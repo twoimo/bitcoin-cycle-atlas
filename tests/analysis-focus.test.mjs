@@ -153,6 +153,36 @@ test('boundary drag previews height through publishes and commits once, while ca
   assert.deepEqual(f.state.hidden,[]);assert.deepEqual(f.state.minimized,[]);assert.equal(f.state.paneHeights.periods,300);f.controller.destroy();
 });
 
+test('pane resize commits the release coordinate and another pointer cannot replace its owner',()=>{
+  for(const secondContact of [false,true]){
+    const f=fixture();f.update({paneHeights:{cycles:400}});
+    const cycles=f.controller.views.get('cycles'),commands=[];
+    f.doc.addEventListener('atlas:indicator-command',event=>{if(event.detail.action==='resize')commands.push(event.detail);});
+    const pointer=(type,y,id=1)=>cycles.resize.dispatchEvent({type,button:0,pointerId:id,clientY:y,preventDefault(){}});
+    pointer('pointerdown',300);pointer('pointermove',350);
+    if(secondContact){pointer('pointerdown',600,2);pointer('pointermove',650,2);pointer('pointerup',680,2);}
+    pointer('pointerup',420);
+    assert.equal(f.state.paneHeights.cycles,520,'the owner release is newer than the last move');
+    assert.equal(commands.length,1);assert.equal(cycles.resize.captured,null);assert.equal(cycles.card.dataset.resizing,'false');
+    f.controller.destroy();
+  }
+});
+
+test('hiding, folding or maximizing a pane cancels a pending resize instead of committing into a changed pane',()=>{
+  for(const change of [{hidden:['cycles']},{minimized:['cycles']},{maximized:'cycles'},{paneHeights:{cycles:600}}]){
+    const f=fixture();f.update({paneHeights:{cycles:400}});
+    const cycles=f.controller.views.get('cycles'),commands=[];
+    f.doc.addEventListener('atlas:indicator-command',event=>{if(event.detail.action==='resize')commands.push(event.detail);});
+    const pointer=(type,y)=>cycles.resize.dispatchEvent({type,button:0,pointerId:1,clientY:y,preventDefault(){}});
+    pointer('pointerdown',300);pointer('pointermove',350);f.update({paneHeights:{cycles:400},...change});
+    pointer('pointerup',420);
+    assert.equal(f.state.paneHeights.cycles,change.paneHeights?.cycles||400);assert.equal(commands.length,0);
+    assert.equal(cycles.resize.captured,null);assert.equal(cycles.card.dataset.resizing,'false');
+    assert.equal(cycles.card.style.getPropertyValue('--analysis-pane-height'),`${f.state.paneHeights.cycles}px`);
+    f.controller.destroy();
+  }
+});
+
 test('compact pane access follows actual order, retains folded studies and excludes hidden or maximized-away studies',()=>{
   const f=fixture(),select=f.controller.paneSelect,access=select.closest('.analysis-pane-access');
   f.update({added:['cycles','duration','peaks','periods','cryptocon'],paneOrder:['duration','cycles','peaks','periods','cryptocon'],minimized:['periods'],hidden:['peaks']});

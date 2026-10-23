@@ -36,15 +36,23 @@ function run(command, args, cwd = root) {
 
 async function checkModels(work) {
   const results = {};
-  for (const [name, broken] of [['MarketRequests', false], ['MarketRequestsBroken', true]]) {
+  for (const [name, broken, invariant] of [
+    ['MarketRequests', false, 'NoStaleDisplay'], ['MarketRequestsBroken', true, 'NoStaleDisplay'],
+    ['HistoryRetry', false, 'RefreshCanRetry'], ['HistoryRetryBroken', true, 'RefreshCanRetry'],
+  ]) {
     const modelDir = path.join(root, 'verification/market-state');
+    // TLC extracts standard modules under java.io.tmpdir using shared names.
+    // Separate them so concurrently running verification jobs cannot race.
+    const javaTmp = path.join(work, `${name}-java`);
+    await mkdir(javaTmp, { recursive: true });
     const result = run(process.env.JAVA || 'java', [
+      '-XX:+UseParallelGC', '-Xmx512m', `-Djava.io.tmpdir=${javaTmp}`,
       '-cp', toolPath, 'tlc2.TLC', '-workers', '1', '-seed', '1', '-fp', '0',
       '-metadir', path.join(work, name), '-config', path.join(modelDir, `${name}.cfg`), path.join(modelDir, `${name}.tla`),
     ]);
     if (broken) {
-      assert.notEqual(result.status, 0, 'Removing the ownership guard must break the model');
-      assert.match(result.output, /Invariant NoStaleDisplay is violated/, 'The negative control must fail for stale display, not a tool error');
+      assert.notEqual(result.status, 0, `${name} must break ${invariant}`);
+      assert.ok(result.output.includes(`Invariant ${invariant} is violated`), `The negative control must fail for ${invariant}, not a tool error: ${result.output}`);
     } else {
       assert.equal(result.status, 0, result.output);
       assert.match(result.output, /Model checking completed\. No error has been found\./);
@@ -72,6 +80,7 @@ async function checkImplementation(work) {
   await cp(path.join(root, 'dist'), path.join(copy, 'dist'), { recursive: true });
   await writeFile(path.join(copy, 'package.json'), '{"type":"module"}\n');
   await cp(path.join(root, 'tests/market-request-ownership.test.mjs'), path.join(copy, 'tests/market-request-ownership.test.mjs'));
+  await cp(path.join(root, 'tests/intraday-history.test.mjs'), path.join(copy, 'tests/intraday-history.test.mjs'));
   const controllerFile = path.join(copy, 'dist/market-data-controller.js');
   const source = await readFile(controllerFile, 'utf8');
   const guarded = 'const series = prior.series || parseMarketSnapshot(await snapshot(), interval);\n        if (active !== request) return;';
@@ -81,7 +90,15 @@ async function checkImplementation(work) {
   const failure = run(process.execPath, ['--test', '--test-reporter=tap', 'tests/market-request-ownership.test.mjs'], copy);
   assert.notEqual(failure.status, 0, 'The real-code regression must reject the removed ownership guard');
   assert.match(failure.output, /superseded fallback must not (replace|notify)/, 'Mutation failed for an unrelated reason');
-  return { regression: 'pass', mutation: 'expected assertion failure', sourceSha256: hash(source), mutatedSourceSha256: hash(mutated) };
+
+  const retryGuard = 'if (history) history.retryAt = 0;';
+  assert.equal(source.split(retryGuard).length, 2, 'Refresh cooldown reset changed: review model/code correspondence and mutation selector');
+  const retryMutated = source.replace(retryGuard, '// Negative control only: retain the old history cooldown on refresh.');
+  await writeFile(controllerFile, retryMutated);
+  const retryFailure = run(process.execPath, ['--test', '--test-reporter=tap', 'tests/intraday-history.test.mjs'], copy);
+  assert.notEqual(retryFailure.status, 0, 'The real-code regression must reject retaining the old history cooldown');
+  assert.match(retryFailure.output, /explicit refresh must release history retry backoff/, 'History retry mutation failed for an unrelated reason');
+  return { regression: 'pass', mutation: 'expected assertion failure', historyRetryMutation: 'expected assertion failure', sourceSha256: hash(source), mutatedSourceSha256: hash(mutated), historyRetryMutatedSourceSha256: hash(retryMutated) };
 }
 
 await prepareTool();
@@ -92,8 +109,9 @@ try {
   console.log(JSON.stringify({
     tool: { name: 'TLC', version: '1.7.4', sha256: toolSha256 },
     bounds: { requestGenerations: 3, intervals: ['1m', '5m'], property: 'NoStaleDisplay' },
+    historyRetryScope: { intervals: 1, existingCandles: true, clock: 'boolean cooldown only', property: 'RefreshCanRetry' },
     model, implementation,
-    limitations: ['Bounded abstract model, not a whole-program proof', 'No pricing, numerical, history-pagination, wall-clock or liveness proof'],
+    limitations: ['Bounded abstract models, not a whole-program proof', 'No pricing, numerical, page-content, wall-clock or liveness proof'],
   }, null, 2));
 } finally {
   await rm(work, { recursive: true, force: true });

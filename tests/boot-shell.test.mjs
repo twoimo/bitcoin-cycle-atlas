@@ -9,6 +9,18 @@ const bootSource = bootMatch?.[1];
 const earlyMatch = html.match(/<script\b[^>]*id="atlas-boot-resource-script"[^>]*>([\s\S]*?)<\/script>/);
 const firstStylesheet = html.search(/<link\b[^>]*rel="stylesheet"/);
 
+test('optional fonts activate after load while layout CSS remains independent', () => {
+  const source = html.match(/<script\b[^>]*id="atlas-fonts-script"[^>]*>([\s\S]*?)<\/script>/)?.[1];
+  assert.ok(source);
+  for (const cached of [false, true]) {
+    const fonts = new EventTarget();fonts.media = 'print';fonts.sheet = cached ? {} : null;
+    runInNewContext(source, { document: { getElementById: () => fonts } });
+    assert.equal(fonts.media, cached ? 'all' : 'print');
+    fonts.dispatchEvent(new Event('load'));
+    assert.equal(fonts.media, 'all');
+  }
+});
+
 // This fixture supplies only the event and attribute APIs used by the real
 // inline bootstrap. Browser layout and module loading are separate checks.
 class ElementFixture extends EventTarget {
@@ -140,7 +152,7 @@ test('startup failures expose accessible recovery and a late ready event cannot 
 });
 
 test('optional resource failures do not abort boot while script and stylesheet failures do', () => {
-  for (const resource of [{ tagName: 'IMG' }, { tagName: 'LINK', rel: 'icon' }, { tagName: 'LINK', rel: 'preload' }]) {
+  for (const resource of [{ tagName: 'IMG' }, { tagName: 'LINK', rel: 'icon' }, { tagName: 'LINK', rel: 'preload' }, { tagName: 'LINK', rel: 'stylesheet', id: 'atlas-optional-fonts' }]) {
     const { root, byId, emit, resourceError } = bootstrap();
     resourceError(resource);
     assert.equal(root.dataset.boot, 'loading', `${resource.tagName} ${resource.rel ?? ''} is not required to initialize the app`);
@@ -166,7 +178,7 @@ test('stylesheet failure during head parsing reaches recovery while early icon f
   failed.byId.get('atlas-boot-retry').click();
   assert.equal(failed.reloads(), 1);
 
-  const optional = bootstrap({ earlyErrors: [{ tagName: 'LINK', rel: 'icon' }, { tagName: 'LINK', rel: 'preload' }] });
+  const optional = bootstrap({ earlyErrors: [{ tagName: 'LINK', rel: 'icon' }, { tagName: 'LINK', rel: 'preload' }, { tagName: 'LINK', rel: 'stylesheet', id: 'atlas-optional-fonts' }] });
   assert.equal(optional.root.dataset.boot, 'loading');
   optional.emit('atlas:ready');
   assert.equal(optional.root.dataset.boot, 'ready');

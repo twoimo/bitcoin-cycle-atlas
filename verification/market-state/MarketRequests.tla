@@ -18,7 +18,7 @@ Init == /\ active = 0 /\ issued = 0 /\ selected = "one"
 \* load(..., {force:true}) calls cancel() then installs the new request.
 \* A load on another interval has the same ownership transition.
 Load(i) ==
-  /\ issued < RequestLimit
+  /\ issued < RequestLimit \* verification/market-state/MarketRequests.cfg:1 exploration bound, not a product guard
   /\ active' = issued + 1 /\ issued' = issued + 1 /\ selected' = i
   /\ interval' = [interval EXCEPT ![issued + 1] = i]
   /\ phase' = [phase EXCEPT ![issued + 1] = "live"]
@@ -32,7 +32,7 @@ Load(i) ==
 
 \* cancel() synchronously revokes ownership; responses may still arrive later.
 Cancel ==
-  /\ active # 0
+  /\ active # 0 \* dist/market-data-controller.js:24
   /\ cancelled' = cancelled \cup {active}
   /\ status' = [status EXCEPT ![interval[active]] =
        storedStatus[interval[active]]]
@@ -41,7 +41,7 @@ Cancel ==
 
 \* Each completion is the synchronous continuation after its await.
 LiveSuccess(id) ==
-  /\ phase[id] = "live"
+  /\ phase[id] = "live" \* dist/market-data-controller.js:57-60 post-fetch continuation
   /\ phase' = [phase EXCEPT ![id] = "done"]
   /\ displayed' = IF active = id THEN [displayed EXCEPT ![interval[id]] = id] ELSE displayed
   /\ status' = IF active = id THEN [status EXCEPT ![interval[id]] = "ready"] ELSE status
@@ -50,13 +50,13 @@ LiveSuccess(id) ==
   /\ UNCHANGED <<issued, selected, interval, cancelled>>
 
 LiveFailure(id) ==
-  /\ phase[id] = "live"
+  /\ phase[id] = "live" \* dist/market-data-controller.js:61-64 fetch failure continuation
   /\ phase' = [phase EXCEPT ![id] = IF active = id THEN "fallback" ELSE "done"]
   /\ UNCHANGED <<active, issued, selected, interval, cancelled, status, storedStatus, displayed>>
 
 \* Exact counterpart of the guard after await snapshot() in load's catch.
 SavedSuccess(id) ==
-  /\ phase[id] = "fallback"
+  /\ phase[id] = "fallback" \* dist/market-data-controller.js:64-67 saved fallback continuation
   /\ phase' = [phase EXCEPT ![id] = "done"]
   /\ displayed' = IF active = id THEN [displayed EXCEPT ![interval[id]] = id] ELSE displayed
   /\ status' = IF active = id THEN [status EXCEPT ![interval[id]] = "snapshot"] ELSE status
@@ -65,8 +65,8 @@ SavedSuccess(id) ==
   /\ UNCHANGED <<issued, selected, interval, cancelled>>
 
 SavedFailure(id) ==
-  /\ phase[id] = "fallback"
-  /\ displayed[interval[id]] = 0
+  /\ phase[id] = "fallback" \* dist/market-data-controller.js:64-69 saved fallback failure
+  /\ displayed[interval[id]] = 0 \* dist/market-data-controller.js:64 prior.series short-circuits saved fetch
   /\ phase' = [phase EXCEPT ![id] = "done"]
   /\ status' = IF active = id THEN [status EXCEPT ![interval[id]] = "error"] ELSE status
   /\ active' = IF active = id THEN 0 ELSE active

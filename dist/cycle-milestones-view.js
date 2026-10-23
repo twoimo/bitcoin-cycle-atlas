@@ -1,6 +1,6 @@
 import { utcDay } from './cycle-engine.js?v=1.11.0';
 import { shiftCalendarMonths } from './cycle-timing.js?v=1.11.0';
-import { MILESTONE_TYPES, INTERVAL_RELATIONS } from './cycle-milestones.js?v=1.11.0-milestones.4';
+import { MILESTONE_TYPES, INTERVAL_RELATIONS } from './cycle-milestones.js?v=1.14.1-audit.1';
 
 /** Pure presentation: all dates, prices and classifications come from the
  * milestone engine. Zoom changes geometry and label density, never endpoints. */

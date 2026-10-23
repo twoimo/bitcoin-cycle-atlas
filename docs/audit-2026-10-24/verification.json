@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "baselineCommit": "d906df3b42a555c57552f005d25a9fef4cfd4c5e",
+  "sourceCommit": "c302fb4f0249d6920536d2da70f58e5426e9f472",
+  "node": "v24.19.0",
+  "tests": {
+    "files": 74,
+    "runnerTests": 662,
+    "pass": 662,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "bothDefaultAndInProcessRunsPass": true
+  },
+  "gates": {
+    "static": "PASS",
+    "cycle": "PASS",
+    "rendererPerformance": "PASS",
+    "formal": "PASS",
+    "standaloneStatic": "PASS"
+  },
+  "browser": {
+    "version": "156.0.8078.47",
+    "fontBlockedViewports": 7,
+    "fontLoadedViewports": 4,
+    "runtimeErrors": 0,
+    "scope": "Headless Chromium emulation; native Chromium mouse and touch via CDP. No physical device or Safari validation.",
+    "standaloneFileViewports": 2
+  },
+  "standalone": {
+    "bytes": 3280279,
+    "previousNestedBytes": 17432498,
+    "embeddedModules": 76,
+    "observations": 5941,
+    "fileBootAndInteractions": "PASS",
+    "importMapRequiresModernBrowser": true
+  }
+}

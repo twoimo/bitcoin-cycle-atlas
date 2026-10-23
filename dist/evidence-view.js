@@ -89,6 +89,7 @@ export function initEvidenceView() {
   if('ResizeObserver' in window){resizeObserver=new ResizeObserver(schedulePage);resizeObserver.observe(shell);}
   window.addEventListener('resize',schedulePage);window.visualViewport?.addEventListener('resize',schedulePage);
   document.fonts?.ready.then(schedulePage);
+  document.fonts?.addEventListener('loadingdone',schedulePage);
 }
 
 export function showEvidenceView(value) {

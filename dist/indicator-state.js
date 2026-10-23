@@ -49,7 +49,7 @@ export function normalizeIndicatorState(value={}) {
   return {added,hidden,minimized,active,primary,collapsed:value.collapsed===true,settings,paneOrder,paneHeights,maximized};
 }
 
-export function readIndicatorState(search='',{mobile=globalThis.matchMedia?.('(max-width:620px)')?.matches??false}={}) {
+export function readIndicatorState(search='',{mobile=globalThis.matchMedia?.('(max-width:620px), (max-width:950px) and (max-height:500px)')?.matches??false}={}) {
   const params=search instanceof URLSearchParams?search:new URLSearchParams(search);
   const added=params.has('indicators')?params.get('indicators').split(','):defaults.slice();
   // Old explicit layouts keep their eye states. New charts hide volume until

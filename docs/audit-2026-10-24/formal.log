@@ -1,0 +1,98 @@
+✔ zoom-out crosses the original 180-bar snapshot and loads real older candles without changing interval (56.443223ms)
+✔ 30m and 4h history uses only complete source groups and at most 288 source bars per page (46.602386ms)
+✔ empty provider pages are remembered and source gaps remain absent without repeated requests (3.491875ms)
+✔ history download is sequential and coalesces new gestures onto its latest requested viewport (11.76979ms)
+✔ interval cancellation drops late history responses and never publishes stale rows (4.330572ms)
+✔ 429 preserves displayed data and cannot create an automatic retry loop (2.948745ms)
+✔ a timed-out history page keeps the saved chart and clears loading state (15.871907ms)
+✔ a new short gesture still obeys the shared request throttle and can be cancelled before HTTP starts (6.033676ms)
+✔ forced refresh can refill the existing past viewport using the newer navigation baseline (11.933918ms)
+✔ explicit refresh releases history backoff when recent candles fall back to retained data (4.678826ms)
+✔ older panning keeps a bounded cache, every requested source bar, and the Reset snapshot (216.976557ms)
+✔ checked coverage merges overlap and queries only the missing half-open windows (0.878176ms)
+✔ checked empty-window metadata is evicted with the time cache instead of growing across distant pans (10.108621ms)
+✔ network failure uses validated embedded candles and retains their original collection time (13.329421ms)
+✔ invalid saved OHLC is rejected instead of becoming a successful fallback (0.761459ms)
+✔ failure of both exchange and saved data stays in error without an automatic retry loop (2.53901ms)
+✔ a forced refresh replaces a saved fallback after a successful validated response (14.304469ms)
+✔ switching intervals aborts the previous request and a late response cannot overwrite or notify (8.594088ms)
+✔ switching back to a cached interval still cancels the outstanding different interval (9.345523ms)
+✔ explicit cancellation produces no stale UI callback and does not enter fallback (1.786076ms)
+✔ a saved-data response arriving after cancellation cannot publish stale fallback state (0.994092ms)
+✔ snapshot-first loading obeys cancellation even when saved data ignores abort and arrives late (0.790144ms)
+✔ a late preferred snapshot cannot overwrite a newer forced refresh of the same interval (1.778121ms)
+✔ an older saved fallback cannot replace 1m; newer first=false; saved failure=false (36.375889ms)
+✔ an older saved fallback cannot replace 1m; newer first=false; saved failure=true (2.661723ms)
+✔ an older saved fallback cannot replace 1m; newer first=true; saved failure=false (10.190394ms)
+✔ an older saved fallback cannot replace 1m; newer first=true; saved failure=true (7.676298ms)
+✔ an older saved fallback cannot replace 5m; newer first=false; saved failure=false (1.876797ms)
+✔ an older saved fallback cannot replace 5m; newer first=false; saved failure=true (1.815589ms)
+✔ an older saved fallback cannot replace 5m; newer first=true; saved failure=false (10.473625ms)
+✔ an older saved fallback cannot replace 5m; newer first=true; saved failure=true (1.353781ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 745.800579
+{
+  "tool": {
+    "name": "TLC",
+    "version": "1.7.4",
+    "sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+  },
+  "bounds": {
+    "requestGenerations": 3,
+    "intervals": [
+      "1m",
+      "5m"
+    ],
+    "property": "NoStaleDisplay"
+  },
+  "historyRetryScope": {
+    "intervals": 1,
+    "existingCandles": true,
+    "clock": "boolean cooldown only",
+    "property": "RefreshCanRetry"
+  },
+  "model": {
+    "MarketRequests": {
+      "outcome": "pass",
+      "generatedStates": 5955,
+      "distinctStates": 2081,
+      "remainingStates": 0
+    },
+    "MarketRequestsBroken": {
+      "outcome": "expected invariant violation",
+      "generatedStates": 151,
+      "distinctStates": 109,
+      "remainingStates": 79
+    },
+    "HistoryRetry": {
+      "outcome": "pass",
+      "generatedStates": 37,
+      "distinctStates": 15,
+      "remainingStates": 0
+    },
+    "HistoryRetryBroken": {
+      "outcome": "expected invariant violation",
+      "generatedStates": 26,
+      "distinctStates": 13,
+      "remainingStates": 2
+    }
+  },
+  "implementation": {
+    "regression": "pass",
+    "mutation": "expected assertion failure",
+    "historyRetryMutation": "expected assertion failure",
+    "sourceSha256": "f9c56339c1a5a55908e9680bb28290b46983b005d5770272dd13f048603182fa",
+    "mutatedSourceSha256": "25ec31700f2d13cc40191466de6905f1a11506e447dbe63dccc0445215e07002",
+    "historyRetryMutatedSourceSha256": "897a4a64272ebafa16af4da6ca0d05b1d3c59f125044e3c8fe46babc19a7d929"
+  },
+  "limitations": [
+    "Bounded abstract models, not a whole-program proof",
+    "No pricing, numerical, page-content, wall-clock or liveness proof"
+  ]
+}

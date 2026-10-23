@@ -126,6 +126,98 @@ test('tuple and normalized object inputs agree, gaps force fresh state warmup', 
   assert.throws(() => computeRollingStates([['2024-02-30', 1]]), /calendar/);
 });
 
+test('rolling statistics match direct window definitions across scales, gaps and window sizes', () => {
+  const prices = Array.from({ length: 950 }, (_, i) => 100 * Math.exp(i / 7000 + 0.2 * Math.sin(i / 19) + 0.03 * Math.cos(i / 3)));
+  for (const scale of [1e-100, 1, 1e100]) for (const [shortWindow, longWindow] of [[1, 1], [2, 5], [28, 91], [100, 365]]) {
+    const input = rows(prices.map(price => price * scale)).filter((_, i) => i !== 432);
+    const points = computeRollingStates(input, { shortWindow, longWindow }).points;
+    for (const i of [longWindow, 431, 432, 450, 800, input.length - 1]) {
+      const point = points[i];
+      const window = input.slice(i - shortWindow, i + 1);
+      const complete = i >= shortWindow && utcDay(window.at(-1)[0]) - utcDay(window[0][0]) === shortWindow;
+      if (!complete) { assert.equal(point.shortMA, null); assert.equal(point.realizedVolPct, null); continue; }
+      const logs = window.map(row => Math.log(row[1]));
+      const logAverage = logs.reduce((a, b) => a + b, 0) / logs.length;
+      assert.ok(Math.abs(Math.log(point.shortMA) - logAverage) < 2e-12, 'geometric window mean');
+      const returns = window.slice(1).map((row, j) => Math.log(row[1] / window[j][1]));
+      const average = returns.reduce((a, b) => a + b, 0) / returns.length;
+      const volatility = returns.length > 1 ? Math.sqrt(returns.reduce((sum, value) => sum + (value - average) ** 2, 0) / (returns.length - 1)) * Math.sqrt(365) * 100 : null;
+      if (volatility === null) assert.equal(point.realizedVolPct, null);
+      else close(point.realizedVolPct, volatility, 1e-10);
+      close(point.rollingRangePct, (Math.max(...window.map(row => row[1])) / Math.min(...window.map(row => row[1])) - 1) * 100);
+      close(point.rollingReturnPct, (window.at(-1)[1] / window[0][1] - 1) * 100);
+    }
+  }
+  const constant = computeRollingStates(rows(Array(4000).fill(60000)));
+  assert.ok(constant.points.slice(91).every(point => point.state === 'range' && point.realizedVolPct === 0));
+  const shockThenQuiet = computeRollingStates(rows([100, 10000, ...Array(200).fill(100)]));
+  assert.ok(shockThenQuiet.points.slice(30).every(point => point.realizedVolPct === 0), 'expired shocks leave no residual variance');
+});
+
+test('rolling statistics compute each observation log only a bounded number of times', () => {
+  const input = rows(Array.from({ length: 4000 }, (_, i) => 100 + i % 17));
+  const original = Math.log;
+  let reads = 0;
+  Math.log = value => { reads++; return original(value); };
+  try {
+    const result = computeRollingStates(input, { shortWindow: 200, longWindow: 1000 });
+    assert.equal(result.points.length, input.length);
+    assert.ok(result.current.shortMA > 0 && Number.isFinite(result.current.realizedVolPct));
+    assert.ok(reads <= input.length * 3, `${reads} logarithms for ${input.length} rows`);
+  } finally { Math.log = original; }
+});
+
+test('out-of-cutoff invalid values cannot make an already observable state history unavailable', () => {
+  const prefix = rows(Array.from({ length: 400 }, (_, i) => 100 + i % 23));
+  const cutoff = prefix.at(-1)[0];
+  const poisonedFuture = [...prefix, [dateFromDay(utcDay(cutoff) + 1), NaN]];
+  assert.deepEqual(computeRollingStates(poisonedFuture, { asOf: cutoff }), computeRollingStates(prefix));
+  assert.deepEqual(detectDirectionalChanges(poisonedFuture, { asOf: cutoff }), detectDirectionalChanges(prefix));
+  assert.deepEqual(aggregateCloseBars(poisonedFuture, { asOf: cutoff }), aggregateCloseBars(prefix));
+  assert.throws(() => computeRollingStates(poisonedFuture), /positive finite price/);
+});
+
+test('geometric-mean equality has the same regime in every quote unit', () => {
+  // 50×100×25×50 = 50^4. The last price is exactly the four-point GMA,
+  // while its short-window drawdown is 50%; equality belongs to pullback.
+  for (const scale of [0.1, 1, 2, 10, 100, 60000, 1e-50, 1e50, 1e-100, 1e100]) {
+    const result = computeRollingStates(rows([50, 100, 25, 50].map(value => value * scale)), { shortWindow: 2, longWindow: 3 });
+    assert.equal(result.current.state, 'pullback', `quote scale ${scale}`);
+  }
+  for (const initial of [[], [7]]) for (const scale of [1e-100, 1, 1e100]) for (const delta of [1e-8, 1e-12]) {
+    for (const [direction, multiplier] of [['correction', 1 - delta], ['pullback', 1 + delta], ['pullback', 1]]) {
+      const result = computeRollingStates(rows([...initial, 50, 100, 25, 50 * multiplier].map(value => value * scale)), { shortWindow: 2, longWindow: 3 });
+      assert.equal(result.current.state, direction, `quote scale ${scale}, initial ${initial}, relative change ${multiplier - 1}`);
+    }
+  }
+});
+
+test('centered logarithms recover finite means and volatility when a price ratio overflows or underflows', () => {
+  const current = computeRollingStates(rows([1e-300, 1e300, 1e-300, 1e300]), { shortWindow: 2, longWindow: 3 }).current;
+  assert.ok(Number.isFinite(current.shortMA) && current.shortMA > 0);
+  assert.ok(Number.isFinite(current.longMA) && current.longMA > 0);
+  close(current.longMA, 1, 1e-12);
+  assert.ok(Number.isFinite(current.realizedVolPct) && current.realizedVolPct > 0);
+});
+
+test('subnormal anchor ratios do not quantize the mean of later quiet prices', () => {
+  for (const anchor of [Number.MAX_VALUE, 1e308]) {
+    const result = computeRollingStates(rows([anchor, ...Array(10).fill(1e-15)]), { shortWindow: 2, longWindow: 3 }).current;
+    for (const key of ['shortMA', 'longMA']) assert.ok(Math.abs(result[key] / 1e-15 - 1) < 1e-12, `${key}: ${result[key]}`);
+    assert.equal(result.realizedVolPct, 0);
+  }
+});
+
+test('finite positive window means stay representable at the floating-point price boundaries', () => {
+  for (const anchor of [1e-100, 1e100]) for (const price of [Number.MAX_VALUE, Number.MIN_VALUE]) {
+    const result = computeRollingStates(rows([anchor, ...Array(10).fill(price)]), { shortWindow: 2, longWindow: 3 }).current;
+    for (const key of ['shortMA', 'longMA']) {
+      assert.ok(Number.isFinite(result[key]) && result[key] > 0, `${key}: ${result[key]}`);
+      assert.ok(Math.abs(result[key] / price - 1) < 1e-12, `${key} must preserve a constant window at ${price}`);
+    }
+  }
+});
+
 test('retrospective macro windows preserve early history and censor the latest trough', () => {
   const cycles = getMacroCycles(data).cycles;
   assert.deepEqual(cycles.map((c) => [c.peakYear, c.bullDays, c.bearDays]), [

@@ -1,0 +1,5 @@
+
+> bitcoin-cycle-atlas@1.14.1 verify:static
+> node scripts/verify-static.mjs
+
+{"status":"ok","files":107,"checkedReferences":211,"basePath":"/bitcoin-cycle-atlas/","standalone":null}

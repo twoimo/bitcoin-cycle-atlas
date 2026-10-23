@@ -1,0 +1,5 @@
+
+> bitcoin-cycle-atlas@1.14.1 verify:performance
+> node scripts/verify-chart-performance.mjs
+
+{"status":"PASS","asOf":"2026-10-22","scope":"Deterministic renderer/search/selection checks; Node SVG boundary, not browser paint or input-latency measurement.","observedPriceRows":5941,"observedCandleRows":5545,"observedVolumeShapes":5545,"svgElements":103,"svgElementBudget":120,"sourceSelectionDates":["2011-08-18","2019-03-21","2026-10-22"],"complexity":[{"sourceRows":1024,"visibleRows":9,"sourceReads":29,"maxReads":33,"displayPoints":1024,"maxDisplayPoints":4004},{"sourceRows":16384,"visibleRows":9,"sourceReads":37,"maxReads":41,"displayPoints":2296,"maxDisplayPoints":4004},{"sourceRows":131072,"visibleRows":9,"sourceReads":43,"maxReads":47,"displayPoints":3978,"maxDisplayPoints":4004}],"moduleHashes":{"atlas-price-chart.js":"b5a1820cc4aa3c241e6e43f8e3efc49c6eff46a6dd26c27232823b5956e41315","chart-overlays.js":"01ab95bedff500867a7b679ec394527c6eb8302bbb74d3b5a351278051628e36","chart-window.js":"ff1527876a0185e8f8a52211170c696bde98f0120c6f0ddde58cea987daaf7cd","chart-navigation.js":"f3c9fbf592a872d6435e739f9562f76e17299c1086393774dc2bffe5525461d4"}}

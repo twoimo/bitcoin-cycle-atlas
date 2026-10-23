@@ -1,0 +1,20 @@
+{
+  "label": "audit-v1.14.1-standalone",
+  "browser": "156.0.8078.47",
+  "fontMode": "blocked",
+  "scope": "Headless Chromium viewport/touch emulation and local immutable market snapshots. Font mode is recorded separately. No physical device, Safari, or browser-native pinch validation.",
+  "results": [
+    {
+      "name": "desktop",
+      "label": "audit-v1.14.1-standalone",
+      "errors": [],
+      "failure": "page.goto: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"file:///workspace/scratch/a6e2a441da4a/bitcoin-cycle-atlas/build/Bitcoin_Cycles_Comparison.html\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    },
+    {
+      "name": "phone",
+      "label": "audit-v1.14.1-standalone",
+      "errors": [],
+      "failure": "page.goto: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"file:///workspace/scratch/a6e2a441da4a/bitcoin-cycle-atlas/build/Bitcoin_Cycles_Comparison.html\", waiting until \"domcontentloaded\"\u001b[22m\n"
+    }
+  ]
+}

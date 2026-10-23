@@ -36,6 +36,12 @@ export function createMarketDataController({ onChange = () => {}, fetchImpl = gl
     const prior = get(interval);
     cancel();
     if (!force && prior.status !== 'idle') return;
+    // Refresh also retries the visible history window. Release its cooldown
+    // even if the head request fails and retains the existing candle series.
+    if (force) {
+      const history = histories.get(interval);
+      if (history) history.retryAt = 0;
+    }
     const controller = new AbortController();
     const request = { interval, controller, timer: setTimeout(() => controller.abort(new Error('Candle request timed out')), timeoutMs) };
     active = request;

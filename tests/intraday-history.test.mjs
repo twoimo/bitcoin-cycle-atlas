@@ -105,6 +105,29 @@ test('forced refresh can refill the existing past viewport using the newer navig
   assert.ok(rows.some(row=>row.time===target.start));assert.ok(rows.some(row=>row.time===target.end));assert.equal(controller.get('1m').historyStatus,'ready');
 });
 
+test('explicit refresh releases history backoff when recent candles fall back to retained data',async t=>{
+  const {controller,calls,series,step}=await fixture('1m',{fetchImpl:async(url,_options,n)=>n<=2?{ok:false,status:503}:response(url)});
+  t.after(()=>controller.cancel());
+  const target={start:series.candles[0].time-30*step,end:series.candles.at(-1).time};
+  await controller.ensureRange('1m',target);
+  assert.equal(controller.get('1m').historyStatus,'error');
+  assert.equal(calls.length,1);
+  await controller.ensureRange('1m',target);
+  assert.equal(calls.length,1,'ordinary gestures still respect the failed-page backoff');
+
+  // This is refresh-market in lab-view: refresh the head, then refill the same
+  // viewport. A head failure must not silently retain the old history cooldown.
+  await controller.load('1m',{force:true});
+  assert.equal(controller.get('1m').status,'snapshot');
+  assert.equal(calls.length,2);
+  await controller.ensureRange('1m',target);
+  assert.equal(calls.length,3,'explicit refresh must release history retry backoff even when the head refresh uses retained candles');
+  const entry=controller.get('1m');
+  assert.equal(entry.historyStatus,'ready');
+  assert.ok(entry.series.candles.some(row=>row.time===target.start));
+  assert.equal(entry.series.candles.at(-1).time,series.candles.at(-1).time);
+});
+
 test('older panning keeps a bounded cache, every requested source bar, and the Reset snapshot',async t=>{
   const {controller,series,step}=await fixture();t.after(()=>controller.cancel());
   for(const offset of [0,6000,12000]){

@@ -1,0 +1,35 @@
+{
+  "view": "customer",
+  "second": {
+    "role": "fix",
+    "label": "refresh retry fix",
+    "lacks": []
+  },
+  "modelStates": 18,
+  "modelTransitions": 40,
+  "chartStates": 7,
+  "chartTransitions": 7,
+  "chartStatus": {
+    "works": 6,
+    "wrong": 0,
+    "fixed": 1
+  },
+  "classes": [
+    {
+      "n": 1,
+      "end": "History blocked after refresh (before fix only)",
+      "invariant": "RefreshCanRetry",
+      "rule": "After manual refresh finishes, the prior failed history attempt cannot block the requested visible window. A subsequent failed attempt may set a new delay.",
+      "cause": "A failed refresh retains the previous history retry delay",
+      "readerSteps": 4,
+      "modelSteps": 5,
+      "counterexamples": 1,
+      "fix": "Saved candles; history can retry"
+    }
+  ],
+  "codeLike": [],
+  "uncited": {
+    "HistoryRetryBroken.tla": [],
+    "HistoryRetry.tla": []
+  }
+}
