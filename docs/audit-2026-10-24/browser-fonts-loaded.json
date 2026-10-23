@@ -1,0 +1,200 @@
+{
+  "label": "audit-v1.14.1-fonts",
+  "browser": "156.0.8078.47",
+  "fontMode": "available",
+  "scope": "Headless Chromium viewport/touch emulation and local immutable market snapshots. Font mode is recorded separately. No physical device, Safari, or browser-native pinch validation.",
+  "results": [
+    {
+      "name": "desktop",
+      "label": "audit-v1.14.1-fonts",
+      "boot": "ready",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "document": {
+        "width": 1440,
+        "height": 900
+      },
+      "chart": {
+        "x": 44,
+        "y": 40,
+        "width": 1358,
+        "height": 816,
+        "top": 40,
+        "right": 1402,
+        "bottom": 856,
+        "left": 44
+      },
+      "volumeChecked": false,
+      "indicatorsExpanded": "true",
+      "priceLegendVisible": true,
+      "readout": "1D관측 종가$81,257.02전봉 −3.5%2026.10.22 UTC",
+      "observedCount": "731",
+      "fontFaces": [
+        "Inter",
+        "Noto Sans KR"
+      ],
+      "events": [
+        "atlas:ready"
+      ],
+      "updates": 4,
+      "frequency": "daily",
+      "chartType": "line",
+      "marketStatus": "Coin Metrics · 일말 2026-10-22 UTC",
+      "navigationAvailable": true,
+      "start": "2024-10-22",
+      "end": "2028-10-22",
+      "errors": [],
+      "interactions": [
+        "indicator dialog opens and closes",
+        "line to candles to line",
+        "native mouse reader resize applies final release",
+        "reader keyboard reset and close"
+      ]
+    },
+    {
+      "name": "tablet-portrait",
+      "label": "audit-v1.14.1-fonts",
+      "boot": "ready",
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "document": {
+        "width": 768,
+        "height": 1024
+      },
+      "chart": {
+        "x": 44,
+        "y": 40,
+        "width": 686,
+        "height": 940,
+        "top": 40,
+        "right": 730,
+        "bottom": 980,
+        "left": 44
+      },
+      "volumeChecked": false,
+      "indicatorsExpanded": "true",
+      "priceLegendVisible": true,
+      "readout": "1D관측 종가$81,257.02전봉 −3.5%2026.10.22 UTC",
+      "observedCount": "731",
+      "fontFaces": [
+        "Inter",
+        "Noto Sans KR"
+      ],
+      "events": [
+        "atlas:ready"
+      ],
+      "updates": 3,
+      "frequency": "daily",
+      "chartType": "line",
+      "marketStatus": "Coin Metrics · 일말 2026-10-22 UTC",
+      "navigationAvailable": true,
+      "start": "2024-10-22",
+      "end": "2028-10-22",
+      "errors": [],
+      "interactions": [
+        "indicator dialog opens and closes",
+        "line to candles to line"
+      ]
+    },
+    {
+      "name": "phone",
+      "label": "audit-v1.14.1-fonts",
+      "boot": "ready",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "document": {
+        "width": 390,
+        "height": 844
+      },
+      "chart": {
+        "x": 0,
+        "y": 48,
+        "width": 390,
+        "height": 752,
+        "top": 48,
+        "right": 390,
+        "bottom": 800,
+        "left": 0
+      },
+      "volumeChecked": false,
+      "indicatorsExpanded": "false",
+      "priceLegendVisible": false,
+      "readout": "1D관측 종가$81,257.02전봉 −3.5%2026.10.22 UTC",
+      "observedCount": "731",
+      "fontFaces": [
+        "Inter",
+        "Noto Sans KR"
+      ],
+      "events": [
+        "atlas:ready"
+      ],
+      "updates": 4,
+      "frequency": "daily",
+      "chartType": "line",
+      "marketStatus": "Coin Metrics · 일말 2026-10-22 UTC",
+      "navigationAvailable": true,
+      "start": "2024-10-22",
+      "end": "2028-10-22",
+      "errors": [],
+      "interactions": [
+        "indicator dialog opens and closes",
+        "line to candles to line",
+        "Chromium touch hold, move and release retain tracking without panning",
+        "next touch tap exits tracking"
+      ]
+    },
+    {
+      "name": "phone-landscape",
+      "label": "audit-v1.14.1-fonts",
+      "boot": "ready",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "document": {
+        "width": 844,
+        "height": 390
+      },
+      "chart": {
+        "x": 44,
+        "y": 40,
+        "width": 762,
+        "height": 306,
+        "top": 40,
+        "right": 806,
+        "bottom": 346,
+        "left": 44
+      },
+      "volumeChecked": false,
+      "indicatorsExpanded": "false",
+      "priceLegendVisible": false,
+      "readout": "1D관측 종가$81,257.02전봉 −3.5%2026.10.22 UTC",
+      "observedCount": "731",
+      "fontFaces": [
+        "Inter",
+        "Noto Sans KR"
+      ],
+      "events": [
+        "atlas:ready"
+      ],
+      "updates": 3,
+      "frequency": "daily",
+      "chartType": "line",
+      "marketStatus": "Coin Metrics · 일말 2026-10-22 UTC",
+      "navigationAvailable": true,
+      "start": "2024-10-22",
+      "end": "2028-10-22",
+      "errors": [],
+      "interactions": [
+        "indicator dialog opens and closes",
+        "line to candles to line"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,259 @@
+{
+  "scope": "Separate sampling profile of ten observed+forecast rolling-state calls per side. These samples are explanatory and excluded from the A/B timings.",
+  "profiles": {
+    "before": {
+      "runs": 10,
+      "rowsPerRun": 14777,
+      "samples": 1122,
+      "topSelfSamples": [
+        {
+          "function": "(anonymous)",
+          "module": "baseline/dist/market-structure.js",
+          "line": 242,
+          "sampledMs": 574.815
+        },
+        {
+          "function": "(anonymous)",
+          "module": "baseline/dist/market-structure.js",
+          "line": 251,
+          "sampledMs": 182.221
+        },
+        {
+          "function": "post",
+          "module": "node:inspector",
+          "line": 115,
+          "sampledMs": 142.242
+        },
+        {
+          "function": "dateFromDay",
+          "module": "baseline/dist/cycle-engine.js?v=1.11.0",
+          "line": 44,
+          "sampledMs": 134.174
+        },
+        {
+          "function": "(anonymous)",
+          "module": "baseline/dist/market-structure.js",
+          "line": 250,
+          "sampledMs": 70.126
+        },
+        {
+          "function": "(anonymous)",
+          "module": "baseline/dist/market-structure.js",
+          "line": 258,
+          "sampledMs": 65.955
+        },
+        {
+          "function": "(garbage collector)",
+          "module": "",
+          "line": 0,
+          "sampledMs": 52.496
+        },
+        {
+          "function": "computeRollingStates",
+          "module": "baseline/dist/market-structure.js",
+          "line": 230,
+          "sampledMs": 34.576
+        },
+        {
+          "function": "utcDay",
+          "module": "baseline/dist/cycle-engine.js?v=1.11.0",
+          "line": 26,
+          "sampledMs": 28.322
+        },
+        {
+          "function": "(anonymous)",
+          "module": "baseline/dist/market-structure.js",
+          "line": 27,
+          "sampledMs": 27.214
+        },
+        {
+          "function": "utcDay",
+          "module": "baseline/dist/cycle-engine.js?v=1.11.0",
+          "line": 26,
+          "sampledMs": 24.198
+        },
+        {
+          "function": "mean",
+          "module": "baseline/dist/market-structure.js",
+          "line": 27,
+          "sampledMs": 24.09
+        },
+        {
+          "function": "(anonymous)",
+          "module": "baseline/dist/market-structure.js",
+          "line": 27,
+          "sampledMs": 15.486
+        },
+        {
+          "function": "utcDay",
+          "module": "baseline/dist/cycle-engine.js?v=1.11.0",
+          "line": 26,
+          "sampledMs": 15.419
+        },
+        {
+          "function": "makeEpisodes",
+          "module": "baseline/dist/market-structure.js",
+          "line": 211,
+          "sampledMs": 8.964
+        },
+        {
+          "function": "mean",
+          "module": "baseline/dist/market-structure.js",
+          "line": 27,
+          "sampledMs": 8.494
+        },
+        {
+          "function": "(anonymous)",
+          "module": "baseline/dist/cycle-engine.js?v=1.11.0",
+          "line": 54,
+          "sampledMs": 8.227
+        },
+        {
+          "function": "(anonymous)",
+          "module": "baseline/dist/market-structure.js",
+          "line": 253,
+          "sampledMs": 8.035
+        },
+        {
+          "function": "validateDataset",
+          "module": "baseline/dist/cycle-engine.js?v=1.11.0",
+          "line": 50,
+          "sampledMs": 4.922
+        },
+        {
+          "function": "(anonymous)",
+          "module": "baseline/dist/market-structure.js",
+          "line": 36,
+          "sampledMs": 4.62
+        }
+      ]
+    },
+    "after": {
+      "runs": 10,
+      "rowsPerRun": 14777,
+      "samples": 342,
+      "topSelfSamples": [
+        {
+          "function": "post",
+          "module": "node:inspector",
+          "line": 115,
+          "sampledMs": 241.578
+        },
+        {
+          "function": "dateFromDay",
+          "module": "candidate/dist/cycle-engine.js?v=1.11.0",
+          "line": 44,
+          "sampledMs": 127.336
+        },
+        {
+          "function": "(anonymous)",
+          "module": "candidate/dist/market-structure.js",
+          "line": 325,
+          "sampledMs": 93.819
+        },
+        {
+          "function": "(anonymous)",
+          "module": "candidate/dist/market-structure.js",
+          "line": 284,
+          "sampledMs": 31.381
+        },
+        {
+          "function": "makeEpisodes",
+          "module": "candidate/dist/market-structure.js",
+          "line": 234,
+          "sampledMs": 21.623
+        },
+        {
+          "function": "validateDataset",
+          "module": "candidate/dist/cycle-engine.js?v=1.11.0",
+          "line": 50,
+          "sampledMs": 19.602
+        },
+        {
+          "function": "(garbage collector)",
+          "module": "",
+          "line": 0,
+          "sampledMs": 17.586
+        },
+        {
+          "function": "computeRollingStates",
+          "module": "candidate/dist/market-structure.js",
+          "line": 300,
+          "sampledMs": 17.385
+        },
+        {
+          "function": "(anonymous)",
+          "module": "candidate/dist/market-structure.js",
+          "line": 260,
+          "sampledMs": 14.839
+        },
+        {
+          "function": "utcDay",
+          "module": "candidate/dist/cycle-engine.js?v=1.11.0",
+          "line": 26,
+          "sampledMs": 14.765
+        },
+        {
+          "function": "utcDay",
+          "module": "candidate/dist/cycle-engine.js?v=1.11.0",
+          "line": 26,
+          "sampledMs": 13.758
+        },
+        {
+          "function": "push",
+          "module": "candidate/dist/market-structure.js",
+          "line": 279,
+          "sampledMs": 7.79
+        },
+        {
+          "function": "atMost",
+          "module": "candidate/dist/market-structure.js",
+          "line": 26,
+          "sampledMs": 6.602
+        },
+        {
+          "function": "add",
+          "module": "candidate/dist/market-structure.js",
+          "line": 255,
+          "sampledMs": 5.18
+        },
+        {
+          "function": "restoreGeometricMean",
+          "module": "candidate/dist/market-structure.js",
+          "line": 41,
+          "sampledMs": 4.779
+        },
+        {
+          "function": "earliestKnowable",
+          "module": "candidate/dist/market-structure.js",
+          "line": 78,
+          "sampledMs": 4.542
+        },
+        {
+          "function": "logPriceRatio",
+          "module": "candidate/dist/market-structure.js",
+          "line": 35,
+          "sampledMs": 2.39
+        },
+        {
+          "function": "compareLogValues",
+          "module": "candidate/dist/market-structure.js",
+          "line": 31,
+          "sampledMs": 1.216
+        },
+        {
+          "function": "utcDay",
+          "module": "candidate/dist/cycle-engine.js?v=1.11.0",
+          "line": 26,
+          "sampledMs": 1.126
+        },
+        {
+          "function": "(anonymous)",
+          "module": "candidate/scripts/benchmark-market-computation.mjs",
+          "line": 0,
+          "sampledMs": 1.116
+        }
+      ]
+    }
+  }
+}

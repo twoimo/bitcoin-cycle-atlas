@@ -12,6 +12,12 @@
     ],
     "property": "NoStaleDisplay"
   },
+  "historyRetryScope": {
+    "intervals": 1,
+    "existingCandles": true,
+    "clock": "boolean cooldown only",
+    "property": "RefreshCanRetry"
+  },
   "model": {
     "MarketRequests": {
       "outcome": "pass",
@@ -24,17 +30,31 @@
       "generatedStates": 151,
       "distinctStates": 109,
       "remainingStates": 79
+    },
+    "HistoryRetry": {
+      "outcome": "pass",
+      "generatedStates": 37,
+      "distinctStates": 15,
+      "remainingStates": 0
+    },
+    "HistoryRetryBroken": {
+      "outcome": "expected invariant violation",
+      "generatedStates": 26,
+      "distinctStates": 13,
+      "remainingStates": 2
     }
   },
   "implementation": {
     "regression": "pass",
     "mutation": "expected assertion failure",
-    "sourceSha256": "dce96066268bb4e5ff0f5b81fe182904d6cb7d711172886872de3d387b6b7bee",
-    "mutatedSourceSha256": "18d1ac6de0cb495dc161cf0001af81978bd922051fea4aacdaf8d0ad865dc19a"
+    "historyRetryMutation": "expected assertion failure",
+    "sourceSha256": "f9c56339c1a5a55908e9680bb28290b46983b005d5770272dd13f048603182fa",
+    "mutatedSourceSha256": "25ec31700f2d13cc40191466de6905f1a11506e447dbe63dccc0445215e07002",
+    "historyRetryMutatedSourceSha256": "897a4a64272ebafa16af4da6ca0d05b1d3c59f125044e3c8fe46babc19a7d929"
   },
   "limitations": [
-    "Bounded abstract model, not a whole-program proof",
-    "No pricing, numerical, history-pagination, wall-clock or liveness proof"
+    "Bounded abstract models, not a whole-program proof",
+    "No pricing, numerical, page-content, wall-clock or liveness proof"
   ],
-  "actualRegressionTests": 30
+  "sourceCommit": "c302fb4f0249d6920536d2da70f58e5426e9f472"
 }
