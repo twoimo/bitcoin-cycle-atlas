@@ -196,6 +196,38 @@ test('blur and resize cancel both pending and active tracking and do not rearm i
   }
 });
 
+test('touch tracking coalesces move bursts and commits the exact release before a pending frame',()=>{
+  const h=mobileGestureHarness({range:daily});try{
+    h.dispatch('pointerdown',point(350));h.advance(500);assert.equal(h.previews.length,1);
+    for(let index=1;index<=240;index++)h.dispatch('pointermove',point(350+index));
+    assert.equal(h.previews.length,1,'intermediate positions cannot paint before a display frame');
+    h.frame();assert.equal(h.previews.length,2);assert.deepEqual(h.previews.at(-1),point(590));
+    h.dispatch('pointermove',point(600));h.dispatch('pointermove',point(650));
+    h.dispatch('pointerup',point(680));assert.equal(h.previews.length,3);assert.deepEqual(h.previews.at(-1),point(680));
+    h.settle();assert.equal(h.previews.length,3,'a queued earlier move cannot overwrite the release');
+    assert.equal(h.tracking.active,true);assert.equal(h.captures.size,0);assert.deepEqual(h.range,daily);
+  }finally{h.destroy();}
+});
+
+test('touch tracking drops queued paints on cancel, resize, destroy and pinch handoff',()=>{
+  for(const interruption of ['cancel','resize','destroy','pinch']){
+    const h=mobileGestureHarness({range:daily});try{
+      h.dispatch('pointerdown',point(350));h.advance(500);h.dispatch('pointermove',point(400));
+      if(interruption==='cancel')h.dispatch('pointercancel',point(400));
+      else if(interruption==='resize')h.dispatch('resize',{target:h.window});
+      else if(interruption==='destroy')h.tracking.destroy();
+      else{
+        h.dispatch('pointerdown',{...point(650,200,2),isPrimary:false});
+        assert.equal(h.element.dataset.pinching,'true');
+        h.dispatch('pointermove',{...point(750,200,2),isPrimary:false});h.settle();
+        assert.deepEqual(h.range,panRange(zoomRange(daily,250/350,465/870),-50/870),'handoff uses the latest raw first-finger position');
+      }
+      h.settle();assert.equal(h.tracking.active,false);assert.equal(h.previews.length,1,'cancelled tracking cannot repaint its cleared readout');
+      assert.equal(h.clears,1);
+    }finally{h.destroy();}
+  }
+});
+
 test('hidden documents and capture loss retire tracking; an unrelated second contact cannot arm a hold',()=>{
   for(const interruption of ['hidden','capture']){
     const h=mobileGestureHarness({range:daily});try{

@@ -5,15 +5,29 @@ export function mountChartTouchTracking({element,getTool=()=> 'crosshair',canSta
   const points=new Map(),listeners=[];
   let timer=null,pending=null,active=false,gesture=null,suppressClickUntil=0,touchContextUntil=0;
   const moveTarget=element.ownerDocument?.defaultView||element;
+  const requestFrame=typeof moveTarget.requestAnimationFrame==='function'?moveTarget.requestAnimationFrame.bind(moveTarget):null;
+  const cancelFrame=typeof moveTarget.cancelAnimationFrame==='function'?moveTarget.cancelAnimationFrame.bind(moveTarget):null;
+  let previewFrame=null,previewPoint=null;
   const listen=(type,fn,options,target=element)=>{target.addEventListener(type,fn,options);listeners.push([target,type,fn,options]);};
   const stopTimer=()=>{if(timer!==null)timers.clearTimeout(timer);timer=null;pending=null;};
   const point=event=>({pointerId:event.pointerId,clientX:event.clientX,clientY:event.clientY});
   const distance=(a,b)=>Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
   const consume=event=>{event.preventDefault();event.stopImmediatePropagation();};
   function release(id){try{if(element.hasPointerCapture?.(id))element.releasePointerCapture(id);}catch{}}
-  function setActive(value){if(active===value)return;active=value;element.dataset.touchTracking=String(value);onChange(value);}
+  function cancelPreview(){if(previewFrame!==null)cancelFrame?.(previewFrame);previewFrame=null;previewPoint=null;}
+  function previewNow(current){cancelPreview();preview(current);}
+  function schedulePreview(current){
+    if(!requestFrame){preview(current);return;}
+    previewPoint=current;
+    if(previewFrame!==null)return;
+    previewFrame=requestFrame(()=>{
+      previewFrame=null;const latest=previewPoint;previewPoint=null;
+      if(active&&points.size===1&&latest&&points.has(latest.pointerId))preview(latest);
+    });
+  }
+  function setActive(value){if(active===value)return;active=value;if(!value)cancelPreview();element.dataset.touchTracking=String(value);onChange(value);}
   function cancel({clearPreview=true}={}) {
-    const captured=[...points.keys()];stopTimer();points.clear();gesture=null;touchContextUntil=0;
+    const captured=[...points.keys()];stopTimer();cancelPreview();points.clear();gesture=null;touchContextUntil=0;
     if(active){setActive(false);if(clearPreview)clear();}
     // Clear ownership before releasing capture: lostpointercapture is delivered
     // synchronously by some hosts and must not cancel the next gesture.
@@ -37,7 +51,7 @@ export function mountChartTouchTracking({element,getTool=()=> 'crosshair',canSta
       if(active){const touches=[...points.values()];setActive(false);gesture=null;clear();resumeNavigation(touches);consume(event);}
       return;
     }
-    if(active){gesture={start:current,moved:false,wasActive:true};try{element.setPointerCapture(event.pointerId);}catch{}preview(current);consume(event);return;}
+    if(active){gesture={start:current,moved:false,wasActive:true};try{element.setPointerCapture(event.pointerId);}catch{}previewNow(current);consume(event);return;}
     pending={...current};
     timer=timers.setTimeout(()=>{
       timer=null;
@@ -45,7 +59,7 @@ export function mountChartTouchTracking({element,getTool=()=> 'crosshair',canSta
       const current=points.get(pending.pointerId);if(!current)return;
       cancelNavigation();setActive(true);gesture={start:current,moved:false,wasActive:false};pending=null;
       try{element.setPointerCapture(current.pointerId);}catch{}
-      preview(current);
+      previewNow(current);
     },delay);
   }
   function move(event) {
@@ -54,7 +68,10 @@ export function mountChartTouchTracking({element,getTool=()=> 'crosshair',canSta
     if(pending&&distance(pending,current)>tolerance)stopTimer();
     if(!active||points.size!==1)return;
     if(gesture&&distance(gesture.start,current)>tolerance)gesture.moved=true;
-    preview(current);consume(event);
+    // A touch device can deliver several moves before a display frame. Keep
+    // every raw point for gesture ownership/pinch, but paint only its latest
+    // position; pointerup below still applies the exact final coordinate.
+    schedulePreview(current);consume(event);
   }
   function up(event) {
     if(event.pointerType!=='touch'||!points.has(event.pointerId))return;
@@ -62,7 +79,7 @@ export function mountChartTouchTracking({element,getTool=()=> 'crosshair',canSta
     if(!active)return;
     // Pointerup may carry a newer position than the last pointermove.
     if(gesture&&distance(gesture.start,current)>tolerance)gesture.moved=true;
-    if(event.type!=='pointercancel')preview(current);
+    if(event.type!=='pointercancel')previewNow(current);else cancelPreview();
     const exit=event.type==='pointercancel'||(gesture?.wasActive&&!gesture.moved);
     release(event.pointerId);gesture=null;suppressClickUntil=Date.now()+600;
     if(exit){setActive(false);clear();}

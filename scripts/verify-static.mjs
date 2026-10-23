@@ -75,13 +75,49 @@ assert(args.length === 0 || (args.length === 2 && args[0] === '--standalone'),
   'Usage: node scripts/verify-static.mjs [--standalone build/Bitcoin_Cycles_Comparison.html]');
 if (args.length) {
   const standalone = await readFile(path.resolve(root, args[1]), 'utf8');
-  assert(/id=["']embedded-btc-data["']/.test(standalone), 'Standalone file lacks the embedded data snapshot');
+  for (const [id, file] of [['embedded-btc-data', 'btc-daily.json'], ['embedded-ohlc-data', 'btc-ohlc.json'], ['embedded-volume-data', 'btc-volume.json']]) {
+    const embedded = standalone.match(new RegExp(`<script\\b[^>]*id=["']${id}["'][^>]*>([\\s\\S]*?)<\\/script>`, 'i'))?.[1];
+    assert.equal(embedded, (await readFile(path.join(dist, 'data', file), 'utf8')).replaceAll('<', '\\u003c'), `Standalone snapshot differs from its source: ${id}`);
+  }
   const ohlcSnapshot = standalone.match(/<script\b[^>]*id=["']embedded-ohlc-data["'][^>]*>([\s\S]*?)<\/script>/i)?.[1];
   assert(ohlcSnapshot, 'Standalone file lacks its real OHLC fallback');
   const { parseMarketSnapshot, CHART_INTERVALS } = await import('../dist/ohlc-data.js');
   const savedCandles = JSON.parse(ohlcSnapshot);
   for (const interval of CHART_INTERVALS) parseMarketSnapshot(savedCandles, interval.id);
-  assert(/data:text\/javascript;base64,/.test(standalone), 'Standalone file lacks embedded ES modules');
+  const mapText = standalone.match(/<script\b[^>]*type=["']importmap["'][^>]*>([\s\S]*?)<\/script>/i)?.[1];
+  assert(mapText, 'Standalone file lacks its flat ES module import map');
+  const { imports } = JSON.parse(mapText);
+  assert(imports && typeof imports === 'object' && !Array.isArray(imports), 'Invalid standalone import map');
+  const entry = standalone.match(/<script\b[^>]*id=["']atlas-standalone-entry["'][^>]*>([\s\S]*?)<\/script>/i)?.[1];
+  assert(/^\s*import\s+["']atlas\/app\.js["'];?\s*$/.test(entry || ''), 'Standalone entry must use its mapped app module');
+  const moduleEdges = new Map();
+  for (const [specifier, url] of Object.entries(imports)) {
+    assert(/^atlas\/(?:[\w.-]+\/)*[\w.-]+\.js$/.test(specifier), `Invalid standalone module alias: ${specifier}`);
+    assert(typeof url === 'string' && /^data:text\/javascript;base64,[A-Za-z0-9+/]*={0,2}$/.test(url), `Missing embedded module: ${specifier}`);
+    const file = path.resolve(dist, specifier.slice('atlas/'.length));
+    assert(file.startsWith(`${dist}${path.sep}`), `Standalone alias escapes dist: ${specifier}`);
+    const decoded = Buffer.from(url.slice('data:text/javascript;base64,'.length), 'base64').toString('utf8');
+    const original = await readFile(file, 'utf8');
+    // Verify module identity as well as reference closure. A swapped or stale
+    // module can have valid imports but still be the wrong published product.
+    const expected = original.replace(/\b(?:from\s*|import\s*\(\s*|import\s*)(['"])(\.\.?\/[^'"\r\n]+)\1/g, (full, quote, imported) => {
+      const target = path.resolve(path.dirname(file), imported.split(/[?#]/)[0]);
+      assert(target.startsWith(`${dist}${path.sep}`), `Standalone module escapes dist: ${specifier}`);
+      return full.replace(`${quote}${imported}${quote}`, JSON.stringify(`atlas/${path.relative(dist, target).split(path.sep).join('/')}`));
+    });
+    assert.equal(decoded, expected, `Standalone module differs from its source: ${specifier}`);
+    const edges = [...decoded.matchAll(/\b(?:from\s*|import\s*\(\s*|import\s*)(['"])([^'"\r\n]+)\1/g)].map(match => match[2]);
+    for (const dependency of edges) assert(Object.hasOwn(imports, dependency), `Unmapped standalone import: ${specifier} -> ${dependency}`);
+    moduleEdges.set(specifier, edges);
+  }
+  const reachable = new Set(), visit = specifier => {
+    assert(moduleEdges.has(specifier), `Missing standalone entry: ${specifier}`);
+    if (reachable.has(specifier)) return;
+    reachable.add(specifier);
+    for (const dependency of moduleEdges.get(specifier)) visit(dependency);
+  };
+  visit('atlas/app.js');
+  assert.equal(reachable.size, moduleEdges.size, 'Standalone contains unreachable duplicate module entries');
   assert(!/\b(?:src|href)\s*=\s*["']\.\.?\//i.test(standalone), 'Standalone file still references a local file');
   const baseStyle = standalone.match(/<style>\s*([\s\S]*?)<\/style>/i)?.[1];
   assert(baseStyle && /^:root\s*\{/.test(baseStyle),

@@ -22,7 +22,11 @@ export const VOLUME_FORECAST_DEFAULTS = Object.freeze({
 });
 
 const mean = values => values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
-const sd = values => values.length > 1 ? Math.sqrt(values.reduce((sum, value) => sum + (value - mean(values)) ** 2, 0) / (values.length - 1)) : 0;
+const sd = values => {
+  if (values.length < 2) return 0;
+  const center = mean(values);
+  return Math.sqrt(values.reduce((sum, value) => sum + (value - center) ** 2, 0) / (values.length - 1));
+};
 const median = values => { const sorted = [...values].sort((a, b) => a - b); return sorted.length ? (sorted[Math.floor((sorted.length - 1) / 2)] + sorted[Math.floor(sorted.length / 2)]) / 2 : 0; };
 const positive = value => typeof value === 'number' && Number.isFinite(value) && value > 0;
 const nonnegative = value => typeof value === 'number' && Number.isFinite(value) && value >= 0;

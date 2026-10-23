@@ -9,9 +9,9 @@ import { renderPeakView } from './peak-view.js?v=1.11.0';
 import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.11.0';
 // Changed release modules use a versioned URL so a cached v1.5 module cannot
 // leave a new long-horizon page running the old three-year workbench.
-import { initViewportWorkspace } from './viewport-workspace.js?v=1.14.0-mobile.1';
-import { initLabView } from './lab-view.js?v=1.14.0-mobile.1';
-import { initEvidenceView, showEvidenceView } from './evidence-view.js?v=1.11.0';
+import { initViewportWorkspace } from './viewport-workspace.js?v=1.14.1-audit.1';
+import { initLabView } from './lab-view.js?v=1.14.1-audit.1';
+import { initEvidenceView, showEvidenceView } from './evidence-view.js?v=1.14.1-audit.1';
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -434,6 +434,7 @@ async function refreshData({quiet=false}={}) {
 $('#refresh-button').addEventListener('click',()=>{closeExport();refreshData();});
 let dataResizeTimer;new ResizeObserver(()=>{clearTimeout(dataResizeTimer);dataResizeTimer=setTimeout(()=>{if(state.view==='data')renderData();},100);}).observe($('#data-view'));
 let resizeTimer;new ResizeObserver(()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>renderChart(),100);}).observe($('#chart-stage'));
+document.fonts?.addEventListener('loadingdone',()=>{renderChart();if(state.view==='data')renderData();});
 let researchResizeTimer;const researchObserver=new ResizeObserver(()=>{clearTimeout(researchResizeTimer);researchResizeTimer=setTimeout(()=>renderResearch(),100);});researchObserver.observe($('#forecast-chart-stage'));researchObserver.observe($('#peak-chart-stage'));
 async function init() {
   try {
