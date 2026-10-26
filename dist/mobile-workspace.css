@@ -36,7 +36,7 @@
   .atlas-plot>.workbench-market-info,.atlas-plot[data-countdown-visible=true]>.workbench-market-info{left:10px;right:10px;width:auto;max-width:calc(100% - 20px);font-size:11px;line-height:16px}
   .atlas-plot .observed-split-badge{display:none}
   .workbench-market-info #workbench-market-refresh{width:28px;height:24px;min-height:24px;padding:4px;flex:none}
-  .chart-indicator-manager{top:var(--mobile-legend-top);left:10px;width:max-content;max-width:calc(100% - var(--plot-right-gap,65px) - 12px);box-sizing:border-box;box-shadow:none;background:transparent;border:0;border-radius:0}
+  .chart-indicator-manager{top:var(--mobile-legend-top);left:10px;width:max-content;max-width:calc(100% - var(--plot-right-gap,65px) - 12px);box-sizing:border-box;box-shadow:none;background:var(--surface);border:0;border-radius:0}
   .chart-indicator-list{max-height:min(200px,28dvh,max(0px,calc(var(--plot-height,500px) - var(--mobile-legend-top) - var(--mobile-countdown-height) - 100px)));overflow:auto;overscroll-behavior:contain;padding:0 4px 0 0}
   .chart-indicator-manager .indicator-legend-toggle{width:32px;min-width:32px;height:28px;min-height:28px}
   .chart-indicator-manager .indicator-row{min-height:32px}

@@ -71,6 +71,8 @@ export async function verifyWorkspaceSurface(api) {
   }
   if(surface==='preview'){
     await until(()=>evaluate(cdp,()=>document.querySelector('#mobile-preview')?.contentDocument?.documentElement?.dataset.boot==='ready'),'preview actual app ready');
+    const previewSettled=()=>until(()=>evaluate(cdp,()=>{const doc=document.querySelector('#mobile-preview')?.contentDocument;return doc?.documentElement?.dataset.boot==='ready'&&!doc.querySelector('.atlas-plot[aria-busy="true"]')&&!doc.querySelector('.workspace-toast:not([hidden])');}),'preview settled observed chart');
+    await previewSettled();
     await inspect('header','preview-controls',{opaque:false});
     receipt.workspace.actual=await evaluate(cdp,()=>{
       const frame=document.querySelector('#mobile-preview'),doc=frame.contentDocument,main=document.querySelector('main');
@@ -91,7 +93,7 @@ export async function verifyWorkspaceSurface(api) {
     assert.ok(Math.abs(previewPan.scrollLeft-previewPan.maxLeft)<=1&&Math.abs(previewPan.scrollTop-previewPan.maxTop)<=1,'Preview must reach both scroll ends');
     assert.ok(previewEnd.frameRight<=previewEnd.clipRight+1&&previewEnd.frameBottom<=previewEnd.clipBottom+1,'Selected viewport bottom/right edge is unreachable');
     assert.ok(previewEnd.footer.includes('로그')&&previewEnd.parentWidth<=previewEnd.viewportWidth+1,'Preview footer must exist without page overflow');
-    receipt.workspace.previewPan={...previewPan,...previewEnd};
+    receipt.workspace.previewPan={...previewPan,...previewEnd,settled:true};
     await screenshot(cdp,page+'-'+width+'x'+height+'-preview-scroll-end.png',receipt);
     await evaluate(cdp,()=>{const main=document.querySelector('main');main.scrollLeft=0;main.scrollTop=0;});await settled(cdp);
     for(const mode of ['loading','error','actual']){
@@ -100,6 +102,7 @@ export async function verifyWorkspaceSurface(api) {
         const frame=document.querySelector('#mobile-preview');
         return !frame.hidden&&frame.contentDocument?.documentElement?.dataset.boot===(value==='actual'?'ready':value);
       },mode),'preview '+mode);
+      if(mode==='actual')await previewSettled();
       const state=await evaluate(cdp,value=>{
         const frame=document.querySelector('#mobile-preview'),doc=frame.contentDocument;
         const shell=doc.getElementById('atlas-boot-shell'),status=doc.getElementById('atlas-boot-status'),error=doc.getElementById('atlas-boot-error');
@@ -148,9 +151,29 @@ export async function verifyWorkspaceSurface(api) {
   await until(()=>evaluate(cdp,()=>document.documentElement?.dataset.boot==='ready'),'app boot ready');
   if(surface==='legacy'){
     await until(()=>evaluate(cdp,()=>document.querySelectorAll('#structure-chart path').length>0&&document.querySelectorAll('#structure-cycles tr').length>0),'legacy chart and real cycle rows');
-    await inspect('body','legacy-scroll-owner');
+    const readLegacySizing=()=>['structure-chart','structure-timeline'].map(id=>{
+      const svg=document.getElementById(id),box=svg.getBoundingClientRect(),view=svg.viewBox.baseVal,matrix=svg.getScreenCTM();
+      const renderedText=[...svg.querySelectorAll('text')].filter(el=>{const b=el.getBoundingClientRect(),s=getComputedStyle(el);return b.width>0&&b.height>0&&s.visibility!=='hidden'&&s.display!=='none';}).map(el=>{const m=el.getScreenCTM();return parseFloat(getComputedStyle(el).fontSize)*Math.hypot(m.a,m.b);});
+      return {id,width:box.width,height:box.height,viewWidth:view.width,viewHeight:view.height,scale:Math.hypot(matrix.a,matrix.b),minText:Math.min(...renderedText),textCount:renderedText.length};
+    });
+    const sizingReady=()=>until(async()=>{const rows=await evaluate(cdp,readLegacySizing);return rows.every(row=>row.textCount>0&&Math.abs(row.width-row.viewWidth)<=1&&Math.abs(row.scale-1)<.01);},'legacy chart redraw at allocated size');
+    await sizingReady();
     receipt.workspace.legacy=await evaluate(cdp,()=>({rows:document.querySelectorAll('#structure-cycles tr').length,paths:document.querySelectorAll('#structure-chart path').length,
       scroller:{height:document.body.clientHeight,scrollHeight:document.body.scrollHeight,overflow:getComputedStyle(document.body).overflowY}}));
+    receipt.workspace.legacy.sizing=await evaluate(cdp,readLegacySizing);
+    const samePage=await evaluate(cdp,()=>performance.timeOrigin);
+    receipt.workspace.legacy.resize=[];
+    for(const nextWidth of [width===320?1440:375,width]){
+      await cdp.send('Emulation.setDeviceMetricsOverride',{width:nextWidth,height,deviceScaleFactor:1,mobile:receipt.touch});
+      await settled(cdp);await sizingReady();
+      const sizing=await evaluate(cdp,readLegacySizing);
+      for(const row of sizing)assert.ok(row.minText>=(row.id==='structure-timeline'?10.9:9.9),'Legacy SVG text shrank after viewport resize: '+JSON.stringify(row));
+      assert.equal(await evaluate(cdp,()=>performance.timeOrigin),samePage,'Legacy resize must stay on the same document');
+      receipt.workspace.legacy.resize.push({width:nextWidth,sizing,samePage:true});
+    }
+    await evaluate(cdp,()=>{document.body.scrollTop=0;});
+    await settled(cdp);
+    await inspect('body','legacy-scroll-owner');
     const tableRows=receipt.workspace.legacy.rows;assert.ok(tableRows>0);
     assert.equal(receipt.workspace.legacy.scroller.overflow,'auto','Legacy body must own its long-document scroll');
     assert.ok(Math.abs(receipt.workspace.legacy.scroller.height-height)<=1,'Legacy scroll owner does not fill the viewport');
@@ -252,6 +275,13 @@ export async function verifyWorkspaceSurface(api) {
     if(label==='annotations-empty')assert.ok((await bounds(cdp,'.research-annotations-list')).text.includes('아직 저장한 측정이 없습니다'),'Annotation empty state missing');
     await key('Tab','Tab',9);await focused(selector);await escape(selector);
   }
+  const indicatorSurface=await evaluate(cdp,()=>{
+    const manager=document.querySelector('#chart-indicator-manager'),list=manager.querySelector('.chart-indicator-list'),b=manager.getBoundingClientRect();
+    return {background:getComputedStyle(manager).backgroundColor,listBackground:getComputedStyle(list).backgroundColor,collapsed:manager.dataset.collapsed,left:b.left,top:b.top,width:b.width,height:b.height};
+  });
+  dark(indicatorSurface.background,'indicator list owned surface');
+  assert.ok(!indicatorSurface.background.startsWith('rgba(')||indicatorSurface.background.endsWith(', 1)'),'Chart event labels must not show through the indicator surface');
+  receipt.workspace.indicatorSurface=indicatorSurface;
   await click(cdp,'#workbench-bottom-more');
   await inspect('#workbench-bottom-menu','bottom-menu');
   await key('End','End',35);await focused('#workbench-bottom-menu');

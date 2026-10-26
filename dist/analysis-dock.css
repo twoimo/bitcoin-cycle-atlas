@@ -3,8 +3,8 @@
  */
 /* Hallmark · pre-emit critique: P4 H4 E3 S5 R4 V3 · weakest: E, uneven focus and small metadata; shared states and readable neutral ink are applied across the app. */
 /* Indicator controls stay inside the chart; there is no lower analysis dock. */
-.chart-indicator-manager{position:absolute;top:var(--indicator-top,75px);left:10px;z-index:9;width:max-content;max-width:min(620px,calc(100% - 95px));color:var(--analysis-dock-ink);font-size:11px;line-height:1.4;background:transparent;border:0;border-radius:0;box-shadow:none;text-shadow:0 1px 2px var(--analysis-dock-shadow)}
-.chart-indicator-manager:has(:focus-visible){z-index:13;background:var(--analysis-dock-surface);box-shadow:0 0 0 4px var(--analysis-dock-shadow-2)}
+.chart-indicator-manager{position:absolute;top:var(--indicator-top,75px);left:10px;z-index:9;width:max-content;max-width:min(620px,calc(100% - 95px));color:var(--analysis-dock-ink);font-size:11px;line-height:1.4;background:var(--surface);border:0;border-radius:0;box-shadow:none;text-shadow:none}
+.chart-indicator-manager:has(:focus-visible){z-index:13;background:var(--surface);box-shadow:0 0 0 4px var(--analysis-dock-shadow-2)}
 .chart-indicator-manager button,.analysis-window-heading button{display:grid;place-items:center;width:24px;height:24px;min-height:0;flex:none;margin:0;padding:4px;border:0;border-radius:3px;color:var(--analysis-dock-ink-2);background:transparent;cursor:pointer}
 .chart-indicator-manager button:hover,.analysis-window-heading button:hover{background:var(--analysis-dock-surface-2);color:var(--analysis-dock-ink-3)}
 .chart-indicator-manager svg,.analysis-window-heading button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
