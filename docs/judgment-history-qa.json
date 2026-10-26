@@ -1,0 +1,61 @@
+{
+  "status": "local-candidate-verified-external-review-incomplete",
+  "base": "53f587bf04f45ea7b3caa639ea88268fa7dca918",
+  "tests": 1060,
+  "nativeOracle": {
+    "queryDates": 16760,
+    "assets": 18,
+    "assetDatePairs": 301680,
+    "startDate": "1980-12-12",
+    "endDate": "2026-10-31",
+    "includesStaleBoundaryScenarios": true
+  },
+  "originalCsv": {
+    "status": "PASS",
+    "base": "53f587bf04f45ea7b3caa639ea88268fa7dca918",
+    "asOfDate": "2026-10-26",
+    "bytes": 16454,
+    "sha256": "78ff52f22e910a34209411dd1f2bec3effa72557057ad5b93deb5691ad442462",
+    "rows": 18,
+    "fields": 34
+  },
+  "viewports": [
+    [
+      1440,
+      1000
+    ],
+    [
+      390,
+      844
+    ],
+    [
+      320,
+      700
+    ],
+    [
+      700,
+      600
+    ],
+    [
+      620,
+      420
+    ],
+    [
+      800,
+      420
+    ]
+  ],
+  "surfaces": [
+    "HTTP",
+    "standalone file"
+  ],
+  "savedRecords": 1,
+  "firstCapturedAt": "2026-10-26T04:42:47.794Z",
+  "standaloneModules": 99,
+  "externalStages": {
+    "thesis": "NOT_RUN",
+    "adversarial": "NOT_RUN",
+    "reverse": "NOT_RUN"
+  },
+  "deployed": false
+}

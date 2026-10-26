@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { standaloneModuleMap } from './standalone-modules.mjs';
+import { validateSavedJudgmentIndex, validateSavedJudgmentRecord, judgmentRecordSha256 } from '../dist/asset-judgment-records.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = resolve(root, 'dist');
@@ -24,11 +25,21 @@ const ohlc = (await readFile(resolve(dist, 'data/btc-ohlc.json'), 'utf8')).repla
 const volume = (await readFile(resolve(dist, 'data/btc-volume.json'), 'utf8')).replaceAll('<', '\\u003c');
 const eth = (await readFile(resolve(dist, 'data/eth-ohlc.json'), 'utf8')).replaceAll('<', '\\u003c');
 const assetComparison = (await readFile(resolve(dist, 'data/asset-comparison.json'), 'utf8')).replaceAll('<', '\\u003c');
+const snapshotIndexRaw = await readFile(resolve(dist, 'data/judgment-snapshots/index.json'), 'utf8');
+const snapshotIndex = validateSavedJudgmentIndex(JSON.parse(snapshotIndexRaw));
+const snapshotTexts = {};
+for (const entry of snapshotIndex.records) {
+  const raw = await readFile(resolve(dist, 'data/judgment-snapshots', entry.file), 'utf8');
+  if (await judgmentRecordSha256(raw) !== entry.sha256) throw new Error('Saved snapshot hash mismatch');
+  validateSavedJudgmentRecord(JSON.parse(raw), { entry }); snapshotTexts[entry.file] = raw;
+}
+const snapshotIndexJson = snapshotIndexRaw.replaceAll('<', '\\u003c');
+const snapshotRecordsJson = JSON.stringify(snapshotTexts).replaceAll('<', '\\u003c');
 const equities=await Promise.all(['mstr','bmnr'].map(async symbol=>`<script id="embedded-${symbol}-data" type="application/json">${(await readFile(resolve(dist, `data/${symbol}-ohlc.json`),'utf8')).replaceAll('<','\\u003c')}</script>`));
 const modules = await standaloneModuleMap(dist);
 const importMap = JSON.stringify({imports:modules.imports}).replaceAll('<', '\\u003c');
 html = html.replace(/<script type="module" src="\.\/site-entry\.js(?:\?[^"\s]*)?"><\/script>/,
-  `<script id="embedded-btc-data" type="application/json">${data}</script>\n  <script id="embedded-ohlc-data" type="application/json">${ohlc}</script>\n  <script id="embedded-volume-data" type="application/json">${volume}</script>\n  <script id="embedded-eth-data" type="application/json">${eth}</script>\n  ${equities.join('\n')}\n  <script id="embedded-asset-comparison-data" type="application/json">${assetComparison}</script>\n  <script type="importmap">${importMap}</script>\n  <script type="module">import ${JSON.stringify(modules.entry)};</script>`);
+  `<script id="embedded-btc-data" type="application/json">${data}</script>\n  <script id="embedded-ohlc-data" type="application/json">${ohlc}</script>\n  <script id="embedded-volume-data" type="application/json">${volume}</script>\n  <script id="embedded-eth-data" type="application/json">${eth}</script>\n  ${equities.join('\n')}\n  <script id="embedded-asset-comparison-data" type="application/json">${assetComparison}</script>\n  <script id="embedded-judgment-snapshot-index" type="application/json">${snapshotIndexJson}</script>\n  <script id="embedded-judgment-snapshots" type="application/json">${snapshotRecordsJson}</script>\n  <script type="importmap">${importMap}</script>\n  <script type="module">import ${JSON.stringify(modules.entry)};</script>`);
 if (/\b(?:src|href)=["']\.\//.test(html)) throw new Error('Unresolved local resource');
 await mkdir(dirname(output), { recursive: true });
 await writeFile(output, html);

@@ -397,3 +397,15 @@ test('narrow explanation metrics stack as full-width label/value rows instead of
   assert.match(narrow, /asset-reason-metrics > div \{ display: flex;[^}]*justify-content: space-between/);
   assert.match(narrow, /asset-reason-metrics dd \{ margin: 0; font-size: 16px; white-space: nowrap/);
 });
+
+
+test('precise compact headings distinguish year count and year-start-to-extreme means', () => {
+  const {view,ui}=setup();
+  assert.match(ui.root.innerHTML, /분석<br>연도 수/);
+  assert.match(ui.root.innerHTML, /연초 → 최고 종가<\/small><span>평균 상승률/);
+  assert.match(ui.root.innerHTML, /연초 → 최저 종가<\/small><span>평균 하락률/);
+  assert.match(ui.root.innerHTML, /연초 종가 대비 연중 최저 종가 하락률의 과거 연도 평균 · MDD 아님/);
+  assert.match(ui.root.innerHTML, /id="asset-history-open"[^>]*disabled/);
+  assert.match(ui.root.innerHTML, /aria-label="자산군별 판단 이력"/);
+  view.destroy();
+});
