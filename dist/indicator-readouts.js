@@ -1,4 +1,4 @@
-import {formatBtcVolume} from './chart-overlays.js?v=1.13.0-research.1';
+import {formatBtcVolume} from './chart-overlays.js?v=1.29.0';
 
 const formatters=new Map();
 const number=(value,digits=2)=>{if(!formatters.has(digits))formatters.set(digits,new Intl.NumberFormat('en-US',{maximumFractionDigits:digits}));return formatters.get(digits).format(value);};

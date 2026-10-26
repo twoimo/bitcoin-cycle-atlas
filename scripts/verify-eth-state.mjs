@@ -5,6 +5,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { verificationProcessResult } from './verification-process.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const baselineCommit = '64c8207cb044d8990289c5a7d39972e21b74c240';
@@ -28,13 +29,12 @@ async function prepareTool() {
   assert.equal(hash(bytes), jarSha256, 'Use the pinned TLC 1.7.4 jar');
 }
 
-function run(command, args, env = {}) {
+function run(command, args, env = {}, expectedStatus = 0) {
   const result = spawnSync(command, args, {
     cwd: root, env: { ...process.env, ...env }, encoding: 'utf8',
     timeout: 60000, maxBuffer: 16 * 1024 * 1024,
   });
-  if (result.error) throw result.error;
-  return { status: result.status, output: (result.stdout || '') + (result.stderr || '') };
+  return verificationProcessResult(result, { command, expectedStatus });
 }
 
 async function models(work) {
@@ -63,9 +63,9 @@ async function models(work) {
       const file = path.join(work, 'configs', id.replaceAll('/', '-') + '.cfg');
       await writeFile(file, invariant ? reviewed.replace(/^INVARIANTS .*$/m, 'INVARIANT ' + invariant) : reviewed);
       const expectedFailure = variant.id === 'baseline' ? failuresBeforeFix.has(invariant) : variant.id !== 'current';
-      const result = run(process.env.JAVA || 'java', ['-XX:+UseParallelGC', '-Xmx1g', '-cp', jar, 'tlc2.TLC', '-workers', '1', '-seed', '1', '-fp', '0', '-metadir', path.join(work, 'states', id.replaceAll('/', '-')), '-config', file, source]);
+      const result = run(process.env.JAVA || 'java', ['-XX:+UseParallelGC', '-Xmx1g', '-cp', jar, 'tlc2.TLC', '-workers', '1', '-seed', '1', '-fp', '0', '-metadir', path.join(work, 'states', id.replaceAll('/', '-')), '-config', file, source], {}, expectedFailure ? 12 : 0);
       if (expectedFailure) {
-        assert.notEqual(result.status, 0, id + ' must expose its invariant violation');
+        assert.equal(result.status, 12, id + ' must finish with the invariant-violation exit status');
         assert.ok(result.output.includes('Invariant ' + invariant + ' is violated'), result.output);
       } else {
         assert.equal(result.status, 0, result.output);
@@ -75,6 +75,7 @@ async function models(work) {
       assert.ok(counts, 'TLC did not finish with state counts: ' + id);
       results[id] = {
         status: expectedFailure ? 'expected invariant violation' : 'pass', invariant,
+        exitStatus: result.status,
         generated: Number(counts[1].replaceAll(',', '')), distinct: Number(counts[2].replaceAll(',', '')),
         remaining: Number(counts[3].replaceAll(',', '')),
       };
@@ -98,7 +99,7 @@ function assertTestRun(result, { mutation = false } = {}) {
   assert.equal(counts.pass + counts.fail, 17, result.output);
   assert.match(result.output, /^1\.\.17$/m, 'The complete 17-case TAP plan must run');
   if (mutation) {
-    assert.notEqual(result.status, 0, result.output);
+    assert.equal(result.status, 1, result.output);
     assert.ok(counts.fail > 0, 'A deliberate mutation must fail an executed test');
   } else {
     assert.equal(result.status, 0, result.output);
@@ -137,7 +138,7 @@ async function implementation(work) {
     },
     {
       id: 'lost-daily-navigation',
-      from: 'if(navigationToken===navigationRevision)state.range=null;\n        else if(state.range)state.range=ethHistoryRange(currentSeries(),state.span,state.range);',
+      from: 'if(navigationToken===navigationRevision)state.range=null;\n        else if(state.range)state.range=ethHistoryRange(currentSeries(),state.span,state.range,visibleForecast()?.displayEnd);',
       to: 'state.range=null;',
       failure: /a live refresh must preserve a newer user date range/,
     },
@@ -159,16 +160,17 @@ async function implementation(work) {
       failure: /the information button must not call an undefined HTML escaper/,
     },
   ];
-  const mutations = {};
+  const mutations = {}, mutationExitStatuses = {};
   try {
     for (const change of changes) {
       assert.equal(source.split(change.from).length, 2, 'Review model/code correspondence and mutation selector: ' + change.id);
       await writeFile(temporary, source.replace(change.from, change.to));
-      const result = run(process.execPath, testArgs, { ETH_VIEW_SOURCE: temporary });
-      assert.notEqual(result.status, 0, change.id + ' must fail its real-code regression');
+      const result = run(process.execPath, testArgs, { ETH_VIEW_SOURCE: temporary }, 1);
+      assert.equal(result.status, 1, change.id + ' must finish with an assertion failure');
       assert.match(result.output, change.failure, 'Mutation failed for an unrelated reason: ' + change.id + '\n' + result.output);
       assertTestRun(result, { mutation: true });
       mutations[change.id] = 'expected assertion failure';
+      mutationExitStatuses[change.id] = result.status;
     }
   } finally {
     // Never alter the working runtime; restore and exercise the scratch copy too.
@@ -176,7 +178,7 @@ async function implementation(work) {
   }
   const restored = run(process.execPath, testArgs, { ETH_VIEW_SOURCE: temporary });
   const restoredCounts = assertTestRun(restored);
-  return { tests: 17, original: 'pass', restored: 'pass', originalCounts, restoredCounts, sourceSha256: hash(source), mutations };
+  return { tests: 17, original: 'pass', restored: 'pass', originalCounts, restoredCounts, sourceSha256: hash(source), mutations, mutationExitStatuses };
 }
 
 await prepareTool();

@@ -1,5 +1,5 @@
-import {INDICATORS} from './indicator-state.js?v=1.14.1-touch.1';
-import {INDICATOR_SETTINGS,INDICATOR_SETTING_INTERVALS,indicatorSettings} from './indicator-settings.js?v=1.13.0-research.1';
+import {INDICATORS} from './indicator-state.js?v=1.29.0';
+import {INDICATOR_SETTINGS,INDICATOR_SETTING_INTERVALS,indicatorSettings} from './indicator-settings.js?v=1.29.0';
 
 /** An editor of only settings that the shipped graph actually consumes. */
 export function mountIndicatorSettingsDialog({doc,getState,command}){

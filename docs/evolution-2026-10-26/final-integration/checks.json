@@ -1,0 +1,86 @@
+{
+  "checkedAt": "2026-10-26T07:20:59.598143+00:00",
+  "basisCommit": "fab0e75e1b32d628863cd82ebbff646b627be2e7",
+  "scope": "Final product tree after PR37 and observation refresh, with uncommitted comparison CSS and verification changes identified by SHA-256. Later documentation commits do not alter these tested product bytes.",
+  "checks": [
+    {
+      "command": "npm test",
+      "exitStatus": 0,
+      "tests": 1189,
+      "passed": 1189,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "output": "tests.log"
+    },
+    {
+      "command": "npm run verify:numerics",
+      "exitStatus": 0,
+      "numericAssertions": 318010,
+      "output": "numerics.log"
+    },
+    {
+      "command": "npm run verify:formal",
+      "exitStatus": 0,
+      "output": "formal.log"
+    },
+    {
+      "command": "npm run verify:treasury-paths",
+      "exitStatus": 0,
+      "dailyStates": 53016,
+      "output": "treasury.log"
+    },
+    {
+      "command": "npm run verify:forecast",
+      "exitStatus": 0,
+      "records": 5,
+      "pendingTargets": 15,
+      "scoredTargets": 0
+    },
+    {
+      "command": "npm run verify:research",
+      "exitStatus": 0,
+      "articles": 490
+    },
+    {
+      "command": "npm run verify:eth-events",
+      "exitStatus": 0,
+      "events": 149
+    },
+    {
+      "command": "npm run verify:cycle",
+      "exitStatus": 0
+    },
+    {
+      "command": "npm run verify:performance",
+      "exitStatus": 0,
+      "svgElements": 100,
+      "budget": 120,
+      "scope": "Structural complexity gate, not new timing measurement"
+    },
+    {
+      "command": "npm run verify:static",
+      "exitStatus": 0,
+      "files": 676,
+      "checkedReferences": 315
+    }
+  ],
+  "sourceSha256": {
+    "dist/daily-data.css": "c5ebd8e2eb7a104bb9d6f38117c34cbddc1e4f734a6dc2396b3a96f1cdbdea9e",
+    "dist/daily-data-view.js": "3e4bdd6dd76445b0d6cc0c65c355965691c6b0541f4978e5d65e999c09f28170",
+    "dist/forecast-journal.js": "9ad9a330825a66b3548e8cca443dda1ba13ba2fa8223a43d701ffe0aeb74132c",
+    "dist/forecast-records.js": "c79893f81c6bdff97685e2c384a3d1facc6eec10effdb09346c63749a36ca308",
+    "dist/treasury-liquidity.js": "b989adb0205ad969f3c87ccfdf71134d5448a38ebe47ed49ac1a63d5119cbd5d",
+    "dist/treasury-instruments.js": "784b98684b5ffe6c8bb747b1bb6eac6cd658221a3cfa29e5c64c11b6711b102f",
+    "scripts/audit-interface.mjs": "4559f768da292435500641201df1238bc6fa61f1b798e8fccb6ef9056dcc6fdf",
+    "tests/daily-data-view.test.mjs": "a4779c0ab9a0dce26c04136766184877de53c900a7a5caf869ada7ac4b417b93",
+    "scripts/verification-process.mjs": "7e6508b78184e70755df5d9c923ecceefcdcf9921e326fa7b92a431c9b7988be"
+  },
+  "logSha256": {
+    "formal.log": "fdc88d5e5494a046d2bd54f118e915f30b8b7ec0b2a14eb58022240886fb4e5a",
+    "numerics.log": "6bc3d452e0f8dd9e74e4165c8f19974ec1ad5a361c50a05bbd5807ae49ef3f43",
+    "tests.log": "a4871a61a574650ba5f6b88c8316b07495160bb4cf868c5b22dc16f5756defbb",
+    "treasury.log": "5f260160c4a69d14459183c4c9d03c45395ef0045c1ef7626539141de0c8fbff"
+  }
+}

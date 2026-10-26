@@ -42,6 +42,8 @@ jobs:
           NODE
       - name: Test release source
         run: npm test
+      - name: Verify preserved forecast identities and replay
+        run: npm run verify:forecast
       - name: Verify research catalog and preserved Markdown
         run: npm run verify:research
       - name: Independently reconcile daily treasury paths
@@ -50,6 +52,29 @@ jobs:
         run: npm run verify:numerics
       - name: Verify bounded request ownership and negative controls
         run: npm run verify:formal
+      - name: Recover a previously preserved release publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          node --input-type=module <<'NODE'
+          import {execFileSync,spawnSync} from 'node:child_process';
+          import {mkdtemp,appendFile} from 'node:fs/promises';
+          import {join} from 'node:path';
+          const repository=process.env.GITHUB_REPOSITORY,tag=process.env.RELEASE_TAG;
+          const result=spawnSync('gh',['api',`repos/${repository}/releases/tags/${tag}`],{encoding:'utf8'});
+          if(result.status!==0){
+            if(!/HTTP 404/.test(result.stderr||''))throw new Error('Could not determine whether this release already exists');
+            console.log('No existing release; a committed publication will be prepared.');
+          }else{
+            const release=JSON.parse(result.stdout),name='PUBLICATION_MANIFEST.json';
+            if(release.assets.some(asset=>asset.name===name)){
+              const directory=await mkdtemp(join(process.env.RUNNER_TEMP,'atlas-release-publication-'));
+              execFileSync('gh',['release','download',tag,'--repo',repository,'--pattern',name,'--dir',directory],{stdio:'inherit'});
+              await appendFile(process.env.GITHUB_ENV,`ATLAS_RELEASE_MANIFEST=${join(directory,name)}\n`);
+            }else if(release.assets.length)throw new Error('Existing release assets lack their preserved publication; refusing to replace immutable assets');
+          }
+          NODE
       - name: Verify and package release assets
         env:
           RELEASE_TAG: ${{ steps.version.outputs.tag }}
@@ -81,19 +106,18 @@ jobs:
             gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" -f "ref=refs/tags/$RELEASE_TAG" -f "sha=$GITHUB_SHA" >/dev/null
           fi
           mapfile -t assets < release/ASSETS.txt
-          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            # A rerun never creates a second release. Identical assets are
-            # skipped; missing assets are uploaded. Existing differing assets
-            # fail clearly instead of deleting published or immutable assets.
-            check_dir="$(mktemp -d)"
-            for asset in "${assets[@]}"; do
-              name="$(basename "$asset")"
-              if gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --pattern "$name" --dir "$check_dir" 2>/dev/null; then
-                cmp "$asset" "$check_dir/$name" || { echo "Existing asset differs: $name. Publish a new tag." >&2; exit 1; }
-              else
-                gh release upload "$RELEASE_TAG" "$asset" --repo "$GITHUB_REPOSITORY"
-              fi
-            done
-          else
-            gh release create "$RELEASE_TAG" "${assets[@]}" --repo "$GITHUB_REPOSITORY" --verify-tag --title "$RELEASE_TAG" --notes-file release/RELEASE_NOTES.md
+          if ! gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --verify-tag --title "$RELEASE_TAG" --notes-file release/RELEASE_NOTES.md
           fi
+          # Upload in list order: the preserved publication is first. An
+          # interrupted upload can reuse it and reproduce all remaining assets.
+          # Never overwrite an existing asset with different bytes.
+          check_dir="$(mktemp -d)"
+          for asset in "${assets[@]}"; do
+            name="$(basename "$asset")"
+            if gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --pattern "$name" --dir "$check_dir" 2>/dev/null; then
+              cmp "$asset" "$check_dir/$name" || { echo "Existing asset differs: $name. Publish a new tag." >&2; exit 1; }
+            else
+              gh release upload "$RELEASE_TAG" "$asset" --repo "$GITHUB_REPOSITORY"
+            fi
+          done

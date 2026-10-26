@@ -57,7 +57,9 @@ BTC 엔진의 [장기 근거 입력](../dist/long-horizon-evidence.js), 초기 �
 
 <a id="bmnr"></a>
 
-## 3. BMNR: ETH의 조건 기준선과 과거 수익률 블록
+## 3. BMNR·ETHUSD: ETH의 조건 기준선과 과거 수익률 블록
+
+v1.29.0에서 ETH 입력 검증은 [asset-daily-observations.js](../dist/asset-daily-observations.js), ETH 경로 생성은 [ethereum-forecast.js](../dist/ethereum-forecast.js)로 분리했다. 계산 규칙은 유지하며 BMNR와 standalone ETH가 같은 기준일·seed에서 동일한 일별 경로를 사용한다. ETH 모듈 그래프에는 BTC 장기 예측 엔진이 들어오지 않는다. ETH 화면은 일·주 관측 차트 위에 미래 점선만 표시하며 `crypto-conditional-daily`는 주식의 평일 모의 경로봉을 생성하지 않는다. 2030년 표식은 기준선 조건이고 실제 미래 사건·고저점 예측이 아니다.
 
 ### 관측 체제와 최소 자료
 

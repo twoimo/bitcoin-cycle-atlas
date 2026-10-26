@@ -2,6 +2,10 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { drawIntradayChart } from '../dist/intraday-chart.js';
 import { CHART_INTERVALS } from '../dist/ohlc-data.js';
+import {readFile} from 'node:fs/promises';
+import {parseEthArchive} from '../dist/eth-market-data.js';
+import {buildEthereumForecasts} from '../dist/ethereum-forecast.js';
+import {ethHistoryRange} from '../dist/eth-view-state.js';
 
 class SvgNode {
   constructor(){this.attrs=new Map();this.nodes=new Map();this.dataset={};this.textContent='';}
@@ -43,6 +47,28 @@ test('ETH line and candle views identify the same observed OHLC across every sup
     assert.ok(inspected.fields.some(field=>field.label==='거래량 · ETH'));
     assert.ok(inspected.fields.some(field=>field.label==='출처'&&field.value==='Coinbase Exchange · ETH-USD'));
     assert.doesNotMatch(controller.getSelection().copyText,/BTC|조건부|예측/);
+  }
+});
+
+test('current ETH conditional paths preserve real OHLC and render future prices as lines at desktop and mobile widths',async()=>{
+  const archive=JSON.parse(await readFile(new URL('../dist/data/eth-ohlc.json',import.meta.url),'utf8'));
+  const daily=parseEthArchive(archive),asOf=daily.lastDate.slice(0,10);
+  const forecast=buildEthereumForecasts({ethHistory:archive,asOf}).forecasts.base;
+  for(const interval of ['daily','weekly'])for(const width of [320,768,1440]){
+    const actual=parseEthArchive(archive,interval),original=structuredClone(actual.candles),svg=svgFixture(width,600);
+    let hovered;
+    const range=ethHistoryRange(actual,'4y',null,forecast.displayEnd);
+    const controller=drawIntradayChart({svg,series:actual,range,forecast,chartType:'candles',showVolume:false,onHover:value=>{hovered=value;}});
+    const selected=original.at(-1);controller.selectDate(selected.date);
+    assert.equal(hovered.kind,'observed');assert.equal(hovered.completed,true);
+    for(const key of ['time','open','high','low','close','volume'])assert.equal(hovered[key],selected[key]);
+    controller.selectDate(`${forecast.path[5].date}T00:00:00Z`);
+    assert.equal(hovered.kind,'forecast');assert.equal(hovered.completed,false);
+    assert.equal(hovered.price,forecast.path[5].price);
+    assert.equal(svg.dataset.forecastCandleCount,'0');
+    assert.match(svg.innerHTML,/equity-forecast-line/);
+    assert.doesNotMatch(svg.innerHTML,/class="equity-forecast-candle"|NaN|Infinity/);
+    assert.deepEqual(actual.candles,original);
   }
 });
 

@@ -11,6 +11,7 @@ const root = resolve(process.argv[2] || resolve(dirname(fileURLToPath(import.met
 const output = resolve(process.argv[3] || resolve(root, 'build/interface-audit'));
 const baseline = process.argv.includes('--baseline');
 const standalone = process.argv.includes('--standalone');
+const comparisonTheme = process.argv.includes('--comparison-theme');
 const tabletCases = [
   {name:'btc',query:''},
   {name:'data',query:'?page=data',data:true},
@@ -36,7 +37,13 @@ const origin = `http://127.0.0.1:${server.address().port}`;
 await mkdir(output, {recursive:true});
 let browser;
 const results = [];
-const cases = baseline ? [{name:'before-font-failure',query:'',width:1440,height:900}] : standalone ? [
+const cases = baseline ? [{name:'before-font-failure',query:'',width:1440,height:900}] : comparisonTheme ? [
+  {name:'comparison-phone320',width:320,height:740,touch:true},
+  {name:'comparison-phone390',width:390,height:844,touch:true},
+  {name:'comparison-tablet768',width:768,height:1024,touch:true},
+  {name:'comparison-tablet1024',width:1024,height:768,touch:true},
+  {name:'comparison-desktop1440',width:1440,height:900},
+].map(test=>({...test,data:true,query:'?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data'})) : standalone ? [
   {name:'standalone-btc-desktop',query:'',width:1440,height:900},
   {name:'standalone-data-phone',query:'?page=data',width:390,height:844,data:true,touch:true},
   {name:'standalone-btc-tablet',query:'',width:768,height:1024,touch:true},
@@ -99,10 +106,32 @@ try {
       assert(state.table.headerHeight <= 64, `${test.name} compact single-row header`);
       assert.equal(state.table.contextHidden,true);
       assert.equal(state.table.footerPresent,false,'Preserve the latest footer-removal change');
+      if(comparisonTheme) {
+        state.table.toolbar = await page.evaluate(() => {
+          const heading=document.querySelector('.daily-heading').getBoundingClientRect();
+          const controls=[...document.querySelectorAll('.daily-heading .daily-back, .daily-heading h1, .daily-heading .daily-action')].map(node=>{
+            const rect=node.getBoundingClientRect();
+            return {id:node.id||node.className||node.tagName,left:rect.left,right:rect.right,top:rect.top,bottom:rect.bottom,width:rect.width,height:rect.height,hidden:getComputedStyle(node).display==='none'};
+          });
+          const panel=document.querySelector('#asset-table-scroll');
+          return {top:heading.top,bottom:heading.bottom,controls,rowHeight:document.querySelector('#data-body tr[data-asset-symbol]').getBoundingClientRect().height,
+            panelHeight:panel.clientHeight,contentHeight:panel.scrollHeight,documentWidth:document.documentElement.scrollWidth,documentHeight:document.documentElement.scrollHeight};
+        });
+        const toolbar=state.table.toolbar;
+        assert.equal(toolbar.controls.length,6,`${test.name} title, return control and four actions`);
+        for(const control of toolbar.controls) {
+          assert(!control.hidden&&control.width>0&&control.height>0,`${test.name} visible ${control.id}`);
+          assert(control.left>=0&&control.right<=test.width+1,`${test.name} ${control.id} fits viewport width`);
+          assert(control.top>=toolbar.top&&control.bottom<=toolbar.bottom,`${test.name} ${control.id} stays in the heading row`);
+        }
+        for(let i=1;i<toolbar.controls.length;i++)assert(toolbar.controls[i-1].right<=toolbar.controls[i].left+0.5,`${test.name} adjacent heading elements must not overlap`);
+        assert(toolbar.documentWidth<=test.width+1&&toolbar.documentHeight<=test.height+1,`${test.name} table scrolling stays inside the viewport`);
+      }
       await page.locator('#daily-method-open').click();
       assert(await page.locator('#daily-method-dialog').evaluate(dialog=>dialog.open));
       state.dialogBackground = await page.locator('#daily-method-dialog').evaluate(dialog=>getComputedStyle(dialog).backgroundColor);
       assert(!/^rgb\(2[0-5]\d, 2[0-5]\d, 2[0-5]\d\)$/.test(state.dialogBackground));
+      if(comparisonTheme&&[320,1440].includes(test.width))await page.screenshot({path:resolve(output,`${test.name}-reading-method.png`)});
       await page.locator('#daily-method-close').click();
       if(await page.locator('#asset-scroll-end').isVisible())await page.locator('#asset-scroll-end').click();
       await page.locator('tr[data-asset-symbol="BTC"] .asset-judgment').click();
@@ -133,7 +162,48 @@ try {
         assert(geometry.topmost,`${test.name} ${side} pinned identity heading must cover scrolling headings`);
         state.table.pinnedHeading.push({side,...geometry});
       }
+      if(comparisonTheme)await page.screenshot({path:resolve(output,`${test.name}-table-end.png`)});
       await page.locator('#asset-table-scroll').evaluate(panel=>panel.scrollLeft=0);
+      if(comparisonTheme) {
+        const topBefore=await page.locator('.asset-mobile-name-header').evaluate(node=>node.getBoundingClientRect().top);
+        await page.locator('#asset-table-scroll').evaluate(panel=>panel.scrollTop=panel.scrollHeight);
+        await page.evaluate(()=>new Promise(done=>requestAnimationFrame(done)));
+        state.table.verticalScroll=await page.locator('#asset-table-scroll').evaluate(panel=>({scrollTop:panel.scrollTop,headerTop:document.querySelector('.asset-mobile-name-header').getBoundingClientRect().top}));
+        assert(Math.abs(state.table.verticalScroll.headerTop-topBefore)<=1,`${test.name} column heading stays pinned during vertical scrolling`);
+        await page.locator('#asset-table-scroll').evaluate(panel=>panel.scrollTop=0);
+        await page.locator('#asset-history-open').click();
+        await page.waitForFunction(()=>document.querySelector('#asset-history-dialog')?.open&&document.querySelectorAll('#history-body [data-history-asset]').length===18,undefined,{timeout:60000});
+        const historySymbols=await page.locator('#history-body [data-history-asset]').evaluateAll(nodes=>nodes.map(node=>node.dataset.historyAsset));
+        assert.equal(historySymbols.length,18);assert.equal(historySymbols[0],'BTC');
+        const dialog=await page.locator('#asset-history-dialog').evaluate(node=>{
+          const rect=node.getBoundingClientRect();
+          return {left:rect.left,right:rect.right,top:rect.top,bottom:rect.bottom,width:rect.width,height:rect.height,clientWidth:node.clientWidth,scrollWidth:node.scrollWidth,background:getComputedStyle(node).backgroundColor};
+        });
+        assert(dialog.left>=0&&dialog.right<=test.width+1&&dialog.top>=0&&dialog.bottom<=test.height+1,`${test.name} history dialog fits viewport`);
+        assert(dialog.scrollWidth<=dialog.clientWidth+1,`${test.name} history dialog has no horizontal overflow`);
+        assert(!/^rgb\(2[0-5]\d, 2[0-5]\d, 2[0-5]\d\)$/.test(dialog.background),`${test.name} history keeps the dark theme`);
+        const initialDate=await page.locator('#history-date').inputValue();
+        const previousDate=new Date(Date.parse(initialDate+'T00:00:00Z')-86400000).toISOString().slice(0,10);
+        await page.locator('#history-prev').click();
+        await page.waitForFunction(date=>document.querySelector('#history-date').value===date,previousDate);
+        assert.equal(await page.locator('.asset-history-board-head > span').last().innerText(),previousDate);
+        await page.locator('#asset-history-dialog').evaluate(node=>node.scrollTop=0);
+        await page.screenshot({path:resolve(output,`${test.name}-history-reconstructed.png`)});
+        await page.locator('[data-history-mode="saved"]').click();
+        await page.waitForFunction(()=>document.querySelectorAll('.asset-history-saved-rows > li').length===18,undefined,{timeout:60000});
+        assert.equal(await page.locator('[data-history-mode="saved"]').getAttribute('aria-pressed'),'true');
+        assert.match(await page.locator('#history-disclosure').innerText(),/실제로 저장한 계산 결과/);
+        const savedCount=await page.locator('.asset-history-saved-rows > li').count();
+        const savedOverflow=await page.locator('#asset-history-dialog').evaluate(node=>node.scrollWidth-node.clientWidth);
+        assert(savedOverflow<=1,`${test.name} saved history has no horizontal overflow`);
+        await page.locator('#asset-history-dialog').evaluate(node=>node.scrollTop=0);
+        await page.screenshot({path:resolve(output,`${test.name}-history-saved.png`)});
+        await page.locator('#asset-history-close').click();
+        await page.waitForFunction(()=>!document.querySelector('#asset-history-dialog').open&&document.activeElement?.id==='asset-history-open');
+        const returnedSymbols=await page.locator('#data-body tr[data-asset-symbol]').evaluateAll(nodes=>nodes.map(node=>node.dataset.assetSymbol));
+        assert.deepEqual(returnedSymbols,state.table.symbols,`${test.name} closing history preserves all comparison rows`);
+        state.history={symbols:historySymbols,dialog,initialDate,previousDate,savedCount,savedOverflow,returnedFocus:await page.evaluate(()=>document.activeElement.id)};
+      }
     }
     if(test.reader) {
       await page.locator('[data-reader="guide"]').first().click();
@@ -164,16 +234,18 @@ try {
       state.touchReplay = 'native Chromium hold, 12 moves, release';
       assert.deepEqual(errors,[]);
     }
+    assert.deepEqual(errors, [], `${test.name} uncaught browser errors after interactions`);
+    assert.deepEqual(missing, [], `${test.name} missing local resources after interactions`);
     await page.screenshot({path:resolve(output,`${test.name}.png`)});
     results.push({name:test.name,...state,blockedHosts:[...new Set(blocked)],pageErrors:errors,missingResources:missing});
     await context.close();
   }
-  const sourceFiles = ['dist/index.html','dist/styles.css','dist/daily-data.css','dist/daily-data-view.js','dist/viewport-workspace.js','dist/chart-touch-tracking.js','dist/analysis-dock.js','dist/market-structure.js'];
+  const sourceFiles = ['dist/index.html','dist/styles.css','dist/daily-data.css','dist/daily-data-view.js','dist/viewport-workspace.js','dist/chart-touch-tracking.js','dist/analysis-dock.js','dist/market-structure.js','scripts/audit-interface.mjs','tests/daily-data-view.test.mjs'];
   const hashes = Object.fromEntries(await Promise.all(sourceFiles.map(async file=>[file,createHash('sha256').update(await readFile(resolve(root,file))).digest('hex')])));
   if(standalone)hashes['build/Bitcoin_Cycles_Comparison.html']=createHash('sha256').update(await readFile(resolve(root,'build/Bitcoin_Cycles_Comparison.html'))).digest('hex');
-  const receipt={browser:await browser.version(),baseline,standalone,policy:'External HTTP requests aborted, including market APIs. In font-load-success only, the optional font stylesheet receives a successful empty CSS response. Korean glyphs use a locally installed official Noto Sans KR fallback. Source snapshots provide deterministic market data.',hashes,cases:results};
+  const receipt={browser:await browser.version(),baseline,standalone,comparisonTheme,policy:'External HTTP requests aborted, including market APIs. In font-load-success only, the optional font stylesheet receives a successful empty CSS response. Korean glyphs use a locally installed official Noto Sans KR fallback. Source snapshots provide deterministic market data.',hashes,cases:results};
   await writeFile(resolve(output,'interface.json'),JSON.stringify(receipt,null,2)+'\n');
-  console.log(JSON.stringify({browser:receipt.browser,baseline,cases:results.length,passed:true,output}));
+  console.log(JSON.stringify({browser:receipt.browser,baseline,comparisonTheme,cases:results.length,passed:true,output}));
 } finally {
   await browser?.close();
   await new Promise(done=>server.close(done));

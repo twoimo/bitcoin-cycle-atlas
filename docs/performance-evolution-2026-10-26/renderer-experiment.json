@@ -1,0 +1,112 @@
+{
+  "status": "COMPLETE",
+  "adoption": "NOT_ADOPTED",
+  "reason": "This price-layer prototype cannot demonstrate full Atlas parity for research overlays, accessible interaction, annotation hit-testing, SVG export and standalone packaging. Frame-ready timings include vsync; they are not renderer-only CPU time or a full-engine comparison.",
+  "method": "Five alternating samples per renderer, ten changing views each; identical full saved OHLC geometry, selection readout and viewport, two RAFs per draw, outputs checked; desktop Chromium only. Warmups excluded.",
+  "sourceSha256": "60b20d6c561bfbc30471b7f8e95031bde45bd98430bac07d02365aa4d48360ec",
+  "source": "Bitstamp",
+  "asOf": "2026-10-25",
+  "browser": "156.0.8078.47",
+  "svg": {
+    "medianMs": 328.80000000074506,
+    "minMs": 325.30000000074506,
+    "maxMs": 333.5
+  },
+  "canvas": {
+    "medianMs": 333.2000000011176,
+    "minMs": 333.09999999962747,
+    "maxMs": 333.30000000074506
+  },
+  "samples": [
+    {
+      "sample": 1,
+      "side": "svg",
+      "durationMs": 333.5,
+      "frames": 10,
+      "bodyCount": 5548,
+      "rendered": 4
+    },
+    {
+      "sample": 1,
+      "side": "canvas",
+      "durationMs": 333.2000000011176,
+      "frames": 10,
+      "bodyCount": 5548,
+      "rendered": 13874
+    },
+    {
+      "sample": 2,
+      "side": "svg",
+      "durationMs": 328.80000000074506,
+      "frames": 10,
+      "bodyCount": 5548,
+      "rendered": 4
+    },
+    {
+      "sample": 2,
+      "side": "canvas",
+      "durationMs": 333.30000000074506,
+      "frames": 10,
+      "bodyCount": 5548,
+      "rendered": 13874
+    },
+    {
+      "sample": 3,
+      "side": "svg",
+      "durationMs": 330.40000000037253,
+      "frames": 10,
+      "bodyCount": 5548,
+      "rendered": 4
+    },
+    {
+      "sample": 3,
+      "side": "canvas",
+      "durationMs": 333.09999999962747,
+      "frames": 10,
+      "bodyCount": 5548,
+      "rendered": 13874
+    },
+    {
+      "sample": 4,
+      "side": "svg",
+      "durationMs": 325.30000000074506,
+      "frames": 10,
+      "bodyCount": 5548,
+      "rendered": 4
+    },
+    {
+      "sample": 4,
+      "side": "canvas",
+      "durationMs": 333.2999999988824,
+      "frames": 10,
+      "bodyCount": 5548,
+      "rendered": 13874
+    },
+    {
+      "sample": 5,
+      "side": "svg",
+      "durationMs": 326.19999999925494,
+      "frames": 10,
+      "bodyCount": 5548,
+      "rendered": 4
+    },
+    {
+      "sample": 5,
+      "side": "canvas",
+      "durationMs": 333.09999999962747,
+      "frames": 10,
+      "bodyCount": 5548,
+      "rendered": 13874
+    }
+  ],
+  "selected": {
+    "time": 1553299200,
+    "date": "2019-03-23",
+    "open": 3980.4,
+    "high": 4001.17,
+    "low": 3957.11,
+    "close": 3982.52,
+    "volume": 2259.5645261
+  },
+  "rows": 5548
+}

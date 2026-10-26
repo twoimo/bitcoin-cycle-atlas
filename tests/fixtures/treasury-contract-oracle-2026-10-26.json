@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-26",
+  "scope": "Independent verification inputs transcribed from docs/TREASURY_INSTRUMENT_LIQUIDITY.md. Model policy and daily cost allocation, not a legal payment-date calendar.",
+  "sources": [
+    "https://www.sec.gov/Archives/edgar/data/1050446/000105044626000044/mstr-20260630.htm",
+    "https://www.sec.gov/Archives/edgar/data/1829311/000149315226027521/form424b5.htm"
+  ],
+  "MSTR": {
+    "financialAsOf": "2026-06-30",
+    "knownAnnualCarry": 34594516.25,
+    "instruments": [
+      {"id":"mstr-notes-2028","kind":"debt","faceUsd":1010000000,"couponRate":0.00625,"putDate":"2027-09-15","maturityDate":"2028-09-15","conversionFrom":"2028-03-15","conversionShares":5513489},
+      {"id":"mstr-notes-2029","kind":"debt","faceUsd":1500000000,"couponRate":0,"putDate":"2028-06-01","maturityDate":"2029-12-01","conversionFrom":"2029-06-01","conversionShares":2230800},
+      {"id":"mstr-notes-2030A","kind":"debt","faceUsd":800000000,"couponRate":0.00625,"putDate":"2028-09-15","maturityDate":"2030-03-15","conversionFrom":"2029-09-15","conversionShares":5341600},
+      {"id":"mstr-notes-2030B","kind":"debt","faceUsd":2000000000,"couponRate":0,"putDate":"2028-03-01","maturityDate":"2030-03-01","conversionFrom":"2029-12-03","conversionShares":4614400},
+      {"id":"mstr-notes-2031","kind":"debt","faceUsd":603659000,"couponRate":0.00875,"putDate":"2028-09-15","maturityDate":"2031-03-15","conversionFrom":"2030-09-15","conversionShares":2593923},
+      {"id":"mstr-notes-2032","kind":"debt","faceUsd":800000000,"couponRate":0.0225,"putDate":"2029-06-15","maturityDate":"2032-06-15","conversionFrom":"2031-12-15","conversionShares":3915200}
+    ]
+  },
+  "BMNR": {
+    "financialAsOf": "2026-05-31",
+    "knownAnnualCarry": 33250000,
+    "instruments": [
+      {"id":"bmnr-bmnp-initial","kind":"preferred","faceUsd":350000000,"couponRate":0.095}
+    ]
+  }
+}

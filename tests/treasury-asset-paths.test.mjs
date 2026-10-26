@@ -121,10 +121,10 @@ test('missing post-Merge days and too-short ETH samples are not filled or silent
 
 test('asset histories must contain an exact cutoff close rather than borrowing a later day', () => {
   const missing = ethRows.filter(row => row.date.slice(0, 10) !== ethAsOf);
-  assert.throws(() => buildTreasuryAssetPaths({ ...ethOptions, ethHistory: missing }), /exact equity asOf/);
+  assert.throws(() => buildTreasuryAssetPaths({ ...ethOptions, ethHistory: missing }), /exact.*asOf/);
   const boundedHistory = ethRows.filter(row => row.date.slice(0, 10) <= ethAsOf);
   const unavailableDate = dateFromDay(utcDay(ethAsOf) + 1);
-  assert.throws(() => buildTreasuryAssetPaths({ ...ethOptions, ethHistory: boundedHistory, asOf: unavailableDate }), /exact equity asOf/);
+  assert.throws(() => buildTreasuryAssetPaths({ ...ethOptions, ethHistory: boundedHistory, asOf: unavailableDate }), /exact.*asOf/);
 });
 
 test('malformed, duplicate, sparse, reordered and conflicting dated rows fail at the boundary', () => {

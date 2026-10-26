@@ -9,3 +9,5 @@ __pycache__/
 .env.*
 !.env.example
 .openai/
+dist/publication.json
+dist/publication.json.tmp

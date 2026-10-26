@@ -1,0 +1,44 @@
+✔ timeline clips dates without changing judgment identity or emitting untrusted CSS (2.147904ms)
+✔ daily CSV preserves every calendar day, original observation date, kind/source version and formula safety (2.054493ms)
+✔ export rejects invalid scope or abort without returning a partial success-shaped CSV (0.899689ms)
+✔ saved reopen keeps its own disclosure; explicit symbol navigation resets incompatible mode/group/date (69.692356ms)
+✔ history reading hierarchy groups date navigation and labels financial values (1.434237ms)
+✔ percentage formatting distinguishes missing, zero, signed values and sub-cent rounding (18.529213ms)
+✔ opening the view creates exactly one grouped comparison table with all 18 assets (21.058689ms)
+✔ the ready board removes the metadata strip without losing source and date disclosure (5.585848ms)
+✔ the board has no footer, reserved footer styles or dangling note description (3.053762ms)
+✔ each final cell uses an exact five-stage label and opens the relevant explanation (4.593298ms)
+✔ identity headers and scroll hint retain one comparison table across screen sizes (0.273833ms)
+✔ mobile geometry fits the fixed name plus complete YTD and judgment without clipped previous values (3.656593ms)
+✔ headers use actual observed trading dates and sample cells disclose partial first years (3.200254ms)
+✔ unequal dates are labeled per asset instead of asserting a shared observation date (2.768612ms)
+✔ loading is lazy while hidden and repeated visible calls share the same pending request (14.170409ms)
+✔ failed fetch clears rows and export, does not retry on resize, and explicit retry recovers (5.741142ms)
+✔ synchronous getter and model failures resolve after painting the error state (0.428798ms)
+✔ the refresh button gets new data and immediately clears an old CSV and open judgment explanation (7.364714ms)
+✔ a partial or duplicate asset result fails closed rather than silently dropping assets (0.609611ms)
+✔ unavailable samples never become neutral; individual observed prices remain readable (3.027453ms)
+✔ CSV contains the same 18 rows, unrounded metrics, provenance, boundaries and price dates (3.468189ms)
+✔ method explains MDD distinction, operational boundaries, sample years and sources without another table (4.044149ms)
+✔ untrusted names and explanations are escaped and CSV spreadsheet formulas are neutralized (5.280075ms)
+✔ a superseded request cannot replace newer data or surface its obsolete error (4.013442ms)
+✔ destroy cancels pending effects, removes actions and makes further renders inert (0.442859ms)
+✔ invalid comparison dates fail visibly before any source request (0.661665ms)
+✔ comparison uses the shared chart theme and keeps navigation and actions in one heading (4.11769ms)
+✔ mobile comparison owns its return control without the global fallback or reserved row (0.193593ms)
+✔ asset identities expose consistent codes and open the same audited explanation (3.328448ms)
+✔ mobile quick moves change only the horizontal table position without recomputing or hiding rows (2.815804ms)
+✔ sticky headings use a single bounded viewport and preserve the pinned identity corner (0.435077ms)
+✔ rail identities use real asset groups, preserve labels and escape the new attribute boundary (5.341529ms)
+✔ comparison keeps neutral asset symbols and reserves colors for returns and judgments (0.362988ms)
+✔ narrow explanation metrics stack as full-width label/value rows instead of clipping long percentages (0.228204ms)
+✔ precise compact headings distinguish year count and year-start-to-extreme means (0.170868ms)
+✔ asset explanation exposes its exact subject and restores generic help title (3.507087ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 208.829073

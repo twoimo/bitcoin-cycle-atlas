@@ -1,19 +1,16 @@
-import { buildComparison, getAnchors, getPointAtDay, comparisonToCsv, validateDataset, utcDay } from './cycle-engine.js?v=1.19.0';
-import { fetchLatestDataset } from "./data-source.js?v=1.21.0";
-import { inspectPublishedDataset, shouldCheckPublishedSnapshot } from "./published-data.js?v=1.21.0";
-import { analyzeCycleTiming } from './cycle-timing.js?v=1.23.0';
-import { renderTimingView } from './timing-view.js?v=1.11.0';
-import { analyzePeakZones } from './peak-zones.js?v=1.23.0';
-import { analyzeCycleForecast } from './forecast-engine.js?v=1.23.0';
-import { renderPeakView } from './peak-view.js?v=1.19.0';
-import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.19.0';
+import { buildComparison, getAnchors, getPointAtDay, comparisonToCsv, validateDataset, utcDay } from './cycle-engine.js?v=1.29.0';
+import { fetchLatestDataset } from "./data-source.js?v=1.29.0";
+import { inspectPublishedDataset, shouldCheckPublishedSnapshot } from "./published-data.js?v=1.29.0";
+import { analyzeCycleTiming } from './cycle-timing.js?v=1.29.0';
+import { renderTimingView } from './timing-view.js?v=1.29.0';
+import { analyzePeakZones } from './peak-zones.js?v=1.29.0';
+import { analyzeCycleForecast } from './forecast-engine.js?v=1.29.0';
+import { renderPeakView } from './peak-view.js?v=1.29.0';
+import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29.0';
 // Changed release modules use a versioned URL so a cached v1.5 module cannot
 // leave a new long-horizon page running the old three-year workbench.
-import { initViewportWorkspace } from "./viewport-workspace.js?v=1.28.0";
-import { initLabView } from "./lab-view.js?v=1.28.0";
-import { initEvidenceView, showEvidenceView } from './evidence-view.js?v=1.20.0';
-import { initDailyDataView } from './daily-data-view.js?v=1.28.1';
-import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.28.0';
+import { initDailyDataView } from './daily-data-view.js?v=1.29.0';
+import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.29.0';
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -106,23 +103,43 @@ function onInitialPageReady(event) {
   finishInitialPage();
 }
 document.addEventListener('atlas:page-ready', onInitialPageReady);
-initViewportWorkspace(icon);
-const outlookController = initLabView();
+let outlookController = null, workspacePromise = null, evidencePromise = null, evidenceModule = null;
+function ensureWorkspace() {
+  if (!workspacePromise) workspacePromise = Promise.all([
+    import('./viewport-workspace.js?v=1.29.0'), import('./lab-view.js?v=1.29.0'),
+  ]).then(([workspace, lab]) => {
+    workspace.initViewportWorkspace(icon);
+    outlookController = lab.initLabView();
+    if (state.dataset) outlookController.setDataset(state.dataset);
+    outlookController.show(state.view === 'outlook');
+    outlookController.showCompare(state.view === 'compare');
+    if (state.view === 'compare') render();
+    return outlookController;
+  }).catch(error => { workspacePromise = null; console.error('Workspace initialization failed', error); if (['outlook','compare'].includes(state.view)) document.dispatchEvent(new CustomEvent('atlas:boot-error')); });
+  return workspacePromise;
+}
+function ensureEvidence() {
+  if (!evidencePromise) evidencePromise = import('./evidence-view.js?v=1.29.0').then(module => {
+    module.initEvidenceView(); evidenceModule = module; module.showEvidenceView(state.view === 'evidence');
+  }).catch(error => { evidencePromise = null; console.error('Evidence initialization failed', error); if (state.view === 'evidence') document.dispatchEvent(new CustomEvent('atlas:boot-error')); });
+  return evidencePromise;
+}
 const dailyDataController = initDailyDataView({
   root: $('#data-view'), download, toast,
   getComparisonDataset: createAssetComparisonLoader({
     embeddedData: () => document.getElementById('embedded-asset-comparison-data')?.textContent ?? null,
   }),
 });
-initEvidenceView();
 function syncPage() {
   document.body.dataset.page=state.view;
   document.title = state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
   for (const view of ['outlook','compare','evidence','data']) document.querySelector(`#${view}-view`).hidden=state.view!==view;
   $$('[data-view]').forEach(n=>{const active=n.dataset.view===state.view;n.classList.toggle('active',active);if(active)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current');});
-  showEvidenceView(state.view==='evidence');
-  outlookController.show(state.view==='outlook');
-  outlookController.showCompare(state.view==='compare');
+  evidenceModule?.showEvidenceView(state.view==='evidence');
+  outlookController?.show(state.view==='outlook');
+  outlookController?.showCompare(state.view==='compare');
+  if (['outlook','compare'].includes(state.view)) void ensureWorkspace();
+  if (state.view === 'evidence') void ensureEvidence();
 }
 syncPage();
 if (state.view === 'data') renderData();
@@ -149,7 +166,7 @@ function render(recalculate = true) {
   renderLegend(); renderChart(); renderTable(state.cursor); renderMethod(); renderResearch();
   syncCursorInputs();
   }
-  outlookController.setDataset(state.dataset);
+  outlookController?.setDataset(state.dataset);
   if(state.view==='data') renderData();
   document.dispatchEvent(new CustomEvent('atlas:dataset',{detail:{latestObservationDate:state.dataset.prices.at(-1)[0]}}));
   $('#sidebar-asof').textContent=`관측 · ${state.dataset.prices.at(-1)[0].replaceAll('-','.')} UTC`;
@@ -337,12 +354,14 @@ $('#method-dialog').addEventListener('click', e => { if(e.target === $('#method-
 function renderData() {
   return dailyDataController.render().then(() => {
     if (state.view !== 'data') return;
+    document.dispatchEvent(new CustomEvent('atlas:page-ready',{detail:{page:'data'}}));
     initialPageRendered = true;
     finishInitialPage();
   });
 }
 $$('[data-view]').forEach(b => b.addEventListener('click', () => {
   state.view = b.dataset.view;
+  if (state.view !== 'data') void ensureDataset();
   syncPage();
   closeExport();
   if(state.view==='compare') requestAnimationFrame(()=>render()); else if(state.view==='data') renderData();
@@ -434,6 +453,12 @@ $('#refresh-button').addEventListener('click',()=>{closeExport();refreshData();}
 let dataResizeTimer;new ResizeObserver(()=>{clearTimeout(dataResizeTimer);dataResizeTimer=setTimeout(()=>{if(state.view==='data')renderData();},100);}).observe($('#data-view'));
 let resizeTimer;new ResizeObserver(()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>renderChart(),100);}).observe($('#chart-stage'));
 let researchResizeTimer;const researchObserver=new ResizeObserver(()=>{clearTimeout(researchResizeTimer);researchResizeTimer=setTimeout(()=>renderResearch(),100);});researchObserver.observe($('#forecast-chart-stage'));researchObserver.observe($('#peak-chart-stage'));
+let datasetPromise = null;
+function ensureDataset() {
+  if (state.dataset) return Promise.resolve(state.dataset);
+  if (!datasetPromise) datasetPromise = init().finally(() => { datasetPromise = null; });
+  return datasetPromise;
+}
 async function init() {
   try {
     const embedded=document.getElementById('embedded-btc-data');let bundled;if(embedded){bundled=JSON.parse(embedded.textContent);}else{const response=await fetch('./data/btc-daily.json',{signal:AbortSignal.timeout(15000)});if(!response.ok)throw Error('Bundled data unavailable');bundled=await response.json();}inspectPublishedDataset(bundled,null);state.dataset=bundled;
@@ -446,4 +471,4 @@ async function init() {
     else document.dispatchEvent(new CustomEvent('atlas:boot-error'));
   }
 }
-init();
+if (state.view !== 'data') void ensureDataset();

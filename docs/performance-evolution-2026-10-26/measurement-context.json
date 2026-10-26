@@ -1,0 +1,24 @@
+{
+  "baselineCommit": "35300332a629ead03f6f365a32fda4669390f72f",
+  "measuredFiles": 660,
+  "runtime": "Node v24.22.1; Chromium 156.0.8078.47",
+  "fontFixture": "Noto Sans KR via FONTCONFIG_FILE; same fixture on both timing sides",
+  "loadBeforeTiming": {
+    "loadAverage": [
+      0.06,
+      0.11,
+      0.05
+    ],
+    "availableCores": 9
+  },
+  "frozenSnapshotPurpose": "Parallel development continued after the full dist snapshot was frozen; timings apply to this exact manifest, not the later merge/version bump.",
+  "functionalJourneyScope": "Same frozen HTTP snapshot plus temporary single HTML built from the equivalent forecast-controller changes before journal archive integration. Full release/journal verification is separate.",
+  "scripts": {
+    "benchmark-workspace.mjs": "a713342e902dcc71212eb886367b0f88683977ac814a0b8bed3618796e612155",
+    "verify-workspace-evolution.mjs": "be46b31361202a80177ca42996d0eb8fe1aea713e3a0dd71bc4766db95fff92f",
+    "experiment-price-renderers.mjs": "554b4aba3b9572f5ef1933e8c3220a7fe0de5f57ea394bf39a9285f13e18fa07"
+  },
+  "measuredSnapshotSha256": "4a742f9774bfa0e4b069998c1b4cc0f0aa1226501edcb63f602a23c7f986eb00",
+  "snapshotHashSerialization": "Python json.dumps(manifest, sort_keys=True), UTF-8",
+  "sourceManifestFileSha256": "a589d6f52eb05ce96633862ff3eba2f781bb35e368a578971ccc5ae60e45f90e"
+}

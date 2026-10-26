@@ -5,6 +5,7 @@ import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promi
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { verificationProcessResult } from './verification-process.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const jarSha256 = '936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88';
@@ -25,10 +26,9 @@ async function prepareTool() {
   assert.equal(hash(bytes), jarSha256, 'Use the pinned TLC 1.7.4 jar');
 }
 
-function run(command, args, cwd = root) {
+function run(command, args, cwd = root, expectedStatus = 0) {
   const result = spawnSync(command, args, { cwd, encoding: 'utf8', timeout: 60000, maxBuffer: 16 * 1024 * 1024 });
-  if (result.error) throw result.error;
-  return { status: result.status, output: `${result.stdout || ''}${result.stderr || ''}` };
+  return verificationProcessResult(result, { command, expectedStatus });
 }
 
 const variants = [
@@ -52,9 +52,9 @@ async function models(work) {
     if (variant.invariant) value = value.replace(/^INVARIANTS .*$/m, `INVARIANT ${variant.invariant}`);
     const file = path.join(root, 'verification/equity-state', variant.id === 'current' ? 'EquityLoad.cfg' : `${variant.id}.cfg`);
     assert.equal(await readFile(file, 'utf8'), value, `Reviewed configuration drift: ${variant.id}`);
-    const result = run(process.env.JAVA || 'java', ['-XX:+UseParallelGC', '-cp', jar, 'tlc2.TLC', '-workers', '1', '-seed', '1', '-fp', '0', '-metadir', path.join(work, variant.id), '-config', file, model]);
+    const result = run(process.env.JAVA || 'java', ['-XX:+UseParallelGC', '-cp', jar, 'tlc2.TLC', '-workers', '1', '-seed', '1', '-fp', '0', '-metadir', path.join(work, variant.id), '-config', file, model], root, variant.invariant ? 12 : 0);
     if (variant.invariant) {
-      assert.notEqual(result.status, 0, `${variant.id} must expose its invariant violation`);
+      assert.equal(result.status, 12, `${variant.id} must finish with the invariant-violation exit status`);
       assert.ok(result.output.includes(`Invariant ${variant.invariant} is violated`), result.output);
     } else {
       assert.equal(result.status, 0, result.output);
@@ -64,6 +64,7 @@ async function models(work) {
     assert.ok(counts, 'TLC did not finish with state counts');
     results[variant.id] = {
       status: variant.invariant ? 'expected invariant violation' : 'pass', invariant: variant.invariant,
+      exitStatus: result.status,
       generated: Number(counts[1].replaceAll(',', '')), distinct: Number(counts[2].replaceAll(',', '')), remaining: Number(counts[3].replaceAll(',', '')),
     };
     console.log(`${variant.id}: ${results[variant.id].status}`);
@@ -77,7 +78,9 @@ async function implementation(work) {
   assert.match(original.output, /tests 28/);
   console.log(original.output.trim());
   const copy = path.join(work, 'implementation');
-  const files = ['dist/equity-view.js', 'dist/equity-market-data.js', 'dist/index.html', 'tests/equity-load-ownership.test.mjs', 'tests/helpers/equity-view-fixture.mjs'];
+  // The initializer fixture imports the actual capital-policy catalog, whose
+  // date helpers are a static dependency. Keep that closure in the scratch copy.
+  const files = ['dist/equity-view.js', 'dist/equity-market-data.js', 'dist/treasury-instruments.js', 'dist/cycle-engine.js', 'dist/index.html', 'tests/equity-load-ownership.test.mjs', 'tests/helpers/equity-view-fixture.mjs'];
   for (const file of files) {
     await mkdir(path.dirname(path.join(copy, file)), { recursive: true });
     await copyFile(path.join(root, file), path.join(copy, file));
@@ -94,7 +97,7 @@ async function implementation(work) {
       failure: /a revoked stock response must not request a coin archive/,
     },
     {
-      id: 'unguarded-projection', from: 'if(token!==generation)return;\n        projection=buildTreasuryProjection', to: 'projection=buildTreasuryProjection',
+      id: 'unguarded-projection', from: 'if(token!==generation)return;\n        cachedInputs=', to: 'cachedInputs=',
       failure: /revoked paint continuation must not calculate/,
     },
     {
@@ -102,7 +105,7 @@ async function implementation(work) {
       failure: /revoked underlying work must not clear a newer forecast/,
     },
     {
-      id: 'retained-old-projection', from: 'daily=nextDaily;weekly=nextWeekly;projection=null;forecast=null;', to: 'daily=nextDaily;weekly=nextWeekly;',
+      id: 'retained-old-projection', from: 'daily=nextDaily;weekly=nextWeekly;cachedInputs=null;projectionCache.clear();projection=null;forecast=null;', to: 'daily=nextDaily;weekly=nextWeekly;cachedInputs=null;projectionCache.clear();',
       failure: /new prices must never be displayed with the previous projection/,
     },
     {
@@ -114,19 +117,20 @@ async function implementation(work) {
       failure: /preserves user interval, scenario and range/,
     },
   ];
-  const mutations = {};
+  const mutations = {}, mutationExitStatuses = {};
   for (const change of changes) {
     assert.equal(source.split(change.from).length, 2, `Review model/code correspondence and mutation selector: ${change.id}`);
     await writeFile(viewFile, source.replace(change.from, change.to));
-    const result = run(process.execPath, ['tests/equity-load-ownership.test.mjs'], copy);
-    assert.notEqual(result.status, 0, `${change.id} must fail its real-code regression`);
+    const result = run(process.execPath, ['tests/equity-load-ownership.test.mjs'], copy, 1);
+    assert.equal(result.status, 1, `${change.id} must finish with an assertion failure`);
     assert.match(result.output, change.failure, `Mutation failed for an unrelated reason: ${change.id}\n${result.output}`);
     mutations[change.id] = 'expected assertion failure';
+    mutationExitStatuses[change.id] = result.status;
   }
   await writeFile(viewFile, source);
   const restored = run(process.execPath, ['tests/equity-load-ownership.test.mjs'], copy);
   assert.equal(restored.status, 0, restored.output);
-  return { tests: 28, original: 'pass', restored: 'pass', sourceSha256: hash(source), mutations };
+  return { tests: 28, original: 'pass', restored: 'pass', sourceSha256: hash(source), mutations, mutationExitStatuses };
 }
 
 await prepareTool();

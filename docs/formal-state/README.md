@@ -1,5 +1,9 @@
 # Market request ownership and manual history retry
 
+## v1.29 integration correspondence
+
+The current committed source is `7261c1807028e1b69bf9cd9be0d269a64f88acc0`. The strict process-exit rerun, exact runtime hashes, maintained mutation selectors and limits of the new features are recorded in [the integration review](../evolution-2026-10-26/publication-independent-review.md) and the current project verification skill. Current machine-readable receipt: [verification result](../evolution-2026-10-26/market-state-final.json). Earlier revisions and charts below remain historical evidence. New economic, scenario and capital-recalculation behavior is not implicitly included in these finite lifecycle models.
+
 ## Current audit: 2026-10-26
 
 Audit base: [`1b7c87ce4fe5d44d05560320bb3a270c639e3bbf`](https://github.com/twoimo/bitcoin-cycle-atlas/tree/1b7c87ce4fe5d44d05560320bb3a270c639e3bbf). Current committed synchronization: [`c8f9d985a7a99cdee13a5c74eeda37168f1c7ea8`](https://github.com/twoimo/bitcoin-cycle-atlas/commit/c8f9d985a7a99cdee13a5c74eeda37168f1c7ea8), incorporating main `65182efcb9a833b2be091c552a0291d47d50b32c`. Previous synchronization: `1ad3be543e870e74f10708c266f19572b217d25f`. The controller at the audit base was byte-identical to that earlier ownership review. The committed runtime extends it with the explicit-refresh retry reset; reviewed source SHA-256: `092b77e78d3f430205c2da45d37395ac3f59606391a48f1c07a4f43ee71cb83a`. The exact published runtime was checked against its model and both product mutations, and its complete verification receipt was regenerated before advancing this synchronization record.

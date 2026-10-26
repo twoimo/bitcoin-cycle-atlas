@@ -68,7 +68,7 @@ test('a weekend cutoff uses the preceding actual stock session and ignores later
 });
 
 test('a new equity session cannot reuse stale crypto data or an invented missing day', () => {
-  assert.throws(() => buildTreasuryProjection({...options, history: nextEquity}), /exact equity asOf/);
+  assert.throws(() => buildTreasuryProjection({...options, history: nextEquity}), /exact.*asOf/);
   const missing = {...nextEth, dailyHistory: {...nextEth.dailyHistory,
     candles: nextEth.dailyHistory.candles.filter(row => row.date.slice(0, 10) !== '2026-10-24'),
   }};

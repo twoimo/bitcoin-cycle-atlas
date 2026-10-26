@@ -1,5 +1,8 @@
 # Treasury model: independent evidence and implementation review
 
+이 문서는 이전 구현의 독립 검토 기록이다. 2026-10-26 확장에서 바뀐 쿠폰 중단·조건부 전환·ETH 유동성은 [새 모델 문서](TREASURY_INSTRUMENT_LIQUIDITY.md)를 참조한다.
+
+
 검토일: 2026-10-24. 대상: MSTR·BMNR 연구 JSON, 생성된 출처 레지스트리, `treasury-model.js`, 미래 근거 연결, 관련 수치 테스트. 이 문서는 출시 전 발견한 문제와 실제 검증 범위를 기록한다. 예측 적중률이나 투자 성과에 대한 검증은 아니다.
 
 ## 1. 재무 기준과 주장 판정

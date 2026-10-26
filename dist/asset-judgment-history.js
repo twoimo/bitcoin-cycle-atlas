@@ -1,5 +1,5 @@
-import { utcDay, dateFromDay, validateDataset } from './cycle-engine.js?v=1.19.0';
-import { ASSET_JUDGMENTS, ASSET_COMPARISON_VERSION, comparisonAsOf, comparisonPercentage as pct, comparisonMean as mean, classifyAssetComparison as classify, comparisonCoverageSummary } from './asset-comparison.js?v=1.28.0';
+import { utcDay, dateFromDay, validateDataset } from './cycle-engine.js?v=1.29.0';
+import { ASSET_JUDGMENTS, ASSET_COMPARISON_VERSION, comparisonAsOf, comparisonPercentage as pct, comparisonMean as mean, classifyAssetComparison as classify, comparisonCoverageSummary } from './asset-comparison.js?v=1.29.0';
 
 export const HISTORY_KIND = 'reconstructed';
 export const HISTORY_NOTE = '현재 보관 원자료 버전으로 재계산한 이력입니다. 당시 운영 판단·당시 공급자 원본·거래 가능 시점을 복원한 기록이 아닙니다.';

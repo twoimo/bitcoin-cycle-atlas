@@ -1,6 +1,6 @@
-import { ETHEREUM_EVENTS, ETHEREUM_EVENT_CATEGORIES, ETHEREUM_EVENT_COLORS, ETHEREUM_EVENTS_REVIEW_DATE, getEthereumEvents } from './ethereum-events.js?v=1.17.0-context.1';
-import { observeEthereumEvent } from './ethereum-event-observations.js?v=1.17.0-context.1';
-import { mountDialogViewport } from './dialog-viewport.js?v=1.14.0-mobile.1';
+import { ETHEREUM_EVENTS, ETHEREUM_EVENT_CATEGORIES, ETHEREUM_EVENT_COLORS, ETHEREUM_EVENTS_REVIEW_DATE, getEthereumEvents } from './ethereum-events.js?v=1.29.0';
+import { observeEthereumEvent } from './ethereum-event-observations.js?v=1.29.0';
+import { mountDialogViewport } from './dialog-viewport.js?v=1.29.0';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const daySeconds = value => {

@@ -1,5 +1,5 @@
-import { chartInterval, fetchMarketCandles, marketProduct, parseMarketSnapshot as parseProductSnapshot } from './ohlc-data.js?v=1.15.0';
-import { createHistoryState, intradayNavigationRange, requestedHistoryWindow, nextHistoryPage, appendHistoryPage } from './intraday-history.js?v=1.15.0';
+import { chartInterval, fetchMarketCandles, marketProduct, parseMarketSnapshot as parseProductSnapshot } from './ohlc-data.js?v=1.29.0';
+import { createHistoryState, intradayNavigationRange, requestedHistoryWindow, nextHistoryPage, appendHistoryPage } from './intraday-history.js?v=1.29.0';
 
 export function createMarketDataController({ product = 'BTC-USD', snapshotUrl, onChange = () => {}, fetchImpl = globalThis.fetch, readEmbedded = () => null, timeoutMs = 15000, preferSnapshot = false, historyRequestGapMs = 250 } = {}) {
   // Product ownership is fixed for the lifetime of this controller. Separate

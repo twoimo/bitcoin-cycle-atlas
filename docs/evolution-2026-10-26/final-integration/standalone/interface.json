@@ -1,0 +1,200 @@
+{
+  "browser": "156.0.8078.47",
+  "baseline": false,
+  "standalone": true,
+  "comparisonTheme": false,
+  "policy": "External HTTP requests aborted, including market APIs. In font-load-success only, the optional font stylesheet receives a successful empty CSS response. Korean glyphs use a locally installed official Noto Sans KR fallback. Source snapshots provide deterministic market data.",
+  "hashes": {
+    "dist/index.html": "0ff4dc8eadf9de8ff0b69a7e2b4a28323bfe361b0dc73aa4db8742ec7f41ff0f",
+    "dist/styles.css": "1c316f67a6df324077f871056e713a210103a12dec1185191ff2f74d2ff4a25b",
+    "dist/daily-data.css": "c5ebd8e2eb7a104bb9d6f38117c34cbddc1e4f734a6dc2396b3a96f1cdbdea9e",
+    "dist/daily-data-view.js": "3e4bdd6dd76445b0d6cc0c65c355965691c6b0541f4978e5d65e999c09f28170",
+    "dist/viewport-workspace.js": "1232303281e45ea078b9cc4547e6a28634f7ec3fca8eb5fc3fcc9d8979a9ad3d",
+    "dist/chart-touch-tracking.js": "6e993c48356a7c3d2156d11007b892a1e930b7d2fb2880d9fcae134cd0d424c7",
+    "dist/analysis-dock.js": "2062b09bfdc73952af0d168e0397913de36503de9f9165d4c5067c50e597fd9e",
+    "dist/market-structure.js": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+    "scripts/audit-interface.mjs": "4559f768da292435500641201df1238bc6fa61f1b798e8fccb6ef9056dcc6fdf",
+    "tests/daily-data-view.test.mjs": "a4779c0ab9a0dce26c04136766184877de53c900a7a5caf869ada7ac4b417b93",
+    "build/Bitcoin_Cycles_Comparison.html": "ee36fd86901e7f4386ec306da06929287902131524a22d58953e2ca32eefa51b"
+  },
+  "cases": [
+    {
+      "name": "standalone-btc-desktop",
+      "boot": "ready",
+      "symbol": "BTCUSD",
+      "background": "rgb(12, 15, 20)",
+      "width": 1440,
+      "height": 900,
+      "documentWidth": 1440,
+      "documentHeight": 900,
+      "fontCssOptional": null,
+      "visibleSvgPaths": 100,
+      "blockedHosts": [],
+      "pageErrors": [],
+      "missingResources": []
+    },
+    {
+      "name": "standalone-data-phone",
+      "boot": "ready",
+      "symbol": "BTCUSD",
+      "background": "rgb(12, 15, 20)",
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "documentHeight": 844,
+      "fontCssOptional": null,
+      "visibleSvgPaths": 4,
+      "table": {
+        "symbols": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "headerHeight": 53,
+        "background": "rgb(12, 15, 20)",
+        "contextHidden": true,
+        "footerPresent": false,
+        "pinnedHeading": [
+          {
+            "side": "start",
+            "scrollLeft": 0,
+            "headingLeft": 1,
+            "cellLeft": 1,
+            "headingWidth": 120,
+            "cellWidth": 120,
+            "visible": true,
+            "topmost": true
+          },
+          {
+            "side": "middle",
+            "scrollLeft": 216,
+            "headingLeft": 1,
+            "cellLeft": 1,
+            "headingWidth": 120,
+            "cellWidth": 120,
+            "visible": true,
+            "topmost": true
+          },
+          {
+            "side": "end",
+            "scrollLeft": 432,
+            "headingLeft": 1,
+            "cellLeft": 1,
+            "headingWidth": 120,
+            "cellWidth": 120,
+            "visible": true,
+            "topmost": true
+          }
+        ]
+      },
+      "dialogBackground": "rgb(18, 22, 29)",
+      "blockedHosts": [],
+      "pageErrors": [],
+      "missingResources": []
+    },
+    {
+      "name": "standalone-btc-tablet",
+      "boot": "ready",
+      "symbol": "BTCUSD",
+      "background": "rgb(12, 15, 20)",
+      "width": 768,
+      "height": 1024,
+      "documentWidth": 768,
+      "documentHeight": 1024,
+      "fontCssOptional": null,
+      "visibleSvgPaths": 100,
+      "blockedHosts": [],
+      "pageErrors": [],
+      "missingResources": []
+    },
+    {
+      "name": "standalone-data-tablet",
+      "boot": "ready",
+      "symbol": "BTCUSD",
+      "background": "rgb(12, 15, 20)",
+      "width": 1024,
+      "height": 768,
+      "documentWidth": 1024,
+      "documentHeight": 768,
+      "fontCssOptional": null,
+      "visibleSvgPaths": 7,
+      "table": {
+        "symbols": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "headerHeight": 55,
+        "background": "rgb(12, 15, 20)",
+        "contextHidden": true,
+        "footerPresent": false,
+        "pinnedHeading": [
+          {
+            "side": "start",
+            "scrollLeft": 0,
+            "headingLeft": 202.078125,
+            "cellLeft": 202.078125,
+            "headingWidth": 240,
+            "cellWidth": 240,
+            "visible": true,
+            "topmost": true
+          },
+          {
+            "side": "middle",
+            "scrollLeft": 111,
+            "headingLeft": 91.078125,
+            "cellLeft": 91.078125,
+            "headingWidth": 240,
+            "cellWidth": 240,
+            "visible": true,
+            "topmost": true
+          },
+          {
+            "side": "end",
+            "scrollLeft": 222,
+            "headingLeft": 45,
+            "cellLeft": 45,
+            "headingWidth": 240,
+            "cellWidth": 240,
+            "visible": true,
+            "topmost": true
+          }
+        ]
+      },
+      "dialogBackground": "rgb(18, 22, 29)",
+      "blockedHosts": [],
+      "pageErrors": [],
+      "missingResources": []
+    }
+  ]
+}

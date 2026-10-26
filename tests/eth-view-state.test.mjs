@@ -104,11 +104,15 @@ async function runEntry(search,{failImport=false,failInit=false}={}){
   const imports=[],events=[],errors=[],bootSymbol={textContent:'BTCUSD'},root={dataset:{}},initializations=[];
   const context={
     URLSearchParams,location:{search},console:{error:(...values)=>errors.push(values)},
+    mountJournalEntry:()=>{},initPerformanceDiagnostics:()=>{},
     CustomEvent:class{constructor(type){this.type=type;}},
     document:{documentElement:root,querySelector:()=>bootSymbol,dispatchEvent:event=>events.push(event.type)},
     __import:async path=>{imports.push(path);if(failImport)throw new Error('module unavailable');return {initEthView:async()=>{initializations.push('ETHUSD');await Promise.resolve();if(failInit)throw new Error('snapshot unavailable');initializations.push('ready');}};},
   };
-  await vm.runInNewContext(`(async()=>{${source.replace(/\bimport\s*\(/g,'__import(')}\n})()`,context,{timeout:1000});
+  // These shared, data-free entry hooks do not determine which asset workspace
+  // is loaded. Keep the production routing and dynamic-import errors intact.
+  const routing=source.replace(/^import \{ (?:mountJournalEntry|initPerformanceDiagnostics) \} from ['"][^'"]+['"];\n/gm,'').replace(/\bimport\s*\(/g,'__import(');
+  await vm.runInNewContext(`(async()=>{${routing}\n})()`,context,{timeout:1000});
   return {imports,events,errors,bootSymbol,root,initializations};
 }
 

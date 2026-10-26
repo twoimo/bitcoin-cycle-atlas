@@ -1,5 +1,5 @@
-import { utcDay } from './cycle-engine.js?v=1.19.0';
-import { normalizePriceDomain } from './price-axis.js?v=1.14.0-mobile.1';
+import { utcDay } from './cycle-engine.js?v=1.29.0';
+import { normalizePriceDomain } from './price-axis.js?v=1.29.0';
 
 /** All coordinates use original prices; factor affects only the choice of ticks. */
 export function createPriceScale(values,{scale='log',top=0,bottom=1,tickCount=6,factor=1,offset=0,inverted=false,paddingRatio=.12,domain=null}={}) {

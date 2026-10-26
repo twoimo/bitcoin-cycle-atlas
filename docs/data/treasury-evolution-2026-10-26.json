@@ -1,0 +1,1256 @@
+{
+  "date": "2026-10-26",
+  "scope": "Deterministic actual-input scenario comparison. Values are conditional calculations, not investment forecasts or a backtest.",
+  "seed": 20261022,
+  "inputHashes": {
+    "dist/data/btc-daily.json": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+    "dist/data/eth-ohlc.json": "004394dfcfae727c671180c0ce67fff8cd1fa473904ebf55113821633fd6e509",
+    "dist/data/mstr-ohlc.json": "00fa8c7c039d793d8415336140b7b0db8130d5a1bd9b1367bda0c30516cc472d",
+    "dist/data/bmnr-ohlc.json": "a90e388186e822a45c2d5b679f22defaee88cac9de18b1023f08d23465213415"
+  },
+  "sourceHashes": {
+    "dist/treasury-model.js": "5f856745631bc0fb9b86902d795a36c35fd8c668872fb6ca4cc7b33f63c29305",
+    "dist/treasury-instruments.js": "784b98684b5ffe6c8bb747b1bb6eac6cd658221a3cfa29e5c64c11b6711b102f",
+    "dist/treasury-liquidity.js": "b989adb0205ad969f3c87ccfdf71134d5448a38ebe47ed49ac1a63d5119cbd5d",
+    "dist/treasury-asset-paths.js": "67d98d830ad95d54312b8cd73d5e6e48c76aec757a7ae55b09ec43b2e8918d5d",
+    "dist/ethereum-forecast.js": "2b75803d717f644443182b33779b6e4079c03033acd4433b5d4d12f0ae3dff3e",
+    "dist/asset-daily-observations.js": "645cdfc751ffe2a4e0ce66a10316fc493d637cd6f74a0d09ea17b4e126367c70",
+    "scripts/report-treasury-evolution.mjs": "0be56cf3396a37e7c4116cb9ececb04f323a952d2f752e8b9d0be3e65caccef1"
+  },
+  "records": [
+    {
+      "symbol": "MSTR",
+      "scenario": "stress",
+      "controlSetting": "cash-at-put",
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": null,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-06-30",
+      "points": 3357,
+      "price2030": 28.81040714669936,
+      "price2035": 18.304489553085773,
+      "coinUnits2035": 499205.1254733091,
+      "shares2035": 487562785.09770596,
+      "financingCost2035": 15926183239.496542,
+      "knownAnnualCarry2035": 0,
+      "convertedShares": 0,
+      "events": [
+        {
+          "id": "mstr-notes-2028",
+          "date": "2027-09-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1010000000,
+          "couponUsd": 17282.68309377139,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030B",
+          "date": "2028-03-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 2000000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2029",
+          "date": "2028-06-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1500000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030A",
+          "date": "2028-09-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 13689.253935660507,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2031",
+          "date": "2028-09-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 603659000,
+          "couponUsd": 14461.372347707053,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2032",
+          "date": "2029-06-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 49281.31416837782,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        }
+      ],
+      "liquidity2035": null,
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "MSTR",
+      "scenario": "base",
+      "controlSetting": "cash-at-put",
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": null,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-06-30",
+      "points": 3357,
+      "price2030": 481.4229939241824,
+      "price2035": 820.3317853103887,
+      "coinUnits2035": 926919.8008550177,
+      "shares2035": 514134701.06193995,
+      "financingCost2035": 15926183239.496542,
+      "knownAnnualCarry2035": 0,
+      "convertedShares": 0,
+      "events": [
+        {
+          "id": "mstr-notes-2028",
+          "date": "2027-09-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1010000000,
+          "couponUsd": 17282.68309377139,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030B",
+          "date": "2028-03-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 2000000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2029",
+          "date": "2028-06-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1500000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030A",
+          "date": "2028-09-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 13689.253935660507,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2031",
+          "date": "2028-09-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 603659000,
+          "couponUsd": 14461.372347707053,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2032",
+          "date": "2029-06-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 49281.31416837782,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        }
+      ],
+      "liquidity2035": null,
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "MSTR",
+      "scenario": "bull",
+      "controlSetting": "cash-at-put",
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": null,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-06-30",
+      "points": 3357,
+      "price2030": 1285.7491445499859,
+      "price2035": 3370.238505675855,
+      "coinUnits2035": 2851991.034078941,
+      "shares2035": 1207027191.0060158,
+      "financingCost2035": 15926183239.496542,
+      "knownAnnualCarry2035": 0,
+      "convertedShares": 0,
+      "events": [
+        {
+          "id": "mstr-notes-2028",
+          "date": "2027-09-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1010000000,
+          "couponUsd": 17282.68309377139,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030B",
+          "date": "2028-03-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 2000000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2029",
+          "date": "2028-06-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1500000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030A",
+          "date": "2028-09-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 13689.253935660507,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2031",
+          "date": "2028-09-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 603659000,
+          "couponUsd": 14461.372347707053,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2032",
+          "date": "2029-06-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 49281.31416837782,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        }
+      ],
+      "liquidity2035": null,
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "MSTR",
+      "scenario": "stress",
+      "controlSetting": "hold-to-maturity",
+      "capitalPolicy": "hold-to-maturity",
+      "exitDelayDays": null,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-06-30",
+      "points": 3357,
+      "price2030": 26.551553246184316,
+      "price2035": 16.345825981326445,
+      "coinUnits2035": 475846.41004688287,
+      "shares2035": 487562785.09770596,
+      "financingCost2035": 16007169664.69501,
+      "knownAnnualCarry2035": 0,
+      "convertedShares": 0,
+      "events": [
+        {
+          "id": "mstr-notes-2028",
+          "date": "2028-09-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1010000000,
+          "couponUsd": 17282.68309377139,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2029",
+          "date": "2029-12-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1500000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030B",
+          "date": "2030-03-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 2000000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030A",
+          "date": "2030-03-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 13689.253935660507,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2031",
+          "date": "2031-03-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 603659000,
+          "couponUsd": 14461.372347707053,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2032",
+          "date": "2032-06-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 49281.31416837782,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        }
+      ],
+      "liquidity2035": null,
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "MSTR",
+      "scenario": "base",
+      "controlSetting": "hold-to-maturity",
+      "capitalPolicy": "hold-to-maturity",
+      "exitDelayDays": null,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-06-30",
+      "points": 3357,
+      "price2030": 494.0845740502939,
+      "price2035": 842.3121522779581,
+      "coinUnits2035": 950874.495479624,
+      "shares2035": 514134701.06193995,
+      "financingCost2035": 16007169664.69501,
+      "knownAnnualCarry2035": 0,
+      "convertedShares": 0,
+      "events": [
+        {
+          "id": "mstr-notes-2028",
+          "date": "2028-09-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1010000000,
+          "couponUsd": 17282.68309377139,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2029",
+          "date": "2029-12-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1500000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030B",
+          "date": "2030-03-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 2000000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030A",
+          "date": "2030-03-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 13689.253935660507,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2031",
+          "date": "2031-03-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 603659000,
+          "couponUsd": 14461.372347707053,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2032",
+          "date": "2032-06-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 49281.31416837782,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        }
+      ],
+      "liquidity2035": null,
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "MSTR",
+      "scenario": "bull",
+      "controlSetting": "hold-to-maturity",
+      "capitalPolicy": "hold-to-maturity",
+      "exitDelayDays": null,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-06-30",
+      "points": 3357,
+      "price2030": 1312.357359248052,
+      "price2035": 3450.7146469349836,
+      "coinUnits2035": 2924728.970386288,
+      "shares2035": 1207027191.0060158,
+      "financingCost2035": 16007169664.69501,
+      "knownAnnualCarry2035": 0,
+      "convertedShares": 0,
+      "events": [
+        {
+          "id": "mstr-notes-2028",
+          "date": "2028-09-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1010000000,
+          "couponUsd": 17282.68309377139,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2029",
+          "date": "2029-12-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1500000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030B",
+          "date": "2030-03-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 2000000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030A",
+          "date": "2030-03-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 13689.253935660507,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2031",
+          "date": "2031-03-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 603659000,
+          "couponUsd": 14461.372347707053,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2032",
+          "date": "2032-06-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 49281.31416837782,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        }
+      ],
+      "liquidity2035": null,
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "MSTR",
+      "scenario": "stress",
+      "controlSetting": "convert-at-window",
+      "capitalPolicy": "convert-at-window",
+      "exitDelayDays": null,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-06-30",
+      "points": 3357,
+      "price2030": 26.551553246184316,
+      "price2035": 16.345825981326445,
+      "coinUnits2035": 475846.41004688287,
+      "shares2035": 487562785.09770596,
+      "financingCost2035": 16007169664.69501,
+      "knownAnnualCarry2035": 0,
+      "convertedShares": 0,
+      "events": [
+        {
+          "id": "mstr-notes-2028",
+          "date": "2028-09-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1010000000,
+          "couponUsd": 17282.68309377139,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2029",
+          "date": "2029-12-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1500000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030B",
+          "date": "2030-03-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 2000000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030A",
+          "date": "2030-03-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 13689.253935660507,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2031",
+          "date": "2031-03-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 603659000,
+          "couponUsd": 14461.372347707053,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2032",
+          "date": "2032-06-15",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 49281.31416837782,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        }
+      ],
+      "liquidity2035": null,
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "MSTR",
+      "scenario": "base",
+      "controlSetting": "convert-at-window",
+      "capitalPolicy": "convert-at-window",
+      "exitDelayDays": null,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-06-30",
+      "points": 3357,
+      "price2030": 485.81393848717374,
+      "price2035": 823.7288885386557,
+      "coinUnits2035": 977642.4999290801,
+      "shares2035": 541063922.3287288,
+      "financingCost2035": 15989875907.155455,
+      "knownAnnualCarry2035": 0,
+      "convertedShares": 21978612,
+      "events": [
+        {
+          "id": "mstr-notes-2028",
+          "date": "2028-03-15",
+          "kind": "converted",
+          "claim": "debt",
+          "faceUsd": 1010000000,
+          "couponUsd": 17282.68309377139,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ],
+          "shares": 5513489
+        },
+        {
+          "id": "mstr-notes-2030A",
+          "date": "2029-09-15",
+          "kind": "converted",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 13689.253935660507,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ],
+          "shares": 5341600
+        },
+        {
+          "id": "mstr-notes-2029",
+          "date": "2029-12-01",
+          "kind": "cash-due",
+          "claim": "debt",
+          "faceUsd": 1500000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ]
+        },
+        {
+          "id": "mstr-notes-2030B",
+          "date": "2030-01-17",
+          "kind": "converted",
+          "claim": "debt",
+          "faceUsd": 2000000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ],
+          "shares": 4614400
+        },
+        {
+          "id": "mstr-notes-2031",
+          "date": "2030-09-15",
+          "kind": "converted",
+          "claim": "debt",
+          "faceUsd": 603659000,
+          "couponUsd": 14461.372347707053,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ],
+          "shares": 2593923
+        },
+        {
+          "id": "mstr-notes-2032",
+          "date": "2031-12-15",
+          "kind": "converted",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 49281.31416837782,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ],
+          "shares": 3915200
+        }
+      ],
+      "liquidity2035": null,
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "MSTR",
+      "scenario": "bull",
+      "controlSetting": "convert-at-window",
+      "capitalPolicy": "convert-at-window",
+      "exitDelayDays": null,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-06-30",
+      "points": 3357,
+      "price2030": 1280.4417325029617,
+      "price2035": 3338.0640736685796,
+      "coinUnits2035": 2948029.869922192,
+      "shares2035": 1260923699.2518032,
+      "financingCost2035": 15989875907.155455,
+      "knownAnnualCarry2035": 0,
+      "convertedShares": 24209412,
+      "events": [
+        {
+          "id": "mstr-notes-2028",
+          "date": "2028-03-15",
+          "kind": "converted",
+          "claim": "debt",
+          "faceUsd": 1010000000,
+          "couponUsd": 17282.68309377139,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ],
+          "shares": 5513489
+        },
+        {
+          "id": "mstr-notes-2029",
+          "date": "2029-06-01",
+          "kind": "converted",
+          "claim": "debt",
+          "faceUsd": 1500000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ],
+          "shares": 2230800
+        },
+        {
+          "id": "mstr-notes-2030A",
+          "date": "2029-09-15",
+          "kind": "converted",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 13689.253935660507,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ],
+          "shares": 5341600
+        },
+        {
+          "id": "mstr-notes-2030B",
+          "date": "2029-12-03",
+          "kind": "converted",
+          "claim": "debt",
+          "faceUsd": 2000000000,
+          "couponUsd": 0,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ],
+          "shares": 4614400
+        },
+        {
+          "id": "mstr-notes-2031",
+          "date": "2030-09-15",
+          "kind": "converted",
+          "claim": "debt",
+          "faceUsd": 603659000,
+          "couponUsd": 14461.372347707053,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ],
+          "shares": 2593923
+        },
+        {
+          "id": "mstr-notes-2032",
+          "date": "2031-12-15",
+          "kind": "converted",
+          "claim": "debt",
+          "faceUsd": 800000000,
+          "couponUsd": 49281.31416837782,
+          "sourceIds": [
+            "mstr-10q-2026q2"
+          ],
+          "shares": 3915200
+        }
+      ],
+      "liquidity2035": null,
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "stress",
+      "controlSetting": "scenario-default",
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": 90,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-05-31",
+      "points": 3357,
+      "price2030": 1.4146874447995117,
+      "price2035": 0.38075145951111794,
+      "coinUnits2035": 4345864.255314339,
+      "shares2035": 760534640.8252268,
+      "financingCost2035": 305508555.7837272,
+      "knownAnnualCarry2035": 33250000,
+      "convertedShares": 0,
+      "events": [],
+      "liquidity2035": {
+        "liquidUnits": 228986.05531433914,
+        "stakedUnits": 4116878.1999999997,
+        "rewardUnits": 0,
+        "queuedUnits": 0,
+        "nextAvailableAt": null,
+        "exitDelayDays": 90,
+        "rewardDelayDays": 7,
+        "totalRewards": 0,
+        "slashedUnits": 216677.80000000002
+      },
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "base",
+      "controlSetting": "scenario-default",
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": 7,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-05-31",
+      "points": 3357,
+      "price2030": 14.482265500140256,
+      "price2035": 9.82108715718457,
+      "coinUnits2035": 6104999.99999999,
+      "shares2035": 635145794.2295079,
+      "financingCost2035": 305508555.7837272,
+      "knownAnnualCarry2035": 33250000,
+      "convertedShares": 0,
+      "events": [],
+      "liquidity2035": {
+        "liquidUnits": 1770639.0526071335,
+        "stakedUnits": 4333556,
+        "rewardUnits": 804.9473928555187,
+        "queuedUnits": 0,
+        "nextAvailableAt": "2036-01-05",
+        "exitDelayDays": 7,
+        "rewardDelayDays": 7,
+        "totalRewards": 900467.816807684,
+        "slashedUnits": 0
+      },
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "bull",
+      "controlSetting": "scenario-default",
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": 7,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-05-31",
+      "points": 3357,
+      "price2030": 174.47385168986716,
+      "price2035": 138.72038371876124,
+      "coinUnits2035": 6104999.999999989,
+      "shares2035": 729478002.8087296,
+      "financingCost2035": 305508555.7837272,
+      "knownAnnualCarry2035": 33250000,
+      "convertedShares": 0,
+      "events": [],
+      "liquidity2035": {
+        "liquidUnits": 1339905.6337530625,
+        "stakedUnits": 4764067.266847064,
+        "rewardUnits": 1027.0993998626875,
+        "queuedUnits": 0,
+        "nextAvailableAt": "2036-01-05",
+        "exitDelayDays": 7,
+        "rewardDelayDays": 7,
+        "totalRewards": 1139012.6385089923,
+        "slashedUnits": 0
+      },
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "stress",
+      "controlSetting": 7,
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": 7,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-05-31",
+      "points": 3357,
+      "price2030": 1.4146874447995117,
+      "price2035": 0.38075145951111794,
+      "coinUnits2035": 4345864.255314339,
+      "shares2035": 760534640.8252268,
+      "financingCost2035": 305508555.7837272,
+      "knownAnnualCarry2035": 33250000,
+      "convertedShares": 0,
+      "events": [],
+      "liquidity2035": {
+        "liquidUnits": 228986.05531433914,
+        "stakedUnits": 4116878.1999999997,
+        "rewardUnits": 0,
+        "queuedUnits": 0,
+        "nextAvailableAt": null,
+        "exitDelayDays": 7,
+        "rewardDelayDays": 7,
+        "totalRewards": 0,
+        "slashedUnits": 216677.80000000002
+      },
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "base",
+      "controlSetting": 7,
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": 7,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-05-31",
+      "points": 3357,
+      "price2030": 14.482265500140256,
+      "price2035": 9.82108715718457,
+      "coinUnits2035": 6104999.99999999,
+      "shares2035": 635145794.2295079,
+      "financingCost2035": 305508555.7837272,
+      "knownAnnualCarry2035": 33250000,
+      "convertedShares": 0,
+      "events": [],
+      "liquidity2035": {
+        "liquidUnits": 1770639.0526071335,
+        "stakedUnits": 4333556,
+        "rewardUnits": 804.9473928555187,
+        "queuedUnits": 0,
+        "nextAvailableAt": "2036-01-05",
+        "exitDelayDays": 7,
+        "rewardDelayDays": 7,
+        "totalRewards": 900467.816807684,
+        "slashedUnits": 0
+      },
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "bull",
+      "controlSetting": 7,
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": 7,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-05-31",
+      "points": 3357,
+      "price2030": 174.47385168986716,
+      "price2035": 138.72038371876124,
+      "coinUnits2035": 6104999.999999989,
+      "shares2035": 729478002.8087296,
+      "financingCost2035": 305508555.7837272,
+      "knownAnnualCarry2035": 33250000,
+      "convertedShares": 0,
+      "events": [],
+      "liquidity2035": {
+        "liquidUnits": 1339905.6337530625,
+        "stakedUnits": 4764067.266847064,
+        "rewardUnits": 1027.0993998626875,
+        "queuedUnits": 0,
+        "nextAvailableAt": "2036-01-05",
+        "exitDelayDays": 7,
+        "rewardDelayDays": 7,
+        "totalRewards": 1139012.6385089923,
+        "slashedUnits": 0
+      },
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "stress",
+      "controlSetting": 30,
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": 30,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-05-31",
+      "points": 3357,
+      "price2030": 1.4146874447995117,
+      "price2035": 0.38075145951111794,
+      "coinUnits2035": 4345864.255314339,
+      "shares2035": 760534640.8252268,
+      "financingCost2035": 305508555.7837272,
+      "knownAnnualCarry2035": 33250000,
+      "convertedShares": 0,
+      "events": [],
+      "liquidity2035": {
+        "liquidUnits": 228986.05531433914,
+        "stakedUnits": 4116878.1999999997,
+        "rewardUnits": 0,
+        "queuedUnits": 0,
+        "nextAvailableAt": null,
+        "exitDelayDays": 30,
+        "rewardDelayDays": 7,
+        "totalRewards": 0,
+        "slashedUnits": 216677.80000000002
+      },
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "base",
+      "controlSetting": 30,
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": 30,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-05-31",
+      "points": 3357,
+      "price2030": 14.482265500140256,
+      "price2035": 9.82108715718457,
+      "coinUnits2035": 6104999.99999999,
+      "shares2035": 635145794.2295079,
+      "financingCost2035": 305508555.7837272,
+      "knownAnnualCarry2035": 33250000,
+      "convertedShares": 0,
+      "events": [],
+      "liquidity2035": {
+        "liquidUnits": 1770639.0526071335,
+        "stakedUnits": 4333556,
+        "rewardUnits": 804.9473928555187,
+        "queuedUnits": 0,
+        "nextAvailableAt": "2036-01-05",
+        "exitDelayDays": 30,
+        "rewardDelayDays": 7,
+        "totalRewards": 900467.816807684,
+        "slashedUnits": 0
+      },
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "bull",
+      "controlSetting": 30,
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": 30,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-05-31",
+      "points": 3357,
+      "price2030": 174.47385168986716,
+      "price2035": 138.72038371876124,
+      "coinUnits2035": 6104999.999999989,
+      "shares2035": 729478002.8087296,
+      "financingCost2035": 305508555.7837272,
+      "knownAnnualCarry2035": 33250000,
+      "convertedShares": 0,
+      "events": [],
+      "liquidity2035": {
+        "liquidUnits": 1339905.6337530625,
+        "stakedUnits": 4764067.266847064,
+        "rewardUnits": 1027.0993998626875,
+        "queuedUnits": 0,
+        "nextAvailableAt": "2036-01-05",
+        "exitDelayDays": 30,
+        "rewardDelayDays": 7,
+        "totalRewards": 1139012.6385089923,
+        "slashedUnits": 0
+      },
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "stress",
+      "controlSetting": 90,
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": 90,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-05-31",
+      "points": 3357,
+      "price2030": 1.4146874447995117,
+      "price2035": 0.38075145951111794,
+      "coinUnits2035": 4345864.255314339,
+      "shares2035": 760534640.8252268,
+      "financingCost2035": 305508555.7837272,
+      "knownAnnualCarry2035": 33250000,
+      "convertedShares": 0,
+      "events": [],
+      "liquidity2035": {
+        "liquidUnits": 228986.05531433914,
+        "stakedUnits": 4116878.1999999997,
+        "rewardUnits": 0,
+        "queuedUnits": 0,
+        "nextAvailableAt": null,
+        "exitDelayDays": 90,
+        "rewardDelayDays": 7,
+        "totalRewards": 0,
+        "slashedUnits": 216677.80000000002
+      },
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "base",
+      "controlSetting": 90,
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": 90,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-05-31",
+      "points": 3357,
+      "price2030": 14.482265500140256,
+      "price2035": 9.82108715718457,
+      "coinUnits2035": 6104999.99999999,
+      "shares2035": 635145794.2295079,
+      "financingCost2035": 305508555.7837272,
+      "knownAnnualCarry2035": 33250000,
+      "convertedShares": 0,
+      "events": [],
+      "liquidity2035": {
+        "liquidUnits": 1770639.0526071335,
+        "stakedUnits": 4333556,
+        "rewardUnits": 804.9473928555187,
+        "queuedUnits": 0,
+        "nextAvailableAt": "2036-01-05",
+        "exitDelayDays": 90,
+        "rewardDelayDays": 7,
+        "totalRewards": 900467.816807684,
+        "slashedUnits": 0
+      },
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "bull",
+      "controlSetting": 90,
+      "capitalPolicy": "cash-at-put",
+      "exitDelayDays": 90,
+      "asOf": "2026-10-23",
+      "financialAsOf": "2026-05-31",
+      "points": 3357,
+      "price2030": 174.47385168986716,
+      "price2035": 138.72038371876124,
+      "coinUnits2035": 6104999.999999989,
+      "shares2035": 729478002.8087296,
+      "financingCost2035": 305508555.7837272,
+      "knownAnnualCarry2035": 33250000,
+      "convertedShares": 0,
+      "events": [],
+      "liquidity2035": {
+        "liquidUnits": 1339905.6337530625,
+        "stakedUnits": 4764067.266847064,
+        "rewardUnits": 1027.0993998626875,
+        "queuedUnits": 0,
+        "nextAvailableAt": "2036-01-05",
+        "exitDelayDays": 90,
+        "rewardDelayDays": 7,
+        "totalRewards": 1139012.6385089923,
+        "slashedUnits": 0
+      },
+      "arrears2035": 0,
+      "liquidityShortfallAt": null,
+      "insolventAt": null
+    }
+  ],
+  "eth": [
+    {
+      "scenario": "stress",
+      "asOf": "2026-10-25",
+      "anchor": 2326.75,
+      "points": 3355,
+      "endDate": "2035-12-31",
+      "price2035": 139.76793302991717,
+      "sourceThrough": "2026-10-25",
+      "observations": 1502,
+      "ohlcClaim": false,
+      "probability": null
+    },
+    {
+      "scenario": "base",
+      "asOf": "2026-10-25",
+      "anchor": 2326.75,
+      "points": 3355,
+      "endDate": "2035-12-31",
+      "price2035": 903.347328270444,
+      "sourceThrough": "2026-10-25",
+      "observations": 1502,
+      "ohlcClaim": false,
+      "probability": null
+    },
+    {
+      "scenario": "bull",
+      "asOf": "2026-10-25",
+      "anchor": 2326.75,
+      "points": 3355,
+      "endDate": "2035-12-31",
+      "price2035": 8541.373685161605,
+      "sourceThrough": "2026-10-25",
+      "observations": 1502,
+      "ohlcClaim": false,
+      "probability": null
+    }
+  ]
+}

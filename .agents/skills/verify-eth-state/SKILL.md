@@ -21,10 +21,15 @@ post-await focusHistoricalEvent writer whenever either changes: daily coverage
 and cached daily loading establish the current abstraction's focus boundary.
 
 Baseline commit: 64c8207cb044d8990289c5a7d39972e21b74c240.
-Last code/model synchronization commit: 1ad3be543e870e74f10708c266f19572b217d25f.
-The correspondence review includes the committed ETH fix and v1.23.0 import URLs.
-Reviewed runtime SHA-256:
-bd57616e5ed9515fb876e93bf12d8ff4cf185825465e4e82c0b86b5dde47ab5d.
+Last code/model synchronization commit: 7261c1807028e1b69bf9cd9be0d269a64f88acc0.
+Previous skill synchronization: 1ad3be543e870e74f10708c266f19572b217d25f.
+The forecast range bound adds an argument without removing the navigation guard.
+The exact mutation selector was maintained; all 17 original/restored replays and
+nine actual-source mutations retain their required outcomes. Reviewed SHA-256:
+51202d57377b6da50f4db0d1c3e33745dfcea8b897fe269a2f5f366f82784168.
+Current receipt: docs/evolution-2026-10-26/eth-state-final.json.
+The new ETH future-price engine, scenario calculations and future visibility are
+outside this finite lifecycle model; their dedicated tests are separate evidence.
 See docs/formal-eth/README.md for the committed review revision, every action and
 guard's code mapping, actual bug replays, bounds, and result receipts.
 
@@ -115,3 +120,7 @@ document. The replay injects DOM, rendering, HTTP, timers, animation frames and
 import boundaries. Neither layer proves browser pixels/timing, economic
 correctness, historical-event causation, scheduler fairness, eventual completion,
 or behavior after arbitrarily many generations.
+
+## Recover the original local synchronization revision
+
+Native Git push was unavailable in the implementation environment. The GitHub API publication preserves the file tree but creates a different commit object. Read `docs/evolution-2026-10-26/SOURCE_PROVENANCE.md` and verify/fetch its original Git bundle into the separate verification ref before diffing an unavailable synchronization commit. Never substitute the public commit ID for the original recorded identity or rewrite an immutable forecast.
