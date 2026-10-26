@@ -3,6 +3,8 @@ import { detectDirectionalChanges } from "./market-structure.js?v=1.29.0";
 import {createInstrumentLedger,advanceInstrumentLedger,instrumentSummary} from './treasury-instruments.js';
 import {createTreasuryLiquidity,advanceTreasuryLiquidity,liquidityUnits,liquiditySummary,addTreasuryCoins,sellLiquidCoins,requestTreasuryExit,validateTreasuryLiquidity} from './treasury-liquidity.js';
 
+import {verifyForecastInformationClock,requireForecastInput} from './forecast-information-time.js';
+
 const DAY = 86400000, YEAR = 365.25;
 const day = value => {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new TypeError('Expected an ISO calendar date');
@@ -264,7 +266,7 @@ function simulate(symbol,snapshot,coinAnchor,latest,scenario,endYear,assetPath=n
  * capital structure. It is explicitly NOT current NAV: newer holdings are not
  * divided by a stale denominator. The stale-vintage warning travels with every
  * output and is shown on the chart. No out-of-sample predictive claim is made. */
-export function buildTreasuryForecasts({symbol,history,asOf,endYear=2035,snapshot=TREASURY_SNAPSHOTS[symbol],coinAnchor=TREASURY_MARKET_ANCHORS[symbol],assetPaths,capitalPolicy='cash-at-put',exitDelayDays}={}) {
+export function buildTreasuryForecasts({symbol,history,asOf,endYear=2035,snapshot=TREASURY_SNAPSHOTS[symbol],coinAnchor=TREASURY_MARKET_ANCHORS[symbol],assetPaths,capitalPolicy='cash-at-put',exitDelayDays,informationClock=null}={}) {
   if(!['MSTR','BMNR'].includes(symbol))throw new RangeError('Invalid instrument or scenario');
   if(!snapshot||!coinAnchor)throw new TypeError('Missing verified treasury snapshot or crypto anchor');
   if(!Number.isSafeInteger(endYear)||endYear<2027||endYear>2050)throw new RangeError('Horizon must be 2027–2050');
@@ -298,6 +300,14 @@ export function buildTreasuryForecasts({symbol,history,asOf,endYear=2035,snapsho
   if(day(latest.date)>=day(`${endYear}-12-31`))throw new RangeError('Expired horizon');
   if(snapshot.asOf>latest.date||snapshot.publishedAt>latest.date||coinAnchor.date>latest.date)throw new RangeError('Future information is not permitted at the price cutoff');
   if(assetPaths!==undefined&&coinAnchor.date!==latest.date)throw new RangeError('Asset-linked paths require the coin anchor date to match the observed equity anchor date');
+  if(informationClock!==null) {
+    verifyForecastInformationClock(informationClock);
+    requireForecastInput(informationClock,{kind:'equity-session',symbol,asOf:latest.date});
+    requireForecastInput(informationClock,{kind:'crypto-daily',symbol:snapshot.coin+'USD',asOf:coinAnchor.date});
+    const research=requireForecastInput(informationClock,{kind:'document',id:'treasury-research'});
+    if(research.publishedAt!==null&&research.publishedAt.slice(0,10)<snapshot.publishedAt)throw new RangeError('Research receipt predates the financial disclosure');
+    if(research.collectedAt.slice(0,10)<snapshot.publishedAt)throw new RangeError('Research collection predates the financial disclosure');
+  }
   const assets=assetPaths===undefined?null:validateAssetPaths(assetPaths,{coin:snapshot.coin,asOf:latest.date,endDate:`${endYear}-12-31`,anchorPrice:coinAnchor.price});
   const simulations=Object.fromEntries(TREASURY_SCENARIOS.map(item=>[item.id,simulate(symbol,snapshot,coinAnchor,latest,item.id,endYear,assets?.scenarios[item.id],{capitalPolicy,exitDelayDays})]));
   const maps=Object.values(simulations).map(item=>new Map(item.path.map(p=>[p.date,p])));
@@ -317,7 +327,7 @@ export function buildTreasuryForecasts({symbol,history,asOf,endYear=2035,snapsho
       ...pivots.map((point,index)=>({id:`${symbol.toLowerCase()}-simulated-${point.type}-${index}`,date:point.eventDate,price:point.eventPrice,title:`모의 ${point.type==='high'?'고점':'저점'} 후보`,description:`앱이 선택한 12% 반전 규칙으로 모의 경로를 사후 요약한 ${point.type==='high'?'고점':'저점'}입니다. 모형 내 확인일은 ${point.confirmationDate}이며 별도 최소 간격 필터는 없습니다. 실제 미래 사건, 4년 주기 또는 적중 확률을 뜻하지 않습니다.`,kind:'simulated-turn',turnType:point.type,confirmationDate:point.confirmationDate,threshold:0.12,probability:null,sourceIds:selected.path.find(row=>row.date===point.eventDate).sourceIds})),
       ...(assets&&selected.insolventAt?[{id:`${symbol.toLowerCase()}-simulated-zero`,date:selected.insolventAt,price:0,title:'모의 잔여가치 소진',description:'이 조건의 일말 보통주 잔여가치가 0 이하가 되어 이후 가격을 0으로 유지하는 모델 규칙입니다. 실제 파산일 예측이 아닙니다.',kind:'simulated-insolvency',probability:null,sourceIds:selected.settings.sourceIds}]:[]),
     ].filter(item=>item.date<=`${endYear}-12-31`).sort((a,b)=>a.date.localeCompare(b.date));
-    return [scenario.id,{symbol,asOf:latest.date,issuedAt:'2026-10-26',financialAsOf:snapshot.asOf,displayEnd:`${endYear}-12-31`,path,milestones,snapshot,coinAnchor,scenario,assumptions:selected.settings,instruments:selected.instruments,instrumentEvents:selected.instrumentEvents,
+    return [scenario.id,{symbol,asOf:latest.date,issuedAt:informationClock?.issuedAt??null,informationCutoffAt:informationClock?.informationCutoffAt??null,informationClock:informationClock?JSON.parse(JSON.stringify(informationClock)):null,modelReviewedAt:'2026-10-26',financialAsOf:snapshot.asOf,displayEnd:`${endYear}-12-31`,path,milestones,snapshot,coinAnchor,scenario,assumptions:selected.settings,instruments:selected.instruments,instrumentEvents:selected.instrumentEvents,
     pathMode:assets?'asset-linked-daily':'target-interpolation',
     assetPath:asset?{asset:assets.asset,asOf:assets.asOf,endDate:assets.endDate,scenario:asset.id,method:asset.method,sourceIds:asset.sourceIds,anchors:asset.anchors,training:asset.training,metadata:{...assets.metadata,...asset.metadata},warnings:[...(assets.warnings||[]),...(asset.warnings||[])]}:null,
     formula:'주가 가정 = 흡수 상태이면 0; 정상 평가 상태이면 프리미엄 × max(코인 가치 + 현금 + 포함 자산 − 채무 원금 − 우선주 청구권 − 기타 부채 − 비지배지분, 0) ÷ 보통주 수',

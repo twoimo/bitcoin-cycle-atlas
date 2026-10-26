@@ -54,3 +54,53 @@ test('overlapping cases are reported separately and future issue dates are rejec
   assert.throws(()=>run({origins:[origins[0],origins[0]]}),/distinct/);
   assert.throws(()=>run({evaluatedAt:'2020-02-31T00:00:00Z'}));
 });
+
+test('explicit null issue times fail and policy fallback never claims actual issuance',()=>{
+  const origin=origins[0],completedAt=Date.parse(origin+'T00:00:00Z')+86400000;
+  const evaluate=issuedAtByOrigin=>run({origins:[origin],economicSnapshots:[],issuedAtByOrigin});
+  for(const supplied of [null,0,false]){
+    assert.throws(()=>evaluate({[origin]:supplied}),/Explicit origin issue time must be a timestamp string/);
+  }
+  for(const issueMap of [{},{[origin]:undefined}]){
+    const r=evaluate(issueMap);
+    assert.equal(r.originStates[0].issuedAt,new Date(completedAt).toISOString());
+    assert.equal(r.originStates[0].actualIssueTimeSupplied,false);
+    assert.ok(r.cases.every(row=>row.actualIssueTimeSupplied===false));
+  }
+  const explicit=new Date(completedAt+3600000).toISOString(),r=evaluate({[origin]:explicit});
+  assert.equal(r.originStates[0].issuedAt,explicit);
+  assert.equal(r.originStates[0].actualIssueTimeSupplied,true);
+  assert.ok(r.cases.every(row=>row.actualIssueTimeSupplied===true));
+  for(const invalid of [completedAt-1,completedAt+86400000]){
+    assert.throws(()=>evaluate({[origin]:new Date(invalid).toISOString()}),/within the UTC day after its completed close/);
+  }
+});
+
+test('synthetic extreme finite outcomes retain finite log losses when quotients underflow',()=>{
+  const scaled=structuredClone(base);
+  for(const row of scaled.ethRows)row.price*=1e-280;
+  const origin=origins[0],before=runEthereumEconomicAblations({...scaled,origins:[origin],horizons:[30]});
+  const changed=structuredClone(scaled);
+  changed.ethRows[610].price=1e300;
+  const after=runEthereumEconomicAblations({...changed,origins:[origin],horizons:[30]});
+  assert.equal(after.cases.length,26);
+  assert.ok(after.cases.every(row=>row.status==='scored'));
+  for(let i=0;i<after.cases.length;i++){
+    const prior=before.cases[i],row=after.cases[i];
+    assert.equal(row.fullPrediction,prior.fullPrediction);
+    assert.equal(row.reducedPrediction,prior.reducedPrediction);
+    assert.ok(Number.isFinite(row.actual)&&row.actual>0);
+    assert.equal(row.fullPrediction/row.actual,0);
+    assert.equal(row.reducedPrediction/row.actual,0);
+    assert.ok(Number.isFinite(row.fullAbsoluteLogError)&&row.fullAbsoluteLogError>1000);
+    assert.ok(Number.isFinite(row.reducedAbsoluteLogError)&&row.reducedAbsoluteLogError>1000);
+  }
+  for(const summary of after.summaries)for(const group of ['overlapping','disjoint']){
+    const metrics=summary[group];
+    assert.equal(metrics.n,1);
+    assert.ok(Number.isFinite(metrics.fullMeanAbsoluteLogError));
+    assert.ok(Number.isFinite(metrics.reducedMeanAbsoluteLogError));
+    assert.ok(Number.isFinite(metrics.meanAbsoluteLogErrorReduction));
+    assert.ok(Number.isFinite(metrics.addedFeatureSkill));
+  }
+});

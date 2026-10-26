@@ -72,7 +72,7 @@ async function screenshot(cdp,name,receipt){
   const bytes=Buffer.from(result.data,'base64');
   await writeFile(resolve(out,name),bytes);
   receipt.screenshots.push({file:name,bytes:bytes.length,sha256:hash(bytes)});
-  if(name==='data-320-start.png'||name==='eth-320-loaded.png'){
+  if(name==='data-320-start.png'||name==='eth-320-loaded.png'||name==='bmnr-320-clock.png'){
     const size=30000,total=Math.ceil(result.data.length/size);
     for(let index=0;index<total;index++)console.log('ETH_BROWSER_IMAGE_CHUNK '+JSON.stringify({name,index,total,data:result.data.slice(index*size,(index+1)*size)}));
   }
@@ -206,13 +206,50 @@ async function ethCase(cdp,width,receipt,expected){
   await click(cdp,'#eth-data-dialog > header > button');
   assert.equal((await bounds(cdp,'#eth-data-dialog')).open,false);
 }
+
+async function bmnrCase(cdp,width,receipt){
+  await until(()=>evaluate(cdp,()=>{
+    const s=document.querySelector('#equity-chart');
+    return s&&Number(s.dataset.observedCandleCount)>0&&Number(s.dataset.forecastPointCount)>0;
+  }),'BMNR observed and conditional paths');
+  await settled(cdp);
+  receipt.chart=await evaluate(cdp,()=>{
+    const chart=document.querySelector('#equity-chart');
+    const path=chart.querySelector('.equity-forecast-line');
+    return {width:innerWidth,scrollWidth:document.documentElement.scrollWidth,dataset:{...chart.dataset},
+      symbol:document.querySelector('#equity-symbol').textContent,price:document.querySelector('#equity-price').textContent,
+      date:document.querySelector('#equity-bar-time').textContent,pathLength:path?.getTotalLength()??0,
+      pathData:path?.getAttribute('d')??'',background:getComputedStyle(document.querySelector('.equity-plot')).backgroundColor};
+  });
+  assert.equal(receipt.chart.symbol,'BMNR');assert.ok(receipt.chart.scrollWidth<=width+1,'BMNR horizontal page overflow');
+  assert.ok(receipt.chart.pathLength>0&&!/NaN|Infinity/.test(receipt.chart.pathData));
+  dark(receipt.chart.background,'BMNR plot');
+  await screenshot(cdp,'bmnr-'+width+'-loaded.png',receipt);
+  await click(cdp,'[data-equity-action="forecast"]');
+  receipt.dialog=await bounds(cdp,'#equity-detail-dialog');
+  assert.equal(receipt.dialog.open,true);visibleBounds(receipt.dialog,width);dark(receipt.dialog.background,'BMNR evidence dialog');
+  receipt.clockLabels=await evaluate(cdp,()=>{
+    const pairs=[...document.querySelectorAll('#equity-detail-content dl dt')].map(dt=>[dt.textContent,dt.nextElementSibling?.textContent]);
+    const dt=[...document.querySelectorAll('#equity-detail-content dt')].find(el=>el.textContent==='실제 발행 시각');
+    dt?.scrollIntoView({block:'center'});
+    return Object.fromEntries(pairs);
+  });
+  assert.equal(receipt.clockLabels['모형 작성·검토일'],'2026-10-26');
+  assert.equal(receipt.clockLabels['실제 발행 시각'],'화면 계산 · 발행 원장에 저장되지 않음');
+  assert.equal(receipt.clockLabels['정보 컷오프'],'개별 자료 수집 기록 참조');
+  await settled(cdp);
+  await screenshot(cdp,'bmnr-'+width+'-clock.png',receipt);
+  await click(cdp,'#equity-detail-dialog > header > button');
+  assert.equal((await bounds(cdp,'#equity-detail-dialog')).open,false);
+}
+
 async function main(){
   await mkdir(out,{recursive:true});
   assert.ok(Number(process.versions.node.split('.')[0])>=24,'Node 24 or newer is required');
   assert.equal(typeof WebSocket,'function','Native WebSocket is required');
   report.sourceCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
   report.sourceHashes={};
-  for(const path of ['dist/index.html','dist/site-entry.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs']){
+  for(const path of ['dist/index.html','dist/site-entry.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs']){
     report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   }
   const fonts=execFileSync('fc-list',[':lang=ko'],{encoding:'utf8'}).trim();
@@ -250,7 +287,7 @@ async function main(){
   const archived=parseEthArchive(JSON.parse(await readFile(resolve(dist,'data/eth-ohlc.json'),'utf8')),'daily');
   const last=archived.candles.at(-1),expected={price:'$'+new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(last.close),date:last.date.slice(0,10),close:last.close};
   report.expectedObservedEth=expected;
-  for(const width of widths)for(const page of ['data','eth']){
+  for(const width of widths)for(const page of ['data','eth','bmnr']){
     const receipt={page,width,height,status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[]};
     report.cases.push(receipt);let cdp,targetId;
     try{
@@ -272,9 +309,9 @@ async function main(){
       await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<=390});
       await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:width<=390,maxTouchPoints:1});
       await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'},{name:'prefers-color-scheme',value:'dark'}]});
-      receipt.url=base+(page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':'/?symbol=ETHUSD&granularity=daily&type=line');
+      receipt.url=base+(page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol=BMNR&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
-      if(page==='data')await dataCase(cdp,width,receipt);else await ethCase(cdp,width,receipt,expected);
+      if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected);else await bmnrCase(cdp,width,receipt);
       assert.equal(receipt.runtimeErrors.length,0,'Browser runtime errors: '+JSON.stringify(receipt.runtimeErrors));
       assert.equal(receipt.resourceErrors.length,0,'Browser resource failures: '+JSON.stringify(receipt.resourceErrors));
       receipt.status='passed';
@@ -286,7 +323,7 @@ async function main(){
       if(targetId)try{await browser.send('Target.closeTarget',{targetId});}catch(error){report.failures.push({page,width,cleanupError:errorText(error)});}
     }
   }
-  assert.equal(report.cases.length,10);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');
+  assert.equal(report.cases.length,15);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');
   report.status='passed';
 }
 try{await main();}catch(error){report.status='failed';report.error=errorText(error);process.exitCode=1;}
@@ -297,5 +334,5 @@ finally{
   if(server)await new Promise(resolve=>server.close(resolve));
   if(profile)try{await rm(profile,{recursive:true,force:true});}catch(error){report.cleanupError=errorText(error);}
   await mkdir(out,{recursive:true});await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,sourceHashes:report.sourceHashes,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,sticky:c.sticky,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,sourceHashes:report.sourceHashes,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,sticky:c.sticky,clockLabels:c.clockLabels,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
 }

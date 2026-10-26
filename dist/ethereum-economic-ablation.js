@@ -73,10 +73,15 @@ export function runEthereumEconomicAblations({
   const ethTargets=economicSnapshots.length?targetIndex(ethRows,evaluationCutoff):new Map();
   const btcTargets=economicSnapshots.length?targetIndex(btcRows,evaluationCutoff):new Map();
   for(const origin of ordered){
-    const issuedAt=issuedAtByOrigin[origin]??closeAt(origin),cutoff=stamp(issuedAt,'issuedAt');
-    if(cutoff<=(utcDay(origin))*DAY||cutoff>evaluationCutoff)throw new RangeError('Origin issue time exceeds evaluation time');
+    const suppliedIssue=issuedAtByOrigin[origin];
+    const actualIssueTimeSupplied=suppliedIssue!==undefined;
+    if(actualIssueTimeSupplied&&typeof suppliedIssue!=='string')throw new TypeError('Explicit origin issue time must be a timestamp string');
+    const issuedAt=actualIssueTimeSupplied?suppliedIssue:closeAt(origin),cutoff=stamp(issuedAt,'issuedAt');
+    if(cutoff>evaluationCutoff)throw new RangeError('Origin issue time exceeds evaluation time');
+    const completedAt=Date.parse(closeAt(origin));
+    if(cutoff<completedAt||cutoff>=completedAt+DAY)throw new RangeError('Origin issue time must be within the UTC day after its completed close');
     const candidate=buildEthereumEconomicCandidate({ethRows,btcRows,economicSnapshots,asOf:origin,horizons,issuedAt});
-    originStates.push({origin,issuedAt,actualIssueTimeSupplied:issuedAtByOrigin[origin]!==undefined,status:candidate.status,reason:candidate.reason??null,
+    originStates.push({origin,issuedAt,actualIssueTimeSupplied,status:candidate.status,reason:candidate.reason??null,
       currentInput:candidate.currentInput??null,training:candidate.training??[]});
     for(const horizonDays of horizons){
       const prediction=candidate.predictions?.find(p=>p.horizonDays===horizonDays&&p.status==='ready');
@@ -94,12 +99,12 @@ export function runEthereumEconomicAblations({
           const reducedPrediction=anchor>0&&Number.isFinite(reducedLogReturn)?anchor*Math.exp(reducedLogReturn):null;
           const eligiblePrediction=Number.isFinite(fullPrediction)&&fullPrediction>0&&Number.isFinite(reducedPrediction)&&reducedPrediction>0;
           const status=!eligiblePrediction?'unavailable':pending?'pending':Number.isFinite(actual)&&actual>0?'scored':'target-unavailable';
-          cases.push({origin,issuedAt,actualIssueTimeSupplied:issuedAtByOrigin[origin]!==undefined,targetDate,horizonDays,target,
+          cases.push({origin,issuedAt,actualIssueTimeSupplied,targetDate,horizonDays,target,
             unit:target==='ETH/USD'?'USD per ETH':'BTC per ETH',feature:feature.id,status,
             fullPrediction:eligiblePrediction?fullPrediction:null,reducedPrediction:eligiblePrediction?reducedPrediction:null,
             actual:status==='scored'?actual:null,
-            fullAbsoluteLogError:status==='scored'?Math.abs(Math.log(fullPrediction/actual)):null,
-            reducedAbsoluteLogError:status==='scored'?Math.abs(Math.log(reducedPrediction/actual)):null,
+            fullAbsoluteLogError:status==='scored'?Math.abs(Math.log(fullPrediction)-Math.log(actual)):null,
+            reducedAbsoluteLogError:status==='scored'?Math.abs(Math.log(reducedPrediction)-Math.log(actual)):null,
             targetSources:status==='scored'?{eth:{vintageId:targetEth.vintageId,sourceHash:targetEth.sourceHash},btc:target==='ETH/BTC'?{vintageId:targetBtc.vintageId,sourceHash:targetBtc.sourceHash}:null}:null,
             reason:status==='unavailable'?candidate.reason??'This horizon or feature refit is unavailable':status==='target-unavailable'?'No target vintage was published and collected by evaluation time':null});
         }

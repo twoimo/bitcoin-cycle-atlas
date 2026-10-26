@@ -1,13 +1,33 @@
-import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {readFile,mkdir,writeFile,readdir} from 'node:fs/promises';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {runEthereumModelComparison} from '../dist/ethereum-model-comparison.js';
 import {runEthereumEconomicAblations} from '../dist/ethereum-economic-ablation.js';
+import {readAssetDailyRows} from '../dist/asset-daily-observations.js';
+import {captureCoinMetricsEthArchive} from '../dist/ethereum-economic-data.js';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const digest=text=>createHash('sha256').update(text).digest('hex');
+
+async function loadEconomicAcquisition(repositoryRoot,asOf){
+  const directory=resolve(repositoryRoot,'build/ethereum-economic-data');
+  let names;try{names=await readdir(directory,{withFileTypes:true});}catch(error){if(error.code==='ENOENT')return null;throw error;}
+  const captures=[];
+  for(const entry of names.filter(row=>row.isDirectory()&&row.name.startsWith('capture-'))){
+    const base=resolve(directory,entry.name);
+    const receipt=JSON.parse(await readFile(resolve(base,'receipt.json'),'utf8'));
+    if(receipt.status!=='success'||receipt.asOf!==asOf)continue;
+    const csv=await readFile(resolve(base,'coinmetrics-eth.csv'),'utf8');
+    const capture=await captureCoinMetricsEthArchive(csv,{asOf,captureStartedAt:receipt.captureStartedAt,collectedAt:receipt.collectedAt});
+    if(capture.source.sourceSha256!==receipt.sourceSha256)throw new Error('Economic acquisition receipt differs from preserved bytes');
+    captures.push({receipt,capture});
+  }
+  captures.sort((a,b)=>a.receipt.collectedAt.localeCompare(b.receipt.collectedAt));
+  return captures.at(-1)??null;
+}
+
 export async function evaluateEthereumModels({repositoryRoot=root,output=null}={}) {
   const ethText=await readFile(resolve(repositoryRoot,'dist/data/eth-ohlc.json'),'utf8');
   const btcText=await readFile(resolve(repositoryRoot,'dist/data/btc-daily.json'),'utf8');
@@ -37,29 +57,17 @@ export async function evaluateEthereumModels({repositoryRoot=root,output=null}={
   const sourceTree=execFileSync('git',['rev-parse','HEAD^{tree}'],{cwd:repositoryRoot,encoding:'utf8'}).trim();
   const dirty=execFileSync('git',['status','--porcelain','--',...Object.keys(sourceFiles),'dist/data/eth-ohlc.json','dist/data/btc-daily.json'],{cwd:repositoryRoot,encoding:'utf8'}).trim();
   if(dirty)throw new Error('Comparison must identify committed candidate source and observed input bytes');
-  const report=runEthereumModelComparison({ethHistory,btcHistory,economicSnapshots:[]},{asOf});
-  const ablation=runEthereumEconomicAblations({ethRows:[],btcRows:[],economicSnapshots:[],asOf,origins:report.origins.map(row=>row.origin)});
+  const acquisition=await loadEconomicAcquisition(repositoryRoot,asOf);
+  const economicSnapshots=acquisition?.capture.coverage.modelSnapshots??[];
+  const report=runEthereumModelComparison({ethHistory,btcHistory,economicSnapshots},{asOf});
+  report.data.economicAcquisition=acquisition?{source:acquisition.capture.source,collectedAt:acquisition.receipt.collectedAt,publishedAt:null,coverage:acquisition.capture.coverage}:{status:'not-collected-in-this-run',eligibleModelSnapshotCount:0};
+  const ablation=runEthereumEconomicAblations({ethRows:readAssetDailyRows(ethHistory,'ETH',asOf),btcRows:readAssetDailyRows(btcHistory,'BTC',asOf),economicSnapshots,asOf,origins:report.origins.map(row=>row.origin)});
   report.provenance={sourceCommit,sourceTree,sourceFiles,inputSha256:{'dist/data/eth-ohlc.json':digest(ethText),'dist/data/btc-daily.json':digest(btcText)},executedAt:new Date().toISOString(),
     executionEnvironment:process.env.GITHUB_ACTIONS==='true'?'GitHub Actions':'Explicit Node invocation',runId:process.env.GITHUB_RUN_ID??null,externalModelReview:null};
   if(output){
     await mkdir(dirname(output),{recursive:true});
-    const bundlePaths=[...new Set([...Object.keys(sourceFiles),
-      'tests/ethereum-cycle-models.test.mjs','tests/ethereum-economic-model.test.mjs',
-      'tests/ethereum-model-comparison.test.mjs','tests/ethereum-forecast-boundary.test.mjs',
-      'docs/ETH_MODEL_COMPARISON.md','docs/ETH_ECONOMIC_SOURCE_REVIEW.md','docs/ETH_CANDIDATE_REVIEW.md','.github/workflows/eth-model-evaluation.yml',
-      'dist/data/eth-ohlc.json','dist/data/btc-daily.json'])].sort();
-    const entries=[],parts=['Ethereum candidate review source book\nSource commit: '+sourceCommit+'\nNo Gemini review has been performed.\n'];
-    for(const path of bundlePaths){
-      const body=await readFile(resolve(repositoryRoot,path));
-      const sha256=digest(body),bytes=body.length;
-      entries.push({path,sha256,bytes});
-      parts.push('\nBEGIN FILE '+path+'\nUTF8_BYTES '+bytes+'\nSHA256 '+sha256+'\n\n'+body.toString('utf8')+'\nEND FILE '+path+'\n');
-    }
-    const bundle=parts.join(''),bundleSha256=digest(bundle);
-    const manifest={sourceCommit,bundleSha256,bundleBytes:Buffer.byteLength(bundle),entries,scope:'Complete dependency closure, focused tests, review contract, workflow and exact current stored price files; external review pending'};
-    await writeFile(resolve(dirname(output),'eth-review-source-bundle.txt'),bundle);
-    await writeFile(resolve(dirname(output),'eth-review-source-manifest.json'),JSON.stringify(manifest,null,2)+'\n');
-    report.provenance.reviewSourceBundle={sha256:bundleSha256,bytes:manifest.bundleBytes,files:entries.length};
+    report.provenance.reviewSourceBundle=null;
+    report.provenance.externalReviewPacket='build/eth-review-packet/source-manifest.json';
     await writeFile(output,JSON.stringify(report,null,2)+'\n');
     ablation.provenance={sourceCommit,sourceTree,inputSha256:report.provenance.inputSha256,executedAt:report.provenance.executedAt,sourceFiles};
     await writeFile(resolve(dirname(output),'ethereum-economic-ablation.json'),JSON.stringify(ablation,null,2)+'\n');
@@ -71,7 +79,7 @@ export function compactEthereumReport(report){
   return {kind:report.kind,asOf:report.asOf,sourceCommit:report.provenance.sourceCommit,sourceTree:report.provenance.sourceTree,executedAt:report.provenance.executedAt,runId:report.provenance.runId,inputSha256:report.provenance.inputSha256,
     uniqueOrigins:report.uniqueOrigins,maturedTargets:report.maturedTargets,prospectiveScoredTargets:report.prospectiveScoredTargets,
     historicalVintagesAvailable:report.data.historicalVintagesAvailable,discardedEarlyEthObservations:report.data.discardedEarlyEthObservations,
-    economicSnapshotCount:report.data.economicSnapshotCount,common:report.common,pairwise:report.pairwise.filter(p=>!['flat','shrunkenTrend','btcLinked'].includes(p.left)&&!['flat','shrunkenTrend','btcLinked'].includes(p.right)),
+    economicSnapshotCount:report.data.economicSnapshotCount,economicAcquisition:report.data.economicAcquisition,common:report.common,pairwise:report.pairwise.filter(p=>!['flat','shrunkenTrend','btcLinked'].includes(p.left)&&!['flat','shrunkenTrend','btcLinked'].includes(p.right)),
     summaries:report.summaries.map(s=>({model:s.model,horizonDays:s.horizonDays,availableOrigins:s.availableOrigins,completedOutcomes:s.completedOutcomes,
       disjointTargetIntervals:s.disjointTargetIntervals,meanAbsoluteLogError:s.disjoint.meanAbsoluteLogError,directionAccuracy:s.disjoint.directionAccuracy,
       directionalCallCoverage:s.disjoint.directionalCallCoverage,directionAccuracyAmongDirectionalCalls:s.disjoint.directionAccuracyAmongDirectionalCalls,
