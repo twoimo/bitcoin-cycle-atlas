@@ -36,6 +36,24 @@ test('opening the view creates exactly one grouped comparison table with all 18 
   view.destroy();
 });
 
+test('the ready board removes the metadata strip without losing source and date disclosure', async () => {
+  const { view, ui, model } = setup();
+  assert.match(ui.root.innerHTML, /id="asset-context"[^>]*hidden/);
+  await view.render();
+  assert.equal(ui.node('asset-context').hidden, true);
+  assert.equal(ui.node('asset-context').textContent, '');
+  assert.equal(ui.node('asset-context').innerHTML, '');
+  assert.equal(ui.node('asset-context').title, '');
+  const css = readFileSync(new URL('../dist/daily-data.css', import.meta.url), 'utf8');
+  assert.match(css, /\.asset-context\[hidden\] \{ display: none;/);
+  ui.click('', { assetReason: 'BTC' });
+  assert.match(ui.node('daily-method-content').innerHTML, /Example price source/);
+  assert.match(ui.node('daily-method-content').innerHTML, /2026-01-02.*2026-10-23/);
+  assert.match(assetComparisonCsv(model), /source_url/);
+  assert.match(assetComparisonCsv(model), /https:\/\/example\.test\/prices\/BTC/);
+  view.destroy();
+});
+
 test('each final cell uses an exact five-stage label and opens the relevant explanation', async () => {
   const { view, ui, model } = setup(); await view.render();
   const table = ui.node('data-body').innerHTML;
@@ -103,7 +121,7 @@ test('unequal dates are labeled per asset instead of asserting a shared observat
   assert.match(ui.node('asset-latest-header').innerHTML, /종목별 기준일/);
   assert.match(ui.node('data-body').innerHTML, /asset-cell-date">2026\.10\.22/);
   assert.match(ui.node('data-body').innerHTML, /asset-cell-date">2026\.01\.05/);
-  assert.match(ui.node('asset-context').innerHTML, /최근 관측 종목별 기준일/);
+  assert.equal(ui.node('asset-context').hidden, true);
   view.destroy();
 });
 
@@ -115,6 +133,7 @@ test('loading is lazy while hidden and repeated visible calls share the same pen
   const pending = view.render(); assert.equal(view.render(), pending);
   await ui.settle(); assert.equal(reads, 1); assert.equal(builds, 0);
   assert.equal(view.state.status, 'loading'); assert.equal(ui.node('export-raw').disabled, true);
+  assert.equal(ui.node('asset-context').hidden, false);
   assert.deepEqual(symbols(ui.node('data-body').innerHTML), []);
   gate.resolve({ retrievedAt: '2026-10-25T08:00:00Z' }); await pending;
   assert.equal(builds, 1); assert.equal(view.state.status, 'ready');
@@ -130,12 +149,14 @@ test('failed fetch clears rows and export, does not retry on resize, and explici
   assert.deepEqual(symbols(ui.node('data-body').innerHTML), []);
   assert.match(ui.node('data-body').innerHTML, /id="asset-retry"/);
   assert.match(ui.node('asset-context').title, /network offline/);
+  assert.equal(ui.node('asset-context').hidden, false);
   ui.click('export-raw'); assert.equal(downloads.length, 0);
   await view.render(); await view.render(); assert.equal(reads, 2);
   broken = false; ui.click('asset-retry'); await view.render();
   assert.equal(reads, 3); assert.equal(view.state.status, 'ready');
   assert.equal(ui.node('export-raw').disabled, false);
   assert.doesNotMatch(ui.node('asset-context').title, /network offline/);
+  assert.equal(ui.node('asset-context').hidden, true);
   assert.deepEqual(symbols(ui.node('data-body').innerHTML), COMPARISON_SYMBOLS);
   view.destroy();
 });
