@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-hallmark-preflight",
+  "sourceCommit": "4bd88bd96125335b68af92f6165cd35e6642beec",
+  "upstream": {
+    "repository": "Nutlope/hallmark",
+    "commit": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+    "version": "2.0.0",
+    "scope": "app",
+    "genre": "modern-minimal"
+  },
+  "brief": {
+    "audience": "Korean users inspecting observed market histories, explicit model assumptions and preserved research records",
+    "job": "inspect prices, compare assets, review original sources and replay stored assumptions",
+    "tone": "dense, restrained financial workbench",
+    "material": "Existing real source archives, the user's exact screenshot and actual repository screens"
+  },
+  "inventory": {
+    "html": [
+      "dist/index.html",
+      "dist/mobile-preview.html"
+    ],
+    "css": [
+      "dist/analysis-dock.css",
+      "dist/atlas.css",
+      "dist/chart-bottom-bar.css",
+      "dist/chart-details-panel.css",
+      "dist/chart-export-workbench.css",
+      "dist/chart-magnet.css",
+      "dist/chart-workspace-controls.css",
+      "dist/compact-chart-layout.css",
+      "dist/compact.css",
+      "dist/cycle-milestones.css",
+      "dist/daily-data.css",
+      "dist/equity-view.css",
+      "dist/eth-view.css",
+      "dist/ethereum-history.css",
+      "dist/forecast-journal.css",
+      "dist/lab.css",
+      "dist/mobile-workspace.css",
+      "dist/outlook.css",
+      "dist/research-annotations.css",
+      "dist/research-reader.css",
+      "dist/styles.css",
+      "dist/symbol-selector.css",
+      "dist/viewport.css",
+      "dist/workspace-tools.css"
+    ],
+    "topLevelRoutes": [
+      "/?symbol=BTCUSD",
+      "/?symbol=ETHUSD",
+      "/?symbol=BMNR",
+      "/?symbol=MSTR",
+      "/?page=data",
+      "/?page=evidence",
+      "/?page=compare&legacy=1",
+      "/mobile-preview.html"
+    ]
+  },
+  "preserved": [
+    "native ES modules and static Pages deployment",
+    "all route destinations, handlers, inputs and test hooks",
+    "observed prices, assumptions, source clocks and stored identities",
+    "full dynamic viewport, single-row primary toolbar and internal scroll owners",
+    "18 comparison assets with BTC first",
+    "existing separate model review and deployment gates"
+  ],
+  "introduced": [
+    "viewport-filling comparison rows with native minimum sizes",
+    "Korean current BTC display identity",
+    "shared focus, text contrast and control states",
+    "four-pixel panel/control spacing and centralized exact-value paints",
+    "dark research reader and direct mobile research navigation",
+    "pinned upstream static and real-browser design checks with before/after preservation"
+  ],
+  "baselineFindings": {
+    "sourceAuditOnly": true,
+    "cssColorLiteralOccurrences": 1091,
+    "uniqueColorLiterals": 843,
+    "stylesSubtleContrast": {
+      "bg": 3.76,
+      "surface": 3.55,
+      "raised": 3.28,
+      "hover": 2.98
+    },
+    "notes": [
+      "Numbers are source-derived audits; actual upstream gate counts come from the workflow receipt.",
+      "The separately executed table fix passed 25 browser cases at 4bd88bd, including a 0.25px bottom gap on both tall cases."
+    ]
+  },
+  "releaseAuthorized": false
+}

@@ -77,6 +77,8 @@ function fixture(t,{symbol='BTCUSD',onSelect=null}={}){
 test('search keyboard selects ETH, cleans asset state and restores trigger focus',t=>{
   const f=fixture(t);f.button.click();assert.equal(f.selector.isOpen(),true);assert.equal(f.button.getAttribute('aria-expanded'),'true');assert.equal(f.doc.activeElement,f.input);
   assert.equal(f.input.getAttribute('aria-activedescendant'),'symbol-option-BTCUSD');
+  assert.equal(f.node('symbol-option-BTCUSD').find(node=>node.className==='symbol-search-name').textContent,'비트코인');
+  assert.equal(searchSymbols('Bitcoin')[0].symbol,'BTCUSD','the original English search alias remains supported');
   assert.equal(f.key('ArrowDown').defaultPrevented,true);assert.equal(f.input.getAttribute('aria-activedescendant'),'symbol-option-ETHUSD');
   f.key('Enter');assert.equal(f.selector.isOpen(),false);assert.equal(f.doc.activeElement,f.button);
   assert.equal(f.destinations[0],'https://example.com/chart?symbol=ETHUSD&granularity=1h&type=candles');
@@ -105,4 +107,53 @@ test('focus stays in the dialog and modal replacement/teardown release listeners
   f.doc.dispatchEvent({type:'atlas:modal-open',detail:{id:'another-dialog'}});assert.equal(f.selector.isOpen(),false);assert.equal(f.doc.activeElement,f.button);
   f.selector.open();f.selector.element.dispatchEvent(event('click',{clientX:0,clientY:0}));assert.equal(f.selector.isOpen(),false);
   f.selector.destroy();assert.equal(f.node('symbol-search-dialog'),null);assert.equal(f.doc.listeners.get('atlas:modal-open').size,0);f.button.click();assert.equal(f.selector.isOpen(),false);
+});
+
+test('keyboard activation reveals clipped rows only and preserves the combobox focus and option identity',t=>{
+  const f=fixture(t);f.selector.open();
+  const dialog=f.selector.element;dialog.clientTop=1;dialog.clientHeight=174;
+  dialog.getBoundingClientRect=()=>({left:10,right:310,top:24,bottom:200});
+  const positions=new Map([['BTCUSD',{top:40,bottom:110}],['ETHUSD',{top:105,bottom:175}],['MSTR',{top:190,bottom:260}],['BMNR',{top:264,bottom:334}]]),calls=[];
+  for(const symbol of ['BTCUSD','ETHUSD','MSTR','BMNR']){
+    const row=f.node('symbol-option-'+symbol);
+    row.getBoundingClientRect=()=>positions.get(symbol);
+    row.scrollIntoView=options=>{calls.push({symbol,options});positions.set(symbol,{top:60,bottom:130});};
+  }
+  f.key('ArrowDown');
+  assert.equal(calls.length,0,'a fully visible ETH row must not move the scroll position');
+  const identity=f.node('symbol-option-MSTR');
+  f.key('ArrowDown');
+  assert.deepEqual(calls,[{symbol:'MSTR',options:{block:'nearest',inline:'nearest',behavior:'instant'}}]);
+  assert.equal(f.doc.activeElement,f.input);
+  assert.equal(f.input.getAttribute('aria-activedescendant'),identity.id);
+  assert.equal(f.node('symbol-option-MSTR'),identity,'navigation keeps the existing option node');
+  assert.equal(identity.getAttribute('aria-selected'),'true');
+  positions.set('ETHUSD',{top:-35,bottom:35});
+  f.key('ArrowUp');
+  assert.equal(calls.length,2,'an option clipped above the dialog must be revealed');
+  assert.equal(calls[1].symbol,'ETHUSD');
+  assert.equal(f.doc.activeElement,f.input);
+  f.key('ArrowDown');
+  assert.equal(calls.length,2,'returning to the now-visible MSTR row must not scroll again');
+});
+
+test('opening on an offscreen current symbol reveals it after the dialog opens without stealing input focus',t=>{
+  const f=fixture(t,{symbol:'BMNR'}),dialog=f.selector.element,calls=[];
+  dialog.clientTop=1;dialog.clientHeight=174;
+  dialog.getBoundingClientRect=()=>({left:10,right:310,top:24,bottom:200});
+  const create=f.doc.createElement;let revealed=false;
+  f.doc.createElement=tag=>{
+    const node=create(tag);
+    node.getBoundingClientRect=()=>node.id==='symbol-option-BMNR'&&!revealed?{top:264,bottom:334}:{top:60,bottom:130};
+    node.scrollIntoView=options=>{
+      assert.equal(dialog.getAttribute('open'),'','visibility is measured after showModal');
+      calls.push({id:node.id,options});revealed=true;
+    };
+    return node;
+  };
+  f.selector.open();
+  assert.deepEqual(calls,[{id:'symbol-option-BMNR',options:{block:'nearest',inline:'nearest',behavior:'instant'}}]);
+  assert.equal(f.input.getAttribute('aria-activedescendant'),'symbol-option-BMNR');
+  assert.equal(f.doc.activeElement,f.input);
+  assert.equal(f.destinations.length,0,'revealing the current row does not navigate');
 });

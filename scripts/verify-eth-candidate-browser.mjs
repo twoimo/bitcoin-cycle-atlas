@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // PR-only verification of checked-out dist files. Does not deploy or alter UI.
 import assert from 'node:assert/strict';
+import {workspaceBrowserCases,verifyWorkspaceSurface} from './verify-workspace-browser.mjs';
 import {createServer} from 'node:http';
 import {readFile,writeFile,mkdir,mkdtemp,rm,stat} from 'node:fs/promises';
 import {resolve,relative,sep,extname} from 'node:path';
@@ -76,7 +77,7 @@ async function screenshot(cdp,name,receipt){
   const bytes=Buffer.from(result.data,'base64');
   await writeFile(resolve(out,name),bytes);
   receipt.screenshots.push({file:name,bytes:bytes.length,sha256:hash(bytes)});
-  if(name==='data-fill-1620x1008.png'||name==='data-fill-1920x1440.png'||name==='data-320-start.png'||name==='eth-320-loaded.png'||name==='bmnr-320-clock.png'||name==='zero-fixture-320.png'||/^(ethusd|bmnr|mstr)-journal-320-(base|stress)\.png$/.test(name)){
+  if(/^workspace-(?:btc|evidence|legacy|preview).*?(?:btc-toolbar|research-reader|legacy|preview-controls|failure)\.png$/.test(name)||name==='data-fill-1620x1008.png'||name==='data-fill-1920x1440.png'||name==='data-320-start.png'||name==='eth-320-loaded.png'||name==='bmnr-320-clock.png'||name==='zero-fixture-320.png'||/^(ethusd|bmnr|mstr)-journal-320-(base|stress)\.png$/.test(name)){
     const size=30000,total=Math.ceil(result.data.length/size);
     for(let index=0;index<total;index++)console.log('ETH_BROWSER_IMAGE_CHUNK '+JSON.stringify({name,index,total,data:result.data.slice(index*size,(index+1)*size)}));
   }
@@ -172,6 +173,22 @@ async function dataCase(cdp,width,receipt){
   assert.ok(receipt.dialog.text.includes('자산 비교표'),'Expected actual method content');
   for(const judgment of ['적극 매수','분할 매수','중립','분할 매도','적극 매도'])assert.ok(receipt.dialog.text.includes(judgment),'Missing judgment definition '+judgment);
   await screenshot(cdp,imagePrefix+'-method.png',receipt);
+  await evaluate(cdp,()=>{const dialog=document.querySelector('#daily-method-dialog');dialog.scrollTop=dialog.scrollHeight;});
+  await settled(cdp);
+  receipt.dialogSticky=await evaluate(cdp,()=>{
+    const dialog=document.querySelector('#daily-method-dialog'),heading=dialog.querySelector('.daily-method-heading');
+    const rect=el=>{const b=el.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom};};
+    const d=rect(dialog),clip={left:Math.max(0,d.left+dialog.clientLeft),right:Math.min(innerWidth,d.left+dialog.clientLeft+dialog.clientWidth),
+      top:Math.max(0,d.top+dialog.clientTop),bottom:Math.min(innerHeight,d.top+dialog.clientTop+dialog.clientHeight)};
+    return {heading:rect(heading),title:rect(heading.querySelector('h2')),close:rect(document.querySelector('#daily-method-close')),clip,
+      scrollTop:dialog.scrollTop,maxScroll:dialog.scrollHeight-dialog.clientHeight};
+  });
+  const sticky=receipt.dialogSticky;
+  if(sticky.maxScroll>0)assert.ok(sticky.scrollTop>0&&Math.abs(sticky.scrollTop-sticky.maxScroll)<=2,'Method dialog did not reach its actual scroll end');
+  for(const key of ['title','close']){
+    const box=sticky[key],clip=sticky.clip;
+    assert.ok(box.left>=clip.left-1&&box.right<=clip.right+1&&box.top>=clip.top-1&&box.bottom<=clip.bottom+1,'Scrolled method dialog clips '+key+': '+JSON.stringify(sticky));
+  }
   await click(cdp,'#daily-method-close');
   assert.equal((await bounds(cdp,'#daily-method-dialog')).open,false);
   if(receipt.responsive)await responsiveDataCase(cdp,receipt);
@@ -494,6 +511,7 @@ async function main(){
   for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json']){
     report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   }
+  for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   const fonts=execFileSync('fc-list',[':lang=ko'],{encoding:'utf8'}).trim();
   assert.ok(fonts.length,'Korean fonts are required; install fonts-noto-cjk in this PR runner');
   report.koreanFonts=fonts.split('\n').slice(0,10);
@@ -565,6 +583,7 @@ async function main(){
     {page:'data',width:1920,height:1440,touch:false,responsive:true,fill:true},
     {page:'data',width:900,height:430,touch:true,responsive:true,fill:false},
     {page:'data',width:320,height:568,touch:true,responsive:true,fill:false});
+  caseSpecs.push(...workspaceBrowserCases);
   for(const spec of caseSpecs){
     const {page,width,height,touch}=spec;
     const receipt={...spec,status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[],dataResourceRequests:[]};
@@ -593,9 +612,9 @@ async function main(){
       await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:touch});
       await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:touch,maxTouchPoints:1});
       await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'},{name:'prefers-color-scheme',value:'dark'}]});
-      receipt.url=base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
+      receipt.url=spec.route?base+spec.route:base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
-      if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
+      if(spec.surface)await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot});else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
       assert.equal(receipt.runtimeErrors.length,0,'Browser runtime errors: '+JSON.stringify(receipt.runtimeErrors));
       assert.equal(receipt.resourceErrors.length,0,'Browser resource failures: '+JSON.stringify(receipt.resourceErrors));
       receipt.status='passed';
@@ -607,7 +626,7 @@ async function main(){
       if(targetId)try{await browser.send('Target.closeTarget',{targetId});}catch(error){report.failures.push({page,width,cleanupError:errorText(error)});}
     }
   }
-  assert.equal(report.cases.length,25);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');
+  assert.equal(report.cases.length,25+workspaceBrowserCases.length);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');
   report.status='passed';
 }
 try{await main();}catch(error){report.status='failed';report.error=errorText(error);process.exitCode=1;}
@@ -618,5 +637,5 @@ finally{
   if(server)await new Promise(resolve=>server.close(resolve));
   if(profile)try{await rm(profile,{recursive:true,force:true});}catch(error){report.cleanupError=errorText(error);}
   await mkdir(out,{recursive:true});await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
 }

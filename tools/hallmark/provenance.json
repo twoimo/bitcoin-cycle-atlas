@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "repository": "https://github.com/Nutlope/hallmark",
+  "commit": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+  "tree": "9c337ca827537705f4c898ca6dc79cd0e9208d75",
+  "version": "2.0.0",
+  "license": "MIT",
+  "sources": [
+    {
+      "name": "sloplint.mjs",
+      "path": "skills/hallmark/scripts/sloplint.mjs",
+      "gitBlob": "9916fa07286e58d319528ad7cfe4ad94318e5796",
+      "bytes": 231622
+    },
+    {
+      "name": "sloplint-render.mjs",
+      "path": "skills/hallmark/scripts/sloplint-render.mjs",
+      "gitBlob": "0ecc64bc79aa34db1fadc7178617bcc53c47e064",
+      "bytes": 99164
+    },
+    {
+      "name": "LICENSE",
+      "path": "LICENSE",
+      "gitBlob": "f4bfc53d8d773d3b10d95c2d58a5773dd4e2f3aa",
+      "bytes": 1078
+    }
+  ],
+  "compatibilityPatch": {
+    "file": "sloplint-render.mjs",
+    "sourceGitBlob": "0ecc64bc79aa34db1fadc7178617bcc53c47e064",
+    "patchedGitBlob": "142a5516f2506987c2795e320d78893cf1d919d4",
+    "before": "  const browser = await puppeteer.launch({ executablePath: chrome, headless: true });",
+    "after": "  // Atlas CI compatibility: ephemeral GitHub runner only; all Hallmark gates stay intact.\n  const atlasCiArgs = process.env.GITHUB_ACTIONS === 'true' && process.env.HALLMARK_CI_CHROME_ARGS === 'ephemeral-ci'\n    ? ['--no-sandbox', '--disable-dev-shm-usage', '--disable-background-networking', '--no-first-run'] : [];\n  const browser = await puppeteer.launch({ executablePath: chrome, headless: true, args: atlasCiArgs });",
+    "reason": "Allow the existing ephemeral GitHub Actions Chrome environment to launch; no rule, selector, severity, finding, or scope is modified. Source files stay exact and patch applies only to a build copy."
+  },
+  "decisions": {
+    "staticTarget": "Explicit dist directory, every CSS and both HTML files",
+    "renderTarget": "Eight HTTP URLs only, no file:// fallback",
+    "moduleQueryPatch": "Not applied: URL-only render avoids the upstream shell-detection limitation",
+    "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+    "runtimeDependency": false,
+    "ciDependency": {
+      "name": "puppeteer-core",
+      "version": "25.16.0",
+      "source": "https://github.com/puppeteer/puppeteer/releases/tag/puppeteer-core-v25.16.0",
+      "installScripts": false
+    }
+  },
+  "gates": "All upstream gates are retained. Current FAIL or REFLEX makes CI exit 1. Incomplete coverage, internal errors, missing render or incomplete kept comparison makes CI exit 2."
+}

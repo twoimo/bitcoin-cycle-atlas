@@ -78,8 +78,14 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
     if (!rows.length) { input.removeAttribute('aria-activedescendant'); return; }
     activeIndex = (index + rows.length) % rows.length;
     rows.forEach((row,i) => { const active = i === activeIndex; row.setAttribute('aria-selected',String(active)); row.tabIndex = active ? 0 : -1; });
-    input.setAttribute('aria-activedescendant',rows[activeIndex].id);
-    if (focus) rows[activeIndex].focus({preventScroll:true});
+    const row = rows[activeIndex];
+    input.setAttribute('aria-activedescendant',row.id);
+    if (focus) row.focus({preventScroll:true});
+    if (opened && dialog.clientHeight > 0) {
+      const bounds = row.getBoundingClientRect(), frame = dialog.getBoundingClientRect();
+      const top = frame.top + dialog.clientTop, bottom = top + dialog.clientHeight;
+      if (bounds.top < top || bounds.bottom > bottom) row.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});
+    }
   }
   function renderResults() {
     matches = searchSymbols(input.value || ''); results.replaceChildren(); rows = [];
@@ -90,7 +96,7 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
       const identity = add(row,'span','symbol-search-identity');
       const symbolLine = add(identity,'span','symbol-search-symbol'); add(symbolLine,'strong','',instrument.symbol);
       if (instrument.symbol === currentSymbol) add(symbolLine,'small','symbol-search-current','현재');
-      add(identity,'span','symbol-search-name',`${instrument.name} · ${instrument.koreanName}`);
+      add(identity,'span','symbol-search-name',instrument.symbol==='BTCUSD'?instrument.koreanName:`${instrument.name} · ${instrument.koreanName}`);
       const source = add(row,'span','symbol-search-source'); add(source,'span','',instrument.source); add(source,'small','',instrument.assetClass==='equity'?'주식 · USD':'현물 · USD');
       row.title = `${instrument.description} · ${instrument.koreanName} / 미국 달러`;
       row.onclick = () => choose(instrument.symbol);
@@ -122,6 +128,7 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
     const ModalEvent = win?.CustomEvent || globalThis.CustomEvent;
     if (ModalEvent) document.dispatchEvent(new ModalEvent('atlas:modal-open',{detail:{id:dialog.id}}));
     if (typeof dialog.showModal === 'function') dialog.showModal(); else { dialog.setAttribute('open',''); dialog.setAttribute('aria-modal','true'); }
+    activate(activeIndex);
     input.focus({preventScroll:true});
   }
   function onKey(event) {

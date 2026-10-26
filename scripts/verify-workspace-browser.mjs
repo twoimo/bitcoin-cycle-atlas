@@ -1,0 +1,195 @@
+import assert from 'node:assert/strict';
+
+export const workspaceBrowserCases = [320, 1440].flatMap(width =>
+  ['btc', 'evidence', 'legacy', 'preview'].map(surface => ({
+    page: 'workspace-' + surface, surface, width, height: 900, touch: width === 320,
+    route: surface === 'btc' ? '/?symbol=BTCUSD&granularity=daily&type=line' :
+      surface === 'evidence' ? '/?page=evidence' : surface === 'legacy' ? '/?page=compare&legacy=1' : '/mobile-preview.html'
+  })));
+workspaceBrowserCases.push({page:'workspace-btc-short',surface:'btc',width:900,height:430,touch:true,route:'/?symbol=BTCUSD&granularity=daily&type=line'});
+
+export async function verifyWorkspaceSurface(api) {
+  const {cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot}=api;
+  const {width,height,surface,page}=receipt;
+  receipt.workspace={surface,states:[]};
+  const states=receipt.workspace.states;
+  async function key(key,code,number,modifiers=0){
+    for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key,code,windowsVirtualKeyCode:number,nativeVirtualKeyCode:number,modifiers});
+    await settled(cdp);
+  }
+  async function text(selector,value){
+    await click(cdp,selector);await key('a','KeyA',65,2);
+    if(value)await cdp.send('Input.insertText',{text:value});else await key('Backspace','Backspace',8);
+    await settled(cdp);
+  }
+  async function inspect(selector,label,{opaque=true,dialog=false}={}){
+    const box=await bounds(cdp,selector);visibleBounds(box,width,height);
+    if(opaque)dark(box.background,label);
+    if(dialog)assert.equal(box.open,true,label+' is not open');
+    const overflow=await evaluate(cdp,()=>({root:document.documentElement.scrollWidth,body:document.body.scrollWidth,width:innerWidth}));
+    assert.ok(Math.max(overflow.root,overflow.body)<=width+1,label+' causes page overflow');
+    states.push({label,selector,box:{...box,text:box.text.slice(0,300)},overflow});
+    await screenshot(cdp,page+'-'+width+'x'+height+'-'+label+'.png',receipt);
+    return box;
+  }
+  async function focused(selector){
+    const focus=await evaluate(cdp,s=>{
+      const container=document.querySelector(s),el=document.activeElement;
+      const b=el.getBoundingClientRect(),style=getComputedStyle(el),clip={left:0,right:innerWidth,top:0,bottom:innerHeight};
+      for(let parent=el.parentElement;parent;parent=parent.parentElement){
+        const p=parent.getBoundingClientRect(),css=getComputedStyle(parent);
+        if(css.overflowX!=='visible'){clip.left=Math.max(clip.left,p.left+parent.clientLeft);clip.right=Math.min(clip.right,p.left+parent.clientLeft+parent.clientWidth);}
+        if(css.overflowY!=='visible'){clip.top=Math.max(clip.top,p.top+parent.clientTop);clip.bottom=Math.min(clip.bottom,p.top+parent.clientTop+parent.clientHeight);}
+      }
+      const hit=document.elementFromPoint(b.left+b.width/2,b.top+b.height/2);
+      return {clip,topmost:Boolean(hit&&(hit===el||el.contains(hit))),inside:container.contains(el),tag:el.tagName,label:el.getAttribute('aria-label')||el.textContent.slice(0,80),
+        left:b.left,right:b.right,top:b.top,bottom:b.bottom,outline:style.outlineStyle,width:parseFloat(style.outlineWidth),color:style.outlineColor};
+    },selector);
+    assert.ok(focus.inside,'Keyboard focus escaped '+selector);
+    assert.ok(focus.left>=-1&&focus.right<=width+1&&focus.top>=-1&&focus.bottom<=height+1,'Focused action is outside viewport: '+JSON.stringify(focus));
+    assert.ok(focus.topmost&&focus.left>=focus.clip.left-1&&focus.right<=focus.clip.right+1&&focus.top>=focus.clip.top-1&&focus.bottom<=focus.clip.bottom+1,'Focused action is clipped or occluded: '+JSON.stringify(focus));
+    assert.ok(focus.width>=2&&focus.outline!=='none','Keyboard focus lacks common visible ring: '+JSON.stringify(focus));
+    states.push({label:'keyboard-focus',selector,focus});
+  }
+  async function escape(selector){
+    await key('Escape','Escape',27);
+    assert.equal(await evaluate(cdp,s=>Boolean(document.querySelector(s)?.open),selector),false,'Escape did not close '+selector);
+  }
+  async function command(query,{empty=false}={}){
+    await key('k','KeyK',75,2);
+    await until(()=>evaluate(cdp,()=>document.querySelector('#workspace-dialog')?.open),'workspace command dialog');
+    await text('.workspace-command-search',query);
+    if(empty){
+      assert.equal(await evaluate(cdp,()=>document.querySelectorAll('.workspace-command-results button').length),0);
+      assert.ok((await bounds(cdp,'.workspace-command-results')).text.includes('일치하는 기능이 없습니다'));
+      await inspect('#workspace-dialog','commands-empty',{dialog:true});
+      await escape('#workspace-dialog');return;
+    }
+    const matches=await evaluate(cdp,()=>[...document.querySelectorAll('.workspace-command:not(:disabled) strong')].map(n=>n.textContent));
+    assert.ok(matches.length>0,'Command not found: '+query);
+    await click(cdp,'.workspace-command:not(:disabled)');
+  }
+  if(surface==='preview'){
+    await until(()=>evaluate(cdp,()=>document.querySelector('#mobile-preview')?.contentDocument?.documentElement.dataset.boot==='ready'),'preview actual app ready');
+    await inspect('header','preview-controls',{opaque:false});
+    receipt.workspace.actual=await evaluate(cdp,()=>{
+      const frame=document.querySelector('#mobile-preview'),doc=frame.contentDocument,main=document.querySelector('main');
+      return {boot:doc.documentElement.dataset.boot,width:frame.width,height:frame.height,innerWidth:frame.contentWindow.innerWidth,plotPaths:doc.querySelectorAll('#lab-chart path').length,mainHeight:main.clientHeight,scrollHeight:main.scrollHeight,scrollWidth:main.scrollWidth,clientWidth:main.clientWidth};
+    });
+    assert.ok(receipt.workspace.actual.plotPaths>0,'Preview iframe never rendered actual BTC chart');
+    for(const mode of ['loading','error','actual']){
+      await evaluate(cdp,value=>{const picker=document.querySelector('#preview-mode');picker.value=value;picker.dispatchEvent(new Event('change',{bubbles:true}));},mode);
+      await until(()=>evaluate(cdp,value=>{
+        const frame=document.querySelector('#mobile-preview');
+        return !frame.hidden&&frame.contentDocument?.documentElement.dataset.boot===(value==='actual'?'ready':value);
+      },mode),'preview '+mode);
+      const state=await evaluate(cdp,value=>{
+        const doc=document.querySelector('#mobile-preview').contentDocument;
+        return {mode:value,boot:doc.documentElement.dataset.boot,shellHidden:doc.getElementById('atlas-boot-shell').hidden,
+          statusHidden:doc.getElementById('atlas-boot-status').hidden,errorHidden:doc.getElementById('atlas-boot-error').hidden,
+          caption:document.getElementById('preview-caption').textContent};
+      },mode);
+      if(mode==='actual')assert.equal(state.shellHidden,true);
+      else {assert.equal(state.shellHidden,false);assert.equal(state.errorHidden,mode!=='error');assert.ok(state.caption.includes('실제 로딩 시간'));}
+      states.push({label:'preview-'+mode,...state});
+      await screenshot(cdp,page+'-'+width+'-'+mode+'.png',receipt);
+    }
+    await evaluate(cdp,()=>{const picker=document.querySelector('#preview-size');picker.value='844x390';picker.dispatchEvent(new Event('change',{bubbles:true}));});
+    await settled(cdp);
+    assert.deepEqual(await evaluate(cdp,()=>{const f=document.querySelector('#mobile-preview');return [f.contentWindow.innerWidth,f.contentWindow.innerHeight];}),[844,390]);
+    receipt.workspace.resized=true;return;
+  }
+  await until(()=>evaluate(cdp,()=>document.documentElement.dataset.boot==='ready'),'app boot ready');
+  if(surface==='legacy'){
+    await until(()=>evaluate(cdp,()=>document.querySelectorAll('#structure-chart path').length>0&&document.querySelectorAll('#structure-cycles tr').length>0),'legacy chart and real cycle rows');
+    await inspect('#compare-view','legacy',{opaque:false});
+    receipt.workspace.legacy=await evaluate(cdp,()=>({rows:document.querySelectorAll('#structure-cycles tr').length,paths:document.querySelectorAll('#structure-chart path').length,
+      scroller:{height:document.querySelector('#compare-view').clientHeight,scrollHeight:document.querySelector('#compare-view').scrollHeight}}));
+    const tableRows=receipt.workspace.legacy.rows;assert.ok(tableRows>0);
+    await evaluate(cdp,()=>document.querySelector('#structure-method').closest('details').scrollIntoView({block:'center'}));await settled(cdp);
+    await click(cdp,'#compare-view details:has(#structure-method) > summary');
+    assert.equal(await evaluate(cdp,()=>document.querySelector('#structure-method').closest('details').open),true);
+    assert.ok((await bounds(cdp,'#structure-method')).text.length>200,'Legacy method text is missing');
+    states.push({label:'legacy-method-open',rows:tableRows});return;
+  }
+  if(surface==='evidence'){
+    await until(()=>evaluate(cdp,()=>document.querySelectorAll('#evidence-body [data-evidence-detail]').length>0),'research rows ready');
+    await inspect('#evidence-view','research-list',{opaque:false});
+    await text('#evidence-search','__atlas_no_matching_research__');
+    assert.ok((await bounds(cdp,'#evidence-body')).text.includes('일치하는 자료가 없습니다'));
+    assert.ok((await evaluate(cdp,()=>location.search)).includes('research-q='));
+    await inspect('#evidence-view','research-empty',{opaque:false});
+    await click(cdp,'#evidence-clear');
+    await click(cdp,'#evidence-body [data-evidence-detail]');
+    await inspect('#research-reader','research-reader',{dialog:true});
+    const childColors=await evaluate(cdp,()=>{
+      const reader=document.querySelector('#research-reader');
+      const nav=reader.querySelector('.research-reader-nav'),provenance=reader.querySelector('.research-provenance');
+      if(!nav||!provenance)throw new Error('Required research reader regions are missing');
+      return [nav,provenance,...reader.querySelectorAll('.research-claim')].slice(0,10).map(n=>({class:n.className,background:getComputedStyle(n).backgroundColor}));
+    });
+    for(const c of childColors)if(c.background!=='rgba(0, 0, 0, 0)')dark(c.background,c.class);
+    receipt.workspace.readerColors=childColors;
+    await evaluate(cdp,()=>{const body=document.querySelector('.research-reader-scroll');body.scrollTop=body.scrollHeight;});await settled(cdp);
+    await click(cdp,'[data-reader-action="close"]');
+    assert.equal(await evaluate(cdp,()=>document.querySelector('#research-reader').open),false);
+    if(width<=620){
+      await click(cdp,'#evidence-back');
+      await until(()=>evaluate(cdp,()=>document.body.dataset.page==='outlook'&&document.querySelectorAll('#lab-chart path').length>0),'mobile research back to chart');
+      receipt.workspace.mobileReturn=true;
+    }
+    return;
+  }
+  await until(()=>evaluate(cdp,()=>document.querySelectorAll('#lab-chart path').length>0&&document.querySelector('#workbench-workspace')),'BTC workbench ready');
+  await inspect('.atlas-canvas-heading','btc-toolbar');
+  const geometry=await evaluate(cdp,()=>{
+    const chart=document.querySelector('#lab-chart'),b=chart.getBoundingClientRect(),stage=document.querySelector('.atlas-workbench').getBoundingClientRect();
+    return {paths:chart.querySelectorAll('path').length,invalidPaths:[...chart.querySelectorAll('path')].filter(p=>/NaN|Infinity/.test(p.getAttribute('d')||'')).length,
+      width:b.width,height:b.height,stageBottom:stage.bottom,viewportHeight:innerHeight,bodyPage:document.body.dataset.page};
+  });
+  assert.ok(geometry.width>=200&&geometry.height>=80,'BTC price canvas compressed');assert.equal(geometry.invalidPaths,0);assert.equal(geometry.bodyPage,'outlook');
+  receipt.workspace.geometry=geometry;
+  await click(cdp,'.workbench-symbol');
+  await inspect('.symbol-search-dialog','symbols',{dialog:true});
+  // Native combobox keyboard movement must keep the aria-selected row visible.
+  for(let i=0;i<3;i++)await key('ArrowDown','ArrowDown',40);
+  const option=await evaluate(cdp,()=>{
+    const list=document.querySelector('#symbol-search-results'),selected=list.querySelector('[aria-selected="true"]');
+    const b=selected.getBoundingClientRect(),p=list.getBoundingClientRect(),dialog=list.closest('dialog'),d=dialog.getBoundingClientRect();
+    return {symbol:selected.dataset.symbol,top:b.top,bottom:b.bottom,
+      clientTop:Math.max(0,p.top+list.clientTop,d.top+dialog.clientTop),
+      clientBottom:Math.min(innerHeight,p.top+list.clientTop+list.clientHeight,d.top+dialog.clientTop+dialog.clientHeight),
+      scrollTop:dialog.scrollTop};
+  });
+  assert.ok(option.top>=option.clientTop-1&&option.bottom<=option.clientBottom+1,'Selected symbol is outside its scrollport');
+  receipt.workspace.symbolSelection=option;
+  await key('Tab','Tab',9);await focused('.symbol-search-dialog');await escape('.symbol-search-dialog');
+  await command('__atlas_no_matching_command__',{empty:true});
+  await command('차트 설정');
+  await inspect('#chart-reader','settings');
+  assert.equal(await evaluate(cdp,()=>document.querySelector('#chart-reader').dataset.kind),'settings');
+  await key('Escape','Escape',27);
+  assert.equal(await evaluate(cdp,()=>document.querySelector('#chart-reader').hidden),true);
+  await click(cdp,'#atlas-mode-menu');
+  await inspect('#indicator-library','indicators',{dialog:true});
+  await text('#indicator-search','__atlas_no_matching_indicator__');
+  assert.ok((await bounds(cdp,'#indicator-library-results')).text.includes('없'));
+  await key('Tab','Tab',9);await focused('#indicator-library');await escape('#indicator-library');
+  for(const [query,selector,label,content] of [
+    ['저장한 연구 측정','#research-annotations-dialog','annotations-empty','연구 측정'],
+    ['날짜로 이동','#chart-go-to-dialog','go-to','UTC'],
+    ['원자료·가정·연구 CSV','#chart-export-dialog','export-preview','출처'],
+    ['예측 기록과 누적 평가','#forecast-journal','btc-journal','예측']
+  ]){
+    await command(query);await until(()=>evaluate(cdp,s=>document.querySelector(s)?.open,selector),label+' open');
+    if(label==='btc-journal')await until(()=>evaluate(cdp,()=>document.querySelector('#journal-price-chart path')),'BTC preserved journal SVG');
+    const box=await inspect(selector,label,{dialog:true});assert.ok(box.text.includes(content),label+' has no expected content');
+    if(label==='annotations-empty')assert.ok((await bounds(cdp,'.research-annotations-list')).text.includes('아직 저장한 측정이 없습니다'),'Annotation empty state missing');
+    await key('Tab','Tab',9);await focused(selector);await escape(selector);
+  }
+  await click(cdp,'#workbench-bottom-more');
+  await inspect('#workbench-bottom-menu','bottom-menu');
+  await key('End','End',35);await focused('#workbench-bottom-menu');
+  await key('Escape','Escape',27);
+  assert.equal(await evaluate(cdp,()=>document.querySelector('#workbench-bottom-menu').hidden),true);
+}
