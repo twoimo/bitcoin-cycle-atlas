@@ -29,6 +29,7 @@ export async function evaluateEthereumModels({repositoryRoot=root,output=null}={
   await visit('dist/ethereum-model-comparison.js');
   await visit('scripts/evaluate-ethereum-models.mjs');
   await visit('scripts/verify-eth-candidate-browser.mjs');
+  for(const path of ['dist/eth-view.js','dist/eth-view.css','dist/intraday-chart.js','dist/equity-forecast-chart.js','tests/equity-chart-rendering.test.mjs','tests/ethereum-forecast.test.mjs']) await visit(path);
   for(const path of ['tests/ethereum-cycle-models.test.mjs','tests/ethereum-economic-model.test.mjs','tests/ethereum-model-comparison.test.mjs','tests/ethereum-forecast-boundary.test.mjs']) await visit(path);
   const sourceCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:repositoryRoot,encoding:'utf8'}).trim();
   const sourceTree=execFileSync('git',['rev-parse','HEAD^{tree}'],{cwd:repositoryRoot,encoding:'utf8'}).trim();

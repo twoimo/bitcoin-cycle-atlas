@@ -1,6 +1,8 @@
 import {utcDay} from './cycle-engine.js?v=1.29.0';
 import {dateWindow,lowerBoundDate,upperBoundDate} from './chart-window.js?v=1.29.0';
 
+export const isEthereumConditionalForecast=forecast=>forecast?.symbol==='ETHUSD'&&forecast.pathMode==='crypto-conditional-daily';
+
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 function forecastTime(value){
   try{return utcDay(value)*86400;}catch{throw new TypeError('Invalid equity forecast date');}
@@ -10,7 +12,8 @@ export function equityForecastAnchor(forecast,lastObserved){
   if(!forecast?.asOf||!lastObserved)return lastObserved;
   const time=forecastTime(forecast.asOf),point=forecast.path?.find(row=>row.date===forecast.asOf);
   if(!point||!Number.isFinite(point.price)||point.price<=0||time<lastObserved.time)throw new TypeError('Invalid equity forecast anchor');
-  return {time,date:`${forecast.asOf}T00:00:00Z`,close:point.price};
+  if(isEthereumConditionalForecast(forecast)&&(!Number.isFinite(point.baselinePrice)||point.baselinePrice<=0))throw new TypeError('Invalid ETH conditional baseline');
+  return {time,date:`${forecast.asOf}T00:00:00Z`,close:point.price,...(isEthereumConditionalForecast(forecast)?{baselinePrice:point.baselinePrice}:{})};
 }
 
 /** Scenario bounds stay separate from a simulated path bar's extrema. */
@@ -21,6 +24,7 @@ export function equityForecastRows(forecast,lastObservedTime){
   for(const point of forecast.path){
     const time=forecastTime(point?.date);
     if(time<=previous||!Number.isFinite(point.price)||point.price<0||!Number.isFinite(point.low)||!Number.isFinite(point.high)||point.low<0||point.low>point.price||point.high<point.price)throw new TypeError('Invalid equity forecast path');
+    if(isEthereumConditionalForecast(forecast)&&(!Number.isFinite(point.baselinePrice)||point.baselinePrice<=0))throw new TypeError('Invalid ETH conditional baseline');
     previous=time;if(time<=lastObservedTime)continue;
     rows.push({...point,time,date:`${point.date}T00:00:00Z`,close:point.price,kind:'forecast'});
   }
@@ -60,9 +64,9 @@ export function equityForecastCandles(forecast,interval='daily'){
   return interval==='daily'?daily:weekly;
 }
 
-export function equityForecastWindowRows(points,lastObserved,minTime,maxTime,scale='log'){
+export function equityForecastWindowRows(points,lastObserved,minTime,maxTime,scale='log',includeBaseline=false){
   if(!points.length)return [];
-  const anchor=lastObserved?{...lastObserved,price:lastObserved.close,low:lastObserved.close,high:lastObserved.close}:null;
+  const anchor=lastObserved?{...lastObserved,price:lastObserved.close,low:lastObserved.close,high:lastObserved.close,...(includeBaseline?{baselinePrice:lastObserved.baselinePrice??lastObserved.close}:{})}:null;
   const visible=dateWindow(points,minTime,maxTime,row=>row.time);
   for(const time of new Set([minTime,maxTime])){
     if(time<=(anchor||points[0]).time||time>=points.at(-1).time)continue;
@@ -72,7 +76,7 @@ export function equityForecastWindowRows(points,lastObserved,minTime,maxTime,sca
     const fraction=(time-left.time)/(right.time-left.time);
     const interpolate=key=>scale==='log'&&left[key]>0&&right[key]>0?Math.exp(Math.log(left[key])*(1-fraction)+Math.log(right[key])*fraction):scale==='log'&&((left[key]===0)!==(right[key]===0))?null:left[key]*(1-fraction)+right[key]*fraction;
     const price=interpolate('price'),low=interpolate('low'),high=interpolate('high'),unavailableBounds=['low','high'].filter(key=>(key==='low'?low:high)===null);
-    visible.push({time,date:new Date(time*1000).toISOString(),price,close:price,low:low===null?null:Math.min(price,low),high:high===null?null:Math.max(price,high),kind:'forecast',interpolated:true,sourceIds:[...new Set([...(left.sourceIds||[]),...(right.sourceIds||[])])],interpolation:{from:left.date,to:right.date,scale,unavailableBounds}});
+    visible.push({time,date:new Date(time*1000).toISOString(),price,close:price,...(includeBaseline?{baselinePrice:interpolate('baselinePrice')}:{}),low:low===null?null:Math.min(price,low),high:high===null?null:Math.max(price,high),kind:'forecast',interpolated:true,sourceIds:[...new Set([...(left.sourceIds||[]),...(right.sourceIds||[])])],interpolation:{from:left.date,to:right.date,scale,unavailableBounds}});
   }
   return visible.sort((a,b)=>a.time-b.time);
 }
@@ -94,11 +98,18 @@ export function equityForecastLogGaps(points,lastObserved,minTime,maxTime){
   return gaps;
 }
 
-export function equityForecastMarkup({forecast,points,lastObserved,x,y,left,right,top,bottom,clipId,minTime,maxTime,showBand=true,scale='log',chartType='line',candles=[],barWidth=4,visibleRows=equityForecastWindowRows(points,lastObserved,minTime,maxTime,scale)}){
+export function equityForecastMarkup({forecast,points,lastObserved,x,y,left,right,top,bottom,clipId,minTime,maxTime,showBand=true,scale='log',chartType='line',candles=[],barWidth=4,visibleRows=equityForecastWindowRows(points,lastObserved,minTime,maxTime,scale,isEthereumConditionalForecast(forecast))}){
   if(!forecast||!points.length)return {markup:'',markerIds:new Set()};
   const first=lowerBoundDate(points,minTime,row=>row.time),last=upperBoundDate(points,maxTime,row=>row.time);
   const pointBefore=points[first-1],included=points.slice(first,last),pointAfter=points[last];
   const values=[...(pointBefore?[pointBefore]:lastObserved?[{...lastObserved,price:lastObserved.close,low:lastObserved.close,high:lastObserved.close}]:[]),...included,...(pointAfter?[pointAfter]:[])];
+  const ethereum=isEthereumConditionalForecast(forecast);
+  let baselinePath='',baselineContinuous=false;
+  if(ethereum)for(const row of values){
+    const value=row.baselinePrice??(row.time===lastObserved?.time?lastObserved.close:NaN);
+    if(!Number.isFinite(value)||value<=0){baselineContinuous=false;continue;}
+    baselinePath+=`${baselineContinuous?'L':'M'}${x(row.time).toFixed(2)},${y(value).toFixed(2)} `;baselineContinuous=true;
+  }
   let path='',continuous=false;
   for(const row of values){if(row.price===0&&scale==='log'){continuous=false;continue;}path+=`${continuous?'L':'M'}${x(row.time).toFixed(2)},${y(row.price).toFixed(2)} `;continuous=true;}
   const boundaryY=value=>value===0&&scale==='log'?bottom:y(value);
@@ -112,7 +123,11 @@ export function equityForecastMarkup({forecast,points,lastObserved,x,y,left,righ
   const band=bandRuns.map(rows=>[...rows,...[...rows].reverse()].map((row,index)=>`${index?'L':'M'}${x(row.time).toFixed(2)},${boundaryY(index<rows.length?row.high:row.low).toFixed(2)}`).join(' ')+'Z').join(' ');
   const zeroBound=visibleRows.find(row=>row.low===0),zeroPrice=visibleRows.find(row=>row.price===0);
   const useCandles=chartType==='candles'&&forecast.pathMode==='asset-linked-daily'&&candles.length>0;
-  let markup=`<g class="equity-forecast-layer" clip-path="url(#${clipId})">${showBand&&band?`<path class="equity-forecast-band" data-zero-bound="${Boolean(zeroBound)}" d="${band}" fill="#c79b4b" opacity=".13"><title>${zeroBound?'하한 0: 잔여가치 소진. 로그축에서 0은 표시할 수 없어 음영을 축 하단까지 자릅니다.':'세 조건의 최소·최대 가정 범위. 확률 또는 신뢰구간이 아닙니다.'}</title></path>`:''}${useCandles?'':`<path class="equity-forecast-line" d="${path}" fill="none" stroke="#e2b66c" stroke-width="1.8" stroke-dasharray="7 5"/>`}`;
+  let markup=`<g class="equity-forecast-layer" clip-path="url(#${clipId})">${showBand&&band?`<path class="equity-forecast-band" data-zero-bound="${Boolean(zeroBound)}" d="${band}" fill="#c79b4b" opacity=".13"><title>${zeroBound?'하한 0: 잔여가치 소진. 로그축에서 0은 표시할 수 없어 음영을 축 하단까지 자릅니다.':ethereum?'음영: 같은 무작위 잔차를 사용한 세 조건의 최소·최대 예시 범위. 확률 또는 신뢰구간이 아닙니다.':'세 조건의 최소·최대 가정 범위. 확률 또는 신뢰구간이 아닙니다.'}</title></path>`:''}${useCandles?'':`<path class="equity-forecast-line" d="${path}" fill="none" stroke="#e2b66c" stroke-width="1.8" stroke-dasharray="7 5"/>`}`;
+  if(ethereum){
+    markup=markup.replace('<path class="equity-forecast-line"', '<path aria-label="무작위 예시 1개 · 확률 아님" class="equity-forecast-line"');
+    if(baselinePath)markup+=`<path class="eth-forecast-baseline" d="${baselinePath}" fill="none" stroke="#70a8e8" stroke-width="1.7" stroke-dasharray="2 4"><title>조건 기준선 · 외부 평가 조건과 앱 가정이며 적합된 경제 모형의 예측이 아닙니다.</title></path>`;
+  }
   if(useCandles){
     const dense=candles.length>256&&barWidth<2,wicks=['',''],bodies=['',''];
     markup+=`<g class="equity-forecast-candles" data-count="${candles.length}" data-rendering="${dense?'batched':'individual'}"><title>${EQUITY_FORECAST_BAR_NOTE}</title>`;

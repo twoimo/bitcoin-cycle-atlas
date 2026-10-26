@@ -5,6 +5,12 @@ on:
     paths:
       - 'dist/ethereum-*model*.js'
       - 'dist/ethereum-forecast.js'
+      - 'dist/eth-view.js'
+      - 'dist/eth-view.css'
+      - 'dist/intraday-chart.js'
+      - 'dist/equity-forecast-chart.js'
+      - 'tests/equity-chart-rendering.test.mjs'
+      - 'tests/ethereum-forecast.test.mjs'
       - 'tests/ethereum-*model*.test.mjs'
       - 'tests/ethereum-forecast-boundary.test.mjs'
       - 'scripts/evaluate-ethereum-models.mjs'
@@ -32,7 +38,7 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - name: Test candidate equations, missing inputs, clocks and future-information boundaries
-        run: node --test tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs
+        run: node --test tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs
       - name: Evaluate the exact committed candidates and current stored prices
         run: node scripts/evaluate-ethereum-models.mjs
       - name: Install Korean font coverage for real browser rendering

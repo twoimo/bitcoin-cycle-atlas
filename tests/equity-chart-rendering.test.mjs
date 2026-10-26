@@ -261,3 +261,64 @@ test('a zero condition lower bound cannot zero or suppress a positive selected-p
   assert.equal(hovered.price,120);assert.equal(hovered.low,0);assert.equal(hovered.candle.low,70);
   assert.notEqual(svg.querySelector('[id$="-cross"]').querySelector('circle').getAttribute('visibility'),'hidden');
 });
+
+const ethConditionalSeries={...series,assetClass:'crypto',symbol:'ETHUSD',product:'ETH-USD',source:'Coinbase Exchange'};
+const ethConditionalFixture=()=>({...forecast,symbol:'ETHUSD',asOf:'2026-10-23',pathMode:'crypto-conditional-daily',milestones:[],path:[{date:'2026-10-23',price:105,low:105,high:105,baselinePrice:105},...forecast.path.map((row,index)=>({...row,baselinePrice:index?1600:900}))]});
+const pathCoordinates=(markup,className)=>{
+  const path=markup.match(new RegExp('class="'+className+'" d="([^"]*)"'))?.[1];
+  assert.ok(path,className+' has actual SVG coordinates');
+  return [...path.matchAll(/[ML](-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g)].map(match=>[Number(match[1]),Number(match[2])]);
+};
+
+test('ETH conditional baseline uses its own prices and remains in both automatic scales with the envelope hidden',()=>{
+  for(const scale of ['linear','log'])for(const showForecastBand of [false,true])for(const width of [320,1100]){
+    const model=ethConditionalFixture(),before=structuredClone(model),svg=svgFixture(width),range={start:time('2026-10-01'),end:time('2027-01-01')};let hovered;
+    const controller=drawIntradayChart({svg,series:ethConditionalSeries,forecast:model,scale,showForecastBand,showVolume:false,range,onHover:value=>{hovered=value;}});
+    const axis=controller.getPriceScale(),baseline=pathCoordinates(svg.innerHTML,'eth-forecast-baseline'),sample=pathCoordinates(svg.innerHTML,'equity-forecast-line');
+    assert.equal(baseline.length,model.path.length);assert.equal(sample.length,model.path.length);
+    assert.ok(axis.min<=105&&axis.max>=1600,'the deterministic baseline is outside the random envelope and must still set the automatic domain');
+    for(let index=0;index<model.path.length;index++){
+      const row=model.path[index],expectedX=axis.left+(time(row.date)-range.start)/(range.end-range.start)*(axis.right-axis.left);
+      assert.ok(Math.abs(baseline[index][0]-expectedX)<.011);
+      assert.ok(Math.abs(baseline[index][1]-axis.y(row.baselinePrice))<.011,'blue path uses baselinePrice');
+      assert.ok(Math.abs(sample[index][1]-axis.y(row.price))<.011,'amber path retains the sampled price');
+    }
+    assert.match(svg.innerHTML,/class="equity-forecast-line"[^>]*stroke="#e2b66c"[^>]*stroke-dasharray="7 5"/);
+    assert.match(svg.innerHTML,/조건 기준선/);assert.match(svg.innerHTML,/무작위 예시 1개 · 확률 아님/);
+    if(showForecastBand)assert.match(svg.innerHTML,/같은 무작위 잔차를 사용한 세 조건/);
+    else assert.doesNotMatch(svg.innerHTML,/class="equity-forecast-band"/);
+    controller.selectDate('2026-12-23');assert.equal(hovered.price,130);assert.equal(hovered.baselinePrice,1600);
+    assert.match(controller.getSelection().copyText,/무작위 예시 가격: \$130/);
+    assert.match(controller.getSelection().copyText,/조건 기준선: \$1,600/);
+    assert.match(controller.getSelection().copyText,/적합된 경제 모형의 예측이 아닙니다/);
+    assert.deepEqual(model,before);assert.doesNotMatch(svg.innerHTML,/NaN|Infinity/);
+  }
+});
+
+test('ETH baseline is interpolated on the display scale at partial viewport edges without creating new model observations',()=>{
+  for(const scale of ['linear','log']){
+    const model=ethConditionalFixture(),before=structuredClone(model),svg=svgFixture(320),range={start:time('2026-11-28'),end:time('2026-12-08')};let hovered;
+    const controller=drawIntradayChart({svg,series:ethConditionalSeries,forecast:model,scale,showForecastBand:false,showVolume:false,range,onHover:value=>{hovered=value;}});
+    const valueAt=date=>{const fraction=(time(date)-time('2026-11-23'))/(time('2026-12-23')-time('2026-11-23'));return scale==='log'?Math.exp(Math.log(900)*(1-fraction)+Math.log(1600)*fraction):900*(1-fraction)+1600*fraction;};
+    controller.selectDate('2026-11-28');assert.equal(hovered.interpolated,true);
+    assert.ok(Math.abs(hovered.baselinePrice-valueAt('2026-11-28'))<1e-9);
+    const axis=controller.getPriceScale();assert.ok(axis.min<=valueAt('2026-11-28')&&axis.max>=valueAt('2026-12-08'));
+    assert.match(controller.getSelection().copyText,/보간/);assert.match(controller.getSelection().copyText,/무작위 예시/);
+    assert.deepEqual(model,before);assert.doesNotMatch(svg.innerHTML,/NaN|Infinity/);
+  }
+});
+
+test('baseline display is limited to the ETH conditional illustration and leaves other models unchanged',()=>{
+  for(const [symbol,pathMode] of [['MSTR',undefined],['BMNR','crypto-conditional-daily'],['ETHUSD','asset-linked-daily']])for(const scale of ['linear','log']){
+    const withBaseline={...ethConditionalFixture(),symbol,pathMode};
+    if(pathMode==='asset-linked-daily')withBaseline.path=withBaseline.path.map((row,index)=>({...row,date:new Date((time('2026-10-23')+index*86400)*1000).toISOString().slice(0,10)}));
+    const withoutBaseline={...withBaseline,path:withBaseline.path.map(({baselinePrice,...row})=>row)},range={start:time('2026-10-01'),end:time('2027-01-01')};
+    const plainSvg=svgFixture(320),extraSvg=svgFixture(320);
+    const render=(svg,model)=>drawIntradayChart({svg,series,forecast:model,chartType:'line',scale,showForecastBand:false,showVolume:false,range});
+    const plain=render(plainSvg,withoutBaseline),extra=render(extraSvg,withBaseline);
+    assert.deepEqual([extra.getPriceScale().min,extra.getPriceScale().max],[plain.getPriceScale().min,plain.getPriceScale().max]);
+    assert.deepEqual(pathCoordinates(extraSvg.innerHTML,'equity-forecast-line'),pathCoordinates(plainSvg.innerHTML,'equity-forecast-line'));
+    assert.doesNotMatch(extraSvg.innerHTML,/eth-forecast-baseline|무작위 예시 1개/);
+    extra.selectDate('2026-11-23');assert.match(extra.getSelection().copyText,/시나리오 가격/);assert.doesNotMatch(extra.getSelection().copyText,/조건 기준선:/);
+  }
+});

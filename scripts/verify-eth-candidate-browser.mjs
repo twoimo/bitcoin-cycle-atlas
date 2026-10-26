@@ -181,16 +181,20 @@ async function ethCase(cdp,width,receipt,expected){
     const note=document.querySelector('#eth-forecast-note');
     return {width:innerWidth,scrollWidth:document.documentElement.scrollWidth,dataset:{...chart.dataset},
       price:document.querySelector('#eth-price').textContent,date:document.querySelector('#eth-bar-time').textContent,
-      kind:document.querySelector('#eth-kind').textContent,observed:path('#eth-chart .market-close-line'),future:path('#eth-chart .equity-forecast-line'),
-      note:{hidden:note.hidden,text:note.textContent},background:getComputedStyle(document.querySelector('.eth-plot')).backgroundColor};
+      kind:document.querySelector('#eth-kind').textContent,observed:path('#eth-chart .market-close-line'),future:path('#eth-chart .equity-forecast-line'),baseline:path('#eth-chart .eth-forecast-baseline'),
+      note:{hidden:note.hidden,text:note.textContent,bottom:note.getBoundingClientRect().bottom-document.querySelector('.eth-plot').getBoundingClientRect().top,
+        plotTop:Number(chart.querySelector('defs clipPath rect').getAttribute('y')),keys:[...note.children].map(el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width,text:el.textContent};})},background:getComputedStyle(document.querySelector('.eth-plot')).backgroundColor};
   });
   const chart=receipt.chart;
   assert.equal(chart.width,width);assert.ok(chart.scrollWidth<=width+1,'ETH horizontal page overflow');
   assert.equal(chart.dataset.product,'ETH-USD');assert.equal(chart.dataset.chartType,'line');
   assert.ok(Number(chart.dataset.observedCandleCount)>0);assert.ok(Number(chart.dataset.forecastPointCount)>0);assert.equal(Number(chart.dataset.forecastCandleCount),0);
-  for(const key of ['observed','future']){assert.ok(chart[key]&&chart[key].length>0,'Missing real SVG '+key+' path');assert.ok(!/NaN|Infinity/.test(chart[key].d),'Invalid SVG coordinates');}
-  assert.equal(chart.future.dash,'7 5');assert.equal(chart.price,expected.price);assert.equal(chart.date,expected.date);assert.equal(chart.kind,'');
+  for(const key of ['observed','future','baseline']){assert.ok(chart[key]&&chart[key].length>0,'Missing real SVG '+key+' path');assert.ok(!/NaN|Infinity/.test(chart[key].d),'Invalid SVG coordinates');}
+  assert.equal(chart.future.dash,'7 5');assert.equal(chart.baseline.dash,'2 4');assert.equal(chart.price,expected.price);assert.equal(chart.date,expected.date);assert.equal(chart.kind,'');
   assert.equal(chart.note.hidden,false);assert.ok(chart.note.text.includes('확률 아님'));
+  for(const text of ['실제 관측','조건 기준선','무작위 예시 1개','음영: 세 조건 범위'])assert.ok(chart.note.text.includes(text),'Missing forecast semantic label '+text);
+  assert.ok(chart.note.bottom<=chart.note.plotTop+1,'Forecast legend overlaps plotted prices');
+  assert.ok(chart.note.keys.every(k=>k.width>0&&k.left>=0&&k.right<=width),'A forecast legend key is clipped');
   dark(chart.background,'ETH plot');
   await screenshot(cdp,'eth-'+width+'-loaded.png',receipt);
   await click(cdp,'[data-eth-action="forecast"]');
@@ -293,5 +297,5 @@ finally{
   if(server)await new Promise(resolve=>server.close(resolve));
   if(profile)try{await rm(profile,{recursive:true,force:true});}catch(error){report.cleanupError=errorText(error);}
   await mkdir(out,{recursive:true});await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,sourceHashes:report.sourceHashes,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,sticky:c.sticky,chart:c.chart?{...c.chart,observed:undefined,future:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,sourceHashes:report.sourceHashes,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,sticky:c.sticky,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
 }
