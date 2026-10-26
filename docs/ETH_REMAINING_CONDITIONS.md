@@ -183,3 +183,15 @@ Hallmark [40355131740](https://github.com/twoimo/bitcoin-cycle-atlas/actions/run
 [2026-10-27 리서치와 수학 명세](ETH_REMODELING_RESEARCH_20261027.md)에 기관 주장·논문·프로토콜 원문과 사실 정정을 연결한다. 새 연구 모드는 확인 시점 기반 상태 지속기간과 시간가변 변동성을 추정한다. 3년 상승·1년 하락을 고정하거나 기관 목표가격을 새 중앙선에 강제하지 않는다. 기존 ETH/BMNR 공통 외부 평가 조건과 보존된 발행본은 별도 모드로 유지한다.
 
 현재 기본 차트 선택 변경은 이 Draft 브랜치의 연구 화면에 한정된다. main 병합·공개 배포 또는 보정된 운영 예측으로의 승격은 아니다. CI와 수치·native 렌더 결과는 해당 실행 소스와 별도로 보존한다. 0/25 경제 입력을 채워 넣거나 새로운 모형을 과거 발행 성과로 소급하지 않는다.
+
+### 13.1 실제 최종 결과와 현재 조건
+
+검증 소스 `d629bbc0010cf23495414a9cdf102dd59b73e1aa`의 [연구·수학·실제 점수](ETH_REMODELING_RESEARCH_20261027.md)와 [원본 실행 증거](eth-candidate-evidence/20261027-remodel/README.md)를 보존했다. 일반 CI [40392624689](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40392624689)는 합성 merge `b3b0da4`에서 1,374/1,374, 수치 assertion 318,010, negative control 16/16이다. 직접 head evidence [40392623994](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40392623994)는 집중 239/239, native 34/34, 163 PNG, runtime/resource 오류 0/0이다.
+
+새 모형의 같은 원점·비중첩 30/90/180일 표본은 9/4/2개다. 기존 ETH 예시보다 30일 로그오차는 약 13.2% 작지만 90일은 약 6.2%, 180일은 약 1.1% 크다. 전체 예측력 개선은 증명되지 않았다. 실제 밴드 포함률도 명목상 80%에 미달해 모의 분위수·적중률 미보정 표시를 유지한다. 완료 상태 표본은 상승 1회·하락 2회뿐이며 현재 판본 회고 결과를 성숙한 전향 성과로 취급하지 않는다.
+
+[Hallmark 40392623996](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40392623996)는 전체 8경로·전후 80 PNG와 integrity PASS를 완료했으나 원문 디자인 gate는 6 FAIL/3 REFLEX, waiver/dismissal 0/0이다. 225 seeds/268 entries/239 parts source-book은 42,983,471 bytes, unresolved 0이며 정확한 SHA-256과 소스가 manifest에 있다.
+
+최종 issuer의 실제 cutoff에서 BMNR/MSTR 완료 세션 자료가 오래된 것으로 확인됐다. 기본 새 발행의 최신성 거부는 유지하며 명시적 CI 보존 모드에서만 새 record/snapshot 0, 기존 9/3을 보존했다. 두 보존 호출의 receipt와 별도 결과 평가 27 pending/0 scored를 함께 기록한다. 원자료 날짜·실제 발행 시계를 소급하지 않았다. 경제 정의 적격 0/25, 경제 snapshot 0·제거 실험 unavailable·전향 scored 0은 남는다.
+
+**최신 지시에 따른 Gemini 반대 검토와 후속 역검토는 omitted-by-user이며 미완료 필수 조건에서 제외한다.** source-book 일반 생성기의 원본 pending 메타데이터는 역사적 출력으로 보존하고 실행 요약에서 이 차이를 명시한다. 생략을 통과로 고치지 않는다. 현재의 미해결 사항은 자료·표본·실제 예측 검증과 원문 디자인 진단이며, 코드·차트 변경은 Draft 연구 브랜치에 반영했다. main 병합·운영 모형 승격·공개 배포는 하지 않았고 releaseAuthorized=false다.

@@ -1,0 +1,144 @@
+[
+  {
+    "status": "PASS",
+    "verificationScope": "Preserved immutable archive integrity and source-compatible replay only",
+    "mode": "preserved-replay-only",
+    "issuanceStatus": "skipped-stale-inputs",
+    "sourceCommit": "d629bbc0010cf23495414a9cdf102dd59b73e1aa",
+    "sourceTree": "7a5e01b64ebdd91830a9f7c38dd9067f5d26ea98",
+    "receiptId": "d758ab0719d2ac248d8c2c10060b51f8e1c22dee12105ed58ae3aaff3301a53b",
+    "outputDirectory": "build/asset-forecast-ledger",
+    "newRecords": 0,
+    "newSnapshots": 0,
+    "reusedRecords": 0,
+    "verifiedExistingRecords": 9,
+    "preservedRecords": 9,
+    "preservedSnapshots": 3,
+    "candidateFreezeAt": null,
+    "replayedAt": "2026-10-26T20:06:53.193Z",
+    "currentInputFreshness": {
+      "checkedAt": "2026-10-26T20:06:51.800Z",
+      "eligibleForNewIssuance": false,
+      "inputs": [
+        {
+          "symbol": "ETHUSD",
+          "actualAsOf": "2026-10-25",
+          "expectedAsOf": "2026-10-25",
+          "checkedAt": "2026-10-26T20:06:51.800Z",
+          "status": "current"
+        },
+        {
+          "symbol": "BMNR",
+          "actualAsOf": "2026-10-23",
+          "expectedAsOf": "2026-10-26",
+          "checkedAt": "2026-10-26T20:06:51.800Z",
+          "status": "stale"
+        },
+        {
+          "symbol": "MSTR",
+          "actualAsOf": "2026-10-23",
+          "expectedAsOf": "2026-10-26",
+          "checkedAt": "2026-10-26T20:06:51.800Z",
+          "status": "stale"
+        }
+      ],
+      "staleInputs": [
+        {
+          "symbol": "BMNR",
+          "actualAsOf": "2026-10-23",
+          "expectedAsOf": "2026-10-26",
+          "checkedAt": "2026-10-26T20:06:51.800Z",
+          "status": "stale"
+        },
+        {
+          "symbol": "MSTR",
+          "actualAsOf": "2026-10-23",
+          "expectedAsOf": "2026-10-26",
+          "checkedAt": "2026-10-26T20:06:51.800Z",
+          "status": "stale"
+        }
+      ]
+    },
+    "regeneratedRecords": 0,
+    "preservedOnlyRecords": 9,
+    "newOutcomeEvaluation": false,
+    "outcomeEvidence": "build/asset-outcome-ledger",
+    "sharedEthereumPaths": "not-rerun-in-preservation-mode",
+    "productionAdopted": false,
+    "publicationScope": "draft-pr-research",
+    "artifactFileScope": "Files written or checked by this call; earlier receipt revisions may also be present",
+    "artifactFiles": 15,
+    "artifactBytes": 8178120
+  },
+  {
+    "status": "PASS",
+    "verificationScope": "Preserved immutable archive integrity and source-compatible replay only",
+    "mode": "preserved-replay-only",
+    "issuanceStatus": "skipped-stale-inputs",
+    "sourceCommit": "d629bbc0010cf23495414a9cdf102dd59b73e1aa",
+    "sourceTree": "7a5e01b64ebdd91830a9f7c38dd9067f5d26ea98",
+    "receiptId": "3f012f48421e30554595b2fbc6200c372458745f9d89ac9f54be56beebff7873",
+    "outputDirectory": "build/asset-forecast-ledger",
+    "newRecords": 0,
+    "newSnapshots": 0,
+    "reusedRecords": 0,
+    "verifiedExistingRecords": 9,
+    "preservedRecords": 9,
+    "preservedSnapshots": 3,
+    "candidateFreezeAt": null,
+    "replayedAt": "2026-10-26T20:07:03.905Z",
+    "currentInputFreshness": {
+      "checkedAt": "2026-10-26T20:07:02.505Z",
+      "eligibleForNewIssuance": false,
+      "inputs": [
+        {
+          "symbol": "ETHUSD",
+          "actualAsOf": "2026-10-25",
+          "expectedAsOf": "2026-10-25",
+          "checkedAt": "2026-10-26T20:07:02.505Z",
+          "status": "current"
+        },
+        {
+          "symbol": "BMNR",
+          "actualAsOf": "2026-10-23",
+          "expectedAsOf": "2026-10-26",
+          "checkedAt": "2026-10-26T20:07:02.505Z",
+          "status": "stale"
+        },
+        {
+          "symbol": "MSTR",
+          "actualAsOf": "2026-10-23",
+          "expectedAsOf": "2026-10-26",
+          "checkedAt": "2026-10-26T20:07:02.505Z",
+          "status": "stale"
+        }
+      ],
+      "staleInputs": [
+        {
+          "symbol": "BMNR",
+          "actualAsOf": "2026-10-23",
+          "expectedAsOf": "2026-10-26",
+          "checkedAt": "2026-10-26T20:07:02.505Z",
+          "status": "stale"
+        },
+        {
+          "symbol": "MSTR",
+          "actualAsOf": "2026-10-23",
+          "expectedAsOf": "2026-10-26",
+          "checkedAt": "2026-10-26T20:07:02.505Z",
+          "status": "stale"
+        }
+      ]
+    },
+    "regeneratedRecords": 0,
+    "preservedOnlyRecords": 9,
+    "newOutcomeEvaluation": false,
+    "outcomeEvidence": "build/asset-outcome-ledger",
+    "sharedEthereumPaths": "not-rerun-in-preservation-mode",
+    "productionAdopted": false,
+    "publicationScope": "draft-pr-research",
+    "artifactFileScope": "Files written or checked by this call; earlier receipt revisions may also be present",
+    "artifactFiles": 16,
+    "artifactBytes": 8185534
+  }
+]

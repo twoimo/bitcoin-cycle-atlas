@@ -1,0 +1,384 @@
+{
+  "schemaVersion": 1,
+  "kind": "eth-remodel-intermediate-execution-history",
+  "claim": "Failed and incomplete stages remain failures; later success does not rewrite their receipts.",
+  "runs": [
+    {
+      "sourceCommit": "ed2f3c923c11e76c5764bcccbefddb3e84601bfc",
+      "sourceTree": "41e249027ab87517eb85c7a6108ca3d50322f9bc",
+      "general": {
+        "runId": 40390681016,
+        "jobId": 121810544682,
+        "status": "success",
+        "checkoutCommit": "1ae2f695e82c54aef58895fb52502c016dc9633a",
+        "checkoutTree": "6e05a7c5c32ae629971b795483c6ff7aeb50d544",
+        "tests": 1368,
+        "passed": 1368
+      },
+      "evidence": {
+        "runId": 40390680985,
+        "jobId": 121810542958,
+        "status": "failure",
+        "focusedTests": 226,
+        "focusedPassed": 226,
+        "nativeCases": 34,
+        "nativePassed": 29,
+        "nativeFailures": [
+          {
+            "page": "eth",
+            "width": 320,
+            "error": "Error: Timed out: ETH observed and future paths\n    at until (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:31:9)\n    at async ethCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:403:3)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:703:283)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:718:5"
+          },
+          {
+            "page": "eth",
+            "width": 390,
+            "error": "Error: Timed out: ETH observed and future paths\n    at until (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:31:9)\n    at async ethCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:403:3)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:703:283)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:718:5"
+          },
+          {
+            "page": "eth",
+            "width": 768,
+            "error": "Error: Timed out: ETH observed and future paths\n    at until (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:31:9)\n    at async ethCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:403:3)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:703:283)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:718:5"
+          },
+          {
+            "page": "eth",
+            "width": 1024,
+            "error": "Error: Timed out: ETH observed and future paths\n    at until (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:31:9)\n    at async ethCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:403:3)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:703:283)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:718:5"
+          },
+          {
+            "page": "eth",
+            "width": 1440,
+            "error": "Error: Timed out: ETH observed and future paths\n    at until (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:31:9)\n    at async ethCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:403:3)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:703:283)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:718:5"
+          }
+        ],
+        "sourceBookGenerated": false
+      },
+      "hallmark": {
+        "runId": 40390681010,
+        "jobId": 121810543321,
+        "status": "failure",
+        "receipt": {
+          "sourceCommit": "ed2f3c923c11e76c5764bcccbefddb3e84601bfc",
+          "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+          "phases": [
+            {
+              "name": "baseline-static",
+              "fails": 1214,
+              "reflex": 1347,
+              "warns": 37,
+              "waived": 0,
+              "rejected": 0,
+              "answered": 0,
+              "dismissed": 0,
+              "notes": 0,
+              "files": 26,
+              "render": "off",
+              "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+            },
+            {
+              "name": "baseline-render",
+              "fails": 53,
+              "reflex": 211,
+              "warns": 13,
+              "waived": 0,
+              "rejected": 0,
+              "answered": 0,
+              "dismissed": 0,
+              "notes": 0,
+              "files": 1,
+              "render": "ran",
+              "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+            }
+          ],
+          "designGate": {
+            "status": "incomplete",
+            "fails": 0,
+            "reflex": 0
+          },
+          "integrityGate": {
+            "status": "fail",
+            "errors": 1
+          },
+          "sourceReadOnly": null,
+          "durationMilliseconds": 101146,
+          "readiness": [
+            {
+              "version": "baseline",
+              "route": "btc",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "eth",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "bmnr",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "mstr",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "data",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "evidence",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "compare",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "mobile-preview",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+              "status": "ready"
+            },
+            {
+              "version": "current",
+              "route": "btc",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+              "status": "ready"
+            }
+          ],
+          "errors": [
+            "TimeoutError: Waiting failed: 30000ms exceeded\n    at new WaitTask (file:///home/runner/work/_temp/hallmark-node/node_modules/puppeteer-core/lib/puppeteer/common/WaitTask.js:46:34)\n    at IsolatedWorld.waitForFunction (file:///home/runner/work/_temp/hallmark-node/node_modules/puppeteer-core/lib/puppeteer/api/Realm.js:49:26)\n    at CdpFrame.waitForFunction (file:///home/runner/work/_temp/hallmark-node/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:585:43)\n    at CdpFrame.<anonymous> (file:///home/runner/work/_temp/hallmark-node/node_modules/puppeteer-core/lib/puppeteer/util/decorators.js:101:27)\n    at CdpPage.waitForFunction (file:///home/runner/work/_temp/hallmark-node/node_modules/puppeteer-core/lib/puppeteer/api/Page.js:1542:37)\n    at readiness (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-hallmark-design.mjs:175:20)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-hallmark-design.mjs:240:24"
+          ],
+          "exitCode": 2
+        }
+      },
+      "cause": "Renderer required a sample path to remain inside its 10–90 simulation quantiles. Native errors independently confirmed Invalid equity forecast path; corrected by separate sample/median/band validation and independent interpolation."
+    },
+    {
+      "sourceCommit": "729d8d86e8517b9f268542763e7f0d43c98cdca9",
+      "sourceTree": "25591f0fdc1eacc67dca2dee6f2c7285b4618d69",
+      "general": {
+        "runId": 40391945470,
+        "jobId": 121814888578,
+        "status": "success",
+        "checkoutCommit": "5d603339a7b4676e0816c239adb2de2b0e1e5656",
+        "tests": 1372,
+        "passed": 1372
+      },
+      "evidence": {
+        "runId": 40391945509,
+        "jobId": 121814887154,
+        "status": "failure",
+        "focusedTests": 237,
+        "focusedPassed": 237,
+        "stage": "Actual new asset forecast issuance",
+        "errorLog": [
+          "2026-10-26T20:02:11.7275022Z file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/issue-asset-forecasts.mjs:190",
+          "2026-10-26T20:02:11.7275860Z   if(asOf!==latestCompletedAssetDate(informationCutoffAt,market))throw new Error(symbol+' committed price archive is stale or incomplete at the actual cutoff');",
+          "2026-10-26T20:02:11.7277324Z Error: BMNR committed price archive is stale or incomplete at the actual cutoff",
+          "2026-10-26T20:02:11.7277978Z     at prepareInputs (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/issue-asset-forecasts.mjs:190:72)",
+          "2026-10-26T20:02:11.7278616Z     at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/issue-asset-forecasts.mjs:347:40",
+          "2026-10-26T20:02:11.7279056Z     at Array.map (<anonymous>)",
+          "2026-10-26T20:02:11.7279551Z     at issueAssetForecasts (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/issue-asset-forecasts.mjs:347:28)",
+          "2026-10-26T20:02:11.7280242Z     at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/issue-asset-forecasts.mjs:444:3",
+          "2026-10-26T20:02:11.7436422Z ##[error]Process completed with exit code 1."
+        ],
+        "nativeExecuted": false,
+        "sourceBookGenerated": false
+      },
+      "hallmark": {
+        "runId": 40391945440,
+        "jobId": 121814887211,
+        "status": "failure",
+        "receipt": {
+          "sourceCommit": "729d8d86e8517b9f268542763e7f0d43c98cdca9",
+          "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+          "phases": [
+            {
+              "name": "baseline-static",
+              "fails": 1214,
+              "reflex": 1347,
+              "warns": 37,
+              "waived": 0,
+              "rejected": 0,
+              "answered": 0,
+              "dismissed": 0,
+              "notes": 0,
+              "files": 26,
+              "render": "off",
+              "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+            },
+            {
+              "name": "baseline-render",
+              "fails": 53,
+              "reflex": 211,
+              "warns": 13,
+              "waived": 0,
+              "rejected": 0,
+              "answered": 0,
+              "dismissed": 0,
+              "notes": 0,
+              "files": 1,
+              "render": "ran",
+              "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+            },
+            {
+              "name": "current-static",
+              "fails": 2,
+              "reflex": 0,
+              "warns": 36,
+              "waived": 0,
+              "rejected": 0,
+              "answered": 0,
+              "dismissed": 0,
+              "notes": 0,
+              "files": 26,
+              "render": "off",
+              "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 2 FAIL, 0 REFLEX"
+            },
+            {
+              "name": "current-render",
+              "fails": 4,
+              "reflex": 3,
+              "warns": 17,
+              "waived": 0,
+              "rejected": 0,
+              "answered": 0,
+              "dismissed": 0,
+              "notes": 0,
+              "files": 1,
+              "render": "ran",
+              "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 208/209; before 53 FAIL, 211 REFLEX, now 4 FAIL, 3 REFLEX"
+            }
+          ],
+          "designGate": {
+            "status": "fail",
+            "fails": 6,
+            "reflex": 3
+          },
+          "integrityGate": {
+            "status": "pass",
+            "errors": 0
+          },
+          "sourceReadOnly": {
+            "current": true,
+            "baseline": true,
+            "gitBlobsMatched": true
+          },
+          "durationMilliseconds": 131632,
+          "readiness": [
+            {
+              "version": "baseline",
+              "route": "btc",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "eth",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "bmnr",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "mstr",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "data",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "evidence",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "compare",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+              "status": "ready"
+            },
+            {
+              "version": "baseline",
+              "route": "mobile-preview",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+              "status": "ready"
+            },
+            {
+              "version": "current",
+              "route": "btc",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+              "status": "ready"
+            },
+            {
+              "version": "current",
+              "route": "eth",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+              "status": "ready"
+            },
+            {
+              "version": "current",
+              "route": "bmnr",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+              "status": "ready"
+            },
+            {
+              "version": "current",
+              "route": "mstr",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+              "status": "ready"
+            },
+            {
+              "version": "current",
+              "route": "data",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+              "status": "ready"
+            },
+            {
+              "version": "current",
+              "route": "evidence",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+              "status": "ready"
+            },
+            {
+              "version": "current",
+              "route": "compare",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+              "status": "ready"
+            },
+            {
+              "version": "current",
+              "route": "mobile-preview",
+              "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+              "status": "ready"
+            }
+          ],
+          "errors": [],
+          "exitCode": 1
+        }
+      },
+      "cause": "Actual cutoff crossed the 2026-10-26 20:00 UTC equity close. Preserved Friday stock archives were correctly rejected for new issuance. Default freshness gate remains; explicit CI mode subsequently preserves/replays old records without generating new issues."
+    }
+  ]
+}
