@@ -289,9 +289,12 @@ const killedMutations = [];
 for (const control of negativeControls) {
   control.property(buildAssetComparison);
   assert.equal(engineSource.split(control.before).length - 1, 1, `unique mutation target: ${control.id}`);
+  // A data: module has no filesystem base. Resolve the actual relative imports
+  // against the reviewed engine file, retaining their query strings instead of
+  // assuming a particular release's cache-busting version.
   const mutated = engineSource.replace(control.before, control.after).replace(
-    "from './cycle-engine.js?v=1.19.0'",
-    `from '${new URL('../dist/cycle-engine.js?v=1.19.0', import.meta.url).href}'`,
+    /\bfrom\s*(['"])(\.[^'"]+)\1/g,
+    (_match, quote, specifier) => `from ${quote}${new URL(specifier, engineUrl).href}${quote}`,
   );
   const module = await import(`data:text/javascript;base64,${Buffer.from(`${mutated}\n//# sourceURL=asset-comparison-${control.id}.js`).toString('base64')}`);
   let intendedFailure = false;

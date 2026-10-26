@@ -1,4 +1,4 @@
-import { utcDay, validateDataset } from './cycle-engine.js?v=1.19.0';
+import { utcDay, validateDataset } from './cycle-engine.js?v=1.29.0';
 
 export const ASSET_COMPARISON_VERSION = 1;
 export const MIN_SAMPLE_YEARS = 5;

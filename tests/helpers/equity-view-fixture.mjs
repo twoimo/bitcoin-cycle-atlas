@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
+import {CAPITAL_POLICIES} from '../../dist/treasury-instruments.js';
 import * as equityData from '../../dist/equity-market-data.js';
 
 export function deferred() {
@@ -76,7 +77,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', project }
   let frameId = 0, navigation;
   const mount = () => ({ cancel() {}, cancelPending() {}, destroy() {} });
   const deps = {
-    ...equityData,
+    ...equityData,CAPITAL_POLICIES,
     drawIntradayChart: options => { draws.push(options); return {}; },
     bindChartNavigation: options => {
       navigation = options;
@@ -145,5 +146,6 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', project }
     latest: () => draws.at(-1),
     status: () => app.querySelector('#equity-status').textContent,
     forecastDialog: () => { click('action', 'forecast'); return document.body.nodes.get('equity-detail-dialog').querySelector('#equity-detail-content').innerHTML; },
+    capitalSetting: (id,value) => document.body.nodes.get('equity-detail-dialog').dispatchEvent({type:'change',target:{id,value}}),
   };
 }

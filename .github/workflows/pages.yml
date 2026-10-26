@@ -14,8 +14,12 @@ concurrency:
 
 jobs:
   build:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      source_commit: ${{ steps.publication.outputs.source_commit }}
+      manifest_sha256: ${{ steps.publication.outputs.manifest_sha256 }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -26,6 +30,8 @@ jobs:
           package-manager-cache: false
       - name: Test before deployment
         run: npm test
+      - name: Verify preserved forecast identities and replay
+        run: npm run verify:forecast
       - name: Verify treasury sources and persistent research summaries
         run: npm run verify:research
       - name: Verify reviewed Ethereum history matches the published catalog
@@ -40,11 +46,34 @@ jobs:
         run: |
           npm run verify:cycle
           npm run verify:performance
-      - name: Verify static paths and standalone build
+      - name: Verify static paths
+        run: node scripts/verify-static.mjs
+      - name: Prepare the committed publication and standalone
+        id: publication
         run: |
-          node scripts/verify-static.mjs
+          npm run build:publication
+          npm run verify:publication
           node scripts/build-standalone.mjs build/Bitcoin_Cycles_Comparison.html
           node scripts/verify-static.mjs --standalone build/Bitcoin_Cycles_Comparison.html
+          node --input-type=module <<'NODE'
+          import {readFile,appendFile} from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          const manifest=JSON.parse(await readFile('dist/publication.json','utf8'));
+          const head=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+          if(manifest.sourceTree?.status!=='clean'||manifest.sourceCommit!==head||!/^[a-f0-9]{64}$/.test(manifest.manifestSha256))throw new Error('Publication must identify this committed source');
+          await appendFile(process.env.GITHUB_OUTPUT,`source_commit=${head}\nmanifest_sha256=${manifest.manifestSha256}\n`);
+          NODE
+      - name: Reject a superseded source before upload
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SOURCE: ${{ steps.publication.outputs.source_commit }}
+        run: |
+          current_main="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')"
+          if [ "$(git rev-parse HEAD)" != "$EXPECTED_SOURCE" ] || [ "$current_main" != "$EXPECTED_SOURCE" ]; then
+            echo 'Prepared source is no longer current main. Refusing an outdated publication.' >&2
+            exit 1
+          fi
       # This is a ready-to-serve static site. Pages must use GitHub Actions as
       # its repository source; configure-pages is not needed to transform it.
       - name: Upload only public site files
@@ -56,14 +85,50 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Check out the exact prepared source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.build.outputs.source_commit }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Reject a superseded source before deployment
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SOURCE: ${{ needs.build.outputs.source_commit }}
+        run: |
+          current_main="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')"
+          if [ "$(git rev-parse HEAD)" != "$EXPECTED_SOURCE" ] || [ "$current_main" != "$EXPECTED_SOURCE" ]; then
+            echo 'Prepared source is no longer current main. Refusing an outdated publication.' >&2
+            exit 1
+          fi
       - name: Deploy validated artifact
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+      - name: Confirm the served publication identity
+        shell: bash
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+          EXPECTED_SOURCE: ${{ needs.build.outputs.source_commit }}
+          EXPECTED_MANIFEST: ${{ needs.build.outputs.manifest_sha256 }}
+        run: |
+          for attempt in 1 2 3 4; do
+            if node scripts/build-publication.mjs --verify-url "$PAGES_URL" --expected-manifest "$EXPECTED_MANIFEST" --expected-source "$EXPECTED_SOURCE"; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 4 ]; then sleep 10; fi
+          done
+          echo 'The public site did not serve the exact prepared publication within the retry bound.' >&2
+          exit 1

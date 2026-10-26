@@ -109,6 +109,7 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   const directory = await fixture(t, {});
   const first = resolve(directory, 'first.html'), second = resolve(directory, 'second.html');
   const builder = resolve(root, 'scripts/build-standalone.mjs');
+  await run(process.execPath,[resolve(root,'scripts/build-publication.mjs'),'--preview']);
   await run(process.execPath, [builder, first]);
   await run(process.execPath, [builder, second]);
   const html = await readFile(first, 'utf8');
@@ -117,7 +118,9 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   const bundle = await standaloneModuleMap(resolve(root, 'dist'));
   assert.equal(verification.modules, Object.keys(bundle.imports).length);
   assert.equal(verification.snapshots, 7);
-  assert.equal(verification.stylesheets, 23);
+  assert.ok(verification.forecastRecords>=5,'all five initial economic scenarios have actual preserved outputs');
+  assert.equal(verification.stylesheets, 24);
+  assert.match(html,/\.forecast-journal\s*\{/,'the archived forecast workspace retains its offline styles');
   const {stdout} = await run(process.execPath, ['--experimental-vm-modules', runtime, 'artifact', first]);
   assert.deepEqual(JSON.parse(stdout), {modules:verification.modules, parsed:true, linked:true});
   const mapMatch = html.match(/<script type="importmap">([\s\S]*?)<\/script>/);
@@ -132,5 +135,8 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   const data = JSON.parse(dataMatch[2]);
   data.prices[0][1] += 1;
   await assert.rejects(verifyStandaloneArtifact(html.replace(dataMatch[0], dataMatch[1] + JSON.stringify(data) + dataMatch[3]), resolve(root, 'dist')), /Changed embedded snapshot/);
+  const archiveMatch=html.match(/(<script id="atlas-forecast-ledger" type="application\/json">)([\s\S]*?)(<\/script>)/);
+  const archive=JSON.parse(archiveMatch[2]);Object.values(archive.records)[0].targets[0].price+=1;
+  await assert.rejects(verifyStandaloneArtifact(html.replace(archiveMatch[0],archiveMatch[1]+JSON.stringify(archive)+archiveMatch[3]),resolve(root,'dist')),/Changed embedded forecast archive/);
   await assert.rejects(verifyStandaloneArtifact(html.replace(mapMatch[0], ''), resolve(root, 'dist')), /exactly one import map/);
 });

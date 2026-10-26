@@ -1,4 +1,4 @@
-import { chartBottomBarFor } from './chart-bottom-bar.js?v=1.14.0-mobile.1';
+import { chartBottomBarFor } from './chart-bottom-bar.js?v=1.29.0';
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 
 /** The timeline is a disclosure above the shared footer, not another chart row. */

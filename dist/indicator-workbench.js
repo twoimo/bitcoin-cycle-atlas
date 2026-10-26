@@ -1,9 +1,9 @@
-import { INDICATORS, readIndicatorState, normalizeIndicatorState, isIndicatorVisible } from './indicator-state.js?v=1.14.1-touch.1';
-import {mountDialogViewport} from './dialog-viewport.js?v=1.14.1-ime.1';
-import {indicatorReadout,indicatorReadoutDate} from './indicator-readouts.js?v=1.13.0-research.1';
-import {INDICATOR_SETTINGS,indicatorSettings,indicatorSupportsInterval} from './indicator-settings.js?v=1.13.0-research.1';
-import {mountIndicatorSettingsDialog} from './indicator-settings-dialog.js?v=1.14.1-touch.1';
-import {INDICATOR_PREFERENCES_KEY,MAX_TEMPLATE_NAME,readIndicatorPreferences,writeIndicatorPreferences,toggleIndicatorFavorite,saveIndicatorTemplate,deleteIndicatorTemplate,indicatorLibraryItems,hasIndicatorTemplate} from './indicator-preferences.js?v=1.14.1-touch.1';
+import { INDICATORS, readIndicatorState, normalizeIndicatorState, isIndicatorVisible } from './indicator-state.js?v=1.29.0';
+import {mountDialogViewport} from './dialog-viewport.js?v=1.29.0';
+import {indicatorReadout,indicatorReadoutDate} from './indicator-readouts.js?v=1.29.0';
+import {INDICATOR_SETTINGS,indicatorSettings,indicatorSupportsInterval} from './indicator-settings.js?v=1.29.0';
+import {mountIndicatorSettingsDialog} from './indicator-settings-dialog.js?v=1.29.0';
+import {INDICATOR_PREFERENCES_KEY,MAX_TEMPLATE_NAME,readIndicatorPreferences,writeIndicatorPreferences,toggleIndicatorFavorite,saveIndicatorTemplate,deleteIndicatorTemplate,indicatorLibraryItems,hasIndicatorTemplate} from './indicator-preferences.js?v=1.29.0';
 
 const ICONS={eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',hidden:'<path d="m3 3 18 18M10 5a12 12 0 0 1 2 0c6.5 0 10 7 10 7a20 20 0 0 1-3 4M6 6a20 20 0 0 0-4 6s3.5 7 10 7a12 12 0 0 0 5-1"/>',close:'<path d="m6 6 12 12M6 18 18 6"/>',expand:'<path d="m7 10 5 5 5-5"/>',collapse:'<path d="m7 14 5-5 5 5"/>'};
 const glyph=name=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[name]}</svg>`;

@@ -1,4 +1,4 @@
-import { aggregateCandles, CANDLE_DOCUMENTATION, marketProduct, parseCompletedCandleRows, parseMarketSnapshot } from './ohlc-data.js?v=1.15.0';
+import { aggregateCandles, CANDLE_DOCUMENTATION, marketProduct, parseCompletedCandleRows, parseMarketSnapshot } from './ohlc-data.js?v=1.29.0';
 
 export const ETH_SNAPSHOT_URL = './data/eth-ohlc.json';
 export const ETH_PRODUCT = 'ETH-USD';

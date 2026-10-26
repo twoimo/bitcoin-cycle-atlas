@@ -1,4 +1,4 @@
-import {normalizeResearchAnnotations,createResearchAnnotation,researchAnnotationSummary,RESEARCH_ANNOTATION_COLORS,MAX_RESEARCH_ANNOTATIONS} from './research-annotations.js?v=1.13.0-research.1';
+import {normalizeResearchAnnotations,createResearchAnnotation,researchAnnotationSummary,RESEARCH_ANNOTATION_COLORS,MAX_RESEARCH_ANNOTATIONS} from './research-annotations.js?v=1.29.0';
 
 /** Controlled editor: callers apply a single command to their own undoable state. */
 export function mountResearchAnnotationsWorkbench({document:doc=globalThis.document,getState,getContext,onCommand}={}) {

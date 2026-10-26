@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { resolve, dirname, relative, sep } from 'node:path';
 import { javascriptModuleReferences, javascriptModuleSpecifiers } from './module-references.mjs';
+import { readForecastArchive } from './build-forecast-ledger.mjs';
+import { checkPublication } from './build-publication.mjs';
 
 export async function verifyStandaloneArtifact(html, dist) {
   assert(!/id="atlas-(?:optional-fonts|fonts-script)"/.test(html), 'Standalone must not request external font stylesheets');
@@ -68,6 +70,17 @@ export async function verifyStandaloneArtifact(html, dist) {
     assert.equal(scripts.length, 1, `Missing or repeated snapshot: ${id}`);
     assert.deepEqual(JSON.parse(scripts[0][1]), JSON.parse(await readFile(resolve(directory, 'data', file), 'utf8')), `Changed embedded snapshot: ${id}`);
   }
+  const embeddedJson=id=>{
+    const values=[...html.matchAll(new RegExp(`<script\\b[^>]*id=["']${id}["'][^>]*>([\\s\\S]*?)<\\/script>`,'gi'))];
+    assert.equal(values.length,1,`Missing or repeated archive: ${id}`);return JSON.parse(values[0][1]);
+  };
+  const archive=await readForecastArchive(resolve(directory,'data/forecast-ledger'));
+  const evaluation=JSON.parse(await readFile(resolve(directory,'data/forecast-ledger/evaluation.json'),'utf8'));
+  const experiments=archive.index.experimentsPath?JSON.parse(await readFile(resolve(directory,'data/forecast-ledger',archive.index.experimentsPath),'utf8')):null;
+  assert.deepEqual(embeddedJson('atlas-forecast-ledger'),{index:archive.index,records:Object.fromEntries(archive.records.map(record=>[record.id,record])),snapshots:Object.fromEntries(archive.snapshots),evaluation,experiments},'Changed embedded forecast archive');
+  const publication=JSON.parse(await readFile(resolve(directory,'publication.json'),'utf8'));
+  await checkPublication(publication,{directory});
+  assert.deepEqual(embeddedJson('atlas-publication'),publication,'Changed embedded publication manifest');
   const index = await readFile(resolve(directory, 'index.html'), 'utf8');
   const stylesheets = [...index.matchAll(/<link rel="stylesheet" href="\.\/([^"?]+)(?:\?[^"\s]*)?">/g)];
   for (const [, file] of stylesheets) {
@@ -76,5 +89,5 @@ export async function verifyStandaloneArtifact(html, dist) {
   }
   const favicon = (await readFile(resolve(directory, 'favicon.svg'))).toString('base64');
   assert(html.includes(`href="data:image/svg+xml;base64,${favicon}"`), 'Changed embedded favicon');
-  return {modules:graph.size, edges:[...graph.values()].reduce((count, targets) => count + targets.length, 0), sourceBytes, rewrittenBytes, snapshots:Object.keys(snapshots).length, stylesheets:stylesheets.length};
+  return {modules:graph.size, edges:[...graph.values()].reduce((count, targets) => count + targets.length, 0), sourceBytes, rewrittenBytes, snapshots:Object.keys(snapshots).length, forecastRecords:archive.records.length, stylesheets:stylesheets.length};
 }

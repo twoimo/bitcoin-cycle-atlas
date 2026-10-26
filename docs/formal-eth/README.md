@@ -1,5 +1,9 @@
 # ETH lifecycle and refresh verification
 
+## v1.29 integration correspondence
+
+The current committed source is `7261c1807028e1b69bf9cd9be0d269a64f88acc0`. The strict process-exit rerun, exact runtime hashes, maintained mutation selectors and limits of the new features are recorded in [the integration review](../evolution-2026-10-26/publication-independent-review.md) and the current project verification skill. Current machine-readable receipt: [verification result](../evolution-2026-10-26/eth-state-final.json). Earlier revisions and charts below remain historical evidence. New economic, scenario and capital-recalculation behavior is not implicitly included in these finite lifecycle models.
+
 Baseline: 64c8207cb044d8990289c5a7d39972e21b74c240 (v1.22.1).
 The reviewed fix includes v1.23.0 import URLs; the runtime SHA-256 is
 bd57616e5ed9515fb876e93bf12d8ff4cf185825465e4e82c0b86b5dde47ab5d.

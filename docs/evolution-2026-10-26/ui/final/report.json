@@ -1,0 +1,691 @@
+{
+  "status": "PASS",
+  "generatedAt": "2026-10-26T06:33:42.511Z",
+  "browser": "156.0.8078.47",
+  "scope": "Actual Chromium DOM, keyboard, downloads and rendered screenshots. Touch viewports are emulation. 200% case uses a half-size viewport and DPR2 reflow proxy, not browser chrome zoom or physical-device/Safari evidence. Root CSS zoom is not a browser-zoom equivalent and is excluded.",
+  "sourceIdentities": [
+    {
+      "path": "dist/forecast-journal.js",
+      "bytes": 26738,
+      "sha256": "0d90260b68f11ffdb50d1d9976c77d93761efb7390582fdde1211ba8b5bb9173"
+    },
+    {
+      "path": "dist/forecast-journal.css",
+      "bytes": 3909,
+      "sha256": "1a05d24a5ef981c25fd48979e3bb6088fecf0eed5ce08d81707986436baf48d9"
+    },
+    {
+      "path": "dist/forecast-records.js",
+      "bytes": 20943,
+      "sha256": "c79893f81c6bdff97685e2c384a3d1facc6eec10effdb09346c63749a36ca308"
+    },
+    {
+      "path": "dist/atlas-price-chart.js",
+      "bytes": 51214,
+      "sha256": "0a439da95ce2ca00875a817483ac3bd1062adbfa0480c7e644e74271dcc6d20e"
+    },
+    {
+      "path": "dist/eth-view.js",
+      "bytes": 30483,
+      "sha256": "51202d57377b6da50f4db0d1c3e33745dfcea8b897fe269a2f5f366f82784168"
+    },
+    {
+      "path": "dist/equity-view.js",
+      "bytes": 44056,
+      "sha256": "8db93687e160f11298f66e09da035e4eb30e79d7d516526803a941d7603f1ba0"
+    },
+    {
+      "path": "dist/daily-data-view.js",
+      "bytes": 28943,
+      "sha256": "3e4bdd6dd76445b0d6cc0c65c355965691c6b0541f4978e5d65e999c09f28170"
+    },
+    {
+      "path": "dist/site-entry.js",
+      "bytes": 1083,
+      "sha256": "acd1420ef95fae493d4a83866fdcde525b17d2b7d881a166a321093b24b8c58c"
+    },
+    {
+      "path": "dist/workspace-tools.js",
+      "bytes": 19149,
+      "sha256": "d51767037bca6af53edb396749e3006f2caf23e7cf384347cf37086fa3104fa3"
+    },
+    {
+      "path": "scripts/verify-evolution-journal.mjs",
+      "bytes": 29513,
+      "sha256": "a7a20bb1147a71a2a45b899cd5817464c496ece6d8bdfbf08d1d9e7bdfd0bed8"
+    },
+    {
+      "path": "build/Bitcoin_Cycles_Comparison.html",
+      "bytes": 18097915,
+      "sha256": "1ffd7b9ce84da6840bbdbf3d9d407dba31000fe3cfae3f16e1b1fedc9c25360e"
+    }
+  ],
+  "closeRaceProbe": true,
+  "cases": [
+    {
+      "name": "desktop",
+      "viewport": [
+        1440,
+        900
+      ],
+      "checks": [
+        "comparison-and-existing-history",
+        "data-method-journal-touch-entry",
+        "journal-records-keyboard-and-exact-values",
+        "journal-selection-survives-resize",
+        "journal-range-keyboard-focus",
+        "journal-six-tabs-and-downloads",
+        "journal-close-reopen-race-and-focus",
+        "journal-test-only-observed-overlay",
+        "journal-tamper-rejection-and-retry",
+        "eth-future-controls",
+        "mstr-capital-modal",
+        "bmnr-capital-modal",
+        "no-unhandled-errors-or-local-missing-resources"
+      ],
+      "failures": [],
+      "downloads": [
+        {
+          "filename": "atlas-forecast-2026-10-25-base.json",
+          "kind": "atlas-forecast-record"
+        },
+        {
+          "filename": "atlas-forecast-evaluation.json",
+          "kind": "atlas-forecast-evaluation"
+        },
+        {
+          "filename": "atlas-publication.json",
+          "kind": "atlas-publication"
+        },
+        {
+          "filename": "atlas-forecast-experiments.json",
+          "kind": "atlas-forecast-experiments"
+        },
+        {
+          "filename": "Atlas_Performance_Diagnostics.json",
+          "kind": null
+        }
+      ],
+      "errors": [],
+      "missing": [],
+      "blockedExternal": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap"
+      ],
+      "symbols": [
+        "BTC",
+        "SPY",
+        "QQQ",
+        "NVDA",
+        "AAPL",
+        "GOOG",
+        "MSFT",
+        "AMZN",
+        "META",
+        "AVGO",
+        "PLTR",
+        "TSLA",
+        "HOOD",
+        "TLT",
+        "IEF",
+        "GLD",
+        "SLV",
+        "PDBC"
+      ],
+      "resizeSelection": {
+        "before": "2027-04-23 · 보존한 가정 $83,111.78",
+        "after": "2027-04-23 · 보존한 가정 $83,111.78"
+      },
+      "focusAfterRangeChange": {
+        "tag": "SELECT",
+        "range": true,
+        "value": "90"
+      },
+      "publicationManifest": "812ce1c3b3114c5e4c1860b2bd3f87515d8103b1d5b926d242f3ffbe45526cac",
+      "focusAfterClose": {
+        "tag": "svg",
+        "id": "lab-chart",
+        "visible": true,
+        "insideClosedDialog": false
+      },
+      "syntheticObservationFixture": {
+        "scope": "Test route only; no data file changed and not a real matured observation",
+        "selectedDate": "2026-10-26",
+        "actualValue": 80839.2948612939
+      },
+      "equityKeyboardAudit": {
+        "MSTR": {
+          "events": [
+            {
+              "event": "keydown",
+              "key": "End",
+              "target": "equity-chart",
+              "active": "equity-chart",
+              "kind": "조건부 일별 경로"
+            },
+            {
+              "event": "close",
+              "active": "equity-chart"
+            }
+          ],
+          "kind": "조건부 일별 경로",
+          "date": "2028-04-23",
+          "active": "equity-chart"
+        },
+        "BMNR": {
+          "events": [
+            {
+              "event": "keydown",
+              "key": "End",
+              "target": "equity-chart",
+              "active": "equity-chart",
+              "kind": "조건부 일별 경로"
+            }
+          ],
+          "kind": "조건부 일별 경로",
+          "date": "2028-04-23",
+          "active": "equity-chart"
+        }
+      }
+    },
+    {
+      "name": "phone320",
+      "viewport": [
+        320,
+        740
+      ],
+      "checks": [
+        "comparison-and-existing-history",
+        "data-method-journal-touch-entry",
+        "journal-records-keyboard-and-exact-values",
+        "journal-selection-survives-resize",
+        "journal-range-keyboard-focus",
+        "journal-six-tabs-and-downloads",
+        "journal-close-reopen-race-and-focus",
+        "eth-future-controls",
+        "mstr-capital-modal",
+        "bmnr-capital-modal",
+        "no-unhandled-errors-or-local-missing-resources"
+      ],
+      "failures": [],
+      "downloads": [
+        {
+          "filename": "atlas-forecast-2026-10-25-base.json",
+          "kind": "atlas-forecast-record"
+        },
+        {
+          "filename": "atlas-forecast-evaluation.json",
+          "kind": "atlas-forecast-evaluation"
+        },
+        {
+          "filename": "atlas-publication.json",
+          "kind": "atlas-publication"
+        },
+        {
+          "filename": "atlas-forecast-experiments.json",
+          "kind": "atlas-forecast-experiments"
+        },
+        {
+          "filename": "Atlas_Performance_Diagnostics.json",
+          "kind": null
+        }
+      ],
+      "errors": [],
+      "missing": [],
+      "blockedExternal": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap"
+      ],
+      "symbols": [
+        "BTC",
+        "SPY",
+        "QQQ",
+        "NVDA",
+        "AAPL",
+        "GOOG",
+        "MSFT",
+        "AMZN",
+        "META",
+        "AVGO",
+        "PLTR",
+        "TSLA",
+        "HOOD",
+        "TLT",
+        "IEF",
+        "GLD",
+        "SLV",
+        "PDBC"
+      ],
+      "resizeSelection": {
+        "before": "2027-04-23 · 보존한 가정 $83,111.78",
+        "after": "2027-04-23 · 보존한 가정 $83,111.78"
+      },
+      "focusAfterRangeChange": {
+        "tag": "SELECT",
+        "range": true,
+        "value": "90"
+      },
+      "publicationManifest": "812ce1c3b3114c5e4c1860b2bd3f87515d8103b1d5b926d242f3ffbe45526cac",
+      "focusAfterClose": {
+        "tag": "svg",
+        "id": "lab-chart",
+        "visible": true,
+        "insideClosedDialog": false
+      },
+      "equityKeyboardAudit": {
+        "MSTR": {
+          "events": [
+            {
+              "event": "keydown",
+              "key": "End",
+              "target": "equity-chart",
+              "active": "equity-chart",
+              "kind": "조건부 일별 경로"
+            },
+            {
+              "event": "close",
+              "active": "equity-chart"
+            }
+          ],
+          "kind": "조건부 일별 경로",
+          "date": "2028-04-23",
+          "active": "equity-chart"
+        },
+        "BMNR": {
+          "events": [
+            {
+              "event": "keydown",
+              "key": "End",
+              "target": "equity-chart",
+              "active": "equity-chart",
+              "kind": "조건부 일별 경로"
+            }
+          ],
+          "kind": "조건부 일별 경로",
+          "date": "2028-04-23",
+          "active": "equity-chart"
+        }
+      }
+    },
+    {
+      "name": "tablet768",
+      "viewport": [
+        768,
+        1024
+      ],
+      "checks": [
+        "comparison-and-existing-history",
+        "data-method-journal-touch-entry",
+        "journal-records-keyboard-and-exact-values",
+        "journal-selection-survives-resize",
+        "journal-range-keyboard-focus",
+        "journal-six-tabs-and-downloads",
+        "journal-close-reopen-race-and-focus",
+        "eth-future-controls",
+        "mstr-capital-modal",
+        "bmnr-capital-modal",
+        "no-unhandled-errors-or-local-missing-resources"
+      ],
+      "failures": [],
+      "downloads": [
+        {
+          "filename": "atlas-forecast-2026-10-25-base.json",
+          "kind": "atlas-forecast-record"
+        },
+        {
+          "filename": "atlas-forecast-evaluation.json",
+          "kind": "atlas-forecast-evaluation"
+        },
+        {
+          "filename": "atlas-publication.json",
+          "kind": "atlas-publication"
+        },
+        {
+          "filename": "atlas-forecast-experiments.json",
+          "kind": "atlas-forecast-experiments"
+        },
+        {
+          "filename": "Atlas_Performance_Diagnostics.json",
+          "kind": null
+        }
+      ],
+      "errors": [],
+      "missing": [],
+      "blockedExternal": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap"
+      ],
+      "symbols": [
+        "BTC",
+        "SPY",
+        "QQQ",
+        "NVDA",
+        "AAPL",
+        "GOOG",
+        "MSFT",
+        "AMZN",
+        "META",
+        "AVGO",
+        "PLTR",
+        "TSLA",
+        "HOOD",
+        "TLT",
+        "IEF",
+        "GLD",
+        "SLV",
+        "PDBC"
+      ],
+      "resizeSelection": {
+        "before": "2027-04-23 · 보존한 가정 $83,111.78",
+        "after": "2027-04-23 · 보존한 가정 $83,111.78"
+      },
+      "focusAfterRangeChange": {
+        "tag": "SELECT",
+        "range": true,
+        "value": "90"
+      },
+      "publicationManifest": "812ce1c3b3114c5e4c1860b2bd3f87515d8103b1d5b926d242f3ffbe45526cac",
+      "focusAfterClose": {
+        "tag": "svg",
+        "id": "lab-chart",
+        "visible": true,
+        "insideClosedDialog": false
+      },
+      "equityKeyboardAudit": {
+        "MSTR": {
+          "events": [
+            {
+              "event": "keydown",
+              "key": "End",
+              "target": "equity-chart",
+              "active": "equity-chart",
+              "kind": "조건부 일별 경로"
+            }
+          ],
+          "kind": "조건부 일별 경로",
+          "date": "2028-04-23",
+          "active": "equity-chart"
+        },
+        "BMNR": {
+          "events": [
+            {
+              "event": "keydown",
+              "key": "End",
+              "target": "equity-chart",
+              "active": "equity-chart",
+              "kind": "조건부 일별 경로"
+            },
+            {
+              "event": "close",
+              "active": "equity-chart"
+            }
+          ],
+          "kind": "조건부 일별 경로",
+          "date": "2028-04-23",
+          "active": "equity-chart"
+        }
+      }
+    },
+    {
+      "name": "zoom200-reflow",
+      "viewport": [
+        720,
+        450
+      ],
+      "checks": [
+        "comparison-and-existing-history",
+        "data-method-journal-touch-entry",
+        "journal-records-keyboard-and-exact-values",
+        "journal-selection-survives-resize",
+        "journal-range-keyboard-focus",
+        "journal-six-tabs-and-downloads",
+        "journal-close-reopen-race-and-focus",
+        "eth-future-controls",
+        "mstr-capital-modal",
+        "bmnr-capital-modal",
+        "no-unhandled-errors-or-local-missing-resources"
+      ],
+      "failures": [],
+      "downloads": [
+        {
+          "filename": "atlas-forecast-2026-10-25-base.json",
+          "kind": "atlas-forecast-record"
+        },
+        {
+          "filename": "atlas-forecast-evaluation.json",
+          "kind": "atlas-forecast-evaluation"
+        },
+        {
+          "filename": "atlas-publication.json",
+          "kind": "atlas-publication"
+        },
+        {
+          "filename": "atlas-forecast-experiments.json",
+          "kind": "atlas-forecast-experiments"
+        },
+        {
+          "filename": "Atlas_Performance_Diagnostics.json",
+          "kind": null
+        }
+      ],
+      "errors": [],
+      "missing": [],
+      "blockedExternal": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap"
+      ],
+      "symbols": [
+        "BTC",
+        "SPY",
+        "QQQ",
+        "NVDA",
+        "AAPL",
+        "GOOG",
+        "MSFT",
+        "AMZN",
+        "META",
+        "AVGO",
+        "PLTR",
+        "TSLA",
+        "HOOD",
+        "TLT",
+        "IEF",
+        "GLD",
+        "SLV",
+        "PDBC"
+      ],
+      "resizeSelection": {
+        "before": "2027-04-23 · 보존한 가정 $83,111.78",
+        "after": "2027-04-23 · 보존한 가정 $83,111.78"
+      },
+      "focusAfterRangeChange": {
+        "tag": "SELECT",
+        "range": true,
+        "value": "90"
+      },
+      "publicationManifest": "812ce1c3b3114c5e4c1860b2bd3f87515d8103b1d5b926d242f3ffbe45526cac",
+      "focusAfterClose": {
+        "tag": "svg",
+        "id": "lab-chart",
+        "visible": true,
+        "insideClosedDialog": false
+      },
+      "equityKeyboardAudit": {
+        "MSTR": {
+          "events": [
+            {
+              "event": "keydown",
+              "key": "End",
+              "target": "equity-chart",
+              "active": "equity-chart",
+              "kind": "조건부 일별 경로"
+            },
+            {
+              "event": "close",
+              "active": "equity-chart"
+            }
+          ],
+          "kind": "조건부 일별 경로",
+          "date": "2028-04-23",
+          "active": "equity-chart"
+        },
+        "BMNR": {
+          "events": [
+            {
+              "event": "close",
+              "active": "forecast"
+            },
+            {
+              "event": "keydown",
+              "key": "End",
+              "target": "equity-chart",
+              "active": "equity-chart",
+              "kind": "조건부 일별 경로"
+            }
+          ],
+          "kind": "조건부 일별 경로",
+          "date": "2028-04-23",
+          "active": "equity-chart"
+        }
+      }
+    },
+    {
+      "name": "standalone320",
+      "viewport": [
+        320,
+        740
+      ],
+      "checks": [
+        "comparison-and-existing-history",
+        "data-method-journal-touch-entry",
+        "journal-records-keyboard-and-exact-values",
+        "journal-selection-survives-resize",
+        "journal-range-keyboard-focus",
+        "journal-six-tabs-and-downloads",
+        "journal-close-reopen-race-and-focus",
+        "eth-future-controls",
+        "mstr-capital-modal",
+        "bmnr-capital-modal",
+        "no-unhandled-errors-or-local-missing-resources"
+      ],
+      "failures": [],
+      "downloads": [
+        {
+          "filename": "atlas-forecast-2026-10-25-base.json",
+          "kind": "atlas-forecast-record"
+        },
+        {
+          "filename": "atlas-forecast-evaluation.json",
+          "kind": "atlas-forecast-evaluation"
+        },
+        {
+          "filename": "atlas-publication.json",
+          "kind": "atlas-publication"
+        },
+        {
+          "filename": "atlas-forecast-experiments.json",
+          "kind": "atlas-forecast-experiments"
+        },
+        {
+          "filename": "Atlas_Performance_Diagnostics.json",
+          "kind": null
+        }
+      ],
+      "errors": [],
+      "missing": [],
+      "blockedExternal": [],
+      "symbols": [
+        "BTC",
+        "SPY",
+        "QQQ",
+        "NVDA",
+        "AAPL",
+        "GOOG",
+        "MSFT",
+        "AMZN",
+        "META",
+        "AVGO",
+        "PLTR",
+        "TSLA",
+        "HOOD",
+        "TLT",
+        "IEF",
+        "GLD",
+        "SLV",
+        "PDBC"
+      ],
+      "resizeSelection": {
+        "before": "2027-04-23 · 보존한 가정 $83,111.78",
+        "after": "2027-04-23 · 보존한 가정 $83,111.78"
+      },
+      "focusAfterRangeChange": {
+        "tag": "SELECT",
+        "range": true,
+        "value": "90"
+      },
+      "publicationManifest": "812ce1c3b3114c5e4c1860b2bd3f87515d8103b1d5b926d242f3ffbe45526cac",
+      "focusAfterClose": {
+        "tag": "svg",
+        "id": "lab-chart",
+        "visible": true,
+        "insideClosedDialog": false
+      },
+      "equityKeyboardAudit": {
+        "MSTR": {
+          "events": [
+            {
+              "event": "close",
+              "active": "forecast"
+            },
+            {
+              "event": "keydown",
+              "key": "End",
+              "target": "equity-chart",
+              "active": "equity-chart",
+              "kind": "조건부 일별 경로"
+            }
+          ],
+          "kind": "조건부 일별 경로",
+          "date": "2028-04-23",
+          "active": "equity-chart"
+        },
+        "BMNR": {
+          "events": [
+            {
+              "event": "keydown",
+              "key": "End",
+              "target": "equity-chart",
+              "active": "equity-chart",
+              "kind": "조건부 일별 경로"
+            },
+            {
+              "event": "close",
+              "active": "equity-chart"
+            }
+          ],
+          "kind": "조건부 일별 경로",
+          "date": "2028-04-23",
+          "active": "equity-chart"
+        }
+      }
+    }
+  ]
+}

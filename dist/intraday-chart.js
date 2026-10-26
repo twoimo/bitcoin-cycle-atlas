@@ -1,14 +1,14 @@
-import {createPriceScale,barPriceChange} from './chart-math.js?v=1.19.0';
-import { priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxisFormatter } from './price-axis.js?v=1.14.0-mobile.1';
-import { createPriceDisplay, formatDisplayPrice } from './price-display.js?v=1.13.0-research.1';
-import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.19.0';
-import { researchAnnotationsMarkup } from './research-annotations.js?v=1.13.0-research.1';
-import {chartInterval} from './ohlc-data.js?v=1.11.0';
-import {chartPaneLayout,volumePaneMarkup,historicalMarkersMarkup} from './chart-overlays.js?v=1.16.0-history.1';
-import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.11.0';
-import { clearChartHover, clearChartHoverPointer, getChartHoverPointer, rememberChartHoverPointer, coalescedChartHover, paintPriceCursor } from './chart-hover.js?v=1.12.1-cursor-hud.1';
-import { dateWindow, pixelExtrema } from './chart-window.js?v=1.11.0';
-import { equityForecastAnchor, equityForecastRows, equityForecastWindowRows, equityForecastLogGaps, equityForecastMarkup, equityForecastCandles, EQUITY_FORECAST_BAR_NOTE } from "./equity-forecast-chart.js?v=1.21.0";
+import {createPriceScale,barPriceChange} from './chart-math.js?v=1.29.0';
+import { priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxisFormatter } from './price-axis.js?v=1.29.0';
+import { createPriceDisplay, formatDisplayPrice } from './price-display.js?v=1.29.0';
+import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.29.0';
+import { researchAnnotationsMarkup } from './research-annotations.js?v=1.29.0';
+import {chartInterval} from './ohlc-data.js?v=1.29.0';
+import {chartPaneLayout,volumePaneMarkup,historicalMarkersMarkup} from './chart-overlays.js?v=1.29.0';
+import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.29.0';
+import { clearChartHover, clearChartHoverPointer, getChartHoverPointer, rememberChartHoverPointer, coalescedChartHover, paintPriceCursor } from './chart-hover.js?v=1.29.0';
+import { dateWindow, pixelExtrema } from './chart-window.js?v=1.29.0';
+import { equityForecastAnchor, equityForecastRows, equityForecastWindowRows, equityForecastLogGaps, equityForecastMarkup, equityForecastCandles, EQUITY_FORECAST_BAR_NOTE } from "./equity-forecast-chart.js?v=1.29.0";
 
 const numberFormats=new Map();
 const number=(value,digits=2)=>{if(!numberFormats.has(digits))numberFormats.set(digits,new Intl.NumberFormat('en-US',{maximumFractionDigits:digits}));return numberFormats.get(digits).format(value);};

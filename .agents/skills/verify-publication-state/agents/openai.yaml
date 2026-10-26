@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verify Atlas publication state"
+  short_description: "Check prepared artifacts and stale publication guards"
+  default_prompt: "Use $verify-publication-state to check a change to the Atlas publication contract and its negative controls."

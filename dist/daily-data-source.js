@@ -1,6 +1,6 @@
-import { validateDataset, utcDay } from './cycle-engine.js?v=1.19.0';
-import { parseEthArchive } from './eth-market-data.js?v=1.15.0';
-import { parseEquityArchive, EQUITIES } from './equity-market-data.js?v=1.18.0';
+import { validateDataset, utcDay } from './cycle-engine.js?v=1.29.0';
+import { parseEthArchive } from './eth-market-data.js?v=1.29.0';
+import { parseEquityArchive, EQUITIES } from './equity-market-data.js?v=1.29.0';
 
 const ARCHIVES = Object.freeze({
   ETH: { url: './data/eth-ohlc.json', embeddedId: 'embedded-eth-data' },

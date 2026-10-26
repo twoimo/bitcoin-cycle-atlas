@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "baselineCommit": "64c8207cb044d8990289c5a7d39972e21b74c240",
+  "executedAt": "2026-10-26T06:34:35.749Z",
+  "node": "v24.22.1",
+  "sourceHashes": {
+    "dist/daily-analytics.js": "81b4a1fca0769e33778af2ba356115250a47017c26f054293e3d08d821c8164c",
+    "dist/cycle-timing.js": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+    "dist/market-structure.js": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+    "dist/daily-data-view.js": "3e4bdd6dd76445b0d6cc0c65c355965691c6b0541f4978e5d65e999c09f28170",
+    "dist/lab-view.js": "390e72b7d490b9c22e672067a3efe722bdc028f0d017e5b4b338fddef254dc4a"
+  },
+  "calendarCases": 34356,
+  "missingDateInvariantCases": 80,
+  "periodComparisons": 1451,
+  "prefixComparisons": 325,
+  "rollingPrefixComparisons": 10,
+  "subnormalBoundaries": {
+    "volatility": 1007167.300709229,
+    "expectedVolatility": 1007167.3007092287,
+    "midpoint": 2.722312378772685e-162,
+    "expectedMidpoint": 2.722312378772685e-162,
+    "retracement": 0.9994556386687565,
+    "expectedRetracement": 0.9994556386687565
+  },
+  "finiteBoundaryOracle": "Exact binary64 rational arithmetic with BigInt. Each slope is <= MAX and strictly above the midpoint between MAX and its predecessor.",
+  "finiteBoundaryCases": [
+    {
+      "left": -1.771930152577346e+308,
+      "right": 1.744446372530627e+308,
+      "distance": 1.9560493706715358,
+      "slope": 1.7976931348623157e+308
+    },
+    {
+      "left": -1.257633137051149e+308,
+      "right": 1.7567346219575627e+308,
+      "distance": 1.6767977251243051,
+      "slope": 1.7976931348623157e+308
+    },
+    {
+      "left": -1.7269369229518715e+308,
+      "right": 1.5697870851178163e+308,
+      "distance": 1.8338636022672368,
+      "slope": 1.7976931348623157e+308
+    }
+  ],
+  "genuinelyUnrepresentableSlopeRejected": true,
+  "normalDifferentials": [],
+  "scope": "Public module calls, explicit missing-date enumeration, native calendar oracle, prefix invariance, exact-binary-rational boundary fixtures, baseline normal-output comparison. No browser or benchmark measurement."
+}

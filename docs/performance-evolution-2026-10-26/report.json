@@ -1,0 +1,7085 @@
+{
+  "baselineCommit": "35300332a629ead03f6f365a32fda4669390f72f",
+  "measuredAt": "2026-10-26T05:52:24.221Z",
+  "browser": "156.0.8078.47",
+  "method": "Fresh contexts, local static server, external requests blocked, 390x844 touch viewport, 4x CPU throttle, five alternating samples per route; ready event plus two animation frames. Synthetic mobile emulation, not physical-phone or field CWV evidence. Scenario time includes test command round trips.",
+  "hashes": {
+    "before/app.js": "0f4e08a3c78abba2e2ba83c7bf2474013c6cfd0c5d9d764570c5f35ef67a1aa3",
+    "before/site-entry.js": "b239f5e72505987f2243d8c646534b353a3def13147401e5553d7f31a94c9bbe",
+    "before/lab-view.js": "5ae97b74b712195d2165d6a3b8b32ff7d97cb27ed72af839c8324ce244eca046",
+    "before/data/btc-daily.json": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+    "before/data/asset-comparison.json": "55c9024fa019e769a0cfdaa539049bccbaa78909c19b75faef5f9740ed8f5985",
+    "after/app.js": "07a72db4d7233130569b6566009a37699768d673c0ff5f9e16d72e9555ab0a4f",
+    "after/site-entry.js": "b40b1eade8d3002c979b3eaec65cd262107354b0a7c79011ee140f138a9f5942",
+    "after/lab-view.js": "61751513b1650e3075ee1fead1f921160905ac73d2ddb5669f7fb99527d6683e",
+    "after/data/btc-daily.json": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+    "after/data/asset-comparison.json": "55c9024fa019e769a0cfdaa539049bccbaa78909c19b75faef5f9740ed8f5985"
+  },
+  "samples": 5,
+  "summary": [
+    {
+      "side": "before",
+      "route": "data",
+      "readyFrameMs": {
+        "median": 1317.300000000745,
+        "min": 1281.800000000745,
+        "max": 1337.7000000011176,
+        "samples": 5
+      },
+      "scenarioMs": null,
+      "scriptCount": 87,
+      "scriptBytes": 2266949
+    },
+    {
+      "side": "after",
+      "route": "data",
+      "readyFrameMs": {
+        "median": 912.7999999988824,
+        "min": 864,
+        "max": 1011.9000000003725,
+        "samples": 5
+      },
+      "scenarioMs": null,
+      "scriptCount": 16,
+      "scriptBytes": 257585
+    },
+    {
+      "side": "before",
+      "route": "btc",
+      "readyFrameMs": {
+        "median": 2125.7000000011176,
+        "min": 2099.300000000745,
+        "max": 2388.60000000149,
+        "samples": 5
+      },
+      "scenarioMs": {
+        "median": 1129.0999999996275,
+        "min": 1024.7999999988824,
+        "max": 1347.6000000014901,
+        "samples": 5
+      },
+      "scriptCount": 87,
+      "scriptBytes": 2266949
+    },
+    {
+      "side": "after",
+      "route": "btc",
+      "readyFrameMs": {
+        "median": 1690.3999999985099,
+        "min": 1631,
+        "max": 1998.699999999255,
+        "samples": 5
+      },
+      "scenarioMs": {
+        "median": 666.5,
+        "min": 655.4000000003725,
+        "max": 704.4000000003725,
+        "samples": 5
+      },
+      "scriptCount": 97,
+      "scriptBytes": 2479872
+    }
+  ],
+  "runs": [
+    {
+      "side": "before",
+      "route": "data",
+      "initial": {
+        "tasks": [
+          {
+            "start": 165.40000000037253,
+            "duration": 75
+          },
+          {
+            "start": 434.30000000074506,
+            "duration": 315
+          },
+          {
+            "start": 749.8000000007451,
+            "duration": 51
+          },
+          {
+            "start": 844.8000000007451,
+            "duration": 56
+          },
+          {
+            "start": 925.7000000011176,
+            "duration": 116
+          },
+          {
+            "start": 1048.800000000745,
+            "duration": 205
+          },
+          {
+            "start": 1254.800000000745,
+            "duration": 58
+          }
+        ],
+        "ready": 1253.7000000011176,
+        "readyFrame": 1317.300000000745,
+        "states": [],
+        "readyCount": 0,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "chartPaths": 0,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 883
+          },
+          {
+            "name": "app.js",
+            "bytes": 46443
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "evidence-view.js",
+            "bytes": 7400
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 105822
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 18611
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": null,
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "after",
+      "route": "data",
+      "initial": {
+        "tasks": [
+          {
+            "start": 396,
+            "duration": 123
+          },
+          {
+            "start": 522.5999999996275,
+            "duration": 291
+          },
+          {
+            "start": 814.1999999992549,
+            "duration": 63
+          }
+        ],
+        "ready": 812.5,
+        "readyFrame": 883.0999999996275,
+        "states": [],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "chartPaths": 0,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 1083
+          },
+          {
+            "name": "journal-entry.js",
+            "bytes": 1184
+          },
+          {
+            "name": "performance-diagnostics.js",
+            "bytes": 8056
+          },
+          {
+            "name": "app.js",
+            "bytes": 48056
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": null,
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "before",
+      "route": "btc",
+      "initial": {
+        "tasks": [
+          {
+            "start": 144.2000000011176,
+            "duration": 83
+          },
+          {
+            "start": 419.2000000011176,
+            "duration": 273
+          },
+          {
+            "start": 738.8000000007451,
+            "duration": 54
+          },
+          {
+            "start": 793.7000000011176,
+            "duration": 1282
+          },
+          {
+            "start": 2127.2000000011176,
+            "duration": 57
+          },
+          {
+            "start": 2184.800000000745,
+            "duration": 570
+          }
+        ],
+        "ready": 2046.300000000745,
+        "readyFrame": 2125.7000000011176,
+        "states": [
+          {
+            "time": 2030.6000000014901,
+            "scenario": "base",
+            "frequency": "daily"
+          },
+          {
+            "time": 2737.9000000003725,
+            "scenario": "base",
+            "frequency": "daily"
+          }
+        ],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [],
+        "chartPaths": 39,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 883
+          },
+          {
+            "name": "app.js",
+            "bytes": 46443
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "evidence-view.js",
+            "bytes": 7400
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 105822
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 18611
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": {
+        "duration": 1138.7000000011176,
+        "tasks": [
+          {
+            "start": 3257.800000000745,
+            "duration": 1020
+          }
+        ],
+        "scenario": "stress",
+        "paths": 37
+      },
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "after",
+      "route": "btc",
+      "initial": {
+        "tasks": [
+          {
+            "start": 347,
+            "duration": 69
+          },
+          {
+            "start": 550,
+            "duration": 225
+          },
+          {
+            "start": 1095.7000000011176,
+            "duration": 119
+          },
+          {
+            "start": 1215.4000000003725,
+            "duration": 398
+          },
+          {
+            "start": 1648.5,
+            "duration": 56
+          },
+          {
+            "start": 1705,
+            "duration": 101
+          }
+        ],
+        "ready": 1580.1000000014901,
+        "readyFrame": 1646.9000000003725,
+        "states": [
+          {
+            "time": 1563.4000000003725,
+            "scenario": "base",
+            "frequency": "daily"
+          },
+          {
+            "time": 1790.300000000745,
+            "scenario": "base",
+            "frequency": "daily"
+          }
+        ],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [],
+        "chartPaths": 39,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 1083
+          },
+          {
+            "name": "journal-entry.js",
+            "bytes": 1184
+          },
+          {
+            "name": "performance-diagnostics.js",
+            "bytes": 8056
+          },
+          {
+            "name": "app.js",
+            "bytes": 48056
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 109282
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "forecast-computation.js",
+            "bytes": 3447
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 19158
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "forecast-worker.js",
+            "bytes": 401
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": {
+        "duration": 704.4000000003725,
+        "tasks": [
+          {
+            "start": 2620.60000000149,
+            "duration": 87
+          },
+          {
+            "start": 2708.4000000003725,
+            "duration": 182
+          }
+        ],
+        "scenario": "stress",
+        "paths": 37
+      },
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "before",
+      "route": "data",
+      "initial": {
+        "tasks": [
+          {
+            "start": 414.59999999962747,
+            "duration": 282
+          },
+          {
+            "start": 794.8000000007451,
+            "duration": 68
+          },
+          {
+            "start": 893.5999999996275,
+            "duration": 124
+          },
+          {
+            "start": 1025.7000000011176,
+            "duration": 250
+          },
+          {
+            "start": 1276.7000000011176,
+            "duration": 56
+          }
+        ],
+        "ready": 1274.9000000003725,
+        "readyFrame": 1337.7000000011176,
+        "states": [],
+        "readyCount": 0,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "chartPaths": 0,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 883
+          },
+          {
+            "name": "app.js",
+            "bytes": 46443
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "evidence-view.js",
+            "bytes": 7400
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 105822
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 18611
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": null,
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "after",
+      "route": "data",
+      "initial": {
+        "tasks": [
+          {
+            "start": 392.90000000037253,
+            "duration": 146
+          },
+          {
+            "start": 541.9000000003725,
+            "duration": 312
+          },
+          {
+            "start": 854.5999999996275,
+            "duration": 56
+          }
+        ],
+        "ready": 853,
+        "readyFrame": 912.7999999988824,
+        "states": [],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "chartPaths": 0,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 1083
+          },
+          {
+            "name": "journal-entry.js",
+            "bytes": 1184
+          },
+          {
+            "name": "performance-diagnostics.js",
+            "bytes": 8056
+          },
+          {
+            "name": "app.js",
+            "bytes": 48056
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": null,
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "before",
+      "route": "btc",
+      "initial": {
+        "tasks": [
+          {
+            "start": 397,
+            "duration": 279
+          },
+          {
+            "start": 716.4000000003725,
+            "duration": 59
+          },
+          {
+            "start": 775.8000000007451,
+            "duration": 1305
+          },
+          {
+            "start": 2108.800000000745,
+            "duration": 65
+          },
+          {
+            "start": 2174.0999999996275,
+            "duration": 589
+          }
+        ],
+        "ready": 2047.800000000745,
+        "readyFrame": 2107.699999999255,
+        "states": [
+          {
+            "time": 2034,
+            "scenario": "base",
+            "frequency": "daily"
+          },
+          {
+            "time": 2745.5999999996275,
+            "scenario": "base",
+            "frequency": "daily"
+          }
+        ],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [],
+        "chartPaths": 39,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 883
+          },
+          {
+            "name": "app.js",
+            "bytes": 46443
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "evidence-view.js",
+            "bytes": 7400
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 105822
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 18611
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": {
+        "duration": 1024.7999999988824,
+        "tasks": [
+          {
+            "start": 3257,
+            "duration": 926
+          }
+        ],
+        "scenario": "stress",
+        "paths": 37
+      },
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "after",
+      "route": "btc",
+      "initial": {
+        "tasks": [
+          {
+            "start": 333.5,
+            "duration": 67
+          },
+          {
+            "start": 547.2000000011176,
+            "duration": 195
+          },
+          {
+            "start": 1097.800000000745,
+            "duration": 110
+          },
+          {
+            "start": 1208.300000000745,
+            "duration": 387
+          },
+          {
+            "start": 1632.7000000011176,
+            "duration": 62
+          },
+          {
+            "start": 1694.9000000003725,
+            "duration": 97
+          }
+        ],
+        "ready": 1563.1000000014901,
+        "readyFrame": 1631,
+        "states": [
+          {
+            "time": 1548.6000000014901,
+            "scenario": "base",
+            "frequency": "daily"
+          },
+          {
+            "time": 1773.800000000745,
+            "scenario": "base",
+            "frequency": "daily"
+          }
+        ],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [],
+        "chartPaths": 39,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 1083
+          },
+          {
+            "name": "journal-entry.js",
+            "bytes": 1184
+          },
+          {
+            "name": "performance-diagnostics.js",
+            "bytes": 8056
+          },
+          {
+            "name": "app.js",
+            "bytes": 48056
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 109282
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "forecast-computation.js",
+            "bytes": 3447
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 19158
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "forecast-worker.js",
+            "bytes": 401
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": {
+        "duration": 655.4000000003725,
+        "tasks": [
+          {
+            "start": 2559.2000000011176,
+            "duration": 90
+          },
+          {
+            "start": 2649.800000000745,
+            "duration": 190
+          }
+        ],
+        "scenario": "stress",
+        "paths": 37
+      },
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "before",
+      "route": "data",
+      "initial": {
+        "tasks": [
+          {
+            "start": 386.1000000014901,
+            "duration": 315
+          },
+          {
+            "start": 769.5,
+            "duration": 59
+          },
+          {
+            "start": 831.5,
+            "duration": 63
+          },
+          {
+            "start": 895.4000000003725,
+            "duration": 125
+          },
+          {
+            "start": 1027.5,
+            "duration": 220
+          },
+          {
+            "start": 1248.4000000003725,
+            "duration": 62
+          }
+        ],
+        "ready": 1247.1000000014901,
+        "readyFrame": 1314.4000000003725,
+        "states": [],
+        "readyCount": 0,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "chartPaths": 0,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 883
+          },
+          {
+            "name": "app.js",
+            "bytes": 46443
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "evidence-view.js",
+            "bytes": 7400
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 105822
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 18611
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": null,
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "after",
+      "route": "data",
+      "initial": {
+        "tasks": [
+          {
+            "start": 438,
+            "duration": 149
+          },
+          {
+            "start": 590.4000000003725,
+            "duration": 344
+          },
+          {
+            "start": 934.6999999992549,
+            "duration": 71
+          }
+        ],
+        "ready": 933.9000000003725,
+        "readyFrame": 1011.9000000003725,
+        "states": [],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "chartPaths": 0,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 1083
+          },
+          {
+            "name": "journal-entry.js",
+            "bytes": 1184
+          },
+          {
+            "name": "performance-diagnostics.js",
+            "bytes": 8056
+          },
+          {
+            "name": "app.js",
+            "bytes": 48056
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": null,
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "before",
+      "route": "btc",
+      "initial": {
+        "tasks": [
+          {
+            "start": 455,
+            "duration": 270
+          },
+          {
+            "start": 763.0999999996275,
+            "duration": 55
+          },
+          {
+            "start": 818.0999999996275,
+            "duration": 1307
+          },
+          {
+            "start": 2169,
+            "duration": 61
+          },
+          {
+            "start": 2231.5,
+            "duration": 530
+          }
+        ],
+        "ready": 2096.0999999996275,
+        "readyFrame": 2167.199999999255,
+        "states": [
+          {
+            "time": 2083.0999999996275,
+            "scenario": "base",
+            "frequency": "daily"
+          },
+          {
+            "time": 2742.0999999996275,
+            "scenario": "base",
+            "frequency": "daily"
+          }
+        ],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [],
+        "chartPaths": 39,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 883
+          },
+          {
+            "name": "app.js",
+            "bytes": 46443
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 105822
+          },
+          {
+            "name": "evidence-view.js",
+            "bytes": 7400
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 18611
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": {
+        "duration": 1072.5999999996275,
+        "tasks": [
+          {
+            "start": 3248.800000000745,
+            "duration": 972
+          }
+        ],
+        "scenario": "stress",
+        "paths": 37
+      },
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "after",
+      "route": "btc",
+      "initial": {
+        "tasks": [
+          {
+            "start": 361.7999999988824,
+            "duration": 61
+          },
+          {
+            "start": 558.6999999992549,
+            "duration": 210
+          },
+          {
+            "start": 1105.5999999996275,
+            "duration": 122
+          },
+          {
+            "start": 1228.2999999988824,
+            "duration": 432
+          },
+          {
+            "start": 1699.3999999985099,
+            "duration": 77
+          },
+          {
+            "start": 1779,
+            "duration": 110
+          }
+        ],
+        "ready": 1630.5999999996275,
+        "readyFrame": 1697.699999999255,
+        "states": [
+          {
+            "time": 1616.8999999985099,
+            "scenario": "base",
+            "frequency": "daily"
+          },
+          {
+            "time": 1875,
+            "scenario": "base",
+            "frequency": "daily"
+          }
+        ],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [],
+        "chartPaths": 39,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 1083
+          },
+          {
+            "name": "journal-entry.js",
+            "bytes": 1184
+          },
+          {
+            "name": "performance-diagnostics.js",
+            "bytes": 8056
+          },
+          {
+            "name": "app.js",
+            "bytes": 48056
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 109282
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "forecast-computation.js",
+            "bytes": 3447
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 19158
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "forecast-worker.js",
+            "bytes": 401
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": {
+        "duration": 692.0999999996275,
+        "tasks": [
+          {
+            "start": 2701.89999999851,
+            "duration": 94
+          },
+          {
+            "start": 2796.5999999996275,
+            "duration": 170
+          }
+        ],
+        "scenario": "stress",
+        "paths": 37
+      },
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "before",
+      "route": "data",
+      "initial": {
+        "tasks": [
+          {
+            "start": 384.09999999962747,
+            "duration": 294
+          },
+          {
+            "start": 840.3000000007451,
+            "duration": 115
+          },
+          {
+            "start": 961.5999999996275,
+            "duration": 250
+          },
+          {
+            "start": 1211.800000000745,
+            "duration": 65
+          }
+        ],
+        "ready": 1211.5999999996275,
+        "readyFrame": 1281.800000000745,
+        "states": [],
+        "readyCount": 0,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "chartPaths": 0,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 883
+          },
+          {
+            "name": "app.js",
+            "bytes": 46443
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 105822
+          },
+          {
+            "name": "evidence-view.js",
+            "bytes": 7400
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 18611
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": null,
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "after",
+      "route": "data",
+      "initial": {
+        "tasks": [
+          {
+            "start": 425.5,
+            "duration": 161
+          },
+          {
+            "start": 590.3999999985099,
+            "duration": 277
+          },
+          {
+            "start": 869.2999999988824,
+            "duration": 68
+          }
+        ],
+        "ready": 868.0999999996275,
+        "readyFrame": 943.8999999985099,
+        "states": [],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "chartPaths": 0,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 1083
+          },
+          {
+            "name": "journal-entry.js",
+            "bytes": 1184
+          },
+          {
+            "name": "performance-diagnostics.js",
+            "bytes": 8056
+          },
+          {
+            "name": "app.js",
+            "bytes": 48056
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": null,
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "before",
+      "route": "btc",
+      "initial": {
+        "tasks": [
+          {
+            "start": 443.7000000011176,
+            "duration": 273
+          },
+          {
+            "start": 757.3000000007451,
+            "duration": 52
+          },
+          {
+            "start": 809.8000000007451,
+            "duration": 1251
+          },
+          {
+            "start": 2101.300000000745,
+            "duration": 69
+          },
+          {
+            "start": 2171.800000000745,
+            "duration": 574
+          }
+        ],
+        "ready": 2022.4000000003725,
+        "readyFrame": 2099.300000000745,
+        "states": [
+          {
+            "time": 1997.9000000003725,
+            "scenario": "base",
+            "frequency": "daily"
+          },
+          {
+            "time": 2725.10000000149,
+            "scenario": "base",
+            "frequency": "daily"
+          }
+        ],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [],
+        "chartPaths": 39,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 883
+          },
+          {
+            "name": "app.js",
+            "bytes": 46443
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 105822
+          },
+          {
+            "name": "evidence-view.js",
+            "bytes": 7400
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 18611
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": {
+        "duration": 1347.6000000014901,
+        "tasks": [
+          {
+            "start": 3230.5,
+            "duration": 1246
+          }
+        ],
+        "scenario": "stress",
+        "paths": 37
+      },
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "after",
+      "route": "btc",
+      "initial": {
+        "tasks": [
+          {
+            "start": 126.40000000037253,
+            "duration": 54
+          },
+          {
+            "start": 504.2999999988824,
+            "duration": 97
+          },
+          {
+            "start": 683.5,
+            "duration": 51
+          },
+          {
+            "start": 746.6999999992549,
+            "duration": 248
+          },
+          {
+            "start": 1397,
+            "duration": 151
+          },
+          {
+            "start": 1548.5999999996275,
+            "duration": 429
+          },
+          {
+            "start": 2000.0999999996275,
+            "duration": 63
+          },
+          {
+            "start": 2064.2999999988824,
+            "duration": 98
+          }
+        ],
+        "ready": 1937.2999999988824,
+        "readyFrame": 1998.699999999255,
+        "states": [
+          {
+            "time": 1915.699999999255,
+            "scenario": "base",
+            "frequency": "daily"
+          },
+          {
+            "time": 2144.7999999988824,
+            "scenario": "base",
+            "frequency": "daily"
+          }
+        ],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [],
+        "chartPaths": 39,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 1083
+          },
+          {
+            "name": "journal-entry.js",
+            "bytes": 1184
+          },
+          {
+            "name": "performance-diagnostics.js",
+            "bytes": 8056
+          },
+          {
+            "name": "app.js",
+            "bytes": 48056
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 109282
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "forecast-computation.js",
+            "bytes": 3447
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 19158
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "forecast-worker.js",
+            "bytes": 401
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": {
+        "duration": 666.5,
+        "tasks": [
+          {
+            "start": 2965.2999999988824,
+            "duration": 86
+          },
+          {
+            "start": 3052.0999999996275,
+            "duration": 172
+          }
+        ],
+        "scenario": "stress",
+        "paths": 37
+      },
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "before",
+      "route": "data",
+      "initial": {
+        "tasks": [
+          {
+            "start": 429.2999999988824,
+            "duration": 283
+          },
+          {
+            "start": 803.9000000003725,
+            "duration": 56
+          },
+          {
+            "start": 890.2999999988824,
+            "duration": 132
+          },
+          {
+            "start": 1029.2999999988824,
+            "duration": 225
+          },
+          {
+            "start": 1255,
+            "duration": 60
+          }
+        ],
+        "ready": 1254.2999999988824,
+        "readyFrame": 1319.7999999988824,
+        "states": [],
+        "readyCount": 0,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "chartPaths": 0,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 883
+          },
+          {
+            "name": "app.js",
+            "bytes": 46443
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "evidence-view.js",
+            "bytes": 7400
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 105822
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 18611
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": null,
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "after",
+      "route": "data",
+      "initial": {
+        "tasks": [
+          {
+            "start": 394.69999999925494,
+            "duration": 118
+          },
+          {
+            "start": 516.3000000007451,
+            "duration": 281
+          },
+          {
+            "start": 798.6999999992549,
+            "duration": 60
+          }
+        ],
+        "ready": 796.8000000007451,
+        "readyFrame": 864,
+        "states": [],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "chartPaths": 0,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 1083
+          },
+          {
+            "name": "journal-entry.js",
+            "bytes": 1184
+          },
+          {
+            "name": "performance-diagnostics.js",
+            "bytes": 8056
+          },
+          {
+            "name": "app.js",
+            "bytes": 48056
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": null,
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "before",
+      "route": "btc",
+      "initial": {
+        "tasks": [
+          {
+            "start": 95,
+            "duration": 95
+          },
+          {
+            "start": 378.80000000074506,
+            "duration": 319
+          },
+          {
+            "start": 752.6000000014901,
+            "duration": 67
+          },
+          {
+            "start": 820,
+            "duration": 1526
+          },
+          {
+            "start": 2390.10000000149,
+            "duration": 66
+          },
+          {
+            "start": 2457.5,
+            "duration": 559
+          }
+        ],
+        "ready": 2308,
+        "readyFrame": 2388.60000000149,
+        "states": [
+          {
+            "time": 2293.2000000011176,
+            "scenario": "base",
+            "frequency": "daily"
+          },
+          {
+            "time": 2988.7000000011176,
+            "scenario": "base",
+            "frequency": "daily"
+          }
+        ],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [],
+        "chartPaths": 39,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 883
+          },
+          {
+            "name": "app.js",
+            "bytes": 46443
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "evidence-view.js",
+            "bytes": 7400
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 105822
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 18611
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": {
+        "duration": 1129.0999999996275,
+        "tasks": [
+          {
+            "start": 3532.10000000149,
+            "duration": 1017
+          }
+        ],
+        "scenario": "stress",
+        "paths": 37
+      },
+      "errors": [],
+      "missing": []
+    },
+    {
+      "side": "after",
+      "route": "btc",
+      "initial": {
+        "tasks": [
+          {
+            "start": 330.2999999988824,
+            "duration": 54
+          },
+          {
+            "start": 542.8999999985099,
+            "duration": 225
+          },
+          {
+            "start": 1107.5999999996275,
+            "duration": 126
+          },
+          {
+            "start": 1234.2999999988824,
+            "duration": 415
+          },
+          {
+            "start": 1693.199999999255,
+            "duration": 60
+          }
+        ],
+        "ready": 1608.0999999996275,
+        "readyFrame": 1690.3999999985099,
+        "states": [
+          {
+            "time": 1592,
+            "scenario": "base",
+            "frequency": "daily"
+          },
+          {
+            "time": 1840.7999999988824,
+            "scenario": "base",
+            "frequency": "daily"
+          }
+        ],
+        "readyCount": 2,
+        "symbol": "BTCUSD",
+        "boot": "ready",
+        "rows": [],
+        "chartPaths": 39,
+        "scriptResources": [
+          {
+            "name": "site-entry.js",
+            "bytes": 1083
+          },
+          {
+            "name": "journal-entry.js",
+            "bytes": 1184
+          },
+          {
+            "name": "performance-diagnostics.js",
+            "bytes": 8056
+          },
+          {
+            "name": "app.js",
+            "bytes": 48056
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "data-source.js",
+            "bytes": 8903
+          },
+          {
+            "name": "published-data.js",
+            "bytes": 3441
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          },
+          {
+            "name": "timing-view.js",
+            "bytes": 13890
+          },
+          {
+            "name": "forecast-engine.js",
+            "bytes": 33795
+          },
+          {
+            "name": "peak-zones.js",
+            "bytes": 14438
+          },
+          {
+            "name": "peak-view.js",
+            "bytes": 10647
+          },
+          {
+            "name": "forecast-view.js",
+            "bytes": 35819
+          },
+          {
+            "name": "daily-data-view.js",
+            "bytes": 26716
+          },
+          {
+            "name": "asset-comparison-source.js",
+            "bytes": 812
+          },
+          {
+            "name": "asset-comparison.js",
+            "bytes": 14348
+          },
+          {
+            "name": "viewport-workspace.js",
+            "bytes": 30096
+          },
+          {
+            "name": "lab-view.js",
+            "bytes": 109282
+          },
+          {
+            "name": "compact-chart-layout.js",
+            "bytes": 8174
+          },
+          {
+            "name": "data-update.js",
+            "bytes": 758
+          },
+          {
+            "name": "workbench-chrome.js",
+            "bytes": 29125
+          },
+          {
+            "name": "research-workbench.js",
+            "bytes": 14711
+          },
+          {
+            "name": "analysis-dock.js",
+            "bytes": 21136
+          },
+          {
+            "name": "indicator-workbench.js",
+            "bytes": 30967
+          },
+          {
+            "name": "inspection-policy.js",
+            "bytes": 506
+          },
+          {
+            "name": "mobile-workspace.js",
+            "bytes": 10367
+          },
+          {
+            "name": "forecast-computation.js",
+            "bytes": 3447
+          },
+          {
+            "name": "forecast-evidence.js",
+            "bytes": 1323
+          },
+          {
+            "name": "research-reader.js",
+            "bytes": 13444
+          },
+          {
+            "name": "price-legend.js",
+            "bytes": 2878
+          },
+          {
+            "name": "cycle-milestones.js",
+            "bytes": 19424
+          },
+          {
+            "name": "cycle-milestones-view.js",
+            "bytes": 29482
+          },
+          {
+            "name": "cycle-selection.js",
+            "bytes": 2809
+          },
+          {
+            "name": "atlas-price-chart.js",
+            "bytes": 50948
+          },
+          {
+            "name": "cryptocon-audit.js",
+            "bytes": 14662
+          },
+          {
+            "name": "chart-navigation.js",
+            "bytes": 38896
+          },
+          {
+            "name": "indicator-state.js",
+            "bytes": 13110
+          },
+          {
+            "name": "atlas-analysis.js",
+            "bytes": 37776
+          },
+          {
+            "name": "price-view-data.js",
+            "bytes": 898
+          },
+          {
+            "name": "long-horizon-view.js",
+            "bytes": 9498
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "market-data-controller.js",
+            "bytes": 8623
+          },
+          {
+            "name": "intraday-chart.js",
+            "bytes": 31127
+          },
+          {
+            "name": "volume-data.js",
+            "bytes": 16291
+          },
+          {
+            "name": "volume-forecast.js",
+            "bytes": 32604
+          },
+          {
+            "name": "bitcoin-events.js",
+            "bytes": 49821
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "chart-presets.js",
+            "bytes": 1232
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "chart-export.js",
+            "bytes": 15475
+          },
+          {
+            "name": "workspace-state.js",
+            "bytes": 6737
+          },
+          {
+            "name": "price-axis.js",
+            "bytes": 9638
+          },
+          {
+            "name": "chart-hover.js",
+            "bytes": 3722
+          },
+          {
+            "name": "price-display.js",
+            "bytes": 2350
+          },
+          {
+            "name": "chart-view-policy.js",
+            "bytes": 6930
+          },
+          {
+            "name": "workspace-history.js",
+            "bytes": 2616
+          },
+          {
+            "name": "chart-touch-tracking.js",
+            "bytes": 7695
+          },
+          {
+            "name": "chart-export-workbench.js",
+            "bytes": 17185
+          },
+          {
+            "name": "research-annotations.js",
+            "bytes": 15630
+          },
+          {
+            "name": "research-annotations-workbench.js",
+            "bytes": 8845
+          },
+          {
+            "name": "history-journal.js",
+            "bytes": 6909
+          },
+          {
+            "name": "chart-magnet.js",
+            "bytes": 9555
+          },
+          {
+            "name": "chart-go-to.js",
+            "bytes": 7649
+          },
+          {
+            "name": "workspace-tools.js",
+            "bytes": 19158
+          },
+          {
+            "name": "chart-bottom-bar.js",
+            "bytes": 7628
+          },
+          {
+            "name": "symbol-selector.js",
+            "bytes": 12241
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "indicator-readouts.js",
+            "bytes": 10949
+          },
+          {
+            "name": "indicator-settings.js",
+            "bytes": 8372
+          },
+          {
+            "name": "indicator-settings-dialog.js",
+            "bytes": 9344
+          },
+          {
+            "name": "indicator-preferences.js",
+            "bytes": 3763
+          },
+          {
+            "name": "research-library-data.js",
+            "bytes": 852773
+          },
+          {
+            "name": "research-source-data.js",
+            "bytes": 47167
+          },
+          {
+            "name": "dialog-viewport.js",
+            "bytes": 1061
+          },
+          {
+            "name": "research-format.js",
+            "bytes": 3229
+          },
+          {
+            "name": "cryptocon-audit-data.js",
+            "bytes": 6892
+          },
+          {
+            "name": "cycle-interval-overlay.js",
+            "bytes": 17272
+          },
+          {
+            "name": "chart-math.js",
+            "bytes": 6166
+          },
+          {
+            "name": "empty-price-chart.js",
+            "bytes": 6026
+          },
+          {
+            "name": "chart-window.js",
+            "bytes": 3061
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "ohlc-data.js",
+            "bytes": 9968
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "chart-overlays.js",
+            "bytes": 21431
+          },
+          {
+            "name": "equity-forecast-chart.js",
+            "bytes": 12665
+          },
+          {
+            "name": "intraday-history.js",
+            "bytes": 4738
+          },
+          {
+            "name": "forecast-worker.js",
+            "bytes": 401
+          },
+          {
+            "name": "long-horizon-forecast.js",
+            "bytes": 34492
+          },
+          {
+            "name": "cycle-engine.js",
+            "bytes": 14793
+          },
+          {
+            "name": "detailed-forecast.js",
+            "bytes": 49059
+          },
+          {
+            "name": "market-structure.js",
+            "bytes": 51798
+          },
+          {
+            "name": "long-horizon-evidence.js",
+            "bytes": 13623
+          },
+          {
+            "name": "cycle-calibration.js",
+            "bytes": 16046
+          },
+          {
+            "name": "cycle-timing.js",
+            "bytes": 21604
+          }
+        ],
+        "scrollWidth": 390
+      },
+      "scenario": {
+        "duration": 657.9000000003725,
+        "tasks": [
+          {
+            "start": 2633.39999999851,
+            "duration": 95
+          },
+          {
+            "start": 2728.699999999255,
+            "duration": 172
+          }
+        ],
+        "scenario": "stress",
+        "paths": 37
+      },
+      "errors": [],
+      "missing": []
+    }
+  ]
+}

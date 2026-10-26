@@ -300,15 +300,19 @@ test('invalid comparison dates fail visibly before any source request', async ()
   }
 });
 
-test('airport board keeps navigation and all actions in one heading without a white theme', () => {
+test('comparison uses the shared chart theme and keeps navigation and actions in one heading', () => {
   const {view, ui} = setup();
   assert.match(ui.root.innerHTML, /class="daily-heading"><button[^>]*class="daily-back"/);
   assert.match(ui.root.innerHTML, /MARKET BOARD/);
   assert.match(ui.root.innerHTML, /aria-label="통합 차트로 돌아가기"/);
   assert.match(ui.root.innerHTML, /aria-label="18개 자산 CSV 내려받기"/);
   const css = readFileSync(new URL('../dist/daily-data.css', import.meta.url), 'utf8');
-  assert.match(css, /--asset-paper: #0b0f10/);
-  assert.match(css, /--asset-sign: #f0d36c/);
+  assert.match(css, /--asset-paper: var\(--bg\)/);
+  assert.match(css, /--asset-ink: var\(--text\)/);
+  assert.match(css, /--asset-grid: var\(--border-soft\)/);
+  assert.match(css, /--asset-sign: var\(--accent\)/);
+  assert.match(css, /--asset-muted: var\(--muted\)/);
+  assert.match(css, /\.daily-board-label \{ display: none;/);
   assert.doesNotMatch(css, /background:\s*(?:#fff(?:fff)?\b|white\b|#d9dcda|#f7d0d5|#c9eed0)/i);
   assert.doesNotMatch(css, /\.daily-back\s*\{\s*display:\s*none/);
   assert.match(css, /prefers-reduced-motion: reduce/);
@@ -376,11 +380,14 @@ test('rail identities use real asset groups, preserve labels and escape the new 
   assert.match(escaped, /data-asset-group="&quot;&gt;&lt;img/);
 });
 
-test('rail presentation separates family colors from returns and uses a flat numeric board', () => {
+test('comparison keeps neutral asset symbols and reserves colors for returns and judgments', () => {
   const css = readFileSync(new URL('../dist/daily-data.css', import.meta.url), 'utf8');
-  assert.match(css, /--asset-route: #6bd7ca/);
-  assert.match(css, /\[data-asset-group="위험 자산"\] \.asset-name-symbol \{ color: var\(--asset-route\)/);
-  assert.match(css, /\[data-asset-group="안전 자산"\] \.asset-name-symbol \{ color: var\(--asset-sign\)/);
+  assert.match(css, /--asset-route: var\(--accent\)/);
+  assert.match(css, /\.asset-name-symbol \{ color: var\(--asset-ink\)/);
+  assert.doesNotMatch(css, /\[data-asset-group=[^\]]+\] \.asset-name-symbol\s*\{/);
+  assert.match(css, /asset-judgment-buy \{ color: var\(--green/);
+  assert.match(css, /asset-judgment-sell \{ color: var\(--red/);
+  assert.match(css, /asset-judgment-neutral \{ color: var\(--asset-sign\)/);
   assert.match(css, /asset-return-gain \{ color: var\(--green,[^;]+; background: var\(--asset-paper\)/);
   assert.match(css, /asset-return-loss \{ color: var\(--red,[^;]+; background: var\(--asset-paper\)/);
   assert.match(css, /border-left: 2px solid currentColor/);

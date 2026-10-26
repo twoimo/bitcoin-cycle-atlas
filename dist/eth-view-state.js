@@ -1,4 +1,4 @@
-import { CHART_INTERVALS, chartInterval, isIntradayInterval } from './ohlc-data.js?v=1.15.0-eth.1';
+import { CHART_INTERVALS, chartInterval, isIntradayInterval } from './ohlc-data.js?v=1.29.0';
 
 export function readEthView(params) {
   return {
@@ -15,19 +15,27 @@ export function ethViewQuery(state) {
   if (state.chartType === 'candles') params.set('type', 'candles');
   if (state.scale === 'linear') params.set('axis', 'linear');
   if (state.span !== '4y') params.set('eth-span', state.span);
+  if (state.forecastVisible === false) params.set('forecast', 'off');
+  if (['stress','bull'].includes(state.ethScenario)) params.set('eth-scenario', state.ethScenario);
   return params.toString();
 }
 
-/** Bounds contain observed bars only. All navigation shares the candle grid. */
-export function ethHistoryRange(series, span = '4y', previous = null) {
+/** Observed bounds by default; an explicit conditional horizon enables future navigation. */
+export function ethHistoryRange(series, span = '4y', previous = null, forecastEnd = null) {
   const step = chartInterval(series.interval).seconds;
   const first = series.candles[0]?.time, last = series.candles.at(-1)?.time;
   if (!Number.isSafeInteger(first) || !Number.isSafeInteger(last)) return null;
-  const min = first - step, max = last + step;
+  const min = first - step;
+  const future = forecastEnd ? Date.parse(`${forecastEnd}T00:00:00Z`) / 1000 : last;
+  if (!Number.isSafeInteger(future)) throw new RangeError('Invalid ETH future horizon');
+  const ceil = value => min + Math.ceil((value - min) / step) * step;
+  const max = ceil(Math.max(last, future) + step);
   const days = {'1m':30, '6m':183, '1y':365, '4y':1461};
   const count = span === 'all' ? Math.round((max - min) / step) : Math.ceil((days[span] || 1461) * 86400 / step);
-  const start = previous?.start ?? Math.max(min, max - count * step);
-  const end = previous?.end ?? max;
+  const defaultEnd = forecastEnd && span !== 'all'
+    ? Math.min(max, ceil(last + (span === '4y' ? 548 : Math.max(10, Math.round((days[span] || 1461) * .25))) * 86400)) : max;
+  const end = previous?.end ?? defaultEnd;
+  const start = previous?.start ?? Math.max(min, end - count * step);
   return {unit:'seconds', start, end, min, max, step, minSpan:Math.min(12, Math.round((max-min)/step)+1), contextKey:`ETH-USD:${series.interval}:${series.retrievedAt}`};
 }
 

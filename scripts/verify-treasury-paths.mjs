@@ -11,7 +11,7 @@ const asOf = '2026-10-23';
 const endYear = 2050;
 const seed = 20261022;
 const readJson = async file => JSON.parse(await readFile(path.join(root, file), 'utf8'));
-const sources = ['scripts/verify-treasury-paths.mjs', 'dist/treasury-asset-paths.js', 'dist/treasury-model.js', 'dist/long-horizon-forecast.js', 'dist/long-horizon-evidence.js', 'dist/detailed-forecast.js', 'dist/cycle-calibration.js', 'dist/cycle-engine.js', 'dist/cycle-timing.js', 'dist/market-structure.js', 'dist/treasury-research.js', 'dist/treasury-catalog.js'];
+const sources = ['scripts/verify-treasury-paths.mjs', 'dist/treasury-asset-paths.js', 'dist/asset-daily-observations.js', 'dist/ethereum-forecast.js', 'dist/treasury-instruments.js', 'dist/treasury-liquidity.js', 'dist/treasury-model.js', 'dist/long-horizon-forecast.js', 'dist/long-horizon-evidence.js', 'dist/detailed-forecast.js', 'dist/cycle-calibration.js', 'dist/cycle-engine.js', 'dist/cycle-timing.js', 'dist/market-structure.js', 'dist/treasury-research.js', 'dist/treasury-catalog.js'];
 const inputs = ['dist/data/btc-daily.json', 'dist/data/eth-ohlc.json', 'dist/data/mstr-ohlc.json', 'dist/data/bmnr-ohlc.json', 'research-data/treasury-mstr.json', 'research-data/treasury-bmnr.json'];
 const hashes = async files => Object.fromEntries(await Promise.all(files.map(async file => [file, createHash('sha256').update(await readFile(path.join(root, file))).digest('hex')])));
 const sourceHashes = await hashes(sources);
@@ -68,23 +68,41 @@ function auditBalances(forecast) {
       continue;
     }
     const dt = 1 / 365.25;
-    const minted = a.coinUnits * ((1 + s.stakingFraction * s.stakingGross * (1 - s.stakingAdvisoryFee) * (1 - s.stakingOtherFee)) ** dt - 1);
+    const minted = a.liquidity ? a.liquidity.stakedUnits * Math.expm1(Math.log1p(s.stakingGross * (1-s.stakingAdvisoryFee) * (1-s.stakingOtherFee)) * dt) : 0;
+    if (b.liquidity) {
+      const pool=b.liquidity;
+      near(b.coinUnits,pool.liquidUnits+pool.stakedUnits+pool.queuedUnits+pool.rewardUnits,`${label} four-pool reconciliation`,b.coinUnits,'liquidityUnits');
+      near(pool.totalRewards-a.liquidity.totalRewards,minted,`${label} active-stake reward accrual`,pool.totalRewards+a.liquidity.totalRewards,'stakingRewards');
+      for(const key of ['liquidUnits','stakedUnits','queuedUnits','rewardUnits'])assert.ok(pool[key]>=0,`${label}.${key} is nonnegative`);
+      assert.ok(b.liquidityArrearsUsd>=0&&b.liquidityArrearsUsd<=b.otherLiabilitiesUsd,`${label} arrears retained in liabilities`);
+    }
     const rewardsSold = b.rewardsSold - a.rewardsSold;
     const rewardCash = b.rewardSaleProceeds - a.rewardSaleProceeds;
     const sold = b.coinsSold - a.coinsSold;
     const capital = b.capitalRaised - a.capitalRaised;
     let slash = 0;
     if (s.slashingLoss && !slashed && years >= 1) {
-      slash = (a.coinUnits + minted - rewardsSold) * s.slashingLoss;
+      slash = b.liquidity ? b.liquidity.slashedUnits-a.liquidity.slashedUnits : 0;
+      assert.ok(slash>=0&&slash<=s.slashingLoss*(a.liquidity.stakedUnits+a.liquidity.queuedUnits)+1e-7,`${label} slashing is bounded by at-risk inventory`);
       slashed = true;
     }
     const coinTerms = [a.coinUnits, minted, -sold, -slash, capital * s.investmentFraction / b.coinPrice];
     near(b.coinUnits, coinTerms.reduce((a, b) => a + b, 0), `${label} coin flow`, coinTerms.reduce((a, b) => a + Math.abs(b), 0), 'coinUnits');
-    near(rewardsSold, Math.max(0, a.coinUnits + minted - s.holdingPolicy.maxCoinUnits), `${label} reward sale capacity`, a.rewardsSold + b.rewardsSold + a.coinUnits, 'rewardUnits');
+    near(rewardsSold, Math.max(0, a.coinUnits + minted - slash - s.holdingPolicy.maxCoinUnits), `${label} reward sale capacity`, a.rewardsSold + b.rewardsSold + a.coinUnits, 'rewardUnits');
     near(rewardCash, rewardsSold * b.coinPrice * (1 - s.saleFee), `${label} reward sale proceeds`, a.rewardSaleProceeds + b.rewardSaleProceeds, 'rewardCashUsd');
     const haircutElapsed = Math.min(years, 1) - Math.min((Date.parse(previous.date) - start) / DAY / 365.25, 1);
     near(b.otherAssetsUsd, a.otherAssetsUsd * (1 - s.otherAssetHaircut) ** haircutElapsed, `${label} other asset haircut`, a.otherAssetsUsd, 'otherAssetsUsd');
-    const expense = (s.financingCarryUsd + s.operatingExpenseUsd) * dt;
+    // Independent source amounts: 2026-06-30 MSTR 10-Q notes, due at their
+    // first holder puts under the default policy. Coupons stop on settlement.
+    const coupons=forecast.symbol==='MSTR'?[
+      [1_010_000_000,.00625,'2027-09-15'],[1_500_000_000,0,'2028-06-01'],
+      [800_000_000,.00625,'2028-09-15'],[2_000_000_000,0,'2028-03-01'],
+      [603_659_000,.00875,'2028-09-15'],[800_000_000,.0225,'2029-06-15'],
+    ]:[[350_000_000,.095,null]];
+    const knownAtStart=coupons.reduce((sum,[face,rate])=>sum+face*rate,0);
+    const expectedCarry=(Math.max(0,s.financingCarryUsd-knownAtStart)+coupons.filter(([, ,due])=>!due||previous.date<due).reduce((sum,[face,rate])=>sum+face*rate,0))*dt;
+    near(b.totalFinancingCost-a.totalFinancingCost,expectedCarry,`${label} instrument carry cessation`,a.totalFinancingCost+b.totalFinancingCost,'financingCarryUsd');
+    const expense = expectedCarry + s.operatingExpenseUsd * dt;
     const principal = a.debtUsd - b.debtUsd;
     const due = s.repayAtPut ? (forecast.snapshot.debtSchedule || []).filter(item => item.date > previous.date && item.date <= point.date).reduce((sum, item) => sum + (item.principalUsd ?? item.amountUsd ?? 0), 0) : 0;
     near(principal, Math.min(a.debtUsd, due), `${label} principal schedule`, a.debtUsd + b.debtUsd, 'principalUsd');
@@ -147,10 +165,10 @@ for (const symbol of ['MSTR', 'BMNR']) {
     }
     assert.ok(rises > 0 && declines > 0, `${symbol}/${scenario} has both upward and downward conditional movements`);
     auditBalances(forecast);
-    scenarios.push({symbol, scenario, asOf, endDate: forecast.displayEnd, points: forecast.path.length, upwardAssetDays: rises, downwardAssetDays: declines, insolventAt: forecast.diagnostics.insolventAt, capacityReachedAt: forecast.diagnostics.capacityReachedAt, lastPrice: forecast.path.at(-1).price, lastCoinUnits: forecast.path.at(-1).components.coinUnits});
+    scenarios.push({symbol, scenario, asOf, endDate: forecast.displayEnd, points: forecast.path.length, upwardAssetDays: rises, downwardAssetDays: declines, insolventAt: forecast.diagnostics.insolventAt, capacityReachedAt: forecast.diagnostics.capacityReachedAt, lastPrice: forecast.path.at(-1).price, lastCoinUnits: forecast.path.at(-1).components.coinUnits,liquidityShortfallAt:forecast.diagnostics.liquidityShortfallAt,knownAnnualCarryAtEnd:forecast.instruments.knownAnnualCarry,settlements:forecast.instrumentEvents.length});
   }
 }
-checks.push('six actual-input financial paths conserve holdings, cash, senior claims, issuance and daily calendar events');
+checks.push('six actual-input financial paths conserve holdings, four ETH liquidity pools, cash, senior claims, issuance, arrears and daily calendar events; known coupons cease after principal settlement');
 
 // Reconcile the displayed ETH residual to the actual dated source returns,
 // without calling the sampler or trusting its reported mean/volatility.

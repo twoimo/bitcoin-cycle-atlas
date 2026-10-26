@@ -173,7 +173,7 @@ test('all forecast paths start at the observed equity price and expose the histo
     near(result.path[0].price, 22);
     assert.equal(result.path[0].kind, 'anchor');
     assert.equal(result.asOf, '2026-10-23');
-    assert.equal(result.issuedAt, '2026-10-24', 'research publication and observed equity price are separate dates');
+    assert.equal(result.issuedAt, '2026-10-26', 'instrument/liquidity method review and observed equity price are separate dates');
     assert.equal(result.path[0].date, result.asOf);
     assert.equal(result.financialAsOf, '2026-05-31');
     assert.equal(result.diagnostics.currentNavClaim, false);

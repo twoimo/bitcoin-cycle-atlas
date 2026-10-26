@@ -1,4 +1,4 @@
-import { utcDay, validateDataset } from './cycle-engine.js?v=1.19.0';
+import { utcDay, validateDataset } from './cycle-engine.js?v=1.29.0';
 
 /** Read-only interpretation of the chart's exact points, never another forecast. */
 export const CYCLE_DECISION_VERSION = 'cycle-checkpoints-v1';

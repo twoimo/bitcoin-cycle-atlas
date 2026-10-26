@@ -1,4 +1,4 @@
-import {CHART_INTERVALS} from './ohlc-data.js?v=1.11.0';
+import {CHART_INTERVALS} from './ohlc-data.js?v=1.29.0';
 
 // These are presentation capabilities of existing graphs, not new calculations.
 // Multipliers preserve the renderer's original observed/scenario styles.

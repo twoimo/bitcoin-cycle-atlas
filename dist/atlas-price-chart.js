@@ -1,21 +1,21 @@
-import { cycleIntervalsOverlayMarkup } from "./cycle-interval-overlay.js?v=1.27.1";
-import { milestoneMarkersMarkup } from "./cycle-milestones-view.js?v=1.27.1";
-import { MILESTONE_TYPES } from "./cycle-milestones.js?v=1.27.1";
-import { utcDay } from './cycle-engine.js?v=1.19.0';
-import { shiftCalendarMonths } from './cycle-timing.js?v=1.23.0';
-import { STATE_LABELS } from "./market-structure.js?v=1.27.1";
-import { chartPaneLayout, historicalMarkersMarkup, volumePaneMarkup, cycleTimingMarkup, formatBtcVolume } from './chart-overlays.js?v=1.13.0-research.1';
-import { createPriceScale, barPriceChange, nearestDailyIndex as nearest } from './chart-math.js?v=1.19.0';
-import { priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxisFormatter } from './price-axis.js?v=1.14.0-mobile.1';
-import { createPriceDisplay, formatDisplayPrice } from './price-display.js?v=1.13.0-research.1';
-import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.19.0';
-import { researchAnnotationsMarkup } from './research-annotations.js?v=1.13.0-research.1';
+import { cycleIntervalsOverlayMarkup } from "./cycle-interval-overlay.js?v=1.29.0";
+import { milestoneMarkersMarkup } from "./cycle-milestones-view.js?v=1.29.0";
+import { MILESTONE_TYPES } from "./cycle-milestones.js?v=1.29.0";
+import { utcDay } from './cycle-engine.js?v=1.29.0';
+import { shiftCalendarMonths } from './cycle-timing.js?v=1.29.0';
+import { STATE_LABELS } from "./market-structure.js?v=1.29.0";
+import { chartPaneLayout, historicalMarkersMarkup, volumePaneMarkup, cycleTimingMarkup, formatBtcVolume } from './chart-overlays.js?v=1.29.0';
+import { createPriceScale, barPriceChange, nearestDailyIndex as nearest } from './chart-math.js?v=1.29.0';
+import { priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxisFormatter } from './price-axis.js?v=1.29.0';
+import { createPriceDisplay, formatDisplayPrice } from './price-display.js?v=1.29.0';
+import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.29.0';
+import { researchAnnotationsMarkup } from './research-annotations.js?v=1.29.0';
 
-import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.11.0';
+import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.29.0';
 
-import { clearChartHover, clearChartHoverPointer, getChartHoverPointer, rememberChartHoverPointer, coalescedChartHover, paintPriceCursor } from './chart-hover.js?v=1.12.1-cursor-hud.1';
+import { clearChartHover, clearChartHoverPointer, getChartHoverPointer, rememberChartHoverPointer, coalescedChartHover, paintPriceCursor } from './chart-hover.js?v=1.29.0';
 
-import { dateWindow, intervalAtDate, lowerBoundDate, upperBoundDate, pixelExtrema } from './chart-window.js?v=1.11.0';
+import { dateWindow, intervalAtDate, lowerBoundDate, upperBoundDate, pixelExtrema } from './chart-window.js?v=1.29.0';
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const numberFormats=new Map();
@@ -47,7 +47,7 @@ function dailyRuns(rows,omit=()=>false){
 }
 
 /** Rendering and inspection only. It never changes prices, paths or model dates. */
-export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,frequency='daily',chartType='line',observedCandles=[],candleSource='Bitstamp',volumeBars=[],volumeProjection=null,volumeSource='Bitstamp',showVolume=false,historicalEvents=[],cycleCalibration=null,showCycleTiming=false,headerInset=null,showHistoricalEvents=true,activeHistoricalEventId=null,onHistoricalEvent=()=>{},stateStepDays=1,unit='usd',denominator=1,scale='log',priceDomain=null,invertScale=false,priceOnlyAuto=false,researchAnnotations=[],activeAnnotationId=null,onAnnotation=null,activeResearchAnnotationId=null,onResearchAnnotation=()=>{},scenarioId=null,tool='crosshair',magnet='off',measurement=null,onMeasurement=()=>{},onHover=()=>{},band=false,turns=[],showTurns=true,cycleMarkers=[],showCycleMarkers=true,activeCycleMarkerId=null,activeCycleMarkerIds=[],activeCycleInterval=null,onCycleMarker=()=>{},cycleIntervals=[],showCycleIntervals=false,cycleRelation='all',cycleOverlayObstacles=[],onCycleInterval=()=>{},events=[],forecastEvidence=[],onForecastEvidence=()=>{},states=[],fib=[],historical=false,nextTurn=null,showNextTurnLabel=true,onNextTurn=()=>{},showDrawdown=true,showStates=false,threshold=.12,onInspect=()=>{},selectedDate}){
+export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,frequency='daily',chartType='line',observedCandles=[],candleSource='Bitstamp',volumeBars=[],volumeProjection=null,volumeSource='Bitstamp',showVolume=false,historicalEvents=[],cycleCalibration=null,showCycleTiming=false,headerInset=null,dateTickMinSpacing=0,showHistoricalEvents=true,activeHistoricalEventId=null,onHistoricalEvent=()=>{},stateStepDays=1,unit='usd',denominator=1,scale='log',priceDomain=null,invertScale=false,priceOnlyAuto=false,researchAnnotations=[],activeAnnotationId=null,onAnnotation=null,activeResearchAnnotationId=null,onResearchAnnotation=()=>{},scenarioId=null,tool='crosshair',magnet='off',measurement=null,onMeasurement=()=>{},onHover=()=>{},band=false,turns=[],showTurns=true,cycleMarkers=[],showCycleMarkers=true,activeCycleMarkerId=null,activeCycleMarkerIds=[],activeCycleInterval=null,onCycleMarker=()=>{},cycleIntervals=[],showCycleIntervals=false,cycleRelation='all',cycleOverlayObstacles=[],onCycleInterval=()=>{},events=[],forecastEvidence=[],onForecastEvidence=()=>{},states=[],fib=[],historical=false,nextTurn=null,showNextTurnLabel=true,onNextTurn=()=>{},showDrawdown=true,showStates=false,threshold=.12,onInspect=()=>{},selectedDate}){
   clearChartHover(svg,{preservePointer:true});
   const selectedAnnotation=activeAnnotationId??activeResearchAnnotationId,activateAnnotation=onAnnotation||onResearchAnnotation;
   // Match the allocated viewport instead of shrinking a fixed-height drawing.
@@ -117,6 +117,11 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,frequency=
   let s=`<title>${historical?'실제 비트코인 가격':'실제 비트코인 가격과 미래 가정'}</title><desc>가격 실선은 실제 관측, 금색 가격 점선은 미래 가정입니다. 색 원과 기간선의 실선은 사후 기준, 점선은 잠정 또는 가정 기준입니다. 그래프를 누르면 값을 고정해 읽을 수 있습니다. 미래 음영은 보정된 확률 구간이 아닙니다.</desc><defs><clipPath id="${clip}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${bottom-T}"/></clipPath><clipPath id="${priceClip}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${priceBottom-T}"/></clipPath><clipPath id="${axisClip}"><rect x="${W-R}" y="${T}" width="${R}" height="${priceBottom-T}"/></clipPath></defs>`;
   for(const price of priceScale.ticks){const yy=y(price),label=axisLabels.tick(price);s+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="#28323f"/><text x="${W-R+axisText.inset}" y="${yy+4}" text-anchor="start" ${axisText.attributes(label)} fill="#b0bbca" font-size="${axisText.fontSize}">${esc(label)}</text>`;}
   let months=span>5000?(small?60:24):span>3000?(small?36:24):span>1100?(small?12:6):span>550?(small?6:3):span>270?3:1;
+  if(Number.isFinite(dateTickMinSpacing)&&dateTickMinSpacing>0){
+    const capacity=Math.max(1,Math.floor(Math.max(1,W-L-R)/dateTickMinSpacing));
+    const minimum=Math.max(months,Math.ceil(span/30.436875/capacity));
+    months=[1,2,3,6,12,24,36,60,120,240].find(value=>value>=minimum)||minimum;
+  }
   let tick=`${start.slice(0,4)}-01-01`;while(dayOf(tick)<minDay)tick=shiftCalendarMonths(tick,months);
   while(dayOf(tick)<=maxDay){const xx=xday(dayOf(tick));s+=`<line x1="${xx}" x2="${xx}" y1="${T}" y2="${bottom}" stroke="#222c37"/><text x="${xx}" y="${axisY}" text-anchor="${xx>W-35?'end':'middle'}" fill="#aebaca" font-size="12">${months>=12?tick.slice(0,4):tick.slice(2,7).replace('-','.')}</text>`;tick=shiftCalendarMonths(tick,months);}
   if(split&&dayOf(split)>=minDay&&dayOf(split)<=maxDay){

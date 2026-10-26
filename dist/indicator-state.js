@@ -1,5 +1,5 @@
-import {normalizeIndicatorSettings,patchIndicatorSettings,indicatorSupportsInterval} from './indicator-settings.js?v=1.13.0-research.1';
-export {indicatorSettings,indicatorSupportsInterval,applyIndicatorPresentation} from './indicator-settings.js?v=1.13.0-research.1';
+import {normalizeIndicatorSettings,patchIndicatorSettings,indicatorSupportsInterval} from './indicator-settings.js?v=1.29.0';
+export {indicatorSettings,indicatorSupportsInterval,applyIndicatorPresentation} from './indicator-settings.js?v=1.29.0';
 
 /** Chart membership, eye visibility, values and pane geometry are separate. */
 export const INDICATORS = Object.freeze([

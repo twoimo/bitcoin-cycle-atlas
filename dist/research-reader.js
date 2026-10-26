@@ -1,7 +1,7 @@
-import {RESEARCH_ARTICLES,ARTICLE_ALIASES} from './research-library-data.js?v=1.20.0';
-import {RESEARCH_SOURCES} from './research-source-data.js?v=1.19.0';
-import {mountDialogViewport} from './dialog-viewport.js?v=1.14.0-mobile.1';
-import {serializeResearchArticleMarkdown,safeResearchUrl as safe} from './research-format.js?v=1.19.0';
+import {RESEARCH_ARTICLES,ARTICLE_ALIASES} from './research-library-data.js?v=1.29.0';
+import {RESEARCH_SOURCES} from './research-source-data.js?v=1.29.0';
+import {mountDialogViewport} from './dialog-viewport.js?v=1.29.0';
+import {serializeResearchArticleMarkdown,safeResearchUrl as safe} from './research-format.js?v=1.29.0';
 export {RESEARCH_ARTICLES};
 export const RESEARCH_CATEGORIES={filing:'공시·재무',data:'원자료·관측',method:'모델·검증 방법',leadership:'경영진·기관 전망',risk:'반론·정책·위험'};
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

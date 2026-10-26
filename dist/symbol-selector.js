@@ -1,4 +1,4 @@
-import { mountDialogViewport } from './dialog-viewport.js?v=1.14.0-mobile.1';
+import { mountDialogViewport } from './dialog-viewport.js?v=1.29.0';
 
 /** Supported instruments are explicit: equity, spot USD and USDT are distinct. */
 export const SYMBOLS = Object.freeze([

@@ -3,6 +3,7 @@ import vm from 'node:vm';
 import * as ohlc from '../../dist/ohlc-data.js';
 import * as ethData from '../../dist/eth-market-data.js';
 import * as ethState from '../../dist/eth-view-state.js';
+import {buildEthereumForecasts} from '../../dist/ethereum-forecast.js';
 import * as events from '../../dist/ethereum-events.js';
 import * as eventHistory from '../../dist/ethereum-history.js';
 import { createMarketDataController, marketStatusText } from '../../dist/market-data-controller.js';
@@ -93,7 +94,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     const pending = deferred(); requests.push({ url, options, ...pending }); return pending.promise;
   };
   const deps = {
-    ...ohlc, ...ethData, ...ethState, ...events, ...eventHistory, marketStatusText,
+    ...ohlc, ...ethData, ...ethState, ...events, ...eventHistory, marketStatusText,buildEthereumForecasts,
     createMarketDataController: options => createMarketDataController({ ...options, fetchImpl }),
     fetchMarketCandles: options => {
       const pending = deferred(); liveRequests.push({ options, ...pending }); return pending.promise;
@@ -155,5 +156,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     focusEvent: id => historyOptions.onFocusEvent(id), latest: () => draws.at(-1),
     status: () => app.querySelector('#eth-status').textContent,
     info: () => { click('action', 'info'); return document.body.nodes.get('eth-data-dialog'); },
+    forecastDialog: () => { click('action','forecast'); return document.body.nodes.get('eth-data-dialog'); },
+    forecastSetting: (id,value) => document.body.nodes.get('eth-data-dialog').dispatchEvent({type:'change',target:{id,value,checked:value}}),
   };
 }

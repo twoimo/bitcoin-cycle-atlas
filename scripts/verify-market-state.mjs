@@ -5,6 +5,7 @@ import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { verificationProcessResult } from './verification-process.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const toolUrl = 'https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar';
@@ -28,10 +29,9 @@ async function prepareTool() {
   assert.equal(hash(bytes), toolSha256, 'Use the pinned TLC 1.7.4 jar for reproducible checks');
 }
 
-function run(command, args, cwd = root) {
+function run(command, args, cwd = root, expectedStatus = 0) {
   const result = spawnSync(command, args, { cwd, encoding: 'utf8', timeout: 60000, maxBuffer: 16 * 1024 * 1024 });
-  if (result.error) throw result.error;
-  return { status: result.status, output: `${result.stdout || ''}${result.stderr || ''}` };
+  return verificationProcessResult(result, { command, expectedStatus });
 }
 
 function checkTap(result, expected, { fails = false } = {}) {
@@ -40,7 +40,7 @@ function checkTap(result, expected, { fails = false } = {}) {
   for (const label of ['cancelled', 'skipped', 'todo']) assert.equal(count(label), 0, `No ${label} tests may qualify as verification`);
   assert.equal(count('pass') + count('fail'), expected, 'The TAP result is incomplete');
   if (fails) {
-    assert.notEqual(result.status, 0, 'The isolated product mutation must fail');
+    assert.equal(result.status, 1, 'The isolated product mutation must complete with an assertion failure');
     assert.ok(count('fail') > 0, 'A tool failure is not a rejected mutation');
   } else {
     assert.equal(result.status, 0, result.output);
@@ -62,9 +62,9 @@ async function checkModels(work) {
       '-XX:+UseParallelGC', '-Xmx512m', `-Djava.io.tmpdir=${javaTmp}`,
       '-cp', toolPath, 'tlc2.TLC', '-workers', '1', '-seed', '1', '-fp', '0',
       '-metadir', path.join(work, name), '-config', path.join(modelDir, `${name}.cfg`), path.join(modelDir, `${name}.tla`),
-    ]);
+    ], root, broken ? 12 : 0);
     if (broken) {
-      assert.notEqual(result.status, 0, `${name} must break ${invariant}`);
+      assert.equal(result.status, 12, `${name} must finish with the invariant-violation exit status`);
       assert.ok(result.output.includes(`Invariant ${invariant} is violated`), `The negative control must fail for ${invariant}, not a tool error: ${result.output}`);
     } else {
       assert.equal(result.status, 0, result.output);
@@ -74,6 +74,7 @@ async function checkModels(work) {
     assert.ok(counts, 'TLC did not report completed state counts');
     results[name] = {
       outcome: broken ? 'expected invariant violation' : 'pass',
+      exitStatus: result.status,
       generatedStates: Number(counts[1].replaceAll(',', '')),
       distinctStates: Number(counts[2].replaceAll(',', '')),
       remainingStates: Number(counts[3].replaceAll(',', '')),
@@ -100,7 +101,7 @@ async function checkImplementation(work) {
   assert.equal(source.split(guarded).length, 2, 'Controller changed: review model/code correspondence and mutation selector');
   const mutated = source.replace(guarded, 'const series = prior.series || parseMarketSnapshot(await snapshot(), interval);\n        // Negative control only: revoked request can publish.');
   await writeFile(controllerFile, mutated);
-  const failure = run(process.execPath, [...testArgs, 'tests/market-request-ownership.test.mjs'], copy);
+  const failure = run(process.execPath, [...testArgs, 'tests/market-request-ownership.test.mjs'], copy, 1);
   checkTap(failure, 8, { fails: true });
   assert.match(failure.output, /superseded fallback must not (replace|notify)/, 'Mutation failed for an unrelated reason');
 
@@ -108,14 +109,14 @@ async function checkImplementation(work) {
   assert.equal(source.split(retryGuard).length, 2, 'Refresh cooldown reset changed: review model/code correspondence and mutation selector');
   const retryMutated = source.replace(retryGuard, '// Negative control only: keep the previous failed-history cooldown.');
   await writeFile(controllerFile, retryMutated);
-  const retryFailure = run(process.execPath, [...testArgs, 'tests/intraday-history.test.mjs'], copy);
+  const retryFailure = run(process.execPath, [...testArgs, 'tests/intraday-history.test.mjs'], copy, 1);
   checkTap(retryFailure, 14, { fails: true });
   assert.match(retryFailure.output, /explicit refresh must release history retry backoff/, 'History retry mutation failed for an unrelated reason');
 
   await writeFile(controllerFile, source);
   const restored = run(process.execPath, [...testArgs, ...files], copy);
   checkTap(restored, 32);
-  return { tests: 32, regression: 'pass', restored: 'pass', mutation: 'expected assertion failure', historyRetryMutation: 'expected assertion failure', sourceSha256: hash(source), mutatedSourceSha256: hash(mutated), historyRetryMutatedSourceSha256: hash(retryMutated) };
+  return { tests: 32, regression: 'pass', restored: 'pass', mutation: 'expected assertion failure', historyRetryMutation: 'expected assertion failure', mutationExitStatus: failure.status, historyRetryMutationExitStatus: retryFailure.status, sourceSha256: hash(source), mutatedSourceSha256: hash(mutated), historyRetryMutatedSourceSha256: hash(retryMutated) };
 }
 
 await prepareTool();

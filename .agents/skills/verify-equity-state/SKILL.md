@@ -10,7 +10,8 @@ Keep the observed chart usable while its forecast is pending. Never let revoked 
 ## Coverage and synchronization
 
 - Covered code: `dist/equity-view.js` functions `load`, `render`, `schedule`, `revealReady`, interval/range callbacks, and `pagehide`/`pageshow`; `dist/index.html` boot-script handshake.
-- Last correspondence review: commit `1ad3be543e870e74f10708c266f19572b217d25f` (2026-10-25). Previous sync: `c7fbf50c34a45386300336756b5fd42a0fab0363`. Since that review, the daily-data information link and module version URLs changed; no covered await, ownership guard, readiness writer or lifecycle transition changed. Current and negative-control models, 28 initializer replays and all seven product mutations were rerun with unchanged invariants. Equity view SHA-256: `1843735506f4fe16c560902697d81cb35da601decf901bd523e231715b998c44`.
+- Last correspondence review: commit `7261c1807028e1b69bf9cd9be0d269a64f88acc0` (2026-10-26). Previous skill synchronization: `1ad3be543e870e74f10708c266f19572b217d25f`. Archive publication, projection ownership, readiness and range guards remain at the same asynchronous boundaries. The cached-input setup and dependency closure required exact negative-selector maintenance; no assertion or invariant was weakened. All 28 original/restored replays and seven real-source mutations pass their required outcomes. Equity view SHA-256: `8db93687e160f11298f66e09da035e4eb30e79d7d516526803a941d7603f1ba0`. Receipt: `docs/evolution-2026-10-26/equity-state-final.json`.
+- New capital-policy recalculation, cache eviction, dialog focus, instrument valuation and liquidity accounting are outside the existing finite model. Their numerical and actual browser tests are separate evidence; the unchanged TLA model does not certify these additions.
 - Model: `verification/equity-state/EquityLoad.tla`. Bounds: three request generations, daily/weekly displays, automatic/custom range choices. Network continuations and the two animation-frame yields are separate.
 - Actual-code replay: `tests/equity-load-ownership.test.mjs` and `tests/helpers/equity-view-fixture.mjs`. The complete production initializer and actual inline boot script execute with HTTP, imports, rendering and DOM boundaries injected. The test does not copy `load` or inspect its hidden locals.
 - Read `docs/formal-equity/README.md` for correspondence and scope. Existing `verify-market-state` separately covers the crypto candle controller.
@@ -42,3 +43,7 @@ Read every TLA+ result with pstack `/statechart`, including passing results. Fol
 ## Scope
 
 This is finite-state verification, not an unbounded or whole-program proof. The model permits extra callback and input orders, including suspended callbacks. That adversarial trace does not establish a particular browser's scheduling behavior. Forecast accuracy, numerical formulas, pixels, latency, liveness and rendering dependencies are outside this check.
+
+## Recover the original local synchronization revision
+
+Native Git push was unavailable in the implementation environment. The GitHub API publication preserves the file tree but creates a different commit object. Read `docs/evolution-2026-10-26/SOURCE_PROVENANCE.md` and verify/fetch its original Git bundle into the separate verification ref before diffing an unavailable synchronization commit. Never substitute the public commit ID for the original recorded identity or rewrite an immutable forecast.

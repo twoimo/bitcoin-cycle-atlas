@@ -1,5 +1,9 @@
 # MSTR·BMNR 로딩과 화면 준비 상태 검증
 
+## v1.29 integration correspondence
+
+The current committed source is `7261c1807028e1b69bf9cd9be0d269a64f88acc0`. The strict process-exit rerun, exact runtime hashes, maintained mutation selectors and limits of the new features are recorded in [the integration review](../evolution-2026-10-26/publication-independent-review.md) and the current project verification skill. Current machine-readable receipt: [verification result](../evolution-2026-10-26/equity-state-final.json). Earlier revisions and charts below remain historical evidence. New economic, scenario and capital-recalculation behavior is not implicitly included in these finite lifecycle models.
+
 기준 커밋은 `347997f02d3674259d4ad6e1f788419bde4811bd`이며 코드·모델 대응을 마지막으로 검토한 구현 커밋은 `1ad3be543e870e74f10708c266f19572b217d25f`이다. 이 기록은 주가 예측 정확도가 아니라 **어떤 요청의 자료가 언제 화면에 나타나는가**를 검증한다.
 
 ## 2026-10-25 유지 점검

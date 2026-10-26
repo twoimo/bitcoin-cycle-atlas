@@ -85,29 +85,30 @@
       if (fonts.sheet) activate();
     })();
   </script>
-  <link rel="stylesheet" href="./styles.css?v=1.28.0">
-  <link rel="stylesheet" href="./compact.css?v=1.11.0">
-  <link rel="stylesheet" href="./outlook.css?v=1.11.0">
-  <link rel="stylesheet" href="./lab.css?v=1.11.0">
-  <link rel="stylesheet" href="./atlas.css?v=1.11.0">
-  <link rel="stylesheet" href="./viewport.css?v=1.11.0">
-  <link rel="stylesheet" href="./chart-details-panel.css?v=1.14.1-source-gap.1">
-  <link rel="stylesheet" href="./analysis-dock.css?v=1.14.1-ime.1">
-  <link rel="stylesheet" href="./chart-magnet.css?v=1.11.0">
-  <link rel="stylesheet" href="./mobile-workspace.css?v=1.28.0">
-  <link rel="stylesheet" href="./workspace-tools.css?v=1.14.0-mobile.1">
-  <link rel="stylesheet" href="./chart-workspace-controls.css?v=1.13.0-research.1">
-  <link rel="stylesheet" href="./research-annotations.css?v=1.13.0-research.1">
-  <link rel="stylesheet" href="./chart-export-workbench.css?v=1.14.0-mobile.1">
-  <link rel="stylesheet" href="./cycle-milestones.css?v=1.14.1-axis-legend.1">
-  <link rel="stylesheet" href="./compact-chart-layout.css?v=1.14.1-ime.1">
-  <link rel="stylesheet" href="./chart-bottom-bar.css?v=1.14.0-mobile.1">
-  <link rel="stylesheet" href="./symbol-selector.css?v=1.18.0">
-  <link rel="stylesheet" href="./eth-view.css?v=1.15.0-eth.1">
-  <link rel="stylesheet" href="./equity-view.css?v=1.20.0">
-  <link rel="stylesheet" href="./research-reader.css?v=1.19.0">
-  <link rel="stylesheet" href="./ethereum-history.css?v=1.17.0-context.1">
-  <link rel="stylesheet" href="./daily-data.css?v=1.28.1">
+  <link rel="stylesheet" href="./styles.css?v=1.29.0">
+  <link rel="stylesheet" href="./compact.css?v=1.29.0">
+  <link rel="stylesheet" href="./outlook.css?v=1.29.0">
+  <link rel="stylesheet" href="./lab.css?v=1.29.0">
+  <link rel="stylesheet" href="./atlas.css?v=1.29.0">
+  <link rel="stylesheet" href="./viewport.css?v=1.29.0">
+  <link rel="stylesheet" href="./chart-details-panel.css?v=1.29.0">
+  <link rel="stylesheet" href="./analysis-dock.css?v=1.29.0">
+  <link rel="stylesheet" href="./chart-magnet.css?v=1.29.0">
+  <link rel="stylesheet" href="./mobile-workspace.css?v=1.29.0">
+  <link rel="stylesheet" href="./workspace-tools.css?v=1.29.0">
+  <link rel="stylesheet" href="./chart-workspace-controls.css?v=1.29.0">
+  <link rel="stylesheet" href="./research-annotations.css?v=1.29.0">
+  <link rel="stylesheet" href="./chart-export-workbench.css?v=1.29.0">
+  <link rel="stylesheet" href="./cycle-milestones.css?v=1.29.0">
+  <link rel="stylesheet" href="./compact-chart-layout.css?v=1.29.0">
+  <link rel="stylesheet" href="./chart-bottom-bar.css?v=1.29.0">
+  <link rel="stylesheet" href="./symbol-selector.css?v=1.29.0">
+  <link rel="stylesheet" href="./eth-view.css?v=1.29.0">
+  <link rel="stylesheet" href="./equity-view.css?v=1.29.0">
+  <link rel="stylesheet" href="./research-reader.css?v=1.29.0">
+  <link rel="stylesheet" href="./ethereum-history.css?v=1.29.0">
+  <link rel="stylesheet" href="./daily-data.css?v=1.29.0">
+  <link rel="stylesheet" href="./forecast-journal.css?v=1.29.0">
 </head>
 <body>
   <div id="atlas-boot-shell">
@@ -228,7 +229,7 @@
         </section>
         <div class="atlas-under-chart"><p id="atlas-chart-note">흰 실선은 실제 가격, 금색 점선은 미래 가정의 예시입니다. 그래프를 눌러 자세히 보세요.</p><details class="atlas-guide"><summary>차트 읽는 법</summary><div><p><strong>실선 = 실제 가격.</strong> 금색 가격 점선은 선택한 가정으로 만든 예시이며, 그날 그 가격이 된다는 예측은 아닙니다.</p><p><strong>고점·저점은 나중에 확인됩니다.</strong> 반대 방향으로 12% 움직인 뒤 확인하므로, 가격이 꺾인 날과 확인한 날을 나눠 보여 줍니다.</p><p><strong>장기 전망은 자동으로 이어집니다.</strong> 검증한 출처의 가장 먼 목표 연도까지 표시합니다. 연말 가치평가 기준은 고점·저점 날짜 예측이 아닙니다.</p><p><strong>음영은 수요·채택 가정의 범위입니다.</strong> 확률 80%를 뜻하지 않으며 실제 가격은 범위를 벗어날 수 있습니다. 2050년까지의 새 모형은 아직 미래 적중률이 검증되지 않았습니다.</p><p><strong>세로축은 상승률을 비교하는 눈금입니다.</strong> $10에서 $20, $100에서 $200처럼 두 배 상승하면 같은 높이만큼 이동합니다.</p></div></details></div>
         <div id="atlas-model-info" hidden></div>
-        <details id="atlas-exact-details" class="lab-details"><summary>정확한 수치 · 계산식 · 과거 검증</summary><div class="lab-details-body"><div class="lab-section-head"><h2>미래 가정의 주요 날짜</h2><div class="lab-segmented"><button data-lab-events="macro" aria-pressed="true">가치평가 기준</button><button data-lab-events="local" aria-pressed="false">예시의 고저점</button></div></div><div class="lab-table-scroll"><table class="lab-table"><thead id="lab-events-head"></thead><tbody id="lab-events-body"></tbody></table></div><div id="lab-events-foot" class="lab-table-foot"></div><div id="lab-method"></div><p><a href="https://github.com/twoimo/bitcoin-cycle-atlas/blob/main/docs/MARKET_STRUCTURE_METHOD.md" target="_blank" rel="noopener noreferrer">과거 구간·월·분기·되돌림 계산 근거 ↗</a> · <a href="?page=compare&amp;legacy=1">이전 상세 분석 도구 ↗</a></p></div></details>
+        <details id="atlas-exact-details" class="lab-details"><summary>정확한 수치 · 계산식 · 과거 검증</summary><div class="lab-details-body"><div class="lab-section-head"><h2>미래 가정의 주요 날짜</h2><div class="lab-segmented"><button data-lab-events="macro" aria-pressed="true">가치평가 기준</button><button data-lab-events="local" aria-pressed="false">예시의 고저점</button></div></div><div class="lab-table-scroll"><table class="lab-table"><thead id="lab-events-head"></thead><tbody id="lab-events-body"></tbody></table></div><div id="lab-events-foot" class="lab-table-foot"></div><div id="lab-method"></div><p><button type="button" class="atlas-quiet-button" data-open-forecast-journal="records">보존한 예측과 누적 평가</button> <button type="button" class="atlas-quiet-button" data-open-forecast-journal="data">자료 상태·공통 기준시각</button></p><p><a href="https://github.com/twoimo/bitcoin-cycle-atlas/blob/main/docs/MARKET_STRUCTURE_METHOD.md" target="_blank" rel="noopener noreferrer">과거 구간·월·분기·되돌림 계산 근거 ↗</a> · <a href="?page=compare&amp;legacy=1">이전 상세 분석 도구 ↗</a></p></div></details>
         <p id="lab-error" class="lab-error" role="alert" hidden></p>
       </section>
       <section id="evidence-view" aria-label="리서치 우선순위" hidden>
@@ -314,6 +315,6 @@
   <dialog id="method-dialog" aria-labelledby="method-title"><div class="dialog-top"><span class="eyebrow">DATA & METHODOLOGY</span><button id="close-method" class="icon-button" aria-label="방법론 닫기"><span data-icon="close"></span></button></div><h2 id="method-title">방법론과 출처</h2><p class="dialog-lead">차트의 출발점부터 가격의 정의까지, 비교에 사용한 기준입니다.</p><div id="method-content"></div><button id="method-done" class="primary-button">확인했습니다</button></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <dialog id="evidence-dialog" aria-labelledby="evidence-detail-title"><div class="dialog-top"><span class="eyebrow">EVIDENCE & LIMITS</span><button id="evidence-close" class="icon-button" aria-label="자료 상세 닫기"><span data-icon="close"></span></button></div><h2 id="evidence-detail-title"></h2><div id="evidence-detail-body"></div></dialog>
-  <script type="module" src="./site-entry.js?v=1.28.1"></script>
+  <script type="module" src="./site-entry.js?v=1.29.0"></script>
 </body>
 </html>

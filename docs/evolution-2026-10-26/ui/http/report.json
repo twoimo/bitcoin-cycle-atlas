@@ -1,0 +1,457 @@
+{
+  "status": "FAIL",
+  "generatedAt": "2026-10-26T06:09:06.472Z",
+  "browser": "156.0.8078.47",
+  "scope": "Actual Chromium DOM, keyboard, downloads and rendered screenshots. Touch viewports are emulation. 200% cases are CSS zoom and a half-size viewport reflow proxy, not browser chrome zoom or physical-device/Safari evidence.",
+  "testInjection": null,
+  "cases": [
+    {
+      "name": "desktop",
+      "viewport": [
+        1440,
+        900
+      ],
+      "checks": [
+        "comparison-and-existing-history",
+        "journal-records-keyboard-and-exact-values",
+        "journal-selection-survives-resize",
+        "journal-six-tabs-and-downloads",
+        "journal-close-reopen-race-and-focus",
+        "eth-future-controls",
+        "mstr-capital-modal",
+        "bmnr-capital-modal",
+        "no-unhandled-errors-or-local-missing-resources"
+      ],
+      "failures": [
+        {
+          "name": "journal-range-keyboard-focus",
+          "error": "Native keyboard range changes must retain focus: {\"tag\":\"BODY\",\"range\":false,\"value\":\"90\"}\n\nfalse !== true\n",
+          "url": "http://127.0.0.1:41853/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+        }
+      ],
+      "downloads": [
+        {
+          "filename": "atlas-forecast-2026-10-25-base.json",
+          "kind": "atlas-forecast-record"
+        },
+        {
+          "filename": "atlas-forecast-evaluation.json",
+          "kind": "atlas-forecast-evaluation"
+        },
+        {
+          "filename": "atlas-publication.json",
+          "kind": "atlas-publication"
+        },
+        {
+          "filename": "atlas-forecast-experiments.json",
+          "kind": "atlas-forecast-experiments"
+        },
+        {
+          "filename": "Atlas_Performance_Diagnostics.json",
+          "kind": null
+        }
+      ],
+      "errors": [],
+      "missing": [],
+      "blockedExternal": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap"
+      ],
+      "symbols": [
+        "BTC",
+        "SPY",
+        "QQQ",
+        "NVDA",
+        "AAPL",
+        "GOOG",
+        "MSFT",
+        "AMZN",
+        "META",
+        "AVGO",
+        "PLTR",
+        "TSLA",
+        "HOOD",
+        "TLT",
+        "IEF",
+        "GLD",
+        "SLV",
+        "PDBC"
+      ],
+      "resizeSelection": {
+        "before": "2027-04-23 · 보존한 가정 $83,111.78",
+        "after": "2027-04-23 · 보존한 가정 $83,111.78"
+      },
+      "focusAfterRangeChange": {
+        "tag": "BODY",
+        "range": false,
+        "value": "90"
+      },
+      "focusAfterClose": {
+        "tag": "svg",
+        "id": "lab-chart",
+        "visible": true,
+        "insideClosedDialog": false
+      }
+    },
+    {
+      "name": "phone320",
+      "viewport": [
+        320,
+        740
+      ],
+      "checks": [
+        "comparison-and-existing-history",
+        "journal-records-keyboard-and-exact-values",
+        "journal-six-tabs-and-downloads",
+        "journal-close-reopen-race-and-focus",
+        "eth-future-controls",
+        "mstr-capital-modal",
+        "bmnr-capital-modal",
+        "no-unhandled-errors-or-local-missing-resources"
+      ],
+      "failures": [
+        {
+          "name": "journal-selection-survives-resize",
+          "error": "A chart resize must keep the selected exact date/value\n+ actual - expected\n\n+ '2026-10-25 · 당시 관측 $80,038.91'\n- '2027-04-23 · 보존한 가정 $83,111.78'\n      ^\n",
+          "url": "http://127.0.0.1:41853/?indicator-hide=volume&indicator-list=closed&indicator-settings=%7B%7D"
+        },
+        {
+          "name": "journal-range-keyboard-focus",
+          "error": "Native keyboard range changes must retain focus: {\"tag\":\"BODY\",\"range\":false,\"value\":\"90\"}\n\nfalse !== true\n",
+          "url": "http://127.0.0.1:41853/?indicator-hide=volume&indicator-list=closed&indicator-settings=%7B%7D"
+        }
+      ],
+      "downloads": [
+        {
+          "filename": "atlas-forecast-2026-10-25-base.json",
+          "kind": "atlas-forecast-record"
+        },
+        {
+          "filename": "atlas-forecast-evaluation.json",
+          "kind": "atlas-forecast-evaluation"
+        },
+        {
+          "filename": "atlas-publication.json",
+          "kind": "atlas-publication"
+        },
+        {
+          "filename": "atlas-forecast-experiments.json",
+          "kind": "atlas-forecast-experiments"
+        },
+        {
+          "filename": "Atlas_Performance_Diagnostics.json",
+          "kind": null
+        }
+      ],
+      "errors": [],
+      "missing": [],
+      "blockedExternal": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap"
+      ],
+      "symbols": [
+        "BTC",
+        "SPY",
+        "QQQ",
+        "NVDA",
+        "AAPL",
+        "GOOG",
+        "MSFT",
+        "AMZN",
+        "META",
+        "AVGO",
+        "PLTR",
+        "TSLA",
+        "HOOD",
+        "TLT",
+        "IEF",
+        "GLD",
+        "SLV",
+        "PDBC"
+      ],
+      "resizeSelection": {
+        "before": "2027-04-23 · 보존한 가정 $83,111.78",
+        "after": "2026-10-25 · 당시 관측 $80,038.91"
+      },
+      "focusAfterRangeChange": {
+        "tag": "BODY",
+        "range": false,
+        "value": "90"
+      },
+      "focusAfterClose": {
+        "tag": "svg",
+        "id": "lab-chart",
+        "visible": true,
+        "insideClosedDialog": false
+      }
+    },
+    {
+      "name": "tablet768",
+      "viewport": [
+        768,
+        1024
+      ],
+      "checks": [
+        "comparison-and-existing-history",
+        "journal-records-keyboard-and-exact-values",
+        "journal-six-tabs-and-downloads",
+        "journal-close-reopen-race-and-focus",
+        "eth-future-controls",
+        "mstr-capital-modal",
+        "no-unhandled-errors-or-local-missing-resources"
+      ],
+      "failures": [
+        {
+          "name": "journal-selection-survives-resize",
+          "error": "A chart resize must keep the selected exact date/value\n+ actual - expected\n\n+ '2026-10-25 · 당시 관측 $80,038.91'\n- '2027-04-23 · 보존한 가정 $83,111.78'\n      ^\n",
+          "url": "http://127.0.0.1:41853/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+        },
+        {
+          "name": "journal-range-keyboard-focus",
+          "error": "Native keyboard range changes must retain focus: {\"tag\":\"BODY\",\"range\":false,\"value\":\"90\"}\n\nfalse !== true\n",
+          "url": "http://127.0.0.1:41853/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+        },
+        {
+          "name": "bmnr-capital-modal",
+          "error": "The expression evaluated to a falsy value:\n\n  assert.ok((await page.locator('#equity-kind').textContent()).includes('조건부'))\n",
+          "url": "http://127.0.0.1:41853/?symbol=BMNR"
+        }
+      ],
+      "downloads": [
+        {
+          "filename": "atlas-forecast-2026-10-25-base.json",
+          "kind": "atlas-forecast-record"
+        },
+        {
+          "filename": "atlas-forecast-evaluation.json",
+          "kind": "atlas-forecast-evaluation"
+        },
+        {
+          "filename": "atlas-publication.json",
+          "kind": "atlas-publication"
+        },
+        {
+          "filename": "atlas-forecast-experiments.json",
+          "kind": "atlas-forecast-experiments"
+        },
+        {
+          "filename": "Atlas_Performance_Diagnostics.json",
+          "kind": null
+        }
+      ],
+      "errors": [],
+      "missing": [],
+      "blockedExternal": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap"
+      ],
+      "symbols": [
+        "BTC",
+        "SPY",
+        "QQQ",
+        "NVDA",
+        "AAPL",
+        "GOOG",
+        "MSFT",
+        "AMZN",
+        "META",
+        "AVGO",
+        "PLTR",
+        "TSLA",
+        "HOOD",
+        "TLT",
+        "IEF",
+        "GLD",
+        "SLV",
+        "PDBC"
+      ],
+      "resizeSelection": {
+        "before": "2027-04-23 · 보존한 가정 $83,111.78",
+        "after": "2026-10-25 · 당시 관측 $80,038.91"
+      },
+      "focusAfterRangeChange": {
+        "tag": "BODY",
+        "range": false,
+        "value": "90"
+      },
+      "focusAfterClose": {
+        "tag": "svg",
+        "id": "lab-chart",
+        "visible": true,
+        "insideClosedDialog": false
+      }
+    },
+    {
+      "name": "zoom200-reflow",
+      "viewport": [
+        720,
+        450
+      ],
+      "checks": [
+        "comparison-and-existing-history",
+        "journal-records-keyboard-and-exact-values",
+        "journal-close-reopen-race-and-focus",
+        "eth-future-controls",
+        "mstr-capital-modal",
+        "bmnr-capital-modal",
+        "no-unhandled-errors-or-local-missing-resources"
+      ],
+      "failures": [
+        {
+          "name": "journal-selection-survives-resize",
+          "error": "A chart resize must keep the selected exact date/value\n+ actual - expected\n\n+ '2026-10-25 · 당시 관측 $80,038.91'\n- '2027-04-23 · 보존한 가정 $83,111.78'\n      ^\n",
+          "url": "http://127.0.0.1:41853/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+        },
+        {
+          "name": "journal-range-keyboard-focus",
+          "error": "Native keyboard range changes must retain focus: {\"tag\":\"BODY\",\"range\":false,\"value\":\"90\"}\n\nfalse !== true\n",
+          "url": "http://127.0.0.1:41853/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+        },
+        {
+          "name": "journal-six-tabs-and-downloads",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    alignment: {\n      comparisonTime: '2026-10-24T00:00:00.000Z',\n      interpretation: '현재 판본을 완료 봉 정책으로 정렬한 회고 비교',\n      mode: 'reconstructed',\n...\n          code: 'current',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-25',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-25',\n          market: 'crypto',\n...\n        observationCount: 5944,\n+       priceDefinition: 'USD price as of end of each labeled UTC day; not intraday high or spot quote',\n        role: 'chart',\n        source: 'Coin Metrics Community API',\n        sourcePath: 'data/btc-daily.json',\n+       sourceUrl: 'https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-10-26&page_size=10000&paging_from=start',\n        symbol: 'BTCUSD'\n      },\n      {\n        freshness: {\n          calendar: 'utc-daily',\n          code: 'gap',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-25',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 2,\n          label: '알려진 결측',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-25',\n          market: 'crypto',\n...\n        observationCount: 3811,\n+       priceDefinition: null,\n        role: 'chart',\n        source: 'Coinbase Exchange',\n        sourcePath: 'data/eth-ohlc.json',\n+       sourceUrl: null,\n        symbol: 'ETHUSD'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 7137,\n+       priceDefinition: null,\n        role: 'chart',\n        source: 'Yahoo Finance',\n        sourcePath: 'data/mstr-ohlc.json',\n+       sourceUrl: null,\n        symbol: 'MSTR'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 349,\n+       priceDefinition: null,\n        role: 'chart',\n        source: 'Yahoo Finance',\n        sourcePath: 'data/bmnr-ohlc.json',\n+       sourceUrl: null,\n        symbol: 'BMNR'\n      },\n      {\n        freshness: {\n          calendar: 'utc-daily',\n          code: 'current',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-25',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-25',\n          market: 'crypto',\n+         observedAt: '2026-10-26T04:15:07.706Z',\n-         observedAt: '2026-10-26T04:48:01.509Z',\n          policy: 'completed-before-current-utc-day',\n          timing: {\n            availabilityKnown: false,\n            availableAt: null,\n            calendar: 'utc-daily',\n...\n        observationCount: 5944,\n+       priceDefinition: 'USD price as of end of each labeled UTC day; not intraday high or spot quote',\n        role: 'comparison',\n+       source: 'Coin Metrics Community API',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: 'https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-10-26&page_size=10000&paging_from=start',\n        symbol: 'BTC'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 8492,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'SPY'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 6950,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'QQQ'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 6982,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'NVDA'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 11559,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'AAPL'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 5581,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'GOOG'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 10233,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'MSFT'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 7407,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'AMZN'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 3629,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'META'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 4331,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'AVGO'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 1524,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'PLTR'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 4106,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'TSLA'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 1316,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'HOOD'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 6099,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'TLT'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 6099,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'IEF'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 5517,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'GLD'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 5155,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'SLV'\n      },\n      {\n        freshness: {\n          calendar: 'nyse-core-2026-2028-v1',\n          code: 'closed',\n+         comparable: true,\n+         disagreement: false,\n          expectedDate: '2026-10-23',\n+         gapScope: 'bundled-history',\n+         knownGapCount: 0,\n          label: '정상 휴장',\n          lastAttemptAt: null,\n          lastOutcome: null,\n          latestDate: '2026-10-23',\n          market: 'equity',\n...\n        observationCount: 3007,\n+       priceDefinition: 'Provider split-adjusted daily close in USD; cash dividends and distributions are excluded, not total return.',\n        role: 'comparison',\n+       source: 'Yahoo Finance',\n-       source: null,\n        sourcePath: 'data/asset-comparison.json',\n+       sourceUrl: null,\n        symbol: 'PDBC'\n      }\n    ],\n+   checkedOutCommit: 'ba28c25a0580890636d7b97d00183ef671174d0a',\n+   contentDigest: '815bd0fae84f899e42fdf63c59ddb2758915a0e0507a27f7711dce18c6f06e4a',\n-   checkedOutCommit: '35300332a629ead03f6f365a32fda4669390f72f',\n-   contentDigest: 'b56d9bbffb849e1119b715ac1f4abf57ea70435ba9b619afc6542695d8b391b9',\n    eventCommit: null,\n    files: [\n      {\n        bytes: 26909,\n        path: 'analysis-dock.css',\n...\n      {\n+       bytes: 21128,\n-       bytes: 21136,\n        path: 'analysis-dock.js',\n+       sha256: '2062b09bfdc73952af0d168e0397913de36503de9f9165d4c5067c50e597fd9e'\n-       sha256: '4da42574566f8340adbae4a0a982e2b1bfe6f72484afe7eb1c5609e242b4f31c'\n      },\n      {\n+       bytes: 48056,\n-       bytes: 47968,\n        path: 'app.js',\n+       sha256: 'f162d70272607a45c3993b64fe5ac5aa4b15186bffc7f22550aa2ddd3c8fcabb'\n-       sha256: 'a9aea4d6c0fb25deb1d3c233788253e3d08cff632fb09f84bfd4d50314d03965'\n      },\n      {\n        bytes: 812,\n        path: 'asset-comparison-source.js',\n        sha256: '4ec4ac85a0ce67687e2d39f3fb22a67319b6d45da31c2b9daa282b4cab3b34f6'\n      },\n      {\n+       bytes: 14847,\n-       bytes: 14348,\n        path: 'asset-comparison.js',\n+       sha256: 'bb75ad2e9aac3df13d8c11ecd2818e91aaf4ad523dac839fb277cc4719195788'\n-       sha256: '081ff18ed2b2c552e652e5e7c5b8245bafbcab3f37f05e52ec149dfe395e8780'\n      },\n      {\n+       bytes: 2241,\n+       path: 'asset-daily-observations.js',\n+       sha256: '645cdfc751ffe2a4e0ce66a10316fc493d637cd6f74a0d09ea17b4e126367c70'\n+     },\n+     {\n+       bytes: 21196,\n+       path: 'asset-judgment-history-view.js',\n+       sha256: 'b51c2cf6f2bbace47f7057e7c39ac4350329fb8ca68a508fa277c201eb901537'\n+     },\n+     {\n+       bytes: 9427,\n+       path: 'asset-judgment-history.js',\n+       sha256: 'bc9648eff2e8d189d934a4d0f7cdbd702b4fc7e81498fe95e652555c55dc7fc5'\n+     },\n+     {\n+       bytes: 11914,\n+       path: 'asset-judgment-records.js',\n+       sha256: 'c715a00584d0de86239ffaf9ee5fa4e705bb734bbcde98ab29e07d02883b3991'\n+     },\n+     {\n        bytes: 37776,\n        path: 'atlas-analysis.js',\n+       sha256: 'c6369b4bf17315cb0858b95ed9570101569a4774ef29fc76d85be2f176009954'\n-       sha256: 'a9fddcb6a7afca399ce0f309ff285b9222b3cd5bd77920a4841027c66446a00a'\n      },\n      {\n+       bytes: 51214,\n-       bytes: 50948,\n        path: 'atlas-price-chart.js',\n+       sha256: '0a439da95ce2ca00875a817483ac3bd1062adbfa0480c7e644e74271dcc6d20e'\n-       sha256: '993e307deb97f8986b9d45da10ddc6c1b7facb876f0b02c792aec9c9719fb9dc'\n      },\n      {\n        bytes: 17145,\n        path: 'atlas.css',\n        sha256: 'cb3cd3cb3e632b27af68d65bbfc9ccc40ce4a3b8ea8ed7eaafcbca200eec7a93'\n...\n      {\n+       bytes: 17170,\n-       bytes: 17185,\n        path: 'chart-export-workbench.js',\n+       sha256: 'ec9433c4f842e89ad70232ffdad62199146da0570d0df1a2dc9a70c41c4608dd'\n-       sha256: 'eb1b2ab5272a32d58e7c0307f930d125cd861a966328f0cb402971a3b0465bfd'\n      },\n      {\n        bytes: 15475,\n        path: 'chart-export.js',\n        sha256: '02092ff68b0ec8dc25d510beb2cb7fd9609f55ab019d483d5e10b116df0c7f3c'\n...\n        path: 'chart-go-to.js',\n+       sha256: '4182e033ad0750bb612e162ff39732c1716589b23dde8f9bb59e5bae94f0b73d'\n-       sha256: 'f9a1cc781e80603fc0c533d612173fcc37065aee1a68ec82c773be6fae315e0f'\n      },\n      {\n        bytes: 3722,\n        path: 'chart-hover.js',\n        sha256: '2babcf82e20c0a6aa3aafd8f660a9175b94b11192fe3e4670c645683b8093067'\n...\n      {\n+       bytes: 6157,\n-       bytes: 6166,\n        path: 'chart-math.js',\n+       sha256: '93db753cfbe24a88d68216267b08304c4149315912e7e60b0548d8ffa975d09a'\n-       sha256: '2e2b392df1a7842da09c97bc41fe484d53f8fc72061121be7800781f1307b923'\n      },\n      {\n+       bytes: 38887,\n-       bytes: 38896,\n        path: 'chart-navigation.js',\n+       sha256: '3c155dbc8f0ee0a812ead043ea05a397364a8338b05e2b51fa9484ace3bb9bd0'\n-       sha256: '247d52a6e0799195fefb6199a4e39e57bc17e4b74acf96d86c67026bdc3b51ee'\n      },\n      {\n        bytes: 21431,\n        path: 'chart-overlays.js',\n+       sha256: '0808bc0b3175eb089394493a9bab2062cdeaf190940169c3b26093c1c3f3e04a'\n-       sha256: '91d400ed5f5fe481cfe1263953340a63615a4ad8df6a601f897168b73656eb6b'\n      },\n      {\n        bytes: 1232,\n        path: 'chart-presets.js',\n+       sha256: '0635174122f5de55ebf0adeff12ba00a79b8364a2a9f57e982615e4e3c6ee0aa'\n-       sha256: 'ec81e72fc3004a0d897597fc69a3c043b0f12c625cda332d45ea4e9e880c1342'\n      },\n      {\n        bytes: 7695,\n        path: 'chart-touch-tracking.js',\n        sha256: '6e993c48356a7c3d2156d11007b892a1e930b7d2fb2880d9fcae134cd0d424c7'\n      },\n      {\n+       bytes: 6921,\n-       bytes: 6930,\n        path: 'chart-view-policy.js',\n+       sha256: '5e6c183ac95d55079a595eb0d564411b5c7d162f1c6b9ec403c7a0c01d1a2cd0'\n-       sha256: '0051b4d13e161fb4d47293a0172b0f7da2e00bfda4c57877b7aab0af77bd0cb4'\n      },\n      {\n        bytes: 3061,\n        path: 'chart-window.js',\n        sha256: 'ff1527876a0185e8f8a52211170c696bde98f0120c6f0ddde58cea987daaf7cd'\n...\n        path: 'cryptocon-audit-data.js',\n+       sha256: '8495fd0373bd81331c05d784c9ffbee2ab26ef5fc9267d6bc127f98332be0088'\n-       sha256: 'a86618cb55624a7b1354457b1802a488327e4c16c162f4f3bced6f4423c84b5e'\n      },\n      {\n        bytes: 14662,\n        path: 'cryptocon-audit.js',\n+       sha256: '7fdf0bf02f6d30c1766642fb127178abaf99c677882e597fe03ca4ca4896b2fe'\n-       sha256: 'd2561b61b665d97fa80b49ac4a978dfc4db53ae8ba1c504cdb2d950155351c25'\n      },\n      {\n        bytes: 12921,\n        path: 'cryptocon-evidence.js',\n        sha256: '06c8b9d57da468215219eb25cdf5be69877a6cee7cd3ee591d83ce378287a9de'\n...\n        path: 'cycle-calibration.js',\n+       sha256: 'f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780'\n-       sha256: '428abd1e06363681c9e6ab4c4299da4fecfae370320a3f144ce3607aaf38b4b8'\n      },\n      {\n        bytes: 21292,\n        path: 'cycle-decision.js',\n+       sha256: '2ca34a30c608631cccb9ad0b8b5c17bbaf4cafe6e58b35ff2a44d09a9b2aadea'\n-       sha256: '7dad7868a73f43aaea1ca656bf9223a7a4fdabe1d88da75b6d2b59be12ebb0a9'\n      },\n      {\n        bytes: 14793,\n        path: 'cycle-engine.js',\n        sha256: 'f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346'\n...\n        path: 'cycle-interval-overlay.js',\n+       sha256: 'f42673d3fb7c09b998ef9f9dc1881007a1e8e8cae3430405605b20753a66088b'\n-       sha256: '274548dda2152838746baecf9e12ef3eb36b2004e344846f76bb26db810b4797'\n      },\n      {\n        bytes: 29482,\n        path: 'cycle-milestones-view.js',\n+       sha256: 'c6154cbf57bcba04f60905d83f4ea2fb8ef31c66e14c1fe9ef828da689af251e'\n-       sha256: '79b072704b92d8c5d328344dd5e0f87ab175387c3e3a2b12e16b075c44ab731e'\n      },\n      {\n        bytes: 11323,\n        path: 'cycle-milestones.css',\n        sha256: 'a473ba7cc455517ad570007302a6adb8a7a2f66b43df99c80962b3a1abe18b8b'\n...\n        path: 'cycle-milestones.js',\n+       sha256: 'bed3032cd8efaec067f0aedfaf42e8c170e43d00ea7c979791eb7028cb6714da'\n-       sha256: 'd12c0f886d9ca21240da07a89f2a70e9c5dee138a4c9d2fcc85acb9fabc02bf4'\n      },\n      {\n        bytes: 2809,\n        path: 'cycle-selection.js',\n+       sha256: 'cb93d394dd247fd3a18e0d3b04318a861c19536309c2f93f9a1dce6f55441c39'\n-       sha256: 'a8fd01dc58b14166c4a76271718062d93996bd43f76a176500e58527a4cdd8ba'\n      },\n      {\n        bytes: 1455,\n        path: 'cycle-table-selection.js',\n        sha256: 'b2dab14d6aa891ddd7aeb8574d9cd09ac3c0940d79869cf3f5d66f6663e96d6e'\n...\n        path: 'cycle-timing.js',\n+       sha256: 'fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518'\n-       sha256: 'c4b8ac425d33c65a0c9d059f09e084279fc73c31b1911ea401861dcbf8bf98da'\n      },\n      {\n        bytes: 9043,\n        path: 'daily-analytics.js',\n+       sha256: '81b4a1fca0769e33778af2ba356115250a47017c26f054293e3d08d821c8164c'\n-       sha256: 'f79103b4116d3322cfde2a52515428a391032f91e211e45df9e953aef4a650c2'\n      },\n      {\n        bytes: 4459,\n        path: 'daily-data-source.js',\n+       sha256: '12583c3201445ddd65895dd2472a39e3fa8b15efc1d97f27ffbdb111279cec91'\n-       sha256: 'f2be14fcd9b0b50296f6804f55f6fa2a31bea364b26f809fcd2119e5d9e9ed7c'\n      },\n      {\n+       bytes: 28812,\n-       bytes: 26716,\n        path: 'daily-data-view.js',\n+       sha256: 'f2f477efc7d38aea1764afc6a3fe9aa9b512ad12c623a4c97e499a3d36c155d1'\n-       sha256: '975875210a857279fafe8a33eab74501861d5a64f27d2af2a7c07e5ae91fc52b'\n      },\n      {\n+       bytes: 29859,\n-       bytes: 17335,\n        path: 'daily-data.css',\n+       sha256: '182982241ec714aa92fca631e0509b94750c13a67457795319d644b3b020407b'\n-       sha256: 'e6f5627a0c8eaf337d47c05e5cb9dcba23d85839f799935294fa9bd58c59b19a'\n      },\n      {\n        bytes: 3420087,\n        path: 'data/asset-comparison.json',\n        sha256: '55c9024fa019e769a0cfdaa539049bccbaa78909c19b75faef5f9740ed8f5985'\n...\n      {\n+       bytes: 21964,\n+       path: 'data/forecast-ledger/evaluation.json',\n+       sha256: '3fcd531970b1c76159b541b8c4738fa333ddc739419451b334521ee07fd17c6e'\n+     },\n+     {\n+       bytes: 699578,\n+       path: 'data/forecast-ledger/experiments.json',\n+       sha256: '97aa947b1e98309b8ead6138792c13772f99b8d69ba7228d6374f0cee0288cdb'\n+     },\n+     {\n+       bytes: 4577,\n+       path: 'data/forecast-ledger/index.json',\n+       sha256: '22fce423adea6f49ab8f60ed61ebf5a936d34bbdf9f5617e5294f0277a1ddbcd'\n+     },\n+     {\n+       bytes: 1000371,\n+       path: 'data/forecast-ledger/records/761263ab7dec58160c280a211cf522e5d9601321aeed265a84356e850e59d3de.json',\n+       sha256: 'e9ff3b72ed2d694e6233f8627fc70ab1e079069026c518e259e345de95ce0236'\n+     },\n+     {\n+       bytes: 1006844,\n+       path: 'data/forecast-ledger/records/7748b3f3ebf559af5c513f425908ce5aa9119f42fca8944b36d6bdc3a09448d2.json',\n+       sha256: '0a88c9af080e87eae48f614eb8b84855e1ff9b9061ee4cacce1ea75798faa271'\n+     },\n+     {\n+       bytes: 1003775,\n+       path: 'data/forecast-ledger/records/c23a29e6f9f6810fe080e4ae1c8765ca4fd27be70800b00398eeed773522d151.json',\n+       sha256: '058493d7eb9ce556412777a2bf578d916dd893e5c495115bb109500f6b1a0628'\n+     },\n+     {\n+       bytes: 1002452,\n+       path: 'data/forecast-ledger/records/d192f63b6a0b3e14c3a8af36c06c8c040110a1d29f6c786f53e362e434f44258.json',\n+       sha256: 'a0267b76b87a6d031f88234594311c7e6141760b3bb5fd04042c31963d08fbc0'\n+     },\n+     {\n+       bytes: 998666,\n+       path: 'data/forecast-ledger/records/f323a1bbdc0402aec7fe36ca1eada553c038239b245737aea150c61930557f6b.json',\n+       sha256: 'a40d61e68acc461de1a76b853a8d3360ab3eca8d070455c11485be720a78dd3e'\n+     },\n+     {\n+       bytes: 189547,\n+       path: 'data/forecast-ledger/snapshots/a45a97d8b43064c1221ac52b6e441589a23a11076d97f92969bd6f8c571a5316.json',\n+       sha256: 'cb5742c93ec8e9ba5f35858901097ce649ba33f97b29385918392dd27cfd19b9'\n+     },\n+     {\n+       bytes: 28154,\n+       path: 'data/judgment-snapshots/2026-10-26T044247794Z-85661ddfe00d.json',\n+       sha256: '1f1cfd6c88a588f702f8eb801e90f9674c48dc2b459bac31e7ab015524bd5add'\n+     },\n+     {\n+       bytes: 28149,\n+       path: 'data/judgment-snapshots/2026-10-26T052614776Z-f11d1a5a57db.json',\n+       sha256: 'c5280364cd355473da0ca38b804679e8ccd162327394a7061b29305c689842b9'\n+     },\n+     {\n+       bytes: 814,\n+       path: 'data/judgment-snapshots/index.json',\n+       sha256: 'f0a9ace5600e3f71601e55908da15d2cffac368e6bdb1bc7b82239c680265011'\n+     },\n+     {\n        bytes: 989925,\n        path: 'data/market-structure-summary.json',\n        sha256: '282c4cfedcc030bfd781abdb309699077372770216d8063d943d021ef34bcfdc'\n      },\n      {\n...\n      {\n+       bytes: 8831,\n-       bytes: 7537,\n        path: 'data-freshness.js',\n+       sha256: '10e2348ae352ef19a840002fadc1123f055712312490d958a8559b39e814a0f1'\n-       sha256: 'b8c0c68c0cd40bb2a342e2564f7fed23cfb178b9527ff40247934e37acf14988'\n      },\n      {\n        bytes: 8903,\n        path: 'data-source.js',\n+       sha256: '1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b'\n-       sha256: '9c966e77f3a7de9534e5bac8da20d395865e45afd95123696e86ef55178e9ca9'\n      },\n      {\n        bytes: 758,\n        path: 'data-update.js',\n        sha256: '2b932afce38f665377c9d406415fd2bac3234c3d09f07361b6daeb19a6a97ab8'\n...\n        path: 'detailed-forecast.js',\n+       sha256: 'e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e'\n-       sha256: '9321739cc057985709ad83df17105cdf8d38d65e88175b14e91c1e86f2df317c'\n      },\n      {\n        bytes: 1061,\n        path: 'dialog-viewport.js',\n        sha256: '36dceb75f26ab3c6fec9fa2c1d8ca8cf0a6ddbb19e2b4d7a5bc0f9d901bde28e'\n      },\n      {\n+       bytes: 5982,\n-       bytes: 6026,\n        path: 'empty-price-chart.js',\n+       sha256: '877aeb29ee669ff2e5de03912aa6bc8c32f6ea93fc68670cd98ba4cbb20ee1d2'\n-       sha256: '702b3355c87d3cbf955380b8f9b24eb7803e305693aff4316c65bd6bdc3821f0'\n      },\n      {\n        bytes: 12665,\n        path: 'equity-forecast-chart.js',\n+       sha256: 'a723125d39e4f2fefaea5e87518559a4e7ea297552e96b8ebd38b560c0627705'\n-       sha256: '3e74aa84f25c1d45b34af3d7a74ea6a2194e11101f6c16e9bece1d51238eae2d'\n      },\n      {\n        bytes: 7872,\n        path: 'equity-market-data.js',\n        sha256: '7c93eaf2471f354511e3440606cb0ed46b46242803bb7d06e3f06955a2a4cb8d'\n      },\n      {\n+       bytes: 6006,\n-       bytes: 5226,\n        path: 'equity-view.css',\n+       sha256: 'a677ab6a4530b9cfe1d95aebb74be9ded2800b1f48d0cf403fb6b4bf930c80a3'\n-       sha256: 'fee44ded1771a1decf1b3097175d28f7107eee4471af4a57dfcde21f4aeb67ed'\n      },\n      {\n+       bytes: 43762,\n-       bytes: 37117,\n        path: 'equity-view.js',\n+       sha256: '7d28bc10b862b233a9876ce94526fcaef2adb3e4faaa5fa038800be8efb6658f'\n-       sha256: 'd7f4042a2914eaa3c3632bd974cd8371b2f789c0a42b1130b2ad044883602f89'\n      },\n      {\n        bytes: 5558,\n        path: 'eth-market-data.js',\n+       sha256: '95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075'\n-       sha256: 'e2f7e0c6a05c2c3b789ebdb5af3484d32d7a56001b1d63c0f1ecf3251c7bbf75'\n      },\n      {\n+       bytes: 2649,\n-       bytes: 1992,\n        path: 'eth-view-state.js',\n+       sha256: '6525b2c8c98eeb276a742a101f69f464938b4c139e9b60551f64459bbb896ab0'\n-       sha256: 'ffebc6c9c73362be067e4eacfc073be4ed2b5f8ea3b1b89fac50fd2df1cf1ec3'\n      },\n      {\n+       bytes: 8616,\n-       bytes: 7265,\n        path: 'eth-view.css',\n+       sha256: '5e68b0bdc7a38ed7a971c3e787b8ddf48b6ff06cf3bbe39ea09c73eb3094d841'\n-       sha256: 'ca2a3069b859631af4c3333cc6b3cb93d0cd7a8480417112230b3844db1e0d70'\n      },\n      {\n+       bytes: 30483,\n-       bytes: 24304,\n        path: 'eth-view.js',\n+       sha256: '51202d57377b6da50f4db0d1c3e33745dfcea8b897fe269a2f5f366f82784168'\n-       sha256: '465f500979e37e95a78e8e74c85e089275d7a766e6a028d9761298db9af3855d'\n      },\n      {\n        bytes: 3125,\n        path: 'ethereum-event-observations.js',\n        sha256: '9f204e9e21f9663e80e81ce6f8e0681d1a4de6a8e1f75bae8ac8d919aefd844d'\n...\n      {\n+       bytes: 9299,\n+       path: 'ethereum-forecast.js',\n+       sha256: '2b75803d717f644443182b33779b6e4079c03033acd4433b5d4d12f0ae3dff3e'\n+     },\n+     {\n        bytes: 9794,\n        path: 'ethereum-history.css',\n        sha256: '2aacd8de575054ff86c47524cfc1eb06714987c5c1886746bfe0998fab0faa67'\n      },\n      {\n+       bytes: 17398,\n-       bytes: 17427,\n        path: 'ethereum-history.js',\n+       sha256: '196e860ce7f4485071ca54685e8b5bf48e62ed9c9d00dc1012f8183de44053a6'\n-       sha256: '61de4a48e652670841d513ad43ac49a0205c759809f8699cc4d5439854fa7641'\n      },\n      {\n        bytes: 47232,\n        path: 'evidence-catalog.js',\n        sha256: '38bb515bba7e4cbd208088bd71bfd50bceefd3403d8f096b0cadfe08bcec8e21'\n...\n        path: 'evidence-index.js',\n+       sha256: '61734361cf428f6c67cc17361ac52e8c5b36a238674f44c596d44c5e784575b2'\n-       sha256: 'e1e8f78da48414308b009366908a832e6df32976feaf0956f1214dae3877bb1f'\n      },\n      {\n        bytes: 7400,\n        path: 'evidence-view.js',\n+       sha256: '9a5852d5790ae1392297bcc10dd27cadbd32dbba645dce93163fe5ed56d08eb8'\n-       sha256: '619e20a6beee6c1ee199cd642ce8b9105611bb68e5c1baa5f2cec1aaec217b3a'\n      },\n      {\n        bytes: 251,\n        path: 'favicon.svg',\n        sha256: '27c6c6bafd62f10468037f5a42ed04b287a77e52ca67617aed773748bda6f161'\n      },\n      {\n+       bytes: 3447,\n+       path: 'forecast-computation.js',\n+       sha256: '8e4843c963a686027fb0b767c6f8969e38fcccd03abcc20c247740e90e006256'\n+     },\n+     {\n        bytes: 33795,\n        path: 'forecast-engine.js',\n+       sha256: 'e3b22730e99ca3a636b825fd84dff898cf20c784f546c483c0a77b6d30867d6f'\n-       sha256: '80406c21c550a652c3983ef77ea3beb1bb435b8b04aeeb91b959c50760904a7d'\n      },\n      {\n+       bytes: 7770,\n-       bytes: 7013,\n        path: 'forecast-evaluation.js',\n+       sha256: 'c48123c844c1fbfd454372d0b2ed56817d1fa9e87a6547abeef2d49c145b0ea5'\n-       sha256: '65606d3a706ec3c44acb499d7d3d830b2f990aa6eea43f19845a7b7bafefa6d2'\n      },\n      {\n        bytes: 1323,\n        path: 'forecast-evidence.js',\n        sha256: '1579b491f7fb1153197c5d28511eb5c75a85821b1b1cc19ae23c7176142b51f1'\n      },\n      {\n+       bytes: 15171,\n+       path: 'forecast-experiments.js',\n+       sha256: 'e5b620615591db1dfc9d5c60e6bdbac60a010ead5f9bf73f4c89457fe3d346eb'\n+     },\n+     {\n+       bytes: 3909,\n+       path: 'forecast-journal.css',\n+       sha256: '1a05d24a5ef981c25fd48979e3bb6088fecf0eed5ce08d81707986436baf48d9'\n+     },\n+     {\n+       bytes: 26266,\n+       path: 'forecast-journal.js',\n+       sha256: '100b1ede6ebbffbc8e21c360dbaf6db244cba45035a668ac92115e044cbd0932'\n+     },\n+     {\n+       bytes: 20943,\n-       bytes: 19243,\n        path: 'forecast-records.js',\n+       sha256: 'c79893f81c6bdff97685e2c384a3d1facc6eec10effdb09346c63749a36ca308'\n-       sha256: '6a150d6c8a2ac05b1c6afc9da64a184f28d15d3d2fb8b2900981dcb7975503af'\n      },\n      {\n        bytes: 13333,\n        path: 'forecast-validation.js',\n        sha256: '8344bfd40d16a9a62173c818c9677f6378f04700892fbb02e8769d4c8d277135'\n...\n        path: 'forecast-view.js',\n+       sha256: '2ad8e94ac5d1bc40d6c246f25ec024319784061213eeb1c277c56684aea180f5'\n-       sha256: '19725d1ba0f67f23bc68356238689d91af06b874bd390bee855af34c9812a5dd'\n      },\n      {\n+       bytes: 401,\n+       path: 'forecast-worker.js',\n+       sha256: 'f874720791a430368708deb85cf58b6d50742a3953f466bdbb34c52346a076c0'\n+     },\n+     {\n+       bytes: 6900,\n-       bytes: 6909,\n        path: 'history-journal.js',\n+       sha256: '4b4647725203e08ed8e000fdedfb24e9626a1a7b06985cb1ce226eed73b321d0'\n-       sha256: 'c92adc17bced791e39ed9cb527934af73487dd6542caa294144a609b0843ee2a'\n      },\n      {\n+       bytes: 46164,\n-       bytes: 45941,\n        path: 'index.html',\n+       sha256: '0ff4dc8eadf9de8ff0b69a7e2b4a28323bfe361b0dc73aa4db8742ec7f41ff0f'\n-       sha256: 'c3c8de51aa98d4134bb4179173c231097cb3d92ee4851e624c9c720cfaa3e0f1'\n      },\n      {\n+       bytes: 3755,\n-       bytes: 3763,\n        path: 'indicator-preferences.js',\n+       sha256: '8d26161783236257a6901b3f644afddc7d3e8a7fb9e05b6078bfc1c82caf1b99'\n-       sha256: 'c0ea00cbe1b881e968dd439582b614b26c0bc6871718f00d6b0cb0c12ac09536'\n      },\n      {\n+       bytes: 10938,\n-       bytes: 10949,\n        path: 'indicator-readouts.js',\n+       sha256: '5143dc1474226dba24127f2dd667ea1e18986059c49fdff6be2ff178cbffbb48'\n-       sha256: '50c22dff318ff2e90dcedb067532dc2a2dd9e33f2ded2aec36d30074c307a2b7'\n      },\n      {\n+       bytes: 9325,\n-       bytes: 9344,\n        path: 'indicator-settings-dialog.js',\n+       sha256: 'a8125d8186ab6adaf952843e9e3fc1b7067252e3922f9d68d6fd2b71ebadb7d6'\n-       sha256: '8bd9d958ae47bb71ab83fe93c0ba1127d8c79bf7239fd17fa6f6e1be2446bfd8'\n      },\n      {\n        bytes: 8372,\n        path: 'indicator-settings.js',\n+       sha256: '87c9ca6aa99a4d1627c44290bb1e9d234ab42156a953af9dff26bd045e242715'\n-       sha256: '7314a4535a8b46be16b456de6e7490450348a0261da410eabfa925ebd693ca12'\n      },\n      {\n+       bytes: 13088,\n-       bytes: 13110,\n        path: 'indicator-state.js',\n+       sha256: 'dc0da197cf7274d5068682631921dc065ecfbb1e8630bca815b2eeb4ddf3617e'\n-       sha256: '881920a5089e37f7c11f2df2b42d8c0886b28c33792097fd6c995315dcefe747'\n      },\n      {\n+       bytes: 30915,\n-       bytes: 30967,\n        path: 'indicator-workbench.js',\n+       sha256: '79dfbf2e43bfdea9e76278e1ec85d56df1f79a678da1df2edcc441876aa277ed'\n-       sha256: '71c36e8c5102da21b07807f7bbc24a671215e66ec537e3b86bf8ab2ab9d7114c'\n      },\n      {\n        bytes: 506,\n        path: 'inspection-policy.js',\n        sha256: 'fb5953349307dd3025382df412414ba96777d0cf07403d49c548a941d47b79e3'\n      },\n      {\n+       bytes: 31073,\n-       bytes: 31127,\n        path: 'intraday-chart.js',\n+       sha256: '93f8dea4ba968ca3ede87a10bc6e127e2e4848aaf7d00adcffb5717b1226b8ef'\n-       sha256: '014df0979adae0dc75108b923555b1ecd94c7409e4d97d4a5e33948875ef19d9'\n      },\n      {\n        bytes: 4738,\n        path: 'intraday-history.js',\n+       sha256: '7bec4f8c3f31571d4494801cfe22286fe9a87f0434c031eca1fd27f1f9e556f2'\n-       sha256: 'c29b30709c3004a37d8b88922489a133bccf5c2691d73fae806ae92647a89d8f'\n      },\n      {\n+       bytes: 1184,\n+       path: 'journal-entry.js',\n+       sha256: '836881e1e91d0e2ed8691ab34074f231a8ebc04ea7a50544bc435f69e957e264'\n+     },\n+     {\n+       bytes: 109167,\n-       bytes: 105822,\n        path: 'lab-view.js',\n+       sha256: '390e72b7d490b9c22e672067a3efe722bdc028f0d017e5b4b338fddef254dc4a'\n-       sha256: '5ae97b74b712195d2165d6a3b8b32ff7d97cb27ed72af839c8324ce244eca046'\n      },\n      {\n        bytes: 10745,\n        path: 'lab.css',\n        sha256: '3604d8b26984ab9c5ef0c9a1eee81e1c4fd1b51cc5d91713df1918a8f94aa6e6'\n...\n        path: 'long-horizon-forecast.js',\n+       sha256: '60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089'\n-       sha256: '13a60db7a26b0e693a2ac1bbf09cb269cf6a5bc63723646bcf4f709ee7a1c6e6'\n      },\n      {\n        bytes: 9498,\n        path: 'long-horizon-view.js',\n+       sha256: 'fb92cf0e36ddc0996b14ab0e65df63b4c94ea460be67f2d38d1b3fa62c8db5ea'\n-       sha256: 'a6cf5d1fdd529493e8ff1631c02ba4d4500616ab1fe43f962aa0bb87e916ba0f'\n      },\n      {\n        bytes: 8623,\n        path: 'market-data-controller.js',\n+       sha256: '978ad14a70fdb3011f0761ceb7c6f6ebc0d37bc0b25aa047ad2ef2014eff07d6'\n-       sha256: '092b77e78d3f430205c2da45d37395ac3f59606391a48f1c07a4f43ee71cb83a'\n      },\n      {\n        bytes: 51798,\n        path: 'market-structure.js',\n+       sha256: '6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7'\n-       sha256: 'cc840a90b3c5bc83e86f27bf891108da04fdd0c5ce348478eadee3f96950383e'\n      },\n      {\n        bytes: 2050,\n        path: 'mobile-preview.html',\n+       sha256: 'e3eb69462d53369e2087c91ebff46e9de8fe07276cf3fc4de0bd5731709c832e'\n-       sha256: '6f013b2765b0f12225a5ae7681ef80fdd0d89b0d64e990ee0123b2f504d397b1'\n      },\n      {\n        bytes: 2851,\n        path: 'mobile-preview.js',\n        sha256: '5defdea2040132f8d776b92335782ab9a7b43b0cb995fd3705adbf0021fa48ee'\n...\n        path: 'outlook-engine.js',\n+       sha256: 'eff146327dd753454224cea92c291af5b5137924bb205b384644307c8b723bc5'\n-       sha256: 'd2c1b5505d18b003736fc749cf9fcd1d6eb4907f88df07bcc2bce435649d23e5'\n      },\n      {\n        bytes: 25882,\n        path: 'outlook-view.js',\n+       sha256: '7bbb489741f90cc95487a8d590173e185601d84373e91c98fed67705f15bc46c'\n-       sha256: '7ac8176bcae14a50adf89b648b515931e1dba0d4cb9a29d4b49b5fc7643b0c7d'\n      },\n      {\n        bytes: 14931,\n        path: 'outlook.css',\n        sha256: 'e6926850639f54c42170232cd72adfa9afef45edd655af7aaa8ece53b5e8f9c8'\n...\n        path: 'peak-view.js',\n+       sha256: '9e12550a63b65097ee612b73e5afee488f7e75059cd5d41aa4feedc34a4c798c'\n-       sha256: 'f1da3f9e0714706ae1f495a84101b5f83276b46022d97ef061722f9dd24d339e'\n      },\n      {\n        bytes: 14438,\n        path: 'peak-zones.js',\n+       sha256: '20e17c4f54bf238b90657d3bf5f8c90bacd6b55a9929fed40bd88f1e1ca7fd99'\n-       sha256: '3ebbb875ab01d6a73b3292f7b96466649a48eb457fb56a428942d4b9e74902e5'\n      },\n      {\n+       bytes: 8318,\n-       bytes: 8056,\n        path: 'performance-diagnostics.js',\n+       sha256: '30a2a0cadcfda3f6f782b86ced0b2e1a6833d344ffc53f948ac3150b617419ac'\n-       sha256: '7d6937ea7f5da3ba33048cae1de3bc29576f6eb16b5cc5f574fda44328d9655e'\n      },\n      {\n        bytes: 9638,\n        path: 'price-axis.js',\n        sha256: 'c8c8153450d688ec541a17f81e1bfefb9296fd7f34620d808a7c84495412c888'\n...\n        path: 'published-data.js',\n+       sha256: '48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010'\n-       sha256: 'd1db9bd6d2fe97307c0a4d3e654fa4082dc93b431ae14a9b30de10cf694f3a2d'\n      },\n      {\n        bytes: 1520,\n        path: 'research/bitcoin-halving-history.md',\n        sha256: 'd2d6eefe533751002bbe5e91e675a28bf894f6996e31c2551ccbba36e0d2d4d3'\n...\n      {\n+       bytes: 8834,\n-       bytes: 8845,\n        path: 'research-annotations-workbench.js',\n+       sha256: '3119c68605299519b8101f6691bb82dc26c57e1e732a313633998f0cba4db782'\n-       sha256: '48da9e72528466ec9890590cf3abb7bfcbedc85fff04dd504bb4f4fd32ab727b'\n      },\n      {\n        bytes: 2980,\n        path: 'research-annotations.css',\n        sha256: '00863b5a63080fd99337876c724c3a0f814c16989d24aa46ab3cdfa2ec276afa'\n...\n      {\n+       bytes: 13435,\n-       bytes: 13444,\n        path: 'research-reader.js',\n+       sha256: 'c8869e264aba1125bd56a23138d581287912b3e6b27ea6d392c4652c3d991575'\n-       sha256: '9e93faf253d7ab04689b5b602d795ae446b5d4e0564861a48cfe05b10d323d50'\n      },\n      {\n        bytes: 47167,\n        path: 'research-source-data.js',\n        sha256: 'eb0720b297fe8430cf954e05df782ef5a4edd186a6c3ab727d1cb0bd8b5086b6'\n...\n      {\n+       bytes: 14691,\n-       bytes: 14711,\n        path: 'research-workbench.js',\n+       sha256: '766bf3962c78120b0d271bbd1abd4c548e3fdb580644743f8cfacb1153ec388b'\n-       sha256: '51ce4fe6eaf7f2bd514e67a5ef6aa5b9a1bbd9fba31cf45e2f5915f84cc4647e'\n      },\n      {\n        bytes: 6802,\n        path: 'scenario-countdown.js',\n+       sha256: '18ab11362ddd904eaffb904999c6d829b8429bf926dcb4ae9369ef4ec1965ed9'\n-       sha256: '9b51667f455ab54d2c39b8ebb2f41f01263506becd81833950da7f378f02a45d'\n      },\n      {\n+       bytes: 1083,\n-       bytes: 997,\n        path: 'site-entry.js',\n+       sha256: 'acd1420ef95fae493d4a83866fdcde525b17d2b7d881a166a321093b24b8c58c'\n-       sha256: 'ff11890da61eda161337000af29754ec742580240d6e18734f445899be80bbc6'\n      },\n      {\n        bytes: 1473705,\n        path: 'social-preview.png',\n        sha256: '6d03fd57f2597a74c1a825ea3f205fd93ae6d0989622aee01c63b5e2535cc26c'\n...\n      {\n+       bytes: 12232,\n-       bytes: 12241,\n        path: 'symbol-selector.js',\n+       sha256: 'e2f14ad05964651db5bb021811bffbc1352b6ad622275470decf4edd1b786de5'\n-       sha256: 'a29d1c908bfcc522224d32d33cd05beeb2bf24c5f5863134a5cca472ca390b19'\n      },\n      {\n        bytes: 13890,\n        path: 'timing-view.js',\n        sha256: 'e47f6f69db210f7cc3086ab7717c1f4231faaca8ec4506467a8ae019677dadba'\n      },\n      {\n+       bytes: 4680,\n-       bytes: 13183,\n        path: 'treasury-asset-paths.js',\n+       sha256: '67d98d830ad95d54312b8cd73d5e6e48c76aec757a7ae55b09ec43b2e8918d5d'\n-       sha256: '6c40cab0287c8e7c4d3c251ef9308a42f33298e94c20c4aa594cb1528ad752dd'\n      },\n      {\n        bytes: 99386,\n        path: 'treasury-catalog.js',\n        sha256: '23e8d229aca6db4f22ead83173aff8aec602c6f6a73c7f6eeaaff9d3b0e82701'\n      },\n      {\n+       bytes: 11046,\n-       bytes: 10087,\n        path: 'treasury-instruments.js',\n+       sha256: '784b98684b5ffe6c8bb747b1bb6eac6cd658221a3cfa29e5c64c11b6711b102f'\n-       sha256: 'f58199cafdc81e9cbf3054c7a8db796502a77a9bed65abde9b99a22812815b11'\n      },\n      {\n+       bytes: 6521,\n-       bytes: 4320,\n        path: 'treasury-liquidity.js',\n+       sha256: 'b989adb0205ad969f3c87ccfdf71134d5448a38ebe47ed49ac1a63d5119cbd5d'\n-       sha256: '3dce2336d4ef611eb1f933d36a914b8024cae22a7253806e5e699b24e776d044'\n      },\n      {\n+       bytes: 35925,\n-       bytes: 34877,\n        path: 'treasury-model.js',\n+       sha256: '5f856745631bc0fb9b86902d795a36c35fd8c668872fb6ca4cc7b33f63c29305'\n-       sha256: 'e37504525f5744557311ec3ce07e7092664be4db317521bc60417fca5dc280ad'\n      },\n      {\n        bytes: 1899,\n        path: 'treasury-projection.js',\n+       sha256: 'd98d0c7e78dc48d0e69ca569b846c9687dd377f0ccc467d1fde5be3537d52153'\n-       sha256: '5b5fed2bc224e95b9e112b9e8635b8698b4373da7a2e1e9de3af923e8623d3d6'\n      },\n      {\n        bytes: 2086,\n        path: 'treasury-research.js',\n+       sha256: 'c5a3166884c3a9db81f1cafc7223ba1a7c1c5498689ec33ea78a2d6522275fbb'\n-       sha256: 'ad9f947f8832a8a0f7cedd187e51243eb00453d2476fb5d4154cc645dce0bddb'\n      },\n      {\n+       bytes: 30063,\n-       bytes: 30096,\n        path: 'viewport-workspace.js',\n+       sha256: '1232303281e45ea078b9cc4547e6a28634f7ec3fca8eb5fc3fcc9d8979a9ad3d'\n-       sha256: 'b199130db67143fa4e0144958a80482bbd0c34140d0769750b947d69ffe254b5'\n      },\n      {\n        bytes: 25906,\n        path: 'viewport.css',\n        sha256: '8db83d73eafde4413960fdca4c4221deb4813afc401c74a6e656befbb7c90720'\n...\n        path: 'volume-data.js',\n+       sha256: 'a788b2ba5381cd9405f468dcac902fb14a23b56696b49153745e2500fe25c88a'\n-       sha256: '6dd407b7f3e93c9714b37a654f240faf7f945e2b4483b0ae05be648c38f70307'\n      },\n      {\n        bytes: 32604,\n        path: 'volume-forecast.js',\n+       sha256: '5b6c3f386f2d3d774395e2a5ba28460d8270a5d9f87b6d4ec68c066252383383'\n-       sha256: '26241023c26a1c4dba4e1f1339481afe136e01284b80a3a9278ad6a492435dd4'\n      },\n      {\n+       bytes: 29105,\n-       bytes: 29125,\n        path: 'workbench-chrome.js',\n+       sha256: 'ed8780d367455e1861e3c2f6666e3f1e1f332c069df13212f66cec6bd8e452ec'\n-       sha256: '0763bd7ceede2718223538f4b09e6a174db3934c1a308b762933e8d31911f88c'\n      },\n      {\n        bytes: 2616,\n        path: 'workspace-history.js',\n        sha256: '1e7f2c7a57c7d0d163e5b2ef482324f28732d4d37783f1aa7dd39429691a54c6'\n      },\n      {\n+       bytes: 6717,\n-       bytes: 6737,\n        path: 'workspace-state.js',\n+       sha256: '797a61ef67ae093cc817d4e6c7b428033821228398c2590b3669d1fc137b6851'\n-       sha256: '039c021d07cb1757142703f455ee9534f80a4f64cbbfd5f01ca5343baf272765'\n      },\n      {\n        bytes: 5255,\n        path: 'workspace-tools.css',\n        sha256: '64817b0345204392d7b4e27c9a61ecf7aaaa9fd099c23646e12df4ee35e5c33d'\n      },\n      {\n+       bytes: 19149,\n-       bytes: 18611,\n        path: 'workspace-tools.js',\n+       sha256: 'd51767037bca6af53edb396749e3006f2caf23e7cf384347cf37086fa3104fa3'\n-       sha256: 'b63cf76d0862bceac497e5e15f2be944bd4c5eb4348c392649f47cf5e761dcce'\n      }\n    ],\n+   generatedAt: '2026-10-26T06:09:37.392Z',\n-   generatedAt: '2026-10-26T05:43:13.643Z',\n    kind: 'atlas-publication',\n+   manifestSha256: 'd1aae853fbc9b6287ea0423276ac767938d29259f1b690224ec2fc8e1e09c7cb',\n-   manifestSha256: '43a03606e2b669a8bb1859f8ccba75872c545baa43c99159595f59b2319f1914',\n    schemaVersion: 1,\n    scope: 'Prepared artifact identities; generatedAt is not a provider publication or successful deployment timestamp',\n+   sourceCommit: 'ba28c25a0580890636d7b97d00183ef671174d0a',\n+   sourceTree: {\n+     scope: 'dist, scripts and package.json',\n+     status: 'modified-preview'\n+   },\n-   sourceCommit: '35300332a629ead03f6f365a32fda4669390f72f',\n    state: {\n+     digest: '815bd0fae84f899e42fdf63c59ddb2758915a0e0507a27f7711dce18c6f06e4a',\n-     digest: 'b56d9bbffb849e1119b715ac1f4abf57ea70435ba9b619afc6542695d8b391b9',\n      phase: 'ready',\n      reason: null,\n      servedCommit: null,\n      servedDigest: null,\n+     sourceCommit: 'ba28c25a0580890636d7b97d00183ef671174d0a',\n+     validatedDigest: '815bd0fae84f899e42fdf63c59ddb2758915a0e0507a27f7711dce18c6f06e4a'\n-     sourceCommit: '35300332a629ead03f6f365a32fda4669390f72f',\n-     validatedDigest: 'b56d9bbffb849e1119b715ac1f4abf57ea70435ba9b619afc6542695d8b391b9'\n    },\n    workflow: {\n      attempt: null,\n      runId: null\n    }\n",
+          "url": "http://127.0.0.1:41853/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+        }
+      ],
+      "downloads": [
+        {
+          "filename": "atlas-forecast-2026-10-25-base.json",
+          "kind": "atlas-forecast-record"
+        },
+        {
+          "filename": "atlas-forecast-evaluation.json",
+          "kind": "atlas-forecast-evaluation"
+        }
+      ],
+      "errors": [],
+      "missing": [],
+      "blockedExternal": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap"
+      ],
+      "symbols": [
+        "BTC",
+        "SPY",
+        "QQQ",
+        "NVDA",
+        "AAPL",
+        "GOOG",
+        "MSFT",
+        "AMZN",
+        "META",
+        "AVGO",
+        "PLTR",
+        "TSLA",
+        "HOOD",
+        "TLT",
+        "IEF",
+        "GLD",
+        "SLV",
+        "PDBC"
+      ],
+      "resizeSelection": {
+        "before": "2027-04-23 · 보존한 가정 $83,111.78",
+        "after": "2026-10-25 · 당시 관측 $80,038.91"
+      },
+      "focusAfterRangeChange": {
+        "tag": "BODY",
+        "range": false,
+        "value": "90"
+      },
+      "focusAfterClose": {
+        "tag": "svg",
+        "id": "lab-chart",
+        "visible": true,
+        "insideClosedDialog": false
+      }
+    },
+    {
+      "name": "zoom200-css",
+      "viewport": [
+        1440,
+        900
+      ],
+      "checks": [
+        "no-unhandled-errors-or-local-missing-resources"
+      ],
+      "failures": [
+        {
+          "name": "comparison-and-existing-history",
+          "error": "locator.click: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#asset-history-close')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" aria-label=\"판단 이력 닫기\" id=\"asset-history-close\">×</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    23 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+          "url": "http://127.0.0.1:41853/?page=data"
+        },
+        {
+          "name": "journal-records-keyboard-and-exact-values",
+          "error": "Dialog must fit the viewport: {\"x\":32,\"y\":-310,\"right\":1408,\"bottom\":1210,\"width\":1376,\"height\":1520,\"innerWidth\":1440,\"innerHeight\":900,\"documentWidth\":1440,\"clientWidth\":686,\"scrollWidth\":686,\"bodyClient\":686,\"bodyScroll\":686}",
+          "url": "http://127.0.0.1:41853/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+        },
+        {
+          "name": "journal-selection-survives-resize",
+          "error": "A chart resize must keep the selected exact date/value\n+ actual - expected\n\n+ '2026-10-25 · 당시 관측 $80,038.91'\n- '2027-04-23 · 보존한 가정 $86,132.62'\n      ^\n",
+          "url": "http://127.0.0.1:41853/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+        },
+        {
+          "name": "journal-range-keyboard-focus",
+          "error": "Native keyboard range changes must retain focus: {\"tag\":\"BODY\",\"range\":false,\"value\":\"90\"}\n\nfalse !== true\n",
+          "url": "http://127.0.0.1:41853/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+        },
+        {
+          "name": "journal-six-tabs-and-downloads",
+          "error": "locator.click: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-journal-tab=\"evaluation\"]')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" aria-pressed=\"false\" data-journal-tab=\"evaluation\">평가</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    23 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+          "url": "http://127.0.0.1:41853/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+        },
+        {
+          "name": "journal-close-reopen-race-and-focus",
+          "error": "locator.click: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-journal-close]')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" data-journal-close=\"\" aria-label=\"예측 기록 닫기\">×</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    23 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n",
+          "url": "http://127.0.0.1:41853/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+        },
+        {
+          "name": "eth-future-controls",
+          "error": "Dialog must fit the viewport: {\"x\":230,\"y\":-410,\"right\":1210,\"bottom\":1310,\"width\":980,\"height\":1720,\"innerWidth\":1440,\"innerHeight\":900,\"documentWidth\":1440,\"clientWidth\":488,\"scrollWidth\":488,\"bodyClient\":448,\"bodyScroll\":448}",
+          "url": "http://127.0.0.1:41853/?symbol=ETHUSD"
+        },
+        {
+          "name": "mstr-capital-modal",
+          "error": "Dialog must fit the viewport: {\"x\":32,\"y\":-410,\"right\":1408,\"bottom\":1310,\"width\":1376,\"height\":1720,\"innerWidth\":1440,\"innerHeight\":900,\"documentWidth\":1440,\"clientWidth\":686,\"scrollWidth\":686,\"bodyClient\":646,\"bodyScroll\":646}",
+          "url": "http://127.0.0.1:41853/?symbol=MSTR"
+        },
+        {
+          "name": "bmnr-capital-modal",
+          "error": "Dialog must fit the viewport: {\"x\":32,\"y\":-410,\"right\":1408,\"bottom\":1310,\"width\":1376,\"height\":1720,\"innerWidth\":1440,\"innerHeight\":900,\"documentWidth\":1440,\"clientWidth\":686,\"scrollWidth\":686,\"bodyClient\":646,\"bodyScroll\":646}",
+          "url": "http://127.0.0.1:41853/?symbol=BMNR"
+        }
+      ],
+      "downloads": [],
+      "errors": [],
+      "missing": [],
+      "blockedExternal": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap"
+      ],
+      "resizeSelection": {
+        "before": "2027-04-23 · 보존한 가정 $86,132.62",
+        "after": "2026-10-25 · 당시 관측 $80,038.91"
+      },
+      "focusAfterRangeChange": {
+        "tag": "BODY",
+        "range": false,
+        "value": "90"
+      }
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { utcDay, validateDataset } from './cycle-engine.js?v=1.19.0';
+import { utcDay, validateDataset } from './cycle-engine.js?v=1.29.0';
 
 const YEAR_DAYS = 365.2425;
 function finite(value, name) {
