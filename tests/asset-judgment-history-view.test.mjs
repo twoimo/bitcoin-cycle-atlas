@@ -26,3 +26,14 @@ test('saved reopen keeps its own disclosure; explicit symbol navigation resets i
   ui.root.close();await view.open({...input,symbol:'IEF'});assert.match(ui.get('history-disclosure').textContent,/현재 보관 원자료/);assert.match(ui.get('history-detail').innerHTML,/미국 중기채권/);assert.match(ui.get('history-detail').innerHTML,/IEF/);assert.equal(ui.get('history-date').value,'2026-01-05');assert.match(ui.get('history-body').innerHTML,/data-history-asset="IEF" aria-pressed="true"/);
  }finally{view.destroy();}
 });
+
+test('history reading hierarchy groups date navigation and labels financial values',async()=>{
+ const source=await readFile(new URL('../dist/asset-judgment-history-view.js',import.meta.url),'utf8');
+ const css=await readFile(new URL('../dist/daily-data.css',import.meta.url),'utf8');
+ assert.match(source,/<div class="asset-history-date-control"><label>판단 기준일/);
+ assert.match(source,/<dt>연초→최고 종가 평균 상승률<\/dt>/);
+ assert.match(source,/<dt>연초→최저 종가 평균 하락률<\/dt>/);
+ assert.match(source,/class="asset-history-saved-return"[^>]*><small>연초 대비<\/small>/);
+ assert.match(css,/\.asset-history-dialog input:focus-visible/);
+ assert.match(css,/\.asset-history-saved-return small \{ display: block/);
+});
