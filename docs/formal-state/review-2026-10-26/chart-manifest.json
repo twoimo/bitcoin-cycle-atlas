@@ -80,5 +80,11 @@
     "indexSha256": "fecd35689983b47b82e2c74f64e5542149aec6e6c59423a04e30f3e019ea6304",
     "normalizingCssQueryExactlyRestoresVerifiedIndex": true,
     "browserEvidence": "../../audit-2026-10-26/browser/interface.json"
+  },
+  "railIntegration": {
+    "main": "53f587bf04f45ea7b3caa639ea88268fa7dca918",
+    "version": "1.27.1",
+    "scope": "Only import cache queries changed in covered lifecycle modules; controller and actual inline boot scripts unchanged. The c8f9 receipts remain labeled as that exact run; final-merge CI runs the complete gates again.",
+    "sourceComparisonReceipt": "../../audit-2026-10-26/integration/v1-27-1-verification.json"
   }
 }

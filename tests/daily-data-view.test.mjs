@@ -307,8 +307,8 @@ test('airport board keeps navigation and all actions in one heading without a wh
   assert.match(ui.root.innerHTML, /aria-label="통합 차트로 돌아가기"/);
   assert.match(ui.root.innerHTML, /aria-label="18개 자산 CSV 내려받기"/);
   const css = readFileSync(new URL('../dist/daily-data.css', import.meta.url), 'utf8');
-  assert.match(css, /--asset-paper: var\(--surface, #12161d\)/);
-  assert.match(css, /--asset-sign: #f4cb50/);
+  assert.match(css, /--asset-paper: #0b0f10/);
+  assert.match(css, /--asset-sign: #f0d36c/);
   assert.doesNotMatch(css, /background:\s*(?:#fff(?:fff)?\b|white\b|#d9dcda|#f7d0d5|#c9eed0)/i);
   assert.doesNotMatch(css, /\.daily-back\s*\{\s*display:\s*none/);
   assert.match(css, /prefers-reduced-motion: reduce/);
@@ -360,4 +360,40 @@ test('sticky headings use a single bounded viewport and preserve the pinned iden
   assert.match(shared,/asset-identity-header \{ display: none;/,'a merged three-column header cannot align with the pinned name column');
   assert.match(shared,/asset-mobile-header \{ display: table-cell;/,'individual column headings must also be visible on tablets and desktops');
   assert.match(shared,/asset-mobile-name-header \{ position: sticky; left: 0; z-index: 4/,'the name heading must follow its body column at every screen size');
+});
+
+
+test('rail identities use real asset groups, preserve labels and escape the new attribute boundary', () => {
+  const model = comparisonViewModel();
+  const markup = renderAssetComparisonRows(model.rows);
+  assert.match(markup, /data-asset-symbol="BTC" data-asset-group="위험 자산"/);
+  assert.match(markup, /aria-description="위험 자산 · Index ETF"/);
+  assert.deepEqual(symbols(markup), COMPARISON_SYMBOLS);
+  const attack = '\"><img src=x onerror=alert(1)>';
+  model.rows[0].group = attack; model.rows[0].category = attack;
+  const escaped = renderAssetComparisonRows(model.rows);
+  assert.doesNotMatch(escaped, /<img|data-asset-group=""><|aria-description=""></);
+  assert.match(escaped, /data-asset-group="&quot;&gt;&lt;img/);
+});
+
+test('rail presentation separates family colors from returns and uses a flat numeric board', () => {
+  const css = readFileSync(new URL('../dist/daily-data.css', import.meta.url), 'utf8');
+  assert.match(css, /--asset-route: #6bd7ca/);
+  assert.match(css, /\[data-asset-group="위험 자산"\] \.asset-name-symbol \{ color: var\(--asset-route\)/);
+  assert.match(css, /\[data-asset-group="안전 자산"\] \.asset-name-symbol \{ color: var\(--asset-sign\)/);
+  assert.match(css, /asset-return-gain \{ color: var\(--green,[^;]+; background: var\(--asset-paper\)/);
+  assert.match(css, /asset-return-loss \{ color: var\(--red,[^;]+; background: var\(--asset-paper\)/);
+  assert.match(css, /border-left: 2px solid currentColor/);
+  assert.match(css, /tr:focus-within/);
+  assert.match(css, /asset-identity \{[^}]*min-height: 44px/);
+  assert.match(css, /asset-judgment \{ min-height: 44px/);
+});
+
+
+test('narrow explanation metrics stack as full-width label/value rows instead of clipping long percentages', () => {
+  const css = readFileSync(new URL('../dist/daily-data.css', import.meta.url), 'utf8');
+  const narrow = css.split('@media (max-width: 620px) {')[1].split('@media (max-width: 380px) {')[0];
+  assert.match(narrow, /asset-reason-metrics \{ grid-template-columns: minmax\(0, 1fr\)/);
+  assert.match(narrow, /asset-reason-metrics > div \{ display: flex;[^}]*justify-content: space-between/);
+  assert.match(narrow, /asset-reason-metrics dd \{ margin: 0; font-size: 16px; white-space: nowrap/);
 });

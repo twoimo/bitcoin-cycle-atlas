@@ -1,4 +1,4 @@
-# 전체 성능·수학·상태·반응형 화면 심층 감사 — v1.26.5
+# 전체 성능·수학·상태·반응형 화면 심층 감사 — v1.27.1
 
 ## 결과와 소스 범위
 
@@ -9,11 +9,14 @@
 | 최초 감사 main | `1b7c87ce4fe5d44d05560320bb3a270c639e3bbf` |
 | 감사 중 반영된 최신 main | `65182efcb9a833b2be091c552a0291d47d50b32c` — PR #32의 하단 안내문 제거 보존 |
 | 핵심 제품 수정 커밋 | `c8f9d985a7a99cdee13a5c74eeda37168f1c7ea8` |
-| 태블릿 보완 후 최종 제품 커밋 | `7f70c2260a634a82ecec633cbc200b6c4b54ae48` |
+| 초기 화면의 태블릿 보완 커밋 | `7f70c2260a634a82ecec633cbc200b6c4b54ae48` |
+| 최종 통합에 포함한 최신 main | `53f587bf04f45ea7b3caa639ea88268fa7dca918` — PR #33의 철도 전광판 디자인 보존 |
 | 사용한 cursor/plugins pstack | `99b609a72323b70204eab407c622f436e858e112` |
-| 버전 | `1.26.5` |
+| 최종 버전 | `1.27.1` — 최초 감사 버전 `1.26.5` 뒤 병합된 `1.27.0`을 포함 |
 
 상태·수학·성능 담당을 나누어 병렬 조사하고 서로의 수정을 교차 검토했다. 사용한 실제 pstack 지침은 `swarm`, `tdd`, `benchmark-checklist`, `create-formal-verification-skill`, `maintain-formal-verification-skill`, `statechart`이다. 기존 PR #12의 일부 수정 의도도 현재 코드에서 다시 실패를 재현한 뒤 적용했다. 오래된 브랜치 전체나 그 보고서의 통과 결과를 이번 코드의 근거로 사용하지 않았다.
+
+감사 PR을 만든 뒤 최신 main의 철도 전광판 변경을 발견해 두 부모를 가진 merge로 보존했다. 새 색상·열 너비·44px 모바일 터치 영역·자산군 색·작은 화면 설명창을 유지하면서 고정 제목 보정을 적용했다. 따라서 이전 디자인에서 남긴 재현 캡처와 최종 `v1.27.1` 브라우저 기록은 별도 파일이다. 수치 계산 코드는 이 디자인 통합으로 바뀌지 않았다.
 
 ## 재현한 결함과 변경
 
@@ -83,7 +86,7 @@ TLC 1.7.4는 해시를 고정했다. 원본과 복원한 코드가 통과하고,
 
 `scripts/audit-interface.mjs`는 실제 Chromium `156.0.8078.47`에서 브라우저를 열고 페이지 동작을 확인한다.
 
-최종 제품에서 **일반 사이트 23개·독립 실행 HTML 4개 사례가 모두 통과**했다. [브라우저 실행 기록](audit-2026-10-26/browser/interface.json)과 [다운로드 HTML 실행 기록](audit-2026-10-26/browser/standalone.json)에 검사별 결과·소스 해시·차단한 외부 호스트가 있다. 자산표는 시작·중간·끝 위치에서 종목명 제목과 셀의 좌표 및 겹침 순서까지 검사한다. 태블릿 결함의 별도 [수정 전](audit-2026-10-26/asset-header-before.json)·[수정 후](audit-2026-10-26/asset-header-after.json) 근거도 보존했다.
+철도 전광판을 포함한 최종 `v1.27.1`에서 **일반 사이트 23개·독립 실행 HTML 4개 사례가 모두 통과**했다. [최종 브라우저 실행 기록](audit-2026-10-26/browser-v1-27-1/interface.json)과 [최종 다운로드 HTML 실행 기록](audit-2026-10-26/browser-v1-27-1/standalone.json)에 검사별 결과·소스 해시·차단한 외부 호스트가 있다. 자산표는 시작·중간·끝 위치에서 종목명 제목과 셀의 좌표 및 겹침 순서까지 검사한다. 이전 디자인의 23+4 기록은 `browser/`에 남겼고, 태블릿 결함의 별도 [수정 전](audit-2026-10-26/asset-header-before.json)·[수정 후](audit-2026-10-26/asset-header-after.json) 근거도 보존했다.
 
 | 화면 | 검증 해상도와 동작 |
 |---|---|
@@ -98,9 +101,9 @@ TLC 1.7.4는 해시를 고정했다. 원본과 복원한 코드가 통과하고,
 
 ## 통합 검증과 재실행
 
-태블릿 보완까지 포함한 최종 제품에서 Node `v24.22.1`의 전체 테스트 **1,046개가 통과**했다. 실패·취소·건너뜀·todo는 모두 0이다. 수치, 연구 자료, ETH 사건, 재무 경로, cycle, 성능 gate는 핵심 제품에서 통과했고 해당 계산 코드는 이후 바뀌지 않았다. 정적 경로와 standalone 검증은 태블릿 보완 뒤 다시 통과했다. [실행 로그와 해시](audit-2026-10-26/integration/verification.json)
+철도 전광판과 태블릿 보완까지 포함한 최종 `v1.27.1`에서 Node `v24.22.1`의 전체 테스트 **1,049개가 통과**했다. 실패·취소·건너뜀·todo는 모두 0이다. 이전 감사 버전의 1,046개에 새 main의 화면 회귀 3개를 보존했다. 수치, 연구 자료, ETH 사건, 재무 경로, cycle, 성능 gate는 핵심 제품에서 통과했고 해당 계산 코드는 이후 바뀌지 않았다. 정적 경로와 standalone 검증은 최종 통합 뒤 다시 통과했다. [최종 실행 로그와 코드 대응](audit-2026-10-26/integration/v1-27-1-verification.json) · [이전 통합 실행 기록](audit-2026-10-26/integration/verification.json)
 
-형식 검증의 최종 직접 실행 커밋은 `c8f9d98`이다. 뒤따른 `7f70c22`는 표 CSS와 stylesheet 캐시 질의만 변경했으며 컨트롤러·초기화·실제 inline boot 코드는 같다. 검증한 index의 해시를 바꾸지 않고 이 대응을 [상태차트 manifest](formal-state/review-2026-10-26/chart-manifest.json)에 추가했다.
+보존한 형식 검증 영수증의 직접 실행 커밋은 `c8f9d98`이다. 뒤따른 태블릿·철도 화면 통합에서도 컨트롤러와 실제 inline boot 코드는 같고, ETH·주식 초기화 모듈은 import 캐시 질의만 달라졌음을 바이트 비교로 확인했다. 검증한 소스의 해시를 바꾸지 않고 이 대응을 [상태차트 manifest](formal-state/review-2026-10-26/chart-manifest.json)에 추가했다. 통합 PR의 CI는 형식 검증을 포함한 전체 gate를 새 커밋에서 다시 실행한다.
 
 ```sh
 npm test
@@ -127,7 +130,7 @@ node scripts/audit-interface.mjs . /tmp/atlas-browser-audit
 node scripts/audit-interface.mjs . /tmp/atlas-standalone-audit --standalone
 ```
 
-릴리스 포장은 증거와 검증 파일까지 커밋해 작업 트리가 깨끗해진 뒤 `npm run release:package -- --tag v1.26.5`로 실행한다. GitHub CI·배포 결과는 해당 실행 링크에서 별도로 확인해야 하며 로컬 통과가 배포 완료를 뜻하지 않는다.
+릴리스 포장은 증거와 검증 파일까지 커밋해 작업 트리가 깨끗해진 뒤 `npm run release:package -- --tag v1.27.1`로 실행한다. GitHub CI·배포 결과는 [감사 PR #34](https://github.com/twoimo/bitcoin-cycle-atlas/pull/34)에서 별도로 확인해야 하며 로컬 통과가 배포 완료를 뜻하지 않는다.
 
 ## 수학적·경제적 해석에서 유지하는 경계
 

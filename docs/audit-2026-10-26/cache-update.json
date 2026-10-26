@@ -59,5 +59,10 @@
   "tabletAmendment": {
     "commit": "7f70c2260a634a82ecec633cbc200b6c4b54ae48",
     "stylesheet": "./daily-data.css?v=1.26.5"
+  },
+  "finalRailIntegration": {
+    "version": "1.27.1",
+    "main": "53f587bf04f45ea7b3caa639ea88268fa7dca918",
+    "allAffectedQueryReferencesUpdated": true
   }
 }

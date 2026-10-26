@@ -1,0 +1,205 @@
+{
+  "browser": "156.0.8078.47",
+  "baseline": false,
+  "standalone": true,
+  "policy": "External HTTP requests aborted, including market APIs. In font-load-success only, the optional font stylesheet receives a successful empty CSS response. Korean glyphs use a locally installed official Noto Sans KR fallback. Source snapshots provide deterministic market data.",
+  "hashes": {
+    "dist/index.html": "c3c8de51aa98d4134bb4179173c231097cb3d92ee4851e624c9c720cfaa3e0f1",
+    "dist/styles.css": "1c316f67a6df324077f871056e713a210103a12dec1185191ff2f74d2ff4a25b",
+    "dist/daily-data.css": "e6f5627a0c8eaf337d47c05e5cb9dcba23d85839f799935294fa9bd58c59b19a",
+    "dist/daily-data-view.js": "975875210a857279fafe8a33eab74501861d5a64f27d2af2a7c07e5ae91fc52b",
+    "dist/viewport-workspace.js": "b199130db67143fa4e0144958a80482bbd0c34140d0769750b947d69ffe254b5",
+    "dist/chart-touch-tracking.js": "6e993c48356a7c3d2156d11007b892a1e930b7d2fb2880d9fcae134cd0d424c7",
+    "dist/analysis-dock.js": "4da42574566f8340adbae4a0a982e2b1bfe6f72484afe7eb1c5609e242b4f31c",
+    "dist/market-structure.js": "cc840a90b3c5bc83e86f27bf891108da04fdd0c5ce348478eadee3f96950383e",
+    "build/Bitcoin_Cycles_Comparison.html": "a74af94d614b6a8ad1b3305f8e8baa7216c753a6c8a3a7fe957a9097dddd630f"
+  },
+  "cases": [
+    {
+      "name": "standalone-btc-desktop",
+      "boot": "ready",
+      "symbol": "BTCUSD",
+      "background": "rgb(12, 15, 20)",
+      "width": 1440,
+      "height": 900,
+      "documentWidth": 1440,
+      "documentHeight": 900,
+      "fontCssOptional": null,
+      "visibleSvgPaths": 100,
+      "blockedHosts": [
+        "community-api.coinmetrics.io"
+      ],
+      "pageErrors": [],
+      "missingResources": []
+    },
+    {
+      "name": "standalone-data-phone",
+      "boot": "ready",
+      "symbol": "BTCUSD",
+      "background": "rgb(12, 15, 20)",
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "documentHeight": 844,
+      "fontCssOptional": null,
+      "visibleSvgPaths": 3,
+      "table": {
+        "symbols": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "headerHeight": 56,
+        "background": "rgb(11, 15, 16)",
+        "contextHidden": true,
+        "footerPresent": false,
+        "pinnedHeading": [
+          {
+            "side": "start",
+            "scrollLeft": 0,
+            "headingLeft": 1,
+            "cellLeft": 1,
+            "headingWidth": 120,
+            "cellWidth": 120,
+            "visible": true,
+            "topmost": true
+          },
+          {
+            "side": "middle",
+            "scrollLeft": 216,
+            "headingLeft": 1,
+            "cellLeft": 1,
+            "headingWidth": 120,
+            "cellWidth": 120,
+            "visible": true,
+            "topmost": true
+          },
+          {
+            "side": "end",
+            "scrollLeft": 432,
+            "headingLeft": 1,
+            "cellLeft": 1,
+            "headingWidth": 120,
+            "cellWidth": 120,
+            "visible": true,
+            "topmost": true
+          }
+        ]
+      },
+      "dialogBackground": "rgb(11, 15, 16)",
+      "blockedHosts": [
+        "community-api.coinmetrics.io"
+      ],
+      "pageErrors": [],
+      "missingResources": []
+    },
+    {
+      "name": "standalone-btc-tablet",
+      "boot": "ready",
+      "symbol": "BTCUSD",
+      "background": "rgb(12, 15, 20)",
+      "width": 768,
+      "height": 1024,
+      "documentWidth": 768,
+      "documentHeight": 1024,
+      "fontCssOptional": null,
+      "visibleSvgPaths": 100,
+      "blockedHosts": [
+        "community-api.coinmetrics.io"
+      ],
+      "pageErrors": [],
+      "missingResources": []
+    },
+    {
+      "name": "standalone-data-tablet",
+      "boot": "ready",
+      "symbol": "BTCUSD",
+      "background": "rgb(12, 15, 20)",
+      "width": 1024,
+      "height": 768,
+      "documentWidth": 1024,
+      "documentHeight": 768,
+      "fontCssOptional": null,
+      "visibleSvgPaths": 10,
+      "table": {
+        "symbols": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "headerHeight": 59,
+        "background": "rgb(11, 15, 16)",
+        "contextHidden": true,
+        "footerPresent": false,
+        "pinnedHeading": [
+          {
+            "side": "start",
+            "scrollLeft": 0,
+            "headingLeft": 205.078125,
+            "cellLeft": 205.078125,
+            "headingWidth": 240,
+            "cellWidth": 240,
+            "visible": true,
+            "topmost": true
+          },
+          {
+            "side": "middle",
+            "scrollLeft": 133,
+            "headingLeft": 72.078125,
+            "cellLeft": 72.078125,
+            "headingWidth": 240,
+            "cellWidth": 240,
+            "visible": true,
+            "topmost": true
+          },
+          {
+            "side": "end",
+            "scrollLeft": 266,
+            "headingLeft": 48,
+            "cellLeft": 48,
+            "headingWidth": 240,
+            "cellWidth": 240,
+            "visible": true,
+            "topmost": true
+          }
+        ]
+      },
+      "dialogBackground": "rgb(11, 15, 16)",
+      "blockedHosts": [
+        "community-api.coinmetrics.io"
+      ],
+      "pageErrors": [],
+      "missingResources": []
+    }
+  ]
+}
