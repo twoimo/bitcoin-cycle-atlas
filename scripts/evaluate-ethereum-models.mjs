@@ -4,6 +4,7 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {runEthereumModelComparison} from '../dist/ethereum-model-comparison.js';
+import {runEthereumEconomicAblations} from '../dist/ethereum-economic-ablation.js';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const digest=text=>createHash('sha256').update(text).digest('hex');
@@ -29,6 +30,7 @@ export async function evaluateEthereumModels({repositoryRoot=root,output=null}={
   await visit('dist/ethereum-model-comparison.js');
   await visit('scripts/evaluate-ethereum-models.mjs');
   await visit('scripts/verify-eth-candidate-browser.mjs');
+  await visit('tests/ethereum-economic-ablation.test.mjs');
   for(const path of ['dist/eth-view.js','dist/eth-view.css','dist/intraday-chart.js','dist/equity-forecast-chart.js','tests/equity-chart-rendering.test.mjs','tests/ethereum-forecast.test.mjs']) await visit(path);
   for(const path of ['tests/ethereum-cycle-models.test.mjs','tests/ethereum-economic-model.test.mjs','tests/ethereum-model-comparison.test.mjs','tests/ethereum-forecast-boundary.test.mjs']) await visit(path);
   const sourceCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:repositoryRoot,encoding:'utf8'}).trim();
@@ -36,6 +38,7 @@ export async function evaluateEthereumModels({repositoryRoot=root,output=null}={
   const dirty=execFileSync('git',['status','--porcelain','--',...Object.keys(sourceFiles),'dist/data/eth-ohlc.json','dist/data/btc-daily.json'],{cwd:repositoryRoot,encoding:'utf8'}).trim();
   if(dirty)throw new Error('Comparison must identify committed candidate source and observed input bytes');
   const report=runEthereumModelComparison({ethHistory,btcHistory,economicSnapshots:[]},{asOf});
+  const ablation=runEthereumEconomicAblations({ethRows:[],btcRows:[],economicSnapshots:[],asOf,origins:report.origins.map(row=>row.origin)});
   report.provenance={sourceCommit,sourceTree,sourceFiles,inputSha256:{'dist/data/eth-ohlc.json':digest(ethText),'dist/data/btc-daily.json':digest(btcText)},executedAt:new Date().toISOString(),
     executionEnvironment:process.env.GITHUB_ACTIONS==='true'?'GitHub Actions':'Explicit Node invocation',runId:process.env.GITHUB_RUN_ID??null,externalModelReview:null};
   if(output){
@@ -58,6 +61,9 @@ export async function evaluateEthereumModels({repositoryRoot=root,output=null}={
     await writeFile(resolve(dirname(output),'eth-review-source-manifest.json'),JSON.stringify(manifest,null,2)+'\n');
     report.provenance.reviewSourceBundle={sha256:bundleSha256,bytes:manifest.bundleBytes,files:entries.length};
     await writeFile(output,JSON.stringify(report,null,2)+'\n');
+    ablation.provenance={sourceCommit,sourceTree,inputSha256:report.provenance.inputSha256,executedAt:report.provenance.executedAt,sourceFiles};
+    await writeFile(resolve(dirname(output),'ethereum-economic-ablation.json'),JSON.stringify(ablation,null,2)+'\n');
+    process.stdout.write('ETH_ABLATION_RECEIPT '+JSON.stringify({kind:ablation.kind,status:ablation.status,sourceCommit,asOf,economicSnapshotsProvided:ablation.economicSnapshotsProvided,uniqueOrigins:ablation.uniqueOrigins,prospectiveScoredTargets:ablation.prospectiveScoredTargets,summaries:ablation.summaries,limitations:ablation.limitations})+'\n');
   }
   return report;
 }
