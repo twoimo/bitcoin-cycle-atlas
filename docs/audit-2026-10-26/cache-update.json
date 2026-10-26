@@ -1,0 +1,63 @@
+{
+  "version": "1.26.5",
+  "changedSources": [
+    "dist/analysis-dock.js",
+    "dist/asset-comparison.js",
+    "dist/chart-touch-tracking.js",
+    "dist/detailed-forecast.js",
+    "dist/index.html",
+    "dist/market-data-controller.js",
+    "dist/market-structure.js",
+    "dist/styles.css",
+    "dist/viewport-workspace.js",
+    "dist/daily-data.css"
+  ],
+  "transitiveModules": [
+    "dist/analysis-dock.js",
+    "dist/app.js",
+    "dist/asset-comparison.js",
+    "dist/atlas-analysis.js",
+    "dist/atlas-price-chart.js",
+    "dist/chart-touch-tracking.js",
+    "dist/cycle-interval-overlay.js",
+    "dist/cycle-milestones-view.js",
+    "dist/cycle-milestones.js",
+    "dist/daily-data-view.js",
+    "dist/detailed-forecast.js",
+    "dist/equity-view.js",
+    "dist/eth-view.js",
+    "dist/lab-view.js",
+    "dist/long-horizon-forecast.js",
+    "dist/market-data-controller.js",
+    "dist/market-structure.js",
+    "dist/site-entry.js",
+    "dist/treasury-asset-paths.js",
+    "dist/treasury-model.js",
+    "dist/treasury-projection.js",
+    "dist/viewport-workspace.js"
+  ],
+  "rewrittenImporters": [
+    "dist/app.js",
+    "dist/atlas-analysis.js",
+    "dist/atlas-price-chart.js",
+    "dist/cycle-interval-overlay.js",
+    "dist/cycle-milestones-view.js",
+    "dist/cycle-milestones.js",
+    "dist/daily-data-view.js",
+    "dist/detailed-forecast.js",
+    "dist/equity-view.js",
+    "dist/eth-view.js",
+    "dist/lab-view.js",
+    "dist/long-horizon-forecast.js",
+    "dist/site-entry.js",
+    "dist/treasury-asset-paths.js",
+    "dist/treasury-model.js",
+    "dist/treasury-projection.js",
+    "dist/viewport-workspace.js"
+  ],
+  "integrationBase": "65182efcb9a833b2be091c552a0291d47d50b32c",
+  "tabletAmendment": {
+    "commit": "7f70c2260a634a82ecec633cbc200b6c4b54ae48",
+    "stylesheet": "./daily-data.css?v=1.26.5"
+  }
+}

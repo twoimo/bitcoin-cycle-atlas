@@ -1,0 +1,18 @@
+✔ the initial HTML provides a visible loading status while unfinished controls stay inert (8.865499ms)
+✔ render readiness releases the real workspace once and later errors cannot resurrect the skeleton (3.578885ms)
+✔ startup failures expose accessible recovery and a late ready event cannot reveal a broken page (10.655303ms)
+✔ optional resource failures do not abort boot while script and stylesheet failures do (17.503764ms)
+✔ stylesheet failure during head parsing reaches recovery while early icon failure remains optional (7.633578ms)
+✔ optional webfonts cannot hold essential CSS or page boot behind a network request (8.193043ms)
+✔ reader resize paints a move burst once and immediately includes the exact release coordinate (1.949114ms)
+✔ another finger cannot move, finish or replace the active reader resize (0.269527ms)
+✔ capture loss, cancellation, hidden documents, viewport changes and destroy retire pending reader work (0.840439ms)
+✔ keyboard and reset actions end a drag before changing width, and overlay mode cannot resize (0.325922ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 111.659027

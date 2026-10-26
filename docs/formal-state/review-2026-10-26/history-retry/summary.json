@@ -1,0 +1,44 @@
+{
+  "view": "customer",
+  "second": {
+    "role": "fix",
+    "label": "수정 후",
+    "lacks": []
+  },
+  "modelStates": 18,
+  "modelTransitions": 40,
+  "chartStates": 7,
+  "chartTransitions": 16,
+  "chartStatus": {
+    "works": 6,
+    "wrong": 0,
+    "fixed": 1,
+    "mixed": 0,
+    "after": 0,
+    "worse": 0
+  },
+  "mixedStatus": [],
+  "classes": [
+    {
+      "n": 1,
+      "end": "새로고침 후 재시도 막힘",
+      "invariant": "RefreshCanRetry",
+      "rule": "After manual refresh finishes, the prior failed history attempt cannot block the requested visible window. A subsequent failed attempt may set a new delay.",
+      "cause": "새로고침 실패가 이전 과거 조회의 재시도 대기를 유지함",
+      "readerSteps": 4,
+      "modelSteps": 5,
+      "counterexamples": 1,
+      "lastSteps": [
+        "최근 조회 실패"
+      ],
+      "startsHere": false,
+      "fix": "저장 봉 · 재시도 가능"
+    }
+  ],
+  "codeLike": [],
+  "uncited": {
+    "HistoryRetryBroken.tla": [],
+    "HistoryRetry.tla": []
+  },
+  "brokenProperties": []
+}

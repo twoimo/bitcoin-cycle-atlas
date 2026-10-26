@@ -18,7 +18,7 @@ Init == /\ active = 0 /\ issued = 0 /\ selected = "one"
 \* load(..., {force:true}) calls cancel() then installs the new request.
 \* A load on another interval has the same ownership transition.
 Load(i) ==
-  /\ issued < RequestLimit
+  /\ issued < RequestLimit \* Finite bound on load generations; dist/market-data-controller.js:38-53
   /\ active' = issued + 1 /\ issued' = issued + 1 /\ selected' = i
   /\ interval' = [interval EXCEPT ![issued + 1] = i]
   /\ phase' = [phase EXCEPT ![issued + 1] = "live"]
@@ -32,7 +32,7 @@ Load(i) ==
 
 \* cancel() synchronously revokes ownership; responses may still arrive later.
 Cancel ==
-  /\ active # 0
+  /\ active # 0 \* dist/market-data-controller.js:29
   /\ cancelled' = cancelled \cup {active}
   /\ status' = [status EXCEPT ![interval[active]] =
        storedStatus[interval[active]]]
@@ -41,7 +41,7 @@ Cancel ==
 
 \* Each completion is the synchronous continuation after its await.
 LiveSuccess(id) ==
-  /\ phase[id] = "live"
+  /\ phase[id] = "live" \* dist/market-data-controller.js:62-67
   /\ phase' = [phase EXCEPT ![id] = "done"]
   /\ displayed' = IF active = id THEN [displayed EXCEPT ![interval[id]] = id] ELSE displayed
   /\ status' = IF active = id THEN [status EXCEPT ![interval[id]] = "ready"] ELSE status
@@ -50,13 +50,13 @@ LiveSuccess(id) ==
   /\ UNCHANGED <<issued, selected, interval, cancelled>>
 
 LiveFailure(id) ==
-  /\ phase[id] = "live"
+  /\ phase[id] = "live" \* dist/market-data-controller.js:62-67
   /\ phase' = [phase EXCEPT ![id] = IF active = id THEN "fallback" ELSE "done"]
   /\ UNCHANGED <<active, issued, selected, interval, cancelled, status, storedStatus, displayed>>
 
-\* Exact counterpart of the guard after await snapshot() in load's catch.
+\* Deliberate mutation of dist/market-data-controller.js:70: remove ownership guard.
 SavedSuccess(id) ==
-  /\ phase[id] = "fallback"
+  /\ phase[id] = "fallback" \* dist/market-data-controller.js:69-74
   /\ phase' = [phase EXCEPT ![id] = "done"]
   /\ displayed' = [displayed EXCEPT ![interval[id]] = id]
   /\ status' = [status EXCEPT ![interval[id]] = "snapshot"]
@@ -65,8 +65,8 @@ SavedSuccess(id) ==
   /\ UNCHANGED <<issued, selected, interval, cancelled>>
 
 SavedFailure(id) ==
-  /\ phase[id] = "fallback"
-  /\ displayed[interval[id]] = 0
+  /\ phase[id] = "fallback" \* dist/market-data-controller.js:69-74
+  /\ displayed[interval[id]] = 0 \* dist/market-data-controller.js:69; prior.series would avoid the failing snapshot
   /\ phase' = [phase EXCEPT ![id] = "done"]
   /\ status' = IF active = id THEN [status EXCEPT ![interval[id]] = "error"] ELSE status
   /\ active' = IF active = id THEN 0 ELSE active

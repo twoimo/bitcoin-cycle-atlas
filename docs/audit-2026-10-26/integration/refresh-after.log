@@ -1,0 +1,47 @@
+PASS Public labels and operational thresholds are explicit and stable
+PASS Average fall is year-start-to-low, separately from ordered MDD
+PASS A trough before a later high cannot become a peak-to-trough drawdown
+PASS Historical means weight each observed year equally regardless of session count
+PASS Current-year observations never enter prior-year means or sample counts
+PASS Year-start return uses the actual first current-year session, not December 31
+PASS Listing-year partial history counts once and is explicitly disclosed
+PASS Unavailable years are never manufactured to inflate the sample
+PASS Every exact threshold has one stage and nearby unrounded values retain their side
+PASS Five-stage partition is exhaustive and ordered over a finite positive-price sweep
+PASS Fewer than five annual samples and degenerate bands are unavailable, never fake neutral
+PASS As-of projection excludes all future prices, years and known future missing dates
+PASS Known stale data are rejected after seven calendar days, including year rollover
+PASS Known missing observations, large internal gaps and a late current baseline fail closed
+PASS Known gaps outside the available historical prefix do not contaminate an as-of result
+PASS Assets with no observations yet remain visible with unavailable metrics
+PASS Default as-of derives deterministically from a zoned retrieval timestamp
+PASS Malformed prices, dates, order and impossible arithmetic cannot produce finite-looking judgments
+PASS Malformed or inconsistent asset contracts fail before rendering a misleading table
+PASS Equivalent positive unit changes preserve the calculated ranges and stages
+PASS Input prices and provenance remain unmodified
+PASS A fresh year-end close on New Year’s Day is correctly unavailable before the first session
+PASS Published all-asset history preserves the reviewed 2026-10-23 sample years and first-session baselines after refresh
+Asset comparison: 23 checks passed.
+PASS BTC uses complete UTC calendar days, includes leap days, and never borrows exchange-session rules
+✔ tests/asset-comparison.test.mjs (0.912799ms)
+✔ MSTR consumes the same seeded BTC engine path in every economic condition (1791.050966ms)
+✔ ETH includes every future calendar day from the exact observed anchor (7.764427ms)
+✔ ETH uses coherent shared residuals while keeping economic conditions separate from outcomes (1.932752ms)
+✔ ETH provenance records only post-Merge blocks available by the equity cutoff (0.870145ms)
+✔ appended or modified future ETH observations cannot change a frozen forecast (13.713521ms)
+✔ pre-Merge price history is excluded from ETH residual estimation (12.758156ms)
+✔ fixed seeds reproduce ETH paths and horizon changes preserve the earlier prefix (42.53539ms)
+✔ missing post-Merge days and too-short ETH samples are not filled or silently substituted (2.742666ms)
+✔ asset histories must contain an exact cutoff close rather than borrowing a later day (2.651318ms)
+✔ malformed, duplicate, sparse, reordered and conflicting dated rows fail at the boundary (2.590717ms)
+✔ invalid prices and constant returns cannot invent future ETH variation (5.548547ms)
+✔ wrong assets and uncompleted raw exchange archives cannot enter ETH simulation (0.319904ms)
+✔ symbol, horizon, seed and cutoff are explicit bounded inputs (0.374226ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2641.533442

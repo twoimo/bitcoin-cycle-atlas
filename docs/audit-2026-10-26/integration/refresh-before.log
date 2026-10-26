@@ -1,0 +1,79 @@
+PASS Public labels and operational thresholds are explicit and stable
+PASS Average fall is year-start-to-low, separately from ordered MDD
+PASS A trough before a later high cannot become a peak-to-trough drawdown
+PASS Historical means weight each observed year equally regardless of session count
+PASS Current-year observations never enter prior-year means or sample counts
+PASS Year-start return uses the actual first current-year session, not December 31
+PASS Listing-year partial history counts once and is explicitly disclosed
+PASS Unavailable years are never manufactured to inflate the sample
+PASS Every exact threshold has one stage and nearby unrounded values retain their side
+PASS Five-stage partition is exhaustive and ordered over a finite positive-price sweep
+PASS Fewer than five annual samples and degenerate bands are unavailable, never fake neutral
+PASS As-of projection excludes all future prices, years and known future missing dates
+PASS Known stale data are rejected after seven calendar days, including year rollover
+PASS Known missing observations, large internal gaps and a late current baseline fail closed
+PASS Known gaps outside the available historical prefix do not contaminate an as-of result
+PASS Assets with no observations yet remain visible with unavailable metrics
+PASS Default as-of derives deterministically from a zoned retrieval timestamp
+PASS Malformed prices, dates, order and impossible arithmetic cannot produce finite-looking judgments
+PASS Malformed or inconsistent asset contracts fail before rendering a misleading table
+PASS Equivalent positive unit changes preserve the calculated ranges and stages
+PASS Input prices and provenance remain unmodified
+PASS A fresh year-end close on New Year’s Day is correctly unavailable before the first session
+✖ tests/asset-comparison.test.mjs (1.339453ms)
+✔ MSTR consumes the same seeded BTC engine path in every economic condition (1883.709308ms)
+✔ ETH includes every future calendar day from the exact observed anchor (10.317388ms)
+✔ ETH uses coherent shared residuals while keeping economic conditions separate from outcomes (2.725525ms)
+✔ ETH provenance records only post-Merge blocks available by the equity cutoff (1.504262ms)
+✖ appended or modified future ETH observations cannot change a frozen forecast (6.837004ms)
+✔ pre-Merge price history is excluded from ETH residual estimation (19.475623ms)
+✔ fixed seeds reproduce ETH paths and horizon changes preserve the earlier prefix (51.913728ms)
+✔ missing post-Merge days and too-short ETH samples are not filled or silently substituted (3.815131ms)
+✔ asset histories must contain an exact cutoff close rather than borrowing a later day (2.943325ms)
+✔ malformed, duplicate, sparse, reordered and conflicting dated rows fail at the boundary (5.888683ms)
+✔ invalid prices and constant returns cannot invent future ETH variation (4.304555ms)
+✔ wrong assets and uncompleted raw exchange archives cannot enter ETH simulation (0.35794ms)
+✔ symbol, horizon, seed and cutoff are explicit bounded inputs (0.585344ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 12
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2364.664281
+
+✖ failing tests:
+
+test at tests/asset-comparison.test.mjs:1:1
+✖ tests/asset-comparison.test.mjs (1.339453ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '2026-10-24'
+  - '2026-10-23'
+              ^
+  
+      at file:///tmp/bca-refresh-replay/tests/asset-comparison.test.mjs:295:91
+      at check (file:///tmp/bca-refresh-replay/tests/asset-comparison.test.mjs:8:28)
+      at file:///tmp/bca-refresh-replay/tests/asset-comparison.test.mjs:289:1 {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '2026-10-24',
+    expected: '2026-10-23',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/treasury-asset-paths.test.mjs:94:1
+✖ appended or modified future ETH observations cannot change a frozen forecast (6.837004ms)
+  RangeError: Daily history must be strictly chronological without duplicates
+      at dailyRows (file:///tmp/bca-refresh-replay/dist/treasury-asset-paths.js:39:52)
+      at buildTreasuryAssetPaths (file:///tmp/bca-refresh-replay/dist/treasury-asset-paths.js:184:16)
+      at TestContext.<anonymous> (file:///tmp/bca-refresh-replay/tests/treasury-asset-paths.test.mjs:97:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

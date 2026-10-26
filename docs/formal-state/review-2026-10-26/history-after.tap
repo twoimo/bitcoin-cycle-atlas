@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: zoom-out crosses the original 180-bar snapshot and loads real older candles without changing interval
+ok 1 - zoom-out crosses the original 180-bar snapshot and loads real older candles without changing interval
+  ---
+  duration_ms: 23.740588
+  type: 'test'
+  ...
+# Subtest: 30m and 4h history uses only complete source groups and at most 288 source bars per page
+ok 2 - 30m and 4h history uses only complete source groups and at most 288 source bars per page
+  ---
+  duration_ms: 14.998107
+  type: 'test'
+  ...
+# Subtest: empty provider pages are remembered and source gaps remain absent without repeated requests
+ok 3 - empty provider pages are remembered and source gaps remain absent without repeated requests
+  ---
+  duration_ms: 3.445012
+  type: 'test'
+  ...
+# Subtest: history download is sequential and coalesces new gestures onto its latest requested viewport
+ok 4 - history download is sequential and coalesces new gestures onto its latest requested viewport
+  ---
+  duration_ms: 4.326293
+  type: 'test'
+  ...
+# Subtest: interval cancellation drops late history responses and never publishes stale rows
+ok 5 - interval cancellation drops late history responses and never publishes stale rows
+  ---
+  duration_ms: 3.607557
+  type: 'test'
+  ...
+# Subtest: 429 preserves displayed data and cannot create an automatic retry loop
+ok 6 - 429 preserves displayed data and cannot create an automatic retry loop
+  ---
+  duration_ms: 1.506845
+  type: 'test'
+  ...
+# Subtest: a timed-out history page keeps the saved chart and clears loading state
+ok 7 - a timed-out history page keeps the saved chart and clears loading state
+  ---
+  duration_ms: 6.21204
+  type: 'test'
+  ...
+# Subtest: a new short gesture still obeys the shared request throttle and can be cancelled before HTTP starts
+ok 8 - a new short gesture still obeys the shared request throttle and can be cancelled before HTTP starts
+  ---
+  duration_ms: 1.62237
+  type: 'test'
+  ...
+# Subtest: forced refresh can refill the existing past viewport using the newer navigation baseline
+ok 9 - forced refresh can refill the existing past viewport using the newer navigation baseline
+  ---
+  duration_ms: 5.221204
+  type: 'test'
+  ...
+# Subtest: BTC-USD: explicit refresh releases history backoff when recent candles fall back to retained data
+ok 10 - BTC-USD: explicit refresh releases history backoff when recent candles fall back to retained data
+  ---
+  duration_ms: 2.018117
+  type: 'test'
+  ...
+# Subtest: ETH-USD: explicit refresh releases history backoff when recent candles fall back to retained data
+ok 11 - ETH-USD: explicit refresh releases history backoff when recent candles fall back to retained data
+  ---
+  duration_ms: 1.676922
+  type: 'test'
+  ...
+# Subtest: older panning keeps a bounded cache, every requested source bar, and the Reset snapshot
+ok 12 - older panning keeps a bounded cache, every requested source bar, and the Reset snapshot
+  ---
+  duration_ms: 70.36209
+  type: 'test'
+  ...
+# Subtest: checked coverage merges overlap and queries only the missing half-open windows
+ok 13 - checked coverage merges overlap and queries only the missing half-open windows
+  ---
+  duration_ms: 0.412092
+  type: 'test'
+  ...
+# Subtest: checked empty-window metadata is evicted with the time cache instead of growing across distant pans
+ok 14 - checked empty-window metadata is evicted with the time cache instead of growing across distant pans
+  ---
+  duration_ms: 3.303128
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 170.906169
