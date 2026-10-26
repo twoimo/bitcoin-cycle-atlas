@@ -41,6 +41,8 @@
 #data-view .asset-col-ytd { width: 120px; }
 #data-view .asset-col-judgment { width: 120px; }
 #data-view .asset-comparison-table th, #data-view .asset-comparison-table td { border-right: 0; border-bottom: 1px solid var(--asset-grid); padding: 4px 10px; height: 40px; box-sizing: border-box; vertical-align: middle; text-align: center; line-height: 1.45; }
+/* Expand only body rows to fill the viewport; native cell minima preserve readability. */
+#data-view .asset-comparison-table tbody tr[data-asset-symbol] { height: var(--asset-fill-row-height, 40px); }
 #data-view .asset-comparison-table tr > :last-child { border-right: 0; }
 #data-view .asset-comparison-table tbody tr:last-child > th, #data-view .asset-comparison-table tbody tr:last-child > td { border-bottom: 0; }
 #data-view .asset-comparison-table thead th { position: sticky; top: 0; z-index: 3; height: 54px; padding: 7px; color: var(--asset-muted); background: var(--surface); font-size: 12px; font-weight: 500; border-bottom: 1px solid var(--border); line-height: 1.5; }

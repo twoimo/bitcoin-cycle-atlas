@@ -154,12 +154,15 @@ export function validateAssetOutcomeIndex(index){
 }
 export async function verifyAssetOutcomeArchive(index,snapshots,evaluations,records){
   validateAssetOutcomeIndex(index);
+  const indexedSnapshotIds=new Set(index.observations.map(entry=>entry.id));
   for(const entry of index.observations){
     const snapshot=snapshots[entry.id];await verifyAssetOutcomeSnapshot(snapshot);
     if(json(assetOutcomeSnapshotEntry(snapshot))!==json(entry))throw new Error('Outcome snapshot index mismatch');
   }
   for(const entry of index.evaluations){
-    const evaluation=evaluations[entry.id];await verifyAssetOutcomeEvaluation(evaluation,records,snapshots);
+    const evaluation=evaluations[entry.id];
+    if(!Array.isArray(evaluation?.observationSnapshotIds)||evaluation.observationSnapshotIds.some(id=>!indexedSnapshotIds.has(id)))throw new Error('Outcome evaluation references an unindexed snapshot');
+    await verifyAssetOutcomeEvaluation(evaluation,records,snapshots);
     if(json(assetOutcomeEvaluationEntry(evaluation))!==json(entry))throw new Error('Outcome evaluation index mismatch');
   }
   return {status:'verified',observations:index.observations.length,evaluations:index.evaluations.length,forecastRecordsChanged:false};

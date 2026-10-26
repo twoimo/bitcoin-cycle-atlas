@@ -223,10 +223,23 @@ export function summarizeEthereumComparison(cases,{horizons=ETH_COMPARISON_POLIC
   return {summaries,common,pairwise,rankingAcrossDifferentOriginSets:false};
 }
 
+// Historical comparison can retain completed earlier origins when today's BTC
+// close is absent. The strict reader still validates the entire source sequence;
+// each BTC-dependent candidate separately requires its exact origin close.
+function lastBtcObservationThrough(history,asOf){
+  const raw=Array.isArray(history)?history:history?.prices;
+  if(!Array.isArray(raw))return asOf;
+  for(let index=raw.length-1;index>=0;index--){
+    const row=raw[index],label=Array.isArray(row)?row[0]:row?.date;
+    if(typeof label==='string'&&label.slice(0,10)<=asOf)return label.slice(0,10);
+  }
+  return asOf;
+}
+
 export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapshots=[],issuedAtByOrigin={}}={}, {asOf}={}) {
   utcDay(asOf);
   if(!issuedAtByOrigin||typeof issuedAtByOrigin!=='object'||Array.isArray(issuedAtByOrigin))throw new TypeError('issuedAtByOrigin must map UTC origins to actual issue timestamps');
-  const ethRaw=readAssetDailyRows(ethHistory,'ETH',asOf),btcRaw=readAssetDailyRows(btcHistory,'BTC',asOf);
+  const ethRaw=readAssetDailyRows(ethHistory,'ETH',asOf),btcRaw=readAssetDailyRows(btcHistory,'BTC',lastBtcObservationThrough(btcHistory,asOf));
   const e=continuousSuffix(ethRaw),b=continuousSuffix(btcRaw),eligible=firstEligibleSegment(ethRaw,ETH_COMPARISON_POLICY.minimumHistoryDays);
   if(!eligible)throw new RangeError('ETH comparison needs 730 contiguous completed history days');
   const rows=withPriceProvenance(ethRaw.slice(eligible.startIndex),ethHistory,'ETH'),btcRows=withPriceProvenance(btcRaw,btcHistory,'BTC'),horizons=ETH_COMPARISON_POLICY.horizons;

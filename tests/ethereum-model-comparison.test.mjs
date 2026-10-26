@@ -212,3 +212,27 @@ test('mature missing ETH or BTC target observations are not future pending targe
     assert.equal(gap.current.candidates.flat.status,'ready');
   }
 });
+
+test('a missing latest BTC close preserves completed origins and marks only affected paired results unavailable',()=>{
+  const {eth,btc}=fixture('2020-01-01',1377),asOf=eth.at(-1).date,origin=eth[1010].date;
+  const base=runEthereumModelComparison({ethHistory:eth,btcHistory:btc},{asOf});
+  const missing=runEthereumModelComparison({ethHistory:eth,btcHistory:btc.slice(0,-1)},{asOf});
+  assert.deepEqual(missing.cases.filter(r=>r.origin===origin),base.cases.filter(r=>r.origin===origin));
+  assert.deepEqual(missing.relativeStrength.cases.filter(r=>r.origin===origin),base.relativeStrength.cases.filter(r=>r.origin===origin));
+  assert.deepEqual(missing.origins.find(r=>r.origin===origin),base.origins.find(r=>r.origin===origin));
+  for(const id of ['flat','shrunkenTrend'])assert.equal(missing.current.candidates[id].status,'ready');
+  for(const id of ['btcLinked','btcTransfer'])assert.equal(missing.current.candidates[id].status,'unavailable');
+  const targetOrigin=eth[1346].date;
+  const paired=missing.relativeStrength.cases.find(r=>r.origin===targetOrigin&&r.horizonDays===30);
+  assert.equal(paired.targetDate,asOf);assert.equal(paired.actual,null);assert.equal(paired.status,'missing-paired-close');
+  assert.equal(missing.cases.find(r=>r.origin===targetOrigin&&r.horizonDays===30).actual,eth.at(-1).price);
+  assert.equal(missing.data.btcObservations,btc.length-1);
+});
+
+test('accepting a missing last BTC close does not hide malformed or duplicated retained observations',()=>{
+  const {eth,btc}=fixture('2020-01-01',1377),asOf=eth.at(-1).date;
+  const retained=btc.slice(0,-1);
+  assert.throws(()=>runEthereumModelComparison({ethHistory:eth,btcHistory:[...retained.slice(0,501),retained[500],...retained.slice(501)]},{asOf}),/chronological/);
+  assert.throws(()=>runEthereumModelComparison({ethHistory:eth,btcHistory:retained.map((r,i)=>i===500?{...r,price:0}:r)},{asOf}),/positive/);
+  assert.throws(()=>runEthereumModelComparison({ethHistory:eth,btcHistory:retained.map((r,i)=>i===500?{...r,time:r.epochDay*86400+1}:r)},{asOf}),/timestamp conflicts/);
+});

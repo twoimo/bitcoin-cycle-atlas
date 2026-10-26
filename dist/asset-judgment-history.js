@@ -1,5 +1,5 @@
 import { utcDay, dateFromDay, validateDataset } from './cycle-engine.js?v=1.29.0';
-import { ASSET_JUDGMENTS, ASSET_COMPARISON_VERSION, comparisonAsOf, comparisonPercentage as pct, comparisonMean as mean, classifyAssetComparison as classify, comparisonCoverageSummary } from './asset-comparison.js?v=1.29.0';
+import { ASSET_JUDGMENTS, ASSET_COMPARISON_VERSION, comparisonAsOf, comparisonAssetName, comparisonPercentage as pct, comparisonMean as mean, classifyAssetComparison as classify, comparisonCoverageSummary } from './asset-comparison.js?v=1.29.0';
 
 export const HISTORY_KIND = 'reconstructed';
 export const HISTORY_NOTE = '현재 보관 원자료 버전으로 재계산한 이력입니다. 당시 운영 판단·당시 공급자 원본·거래 가능 시점을 복원한 기록이 아닙니다.';
@@ -62,7 +62,7 @@ export function createAssetJudgmentHistory(bundle, { endDate, sourceVersion = ''
       } catch { globalErrorDay = Math.min(globalErrorDay, point.epochDay); }
       prior = point;
     }
-    const info = Object.freeze({ symbol:asset.symbol, name:asset.name, group:asset.group, category:asset.category, currency:asset.currency || 'USD', firstDate:prices[0]?.date ?? null, lastDate:prices.at(-1)?.date ?? null, calendar,
+    const info = Object.freeze({ symbol:asset.symbol, name:comparisonAssetName(asset), group:asset.group, category:asset.category, currency:asset.currency || 'USD', firstDate:prices[0]?.date ?? null, lastDate:prices.at(-1)?.date ?? null, calendar,
       source:Object.freeze({name:meta.sourceName ?? '',url:meta.sourceUrl ?? meta.source ?? '',priceDefinition:meta.priceDefinition ?? '',currency:asset.currency,retrievedAt:meta.retrievedAt ?? bundle.retrievedAt ?? null,firstDate:meta.firstDate ?? all[0].date,lastDate:meta.lastDate ?? all.at(-1).date,count:meta.count ?? all.length,responseSha256:meta.responseSha256 ?? meta.rawSha256 ?? null}) });
     function at(day, date) {
       const pos = upper(prices, day, p=>p.epochDay)-1, latest = prices[pos] ?? null, year = yearOf(date);

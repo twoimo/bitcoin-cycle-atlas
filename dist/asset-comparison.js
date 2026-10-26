@@ -1,5 +1,8 @@
 import { utcDay, validateDataset } from './cycle-engine.js?v=1.29.0';
 
+// Localized display identity; source archives and saved historical records keep their bytes.
+export function comparisonAssetName(asset) { return asset.symbol === 'BTC' ? '비트코인' : asset.name; }
+
 export const ASSET_COMPARISON_VERSION = 1;
 export const MIN_SAMPLE_YEARS = 5;
 export const MAX_STALE_DAYS = 7;
@@ -176,7 +179,7 @@ export function buildAssetComparison(bundle, { asOfDate } = {}) {
     const coverage = coverageFor(prices, meta, periods, year, asOfDay);
     const judgment = classify({ sampleYears, meanRisePct, meanFallPct, ytdPct, current, latest, year, asOfDay, coverage });
     return {
-      symbol: asset.symbol, name: asset.name, group: asset.group, category: asset.category, currency: asset.currency,
+      symbol: asset.symbol, name: comparisonAssetName(asset), group: asset.group, category: asset.category, currency: asset.currency,
       sampleYears, sampleStartYear: samples[0]?.year ?? null, sampleEndYear: samples.at(-1)?.year ?? null,
       samplePartialFirstYear: Boolean(samples.length && coverage.firstYearPartial),
       firstPartialStartDate: samples.length ? coverage.firstPartialStartDate : null,

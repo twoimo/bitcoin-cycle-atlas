@@ -76,7 +76,7 @@ async function screenshot(cdp,name,receipt){
   const bytes=Buffer.from(result.data,'base64');
   await writeFile(resolve(out,name),bytes);
   receipt.screenshots.push({file:name,bytes:bytes.length,sha256:hash(bytes)});
-  if(name==='data-320-start.png'||name==='eth-320-loaded.png'||name==='bmnr-320-clock.png'||name==='zero-fixture-320.png'||/^(ethusd|bmnr|mstr)-journal-320-(base|stress)\.png$/.test(name)){
+  if(name==='data-fill-1620x1008.png'||name==='data-fill-1920x1440.png'||name==='data-320-start.png'||name==='eth-320-loaded.png'||name==='bmnr-320-clock.png'||name==='zero-fixture-320.png'||/^(ethusd|bmnr|mstr)-journal-320-(base|stress)\.png$/.test(name)){
     const size=30000,total=Math.ceil(result.data.length/size);
     for(let index=0;index<total;index++)console.log('ETH_BROWSER_IMAGE_CHUNK '+JSON.stringify({name,index,total,data:result.data.slice(index*size,(index+1)*size)}));
   }
@@ -104,9 +104,9 @@ async function bounds(cdp,selector){
       background:style.backgroundColor,display:style.display,visibility:style.visibility,open:el.open??null,text:el.textContent};
   },selector);
 }
-function visibleBounds(b,width){
+function visibleBounds(b,width,viewportHeight=height){
   assert.ok(b.width>0&&b.height>0&&b.display!=='none'&&b.visibility!=='hidden','Element must be visible: '+b.selector);
-  assert.ok(b.left>=-1&&b.right<=width+1&&b.top>=-1&&b.bottom<=height+1,'Element exceeds viewport: '+JSON.stringify(b));
+  assert.ok(b.left>=-1&&b.right<=width+1&&b.top>=-1&&b.bottom<=viewportHeight+1,'Element exceeds viewport: '+JSON.stringify(b));
 }
 function dark(color,label){
   const m=color.match(/^rgba?\(([\d.]+)[, ]+([\d.]+)[, ]+([\d.]+)(?:[, /]+([\d.]+))?\)$/);
@@ -114,6 +114,7 @@ function dark(color,label){
   assert.ok(m.slice(1,4).every(n=>Number(n)<90)&&Number(m[4]??1)>=.9,'Dark opaque background required: '+label+' '+color);
 }
 async function dataCase(cdp,width,receipt){
+  const imagePrefix=receipt.height===900?'data-'+width:'data-'+width+'x'+receipt.height;
   await until(()=>evaluate(cdp,()=>document.querySelectorAll('#data-body tr[data-asset-symbol]').length===18),'18 asset rows');
   await settled(cdp);
   receipt.layout=await evaluate(cdp,()=>{
@@ -122,13 +123,13 @@ async function dataCase(cdp,width,receipt){
       const r=el.getBoundingClientRect();return {id:el.id||el.className||el.tagName,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};
     });
     return {width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
-      symbols:rows.map(r=>r.dataset.assetSymbol),judgments:rows.map(r=>r.querySelector('.asset-judgment')?.textContent),controls,headingHeight:document.querySelector('.daily-heading').getBoundingClientRect().height,headingBackground:getComputedStyle(document.querySelector('.daily-heading')).backgroundColor,
+      symbols:rows.map(r=>r.dataset.assetSymbol),btcName:rows[0].querySelector('.asset-name-label').textContent,judgments:rows.map(r=>r.querySelector('.asset-judgment')?.textContent),controls,headingHeight:document.querySelector('.daily-heading').getBoundingClientRect().height,headingBackground:getComputedStyle(document.querySelector('.daily-heading')).backgroundColor,
       bodyBackground:getComputedStyle(rows[0].querySelector('.asset-name')).backgroundColor,
       coarse:matchMedia('(pointer:coarse)').matches};
   });
   const layout=receipt.layout;
   assert.equal(layout.width,width);assert.ok(layout.scrollWidth<=width+1,'Page horizontal overflow');
-  assert.equal(layout.symbols.length,18);assert.equal(new Set(layout.symbols).size,18);assert.equal(layout.symbols[0],'BTC');
+  assert.equal(layout.symbols.length,18);assert.equal(new Set(layout.symbols).size,18);assert.equal(layout.symbols[0],'BTC');assert.equal(layout.btcName,'비트코인');
   assert.ok(layout.judgments.every(j=>['적극 매수','분할 매수','중립','분할 매도','적극 매도','판단 보류'].includes(j)),'Unknown or missing comparison judgment');
   assert.equal(layout.controls.length,6,'Expected back, title and four action controls');
   assert.ok(layout.headingHeight<=64,'Heading must remain one compact toolbar row');
@@ -163,16 +164,103 @@ async function dataCase(cdp,width,receipt){
     if(fraction===0)assert.ok(sticky.scrollLeft<=1,'Table did not reach start');
     if(fraction===1)assert.ok(Math.abs(sticky.scrollLeft-sticky.maxScroll)<=1,'Table did not reach end');
     dark(sticky.headerBackground,'sticky heading');dark(sticky.bodyBackground,'sticky body');
-    await screenshot(cdp,'data-'+width+'-'+(fraction===0?'start':fraction===1?'end':'middle')+'.png',receipt);
+    await screenshot(cdp,imagePrefix+'-'+(fraction===0?'start':fraction===1?'end':'middle')+'.png',receipt);
   }
   await click(cdp,'#daily-method-open');
   receipt.dialog=await bounds(cdp,'#daily-method-dialog');
-  assert.equal(receipt.dialog.open,true);visibleBounds(receipt.dialog,width);dark(receipt.dialog.background,'data dialog');
+  assert.equal(receipt.dialog.open,true);visibleBounds(receipt.dialog,width,receipt.height);dark(receipt.dialog.background,'data dialog');
   assert.ok(receipt.dialog.text.includes('자산 비교표'),'Expected actual method content');
   for(const judgment of ['적극 매수','분할 매수','중립','분할 매도','적극 매도'])assert.ok(receipt.dialog.text.includes(judgment),'Missing judgment definition '+judgment);
-  await screenshot(cdp,'data-'+width+'-method.png',receipt);
+  await screenshot(cdp,imagePrefix+'-method.png',receipt);
   await click(cdp,'#daily-method-close');
   assert.equal((await bounds(cdp,'#daily-method-dialog')).open,false);
+  if(receipt.responsive)await responsiveDataCase(cdp,receipt);
+}
+
+
+function readDataGeometry(){
+  const panel=document.querySelector('#asset-table-scroll'),table=panel.querySelector('.asset-comparison-table');
+  const rows=[...table.tBodies[0].querySelectorAll('tr[data-asset-symbol]')];
+  const rect=el=>{const b=el.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};};
+  const panelBox=rect(panel),rowBoxes=rows.map(rect);
+  return {width:innerWidth,height:innerHeight,coarse:matchMedia('(pointer:coarse)').matches,
+    documentWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,
+    symbols:rows.map(r=>r.dataset.assetSymbol),btcName:rows[0].querySelector('.asset-name-label').textContent,
+    root:rect(document.querySelector('#data-view')),panel:panelBox,header:rect(table.tHead),
+    clientHeight:panel.clientHeight,scrollHeight:panel.scrollHeight,scrollTop:panel.scrollTop,
+    clientBottom:panelBox.top+panel.clientTop+panel.clientHeight,clientTop:panelBox.top+panel.clientTop,
+    rows:rowBoxes,buttons:[...table.tBodies[0].querySelectorAll('.asset-identity,.asset-judgment')].map(rect),
+    pinnedHead:rect(table.querySelector('.asset-mobile-name-header')),pinnedBody:rect(rows[0].querySelector('.asset-name')),
+    groups:[...table.tBodies[0].querySelectorAll('.asset-group')].map(cell=>{
+      const first=rows.indexOf(cell.parentElement),last=first+cell.rowSpan-1;
+      return {first,last,span:cell.rowSpan,visible:getComputedStyle(cell).display!=='none',cell:rect(cell),firstRow:rowBoxes[first],lastRow:rowBoxes[last]};
+    })};
+}
+function assertDataGeometry(g,{width,height,fill}){
+  assert.equal(g.width,width);assert.equal(g.height,height);
+  assert.ok(Math.max(g.documentWidth,g.bodyWidth)<=width+1,'Body horizontal overflow');
+  assert.equal(g.symbols.length,18);assert.equal(new Set(g.symbols).size,18);assert.equal(g.symbols[0],'BTC');assert.equal(g.btcName,'비트코인');
+  assert.ok(Math.abs(g.header.height-54)<=1,'Header expanded instead of body rows');
+  assert.ok(Math.abs(g.root.bottom-height)<=2,'Data view no longer fills the viewport');
+  // The inner client area may be shorter by its horizontal scrollbar; the panel itself reaches the bottom.
+  assert.ok(Math.abs(g.panel.bottom-height)<=3,'Table viewport leaves unused bottom space');
+  assert.ok(g.rows.every(r=>r.height>=(g.coarse?48:40)-1),'Body rows were compressed');
+  const buttonMin=g.coarse||width<=760?44:30;
+  assert.ok(g.buttons.every(b=>b.height>=buttonMin-1),'Reading or touch target compressed');
+  assert.ok(Math.abs(g.pinnedHead.left-g.pinnedBody.left)<=1,'Pinned column misalignment');
+  assert.deepEqual(g.groups.map(x=>x.span),[13,4,1]);assert.deepEqual(g.groups.map(x=>x.first),[0,13,17]);
+  for(const group of g.groups.filter(x=>x.visible)){
+    assert.ok(Math.abs(group.cell.top-group.firstRow.top)<=1,'Rowspan starts outside its group');
+    assert.ok(Math.abs(group.cell.bottom-group.lastRow.bottom)<=1,'Rowspan ends outside its group');
+  }
+  if(fill){
+    assert.ok(Math.abs(g.rows.at(-1).bottom-g.clientBottom)<=2,'Unused space below final asset');
+    assert.ok(g.scrollHeight<=g.clientHeight+2,'Tall viewport has unnecessary vertical scrolling');
+  }else assert.ok(g.scrollHeight>g.clientHeight+1,'Short viewport must retain internal scrolling');
+}
+async function resetDataScroll(cdp){
+  await evaluate(cdp,()=>{const p=document.querySelector('#asset-table-scroll');p.scrollLeft=0;p.scrollTop=0;});
+  await settled(cdp);
+}
+async function responsiveDataCase(cdp,receipt){
+  await resetDataScroll(cdp);
+  receipt.geometry=await evaluate(cdp,readDataGeometry);assertDataGeometry(receipt.geometry,receipt);
+  await screenshot(cdp,'data-fill-'+receipt.width+'x'+receipt.height+'.png',receipt);
+  if(!receipt.fill){
+    await evaluate(cdp,()=>{const p=document.querySelector('#asset-table-scroll');p.scrollTop=p.scrollHeight-p.clientHeight;});
+    await settled(cdp);
+    const end=await evaluate(cdp,readDataGeometry);
+    assert.ok(end.scrollTop>0,'Internal vertical scroll did not move');
+    assert.ok(Math.abs(end.rows.at(-1).bottom-end.clientBottom)<=2,'Final asset cannot be reached');
+    assert.ok(Math.abs(end.pinnedHead.top-end.clientTop)<=1,'Header no longer sticks during vertical scrolling');
+    receipt.geometry.verticalEnd={scrollTop:end.scrollTop,finalRowBottom:end.rows.at(-1).bottom,clientBottom:end.clientBottom,headerTop:end.pinnedHead.top};
+    await screenshot(cdp,'data-scroll-end-'+receipt.width+'x'+receipt.height+'.png',receipt);
+  }
+  if(!receipt.resize)return;
+  await resetDataScroll(cdp);
+  await evaluate(cdp,()=>{
+    const table=document.querySelector('.asset-comparison-table'),body=table.tBodies[0];
+    globalThis.__assetResizeAudit={root:document.querySelector('#data-view'),panel:document.querySelector('#asset-table-scroll'),
+      table,head:table.tHead,body,rows:[...body.querySelectorAll('tr[data-asset-symbol]')],bodyMarkup:body.innerHTML,timeOrigin:performance.timeOrigin};
+  });
+  const resourcesBefore=structuredClone(receipt.dataResourceRequests);receipt.resize=[];
+  for(const target of [{width:900,height:430,fill:false},{width:1620,height:1008,fill:true}]){
+    await cdp.send('Emulation.setDeviceMetricsOverride',{width:target.width,height:target.height,deviceScaleFactor:1,mobile:false});
+    await settled(cdp);await resetDataScroll(cdp);
+    const geometry=await evaluate(cdp,readDataGeometry);assertDataGeometry(geometry,target);
+    const identity=await evaluate(cdp,()=>{
+      const prior=globalThis.__assetResizeAudit,table=document.querySelector('.asset-comparison-table');
+      const rows=[...table.tBodies[0].querySelectorAll('tr[data-asset-symbol]')];
+      return {samePage:prior.timeOrigin===performance.timeOrigin,root:prior.root===document.querySelector('#data-view'),
+        panel:prior.panel===document.querySelector('#asset-table-scroll'),table:prior.table===table,head:prior.head===table.tHead,
+        body:prior.body===table.tBodies[0],rows:rows.length===prior.rows.length&&rows.every((row,index)=>row===prior.rows[index]),
+        content:prior.bodyMarkup===table.tBodies[0].innerHTML};
+    });
+    assert.ok(Object.values(identity).every(Boolean),'Resize replaced cached board DOM: '+JSON.stringify(identity));
+    assert.deepEqual(receipt.dataResourceRequests,resourcesBefore,'Resize re-requested comparison resources');
+    receipt.resize.push({...target,geometry,identity});
+    await screenshot(cdp,'data-resize-'+target.width+'x'+target.height+'.png',receipt);
+  }
 }
 
 async function journalCase(cdp,width,receipt,symbol,archive){
@@ -403,7 +491,7 @@ async function main(){
   assert.equal(typeof WebSocket,'function','Native WebSocket is required');
   report.sourceCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
   report.sourceHashes={};
-  for(const path of ['dist/index.html','dist/site-entry.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json']){
+  for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json']){
     report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   }
   const fonts=execFileSync('fc-list',[':lang=ko'],{encoding:'utf8'}).trim();
@@ -471,9 +559,15 @@ async function main(){
   const fixtureBytes=Buffer.from(JSON.stringify({synthetic:true,description:'Browser-only zero-valued reconstructed path; no prospective forecast or economic observation.',index:syntheticIndex,record:syntheticZeroRecord,snapshotId:snapshot.id},null,2)+'\n');
   await writeFile(resolve(out,'zero-fixture.json'),fixtureBytes);
   report.syntheticFixture={file:'zero-fixture.json',bytes:fixtureBytes.length,sha256:hash(fixtureBytes),recordId:syntheticZeroRecord.id,snapshotId:snapshot.id};
-  for(const width of widths)for(const page of (width===320?['data','eth','bmnr','mstr','zero-fixture']:['data','eth','bmnr','mstr'])){
-
-    const receipt={page,width,height,status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[]};
+  const caseSpecs=widths.flatMap(width=>(width===320?['data','eth','bmnr','mstr','zero-fixture']:['data','eth','bmnr','mstr']).map(page=>({page,width,height:900,touch:width<=390})));
+  caseSpecs.push(
+    {page:'data',width:1620,height:1008,touch:false,responsive:true,fill:true,resize:true},
+    {page:'data',width:1920,height:1440,touch:false,responsive:true,fill:true},
+    {page:'data',width:900,height:430,touch:true,responsive:true,fill:false},
+    {page:'data',width:320,height:568,touch:true,responsive:true,fill:false});
+  for(const spec of caseSpecs){
+    const {page,width,height,touch}=spec;
+    const receipt={...spec,status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[],dataResourceRequests:[]};
     report.cases.push(receipt);let cdp,targetId;
     try{
       ({targetId}=await browser.send('Target.createTarget',{url:'about:blank'}));
@@ -482,7 +576,12 @@ async function main(){
       const urls=new Map(),optional=url=>/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(url||'');
       cdp.on('Runtime.exceptionThrown',event=>receipt.runtimeErrors.push(event.exceptionDetails));
       cdp.on('Runtime.consoleAPICalled',event=>{if(event.type==='error')receipt.runtimeErrors.push({type:'console.error',args:event.args});});
-      cdp.on('Network.requestWillBeSent',event=>urls.set(event.requestId,event.request.url));
+      cdp.on('Network.requestWillBeSent',event=>{
+        urls.set(event.requestId,event.request.url);
+        const url=new URL(event.request.url);
+        if(url.origin===base&&/\/(?:daily-data-view\.js|daily-data\.css|asset-comparison\.js|data\/asset-comparison\.json)$/.test(url.pathname))
+          receipt.dataResourceRequests.push({requestId:event.requestId,url:event.request.url});
+      });
       cdp.on('Network.responseReceived',event=>{if(event.response.status>=400)receipt.resourceErrors.push({url:event.response.url,status:event.response.status});});
       cdp.on('Network.loadingFailed',event=>{
         const url=urls.get(event.requestId)||'unknown';
@@ -491,8 +590,8 @@ async function main(){
       });
       await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');
       await cdp.send('Network.setBlockedURLs',{urls:['https://*']});
-      await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<=390});
-      await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:width<=390,maxTouchPoints:1});
+      await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:touch});
+      await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:touch,maxTouchPoints:1});
       await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'},{name:'prefers-color-scheme',value:'dark'}]});
       receipt.url=base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
@@ -508,7 +607,7 @@ async function main(){
       if(targetId)try{await browser.send('Target.closeTarget',{targetId});}catch(error){report.failures.push({page,width,cleanupError:errorText(error)});}
     }
   }
-  assert.equal(report.cases.length,21);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');
+  assert.equal(report.cases.length,25);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');
   report.status='passed';
 }
 try{await main();}catch(error){report.status='failed';report.error=errorText(error);process.exitCode=1;}
@@ -519,5 +618,5 @@ finally{
   if(server)await new Promise(resolve=>server.close(resolve));
   if(profile)try{await rm(profile,{recursive:true,force:true});}catch(error){report.cleanupError=errorText(error);}
   await mkdir(out,{recursive:true});await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
 }

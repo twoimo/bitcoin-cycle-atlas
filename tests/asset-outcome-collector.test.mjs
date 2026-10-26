@@ -29,7 +29,7 @@ test('one failed asset and a stale archive cannot block another already matured 
   assert.equal(json(records),before);assert.equal(result.evaluation.forecastRecordsChanged,false);
 });
 
-test('same bytes reuse their first retained receipt while a corrected source appends immutable evaluation history',async t=>{
+test('consecutive same bytes reuse their latest retained receipt while corrections append immutable history',async t=>{
   const directory=await mkdtemp(join(tmpdir(),'atlas-outcome-'));
   t.after(()=>rm(directory,{recursive:true,force:true}));
   let archive=emptyOutcomeArchive();
@@ -88,4 +88,72 @@ test('outcome transport binds original file bytes and emits reconstructable sour
   assert.equal(chunks.length,chunks[0].total);
   assert.deepEqual(JSON.parse(chunks.map(c=>c.text).join('')),transport);
   assert.ok(lines.some(l=>l.startsWith('ASSET_OUTCOME_FILE_MANIFEST ')));
+});
+
+test('a byte-identical rollback is a new acquisition after an intervening revision',async t=>{
+  const directory=await mkdtemp(join(tmpdir(),'atlas-outcome-rollback-'));t.after(()=>rm(directory,{recursive:true,force:true}));
+  const archive=emptyOutcomeArchive();
+  const take=async(sourceValue,evaluatedAt)=>{
+    const result=await collectAssetOutcomes({records:[eth.record],priorSnapshots:archive.snapshots,evaluator:syntheticOutcomeEvaluator,
+      clock:()=>evaluatedAt,sourceReader:async()=>sourceValue});
+    appendAssetOutcomeEvaluation(archive,result);await writeAssetOutcomeArchive(directory,archive,recordMap);return result;
+  };
+  const a=source('ETHUSD',2100,'2026-11-25T01:00:00.000Z');
+  const first=await take(a,'2026-11-25T02:00:00.000Z');
+  const second=await take(source('ETHUSD',2150,'2026-11-26T01:00:00.000Z'),'2026-11-26T02:00:00.000Z');
+  const retained=new Map(await Promise.all([...archive.texts.keys()].map(async path=>[path,await readFile(join(directory,path),'utf8')])));
+  const originalSnapshotId=first.attempts[0].snapshotId;
+  // Preserve A's exact original sourceDocument, including retrievedAt.
+  const rollback={...a,collectedAt:'2026-11-27T01:00:00.000Z',sourceUrl:a.sourceUrl.replace('c'.repeat(40),'d'.repeat(40))};
+  const third=await take(rollback,'2026-11-27T02:00:00.000Z');
+  assert.equal(third.attempts[0].status,'captured');assert.equal(third.evaluation.result.rows[0].actual,2100);
+  assert.notEqual(third.attempts[0].snapshotId,originalSnapshotId);
+  assert.equal(third.evaluation.result.rows[0].actualSource.collectedAt,rollback.collectedAt);
+  assert.equal(archive.index.observations.length,3);
+  assert.equal(archive.evaluations[first.evaluation.id].result.rows[0].actual,2100);
+  assert.equal(archive.evaluations[second.evaluation.id].result.rows[0].actual,2150);
+  for(const [path,bytes]of retained)assert.equal(await readFile(join(directory,path),'utf8'),bytes);
+  const fourth=await take({...rollback,collectedAt:'2026-11-28T01:00:00.000Z'},'2026-11-28T02:00:00.000Z');
+  assert.equal(fourth.attempts[0].status,'reused');assert.equal(fourth.attempts[0].snapshotId,third.attempts[0].snapshotId);
+  assert.equal(fourth.evaluation.result.rows[0].actual,2100);assert.equal(archive.index.observations.length,3);
+});
+
+test('new missing or altered serialized objects and unindexed snapshots cannot replace a valid index',async t=>{
+  for(const mode of ['missing-text','altered-text','unindexed-snapshot','extra-path']){
+    const directory=await mkdtemp(join(tmpdir(),'atlas-outcome-preflight-'));t.after(()=>rm(directory,{recursive:true,force:true}));
+    const archive=emptyOutcomeArchive();
+    const first=await collectAssetOutcomes({records:[eth.record],evaluator:syntheticOutcomeEvaluator,
+      clock:()=> '2026-11-25T02:00:00.000Z',sourceReader:async()=>source('ETHUSD',2100,'2026-11-25T01:00:00.000Z')});
+    appendAssetOutcomeEvaluation(archive,first);await writeAssetOutcomeArchive(directory,archive,recordMap);
+    const indexBefore=await readFile(join(directory,'index.json'),'utf8');
+    const second=await collectAssetOutcomes({records:[eth.record],priorSnapshots:archive.snapshots,evaluator:syntheticOutcomeEvaluator,
+      clock:()=> '2026-11-26T02:00:00.000Z',sourceReader:async()=>source('ETHUSD',2150,'2026-11-26T01:00:00.000Z')});
+    appendAssetOutcomeEvaluation(archive,second);
+    const evaluationPath=archive.index.evaluations.find(e=>e.id===second.evaluation.id).path;
+    if(mode==='missing-text')archive.texts.delete(evaluationPath);
+    if(mode==='altered-text'){
+      const altered=structuredClone(second.evaluation);altered.result.rows[0].actual=9999;
+      archive.texts.set(evaluationPath,json(altered));
+    }
+    if(mode==='unindexed-snapshot'){
+      const id=second.attempts[0].snapshotId;
+      archive.index.observations=archive.index.observations.filter(entry=>entry.id!==id);
+      archive.texts.delete('observations/'+id+'.json');
+      assert.ok(archive.snapshots[id]);assert.ok(second.evaluation.observationSnapshotIds.includes(id));
+    }
+    if(mode==='extra-path')archive.texts.set('not-indexed.json','{}');
+    await assert.rejects(writeAssetOutcomeArchive(directory,archive,recordMap),/serialized paths|Serialized outcome bytes|unindexed snapshot/);
+    assert.equal(await readFile(join(directory,'index.json'),'utf8'),indexBefore,mode);
+    const unchanged=await readAssetOutcomeArchive(directory,recordMap);
+    assert.equal(unchanged.index.evaluations.length,1,mode);
+    await assert.rejects(readFile(join(directory,evaluationPath),'utf8'),error=>error.code==='ENOENT',mode);
+  }
+});
+
+test('evaluation clock ordering uses normalized instants instead of differing timestamp spellings',async()=>{
+  const take=clock=>collectAssetOutcomes({records:[eth.record],evaluator:syntheticOutcomeEvaluator,clock,
+    sourceReader:async()=>source('ETHUSD',2100,'2026-11-25T01:00:00.001Z')});
+  await assert.rejects(take(()=> '2026-11-25T01:00:00Z'),/precedes its actual acquisition/);
+  const result=await take(()=> '2026-11-25T01:00:01Z');
+  assert.equal(result.evaluation.evaluatedAt,'2026-11-25T01:00:01.000Z');
 });

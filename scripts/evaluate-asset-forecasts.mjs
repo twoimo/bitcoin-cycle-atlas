@@ -4,6 +4,7 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {canonicalForecastJson} from '../dist/forecast-records.js';
+import {normalizeForecastTimestamp} from '../dist/forecast-information-time.js';
 import {ASSET_OUTCOME_VERSION,createAssetOutcomeSnapshot,createAssetOutcomeEvaluation,
   assetOutcomeSnapshotEntry,assetOutcomeEvaluationEntry,validateAssetOutcomeIndex,verifyAssetOutcomeArchive} from '../dist/asset-outcome-records.js';
 import {readAssetForecastArchive,assetFileIdentity} from './issue-asset-forecasts.mjs';
@@ -73,16 +74,19 @@ export async function collectAssetOutcomes({records,priorSnapshots={},sourceRead
     const item=acquired[index],symbol=symbols[index];
     if(item.status==='rejected'){const reason=message(item.reason);failures.push({symbol,reason});attempts.push({symbol,status:'failed',reason});continue;}
     const candidate=item.value.snapshot;
-    const reusable=Object.values(priorSnapshots).filter(old=>old.symbol===symbol&&
-      old.sourceDocument===candidate.sourceDocument&&old.sourceReceipt.sourceHash===candidate.sourceReceipt.sourceHash&&
-      old.sourceReceipt.publishedAt===candidate.sourceReceipt.publishedAt&&old.sourceReceipt.collectedAt<=candidate.sourceReceipt.collectedAt)
-      .sort((a,b)=>a.sourceReceipt.collectedAt.localeCompare(b.sourceReceipt.collectedAt)||a.id.localeCompare(b.id))[0];
+    const eligiblePrior=Object.values(priorSnapshots).filter(old=>old.symbol===symbol&&old.sourceReceipt.collectedAt<=candidate.sourceReceipt.collectedAt);
+    const latestCollectedAt=eligiblePrior.reduce((latest,old)=>old.sourceReceipt.collectedAt>latest?old.sourceReceipt.collectedAt:latest,'');
+    const latestPrior=eligiblePrior.filter(old=>old.sourceReceipt.collectedAt===latestCollectedAt);
+    const sameSource=old=>old.sourceDocument===candidate.sourceDocument&&old.sourceReceipt.sourceHash===candidate.sourceReceipt.sourceHash&&old.sourceReceipt.publishedAt===candidate.sourceReceipt.publishedAt;
+    // Only uninterrupted equal bytes reuse their receipt. A -> B -> A is a new vintage.
+    // Conflicting latest receipts remain visible to the evaluator's ambiguity check.
+    const reusable=latestPrior.length>0&&latestPrior.every(sameSource)?latestPrior.sort((a,b)=>a.id.localeCompare(b.id))[0]:null;
     const snapshot=reusable??candidate;snapshots[snapshot.id]=snapshot;
     attempts.push({symbol,status:reusable?'reused':'captured',snapshotId:snapshot.id,
       attemptCollectedAt:candidate.sourceReceipt.collectedAt,attemptSourceUrl:candidate.sourceReceipt.sourceUrl,
       sourceHash:candidate.sourceReceipt.sourceHash,retainedCollectedAt:snapshot.sourceReceipt.collectedAt});
   }
-  const evaluatedAt=clock();
+  const evaluatedAt=normalizeForecastTimestamp(clock(),'evaluatedAt');
   if(attempts.some(a=>a.attemptCollectedAt>evaluatedAt))throw new RangeError('Evaluation clock precedes its actual acquisition');
   const evaluation=await createAssetOutcomeEvaluation({records,observationSnapshots:Object.values(snapshots),evaluatedAt,evaluator,acquisitionFailures:failures});
   return {evaluation,snapshots,attempts,status:failures.length?'partial':'PASS'};
@@ -113,10 +117,27 @@ async function writeCurrent(directory,path,text){
 }
 export async function writeAssetOutcomeArchive(directory,archive,records){
   await verifyAssetOutcomeArchive(archive.index,archive.snapshots,archive.evaluations,records);
-  for(const [path,text]of archive.texts)await writeImmutable(directory,path,text);
-  await writeCurrent(directory,'index.json',json(archive.index));
+  if(!(archive.texts instanceof Map))throw new TypeError('Outcome archive serialized texts are required');
+  const expected=new Map([
+    ...archive.index.observations.map(entry=>[entry.path,archive.snapshots[entry.id]]),
+    ...archive.index.evaluations.map(entry=>[entry.path,archive.evaluations[entry.id]]),
+  ]);
+  if(archive.texts.size!==expected.size)throw new Error('Outcome serialized paths do not match the indexed objects');
+  const writes=[];
+  for(const [path,value]of expected){
+    const text=archive.texts.get(path);
+    if(typeof text!=='string')throw new Error('Missing serialized indexed outcome object: '+path);
+    let parsed;
+    try{parsed=JSON.parse(text);}catch{throw new Error('Invalid serialized indexed outcome JSON: '+path);}
+    if(!equal(parsed,value))throw new Error('Serialized outcome bytes differ from the verified object: '+path);
+    writes.push([path,text]);
+  }
+  // Capture validated strings and index before any write; preserve retained formatting.
+  const indexText=json(archive.index);
+  for(const [path,text]of writes)await writeImmutable(directory,path,text);
+  await writeCurrent(directory,'index.json',indexText);
   const saved=await readAssetOutcomeArchive(directory,records);
-  if(!equal(saved.index,archive.index))throw new Error('Outcome archive read-back mismatch');
+  if(json(saved.index)!==indexText)throw new Error('Outcome archive read-back mismatch');
 }
 export function assetOutcomeTransport(path,text){
   if(!path.startsWith('observations/'))return null;
