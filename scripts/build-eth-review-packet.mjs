@@ -85,6 +85,7 @@ export async function buildEthReviewPacket({
   seedPaths,evidencePaths=[],baselineCommit=null,dynamicResolutions=[],
   maximumPartBytes=180000,maximumBundleBytes=30000000,
 }={}){
+  if(!Number.isSafeInteger(maximumBundleBytes)||maximumBundleBytes<1024)throw new RangeError('Bundle byte limit must be a finite safe integer of at least 1024 bytes');
   const root=resolve(repositoryRoot),git=args=>execFileSync('git',args,{cwd:root,maxBuffer:maximumBundleBytes});
   if(!Array.isArray(seedPaths)||!seedPaths.length)throw new TypeError('Explicit nonempty seedPaths required');
   if(!Array.isArray(evidencePaths)||!Array.isArray(dynamicResolutions))throw new TypeError('Expected evidence and dynamic-resolution arrays');
@@ -140,12 +141,18 @@ export async function buildEthReviewPacket({
     entries.push({path:r.path,kind:r.kind,gitBlob:r.gitBlob??null,bytes:r.bytes,sha256:r.sha256,encoding,payloadBytes:payload.length});
     segments.push(Buffer.from('\nBEGIN FILE '+r.path+'\nKIND '+r.kind+'\nORIGINAL_BYTES '+r.bytes+'\nSHA256 '+r.sha256+'\nENCODING '+encoding+'\nPAYLOAD_BYTES '+payload.length+'\n\n'),payload,Buffer.from('\nEND FILE '+r.path+'\n'));
   }
-  const book=Buffer.concat(segments);if(book.length>maximumBundleBytes)throw new RangeError('Source book exceeds byte bound');
+  const bundleBytes=segments.reduce((total,segment)=>total+segment.length,0);
+  if(bundleBytes>maximumBundleBytes){
+    const error=new RangeError('Source book exceeds byte bound: '+bundleBytes+' > '+maximumBundleBytes+' bytes ('+entries.length+' entries)');
+    Object.assign(error,{code:'REVIEW_BUNDLE_TOO_LARGE',bundleBytes,maximumBundleBytes,entryCount:entries.length});
+    throw error;
+  }
+  const book=Buffer.concat(segments,bundleBytes);
   const parts=partitionReviewBook(book,maximumPartBytes);
   const manifest={
     schemaVersion:1,sourceCommit,sourceTree,baselineCommit,createdAt:new Date().toISOString(),
     seedPaths:[...new Set(seedPaths)].sort(),evidencePaths:[...new Set(evidencePaths)].sort(),
-    bundleSha256:digest(book),bundleBytes:book.length,sourceAccess:unresolved.length?'SOURCE_MISSING':'complete-for-declared-scope',
+    bundleSha256:digest(book),bundleBytes:book.length,bundleLimitBytes:maximumBundleBytes,sourceAccess:unresolved.length?'SOURCE_MISSING':'complete-for-declared-scope',
     entries,dependencies,externalImports,unresolvedImports:unresolved,declaredDynamic,
     parts:parts.map(({body,...r})=>r),
     scope:'Exact committed seeds and recursive static/literal imports plus explicit dynamic declarations. Runtime data must be explicit seeds. Provided execution evidence is byte-preserved, not automatically authenticated.',

@@ -216,3 +216,25 @@ test('comment separated computed imports stay SOURCE_MISSING and unicode line te
     assert.equal(candidate.specifier,'./hidden.mjs');
   }
 });
+
+
+test('source-book capacity preserves complete UTF-8 bytes and enforces the exact finite bound',async t=>{
+  const f=await fixture(t,{'payload.txt':'합성 검토 원문🙂\n'.repeat(200)});
+  const options={repositoryRoot:f.root,seedPaths:['payload.txt'],maximumPartBytes:1024};
+  const initial=await buildEthReviewPacket({...options,outputDirectory:'initial',maximumBundleBytes:20000});
+  const original=await readFile(join(f.root,'initial/source-book.txt'));
+  assert.equal(original.length,initial.bundleBytes);assert.equal(initial.bundleLimitBytes,20000);
+  const exact=await buildEthReviewPacket({...options,outputDirectory:'exact',maximumBundleBytes:original.length});
+  assert.equal(exact.bundleLimitBytes,original.length);assert.equal(exact.bundleSha256,initial.bundleSha256);
+  const book=await readFile(join(f.root,'exact/source-book.txt'));
+  assert.deepEqual(book,original);
+  assert.deepEqual(Buffer.concat(await Promise.all(exact.parts.map(part=>readFile(join(f.root,'exact',part.name))))),original);
+  assert.equal(validateEthReviewSource({manifest:exact,sourceBook:book}).sources.size,1);
+  await assert.rejects(buildEthReviewPacket({...options,outputDirectory:'too-small',maximumBundleBytes:original.length-1}),error=>{
+    assert.ok(error instanceof RangeError);assert.equal(error.code,'REVIEW_BUNDLE_TOO_LARGE');
+    assert.equal(error.bundleBytes,original.length);assert.equal(error.maximumBundleBytes,original.length-1);assert.equal(error.entryCount,1);
+    assert.ok(error.message.includes(original.length+' > '+(original.length-1)));return true;
+  });
+  await assert.rejects(readFile(join(f.root,'too-small/source-manifest.json')),error=>error.code==='ENOENT');
+  for(const limit of [Infinity,NaN,0,1023,20000.5])await assert.rejects(buildEthReviewPacket({...options,maximumBundleBytes:limit}),/finite safe integer/);
+});

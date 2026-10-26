@@ -25,7 +25,9 @@ const manifest=await buildEthReviewPacket({
   repositoryRoot:root,outputDirectory:'build/eth-review-packet',
   baselineCommit:scope.baselineCommit,seedPaths:scope.seedPaths,
   dynamicResolutions:scope.dynamicResolutions,evidencePaths,
-  maximumBundleBytes:50000000,
+  // Source-identified revisions retain all earlier records and full snapshots.
+  // Keep a finite 60 MB budget; the manifest and overflow error report exact bytes.
+  maximumBundleBytes:60000000,
 });
 await writeFile(resolve(root,'build/eth-review-packet/scope-notes.txt'),scope.scope+'\nScreenshots remain in the separately preserved browser artifact; report.json binds their filenames and hashes. Parsed duplicate economic rows are omitted because the exact CSV and acquisition/coverage receipts are present.\n');
 console.log('ETH_REVIEW_MANIFEST '+JSON.stringify(manifest));
