@@ -1,0 +1,57 @@
+[
+  {
+    "mode": "redesign",
+    "depth": "full",
+    "scope": "app",
+    "theme": "Atlas locked system",
+    "genre": "modern-minimal",
+    "prompt": "Hallmark를 전체 프로젝트에 적용하고, 하단 빈 공간 없는 풀사이즈 반응형과 비트코인 한국어 표시명을 유지한다.",
+    "date": "2026-10-26",
+    "sourceCommit": "df0bc769b3cb9a65654c2874673e04612c8880df",
+    "upstream": {
+      "repository": "Nutlope/hallmark",
+      "version": "2.0.0",
+      "commit": "7ec868225c6caa040558c321ee0fefa0e73f83a8"
+    },
+    "coverage": {
+      "cssFiles": 24,
+      "htmlFiles": 2,
+      "routes": 8
+    },
+    "evidence": "docs/hallmark-evidence/20261026/execution.json",
+    "report": "docs/HALLMARK_APP_ADOPTION.md",
+    "releaseAuthorized": false,
+    "designGate": {
+      "status": "fail",
+      "fails": 6,
+      "reflex": 3
+    },
+    "integrityGate": {
+      "status": "pass",
+      "errors": 0
+    },
+    "nativeBrowser": {
+      "passed": 34,
+      "total": 34,
+      "runtimeErrors": 0,
+      "resourceErrors": 0
+    },
+    "generalTests": {
+      "passed": 1350,
+      "total": 1350,
+      "checkout": "synthetic-merge"
+    },
+    "focusedTests": {
+      "passed": 208,
+      "total": 208
+    },
+    "upstreamRulesModified": false,
+    "visualReview": {
+      "verdict": "ship",
+      "scope": "Independent visual finish of the app at the identified source only",
+      "sameModel": true,
+      "realGeminiOpposition": false,
+      "automatedHallmarkPass": false
+    }
+  }
+]

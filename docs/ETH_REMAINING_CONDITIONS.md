@@ -71,7 +71,7 @@ ETH, BMNR, MSTR의 미래 가정 설명창에 별도 보존 발행본 버튼을 
 
 loader의 소유권은 index 요청부터 원문 검증까지 유지하며, 실제 취소와 별개로 이전 generation의 늦은 성공·실패·타이머를 차단한다. 닫기·재열기·다른 창 열기·pagehide와 지연된 모듈 import도 같은 최신 요청 규칙을 따른다. 네이티브 close 이벤트가 새로 열린 창을 취소하는 경우와 SVG의 Escape가 모달 닫기를 막는 경우를 교정한다.
 
-검증은 Node의 전체 실제 모듈 테스트와 GitHub Actions Chromium 렌더링으로 수행한다. 320/390/768/1024/1440px의 비교표·ETH·BMNR·MSTR 20개 경우에 각 자산 저장본을 연결하고, 추가로 합성 0→양수 회복→0 경로 한 개를 별도 URL 공간에서 검증한다. 이 합성 경로는 reconstructed와 test-only로 표시하며 실제 9개 발행본·경제 자료·예측 성과에 포함하지 않는다. 실행 성공 여부는 해당 소스 commit의 CI와 브라우저 영수증으로 확인한다.
+검증은 Node의 전체 실제 모듈 테스트와 GitHub Actions Chromium 렌더링으로 수행한다. 초기 검증 범위는 320/390/768/1024/1440px의 비교표·ETH·BMNR·MSTR 20개 경우다. 해당 초기 실행에서는 각 자산 저장본을 연결하고, 추가로 합성 0→양수 회복→0 경로 한 개를 별도 URL 공간에서 검증했다. 이 합성 경로는 reconstructed와 test-only로 표시하며 실제 9개 발행본·경제 자료·예측 성과에 포함하지 않는다. 실행 성공 여부는 해당 소스 commit의 CI와 브라우저 영수증으로 확인한다.
 
 
 ## 6. 후속 감사: 기간별 예측, 프로토콜 시대와 구조적 표본 제약
@@ -111,7 +111,7 @@ dynamic import에서 토큰과 괄호 사이의 block/line comment 및 JavaScrip
 
 ## 8. 112892a 변경분의 실제 후속 실행과 소스 동결
 
-2026-10-26에 기간별 예측 누락·프로토콜 시대 입력·검토 source-book 결합을 수정한 source112892aa634ea8ec0d31d9bf60ad902f2b3fd600의 실제 실행을 완료했다. [최신 변경분 논제](reviews/ETH_CHATGPT_DELTA_THESIS_20261026.md)와 [CI·수집·원장 영수증](eth-candidate-evidence/20261026-delta-ci.json)에 정확한 근거를 보존한다. 아래 보고서를 저장한 후속 문서 커밋과 검토 대상 소스는 구분한다.
+2026-10-26에 기간별 예측 누락·프로토콜 시대 입력·검토 source-book 결합을 수정한 source112892aa634ea8ec0d31d9bf60ad902f2b3fd600의 실제 실행을 완료했다. [112892a 변경분 논제](reviews/ETH_CHATGPT_DELTA_THESIS_20261026.md)와 [CI·수집·원장 영수증](eth-candidate-evidence/20261026-delta-ci.json)에 정확한 근거를 보존한다. 아래 보고서를 저장한 후속 문서 커밋과 검토 대상 소스는 구분한다.
 
 - 일반 CI40328955938: main 자동 갱신5b9246a와 결합한 합성 merge9426273에서 주 테스트1,321 pass 및 수치 assertion318,010. 직접 PR tree의 실행으로 소급하지 않는다.
 - 직접 head evidence40328955886: 집중188 pass, Chromium21경우 pass. 물리 모바일·Safari 검증은 아니다.
@@ -142,3 +142,19 @@ Coin Metrics의 완전한 pre-Dencun 요청 창에는 FeeTotNtv를 executionFees
 - 0c1ed40의 실제 Actions: 일반 40334143803 주 테스트 1,336개, evidence 40334143939 집중 203개/브라우저 21개 통과. 이 결과는 해당 커밋에 한정한다. 후속 화면 변경에는 기존 21개와 별도의 1620×1008, 1920×1440, 900×430 터치, 320×568 터치 및 같은 페이지 높이 변경 검사를 추가했다. 후속 실행 결과는 별도 영수증으로 확인한다.
 - 0c1ed40 실행의 실제 관측 snapshot 3개·평가 2개·수집 receipt를 research-data/asset-outcome-ledger에 원래 bytes로 보존한다. 원 발행 9개와 목표 pending 27개/scored 0개는 그대로다.
 - 사용자가 Hallmark 전체 프로젝트 적용을 추가 요청했다. 고정 upstream 7ec868225c6caa040558c321ee0fefa0e73f83a8의 app 범위를 사용하며, 전 화면의 디자인·기능 보존 검증은 별도 진행한다. Hallmark 결과는 실제 Gemini 반대 검토 또는 모델 채택 승인으로 계산하지 않는다.
+
+## 11. Hallmark 전체 앱 적용과 실제 후속 검증
+
+검증 대상 응용 소스는 `df0bc769b3cb9a65654c2874673e04612c8880df`다. 이 절·영수증을 저장한 후속 문서 커밋과 구분한다. [전체 적용 보고서](HALLMARK_APP_ADOPTION.md)와 [원본 진단·실행·화면 증거](hallmark-evidence/20261026/README.md)에 연결했다.
+
+일반 CI [40355131708](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40355131708)는 main `5b9246a`와 PR head의 합성 merge `e8b2ead`에서 주 테스트 1,350개·수치 assertion 318,010개·negative control 16개를 통과했다. 일반 CI의 tree를 직접 PR tree와 같다고 주장하지 않는다. 직접 head evidence [40355131704](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40355131704)는 집중 208개와 Chromium 34사례, runtime/resource error 0/0을 기록했다.
+
+비교표는 1620×1008/1920×1440에서 18행·BTC 첫 행·비트코인 표시와 하단 0.25px 차이를 유지한다. 비교 SVG는 같은 문서의 폭 변경 후 배율 1·최소 실제 글씨 11px다. 차트 지표 목록의 뒤 비침, ETH 범례 충돌, 모바일 연구 본문 높이, 명령창·빈 측정 목록·키보드 포커스와 실제 기기 미리보기 끝 이동을 보완했다.
+
+Hallmark [40355131740](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40355131740)는 24 CSS/2 HTML, 실제 8경로의 전후 80장을 완료했다. source integrity는 PASS/0오류이며 원문 디자인 게이트는 **정적 2 FAIL/0 REFLEX + render 4 FAIL/3 REFLEX**, 총 6 FAIL/3 REFLEX로 실패 상태다. 실제 영역·숨겨진 sticky DOM·학술 출처 줄바꿈의 맥락을 기록하되 규칙·severity·Floor를 완화하지 않는다.
+
+동결 source-book은 216 seeds/257 entries/235 parts, 42,287,137bytes, SHA-256 `ef89040facfecbea04741a9faea87b27690efd210d2b95550ed71864fd21dbfe`, unresolved 0이다. 원문 검토 묶음 생성과 외부 모델의 실제 실행을 구분한다.
+
+같은 실행에서 경제 입력 계약 적격 0/25, 완전한 적격 경제 snapshot 0을 확인한다. 기존 자산 연구 발행본 9개와 목표 27개 pending/0개 scored를 유지한다. 보존 발행본의 재생과 관측·결과 원장의 별도 평가는 모델 성과나 실제 운영 채택을 대신하지 않는다.
+
+실제 Gemini 소스 반대 검토 및 그 보고서의 ChatGPT 역검토는 여전히 미완료다. 디자인 검토를 수행한 독립 에이전트는 같은 모델이며 이 조건을 충족하지 않는다. 90·180일 경제 학습의 구조적 표본 한계, 실제 LST 유동성과 과거 판본, 장기 운영 검증도 그대로 남는다. main 병합·기본 모형 승격·공개 배포를 하지 않았으며 `releaseAuthorized=false`를 유지한다.

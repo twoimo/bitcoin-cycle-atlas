@@ -18,7 +18,9 @@ Read long research prose at a comfortable measure and size. Keep data labels, to
 
 The chart and comparison workspace fill the available dynamic viewport. One compact toolbar row leaves the remaining space to data. Dense tables own both scroll axes; headers and identifying columns remain sticky. Expand comparison body rows to consume available height, but retain readable and touch-friendly minima on short screens.
 
-Use a consistent four-pixel spacing rhythm for redesigned controls and panels. Do not change the price renderer's coordinate transforms or measured viewport ownership to satisfy a visual checker. Dialogs and text panels scroll inside their bounds; short and mobile viewports must retain their navigation and close actions.
+Use a consistent four-pixel spacing rhythm for redesigned controls and panels. Do not change the price renderer's coordinate transforms or measured viewport ownership to satisfy a visual checker. Dialogs and text panels scroll inside their bounds; short and mobile viewports must retain their navigation and close actions. Phone financial toolbars keep one row and allow native horizontal gestures to reach controls sized to 44px. Research uses separate header, controls, flexible table and pager rows; filter controls cannot stretch into the reading area.
+
+Expanded indicator controls have an opaque owned surface so chart annotations cannot paint through their text. Every responsive SVG must redraw at its allocated dimensions; validate painted text with the SVG transform, not the nominal font size alone. The legacy timeline retains a readable 700px internal canvas and horizontal scrolling. A 1:1 device preview has its own scroll area with reachable bottom/right edges and a focus ring when the embedded document receives keyboard focus.
 
 ## Interaction and states
 
