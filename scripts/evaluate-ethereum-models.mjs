@@ -80,14 +80,14 @@ export function compactEthereumReport(report){
     uniqueOrigins:report.uniqueOrigins,maturedTargets:report.maturedTargets,prospectiveScoredTargets:report.prospectiveScoredTargets,
     historicalVintagesAvailable:report.data.historicalVintagesAvailable,discardedEarlyEthObservations:report.data.discardedEarlyEthObservations,
     economicSnapshotCount:report.data.economicSnapshotCount,economicAcquisition:report.data.economicAcquisition,common:report.common,pairwise:report.pairwise.filter(p=>!['flat','shrunkenTrend','btcLinked'].includes(p.left)&&!['flat','shrunkenTrend','btcLinked'].includes(p.right)),
-    summaries:report.summaries.map(s=>({model:s.model,horizonDays:s.horizonDays,availableOrigins:s.availableOrigins,completedOutcomes:s.completedOutcomes,
+    summaries:report.summaries.map(s=>({model:s.model,horizonDays:s.horizonDays,availableOrigins:s.availableOrigins,completedOutcomes:s.completedOutcomes,pendingTargets:s.pendingTargets,missingOutcomes:s.missingOutcomes,
       disjointTargetIntervals:s.disjointTargetIntervals,meanAbsoluteLogError:s.disjoint.meanAbsoluteLogError,directionAccuracy:s.disjoint.directionAccuracy,
       directionalCallCoverage:s.disjoint.directionalCallCoverage,directionAccuracyAmongDirectionalCalls:s.disjoint.directionAccuracyAmongDirectionalCalls,
       pairedBaselines:Object.fromEntries(Object.entries(s.pairedBaselines).map(([id,p])=>[id,{n:p.disjointCases,skill:p.skill,candidateError:p.candidateMeanAbsoluteLogError,baselineError:p.baselineMeanAbsoluteLogError}])),
       interval:s.experimentalInterval})),
     current:Object.fromEntries(Object.entries(report.current.candidates).map(([id,c])=>[id,{status:c.status,reason:c.reason??null,predictions:c.predictions,assumptions:c.assumptions??null,feasibility:c.feasibility??null}])),
     reviewSourceBundle:report.provenance.reviewSourceBundle,
-    relativeStrength:{target:report.relativeStrength.target,unit:report.relativeStrength.unit,summaries:report.relativeStrength.summaries.map(s=>({model:s.model,horizonDays:s.horizonDays,availableOrigins:s.availableOrigins,completedOutcomes:s.completedOutcomes,disjointCases:s.disjointTargetIntervals,meanAbsoluteLogError:s.disjoint.meanAbsoluteLogError})),pairwise:report.relativeStrength.pairwise,scope:report.relativeStrength.scope},
+    relativeStrength:{target:report.relativeStrength.target,unit:report.relativeStrength.unit,summaries:report.relativeStrength.summaries.map(s=>({model:s.model,horizonDays:s.horizonDays,availableOrigins:s.availableOrigins,completedOutcomes:s.completedOutcomes,pendingTargets:s.pendingTargets,missingOutcomes:s.missingOutcomes,disjointCases:s.disjointTargetIntervals,meanAbsoluteLogError:s.disjoint.meanAbsoluteLogError})),pairwise:report.relativeStrength.pairwise,scope:report.relativeStrength.scope},
     adoption:report.adoption,scope:report.scope};
 }
 if(process.argv[1]&&pathToFileURL(resolve(process.argv[1])).href===import.meta.url){

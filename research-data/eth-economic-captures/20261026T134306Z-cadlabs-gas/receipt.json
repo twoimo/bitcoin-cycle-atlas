@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "kind": "historical-eth-gas-partial-source-capture",
+  "acquiredVia": "Existing GitHub connector; exact pinned repository file reads",
+  "repository": "CADLabs/ethereum-economic-model",
+  "commit": "a70e21f1c7eeb7eb2491d897d001bcd7432d7610",
+  "captureStartedAt": "2026-10-26T13:43:05Z",
+  "collectedAt": "2026-10-26T13:43:06Z",
+  "collectionClockMeaning": "Current UTC time read after all three GitHub file tools completed; an upper bound on this session's acquisition, not an HTTP transfer timestamp.",
+  "publishedAt": null,
+  "historicalPublicationProven": false,
+  "historicalCollectionProven": false,
+  "files": [
+    {
+      "retainedPath": "ether_gas_used.csv",
+      "sourcePath": "data/ether_gas_used.csv",
+      "gitBlobSha": "13bc5d2c10029ff9bd1d8ac662855f5e9c27cee0",
+      "bytes": 86230
+    },
+    {
+      "retainedPath": "SOURCE_README.md",
+      "sourcePath": "data/README.md",
+      "gitBlobSha": "88f9b74147083e7c6de7d67578c13bdf9c801d2c",
+      "bytes": 831
+    },
+    {
+      "retainedPath": "LICENSE",
+      "sourcePath": "LICENSE",
+      "gitBlobSha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7",
+      "bytes": 35149
+    }
+  ],
+  "attribution": {
+    "originalProviderNamedBySource": "Etherscan",
+    "originalChart": "https://etherscan.io/chart/gasused",
+    "acquiredDirectlyFromOriginalProvider": false,
+    "repositoryLicense": "GPL-3.0",
+    "separateOriginalProviderRightsVerified": false
+  },
+  "observations": {
+    "rows": 2182,
+    "firstDate": "2015-07-30",
+    "lastDate": "2021-07-19",
+    "missingDates": 0,
+    "duplicateDates": 0,
+    "timestampMismatches": 0,
+    "lineEndings": "Original ASCII/CRLF bytes preserved"
+  },
+  "partialMetric": {
+    "metric": "l1GasUsed",
+    "unit": "gas / 28 UTC days",
+    "observedFrom": "2021-06-22",
+    "observedThrough": "2021-07-19",
+    "windowDays": 28,
+    "value": 2583387772249,
+    "mappingBasis": "The retained source README attributes this daily Historical Ethereum Gas Used export to Etherscan. Sum its 28 Value integers; do not convert it into transaction counts, fees or L2 activity."
+  },
+  "fullModelSnapshotReady": false,
+  "eligibleModelSnapshotCount": 0,
+  "modelSnapshots": [],
+  "limitations": [
+    "Historical research archive, not a fresh complete network input set.",
+    "The entire source predates Capella and cannot increase the full economic model's eligible training sample.",
+    "Repository commit time is not used as first publication or collection time.",
+    "The original provider endpoint and an independent node total were not collected by this session."
+  ]
+}

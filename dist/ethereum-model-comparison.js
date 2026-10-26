@@ -7,7 +7,7 @@ import {buildEthereumCycleCandidates} from './ethereum-cycle-models.js';
 import {buildEthereumEconomicCandidate} from './ethereum-economic-model.js';
 
 export const ETH_COMPARISON_POLICY = Object.freeze({
-  version: 'eth-locked-candidate-comparison-2', horizons: Object.freeze([30,90,180]),
+  version: 'eth-locked-candidate-comparison-3', horizons: Object.freeze([30,90,180]),
   minimumHistoryDays: 730, originStrideDays: 28, betaLookbackDays: 365,
   legacySeed: 20261022, minimumBlendCases: 12, intervalAlpha: 0.2,
   minimumCalibrationCases: 12, minimumDisjointPromotionCases: 30,
@@ -36,6 +36,16 @@ function continuousSuffix(rows) {
     gaps.push({after:rows[i-1].date,before:rows[i].date,missingDays:rows[i].epochDay-rows[i-1].epochDay-1});start=i;
   }
   return {rows:rows.slice(start),discardedObservations:start,gaps,interpolation:false};
+}
+// Freeze the origin grid when the first eligible past segment is complete.
+// A later gap cannot move that grid or delete already eligible earlier origins.
+function firstEligibleSegment(rows,minimumHistoryDays) {
+  let start=0;
+  for(let index=0;index<rows.length;index++){
+    if(index&&rows[index].epochDay!==rows[index-1].epochDay+1)start=index;
+    if(index-start>=minimumHistoryDays)return {startIndex:start,firstOriginDay:rows[index].epochDay};
+  }
+  return null;
 }
 function withPriceProvenance(rows,history,asset) {
   const raw=Array.isArray(history)?history:asset==='BTC'?history?.prices:history?.dailyHistory?.candles??history?.candles;
@@ -165,7 +175,8 @@ export function summarizeEthereumComparison(cases,{horizons=ETH_COMPARISON_POLIC
         skill:baselineError>0?1-candidate/baselineError:null,origins:pd.map(r=>r.origin)}];
     }));
     summaries.push({model,horizonDays,candidateOrigins:all.length,availableOrigins:all.filter(r=>positive(r.predictions?.[model])).length,
-      completedOutcomes:used.length,pendingTargets:all.filter(r=>r.actual===null&&positive(r.predictions?.[model])).length,
+      completedOutcomes:used.length,pendingTargets:all.filter(r=>r.status==='pending'&&positive(r.predictions?.[model])).length,
+      missingOutcomes:all.filter(r=>['missing-observation','missing-paired-close'].includes(r.status)&&positive(r.predictions?.[model])).length,
       uniqueOrigins:new Set(used.map(r=>r.origin)).size,distinctTargetDates:new Set(used.map(r=>r.targetDate)).size,
       disjointTargetIntervals:disjoint.length,overlappingTargets:used.length>disjoint.length,independentMarketRegimes:null,independentSampleSize:null,
       allEligible:score(used),disjoint:score(disjoint),pairedBaselines,
@@ -215,10 +226,11 @@ export function summarizeEthereumComparison(cases,{horizons=ETH_COMPARISON_POLIC
 export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapshots=[],issuedAtByOrigin={}}={}, {asOf}={}) {
   utcDay(asOf);
   if(!issuedAtByOrigin||typeof issuedAtByOrigin!=='object'||Array.isArray(issuedAtByOrigin))throw new TypeError('issuedAtByOrigin must map UTC origins to actual issue timestamps');
-  const e=continuousSuffix(readAssetDailyRows(ethHistory,'ETH',asOf)),b=continuousSuffix(readAssetDailyRows(btcHistory,'BTC',asOf));
-  const rows=withPriceProvenance(e.rows,ethHistory,'ETH'),btcRows=withPriceProvenance(b.rows,btcHistory,'BTC'),horizons=ETH_COMPARISON_POLICY.horizons;
-  if(rows.length<ETH_COMPARISON_POLICY.minimumHistoryDays+1)throw new RangeError('ETH comparison needs 730 contiguous completed history days');
-  const firstOrigin=rows[0].epochDay+ETH_COMPARISON_POLICY.minimumHistoryDays;
+  const ethRaw=readAssetDailyRows(ethHistory,'ETH',asOf),btcRaw=readAssetDailyRows(btcHistory,'BTC',asOf);
+  const e=continuousSuffix(ethRaw),b=continuousSuffix(btcRaw),eligible=firstEligibleSegment(ethRaw,ETH_COMPARISON_POLICY.minimumHistoryDays);
+  if(!eligible)throw new RangeError('ETH comparison needs 730 contiguous completed history days');
+  const rows=withPriceProvenance(ethRaw.slice(eligible.startIndex),ethHistory,'ETH'),btcRows=withPriceProvenance(btcRaw,btcHistory,'BTC'),horizons=ETH_COMPARISON_POLICY.horizons;
+  const firstOrigin=eligible.firstOriginDay;
   const origins=rows.filter(r=>r.epochDay>=firstOrigin&&(r.epochDay-firstOrigin)%ETH_COMPARISON_POLICY.originStrideDays===0).map(r=>r.date);
   if(origins.at(-1)!==asOf)origins.push(asOf);
   const ethByDate=new Map(rows.map(r=>[r.date,r.price])),btcByDate=new Map(btcRows.map(r=>[r.date,r.price])),cases=[],relativeCases=[],originsMetadata=[];
@@ -231,17 +243,24 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
       if(typeof issuedAt!=='string'||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/.test(issuedAt)||!Number.isFinite(issue)||issue<observedEnd||issue>=observedEnd+86400000)throw new RangeError('Explicit issue timestamp must be within the UTC day after the origin close');
     }
     const informationCutoffAt=issuedAt??closeAt(origin);
-    const ep=rows.filter(r=>r.date<=origin),bp=btcRows.filter(r=>r.date<=origin),anchorPrice=ep.at(-1).price;
-    const simple=buildIndependentBenchmarks(ep,{asOf:origin,horizons});
-    const relativeBenchmarks=buildEthereumRelativeBenchmarks({ethRows:ep,btcRows:bp,asOf:origin,horizons});
-    const cycle=buildEthereumCycleCandidates({ethRows:ep,btcRows:bp,asOf:origin,horizons});
-    const economic=buildEthereumEconomicCandidate({ethRows:ep,btcRows:bp,asOf:origin,horizons,economicSnapshots,issuedAt});
-    const candidates={
-      flat:readyPredictions(simple.targets,'flat'),shrunkenTrend:readyPredictions(simple.targets,'shrunkenTrend'),
-      btcLinked:buildSimpleEthereumBtcLink({ethRows:ep,btcRows:bp,asOf:origin,horizons}),
-      btcTransfer:cycle.btcTransfer,ethRefit:cycle.ethRefit,legacyEth:legacyCandidate(ep,origin,horizons),economic,
-    };
-    candidates.combined=buildEthereumCombinedCandidate({origin,horizons,cycle:candidates.ethRefit,economic,history:cases});
+    const ep=continuousSuffix(rows.filter(r=>r.date<=origin)).rows,bp=continuousSuffix(btcRows.filter(r=>r.date<=origin)).rows,anchorPrice=ep.at(-1).price;
+    let candidates,relativeBenchmarks,economic;
+    if(ep.length<ETH_COMPARISON_POLICY.minimumHistoryDays+1){
+      const reason='Origin requires 730 contiguous completed ETH history days after the latest past gap';
+      candidates=Object.fromEntries(ETH_COMPARISON_MODELS.map(model=>[model,unavailable(reason)]));
+      relativeBenchmarks=unavailable(reason);economic=candidates.economic;
+    }else{
+      const simple=buildIndependentBenchmarks(ep,{asOf:origin,horizons});
+      relativeBenchmarks=buildEthereumRelativeBenchmarks({ethRows:ep,btcRows:bp,asOf:origin,horizons});
+      const cycle=buildEthereumCycleCandidates({ethRows:ep,btcRows:bp,asOf:origin,horizons});
+      economic=buildEthereumEconomicCandidate({ethRows:ep,btcRows:bp,asOf:origin,horizons,economicSnapshots,issuedAt});
+      candidates={
+        flat:readyPredictions(simple.targets,'flat'),shrunkenTrend:readyPredictions(simple.targets,'shrunkenTrend'),
+        btcLinked:buildSimpleEthereumBtcLink({ethRows:ep,btcRows:bp,asOf:origin,horizons}),
+        btcTransfer:cycle.btcTransfer,ethRefit:cycle.ethRefit,legacyEth:legacyCandidate(ep,origin,horizons),economic,
+      };
+      candidates.combined=buildEthereumCombinedCandidate({origin,horizons,cycle:candidates.ethRefit,economic,history:cases});
+    }
     originsMetadata.push({origin,informationCutoffAt,issuedAt:issuedAt??null,observationThroughAt:closeAt(origin),models:Object.fromEntries(Object.entries(candidates).map(([id,c])=>[id,{
       status:c.status,reason:c.reason??null,training:c.training??null,assumptions:c.assumptions??null,feasibility:c.feasibility??null,
       perHorizonAvailability:horizons.map(h=>({horizonDays:h,available:Boolean(rowPrediction(c,h))})),
@@ -277,7 +296,7 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
         status:targetDate>asOf?'pending':positive(actualRatio)?'retrospective':'missing-paired-close'});
       const legacy=rowPrediction(candidates.legacyEth,h);
       cases.push({origin,informationCutoffAt,issuedAt:issuedAt??null,observationThroughAt:closeAt(origin),targetDate,targetObservationEndAt:closeAt(targetDate),targetAvailableAt:null,horizonDays:h,
-        anchorPrice,actual,status:actual===null?'pending':'retrospective',predictions,unavailableModels,intervals,
+        anchorPrice,actual,status:targetDate>asOf?'pending':actual===null?'missing-observation':'retrospective',predictions,unavailableModels,intervals,
         legacyScenarioEnvelope:legacy?{low:legacy.scenarioLow,high:legacy.scenarioHigh,empiricallyCovered:actual===null?null:actual>=legacy.scenarioLow&&actual<=legacy.scenarioHigh,
           logWidth:(Math.log(legacy.scenarioHigh)-Math.log(legacy.scenarioLow)),probability:null,confidenceInterval:false}:null});
     }
@@ -286,7 +305,9 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
   const summary=summarizeEthereumComparison(cases);
   return {schemaVersion:1,kind:'ethereum-candidate-comparison',asOf,policy:ETH_COMPARISON_POLICY,
     data:{ethFirstObservation:rows[0].date,btcFirstObservation:btcRows[0].date,ethObservations:rows.length,btcObservations:btcRows.length,
-      ethGaps:e.gaps,discardedEarlyEthObservations:e.discardedObservations,btcGaps:b.gaps,discardedEarlyBtcObservations:b.discardedObservations,interpolation:false,
+      ethGaps:e.gaps,discardedEarlyEthObservations:eligible.startIndex,btcGaps:b.gaps,discardedEarlyBtcObservations:0,interpolation:false,
+      currentPrefixDiscardedEthObservations:continuousSuffix(rows).discardedObservations,currentPrefixDiscardedBtcObservations:b.discardedObservations,
+      originGridPolicy:'First eligible 731-observation ETH segment fixes the 28-day grid. Contiguous input suffixes are selected separately inside each origin.',
       ethArchiveCollectedAt:ethHistory?.retrievedAt??null,ethArchiveFirstCollectedAt:ethHistory?.dailyHistory?.firstCollectedAt??ethHistory?.firstCollectedAt??null,
       historicalVintagesAvailable:false,economicSnapshotCount:economicSnapshots.length,
       explicitIssueTimeCount:origins.filter(origin=>issuedAtByOrigin[origin]!==undefined).length,

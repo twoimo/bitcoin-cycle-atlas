@@ -3,7 +3,7 @@
  * A provider archive is an observation, not an eth-economic-input-3 snapshot.
  * This adapter does not relabel historical observations as historical captures.
  */
-import { ETH_ECONOMIC_INPUT_SCHEMA, assessEthereumEconomicFeasibility } from './ethereum-economic-model.js';
+import { ETH_ECONOMIC_INPUT_SCHEMA, ETH_ECONOMIC_MAINNET_CLOCK, assessEthereumEconomicFeasibility } from './ethereum-economic-model.js';
 
 const DAY_MS = 86400000;
 const DOC_REF = '8489126ae94aff995d01be44f965327f2640f51e';
@@ -28,7 +28,8 @@ export const COIN_METRICS_ETH_FIELDS = Object.freeze({
     unit: 'ETH / UTC day',
     definition: 'Total execution base, priority and blob fees; includes fees burned. Additional MEV is not automatically included.',
     modelMapping: null,
-    reason: 'executionFeesEth and blobFeesEth require a measured split; assigning the total to execution fees double counts blobs.',
+    reason: 'After blob activation, executionFeesEth and blobFeesEth require a measured split; assigning the total to execution fees double counts blobs.',
+    conditionalMapping: 'A complete UTC window ending before Deneb activation can match executionFeesEth only; this never proves historical availability or full-model readiness.',
     definitionUrl: DOC_ROOT + 'network-data/network-data-overview/fees-and-revenue/fees.md#feetot',
   },
   IssTotNtv: {
@@ -200,14 +201,23 @@ export function assessCoinMetricsEconomicCoverage(parsed, { asOf, collectedAt })
       : metric === 'l1GasUsed' || metric === 'l2Transactions' ? 'TxCnt is L1 transaction count and cannot substitute for gas or a fixed L2 universe.'
       : 'Required measured field and its definition-matched provenance are absent.',
   }));
+  const partialMetrics={};
+  if(requestedWindow.completeWindow&&Date.parse(requestedWindow.observedAt)<=Date.parse(ETH_ECONOMIC_MAINNET_CLOCK.denebAt)){
+    const matched=requirements.find(row=>row.metric==='executionFeesEth');
+    Object.assign(matched,{status:'available',sourceField:'FeeTotNtv',
+      reason:'The entire completed window precedes Deneb blob activation; total transaction fees are execution fees in this era. This is a definition match only, not historical availability proof.'});
+    partialMetrics.executionFeesEth={value:requestedWindow.aggregate.totalFeesIncludingBlobEth,unit:'ETH / 28 UTC days',
+      observedFrom:requestedWindow.observedFrom,observedThrough:requestedWindow.observedThrough,sourceField:'FeeTotNtv',
+      definitionUrl:COIN_METRICS_ETH_FIELDS.FeeTotNtv.definitionUrl,historicalAvailabilityProven:false};
+  }
   return {
-    version: 'eth-economic-source-coverage-1', asOf, collectedAt,
+    version: 'eth-economic-source-coverage-2', asOf, collectedAt,
     sourceStatus: parsed.completeRawMetricRows > 0 ? 'partial-observations-collected' : 'no-complete-raw-observations',
     requestedWindow, latestCompleteWindow, staleDays,
     freshness: staleDays === null ? 'unavailable' : staleDays > 7 ? 'stale' : 'within-seven-days',
     requiredMetricCount: requirements.length,
-    definitionMatchedMetricCount: 0,
-    requirements,
+    definitionMatchedMetricCount: requirements.filter(row=>row.status==='available').length,
+    partialMetrics, requirements,
     publishedAt: null,
     historicalCollectionProven: false,
     historicalPointInTimeReady: false,

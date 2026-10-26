@@ -20,6 +20,7 @@ async function addFiles(directory,{filter=()=>true}={}){
 }
 await addFiles('build/ethereum-economic-data',{filter:path=>!path.endsWith('/capture.json')});
 await addFiles('build/asset-forecast-ledger',{filter:path=>path.endsWith('.json')});
+await addFiles('build/asset-outcome-ledger',{filter:path=>path.endsWith('.json')});
 const manifest=await buildEthReviewPacket({
   repositoryRoot:root,outputDirectory:'build/eth-review-packet',
   baselineCommit:scope.baselineCommit,seedPaths:scope.seedPaths,

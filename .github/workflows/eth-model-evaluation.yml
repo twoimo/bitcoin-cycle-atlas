@@ -6,6 +6,8 @@ on:
       - 'dist/**'
       - 'tests/ethereum-*.test.mjs'
       - 'tests/asset-forecast*.test.mjs'
+      - 'tests/asset-outcome*.test.mjs'
+      - 'tests/helpers/asset-outcome*.mjs'
       - 'tests/eth-review-packet.test.mjs'
       - 'tests/journal-entry-ownership.test.mjs'
       - 'tests/equity-chart-rendering.test.mjs'
@@ -15,6 +17,9 @@ on:
       - 'scripts/verify-eth-candidate-browser.mjs'
       - 'scripts/capture-ethereum-economic-data.mjs'
       - 'scripts/issue-asset-forecasts.mjs'
+      - 'scripts/evaluate-asset-forecasts.mjs'
+      - 'research-data/asset-outcome-ledger/**'
+      - 'research-data/eth-economic-captures/**'
       - 'scripts/build-eth-review*.mjs'
       - 'research-data/eth-review-scope.json'
       - '.github/workflows/eth-model-evaluation.yml'
@@ -40,11 +45,15 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - name: Test candidate equations, missing inputs, clocks and future-information boundaries
-        run: node --test tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-economic-ablation.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs tests/ethereum-economic-data.test.mjs tests/ethereum-economic-collector.test.mjs tests/asset-forecast-records.test.mjs tests/asset-forecast-collector.test.mjs tests/asset-forecast-journal.test.mjs tests/journal-entry-ownership.test.mjs tests/eth-review-packet.test.mjs tests/treasury-model.test.mjs
+        run: node --test tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-economic-ablation.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs tests/ethereum-economic-data.test.mjs tests/ethereum-economic-collector.test.mjs tests/asset-forecast-records.test.mjs tests/asset-forecast-collector.test.mjs tests/asset-outcome-records.test.mjs tests/asset-outcome-collector.test.mjs tests/ethereum-historical-gas-source.test.mjs tests/asset-forecast-journal.test.mjs tests/journal-entry-ownership.test.mjs tests/eth-review-packet.test.mjs tests/treasury-model.test.mjs
       - name: Collect pinned public economic source with actual acquisition receipts
         run: node scripts/capture-ethereum-economic-data.mjs
       - name: Evaluate the exact committed candidates and current stored prices
         run: node scripts/evaluate-ethereum-models.mjs
+      - name: Evaluate preserved asset forecasts without requiring a new forecast issue
+        run: |
+          node scripts/evaluate-asset-forecasts.mjs
+          node scripts/evaluate-asset-forecasts.mjs --emit-files
       - name: Freeze and replay actual ETH BMNR and MSTR research issues
         run: |
           node scripts/issue-asset-forecasts.mjs
@@ -84,6 +93,7 @@ jobs:
             build/ethereum-economic-ablation.json
             build/ethereum-economic-data
             build/asset-forecast-ledger
+            build/asset-outcome-ledger
             build/eth-review-packet
             build/eth-browser
           if-no-files-found: error

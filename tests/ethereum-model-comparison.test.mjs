@@ -112,7 +112,8 @@ test('late BTC archive makes only BTC-dependent origins unavailable without abor
   assert.equal(report.data.discardedEarlyBtcObservations,0);
   const gapped=runEthereumModelComparison({ethHistory:eth,btcHistory:btc.filter((r,i)=>i!==800)},{asOf:eth.at(-1).date});
   assert.equal(gapped.data.btcGaps.length,1);
-  assert.equal(gapped.data.discardedEarlyBtcObservations,800);
+  assert.equal(gapped.data.discardedEarlyBtcObservations,0);
+  assert.equal(gapped.data.currentPrefixDiscardedBtcObservations,800);
   assert.ok(report.summaries.find(s=>s.model==='flat'&&s.horizonDays===30).completedOutcomes>0);
 });
 
@@ -168,4 +169,46 @@ test('the complete comparison preserves valid per-horizon ETH refits and precise
     {horizonDays:30,available:true},{horizonDays:90,available:true},{horizonDays:180,available:false},
   ]);
   assert.equal(report.adoption.productionModelChanged,false);
+});
+
+test('a later BTC gap cannot erase already completed earlier predictions or their paired targets',()=>{
+  const {eth,btc}=fixture('2020-01-01',1400),asOf=eth.at(-1).date,origin=eth[1010].date;
+  const base=runEthereumModelComparison({ethHistory:eth,btcHistory:btc},{asOf});
+  const gap=runEthereumModelComparison({ethHistory:eth,btcHistory:btc.filter((_,i)=>i!==1200)},{asOf});
+  assert.deepEqual(gap.cases.filter(r=>r.origin===origin),base.cases.filter(r=>r.origin===origin));
+  assert.deepEqual(gap.relativeStrength.cases.filter(r=>r.origin===origin),base.relativeStrength.cases.filter(r=>r.origin===origin));
+  assert.deepEqual(gap.origins.find(r=>r.origin===origin),base.origins.find(r=>r.origin===origin));
+  assert.ok(gap.cases.some(r=>r.origin===origin&&r.predictions.btcLinked>0));
+  assert.equal(gap.data.btcObservations,1399);
+});
+
+test('a later ETH gap preserves the first eligible grid and marks only insufficient past prefixes unavailable',()=>{
+  const {eth,btc}=fixture('2020-01-01',1400),asOf=eth.at(-1).date,origin=eth[1010].date;
+  const base=runEthereumModelComparison({ethHistory:eth,btcHistory:btc},{asOf});
+  const gap=runEthereumModelComparison({ethHistory:eth.filter((_,i)=>i!==1200),btcHistory:btc},{asOf});
+  assert.deepEqual(gap.cases.filter(r=>r.origin===origin),base.cases.filter(r=>r.origin===origin));
+  assert.deepEqual(gap.origins.filter(r=>r.origin<eth[1200].date),base.origins.filter(r=>r.origin<eth[1200].date));
+  assert.equal(gap.data.discardedEarlyEthObservations,0);
+  for(const candidate of Object.values(gap.current.candidates)){
+    assert.equal(candidate.status,'unavailable');assert.match(candidate.reason,/730 contiguous/);
+  }
+});
+
+test('mature missing ETH or BTC target observations are not future pending targets and later history can recover',()=>{
+  const {eth,btc}=fixture('2020-01-01',2200),asOf=eth.at(-1).date,origin=eth[1010].date;
+  const base=runEthereumModelComparison({ethHistory:eth,btcHistory:btc},{asOf});
+  for(const symbol of ['ETH','BTC']){
+    const gap=runEthereumModelComparison({ethHistory:symbol==='ETH'?eth.filter((_,i)=>i!==1040):eth,
+      btcHistory:symbol==='BTC'?btc.filter((_,i)=>i!==1040):btc},{asOf});
+    const cases=symbol==='ETH'?gap.cases:gap.relativeStrength.cases;
+    const prior=symbol==='ETH'?base.cases:base.relativeStrength.cases;
+    const row=cases.find(r=>r.origin===origin&&r.horizonDays===30);
+    assert.deepEqual(row.predictions,prior.find(r=>r.origin===origin&&r.horizonDays===30).predictions);
+    assert.equal(row.actual,null);
+    assert.equal(row.status,symbol==='ETH'?'missing-observation':'missing-paired-close');
+    const summary=(symbol==='ETH'?gap.summaries:gap.relativeStrength.summaries).find(r=>r.model==='flat'&&r.horizonDays===30);
+    assert.ok(summary.missingOutcomes>=1);
+    assert.equal(summary.pendingTargets,cases.filter(r=>r.horizonDays===30&&r.status==='pending'&&r.predictions.flat>0).length);
+    assert.equal(gap.current.candidates.flat.status,'ready');
+  }
 });

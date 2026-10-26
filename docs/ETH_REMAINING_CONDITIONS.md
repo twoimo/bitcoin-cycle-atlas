@@ -120,3 +120,15 @@ dynamic import에서 토큰과 괄호 사이의 block/line comment 및 JavaScrip
 - 동결 패킷은 38,522,626bytes, SHA-256a2924fb225c27c88c3c3350121e7ab6af91a8cba586280e0b77f42263118601d, 205seeds/234entries/215parts/unresolved0다. [manifest](eth-candidate-evidence/20261026-delta-review-source-manifest.json)에 연결했다.
 - 별도 main 자동 자료 갱신5b9246a가 운영 배포된 사실은 보존한다. 이번 PR#39의 후보를 병합·배포한 것은 아니다.
 - 실제 Gemini 반대 검토와 ChatGPT 역검토는 미완료이며 releaseAuthorized=false다.
+
+## 9. 후속 구현: 인과적 결측 처리와 불변 결과 평가
+
+최종 archive의 마지막 결측을 기준으로 과거 입력 전체를 잘라내던 경로를 수정한다. 최초 731개 연속 ETH 관측이 완성된 시점으로 원점 격자를 고정하고, 각 원점 안의 과거 prefix에서만 ETH/BTC 연속성을 판단한다. 뒤의 결측으로 이미 유효했던 과거 예측을 지우지 않는다. 만기 후 종가 누락과 미래 pending은 별도로 집계한다.
+
+[독립 결과 원장](ASSET_OUTCOME_LEDGER.md)은 새 예측 발행·최신성·금융 모형 실행의 성공과 별도로 기존 발행본을 평가한다. 원문 관측과 수집 시각, 평가 cutoff·함수 소스·결과를 내용 주소 파일로 보존하고, 가격 정정은 새 판본으로 추가한다. 현재 실제 미도래 목표의 점수를 만들어 넣지 않는다.
+
+추가로 [보존된 CADLabs gas archive](../research-data/eth-economic-captures/20261026T134306Z-cadlabs-gas/receipt.json)는 2015-07-30~2021-07-19의 실제 원문2,182행과 출처·라이선스·이번 수집시각을 보존한다. 마지막28일의 gas 합은2,583,387,772,249다. pre-Capella 역사 부분 입력이므로 현재 full 경제모형의 적격 표본 증가로 계산하지 않는다.
+
+Coin Metrics의 완전한 pre-Dencun 요청 창에는 FeeTotNtv를 executionFeesEth와 조건부로 대응할 수 있다. 활성일을 포함한 창에서는 별도 blob 수수료가 없으면 대응하지 않는다. 나머지 필드를 0으로 채우거나 full snapshot을 만들지 않는다.
+
+이 절은 구현 설명이다. 실제 검사 결과와 정확한 소스 commit·tree·artifact·review packet 신원은 후속 완료 영수증으로 구분한다. 기본 모델 승격·main 병합·공개 배포·실제 외부 검토 완료를 승인하지 않는다.

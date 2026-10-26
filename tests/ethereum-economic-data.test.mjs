@@ -122,3 +122,21 @@ test('direct aggregation rejects corrupted parsed values and observation clocks'
   const c = parsed(); c.rows[1].metrics.SplyCur = undefined;
   assert.throws(() => aggregateCoinMetricsEthWindow(c, '2026-01-29'), /Invalid parsed/);
 });
+
+test('a complete pre-Dencun fee window matches execution fees without inventing remaining inputs or availability',()=>{
+  const csv=end=>{const last=Date.parse(end+'T00:00:00Z');return [header,...Array.from({length:28},(_,i)=>{
+    const d=last-(27-i)*DAY;return [new Date(d).toISOString().slice(0,10),i,2*i,1000+i,i*10,(d+DAY+3600000)/1000].join(',');
+  })].join('\n')+'\n';};
+  const before=assessCoinMetricsEconomicCoverage(parseCoinMetricsEthCsv(csv('2024-03-12')),{asOf:'2024-03-12',collectedAt:'2024-03-15T00:00:00Z'});
+  assert.equal(before.definitionMatchedMetricCount,1);
+  assert.equal(before.partialMetrics.executionFeesEth.value,378);
+  assert.equal(before.requirements.find(row=>row.metric==='executionFeesEth').sourceField,'FeeTotNtv');
+  assert.equal(before.partialMetrics.executionFeesEth.historicalAvailabilityProven,false);
+  assert.equal(before.fullModelSnapshotReady,false);assert.equal(before.historicalPointInTimeReady,false);
+  assert.equal(before.eligibleModelSnapshotCount,0);assert.deepEqual(before.modelSnapshots,[]);
+  for(const metric of ['blobGasUsed','blobFeesEth','blobBurnEth'])assert.equal(before.requirements.find(row=>row.metric===metric).status,'unavailable');
+  const active=assessCoinMetricsEconomicCoverage(parseCoinMetricsEthCsv(csv('2024-03-13')),{asOf:'2024-03-13',collectedAt:'2024-03-15T00:00:00Z'});
+  assert.equal(active.definitionMatchedMetricCount,0);assert.deepEqual(active.partialMetrics,{});
+  const missing=parseCoinMetricsEthCsv(csv('2024-03-12').split('\n').filter(line=>!line.startsWith('2024-03-01,')).join('\n'));
+  assert.equal(assessCoinMetricsEconomicCoverage(missing,{asOf:'2024-03-12',collectedAt:'2024-03-15T00:00:00Z'}).definitionMatchedMetricCount,0);
+});
