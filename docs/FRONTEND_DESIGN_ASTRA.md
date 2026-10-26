@@ -34,7 +34,7 @@ Visual judgment: date controls now read as one operation; saved values are ident
 
 ## Evidence and limits
 
-Child evidence root: `/Users/twoimo/.aside/u/0/sessions/2026-10-26_a1jg2ebvtzl9ctae/tmp/`.
+Full evidence is retained in private task-local temporary storage, not in the public source tree.
 
 - Before: `before-1440-all.png`, `before-390-all.png`, `before-320-saved.png`.
 - After: `final2-1440-all.png`, `final2-1440-saved.png`, `final2-320-all.png`, `final2-320-saved-rows.png`, `final2-390-saved-rows.png`, `final2-768-saved-rows.png`.
@@ -42,3 +42,8 @@ Child evidence root: `/Users/twoimo/.aside/u/0/sessions/2026-10-26_a1jg2ebvtzl9c
 - Machine evidence: `final2-qa.json`, `main-final-browser-qa.json`, `csv-byte-comparison.json`, `full-tests-final.log`; reproducible task-local `history-qa.mjs` and `base-qa.mjs`.
 
 Independent read-only public audit reported two pre-existing interaction issues: explicit-symbol history opening does not focus/scroll to detail, unlike selecting a board asset; the asset explanation dialog retains the generic help title. These are handed to the parent rather than changing functional open/focus contracts in this presentation-only patch. No push, PR, merge, release or deployment performed.
+
+## Integrator follow-up
+The independent Astra review's subject-title and explicit-symbol focus findings are addressed by the integrator with scoped controller regressions. After a requested symbol is rendered, focus moves to the existing detail title, matching board-selection behavior. The explanation dialog names the selected asset and returns to the generic title for ordinary help. No calculations, archive values, CSV or capture logic are changed.
+
+Integrator acceptance: 1,083 tests passed; the two pre-existing interaction defects reproduced on the public baseline at 320/390/768 widths and passed after the fixes, including visible detail title, exact asset heading, Escape return focus and generic-help reset. Eight-size HTTP/standalone history and original-board checks passed. Nine protected engine/data/capture/workflow/snapshot paths match the v1.28.0 base bytes, and the main CSV retains SHA-256 cd92bb9b88cd3881c0280c7856e0267a0a2767eaf7e424e757f16e2cfd9e5f29. CI/public acceptance remain separate downstream checks.

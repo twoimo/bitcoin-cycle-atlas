@@ -409,3 +409,8 @@ test('precise compact headings distinguish year count and year-start-to-extreme 
   assert.match(ui.root.innerHTML, /aria-label="자산군별 판단 이력"/);
   view.destroy();
 });
+
+
+test('asset explanation exposes its exact subject and restores generic help title',async()=>{
+ const {view,ui,model}=setup();await view.render();ui.click('',{assetReason:'IEF'});const selected=model.rows.find(r=>r.symbol==='IEF');assert.equal(ui.node('daily-method-title').textContent,`${selected.name} (IEF) 판단 근거`);ui.click('daily-method-close');ui.click('daily-method-open');assert.equal(ui.node('daily-method-title').textContent,'자산 비교표 읽는 법');view.destroy();
+});
