@@ -10,7 +10,7 @@
 
 프로젝트의 Coinbase 자료는 2025-08-24 장중 고가 $4,955.90, 2025-08-22 UTC 종가 $4,831.24를 기록한다. 이전 종가 최고는 2021-11-08 $4,811.90, 장중 최고는 2021-11-10 $4,867.81이다. 이 값은 새 CI 진단 스크립트가 정확한 입력 해시와 함께 다시 계산한다.
 
-CME·Glassnode 상반기 보고서의 미갱신 서술은 **2025년 5월까지의 자료**에 대한 것이다.[S03] 이를 2025년 전체 사실로 연장하면 정보 시점 오류다. 질문은 “PoS가 최고가 경신을 막았나”에서 **“왜 회복 시기·상승 배율·ETH/BTC 상대성과가 달랐나”**로 바꿔야 한다.
+[CME·Glassnode 상반기 보고서의 공동 발행사 원문](https://research.glassnode.com/cme-glassnode-ethereum-insight-and-market-trends-h1-2025/)의 미갱신 서술은 **2025년 5월까지의 자료**에 대한 것이다.[S03] 이를 2025년 전체 사실로 연장하면 정보 시점 오류다. 질문은 “PoS가 최고가 경신을 막았나”에서 **“왜 회복 시기·상승 배율·ETH/BTC 상대성과가 달랐나”**로 바꿔야 한다.
 
 ## 2. 3년 상승·1년 하락 가설
 
@@ -299,3 +299,7 @@ tests/ethereum-adaptive-model.test.mjs는 시점·노출·우측 검열·잔차 
 2025년 기관 가격 문턱은 2025-01-01–12-31의 Coinbase ETH-USD 장중 고가에 한정한다. 전체 365일이 없고 초과가 관측되지 않았다면 미달 확정을 하지 않는다. Galaxy의 5,500달러 초과와 VanEck의 6,000달러 초과를 검사하되, VanEck의 분기별 경로까지 검증한 것으로 세지 않는다. 다른 거래소의 모든 체결에 대한 명제도 아니다. 미래 데이터가 추가되어도 2025년 판정에 전 기간 최고가를 사용하지 않는다.
 
 기존 비교의 `coreCommonCases`/`coreDisjointMeanAbsoluteLogErrors`는 기존 6개 모델에 관한 공통 집합이다. 신규 adaptive 모델의 공정한 대조는 동일 origin·horizon을 맞춘 pairwise/paired baseline 결과를 사용한다. 단일 중앙 80% 구간의 로그 interval score를 사용하며, 여러 분위수 구간을 합친 WIS로 부르지 않는다.
+
+## 장 마감 이후의 검증과 발행 분리
+
+두 번째 CI의 실제 시각이 2026-10-26 20:00 UTC 미국 주식 세션 마감 이후가 되어, BMNR/MSTR의 보존된 10월 23일 자료로 새 발행을 만들려던 단계가 정확히 거부됐다. 최초 실행 실패를 성공으로 바꾸거나 시각을 소급하지 않는다. 기본 issuer의 최신 완료 세션 검사는 유지한다. evidence workflow의 명시적 `--replay-preserved-if-stale`에서만 유효하지만 오래된 자료를 구분하고, 기존 발행본의 bytes·ID·issuedAt을 보존한 무결성/가능한 동일 소스 재생을 수행한다. 새 기록 수는 0, candidateFreezeAt은 null, issuanceStatus는 skipped-stale-inputs이다. 미래·미완료·잘못된 입력은 이 분기로 숨기지 않고 계속 실패한다. 관측·결과의 평가는 기존 독립 outcome workflow가 실제 시각으로 담당하며, 보존 모드의 성공을 새 발행 또는 예측 성과로 세지 않는다.

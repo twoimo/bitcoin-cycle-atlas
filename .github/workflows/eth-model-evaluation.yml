@@ -58,12 +58,14 @@ jobs:
         run: node scripts/evaluate-ethereum-models.mjs
       - name: Audit ETH periods, volatility, simulation and institutional arithmetic
         run: node scripts/evaluate-ethereum-adaptive-research.mjs
-      - name: Freeze and replay actual ETH BMNR and MSTR research issues
+      - name: Verify preserved ETH BMNR and MSTR records and issue only with current inputs
         run: |
-          node scripts/issue-asset-forecasts.mjs
-          # Replay a second time and print compact receipts. The complete immutable
+          node scripts/issue-asset-forecasts.mjs --replay-preserved-if-stale
+          # Replay a second time and print compact receipts. Stale prices permit
+          # preservation/replay only: no new record or false issue timestamp.
+          # The complete immutable
           # ledger remains in the artifact below; do not duplicate it in the job log.
-          node scripts/issue-asset-forecasts.mjs
+          node scripts/issue-asset-forecasts.mjs --replay-preserved-if-stale
       - name: Install a pinned Korean font with bounded network and cache time
         timeout-minutes: 3
         run: |

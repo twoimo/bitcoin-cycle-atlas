@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {canonicalForecastJson} from '../dist/forecast-records.js';
-import {decideAssetAppend,assetFileIdentity,assetSnapshotTransport,emitAssetForecastFiles} from '../scripts/issue-asset-forecasts.mjs';
+import {assetIssuanceFreshness,decideAssetAppend,assetFileIdentity,assetSnapshotTransport,emitAssetForecastFiles} from '../scripts/issue-asset-forecasts.mjs';
 
 const sha=value=>createHash('sha256').update(value).digest('hex');
 const encoded=value=>canonicalForecastJson(value)+'\n';
@@ -89,4 +89,23 @@ test('snapshot transport cannot disguise modified source bytes or normalize immu
   const external=structuredClone(fixture.snapshot);
   external.informationClock.inputs[0].sourceUrl='https://example.org/treasury.json';
   assert.equal(assetSnapshotTransport(fixture.path,encoded(external)),null);
+});
+
+test('actual equity session close blocks new issuance without backdating preserved records',()=>{
+  const dates={ETHUSD:'2026-10-25',BMNR:'2026-10-23',MSTR:'2026-10-23'},before=structuredClone(dates);
+  assert.equal(assetIssuanceFreshness(dates,'2026-10-26T19:59:59.999Z').eligibleForNewIssuance,true);
+  const closed=assetIssuanceFreshness(dates,'2026-10-26T20:00:00.000Z');
+  assert.equal(closed.eligibleForNewIssuance,false);
+  assert.deepEqual(closed.staleInputs.map(r=>[r.symbol,r.actualAsOf,r.expectedAsOf]),
+    [['BMNR','2026-10-23','2026-10-26'],['MSTR','2026-10-23','2026-10-26']]);
+  const midnight=assetIssuanceFreshness(dates,'2026-10-27T00:00:00.000Z');
+  assert.equal(midnight.staleInputs.length,3);
+  assert.deepEqual(dates,before);
+});
+test('preservation eligibility does not disguise future, incomplete or malformed observations as stale',()=>{
+  const dates={ETHUSD:'2026-10-25',BMNR:'2026-10-23',MSTR:'2026-10-23'};
+  assert.throws(()=>assetIssuanceFreshness({...dates,BMNR:'2026-10-26'},'2026-10-26T19:59:59.999Z'),/incomplete or future/);
+  assert.throws(()=>assetIssuanceFreshness({...dates,ETHUSD:'2026-10-26'},'2026-10-26T20:00:00.000Z'),/incomplete or future/);
+  for(const value of [null,'2026-02-30','not-a-date'])assert.throws(()=>assetIssuanceFreshness({...dates,BMNR:value},'2026-10-26T20:00:00.000Z'),/malformed/);
+  assert.throws(()=>assetIssuanceFreshness(dates,'invalid'),/date|timestamp|instant|time/i);
 });

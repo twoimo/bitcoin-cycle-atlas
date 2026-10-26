@@ -315,11 +315,84 @@ async function verifyCommittedModelBytes(models,commit){
   return Object.keys(files);
 }
 
+
+/** Classify completed-date freshness without relaxing the new-issuance clock.
+ * Future/malformed dates remain errors; only older completed input dates qualify
+ * for the explicitly requested preservation workflow. */
+export function assetIssuanceFreshness(lastDates,checkedAt){
+  const inputs=SYMBOLS.map(symbol=>{
+    const actualAsOf=lastDates?.[symbol],market=symbol==='ETHUSD'?'crypto':'equity';
+    const expectedAsOf=latestCompletedAssetDate(checkedAt,market);
+    const epoch=typeof actualAsOf==='string'?Date.parse(actualAsOf+'T00:00:00Z'):NaN;
+    if(typeof actualAsOf!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(actualAsOf)||!Number.isFinite(epoch)||
+      new Date(epoch).toISOString().slice(0,10)!==actualAsOf)throw new TypeError(symbol+' malformed archive completion date');
+    if(actualAsOf>expectedAsOf)throw new Error(symbol+' archive contains an incomplete or future session at the actual cutoff');
+    return {symbol,actualAsOf,expectedAsOf,checkedAt,status:actualAsOf===expectedAsOf?'current':'stale'};
+  });
+  return {checkedAt,eligibleForNewIssuance:inputs.every(input=>input.status==='current'),
+    inputs,staleInputs:inputs.filter(input=>input.status==='stale')};
+}
+function currentInputFreshness(sources,checkedAt){
+  const eth=JSON.parse(sources['dist/data/eth-ohlc.json'].text),lastDates={ETHUSD:lastCryptoDate(eth,'ETH')};
+  readAssetDailyRows(eth,'ETH',lastDates.ETHUSD);
+  for(const symbol of ['BMNR','MSTR']){
+    const history=parseEquityArchive(JSON.parse(sources['dist/data/'+symbol.toLowerCase()+'-ohlc.json'].text),{symbol,interval:'daily'});
+    lastDates[symbol]=history.candles.at(-1).date.slice(0,10);
+  }
+  return assetIssuanceFreshness(lastDates,checkedAt);
+}
+async function preserveAfterStaleInput({archive,models,output,commit,startedAt,informationCutoffAt,freshness,sources,protectedPaths,emitFiles}){
+  if(!archive.index.entries.length)throw new Error('Stale inputs and no preserved asset forecast archive to verify');
+  const integrity=await verifyAssetForecastArchive(archive.index,archive.records,archive.snapshots);
+  const replay=await replayPriorArchive(archive,models),replayedAt=now(),records=recordsIn(archive);
+  assertCommitted(protectedPaths,commit);
+  const receiptBody={schemaVersion:1,kind:'atlas-asset-forecast-replay-receipt',status:'PASS',
+    verificationScope:'Preserved immutable archive integrity and source-compatible replay only',
+    mode:'preserved-replay-only',issuanceStatus:'skipped-stale-inputs',
+    startedAt,informationCutoffAt,replayedAt,candidateFreezeAt:null,sourceCommit:commit,sourceTree:git('rev-parse','HEAD^{tree}'),
+    collector:{path:COLLECTOR_PATH,sourceHash:sources[COLLECTOR_PATH].sourceHash},
+    currentInputFreshness:freshness,newRecords:0,newSnapshots:0,appendedRecordIds:[],reusedRecordIds:[],
+    preservedRecords:records.length,preservedSnapshots:Object.keys(archive.snapshots).length,...summarizeAssetRecordKinds(records),
+    integrity,replay,sharedEthereumPaths:{status:'not-rerun-in-preservation-mode'},
+    evaluation:{status:'not-run-in-preservation-mode',separateEvidence:'build/asset-outcome-ledger',
+      existingOutputEvaluation:'If present, retained unchanged at its original evaluatedAt; not a new evaluation'},
+    historicalVintagesProven:false,productionAdopted:false,publicationScope:'draft-pr-research',
+    issuanceMeaning:'No new snapshot, record or issue clock is created. Existing bytes and issuedAt values remain unchanged. Freshness failure is not counted as successful new issuance.'};
+  const runReceipt={id:await forecastHash(receiptBody),...receiptBody},texts=new Map(archive.texts);
+  texts.set('index.json',jsonText(archive.index));texts.set('receipt.json',jsonText(runReceipt));
+  texts.set('receipts/'+runReceipt.id+'.json',jsonText(runReceipt));
+  try{
+    const previousText=await readFile(resolve(output,'receipt.json'),'utf8'),previous=JSON.parse(previousText);
+    if(!/^[a-f0-9]{64}$/.test(previous.id))throw new Error('Invalid existing asset run receipt identity');
+    texts.set('receipts/'+previous.id+'.json',previousText);
+  }catch(error){if(error.code!=='ENOENT')throw error;}
+  for(const [path,text] of archive.texts)await writeImmutable(output,path,text);
+  for(const [path,text] of texts)if(path.startsWith('receipts/'))await writeImmutable(output,path,text);
+  await writeCurrent(output,'receipt.json',texts.get('receipt.json'));
+  await writeCurrent(output,'index.json',texts.get('index.json'));
+  const saved=await readAssetForecastArchive(output);
+  if(!equal(saved.index,archive.index))throw new Error('Preserved asset index failed read-back verification');
+  for(const [path,text] of archive.texts)if(saved.texts.get(path)!==text)throw new Error('Preserved asset bytes changed during stale-input replay: '+path);
+  assertCommitted(protectedPaths,commit);
+  const summary={status:'PASS',verificationScope:receiptBody.verificationScope,mode:receiptBody.mode,issuanceStatus:receiptBody.issuanceStatus,
+    sourceCommit:commit,sourceTree:receiptBody.sourceTree,receiptId:runReceipt.id,outputDirectory:relative(ROOT,output).replaceAll('\\','/'),
+    newRecords:0,newSnapshots:0,reusedRecords:0,verifiedExistingRecords:records.length,preservedRecords:records.length,
+    preservedSnapshots:Object.keys(archive.snapshots).length,candidateFreezeAt:null,replayedAt,
+    currentInputFreshness:freshness,regeneratedRecords:replay.regeneratedRecords,preservedOnlyRecords:replay.preservedOnlyRecords,
+    newOutcomeEvaluation:false,outcomeEvidence:'build/asset-outcome-ledger',sharedEthereumPaths:'not-rerun-in-preservation-mode',
+    productionAdopted:false,publicationScope:'draft-pr-research',
+    artifactFileScope:'Files written or checked by this call; earlier receipt revisions may also be present',
+    artifactFiles:texts.size,artifactBytes:[...texts.values()].reduce((sum,text)=>sum+Buffer.byteLength(text,'utf8'),0)};
+  console.log('ASSET_FORECAST_SUMMARY '+JSON.stringify(summary));if(emitFiles)emitAssetForecastFiles(texts);
+  return {summary,index:archive.index,receipt:runReceipt,evaluation:null};
+}
+
 export async function issueAssetForecasts({
   outputDirectory=resolve(ROOT,'build/asset-forecast-ledger'),
   priorDirectory=resolve(ROOT,'dist/data/asset-forecast-ledger'),
-  endYear=2035,seed=20261022,emitFiles=false,
+  endYear=2035,seed=20261022,emitFiles=false,replayPreservedIfStale=false,
 }={}){
+  if(typeof replayPreservedIfStale!=='boolean')throw new TypeError('replayPreservedIfStale must be boolean');
   if(!Number.isSafeInteger(endYear)||endYear<2027||endYear>2050)throw new RangeError('Invalid asset forecast end year');
   if(!Number.isSafeInteger(seed)||seed<0||seed>4294967295)throw new RangeError('Invalid asset forecast seed');
   const output=resolve(outputDirectory),prior=resolve(priorDirectory);
@@ -344,6 +417,11 @@ export async function issueAssetForecasts({
     assertCommitted(protectedPaths,commit);
     const archive=await mergeAssetForecastArchives(priorArchive,outputArchive);
     const informationCutoffAt=now();
+    if(replayPreservedIfStale){
+      const freshness=currentInputFreshness(sources,informationCutoffAt);
+      if(!freshness.eligibleForNewIssuance)return await preserveAfterStaleInput({archive,models,output,commit,startedAt,
+        informationCutoffAt,freshness,sources,protectedPaths,emitFiles});
+    }
     const prepared=SYMBOLS.map(symbol=>prepareInputs(symbol,sources,{endYear,seed,informationCutoffAt}));
     const sharedEthereumPaths=await verifySharedEthereumPaths(
       prepared.find(item=>item.symbol==='BMNR').bundle,
@@ -435,6 +513,7 @@ if(process.argv[1]&&pathToFileURL(resolve(process.argv[1])).href===import.meta.u
   for(let index=0;index<args.length;index++){
     const arg=args[index];
     if(arg==='--emit-files')options.emitFiles=true;
+    else if(arg==='--replay-preserved-if-stale')options.replayPreservedIfStale=true;
     else if(arg==='--output-dir')options.outputDirectory=resolve(args[++index]??'');
     else if(arg==='--prior-dir')options.priorDirectory=resolve(args[++index]??'');
     else if(arg==='--end-year')options.endYear=Number(args[++index]);
