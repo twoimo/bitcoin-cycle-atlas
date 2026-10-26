@@ -31,7 +31,7 @@ test('opening the view creates exactly one grouped comparison table with all 18 
   assert.deepEqual(symbols(table), COMPARISON_SYMBOLS);
   assert.deepEqual([...table.matchAll(/rowspan="(\d+)"/g)].map(match => Number(match[1])), [13, 4, 1]);
   assert.match(table, /asset-return-gain/); assert.match(table, /asset-return-loss/);
-  assert.match(ui.node('asset-row-count').textContent, /18개 자산 전체/);
+  assert.equal(symbols(table).length, 18);
   assert.doesNotMatch(table, /data-cycle|data-evidence|M7/);
   view.destroy();
 });
@@ -51,6 +51,21 @@ test('the ready board removes the metadata strip without losing source and date 
   assert.match(ui.node('daily-method-content').innerHTML, /2026-01-02.*2026-10-23/);
   assert.match(assetComparisonCsv(model), /source_url/);
   assert.match(assetComparisonCsv(model), /https:\/\/example\.test\/prices\/BTC/);
+  view.destroy();
+});
+
+test('the board has no footer, reserved footer styles or dangling note description', async () => {
+  const { view, ui } = setup(); await view.render();
+  assert.doesNotMatch(ui.root.innerHTML, /asset-table-footer|asset-table-meta|asset-color-key|asset-row-count|asset-sample-note|asset-table-note/);
+  assert.match(ui.root.innerHTML, /<caption class="sr-only">18개 자산별/);
+  const css = readFileSync(new URL('../dist/daily-data.css', import.meta.url), 'utf8');
+  assert.doesNotMatch(css, /asset-table-footer|asset-color-key|asset-row-count|asset-sample-note/);
+  ui.click('daily-method-open');
+  const content = ui.node('daily-method-content').innerHTML;
+  assert.match(content, /평균 낙폭과 MDD는 다릅니다/);
+  assert.match(content, /배당·분배금을 제외한 종가 기준/);
+  assert.match(content, /미래의 저점·고점을 확정하지 않으며/);
+  assert.match(content, /상장 첫해 일부 기간/);
   view.destroy();
 });
 
@@ -109,7 +124,8 @@ test('headers use actual observed trading dates and sample cells disclose partia
   assert.match(ui.node('data-body').innerHTML, /2016–2025 · 10개 연도/);
   assert.match(ui.node('data-body').innerHTML, /첫해는 2016-03-02부터의 일부 기간/);
   assert.match(ui.node('data-body').innerHTML, /<sup aria-hidden="true">\*<\/sup>/);
-  assert.match(ui.node('asset-sample-note').textContent, /2026년은 평균에서 제외/);
+  ui.click('daily-method-open');
+  assert.match(ui.node('daily-method-content').innerHTML, /올해 자료는 이 평균에 넣지 않습니다/);
   view.destroy();
 });
 
@@ -210,7 +226,8 @@ test('unavailable samples never become neutral; individual observed prices remai
   assert.equal((table.match(/>판단 보류<\/button>/g) || []).length, 4);
   assert.deepEqual(symbols(table), COMPARISON_SYMBOLS);
   assert.match(table, /최근 관측 종가">85\.00/);
-  assert.match(ui.node('asset-row-count').textContent, /4개 판단 보류/);
+  ui.click('', { assetReason: 'BTC' });
+  assert.match(ui.node('daily-method-content').innerHTML, /자료가 오래되었습니다/);
   assert.match(assetComparisonCsv(model), /자료가 오래되었습니다/);
   view.destroy();
 });

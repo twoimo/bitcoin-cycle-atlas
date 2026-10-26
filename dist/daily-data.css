@@ -79,16 +79,6 @@
 #data-view .asset-comparison-table .asset-table-empty { height: 220px; padding: 35px 20px; background: var(--asset-paper); color: var(--asset-muted); font-size: 13px; }
 #data-view .asset-table-empty > span { display: block; }
 #data-view #asset-retry { margin-top: 16px; padding: 8px 14px; border: 1px solid #65572e; border-radius: 2px; background: #2d281a; color: var(--asset-sign); font-size: 12px; }
-#data-view .asset-table-footer { flex: none; padding: 12px 14px; border-top: 1px solid var(--asset-grid); background: var(--asset-paper); color: var(--asset-muted); font-size: 10px; line-height: 1.8; }
-#data-view .asset-table-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 3px 16px; }
-#data-view #asset-row-count { color: var(--asset-sign); font-weight: 600; }
-#data-view .asset-color-key { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; }
-#data-view .asset-color-key i { display: inline-block; width: 6px; height: 6px; }
-#data-view .asset-key-gain { background: var(--green, #66c3ab); }
-#data-view .asset-key-loss { background: var(--red, #ec8190); margin-left: 6px; }
-#data-view .asset-table-footer p { margin: 5px 0 0; }
-#data-view .asset-table-footer strong { color: #d4dde7; font-weight: 650; }
-#data-view #asset-sample-note { white-space: normal; }
 #data-view .daily-method-dialog { width: min(740px, calc(100% - 28px)); max-height: 88dvh; padding: 20px 24px 25px; border: 1px solid #55503a; border-top: 3px solid var(--asset-sign); border-radius: 2px; color: var(--asset-ink); background: var(--asset-paper); }
 #data-view .daily-method-dialog::backdrop { background: #05080ddd; }
 #data-view .daily-method-heading { display: flex; position: sticky; top: -20px; z-index: 1; align-items: center; justify-content: space-between; gap: 12px; padding: 3px 0 12px; background: var(--asset-paper); border-bottom: 1px solid var(--asset-grid); }
@@ -152,8 +142,6 @@
   #data-view .asset-name-label { font-size: 10px; white-space: normal; overflow: visible; line-height: 1.4; }
   #data-view .asset-comparison-table .asset-return { font-size: 12px; }
   #data-view .asset-comparison-table .asset-ytd { font-size: 13px; }
-  #data-view .asset-table-footer { flex: none; padding: 8px 10px; }
-  #data-view .asset-color-key { margin-left: 0; }
   #data-view .daily-method-dialog { padding: 15px 17px 22px; }
   #data-view .daily-method-heading { top: -15px; }
   #data-view .daily-method-heading h2 { font-size: 18px; }
