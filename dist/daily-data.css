@@ -25,8 +25,7 @@
 #data-view .daily-help-icon { display: inline-flex; width: 16px; height: 16px; align-items: center; justify-content: center; border: 1px solid currentColor; border-radius: 50%; font: 600 11px/1 var(--font); }
 #data-view .daily-action:disabled { opacity: .4; cursor: default; }
 #data-view .asset-context { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 18px; flex: none; color: var(--asset-muted); font-size: 11px; line-height: 1.7; }
-#data-view .asset-context strong { color: var(--asset-sign); font-weight: 650; }
-#data-view .asset-context-source { margin-left: auto; color: var(--asset-muted); }
+#data-view .asset-context[hidden] { display: none; }
 #data-view .asset-scroll-hint, #data-view .asset-mobile-nav { display: none; }
 /* One bounded table viewport owns both axes; its headings remain in view. */
 #data-view .asset-table-panel { display: flex; flex-direction: column; flex: 1; min-height: 0; min-width: 0; border: 1px solid var(--asset-grid); border-top: 3px solid var(--asset-sign); background: var(--asset-paper); color: var(--asset-ink); }
@@ -128,7 +127,6 @@
   #data-view .daily-back { width: 32px; min-height: 36px; }
   #data-view #asset-refresh span, #data-view #daily-method-open > span:last-child { display: none; }
   #data-view .asset-context { gap: 3px 10px; font-size: 10px; }
-  #data-view .asset-context-source { width: 100%; margin-left: 0; }
   #data-view .asset-scroll-hint { display: none; }
   #data-view .asset-mobile-nav { display: flex; flex: none; align-items: center; justify-content: space-between; gap: 6px; }
   #data-view .asset-mobile-nav button { min-height: 34px; padding: 5px 8px; border: 1px solid var(--asset-grid); border-radius: 2px; background: var(--surface-raised, #191e27); color: var(--asset-sign); font-size: 11px; }
