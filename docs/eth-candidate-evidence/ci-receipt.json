@@ -1,0 +1,271 @@
+{
+  "recordType": "eth-candidate-execution-receipts",
+  "sourceCommit": "65578526682205e4239417eb01229879db8de4eb",
+  "baseMainCommit": "30805dacdcf0aa3ea991439de87d5f9a38c59f25",
+  "evidence": {
+    "sourceCommit": "65578526682205e4239417eb01229879db8de4eb",
+    "runId": 40309068923,
+    "jobId": 121525395964,
+    "focusedTests": 62,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "complete": true,
+    "sourceBundle": {
+      "sha256": "e4c8549b624cd5fe2331161a4d6d1b9079697e03cfd91575cfb280c101e05072",
+      "bytes": 2332501,
+      "files": 56
+    },
+    "artifact": {
+      "id": 12644520146,
+      "name": "eth-candidate-evidence-65578526682205e4239417eb01229879db8de4eb",
+      "size_in_bytes": 5138437,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12644520146",
+      "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12644520146/zip",
+      "expired": false,
+      "created_at": "2026-10-26T10:39:55Z",
+      "expires_at": "2026-11-25T10:39:54Z",
+      "updated_at": "2026-10-26T10:39:55Z",
+      "digest": "sha256:651e15c3798343d131ffccfa34bfae8238ca52725f562cd37d809195a174f74f",
+      "workflow_run": {
+        "id": 40309068923,
+        "repository_id": 1428515198,
+        "head_repository_id": 1428515198,
+        "head_branch": "chatgpt/eth-cycle-economics-20261026",
+        "head_sha": "65578526682205e4239417eb01229879db8de4eb"
+      }
+    },
+    "browser": {
+      "passedCases": 10,
+      "status": "passed",
+      "screenshotCount": 30,
+      "version": {
+        "protocolVersion": "1.3",
+        "product": "Chrome/155.0.8059.39",
+        "revision": "@3ff7ac5a9224be9156d7f8703a06e22890aafd34",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+        "jsVersion": "15.5.35.20"
+      },
+      "startedAt": "2026-10-26T10:39:29.994Z",
+      "finishedAt": "2026-10-26T10:39:53.811Z"
+    },
+    "font": {
+      "repository": "notofonts/noto-cjk",
+      "commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
+      "fontBlob": "dc4a7c65e6f450bf17c10a2405250b620eb78703",
+      "licenseBlob": "d952d62c065f3f35fb83a173496e90b21525aef3"
+    }
+  },
+  "normalCI": {
+    "status": "success",
+    "runId": 40309069049,
+    "jobId": 121525396547,
+    "headCommit": "65578526682205e4239417eb01229879db8de4eb",
+    "testedMergeCommit": "057c87a853fd7a53e7c6f3387270df0b927cd237",
+    "mainCommit": "30805dacdcf0aa3ea991439de87d5f9a38c59f25",
+    "mainTests": 1229,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "numericalAssertions": 318010,
+    "targetedRequestMutantsRejected": 16,
+    "formalEth": {
+      "baselineCommit": "64c8207cb044d8990289c5a7d39972e21b74c240",
+      "tool": {
+        "name": "TLC",
+        "release": "1.7.4",
+        "jarSha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+      },
+      "bounds": {
+        "requestGenerations": 3,
+        "intervals": [
+          "daily",
+          "weekly"
+        ],
+        "rangeChoices": [
+          "auto",
+          "custom"
+        ]
+      },
+      "model": {
+        "current": {
+          "status": "pass",
+          "invariant": null,
+          "exitStatus": 0,
+          "generated": 11109,
+          "distinct": 2243,
+          "remaining": 0
+        },
+        "baseline/TypeOK": {
+          "status": "pass",
+          "invariant": "TypeOK",
+          "exitStatus": 0,
+          "generated": 14969,
+          "distinct": 3503,
+          "remaining": 0
+        },
+        "baseline/ReadyHasUsableView": {
+          "status": "expected invariant violation",
+          "invariant": "ReadyHasUsableView",
+          "exitStatus": 12,
+          "generated": 36,
+          "distinct": 23,
+          "remaining": 13
+        },
+        "baseline/NoHiddenPublication": {
+          "status": "expected invariant violation",
+          "invariant": "NoHiddenPublication",
+          "exitStatus": 12,
+          "generated": 31,
+          "distinct": 21,
+          "remaining": 12
+        },
+        "baseline/NoStalePublication": {
+          "status": "pass",
+          "invariant": "NoStalePublication",
+          "exitStatus": 0,
+          "generated": 14969,
+          "distinct": 3503,
+          "remaining": 0
+        },
+        "baseline/NavigationSurvivesRefresh": {
+          "status": "expected invariant violation",
+          "invariant": "NavigationSurvivesRefresh",
+          "exitStatus": 12,
+          "generated": 268,
+          "distinct": 145,
+          "remaining": 87
+        },
+        "baseline/ReadinessOnce": {
+          "status": "pass",
+          "invariant": "ReadinessOnce",
+          "exitStatus": 0,
+          "generated": 14969,
+          "distinct": 3503,
+          "remaining": 0
+        },
+        "unguarded-response/NoStalePublication": {
+          "status": "expected invariant violation",
+          "invariant": "NoStalePublication",
+          "exitStatus": 12,
+          "generated": 14,
+          "distinct": 8,
+          "remaining": 3
+        },
+        "unguarded-error/NoStalePublication": {
+          "status": "expected invariant violation",
+          "invariant": "NoStalePublication",
+          "exitStatus": 12,
+          "generated": 15,
+          "distinct": 9,
+          "remaining": 4
+        },
+        "hidden-render/NoHiddenPublication": {
+          "status": "expected invariant violation",
+          "invariant": "NoHiddenPublication",
+          "exitStatus": 12,
+          "generated": 31,
+          "distinct": 21,
+          "remaining": 12
+        },
+        "lost-navigation/NavigationSurvivesRefresh": {
+          "status": "expected invariant violation",
+          "invariant": "NavigationSurvivesRefresh",
+          "exitStatus": 12,
+          "generated": 289,
+          "distinct": 160,
+          "remaining": 103
+        }
+      },
+      "implementation": {
+        "tests": 17,
+        "original": "pass",
+        "restored": "pass",
+        "originalCounts": {
+          "tests": 17,
+          "pass": 17,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "restoredCounts": {
+          "tests": 17,
+          "pass": 17,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "sourceSha256": "b754278fea10a66a7f046eb7006f8951a890a32222a7b23a5f0ed989153cb7b9",
+        "mutations": {
+          "premature-ready": "expected assertion failure",
+          "hidden-render": "expected assertion failure",
+          "unguarded-archive": "expected assertion failure",
+          "unguarded-error": "expected assertion failure",
+          "lost-daily-navigation": "expected assertion failure",
+          "lost-intraday-navigation": "expected assertion failure",
+          "untracked-navigation": "expected assertion failure",
+          "repeated-ready": "expected assertion failure",
+          "missing-escaper": "expected assertion failure"
+        },
+        "mutationExitStatuses": {
+          "premature-ready": 1,
+          "hidden-render": 1,
+          "unguarded-archive": 1,
+          "unguarded-error": 1,
+          "lost-daily-navigation": 1,
+          "lost-intraday-navigation": 1,
+          "untracked-navigation": 1,
+          "repeated-ready": 1,
+          "missing-escaper": 1
+        }
+      },
+      "limitations": [
+        "Finite reachable-state check, not an unbounded or whole-program proof",
+        "HTTP abort can complete late; callbacks while suspended are a deliberate scheduler over-approximation",
+        "Initializer replay injects import, HTTP, animation-frame, timer and DOM boundaries",
+        "Intraday controller publication is covered by verify-market-state; ETH integration is replay-tested",
+        "No price accuracy, causal event effect, pixel layout, browser scheduling or liveness proof"
+      ]
+    }
+  },
+  "priorFontDownloadCancellation": {
+    "runId": 40307059437,
+    "jobId": 121518663635,
+    "headCommit": "8c50d560548b7bc2fee342093661daa12a6fe769",
+    "conclusion": "cancelled",
+    "browser": "skipped",
+    "focusedAndPriceEvaluation": "passed",
+    "replacementRun": 40308035957,
+    "reason": "Existing PR-specific concurrency superseded the known running font-install job after a workflow-only bounded-font update; no application assertion failure or successful final browser result claimed.",
+    "observedDelay": {
+      "fontPackage": "fonts-noto-cjk",
+      "packageBytesApprox": 61200000,
+      "downloadStartedAt": "2026-10-26T10:24:09.3918891Z",
+      "cancelledAt": "2026-10-26T10:31:25.6569976Z"
+    },
+    "preservedPartialArtifactId": 12643710358
+  },
+  "priorFontGuardFailure": {
+    "runId": 40308035957,
+    "jobId": 121522089305,
+    "headCommit": "8465a302f9b9b3f0d972f1c47971c47b165fa0f3",
+    "conclusion": "failure",
+    "browser": "skipped",
+    "focusedTestsPassed": 61,
+    "reason": "Font download, both Git blob checks and font cache succeeded; optional runner utility rg was absent. Replaced only that guard with standard grep.",
+    "artifactId": 12643512665,
+    "repairedBy": "d03c41121cb4e3d86355bef55b3c507572bd8c84"
+  },
+  "scope": {
+    "externalGeminiSourceReview": "pending; no verified execution route through current GitHub-only integration",
+    "chatgptReverseReviewOfGemini": "pending; requires the actual external report",
+    "productionDefaultChanged": false,
+    "merged": false,
+    "deployed": false,
+    "economicSnapshotCount": 0,
+    "prospectiveScoredTargets": 0,
+    "reviewPreservationCommit": "This file is preserved in a later documentation-only commit; sourceCommit identifies the executed application code."
+  }
+}
