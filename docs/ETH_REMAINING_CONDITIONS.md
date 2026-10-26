@@ -158,3 +158,20 @@ Hallmark [40355131740](https://github.com/twoimo/bitcoin-cycle-atlas/actions/run
 같은 실행에서 경제 입력 계약 적격 0/25, 완전한 적격 경제 snapshot 0을 확인한다. 기존 자산 연구 발행본 9개와 목표 27개 pending/0개 scored를 유지한다. 보존 발행본의 재생과 관측·결과 원장의 별도 평가는 모델 성과나 실제 운영 채택을 대신하지 않는다.
 
 실제 Gemini 소스 반대 검토 및 그 보고서의 ChatGPT 역검토는 여전히 미완료다. 디자인 검토를 수행한 독립 에이전트는 같은 모델이며 이 조건을 충족하지 않는다. 90·180일 경제 학습의 구조적 표본 한계, 실제 LST 유동성과 과거 판본, 장기 운영 검증도 그대로 남는다. main 병합·기본 모형 승격·공개 배포를 하지 않았으며 `releaseAuthorized=false`를 유지한다.
+
+
+## 12. 가격 판본의 순서 독립성과 검토 묶음 용량 보완
+
+최종 검증 소스는 `fb2cec889c409a40ced3760c415b0b3cccdd6165`다. [후속 보고서](reviews/PRICE_VINTAGE_ORDER_FIX_20261027.md)와 [실행·manifest·브라우저·원문 진단](eth-candidate-evidence/20261027-price-vintages/README.md)에 정확한 출처를 보존한다.
+
+같은 날짜·수집 시각의 가격/원문 hash 충돌을 현재 선택된 최신 판본에 대해서만 비교하던 오류를 수정했다. 더 최신 판본이 앞에 있더라도 이미 cutoff에 들어온 이전 동시각 충돌을 거부한다. 미래의 서로 다른 판본 제외, 불변 vintage ID의 변경 거부, 정상 최신값·동률 선택은 유지한다.
+
+테스트만 먼저 추가한 `78ad471`의 실제 직접 실행은**213개 중 211 pass / 2 fail**로 결함을 재현했다. 수정 후 최종 일반 CI [40367613955](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40367613955)는 합성 merge `2e2f261`에서 **1,356/1,356**, 수치 assertion **318,010**, negative control **16/16**을 통과했다. 직접 head evidence [40367613761](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40367613761)은 집중 **214/214**, native **34/34**, **161 PNG**, runtime/resource error **0/0**을 기록했다. 비교표 18행·BTC 첫 행·비트코인과 큰 화면 하단 0.25px 차이도 유지한다.
+
+검증 함수의 소스 hash 변경으로 별도 연구 발행기가 새 소스 개정본 9개를 생성한다. 기존 9개 기록과 3개 snapshot을 평가하는 독립 결과 원장은**27 pending / 0 scored** 및 forecastRecordsChanged=false다. 별도 artifact는 이전 9개와 새 9개를 함께 보존해 **18 records / 6 snapshots**, **54 pending / 0 scored**이며, 두 번째 실행은**new 0 / reused 9**다. 같은 세 자산 원점의 개정본 증가를 독립 관측 또는 실제 성과 증가로 계산하지 않는다. 현재 사이트 원장 파일은 기존 9개를 유지한다.
+
+전체 검토 묶음의 실제 크기는 **50,489,326 bytes**로 이전 50MB 상한을 넘었다. 전체 원문/이전 기록/새 개정본을 유지하고 명시적 60MB 한도와 실제 바이트 진단을 추가했다. 정확한 한도 성공·1바이트 초과 거부·UTF-8 조각 완전 재결합을 검사했다. 새 packet은 **216 seeds / 269 entries / 281 parts**, unresolved **0**, SHA-256 `836755535bc9561782926b05c648c052d5f57c44feed1e635578071a5500a43e`다. 원장 재실행과 artifact 전체 보존을 유지하며 로그의 전체 파일 중복 출력만 줄였다.
+
+최종 Hallmark 첫 시도는 Chrome 시작 timeout으로 미완료였고, 같은 source 작업 재시도는 전체 8경로·전후 80 PNG 및 integrity PASS를 완료했다. 원문 디자인 gate는 기존 **6 FAIL / 3 REFLEX**, waiver/dismissal **0/0**으로 계속 실패 상태다.
+
+경제 정의 적격 **0/25**·완전한 적격 경제 snapshot **0**, 실제 Gemini 반대 검토·ChatGPT 역검토·성숙한 전향 성과 조건은 남아 있다. 이번 소스 검토는 같은 모델의 분리 검토다. PR은 Draft이며 main 병합·기본값 승격·공개 배포 없이 releaseAuthorized=false를 유지한다.
