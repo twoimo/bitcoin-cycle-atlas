@@ -380,6 +380,10 @@ async function syntheticZeroCase(cdp,width,receipt){
   assert.equal(receipt.journal.invalidPaths,0);assert.ok(receipt.journal.overlayLength>0);
   assert.ok(receipt.journal.text.includes('회고 재구성 · 전향 평가 제외'),'Synthetic/reconstructed record was presented as prospective');
   assert.ok(receipt.journal.text.includes('재구성 생성'),'Synthetic record clock was labelled as a real issue');
+  await evaluate(cdp,()=>{
+    const range=document.querySelector('[data-asset-journal-range]');range.value='0';range.dispatchEvent(new Event('change',{bubbles:true}));
+  });
+  await settled(cdp);
   await evaluate(cdp,()=>document.querySelector('[data-asset-journal-date]').scrollIntoView({block:'center'}));
   await settled(cdp);await click(cdp,'[data-asset-journal-date]');
   for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key:'End',code:'End',windowsVirtualKeyCode:35,nativeVirtualKeyCode:35});
@@ -451,10 +455,10 @@ async function main(){
     const price=i<20?anchor*(1-i/20):(i>=30&&i<=35?anchor*.1:0);
     return {date:new Date(at+i*86400000).toISOString().slice(0,10),price,low:price*.5,high:anchor,baselinePrice:null};
   });
-  const files={'scripts/verify-eth-candidate-browser.mjs':report.sourceHashes['scripts/verify-eth-candidate-browser.mjs']};
+  const files={'dist/asset-forecast-records.js':report.sourceHashes['dist/asset-forecast-records.js']};
   syntheticZeroRecord=await createAssetForecastRecord({snapshot,recordKind:'reconstructed',
     model:{version:'synthetic-zero-browser-fixture',sourceCommit:report.sourceCommit,files,sourceHash:await forecastHash(files)},
-    options:{syntheticBrowserFixture:true},forecast:{symbol:'BMNR',asOf:snapshot.asOf,scenario:{id:'base',label:'Synthetic zero test only'},
+    options:{syntheticBrowserFixture:true,syntheticGenerator:{path:'scripts/verify-eth-candidate-browser.mjs',sha256:report.sourceHashes['scripts/verify-eth-candidate-browser.mjs']},sourceIdentityMeaning:'Committed ledger module under test; output is a synthetic fixture, not a production price-model result.'},forecast:{symbol:'BMNR',asOf:snapshot.asOf,scenario:{id:'base',label:'Synthetic zero test only'},
       displayEnd:path.at(-1).date,path}});
   const syntheticEntry=assetForecastIndexEntry(syntheticZeroRecord);
   const syntheticIndex={schemaVersion:1,kind:'atlas-asset-forecast-index',entries:[syntheticEntry]};
