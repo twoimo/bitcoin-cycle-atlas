@@ -1,7 +1,9 @@
 // Explicitly synthetic mechanism fixtures. These are not published network data,
 // observed forecast accuracy, vintage-validation receipts or a calibration sample.
+// Starts after Dencun; long fixtures extend into a hypothetical future solely to
+// test regression mechanics. Their mature labels are not present-day evidence.
 export function fixture(count=3000){
-  const day=86400000,start=Date.parse('2018-01-01T00:00:00Z'),date=i=>new Date(start+i*day).toISOString().slice(0,10);
+  const day=86400000,start=Date.parse('2024-04-01T00:00:00Z'),date=i=>new Date(start+i*day).toISOString().slice(0,10);
   const sourceUrl='https://fixtures.invalid/synthetic-eth-economics';
   const ethRows=[],btcRows=[],economicSnapshots=[];
   for(let i=0;i<count;i++){

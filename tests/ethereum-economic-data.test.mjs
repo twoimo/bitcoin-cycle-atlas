@@ -70,6 +70,8 @@ test('a valid raw window never becomes a fictitious complete economic input', ()
   assert.equal(c.definitionMatchedMetricCount, 0);
   assert.equal(c.requirements.length, 25);
   assert.equal(c.fullModelSnapshotReady, false);
+  assert.equal(c.modelFeasibility.provesInputReadiness, false);
+  assert.equal(c.modelFeasibility.horizons.find(h=>h.horizonDays===180).structurallyEnoughMatureLabels, false);
   assert.equal(c.historicalPointInTimeReady, false);
   assert.equal(c.publishedAt, null);
   assert.deepEqual(c.modelSnapshots, []);

@@ -11,7 +11,7 @@ const SHA40=/^[a-f0-9]{40}$/;
 const SHA64=/^[a-f0-9]{64}$/;
 const STAGES=['chatgpt-thesis','gemini-opposition','chatgpt-reverse'];
 function safePath(path){
-  if(typeof path!=='string'||!path||path.includes('\\')||path.includes('\0')||path.startsWith('/')||path.split('/').some(p=>['..','.',''].includes(p))||path==='.git'||path.startsWith('.git/'))throw new TypeError('Expected exact repository-relative path');
+  if(typeof path!=='string'||!path||path.includes('\\')||/[\u0000-\u001f\u007f]/.test(path)||path.startsWith('/')||path.split('/').some(p=>['..','.',''].includes(p))||path==='.git'||path.startsWith('.git/'))throw new TypeError('Expected exact repository-relative path');
   return path;
 }
 function inside(root,path){safePath(path);const full=resolve(root,path);if(relative(root,full).startsWith('..'))throw new RangeError('Path leaves repository');return full;}
@@ -32,9 +32,13 @@ export function parseStaticReviewImports(source){
 
 /** Dynamic-import detection is conservative. False positives need explicit byte-bound declarations. */
 export function discoverDynamicReviewImports(source){
-  return [...source.matchAll(/\bimport\s*\(/g)].map(match=>{
-    const tail=source.slice(match.index);
-    const literal=tail.match(/^import\s*\(\s*(['"])([^'"\r\n\\]+)\1\s*(?:\)|,)/);
+  // Comments and every JavaScript line terminator may separate import and (.
+  // String/comment examples still need explicit non-executable declarations.
+  const trivia='(?:\\s|\\/\\*[\\s\\S]*?\\*\\/|\\/\\/[^\\r\\n\\u2028\\u2029]*(?:\\r\\n|[\\r\\n\\u2028\\u2029]|$))*';
+  const candidates=new RegExp('\\bimport'+trivia+'\\(','g');
+  const literalPattern=new RegExp('^import'+trivia+'\\('+trivia+'([\\x27"])([^\\x27"\\r\\n\\\\]+)\\1'+trivia+'(?:\\)|,)');
+  return [...source.matchAll(candidates)].map(match=>{
+    const tail=source.slice(match.index),literal=tail.match(literalPattern);
     return {offset:match.index,specifier:literal?.[2]??null,sourceFragment:tail.slice(0,160)};
   });
 }
@@ -147,6 +151,7 @@ export async function buildEthReviewPacket({
     scope:'Exact committed seeds and recursive static/literal imports plus explicit dynamic declarations. Runtime data must be explicit seeds. Provided execution evidence is byte-preserved, not automatically authenticated.',
     externalReview:{status:'pending',actualGeminiReport:null,actualChatgptReverse:null,releaseAuthorized:false},
   };
+  validateEthReviewSource({manifest,sourceBook:book});
   const output=inside(root,outputDirectory);await mkdir(output,{recursive:true});
   await writeFile(resolve(output,'source-book.txt'),book);
   for(const part of parts)await writeFile(resolve(output,part.name),part.body);
@@ -162,10 +167,77 @@ export async function buildEthReviewPacket({
   return manifest;
 }
 
+
+/**
+ * Reconcile every framed file with the exact source book before trusting a
+ * separately supplied manifest or quote. This proves byte consistency only:
+ * Git membership, source delivery and provider execution remain external facts.
+ */
+export function validateEthReviewSource({manifest,sourceBook}={}){
+  if(!manifest||manifest.schemaVersion!==1||!SHA40.test(manifest.sourceCommit)||!SHA40.test(manifest.sourceTree)||!SHA64.test(manifest.bundleSha256))throw new TypeError('Exact source-book manifest identity required');
+  if(!(typeof sourceBook==='string'||Buffer.isBuffer(sourceBook)))throw new TypeError('Exact source-book bytes are required');
+  const book=Buffer.isBuffer(sourceBook)?sourceBook:Buffer.from(sourceBook);
+  if(!Number.isSafeInteger(manifest.bundleBytes)||manifest.bundleBytes!==book.length||digest(book)!==manifest.bundleSha256)throw new RangeError('Exact source-book bytes are required');
+  if(!Array.isArray(manifest.entries)||!manifest.entries.length)throw new TypeError('Nonempty source-book entries required');
+  let offset=0;
+  const line=()=>{
+    const end=book.indexOf(10,offset);
+    if(end<0)throw new RangeError('Truncated source-book framing');
+    const bytes=book.subarray(offset,end),value=bytes.toString('utf8');
+    if(!Buffer.from(value).equals(bytes))throw new TypeError('Invalid UTF-8 source-book header');
+    offset=end+1;return value;
+  };
+  const expect=value=>{if(line()!==value)throw new RangeError('Source-book header or file framing mismatch');};
+  expect('ETH SOURCE REVIEW BOOK');
+  expect('SOURCE_COMMIT '+manifest.sourceCommit);
+  expect('SOURCE_TREE '+manifest.sourceTree);
+  expect('EXTERNAL_REVIEW pending');
+  const sources=new Map();
+  for(const entry of manifest.entries){
+    if(!entry||typeof entry!=='object')throw new TypeError('Invalid source-book entry');
+    const path=safePath(entry.path);
+    if(sources.has(path))throw new RangeError('Duplicate source-book path');
+    if(!['committed-source','provided-execution-evidence'].includes(entry.kind)||!['utf8','base64'].includes(entry.encoding)||!SHA64.test(entry.sha256))throw new TypeError('Invalid source-book entry metadata');
+    if(!Number.isSafeInteger(entry.bytes)||entry.bytes<0||!Number.isSafeInteger(entry.payloadBytes)||entry.payloadBytes<0)throw new TypeError('Invalid source-book byte lengths');
+    expect('');expect('BEGIN FILE '+path);expect('KIND '+entry.kind);
+    expect('ORIGINAL_BYTES '+entry.bytes);expect('SHA256 '+entry.sha256);
+    expect('ENCODING '+entry.encoding);expect('PAYLOAD_BYTES '+entry.payloadBytes);expect('');
+    if(entry.payloadBytes>book.length-offset)throw new RangeError('Truncated source-book payload');
+    const payload=book.subarray(offset,offset+entry.payloadBytes);offset+=entry.payloadBytes;
+    let body;
+    if(entry.encoding==='utf8'){
+      body=payload;
+      if(!Buffer.from(body.toString('utf8')).equals(body))throw new TypeError('Invalid UTF-8 source-book payload');
+    }else{
+      const encoded=payload.toString('utf8');
+      body=Buffer.from(encoded,'base64');
+      if(body.toString('base64')!==encoded||!Buffer.from(encoded).equals(payload))throw new TypeError('Noncanonical base64 source-book payload');
+    }
+    if(body.length!==entry.bytes||digest(body)!==entry.sha256)throw new RangeError('Source-book payload bytes differ from manifest');
+    if(entry.kind==='committed-source'){
+      const gitBlob=createHash('sha1').update(Buffer.from('blob '+body.length+'\0')).update(body).digest('hex');
+      if(!SHA40.test(entry.gitBlob)||gitBlob!==entry.gitBlob)throw new RangeError('Source-book Git blob differs from manifest');
+    }else if(entry.gitBlob!==null)throw new TypeError('Execution evidence cannot claim a committed Git blob');
+    expect('');expect('END FILE '+path);
+    sources.set(path,{entry,body});
+  }
+  if(offset!==book.length)throw new RangeError('Unexpected trailing or unlisted source-book bytes');
+  if(!Array.isArray(manifest.parts)||!manifest.parts.length)throw new TypeError('Source-book parts required');
+  let partOffset=0;
+  for(const [i,part] of manifest.parts.entries()){
+    if(!part||part.name!=='source-part-'+String(i+1).padStart(2,'0')+'.txt'||!Number.isSafeInteger(part.bytes)||part.bytes<=0||part.bytes>book.length-partOffset||!SHA64.test(part.sha256))throw new TypeError('Invalid source-book part manifest');
+    const bytes=book.subarray(partOffset,partOffset+part.bytes);partOffset+=part.bytes;
+    if(digest(bytes)!==part.sha256||!Buffer.from(bytes.toString('utf8')).equals(bytes))throw new RangeError('Source-book part bytes differ from manifest');
+  }
+  if(partOffset!==book.length)throw new RangeError('Source-book parts do not cover the complete book');
+  return {sourceCommit:manifest.sourceCommit,sourceTree:manifest.sourceTree,sources};
+}
+
 /** Structural consistency only; actual provider execution must be independently authenticated. */
 export function validateEthReviewChain({manifest,sourceBook,reports,sourceContents,now=new Date().toISOString()}={}){
   if(!manifest||!SHA40.test(manifest.sourceCommit)||!SHA64.test(manifest.bundleSha256)||manifest.sourceAccess!=='complete-for-declared-scope')throw new TypeError('Complete exact source manifest required');
-  if(!(typeof sourceBook==='string'||Buffer.isBuffer(sourceBook))||digest(sourceBook)!==manifest.bundleSha256||Buffer.byteLength(sourceBook)!==manifest.bundleBytes)throw new RangeError('Exact source-book bytes are required');
+  const boundSource=validateEthReviewSource({manifest,sourceBook});
+  if(!Array.isArray(manifest.unresolvedImports)||manifest.unresolvedImports.length)throw new TypeError('Complete exact source manifest cannot contain unresolved imports');
   if(!Array.isArray(reports)||reports.length!==3)throw new TypeError('Three complete reports required');
   if(!sourceContents||typeof sourceContents!=='object')throw new TypeError('Exact readback source contents required');
   const nowMs=stamp(now,'now');let previousHash=null,previousCompleted=-Infinity;const validated=[],reportHashes=new Set();
@@ -187,8 +259,8 @@ export function validateEthReviewChain({manifest,sourceBook,reports,sourceConten
     if(!Array.isArray(r.sourceReadback)||r.sourceReadback.length<2)throw new TypeError('Substantive source readback from two files required');
     const paths=new Set();
     for(const readback of r.sourceReadback){
-      const path=safePath(readback.path),entry=manifest.entries.find(e=>e.path===path&&e.kind==='committed-source'),body=sourceContents[path];
-      if(!entry||typeof body!=='string'||digest(body)!==entry.sha256)throw new RangeError('Readback source bytes differ from manifest');
+      const path=safePath(readback.path),bound=boundSource.sources.get(path),entry=bound?.entry,body=sourceContents[path];
+      if(!entry||entry.kind!=='committed-source'||entry.encoding!=='utf8'||typeof body!=='string'||!Buffer.from(body).equals(bound.body))throw new RangeError('Readback source bytes differ from manifest');
       if(typeof readback.quote!=='string'||readback.quote.trim().length<40||!body.includes(readback.quote)||!r.reportText.includes(readback.quote))throw new RangeError('Actual report must contain exact substantive source fragments');
       paths.add(path);
     }

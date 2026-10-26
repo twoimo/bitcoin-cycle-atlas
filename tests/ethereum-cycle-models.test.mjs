@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {shortCycleFixture} from './helpers/eth-cycle-short-fixture.mjs';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { utcDay, dateFromDay } from '../dist/cycle-engine.js';
@@ -156,4 +157,33 @@ test('BTC transfer is the actual dated BTC baseline normalized to ETH, independe
   assert.equal(result.assumptions.btcPhaseAndRelativeAmplitudeTransferredAsHypothesis,true);
   assert.equal(result.probability,null);
   assert.equal(result.productionEligible,false);
+});
+
+
+test('ETH refit retains each valid short horizon when another requested horizon crosses the final anchor',()=>{
+  const rows=shortCycleFixture(),origin=rows.at(-1).date;
+  const run=horizons=>buildEthereumCycleCandidates({ethRows:rows,btcRows:[],asOf:origin,horizons}).ethRefit;
+  const mixed=run([30,90,180]),reordered=run([180,90,30]);
+  assert.equal(mixed.status,'available');assert.equal(reordered.status,'available');
+  for(const h of [30,90]){
+    const single=run([h]);assert.equal(single.status,'available');
+    assert.deepEqual(mixed.predictions.find(p=>p.horizonDays===h),single.predictions[0]);
+    assert.deepEqual(reordered.predictions.find(p=>p.horizonDays===h),single.predictions[0]);
+  }
+  const missing=mixed.predictions.find(p=>p.horizonDays===180);
+  assert.equal(missing.status,'unavailable');assert.equal(missing.price,undefined);
+  assert.match(missing.reason,/next estimated low/);
+  assert.deepEqual(mixed.anchors,reordered.anchors);
+  assert.equal(mixed.calibrated,false);assert.equal(mixed.productionEligible,false);
+  assert.equal(run([180]).status,'unavailable');
+});
+test('the last ETH low anchor is inclusive and the next day cannot invent another wave',()=>{
+  const rows=shortCycleFixture(),origin=rows.at(-1).date;
+  const result=buildEthereumCycleCandidates({ethRows:rows,btcRows:[],asOf:origin,horizons:[150,151]}).ethRefit;
+  assert.equal(result.status,'available');
+  const low=result.anchors.at(-1),at=result.predictions[0],after=result.predictions[1];
+  assert.equal(low.epochDay-utcDay(origin),150);
+  assert.equal(at.targetDate,low.date);close(at.price,low.price);
+  assert.equal(after.status,'unavailable');assert.equal(after.price,undefined);
+  assert.equal(after.targetDate,dateFromDay(low.epochDay+1));
 });

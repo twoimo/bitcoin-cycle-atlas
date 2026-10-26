@@ -85,7 +85,7 @@ export function compactEthereumReport(report){
       directionalCallCoverage:s.disjoint.directionalCallCoverage,directionAccuracyAmongDirectionalCalls:s.disjoint.directionAccuracyAmongDirectionalCalls,
       pairedBaselines:Object.fromEntries(Object.entries(s.pairedBaselines).map(([id,p])=>[id,{n:p.disjointCases,skill:p.skill,candidateError:p.candidateMeanAbsoluteLogError,baselineError:p.baselineMeanAbsoluteLogError}])),
       interval:s.experimentalInterval})),
-    current:Object.fromEntries(Object.entries(report.current.candidates).map(([id,c])=>[id,{status:c.status,reason:c.reason??null,predictions:c.predictions,assumptions:c.assumptions??null}])),
+    current:Object.fromEntries(Object.entries(report.current.candidates).map(([id,c])=>[id,{status:c.status,reason:c.reason??null,predictions:c.predictions,assumptions:c.assumptions??null,feasibility:c.feasibility??null}])),
     reviewSourceBundle:report.provenance.reviewSourceBundle,
     relativeStrength:{target:report.relativeStrength.target,unit:report.relativeStrength.unit,summaries:report.relativeStrength.summaries.map(s=>({model:s.model,horizonDays:s.horizonDays,availableOrigins:s.availableOrigins,completedOutcomes:s.completedOutcomes,disjointCases:s.disjointTargetIntervals,meanAbsoluteLogError:s.disjoint.meanAbsoluteLogError})),pairwise:report.relativeStrength.pairwise,scope:report.relativeStrength.scope},
     adoption:report.adoption,scope:report.scope};

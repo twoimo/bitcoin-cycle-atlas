@@ -3,7 +3,7 @@
  * A provider archive is an observation, not an eth-economic-input-3 snapshot.
  * This adapter does not relabel historical observations as historical captures.
  */
-import { ETH_ECONOMIC_INPUT_SCHEMA } from './ethereum-economic-model.js';
+import { ETH_ECONOMIC_INPUT_SCHEMA, assessEthereumEconomicFeasibility } from './ethereum-economic-model.js';
 
 const DAY_MS = 86400000;
 const DOC_REF = '8489126ae94aff995d01be44f965327f2640f51e';
@@ -212,6 +212,7 @@ export function assessCoinMetricsEconomicCoverage(parsed, { asOf, collectedAt })
     historicalCollectionProven: false,
     historicalPointInTimeReady: false,
     fullModelSnapshotReady: false,
+    modelFeasibility: assessEthereumEconomicFeasibility({asOf}),
     eligibleModelSnapshotCount: 0,
     modelSnapshots: [],
     blockers: [

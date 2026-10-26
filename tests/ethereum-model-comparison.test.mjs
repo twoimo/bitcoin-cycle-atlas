@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {shortCycleFixture} from './helpers/eth-cycle-short-fixture.mjs';
 import assert from 'node:assert/strict';
 import {utcDay,dateFromDay} from '../dist/cycle-engine.js';
 import {buildSimpleEthereumBtcLink,buildEthereumRelativeBenchmarks,buildEthereumCombinedCandidate,summarizeEthereumComparison,runEthereumModelComparison,disjointEthereumCases} from '../dist/ethereum-model-comparison.js';
@@ -148,4 +149,23 @@ test('explicit issue clocks are preserved and cannot predate the completed origi
   assert.equal(report.data.explicitIssueTimeCount,1);
   assert.ok(report.cases.every(c=>c.targetAvailableAt===null));
   assert.throws(()=>runEthereumModelComparison({...input,issuedAtByOrigin:{[asOf]:asOf+'T23:00:00Z'}},{asOf}),/issue timestamp/);
+});
+
+
+test('the complete comparison preserves valid per-horizon ETH refits and precise unavailable reasons',()=>{
+  const eth=shortCycleFixture(),asOf=eth.at(-1).date;
+  const btc=eth.map(row=>({...row,price:row.price*10}));
+  const report=runEthereumModelComparison({ethHistory:eth,btcHistory:btc},{asOf});
+  for(const h of [30,90]){
+    const row=report.cases.find(c=>c.origin===asOf&&c.horizonDays===h);
+    assert.ok(row.predictions.ethRefit>0);
+    assert.equal(row.unavailableModels.ethRefit,undefined);
+  }
+  const unavailable=report.cases.find(c=>c.origin===asOf&&c.horizonDays===180);
+  assert.equal(unavailable.predictions.ethRefit,undefined);
+  assert.match(unavailable.unavailableModels.ethRefit,/next estimated low/);
+  assert.deepEqual(report.origins.find(o=>o.origin===asOf).models.ethRefit.perHorizonAvailability,[
+    {horizonDays:30,available:true},{horizonDays:90,available:true},{horizonDays:180,available:false},
+  ]);
+  assert.equal(report.adoption.productionModelChanged,false);
 });

@@ -212,35 +212,51 @@
   "dynamicResolutions": [
     {
       "owner": "tests/eth-review-packet.test.mjs",
-      "offset": 1708,
+      "offset": 1732,
       "sourceFragment": "import('./a.mjs'); const b=import(target);\");\n  assert.equal(r.length,2);assert.equal(r[0].specifier,'./a.mjs');assert.equal(r[1].specifier,null);\n  assert.matc",
       "targets": [],
       "nonExecutableExample": true,
-      "reason": "Literal import text passed only to the candidate-discovery unit test; it is a synthetic string and is never executed or resolved as a repository dependency."
+      "reason": "Exact synthetic import text within this test module is supplied to a parser or written into an isolated temporary Git fixture. The generated modules are never evaluated; this text is not an import from the repository test file."
     },
     {
       "owner": "tests/eth-review-packet.test.mjs",
-      "offset": 1735,
+      "offset": 1759,
       "sourceFragment": "import(target);\");\n  assert.equal(r.length,2);assert.equal(r[0].specifier,'./a.mjs');assert.equal(r[1].specifier,null);\n  assert.match(r[1].sourceFragment,/impo",
       "targets": [],
       "nonExecutableExample": true,
-      "reason": "Computed import text passed only to the candidate-discovery unit test; the source string is inspected and never executed with a target expression."
+      "reason": "Exact synthetic import text within this test module is supplied to a parser or written into an isolated temporary Git fixture. The generated modules are never evaluated; this text is not an import from the repository test file."
     },
     {
       "owner": "tests/eth-review-packet.test.mjs",
-      "offset": 2528,
+      "offset": 2552,
       "sourceFragment": "import('./lazy.mjs'); throw new Error('must not run');\\n\",'dep.mjs':\"export {x} from './leaf.mjs';\\n\",'leaf.mjs':'export const x=42;\\n','lazy.mjs':'export const",
       "targets": [],
       "nonExecutableExample": true,
-      "reason": "The fixture writes a temporary synthetic module and its lazy module from bodies included in this test; packet parsing must not execute either module, and these are not repository files."
+      "reason": "Exact synthetic import text within this test module is supplied to a parser or written into an isolated temporary Git fixture. The generated modules are never evaluated; this text is not an import from the repository test file."
     },
     {
       "owner": "tests/eth-review-packet.test.mjs",
-      "offset": 4477,
+      "offset": 4501,
       "sourceFragment": "import(name);\\n\",f=await fixture(t,{'main.mjs':source,'target.mjs':'export const safe=true;\\n'});\n  const unresolved=await buildEthReviewPacket({repositoryRoot:",
       "targets": [],
       "nonExecutableExample": true,
-      "reason": "The fixture writes a temporary synthetic computed-import module and target body included in this test, then verifies explicit declaration handling without evaluating the generated module."
+      "reason": "Exact synthetic import text within this test module is supplied to a parser or written into an isolated temporary Git fixture. The generated modules are never evaluated; this text is not an import from the repository test file."
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "offset": 16452,
+      "sourceFragment": "import /* permitted comment */ ('./hidden.mjs');\\nexport const line=()=>import // permitted line comment\\n ('./hidden.mjs');\\n\";\n  const f=await fixture(t,{'mai",
+      "targets": [],
+      "nonExecutableExample": true,
+      "reason": "Exact synthetic import text within this test module is supplied to a parser or written into an isolated temporary Git fixture. The generated modules are never evaluated; this text is not an import from the repository test file."
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "offset": 17117,
+      "sourceFragment": "import /* computed */ (name);\\n\";\n  const f=await fixture(t,{'main.mjs':source});\n  const m=await buildEthReviewPacket({repositoryRoot:f.root,seedPaths:['main.m",
+      "targets": [],
+      "nonExecutableExample": true,
+      "reason": "Exact synthetic import text within this test module is supplied to a parser or written into an isolated temporary Git fixture. The generated modules are never evaluated; this text is not an import from the repository test file."
     }
   ]
 }

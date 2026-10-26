@@ -6,12 +6,22 @@
 const DAY_MS = 86400000;
 const EIP_REF = '7372d10a457b29eceb02cd052345af165de1fb60';
 const SPEC_REF = 'ff73f4dd90a8717b13ed5a52afa5c1af358259b5';
-export const ETH_ECONOMIC_VERSION = 'eth-economic-ridge-3';
+export const ETH_ECONOMIC_VERSION = 'eth-economic-ridge-4';
 export const ETH_ECONOMIC_DEFAULTS = Object.freeze({
   windowDays: 28, maximumSnapshotAgeDays: 7, ridgeAlpha: 1,
   minimumTrainingLabels: 16, maximumHorizonDays: 180,
 });
+export const ETH_ECONOMIC_MAINNET_CLOCK = Object.freeze({
+  genesisTime:1606824023,secondsPerSlot:12,slotsPerEpoch:32,
+  capellaEpoch:194048,denebEpoch:269568,
+  genesisAt:'2020-12-01T12:00:23.000Z',
+  capellaAt:'2023-04-12T22:27:35.000Z',
+  denebAt:'2024-03-13T13:55:35.000Z',
+});
 export const ETH_ECONOMIC_SOURCES = Object.freeze([
+  {id:'mainnet-genesis',url:'https://github.com/eth-clients/mainnet/blob/8cad4805e9cb5aa5e8e74d30e3f5029a7f133372/README.md',blobSha:'074fe44aaaf9561208b029c91671e499dc0af2f9'},
+  {id:'mainnet-fork-clock',url:'https://github.com/ethereum/consensus-specs/blob/'+SPEC_REF+'/configs/mainnet.yaml',blobSha:'3dadbd7433b69a45669cdd2459fee41653cd2ac1'},
+  {id:'mainnet-epoch-clock',url:'https://github.com/ethereum/consensus-specs/blob/'+SPEC_REF+'/presets/mainnet/phase0.yaml',blobSha:'44030cc5b9c19b80cc72639ba348c226c34aa88e'},
   {id:'eip-1559',url:'https://github.com/ethereum/EIPs/blob/'+EIP_REF+'/EIPS/eip-1559.md',blobSha:'26a5b739e1661fc7599d4d3a4c35e004a72886e1'},
   {id:'eip-4844',url:'https://github.com/ethereum/EIPs/blob/'+EIP_REF+'/EIPS/eip-4844.md',blobSha:'de2e4a46ad93fc04e6fe3174dc6e90a3307bdb5f'},
   {id:'eip-3675',url:'https://github.com/ethereum/EIPs/blob/'+EIP_REF+'/EIPS/eip-3675.md',blobSha:'efa51f543490bd6643fa943fb963d762312bda2a'},
@@ -134,6 +144,52 @@ function finite(value,name,nonnegative=true){
   if(!Number.isFinite(value)||(nonnegative&&value<0))throw new RangeError(name+' must be finite'+(nonnegative?' and nonnegative':''));
   return value;
 }
+
+/** UTC windows ending before activation cannot contain the later protocol action.
+ * A window containing the activation instant may contain actual later activity.
+ * Protocol zero is not a substitute for a missing measurement/source receipt.
+ */
+export function assertEthereumEconomicProtocolEra(metrics,observedThrough){
+  const d=day(observedThrough),end=(d+1)*DAY_MS;
+  if(!metrics||typeof metrics!=='object')throw new TypeError('Economic metrics required for protocol-era validation');
+  if(end<=Date.parse(ETH_ECONOMIC_MAINNET_CLOCK.genesisAt)&&[
+    'consensusNetIssuanceEth','stakedEth','exitQueueEth','stakingConsensusRewardsEth',
+    'stakingConsensusPenaltiesEth','averageRewardEligibleStakeEth',
+  ].some(name=>metrics[name]!==0))throw new RangeError('Consensus issuance and active staking cannot predate mainnet Beacon genesis');
+  if(end<=Date.parse(ETH_ECONOMIC_MAINNET_CLOCK.denebAt)&&
+    ['blobGasUsed','blobFeesEth','blobBurnEth'].some(name=>metrics[name]!==0))throw new RangeError('Blob activity and fees cannot predate mainnet Dencun');
+  if(end<=Date.parse(ETH_ECONOMIC_MAINNET_CLOCK.capellaAt)&&metrics.completedExitCount!==0)throw new RangeError('Completed execution-layer withdrawals cannot predate mainnet Capella');
+  if(d-27>=day('2022-09-16')&&metrics.executionPowIssuanceEth!==0)throw new RangeError('Execution PoW issuance must be zero for fully post-Merge mainnet windows');
+}
+
+/** Supply accounting remains usable independently of full-model readiness. */
+export function ethereumEconomicNetSupplyRate(metrics){
+  for(const key of ['consensusNetIssuanceEth','executionPowIssuanceEth','executionBurnEth','blobBurnEth','supplyEth'])finite(metrics?.[key],key,key!=='consensusNetIssuanceEth');
+  if(!(metrics.supplyEth>0))throw new RangeError('Supply must be positive');
+  return (metrics.consensusNetIssuanceEth+metrics.executionPowIssuanceEth-metrics.executionBurnEth-metrics.blobBurnEth)/metrics.supplyEth;
+}
+
+/** Optimistic protocol ceiling, never actual data, training evidence or readiness. */
+export function assessEthereumEconomicFeasibility({asOf,horizons=[30,90,180]}={}){
+  const d=day(asOf),firstPossibleOriginDate=ETH_ECONOMIC_MAINNET_CLOCK.capellaAt.slice(0,10);
+  if(!Array.isArray(horizons)||!horizons.length||new Set(horizons).size!==horizons.length||horizons.some(h=>![30,90,180].includes(h)))throw new RangeError('Only distinct 30, 90, 180 day horizons are supported');
+  const first=day(firstPossibleOriginDate),minimum=ETH_ECONOMIC_DEFAULTS.minimumTrainingLabels;
+  return {
+    version:'eth-economic-protocol-feasibility-1',asOf,firstPossibleOriginDate,
+    capellaAt:ETH_ECONOMIC_MAINNET_CLOCK.capellaAt,optimisticUpperBound:true,
+    actualEligibleLabels:null,independentMarketRegimes:null,provesInputReadiness:false,
+    limitation:'Completed execution-layer exits are required. Earliest activation-day origin is only an optimistic bound; actual exits, complete observations and publication/collection receipts can make eligibility later. Nonoverlapping labels are not independent regimes.',
+    horizons:horizons.map(horizonDays=>{
+      const maximumPossibleMatureLabels=Math.max(0,Math.floor((d-first)/horizonDays));
+      const firstMatureDay=first+minimum*horizonDays;
+      return {horizonDays,minimumTrainingLabels:minimum,maximumPossibleMatureLabels,
+        structurallyEnoughMatureLabels:maximumPossibleMatureLabels>=minimum,
+        earliestPossibleAsOf:dateOf(firstMatureDay),
+        earliestPossibleIssuedAt:new Date((firstMatureDay+1)*DAY_MS).toISOString()};
+    }),
+  };
+}
+
 function priceIndex(rows,asOfDay,cutoff,label){
   if(!Array.isArray(rows)||!rows.length)throw new TypeError(label+' daily prices are required');
   const index=new Map();
@@ -189,12 +245,13 @@ function snapshotsAtIssue(raw,asOfDay,cutoff){
       finite(m[name],name,name!=='consensusNetIssuanceEth');
       if(!url(snapshot.metricSourceUrls?.[name]))throw new TypeError('Metric source URL missing: '+name);
     }
+    assertEthereumEconomicProtocolEra(m,snapshot.observedThrough);
     if(!(m.supplyEth>0&&m.l2UserFeesEth>0))throw new RangeError('Supply and L2 user-fee denominator must be positive');
     if(m.stakedEth>m.supplyEth||m.exitQueueEth>m.stakedEth)throw new RangeError('Staking/exit stock accounting is inconsistent');
     if(!(m.averageRewardEligibleStakeEth>0))throw new RangeError('The staking return denominator must be positive');
     if(!Number.isSafeInteger(m.completedExitCount)||m.completedExitCount<1)throw new RangeError('Completed waiting-time observations require a positive completed-exit count');
     if(m.uniqueNativeCollateralEth+m.uniqueStakingClaimCollateralEth>m.supplyEth+64*Number.EPSILON*Math.max(1,m.supplyEth))throw new RangeError('Unique underlying collateral cannot exceed total ETH supply');
-    if(d-27>=day('2022-09-16')&&m.executionPowIssuanceEth!==0)throw new RangeError('Execution PoW issuance must be zero for fully post-Merge mainnet windows');
+
     const tol=1e-10*Math.max(1,m.executionFeesEth,m.blobFeesEth);
     if(m.executionBurnEth>m.executionFeesEth+tol||Math.abs(m.blobBurnEth-m.blobFeesEth)>tol)throw new RangeError('Fee and burn accounting is inconsistent');
     if(m.l2SettlementFeesEth>m.executionFeesEth+m.blobFeesEth+tol)throw new RangeError('Rollup L1 payments must be a subset of L1 fees');
@@ -224,7 +281,7 @@ function featureAt(eth,btc,snapshots,d,cutoff){
   const x=[
     Math.log1p(m.l1GasUsed/28),Math.log1p(m.l2Transactions/28),Math.log1p(m.blobGasUsed/28),
     (m.executionFeesEth+m.blobFeesEth)/m.supplyEth,
-    (m.consensusNetIssuanceEth+m.executionPowIssuanceEth-m.executionBurnEth-m.blobBurnEth)/m.supplyEth,
+    ethereumEconomicNetSupplyRate(m),
     m.stakedEth/m.supplyEth,m.exitQueueEth/m.supplyEth,m.l2SettlementFeesEth/m.l2UserFeesEth,
     Math.log(e.price/e0.price)-Math.log(b.price/b0.price),Math.log(b.price/b0.price),
     (m.stakingConsensusRewardsEth-m.stakingConsensusPenaltiesEth+m.stakingPriorityFeesEth+m.stakingMevExcludingPriorityEth-m.stakingServiceFeesEth-m.stakingOperatingCostsEth)/m.averageRewardEligibleStakeEth,
@@ -285,17 +342,20 @@ function coefficientReceipt(model){
 
 /** No output from this function is an authorization to promote a default model. */
 export function buildEthereumEconomicCandidate({ethRows,btcRows,asOf,horizons=[30,90,180],economicSnapshots=[],issuedAt}={}){
+  let feasibility=null;
+  const blocked=(reason,extra={})=>unavailable(reason,{feasibility,...extra});
   try{
     const asOfDay=day(asOf),closeAt=(asOfDay+1)*DAY_MS;
     const cutoff=issuedAt===undefined?closeAt:stamp(issuedAt,'issuedAt');
     const issueLag=cutoff-closeAt;
     if(issueLag<0||issueLag>=DAY_MS)throw new RangeError('issuedAt must be within the UTC day after the asOf close');
     if(!Array.isArray(horizons)||!horizons.length||new Set(horizons).size!==horizons.length||horizons.some(h=>![30,90,180].includes(h)))throw new RangeError('Only distinct 30, 90, 180 day horizons are supported');
-    if(!Array.isArray(economicSnapshots)||!economicSnapshots.length)return unavailable('No point-in-time economic snapshots; price-only data cannot activate economic inputs.',{asOf,issuedAt:new Date(cutoff).toISOString(),missingInputs:metricNames});
+    feasibility=assessEthereumEconomicFeasibility({asOf,horizons});
+    if(!Array.isArray(economicSnapshots)||!economicSnapshots.length)return blocked('No point-in-time economic snapshots; price-only data cannot activate economic inputs.',{asOf,issuedAt:new Date(cutoff).toISOString(),missingInputs:metricNames});
     const snapshots=snapshotsAtIssue(economicSnapshots,asOfDay,cutoff);
     const eth=priceIndex(ethRows,asOfDay,cutoff,'ETH'),btc=priceIndex(btcRows,asOfDay,cutoff,'BTC');
     const current=featureAt(eth,btc,snapshots,asOfDay,cutoff);
-    if(!current)return unavailable('The current origin lacks a complete lagged price window or an eligible economic vintage.',{asOf,issuedAt:new Date(cutoff).toISOString()});
+    if(!current)return blocked('The current origin lacks a complete lagged price window or an eligible economic vintage.',{asOf,issuedAt:new Date(cutoff).toISOString()});
     const first=Math.min(...eth.keys()),predictions=[],training=[],coefficients=[],contributions=[],ablations=[];
     for(const horizonDays of horizons){
       const samples=[];let considered=0,rejected=0;
@@ -315,6 +375,7 @@ export function buildEthereumEconomicCandidate({ethRows,btcRows,asOf,horizons=[3
       const info={
         horizonDays,consideredOrigins:considered,rejectedOrigins:rejected,eligibleOrigins:samples.length,
         minimumTrainingLabels:ETH_ECONOMIC_DEFAULTS.minimumTrainingLabels,
+        protocolFeasibility:feasibility.horizons.find(row=>row.horizonDays===horizonDays),
         firstOrigin:samples[0]?.originDate??null,lastOrigin:samples.at(-1)?.originDate??null,
         maximumLabelDate:samples.at(-1)?.targetDate??null,labelWindowsOverlap:false,
         adjacentWindowsShareEndpoint:true,independentMarketRegimes:null,
@@ -359,7 +420,7 @@ export function buildEthereumEconomicCandidate({ethRows,btcRows,asOf,horizons=[3
     const ready=predictions.some(p=>p.status==='ready');
     return {
       status:ready?'ready':'unavailable',version:ETH_ECONOMIC_VERSION,asOf,issuedAt:new Date(cutoff).toISOString(),
-      predictions,training,coefficients,contributions,ablations,
+      predictions,training,coefficients,contributions,ablations,feasibility,
       reason:ready?null:'No horizon has enough eligible mature labels.',
       currentInput:{scopes:current.snapshot.scopes,completedExitCount:current.snapshot.metrics.completedExitCount,snapshotDate:dateOf(current.snapshot.day),ageDays:asOfDay-current.snapshot.day,vintageId:current.snapshot.evidence.vintageId,sourceHash:current.snapshot.evidence.sourceHash,observedEthUsd:current.eth,observedEthBtc:current.eth/current.btc},
       method:{name:'direct-horizon-ridge',ridgeAlpha:ETH_ECONOMIC_DEFAULTS.ridgeAlpha,alphaOrigin:'fixed analyst regularization, not selected using future performance',featureCount:ETH_ECONOMIC_FEATURES.length,trainingStandardizationOnly:true,futureBtcRealizationUsedAsPredictor:false,relativeStrengthIsSeparateTarget:true,causalClaim:false,probability:null,calibrated:false,defaultEligible:false,outOfSamplePerformance:null},
@@ -376,7 +437,7 @@ export function buildEthereumEconomicCandidate({ethRows,btcRows,asOf,horizons=[3
       ],
     };
   }catch(error){
-    if(error instanceof TypeError||error instanceof RangeError)return unavailable(error.message,{asOf:typeof asOf==='string'?asOf:null});
+    if(error instanceof TypeError||error instanceof RangeError)return blocked(error.message,{asOf:typeof asOf==='string'?asOf:null});
     throw error;
   }
 }

@@ -7,7 +7,7 @@ import {buildEthereumCycleCandidates} from './ethereum-cycle-models.js';
 import {buildEthereumEconomicCandidate} from './ethereum-economic-model.js';
 
 export const ETH_COMPARISON_POLICY = Object.freeze({
-  version: 'eth-locked-candidate-comparison-1', horizons: Object.freeze([30,90,180]),
+  version: 'eth-locked-candidate-comparison-2', horizons: Object.freeze([30,90,180]),
   minimumHistoryDays: 730, originStrideDays: 28, betaLookbackDays: 365,
   legacySeed: 20261022, minimumBlendCases: 12, intervalAlpha: 0.2,
   minimumCalibrationCases: 12, minimumDisjointPromotionCases: 30,
@@ -243,14 +243,17 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
     };
     candidates.combined=buildEthereumCombinedCandidate({origin,horizons,cycle:candidates.ethRefit,economic,history:cases});
     originsMetadata.push({origin,informationCutoffAt,issuedAt:issuedAt??null,observationThroughAt:closeAt(origin),models:Object.fromEntries(Object.entries(candidates).map(([id,c])=>[id,{
-      status:c.status,reason:c.reason??null,training:c.training??null,assumptions:c.assumptions??null,
+      status:c.status,reason:c.reason??null,training:c.training??null,assumptions:c.assumptions??null,feasibility:c.feasibility??null,
       perHorizonAvailability:horizons.map(h=>({horizonDays:h,available:Boolean(rowPrediction(c,h))})),
     }]))});
     for(const h of horizons){
       const targetDate=dateFromDay(utcDay(origin)+h),actual=ethByDate.get(targetDate)??null,predictions={},intervals={},unavailableModels={};
       for(const model of ETH_COMPARISON_MODELS){
         const p=rowPrediction(candidates[model],h);
-        if(!p){unavailableModels[model]=candidates[model].reason??'Insufficient horizon-specific evidence';continue;}
+        if(!p){
+          const missing=candidates[model].predictions?.find(row=>row.horizonDays===h);
+          unavailableModels[model]=missing?.reason??candidates[model].reason??'Insufficient horizon-specific evidence';continue;
+        }
         if(p.targetDate!==targetDate)throw new RangeError('Candidate target clock differs from the evaluation target');
         predictions[model]=p.price;
         const prior=calibration.get(model).get(h);

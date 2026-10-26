@@ -9,7 +9,7 @@ import { calibrateCycleTiming, CYCLE_CALIBRATION_DEFAULTS } from './cycle-calibr
  * Neither candidate is a production forecast or a calibrated distribution.
  */
 export const ETHEREUM_CYCLE_COMPARISON_POLICY = Object.freeze({
-  version: 'eth-cycle-comparison-1',
+  version: 'eth-cycle-comparison-2',
   drawdownPct: CYCLE_CALIBRATION_DEFAULTS.drawdownPct,
   reversalPct: CYCLE_CALIBRATION_DEFAULTS.reversalPct,
   confirmationDays: CYCLE_CALIBRATION_DEFAULTS.confirmationDays,
@@ -188,7 +188,9 @@ function refit(rows, asOf, horizons) {
   const current = rows.at(-1), peak = highs.at(-1), previousPeak = highs.at(-2);
   const peakDay = peak.epochDay + periodDays, zoneDay = peakDay - zoneLeadDays, lowDay = peakDay + bearDays;
   if (zoneDay <= current.epochDay) return unavailable('Estimated ETH high-zone date has expired; no additional cycle is invented', training, assumptions);
-  if (current.epochDay + Math.max(...horizons) > lowDay) return unavailable('Requested ETH horizon exceeds the next estimated low; no repeated wave is invented', training, assumptions);
+  const horizonReason = 'Requested ETH horizon exceeds the next estimated low; no repeated wave is invented';
+  const eligibleHorizons = horizons.filter(horizonDays => current.epochDay + horizonDays <= lowDay);
+  if (!eligibleHorizons.length) return unavailable(horizonReason, training, assumptions);
   let nextPeak, nextLow;
   try {
     nextPeak = finitePrice(Math.log(peak.price) + growthRetention * logRatio(peak.price, previousPeak.price));
@@ -206,7 +208,10 @@ function refit(rows, asOf, horizons) {
   anchors.push(anchor('peak-reference', peakDay, nextPeak), anchor('next-low-reference', lowDay, nextLow));
   return {
     status: 'available', model: 'eth-refitted-log-anchor-baseline', asOf,
-    predictions: projectedPrices(anchors, asOf, horizons), anchors, training, assumptions,
+    predictions: horizons.map(horizonDays => eligibleHorizons.includes(horizonDays)
+      ? projectedPrices(anchors, asOf, [horizonDays])[0]
+      : { status: 'unavailable', horizonDays, targetDate: dateFromDay(current.epochDay + horizonDays), reason: horizonReason }),
+    anchors, training, assumptions,
     probability: null, calibrated: false, productionEligible: false,
     warning: 'Few dependent ETH reversal episodes are not independent four-year cycles. Fitted coefficients and 3-up/1-down proportions require out-of-sample evaluation.',
   };
