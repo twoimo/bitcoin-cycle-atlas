@@ -9,63 +9,69 @@
   "viewports": [
     {
       "width": 1440,
-      "height": 59,
+      "height": 1000,
       "assets": 18,
       "keyboardFocus": true,
       "reducedMotion": true,
       "lastRowVisible": true,
       "stickyHeaderDelta": 0,
-      "minMeasuredBodyTextContrast": 6.939858807417792
+      "minMeasuredBodyTextContrast": 6.939858807417792,
+      "headingHeight": 59
     },
     {
       "width": 390,
-      "height": 56,
+      "height": 844,
       "assets": 18,
       "keyboardFocus": true,
       "reducedMotion": true,
       "lastRowVisible": true,
       "stickyHeaderDelta": 0,
-      "minMeasuredBodyTextContrast": 6.939858807417792
+      "minMeasuredBodyTextContrast": 6.939858807417792,
+      "headingHeight": 56
     },
     {
       "width": 320,
-      "height": 56,
+      "height": 700,
       "assets": 18,
       "keyboardFocus": true,
       "reducedMotion": true,
       "lastRowVisible": true,
       "stickyHeaderDelta": 0,
-      "minMeasuredBodyTextContrast": 6.939858807417792
+      "minMeasuredBodyTextContrast": 6.939858807417792,
+      "headingHeight": 56
     },
     {
       "width": 700,
-      "height": 56,
+      "height": 600,
       "assets": 18,
       "keyboardFocus": true,
       "reducedMotion": true,
       "lastRowVisible": true,
       "stickyHeaderDelta": 0,
-      "minMeasuredBodyTextContrast": 6.939858807417792
+      "minMeasuredBodyTextContrast": 6.939858807417792,
+      "headingHeight": 56
     },
     {
       "width": 620,
-      "height": 56,
+      "height": 420,
       "assets": 18,
       "keyboardFocus": true,
       "reducedMotion": true,
       "lastRowVisible": true,
       "stickyHeaderDelta": 0,
-      "minMeasuredBodyTextContrast": 6.939858807417792
+      "minMeasuredBodyTextContrast": 6.939858807417792,
+      "headingHeight": 56
     },
     {
       "width": 800,
-      "height": 59,
+      "height": 420,
       "assets": 18,
       "keyboardFocus": true,
       "reducedMotion": true,
       "lastRowVisible": true,
       "stickyHeaderDelta": 0,
-      "minMeasuredBodyTextContrast": 6.939858807417792
+      "minMeasuredBodyTextContrast": 6.939858807417792,
+      "headingHeight": 59
     }
   ],
   "csv": {
