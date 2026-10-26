@@ -29,6 +29,8 @@
 /* The direct evidence route does not mount the chart workspace's mobile chrome. */
 .evidence-mobile-heading{display:none}
 @media(max-width:620px){
+  #evidence-view{grid-template-rows:auto auto minmax(0,1fr) auto}
+  .evidence-controls{align-content:flex-start;align-items:center}
   .evidence-mobile-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none;min-height:calc(54px + env(safe-area-inset-top,0px));padding:calc(4px + env(safe-area-inset-top,0px)) 12px 4px 8px;box-sizing:border-box;border-bottom:1px solid var(--border,var(--research-reader-rule-2));background:var(--surface,var(--research-reader-surface-3));color:var(--muted,var(--research-reader-ink-5));font:600 12px/1.3 var(--font,system-ui)}
   .evidence-mobile-heading button{display:inline-flex;align-items:center;gap:4px;min-height:44px;padding:8px 12px 8px 4px;border:0;border-radius:5px;background:transparent;color:var(--text,var(--research-reader-ink-6));font:600 12px/1.3 var(--font,system-ui);cursor:pointer}
   .evidence-mobile-heading button:hover{background:var(--surface-hover,var(--research-reader-surface-4))}

@@ -175,6 +175,7 @@ async function readiness(version){
         await page.waitForFunction(name=>{
           const doc=name==='mobile-preview'?document.querySelector('#mobile-preview')?.contentDocument:document;
           if(!doc||doc.documentElement.dataset.boot!=='ready')return false;
+          if((name==='btc'||name==='mobile-preview')&&(doc.querySelector('.atlas-plot[aria-busy="true"]')||doc.querySelector('.workspace-toast:not([hidden])')))return false;
           if(name==='data')return doc.querySelectorAll('#data-body tr[data-asset-symbol]').length===18;
           if(name==='evidence')return doc.querySelectorAll('#evidence-body [data-evidence-detail]').length>0;
           if(name==='compare')return doc.querySelectorAll('#structure-chart path').length>0&&doc.querySelectorAll('#structure-cycles tr').length>0;

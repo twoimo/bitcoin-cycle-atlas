@@ -77,6 +77,23 @@ export async function verifyWorkspaceSurface(api) {
       return {boot:doc.documentElement?.dataset.boot,width:frame.width,height:frame.height,innerWidth:frame.contentWindow.innerWidth,plotPaths:doc.querySelectorAll('#lab-chart path').length,mainHeight:main.clientHeight,scrollHeight:main.scrollHeight,scrollWidth:main.scrollWidth,clientWidth:main.clientWidth};
     });
     assert.ok(receipt.workspace.actual.plotPaths>0,'Preview iframe never rendered actual BTC chart');
+    await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('#mobile-preview')?.contentDocument?.querySelector('.workbench-bottom-bar'))),'preview footer ready');
+    const previewPan=await evaluate(cdp,()=>{
+      const main=document.querySelector('main'),frame=document.querySelector('#mobile-preview');
+      main.scrollLeft=main.scrollWidth;main.scrollTop=main.scrollHeight;
+      return {scrollLeft:main.scrollLeft,maxLeft:main.scrollWidth-main.clientWidth,scrollTop:main.scrollTop,maxTop:main.scrollHeight-main.clientHeight};
+    });await settled(cdp);
+    const previewEnd=await evaluate(cdp,()=>{
+      const main=document.querySelector('main'),frame=document.querySelector('#mobile-preview'),m=main.getBoundingClientRect(),f=frame.getBoundingClientRect();
+      return {frameRight:f.right,frameBottom:f.bottom,clipRight:m.left+main.clientLeft+main.clientWidth,clipBottom:m.top+main.clientTop+main.clientHeight,
+        parentWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth,footer:frame.contentDocument.querySelector('.workbench-bottom-bar')?.textContent||''};
+    });
+    assert.ok(Math.abs(previewPan.scrollLeft-previewPan.maxLeft)<=1&&Math.abs(previewPan.scrollTop-previewPan.maxTop)<=1,'Preview must reach both scroll ends');
+    assert.ok(previewEnd.frameRight<=previewEnd.clipRight+1&&previewEnd.frameBottom<=previewEnd.clipBottom+1,'Selected viewport bottom/right edge is unreachable');
+    assert.ok(previewEnd.footer.includes('로그')&&previewEnd.parentWidth<=previewEnd.viewportWidth+1,'Preview footer must exist without page overflow');
+    receipt.workspace.previewPan={...previewPan,...previewEnd};
+    await screenshot(cdp,page+'-'+width+'x'+height+'-preview-scroll-end.png',receipt);
+    await evaluate(cdp,()=>{const main=document.querySelector('main');main.scrollLeft=0;main.scrollTop=0;});await settled(cdp);
     for(const mode of ['loading','error','actual']){
       await evaluate(cdp,value=>{const picker=document.querySelector('#preview-mode');picker.value=value;picker.dispatchEvent(new Event('change',{bubbles:true}));},mode);
       await until(()=>evaluate(cdp,value=>{
@@ -112,8 +129,17 @@ export async function verifyWorkspaceSurface(api) {
           'Preview active boot panel is not visible: '+JSON.stringify(state.active));
       }
       states.push({label:'preview-'+mode,...state});
+      await screenshot(cdp,page+'-'+width+'x'+height+'-preview-'+mode+'.png',receipt);
       await screenshot(cdp,page+'-'+width+'-'+mode+'.png',receipt);
     }
+    await evaluate(cdp,()=>document.querySelector('header a').focus());
+    await key('Tab','Tab',9);
+    const frameFocus=await evaluate(cdp,()=>{
+      const frame=document.querySelector('#mobile-preview'),css=getComputedStyle(frame);
+      return {active:document.activeElement===frame,outline:css.outlineStyle,width:parseFloat(css.outlineWidth),color:css.outlineColor};
+    });
+    assert.ok(frameFocus.active&&frameFocus.outline!=='none'&&frameFocus.width>=2,'Embedded preview keyboard focus must be visible');
+    receipt.workspace.frameFocus=frameFocus;
     await evaluate(cdp,()=>{const picker=document.querySelector('#preview-size');picker.value='844x390';picker.dispatchEvent(new Event('change',{bubbles:true}));});
     await settled(cdp);
     assert.deepEqual(await evaluate(cdp,()=>{const f=document.querySelector('#mobile-preview');return [f.contentWindow.innerWidth,f.contentWindow.innerHeight];}),[844,390]);
@@ -143,6 +169,15 @@ export async function verifyWorkspaceSurface(api) {
   if(surface==='evidence'){
     await until(()=>evaluate(cdp,()=>document.querySelectorAll('#evidence-body [data-evidence-detail]').length>0),'research rows ready');
     await inspect('#evidence-view','research-list',{opaque:false});
+    const density=await evaluate(cdp,()=>{
+      const view=document.querySelector('#evidence-view'),controls=view.querySelector('.evidence-controls'),shell=view.querySelector('.evidence-table-shell'),rect=shell.getBoundingClientRect();
+      const rows=[...view.querySelectorAll('#evidence-body tr')].filter(row=>{const r=row.getBoundingClientRect();return r.height>0&&r.top>=rect.top&&r.bottom<=rect.bottom+1;});
+      return {controlsHeight:controls.getBoundingClientRect().height,tableHeight:rect.height,rowsInView:rows.length,gridRows:getComputedStyle(view).gridTemplateRows};
+    });
+    assert.ok(density.controlsHeight<=112,'Research filters consume the reading viewport');
+    assert.ok(density.tableHeight>=height*.6&&density.rowsInView>=6,'Research viewport must retain useful list density');
+    receipt.workspace.density=density;
+
     await text('#evidence-search','__atlas_no_matching_research__');
     assert.ok((await bounds(cdp,'#evidence-body')).text.includes('일치하는 자료가 없습니다'));
     assert.ok((await evaluate(cdp,()=>location.search)).includes('research-q='));

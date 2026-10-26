@@ -77,7 +77,7 @@ async function screenshot(cdp,name,receipt){
   const bytes=Buffer.from(result.data,'base64');
   await writeFile(resolve(out,name),bytes);
   receipt.screenshots.push({file:name,bytes:bytes.length,sha256:hash(bytes)});
-  if(/^workspace-(?:btc|evidence|legacy|preview).*?(?:btc-toolbar|research-reader|legacy|preview-controls|failure)\.png$/.test(name)||name==='data-fill-1620x1008.png'||name==='data-fill-1920x1440.png'||name==='data-320-start.png'||name==='eth-320-loaded.png'||name==='bmnr-320-clock.png'||name==='zero-fixture-320.png'||/^(ethusd|bmnr|mstr)-journal-320-(base|stress)\.png$/.test(name)){
+  if(/^workspace-(?:btc|evidence|legacy|preview).*?(?:btc-toolbar|research-reader|legacy|preview-controls|failure|btc-journal|annotations-empty|settings|indicators|go-to|export-preview|research-empty|preview-loading|preview-error|preview-scroll-end)\.png$/.test(name)||name==='data-fill-1620x1008.png'||name==='data-fill-1920x1440.png'||name==='data-320-start.png'||name==='eth-320-loaded.png'||name==='bmnr-320-clock.png'||name==='zero-fixture-320.png'||/^(ethusd|bmnr|mstr)-journal-320-(base|stress)\.png$/.test(name)){
     const size=30000,total=Math.ceil(result.data.length/size);
     for(let index=0;index<total;index++)console.log('ETH_BROWSER_IMAGE_CHUNK '+JSON.stringify({name,index,total,data:result.data.slice(index*size,(index+1)*size)}));
   }
@@ -439,6 +439,25 @@ async function ethCase(cdp,width,receipt,expected,archive){
 
 async function verifyInfoDataLinks(cdp,symbol){
   const eth=symbol==='ETHUSD',dialogId=eth?'eth-data-dialog':'equity-detail-dialog';
+  const gestureStart=await evaluate(cdp,()=>{
+    const bar=document.querySelector('.eth-topbar');bar.scrollLeft=0;
+    const r=bar.getBoundingClientRect();return {left:r.left+bar.clientLeft,right:r.left+bar.clientLeft+bar.clientWidth,y:r.top+r.height/2,height:r.height};
+  });
+  const startX=gestureStart.right-16,endX=Math.max(gestureStart.left+16,startX-160);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:startX,y:gestureStart.y,id:1}]});
+  for(let step=1;step<=6;step++){
+    await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:startX+(endX-startX)*step/6,y:gestureStart.y,id:1}]});
+    await delay(16);
+  }
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await settled(cdp);
+  const gesture=await evaluate(cdp,()=>{
+    const bar=document.querySelector('.eth-topbar'),app=bar.closest('.eth-app');
+    return {scrollLeft:bar.scrollLeft,scrollWidth:bar.scrollWidth,clientWidth:bar.clientWidth,height:bar.getBoundingClientRect().height,appScrollLeft:app.scrollLeft,rootWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth};
+  });
+  assert.ok(gesture.scrollWidth>gesture.clientWidth&&gesture.scrollLeft>0,'Native touch must scroll the overflowing toolbar');
+  assert.equal(gesture.appScrollLeft,0,'Touch must not scroll the clipped app shell');
+  assert.equal(gesture.height,gestureStart.height,'Touch must retain one toolbar row');
+  assert.ok(gesture.rootWidth<=gesture.viewportWidth+1,'Touch must not cause document overflow');
   await click(cdp,eth?'[data-eth-action="info"]':'[data-equity-action="info"]');
   const toolbarAccess=await evaluate(cdp,eth=>{
     const button=document.querySelector(eth?'[data-eth-action="info"]':'[data-equity-action="info"]'),bar=button.closest('.eth-topbar'),b=button.getBoundingClientRect(),r=bar.getBoundingClientRect();
@@ -474,7 +493,7 @@ async function verifyInfoDataLinks(cdp,symbol){
   assert.equal(state.misleading,false);
   await click(cdp,'#'+dialogId+' > header > button');
   assert.equal(await evaluate(cdp,id=>document.getElementById(id).open,dialogId),false);
-  return {...state,toolbarAccess};
+  return {...state,toolbarAccess,gesture};
 }
 
 async function equityCase(cdp,width,receipt,symbol,archive){

@@ -196,7 +196,11 @@ export async function initEthView() {
     $('#eth-forecast-note').title=forecast?`${forecast.scenario.label} · 관측 ${forecast.asOf} · 외부 평가 조건 2024-06-05`:'';
     $('[data-eth-action="forecast"]').setAttribute('aria-pressed',String(Boolean(forecast)));
     if(!state.range)state.range=intraday?market.range(state.frequency):ethHistoryRange(series,state.span,null,forecast?.displayEnd);
-    state.controller=drawIntradayChart({svg,series,range:state.range,chartType:state.chartType,scale:state.scale,priceDomain:state.priceDomain,showVolume:false,tool:state.tool,selectedTime:state.selectedTime,headerInset:plot.clientHeight<300?(forecast?70:54):(forecast?100:76),forecast,onForecastEvidence:()=>openInfo('forecast'),historyStatus:entry?.historyStatus||'ready',onHover:showReadout,
+    // Keep readable semantic keys outside the price clip at every font/viewport size.
+    const forecastNote=$('#eth-forecast-note'),noteBottom=forecastNote.offsetTop+forecastNote.offsetHeight;
+    const headerInset=Math.max(plot.clientHeight<300?(forecast?70:54):(forecast?100:76),
+      forecast&&Number.isFinite(noteBottom)?Math.ceil(noteBottom+8):0);
+    state.controller=drawIntradayChart({svg,series,range:state.range,chartType:state.chartType,scale:state.scale,priceDomain:state.priceDomain,showVolume:false,tool:state.tool,selectedTime:state.selectedTime,headerInset,forecast,onForecastEvidence:()=>openInfo('forecast'),historyStatus:entry?.historyStatus||'ready',onHover:showReadout,
       historicalEvents:getEthereumEvents({category:state.eventSettings.category}),showHistoricalEvents:state.eventSettings.visible,activeHistoricalEventId:state.selectedHistoryEvent,historicalEventColors:ETHEREUM_EVENT_COLORS,onHistoricalEvent:openHistoricalEvent});
     updateHistoryContext();
     const status=intraday?marketStatusText(entry):`Coinbase ETH-USD · ${busy?'갱신 중':state.refreshError?'연결 실패 · 저장 자료':series.snapshot?'저장 자료':'완료 봉'} · ${stamp(series.lastDate)}${series.gapCount?` · 빈 봉 ${series.gapCount}개`:''}`;
