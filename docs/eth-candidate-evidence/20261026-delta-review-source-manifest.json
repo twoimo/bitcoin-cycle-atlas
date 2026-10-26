@@ -1,0 +1,5823 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "112892aa634ea8ec0d31d9bf60ad902f2b3fd600",
+  "sourceTree": "e5ae7ead7a58596ae34ee8863ae936469af7bd9d",
+  "baselineCommit": "30805dacdcf0aa3ea991439de87d5f9a38c59f25",
+  "createdAt": "2026-10-26T13:17:43.002Z",
+  "seedPaths": [
+    ".github/workflows/ci.yml",
+    ".github/workflows/eth-model-evaluation.yml",
+    "dist/analysis-dock.css",
+    "dist/analysis-dock.js",
+    "dist/app.js",
+    "dist/asset-comparison-source.js",
+    "dist/asset-comparison.js",
+    "dist/asset-daily-observations.js",
+    "dist/asset-forecast-journal.js",
+    "dist/asset-forecast-records.js",
+    "dist/asset-judgment-history-view.js",
+    "dist/asset-judgment-history.js",
+    "dist/asset-judgment-records.js",
+    "dist/atlas-analysis.js",
+    "dist/atlas-price-chart.js",
+    "dist/atlas.css",
+    "dist/bitcoin-events.js",
+    "dist/chart-bottom-bar.css",
+    "dist/chart-bottom-bar.js",
+    "dist/chart-details-panel.css",
+    "dist/chart-export-workbench.css",
+    "dist/chart-export-workbench.js",
+    "dist/chart-export.js",
+    "dist/chart-go-to.js",
+    "dist/chart-hover.js",
+    "dist/chart-magnet.css",
+    "dist/chart-magnet.js",
+    "dist/chart-math.js",
+    "dist/chart-navigation.js",
+    "dist/chart-overlays.js",
+    "dist/chart-presets.js",
+    "dist/chart-touch-tracking.js",
+    "dist/chart-view-policy.js",
+    "dist/chart-window.js",
+    "dist/chart-workspace-controls.css",
+    "dist/compact-chart-layout.css",
+    "dist/compact-chart-layout.js",
+    "dist/compact.css",
+    "dist/cryptocon-audit-data.js",
+    "dist/cryptocon-audit.js",
+    "dist/cryptocon-evidence.js",
+    "dist/cycle-calibration.js",
+    "dist/cycle-decision.js",
+    "dist/cycle-engine.js",
+    "dist/cycle-interval-overlay.js",
+    "dist/cycle-milestones-view.js",
+    "dist/cycle-milestones.css",
+    "dist/cycle-milestones.js",
+    "dist/cycle-selection.js",
+    "dist/cycle-table-selection.js",
+    "dist/cycle-timing.js",
+    "dist/daily-analytics.js",
+    "dist/daily-data-source.js",
+    "dist/daily-data-view.js",
+    "dist/daily-data.css",
+    "dist/data-freshness.js",
+    "dist/data-source.js",
+    "dist/data-update.js",
+    "dist/data/asset-comparison.json",
+    "dist/data/bmnr-ohlc.json",
+    "dist/data/btc-daily.json",
+    "dist/data/btc-ohlc.json",
+    "dist/data/btc-volume.json",
+    "dist/data/cycle-calibration.json",
+    "dist/data/eth-ohlc.json",
+    "dist/data/market-structure-summary.json",
+    "dist/data/mstr-ohlc.json",
+    "dist/detailed-forecast.js",
+    "dist/dialog-viewport.js",
+    "dist/empty-price-chart.js",
+    "dist/equity-forecast-chart.js",
+    "dist/equity-market-data.js",
+    "dist/equity-view.css",
+    "dist/equity-view.js",
+    "dist/eth-market-data.js",
+    "dist/eth-view-state.js",
+    "dist/eth-view.css",
+    "dist/eth-view.js",
+    "dist/ethereum-cycle-models.js",
+    "dist/ethereum-economic-ablation.js",
+    "dist/ethereum-economic-data.js",
+    "dist/ethereum-economic-model.js",
+    "dist/ethereum-event-observations.js",
+    "dist/ethereum-events.js",
+    "dist/ethereum-forecast.js",
+    "dist/ethereum-history.css",
+    "dist/ethereum-history.js",
+    "dist/ethereum-model-comparison.js",
+    "dist/evidence-catalog.js",
+    "dist/evidence-index.js",
+    "dist/evidence-view.js",
+    "dist/forecast-computation.js",
+    "dist/forecast-engine.js",
+    "dist/forecast-evaluation.js",
+    "dist/forecast-evidence.js",
+    "dist/forecast-experiments.js",
+    "dist/forecast-information-time.js",
+    "dist/forecast-journal.css",
+    "dist/forecast-journal.js",
+    "dist/forecast-records.js",
+    "dist/forecast-validation.js",
+    "dist/forecast-view.js",
+    "dist/forecast-worker.js",
+    "dist/history-journal.js",
+    "dist/index.html",
+    "dist/indicator-preferences.js",
+    "dist/indicator-readouts.js",
+    "dist/indicator-settings-dialog.js",
+    "dist/indicator-settings.js",
+    "dist/indicator-state.js",
+    "dist/indicator-workbench.js",
+    "dist/inspection-policy.js",
+    "dist/intraday-chart.js",
+    "dist/intraday-history.js",
+    "dist/journal-entry.js",
+    "dist/lab-view.js",
+    "dist/lab.css",
+    "dist/long-horizon-evidence.js",
+    "dist/long-horizon-forecast.js",
+    "dist/long-horizon-view.js",
+    "dist/market-data-controller.js",
+    "dist/market-structure.js",
+    "dist/mobile-preview.html",
+    "dist/mobile-preview.js",
+    "dist/mobile-workspace.css",
+    "dist/mobile-workspace.js",
+    "dist/ohlc-data.js",
+    "dist/outlook-engine.js",
+    "dist/outlook-view.js",
+    "dist/outlook.css",
+    "dist/peak-view.js",
+    "dist/peak-zones.js",
+    "dist/performance-diagnostics.js",
+    "dist/price-axis.js",
+    "dist/price-display.js",
+    "dist/price-legend.js",
+    "dist/price-view-data.js",
+    "dist/publication-contract.js",
+    "dist/published-data.js",
+    "dist/research-annotations-workbench.js",
+    "dist/research-annotations.css",
+    "dist/research-annotations.js",
+    "dist/research-format.js",
+    "dist/research-library-data.js",
+    "dist/research-methods.js",
+    "dist/research-reader.css",
+    "dist/research-reader.js",
+    "dist/research-source-data.js",
+    "dist/research-source-records.js",
+    "dist/research-workbench.js",
+    "dist/scenario-countdown.js",
+    "dist/site-entry.js",
+    "dist/structure-evidence.js",
+    "dist/styles.css",
+    "dist/symbol-selector.css",
+    "dist/symbol-selector.js",
+    "dist/timing-view.js",
+    "dist/treasury-asset-paths.js",
+    "dist/treasury-catalog.js",
+    "dist/treasury-instruments.js",
+    "dist/treasury-liquidity.js",
+    "dist/treasury-model.js",
+    "dist/treasury-projection.js",
+    "dist/treasury-research.js",
+    "dist/viewport-workspace.js",
+    "dist/viewport.css",
+    "dist/volume-data.js",
+    "dist/volume-forecast.js",
+    "dist/workbench-chrome.js",
+    "dist/workspace-history.js",
+    "dist/workspace-state.js",
+    "dist/workspace-tools.css",
+    "dist/workspace-tools.js",
+    "docs/ETH_CANDIDATE_REVIEW.md",
+    "docs/ETH_ECONOMIC_SOURCE_REVIEW.md",
+    "docs/ETH_MODEL_COMPARISON.md",
+    "docs/ETH_REMAINING_CONDITIONS.md",
+    "docs/eth-candidate-evidence/CONTINUATION_RESULTS.md",
+    "docs/reviews/ETH_CHATGPT_THESIS_20261026.md",
+    "package.json",
+    "research-data/eth-review-scope.json",
+    "research-data/treasury-bmnr.json",
+    "research-data/treasury-mstr.json",
+    "scripts/build-eth-review-evidence.mjs",
+    "scripts/build-eth-review-packet.mjs",
+    "scripts/build-forecast-ledger.mjs",
+    "scripts/capture-ethereum-economic-data.mjs",
+    "scripts/evaluate-ethereum-models.mjs",
+    "scripts/issue-asset-forecasts.mjs",
+    "scripts/verify-eth-candidate-browser.mjs",
+    "tests/asset-forecast-collector.test.mjs",
+    "tests/asset-forecast-journal.test.mjs",
+    "tests/asset-forecast-records.test.mjs",
+    "tests/equity-chart-rendering.test.mjs",
+    "tests/eth-review-packet.test.mjs",
+    "tests/ethereum-cycle-models.test.mjs",
+    "tests/ethereum-economic-ablation.test.mjs",
+    "tests/ethereum-economic-collector.test.mjs",
+    "tests/ethereum-economic-data.test.mjs",
+    "tests/ethereum-economic-model.test.mjs",
+    "tests/ethereum-forecast-boundary.test.mjs",
+    "tests/ethereum-forecast.test.mjs",
+    "tests/ethereum-model-comparison.test.mjs",
+    "tests/journal-entry-ownership.test.mjs",
+    "tests/treasury-model.test.mjs"
+  ],
+  "evidencePaths": [
+    "build/asset-forecast-ledger/evaluation.json",
+    "build/asset-forecast-ledger/index.json",
+    "build/asset-forecast-ledger/receipt.json",
+    "build/asset-forecast-ledger/records/1f6c1f2ddfb52db984a0b21750f0348ed5c9a64bdd304b9ad3a5392269ea85d0.json",
+    "build/asset-forecast-ledger/records/6396a34f44819361570112c18a1839a24cba194ce78952116adb15ee1e726f6d.json",
+    "build/asset-forecast-ledger/records/6415ad41abb2d18112e931da359f8d22780624714dc34ae10dba3dcad758b032.json",
+    "build/asset-forecast-ledger/records/64c518b3d36c3ea905d4481e8caea5d4c8f1a37636a6c217ae882c3b57b12a0e.json",
+    "build/asset-forecast-ledger/records/70c5376f4bbfe3f01608f267ff5319b0448639c6f7341e7a7a733ee006704dee.json",
+    "build/asset-forecast-ledger/records/82a0254b824a45c14ab8f6bb581b6c1ba0a5228660e8886cfcbab572ff5c789e.json",
+    "build/asset-forecast-ledger/records/c95ec6279e5e31c1e39ced2b24758cfb7bfeed3f2c8a6c3417a00a4892cc5df5.json",
+    "build/asset-forecast-ledger/records/f46439fa7318b5a2a46fc3fdaae8570fb9498ed16cad58fdac16dfcfd789e4fd.json",
+    "build/asset-forecast-ledger/records/fed5d3ed9c1c3a21f264108330b3df069e02575d24508f25e37ce431ca958c35.json",
+    "build/asset-forecast-ledger/snapshots/2e8527d1d9f4f40a736431ba77351b29ef1f974bc261fd0f04cb6188b7699b4c.json",
+    "build/asset-forecast-ledger/snapshots/8751ee7c522a1beea811ef98d73a09e58d6d4577e957f72ed1eba581ee92735d.json",
+    "build/asset-forecast-ledger/snapshots/924ce95aa5a5e9cda7de95fd5f4061ae7f2517b4856bf7ef5e0f91ca3445d6c5.json",
+    "build/eth-browser/report.json",
+    "build/ethereum-economic-ablation.json",
+    "build/ethereum-economic-data/capture-LsckCw/ATTRIBUTION.md",
+    "build/ethereum-economic-data/capture-LsckCw/LICENSE.coinmetrics.txt",
+    "build/ethereum-economic-data/capture-LsckCw/coinmetrics-eth.csv",
+    "build/ethereum-economic-data/capture-LsckCw/coverage.json",
+    "build/ethereum-economic-data/capture-LsckCw/network-1-license.json",
+    "build/ethereum-economic-data/capture-LsckCw/network-2-eth-csv.json",
+    "build/ethereum-economic-data/capture-LsckCw/receipt.json",
+    "build/ethereum-economic-data/capture-LsckCw/started.json",
+    "build/ethereum-model-comparison.json"
+  ],
+  "bundleSha256": "a2924fb225c27c88c3c3350121e7ab6af91a8cba586280e0b77f42263118601d",
+  "bundleBytes": 38522626,
+  "sourceAccess": "complete-for-declared-scope",
+  "entries": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "kind": "committed-source",
+      "gitBlob": "e1babb4022a34d374d144bb542b4bff67db60581",
+      "bytes": 2602,
+      "sha256": "81879be3b4507eadf6d7c62840342b189c79fab8adc9517595fa0e28bb92768e",
+      "encoding": "utf8",
+      "payloadBytes": 2602
+    },
+    {
+      "path": ".github/workflows/eth-model-evaluation.yml",
+      "kind": "committed-source",
+      "gitBlob": "5b4f43bfd7e7f2b601a4b75867b1b17f99aa2e58",
+      "bytes": 5279,
+      "sha256": "7498231309e03238dad64e3a41459a197425b96e43180458478fbc5c50e22957",
+      "encoding": "utf8",
+      "payloadBytes": 5279
+    },
+    {
+      "path": "build/asset-forecast-ledger/evaluation.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 15797,
+      "sha256": "71a872c0d1b545d79dbef4b8c7d12339db32421264559206396a9b28ccc1891e",
+      "encoding": "utf8",
+      "payloadBytes": 15797
+    },
+    {
+      "path": "build/asset-forecast-ledger/index.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 7826,
+      "sha256": "2620f75f54b9755f417296348a4e31e14d584c338bcd2b67b0ac15c2c59bbe62",
+      "encoding": "utf8",
+      "payloadBytes": 7826
+    },
+    {
+      "path": "build/asset-forecast-ledger/receipt.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 11169,
+      "sha256": "f62609beca0636e987b402ef7251df49c3cc589cf00340aa32cdcf6eb6c33002",
+      "encoding": "utf8",
+      "payloadBytes": 11169
+    },
+    {
+      "path": "build/asset-forecast-ledger/records/1f6c1f2ddfb52db984a0b21750f0348ed5c9a64bdd304b9ad3a5392269ea85d0.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 353535,
+      "sha256": "4756068b0739ee5710709e4283689c5371a7faa83a6a215bb4aeb12c7d9d2a7b",
+      "encoding": "utf8",
+      "payloadBytes": 353535
+    },
+    {
+      "path": "build/asset-forecast-ledger/records/6396a34f44819361570112c18a1839a24cba194ce78952116adb15ee1e726f6d.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 294945,
+      "sha256": "0024a5a8a3155c846393474984ff9bfff65dd652ee4a58eaf795e05a38d82754",
+      "encoding": "utf8",
+      "payloadBytes": 294945
+    },
+    {
+      "path": "build/asset-forecast-ledger/records/6415ad41abb2d18112e931da359f8d22780624714dc34ae10dba3dcad758b032.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 295703,
+      "sha256": "422e4b1760e70ef8125c4aa31e278b93e9047dc25db522adcc5fe4ce81ef4d36",
+      "encoding": "utf8",
+      "payloadBytes": 295703
+    },
+    {
+      "path": "build/asset-forecast-ledger/records/64c518b3d36c3ea905d4481e8caea5d4c8f1a37636a6c217ae882c3b57b12a0e.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 352540,
+      "sha256": "2b98ae245672400303646f3ec7558ab641e7930b8682d9474ceffba300547163",
+      "encoding": "utf8",
+      "payloadBytes": 352540
+    },
+    {
+      "path": "build/asset-forecast-ledger/records/70c5376f4bbfe3f01608f267ff5319b0448639c6f7341e7a7a733ee006704dee.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 328316,
+      "sha256": "b673b3eda822da21e4d34593c064009fc7ed791932e049bcbf1a3c2314466fd3",
+      "encoding": "utf8",
+      "payloadBytes": 328316
+    },
+    {
+      "path": "build/asset-forecast-ledger/records/82a0254b824a45c14ab8f6bb581b6c1ba0a5228660e8886cfcbab572ff5c789e.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 302943,
+      "sha256": "318a51e2d215486622903df8a6ffa8381476b9dce267287b4d0d6ea4863fb51d",
+      "encoding": "utf8",
+      "payloadBytes": 302943
+    },
+    {
+      "path": "build/asset-forecast-ledger/records/c95ec6279e5e31c1e39ced2b24758cfb7bfeed3f2c8a6c3417a00a4892cc5df5.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 353211,
+      "sha256": "79f6537a6fa53277652b9912d362dffb0190d678dc9c4e24afd50416295e347c",
+      "encoding": "utf8",
+      "payloadBytes": 353211
+    },
+    {
+      "path": "build/asset-forecast-ledger/records/f46439fa7318b5a2a46fc3fdaae8570fb9498ed16cad58fdac16dfcfd789e4fd.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 295212,
+      "sha256": "2393752aeb833c2098d10b6fbedef4cbb9c1af4ebdd4805752b06579fd346b2b",
+      "encoding": "utf8",
+      "payloadBytes": 295212
+    },
+    {
+      "path": "build/asset-forecast-ledger/records/fed5d3ed9c1c3a21f264108330b3df069e02575d24508f25e37ce431ca958c35.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 327295,
+      "sha256": "a931458d15ec987d1b977cec6ade9d46ef4a4dcbf51c99edf2d6b4cc3d1369ca",
+      "encoding": "utf8",
+      "payloadBytes": 327295
+    },
+    {
+      "path": "build/asset-forecast-ledger/snapshots/2e8527d1d9f4f40a736431ba77351b29ef1f974bc261fd0f04cb6188b7699b4c.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 2783432,
+      "sha256": "0d0269a2f4f9c987b17eea8458fe32313b17b8171912f25895576b730e8d0665",
+      "encoding": "utf8",
+      "payloadBytes": 2783432
+    },
+    {
+      "path": "build/asset-forecast-ledger/snapshots/8751ee7c522a1beea811ef98d73a09e58d6d4577e957f72ed1eba581ee92735d.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 1094162,
+      "sha256": "90a6dddcfdcbf3547c96d7d06eff42ecc7e2c33a1733a148a69d8ea79a8f71e3",
+      "encoding": "utf8",
+      "payloadBytes": 1094162
+    },
+    {
+      "path": "build/asset-forecast-ledger/snapshots/924ce95aa5a5e9cda7de95fd5f4061ae7f2517b4856bf7ef5e0f91ca3445d6c5.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 1374172,
+      "sha256": "e813aa973ace44c541f7a5aea1cef6178844c3bdc118c1f9d6db3bbbdcba46da",
+      "encoding": "utf8",
+      "payloadBytes": 1374172
+    },
+    {
+      "path": "build/eth-browser/report.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 571703,
+      "sha256": "4a747e02503075d281d92bcd433f61ae24241a9f0fb0acf9e866df4a8a8497e3",
+      "encoding": "utf8",
+      "payloadBytes": 571703
+    },
+    {
+      "path": "build/ethereum-economic-ablation.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 5317623,
+      "sha256": "6d041b160a4e69e16dac162f0de454dcf1dc7c4623f0614980ecf7a6975bb7fb",
+      "encoding": "utf8",
+      "payloadBytes": 5317623
+    },
+    {
+      "path": "build/ethereum-economic-data/capture-LsckCw/ATTRIBUTION.md",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 582,
+      "sha256": "b135034634a4ec4aa9076ecd83fbde36be8f7c5d9605f8aa1cc935900e16cdc5",
+      "encoding": "utf8",
+      "payloadBytes": 582
+    },
+    {
+      "path": "build/ethereum-economic-data/capture-LsckCw/coinmetrics-eth.csv",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 2121732,
+      "sha256": "46b18f3df967405374b1f6ee8a3d11ee1b7a5b176ac9fb4342caf6bf8648f2cc",
+      "encoding": "utf8",
+      "payloadBytes": 2121732
+    },
+    {
+      "path": "build/ethereum-economic-data/capture-LsckCw/coverage.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 9308,
+      "sha256": "852d7160e3d5c4489f81c55de2531155262589ff81646616c016642dda0f6b06",
+      "encoding": "utf8",
+      "payloadBytes": 9308
+    },
+    {
+      "path": "build/ethereum-economic-data/capture-LsckCw/LICENSE.coinmetrics.txt",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 289,
+      "sha256": "197c6cdd1642545c2300d4353b1ec4be6a3b888073ad969079c224998cbc0732",
+      "encoding": "utf8",
+      "payloadBytes": 289
+    },
+    {
+      "path": "build/ethereum-economic-data/capture-LsckCw/network-1-license.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 915,
+      "sha256": "1f293a037b2574638c6efa4bc8832c28686f47e80676f29ddeac05aeca2a2cf1",
+      "encoding": "utf8",
+      "payloadBytes": 915
+    },
+    {
+      "path": "build/ethereum-economic-data/capture-LsckCw/network-2-eth-csv.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 931,
+      "sha256": "905b05161a02e53285bc1135602eb0d4cb5a6e531a426756ba5ce876b5b8814d",
+      "encoding": "utf8",
+      "payloadBytes": 931
+    },
+    {
+      "path": "build/ethereum-economic-data/capture-LsckCw/receipt.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 7126,
+      "sha256": "2663971663a3d11f97986f51d1f715effd71f5b7e893cadf1073819e1123ce84",
+      "encoding": "utf8",
+      "payloadBytes": 7126
+    },
+    {
+      "path": "build/ethereum-economic-data/capture-LsckCw/started.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 1206,
+      "sha256": "839afa3a95135257e36c199f4144d2760d859b6e6388963d05c7e354ae8db612",
+      "encoding": "utf8",
+      "payloadBytes": 1206
+    },
+    {
+      "path": "build/ethereum-model-comparison.json",
+      "kind": "provided-execution-evidence",
+      "gitBlob": null,
+      "bytes": 9326304,
+      "sha256": "631e21e6d8265dd9703a4ab06ee34c77ad1bdf716a93a02305d756c8abd0ecda",
+      "encoding": "utf8",
+      "payloadBytes": 9326304
+    },
+    {
+      "path": "dist/analysis-dock.css",
+      "kind": "committed-source",
+      "gitBlob": "97fc570322319f09e78ea52270bcae259258af3b",
+      "bytes": 26909,
+      "sha256": "ed2331d4dae58c4bdede70faa983843f2de562878e8c65b0e97f951af5825caf",
+      "encoding": "utf8",
+      "payloadBytes": 26909
+    },
+    {
+      "path": "dist/analysis-dock.js",
+      "kind": "committed-source",
+      "gitBlob": "e1b03e181e12ecb6c41aaaf49e2fa494aa593583",
+      "bytes": 21128,
+      "sha256": "2062b09bfdc73952af0d168e0397913de36503de9f9165d4c5067c50e597fd9e",
+      "encoding": "utf8",
+      "payloadBytes": 21128
+    },
+    {
+      "path": "dist/app.js",
+      "kind": "committed-source",
+      "gitBlob": "240d72f7aa39de70bd88c019493dcd10c4b06af3",
+      "bytes": 48056,
+      "sha256": "f162d70272607a45c3993b64fe5ac5aa4b15186bffc7f22550aa2ddd3c8fcabb",
+      "encoding": "utf8",
+      "payloadBytes": 48056
+    },
+    {
+      "path": "dist/asset-comparison-source.js",
+      "kind": "committed-source",
+      "gitBlob": "111c0e059e2d9877fa4cfecf6bbdcb63ecb71b20",
+      "bytes": 812,
+      "sha256": "4ec4ac85a0ce67687e2d39f3fb22a67319b6d45da31c2b9daa282b4cab3b34f6",
+      "encoding": "utf8",
+      "payloadBytes": 812
+    },
+    {
+      "path": "dist/asset-comparison.js",
+      "kind": "committed-source",
+      "gitBlob": "8465d46ffec74e012b55f86d01493b9d70a2b59b",
+      "bytes": 14847,
+      "sha256": "bb75ad2e9aac3df13d8c11ecd2818e91aaf4ad523dac839fb277cc4719195788",
+      "encoding": "utf8",
+      "payloadBytes": 14847
+    },
+    {
+      "path": "dist/asset-daily-observations.js",
+      "kind": "committed-source",
+      "gitBlob": "53b0a767f63d4b958e351be2d7ba934a105f8018",
+      "bytes": 2241,
+      "sha256": "645cdfc751ffe2a4e0ce66a10316fc493d637cd6f74a0d09ea17b4e126367c70",
+      "encoding": "utf8",
+      "payloadBytes": 2241
+    },
+    {
+      "path": "dist/asset-forecast-journal.js",
+      "kind": "committed-source",
+      "gitBlob": "08b9e2f35f9be886b21f18d595f5ea181f56506f",
+      "bytes": 25397,
+      "sha256": "d8b3ad905673628c1b7abac39621f82470028e4cdd1977ce595d40bc35e9fc18",
+      "encoding": "utf8",
+      "payloadBytes": 25397
+    },
+    {
+      "path": "dist/asset-forecast-records.js",
+      "kind": "committed-source",
+      "gitBlob": "c24b372e747e6c670880f5a65609f00c427125a5",
+      "bytes": 25789,
+      "sha256": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2",
+      "encoding": "utf8",
+      "payloadBytes": 25789
+    },
+    {
+      "path": "dist/asset-judgment-history-view.js",
+      "kind": "committed-source",
+      "gitBlob": "17fdebc5468b08e99c9b03e2ddbcf58d0075c0c6",
+      "bytes": 21669,
+      "sha256": "e0b391d3dec3344543399cae835da279b34448bf422024baa3db8d1ce39e7027",
+      "encoding": "utf8",
+      "payloadBytes": 21669
+    },
+    {
+      "path": "dist/asset-judgment-history.js",
+      "kind": "committed-source",
+      "gitBlob": "9fd0658d3ce7615591992234ed6124afa1ec4610",
+      "bytes": 9427,
+      "sha256": "bc9648eff2e8d189d934a4d0f7cdbd702b4fc7e81498fe95e652555c55dc7fc5",
+      "encoding": "utf8",
+      "payloadBytes": 9427
+    },
+    {
+      "path": "dist/asset-judgment-records.js",
+      "kind": "committed-source",
+      "gitBlob": "71ad303971d7d09150cc9ae6853b7f57c85510f4",
+      "bytes": 11914,
+      "sha256": "c715a00584d0de86239ffaf9ee5fa4e705bb734bbcde98ab29e07d02883b3991",
+      "encoding": "utf8",
+      "payloadBytes": 11914
+    },
+    {
+      "path": "dist/atlas-analysis.js",
+      "kind": "committed-source",
+      "gitBlob": "925b688e149d7abac7f2c16a55a1b66f496b90b4",
+      "bytes": 37776,
+      "sha256": "c6369b4bf17315cb0858b95ed9570101569a4774ef29fc76d85be2f176009954",
+      "encoding": "utf8",
+      "payloadBytes": 37776
+    },
+    {
+      "path": "dist/atlas-price-chart.js",
+      "kind": "committed-source",
+      "gitBlob": "709a698c37f88c6554292d4090f64d2be61e0ab6",
+      "bytes": 51214,
+      "sha256": "0a439da95ce2ca00875a817483ac3bd1062adbfa0480c7e644e74271dcc6d20e",
+      "encoding": "utf8",
+      "payloadBytes": 51214
+    },
+    {
+      "path": "dist/atlas.css",
+      "kind": "committed-source",
+      "gitBlob": "e0abf9571160664e7c56a62e5f365d4ac33bfe04",
+      "bytes": 17145,
+      "sha256": "cb3cd3cb3e632b27af68d65bbfc9ccc40ce4a3b8ea8ed7eaafcbca200eec7a93",
+      "encoding": "utf8",
+      "payloadBytes": 17145
+    },
+    {
+      "path": "dist/bitcoin-events.js",
+      "kind": "committed-source",
+      "gitBlob": "461ea160ca540d506c5bde1c1ffe688c2f361e28",
+      "bytes": 49821,
+      "sha256": "871bc28763906dc15fe61c034388582914c0c018bd13f96af3162571d9295b22",
+      "encoding": "utf8",
+      "payloadBytes": 49821
+    },
+    {
+      "path": "dist/chart-bottom-bar.css",
+      "kind": "committed-source",
+      "gitBlob": "eb4ddcedb35da5998fb2715f62b8f05dd593b8b4",
+      "bytes": 7869,
+      "sha256": "0d53a8e860169700fcb6d9f151e2bf934a501765e3a0665d55eedf2bec50ba24",
+      "encoding": "utf8",
+      "payloadBytes": 7869
+    },
+    {
+      "path": "dist/chart-bottom-bar.js",
+      "kind": "committed-source",
+      "gitBlob": "319c36afbb92ff23731ded6f04eda540ad58d995",
+      "bytes": 7628,
+      "sha256": "09012f7ed5e2c6e1b331592ec0123748da7b65b409747be21ed6034bd93e6aa0",
+      "encoding": "utf8",
+      "payloadBytes": 7628
+    },
+    {
+      "path": "dist/chart-details-panel.css",
+      "kind": "committed-source",
+      "gitBlob": "152e4e30c905161ca62622dd44fcce3498deb9d5",
+      "bytes": 32343,
+      "sha256": "844869458fe856496569f11ad620ff6c6fc45870b2c29a63f42a89eb6967d7f9",
+      "encoding": "utf8",
+      "payloadBytes": 32343
+    },
+    {
+      "path": "dist/chart-export-workbench.css",
+      "kind": "committed-source",
+      "gitBlob": "2c8c8daf27f3324b41b4225c261d1210d0664599",
+      "bytes": 3029,
+      "sha256": "0b0c8d585967576a071131fe0d38a268f5a48499a26edefafda22338892b1cb5",
+      "encoding": "utf8",
+      "payloadBytes": 3029
+    },
+    {
+      "path": "dist/chart-export-workbench.js",
+      "kind": "committed-source",
+      "gitBlob": "5c7b3d872f98af502a91691b08e651916af505c4",
+      "bytes": 17170,
+      "sha256": "ec9433c4f842e89ad70232ffdad62199146da0570d0df1a2dc9a70c41c4608dd",
+      "encoding": "utf8",
+      "payloadBytes": 17170
+    },
+    {
+      "path": "dist/chart-export.js",
+      "kind": "committed-source",
+      "gitBlob": "5efe52e817d7dd9a6219fa4a406c93c6b303dd0d",
+      "bytes": 15475,
+      "sha256": "02092ff68b0ec8dc25d510beb2cb7fd9609f55ab019d483d5e10b116df0c7f3c",
+      "encoding": "utf8",
+      "payloadBytes": 15475
+    },
+    {
+      "path": "dist/chart-go-to.js",
+      "kind": "committed-source",
+      "gitBlob": "2828a323337fbd644ae9c7aa1302edb92983eac4",
+      "bytes": 7649,
+      "sha256": "4182e033ad0750bb612e162ff39732c1716589b23dde8f9bb59e5bae94f0b73d",
+      "encoding": "utf8",
+      "payloadBytes": 7649
+    },
+    {
+      "path": "dist/chart-hover.js",
+      "kind": "committed-source",
+      "gitBlob": "c2a6b8ca38f7cd94545a605f14b32c75411afe13",
+      "bytes": 3722,
+      "sha256": "2babcf82e20c0a6aa3aafd8f660a9175b94b11192fe3e4670c645683b8093067",
+      "encoding": "utf8",
+      "payloadBytes": 3722
+    },
+    {
+      "path": "dist/chart-magnet.css",
+      "kind": "committed-source",
+      "gitBlob": "c81e79059ebc72708b4d1e4b29c38a78462a09f9",
+      "bytes": 1944,
+      "sha256": "24c303c16064cc8885afd5a61058659a17e4b388baf5647189a10298fb8f0caa",
+      "encoding": "utf8",
+      "payloadBytes": 1944
+    },
+    {
+      "path": "dist/chart-magnet.js",
+      "kind": "committed-source",
+      "gitBlob": "7b768e79b812e26cd35225913cf60868fc685861",
+      "bytes": 9555,
+      "sha256": "e568efbd4da72482a9b825263d8d9da29e45cec47e39a83b2ff11e76b6dd4d9c",
+      "encoding": "utf8",
+      "payloadBytes": 9555
+    },
+    {
+      "path": "dist/chart-math.js",
+      "kind": "committed-source",
+      "gitBlob": "d99a98c64181d46ded13bea70635719b373c2c0d",
+      "bytes": 6157,
+      "sha256": "93db753cfbe24a88d68216267b08304c4149315912e7e60b0548d8ffa975d09a",
+      "encoding": "utf8",
+      "payloadBytes": 6157
+    },
+    {
+      "path": "dist/chart-navigation.js",
+      "kind": "committed-source",
+      "gitBlob": "06b282ddce71b555f7dcd5f7fc4feb444ed7db3c",
+      "bytes": 38887,
+      "sha256": "3c155dbc8f0ee0a812ead043ea05a397364a8338b05e2b51fa9484ace3bb9bd0",
+      "encoding": "utf8",
+      "payloadBytes": 38887
+    },
+    {
+      "path": "dist/chart-overlays.js",
+      "kind": "committed-source",
+      "gitBlob": "e0763d3dc40344e8dc13605e6ca24d6cfba4ab01",
+      "bytes": 21431,
+      "sha256": "0808bc0b3175eb089394493a9bab2062cdeaf190940169c3b26093c1c3f3e04a",
+      "encoding": "utf8",
+      "payloadBytes": 21431
+    },
+    {
+      "path": "dist/chart-presets.js",
+      "kind": "committed-source",
+      "gitBlob": "f681246007bb7aacb9f368846f2e9606391a7186",
+      "bytes": 1232,
+      "sha256": "0635174122f5de55ebf0adeff12ba00a79b8364a2a9f57e982615e4e3c6ee0aa",
+      "encoding": "utf8",
+      "payloadBytes": 1232
+    },
+    {
+      "path": "dist/chart-touch-tracking.js",
+      "kind": "committed-source",
+      "gitBlob": "ae92635368b7ee860251c1713efca56d91acbf6b",
+      "bytes": 7695,
+      "sha256": "6e993c48356a7c3d2156d11007b892a1e930b7d2fb2880d9fcae134cd0d424c7",
+      "encoding": "utf8",
+      "payloadBytes": 7695
+    },
+    {
+      "path": "dist/chart-view-policy.js",
+      "kind": "committed-source",
+      "gitBlob": "5e11a09bff4c187e24ebc36afe19bdd3c481b3c6",
+      "bytes": 6921,
+      "sha256": "5e6c183ac95d55079a595eb0d564411b5c7d162f1c6b9ec403c7a0c01d1a2cd0",
+      "encoding": "utf8",
+      "payloadBytes": 6921
+    },
+    {
+      "path": "dist/chart-window.js",
+      "kind": "committed-source",
+      "gitBlob": "4b9d45b8a773b87046686775b34fc040944beda3",
+      "bytes": 3061,
+      "sha256": "ff1527876a0185e8f8a52211170c696bde98f0120c6f0ddde58cea987daaf7cd",
+      "encoding": "utf8",
+      "payloadBytes": 3061
+    },
+    {
+      "path": "dist/chart-workspace-controls.css",
+      "kind": "committed-source",
+      "gitBlob": "1de901a4f7182a8d357d7354fa82eb0da4ab0022",
+      "bytes": 4494,
+      "sha256": "2947764d2161033646db9d79bc68f9db7940651bee523dccd52035b4593ed02b",
+      "encoding": "utf8",
+      "payloadBytes": 4494
+    },
+    {
+      "path": "dist/compact-chart-layout.css",
+      "kind": "committed-source",
+      "gitBlob": "7eb8fcf306a4796bc56f84484ca78df7f0cdd277",
+      "bytes": 6614,
+      "sha256": "0a3577b6b809209c3ad4960dcd6a8a336e18dd3b32f1927f6c7b7d6dc17faec1",
+      "encoding": "utf8",
+      "payloadBytes": 6614
+    },
+    {
+      "path": "dist/compact-chart-layout.js",
+      "kind": "committed-source",
+      "gitBlob": "ff6a7b3a1cd73012e4c5a7fe6e459e529677961b",
+      "bytes": 8174,
+      "sha256": "ae310165a5b631769aedc726c5128d45a6f5adc6e8323f8da0917bf0b6c010e4",
+      "encoding": "utf8",
+      "payloadBytes": 8174
+    },
+    {
+      "path": "dist/compact.css",
+      "kind": "committed-source",
+      "gitBlob": "1b576156e8b12c30cfecd2021ec3b059fa2bf092",
+      "bytes": 16218,
+      "sha256": "5b1b437d29faf29a3f439d492cb873fbd40859a6ab0a39cf99c35c73df43ccdb",
+      "encoding": "utf8",
+      "payloadBytes": 16218
+    },
+    {
+      "path": "dist/cryptocon-audit-data.js",
+      "kind": "committed-source",
+      "gitBlob": "f76d39ca124c710e462cb08ecb7c2696a91020cb",
+      "bytes": 6892,
+      "sha256": "8495fd0373bd81331c05d784c9ffbee2ab26ef5fc9267d6bc127f98332be0088",
+      "encoding": "utf8",
+      "payloadBytes": 6892
+    },
+    {
+      "path": "dist/cryptocon-audit.js",
+      "kind": "committed-source",
+      "gitBlob": "7a97b120625606d1f1f050af42eac2f8b1c3661b",
+      "bytes": 14662,
+      "sha256": "7fdf0bf02f6d30c1766642fb127178abaf99c677882e597fe03ca4ca4896b2fe",
+      "encoding": "utf8",
+      "payloadBytes": 14662
+    },
+    {
+      "path": "dist/cryptocon-evidence.js",
+      "kind": "committed-source",
+      "gitBlob": "5cba78aff35057766699f3a8d12aa5f2ca8e27b7",
+      "bytes": 12921,
+      "sha256": "06c8b9d57da468215219eb25cdf5be69877a6cee7cd3ee591d83ce378287a9de",
+      "encoding": "utf8",
+      "payloadBytes": 12921
+    },
+    {
+      "path": "dist/cycle-calibration.js",
+      "kind": "committed-source",
+      "gitBlob": "bb9dae1646aaeec72bdf5040425657ee6e1fbb98",
+      "bytes": 16046,
+      "sha256": "f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780",
+      "encoding": "utf8",
+      "payloadBytes": 16046
+    },
+    {
+      "path": "dist/cycle-decision.js",
+      "kind": "committed-source",
+      "gitBlob": "c8e9c621d5d621249bb503601324b25ccba87c50",
+      "bytes": 21292,
+      "sha256": "2ca34a30c608631cccb9ad0b8b5c17bbaf4cafe6e58b35ff2a44d09a9b2aadea",
+      "encoding": "utf8",
+      "payloadBytes": 21292
+    },
+    {
+      "path": "dist/cycle-engine.js",
+      "kind": "committed-source",
+      "gitBlob": "2c2ec7a65c261ee7305a8d7f034b3342628eb659",
+      "bytes": 14793,
+      "sha256": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+      "encoding": "utf8",
+      "payloadBytes": 14793
+    },
+    {
+      "path": "dist/cycle-interval-overlay.js",
+      "kind": "committed-source",
+      "gitBlob": "df70ebab327531843f763ef0a0e70e86b2fa589a",
+      "bytes": 17272,
+      "sha256": "f42673d3fb7c09b998ef9f9dc1881007a1e8e8cae3430405605b20753a66088b",
+      "encoding": "utf8",
+      "payloadBytes": 17272
+    },
+    {
+      "path": "dist/cycle-milestones-view.js",
+      "kind": "committed-source",
+      "gitBlob": "765dee661b8e7d6c06b4c3ea8df87916b421771b",
+      "bytes": 29482,
+      "sha256": "c6154cbf57bcba04f60905d83f4ea2fb8ef31c66e14c1fe9ef828da689af251e",
+      "encoding": "utf8",
+      "payloadBytes": 29482
+    },
+    {
+      "path": "dist/cycle-milestones.css",
+      "kind": "committed-source",
+      "gitBlob": "5754b48a94b4b1f38604f8edcb20370fd6765928",
+      "bytes": 11323,
+      "sha256": "a473ba7cc455517ad570007302a6adb8a7a2f66b43df99c80962b3a1abe18b8b",
+      "encoding": "utf8",
+      "payloadBytes": 11323
+    },
+    {
+      "path": "dist/cycle-milestones.js",
+      "kind": "committed-source",
+      "gitBlob": "28fb81376cd0be912f24ec31560165e21632db5f",
+      "bytes": 19424,
+      "sha256": "bed3032cd8efaec067f0aedfaf42e8c170e43d00ea7c979791eb7028cb6714da",
+      "encoding": "utf8",
+      "payloadBytes": 19424
+    },
+    {
+      "path": "dist/cycle-selection.js",
+      "kind": "committed-source",
+      "gitBlob": "e8e18fefadc3b3a6cf46bf34ef7a00763a221f3f",
+      "bytes": 2809,
+      "sha256": "cb93d394dd247fd3a18e0d3b04318a861c19536309c2f93f9a1dce6f55441c39",
+      "encoding": "utf8",
+      "payloadBytes": 2809
+    },
+    {
+      "path": "dist/cycle-table-selection.js",
+      "kind": "committed-source",
+      "gitBlob": "6bf0ec7e718fa36c4fedfcd8c17be47dc7f67399",
+      "bytes": 1455,
+      "sha256": "b2dab14d6aa891ddd7aeb8574d9cd09ac3c0940d79869cf3f5d66f6663e96d6e",
+      "encoding": "utf8",
+      "payloadBytes": 1455
+    },
+    {
+      "path": "dist/cycle-timing.js",
+      "kind": "committed-source",
+      "gitBlob": "e70212a783e7ff902165d09b8a23bb91231bfe72",
+      "bytes": 21604,
+      "sha256": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+      "encoding": "utf8",
+      "payloadBytes": 21604
+    },
+    {
+      "path": "dist/daily-analytics.js",
+      "kind": "committed-source",
+      "gitBlob": "e7193de54085f701811d9e9083f9f4647e33edec",
+      "bytes": 9043,
+      "sha256": "81b4a1fca0769e33778af2ba356115250a47017c26f054293e3d08d821c8164c",
+      "encoding": "utf8",
+      "payloadBytes": 9043
+    },
+    {
+      "path": "dist/daily-data-source.js",
+      "kind": "committed-source",
+      "gitBlob": "2d332d543d2a02ae97e0ee49f4164d368872cef6",
+      "bytes": 4459,
+      "sha256": "12583c3201445ddd65895dd2472a39e3fa8b15efc1d97f27ffbdb111279cec91",
+      "encoding": "utf8",
+      "payloadBytes": 4459
+    },
+    {
+      "path": "dist/daily-data-view.js",
+      "kind": "committed-source",
+      "gitBlob": "2bd8895c337dd93a3505f6f39386dafcbba7e267",
+      "bytes": 28943,
+      "sha256": "3e4bdd6dd76445b0d6cc0c65c355965691c6b0541f4978e5d65e999c09f28170",
+      "encoding": "utf8",
+      "payloadBytes": 28943
+    },
+    {
+      "path": "dist/daily-data.css",
+      "kind": "committed-source",
+      "gitBlob": "909460d201943b78ee9b7c6e77b7135a8d4774f7",
+      "bytes": 32683,
+      "sha256": "c5ebd8e2eb7a104bb9d6f38117c34cbddc1e4f734a6dc2396b3a96f1cdbdea9e",
+      "encoding": "utf8",
+      "payloadBytes": 32683
+    },
+    {
+      "path": "dist/data-freshness.js",
+      "kind": "committed-source",
+      "gitBlob": "9e01abe64ebc9d0e88a1373c58fa48548d09db87",
+      "bytes": 8831,
+      "sha256": "10e2348ae352ef19a840002fadc1123f055712312490d958a8559b39e814a0f1",
+      "encoding": "utf8",
+      "payloadBytes": 8831
+    },
+    {
+      "path": "dist/data-source.js",
+      "kind": "committed-source",
+      "gitBlob": "5d5801032378c38bbffafb9e5f54895707ada2b4",
+      "bytes": 8903,
+      "sha256": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b",
+      "encoding": "utf8",
+      "payloadBytes": 8903
+    },
+    {
+      "path": "dist/data-update.js",
+      "kind": "committed-source",
+      "gitBlob": "c00eb9cfe848ea8821a15ea7a9ac0f07df383723",
+      "bytes": 758,
+      "sha256": "42c87aac66a2be8ed43c8a547cecded3c1908226913c4fd4c70b24e7c01fa680",
+      "encoding": "utf8",
+      "payloadBytes": 758
+    },
+    {
+      "path": "dist/data/asset-comparison.json",
+      "kind": "committed-source",
+      "gitBlob": "86513f77f45a5aee794078170dbbc9a9650516d3",
+      "bytes": 3420087,
+      "sha256": "ef4346de06293a6ebb10db451e52c9eb8809aac052e78fd0a8b97fea4e727bdb",
+      "encoding": "utf8",
+      "payloadBytes": 3420087
+    },
+    {
+      "path": "dist/data/bmnr-ohlc.json",
+      "kind": "committed-source",
+      "gitBlob": "5f5c9c753616c0bd8f014ec71808209239119b20",
+      "bytes": 90448,
+      "sha256": "25c312625b781582b5004db0b82d8e6fcbaa2306fb5406b3ebce400f7b9e587c",
+      "encoding": "utf8",
+      "payloadBytes": 90448
+    },
+    {
+      "path": "dist/data/btc-daily.json",
+      "kind": "committed-source",
+      "gitBlob": "1aac64439b616ccbd3a492011888253010be015b",
+      "bytes": 189384,
+      "sha256": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+      "encoding": "utf8",
+      "payloadBytes": 189384
+    },
+    {
+      "path": "dist/data/btc-ohlc.json",
+      "kind": "committed-source",
+      "gitBlob": "73b6fd70b474a422ba9e6198f4686ade2f771095",
+      "bytes": 195578,
+      "sha256": "d75f2c05c91ce6b8782ae4168d033d332a4238a0d88c20fce314399dc25e9890",
+      "encoding": "utf8",
+      "payloadBytes": 195578
+    },
+    {
+      "path": "dist/data/btc-volume.json",
+      "kind": "committed-source",
+      "gitBlob": "cfef39304f7d596606a420ed3b657a941906befd",
+      "bytes": 875500,
+      "sha256": "7fff8b30547abb11104234f2958f0d6ea85e0fd0b03f00e9e4cd597122a812e7",
+      "encoding": "utf8",
+      "payloadBytes": 875500
+    },
+    {
+      "path": "dist/data/cycle-calibration.json",
+      "kind": "committed-source",
+      "gitBlob": "a8576248c7cb2b56507e2385d93568f6d9167f0f",
+      "bytes": 30148,
+      "sha256": "8b2ea0b0b35203e5e6dc4e0a44e163bf517b0f12adaa5eb2ded04886bbc1c7e8",
+      "encoding": "utf8",
+      "payloadBytes": 30148
+    },
+    {
+      "path": "dist/data/eth-ohlc.json",
+      "kind": "committed-source",
+      "gitBlob": "882c49f0263034426e4e3afe377cc60a17448b6c",
+      "bytes": 895609,
+      "sha256": "69a726d87fcea635772a806ac6a00f43880a43d8c66bd88152045dffc209106f",
+      "encoding": "utf8",
+      "payloadBytes": 895609
+    },
+    {
+      "path": "dist/data/market-structure-summary.json",
+      "kind": "committed-source",
+      "gitBlob": "97dccc5c6d65338801013f7a8c9524e75f64210d",
+      "bytes": 989925,
+      "sha256": "282c4cfedcc030bfd781abdb309699077372770216d8063d943d021ef34bcfdc",
+      "encoding": "utf8",
+      "payloadBytes": 989925
+    },
+    {
+      "path": "dist/data/mstr-ohlc.json",
+      "kind": "committed-source",
+      "gitBlob": "1d5ccc08b06424cecec6cf7608b1e0853846d900",
+      "bytes": 1796374,
+      "sha256": "abe8922091f252154e2715a0fbd69d15bfac3872565547e5bb77565f4f1529a9",
+      "encoding": "utf8",
+      "payloadBytes": 1796374
+    },
+    {
+      "path": "dist/detailed-forecast.js",
+      "kind": "committed-source",
+      "gitBlob": "526fdabd250e8ba933b9b0f8cb10de1ab2da8861",
+      "bytes": 49059,
+      "sha256": "e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e",
+      "encoding": "utf8",
+      "payloadBytes": 49059
+    },
+    {
+      "path": "dist/dialog-viewport.js",
+      "kind": "committed-source",
+      "gitBlob": "84fef4696ea493dc595b8d6f9ec4024373c955fc",
+      "bytes": 1061,
+      "sha256": "36dceb75f26ab3c6fec9fa2c1d8ca8cf0a6ddbb19e2b4d7a5bc0f9d901bde28e",
+      "encoding": "utf8",
+      "payloadBytes": 1061
+    },
+    {
+      "path": "dist/empty-price-chart.js",
+      "kind": "committed-source",
+      "gitBlob": "a98a259a1461ecf646e73bafd17d14f44c7af1a3",
+      "bytes": 5982,
+      "sha256": "877aeb29ee669ff2e5de03912aa6bc8c32f6ea93fc68670cd98ba4cbb20ee1d2",
+      "encoding": "utf8",
+      "payloadBytes": 5982
+    },
+    {
+      "path": "dist/equity-forecast-chart.js",
+      "kind": "committed-source",
+      "gitBlob": "09694e6981c8013a5560544fa9bab720cf4adc34",
+      "bytes": 14487,
+      "sha256": "80fffdffb5528c62279ba14cae23f61ca9d0c4560e8a3032032f97f41520bd64",
+      "encoding": "utf8",
+      "payloadBytes": 14487
+    },
+    {
+      "path": "dist/equity-market-data.js",
+      "kind": "committed-source",
+      "gitBlob": "68bdb87dc63549bd8a38b655bcc2ae0fb2631578",
+      "bytes": 7872,
+      "sha256": "7c93eaf2471f354511e3440606cb0ed46b46242803bb7d06e3f06955a2a4cb8d",
+      "encoding": "utf8",
+      "payloadBytes": 7872
+    },
+    {
+      "path": "dist/equity-view.css",
+      "kind": "committed-source",
+      "gitBlob": "6d417fa861e8f46ca3591ef7fb8f65176cc3423d",
+      "bytes": 6006,
+      "sha256": "a677ab6a4530b9cfe1d95aebb74be9ded2800b1f48d0cf403fb6b4bf930c80a3",
+      "encoding": "utf8",
+      "payloadBytes": 6006
+    },
+    {
+      "path": "dist/equity-view.js",
+      "kind": "committed-source",
+      "gitBlob": "2ef581c6f99a7ecfc0a5aee301c0d34d44c42e76",
+      "bytes": 44400,
+      "sha256": "0ebc5158e8c5b537e0fe1f1e6c8f2b35ca88bffcee126aff84d239c88669cc6f",
+      "encoding": "utf8",
+      "payloadBytes": 44400
+    },
+    {
+      "path": "dist/eth-market-data.js",
+      "kind": "committed-source",
+      "gitBlob": "10676b4efebeaa020577e9f1d37129e02963ec92",
+      "bytes": 5558,
+      "sha256": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075",
+      "encoding": "utf8",
+      "payloadBytes": 5558
+    },
+    {
+      "path": "dist/eth-view-state.js",
+      "kind": "committed-source",
+      "gitBlob": "5191a006b40a6005ee49c6c224da9b0e62a21201",
+      "bytes": 2649,
+      "sha256": "6525b2c8c98eeb276a742a101f69f464938b4c139e9b60551f64459bbb896ab0",
+      "encoding": "utf8",
+      "payloadBytes": 2649
+    },
+    {
+      "path": "dist/eth-view.css",
+      "kind": "committed-source",
+      "gitBlob": "5dd0bd13f831962daf328a08480d34312f970dff",
+      "bytes": 8806,
+      "sha256": "fd4bf92ad312da2c7fb8e66c63c566d38151fd8750310d76187c59a688731f5c",
+      "encoding": "utf8",
+      "payloadBytes": 8806
+    },
+    {
+      "path": "dist/eth-view.js",
+      "kind": "committed-source",
+      "gitBlob": "16c37a1fa6ceeaa861370821c0b4323740a6723e",
+      "bytes": 31208,
+      "sha256": "0a88bff492a5b97278f6763fb80adf36cc884404080b8ccd41f2fd7cfdf27d0d",
+      "encoding": "utf8",
+      "payloadBytes": 31208
+    },
+    {
+      "path": "dist/ethereum-cycle-models.js",
+      "kind": "committed-source",
+      "gitBlob": "e508dea9bf50343984384ade1c6010b2c82fc6e1",
+      "bytes": 15351,
+      "sha256": "ca8196d2ee5afb56eb2f68be9ae46228cf81e56ffc1ea6499da1598d82dc9924",
+      "encoding": "utf8",
+      "payloadBytes": 15351
+    },
+    {
+      "path": "dist/ethereum-economic-ablation.js",
+      "kind": "committed-source",
+      "gitBlob": "b19bdd0be463e5d4c70e77a9c11918bb333415f2",
+      "bytes": 10796,
+      "sha256": "875a843ff964d6e080392c6799eb435a46fbdb57ec27aa95dd2bc202b51e2645",
+      "encoding": "utf8",
+      "payloadBytes": 10796
+    },
+    {
+      "path": "dist/ethereum-economic-data.js",
+      "kind": "committed-source",
+      "gitBlob": "f8fef43b0cb4d7920cc89725b23d0a6f2b6cb992",
+      "bytes": 16025,
+      "sha256": "89c45249558096b54c8a5bb04d41ad3848467ac96c05b5caf94550f46c35c62f",
+      "encoding": "utf8",
+      "payloadBytes": 16025
+    },
+    {
+      "path": "dist/ethereum-economic-model.js",
+      "kind": "committed-source",
+      "gitBlob": "be4b64c8f5b605ca9640cb9dd385a4ba850dade4",
+      "bytes": 38913,
+      "sha256": "83d5fe9e2ff1eb63bfc95a38322448e38f6e276ea37766836805c5953d1b8990",
+      "encoding": "utf8",
+      "payloadBytes": 38913
+    },
+    {
+      "path": "dist/ethereum-event-observations.js",
+      "kind": "committed-source",
+      "gitBlob": "6b609699b6f72f88ef2976eabac018f1442f0c45",
+      "bytes": 3125,
+      "sha256": "9f204e9e21f9663e80e81ce6f8e0681d1a4de6a8e1f75bae8ac8d919aefd844d",
+      "encoding": "utf8",
+      "payloadBytes": 3125
+    },
+    {
+      "path": "dist/ethereum-events.js",
+      "kind": "committed-source",
+      "gitBlob": "c56270f6139315d8943422584341015670a7b440",
+      "bytes": 468871,
+      "sha256": "9cd142ec31d84e613c7429544270abb452ebcfef8db0d3aa143165f6582cc29f",
+      "encoding": "utf8",
+      "payloadBytes": 468871
+    },
+    {
+      "path": "dist/ethereum-forecast.js",
+      "kind": "committed-source",
+      "gitBlob": "1c88505d0e46ee1b229b28ab0390b9efa1c92211",
+      "bytes": 9679,
+      "sha256": "b86e6e917c8d72c9db892dc4931694f915d6d73352dbab54798a64bd5ee3db4c",
+      "encoding": "utf8",
+      "payloadBytes": 9679
+    },
+    {
+      "path": "dist/ethereum-history.css",
+      "kind": "committed-source",
+      "gitBlob": "a74b10920a30d5ef091813b9dc5cbb3ea8db59f3",
+      "bytes": 9794,
+      "sha256": "2aacd8de575054ff86c47524cfc1eb06714987c5c1886746bfe0998fab0faa67",
+      "encoding": "utf8",
+      "payloadBytes": 9794
+    },
+    {
+      "path": "dist/ethereum-history.js",
+      "kind": "committed-source",
+      "gitBlob": "798ead81a5e2d0a21da27560bf8232625a885601",
+      "bytes": 17398,
+      "sha256": "196e860ce7f4485071ca54685e8b5bf48e62ed9c9d00dc1012f8183de44053a6",
+      "encoding": "utf8",
+      "payloadBytes": 17398
+    },
+    {
+      "path": "dist/ethereum-model-comparison.js",
+      "kind": "committed-source",
+      "gitBlob": "3002573a43da80fd760767973af92eac96e29963",
+      "bytes": 24897,
+      "sha256": "5650bd2750ed49255d761f1db9ee20cf9040fcf9b9531dd80472919d01afacfe",
+      "encoding": "utf8",
+      "payloadBytes": 24897
+    },
+    {
+      "path": "dist/evidence-catalog.js",
+      "kind": "committed-source",
+      "gitBlob": "c53a7fba659a43fc2c8f7fe258b5cdd312b73b3b",
+      "bytes": 47232,
+      "sha256": "38bb515bba7e4cbd208088bd71bfd50bceefd3403d8f096b0cadfe08bcec8e21",
+      "encoding": "utf8",
+      "payloadBytes": 47232
+    },
+    {
+      "path": "dist/evidence-index.js",
+      "kind": "committed-source",
+      "gitBlob": "0371f7676ca594c2e79111cb472b9b10e66bef69",
+      "bytes": 4048,
+      "sha256": "61734361cf428f6c67cc17361ac52e8c5b36a238674f44c596d44c5e784575b2",
+      "encoding": "utf8",
+      "payloadBytes": 4048
+    },
+    {
+      "path": "dist/evidence-view.js",
+      "kind": "committed-source",
+      "gitBlob": "0ef5346a6cfb0f662f7b178609a879f09b64dce2",
+      "bytes": 7400,
+      "sha256": "9a5852d5790ae1392297bcc10dd27cadbd32dbba645dce93163fe5ed56d08eb8",
+      "encoding": "utf8",
+      "payloadBytes": 7400
+    },
+    {
+      "path": "dist/forecast-computation.js",
+      "kind": "committed-source",
+      "gitBlob": "28761046b306ffc7d6fa06d5627cf1ba9841a719",
+      "bytes": 3447,
+      "sha256": "8e4843c963a686027fb0b767c6f8969e38fcccd03abcc20c247740e90e006256",
+      "encoding": "utf8",
+      "payloadBytes": 3447
+    },
+    {
+      "path": "dist/forecast-engine.js",
+      "kind": "committed-source",
+      "gitBlob": "9d5331dbc564bc776f991bed57544d60c4f21ceb",
+      "bytes": 33795,
+      "sha256": "e3b22730e99ca3a636b825fd84dff898cf20c784f546c483c0a77b6d30867d6f",
+      "encoding": "utf8",
+      "payloadBytes": 33795
+    },
+    {
+      "path": "dist/forecast-evaluation.js",
+      "kind": "committed-source",
+      "gitBlob": "268ae777bbe5c7f1901b3a4366ec826085707018",
+      "bytes": 7770,
+      "sha256": "c48123c844c1fbfd454372d0b2ed56817d1fa9e87a6547abeef2d49c145b0ea5",
+      "encoding": "utf8",
+      "payloadBytes": 7770
+    },
+    {
+      "path": "dist/forecast-evidence.js",
+      "kind": "committed-source",
+      "gitBlob": "fe6431ab3136a5a20762c973866c0cb5cc1a6407",
+      "bytes": 1323,
+      "sha256": "1579b491f7fb1153197c5d28511eb5c75a85821b1b1cc19ae23c7176142b51f1",
+      "encoding": "utf8",
+      "payloadBytes": 1323
+    },
+    {
+      "path": "dist/forecast-experiments.js",
+      "kind": "committed-source",
+      "gitBlob": "cf203d2fbebfdce2bd79310d9805bf5a1b94f63a",
+      "bytes": 15171,
+      "sha256": "e5b620615591db1dfc9d5c60e6bdbac60a010ead5f9bf73f4c89457fe3d346eb",
+      "encoding": "utf8",
+      "payloadBytes": 15171
+    },
+    {
+      "path": "dist/forecast-information-time.js",
+      "kind": "committed-source",
+      "gitBlob": "2780f2840eda4ad995ba5147592de85c7f622a9c",
+      "bytes": 8641,
+      "sha256": "bc507add4ac52a5f8a385782d3a85efd1603990ab41d7e4788a4855d07f39806",
+      "encoding": "utf8",
+      "payloadBytes": 8641
+    },
+    {
+      "path": "dist/forecast-journal.css",
+      "kind": "committed-source",
+      "gitBlob": "6876d34981d2f75d31c7cc2971fa9df5a33a1bc2",
+      "bytes": 3909,
+      "sha256": "1a05d24a5ef981c25fd48979e3bb6088fecf0eed5ce08d81707986436baf48d9",
+      "encoding": "utf8",
+      "payloadBytes": 3909
+    },
+    {
+      "path": "dist/forecast-journal.js",
+      "kind": "committed-source",
+      "gitBlob": "bf9a3a2c8dda7064a945f25dd06a836a464c5525",
+      "bytes": 26890,
+      "sha256": "9ad9a330825a66b3548e8cca443dda1ba13ba2fa8223a43d701ffe0aeb74132c",
+      "encoding": "utf8",
+      "payloadBytes": 26890
+    },
+    {
+      "path": "dist/forecast-records.js",
+      "kind": "committed-source",
+      "gitBlob": "ed40b61b799b7bd04b2d66ce51b5f485333ed4d0",
+      "bytes": 20943,
+      "sha256": "c79893f81c6bdff97685e2c384a3d1facc6eec10effdb09346c63749a36ca308",
+      "encoding": "utf8",
+      "payloadBytes": 20943
+    },
+    {
+      "path": "dist/forecast-validation.js",
+      "kind": "committed-source",
+      "gitBlob": "60ae31d2764586fec7a26b42623141532b510837",
+      "bytes": 13333,
+      "sha256": "8344bfd40d16a9a62173c818c9677f6378f04700892fbb02e8769d4c8d277135",
+      "encoding": "utf8",
+      "payloadBytes": 13333
+    },
+    {
+      "path": "dist/forecast-view.js",
+      "kind": "committed-source",
+      "gitBlob": "2f156a1aad33d5376a3ed06bb39de928e2ca6a06",
+      "bytes": 35819,
+      "sha256": "2ad8e94ac5d1bc40d6c246f25ec024319784061213eeb1c277c56684aea180f5",
+      "encoding": "utf8",
+      "payloadBytes": 35819
+    },
+    {
+      "path": "dist/forecast-worker.js",
+      "kind": "committed-source",
+      "gitBlob": "f2cb3c5dd1fbb03aa65fc944793c3ab74c629dc2",
+      "bytes": 401,
+      "sha256": "f874720791a430368708deb85cf58b6d50742a3953f466bdbb34c52346a076c0",
+      "encoding": "utf8",
+      "payloadBytes": 401
+    },
+    {
+      "path": "dist/history-journal.js",
+      "kind": "committed-source",
+      "gitBlob": "1cbaecfd21bacf37ad688a205875d38334009c35",
+      "bytes": 6900,
+      "sha256": "4b4647725203e08ed8e000fdedfb24e9626a1a7b06985cb1ce226eed73b321d0",
+      "encoding": "utf8",
+      "payloadBytes": 6900
+    },
+    {
+      "path": "dist/index.html",
+      "kind": "committed-source",
+      "gitBlob": "ca331a5d239fea0e2522ece288cd2c55f0f82945",
+      "bytes": 46164,
+      "sha256": "0ff4dc8eadf9de8ff0b69a7e2b4a28323bfe361b0dc73aa4db8742ec7f41ff0f",
+      "encoding": "utf8",
+      "payloadBytes": 46164
+    },
+    {
+      "path": "dist/indicator-preferences.js",
+      "kind": "committed-source",
+      "gitBlob": "1b673a5e2c760774f5c8ef858220d88f509415da",
+      "bytes": 3755,
+      "sha256": "8d26161783236257a6901b3f644afddc7d3e8a7fb9e05b6078bfc1c82caf1b99",
+      "encoding": "utf8",
+      "payloadBytes": 3755
+    },
+    {
+      "path": "dist/indicator-readouts.js",
+      "kind": "committed-source",
+      "gitBlob": "da4ef353ae76d43901bc9b2b938ae34ea98fbc5c",
+      "bytes": 10938,
+      "sha256": "5143dc1474226dba24127f2dd667ea1e18986059c49fdff6be2ff178cbffbb48",
+      "encoding": "utf8",
+      "payloadBytes": 10938
+    },
+    {
+      "path": "dist/indicator-settings-dialog.js",
+      "kind": "committed-source",
+      "gitBlob": "c1e500629f9d643a1a71ccc53a69435de4bb55a2",
+      "bytes": 9325,
+      "sha256": "a8125d8186ab6adaf952843e9e3fc1b7067252e3922f9d68d6fd2b71ebadb7d6",
+      "encoding": "utf8",
+      "payloadBytes": 9325
+    },
+    {
+      "path": "dist/indicator-settings.js",
+      "kind": "committed-source",
+      "gitBlob": "1f8f2ae607ab29e9257686cc64289480c5a99915",
+      "bytes": 8372,
+      "sha256": "87c9ca6aa99a4d1627c44290bb1e9d234ab42156a953af9dff26bd045e242715",
+      "encoding": "utf8",
+      "payloadBytes": 8372
+    },
+    {
+      "path": "dist/indicator-state.js",
+      "kind": "committed-source",
+      "gitBlob": "5398b18159debf027b0b10e41550ad91f4c52a74",
+      "bytes": 13088,
+      "sha256": "dc0da197cf7274d5068682631921dc065ecfbb1e8630bca815b2eeb4ddf3617e",
+      "encoding": "utf8",
+      "payloadBytes": 13088
+    },
+    {
+      "path": "dist/indicator-workbench.js",
+      "kind": "committed-source",
+      "gitBlob": "d84e3732dd48c099f1c03d55b7d22f7fe65cf453",
+      "bytes": 30915,
+      "sha256": "79dfbf2e43bfdea9e76278e1ec85d56df1f79a678da1df2edcc441876aa277ed",
+      "encoding": "utf8",
+      "payloadBytes": 30915
+    },
+    {
+      "path": "dist/inspection-policy.js",
+      "kind": "committed-source",
+      "gitBlob": "51e6d0dac2c111dfd60b290c64e60b30e4537eac",
+      "bytes": 506,
+      "sha256": "fb5953349307dd3025382df412414ba96777d0cf07403d49c548a941d47b79e3",
+      "encoding": "utf8",
+      "payloadBytes": 506
+    },
+    {
+      "path": "dist/intraday-chart.js",
+      "kind": "committed-source",
+      "gitBlob": "9fe55b1e1d8289d76484e421a9f330ba790c9cbd",
+      "bytes": 32033,
+      "sha256": "fade4f008178166c1538044a0bd073951106121c8b48f0745e875207f6661847",
+      "encoding": "utf8",
+      "payloadBytes": 32033
+    },
+    {
+      "path": "dist/intraday-history.js",
+      "kind": "committed-source",
+      "gitBlob": "a71362c8f04c2f1e281c3b39ce2a59bbae081dd7",
+      "bytes": 4738,
+      "sha256": "7bec4f8c3f31571d4494801cfe22286fe9a87f0434c031eca1fd27f1f9e556f2",
+      "encoding": "utf8",
+      "payloadBytes": 4738
+    },
+    {
+      "path": "dist/journal-entry.js",
+      "kind": "committed-source",
+      "gitBlob": "8b7d7ba8f93b807315361e6279614e43efe2380b",
+      "bytes": 2840,
+      "sha256": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0",
+      "encoding": "utf8",
+      "payloadBytes": 2840
+    },
+    {
+      "path": "dist/lab-view.js",
+      "kind": "committed-source",
+      "gitBlob": "f9d6dbc383ab32ee377b7492f9a56c51a5cc3400",
+      "bytes": 109167,
+      "sha256": "390e72b7d490b9c22e672067a3efe722bdc028f0d017e5b4b338fddef254dc4a",
+      "encoding": "utf8",
+      "payloadBytes": 109167
+    },
+    {
+      "path": "dist/lab.css",
+      "kind": "committed-source",
+      "gitBlob": "88041b9865de5468024beba8ffeed66345712768",
+      "bytes": 10745,
+      "sha256": "3604d8b26984ab9c5ef0c9a1eee81e1c4fd1b51cc5d91713df1918a8f94aa6e6",
+      "encoding": "utf8",
+      "payloadBytes": 10745
+    },
+    {
+      "path": "dist/long-horizon-evidence.js",
+      "kind": "committed-source",
+      "gitBlob": "1706ec850281ca42c80d28cd79a613c9061f135b",
+      "bytes": 13623,
+      "sha256": "7b5f9fc162e0c621b6a7df9f0f3d77e76c274040e83b88b0a8301638cb29f2f8",
+      "encoding": "utf8",
+      "payloadBytes": 13623
+    },
+    {
+      "path": "dist/long-horizon-forecast.js",
+      "kind": "committed-source",
+      "gitBlob": "fb7b191ec821076d97eaf408b813784f5397cc9d",
+      "bytes": 34492,
+      "sha256": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+      "encoding": "utf8",
+      "payloadBytes": 34492
+    },
+    {
+      "path": "dist/long-horizon-view.js",
+      "kind": "committed-source",
+      "gitBlob": "772a5bfbe6854ce83d9ab0317147b4a2900d2e4b",
+      "bytes": 9498,
+      "sha256": "fb92cf0e36ddc0996b14ab0e65df63b4c94ea460be67f2d38d1b3fa62c8db5ea",
+      "encoding": "utf8",
+      "payloadBytes": 9498
+    },
+    {
+      "path": "dist/market-data-controller.js",
+      "kind": "committed-source",
+      "gitBlob": "3f6b079eb05443841d23a40f63aeebf0b244eb15",
+      "bytes": 8623,
+      "sha256": "978ad14a70fdb3011f0761ceb7c6f6ebc0d37bc0b25aa047ad2ef2014eff07d6",
+      "encoding": "utf8",
+      "payloadBytes": 8623
+    },
+    {
+      "path": "dist/market-structure.js",
+      "kind": "committed-source",
+      "gitBlob": "02e716af0dc8cbe7c7b8c11ec99d0ff78c3e81e4",
+      "bytes": 51798,
+      "sha256": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+      "encoding": "utf8",
+      "payloadBytes": 51798
+    },
+    {
+      "path": "dist/mobile-preview.html",
+      "kind": "committed-source",
+      "gitBlob": "ef183a380144c7df94827bf711ab08084af3ccbd",
+      "bytes": 2050,
+      "sha256": "e3eb69462d53369e2087c91ebff46e9de8fe07276cf3fc4de0bd5731709c832e",
+      "encoding": "utf8",
+      "payloadBytes": 2050
+    },
+    {
+      "path": "dist/mobile-preview.js",
+      "kind": "committed-source",
+      "gitBlob": "eaf08b0e383598b904c37b9827ec6c0830c87b96",
+      "bytes": 2851,
+      "sha256": "5defdea2040132f8d776b92335782ab9a7b43b0cb995fd3705adbf0021fa48ee",
+      "encoding": "utf8",
+      "payloadBytes": 2851
+    },
+    {
+      "path": "dist/mobile-workspace.css",
+      "kind": "committed-source",
+      "gitBlob": "a1cd6b2a32cf63710ecd48c3195c168dd0bcfe44",
+      "bytes": 15679,
+      "sha256": "7142ccf1514b63137560026fa990ab7aff52fb68c36c354640b2d68d841c22e2",
+      "encoding": "utf8",
+      "payloadBytes": 15679
+    },
+    {
+      "path": "dist/mobile-workspace.js",
+      "kind": "committed-source",
+      "gitBlob": "0642dc1893ae777081d2ef8615cedb190d7474d9",
+      "bytes": 10367,
+      "sha256": "bdc2be8fcea03e69d174bfacd3038e232e0fef90fdfcd007902057b9f010325f",
+      "encoding": "utf8",
+      "payloadBytes": 10367
+    },
+    {
+      "path": "dist/ohlc-data.js",
+      "kind": "committed-source",
+      "gitBlob": "977282f651ac5c7b29b5beb9c3c67242ab8aaca7",
+      "bytes": 9968,
+      "sha256": "b2a5104c22b0fced11d747cae9fd7797a876b0c7de4e30492376acae791e7f5d",
+      "encoding": "utf8",
+      "payloadBytes": 9968
+    },
+    {
+      "path": "dist/outlook-engine.js",
+      "kind": "committed-source",
+      "gitBlob": "e0f625fc67ad7f62a8d63325847d2e3528d95936",
+      "bytes": 35266,
+      "sha256": "eff146327dd753454224cea92c291af5b5137924bb205b384644307c8b723bc5",
+      "encoding": "utf8",
+      "payloadBytes": 35266
+    },
+    {
+      "path": "dist/outlook-view.js",
+      "kind": "committed-source",
+      "gitBlob": "426761e99760f94ab1149a42fda9c5bbc58ba62e",
+      "bytes": 25882,
+      "sha256": "7bbb489741f90cc95487a8d590173e185601d84373e91c98fed67705f15bc46c",
+      "encoding": "utf8",
+      "payloadBytes": 25882
+    },
+    {
+      "path": "dist/outlook.css",
+      "kind": "committed-source",
+      "gitBlob": "4fb9e268b9b05a39854573cc0dfb79b2781c9cf2",
+      "bytes": 14931,
+      "sha256": "e6926850639f54c42170232cd72adfa9afef45edd655af7aaa8ece53b5e8f9c8",
+      "encoding": "utf8",
+      "payloadBytes": 14931
+    },
+    {
+      "path": "dist/peak-view.js",
+      "kind": "committed-source",
+      "gitBlob": "e30f628eaa769db6f9a30887c684384e41fe5c69",
+      "bytes": 10647,
+      "sha256": "9e12550a63b65097ee612b73e5afee488f7e75059cd5d41aa4feedc34a4c798c",
+      "encoding": "utf8",
+      "payloadBytes": 10647
+    },
+    {
+      "path": "dist/peak-zones.js",
+      "kind": "committed-source",
+      "gitBlob": "96063ae9d512ac4a5782f8865a077cd9d19a7d59",
+      "bytes": 14438,
+      "sha256": "20e17c4f54bf238b90657d3bf5f8c90bacd6b55a9929fed40bd88f1e1ca7fd99",
+      "encoding": "utf8",
+      "payloadBytes": 14438
+    },
+    {
+      "path": "dist/performance-diagnostics.js",
+      "kind": "committed-source",
+      "gitBlob": "ca37b10b20b946f9f8e03da39f1f92b6ee7c1ce6",
+      "bytes": 8318,
+      "sha256": "30a2a0cadcfda3f6f782b86ced0b2e1a6833d344ffc53f948ac3150b617419ac",
+      "encoding": "utf8",
+      "payloadBytes": 8318
+    },
+    {
+      "path": "dist/price-axis.js",
+      "kind": "committed-source",
+      "gitBlob": "f88328551320f7d8e74188b3bfff903b6ee7ee68",
+      "bytes": 9638,
+      "sha256": "c8c8153450d688ec541a17f81e1bfefb9296fd7f34620d808a7c84495412c888",
+      "encoding": "utf8",
+      "payloadBytes": 9638
+    },
+    {
+      "path": "dist/price-display.js",
+      "kind": "committed-source",
+      "gitBlob": "2d0d0586947af492ae5e2a6acccd84ac7a0b3ef1",
+      "bytes": 2350,
+      "sha256": "7558e6e6f56825f66c4268a6939808abe21b731bf0fbe3fa8c5766d1b8e87179",
+      "encoding": "utf8",
+      "payloadBytes": 2350
+    },
+    {
+      "path": "dist/price-legend.js",
+      "kind": "committed-source",
+      "gitBlob": "9e372fa134972a84ee72d3a253ecf7a92ff399d1",
+      "bytes": 2878,
+      "sha256": "2c1995584f7f809758124829396ecdbf546fb2af6c028d4f63cfb74f3c0ec993",
+      "encoding": "utf8",
+      "payloadBytes": 2878
+    },
+    {
+      "path": "dist/price-view-data.js",
+      "kind": "committed-source",
+      "gitBlob": "7ea59cfa4c4965af25a801212de22aef14caf4eb",
+      "bytes": 898,
+      "sha256": "54548b35600e976a31c60d5f2dae6539fee841cf0bd5520f6bd253c90c871634",
+      "encoding": "utf8",
+      "payloadBytes": 898
+    },
+    {
+      "path": "dist/publication-contract.js",
+      "kind": "committed-source",
+      "gitBlob": "985e59e057093252800c0ddbe77b960e0deaa680",
+      "bytes": 1862,
+      "sha256": "faa94f8819b6c51bdf7716e2b650f8acf80ee410b6d21e96f3b792dd2ff10cc6",
+      "encoding": "utf8",
+      "payloadBytes": 1862
+    },
+    {
+      "path": "dist/published-data.js",
+      "kind": "committed-source",
+      "gitBlob": "6b9df2370a4e03ad120661277924763dccadc466",
+      "bytes": 3441,
+      "sha256": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010",
+      "encoding": "utf8",
+      "payloadBytes": 3441
+    },
+    {
+      "path": "dist/research-annotations-workbench.js",
+      "kind": "committed-source",
+      "gitBlob": "5af36d5cc37baa2045e3d86f460dc2b3ee31a439",
+      "bytes": 8834,
+      "sha256": "3119c68605299519b8101f6691bb82dc26c57e1e732a313633998f0cba4db782",
+      "encoding": "utf8",
+      "payloadBytes": 8834
+    },
+    {
+      "path": "dist/research-annotations.css",
+      "kind": "committed-source",
+      "gitBlob": "4ebcebe49dd4471a8f210ec18177ebdcfd4b2f53",
+      "bytes": 2980,
+      "sha256": "00863b5a63080fd99337876c724c3a0f814c16989d24aa46ab3cdfa2ec276afa",
+      "encoding": "utf8",
+      "payloadBytes": 2980
+    },
+    {
+      "path": "dist/research-annotations.js",
+      "kind": "committed-source",
+      "gitBlob": "585b9344ef307d4f64987fa07970b11daa623a27",
+      "bytes": 15630,
+      "sha256": "b8f2e825bada44959e13375fb8243df188aa4e72aa64a788f7f2f3e555139a49",
+      "encoding": "utf8",
+      "payloadBytes": 15630
+    },
+    {
+      "path": "dist/research-format.js",
+      "kind": "committed-source",
+      "gitBlob": "412d86c0812381af6700ab0c9a93e460b165cd94",
+      "bytes": 3229,
+      "sha256": "8d4b225cb3ee9f3042c72b12a2f4d3040123473c65bff8549c74bb55a5c0c37a",
+      "encoding": "utf8",
+      "payloadBytes": 3229
+    },
+    {
+      "path": "dist/research-library-data.js",
+      "kind": "committed-source",
+      "gitBlob": "b20113dc0f38e243adacb1053bf0c99ac7de5038",
+      "bytes": 852773,
+      "sha256": "20d17df4b01fed0f5a72fe47dba57c68abe294c34eb6fa6a47a90d3ed7b95215",
+      "encoding": "utf8",
+      "payloadBytes": 852773
+    },
+    {
+      "path": "dist/research-methods.js",
+      "kind": "committed-source",
+      "gitBlob": "461d1db1070f5d36c7ccaf7b20df748767cd8498",
+      "bytes": 11277,
+      "sha256": "75b8bba6cb3b00968705257af19a7f2fda4250254c0343e424d1190376aca0df",
+      "encoding": "utf8",
+      "payloadBytes": 11277
+    },
+    {
+      "path": "dist/research-reader.css",
+      "kind": "committed-source",
+      "gitBlob": "6bc32969a66679c02f0541fe46756c63461395f4",
+      "bytes": 8266,
+      "sha256": "08b3e0bb6f0ddc1c947e37cf0a029b345fdd57a15ec466a7f05e71c73e863d47",
+      "encoding": "utf8",
+      "payloadBytes": 8266
+    },
+    {
+      "path": "dist/research-reader.js",
+      "kind": "committed-source",
+      "gitBlob": "8ab0d28a02fe2fd4b44599c16a2caf292108b162",
+      "bytes": 13435,
+      "sha256": "c8869e264aba1125bd56a23138d581287912b3e6b27ea6d392c4652c3d991575",
+      "encoding": "utf8",
+      "payloadBytes": 13435
+    },
+    {
+      "path": "dist/research-source-data.js",
+      "kind": "committed-source",
+      "gitBlob": "63978375524995b0e9c74ca747670c637aca6e41",
+      "bytes": 47167,
+      "sha256": "eb0720b297fe8430cf954e05df782ef5a4edd186a6c3ab727d1cb0bd8b5086b6",
+      "encoding": "utf8",
+      "payloadBytes": 47167
+    },
+    {
+      "path": "dist/research-source-records.js",
+      "kind": "committed-source",
+      "gitBlob": "469ea428fc83994b07c4bc1215ed867f50a13ae5",
+      "bytes": 5306,
+      "sha256": "5afa3d9e0f581e718925ea9689424b33f47d1961c38b12c54cbd641f2c786ebb",
+      "encoding": "utf8",
+      "payloadBytes": 5306
+    },
+    {
+      "path": "dist/research-workbench.js",
+      "kind": "committed-source",
+      "gitBlob": "2bb37962a5d1ae528308ac20062f4309aa65cc63",
+      "bytes": 14691,
+      "sha256": "766bf3962c78120b0d271bbd1abd4c548e3fdb580644743f8cfacb1153ec388b",
+      "encoding": "utf8",
+      "payloadBytes": 14691
+    },
+    {
+      "path": "dist/scenario-countdown.js",
+      "kind": "committed-source",
+      "gitBlob": "69efa099b82954db77260ee63d9cd0462c229059",
+      "bytes": 6802,
+      "sha256": "18ab11362ddd904eaffb904999c6d829b8429bf926dcb4ae9369ef4ec1965ed9",
+      "encoding": "utf8",
+      "payloadBytes": 6802
+    },
+    {
+      "path": "dist/site-entry.js",
+      "kind": "committed-source",
+      "gitBlob": "6b264fd3c534913b16e4d7e7be052f3890cfb34e",
+      "bytes": 1083,
+      "sha256": "acd1420ef95fae493d4a83866fdcde525b17d2b7d881a166a321093b24b8c58c",
+      "encoding": "utf8",
+      "payloadBytes": 1083
+    },
+    {
+      "path": "dist/structure-evidence.js",
+      "kind": "committed-source",
+      "gitBlob": "7160c85e9de6548db84fc11da2e585a0f377979f",
+      "bytes": 22335,
+      "sha256": "48fc1cb7f58207ebf6661034be667f5c17a4349e6d4805c65b8287b218a425ad",
+      "encoding": "utf8",
+      "payloadBytes": 22335
+    },
+    {
+      "path": "dist/styles.css",
+      "kind": "committed-source",
+      "gitBlob": "11891af7e01643c1e0efb530054dad94f190b77d",
+      "bytes": 31124,
+      "sha256": "1c316f67a6df324077f871056e713a210103a12dec1185191ff2f74d2ff4a25b",
+      "encoding": "utf8",
+      "payloadBytes": 31124
+    },
+    {
+      "path": "dist/symbol-selector.css",
+      "kind": "committed-source",
+      "gitBlob": "621b5320c3bb36fc8f7f2938b3955d132ab6a966",
+      "bytes": 5974,
+      "sha256": "894d8aceaf7616ef7018e584efdf7a0fb99ddff0299c613d6c1b6d17d52d1b39",
+      "encoding": "utf8",
+      "payloadBytes": 5974
+    },
+    {
+      "path": "dist/symbol-selector.js",
+      "kind": "committed-source",
+      "gitBlob": "24bf458df1dc800033091ebc81213a1561aaac39",
+      "bytes": 12232,
+      "sha256": "e2f14ad05964651db5bb021811bffbc1352b6ad622275470decf4edd1b786de5",
+      "encoding": "utf8",
+      "payloadBytes": 12232
+    },
+    {
+      "path": "dist/timing-view.js",
+      "kind": "committed-source",
+      "gitBlob": "bdd06d05d3fc3dfbb35b6d32b9b79d3404266276",
+      "bytes": 13890,
+      "sha256": "e47f6f69db210f7cc3086ab7717c1f4231faaca8ec4506467a8ae019677dadba",
+      "encoding": "utf8",
+      "payloadBytes": 13890
+    },
+    {
+      "path": "dist/treasury-asset-paths.js",
+      "kind": "committed-source",
+      "gitBlob": "87f6e89f97d68891e5d7acf32206800c85f7c06b",
+      "bytes": 4680,
+      "sha256": "67d98d830ad95d54312b8cd73d5e6e48c76aec757a7ae55b09ec43b2e8918d5d",
+      "encoding": "utf8",
+      "payloadBytes": 4680
+    },
+    {
+      "path": "dist/treasury-catalog.js",
+      "kind": "committed-source",
+      "gitBlob": "0bddecdaa0f052d61138f1ce4f09e2a633cf727e",
+      "bytes": 99386,
+      "sha256": "692a136525be1f023e9e39e545ef9955ad96b88d5230ba2ab16abf4d3be91ec8",
+      "encoding": "utf8",
+      "payloadBytes": 99386
+    },
+    {
+      "path": "dist/treasury-instruments.js",
+      "kind": "committed-source",
+      "gitBlob": "b6903e79228e685cc7403b71b0ce8fc4d722d1bd",
+      "bytes": 11046,
+      "sha256": "784b98684b5ffe6c8bb747b1bb6eac6cd658221a3cfa29e5c64c11b6711b102f",
+      "encoding": "utf8",
+      "payloadBytes": 11046
+    },
+    {
+      "path": "dist/treasury-liquidity.js",
+      "kind": "committed-source",
+      "gitBlob": "3caa4ade380edb0f5344861bb129184209648e4a",
+      "bytes": 6521,
+      "sha256": "b989adb0205ad969f3c87ccfdf71134d5448a38ebe47ed49ac1a63d5119cbd5d",
+      "encoding": "utf8",
+      "payloadBytes": 6521
+    },
+    {
+      "path": "dist/treasury-model.js",
+      "kind": "committed-source",
+      "gitBlob": "78bd990d8666c6bad4bccbd614062488cad0e846",
+      "bytes": 36947,
+      "sha256": "4812b36b65912209201eabf46ba39868cec7d7ddb014421e556476412b8e1739",
+      "encoding": "utf8",
+      "payloadBytes": 36947
+    },
+    {
+      "path": "dist/treasury-projection.js",
+      "kind": "committed-source",
+      "gitBlob": "8d8a17ec10d96badb29cc4b1171cfba5d786c70b",
+      "bytes": 1938,
+      "sha256": "9cf7e6660124880e5a9ad654f41c846d10deb309ace18cf59b96699963948fd1",
+      "encoding": "utf8",
+      "payloadBytes": 1938
+    },
+    {
+      "path": "dist/treasury-research.js",
+      "kind": "committed-source",
+      "gitBlob": "18f00bf58088eebb0dcc76c136f563d2cd801a63",
+      "bytes": 2086,
+      "sha256": "c5a3166884c3a9db81f1cafc7223ba1a7c1c5498689ec33ea78a2d6522275fbb",
+      "encoding": "utf8",
+      "payloadBytes": 2086
+    },
+    {
+      "path": "dist/viewport-workspace.js",
+      "kind": "committed-source",
+      "gitBlob": "61bd141595106f848c1ba2704bb171aee549ac00",
+      "bytes": 30063,
+      "sha256": "1232303281e45ea078b9cc4547e6a28634f7ec3fca8eb5fc3fcc9d8979a9ad3d",
+      "encoding": "utf8",
+      "payloadBytes": 30063
+    },
+    {
+      "path": "dist/viewport.css",
+      "kind": "committed-source",
+      "gitBlob": "e92301fc6e1cae7f86be071d8ae842f263b96b80",
+      "bytes": 25906,
+      "sha256": "8db83d73eafde4413960fdca4c4221deb4813afc401c74a6e656befbb7c90720",
+      "encoding": "utf8",
+      "payloadBytes": 25906
+    },
+    {
+      "path": "dist/volume-data.js",
+      "kind": "committed-source",
+      "gitBlob": "7495c261ad18633579432b917bf7a2770796b97b",
+      "bytes": 16291,
+      "sha256": "a788b2ba5381cd9405f468dcac902fb14a23b56696b49153745e2500fe25c88a",
+      "encoding": "utf8",
+      "payloadBytes": 16291
+    },
+    {
+      "path": "dist/volume-forecast.js",
+      "kind": "committed-source",
+      "gitBlob": "ee10acc881b5e06b7006f5485218bdf21e2708ec",
+      "bytes": 32604,
+      "sha256": "5b6c3f386f2d3d774395e2a5ba28460d8270a5d9f87b6d4ec68c066252383383",
+      "encoding": "utf8",
+      "payloadBytes": 32604
+    },
+    {
+      "path": "dist/workbench-chrome.js",
+      "kind": "committed-source",
+      "gitBlob": "2a1cfdfc7c388bdab86c139625d3c23935afad94",
+      "bytes": 29105,
+      "sha256": "ed8780d367455e1861e3c2f6666e3f1e1f332c069df13212f66cec6bd8e452ec",
+      "encoding": "utf8",
+      "payloadBytes": 29105
+    },
+    {
+      "path": "dist/workspace-history.js",
+      "kind": "committed-source",
+      "gitBlob": "1c00f1a87a97f8461f315a4a7890e6206dcab382",
+      "bytes": 2616,
+      "sha256": "1e7f2c7a57c7d0d163e5b2ef482324f28732d4d37783f1aa7dd39429691a54c6",
+      "encoding": "utf8",
+      "payloadBytes": 2616
+    },
+    {
+      "path": "dist/workspace-state.js",
+      "kind": "committed-source",
+      "gitBlob": "8ed8eb6d9d657968354fcfb2a18c76b351835e0c",
+      "bytes": 6717,
+      "sha256": "797a61ef67ae093cc817d4e6c7b428033821228398c2590b3669d1fc137b6851",
+      "encoding": "utf8",
+      "payloadBytes": 6717
+    },
+    {
+      "path": "dist/workspace-tools.css",
+      "kind": "committed-source",
+      "gitBlob": "9d990b1e0ac5a8a33a811bd14367164e41643477",
+      "bytes": 5255,
+      "sha256": "64817b0345204392d7b4e27c9a61ecf7aaaa9fd099c23646e12df4ee35e5c33d",
+      "encoding": "utf8",
+      "payloadBytes": 5255
+    },
+    {
+      "path": "dist/workspace-tools.js",
+      "kind": "committed-source",
+      "gitBlob": "4dc0fe16851ffbfbea6e9b0a0b0a2ee7ce2fac8d",
+      "bytes": 19149,
+      "sha256": "d51767037bca6af53edb396749e3006f2caf23e7cf384347cf37086fa3104fa3",
+      "encoding": "utf8",
+      "payloadBytes": 19149
+    },
+    {
+      "path": "docs/ETH_CANDIDATE_REVIEW.md",
+      "kind": "committed-source",
+      "gitBlob": "7273335373a0180fc5262881b16330f604d4e279",
+      "bytes": 9675,
+      "sha256": "92bd679bcbd1bab0d9fc486ece71dd5031273bbdc8e4af9dbaf469043f899392",
+      "encoding": "utf8",
+      "payloadBytes": 9675
+    },
+    {
+      "path": "docs/ETH_ECONOMIC_SOURCE_REVIEW.md",
+      "kind": "committed-source",
+      "gitBlob": "05f36ebf330901190bbae36eaca2a90b7fcc4904",
+      "bytes": 14119,
+      "sha256": "114640323781b545af8e2ca276ae85b4dd2016ba090ba13742ce2a7e1e64488f",
+      "encoding": "utf8",
+      "payloadBytes": 14119
+    },
+    {
+      "path": "docs/ETH_MODEL_COMPARISON.md",
+      "kind": "committed-source",
+      "gitBlob": "d812fadb82d04a332406abcef4029ae88b6e78fa",
+      "bytes": 16517,
+      "sha256": "ef36a362ba2672a887f1e6043a5ef7549cb80d607ea0e042fedb3c691fca2151",
+      "encoding": "utf8",
+      "payloadBytes": 16517
+    },
+    {
+      "path": "docs/ETH_REMAINING_CONDITIONS.md",
+      "kind": "committed-source",
+      "gitBlob": "827c030d57b621cc6f5c088a792981dfd846e2c4",
+      "bytes": 15820,
+      "sha256": "e9f831fc4609dc04c7089982a48a0f30cf6d38928444eac44a8a218d3e63f878",
+      "encoding": "utf8",
+      "payloadBytes": 15820
+    },
+    {
+      "path": "docs/eth-candidate-evidence/CONTINUATION_RESULTS.md",
+      "kind": "committed-source",
+      "gitBlob": "bb3e73d4688f388fd2944b5c4ae860e1f0ff80b2",
+      "bytes": 9673,
+      "sha256": "1820f26a141e83e76334decb7c71e47d33d6c97dce6163f59888e633a2c9dc5b",
+      "encoding": "utf8",
+      "payloadBytes": 9673
+    },
+    {
+      "path": "docs/reviews/ETH_CHATGPT_THESIS_20261026.md",
+      "kind": "committed-source",
+      "gitBlob": "04d2ab4b5d4cf872cd962ba52ae026375b9fe7ea",
+      "bytes": 11037,
+      "sha256": "6cb3ee64c8a8bf3a6e28f6f575e4e965b02e91f8c8b8a616624ff0b2678df1e3",
+      "encoding": "utf8",
+      "payloadBytes": 11037
+    },
+    {
+      "path": "package.json",
+      "kind": "committed-source",
+      "gitBlob": "eb731cddca23007572462290db12a54cadb106ef",
+      "bytes": 2483,
+      "sha256": "9cc4e10c53fa38708065266d5ff74b2550be8c90855d11bd82274a9ce28418fe",
+      "encoding": "utf8",
+      "payloadBytes": 2483
+    },
+    {
+      "path": "research-data/eth-review-scope.json",
+      "kind": "committed-source",
+      "gitBlob": "9f69ab4e9f6dbb5ff054411fc57d0f9c9d311e77",
+      "bytes": 11020,
+      "sha256": "8ae88cd8ce09256d2e7f869895d19b9e097e2ebce6b125dfd785ff343193f098",
+      "encoding": "utf8",
+      "payloadBytes": 11020
+    },
+    {
+      "path": "research-data/treasury-bmnr.json",
+      "kind": "committed-source",
+      "gitBlob": "af30558c50d5a54456b7c34ceb926a78a31d3302",
+      "bytes": 54352,
+      "sha256": "08724dc7eee6b00c303445ef9da9aff266c1f5bb0c0ec863e87846a282041105",
+      "encoding": "utf8",
+      "payloadBytes": 54352
+    },
+    {
+      "path": "research-data/treasury-mstr.json",
+      "kind": "committed-source",
+      "gitBlob": "8b78139b375e08a900686c88f91ff0511f39d58b",
+      "bytes": 65520,
+      "sha256": "cac107e363aba4ceb95db085ac351911a3771ba1c1c7818c8adebbfaa7414de1",
+      "encoding": "utf8",
+      "payloadBytes": 65520
+    },
+    {
+      "path": "scripts/build-eth-review-evidence.mjs",
+      "kind": "committed-source",
+      "gitBlob": "daa4cfe8b614bb939c7e6ddd84d08175bc1ff6d2",
+      "bytes": 1892,
+      "sha256": "f9200e903993567246ad74414a5d506207b4044731f3b4395da5f93dca3693c8",
+      "encoding": "utf8",
+      "payloadBytes": 1892
+    },
+    {
+      "path": "scripts/build-eth-review-packet.mjs",
+      "kind": "committed-source",
+      "gitBlob": "89d3b29179d545e59ca3c883ecf4812508deea79",
+      "bytes": 24419,
+      "sha256": "2e9f62da8263911289271f06646cb5523167156d8aefca1f808299b2005c68d4",
+      "encoding": "utf8",
+      "payloadBytes": 24419
+    },
+    {
+      "path": "scripts/build-forecast-ledger.mjs",
+      "kind": "committed-source",
+      "gitBlob": "728fc9096912cb3b62e475b7d61f2236e45d3fc8",
+      "bytes": 21434,
+      "sha256": "126ceae92b5025991aa07d0638fb1559b3e5e08224dd3915d8d901e5e4c9914d",
+      "encoding": "utf8",
+      "payloadBytes": 21434
+    },
+    {
+      "path": "scripts/capture-ethereum-economic-data.mjs",
+      "kind": "committed-source",
+      "gitBlob": "11273cc9730ce6f938ada1d990841f376e7a2c40",
+      "bytes": 11564,
+      "sha256": "47903b8176d9a14f53cb3e1443f94b25b9dad758e842e24287b5078d7b623968",
+      "encoding": "utf8",
+      "payloadBytes": 11564
+    },
+    {
+      "path": "scripts/evaluate-ethereum-models.mjs",
+      "kind": "committed-source",
+      "gitBlob": "c704e94b4a65fc66646abbc2e83bfec36a8ef98d",
+      "bytes": 8722,
+      "sha256": "c27439bc9d065c0c4c5a738a1e2165dbc0b368271dba8f65c3f9c937770089d7",
+      "encoding": "utf8",
+      "payloadBytes": 8722
+    },
+    {
+      "path": "scripts/issue-asset-forecasts.mjs",
+      "kind": "committed-source",
+      "gitBlob": "5ea52535f924232c7f4bb1b5993d8ca79d37eb5a",
+      "bytes": 28933,
+      "sha256": "38f11296ee3f5ea0c51e5fb5dddea91740f431bafb667e2bd00add82c3e7b6b3",
+      "encoding": "utf8",
+      "payloadBytes": 28933
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "kind": "committed-source",
+      "gitBlob": "f89d5cfe371960c19447479aa2f3ac17a06762a0",
+      "bytes": 43481,
+      "sha256": "d0885603fd3b79cc9aea652e053a22ca58ddc853680f618dc1b0f2f0a1ee2c75",
+      "encoding": "utf8",
+      "payloadBytes": 43481
+    },
+    {
+      "path": "tests/asset-forecast-collector.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "a5c130d452bcbc38d6fcc50a852ea54017c430e6",
+      "bytes": 6105,
+      "sha256": "deeb31f9a1db654bc316ac9fdb97522c0c0ea3f6c62a25a1fc235eff84adb669",
+      "encoding": "utf8",
+      "payloadBytes": 6105
+    },
+    {
+      "path": "tests/asset-forecast-journal.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "dbad37683c06fcab3dc607266a5394e6d9be8837",
+      "bytes": 13274,
+      "sha256": "d11fe5b12d121ea3a3aeb01ff35224b17665d5ba49ad088457dc77601193c412",
+      "encoding": "utf8",
+      "payloadBytes": 13274
+    },
+    {
+      "path": "tests/asset-forecast-records.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "79dcc49728351e710ee0dafcb704b9ccc48b4695",
+      "bytes": 18149,
+      "sha256": "4b3ef07a5757d30ad002e54f7ddfa4085861f7b008764f1dc446091059ad8a4f",
+      "encoding": "utf8",
+      "payloadBytes": 18149
+    },
+    {
+      "path": "tests/equity-chart-rendering.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "3afceecef9b40e99df8369b60599a4787f0da62a",
+      "bytes": 27413,
+      "sha256": "5c2253208ce1aaf71840cc549fb91502f5ca376764aa365fa6ca5bbf00f009f3",
+      "encoding": "utf8",
+      "payloadBytes": 27413
+    },
+    {
+      "path": "tests/eth-review-packet.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "0720316655081cd848f88f807a133d5dcfc35732",
+      "bytes": 17639,
+      "sha256": "80371220b95fc91ee553c0e0ae6055502d78267213da6b22f14182553ea148c1",
+      "encoding": "utf8",
+      "payloadBytes": 17639
+    },
+    {
+      "path": "tests/ethereum-cycle-models.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "f8619f21105e3ab24916c8307655e0a682c460fa",
+      "bytes": 10769,
+      "sha256": "7277169b3ad5b6ee3adab6140612387ffb9d1ab681afef5d03cb20a80a964c64",
+      "encoding": "utf8",
+      "payloadBytes": 10769
+    },
+    {
+      "path": "tests/ethereum-economic-ablation.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "93e0347fcaa853d71007e19e4f40f612793109aa",
+      "bytes": 6858,
+      "sha256": "3d2e971d7afe128bd5956b826db58c7dd85e3334d474eb19d9d8a793b449bde5",
+      "encoding": "utf8",
+      "payloadBytes": 6858
+    },
+    {
+      "path": "tests/ethereum-economic-collector.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "7b38965a64d4f2bb24bf3b5ac1c40bab19040357",
+      "bytes": 7958,
+      "sha256": "55f5f265ba09642646dd58b4a51fab43984692e5fc3ed96304de40ca284e7c4d",
+      "encoding": "utf8",
+      "payloadBytes": 7958
+    },
+    {
+      "path": "tests/ethereum-economic-data.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "833a1b719bd1038e86f46a3acd9e5abb4a68542f",
+      "bytes": 7420,
+      "sha256": "c98fbe935a8d2fd2d15c2876986d5134b2a72e8b4a4a8c60a5fdedcd8d30c785",
+      "encoding": "utf8",
+      "payloadBytes": 7420
+    },
+    {
+      "path": "tests/ethereum-economic-model.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "afa20f11c791fd6c40d9b324b18881e53be375a2",
+      "bytes": 17935,
+      "sha256": "0a46d74342b31eff2a948505776b9a0f48d0dc56d6d28b37ec72087641ba0c62",
+      "encoding": "utf8",
+      "payloadBytes": 17935
+    },
+    {
+      "path": "tests/ethereum-forecast-boundary.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "b0a808966c8d17aa66d7e71ff04ed47f10c14ea5",
+      "bytes": 6131,
+      "sha256": "d43cbda7cc27946aee0ecc790c8b334682469cac2d583097e4a32f4fc233bd65",
+      "encoding": "utf8",
+      "payloadBytes": 6131
+    },
+    {
+      "path": "tests/ethereum-forecast.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "aceab90db71636a646a32aae23ab5066597cb344",
+      "bytes": 3823,
+      "sha256": "f1562e30a3cd22fc6fab5c3cf0d317dcb93dac4ed2dbd62480379cdd7bba6c98",
+      "encoding": "utf8",
+      "payloadBytes": 3823
+    },
+    {
+      "path": "tests/ethereum-model-comparison.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "b127e76136669df8ab7dbb964e6e931ace2236ac",
+      "bytes": 10844,
+      "sha256": "981c35fff10da84f05d5123e75a87a8b009ef13142d961e1f44209c3e4470860",
+      "encoding": "utf8",
+      "payloadBytes": 10844
+    },
+    {
+      "path": "tests/helpers/eth-cycle-short-fixture.mjs",
+      "kind": "committed-source",
+      "gitBlob": "e95e7bf9dbebea5c319109df8c4b38acd4b1d1fe",
+      "bytes": 751,
+      "sha256": "1a8166ec6470e1ef6d152bcef7e4e41b60b6774c3bb368b3ce3107f86cd46361",
+      "encoding": "utf8",
+      "payloadBytes": 751
+    },
+    {
+      "path": "tests/helpers/eth-economic-fixture.mjs",
+      "kind": "committed-source",
+      "gitBlob": "cca2ab29d8cb4da07de12a3c6e76b4bcd79796ac",
+      "bytes": 2985,
+      "sha256": "7243c42d289cb3b3f6e862d426756f4dcb3faba121d7047dde08339471cdd70d",
+      "encoding": "utf8",
+      "payloadBytes": 2985
+    },
+    {
+      "path": "tests/helpers/eth-view-fixture.mjs",
+      "kind": "committed-source",
+      "gitBlob": "c22d1efe6681e58ca9553e5544d51b808b182f6b",
+      "bytes": 9946,
+      "sha256": "525182e1f3c1fbee73b15dc59ff606af28a6789b15fd9822cb6df6b8d00a5632",
+      "encoding": "utf8",
+      "payloadBytes": 9946
+    },
+    {
+      "path": "tests/journal-entry-ownership.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "e3bd0563d076c22a88eb9e437e23317c9e60e988",
+      "bytes": 6321,
+      "sha256": "e9a032e9b60946f0b090a4c2726cd2cac0ed39a90bfdb5d70b4a71d99ab8a0f2",
+      "encoding": "utf8",
+      "payloadBytes": 6321
+    },
+    {
+      "path": "tests/treasury-model.test.mjs",
+      "kind": "committed-source",
+      "gitBlob": "ae3a5bd2c41712bc01a57dfb264787c65f89a80b",
+      "bytes": 19407,
+      "sha256": "3adad825d22f1c58a6cd8892171dec6edfed5fc41655ecb9fa6ece80c71c9098",
+      "encoding": "utf8",
+      "payloadBytes": 19407
+    }
+  ],
+  "dependencies": [
+    {
+      "owner": "dist/analysis-dock.js",
+      "target": "dist/indicator-state.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/indicator-state.js",
+      "target": "dist/indicator-settings.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/indicator-settings.js",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/data-source.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/data-source.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/published-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/published-data.js",
+      "target": "dist/data-source.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/cycle-timing.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cycle-timing.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/timing-view.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/peak-zones.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/peak-zones.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/peak-zones.js",
+      "target": "dist/cycle-timing.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/forecast-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-engine.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-engine.js",
+      "target": "dist/cycle-timing.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/peak-view.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/peak-view.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/forecast-view.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-view.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/daily-data-view.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/daily-data-view.js",
+      "target": "dist/asset-comparison.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-comparison.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/daily-data-view.js",
+      "target": "dist/asset-judgment-history-view.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-judgment-history-view.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-judgment-history-view.js",
+      "target": "dist/asset-judgment-history.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-judgment-history.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-judgment-history.js",
+      "target": "dist/asset-comparison.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-judgment-history-view.js",
+      "target": "dist/asset-judgment-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/asset-comparison-source.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/viewport-workspace.js",
+      "kind": "dynamic-literal"
+    },
+    {
+      "owner": "dist/viewport-workspace.js",
+      "target": "dist/compact-chart-layout.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/viewport-workspace.js",
+      "target": "dist/data-update.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/viewport-workspace.js",
+      "target": "dist/workbench-chrome.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workbench-chrome.js",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workbench-chrome.js",
+      "target": "dist/chart-magnet.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workbench-chrome.js",
+      "target": "dist/chart-go-to.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-go-to.js",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-go-to.js",
+      "target": "dist/chart-view-policy.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-view-policy.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-view-policy.js",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-view-policy.js",
+      "target": "dist/price-axis.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workbench-chrome.js",
+      "target": "dist/price-display.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workbench-chrome.js",
+      "target": "dist/workspace-tools.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workspace-tools.js",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workspace-tools.js",
+      "target": "dist/dialog-viewport.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workspace-tools.js",
+      "target": "dist/workspace-state.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workspace-state.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workspace-state.js",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workspace-state.js",
+      "target": "dist/intraday-history.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/intraday-history.js",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workspace-state.js",
+      "target": "dist/price-axis.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workspace-state.js",
+      "target": "dist/price-display.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workbench-chrome.js",
+      "target": "dist/chart-bottom-bar.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/workbench-chrome.js",
+      "target": "dist/symbol-selector.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/symbol-selector.js",
+      "target": "dist/dialog-viewport.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/viewport-workspace.js",
+      "target": "dist/research-workbench.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/research-workbench.js",
+      "target": "dist/bitcoin-events.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/research-workbench.js",
+      "target": "dist/chart-overlays.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-overlays.js",
+      "target": "dist/chart-window.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/research-workbench.js",
+      "target": "dist/history-journal.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/history-journal.js",
+      "target": "dist/chart-bottom-bar.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/viewport-workspace.js",
+      "target": "dist/analysis-dock.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/viewport-workspace.js",
+      "target": "dist/indicator-workbench.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/indicator-workbench.js",
+      "target": "dist/indicator-state.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/indicator-workbench.js",
+      "target": "dist/dialog-viewport.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/indicator-workbench.js",
+      "target": "dist/indicator-readouts.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/indicator-readouts.js",
+      "target": "dist/chart-overlays.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/indicator-workbench.js",
+      "target": "dist/indicator-settings.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/indicator-workbench.js",
+      "target": "dist/indicator-settings-dialog.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/indicator-settings-dialog.js",
+      "target": "dist/indicator-state.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/indicator-settings-dialog.js",
+      "target": "dist/indicator-settings.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/indicator-workbench.js",
+      "target": "dist/indicator-preferences.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/indicator-preferences.js",
+      "target": "dist/indicator-state.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/viewport-workspace.js",
+      "target": "dist/inspection-policy.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/viewport-workspace.js",
+      "target": "dist/mobile-workspace.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/lab-view.js",
+      "kind": "dynamic-literal"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/performance-diagnostics.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/forecast-computation.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/forecast-evidence.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/research-reader.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/research-reader.js",
+      "target": "dist/research-library-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/research-reader.js",
+      "target": "dist/research-source-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/research-reader.js",
+      "target": "dist/dialog-viewport.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/research-reader.js",
+      "target": "dist/research-format.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/price-legend.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/cycle-milestones.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cycle-milestones.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cycle-milestones.js",
+      "target": "dist/market-structure.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/market-structure.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/market-structure.js",
+      "target": "dist/cycle-timing.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/cycle-milestones-view.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cycle-milestones-view.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cycle-milestones-view.js",
+      "target": "dist/cycle-timing.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cycle-milestones-view.js",
+      "target": "dist/cycle-milestones.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/cycle-selection.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cycle-selection.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/atlas-price-chart.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/cycle-interval-overlay.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cycle-interval-overlay.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cycle-interval-overlay.js",
+      "target": "dist/cycle-milestones.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/cycle-milestones-view.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/cycle-milestones.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/cycle-timing.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/market-structure.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/chart-overlays.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/chart-math.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-math.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-math.js",
+      "target": "dist/price-axis.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/price-axis.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/price-display.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/empty-price-chart.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/empty-price-chart.js",
+      "target": "dist/chart-math.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/empty-price-chart.js",
+      "target": "dist/price-axis.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/empty-price-chart.js",
+      "target": "dist/price-display.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/empty-price-chart.js",
+      "target": "dist/chart-hover.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/empty-price-chart.js",
+      "target": "dist/research-annotations.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/empty-price-chart.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/research-annotations.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/chart-magnet.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/chart-hover.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-price-chart.js",
+      "target": "dist/chart-window.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/cryptocon-audit.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cryptocon-audit.js",
+      "target": "dist/cryptocon-audit-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cryptocon-audit-data.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cryptocon-audit.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/chart-navigation.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-navigation.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-navigation.js",
+      "target": "dist/price-axis.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/atlas-analysis.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-analysis.js",
+      "target": "dist/market-structure.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-analysis.js",
+      "target": "dist/peak-zones.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-analysis.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/atlas-analysis.js",
+      "target": "dist/cycle-timing.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/analysis-dock.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/indicator-state.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/price-view-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/inspection-policy.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/long-horizon-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/long-horizon-forecast.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/long-horizon-forecast.js",
+      "target": "dist/detailed-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/detailed-forecast.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/detailed-forecast.js",
+      "target": "dist/cycle-timing.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/detailed-forecast.js",
+      "target": "dist/market-structure.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/long-horizon-forecast.js",
+      "target": "dist/market-structure.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/long-horizon-forecast.js",
+      "target": "dist/long-horizon-evidence.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/long-horizon-forecast.js",
+      "target": "dist/cycle-calibration.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cycle-calibration.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cycle-calibration.js",
+      "target": "dist/cycle-timing.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/long-horizon-view.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/long-horizon-view.js",
+      "target": "dist/long-horizon-evidence.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/intraday-chart.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/intraday-chart.js",
+      "target": "dist/chart-math.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/intraday-chart.js",
+      "target": "dist/price-axis.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/intraday-chart.js",
+      "target": "dist/price-display.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/intraday-chart.js",
+      "target": "dist/empty-price-chart.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/intraday-chart.js",
+      "target": "dist/research-annotations.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/intraday-chart.js",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/intraday-chart.js",
+      "target": "dist/chart-overlays.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/intraday-chart.js",
+      "target": "dist/chart-magnet.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/intraday-chart.js",
+      "target": "dist/chart-hover.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/intraday-chart.js",
+      "target": "dist/chart-window.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/intraday-chart.js",
+      "target": "dist/equity-forecast-chart.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-forecast-chart.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-forecast-chart.js",
+      "target": "dist/chart-window.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/market-data-controller.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/market-data-controller.js",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/market-data-controller.js",
+      "target": "dist/intraday-history.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/volume-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/volume-data.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/volume-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/volume-forecast.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/bitcoin-events.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/research-workbench.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/chart-overlays.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/market-structure.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/cycle-timing.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/chart-presets.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-presets.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-presets.js",
+      "target": "dist/cycle-timing.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/chart-export.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/workspace-state.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/price-axis.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/chart-hover.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/price-display.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/chart-view-policy.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/workspace-history.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/chart-touch-tracking.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/chart-export-workbench.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-export-workbench.js",
+      "target": "dist/chart-export.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/chart-export-workbench.js",
+      "target": "dist/dialog-viewport.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/research-annotations.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/lab-view.js",
+      "target": "dist/research-annotations-workbench.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/research-annotations-workbench.js",
+      "target": "dist/research-annotations.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/app.js",
+      "target": "dist/evidence-view.js",
+      "kind": "dynamic-literal"
+    },
+    {
+      "owner": "dist/evidence-view.js",
+      "target": "dist/research-reader.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-daily-observations.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-forecast-journal.js",
+      "target": "dist/forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-records.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-records.js",
+      "target": "dist/forecast-evaluation.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-evaluation.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-forecast-journal.js",
+      "target": "dist/asset-forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-forecast-records.js",
+      "target": "dist/forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-forecast-records.js",
+      "target": "dist/forecast-evaluation.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-forecast-records.js",
+      "target": "dist/data-freshness.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-forecast-records.js",
+      "target": "dist/forecast-information-time.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-information-time.js",
+      "target": "dist/data-freshness.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-information-time.js",
+      "target": "dist/forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-forecast-records.js",
+      "target": "dist/asset-daily-observations.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-forecast-records.js",
+      "target": "dist/equity-market-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-forecast-journal.js",
+      "target": "dist/atlas-price-chart.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-forecast-journal.js",
+      "target": "dist/chart-math.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/asset-forecast-journal.js",
+      "target": "dist/dialog-viewport.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/cycle-decision.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/daily-analytics.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/daily-data-source.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/daily-data-source.js",
+      "target": "dist/eth-market-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-market-data.js",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/daily-data-source.js",
+      "target": "dist/equity-market-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-view.js",
+      "target": "dist/treasury-instruments.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-instruments.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-view.js",
+      "target": "dist/equity-market-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-view.js",
+      "target": "dist/intraday-chart.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-view.js",
+      "target": "dist/chart-navigation.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-view.js",
+      "target": "dist/chart-touch-tracking.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-view.js",
+      "target": "dist/chart-hover.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-view.js",
+      "target": "dist/symbol-selector.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-view.js",
+      "target": "dist/dialog-viewport.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-view.js",
+      "target": "dist/treasury-projection.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-projection.js",
+      "target": "dist/treasury-asset-paths.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-asset-paths.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-asset-paths.js",
+      "target": "dist/long-horizon-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-asset-paths.js",
+      "target": "dist/asset-daily-observations.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-asset-paths.js",
+      "target": "dist/ethereum-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-forecast.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-forecast.js",
+      "target": "dist/asset-daily-observations.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-asset-paths.js",
+      "target": "dist/long-horizon-evidence.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-projection.js",
+      "target": "dist/treasury-model.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-model.js",
+      "target": "dist/treasury-research.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-research.js",
+      "target": "dist/treasury-catalog.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-model.js",
+      "target": "dist/market-structure.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-model.js",
+      "target": "dist/treasury-instruments.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-model.js",
+      "target": "dist/treasury-liquidity.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-liquidity.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-model.js",
+      "target": "dist/forecast-information-time.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/treasury-projection.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-view.js",
+      "target": "dist/equity-forecast-chart.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-view.js",
+      "target": "dist/treasury-research.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/equity-view.js",
+      "target": "dist/research-reader.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-view-state.js",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-view.js",
+      "target": "dist/ethereum-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-view.js",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-view.js",
+      "target": "dist/eth-market-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-view.js",
+      "target": "dist/market-data-controller.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-view.js",
+      "target": "dist/intraday-chart.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-view.js",
+      "target": "dist/chart-navigation.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-view.js",
+      "target": "dist/chart-touch-tracking.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-view.js",
+      "target": "dist/chart-hover.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-view.js",
+      "target": "dist/symbol-selector.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-view.js",
+      "target": "dist/eth-view-state.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-view.js",
+      "target": "dist/ethereum-events.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/eth-view.js",
+      "target": "dist/ethereum-history.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-history.js",
+      "target": "dist/ethereum-events.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-history.js",
+      "target": "dist/ethereum-event-observations.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-history.js",
+      "target": "dist/dialog-viewport.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-cycle-models.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-cycle-models.js",
+      "target": "dist/detailed-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-cycle-models.js",
+      "target": "dist/cycle-calibration.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-economic-ablation.js",
+      "target": "dist/ethereum-economic-model.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-economic-ablation.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-economic-data.js",
+      "target": "dist/ethereum-economic-model.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-model-comparison.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-model-comparison.js",
+      "target": "dist/asset-daily-observations.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-model-comparison.js",
+      "target": "dist/forecast-evaluation.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-model-comparison.js",
+      "target": "dist/forecast-experiments.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-experiments.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-experiments.js",
+      "target": "dist/long-horizon-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-experiments.js",
+      "target": "dist/long-horizon-evidence.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-experiments.js",
+      "target": "dist/forecast-evaluation.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-experiments.js",
+      "target": "dist/forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-model-comparison.js",
+      "target": "dist/ethereum-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-model-comparison.js",
+      "target": "dist/ethereum-cycle-models.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/ethereum-model-comparison.js",
+      "target": "dist/ethereum-economic-model.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/evidence-index.js",
+      "target": "dist/cryptocon-evidence.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/evidence-index.js",
+      "target": "dist/evidence-catalog.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/evidence-index.js",
+      "target": "dist/structure-evidence.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/evidence-index.js",
+      "target": "dist/long-horizon-evidence.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-journal.js",
+      "target": "dist/forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-journal.js",
+      "target": "dist/atlas-price-chart.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-journal.js",
+      "target": "dist/dialog-viewport.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-journal.js",
+      "target": "dist/data-freshness.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-journal.js",
+      "target": "dist/performance-diagnostics.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/forecast-worker.js",
+      "target": "dist/long-horizon-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/journal-entry.js",
+      "target": "dist/forecast-journal.js",
+      "kind": "dynamic-literal"
+    },
+    {
+      "owner": "dist/journal-entry.js",
+      "target": "dist/asset-forecast-journal.js",
+      "kind": "dynamic-literal"
+    },
+    {
+      "owner": "dist/outlook-engine.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/outlook-engine.js",
+      "target": "dist/cycle-timing.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/outlook-view.js",
+      "target": "dist/outlook-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/outlook-view.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/scenario-countdown.js",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/site-entry.js",
+      "target": "dist/journal-entry.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/site-entry.js",
+      "target": "dist/performance-diagnostics.js",
+      "kind": "static"
+    },
+    {
+      "owner": "dist/site-entry.js",
+      "target": "dist/eth-view.js",
+      "kind": "dynamic-literal"
+    },
+    {
+      "owner": "dist/site-entry.js",
+      "target": "dist/equity-view.js",
+      "kind": "dynamic-literal"
+    },
+    {
+      "owner": "dist/site-entry.js",
+      "target": "dist/app.js",
+      "kind": "dynamic-literal"
+    },
+    {
+      "owner": "scripts/build-eth-review-evidence.mjs",
+      "target": "scripts/build-eth-review-packet.mjs",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/build-forecast-ledger.mjs",
+      "target": "dist/long-horizon-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/build-forecast-ledger.mjs",
+      "target": "dist/long-horizon-evidence.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/build-forecast-ledger.mjs",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/build-forecast-ledger.mjs",
+      "target": "dist/forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/build-forecast-ledger.mjs",
+      "target": "dist/forecast-evaluation.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/build-forecast-ledger.mjs",
+      "target": "dist/forecast-experiments.js",
+      "kind": "dynamic-literal"
+    },
+    {
+      "owner": "scripts/build-forecast-ledger.mjs",
+      "target": "dist/forecast-experiments.js",
+      "kind": "dynamic-literal"
+    },
+    {
+      "owner": "scripts/capture-ethereum-economic-data.mjs",
+      "target": "dist/ethereum-economic-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/evaluate-ethereum-models.mjs",
+      "target": "dist/ethereum-model-comparison.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/evaluate-ethereum-models.mjs",
+      "target": "dist/ethereum-economic-ablation.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/evaluate-ethereum-models.mjs",
+      "target": "dist/asset-daily-observations.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/evaluate-ethereum-models.mjs",
+      "target": "dist/ethereum-economic-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "target": "scripts/build-forecast-ledger.mjs",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "target": "dist/forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "target": "dist/forecast-information-time.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "target": "dist/asset-forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "target": "dist/ethereum-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "target": "dist/treasury-projection.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "target": "dist/asset-daily-observations.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "target": "dist/equity-market-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "target": "dist/treasury-catalog.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/verify-eth-candidate-browser.mjs",
+      "target": "dist/eth-market-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/verify-eth-candidate-browser.mjs",
+      "target": "dist/asset-forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "scripts/verify-eth-candidate-browser.mjs",
+      "target": "dist/forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/asset-forecast-collector.test.mjs",
+      "target": "dist/forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/asset-forecast-collector.test.mjs",
+      "target": "scripts/issue-asset-forecasts.mjs",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/asset-forecast-journal.test.mjs",
+      "target": "dist/forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/asset-forecast-journal.test.mjs",
+      "target": "dist/forecast-information-time.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/asset-forecast-journal.test.mjs",
+      "target": "dist/asset-forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/asset-forecast-journal.test.mjs",
+      "target": "dist/asset-forecast-journal.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/asset-forecast-records.test.mjs",
+      "target": "dist/forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/asset-forecast-records.test.mjs",
+      "target": "dist/forecast-information-time.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/asset-forecast-records.test.mjs",
+      "target": "dist/asset-forecast-records.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/asset-forecast-records.test.mjs",
+      "target": "dist/treasury-model.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/asset-forecast-records.test.mjs",
+      "target": "scripts/issue-asset-forecasts.mjs",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/equity-chart-rendering.test.mjs",
+      "target": "dist/intraday-chart.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/equity-chart-rendering.test.mjs",
+      "target": "dist/equity-forecast-chart.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "target": "scripts/build-eth-review-packet.mjs",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-cycle-models.test.mjs",
+      "target": "tests/helpers/eth-cycle-short-fixture.mjs",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/helpers/eth-cycle-short-fixture.mjs",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-cycle-models.test.mjs",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-cycle-models.test.mjs",
+      "target": "dist/detailed-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-cycle-models.test.mjs",
+      "target": "dist/cycle-calibration.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-cycle-models.test.mjs",
+      "target": "dist/ethereum-cycle-models.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-economic-ablation.test.mjs",
+      "target": "dist/ethereum-economic-ablation.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-economic-ablation.test.mjs",
+      "target": "dist/ethereum-economic-model.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-economic-ablation.test.mjs",
+      "target": "tests/helpers/eth-economic-fixture.mjs",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-economic-data.test.mjs",
+      "target": "dist/ethereum-economic-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-economic-model.test.mjs",
+      "target": "dist/ethereum-economic-model.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-economic-model.test.mjs",
+      "target": "dist/ethereum-model-comparison.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-economic-model.test.mjs",
+      "target": "tests/helpers/eth-economic-fixture.mjs",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-forecast-boundary.test.mjs",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-forecast-boundary.test.mjs",
+      "target": "dist/asset-daily-observations.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-forecast-boundary.test.mjs",
+      "target": "dist/ethereum-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-forecast-boundary.test.mjs",
+      "target": "dist/treasury-asset-paths.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-forecast.test.mjs",
+      "target": "dist/ethereum-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-forecast.test.mjs",
+      "target": "dist/treasury-asset-paths.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-forecast.test.mjs",
+      "target": "tests/helpers/eth-view-fixture.mjs",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/helpers/eth-view-fixture.mjs",
+      "target": "dist/ohlc-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/helpers/eth-view-fixture.mjs",
+      "target": "dist/eth-market-data.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/helpers/eth-view-fixture.mjs",
+      "target": "dist/eth-view-state.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/helpers/eth-view-fixture.mjs",
+      "target": "dist/ethereum-forecast.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/helpers/eth-view-fixture.mjs",
+      "target": "dist/ethereum-events.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/helpers/eth-view-fixture.mjs",
+      "target": "dist/ethereum-history.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/helpers/eth-view-fixture.mjs",
+      "target": "dist/market-data-controller.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-model-comparison.test.mjs",
+      "target": "tests/helpers/eth-cycle-short-fixture.mjs",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-model-comparison.test.mjs",
+      "target": "dist/cycle-engine.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/ethereum-model-comparison.test.mjs",
+      "target": "dist/ethereum-model-comparison.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/treasury-model.test.mjs",
+      "target": "dist/treasury-model.js",
+      "kind": "static"
+    },
+    {
+      "owner": "tests/treasury-model.test.mjs",
+      "target": "dist/treasury-research.js",
+      "kind": "static"
+    }
+  ],
+  "externalImports": [
+    {
+      "owner": "scripts/build-eth-review-evidence.mjs",
+      "specifier": "node:fs/promises",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/build-eth-review-evidence.mjs",
+      "specifier": "node:path",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/build-eth-review-evidence.mjs",
+      "specifier": "node:url",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/build-eth-review-packet.mjs",
+      "specifier": "node:fs/promises",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/build-eth-review-packet.mjs",
+      "specifier": "node:path",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/build-eth-review-packet.mjs",
+      "specifier": "node:url",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/build-eth-review-packet.mjs",
+      "specifier": "node:crypto",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/build-eth-review-packet.mjs",
+      "specifier": "node:child_process",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/build-eth-review-packet.mjs",
+      "specifier": "node:module",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/build-forecast-ledger.mjs",
+      "specifier": "node:fs/promises",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/build-forecast-ledger.mjs",
+      "specifier": "node:path",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/build-forecast-ledger.mjs",
+      "specifier": "node:url",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/build-forecast-ledger.mjs",
+      "specifier": "node:child_process",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/build-forecast-ledger.mjs",
+      "specifier": "node:crypto",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/capture-ethereum-economic-data.mjs",
+      "specifier": "node:fs/promises",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/capture-ethereum-economic-data.mjs",
+      "specifier": "node:path",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/capture-ethereum-economic-data.mjs",
+      "specifier": "node:crypto",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/capture-ethereum-economic-data.mjs",
+      "specifier": "node:child_process",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/evaluate-ethereum-models.mjs",
+      "specifier": "node:fs/promises",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/evaluate-ethereum-models.mjs",
+      "specifier": "node:path",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/evaluate-ethereum-models.mjs",
+      "specifier": "node:url",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/evaluate-ethereum-models.mjs",
+      "specifier": "node:crypto",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/evaluate-ethereum-models.mjs",
+      "specifier": "node:child_process",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "specifier": "node:fs/promises",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "specifier": "node:path",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "specifier": "node:url",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "specifier": "node:child_process",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/issue-asset-forecasts.mjs",
+      "specifier": "node:crypto",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/verify-eth-candidate-browser.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/verify-eth-candidate-browser.mjs",
+      "specifier": "node:http",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/verify-eth-candidate-browser.mjs",
+      "specifier": "node:fs/promises",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/verify-eth-candidate-browser.mjs",
+      "specifier": "node:path",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/verify-eth-candidate-browser.mjs",
+      "specifier": "node:os",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/verify-eth-candidate-browser.mjs",
+      "specifier": "node:child_process",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/verify-eth-candidate-browser.mjs",
+      "specifier": "node:crypto",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "scripts/verify-eth-candidate-browser.mjs",
+      "specifier": "node:url",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/asset-forecast-collector.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/asset-forecast-collector.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/asset-forecast-collector.test.mjs",
+      "specifier": "node:crypto",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/asset-forecast-journal.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/asset-forecast-journal.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/asset-forecast-records.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/asset-forecast-records.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/equity-chart-rendering.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/equity-chart-rendering.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "specifier": "node:fs/promises",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "specifier": "node:os",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "specifier": "node:path",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "specifier": "node:child_process",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "specifier": "node:crypto",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-cycle-models.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-cycle-models.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-cycle-models.test.mjs",
+      "specifier": "node:fs/promises",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-ablation.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-ablation.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-collector.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-collector.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-collector.test.mjs",
+      "specifier": "node:fs/promises",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-collector.test.mjs",
+      "specifier": "node:os",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-collector.test.mjs",
+      "specifier": "node:path",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-collector.test.mjs",
+      "specifier": "node:url",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-collector.test.mjs",
+      "specifier": "node:child_process",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-collector.test.mjs",
+      "specifier": "node:crypto",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-data.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-data.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-model.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-economic-model.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-forecast-boundary.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-forecast-boundary.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-forecast-boundary.test.mjs",
+      "specifier": "node:fs/promises",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-forecast.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-forecast.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-forecast.test.mjs",
+      "specifier": "node:fs/promises",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/helpers/eth-view-fixture.mjs",
+      "specifier": "node:fs/promises",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/helpers/eth-view-fixture.mjs",
+      "specifier": "node:vm",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-model-comparison.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/ethereum-model-comparison.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/journal-entry-ownership.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/journal-entry-ownership.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/journal-entry-ownership.test.mjs",
+      "specifier": "node:fs",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/journal-entry-ownership.test.mjs",
+      "specifier": "node:vm",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/treasury-model.test.mjs",
+      "specifier": "node:test",
+      "kind": "node-builtin"
+    },
+    {
+      "owner": "tests/treasury-model.test.mjs",
+      "specifier": "node:assert/strict",
+      "kind": "node-builtin"
+    }
+  ],
+  "unresolvedImports": [],
+  "declaredDynamic": [
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "offset": 1732,
+      "sourceFragment": "import('./a.mjs'); const b=import(target);\");\n  assert.equal(r.length,2);assert.equal(r[0].specifier,'./a.mjs');assert.equal(r[1].specifier,null);\n  assert.matc",
+      "targets": [],
+      "nonExecutableExample": true,
+      "reason": "Exact synthetic import text within this test module is supplied to a parser or written into an isolated temporary Git fixture. The generated modules are never evaluated; this text is not an import from the repository test file.",
+      "sourceSha256": "80371220b95fc91ee553c0e0ae6055502d78267213da6b22f14182553ea148c1"
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "offset": 1759,
+      "sourceFragment": "import(target);\");\n  assert.equal(r.length,2);assert.equal(r[0].specifier,'./a.mjs');assert.equal(r[1].specifier,null);\n  assert.match(r[1].sourceFragment,/impo",
+      "targets": [],
+      "nonExecutableExample": true,
+      "reason": "Exact synthetic import text within this test module is supplied to a parser or written into an isolated temporary Git fixture. The generated modules are never evaluated; this text is not an import from the repository test file.",
+      "sourceSha256": "80371220b95fc91ee553c0e0ae6055502d78267213da6b22f14182553ea148c1"
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "offset": 2552,
+      "sourceFragment": "import('./lazy.mjs'); throw new Error('must not run');\\n\",'dep.mjs':\"export {x} from './leaf.mjs';\\n\",'leaf.mjs':'export const x=42;\\n','lazy.mjs':'export const",
+      "targets": [],
+      "nonExecutableExample": true,
+      "reason": "Exact synthetic import text within this test module is supplied to a parser or written into an isolated temporary Git fixture. The generated modules are never evaluated; this text is not an import from the repository test file.",
+      "sourceSha256": "80371220b95fc91ee553c0e0ae6055502d78267213da6b22f14182553ea148c1"
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "offset": 4501,
+      "sourceFragment": "import(name);\\n\",f=await fixture(t,{'main.mjs':source,'target.mjs':'export const safe=true;\\n'});\n  const unresolved=await buildEthReviewPacket({repositoryRoot:",
+      "targets": [],
+      "nonExecutableExample": true,
+      "reason": "Exact synthetic import text within this test module is supplied to a parser or written into an isolated temporary Git fixture. The generated modules are never evaluated; this text is not an import from the repository test file.",
+      "sourceSha256": "80371220b95fc91ee553c0e0ae6055502d78267213da6b22f14182553ea148c1"
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "offset": 16452,
+      "sourceFragment": "import /* permitted comment */ ('./hidden.mjs');\\nexport const line=()=>import // permitted line comment\\n ('./hidden.mjs');\\n\";\n  const f=await fixture(t,{'mai",
+      "targets": [],
+      "nonExecutableExample": true,
+      "reason": "Exact synthetic import text within this test module is supplied to a parser or written into an isolated temporary Git fixture. The generated modules are never evaluated; this text is not an import from the repository test file.",
+      "sourceSha256": "80371220b95fc91ee553c0e0ae6055502d78267213da6b22f14182553ea148c1"
+    },
+    {
+      "owner": "tests/eth-review-packet.test.mjs",
+      "offset": 17117,
+      "sourceFragment": "import /* computed */ (name);\\n\";\n  const f=await fixture(t,{'main.mjs':source});\n  const m=await buildEthReviewPacket({repositoryRoot:f.root,seedPaths:['main.m",
+      "targets": [],
+      "nonExecutableExample": true,
+      "reason": "Exact synthetic import text within this test module is supplied to a parser or written into an isolated temporary Git fixture. The generated modules are never evaluated; this text is not an import from the repository test file.",
+      "sourceSha256": "80371220b95fc91ee553c0e0ae6055502d78267213da6b22f14182553ea148c1"
+    }
+  ],
+  "parts": [
+    {
+      "name": "source-part-01.txt",
+      "bytes": 180000,
+      "sha256": "a5cb09a4fdbcef744801d582cc90640ff6f4c7c5c072a30d6c5eacbb1fc3b3c0"
+    },
+    {
+      "name": "source-part-02.txt",
+      "bytes": 180000,
+      "sha256": "5c69a8355ca93ab6a915a2a4be9cefea5fc3101d37b67ac9801007a16e0acf1e"
+    },
+    {
+      "name": "source-part-03.txt",
+      "bytes": 180000,
+      "sha256": "160bfbdaff635727f12b0acab2ce9070448a312b1ea65b152e8be1ba88875b57"
+    },
+    {
+      "name": "source-part-04.txt",
+      "bytes": 180000,
+      "sha256": "59d86f929e2eda27b12d305cb1d5351b0fb10eaf6d372e117676a907546fa4a5"
+    },
+    {
+      "name": "source-part-05.txt",
+      "bytes": 180000,
+      "sha256": "81343b22f99e6883c1beb0f1f9f81644476e8e048e99c93d844aa21abb903f5c"
+    },
+    {
+      "name": "source-part-06.txt",
+      "bytes": 180000,
+      "sha256": "ee225f2389da9377c1ab75923b48f1b60e76bf2bcc4195544e7e84ee64a56aa9"
+    },
+    {
+      "name": "source-part-07.txt",
+      "bytes": 180000,
+      "sha256": "2349b646f83e368209d91808a22b1794b5c88e04c5a330eacdabe60e96e2e047"
+    },
+    {
+      "name": "source-part-08.txt",
+      "bytes": 180000,
+      "sha256": "03738502a1072f5759239272b05cf04f93c7ccf079a6f96bd2a75d00b21103b7"
+    },
+    {
+      "name": "source-part-09.txt",
+      "bytes": 180000,
+      "sha256": "6e8520e73fac817e44445fc8d2e2a9001866ddea78c8454dbe307da715fd069f"
+    },
+    {
+      "name": "source-part-10.txt",
+      "bytes": 180000,
+      "sha256": "8693e35605e880671403c7d6059e04410e575c11da31426a5990ce8a494d7e17"
+    },
+    {
+      "name": "source-part-11.txt",
+      "bytes": 180000,
+      "sha256": "cc7c9cfc5489b6de0ddfdb65ea4a2a8a90a135309f9be6822db18cbd68403781"
+    },
+    {
+      "name": "source-part-12.txt",
+      "bytes": 180000,
+      "sha256": "58db69147cf16702fc00756cdacaf188d1ae3adde7f9da87f41a33150a25e913"
+    },
+    {
+      "name": "source-part-13.txt",
+      "bytes": 180000,
+      "sha256": "bc30688d4c9669d0e61dff44a75aa772e757e80e1c702ac908c9989bb5dc2e3c"
+    },
+    {
+      "name": "source-part-14.txt",
+      "bytes": 180000,
+      "sha256": "36bd12ff41d79068574928b597268a4d94a0fc0669ba2057a015fe5f7c602b67"
+    },
+    {
+      "name": "source-part-15.txt",
+      "bytes": 180000,
+      "sha256": "c1df1f94c930888ed57690a98aff27c26392ff62201bca9e4b290888c08b6b4e"
+    },
+    {
+      "name": "source-part-16.txt",
+      "bytes": 180000,
+      "sha256": "5054bd805147cf2b4c06d8aade7da409bd527975562aa6b616a910399af32d25"
+    },
+    {
+      "name": "source-part-17.txt",
+      "bytes": 180000,
+      "sha256": "d580f24deab15e9b5e767557bf2bda2f3278c44ab9347cb7fcc2d2447e65842e"
+    },
+    {
+      "name": "source-part-18.txt",
+      "bytes": 180000,
+      "sha256": "3b2fc4eab04a8060b0f37984c98571a098d66503b0414d85a388ce89dc4ae895"
+    },
+    {
+      "name": "source-part-19.txt",
+      "bytes": 180000,
+      "sha256": "3c8cb2cada2f997488541d6c9f3aa52a026e42f4f118b8ff62e9e2732b524379"
+    },
+    {
+      "name": "source-part-20.txt",
+      "bytes": 180000,
+      "sha256": "ab07405b5d9d49d9102944ef1d377372595054b061e009fb93d7d0bc62a0415f"
+    },
+    {
+      "name": "source-part-21.txt",
+      "bytes": 180000,
+      "sha256": "baec8f522a396f80e30e25ec5d64e472beb16093c5a3c8d6e2980705b09a7474"
+    },
+    {
+      "name": "source-part-22.txt",
+      "bytes": 180000,
+      "sha256": "ec87c2df598a65abc90d9bb9bfda6c6c86fd74daf146f5e409cae0de9b6b950f"
+    },
+    {
+      "name": "source-part-23.txt",
+      "bytes": 180000,
+      "sha256": "fe686be6706df373f85a3f6b2b42e5a0a2f81ffafe497b7e94fc067c2ff6904e"
+    },
+    {
+      "name": "source-part-24.txt",
+      "bytes": 180000,
+      "sha256": "4b7dc03e650c1830e39036ece7fd7d721e5fae9e06704693d3df4f44253d9d18"
+    },
+    {
+      "name": "source-part-25.txt",
+      "bytes": 180000,
+      "sha256": "706aef254bb108068e0da7beb4832c1ab284f0751e61aac35d2ef859421ed885"
+    },
+    {
+      "name": "source-part-26.txt",
+      "bytes": 180000,
+      "sha256": "8f7f91f7aadd20d8571da125271763e3de1d9593abbf42a84ffd8bd7eab26640"
+    },
+    {
+      "name": "source-part-27.txt",
+      "bytes": 180000,
+      "sha256": "11e5586215c1fa60b78d7b27ce650cd68ae3fd63738cac7d07f0aac8da91466a"
+    },
+    {
+      "name": "source-part-28.txt",
+      "bytes": 180000,
+      "sha256": "b6f61bb0d9dd24e85f7c779c32211d437f3adfc0fecade1e88fc29967ff20504"
+    },
+    {
+      "name": "source-part-29.txt",
+      "bytes": 180000,
+      "sha256": "a23e5f917252382426be910a106b4dd7a789250b554bf5c030cb525d7fac30ea"
+    },
+    {
+      "name": "source-part-30.txt",
+      "bytes": 180000,
+      "sha256": "cdabb01bec2ace75106c4dc4ce176f8826469cac7e625642e65daff8afb00163"
+    },
+    {
+      "name": "source-part-31.txt",
+      "bytes": 180000,
+      "sha256": "d7094c9f120bb24295e7f025af76a2b337508142af18d63ff07e35005fdb46e4"
+    },
+    {
+      "name": "source-part-32.txt",
+      "bytes": 180000,
+      "sha256": "7e3e25129e3a3783373bc60d74098f7e2dad6c8b860a096f324eba817680f623"
+    },
+    {
+      "name": "source-part-33.txt",
+      "bytes": 180000,
+      "sha256": "973e08d8b0af6b0ae66b2b074fcbff6612f770596c242f7e71c038d3693ce444"
+    },
+    {
+      "name": "source-part-34.txt",
+      "bytes": 180000,
+      "sha256": "a83e455cb55fd0f38a3824f7d15c40e81a53f48954c32277e203dc3d72b0fe1c"
+    },
+    {
+      "name": "source-part-35.txt",
+      "bytes": 180000,
+      "sha256": "c6e04b2c3dd95e19d3ab5d4861afef6db941e55f335a019ca47385394241a65a"
+    },
+    {
+      "name": "source-part-36.txt",
+      "bytes": 180000,
+      "sha256": "e3bcb2675bde4d52c279c3b45444ad3eba45af468f9ac1a4f12471fbcca2acae"
+    },
+    {
+      "name": "source-part-37.txt",
+      "bytes": 180000,
+      "sha256": "d805c2054ba82c486b4afcd334aa5ad5c50abfce72a2aef3efcd5e6dba4cdb4e"
+    },
+    {
+      "name": "source-part-38.txt",
+      "bytes": 180000,
+      "sha256": "0372e1f0815c4ff5f47107f1502c206072d470a0954a626ef0f8cae6d6edcc68"
+    },
+    {
+      "name": "source-part-39.txt",
+      "bytes": 180000,
+      "sha256": "a8fbc9e8cf3d9112e319f408a0a81b7dd209d46eac8d0767c63c5afc6201d5ee"
+    },
+    {
+      "name": "source-part-40.txt",
+      "bytes": 180000,
+      "sha256": "bc7e5a833bd36e1cd0d139f04b309b6a8b2ca297fa229c290a10447931f6db18"
+    },
+    {
+      "name": "source-part-41.txt",
+      "bytes": 180000,
+      "sha256": "511c2914626127fee552d7387817123ec743caf5b6662023a1a09309d9b7fedb"
+    },
+    {
+      "name": "source-part-42.txt",
+      "bytes": 180000,
+      "sha256": "0e7f6cd4c929a6bba5a4156007df7af854b371055cb2d15d47ccba32907a5308"
+    },
+    {
+      "name": "source-part-43.txt",
+      "bytes": 180000,
+      "sha256": "161e81cf0045d06ec5e08b84c391ae05f73d1d80509e6f0f87086c7b5ef3a1d5"
+    },
+    {
+      "name": "source-part-44.txt",
+      "bytes": 180000,
+      "sha256": "6a3969ac14609b0671698ffc8ff06c548dcc79738b945faac43b3df8a1886348"
+    },
+    {
+      "name": "source-part-45.txt",
+      "bytes": 180000,
+      "sha256": "76cc2ee26bb11589b683eebfb45aa6a82058f7985255018e0c46beed9e52115e"
+    },
+    {
+      "name": "source-part-46.txt",
+      "bytes": 180000,
+      "sha256": "fb9ad9aede7821a0778b4ce764bf491e86b33d00eebb364093bbf011a1294f50"
+    },
+    {
+      "name": "source-part-47.txt",
+      "bytes": 180000,
+      "sha256": "74d1d2599181bfe6ab30430096a22603aa4b03557404819efa01b3e398b18209"
+    },
+    {
+      "name": "source-part-48.txt",
+      "bytes": 179999,
+      "sha256": "0b3a76eeb31cdc84de827fee1f760ee4e173f5446b6014ac53af011b3a58609f"
+    },
+    {
+      "name": "source-part-49.txt",
+      "bytes": 180000,
+      "sha256": "c777068275acfe50825f00da0eca6d5d737ca05649b1a961643def35f37a4a0e"
+    },
+    {
+      "name": "source-part-50.txt",
+      "bytes": 180000,
+      "sha256": "0e704b87fc242da8a80c0220a5a5cc843ef4e3abba43b7237ba987b197e4d34b"
+    },
+    {
+      "name": "source-part-51.txt",
+      "bytes": 180000,
+      "sha256": "91ac966e11f3031d159b9c176599050787646aacaa06f515ede46e4e407d8865"
+    },
+    {
+      "name": "source-part-52.txt",
+      "bytes": 180000,
+      "sha256": "abf698ae695e1d3854c628a0cfc40252f63b0727c33de566a298ab5d4056021a"
+    },
+    {
+      "name": "source-part-53.txt",
+      "bytes": 180000,
+      "sha256": "778e90571de891a95a037e5ffd8dc99991945b8f1d542cd2168c1b0b5b05b1e8"
+    },
+    {
+      "name": "source-part-54.txt",
+      "bytes": 180000,
+      "sha256": "a3692764b660c5484423600f1aabcf0055172aef11e2b16083b035cec0eaa810"
+    },
+    {
+      "name": "source-part-55.txt",
+      "bytes": 180000,
+      "sha256": "9c617a6a0a8e9f277e959a55c9ffcb5b3c354b4c10698156d4a83568689e3b1a"
+    },
+    {
+      "name": "source-part-56.txt",
+      "bytes": 180000,
+      "sha256": "1de51d7fa83282a6abcc34a4709f29a7bb7cc907375e3340e72d340020b8e5f7"
+    },
+    {
+      "name": "source-part-57.txt",
+      "bytes": 180000,
+      "sha256": "922b0d7662554dd8a130fb4bb819cc56abc1fabc312bff1640baff628e856541"
+    },
+    {
+      "name": "source-part-58.txt",
+      "bytes": 180000,
+      "sha256": "e6b15bafc61fb9acf9e391b1e0db4b18faec21bcb500b6274fab498e567da146"
+    },
+    {
+      "name": "source-part-59.txt",
+      "bytes": 180000,
+      "sha256": "ede0fc7c1be68d233c9f32ec59c9935da602defb189f5c203e4dd8ba72863b46"
+    },
+    {
+      "name": "source-part-60.txt",
+      "bytes": 180000,
+      "sha256": "40e1df44feadcf4d979fde6913be9b16258eadec30882faab8f66aadc4209ae5"
+    },
+    {
+      "name": "source-part-61.txt",
+      "bytes": 180000,
+      "sha256": "54aa1414b2ae87f24730281ec0e2e0601eff5d4a5523f2b5e250ec66e82531e6"
+    },
+    {
+      "name": "source-part-62.txt",
+      "bytes": 180000,
+      "sha256": "cac98ad096404d09f34bef4fda9a9021f836d46be8bc4f5e817c2ca5565de8eb"
+    },
+    {
+      "name": "source-part-63.txt",
+      "bytes": 180000,
+      "sha256": "d0c1b037223c71e6615d215bec23103039d0b1abc18942c8afcb86a63f0f73d3"
+    },
+    {
+      "name": "source-part-64.txt",
+      "bytes": 180000,
+      "sha256": "8f2a8038efc11ef728d50785ad72a867649f065cb7f711371699d95f22b7ea44"
+    },
+    {
+      "name": "source-part-65.txt",
+      "bytes": 180000,
+      "sha256": "d58a835f73eb74985462505b3c18ac6713857c386f7ae7bd4e92cc7102429527"
+    },
+    {
+      "name": "source-part-66.txt",
+      "bytes": 180000,
+      "sha256": "baf0e5980d7da515293faba250420763aa868d101d70c32cec3cc653e8095866"
+    },
+    {
+      "name": "source-part-67.txt",
+      "bytes": 180000,
+      "sha256": "dc8c005561af0e7c4a172f40f10224ece0b47022e4d7d125f309d65808648c25"
+    },
+    {
+      "name": "source-part-68.txt",
+      "bytes": 180000,
+      "sha256": "4f8c9c31e412caf676f7c22fb76656b1c7f270012f7562918b8c6efb1820a38d"
+    },
+    {
+      "name": "source-part-69.txt",
+      "bytes": 180000,
+      "sha256": "13c4d5f3fc4ba561a708477631c9956e7544e4b05a6fa7a6db6f59ada69b8484"
+    },
+    {
+      "name": "source-part-70.txt",
+      "bytes": 180000,
+      "sha256": "231dba4067f0c32c257339a087249100c3e5520408eb107b314f15826d7663fc"
+    },
+    {
+      "name": "source-part-71.txt",
+      "bytes": 180000,
+      "sha256": "c2a5ea66c14303e7dc4a89ed4bbbfcdda9663c31e4d5ad910953899dd1fcd36f"
+    },
+    {
+      "name": "source-part-72.txt",
+      "bytes": 180000,
+      "sha256": "acf9e01c8501589c08f8f197d7237f11ba13b5da35d1b4339974fc8b4bcfc8cd"
+    },
+    {
+      "name": "source-part-73.txt",
+      "bytes": 180000,
+      "sha256": "48100f82e3b07b9094f985d1ef8b94e339909d6a096c03df1752effb90d4a829"
+    },
+    {
+      "name": "source-part-74.txt",
+      "bytes": 180000,
+      "sha256": "51f503da0c03d59ad036445da2f854fa05e972e5847ff1200f72334c9a227635"
+    },
+    {
+      "name": "source-part-75.txt",
+      "bytes": 180000,
+      "sha256": "a188e1ca42f479e94cf16fdd7984e8e71c07b03ae9ba82ef20634dd005e85a78"
+    },
+    {
+      "name": "source-part-76.txt",
+      "bytes": 180000,
+      "sha256": "12a914a65caaac8f2793878c9577c1e8df407eecebbb50650146f6df5859516d"
+    },
+    {
+      "name": "source-part-77.txt",
+      "bytes": 180000,
+      "sha256": "d210b1ac46fbbcf0ccd962bf621a2dfd0807c6c2f02b28bd8bf302ea79566a4d"
+    },
+    {
+      "name": "source-part-78.txt",
+      "bytes": 180000,
+      "sha256": "12463e9b2cd44c16640d1c243c3b22c90d86bb2f357610483b0d0aa70f88236c"
+    },
+    {
+      "name": "source-part-79.txt",
+      "bytes": 180000,
+      "sha256": "fe67e230898ff2d42269274c491d8f0e000cd2c382365d9c6eba4f73911b54a3"
+    },
+    {
+      "name": "source-part-80.txt",
+      "bytes": 180000,
+      "sha256": "e08c9a9c06345192b1cf407a255a18c79f19cdd28d01271fa0ff011c0c74a837"
+    },
+    {
+      "name": "source-part-81.txt",
+      "bytes": 180000,
+      "sha256": "553f28b80e2c67510544b076f1731fcd633089fb47cb89cb6478353cb0cfa8d3"
+    },
+    {
+      "name": "source-part-82.txt",
+      "bytes": 180000,
+      "sha256": "6c442e2810de8e62cc0e1df6f2a4d8428195d8a153021c300f13568491fc8974"
+    },
+    {
+      "name": "source-part-83.txt",
+      "bytes": 180000,
+      "sha256": "edd9d8a172135aa442c6e4362d946480cfad1b7bad576327b081e1ce7bb2abf6"
+    },
+    {
+      "name": "source-part-84.txt",
+      "bytes": 180000,
+      "sha256": "e4deb5068a011b4a1ba70d3b2bf45bfb6162cb7cdafbb1d7ea8c656e3b58f067"
+    },
+    {
+      "name": "source-part-85.txt",
+      "bytes": 180000,
+      "sha256": "b8ed9e12bec3609eb505bf3263550a73593ba314be9d65f4b8b245cc128c4066"
+    },
+    {
+      "name": "source-part-86.txt",
+      "bytes": 180000,
+      "sha256": "59d7315f558d70879f74955b301d18e02338c187ee1f8c6fd9e11494909583de"
+    },
+    {
+      "name": "source-part-87.txt",
+      "bytes": 180000,
+      "sha256": "b85a3a3e850c7e31d47d4ff82d39975ff46213beeca46d2f46502d114f82a6dd"
+    },
+    {
+      "name": "source-part-88.txt",
+      "bytes": 180000,
+      "sha256": "ff4c136fdc49b30582efba28b6b958421339e7ef1c56d84bf674ae114c2147c1"
+    },
+    {
+      "name": "source-part-89.txt",
+      "bytes": 180000,
+      "sha256": "8926235e5b701a4aad852d7a043484a1b07d18d1dba347e49069d8d5e8701c30"
+    },
+    {
+      "name": "source-part-90.txt",
+      "bytes": 180000,
+      "sha256": "d2cd1613d2cea3b40e0d9270784bd136fe39ae62e8cd0306ae4c65760d746903"
+    },
+    {
+      "name": "source-part-91.txt",
+      "bytes": 180000,
+      "sha256": "777124878349b02f9b7a0e64033c77fce951da3af7ab864f015a3e6ae6e2986b"
+    },
+    {
+      "name": "source-part-92.txt",
+      "bytes": 180000,
+      "sha256": "9d5f7b20e7d622e4588f79d8a920c8d55966ac16c252118b6cca6536ceff2d11"
+    },
+    {
+      "name": "source-part-93.txt",
+      "bytes": 180000,
+      "sha256": "6a66694219ac7ec4cd324df9d42f55f0aca45fb8680ebba1df640b7b7d2186cb"
+    },
+    {
+      "name": "source-part-94.txt",
+      "bytes": 180000,
+      "sha256": "1ea7dacc6df352127f1416573216bb02d6a9742ab9bf8faf1c765c7f76fa34fe"
+    },
+    {
+      "name": "source-part-95.txt",
+      "bytes": 180000,
+      "sha256": "6164d202f88ff4746024588027840f48561807db671bf57985503dd348227a45"
+    },
+    {
+      "name": "source-part-96.txt",
+      "bytes": 180000,
+      "sha256": "4f63c4730d08423ebe7d30ecefeecd61c80d89497385312e6a6ed8a3de32cbc1"
+    },
+    {
+      "name": "source-part-97.txt",
+      "bytes": 180000,
+      "sha256": "312c31c84fabcd4115ded5a967c1305bf5439ca64fa75c6a3695200caac3f248"
+    },
+    {
+      "name": "source-part-98.txt",
+      "bytes": 180000,
+      "sha256": "b8d69d3128a95952aa5c0c76b621f7a8ddd5081aa60811d93b3c2b03450c46a9"
+    },
+    {
+      "name": "source-part-99.txt",
+      "bytes": 180000,
+      "sha256": "1a0aa350d8fe0f5528b51b9e76f70b8647f815dd7f1ac1876dfc6d85551729cb"
+    },
+    {
+      "name": "source-part-100.txt",
+      "bytes": 180000,
+      "sha256": "7f9bcbd02d1f2a4be39d072344ea2a131ed896608846b4b46b77b8d4b0ab109f"
+    },
+    {
+      "name": "source-part-101.txt",
+      "bytes": 180000,
+      "sha256": "0f1166b62cdec6b51fed1c8c247ef27d691c6ca692ccaa08e7cba8e75c6540ff"
+    },
+    {
+      "name": "source-part-102.txt",
+      "bytes": 180000,
+      "sha256": "b6b8a90efbbf537494760cd573afffb2776bc0fd3c5d44d7ed67122aea67a56d"
+    },
+    {
+      "name": "source-part-103.txt",
+      "bytes": 180000,
+      "sha256": "2afcfd0905bef44d40f0cf45c94eddd854810534bbb1473bc8bc7f365ba3008f"
+    },
+    {
+      "name": "source-part-104.txt",
+      "bytes": 180000,
+      "sha256": "1b14e3851a70e22b2c2f9f3495cbdfbe0c2c2a1416c1c03950f0085f813246c8"
+    },
+    {
+      "name": "source-part-105.txt",
+      "bytes": 180000,
+      "sha256": "8bfdc8c783739ac5cddb14e72c21cd347775ef74165b0c2abca2fe1e6fc496ea"
+    },
+    {
+      "name": "source-part-106.txt",
+      "bytes": 180000,
+      "sha256": "b9afb7c075f922f1d82c160638b036e7035132c3bedb6aaa05f82ba95bbfd74a"
+    },
+    {
+      "name": "source-part-107.txt",
+      "bytes": 180000,
+      "sha256": "4e5d2dd23494f5bcc15cac5246163760c601803f18f5c6e207f7dd38b69d9ac3"
+    },
+    {
+      "name": "source-part-108.txt",
+      "bytes": 180000,
+      "sha256": "ea4f618f8241ded3dcc29850030555b1e8e8fa295ce84f2ed2f5df57a6c7e80d"
+    },
+    {
+      "name": "source-part-109.txt",
+      "bytes": 180000,
+      "sha256": "b46856f6b25d037b205dcfe48fae7a18b1263e2dc99163e4e16e69a468762bc8"
+    },
+    {
+      "name": "source-part-110.txt",
+      "bytes": 180000,
+      "sha256": "b132c8fedd56c56440d54e82ebefeeefd4dabb415f13197fc380eb031169084a"
+    },
+    {
+      "name": "source-part-111.txt",
+      "bytes": 180000,
+      "sha256": "7a5f2b8ff361e98557638ff7863f9fab0f5dab2eaf85c0fb83040deb9d13f909"
+    },
+    {
+      "name": "source-part-112.txt",
+      "bytes": 180000,
+      "sha256": "db7b71c88c225401263085a6f1e5956e6ddd551102b5934872c7c23dc68f22b1"
+    },
+    {
+      "name": "source-part-113.txt",
+      "bytes": 180000,
+      "sha256": "ad72d6dca47a5d3b97f80d30c3fb78f6440d247de5c1af9e4e5d6428550dfe29"
+    },
+    {
+      "name": "source-part-114.txt",
+      "bytes": 180000,
+      "sha256": "51b167c087a4ed1bcf60a33b41b3b27fd4b99207c7b63ffdae27240ce4c14454"
+    },
+    {
+      "name": "source-part-115.txt",
+      "bytes": 180000,
+      "sha256": "cba0e13b0df5a232f980174d076309cadc171838a2e187bff7756749282c3372"
+    },
+    {
+      "name": "source-part-116.txt",
+      "bytes": 180000,
+      "sha256": "7c0682f396e052606b42c2820638443816b25c7f19888cc5c153f276910abd99"
+    },
+    {
+      "name": "source-part-117.txt",
+      "bytes": 180000,
+      "sha256": "cd782f8f8d7bfb626e709c4602a2122ccc14f2a80c512fd0c025a6e9e8cfe063"
+    },
+    {
+      "name": "source-part-118.txt",
+      "bytes": 180000,
+      "sha256": "625db8b529ac661eef011135cb1e4be078535a3e20b63aae9ad7913947b25c79"
+    },
+    {
+      "name": "source-part-119.txt",
+      "bytes": 180000,
+      "sha256": "92c68892c689dda99a7f7b12e2c50f6c04edbeabd62bc3e62e401c5de51f66c1"
+    },
+    {
+      "name": "source-part-120.txt",
+      "bytes": 180000,
+      "sha256": "76e5943f2ffef4d1c5e6d58401d746ec825d7091a3f5ee042215aae6b1bc3413"
+    },
+    {
+      "name": "source-part-121.txt",
+      "bytes": 180000,
+      "sha256": "b924de695a37b9e24550cd1a40f4f1e27851a1b2d768ab133c51be2763fc7526"
+    },
+    {
+      "name": "source-part-122.txt",
+      "bytes": 180000,
+      "sha256": "e3b40efc2178cebe1cda75b9e113980492255dc90bf5f99607a56714b77ffd03"
+    },
+    {
+      "name": "source-part-123.txt",
+      "bytes": 180000,
+      "sha256": "efc189b8312028005a59ccad1ce9a25ebef073f5efbde0fa8c0b2c2d02fb13ba"
+    },
+    {
+      "name": "source-part-124.txt",
+      "bytes": 180000,
+      "sha256": "f8cb7dd665214759e9ac67808a932499ff05149ef30c5fb589034e3f0850d184"
+    },
+    {
+      "name": "source-part-125.txt",
+      "bytes": 180000,
+      "sha256": "892e9044d37fddc267f6a6358fd7f14735e9e95285a27814a9a53fc1a5eb35b6"
+    },
+    {
+      "name": "source-part-126.txt",
+      "bytes": 180000,
+      "sha256": "69d6ed0b007f763a94e8d74107555dca303de0291373524dc98f24adcdaeaeca"
+    },
+    {
+      "name": "source-part-127.txt",
+      "bytes": 180000,
+      "sha256": "b3e38cbf8c30b4d88691ee658be77ddec9acb5a962be3ec9af63e6b39fe16cc6"
+    },
+    {
+      "name": "source-part-128.txt",
+      "bytes": 180000,
+      "sha256": "689eddeedad867eb507264b01629fd5fe96b048ff6a3427fad3342903ff4e098"
+    },
+    {
+      "name": "source-part-129.txt",
+      "bytes": 180000,
+      "sha256": "e36ff7d5589b41211891fde8a15745b7d7ef941a0ea6ca75659319a89e7c991a"
+    },
+    {
+      "name": "source-part-130.txt",
+      "bytes": 180000,
+      "sha256": "8323e0ee4dd2220ca3e6f83ad2e5ef2341ec0a93c2263d7ccd05b158d6fe0f5e"
+    },
+    {
+      "name": "source-part-131.txt",
+      "bytes": 180000,
+      "sha256": "1cb34ca3492b6ba1692ec5dd00803a423e8474d369d72db39d6bb61b19206fa7"
+    },
+    {
+      "name": "source-part-132.txt",
+      "bytes": 180000,
+      "sha256": "a2d6739b2e65cb887217398f4cfb15a1d60ea92d049294d93129dc5917bc00bb"
+    },
+    {
+      "name": "source-part-133.txt",
+      "bytes": 180000,
+      "sha256": "e6453eb06799c146595aa7f706e8205917d3add9f1f5e65e946c88a7aee4ca58"
+    },
+    {
+      "name": "source-part-134.txt",
+      "bytes": 180000,
+      "sha256": "04671d7081ac1d7e152a0015deb610abbbaa22976a0aaace4b4515ee423b3a06"
+    },
+    {
+      "name": "source-part-135.txt",
+      "bytes": 180000,
+      "sha256": "197b47b0edda76ed2e2ec00943b9587a5d09ff2848f0bd485032820cc6ac6d10"
+    },
+    {
+      "name": "source-part-136.txt",
+      "bytes": 180000,
+      "sha256": "b64c6361d2b4fa74abfee330c5038a8f9eb606b7ae3034b694896f191af6106c"
+    },
+    {
+      "name": "source-part-137.txt",
+      "bytes": 180000,
+      "sha256": "cbd78d9d89d8fa60e9d9b61c99d14cb404f9b679f3da0bab29ea594c94711c38"
+    },
+    {
+      "name": "source-part-138.txt",
+      "bytes": 180000,
+      "sha256": "2ca1257016079e1d4a72dc1cadd119111b34ea368e879636c04bfe023d4b3360"
+    },
+    {
+      "name": "source-part-139.txt",
+      "bytes": 180000,
+      "sha256": "c256f7ed12a9f9567168cd20daa5ab657607d8f717f6c654392cd8b2f71ceb82"
+    },
+    {
+      "name": "source-part-140.txt",
+      "bytes": 180000,
+      "sha256": "174cccf6eed9f8507e77c480580701753a8b32c12ebcad0d9d493a8479127a13"
+    },
+    {
+      "name": "source-part-141.txt",
+      "bytes": 180000,
+      "sha256": "f61906cd9075b6e74306eac5e4460a5d87ee35041bb81d8dcba1c58b05e4555a"
+    },
+    {
+      "name": "source-part-142.txt",
+      "bytes": 180000,
+      "sha256": "d774979026d2e6e15d3f24faa6cb6c668dd0625a982e906b7120a41bea67ce37"
+    },
+    {
+      "name": "source-part-143.txt",
+      "bytes": 180000,
+      "sha256": "27e8b4a4f3a8c317fed52f83bf5725a27eb50db0f00204ae951187dadb177a3e"
+    },
+    {
+      "name": "source-part-144.txt",
+      "bytes": 180000,
+      "sha256": "f5b4d9bd5c4fb102f2ce591d6f64ab85bc0d2d90ef852e9adc4314e4edd22fb7"
+    },
+    {
+      "name": "source-part-145.txt",
+      "bytes": 180000,
+      "sha256": "570d8ef63ff9cb0dede4048f67043d39ca7b81b5250f103c54fba417f7fb53bd"
+    },
+    {
+      "name": "source-part-146.txt",
+      "bytes": 180000,
+      "sha256": "6324bca57a12885ebd87e0eb3ef4a6a9b47616e3c262fb0c113fb665fe8b825b"
+    },
+    {
+      "name": "source-part-147.txt",
+      "bytes": 180000,
+      "sha256": "29c1f2b5c043eb5e3a36e06917107860e15be721f25bde81f707b18fe90ab461"
+    },
+    {
+      "name": "source-part-148.txt",
+      "bytes": 180000,
+      "sha256": "67f330c4f1b3ac2225fd7757f390ab3effd5ca4dc619bf0c9bd2cfeeb397c463"
+    },
+    {
+      "name": "source-part-149.txt",
+      "bytes": 180000,
+      "sha256": "92d46af476ebd15d46008462d569ac842042f446d3b2732292195cf98e6ce3b8"
+    },
+    {
+      "name": "source-part-150.txt",
+      "bytes": 180000,
+      "sha256": "cda05339a8ac42eb298e2e15e6ad9f01e4f01651642930288053b460790360f8"
+    },
+    {
+      "name": "source-part-151.txt",
+      "bytes": 180000,
+      "sha256": "43adb2911259e64c9c6680c945852f8b7b224d0619b12a35b758ba15ca0edbc2"
+    },
+    {
+      "name": "source-part-152.txt",
+      "bytes": 180000,
+      "sha256": "952c2cea38052fdaa35cebcb97f4b56e0a06c328ea68c454bc9151a517f4588b"
+    },
+    {
+      "name": "source-part-153.txt",
+      "bytes": 180000,
+      "sha256": "a2bc7f76c93049e6980722fa51e8298332124ebacbf47bd5a4731e7f669201b9"
+    },
+    {
+      "name": "source-part-154.txt",
+      "bytes": 180000,
+      "sha256": "a359f614a75bbd4fa2327b20a33d89f023ef46b0fcbe05182ee33402ff5078c5"
+    },
+    {
+      "name": "source-part-155.txt",
+      "bytes": 180000,
+      "sha256": "dda7ad89092a7607bf3057ee103b9fb9786e18e31202e4e960c73b28955184ef"
+    },
+    {
+      "name": "source-part-156.txt",
+      "bytes": 180000,
+      "sha256": "ac667fecfcc8c3289d156de52b17c9fdf498859b55412a086e4b381e4734add4"
+    },
+    {
+      "name": "source-part-157.txt",
+      "bytes": 180000,
+      "sha256": "39f612a129e18323f0097c52a31a4fdce3483d25e52f6e2c482b51f9201d607e"
+    },
+    {
+      "name": "source-part-158.txt",
+      "bytes": 180000,
+      "sha256": "24a32da946e51ec5f9db6a5873fab9c8551cd5a7f69525d34b365dd6c93eccad"
+    },
+    {
+      "name": "source-part-159.txt",
+      "bytes": 180000,
+      "sha256": "a50a9300ee23c7772634e9c988ec3a448cf9c09f3916455406eff98029945b0a"
+    },
+    {
+      "name": "source-part-160.txt",
+      "bytes": 180000,
+      "sha256": "4bf629f3c1f37e69fd1ac1384fd9a5b082aeef511a3a108bf90068d43c24e7da"
+    },
+    {
+      "name": "source-part-161.txt",
+      "bytes": 180000,
+      "sha256": "66dede35a4a413cce8eee25bbc046baec8397b30a7aa2b7c126c04d11de3bc27"
+    },
+    {
+      "name": "source-part-162.txt",
+      "bytes": 180000,
+      "sha256": "2013baaa985c2d8003c1162488c06b78e2e30c887e6b624f47e8d28ce525a0b7"
+    },
+    {
+      "name": "source-part-163.txt",
+      "bytes": 180000,
+      "sha256": "6d4a9f66565551f9faeece611d517ced2d4c6363327c54f25dd19b8d1dda0969"
+    },
+    {
+      "name": "source-part-164.txt",
+      "bytes": 180000,
+      "sha256": "ca76efb6ddc5c1e8cae1439808f7c6a0d7a05501c81a36c5153b4283d5fea104"
+    },
+    {
+      "name": "source-part-165.txt",
+      "bytes": 180000,
+      "sha256": "19303908d1fe09855a4a00283f8046c4d12cc283cb5e712b1568c4d053f8117b"
+    },
+    {
+      "name": "source-part-166.txt",
+      "bytes": 180000,
+      "sha256": "79ff53e8d2907f9cfe78e5eb1561faa731afd22eb968d06319830b2479fd0181"
+    },
+    {
+      "name": "source-part-167.txt",
+      "bytes": 180000,
+      "sha256": "a0cc3a488cda93b8f0d08b543b95a2ccfc431f5854d7916d1e25727411e750eb"
+    },
+    {
+      "name": "source-part-168.txt",
+      "bytes": 180000,
+      "sha256": "85e97f1ef6f6c76262e7a6ac688f8eb97fb4e22956ed1aa95db7032e336bbd1d"
+    },
+    {
+      "name": "source-part-169.txt",
+      "bytes": 180000,
+      "sha256": "a7bdcfa73befea3dbbf05d7ac1f95de93138134b344ae98ac5cc34fcd8040c2d"
+    },
+    {
+      "name": "source-part-170.txt",
+      "bytes": 180000,
+      "sha256": "6e60447149125db6ee396e39e57da39ed26bb98ffbb3d59fa0faec5515e6b962"
+    },
+    {
+      "name": "source-part-171.txt",
+      "bytes": 180000,
+      "sha256": "b49e6070f1624b7f8cd6329a1274736ad3d5d97713ee86b23d35c60124d77443"
+    },
+    {
+      "name": "source-part-172.txt",
+      "bytes": 180000,
+      "sha256": "2e34311a0bb0d923092b9a2d964c0a749be8576fa592414cea80b660dac75050"
+    },
+    {
+      "name": "source-part-173.txt",
+      "bytes": 180000,
+      "sha256": "c981bd4a3ab6baba8fe99e3eeea36d90b4c44b71f76e97f94a6234f6aaf37d79"
+    },
+    {
+      "name": "source-part-174.txt",
+      "bytes": 180000,
+      "sha256": "2edd7e1231bb6ace3eeef4bd06eed83d9c4b114d001e801c9e971ccab080d737"
+    },
+    {
+      "name": "source-part-175.txt",
+      "bytes": 180000,
+      "sha256": "cab36fb49cfbb846f7e48e0b940fa2500115f03507a0dd9382b279e7286c0d19"
+    },
+    {
+      "name": "source-part-176.txt",
+      "bytes": 180000,
+      "sha256": "41f6887470f383894dcbe338178db74ed201151bed755fdcb5212090320c0953"
+    },
+    {
+      "name": "source-part-177.txt",
+      "bytes": 180000,
+      "sha256": "0d2249dd54615fc07b002ce4d593b234f5a826dacb50f256d6666174407cda64"
+    },
+    {
+      "name": "source-part-178.txt",
+      "bytes": 180000,
+      "sha256": "c9f987e82cca5adf95521f3171adff4cca95ada56ec6d4c06f2fd86f8a574199"
+    },
+    {
+      "name": "source-part-179.txt",
+      "bytes": 180000,
+      "sha256": "ae5970010fd2197ccaf954a57ddcd94162735dbe8b27958d93586e52518cc743"
+    },
+    {
+      "name": "source-part-180.txt",
+      "bytes": 180000,
+      "sha256": "5242ac929d5785b86e7889f53905f589e3f077a3d59daeba21850e64660150be"
+    },
+    {
+      "name": "source-part-181.txt",
+      "bytes": 180000,
+      "sha256": "dd9043630279f69ee8a0e0f00af80a3012ce8461051678832e18245039817f8b"
+    },
+    {
+      "name": "source-part-182.txt",
+      "bytes": 180000,
+      "sha256": "c2613dfc7f4d9ef2f6d8e5182cc27ef1773b6e67ff01723861e03bd89de63b27"
+    },
+    {
+      "name": "source-part-183.txt",
+      "bytes": 180000,
+      "sha256": "b51bbbeaa171fe7bdaabca152ec100c02769241581bfd6fb4c51fc13186b70d3"
+    },
+    {
+      "name": "source-part-184.txt",
+      "bytes": 180000,
+      "sha256": "d3096085658c9e9f0625ea03ac5307ce85748314c2ab19d5bee843655ffe5fd2"
+    },
+    {
+      "name": "source-part-185.txt",
+      "bytes": 180000,
+      "sha256": "60b051b77a279eb13a1f417d851597e0d41620c9f079de2e434b6b576456430a"
+    },
+    {
+      "name": "source-part-186.txt",
+      "bytes": 180000,
+      "sha256": "9f1a006c34fadde9466266885b61b0329673b59888eae7559d7b36191a2cd3b6"
+    },
+    {
+      "name": "source-part-187.txt",
+      "bytes": 180000,
+      "sha256": "0b4bbb1cbe95c9be083a01c38773a307a60f2e2b84578ffeeb5ebb6f27d97d3b"
+    },
+    {
+      "name": "source-part-188.txt",
+      "bytes": 180000,
+      "sha256": "e572c345cda185f359cb2bddb38bfed317f35999bd23390bf56af2d9677d5c89"
+    },
+    {
+      "name": "source-part-189.txt",
+      "bytes": 180000,
+      "sha256": "2aad89b4b9fdcdf8a155f6c21476ac6a66211d55b4314515f5475d860b7e2590"
+    },
+    {
+      "name": "source-part-190.txt",
+      "bytes": 180000,
+      "sha256": "6d68a47fe3fa3a577642eb4ea9c582a26edce040c6d1b3aeb1e00a7e1be68295"
+    },
+    {
+      "name": "source-part-191.txt",
+      "bytes": 180000,
+      "sha256": "e8fa2a2bd6588b127a0fc7f85b2d4139f8379ff7b871d89cf0bafb4b3e3d0af4"
+    },
+    {
+      "name": "source-part-192.txt",
+      "bytes": 180000,
+      "sha256": "e785f1fd4ef2992c5a0f99057fee96901fce20a89d92c01bf55c7532a1a1cdc6"
+    },
+    {
+      "name": "source-part-193.txt",
+      "bytes": 180000,
+      "sha256": "cfdd508af4df95a510b94c09f24c2e2591e4fc8f781601cc5974d052c4e0f827"
+    },
+    {
+      "name": "source-part-194.txt",
+      "bytes": 180000,
+      "sha256": "bb36bbd180c1c280468aac573cafe15354d7fca37c9b15033bd2027583aff09c"
+    },
+    {
+      "name": "source-part-195.txt",
+      "bytes": 180000,
+      "sha256": "736f54a2b9fbdf86b4b70c1e473aabd8ca6243cff4db3a4c7a591d812d08d27c"
+    },
+    {
+      "name": "source-part-196.txt",
+      "bytes": 180000,
+      "sha256": "ebcdb4c2d4958e1258e67d25a94b6e96dc010574aaa6a779780e0f8332c31326"
+    },
+    {
+      "name": "source-part-197.txt",
+      "bytes": 179998,
+      "sha256": "97dbfce321bb319fd6c971177d0faf86f173e4133d94d0bec7ac7fb1af5b6207"
+    },
+    {
+      "name": "source-part-198.txt",
+      "bytes": 180000,
+      "sha256": "95ab6a1578aebb4a956dda366f3c761683e579e6519dfc118eecc6e7eb9c2bd7"
+    },
+    {
+      "name": "source-part-199.txt",
+      "bytes": 180000,
+      "sha256": "85582b047a0ad5d4b4059a3ff5c5d7c27fe4a3cabac13441b17e9c10d1cd4be6"
+    },
+    {
+      "name": "source-part-200.txt",
+      "bytes": 179999,
+      "sha256": "ce6ad6eb564262656b293c2ff639ba2698b18f6af83af6e9832b0d5b44e20753"
+    },
+    {
+      "name": "source-part-201.txt",
+      "bytes": 180000,
+      "sha256": "53923b76c9d04c34d4cbf0fb7ac4f2ccbcdefee83b5b3e108504a492c69b8fa7"
+    },
+    {
+      "name": "source-part-202.txt",
+      "bytes": 180000,
+      "sha256": "e15d6fe0876b8e3ea97bf4e32343d06d1d88437903e13c33d717300de4940c52"
+    },
+    {
+      "name": "source-part-203.txt",
+      "bytes": 180000,
+      "sha256": "09f78a1ad350e0695814f8689ff318f7fcb0e13927332ebe3273a514923ebc3f"
+    },
+    {
+      "name": "source-part-204.txt",
+      "bytes": 180000,
+      "sha256": "248e58588c60045e29e51ebd7aab42bc69868ea7341f99e2e749d819083de7b5"
+    },
+    {
+      "name": "source-part-205.txt",
+      "bytes": 179998,
+      "sha256": "78a9def7acec8f976b8334262ea2dac8e31e00f57d814ec5e81d29448bbb6162"
+    },
+    {
+      "name": "source-part-206.txt",
+      "bytes": 180000,
+      "sha256": "6854d9c1bdca5516b52bc9bd0a6be682fd794946d46bb54c4adb988a06846063"
+    },
+    {
+      "name": "source-part-207.txt",
+      "bytes": 180000,
+      "sha256": "af268f436e37d239a7fa459d72c19a1ef57748f6580b2f4b16e4a337979ad5ea"
+    },
+    {
+      "name": "source-part-208.txt",
+      "bytes": 179999,
+      "sha256": "2a7e873a0941000def0f3330aeb2d7fc8af277cdacb48a9ea81413d019de08fd"
+    },
+    {
+      "name": "source-part-209.txt",
+      "bytes": 180000,
+      "sha256": "df57124a4358cba4d73556dce3ea3a499251603dfeff4bc2171253f2ec233a53"
+    },
+    {
+      "name": "source-part-210.txt",
+      "bytes": 180000,
+      "sha256": "861d1ca095622ab765e3fc043346ab49c4413827c663721d96282c9c321a7ab9"
+    },
+    {
+      "name": "source-part-211.txt",
+      "bytes": 179999,
+      "sha256": "5c2d11cb62254ceb2d33a4237be47e7849f692ba703f127d5251db576fd14101"
+    },
+    {
+      "name": "source-part-212.txt",
+      "bytes": 180000,
+      "sha256": "c42e2dadcbfeced9fbc8a98c039fda6d4a848ecd7d2054860a7324230a4de182"
+    },
+    {
+      "name": "source-part-213.txt",
+      "bytes": 180000,
+      "sha256": "d031d4e2b798c64c158371a8c1460c01c4f3bef03e609706974b1c04710d78da"
+    },
+    {
+      "name": "source-part-214.txt",
+      "bytes": 180000,
+      "sha256": "702f63470a4ef65c4d43228c788c031dc324778c8668a0c8138586700e7ac56c"
+    },
+    {
+      "name": "source-part-215.txt",
+      "bytes": 2634,
+      "sha256": "d8d3e1f31c110e91f6527f4ca9cb74d05408e541db1a1fcce6d8af9c915ffbc2"
+    }
+  ],
+  "scope": "Exact committed seeds and recursive static/literal imports plus explicit dynamic declarations. Runtime data must be explicit seeds. Provided execution evidence is byte-preserved, not automatically authenticated.",
+  "externalReview": {
+    "status": "pending",
+    "actualGeminiReport": null,
+    "actualChatgptReverse": null,
+    "releaseAuthorized": false
+  }
+}

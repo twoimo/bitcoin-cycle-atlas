@@ -107,3 +107,16 @@ ETH 재추정의 기존 조건은 요청한 최장 기간이 마지막 추정 �
 dynamic import에서 토큰과 괄호 사이의 block/line comment 및 JavaScript 줄 구분자를 처리한다. 실제 fixture에서 주석 뒤의 literal dependency를 포함하고, 계산된 import는 SOURCE_MISSING으로 남긴다. 테스트 내 비실행 예시는 정확한 offset·원문에 묶인 선언을 유지한다.
 
 이 검증은 구조·바이트 일관성 검사다. Git tree의 외부 진위, 실제 Gemini 실행, 실제 소스 전달 또는 릴리스 권한을 인증하지 않는다. actualModelExecutionAuthenticated=false와 releaseAuthorized=false는 계속 유지한다. 후속 검토 논제는 CI가 끝난 소스 커밋과 패킷을 먼저 고정한 뒤 별도 보고서로 기록한다. 보존된 d510163 논제를 새 head에 대한 완료된 검토로 취급하지 않는다.
+
+
+## 8. 112892a 변경분의 실제 후속 실행과 소스 동결
+
+2026-10-26에 기간별 예측 누락·프로토콜 시대 입력·검토 source-book 결합을 수정한 source112892aa634ea8ec0d31d9bf60ad902f2b3fd600의 실제 실행을 완료했다. [최신 변경분 논제](reviews/ETH_CHATGPT_DELTA_THESIS_20261026.md)와 [CI·수집·원장 영수증](eth-candidate-evidence/20261026-delta-ci.json)에 정확한 근거를 보존한다. 아래 보고서를 저장한 후속 문서 커밋과 검토 대상 소스는 구분한다.
+
+- 일반 CI40328955938: main 자동 갱신5b9246a와 결합한 합성 merge9426273에서 주 테스트1,321 pass 및 수치 assertion318,010. 직접 PR tree의 실행으로 소급하지 않는다.
+- 직접 head evidence40328955886: 집중188 pass, Chromium21경우 pass. 물리 모바일·Safari 검증은 아니다.
+- ETH 재추정의 유효 원점을 복원하자 30일/90일 flat 대비 개선율은 각각 -80.30%/-64.12%로 악화됐다. 180일은 +30.14%지만 비중첩 표본4개다. [새 비교 수치](eth-candidate-evidence/20261026-delta-comparison.json)를 사용하며 이전 표를 최신 성과로 인용하지 않는다.
+- 실제 수집 적격 경제 snapshot0, 원장 new0/reused9/정확 재생9, pending27/scored0 유지.
+- 동결 패킷은 38,522,626bytes, SHA-256a2924fb225c27c88c3c3350121e7ab6af91a8cba586280e0b77f42263118601d, 205seeds/234entries/215parts/unresolved0다. [manifest](eth-candidate-evidence/20261026-delta-review-source-manifest.json)에 연결했다.
+- 별도 main 자동 자료 갱신5b9246a가 운영 배포된 사실은 보존한다. 이번 PR#39의 후보를 병합·배포한 것은 아니다.
+- 실제 Gemini 반대 검토와 ChatGPT 역검토는 미완료이며 releaseAuthorized=false다.
