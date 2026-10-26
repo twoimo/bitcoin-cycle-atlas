@@ -93,7 +93,9 @@ test('ETH provenance records only post-Merge blocks available by the equity cuto
 
 test('appended or modified future ETH observations cannot change a frozen forecast', () => {
   const altered = ethRows.map(row => row.date.slice(0, 10) > ethAsOf ? { ...row, close: 1e10 } : row);
-  altered.push({ date: '2026-10-24', close: 1e-10 });
+  const nextDate = dateFromDay(utcDay(ethRows.at(-1).date.slice(0, 10)) + 1);
+  assert.ok(nextDate > ethAsOf);
+  altered.push({ date: nextDate, close: 1e-10 });
   assert.deepEqual(buildTreasuryAssetPaths({ ...ethOptions, ethHistory: altered }), eth);
 });
 
@@ -120,7 +122,9 @@ test('missing post-Merge days and too-short ETH samples are not filled or silent
 test('asset histories must contain an exact cutoff close rather than borrowing a later day', () => {
   const missing = ethRows.filter(row => row.date.slice(0, 10) !== ethAsOf);
   assert.throws(() => buildTreasuryAssetPaths({ ...ethOptions, ethHistory: missing }), /exact equity asOf/);
-  assert.throws(() => buildTreasuryAssetPaths({ ...ethOptions, asOf: '2027-01-01' }), /exact equity asOf/);
+  const boundedHistory = ethRows.filter(row => row.date.slice(0, 10) <= ethAsOf);
+  const unavailableDate = dateFromDay(utcDay(ethAsOf) + 1);
+  assert.throws(() => buildTreasuryAssetPaths({ ...ethOptions, ethHistory: boundedHistory, asOf: unavailableDate }), /exact equity asOf/);
 });
 
 test('malformed, duplicate, sparse, reordered and conflicting dated rows fail at the boundary', () => {

@@ -42,12 +42,15 @@ function logReturn(price, reference) {
   // digits. Use the original operands before taking its logarithm as well.
   return Number.isFinite(ratio) && ratio >= 2 ** -1022 ? Math.log(ratio) : Math.log(price) - Math.log(reference);
 }
-function geometricPriceMean(rows) {
-  let low = Infinity, high = 0, logSum = 0;
-  for (const row of rows) { low = Math.min(low, row.price); high = Math.max(high, row.price); logSum += Math.log(row.price); }
-  // Every positive geometric mean lies inside its observed input range.
-  // Preserve that exact bound when log/exp roundoff crosses a finite limit.
-  return Math.max(low, Math.min(high, Math.exp(logSum / rows.length)));
+function compareLogValues(left, right) {
+  // Roundoff ties in unit-free log ratios are not strict economic signals.
+  const tolerance = 64 * Number.EPSILON * Math.max(1, Math.abs(left), Math.abs(right));
+  return Math.abs(left - right) <= tolerance ? 0 : left > right ? 1 : -1;
+}
+function restoreGeometricMean(referenceLog, centeredMean, low, high) {
+  // A positive geometric mean stays inside the exact observed window bounds,
+  // including constant subnormal and near-MAX_VALUE prices.
+  return Math.max(low, Math.min(high, Math.exp(referenceLog + centeredMean)));
 }
 function pairwiseSlope(y1, y2, x1, x2) {
   const numerator = y2 - y1, denominator = x2 - x1;
@@ -72,11 +75,24 @@ function fraction(value, name) {
   if (!Number.isFinite(value) || value <= 0 || value >= 1) throw new TypeError(`${name} must lie strictly between 0 and 1`);
 }
 function observations(input, asOf) {
-  const rows = validateDataset(input);
-  if (asOf !== undefined) utcDay(asOf);
-  const selected = asOf === undefined ? rows : rows.filter((row) => row.date <= asOf);
+  if (asOf === undefined) return validateDataset(input);
+  const cutoff = utcDay(asOf), raw = Array.isArray(input) ? input : input?.prices;
+  if (!Array.isArray(raw) || !raw.length) throw new TypeError('Daily prices must be a nonempty array');
+  // Dates establish scope; a future price is neither evidence for nor a
+  // validation dependency of the requested historical prefix. Visit every
+  // index so sparse slots cannot disappear; retain the global date contract.
+  const selected = [];
+  let previous = -Infinity;
+  for (let index = 0; index < raw.length; index++) {
+    const row = raw[index];
+    if (Array.isArray(row) && row.length !== 2) throw new TypeError(`Daily price row ${index} must contain exactly date and price`);
+    const date = Array.isArray(row) ? row[0] : row?.date, day = utcDay(date);
+    if (day <= previous) throw new TypeError(`Duplicate or reversed UTC date at row ${index}: ${date}`);
+    previous = day;
+    if (day <= cutoff) selected.push(row);
+  }
   if (!selected.length) throw new RangeError('No observations on or before asOf');
-  return selected;
+  return validateDataset(selected);
 }
 function point(row) { return { date: row.date, price: row.price }; }
 function extreme(rows, maximum = true) {
@@ -256,6 +272,62 @@ function makeEpisodes(points, stepDays) {
   return episodes;
 }
 
+/** Compensated rolling means; periodic O(window) rebuilds bound drift at O(n) total work. */
+function slidingLogMean(logs, size) {
+  let sum = 0, correction = 0;
+  const add = value => {
+    const next = sum + value;
+    correction += Math.abs(sum) >= Math.abs(value) ? (sum - next) + value : (value - next) + sum;
+    sum = next;
+  };
+  return index => {
+    if (index >= size) add(-logs[index - size] / size);
+    add(logs[index] / size);
+    if ((index + 1) % size === 0) {
+      sum = 0; correction = 0;
+      for (let j = index + 1 - size; j <= index; j++) add(logs[j] / size);
+    }
+    return sum + correction;
+  };
+}
+
+/** Merge-only Welford aggregates avoid subtractive noise after a large return expires. */
+function slidingReturnSD(returns, size) {
+  const incoming = [], outgoing = [];
+  let count = 0;
+  const push = (stack, value) => {
+    const prior = stack.at(-1), n = (prior?.count ?? 0) + 1;
+    const delta = value - (prior?.center ?? 0), center = (prior?.center ?? 0) + delta / n;
+    stack.push({ value, count: n, center, m2: (prior?.m2 ?? 0) + delta * (value - center) });
+  };
+  return index => {
+    if (!index) return null;
+    push(incoming, returns[index]); count++;
+    if (count > size) {
+      if (!outgoing.length) while (incoming.length) push(outgoing, incoming.pop().value);
+      outgoing.pop(); count--;
+    }
+    if (count < 2) return null;
+    const left = outgoing.at(-1), right = incoming.at(-1);
+    const cross = left && right ? (right.center - left.center) ** 2 * (left.count / count) * right.count : 0;
+    return Math.sqrt(((left?.m2 ?? 0) + (right?.m2 ?? 0) + cross) / (count - 1));
+  };
+}
+
+/** Each observation enters/leaves each monotone queue once. */
+function slidingPriceExtrema(rows, window) {
+  const highs = new Int32Array(rows.length), lows = new Int32Array(rows.length);
+  let highHead = 0, highTail = 0, lowHead = 0, lowTail = 0;
+  return index => {
+    while (highHead < highTail && highs[highHead] < index - window) highHead++;
+    while (lowHead < lowTail && lows[lowHead] < index - window) lowHead++;
+    while (highHead < highTail && rows[highs[highTail - 1]].price <= rows[index].price) highTail--;
+    while (lowHead < lowTail && rows[lows[lowTail - 1]].price >= rows[index].price) lowTail--;
+    highs[highTail++] = index; lows[lowTail++] = index;
+    return { high: rows[highs[highHead]].price, low: rows[lows[lowHead]].price };
+  };
+}
+
 /** Every label depends only on closes at or before that label's date. */
 export function computeRollingStates(input, {
   frequency = 'daily', threshold = 0.12,
@@ -268,35 +340,46 @@ export function computeRollingStates(input, {
   if (longWindow < shortWindow) throw new RangeError('longWindow must be at least shortWindow');
   const rows = sampledRows(input, { frequency, asOf }), stepDays = frequency === 'weekly' ? 7 : 1;
   const parameters = { frequency, threshold, shortWindow, longWindow, deepDrawdown, stepDays, windowDefinition: 'lookback intervals; each price window includes both endpoints' };
+  const logs = new Float64Array(rows.length), returns = new Float64Array(rows.length);
+  const referencePrice = rows[0]?.price ?? 1, referenceLog = Math.log(referencePrice);
+  for (let i = 0; i < rows.length; i++) {
+    logs[i] = logReturn(rows[i].price, referencePrice);
+    if (i) returns[i] = logReturn(rows[i].price, rows[i - 1].price);
+  }
+  const shortMean = slidingLogMean(logs, shortWindow + 1), longMean = slidingLogMean(logs, longWindow + 1);
+  const shortSD = slidingReturnSD(returns, shortWindow);
+  const shortExtrema = slidingPriceExtrema(rows, shortWindow), longExtrema = slidingPriceExtrema(rows, longWindow);
   let ath = -Infinity;
   const points = rows.map((row, i) => {
+    const shortLogMean = shortMean(i), longLogMean = longMean(i), windowSD = shortSD(i);
+    const shortBounds = shortExtrema(i), longBounds = longExtrema(i);
     const newATH = i > 0 && row.price > ath;
     ath = Math.max(ath, row.price);
     const athDrawdown = row.price / ath - 1;
     const hasShort = i >= shortWindow && row.epochDay - rows[i - shortWindow].epochDay === shortWindow * stepDays;
     const hasLong = i >= longWindow && row.epochDay - rows[i - longWindow].epochDay === longWindow * stepDays;
-    const shortRows = hasShort ? rows.slice(i - shortWindow, i + 1) : [];
-    const longRows = hasLong ? rows.slice(i - longWindow, i + 1) : [];
-    const shortMA = hasShort ? geometricPriceMean(shortRows) : null;
-    const longMA = hasLong ? geometricPriceMean(longRows) : null;
-    const high = hasShort ? Math.max(...shortRows.map((p) => p.price)) : null;
-    const low = hasShort ? Math.min(...shortRows.map((p) => p.price)) : null;
-    const rollingReturn = hasShort ? row.price / shortRows[0].price - 1 : null;
+    const shortMA = hasShort ? restoreGeometricMean(referenceLog, shortLogMean, shortBounds.low, shortBounds.high) : null;
+    const longMA = hasLong ? restoreGeometricMean(referenceLog, longLogMean, longBounds.low, longBounds.high) : null;
+    const high = hasShort ? shortBounds.high : null;
+    const low = hasShort ? shortBounds.low : null;
+    const rollingReturn = hasShort ? row.price / rows[i - shortWindow].price - 1 : null;
     const rollingRange = hasShort ? high / low - 1 : null;
     const rollingDrawdown = hasShort ? row.price / high - 1 : null;
     const rebound = hasShort ? row.price / low - 1 : null;
-    const returns = hasShort ? shortRows.slice(1).map((p, index) => logReturn(p.price, shortRows[index].price)) : [];
-    const rv = sampleSD(returns);
+    const rv = hasShort ? windowSD : null;
+    const shortSide = hasShort ? compareLogValues(logs[i], shortLogMean) : null;
+    const longSide = hasLong ? compareLogValues(logs[i], longLogMean) : null;
+    const averageOrder = hasLong ? compareLogValues(shortLogMean, longLogMean) : null;
     let state = 'transition';
     if (!hasLong) state = 'warmup';
     else if (newATH) state = 'price-discovery';
     else if (atMost(athDrawdown, -deepDrawdown) && atMost(rollingRange, threshold) && atMost(Math.abs(rollingReturn), threshold / 2)) state = 'bottom-formation';
     else if (atMost(rollingRange, threshold) && atMost(Math.abs(rollingReturn), threshold / 2)) state = 'range';
-    else if (atMost(athDrawdown, -threshold) && atLeast(rebound, threshold) && rollingReturn > threshold / 2 && row.price > shortMA) state = 'rebound';
-    else if (atMost(rollingDrawdown, -threshold) && row.price >= longMA) state = 'pullback';
-    else if (row.price >= shortMA && shortMA >= longMA && rollingReturn > 0) state = 'advance';
-    else if (row.price < longMA && rollingReturn < 0) state = 'correction';
-    else if (row.price < shortMA && rollingReturn < 0) state = 'pullback';
+    else if (atMost(athDrawdown, -threshold) && atLeast(rebound, threshold) && rollingReturn > threshold / 2 && shortSide > 0) state = 'rebound';
+    else if (atMost(rollingDrawdown, -threshold) && longSide >= 0) state = 'pullback';
+    else if (shortSide >= 0 && averageOrder >= 0 && rollingReturn > 0) state = 'advance';
+    else if (longSide < 0 && rollingReturn < 0) state = 'correction';
+    else if (shortSide < 0 && rollingReturn < 0) state = 'pullback';
     return finiteMetrics({
       date: row.date, price: row.price, epochDay: row.epochDay, state,
       knownAt: row.date, earliestKnowableUtc: earliestKnowable(row.date), causal: true,

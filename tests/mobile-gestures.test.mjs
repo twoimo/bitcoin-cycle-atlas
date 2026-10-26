@@ -9,6 +9,38 @@ const first=Date.parse('2026-10-01T00:00:00Z')/1000;
 const hourly={start:first,end:first+99*3600,min:first-1000*3600,max:first+99*3600,unit:'seconds',step:3600,minSpan:12,maxSpan:6000,allowEmpty:true,contextKey:'market:1h:revision'};
 const point=(x,y=200,pointerId=1)=>({clientX:x,clientY:y,pointerId});
 
+test('active touch tracking paints only the latest move in each frame and commits the exact release',()=>{
+  const h=mobileGestureHarness({range:daily});try{
+    h.dispatch('pointerdown',point(350));h.advance(500);assert.equal(h.previews.length,1);
+    for(let x=351;x<=382;x++)h.dispatch('pointermove',point(x));
+    assert.equal(h.previews.length,1,'raw move events must not synchronously repaint the crosshair');
+    h.frame();assert.equal(h.previews.length,2);assert.equal(h.previews.at(-1).clientX,382);
+    h.dispatch('pointermove',point(400));h.dispatch('pointerup',point(435));
+    assert.equal(h.previews.at(-1).clientX,435,'release may be newer than the last move');
+    const count=h.previews.length;h.settle();assert.equal(h.previews.length,count,'a queued move must not overwrite release');
+    assert.equal(h.tracking.active,true);assert.equal(h.captures.size,0);
+  }finally{h.destroy();}
+});
+
+test('a queued tracking preview is retired by cancellation and pinch without losing raw contact positions',()=>{
+  for(const interruption of ['cancel','hidden','blur','capture','pinch']){
+    const h=mobileGestureHarness({range:daily});try{
+      h.dispatch('pointerdown',point(350));h.advance(500);h.dispatch('pointermove',point(390));
+      assert.equal(h.previews.length,1);
+      if(interruption==='cancel')h.dispatch('pointercancel',point(410));
+      else if(interruption==='hidden'){h.document.hidden=true;h.dispatch('visibilitychange',{target:h.document});}
+      else if(interruption==='blur')h.dispatch('blur',{target:h.window});
+      else if(interruption==='capture')h.element.releasePointerCapture(1);
+      else {h.dispatch('pointerdown',{...point(650,200,2),isPrimary:false});assert.equal(h.element.dataset.pinching,'true');}
+      const count=h.previews.length;h.settle();assert.equal(h.previews.length,count);assert.equal(h.tracking.active,false);
+      if(interruption==='pinch'){
+        h.dispatch('pointermove',{...point(700,200,2),isPrimary:false});h.settle();
+        assert.deepEqual(h.range,panRange(zoomRange(daily,260/310,460/870),-25/870),'pinch starts at the latest raw first-finger position');
+      }
+    }finally{h.destroy();}
+  }
+});
+
 for(const [label,range]of [['daily',daily],['weekly',{...daily,contextKey:'weekly:source'}],['hourly',hourly]]){
   test(`${label} a 480px swipe includes its release coordinate through redraws and captures one transaction`,()=>{
     const h=mobileGestureHarness({range});try{

@@ -1,0 +1,198 @@
+{
+  "status": "PASS",
+  "baseCommit": "1b7c87ce4fe5d44d05560320bb3a270c639e3bbf",
+  "node": "v24.22.1",
+  "sourceHashes": {
+    "dist/asset-comparison.js": "081ff18ed2b2c552e652e5e7c5b8245bafbcab3f37f05e52ec149dfe395e8780",
+    "dist/detailed-forecast.js": "e0b96ccae230e6c41c5e6df7a045329bb829a14dadb618365674644cf9ad2529",
+    "dist/market-structure.js": "1d6659b20343ae885a38c6bc5c0c057f1b439e4cbbc35552cdeadc4b20a294a3",
+    "scripts/verify-asset-comparison.mjs": "2bd5421bebbca766f653ba633ddb39f8af3aea8957280e9c88501da285403252",
+    "tests/math-audit-20261026.test.mjs": "de49aea17591ff8bc38fae283e448bb8461b161cff27d2a3a4cac5b9e53e7127"
+  },
+  "findings": [
+    {
+      "id": "MATH-01",
+      "scope": "Detailed forecast exported API default referenceDate",
+      "before": "RangeError: referenceDate must follow the latest completed UTC price",
+      "after": "2026-10-24",
+      "syntheticFixture": true,
+      "notes": "Failing-before direct node test recorded in agent tool log; current main archive also reproduced with latest observation 2026-10-23."
+    },
+    {
+      "id": "MATH-02",
+      "scope": "Five-stage judgment at equal mathematical means",
+      "exactMeanRisePct": 20,
+      "exactCurrentReturnPct": 20,
+      "before": {
+        "meanRisePct": 20.000000000000004,
+        "ytdPct": 19.999999999999996,
+        "stage": "sell"
+      },
+      "after": {
+        "meanRisePct": 20,
+        "ytdPct": 20,
+        "stage": "strong-sell"
+      },
+      "syntheticFixture": true
+    }
+  ],
+  "unchangedPublishedStages": true,
+  "publishedStages": [
+    {
+      "symbol": "BTC",
+      "stage": "neutral"
+    },
+    {
+      "symbol": "SPY",
+      "stage": "sell"
+    },
+    {
+      "symbol": "QQQ",
+      "stage": "sell"
+    },
+    {
+      "symbol": "NVDA",
+      "stage": "neutral"
+    },
+    {
+      "symbol": "AAPL",
+      "stage": "neutral"
+    },
+    {
+      "symbol": "GOOG",
+      "stage": "neutral"
+    },
+    {
+      "symbol": "MSFT",
+      "stage": "neutral"
+    },
+    {
+      "symbol": "AMZN",
+      "stage": "neutral"
+    },
+    {
+      "symbol": "META",
+      "stage": "neutral"
+    },
+    {
+      "symbol": "AVGO",
+      "stage": "buy"
+    },
+    {
+      "symbol": "PLTR",
+      "stage": "neutral"
+    },
+    {
+      "symbol": "TSLA",
+      "stage": "buy"
+    },
+    {
+      "symbol": "HOOD",
+      "stage": "buy"
+    },
+    {
+      "symbol": "TLT",
+      "stage": "buy"
+    },
+    {
+      "symbol": "IEF",
+      "stage": "strong-buy"
+    },
+    {
+      "symbol": "GLD",
+      "stage": "strong-buy"
+    },
+    {
+      "symbol": "SLV",
+      "stage": "strong-buy"
+    },
+    {
+      "symbol": "PDBC",
+      "stage": "strong-sell"
+    }
+  ],
+  "verification": {
+    "focusedTests": 4,
+    "assetComparisonExistingChecks": 24,
+    "detailedForecastTests": 21,
+    "independentAssetVerifier": {
+      "assets": 18,
+      "observations": 103929,
+      "annualSamples": 400,
+      "boundedPaths": 360,
+      "thresholdCases": 262,
+      "negativeControls": 16,
+      "detectedControls": 16
+    },
+    "marketStructureIndependentReview": {
+      "randomSeed": 834382,
+      "randomTrials": 80,
+      "rowsPerTrial": 200,
+      "unitScales": [
+        1e-250,
+        1e-100,
+        1e+100,
+        1e+250
+      ],
+      "stateVectorComparisons": 320,
+      "equalityScales": 8,
+      "constantExtremeCases": 2,
+      "mixedExtremeCases": 3,
+      "maxRelativeMeanError": 4.440892098500626e-16,
+      "maxRelativeVolError": 6.661338147750939e-16
+    }
+  },
+  "limitations": [
+    "Bounded tests and algebraic identities, not an unbounded floating-point proof.",
+    "Historical stage rules do not establish future return probabilities or trading profitability.",
+    "No new issuer financial fact or market source was researched in this mathematical code review."
+  ],
+  "sourceIdentityScope": "Initial numerical execution receipt, preserved verbatim; finalSourceReview separately identifies the later committed runtime.",
+  "finalSourceReview": {
+    "runtimeProductCommit": "c8f9d985a7a99cdee13a5c74eeda37168f1c7ea8",
+    "runtimeParentCommit": "65182efcb9a833b2be091c552a0291d47d50b32c",
+    "method": "Read final source and compare byte identities. This receipt is not a rerun of the earlier numerical sweep.",
+    "sourceHashes": {
+      "dist/asset-comparison.js": "081ff18ed2b2c552e652e5e7c5b8245bafbcab3f37f05e52ec149dfe395e8780",
+      "dist/detailed-forecast.js": "7bba1e7e524df8c664d2cad931fa1c6b06519734489548446d578450cdfb1711",
+      "dist/market-structure.js": "cc840a90b3c5bc83e86f27bf891108da04fdd0c5ce348478eadee3f96950383e",
+      "scripts/verify-asset-comparison.mjs": "2bd5421bebbca766f653ba633ddb39f8af3aea8957280e9c88501da285403252",
+      "tests/math-audit-20261026.test.mjs": "de49aea17591ff8bc38fae283e448bb8461b161cff27d2a3a4cac5b9e53e7127"
+    },
+    "changesSinceNumericalExecution": [
+      {
+        "path": "dist/asset-comparison.js",
+        "kind": "byte-identical",
+        "matchesEarlierHash": true
+      },
+      {
+        "path": "dist/detailed-forecast.js",
+        "kind": "import-cache-query-only",
+        "from": "./market-structure.js?v=1.23.0",
+        "to": "./market-structure.js?v=1.26.5",
+        "revertingOnlyThisQueryMatchesEarlierHash": true
+      },
+      {
+        "path": "dist/market-structure.js",
+        "kind": "observations-asOf-validation-only",
+        "finalSha256": "cc840a90b3c5bc83e86f27bf891108da04fdd0c5ce348478eadee3f96950383e",
+        "restoringEarlierObservedFunctionReconstructsExactReviewedFileSha256": "1d6659b20343ae885a38c6bc5c0c057f1b439e4cbbc35552cdeadc4b20a294a3",
+        "rollingArithmeticFunctionsUnchanged": true,
+        "noAsOfBranchUnchanged": true,
+        "description": "An indexed loop replaces Array.filter so sparse positions, wrong tuple arity, malformed dates, duplicate dates and reversed dates cannot disappear outside the price scope. Positive finite price validation remains restricted to observations on or before asOf.",
+        "focusedRegressionSource": "tests/market-structure.test.mjs: invalid future price / as-of scope malformed structure"
+      },
+      {
+        "path": "scripts/verify-asset-comparison.mjs",
+        "kind": "byte-identical",
+        "matchesEarlierHash": true
+      },
+      {
+        "path": "tests/math-audit-20261026.test.mjs",
+        "kind": "byte-identical",
+        "matchesEarlierHash": true
+      }
+    ],
+    "limitations": "Prior arithmetic numbers retain their original execution source hashes. No new market source research, full sweep, browser test or deployment was performed for this documentation reconciliation."
+  }
+}

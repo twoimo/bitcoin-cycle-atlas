@@ -1,0 +1,78 @@
+{
+  "runtimeCommit": "c8f9d985a7a99cdee13a5c74eeda37168f1c7ea8",
+  "incorporatedMain": "65182efcb9a833b2be091c552a0291d47d50b32c",
+  "initialAuditBaseline": "1b7c87ce4fe5d44d05560320bb3a270c639e3bbf",
+  "node": "v24.22.1",
+  "tests": {
+    "passed": 1046,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "successfulCommands": [
+    "npm test",
+    "npm run verify:numerics",
+    "npm run verify:research",
+    "npm run verify:eth-events",
+    "npm run verify:treasury-paths",
+    "npm run verify:cycle",
+    "npm run verify:performance",
+    "node --use-env-proxy scripts/verify-static.mjs",
+    "npm run build:standalone",
+    "node scripts/verify-static.mjs --standalone build/Bitcoin_Cycles_Comparison.html"
+  ],
+  "verificationScope": "Final product runtime commit plus accompanying verifier changes; full formal/browser results are separate receipts. These are local checks, not a claim that GitHub CI or deployment completed. Release packaging is intentionally deferred until the evidence commit makes the source tree clean.",
+  "standalone": {
+    "bytes": 11712041,
+    "sha256": "4710729f0a2cbac95aad94352eb4346d104496af576eb017e17c9ec4fd0f0860"
+  },
+  "refreshReplay": {
+    "originalFailedRun": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40232721164",
+    "originalFailedJob": 121287683272,
+    "baseline": "1b7c87ce4fe5d44d05560320bb3a270c639e3bbf",
+    "syntheticChanges": "One test-only 2026-10-24 BTC comparison observation and one ETH candle; no production market data changed.",
+    "before": "Reproduced fixed latest-date and duplicate future-date test failures",
+    "after": "The same growing-data fixture passes after replacing only the affected tests; 14 TAP cases plus asset-comparison assertions. This does not claim an actual later scheduled refresh has completed."
+  },
+  "evidenceSha256": {
+    "tests.log": "ffbae0849386c43dc80aacf434395e8a7f0c618668983f522e2a194acd335155",
+    "numerics.log": "971d59a6160be367d1f568634e0e2d70322b6b27cd7e0f2212654a02c4f837ce",
+    "research.log": "53bc313ad52bd3c6e4ff33b7657e3c3aee9b38a030200517ee12bd3e74f6c678",
+    "eth-events.log": "32485248e04b9f109807403d13605983f73cb8a610d7fb85d65f8bdf9b41b209",
+    "treasury.log": "ab92398acb690fa3c954154fc4fad7c70dfd5ce79a9b07e44a183a14ad3ea2ed",
+    "cycle.log": "0936f90e2dd9492fbe86a154fc1ec03450995dfdd1e1f7238182be620713ea65",
+    "performance.log": "0090af0207e94242aa274c76aaed34b128a72e0092782a9d62adf91021b4a7b6",
+    "static.log": "39802f630810425b45c5e7eac4ab08f381d58e240d88dc251c90d2d361279b46",
+    "standalone.log": "76fd3790d8e98f56ebf9046077500be61c951a086bc83189b9beb773f3d1754a",
+    "refresh-before.log": "2d424cf2d6ab8f04ab2b86c1fd6e88b967d69845f71b03400387362cc0a93be1",
+    "refresh-after.log": "4c1c2ffba1df7152f894f8f0a07cbc2e3ef1d2608809d7d97f2a18bb97e63ca3",
+    "boot-before.log": "c1d9e3315bacd3ea4a1b93cf3be8f0061726b3c091be3125dd88dafd4228b99b",
+    "boot-reader-after.log": "53aa26ff610715c9710d717cfa03feb8e2d39fd8f3d282c2a75c5c8ef422abbf",
+    "reader-before.log": "c70fad7cc73d5b38b79626ff3d535d65f95fdb2e3bc34b151d95c99fbc8b2e32",
+    "tests-final.log": "b5ab35331442c6f65c98ea162a433bfdbfd7e2651c67af2571a962b008d73bdc",
+    "static-final.log": "1c817d0c5c63862e7d15df9ab933f6bebadfbea361f32ee020f0445e0233898a"
+  },
+  "finalProductCommit": "7f70c2260a634a82ecec633cbc200b6c4b54ae48",
+  "finalProductAmendment": "Tablet CSS headings and the stylesheet cache query only; numerical/controller/boot executable code is unchanged from the core c8f9 commit.",
+  "finalTests": {
+    "log": "tests-final.log",
+    "passed": 1046,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "browser": {
+    "cases": 23,
+    "standaloneCases": 4,
+    "allPassed": true,
+    "receipt": "../browser/interface.json",
+    "standaloneReceipt": "../browser/standalone.json"
+  },
+  "finalStatic": {
+    "log": "static-final.log",
+    "exitCode": 0,
+    "sourceCommit": "7f70c2260a634a82ecec633cbc200b6c4b54ae48"
+  }
+}

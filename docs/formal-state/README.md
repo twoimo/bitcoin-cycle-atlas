@@ -1,82 +1,113 @@
-# Market request ownership: bounded formal verification
+# Market request ownership and manual history retry
 
-Audit base: [`e15ae31a4223d127244b6d630ae4b7c910f653ef`](https://github.com/twoimo/bitcoin-cycle-atlas/tree/e15ae31a4223d127244b6d630ae4b7c910f653ef).
+## Current audit: 2026-10-26
 
-Last code/model correspondence review: [`1ad3be543e870e74f10708c266f19572b217d25f`](https://github.com/twoimo/bitcoin-cycle-atlas/tree/1ad3be543e870e74f10708c266f19572b217d25f) on 2026-10-25. Previous sync: `c7fbf50c34a45386300336756b5fd42a0fab0363`. The controller source is byte-identical to the previous review. Daily-data information links, CSS and import URLs in surrounding views do not change its awaits, owner replacement, cancellation or publication guards. Each controller still has a fixed product and private cache/request slot.
+Audit base: [`1b7c87ce4fe5d44d05560320bb3a270c639e3bbf`](https://github.com/twoimo/bitcoin-cycle-atlas/tree/1b7c87ce4fe5d44d05560320bb3a270c639e3bbf). Current committed synchronization: [`c8f9d985a7a99cdee13a5c74eeda37168f1c7ea8`](https://github.com/twoimo/bitcoin-cycle-atlas/commit/c8f9d985a7a99cdee13a5c74eeda37168f1c7ea8), incorporating main `65182efcb9a833b2be091c552a0291d47d50b32c`. Previous synchronization: `1ad3be543e870e74f10708c266f19572b217d25f`. The controller at the audit base was byte-identical to that earlier ownership review. The committed runtime extends it with the explicit-refresh retry reset; reviewed source SHA-256: `092b77e78d3f430205c2da45d37395ac3f59606391a48f1c07a4f43ee71cb83a`. The exact published runtime was checked against its model and both product mutations, and its complete verification receipt was regenerated before advancing this synchronization record.
 
-Maintenance outcome: **in sync; correspondence metadata advanced, model semantics and bounds unchanged**. Current and broken models, all 30 actual controller/history/ownership regressions and the saved-fallback guard mutation were rerun. ETH lifecycle integration is now independently covered by [verify-eth-state](../formal-eth/README.md), with 17 initializer cases; those examples do not turn this single-controller model into a cross-product proof. Pagination, workspace saving, indicator templates, CSV export, pixels and first-screen initialization remain outside this model.
+**A manual-refresh defect was reproduced and repaired.** After an older-candle request failed, a manual refresh that also failed preserved its 30-second history cooldown while dropping the visible history error. Refilling the same viewport made no request. The explicit refresh now releases the previous failure cooldown, including when it retains existing candles. Normal gestures still respect failure backoff, and the shared request throttle is unchanged.
 
-**The current ownership guard passed this audit.** No existing asynchronous overwrite defect was reproduced. The red/green comparison is a deliberate negative control: remove one guard, observe failure, then compare against the existing correct code. It is not evidence that this audit repaired a production race.
+The fix and retry abstraction were prepared in PR #12 and were adapted to current main's separate BTC/ETH controller instances. The old branch was not substituted for current source. Both product replays failed on the current baseline and passed on the amended code.
 
-## Property and practical consequence
+**The existing request ownership guard remains valid.** Its model passed unchanged before editing. Removing its saved-response guard in a temporary product copy produces a stale-publication failure. This is a deliberate negative control, not an observed production race repaired by this audit.
 
-`NoStaleDisplay`: a request canceled or superseded by another request must never supply a later displayed result. This protects a freshly selected or refreshed chart from an older saved snapshot arriving late. Callback checks in the executable regressions also ensure a revoked request cannot schedule a stale UI update.
+Start with the [Korean before/after explanation](review-2026-10-26/comparison.png), [passing retry overview](review-2026-10-26/fixed.png), and [Korean evidence and limitations](review-2026-10-26/stories-ko.md). Both PNGs have adjacent Mermaid source. Older `current/` and `mutation/` files below this directory remain historical receipts; the newly regenerated figures are under `review-2026-10-26/`.
 
-The model has two interval caches (`one` = `1m`, `five` = `5m`) and at most three request generations. TLC exhaustively enumerates its allowed interleavings of request start, cancellation/replacement, exchange success/failure, and saved-data success/failure. This is a finite-state verification of request ownership, not a mathematical proof of Bitcoin prices or forecast validity.
+## Properties and evidence
 
-## Evidence
-
-| Check | Observed result |
+| Check | Scope and observed result |
 | --- | --- |
-| Current TLA+ model | 5,955 generated states; 2,081 distinct states; 0 states left; invariant holds |
-| Current complete state graph | 2,081 states; 5,954 transitions |
-| Current full chart projection | 6 visible states; 13 transitions |
-| Deliberately broken model, first-counterexample run | Invariant fails; 151 generated; 109 distinct; 79 queued when intentionally stopped |
-| Actual controller/history/ownership regressions | 30 tests passed, 0 failed |
-| Actual-code mutation | Removing the saved-fallback guard causes the expected stale-update assertion to fail |
+| `NoStaleDisplay` | At most three generations and two interval caches: 5,955 generated, 2,081 distinct states, zero queued; pass |
+| Ownership negative model | Deliberately removed guard: intended invariant failure after 151 generated, 109 distinct states |
+| `RefreshCanRetry` and `TypeOK` | One interval with retained candles and a boolean cooldown: 37 generated, 15 distinct states, zero queued; pass |
+| Retry baseline model | Reproduced pre-fix behavior: intended invariant failure after 26 generated, 13 distinct states |
+| Real controller/history/ownership checks | 32 named tests pass, zero failures, cancellations, skips or todos |
+| Real-code negative controls | Removing the saved-response guard fails the stale-update assertion; separately removing the refresh reset fails both BTC/ETH retry cases |
+| Restored temporary product | All 32 named tests pass again |
+| Final equity lifecycle gate at `c8f9d98` | 46,252 distinct states; 28 original and 28 restored initializer replays; seven actual-source mutations rejected |
+| Final ETH lifecycle gate at `c8f9d98` | 2,243 distinct states; 17 original and 17 restored initializer replays; nine actual-source mutations rejected |
 
-These results come from the checked-in summaries and the runner, not estimates. The broken run stops at its first counterexample; its partial state count is not an exhaustive proof. pstack separately explores its complete graph to draw and classify counterexample paths.
+Read the exact final-commit [market receipt](review-2026-10-26/market-verification.json), [equity receipt](review-2026-10-26/equity-final.json), and [ETH receipt](review-2026-10-26/eth-final.json). The earlier [equity baseline](review-2026-10-26/equity-baseline.json), [ETH baseline](review-2026-10-26/eth-baseline.json), and [before](review-2026-10-26/history-before.tap)/[after](review-2026-10-26/history-after.tap) retry runs remain intact. First-counterexample counts are partial exploration, not exhaustive counts. Chart counts come from each generated `summary.json`, which can describe a full baseline graph rather than the early-stop check.
 
-## Model-to-code correspondence
+The existing ETH/equity source and inline boot handshake were reviewed from `1ad3be5` to the audit base. Surrounding information links, asset-table markup, CSS and import URLs did not add a covered state writer or continuation. Final integration changes import query strings and makes optional font failures nonfatal in the boot script. The exact existing ETH and equity gates were therefore rerun on published commit `c8f9d98`, keeping their model bounds and invariants unchanged. Their final receipts contain the new module hashes; older baseline hashes are preserved separately. The full production initializer and boot script execute in these replays with DOM, rendering, HTTP and scheduling boundaries injected. They do not prove real font loading, browser pixels or device behavior.
+
+## Ownership model correspondence
 
 | Model component | Actual code or meaning |
 | --- | --- |
-| `active` | Controller's currently owning request object, abstracted as a unique generation number |
-| `interval`, `selected` | Request interval and selected interval; only two representatives are modeled |
-| `phase` | Suspended live-fetch or saved-fallback continuation, including already canceled work that may complete late |
-| `cancelled` | Verification monitor recording requests whose ownership was revoked; not a new product data structure |
-| `displayed` | Generation of the last publication for each interval, not the age of the underlying price quote |
-| `status`, `storedStatus` | Visible loading/ready/snapshot/error state and status restored from retained data on cancellation |
-| `Load` | Forced `load` or interval switch: synchronous cancellation and installation of the new owner |
-| `Cancel` | `cancel`: revoke owner, abort its signal, restore prior displayed status |
-| `LiveSuccess`, `LiveFailure` | Synchronous continuations after `fetchMarketCandles`; ownership checked before publish or fallback |
-| `SavedSuccess`, `SavedFailure` | Synchronous continuations after `snapshot`; the post-await ownership guard controls publication |
+| `active` | Currently owning request object, abstracted to a generation number |
+| `interval`, `selected` | Requested and selected intervals; two representative values |
+| `phase` | Live-fetch or saved-fallback continuation, including canceled work that may complete late |
+| `cancelled` | Verification monitor of revoked requests; not product data |
+| `displayed` | Generation of the last published result per interval, not quote age |
+| `status`, `storedStatus` | Loading, ready, saved or error state and retained-data restoration |
+| `Load` | `load`: synchronously cancel old work and install the new owner |
+| `Cancel` | `cancel`: revoke ownership, abort the signal and restore displayed status |
+| `LiveSuccess`, `LiveFailure` | Continuations after `fetchMarketCandles`; owner checked before publication or fallback |
+| `SavedSuccess`, `SavedFailure` | Continuations after `snapshot`; the post-await owner guard controls publication |
 
-The model treats each uninterrupted continuation as one step. In this app, `onChange` schedules rendering rather than synchronously starting another controller action. The model permits independent saved-response completions, which overapproximates the shared snapshot promise: extra delivery orders are admitted, not omitted. Cache contents, HTTP parsing, numerical values, snapshot validity, and the exact source of a fallback are abstracted into success/failure. Prefer-snapshot initial loads, history pagination, throttling, wall-clock timeouts, and unbounded liveness are not included in this model; existing executable tests cover selected examples of those behaviors.
+Every uninterrupted continuation is one model step. `onChange` schedules rendering rather than synchronously starting a new controller action. The model permits independent saved-response completions, an over-approximation of the shared snapshot promise. Aborting HTTP is not assumed to prevent a late completion. Product ownership and caches remain private to each controller.
 
-## Counterexample replay
+The actual replay opens the controller, makes its exchange request fail, starts a new request while the saved response is pending, and delivers the old saved response last. It covers both intervals, both completion orders, and saved success/failure. `MarketRequestsBroken.tla` changes only the publication guard, and the mutation runner removes the corresponding real line in a temporary copy.
 
-The negative control removes only the guard immediately after the saved snapshot is awaited in `load`'s error branch:
+## Manual retry model correspondence
 
-1. Open the candle chart; its exchange request fails, so saved candles are requested.
-2. Cancel the request, change interval, or force a newer refresh while saved data remains pending.
-3. Let the older saved response arrive.
-4. With the guard removed, the old response can publish a snapshot or notify the UI. With the existing guard, it is ignored, whether the newer request is still loading or already finished.
+`RefreshCanRetry`: when manual refresh completes, an earlier failed history attempt cannot block another request for the still-unloaded viewport. A subsequent failed request may establish a new delay.
 
-`tests/market-request-ownership.test.mjs` exercises both intervals, both old/new completion orders, and old saved-response success/failure: eight deterministic combinations. `scripts/verify-market-state.mjs` copies actual source to a temporary directory, removes that exact guard, verifies the expected assertion failure, and deletes the copy. It fails if the source mutation selector no longer matches, so code drift cannot silently invalidate the negative control.
+| Action or variable | Actual code or meaning |
+| --- | --- |
+| `retryBlocked` | Boolean abstraction of `history.retryAt > Date.now()` |
+| `refreshDone` | Verification monitor for refresh completion; not product state |
+| `RequestHistory` | `ensureRange`: requires no active owner, missing coverage and an expired/cleared cooldown, then publishes history loading |
+| `HistorySuccess` | Final history continuation resets the cooldown and publishes success |
+| `HistoryFailure` | History catch sets a new retry deadline and publishes the error |
+| `StartRefresh` | `load(..., { force: true })`: cancel old work, clear the previous delay, publish loading in one synchronous continuation |
+| `RefreshSuccess` | Replace history with `createHistoryState`, whose cooldown starts at zero |
+| `RefreshFailure` | Retain `prior.series` and the existing history object without a new snapshot await |
+| `CooldownElapsed` | Environment step; no proof about real elapsed time or clock monotonicity |
 
-## Run and reproduce
+The model starts with validated retained candles and a missing viewport for one interval. It does not represent revoked generations; the separate ownership model covers a bounded set of those interleavings. The two models are not claimed to compose into a whole-program proof.
+
+The real pre-fix trace is: history HTTP 503, ordinary gesture blocked by backoff, manual refresh HTTP 503, same viewport request. Before the fix the request counter stays at two. After the fix a third request supplies the missing period. Both BTC-USD and ETH-USD use the real parser and public controller API. The defect exists in the original history feature commit `8e0dedac78f1d8d34a82b9310ecbb161bad1f9cc`; it is newly integrated from PR #12 here, not presented as a new discovery.
+
+## Run the verification
+
+From the repository root with Node 24+ and Java 11+:
 
 ```sh
 node scripts/verify-market-state.mjs
 ```
 
-Requires Node 24+ and Java 11+. The script downloads and verifies official [TLC 1.7.4](https://github.com/tlaplus/tlaplus/releases/tag/v1.7.4), or accepts `TLA2TOOLS` pointing to the same jar. Its SHA-256 is `936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88`. The current controller SHA-256 at correspondence review is `5de1c4b3396551ae71400516f26d35fb6737b0bdad74fcdec403342b2c9991db`.
+An optional output argument writes the JSON receipt. The runner pins official [TLC 1.7.4](https://github.com/tlaplus/tlaplus/releases/tag/v1.7.4) to SHA-256 `936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88`. Set `TLA2TOOLS` to that same jar for offline use. Each model gets a private Java temporary directory; the heap is capped at 512 MiB. Download, checksum, Java launch, timeout and incomplete TAP results are failures, not verification passes.
 
-## Statecharts
+The runner requires named TAP test counts, tests two isolated product mutations, restores the actual source and reruns the full 32-case set. It never changes product files in place. It fails closed if exact mutation selectors no longer match.
 
-- [Current complete projection](current/full-chart.png) and [Mermaid source](current/full-chart.mmd) show all edges between the six visible states. Distinct hidden request/cache states can share a screen label; an arbitrary path through this projection is not itself proof that the hidden model can take that path.
-- [Current pstack overview](current/chart.png) and [Mermaid source](current/chart.mmd) keep selected shortest paths. The overview is intentionally not the complete transition relation.
-- [Negative-control counterexample](mutation/bug-1.png), [Mermaid source](mutation/bug-1.mmd), and [numbered story](mutation/stories.md) demonstrate the removed guard. Green denotes the existing guard preventing the mutant's bad state.
-- Exact chart counts are in `current/summary.json`, `current/full-summary.json`, and `mutation/summary.json`. `verification-summary.json` records the one-command verification output.
+## Statecharts and tool compatibility
 
-Charts were generated with Cursor pstack's [`statechart`](https://github.com/cursor/plugins/tree/eb4db2b55b2b7dec3d9282754cddf0a56bf4ff10/pstack/skills/statechart), pinned at `eb4db2b55b2b7dec3d9282754cddf0a56bf4ff10`, plus Mermaid CLI 12.0.0. From a scratch copy of `verification/market-state/` outside the repository, with `PSTACK` set to that checkout and `TLA2TOOLS` to the verified jar:
+Fresh figures use upstream pstack commit `99b609a72323b70204eab407c622f436e858e112`, `pele@1.8.0`, `@resvg/resvg-js@2.6.2` and the official Noto Sans KR font. The input/tool manifest is [chart-manifest.json](review-2026-10-26/chart-manifest.json). No external tool or font binary is committed.
+
+The old ownership mapping accessed `phase[active - 1]`. Current pstack documents one-based TLA tuples and explicitly rejected `phase[0]`. The mapping now reads `phase[active]`. This is verification-tool drift, not a runtime state change. Current-model action guards have source anchors; the comparison summaries report no uncited conditions.
+
+- [Current ownership overview](review-2026-10-26/current/chart.png): six states and five displayed transitions; `--cover` omits eight of thirteen projected transitions.
+- [Ownership negative-control trace](review-2026-10-26/mutation/bug-1.png): the existing guard prevents the deliberate mutant's late update.
+- [Retry baseline comparison](review-2026-10-26/history-retry/chart.png): seven projected states and sixteen transitions from eighteen baseline model states. Green means an old error prevented by the fix.
+- [Retry counterexample](review-2026-10-26/history-retry/bug-1.png): four numbered visible steps, with the repaired outcome shown separately.
+- [Passing retry overview](review-2026-10-26/fixed.png): six states and five shortest-path transitions from fifteen passing model states. Eight omitted projected edges are listed in `fixed-summary.json`.
+- [Reader comparison](review-2026-10-26/comparison.png): separate explanatory diagram; red is the old failure and green is the enabled retry. It is not another model or proof.
+
+Work on a scratch copy of `verification/market-state/` outside the repository. Read the installed pstack `/statechart` skill and its `--help` before regenerating. With `PSTACK_DIR` pointing to the pinned upstream checkout, `TLA2TOOLS` to the verified jar, and a Korean-capable system-ui font configured, the commands used were:
 
 ```sh
-node "$PSTACK/pstack/skills/statechart/scripts/statechart.mjs" from-spec MarketRequests.tla --title 'Candle request state transitions' --out current --png
-node "$PSTACK/pstack/skills/statechart/scripts/statechart.mjs" from-spec MarketRequestsBroken.tla --fixed MarketRequests.tla --label 'the existing guard' --expect-broken NoStaleDisplay --title 'Negative control: guard removed' --out mutation --png
-node "$PSTACK/pstack/skills/statechart/scripts/tlc-to-chart.mjs" --dot current/tlc/MarketRequests.dot --map MarketRequests.map.mjs --spec MarketRequests.tla --highlight 0 --full-labels --title 'Candle request transitions: all projected edges' --out full-chart.mmd --summary full-summary.json
-npx --yes @mermaid-js/mermaid-cli@12.0.0 -i full-chart.mmd -o full-chart.png -s 2
+node "$PSTACK_DIR/pstack/skills/statechart/scripts/statechart.mjs" from-spec MarketRequests.tla --title 'Candle request ownership' --out current --cover --png
+node "$PSTACK_DIR/pstack/skills/statechart/scripts/statechart.mjs" from-spec MarketRequestsBroken.tla --fixed MarketRequests.tla --label 'the existing guard' --expect-broken NoStaleDisplay --title 'Negative control: stale response guard' --out mutation --cover --png
+node "$PSTACK_DIR/pstack/skills/statechart/scripts/statechart.mjs" from-spec HistoryRetryBroken.tla --fixed HistoryRetry.tla --label '수정 후' --expect-broken RefreshCanRetry --title '수동 새로고침과 과거 봉 재시도' --out history-retry --png
+node "$PSTACK_DIR/pstack/skills/statechart/scripts/statechart.mjs" from-spec HistoryRetry.tla --title '수정 후 과거 봉 재시도 상태' --out history-fixed --cover --png
+node "$PSTACK_DIR/pstack/skills/statechart/scripts/statechart.mjs" render comparison.mmd --theme classic --out comparison.png
 ```
 
-Use a supported local Chromium configuration for PNG rendering. Tool or browser-launch failures are not verification passes; the TLC and image steps have separate failure signals. Keep the source, model, regression replay, and project-local `verify-market-state` skill synchronized after changes.
+All seven PNGs were opened and inspected. Initial Korean font-width overflow was corrected and figures were regenerated before delivery. The chart and code-check steps have separate failure signals; a rendered PNG alone is not evidence that a property passed.
+
+## Limits
+
+These are finite-state safety checks. They do not prove unrestricted request counts, actual clock durations, rate limiting, page contents, parser correctness for every input, cross-product controller composition, memory use, browser pixels or scheduling, eventual completion, economic model correctness or forecasting accuracy. Prefer-snapshot and pagination behavior are covered by selected real-code examples, not the ownership TLA abstraction. Refresh replay evidence does not prove that a remote exchange will recover.
+
+Keep the controller, models, mutation selectors, project-local `verify-market-state` skill and receipts synchronized. Use pstack `/maintain-formal-verification-skill` after a covered change that was not checked at the time.

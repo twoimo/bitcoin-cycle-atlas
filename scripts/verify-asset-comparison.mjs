@@ -167,6 +167,9 @@ const short = stageBundle(100, history.filter(([date]) => date >= '2022-01-01'))
 const absentYear = stageBundle(100, history.filter(([date]) => !date.startsWith('2023-')));
 const monthly = stageBundle();
 monthly.assets[0].meta.dataGranularity = '1mo';
+const mixedRiseHistory = [10, 30, 10, 30, 20].flatMap((rise, index) => yearPrices(2021 + index, [100, 100 + rise, 80]));
+const roundoffBoundary = stageBundle(120, mixedRiseHistory);
+roundoffBoundary.assets[0].prices = roundoffBoundary.assets[0].prices.map(([date, price]) => [date, price * 0.01]);
 
 const negativeControls = [
   {
@@ -262,10 +265,24 @@ const negativeControls = [
   },
   {
     id: 'exact-buy-boundary-uncovered',
-    before: 'else if (ytdPct <= thresholds.buyPct)',
-    after: 'else if (ytdPct < thresholds.buyPct)',
+    before: 'else if (!strictlyBelow(thresholds.buyPct, ytdPct))',
+    after: 'else if (strictlyBelow(ytdPct, thresholds.buyPct))',
     property: build => assert.equal(buildRow(build, stageBundle(75)).judgment.id, 'buy', 'control: inclusive buy boundary'),
     failure: 'control: inclusive buy boundary',
+  },
+  {
+    id: 'floating-boundary-tie-removed',
+    before: 'return value < boundary && boundary - value > tolerance;',
+    after: 'return value < boundary;',
+    property: build => assert.equal(buildRow(build, roundoffBoundary).judgment.id, 'strong-sell', 'control: mathematical mean boundary'),
+    failure: 'control: mathematical mean boundary',
+  },
+  {
+    id: 'floating-tolerance-widened',
+    before: '8 * Number.EPSILON * Math.max(Math.abs(value), Math.abs(boundary))',
+    after: '1e-4 * Math.max(Math.abs(value), Math.abs(boundary))',
+    property: build => assert.equal(buildRow(build, stageBundle(199.99999999)).judgment.id, 'sell', 'control: distinct unrounded boundary'),
+    failure: 'control: distinct unrounded boundary',
   },
 ];
 const killedMutations = [];

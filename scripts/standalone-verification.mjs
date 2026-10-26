@@ -4,6 +4,7 @@ import { resolve, dirname, relative, sep } from 'node:path';
 import { javascriptModuleReferences, javascriptModuleSpecifiers } from './module-references.mjs';
 
 export async function verifyStandaloneArtifact(html, dist) {
+  assert(!/id="atlas-(?:optional-fonts|fonts-script)"/.test(html), 'Standalone must not request external font stylesheets');
   const maps = [...html.matchAll(/<script\b[^>]*type=["']importmap["'][^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(maps.length, 1, 'Standalone requires exactly one import map');
   const map = JSON.parse(maps[0][1]);

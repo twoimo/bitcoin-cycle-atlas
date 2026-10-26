@@ -1,0 +1,21 @@
+---
+title: 과거 봉 재시도 — 수정 전과 수정 후
+---
+stateDiagram-v2
+  direction TB
+  state "과거 조회 실패" as Failed
+  state "재시도 대기 중" as Waiting
+  state "수동 새로고침" as Refresh
+  state "최근 조회도 실패 · 저장 캔들 유지" as Saved
+  state "수정 전: 이전 대기 때문에 재시도 차단" as Blocked
+  state "수정 후: 과거 봉 재조회 가능" as Retry
+  [*] --> Failed
+  Failed --> Waiting: 실패 대기 적용
+  Waiting --> Refresh: 사용자가 새로고침 선택
+  Refresh --> Saved: 최근 캔들 요청 실패
+  Saved --> Blocked: 기존 동작
+  Saved --> Retry: 이전 실패 대기 해제
+  classDef bad fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-width:3px
+  classDef good fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:3px
+  class Blocked bad
+  class Retry good

@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-26",
+  "auditBase": "1b7c87ce4fe5d44d05560320bb3a270c639e3bbf",
+  "pstackCommit": "99b609a72323b70204eab407c622f436e858e112",
+  "tlcVersion": "1.7.4",
+  "renderer": {
+    "pele": "1.8.0",
+    "resvg": "2.6.2"
+  },
+  "font": {
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosanskr/NotoSansKR%5Bwght%5D.ttf",
+    "sha256": "194018e6b2b293a7964f037b25c0249ce1418bc9ab3c971060a03aa57861e252"
+  },
+  "inputs": {
+    "verification/market-state/HistoryRetry.map.mjs": "435ef39b1173ca5f42a03aa2df72a32b2156dd3eb5a98dac84db183ccd3c2077",
+    "verification/market-state/MarketRequests.map.mjs": "9306c91a57f9abbe61291cffc5fbb53ee4dfade6f2ac4ed2c7731ac4636179b5",
+    "verification/market-state/MarketRequests.tla": "39e338848db5b4b4e65e6bf918bbab37107fd213ed24d6e65ce175aeaddee25c",
+    "verification/market-state/MarketRequestsBroken.cfg": "a74de6ce0b55b2085af33a8592030b98d51de8f24581bea4dd1c264a91ddfd0c",
+    "verification/market-state/MarketRequestsBroken.tla": "d94018bae5701f99cfa31b203626f6e1f6f55285b5d04a22a9385c25b5d0a21c",
+    "verification/market-state/MarketRequestsBroken.map.mjs": "9306c91a57f9abbe61291cffc5fbb53ee4dfade6f2ac4ed2c7731ac4636179b5",
+    "verification/market-state/HistoryRetryBroken.cfg": "a296fe04319a673d2c047db7a1969835884419a48ff1f5079443132eb241408a",
+    "verification/market-state/HistoryRetry.tla": "48200482c8085f12fdb7851424e7d8a50f869fd80a224f1cd4f6ba603845510e",
+    "verification/market-state/HistoryRetryBroken.map.mjs": "b5d3f08cf9d3a1d0e80263225ea477e67cf1481aa40e6c4a6f80274fc940af08",
+    "verification/market-state/HistoryRetryBroken.tla": "f57dcc6e8fedf1789ef98c446ec6bc368b78e5a65e3a4caba6f6a304e5519b16",
+    "verification/market-state/MarketRequests.cfg": "a74de6ce0b55b2085af33a8592030b98d51de8f24581bea4dd1c264a91ddfd0c",
+    "verification/market-state/HistoryRetry.cfg": "072a761ab7a07d305aec57d8b173981cc3621e3095d8483f46a6c9b35be58807"
+  },
+  "visualInspection": {
+    "allGeneratedPNGsOpened": true,
+    "koreanFontMeasurementCorrected": true,
+    "overflowAfterCorrection": false
+  },
+  "omissions": "No DOT graphs, tool jars, renderer modules, font binary or browser binary are committed.",
+  "reviewedRuntimeCommit": "c8f9d985a7a99cdee13a5c74eeda37168f1c7ea8",
+  "incorporatedMainCommit": "65182efcb9a833b2be091c552a0291d47d50b32c",
+  "reviewedRuntime": {
+    "path": "dist/market-data-controller.js",
+    "sha256": "092b77e78d3f430205c2da45d37395ac3f59606391a48f1c07a4f43ee71cb83a",
+    "verificationReceipt": "market-verification.json",
+    "verificationRerunOnCommittedRuntime": true
+  },
+  "baselineLifecycleReceipts": {
+    "commit": "1b7c87ce4fe5d44d05560320bb3a270c639e3bbf",
+    "files": [
+      "eth-baseline.json",
+      "equity-baseline.json"
+    ],
+    "notRelabeledAsFinalCommitRuns": true
+  },
+  "finalLifecycleReceipts": {
+    "commit": "c8f9d985a7a99cdee13a5c74eeda37168f1c7ea8",
+    "bootScriptContainer": {
+      "path": "dist/index.html",
+      "sha256": "e52556b292df0073959406915c8a6e1d7f2b668d8e8ee72c67bdfa0afc0a2c05"
+    },
+    "checks": {
+      "eth": {
+        "receipt": "eth-final.json",
+        "runtimePath": "dist/eth-view.js",
+        "sourceSha256": "54242617702e74894fdadd9edd67e678e3617e6f65a37d8ed3a929b5fc94687c",
+        "tests": 17,
+        "mutations": 9,
+        "distinctStates": 2243
+      },
+      "equity": {
+        "receipt": "equity-final.json",
+        "runtimePath": "dist/equity-view.js",
+        "sourceSha256": "c3d6422da4b59dafbd54f878def9a6c8d027cc8952eb28dcacf4114bb4ef7623",
+        "tests": 28,
+        "mutations": 7,
+        "distinctStates": 46252
+      }
+    },
+    "modelBoundsChanged": false,
+    "originalBaselineFilesPreserved": true
+  },
+  "postVerificationAmendment": {
+    "commit": "7f70c2260a634a82ecec633cbc200b6c4b54ae48",
+    "changes": "Tablet CSS alignment and only the daily-data.css cache query in index.html. Runtime JS, controller, lifecycle and actual inline boot code are unchanged from the c8f9 verification commit.",
+    "indexSha256": "fecd35689983b47b82e2c74f64e5542149aec6e6c59423a04e30f3e019ea6304",
+    "normalizingCssQueryExactlyRestoresVerifiedIndex": true,
+    "browserEvidence": "../../audit-2026-10-26/browser/interface.json"
+  },
+  "railIntegration": {
+    "main": "53f587bf04f45ea7b3caa639ea88268fa7dca918",
+    "version": "1.27.1",
+    "scope": "Only import cache queries changed in covered lifecycle modules; controller and actual inline boot scripts unchanged. The c8f9 receipts remain labeled as that exact run; final-merge CI runs the complete gates again.",
+    "sourceComparisonReceipt": "../../audit-2026-10-26/integration/v1-27-1-verification.json"
+  }
+}

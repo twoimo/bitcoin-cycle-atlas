@@ -140,7 +140,7 @@ test('startup failures expose accessible recovery and a late ready event cannot 
 });
 
 test('optional resource failures do not abort boot while script and stylesheet failures do', () => {
-  for (const resource of [{ tagName: 'IMG' }, { tagName: 'LINK', rel: 'icon' }, { tagName: 'LINK', rel: 'preload' }]) {
+  for (const resource of [{ tagName: 'IMG' }, { tagName: 'LINK', rel: 'icon' }, { tagName: 'LINK', rel: 'preload' }, { tagName: 'LINK', rel: 'stylesheet', id: 'atlas-optional-fonts' }]) {
     const { root, byId, emit, resourceError } = bootstrap();
     resourceError(resource);
     assert.equal(root.dataset.boot, 'loading', `${resource.tagName} ${resource.rel ?? ''} is not required to initialize the app`);
@@ -166,8 +166,24 @@ test('stylesheet failure during head parsing reaches recovery while early icon f
   failed.byId.get('atlas-boot-retry').click();
   assert.equal(failed.reloads(), 1);
 
-  const optional = bootstrap({ earlyErrors: [{ tagName: 'LINK', rel: 'icon' }, { tagName: 'LINK', rel: 'preload' }] });
+  const optional = bootstrap({ earlyErrors: [{ tagName: 'LINK', rel: 'icon' }, { tagName: 'LINK', rel: 'preload' }, { tagName: 'LINK', rel: 'stylesheet', id: 'atlas-optional-fonts' }] });
   assert.equal(optional.root.dataset.boot, 'loading');
   optional.emit('atlas:ready');
   assert.equal(optional.root.dataset.boot, 'ready');
+});
+
+test('optional webfonts cannot hold essential CSS or page boot behind a network request', async () => {
+  const css = await readFile(new URL('../dist/styles.css', import.meta.url), 'utf8');
+  assert.doesNotMatch(css, /@import\s+url\([^)]*fonts\.googleapis\.com/);
+  assert.match(html, /<link\b[^>]*id="atlas-optional-fonts"[^>]*media="print"/);
+  const fontScript = html.match(/<script\b[^>]*id="atlas-fonts-script"[^>]*>([\s\S]*?)<\/script>/)?.[1];
+  assert.ok(fontScript);
+  const fonts = new EventTarget(); fonts.media = 'print'; fonts.sheet = null;
+  runInNewContext(fontScript, { document: { getElementById: () => fonts } });
+  assert.equal(fonts.media, 'print');
+  fonts.dispatchEvent(new Event('load'));
+  assert.equal(fonts.media, 'all');
+  fonts.media = 'print'; fonts.sheet = {};
+  runInNewContext(fontScript, { document: { getElementById: () => fonts } });
+  assert.equal(fonts.media, 'all', 'An already cached stylesheet is activated too');
 });

@@ -1,4 +1,4 @@
 interface:
   display_name: "Verify Market Request State"
-  short_description: "Verify candle request ownership and stale responses"
-  default_prompt: "Use $verify-market-state to verify changes to candle loading, cancellation, and saved-data fallback."
+  short_description: "Verify candle ownership and explicit history retries"
+  default_prompt: "Use $verify-market-state to verify candle loading, cancellation, saved-data fallback, and manual history retries."

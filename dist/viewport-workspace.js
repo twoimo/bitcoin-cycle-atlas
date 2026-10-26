@@ -2,7 +2,7 @@ import { mountCompactChartLayout } from './compact-chart-layout.js?v=1.14.0-mobi
 import { DATA_UPDATE } from './data-update.js?v=1.11.0';
 import { mountWorkbenchChrome } from './workbench-chrome.js?v=1.19.0';
 import { mountResearchWorkbench } from './research-workbench.js?v=1.14.0-mobile.1';
-import { mountAnalysisIndicators } from './analysis-dock.js?v=1.14.1-touch.1';
+import { mountAnalysisIndicators } from "./analysis-dock.js?v=1.27.1";
 import { mountIndicatorWorkbench } from './indicator-workbench.js?v=1.14.1-ime.1';
 import { inspectionPanelAction } from './inspection-policy.js?v=1.11.0';
 import { mountMobileWorkspace } from './mobile-workspace.js?v=1.14.0-mobile.1';
@@ -101,11 +101,61 @@ function pager(panel,body) {
   const schedule=()=>{if(!frame)frame=requestAnimationFrame(()=>{frame=0;fit();});};
   new ResizeObserver(schedule).observe(body);
   document.fonts?.ready.then(schedule);
+  document.fonts?.addEventListener('loadingdone',schedule);
   return {
     set(root,{preservePage=false}={}){enabled=true;nav.hidden=false;blocks=readableBlocks(root);if(!preservePage)current=0;schedule();},
     suspend(){enabled=false;nav.hidden=true;if(frame){cancelAnimationFrame(frame);frame=0;}},
     fit:schedule
   };
+}
+
+/** One pointer owns a docked reader resize; only the latest move paints per frame. */
+export function mountReaderResize({handle,getWidth,setWidth,isEnabled=()=>true}) {
+  const doc=handle.ownerDocument,view=doc?.defaultView;
+  const request=typeof view?.requestAnimationFrame==='function'?view.requestAnimationFrame.bind(view):null;
+  const cancelFrame=typeof view?.cancelAnimationFrame==='function'?view.cancelAnimationFrame.bind(view):null;
+  let drag=null,pending=null,frame=null,destroyed=false;
+  const listeners=[];
+  const listen=(target,type,handler)=>{target?.addEventListener(type,handler);listeners.push([target,type,handler]);};
+  const clearPending=()=>{if(frame!==null)cancelFrame?.(frame);frame=null;pending=null;};
+  function cancel(){
+    const owner=drag;drag=null;clearPending();
+    if(owner)try{handle.releasePointerCapture?.(owner.id);}catch{}
+  }
+  function flush(){
+    if(frame!==null)cancelFrame?.(frame);frame=null;
+    const value=pending;pending=null;
+    if(destroyed||!drag||!isEnabled()){cancel();return;}
+    if(Number.isFinite(value))setWidth(value);
+  }
+  function move(event){
+    if(!drag||event.pointerId!==drag.id)return;
+    if(!isEnabled()){cancel();return;}
+    if(!Number.isFinite(event.clientX))return;
+    event.preventDefault();pending=drag.width+drag.x-event.clientX;
+    if(!request)flush();else if(frame===null)frame=request(flush);
+  }
+  listen(handle,'pointerdown',event=>{
+    if(destroyed||drag||event.button!==0||event.isPrimary===false||!isEnabled()||!Number.isFinite(event.clientX))return;
+    const width=getWidth();if(!Number.isFinite(width)||width<=0)return;
+    event.preventDefault();drag={id:event.pointerId,x:event.clientX,width};
+    try{handle.setPointerCapture?.(event.pointerId);}catch{cancel();}
+  });
+  listen(handle,'pointermove',move);
+  listen(handle,'pointerup',event=>{
+    if(!drag||event.pointerId!==drag.id)return;
+    move(event);flush();cancel();
+  });
+  for(const type of ['pointercancel','lostpointercapture'])listen(handle,type,event=>{if(drag?.id===event.pointerId)cancel();});
+  listen(handle,'dblclick',event=>{if(!isEnabled())return;event.preventDefault();cancel();setWidth(320);});
+  listen(handle,'keydown',event=>{
+    if(event.key==='Escape'&&drag){event.preventDefault();cancel();return;}
+    if(!isEnabled()||!['ArrowLeft','ArrowRight','Home'].includes(event.key))return;
+    event.preventDefault();cancel();setWidth(event.key==='Home'?320:getWidth()+(event.key==='ArrowLeft'?20:-20));
+  });
+  listen(view,'blur',cancel);listen(view,'resize',cancel);
+  listen(doc,'visibilitychange',()=>{if(doc.hidden)cancel();});
+  return {cancel,destroy(){if(destroyed)return;destroyed=true;cancel();for(const [target,type,handler]of listeners)target?.removeEventListener(type,handler);}};
 }
 
 export function initViewportWorkspace(icon) {
@@ -124,6 +174,7 @@ export function initViewportWorkspace(icon) {
   const overlay=matchMedia('(max-width:900px)');
   function syncOverlay(){
     const covers=!reader.hidden&&overlay.matches;
+    if(overlay.matches)readerResize.cancel();
     $('#main').inert=covers;$('.atlas-sidebar').inert=covers;
     reader.dataset.overlay=String(covers);
     if(covers&&!reader.contains(document.activeElement)&&!document.activeElement?.closest('.workbench-rail'))$('#chart-reader-title').focus({preventScroll:true});
@@ -136,12 +187,7 @@ export function initViewportWorkspace(icon) {
     const width=Math.round(Math.max(280,Math.min(max,value)));workspace.style.setProperty('--detail-width',`${width}px`);resize.setAttribute('aria-valuenow',String(width));resize.setAttribute('aria-valuemax',String(max));
   }
   window.addEventListener('resize',()=>{if(!reader.hidden&&!overlay.matches)sizeReader(parseFloat(workspace.style.getPropertyValue('--detail-width'))||320);});
-  let resizeStart=null;
-  resize.addEventListener('pointerdown',event=>{if(event.button!==0||overlay.matches)return;event.preventDefault();resizeStart={x:event.clientX,width:reader.getBoundingClientRect().width};resize.setPointerCapture(event.pointerId);});
-  resize.addEventListener('pointermove',event=>{if(resizeStart)sizeReader(resizeStart.width+resizeStart.x-event.clientX);});
-  const endResize=()=>{resizeStart=null;};resize.addEventListener('pointerup',endResize);resize.addEventListener('pointercancel',endResize);
-  resize.addEventListener('dblclick',()=>sizeReader(320));
-  resize.addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight','Home'].includes(event.key))return;event.preventDefault();sizeReader(event.key==='Home'?320:reader.getBoundingClientRect().width+(event.key==='ArrowLeft'?20:-20));});
+  const readerResize=mountReaderResize({handle:resize,getWidth:()=>reader.getBoundingClientRect().width,setWidth:sizeReader,isEnabled:()=>!reader.hidden&&!overlay.matches});
 
   const title=$('#chart-reader-title'),actions=$('#chart-detail-actions');
   const controlStore=document.createElement('div');controlStore.id='chart-control-store';controlStore.hidden=true;stage.append(controlStore);
@@ -169,6 +215,7 @@ export function initViewportWorkspace(icon) {
   }
   function closeReader({restoreFocus=true}={}){
     if(reader.hidden)return;
+    readerResize.cancel();
     returnControls();
     reader.hidden=true;workspace.dataset.detailsOpen='false';expanded();syncOverlay();
     document.dispatchEvent(new CustomEvent('atlas:panel-state',{detail:{open:false,kind:reader.dataset.kind}}));

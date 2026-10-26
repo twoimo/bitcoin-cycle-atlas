@@ -34,17 +34,38 @@ function run(command, args, cwd = root) {
   return { status: result.status, output: `${result.stdout || ''}${result.stderr || ''}` };
 }
 
+function checkTap(result, expected, { fails = false } = {}) {
+  const count = label => Number(result.output.match(new RegExp(`^# ${label} (\\d+)$`, 'm'))?.[1]);
+  assert.equal(count('tests'), expected, 'The verifier must execute each named regression, not only test files');
+  for (const label of ['cancelled', 'skipped', 'todo']) assert.equal(count(label), 0, `No ${label} tests may qualify as verification`);
+  assert.equal(count('pass') + count('fail'), expected, 'The TAP result is incomplete');
+  if (fails) {
+    assert.notEqual(result.status, 0, 'The isolated product mutation must fail');
+    assert.ok(count('fail') > 0, 'A tool failure is not a rejected mutation');
+  } else {
+    assert.equal(result.status, 0, result.output);
+    assert.equal(count('pass'), expected, 'Every original/restored regression must pass');
+    assert.equal(count('fail'), 0);
+  }
+}
+
 async function checkModels(work) {
   const results = {};
-  for (const [name, broken] of [['MarketRequests', false], ['MarketRequestsBroken', true]]) {
+  for (const [name, broken, invariant] of [
+    ['MarketRequests', false, 'NoStaleDisplay'], ['MarketRequestsBroken', true, 'NoStaleDisplay'],
+    ['HistoryRetry', false, 'RefreshCanRetry'], ['HistoryRetryBroken', true, 'RefreshCanRetry'],
+  ]) {
     const modelDir = path.join(root, 'verification/market-state');
+    const javaTmp = path.join(work, `${name}-java`);
+    await mkdir(javaTmp, { recursive: true });
     const result = run(process.env.JAVA || 'java', [
+      '-XX:+UseParallelGC', '-Xmx512m', `-Djava.io.tmpdir=${javaTmp}`,
       '-cp', toolPath, 'tlc2.TLC', '-workers', '1', '-seed', '1', '-fp', '0',
       '-metadir', path.join(work, name), '-config', path.join(modelDir, `${name}.cfg`), path.join(modelDir, `${name}.tla`),
     ]);
     if (broken) {
-      assert.notEqual(result.status, 0, 'Removing the ownership guard must break the model');
-      assert.match(result.output, /Invariant NoStaleDisplay is violated/, 'The negative control must fail for stale display, not a tool error');
+      assert.notEqual(result.status, 0, `${name} must break ${invariant}`);
+      assert.ok(result.output.includes(`Invariant ${invariant} is violated`), `The negative control must fail for ${invariant}, not a tool error: ${result.output}`);
     } else {
       assert.equal(result.status, 0, result.output);
       assert.match(result.output, /Model checking completed\. No error has been found\./);
@@ -63,25 +84,38 @@ async function checkModels(work) {
 
 async function checkImplementation(work) {
   const files = ['tests/market-data-controller.test.mjs', 'tests/intraday-history.test.mjs', 'tests/market-request-ownership.test.mjs'];
-  const original = run(process.execPath, ['--test', ...files]);
-  assert.equal(original.status, 0, original.output);
+  const testArgs = ['--test', '--test-reporter=tap'];
+  const original = run(process.execPath, [...testArgs, ...files]);
+  checkTap(original, 32);
   console.log(original.output.trim());
 
   const copy = path.join(work, 'actual-code-mutation');
   await mkdir(path.join(copy, 'tests'), { recursive: true });
   await cp(path.join(root, 'dist'), path.join(copy, 'dist'), { recursive: true });
   await writeFile(path.join(copy, 'package.json'), '{"type":"module"}\n');
-  await cp(path.join(root, 'tests/market-request-ownership.test.mjs'), path.join(copy, 'tests/market-request-ownership.test.mjs'));
+  for (const file of files) await cp(path.join(root, file), path.join(copy, file));
   const controllerFile = path.join(copy, 'dist/market-data-controller.js');
   const source = await readFile(controllerFile, 'utf8');
   const guarded = 'const series = prior.series || parseMarketSnapshot(await snapshot(), interval);\n        if (active !== request) return;';
   assert.equal(source.split(guarded).length, 2, 'Controller changed: review model/code correspondence and mutation selector');
   const mutated = source.replace(guarded, 'const series = prior.series || parseMarketSnapshot(await snapshot(), interval);\n        // Negative control only: revoked request can publish.');
   await writeFile(controllerFile, mutated);
-  const failure = run(process.execPath, ['--test', '--test-reporter=tap', 'tests/market-request-ownership.test.mjs'], copy);
-  assert.notEqual(failure.status, 0, 'The real-code regression must reject the removed ownership guard');
+  const failure = run(process.execPath, [...testArgs, 'tests/market-request-ownership.test.mjs'], copy);
+  checkTap(failure, 8, { fails: true });
   assert.match(failure.output, /superseded fallback must not (replace|notify)/, 'Mutation failed for an unrelated reason');
-  return { regression: 'pass', mutation: 'expected assertion failure', sourceSha256: hash(source), mutatedSourceSha256: hash(mutated) };
+
+  const retryGuard = 'if (history) history.retryAt = 0;';
+  assert.equal(source.split(retryGuard).length, 2, 'Refresh cooldown reset changed: review model/code correspondence and mutation selector');
+  const retryMutated = source.replace(retryGuard, '// Negative control only: keep the previous failed-history cooldown.');
+  await writeFile(controllerFile, retryMutated);
+  const retryFailure = run(process.execPath, [...testArgs, 'tests/intraday-history.test.mjs'], copy);
+  checkTap(retryFailure, 14, { fails: true });
+  assert.match(retryFailure.output, /explicit refresh must release history retry backoff/, 'History retry mutation failed for an unrelated reason');
+
+  await writeFile(controllerFile, source);
+  const restored = run(process.execPath, [...testArgs, ...files], copy);
+  checkTap(restored, 32);
+  return { tests: 32, regression: 'pass', restored: 'pass', mutation: 'expected assertion failure', historyRetryMutation: 'expected assertion failure', sourceSha256: hash(source), mutatedSourceSha256: hash(mutated), historyRetryMutatedSourceSha256: hash(retryMutated) };
 }
 
 await prepareTool();
@@ -89,12 +123,15 @@ const work = await mkdtemp(path.join(tmpdir(), 'atlas-market-proof-'));
 try {
   const model = await checkModels(work);
   const implementation = await checkImplementation(work);
-  console.log(JSON.stringify({
+  const receipt = {
     tool: { name: 'TLC', version: '1.7.4', sha256: toolSha256 },
     bounds: { requestGenerations: 3, intervals: ['1m', '5m'], property: 'NoStaleDisplay' },
+    historyRetryScope: { intervals: 1, existingCandles: true, clock: 'boolean cooldown only', property: 'RefreshCanRetry' },
     model, implementation,
-    limitations: ['Bounded abstract model, not a whole-program proof', 'No pricing, numerical, history-pagination, wall-clock or liveness proof'],
-  }, null, 2));
+    limitations: ['Separate bounded abstract models, not a composed whole-program proof', 'No pricing, numerical, page-content, wall-clock or liveness proof'],
+  };
+  console.log(JSON.stringify(receipt, null, 2));
+  if (process.argv[2]) await writeFile(process.argv[2], `${JSON.stringify(receipt, null, 2)}\n`);
 } finally {
   await rm(work, { recursive: true, force: true });
 }

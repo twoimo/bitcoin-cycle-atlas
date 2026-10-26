@@ -1,6 +1,6 @@
 import { HALVINGS, utcDay, dateFromDay, validateDataset } from './cycle-engine.js?v=1.19.0';
-import { buildDetailedForecast } from "./detailed-forecast.js?v=1.23.0";
-import { computeRollingStates, detectDirectionalChanges } from "./market-structure.js?v=1.23.0";
+import { buildDetailedForecast } from "./detailed-forecast.js?v=1.27.1";
+import { computeRollingStates, detectDirectionalChanges } from "./market-structure.js?v=1.27.1";
 import { LONG_HORIZON_CLAIMS, LONG_HORIZON_REVIEW_DATE } from './long-horizon-evidence.js?v=1.11.0';
 import { calibrateCycleTiming } from './cycle-calibration.js?v=1.23.0';
 

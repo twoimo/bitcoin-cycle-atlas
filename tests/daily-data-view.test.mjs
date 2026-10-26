@@ -86,7 +86,7 @@ test('each final cell uses an exact five-stage label and opens the relevant expl
   view.destroy();
 });
 
-test('mobile identity header and scroll hint retain one table and the desktop merged heading', () => {
+test('identity headers and scroll hint retain one comparison table across screen sizes', () => {
   const { view, ui } = setup();
   const frame = ui.root.innerHTML;
   assert.equal((frame.match(/<table\b/g) || []).length, 1);
@@ -110,7 +110,7 @@ test('mobile geometry fits the fixed name plus complete YTD and judgment without
     assert.equal(120+60+180+192+2*(viewport/2-60),viewport+432,'table width equals the visible column sum');
   }
   assert.match(mobile, /asset-mobile-category-header, [^}]*asset-category \{ display: none;/);
-  assert.match(mobile, /asset-mobile-name-header \{ position: sticky; left: 0;/);
+  assert.match(css.split('@media')[0], /asset-mobile-name-header \{ position: sticky; left: 0;/);
   assert.match(mobile, /asset-name-label \{[^}]*white-space: normal;/);
   assert.match(mobile, /scroll-snap-type: x mandatory; scroll-padding-inline-start: 120px;/);
 });
@@ -353,10 +353,13 @@ test('mobile quick moves change only the horizontal table position without recom
 
 test('sticky headings use a single bounded viewport and preserve the pinned identity corner', () => {
   const css=readFileSync(new URL('../dist/daily-data.css',import.meta.url),'utf8');
+  const shared=css.split('@media')[0];
   assert.match(css,/asset-table-panel \{ display: flex; flex-direction: column; flex: 1; min-height: 0/);
   assert.match(css,/asset-table-scroll \{ flex: 1; min-height: 0; min-width: 0; overflow: auto/);
   assert.match(css,/thead th \{ position: sticky; top: 0; z-index: 3/);
-  assert.match(css,/asset-mobile-name-header \{ position: sticky; left: 0; z-index: 4/);
+  assert.match(shared,/asset-identity-header \{ display: none;/,'a merged three-column header cannot align with the pinned name column');
+  assert.match(shared,/asset-mobile-header \{ display: table-cell;/,'individual column headings must also be visible on tablets and desktops');
+  assert.match(shared,/asset-mobile-name-header \{ position: sticky; left: 0; z-index: 4/,'the name heading must follow its body column at every screen size');
 });
 
 

@@ -9,7 +9,7 @@ const labels = {
 export function state(v) {
   const bad = Object.values(v.displayed).some(id => v.cancelled.includes(id));
   if (bad) return 'Cancelled request replaced chart';
-  const waitingForSaved = v.active > 0 && v.phase[v.active - 1] === 'fallback';
+  const waitingForSaved = v.active > 0 && v.phase[v.active] === 'fallback';
   return waitingForSaved ? 'Reading saved candles' : labels[v.status[v.selected]];
 }
 export function step(action, before, after) {

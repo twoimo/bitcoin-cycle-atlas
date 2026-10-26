@@ -1,5 +1,5 @@
 import { utcDay } from './cycle-engine.js?v=1.19.0';
-import { INTERVAL_RELATIONS } from "./cycle-milestones.js?v=1.23.0";
+import { INTERVAL_RELATIONS } from "./cycle-milestones.js?v=1.27.1";
 
 // Dates and classifications belong to the milestone engine. This renderer only
 // packs their spans into the existing price plot; it never extends that plot.

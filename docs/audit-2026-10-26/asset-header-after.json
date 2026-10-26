@@ -1,0 +1,283 @@
+{
+  "phase": "after",
+  "cssSha256": "c3f0779662017d180ee3f6a0796baa8f1898126f31f0b317c27a14aeffa6c708",
+  "cases": [
+    {
+      "width": 768,
+      "height": 1024,
+      "scrolls": [
+        {
+          "scrollLeft": 0,
+          "scrollMaximum": 478,
+          "header": {
+            "left": 227.515625,
+            "right": 437.6875,
+            "width": 210.171875,
+            "display": "table-cell"
+          },
+          "name": {
+            "left": 227.515625,
+            "right": 437.6875,
+            "width": 210.171875
+          },
+          "mergedDisplay": "none",
+          "topLabel": "종목명",
+          "aligned": true,
+          "documentWidth": 768,
+          "rows": 18,
+          "requestedRatio": 0
+        },
+        {
+          "scrollLeft": 239,
+          "scrollMaximum": 478,
+          "header": {
+            "left": 48,
+            "right": 258.171875,
+            "width": 210.171875,
+            "display": "table-cell"
+          },
+          "name": {
+            "left": 48,
+            "right": 258.171875,
+            "width": 210.171875
+          },
+          "mergedDisplay": "none",
+          "topLabel": "종목명",
+          "aligned": true,
+          "documentWidth": 768,
+          "rows": 18,
+          "requestedRatio": 0.5
+        },
+        {
+          "scrollLeft": 478,
+          "scrollMaximum": 478,
+          "header": {
+            "left": 48,
+            "right": 258.171875,
+            "width": 210.171875,
+            "display": "table-cell"
+          },
+          "name": {
+            "left": 48,
+            "right": 258.171875,
+            "width": 210.171875
+          },
+          "mergedDisplay": "none",
+          "topLabel": "종목명",
+          "aligned": true,
+          "documentWidth": 768,
+          "rows": 18,
+          "requestedRatio": 1
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "scrolls": [
+        {
+          "scrollLeft": 0,
+          "scrollMaximum": 222,
+          "header": {
+            "left": 227.515625,
+            "right": 437.6875,
+            "width": 210.171875,
+            "display": "table-cell"
+          },
+          "name": {
+            "left": 227.515625,
+            "right": 437.6875,
+            "width": 210.171875
+          },
+          "mergedDisplay": "none",
+          "topLabel": "종목명",
+          "aligned": true,
+          "documentWidth": 1024,
+          "rows": 18,
+          "requestedRatio": 0
+        },
+        {
+          "scrollLeft": 111,
+          "scrollMaximum": 222,
+          "header": {
+            "left": 116.515625,
+            "right": 326.6875,
+            "width": 210.171875,
+            "display": "table-cell"
+          },
+          "name": {
+            "left": 116.515625,
+            "right": 326.6875,
+            "width": 210.171875
+          },
+          "mergedDisplay": "none",
+          "topLabel": "종목명",
+          "aligned": true,
+          "documentWidth": 1024,
+          "rows": 18,
+          "requestedRatio": 0.5
+        },
+        {
+          "scrollLeft": 222,
+          "scrollMaximum": 222,
+          "header": {
+            "left": 48,
+            "right": 258.171875,
+            "width": 210.171875,
+            "display": "table-cell"
+          },
+          "name": {
+            "left": 48,
+            "right": 258.171875,
+            "width": 210.171875
+          },
+          "mergedDisplay": "none",
+          "topLabel": "종목명",
+          "aligned": true,
+          "documentWidth": 1024,
+          "rows": 18,
+          "requestedRatio": 1
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "scrolls": [
+        {
+          "scrollLeft": 0,
+          "scrollMaximum": 0,
+          "header": {
+            "left": 257.640625,
+            "right": 503.09375,
+            "width": 245.453125,
+            "display": "table-cell"
+          },
+          "name": {
+            "left": 257.640625,
+            "right": 503.09375,
+            "width": 245.453125
+          },
+          "mergedDisplay": "none",
+          "topLabel": "종목명",
+          "aligned": true,
+          "documentWidth": 1440,
+          "rows": 18,
+          "requestedRatio": 0
+        },
+        {
+          "scrollLeft": 0,
+          "scrollMaximum": 0,
+          "header": {
+            "left": 257.640625,
+            "right": 503.09375,
+            "width": 245.453125,
+            "display": "table-cell"
+          },
+          "name": {
+            "left": 257.640625,
+            "right": 503.09375,
+            "width": 245.453125
+          },
+          "mergedDisplay": "none",
+          "topLabel": "종목명",
+          "aligned": true,
+          "documentWidth": 1440,
+          "rows": 18,
+          "requestedRatio": 0.5
+        },
+        {
+          "scrollLeft": 0,
+          "scrollMaximum": 0,
+          "header": {
+            "left": 257.640625,
+            "right": 503.09375,
+            "width": 245.453125,
+            "display": "table-cell"
+          },
+          "name": {
+            "left": 257.640625,
+            "right": 503.09375,
+            "width": 245.453125
+          },
+          "mergedDisplay": "none",
+          "topLabel": "종목명",
+          "aligned": true,
+          "documentWidth": 1440,
+          "rows": 18,
+          "requestedRatio": 1
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "scrolls": [
+        {
+          "scrollLeft": 0,
+          "scrollMaximum": 432,
+          "header": {
+            "left": 1,
+            "right": 121,
+            "width": 120,
+            "display": "table-cell"
+          },
+          "name": {
+            "left": 1,
+            "right": 121,
+            "width": 120
+          },
+          "mergedDisplay": "none",
+          "topLabel": "종목명",
+          "aligned": true,
+          "documentWidth": 390,
+          "rows": 18,
+          "requestedRatio": 0
+        },
+        {
+          "scrollLeft": 216,
+          "scrollMaximum": 432,
+          "header": {
+            "left": 1,
+            "right": 121,
+            "width": 120,
+            "display": "table-cell"
+          },
+          "name": {
+            "left": 1,
+            "right": 121,
+            "width": 120
+          },
+          "mergedDisplay": "none",
+          "topLabel": "종목명",
+          "aligned": true,
+          "documentWidth": 390,
+          "rows": 18,
+          "requestedRatio": 0.5
+        },
+        {
+          "scrollLeft": 432,
+          "scrollMaximum": 432,
+          "header": {
+            "left": 1,
+            "right": 121,
+            "width": 120,
+            "display": "table-cell"
+          },
+          "name": {
+            "left": 1,
+            "right": 121,
+            "width": 120
+          },
+          "mergedDisplay": "none",
+          "topLabel": "종목명",
+          "aligned": true,
+          "documentWidth": 390,
+          "rows": 18,
+          "requestedRatio": 1
+        }
+      ]
+    }
+  ],
+  "browser": "156.0.8078.47"
+}

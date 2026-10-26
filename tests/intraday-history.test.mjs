@@ -14,8 +14,9 @@ function response(url,{omit=()=>false}={}) {
 }
 function deferred(){let resolve;const promise=new Promise(yes=>{resolve=yes;});return {promise,resolve};}
 async function fixture(interval='1m',options={}) {
-  const series=await fetchMarketCandles({interval,now:end*1000,count:180,fetchImpl:async url=>response(url)});
-  const saved={version:1,source:'Coinbase Exchange',product:'BTC-USD',intervals:{[interval]:series}},calls=[];
+  const product=options.controller?.product||'BTC-USD';
+  const series=await fetchMarketCandles({interval,product,now:end*1000,count:180,fetchImpl:async url=>response(url)});
+  const saved={version:1,source:'Coinbase Exchange',product,intervals:{[interval]:series}},calls=[];
   const controller=createMarketDataController({preferSnapshot:true,historyRequestGapMs:0,readEmbedded:()=>JSON.stringify(saved),fetchImpl:async(url,args)=>{calls.push({url,args});return options.fetchImpl?options.fetchImpl(url,args,calls.length):response(url,options);},...options.controller});
   await controller.load(interval);return {controller,calls,series,step:chartInterval(interval).seconds};
 }
@@ -103,6 +104,30 @@ test('forced refresh can refill the existing past viewport using the newer navig
   const refreshed=controller.range('1m',target);assert.notEqual(refreshed.contextKey,oldKey);assert.equal(refreshed.start,target.start);assert.equal(refreshed.end,target.end);
   await controller.ensureRange('1m',target);const rows=controller.get('1m').series.candles;
   assert.ok(rows.some(row=>row.time===target.start));assert.ok(rows.some(row=>row.time===target.end));assert.equal(controller.get('1m').historyStatus,'ready');
+});
+
+for(const product of ['BTC-USD','ETH-USD'])test(`${product}: explicit refresh releases history backoff when recent candles fall back to retained data`,async t=>{
+  const {controller,calls,series,step}=await fixture('1m',{controller:{product},fetchImpl:async(url,_options,n)=>n<=2?{ok:false,status:503}:response(url)});
+  t.after(()=>controller.cancel());
+  const target={start:series.candles[0].time-30*step,end:series.candles.at(-1).time};
+  await controller.ensureRange('1m',target);
+  assert.equal(controller.get('1m').historyStatus,'error');
+  assert.equal(calls.length,1);
+  await controller.ensureRange('1m',target);
+  assert.equal(calls.length,1,'ordinary gestures still respect the failed-page backoff');
+
+  // The chart refreshes recent candles, then refills the current viewport.
+  // A head failure must not silently retain the old history cooldown.
+  await controller.load('1m',{force:true});
+  assert.equal(controller.get('1m').status,'snapshot');
+  assert.equal(calls.length,2);
+  await controller.ensureRange('1m',target);
+  assert.equal(calls.length,3,'explicit refresh must release history retry backoff even when the head refresh uses retained candles');
+  const entry=controller.get('1m');
+  assert.equal(entry.historyStatus,'ready');
+  assert.equal(entry.series.product,product);
+  assert.ok(entry.series.candles.some(row=>row.time===target.start));
+  assert.equal(entry.series.candles.at(-1).time,series.candles.at(-1).time);
 });
 
 test('older panning keeps a bounded cache, every requested source bar, and the Reset snapshot',async t=>{

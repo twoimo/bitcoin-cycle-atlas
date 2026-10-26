@@ -1,0 +1,6 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.26.5 verify:eth-events
+> node scripts/build-ethereum-events.mjs --check
+
+{"file":"/workspace/scratch/faf64187bc84/bitcoin-cycle-atlas/dist/ethereum-events.js","events":149,"sources":407,"uniqueUrls":330,"reviewDate":"2026-10-24","check":true}
