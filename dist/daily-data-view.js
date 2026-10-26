@@ -1,5 +1,5 @@
 import { buildAssetComparison } from './asset-comparison.js?v=1.28.0';
-import { initAssetJudgmentHistoryView } from './asset-judgment-history-view.js?v=1.28.0';
+import { initAssetJudgmentHistoryView } from './asset-judgment-history-view.js?v=1.28.1';
 
 const SYMBOLS = ['BTC', 'SPY', 'QQQ', 'NVDA', 'AAPL', 'GOOG', 'MSFT', 'AMZN', 'META', 'AVGO', 'PLTR', 'TSLA', 'HOOD', 'TLT', 'IEF', 'GLD', 'SLV', 'PDBC'];
 const LABELS = { 'strong-buy': '적극 매수', buy: '분할 매수', neutral: '중립', sell: '분할 매도', 'strong-sell': '적극 매도' };
@@ -200,6 +200,7 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
   }
 
   function openMethod(selected) {
+    text('#daily-method-title', selected ? `${selected.name} (${selected.symbol}) 판단 근거` : '자산 비교표 읽는 법');
     put('#daily-method-content', methodContent(selected));
     const dialog = $('#daily-method-dialog');
     if (dialog.open) return;

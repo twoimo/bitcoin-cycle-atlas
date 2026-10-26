@@ -9,7 +9,7 @@ test('export rejects invalid scope or abort without returning a partial success-
 import{readFile}from'node:fs/promises';
 import{initAssetJudgmentHistoryView}from'../dist/asset-judgment-history-view.js';
 function dialogFixture(){
- const nodes=new Map(),buttons=[],listeners=new Map(),closes=[];const node=(id='',dataset={})=>({id,dataset,innerHTML:'',textContent:'',value:'',hidden:false,disabled:false,attrs:new Map(),setAttribute(k,v){this.attrs.set(k,v);},focus(){},closest(){return this;}});
+ const nodes=new Map(),buttons=[],listeners=new Map(),closes=[];const node=(id='',dataset={})=>({id,dataset,innerHTML:'',textContent:'',value:'',hidden:false,disabled:false,attrs:new Map(),setAttribute(k,v){this.attrs.set(k,v);},focus(){this.focused=true;},closest(){return this;}});
  const root={open:false,set innerHTML(value){this.html=value;for(const m of value.matchAll(/id="([^"]+)"/g))nodes.set(m[1],node(m[1]));for(const m of value.matchAll(/<button\b([^>]*)>/g)){const dataset={};for(const a of m[1].matchAll(/data-([\w-]+)="([^"]*)"/g))dataset[a[1].replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]=a[2];buttons.push(node('',dataset));}},querySelector(s){const id=s.slice(1);if(!nodes.has(id))nodes.set(id,node(id));return nodes.get(id);},querySelectorAll(s){const key=s.slice(6,-1).replace(/-([a-z])/g,(_,c)=>c.toUpperCase());return buttons.filter(b=>Object.hasOwn(b.dataset,key));},showModal(){this.open=true;},close(){this.open=false;if(this.deferClose)closes.push(()=>listeners.get('close')?.({}));else listeners.get('close')?.({});},addEventListener(k,v){listeners.set(k,v);},removeEventListener(k){listeners.delete(k);}};
  return{root,flushClose:()=>{while(closes.length)closes.shift()();},get:id=>root.querySelector('#'+id),click:(id,dataset={})=>listeners.get('click')?.({target:node(id,dataset)}),change:id=>listeners.get('change')?.({target:root.querySelector('#'+id)})};
 }
@@ -23,6 +23,17 @@ test('saved reopen keeps its own disclosure; explicit symbol navigation resets i
   await view.open(input);ui.get('history-date').value='2025-07-01';ui.change('history-date');ui.click('',{historyGroup:'위험 자산'});ui.click('',{historyMode:'saved'});await settle();assert.match(ui.get('history-detail').innerHTML,/원자료 수집/);assert.match(ui.get('history-detail').innerHTML,/저장 기록 18개 CSV/);
   ui.click('history-export');assert.equal(downloads.length,1);assert.equal((await downloads[0].blob.text()).trimEnd().split('\r\n').length,19);
   ui.root.deferClose=true;ui.root.close();deferredList=true;const reopening=view.open(input);ui.flushClose();resolveList(manifest);await reopening;deferredList=false;assert.match(ui.get('history-disclosure').textContent,/^실제로 저장한 계산 결과/);assert.match(ui.get('history-detail').innerHTML,/원자료 수집/);
-  ui.root.close();await view.open({...input,symbol:'IEF'});assert.match(ui.get('history-disclosure').textContent,/현재 보관 원자료/);assert.match(ui.get('history-detail').innerHTML,/미국 중기채권/);assert.match(ui.get('history-detail').innerHTML,/IEF/);assert.equal(ui.get('history-date').value,'2026-01-05');assert.match(ui.get('history-body').innerHTML,/data-history-asset="IEF" aria-pressed="true"/);
+  ui.root.close();await view.open({...input,symbol:'IEF'});assert.match(ui.get('history-disclosure').textContent,/현재 보관 원자료/);assert.match(ui.get('history-detail').innerHTML,/미국 중기채권/);assert.match(ui.get('history-detail').innerHTML,/IEF/);assert.equal(ui.get('history-date').value,'2026-01-05');assert.match(ui.get('history-body').innerHTML,/data-history-asset="IEF" aria-pressed="true"/);assert.equal(ui.get('history-detail-title').focused,true);
  }finally{view.destroy();}
+});
+
+test('history reading hierarchy groups date navigation and labels financial values',async()=>{
+ const source=await readFile(new URL('../dist/asset-judgment-history-view.js',import.meta.url),'utf8');
+ const css=await readFile(new URL('../dist/daily-data.css',import.meta.url),'utf8');
+ assert.match(source,/<div class="asset-history-date-control"><label>판단 기준일/);
+ assert.match(source,/<dt>연초→최고 종가 평균 상승률<\/dt>/);
+ assert.match(source,/<dt>연초→최저 종가 평균 하락률<\/dt>/);
+ assert.match(source,/class="asset-history-saved-return"[^>]*><small>연초 대비<\/small>/);
+ assert.match(css,/\.asset-history-dialog input:focus-visible/);
+ assert.match(css,/\.asset-history-saved-return small \{ display: block/);
 });
