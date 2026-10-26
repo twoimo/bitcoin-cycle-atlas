@@ -227,7 +227,7 @@ function mount(){
       chart=drawAtlasPriceChart({svg,rows:zeroMode?rows.filter(row=>row.date<=record.asOf):rows,start,end,split:record.asOf,scale:zeroMode?'linear':'log',priceDomain:domain,
         band:!zeroMode,selectedDate,showDrawdown:false,showTurns:false,showCycleMarkers:false,showHistoricalEvents:false,
         headerInset:16,dateTickMinSpacing:64,onHover:value=>{if(!zeroMode)inspect(byDate.get(value?.date)?.row);}});
-      const title=svg.querySelector('title');if(title)title.textContent=record.symbol+' · 발행 당시 관측과 보존한 조건부 경로';
+      const title=svg.querySelector('title');if(title)title.textContent=record.symbol+' · '+(record.recordKind==='issued'?'발행 당시 관측':'재구성 입력 관측')+'과 보존한 조건부 경로';
       svg.dataset.assetJournalRecord=record.id;svg.dataset.assetJournalScale=zeroMode?'linear':'log';
       svg.dataset.assetJournalFrozenRows=String(frozen.length);
       selectSaved=null;

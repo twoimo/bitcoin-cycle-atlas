@@ -1,5 +1,8 @@
 # ETH 경제 입력 후보: 근거, 계수 연결, 데이터 한계
 
+> 2026-10-26 후속 구현: ETH/BMNR/MSTR의 실제 연구 발행 원장과 정밀 시계, 저장본 화면, 실제 수집 영수증, OOS 경제 변수 제거 실험을 추가했다. [최신 후속 실행 결과](eth-candidate-evidence/CONTINUATION_RESULTS.md)와 [새 ChatGPT 논제](reviews/ETH_CHATGPT_THESIS_20261026.md)가 현재 완료·미완료를 구분한다. 아래 최초 후보의 미완료 표시는 당시 감사 기록으로 읽는다. 새 모형의 운영 채택과 실제 Gemini 검토는 계속 미완료다.
+
+
 ## 1. 목적과 현재 상태
 
 dist/ethereum-economic-model.js의 eth-economic-ridge-3는 관측 가능한 경제 입력을 30·90·180일 ETH/USD 수익률과 ETH/BTC 상대 수익률에 각각 연결하는 실험 후보다. 프로토콜의 회계 정의와 예측 회귀의 설계 선택을 구분한다. 아래 1차 자료는 수수료·발행·스테이킹 보상·출금의 의미를 정하는 근거이며, 회귀 계수의 부호나 미래 가격을 보장하지 않는다.

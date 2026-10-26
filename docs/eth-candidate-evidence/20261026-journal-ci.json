@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "kind": "actual-github-actions-verification",
+  "recordedAt": "2026-10-26T12:40:40Z",
+  "sourceCommit": "d5101631b294a25d7db2ddff1ac74a76bddf92fd",
+  "sourceTree": "10008614b61cd4d4186d250f33270cd4a8e04a32",
+  "ci": {
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40323656995",
+    "runId": 40323656995,
+    "jobId": 121574686204,
+    "status": "completed",
+    "conclusion": "success",
+    "checkedOutCommit": "0f72d7ccfa66d53a2be74094ebdd98b1dac189de",
+    "checkedOutTree": "10008614b61cd4d4186d250f33270cd4a8e04a32",
+    "treeEqualsSourceHead": true,
+    "tests": 1307,
+    "pass": 1307,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "numericalAssertions": 318010,
+    "gates": [
+      "BTC immutable ledger/replay",
+      "treasury research provenance",
+      "ETH reviewed event catalog",
+      "independent treasury path reconciliation",
+      "numerical and causal boundary checks",
+      "bounded request ownership/mutants/TLC",
+      "daily clock/performance",
+      "Pages base-path static resources",
+      "clean-tree publication/standalone build"
+    ]
+  },
+  "evidence": {
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40323657043",
+    "runId": 40323657043,
+    "jobId": 121574686031,
+    "checkedOutCommit": "d5101631b294a25d7db2ddff1ac74a76bddf92fd",
+    "status": "completed",
+    "conclusion": "success",
+    "focusedTests": 174,
+    "pass": 174,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "realBrowserCases": 20,
+    "syntheticBrowserCases": 1,
+    "artifact": {
+      "id": 12649823742,
+      "name": "eth-candidate-evidence-d5101631b294a25d7db2ddff1ac74a76bddf92fd",
+      "size_in_bytes": 27555904,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12649823742",
+      "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12649823742/zip",
+      "expired": false,
+      "created_at": "2026-10-26T12:37:11Z",
+      "expires_at": "2026-11-25T12:37:08Z",
+      "updated_at": "2026-10-26T12:37:11Z",
+      "digest": "sha256:2ca6b92d258fc5e7350c409b9f2d622e475539507f558c3fdee7a8149f2bda9f",
+      "workflow_run": {
+        "id": 40323657043,
+        "repository_id": 1428515198,
+        "head_repository_id": 1428515198,
+        "head_branch": "chatgpt/eth-cycle-economics-20261026",
+        "head_sha": "d5101631b294a25d7db2ddff1ac74a76bddf92fd"
+      }
+    }
+  },
+  "noProductionDeployment": true,
+  "externalGemini": "pending",
+  "actualProspectiveScoredTargets": 0
+}

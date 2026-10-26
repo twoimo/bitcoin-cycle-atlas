@@ -372,12 +372,15 @@ async function syntheticZeroCase(cdp,width,receipt){
     const dialog=document.querySelector('#asset-forecast-journal'),svg=dialog.querySelector('svg');
     const paths=[...svg.querySelectorAll('[data-asset-journal-zero-overlay="true"] path')];
     return {dataset:{...dialog.dataset},chart:{...svg.dataset},text:dialog.textContent,
+      chartTitle:svg.querySelector('title')?.textContent,commonFutureLengths:[...svg.querySelectorAll('.price-series-layer > path[stroke-dasharray="5 3"]')].map(path=>path.getTotalLength()),
       overlayPaths:paths.length,invalidPaths:paths.filter(p=>/NaN|Infinity/.test(p.getAttribute('d'))).length,
       overlayLength:paths.reduce((sum,p)=>sum+p.getTotalLength(),0)};
   });
   assert.equal(receipt.journal.dataset.recordId,syntheticZeroRecord.id);
   assert.equal(receipt.journal.chart.assetJournalScale,'linear');assert.equal(receipt.journal.overlayPaths,2);
   assert.equal(receipt.journal.invalidPaths,0);assert.ok(receipt.journal.overlayLength>0);
+  assert.ok(receipt.journal.chartTitle.includes('재구성 입력 관측'),'Reconstructed SVG title claims issuance');
+  assert.ok(receipt.journal.commonFutureLengths.every(length=>length===0),'A positive-only shared future trace bridges the synthetic zero dip');
   assert.ok(receipt.journal.text.includes('회고 재구성 · 전향 평가 제외'),'Synthetic/reconstructed record was presented as prospective');
   assert.ok(receipt.journal.text.includes('재구성 생성'),'Synthetic record clock was labelled as a real issue');
   await evaluate(cdp,()=>{
