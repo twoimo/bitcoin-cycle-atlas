@@ -1,5 +1,7 @@
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
 import {buildEthereumForecasts} from './ethereum-forecast.js';
+import {buildEthereumAdaptiveForecast} from './ethereum-adaptive-model.js';
+import {ethereumResearchPanel} from './ethereum-research-panel.js';
 import { CHART_INTERVALS, chartInterval, isIntradayInterval, fetchMarketCandles } from './ohlc-data.js?v=1.29.0';
 import { parseEthArchive, mergeEthArchive } from './eth-market-data.js?v=1.29.0';
 import { createMarketDataController, marketStatusText } from "./market-data-controller.js?v=1.29.0";
@@ -37,8 +39,8 @@ export async function initEthView() {
   document.body.dataset.market = 'ETHUSD';
   document.title = 'ETHUSD · Ethereum — Bitcoin Cycle Atlas';
   const params = new URLSearchParams(location.search);
-  const state = {...readEthView(params),forecastVisible:params.get('forecast')!=='off',ethScenario:['stress','base','bull'].includes(params.get('eth-scenario'))?params.get('eth-scenario'):'base',eventSettings:readEthereumEventSettings(params),selectedHistoryEvent:null,tool:'crosshair',range:null,priceDomain:null,controller:null,selectedTime:null,frame:null,loading:false,error:null,refreshError:null};
-  let forecastBundle=null,forecastError=null,infoMode='data';
+  const state = {...readEthView(params),ethModel:params.get('eth-model')==='valuation'||(!params.has('eth-model')&&params.has('eth-scenario'))?'valuation':'adaptive',forecastVisible:params.get('forecast')!=='off',ethScenario:['stress','base','bull'].includes(params.get('eth-scenario'))?params.get('eth-scenario'):'base',eventSettings:readEthereumEventSettings(params),selectedHistoryEvent:null,tool:'crosshair',range:null,priceDomain:null,controller:null,selectedTime:null,frame:null,loading:false,error:null,refreshError:null};
+  let forecastBundle=null,forecastError=null,adaptiveForecast=null,adaptiveError=null,infoMode='data';
   let payload = null, daily = null, weekly = null, archiveRequest = null, generation = 0, navigationRevision = 0, ready = false, suspended = false;
   const app = document.createElement('main');
   app.id = 'main';app.className = 'eth-app';app.dataset.bootContent = '';app.inert = true;app.setAttribute('aria-hidden','true');
@@ -116,6 +118,13 @@ export async function initEthView() {
   function openHistoricalEvent(id){cancelInteraction();state.selectedHistoryEvent=id;historyWorkbench.open(id);schedule();}
   function updateHistoryContext(){historyWorkbench.update({frequency:state.frequency,firstDate:daily?.firstDate?.slice(0,10),lastDate:daily?.lastDate?.slice(0,10),dailySeries:daily,visibleCount:Number(svg.dataset.historyEventCount||0)});}
   function ensureForecast(){
+    if(state.ethModel==='adaptive'){
+      if(payload&&daily&&!adaptiveForecast&&!adaptiveError){
+        try{adaptiveForecast=buildEthereumAdaptiveForecast({ethHistory:payload,asOf:daily.lastDate.slice(0,10)});}
+        catch(error){adaptiveError=error.message||'ETH 연구 모형의 관측 입력을 확인해 주세요.';}
+      }
+      return adaptiveForecast;
+    }
     if(payload&&daily&&!forecastBundle&&!forecastError){
       try{forecastBundle=buildEthereumForecasts({ethHistory:payload,asOf:daily.lastDate.slice(0,10)});}
       catch(error){forecastError=error.message||'ETH 미래 조건 입력을 확인해 주세요.';}
@@ -130,22 +139,31 @@ export async function initEthView() {
     if(!info.open)info.showModal();
   }
   function renderForecastInfo(){
+    const focused=document.activeElement?.id;
+    try{
     info.querySelector('#eth-data-title').textContent='ETH 조건부 미래 경로';
     const selected=ensureForecast(),model=selected?.assetPath;
+    const modelControl=`<div class="eth-forecast-controls"><label for="eth-model">미래 경로 모형</label><select id="eth-model"><option value="adaptive" ${state.ethModel==='adaptive'?'selected':''}>ETH 자체 기간·변동성 연구</option><option value="valuation" ${state.ethModel==='valuation'?'selected':''}>기존 외부 평가 조건 · BMNR 공통</option></select></div>`;
+    if(state.ethModel==='adaptive'){
+      info.querySelector('#eth-data-content').innerHTML=modelControl+`<div class="eth-forecast-controls"><label><input id="eth-forecast-visible" type="checkbox" ${state.forecastVisible?'checked':''}> 일봉·주봉에 연구 경로 표시</label></div>`+ethereumResearchPanel(selected,adaptiveError)+`<button type="button" data-open-asset-forecast-journal="ETHUSD">보존한 연구 발행본</button> <button type="button" data-open-forecast-journal="data">자료 상태·공통 기준시각</button>`;
+      return;
+    }
     const options=[['stress','스트레스 · $360 기준선'],['base','현재 가격 기준선'],['bull','채택 확대 · $22,000 기준선']];
-    info.querySelector('#eth-data-content').innerHTML=`<p class="eth-data-lead">조건 기준선과 무작위 예시 1개</p><div class="eth-forecast-controls"><label for="eth-scenario">외부 평가 조건 · 앱 가정</label><select id="eth-scenario">${options.map(([id,label])=>`<option value="${id}" ${state.ethScenario===id?'selected':''}>${esc(label)}</option>`).join('')}</select><label><input id="eth-forecast-visible" type="checkbox" ${state.forecastVisible?'checked':''}> 일봉·주봉에 기준선·예시 경로 표시</label></div>${model?`<dl><dt>실제 관측 기준일</dt><dd>${esc(selected.asOf)}</dd><dt>학습 관측</dt><dd>${esc(model.training.firstObservation)} – ${esc(model.training.informationThrough)} · ${model.training.observations.toLocaleString('en-US')}일</dd><dt>외부 조건 발표일</dt><dd>${esc(model.training.researchAsOf)} · 과거 연구 조건</dd><dt>재현 seed</dt><dd>${model.metadata.seed}</dd><dt>선택한 기준선</dt><dd>${esc(model.anchors[0].date)} · $${number(model.anchors[0].price)}</dd><dt>표시 종료</dt><dd>${esc(selected.displayEnd)}</dd></dl>`:`<p class="eth-data-error">${esc(forecastError||'완료 일봉 자료를 준비하고 있습니다.')}</p>`}<p>ETH와 BMNR의 코인 입력은 같은 기준일·seed에서 같은 경로를 사용합니다. ETH 관측 범위는 주식 거래일보다 나중에 끝날 수 있으므로 각 화면의 기준일을 함께 확인하세요.</p><p>2030년 $360·$22,000은 VanEck의 2024년 연구에서 선택한 외부 평가 조건입니다. 원문의 기준 조건 $22,000을 앱의 채택 확대 사례로 선택했고, 현재 가격 유지·2030년 이후 기준선 유지는 앱 가정입니다. 원문의 전체 모형을 재현하거나 현재의 새 전망으로 해석하지 않습니다.</p><p>파란 점선은 선택한 외부 평가 조건과 앱 가정의 조건 기준선입니다. 금색 점선은 기준선에 무작위 잔차 하나를 더한 예시입니다. 사용량·수수료·소각·발행·스테이킹을 관측 자료에 적합한 경제 모형의 결과가 아닙니다.</p><p>과거 수익률의 28일 블록을 하나의 seed로 추출하고 최근 90일 변동성과 730일 잔차 반감기를 유지합니다. 세 조건은 같은 잔차를 사용합니다. 목표값은 기준선이며 실제 모의 종착점을 강제로 맞추지 않습니다.</p><p>실선·채운 캔들은 실제 완료 OHLC이고, 미래의 금색 점선은 일별 모의 종가의 무작위 예시 1개입니다. 미래 OHLC·거래량을 합성하지 않습니다. 음영은 세 조건의 최소·최대이며 확률·신뢰구간·가능한 손실의 전체 범위가 아닙니다. 분·시간봉에서는 미래 조건을 표시하지 않습니다.</p><p><a href="https://www.vaneck.com/us/en/blogs/digital-assets/matthew-sigel-eth-2030-price-target/" target="_blank" rel="noopener noreferrer">VanEck 2024 ETH 평가 원문 ↗</a></p><p><a href="https://eips.ethereum.org/EIPS/eip-3675" target="_blank" rel="noopener noreferrer">Merge · EIP-3675 ↗</a></p><button type="button" data-open-asset-forecast-journal="ETHUSD">보존한 연구 발행본</button> <button type="button" data-open-forecast-journal="data">자료 상태·공통 기준시각</button>`;
+    info.querySelector('#eth-data-content').innerHTML=modelControl+`<p class="eth-data-lead">조건 기준선과 무작위 예시 1개</p><div class="eth-forecast-controls"><label for="eth-scenario">외부 평가 조건 · 앱 가정</label><select id="eth-scenario">${options.map(([id,label])=>`<option value="${id}" ${state.ethScenario===id?'selected':''}>${esc(label)}</option>`).join('')}</select><label><input id="eth-forecast-visible" type="checkbox" ${state.forecastVisible?'checked':''}> 일봉·주봉에 기준선·예시 경로 표시</label></div>${model?`<dl><dt>실제 관측 기준일</dt><dd>${esc(selected.asOf)}</dd><dt>학습 관측</dt><dd>${esc(model.training.firstObservation)} – ${esc(model.training.informationThrough)} · ${model.training.observations.toLocaleString('en-US')}일</dd><dt>외부 조건 발표일</dt><dd>${esc(model.training.researchAsOf)} · 과거 연구 조건</dd><dt>재현 seed</dt><dd>${model.metadata.seed}</dd><dt>선택한 기준선</dt><dd>${esc(model.anchors[0].date)} · $${number(model.anchors[0].price)}</dd><dt>표시 종료</dt><dd>${esc(selected.displayEnd)}</dd></dl>`:`<p class="eth-data-error">${esc(forecastError||'완료 일봉 자료를 준비하고 있습니다.')}</p>`}<p>이 기존 외부 평가 모드에서 ETH와 BMNR의 코인 입력은 같은 기준일·seed에서 같은 경로를 사용합니다. ETH 관측 범위는 주식 거래일보다 나중에 끝날 수 있으므로 각 화면의 기준일을 함께 확인하세요.</p><p>2030년 $360·$22,000은 VanEck의 2024년 연구에서 선택한 외부 평가 조건입니다. 원문의 기준 조건 $22,000을 앱의 채택 확대 사례로 선택했고, 현재 가격 유지·2030년 이후 기준선 유지는 앱 가정입니다. 원문의 전체 모형을 재현하거나 현재의 새 전망으로 해석하지 않습니다.</p><p>파란 점선은 선택한 외부 평가 조건과 앱 가정의 조건 기준선입니다. 금색 점선은 기준선에 무작위 잔차 하나를 더한 예시입니다. 사용량·수수료·소각·발행·스테이킹을 관측 자료에 적합한 경제 모형의 결과가 아닙니다.</p><p>과거 수익률의 28일 블록을 하나의 seed로 추출하고 최근 90일 변동성과 730일 잔차 반감기를 유지합니다. 세 조건은 같은 잔차를 사용합니다. 목표값은 기준선이며 실제 모의 종착점을 강제로 맞추지 않습니다.</p><p>실선·채운 캔들은 실제 완료 OHLC이고, 미래의 금색 점선은 일별 모의 종가의 무작위 예시 1개입니다. 미래 OHLC·거래량을 합성하지 않습니다. 음영은 세 조건의 최소·최대이며 확률·신뢰구간·가능한 손실의 전체 범위가 아닙니다. 분·시간봉에서는 미래 조건을 표시하지 않습니다.</p><p><a href="https://www.vaneck.com/us/en/blogs/digital-assets/matthew-sigel-eth-2030-price-target/" target="_blank" rel="noopener noreferrer">VanEck 2024 ETH 평가 원문 ↗</a></p><p><a href="https://eips.ethereum.org/EIPS/eip-3675" target="_blank" rel="noopener noreferrer">Merge · EIP-3675 ↗</a></p><button type="button" data-open-asset-forecast-journal="ETHUSD">보존한 연구 발행본</button> <button type="button" data-open-forecast-journal="data">자료 상태·공통 기준시각</button>`;
+    }finally{if(['eth-model','eth-scenario','eth-forecast-visible'].includes(focused))info.querySelector('#'+focused)?.focus();}
   }
   info.addEventListener('change',event=>{
-    if(event.target.id==='eth-scenario'&&['stress','base','bull'].includes(event.target.value))state.ethScenario=event.target.value;
+    if(event.target.id==='eth-model'&&['adaptive','valuation'].includes(event.target.value))state.ethModel=event.target.value;
+    else if(event.target.id==='eth-scenario'&&['stress','base','bull'].includes(event.target.value))state.ethScenario=event.target.value;
     else if(event.target.id==='eth-forecast-visible')state.forecastVisible=event.target.checked;else return;
-    cancelInteraction();++navigationRevision;state.range=null;state.priceDomain=null;persist();renderForecastInfo();schedule();
+    cancelInteraction();++navigationRevision;state.range=null;state.priceDomain=null;persist();renderForecastInfo();if(event.target.id==='eth-model')info.querySelector('#eth-model')?.focus();schedule();
   });
   function showReadout(row){
-    $('#eth-kind').textContent=row.kind==='forecast'?'무작위 예시':'';
+    $('#eth-kind').textContent=row.kind==='forecast'?(state.ethModel==='adaptive'?'모형 예시':'무작위 예시'):'';
     if(row.kind==='forecast'){
       $('#eth-price').textContent=`$${number(row.price)}`;$('#eth-change').textContent='';
       $('#eth-bar-time').textContent=(row.date||'').slice(0,10);$('#eth-bar-time').dateTime=row.date||'';
-      $('#eth-ohlc').innerHTML=`<span>세 조건 범위 $${number(row.low)} – $${number(row.high)}</span><span>미래 OHLC 아님</span>`;
+      $('#eth-ohlc').innerHTML=`<span>${state.ethModel==='adaptive'?'모의 10–90%':'세 조건 범위'} $${number(row.low)} – $${number(row.high)}</span><span>미래 OHLC 아님</span>`;
       if(!row.hovered)state.selectedTime=row.time;return;
     }
     if(row.kind==='unavailable'){$('#eth-price').textContent='—';$('#eth-change').textContent='';$('#eth-bar-time').textContent='';$('#eth-ohlc').textContent='이 구간에 완료된 봉이 없습니다.';return;}
@@ -193,7 +211,13 @@ export async function initEthView() {
     }
     const forecast=visibleForecast();
     $('#eth-forecast-note').hidden=!forecast;
-    $('#eth-forecast-note').title=forecast?`${forecast.scenario.label} · 관측 ${forecast.asOf} · 외부 평가 조건 2024-06-05`:'';
+    $('#eth-forecast-note').title=forecast?`${forecast.scenario.label} · 관측 ${forecast.asOf}`:'';
+    const adaptive=forecast?.researchModel==='adaptive';
+    $('#eth-forecast-note').querySelector('.eth-baseline-key').textContent=adaptive?'·· 모형 중앙값':'·· 조건 기준선';
+    $('#eth-forecast-note').querySelector('.eth-envelope-key').textContent=adaptive?'음영: 모의 10–90%':'음영: 세 조건 범위';
+    $('#eth-forecast-note').querySelector('.eth-sample-key').textContent=adaptive?'┄ 모형 예시 1개 · 적중률 미보정':'┄ 무작위 예시 1개 · 확률 아님';
+    svg.dataset.forecastModel=forecast?state.ethModel:'none';
+    svg.setAttribute('aria-label',adaptive?'ETH-USD 실제 관측, 파란 점선은 모형 중앙값, 금색 점선은 모의 예시 1개, 음영은 모의 10–90% 분위수이며 실제 적중률 보장이 아닙니다. 드래그·휠·방향키로 탐색하세요.':'ETH-USD 실제 관측, 파란 점선은 외부 조건 기준선, 금색 점선은 무작위 예시 1개, 음영은 세 조건 범위이며 확률이 아닙니다. 드래그·휠·방향키로 탐색하세요.');
     $('[data-eth-action="forecast"]').setAttribute('aria-pressed',String(Boolean(forecast)));
     if(!state.range)state.range=intraday?market.range(state.frequency):ethHistoryRange(series,state.span,null,forecast?.displayEnd);
     // Keep readable semantic keys outside the price clip at every font/viewport size.
@@ -209,7 +233,7 @@ export async function initEthView() {
     plot.dataset.tool=state.tool;navigation.update();if(info.open){if(infoMode==='forecast')renderForecastInfo();else renderInfo();}revealReady();
   }
   function schedule(){if(!suspended&&state.frame===null)state.frame=requestAnimationFrame(render);}
-  function setPayload(value){const nextDaily=parseEthArchive(value),nextWeekly=parseEthArchive(value,'weekly');payload=value;daily=nextDaily;weekly=nextWeekly;forecastBundle=null;forecastError=null;}
+  function setPayload(value){const nextDaily=parseEthArchive(value),nextWeekly=parseEthArchive(value,'weekly');payload=value;daily=nextDaily;weekly=nextWeekly;forecastBundle=null;forecastError=null;adaptiveForecast=null;adaptiveError=null;}
   async function getArchive(signal){
     const embedded=document.getElementById('embedded-eth-data')?.textContent;
     if(embedded)return JSON.parse(embedded);

@@ -3,18 +3,20 @@ import {readAssetDailyRows} from './asset-daily-observations.js';
 import {buildIndependentBenchmarks, absoluteLogError, intervalScore} from './forecast-evaluation.js';
 import {calibrateLogInterval} from './forecast-experiments.js';
 import {buildEthereumAssetScenarioPaths} from './ethereum-forecast.js';
+import {buildEthereumAdaptiveCandidate} from './ethereum-adaptive-model.js';
 import {buildEthereumCycleCandidates} from './ethereum-cycle-models.js';
 import {buildEthereumEconomicCandidate} from './ethereum-economic-model.js';
 
 export const ETH_COMPARISON_POLICY = Object.freeze({
-  version: 'eth-locked-candidate-comparison-3', horizons: Object.freeze([30,90,180]),
+  version: 'eth-locked-candidate-comparison-4', horizons: Object.freeze([30,90,180]),
   minimumHistoryDays: 730, originStrideDays: 28, betaLookbackDays: 365,
   legacySeed: 20261022, minimumBlendCases: 12, intervalAlpha: 0.2,
   minimumCalibrationCases: 12, minimumDisjointPromotionCases: 30,
-  prospectiveEvidenceRequired: true, externalReviewRequired: true,
+  prospectiveEvidenceRequired: true, externalReviewRequired: false,
+  externalReviewDecision:'User explicitly omitted Gemini opposition and follow-up reverse review on 2026-10-27; not a completed review',
 });
 export const ETH_COMPARISON_MODELS = Object.freeze([
-  'flat','shrunkenTrend','btcLinked','btcTransfer','ethRefit','legacyEth','economic','combined',
+  'flat','shrunkenTrend','btcLinked','btcTransfer','ethRefit','adaptiveEth','legacyEth','economic','combined',
 ]);
 const mean = values => values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
 const closeAt = date => new Date((utcDay(date)+1)*86400000).toISOString();
@@ -159,6 +161,7 @@ export function summarizeEthereumComparison(cases,{horizons=ETH_COMPARISON_POLIC
     const disjoint=disjointEthereumCases(used);
     const intervalCases=used.filter(r=>r.intervals?.[model]?.status==='experimental');
     const intervalDisjoint=disjointEthereumCases(intervalCases);
+    const simulated=used.filter(r=>r.simulatedIntervals?.[model]),simulatedDisjoint=disjointEthereumCases(simulated);
     const score=group=>({
       meanAbsoluteLogError:mean(group.map(r=>absoluteLogError(r.predictions[model],r.actual))),
       rootMeanSquaredLogError:group.length?Math.sqrt(mean(group.map(r=>(Math.log(r.predictions[model])-Math.log(r.actual))**2))):null,
@@ -188,6 +191,13 @@ export function summarizeEthereumComparison(cases,{horizons=ETH_COMPARISON_POLIC
         disjointMeanLogWidth:mean(intervalDisjoint.map(r=>r.intervals[model].logWidth)),
         disjointMeanLogIntervalScore:mean(intervalDisjoint.map(r=>r.intervals[model].logIntervalScore)),
         calibratedForProduction:false,coverageGuarantee:false},
+      simulatedInterval:{nominalPointwiseMass:.8,cases:simulated.length,disjointCases:simulatedDisjoint.length,
+        empiricalCoverage:mean(simulated.map(r=>Number(r.simulatedIntervals[model].covered))),
+        meanLogWidth:mean(simulated.map(r=>r.simulatedIntervals[model].logWidth)),
+        meanLogIntervalScore:mean(simulated.map(r=>r.simulatedIntervals[model].logIntervalScore)),
+        disjointEmpiricalCoverage:mean(simulatedDisjoint.map(r=>Number(r.simulatedIntervals[model].covered))),
+        disjointMeanLogWidth:mean(simulatedDisjoint.map(r=>r.simulatedIntervals[model].logWidth)),
+        disjointMeanLogIntervalScore:mean(simulatedDisjoint.map(r=>r.simulatedIntervals[model].logIntervalScore)),coverageGuarantee:false},
       productionPromoted:false});
   }
   const readyCore=['flat','shrunkenTrend','btcLinked','btcTransfer','ethRefit','legacyEth'].filter(model=>models.includes(model));
@@ -270,7 +280,7 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
       candidates={
         flat:readyPredictions(simple.targets,'flat'),shrunkenTrend:readyPredictions(simple.targets,'shrunkenTrend'),
         btcLinked:buildSimpleEthereumBtcLink({ethRows:ep,btcRows:bp,asOf:origin,horizons}),
-        btcTransfer:cycle.btcTransfer,ethRefit:cycle.ethRefit,legacyEth:legacyCandidate(ep,origin,horizons),economic,
+        btcTransfer:cycle.btcTransfer,ethRefit:cycle.ethRefit,adaptiveEth:buildEthereumAdaptiveCandidate({ethRows:ep,asOf:origin,horizons}),legacyEth:legacyCandidate(ep,origin,horizons),economic,
       };
       candidates.combined=buildEthereumCombinedCandidate({origin,horizons,cycle:candidates.ethRefit,economic,history:cases});
     }
@@ -279,7 +289,7 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
       perHorizonAvailability:horizons.map(h=>({horizonDays:h,available:Boolean(rowPrediction(c,h))})),
     }]))});
     for(const h of horizons){
-      const targetDate=dateFromDay(utcDay(origin)+h),actual=ethByDate.get(targetDate)??null,predictions={},intervals={},unavailableModels={};
+      const targetDate=dateFromDay(utcDay(origin)+h),actual=ethByDate.get(targetDate)??null,predictions={},intervals={},simulatedIntervals={},unavailableModels={};
       for(const model of ETH_COMPARISON_MODELS){
         const p=rowPrediction(candidates[model],h);
         if(!p){
@@ -288,6 +298,9 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
         }
         if(p.targetDate!==targetDate)throw new RangeError('Candidate target clock differs from the evaluation target');
         predictions[model]=p.price;
+        if(positive(p.simulatedLower)&&positive(p.simulatedUpper))simulatedIntervals[model]={lower:p.simulatedLower,upper:p.simulatedUpper,nominalPointwiseMass:p.nominalPointwiseMass,
+          covered:actual===null?null:actual>=p.simulatedLower&&actual<=p.simulatedUpper,logWidth:Math.log(p.simulatedUpper)-Math.log(p.simulatedLower),
+          logIntervalScore:actual===null?null:intervalScore(Math.log(p.simulatedLower),Math.log(p.simulatedUpper),Math.log(actual),.2),coverageGuarantee:false};
         const prior=calibration.get(model).get(h);
         const interval=calibrateLogInterval(prior,{origin,predicted:p.price,horizonDays:h,alpha:ETH_COMPARISON_POLICY.intervalAlpha,minCount:ETH_COMPARISON_POLICY.minimumCalibrationCases});
         intervals[model]=interval.status==='experimental'&&actual!==null?{...interval,covered:actual>=interval.lower&&actual<=interval.upper,
@@ -309,7 +322,7 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
         status:targetDate>asOf?'pending':positive(actualRatio)?'retrospective':'missing-paired-close'});
       const legacy=rowPrediction(candidates.legacyEth,h);
       cases.push({origin,informationCutoffAt,issuedAt:issuedAt??null,observationThroughAt:closeAt(origin),targetDate,targetObservationEndAt:closeAt(targetDate),targetAvailableAt:null,horizonDays:h,
-        anchorPrice,actual,status:targetDate>asOf?'pending':actual===null?'missing-observation':'retrospective',predictions,unavailableModels,intervals,
+        anchorPrice,actual,status:targetDate>asOf?'pending':actual===null?'missing-observation':'retrospective',predictions,unavailableModels,intervals,simulatedIntervals,
         legacyScenarioEnvelope:legacy?{low:legacy.scenarioLow,high:legacy.scenarioHigh,empiricallyCovered:actual===null?null:actual>=legacy.scenarioLow&&actual<=legacy.scenarioHigh,
           logWidth:(Math.log(legacy.scenarioHigh)-Math.log(legacy.scenarioLow)),probability:null,confidenceInterval:false}:null});
     }
@@ -333,8 +346,8 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
       scope:'ETH/BTC is scored independently from ETH/USD; observed future BTC enters only the realized target, never a predictor. Missing paired closes and absent economic forecasts are not fabricated.',
       economicSnapshotsProvided:economicSnapshots.length,
       economicPredictionsAvailable:relativeCases.some(r=>positive(r.predictions.economic)),prospectiveScoredTargets:0},
-    adoption:{status:'not-adopted',productionModelChanged:false,externalGeminiReview:'pending-unavailable-through-github',
-      reasons:['Current-vintage retrospective price replay is not prospective performance','Economic point-in-time network inputs are not manufactured','Few macro cycles and overlapping outcomes do not establish a fixed cycle law','External source-read Gemini opposition and ChatGPT reverse review are not completed'],
+    adoption:{status:'not-adopted',productionModelChanged:false,externalGeminiReview:'omitted-by-user-2026-10-27',reverseReview:'omitted-by-user-2026-10-27',draftChartResearchModel:'eth-adaptive-research-1',
+      reasons:['Current-vintage retrospective price replay is not prospective performance','Economic point-in-time network inputs are not manufactured','Few macro cycles and overlapping outcomes do not establish a fixed cycle law'],
       longHorizonValidation:false,calibratedForProduction:false},
     scope:'Historical dates restrict all predictor prefixes and matured error fitting. Prices are the current stored archive, not recovered historical publication vintages. 30/90/180-day errors do not validate 2030–2035 paths. Interval results are retrospective experiments, not forecast probabilities.'};
 }

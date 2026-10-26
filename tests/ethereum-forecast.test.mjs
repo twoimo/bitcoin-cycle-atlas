@@ -37,7 +37,7 @@ test('ETH forecast cutoff and source eligibility are strict and future observati
 });
 
 test('the production ETH view exposes scenarios, preserves exact observed candles and omits intraday futures',async()=>{
-  const f=await ethViewFixture();f.reply(0,ethHistory);await f.settle();await f.initialization;
+  const f=await ethViewFixture({query:'&eth-model=valuation'});f.reply(0,ethHistory);await f.settle();await f.initialization;
   const observed=structuredClone(f.latest().series.candles),anchor=observed.at(-1);
   assert.equal(f.latest().forecast.asOf,anchor.date.slice(0,10));
   assert.equal(f.latest().forecast.path[0].price,anchor.close);

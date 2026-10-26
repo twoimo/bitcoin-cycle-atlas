@@ -420,8 +420,8 @@ async function ethCase(cdp,width,receipt,expected,archive){
   assert.ok(Number(chart.dataset.observedCandleCount)>0);assert.ok(Number(chart.dataset.forecastPointCount)>0);assert.equal(Number(chart.dataset.forecastCandleCount),0);
   for(const key of ['observed','future','baseline']){assert.ok(chart[key]&&chart[key].length>0,'Missing real SVG '+key+' path');assert.ok(!/NaN|Infinity/.test(chart[key].d),'Invalid SVG coordinates');}
   assert.equal(chart.future.dash,'7 5');assert.equal(chart.baseline.dash,'2 4');assert.equal(chart.price,expected.price);assert.equal(chart.date,expected.date);assert.equal(chart.kind,'');
-  assert.equal(chart.note.hidden,false);assert.ok(chart.note.text.includes('확률 아님'));
-  for(const text of ['실제 관측','조건 기준선','무작위 예시 1개','음영: 세 조건 범위'])assert.ok(chart.note.text.includes(text),'Missing forecast semantic label '+text);
+  assert.equal(chart.note.hidden,false);assert.equal(chart.dataset.forecastModel,'adaptive');assert.ok(chart.note.text.includes('적중률 미보정'));
+  for(const text of ['실제 관측','모형 중앙값','모형 예시 1개','음영: 모의 10–90%'])assert.ok(chart.note.text.includes(text),'Missing forecast semantic label '+text);
   assert.ok(chart.note.bottom<=chart.note.plotTop+1,'Forecast legend overlaps plotted prices');
   assert.ok(chart.note.keys.every(k=>k.width>0&&k.left>=0&&k.right<=width),'A forecast legend key is clipped');
   dark(chart.background,'ETH plot');
@@ -432,7 +432,23 @@ async function ethCase(cdp,width,receipt,expected,archive){
   assert.equal(receipt.dialog.open,true);visibleBounds(receipt.dialog,width);dark(receipt.dialog.background,'ETH evidence dialog');
   assert.ok(receipt.dialog.text.includes(expected.date),'Dialog must identify real cutoff');
   assert.ok(receipt.dialog.text.includes('ETH와 BMNR')&&receipt.dialog.text.includes('신뢰구간'),'Missing shared-source and uncertainty disclosure');
+  assert.ok(receipt.dialog.text.includes('현재 상태')&&receipt.dialog.text.includes('계수의 추정 불확실성'),'New model evidence must describe state and omitted uncertainty');
   await screenshot(cdp,'eth-'+width+'-evidence.png',receipt);
+  if(width===320||width===1440){
+    const nativeKey=async(key,code,num)=>{for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key,code,windowsVirtualKeyCode:num,nativeVirtualKeyCode:num});};
+    await evaluate(cdp,()=>{document.querySelector('#eth-model').scrollIntoView({block:'center'});document.querySelector('#eth-model').focus();});
+    await nativeKey('End','End',35);await nativeKey('Enter','Enter',13);await settled(cdp);
+    assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-model').value),'valuation');
+    assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-chart').dataset.forecastModel),'valuation');
+    assert.equal(await evaluate(cdp,()=>document.activeElement.id),'eth-model','Native model selection must retain keyboard focus');
+    assert.ok((await bounds(cdp,'#eth-data-dialog')).text.includes('조건 기준선과 무작위 예시 1개'));
+    await screenshot(cdp,'eth-'+width+'-legacy-model.png',receipt);
+    await nativeKey('Home','Home',36);await nativeKey('Enter','Enter',13);await settled(cdp);
+    assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-model').value),'adaptive');
+    assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-chart').dataset.forecastModel),'adaptive');
+    receipt.modelSwitch={nativeKeyboard:true,legacyAvailable:true,restoredAdaptive:true,observedPrice:await evaluate(cdp,()=>document.querySelector('#eth-price').textContent)};
+    assert.equal(receipt.modelSwitch.observedPrice,expected.price);
+  }
   await journalCase(cdp,width,receipt,'ETHUSD',archive);
   assert.equal((await bounds(cdp,'#eth-data-dialog')).open,false);
 }
@@ -578,7 +594,7 @@ async function main(){
   assert.equal(typeof WebSocket,'function','Native WebSocket is required');
   report.sourceCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
   report.sourceHashes={};
-  for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json','dist/lab-view.js','dist/analysis-dock.css','dist/compact-chart-layout.css','dist/mobile-workspace.css','dist/mobile-preview.js','scripts/verify-workspace-browser.mjs']){
+  for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/ethereum-adaptive-model.js','dist/ethereum-adoption-scenarios.js','dist/ethereum-research-panel.js','dist/ethereum-research-catalog.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json','dist/lab-view.js','dist/analysis-dock.css','dist/compact-chart-layout.css','dist/mobile-workspace.css','dist/mobile-preview.js','scripts/verify-workspace-browser.mjs']){
     report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   }
   for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/preserved-archive-download.js','dist/workspace-tools.js','dist/research-annotations-workbench.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));

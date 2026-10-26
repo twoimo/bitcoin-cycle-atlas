@@ -32,4 +32,4 @@ Each existing loading, empty, error and full state is part of the review. A miss
 
 The pinned Hallmark scanner covers every HTML/CSS entry and renders every declared route at its supported widths. It does not traverse this app's dynamic JavaScript import graph or open every dialog. Retain the existing functional and model checks and add explicit browser state checks for those boundaries. Record actual execution, missing targets, source hashes, before/after preservation and failures separately. A missing render, an internal scanner error or a skipped comparison is not a pass.
 
-Design validation does not replace the separately required real Gemini opposition, source verification, mature prospective outcomes or release authorization. This research branch remains subject to those existing gates.
+The user explicitly omitted Gemini opposition and the follow-up reverse review on 2026-10-27. Record them as omitted by the user, never passed or completed. Source verification, numerical and functional checks, mature prospective evidence and separate release authorization still apply. A research chart mode is not a claim of production forecast calibration.

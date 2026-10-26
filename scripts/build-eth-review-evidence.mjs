@@ -7,6 +7,7 @@ const root=fileURLToPath(new URL('..',import.meta.url));
 const scope=JSON.parse(await readFile(resolve(root,'research-data/eth-review-scope.json'),'utf8'));
 const evidencePaths=[
   'build/ethereum-model-comparison.json',
+  'build/ethereum-adaptive-research.json',
   'build/ethereum-economic-ablation.json',
   'build/eth-browser/report.json',
 ];
