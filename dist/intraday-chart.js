@@ -35,7 +35,7 @@ export function drawIntradayChart({svg,series,chartType='candles',scale='log',pr
   const minTime=range?.start??allRows[0].time-interval.seconds,maxTime=range?.end??allRows.at(-1).time+interval.seconds;
   let rows=dateWindow(allRows,minTime,maxTime,row=>row.time);
   const forecastAnchor=equityForecastAnchor(forecast,allRows.at(-1));
-  const futureRows=equityForecastRows(forecast,forecastAnchor?.time??Infinity),visibleFuture=equityForecastWindowRows(futureRows,forecastAnchor,minTime,maxTime,scale,ethereumConditional);
+  const futureRows=equityForecastRows(forecast,forecastAnchor?.time??Infinity),visibleFuture=equityForecastWindowRows(futureRows,forecastAnchor,minTime,maxTime,scale,ethereumConditional,forecast?.researchModel!=='adaptive');
   const futureCandles=forecast?.pathMode==='asset-linked-daily'&&chartType==='candles'?dateWindow(equityForecastCandles(forecast,series.interval),minTime,maxTime,row=>row.time):[];
   const scaleRows=[...rows,...visibleFuture];
   const forecastLogGaps=scale==='log'?equityForecastLogGaps(futureRows,forecastAnchor,minTime,maxTime):[];

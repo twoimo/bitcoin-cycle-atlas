@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {utcDay,dateFromDay} from '../dist/cycle-engine.js';
-import {ETH_ADAPTIVE_POLICY,fitEthereumAdaptiveModel,simulateEthereumAdaptive,buildEthereumAdaptiveCandidate,buildEthereumAdaptiveForecast} from '../dist/ethereum-adaptive-model.js';
+import {ETH_ADAPTIVE_POLICY,confirmedEthereumRegimes,fitEthereumAdaptiveModel,simulateEthereumAdaptive,buildEthereumAdaptiveCandidate,buildEthereumAdaptiveForecast} from '../dist/ethereum-adaptive-model.js';
 import {runEthereumModelComparison} from '../dist/ethereum-model-comparison.js';
 import {ethViewFixture} from './helpers/eth-view-fixture.mjs';
 
@@ -129,4 +129,34 @@ test('new chart model cannot disguise pointwise simulation percentiles as calibr
   assert.equal(model.metadata.deterministicFourYearCycle,false);
   assert.equal(model.metadata.parameterUncertaintyIncluded,false);
   assert.ok(model.path.every(p=>!('open'in p)&&!('volume'in p)));
+});
+
+
+test('threshold confirmations occur on the independently known fourteenth close, never at the extremum',()=>{
+  const start=utcDay('2023-01-01'),make=prices=>prices.map((price,i)=>({date:dateFromDay(start+i),price}));
+  assert.deepEqual(confirmedEthereumRegimes(make([100,...Array(13).fill(60)])),[]);
+  const down=confirmedEthereumRegimes(make([100,...Array(14).fill(60)]));
+  assert.deepEqual(down,[{state:'down',turnDate:'2023-01-01',knownAt:'2023-01-15',index:14,price:100}]);
+  const before=[100,...Array(14).fill(60),50,...Array(13).fill(60)];
+  assert.deepEqual(confirmedEthereumRegimes(make(before)),down);
+  const both=confirmedEthereumRegimes(make([...before,60]));
+  assert.deepEqual(both,[...down,{state:'up',turnDate:'2023-01-16',knownAt:'2023-01-30',index:29,price:50}]);
+  const reset=[100,...Array(13).fill(60),61,...Array(13).fill(60)];
+  assert.equal(confirmedEthereumRegimes(make(reset)).length,0,'A recovery resets consecutive confirmation days');
+});
+test('the variance filter uses the pre-return variance and normalized, raw-mean-centered shocks',()=>{
+  const byDate=new Map(fit.training.events.map(e=>[e.knownAt,e.state]));
+  let state=null,v=fit.training.initialVariance;const z=[];
+  for(let i=1;i<rows.length;i++){
+    if(state){
+      const shock=Math.log(rows[i].price)-Math.log(rows[i-1].price)-fit.states[state].rawMean;
+      z.push(shock/Math.sqrt(v));
+      v=.02*fit.states[state].longRunVariance+.06*shock**2+.92*v;
+    }
+    if(byDate.has(rows[i].date))state=byDate.get(rows[i].date);
+  }
+  assert.ok(Math.abs(v-fit.currentVariance)<1e-12);
+  const center=z.reduce((s,x)=>s+x,0)/z.length;
+  const scale=Math.sqrt(z.reduce((s,x)=>s+(x-center)**2,0)/z.length);
+  for(let i=0;i<z.length;i++)assert.ok(Math.abs((z[i]-center)/scale-fit.innovations[i])<1e-10);
 });

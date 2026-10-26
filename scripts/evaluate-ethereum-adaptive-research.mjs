@@ -12,6 +12,15 @@ for(const path of ['dist/data/eth-ohlc.json','dist/data/btc-daily.json','dist/da
 }
 const ethArchive=inputs['dist/data/eth-ohlc.json'],btcArchive=inputs['dist/data/btc-daily.json'],coinbaseBtc=inputs['dist/data/btc-ohlc.json'];
 const eth=ethArchive.dailyHistory.candles.map(r=>({date:r.date.slice(0,10),price:r.close,high:r.high})),btc=btcArchive.prices.map(([date,price])=>({date,price}));
+for(const [label,rows] of [['ETH',eth],['BTC',btc]]){
+  if(!rows.length)throw new Error(label+' price archive is empty');
+  for(let i=0;i<rows.length;i++){
+    const r=rows[i],stamp=Date.parse(r.date+'T00:00:00Z');
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(r.date)||!Number.isFinite(stamp)||new Date(stamp).toISOString().slice(0,10)!==r.date||
+      !(Number.isFinite(r.price)&&r.price>0)||(i&&rows[i-1].date>=r.date)||
+      (label==='ETH'&&!(Number.isFinite(r.high)&&r.high>=r.price)))throw new Error(label+' malformed daily observation at '+i);
+  }
+}
 const asOf=eth.at(-1).date;
 const day=s=>Date.parse(s+'T00:00:00Z')/86400000;
 const mean=a=>a.reduce((s,x)=>s+x,0)/a.length;
@@ -41,6 +50,24 @@ for(let i=0;i<peaks.length;i++){
     leftCensored:i===0,rightCensored:i===peaks.length-1,retrospectivelySelected:true});
   start=trough;
 }
+const periodStart='2025-01-01',periodEnd='2025-12-31';
+const yearRows=eth.filter(r=>r.date>=periodStart&&r.date<=periodEnd);
+const fullPeriodCoverage=yearRows.length===365&&yearRows[0]?.date===periodStart&&yearRows.at(-1)?.date===periodEnd&&
+  yearRows.every((r,i)=>i===0||day(r.date)-day(yearRows[i-1].date)===1);
+const observedMaximum=yearRows.length?extreme(yearRows,'high',1):null;
+const targets=[
+  {institution:'Galaxy',published:'2024-12-31',clientRelease:'2024-12-27',strictAboveUsd:5500,
+    source:'https://www.galaxy.com/insights/research/crypto-predictions-2025',
+    originalScope:'ETH trades above 5500 during 2025; not a year-end close',
+    annualHighCheck:'Sufficient for this price threshold within the specified Coinbase ETH-USD universe'},
+  {institution:'VanEck',published:'2024-12-13',strictAboveUsd:6000,
+    source:'https://www.vaneck.com/us/en/blogs/digital-assets/matthew-sigel-vanecks-10-crypto-predictions-for-2025/',
+    originalScope:'2025 cycle-apex price in an outlook also proposing Q1/Q4 timing',
+    annualHighCheck:'Necessary price-threshold check only; not sufficient to validate the complete timing/path forecast'}
+].map(target=>({...target,periodStart,periodEnd,priceDefinition:'Coinbase Exchange ETH-USD UTC daily intraday high',
+  observations:yearRows.length,fullPeriodCoverage,observedMaximum,
+  thresholdObserved:observedMaximum?.high>target.strictAboveUsd?true:fullPeriodCoverage?false:null,
+  allVenuesClaim:false,allTimeMaximumUsed:false}));
 const lookup=new Map(eth.map(r=>[r.date,r.price])),annual=[];
 for(let year=2017;year<=Number(asOf.slice(0,4));year++){
   const prior=lookup.get((year-1)+'-12-31'),end=year===Number(asOf.slice(0,4))?asOf:year+'-12-31',value=lookup.get(end);
@@ -60,18 +87,20 @@ const report={schemaVersion:1,kind:'ethereum-adaptive-research-audit',asOf,
     fetchedCurrentPricesInThisScript:false,macroCyclesIndependent:false,peakWindowsRetrospectivelySelected:true},
   ath:{close:extreme(eth,'price',1),intraday:extreme(eth,'high',1),prior2025Close:extreme(eth.filter(r=>r.date<'2025-01-01'),'price',1),
     prior2025Intraday:extreme(eth.filter(r=>r.date<'2025-01-01'),'high',1)},
+  institutional2025Thresholds:targets,
   episodes,annualReturns:annual,volatility:[vol('2024-01-01','2025-12-31'),vol('2020-01-01','2022-09-14'),vol('2022-09-15',asOf)],
   sameProviderVolatility:vol(sameProvider[0].date,asOf,sameProvider),
   policy:ETH_ADAPTIVE_POLICY,training:fit.training,simulation:sim.metadata,currentPath:sim.path,
   runtime:{fitAnd730Day256DrawSimulationMs:runtimeMs,environment:'GitHub Actions Node; not physical mobile latency',timingIsNotGuaranteed:true,
-    allocationUpperBoundBytes:(730+1)*256*8,complexity:'O(history + horizon*draws*log(draws)); one fit and cached UI result'},
+    logMatrixBytes:(730+1)*256*8,memoryComplexity:'O(history + horizon*draws); matrix bytes exclude fitted arrays and output objects',complexity:'O(history + horizon*draws*log(draws)); one fit and cached UI result'},
   monteCarloSensitivity:{comparisonDraws:1024,interpretation:'Numerical draw error only, not parameter uncertainty or selecting a better forecast',
     horizons:[30,90,180,365,730].map(h=>({horizonDays:h,draws256:sim.path[h],draws1024:dense.path[h],
       medianLogDifference:Math.log(dense.path[h].baselinePrice/sim.path[h].baselinePrice)}))},
   comparisons:comparison.summaries.filter(s=>s.model==='adaptiveEth'),
   paired:comparison.pairwise.filter(s=>s.left==='adaptiveEth'||s.right==='adaptiveEth'),
   forecastPerformance:{prospectiveScoredTargets:0,productionPromoted:false,externalGeminiReview:'omitted-by-user-2026-10-27',reverseReview:'omitted-by-user-2026-10-27'},
-  institutionalArithmetic:{tomLee:{source:'https://www.sec.gov/Archives/edgar/data/1829311/000149315225012513/ex99-2.htm',assumedBtcUsd:250000,
+  institutionalArithmetic:{tomLee:{source:'https://www.sec.gov/Archives/edgar/data/1829311/000149315225012513/ex99-2.htm',published:'2025-09-02',messagePeriod:'2025-08',btcTargetHorizon:'2025 year-end',ethRatioScenarioHorizon:null,
+    ethRatioScenarioHorizonNote:'Conditional ratio grid; replacement-cost scenario has no explicit standalone deadline',assumedBtcUsd:250000,
     ratios:[.04790,.080727,.25].map(r=>({ratio:r,conditionalEthUsd:250000*r})),jointProbability:null,ratioStationarityProven:false},
     vanEck:{source:'https://www.vaneck.com/us/en/blogs/digital-assets/matthew-sigel-eth-2030-price-target/',published:'2024-06-05',
       fcf2030MillionUsd:66058,terminalMultiple:33.33,supply2030MillionEth:100.07,
@@ -85,3 +114,7 @@ const report={schemaVersion:1,kind:'ethereum-adaptive-research-audit',asOf,
 const output=resolve(root,'build/ethereum-adaptive-research.json');await mkdir(dirname(output),{recursive:true});await writeFile(output,JSON.stringify(report,null,2)+'\n');
 const {currentPath,...receipt}=report;
 console.log('ETH_ADAPTIVE_RECEIPT '+JSON.stringify(receipt));
+const pathText=JSON.stringify({kind:'reconstructed-research-path',issued:false,asOf,sourceCommit:report.sourceCommit,
+  sourceTree:report.sourceTree,executedAt:report.executedAt,inputSha256:hashes,metadata:sim.metadata,path:currentPath});
+const chunkSize=20000,total=Math.ceil(pathText.length/chunkSize);
+for(let index=0;index<total;index++)console.log('ETH_ADAPTIVE_PATH_CHUNK '+JSON.stringify({index,total,data:pathText.slice(index*chunkSize,(index+1)*chunkSize)}));

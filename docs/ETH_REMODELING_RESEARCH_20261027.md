@@ -200,6 +200,8 @@ Coinbase의 현재 x402 구현은 여러 체인을 지원하고 수천 결제를
 
 과거 충격은 해당 수익률 관측 전의 lagged 분산으로 표준화한다. 잔차 집합을 평균 0·모집단 2차 모멘트 1로 다시 정규화해 제거한 평균이 잔차를 통해 재유입되지 않게 한다. 28일 원형 블록은 모든 관측의 주변 추출 가중치를 동일하게 하되 끝→처음 연결이라는 인공 경계를 가정한다.
 
+전체 잔차의 평균 0은 블록의 다음 잔차가 과거와 독립이라는 뜻이 아니다. 잔차와 현재 변동성의 상관이 남을 수 있어 조건부 수익률 무편향 또는 가격 martingale을 증명했다고 주장하지 않는다.
+
 양의 장기분산과 비음수 재귀 가중치는 양의 분산을 유지한다. log 가격은 유한 지수 범위를 벗어나면 명시적 오류를 내며 임의 상하한으로 숨기지 않는다. 블록 의존성과 상태 이동이 있으므로 iid 조건의 정상성 정리를 실제 모의 과정 전체의 보증으로 과장하지 않는다.
 
 ### 7.4 차트 의미
@@ -289,3 +291,11 @@ tests/ethereum-adaptive-model.test.mjs는 시점·노출·우측 검열·잔차 
 | S45 | [Probability of Backtest Overfitting](https://scholarworks.wmich.edu/math_pubs/40/) | 다중 설정 선택 문제 |
 | S46 | [Gneiting·Raftery proper scoring](https://sites.stat.washington.edu/people/raftery/Research/PDF/Gneiting2007jasa.pdf) | 2007 |
 | S47 | [Adaptive conformal inference](https://arxiv.org/abs/2106.00170) | 2021·보장 조건 |
+
+## 구현 검증 중 확인한 경계 수정
+
+기존 공통 차트는 대표 경로가 하한·상한 안에 들어간다고 전제했다. 새 모형의 대표 경로는 10–90% 분위수 밖으로 나갈 수 있으므로 이 전제를 유지하면 렌더링이 실패한다. adaptive 모드에서는 대표 가격의 양수·유한성과 `하한 ≤ 중앙값 ≤ 상한`을 독립적으로 검증한다. 화면 경계 보간에서도 분위수를 대표 경로까지 넓히지 않는다. 기존 외부 평가·주식 경로의 포함 조건은 유지한다. 실제 원자료 렌더와 밴드 밖 합성 예시, 로그·선형 경계 보간으로 이 차이를 검사한다.
+
+2025년 기관 가격 문턱은 2025-01-01–12-31의 Coinbase ETH-USD 장중 고가에 한정한다. 전체 365일이 없고 초과가 관측되지 않았다면 미달 확정을 하지 않는다. Galaxy의 5,500달러 초과와 VanEck의 6,000달러 초과를 검사하되, VanEck의 분기별 경로까지 검증한 것으로 세지 않는다. 다른 거래소의 모든 체결에 대한 명제도 아니다. 미래 데이터가 추가되어도 2025년 판정에 전 기간 최고가를 사용하지 않는다.
+
+기존 비교의 `coreCommonCases`/`coreDisjointMeanAbsoluteLogErrors`는 기존 6개 모델에 관한 공통 집합이다. 신규 adaptive 모델의 공정한 대조는 동일 origin·horizon을 맞춘 pairwise/paired baseline 결과를 사용한다. 단일 중앙 80% 구간의 로그 interval score를 사용하며, 여러 분위수 구간을 합친 WIS로 부르지 않는다.

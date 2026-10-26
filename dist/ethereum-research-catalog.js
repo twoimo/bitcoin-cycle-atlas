@@ -1,14 +1,14 @@
 export const ETH_RESEARCH_SOURCES=Object.freeze([
   {
     "id": "mirae-20260223",
-    "date": "2026-02-23",
+    "date": "표지 2026-02-23 · 현재 판본",
     "label": "미래에셋 · 올해는 이더리움이다",
     "url": "https://securities.miraeasset.com/bbs/download/2142940.pdf?attachmentId=2142940",
     "finding": "AI 에이전트 투자 논제. 스테이킹 수치는 PDF와 공식 요약이 달라 자동 입력하지 않습니다. 채택과 ETH 가치 귀속은 별도 검증 대상입니다."
   },
   {
     "id": "lee-sec-202509",
-    "date": "2025-09",
+    "date": "공개 2025-09-02 · 8월 메시지",
     "label": "톰 리 · SEC 보존 발표 원문",
     "url": "https://www.sec.gov/Archives/edgar/data/1829311/000149315225012513/ex99-2.htm",
     "finding": "BTC 가격 × ETH/BTC 비율은 조건부 산술입니다. BTC 목표와 비율 복귀의 공동 실현을 증명하지 않습니다. 발표자는 ETH 재무 기업의 회장입니다."
@@ -99,9 +99,9 @@ export const ETH_RESEARCH_SOURCES=Object.freeze([
   },
   {
     "id": "tokenomics",
-    "date": "2021 출판",
+    "date": "2021 RFS 최종 출판 · DOI 10.1093/rfs/hhaa089",
     "label": "Cong·Li·Wang · Tokenomics",
-    "url": "https://bfi.uchicago.edu/working-paper/tokenomics-dynamic-adoption-and-valuation/",
+    "url": "https://www.linwilliamcong.com/_files/ugd/555f73_c11eda05cc144e688c772c612edf8158.pdf",
     "finding": "네트워크 효과와 균형 가치의 이론입니다. 실제 ETH 계수·경쟁 점유율을 별도로 측정해야 합니다."
   },
   {

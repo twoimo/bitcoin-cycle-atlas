@@ -153,7 +153,7 @@ export function simulateEthereumAdaptive(fit,{horizonDays=730,sampleCount=256,se
   return {path,representative,metadata:{version:p.version,seed,sampleCount,horizonDays,blockDays:p.blockDays,probability:null,calibrated:false,
     nominalPointwiseMass:.8,bandMeaning:'Conditional Monte Carlo 10th–90th percentiles, not validated 80% coverage or a simultaneous path band',
     centerMeaning:'Pointwise median; generally not an individually realizable trajectory',representativePathIndex:0,
-    sharedBlockLaw:'Circular standardized return blocks; wraparound boundary assumed',historicalDriftExtrapolated:false,
+    sharedBlockLaw:'Circular standardized return blocks; wraparound boundary assumed',unshrunkHistoricalMeanExtrapolated:false,historicalDriftDamped:true,
     parametersEstimatedFrom:'Current observation prefix only',policyParametersValidated:false,parameterUncertaintyIncluded:false,
     deterministicFourYearCycle:false,bitcoinHalvingApplied:false,futureThresholdCrossingsGuaranteed:false,
     historicalVintageBacktest:false,ohlcClaim:false,productionPromoted:false}};

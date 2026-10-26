@@ -11,6 +11,7 @@ on:
       - 'tests/eth-review-packet.test.mjs'
       - 'tests/journal-entry-ownership.test.mjs'
       - 'tests/equity-chart-rendering.test.mjs'
+      - 'tests/eth-chart-rendering.test.mjs'
       - 'tests/treasury-model.test.mjs'
       - 'tests/helpers/eth-*.mjs'
       - 'scripts/evaluate-ethereum-models.mjs'
@@ -46,7 +47,7 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - name: Test candidate equations, missing inputs, clocks and future-information boundaries
-        run: node --test tests/ethereum-adaptive-model.test.mjs tests/ethereum-adoption-scenarios.test.mjs tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-economic-ablation.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs tests/ethereum-economic-data.test.mjs tests/ethereum-economic-collector.test.mjs tests/asset-forecast-records.test.mjs tests/asset-forecast-collector.test.mjs tests/asset-outcome-records.test.mjs tests/asset-outcome-collector.test.mjs tests/ethereum-historical-gas-source.test.mjs tests/asset-forecast-journal.test.mjs tests/journal-entry-ownership.test.mjs tests/eth-review-packet.test.mjs tests/treasury-model.test.mjs
+        run: node --test tests/ethereum-adaptive-model.test.mjs tests/ethereum-adoption-scenarios.test.mjs tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-economic-ablation.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/eth-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs tests/ethereum-economic-data.test.mjs tests/ethereum-economic-collector.test.mjs tests/asset-forecast-records.test.mjs tests/asset-forecast-collector.test.mjs tests/asset-outcome-records.test.mjs tests/asset-outcome-collector.test.mjs tests/ethereum-historical-gas-source.test.mjs tests/asset-forecast-journal.test.mjs tests/journal-entry-ownership.test.mjs tests/eth-review-packet.test.mjs tests/treasury-model.test.mjs
       - name: Evaluate preserved asset forecasts without requiring a new forecast issue
         run: |
           node scripts/evaluate-asset-forecasts.mjs

@@ -212,6 +212,7 @@
     "tests/asset-outcome-collector.test.mjs",
     "tests/asset-outcome-records.test.mjs",
     "tests/equity-chart-rendering.test.mjs",
+    "tests/eth-chart-rendering.test.mjs",
     "tests/eth-review-packet.test.mjs",
     "tests/ethereum-adaptive-model.test.mjs",
     "tests/ethereum-adoption-scenarios.test.mjs",
