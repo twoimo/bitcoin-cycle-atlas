@@ -107,7 +107,7 @@ async function bounds(cdp,selector){
 }
 function visibleBounds(b,width,viewportHeight=height){
   assert.ok(b.width>0&&b.height>0&&b.display!=='none'&&b.visibility!=='hidden','Element must be visible: '+b.selector);
-  assert.ok(b.left>=-1&&b.right<=width+1&&b.top>=-1&&b.bottom<=viewportHeight+1,'Element exceeds viewport: '+JSON.stringify(b));
+  assert.ok(b.left>=-1&&b.right<=width+1&&b.top>=-1&&b.bottom<=viewportHeight+1,'Element exceeds viewport: '+JSON.stringify({...b,text:b.text?.slice(0,300)}));
 }
 function dark(color,label){
   const m=color.match(/^rgba?\(([\d.]+)[, ]+([\d.]+)[, ]+([\d.]+)(?:[, /]+([\d.]+))?\)$/);
@@ -417,6 +417,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
   assert.ok(chart.note.keys.every(k=>k.width>0&&k.left>=0&&k.right<=width),'A forecast legend key is clipped');
   dark(chart.background,'ETH plot');
   await screenshot(cdp,'eth-'+width+'-loaded.png',receipt);
+  if(width===320)receipt.infoDataLinks=await verifyInfoDataLinks(cdp,'ETHUSD');
   await click(cdp,'[data-eth-action="forecast"]');
   receipt.dialog=await bounds(cdp,'#eth-data-dialog');
   assert.equal(receipt.dialog.open,true);visibleBounds(receipt.dialog,width);dark(receipt.dialog.background,'ETH evidence dialog');
@@ -425,6 +426,37 @@ async function ethCase(cdp,width,receipt,expected,archive){
   await screenshot(cdp,'eth-'+width+'-evidence.png',receipt);
   await journalCase(cdp,width,receipt,'ETHUSD',archive);
   assert.equal((await bounds(cdp,'#eth-data-dialog')).open,false);
+}
+
+async function verifyInfoDataLinks(cdp,symbol){
+  const eth=symbol==='ETHUSD',dialogId=eth?'eth-data-dialog':'equity-detail-dialog';
+  await click(cdp,eth?'[data-eth-action="info"]':'[data-equity-action="info"]');
+  const state=await evaluate(cdp,async({symbol,dialogId})=>{
+    const dialog=document.getElementById(dialogId);
+    if(!dialog?.open)throw new Error('Data information did not open');
+    const links=[...dialog.querySelectorAll('a')];
+    const saved=links.find(a=>a.textContent.trim()==='보존한 일별 원자료(JSON) ↗');
+    const comparison=links.find(a=>a.textContent.trim()==='18개 자산 비교표 ↗');
+    if(!saved||!comparison)throw new Error('Truthful data destinations are missing');
+    const raw=new URL(saved.href),table=new URL(comparison.href);
+    if(raw.origin!==location.origin)throw new Error('Archive link left the current origin');
+    const response=await fetch(raw.href,{credentials:'omit',cache:'no-store'});
+    if(!response.ok)throw new Error('Archive HTTP '+response.status);
+    const payload=await response.json(),rows=symbol==='ETHUSD'?payload.dailyHistory?.candles:payload.candles;
+    return {rawAttribute:saved.getAttribute('href'),rawUrl:raw.href,returnedUrl:response.url,
+      expectedRawUrl:new URL('./data/'+(symbol==='ETHUSD'?'eth':symbol.toLowerCase())+'-ohlc.json',location.href).href,
+      target:saved.target,rel:[...saved.relList],product:payload.product,rows:Array.isArray(rows)?rows.length:0,
+      comparison:{origin:table.origin,path:table.pathname,search:table.search,hash:table.hash},
+      location:{origin:location.origin,path:location.pathname},misleading:dialog.textContent.includes('일별 원자료 · 연간 수익률 · MDD')};
+  },{symbol,dialogId});
+  assert.equal(state.rawUrl,state.expectedRawUrl);assert.equal(state.returnedUrl,state.expectedRawUrl);
+  assert.equal(state.target,'_blank');assert.ok(state.rel.includes('noopener')&&state.rel.includes('noreferrer'));
+  assert.equal(state.product,symbol==='ETHUSD'?'ETH-USD':symbol);assert.ok(state.rows>0);
+  assert.deepEqual(state.comparison,{origin:state.location.origin,path:state.location.path,search:'?page=data',hash:''});
+  assert.equal(state.misleading,false);
+  await click(cdp,'#'+dialogId+' > header > button');
+  assert.equal(await evaluate(cdp,id=>document.getElementById(id).open,dialogId),false);
+  return state;
 }
 
 async function equityCase(cdp,width,receipt,symbol,archive){
@@ -446,6 +478,7 @@ async function equityCase(cdp,width,receipt,symbol,archive){
   assert.ok(receipt.chart.pathLength>0&&!/NaN|Infinity/.test(receipt.chart.pathData));
   dark(receipt.chart.background,symbol+' plot');
   await screenshot(cdp,label+'-'+width+'-loaded.png',receipt);
+  if(width===320)receipt.infoDataLinks=await verifyInfoDataLinks(cdp,symbol);
   await click(cdp,'[data-equity-action="forecast"]');
   receipt.dialog=await bounds(cdp,'#equity-detail-dialog');
   assert.equal(receipt.dialog.open,true);visibleBounds(receipt.dialog,width);dark(receipt.dialog.background,symbol+' evidence dialog');
@@ -511,7 +544,7 @@ async function main(){
   for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json']){
     report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   }
-  for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
+  for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/preserved-archive-download.js','dist/research-annotations-workbench.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   const fonts=execFileSync('fc-list',[':lang=ko'],{encoding:'utf8'}).trim();
   assert.ok(fonts.length,'Korean fonts are required; install fonts-noto-cjk in this PR runner');
   report.koreanFonts=fonts.split('\n').slice(0,10);
@@ -637,5 +670,5 @@ finally{
   if(server)await new Promise(resolve=>server.close(resolve));
   if(profile)try{await rm(profile,{recursive:true,force:true});}catch(error){report.cleanupError=errorText(error);}
   await mkdir(out,{recursive:true});await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,infoDataLinks:c.infoDataLinks,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
 }

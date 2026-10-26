@@ -138,7 +138,7 @@
   #data-view .asset-col-price { width: 96px; }
   #data-view .asset-col-ytd { width: calc(50cqw - 60px); }
   #data-view .asset-col-judgment { width: calc(50cqw - 60px); }
-  #data-view .asset-comparison-table thead th { padding: 8px 8px; font-size: 12px; line-height: 1.4; }
+  #data-view .asset-comparison-table thead th { padding: 4px 8px; font-size: 12px; line-height: 1.2; }
   #data-view .asset-comparison-table .asset-mobile-group-header, #data-view .asset-comparison-table .asset-mobile-category-header, #data-view .asset-comparison-table .asset-group, #data-view .asset-comparison-table .asset-category { display: none; }
   #data-view .asset-comparison-table .asset-name { padding-left: 8px; padding-right: 8px; font-size: 11px; line-height: 1.35; white-space: normal; word-break: keep-all; overflow-wrap: anywhere; }
   #data-view .asset-identity { grid-template-columns: minmax(0, 1fr); gap: 2px; min-height: 44px; }

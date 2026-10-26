@@ -46,6 +46,11 @@ const blob=bytes=>createHash('sha1').update('blob '+bytes.length+'\0').update(by
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const git=(dir,...a)=>execFileSync('git',['-C',dir,...a],{encoding:'utf8',timeout:30000,maxBuffer:16*1024*1024}).trim();
 const errorText=e=>String(e?.stack||e);
+function remainingBudget(maximum=30000){
+  const left=deadline-Date.now()-500;
+  if(left<=0)throw new Error('Hallmark audit deadline exceeded');
+  return Math.min(maximum,left);
+}
 function integrity(condition,message){if(!condition)receipt.integrityErrors.push(message);return !!condition;}
 async function json(path,value){await mkdir(resolve(path,'..'),{recursive:true});await writeFile(path,JSON.stringify(value,null,2)+'\n');}
 async function inventory(dir,prefix=''){
@@ -78,7 +83,7 @@ async function runChild(name,cli,timeout){
   console.log('HALLMARK_PHASE_START '+JSON.stringify({name,at:new Date().toISOString(),args:cli}));
   return await new Promise(resolveRun=>{
     const child=spawn(process.execPath,[join(PATCHED,'sloplint.mjs'),...cli],{
-      cwd:WORK,env:{...process.env,HALLMARK_CI_CHROME_ARGS:'ephemeral-ci'},stdio:['ignore','pipe','pipe'],detached:process.platform!=='win32'});
+      cwd:WORK,env:{...process.env,HALLMARK_CI_CHROME_ARGS:'ephemeral-ci',HALLMARK_ATLAS_READY:'1'},stdio:['ignore','pipe','pipe'],detached:process.platform!=='win32'});
     activeChild=child;let stdout='',stderr='',timedOut=false,outputExceeded=false;
     const stop=()=>{try{if(process.platform==='win32')child.kill('SIGKILL');else process.kill(-child.pid,'SIGKILL');}catch{}};
     const timer=setTimeout(()=>{timedOut=true;stop();},Math.min(timeout,remaining-500));
@@ -140,6 +145,10 @@ async function phase(version,kind,mode,expectedFiles){
     }else integrity(Object.keys(before.files||{}).length===2,'Baseline static must inventory both HTML files');
   }else integrity(typeof summary.kept==='string'&&!summary.kept.includes('nothing recorded'),activePhase+': no substantive kept comparison');
   if(kind==='render'){
+    const actualReady=result.stderr.split(/\r?\n/).filter(line=>line.startsWith('HALLMARK_RENDER_READY ')).map(line=>JSON.parse(line.slice('HALLMARK_RENDER_READY '.length)));
+    detail.actualRenderReady=actualReady;
+    integrity(actualReady.length===ROUTES.length&&ROUTES.every(route=>actualReady.some(item=>item.url===route.url&&item.route===route.name)),
+      activePhase+': actual renderer readiness was not observed for all eight routes');
     detail.screenshots=await screenshotProof(version);
     detail.requestedUrls=URLS.filter(url=>(requestCounts.get(activePhase+'\n'+url)||0)>0);
     integrity(detail.requestedUrls.length===8,activePhase+': not all eight URLs reached the server');
@@ -153,14 +162,15 @@ async function copyDist(from){await rm(DIST,{recursive:true,force:true});await c
 async function readiness(version){
   activePhase=version+'-readiness';
   const req=createRequire(join(process.env.HALLMARK_PUPPETEER,'noop.js')),puppeteer=(await import(pathToFileURL(req.resolve('puppeteer-core')).href)).default;
-  const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--disable-background-networking','--no-first-run']});
+  const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:true,timeout:remainingBudget(),protocolTimeout:remainingBudget(),args:['--no-sandbox','--disable-dev-shm-usage','--disable-background-networking','--no-first-run']});
   try{
     for(const route of ROUTES){
+      remainingBudget();
       const page=await browser.newPage(),errors=[];
       page.on('pageerror',error=>errors.push(errorText(error)));
       try{
         await page.setViewport({width:1440,height:900});
-        await page.goto(route.url,{waitUntil:'domcontentloaded',timeout:30000});
+        await page.goto(route.url,{waitUntil:'domcontentloaded',timeout:remainingBudget()});
         await page.waitForFunction(name=>{
           const doc=name==='mobile-preview'?document.querySelector('#mobile-preview')?.contentDocument:document;
           if(!doc||doc.documentElement.dataset.boot!=='ready')return false;
@@ -170,7 +180,7 @@ async function readiness(version){
           if(name==='eth')return Number(doc.querySelector('#eth-chart')?.dataset.observedCandleCount)>0;
           if(name==='bmnr'||name==='mstr')return Number(doc.querySelector('#equity-chart')?.dataset.observedCandleCount)>0;
           return doc.querySelectorAll('#lab-chart path').length>0;
-        },{timeout:30000},route.name);
+        },{timeout:remainingBudget()},route.name);
         assert.equal(errors.length,0,'Runtime errors in '+version+' '+route.name+': '+errors.join('; '));
         receipt.readiness.push({version,route:route.name,url:route.url,status:'ready'});
       }finally{await page.close();}
@@ -185,8 +195,18 @@ try{
     const data=await readFile(join(UPSTREAM,source.name));assert.equal(blob(data),source.gitBlob,'Pinned upstream source hash mismatch: '+source.name);
     let output=data;
     if(source.name==='sloplint-render.mjs'){
-      const patch=manifest.compatibilityPatch,text=data.toString('utf8');assert.equal(text.split(patch.before).length-1,1,'Chrome launch patch anchor must occur exactly once');
-      output=Buffer.from(text.replace(patch.before,patch.after));assert.equal(blob(output),patch.patchedGitBlob,'Patched renderer hash mismatch');
+      const launch=manifest.compatibilityPatch,ready=manifest.readinessPatch;
+      let text=data.toString('utf8');
+      assert.deepEqual(manifest.buildCopyPatchOrder,['compatibilityPatch','readinessPatch'],'Unexpected renderer patch order');
+      assert.equal(text.split(launch.before).length-1,1,'Chrome launch patch anchor must occur exactly once');
+      text=text.replace(launch.before,launch.after);
+      const launchBlob=blob(Buffer.from(text));
+      assert.equal(launchBlob,launch.launchOnlyGitBlob,'Launch-only renderer hash mismatch');
+      assert.equal(launchBlob,ready.sourceGitBlob,'Readiness patch source hash mismatch');
+      assert.equal(text.split(ready.before).length-1,1,'Readiness patch anchor must occur exactly once');
+      text=text.replace(ready.before,ready.after);output=Buffer.from(text);
+      assert.equal(blob(output),ready.patchedGitBlob,'Readiness-patched renderer hash mismatch');
+      assert.equal(blob(output),launch.patchedGitBlob,'Final renderer hash mismatch');
     }
     await writeFile(join(PATCHED,source.name),output);
   }

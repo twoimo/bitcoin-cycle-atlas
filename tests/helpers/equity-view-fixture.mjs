@@ -60,7 +60,7 @@ export function equityPayload(symbol, revision) {
   };
 }
 
-export async function equityViewFixture(symbol = 'MSTR', { query = '', project } = {}) {
+export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname = '/', project } = {}) {
   const requests = [], frames = new Map(), draws = [], calculations = [], errors = [], events = [], articles = [];
   const window = new Surface(), document = new Surface();
   document.body = new Node(); document.activeElement = new Node();
@@ -84,6 +84,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', project }
       return { cancelGesture() {}, destroy() {}, update() {} };
     },
     mountChartTouchTracking: mount, clearChartHover() {}, mountSymbolSelector: mount,
+    bindPreservedArchiveDownload() {}, // DOM download behavior is verified separately.
     mountDialogViewport: mount, EQUITY_FORECAST_BAR_NOTE: 'simulated values',
     TREASURY_EVENTS: [], TREASURY_SOURCES: [], treasuryEventMarkup() {},
     openResearchArticle: (id, options) => articles.push({ id, view: options.view }),
@@ -106,7 +107,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', project }
     .replace('export async function initEquityView', 'async function initEquityView');
   const context = vm.createContext({
     __deps: deps, document, window, URLSearchParams, AbortController, AbortSignal, Date, Intl,
-    location: { search: `?symbol=${symbol}${query}`, pathname: '/' }, history: { replaceState() {} },
+    location: { search: `?symbol=${symbol}${query}`, pathname }, history: { replaceState() {} },
     console: { error: (...args) => errors.push(args) },
     CustomEvent: class { constructor(type, options = {}) { this.type = type; Object.assign(this, options); } },
     ResizeObserver: class { observe() {} disconnect() {} },
@@ -145,6 +146,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', project }
     pan: range => navigation.onRangeChange(range),
     latest: () => draws.at(-1),
     status: () => app.querySelector('#equity-status').textContent,
+    info: () => { click('action', 'info'); return document.body.nodes.get('equity-detail-dialog'); },
     forecastDialog: () => { click('action', 'forecast'); return document.body.nodes.get('equity-detail-dialog').querySelector('#equity-detail-content').innerHTML; },
     capitalSetting: (id,value) => document.body.nodes.get('equity-detail-dialog').dispatchEvent({type:'change',target:{id,value}}),
   };

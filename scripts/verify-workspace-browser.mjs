@@ -45,7 +45,7 @@ export async function verifyWorkspaceSurface(api) {
       return {clip,topmost:Boolean(hit&&(hit===el||el.contains(hit))),inside:container.contains(el),tag:el.tagName,label:el.getAttribute('aria-label')||el.textContent.slice(0,80),
         left:b.left,right:b.right,top:b.top,bottom:b.bottom,outline:style.outlineStyle,width:parseFloat(style.outlineWidth),color:style.outlineColor};
     },selector);
-    assert.ok(focus.inside,'Keyboard focus escaped '+selector);
+    assert.ok(focus.inside,'Keyboard focus escaped '+selector+': '+JSON.stringify(focus));
     assert.ok(focus.left>=-1&&focus.right<=width+1&&focus.top>=-1&&focus.bottom<=height+1,'Focused action is outside viewport: '+JSON.stringify(focus));
     assert.ok(focus.topmost&&focus.left>=focus.clip.left-1&&focus.right<=focus.clip.right+1&&focus.top>=focus.clip.top-1&&focus.bottom<=focus.clip.bottom+1,'Focused action is clipped or occluded: '+JSON.stringify(focus));
     assert.ok(focus.width>=2&&focus.outline!=='none','Keyboard focus lacks common visible ring: '+JSON.stringify(focus));
@@ -70,27 +70,47 @@ export async function verifyWorkspaceSurface(api) {
     await click(cdp,'.workspace-command:not(:disabled)');
   }
   if(surface==='preview'){
-    await until(()=>evaluate(cdp,()=>document.querySelector('#mobile-preview')?.contentDocument?.documentElement.dataset.boot==='ready'),'preview actual app ready');
+    await until(()=>evaluate(cdp,()=>document.querySelector('#mobile-preview')?.contentDocument?.documentElement?.dataset.boot==='ready'),'preview actual app ready');
     await inspect('header','preview-controls',{opaque:false});
     receipt.workspace.actual=await evaluate(cdp,()=>{
       const frame=document.querySelector('#mobile-preview'),doc=frame.contentDocument,main=document.querySelector('main');
-      return {boot:doc.documentElement.dataset.boot,width:frame.width,height:frame.height,innerWidth:frame.contentWindow.innerWidth,plotPaths:doc.querySelectorAll('#lab-chart path').length,mainHeight:main.clientHeight,scrollHeight:main.scrollHeight,scrollWidth:main.scrollWidth,clientWidth:main.clientWidth};
+      return {boot:doc.documentElement?.dataset.boot,width:frame.width,height:frame.height,innerWidth:frame.contentWindow.innerWidth,plotPaths:doc.querySelectorAll('#lab-chart path').length,mainHeight:main.clientHeight,scrollHeight:main.scrollHeight,scrollWidth:main.scrollWidth,clientWidth:main.clientWidth};
     });
     assert.ok(receipt.workspace.actual.plotPaths>0,'Preview iframe never rendered actual BTC chart');
     for(const mode of ['loading','error','actual']){
       await evaluate(cdp,value=>{const picker=document.querySelector('#preview-mode');picker.value=value;picker.dispatchEvent(new Event('change',{bubbles:true}));},mode);
       await until(()=>evaluate(cdp,value=>{
         const frame=document.querySelector('#mobile-preview');
-        return !frame.hidden&&frame.contentDocument?.documentElement.dataset.boot===(value==='actual'?'ready':value);
+        return !frame.hidden&&frame.contentDocument?.documentElement?.dataset.boot===(value==='actual'?'ready':value);
       },mode),'preview '+mode);
       const state=await evaluate(cdp,value=>{
-        const doc=document.querySelector('#mobile-preview').contentDocument;
-        return {mode:value,boot:doc.documentElement.dataset.boot,shellHidden:doc.getElementById('atlas-boot-shell').hidden,
-          statusHidden:doc.getElementById('atlas-boot-status').hidden,errorHidden:doc.getElementById('atlas-boot-error').hidden,
-          caption:document.getElementById('preview-caption').textContent};
+        const frame=document.querySelector('#mobile-preview'),doc=frame.contentDocument;
+        const shell=doc.getElementById('atlas-boot-shell'),status=doc.getElementById('atlas-boot-status'),error=doc.getElementById('atlas-boot-error');
+        const rect=el=>{const b=el.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom};};
+        const client=el=>{const b=rect(el);return {left:b.left+el.clientLeft,right:b.left+el.clientLeft+el.clientWidth,top:b.top+el.clientTop,bottom:b.top+el.clientTop+el.clientHeight};};
+        const intersect=(...boxes)=>({left:Math.max(...boxes.map(b=>b.left)),right:Math.min(...boxes.map(b=>b.right)),top:Math.max(...boxes.map(b=>b.top)),bottom:Math.min(...boxes.map(b=>b.bottom))});
+        const rendered=el=>{const css=el.ownerDocument.defaultView.getComputedStyle(el);return el.getClientRects().length>0&&css.display!=='none'&&!['hidden','collapse'].includes(css.visibility)&&Number(css.opacity)>0;};
+        let active=null;
+        if(value!=='actual'){
+          const panel=value==='loading'?status:error,canvas=panel.closest('.atlas-boot-canvas'),main=document.querySelector('main');
+          if(!canvas||!main)throw new Error('Preview clipping containers are missing');
+          const local=intersect(rect(panel),client(canvas),{left:0,right:frame.contentWindow.innerWidth,top:0,bottom:frame.contentWindow.innerHeight});
+          const f=client(frame),visible=intersect({left:f.left+local.left,right:f.left+local.right,top:f.top+local.top,bottom:f.top+local.bottom},f,client(main),{left:0,right:innerWidth,top:0,bottom:innerHeight});
+          active={id:panel.id,rendered:[panel,canvas,shell,frame,main].every(rendered),local,visible,
+            visibleWidth:Math.max(0,visible.right-visible.left),visibleHeight:Math.max(0,visible.bottom-visible.top)};
+        }
+        return {mode:value,boot:doc.documentElement?.dataset.boot,shellHidden:shell.hidden,
+          statusHidden:status.hidden,errorHidden:error.hidden,active,caption:document.getElementById('preview-caption').textContent};
       },mode);
       if(mode==='actual')assert.equal(state.shellHidden,true);
-      else {assert.equal(state.shellHidden,false);assert.equal(state.errorHidden,mode!=='error');assert.ok(state.caption.includes('실제 로딩 시간'));}
+      else {
+        assert.equal(state.shellHidden,false);
+        assert.equal(state.statusHidden,mode==='error');
+        assert.equal(state.errorHidden,mode!=='error');
+        assert.ok(state.caption.includes('실제 로딩 시간'));
+        assert.ok(state.active.rendered&&state.active.visibleWidth>0&&state.active.visibleHeight>0,
+          'Preview active boot panel is not visible: '+JSON.stringify(state.active));
+      }
       states.push({label:'preview-'+mode,...state});
       await screenshot(cdp,page+'-'+width+'-'+mode+'.png',receipt);
     }
@@ -99,18 +119,26 @@ export async function verifyWorkspaceSurface(api) {
     assert.deepEqual(await evaluate(cdp,()=>{const f=document.querySelector('#mobile-preview');return [f.contentWindow.innerWidth,f.contentWindow.innerHeight];}),[844,390]);
     receipt.workspace.resized=true;return;
   }
-  await until(()=>evaluate(cdp,()=>document.documentElement.dataset.boot==='ready'),'app boot ready');
+  await until(()=>evaluate(cdp,()=>document.documentElement?.dataset.boot==='ready'),'app boot ready');
   if(surface==='legacy'){
     await until(()=>evaluate(cdp,()=>document.querySelectorAll('#structure-chart path').length>0&&document.querySelectorAll('#structure-cycles tr').length>0),'legacy chart and real cycle rows');
-    await inspect('#compare-view','legacy',{opaque:false});
+    await inspect('body','legacy-scroll-owner');
     receipt.workspace.legacy=await evaluate(cdp,()=>({rows:document.querySelectorAll('#structure-cycles tr').length,paths:document.querySelectorAll('#structure-chart path').length,
-      scroller:{height:document.querySelector('#compare-view').clientHeight,scrollHeight:document.querySelector('#compare-view').scrollHeight}}));
+      scroller:{height:document.body.clientHeight,scrollHeight:document.body.scrollHeight,overflow:getComputedStyle(document.body).overflowY}}));
     const tableRows=receipt.workspace.legacy.rows;assert.ok(tableRows>0);
+    assert.equal(receipt.workspace.legacy.scroller.overflow,'auto','Legacy body must own its long-document scroll');
+    assert.ok(Math.abs(receipt.workspace.legacy.scroller.height-height)<=1,'Legacy scroll owner does not fill the viewport');
+    assert.ok(receipt.workspace.legacy.scroller.scrollHeight>height,'Legacy document content is unexpectedly clipped');
     await evaluate(cdp,()=>document.querySelector('#structure-method').closest('details').scrollIntoView({block:'center'}));await settled(cdp);
     await click(cdp,'#compare-view details:has(#structure-method) > summary');
     assert.equal(await evaluate(cdp,()=>document.querySelector('#structure-method').closest('details').open),true);
     assert.ok((await bounds(cdp,'#structure-method')).text.length>200,'Legacy method text is missing');
-    states.push({label:'legacy-method-open',rows:tableRows});return;
+    states.push({label:'legacy-method-open',rows:tableRows});
+    await evaluate(cdp,()=>{document.body.scrollTop=document.body.scrollHeight;});await settled(cdp);
+    const end=await evaluate(cdp,()=>({top:document.body.scrollTop,max:document.body.scrollHeight-document.body.clientHeight}));
+    assert.ok(end.max>0&&Math.abs(end.top-end.max)<=2,'Legacy document did not reach its real scroll end');
+    receipt.workspace.legacy.end=end;
+    await inspect('#main > .footer','legacy-footer',{opaque:false});return;
   }
   if(surface==='evidence'){
     await until(()=>evaluate(cdp,()=>document.querySelectorAll('#evidence-body [data-evidence-detail]').length>0),'research rows ready');
@@ -131,6 +159,8 @@ export async function verifyWorkspaceSurface(api) {
     for(const c of childColors)if(c.background!=='rgba(0, 0, 0, 0)')dark(c.background,c.class);
     receipt.workspace.readerColors=childColors;
     await evaluate(cdp,()=>{const body=document.querySelector('.research-reader-scroll');body.scrollTop=body.scrollHeight;});await settled(cdp);
+    const readerScroll=await evaluate(cdp,()=>{const body=document.querySelector('#research-reader .research-reader-scroll');return {top:body.scrollTop,max:body.scrollHeight-body.clientHeight};});
+    assert.ok(Math.abs(readerScroll.top-readerScroll.max)<=2,'Research reader did not reach scroll end');receipt.workspace.readerScroll=readerScroll;
     await click(cdp,'[data-reader-action="close"]');
     assert.equal(await evaluate(cdp,()=>document.querySelector('#research-reader').open),false);
     if(width<=620){

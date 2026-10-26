@@ -117,7 +117,13 @@ test('ETH data information opens with its escaped original-data link', async () 
   let dialog;
   assert.doesNotThrow(() => { dialog = f.info(); }, 'the information button must not call an undefined HTML escaper');
   assert.equal(dialog.open, true);
-  assert.match(dialog.querySelector('#eth-data-content').innerHTML, /href="\/atlas-&quot;quote&amp;path\?page=data&amp;data-asset=ETH"/);
+  const markup = dialog.querySelector('#eth-data-content').innerHTML;
+  const saved = markup.match(/<a href="([^"]+)" target="_blank" rel="noopener noreferrer">보존한 일별 원자료\(JSON\) ↗<\/a>/);
+  assert.ok(saved, 'the info dialog must identify its preserved JSON archive');
+  assert.equal(saved[1], './data/eth-ohlc.json');
+  assert.equal(saved[1], f.requests[0].url, 'the original-data link must use the actual observed-price archive');
+  assert.match(markup, /href="\/atlas-&quot;quote&amp;path\?page=data">18개 자산 비교표 ↗<\/a>/);
+  assert.doesNotMatch(markup, /data-asset=|일별 원자료 · 연간 수익률 · MDD/);
 });
 
 test('ETH intraday force refresh preserves later date and price navigation through the real controller', async () => {

@@ -102,6 +102,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     drawIntradayChart: options => { draws.push(options); return {}; },
     bindChartNavigation: options => { navigation = options; return { cancelGesture() {}, destroy() {}, update() {} }; },
     mountChartTouchTracking: mount, clearChartHover() {}, mountSymbolSelector: mount,
+    bindPreservedArchiveDownload() {}, // DOM download behavior is verified separately.
     mountEthereumHistory: options => { historyOptions = options; return { update() {}, setSettings() {}, open() {}, destroy() {} }; },
   };
   const source = await readFile(process.env.ETH_VIEW_SOURCE || new URL('../../dist/eth-view.js', import.meta.url), 'utf8');
