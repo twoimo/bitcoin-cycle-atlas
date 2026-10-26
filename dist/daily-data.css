@@ -44,7 +44,11 @@
 #data-view .asset-comparison-table tbody tr:last-child > th, #data-view .asset-comparison-table tbody tr:last-child > td { border-bottom: 0; }
 #data-view .asset-comparison-table thead th { position: sticky; top: 0; z-index: 3; height: 68px; padding: 10px 7px; color: #c0c8d3; background: var(--surface-raised, #191e27); font-size: 12px; font-weight: 600; border-bottom: 1px solid #4f4931; line-height: 1.65; }
 #data-view .asset-comparison-table thead th small { display: block; color: var(--asset-muted); font: 10px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; }
-#data-view .asset-comparison-table .asset-mobile-header { display: none; }
+/* Each heading follows its own body column; a colspan identity heading would
+   scroll away from the pinned name cells on tablet and desktop overflows. */
+#data-view .asset-comparison-table .asset-identity-header { display: none; }
+#data-view .asset-comparison-table .asset-mobile-header { display: table-cell; }
+#data-view .asset-comparison-table .asset-mobile-name-header { position: sticky; left: 0; z-index: 4; background: var(--surface-raised, #191e27); box-shadow: 1px 0 0 var(--asset-grid); }
 #data-view .asset-comparison-table .asset-ytd-header { color: var(--asset-sign); background: #23221c; }
 #data-view .asset-comparison-table .asset-judgment-header { color: var(--asset-sign); border-left: 1px solid #4f4931; }
 #data-view .asset-comparison-table .asset-group { background: #171c24; color: var(--asset-muted); font-size: 11px; font-weight: 600; letter-spacing: .04em; padding: 8px 5px; }
@@ -132,10 +136,7 @@
   #data-view .asset-col-ytd { width: calc(50cqw - 60px); }
   #data-view .asset-col-judgment { width: calc(50cqw - 60px); }
   #data-view .asset-comparison-table thead th { padding: 8px 6px; font-size: 12px; line-height: 1.4; }
-  #data-view .asset-comparison-table .asset-identity-header { display: none; }
-  #data-view .asset-comparison-table .asset-mobile-header { display: table-cell; }
   #data-view .asset-comparison-table .asset-mobile-group-header, #data-view .asset-comparison-table .asset-mobile-category-header, #data-view .asset-comparison-table .asset-group, #data-view .asset-comparison-table .asset-category { display: none; }
-  #data-view .asset-comparison-table .asset-mobile-name-header { position: sticky; left: 0; z-index: 4; background: var(--surface-raised, #191e27); box-shadow: 1px 0 0 var(--asset-grid); }
   #data-view .asset-comparison-table .asset-name { padding-left: 8px; padding-right: 8px; font-size: 11px; line-height: 1.35; white-space: normal; word-break: keep-all; overflow-wrap: anywhere; }
   #data-view .asset-identity { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   #data-view .asset-name-symbol { font-size: 11px; }
