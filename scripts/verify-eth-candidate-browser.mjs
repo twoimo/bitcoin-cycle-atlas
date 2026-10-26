@@ -83,11 +83,20 @@ async function screenshot(cdp,name,receipt){
   }
 }
 async function click(cdp,selector){
+  await evaluate(cdp,s=>{const el=document.querySelector(s);if(!el)throw new Error('Missing click target '+s);el.scrollIntoView({behavior:'instant',block:'nearest',inline:'nearest'});},selector);
+  await settled(cdp);
   const point=await evaluate(cdp,s=>{
     const el=document.querySelector(s);if(!el)throw new Error('Missing click target '+s);
     if(el.disabled)throw new Error('Disabled click target '+s);
     const b=el.getBoundingClientRect(),x=b.left+b.width/2,y=b.top+b.height/2;
     if(!b.width||!b.height||x<0||y<0||x>=innerWidth||y>=innerHeight)throw new Error('Click target outside viewport '+s);
+    const clip={left:0,right:innerWidth,top:0,bottom:innerHeight};
+    for(let p=el.parentElement;p;p=p.parentElement){
+      const r=p.getBoundingClientRect(),css=getComputedStyle(p);
+      if(css.overflowX!=='visible'){clip.left=Math.max(clip.left,r.left+p.clientLeft);clip.right=Math.min(clip.right,r.left+p.clientLeft+p.clientWidth);}
+      if(css.overflowY!=='visible'){clip.top=Math.max(clip.top,r.top+p.clientTop);clip.bottom=Math.min(clip.bottom,r.top+p.clientTop+p.clientHeight);}
+    }
+    if(b.left<clip.left-1||b.right>clip.right+1||b.top<clip.top-1||b.bottom>clip.bottom+1)throw new Error('Click target clipped '+s+' '+JSON.stringify({box:{left:b.left,right:b.right,top:b.top,bottom:b.bottom},clip}));
     const top=document.elementFromPoint(x,y);
     if(!top||!(top===el||el.contains(top)))throw new Error('Click target occluded '+s);
     return {x,y};
@@ -431,6 +440,15 @@ async function ethCase(cdp,width,receipt,expected,archive){
 async function verifyInfoDataLinks(cdp,symbol){
   const eth=symbol==='ETHUSD',dialogId=eth?'eth-data-dialog':'equity-detail-dialog';
   await click(cdp,eth?'[data-eth-action="info"]':'[data-equity-action="info"]');
+  const toolbarAccess=await evaluate(cdp,eth=>{
+    const button=document.querySelector(eth?'[data-eth-action="info"]':'[data-equity-action="info"]'),bar=button.closest('.eth-topbar'),b=button.getBoundingClientRect(),r=bar.getBoundingClientRect();
+    return {button:{width:b.width,height:b.height,left:b.left,right:b.right},bar:{left:r.left,right:r.right,scrollLeft:bar.scrollLeft,scrollWidth:bar.scrollWidth,clientWidth:bar.clientWidth,overflowX:getComputedStyle(bar).overflowX},
+      rootWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth};
+  },eth);
+  assert.ok(toolbarAccess.button.width>=44&&toolbarAccess.button.height>=44,'Mobile info needs a real 44px target');
+  assert.equal(toolbarAccess.bar.overflowX,'auto','Mobile toolbar owns its horizontal scroll');
+  assert.ok(toolbarAccess.button.left>=toolbarAccess.bar.left-1&&toolbarAccess.button.right<=toolbarAccess.bar.right+1,'Revealed info target remains clipped');
+  assert.ok(toolbarAccess.rootWidth<=toolbarAccess.viewportWidth+1,'Toolbar scroll leaked to the document');
   const state=await evaluate(cdp,async({symbol,dialogId})=>{
     const dialog=document.getElementById(dialogId);
     if(!dialog?.open)throw new Error('Data information did not open');
@@ -456,7 +474,7 @@ async function verifyInfoDataLinks(cdp,symbol){
   assert.equal(state.misleading,false);
   await click(cdp,'#'+dialogId+' > header > button');
   assert.equal(await evaluate(cdp,id=>document.getElementById(id).open,dialogId),false);
-  return state;
+  return {...state,toolbarAccess};
 }
 
 async function equityCase(cdp,width,receipt,symbol,archive){
@@ -544,7 +562,7 @@ async function main(){
   for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json']){
     report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   }
-  for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/preserved-archive-download.js','dist/research-annotations-workbench.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
+  for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/preserved-archive-download.js','dist/workspace-tools.js','dist/research-annotations-workbench.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   const fonts=execFileSync('fc-list',[':lang=ko'],{encoding:'utf8'}).trim();
   assert.ok(fonts.length,'Korean fonts are required; install fonts-noto-cjk in this PR runner');
   report.koreanFonts=fonts.split('\n').slice(0,10);

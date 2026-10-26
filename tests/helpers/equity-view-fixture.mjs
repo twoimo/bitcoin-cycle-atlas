@@ -33,6 +33,7 @@ class Node extends Surface {
     return this.nodes.get(selector);
   }
   querySelectorAll() { return []; }
+  contains(node) { return node === this || [...this.nodes.values()].some(child => child.contains(node)); }
   setAttribute(name, value) { this.attrs.set(name, String(value)); }
   removeAttribute(name) { this.attrs.delete(name); }
   getAttribute(name) { return this.attrs.get(name); }

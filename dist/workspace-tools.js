@@ -79,6 +79,13 @@ export function mountWorkspaceTools({trigger, plot, openReader, closeReader}) {
     selectTab(value,{focusInput:!compact});if(compact)closeButton.focus({preventScroll:true});
   }
   function run(item){close(false);plot.querySelector('svg:not([hidden])')?.focus({preventScroll:true});item.run();}
+  function openJournal(tab='records'){
+    const source=[opener,trigger,doc.getElementById('mobile-details-toggle'),plot.querySelector('svg:not([hidden])')].find(node=>{
+      if(!node?.isConnected||node===doc.body||!node.getClientRects().length||node.closest?.('[hidden],[inert],[aria-hidden="true"]'))return false;
+      const owner=node.closest?.('dialog');return !owner||owner.isConnected&&owner.open;
+    });
+    if(source)doc.dispatchEvent(new win.CustomEvent('atlas:forecast-journal',{detail:{tab,opener:source}}));
+  }
   function commands(){
     const intraday=Boolean(latest?.intraday),available=Boolean(latest?.navigationAvailable);
     const reader=kind=>()=>openReader(kind,{focus:true,opener:trigger});
@@ -102,8 +109,8 @@ export function mountWorkspaceTools({trigger, plot, openReader, closeReader}) {
       {label:'선택 데이터',description:'실제 관측값과 출처 확인',run:reader('selection')},
       {label:'날짜로 이동',description:'UTC 날짜·시각 또는 시작·끝 범위 지정',key:'Alt G',run:()=>doc.getElementById('workbench-go-date')?.click()},
       {label:'모델과 검증',description:'계산식과 자료의 한계',run:reader('math')},
-      {label:'예측 기록과 누적 평가',description:'고정한 예측 재생 · 변경 이유 · 자료 상태 · 실험',keywords:'forecast journal replay ledger 예측 기록 평가',run:()=>doc.dispatchEvent(new win.CustomEvent('atlas:forecast-journal',{detail:{opener:trigger}}))},
-      {label:'이 탭의 성능 진단',description:'입력·계산·표시 지연 · 로컬 JSON',keywords:'performance 진단 성능',run:()=>doc.dispatchEvent(new win.CustomEvent('atlas:forecast-journal',{detail:{tab:'performance',opener:trigger}}))},
+      {label:'예측 기록과 누적 평가',description:'고정한 예측 재생 · 변경 이유 · 자료 상태 · 실험',keywords:'forecast journal replay ledger 예측 기록 평가',run:()=>openJournal()},
+      {label:'이 탭의 성능 진단',description:'입력·계산·표시 지연 · 로컬 JSON',keywords:'performance 진단 성능',run:()=>openJournal('performance')},
       {label:'차트 PNG 저장',description:'현재 주 가격 차트 · 가격축·가정·출처 포함',keywords:'image snapshot export download 사진 이미지',run:()=>dispatch('export-png')},
       {label:'가격 + 연구 창 이미지 저장',description:'보이는 분석 창의 순서·개별 축과 출처 포함',keywords:'workspace snapshot export',run:()=>dispatch('export-workspace')},
       {label:'가격축 뒤집기',description:latest?.invertScale?'현재 반전 · 기본 방향으로':'가격축 위아래 방향 전환',keywords:'invert price scale',run:()=>dispatch('invert-scale')},

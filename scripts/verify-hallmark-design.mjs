@@ -36,6 +36,7 @@ const ROUTES=[
 const URLS=ROUTES.map(route=>route.url),started=Date.now(),deadline=started+600000;
 const receipt={schemaVersion:1,startedAt:new Date(started).toISOString(),baselineCommit:PIN,
   upstreamCommit:'7ec868225c6caa040558c321ee0fefa0e73f83a8',scope:'app',genre:'modern-minimal',
+  auditInputs:{static:['dist'],render:['dist/styles.css',...URLS],note:'The render pass also runs static gates on styles.css so upstream can read the explicit reworded stamp for kept checks. Its totals are not directly comparable with earlier URL-only passes.'},
   origin:ORIGIN,workPath:relative(ROOT,WORK),routes:ROUTES,phases:[],readiness:[],integrityErrors:[],
   designGate:{status:'not-run',fails:0,reflex:0},sourceReadOnly:null,
   limits:{totalMilliseconds:600000,staticMilliseconds:60000,renderMilliseconds:270000},
@@ -113,7 +114,7 @@ async function screenshotProof(phase){
     integrity((await stat(join(folder,name))).size>0,phase+': empty screenshot '+name);
   }
   const reviewImages=[];
-  for(const [routeName,tag] of [['btc','1440x900'],['data','1440x900'],['evidence','375'],['mobile-preview','375']]){
+  for(const [routeName,tag] of ROUTES.flatMap(route=>['1440x900','375'].map(tag=>[route.name,tag]))){
     const route=ROUTES.find(r=>r.name===routeName),file=slug(route.url)+'-'+tag+'.png';
     if(!names.includes(file))continue;
     const bytes=await readFile(join(folder,file)),name=phase+'/'+routeName+'-'+tag+'.png',base64=bytes.toString('base64'),size=30000,total=Math.ceil(base64.length/size);
@@ -125,7 +126,7 @@ async function screenshotProof(phase){
 }
 async function phase(version,kind,mode,expectedFiles){
   activePhase=version+'-'+kind;
-  const cli=[...(kind==='static'?['dist']:URLS.flatMap(url=>['--url',url])),'--scope','app','--genre','modern-minimal','--json','--'+mode];
+  const cli=[...(kind==='static'?['dist']:['dist/styles.css',...URLS.flatMap(url=>['--url',url])]),'--scope','app','--genre','modern-minimal','--json','--'+mode];
   if(mode==='kept')await cp(join(REPORTS,'baseline-'+kind+'-before.json'),join(WORK,'.hallmark/before.json'));
   const result=await runChild(activePhase,cli,kind==='static'?60000:270000),report=result.report,summary=report?.summary,findings=report?.findings;
   integrity(summary&&Array.isArray(findings),activePhase+': report schema missing');
@@ -234,9 +235,9 @@ try{
   });
   await new Promise((accept,reject)=>{server.once('error',reject);server.listen(4177,'127.0.0.1',accept);});
   await copyDist(BASELINE);await readiness('baseline');
-  await phase('baseline','static','before',26);await phase('baseline','render','before',0);
+  await phase('baseline','static','before',26);await phase('baseline','render','before',1);
   await copyDist(ROOT);await readiness('current');
-  await phase('current','static','kept',count(currentFiles).css+count(currentFiles).html);await phase('current','render','kept',0);
+  await phase('current','static','kept',count(currentFiles).css+count(currentFiles).html);await phase('current','render','kept',1);
   const afterCurrent=await sourceProof(ROOT),afterBaseline=await sourceProof(BASELINE);
   assert.deepEqual(afterCurrent,beforeCurrent,'Current source changed during audit');assert.deepEqual(afterBaseline,beforeBaseline,'Baseline source changed during audit');
   receipt.sourceReadOnly={current:true,baseline:true,gitBlobsMatched:true};

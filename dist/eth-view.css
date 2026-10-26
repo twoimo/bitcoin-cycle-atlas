@@ -13,7 +13,7 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
 .eth-tools{grid-row:1/-1;display:flex;align-items:center;flex-direction:column;gap:8px;padding:8px 4px;background:var(--eth-view-surface-3);border-right:1px solid var(--eth-view-rule-2)}
 .eth-brand{height:36px;margin:1px 0 12px;display:grid;place-items:center}
 .eth-brand svg{width:20px;height:28px}
-.eth-rail-unit{margin-top:auto;font-size:9px;color:var(--eth-view-ink-4);writing-mode:vertical-rl;letter-spacing:normal;padding:12px 0}
+.eth-rail-unit{margin-top:auto;font-size:11px;color:var(--eth-view-ink-4);writing-mode:vertical-rl;letter-spacing:normal;padding:12px 0}
 .eth-topbar{grid-column:2;display:flex;align-items:center;gap:8px;padding:0 8px;min-width:0;background:var(--eth-view-surface-3);border-bottom:1px solid var(--eth-view-rule-2)}
 .eth-topbar .workbench-symbol{font-size:13px;font-weight:650;color:var(--eth-view-ink-5);padding:4px 8px;min-height:30px}
 .eth-interval-buttons,.eth-chart-types{display:flex;align-items:center;gap:2px}
@@ -30,24 +30,24 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
 .eth-readout-heading,.eth-readout-value,.eth-ohlc{display:flex;align-items:baseline;gap:8px}
 .eth-readout-heading{font-size:11px;color:var(--eth-view-ink-6)}
 .eth-readout-heading strong{font-size:12px;font-weight:550;color:var(--eth-view-ink-7)}
-.eth-venue{font-size:9px;letter-spacing:.4px;color:var(--eth-view-ink-8)}
+.eth-venue{font-size:11px;letter-spacing:.4px;color:var(--eth-view-ink-8)}
 .eth-readout-value>strong{font-size:17px;font-weight:550;letter-spacing:-.3px;color:var(--eth-view-ink-9)}
 #eth-change{font-size:11px}
 .eth-gain{color:var(--eth-view-ink-10)}.eth-loss{color:var(--eth-view-ink-11)}
-#eth-bar-time{font-size:10px;color:var(--eth-view-ink-12);margin-left:4px}
-.eth-ohlc{gap:16px;font-size:10px;color:var(--eth-view-ink-13)}
+#eth-bar-time{font-size:11px;color:var(--eth-view-ink-12);margin-left:4px}
+.eth-ohlc{gap:16px;font-size:11px;color:var(--eth-view-ink-13)}
 .eth-ohlc i{font-style:normal;color:var(--eth-view-ink-14);margin-right:2px}
 .eth-empty{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:var(--atlas-surface);color:var(--eth-view-ink-15);font-size:12px}
 .eth-empty p{max-width:400px}
 .eth-empty button{padding:8px 20px;border:1px solid var(--eth-view-rule-3)}
 .eth-plot .chart-navigation{bottom:54px;opacity:.4}
 .eth-plot:hover .chart-navigation,.eth-plot:focus-within .chart-navigation{opacity:1}
-.eth-bottom{grid-column:2;display:flex;align-items:center;gap:4px;min-width:0;border-top:1px solid var(--eth-view-rule-2);background:var(--eth-view-surface-3);padding:0 8px;font-size:10px;color:var(--eth-view-ink-12);white-space:nowrap}
+.eth-bottom{grid-column:2;display:flex;align-items:center;gap:4px;min-width:0;border-top:1px solid var(--eth-view-rule-2);background:var(--eth-view-surface-3);padding:0 8px;font-size:11px;color:var(--eth-view-ink-12);white-space:nowrap}
 .eth-periods{display:flex;align-items:center;gap:1px}
-.eth-bottom button{font-size:10px;padding:4px 8px;min-height:26px}
+.eth-bottom button{font-size:11px;padding:4px 8px;min-height:26px}
 #eth-period-select{display:none}
-#eth-status{margin-left:auto;min-width:0;overflow:hidden;text-overflow:ellipsis;padding:0 8px;color:var(--eth-view-ink-16);font-size:10px}
-.eth-timezone{font-size:9px;padding:0 8px;border-right:1px solid var(--eth-view-rule-2)}
+#eth-status{margin-left:auto;min-width:0;overflow:hidden;text-overflow:ellipsis;padding:0 8px;color:var(--eth-view-ink-16);font-size:11px}
+.eth-timezone{font-size:11px;padding:0 8px;border-right:1px solid var(--eth-view-rule-2)}
 .eth-data-dialog{width:min(490px,calc(100% - 28px));max-height:calc(100dvh - 40px);margin:auto;padding:20px;border:1px solid var(--eth-view-rule-4);border-radius:9px;background:var(--chart-details-panel-surface-12);color:var(--eth-view-ink-17);box-shadow:0 22px 90px var(--atlas-shadow);overflow:auto;font-family:var(--font,system-ui)}
 .eth-data-dialog::backdrop{background:var(--eth-view-surface-5)}
 .eth-data-dialog header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
@@ -71,16 +71,16 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
   .eth-app .eth-icon{height:34px;width:33px;padding:8px}
   .eth-divider{margin:0 1px}.eth-top-spacer{min-width:0}
   .eth-readout{top:7px;left:9px;right:12px;line-height:1.65}.eth-readout-heading{gap:8px}.eth-readout-heading strong{font-size:11px}.eth-readout-value>strong{font-size:16px}
-  .eth-ohlc{gap:12px;font-size:9px}.eth-venue{font-size:8px}#eth-bar-time{font-size:9px}
-  .eth-bottom{gap:1px;padding:0 4px env(safe-area-inset-bottom,0px)}.eth-periods{display:none}#eth-period-select{display:block;max-width:66px;font-size:10px;padding:4px 4px}
-  #eth-status{padding:0 4px;font-size:9px}.eth-timezone{padding:0 4px;font-size:8px}.eth-bottom button{padding:4px 8px}
+  .eth-ohlc{gap:12px;font-size:11px}.eth-venue{font-size:11px}#eth-bar-time{font-size:11px}
+  .eth-bottom{gap:1px;padding:0 4px env(safe-area-inset-bottom,0px)}.eth-periods{display:none}#eth-period-select{display:block;max-width:66px;font-size:11px;padding:4px 4px}
+  #eth-status{padding:0 4px;font-size:11px}.eth-timezone{padding:0 4px;font-size:11px}.eth-bottom button{padding:4px 8px}
   .eth-plot .chart-navigation{bottom:51px;opacity:.75}.eth-plot .chart-navigation button{width:30px;height:28px}
   .eth-data-dialog{padding:16px}.eth-data-dialog dl{grid-template-columns:112px minmax(0,1fr)}
 }
-@media(max-width:360px){.eth-topbar{gap:4px}.eth-app .eth-icon{width:30px}.eth-chart-types{gap:0}.eth-ohlc{gap:8px}#eth-status{font-size:8px}}
-@media(max-height:420px){.eth-readout{top:3px}.eth-readout-heading{display:none}.eth-readout-value>strong{font-size:14px}.eth-ohlc{font-size:9px}.eth-plot .chart-navigation{bottom:43px}}
-.eth-forecast-note{position:absolute;left:13px;right:12px;top:71px;display:flex;flex-wrap:wrap;gap:4px 12px;line-height:1.25;font-size:9px;color:var(--equity-view-ink-8);pointer-events:none;white-space:nowrap;overflow:hidden}.eth-forecast-note .eth-sample-key,.eth-forecast-note .eth-envelope-key,#eth-kind{color:var(--equity-view-ink-9)}.eth-forecast-note .eth-baseline-key{color:var(--eth-view-ink-28)}.eth-forecast-note .eth-sample-key{flex-basis:100%}#eth-kind{font-size:10px}.eth-forecast-controls{display:grid;gap:12px;font-size:12px}.eth-forecast-controls select{min-width:0;width:100%;padding:8px;background:var(--equity-view-surface-6);color:var(--equity-view-ink-18);border:1px solid var(--equity-view-rule-2);border-radius:5px;font:inherit}.eth-data-dialog [data-open-forecast-journal]{font:inherit;font-size:12px;padding:8px;border:1px solid var(--equity-view-rule-2);background:var(--equity-view-surface-5);color:var(--equity-view-ink-12);border-radius:5px;cursor:pointer}.eth-data-dialog select:focus-visible,.eth-data-dialog [data-open-forecast-journal]:focus-visible{outline:2px solid var(--equity-view-rule-3);outline-offset:2px}.eth-plot .equity-forecast-evidence{cursor:pointer}.eth-plot .equity-forecast-evidence:focus-visible circle{stroke:var(--chart-details-panel-rule-8);stroke-width:3}
-@media(max-width:620px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:29px;padding:8px}.eth-forecast-note{top:69px;left:10px;gap:4px 12px;font-size:8px}#eth-kind{font-size:9px}}
+@media(max-width:360px){.eth-topbar{gap:4px}.eth-app .eth-icon{width:30px}.eth-chart-types{gap:0}.eth-ohlc{gap:8px}#eth-status{font-size:11px}}
+@media(max-height:420px){.eth-readout{top:3px}.eth-readout-heading{display:none}.eth-readout-value>strong{font-size:14px}.eth-ohlc{font-size:11px}.eth-plot .chart-navigation{bottom:43px}}
+.eth-forecast-note{position:absolute;left:13px;right:12px;top:71px;display:flex;flex-wrap:wrap;gap:4px 12px;line-height:1.25;font-size:11px;color:var(--equity-view-ink-8);pointer-events:none;white-space:nowrap;overflow:hidden}.eth-forecast-note .eth-sample-key,.eth-forecast-note .eth-envelope-key,#eth-kind{color:var(--equity-view-ink-9)}.eth-forecast-note .eth-baseline-key{color:var(--eth-view-ink-28)}.eth-forecast-note .eth-sample-key{flex-basis:100%}#eth-kind{font-size:11px}.eth-forecast-controls{display:grid;gap:12px;font-size:12px}.eth-forecast-controls select{min-width:0;width:100%;padding:8px;background:var(--equity-view-surface-6);color:var(--equity-view-ink-18);border:1px solid var(--equity-view-rule-2);border-radius:5px;font:inherit}.eth-data-dialog [data-open-forecast-journal]{font:inherit;font-size:12px;padding:8px;border:1px solid var(--equity-view-rule-2);background:var(--equity-view-surface-5);color:var(--equity-view-ink-12);border-radius:5px;cursor:pointer}.eth-data-dialog select:focus-visible,.eth-data-dialog [data-open-forecast-journal]:focus-visible{outline:2px solid var(--equity-view-rule-3);outline-offset:2px}.eth-plot .equity-forecast-evidence{cursor:pointer}.eth-plot .equity-forecast-evidence:focus-visible circle{stroke:var(--chart-details-panel-rule-8);stroke-width:3}
+@media(max-width:620px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:29px;padding:8px}.eth-forecast-note{top:69px;left:10px;gap:4px 12px;font-size:11px}#eth-kind{font-size:11px}}
 @media(max-width:360px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:25px;padding:4px}body[data-market="ETHUSD"] .eth-divider{display:none}body[data-market="ETHUSD"] .eth-topbar{gap:2px}}
 @media(max-height:420px){.eth-forecast-note{top:42px}}
 

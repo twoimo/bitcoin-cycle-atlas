@@ -29,15 +29,15 @@
 .atlas-plot[data-legend-dock=top]>.lab-chart-foot{top:8px}
 .atlas-plot[data-mode=price]>.lab-chart-foot .lab-legend{display:flex;flex-wrap:nowrap;flex:none;width:max-content;min-width:0;justify-content:flex-start;align-items:center;gap:8px;text-align:left}
 .price-legend{display:flex;flex-wrap:nowrap;flex:none;justify-content:flex-start;gap:8px;align-items:center;min-height:14px}
-.atlas-plot>.lab-chart-foot .price-legend-item{display:inline-flex;align-items:center;flex:none;gap:4px;font-size:9px;line-height:14px;white-space:nowrap}
+.atlas-plot>.lab-chart-foot .price-legend-item{display:inline-flex;align-items:center;flex:none;gap:4px;font-size:11px;line-height:14px;white-space:nowrap}
 .atlas-plot>.lab-chart-foot .price-legend-item>span{font-size:inherit;line-height:inherit}
 .atlas-chart-stage .lab-chart-foot svg.price-legend-swatch{display:block;position:static;width:18px;height:12px;min-width:18px;max-width:18px;max-height:12px;flex:0 0 18px;overflow:visible;touch-action:auto}
 .atlas-plot>.lab-chart-foot .cycle-legend{display:flex;flex-wrap:nowrap;flex:none;align-items:center;justify-content:flex-start;gap:8px;min-width:0;max-width:none;margin:0;padding:0 0 0 8px;border-left:1px solid var(--cycle-milestones-rule-3);border-top:0;box-sizing:border-box}
-.atlas-plot>.lab-chart-foot .cycle-legend span{display:flex;align-items:center;gap:4px;font-size:9px;line-height:12px;white-space:nowrap}
+.atlas-plot>.lab-chart-foot .cycle-legend span{display:flex;align-items:center;gap:4px;font-size:11px;line-height:12px;white-space:nowrap}
 .atlas-chart-stage .cycle-legend-item>svg{width:11px;height:11px;min-width:11px;flex:none}
 .atlas-plot>.lab-chart-foot .cycle-legend .cycle-legend-note{display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:8px;max-width:none;margin:0;padding-left:8px;border-left:1px solid var(--cycle-milestones-rule-3);color:var(--cycle-milestones-ink-2);white-space:nowrap}
 .atlas-plot>.lab-chart-foot .cycle-legend .cycle-legend-status-label{display:none}
-.atlas-plot>.lab-chart-foot .cycle-legend .cycle-legend-note span{font-size:8px;line-height:11px}
+.atlas-plot>.lab-chart-foot .cycle-legend .cycle-legend-note span{font-size:11px;line-height:11px}
 .atlas-chart-stage .cycle-style-sample>svg{display:block;width:22px;height:12px;min-width:22px;flex:none;color:var(--cycle-milestones-ink-3)}
 @container price-plot (width > 850px){
  .atlas-plot:has(>.lab-chart-foot:not([hidden]))>:is(#lab-metrics,.workbench-market-info,.chart-indicator-manager){max-width:min(620px,calc(100% - var(--plot-right-gap,80px) - var(--chart-hud-width) - 26px))}
@@ -48,29 +48,29 @@
 .cycle-chart-controls{flex:none;min-width:0;margin:0;padding:0}
 .cycle-chart-controls[hidden]{display:none!important}
 .cycle-chart-controls>details{position:relative}
-.cycle-chart-controls>details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:center;min-height:28px;padding:4px 8px;box-sizing:border-box;border:1px solid var(--cycle-milestones-rule-4);border-radius:4px;background:var(--cycle-milestones-surface);color:var(--cycle-milestones-ink-4);font-size:10px;line-height:18px;white-space:nowrap}
+.cycle-chart-controls>details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:center;min-height:28px;padding:4px 8px;box-sizing:border-box;border:1px solid var(--cycle-milestones-rule-4);border-radius:4px;background:var(--cycle-milestones-surface);color:var(--cycle-milestones-ink-4);font-size:11px;line-height:18px;white-space:nowrap}
 .cycle-chart-controls>details>summary::-webkit-details-marker{display:none}
 .cycle-chart-controls>details[open]>summary{background:var(--cycle-milestones-surface-2);border-color:var(--cycle-milestones-rule-5);color:var(--cycle-milestones-ink-5)}
 .atlas-canvas-heading:has(#atlas-cycle-options[open]){position:relative;z-index:60;overflow:visible}
 .cycle-chart-menu{position:absolute;top:calc(100% + 7px);right:0;z-index:61;width:490px;max-width:calc(100vw - 100px);max-height:calc(100dvh - 100px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;box-sizing:border-box;border:1px solid var(--cycle-milestones-rule-6);border-radius:6px;background:var(--cycle-milestones-surface-3);box-shadow:0 10px 28px var(--atlas-shadow);color:var(--cycle-milestones-ink-6)}
 .cycle-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;border-bottom:1px solid var(--cycle-milestones-rule-7)}
 .cycle-panel-heading h2{margin:0;font-size:11px;font-weight:550;line-height:1.5;color:var(--cycle-milestones-ink-7);white-space:nowrap}
-.cycle-panel-heading h2 small{font-size:9px;font-weight:400;color:var(--cycle-milestones-ink-8);margin-left:8px}
+.cycle-panel-heading h2 small{font-size:11px;font-weight:400;color:var(--cycle-milestones-ink-8);margin-left:8px}
 .cycle-panel-actions{display:flex;align-items:center;gap:8px;padding:8px 12px;min-width:0}
 .cycle-panel-actions select{font:inherit!important;font-size:11px!important;min-width:0;width:auto!important;max-width:none!important;flex:1;min-height:30px!important;height:30px;padding:4px 24px 4px 8px!important;background:var(--cycle-milestones-surface-4);color:var(--cycle-milestones-ink-9);border:1px solid var(--cycle-milestones-rule-8);border-radius:4px}
-.cycle-chart-menu button{font:inherit;font-size:10px;line-height:1.5;min-height:28px;padding:4px 8px;color:var(--cycle-milestones-ink-10);border:1px solid var(--cycle-milestones-rule-9);border-radius:4px;background:var(--cycle-milestones-surface-5);cursor:pointer;white-space:nowrap}
+.cycle-chart-menu button{font:inherit;font-size:11px;line-height:1.5;min-height:28px;padding:4px 8px;color:var(--cycle-milestones-ink-10);border:1px solid var(--cycle-milestones-rule-9);border-radius:4px;background:var(--cycle-milestones-surface-5);cursor:pointer;white-space:nowrap}
 .cycle-chart-menu button:hover{background:var(--cycle-milestones-surface-6);color:var(--cycle-milestones-ink-11)}
 .cycle-chart-controls :focus-visible{outline:2px solid var(--cycle-milestones-rule-10);outline-offset:2px}
 .cycle-panel-selection{display:flex;align-items:center;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:8px 12px;border-block:1px solid var(--chart-export-workbench-rule-2);background:var(--cycle-milestones-surface-7)}
 .cycle-panel-selection[hidden]{display:none!important}
-.cycle-panel-selection p{margin:0;min-width:0;flex:1 1 260px;font-size:10px;line-height:1.6;color:var(--chart-bottom-bar-ink-7);overflow-wrap:anywhere}
+.cycle-panel-selection p{margin:0;min-width:0;flex:1 1 260px;font-size:11px;line-height:1.6;color:var(--chart-bottom-bar-ink-7);overflow-wrap:anywhere}
 .cycle-selection-actions{display:flex;align-items:center;gap:4px;margin-left:auto}
-.cycle-panel-note{margin:0;padding:8px 12px;font-size:10px;line-height:1.75;color:var(--cycle-milestones-ink-12);word-break:keep-all}
-.cycle-reference{padding:4px 12px 12px;color:var(--chart-workspace-controls-ink-4);font-size:10px;line-height:1.6}
+.cycle-panel-note{margin:0;padding:8px 12px;font-size:11px;line-height:1.75;color:var(--cycle-milestones-ink-12);word-break:keep-all}
+.cycle-reference{padding:4px 12px 12px;color:var(--chart-workspace-controls-ink-4);font-size:11px;line-height:1.6}
 .cycle-reference>summary{cursor:pointer;padding:4px 0;color:var(--cycle-milestones-ink-13)}
-.cycle-reference p{margin:8px 0;font-size:10px;line-height:1.75}
+.cycle-reference p{margin:8px 0;font-size:11px;line-height:1.75}
 .cycle-reference-table{overflow-x:auto;overscroll-behavior:contain}
-.cycle-reference table{width:100%;border-collapse:collapse;font-size:10px;white-space:nowrap}
+.cycle-reference table{width:100%;border-collapse:collapse;font-size:11px;white-space:nowrap}
 .cycle-reference th,.cycle-reference td{border-bottom:1px solid var(--chart-details-panel-rule-20);padding:4px 8px;text-align:left;color:var(--cycle-milestones-ink-14)}
 .cycle-reference th{font-weight:500;color:var(--cycle-milestones-ink-15);background:var(--cycle-milestones-surface-4)}
 /* Stack below OHLC/provenance on narrow plots. Expanding studies scrolls
@@ -85,18 +85,18 @@
 @container price-plot (max-width:540px){
  .atlas-plot>.lab-chart-foot .lab-legend:has(.cycle-legend){gap:4px}
  .atlas-plot>.lab-chart-foot .cycle-legend{gap:8px;padding-top:0}
- .atlas-plot>.lab-chart-foot .cycle-legend span{font-size:8px;line-height:12px;gap:4px}
+ .atlas-plot>.lab-chart-foot .cycle-legend span{font-size:11px;line-height:12px;gap:4px}
  .atlas-plot>.lab-chart-foot .cycle-legend .cycle-legend-note{justify-content:flex-start;column-gap:8px}
  .atlas-plot>.lab-chart-foot .cycle-legend .cycle-legend-status-label{display:none}
  .atlas-chart-stage .cycle-style-sample>svg{width:22px;min-width:22px;height:13px}
  .atlas-plot>.lab-chart-foot .price-legend{gap:2px 8px;min-height:12px}
- .atlas-plot>.lab-chart-foot .price-legend>span{gap:4px;font-size:8px;line-height:12px}
+ .atlas-plot>.lab-chart-foot .price-legend>span{gap:4px;font-size:11px;line-height:12px}
 }
 @media(min-width:621px) and (max-width:1000px){
  .cycle-chart-menu{position:fixed;top:46px;left:calc(var(--sidebar-width,44px) + 8px);right:calc(var(--rail-width,38px) + 8px);width:auto;max-width:none;max-height:calc(100dvh - 58px)}
 }
 @media(max-width:620px){
- .cycle-chart-controls>details>summary{height:36px;min-height:36px;padding:4px 8px;font-size:10px;border-color:var(--cycle-milestones-rule-11)}
+ .cycle-chart-controls>details>summary{height:36px;min-height:36px;padding:4px 8px;font-size:11px;border-color:var(--cycle-milestones-rule-11)}
  .cycle-chart-menu{position:fixed;top:calc(52px + var(--mobile-top,0px));left:8px;right:8px;width:auto;max-width:none;max-height:calc(100dvh - 72px - var(--mobile-top,0px))}
  .cycle-panel-heading h2 small{display:none}
  .cycle-panel-actions{padding:8px;gap:8px}

@@ -19,8 +19,8 @@
  width:28px;min-width:28px;height:26px;min-height:26px;margin:0;flex:none;border:1px solid var(--analysis-dock-rule);background:var(--analysis-dock-surface-3)
 }
 .atlas-plot[data-compact-layout] .chart-indicator-manager[data-collapsed=true] .indicator-legend-toggle{border:1px solid var(--analysis-dock-rule);background:var(--analysis-dock-surface-3)}
-.compact-list-size{display:flex;flex-direction:row;align-items:center;gap:4px;margin:0;min-width:0;font-size:9px;line-height:1.4;color:var(--compact-chart-layout-ink)}
-.compact-list-size select{width:auto;min-width:54px;max-width:72px;height:24px;min-height:24px;margin:0;padding:2px 16px 2px 4px;border:1px solid var(--compact-chart-layout-rule);border-radius:3px;background:var(--compact-chart-layout-surface);color:var(--compact-chart-layout-ink-2);font:inherit;font-size:10px}
+.compact-list-size{display:flex;flex-direction:row;align-items:center;gap:4px;margin:0;min-width:0;font-size:11px;line-height:1.4;color:var(--compact-chart-layout-ink)}
+.compact-list-size select{width:auto;min-width:54px;max-width:72px;height:24px;min-height:24px;margin:0;padding:2px 16px 2px 4px;border:1px solid var(--compact-chart-layout-rule);border-radius:3px;background:var(--compact-chart-layout-surface);color:var(--compact-chart-layout-ink-2);font:inherit;font-size:11px}
 .compact-list-size[hidden],.compact-indicator-controls[hidden],.analysis-pane-access[hidden]{display:none!important}
 .atlas-plot[data-compact-layout] .chart-indicator-list{
  min-height:0;max-height:var(--compact-list-max-height);margin:0;padding:0 4px 0 0;overflow:auto;
@@ -43,12 +43,12 @@
 .atlas-plot[data-compact-layout]>.analysis-indicator-windows[data-minimized-all=true]:not([data-maximized=true]){bottom:auto;max-height:calc(var(--plot-height,700px) - var(--compact-analysis-top) - var(--compact-analysis-bottom))}
 .atlas-plot[data-compact-layout] .analysis-pane-access{
  position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;flex:0 0 32px;min-height:32px;
- box-sizing:border-box;margin-bottom:-8px;padding:2px 8px;border:1px solid var(--analysis-dock-rule-11);border-radius:5px 5px 0 0;background:var(--compact-chart-layout-surface-2);color:var(--compact-chart-layout-ink-3);font-size:10px
+ box-sizing:border-box;margin-bottom:-8px;padding:2px 8px;border:1px solid var(--analysis-dock-rule-11);border-radius:5px 5px 0 0;background:var(--compact-chart-layout-surface-2);color:var(--compact-chart-layout-ink-3);font-size:11px
 }
 .analysis-pane-access label{display:flex;flex:1;align-items:center;gap:8px;min-width:0;margin:0;font:inherit}
 .analysis-pane-access label>span{flex:none;white-space:nowrap}
 .analysis-pane-access select{flex:1;width:auto;min-width:0;height:28px;min-height:28px;margin:0;padding:4px 24px 4px 8px;border:0;border-radius:3px;background:var(--compact-chart-layout-surface-3);color:var(--compact-chart-layout-ink-4);font:inherit;font-size:11px}
-.analysis-pane-access>button{flex:none;width:40px;min-height:28px;padding:4px 4px;border:1px solid var(--compact-chart-layout-rule-2);border-radius:3px;background:var(--compact-chart-layout-surface-4);color:var(--compact-chart-layout-ink-4);font:inherit;font-size:10px;cursor:pointer}
+.analysis-pane-access>button{flex:none;width:40px;min-height:28px;padding:4px 4px;border:1px solid var(--compact-chart-layout-rule-2);border-radius:3px;background:var(--compact-chart-layout-surface-4);color:var(--compact-chart-layout-ink-4);font:inherit;font-size:11px;cursor:pointer}
 .atlas-plot[data-compact-layout] .analysis-indicator-windows[data-maximized=true]>.analysis-pane-access{display:none}
 /* Bodies already have their own scrollports. A sticky top offset inside an
    overflow-hidden card moves the painted header over the first body rows. */
@@ -58,7 +58,7 @@
  position:relative;top:0;scroll-margin-top:var(--analysis-access-height,0px)
 }
 .atlas-plot[data-compact-layout] .analysis-window-heading h3{font-size:11px;line-height:16px;min-width:0}
-.atlas-plot[data-compact-layout] .analysis-window-axis{margin-left:auto;margin-right:0;font-size:9px}
+.atlas-plot[data-compact-layout] .analysis-window-axis{margin-left:auto;margin-right:0;font-size:11px}
 .atlas-plot[data-compact-layout] .analysis-window-actions{flex-basis:100%;justify-content:flex-end;gap:2px;margin:0}
 .atlas-plot[data-compact-layout] .analysis-window-actions>button{width:32px;min-width:32px;height:32px;min-height:32px;padding:8px}
 .atlas-plot[data-compact-layout] .analysis-indicator-window[data-minimized=true]{min-height:0;height:auto}
