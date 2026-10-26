@@ -88,3 +88,29 @@ test('source receipt normalization is canonical and unsupported provider identit
   const wrong=JSON.parse(sourceDocument);wrong.product='BTC-USD';
   await assert.rejects(createAssetOutcomeSnapshot({symbol:'ETHUSD',sourceDocument:JSON.stringify(wrong),sourceUrl:'https://example.invalid',collectedAt:'2026-11-25T01:00:00Z'}),/Coinbase ETH/);
 });
+
+
+test('outcome evaluation cannot conceal earlier simultaneous conflicts behind a later snapshot',async()=>{
+  const orders=[[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];
+  for(const [symbol,record]of [['ETHUSD',eth],['BMNR',bmnr]])for(const conflict of ['price','source']){
+    const time='2026-11-25T01:00:00.000Z';
+    const a=await capture(symbol,2100,time);
+    const b=conflict==='price'?await capture(symbol,2200,time):await capture(symbol,2100,time,{sourceDocument:a.sourceDocument+'\n'});
+    const later=await capture(symbol,2300,'2026-11-26T01:00:00.000Z');
+    assert.notEqual(a.sourceReceipt.sourceHash,b.sourceReceipt.sourceHash);
+    assert.notEqual(a.sourceReceipt.vintageId,b.sourceReceipt.vintageId);
+    const snapshots=[a,b,later],saved=json({record,snapshots}),cutoff='2026-11-25T00:59:59.999Z';
+    const expected=await evaluate([record],snapshots,cutoff);
+    assert.equal(expected.result.rows[0].status,'missing-observation');
+    assert.equal(expected.result.scoredTargets,0);assert.equal(expected.result.missingObservationTargets,1);
+    for(const order of orders){
+      const rows=order.map(index=>snapshots[index]);
+      assert.deepEqual(await evaluate([record],rows,cutoff),expected);
+      for(const evaluatedAt of [time,'2026-11-26T02:00:00.000Z']){
+        await assert.rejects(evaluate([record],rows,evaluatedAt),/Ambiguous equally timed/);
+      }
+    }
+    await verifyAssetOutcomeEvaluation(expected,{[record.id]:record},Object.fromEntries(snapshots.map(snapshot=>[snapshot.id,snapshot])));
+    assert.equal(json({record,snapshots}),saved);
+  }
+});

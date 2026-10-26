@@ -86,6 +86,72 @@ test('later collected price revisions cannot rewrite an earlier cutoff and confl
   for(const rows of [[base,{...base,price:2200}],[{...base,price:2200},base]])assert.throws(()=>selectPriceVintages(rows,options),/Conflicting immutable/);
 });
 
+
+// These permutations include a later selected revision before either conflicting
+// receipt. Every date, hash and price remains synthetic test input.
+const vintageOrders=[[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];
+function vintageFixture(){
+  const a={date:'2026-10-23',price:2000,vintageId:'alpha',sourceHash:'a'.repeat(64),sourceUrl:'https://example.invalid/price',publishedAt:null,collectedAt:'2026-10-24T01:00:00.000Z'};
+  const later={...a,price:2300,vintageId:'later',sourceHash:'c'.repeat(64),collectedAt:'2026-10-25T01:00:00.000Z'};
+  return {a,later};
+}
+const vintageMarkets=[['ETHUSD','crypto'],['BMNR','equity'],['MSTR','equity']];
+
+test('visible same-time price or source conflicts are rejected in every order behind later revisions',()=>{
+  const {a,later}=vintageFixture();
+  for(const conflict of [{price:2100},{sourceHash:'b'.repeat(64)}]){
+    // Equivalent UTC spellings must belong to the same normalized collection time.
+    const b={...a,...conflict,vintageId:'beta',collectedAt:'2026-10-24T01:00:00Z'};
+    for(const [symbol,market]of vintageMarkets)for(const order of vintageOrders){
+      const rows=order.map(index=>[a,b,later][index]),before=structuredClone(rows);
+      assert.throws(()=>selectPriceVintages(rows,{symbol,market,informationCutoffAt:'2026-10-26T10:00:00.000Z'}),/Ambiguous equally timed/);
+      assert.deepEqual(rows,before);
+    }
+  }
+});
+
+test('distinct future conflicts remain excluded until the exact acquisition cutoff',()=>{
+  const {a,later}=vintageFixture(),b={...a,price:2100,vintageId:'beta'};
+  const known={...a,price:1900,vintageId:'known',sourceHash:'d'.repeat(64),collectedAt:'2026-10-24T00:30:00.000Z'};
+  for(const [symbol,market]of vintageMarkets)for(const order of vintageOrders){
+    const rows=[known,...order.map(index=>[a,b,later][index])];
+    const options={symbol,market,informationCutoffAt:'2026-10-24T00:59:59.999Z'};
+    const before=selectPriceVintages(rows,options);
+    assert.equal(before.rows.length,1);assert.equal(before.rows[0].vintageId,'known');assert.equal(before.rows[0].price,1900);
+    assert.equal(before.futureVersions,3);
+    assert.deepEqual(selectPriceVintages([...rows,a],options),before,'Identical future receipts count only once');
+    assert.throws(()=>selectPriceVintages(rows,{...options,informationCutoffAt:'2026-10-24T01:00:00.000Z'}),/Ambiguous equally timed/);
+  }
+});
+
+test('equivalent receipts keep deterministic latest selection and separate observation dates',()=>{
+  const {a,later}=vintageFixture(),equivalent={...a,vintageId:'omega',collectedAt:'2026-10-24T01:00:00Z'};
+  const otherDate={...a,date:'2026-10-22',price:1500,vintageId:'other-day',sourceHash:'d'.repeat(64)};
+  for(const [symbol,market]of vintageMarkets){
+    let expectedEarlier=null,expectedLater=null;
+    for(const order of vintageOrders){
+      const rows=[otherDate,...order.map(index=>[a,equivalent,later][index])],saved=structuredClone(rows);
+      const earlier=selectPriceVintages(rows,{symbol,market,informationCutoffAt:'2026-10-24T02:00:00.000Z'});
+      const newest=selectPriceVintages(rows,{symbol,market,informationCutoffAt:'2026-10-25T01:00:00.000Z'});
+      assert.deepEqual(earlier.rows.map(row=>[row.date,row.price,row.vintageId]),[['2026-10-22',1500,'other-day'],['2026-10-23',2000,'omega']]);
+      assert.equal(earlier.futureVersions,1);assert.equal(newest.rows[1].vintageId,'later');assert.equal(newest.rows[1].price,2300);assert.equal(newest.futureVersions,0);
+      if(expectedEarlier)assert.deepEqual(earlier,expectedEarlier);else expectedEarlier=earlier;
+      if(expectedLater)assert.deepEqual(newest,expectedLater);else expectedLater=newest;
+      assert.deepEqual(rows,saved);
+    }
+  }
+});
+
+test('conflicting immutable vintage identities are rejected even before acquisition',()=>{
+  const {a}=vintageFixture();
+  for(const conflict of [{price:2100},{sourceHash:'b'.repeat(64)}]){
+    const changed={...a,...conflict};
+    for(const rows of [[a,changed],[changed,a]])assert.throws(()=>selectPriceVintages(rows,{
+      symbol:'ETHUSD',informationCutoffAt:'2026-10-24T00:59:59.999Z',
+    }),/Conflicting immutable/);
+  }
+});
+
 test('actual asset records replay exact preserved daily outputs and use separate research identity',async()=>{
   await verifyAssetForecastRecord(ethRecord,eth.snapshot);await verifyAssetForecastRecord(bmnrRecord,bmnr.snapshot);
   assert.equal(ethRecord.publicationScope,'draft-pr-research');assert.equal(ethRecord.productionAdopted,false);assert.equal(ethRecord.firstPublishedAt,null);
