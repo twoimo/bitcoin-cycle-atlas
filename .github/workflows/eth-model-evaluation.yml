@@ -58,7 +58,7 @@ jobs:
           install -m 0644 "$atlas_font_temp/OFL.txt" "$atlas_font_dir/OFL.txt"
           timeout 30s fc-cache -f "$atlas_font_dir"
           fc-scan --format '%{family}\n' "$atlas_font_dir/NotoSansCJKkr-Regular.otf"
-          fc-list ':lang=ko' file | rg --fixed-strings "$atlas_font_dir/NotoSansCJKkr-Regular.otf"
+          fc-list ':lang=ko' file | grep -F -- "$atlas_font_dir/NotoSansCJKkr-Regular.otf"
           echo "ATLAS_FONT_RECEIPT commit=f8d157532fbfaeda587e826d4cd5b21a49186f7c font_blob=$atlas_font_blob license_blob=$atlas_font_license_blob"
       - name: Render comparison and ETH screens across mobile, tablet and desktop
         run: |
