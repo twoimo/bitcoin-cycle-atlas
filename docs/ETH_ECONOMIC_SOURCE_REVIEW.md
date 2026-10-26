@@ -2,13 +2,13 @@
 
 ## 1. 목적과 현재 상태
 
-dist/ethereum-economic-model.js의 eth-economic-ridge-2는 관측 가능한 경제 입력을 30·90·180일 ETH/USD 수익률과 ETH/BTC 상대 수익률에 각각 연결하는 실험 후보다. 프로토콜의 회계 정의와 예측 회귀의 설계 선택을 구분한다. 아래 1차 자료는 수수료·발행·스테이킹 보상·출금의 의미를 정하는 근거이며, 회귀 계수의 부호나 미래 가격을 보장하지 않는다.
+dist/ethereum-economic-model.js의 eth-economic-ridge-3는 관측 가능한 경제 입력을 30·90·180일 ETH/USD 수익률과 ETH/BTC 상대 수익률에 각각 연결하는 실험 후보다. 프로토콜의 회계 정의와 예측 회귀의 설계 선택을 구분한다. 아래 1차 자료는 수수료·발행·스테이킹 보상·출금의 의미를 정하는 근거이며, 회귀 계수의 부호나 미래 가격을 보장하지 않는다.
 
 현재 저장소에는 이 후보에 필요한 과거 경제 입력의 실제 발표·수집 판본 묶음이 없다. 따라서 실데이터 비교에서 경제 후보가 unavailable인 것은 의도된 결과다. 테스트의 3,000일 가격·경제 자료, URL, 해시, 발표·수집·발행 시간은 모두 합성 자료다. 테스트 통과는 연결과 누출 방지 동작을 검증하며 투자 성과나 예측 정확도를 입증하지 않는다.
 
 ## 2. 가격과 공급의 연결
 
-공급 회계는 총공급 변화 = 합의 계층 순발행 − 실행 기본 수수료 소각 − blob 수수료 소각으로 둔다. 합의 계층 순발행은 보상에 따른 생성에서 벌칙·슬래싱에 따른 소멸을 차감한 값이다. 입금과 출금은 계층 간 잔액 이동이며 발행량으로 더하지 않는다. 실행 수수료의 기본 수수료와 우선 수수료, 별도 blob 수수료를 분리한다. [EIP-1559](https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-1559.md), [EIP-4844](https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-4844.md), [EIP-3675](https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-3675.md), [EIP-4895](https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-4895.md).
+공급 회계는 총공급 변화 = 합의 계층 순발행 + 실행 계층 PoW 발행 − 실행 기본 수수료 소각 − blob 수수료 소각으로 둔다. 실행 계층 PoW 발행은 canonical block·ommer inclusion·ommer beneficiary 보상을 포함하며 거래 수수료와 분리한다. EIP-3675의 TRANSITION_BLOCK 이후 해당 보상이 제거되므로, 2022-09-16 UTC부터 시작하는 전체 28일 창에서는 0이어야 한다. 전환기를 걸치는 창은 실제 전환 전 발행량을 보존한다. 0도 원문의 canonical block 범위·전환 경계·보상 규칙이 확인된 관측값이어야 하며 누락값 대체가 아니다. 합의 계층 순발행은 보상에 따른 생성에서 벌칙·슬래싱에 따른 소멸을 차감한 값이다. 입금과 출금은 계층 간 잔액 이동이며 발행량으로 더하지 않는다. 실행 수수료의 기본 수수료와 우선 수수료, 별도 blob 수수료를 분리한다. [EIP-1559](https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-1559.md), [EIP-4844](https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-4844.md), [EIP-3675](https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-3675.md), [EIP-4895](https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-4895.md).
 
 L2 사용량과 ETH에 귀속되는 L1 지불액은 별도로 측정한다. l2Transactions는 고정한 rollup 집합의 활동량, l2SettlementFeesEth는 그 집합이 L1 실행·blob 자원에 실제 지급한 금액이다. 후자는 이미 전체 L1 수수료에 포함되므로 다시 합산하지 않는다. l2SettlementFeesEth / l2UserFeesEth는 해당 집합의 비용·수수료 비율이지 토큰 보유자에게 지급되는 배당률이 아니다. L2 손실 구간에서는 1을 넘을 수 있다. Blob 용량·가격 규칙 변경 때문에 활동량과 비용의 관계를 시대를 초월한 상수로 두지 않는다. [EIP-7691](https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-7691.md), [EIP-7918](https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-7918.md). 문서의 Final 상태만으로 특정 날짜의 메인넷 활성화를 추정하지 않으며, 실제 수집기의 fork·블록 기준을 별도로 보존해야 한다.
 
@@ -36,7 +36,7 @@ LST의 직접 유통성 계수는 이번 후보에 넣지 않았다. 고정한 �
 
 ## 4. 시점, 판본, 표본 제한
 
-경제 입력은 eth-economic-input-2, 완료된 28일 창, observedThrough, 실제 publishedAt·collectedAt, vintageId, 원문 해시, 원문 URL과 각 지표의 URL을 요구한다. L2·staking cohort·완료 출금·담보 집합은 각각 고정된 ID로 구분한다. 같은 판본의 값·해시 또는 receipt 시각이 충돌하면 거부한다. 뒤늦은 수정본을 과거 발행 시점에 소급 적용하지 않는다.
+경제 입력은 eth-economic-input-3, 완료된 28일 창, observedThrough, 실제 publishedAt·collectedAt, vintageId, 원문 해시, 원문 URL과 각 지표의 URL을 요구한다. L2·staking cohort·완료 출금·담보 집합은 각각 고정된 ID로 구분한다. 같은 판본의 값·해시 또는 receipt 시각이 충돌하면 거부한다. 뒤늦은 수정본을 과거 발행 시점에 소급 적용하지 않는다.
 
 UTC 일별 종가는 다음 UTC 날짜가 시작하기 전에 관측될 수 없다. 그 이후에도 실제 발표·수집이 늦었다면 해당 시각 전의 예측에는 쓸 수 없다. 비교기의 issuedAtByOrigin은 기록된 발행 시각을 전달하며, 누락 시 보수적인 다음 날 자정을 사용한다. 수집 시각을 종가 날짜로 만들어 넣지 않는다. 코인 UTC 종가와 미국 주식 종가는 다른 정보 집합이므로 BMNR 소비자는 자신의 실제 판단 시각을 별도로 적용해야 한다.
 
