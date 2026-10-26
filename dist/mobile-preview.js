@@ -46,3 +46,23 @@ modePicker.addEventListener('change',async()=>{
     if(request===generation){pending=null;frame.removeAttribute('aria-busy');}
   }
 });
+
+
+// Browsers focus an embedded document without matching :focus on its iframe.
+// Reflect real child-document focus so keyboard users retain a visible frame boundary.
+let previewFocusEvents=null;
+function bindPreviewFocus(){
+  previewFocusEvents?.abort();previewFocusEvents=new AbortController();
+  const child=frame.contentDocument,options={signal:previewFocusEvents.signal};
+  const update=()=>frame.toggleAttribute('data-focus-within',document.activeElement===frame&&!frame.hidden);
+  if(!child){frame.removeAttribute('data-focus-within');return;}
+  child.addEventListener('focusin',update,options);
+  child.addEventListener('focusout',()=>queueMicrotask(update),options);
+  frame.contentWindow.addEventListener('focus',update,options);
+  frame.contentWindow.addEventListener('blur',()=>queueMicrotask(update),options);
+  update();
+}
+frame.addEventListener('load',bindPreviewFocus);
+frame.addEventListener('focus',()=>frame.setAttribute('data-focus-within',''));
+document.addEventListener('focusin',()=>{if(document.activeElement!==frame)frame.removeAttribute('data-focus-within');});
+if(frame.contentDocument?.readyState==='complete')bindPreviewFocus();

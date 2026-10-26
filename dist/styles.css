@@ -967,3 +967,6 @@ body #compare-view :is(button,select,input:not([type="range"])){min-height:var(-
 @media(max-width:620px),(pointer:coarse){
   body #compare-view :is(button,select,input:not([type="range"])){min-height:var(--control-touch-size)}
 }
+
+body .footer button{min-height:var(--control-min-size)}
+@media(max-width:620px),(pointer:coarse){body .footer button{min-height:var(--control-touch-size)}}

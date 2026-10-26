@@ -77,7 +77,7 @@ async function screenshot(cdp,name,receipt){
   const bytes=Buffer.from(result.data,'base64');
   await writeFile(resolve(out,name),bytes);
   receipt.screenshots.push({file:name,bytes:bytes.length,sha256:hash(bytes)});
-  if(/^workspace-(?:btc|evidence|legacy|preview).*?(?:btc-toolbar|research-reader|legacy|preview-controls|failure|btc-journal|annotations-empty|settings|indicators|go-to|export-preview|research-empty|preview-loading|preview-error|preview-scroll-end)\.png$/.test(name)||name==='data-fill-1620x1008.png'||name==='data-fill-1920x1440.png'||name==='data-320-start.png'||name==='eth-320-loaded.png'||name==='bmnr-320-clock.png'||name==='zero-fixture-320.png'||/^(ethusd|bmnr|mstr)-journal-320-(base|stress)\.png$/.test(name)){
+  if(["data-fill-1620x1008.png","data-fill-1920x1440.png","ethusd-journal-320-base.png","bmnr-journal-320-stress.png","workspace-btc-320x900-annotations-empty.png","workspace-btc-320x900-go-to.png","workspace-btc-320x900-export-preview.png","workspace-btc-short-900x430-btc-journal.png","workspace-btc-short-900x430-bottom-menu.png","workspace-evidence-320x900-research-reader.png","workspace-evidence-320x900-research-empty.png","workspace-preview-320x900-preview-scroll-end.png","workspace-preview-1440x900-preview-scroll-end.png","workspace-preview-320x900-preview-loading.png","workspace-preview-320x900-preview-error.png"].includes(name)||name.endsWith('-failure.png')){
     const size=30000,total=Math.ceil(result.data.length/size);
     for(let index=0;index<total;index++)console.log('ETH_BROWSER_IMAGE_CHUNK '+JSON.stringify({name,index,total,data:result.data.slice(index*size,(index+1)*size)}));
   }

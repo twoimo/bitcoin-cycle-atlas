@@ -23,7 +23,7 @@ header { display: flex; align-items: center; justify-content: center; gap: 12px;
 label { display: flex; gap: 8px; align-items: center; min-width: 0; }
 select, a { min-height: 44px; max-width: 100%; padding: 8px 12px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 4px; font: inherit; }
 a { display: inline-flex; align-items: center; text-underline-offset: .2em; }
-select:focus-visible, a:focus-visible, iframe:focus-visible, iframe:focus, iframe:focus-within { outline: 2px solid var(--focus); outline-offset: -2px; }
+select:focus-visible, a:focus-visible, iframe:focus-visible, iframe:focus, iframe:focus-within, iframe[data-focus-within] { outline: 2px solid var(--focus); outline-offset: -2px; }
 a:hover, a:active { border-color: var(--focus); }
 select:disabled { opacity: .5; cursor: not-allowed; }
 main { display: flex; align-items: flex-start; min-width: 0; min-height: 0; padding: 0 12px 12px; overflow: auto; scrollbar-gutter: stable; }
