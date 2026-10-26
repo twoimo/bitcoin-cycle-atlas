@@ -11,6 +11,7 @@
     "dist/asset-comparison-source.js",
     "dist/asset-comparison.js",
     "dist/asset-daily-observations.js",
+    "dist/asset-forecast-journal.js",
     "dist/asset-forecast-records.js",
     "dist/asset-judgment-history-view.js",
     "dist/asset-judgment-history.js",
@@ -191,6 +192,7 @@
     "scripts/issue-asset-forecasts.mjs",
     "scripts/verify-eth-candidate-browser.mjs",
     "tests/asset-forecast-collector.test.mjs",
+    "tests/asset-forecast-journal.test.mjs",
     "tests/asset-forecast-records.test.mjs",
     "tests/equity-chart-rendering.test.mjs",
     "tests/eth-review-packet.test.mjs",
@@ -202,6 +204,7 @@
     "tests/ethereum-forecast-boundary.test.mjs",
     "tests/ethereum-forecast.test.mjs",
     "tests/ethereum-model-comparison.test.mjs",
+    "tests/journal-entry-ownership.test.mjs",
     "tests/treasury-model.test.mjs"
   ],
   "dynamicResolutions": [

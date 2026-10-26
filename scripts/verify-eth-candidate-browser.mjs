@@ -9,6 +9,8 @@ import {spawn,execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {parseEthArchive} from '../dist/eth-market-data.js';
+import {createAssetForecastRecord,assetForecastIndexEntry} from '../dist/asset-forecast-records.js';
+import {forecastHash} from '../dist/forecast-records.js';
 
 const root=resolve(fileURLToPath(new URL('..',import.meta.url)));
 const dist=resolve(root,'dist'),out=resolve(root,'build/eth-browser');
@@ -17,6 +19,8 @@ const report={schemaVersion:1,kind:'eth-candidate-real-browser',startedAt:new Da
   scope:'Actual checked-out static site in headless Chromium through native CDP; no production deployment, Safari or physical-device claim.'};
 let server,chrome,browser,profile,base;
 let chromeStderr='';
+const syntheticJournalFiles=new Map();
+let syntheticZeroRecord=null;
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 const errorText=error=>error instanceof Error?(error.stack||error.message):String(error);
 const hash=buffer=>createHash('sha256').update(buffer).digest('hex');
@@ -72,7 +76,7 @@ async function screenshot(cdp,name,receipt){
   const bytes=Buffer.from(result.data,'base64');
   await writeFile(resolve(out,name),bytes);
   receipt.screenshots.push({file:name,bytes:bytes.length,sha256:hash(bytes)});
-  if(name==='data-320-start.png'||name==='eth-320-loaded.png'||name==='bmnr-320-clock.png'){
+  if(name==='data-320-start.png'||name==='eth-320-loaded.png'||name==='bmnr-320-clock.png'||name==='zero-fixture-320.png'||/^(ethusd|bmnr|mstr)-journal-320-(base|stress)\.png$/.test(name)){
     const size=30000,total=Math.ceil(result.data.length/size);
     for(let index=0;index<total;index++)console.log('ETH_BROWSER_IMAGE_CHUNK '+JSON.stringify({name,index,total,data:result.data.slice(index*size,(index+1)*size)}));
   }
@@ -170,7 +174,118 @@ async function dataCase(cdp,width,receipt){
   await click(cdp,'#daily-method-close');
   assert.equal((await bounds(cdp,'#daily-method-dialog')).open,false);
 }
-async function ethCase(cdp,width,receipt,expected){
+
+async function journalCase(cdp,width,receipt,symbol,archive){
+  const entries=archive.filter(item=>item.entry.symbol===symbol),baseRecord=entries.find(item=>item.entry.scenario==='base').record;
+  const trigger='[data-open-asset-forecast-journal="'+symbol+'"]';
+  await evaluate(cdp,s=>document.querySelector(s).scrollIntoView({block:'center'}),trigger);
+  await settled(cdp);await click(cdp,trigger);
+  await until(()=>evaluate(cdp,()=>document.querySelector('#asset-forecast-journal')?.dataset.state==='ready'),symbol+' saved journal ready');
+  receipt.journal={symbol,stages:[]};
+  async function inspect(label,expected,{full=false}={}){
+    await settled(cdp);
+    const state=await evaluate(cdp,()=>{
+      const dialog=document.querySelector('#asset-forecast-journal'),body=dialog.querySelector('.journal-body'),svg=dialog.querySelector('svg');
+      const bounds=el=>{const b=el.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};};
+      return {dataset:{...dialog.dataset},open:dialog.open,box:bounds(dialog),background:getComputedStyle(dialog).backgroundColor,
+        bodyWidth:body.clientWidth,bodyScrollWidth:body.scrollWidth,pageWidth:document.documentElement.scrollWidth,
+        text:body.textContent,selected:dialog.querySelector('#asset-journal-selection')?.textContent,
+        recordOptions:[...dialog.querySelectorAll('[data-asset-journal-record] option')].map(o=>o.value),
+        chartDataset:{...svg.dataset},chartTitle:svg.querySelector('title')?.textContent,
+        pathCount:svg.querySelectorAll('path').length,
+        pathLengths:[...svg.querySelectorAll('path')].map(p=>p.getTotalLength()),
+        invalidPaths:[...svg.querySelectorAll('path')].filter(p=>/NaN|Infinity/.test(p.getAttribute('d')||'')).length,
+        zeroOverlay:Boolean(svg.querySelector('[data-asset-journal-zero-overlay="true"]')),
+        baseline:svg.querySelector('[data-asset-journal-baseline]')?{points:Number(svg.querySelector('[data-asset-journal-baseline]').dataset.baselinePoints),dash:svg.querySelector('[data-asset-journal-baseline]').getAttribute('stroke-dasharray'),length:svg.querySelector('[data-asset-journal-baseline]').getTotalLength()}:null,
+        controlBoxes:[...dialog.querySelectorAll('.journal-controls>*')].map(bounds)};
+    });
+    assert.equal(state.open,true);assert.equal(state.dataset.state,'ready');assert.equal(state.dataset.symbol,symbol);assert.equal(state.dataset.recordId,expected.id);
+    assert.equal(state.chartDataset.assetJournalRecord,expected.id);
+    assert.equal(Number(state.chartDataset.assetJournalFrozenRows),expected.output.path.length);
+    assert.equal(state.recordOptions.length,entries.length);
+    assert.deepEqual([...state.recordOptions].sort(),entries.map(item=>item.record.id).sort());
+    assert.ok(state.text.includes(expected.asOf)&&state.text.includes(expected.issuedAt.replace('T',' ').replace('Z',' UTC')),'Saved source clocks missing');
+    assert.ok(state.text.includes(expected.model.sourceCommit)&&state.text.includes(expected.outputHash),'Saved source/output identity missing');
+    assert.ok(state.text.includes('확률이나 신뢰구간이 아닙니다'),'Saved scenario band mislabelled');
+    assert.ok(state.pathCount>0&&state.pathLengths.some(value=>value>0)&&state.invalidPaths===0,'Journal chart has invalid or missing paths');
+    assert.ok(state.chartTitle.startsWith(symbol),'Journal chart has wrong asset title');
+    const expectedBaseline=expected.output.path.some(row=>Number.isFinite(row[4]));
+    assert.equal(Boolean(state.baseline),expectedBaseline,'Stored baseline must have its own plotted line');
+    if(expectedBaseline){assert.ok(state.baseline.length>0);assert.equal(state.baseline.dash,'2 5');}
+    if(symbol==='ETHUSD')assert.ok(state.text.includes('무작위 예시 1개')&&state.text.includes('파란 점선'),'Saved ETH random example and baseline semantics missing');
+    assert.ok(state.bodyScrollWidth<=state.bodyWidth+1&&state.pageWidth<=width+1,'Journal horizontal overflow');
+    assert.ok(state.box.left>=-1&&state.box.right<=width+1&&state.box.top>=-1&&state.box.bottom<=height+1,'Journal outside viewport');
+    for(const box of state.controlBoxes)assert.ok(box.width>0&&box.left>=state.box.left&&box.right<=state.box.right+1,'Journal control clipped');
+    dark(state.background,symbol+' journal');
+    if(full){
+      const hasZero=expected.output.path.some(row=>row[1]===0||row[2]===0);
+      assert.equal(state.chartDataset.assetJournalScale,hasZero?'linear':'log');
+      assert.equal(state.zeroOverlay,hasZero,'Exact zero-value chart overlay does not match frozen rows');
+      state.expectedZero=hasZero;
+    }
+    receipt.journal.stages.push({label,recordId:expected.id,scenario:expected.scenario.id,asOf:expected.asOf,issuedAt:expected.issuedAt,outputHash:expected.outputHash,
+      frozenRows:expected.output.path.length,scale:state.chartDataset.assetJournalScale,zeroOverlay:state.zeroOverlay,baseline:state.baseline,selected:state.selected,
+      box:state.box,bodyWidth:state.bodyWidth,bodyScrollWidth:state.bodyScrollWidth,pathCount:state.pathCount,invalidPaths:state.invalidPaths});
+    return state;
+  }
+  await inspect('base-180',baseRecord);
+  await screenshot(cdp,symbol.toLowerCase()+'-journal-'+width+'-base.png',receipt);
+  await evaluate(cdp,()=>{
+    const range=document.querySelector('[data-asset-journal-range]');range.value='0';range.dispatchEvent(new Event('change',{bubbles:true}));
+  });
+  await inspect('base-full',baseRecord,{full:true});
+  const stress=entries.find(item=>item.entry.scenario==='stress').record;
+  await evaluate(cdp,id=>{
+    const select=document.querySelector('[data-asset-journal-record]');select.value=id;select.dispatchEvent(new Event('change',{bubbles:true}));
+  },stress.id);
+  await until(()=>evaluate(cdp,id=>{
+    const dialog=document.querySelector('#asset-forecast-journal');
+    return dialog?.dataset.state==='ready'&&dialog.dataset.recordId===id;
+  },stress.id),symbol+' stress record verified');
+  await inspect('stress-full',stress,{full:true});
+  await evaluate(cdp,()=>document.querySelector('[data-asset-journal-date]').scrollIntoView({block:'center'}));
+  await settled(cdp);await click(cdp,'[data-asset-journal-date]');
+  await cdp.send('Input.dispatchKeyEvent',{type:'keyDown',key:'End',code:'End',windowsVirtualKeyCode:35,nativeVirtualKeyCode:35});
+  await cdp.send('Input.dispatchKeyEvent',{type:'keyUp',key:'End',code:'End',windowsVirtualKeyCode:35,nativeVirtualKeyCode:35});
+  await settled(cdp);
+  const end=stress.output.path.at(-1),lastPrice='$'+end[1].toLocaleString('en-US',{maximumFractionDigits:2});
+  receipt.journal.finalSelection=await evaluate(cdp,()=>({
+    text:document.querySelector('#asset-journal-selection').textContent,
+    value:document.querySelector('[data-asset-journal-date]').value,max:document.querySelector('[data-asset-journal-date]').max,
+    ariaValue:document.querySelector('[data-asset-journal-date]').getAttribute('aria-valuetext')
+  }));
+  assert.equal(receipt.journal.finalSelection.value,receipt.journal.finalSelection.max,'Native End key did not select final saved date');
+  assert.ok(receipt.journal.finalSelection.text.includes(end[0])&&receipt.journal.finalSelection.text.includes(' '+lastPrice),'Final saved value is not displayed exactly to documented precision');
+  await screenshot(cdp,symbol.toLowerCase()+'-journal-'+width+'-stress.png',receipt);
+  if(width===320&&symbol==='MSTR'){
+    // Native dialog close is queued; a cached import can reopen first.
+    await evaluate(cdp,()=>{
+      const opener=document.querySelector('[data-equity-action="forecast"]');
+      document.querySelector('#asset-forecast-journal').close();
+      document.dispatchEvent(new CustomEvent('atlas:asset-forecast-journal',{detail:{symbol:'BMNR',opener}}));
+    });
+    await until(()=>evaluate(cdp,()=>{
+      const dialog=document.querySelector('#asset-forecast-journal');
+      return dialog?.open&&dialog.dataset.symbol==='BMNR'&&dialog.dataset.state==='ready';
+    }),'reopened BMNR survives the older native close task');
+    await settled(cdp);
+    receipt.journal.closeReopen=await evaluate(cdp,()=>{
+      const dialog=document.querySelector('#asset-forecast-journal');return {open:dialog.open,...dialog.dataset};
+    });
+    assert.equal(receipt.journal.closeReopen.recordId,archive.find(item=>item.entry.symbol==='BMNR'&&item.entry.scenario==='base').record.id);
+    assert.equal(receipt.journal.closeReopen.state,'ready');
+  }
+  if(width===320&&symbol==='ETHUSD'){
+    await evaluate(cdp,()=>document.querySelector('#asset-journal-price-chart').scrollIntoView({block:'center'}));
+    await settled(cdp);await click(cdp,'#asset-journal-price-chart');
+    for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key:'Escape',code:'Escape',windowsVirtualKeyCode:27,nativeVirtualKeyCode:27});
+    await settled(cdp);receipt.journal.nativeEscapeFromChart=true;
+  }else await click(cdp,'[data-asset-journal-close]');
+  assert.equal(await evaluate(cdp,()=>document.querySelector('#asset-forecast-journal').open),false);
+  assert.equal(await evaluate(cdp,()=>document.querySelector('#asset-forecast-journal').dataset.state),'closed');
+}
+
+async function ethCase(cdp,width,receipt,expected,archive){
   await until(()=>evaluate(cdp,()=>{
     const s=document.querySelector('#eth-chart');return s&&Number(s.dataset.observedCandleCount)>0&&Number(s.dataset.forecastPointCount)>0;
   }),'ETH observed and future paths');
@@ -203,15 +318,16 @@ async function ethCase(cdp,width,receipt,expected){
   assert.ok(receipt.dialog.text.includes(expected.date),'Dialog must identify real cutoff');
   assert.ok(receipt.dialog.text.includes('ETH와 BMNR')&&receipt.dialog.text.includes('신뢰구간'),'Missing shared-source and uncertainty disclosure');
   await screenshot(cdp,'eth-'+width+'-evidence.png',receipt);
-  await click(cdp,'#eth-data-dialog > header > button');
+  await journalCase(cdp,width,receipt,'ETHUSD',archive);
   assert.equal((await bounds(cdp,'#eth-data-dialog')).open,false);
 }
 
-async function bmnrCase(cdp,width,receipt){
+async function equityCase(cdp,width,receipt,symbol,archive){
+  const label=symbol.toLowerCase();
   await until(()=>evaluate(cdp,()=>{
     const s=document.querySelector('#equity-chart');
     return s&&Number(s.dataset.observedCandleCount)>0&&Number(s.dataset.forecastPointCount)>0;
-  }),'BMNR observed and conditional paths');
+  }),symbol+' observed and conditional paths');
   await settled(cdp);
   receipt.chart=await evaluate(cdp,()=>{
     const chart=document.querySelector('#equity-chart');
@@ -221,13 +337,13 @@ async function bmnrCase(cdp,width,receipt){
       date:document.querySelector('#equity-bar-time').textContent,pathLength:path?.getTotalLength()??0,
       pathData:path?.getAttribute('d')??'',background:getComputedStyle(document.querySelector('.equity-plot')).backgroundColor};
   });
-  assert.equal(receipt.chart.symbol,'BMNR');assert.ok(receipt.chart.scrollWidth<=width+1,'BMNR horizontal page overflow');
+  assert.equal(receipt.chart.symbol,symbol);assert.ok(receipt.chart.scrollWidth<=width+1,symbol+' horizontal page overflow');
   assert.ok(receipt.chart.pathLength>0&&!/NaN|Infinity/.test(receipt.chart.pathData));
-  dark(receipt.chart.background,'BMNR plot');
-  await screenshot(cdp,'bmnr-'+width+'-loaded.png',receipt);
+  dark(receipt.chart.background,symbol+' plot');
+  await screenshot(cdp,label+'-'+width+'-loaded.png',receipt);
   await click(cdp,'[data-equity-action="forecast"]');
   receipt.dialog=await bounds(cdp,'#equity-detail-dialog');
-  assert.equal(receipt.dialog.open,true);visibleBounds(receipt.dialog,width);dark(receipt.dialog.background,'BMNR evidence dialog');
+  assert.equal(receipt.dialog.open,true);visibleBounds(receipt.dialog,width);dark(receipt.dialog.background,symbol+' evidence dialog');
   receipt.clockLabels=await evaluate(cdp,()=>{
     const pairs=[...document.querySelectorAll('#equity-detail-content dl dt')].map(dt=>[dt.textContent,dt.nextElementSibling?.textContent]);
     const dt=[...document.querySelectorAll('#equity-detail-content dt')].find(el=>el.textContent==='실제 발행 시각');
@@ -238,11 +354,40 @@ async function bmnrCase(cdp,width,receipt){
   assert.equal(receipt.clockLabels['실제 발행 시각'],'화면 계산 · 발행 원장에 저장되지 않음');
   assert.equal(receipt.clockLabels['정보 컷오프'],'개별 자료 수집 기록 참조');
   await settled(cdp);
-  await screenshot(cdp,'bmnr-'+width+'-clock.png',receipt);
-  await evaluate(cdp,()=>document.querySelector('#equity-detail-dialog > header > button').scrollIntoView({block:'start'}));
-  await settled(cdp);
-  await click(cdp,'#equity-detail-dialog > header > button');
+  await screenshot(cdp,label+'-'+width+'-clock.png',receipt);
+  await journalCase(cdp,width,receipt,symbol,archive);
   assert.equal((await bounds(cdp,'#equity-detail-dialog')).open,false);
+}
+
+
+async function syntheticZeroCase(cdp,width,receipt){
+  receipt.synthetic=true;
+  receipt.scope='Synthetic zero-valued output with a real preserved input snapshot, explicitly reconstructed and excluded from issued forecasts or measured predictive performance.';
+  await until(()=>evaluate(cdp,()=>Number(document.querySelector('#equity-chart')?.dataset.observedCandleCount)>0),'fixture stock chart');
+  await settled(cdp);await click(cdp,'[data-equity-action="forecast"]');
+  await evaluate(cdp,()=>document.querySelector('[data-open-asset-forecast-journal="BMNR"]').scrollIntoView({block:'center'}));
+  await settled(cdp);await click(cdp,'[data-open-asset-forecast-journal="BMNR"]');
+  await until(()=>evaluate(cdp,()=>document.querySelector('#asset-forecast-journal')?.dataset.state==='ready'),'verified synthetic zero journal');
+  receipt.journal=await evaluate(cdp,()=>{
+    const dialog=document.querySelector('#asset-forecast-journal'),svg=dialog.querySelector('svg');
+    const paths=[...svg.querySelectorAll('[data-asset-journal-zero-overlay="true"] path')];
+    return {dataset:{...dialog.dataset},chart:{...svg.dataset},text:dialog.textContent,
+      overlayPaths:paths.length,invalidPaths:paths.filter(p=>/NaN|Infinity/.test(p.getAttribute('d'))).length,
+      overlayLength:paths.reduce((sum,p)=>sum+p.getTotalLength(),0)};
+  });
+  assert.equal(receipt.journal.dataset.recordId,syntheticZeroRecord.id);
+  assert.equal(receipt.journal.chart.assetJournalScale,'linear');assert.equal(receipt.journal.overlayPaths,2);
+  assert.equal(receipt.journal.invalidPaths,0);assert.ok(receipt.journal.overlayLength>0);
+  assert.ok(receipt.journal.text.includes('회고 재구성 · 전향 평가 제외'),'Synthetic/reconstructed record was presented as prospective');
+  assert.ok(receipt.journal.text.includes('재구성 생성'),'Synthetic record clock was labelled as a real issue');
+  await evaluate(cdp,()=>document.querySelector('[data-asset-journal-date]').scrollIntoView({block:'center'}));
+  await settled(cdp);await click(cdp,'[data-asset-journal-date]');
+  for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key:'End',code:'End',windowsVirtualKeyCode:35,nativeVirtualKeyCode:35});
+  await settled(cdp);
+  receipt.journal.finalSelection=await evaluate(cdp,()=>document.querySelector('#asset-journal-selection').textContent);
+  assert.ok(receipt.journal.finalSelection.includes(syntheticZeroRecord.output.displayEnd)&&receipt.journal.finalSelection.includes(' $0 · 조건 범위 $0'),'Exact zero tail is missing from the native keyboard selection');
+  await screenshot(cdp,'zero-fixture-320.png',receipt);
+  await click(cdp,'[data-asset-journal-close]');
 }
 
 async function main(){
@@ -251,7 +396,7 @@ async function main(){
   assert.equal(typeof WebSocket,'function','Native WebSocket is required');
   report.sourceCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
   report.sourceHashes={};
-  for(const path of ['dist/index.html','dist/site-entry.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs']){
+  for(const path of ['dist/index.html','dist/site-entry.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json']){
     report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   }
   const fonts=execFileSync('fc-list',[':lang=ko'],{encoding:'utf8'}).trim();
@@ -266,7 +411,12 @@ async function main(){
   const mime={'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.woff2':'font/woff2','.ico':'image/x-icon'};
   server=createServer(async(req,res)=>{
     try{
-      const url=new URL(req.url,'http://127.0.0.1'),path=resolve(dist,'.'+decodeURIComponent(url.pathname==='/'?'/index.html':url.pathname)),rel=relative(dist,path);
+      const url=new URL(req.url,'http://127.0.0.1'),synthetic=url.pathname.startsWith('/__synthetic-zero__/');
+      const pathname=synthetic?url.pathname.slice('/__synthetic-zero__'.length):url.pathname;
+      if(synthetic&&syntheticJournalFiles.has(pathname)){
+        res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(syntheticJournalFiles.get(pathname));return;
+      }
+      const path=resolve(dist,'.'+decodeURIComponent(pathname==='/'?'/index.html':pathname)),rel=relative(dist,path);
       if(rel==='..'||rel.startsWith('..'+sep)){res.writeHead(403);res.end('Forbidden');return;}
       if(!(await stat(path)).isFile())throw new Error('Not a file');
       const bytes=await readFile(path);res.writeHead(200,{'Content-Type':mime[extname(path)]||'application/octet-stream','Cache-Control':'no-store'});res.end(bytes);
@@ -289,7 +439,33 @@ async function main(){
   const archived=parseEthArchive(JSON.parse(await readFile(resolve(dist,'data/eth-ohlc.json'),'utf8')),'daily');
   const last=archived.candles.at(-1),expected={price:'$'+new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(last.close),date:last.date.slice(0,10),close:last.close};
   report.expectedObservedEth=expected;
-  for(const width of widths)for(const page of ['data','eth','bmnr']){
+  const index=JSON.parse(await readFile(resolve(dist,'data/asset-forecast-ledger/index.json'),'utf8'));
+  const archive=[];
+  for(const entry of index.entries)archive.push({entry,record:JSON.parse(await readFile(resolve(dist,'data/asset-forecast-ledger',entry.recordPath),'utf8'))});
+  // A separate URL namespace serves a labelled test-only zero path. It never
+  // writes the production archive or changes the nine real issue records.
+  const source=archive.find(item=>item.entry.symbol==='BMNR'&&item.entry.scenario==='base');
+  const snapshot=JSON.parse(await readFile(resolve(dist,'data/asset-forecast-ledger',source.entry.snapshotPath),'utf8'));
+  const anchor=snapshot.inputs.primaryPrices.at(-1)[1],at=Date.parse(snapshot.asOf+'T00:00:00Z');
+  const path=Array.from({length:201},(_,i)=>{
+    const price=i<20?anchor*(1-i/20):(i>=30&&i<=35?anchor*.1:0);
+    return {date:new Date(at+i*86400000).toISOString().slice(0,10),price,low:price*.5,high:anchor,baselinePrice:null};
+  });
+  const files={'scripts/verify-eth-candidate-browser.mjs':report.sourceHashes['scripts/verify-eth-candidate-browser.mjs']};
+  syntheticZeroRecord=await createAssetForecastRecord({snapshot,recordKind:'reconstructed',
+    model:{version:'synthetic-zero-browser-fixture',sourceCommit:report.sourceCommit,files,sourceHash:await forecastHash(files)},
+    options:{syntheticBrowserFixture:true},forecast:{symbol:'BMNR',asOf:snapshot.asOf,scenario:{id:'base',label:'Synthetic zero test only'},
+      displayEnd:path.at(-1).date,path}});
+  const syntheticEntry=assetForecastIndexEntry(syntheticZeroRecord);
+  const syntheticIndex={schemaVersion:1,kind:'atlas-asset-forecast-index',entries:[syntheticEntry]};
+  syntheticJournalFiles.set('/data/asset-forecast-ledger/index.json',JSON.stringify(syntheticIndex));
+  syntheticJournalFiles.set('/data/asset-forecast-ledger/'+syntheticEntry.recordPath,JSON.stringify(syntheticZeroRecord));
+  syntheticJournalFiles.set('/data/asset-forecast-ledger/'+syntheticEntry.snapshotPath,JSON.stringify(snapshot));
+  const fixtureBytes=Buffer.from(JSON.stringify({synthetic:true,description:'Browser-only zero-valued reconstructed path; no prospective forecast or economic observation.',index:syntheticIndex,record:syntheticZeroRecord,snapshotId:snapshot.id},null,2)+'\n');
+  await writeFile(resolve(out,'zero-fixture.json'),fixtureBytes);
+  report.syntheticFixture={file:'zero-fixture.json',bytes:fixtureBytes.length,sha256:hash(fixtureBytes),recordId:syntheticZeroRecord.id,snapshotId:snapshot.id};
+  for(const width of widths)for(const page of (width===320?['data','eth','bmnr','mstr','zero-fixture']:['data','eth','bmnr','mstr'])){
+
     const receipt={page,width,height,status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[]};
     report.cases.push(receipt);let cdp,targetId;
     try{
@@ -311,9 +487,9 @@ async function main(){
       await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<=390});
       await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:width<=390,maxTouchPoints:1});
       await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'},{name:'prefers-color-scheme',value:'dark'}]});
-      receipt.url=base+(page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol=BMNR&granularity=daily&type=line');
+      receipt.url=base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
-      if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected);else await bmnrCase(cdp,width,receipt);
+      if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
       assert.equal(receipt.runtimeErrors.length,0,'Browser runtime errors: '+JSON.stringify(receipt.runtimeErrors));
       assert.equal(receipt.resourceErrors.length,0,'Browser resource failures: '+JSON.stringify(receipt.resourceErrors));
       receipt.status='passed';
@@ -325,7 +501,7 @@ async function main(){
       if(targetId)try{await browser.send('Target.closeTarget',{targetId});}catch(error){report.failures.push({page,width,cleanupError:errorText(error)});}
     }
   }
-  assert.equal(report.cases.length,15);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');
+  assert.equal(report.cases.length,21);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');
   report.status='passed';
 }
 try{await main();}catch(error){report.status='failed';report.error=errorText(error);process.exitCode=1;}
@@ -336,5 +512,5 @@ finally{
   if(server)await new Promise(resolve=>server.close(resolve));
   if(profile)try{await rm(profile,{recursive:true,force:true});}catch(error){report.cleanupError=errorText(error);}
   await mkdir(out,{recursive:true});await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,sourceHashes:report.sourceHashes,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,sticky:c.sticky,clockLabels:c.clockLabels,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
 }
