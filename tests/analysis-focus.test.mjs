@@ -47,6 +47,7 @@ class Element extends Surface {
 }
 function fixture(){
   const doc=new Surface();doc.createElement=tag=>new Element(tag,doc);doc.createElementNS=(_,tag)=>doc.createElement(tag);doc.createTextNode=text=>Object.assign(doc.createElement('#text'),{textContent:text});
+  doc.defaultView=new Surface();doc.hidden=false;
   doc.body=doc.createElement('body');doc.activeElement=doc.body;doc.querySelector=selector=>doc.body.querySelector(selector);doc.querySelectorAll=selector=>doc.body.querySelectorAll(selector);doc.getElementById=id=>doc.querySelector(`#${id}`);
   const add=(parent,tag,className)=>{const node=doc.createElement(tag);node.className=className;parent.append(node);return node;};
   const opener=add(doc.body,'button');opener.id='atlas-mode-menu';
@@ -168,4 +169,42 @@ test('compact pane access follows actual order, retains folded studies and exclu
   f.controller.views.get('cycles').maximize.click();assert.equal(access.hidden,true);assert.deepEqual(select.children.map(option=>option.value),['cycles']);
   f.controller.views.get('cycles').maximize.click();assert.equal(access.hidden,false);assert.deepEqual(select.children.map(option=>option.value),['duration','cycles','periods','cryptocon']);
   f.update({added:['cycles']});assert.equal(access.hidden,true);f.controller.destroy();
+});
+
+test('pane resizing commits the release coordinate even without an intervening move',()=>{
+  const f=fixture();f.update({paneHeights:{cycles:400}});const view=f.controller.views.get('cycles');
+  const pointer=(type,y,id=1,extra={})=>view.resize.dispatchEvent({type,button:0,pointerId:id,clientY:y,preventDefault(){},...extra});
+  pointer('pointerdown',300);pointer('pointermove',340);pointer('pointerup',390);
+  assert.equal(f.state.paneHeights.cycles,490);assert.equal(view.resize.captured,null);
+  pointer('pointerdown',300);pointer('pointerup',330);assert.equal(f.state.paneHeights.cycles,520);
+  f.controller.destroy();
+});
+
+test('a second pointer cannot replace the owner of an analysis resize',()=>{
+  const f=fixture();f.update({paneHeights:{cycles:400}});const view=f.controller.views.get('cycles');
+  const pointer=(type,y,id=1,extra={})=>view.resize.dispatchEvent({type,button:0,pointerId:id,clientY:y,preventDefault(){},...extra});
+  pointer('pointerdown',300);pointer('pointermove',340);pointer('pointerdown',600,2,{isPrimary:false});
+  pointer('pointermove',700,2);pointer('pointerup',700,2);assert.equal(f.state.paneHeights.cycles,400);
+  pointer('pointerup',390);assert.equal(f.state.paneHeights.cycles,490);assert.equal(view.resize.captured,null);
+  f.controller.destroy();
+});
+
+test('pane hiding, collapse, external resize and interruption retire stale drag commits',()=>{
+  for(const interruption of ['hidden','folded','maximized','external','keyboard','blur','visibility','destroy']){
+    const f=fixture();f.update({paneHeights:{cycles:400}});const view=f.controller.views.get('cycles');
+    const pointer=(type,y)=>view.resize.dispatchEvent({type,button:0,pointerId:1,clientY:y,preventDefault(){}});
+    pointer('pointerdown',300);pointer('pointermove',340);
+    if(interruption==='hidden')f.update({hidden:['cycles'],paneHeights:{cycles:400}});
+    else if(interruption==='folded')f.update({minimized:['cycles'],paneHeights:{cycles:400}});
+    else if(interruption==='maximized')f.update({maximized:'cycles',paneHeights:{cycles:400}});
+    else if(interruption==='external')f.update({paneHeights:{cycles:550}});
+    else if(interruption==='keyboard')view.resize.dispatchEvent({type:'keydown',key:'ArrowDown',preventDefault(){}});
+    else if(interruption==='blur')f.doc.defaultView.dispatchEvent({type:'blur'});
+    else if(interruption==='visibility'){f.doc.hidden=true;f.doc.dispatchEvent({type:'visibilitychange'});}
+    else f.controller.destroy();
+    const saved=f.state.paneHeights.cycles;pointer('pointerup',600);
+    assert.equal(f.state.paneHeights.cycles,saved,`${interruption} must retire the old pointer owner`);
+    assert.equal(view.resize.captured,null,`${interruption} must release capture`);
+    if(interruption!=='destroy')f.controller.destroy();
+  }
 });

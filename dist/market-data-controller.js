@@ -41,6 +41,12 @@ export function createMarketDataController({ product = 'BTC-USD', snapshotUrl, o
     const prior = get(interval);
     cancel();
     if (!force && prior.status !== 'idle') return;
+    // An explicit refresh retries the viewport even if recent candles fail
+    // and fallback retains the existing history object and candle series.
+    if (force) {
+      const history = histories.get(interval);
+      if (history) history.retryAt = 0;
+    }
     const controller = new AbortController();
     const request = { interval, controller, timer: setTimeout(() => controller.abort(new Error('Candle request timed out')), timeoutMs) };
     active = request;

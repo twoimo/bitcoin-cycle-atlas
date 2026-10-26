@@ -103,19 +103,28 @@ export function mountAnalysisIndicators({stage,svg,modeTabs,controls}) {
     const height=()=>indicatorState.paneHeights[mode]||ANALYSIS_PANE_DEFAULT_HEIGHT;
     const bounded=value=>Math.round(Math.min(ANALYSIS_PANE_MAX_HEIGHT,Math.max(ANALYSIS_PANE_MIN_HEIGHT,value)));
     const showHeight=value=>{card.style.setProperty('--analysis-pane-height',`${value}px`);resize.setAttribute('aria-valuenow',String(value));resize.setAttribute('aria-valuetext',`${value}px`);};
-    const finish=(event,cancel=false)=>{if(!drag||event.pointerId!==undefined&&event.pointerId!==drag.pointerId)return;const current=drag;drag=null;card.dataset.resizing='false';if(cancel)showHeight(height());else indicator('resize',mode,{height:current.height});try{resize.releasePointerCapture?.(current.pointerId);}catch{}};
-    resize.addEventListener('pointerdown',event=>{if(event.button!==0||indicatorState.maximized===mode)return;event.preventDefault();resize.focus({preventScroll:true});const initial=card.getBoundingClientRect?.().height||height();drag={pointerId:event.pointerId,y:event.clientY,height:bounded(initial),initial};card.dataset.resizing='true';resize.setPointerCapture?.(event.pointerId);});
-    resize.addEventListener('pointermove',event=>{if(!drag||event.pointerId!==drag.pointerId)return;event.preventDefault();drag.height=bounded(drag.initial+event.clientY-drag.y);showHeight(drag.height);});
+    const finish=(event,cancel=false)=>{
+      if(!drag||event.pointerId!==undefined&&event.pointerId!==drag.pointerId)return;
+      const current=drag;
+      if(!cancel&&Number.isFinite(event.clientY))current.height=bounded(current.initial+event.clientY-current.y);
+      // Publishing state and releasing capture can reenter this controller.
+      drag=null;card.dataset.resizing='false';
+      if(cancel)showHeight(height());else indicator('resize',mode,{height:current.height});
+      try{resize.releasePointerCapture?.(current.pointerId);}catch{}
+    };
+    const cancelResize=()=>finish({},true);
+    resize.addEventListener('pointerdown',event=>{if(drag||event.button!==0||event.isPrimary===false||!Number.isFinite(event.clientY)||card.hidden||resize.hidden||indicatorState.maximized===mode)return;event.preventDefault();resize.focus({preventScroll:true});const initial=card.getBoundingClientRect?.().height||height();drag={pointerId:event.pointerId,y:event.clientY,height:bounded(initial),savedHeight:height(),initial};card.dataset.resizing='true';try{resize.setPointerCapture?.(event.pointerId);}catch{cancelResize();}});
+    resize.addEventListener('pointermove',event=>{if(!drag||event.pointerId!==drag.pointerId||!Number.isFinite(event.clientY))return;event.preventDefault();drag.height=bounded(drag.initial+event.clientY-drag.y);showHeight(drag.height);});
     resize.addEventListener('pointerup',event=>finish(event));resize.addEventListener('pointercancel',event=>finish(event,true));resize.addEventListener('lostpointercapture',event=>finish(event,true));
     resize.addEventListener('keydown',event=>{
       if(event.key==='Escape'&&drag){event.preventDefault();finish({},true);return;}
       const step=event.shiftKey?60:20,next=event.key==='ArrowUp'?height()-step:event.key==='ArrowDown'?height()+step:event.key==='Home'?ANALYSIS_PANE_MIN_HEIGHT:event.key==='End'?ANALYSIS_PANE_MAX_HEIGHT:null;
-      if(next===null)return;event.preventDefault();indicator('resize',mode,{height:bounded(next)});
+      if(next===null)return;event.preventDefault();cancelResize();indicator('resize',mode,{height:bounded(next)});
     });
-    resize.addEventListener('dblclick',event=>{event.preventDefault();indicator('resize',mode,{height:ANALYSIS_PANE_DEFAULT_HEIGHT});});
+    resize.addEventListener('dblclick',event=>{event.preventDefault();cancelResize();indicator('resize',mode,{height:ANALYSIS_PANE_DEFAULT_HEIGHT});});
     body.append(meta,controlRow,viewport,selection,note);card.append(header,body,resize);windows.append(card);
     card.addEventListener('pointerdown',()=>command('activate',mode),true);card.addEventListener('focusin',()=>command('activate',mode));
-    views.set(mode,{card,body,minimize,maximize,up,down,resize,showHeight,chart,title,caption,legend,note,summary,locate,prev,next});
+    views.set(mode,{card,body,minimize,maximize,up,down,resize,showHeight,cancelResize,syncResize(available){if(drag&&(!available||drag.savedHeight!==height()))cancelResize();},chart,title,caption,legend,note,summary,locate,prev,next});
   }
   function goToPane({focus=false}={}){
     const view=views.get(paneSelect.value);if(!view||view.card.hidden)return;
@@ -152,6 +161,7 @@ export function mountAnalysisIndicators({stage,svg,modeTabs,controls}) {
     }
     for(const [mode,view] of views){
       const visible=isIndicatorVisible(indicatorState,mode,frequency)&&(!maximized||mode===maximized),folded=minimized.includes(mode),focusInBody=view.body.contains(focused),expanded=mode===maximized;
+      view.syncResize(visible&&!folded&&!expanded);
       view.card.hidden=!visible;view.card.dataset.active=String(mode===active);view.card.dataset.minimized=String(folded);view.body.hidden=folded;
       view.card.dataset.maximized=String(expanded);view.resize.hidden=folded||expanded;
       if(view.card.dataset.resizing!=='true')view.showHeight(paneHeights[mode]||ANALYSIS_PANE_DEFAULT_HEIGHT);
@@ -187,6 +197,9 @@ export function mountAnalysisIndicators({stage,svg,modeTabs,controls}) {
   }
   // Scroll inside floating analysis windows never pans the underlying price axis.
   windows.addEventListener('wheel',event=>event.stopPropagation(),{passive:true});windows.addEventListener('pointerdown',event=>event.stopPropagation());windows.addEventListener('dblclick',event=>event.stopPropagation());windows.addEventListener('contextmenu',event=>event.stopPropagation());windows.addEventListener('keydown',event=>event.stopPropagation());
+  const cancelResizes=()=>{for(const view of views.values())view.cancelResize();};
+  const onVisibility=()=>{if(doc.hidden)cancelResizes();};
+  doc.defaultView?.addEventListener('blur',cancelResizes);doc.defaultView?.addEventListener('resize',cancelResizes);doc.addEventListener('visibilitychange',onVisibility);
   doc.addEventListener('atlas:analysis-state',setState);doc.addEventListener('atlas:indicator-state',indicators);
-  return {element:windows,views,paneSelect,paneGo,destroy(){doc.removeEventListener('atlas:analysis-state',setState);doc.removeEventListener('atlas:indicator-state',indicators);windows.remove();}};
+  return {element:windows,views,paneSelect,paneGo,destroy(){cancelResizes();doc.defaultView?.removeEventListener('blur',cancelResizes);doc.defaultView?.removeEventListener('resize',cancelResizes);doc.removeEventListener('visibilitychange',onVisibility);doc.removeEventListener('atlas:analysis-state',setState);doc.removeEventListener('atlas:indicator-state',indicators);windows.remove();}};
 }

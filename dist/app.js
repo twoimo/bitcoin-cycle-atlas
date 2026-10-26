@@ -9,10 +9,10 @@ import { renderPeakView } from './peak-view.js?v=1.19.0';
 import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.19.0';
 // Changed release modules use a versioned URL so a cached v1.5 module cannot
 // leave a new long-horizon page running the old three-year workbench.
-import { initViewportWorkspace } from './viewport-workspace.js?v=1.19.0';
-import { initLabView } from "./lab-view.js?v=1.24.0";
+import { initViewportWorkspace } from "./viewport-workspace.js?v=1.26.5";
+import { initLabView } from "./lab-view.js?v=1.26.5";
 import { initEvidenceView, showEvidenceView } from './evidence-view.js?v=1.20.0';
-import { initDailyDataView } from './daily-data-view.js?v=1.26.4';
+import { initDailyDataView } from "./daily-data-view.js?v=1.26.5";
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.26.4';
 
 const $ = (selector) => document.querySelector(selector);

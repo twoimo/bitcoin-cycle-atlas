@@ -286,8 +286,10 @@ check('A fresh year-end close on New Year’s Day is correctly unavailable befor
   }
 });
 
-check('Published all-asset history has the real observed sample years and first-session baselines', () => {
-  const result = buildAssetComparison(published, { asOfDate: '2026-10-25' });
+check('Published all-asset history preserves the reviewed 2026-10-23 sample years and first-session baselines after refresh', () => {
+  // This is a historical witness, so freeze the cutoff as well as its expected
+  // values. The published archive continues growing with the refresh workflow.
+  const result = buildAssetComparison(published, { asOfDate: '2026-10-23' });
   assert.deepEqual(result.rows.map(asset => asset.symbol), ['BTC', 'SPY', 'QQQ', 'NVDA', 'AAPL', 'GOOG', 'MSFT', 'AMZN', 'META', 'AVGO', 'PLTR', 'TSLA', 'HOOD', 'TLT', 'IEF', 'GLD', 'SLV', 'PDBC']);
   assert.deepEqual(result.rows.map(asset => asset.sampleYears), [16, 33, 27, 27, 46, 22, 40, 29, 14, 17, 6, 16, 5, 24, 24, 22, 20, 12]);
   assert.ok(result.rows.reduce((count, asset) => count + asset.observationCount, 0) > 97000);
@@ -311,7 +313,7 @@ check('Published all-asset history has the real observed sample years and first-
 console.log(`Asset comparison: ${checks} checks passed.`);
 
 check('BTC uses complete UTC calendar days, includes leap days, and never borrows exchange-session rules', () => {
-  const btc = buildAssetComparison(published, { asOfDate: '2026-10-26' }).rows[0];
+  const btc = buildAssetComparison(published, { asOfDate: '2026-10-23' }).rows[0];
   assert.equal(btc.symbol, 'BTC'); assert.equal(btc.yearStartDate, '2026-01-01');
   assert.equal(btc.source.url, published.assets[0].meta.source);
   assert.equal(btc.source.responseSha256, published.assets[0].meta.rawSha256);
@@ -319,24 +321,26 @@ check('BTC uses complete UTC calendar days, includes leap days, and never borrow
   assert.equal(btc.samples.find(sample => sample.year === 2012).count, 366);
   assert.equal(btc.coverage.complete, true); assert.equal(btc.coverage.gapCount, 0);
   const gapBundle = structuredClone(published); gapBundle.assets[0].prices.splice(gapBundle.assets[0].prices.findIndex(([date]) => date === '2024-02-29'), 1);
-  const gap = buildAssetComparison(gapBundle, { asOfDate: '2026-10-26' }).rows[0];
+  const gap = buildAssetComparison(gapBundle, { asOfDate: '2026-10-23' }).rows[0];
   assert.equal(gap.coverage.complete, false); assert.equal(gap.coverage.gapCount, 1); assert.equal(gap.judgment.id, 'unavailable');
   assert.match(gap.coverage.issues.find(issue => issue.includes('달력일')), /하루를 넘는 UTC 달력일 관측 간격 1개/);
   const twoDayGap = structuredClone(published); twoDayGap.assets[0].prices.splice(twoDayGap.assets[0].prices.findIndex(([date]) => date === '2024-02-29'), 1);
-  const oneGapDayRow = buildAssetComparison(twoDayGap, { asOfDate: '2026-10-26' }).rows[0];
+  const oneGapDayRow = buildAssetComparison(twoDayGap, { asOfDate: '2026-10-23' }).rows[0];
   assert.equal(oneGapDayRow.coverage.gapCount, 1);
   assert.match(oneGapDayRow.coverage.issues.find(issue => issue.includes('달력일')), /달력일 관측 간격 1개/);
   const eightDayGap = structuredClone(published); eightDayGap.assets[0].prices = eightDayGap.assets[0].prices.filter(([date]) => date < '2024-02-20' || date > '2024-02-26');
   const eightDayAdjacency = eightDayGap.assets[0].prices.filter(([date]) => date >= '2024-02-19' && date <= '2024-02-27').map(([date]) => date);
   assert.deepEqual(eightDayAdjacency, ['2024-02-19', '2024-02-27']);
-  const eightGapRow = buildAssetComparison(eightDayGap, { asOfDate: '2026-10-26' }).rows[0];
+  const eightGapRow = buildAssetComparison(eightDayGap, { asOfDate: '2026-10-23' }).rows[0];
   assert.equal(eightGapRow.coverage.gapCount, 1);
   assert.match(eightGapRow.coverage.issues.find(issue => issue.includes('달력일')), /달력일 관측 간격 1개/);
   assert.equal(btc.latestDate, '2026-10-23'); assert.equal(btc.judgment.available, true);
   const lateStart = structuredClone(published); lateStart.assets[0].prices = lateStart.assets[0].prices.filter(([date]) => date !== '2026-01-01');
-  const noJanFirst = buildAssetComparison(lateStart, { asOfDate: '2026-10-26' }).rows[0];
+  const noJanFirst = buildAssetComparison(lateStart, { asOfDate: '2026-10-23' }).rows[0];
   assert.equal(noJanFirst.coverage.complete, false); assert.equal(noJanFirst.judgment.id, 'unavailable');
-  const stale = buildAssetComparison(published, { asOfDate: '2026-10-31' }).rows[0];
+  const staleBundle = structuredClone(published);
+  staleBundle.assets[0].prices = staleBundle.assets[0].prices.filter(([date]) => date <= '2026-10-23');
+  const stale = buildAssetComparison(staleBundle, { asOfDate: '2026-10-31' }).rows[0];
   assert.equal(stale.latestDate, '2026-10-23'); assert.equal(stale.judgment.id, 'unavailable');
   assert.match(stale.judgment.reason, /7일 넘게/);
 });

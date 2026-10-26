@@ -29,7 +29,15 @@ function finite(value, label) {
 function percentage(price, baseline) {
   const ratio = price / baseline;
   if (!Number.isFinite(ratio) || ratio <= 0) throw new RangeError('Asset comparison price ratio overflow or underflow');
-  return finite((ratio - 1) * 100, 'percentage');
+  return finite((price - baseline) / baseline * 100, 'percentage');
+}
+
+// Comparison of an averaged historical return with a current return combines
+// several floating-point operations. Resolve only roundoff-sized ties at the
+// declared inclusive boundary; never round prices or percentage thresholds.
+function strictlyBelow(value, boundary) {
+  const tolerance = 8 * Number.EPSILON * Math.max(Math.abs(value), Math.abs(boundary));
+  return value < boundary && boundary - value > tolerance;
 }
 
 // Every member of each mean has the same sign; this update avoids overflowing
@@ -63,13 +71,13 @@ function classify({ sampleYears, meanRisePct, meanFallPct, ytdPct, current, late
   if (sampleYears < MIN_SAMPLE_YEARS) return unavailable(`과거 표본 ${sampleYears}개 연도로는 최소 ${MIN_SAMPLE_YEARS}개 연도 기준을 충족하지 못합니다.`, thresholds);
   if (!(meanRisePct > 0 && meanFallPct < 0) || !Number.isFinite(ytdPct)) return unavailable('상승·낙폭 양쪽의 평균 범위를 확보하지 못했습니다.', thresholds);
   let id, reason;
-  if (ytdPct <= thresholds.strongBuyPct) {
+  if (!strictlyBelow(thresholds.strongBuyPct, ytdPct)) {
     id = 'strong-buy'; reason = '올해 첫 종가 대비 하락이 과거 평균 낙폭 경계에 도달하거나 그보다 깊습니다.';
-  } else if (ytdPct <= thresholds.buyPct) {
+  } else if (!strictlyBelow(thresholds.buyPct, ytdPct)) {
     id = 'buy'; reason = '올해 첫 종가 대비 하락이 과거 평균 낙폭의 절반 경계를 넘었습니다.';
-  } else if (ytdPct < thresholds.sellPct) {
+  } else if (strictlyBelow(ytdPct, thresholds.sellPct)) {
     id = 'neutral'; reason = '올해 가격 변화가 과거 평균 상승·낙폭의 절반 경계 사이에 있습니다.';
-  } else if (ytdPct < thresholds.strongSellPct) {
+  } else if (strictlyBelow(ytdPct, thresholds.strongSellPct)) {
     id = 'sell'; reason = '올해 첫 종가 대비 상승이 과거 평균 상승의 절반 경계에 도달했습니다.';
   } else {
     id = 'strong-sell'; reason = '올해 첫 종가 대비 상승이 과거 평균 상승 경계에 도달하거나 그보다 높습니다.';

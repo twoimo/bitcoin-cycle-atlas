@@ -65,7 +65,7 @@
       let failed = false;
       function capture(event) {
         const target = event.target;
-        if (target?.tagName === 'LINK' && /(?:^|\s)stylesheet(?:\s|$)/i.test(target.rel || '')) failed = true;
+        if (target?.tagName === 'LINK' && target.id !== 'atlas-optional-fonts' && /(?:^|\s)stylesheet(?:\s|$)/i.test(target.rel || '')) failed = true;
       }
       window.addEventListener('error', capture, true);
       window.__atlasTakeEarlyStyleFailure = () => {
@@ -76,7 +76,16 @@
     })();
   </script>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./styles.css?v=1.11.0-milestones.4">
+  <link id="atlas-optional-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&amp;family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&amp;display=swap" media="print">
+  <script id="atlas-fonts-script">
+    (() => {
+      const fonts = document.getElementById('atlas-optional-fonts');
+      const activate = () => { fonts.media = 'all'; };
+      fonts.addEventListener('load', activate, { once: true });
+      if (fonts.sheet) activate();
+    })();
+  </script>
+  <link rel="stylesheet" href="./styles.css?v=1.26.5">
   <link rel="stylesheet" href="./compact.css?v=1.11.0">
   <link rel="stylesheet" href="./outlook.css?v=1.11.0">
   <link rel="stylesheet" href="./lab.css?v=1.11.0">
@@ -151,7 +160,7 @@
       }
       function onError(event) {
         const target = event.target;
-        const stylesheet = target?.tagName === 'LINK' && /(?:^|\s)stylesheet(?:\s|$)/i.test(target.rel || '');
+        const stylesheet = target?.tagName === 'LINK' && target.id !== 'atlas-optional-fonts' && /(?:^|\s)stylesheet(?:\s|$)/i.test(target.rel || '');
         if (target === window || target?.tagName === 'SCRIPT' || stylesheet) fail();
       }
       document.getElementById('atlas-boot-retry').addEventListener('click', () => location.reload());
@@ -305,6 +314,6 @@
   <dialog id="method-dialog" aria-labelledby="method-title"><div class="dialog-top"><span class="eyebrow">DATA & METHODOLOGY</span><button id="close-method" class="icon-button" aria-label="방법론 닫기"><span data-icon="close"></span></button></div><h2 id="method-title">방법론과 출처</h2><p class="dialog-lead">차트의 출발점부터 가격의 정의까지, 비교에 사용한 기준입니다.</p><div id="method-content"></div><button id="method-done" class="primary-button">확인했습니다</button></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <dialog id="evidence-dialog" aria-labelledby="evidence-detail-title"><div class="dialog-top"><span class="eyebrow">EVIDENCE & LIMITS</span><button id="evidence-close" class="icon-button" aria-label="자료 상세 닫기"><span data-icon="close"></span></button></div><h2 id="evidence-detail-title"></h2><div id="evidence-detail-body"></div></dialog>
-  <script type="module" src="./site-entry.js?v=1.26.4"></script>
+  <script type="module" src="./site-entry.js?v=1.26.5"></script>
 </body>
 </html>

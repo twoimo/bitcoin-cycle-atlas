@@ -76,7 +76,7 @@ jobs:
       - name: Refresh completed US equity sessions
         continue-on-error: true
         run: npm run refresh:equities
-      - name: Refresh the full 17-asset comparison history
+      - name: Refresh the full 18-asset comparison history
         # Atomic validation keeps the previous complete bundle on provider failure.
         continue-on-error: true
         run: npm run refresh:asset-comparison

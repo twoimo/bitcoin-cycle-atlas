@@ -1,6 +1,6 @@
 import { HALVINGS, utcDay, dateFromDay, validateDataset } from './cycle-engine.js?v=1.19.0';
 import { shiftCalendarMonths } from './cycle-timing.js?v=1.23.0';
-import { computeRollingStates } from "./market-structure.js?v=1.23.0";
+import { computeRollingStates } from "./market-structure.js?v=1.26.5";
 
 /**
  * Conditional historical-block scenarios, not a probability-calibrated forecast.
@@ -117,7 +117,7 @@ function context(input, options) {
   const priorRows = rows.filter(row => row.date < currentHalving.date);
   const priorHalving = HALVINGS.findLast(item => item.date < currentHalving.date);
   const previousPeak = pickExtreme(priorRows.filter(row => !priorHalving || row.date >= priorHalving.date));
-  const referenceDate = options.referenceDate ?? (options.asOf ? addDays(current.date, 1) : settings.referenceDate);
+  const referenceDate = options.referenceDate ?? (options.asOf || current.date >= settings.referenceDate ? addDays(current.date, 1) : settings.referenceDate);
   utcDay(referenceDate);
   if (referenceDate <= current.date) throw new RangeError('referenceDate must follow the latest completed UTC price');
   const displayEnd = options.displayEnd ?? shiftCalendarMonths(referenceDate, settings.horizonYears * 12);

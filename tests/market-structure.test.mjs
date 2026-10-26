@@ -12,6 +12,29 @@ const data = JSON.parse(await readFile(new URL('./fixtures/btc-daily-2026-10-20.
 const rows = (prices, start = '2020-01-01') => prices.map((price, index) => [dateFromDay(utcDay(start) + index), price]);
 const close = (a, b, tolerance = 1e-10) => assert.ok(Math.abs(a - b) <= tolerance * Math.max(1, Math.abs(b)), `${a} != ${b}`);
 
+test('a close exactly on its geometric mean keeps its regime when quote units change',()=>{
+  // Geometric mean of 1, 4, 2 is exactly 2. Equality must not be promoted to
+  // a strict rebound signal by the absolute log/exp round trip.
+  for(const unit of [1,10,100,1e-100,1e100]){
+    const result=computeRollingStates(rows([1,4,2].map(price=>price*unit)),{shortWindow:2,longWindow:2});
+    assert.equal(result.current.state,'pullback',`quote multiplier ${unit}`);
+    close(result.current.shortMA/unit,2);
+  }
+});
+
+test('rolling volatility forgets an expired shock and matches a two-pass oracle on each full window',()=>{
+  const values=[1,1e100,...Array.from({length:400},(_,i)=>1e100*(1+1e-9*Math.sin(i)))];
+  const input=rows(values),shortWindow=28,longWindow=91,result=computeRollingStates(input,{shortWindow,longWindow});
+  for(let index=shortWindow;index<values.length;index++){
+    const returns=values.slice(index-shortWindow+1,index+1).map((price,offset)=>Math.log(price/values[index-shortWindow+offset]));
+    const mean=returns.reduce((sum,value)=>sum+value,0)/returns.length;
+    const expected=Math.sqrt(returns.reduce((sum,value)=>sum+(value-mean)**2,0)/(returns.length-1))*Math.sqrt(365)*100;
+    const actual=result.points[index].realizedVolPct;
+    assert.ok(Math.abs(actual-expected)<=1e-10*Math.max(1e-9,expected),`volatility at ${index}: ${actual} != ${expected}`);
+  }
+  assert.ok(result.current.realizedVolPct<0.00001,'expired jumps cannot leave a persistent volatility floor');
+});
+
 test('log retracement remains finite when the endpoint ratio is outside the numeric range', () => {
   for (const [start, end] of [[1e-200, 1e200], [1e200, 1e-200]]) {
     const levels = fibonacciLevels(start, end, {ratios:[0.25, 0.5, 0.75], scale:'log'});
@@ -169,6 +192,34 @@ test('appending future prices cannot rewrite causal labels or confirmed pivots',
       assert.deepEqual(computeRollingStates(mutatedFuture, { frequency, asOf: cutoff }).points, states.points);
       assert.deepEqual(detectDirectionalChanges(mutatedFuture, { frequency, asOf: cutoff }).pivots, pivots.pivots);
     }
+  }
+});
+
+test('an invalid future price cannot make a valid as-of prefix unavailable',()=>{
+  const input=rows([100,105,120,101,113]),asOf=input.at(-1)[0];
+  for(const bad of [NaN,Infinity,0,-1]){
+    const future=[...input,['2020-01-06',bad]];
+    for(const compute of [computeRollingStates,detectDirectionalChanges,aggregateCloseBars]){
+      assert.deepEqual(compute(future,{asOf}),compute(input,{asOf}));
+      assert.throws(()=>compute(future,{asOf:'2020-01-06'}),/price/i,'bad prices inside the requested scope still fail');
+    }
+  }
+});
+
+test('as-of scope cannot silently discard sparse slots or malformed date structure',()=>{
+  const prefix=rows([100,105,120]),asOf=prefix.at(-1)[0];
+  const holeInside=[...prefix];delete holeInside[1];
+  const holeAfter=[...prefix];holeAfter.length++;
+  const malformed=[
+    holeInside,holeAfter,
+    [...prefix,['2020-01-04',100,'unexpected']],
+    [...prefix,['2020-01-04']],
+    [...prefix,['2020-01-04',100],['2020-01-04',101]],
+    [...prefix,['2020-01-05',100],['2020-01-04',101]],
+    [...prefix,['2020-02-30',100]],
+  ];
+  for(const compute of [computeRollingStates,detectDirectionalChanges,aggregateCloseBars])for(const input of malformed){
+    assert.throws(()=>compute(input,{asOf}),/date|row/i,'date shape and chronology remain validated outside the price scope');
   }
 });
 
