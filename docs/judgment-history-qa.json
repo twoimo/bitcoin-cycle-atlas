@@ -1,21 +1,26 @@
 {
-  "status": "local-candidate-verified-external-review-incomplete",
-  "base": "53f587bf04f45ea7b3caa639ea88268fa7dca918",
-  "tests": 1060,
+  "status": "local-release-candidate-verified-external-waived-ci-pending",
+  "version": "1.28.0",
+  "upstreamBase": "35300332a629ead03f6f365a32fda4669390f72f",
+  "tests": 1081,
   "nativeOracle": {
-    "queryDates": 16760,
-    "assets": 18,
-    "assetDatePairs": 301680,
+    "status": "PASS",
     "startDate": "1980-12-12",
-    "endDate": "2026-10-31",
-    "includesStaleBoundaryScenarios": true
+    "endDate": "2026-11-02",
+    "archiveLastDate": "2026-10-25",
+    "queryDates": 16762,
+    "assets": 18,
+    "assetDatePairs": 301716,
+    "sourceVersion": "004f105b954ff392f66632d652b9602fa43d84043e2b88780ee1620237d517a4",
+    "elapsedMs": 124390.72783300001,
+    "scope": "latest 1.27.1 native engine; all calendar dates plus eight-day stale boundary; no historical-vintage or future observations claim"
   },
   "originalCsv": {
     "status": "PASS",
-    "base": "53f587bf04f45ea7b3caa639ea88268fa7dca918",
+    "base": "35300332a629ead03f6f365a32fda4669390f72f",
     "asOfDate": "2026-10-26",
-    "bytes": 16454,
-    "sha256": "78ff52f22e910a34209411dd1f2bec3effa72557057ad5b93deb5691ad442462",
+    "bytes": 16451,
+    "sha256": "cd92bb9b88cd3881c0280c7856e0267a0a2767eaf7e424e757f16e2cfd9e5f29",
     "rows": 18,
     "fields": 34
   },
@@ -43,19 +48,30 @@
     [
       800,
       420
+    ],
+    [
+      768,
+      1024
+    ],
+    [
+      1024,
+      768
     ]
   ],
   "surfaces": [
     "HTTP",
     "standalone file"
   ],
-  "savedRecords": 1,
+  "savedRecords": 2,
   "firstCapturedAt": "2026-10-26T04:42:47.794Z",
+  "latestCapturedAt": "2026-10-26T05:26:14.776Z",
   "standaloneModules": 99,
   "externalStages": {
     "thesis": "NOT_RUN",
     "adversarial": "NOT_RUN",
     "reverse": "NOT_RUN"
   },
-  "deployed": false
+  "externalOptOut": "explicit current user approval for this header/history change only",
+  "localFormal": "Java runtime unavailable; mandatory GitHub CI/Pages formal gate preserved",
+  "publicAcceptanceAtReportCreation": "pending"
 }

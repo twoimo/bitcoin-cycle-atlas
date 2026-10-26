@@ -63,7 +63,7 @@ export function createAssetJudgmentHistory(bundle, { endDate, sourceVersion = ''
       prior = point;
     }
     const info = Object.freeze({ symbol:asset.symbol, name:asset.name, group:asset.group, category:asset.category, currency:asset.currency || 'USD', firstDate:prices[0]?.date ?? null, lastDate:prices.at(-1)?.date ?? null, calendar,
-      source:Object.freeze({name:meta.sourceName || '',url:meta.sourcePage || meta.sourceUrl || '',retrievedAt:meta.retrievedAt || bundle.retrievedAt || '',priceDefinition:meta.priceDefinition || ''}) });
+      source:Object.freeze({name:meta.sourceName ?? '',url:meta.sourceUrl ?? meta.source ?? '',priceDefinition:meta.priceDefinition ?? '',currency:asset.currency,retrievedAt:meta.retrievedAt ?? bundle.retrievedAt ?? null,firstDate:meta.firstDate ?? all[0].date,lastDate:meta.lastDate ?? all.at(-1).date,count:meta.count ?? all.length,responseSha256:meta.responseSha256 ?? meta.rawSha256 ?? null}) });
     function at(day, date) {
       const pos = upper(prices, day, p=>p.epochDay)-1, latest = prices[pos] ?? null, year = yearOf(date);
       let b = bands.get(year);
@@ -80,7 +80,7 @@ export function createAssetJudgmentHistory(bundle, { endDate, sourceVersion = ''
       const coverage=comparisonCoverageSummary({first,current:current ? {startDate:current.first.date} : null,calendar,missingDates:knownMissing,missingYears,gapCount:upper(gapEnds,day)});
       const ytdPct=current && latest ? pct(latest.price,current.first.price) : null;
       const judgment=classify({...b,ytdPct,current:current?.first??null,latest,year,asOfDay:day,coverage});
-      return {...info,...b,asOf:date,year,firstDate:first?.date??null,lastDate:latest?.date??null,latestDate:latest?.date ?? null,latestPrice:latest?.price ?? null,yearStartDate:current?.first.date ?? null,yearStartPrice:current?.first.price ?? null,ytdPct,judgment,coverage,samplePartialFirstYear:Boolean(b.sampleYears&&coverage.firstYearPartial),firstPartialStartDate:b.sampleYears?coverage.firstPartialStartDate:null};
+      return {...info,...b,asOf:date,year,observationCount:pos+1,firstDate:first?.date??null,lastDate:latest?.date??null,latestDate:latest?.date ?? null,latestPrice:latest?.price ?? null,yearStartDate:current?.first.date ?? null,yearStartPrice:current?.first.price ?? null,ytdPct,judgment,coverage,samplePartialFirstYear:Boolean(b.sampleYears&&coverage.firstYearPartial),firstPartialStartDate:b.sampleYears?coverage.firstPartialStartDate:null};
     }
     return {info,at};
   });

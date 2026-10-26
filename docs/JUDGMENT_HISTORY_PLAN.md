@@ -37,12 +37,9 @@ W5 ChatGPT thesis -> Gemini source-backed adversarial review -> ChatGPT reverse,
 W6 only after dependent validation: PR/CI/Pages/release/public readback, preserving existing metadata/footer removals and unrelated work.
 
 ## Current external-validation status
-Thesis NOT_RUN: shared FIFO has prior owners; no observed current provider readiness/admission for this job.
-Gemini NOT_RUN: shared coordination has an unresolved other-owner operation. Preserve ownership; do not force-release, duplicate or infer remote failure. Private coordination/resumption identifiers stay outside Git.
-Reverse NOT_RUN: depends on actual thesis and Gemini reports.
-Independent reversible candidates and local tests may proceed. The history feature's dependent publication is held until this validation or an explicit current opt-out changes the applicable workflow.
+The user explicitly waived the external three-phase cross-audit for this header/history change on 2026-10-26 and authorized CI-backed deployment. Thesis, Gemini adversarial review and ChatGPT reverse remain NOT_RUN, not verified. No prompt or source bundle was submitted externally for this task. Only this task's unsent queued item was withdrawn; other owners and operations remain untouched. Local numerical, regression, browser, CI, Pages and public readback gates still apply.
 
-## Verified candidate results (2026-10-26 UTC)
+## Initial candidate results before v1.27.1 integration (2026-10-26 UTC)
 - 1,060 local tests passed, including delayed close/reopen, saved-mode disclosure, explicit-symbol mode/group/date reset, CSV and capture/loader failure behavior.
 - Exhaustive native-engine comparison: 16,760 calendar query dates × 18 assets = 301,680 exact comparisons, from 1980-12-12 through 2026-10-31. Dates after the archive endpoint are intentional stale-boundary scenarios, not future observations or forecasts.
 - Independent asset verifier: 18 assets, 103,929 closes, 400 annual samples, 360 bounded price paths, 262 threshold cases; 14/14 targeted negative controls rejected.
@@ -53,5 +50,15 @@ Independent reversible candidates and local tests may proceed. The history featu
 - Standalone build embeds the index plus exact record text strings for byte-hash verification; 99 modules. Static reference verification passed.
 - Internal read-only code review reported no additional concrete regression. It is not the mandatory external thesis/adversarial/reverse audit.
 
+## Integrated v1.28 release acceptance
+Latest upstream base is 35300332a629ead03f6f365a32fda4669390f72f (v1.27.1 plus existing successful data refreshes). Preserve its boundary tolerance, percentage arithmetic, pinned headings and unrelated audited fixes. Source metadata and prefix observation counts are now also matched by the indexed history.
+
+- 1,081 local tests pass.
+- 16,762 query dates × 18 assets = 301,716 exact native-engine comparisons, including all financial fields, judgment, coverage, observation counts and source metadata. Range 1980-12-12–2026-11-02; archive observations end 2026-10-25. Later query dates test staleness, not forecasts.
+- Existing comparison CSV is byte-identical to the latest upstream with the same source and as-of date: 18 rows, 34 fields, 16,451 bytes, SHA-256 cd92bb9b88cd3881c0280c7856e0267a0a2767eaf7e424e757f16e2cfd9e5f29.
+- Two actual current-time captures preserve different source/rules identities without rewriting earlier values. The second uses the integrated current archive and engine.
+- Local numerical, research, event, treasury, cycle, performance, static and standalone checks pass. Local TLC formal execution lacks a Java runtime; the unchanged full formal checks remain mandatory in GitHub CI/Pages before merge/public acceptance. No local formal pass is claimed.
+- HTTP/standalone and original-board journeys include tablet 768×1024 and 1024×768 in addition to the original six sizes.
+
 ## Remaining delivery
-External thesis/adversarial/reverse stages are NOT_RUN. No PR, merge, release, Pages deployment, production workflow run or public acceptance is claimed for this candidate. Existing ETH work and PR #12 are untouched. Before public delivery, complete the applicable external gate or obtain an explicit current opt-out; then update release/cache versions, run CI, merge/deploy and verify the real public files and UI.
+The user explicitly authorized this feature's external cross-audit opt-out and CI-backed publication. External thesis/adversarial/reverse remain NOT_RUN. PR/CI, Pages, release and actual public readback are separate pending acceptance stages until observed. No unrelated request or operation is cancelled. PR #12 remains separate.

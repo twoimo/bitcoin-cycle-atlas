@@ -1,4 +1,4 @@
-import { buildAssetComparison } from './asset-comparison.js?v=1.27.1';
+import { buildAssetComparison } from './asset-comparison.js?v=1.28.0';
 import { initAssetJudgmentHistoryView } from './asset-judgment-history-view.js?v=1.28.0';
 
 const SYMBOLS = ['BTC', 'SPY', 'QQQ', 'NVDA', 'AAPL', 'GOOG', 'MSFT', 'AMZN', 'META', 'AVGO', 'PLTR', 'TSLA', 'HOOD', 'TLT', 'IEF', 'GLD', 'SLV', 'PDBC'];
