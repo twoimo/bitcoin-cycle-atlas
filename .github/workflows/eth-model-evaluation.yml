@@ -1,0 +1,48 @@
+name: ETH candidate evidence
+
+on:
+  pull_request:
+    paths:
+      - 'dist/ethereum-*model*.js'
+      - 'dist/ethereum-forecast.js'
+      - 'tests/ethereum-*model*.test.mjs'
+      - 'tests/ethereum-forecast-boundary.test.mjs'
+      - 'scripts/evaluate-ethereum-models.mjs'
+      - 'scripts/verify-eth-candidate-browser.mjs'
+      - '.github/workflows/eth-model-evaluation.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eth-candidate-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Test candidate equations, missing inputs, clocks and future-information boundaries
+        run: node --test tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs
+      - name: Evaluate the exact committed candidates and current stored prices
+        run: node scripts/evaluate-ethereum-models.mjs
+      - name: Preserve complete source-identified candidate evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4, ref verified through GitHub
+        with:
+          name: eth-candidate-evidence-${{ github.sha }}
+          path: |
+            build/ethereum-model-comparison.json
+            build/eth-review-source-bundle.txt
+            build/eth-review-source-manifest.json
+          if-no-files-found: error
+          retention-days: 30
