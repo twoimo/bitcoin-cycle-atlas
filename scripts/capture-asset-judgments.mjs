@@ -28,14 +28,28 @@ export async function captureAssetJudgments({bundle,bundlePath=join(root,'dist/d
   const raw=JSON.stringify(record)+'\n',lock=join(directory,'.capture-lock'),token=randomUUID();
   await mkdir(directory,{recursive:true});const ds=await lstat(directory);if(!ds.isDirectory()||ds.isSymbolicLink())throw new TypeError('Snapshot directory must not be a symlink');
   try{await mkdir(lock);}catch(error){if(error.code==='EEXIST')throw new Error('Another snapshot writer owns the capture lock');throw error;}
+  const lockIdentity=await lstat(lock),ownerPath=join(lock,'owner');
+  async function ownsLock(){
+    const current=await lstat(lock);
+    if(!current.isDirectory()||current.isSymbolicLink()||current.dev!==lockIdentity.dev||current.ino!==lockIdentity.ino)return false;
+    await regular(ownerPath);
+    return await readFile(ownerPath,'utf8')===token;
+  }
+  async function requireOwnership(){
+    let owned=false;try{owned=await ownsLock();}catch{}
+    if(!owned)throw new Error('Capture lock ownership lost; preserve immutable records and do not commit the index');
+  }
   let created=false;
   try{
-    await writeFile(join(lock,'owner'),token,{flag:'wx'});
+    await writeFile(ownerPath,token,{flag:'wx'});
+    await requireOwnership();
     const indexPath=join(directory,'index.json');let previous={version:1,records:[]};
     try{await regular(indexPath);previous=validateSavedJudgmentIndex(JSON.parse(await readFile(indexPath,'utf8')));}catch(error){if(error.code!=='ENOENT')throw error;}
     const expected=new Map(previous.records.map(entry=>[entry.file,entry]));
+    await requireOwnership();
     try{await writeFile(join(directory,file),raw,{flag:'wx'});created=true;}catch(error){if(error.code!=='EEXIST')throw error;await regular(join(directory,file));if(await readFile(join(directory,file),'utf8')!==raw)throw new Error('Immutable snapshot collision or tampering');}
     await afterRecordWrite?.({file,record,created});
+    await requireOwnership();
     // Scan immutable records, not only the previous index, to recover valid orphan
     // records left by a local failure after exclusive creation but before rename.
     const entries=[];
@@ -48,11 +62,11 @@ export async function captureAssetJudgments({bundle,bundlePath=join(root,'dist/d
     if(previous.records.some(entry=>!entries.some(next=>next.file===entry.file)))throw new Error('An indexed immutable snapshot is missing');
     const index=validateSavedJudgmentIndex({version:1,records:entries});
     const temporary=join(directory,'.index-tmp-'+token);
-    try{await writeFile(temporary,JSON.stringify(index)+'\n',{flag:'wx'});await rename(temporary,indexPath);}finally{await rm(temporary,{force:true});}
+    try{await requireOwnership();await writeFile(temporary,JSON.stringify(index)+'\n',{flag:'wx'});await requireOwnership();await rename(temporary,indexPath);}finally{await rm(temporary,{force:true});}
     return {status:created?'created':'existing',file,record,index,entry:entries.find(e=>e.file===file)};
   }finally{
     // Never remove a replaced/other writer's lock, and never expire by age.
-    let owned=false;try{owned=await readFile(join(lock,'owner'),'utf8')===token;}catch{}
+    let owned=false;try{owned=await ownsLock();}catch{}
     if(owned)await rm(lock,{recursive:true});
   }
 }
