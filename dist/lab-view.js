@@ -647,6 +647,9 @@ export function initLabView() {
       // The cached analysis already computed both frequencies at this threshold.
       const dc=a.pivots[state.structureFrequency];
       drawChart({svg:$('#structure-chart'),tooltip:$('#structure-tooltip'),rows:b.rows,start,end:actualEnd,frequency:state.structureFrequency,stateStepDays:state.structureFrequency==='weekly'?7:1,states:points,turns:dc.pivots.map(p=>({date:p.eventDate,price:p.eventPrice,type:p.type,confirmationDate:p.confirmationDate})),historical:true,showStates:true,threshold:state.threshold});
+      // Legacy research labels remain readable at native scale, including the compact state caption.
+      // Keep larger labels and all price coordinates unchanged; hover updates retain the floor.
+      for(const label of $('#structure-chart').querySelectorAll('text[font-size]'))if(Number(label.getAttribute('font-size'))<11)label.style.fontSize='11px';
       $('#structure-legend').innerHTML=Object.entries(STATE_LABELS).filter(([k])=>k!=='warmup').map(([k,v])=>`<span><i style="background:${COLORS[k]}"></i>${esc(v)}</span>`).join('');
       drawTimeline(a,points);renderCycleTable(a);renderPeriods(a);renderStructureDetails(a);
       document.dispatchEvent(new CustomEvent('atlas:page-ready',{detail:{page:'compare'}}));

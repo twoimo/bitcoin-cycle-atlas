@@ -167,7 +167,7 @@ export async function verifyWorkspaceSurface(api) {
       await cdp.send('Emulation.setDeviceMetricsOverride',{width:nextWidth,height,deviceScaleFactor:1,mobile:receipt.touch});
       await settled(cdp);await sizingReady();
       const sizing=await evaluate(cdp,readLegacySizing);
-      for(const row of sizing)assert.ok(row.minText>=(row.id==='structure-timeline'?10.9:9.9),'Legacy SVG text shrank after viewport resize: '+JSON.stringify(row));
+      for(const row of sizing)assert.ok(row.minText>=10.9,'Legacy SVG text shrank after viewport resize: '+JSON.stringify(row));
       assert.equal(await evaluate(cdp,()=>performance.timeOrigin),samePage,'Legacy resize must stay on the same document');
       receipt.workspace.legacy.resize.push({width:nextWidth,sizing,samePage:true});
     }
