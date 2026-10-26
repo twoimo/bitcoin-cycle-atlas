@@ -81,11 +81,13 @@ export function requireForecastInput(clock,{kind,symbol,asOf,id}={}) {
 
 /** Select versions that this observer had actually collected at the cutoff.
  * Later corrections cannot rewrite an earlier selected vintage. The same
- * date/vintage must have exactly one value and receipt, regardless of order. */
+ * date/vintage must have exactly one value and receipt, regardless of order.
+ * Every cutoff-visible collection time must also be unambiguous, including
+ * older revisions that are no longer selected as the latest observation. */
 export function selectPriceVintages(observations,{symbol,market='crypto',informationCutoffAt}={}) {
   const cutoff=normalizeForecastTimestamp(informationCutoffAt,'informationCutoffAt');
   if(!['crypto','equity'].includes(market) || !Array.isArray(observations) || observations.length>100000) throw new TypeError('Invalid price-vintage collection');
-  const versions=new Map(),dates=new Map(); let futureVersions=0;
+  const versions=new Map(),visibleTimes=new Map(),dates=new Map(); let futureVersions=0;
   for(const row of observations) {
     if(!row || !Number.isFinite(row.price) || row.price<=0) throw new RangeError('Observed prices must be positive and finite');
     const normalized=receipt({...row,id:row.id??symbol+':'+row.date+':'+row.vintageId,kind:market==='crypto'?'crypto-daily':'equity-session',symbol,asOf:row.date});
@@ -96,8 +98,10 @@ export function selectPriceVintages(observations,{symbol,market='crypto',informa
     }
     versions.set(key,value);
     if(value.collectedAt>cutoff || value.eventAt>cutoff || value.publishedAt!==null && value.publishedAt>cutoff) {futureVersions++;continue;}
+    const timeKey=row.date+'\0'+value.collectedAt,sameTime=visibleTimes.get(timeKey);
+    if(sameTime && sameTime.vintageId!==value.vintageId && (sameTime.price!==value.price || sameTime.sourceHash!==value.sourceHash)) throw new RangeError('Ambiguous equally timed price revisions');
+    if(!sameTime)visibleTimes.set(timeKey,value);
     const prior=dates.get(row.date);
-    if(prior && prior.collectedAt===value.collectedAt && prior.vintageId!==value.vintageId && (prior.price!==value.price || prior.sourceHash!==value.sourceHash)) throw new RangeError('Ambiguous equally timed price revisions');
     if(!prior || prior.collectedAt<value.collectedAt || prior.collectedAt===value.collectedAt && prior.vintageId.localeCompare(value.vintageId)<0) dates.set(row.date,value);
   }
   const rows=[...dates.values()].sort((a,b)=>a.date.localeCompare(b.date));
