@@ -44,7 +44,7 @@ export function dailyViewSurface({ hidden = false } = {}) {
     settle: () => new Promise(resolve => setImmediate(resolve)),
     resetWork: () => work.clear(),
     work: () => Object.fromEntries([...work].sort(([left], [right]) => left.localeCompare(right))),
-    snapshot: () => ({ context: node('asset-context').innerHTML || node('asset-context').textContent, table: node('data-body').innerHTML, count: node('asset-row-count').textContent, startHeader: node('asset-start-header').innerHTML, latestHeader: node('asset-latest-header').innerHTML, exportDisabled: node('export-raw').disabled }),
+    snapshot: () => ({ context: node('asset-context').innerHTML || node('asset-context').textContent, table: node('data-body').innerHTML, count: (node('data-body').innerHTML.match(/data-asset-symbol=/g) || []).length, startHeader: node('asset-start-header').innerHTML, latestHeader: node('asset-latest-header').innerHTML, exportDisabled: node('export-raw').disabled }),
   };
 }
 

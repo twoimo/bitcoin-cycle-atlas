@@ -1,4 +1,4 @@
-import { buildAssetComparison } from './asset-comparison.js?v=1.26.3';
+import { buildAssetComparison } from './asset-comparison.js?v=1.26.4';
 
 const SYMBOLS = ['BTC', 'SPY', 'QQQ', 'NVDA', 'AAPL', 'GOOG', 'MSFT', 'AMZN', 'META', 'AVGO', 'PLTR', 'TSLA', 'HOOD', 'TLT', 'IEF', 'GLD', 'SLV', 'PDBC'];
 const LABELS = { 'strong-buy': '적극 매수', buy: '분할 매수', neutral: '중립', sell: '분할 매도', 'strong-sell': '적극 매도' };
@@ -83,8 +83,8 @@ function frame() {
   return `<header class="daily-heading"><button type="button" class="daily-back" data-view="outlook" aria-label="통합 차트로 돌아가기" title="통합 차트로 돌아가기"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 12H4m6-6-6 6 6 6"/></svg></button><div class="daily-heading-title"><h1>자산 비교표</h1><span class="daily-board-label" lang="en">MARKET BOARD</span></div><div class="daily-heading-actions"><button type="button" class="daily-action" id="asset-refresh" aria-label="가격 자료 갱신" title="가격 자료 갱신"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5m10-2a7 7 0 0 0-12-4l-3 3m16 6-3 3a7 7 0 0 1-12-4"/></svg><span>갱신</span></button><button type="button" class="daily-action" id="daily-method-open" aria-label="자산 비교표 읽는 법" title="자산 비교표 읽는 법"><span class="daily-help-icon" aria-hidden="true">?</span><span>읽는 법</span></button><button type="button" class="daily-action" id="export-raw" aria-label="18개 자산 CSV 내려받기" title="18개 자산 CSV 내려받기" disabled><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span>CSV</span></button></div></header>
     <div class="asset-context" id="asset-context" role="status" aria-live="polite" hidden>자산 비교표를 열면 가격 자료를 불러옵니다.</div>
     <p class="asset-scroll-hint" id="asset-scroll-hint">좌우로 밀어 수치와 맨 끝 판단을 확인하세요.</p><nav class="asset-mobile-nav" aria-label="자산표 가로 이동"><button type="button" id="asset-scroll-start" aria-controls="asset-table-scroll">← 표본·평균</button><span>18개 자산 전체</span><button type="button" id="asset-scroll-end" aria-controls="asset-table-scroll">가격·판단 →</button></nav>
-    <section class="asset-table-panel" aria-label="18개 자산의 과거 상승·낙폭과 올해 판단"><div class="asset-table-scroll" id="asset-table-scroll" tabindex="0" role="region" aria-describedby="asset-scroll-hint" aria-label="자산 비교표. 작은 화면에서는 좌우로 이동할 수 있습니다."><table class="asset-comparison-table" aria-describedby="asset-table-note"><caption class="sr-only">18개 자산별 과거 연간 평균 상승률과 연초 대비 낙폭, 올해 종가와 등락률, 다섯 단계 판단</caption><colgroup><col class="asset-col-group"><col class="asset-col-category"><col class="asset-col-name"><col class="asset-col-samples"><col class="asset-col-return"><col class="asset-col-return"><col class="asset-col-price"><col class="asset-col-price"><col class="asset-col-ytd"><col class="asset-col-judgment"></colgroup><thead><tr><th colspan="3" scope="colgroup" class="asset-identity-header">종목명</th><th scope="col" class="asset-mobile-header asset-mobile-group-header">자산군</th><th scope="col" class="asset-mobile-header asset-mobile-category-header">분류</th><th scope="col" class="asset-mobile-header asset-mobile-name-header">종목명</th><th scope="col">표본<br>연수</th><th scope="col">평균<br>상승률</th><th scope="col">평균<br>낙폭</th><th scope="col" id="asset-start-header">연초 종가<small>기준일 확인 중</small></th><th scope="col" id="asset-latest-header">최근 종가<small>기준일 확인 중</small></th><th scope="col" class="asset-ytd-header" id="asset-ytd-header">연초 대비<br>상승·하락률</th><th scope="col" class="asset-judgment-header">판단</th></tr></thead><tbody id="data-body"><tr><td colspan="10" class="asset-table-empty">자산별 가격 자료를 준비하고 있습니다.</td></tr></tbody></table></div>
-    <footer class="asset-table-footer"><div class="asset-table-meta"><span id="asset-row-count">18개 자산</span><span>배당·분배금 제외 종가 기준 · USD</span><span class="asset-color-key"><i class="asset-key-gain" aria-hidden="true"></i>상승 <i class="asset-key-loss" aria-hidden="true"></i>하락</span></div><p id="asset-table-note">평균 낙폭은 연초 종가 대비 연중 최저 낙폭이며 <strong>MDD가 아닙니다.</strong> 판단은 과거 평균과 올해 등락률을 비교한 규칙입니다. <span id="asset-sample-note">올해는 평균에서 제외합니다.</span></p></footer></section>
+    <section class="asset-table-panel" aria-label="18개 자산의 과거 상승·낙폭과 올해 판단"><div class="asset-table-scroll" id="asset-table-scroll" tabindex="0" role="region" aria-describedby="asset-scroll-hint" aria-label="자산 비교표. 작은 화면에서는 좌우로 이동할 수 있습니다."><table class="asset-comparison-table"><caption class="sr-only">18개 자산별 과거 연간 평균 상승률과 연초 대비 낙폭, 올해 종가와 등락률, 다섯 단계 판단</caption><colgroup><col class="asset-col-group"><col class="asset-col-category"><col class="asset-col-name"><col class="asset-col-samples"><col class="asset-col-return"><col class="asset-col-return"><col class="asset-col-price"><col class="asset-col-price"><col class="asset-col-ytd"><col class="asset-col-judgment"></colgroup><thead><tr><th colspan="3" scope="colgroup" class="asset-identity-header">종목명</th><th scope="col" class="asset-mobile-header asset-mobile-group-header">자산군</th><th scope="col" class="asset-mobile-header asset-mobile-category-header">분류</th><th scope="col" class="asset-mobile-header asset-mobile-name-header">종목명</th><th scope="col">표본<br>연수</th><th scope="col">평균<br>상승률</th><th scope="col">평균<br>낙폭</th><th scope="col" id="asset-start-header">연초 종가<small>기준일 확인 중</small></th><th scope="col" id="asset-latest-header">최근 종가<small>기준일 확인 중</small></th><th scope="col" class="asset-ytd-header" id="asset-ytd-header">연초 대비<br>상승·하락률</th><th scope="col" class="asset-judgment-header">판단</th></tr></thead><tbody id="data-body"><tr><td colspan="10" class="asset-table-empty">자산별 가격 자료를 준비하고 있습니다.</td></tr></tbody></table></div>
+    </section>
     <dialog class="daily-method-dialog" id="daily-method-dialog" aria-labelledby="daily-method-title"><div class="daily-method-heading"><h2 id="daily-method-title">자산 비교표 읽는 법</h2><button type="button" id="daily-method-close" aria-label="읽는 법 닫기">×</button></div><div id="daily-method-content"></div></dialog>`;
 }
 
@@ -110,8 +110,6 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
     put('#asset-start-header', '연초 종가<small>기준일 확인 중</small>');
     put('#asset-latest-header', '최근 종가<small>기준일 확인 중</small>');
     put('#asset-ytd-header', '연초 대비<br>상승·하락률');
-    text('#asset-row-count', canRetry ? '자료 확인 필요' : '18개 자산 · 자료 준비 중');
-    text('#asset-sample-note', '올해는 평균에서 제외합니다.');
     if ($('#daily-method-dialog').open) put('#daily-method-content', methodContent());
   }
 
@@ -128,7 +126,6 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
 
   function paint() {
     const rows = model.rows, start = sharedDate(rows, 'yearStartDate'), latest = sharedDate(rows, 'latestDate');
-    const unavailable = rows.filter(row => !judgment(row).available).length;
     put('#data-body', renderAssetComparisonRows(rows));
     put('#asset-start-header', `연초 종가<small>${start ? esc(displayDate(start)) : '종목별 기준일'}</small>`);
     put('#asset-latest-header', `최근 종가<small>${latest ? esc(displayDate(latest)) : '종목별 기준일'}</small>`);
@@ -136,8 +133,6 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
     text('#asset-context', '');
     $('#asset-context').title = '';
     $('#asset-context').hidden = true;
-    text('#asset-row-count', `${rows.length}개 자산 전체${unavailable ? ` · ${unavailable}개 판단 보류` : ''}`);
-    text('#asset-sample-note', `${model.year}년은 평균에서 제외${rows.some(row => row.samplePartialFirstYear) ? ' · * 상장 첫해 일부 기간 포함' : ''}.`);
     $('#export-raw').disabled = typeof download !== 'function';
     $('#asset-refresh').disabled = false;
     $('#asset-table-scroll').setAttribute('aria-busy', 'false');
