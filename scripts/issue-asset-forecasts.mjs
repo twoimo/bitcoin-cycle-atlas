@@ -59,6 +59,14 @@ function receipt(source,id,kind='document',symbol=null,asOf=null,sourceObservedT
     publishedAt:null,collectedAt:source.collectedAt,sourceHash:source.sourceHash,
     sourceUrl:source.sourceUrl,vintageId:source.vintageId,availabilityBasis:'collection-upper-bound'};
 }
+export function summarizeAssetRecordKinds(records){
+  return {
+    preservedRecordSummaries:records.map(record=>({id:record.id,recordKind:record.recordKind,symbol:record.symbol,scenario:record.scenario.id,asOf:record.asOf,issuedAt:record.issuedAt})),
+    issuedRecordCount:records.filter(record=>record.recordKind==='issued').length,
+    reconstructedRecordCount:records.filter(record=>record.recordKind==='reconstructed').length,
+  };
+}
+
 function recordsIn(archive){return archive.index.entries.map(entry=>archive.records[entry.id]);}
 
 export async function readAssetForecastArchive(directory){
@@ -117,7 +125,7 @@ export function decideAssetAppend(records,candidate){
   if(!equal(prior.options,candidate.options)||!equal(prior.targets.map(row=>row.horizonDays),candidate.targets.map(row=>row.horizonDays)))changed.push('declared options or horizons');
   if(prior.recordKind!==candidate.recordKind)changed.push('record kind');
   if(!changed.length)throw new Error('Unexplained same-origin asset revision');
-  return {action:'append',replaces:prior.id,revisionReason:'New research issue after change to '+changed.join('; ')+'. Prior issued record and full output remain immutable.'};
+  return {action:'append',replaces:prior.id,revisionReason:'New research issue after change to '+changed.join('; ')+'. Prior preserved record and full output remain immutable.'};
 }
 async function collectModels(){
   const [ledger,eth,treasury]=await Promise.all([
@@ -385,7 +393,7 @@ export async function issueAssetForecasts({
         primaryMarket:item.symbol==='ETHUSD'?'crypto-utc-daily':'new-york-equity-session'})),
       appendedRecordIds:appended,reusedRecordIds:reused,
       preservedRecords:records.length,preservedSnapshots:Object.keys(archive.snapshots).length,
-      issuedRecords:records.map(record=>({id:record.id,symbol:record.symbol,scenario:record.scenario.id,asOf:record.asOf,issuedAt:record.issuedAt})),
+      ...summarizeAssetRecordKinds(records),
       integrity,replay,sharedEthereumPaths,
       evaluation:{evaluatedAt,pendingTargets:evaluation.pendingTargets,scoredTargets:evaluation.scoredTargets},
       historicalVintagesProven:false,probability:null,calibrated:false,productionAdopted:false,

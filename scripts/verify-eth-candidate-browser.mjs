@@ -239,6 +239,8 @@ async function bmnrCase(cdp,width,receipt){
   assert.equal(receipt.clockLabels['정보 컷오프'],'개별 자료 수집 기록 참조');
   await settled(cdp);
   await screenshot(cdp,'bmnr-'+width+'-clock.png',receipt);
+  await evaluate(cdp,()=>document.querySelector('#equity-detail-dialog > header > button').scrollIntoView({block:'start'}));
+  await settled(cdp);
   await click(cdp,'#equity-detail-dialog > header > button');
   assert.equal((await bounds(cdp,'#equity-detail-dialog')).open,false);
 }

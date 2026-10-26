@@ -4,6 +4,7 @@ import {forecastHash,canonicalForecastJson} from '../dist/forecast-records.js';
 import {createForecastInformationClock,verifyForecastInformationClock,selectPriceVintages} from '../dist/forecast-information-time.js';
 import {assetSourceHash,createAssetForecastSnapshot,createAssetForecastRecord,verifyAssetForecastSnapshot,verifyAssetForecastRecord,restoreAssetForecastPath,assetForecastIndexEntry,validateAssetForecastIndex,verifyAssetForecastArchive,evaluateAssetForecastRecords,latestCompletedAssetDate} from '../dist/asset-forecast-records.js';
 import {buildTreasuryForecast} from '../dist/treasury-model.js';
+import {mergeAssetForecastArchives,summarizeAssetRecordKinds} from '../scripts/issue-asset-forecasts.mjs';
 const DAY=86400000;
 const at='2026-10-26T10:00:00.000Z',capture='2026-10-26T09:00:00.000Z';
 const date=(start,offset)=>new Date(Date.parse(start+'T00:00:00Z')+offset*DAY).toISOString().slice(0,10);
@@ -176,4 +177,21 @@ test('normalization roundoff is bounded and preserved without rewriting actual o
   await verifyAssetForecastRecord(record,eth.snapshot);
   const wrong=forecast(eth.snapshot);wrong.path[0].price+=1;
   await assert.rejects(createAssetForecastRecord({snapshot:eth.snapshot,forecast:wrong,model}),/anchor or end/);
+});
+
+test('a mixed prior archive preserves reconstructed identity without reporting it as an issued forecast',async()=>{
+  const rebuilt=await createAssetForecastRecord({snapshot:eth.snapshot,forecast:forecast(eth.snapshot),model,recordKind:'reconstructed'});
+  const pack=record=>({index:index([record]),records:{[record.id]:record},snapshots:{[eth.snapshot.id]:eth.snapshot},texts:new Map()});
+  const before=canonicalForecastJson(rebuilt);
+  const archive=await mergeAssetForecastArchives(pack(rebuilt),pack(ethRecord));
+  const rows=archive.index.entries.map(entry=>archive.records[entry.id]),summary=summarizeAssetRecordKinds(rows);
+  assert.equal(summary.issuedRecordCount,1);assert.equal(summary.reconstructedRecordCount,1);
+  assert.equal(Object.hasOwn(summary,'issuedRecords'),false);
+  const item=summary.preservedRecordSummaries.find(row=>row.id===rebuilt.id);
+  assert.equal(item.recordKind,'reconstructed');assert.equal(item.issuedAt,rebuilt.issuedAt);
+  assert.equal(canonicalForecastJson(archive.records[rebuilt.id]),before);
+  const target=rebuilt.targets[0],observed={date:target.targetDate,price:2100,vintageId:'synthetic-mixed-outcome',sourceHash:'e'.repeat(64),sourceUrl:'https://example.invalid/outcome',publishedAt:null,collectedAt:'2026-11-25T01:00:00.000Z'};
+  const evaluated=await evaluateAssetForecastRecords(rows,{ETHUSD:[observed]},{evaluatedAt:'2026-11-25T01:00:00.000Z'});
+  assert.equal(evaluated.rows.find(row=>row.recordId===rebuilt.id&&row.horizonDays===30).status,'retrospective');
+  assert.equal(evaluated.rows.find(row=>row.recordId===ethRecord.id&&row.horizonDays===30).status,'scored');
 });

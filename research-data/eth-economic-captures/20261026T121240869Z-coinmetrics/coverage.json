@@ -1,0 +1,234 @@
+{
+  "version": "eth-economic-source-coverage-1",
+  "asOf": "2026-10-25",
+  "collectedAt": "2026-10-26T12:12:40.869Z",
+  "sourceStatus": "partial-observations-collected",
+  "requestedWindow": {
+    "observedFrom": "2026-09-28",
+    "observedThrough": "2026-10-25",
+    "observedAt": "2026-10-26T00:00:00.000Z",
+    "windowDays": 28,
+    "completeWindow": false,
+    "missingDates": [
+      "2026-09-28",
+      "2026-09-29",
+      "2026-09-30",
+      "2026-10-01",
+      "2026-10-02",
+      "2026-10-03",
+      "2026-10-04",
+      "2026-10-05",
+      "2026-10-06",
+      "2026-10-07",
+      "2026-10-08",
+      "2026-10-09",
+      "2026-10-10",
+      "2026-10-11",
+      "2026-10-12",
+      "2026-10-13",
+      "2026-10-14",
+      "2026-10-15",
+      "2026-10-16",
+      "2026-10-17",
+      "2026-10-18",
+      "2026-10-19",
+      "2026-10-20",
+      "2026-10-21",
+      "2026-10-22",
+      "2026-10-23",
+      "2026-10-24",
+      "2026-10-25"
+    ],
+    "missingFields": [],
+    "aggregate": null,
+    "providerCompletedAt": null,
+    "modelSnapshot": null,
+    "accounting": "Original provider aggregates only. Fees include blobs; issuance is gross; supply scope is unreconciled; L1 transaction count is not gas."
+  },
+  "latestCompleteWindow": {
+    "observedFrom": "2026-04-26",
+    "observedThrough": "2026-05-23",
+    "observedAt": "2026-05-24T00:00:00.000Z",
+    "windowDays": 28,
+    "completeWindow": true,
+    "missingDates": [],
+    "missingFields": [],
+    "aggregate": {
+      "totalFeesIncludingBlobEth": 9122.065722414914,
+      "grossIssuanceEth": 78672.726006681,
+      "l1TransactionCount": 64795230,
+      "providerLedgerSupplyEth": 121721391.22868587
+    },
+    "providerCompletedAt": "2026-05-24T02:44:08.000Z",
+    "modelSnapshot": null,
+    "accounting": "Original provider aggregates only. Fees include blobs; issuance is gross; supply scope is unreconciled; L1 transaction count is not gas."
+  },
+  "staleDays": 155,
+  "freshness": "stale",
+  "requiredMetricCount": 25,
+  "definitionMatchedMetricCount": 0,
+  "requirements": [
+    {
+      "metric": "l1GasUsed",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "TxCnt is L1 transaction count and cannot substitute for gas or a fixed L2 universe."
+    },
+    {
+      "metric": "l2Transactions",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "TxCnt is L1 transaction count and cannot substitute for gas or a fixed L2 universe."
+    },
+    {
+      "metric": "blobGasUsed",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "executionFeesEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "FeeTotNtv is an aggregate including blob fees; the required split is absent."
+    },
+    {
+      "metric": "executionBurnEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "blobFeesEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "FeeTotNtv is an aggregate including blob fees; the required split is absent."
+    },
+    {
+      "metric": "blobBurnEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "FeeTotNtv is an aggregate including blob fees; the required split is absent."
+    },
+    {
+      "metric": "consensusNetIssuanceEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "IssTotNtv is gross issuance; required layer, penalty and era components are absent."
+    },
+    {
+      "metric": "executionPowIssuanceEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "IssTotNtv is gross issuance; required layer, penalty and era components are absent."
+    },
+    {
+      "metric": "supplyEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "SplyCur exists but exact EL/CL scope and its revision history need reconciliation."
+    },
+    {
+      "metric": "stakedEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "exitQueueEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "l2UserFeesEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "l2SettlementFeesEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "stakingConsensusRewardsEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "stakingConsensusPenaltiesEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "stakingPriorityFeesEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "stakingMevExcludingPriorityEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "stakingServiceFeesEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "stakingOperatingCostsEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "averageRewardEligibleStakeEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "completedExitCount",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "completedExitMedianWaitDays",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "uniqueNativeCollateralEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    },
+    {
+      "metric": "uniqueStakingClaimCollateralEth",
+      "status": "unavailable",
+      "sourceField": null,
+      "reason": "Required measured field and its definition-matched provenance are absent."
+    }
+  ],
+  "publishedAt": null,
+  "historicalCollectionProven": false,
+  "historicalPointInTimeReady": false,
+  "fullModelSnapshotReady": false,
+  "eligibleModelSnapshotCount": 0,
+  "modelSnapshots": [],
+  "blockers": [
+    "This collection time applies to the exact archive captured now, not historical issue times.",
+    "Provider calculation completion and Git commit metadata are not proven publication times of historical metric vintages.",
+    "Only aggregate provider fields are present; the reviewed 25-metric definition and cohort requirements are not satisfied.",
+    "Latest complete source window is older than the seven-day model freshness limit."
+  ]
+}
