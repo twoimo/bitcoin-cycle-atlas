@@ -3,28 +3,28 @@
   "generatedBy": "node scripts/refresh-cycle-calibration.mjs",
   "source": {
     "path": "dist/data/btc-daily.json",
-    "pricesSha256": "139634076ed2da8b0a5cb3c28572f7b3eb273ab0d4fa5c214d2ab14b16393aa5",
+    "pricesSha256": "b41e769d2c367c9f0c17bbb8c39c2c9dbb78edb5612230cf32b7f45b0275f85a",
     "provider": "Coin Metrics Community API",
     "metric": "PriceUSD",
     "firstDate": "2010-07-18",
-    "lastDate": "2026-10-23",
-    "observationCount": 5942,
+    "lastDate": "2026-10-25",
+    "observationCount": 5944,
     "completedUtcObservationsOnly": true
   },
   "version": "causal-cycle-clock-v1",
-  "asOf": "2026-10-23",
+  "asOf": "2026-10-25",
   "current": {
-    "date": "2026-10-23",
-    "epochDay": 20749,
+    "date": "2026-10-25",
+    "epochDay": 20751,
     "state": "shortened",
     "label": "단축 가정",
     "color": "#df7c83",
-    "shiftDays": -52.77863452863022,
+    "shiftDays": -53.37569018743148,
     "appliedShiftDays": -53,
     "cycleLengthDays": 1408,
     "causal": true,
     "probability": null,
-    "asOf": "2026-10-23",
+    "asOf": "2026-10-25",
     "available": true,
     "rawShiftDays": -66,
     "referencePeakDate": "2025-10-06",
@@ -142,7 +142,7 @@
     "https://www.fidelity.com/learning-center/trading-investing/four-year-bitcoin-and-crypto-cycles",
     "https://fidelitydigitalassets.com/research-and-insights/bitcoins-four-year-cycle-over"
   ],
-  "observationCount": 5942,
+  "observationCount": 5944,
   "futureApplication": {
     "enabled": true,
     "requestedShiftDays": -53,
@@ -159,7 +159,7 @@
     "timingAdjustment": {
       "requested": true,
       "available": true,
-      "asOf": "2026-10-23",
+      "asOf": "2026-10-25",
       "requestedShiftDays": -53,
       "appliedShiftDays": -53,
       "applied": true,
@@ -174,18 +174,6 @@
     "clockVerifiedWithSampleCount": 16
   },
   "recentDailyStates": [
-    {
-      "date": "2026-04-27",
-      "state": "aligned",
-      "appliedShiftDays": -13,
-      "cycleLengthDays": 1448
-    },
-    {
-      "date": "2026-04-28",
-      "state": "aligned",
-      "appliedShiftDays": -13,
-      "cycleLengthDays": 1448
-    },
     {
       "date": "2026-04-29",
       "state": "aligned",
@@ -1250,6 +1238,18 @@
     },
     {
       "date": "2026-10-23",
+      "state": "shortened",
+      "appliedShiftDays": -53,
+      "cycleLengthDays": 1408
+    },
+    {
+      "date": "2026-10-24",
+      "state": "shortened",
+      "appliedShiftDays": -53,
+      "cycleLengthDays": 1408
+    },
+    {
+      "date": "2026-10-25",
       "state": "shortened",
       "appliedShiftDays": -53,
       "cycleLengthDays": 1408
