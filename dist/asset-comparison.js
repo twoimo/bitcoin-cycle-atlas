@@ -133,13 +133,17 @@ function coverageFor(prices, metadata, periods, year, asOfDay) {
   }
   const presentYears = new Set(periods.map(period => period.year)), missingYears = [];
   if (first) for (let historicalYear = yearOf(first.date); historicalYear < year; historicalYear++) if (!presentYears.has(historicalYear)) missingYears.push(historicalYear);
+  return comparisonCoverageSummary({ first, current: periods.find(period => period.year === year), calendar, missingDates, missingYears, gapCount });
+}
+
+/** Shared diagnostic semantics for current snapshots and indexed reconstruction. */
+export function comparisonCoverageSummary({ first, current, calendar, missingDates, missingYears, gapCount }) {
   const firstYearPartial = Boolean(first && (calendar === 'calendar-days' ? first.date.slice(5) !== '01-01' : first.date.slice(5) > '01-07'));
   const issues = [];
   if (!first) issues.push('기준일까지의 관측 없음');
   if (missingDates.length) issues.push(`확인된 결측 ${missingDates.length}개 날짜`);
   if (missingYears.length) issues.push(`관측 없는 과거 연도 ${missingYears.join(', ')}`);
   if (gapCount) issues.push(calendar === 'calendar-days' ? `하루를 넘는 UTC 달력일 관측 간격 ${gapCount}개` : `7일을 넘는 거래 세션 관측 간격 ${gapCount}개`);
-  const current = periods.find(period => period.year === year);
   if (current && (calendar === 'calendar-days' ? current.startDate.slice(5) !== '01-01' : current.startDate.slice(5) > '01-07')) issues.push(calendar === 'calendar-days' ? '올해 UTC 첫 달력일 기준 종가 없음' : '올해 첫 주의 기준 종가 없음');
   return { status: !first ? 'unavailable' : issues.length ? 'incomplete' : 'observed', complete: Boolean(first) && issues.length === 0, issues, missingYears, missingDates: missingDates.sort(), gapCount, firstYearPartial, firstPartialStartDate: firstYearPartial ? first.date : null };
 }
@@ -187,3 +191,6 @@ export function buildAssetComparison(bundle, { asOfDate } = {}) {
   });
   return { version: ASSET_COMPARISON_VERSION, asOf, year, rows, methodology: ASSET_COMPARISON_METHODOLOGY };
 }
+
+// Shared rule primitives; history must not maintain a second classifier.
+export { percentage as comparisonPercentage, mean as comparisonMean, classify as classifyAssetComparison, sourceDate as comparisonAsOf };
