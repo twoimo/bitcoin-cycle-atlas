@@ -28,6 +28,7 @@ export async function evaluateEthereumModels({repositoryRoot=root,output=null}={
   }
   await visit('dist/ethereum-model-comparison.js');
   await visit('scripts/evaluate-ethereum-models.mjs');
+  await visit('scripts/verify-eth-candidate-browser.mjs');
   for(const path of ['tests/ethereum-cycle-models.test.mjs','tests/ethereum-economic-model.test.mjs','tests/ethereum-model-comparison.test.mjs','tests/ethereum-forecast-boundary.test.mjs']) await visit(path);
   const sourceCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:repositoryRoot,encoding:'utf8'}).trim();
   const sourceTree=execFileSync('git',['rev-parse','HEAD^{tree}'],{cwd:repositoryRoot,encoding:'utf8'}).trim();
@@ -41,7 +42,7 @@ export async function evaluateEthereumModels({repositoryRoot=root,output=null}={
     const bundlePaths=[...new Set([...Object.keys(sourceFiles),
       'tests/ethereum-cycle-models.test.mjs','tests/ethereum-economic-model.test.mjs',
       'tests/ethereum-model-comparison.test.mjs','tests/ethereum-forecast-boundary.test.mjs',
-      'docs/ETH_MODEL_COMPARISON.md','.github/workflows/eth-model-evaluation.yml',
+      'docs/ETH_MODEL_COMPARISON.md','docs/ETH_ECONOMIC_SOURCE_REVIEW.md','docs/ETH_CANDIDATE_REVIEW.md','.github/workflows/eth-model-evaluation.yml',
       'dist/data/eth-ohlc.json','dist/data/btc-daily.json'])].sort();
     const entries=[],parts=['Ethereum candidate review source book\nSource commit: '+sourceCommit+'\nNo Gemini review has been performed.\n'];
     for(const path of bundlePaths){
@@ -60,15 +61,18 @@ export async function evaluateEthereumModels({repositoryRoot=root,output=null}={
   return report;
 }
 export function compactEthereumReport(report){
-  return {kind:report.kind,asOf:report.asOf,sourceCommit:report.provenance.sourceCommit,inputSha256:report.provenance.inputSha256,
+  return {kind:report.kind,asOf:report.asOf,sourceCommit:report.provenance.sourceCommit,sourceTree:report.provenance.sourceTree,executedAt:report.provenance.executedAt,runId:report.provenance.runId,inputSha256:report.provenance.inputSha256,
     uniqueOrigins:report.uniqueOrigins,maturedTargets:report.maturedTargets,prospectiveScoredTargets:report.prospectiveScoredTargets,
     historicalVintagesAvailable:report.data.historicalVintagesAvailable,discardedEarlyEthObservations:report.data.discardedEarlyEthObservations,
-    economicSnapshotCount:report.data.economicSnapshotCount,common:report.common,
+    economicSnapshotCount:report.data.economicSnapshotCount,common:report.common,pairwise:report.pairwise.filter(p=>!['flat','shrunkenTrend','btcLinked'].includes(p.left)&&!['flat','shrunkenTrend','btcLinked'].includes(p.right)),
     summaries:report.summaries.map(s=>({model:s.model,horizonDays:s.horizonDays,availableOrigins:s.availableOrigins,completedOutcomes:s.completedOutcomes,
       disjointTargetIntervals:s.disjointTargetIntervals,meanAbsoluteLogError:s.disjoint.meanAbsoluteLogError,directionAccuracy:s.disjoint.directionAccuracy,
+      directionalCallCoverage:s.disjoint.directionalCallCoverage,directionAccuracyAmongDirectionalCalls:s.disjoint.directionAccuracyAmongDirectionalCalls,
       pairedBaselines:Object.fromEntries(Object.entries(s.pairedBaselines).map(([id,p])=>[id,{n:p.disjointCases,skill:p.skill,candidateError:p.candidateMeanAbsoluteLogError,baselineError:p.baselineMeanAbsoluteLogError}])),
       interval:s.experimentalInterval})),
-    current:Object.fromEntries(Object.entries(report.current.candidates).map(([id,c])=>[id,{status:c.status,reason:c.reason??null,predictions:c.predictions,training:c.training??null,assumptions:c.assumptions??null}])),
+    current:Object.fromEntries(Object.entries(report.current.candidates).map(([id,c])=>[id,{status:c.status,reason:c.reason??null,predictions:c.predictions,assumptions:c.assumptions??null}])),
+    reviewSourceBundle:report.provenance.reviewSourceBundle,
+    relativeStrength:{target:report.relativeStrength.target,unit:report.relativeStrength.unit,summaries:report.relativeStrength.summaries.map(s=>({model:s.model,horizonDays:s.horizonDays,availableOrigins:s.availableOrigins,completedOutcomes:s.completedOutcomes,disjointCases:s.disjointTargetIntervals,meanAbsoluteLogError:s.disjoint.meanAbsoluteLogError})),pairwise:report.relativeStrength.pairwise,scope:report.relativeStrength.scope},
     adoption:report.adoption,scope:report.scope};
 }
 if(process.argv[1]&&pathToFileURL(resolve(process.argv[1])).href===import.meta.url){

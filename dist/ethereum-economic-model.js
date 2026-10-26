@@ -6,10 +6,10 @@
 const DAY_MS = 86400000;
 const EIP_REF = '7372d10a457b29eceb02cd052345af165de1fb60';
 const SPEC_REF = 'ff73f4dd90a8717b13ed5a52afa5c1af358259b5';
-export const ETH_ECONOMIC_VERSION = 'eth-economic-ridge-1';
+export const ETH_ECONOMIC_VERSION = 'eth-economic-ridge-2';
 export const ETH_ECONOMIC_DEFAULTS = Object.freeze({
   windowDays: 28, maximumSnapshotAgeDays: 7, ridgeAlpha: 1,
-  minimumTrainingLabels: 12, maximumHorizonDays: 180,
+  minimumTrainingLabels: 16, maximumHorizonDays: 180,
 });
 export const ETH_ECONOMIC_SOURCES = Object.freeze([
   {id:'eip-1559',url:'https://github.com/ethereum/EIPs/blob/'+EIP_REF+'/EIPS/eip-1559.md',blobSha:'26a5b739e1661fc7599d4d3a4c35e004a72886e1'},
@@ -20,6 +20,9 @@ export const ETH_ECONOMIC_SOURCES = Object.freeze([
   {id:'eip-7918',url:'https://github.com/ethereum/EIPs/blob/'+EIP_REF+'/EIPS/eip-7918.md',blobSha:'9f17abdd1956499ddef12848e75dd6eff0b601e8'},
   {id:'altair-rewards',url:'https://github.com/ethereum/consensus-specs/blob/'+SPEC_REF+'/specs/altair/beacon-chain.md',blobSha:'265b7e1d4b243c2b1bac21c9ca7c6445579fa7df'},
   {id:'electra-exits',url:'https://github.com/ethereum/consensus-specs/blob/'+SPEC_REF+'/specs/electra/beacon-chain.md',blobSha:'9a14039cfbfffea48d5bfde56dac977151fb6a0d'},
+  {id:'beacon-reward-types',url:'https://github.com/ethereum/beacon-APIs/blob/79b9b05e354da4f80d8f18879871af6f0068108d/types/rewards.yaml',blobSha:'c5c0485d0e090d0c111f1d5f254cff444237f402'},
+  {id:'beacon-block-rewards',url:'https://github.com/ethereum/beacon-APIs/blob/79b9b05e354da4f80d8f18879871af6f0068108d/apis/beacon/rewards/blocks.yaml',blobSha:'f28edd8d40bb4cc5ba784ebf04876b565a9d0190'},
+  {id:'erc-4626-accounting',url:'https://github.com/ethereum/ERCs/blob/4891ba3b86d2058d0f472dbf1500af6bb056caf2/ERCS/erc-4626.md',blobSha:'41de5ab9c01119d0c2f6700860d1cc25a278cf06'},
 ]);
 export const ETH_ECONOMIC_INPUT_SCHEMA = Object.freeze({
   priceRow: {
@@ -28,10 +31,16 @@ export const ETH_ECONOMIC_INPUT_SCHEMA = Object.freeze({
     price:'USD per ETH or USD per BTC; a single consistent venue/definition per series.',
   },
   snapshot: {
-    required:['metricDefinitionVersion','l2UniverseId','observedThrough','windowDays','completeWindow','publishedAt','collectedAt','vintageId','sourceHash','sourceUrl','metricSourceUrls','metrics'],
+    required:['metricDefinitionVersion','l2UniverseId','stakingCohortId','stakingRewardAccounting','exitTimingUniverseId','exitTimingBasis','collateralUniverseId','collateralAccounting','observedThrough','windowDays','completeWindow','publishedAt','collectedAt','vintageId','sourceHash','sourceUrl','metricSourceUrls','metrics'],
     windowDays:28,
-    metricDefinitionVersion:'eth-economic-input-1',
+    metricDefinitionVersion:'eth-economic-input-2',
     l2UniverseId:'A fixed explicit rollup universe; a changed universe requires a separate model/data revision.',
+    stakingCohortId:'A fixed measured validator/investor cohort; its earned rewards, costs and time-weighted eligible principal use the same scope.',
+    stakingRewardAccounting:'earned-disjoint-28d-v1: consensus rewards/penalties, execution priority fees and MEV excluding those fees are mutually reconciled; costs are actual cohort expenses, not assumed APR haircuts.',
+    exitTimingUniverseId:'A fixed universe of completed validator exits; its completion sample is distinct from the pending queue stock.',
+    exitTimingBasis:'completed-request-to-execution-28d-v1: completedExitMedianWaitDays measures elapsed request-to-available-execution-balance time for exits completed during this window.',
+    collateralUniverseId:'A fixed set of collateral protocols and backing adapters; maintain the same coverage and deduplication method across vintages.',
+    collateralAccounting:'unique-underlying-disjoint-v1: native/wrapped-native and staking-claim backing units are each deduplicated and mutually disjoint; lending receipts, bridges, wrappers and reused claims are not extra underlying ETH.',
     observedThrough:'Last included UTC day; flow window is the 28 complete days ending here; stocks are measured at its end.',
     provenance:'All component releases must be no later than publishedAt; collectedAt is the actual capture time for these exact bytes. Preserve revisions as additional vintages.',
     metricSourceUrls:'A nonempty HTTPS source URL for every metric. The estimator checks presence and chronology, not source authenticity.',
@@ -52,6 +61,17 @@ export const ETH_ECONOMIC_INPUT_SCHEMA = Object.freeze({
     exitQueueEth:{unit:'ETH at window end',definition:'Subset of stakedEth with queued exits; excludes already withdrawn balances.'},
     l2UserFeesEth:{unit:'ETH/28 UTC days',definition:'End-user fees collected by the same rollup universe, each execution/data/operator charge counted once; ETH converted fees require a dated conversion receipt.'},
     l2SettlementFeesEth:{unit:'ETH/28 UTC days',definition:'That universe paid to L1 execution plus blob fees, a subset of total L1 fees; never added again to executionFeesEth+blobFeesEth.'},
+    stakingConsensusRewardsEth:{unit:'ETH/28 UTC days',definition:'Gross consensus rewards earned by the fixed staking cohort; not ideal/theoretical reward and not duplicated across total and component API fields.'},
+    stakingConsensusPenaltiesEth:{unit:'ETH/28 UTC days',definition:'Consensus penalties and slashing destruction borne by that same cohort, as a nonnegative deduction.'},
+    stakingPriorityFeesEth:{unit:'ETH/28 UTC days',definition:'Execution priority fees received by the cohort, separate from issuance and burn.'},
+    stakingMevExcludingPriorityEth:{unit:'ETH/28 UTC days',definition:'Measured additional MEV payment to the cohort after removing priority fees already in stakingPriorityFeesEth; unknown decomposition is missing, not zero.'},
+    stakingServiceFeesEth:{unit:'ETH/28 UTC days',definition:'Actual pool, operator and custody charges to the measured investors; count each charge once.'},
+    stakingOperatingCostsEth:{unit:'ETH/28 UTC days',definition:'Actual remaining operating costs not already included in service fees; non-ETH expenses require a dated conversion receipt.'},
+    averageRewardEligibleStakeEth:{unit:'time-weighted ETH over 28 UTC days',definition:'Average cohort principal exposed to the recorded rewards/penalties during the window; denominator and all return components share the same cohort.'},
+    completedExitCount:{unit:'completed exits/28 UTC days',definition:'Number of eligible completed exits underlying the waiting-time statistic; zero does not imply zero waiting time.'},
+    completedExitMedianWaitDays:{unit:'elapsed days per completed exit',definition:'Median request-to-execution-availability duration for the completed exit sample. It is not a forecast of pending exits and is completion-selection biased.'},
+    uniqueNativeCollateralEth:{unit:'unique underlying ETH at window end',definition:'Native and wrapped-native ETH pledged within the fixed collateral universe after deduplicating lending receipts and reused claims.'},
+    uniqueStakingClaimCollateralEth:{unit:'unique underlying ETH at window end',definition:'ETH backing pledged staking claims after recursive wrapper/receipt deduplication; exclude any backing unit already counted as native collateral.'},
   },
 });
 export const ETH_ECONOMIC_FEATURES = Object.freeze([
@@ -65,6 +85,9 @@ export const ETH_ECONOMIC_FEATURES = Object.freeze([
   {id:'l2CaptureRatio',formula:'l2SettlementFeesEth/l2UserFeesEth',unit:'ratio, may exceed 1 if sequencers lose money',group:'capture'},
   {id:'ethBtcMomentum',formula:'log((ETH[t]/BTC[t])/(ETH[t-28]/BTC[t-28]))',unit:'past 28-day log return',group:'relative-strength'},
   {id:'btcMomentum',formula:'log(BTC[t]/BTC[t-28])',unit:'past 28-day log return',group:'btc-link'},
+  {id:'netStakingYield',formula:'(stakingConsensusRewardsEth-stakingConsensusPenaltiesEth+stakingPriorityFeesEth+stakingMevExcludingPriorityEth-stakingServiceFeesEth-stakingOperatingCostsEth)/averageRewardEligibleStakeEth',unit:'earned net ETH/ETH per 28 days; may be negative',group:'staking-return'},
+  {id:'completedExitWait',formula:'log1p(completedExitMedianWaitDays)',unit:'log elapsed days of completed exits',group:'withdrawal-liquidity'},
+  {id:'uniqueCollateralShare',formula:'(uniqueNativeCollateralEth+uniqueStakingClaimCollateralEth)/supplyEth',unit:'fraction of unique underlying ETH',group:'collateral-demand'},
 ]);
 export const ETH_ECONOMIC_EQUATIONS = Object.freeze({
   supply:'S[t+1]=S[t]+consensusNetIssuanceEth-executionBurnEth-blobBurnEth; deposits/withdrawals move balances and do not create supply.',
@@ -74,6 +97,10 @@ export const ETH_ECONOMIC_EQUATIONS = Object.freeze({
   interpretation:'Estimated predictive associations, not causal effects or a discounted cash-flow proof. Fee and supply features share accounting components; they are not added as independent revenues.',
   ablation:'Drop one feature and refit on the identical eligible training origins; report change in the current prediction, not out-of-sample importance.',
   sensitivity:'Coefficient times one training feature standard deviation, holding other transformed features fixed; not a causal native-unit shock.',
+  stakingReturn:'Net staking yield is an earned 28-day cohort return, not annualized guaranteed APR, available cash or market-wide total issuance. Costs can make it negative.',
+  exitLiquidity:'Completed-exit waiting time and pending exitQueueEth are distinct observations. No current queue clearance time is inferred from the completed sample.',
+  collateral:'Unique underlying collateral is the disjoint union of native/wrapped-native ETH and ETH backing staking claims; it is not gross USD TVL or a sum of every receipt token.',
+  tradability:'No LST tradability coefficient is inferred from backing conversion, staked share or a queue. A fixed asset basket with dated executable quotes, size, depth and redemption limits would need a separately reviewed model variant.',
   probability:'No confidence or probability interval is produced. A ridge fit alone does not calibrate probabilities.',
   longHorizon:'Only 30, 90 and 180 days are supported. No extrapolation of these fitted returns to 2030-2035.',
 });
@@ -121,7 +148,7 @@ function priceIndex(rows,asOfDay,cutoff,label){
     const tied=versions.find(x=>x.evidence.published===evidence.published&&x.evidence.collected===evidence.collected);
     if(tied&&(tied.price!==price||tied.evidence.sourceHash!==evidence.sourceHash||tied.evidence.vintageId!==evidence.vintageId))throw new RangeError('Ambiguous price vintages at the same release and collection time');
     const same=versions.find(x=>x.evidence.vintageId===evidence.vintageId);
-    if(same&&(same.price!==price||same.evidence.sourceHash!==evidence.sourceHash))throw new RangeError('Conflicting price vintage identity');
+    if(same&&(same.price!==price||same.evidence.sourceHash!==evidence.sourceHash||same.evidence.published!==evidence.published||same.evidence.collected!==evidence.collected||same.evidence.sourceUrl!==evidence.sourceUrl))throw new RangeError('Conflicting price vintage identity or receipt timestamps');
     if(!same)versions.push({day:d,price,evidence});
     index.set(d,versions);
   }
@@ -148,9 +175,12 @@ function snapshotsAtIssue(raw,asOfDay,cutoff){
     if(typeof snapshot.publishedAt==='string'&&stamp(snapshot.publishedAt,'publishedAt')>cutoff)continue;
     if(typeof snapshot.collectedAt==='string'&&stamp(snapshot.collectedAt,'collectedAt')>cutoff)continue;
     const evidence=receipt(snapshot,(d+1)*DAY_MS);
-    if(snapshot.metricDefinitionVersion!=='eth-economic-input-1'||typeof snapshot.l2UniverseId!=='string'||!snapshot.l2UniverseId.trim())throw new TypeError('A metric definition version and fixed L2 universe are required');
-    universes.add(snapshot.l2UniverseId);
-    if(universes.size>1)throw new RangeError('L2 universe changed inside the eligible input dataset');
+    if(snapshot.metricDefinitionVersion!=='eth-economic-input-2')throw new TypeError('The versioned economic input definition is required');
+    const scopes=['l2UniverseId','stakingCohortId','exitTimingUniverseId','collateralUniverseId'];
+    if(scopes.some(key=>typeof snapshot[key]!=='string'||!snapshot[key].trim()))throw new TypeError('Fixed activity, staking, exit and collateral universes are required');
+    if(snapshot.stakingRewardAccounting!=='earned-disjoint-28d-v1'||snapshot.exitTimingBasis!=='completed-request-to-execution-28d-v1'||snapshot.collateralAccounting!=='unique-underlying-disjoint-v1')throw new TypeError('Explicit nonduplicated reward, completed-exit and underlying-collateral accounting is required');
+    universes.add(JSON.stringify(scopes.map(key=>snapshot[key])));
+    if(universes.size>1)throw new RangeError('An economic measurement universe changed inside the eligible input dataset');
     if(snapshot.windowDays!==28||snapshot.completeWindow!==true)throw new RangeError('Economic snapshot requires one complete 28-day window');
     const m=snapshot.metrics;
     if(!m||typeof m!=='object')throw new TypeError('Economic metrics are required');
@@ -160,15 +190,18 @@ function snapshotsAtIssue(raw,asOfDay,cutoff){
     }
     if(!(m.supplyEth>0&&m.l2UserFeesEth>0))throw new RangeError('Supply and L2 user-fee denominator must be positive');
     if(m.stakedEth>m.supplyEth||m.exitQueueEth>m.stakedEth)throw new RangeError('Staking/exit stock accounting is inconsistent');
+    if(!(m.averageRewardEligibleStakeEth>0))throw new RangeError('The staking return denominator must be positive');
+    if(!Number.isSafeInteger(m.completedExitCount)||m.completedExitCount<1)throw new RangeError('Completed waiting-time observations require a positive completed-exit count');
+    if(m.uniqueNativeCollateralEth+m.uniqueStakingClaimCollateralEth>m.supplyEth+64*Number.EPSILON*Math.max(1,m.supplyEth))throw new RangeError('Unique underlying collateral cannot exceed total ETH supply');
     const tol=1e-10*Math.max(1,m.executionFeesEth,m.blobFeesEth);
     if(m.executionBurnEth>m.executionFeesEth+tol||Math.abs(m.blobBurnEth-m.blobFeesEth)>tol)throw new RangeError('Fee and burn accounting is inconsistent');
     if(m.l2SettlementFeesEth>m.executionFeesEth+m.blobFeesEth+tol)throw new RangeError('Rollup L1 payments must be a subset of L1 fees');
-    const key=d+'|'+evidence.vintageId,signature=JSON.stringify(metricNames.map(name=>m[name]))+'|'+evidence.sourceHash;
+    const key=d+'|'+evidence.vintageId,signature=JSON.stringify([metricNames.map(name=>m[name]),evidence.sourceHash,evidence.published,evidence.collected,evidence.sourceUrl,metricNames.map(name=>snapshot.metricSourceUrls[name])]);
     const timeKey=d+'|'+evidence.published+'|'+evidence.collected,timeValue=signature+'|'+evidence.vintageId;
     if(times.has(timeKey)&&times.get(timeKey)!==timeValue)throw new RangeError('Ambiguous economic vintages at the same release and collection time');
     times.set(timeKey,timeValue);
     if(seen.has(key)&&seen.get(key)!==signature)throw new RangeError('Conflicting economic vintage identity');
-    if(!seen.has(key))result.push({day:d,metrics:m,evidence});
+    if(!seen.has(key))result.push({day:d,metrics:m,evidence,scopes:Object.fromEntries(scopes.map(key=>[key,snapshot[key]]))});
     seen.set(key,signature);
   }
   return result.sort((a,b)=>a.day-b.day||a.evidence.published-b.evidence.published||a.evidence.collected-b.evidence.collected);
@@ -192,6 +225,9 @@ function featureAt(eth,btc,snapshots,d,cutoff){
     (m.consensusNetIssuanceEth-m.executionBurnEth-m.blobBurnEth)/m.supplyEth,
     m.stakedEth/m.supplyEth,m.exitQueueEth/m.supplyEth,m.l2SettlementFeesEth/m.l2UserFeesEth,
     Math.log(e.price/e0.price)-Math.log(b.price/b0.price),Math.log(b.price/b0.price),
+    (m.stakingConsensusRewardsEth-m.stakingConsensusPenaltiesEth+m.stakingPriorityFeesEth+m.stakingMevExcludingPriorityEth-m.stakingServiceFeesEth-m.stakingOperatingCostsEth)/m.averageRewardEligibleStakeEth,
+    Math.log1p(m.completedExitMedianWaitDays),
+    (m.uniqueNativeCollateralEth+m.uniqueStakingClaimCollateralEth)/m.supplyEth,
   ];
   if(x.some(value=>!Number.isFinite(value)))return null;
   return {x,eth:e.price,btc:b.price,snapshot:s,cutoff,day:d};
@@ -323,18 +359,22 @@ export function buildEthereumEconomicCandidate({ethRows,btcRows,asOf,horizons=[3
       status:ready?'ready':'unavailable',version:ETH_ECONOMIC_VERSION,asOf,issuedAt:new Date(cutoff).toISOString(),
       predictions,training,coefficients,contributions,ablations,
       reason:ready?null:'No horizon has enough eligible mature labels.',
-      currentInput:{snapshotDate:dateOf(current.snapshot.day),ageDays:asOfDay-current.snapshot.day,vintageId:current.snapshot.evidence.vintageId,sourceHash:current.snapshot.evidence.sourceHash,observedEthUsd:current.eth,observedEthBtc:current.eth/current.btc},
+      currentInput:{scopes:current.snapshot.scopes,completedExitCount:current.snapshot.metrics.completedExitCount,snapshotDate:dateOf(current.snapshot.day),ageDays:asOfDay-current.snapshot.day,vintageId:current.snapshot.evidence.vintageId,sourceHash:current.snapshot.evidence.sourceHash,observedEthUsd:current.eth,observedEthBtc:current.eth/current.btc},
       method:{name:'direct-horizon-ridge',ridgeAlpha:ETH_ECONOMIC_DEFAULTS.ridgeAlpha,alphaOrigin:'fixed analyst regularization, not selected using future performance',featureCount:ETH_ECONOMIC_FEATURES.length,trainingStandardizationOnly:true,futureBtcRealizationUsedAsPredictor:false,relativeStrengthIsSeparateTarget:true,causalClaim:false,probability:null,calibrated:false,defaultEligible:false,outOfSamplePerformance:null},
       warnings:[
         'Receipt metadata is validated but external authenticity and completeness require independent source verification.',
         'Small nonoverlapping samples can still share market regimes and overlapping 28-day feature windows; count is not independent cycle count.',
         'Fee/usage variables are endogenous; fitted signs need not imply causal effects. No forced positive-price response.',
+        'Staking return is cohort-specific and earned rather than immediately liquid. Completed withdrawal waits do not forecast current queue clearance.',
+        'Collateral disjointness requires a source backing/claim reconciliation; aggregate totals alone cannot prove deduplication. Staking and collateral features can refer to the same economic units without adding them as new supply.',
+        'No direct LST tradability coefficient is fitted. Backing conversion is not an executable liquidation price.',
         'Protocol specification revisions describe accounting, not a fixed future fee market or activation calendar.',
         'Observed UTC coin closes are not contemporaneous New York equity closes. An equity consumer must supply its own information cutoff.',
         'The same frozen candidate result must be used for ETH and BMNR; no default promotion or long-range extrapolation is authorized.',
       ],
     };
   }catch(error){
-    return unavailable(error instanceof Error?error.message:String(error),{asOf:typeof asOf==='string'?asOf:null});
+    if(error instanceof TypeError||error instanceof RangeError)return unavailable(error.message,{asOf:typeof asOf==='string'?asOf:null});
+    throw error;
   }
 }

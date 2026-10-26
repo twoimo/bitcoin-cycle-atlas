@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {buildEthereumEconomicCandidate,ETH_ECONOMIC_FEATURES,ETH_ECONOMIC_INPUT_SCHEMA} from '../dist/ethereum-economic-model.js';
+import {runEthereumModelComparison} from '../dist/ethereum-model-comparison.js';
 
 // Explicitly synthetic mechanism fixtures. These are not published network data,
 // observed forecast accuracy, vintage-validation receipts or a calibration sample.
-function fixture(count=2600){
+function fixture(count=3000){
   const day=86400000,start=Date.parse('2018-01-01T00:00:00Z'),date=i=>new Date(start+i*day).toISOString().slice(0,10);
   const sourceUrl='https://fixtures.invalid/synthetic-eth-economics';
   const ethRows=[],btcRows=[],economicSnapshots=[];
@@ -18,14 +19,28 @@ function fixture(count=2600){
         executionFeesEth:20000*(1+.1*Math.cos(i/87)),executionBurnEth:10000*(1+.1*Math.cos(i/87)),blobFeesEth:1000*(1+.2*Math.sin(i/42)),blobBurnEth:1000*(1+.2*Math.sin(i/42)),
         consensusNetIssuanceEth:25000*(1+.1*Math.sin(i/79)),supplyEth:120e6,stakedEth:30e6+5e5*Math.sin(i/107),exitQueueEth:1e5*(1+.1*Math.sin(i/19)),
         l2UserFeesEth:5000*(1+.1*Math.cos(i/23)),l2SettlementFeesEth:3000*(1+.1*Math.sin(i/29)),
+        stakingConsensusRewardsEth:10000*(1+.2*Math.sin(i/83)),stakingConsensusPenaltiesEth:200*(1+.1*Math.cos(i/37)),
+        stakingPriorityFeesEth:2400*(1+.15*Math.sin(i/33)),stakingMevExcludingPriorityEth:900*(1+.2*Math.cos(i/57)),
+        stakingServiceFeesEth:700*(1+.1*Math.sin(i/107)),stakingOperatingCostsEth:200*(1+.05*Math.cos(i/29)),
+        averageRewardEligibleStakeEth:12e6+2e5*Math.sin(i/97),completedExitCount:50+i%17,completedExitMedianWaitDays:2+.8*Math.sin(i/71),
+        uniqueNativeCollateralEth:8e6+5e5*Math.sin(i/43),uniqueStakingClaimCollateralEth:4e6+3e5*Math.cos(i/67),
       };
-      economicSnapshots.push({metricDefinitionVersion:'eth-economic-input-1',l2UniverseId:'synthetic-rollups-fixed',observedThrough:date(i),windowDays:28,completeWindow:true,...provenance,metrics,metricSourceUrls:Object.fromEntries(Object.keys(metrics).map(k=>[k,sourceUrl]))});
+      economicSnapshots.push({
+        metricDefinitionVersion:'eth-economic-input-2',l2UniverseId:'synthetic-rollups-fixed',
+        stakingCohortId:'synthetic-staking-fixed',stakingRewardAccounting:'earned-disjoint-28d-v1',
+        exitTimingUniverseId:'synthetic-completed-exits-fixed',exitTimingBasis:'completed-request-to-execution-28d-v1',
+        collateralUniverseId:'synthetic-collateral-fixed',collateralAccounting:'unique-underlying-disjoint-v1',
+        observedThrough:date(i),windowDays:28,completeWindow:true,...provenance,metrics,
+        metricSourceUrls:Object.fromEntries(Object.keys(metrics).map(k=>[k,sourceUrl])),
+      });
     }
   }
   return {ethRows,btcRows,economicSnapshots,asOf:date(count-1),horizons:[30,90,180]};
 }
 
 const clone=value=>structuredClone(value);
+const afterDay=(date,days)=>new Date(Date.parse(date+'T00:00:00.000Z')+days*86400000).toISOString().slice(0,10);
+const featureValue=(output,id)=>output.contributions[0].features.find(f=>f.id===id).value;
 const model=buildEthereumEconomicCandidate;
 const base=fixture();
 const result=model(base);
@@ -46,7 +61,7 @@ test('direct horizons use mature, disjoint labels and preserve the distinction b
   assert.equal(result.predictions.length,3);
   assert.equal(result.method.alphaOrigin,'fixed analyst regularization, not selected using future performance');
   for(const train of result.training){
-    assert.ok(train.eligibleOrigins>=12);
+    assert.ok(train.eligibleOrigins>=16);
     assert.equal(train.publicAndCollectedByOrigin,true);
     assert.equal(train.labelWindowsOverlap,false);
     assert.equal(train.independentMarketRegimes,null);
@@ -61,12 +76,13 @@ test('direct horizons use mature, disjoint labels and preserve the distinction b
 });
 
 test('future prices, future economic bytes and revisions unavailable at their historical origin cannot alter this forecast',()=>{
-  const next=clone(base),futureDate='2025-02-13',futureTime='2025-02-14T00:00:00.000Z';
+  const next=clone(base),futureDate=afterDay(base.asOf,1),futureTime=afterDay(base.asOf,2)+'T00:00:00.000Z';
   next.ethRows.push({...next.ethRows.at(-1),date:futureDate,price:-1,publishedAt:futureTime,collectedAt:futureTime});
   next.btcRows.push({...next.btcRows.at(-1),date:futureDate,price:Infinity,publishedAt:futureTime,collectedAt:futureTime});
   next.economicSnapshots.push({...clone(next.economicSnapshots.at(-1)),observedThrough:futureDate,metrics:{},publishedAt:futureTime,collectedAt:futureTime});
   assert.deepEqual(model(next),result);
-  const late=clone(base),prior=clone(late.economicSnapshots.find(s=>s.observedThrough===late.ethRows[2569].date));
+  const late=clone(base),lastOrigin=result.training.find(t=>t.horizonDays===30).lastOrigin;
+  const prior=clone(late.economicSnapshots.filter(s=>s.observedThrough<=lastOrigin).at(-1));
   prior.vintageId='synthetic-later-revision';prior.sourceHash='b'.repeat(64);
   prior.publishedAt=result.issuedAt;prior.collectedAt=result.issuedAt;prior.metrics.executionFeesEth*=2;
   late.economicSnapshots.push(prior);
@@ -108,7 +124,7 @@ test('missing days, delayed current releases and ambiguous revisions fail closed
   const gap=clone(base);gap.ethRows.splice(gap.ethRows.length-8,1);
   assert.equal(model(gap).status,'unavailable');
   const delayed=clone(base),latest=delayed.economicSnapshots.at(-1);
-  latest.publishedAt='2025-02-14T00:00:00.000Z';latest.collectedAt=latest.publishedAt;
+  latest.publishedAt=afterDay(base.asOf,2)+'T00:00:00.000Z';latest.collectedAt=latest.publishedAt;
   assert.equal(model(delayed).status,'unavailable');
   const conflicting=clone(base),duplicate=clone(conflicting.economicSnapshots.at(-1));
   duplicate.metrics.executionFeesEth*=1.1;conflicting.economicSnapshots.push(duplicate);
@@ -141,4 +157,87 @@ test('short data and unsupported long-horizon extrapolation remain unavailable',
   assert.equal(model({...base,horizons:[365]}).status,'unavailable');
   assert.equal(model({...base,issuedAt:base.asOf+'T12:00:00.000Z'}).status,'unavailable');
   assert.equal(model({...base,issuedAt:'2025-02-31T00:00:00Z'}).status,'unavailable');
+});
+
+test('earned staking return has measured deductions and reaches a fitted channel separate from issuance',()=>{
+  const m=base.economicSnapshots.at(-1).metrics;
+  assert.equal(featureValue(result,'netStakingYield'),(m.stakingConsensusRewardsEth-m.stakingConsensusPenaltiesEth+m.stakingPriorityFeesEth+m.stakingMevExcludingPriorityEth-m.stakingServiceFeesEth-m.stakingOperatingCostsEth)/m.averageRewardEligibleStakeEth);
+  const costs=clone(base);costs.economicSnapshots.at(-1).metrics.stakingOperatingCostsEth=30000;
+  const next=model(costs);
+  assert.equal(next.status,'ready');assert.ok(featureValue(next,'netStakingYield')<0);
+  assert.equal(featureValue(next,'netSupplyRate'),featureValue(result,'netSupplyRate'));
+  assert.deepEqual(next.coefficients,result.coefficients);
+  assert.ok(next.predictions.some((p,i)=>Math.abs(p.price-result.predictions[i].price)>1e-6));
+  const missing=clone(base);delete missing.economicSnapshots.at(-1).metrics.stakingMevExcludingPriorityEth;
+  assert.equal(model(missing).status,'unavailable');
+  const duplicatePolicy=clone(base);duplicatePolicy.economicSnapshots.at(-1).stakingRewardAccounting='gross-builder-payments-plus-priority';
+  assert.equal(model(duplicatePolicy).status,'unavailable');
+});
+
+test('completed exit duration and unique underlying collateral are separate fitted channels',()=>{
+  for(const [metric,id] of [['completedExitMedianWaitDays','completedExitWait'],['uniqueStakingClaimCollateralEth','uniqueCollateralShare']]){
+    const changed=clone(base);changed.economicSnapshots.at(-1).metrics[metric]*=1.2;
+    const next=model(changed);
+    assert.equal(next.status,'ready');assert.ok(featureValue(next,id)>featureValue(result,id));
+    for(const unchanged of ['exitQueueShare','stakedShare','netSupplyRate','netStakingYield'])assert.equal(featureValue(next,unchanged),featureValue(result,unchanged));
+    assert.deepEqual(next.coefficients,result.coefficients);
+    assert.ok(next.predictions.some((p,i)=>Math.abs(p.price-result.predictions[i].price)>1e-6));
+  }
+  const m=base.economicSnapshots.at(-1).metrics;
+  assert.equal(featureValue(result,'completedExitWait'),Math.log1p(m.completedExitMedianWaitDays));
+  assert.equal(featureValue(result,'uniqueCollateralShare'),(m.uniqueNativeCollateralEth+m.uniqueStakingClaimCollateralEth)/m.supplyEth);
+  const noCompleted=clone(base);noCompleted.economicSnapshots.at(-1).metrics.completedExitCount=0;
+  assert.equal(model(noCompleted).status,'unavailable');
+  const impossible=clone(base);impossible.economicSnapshots.at(-1).metrics.uniqueNativeCollateralEth=m.supplyEth;
+  assert.equal(model(impossible).status,'unavailable');
+  const policy=clone(base);policy.economicSnapshots.at(-1).collateralAccounting='gross-receipt-tvl';
+  assert.equal(model(policy).status,'unavailable');
+  const changedUniverse=clone(base);changedUniverse.economicSnapshots.at(-1).stakingCohortId='different-cohort';
+  assert.equal(model(changedUniverse).status,'unavailable');
+});
+
+test('same-vintage receipt timestamp conflicts fail identically in either array order',()=>{
+  for(const key of ['ethRows','economicSnapshots']){
+    const observedKey=key==='ethRows'?'date':'observedThrough';
+    for(const field of ['publishedAt','collectedAt']){
+      const original=clone(base[key][100]),duplicate=clone(original);
+      const later=afterDay(original[observedKey],2)+'T00:00:00.000Z';
+      duplicate[field]=later;
+      if(field==='publishedAt')duplicate.collectedAt=later;
+      for(const versions of [[original,duplicate],[duplicate,original]]){
+        const changed=clone(base);
+        changed[key].splice(100,1,...versions);
+        const output=model(changed);
+        assert.equal(output.status,'unavailable');assert.match(output.reason,/Conflicting .*vintage identity/);
+      }
+    }
+  }
+});
+
+test('unexpected internal errors propagate instead of becoming unavailable economic data',()=>{
+  const input=clone(base),sentinel=new Error('sentinel internal failure');
+  Object.defineProperty(input.economicSnapshots[0],'metrics',{get(){throw sentinel;}});
+  assert.throws(()=>model(input),error=>error===sentinel);
+});
+
+test('comparator preserves synthetic source receipts and scores the separately predicted ETHBTC target',()=>{
+  const issuedAtByOrigin=Object.fromEntries(base.ethRows.map(row=>[row.date,afterDay(row.date,1)+'T00:05:00.000Z']));
+  const report=runEthereumModelComparison({
+    ethHistory:base.ethRows,btcHistory:base.btcRows,economicSnapshots:base.economicSnapshots,issuedAtByOrigin,
+  },{asOf:base.asOf});
+  const economic=report.current.candidates.economic;
+  assert.equal(economic.status,'ready');
+  assert.equal(economic.currentInput.sourceHash,base.economicSnapshots.at(-1).sourceHash);
+  assert.equal(economic.issuedAt,issuedAtByOrigin[base.asOf]);
+  assert.ok(economic.predictions.some(p=>Number.isFinite(p.ethBtcRatio)&&p.ethBtcRatio>0));
+  const scored=report.relativeStrength.cases.filter(c=>Number.isFinite(c.predictions.economic)&&c.actual>0);
+  assert.ok(scored.length>0);
+  for(const c of scored){
+    assert.equal(c.unit,'BTC per ETH');assert.ok(c.predictions.economic>0);
+    assert.ok(c.targetDate<=base.asOf);assert.ok(c.actual>0);
+  }
+  const pending=report.relativeStrength.cases.filter(c=>Number.isFinite(c.predictions.economic)&&c.targetDate>base.asOf);
+  assert.ok(pending.length>0);
+  assert.ok(pending.every(c=>c.actual===null&&c.status==='pending'));
+  assert.ok(report.relativeStrength.summaries.some(s=>s.model==='economic'&&s.completedOutcomes>0));
 });

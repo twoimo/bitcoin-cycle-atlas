@@ -35,14 +35,23 @@ jobs:
         run: node --test tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs
       - name: Evaluate the exact committed candidates and current stored prices
         run: node scripts/evaluate-ethereum-models.mjs
+      - name: Install Korean font coverage for real browser rendering
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk
+      - name: Render comparison and ETH screens across mobile, tablet and desktop
+        run: |
+          node --check scripts/verify-eth-candidate-browser.mjs
+          node scripts/verify-eth-candidate-browser.mjs . build/eth-browser
       - name: Preserve complete source-identified candidate evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4, ref verified through GitHub
         with:
-          name: eth-candidate-evidence-${{ github.sha }}
+          name: eth-candidate-evidence-${{ github.event.pull_request.head.sha }}
           path: |
             build/ethereum-model-comparison.json
             build/eth-review-source-bundle.txt
             build/eth-review-source-manifest.json
+            build/eth-browser
           if-no-files-found: error
           retention-days: 30

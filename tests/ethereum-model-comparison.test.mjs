@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {utcDay,dateFromDay} from '../dist/cycle-engine.js';
-import {buildSimpleEthereumBtcLink,buildEthereumCombinedCandidate,summarizeEthereumComparison,runEthereumModelComparison,disjointEthereumCases} from '../dist/ethereum-model-comparison.js';
+import {buildSimpleEthereumBtcLink,buildEthereumRelativeBenchmarks,buildEthereumCombinedCandidate,summarizeEthereumComparison,runEthereumModelComparison,disjointEthereumCases} from '../dist/ethereum-model-comparison.js';
 
 function fixture(start='2022-01-01',days=1000){
   const first=utcDay(start),btc=[],eth=[];
@@ -75,4 +75,77 @@ test('the integrated evaluator is deterministic, does not interpolate gaps or in
   assert.deepEqual(runEthereumModelComparison(altered,{asOf}),report);
   const short=eth.filter((r,i)=>i!==500);
   assert.throws(()=>runEthereumModelComparison({...input,ethHistory:short},{asOf}),/730 contiguous/);
+});
+
+test('pairwise candidate scores never substitute noncommon dates or call overlap independent',()=>{
+  const cases=[
+    {origin:'2024-01-01',targetDate:'2024-01-31',horizonDays:30,anchorPrice:100,actual:110,predictions:{btcTransfer:110,ethRefit:100},intervals:{}},
+    {origin:'2024-01-15',targetDate:'2024-02-14',horizonDays:30,anchorPrice:100,actual:80,predictions:{btcTransfer:800,ethRefit:80},intervals:{}},
+    {origin:'2024-02-01',targetDate:'2024-03-02',horizonDays:30,anchorPrice:100,actual:120,predictions:{btcTransfer:120,ethRefit:100},intervals:{}},
+    {origin:'2024-03-03',targetDate:'2024-04-02',horizonDays:30,anchorPrice:100,actual:1,predictions:{legacyEth:1},intervals:{}},
+  ];
+  const report=summarizeEthereumComparison([...cases].reverse(),{horizons:[30],models:['btcTransfer','ethRefit','legacyEth']});
+  const pair=report.pairwise.find(p=>p.left==='btcTransfer'&&p.right==='ethRefit');
+  assert.equal(pair.sameOriginCases,3);
+  assert.equal(pair.firstCommonOrigin,'2024-01-01');
+  assert.equal(pair.lastCommonOrigin,'2024-02-01');
+  assert.equal(pair.disjointCases,2);
+  assert.deepEqual(pair.disjointOrigins,['2024-01-01','2024-02-01']);
+  assert.equal(pair.leftScore.meanAbsoluteLogError,0);
+  assert.equal(pair.leftSkillAgainstRight,1);
+  assert.equal(pair.independentSampleSize,null);
+  const missing=report.pairwise.find(p=>p.left==='ethRefit'&&p.right==='legacyEth');
+  assert.equal(missing.sameOriginCases,0);
+  assert.equal(missing.leftScore.meanAbsoluteLogError,null);
+  assert.equal(missing.leftSkillAgainstRight,null);
+});
+test('late BTC archive makes only BTC-dependent origins unavailable without aborting ETH replay',()=>{
+  const {btc,eth}=fixture('2020-01-01',1400);
+  const report=runEthereumModelComparison({ethHistory:eth,btcHistory:btc.slice(800)},{asOf:eth.at(-1).date});
+  const early=report.cases[0];
+  assert.ok(early.predictions.flat>0);
+  assert.ok(early.unavailableModels.btcLinked);
+  assert.equal(early.predictions.btcLinked,undefined);
+  assert.equal(report.current.candidates.btcLinked.status,'ready');
+  assert.deepEqual(report.data.btcGaps,[]);
+  assert.equal(report.data.discardedEarlyBtcObservations,0);
+  const gapped=runEthereumModelComparison({ethHistory:eth,btcHistory:btc.filter((r,i)=>i!==800)},{asOf:eth.at(-1).date});
+  assert.equal(gapped.data.btcGaps.length,1);
+  assert.equal(gapped.data.discardedEarlyBtcObservations,800);
+  assert.ok(report.summaries.find(s=>s.model==='flat'&&s.horizonDays===30).completedOutcomes>0);
+});
+
+test('ETH/BTC has its own observed target and causal ratio benchmarks',()=>{
+  const {btc,eth}=fixture('2020-01-01',1000),asOf=eth[800].date;
+  const reference=buildEthereumRelativeBenchmarks({ethRows:eth,btcRows:btc,asOf});
+  assert.equal(reference.status,'ready');
+  assert.equal(reference.assumptions.target,'ETH/BTC');
+  assert.equal(reference.anchorRatio,eth[800].price/btc[800].price);
+  const poisoned=btc.map(r=>r.date>asOf?{...r,price:1e90}:r);
+  assert.deepEqual(buildEthereumRelativeBenchmarks({ethRows:eth,btcRows:poisoned,asOf}),reference);
+  const report=runEthereumModelComparison({ethHistory:eth,btcHistory:btc},{asOf:eth.at(-1).date});
+  const ratio=report.relativeStrength.cases.find(c=>c.actual!==null);
+  const ethTarget=eth.find(r=>r.date===ratio.targetDate),btcTarget=btc.find(r=>r.date===ratio.targetDate);
+  assert.equal(ratio.actual,ethTarget.price/btcTarget.price);
+  assert.notEqual(ratio.actual,ethTarget.price);
+  assert.equal(ratio.predictions.economic,undefined);
+  assert.equal(report.relativeStrength.summaries.find(s=>s.model==='economic').completedOutcomes,0);
+});
+test('unexpected input accessor faults propagate instead of looking like missing prices',()=>{
+  const {btc,eth}=fixture();
+  const sentinel=new Error('sentinel internal failure');
+  const broken=[{get date(){throw sentinel;}}];
+  assert.throws(()=>buildSimpleEthereumBtcLink({ethRows:eth,btcRows:broken,asOf:eth.at(-1).date}),e=>e===sentinel);
+});
+
+test('explicit issue clocks are preserved and cannot predate the completed origin close',()=>{
+  const {btc,eth}=fixture(),asOf=eth.at(-1).date;
+  const next=dateFromDay(utcDay(asOf)+1),issuedAt=next+'T06:00:00.000Z';
+  const input={ethHistory:eth,btcHistory:btc,issuedAtByOrigin:{[asOf]:issuedAt}};
+  const report=runEthereumModelComparison(input,{asOf});
+  assert.equal(report.current.issuedAt,issuedAt);
+  assert.equal(report.current.informationCutoffAt,issuedAt);
+  assert.equal(report.data.explicitIssueTimeCount,1);
+  assert.ok(report.cases.every(c=>c.targetAvailableAt===null));
+  assert.throws(()=>runEthereumModelComparison({...input,issuedAtByOrigin:{[asOf]:asOf+'T23:00:00Z'}},{asOf}),/issue timestamp/);
 });

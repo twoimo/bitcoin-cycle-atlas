@@ -54,7 +54,12 @@ function rowPrediction(candidate,horizonDays) {
   return ['ready','available'].includes(candidate?.status)&&row&&row.status!=='unavailable'&&positive(row.price)?row:null;
 }
 export function buildSimpleEthereumBtcLink({ethRows,btcRows,asOf,horizons=ETH_COMPARISON_POLICY.horizons}={}) {
-  const e=readAssetDailyRows(ethRows,'ETH',asOf),b=readAssetDailyRows(btcRows,'BTC',asOf);
+  let e,b;
+  try { e=readAssetDailyRows(ethRows,'ETH',asOf); b=readAssetDailyRows(btcRows,'BTC',asOf); }
+  catch(error) {
+    if(error instanceof TypeError||error instanceof RangeError)return unavailable('BTC-linked input unavailable: '+error.message);
+    throw error;
+  }
   const first=utcDay(asOf)-ETH_COMPARISON_POLICY.betaLookbackDays;
   const eb=new Map(e.map(r=>[r.epochDay,r.price])),bb=new Map(b.map(r=>[r.epochDay,r.price]));
   const pairs=[];
@@ -75,6 +80,26 @@ export function buildSimpleEthereumBtcLink({ethRows,btcRows,asOf,horizons=ETH_CO
     beta,estimatedBeta:true,alphaIncluded:false,btcFutureRealizationUsed:false,
     btcDrift:benchmark.dailyLogDrift,btcTrendPolicy:benchmark.policy,
   },training:{observations:pairs.length,firstReturnDate:dateFromDay(first+1),informationThrough:asOf}};
+}
+
+/** A separate ETH/BTC target; no future BTC value enters either benchmark. */
+export function buildEthereumRelativeBenchmarks({ethRows,btcRows,asOf,horizons=ETH_COMPARISON_POLICY.horizons}={}) {
+  let e,b;
+  try { e=readAssetDailyRows(ethRows,'ETH',asOf); b=readAssetDailyRows(btcRows,'BTC',asOf); }
+  catch(error) {
+    if(error instanceof TypeError||error instanceof RangeError)return unavailable('ETH/BTC benchmark input unavailable: '+error.message);
+    throw error;
+  }
+  const em=new Map(e.map(r=>[r.epochDay,r.price])),bm=new Map(b.map(r=>[r.epochDay,r.price])),ratios=[];
+  for(let day=utcDay(asOf)-180;day<=utcDay(asOf);day++){
+    if(![em.get(day),bm.get(day)].every(positive))return unavailable('ETH/BTC benchmark requires 181 consecutive aligned closes');
+    const price=em.get(day)/bm.get(day);
+    if(!positive(price))return unavailable('ETH/BTC ratio is not finite and positive');
+    ratios.push({date:dateFromDay(day),epochDay:day,price});
+  }
+  const result=buildIndependentBenchmarks(ratios,{asOf,horizons});
+  return {status:'ready',anchorRatio:ratios.at(-1).price,targets:result.targets,
+    assumptions:{target:'ETH/BTC',policy:result.policy,futureBtcRealizationUsed:false}};
 }
 
 /** Fit a convex blend only on matured, disjoint paired prior forecasts. */
@@ -110,10 +135,13 @@ function legacyCandidate(ethRows,asOf,horizons) {
         scenarioLow:Math.min(...Object.values(scenarios).map(s=>s.path[h].price)),
         scenarioHigh:Math.max(...Object.values(scenarios).map(s=>s.path[h].price))};
     }),assumptions:{seed:ETH_COMPARISON_POLICY.legacySeed,sourceDate:'2024-06-05',point:'Existing base single historical-block illustration',scenarioRangeIsProbability:false}};
-  }catch(error){return unavailable(error.message);}
+  }catch(error){
+    if(error instanceof TypeError||error instanceof RangeError)return unavailable(error.message);
+    throw error;
+  }
 }
 
-export function summarizeEthereumComparison(cases,{horizons=ETH_COMPARISON_POLICY.horizons,models=ETH_COMPARISON_MODELS}={}) {
+export function summarizeEthereumComparison(cases,{horizons=ETH_COMPARISON_POLICY.horizons,models=ETH_COMPARISON_MODELS,baselineModels=['flat','shrunkenTrend','btcLinked']}={}) {
   const summaries=[];
   for(const horizonDays of horizons)for(const model of models){
     const all=cases.filter(r=>r.horizonDays===horizonDays);
@@ -129,7 +157,7 @@ export function summarizeEthereumComparison(cases,{horizons=ETH_COMPARISON_POLIC
       directionalCallCoverage:group.length?group.filter(r=>r.predictions[model]!==r.anchorPrice).length/group.length:null,
       directionAccuracyAmongDirectionalCalls:mean(group.filter(r=>r.predictions[model]!==r.anchorPrice).map(r=>Number(Math.sign(Math.log(r.predictions[model])-Math.log(r.anchorPrice))===Math.sign(Math.log(r.actual)-Math.log(r.anchorPrice))))),
     });
-    const pairedBaselines=Object.fromEntries(['flat','shrunkenTrend','btcLinked'].map(baseline=>{
+    const pairedBaselines=Object.fromEntries(baselineModels.map(baseline=>{
       const paired=used.filter(r=>positive(r.predictions[baseline])),pd=disjointEthereumCases(paired);
       const candidate=mean(pd.map(r=>absoluteLogError(r.predictions[model],r.actual)));
       const baselineError=mean(pd.map(r=>absoluteLogError(r.predictions[baseline],r.actual)));
@@ -145,10 +173,13 @@ export function summarizeEthereumComparison(cases,{horizons=ETH_COMPARISON_POLIC
         empiricalCoverage:mean(intervalCases.map(r=>Number(r.intervals[model].covered))),
         meanLogWidth:mean(intervalCases.map(r=>r.intervals[model].logWidth)),
         meanLogIntervalScore:mean(intervalCases.map(r=>r.intervals[model].logIntervalScore)),
+        disjointEmpiricalCoverage:mean(intervalDisjoint.map(r=>Number(r.intervals[model].covered))),
+        disjointMeanLogWidth:mean(intervalDisjoint.map(r=>r.intervals[model].logWidth)),
+        disjointMeanLogIntervalScore:mean(intervalDisjoint.map(r=>r.intervals[model].logIntervalScore)),
         calibratedForProduction:false,coverageGuarantee:false},
       productionPromoted:false});
   }
-  const readyCore=['flat','shrunkenTrend','btcLinked','btcTransfer','ethRefit','legacyEth'];
+  const readyCore=['flat','shrunkenTrend','btcLinked','btcTransfer','ethRefit','legacyEth'].filter(model=>models.includes(model));
   const common=horizons.map(horizonDays=>{
     const group=cases.filter(r=>r.horizonDays===horizonDays&&positive(r.actual));
     const subset=group.filter(r=>readyCore.every(m=>positive(r.predictions[m])));
@@ -159,32 +190,59 @@ export function summarizeEthereumComparison(cases,{horizons=ETH_COMPARISON_POLIC
       coreDisjointMeanAbsoluteLogErrors:Object.fromEntries(readyCore.map(m=>[m,mean(disjoint.map(r=>absoluteLogError(r.predictions[m],r.actual)))])),
       coreDisjointOrigins:disjoint.map(r=>r.origin)};
   });
-  return {summaries,common,rankingAcrossDifferentOriginSets:false};
+  // Pairwise candidate comparisons retain their exact common origin set.
+  // Empty intersections are evidence gaps, never a license to compare unrelated means.
+  const pairwise=[];
+  for(const horizonDays of horizons)for(let i=0;i<models.length;i++)for(let j=i+1;j<models.length;j++){
+    const left=models[i],right=models[j];
+    const same=cases.filter(r=>r.horizonDays===horizonDays&&positive(r.actual)&&positive(r.predictions?.[left])&&positive(r.predictions?.[right]));
+    const disjoint=disjointEthereumCases(same),commonOrigins=same.map(r=>r.origin).sort();
+    const scoreFor=(group,model)=>({
+      meanAbsoluteLogError:mean(group.map(r=>absoluteLogError(r.predictions[model],r.actual))),
+      rootMeanSquaredLogError:group.length?Math.sqrt(mean(group.map(r=>(Math.log(r.predictions[model])-Math.log(r.actual))**2))):null,
+      directionAccuracy:mean(group.map(r=>Number(Math.sign(Math.log(r.predictions[model])-Math.log(r.anchorPrice))===Math.sign(Math.log(r.actual)-Math.log(r.anchorPrice))))),
+    });
+    const leftScore=scoreFor(disjoint,left),rightScore=scoreFor(disjoint,right);
+    pairwise.push({horizonDays,left,right,sameOriginCases:same.length,disjointCases:disjoint.length,
+      firstCommonOrigin:commonOrigins[0]??null,lastCommonOrigin:commonOrigins.at(-1)??null,
+      disjointOrigins:disjoint.map(r=>r.origin),leftScore,rightScore,
+      leftSkillAgainstRight:rightScore.meanAbsoluteLogError>0?1-leftScore.meanAbsoluteLogError/rightScore.meanAbsoluteLogError:null,
+      independentMarketRegimes:null,independentSampleSize:null});
+  }
+  return {summaries,common,pairwise,rankingAcrossDifferentOriginSets:false};
 }
 
-export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapshots=[]}={}, {asOf}={}) {
+export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapshots=[],issuedAtByOrigin={}}={}, {asOf}={}) {
   utcDay(asOf);
+  if(!issuedAtByOrigin||typeof issuedAtByOrigin!=='object'||Array.isArray(issuedAtByOrigin))throw new TypeError('issuedAtByOrigin must map UTC origins to actual issue timestamps');
   const e=continuousSuffix(readAssetDailyRows(ethHistory,'ETH',asOf)),b=continuousSuffix(readAssetDailyRows(btcHistory,'BTC',asOf));
   const rows=withPriceProvenance(e.rows,ethHistory,'ETH'),btcRows=withPriceProvenance(b.rows,btcHistory,'BTC'),horizons=ETH_COMPARISON_POLICY.horizons;
   if(rows.length<ETH_COMPARISON_POLICY.minimumHistoryDays+1)throw new RangeError('ETH comparison needs 730 contiguous completed history days');
   const firstOrigin=rows[0].epochDay+ETH_COMPARISON_POLICY.minimumHistoryDays;
   const origins=rows.filter(r=>r.epochDay>=firstOrigin&&(r.epochDay-firstOrigin)%ETH_COMPARISON_POLICY.originStrideDays===0).map(r=>r.date);
   if(origins.at(-1)!==asOf)origins.push(asOf);
-  const ethByDate=new Map(rows.map(r=>[r.date,r.price])),cases=[],originsMetadata=[];
+  const ethByDate=new Map(rows.map(r=>[r.date,r.price])),btcByDate=new Map(btcRows.map(r=>[r.date,r.price])),cases=[],relativeCases=[],originsMetadata=[];
   const calibration=new Map(ETH_COMPARISON_MODELS.map(m=>[m,new Map(horizons.map(h=>[h,[]]))]));
   let current=null;
   for(const origin of origins){
+    const issuedAt=issuedAtByOrigin[origin];
+    if(issuedAt!==undefined){
+      const observedEnd=Date.parse(closeAt(origin)),issue=Date.parse(issuedAt);
+      if(typeof issuedAt!=='string'||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2})$/.test(issuedAt)||!Number.isFinite(issue)||issue<observedEnd||issue>=observedEnd+86400000)throw new RangeError('Explicit issue timestamp must be within the UTC day after the origin close');
+    }
+    const informationCutoffAt=issuedAt??closeAt(origin);
     const ep=rows.filter(r=>r.date<=origin),bp=btcRows.filter(r=>r.date<=origin),anchorPrice=ep.at(-1).price;
     const simple=buildIndependentBenchmarks(ep,{asOf:origin,horizons});
+    const relativeBenchmarks=buildEthereumRelativeBenchmarks({ethRows:ep,btcRows:bp,asOf:origin,horizons});
     const cycle=buildEthereumCycleCandidates({ethRows:ep,btcRows:bp,asOf:origin,horizons});
-    const economic=buildEthereumEconomicCandidate({ethRows:ep,btcRows:bp,asOf:origin,horizons,economicSnapshots});
+    const economic=buildEthereumEconomicCandidate({ethRows:ep,btcRows:bp,asOf:origin,horizons,economicSnapshots,issuedAt});
     const candidates={
       flat:readyPredictions(simple.targets,'flat'),shrunkenTrend:readyPredictions(simple.targets,'shrunkenTrend'),
       btcLinked:buildSimpleEthereumBtcLink({ethRows:ep,btcRows:bp,asOf:origin,horizons}),
       btcTransfer:cycle.btcTransfer,ethRefit:cycle.ethRefit,legacyEth:legacyCandidate(ep,origin,horizons),economic,
     };
     candidates.combined=buildEthereumCombinedCandidate({origin,horizons,cycle:candidates.ethRefit,economic,history:cases});
-    originsMetadata.push({origin,informationCutoffAt:closeAt(origin),models:Object.fromEntries(Object.entries(candidates).map(([id,c])=>[id,{
+    originsMetadata.push({origin,informationCutoffAt,issuedAt:issuedAt??null,observationThroughAt:closeAt(origin),models:Object.fromEntries(Object.entries(candidates).map(([id,c])=>[id,{
       status:c.status,reason:c.reason??null,training:c.training??null,assumptions:c.assumptions??null,
       perHorizonAvailability:horizons.map(h=>({horizonDays:h,available:Boolean(rowPrediction(c,h))})),
     }]))});
@@ -203,23 +261,41 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
         // independently rejects outcomes whose target date is after its origin.
         if(actual!==null)prior.push({origin,targetDate,horizonDays:h,predicted:p.price,actual});
       }
+      const rb=relativeBenchmarks.targets?.find(t=>t.horizonDays===h),re=rowPrediction(economic,h);
+      const anchorBtc=btcByDate.get(origin),targetBtc=btcByDate.get(targetDate);
+      const anchorRatio=positive(anchorBtc)?anchorPrice/anchorBtc:null;
+      const actualRatio=positive(actual)&&positive(targetBtc)?actual/targetBtc:null;
+      const ratioPredictions={};
+      if(rb){ratioPredictions.flat=rb.flat;ratioPredictions.shrunkenTrend=rb.shrunkenTrend;}
+      if(positive(re?.ethBtcRatio))ratioPredictions.economic=re.ethBtcRatio;
+      relativeCases.push({origin,targetDate,horizonDays:h,informationCutoffAt,issuedAt:issuedAt??null,
+        anchorPrice:positive(anchorRatio)?anchorRatio:null,actual:positive(actualRatio)?actualRatio:null,
+        predictions:ratioPredictions,intervals:{},target:'ETH/BTC',unit:'BTC per ETH',
+        status:targetDate>asOf?'pending':positive(actualRatio)?'retrospective':'missing-paired-close'});
       const legacy=rowPrediction(candidates.legacyEth,h);
-      cases.push({origin,informationCutoffAt:closeAt(origin),targetDate,targetAvailableAt:closeAt(targetDate),horizonDays:h,
+      cases.push({origin,informationCutoffAt,issuedAt:issuedAt??null,observationThroughAt:closeAt(origin),targetDate,targetObservationEndAt:closeAt(targetDate),targetAvailableAt:null,horizonDays:h,
         anchorPrice,actual,status:actual===null?'pending':'retrospective',predictions,unavailableModels,intervals,
         legacyScenarioEnvelope:legacy?{low:legacy.scenarioLow,high:legacy.scenarioHigh,empiricallyCovered:actual===null?null:actual>=legacy.scenarioLow&&actual<=legacy.scenarioHigh,
           logWidth:(Math.log(legacy.scenarioHigh)-Math.log(legacy.scenarioLow)),probability:null,confidenceInterval:false}:null});
     }
-    if(origin===asOf)current={asOf,informationCutoffAt:closeAt(asOf),candidates};
+    if(origin===asOf)current={asOf,informationCutoffAt,issuedAt:issuedAt??null,candidates};
   }
   const summary=summarizeEthereumComparison(cases);
   return {schemaVersion:1,kind:'ethereum-candidate-comparison',asOf,policy:ETH_COMPARISON_POLICY,
     data:{ethFirstObservation:rows[0].date,btcFirstObservation:btcRows[0].date,ethObservations:rows.length,btcObservations:btcRows.length,
-      ethGaps:e.gaps,discardedEarlyEthObservations:e.discardedObservations,interpolation:false,
+      ethGaps:e.gaps,discardedEarlyEthObservations:e.discardedObservations,btcGaps:b.gaps,discardedEarlyBtcObservations:b.discardedObservations,interpolation:false,
       ethArchiveCollectedAt:ethHistory?.retrievedAt??null,ethArchiveFirstCollectedAt:ethHistory?.dailyHistory?.firstCollectedAt??ethHistory?.firstCollectedAt??null,
-      historicalVintagesAvailable:false,economicSnapshotCount:economicSnapshots.length},
+      historicalVintagesAvailable:false,economicSnapshotCount:economicSnapshots.length,
+      explicitIssueTimeCount:origins.filter(origin=>issuedAtByOrigin[origin]!==undefined).length,
+      priceVintageIntegration:'One selected frozen price row per date; raw multi-publication price ledgers require selection before this evaluator. Unknown historical issue/publication timestamps are not invented.'},
     uniqueOrigins:origins.length,maturedTargets:cases.filter(r=>r.actual!==null).length,
     prospectiveScoredTargets:0,independentMarketRegimes:null,independentCycleCount:null,
     origins:originsMetadata,cases,...summary,current,
+    relativeStrength:{target:'ETH/BTC',unit:'BTC per ETH',cases:relativeCases,
+      ...summarizeEthereumComparison(relativeCases,{horizons,models:['flat','shrunkenTrend','economic'],baselineModels:['flat','shrunkenTrend']}),
+      scope:'ETH/BTC is scored independently from ETH/USD; observed future BTC enters only the realized target, never a predictor. Missing paired closes and absent economic forecasts are not fabricated.',
+      economicSnapshotsProvided:economicSnapshots.length,
+      economicPredictionsAvailable:relativeCases.some(r=>positive(r.predictions.economic)),prospectiveScoredTargets:0},
     adoption:{status:'not-adopted',productionModelChanged:false,externalGeminiReview:'pending-unavailable-through-github',
       reasons:['Current-vintage retrospective price replay is not prospective performance','Economic point-in-time network inputs are not manufactured','Few macro cycles and overlapping outcomes do not establish a fixed cycle law','External source-read Gemini opposition and ChatGPT reverse review are not completed'],
       longHorizonValidation:false,calibratedForProduction:false},
