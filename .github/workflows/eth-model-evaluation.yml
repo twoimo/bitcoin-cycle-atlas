@@ -41,10 +41,25 @@ jobs:
         run: node --test tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs
       - name: Evaluate the exact committed candidates and current stored prices
         run: node scripts/evaluate-ethereum-models.mjs
-      - name: Install Korean font coverage for real browser rendering
+      - name: Install a pinned Korean font with bounded network and cache time
+        timeout-minutes: 3
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y fonts-noto-cjk
+          set -euo pipefail
+          atlas_font_dir="$HOME/.local/share/fonts/atlas-ci"
+          atlas_font_temp="$RUNNER_TEMP/atlas-noto-cjk"
+          mkdir -p "$atlas_font_dir" "$atlas_font_temp"
+          curl --fail --location --silent --show-error --proto '=https' --connect-timeout 10 --max-time 60 --output "$atlas_font_temp/NotoSansCJKkr-Regular.otf" 'https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf'
+          atlas_font_blob="$(git hash-object --no-filters "$atlas_font_temp/NotoSansCJKkr-Regular.otf")"
+          test "$atlas_font_blob" = 'dc4a7c65e6f450bf17c10a2405250b620eb78703'
+          curl --fail --location --silent --show-error --proto '=https' --connect-timeout 10 --max-time 60 --output "$atlas_font_temp/OFL.txt" 'https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/LICENSE'
+          atlas_font_license_blob="$(git hash-object --no-filters "$atlas_font_temp/OFL.txt")"
+          test "$atlas_font_license_blob" = 'd952d62c065f3f35fb83a173496e90b21525aef3'
+          install -m 0644 "$atlas_font_temp/NotoSansCJKkr-Regular.otf" "$atlas_font_dir/NotoSansCJKkr-Regular.otf"
+          install -m 0644 "$atlas_font_temp/OFL.txt" "$atlas_font_dir/OFL.txt"
+          timeout 30s fc-cache -f "$atlas_font_dir"
+          fc-scan --format '%{family}\n' "$atlas_font_dir/NotoSansCJKkr-Regular.otf"
+          fc-list ':lang=ko' file | rg --fixed-strings "$atlas_font_dir/NotoSansCJKkr-Regular.otf"
+          echo "ATLAS_FONT_RECEIPT commit=f8d157532fbfaeda587e826d4cd5b21a49186f7c font_blob=$atlas_font_blob license_blob=$atlas_font_license_blob"
       - name: Render comparison and ETH screens across mobile, tablet and desktop
         run: |
           node --check scripts/verify-eth-candidate-browser.mjs
