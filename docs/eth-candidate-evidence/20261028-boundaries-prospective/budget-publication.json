@@ -1,0 +1,21 @@
+{
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "branch": "chatgpt/eth-cycle-economics-20261026",
+  "parent": "5cbd9551caeb4199ef92916a0e1c3ba50beed043",
+  "sourceCommit": "47f2ae587ab5fdbe25b380c6a92bf496bd3d798e",
+  "tree": "9d33dff7762f5b8a73d493e8daedacc2af74666d",
+  "changedFiles": [
+    {
+      "path": "scripts/build-eth-review-evidence.mjs",
+      "gitBlobSha": "7a8532efb897f0acf72f0509d10a67dc332fb763"
+    }
+  ],
+  "reason": {
+    "priorRunId": 40535038411,
+    "priorLimitBytes": 64000000,
+    "observedBytes": 64042920,
+    "observedEntries": 519,
+    "newLimitBytes": 65000000,
+    "modelAndStatisticalGatesUnchanged": true
+  }
+}

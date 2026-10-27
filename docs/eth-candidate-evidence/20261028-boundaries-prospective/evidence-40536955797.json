@@ -1,0 +1,521 @@
+{
+  "kind": "eth-candidate-evidence-run-receipt",
+  "version": 1,
+  "sourceCommit": "47f2ae587ab5fdbe25b380c6a92bf496bd3d798e",
+  "sourceTree": "9d33dff7762f5b8a73d493e8daedacc2af74666d",
+  "workflow": {
+    "id": 40536955797,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40536955797",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-10-27T16:02:24Z",
+    "startedAt": "2026-10-27T16:02:24Z",
+    "updatedAt": "2026-10-27T16:10:20Z"
+  },
+  "jobId": 122304669233,
+  "steps": [
+    {
+      "number": 1,
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 2,
+      "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 3,
+      "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 4,
+      "name": "Test candidate equations, missing inputs, clocks and future-information boundaries",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 5,
+      "name": "Evaluate preserved asset forecasts without requiring a new forecast issue",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 6,
+      "name": "Collect pinned public economic source with actual acquisition receipts",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 7,
+      "name": "Diagnose preserved source completion clocks and exact partial economic aggregates",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 8,
+      "name": "Attempt a bounded public Ethereum throughput supplement and preserve actual failure receipts",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 9,
+      "name": "Attempt one protocol-defined PoW issuance observation without activating an economic snapshot",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 10,
+      "name": "Reconcile metric definitions raw-byte replays and actual economic source clocks",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 11,
+      "name": "Preserve actual economic capture vintages and independently replay their raw inputs",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 12,
+      "name": "Audit bounded public supply claims with exact non-fee destruction accounting",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 13,
+      "name": "Evaluate the exact committed candidates and current stored prices",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 14,
+      "name": "Audit ETH periods, volatility, simulation and institutional arithmetic",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 15,
+      "name": "Compare pooled returns, interval evidence and exact preservation of existing adaptive results",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 16,
+      "name": "Compare intervals with simple fixed-volatility and original empirical controls",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 17,
+      "name": "Evaluate causal state initialization as a separate research control",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 18,
+      "name": "Measure fixed-seed numerical sensitivity without selecting a winning seed",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 19,
+      "name": "Compare every price candidate on fixed common origins across the declared seed panel",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 20,
+      "name": "Freeze earlier calibration errors and evaluate only later disjoint forecast windows",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 21,
+      "name": "Acquire one bounded ETH tail and preserve adaptive pooled and opt-in warm-start records",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 22,
+      "name": "Validate retained prospective calibration evidence without requiring a new forecast issue",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 23,
+      "name": "Reconcile existing models and remaining evidence conditions",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 24,
+      "name": "Verify preserved ETH BMNR and MSTR records and issue only with current inputs",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 25,
+      "name": "Install a pinned Korean font with bounded network and cache time",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 26,
+      "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 27,
+      "name": "Bind exact committed sources inputs and execution evidence for external review",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 28,
+      "name": "Preserve complete source-identified candidate evidence",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 55,
+      "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 56,
+      "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "number": 57,
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "tests": {
+    "groups": [
+      31,
+      66,
+      34,
+      378
+    ],
+    "total": 509,
+    "pass": 509,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "exactLogLines": [
+      "2026-10-27T16:02:47.0190248Z ℹ tests 31",
+      "2026-10-27T16:02:47.0191213Z ℹ pass 31",
+      "2026-10-27T16:02:47.0191649Z ℹ fail 0",
+      "2026-10-27T16:02:47.0192082Z ℹ cancelled 0",
+      "2026-10-27T16:02:47.0192535Z ℹ skipped 0",
+      "2026-10-27T16:02:47.0192953Z ℹ todo 0",
+      "2026-10-27T16:02:48.0811859Z ℹ tests 66",
+      "2026-10-27T16:02:48.0812257Z ℹ pass 66",
+      "2026-10-27T16:02:48.0812453Z ℹ fail 0",
+      "2026-10-27T16:02:48.0812657Z ℹ cancelled 0",
+      "2026-10-27T16:02:48.0812875Z ℹ skipped 0",
+      "2026-10-27T16:02:48.0813087Z ℹ todo 0",
+      "2026-10-27T16:02:56.2759141Z ℹ tests 34",
+      "2026-10-27T16:02:56.2760142Z ℹ pass 34",
+      "2026-10-27T16:02:56.2760807Z ℹ fail 0",
+      "2026-10-27T16:02:56.2761284Z ℹ cancelled 0",
+      "2026-10-27T16:02:56.2761783Z ℹ skipped 0",
+      "2026-10-27T16:02:56.2762203Z ℹ todo 0",
+      "2026-10-27T16:03:08.3401459Z ℹ tests 378",
+      "2026-10-27T16:03:08.3401890Z ℹ pass 378",
+      "2026-10-27T16:03:08.3402104Z ℹ fail 0",
+      "2026-10-27T16:03:08.3402324Z ℹ cancelled 0",
+      "2026-10-27T16:03:08.3402543Z ℹ skipped 0",
+      "2026-10-27T16:03:08.3402755Z ℹ todo 0"
+    ],
+    "overlapsGeneralCi": true
+  },
+  "calibration": {
+    "id": "95e4ce93a7749e86bacfdee42b45ef5479b52f3c67984191e41d960befd588a5",
+    "provenance": {
+      "sourceCommit": "47f2ae587ab5fdbe25b380c6a92bf496bd3d798e",
+      "sourceTree": "9d33dff7762f5b8a73d493e8daedacc2af74666d",
+      "sourceFiles": {
+        "scripts/build-ethereum-prospective-calibration-readiness.mjs": "2bd9d8e10cf41292938355983830bc38079ed56b0a3453a2f3d2a9649c7a4ee2",
+        "dist/forecast-records.js": "c79893f81c6bdff97685e2c384a3d1facc6eec10effdb09346c63749a36ca308",
+        "dist/cycle-engine.js": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+        "dist/forecast-evaluation.js": "c48123c844c1fbfd454372d0b2ed56817d1fa9e87a6547abeef2d49c145b0ea5",
+        "dist/forecast-information-time.js": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23",
+        "dist/data-freshness.js": "10e2348ae352ef19a840002fadc1123f055712312490d958a8559b39e814a0f1",
+        "dist/ethereum-prospective-dispatch.js": "0d94a0574b017b3eefa145006a2ca616babb199f3362f01d7e8e858fb93c5194",
+        "dist/ethereum-prospective-records.js": "709cb0f968c3f961b7e1089cf79518bfb79b4fe8e7d2042f99f1387a401b734e",
+        "dist/asset-forecast-records.js": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2",
+        "dist/asset-daily-observations.js": "645cdfc751ffe2a4e0ce66a10316fc493d637cd6f74a0d09ea17b4e126367c70",
+        "dist/equity-market-data.js": "7c93eaf2471f354511e3440606cb0ed46b46242803bb7d06e3f06955a2a4cb8d",
+        "dist/ethereum-prospective-prices.js": "1541a414cea9c11116d9485a9ff4d26052105cb4e9e0df5a14afcc82ddd8726d",
+        "dist/eth-market-data.js": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075",
+        "dist/ohlc-data.js": "b2a5104c22b0fced11d747cae9fd7797a876b0c7de4e30492376acae791e7f5d",
+        "dist/ethereum-adaptive-model.js": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d",
+        "dist/ethereum-pooled-model.js": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467",
+        "dist/ethereum-warm-start-prospective.js": "f606daff3b57c0769004a6afe71f005d4bd9cd2a61a0541d775f17a39189af9b",
+        "dist/ethereum-warm-start-model.js": "8b01bbf858689225926ae4d6f60fab002797690b0b7fdada772796f65736c0ff",
+        "dist/asset-outcome-records.js": "7fbc8c98eb8fcf78ab43ce5d06a28d16d1a57d9ffcf4ee872b4871ade3177257",
+        "scripts/build-forecast-ledger.mjs": "126ceae92b5025991aa07d0638fb1559b3e5e08224dd3915d8d901e5e4c9914d",
+        "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+        "dist/detailed-forecast.js": "e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e",
+        "dist/cycle-timing.js": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+        "dist/market-structure.js": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+        "dist/long-horizon-evidence.js": "7b5f9fc162e0c621b6a7df9f0f3d77e76c274040e83b88b0a8301638cb29f2f8",
+        "dist/cycle-calibration.js": "f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780",
+        "scripts/ethereum-prospective-calibration-core.mjs": "8f74583e77d98a2eec0e67ef1129d8983cd846df3cde3cb0da4a5240b49a849a",
+        "scripts/ethereum-independent-calibration-core.mjs": "ed16303f8a189ac41f0661fbebb9493d3fb139d38e8ba6dcc12704181b6e5e29"
+      },
+      "executedAt": "2026-10-27T16:06:05.398Z",
+      "runId": "40536955797"
+    },
+    "preservedRecords": 3,
+    "uniqueOrigins": 1,
+    "actualSourceReplay": [
+      {
+        "modelKey": "adaptive",
+        "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+        "outputHash": "f5728c0632945702a839cf8722a9b8ec6af0c91346169f5b14929c6ce055fe25",
+        "points": 731,
+        "method": "models-reexecuted-from-own-preserved-base-and-tail",
+        "recordIdentityEqual": true
+      },
+      {
+        "modelKey": "warmStart",
+        "id": "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+        "outputHash": "b7f45f7ebada37e9a046b4e5547101bb985b43a16fbbf3ee1e34bcdc667b6dc8",
+        "points": 731,
+        "method": "models-reexecuted-from-own-preserved-base-and-tail",
+        "recordIdentityEqual": true
+      },
+      {
+        "modelKey": "pooled",
+        "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+        "outputHash": "7b84f0fa04346be007f153a189ce4266d705cd3702c5f0d65e4ceefa3e37d570",
+        "points": 731,
+        "method": "models-reexecuted-from-own-preserved-base-and-tail",
+        "recordIdentityEqual": true
+      }
+    ],
+    "readyBindings": 0,
+    "actualFreezesCreated": 0,
+    "actualCalibratedRecordsIssued": 0,
+    "results": [
+      {
+        "modelKey": "adaptive",
+        "horizonDays": 180,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "pooled",
+        "horizonDays": 180,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "warmStart",
+        "horizonDays": 180,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "adaptive",
+        "horizonDays": 30,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "pooled",
+        "horizonDays": 30,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "warmStart",
+        "horizonDays": 30,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "adaptive",
+        "horizonDays": 90,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "pooled",
+        "horizonDays": 90,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "warmStart",
+        "horizonDays": 90,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      }
+    ]
+  },
+  "browser": {
+    "status": "passed",
+    "sourceCommit": "47f2ae587ab5fdbe25b380c6a92bf496bd3d798e",
+    "startedAt": "2026-10-27T16:06:32.035Z",
+    "finishedAt": "2026-10-27T16:09:59.998Z",
+    "browserVersion": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/155.0.8059.39",
+      "revision": "@3ff7ac5a9224be9156d7f8703a06e22890aafd34",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+      "jsVersion": "15.5.35.20"
+    },
+    "cases": 35,
+    "passed": 35,
+    "images": 181,
+    "runtimeErrors": [],
+    "unexpectedResourceErrors": [],
+    "expectedOfflineResourceErrorCount": 15,
+    "allImageHashesIndependentlyCheckedIn": "artifact-verification-40536955797.json",
+    "newVisualInspectionOfAllImages": false
+  },
+  "economics": {
+    "requiredMetricCount": 26,
+    "providedSnapshots": 0,
+    "eligibleFullSnapshots": 0,
+    "active": false
+  },
+  "supply": {
+    "version": "eth-supply-accounting-audit-3",
+    "status": "provider-accounting-audited",
+    "collectedAt": "2026-10-27T16:05:21.417Z",
+    "eligibleModelSnapshotCount": 0,
+    "fullModelSnapshotReady": false,
+    "modelInputActivated": false,
+    "utcWindowReconciliation": {
+      "status": "unavailable",
+      "convention": "Conditionally treat supplyWei at the row label as the end-of-slot stock; require labels at the preceding and final requested slots. Include every exact-window flow row, exclude the predecessor flow.",
+      "startBoundarySlot": 15317998,
+      "endBoundarySlot": 15519598,
+      "startBoundaryTimestamp": 1790639999,
+      "endBoundaryTimestamp": 1793059199,
+      "startRowPosition": null,
+      "endRowPosition": null,
+      "startSupplyWei": null,
+      "endSupplyWei": null,
+      "startBoundaryExplicitlyFinalized": false,
+      "endBoundaryExplicitlyFinalized": false,
+      "flowRowsIncluded": 0,
+      "predecessorFlowExcluded": true,
+      "supplyChangeWei": null,
+      "expectedChangeFromComponentsWei": null,
+      "reportedNetWei": null,
+      "componentResidualWei": null,
+      "reportedNetResidualWei": null,
+      "missingFlowComponents": [
+        "issuanceWei",
+        "baseFeeBurnWei",
+        "blobBaseFeeBurnWei",
+        "consensusPenaltiesWei",
+        "otherExecutionBurnWei"
+      ],
+      "unavailableReasons": [
+        "exact-window-flow-coverage-unavailable",
+        "preceding-boundary-stock-row-unavailable",
+        "ending-boundary-stock-row-unavailable"
+      ],
+      "independentCanonicalValidation": false,
+      "utcAccountingEligibilityProven": false
+    }
+  },
+  "release": {
+    "draft": true,
+    "authorized": false,
+    "productionPromoted": false,
+    "geminiOpposition": "omitted-by-user",
+    "followupReverseReview": "omitted-by-user",
+    "gatesNotSubstitutedByCodeTests": [
+      "Mature prospective outcomes",
+      "Adequate horizon-specific nonoverlapping samples",
+      "Validated forecast calibration",
+      "Separate release authorization"
+    ]
+  },
+  "sourceBook": {
+    "seeds": 376,
+    "entries": 520,
+    "parts": 356,
+    "bundleBytes": 64037165,
+    "bundleLimitBytes": 65000000,
+    "bundleSha256": "36262e00fb4fd9fab458b9411b65ec0184841151fb3d72ac87b52c582face02c",
+    "sourceAccess": "complete-for-declared-scope",
+    "unresolvedImports": 0,
+    "manifest": "source-manifest-40536955797.json"
+  },
+  "artifact": {
+    "id": 12748673800,
+    "sizeInBytes": 52846711,
+    "sha256": "sha256:de78ccce3f29f118e16783403f40aa1807b8257fc043e349b93cde6fb96fe86a",
+    "createdAt": "2026-10-27T16:10:17Z",
+    "expiresAt": "2026-11-26T16:10:11Z",
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40536955797/artifacts/12748673800"
+  },
+  "priorFailure": {
+    "runId": 40535038411,
+    "bundleBytes": 64042920,
+    "limitBytes": 64000000,
+    "entries": 519,
+    "remedy": "Finite 65,000,000-byte resource budget; all original bytes retained; model and statistical gates unchanged."
+  },
+  "limits": [
+    "Actual current-run receipts are distinct from preserved historical captures and from the later documentation commit.",
+    "A green workflow is not prospective forecast accuracy or model promotion.",
+    "Generic externalReview.pending in the original source manifest does not override the user's omitted-by-user instruction."
+  ]
+}

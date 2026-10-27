@@ -1,0 +1,196 @@
+{
+  "sourceCommit": "5cbd9551caeb4199ef92916a0e1c3ba50beed043",
+  "runId": 40535038411,
+  "jobId": 122297875578,
+  "conclusion": "failure",
+  "failureStage": "source-book packaging only",
+  "measuredBundleBytes": 64042920,
+  "previousLimitBytes": 64000000,
+  "entries": 519,
+  "calibration": {
+    "id": "eda821a7d6c5f2cda5d1419335ed7c45ac0a788de09e27692523da7bda0c4703",
+    "provenance": {
+      "sourceCommit": "5cbd9551caeb4199ef92916a0e1c3ba50beed043",
+      "sourceTree": "83aa847506921ea5626ffd7124e49586a9901524",
+      "sourceFiles": {
+        "scripts/build-ethereum-prospective-calibration-readiness.mjs": "2bd9d8e10cf41292938355983830bc38079ed56b0a3453a2f3d2a9649c7a4ee2",
+        "dist/forecast-records.js": "c79893f81c6bdff97685e2c384a3d1facc6eec10effdb09346c63749a36ca308",
+        "dist/cycle-engine.js": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+        "dist/forecast-evaluation.js": "c48123c844c1fbfd454372d0b2ed56817d1fa9e87a6547abeef2d49c145b0ea5",
+        "dist/forecast-information-time.js": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23",
+        "dist/data-freshness.js": "10e2348ae352ef19a840002fadc1123f055712312490d958a8559b39e814a0f1",
+        "dist/ethereum-prospective-dispatch.js": "0d94a0574b017b3eefa145006a2ca616babb199f3362f01d7e8e858fb93c5194",
+        "dist/ethereum-prospective-records.js": "709cb0f968c3f961b7e1089cf79518bfb79b4fe8e7d2042f99f1387a401b734e",
+        "dist/asset-forecast-records.js": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2",
+        "dist/asset-daily-observations.js": "645cdfc751ffe2a4e0ce66a10316fc493d637cd6f74a0d09ea17b4e126367c70",
+        "dist/equity-market-data.js": "7c93eaf2471f354511e3440606cb0ed46b46242803bb7d06e3f06955a2a4cb8d",
+        "dist/ethereum-prospective-prices.js": "1541a414cea9c11116d9485a9ff4d26052105cb4e9e0df5a14afcc82ddd8726d",
+        "dist/eth-market-data.js": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075",
+        "dist/ohlc-data.js": "b2a5104c22b0fced11d747cae9fd7797a876b0c7de4e30492376acae791e7f5d",
+        "dist/ethereum-adaptive-model.js": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d",
+        "dist/ethereum-pooled-model.js": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467",
+        "dist/ethereum-warm-start-prospective.js": "f606daff3b57c0769004a6afe71f005d4bd9cd2a61a0541d775f17a39189af9b",
+        "dist/ethereum-warm-start-model.js": "8b01bbf858689225926ae4d6f60fab002797690b0b7fdada772796f65736c0ff",
+        "dist/asset-outcome-records.js": "7fbc8c98eb8fcf78ab43ce5d06a28d16d1a57d9ffcf4ee872b4871ade3177257",
+        "scripts/build-forecast-ledger.mjs": "126ceae92b5025991aa07d0638fb1559b3e5e08224dd3915d8d901e5e4c9914d",
+        "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+        "dist/detailed-forecast.js": "e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e",
+        "dist/cycle-timing.js": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+        "dist/market-structure.js": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+        "dist/long-horizon-evidence.js": "7b5f9fc162e0c621b6a7df9f0f3d77e76c274040e83b88b0a8301638cb29f2f8",
+        "dist/cycle-calibration.js": "f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780",
+        "scripts/ethereum-prospective-calibration-core.mjs": "8f74583e77d98a2eec0e67ef1129d8983cd846df3cde3cb0da4a5240b49a849a",
+        "scripts/ethereum-independent-calibration-core.mjs": "ed16303f8a189ac41f0661fbebb9493d3fb139d38e8ba6dcc12704181b6e5e29"
+      },
+      "executedAt": "2026-10-27T15:55:05.572Z",
+      "runId": "40535038411"
+    },
+    "preservedRecords": 3,
+    "uniqueOrigins": 1,
+    "actualSourceReplay": [
+      {
+        "modelKey": "adaptive",
+        "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+        "outputHash": "f5728c0632945702a839cf8722a9b8ec6af0c91346169f5b14929c6ce055fe25",
+        "points": 731,
+        "method": "models-reexecuted-from-own-preserved-base-and-tail",
+        "recordIdentityEqual": true
+      },
+      {
+        "modelKey": "warmStart",
+        "id": "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+        "outputHash": "b7f45f7ebada37e9a046b4e5547101bb985b43a16fbbf3ee1e34bcdc667b6dc8",
+        "points": 731,
+        "method": "models-reexecuted-from-own-preserved-base-and-tail",
+        "recordIdentityEqual": true
+      },
+      {
+        "modelKey": "pooled",
+        "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+        "outputHash": "7b84f0fa04346be007f153a189ce4266d705cd3702c5f0d65e4ceefa3e37d570",
+        "points": 731,
+        "method": "models-reexecuted-from-own-preserved-base-and-tail",
+        "recordIdentityEqual": true
+      }
+    ],
+    "readyBindings": 0,
+    "actualFreezesCreated": 0,
+    "actualCalibratedRecordsIssued": 0,
+    "results": [
+      {
+        "modelKey": "adaptive",
+        "horizonDays": 180,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "pooled",
+        "horizonDays": 180,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "warmStart",
+        "horizonDays": 180,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "adaptive",
+        "horizonDays": 30,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "pooled",
+        "horizonDays": 30,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "warmStart",
+        "horizonDays": 30,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "adaptive",
+        "horizonDays": 90,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "pooled",
+        "horizonDays": 90,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      },
+      {
+        "modelKey": "warmStart",
+        "horizonDays": 90,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "pendingRecords": 1,
+        "invalidObservations": 0,
+        "logRadius": null
+      }
+    ]
+  },
+  "browser": {
+    "status": "passed",
+    "sourceCommit": "5cbd9551caeb4199ef92916a0e1c3ba50beed043",
+    "cases": 35,
+    "passed": 35,
+    "images": 181,
+    "runtimeErrors": [],
+    "unexpectedResourceErrors": [],
+    "expectedOfflineErrors": 15
+  },
+  "selectedLogLines": [
+    "2026-10-27T15:59:07.0187712Z     const error=new RangeError('Source book exceeds byte bound: '+bundleBytes+' > '+maximumBundleBytes+' bytes ('+entries.length+' entries)');",
+    "2026-10-27T15:59:07.0189648Z RangeError: Source book exceeds byte bound: 64042920 > 64000000 bytes (519 entries)",
+    "2026-10-27T15:59:07.0192264Z   code: 'REVIEW_BUNDLE_TOO_LARGE',",
+    "2026-10-27T15:59:09.3721429Z SHA256 digest of uploaded artifact zip is 133415ac4896376f58e23634775946181cebcd8b69bff74d892cb8548215531f",
+    "2026-10-27T15:59:09.8477921Z Artifact eth-candidate-evidence-5cbd9551caeb4199ef92916a0e1c3ba50beed043.zip successfully finalized. Artifact ID 12747517947",
+    "2026-10-27T15:59:09.8479585Z Artifact eth-candidate-evidence-5cbd9551caeb4199ef92916a0e1c3ba50beed043 has been successfully uploaded! Final size is 27419392 bytes. Artifact ID is 12747517947"
+  ],
+  "artifact": {
+    "id": 12747517947,
+    "sizeInBytes": 27419392,
+    "runnerReportedZipSha256": "133415ac4896376f58e23634775946181cebcd8b69bff74d892cb8548215531f",
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40535038411/artifacts/12747517947"
+  }
+}

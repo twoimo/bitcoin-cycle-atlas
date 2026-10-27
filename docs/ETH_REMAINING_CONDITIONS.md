@@ -1,6 +1,12 @@
 # ETH 후속 조건: 실제 수집, 발행본, 제거 실험, 검토 소스
 
-> **최신 완료 상태 — 공급 회계·실제 판본·시간 분리 보정:** c73b17b2에서 일반 CI **1,602개**, ETH 집중 **469개**, Chromium **35개·181 PNG**, Hallmark **0 FAIL/0 REFLEX**를 완료했다. 경제 계약은 **input-4/ridge-6·26개 필수 입력**이며 수수료 이외 실행 파괴를 포함한다. 실제 수집 원장은 최초 3개에서 6개로 늘고 고유 값 판본 6개를 유지했으며, 112개 연결 입력으로 6/6 재생했다. 앞선 12개 오차로 고정한 pooled 30일 보정은 이후 8개 평가에서 구간점수 15.5991% 개선·로그 폭 44.3047% 증가였다. 새 공급 원문의 225개 회계·224개 잔액 차이가 일치했지만 정확한 28 UTC일 경계와 전체 적격 경제 snapshot **0**은 남는다. 이전 절의 25개 입력·발행본 개수·오류 상태는 당시 이력이다. [최신 상세 보고서](ETH_VINTAGES_SUPPLY_AND_CALIBRATION_20261027.md)를 따른다.
+> **2026-10-28 최종 완료 — 공급 경계·전향 보정 검사:** 구현 소스 `47f2ae587ab5fdbe25b380c6a92bf496bd3d798e`에서 일반 CI **1,642/1,642**, ETH 집중 **509/509**, Chromium **35/35·181 PNG**, Hallmark **0 FAIL / 0 REFLEX·정적 36/render 17 WARN**을 완료했다. 최종 source-book **376 seeds·520 entries·356 parts·64,037,165 bytes**를 유한한 **65,000,000-byte 한도** 안에서 보존했고 unresolved import는 0이다. 실제 내려받은 **52,846,711-byte ZIP digest**, 전체 CRC·part·원문 frame·181 PNG 해시도 대조했다. 일반 CI와 집중 검사 수는 겹치므로 합산하지 않는다. 정확한 commit·checkout·run·영수증은 [이번 보고서](ETH_BOUNDARIES_AND_PROSPECTIVE_GATE_20261028.md)를 따른다.
+
+> **최초 실패 보존:** 기능 소스 `5cbd9551`의 첫 ETH 실행은 CLI·브라우저 통과 뒤 source-book **519 entries·64,042,920 bytes**가 당시 **64,000,000-byte 한도를 초과해 실패**했다. `47f2ae58`는 한 경로의 유한한 자원 한도를 조정해 다시 실행했다. 첫 실패와 최종 성공을 같은 실행으로 바꾸지 않으며 모델·표본·보정 조건은 그대로다.
+
+> **이번 구현의 실증 경계:** 공급 집계의 실제 끝 시각과 요청 UTC 창의 선행·종료 공급 잔액을 검사한다. 전향 보정은 실제 발행본과 원문 정답으로 같은 모형·설정의 첫 12개 비중첩 성숙 구간을 고정하며 선택된 결측 슬롯을 이후 사례로 대체하지 않는다. 로컬 집중 **146/146**, 로컬·첫·최종 원격 CLI에서 원래 세 모형 **각 731점·기록 ID 동일 재생**을 확인했다. 최종 9개 결합 모두 준비 부족·반경 null이며, 완전 경제 snapshot **0**, 성숙한 보정 사례 **0**, freeze·보정 발행 **0**, `releaseAuthorized=false`다. source-book 복구와 경제 입력·전향 성과의 충족은 서로 다른 조건이다.
+
+> **이전 완료 상태 — 공급 회계·실제 판본·시간 분리 보정:** c73b17b2에서 일반 CI **1,602개**, ETH 집중 **469개**, Chromium **35개·181 PNG**, Hallmark **0 FAIL/0 REFLEX**를 완료했다. 경제 계약은 **input-4/ridge-6·26개 필수 입력**이며 수수료 이외 실행 파괴를 포함한다. 실제 수집 원장은 최초 3개에서 6개로 늘고 고유 값 판본 6개를 유지했으며, 112개 연결 입력으로 6/6 재생했다. 앞선 12개 오차로 고정한 pooled 30일 보정은 이후 8개 평가에서 구간점수 15.5991% 개선·로그 폭 44.3047% 증가였다. 새 공급 원문의 225개 회계·224개 잔액 차이가 일치했지만 정확한 28 UTC일 경계와 전체 적격 경제 snapshot **0**은 남는다. 이전 절의 25개 입력·발행본 개수·오류 상태는 당시 이력이다. [해당 실행의 상세 보고서](ETH_VINTAGES_SUPPLY_AND_CALIBRATION_20261027.md)를 따른다.
 
 > **2026-10-27 최신 사용자 지시:** 실제 Gemini 반대 검토와 그 보고서에 대한 후속 역검토는 생략한다. 아래 이전 절에 남은 미완료 표기는 당시의 기록이며 현재의 필수 조건이 아니다. 생략은 통과·완료를 뜻하지 않는다. 수학·데이터·기능 검증, 전향 성과와 별도 릴리스 승인은 유지한다.
 
@@ -300,3 +306,26 @@ Gemini 반대 검토와 후속 역검토는 사용자의 명시 지시에 따라
 - 최종 일반1602/집중469/native35, 수치318010, negative16/16이 통과했다. native181PNG/runtime0/unexpectedresource0, offline15개 원문 검증이다. Hallmark0FAIL/0REFLEX/integrity0, 기존static36/render17WARN은 남아 있다. 최종 source-book371seeds/512entries/355parts/63,845,026bytes·unresolved0을64MB한도 안에서 보존했다.
 
 완전 경제 snapshot0, 원점 당시 가용한 완전26개 입력, 동일cohort 순보상·비용, 고유기초담보, 충분한 기간별 성숙 정답·시장 환경, 미래의 실제 보정 성적이 남는다. 90/180일 낙관적 구조 경계2027-03-23/2031-03-02 각09:00KST는 실제 준비일 약속이 아니다. Gemini 반대 검토와 후속 역검토는 **omitted-by-user**이며 미완료 필수 조건으로 복원하지 않는다. Draft와 releaseAuthorized=false를 유지한다.
+
+
+## 2026-10-28 후속: 실제 구간 경계·전향 보정 원장 검사
+
+[상세 결과와 정확한 검증 범위](ETH_BOUNDARIES_AND_PROSPECTIVE_GATE_20261028.md), [원본 영수증 목록](eth-candidate-evidence/20261028-boundaries-prospective/README.md)을 따른다. 기능 구현 `5cbd9551`의 11개 변경 경로, 용량 교정 `47f2ae58`의 1개 변경 경로, 증거를 보존하는 후속 문서 커밋을 구분한다.
+
+- 공급 audit-3는 표시용 label 시각과 실제 inclusive toSlot의 끝 시각을 구분한다. 과거 label로 미래 집계 구간을 숨기는 경우를 검출하고, 요청한 UTC 28일 창의 직전 공급 잔액과 마지막 포함 slot 잔액이 있어야 기간 stock/flow 잔차를 계산한다. 내부 label을 구간 끝 잔액으로 옮기거나 결측 기타 파괴를 0으로 채우지 않는다.
+- 기존 공급 원문의 225개 구성식과 224개 인접 공급 잔액 검사는 유지된다. 두 bucket이 UTC 창 경계를 넘고 경계 잔액이 없으므로 실제 원문은 여전히 정확한 모형 입력이 아니다. 새로운 진단은 unavailable이며 경제 입력을 활성화하지 않는다.
+- 전향 보정 gate는 모든 기록과 원문 snapshot을 검증한 뒤 모형 source hash·version·seed·경로 수·horizon을 묶는다. 원점별 최초 발행을 먼저 정하고, 첫 12개 비중첩 성숙 타깃을 오차와 무관하게 선택한다. 이후의 좋은 정답으로 누락된 선택 구간을 채우지 않는다.
+- 원문 수집 시각도 무결성을 확인한 다음 cutoff와 비교한다. 같은 원점의 판본은 독립 표본으로 늘리지 않는다. 제공된 전체 원장·관측 목록으로 readiness와 freeze를 다시 구성하므로, 준비 보고서만 다시 해시하거나 목록에 존재하는 최초 기록을 선택 집합에서 숨기는 우회를 거부한다. 보존되지 않아 입력으로 제공되지 않은 과거 기록의 존재까지 독립 인증한다는 뜻은 아니다.
+- 새 CLI는 보존된 seed와 현재 build 원장·독립 ETH 정답 원장을 함께 읽고, 새 예측 발행 성공과 별도로 준비 상태를 검사한다. 원래 가격 모형을 보존 원문에서 재실행하고 index·기록·snapshot과 파일 경계·용량 한도를 검증한다. 원래 dispatch와 14/14/17개 모델 파일, 발행 시각, ID, 예측점은 바꾸지 않는다.
+- [원격 전체 tree 비교](eth-candidate-evidence/20261028-boundaries-prospective/source-preservation.json)에서 `704b1373`→`47f2ae58`의 `dist/` 713파일, 후보 원장 17파일, outcome 원장 7파일, 경제 판본 51파일, 기존 문서 1,233파일의 Git blob이 모두 같았다. 이번 문서·영수증 보존 커밋은 이 소스 비교와 별도로 기록한다.
+- 현재 세 모형×30/90/180일의 아홉 조합은 모두 성숙 정답 0이며 반경은 null이다. 첫 30일 타깃 관측 종료 2026-11-26 09:00 KST 이후 실제 정답을 받아도 12개 조건을 자동 충족하지 않는다. 충분한 구간 확보 뒤 불변 보정 블록을 고정하고, 그 이후 별도의 보정 예측 발행·실제 성과 평가가 필요하다.
+- 예약 갱신에서 확인한 세 treasury 테스트의 고정 2026-10-23 입력에 같은 날짜의 coinAnchor를 명시했다. 원래 미래정보 차단식과 제품 모형은 유지했다. 이 수정의 PR 검증과 운영 main의 예약 실행 복구는 별개다.
+- 로컬 집중은 146/146이다. 날짜만 갱신한 anchor의 격리 비교에서는 수정 전 42 pass/3 fail, 수정 후 45/45이며, 원래 anchor에서도 수정 후 45/45다. 이 범위를 다른 테스트 수에 다시 더하지 않는다.
+- 첫 일반 CI [40535038425](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40535038425)는 실제 합성 merge `e156c08e`에서 1,642/1,642, 수치 assertion 318,010, negative control 16/16을 통과했다. 첫 Hallmark [40535038343](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40535038343)는 직접 head `5cbd9551`에서 0 FAIL/0 REFLEX·integrity error 0이며 정적 36/render 17 WARN을 보존했다.
+- 첫 ETH evidence [40535038411](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40535038411)의 실제 CLI는 원래 세 기록을 각각 731점으로 재실행했고 9개 결합 모두 준비 부족·반경 null을 보고했다. Chromium 35/35·181 PNG, runtime/unexpected resource 0/0, 의도한 offline 오류 15개를 확인했다. source-book 단계는 519 entries·64,042,920 bytes로 기존 64,000,000-byte 한도를 초과해 실패했다. [첫 실패 영수증](eth-candidate-evidence/20261028-boundaries-prospective/evidence-40535038411-first-attempt.json)을 그대로 보존한다.
+- 한도를 65,000,000 bytes로 조정한 `47f2ae58`의 [일반 CI 40536955930](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40536955930)는 합성 merge `e975a032`에서 다시 1,642/1,642·수치 assertion 318,010·negative control 16/16을 통과했다. [Hallmark 40536955832](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40536955832)는 직접 `47f2ae58`에서 0 FAIL/0 REFLEX·integrity error 0, 정적 36/render 17 WARN과 전후 80 PNG를 기록했다.
+- [최종 ETH evidence 40536955797](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40536955797), job 122304669233은 success다. 집중 31+66+34+378=509/509, Chromium 35/35·181 PNG, runtime/unexpected resource 0/0, 의도한 offline 오류 15개다. [최종 CLI 원본](eth-candidate-evidence/20261028-boundaries-prospective/prospective-calibration-40536955797.json)의 보고 ID는 `95e4ce93a7749e86bacfdee42b45ef5479b52f3c67984191e41d960befd588a5`, cutoff는 2026-10-27T16:05:58.086Z, 실행 기록은 16:06:05.398Z다. 원래 3개 기록을 각 731점·ID 동일하게 재실행했고 9개 결합 모두 준비 부족·반경 null, ready·freeze·보정 발행 0을 유지했다.
+- 최종 [source-book manifest](eth-candidate-evidence/20261028-boundaries-prospective/source-manifest-40536955797.json)는 376 seeds·520 entries·356 parts·64,037,165 bytes·unresolved 0, SHA-256 `36262e00fb4fd9fab458b9411b65ec0184841151fb3d72ac87b52c582face02c`다. [다운로드 후 검증](eth-candidate-evidence/20261028-boundaries-prospective/artifact-verification-40536955797.json)은 52,846,711-byte ZIP의 GitHub digest 일치, 전체 684 ZIP CRC, 356 part와 재조립, 기존 검증기에 의한 520개 원문 frame, 181 PNG 해시 일치를 기록했다. 새 육안 검사나 역사적 공개·독립 예측력 인증으로 확대하지 않는다.
+- [전체 artifact 12748673800](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40536955797/artifacts/12748673800)의 기록상 만료는 2026-11-26T16:10:11Z, 한국 시각 2026-11-27 01:10:11이다. manifest·CLI envelope의 정확한 bytes와 주요 실행·검증 영수증은 별도 보존 파일로 연결했다. 이 결과는 구현 소스 `47f2ae58`에 속하고 후속 문서 게시 커밋과 구분한다.
+
+남는 실증 조건은 정확한 28 UTC일 공급 경계·독립 상태 정산과 전체 26개 경제 입력, 원점 당시 가용 판본과 실제 시계, 동일 cohort의 순보상·비용, 중복 제거한 기초 담보, 충분한 성숙 전향 정답과 이후 보정 성적이다. 경제 학습의 90/180일 낙관적 구조 경계인 2027-03-23/2031-03-02 각 09:00 KST는 실제 준비일 약속이 아니다. 전향 보정의 최초 12개 조건은 retrospective 개발 오차로 채우지 않는다. 구현 소스의 CI·ETH evidence·Hallmark와 실제 artifact 검증은 완료했으며 문서 게시 후 자동 실행은 별도 소스로 기록한다. Gemini 반대 검토·후속 역검토는 **omitted-by-user**, 별도 릴리스 조건은 **releaseAuthorized=false**다.
