@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
-import {readFile,writeFile} from 'node:fs/promises';
+import {readFile,readdir,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {canonicalForecastJson,forecastHash} from '../dist/forecast-records.js';
-import {assessEthereumEconomicFeasibility} from '../dist/ethereum-economic-model.js';
+import {assessEthereumEconomicFeasibility,ETH_ECONOMIC_VERSION,ETH_ECONOMIC_INPUT_SCHEMA} from '../dist/ethereum-economic-model.js';
+import {auditEthereumSupplyAccounting} from './ethereum-supply-accounting-core.mjs';
 import {verifyEthereumProspectiveRecord,ethereumProspectiveIndexEntry} from '../dist/ethereum-prospective-dispatch.js';
 const root=fileURLToPath(new URL('..',import.meta.url)),sha=x=>createHash('sha256').update(x).digest('hex');
 const git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8',timeout:10000}).trim();
@@ -18,6 +19,41 @@ const comparison=await read('build/ethereum-model-comparison.json'),stability=aw
 const intervalControls=await read('build/ethereum-interval-controls.json'),warmStart=await read('build/ethereum-warm-start.json');
 const sourceTiming=await read('build/ethereum-source-timing.json');
 const commonCohort=await read('build/ethereum-common-cohort.json'),economicCoverage=await read('build/ethereum-economic-evidence-coverage.json');
+const independentCalibration=await read('build/ethereum-independent-calibration.json');
+const economicVintages=await read('build/ethereum-economic-vintages/receipt.json'),economicVintageReplay=await read('build/ethereum-economic-vintages/replay.json');
+assert.equal(independentCalibration.provenance.sourceCommit,sourceCommit);assert.equal(independentCalibration.provenance.sourceTree,sourceTree);
+assert.equal(independentCalibration.provenance.comparisonSha256,sources['build/ethereum-model-comparison.json']);
+assert.equal(independentCalibration.provenance.warmStartSha256,sources['build/ethereum-warm-start.json']);
+assert.equal(independentCalibration.provenance.inputSha256['dist/data/eth-ohlc.json'],comparison.provenance.inputSha256['dist/data/eth-ohlc.json']);
+assert(!independentCalibration.results.some(row=>row.status==='incomplete'));
+for(const report of [economicVintages,economicVintageReplay]){
+  assert.equal(report.sourceCommit,sourceCommit);assert.equal(report.sourceTree,sourceTree);assert.equal(report.sourceIdentityStatus,'verified-checkout');
+  assert.equal(report.networkRequests,0);assert.equal(report.fullModelSnapshotReady,false);assert.equal(report.modelInputActivated,false);
+}
+assert.equal(economicVintageReplay.recordCount,economicVintages.recordCount);assert.equal(economicVintageReplay.newCaptureCount,0);
+assert.equal(economicVintages.metricDefinitionVersion,ETH_ECONOMIC_INPUT_SCHEMA.snapshot.metricDefinitionVersion);
+const supplyAudits=[];
+const supplyDirectories=(await readdir(resolve(root,'build/ethereum-supply-accounting'),{withFileTypes:true})).filter(e=>e.isDirectory()&&/^capture-[A-Za-z0-9_-]+$/.test(e.name));
+assert(supplyDirectories.length>0&&supplyDirectories.length<=10,'Bounded actual supply capture receipts required');
+for(const entry of supplyDirectories){
+  const directory='build/ethereum-supply-accounting/'+entry.name,receipt=await read(directory+'/receipt.json');
+  assert.equal(receipt.sourceCommit,sourceCommit);assert.equal(receipt.sourceTree,sourceTree);
+  for(const [path,hash]of Object.entries(receipt.sourceHashes))assert.equal(sha(await readFile(resolve(root,path))),hash,'Supply source changed: '+path);
+  let history=null;
+  for(const file of receipt.rawFiles){
+    assert(/^[A-Za-z0-9_.-]+$/.test(file.file),'Invalid supply raw file name');
+    const path=directory+'/'+file.file,bytes=await readFile(resolve(root,path));assert.equal(bytes.length,file.bytes);assert.equal(sha(bytes),file.sha256);sources[path]=file.sha256;
+    if(file.file==='history-30d.raw.json'&&receipt.status==='provider-accounting-audited')history=JSON.parse(bytes);
+  }
+  if(receipt.status==='provider-accounting-audited'){
+    assert(history,'A successful supply audit needs original history bytes');
+    assert.deepEqual(auditEthereumSupplyAccounting(history,{collectedAt:receipt.collectedAt,observedThrough:receipt.observation.utcWindow.observedThrough}),receipt.observation,'Supply arithmetic does not replay');
+  }
+  supplyAudits.push({status:receipt.status,error:receipt.error??null,sourceCommit:receipt.sourceCommit,collectedAt:receipt.collectedAt??null,
+    receiptPath:directory+'/receipt.json',receiptSha256:sources[directory+'/receipt.json'],rawFiles:receipt.rawFiles,
+    definitionFinding:receipt.observation?.definitionFinding??null,series:receipt.observation?.series??null,
+    utcWindow:receipt.observation?.utcWindow??null,independentCanonicalValidation:false,modelInputActivated:false});
+}
 assert.equal(intervalControls.provenance.sourceCommit,sourceCommit);assert.equal(warmStart.provenance.sourceCommit,sourceCommit);
 assert.equal(commonCohort.provenance.sourceCommit,sourceCommit);assert.equal(commonCohort.provenance.sourceTree,sourceTree);
 assert.equal(commonCohort.provenance.comparisonSha256,sources['build/ethereum-model-comparison.json']);
@@ -74,7 +110,13 @@ const report={kind:'ethereum-model-remaining-conditions',sourceCommit,sourceTree
       sampleCounts:commonCohort.policy.sampleCounts,seeds:commonCohort.policy.seeds,
       summaries:commonCohort.result.summaries,comparisons:commonCohort.result.comparisons,
       defaultReplayCases:commonCohort.defaultReplay.length,failures:commonCohort.failures,
-      separatePointAndIntervalCohorts:true,marketAccuracyProven:false,statisticalSignificanceClaim:false}},
+      separatePointAndIntervalCohorts:true,marketAccuracyProven:false,statisticalSignificanceClaim:false},
+    independentCalibration:{policy:independentCalibration.policy,reportSha256:sources['build/ethereum-independent-calibration.json'],
+      results:independentCalibration.results.map(row=>({model:row.split.model,horizonDays:row.split.horizonDays,status:row.status,
+        calibrationCases:row.split.calibrationCases,calibrationBoundary:row.split.calibrationBoundary,selectedTestCases:row.selectedTestCases,
+        completedTestCases:row.completedTestCases,summaries:row.summaries,pairedIntervalSkill:row.pairedIntervalSkill})),
+      futureProtocol:independentCalibration.futureProtocol,untouchedHistoricalHoldout:false,prospectiveScoredTargets:0,
+      historicalVintagesVerified:false,coverageGuarantee:false,calibratedForProduction:false}},
   prospective:{status:receipt.status,replayFromPersistedFiles:replayReceipt?{status:replayReceipt.status,networkRequests:replayReceipt.networkRequests,newRecords:replayReceipt.newRecords,reusedRecords:replayReceipt.reusedRecords,indexUnchanged:replayReceipt.indexUnchanged}:null,previousAssetLedger:{records:previous.entries.length,models:priorModels,separateFromNewCandidates:true},
     candidateRecords:records.length,uniqueOrigins:new Set(records.map(r=>r.asOf)).size,
     modelEvidence:[...new Set(['adaptive','pooled','warmStart',...records.map(r=>r.modelKey)])].map(modelKey=>{
@@ -85,7 +127,9 @@ const report={kind:'ethereum-model-remaining-conditions',sourceCommit,sourceTree
         independentlyValidatedMarketRegimes:null,accuracyProven:false};
     }),issuanceReceiptSha256:sources['build/ethereum-prospective-ledger/receipt.json'],
     requiresFutureObservedAndCollectedPrices:true,multipleModelsOrHorizonsAreNotIndependentOrigins:true},
-  economics:{version:'eth-economic-ridge-5',providedSnapshots:comparison.data.economicSnapshotCount,
+  economics:{version:ETH_ECONOMIC_VERSION,metricDefinitionVersion:ETH_ECONOMIC_INPUT_SCHEMA.snapshot.metricDefinitionVersion,
+    requiredMetricCount:Object.keys(ETH_ECONOMIC_INPUT_SCHEMA.metrics).length,
+    requiredNonFeeExecutionDestruction:true,legacyFullInputAutomaticallyUpgraded:false,providedSnapshots:comparison.data.economicSnapshotCount,
     eligibleFullSnapshots:comparison.data.economicSnapshotReadiness?.definitionAndTimeQualifiedSnapshots??null,
     inputInspection:comparison.data.economicSnapshotReadiness??null,
     metricEvidence:{version:economicCoverage.version,asOf:economicCoverage.asOf,issuedAt:economicCoverage.issuedAt,
@@ -95,6 +139,14 @@ const report={kind:'ethereum-model-remaining-conditions',sourceCommit,sourceTree
       reportSha256:sources['build/ethereum-economic-evidence-coverage.json'],
       eligibleModelSnapshotCount:economicCoverage.eligibleModelSnapshotCount,modelInputActivated:false,
       historicalPointInTimeReady:false},
+    observationVintages:{version:economicVintages.version,ledgerId:economicVintages.ledgerId,
+      recordCount:economicVintages.recordCount,newCaptureCount:economicVintages.newCaptureCount,reusedCaptureCount:economicVintages.reusedCaptureCount,
+      distinctDataVersions:economicVintages.distinctDataVersions,verifiedInputFiles:economicVintages.verifiedInputFiles,
+      selection:economicVintages.selection.summary,receiptSha256:sources['build/ethereum-economic-vintages/receipt.json'],
+      replay:{networkRequests:economicVintageReplay.networkRequests,newCaptureCount:economicVintageReplay.newCaptureCount,
+        reusedCaptureCount:economicVintageReplay.reusedCaptureCount,verifiedInputFiles:economicVintageReplay.verifiedInputFiles},
+      actualReceiptClocksRetained:true,firstPublicationProven:false,fullModelSnapshotReady:false,modelInputActivated:false},
+    supplyAccountingAudits:supplyAudits,
     retainedSourceTiming:{sourceSha256:sourceTiming.source.sha256,collectedAt:sourceTiming.source.collectedAt,
       publishedAt:sourceTiming.source.publishedAt,latestComplete:sourceTiming.rows.latestComplete,
       completeMergeEraRows:sourceTiming.rows.completeMetricRows,
@@ -104,7 +156,7 @@ const report={kind:'ethereum-model-remaining-conditions',sourceCommit,sourceTree
     active:comparison.current.candidates.economic.status==='ready',
     feasibility:assessEthereumEconomicFeasibility({asOf:comparison.asOf}),
     partialProtocolPoWZeroIsNotTotalIssuance:true,definitionContractsRelaxed:false,
-    remaining:['Definition-matched complete 25-metric snapshots','Actual publication and collection vintages available by each historical origin',
+    remaining:['Definition-matched complete '+Object.keys(ETH_ECONOMIC_INPUT_SCHEMA.metrics).length+'-metric snapshots including measured non-fee execution destruction','Actual publication and collection vintages available by each historical origin',
       'Cohort-specific earned net staking returns and disjoint underlying collateral','Enough same-horizon matured labels and market regimes']},
   release:{draft:true,authorized:false,productionPromoted:false,
     geminiOpposition:'omitted-by-user',followupReverseReview:'omitted-by-user',

@@ -1,7 +1,7 @@
 /** Read-only evidence inventory. This does not construct or activate model snapshots. */
 import {ETH_ECONOMIC_INPUT_SCHEMA,ETH_ECONOMIC_DEFAULTS,ETH_ECONOMIC_MAINNET_CLOCK} from './ethereum-economic-model.js';
 
-export const ETH_ECONOMIC_EVIDENCE_VERSION='eth-economic-evidence-coverage-1';
+export const ETH_ECONOMIC_EVIDENCE_VERSION='eth-economic-evidence-coverage-2';
 const DAY=86400000,DEFINITION=ETH_ECONOMIC_INPUT_SCHEMA.snapshot.metricDefinitionVersion;
 const BACKEND='567f60415e8b48eb84f7b08e1bd83c8ca99995bf';
 const backend=path=>'https://github.com/growthepie/gtp-backend/blob/'+BACKEND+'/'+path;
@@ -20,6 +20,7 @@ const SOURCE={
   eip1559:'https://eips.ethereum.org/EIPS/eip-1559',
   eip4844:'https://eips.ethereum.org/EIPS/eip-4844',
   eip3675:'https://eips.ethereum.org/EIPS/eip-3675',
+  eip6780:'https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-6780.md',
   eip7918:'https://eips.ethereum.org/EIPS/eip-7918',
   beacon:'https://ethereum.github.io/beacon-APIs/',
 };
@@ -38,6 +39,8 @@ export const ETH_ECONOMIC_EVIDENCE_REQUIREMENTS=deepFreeze({
     ['Sum gasUsed * effectiveGasPrice from execution receipts only; do not relabel total fees including blobs as execution fees.'],[SOURCE.fees,SOURCE.eip1559],'scope-mismatch'),
   executionBurnEth:requirement(['base-priority-split-missing'],
     ['Per-block baseFeePerGas * gasUsed in exact wei across the canonical UTC window; priority fees are transfers, not burn.'],[SOURCE.eip1559,SOURCE.fees],'subset'),
+  otherExecutionBurnEth:requirement(['non-fee-destruction-unmeasured','fork-aware-trace-state-reconciliation'],
+    ['Canonical execution traces and pre/post-state balances must reconcile non-fee destruction across the exact UTC window. EIP-6780 retains destruction for a newly created contract in the same transaction. Neither absent events nor transfers to apparently inaccessible addresses establish protocol destruction or a measured zero.'],[SOURCE.eip6780]),
   blobFeesEth:requirement(['blob-fee-split-missing','noninteger-blob-formula'],
     ['Exact blobGasUsed * protocol integer blob base fee, or reconciled blob receipt fees, under the applicable fork schedule; TRUNC(EXP(...)) is not the integer fake_exponential algorithm.'],[SOURCE.blob,SOURCE.eip4844,SOURCE.eip7918],'scope-mismatch'),
   blobBurnEth:requirement(['blob-fee-split-missing','noninteger-blob-formula'],
@@ -146,7 +149,9 @@ function clocks(observation,asOfMs,issuedMs){
     tags,receiptTimesQualified:tags.length===0,providerClocksAreNotPublication:true};
 }
 function powShape(observation){
-  ensure(observation.sourceType==='protocol-computed-zero'&&observation.metricDefinitionVersion===DEFINITION,'PoW observation definition mismatch');
+  // The PoW component definition is unchanged between input-3 and input-4.
+  // This explicit partial-component compatibility never upgrades a full input-3 snapshot.
+  ensure(observation.sourceType==='protocol-computed-zero'&&['eth-economic-input-3',DEFINITION].includes(observation.metricDefinitionVersion),'PoW observation definition mismatch');
   ensure(observation.partialMetrics?.executionPowIssuanceEth?.value===0&&observation.partialMetrics.executionPowIssuanceEth.unit===ETH_ECONOMIC_INPUT_SCHEMA.metrics.executionPowIssuanceEth.unit,'PoW observation must be the sourced zero metric');
   ensure(observation.completeWindow===true&&observation.windowDays===28&&day(observation.windowStart)>=day('2022-09-16'),'PoW zero requires a complete post-transition window');
   const first=observation.canonicalBlockRange?.first,last=observation.canonicalBlockRange?.last;
@@ -166,7 +171,7 @@ export function inspectEthereumEconomicEvidence({asOf,issuedAt,sources=[]}={}){
   ensure(issuedMs!==null&&issuedMs>=asOfMs+DAY,'Diagnostic cutoff must follow its completed asOf day');
   ensure(Array.isArray(sources)&&sources.length<=100,'Expected bounded capture list');
   const metricIds=Object.keys(ETH_ECONOMIC_INPUT_SCHEMA.metrics);
-  ensure(metricIds.length===25&&metricIds.every(id=>Object.hasOwn(ETH_ECONOMIC_EVIDENCE_REQUIREMENTS,id)),'Economic definition contract changed; review this inspector');
+  ensure(metricIds.length===26&&metricIds.every(id=>Object.hasOwn(ETH_ECONOMIC_EVIDENCE_REQUIREMENTS,id)),'Economic definition contract changed; review this inspector');
   const inventory=[],observations=[],links=[];
   function add(source,field,value,clock,sourceUrl,relations,notes=[]){
     if(!valueIsObserved(value))return;
@@ -254,6 +259,7 @@ export function inspectEthereumEconomicEvidence({asOf,issuedAt,sources=[]}={}){
       documentationIsNotObservation:true,sourceUrls:[...new Set(Object.values(ETH_ECONOMIC_EVIDENCE_REQUIREMENTS).flatMap(r=>r.sourceUrls))]},
     nextCollectionSteps:ETH_ECONOMIC_CAPTURE_NEXT_STEPS,
     accountingConstraints:[
+      'Non-fee execution destruction is required separately in input-4; fees and consensus penalties cannot absorb it. Older full input-3 snapshots are not silently upgraded.',
       'executionFeesEth + blobFeesEth is the total; executionBurnEth is a component, not additional fee revenue.',
       'l2SettlementFeesEth is already a subset of total L1 fees; never add it to those total fees.',
       'Epoch-average net CL rewards are neither exact UTC gross rewards nor a cohort return.',

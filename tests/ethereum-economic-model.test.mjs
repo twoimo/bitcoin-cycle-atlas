@@ -81,7 +81,7 @@ test('fee capture, burn and issuance reach different mathematical features witho
   assert.equal(value(before,'netSupplyRate'),value(after,'netSupplyRate'));
   assert.ok(value(after,'l2CaptureRatio')>value(before,'l2CaptureRatio'));
   const m=base.economicSnapshots.at(-1).metrics;
-  assert.equal(value(before,'netSupplyRate'),(m.consensusNetIssuanceEth+m.executionPowIssuanceEth-m.executionBurnEth-m.blobBurnEth)/m.supplyEth);
+  assert.equal(value(before,'netSupplyRate'),(m.consensusNetIssuanceEth+m.executionPowIssuanceEth-m.executionBurnEth-m.blobBurnEth-m.otherExecutionBurnEth)/m.supplyEth);
   assert.equal(value(before,'l1FeeYield'),(m.executionFeesEth+m.blobFeesEth)/m.supplyEth);
   const inconsistent=clone(base);inconsistent.economicSnapshots.at(-1).metrics.blobBurnEth=0;
   assert.equal(model(inconsistent).status,'unavailable');

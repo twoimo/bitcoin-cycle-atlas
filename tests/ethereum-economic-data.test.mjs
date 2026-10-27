@@ -66,9 +66,9 @@ test('reference-only tail does not make old economic observations current', () =
 });
 test('a valid raw window never becomes a fictitious complete economic input', () => {
   const c = assessCoinMetricsEconomicCoverage(parsed(), { asOf: '2026-01-29', collectedAt: '2026-01-30T10:00:00Z' });
-  assert.equal(c.requiredMetricCount, 25);
+  assert.equal(c.requiredMetricCount, 26);
   assert.equal(c.definitionMatchedMetricCount, 0);
-  assert.equal(c.requirements.length, 25);
+  assert.equal(c.requirements.length, 26);
   assert.equal(c.fullModelSnapshotReady, false);
   assert.equal(c.modelFeasibility.provesInputReadiness, false);
   assert.equal(c.modelFeasibility.horizons.find(h=>h.horizonDays===180).structurallyEnoughMatureLabels, false);

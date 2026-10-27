@@ -16,6 +16,7 @@ const evidencePaths=[
   'build/ethereum-warm-start.json',
   'build/ethereum-common-cohort.json',
   'build/ethereum-economic-evidence-coverage.json',
+  'build/ethereum-independent-calibration.json',
   'build/ethereum-economic-ablation.json',
   'build/eth-browser/report.json',
 ];
@@ -30,6 +31,8 @@ async function addFiles(directory,{filter=()=>true}={}){
 await addFiles('build/ethereum-economic-data',{filter:path=>!path.endsWith('/capture.json')});
 await addFiles('build/ethereum-throughput-supplement');
 await addFiles('build/ethereum-pow-zero');
+await addFiles('build/ethereum-economic-vintages');
+await addFiles('build/ethereum-supply-accounting');
 await addFiles('build/ethereum-prospective-ledger');
 await addFiles('build/asset-forecast-ledger',{filter:path=>path.endsWith('.json')});
 await addFiles('build/asset-outcome-ledger',{filter:path=>path.endsWith('.json')});

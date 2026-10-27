@@ -1,6 +1,6 @@
 /**
  * Public source acquisition boundary for ETH economic research.
- * A provider archive is an observation, not an eth-economic-input-3 snapshot.
+ * A provider archive is an observation, not an eth-economic-input-4 snapshot.
  * This adapter does not relabel historical observations as historical captures.
  */
 import { ETH_ECONOMIC_INPUT_SCHEMA, ETH_ECONOMIC_MAINNET_CLOCK, assessEthereumEconomicFeasibility } from './ethereum-economic-model.js';
@@ -178,7 +178,7 @@ export function aggregateCoinMetricsEthWindow(parsed, observedThrough) {
   return windowFromIndex(checkedIndex(parsed), observedThrough);
 }
 
-/** Readiness is for the existing 25-metric economic contract, not raw-source availability. */
+/** Readiness is for the current full economic contract, not raw-source availability. */
 export function assessCoinMetricsEconomicCoverage(parsed, { asOf, collectedAt }) {
   const d = day(asOf), capture = timestamp(collectedAt, 'collectedAt');
   const index = checkedIndex(parsed);
@@ -228,7 +228,7 @@ export function assessCoinMetricsEconomicCoverage(parsed, { asOf, collectedAt })
     blockers: [
       'This collection time applies to the exact archive captured now, not historical issue times.',
       'Provider calculation completion and Git commit metadata are not proven publication times of historical metric vintages.',
-      'Only aggregate provider fields are present; the reviewed 25-metric definition and cohort requirements are not satisfied.',
+      'Only aggregate provider fields are present; the reviewed '+requirements.length+'-metric definition and cohort requirements are not satisfied.',
       ...(staleDays !== null && staleDays > 7 ? ['Latest complete source window is older than the seven-day model freshness limit.'] : []),
     ],
   };

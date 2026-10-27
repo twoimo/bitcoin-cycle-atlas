@@ -6,7 +6,7 @@
 const DAY_MS = 86400000;
 const EIP_REF = '7372d10a457b29eceb02cd052345af165de1fb60';
 const SPEC_REF = 'ff73f4dd90a8717b13ed5a52afa5c1af358259b5';
-export const ETH_ECONOMIC_VERSION = 'eth-economic-ridge-5';
+export const ETH_ECONOMIC_VERSION = 'eth-economic-ridge-6';
 export const ETH_ECONOMIC_DEFAULTS = Object.freeze({
   windowDays: 28, maximumSnapshotAgeDays: 7, ridgeAlpha: 1,
   minimumTrainingLabels: 16, maximumHorizonDays: 180,
@@ -25,6 +25,7 @@ export const ETH_ECONOMIC_SOURCES = Object.freeze([
   {id:'eip-1559',url:'https://github.com/ethereum/EIPs/blob/'+EIP_REF+'/EIPS/eip-1559.md',blobSha:'26a5b739e1661fc7599d4d3a4c35e004a72886e1'},
   {id:'eip-4844',url:'https://github.com/ethereum/EIPs/blob/'+EIP_REF+'/EIPS/eip-4844.md',blobSha:'de2e4a46ad93fc04e6fe3174dc6e90a3307bdb5f'},
   {id:'eip-3675',url:'https://github.com/ethereum/EIPs/blob/'+EIP_REF+'/EIPS/eip-3675.md',blobSha:'efa51f543490bd6643fa943fb963d762312bda2a'},
+  {id:'eip-6780',url:'https://github.com/ethereum/EIPs/blob/'+EIP_REF+'/EIPS/eip-6780.md',blobSha:'1b6a0e94cc47e859b9866e570391cf37dc55059a'},
   {id:'eip-4895',url:'https://github.com/ethereum/EIPs/blob/'+EIP_REF+'/EIPS/eip-4895.md',blobSha:'81af3b60b632bc9c03513d1d137f25410e3f4d34'},
   {id:'eip-7691',url:'https://github.com/ethereum/EIPs/blob/'+EIP_REF+'/EIPS/eip-7691.md',blobSha:'2bbc7d20da59c7ceb85736a47b1c75d2afdcc7ef'},
   {id:'eip-7918',url:'https://github.com/ethereum/EIPs/blob/'+EIP_REF+'/EIPS/eip-7918.md',blobSha:'9f17abdd1956499ddef12848e75dd6eff0b601e8'},
@@ -43,7 +44,8 @@ export const ETH_ECONOMIC_INPUT_SCHEMA = Object.freeze({
   snapshot: {
     required:['metricDefinitionVersion','l2UniverseId','stakingCohortId','stakingRewardAccounting','exitTimingUniverseId','exitTimingBasis','collateralUniverseId','collateralAccounting','observedThrough','windowDays','completeWindow','publishedAt','collectedAt','vintageId','sourceHash','sourceUrl','metricSourceUrls','metrics'],
     windowDays:28,
-    metricDefinitionVersion:'eth-economic-input-3',
+    metricDefinitionVersion:'eth-economic-input-4',
+    revision:'Input-4 adds measured non-fee execution destruction. A full input-3 snapshot is not automatically compatible and a missing destruction value is not zero.',
     l2UniverseId:'A fixed explicit rollup universe; a changed universe requires a separate model/data revision.',
     stakingCohortId:'A fixed measured validator/investor cohort; its earned rewards, costs and time-weighted eligible principal use the same scope.',
     stakingRewardAccounting:'earned-disjoint-28d-v1: consensus rewards/penalties, execution priority fees and MEV excluding those fees are mutually reconciled; costs are actual cohort expenses, not assumed APR haircuts.',
@@ -63,6 +65,7 @@ export const ETH_ECONOMIC_INPUT_SCHEMA = Object.freeze({
     blobGasUsed:{unit:'blob gas/28 UTC days',definition:'Consumed blob gas, with protocol era and capacity changes retained in the source vintage.'},
     executionFeesEth:{unit:'ETH/28 UTC days',definition:'L1 execution fees, base plus priority, excluding blob fees; rollup L1 payments are already included.'},
     executionBurnEth:{unit:'ETH/28 UTC days',definition:'Execution base-fee burn, already contained in execution fees.'},
+    otherExecutionBurnEth:{unit:'ETH/28 UTC days',definition:'Non-fee execution-layer destruction, including fork-aware SELFDESTRUCT balance destruction. Excludes execution base-fee burn, blob burn, consensus penalties, transfers to funded addresses and merely inaccessible balances. Requires canonical trace/state reconciliation; missing is not zero.'},
     blobFeesEth:{unit:'ETH/28 UTC days',definition:'Blob gas fees only, separate from the execution fee of a blob-carrying transaction.'},
     blobBurnEth:{unit:'ETH/28 UTC days',definition:'Blob fee burn; equal to blobFeesEth under the cited protocol accounting.'},
     consensusNetIssuanceEth:{unit:'ETH/28 UTC days',definition:'Consensus balance creation less consensus penalties/destruction; excludes deposits, withdrawals and execution fee transfers. May be negative.'},
@@ -90,7 +93,7 @@ export const ETH_ECONOMIC_FEATURES = Object.freeze([
   {id:'l2Usage',formula:'log1p(l2Transactions/28)',unit:'log transactions/day',group:'usage'},
   {id:'blobDemand',formula:'log1p(blobGasUsed/28)',unit:'log blob gas/day',group:'usage'},
   {id:'l1FeeYield',formula:'(executionFeesEth+blobFeesEth)/supplyEth',unit:'ETH/ETH per 28 days',group:'fees'},
-  {id:'netSupplyRate',formula:'(consensusNetIssuanceEth+executionPowIssuanceEth-executionBurnEth-blobBurnEth)/supplyEth',unit:'ETH/ETH per 28 days',group:'supply'},
+  {id:'netSupplyRate',formula:'(consensusNetIssuanceEth+executionPowIssuanceEth-executionBurnEth-blobBurnEth-otherExecutionBurnEth)/supplyEth',unit:'ETH/ETH per 28 days',group:'supply'},
   {id:'stakedShare',formula:'stakedEth/supplyEth',unit:'fraction',group:'staking'},
   {id:'exitQueueShare',formula:'exitQueueEth/supplyEth',unit:'fraction',group:'liquidity'},
   {id:'l2CaptureRatio',formula:'l2SettlementFeesEth/l2UserFeesEth',unit:'ratio, may exceed 1 if sequencers lose money',group:'capture'},
@@ -101,7 +104,7 @@ export const ETH_ECONOMIC_FEATURES = Object.freeze([
   {id:'uniqueCollateralShare',formula:'(uniqueNativeCollateralEth+uniqueStakingClaimCollateralEth)/supplyEth',unit:'fraction of unique underlying ETH',group:'collateral-demand'},
 ]);
 export const ETH_ECONOMIC_EQUATIONS = Object.freeze({
-  supply:'S[t+1]=S[t]+consensusNetIssuanceEth+executionPowIssuanceEth-executionBurnEth-blobBurnEth; PoW issuance includes canonical block and ommer subsidies before the transition. Deposits/withdrawals move balances and do not create supply.',
+  supply:'S[t+1]=S[t]+consensusNetIssuanceEth+executionPowIssuanceEth-executionBurnEth-blobBurnEth-otherExecutionBurnEth; all flows and stocks share exact boundaries. PoW issuance includes canonical block and ommer subsidies before the transition. Deposits/withdrawals and transfers to funded addresses preserve supply. Fork-aware non-fee execution destruction is a separate deduction, never an unmeasured zero.',
   fit:'For each h, minimize mean((y-alpha-z*beta)^2)+ridgeAlpha*sum(beta^2), with z standardized on that training set only; alpha is unpenalized.',
   ethTarget:'y=log(ETH[t+h]/ETH[t]); ETH forecast=ETH[asOf]*exp(alpha+z[asOf]*beta).',
   ratioTarget:'q=log((ETH[t+h]/BTC[t+h])/(ETH[t]/BTC[t])); ETH/BTC is estimated separately using the same lagged inputs.',
@@ -164,9 +167,9 @@ export function assertEthereumEconomicProtocolEra(metrics,observedThrough){
 
 /** Supply accounting remains usable independently of full-model readiness. */
 export function ethereumEconomicNetSupplyRate(metrics){
-  for(const key of ['consensusNetIssuanceEth','executionPowIssuanceEth','executionBurnEth','blobBurnEth','supplyEth'])finite(metrics?.[key],key,key!=='consensusNetIssuanceEth');
+  for(const key of ['consensusNetIssuanceEth','executionPowIssuanceEth','executionBurnEth','blobBurnEth','otherExecutionBurnEth','supplyEth'])finite(metrics?.[key],key,key!=='consensusNetIssuanceEth');
   if(!(metrics.supplyEth>0))throw new RangeError('Supply must be positive');
-  return (metrics.consensusNetIssuanceEth+metrics.executionPowIssuanceEth-metrics.executionBurnEth-metrics.blobBurnEth)/metrics.supplyEth;
+  return (metrics.consensusNetIssuanceEth+metrics.executionPowIssuanceEth-metrics.executionBurnEth-metrics.blobBurnEth-metrics.otherExecutionBurnEth)/metrics.supplyEth;
 }
 
 /** Optimistic protocol ceiling, never actual data, training evidence or readiness. */
@@ -232,7 +235,7 @@ function snapshotsAtIssue(raw,asOfDay,cutoff){
     if(typeof snapshot.publishedAt==='string'&&stamp(snapshot.publishedAt,'publishedAt')>cutoff)continue;
     if(typeof snapshot.collectedAt==='string'&&stamp(snapshot.collectedAt,'collectedAt')>cutoff)continue;
     const evidence=receipt(snapshot,(d+1)*DAY_MS);
-    if(snapshot.metricDefinitionVersion!=='eth-economic-input-3')throw new TypeError('The versioned economic input definition is required');
+    if(snapshot.metricDefinitionVersion!==ETH_ECONOMIC_INPUT_SCHEMA.snapshot.metricDefinitionVersion)throw new TypeError('The versioned economic input-4 definition including measured otherExecutionBurnEth is required; full input-3 snapshots cannot be silently upgraded');
     const scopes=['l2UniverseId','stakingCohortId','exitTimingUniverseId','collateralUniverseId'];
     if(scopes.some(key=>typeof snapshot[key]!=='string'||!snapshot[key].trim()))throw new TypeError('Fixed activity, staking, exit and collateral universes are required');
     if(snapshot.stakingRewardAccounting!=='earned-disjoint-28d-v1'||snapshot.exitTimingBasis!=='completed-request-to-execution-28d-v1'||snapshot.collateralAccounting!=='unique-underlying-disjoint-v1')throw new TypeError('Explicit nonduplicated reward, completed-exit and underlying-collateral accounting is required');

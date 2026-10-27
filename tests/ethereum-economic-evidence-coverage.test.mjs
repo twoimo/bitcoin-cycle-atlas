@@ -34,8 +34,8 @@ function pow(){
       sourceManifest:[{id:'eip-3675',url:'https://eips.ethereum.org/EIPS/eip-3675',sourceSha256:'c'.repeat(64)}]}}};
 }
 
-test('a complete 25-row gap inventory does not interpret absent measurements as zero',()=>{
-  const r=inspect([]);assert.equal(r.metrics.length,25);assert.equal(r.summary.notObservedMetricCount,25);
+test('a complete 26-row gap inventory does not interpret absent measurements as zero',()=>{
+  const r=inspect([]);assert.equal(r.metrics.length,26);assert.equal(r.summary.notObservedMetricCount,26);
   assert.deepEqual(r.metrics.map(m=>m.metric),Object.keys(ETH_ECONOMIC_INPUT_SCHEMA.metrics));
   assert.equal(r.observations.length,0);assert.equal(r.eligibleModelSnapshotCount,0);assert.deepEqual(r.modelSnapshots,[]);
   assert.equal(metric(r,'executionPowIssuanceEth').sourceCaptureStates.find(s=>s.kind==='pow-zero').state,'missing');
@@ -47,7 +47,7 @@ test('current partial evidence has separate definition, timing, scope and raw-re
   assert.equal(r.summary.observedSourceFieldCount,6);assert.equal(r.summary.definitionExactReportedMetricCount,1);
   assert.equal(r.summary.definitionExactReplayedMetricCount,0);assert.equal(r.summary.rateDerivedMetricCount,1);
   assert.equal(r.summary.staleObservationCount,4);assert.equal(r.summary.unknownPublicationObservationCount,6);
-  assert.equal(r.summary.reportedExactAndClockQualifiedMetricCount,0);assert.equal(r.summary.notObservedMetricCount,15);
+  assert.equal(r.summary.reportedExactAndClockQualifiedMetricCount,0);assert.equal(r.summary.notObservedMetricCount,16);
   assert.equal(metric(r,'executionPowIssuanceEth').status,'exact-partial');assert.equal(metric(r,'l1GasUsed').status,'rate-derived-partial');
   assert.equal(r.fullModelSnapshotReady,false);assert.equal(r.productionPromoted,false);assert.equal(r.historicalPointInTimeReady,false);
   assert.equal(r.sourceMethodologyReview.hostedBackendVersionVerified,false);

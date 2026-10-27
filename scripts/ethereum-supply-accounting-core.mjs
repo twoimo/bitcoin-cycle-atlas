@@ -1,0 +1,189 @@
+// Exact arithmetic over a provider's preserved claims. This is not chain execution,
+// a UTC-window source adapter, or evidence of historical publication.
+import { ETH_ECONOMIC_INPUT_SCHEMA, ETH_ECONOMIC_MAINNET_CLOCK } from '../dist/ethereum-economic-model.js';
+
+export const ETH_SUPPLY_ACCOUNTING_SOURCE=Object.freeze({
+  historyUrl:'https://ethsupply.fyi/api/history?range=30d',
+  methodologyUrl:'https://ethsupply.fyi/methodology/',
+  protocolFile:'research-data/eth-supply-accounting/eip-6780.md',
+  protocolUrl:'https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-6780.md',
+  protocolGitBlobSha:'1b6a0e94cc47e859b9866e570391cf37dc55059a',
+  attribution:'ethsupply.fyi / donnoh.gwei; protocol specification: Ethereum EIPs, CC0',
+  redistributionLicense:'Provider data license not established by this audit; retain attribution and source URL.',
+});
+export const ETH_SUPPLY_ACCOUNTING_POLICY=Object.freeze({
+  version:'eth-supply-accounting-audit-1',maximumRows:250000,maximumIntegerDigits:80,
+  requestCount:2,retries:0,historyMaximumBytes:8*1024*1024,methodologyMaximumBytes:2*1024*1024,
+  formula:'netWei = issuanceWei - baseFeeBurnWei - blobBaseFeeBurnWei - consensusPenaltiesWei - otherExecutionBurnWei',
+  missingPolicy:'Unknown otherExecutionBurnWei is missing, not zero; a residual is not automatically classified destruction.',
+});
+const COMPONENTS=['baseFeeBurnWei','blobBaseFeeBurnWei','consensusPenaltiesWei','otherExecutionBurnWei'];
+const MONEY_FIELDS=['supplyWei','issuanceWei','attestationIssuanceWei','syncCommitteeIssuanceWei','proposerIssuanceWei',
+  'attestationSourceIssuanceWei','attestationTargetIssuanceWei','attestationHeadIssuanceWei','attestationInclusionIssuanceWei',
+  'syncInclusionIssuanceWei','proposerSlashingIssuanceWei','attesterSlashingIssuanceWei','otherProposerIssuanceWei',
+  'burnWei',...COMPONENTS,'attestationSourcePenaltyWei','attestationTargetPenaltyWei','inactivityPenaltyWei',
+  'syncCommitteePenaltyWei','initialSlashingPenaltyWei','correlationSlashingPenaltyWei',
+  'offsetBaseFeeWei','averageBaseFeePerGasWei','baseFeePerGasWei','gasUsed','gasTarget','gasMax',
+  'blobFloorBurnWei','blobCongestionBurnWei'];
+const SIGNED_FIELDS=['netWei'];
+const DAY=86400,GENESIS=ETH_ECONOMIC_MAINNET_CLOCK.genesisTime,SLOT=ETH_ECONOMIC_MAINNET_CLOCK.secondsPerSlot;
+const check=(ok,message)=>{if(!ok)throw new RangeError(message);};
+function safe(value,label){check(Number.isSafeInteger(value)&&value>=0,label+' must be a nonnegative safe integer');return value;}
+function stamp(value,label){
+  check(typeof value==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/.test(value),label+' requires an explicit UTC timestamp');
+  const t=Date.parse(value);check(Number.isFinite(t)&&new Date(t).toISOString().slice(0,19)===value.slice(0,19),'Invalid '+label);return t/1000;
+}
+function date(value){check(typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value),'observedThrough requires a UTC day');
+  const t=Date.parse(value+'T00:00:00Z')/1000;check(Number.isFinite(t)&&new Date(t*1000).toISOString().slice(0,10)===value,'Invalid UTC day');return t;}
+function integer(value,label,signed=false){
+  if(value===null||value===undefined)return null;
+  check(typeof value==='string'&&value.length<=ETH_SUPPLY_ACCOUNTING_POLICY.maximumIntegerDigits&&
+    (signed?/^(?:0|-?[1-9]\d*)$/:/^(?:0|[1-9]\d*)$/).test(value),label+' must retain a canonical exact integer string or null');
+  return BigInt(value);
+}
+function rowValues(row,label){
+  check(row&&typeof row==='object'&&!Array.isArray(row),label+' must be an object');
+  const values={};for(const f of MONEY_FIELDS)values[f]=integer(row[f],label+'.'+f);
+  for(const f of SIGNED_FIELDS)values[f]=integer(row[f],label+'.'+f,true);
+  for(const f of ['blobsUsed','blobsTarget','blobsMax','blocks'])if(row[f]!=null)safe(row[f],label+'.'+f);
+  return values;
+}
+function arithmetic(values){
+  const complete=COMPONENTS.every(f=>values[f]!==null),componentTotal=complete?COMPONENTS.reduce((s,f)=>s+values[f],0n):null;
+  const expectedNet=componentTotal!==null&&values.issuanceWei!==null?values.issuanceWei-componentTotal:null;
+  return {
+    componentTotalWei:componentTotal?.toString()??null,
+    burnResidualWei:componentTotal!==null&&values.burnWei!==null?(values.burnWei-componentTotal).toString():null,
+    expectedNetWei:expectedNet?.toString()??null,
+    netResidualWei:expectedNet!==null&&values.netWei!==null?(values.netWei-expectedNet).toString():null,
+    netVersusReportedBurnResidualWei:values.issuanceWei!==null&&values.burnWei!==null&&values.netWei!==null?
+      (values.netWei-(values.issuanceWei-values.burnWei)).toString():null,
+    omittedOtherBurnBiasWei:complete?values.otherExecutionBurnWei.toString():null,
+  };
+}
+function slotRange(row){
+  if(row.fromSlot!==undefined||row.toSlot!==undefined){
+    const first=safe(row.fromSlot,'fromSlot'),last=safe(row.toSlot,'toSlot');check(first<=last,'Reversed source slot bucket');
+    const position=safe(row.slot,'slot');check(position>=first&&position<=last&&row.timestamp===GENESIS+position*SLOT,'Bucket label is outside its slot range or mainnet clock');
+    if(row.fromTimestamp!=null)check(row.fromTimestamp===GENESIS+first*SLOT,'Source bucket start clock differs from its slot');
+    if(row.toTimestamp!=null)check(row.toTimestamp===GENESIS+last*SLOT,'Source bucket end clock differs from its slot');
+    return {first,last,explicit:true};
+  }
+  const s=safe(row.slot,'slot');check(row.timestamp===GENESIS+s*SLOT,'Slot timestamp differs from the mainnet slot clock');
+  return {first:s,last:s,explicit:false};
+}
+function summarizeSeries(rows,kind){
+  check(Array.isArray(rows)&&rows.length<=ETH_SUPPLY_ACCOUNTING_POLICY.maximumRows,'Missing or oversized '+kind+' array');
+  const fields=Object.fromEntries([...MONEY_FIELDS,...SIGNED_FIELDS].map(f=>[f,{present:0,missing:0}]));
+  const counters={burnComponentsChecked:0,burnComponentsMismatched:0,netComponentsChecked:0,netComponentsMismatched:0,
+    netVersusReportedBurnChecked:0,netVersusReportedBurnMismatched:0,otherBurnPresent:0,otherBurnMissing:0,otherBurnNonzero:0};
+  const examples=[],parsed=[],pairExamples=[];let previous=null,firstRow=null,firstPair=null,lastPair=null,pairCount=0,pairMismatchCount=0,allContiguous=true;
+  const totals=Object.fromEntries(['issuanceWei','burnWei',...COMPONENTS,'netWei','gasUsed'].map(f=>[f,0n]));
+  const laterTotals={...totals};
+  for(let index=0;index<rows.length;index++){
+    const row=rows[index],label=kind+'['+index+']',v=rowValues(row,label),t=safe(row.timestamp,label+'.timestamp');
+    const position=safe(row[kind==='slots'?'slot':'epoch'],label+'.position');
+    check(!previous||t>previous.timestamp&&position>previous.position,kind+' positions and timestamps must be unique and ascending');
+    const range=kind==='slots'?slotRange(row):null;
+    if(range&&previous)check(range.first>previous.range.last,'Overlapping source slot buckets');
+    for(const f of Object.keys(fields))fields[f][v[f]===null?'missing':'present']++;
+    const a=arithmetic(v);
+    for(const f of Object.keys(totals)){
+      totals[f]=totals[f]!==null&&v[f]!==null?totals[f]+v[f]:null;
+      if(index>0)laterTotals[f]=laterTotals[f]!==null&&v[f]!==null?laterTotals[f]+v[f]:null;
+    }
+    for(const [key,base]of [['burnResidualWei','burnComponents'],['netResidualWei','netComponents'],['netVersusReportedBurnResidualWei','netVersusReportedBurn']]){
+      if(a[key]!==null){counters[base+'Checked']++;if(a[key]!=='0'){counters[base+'Mismatched']++;if(examples.length<20)examples.push({index,position,identity:key,residualWei:a[key]});}}
+    }
+    counters[v.otherExecutionBurnWei===null?'otherBurnMissing':'otherBurnPresent']++;
+    if(v.otherExecutionBurnWei!==null&&v.otherExecutionBurnWei>0n)counters.otherBurnNonzero++;
+    // This comparison states its endpoint convention explicitly. It is not used
+    // to promote the provider's epoch/duty accounting into a UTC-day observation.
+    const contiguous=previous&&(kind==='slots'?range.first===previous.range.last+1:position===previous.position+1&&t-previous.timestamp===SLOT*ETH_ECONOMIC_MAINNET_CLOCK.slotsPerEpoch);
+    if(previous&&!contiguous)allContiguous=false;
+    if(contiguous&&v.supplyWei!==null&&previous.values.supplyWei!==null&&v.netWei!==null){
+      const delta=v.supplyWei-previous.values.supplyWei;
+      const pair={fromPosition:previous.position,toPosition:position,supplyChangeWei:delta.toString(),reportedNetWei:v.netWei.toString(),residualWei:(delta-v.netWei).toString()};
+      pairCount++;firstPair??=pair;lastPair=pair;if(pair.residualWei!=='0'){pairMismatchCount++;if(pairExamples.length<20)pairExamples.push(pair);}
+    }
+    previous={index,position,timestamp:t,range,values:v};firstRow??=previous;parsed.push({...previous,row});
+  }
+  let endpointDecomposition=null;
+  if(rows.length>=2&&allContiguous&&firstRow.values.supplyWei!==null&&previous.values.supplyWei!==null){
+    const delta=previous.values.supplyWei-firstRow.values.supplyWei,a=arithmetic(laterTotals);
+    endpointDecomposition={fromPosition:firstRow.position,toPosition:previous.position,startSupplyWei:firstRow.values.supplyWei.toString(),endSupplyWei:previous.values.supplyWei.toString(),
+      supplyChangeWei:delta.toString(),flowRowsIncluded:rows.length-1,firstRowFlowExcluded:true,
+      componentClaims:Object.fromEntries(Object.entries(laterTotals).map(([f,v])=>[f,v?.toString()??null])),
+      expectedChangeFromComponentsWei:a.expectedNetWei,
+      componentResidualWei:a.expectedNetWei===null?null:(delta-BigInt(a.expectedNetWei)).toString(),
+      reportedNetResidualWei:laterTotals.netWei===null?null:(delta-laterTotals.netWei).toString(),
+      biasIfOtherExecutionBurnOmittedWei:a.omittedOtherBurnBiasWei};
+  }
+  return {summary:{rows:rows.length,firstTimestamp:rows[0]?.timestamp??null,lastTimestamp:rows.at(-1)?.timestamp??null,
+    fields,...counters,mismatchExamples:examples,
+    reportedRowSums:Object.fromEntries(Object.entries(totals).map(([f,v])=>[f,rows.length?v?.toString()??null:null])),
+    endpointArithmetic:{convention:'Treat supplyWei as the end of each reported contiguous bucket and compare the later row netWei. This convention check does not establish source clock semantics.',
+      adjacentPairsChecked:pairCount,mismatchedPairs:pairMismatchCount,firstPair,lastPair,mismatchExamples:pairExamples,endpointDecomposition}},parsed};
+}
+function inspectUtcWindow(parsed,observedThrough){
+  const end=date(observedThrough)+DAY,start=end-28*DAY,first=Math.ceil((start-GENESIS)/SLOT),last=Math.ceil((end-GENESIS)/SLOT)-1;
+  const intersecting=parsed.filter(p=>p.range.first<=last&&p.range.last>=first);
+  const boundaryCrossing=intersecting.filter(p=>p.range.first<first||p.range.last>last);
+  let covered=0,previous=null,gaps=0;for(const p of intersecting){
+    const low=Math.max(first,p.range.first),high=Math.min(last,p.range.last);covered+=high-low+1;
+    if(previous!==null&&low!==previous+1)gaps++;previous=high;
+  }
+  const covers=intersecting.length>0&&intersecting[0].range.first<=first&&intersecting.at(-1).range.last>=last&&gaps===0&&covered===last-first+1;
+  const missingComponents=Object.fromEntries(['issuanceWei','burnWei',...COMPONENTS,'netWei','gasUsed','supplyWei'].map(f=>[f,intersecting.filter(p=>p.values[f]===null).length]));
+  const finalized=intersecting.length>0&&intersecting.every(p=>p.row.finalized===true);
+  const exactBuckets=covers&&boundaryCrossing.length===0;
+  const aggregates={};if(exactBuckets)for(const f of ['issuanceWei','burnWei',...COMPONENTS,'netWei','gasUsed']){
+    aggregates[f]=missingComponents[f]===0?intersecting.reduce((s,p)=>s+p.values[f],0n).toString():null;
+  }
+  return {observedFrom:new Date(start*1000).toISOString().slice(0,10),observedThrough,windowDays:28,
+    firstRequiredSlot:first,lastRequiredSlot:last,requiredSlots:last-first+1,coveredSlots:covered,intersectingBuckets:intersecting.length,
+    boundaryCrossingBuckets:boundaryCrossing.length,internalGapCount:gaps,providerBucketsCoverAllRequiredSlots:covers,
+    exactBucketBoundaryMatch:exactBuckets,allSelectedBucketsExplicitlyFinalized:finalized,missingComponents,
+    providerClaimAggregates:aggregates,utcAccountingEligibilityProven:false,
+    blockingReasons:[...(!covers?['incomplete-slot-coverage']:[]),...(boundaryCrossing.length?['source-bucket-straddles-utc-window']:[]),
+      ...(!finalized?['finality-not-explicit-for-every-selected-bucket']:[]),
+      'provider-bucket-duty-and-recognition-semantics-not-independently-verified','publication-time-unknown','canonical-state-not-independently-replayed'],
+    interpretation:'Bucket sums remain provider claims even when integer arithmetic and requested slot boundaries align. No proration, missing-zero fill, or epoch-to-UTC relabeling.',
+  };
+}
+
+export function auditEthereumSupplyAccounting(payload,{collectedAt,observedThrough}={}){
+  const collected=stamp(collectedAt,'collectedAt');date(observedThrough);
+  check(date(observedThrough)+DAY<=collected,'Requested UTC window is not yet complete');
+  check(payload&&typeof payload==='object'&&payload.schemaVersion===1,'Unexpected supply history schema');
+  check(payload.range==='30d','Expected the declared 30d history document');
+  check(payload.partial!==true&&payload.baseRevision===undefined,'Incremental history is not a complete standalone document');
+  safe(payload.revision,'revision');const generated=safe(payload.generatedAt,'generatedAt');
+  check(generated<=collected+300,'Provider generation clock exceeds bounded clock tolerance');
+  if(payload.chainId!==undefined)check(payload.chainId===1,'Provider returned another chain');
+  const slots=summarizeSeries(payload.slots,'slots'),epochs=summarizeSeries(payload.epochs,'epochs');
+  check(slots.summary.rows+epochs.summary.rows<=ETH_SUPPLY_ACCOUNTING_POLICY.maximumRows,'Combined history exceeds row bound');
+  check(slots.summary.rows+epochs.summary.rows>0,'Provider supplied no accounting rows');
+  for(const series of [slots,epochs])if(series.summary.lastTimestamp!==null)check(series.summary.lastTimestamp<=generated+300,'Accounting row is after provider generation');
+  const summary=payload.summary?arithmetic(rowValues(payload.summary,'summary')):null;
+  const observationClocks=Object.fromEntries([['slots',slots],['epochs',epochs]].map(([name,series])=>{
+    const future=series.parsed.filter(p=>p.timestamp>collected);
+    return [name,{rowsAfterActualCollection:future.length,latestReportedTimestamp:series.summary.lastTimestamp,
+      maximumLeadSeconds:future.reduce((max,p)=>Math.max(max,p.timestamp-collected),0)}];
+  }));
+  return {version:ETH_SUPPLY_ACCOUNTING_POLICY.version,status:'provider-accounting-audited',source:ETH_SUPPLY_ACCOUNTING_SOURCE,
+    providerSchemaVersion:payload.schemaVersion,providerRevision:payload.revision,providerGeneratedAt:new Date(generated*1000).toISOString(),
+    providerClockAfterCollection:generated>collected,collectedAt,publishedAt:null,historicalAvailabilityProven:false,
+    observationClocks,
+    providerInterval:payload.interval??null,intervalSlots:payload.intervalSlots??null,intervalEpochs:payload.intervalEpochs??null,
+    declaredCoverage:payload.coverage??null,declaredWarnings:payload.warnings??null,summaryArithmetic:summary,
+    series:{slots:slots.summary,epochs:epochs.summary},utcWindow:inspectUtcWindow(slots.parsed,observedThrough),
+    supplyIdentity:ETH_SUPPLY_ACCOUNTING_POLICY.formula,
+    definitionFinding:{id:'other-execution-destruction-required',sourceUrl:ETH_SUPPLY_ACCOUNTING_SOURCE.protocolUrl,
+      field:'otherExecutionBurnEth',reason:'EIP-6780 retains same-transaction SELFDESTRUCT burns. A fee-only supply identity is incomplete without measured non-fee destruction or affirmative exact-window zero evidence.',
+      aProposalIsNotAnActivatedFork:true,modelDefinitionVersion:ETH_ECONOMIC_INPUT_SCHEMA.snapshot.metricDefinitionVersion},
+    requiredMetricCount:Object.keys(ETH_ECONOMIC_INPUT_SCHEMA.metrics).length,definitionMatchedModelMetricCount:0,
+    independentCanonicalValidation:false,independentProviderAudit:false,fullModelSnapshotReady:false,eligibleModelSnapshotCount:0,
+    modelInputActivated:false,modelSnapshots:[],
+  };
+}

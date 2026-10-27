@@ -23,6 +23,11 @@ on:
       - 'scripts/evaluate-ethereum-common-cohort.mjs'
       - 'scripts/ethereum-common-cohort-core.mjs'
       - 'scripts/build-ethereum-economic-evidence-coverage.mjs'
+      - 'scripts/ethereum-economic-vintages*.mjs'
+      - 'scripts/ethereum-supply-accounting-core.mjs'
+      - 'scripts/capture-ethereum-supply-accounting.mjs'
+      - 'scripts/ethereum-independent-calibration-core.mjs'
+      - 'scripts/evaluate-ethereum-independent-calibration.mjs'
       - 'scripts/analyze-ethereum-source-timing.mjs'
       - 'scripts/evaluate-ethereum-monte-carlo-stability.mjs'
       - 'scripts/ethereum-monte-carlo-stability-core.mjs'
@@ -43,6 +48,8 @@ on:
       - 'scripts/evaluate-asset-forecasts.mjs'
       - 'research-data/asset-outcome-ledger/**'
       - 'research-data/eth-economic-captures/**'
+      - 'research-data/ethereum-economic-vintages/**'
+      - 'research-data/eth-supply-accounting/**'
       - 'scripts/build-eth-review*.mjs'
       - 'research-data/eth-review-scope.json'
       - '.github/workflows/eth-model-evaluation.yml'
@@ -73,6 +80,10 @@ jobs:
           node --check scripts/issue-ethereum-prospective.mjs
           node --check scripts/evaluate-ethereum-common-cohort.mjs
           node --check scripts/build-ethereum-economic-evidence-coverage.mjs
+          node --check scripts/ethereum-economic-vintages.mjs
+          node --check scripts/capture-ethereum-supply-accounting.mjs
+          node --check scripts/evaluate-ethereum-independent-calibration.mjs
+          node --test tests/ethereum-economic-supply-accounting.test.mjs tests/ethereum-supply-accounting.test.mjs tests/ethereum-economic-vintages.test.mjs tests/ethereum-independent-calibration.test.mjs
           node --test tests/ethereum-common-cohort.test.mjs tests/ethereum-economic-evidence-coverage.test.mjs tests/ethereum-warm-start-prospective.test.mjs
           node --test tests/ethereum-warm-start-model.test.mjs tests/ethereum-source-timing.test.mjs tests/ethereum-btc-link-range.test.mjs tests/ethereum-economic-readiness.test.mjs tests/ethereum-interval-benchmark.test.mjs tests/ethereum-prospective-reuse.test.mjs tests/ethereum-prospective-records.test.mjs tests/ethereum-prospective-collector.test.mjs tests/ethereum-numeric-range.test.mjs tests/ethereum-monte-carlo-stability.test.mjs tests/ethereum-pow-zero.test.mjs tests/ethereum-btc-refresh-status.test.mjs tests/ethereum-offline-refresh-policy.test.mjs tests/ethereum-pooled-model.test.mjs tests/ethereum-interval-comparison.test.mjs tests/ethereum-throughput-supplement.test.mjs tests/eth-future-range.test.mjs tests/ethereum-adaptive-model.test.mjs tests/ethereum-adoption-scenarios.test.mjs tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-economic-ablation.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/eth-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs tests/ethereum-economic-data.test.mjs tests/ethereum-economic-collector.test.mjs tests/asset-forecast-records.test.mjs tests/asset-forecast-collector.test.mjs tests/asset-outcome-records.test.mjs tests/asset-outcome-collector.test.mjs tests/ethereum-historical-gas-source.test.mjs tests/asset-forecast-journal.test.mjs tests/journal-entry-ownership.test.mjs tests/eth-review-packet.test.mjs tests/treasury-model.test.mjs
       - name: Evaluate preserved asset forecasts without requiring a new forecast issue
@@ -91,6 +102,13 @@ jobs:
         run: node scripts/capture-ethereum-pow-zero.mjs
       - name: Reconcile metric definitions raw-byte replays and actual economic source clocks
         run: node scripts/build-ethereum-economic-evidence-coverage.mjs
+      - name: Preserve actual economic capture vintages and independently replay their raw inputs
+        run: |
+          node scripts/ethereum-economic-vintages.mjs
+          node scripts/ethereum-economic-vintages.mjs --verify-preserved-only
+      - name: Audit bounded public supply claims with exact non-fee destruction accounting
+        continue-on-error: true
+        run: node scripts/capture-ethereum-supply-accounting.mjs
       - name: Evaluate the exact committed candidates and current stored prices
         run: node scripts/evaluate-ethereum-models.mjs
       - name: Audit ETH periods, volatility, simulation and institutional arithmetic
@@ -105,6 +123,8 @@ jobs:
         run: node scripts/evaluate-ethereum-monte-carlo-stability.mjs
       - name: Compare every price candidate on fixed common origins across the declared seed panel
         run: node scripts/evaluate-ethereum-common-cohort.mjs
+      - name: Freeze earlier calibration errors and evaluate only later disjoint forecast windows
+        run: node scripts/evaluate-ethereum-independent-calibration.mjs
       - name: Acquire one bounded ETH tail and preserve adaptive pooled and opt-in warm-start records
         continue-on-error: true
         run: |
@@ -157,6 +177,9 @@ jobs:
             build/ethereum-warm-start.json
             build/ethereum-common-cohort.json
             build/ethereum-economic-evidence-coverage.json
+            build/ethereum-economic-vintages
+            build/ethereum-supply-accounting
+            build/ethereum-independent-calibration.json
             build/ethereum-prospective-ledger
             build/ethereum-monte-carlo-stability.json
             build/ethereum-pooled-research.json
