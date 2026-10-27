@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "ccac8d10dfdc76f618d906d3c3fe4a4d69d7d173",
+  "bundleSha256": "160212435cd3686ade2f1c8a6909c388769206f8cc2f7e8f919537012509287c",
+  "sourceAccess": "complete-for-declared-scope",
+  "requiredStages": [
+    "chatgpt-thesis",
+    "gemini-opposition",
+    "chatgpt-reverse"
+  ],
+  "stageStatus": {
+    "chatgpt-thesis": "pending",
+    "gemini-opposition": "pending",
+    "chatgpt-reverse": "pending"
+  },
+  "requiredReportFields": [
+    "stage",
+    "provider",
+    "model",
+    "reasoningLevel",
+    "researchMode",
+    "sourceCommit",
+    "bundleSha256",
+    "startedAt",
+    "completedAt",
+    "originalUrl",
+    "reportText",
+    "reportSha256",
+    "completeVisibleReport",
+    "sourceReadback",
+    "previousReportSha256",
+    "previousReportReadback"
+  ],
+  "warning": "Hash/source/stage consistency is not model authentication, an actual external review or release permission.",
+  "releaseAuthorized": false
+}

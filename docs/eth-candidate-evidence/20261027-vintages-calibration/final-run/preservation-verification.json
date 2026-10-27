@@ -1,0 +1,127 @@
+{
+  "artifact": {
+    "id": 12741351646,
+    "runId": 40518730718,
+    "file": "eth-evidence-c73b17b2.zip",
+    "bytes": 52699937,
+    "sha256": "9989bb94dfefd3b602d46478ef137bf9ec8bee6daf5b202c6feb22305f4eb07e"
+  },
+  "sourceCommit": "c73b17b29809961dab7e9337482e22da28789c81",
+  "sourceTree": "2fe83d8eb6e019fe6229e2627751168e20e19491",
+  "preservedFiles": [
+    {
+      "artifactPath": "ethereum-economic-vintages/receipt.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-economic-vintages/receipt.json",
+      "bytes": 12114,
+      "sha256": "71475ba8db5c645db599bfbc92187617d60f092689f6e4d52b1fb78c5e983df5"
+    },
+    {
+      "artifactPath": "ethereum-economic-vintages/replay.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-economic-vintages/replay.json",
+      "bytes": 10347,
+      "sha256": "13d703d22237d616ea0808cb41aa48795c3c6ca9cc4acbfe3304fb5812bf329f"
+    },
+    {
+      "artifactPath": "ethereum-economic-evidence-coverage.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-economic-evidence-coverage.json",
+      "bytes": 59693,
+      "sha256": "ed37046de6d4dac4d1b60296f1155d1baf9e34dd03d48c3b90e8aabf8c2e23c5"
+    },
+    {
+      "artifactPath": "ethereum-source-timing.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-source-timing.json",
+      "bytes": 9883,
+      "sha256": "a7cc6aa79a5557a4938b4aa95dd1322ec120d4de304ffd3128ababccff21586b"
+    },
+    {
+      "artifactPath": "ethereum-independent-calibration.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-independent-calibration.json",
+      "bytes": 99613,
+      "sha256": "c1accd893000da19c5bc48f4ebc40ec672df43f5de14dd6fa2381b7e03a7d0f1"
+    },
+    {
+      "artifactPath": "ethereum-model-readiness.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-model-readiness.json",
+      "bytes": 283470,
+      "sha256": "dccbcf2ab97d545eb24dd600a9884a33678a19173b0cb778b3dc0017e9dbccd8"
+    },
+    {
+      "artifactPath": "ethereum-prospective-ledger/receipt.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-prospective-ledger/receipt.json",
+      "bytes": 5206,
+      "sha256": "e039f4c27e6ca7ad4a88d653f8f2676b0c57a5ffeb436c5e662a17f4903df37f"
+    },
+    {
+      "artifactPath": "ethereum-prospective-ledger/replay-receipt.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-prospective-ledger/replay-receipt.json",
+      "bytes": 3055,
+      "sha256": "6dada718dc666d0844561e10a868ab7ecdb49ded0649d5deced001a8264dda54"
+    },
+    {
+      "artifactPath": "eth-browser/report.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/eth-browser/report.json",
+      "bytes": 999434,
+      "sha256": "f07a16181015c9b8fb577e95b3aa022fce02713eebda30f3ba47eeb190ead2a4"
+    },
+    {
+      "artifactPath": "eth-review-packet/source-manifest.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/eth-review-packet/source-manifest.json",
+      "bytes": 377559,
+      "sha256": "74f9cc2018b6e6e761918199f1fdef768255f1c081724282563bea35cd5cbea5"
+    },
+    {
+      "artifactPath": "eth-review-packet/review-contract.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/eth-review-packet/review-contract.json",
+      "bytes": 956,
+      "sha256": "dbcceb7803fc00fef8e2d5fef83ab31704e3d8af2d29d1bf8bf16a2cfbe79539"
+    },
+    {
+      "artifactPath": "ethereum-supply-accounting/capture-0kqcvW/receipt.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-supply-accounting/capture-0kqcvW/receipt.json",
+      "bytes": 23804,
+      "sha256": "a3ea45f7ffc5be492a5e92d5946d832bf4b59e9ec7dc187ffd57ca04574cfcc0"
+    },
+    {
+      "artifactPath": "ethereum-supply-accounting/capture-0kqcvW/observation.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-supply-accounting/capture-0kqcvW/observation.json",
+      "bytes": 17650,
+      "sha256": "87de15aff4ba4271561131d322a35dfd4337a5a79cf8cdd0f613e97d69231c22"
+    },
+    {
+      "artifactPath": "ethereum-supply-accounting/capture-0kqcvW/history-30d.raw.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-supply-accounting/capture-0kqcvW/history-30d.raw.json",
+      "bytes": 801491,
+      "sha256": "6c32bb06c88ea0af45ee803ce33582ee8eca2382077b422cdf045aea2391847a"
+    },
+    {
+      "artifactPath": "ethereum-supply-accounting/capture-0kqcvW/started.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-supply-accounting/capture-0kqcvW/started.json",
+      "bytes": 1647,
+      "sha256": "7ba7f0301b45c46a509d3ab0d276f56938831e340d6182a0102741b9e01de98b"
+    }
+  ],
+  "methodologyIdentity": {
+    "sourceUrl": "https://ethsupply.fyi/methodology/",
+    "bytes": 125691,
+    "sha256": "fd9c3d66c4c8f7112bb44b19a99f8b11a869038b656a7726d6143e5798e73687",
+    "fullDocumentRepublishedInRepository": false
+  },
+  "sourcebook": {
+    "bytes": 63845026,
+    "sha256": "1f40c4bdacc84915cbda8d434030a3e88bc37b409b7af05a661258a00d9c582d",
+    "seeds": 371,
+    "entries": 512,
+    "parts": 355,
+    "unresolved": 0,
+    "partsRecombinedExactly": true
+  },
+  "browser": {
+    "status": "passed",
+    "cases": 35,
+    "failures": 0,
+    "verifiedScreenshots": 181,
+    "runtimeErrors": 0,
+    "unexpectedResourceErrors": 0,
+    "expectedOfflineRefresh": 15
+  }
+}

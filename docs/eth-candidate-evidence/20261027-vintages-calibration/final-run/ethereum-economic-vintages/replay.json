@@ -1,0 +1,262 @@
+{
+  "kind": "ethereum-economic-vintages-replay",
+  "version": "eth-economic-vintages-1",
+  "sourceCommit": "c73b17b29809961dab7e9337482e22da28789c81",
+  "sourceTree": "2fe83d8eb6e019fe6229e2627751168e20e19491",
+  "sourceIdentityStatus": "verified-checkout",
+  "recordedAt": "2026-10-27T14:13:13.213Z",
+  "networkRequests": 0,
+  "seedDirectory": "build/ethereum-economic-vintages",
+  "seedIndexSha256": "f7179856d979ecf0a59d0d488691d064cc481bea305db9d1c1e0f81b8020830a",
+  "recordCount": 6,
+  "verifiedInputFiles": 112,
+  "newCaptureCount": 0,
+  "reusedCaptureCount": 6,
+  "replayedCaptures": 6,
+  "selection": {
+    "kind": "ethereum-economic-vintage-selection",
+    "version": "eth-economic-vintages-1",
+    "cutoff": "2026-10-27T14:13:13.213Z",
+    "maximumAgeDays": 7,
+    "selections": [
+      {
+        "dataKey": "08bd7430d9a8b62bf7d8377aa86ff5a099da59a35c9aa78eae76aa3c8bb6df1c",
+        "series": "publicnode:ethereum-mainnet:post-transition-pow-zero",
+        "sourceField": "executionPowIssuanceEth",
+        "observedFrom": "2026-09-29",
+        "observedThrough": "2026-10-26",
+        "status": "selected",
+        "latestCollectedAt": "2026-10-27T14:12:34.275Z",
+        "ageDays": 0,
+        "freshness": "within-policy",
+        "captureEvidenceCount": 2,
+        "distinctValueVersionCount": 1,
+        "dataVersionIdsAtLatestClock": [
+          "330d272245ab5dfccc9005de112f30ef30db4780ce333deb763dad112aef7e96"
+        ],
+        "latestRecordIds": [
+          "c53eada39bf75da5d541c884c2402e3eecf61741cb86de5ae156ee7e7ab328e5"
+        ],
+        "modelInputActivated": false,
+        "dataVersionId": "330d272245ab5dfccc9005de112f30ef30db4780ce333deb763dad112aef7e96",
+        "value": 0,
+        "relations": [
+          {
+            "metric": "executionPowIssuanceEth",
+            "relation": "exact",
+            "reason": "Sourced protocol-zero partial observation for the fully post-transition canonical range."
+          }
+        ],
+        "firstObservedAvailableAt": "2026-10-27T11:59:12.455Z",
+        "publicationTimeKnown": false
+      },
+      {
+        "dataKey": "1d2774eb6de8dce17084a8f1dd5f33e8d888ed1b36236f7ed77e5a569e7ad7e4",
+        "series": "coinmetrics/data:ethereum:csv/eth.csv",
+        "sourceField": "IssTotNtv",
+        "observedFrom": "2026-04-26",
+        "observedThrough": "2026-05-23",
+        "status": "selected",
+        "latestCollectedAt": "2026-10-27T14:11:59.891Z",
+        "ageDays": 156,
+        "freshness": "stale",
+        "captureEvidenceCount": 2,
+        "distinctValueVersionCount": 1,
+        "dataVersionIdsAtLatestClock": [
+          "caf995f3a054b69c78f33d083d767e9acd67739715af065132f328549947c69f"
+        ],
+        "latestRecordIds": [
+          "ecab8100eb41c53b6be56401b7ebc17c65b69414b299cd7c4c13b184b74b99aa"
+        ],
+        "modelInputActivated": false,
+        "dataVersionId": "caf995f3a054b69c78f33d083d767e9acd67739715af065132f328549947c69f",
+        "value": 78672.726006681,
+        "relations": [
+          {
+            "metric": "consensusNetIssuanceEth",
+            "relation": "scope-mismatch",
+            "reason": "Gross network issuance does not subtract consensus penalties or establish layer accounting."
+          },
+          {
+            "metric": "executionPowIssuanceEth",
+            "relation": "scope-mismatch",
+            "reason": "A combined issuance field does not prove a PoW-only value."
+          }
+        ],
+        "firstObservedAvailableAt": "2026-10-27T11:58:29.283Z",
+        "publicationTimeKnown": false
+      },
+      {
+        "dataKey": "425a913a264820617f024980400ee979b86b5f74b9cf517170a51fb6aac8fd69",
+        "series": "coinmetrics/data:ethereum:csv/eth.csv",
+        "sourceField": "FeeTotNtv",
+        "observedFrom": "2026-04-26",
+        "observedThrough": "2026-05-23",
+        "status": "selected",
+        "latestCollectedAt": "2026-10-27T14:11:59.891Z",
+        "ageDays": 156,
+        "freshness": "stale",
+        "captureEvidenceCount": 2,
+        "distinctValueVersionCount": 1,
+        "dataVersionIdsAtLatestClock": [
+          "fa2adb92d6360a324281b3fa08a36f2e4f57b6eec804af702e4ba5ccaca99f38"
+        ],
+        "latestRecordIds": [
+          "ecab8100eb41c53b6be56401b7ebc17c65b69414b299cd7c4c13b184b74b99aa"
+        ],
+        "modelInputActivated": false,
+        "dataVersionId": "fa2adb92d6360a324281b3fa08a36f2e4f57b6eec804af702e4ba5ccaca99f38",
+        "value": 9122.065722414914,
+        "relations": [
+          {
+            "metric": "blobBurnEth",
+            "relation": "scope-mismatch",
+            "reason": "The total does not identify blob fee burn."
+          },
+          {
+            "metric": "blobFeesEth",
+            "relation": "scope-mismatch",
+            "reason": "The total does not identify its blob component."
+          },
+          {
+            "metric": "executionBurnEth",
+            "relation": "scope-mismatch",
+            "reason": "Total fees include priority transfers and blobs; they are not execution burn."
+          },
+          {
+            "metric": "executionFeesEth",
+            "relation": "scope-mismatch",
+            "reason": "Total fees already include blob fees; the execution/blob split is absent."
+          },
+          {
+            "metric": "l2SettlementFeesEth",
+            "relation": "scope-mismatch",
+            "reason": "No fixed-rollup settlement subset is identified."
+          }
+        ],
+        "firstObservedAvailableAt": "2026-10-27T11:58:29.283Z",
+        "publicationTimeKnown": false
+      },
+      {
+        "dataKey": "464413bb2d7697b74bb6a5e69b86f537981cd16893dc5e8914ce66e7c8429d0a",
+        "series": "growthepie:ethereum-mainnet:throughput",
+        "sourceField": "l1GasUsedRateDerived",
+        "observedFrom": "2026-09-29",
+        "observedThrough": "2026-10-26",
+        "status": "selected",
+        "latestCollectedAt": "2026-10-27T14:12:00.527Z",
+        "ageDays": 0,
+        "freshness": "within-policy",
+        "captureEvidenceCount": 2,
+        "distinctValueVersionCount": 1,
+        "dataVersionIdsAtLatestClock": [
+          "98aae16c5e5235cffa8030512519bc20a146d6a9feb2ccddb1d6e822acc443a8"
+        ],
+        "latestRecordIds": [
+          "4d0fca754af119c46b8ed454d6d992e1ca9838260c4123903032c8300d809f38"
+        ],
+        "modelInputActivated": false,
+        "dataVersionId": "98aae16c5e5235cffa8030512519bc20a146d6a9feb2ccddb1d6e822acc443a8",
+        "value": 6094027523397,
+        "relations": [
+          {
+            "metric": "l1GasUsed",
+            "relation": "rate-derived",
+            "reason": "Daily Mgas/s converted to gas; exact integer/canonical completeness has not been established."
+          }
+        ],
+        "firstObservedAvailableAt": "2026-10-27T11:58:30.231Z",
+        "publicationTimeKnown": false
+      },
+      {
+        "dataKey": "63f84b4c2df09f94f8d92a6d340c25a196342c9d36961764b5b8fe714f304b68",
+        "series": "coinmetrics/data:ethereum:csv/eth.csv",
+        "sourceField": "SplyCur",
+        "observedFrom": "2026-04-26",
+        "observedThrough": "2026-05-23",
+        "status": "selected",
+        "latestCollectedAt": "2026-10-27T14:11:59.891Z",
+        "ageDays": 156,
+        "freshness": "stale",
+        "captureEvidenceCount": 2,
+        "distinctValueVersionCount": 1,
+        "dataVersionIdsAtLatestClock": [
+          "2432f99ad84e4868097bfc96be5a35bdbca242d9e5186a248602684a4ed89318"
+        ],
+        "latestRecordIds": [
+          "ecab8100eb41c53b6be56401b7ebc17c65b69414b299cd7c4c13b184b74b99aa"
+        ],
+        "modelInputActivated": false,
+        "dataVersionId": "2432f99ad84e4868097bfc96be5a35bdbca242d9e5186a248602684a4ed89318",
+        "value": 121721391.22868587,
+        "relations": [
+          {
+            "metric": "supplyEth",
+            "relation": "scope-mismatch",
+            "reason": "Execution/consensus supply and revision scope remain unreconciled."
+          }
+        ],
+        "firstObservedAvailableAt": "2026-10-27T11:58:29.283Z",
+        "publicationTimeKnown": false
+      },
+      {
+        "dataKey": "b16c47ea97d27f8aa1f5a0e51b6efc4d5130964eadc57b3788f8dd81d6a21164",
+        "series": "coinmetrics/data:ethereum:csv/eth.csv",
+        "sourceField": "TxCnt",
+        "observedFrom": "2026-04-26",
+        "observedThrough": "2026-05-23",
+        "status": "selected",
+        "latestCollectedAt": "2026-10-27T14:11:59.891Z",
+        "ageDays": 156,
+        "freshness": "stale",
+        "captureEvidenceCount": 2,
+        "distinctValueVersionCount": 1,
+        "dataVersionIdsAtLatestClock": [
+          "df01ffeb769c6c8dbb0c4939f53d723f26a325b67c1fa7ed81f9e8b176daca60"
+        ],
+        "latestRecordIds": [
+          "ecab8100eb41c53b6be56401b7ebc17c65b69414b299cd7c4c13b184b74b99aa"
+        ],
+        "modelInputActivated": false,
+        "dataVersionId": "df01ffeb769c6c8dbb0c4939f53d723f26a325b67c1fa7ed81f9e8b176daca60",
+        "value": 64795230,
+        "relations": [
+          {
+            "metric": "l1GasUsed",
+            "relation": "incompatible-unit",
+            "reason": "L1 transaction count is not execution gas."
+          },
+          {
+            "metric": "l2Transactions",
+            "relation": "scope-mismatch",
+            "reason": "L1 transactions are not transactions on the fixed rollup universe."
+          }
+        ],
+        "firstObservedAvailableAt": "2026-10-27T11:58:29.283Z",
+        "publicationTimeKnown": false
+      }
+    ],
+    "summary": {
+      "selectedFieldWindows": 6,
+      "ambiguousFieldWindows": 0,
+      "staleSelectedFieldWindows": 4,
+      "unavailableCaptureObservations": 0,
+      "eligibleModelSnapshotCount": 0,
+      "modelInputActivated": false
+    },
+    "policy": {
+      "selectionIsReceiptClockAvailabilityAudit": true,
+      "collectionIsUpperBoundNotFirstPublication": true,
+      "providerGeneratedOrCompletedClocksIgnoredForAvailability": true,
+      "repeatedCaptureIsNotIndependentSample": true,
+      "numericValueVersionsMayShareRoundedRepresentation": true,
+      "rawReceiptRevisionsRemainSeparatelyIdentified": true,
+      "retainedArchiveDoesNotProvePastModelUse": true,
+      "equalCollectionClockConflictsAreAmbiguous": true,
+      "fullModelSnapshotReady": false,
+      "historicalPointInTimeReady": false
+    }
+  },
+  "modelInputActivated": false,
+  "fullModelSnapshotReady": false
+}

@@ -1,0 +1,75 @@
+{
+  "kind": "ethereum-economic-vintage-record",
+  "version": "eth-economic-vintages-1",
+  "captureKey": "bd67b571365614da7160b1c03e7709ee53108992bf80396578509c2fde4db134",
+  "recordedAt": "2026-10-27T14:13:12.962Z",
+  "sourceKind": "throughput",
+  "collectorStatus": "supplement-collected",
+  "collectorError": null,
+  "receipt": {
+    "path": "build/ethereum-throughput-supplement/capture-T1bZN0/receipt.json",
+    "sha256": "e07c0c58c7932cf289c287aaaa388bdd6fcc1c4756dff767c39f93309aa0d4fe",
+    "bytes": 8226
+  },
+  "rawFiles": [
+    {
+      "path": "build/ethereum-throughput-supplement/capture-T1bZN0/master.raw.json",
+      "sha256": "f36e108ed110f4039c6acaba5186988275d9cbe152cd16350d7b82719d254775",
+      "bytes": 161732
+    },
+    {
+      "path": "build/ethereum-throughput-supplement/capture-T1bZN0/throughput.raw.json",
+      "sha256": "4a9c9dce44aa2f5f819d1e15472e09808a2c84216d18486a8eeacac49c1c107b",
+      "bytes": 192196
+    }
+  ],
+  "collectorSource": {
+    "sourceCommit": "c73b17b29809961dab7e9337482e22da28789c81",
+    "sourceTree": "2fe83d8eb6e019fe6229e2627751168e20e19491",
+    "sourceHashes": {
+      "scripts/capture-ethereum-throughput.mjs": "3a77ccf15b256192835d803773c56446cef4811911ac8edd7cafc861d0623f28",
+      "tests/ethereum-throughput-supplement.test.mjs": "32ba5115ebb38dda83bd7e92740b453d15b51e9dc9cfe2e4ba3a6b85019fed4d"
+    },
+    "runId": "40518730718",
+    "runAttempt": "1",
+    "receiptAuthenticityIndependentlyProven": false
+  },
+  "metricDefinitionVersion": "eth-economic-input-4",
+  "observations": [
+    {
+      "series": "growthepie:ethereum-mainnet:throughput",
+      "sourceField": "l1GasUsedRateDerived",
+      "observedFrom": "2026-09-29",
+      "observedThrough": "2026-10-26",
+      "metricDefinitionVersion": "eth-economic-input-4",
+      "value": 6094027523397,
+      "valueRepresentation": "replayed-javascript-number",
+      "relations": [
+        {
+          "metric": "l1GasUsed",
+          "relation": "rate-derived",
+          "reason": "Daily Mgas/s converted to gas; exact integer/canonical completeness has not been established."
+        }
+      ],
+      "dataKey": "464413bb2d7697b74bb6a5e69b86f537981cd16893dc5e8914ce66e7c8429d0a",
+      "dataVersionId": "98aae16c5e5235cffa8030512519bc20a146d6a9feb2ccddb1d6e822acc443a8",
+      "sourceUrl": "https://api.growthepie.com/v1/metrics/chains/ethereum/throughput.json",
+      "clocks": {
+        "observedFrom": "2026-09-29",
+        "observedThrough": "2026-10-26",
+        "observedAt": "2026-10-27T00:00:00.000Z",
+        "collectedAt": "2026-10-27T14:12:00.527Z",
+        "publishedAt": null,
+        "providerGeneratedAt": "2026-10-27T13:15:36Z",
+        "providerCompletedAt": null
+      },
+      "availabilityUpperBound": "2026-10-27T14:12:00.527Z",
+      "availabilityBasis": "actual-collector-receipt-clock",
+      "publicationTimeKnown": false,
+      "rawBytesVerified": true,
+      "replayedFromRaw": true,
+      "modelInputActivated": false
+    }
+  ],
+  "id": "4d0fca754af119c46b8ed454d6d992e1ca9838260c4123903032c8300d809f38"
+}

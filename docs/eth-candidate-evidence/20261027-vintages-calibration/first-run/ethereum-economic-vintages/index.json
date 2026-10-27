@@ -1,0 +1,10 @@
+{
+  "kind": "ethereum-economic-vintages-index",
+  "version": "eth-economic-vintages-1",
+  "ledgerId": "ba582489fef69ecfc6d8ab13d0b24f840d8184a842052779a9dc5ab2d2aed3e0",
+  "recordIds": [
+    "a611f74e15639738555667230dfb03b88651b161108ee814d46c887bd68297cf",
+    "d9aad00abd60709283675c21083929b04776e852c1ec0b9d9c1816c63a5fe65c",
+    "7dec5b646d51af0051b4ad6f3e62e3d671300278da04853312756746d4d4fd6f"
+  ]
+}

@@ -1,0 +1,179 @@
+{
+  "version": "eth-supply-second-capture-verification-1",
+  "verifiedAt": "2026-10-27T14:23:19.370Z",
+  "sourceCommit": "c73b17b29809961dab7e9337482e22da28789c81",
+  "sourceTree": "2fe83d8eb6e019fe6229e2627751168e20e19491",
+  "runId": "40518730718",
+  "captureDirectory": "build/ethereum-supply-accounting/capture-0kqcvW",
+  "receipt": {
+    "bytes": 23804,
+    "sha256": "a3ea45f7ffc5be492a5e92d5946d832bf4b59e9ec7dc187ffd57ca04574cfcc0",
+    "status": "provider-accounting-audited"
+  },
+  "observation": {
+    "bytes": 17650,
+    "sha256": "87de15aff4ba4271561131d322a35dfd4337a5a79cf8cdd0f613e97d69231c22",
+    "receiptEmbeddedEquality": true,
+    "allFieldsReplayedExactly": true
+  },
+  "rawFiles": [
+    {
+      "file": "methodology.raw.html",
+      "bytes": 125691,
+      "sha256": "fd9c3d66c4c8f7112bb44b19a99f8b11a869038b656a7726d6143e5798e73687",
+      "receiptEqual": true,
+      "networkReceiptEqual": true,
+      "providerDigest": null
+    },
+    {
+      "file": "history-30d.raw.json",
+      "bytes": 801491,
+      "sha256": "6c32bb06c88ea0af45ee803ce33582ee8eca2382077b422cdf045aea2391847a",
+      "receiptEqual": true,
+      "networkReceiptEqual": true,
+      "providerDigest": "6c32bb06c88ea0af45ee803ce33582ee8eca2382077b422cdf045aea2391847a"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "scripts/ethereum-supply-accounting-core.mjs",
+      "bytes": 19492,
+      "sha256": "e4634989bedfd108b496dc0c4cb004828a7c9768451f7dac1b92b880b83bc88b",
+      "sourceHashEqual": true
+    },
+    {
+      "path": "scripts/capture-ethereum-supply-accounting.mjs",
+      "bytes": 7582,
+      "sha256": "b5a40119dcef49887c36b52af8ee83854f61b1a24f3cdf204850f55aedba1e57",
+      "sourceHashEqual": true
+    },
+    {
+      "path": "tests/ethereum-supply-accounting.test.mjs",
+      "bytes": 11300,
+      "sha256": "f33c501863b65b8c0b4c61094a68a8a2d162c333b48a7ed2dbb31f8499680bc5",
+      "sourceHashEqual": true
+    },
+    {
+      "path": "dist/ethereum-economic-model.js",
+      "bytes": 42596,
+      "sha256": "fecb23afa3ea4efd2e8a8bbd3be67de1dd7c6fd133302d347a703487f78951d0",
+      "sourceHashEqual": true
+    },
+    {
+      "path": "research-data/eth-supply-accounting/eip-6780.md",
+      "bytes": 5908,
+      "sha256": "3941eed8379cc93abb7342c5b186bd883e8b1518b0025d94a49be068f8ea2101",
+      "sourceHashEqual": true
+    }
+  ],
+  "protocol": {
+    "gitBlobSha": "1b6a0e94cc47e859b9866e570391cf37dc55059a",
+    "sha256": "3941eed8379cc93abb7342c5b186bd883e8b1518b0025d94a49be068f8ea2101",
+    "bytes": 5908,
+    "verified": true
+  },
+  "clockOrderingVerified": true,
+  "providerHeaderBodyRevisionAndGenerationEquality": true,
+  "networkRequestCount": 2,
+  "publishedAt": null,
+  "modelInputActivated": false,
+  "independentCanonicalValidation": false,
+  "independentArithmetic": {
+    "independentArithmeticLanguage": "Python arbitrary-precision integer",
+    "rows": 225,
+    "epochRows": 0,
+    "feeComponentComparisons": 225,
+    "feeComponentMismatches": 0,
+    "netComponentComparisons": 225,
+    "netComponentMismatches": 0,
+    "adjacentSupplyComparisons": 224,
+    "adjacentSupplyMismatches": 0,
+    "sourceBucketsContiguous": true,
+    "sourceBucketsAll960Slots": true,
+    "providerBlockAndMissedSlotCountsReconciled": true,
+    "allMonetaryRowSumsEqualProviderSummary": true,
+    "allMonetaryRowSumsEqualObservation": true,
+    "sumsWei": {
+      "issuanceWei": "89471007971834000000000",
+      "burnWei": "2009658657483495315415",
+      "baseFeeBurnWei": "2006874146365071169495",
+      "blobBaseFeeBurnWei": "2784511118424145920",
+      "consensusPenaltiesWei": "150338756796000000000",
+      "otherExecutionBurnWei": "0",
+      "netWei": "87311010557554504684585"
+    },
+    "sumsEth": {
+      "issuanceWei": "89471.007971834",
+      "burnWei": "2009.658657483495315415",
+      "baseFeeBurnWei": "2006.874146365071169495",
+      "blobBaseFeeBurnWei": "2.78451111842414592",
+      "consensusPenaltiesWei": "150.338756796",
+      "otherExecutionBurnWei": "0",
+      "netWei": "87311.010557554504684585"
+    },
+    "otherBurn": {
+      "present": 225,
+      "missing": 0,
+      "nonzero": 0
+    },
+    "endpoint": {
+      "supplyChangeWei": "87017459583503902509187",
+      "supplyChangeEth": "87017.459583503902509187",
+      "flowRows": 224,
+      "firstRowFlowExcluded": true,
+      "residualWei": "0"
+    },
+    "providerWindow": {
+      "fromSlot": 15307776,
+      "toSlot": 15523775,
+      "fromTimestamp": "2026-09-27T13:55:35Z",
+      "toTimestamp": "2026-10-27T13:55:23Z"
+    },
+    "utcWindow": {
+      "observedFrom": "2026-09-29",
+      "observedThrough": "2026-10-26",
+      "coveredSlots": 201600,
+      "selectedBuckets": 211,
+      "wholeInteriorBuckets": 209,
+      "interiorSlots": 200640,
+      "boundaryFragments": [
+        {
+          "sourceFromSlot": 15317376,
+          "sourceToSlot": 15318335,
+          "sourceFromTimestamp": "2026-09-28T21:55:35Z",
+          "sourceToTimestamp": "2026-09-29T01:07:23Z",
+          "selectedFirstSlot": 15317999,
+          "selectedLastSlot": 15318335,
+          "selectedSlots": 337
+        },
+        {
+          "sourceFromSlot": 15518976,
+          "sourceToSlot": 15519935,
+          "sourceFromTimestamp": "2026-10-26T21:55:35Z",
+          "sourceToTimestamp": "2026-10-27T01:07:23Z",
+          "selectedFirstSlot": 15518976,
+          "selectedLastSlot": 15519598,
+          "selectedSlots": 623
+        }
+      ],
+      "exactBucketBoundaryMatch": false,
+      "providerClaimAggregatesRemainEmpty": true
+    },
+    "comparisonWithFirstCapture": {
+      "sameProviderWindow": false,
+      "sourceWindowShiftSlots": 672,
+      "sourceWindowShiftSeconds": 8064,
+      "firstFromTimestamp": "2026-09-27T11:41:11Z",
+      "firstToTimestamp": "2026-10-27T11:40:59Z",
+      "firstNetWei": "87290222287572748941116",
+      "secondNetWei": "87311010557554504684585",
+      "differenceNetWei": "20788269981755743469",
+      "differenceNetEth": "20.788269981755743469",
+      "firstEndpointChangeWei": "86935806464553815762797",
+      "secondEndpointChangeWei": "87017459583503902509187",
+      "interpretation": "Different moving 30-day windows and bucket grids; this difference is not evidence of a revision to the same economic window."
+    },
+    "verifiedAt": "2026-10-27T14:24:39.460754Z"
+  },
+  "allChecksPassed": true
+}
