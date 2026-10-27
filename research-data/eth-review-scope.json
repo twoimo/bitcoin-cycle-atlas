@@ -249,7 +249,16 @@
     "scripts/ethereum-monte-carlo-stability-core.mjs",
     "scripts/evaluate-ethereum-monte-carlo-stability.mjs",
     "tests/ethereum-monte-carlo-stability.test.mjs",
-    "tests/ethereum-numeric-range.test.mjs"
+    "tests/ethereum-numeric-range.test.mjs",
+    "dist/ethereum-prospective-prices.js",
+    "dist/ethereum-prospective-records.js",
+    "scripts/ethereum-prospective-collector-core.mjs",
+    "scripts/issue-ethereum-prospective.mjs",
+    "scripts/build-ethereum-model-readiness.mjs",
+    "tests/helpers/eth-prospective-fixture.mjs",
+    "tests/ethereum-prospective-records.test.mjs",
+    "tests/ethereum-prospective-collector.test.mjs",
+    "research-data/ethereum-prospective-ledger/index.json"
   ],
   "dynamicResolutions": [
     {

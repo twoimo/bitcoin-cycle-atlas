@@ -25,3 +25,30 @@
 최신 완료 ETH 가격을 실제로 수집한 경우에만 신규 원점의 전체 경로와 flat/shrunkenTrend 기준을 고정한다. unknown publishedAt은 null, 과거 판본 미확보는 false로 유지한다. 수집·생성·발행·목표 관측 종료를 구분하고 과거로 발행 시각을 소급하지 않는다. 결과 관측이 없는 현재의 점수는 0표본이다.
 
 Gemini 반대 검토와 후속 역검토는 omitted-by-user다. PR Draft·releaseAuthorized=false를 유지한다.
+
+## 실제 발행 계약 — 실행 전 고정
+
+새 원장은 research-data/ethereum-prospective-ledger에 기존 asset 원장과 별도로 보존한다. base는 54317f7d05abd8fe569b0912ff34caee2bbe9981의 dist/data/eth-ohlc.json, Git blob 882c49f0263034426e4e3afe377cc60a17448b6c, 895,609 bytes다. 이 base를 최신 자료로 이름만 바꾸지 않는다.
+
+Coinbase ETH-USD daily endpoint 한 번만 요청한다. 실제 요청일 UTC 자정까지, 기존 요청 종료점에서 7일 전부터의 범위다. 최대290일·300행·2MiB·본문 종료까지30초·재시도0·redirect금지이며, 요청한 모든 완료 일자가 있어야 한다. 공식API가 범위 밖 행을 반환할 수 있으므로 전체 원문을 보존하고 제외 수를 기록한다. 원래 base bytes와 raw tail bytes에서 입력을 정확히 재구성하며 미수신·실패를 성공 가격으로 채우지 않는다. [Coinbase 공식 명세](https://docs.cdp.coinbase.com/api-reference/exchange-api/rest-api/products/get-product-candles).
+
+원장 경로 열은 date / median / q10 / q90 / representative다. q10≤median≤q90를 요구하고 대표 경로의 원래 숫자는 그대로 남긴다. 730일까지731점, 정책 seed20261027·256회, 30/90/180일 목표와 같은 원점의 flat/shrunkenTrend 기준을 함께 고정한다. baseline/정책을 결과를 본 뒤 재추정하지 않는다.
+
+정보 cutoff는 실제 tail 수신 완료 시각이며, base 원문 수집 시각·계산 시작/완료·발행 시각을 따로 기록한다. 요청·발행 사이 UTC 날짜가 바뀌어 입력이 최신 완료 관측이 아니게 되면 발행을 거부한다. 출처의 최초 공개 시각은 계속 null이다. 파생 prefix hash와 원래 base/tail hash를 혼동하지 않는다.
+
+runKey는 base/tail 원문 hash·가격 prefix hash·merge 정책·모형 소스·옵션에 묶이고 수집/발행 시각 자체는 제외한다. 원문과 모형이 같은 재실행은 기존 발행 시각과 기록을 재사용한다. 같은 runKey에 다른 outputHash가 나오면 실패다. 원문 개정본 때문에 같은 원점에 기록이 늘어도 독립 원점 수는 늘지 않는다.
+
+결과 평가는 발행 전 시각을 거부하고, 목표일의 UTC 종가가 종료됐으며 해당 실제값을 평가 cutoff까지 수집한 경우에만 중앙값 로그오차와 raw interval score를 계산한다. 미래·미수집 결과는 pending/missing으로 남기고 score를 만들지 않는다. 평가에도 정확한 소스 hash를 남긴다.
+
+## 경제 데이터의 정의 대조
+
+고정 growthepie backend 567f60415e8b48eb84f7b08e1bd83c8ca99995bf에서 다음 불일치를 확인했다. 이는 현재 hosted API가 반드시 같은 코드를 실행한다는 주장이 아니다.
+
+| 원문 | 현재 경제 모형에 바로 대입하지 않는 이유 |
+|---|---|
+| [ETH supply adapter](https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/eim/adapters/adapter_eth_supply.py) | CL 보상은 epoch 정규화 표본의 시간 평균에 epochs/hour를 곱한다. 정확한 UTC 28일 순발행 합계로 승격하려면 경계·집계 검증이 필요하다. activeBalanceGwei는 대기 등을 포함한 전체 stakedEth 계약과 같지 않다. |
+| [Collateral adapter](https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/eim/adapters/adapter_eth_collateral.py) | 가변 프로토콜 집합과 최신 USD/ETH 환산·LST 차감은 고정 universe의 underlying 중복 제거를 증명하지 않는다. |
+| [Blob fee SQL](https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/src/queries/postgres/da_metrics/ethereum_blob_base_fee.sql.j2) | TRUNC(EXP(...))를 사용한다. EIP-4844의 정수 fake_exponential과 동일한 bit-exact 회계라고 단정할 수 없다. |
+| 기존 Coin Metrics archive | gross 발행·총수수료·L1 거래수와 consensus 순발행·분리된 blob 회계·gas 사용량은 각각 다른 정의다. |
+
+기존 PoW 발행0 부분 관측은 유지한다. 약20만 블록의 완전한28일 gas/소각 합계를 boundary 블록이나 float feeHistory 비율에서 만들어 내지 않는다. 전체 경제 snapshot과 과거 원점 적격성을 확보했다는 주장은 하지 않는다.
