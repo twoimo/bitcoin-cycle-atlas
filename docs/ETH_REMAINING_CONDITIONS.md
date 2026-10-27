@@ -219,3 +219,18 @@ Gemini 반대 검토와 후속 역검토는 사용자의 명시 지시에 따라
 - Hallmark는 8경로 전후 80 PNG와 integrity PASS, **6 FAIL / 3 REFLEX** 그대로다. 해당 workflow는 failure다.
 - 첫 native 실패 및 중간 hashbang 문법 실패와 최종 성공을 각각 보존했다. source-book generic externalReview.pending은 원본으로 남기며 현재 정책은 Gemini/역검토 omitted-by-user다.
 - PR Draft, releaseAuthorized=false. 본 후속에서 main 변경·병합·배포는 하지 않았다.
+
+
+## 2026-10-27 최신 후속: 실제 화면 오류·Hallmark와 PoW 부분 관측
+
+[상세 결과](ETH_UI_PROTOCOL_FOLLOWUP_20261027.md) · [원문·중간 실패·최종 실행](eth-candidate-evidence/20261027-ui-protocol/README.md)
+
+- 최종 실제 소스 **39d380d5a05295f5180088ccfe0190ebc3b21e0d**: 일반 **1,436**, 집중 **303**, native **35** 통과. native **181 PNG**, runtime/unexpected resource **0/0**, 실제 offline 실패 **15개 원문 보존 및 상태별 검증**이다. 일반 CI는 합성 merge 6b2875a이며 직접 head evidence와 구분한다.
+- 실제 BTC 갱신 공지와 native 재시도·단일 live 안내를 추가했다. 모바일 overflow, 표 두 축 끝, 짧은 indicator 제목·닫기, 375px 전체 출처를 실제로 확인했다. 18종목·BTC 첫 행·비트코인·큰 표 내부 하단0.25px을 유지했다.
+- Hallmark **6 FAIL/3 REFLEX → 0/0**. 원본 검사기·severity·waiver를 바꾸지 않았다. static36/render17 WARN과 content-delta 경고는 남아 있다. 위 과거 절의 6/3은 당시 실행 기록이다.
+- 공개 RPC의 **executionPowIssuanceEth=0 부분 관측 1개**를 실제 수집했다. 2026-09-29~10-26, 51 RPC·3 원문·26.605초, 54 원문1,075,342bytes다. PoS/전체 순발행 0 또는 미래 가격 정리로 해석하지 않는다.
+- publishedAt:null·PIT적격0·전체 경제 snapshot0·modelInputActivated:false다. 기존 Coin Metrics의 엄격 정의0/25, throughput supplement도 별도로 유지한다. 한 provider의 경계·finalized 주장에 대한 점검이며 독립 consensus/full header-chain 검증이 아니다.
+- 기존 adaptive/pooled·v1 731점·27요약·45pairwise, 원장9개/snapshot3개, pending27/scored0을 유지했다. 새 발행0, 기존 가격 모형 우월성의 새 입증 없음.
+- 첫 UI CI4실패/native5실패, 다음 통과, HTTP body cleanup 후 최종 통과를 각각 기록했다. 실제 sourcebook은243seeds/346entries/255parts/45,771,932bytes·unresolved0이다.
+- Gemini 반대 검토·후속 역검토는 계속 **omitted-by-user**다. 더 이상 이 두 검토를 새로 요구하는 미완료 조건으로 적용하지 않는다. 충분한 경제 판본·성숙한 전향 성과·장기 표본 제약과 별도 릴리스 권한은 남는다.
+- Draft 유지, releaseAuthorized=false. 본 후속에서 main 변경·병합·공개 배포를 하지 않았다.

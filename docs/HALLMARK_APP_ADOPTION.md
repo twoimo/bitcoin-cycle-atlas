@@ -1,5 +1,8 @@
 # Hallmark 전체 앱 적용 결과
 
+> **2026-10-27 최신 결과:** 실제 소스 **39d380d5a05295f5180088ccfe0190ebc3b21e0d**에서 고정 Hallmark app 검사 **0 FAIL / 0 REFLEX**, integrity errors0을 확인했다. static36/render17 WARN은 그대로 남는다. [최신 결과·해결 방식·남는 경고](ETH_UI_PROTOCOL_FOLLOWUP_20261027.md)와 [원본 진단](eth-candidate-evidence/20261027-ui-protocol/hallmark-records.json)을 참조한다. 아래 df0bc76의 6/3과 당시 소스·화면 평가는 보존된 이전 실행 기록이다. 현재 Gemini 반대 검토·후속 역검토는 사용자 지시에 따라 omitted-by-user이며 통과로 간주하지 않는다.
+
+
 검증 대상 응용 소스: `df0bc769b3cb9a65654c2874673e04612c8880df`. 이 문서를 저장한 후속 문서 커밋과 실제 실행 소스를 구분한다. 사용자 요청에 따라 [Nutlope/hallmark v2.0.0](https://github.com/Nutlope/hallmark/tree/7ec868225c6caa040558c321ee0fefa0e73f83a8)의 app 범위를 기존 전체 앱에 적용했다.
 
 ## 바뀐 사용자 동작
