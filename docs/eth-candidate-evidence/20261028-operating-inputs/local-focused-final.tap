@@ -1,0 +1,1024 @@
+TAP version 13
+# Subtest: exact committed archive selection preserves every original byte and clock
+ok 1 - exact committed archive selection preserves every original byte and clock
+  ---
+  duration_ms: 395.576723
+  type: 'test'
+  ...
+# Subtest: a reviewed committed rollover keeps the frozen snapshot contract and shortens its next request
+ok 2 - a reviewed committed rollover keeps the frozen snapshot contract and shortens its next request
+  ---
+  duration_ms: 63.25762
+  type: 'test'
+  ...
+# Subtest: dirty working bytes cannot acquire a clean committed identity
+ok 3 - dirty working bytes cannot acquire a clean committed identity
+  ---
+  duration_ms: 27.14854
+  type: 'test'
+  ...
+# Subtest: unsafe paths, symlink mode, or uncertain Git identities cannot select a base
+ok 4 - unsafe paths, symlink mode, or uncertain Git identities cannot select a base
+  ---
+  duration_ms: 23.713764
+  type: 'test'
+  ...
+# Subtest: future acquisition, a future base end, and a different market remain invalid
+ok 5 - future acquisition, a future base end, and a different market remain invalid
+  ---
+  duration_ms: 31.961267
+  type: 'test'
+  ...
+# Subtest: empty, oversized, or lossy UTF-8 bytes cannot be accepted as a committed base
+ok 6 - empty, oversized, or lossy UTF-8 bytes cannot be accepted as a committed base
+  ---
+  duration_ms: 28.909473
+  type: 'test'
+  ...
+# Subtest: retained ledger remains readable when a new issuer never produced a build index
+ok 7 - retained ledger remains readable when a new issuer never produced a build index
+  ---
+  duration_ms: 152.973186
+  type: 'test'
+  ...
+# Subtest: identical retained and current records are counted once and both input inventories remain bound
+ok 8 - identical retained and current records are counted once and both input inventories remain bound
+  ---
+  duration_ms: 257.844956
+  type: 'test'
+  ...
+# Subtest: index time and model metadata cannot disagree with the immutable record
+ok 9 - index time and model metadata cannot disagree with the immutable record
+  ---
+  duration_ms: 116.206394
+  type: 'test'
+  ...
+# Subtest: index traversal and duplicate run entries fail before fallback or selection
+ok 10 - index traversal and duplicate run entries fail before fallback or selection
+  ---
+  duration_ms: 115.697054
+  type: 'test'
+  ...
+# Subtest: a missing file in a present current index is an error, not permission to ignore that index
+ok 11 - a missing file in a present current index is an error, not permission to ignore that index
+  ---
+  duration_ms: 118.398865
+  type: 'test'
+  ...
+# Subtest: a captured observation survives an interrupted issue even when its build index is absent
+ok 12 - a captured observation survives an interrupted issue even when its build index is absent
+  ---
+  duration_ms: 196.039807
+  type: 'test'
+  ...
+# Subtest: an acquisition filename cannot rename an immutable observed snapshot
+ok 13 - an acquisition filename cannot rename an immutable observed snapshot
+  ---
+  duration_ms: 120.963568
+  type: 'test'
+  ...
+# Subtest: independent ETH outcome metadata is bound to its preserved raw observation
+ok 14 - independent ETH outcome metadata is bound to its preserved raw observation
+  ---
+  duration_ms: 299.412688
+  type: 'test'
+  ...
+# Subtest: an oversized source index fails on its byte limit before JSON decoding
+ok 15 - an oversized source index fails on its byte limit before JSON decoding
+  ---
+  duration_ms: 110.365515
+  type: 'test'
+  ...
+# Subtest: an oversized acquisition directory is rejected before any untrusted file body is parsed
+ok 16 - an oversized acquisition directory is rejected before any untrusted file body is parsed
+  ---
+  duration_ms: 258.881811
+  type: 'test'
+  ...
+# Subtest: an indexed record cannot follow a symlink outside the supplied repository
+ok 17 - an indexed record cannot follow a symlink outside the supplied repository
+  ---
+  duration_ms: 6.288913
+  type: 'test'
+  ...
+# Subtest: a prior opaque session cannot make a later loader read trust changed bytes under the same record ID
+ok 18 - a prior opaque session cannot make a later loader read trust changed bytes under the same record ID
+  ---
+  duration_ms: 313.268504
+  type: 'test'
+  ...
+# Subtest: one opaque session preserves every single-call field and ID across all horizons
+ok 19 - one opaque session preserves every single-call field and ID across all horizons
+  ---
+  duration_ms: 1037.474744
+  type: 'test'
+  ...
+# Subtest: serialized, forged and wrapped sessions and external cache flags cannot bypass verification
+ok 20 - serialized, forged and wrapped sessions and external cache flags cannot bypass verification
+  ---
+  duration_ms: 233.571844
+  type: 'test'
+  ...
+# Subtest: session acquisition and batch bindings capture inputs before their first asynchronous suspension
+ok 21 - session acquisition and batch bindings capture inputs before their first asynchronous suspension
+  ---
+  duration_ms: 502.284101
+  type: 'test'
+  ...
+# Subtest: an invalid input cannot be repaired in the caller while session verification is suspended
+ok 22 - an invalid input cannot be repaired in the caller while session verification is suspended
+  ---
+  duration_ms: 327.403496
+  type: 'test'
+  ...
+# Subtest: one session reselects outcome vintages at each cutoff and result mutation cannot contaminate it
+ok 23 - one session reselects outcome vintages at each cutoff and result mutation cannot contaminate it
+  ---
+  duration_ms: 1244.440845
+  type: 'test'
+  ...
+# Subtest: cached invalid-observation diagnostics are owned by the session and cannot be edited through results
+ok 24 - cached invalid-observation diagnostics are owned by the session and cannot be edited through results
+  ---
+  duration_ms: 232.888361
+  type: 'test'
+  ...
+# Subtest: an opaque token never substitutes for full raw-input reconstruction when creating or verifying a freeze
+ok 25 - an opaque token never substitutes for full raw-input reconstruction when creating or verifying a freeze
+  ---
+  duration_ms: 544.196749
+  type: 'test'
+  ...
+# Subtest: strict gate derives exactly twelve same-bound prospective residuals and preserves null publication
+ok 26 - strict gate derives exactly twelve same-bound prospective residuals and preserves null publication
+  ---
+  duration_ms: 572.020668
+  type: 'test'
+  ...
+# Subtest: zero mature outcomes remain insufficient, never a retrospective fallback or forecast issue
+ok 27 - zero mature outcomes remain insufficient, never a retrospective fallback or forecast issue
+  ---
+  duration_ms: 67.344053
+  type: 'test'
+  ...
+# Subtest: missing selected outcomes retain their original slots and cannot borrow later valid cases
+ok 28 - missing selected outcomes retain their original slots and cannot borrow later valid cases
+  ---
+  duration_ms: 266.598919
+  type: 'test'
+  ...
+# Subtest: a corrupted forecast rejects the entire inventory even if its body hash is recomputed
+ok 29 - a corrupted forecast rejects the entire inventory even if its body hash is recomputed
+  ---
+  duration_ms: 78.531971
+  type: 'test'
+  ...
+# Subtest: unverified routing fields cannot hide a record as a different experiment, future issue or overlapping origin
+ok 30 - unverified routing fields cannot hide a record as a different experiment, future issue or overlapping origin
+  ---
+  duration_ms: 237.211229
+  type: 'test'
+  ...
+# Subtest: same-origin revisions cannot inflate sample size or replace the earliest issue
+ok 31 - same-origin revisions cannot inflate sample size or replace the earliest issue
+  ---
+  duration_ms: 618.81911
+  type: 'test'
+  ...
+# Subtest: equally timed conflicting same-origin issues block the selected slot without tie-breaking by loss
+ok 32 - equally timed conflicting same-origin issues block the selected slot without tie-breaking by loss
+  ---
+  duration_ms: 322.844472
+  type: 'test'
+  ...
+# Subtest: changed source graphs and simulation options cannot inherit another experiment residuals
+ok 33 - changed source graphs and simulation options cannot inherit another experiment residuals
+  ---
+  duration_ms: 575.115906
+  type: 'test'
+  ...
+# Subtest: overlapping origins and nonselected test losses cannot change the fixed calibration block
+ok 34 - overlapping origins and nonselected test losses cannot change the fixed calibration block
+  ---
+  duration_ms: 801.238769
+  type: 'test'
+  ...
+# Subtest: future outcome acquisitions cannot enter a cutoff, including altered future payloads
+ok 35 - future outcome acquisitions cannot enter a cutoff, including altered future payloads
+  ---
+  duration_ms: 881.743556
+  type: 'test'
+  ...
+# Subtest: an unverified acquisition clock cannot hide a current invalid outcome as a future vintage
+ok 36 - an unverified acquisition clock cannot hide a current invalid outcome as a future vintage
+  ---
+  duration_ms: 253.582611
+  type: 'test'
+  ...
+# Subtest: a cutoff-visible corrupt outcome cannot be silently discarded in favor of a valid revision
+ok 37 - a cutoff-visible corrupt outcome cannot be silently discarded in favor of a valid revision
+  ---
+  duration_ms: 258.629309
+  type: 'test'
+  ...
+# Subtest: latest visible outcome revisions bind their immutable source and previous cutoffs are stable
+ok 38 - latest visible outcome revisions bind their immutable source and previous cutoffs are stable
+  ---
+  duration_ms: 531.71795
+  type: 'test'
+  ...
+# Subtest: all zero prospective errors yield an exact zero frozen radius
+ok 39 - all zero prospective errors yield an exact zero frozen radius
+  ---
+  duration_ms: 258.219848
+  type: 'test'
+  ...
+# Subtest: retrospective reports, duplicate IDs, and mismatched publication clocks are rejected
+ok 40 - retrospective reports, duplicate IDs, and mismatched publication clocks are rejected
+  ---
+  duration_ms: 261.446455
+  type: 'test'
+  ...
+# Subtest: freeze reconstructs all input evidence and rejects changed fields even with a recomputed readiness hash
+ok 41 - freeze reconstructs all input evidence and rejects changed fields even with a recomputed readiness hash
+  ---
+  duration_ms: 1749.050194
+  type: 'test'
+  ...
+# Subtest: a rehashed readiness cannot choose a smaller inventory to omit the first origin
+ok 42 - a rehashed readiness cannot choose a smaller inventory to omit the first origin
+  ---
+  duration_ms: 494.959004
+  type: 'test'
+  ...
+# Subtest: freeze verification validates extra inputs before their binding or clocks can hide an omitted first origin
+ok 43 - freeze verification validates extra inputs before their binding or clocks can hide an omitted first origin
+  ---
+  duration_ms: 945.613181
+  type: 'test'
+  ...
+# Subtest: freeze validates exact source identity and cannot be backdated before all selected acquisitions
+ok 44 - freeze validates exact source identity and cannot be backdated before all selected acquisitions
+  ---
+  duration_ms: 760.87282
+  type: 'test'
+  ...
+# Subtest: verification can carry later evidence without refitting a frozen block and detects omitted earlier evidence
+ok 45 - verification can carry later evidence without refitting a frozen block and detects omitted earlier evidence
+  ---
+  duration_ms: 1188.752649
+  type: 'test'
+  ...
+# Subtest: first twelve actual-plus-future calendars retain the strict 30, 90 and 180 day requirements
+ok 46 - first twelve actual-plus-future calendars retain the strict 30, 90 and 180 day requirements
+  ---
+  duration_ms: 51.801923
+  type: 'test'
+  ...
+# Subtest: a later audit never backfills missed past origin dates or counts hypothetical windows as matured evidence
+ok 47 - a later audit never backfills missed past origin dates or counts hypothetical windows as matured evidence
+  ---
+  duration_ms: 51.471896
+  type: 'test'
+  ...
+# Subtest: capture days follow the same new-origin schedule after a missed day or a much later audit
+ok 48 - capture days follow the same new-origin schedule after a missed day or a much later audit
+  ---
+  duration_ms: 159.11863
+  type: 'test'
+  ...
+# Subtest: same-origin revisions do not create windows and changed model source identities remain separate
+ok 49 - same-origin revisions do not create windows and changed model source identities remain separate
+  ---
+  duration_ms: 55.927803
+  type: 'test'
+  ...
+# Subtest: compact index projection exactly reproduces the first byte-bound crossing without generating forecasts
+ok 50 - compact index projection exactly reproduces the first byte-bound crossing without generating forecasts
+  ---
+  duration_ms: 48.350865
+  type: 'test'
+  ...
+# Subtest: unchanged base expiry exercises the exact frozen planner boundary while committed replacement stays a separate operation
+ok 51 - unchanged base expiry exercises the exact frozen planner boundary while committed replacement stays a separate operation
+  ---
+  duration_ms: 108.738226
+  type: 'test'
+  ...
+# Subtest: each retained same-day acquisition consumes capacity while frequency and independent updates are not presumed
+ok 52 - each retained same-day acquisition consumes capacity while frequency and independent updates are not presumed
+  ---
+  duration_ms: 54.042902
+  type: 'test'
+  ...
+# Subtest: duplicate acquisitions, unsupported metadata, future clocks and oversized inventories fail instead of improving the projection
+ok 53 - duplicate acquisitions, unsupported metadata, future clocks and oversized inventories fail instead of improving the projection
+  ---
+  duration_ms: 1.299484
+  type: 'test'
+  ...
+# Subtest: block-style trigger inspection separates market refresh from actual candidate issuance and treats unfamiliar YAML as unknown
+ok 54 - block-style trigger inspection separates market refresh from actual candidate issuance and treats unfamiliar YAML as unknown
+  ---
+  duration_ms: 1.174309
+  type: 'test'
+  ...
+# Subtest: the actual report binds verified raw inventory and source bytes without claiming future samples, historical authenticity or release
+ok 55 - the actual report binds verified raw inventory and source bytes without claiming future samples, historical authenticity or release
+  ---
+  duration_ms: 1169.095578
+  type: 'test'
+  ...
+# Subtest: one exact public GET keeps original bytes and EOF collection time
+ok 56 - one exact public GET keeps original bytes and EOF collection time
+  ---
+  duration_ms: 60.793829
+  type: 'test'
+  ...
+# Subtest: HTTP 429 has one attempt, complete original response and no successful capture
+ok 57 - HTTP 429 has one attempt, complete original response and no successful capture
+  ---
+  duration_ms: 26.550874
+  type: 'test'
+  ...
+# Subtest: timeout remains active after headers through body EOF and aborts the actual signal
+ok 58 - timeout remains active after headers through body EOF and aborts the actual signal
+  ---
+  duration_ms: 37.320282
+  type: 'test'
+  ...
+# Subtest: declared and streamed body overflow abort with no fabricated complete-body hash
+ok 59 - declared and streamed body overflow abort with no fabricated complete-body hash
+  ---
+  duration_ms: 53.475911
+  type: 'test'
+  ...
+# Subtest: invalid JSON, invalid UTF-8 and a missing completed day preserve failure source bytes
+ok 60 - invalid JSON, invalid UTF-8 and a missing completed day preserve failure source bytes
+  ---
+  duration_ms: 115.312336
+  type: 'test'
+  ...
+# Subtest: timeout before response headers never fabricates a provider status or raw data
+ok 61 - timeout before response headers never fabricates a provider status or raw data
+  ---
+  duration_ms: 40.442034
+  type: 'test'
+  ...
+# Subtest: UTF-8 BOM cannot silently change the exact raw source bytes during decode
+ok 62 - UTF-8 BOM cannot silently change the exact raw source bytes during decode
+  ---
+  duration_ms: 28.619182
+  type: 'test'
+  ...
+# Subtest: typed raw quantiles preserve a representative trajectory outside the band and exact immutable replay
+ok 63 - typed raw quantiles preserve a representative trajectory outside the band and exact immutable replay
+  ---
+  duration_ms: 41.71943
+  type: 'test'
+  ...
+# Subtest: changed primary prices cannot pass with an unchanged base/tail source even after readdressing
+ok 64 - changed primary prices cannot pass with an unchanged base/tail source even after readdressing
+  ---
+  duration_ms: 38.008931
+  type: 'test'
+  ...
+# Subtest: record dates, anchors, medians, source hash, simulation options and target cache are binding
+ok 65 - record dates, anchors, medians, source hash, simulation options and target cache are binding
+  ---
+  duration_ms: 115.2378
+  type: 'test'
+  ...
+# Subtest: new acquisition clocks do not manufacture a second economic run and reuse keeps old issue time
+ok 66 - new acquisition clocks do not manufacture a second economic run and reuse keeps old issue time
+  ---
+  duration_ms: 41.539869
+  type: 'test'
+  ...
+# Subtest: actual generation and UTC freshness forbid future inputs and backdated or next-day issuance
+ok 67 - actual generation and UTC freshness forbid future inputs and backdated or next-day issuance
+  ---
+  duration_ms: 41.774646
+  type: 'test'
+  ...
+# Subtest: single-page raw parsing requires all requested completed days and exact endpoint
+ok 68 - single-page raw parsing requires all requested completed days and exact endpoint
+  ---
+  duration_ms: 44.856651
+  type: 'test'
+  ...
+# Subtest: no target score exists before maturity or without collected actuals; future snapshots are excluded
+ok 69 - no target score exists before maturity or without collected actuals; future snapshots are excluded
+  ---
+  duration_ms: 104.144794
+  type: 'test'
+  ...
+# Subtest: mature score uses observed price and immutable raw bounds, never the representative or cached claims
+ok 70 - mature score uses observed price and immutable raw bounds, never the representative or cached claims
+  ---
+  duration_ms: 81.735858
+  type: 'test'
+  ...
+# Subtest: real replay rebuilds the model from retained source bytes and rejects a rehashed output cache
+ok 71 - real replay rebuilds the model from retained source bytes and rejects a rehashed output cache
+  ---
+  duration_ms: 339.181913
+  type: 'test'
+  ...
+# Subtest: changing excluded live candle preserves the first issued record and source snapshot
+ok 72 - changing excluded live candle preserves the first issued record and source snapshot
+  ---
+  duration_ms: 90.69906
+  type: 'test'
+  ...
+# Subtest: all existing equivalent raw variants retain the earliest issuance
+ok 73 - all existing equivalent raw variants retain the earliest issuance
+  ---
+  duration_ms: 106.860545
+  type: 'test'
+  ...
+# Subtest: completed OHLCV and completed close revisions remain distinct inputs
+ok 74 - completed OHLCV and completed close revisions remain distinct inputs
+  ---
+  duration_ms: 126.992195
+  type: 'test'
+  ...
+# Subtest: identical consumed input with a different forecast is rejected
+ok 75 - identical consumed input with a different forecast is rejected
+  ---
+  duration_ms: 73.597221
+  type: 'test'
+  ...
+# Subtest: changed model source remains a distinct candidate
+ok 76 - changed model source remains a distinct candidate
+  ---
+  duration_ms: 61.720205
+  type: 'test'
+  ...
+# Subtest: reuse cannot borrow an issuance from after the attempted generation
+ok 77 - reuse cannot borrow an issuance from after the attempted generation
+  ---
+  duration_ms: 81.34839
+  type: 'test'
+  ...
+# Subtest: claimed normalized prices must still reconstruct from the retained raw bytes
+ok 78 - claimed normalized prices must still reconstruct from the retained raw bytes
+  ---
+  duration_ms: 53.29866
+  type: 'test'
+  ...
+# Subtest: fixed sample preserves 34/40 ETH effective balances, exact actual balances and all missing economic conditions
+ok 79 - fixed sample preserves 34/40 ETH effective balances, exact actual balances and all missing economic conditions
+  ---
+  duration_ms: 2.700849
+  type: 'test'
+  ...
+# Subtest: response order is not trusted and exact requested IDs determine the retained order
+ok 80 - response order is not trusted and exact requested IDs determine the retained order
+  ---
+  duration_ms: 1.383458
+  type: 'test'
+  ...
+# Subtest: HTTP200 with a missing, duplicate, additional or unexpected validator is rejected
+ok 81 - HTTP200 with a missing, duplicate, additional or unexpected validator is rejected
+  ---
+  duration_ms: 1.272474
+  type: 'test'
+  ...
+# Subtest: public keys, decimal integers and protocol fields are validated before aggregation
+ok 82 - public keys, decimal integers and protocol fields are validated before aggregation
+  ---
+  duration_ms: 2.10726
+  type: 'test'
+  ...
+# Subtest: effective balance can exceed actual balance after losses without being silently corrected
+ok 83 - effective balance can exceed actual balance after losses without being silently corrected
+  ---
+  duration_ms: 0.385431
+  type: 'test'
+  ...
+# Subtest: gwei arithmetic keeps low digits beyond Number safe integer range
+ok 84 - gwei arithmetic keeps low digits beyond Number safe integer range
+  ---
+  duration_ms: 0.397509
+  type: 'test'
+  ...
+# Subtest: mainnet genesis identity is required and not inferred from the hostname
+ok 85 - mainnet genesis identity is required and not inferred from the hostname
+  ---
+  duration_ms: 0.540911
+  type: 'test'
+  ...
+# Subtest: header SSZ root binds state and other header fields; provider root lookup is separately bound
+ok 86 - header SSZ root binds state and other header fields; provider root lookup is separately bound
+  ---
+  duration_ms: 0.961634
+  type: 'test'
+  ...
+# Subtest: optimistic, unfinalized and noncanonical provider assertions fail closed
+ok 87 - optimistic, unfinalized and noncanonical provider assertions fail closed
+  ---
+  duration_ms: 1.775058
+  type: 'test'
+  ...
+# Subtest: future header clocks and acquisition before the pinned-root request are rejected
+ok 88 - future header clocks and acquisition before the pinned-root request are rejected
+  ---
+  duration_ms: 0.935896
+  type: 'test'
+  ...
+# Subtest: arbitrary endpoints, incomplete responses, invalid UTF8/JSON and oversized bodies are rejected
+ok 89 - arbitrary endpoints, incomplete responses, invalid UTF8/JSON and oversized bodies are rejected
+  ---
+  duration_ms: 1.251513
+  type: 'test'
+  ...
+# Subtest: earned rewards and completed exit waiting time cannot be inferred from a single status sample
+ok 90 - earned rewards and completed exit waiting time cannot be inferred from a single status sample
+  ---
+  duration_ms: 0.384449
+  type: 'test'
+  ...
+# Subtest: collector performs only genesis/header/root-pinned validator GETs and preserves all raw bytes
+ok 91 - collector performs only genesis/header/root-pinned validator GETs and preserves all raw bytes
+  ---
+  duration_ms: 2.436387
+  type: 'test'
+  ...
+# Subtest: collector retains actual HTTP failure bytes without retry or invented observations
+ok 92 - collector retains actual HTTP failure bytes without retry or invented observations
+  ---
+  duration_ms: 0.4388
+  type: 'test'
+  ...
+# Subtest: oversized streamed data retains only a marked bounded prefix and cannot become an observation
+ok 93 - oversized streamed data retains only a marked bounded prefix and cannot become an observation
+  ---
+  duration_ms: 0.522905
+  type: 'test'
+  ...
+# Subtest: combined capture byte cap remains bounded across otherwise individually valid responses
+ok 94 - combined capture byte cap remains bounded across otherwise individually valid responses
+  ---
+  duration_ms: 0.543605
+  type: 'test'
+  ...
+# Subtest: invalid header is rejected before any state-root request is sent
+ok 95 - invalid header is rejected before any state-root request is sent
+  ---
+  duration_ms: 0.748068
+  type: 'test'
+  ...
+# Subtest: request timeout aborts once and preserves a failure receipt
+ok 96 - request timeout aborts once and preserves a failure receipt
+  ---
+  duration_ms: 4.959013
+  type: 'test'
+  ...
+# Subtest: transport budgets cannot be raised or changed to retries or redirects
+ok 97 - transport budgets cannot be raised or changed to retries or redirects
+  ---
+  duration_ms: 0.332212
+  type: 'test'
+  ...
+# Subtest: complete persisted capture recomputes from all raw files without network calls
+ok 98 - complete persisted capture recomputes from all raw files without network calls
+  ---
+  duration_ms: 1.590395
+  type: 'test'
+  ...
+# Subtest: replay rejects altered bytes, accounting, clocks and promoted economic claims
+ok 99 - replay rejects altered bytes, accounting, clocks and promoted economic claims
+  ---
+  duration_ms: 2.355938
+  type: 'test'
+  ...
+# Subtest: replay rejects missing or duplicate raw files and actual failed capture receipts
+ok 100 - replay rejects missing or duplicate raw files and actual failed capture receipts
+  ---
+  duration_ms: 1.473011
+  type: 'test'
+  ...
+# Subtest: replay rejects each independently reproduced deadline, byte, request-count and cohort-policy mutation
+ok 101 - replay rejects each independently reproduced deadline, byte, request-count and cohort-policy mutation
+  ---
+  duration_ms: 1.418751
+  type: 'test'
+  ...
+# Subtest: capture and replay accept reduced byte/time budgets with exact retained byte boundaries
+ok 102 - capture and replay accept reduced byte/time budgets with exact retained byte boundaries
+  ---
+  duration_ms: 1.786175
+  type: 'test'
+  ...
+# Subtest: replay checks the complete fixed identity and the same allowed transport schema as capture
+ok 103 - replay checks the complete fixed identity and the same allowed transport schema as capture
+  ---
+  duration_ms: 2.1073
+  type: 'test'
+  ...
+# Subtest: replay budgets body EOF against both request and total deadlines, with consistent declared deadlines
+ok 104 - replay budgets body EOF against both request and total deadlines, with consistent declared deadlines
+  ---
+  duration_ms: 1.729891
+  type: 'test'
+  ...
+# Subtest: local hashing, observation processing and replay after the network deadline do not invalidate timely body EOF
+ok 105 - local hashing, observation processing and replay after the network deadline do not invalidate timely body EOF
+  ---
+  duration_ms: 1.021643
+  type: 'test'
+  ...
+# Subtest: a signal-respecting stalled body aborts once and preserves its partial bytes on disk
+ok 106 - a signal-respecting stalled body aborts once and preserves its partial bytes on disk
+  ---
+  duration_ms: 9.045014
+  type: 'test'
+  ...
+# Subtest: one wei non-fee destruction remains exact beyond Number precision
+ok 107 - one wei non-fee destruction remains exact beyond Number precision
+  ---
+  duration_ms: 2.061792
+  type: 'test'
+  ...
+# Subtest: unknown non-fee destruction is missing, not zero or residual classification
+ok 108 - unknown non-fee destruction is missing, not zero or residual classification
+  ---
+  duration_ms: 0.471238
+  type: 'test'
+  ...
+# Subtest: component and stock disagreements retain exact signed residuals
+ok 109 - component and stock disagreements retain exact signed residuals
+  ---
+  duration_ms: 0.331291
+  type: 'test'
+  ...
+# Subtest: rounded numeric or noncanonical decimal money is rejected
+ok 110 - rounded numeric or noncanonical decimal money is rejected
+  ---
+  duration_ms: 0.34461
+  type: 'test'
+  ...
+# Subtest: negative net issuance is permitted with exact reconciliation
+ok 111 - negative net issuance is permitted with exact reconciliation
+  ---
+  duration_ms: 0.281918
+  type: 'test'
+  ...
+# Subtest: duplicate and reversed source positions cannot manufacture coverage
+ok 112 - duplicate and reversed source positions cannot manufacture coverage
+  ---
+  duration_ms: 0.353394
+  type: 'test'
+  ...
+# Subtest: slot timestamps must agree with the mainnet clock
+ok 113 - slot timestamps must agree with the mainnet clock
+  ---
+  duration_ms: 0.162
+  type: 'test'
+  ...
+# Subtest: a bucket crossing UTC start is not prorated into exact 28-day data
+ok 114 - a bucket crossing UTC start is not prorated into exact 28-day data
+  ---
+  duration_ms: 0.259655
+  type: 'test'
+  ...
+# Subtest: full explicit slot coverage can sum provider claims without model activation
+ok 115 - full explicit slot coverage can sum provider claims without model activation
+  ---
+  duration_ms: 0.369767
+  type: 'test'
+  ...
+# Subtest: an internal slot gap prevents complete window aggregation
+ok 116 - an internal slot gap prevents complete window aggregation
+  ---
+  duration_ms: 0.284591
+  type: 'test'
+  ...
+# Subtest: an epoch-only source remains incapable of proving a UTC slot window
+ok 117 - an epoch-only source remains incapable of proving a UTC slot window
+  ---
+  duration_ms: 0.264231
+  type: 'test'
+  ...
+# Subtest: unknown schema, incomplete history, wrong chain and future clocks fail
+ok 118 - unknown schema, incomplete history, wrong chain and future clocks fail
+  ---
+  duration_ms: 0.361235
+  type: 'test'
+  ...
+# Subtest: a small clock lead is disclosed and never becomes publication
+ok 119 - a small clock lead is disclosed and never becomes publication
+  ---
+  duration_ms: 0.203412
+  type: 'test'
+  ...
+# Subtest: the requested UTC window must already be complete at collection
+ok 120 - the requested UTC window must already be complete at collection
+  ---
+  duration_ms: 0.106317
+  type: 'test'
+  ...
+# Subtest: a source row after actual collection is disclosed even within generation tolerance
+ok 121 - a source row after actual collection is disclosed even within generation tolerance
+  ---
+  duration_ms: 0.208198
+  type: 'test'
+  ...
+# Subtest: upstream EIP-6780 bytes match the connector-reviewed source blob
+ok 122 - upstream EIP-6780 bytes match the connector-reviewed source blob
+  ---
+  duration_ms: 1.324441
+  type: 'test'
+  ...
+# Subtest: HTTP error bytes are preserved before the caller marks collection failed
+ok 123 - HTTP error bytes are preserved before the caller marks collection failed
+  ---
+  duration_ms: 0.525678
+  type: 'test'
+  ...
+# Subtest: response digest matches only exact captured bytes and is not authenticity proof
+ok 124 - response digest matches only exact captured bytes and is not authenticity proof
+  ---
+  duration_ms: 0.339703
+  type: 'test'
+  ...
+# Subtest: unexpected URLs and advertised or streamed oversized bodies are rejected
+ok 125 - unexpected URLs and advertised or streamed oversized bodies are rejected
+  ---
+  duration_ms: 0.482054
+  type: 'test'
+  ...
+# Subtest: actual grouped source row retains fractional blob presentation without usage totals
+ok 126 - actual grouped source row retains fractional blob presentation without usage totals
+  ---
+  duration_ms: 0.234297
+  type: 'test'
+  ...
+# Subtest: ancillary blob missing, explicit zero and fractional values remain distinct
+ok 127 - ancillary blob missing, explicit zero and fractional values remain distinct
+  ---
+  duration_ms: 0.501302
+  type: 'test'
+  ...
+# Subtest: reported burn conventions do not double count consensus penalties or force a nonzero-other interpretation
+ok 128 - reported burn conventions do not double count consensus penalties or force a nonzero-other interpretation
+  ---
+  duration_ms: 0.288768
+  type: 'test'
+  ...
+# Subtest: UTC window includes slots by timestamp, preserving inclusive provider bucket ends
+ok 129 - UTC window includes slots by timestamp, preserving inclusive provider bucket ends
+  ---
+  duration_ms: 0.168759
+  type: 'test'
+  ...
+# Subtest: an old bucket label cannot hide coverage after actual collection
+ok 130 - an old bucket label cannot hide coverage after actual collection
+  ---
+  duration_ms: 0.214187
+  type: 'test'
+  ...
+# Subtest: a bucket endpoint beyond provider clock tolerance fails despite an old label
+ok 131 - a bucket endpoint beyond provider clock tolerance fails despite an old label
+  ---
+  duration_ms: 0.170963
+  type: 'test'
+  ...
+# Subtest: requested-window stocks reconcile all exact-window flows while excluding predecessor flow
+ok 132 - requested-window stocks reconcile all exact-window flows while excluding predecessor flow
+  ---
+  duration_ms: 0.284231
+  type: 'test'
+  ...
+# Subtest: complete exact-window flows do not manufacture the missing preceding stock
+ok 133 - complete exact-window flows do not manufacture the missing preceding stock
+  ---
+  duration_ms: 0.193897
+  type: 'test'
+  ...
+# Subtest: requested-window stock mismatch retains the exact signed one-wei residual
+ok 134 - requested-window stock mismatch retains the exact signed one-wei residual
+  ---
+  duration_ms: 0.237972
+  type: 'test'
+  ...
+# Subtest: unknown window supply components remain unavailable despite a reported net stock match
+ok 135 - unknown window supply components remain unavailable despite a reported net stock match
+  ---
+  duration_ms: 0.203221
+  type: 'test'
+  ...
+# Subtest: a stock labeled inside its bucket is not silently moved to a UTC boundary
+ok 136 - a stock labeled inside its bucket is not silently moved to a UTC boundary
+  ---
+  duration_ms: 0.294936
+  type: 'test'
+  ...
+# Subtest: matching boundary stock arithmetic does not imply predecessor finality
+ok 137 - matching boundary stock arithmetic does not imply predecessor finality
+  ---
+  duration_ms: 0.187037
+  type: 'test'
+  ...
+# Subtest: 960-slot epoch grid conditionally cannot label UTC boundary stocks
+ok 138 - 960-slot epoch grid conditionally cannot label UTC boundary stocks
+  ---
+  duration_ms: 1.571667
+  type: 'test'
+  ...
+# Subtest: even individual whole-epoch end stocks retain the UTC mismatch
+ok 139 - even individual whole-epoch end stocks retain the UTC mismatch
+  ---
+  duration_ms: 0.176362
+  type: 'test'
+  ...
+# Subtest: single-slot capability does not imply full historical flow availability
+ok 140 - single-slot capability does not imply full historical flow availability
+  ---
+  duration_ms: 0.124975
+  type: 'test'
+  ...
+# Subtest: a deliberately shifted synthetic grid exactly aligns both UTC stocks
+ok 141 - a deliberately shifted synthetic grid exactly aligns both UTC stocks
+  ---
+  duration_ms: 0.410387
+  type: 'test'
+  ...
+# Subtest: currently absent grid alignment may occur on another UTC day
+ok 142 - currently absent grid alignment may occur on another UTC day
+  ---
+  duration_ms: 0.145966
+  type: 'test'
+  ...
+# Subtest: irregular bucket widths do not establish a persistent grid
+ok 143 - irregular bucket widths do not establish a persistent grid
+  ---
+  duration_ms: 0.454603
+  type: 'test'
+  ...
+# Subtest: mixed interior label offsets do not become an end-stock grid
+ok 144 - mixed interior label offsets do not become an end-stock grid
+  ---
+  duration_ms: 0.347505
+  type: 'test'
+  ...
+# Subtest: a single observed bucket does not establish a repeated grid
+ok 145 - a single observed bucket does not establish a repeated grid
+  ---
+  duration_ms: 0.103263
+  type: 'test'
+  ...
+# Subtest: row overlap, reversed ordering and out-of-range labels are rejected
+ok 146 - row overlap, reversed ordering and out-of-range labels are rejected
+  ---
+  duration_ms: 0.3038
+  type: 'test'
+  ...
+# Subtest: slot, epoch and explicit endpoint clocks bind the original row
+ok 147 - slot, epoch and explicit endpoint clocks bind the original row
+  ---
+  duration_ms: 0.442875
+  type: 'test'
+  ...
+# Subtest: past labels cannot hide coverage after actual collection
+ok 148 - past labels cannot hide coverage after actual collection
+  ---
+  duration_ms: 0.14243
+  type: 'test'
+  ...
+# Subtest: unfinished requested days and excessive provider clocks are rejected
+ok 149 - unfinished requested days and excessive provider clocks are rejected
+  ---
+  duration_ms: 0.216961
+  type: 'test'
+  ...
+# Subtest: partial, recovery and delta histories cannot masquerade as standalone snapshots
+ok 150 - partial, recovery and delta histories cannot masquerade as standalone snapshots
+  ---
+  duration_ms: 0.274777
+  type: 'test'
+  ...
+# Subtest: missing raw rows and malformed stock values never become zeros
+ok 151 - missing raw rows and malformed stock values never become zeros
+  ---
+  duration_ms: 0.42538
+  type: 'test'
+  ...
+# Subtest: pure geometry analysis leaves supplied rows unchanged
+ok 152 - pure geometry analysis leaves supplied rows unchanged
+  ---
+  duration_ms: 0.537055
+  type: 'test'
+  ...
+# Subtest: loader replays original bound bytes and original clocks with no network
+ok 153 - loader replays original bound bytes and original clocks with no network
+  ---
+  duration_ms: 6.299097
+  type: 'test'
+  ...
+# Subtest: audited receipt with missing raw file is invalid evidence, not an empty observation
+ok 154 - audited receipt with missing raw file is invalid evidence, not an empty observation
+  ---
+  duration_ms: 2.524227
+  type: 'test'
+  ...
+# Subtest: changed bytes, wrong digest and reordered acquisition clocks are rejected
+ok 155 - changed bytes, wrong digest and reordered acquisition clocks are rejected
+  ---
+  duration_ms: 5.070678
+  type: 'test'
+  ...
+# Subtest: failed acquisition remains unavailable and cannot produce a grid diagnosis
+ok 156 - failed acquisition remains unavailable and cannot produce a grid diagnosis
+  ---
+  duration_ms: 2.434244
+  type: 'test'
+  ...
+# Subtest: future capture and source-path escape cannot supply current evidence
+ok 157 - future capture and source-path escape cannot supply current evidence
+  ---
+  duration_ms: 2.209602
+  type: 'test'
+  ...
+# Subtest: symlinked raw evidence is rejected even when its bytes match
+ok 158 - symlinked raw evidence is rejected even when its bytes match
+  ---
+  duration_ms: 2.273837
+  type: 'test'
+  ...
+# Subtest: capture-root symlinks cannot redirect directory discovery
+ok 159 - capture-root symlinks cannot redirect directory discovery
+  ---
+  duration_ms: 1.772334
+  type: 'test'
+  ...
+# Subtest: default issuer remains the original two candidates; warm-start is an explicit combinable opt-in
+ok 160 - default issuer remains the original two candidates; warm-start is an explicit combinable opt-in
+  ---
+  duration_ms: 0.358301
+  type: 'test'
+  ...
+# Subtest: original two records, snapshot and 14-file model graph remain exact after optional extension
+ok 161 - original two records, snapshot and 14-file model graph remain exact after optional extension
+  ---
+  duration_ms: 1306.032871
+  type: 'test'
+  ...
+# Subtest: separate warm-start record binds its full 731-point forecast, initial detector state and unchanged baselines
+ok 162 - separate warm-start record binds its full 731-point forecast, initial detector state and unchanged baselines
+  ---
+  duration_ms: 0.363879
+  type: 'test'
+  ...
+# Subtest: warm-start replay recomputes its model from preserved raw bytes and rejects a rehashed output cache
+ok 163 - warm-start replay recomputes its model from preserved raw bytes and rejects a rehashed output cache
+  ---
+  duration_ms: 758.875188
+  type: 'test'
+  ...
+# Subtest: warm identity, clocks, policy and initialization claims are fail-closed
+ok 164 - warm identity, clocks, policy and initialization claims are fail-closed
+  ---
+  duration_ms: 773.804218
+  type: 'test'
+  ...
+# Subtest: same completed warm input reuses its earliest issue; completed OHLCV and model revisions remain separate
+ok 165 - same completed warm input reuses its earliest issue; completed OHLCV and model revisions remain separate
+  ---
+  duration_ms: 979.07689
+  type: 'test'
+  ...
+# Subtest: same completed input with altered warm output or targets cannot be accepted as a replay
+ok 166 - same completed input with altered warm output or targets cannot be accepted as a replay
+  ---
+  duration_ms: 401.709653
+  type: 'test'
+  ...
+# Subtest: legacy-only evaluation remains byte-for-byte the original and mixed evaluation preserves its component unchanged
+ok 167 - legacy-only evaluation remains byte-for-byte the original and mixed evaluation preserves its component unchanged
+  ---
+  duration_ms: 910.646281
+  type: 'test'
+  ...
+# Subtest: warm evaluation cannot borrow old issuance or create scores at an uncollected future target
+ok 168 - warm evaluation cannot borrow old issuance or create scores at an uncollected future target
+  ---
+  duration_ms: 1107.824179
+  type: 'test'
+  ...
+# Subtest: the retained growing ledger accepts warm entries without weakening original record invariants
+ok 169 - the retained growing ledger accepts warm entries without weakening original record invariants
+  ---
+  duration_ms: 507.082643
+  type: 'test'
+  ...
+1..169
+# tests 169
+# suites 0
+# pass 169
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 28379.311792

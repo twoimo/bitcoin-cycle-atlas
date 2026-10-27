@@ -1,0 +1,178 @@
+{
+  "report": {
+    "id": "857556c315164cde9138e07ca2cb94c33df145a718869f1fa17f410c0a4b8954",
+    "schemaVersion": 1,
+    "kind": "ethereum-supply-resolution-report",
+    "policy": {
+      "version": "eth-supply-resolution-1",
+      "windowDays": 28,
+      "maximumRows": 250000,
+      "maximumIntegerDigits": 80,
+      "maximumProviderClockLeadSeconds": 300,
+      "scope": "Conditionally test observed bucket/label residues against exact UTC boundary slots. A finite sample does not prove future API resolution."
+    },
+    "informationCutoffAt": "2026-10-27T16:43:36.818Z",
+    "sourceRoots": [
+      {
+        "path": "build/ethereum-supply-accounting",
+        "present": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-supply-accounting",
+        "present": false
+      }
+    ],
+    "inputFiles": {
+      "build/ethereum-supply-accounting/capture-HHIF8R/receipt.json": {
+        "bytes": 25889,
+        "sha256": "fe99015fe970b4119fd657b8e8a90010a52d4eb1cbe24a74137b7c85d162b526"
+      },
+      "build/ethereum-supply-accounting/capture-HHIF8R/history-30d.raw.json": {
+        "bytes": 801503,
+        "sha256": "21018bae4b5ceae9102940075737e1a6c85c2ab22803fa7b345c9c34e98afdfb"
+      }
+    },
+    "captures": [
+      {
+        "path": "build/ethereum-supply-accounting/capture-HHIF8R",
+        "status": "diagnosed",
+        "originalStatus": "provider-accounting-audited",
+        "originalSourceCommit": "47f2ae587ab5fdbe25b380c6a92bf496bd3d798e",
+        "originalRunId": "40536955797",
+        "originalCollectedAt": "2026-10-27T16:05:21.417Z",
+        "diagnostic": {
+          "version": "eth-supply-resolution-1",
+          "kind": "ethereum-supply-resolution-diagnostic",
+          "provider": {
+            "range": "30d",
+            "revision": 1793116827107,
+            "generatedAt": "2026-10-27T16:00:27.000Z",
+            "interval": "30epochs",
+            "declaredIntervalSlots": 960,
+            "declaredIntervalEpochs": 30
+          },
+          "collectedAt": "2026-10-27T16:05:21.417Z",
+          "publishedAt": null,
+          "providerClockAfterCollection": false,
+          "requestedWindow": {
+            "observedFrom": "2026-09-29",
+            "observedThrough": "2026-10-26",
+            "windowDays": 28,
+            "firstRequiredSlot": 15317999,
+            "lastRequiredSlot": 15519598,
+            "requiredSlots": 201600,
+            "startBoundary": {
+              "slot": 15317998,
+              "timestamp": 1790639999,
+              "epochResidue": 14,
+              "rowPresent": false,
+              "supplyWei": null,
+              "stockAvailable": false,
+              "explicitlyFinalized": false,
+              "sameObservedGridCouldLabelThisSlot": false,
+              "anyDailyUtcBoundaryCouldAlignIfGridPersists": false
+            },
+            "endBoundary": {
+              "slot": 15519598,
+              "timestamp": 1793059199,
+              "epochResidue": 14,
+              "rowPresent": false,
+              "supplyWei": null,
+              "stockAvailable": false,
+              "explicitlyFinalized": false,
+              "sameObservedGridCouldLabelThisSlot": false,
+              "anyDailyUtcBoundaryCouldAlignIfGridPersists": false
+            },
+            "intersectingRows": 211,
+            "boundaryCrossingRows": 2,
+            "coveredSlots": 201600,
+            "exactWholeRowFlowCoverage": false,
+            "whollyInsideRows": 209
+          },
+          "observedGrid": {
+            "rows": 225,
+            "widthsSlots": [
+              960
+            ],
+            "uniformAlignedGridObserved": true,
+            "strideSlots": 960,
+            "startResidue": 160,
+            "labelResidue": 159,
+            "allLabelsAtBucketEnd": true,
+            "allRowsExplicitlyFinalized": true,
+            "missingSlotsBetweenRows": 0,
+            "epochResidues": {
+              "starts": [
+                0
+              ],
+              "ends": [
+                31
+              ],
+              "labels": [
+                31
+              ]
+            },
+            "declaredSlotWidthMatchesEveryRow": true
+          },
+          "utcAlignment": {
+            "slotsPerDay": 7200,
+            "slotsPerEpoch": 32,
+            "epochsPerDay": 225,
+            "dailyAdvanceModuloEpoch": 0,
+            "gcdGridAndDailyAdvance": 480,
+            "conditionalIncompatibilityProven": true,
+            "status": "same-grid-cannot-label-utc-boundary",
+            "condition": "Every future relevant stock label must retain this observed stride and label residue. Changing API resolution or grid origin invalidates this conditional conclusion.",
+            "finiteSamplesProveFutureApiGrid": false,
+            "mathematicalCriterion": "An observed label residue b modulo m can meet the UTC boundary sequence a+n*d iff gcd(m,d) divides a-b."
+          },
+          "modelInputActivated": false,
+          "fullModelSnapshotReady": false,
+          "eligibleModelSnapshotCount": 0,
+          "independentCanonicalValidation": false,
+          "historicalPublicationAuthenticated": false,
+          "limitations": [
+            "This diagnostic checks slot geometry, clocks and supplied stock labels; it does not reconcile supply-changing flows.",
+            "A compatible grid does not establish available historical rows, exact accounting semantics, future service behavior or independent canonical state.",
+            "Missing stocks remain null. No proration, timestamp relabeling, or missing-zero fill is performed."
+          ]
+        },
+        "raw": {
+          "path": "build/ethereum-supply-accounting/capture-HHIF8R/history-30d.raw.json",
+          "bytes": 801503,
+          "sha256": "21018bae4b5ceae9102940075737e1a6c85c2ab22803fa7b345c9c34e98afdfb",
+          "url": "https://ethsupply.fyi/api/history?range=30d"
+        }
+      }
+    ],
+    "status": "diagnosed",
+    "diagnosedCaptures": 1,
+    "invalidSourceCaptures": 0,
+    "unavailableCaptures": 0,
+    "sameGridConditionalIncompatibilityCount": 1,
+    "networkRequests": 0,
+    "existingRawBytesChanged": false,
+    "modelInputActivated": false,
+    "fullModelSnapshotReady": false,
+    "eligibleModelSnapshotCount": 0,
+    "independentCanonicalValidation": false,
+    "caveat": "Counts describe captured documents, not independent economic samples. Geometry is conditional on preserving the observed grid. Missing or failed sources do not become zero-valued observations."
+  },
+  "provenance": {
+    "executionMode": "local-direct-function-replay",
+    "executedAt": "2026-10-27T16:43:36.833Z",
+    "sourceFiles": {
+      "scripts/ethereum-supply-resolution-core.mjs": "dbbd0988bf0ade4e9b8ebfa397754bdf1c176807b4d3b341eb5a744f7efd77ca",
+      "scripts/analyze-ethereum-supply-resolution.mjs": "4831b7a675d407ee133ff4e24b9f9bdf5f731f51b042fed66571f99885984577",
+      "tests/ethereum-supply-resolution.test.mjs": "ba3660eb989753e9372eeab0f4490bd427fc92afac3c502604318bccd29d3610",
+      "scripts/ethereum-supply-accounting-core.mjs": "953181d997804f699f3800288275351ceb09e488d897e3844a68b3920848b7ee",
+      "dist/ethereum-economic-model.js": "fecb23afa3ea4efd2e8a8bbd3be67de1dd7c6fd133302d347a703487f78951d0"
+    },
+    "sourceInputRun": 40536955797,
+    "sourceInputCommit": "47f2ae587ab5fdbe25b380c6a92bf496bd3d798e",
+    "sourceArtifactId": 12748673800,
+    "sourceArtifactSha256": "de78ccce3f29f118e16783403f40aa1807b8257fc043e349b93cde6fb96fe86a",
+    "networkRequests": 0,
+    "cliGitProvenanceExecuted": false
+  }
+}
