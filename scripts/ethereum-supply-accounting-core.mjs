@@ -12,7 +12,7 @@ export const ETH_SUPPLY_ACCOUNTING_SOURCE=Object.freeze({
   redistributionLicense:'Provider data license not established by this audit; retain attribution and source URL.',
 });
 export const ETH_SUPPLY_ACCOUNTING_POLICY=Object.freeze({
-  version:'eth-supply-accounting-audit-1',maximumRows:250000,maximumIntegerDigits:80,
+  version:'eth-supply-accounting-audit-2',maximumRows:250000,maximumIntegerDigits:80,
   requestCount:2,retries:0,historyMaximumBytes:8*1024*1024,methodologyMaximumBytes:2*1024*1024,
   formula:'netWei = issuanceWei - baseFeeBurnWei - blobBaseFeeBurnWei - consensusPenaltiesWei - otherExecutionBurnWei',
   missingPolicy:'Unknown otherExecutionBurnWei is missing, not zero; a residual is not automatically classified destruction.',
@@ -26,6 +26,7 @@ const MONEY_FIELDS=['supplyWei','issuanceWei','attestationIssuanceWei','syncComm
   'offsetBaseFeeWei','averageBaseFeePerGasWei','baseFeePerGasWei','gasUsed','gasTarget','gasMax',
   'blobFloorBurnWei','blobCongestionBurnWei'];
 const SIGNED_FIELDS=['netWei'];
+const USAGE_PRESENTATION=['blobsUsed','blobsTarget','blobsMax'];
 const DAY=86400,GENESIS=ETH_ECONOMIC_MAINNET_CLOCK.genesisTime,SLOT=ETH_ECONOMIC_MAINNET_CLOCK.secondsPerSlot;
 const check=(ok,message)=>{if(!ok)throw new RangeError(message);};
 function safe(value,label){check(Number.isSafeInteger(value)&&value>=0,label+' must be a nonnegative safe integer');return value;}
@@ -45,19 +46,31 @@ function rowValues(row,label){
   check(row&&typeof row==='object'&&!Array.isArray(row),label+' must be an object');
   const values={};for(const f of MONEY_FIELDS)values[f]=integer(row[f],label+'.'+f);
   for(const f of SIGNED_FIELDS)values[f]=integer(row[f],label+'.'+f,true);
-  for(const f of ['blobsUsed','blobsTarget','blobsMax','blocks'])if(row[f]!=null)safe(row[f],label+'.'+f);
+  // The captured 30epochs document reports fractional blobsUsed even though its
+  // public schema calls this UInt. Keep ancillary presentation numbers; do not
+  // turn an average/rate-like field into an integer count or additive usage.
+  for(const f of USAGE_PRESENTATION)if(row[f]!=null)check(typeof row[f]==='number'&&Number.isFinite(row[f])&&row[f]>=0,label+'.'+f+' must be a finite nonnegative presentation number or null');
+  if(row.blocks!=null)safe(row.blocks,label+'.blocks');
   return values;
 }
 function arithmetic(values){
   const complete=COMPONENTS.every(f=>values[f]!==null),componentTotal=complete?COMPONENTS.reduce((s,f)=>s+values[f],0n):null;
   const expectedNet=componentTotal!==null&&values.issuanceWei!==null?values.issuanceWei-componentTotal:null;
+  const feeBurn=values.baseFeeBurnWei!==null&&values.blobBaseFeeBurnWei!==null?values.baseFeeBurnWei+values.blobBaseFeeBurnWei:null;
+  const feeAndOther=feeBurn!==null&&values.otherExecutionBurnWei!==null?feeBurn+values.otherExecutionBurnWei:null;
   return {
     componentTotalWei:componentTotal?.toString()??null,
-    burnResidualWei:componentTotal!==null&&values.burnWei!==null?(values.burnWei-componentTotal).toString():null,
+    feeBurnComponentTotalWei:feeBurn?.toString()??null,
+    // These are explicit alternative interpretations of reported burnWei.
+    // The actual first source has otherExecutionBurnWei=0 in every row, so
+    // agreement cannot distinguish fee-only from fee-plus-other semantics.
+    burnResidualWei:feeBurn!==null&&values.burnWei!==null?(values.burnWei-feeBurn).toString():null,
+    feePlusOtherBurnResidualWei:feeAndOther!==null&&values.burnWei!==null?(values.burnWei-feeAndOther).toString():null,
+    allDestructionResidualWei:componentTotal!==null&&values.burnWei!==null?(values.burnWei-componentTotal).toString():null,
     expectedNetWei:expectedNet?.toString()??null,
     netResidualWei:expectedNet!==null&&values.netWei!==null?(values.netWei-expectedNet).toString():null,
-    netVersusReportedBurnResidualWei:values.issuanceWei!==null&&values.burnWei!==null&&values.netWei!==null?
-      (values.netWei-(values.issuanceWei-values.burnWei)).toString():null,
+    netVersusReportedBurnResidualWei:values.issuanceWei!==null&&values.burnWei!==null&&values.netWei!==null&&values.consensusPenaltiesWei!==null&&values.otherExecutionBurnWei!==null?
+      (values.netWei-(values.issuanceWei-values.burnWei-values.consensusPenaltiesWei-values.otherExecutionBurnWei)).toString():null,
     omittedOtherBurnBiasWei:complete?values.otherExecutionBurnWei.toString():null,
   };
 }
@@ -77,8 +90,10 @@ function summarizeSeries(rows,kind){
   const fields=Object.fromEntries([...MONEY_FIELDS,...SIGNED_FIELDS].map(f=>[f,{present:0,missing:0}]));
   const counters={burnComponentsChecked:0,burnComponentsMismatched:0,netComponentsChecked:0,netComponentsMismatched:0,
     netVersusReportedBurnChecked:0,netVersusReportedBurnMismatched:0,otherBurnPresent:0,otherBurnMissing:0,otherBurnNonzero:0};
+  const reportedBurnCandidates=Object.fromEntries(['feeOnly','feePlusOtherExecution','allDestruction'].map(k=>[k,{checked:0,mismatched:0}]));
+  const usagePresentation=Object.fromEntries(USAGE_PRESENTATION.map(f=>[f,{present:0,missing:0,nonInteger:0,minimum:null,maximum:null,additiveTotalEligible:false}]));
   const examples=[],parsed=[],pairExamples=[];let previous=null,firstRow=null,firstPair=null,lastPair=null,pairCount=0,pairMismatchCount=0,allContiguous=true;
-  const totals=Object.fromEntries(['issuanceWei','burnWei',...COMPONENTS,'netWei','gasUsed'].map(f=>[f,0n]));
+  const totals=Object.fromEntries(['issuanceWei','burnWei',...COMPONENTS,'netWei'].map(f=>[f,0n]));
   const laterTotals={...totals};
   for(let index=0;index<rows.length;index++){
     const row=rows[index],label=kind+'['+index+']',v=rowValues(row,label),t=safe(row.timestamp,label+'.timestamp');
@@ -87,7 +102,11 @@ function summarizeSeries(rows,kind){
     const range=kind==='slots'?slotRange(row):null;
     if(range&&previous)check(range.first>previous.range.last,'Overlapping source slot buckets');
     for(const f of Object.keys(fields))fields[f][v[f]===null?'missing':'present']++;
+    for(const f of USAGE_PRESENTATION){const u=usagePresentation[f],value=row[f];if(value==null)u.missing++;
+      else{u.present++;if(!Number.isInteger(value))u.nonInteger++;u.minimum=u.minimum===null?value:Math.min(u.minimum,value);u.maximum=u.maximum===null?value:Math.max(u.maximum,value);}}
     const a=arithmetic(v);
+    for(const [name,key]of [['feeOnly','burnResidualWei'],['feePlusOtherExecution','feePlusOtherBurnResidualWei'],['allDestruction','allDestructionResidualWei']]){
+      if(a[key]!==null){reportedBurnCandidates[name].checked++;if(a[key]!=='0')reportedBurnCandidates[name].mismatched++;}}
     for(const f of Object.keys(totals)){
       totals[f]=totals[f]!==null&&v[f]!==null?totals[f]+v[f]:null;
       if(index>0)laterTotals[f]=laterTotals[f]!==null&&v[f]!==null?laterTotals[f]+v[f]:null;
@@ -120,7 +139,9 @@ function summarizeSeries(rows,kind){
       biasIfOtherExecutionBurnOmittedWei:a.omittedOtherBurnBiasWei};
   }
   return {summary:{rows:rows.length,firstTimestamp:rows[0]?.timestamp??null,lastTimestamp:rows.at(-1)?.timestamp??null,
-    fields,...counters,mismatchExamples:examples,
+    fields,...counters,mismatchExamples:examples,reportedBurnCandidates,usagePresentation,
+    excludedFromAdditiveTotals:['gasUsed','gasTarget','gasMax',...USAGE_PRESENTATION],
+    usageMeaning:'Grouped source fields have unestablished aggregate/average semantics. Fractional blob presentation is retained; gas and blob presentation values are never summed or converted into model usage.',
     reportedRowSums:Object.fromEntries(Object.entries(totals).map(([f,v])=>[f,rows.length?v?.toString()??null:null])),
     endpointArithmetic:{convention:'Treat supplyWei as the end of each reported contiguous bucket and compare the later row netWei. This convention check does not establish source clock semantics.',
       adjacentPairsChecked:pairCount,mismatchedPairs:pairMismatchCount,firstPair,lastPair,mismatchExamples:pairExamples,endpointDecomposition}},parsed};
@@ -137,7 +158,7 @@ function inspectUtcWindow(parsed,observedThrough){
   const missingComponents=Object.fromEntries(['issuanceWei','burnWei',...COMPONENTS,'netWei','gasUsed','supplyWei'].map(f=>[f,intersecting.filter(p=>p.values[f]===null).length]));
   const finalized=intersecting.length>0&&intersecting.every(p=>p.row.finalized===true);
   const exactBuckets=covers&&boundaryCrossing.length===0;
-  const aggregates={};if(exactBuckets)for(const f of ['issuanceWei','burnWei',...COMPONENTS,'netWei','gasUsed']){
+  const aggregates={};if(exactBuckets)for(const f of ['issuanceWei','burnWei',...COMPONENTS,'netWei']){
     aggregates[f]=missingComponents[f]===0?intersecting.reduce((s,p)=>s+p.values[f],0n).toString():null;
   }
   return {observedFrom:new Date(start*1000).toISOString().slice(0,10),observedThrough,windowDays:28,
@@ -145,6 +166,7 @@ function inspectUtcWindow(parsed,observedThrough){
     boundaryCrossingBuckets:boundaryCrossing.length,internalGapCount:gaps,providerBucketsCoverAllRequiredSlots:covers,
     exactBucketBoundaryMatch:exactBuckets,allSelectedBucketsExplicitlyFinalized:finalized,missingComponents,
     providerClaimAggregates:aggregates,utcAccountingEligibilityProven:false,
+    excludedUsageFields:['gasUsed','gasTarget','gasMax',...USAGE_PRESENTATION],
     blockingReasons:[...(!covers?['incomplete-slot-coverage']:[]),...(boundaryCrossing.length?['source-bucket-straddles-utc-window']:[]),
       ...(!finalized?['finality-not-explicit-for-every-selected-bucket']:[]),
       'provider-bucket-duty-and-recognition-semantics-not-independently-verified','publication-time-unknown','canonical-state-not-independently-replayed'],
@@ -179,6 +201,12 @@ export function auditEthereumSupplyAccounting(payload,{collectedAt,observedThrou
     declaredCoverage:payload.coverage??null,declaredWarnings:payload.warnings??null,summaryArithmetic:summary,
     series:{slots:slots.summary,epochs:epochs.summary},utcWindow:inspectUtcWindow(slots.parsed,observedThrough),
     supplyIdentity:ETH_SUPPLY_ACCOUNTING_POLICY.formula,
+    reportedBurnInterpretation:{
+      burnComponentsCheck:'Conditional burnWei = baseFeeBurnWei + blobBaseFeeBurnWei; consensus penalties are a separate deduction.',
+      netVersusReportedBurnCheck:'Conditional netWei = issuanceWei - burnWei - consensusPenaltiesWei - otherExecutionBurnWei, if burnWei means fee-only burn.',
+      alternativesRetained:['fee-only','fee-plus-other-execution','all-destruction'],
+      ambiguity:'When otherExecutionBurnWei is zero, a matching source cannot distinguish fee-only and fee-plus-other burnWei. The independently component-computed net never depends on selecting a burnWei convention.',
+      sourceSemanticProofEstablished:false},
     definitionFinding:{id:'other-execution-destruction-required',sourceUrl:ETH_SUPPLY_ACCOUNTING_SOURCE.protocolUrl,
       field:'otherExecutionBurnEth',reason:'EIP-6780 retains same-transaction SELFDESTRUCT burns. A fee-only supply identity is incomplete without measured non-fee destruction or affirmative exact-window zero evidence.',
       aProposalIsNotAnActivatedFork:true,modelDefinitionVersion:ETH_ECONOMIC_INPUT_SCHEMA.snapshot.metricDefinitionVersion},

@@ -7,7 +7,7 @@ import {fetchEthereumSupplyAccountingBytes,verifySupplyResponseDigest} from '../
 const G=1606824023,S=12;
 const asOf='2026-10-26',collectedAt='2026-10-27T12:00:00.000Z';
 const first=Math.ceil((Date.parse('2026-09-29T00:00:00Z')/1000-G)/S),last=first+201600-1;
-function values(){return {issuanceWei:'10000000000000000001',baseFeeBurnWei:'1000000000000000000',blobBaseFeeBurnWei:'2000000000000000000',consensusPenaltiesWei:'3000000000000000000',otherExecutionBurnWei:'1',burnWei:'6000000000000000001',netWei:'4000000000000000000',gasUsed:'9007199254740993',supplyWei:'120000000000000000000000001'};}
+function values(){return {issuanceWei:'10000000000000000001',baseFeeBurnWei:'1000000000000000000',blobBaseFeeBurnWei:'2000000000000000000',consensusPenaltiesWei:'3000000000000000000',otherExecutionBurnWei:'1',burnWei:'3000000000000000000',netWei:'4000000000000000000',gasUsed:'9007199254740993',supplyWei:'120000000000000000000000001'};}
 function slot(n,more={}){return {slot:n,timestamp:G+n*S,blockKnown:true,finalized:true,...values(),...more};}
 function payload(){return {schemaVersion:1,range:'30d',revision:10,generatedAt:Date.parse(collectedAt)/1000-5,slots:[slot(last-1),slot(last,{supplyWei:'120000004000000000000000001'})],epochs:[]};}
 const audit=p=>auditEthereumSupplyAccounting(p,{collectedAt,observedThrough:asOf});
@@ -23,12 +23,12 @@ test('one wei non-fee destruction remains exact beyond Number precision',()=>{
 });
 test('unknown non-fee destruction is missing, not zero or residual classification',()=>{
   const p=payload();delete p.slots[0].otherExecutionBurnWei;p.slots[1].otherExecutionBurnWei=null;
-  const s=audit(p).series.slots;assert.equal(s.otherBurnMissing,2);assert.equal(s.burnComponentsChecked,0);assert.equal(s.netComponentsChecked,0);assert.equal(s.netVersusReportedBurnChecked,2);
+  const s=audit(p).series.slots;assert.equal(s.otherBurnMissing,2);assert.equal(s.burnComponentsChecked,2);assert.equal(s.netComponentsChecked,0);assert.equal(s.netVersusReportedBurnChecked,0);
 });
 test('component and stock disagreements retain exact signed residuals',()=>{
-  const p=payload();p.slots[1].otherExecutionBurnWei='2';p.slots[1].supplyWei='120000004000000000000000002';
+  const p=payload();p.slots[1].otherExecutionBurnWei='2';p.slots[1].burnWei='3000000000000000001';p.slots[1].supplyWei='120000004000000000000000002';
   const s=audit(p).series.slots;assert.equal(s.burnComponentsMismatched,1);assert.equal(s.netComponentsMismatched,1);
-  assert.equal(s.mismatchExamples[0].residualWei,'-1');assert.equal(s.endpointArithmetic.mismatchExamples[0].residualWei,'1');
+  assert.equal(s.mismatchExamples[0].residualWei,'1');assert.equal(s.endpointArithmetic.mismatchExamples[0].residualWei,'1');
 });
 test('rounded numeric or noncanonical decimal money is rejected',()=>{
   for(const bad of [9007199254740992,'1e18','01','1.0','-0','-1',Infinity]){
@@ -54,7 +54,7 @@ test('a bucket crossing UTC start is not prorated into exact 28-day data',()=>{
 test('full explicit slot coverage can sum provider claims without model activation',()=>{
   const p=payload();p.slots=[slot(last,{fromSlot:first,toSlot:last,fromTimestamp:G+first*S,toTimestamp:G+last*S})];
   const a=audit(p),w=a.utcWindow;assert.equal(w.requiredSlots,201600);assert.equal(w.exactBucketBoundaryMatch,true);
-  assert.equal(w.providerClaimAggregates.gasUsed,'9007199254740993');assert.equal(w.providerClaimAggregates.otherExecutionBurnWei,'1');
+  assert.equal(Object.hasOwn(w.providerClaimAggregates,'gasUsed'),false);assert(w.excludedUsageFields.includes('gasUsed'));assert.equal(w.providerClaimAggregates.otherExecutionBurnWei,'1');
   assert.equal(w.utcAccountingEligibilityProven,false);assert.equal(a.modelInputActivated,false);
 });
 test('an internal slot gap prevents complete window aggregation',()=>{
@@ -99,4 +99,30 @@ test('unexpected URLs and advertised or streamed oversized bodies are rejected',
   await assert.rejects(fetchEthereumSupplyAccountingBytes('https://example.com/'),/not allowlisted/);
   await assert.rejects(fetchEthereumSupplyAccountingBytes(SOURCE.historyUrl,{maximumBytes:2,fetchImpl:async()=>new Response('123',{headers:{'content-length':'3'}})}),/advertised body/);
   await assert.rejects(fetchEthereumSupplyAccountingBytes(SOURCE.historyUrl,{maximumBytes:2,fetchImpl:async()=>new Response('123')}),/streamed body/);
+});
+
+test('actual grouped source row retains fractional blob presentation without usage totals',()=>{
+  // Minimal fields transcribed from captured 30d response SHA256 4992d3b2f4cc6d9e353c7f52fdc88c79af2e178dbe126fe5ddbaef1d79ecbbcc.
+  const row={slot:15308063,epoch:478376,timestamp:1790520779,fromSlot:15307104,toSlot:15308063,fromTimestamp:1790509271,toTimestamp:1790520779,
+    finalized:true,blocks:955,blobsUsed:4.641884816753927,blobsTarget:14,blobsMax:21,gasUsed:'31491039',
+    supplyWei:'122081609399981044865783235',issuanceWei:'394039220870000000000',burnWei:'37878200147066821681',
+    baseFeeBurnWei:'37860860855006600241',blobBaseFeeBurnWei:'17339292060221440',consensusPenaltiesWei:'1745197704000000000',otherExecutionBurnWei:'0',netWei:'354415823018933178319'};
+  const a=audit({...payload(),slots:[row]}),s=a.series.slots;
+  assert.equal(a.version,'eth-supply-accounting-audit-2');assert.equal(s.usagePresentation.blobsUsed.nonInteger,1);
+  assert.equal(s.usagePresentation.blobsUsed.minimum,4.641884816753927);assert.equal(s.usagePresentation.blobsUsed.additiveTotalEligible,false);
+  assert.equal(Object.hasOwn(s.reportedRowSums,'gasUsed'),false);assert.equal(s.burnComponentsMismatched,0);assert.equal(s.netComponentsMismatched,0);
+  assert.equal(s.reportedBurnCandidates.allDestruction.mismatched,1);assert.equal(s.reportedBurnCandidates.feePlusOtherExecution.mismatched,0);
+});
+test('ancillary blob missing, explicit zero and fractional values remain distinct',()=>{
+  const p=payload();p.slots[0].blobsUsed=null;p.slots[1].blobsUsed=0;
+  const u=audit(p).series.slots.usagePresentation.blobsUsed;assert.equal(u.missing,1);assert.equal(u.present,1);assert.equal(u.minimum,0);assert.equal(u.nonInteger,0);
+  for(const bad of ['4.2',-1,NaN,Infinity,{},true]){const q=payload();q.slots[0].blobsUsed=bad;assert.throws(()=>audit(q),/presentation number/);}
+});
+test('reported burn conventions do not double count consensus penalties or force a nonzero-other interpretation',()=>{
+  const a=audit(payload()),s=a.series.slots;
+  assert.equal(s.reportedBurnCandidates.feeOnly.mismatched,0);assert.equal(s.reportedBurnCandidates.feePlusOtherExecution.mismatched,2);
+  assert.equal(s.reportedBurnCandidates.allDestruction.mismatched,2);assert.equal(s.netVersusReportedBurnMismatched,0);
+  const p=payload();for(const r of p.slots)r.burnWei='3000000000000000001';
+  const q=audit(p).series.slots;assert.equal(q.reportedBurnCandidates.feePlusOtherExecution.mismatched,0);assert.equal(q.reportedBurnCandidates.feeOnly.mismatched,2);
+  assert.equal(q.netComponentsMismatched,0);
 });
