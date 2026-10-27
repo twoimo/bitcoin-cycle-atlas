@@ -52,3 +52,13 @@ runKey는 base/tail 원문 hash·가격 prefix hash·merge 정책·모형 소스
 | 기존 Coin Metrics archive | gross 발행·총수수료·L1 거래수와 consensus 순발행·분리된 blob 회계·gas 사용량은 각각 다른 정의다. |
 
 기존 PoW 발행0 부분 관측은 유지한다. 약20만 블록의 완전한28일 gas/소각 합계를 boundary 블록이나 float feeHistory 비율에서 만들어 내지 않는다. 전체 경제 snapshot과 과거 원점 적격성을 확보했다는 주장은 하지 않는다.
+
+## 최초 실제 발행과 재실행 보완
+
+소스7b68ce295a35d39fd53f174f93090bafd47e9dce의 실제 evidence 실행에서 Coinbase 요청1회·재시도0·528 bytes 수집을 완료했다. 2026-10-26 완료 ETH-USD 종가는 $2,320.34다. 실제 수신 완료2026-10-27T07:44:13.188Z, 발행2026-10-27T07:44:13.396Z이며 한국 시각으로16:44:13이다.
+
+adaptive/pooled 각각731점과 30/90/180일 target·flat/shrunkenTrend를 처음 고정했다. 최초 snapshot1개·record2개·고유ETH원점1개·pending6개·scored0개다. 두 기록을 각자의 보존 원문에서 실제 모델 재실행으로 정확재생했다. 첫30일 targetDate는2026-11-25이고 관측 종료는2026-11-26T00:00Z(한국09:00)다.
+
+원본 기록·snapshot·raw·receipt의 실제 Git blob을 Actions의 file manifest와 대조해 별도 연구 원장에 보존한다. 후속 소스는 발행기를 다시 실행해도 이 원장과 같은 실행 디렉터리의 원장을 함께 읽고 기존 발행 시각을 재사용한다. 수집/발행 receipt는 내용 주소 경로에도 보존한다. 추가 verify-preserved-only 프로세스는 네트워크 요청0·새 발행0으로 디스크의 원본을 읽어 모형을 다시 계산한다. 이 후속 검증의 실제 상태는 최종 실행 영수증에서 확인한다.
+
+초기 수치/MC 소스a7f81838de9f1c8a480f554255b10e41dd85989e의 전체 일반1,446·집중313·native35개,181PNG가 통과했다. MC는35회 적합 재사용·64,512,000 draw-days·9.716초, default105개 원점/horizon/model 비교 정확일치다. 기존 9개 모형의731점·27요약·45pairwise 보존도 통과했다. 고정 seed 패널의 세 pooled/flat 기간 모두 skill 부호가 바뀌므로 단일seed의 작은 개선을 안정적 우월성이라고 부르지 않는다. 이 값은 최초 소스 실행 결과이며 후속 소스의 검증을 대신하지 않는다.

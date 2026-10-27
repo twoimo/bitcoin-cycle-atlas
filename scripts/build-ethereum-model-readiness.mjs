@@ -26,6 +26,8 @@ for(const entry of index?.entries??[]){
 }
 const evaluation=receipt.evaluation?await read('build/ethereum-prospective-ledger/evaluations/'+receipt.evaluation.id+'.json'):null;
 if(evaluation){const {id,...body}=evaluation;assert.equal(await forecastHash(body),id);assert.deepEqual(evaluation.recordIds,records.map(r=>r.id).sort());}
+const replayReceipt=await read('build/ethereum-prospective-ledger/replay-receipt.json',true);
+if(receipt.status==='issued-or-reused'){assert.equal(replayReceipt?.status,'verified-preserved');assert.equal(replayReceipt.networkRequests,0);assert.equal(replayReceipt.newRecords,0);}
 const previous=await read('dist/data/asset-forecast-ledger/index.json');
 const priorModels=Object.values(Object.groupBy(previous.entries,e=>e.symbol)).map(entries=>({
   symbol:entries[0].symbol,records:entries.length,
@@ -39,7 +41,7 @@ const report={kind:'ethereum-model-remaining-conditions',sourceCommit,sourceTree
       meanAbsoluteLogError:s.disjoint.meanAbsoluteLogError})),
     simulationSensitivity:{status:stability.result.status,policy:stability.policy.version,defaultReplayCases:stability.defaultReplay.length,
       comparisons:stability.result.comparisons??[],marketAccuracyProven:false}},
-  prospective:{status:receipt.status,previousAssetLedger:{records:previous.entries.length,models:priorModels,separateFromNewCandidates:true},
+  prospective:{status:receipt.status,replayFromPersistedFiles:replayReceipt?{status:replayReceipt.status,networkRequests:replayReceipt.networkRequests,newRecords:replayReceipt.newRecords,reusedRecords:replayReceipt.reusedRecords,indexUnchanged:replayReceipt.indexUnchanged}:null,previousAssetLedger:{records:previous.entries.length,models:priorModels,separateFromNewCandidates:true},
     candidateRecords:records.length,uniqueOrigins:new Set(records.map(r=>r.asOf)).size,
     modelEvidence:['adaptive','pooled'].map(modelKey=>{
       const owned=records.filter(r=>r.modelKey===modelKey),rows=(evaluation?.rows??[]).filter(r=>r.modelKey===modelKey);

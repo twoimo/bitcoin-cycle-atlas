@@ -86,7 +86,9 @@ jobs:
         run: node scripts/evaluate-ethereum-monte-carlo-stability.mjs
       - name: Acquire one bounded ETH tail and preserve real prospective adaptive and pooled records
         continue-on-error: true
-        run: node scripts/issue-ethereum-prospective.mjs
+        run: |
+          node scripts/issue-ethereum-prospective.mjs
+          node scripts/issue-ethereum-prospective.mjs --verify-preserved-only
       - name: Reconcile existing models and remaining evidence conditions
         run: node scripts/build-ethereum-model-readiness.mjs
       - name: Verify preserved ETH BMNR and MSTR records and issue only with current inputs

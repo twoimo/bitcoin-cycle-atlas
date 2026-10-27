@@ -258,7 +258,16 @@
     "tests/helpers/eth-prospective-fixture.mjs",
     "tests/ethereum-prospective-records.test.mjs",
     "tests/ethereum-prospective-collector.test.mjs",
-    "research-data/ethereum-prospective-ledger/index.json"
+    "research-data/ethereum-prospective-ledger/index.json",
+    "research-data/ethereum-prospective-ledger/receipt.json",
+    "research-data/ethereum-prospective-ledger/acquisition.json",
+    "research-data/ethereum-prospective-ledger/raw/coinbase-tail.json",
+    "research-data/ethereum-prospective-ledger/records/563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b.json",
+    "research-data/ethereum-prospective-ledger/records/f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1.json",
+    "research-data/ethereum-prospective-ledger/snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+    "research-data/ethereum-prospective-ledger/observations/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+    "research-data/ethereum-prospective-ledger/evaluations/798f9901977d7778a7c1a105c2c6bdf6afe2f0ad5f83a79e0273db1e876921ea.json",
+    "research-data/ethereum-prospective-ledger/files.json"
   ],
   "dynamicResolutions": [
     {
