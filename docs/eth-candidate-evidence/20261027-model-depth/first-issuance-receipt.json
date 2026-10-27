@@ -1,0 +1,144 @@
+{
+  "kind": "ethereum-prospective-issuance",
+  "sourceCommit": "7b68ce295a35d39fd53f174f93090bafd47e9dce",
+  "sourceTree": "e0eea1fe6b9662b2ef7a113618b2dc973d335fd5",
+  "sourceHashes": {
+    "scripts/issue-ethereum-prospective.mjs": "9ebe21ce5fc5d1ab542576b0e9fcf6e501aa8010be4583eaede0b94066de8707",
+    "scripts/ethereum-prospective-collector-core.mjs": "e075c15b1e53c7feff62af8d8491ec3ffb78e160e1ceb42f5ca3b67be1cce93c",
+    "dist/ethereum-prospective-records.js": "709cb0f968c3f961b7e1089cf79518bfb79b4fe8e7d2042f99f1387a401b734e",
+    "dist/ethereum-prospective-prices.js": "1541a414cea9c11116d9485a9ff4d26052105cb4e9e0df5a14afcc82ddd8726d",
+    "dist/data/eth-ohlc.json": "69a726d87fcea635772a806ac6a00f43880a43d8c66bd88152045dffc209106f"
+  },
+  "runId": "40468702094",
+  "startedAt": "2026-10-27T07:44:13.019Z",
+  "status": "issued-or-reused",
+  "priceOnlyCandidates": true,
+  "economicSnapshotsActivated": 0,
+  "newRecords": 2,
+  "reusedRecords": 0,
+  "newSnapshots": 1,
+  "prospectiveScoredTargets": 0,
+  "productionAdopted": false,
+  "externalGeminiReview": "omitted-by-user",
+  "reverseReview": "omitted-by-user",
+  "releaseAuthorized": false,
+  "errors": [],
+  "preservedRecords": 0,
+  "asOf": "2026-10-26",
+  "anchor": 2320.34,
+  "informationCutoffAt": "2026-10-27T07:44:13.188Z",
+  "issuedAt": "2026-10-27T07:44:13.396Z",
+  "decisions": [
+    {
+      "modelKey": "adaptive",
+      "action": "append",
+      "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+      "runKey": "a0ae2e682803b573efed9ce4cfddf4235cef75f7dc45c2d5af8e9f39bdc67376"
+    },
+    {
+      "modelKey": "pooled",
+      "action": "append",
+      "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+      "runKey": "f4cb18fb5990bf6d9ab7c6181fda127c8cc9c83c2988a1cc82753b5c51b06149"
+    }
+  ],
+  "replay": [
+    {
+      "modelKey": "adaptive",
+      "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+      "outputHash": "f5728c0632945702a839cf8722a9b8ec6af0c91346169f5b14929c6ce055fe25",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    },
+    {
+      "modelKey": "pooled",
+      "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+      "outputHash": "7b84f0fa04346be007f153a189ce4266d705cd3702c5f0d65e4ceefa3e37d570",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    }
+  ],
+  "totalRecords": 2,
+  "uniqueOrigins": 1,
+  "modelOrigins": {
+    "adaptive": 1,
+    "pooled": 1
+  },
+  "evaluation": {
+    "id": "798f9901977d7778a7c1a105c2c6bdf6afe2f0ad5f83a79e0273db1e876921ea",
+    "evaluatedAt": "2026-10-27T07:44:13.529Z",
+    "pending": 6,
+    "missingObservations": 0,
+    "scored": 0,
+    "earliestOutcomeEventAt": "2026-11-26T00:00:00.000Z"
+  },
+  "finishedAt": "2026-10-27T07:44:14.046Z",
+  "acquisition": {
+    "status": "success",
+    "requestStartedAt": "2026-10-27T07:44:13.023Z",
+    "bodyCompletedAt": "2026-10-27T07:44:13.188Z",
+    "requests": 1,
+    "retries": 0,
+    "bytes": 528,
+    "rawSha256": "588c843504e25a10ecd0d1e6d157b944e1abde963f1c3b504d73dd4b5ad22635",
+    "error": null
+  },
+  "files": [
+    {
+      "path": "receipt.json",
+      "bytes": 2511,
+      "sha256": "9223f764375e9a457fbb03efca27f832c216e5490d05708eef2f432ad72eaf41",
+      "gitBlobSha": "b89b46d302b54a044d9eb81bb9525fabe956c8c8"
+    },
+    {
+      "path": "acquisition.json",
+      "bytes": 2177,
+      "sha256": "b7caaa59bbe987c16719d749b90f0d820f15f90b7f2019136f6094836086ffaa",
+      "gitBlobSha": "87623c0ea84ecad67f6ddf14bded587b7bac9f36"
+    },
+    {
+      "path": "raw/coinbase-tail.json",
+      "bytes": 528,
+      "sha256": "588c843504e25a10ecd0d1e6d157b944e1abde963f1c3b504d73dd4b5ad22635",
+      "gitBlobSha": "0dc24cba98d0a38c274a9a5623879c3dcb5f087f"
+    },
+    {
+      "path": "records/563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b.json",
+      "bytes": 75200,
+      "sha256": "f1a53ceda9039fc00d3c59b5ae8c887c7bf277ad4d4a866d9021a02d32e5efc8",
+      "gitBlobSha": "28aee2d90c339465d759f84997ff07cfbd694745"
+    },
+    {
+      "path": "records/f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1.json",
+      "bytes": 74394,
+      "sha256": "15a3156fc75faff35aca7a5f52e835570a4370b4e370ac0a5961fafc8a0363ce",
+      "gitBlobSha": "b2693e3ddbd87232b52c14d5cdf3c13e578540d1"
+    },
+    {
+      "path": "snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+      "bytes": 1084124,
+      "sha256": "4a6d592d5d7b5e99295c8ca7f9ad843ac063a695743a7e3bee766777f38903f8",
+      "gitBlobSha": "15e6fffea29b75ff69c2763f8264823cff0d3115"
+    },
+    {
+      "path": "observations/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+      "bytes": 1084124,
+      "sha256": "4a6d592d5d7b5e99295c8ca7f9ad843ac063a695743a7e3bee766777f38903f8",
+      "gitBlobSha": "15e6fffea29b75ff69c2763f8264823cff0d3115"
+    },
+    {
+      "path": "evaluations/798f9901977d7778a7c1a105c2c6bdf6afe2f0ad5f83a79e0273db1e876921ea.json",
+      "bytes": 4268,
+      "sha256": "ae3cf92fd0f840548d060b048bf8a029f3c7c448f71bf1dab861d74318cca46d",
+      "gitBlobSha": "e18adbfcd637d955bffb32b6bdf77cd671e93598"
+    },
+    {
+      "path": "index.json",
+      "bytes": 1327,
+      "sha256": "3dceded0324c32acbf2efd6aafdf015e85434361aa24e807021aa1382e5d7d93",
+      "gitBlobSha": "0287108c0d8267e640f13f6c7644a3888bd020a6"
+    }
+  ]
+}

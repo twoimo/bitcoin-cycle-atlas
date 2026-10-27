@@ -1,0 +1,702 @@
+{
+  "schemaVersion": 1,
+  "kind": "eth-model-depth-execution",
+  "sourceCommit": "93810f3ae099aa8af37bc41a3762981ab749a7b4",
+  "sourceTree": "2e9fec444da0b1565ed14dcbe612e34e0e42470f",
+  "priorTaskHead": "54317f7d05abd8fe569b0912ff34caee2bbe9981",
+  "followupDocumentationOnly": true,
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "pullRequest": 39,
+  "branch": "chatgpt/eth-cycle-economics-20261026",
+  "ci": {
+    "sourceCommit": "93810f3ae099aa8af37bc41a3762981ab749a7b4",
+    "runId": 40470921248,
+    "jobId": 122077574792,
+    "status": "success",
+    "sourceMode": "pull-request-synthetic-merge",
+    "checkoutCommit": "3faa2c5c9be1c5987b89fa3544e48aa5f861ccf6",
+    "checkoutTree": "47ba5f46496e941e3e79c979d0526cb31490e4e1",
+    "parents": [
+      "5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+      "93810f3ae099aa8af37bc41a3762981ab749a7b4"
+    ],
+    "counts": {
+      "main": {
+        "tests": 1469,
+        "pass": 1469,
+        "fail": 0,
+        "skip": 0
+      },
+      "additional": {
+        "tests": 32,
+        "pass": 32,
+        "fail": 0,
+        "skip": 0
+      },
+      "dailyClock": {
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "skip": 0
+      },
+      "staticResources": {
+        "tests": 17,
+        "pass": 17,
+        "fail": 0,
+        "skip": 0
+      },
+      "numericalAssertions": 318010,
+      "negativeControls": {
+        "passed": 16,
+        "total": 16
+      }
+    },
+    "observedLogLines": [
+      "2026-10-27T08:03:36.0492758Z HEAD is now at 3faa2c5 Merge 93810f3ae099aa8af37bc41a3762981ab749a7b4 into 5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+      "2026-10-27T08:04:30.9926985Z ℹ tests 1469",
+      "2026-10-27T08:04:30.9927705Z ℹ pass 1469",
+      "2026-10-27T08:04:30.9928040Z ℹ fail 0",
+      "2026-10-27T08:04:30.9928712Z ℹ skipped 0",
+      "2026-10-27T08:04:42.0161158Z   \"assertions\": 318010,",
+      "2026-10-27T08:04:49.0461745Z PASS negative controls: 16/16 targeted mutants rejected at their intended assertions",
+      "2026-10-27T08:04:56.2942976Z # tests 32",
+      "2026-10-27T08:04:56.2943424Z # pass 32",
+      "2026-10-27T08:04:56.2943663Z # fail 0",
+      "2026-10-27T08:04:56.2944194Z # skipped 0",
+      "2026-10-27T08:05:06.7072045Z ℹ tests 28",
+      "2026-10-27T08:05:06.7072461Z ℹ pass 28",
+      "2026-10-27T08:05:06.7072657Z ℹ fail 0",
+      "2026-10-27T08:05:06.7073072Z ℹ skipped 0",
+      "2026-10-27T08:05:23.8583775Z # tests 17",
+      "2026-10-27T08:05:23.8584143Z # pass 17",
+      "2026-10-27T08:05:23.8584325Z # fail 0",
+      "2026-10-27T08:05:23.8584733Z # skipped 0"
+    ]
+  },
+  "evidence": {
+    "runId": 40470921260,
+    "jobId": 122077575118,
+    "status": "success",
+    "actualCheckout": "93810f3ae099aa8af37bc41a3762981ab749a7b4",
+    "tests": {
+      "pass": 336,
+      "fail": 0,
+      "skipped": 0
+    },
+    "observedTestSummary": [
+      "2026-10-27T08:03:52.1635628Z ℹ tests 336",
+      "2026-10-27T08:03:52.1636045Z ℹ pass 336",
+      "2026-10-27T08:03:52.1636243Z ℹ fail 0",
+      "2026-10-27T08:03:52.1636658Z ℹ skipped 0"
+    ],
+    "browser": {
+      "status": "passed",
+      "cases": 35,
+      "screenshots": 181,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "originalResourceErrors": 15,
+      "failures": [],
+      "imageLogMode": "failures-only"
+    }
+  },
+  "hallmark": {
+    "runId": 40470922626,
+    "jobId": 122077578243,
+    "sourceCommit": "93810f3ae099aa8af37bc41a3762981ab749a7b4",
+    "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+    "phases": [
+      {
+        "name": "baseline-static",
+        "fails": 1214,
+        "reflex": 1347,
+        "warns": 37,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 26,
+        "render": "off",
+        "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      {
+        "name": "baseline-render",
+        "fails": 53,
+        "reflex": 211,
+        "warns": 13,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      {
+        "name": "current-static",
+        "fails": 0,
+        "reflex": 0,
+        "warns": 36,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 26,
+        "render": "off",
+        "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX"
+      },
+      {
+        "name": "current-render",
+        "fails": 0,
+        "reflex": 0,
+        "warns": 17,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 208/209; before 53 FAIL, 211 REFLEX, now 0 FAIL, 0 REFLEX"
+      }
+    ],
+    "designGate": {
+      "status": "pass",
+      "fails": 0,
+      "reflex": 0
+    },
+    "integrityGate": {
+      "status": "pass",
+      "errors": 0
+    },
+    "sourceReadOnly": {
+      "current": true,
+      "baseline": true,
+      "gitBlobsMatched": true
+    },
+    "durationMilliseconds": 131601,
+    "readiness": [
+      {
+        "version": "baseline",
+        "route": "btc",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "eth",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "bmnr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "mstr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "data",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "evidence",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "compare",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "mobile-preview",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "btc",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "eth",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "bmnr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "mstr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "data",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "evidence",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "compare",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "mobile-preview",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+        "status": "ready"
+      }
+    ],
+    "errors": [],
+    "exitCode": 0
+  },
+  "sourcebook": {
+    "seeds": 267,
+    "entries": 384,
+    "parts": 283,
+    "unresolvedImports": 0,
+    "bytes": 50872902,
+    "sha256": "eee657861513c6c055a2be299f11599e639d1b70582f62b246a2130b6f3d91cb",
+    "generatorExternalReview": {
+      "status": "pending",
+      "actualGeminiReport": null,
+      "actualChatgptReverse": null,
+      "releaseAuthorized": false
+    },
+    "actualUserPolicy": {
+      "geminiOpposition": "omitted-by-user",
+      "followupReverseReview": "omitted-by-user"
+    }
+  },
+  "artifact": {
+    "id": 12719255668,
+    "name": "eth-candidate-evidence-93810f3ae099aa8af37bc41a3762981ab749a7b4",
+    "size_in_bytes": 45887217,
+    "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12719255668",
+    "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12719255668/zip",
+    "expired": false,
+    "created_at": "2026-10-27T08:10:21Z",
+    "expires_at": "2026-11-26T08:10:16Z",
+    "updated_at": "2026-10-27T08:10:21Z",
+    "digest": "sha256:c4720ee5758dee16c21527a5197cb40c4f2dabae4862bc048f186f38c123427c",
+    "workflow_run": {
+      "id": 40470921260,
+      "repository_id": 1428515198,
+      "head_repository_id": 1428515198,
+      "head_branch": "chatgpt/eth-cycle-economics-20261026",
+      "head_sha": "93810f3ae099aa8af37bc41a3762981ab749a7b4"
+    }
+  },
+  "prospective": {
+    "firstIssuanceSource": "7b68ce295a35d39fd53f174f93090bafd47e9dce",
+    "firstIssuanceRun": 40468702094,
+    "latestReceipt": {
+      "kind": "ethereum-prospective-issuance",
+      "sourceCommit": "93810f3ae099aa8af37bc41a3762981ab749a7b4",
+      "sourceTree": "2e9fec444da0b1565ed14dcbe612e34e0e42470f",
+      "sourceHashes": {
+        "scripts/issue-ethereum-prospective.mjs": "87401ce617aef9061d193889d6530366a37e6ecc30cf37b2bdfd6a435c00a3c0",
+        "scripts/ethereum-prospective-collector-core.mjs": "e075c15b1e53c7feff62af8d8491ec3ffb78e160e1ceb42f5ca3b67be1cce93c",
+        "scripts/ethereum-prospective-reuse.mjs": "1f25d0406904c4fafb10681601a5043acf35a10d19595e5654bccbc15f8589a7",
+        "dist/ethereum-prospective-records.js": "709cb0f968c3f961b7e1089cf79518bfb79b4fe8e7d2042f99f1387a401b734e",
+        "dist/ethereum-prospective-prices.js": "1541a414cea9c11116d9485a9ff4d26052105cb4e9e0df5a14afcc82ddd8726d",
+        "dist/data/eth-ohlc.json": "69a726d87fcea635772a806ac6a00f43880a43d8c66bd88152045dffc209106f"
+      },
+      "runId": "40470921260",
+      "startedAt": "2026-10-27T08:06:19.392Z",
+      "status": "issued-or-reused",
+      "mode": "capture-and-issue",
+      "reusePolicy": "eth-prospective-completed-tail-reuse-1",
+      "priceOnlyCandidates": true,
+      "economicSnapshotsActivated": 0,
+      "newRecords": 0,
+      "reusedRecords": 2,
+      "newSnapshots": 0,
+      "prospectiveScoredTargets": 0,
+      "productionAdopted": false,
+      "externalGeminiReview": "omitted-by-user",
+      "reverseReview": "omitted-by-user",
+      "releaseAuthorized": false,
+      "errors": [],
+      "preservedRecords": 2,
+      "asOf": "2026-10-26",
+      "anchor": 2320.34,
+      "informationCutoffAt": "2026-10-27T08:06:19.875Z",
+      "attemptedIssueAt": "2026-10-27T08:06:20.183Z",
+      "recordIssuedAt": {
+        "adaptive": "2026-10-27T07:44:13.396Z",
+        "pooled": "2026-10-27T07:44:13.396Z"
+      },
+      "decisions": [
+        {
+          "modelKey": "adaptive",
+          "action": "reuse",
+          "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+          "runKey": "a0ae2e682803b573efed9ce4cfddf4235cef75f7dc45c2d5af8e9f39bdc67376",
+          "attemptedRunKey": "4f7b274046f1f92d335b4927b31240193161f154057c924b7d7e9651f90ea3f1",
+          "attemptedSnapshotId": "9e568dc5e619972ed2984052fad3b7b3ae3072b60336f5f02786be8ae98293c4",
+          "reusePolicy": "eth-prospective-completed-tail-reuse-1",
+          "consumedInputHash": "5caf73ad0664475b9a648802f2aa8eb03db24fa3a8cd08bf0715aa67308c8ae6",
+          "reason": "same-completed-input-excluded-rows-may-differ",
+          "equivalentPreservedIds": [
+            "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b"
+          ]
+        },
+        {
+          "modelKey": "pooled",
+          "action": "reuse",
+          "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+          "runKey": "f4cb18fb5990bf6d9ab7c6181fda127c8cc9c83c2988a1cc82753b5c51b06149",
+          "attemptedRunKey": "d9e752cbfd62d2c648c36659fdeba9c2b127699ed5b2e03e12838824161eadb9",
+          "attemptedSnapshotId": "9e568dc5e619972ed2984052fad3b7b3ae3072b60336f5f02786be8ae98293c4",
+          "reusePolicy": "eth-prospective-completed-tail-reuse-1",
+          "consumedInputHash": "be4bc78949b4158b3fee8d84df9766e90e62823cb762eea8745ec3387067a889",
+          "reason": "same-completed-input-excluded-rows-may-differ",
+          "equivalentPreservedIds": [
+            "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1"
+          ]
+        }
+      ],
+      "replay": [
+        {
+          "modelKey": "adaptive",
+          "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+          "outputHash": "f5728c0632945702a839cf8722a9b8ec6af0c91346169f5b14929c6ce055fe25",
+          "points": 731,
+          "method": "models-reexecuted-from-own-preserved-base-and-tail",
+          "recordIdentityEqual": true
+        },
+        {
+          "modelKey": "pooled",
+          "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+          "outputHash": "7b84f0fa04346be007f153a189ce4266d705cd3702c5f0d65e4ceefa3e37d570",
+          "points": 731,
+          "method": "models-reexecuted-from-own-preserved-base-and-tail",
+          "recordIdentityEqual": true
+        }
+      ],
+      "totalRecords": 2,
+      "uniqueOrigins": 1,
+      "modelOrigins": {
+        "adaptive": 1,
+        "pooled": 1
+      },
+      "evaluation": {
+        "id": "88265099ff3a32ea7e24f0ab0251c71a041f3b9c79bb169c18ee4a86d7dca28c",
+        "evaluatedAt": "2026-10-27T08:06:20.741Z",
+        "pending": 6,
+        "missingObservations": 0,
+        "scored": 0,
+        "earliestOutcomeEventAt": "2026-11-26T00:00:00.000Z"
+      },
+      "finishedAt": "2026-10-27T08:06:21.562Z",
+      "acquisition": {
+        "status": "success",
+        "requestStartedAt": "2026-10-27T08:06:19.693Z",
+        "bodyCompletedAt": "2026-10-27T08:06:19.875Z",
+        "requests": 1,
+        "retries": 0,
+        "bytes": 528,
+        "rawSha256": "4a12b3f9e067b1a6f7fe2432c1f54cb5845a96bf566ffd51359dbd18b55d52bd",
+        "error": null
+      },
+      "files": [
+        {
+          "path": "receipt.json",
+          "bytes": 3734,
+          "sha256": "e0bc6397559c554d1f41cfbb6220fd6951d8614747b1c1a2d18e404a1e78a1e4",
+          "gitBlobSha": "5e2ab41ea3d295a07293ec2c4ed2953fb2a56dfb"
+        },
+        {
+          "path": "records/563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b.json",
+          "bytes": 75200,
+          "sha256": "f1a53ceda9039fc00d3c59b5ae8c887c7bf277ad4d4a866d9021a02d32e5efc8",
+          "gitBlobSha": "28aee2d90c339465d759f84997ff07cfbd694745"
+        },
+        {
+          "path": "snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+          "bytes": 1084124,
+          "sha256": "4a6d592d5d7b5e99295c8ca7f9ad843ac063a695743a7e3bee766777f38903f8",
+          "gitBlobSha": "15e6fffea29b75ff69c2763f8264823cff0d3115"
+        },
+        {
+          "path": "records/f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1.json",
+          "bytes": 74394,
+          "sha256": "15a3156fc75faff35aca7a5f52e835570a4370b4e370ac0a5961fafc8a0363ce",
+          "gitBlobSha": "b2693e3ddbd87232b52c14d5cdf3c13e578540d1"
+        },
+        {
+          "path": "acquisitions/391956df1308eec3578872d90ca0c3247e730ae05e5c7086709c0b45ed30c6a1.json",
+          "bytes": 2177,
+          "sha256": "721cb6cb5736ce0631b09f161b1d102426b6c0cf12e73401ce96a8e8eb6e6da9",
+          "gitBlobSha": "4ab05fb214d9ec5149c756efdae1bf19b1d4e4a9"
+        },
+        {
+          "path": "raw/coinbase-tail-4a12b3f9e067b1a6f7fe2432c1f54cb5845a96bf566ffd51359dbd18b55d52bd.json",
+          "bytes": 528,
+          "sha256": "4a12b3f9e067b1a6f7fe2432c1f54cb5845a96bf566ffd51359dbd18b55d52bd",
+          "gitBlobSha": "1e13414f71d2034829e537286009b1eb5f9f99d0"
+        },
+        {
+          "path": "observations/9e568dc5e619972ed2984052fad3b7b3ae3072b60336f5f02786be8ae98293c4.json",
+          "bytes": 1084124,
+          "sha256": "2c15e3dd3f8663e2b1a3680f56716a5db7799e0b97aea6b80fc273695a5bcc38",
+          "gitBlobSha": "07ba8cf6fb70e4397a5d07d541b78e7ba4e919e7"
+        },
+        {
+          "path": "evaluations/88265099ff3a32ea7e24f0ab0251c71a041f3b9c79bb169c18ee4a86d7dca28c.json",
+          "bytes": 4268,
+          "sha256": "c026d67fda0d79f7ab24524613eb8208bb951a691c2e79d2833882a3914e509c",
+          "gitBlobSha": "b766f2a94725f3bab82761d157da935021b4abd5"
+        },
+        {
+          "path": "index.json",
+          "bytes": 1327,
+          "sha256": "3dceded0324c32acbf2efd6aafdf015e85434361aa24e807021aa1382e5d7d93",
+          "gitBlobSha": "0287108c0d8267e640f13f6c7644a3888bd020a6"
+        },
+        {
+          "path": "issuances/827f49b4229e6c975ae204018a04e70756f3279c5625bc2770eff27588adfcfc.json",
+          "bytes": 3734,
+          "sha256": "e0bc6397559c554d1f41cfbb6220fd6951d8614747b1c1a2d18e404a1e78a1e4",
+          "gitBlobSha": "5e2ab41ea3d295a07293ec2c4ed2953fb2a56dfb"
+        }
+      ]
+    },
+    "separateProcessReplay": {
+      "kind": "ethereum-prospective-issuance",
+      "sourceCommit": "93810f3ae099aa8af37bc41a3762981ab749a7b4",
+      "sourceTree": "2e9fec444da0b1565ed14dcbe612e34e0e42470f",
+      "sourceHashes": {
+        "scripts/issue-ethereum-prospective.mjs": "87401ce617aef9061d193889d6530366a37e6ecc30cf37b2bdfd6a435c00a3c0",
+        "scripts/ethereum-prospective-collector-core.mjs": "e075c15b1e53c7feff62af8d8491ec3ffb78e160e1ceb42f5ca3b67be1cce93c",
+        "scripts/ethereum-prospective-reuse.mjs": "1f25d0406904c4fafb10681601a5043acf35a10d19595e5654bccbc15f8589a7",
+        "dist/ethereum-prospective-records.js": "709cb0f968c3f961b7e1089cf79518bfb79b4fe8e7d2042f99f1387a401b734e",
+        "dist/ethereum-prospective-prices.js": "1541a414cea9c11116d9485a9ff4d26052105cb4e9e0df5a14afcc82ddd8726d",
+        "dist/data/eth-ohlc.json": "69a726d87fcea635772a806ac6a00f43880a43d8c66bd88152045dffc209106f"
+      },
+      "runId": "40470921260",
+      "startedAt": "2026-10-27T08:06:21.666Z",
+      "status": "verified-preserved",
+      "mode": "verify-preserved-only",
+      "reusePolicy": "eth-prospective-completed-tail-reuse-1",
+      "priceOnlyCandidates": true,
+      "economicSnapshotsActivated": 0,
+      "newRecords": 0,
+      "reusedRecords": 2,
+      "newSnapshots": 0,
+      "prospectiveScoredTargets": 0,
+      "productionAdopted": false,
+      "externalGeminiReview": "omitted-by-user",
+      "reverseReview": "omitted-by-user",
+      "releaseAuthorized": false,
+      "errors": [],
+      "preservedRecords": 2,
+      "replay": [
+        {
+          "modelKey": "adaptive",
+          "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+          "outputHash": "f5728c0632945702a839cf8722a9b8ec6af0c91346169f5b14929c6ce055fe25",
+          "points": 731,
+          "method": "models-reexecuted-from-own-preserved-base-and-tail",
+          "recordIdentityEqual": true
+        },
+        {
+          "modelKey": "pooled",
+          "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+          "outputHash": "7b84f0fa04346be007f153a189ce4266d705cd3702c5f0d65e4ceefa3e37d570",
+          "points": 731,
+          "method": "models-reexecuted-from-own-preserved-base-and-tail",
+          "recordIdentityEqual": true
+        }
+      ],
+      "networkRequests": 0,
+      "preservedOnlyRecords": 0,
+      "totalRecords": 2,
+      "uniqueOrigins": 1,
+      "originalIssuedAt": {
+        "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b": "2026-10-27T07:44:13.396Z",
+        "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1": "2026-10-27T07:44:13.396Z"
+      },
+      "indexUnchanged": true,
+      "finishedAt": "2026-10-27T08:06:22.845Z",
+      "acquisition": null,
+      "files": [
+        {
+          "path": "replay-receipt.json",
+          "bytes": 2199,
+          "sha256": "dcb8de9e2d92732a7a05cf752d651a339c6711c508cfcdf8bd009c77080308c9",
+          "gitBlobSha": "234971cf9040de9e21e66d691bfd57b2c62d0d8c"
+        },
+        {
+          "path": "records/563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b.json",
+          "bytes": 75200,
+          "sha256": "f1a53ceda9039fc00d3c59b5ae8c887c7bf277ad4d4a866d9021a02d32e5efc8",
+          "gitBlobSha": "28aee2d90c339465d759f84997ff07cfbd694745"
+        },
+        {
+          "path": "snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+          "bytes": 1084124,
+          "sha256": "4a6d592d5d7b5e99295c8ca7f9ad843ac063a695743a7e3bee766777f38903f8",
+          "gitBlobSha": "15e6fffea29b75ff69c2763f8264823cff0d3115"
+        },
+        {
+          "path": "records/f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1.json",
+          "bytes": 74394,
+          "sha256": "15a3156fc75faff35aca7a5f52e835570a4370b4e370ac0a5961fafc8a0363ce",
+          "gitBlobSha": "b2693e3ddbd87232b52c14d5cdf3c13e578540d1"
+        }
+      ]
+    },
+    "completeCurrentFileTransport": true,
+    "committedReferences": {
+      "sourceCommit": "93810f3ae099aa8af37bc41a3762981ab749a7b4",
+      "files": [
+        {
+          "path": "records/563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b.json",
+          "repositoryPath": "research-data/ethereum-prospective-ledger/records/563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b.json",
+          "sourceCommit": "93810f3ae099aa8af37bc41a3762981ab749a7b4",
+          "sha256": "f1a53ceda9039fc00d3c59b5ae8c887c7bf277ad4d4a866d9021a02d32e5efc8"
+        },
+        {
+          "path": "snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+          "repositoryPath": "research-data/ethereum-prospective-ledger/snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+          "sourceCommit": "93810f3ae099aa8af37bc41a3762981ab749a7b4",
+          "sha256": "4a6d592d5d7b5e99295c8ca7f9ad843ac063a695743a7e3bee766777f38903f8"
+        },
+        {
+          "path": "records/f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1.json",
+          "repositoryPath": "research-data/ethereum-prospective-ledger/records/f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1.json",
+          "sourceCommit": "93810f3ae099aa8af37bc41a3762981ab749a7b4",
+          "sha256": "15a3156fc75faff35aca7a5f52e835570a4370b4e370ac0a5961fafc8a0363ce"
+        }
+      ],
+      "allOriginalFilesRetainedInArtifact": true
+    },
+    "savedGitBlobs": [
+      {
+        "path": "receipt.json",
+        "sha": "5e2ab41ea3d295a07293ec2c4ed2953fb2a56dfb",
+        "reused": false,
+        "bytes": 3734
+      },
+      {
+        "path": "acquisitions/391956df1308eec3578872d90ca0c3247e730ae05e5c7086709c0b45ed30c6a1.json",
+        "sha": "4ab05fb214d9ec5149c756efdae1bf19b1d4e4a9",
+        "reused": false,
+        "bytes": 2177
+      },
+      {
+        "path": "raw/coinbase-tail-4a12b3f9e067b1a6f7fe2432c1f54cb5845a96bf566ffd51359dbd18b55d52bd.json",
+        "sha": "1e13414f71d2034829e537286009b1eb5f9f99d0",
+        "reused": false,
+        "bytes": 528
+      },
+      {
+        "path": "observations/9e568dc5e619972ed2984052fad3b7b3ae3072b60336f5f02786be8ae98293c4.json",
+        "sha": "07ba8cf6fb70e4397a5d07d541b78e7ba4e919e7",
+        "reused": false,
+        "bytes": 1084124
+      },
+      {
+        "path": "evaluations/88265099ff3a32ea7e24f0ab0251c71a041f3b9c79bb169c18ee4a86d7dca28c.json",
+        "sha": "b766f2a94725f3bab82761d157da935021b4abd5",
+        "reused": false,
+        "bytes": 4268
+      },
+      {
+        "path": "index.json",
+        "sha": "0287108c0d8267e640f13f6c7644a3888bd020a6",
+        "reused": true,
+        "bytes": 1327
+      },
+      {
+        "path": "issuances/827f49b4229e6c975ae204018a04e70756f3279c5625bc2770eff27588adfcfc.json",
+        "sha": "5e2ab41ea3d295a07293ec2c4ed2953fb2a56dfb",
+        "reused": true,
+        "bytes": 3734
+      },
+      {
+        "path": "files.json",
+        "sha": "7555a4bfb559470897d5c308b009279eca8bf876",
+        "reused": false,
+        "bytes": 2255
+      },
+      {
+        "path": "records/563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b.json",
+        "sha": "28aee2d90c339465d759f84997ff07cfbd694745",
+        "reused": true,
+        "bytes": 75200
+      },
+      {
+        "path": "snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+        "sha": "15e6fffea29b75ff69c2763f8264823cff0d3115",
+        "reused": true,
+        "bytes": 1084124
+      },
+      {
+        "path": "records/f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1.json",
+        "sha": "b2693e3ddbd87232b52c14d5cdf3c13e578540d1",
+        "reused": true,
+        "bytes": 74394
+      }
+    ],
+    "intermediateEquivalentRecords": "85b958 generated two additional raw-variant records with unchanged model outputs; preserved under intermediate/85b958, excluded from the final canonical two-record index. The 47ee artifact is separately retained and no unobserved counts are inferred."
+  },
+  "performance": {
+    "milliseconds": 9536.134936,
+    "fitCount": 35,
+    "drawDays": 64512000,
+    "maximumLogMatrixBytes": 1482752,
+    "environment": "GitHub Actions Node; no physical mobile latency claim",
+    "source": "GitHub Actions runtime only",
+    "marketAccuracyProven": false
+  },
+  "preserved": {
+    "protectedFiles": 18,
+    "allProtectedFilesByteIdentical": true,
+    "deletedPaths": [],
+    "mainRefObserved": "5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+    "mainWasMutatedByThisTask": false,
+    "merged": false,
+    "deployed": false,
+    "defaultModelChanged": false,
+    "priceArchiveRewritten": false
+  },
+  "release": {
+    "draft": true,
+    "authorized": false,
+    "productionPromoted": false,
+    "geminiOpposition": "omitted-by-user",
+    "followupReverseReview": "omitted-by-user"
+  }
+}

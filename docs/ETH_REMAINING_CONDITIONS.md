@@ -234,3 +234,20 @@ Gemini 반대 검토와 후속 역검토는 사용자의 명시 지시에 따라
 - 첫 UI CI4실패/native5실패, 다음 통과, HTTP body cleanup 후 최종 통과를 각각 기록했다. 실제 sourcebook은243seeds/346entries/255parts/45,771,932bytes·unresolved0이다.
 - Gemini 반대 검토·후속 역검토는 계속 **omitted-by-user**다. 더 이상 이 두 검토를 새로 요구하는 미완료 조건으로 적용하지 않는다. 충분한 경제 판본·성숙한 전향 성과·장기 표본 제약과 별도 릴리스 권한은 남는다.
 - Draft 유지, releaseAuthorized=false. 본 후속에서 main 변경·병합·공개 배포를 하지 않았다.
+
+
+## 2026-10-27 최신 심층 후속: 수치 민감도와 최초 후보 발행
+
+[상세 결과](ETH_MODEL_DEPTH_20261027.md) · [원문·실제 실행·중간 중복 기록](eth-candidate-evidence/20261027-model-depth/README.md)
+
+- 실제 검증 소스 **93810f3ae099aa8af37bc41a3762981ab749a7b4**에서 일반 **1,469개**, 집중 **336개**, native **35개**가 통과했고 181 PNG를 보존했다. Hallmark는 0 FAIL / 0 REFLEX, integrity PASS다. static 36 / render 17 WARN은 유지한다.
+- 경제 ridge-5와 BTC beta는 극단 유한 입력에서 중간 ratio/exp가 붕괴할 때만 로그 영역으로 복구한다. 실제 입력 준비, 최소 16개 학습과 12개 보정 조건은 완화하지 않았다.
+- 사전 고정한 8개 seed × 256/1,024회 모의의 pooled/flat skill은 30/90/180일 모두 부호가 바뀐다. 단일 seed의 30일 +0.085%를 안정적 우월성으로 취급하지 않는다. 공통 adaptive/pooled 원점 9/4/2개와 pooled/flat 원점 20/10/5개는 별도 집합이다.
+- 35회 fit을 재사용해 64,512,000 draw-days를 최종 9.536초에 계산했다. 원래 default 105개 비교가 정확히 일치했다. 기존 731점·27개 요약·45개 pairwise와 모형 소스·가격·기존 자산 원장 18개 보호 파일도 일치한다.
+- **후보 전용 원장**에 실제 2026-10-26 완료 가격 $2,320.34로 adaptive/pooled 각각 731점을 2026-10-27 **16:44:13 KST**에 최초 발행했다. 기존 9개 asset 원장의 27 pending과 합산하지 않는다.
+- 재실행에서 범위 밖 미완료 오늘 일봉 때문에 같은 완료 가격의 예측이 중복 발행되는 문제를 찾아 고쳤다. 원문과 완료 OHLCV 개정은 보존하며 범위 밖 행만 달라진 경우 최초 기록을 재사용한다. 중간85b 실행에서 추가된 동등 기록 2개도 증거로 보존했다.
+- 최종 실제 재수집은 **새 발행 0 / 기존 2개 재사용**이다. 별도 프로세스에서도 **network 0 / new 0 / 원문 기반 모델 재실행 2개 정확 일치**를 확인했다. 최종 활성 원장은 고유 원점 1개, pending 6개, scored 0개다.
+- 30/90/180일의 첫 목표 관측 종료는 한국 시각 **2026-11-26 / 2027-01-25 / 2027-04-25 각 09:00**이다. 완료 실제값을 수집할 때까지 점수를 만들지 않는다.
+- 전체 경제 snapshot 0, historical PIT false, 모형 비활성 상태를 유지한다. growthepie의 epoch 평균 발행·active stake·가변 담보·float blob fee를 25개 엄격 정의와 동일하다고 간주하지 않는다. 90/180일 학습의 낙관적 구조 경계는 2027-03-23 / 2031-03-02 각 09:00 KST이며 실제 준비일 약속이 아니다.
+- source-book은 267 seeds / 384 entries / 283 parts / 50,872,902 bytes, unresolved 0이다. Gemini 반대 검토·후속 역검토는 계속 **omitted-by-user**이며 미완료 필수 조건으로 다시 요구하지 않는다.
+- Draft와 releaseAuthorized=false를 유지한다. main 변경·병합·배포·기본 모형 승격은 수행하지 않았다. 후속 문서 전용 커밋과 위 실제 검증 소스는 구분한다.
