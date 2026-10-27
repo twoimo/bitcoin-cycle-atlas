@@ -107,6 +107,11 @@ test('changed canonical identity on fresh boundary read prevents observation',as
   const f=fixture({mutate:(b,{count})=>count>1?{...b,hash:hash(99)}:b});
   await assert.rejects(collectEthereumPowZeroCore(input(f)),/identity changed/);
 });
+test('a changed finalized anchor on its last numbered recheck cannot pass',async()=>{
+  const f=fixture({mutate:(b,{n,count})=>n===HEAD&&count===2?{...b,hash:hash(98)}:b});
+  await assert.rejects(collectEthereumPowZeroCore(input(f)),/identity changed/);
+  assert.equal(f.counts.get(HEAD),2);
+});
 test('adjacent UTC boundary parent links are verified',async()=>{
   const start=Date.parse('2026-09-29T00:00:00Z')/1000;
   const n=P.transition+Math.ceil((start-BASE)/12);
@@ -117,6 +122,22 @@ test('non-monotonic sampled timestamps and reversed collection clock fail closed
   const f=fixture({mutate:(b,{n})=>n>P.transition&&n<HEAD?{...b,timestamp:hex(BASE-1)}:b});
   await assert.rejects(collectEthereumPowZeroCore(input(f)),/monotonic/);
   await assert.rejects(collectEthereumPowZeroCore({...input(fixture()),clock:()=> '2026-10-27T00:19:59Z'}),/backwards/);
+});
+test('adversarial synthetic RPC exhausts search budget before a 52nd cache miss',async()=>{
+  // Adversarial sampled timestamps, not a realistic chain or market fixture.
+  const final=P.maximumHeadExclusive-1,middle=P.transition+Math.floor((final-P.transition)/2);
+  const start=Date.parse('2026-09-29T00:00:00Z')/1000,end=Date.parse('2026-10-27T00:00:00Z')/1000;
+  const calls=[];
+  const read=async(method,params)=>{
+    calls.push({method,params});
+    if(method==='eth_chainId')return '0x1';
+    const n=params[0]==='finalized'?final:Number(BigInt(params[0])),b=block(n);
+    if(n>P.transition)b.timestamp=hex(n<middle?start-1-Math.ceil(Math.log2(middle-n)):n===middle?start:end+Math.ceil(Math.log2(n-middle)));
+    return b;
+  };
+  await assert.rejects(collectEthereumPowZeroCore(input({read})),/Boundary search budget exhausted/);
+  assert.equal(calls.length,5+51);
+  assert.equal(calls.filter(c=>c.method==='eth_getBlockByNumber'&&c.params[0]===hex(final)).length,0);
 });
 function harness({respond,limits={}}={}){
   let time=Date.parse(START);const calls=[];
@@ -187,6 +208,7 @@ test('declared, streamed and total byte limits retain incomplete status and no i
   ]){
     const h=harness(options);await assert.rejects(h.t.read('eth_chainId',[]),/byte limit/);
     assert.equal(h.t.requests[0].complete,false);assert.equal(h.t.rawFiles.length,0);
+    assert.equal(h.calls[0].options.signal.aborted,true,'Failed body limits must abort the actual fetch signal');
   }
 });
 test('per-request timeout aborts fetch and preserves failure receipt',async()=>{
@@ -195,6 +217,29 @@ test('per-request timeout aborts fetch and preserves failure receipt',async()=>{
   })});
   await assert.rejects(t.read('eth_chainId',[]),/aborted/);
   assert.equal(t.requests.length,1);assert.equal(t.requests[0].complete,false);assert.match(t.requests[0].error,/aborted/);
+});
+test('timeout remains active after headers while a partial body waits for EOF',async()=>{
+  let deliveredSignal;
+  const t=createPowZeroTransport({limits:{...T,requestTimeoutMs:10},fetchImpl:async(_url,{signal})=>{
+    deliveredSignal=signal;
+    return new Response(new ReadableStream({start(controller){
+      controller.enqueue(new TextEncoder().encode('{"jsonrpc":'));
+      signal.addEventListener('abort',()=>controller.error(new Error('body aborted before EOF')),{once:true});
+    }}));
+  }});
+  await assert.rejects(t.read('eth_chainId',[]),/body aborted/);
+  assert.equal(deliveredSignal.aborted,true);assert.ok(t.requests[0].receivedBytes>0);
+  assert.equal(t.requests[0].complete,false);assert.equal(t.rawFiles.length,0);
+});
+test('cumulative body budget includes earlier successful responses',async()=>{
+  const body=id=>JSON.stringify({jsonrpc:'2.0',id,result:'0x1'});
+  const bytes=new TextEncoder().encode(body(1)).length;
+  const h=harness({limits:{maximumTotalBytes:bytes*2-1},respond:({options})=>new Response(body(JSON.parse(options.body).id))});
+  assert.equal(await h.t.read('eth_chainId',[]),'0x1');
+  await assert.rejects(h.t.read('eth_chainId',[]),/byte limit/);
+  assert.equal(h.calls.length,2);assert.equal(h.t.rawFiles.length,1);
+  assert.equal(h.t.requests[0].complete,true);assert.equal(h.t.requests[1].complete,false);
+  assert.equal(h.t.stats().totalReceivedBytes,bytes*2);assert.equal(h.calls[1].options.signal.aborted,true);
 });
 test('immutable source bytes must match Git blob identity; failed bytes remain inspectable',async()=>{
   const h=harness({respond:()=>new Response('not the pinned EIP')});

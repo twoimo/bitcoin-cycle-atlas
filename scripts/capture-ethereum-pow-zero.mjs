@@ -43,7 +43,7 @@ export function createPowZeroTransport({fetchImpl=globalThis.fetch,nowMs=()=>Dat
       if(!response.ok)throw new Error('HTTP '+response.status);
       if(nowMs()>=deadline)throw new Error('Total capture deadline exceeded');
       return {bytes,entry};
-    }catch(error){entry.error=message(error);throw error;}
+    }catch(error){controller.abort();entry.error=message(error);throw error;}
     finally{clearTimeout(timer);entry.finishedAt=new Date(nowMs()).toISOString();}
   }
   return {

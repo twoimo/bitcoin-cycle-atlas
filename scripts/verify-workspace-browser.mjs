@@ -16,7 +16,7 @@ export async function verifyWorkspaceSurface(api) {
   receipt.workspace={surface,states:[]};
   const states=receipt.workspace.states;
   async function key(key,code,number,modifiers=0){
-    for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key,code,windowsVirtualKeyCode:number,nativeVirtualKeyCode:number,modifiers,...(type==='keyDown'&&key==='Enter'?{text:'\r',unmodifiedText:'\r'}:{})});
+    for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key,code,windowsVirtualKeyCode:number,nativeVirtualKeyCode:number,modifiers,...(type==='keyDown'&&key==='Enter'&&modifiers===0?{text:'\r',unmodifiedText:'\r'}:{})});
     await settled(cdp);
   }
   async function text(selector,value){
