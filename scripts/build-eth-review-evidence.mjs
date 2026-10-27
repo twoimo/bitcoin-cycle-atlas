@@ -9,6 +9,7 @@ const evidencePaths=[
   'build/ethereum-model-comparison.json',
   'build/ethereum-adaptive-research.json',
   'build/ethereum-pooled-research.json',
+  'build/ethereum-monte-carlo-stability.json',
   'build/ethereum-economic-ablation.json',
   'build/eth-browser/report.json',
 ];

@@ -18,6 +18,8 @@ on:
       - 'scripts/evaluate-ethereum-models.mjs'
       - 'scripts/evaluate-ethereum-adaptive-research.mjs'
       - 'scripts/evaluate-ethereum-pooled-research.mjs'
+      - 'scripts/evaluate-ethereum-monte-carlo-stability.mjs'
+      - 'scripts/ethereum-monte-carlo-stability-core.mjs'
       - 'scripts/capture-ethereum-throughput.mjs'
       - 'scripts/ethereum-pow-zero-core.mjs'
       - 'scripts/capture-ethereum-pow-zero.mjs'
@@ -56,7 +58,7 @@ jobs:
       - name: Test candidate equations, missing inputs, clocks and future-information boundaries
         run: |
           node --check scripts/verify-eth-candidate-browser.mjs
-          node --test tests/ethereum-pow-zero.test.mjs tests/ethereum-btc-refresh-status.test.mjs tests/ethereum-offline-refresh-policy.test.mjs tests/ethereum-pooled-model.test.mjs tests/ethereum-interval-comparison.test.mjs tests/ethereum-throughput-supplement.test.mjs tests/eth-future-range.test.mjs tests/ethereum-adaptive-model.test.mjs tests/ethereum-adoption-scenarios.test.mjs tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-economic-ablation.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/eth-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs tests/ethereum-economic-data.test.mjs tests/ethereum-economic-collector.test.mjs tests/asset-forecast-records.test.mjs tests/asset-forecast-collector.test.mjs tests/asset-outcome-records.test.mjs tests/asset-outcome-collector.test.mjs tests/ethereum-historical-gas-source.test.mjs tests/asset-forecast-journal.test.mjs tests/journal-entry-ownership.test.mjs tests/eth-review-packet.test.mjs tests/treasury-model.test.mjs
+          node --test tests/ethereum-numeric-range.test.mjs tests/ethereum-monte-carlo-stability.test.mjs tests/ethereum-pow-zero.test.mjs tests/ethereum-btc-refresh-status.test.mjs tests/ethereum-offline-refresh-policy.test.mjs tests/ethereum-pooled-model.test.mjs tests/ethereum-interval-comparison.test.mjs tests/ethereum-throughput-supplement.test.mjs tests/eth-future-range.test.mjs tests/ethereum-adaptive-model.test.mjs tests/ethereum-adoption-scenarios.test.mjs tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-economic-ablation.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/eth-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs tests/ethereum-economic-data.test.mjs tests/ethereum-economic-collector.test.mjs tests/asset-forecast-records.test.mjs tests/asset-forecast-collector.test.mjs tests/asset-outcome-records.test.mjs tests/asset-outcome-collector.test.mjs tests/ethereum-historical-gas-source.test.mjs tests/asset-forecast-journal.test.mjs tests/journal-entry-ownership.test.mjs tests/eth-review-packet.test.mjs tests/treasury-model.test.mjs
       - name: Evaluate preserved asset forecasts without requiring a new forecast issue
         run: |
           node scripts/evaluate-asset-forecasts.mjs
@@ -75,6 +77,8 @@ jobs:
         run: node scripts/evaluate-ethereum-adaptive-research.mjs
       - name: Compare pooled returns, interval evidence and exact preservation of existing adaptive results
         run: node scripts/evaluate-ethereum-pooled-research.mjs
+      - name: Measure fixed-seed numerical sensitivity without selecting a winning seed
+        run: node scripts/evaluate-ethereum-monte-carlo-stability.mjs
       - name: Verify preserved ETH BMNR and MSTR records and issue only with current inputs
         run: |
           node scripts/issue-asset-forecasts.mjs --replay-preserved-if-stale
@@ -112,6 +116,7 @@ jobs:
         with:
           name: eth-candidate-evidence-${{ github.event.pull_request.head.sha }}
           path: |
+            build/ethereum-monte-carlo-stability.json
             build/ethereum-pooled-research.json
             build/ethereum-throughput-supplement
             build/ethereum-pow-zero

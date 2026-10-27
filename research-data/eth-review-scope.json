@@ -245,7 +245,11 @@
     "tests/ethereum-btc-refresh-status.test.mjs",
     "scripts/ethereum-pow-zero-core.mjs",
     "scripts/capture-ethereum-pow-zero.mjs",
-    "tests/ethereum-pow-zero.test.mjs"
+    "tests/ethereum-pow-zero.test.mjs",
+    "scripts/ethereum-monte-carlo-stability-core.mjs",
+    "scripts/evaluate-ethereum-monte-carlo-stability.mjs",
+    "tests/ethereum-monte-carlo-stability.test.mjs",
+    "tests/ethereum-numeric-range.test.mjs"
   ],
   "dynamicResolutions": [
     {

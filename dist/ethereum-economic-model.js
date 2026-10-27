@@ -6,7 +6,7 @@
 const DAY_MS = 86400000;
 const EIP_REF = '7372d10a457b29eceb02cd052345af165de1fb60';
 const SPEC_REF = 'ff73f4dd90a8717b13ed5a52afa5c1af358259b5';
-export const ETH_ECONOMIC_VERSION = 'eth-economic-ridge-4';
+export const ETH_ECONOMIC_VERSION = 'eth-economic-ridge-5';
 export const ETH_ECONOMIC_DEFAULTS = Object.freeze({
   windowDays: 28, maximumSnapshotAgeDays: 7, ridgeAlpha: 1,
   minimumTrainingLabels: 16, maximumHorizonDays: 180,
@@ -272,6 +272,15 @@ function economicAt(snapshots,d,cutoff){
   }
   return null;
 }
+// Preserve ordinary arithmetic exactly; recover only intermediate range failures.
+function logPriceRatio(a,b){
+  const ratio=a/b;
+  return Number.isFinite(ratio)&&ratio>0?Math.log(ratio):Math.log(a)-Math.log(b);
+}
+function finitePriceProduct(anchor,logReturn){
+  const legacy=anchor*Math.exp(logReturn);
+  return Number.isFinite(legacy)&&legacy>0?legacy:Math.exp(Math.log(anchor)+logReturn);
+}
 function featureAt(eth,btc,snapshots,d,cutoff){
   const start=d-28;
   if(!completePrices(eth,start,d,cutoff)||!completePrices(btc,start,d,cutoff))return null;
@@ -283,7 +292,7 @@ function featureAt(eth,btc,snapshots,d,cutoff){
     (m.executionFeesEth+m.blobFeesEth)/m.supplyEth,
     ethereumEconomicNetSupplyRate(m),
     m.stakedEth/m.supplyEth,m.exitQueueEth/m.supplyEth,m.l2SettlementFeesEth/m.l2UserFeesEth,
-    Math.log(e.price/e0.price)-Math.log(b.price/b0.price),Math.log(b.price/b0.price),
+    logPriceRatio(e.price,e0.price)-logPriceRatio(b.price,b0.price),logPriceRatio(b.price,b0.price),
     (m.stakingConsensusRewardsEth-m.stakingConsensusPenaltiesEth+m.stakingPriorityFeesEth+m.stakingMevExcludingPriorityEth-m.stakingServiceFeesEth-m.stakingOperatingCostsEth)/m.averageRewardEligibleStakeEth,
     Math.log1p(m.completedExitMedianWaitDays),
     (m.uniqueNativeCollateralEth+m.uniqueStakingClaimCollateralEth)/m.supplyEth,
@@ -356,6 +365,7 @@ export function buildEthereumEconomicCandidate({ethRows,btcRows,asOf,horizons=[3
     const eth=priceIndex(ethRows,asOfDay,cutoff,'ETH'),btc=priceIndex(btcRows,asOfDay,cutoff,'BTC');
     const current=featureAt(eth,btc,snapshots,asOfDay,cutoff);
     if(!current)return blocked('The current origin lacks a complete lagged price window or an eligible economic vintage.',{asOf,issuedAt:new Date(cutoff).toISOString()});
+    if(!(Number.isFinite(current.eth/current.btc)&&current.eth/current.btc>0))return blocked('Observed ETH/BTC ratio exceeds finite positive numeric range.',{asOf,issuedAt:new Date(cutoff).toISOString()});
     const first=Math.min(...eth.keys()),predictions=[],training=[],coefficients=[],contributions=[],ablations=[];
     for(const horizonDays of horizons){
       const samples=[];let considered=0,rejected=0;
@@ -367,7 +377,7 @@ export function buildEthereumEconomicCandidate({ethRows,btcRows,asOf,horizons=[3
         const f=featureAt(eth,btc,snapshots,d,originCutoff),targetDay=d+horizonDays;
         if(!f||!completePrices(eth,d,targetDay,cutoff)||!completePrices(btc,d,targetDay,cutoff)){rejected++;continue;}
         const e=priceAt(eth,targetDay,cutoff),b=priceAt(btc,targetDay,cutoff);
-        const y=Math.log(e.price/f.eth),ratioY=y-Math.log(b.price/f.btc);
+        const y=logPriceRatio(e.price,f.eth),ratioY=y-logPriceRatio(b.price,f.btc);
         if(!Number.isFinite(y)||!Number.isFinite(ratioY)){rejected++;continue;}
         samples.push({x:f.x,y,ratioY,originDate:dateOf(d),targetDate:dateOf(targetDay),snapshotVintage:f.snapshot.evidence.vintageId,snapshotHash:f.snapshot.evidence.sourceHash});
       }
@@ -389,7 +399,9 @@ export function buildEthereumEconomicCandidate({ethRows,btcRows,asOf,horizons=[3
       }
       const model=ridge(samples,'y'),ratioModel=ridge(samples,'ratioY');
       const logReturn=model.predict(current.x),relativeLogReturn=ratioModel.predict(current.x);
-      const price=current.eth*Math.exp(logReturn),ethBtcRatio=current.eth/current.btc*Math.exp(relativeLogReturn);
+      const observedRatio=current.eth/current.btc;
+      if(!(Number.isFinite(observedRatio)&&observedRatio>0))throw new RangeError('Observed ETH/BTC ratio exceeds finite positive numeric range');
+      const price=finitePriceProduct(current.eth,logReturn),ethBtcRatio=finitePriceProduct(observedRatio,relativeLogReturn);
       if(!Number.isFinite(price)||price<=0||!Number.isFinite(ethBtcRatio)||ethBtcRatio<=0){
         predictions.push({status:'unavailable',horizonDays,targetDate:dateOf(asOfDay+horizonDays),reason:'Fitted prediction exceeds finite positive numeric range.'});continue;
       }

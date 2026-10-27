@@ -78,7 +78,8 @@ export function buildSimpleEthereumBtcLink({ethRows,btcRows,asOf,horizons=ETH_CO
   const pairs=[];
   for(let day=first+1;day<=utcDay(asOf);day++){
     if(![eb.get(day),eb.get(day-1),bb.get(day),bb.get(day-1)].every(positive))return unavailable('BTC beta needs 365 consecutive aligned completed return days');
-    pairs.push([Math.log(bb.get(day)/bb.get(day-1)),Math.log(eb.get(day)/eb.get(day-1))]);
+    const logRatio=(a,b)=>{const ratio=a/b;return Number.isFinite(ratio)&&ratio>0?Math.log(ratio):Math.log(a)-Math.log(b);};
+    pairs.push([logRatio(bb.get(day),bb.get(day-1)),logRatio(eb.get(day),eb.get(day-1))]);
   }
   const mx=mean(pairs.map(p=>p[0])),my=mean(pairs.map(p=>p[1]));
   const xx=pairs.reduce((s,p)=>s+(p[0]-mx)**2,0);
