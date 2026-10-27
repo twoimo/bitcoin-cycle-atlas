@@ -1,5 +1,5 @@
-import {isExpectedOfflineBtcRefresh} from './btc-offline-refresh-policy.mjs';
 #!/usr/bin/env node
+import {isExpectedOfflineBtcRefresh} from './btc-offline-refresh-policy.mjs';
 // PR-only verification of checked-out dist files. Does not deploy or alter UI.
 import assert from 'node:assert/strict';
 import {workspaceBrowserCases,verifyWorkspaceSurface} from './verify-workspace-browser.mjs';

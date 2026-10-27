@@ -52,7 +52,9 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - name: Test candidate equations, missing inputs, clocks and future-information boundaries
-        run: node --test tests/ethereum-offline-refresh-policy.test.mjs tests/ethereum-pooled-model.test.mjs tests/ethereum-interval-comparison.test.mjs tests/ethereum-throughput-supplement.test.mjs tests/eth-future-range.test.mjs tests/ethereum-adaptive-model.test.mjs tests/ethereum-adoption-scenarios.test.mjs tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-economic-ablation.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/eth-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs tests/ethereum-economic-data.test.mjs tests/ethereum-economic-collector.test.mjs tests/asset-forecast-records.test.mjs tests/asset-forecast-collector.test.mjs tests/asset-outcome-records.test.mjs tests/asset-outcome-collector.test.mjs tests/ethereum-historical-gas-source.test.mjs tests/asset-forecast-journal.test.mjs tests/journal-entry-ownership.test.mjs tests/eth-review-packet.test.mjs tests/treasury-model.test.mjs
+        run: |
+          node --check scripts/verify-eth-candidate-browser.mjs
+          node --test tests/ethereum-offline-refresh-policy.test.mjs tests/ethereum-pooled-model.test.mjs tests/ethereum-interval-comparison.test.mjs tests/ethereum-throughput-supplement.test.mjs tests/eth-future-range.test.mjs tests/ethereum-adaptive-model.test.mjs tests/ethereum-adoption-scenarios.test.mjs tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-economic-ablation.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/eth-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs tests/ethereum-economic-data.test.mjs tests/ethereum-economic-collector.test.mjs tests/asset-forecast-records.test.mjs tests/asset-forecast-collector.test.mjs tests/asset-outcome-records.test.mjs tests/asset-outcome-collector.test.mjs tests/ethereum-historical-gas-source.test.mjs tests/asset-forecast-journal.test.mjs tests/journal-entry-ownership.test.mjs tests/eth-review-packet.test.mjs tests/treasury-model.test.mjs
       - name: Evaluate preserved asset forecasts without requiring a new forecast issue
         run: |
           node scripts/evaluate-asset-forecasts.mjs
@@ -96,9 +98,7 @@ jobs:
           fc-list ':lang=ko' file | grep -F -- "$atlas_font_dir/NotoSansCJKkr-Regular.otf"
           echo "ATLAS_FONT_RECEIPT commit=f8d157532fbfaeda587e826d4cd5b21a49186f7c font_blob=$atlas_font_blob license_blob=$atlas_font_license_blob"
       - name: Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop
-        run: |
-          node --check scripts/verify-eth-candidate-browser.mjs
-          node scripts/verify-eth-candidate-browser.mjs . build/eth-browser
+        run: node scripts/verify-eth-candidate-browser.mjs . build/eth-browser
       - name: Bind exact committed sources inputs and execution evidence for external review
         run: node scripts/build-eth-review-evidence.mjs
       - name: Preserve complete source-identified candidate evidence
