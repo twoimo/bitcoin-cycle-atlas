@@ -102,7 +102,7 @@ async function main(){
   report.runtime={elapsedMs:performance.now()-start,originFits:report.origins.length,physicalMobileMeasurement:false};
   const output=resolve(root,'build/ethereum-warm-start.json');await mkdir(dirname(output),{recursive:true});
   await writeFile(output,JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_WARM_START_RECEIPT '+JSON.stringify({kind:report.kind,asOf,policy:report.policy,provenance:report.provenance,runtime:report.runtime,
+  console.log('ETH_WARM_START_RECEIPT '+JSON.stringify({kind:report.kind,asOf:report.asOf,policy:report.policy,provenance:report.provenance,runtime:report.runtime,
     current:{...report.current,path:undefined,pathPoints:report.current.path.length},
     originCount:report.origins.length,availableOrigins:report.origins.filter(r=>r.status==='available').length,
     pointComparisons:report.pointComparisons,intervalComparisons:report.intervalComparisons,gaussianSummaries:report.gaussianControl.summaries,
