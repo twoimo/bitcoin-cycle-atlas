@@ -7,7 +7,7 @@ import {canonicalForecastJson,forecastHash} from '../dist/forecast-records.js';
 import {buildEthereumAdaptiveForecast,ETH_ADAPTIVE_POLICY} from '../dist/ethereum-adaptive-model.js';
 import {buildEthereumPooledForecast,ETH_POOLED_POLICY} from '../dist/ethereum-pooled-model.js';
 import {ETH_PROSPECTIVE_PRICE_POLICY,createEthereumResearchSnapshot,verifyEthereumResearchSnapshot,rebuildEthereumResearchPrices} from '../dist/ethereum-prospective-prices.js';
-import {createEthereumProspectiveRecord,verifyEthereumProspectiveRecord,decideEthereumProspectiveAppend,ethereumProspectiveIndexEntry,evaluateEthereumProspectiveRecords} from '../dist/ethereum-prospective-records.js';
+import {createEthereumProspectiveRecord,verifyEthereumProspectiveRecord,decideEthereumProspectiveAppend,ethereumProspectiveIndexEntry,evaluateEthereumProspectiveRecords,replayEthereumProspectiveRecord} from '../dist/ethereum-prospective-records.js';
 import {collectForecastModelIdentity} from './build-forecast-ledger.mjs';
 import {captureEthereumResearchTail} from './ethereum-prospective-collector-core.mjs';
 
@@ -104,10 +104,7 @@ try{
   const replay=[];
   for(const {modelKey,action,id}of decisions){
     const record=records.find(r=>r.id===id);
-    const replayed=await createEthereumProspectiveRecord({snapshot:snapshots[record.snapshotId],forecast:forecasts[modelKey],model:record.model,modelKey,
-      generationStartedAt:record.generationStartedAt,generatedAt:record.generatedAt,issuedAt:record.issuedAt});
-    if(replayed.outputHash!==record.outputHash||replayed.id!==record.id)throw new Error('Candidate failed exact preserved-path replay');
-    replay.push({modelKey,id,outputHash:record.outputHash,points:731,recordIdentityEqual:true});
+    replay.push(await replayEthereumProspectiveRecord({record,snapshot:snapshots[record.snapshotId],currentModel:modelFor(modelKey)}));
   }
   receipt.status='issued-or-reused';receipt.asOf=captureSnapshot.asOf;receipt.anchor=captureSnapshot.primaryPrices.at(-1)[1];
   receipt.informationCutoffAt=captureSnapshot.informationCutoffAt;receipt.issuedAt=issuedAt;receipt.decisions=decisions;receipt.replay=replay;

@@ -2,9 +2,9 @@ import {canonicalForecastJson,forecastHash} from './forecast-records.js';
 import {createForecastInformationClock,normalizeForecastTimestamp,selectPriceVintages} from './forecast-information-time.js';
 import {latestCompletedAssetDate} from './asset-forecast-records.js';
 import {buildIndependentBenchmarks} from './forecast-evaluation.js';
-import {verifyEthereumResearchSnapshot} from './ethereum-prospective-prices.js';
-import {ETH_ADAPTIVE_POLICY} from './ethereum-adaptive-model.js';
-import {ETH_POOLED_POLICY} from './ethereum-pooled-model.js';
+import {verifyEthereumResearchSnapshot,rebuildEthereumResearchPrices} from './ethereum-prospective-prices.js';
+import {ETH_ADAPTIVE_POLICY,buildEthereumAdaptiveForecast} from './ethereum-adaptive-model.js';
+import {ETH_POOLED_POLICY,buildEthereumPooledForecast} from './ethereum-pooled-model.js';
 
 export const ETH_PROSPECTIVE_POLICY=Object.freeze({version:'eth-prospective-record-1',
   horizonDays:730,sampleCount:256,seed:20261027,horizons:Object.freeze([30,90,180]),
@@ -150,4 +150,20 @@ export async function evaluateEthereumProspectiveRecords({records,snapshots,obse
     scored:rows.filter(r=>r.status==='scored').length,independentMarketRegimes:null,productionPromoted:false,coverageGuarantee:false,
     evaluator:copy(evaluator),futureObservationVintagesExcluded:selected.futureVersions};
   return {id:await forecastHash(body),...body};
+}
+
+/** Regenerate from this record's retained source bytes, never an in-memory output cache. */
+export async function replayEthereumProspectiveRecord({record,snapshot,currentModel}={}){
+  await verifyEthereumProspectiveRecord(record,snapshot);
+  await identity(currentModel,record.modelKey);
+  if(currentModel.sourceHash!==record.model.sourceHash||currentModel.version!==record.model.version)throw new Error('Exact candidate replay requires the same committed model source');
+  const prices=rebuildEthereumResearchPrices({baseText:snapshot.base.text,tailText:snapshot.tail.text,
+    requestStartedAt:snapshot.tail.requestStartedAt,bodyCompletedAt:snapshot.tail.bodyCompletedAt,sourceUrl:snapshot.tail.sourceUrl});
+  const builder=record.modelKey==='adaptive'?buildEthereumAdaptiveForecast:buildEthereumPooledForecast;
+  const forecast=builder({ethHistory:prices.archive,asOf:record.asOf,...record.options});
+  const regenerated=await createEthereumProspectiveRecord({snapshot,forecast,model:record.model,modelKey:record.modelKey,
+    generationStartedAt:record.generationStartedAt,generatedAt:record.generatedAt,issuedAt:record.issuedAt});
+  if(regenerated.outputHash!==record.outputHash||regenerated.id!==record.id)throw new Error('Candidate differs from re-execution on its preserved raw inputs');
+  return {modelKey:record.modelKey,id:record.id,outputHash:record.outputHash,points:regenerated.output.path.length,
+    method:'models-reexecuted-from-own-preserved-base-and-tail',recordIdentityEqual:true};
 }

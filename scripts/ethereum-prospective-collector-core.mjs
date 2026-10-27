@@ -30,7 +30,9 @@ export async function captureEthereumResearchTail({baseText,fetchImpl=globalThis
         parts.push(Buffer.from(row.value));
       }
       const bytes=Buffer.concat(parts);receipt.bodyCompletedAt=clock();receipt.completeBody=true;receipt.rawSha256=sha(bytes);receipt.rawBase64=bytes.toString('base64');
-      receipt.rawText=new TextDecoder('utf-8',{fatal:true}).decode(bytes);
+      const decoded=new TextDecoder('utf-8',{fatal:true}).decode(bytes);
+      if(!Buffer.from(decoded,'utf8').equals(bytes))throw new Error('ETH raw body is not lossless UTF-8; preserve original bytes only');
+      receipt.rawText=decoded;
       if(!response.ok)throw new Error('ETH provider returned HTTP '+response.status);
       rebuildEthereumResearchPrices({baseText,tailText:receipt.rawText,requestStartedAt:started,bodyCompletedAt:receipt.bodyCompletedAt,sourceUrl:receipt.sourceUrl});
       receipt.status='success';

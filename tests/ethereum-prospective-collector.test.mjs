@@ -61,3 +61,11 @@ test('timeout before response headers never fabricates a provider status or raw 
   assert.equal(result.status,'failed');assert.equal(result.httpStatus,null);assert.equal(signal.aborted,true);
   assert.equal(result.rawSha256,null);assert.equal(result.receivedBytes,0);
 });
+
+test('UTF-8 BOM cannot silently change the exact raw source bytes during decode',async()=>{
+  const {f,options}=await setup(),raw=Buffer.concat([Buffer.from([0xef,0xbb,0xbf]),Buffer.from(f.tail.text)]);
+  const result=await captureEthereumResearchTail({...options,fetchImpl:async()=>new Response(raw)});
+  assert.equal(result.status,'failed');assert.match(result.error.message,/lossless UTF-8/);
+  assert.equal(result.completeBody,true);assert.equal(result.rawText,null);
+  assert.equal(result.rawSha256,digest(raw));assert.equal(result.rawBase64,raw.toString('base64'));
+});

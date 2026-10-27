@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {forecastHash,canonicalForecastJson} from '../dist/forecast-records.js';
 import {createEthereumResearchSnapshot,verifyEthereumResearchSnapshot,rebuildEthereumResearchPrices,planEthereumResearchPriceRequest} from '../dist/ethereum-prospective-prices.js';
-import {createEthereumProspectiveRecord,verifyEthereumProspectiveRecord,decideEthereumProspectiveAppend,evaluateEthereumProspectiveRecords} from '../dist/ethereum-prospective-records.js';
+import {createEthereumProspectiveRecord,verifyEthereumProspectiveRecord,decideEthereumProspectiveAppend,evaluateEthereumProspectiveRecords,replayEthereumProspectiveRecord} from '../dist/ethereum-prospective-records.js';
 import {prospectiveFixture} from './helpers/eth-prospective-fixture.mjs';
+import {buildEthereumAdaptiveForecast} from '../dist/ethereum-adaptive-model.js';
 const copy=structuredClone;
 test('typed raw quantiles preserve a representative trajectory outside the band and exact immutable replay',async()=>{
   const f=await prospectiveFixture();
@@ -95,4 +96,23 @@ test('mature score uses observed price and immutable raw bounds, never the repre
   assert.ok(Math.abs(score.scores.logIntervalScore-(Math.log(120)-Math.log(80)+10*(Math.log(80)-Math.log(50))))<1e-12);
   assert.equal(score.scores.covered,false);assert.equal(score.source.snapshotId,observed.id);
   assert.equal(result.uniqueOrigins,1);assert.equal(result.scored,1);
+});
+
+test('real replay rebuilds the model from retained source bytes and rejects a rehashed output cache',async()=>{
+  const f=await prospectiveFixture(),base=JSON.parse(f.base.text),first=base.dailyHistory.candles[0].time;
+  const price=i=>2000*Math.exp(.65*Math.sin(i/60)+.0001*i);
+  for(const [i,r]of base.dailyHistory.candles.entries()){r.open=r.close=price(i);r.high=r.close*1.01;r.low=r.close*.99;}
+  const text=JSON.stringify(base),baseInput={...f.base,text,gitBlobSha:createHash('sha1').update('blob '+Buffer.byteLength(text)+'\0').update(text).digest('hex')};
+  const raw=JSON.parse(f.tail.text).map(row=>{const p=price((row[0]-first)/86400);return [row[0],p*.99,p*1.01,p,p,10];});
+  const tail={...f.tail,text:JSON.stringify(raw)},snapshot=await createEthereumResearchSnapshot({base:baseInput,tail});
+  const prices=rebuildEthereumResearchPrices({baseText:text,tailText:tail.text,requestStartedAt:tail.requestStartedAt,bodyCompletedAt:tail.bodyCompletedAt,sourceUrl:tail.sourceUrl});
+  const forecast=buildEthereumAdaptiveForecast({ethHistory:prices.archive,asOf:snapshot.asOf,horizonDays:730,sampleCount:256,seed:20261027});
+  const record=await createEthereumProspectiveRecord({...f.args,snapshot,forecast});
+  const replay=await replayEthereumProspectiveRecord({record,snapshot,currentModel:f.model});
+  assert.equal(replay.method,'models-reexecuted-from-own-preserved-base-and-tail');assert.equal(replay.points,731);
+  const changed=copy(forecast);changed.path[17].price*=1.01;
+  const forged=await createEthereumProspectiveRecord({...f.args,snapshot,forecast:changed});
+  await verifyEthereumProspectiveRecord(forged,snapshot); // Well-formed content address does not prove recomputation.
+  await assert.rejects(replayEthereumProspectiveRecord({record:forged,snapshot,currentModel:f.model}),/re-execution/);
+  await assert.rejects(replayEthereumProspectiveRecord({record,snapshot,currentModel:{...f.model,sourceHash:'f'.repeat(64)}}),/hash/);
 });
