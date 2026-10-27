@@ -251,3 +251,20 @@ Gemini 반대 검토와 후속 역검토는 사용자의 명시 지시에 따라
 - 전체 경제 snapshot 0, historical PIT false, 모형 비활성 상태를 유지한다. growthepie의 epoch 평균 발행·active stake·가변 담보·float blob fee를 25개 엄격 정의와 동일하다고 간주하지 않는다. 90/180일 학습의 낙관적 구조 경계는 2027-03-23 / 2031-03-02 각 09:00 KST이며 실제 준비일 약속이 아니다.
 - source-book은 267 seeds / 384 entries / 283 parts / 50,872,902 bytes, unresolved 0이다. Gemini 반대 검토·후속 역검토는 계속 **omitted-by-user**이며 미완료 필수 조건으로 다시 요구하지 않는다.
 - Draft와 releaseAuthorized=false를 유지한다. main 변경·병합·배포·기본 모형 승격은 수행하지 않았다. 후속 문서 전용 커밋과 위 실제 검증 소스는 구분한다.
+
+## 2026-10-27 추가 심층: 초기 상태·단순 구간 기준·경제 자료의 시계
+
+[상세 연구와 수학](ETH_INITIALIZATION_AND_CONTROLS_20261027.md) · [실행·원문 진단·중간 실패](eth-candidate-evidence/20261027-initialization/README.md)
+
+- 검증 소스는 **a1ecdcea2ed181835af65f0db6b712ba8c3ee273**, tree **aa09ec9b42a48535647efc11b2ce325173ab76fb**다. 이 결과를 추가하는 후속 문서 커밋과 구분한다.
+- 기존 adaptive v1은 Merge에서 판별기를 시작해 1,501개 post-Merge 수익률 중 588개만 상태에 배정했다. 별도 warm-start 연구 후보는 그때까지의 전체 연속 가격으로 상태·나이·극값·확인 연속 횟수를 초기화한다. 추정에는 post-Merge 수익률과 그 기간의 위험 노출만 사용해 **1,501개를 분류하고 913개를 복원**한다. 과거 가격을 초기화에 쓰는 것과 과거 수익률을 추정 표본에 넣는 것을 구분한다.
+- 최초 상태는 추정 창 이전에 시작한 기간으로 처리하고, 현재 미완료 기간도 완결 표본으로 세지 않는다. up/down은 확인 시점 기반 상태이며 실제 저점·고점 사이 상승장/하락장과 동일하지 않다. **3년 상승·1년 하락은 증명되지 않았다.**
+- 같은 원점에서 기존 adaptive 대비 평균 절대 로그오차 개선율은 30일 **−2.40% / n9**, 90일 **+0.62% / n4**, 180일 **+4.93% / n2**다. 사용 자료 증가를 예측력 향상으로 치환하지 않는다. warm-start는 기본값·보존 발행본을 바꾸지 않으며 전향 발행 0개다.
+- 180일 과거 변동성·로그 drift 0의 고정 정규 구간 기준과 원래 flat/shrunkenTrend 경험 구간을 추가했다. 후보와 기준의 공통 원점을 먼저 정한 뒤 비중첩 표본을 선택하고 raw 구간에서 proper interval score를 다시 계산한다. 적중률만으로 구간 품질을 평가하지 않으며 서로 다른 원점 집합의 평균 점수도 직접 비교하지 않는다. 기존 interval 비교 9개는 원래 순서대로 보존하고 12개를 덧붙였다.
+- Coin Metrics 보존 CSV의 Merge 이후 완결 행 1,347개에서 일 종료→provider 계산 완료 지연은 **1일 초과 91개 / 30일 초과 16개**다. PriceUSD[d]와 ReferenceRate[d]의 날짜 의미도 다르다. 관측일·계산 완료·공개·실제 수집 시각을 분리하고, 모르는 publishedAt은 null로 유지한다. 실제 과거 가용 판본으로 소급하지 않는다.
+- 마지막 완결 28일 창의 total fees는 **9,122.065722414916226531 ETH**, gross issuance는 **78,672.726006681 ETH**, provider 공급 증가는 **75,192.915800120654279794 ETH**다. 이는 2026-04-26~05-23의 오래된 부분 관측이다. 수수료=소각, gross=합의 순발행, provider 공급=검증된 전체 공급으로 바꾸지 않는다. **완전 경제 snapshot은 여전히 0**이다.
+- 준비 상태가 전달받은 배열 길이를 적격 snapshot 수로 표시하던 진단을 고쳤다. 실제 정의·시각·최신성 검사를 재사용하며 형식 오류는 invalid-input/null로 남긴다. BTC 연동 가격식도 중간 exp만 overflow하고 최종 가격은 유한한 경우에 한정해 로그 영역으로 복구한다.
+- 최종 일반 CI **1,511/1,511**, 집중 **378/378**, Chromium **35/35·181 PNG**가 통과했다. runtime/unexpected resource 오류 0/0, 의도한 offline 원문 오류 15개는 보존한다. Hallmark **0 FAIL/0 REFLEX**, static36/render17 WARN, integrity errors0이다. 일반 CI는 합성 merge136f361, 직접 evidence·Hallmark는 a1ecdcea이며 정확한 tree·run은 실행 요약에 있다. 먼저 실패한 기존 비교 개수 assertion과 receipt 변수 오류도 intermediate-executions.json에 남겼다.
+- 기존 adaptive731점·27요약·45pairwise 보존을 확인했다. 실제 후보 원장은 **새0/기존2재사용·고유원점1·pending6/scored0**, 네트워크 없는 재실행에서 각731점이 일치한다. warm-start는 발행0이며 기존 발행본의 성적으로 소급하지 않는다. source-book은 **279seeds/400entries/314parts/56,450,426bytes**, unresolved0이고 60MB 한도를 유지했다.
+- 완전한 경제 입력·원점 당시의 실제 가용 판본·충분한 기간별 정답·성숙한 전향 성과·독립 보정 검증은 남아 있다. 기존 90/180일 학습의 구조적 경계도 유지한다. Gemini 반대 검토와 후속 역검토는 **omitted-by-user**이며 필수 조건으로 되살리지 않는다.
+- Draft, releaseAuthorized=false를 유지한다. 이 후속에서 main 변경·병합·배포·기본 모형 승격은 하지 않았다.

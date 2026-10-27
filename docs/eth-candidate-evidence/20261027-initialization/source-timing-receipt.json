@@ -1,0 +1,62 @@
+{
+  "source": {
+    "sha256": "46b18f3df967405374b1f6ee8a3d11ee1b7a5b176ac9fb4342caf6bf8648f2cc",
+    "gitBlobSha1": "d8e4f389b37626f432a923805e5cc5fa2ad5490b",
+    "byteCount": 2121732,
+    "receiptHashMatched": true,
+    "repository": "coinmetrics/data",
+    "path": "csv/eth.csv",
+    "providerCommit": "f1a36afb962731c387bb03982758ab0103063da5",
+    "repositoryCommitTimestamp": "2026-05-24T13:37:39Z",
+    "publishedAt": null,
+    "collectedAt": "2026-10-26T12:12:40.869Z",
+    "publicationTimeKnown": false,
+    "clockMeaning": "Commit metadata and provider completion never substitute for publication or collection"
+  },
+  "rows": {
+    "total": 3952,
+    "first": "2015-07-30",
+    "last": "2026-05-24",
+    "eraStart": "2022-09-15",
+    "eraStartMeaning": "Merge calendar date inclusive; the transition day is not a full PoS day",
+    "eraRows": 1348,
+    "completeMetricRows": 1347,
+    "latestComplete": "2026-05-23",
+    "missingByField": {
+      "SplyCur": 1,
+      "IssTotNtv": 1,
+      "FeeTotNtv": 1,
+      "AdrActCnt": 1,
+      "TxCnt": 1,
+      "PriceUSD": 1
+    }
+  },
+  "lagOver1Day": 91,
+  "lagOver30Days": 16,
+  "latest28Days": {
+    "observedFrom": "2026-04-26",
+    "observedThrough": "2026-05-23",
+    "observedAt": "2026-05-24T00:00:00.000Z",
+    "windowDays": 28,
+    "completeMetricWindow": true,
+    "missingDates": [],
+    "missingFields": [],
+    "aggregate": {
+      "totalFeesIncludingBlobEth": "9122.065722414916226531",
+      "grossIssuanceEth": "78672.726006681",
+      "providerLedgerSupplyOpeningEth": "121646198.312885754802307137",
+      "providerLedgerSupplyClosingEth": "121721391.228685875456586931",
+      "providerLedgerSupplyChangeEth": "75192.915800120654279794",
+      "providerLedgerSupplyGrowthPct": 0.061812795502837845,
+      "supplyGrowthMeaning": "Change in this provider ledger metric; not a reconciled net-issuance or burn estimate",
+      "nativeAmountRepresentation": "Exact decimal strings, integer arithmetic at 10^-18 ETH; growth percent is approximate",
+      "supplyOpeningAt": "2026-04-26T00:00:00.000Z",
+      "supplyClosingAt": "2026-05-24T00:00:00.000Z"
+    },
+    "providerCompletedAt": "2026-05-24T02:44:08.000Z",
+    "modelSnapshot": null
+  },
+  "staleDays": 155,
+  "fullModelSnapshotReady": false,
+  "output": "/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/build/ethereum-source-timing.json"
+}

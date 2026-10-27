@@ -1,0 +1,29 @@
+{
+  "kind": "research-document-values-compared-with-completed-ci",
+  "sourceCommit": "a1ecdcea2ed181835af65f0db6b712ba8c3ee273",
+  "runId": "40476026537",
+  "verifiedAt": "2026-10-27T08:59:01.762Z",
+  "exactMatches": [
+    "warm-start point pairs",
+    "warm-start interval pairs",
+    "warm-start Gaussian summaries",
+    "prior and candidate state diagnostics",
+    "warm-start policy",
+    "adaptive and pooled Gaussian summaries",
+    "empirical controls",
+    "source-clock source identity",
+    "source-clock row counts",
+    "source-clock exact 28-day aggregate"
+  ],
+  "sourceFileSha256Matches": [
+    "dist/ethereum-warm-start-model.js",
+    "dist/ethereum-interval-benchmark.js",
+    "dist/ethereum-economic-model.js",
+    "dist/ethereum-model-comparison.js",
+    "scripts/evaluate-ethereum-warm-start.mjs",
+    "scripts/evaluate-ethereum-interval-controls.mjs",
+    "scripts/analyze-ethereum-source-timing.mjs",
+    "dist/data/eth-ohlc.json"
+  ],
+  "forecastAccuracyProven": false
+}
