@@ -1,0 +1,95 @@
+[
+  {
+    "url": "https://ethereum-beacon-api.publicnode.com/eth/v1/beacon/genesis",
+    "httpStatus": 200,
+    "startedAt": "2026-10-27T16:35:14.214065+00:00",
+    "collectedAt": "2026-10-27T16:35:14.291423+00:00",
+    "bytes": 170,
+    "sha256": "55ffb0cee289551f91ce003dcee739e310b65cbadf9421c3057b29d312eabd18",
+    "path": "/tmp/eth-economic-cohort-probe/genesis.raw.json",
+    "finalized": null,
+    "execution_optimistic": null,
+    "selectedData": {
+      "genesis_time": "1606824023",
+      "genesis_validators_root": "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95",
+      "genesis_fork_version": "0x00000000"
+    }
+  },
+  {
+    "url": "https://ethereum-beacon-api.publicnode.com/eth/v1/beacon/states/0x599ec75e7c18069511ef94f8d03fe63ee791e7ce0ee3725546f049cf0251fd57/validators?id=0,1,2,3,4,5,6,7",
+    "httpStatus": 200,
+    "startedAt": "2026-10-27T16:35:14.291475+00:00",
+    "collectedAt": "2026-10-27T16:35:14.788736+00:00",
+    "bytes": 3769,
+    "sha256": "033ba6badfdf11733c882ba305875c6bf281b96e4adede33e384998e915fcff1",
+    "path": "/tmp/eth-economic-cohort-probe/validators.raw.json",
+    "finalized": true,
+    "execution_optimistic": false,
+    "selectedData": [
+      {
+        "index": "0",
+        "status": "active_ongoing",
+        "balance": "34251995807",
+        "effective_balance": "34000000000",
+        "withdrawable_epoch": "18446744073709551615",
+        "exit_epoch": "18446744073709551615"
+      },
+      {
+        "index": "1",
+        "status": "active_ongoing",
+        "balance": "32039159506",
+        "effective_balance": "32000000000",
+        "withdrawable_epoch": "18446744073709551615",
+        "exit_epoch": "18446744073709551615"
+      },
+      {
+        "index": "2",
+        "status": "active_ongoing",
+        "balance": "32039113972",
+        "effective_balance": "32000000000",
+        "withdrawable_epoch": "18446744073709551615",
+        "exit_epoch": "18446744073709551615"
+      },
+      {
+        "index": "3",
+        "status": "active_ongoing",
+        "balance": "32039094486",
+        "effective_balance": "32000000000",
+        "withdrawable_epoch": "18446744073709551615",
+        "exit_epoch": "18446744073709551615"
+      },
+      {
+        "index": "4",
+        "status": "active_ongoing",
+        "balance": "32039135833",
+        "effective_balance": "32000000000",
+        "withdrawable_epoch": "18446744073709551615",
+        "exit_epoch": "18446744073709551615"
+      },
+      {
+        "index": "5",
+        "status": "active_ongoing",
+        "balance": "39423114441",
+        "effective_balance": "32000000000",
+        "withdrawable_epoch": "18446744073709551615",
+        "exit_epoch": "18446744073709551615"
+      },
+      {
+        "index": "6",
+        "status": "active_ongoing",
+        "balance": "40367740489",
+        "effective_balance": "40000000000",
+        "withdrawable_epoch": "18446744073709551615",
+        "exit_epoch": "18446744073709551615"
+      },
+      {
+        "index": "7",
+        "status": "withdrawal_done",
+        "balance": "0",
+        "effective_balance": "0",
+        "withdrawable_epoch": "441214",
+        "exit_epoch": "440958"
+      }
+    ]
+  }
+]

@@ -7,6 +7,7 @@ import {planEthereumResearchPriceRequest,createEthereumResearchSnapshot} from '.
 import {createEthereumProspectiveRecord} from '../dist/ethereum-prospective-records.js';
 import {createAssetOutcomeSnapshot} from '../dist/asset-outcome-records.js';
 import {ETH_PROSPECTIVE_CALIBRATION_POLICY as policy,buildEthereumProspectiveCalibrationReadiness,
+  createEthereumProspectiveCalibrationSession,buildEthereumProspectiveCalibrationReadinessBatch,
   createEthereumProspectiveCalibrationFreeze,verifyEthereumProspectiveCalibrationFreeze} from '../scripts/ethereum-prospective-calibration-core.mjs';
 
 // Synthetic sources and source identities exercise contracts only. These are
@@ -73,6 +74,87 @@ before(async()=>{
 });
 const run=overrides=>buildEthereumProspectiveCalibrationReadiness({...inputs,...overrides});
 async function rehash(value){const {id,...body}=value;return {id:await forecastHash(body),...body};}
+
+test('one opaque session preserves every single-call field and ID across all horizons',async()=>{
+  const bindings=[30,90,180].map(horizonDays=>({...binding,horizonDays}));
+  const expected=[];for(const bound of bindings)expected.push(await run({binding:bound}));
+  const session=await createEthereumProspectiveCalibrationSession(inputs);
+  assert.equal(Object.isFrozen(session),true);assert.deepEqual(Object.keys(session),[]);
+  assert.deepEqual(await buildEthereumProspectiveCalibrationReadinessBatch({session,bindings,informationCutoffAt}),expected);
+});
+
+test('serialized, forged and wrapped sessions and external cache flags cannot bypass verification',async()=>{
+  const session=await createEthereumProspectiveCalibrationSession(inputs);
+  for(const fake of [{},JSON.parse(JSON.stringify(session)),Object.create(session),new Proxy(session,{}),null]){
+    await assert.rejects(()=>buildEthereumProspectiveCalibrationReadinessBatch({session:fake,bindings:[binding],informationCutoffAt}),/original opaque/);
+  }
+  for(const extra of [{records},{observations:[outcome]},{verified:true},{cache:{}}]){
+    await assert.rejects(()=>buildEthereumProspectiveCalibrationReadinessBatch({session,bindings:[binding],informationCutoffAt,...extra}),/Only a calibration session/);
+  }
+  await assert.rejects(()=>buildEthereumProspectiveCalibrationReadinessBatch({session,bindings:[binding,binding],informationCutoffAt}),/Unique exact/);
+});
+
+test('session acquisition and batch bindings capture inputs before their first asynchronous suspension',async()=>{
+  const expected=await run(),mutable=clone(inputs);
+  const pending=createEthereumProspectiveCalibrationSession(mutable);
+  mutable.records[0].model.sourceHash='0'.repeat(64);
+  mutable.snapshots[mutable.records[0].snapshotId].base.text='changed after call';
+  mutable.observations[0].sourceDocument='changed after call';
+  const session=await pending,bindings=[clone(binding)],request={session,bindings,informationCutoffAt};
+  const result=buildEthereumProspectiveCalibrationReadinessBatch(request);
+  bindings[0].horizonDays=90;bindings[0].options.seed=17;request.informationCutoffAt='2099-01-01T00:00:00.000Z';
+  assert.deepEqual(await result,[expected]);
+  await assert.rejects(()=>createEthereumProspectiveCalibrationSession(mutable),/Invalid preserved prospective record/);
+});
+
+test('an invalid input cannot be repaired in the caller while session verification is suspended',async()=>{
+  const mutable=clone(inputs);mutable.records[0].model.sourceHash='0'.repeat(64);
+  const rejected=createEthereumProspectiveCalibrationSession(mutable);
+  mutable.records[0]=clone(records[0]);
+  await assert.rejects(()=>rejected,/Invalid preserved prospective record/);
+  const bad=clone(inputs);bad.observations[0].sourceReceipt.collectedAt='2099-01-01T00:00:00.000Z';
+  const pending=createEthereumProspectiveCalibrationSession(bad);bad.observations[0]=clone(outcome);
+  const session=await pending;
+  const [result]=await buildEthereumProspectiveCalibrationReadinessBatch({session,bindings:[binding],informationCutoffAt});
+  assert.equal(result.status,'incomplete-calibration-block');assert.equal(result.invalidObservations.length,1);
+  assert.equal(result.futureObservationIds.length,0);assert.equal(result.logRadius,null);
+});
+
+test('one session reselects outcome vintages at each cutoff and result mutation cannot contaminate it',async()=>{
+  const laterAt=new Date(Date.parse(informationCutoffAt)+1000).toISOString();
+  const later=await makeOutcome(records,{collectedAt:laterAt,priceOverrides:{[records[0].targets[0].targetDate]:1000}});
+  const source={...inputs,observations:[outcome,later]},session=await createEthereumProspectiveCalibrationSession(source);
+  const evaluate=at=>buildEthereumProspectiveCalibrationReadinessBatch({session,bindings:[binding],informationCutoffAt:at});
+  const before=await evaluate(informationCutoffAt),after=await evaluate(laterAt);
+  assert.deepEqual(before,[await run(source)]);
+  assert.deepEqual(after,[await run({...source,informationCutoffAt:laterAt})]);
+  assert.equal(before[0].slots[0].observationId,outcome.id);assert.equal(after[0].slots[0].observationId,later.id);
+  assert.notEqual(before[0].logRadius,after[0].logRadius);
+  before[0].slots[0].actual=1;before[0].binding.options.seed=17;
+  assert.deepEqual(await evaluate(informationCutoffAt),[await run(source)]);
+  const second=await createEthereumProspectiveCalibrationSession({...inputs,observations:[later]});
+  const [different]=await buildEthereumProspectiveCalibrationReadinessBatch({session:second,bindings:[binding],informationCutoffAt});
+  assert.equal(different.status,'incomplete-calibration-block');assert.equal(different.validSelectedOutcomes,0);
+});
+
+test('cached invalid-observation diagnostics are owned by the session and cannot be edited through results',async()=>{
+  const bad=clone(outcome);bad.sourceDocument='broken raw observation';
+  const session=await createEthereumProspectiveCalibrationSession({...inputs,observations:[bad]});
+  const evaluate=()=>buildEthereumProspectiveCalibrationReadinessBatch({session,bindings:[binding],informationCutoffAt});
+  const original=await evaluate(),expected=clone(original);
+  original[0].invalidObservations[0].message='forged success';original[0].invalidObservations.length=0;
+  assert.deepEqual(await evaluate(),expected);
+});
+
+test('an opaque token never substitutes for full raw-input reconstruction when creating or verifying a freeze',async()=>{
+  const session=await createEthereumProspectiveCalibrationSession(inputs);
+  const [readiness]=await buildEthereumProspectiveCalibrationReadinessBatch({session,bindings:[binding],informationCutoffAt});
+  const frozen=await createEthereumProspectiveCalibrationFreeze({...inputs,readiness,frozenAt:informationCutoffAt,freezeSource});
+  const bad=clone(records[0]);bad.model.sourceHash='0'.repeat(64);
+  const changed={...inputs,records:[bad,...records.slice(1)],session};
+  await assert.rejects(()=>createEthereumProspectiveCalibrationFreeze({...changed,readiness,frozenAt:informationCutoffAt,freezeSource}),/Invalid preserved prospective record/);
+  await assert.rejects(()=>verifyEthereumProspectiveCalibrationFreeze(frozen,changed),/Invalid preserved prospective record/);
+});
 
 test('strict gate derives exactly twelve same-bound prospective residuals and preserves null publication',async()=>{
   const before=json(inputs),result=await run();

@@ -12,7 +12,8 @@ import {ETH_ADAPTIVE_POLICY} from '../dist/ethereum-adaptive-model.js';
 import {ETH_POOLED_POLICY} from '../dist/ethereum-pooled-model.js';
 import {ETH_WARM_START_PROSPECTIVE_POLICY,ETH_WARM_START_PROSPECTIVE_ENTRY} from '../dist/ethereum-warm-start-prospective.js';
 import {collectForecastModelIdentity} from './build-forecast-ledger.mjs';
-import {ETH_PROSPECTIVE_CALIBRATION_POLICY,buildEthereumProspectiveCalibrationReadiness} from './ethereum-prospective-calibration-core.mjs';
+import {ETH_PROSPECTIVE_CALIBRATION_POLICY,createEthereumProspectiveCalibrationSession,
+  buildEthereumProspectiveCalibrationReadinessBatch} from './ethereum-prospective-calibration-core.mjs';
 
 const HEX=/^[a-f0-9]{64}$/,json=canonicalForecastJson;
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -128,10 +129,9 @@ export async function buildEthereumProspectiveCalibrationReport({repositoryRoot,
       bindings.set(json(binding),binding);
     }
   }
-  const results=[];
-  for(const binding of [...bindings.values()].sort((a,b)=>json(a).localeCompare(json(b)))){
-    results.push(await buildEthereumProspectiveCalibrationReadiness({...input,informationCutoffAt:cutoff,binding}));
-  }
+  const session=await createEthereumProspectiveCalibrationSession(input);
+  const results=await buildEthereumProspectiveCalibrationReadinessBatch({session,informationCutoffAt:cutoff,
+    bindings:[...bindings.values()].sort((a,b)=>json(a).localeCompare(json(b)))});
   const ready=results.filter(result=>result.status==='ready-to-freeze');
   const body={schemaVersion:1,kind:'ethereum-prospective-calibration-report',informationCutoffAt:cutoff,
     policy:ETH_PROSPECTIVE_CALIBRATION_POLICY,

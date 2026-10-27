@@ -26,10 +26,17 @@ on:
       - 'scripts/ethereum-economic-vintages*.mjs'
       - 'scripts/ethereum-supply-accounting-core.mjs'
       - 'scripts/capture-ethereum-supply-accounting.mjs'
+      - 'scripts/ethereum-supply-resolution-core.mjs'
+      - 'scripts/analyze-ethereum-supply-resolution.mjs'
+      - 'scripts/ethereum-staking-cohort-core.mjs'
+      - 'scripts/capture-ethereum-staking-cohort.mjs'
       - 'scripts/ethereum-independent-calibration-core.mjs'
       - 'scripts/evaluate-ethereum-independent-calibration.mjs'
       - 'scripts/ethereum-prospective-calibration-core.mjs'
       - 'scripts/build-ethereum-prospective-calibration-readiness.mjs'
+      - 'scripts/ethereum-prospective-base.mjs'
+      - 'scripts/ethereum-prospective-capacity-core.mjs'
+      - 'scripts/analyze-ethereum-prospective-capacity.mjs'
       - 'scripts/analyze-ethereum-source-timing.mjs'
       - 'scripts/evaluate-ethereum-monte-carlo-stability.mjs'
       - 'scripts/ethereum-monte-carlo-stability-core.mjs'
@@ -52,6 +59,7 @@ on:
       - 'research-data/eth-economic-captures/**'
       - 'research-data/ethereum-economic-vintages/**'
       - 'research-data/eth-supply-accounting/**'
+      - 'research-data/ethereum-staking-cohort/**'
       - 'scripts/build-eth-review*.mjs'
       - 'research-data/eth-review-scope.json'
       - '.github/workflows/eth-model-evaluation.yml'
@@ -86,6 +94,11 @@ jobs:
           node --check scripts/capture-ethereum-supply-accounting.mjs
           node --check scripts/evaluate-ethereum-independent-calibration.mjs
           node --check scripts/build-ethereum-prospective-calibration-readiness.mjs
+          node --check scripts/ethereum-prospective-base.mjs
+          node --check scripts/analyze-ethereum-prospective-capacity.mjs
+          node --check scripts/analyze-ethereum-supply-resolution.mjs
+          node --check scripts/capture-ethereum-staking-cohort.mjs
+          node --test tests/ethereum-prospective-base.test.mjs tests/ethereum-prospective-capacity.test.mjs tests/ethereum-supply-resolution.test.mjs tests/ethereum-staking-cohort.test.mjs
           node --test tests/ethereum-prospective-calibration.test.mjs tests/ethereum-prospective-calibration-readiness.test.mjs
           node --test tests/ethereum-economic-supply-accounting.test.mjs tests/ethereum-supply-accounting.test.mjs tests/ethereum-economic-vintages.test.mjs tests/ethereum-independent-calibration.test.mjs
           node --test tests/ethereum-common-cohort.test.mjs tests/ethereum-economic-evidence-coverage.test.mjs tests/ethereum-warm-start-prospective.test.mjs
@@ -113,6 +126,11 @@ jobs:
       - name: Audit bounded public supply claims with exact non-fee destruction accounting
         continue-on-error: true
         run: node scripts/capture-ethereum-supply-accounting.mjs
+      - name: Reconcile actual supply sampling grids with exact UTC boundary stock requirements
+        run: node scripts/analyze-ethereum-supply-resolution.mjs
+      - name: Collect one pinned fixed-validator cohort state without activating economic inputs
+        continue-on-error: true
+        run: node scripts/capture-ethereum-staking-cohort.mjs
       - name: Evaluate the exact committed candidates and current stored prices
         run: node scripts/evaluate-ethereum-models.mjs
       - name: Audit ETH periods, volatility, simulation and institutional arithmetic
@@ -136,6 +154,8 @@ jobs:
           node scripts/issue-ethereum-prospective.mjs --verify-preserved-only --include-warm-start
       - name: Validate retained prospective calibration evidence without requiring a new forecast issue
         run: node scripts/build-ethereum-prospective-calibration-readiness.mjs
+      - name: Diagnose prospective calendar and retained-input capacity without relaxing sample requirements
+        run: node scripts/analyze-ethereum-prospective-capacity.mjs
       - name: Reconcile existing models and remaining evidence conditions
         run: node scripts/build-ethereum-model-readiness.mjs
       - name: Verify preserved ETH BMNR and MSTR records and issue only with current inputs
@@ -185,8 +205,11 @@ jobs:
             build/ethereum-economic-evidence-coverage.json
             build/ethereum-economic-vintages
             build/ethereum-supply-accounting
+            build/ethereum-supply-resolution.json
+            build/ethereum-staking-cohort
             build/ethereum-independent-calibration.json
             build/ethereum-prospective-calibration-readiness.json
+            build/ethereum-prospective-capacity.json
             build/ethereum-prospective-ledger
             build/ethereum-monte-carlo-stability.json
             build/ethereum-pooled-research.json

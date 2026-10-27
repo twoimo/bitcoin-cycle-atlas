@@ -22,6 +22,15 @@ const P=ETH_PROSPECTIVE_CALIBRATION_POLICY,HEX=/^[a-f0-9]{64}$/,COMMIT=/^[a-f0-9
 const json=canonicalForecastJson,copy=value=>JSON.parse(json(value));
 const closeAt=date=>new Date((utcDay(date)+1)*86400000).toISOString();
 const safeError=error=>({name:error.name,message:String(error.message).slice(0,800)});
+const sessions=new WeakMap();
+
+function freezeValues(value){
+  if(value&&typeof value==='object'){
+    for(const child of Object.values(value))freezeValues(child);
+    Object.freeze(value);
+  }
+  return value;
+}
 
 function normalizedBinding(binding){
   if(!binding||!['adaptive','pooled','warmStart'].includes(binding.modelKey)||
@@ -77,19 +86,61 @@ function observationCollectedAt(snapshot){
   throw new TypeError('Only preserved raw ETH observation snapshots are accepted');
 }
 
+/** The token carries no caller-readable evidence and is never serialized as
+ * proof. Copy before the first await, then validate the owned immutable values.
+ * Every new session repeats validation; an ID, cache flag or old token cannot
+ * authenticate changed inputs. Outcomes are parsed once, while cutoff/vintage
+ * selection is still performed independently for each requested binding. */
+export async function createEthereumProspectiveCalibrationSession({records,snapshots,observations=[]}={}){
+  boundedUnique(records,P.maximumRecords,'prospective records');
+  boundedUnique(observations,P.maximumObservations,'outcome snapshots');
+  if(!snapshots||typeof snapshots!=='object'||Array.isArray(snapshots))throw new TypeError('Preserved forecast snapshots by ID are required');
+  const captured=freezeValues(copy({records,snapshots,observations}));
+  boundedUnique(captured.records,P.maximumRecords,'prospective records');
+  boundedUnique(captured.observations,P.maximumObservations,'outcome snapshots');
+  await verifyRecordInventory(captured.records,captured.snapshots);
+  const observationEvidence=[];
+  for(const snapshot of captured.observations){
+    try{observationEvidence.push({snapshot,...await observationRows(snapshot)});}
+    catch(error){observationEvidence.push({snapshot,error:safeError(error)});}
+  }
+  const token=Object.freeze(Object.create(null));
+  sessions.set(token,{...captured,observationEvidence:freezeValues(observationEvidence)});
+  return token;
+}
+
+/** Only an in-process token produced above is accepted. There is deliberately
+ * no public "already verified" input or persisted validation cache. */
+export async function buildEthereumProspectiveCalibrationReadinessBatch(input={}){
+  if(!input||Object.keys(input).sort().join(',')!=='bindings,informationCutoffAt,session')
+    throw new TypeError('Only a calibration session, bindings and cutoff are accepted');
+  const evidence=sessions.get(input.session);
+  if(!evidence)throw new TypeError('An original opaque calibration session is required');
+  const at=normalizeForecastTimestamp(input.informationCutoffAt,'informationCutoffAt');
+  if(!Array.isArray(input.bindings)||input.bindings.length>P.maximumRecords*3)
+    throw new TypeError('Bounded exact calibration bindings required');
+  // Capture all requested bindings before the first await as well.
+  const bindings=input.bindings.map(normalizedBinding);
+  if(new Set(bindings.map(json)).size!==bindings.length)throw new TypeError('Unique exact calibration bindings required');
+  const results=[];
+  for(const bound of bindings)results.push(await readinessFromVerifiedEvidence(evidence,at,bound));
+  return results;
+}
+
 /** Selection never reads losses. Same-origin revisions cannot inflate n or
  * replace a missing first issue. Validation failure remains in its selected
  * slot; invalid visible outcome evidence blocks the entire freeze. */
 export async function buildEthereumProspectiveCalibrationReadiness({records,snapshots,observations=[],informationCutoffAt,binding}={}){
   const at=normalizeForecastTimestamp(informationCutoffAt,'informationCutoffAt'),bound=normalizedBinding(binding);
-  boundedUnique(records,P.maximumRecords,'prospective records');
-  boundedUnique(observations,P.maximumObservations,'outcome snapshots');
-  if(!snapshots||typeof snapshots!=='object'||Array.isArray(snapshots))throw new TypeError('Preserved forecast snapshots by ID are required');
+  const session=await createEthereumProspectiveCalibrationSession({records,snapshots,observations});
+  return readinessFromVerifiedEvidence(sessions.get(session),at,bound);
+}
+
+async function readinessFromVerifiedEvidence({records,observations,observationEvidence},at,bound){
   // Identity, binding and clocks are untrusted routing inputs until the whole
   // original record and its snapshot reproduce. A changed model hash/issue
   // time must not make a bad first record disappear as another experiment or
   // a future issue and silently promote the thirteenth origin into its slot.
-  await verifyRecordInventory(records,snapshots);
   const excluded=[],pending=[],matured=[];
   for(const record of records){
     if(!matches(record,bound)){excluded.push({recordId:record.id,reason:'different-experiment-binding'});continue;}
@@ -132,11 +183,13 @@ export async function buildEthereumProspectiveCalibrationReadiness({records,snap
       observationId:null,actual:null,actualSource:null,absoluteLogError:null});
   }
   const prices=[],byVintage=new Map(),futureObservations=[],invalidObservations=[];
-  for(const snapshot of observations){
+  for(const evidence of observationEvidence){
+    const {snapshot}=evidence;
+    if(evidence.error){invalidObservations.push({observationId:snapshot.id,...evidence.error});continue;}
     try{
       // The acquisition clock is part of the immutable evidence too. Verify
       // it before deciding a vintage lies beyond this cutoff.
-      const {rows,receipt}=await observationRows(snapshot),collectedAt=receipt.collectedAt;
+      const {rows,receipt}=evidence,collectedAt=receipt.collectedAt;
       if(collectedAt>at){futureObservations.push(snapshot.id);continue;}
       if(byVintage.has(receipt.vintageId))throw new Error('Conflicting outcome acquisition identity');
       byVintage.set(receipt.vintageId,snapshot);

@@ -6,6 +6,7 @@ import {tmpdir} from 'node:os';
 import {fileURLToPath} from 'node:url';
 import {canonicalForecastJson} from '../dist/forecast-records.js';
 import {readEthereumCalibrationInputs} from '../scripts/build-ethereum-prospective-calibration-readiness.mjs';
+import {createEthereumProspectiveCalibrationSession,buildEthereumProspectiveCalibrationReadinessBatch} from '../scripts/ethereum-prospective-calibration-core.mjs';
 
 const root=fileURLToPath(new URL('..',import.meta.url)),candidate='research-data/ethereum-prospective-ledger';
 const originalIndex=JSON.parse(await readFile(join(root,candidate,'index.json'),'utf8'));
@@ -110,4 +111,19 @@ test('an indexed record cannot follow a symlink outside the supplied repository'
   await rm(join(directory,candidate,entry.recordPath));
   await symlink(join(external,'record.json'),join(directory,candidate,entry.recordPath));
   await assert.rejects(()=>load(directory),/regular file inside the repository/);
+});
+
+test('a prior opaque session cannot make a later loader read trust changed bytes under the same record ID',async t=>{
+  const directory=await fixture(t),input=await load(directory),record=input.records[0];
+  const session=await createEthereumProspectiveCalibrationSession(input);
+  const binding={modelKey:record.modelKey,modelVersion:record.model.version,modelSourceHash:record.model.sourceHash,
+    options:record.options,horizonDays:30};
+  const args={session,bindings:[binding],informationCutoffAt:record.issuedAt};
+  const expected=await buildEthereumProspectiveCalibrationReadinessBatch(args);
+  const changed=JSON.parse(recordText);changed.model.sourceHash='0'.repeat(64);
+  await put(directory,candidate+'/'+entry.recordPath,changed);
+  await assert.rejects(()=>load(directory),/hash|identity|source|mismatch/i);
+  // The old token still represents its owned original bytes, never a claim
+  // that the current files have been reread or the changed record is valid.
+  assert.deepEqual(await buildEthereumProspectiveCalibrationReadinessBatch(args),expected);
 });

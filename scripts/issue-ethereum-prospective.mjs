@@ -13,18 +13,18 @@ import {collectForecastModelIdentity} from './build-forecast-ledger.mjs';
 import {captureEthereumResearchTail} from './ethereum-prospective-collector-core.mjs';
 import {decideEthereumProspectiveIssue,ETH_PROSPECTIVE_REUSE_POLICY} from './ethereum-prospective-reuse.mjs';
 import {parseEthereumProspectiveArguments} from './ethereum-prospective-options.mjs';
+import {readEthereumCommittedBase,ETH_COMMITTED_BASE_POLICY} from './ethereum-prospective-base.mjs';
 
 const root=fileURLToPath(new URL('..',import.meta.url)),out=resolve(root,'build/ethereum-prospective-ledger');
 const stored=resolve(root,'research-data/ethereum-prospective-ledger');
 const json=x=>canonicalForecastJson(x)+'\n',now=()=>new Date().toISOString(),sha=x=>createHash('sha256').update(x).digest('hex');
 const git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8',timeout:10000}).trim();
 const sourceCommit=git('rev-parse','HEAD'),sourceTree=git('rev-parse','HEAD^{tree}');
-const PIN={sourceCommit:'54317f7d05abd8fe569b0912ff34caee2bbe9981',gitBlobSha:'882c49f0263034426e4e3afe377cc60a17448b6c',bytes:895609};
 const {verifyOnly,includeWarmStart,modelKeys}=parseEthereumProspectiveArguments(process.argv.slice(2));
 const receiptPath=verifyOnly?'replay-receipt.json':'receipt.json';
 const files=new Map(),records=[],snapshots={},committedTransportReferences=new Map();
 const sourcePaths=['scripts/issue-ethereum-prospective.mjs','scripts/ethereum-prospective-collector-core.mjs','scripts/ethereum-prospective-reuse.mjs',
-  'scripts/ethereum-prospective-options.mjs','dist/ethereum-prospective-dispatch.js','dist/ethereum-warm-start-prospective.js',
+  'scripts/ethereum-prospective-options.mjs','scripts/ethereum-prospective-base.mjs','dist/ethereum-prospective-dispatch.js','dist/ethereum-warm-start-prospective.js',
   'dist/ethereum-warm-start-model.js','dist/ethereum-prospective-records.js','dist/ethereum-prospective-prices.js',ETH_PROSPECTIVE_PRICE_POLICY.basePath];
 if(git('status','--porcelain','--',...sourcePaths))throw new Error('Prospective issuer requires committed source and base input');
 const sourceHashes=Object.fromEntries(await Promise.all(sourcePaths.map(async p=>[p,sha(await readFile(resolve(root,p)))])));
@@ -93,16 +93,17 @@ try{
     receipt.originalIssuedAt=Object.fromEntries(eligible.map(r=>[r.id,r.issuedAt]));
     receipt.indexUnchanged=true;
   }else{
-  const baseText=await readFile(resolve(root,ETH_PROSPECTIVE_PRICE_POLICY.basePath),'utf8'),baseCollectedAt=now();
-  const baseBytes=Buffer.from(baseText,'utf8');
-  if(baseBytes.length!==PIN.bytes||createHash('sha1').update('blob '+baseBytes.length+'\0').update(baseBytes).digest('hex')!==PIN.gitBlobSha)throw new Error('Current committed base differs from the declared immutable pin; review a new pin explicitly');
+  const committedBase=await readEthereumCommittedBase({repositoryRoot:root,sourceCommit,sourceTree});
+  const baseText=committedBase.base.text;
+  receipt.baseSelection=committedBase.receipt;
+  receipt.baseSelectionPolicy=ETH_COMMITTED_BASE_POLICY;
   tail=await captureEthereumResearchTail({baseText});
   const acquisitionId=await forecastHash(tail);
   await save('acquisitions/'+acquisitionId+'.json',json(tail));
   if(tail.completeBody&&tail.rawText!==null)await save('raw/coinbase-tail-'+tail.rawSha256+'.json',tail.rawText);
   else if(tail.completeBody&&tail.rawBase64!==null)await save('raw/coinbase-tail-'+tail.rawSha256+'.base64.txt',tail.rawBase64);
   if(tail.status!=='success')throw new Error('No candidate issue after failed ETH capture: '+tail.error?.message);
-  captureSnapshot=await createEthereumResearchSnapshot({base:{text:baseText,...PIN,collectedAt:baseCollectedAt},
+  captureSnapshot=await createEthereumResearchSnapshot({base:committedBase.base,
     tail:{text:tail.rawText,requestStartedAt:tail.requestStartedAt,bodyCompletedAt:tail.bodyCompletedAt,sourceUrl:tail.sourceUrl}});
   const priceSource=rebuildEthereumResearchPrices({baseText,tailText:tail.rawText,requestStartedAt:tail.requestStartedAt,
     bodyCompletedAt:tail.bodyCompletedAt,sourceUrl:tail.sourceUrl});
