@@ -15,6 +15,9 @@ async function read(path,optional=false){
   catch(error){if(optional&&error.code==='ENOENT')return null;throw error;}
 }
 const comparison=await read('build/ethereum-model-comparison.json'),stability=await read('build/ethereum-monte-carlo-stability.json');
+const intervalControls=await read('build/ethereum-interval-controls.json'),warmStart=await read('build/ethereum-warm-start.json');
+const sourceTiming=await read('build/ethereum-source-timing.json');
+assert.equal(intervalControls.provenance.sourceCommit,sourceCommit);assert.equal(warmStart.provenance.sourceCommit,sourceCommit);
 const receipt=await read('build/ethereum-prospective-ledger/receipt.json'),index=await read('build/ethereum-prospective-ledger/index.json',true);
 assert.equal(comparison.provenance.sourceCommit,sourceCommit);assert.equal(stability.sourceCommit,sourceCommit);assert.equal(receipt.sourceCommit,sourceCommit);
 const records=[];
@@ -41,6 +44,18 @@ const report={kind:'ethereum-model-remaining-conditions',sourceCommit,sourceTree
       meanAbsoluteLogError:s.disjoint.meanAbsoluteLogError})),
     simulationSensitivity:{status:stability.result.status,policy:stability.policy.version,defaultReplayCases:stability.defaultReplay.length,
       comparisons:stability.result.comparisons??[],marketAccuracyProven:false}},
+  addedResearchControls:{
+    intervalBenchmarks:{gaussian:intervalControls.gaussian.summaries,empirical:intervalControls.empiricalControls,
+      calibratedForProduction:false,comparisonAcrossDifferentOrigins:false},
+    initialization:{model:warmStart.policy.version,
+      classifiedReturnsBefore:warmStart.current.prior.classifiedReturns,
+      classifiedReturnsAfter:warmStart.current.candidate.classifiedReturns,
+      restoredClassifiedReturns:warmStart.current.restoredClassifiedReturns,
+      preMergeReturnsUsed:warmStart.current.candidate.preMergeReturnsUsed,
+      preMergeRiskDaysUsed:warmStart.current.candidate.preMergeRiskDaysUsed,
+      pointComparisons:warmStart.pointComparisons.filter(row=>row.left==='warmStartEth'),
+      intervalComparisons:warmStart.intervalComparisons,
+      defaultChanged:false,prospectiveRecordsIssued:0,predictiveImprovementProven:false}},
   prospective:{status:receipt.status,replayFromPersistedFiles:replayReceipt?{status:replayReceipt.status,networkRequests:replayReceipt.networkRequests,newRecords:replayReceipt.newRecords,reusedRecords:replayReceipt.reusedRecords,indexUnchanged:replayReceipt.indexUnchanged}:null,previousAssetLedger:{records:previous.entries.length,models:priorModels,separateFromNewCandidates:true},
     candidateRecords:records.length,uniqueOrigins:new Set(records.map(r=>r.asOf)).size,
     modelEvidence:['adaptive','pooled'].map(modelKey=>{
@@ -51,7 +66,15 @@ const report={kind:'ethereum-model-remaining-conditions',sourceCommit,sourceTree
         independentlyValidatedMarketRegimes:null,accuracyProven:false};
     }),issuanceReceiptSha256:sources['build/ethereum-prospective-ledger/receipt.json'],
     requiresFutureObservedAndCollectedPrices:true,multipleModelsOrHorizonsAreNotIndependentOrigins:true},
-  economics:{version:'eth-economic-ridge-5',eligibleFullSnapshots:comparison.data.economicSnapshotCount,
+  economics:{version:'eth-economic-ridge-5',providedSnapshots:comparison.data.economicSnapshotCount,
+    eligibleFullSnapshots:comparison.data.economicSnapshotReadiness?.definitionAndTimeQualifiedSnapshots??null,
+    inputInspection:comparison.data.economicSnapshotReadiness??null,
+    retainedSourceTiming:{sourceSha256:sourceTiming.source.sha256,collectedAt:sourceTiming.source.collectedAt,
+      publishedAt:sourceTiming.source.publishedAt,latestComplete:sourceTiming.rows.latestComplete,
+      completeMergeEraRows:sourceTiming.rows.completeMetricRows,
+      providerCompletionOverOneDay:sourceTiming.completionLag.strictlyOver1Day,
+      providerCompletionOverThirtyDays:sourceTiming.completionLag.strictlyOver30Days,
+      historicalPointInTimeReady:false},
     active:comparison.current.candidates.economic.status==='ready',
     feasibility:assessEthereumEconomicFeasibility({asOf:comparison.asOf}),
     partialProtocolPoWZeroIsNotTotalIssuance:true,definitionContractsRelaxed:false,

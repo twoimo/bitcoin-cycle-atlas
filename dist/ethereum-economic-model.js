@@ -272,6 +272,29 @@ function economicAt(snapshots,d,cutoff){
   }
   return null;
 }
+/** Diagnose the same snapshot contract used by the estimator. A supplied array
+ * length is not the number of eligible inputs; validation authenticates neither
+ * source contents nor past possession of the declared vintages. */
+export function inspectEthereumEconomicSnapshots({economicSnapshots=[],asOf,issuedAt}={}){
+  const providedSnapshots=Array.isArray(economicSnapshots)?economicSnapshots.length:null;
+  const result={asOf,providedSnapshots,definitionAndTimeQualifiedSnapshots:null,
+    currentSnapshotAvailable:false,currentSnapshot:null,sourceAuthenticityVerified:false,
+    historicalVintagesVerified:false,modelReady:false,definitionContractsRelaxed:false};
+  try{
+    const d=day(asOf),closeAt=(d+1)*DAY_MS,cutoff=issuedAt===undefined?closeAt:stamp(issuedAt,'issuedAt');
+    if(cutoff<closeAt||cutoff>=closeAt+DAY_MS)throw new RangeError('issuedAt must be within the UTC day after the asOf close');
+    if(!Array.isArray(economicSnapshots))throw new TypeError('Economic snapshots must be an array');
+    const qualified=snapshotsAtIssue(economicSnapshots,d,cutoff),current=economicAt(qualified,d,cutoff);
+    return {...result,status:'inspected',informationCutoffAt:new Date(cutoff).toISOString(),
+      definitionAndTimeQualifiedSnapshots:qualified.length,currentSnapshotAvailable:current!==null,
+      currentSnapshot:current?{observedThrough:dateOf(current.day),ageDays:d-current.day,
+        vintageId:current.evidence.vintageId,sourceHash:current.evidence.sourceHash}:null,
+      reason:qualified.length?current?null:'No qualified snapshot is fresh at this origin':'No definition-and-time-qualified full snapshots'};
+  }catch(error){
+    if(!(error instanceof TypeError||error instanceof RangeError))throw error;
+    return {...result,status:'invalid-input',reason:error.message};
+  }
+}
 // Preserve ordinary arithmetic exactly; recover only intermediate range failures.
 function logPriceRatio(a,b){
   const ratio=a/b;

@@ -11,6 +11,9 @@ const evidencePaths=[
   'build/ethereum-pooled-research.json',
   'build/ethereum-monte-carlo-stability.json',
   'build/ethereum-model-readiness.json',
+  'build/ethereum-source-timing.json',
+  'build/ethereum-interval-controls.json',
+  'build/ethereum-warm-start.json',
   'build/ethereum-economic-ablation.json',
   'build/eth-browser/report.json',
 ];

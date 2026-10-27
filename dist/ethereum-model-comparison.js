@@ -6,7 +6,7 @@ import {buildEthereumAssetScenarioPaths} from './ethereum-forecast.js';
 import {buildEthereumAdaptiveCandidate} from './ethereum-adaptive-model.js';
 import {buildEthereumPooledCandidate} from './ethereum-pooled-model.js';
 import {buildEthereumCycleCandidates} from './ethereum-cycle-models.js';
-import {buildEthereumEconomicCandidate} from './ethereum-economic-model.js';
+import {buildEthereumEconomicCandidate,inspectEthereumEconomicSnapshots} from './ethereum-economic-model.js';
 
 export const ETH_COMPARISON_POLICY = Object.freeze({
   version: 'eth-locked-candidate-comparison-5', horizons: Object.freeze([30,90,180]),
@@ -87,7 +87,14 @@ export function buildSimpleEthereumBtcLink({ethRows,btcRows,asOf,horizons=ETH_CO
   const beta=pairs.reduce((s,p)=>s+(p[0]-mx)*(p[1]-my),0)/xx;
   const benchmark=buildIndependentBenchmarks(b,{asOf,horizons});
   const anchor=e.at(-1).price;
-  const predictions=benchmark.targets.map(t=>({horizonDays:t.horizonDays,targetDate:t.targetDate,price:anchor*Math.exp(beta*benchmark.dailyLogDrift*t.horizonDays)}));
+  const predictions=benchmark.targets.map(t=>{
+    const logChange=beta*benchmark.dailyLogDrift*t.horizonDays;
+    const direct=anchor*Math.exp(logChange);
+    // Preserve ordinary arithmetic exactly. The intermediate exponential may
+    // overflow/underflow even when the combined log-price is representable.
+    const price=positive(direct)?direct:Math.exp(Math.log(anchor)+logChange);
+    return {horizonDays:t.horizonDays,targetDate:t.targetDate,price};
+  });
   if(!predictions.every(p=>positive(p.price)))return unavailable('BTC-linked prediction overflow');
   return {status:'ready',predictions,assumptions:{
     formula:'log(P_ETH[t+h]/P_ETH[t]) = beta[t] * h * BTC_shrunken_daily_log_trend[t]',
@@ -242,7 +249,7 @@ export function summarizeEthereumIntervalPair(cases,{asOf,horizonDays,left,right
   const cutoff=utcDay(asOf);
   if(!Array.isArray(cases)||!Number.isSafeInteger(horizonDays)||horizonDays<1||horizonDays>730||
     !Number.isFinite(alpha)||alpha<=0||alpha>=1)throw new RangeError('Invalid paired interval settings');
-  for(const side of [left,right])if(!side||!ETH_COMPARISON_MODELS.includes(side.model)||
+  for(const side of [left,right])if(!side||![...ETH_COMPARISON_MODELS,'warmStartEth'].includes(side.model)||
     !['simulated','experimental'].includes(side.kind))throw new TypeError('Unknown paired interval model or kind');
   function band(row,side){
     const value=(side.kind==='simulated'?row.simulatedIntervals:row.intervals)?.[side.model];
@@ -287,6 +294,17 @@ export function summarizeEthereumIntervalPair(cases,{asOf,horizonDays,left,right
     disjoint:{left:leftScore,right:rightScore},
     rightMinusLeftMeanLogIntervalScore:disjoint.length?rightScore.meanLogIntervalScore-leftScore.meanLogIntervalScore:null,
     independentSampleSize:null,coverageGuarantee:false,historicalOutcomeAvailabilityProven:false};
+}
+
+/** Score research bands against simple forecasts' already-frozen empirical
+ * error bands. Calibration happened at each original origin; this comparison
+ * never fits a new radius from the completed evaluation cohort. */
+export function summarizeEthereumBenchmarkIntervals(cases,{asOf,horizons=ETH_COMPARISON_POLICY.horizons}={}){
+  return horizons.flatMap(horizonDays=>['adaptiveEth','pooledEth'].flatMap(model=>
+    ['flat','shrunkenTrend'].map(baseline=>summarizeEthereumIntervalPair(cases,{
+      asOf,horizonDays,left:{model,kind:'simulated'},right:{model:baseline,kind:'experimental'},
+      alpha:ETH_COMPARISON_POLICY.intervalAlpha,
+    }))));
 }
 
 // Historical comparison can retain completed earlier origins when today's BTC
@@ -406,6 +424,10 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
     [{model:'adaptiveEth',kind:'simulated'},{model:'adaptiveEth',kind:'experimental'}],
     [{model:'pooledEth',kind:'simulated'},{model:'pooledEth',kind:'experimental'}],
   ].map(([left,right])=>summarizeEthereumIntervalPair(cases,{asOf,horizonDays,left,right,alpha:ETH_COMPARISON_POLICY.intervalAlpha})));
+  // Keep the existing nine comparison rows in their original order. The added
+  // baseline comparisons use their own exact common target set before selecting
+  // disjoint intervals; missing calibration remains unavailable.
+  intervalComparisons.push(...summarizeEthereumBenchmarkIntervals(cases,{asOf,horizons}));
   return {schemaVersion:1,kind:'ethereum-candidate-comparison',asOf,policy:ETH_COMPARISON_POLICY,
     data:{ethFirstObservation:rows[0].date,btcFirstObservation:btcRows[0].date,ethObservations:rows.length,btcObservations:btcRows.length,
       ethGaps:e.gaps,discardedEarlyEthObservations:eligible.startIndex,btcGaps:b.gaps,discardedEarlyBtcObservations:0,interpolation:false,
@@ -413,6 +435,7 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
       originGridPolicy:'First eligible 731-observation ETH segment fixes the 28-day grid. Contiguous input suffixes are selected separately inside each origin.',
       ethArchiveCollectedAt:ethHistory?.retrievedAt??null,ethArchiveFirstCollectedAt:ethHistory?.dailyHistory?.firstCollectedAt??ethHistory?.firstCollectedAt??null,
       historicalVintagesAvailable:false,economicSnapshotCount:economicSnapshots.length,
+      economicSnapshotReadiness:inspectEthereumEconomicSnapshots({economicSnapshots,asOf,issuedAt:issuedAtByOrigin[asOf]}),
       explicitIssueTimeCount:origins.filter(origin=>issuedAtByOrigin[origin]!==undefined).length,
       priceVintageIntegration:'One selected frozen price row per date; raw multi-publication price ledgers require selection before this evaluator. Unknown historical issue/publication timestamps are not invented.'},
     uniqueOrigins:origins.length,maturedTargets:cases.filter(r=>r.actual!==null).length,
