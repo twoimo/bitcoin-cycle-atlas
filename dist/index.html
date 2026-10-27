@@ -214,7 +214,12 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
     <div class="atlas-side-foot"><strong>실제 가격과 미래 예시</strong><br><span id="sidebar-asof">관측: 2026.10.20 UTC</span><br><span id="sidebar-reference">계산 기준: 2026.10.22</span></div>
   </aside>
   <div class="workspace" data-boot-content inert aria-hidden="true">
-    <main id="main">
+    <main id="main" tabindex="-1">
+      <div id="btc-refresh-notice" class="btc-refresh-notice" role="group" aria-labelledby="btc-refresh-summary" hidden>
+        <div class="btc-refresh-copy"><strong id="btc-refresh-summary"></strong><span id="btc-refresh-detail"></span></div>
+        <button id="btc-refresh-retry" type="button" aria-label="비트코인 일별 자료 다시 확인" aria-describedby="btc-refresh-detail">재시도</button>
+      </div>
+      <span id="btc-refresh-announcement" class="btc-refresh-announcement" role="status" aria-live="polite" aria-atomic="true"></span>
       <section id="outlook-view" class="lab-page atlas-page" aria-labelledby="outlook-heading">
         <header class="lab-heading"><div><span class="lab-eyebrow">비트코인 사이클</span><h1 id="outlook-heading">비트코인 통합 차트</h1></div><div class="lab-date"><span id="atlas-reference">장기 전망</span><small id="lab-asof">관측 자료를 불러오는 중</small></div></header>
         <section class="lab-panel atlas-workbench" aria-label="과거와 미래를 함께 보는 통합 그래프">

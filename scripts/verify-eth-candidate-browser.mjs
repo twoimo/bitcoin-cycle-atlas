@@ -124,6 +124,27 @@ function dark(color,label){
   assert.ok(m,'Expected computed RGB color for '+label+': '+color);
   assert.ok(m.slice(1,4).every(n=>Number(n)<90)&&Number(m[4]??1)>=.9,'Dark opaque background required: '+label+' '+color);
 }
+async function verifyHeaderOwnership(cdp){
+  const snapshot=await evaluate(cdp,()=>{
+    const doc=document.querySelector('#mobile-preview')?.contentDocument||document;
+    const read=(id,ownerSelector,headSelector,dialog=false)=>{
+      const owner=doc.querySelector(ownerSelector),head=doc.querySelector(headSelector);
+      if(!owner||!head)return {id,present:false};
+      const css=doc.defaultView.getComputedStyle(head);
+      return {id,present:true,active:!owner.closest('[hidden]')&&(!dialog||owner.open),position:css.position,top:css.top,rendered:head.getClientRects().length>0};
+    };
+    return [read('data','#data-view','#data-view .asset-comparison-table thead'),
+      read('evidence','#evidence-view','#evidence-view .evidence-table thead'),
+      read('indicator','#indicator-library','#indicator-library .indicator-library-heading',true)];
+  });
+  for(const item of snapshot){
+    if(item.id!=='indicator')assert.ok(item.present,'Missing table header '+item.id);
+    if(!item.present)continue;
+    if(item.active){assert.equal(item.position,'sticky','Active header lost ownership: '+item.id);assert.equal(parseFloat(item.top),0);}
+    else assert.ok(!['sticky','fixed'].includes(item.position),'Inactive header owns an anchor: '+JSON.stringify(item));
+  }
+  return snapshot;
+}
 async function dataCase(cdp,width,receipt){
   const imagePrefix=receipt.height===900?'data-'+width:'data-'+width+'x'+receipt.height;
   await until(()=>evaluate(cdp,()=>document.querySelectorAll('#data-body tr[data-asset-symbol]').length===18),'18 asset rows');
@@ -138,6 +159,8 @@ async function dataCase(cdp,width,receipt){
       bodyBackground:getComputedStyle(rows[0].querySelector('.asset-name')).backgroundColor,
       coarse:matchMedia('(pointer:coarse)').matches};
   });
+  receipt.layout.headerOwnership=await verifyHeaderOwnership(cdp);
+  assert.equal(await evaluate(cdp,()=>document.querySelector('#btc-refresh-notice')?.hidden),true,'BTC source notice must not be shown on the independent asset board');
   const layout=receipt.layout;
   assert.equal(layout.width,width);assert.ok(layout.scrollWidth<=width+1,'Page horizontal overflow');
   assert.equal(layout.symbols.length,18);assert.equal(new Set(layout.symbols).size,18);assert.equal(layout.symbols[0],'BTC');assert.equal(layout.btcName,'비트코인');
@@ -262,6 +285,33 @@ async function responsiveDataCase(cdp,receipt){
     assert.ok(Math.abs(end.pinnedHead.top-end.clientTop)<=1,'Header no longer sticks during vertical scrolling');
     receipt.geometry.verticalEnd={scrollTop:end.scrollTop,finalRowBottom:end.rows.at(-1).bottom,clientBottom:end.clientBottom,headerTop:end.pinnedHead.top};
     await screenshot(cdp,'data-scroll-end-'+receipt.width+'x'+receipt.height+'.png',receipt);
+
+    await evaluate(cdp,()=>{const panel=document.querySelector('#asset-table-scroll');panel.scrollLeft=panel.scrollWidth-panel.clientWidth;panel.scrollTop=panel.scrollHeight-panel.clientHeight;});
+    await settled(cdp);
+    const corner=await evaluate(cdp,()=>{
+      const panel=document.querySelector('#asset-table-scroll'),table=panel.querySelector('.asset-comparison-table');
+      const rows=[...table.tBodies[0].querySelectorAll('tr[data-asset-symbol]')],last=rows.at(-1);
+      const rect=el=>{const b=el.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};};
+      const p=rect(panel),clip={left:p.left+panel.clientLeft,right:p.left+panel.clientLeft+panel.clientWidth,top:p.top+panel.clientTop,bottom:p.top+panel.clientTop+panel.clientHeight};
+      const cells={nameHead:table.querySelector('.asset-mobile-name-header'),judgmentHead:table.querySelector('.asset-judgment-header'),name:last.querySelector('.asset-name'),judgment:last.querySelector('.asset-judgment')};
+      const read=el=>{const b=rect(el),left=Math.max(b.left,clip.left,0),right=Math.min(b.right,clip.right,innerWidth),top=Math.max(b.top,clip.top,0),bottom=Math.min(b.bottom,clip.bottom,innerHeight);
+        const hit=right>left&&bottom>top?document.elementFromPoint((left+right)/2,(top+bottom)/2):null;
+        return {...b,position:getComputedStyle(el).position,topInset:getComputedStyle(el).top,topmost:Boolean(hit&&(hit===el||el.contains(hit)))};
+      };
+      return {x:panel.scrollLeft,maxX:panel.scrollWidth-panel.clientWidth,y:panel.scrollTop,maxY:panel.scrollHeight-panel.clientHeight,clip,head:rect(table.tHead),headPosition:getComputedStyle(table.tHead).position,lastSymbol:last.dataset.assetSymbol,cells:Object.fromEntries(Object.entries(cells).map(([key,el])=>[key,read(el)]))};
+    });
+    assert.ok(corner.maxX>0&&corner.maxY>0,'Both table axes must actually scroll');
+    assert.ok(Math.abs(corner.x-corner.maxX)<=2&&Math.abs(corner.y-corner.maxY)<=2,'Both table ends must be reachable');
+    assert.equal(corner.headPosition,'sticky');assert.ok(Math.abs(corner.head.top-corner.clip.top)<=1,'thead lost vertical pinning');
+    for(const key of ['nameHead','judgmentHead'])assert.ok(Math.abs(corner.cells[key].top-corner.clip.top)<=1,'Header is not at the scrollport edge');
+    assert.equal(corner.cells.nameHead.position,'sticky');assert.equal(corner.cells.nameHead.topInset,'auto');
+    assert.ok(Math.abs(corner.cells.nameHead.left-corner.cells.name.left)<=1&&Math.abs(corner.cells.nameHead.left-corner.clip.left)<=1,'Pinned name column drifts');
+    assert.ok(Math.abs(corner.cells.nameHead.width-corner.cells.name.width)<=1);
+    assert.ok(corner.cells.judgment.left>=corner.cells.name.right-1&&corner.cells.judgment.right<=corner.clip.right+1&&corner.cells.judgment.bottom<=corner.clip.bottom+1,'Final judgment is clipped or covered');
+    assert.ok(Object.values(corner.cells).every(cell=>cell.topmost),'Sticky corner or final row is occluded');
+    receipt.geometry.dualAxis=corner;
+    await screenshot(cdp,'data-corner-'+receipt.width+'x'+receipt.height+'.png',receipt);
+
   }
   if(!receipt.resize)return;
   await resetDataScroll(cdp);
@@ -404,6 +454,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
   await until(()=>evaluate(cdp,()=>{
     const s=document.querySelector('#eth-chart');return s&&Number(s.dataset.observedCandleCount)>0&&Number(s.dataset.forecastPointCount)>0;
   }),'ETH observed and future paths');
+  assert.equal(await evaluate(cdp,()=>document.querySelector('#btc-refresh-notice')),null,'BTC refresh state must not leak into the ETH root');
   await settled(cdp);
   receipt.chart=await evaluate(cdp,()=>{
     const chart=document.querySelector('#eth-chart');
@@ -615,7 +666,7 @@ async function main(){
   assert.equal(typeof WebSocket,'function','Native WebSocket is required');
   report.sourceCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
   report.sourceHashes={};
-  for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/ethereum-adaptive-model.js','dist/ethereum-pooled-model.js','dist/eth-view-state.js','dist/ethereum-adoption-scenarios.js','dist/ethereum-research-panel.js','dist/ethereum-research-catalog.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','scripts/btc-offline-refresh-policy.mjs','tests/ethereum-offline-refresh-policy.test.mjs','dist/data/btc-daily.json','dist/app.js','dist/data-source.js','dist/published-data.js','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json','dist/lab-view.js','dist/analysis-dock.css','dist/compact-chart-layout.css','dist/mobile-workspace.css','dist/mobile-preview.js','scripts/verify-workspace-browser.mjs']){
+  for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/ethereum-adaptive-model.js','dist/ethereum-pooled-model.js','dist/eth-view-state.js','dist/ethereum-adoption-scenarios.js','dist/ethereum-research-panel.js','dist/ethereum-research-catalog.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','scripts/btc-offline-refresh-policy.mjs','tests/ethereum-offline-refresh-policy.test.mjs','dist/data/btc-daily.json','dist/app.js','dist/btc-refresh-status.js','tests/ethereum-btc-refresh-status.test.mjs','dist/data-source.js','dist/published-data.js','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json','dist/lab-view.js','dist/analysis-dock.css','dist/compact-chart-layout.css','dist/mobile-workspace.css','dist/mobile-preview.js','scripts/verify-workspace-browser.mjs']){
     report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   }
   for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/preserved-archive-download.js','dist/workspace-tools.js','dist/research-annotations-workbench.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
@@ -661,7 +712,7 @@ async function main(){
   report.expectedObservedEth=expected;
   const btcArchiveBytes=await readFile(resolve(dist,'data/btc-daily.json'));
   const btcArchive=JSON.parse(btcArchiveBytes.toString('utf8')),lastBtc=btcArchive.prices.at(-1);
-  const expectedBtc={asOf:lastBtc[0],price:lastBtc[1],formattedPrice:'$'+new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(lastBtc[1]),
+  const expectedBtc={sourceUrl:btcArchive.meta.source,asOf:lastBtc[0],price:lastBtc[1],formattedPrice:'$'+new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(lastBtc[1]),
     archiveSha256:hash(btcArchiveBytes)};
   report.expectedObservedBtc=expectedBtc;
   const index=JSON.parse(await readFile(resolve(dist,'data/asset-forecast-ledger/index.json'),'utf8'));
@@ -728,7 +779,18 @@ async function main(){
           if(!doc)return null;
           const button=doc.querySelector('#refresh-button');
           const visible=Boolean(button&&button.getClientRects().length&&doc.defaultView.getComputedStyle(button).visibility==='visible');
+          const notice=doc.querySelector('#btc-refresh-notice'),retry=doc.querySelector('#btc-refresh-retry');
+          const summary=doc.querySelector('#btc-refresh-summary'),detail=doc.querySelector('#btc-refresh-detail'),live=doc.querySelector('#btc-refresh-announcement');
+          const box=node=>{if(!node)return null;const b=node.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};};
+          const topmost=node=>{if(!node)return false;const b=node.getBoundingClientRect(),hit=doc.elementFromPoint(b.left+b.width/2,b.top+b.height/2);return Boolean(hit&&(hit===node||node.contains(hit)));};
+          const painted=Boolean(notice&&!notice.hidden&&notice.getClientRects().length&&doc.defaultView.getComputedStyle(notice).visibility==='visible');
           return {url:doc.location.href,timeOrigin:doc.defaultView.performance.timeOrigin,
+            notice:{state:notice?.dataset.state,visible:painted,box:box(notice),summary:summary?.textContent,detail:detail?.textContent,
+              summaryUnclipped:Boolean(summary&&summary.scrollWidth<=summary.clientWidth+1),detailUnclipped:Boolean(detail&&detail.scrollWidth<=detail.clientWidth+1),
+              retryBox:box(retry),retryDisabled:retry?.disabled,retryTopmost:topmost(retry),summaryTopmost:topmost(summary),
+              liveRole:live?.getAttribute('role'),livePoliteness:live?.getAttribute('aria-live'),liveAtomic:live?.getAttribute('aria-atomic'),announcement:live?.textContent,
+              duplicateAnnouncements:[...doc.querySelectorAll('[role="status"]')].filter(n=>n.textContent.startsWith('비트코인 일별')).length,
+              viewportWidth:doc.defaultView.innerWidth,viewportHeight:doc.defaultView.innerHeight},
             title:button?.title,disabled:button?.disabled,busy:button?.classList.contains('busy'),refreshButtonVisible:visible,
             cutoff:doc.querySelector('#sidebar-asof')?.textContent,page:doc.body?.dataset.page,
             price:doc.querySelector('#lab-metrics .readout-main > strong')?.textContent,
@@ -737,6 +799,16 @@ async function main(){
         },{preview});
         const observed=await until(async()=>{const value=await read();return value?.title==='갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.'&&value.disabled===false&&!value.busy?value:null;},'explicit failed offline refresh state');
         assert.equal(observed.cutoff,'관측 · '+expectedBtc.asOf.replaceAll('-','.')+' UTC');
+        const notice=observed.notice;
+        assert.equal(notice.visible,true,'The refresh failure must be visibly disclosed');
+        assert.equal(notice.state,'failed');assert.equal(notice.summary,'비트코인 일별 갱신 실패');
+        assert.equal(notice.detail,expectedBtc.asOf.replaceAll('-','.')+' UTC 자료 유지');
+        assert.equal(notice.retryDisabled,false);assert.ok(notice.retryTopmost&&notice.summaryTopmost,'Refresh notice or retry is occluded');
+        assert.ok(notice.summaryUnclipped&&notice.detailUnclipped,'Refresh notice text is clipped');
+        for(const box of [notice.box,notice.retryBox])assert.ok(box.left>=-1&&box.right<=notice.viewportWidth+1&&box.top>=-1&&box.bottom<=notice.viewportHeight+1,'Refresh notice escapes its document viewport');
+        if(notice.viewportWidth<=620)assert.ok(notice.retryBox.width>=44&&notice.retryBox.height>=44,'Refresh retry must remain touch-sized');
+        assert.equal(notice.liveRole,'status');assert.equal(notice.livePoliteness,'polite');assert.equal(notice.liveAtomic,'true');
+        assert.equal(notice.duplicateAnnouncements,1,'BTC refresh results must have one live announcement owner');
         const priceDisplayed=observed.page==='outlook';
         if(priceDisplayed){
           assert.equal(observed.price,expectedBtc.formattedPrice);
@@ -748,16 +820,17 @@ async function main(){
         const matching=frames.filter(frame=>frame.url===observed.url);
         assert.equal(matching.length,1,'Offline failure must bind to one current app document');
         const frame=matching[0];
-        const candidates=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId)&&error.frameId===frame.id&&error.loaderId===frame.loaderId&&
-          isExpectedOfflineBtcRefresh(error,{surface:spec.surface,archiveAsOf:expectedBtc.asOf}));
-        assert.equal(candidates.length,1,'Each stale app document must show exactly one identified blocked initial refresh');
+        const candidates=await until(async()=>{const matches=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId)&&error.frameId===frame.id&&error.loaderId===frame.loaderId&&
+          isExpectedOfflineBtcRefresh(error,{surface:spec.surface,archiveAsOf:expectedBtc.asOf}));return matches.length?matches:null;},'identified blocked refresh request');
+        assert.equal(candidates.length,1,'Each verified refresh attempt must bind to exactly one new blocked request');
         for(const error of candidates)validatedOfflineRequestIds.add(error.requestId);
         receipt.expectedOfflineRefresh.push({phase,frameId:frame.id,loaderId:frame.loaderId,observed,
           requestIds:candidates.map(error=>error.requestId),archiveSha256:expectedBtc.archiveSha256,
           archiveAsOf:expectedBtc.asOf,displayedPriceVerified:priceDisplayed,displayedPricePrecision:'USD rounded to 2 decimals',
-          failureTitleVerified:true,persistentVisibleErrorVerified:false,
+          failureTitleVerified:true,persistentVisibleErrorVerified:true,noticeVisibilityScope:preview?'child-document viewport; parent reachability checked separately':'actual viewport',
           interpretation:priceDisplayed?'Expected offline refresh failure; archive cutoff and displayed BTC price retained':
             'Expected offline refresh failure; archive cutoff retained. This surface does not display a current numeric BTC quote.'});
+        return true;
       };
       await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');
       await cdp.send('Network.setBlockedURLs',{urls:['https://*']});
@@ -766,7 +839,7 @@ async function main(){
       await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'},{name:'prefers-color-scheme',value:'dark'}]});
       receipt.url=spec.route?base+spec.route:base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
-      if(spec.surface)await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh});else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
+      if(spec.surface)await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership:()=>verifyHeaderOwnership(cdp)});else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
       assert.equal(receipt.runtimeErrors.length,0,'Browser runtime errors: '+JSON.stringify(receipt.runtimeErrors));
       receipt.unexpectedResourceErrors=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId));
       assert.equal(receipt.unexpectedResourceErrors.length,0,'Unexpected browser resource failures: '+JSON.stringify(receipt.unexpectedResourceErrors));

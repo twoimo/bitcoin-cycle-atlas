@@ -8,8 +8,10 @@ export const workspaceBrowserCases = [320, 1440].flatMap(width =>
   })));
 workspaceBrowserCases.push({page:'workspace-btc-short',surface:'btc',width:900,height:430,touch:true,route:'/?symbol=BTCUSD&granularity=daily&type=line'});
 
+workspaceBrowserCases.push({page:'workspace-legacy',surface:'legacy',width:375,height:900,touch:true,route:'/?page=compare&legacy=1'});
+
 export async function verifyWorkspaceSurface(api) {
-  const {cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh}=api;
+  const {cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership}=api;
   const {width,height,surface,page}=receipt;
   receipt.workspace={surface,states:[]};
   const states=receipt.workspace.states;
@@ -150,7 +152,26 @@ export async function verifyWorkspaceSurface(api) {
     receipt.workspace.resized=true;return;
   }
   await until(()=>evaluate(cdp,()=>document.documentElement?.dataset.boot==='ready'),'app boot ready');
-  await verifyOfflineRefresh({phase:'workspace-initial-document'});
+  const failedRefresh=await verifyOfflineRefresh({phase:'workspace-initial-document'});
+  receipt.workspace.headerOwnership=await verifyHeaderOwnership();
+  if(surface==='btc'&&failedRefresh){
+    await inspect('#btc-refresh-notice','refresh-failed');
+    await evaluate(cdp,()=>{
+      const notice=document.querySelector('#btc-refresh-notice'),button=document.querySelector('#btc-refresh-retry');
+      globalThis.__btcRefreshProbe={transitions:[],observer:new MutationObserver(()=>{
+        globalThis.__btcRefreshProbe.transitions.push({state:notice.dataset.state,disabled:button.disabled,busy:notice.getAttribute('aria-busy'),cutoff:document.querySelector('#btc-refresh-detail').textContent});
+      })};
+      globalThis.__btcRefreshProbe.observer.observe(notice,{attributes:true,subtree:true,attributeFilter:['data-state','aria-busy','disabled']});
+      button.focus();
+    });
+    await focused('#btc-refresh-notice');await key('Enter','Enter',13);
+    await verifyOfflineRefresh({phase:'native-keyboard-retry'});
+    const transitions=await evaluate(cdp,()=>{const probe=globalThis.__btcRefreshProbe;probe.observer.disconnect();return probe.transitions;});
+    assert.ok(transitions.some(t=>t.state==='refreshing'&&t.disabled&&t.busy==='true'),'Real retry never entered busy state');
+    assert.ok(transitions.some(t=>t.state==='failed'&&!t.disabled&&t.busy==='false'),'Real retry never returned to a retryable failure');
+    receipt.workspace.refreshRetry={transitions,archivePreserved:true};
+    await inspect('#btc-refresh-notice','refresh-retry-failed');
+  }
   if(surface==='legacy'){
     await until(()=>evaluate(cdp,()=>document.querySelectorAll('#structure-chart path').length>0&&document.querySelectorAll('#structure-cycles tr').length>0),'legacy chart and real cycle rows');
     const readLegacySizing=()=>['structure-chart','structure-timeline'].map(id=>{
@@ -185,6 +206,31 @@ export async function verifyWorkspaceSurface(api) {
     assert.equal(await evaluate(cdp,()=>document.querySelector('#structure-method').closest('details').open),true);
     assert.ok((await bounds(cdp,'#structure-method')).text.length>200,'Legacy method text is missing');
     states.push({label:'legacy-method-open',rows:tableRows});
+
+    await evaluate(cdp,()=>document.querySelector('#legacy-comparison > summary').scrollIntoView({block:'center'}));await settled(cdp);
+    if(!await evaluate(cdp,()=>document.querySelector('#legacy-comparison').open))await click(cdp,'#legacy-comparison > summary');
+    await evaluate(cdp,()=>document.querySelector('#analysis-tab-forecast').scrollIntoView({block:'center'}));await settled(cdp);
+    await click(cdp,'#analysis-tab-forecast');
+    await evaluate(cdp,()=>document.querySelector('#forecast-method').closest('details').querySelector('summary').scrollIntoView({block:'center'}));await settled(cdp);
+    if(!await evaluate(cdp,()=>document.querySelector('#forecast-method').closest('details').open))await click(cdp,'#forecast-analysis details:has(#forecast-method) > summary');
+    await until(()=>evaluate(cdp,()=>document.querySelector('#forecast-method .forecast-sources')?.querySelectorAll('a').length===3),'live forecast sources');
+    await evaluate(cdp,()=>document.querySelector('#forecast-method .forecast-sources').scrollIntoView({block:'center',inline:'nearest'}));await settled(cdp);
+    const sources=await evaluate(cdp,()=>{
+      const block=document.querySelector('#forecast-method .forecast-sources'),cite=block.querySelector('cite');
+      return {width:innerWidth,clientWidth:block.clientWidth,scrollWidth:block.scrollWidth,cite:cite?.textContent,citeRendered:Boolean(cite&&cite.getClientRects().length),
+        links:[...block.querySelectorAll('a')].map(a=>{const b=a.getBoundingClientRect(),style=getComputedStyle(a),lineHeight=parseFloat(style.lineHeight);
+          return {href:a.getAttribute('href'),label:a.textContent.trim(),target:a.target,rel:a.rel,lineHeight,height:b.height,rendered:b.width>0&&b.height>0,left:b.left,right:b.right,top:b.top,bottom:b.bottom};
+        })};
+    });
+    assert.deepEqual(sources.links.map(a=>a.href),['https://docs.coinmetrics.io/network-data/network-data-overview/market/price',expectedBtc.sourceUrl,'https://otexts.com/fpp3/toolbox.html']);
+    assert.equal(sources.cite,'Forecasting: Principles and Practice');assert.equal(sources.citeRendered,true);
+    assert.ok(sources.scrollWidth<=sources.clientWidth+1,'Source paragraph overflows');
+    for(const a of sources.links){assert.ok(a.rendered&&Number.isFinite(a.lineHeight)&&a.height<=a.lineHeight+1,'Source link wraps: '+JSON.stringify(a));
+      assert.ok(a.left>=-1&&a.right<=width+1&&a.top>=-1&&a.bottom<=height+1,'Source link is outside viewport');
+      assert.equal(a.target,'_blank');assert.ok(a.rel.split(/\s+/).includes('noopener')&&a.rel.split(/\s+/).includes('noreferrer'));}
+    receipt.workspace.legacy.sources=sources;
+    await inspect('#forecast-method .forecast-sources','legacy-sources',{opaque:false});
+
     await evaluate(cdp,()=>{document.body.scrollTop=document.body.scrollHeight;});await settled(cdp);
     const end=await evaluate(cdp,()=>({top:document.body.scrollTop,max:document.body.scrollHeight-document.body.clientHeight}));
     assert.ok(end.max>0&&Math.abs(end.top-end.max)<=2,'Legacy document did not reach its real scroll end');
@@ -262,6 +308,32 @@ export async function verifyWorkspaceSurface(api) {
   assert.equal(await evaluate(cdp,()=>document.querySelector('#chart-reader').hidden),true);
   await click(cdp,'#atlas-mode-menu');
   await inspect('#indicator-library','indicators',{dialog:true});
+
+  if(height<=600){
+    await evaluate(cdp,()=>{const dialog=document.querySelector('#indicator-library');dialog.scrollTop=dialog.scrollHeight-dialog.clientHeight;});await settled(cdp);
+    const scrolled=await evaluate(cdp,()=>{
+      const dialog=document.querySelector('#indicator-library'),head=dialog.querySelector('.indicator-library-heading'),close=head.querySelector('button');
+      const rect=el=>{const b=el.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom};};
+      const d=rect(dialog),c=rect(close),clip={left:Math.max(0,d.left+dialog.clientLeft),right:Math.min(innerWidth,d.left+dialog.clientLeft+dialog.clientWidth),top:Math.max(0,d.top+dialog.clientTop),bottom:Math.min(innerHeight,d.top+dialog.clientTop+dialog.clientHeight)};
+      const hit=document.elementFromPoint((c.left+c.right)/2,(c.top+c.bottom)/2);
+      return {scrollTop:dialog.scrollTop,maxScroll:dialog.scrollHeight-dialog.clientHeight,results:dialog.querySelectorAll('[data-library-indicator]').length,position:getComputedStyle(head).position,clip,title:rect(head.querySelector('h2')),close:c,closeTopmost:Boolean(hit&&(hit===close||close.contains(hit)))};
+    });
+    assert.ok(scrolled.results>0&&scrolled.maxScroll>0,'Short library must exercise a populated scrolling dialog');
+    assert.ok(scrolled.scrollTop>0&&Math.abs(scrolled.scrollTop-scrolled.maxScroll)<=2);assert.equal(scrolled.position,'sticky');
+    for(const name of ['title','close']){const b=scrolled[name],c=scrolled.clip;assert.ok(b.left>=c.left-1&&b.right<=c.right+1&&b.top>=c.top-1&&b.bottom<=c.bottom+1,'Scrolled heading clips '+name);}
+    assert.equal(scrolled.closeTopmost,true);receipt.workspace.indicatorScroll=scrolled;
+    await screenshot(cdp,page+'-'+width+'x'+height+'-indicators-scroll-end.png',receipt);
+    const closeSelector='#indicator-library .indicator-library-heading > button';
+    await evaluate(cdp,()=>document.querySelector('#indicator-search').focus());
+    let closeFocused=false;
+    for(let step=0;step<16;step++){await key('Tab','Tab',9,8);closeFocused=await evaluate(cdp,s=>document.activeElement===document.querySelector(s),closeSelector);if(closeFocused)break;}
+    assert.equal(closeFocused,true,'Native reverse Tab never reached indicator close');
+    await focused(closeSelector);await key('Enter','Enter',13);
+    assert.equal(await evaluate(cdp,()=>document.querySelector('#indicator-library').open),false);
+    receipt.workspace.indicatorClosedOwnership=await verifyHeaderOwnership();
+    await click(cdp,'#atlas-mode-menu');await until(()=>evaluate(cdp,()=>document.querySelector('#indicator-library').open),'indicator library reopened');
+  }
+
   await text('#indicator-search','__atlas_no_matching_indicator__');
   assert.ok((await bounds(cdp,'#indicator-library-results')).text.includes('없'));
   await key('Tab','Tab',9);await focused('#indicator-library');await escape('#indicator-library');

@@ -42,7 +42,7 @@
 }
 .atlas-plot[data-compact-layout]>.analysis-indicator-windows[data-minimized-all=true]:not([data-maximized=true]){bottom:auto;max-height:calc(var(--plot-height,700px) - var(--compact-analysis-top) - var(--compact-analysis-bottom))}
 .atlas-plot[data-compact-layout] .analysis-pane-access{
- position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;flex:0 0 32px;min-height:32px;
+ z-index:5;display:flex;align-items:center;gap:8px;flex:0 0 32px;min-height:32px;
  box-sizing:border-box;margin-bottom:-8px;padding:2px 8px;border:1px solid var(--analysis-dock-rule-11);border-radius:5px 5px 0 0;background:var(--compact-chart-layout-surface-2);color:var(--compact-chart-layout-ink-3);font-size:11px
 }
 .analysis-pane-access label{display:flex;flex:1;align-items:center;gap:8px;min-width:0;margin:0;font:inherit}

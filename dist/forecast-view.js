@@ -218,7 +218,7 @@ function methodHtml(forecast) {
     <p>위 산식과 날짜 덧셈은 가정이 주어졌을 때 재현할 수 있습니다. 관측만으로 미래 극값을 증명하는 것은 별개의 문제입니다. 오늘까지 똑같은 가격 이력을 가진 두 경로라도 내일 하나는 기존 최고값보다 높고 다른 하나는 기존 최저값보다 낮게 이어질 수 있습니다.</p>
     <div class="formula-block">P⁺(t) = P⁻(t) = P(t), t ≤ T<br>P⁺(T+1) = 1.1 × max(P(t), t≤T)<br>P⁻(T+1) = 0.9 × min(P(t), t≤T)</div>
     <p>동일한 과거에서 서로 다른 미래가 가능하므로, 추가 가정 없이 최종 고점·저점의 날짜와 가격이 유일하게 결정되지는 않습니다. 현재 저점 후보를 밑도는 새 관측, 새 고점, 이전과 다른 상승·하락 기간이 나오면 관련 기준을 다시 계산해야 합니다.</p>
-    <p>출처: <a href="https://docs.coinmetrics.io/network-data/network-data-overview/market/price" target="_blank" rel="noopener noreferrer">Coin Metrics PriceUSD의 UTC 일말 정의</a> · <a href="${esc(source)}" target="_blank" rel="noopener noreferrer">실제 사용한 공개 일별 원자료</a> · <a href="https://otexts.com/fpp3/toolbox.html" target="_blank" rel="noopener noreferrer">Forecasting: Principles and Practice 5장 — 과거 시점 검증·단순 기준·예측구간</a>. 출처가 이 사이트의 미래 시나리오를 보증하는 것은 아닙니다.</p>`;
+    <p class="forecast-sources">출처: <a href="https://docs.coinmetrics.io/network-data/network-data-overview/market/price" target="_blank" rel="noopener noreferrer">PriceUSD 정의</a> (Coin Metrics · UTC 일말) · <a href="${esc(source)}" target="_blank" rel="noopener noreferrer">일별 원자료</a> (이 계산에 실제 사용한 공개 자료) · <a href="https://otexts.com/fpp3/toolbox.html" target="_blank" rel="noopener noreferrer">FPP3 5장</a> — <cite>Forecasting: Principles and Practice</cite>, 과거 시점 검증·단순 기준·예측구간. 출처가 이 사이트의 미래 시나리오를 보증하는 것은 아닙니다.</p>`;
 }
 
 export function renderForecastView(forecast, dataset, { view = 'macro', scenarioId = 'bottom-holds' } = {}) {

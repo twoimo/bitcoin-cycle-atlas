@@ -240,7 +240,9 @@
     "tests/ethereum-throughput-supplement.test.mjs",
     "tests/helpers/asset-outcome-fixture.mjs",
     "tests/journal-entry-ownership.test.mjs",
-    "tests/treasury-model.test.mjs"
+    "tests/treasury-model.test.mjs",
+    "dist/btc-refresh-status.js",
+    "tests/ethereum-btc-refresh-status.test.mjs"
   ],
   "dynamicResolutions": [
     {

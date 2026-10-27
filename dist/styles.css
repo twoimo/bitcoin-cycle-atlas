@@ -970,3 +970,32 @@ body #compare-view :is(button,select,input:not([type="range"])){min-height:var(-
 
 body .footer button{min-height:var(--control-min-size)}
 @media(max-width:620px),(pointer:coarse){body .footer button{min-height:var(--control-touch-size)}}
+
+/* Each visible scroll owner keeps its own header at the viewport edge.
+   Hidden pages and closed dialogs do not own a sticky header. A table's
+   thead owns vertical pinning; the name cells own horizontal pinning. */
+.indicator-library[open] > .indicator-library-heading,
+.atlas-plot[data-compact-layout] > .analysis-indicator-windows:not([hidden]):not([data-maximized=true]) > .analysis-pane-access:not([hidden]),
+#evidence-view:not([hidden]) .evidence-table thead,
+#data-view:not([hidden]) .asset-comparison-table thead {
+  position: sticky;
+  top: 0;
+}
+
+.research-detail-content .forecast-sources a{display:inline-block}
+.research-detail-content .forecast-sources cite{font-style:normal}
+
+/* An error owns a bounded row inside main, so existing details-grid and modal
+   inert ownership stay intact. Legacy comparison retains document scrolling. */
+body:not([data-page=compare]) #main[data-btc-notice=true]{display:grid;grid-template-rows:auto minmax(0,1fr)}
+body:not([data-page=compare]) #main[data-btc-notice=true]>.btc-refresh-notice{grid-row:1}
+body:not([data-page=compare]) #main[data-btc-notice=true]>section{grid-row:2;min-height:0}
+.btc-refresh-notice{display:flex;align-items:center;gap:12px;min-width:0;padding:4px 8px;border-bottom:1px solid var(--border);background:var(--surface-raised);color:var(--text);font-size:12px;line-height:1.5}
+.btc-refresh-copy{display:flex;flex:1;align-items:baseline;flex-wrap:wrap;gap:0 12px;min-width:0}
+.btc-refresh-copy strong{font-weight:600;color:var(--accent)}
+.btc-refresh-copy span{color:var(--muted);font-variant-numeric:tabular-nums}
+.btc-refresh-notice button{flex:none;min-width:56px;min-height:36px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text)}
+.btc-refresh-notice button:hover:not(:disabled){background:var(--surface-hover)}
+.btc-refresh-notice button:focus-visible{outline:2px solid var(--focus,var(--accent));outline-offset:2px}
+.btc-refresh-announcement{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:620px){.btc-refresh-notice{gap:8px}.btc-refresh-copy{display:block;font-size:11px}.btc-refresh-copy strong,.btc-refresh-copy span{display:block}.btc-refresh-notice button{min-width:56px;min-height:44px}}

@@ -360,7 +360,10 @@ test('sticky headings use a single bounded viewport and preserve the pinned iden
   const shared=css.split('@media')[0];
   assert.match(css,/asset-table-panel \{ display: flex; flex-direction: column; flex: 1; min-height: 0/);
   assert.match(css,/asset-table-scroll \{ flex: 1; min-height: 0; min-width: 0; overflow: auto/);
-  assert.match(css,/thead th \{ position: sticky; top: 0; z-index: 3/);
+  const common=readFileSync(new URL('../dist/styles.css',import.meta.url),'utf8');
+  assert.match(common,/#data-view:not\(\[hidden\]\) \.asset-comparison-table thead \{\s*position: sticky;\s*top: 0;/);
+  assert.match(css,/asset-comparison-table thead \{ z-index: 3;/);
+  assert.doesNotMatch(css,/thead th \{ position: sticky; top: 0/,'vertical pinning belongs to the header group, not every cell');
   assert.match(shared,/asset-identity-header \{ display: none;/,'a merged three-column header cannot align with the pinned name column');
   assert.match(shared,/asset-mobile-header \{ display: table-cell;/,'individual column headings must also be visible on tablets and desktops');
   assert.match(shared,/asset-mobile-name-header \{ position: sticky; left: 0; z-index: 4/,'the name heading must follow its body column at every screen size');

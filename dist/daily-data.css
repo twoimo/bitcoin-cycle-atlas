@@ -49,7 +49,8 @@
 #data-view .asset-comparison-table tbody tr[data-asset-symbol] { height: var(--asset-fill-row-height, 40px); }
 #data-view .asset-comparison-table tr > :last-child { border-right: 0; }
 #data-view .asset-comparison-table tbody tr:last-child > th, #data-view .asset-comparison-table tbody tr:last-child > td { border-bottom: 0; }
-#data-view .asset-comparison-table thead th { position: sticky; top: 0; z-index: 3; height: 54px; padding: 8px; color: var(--asset-muted); background: var(--surface); font-size: 12px; font-weight: 500; border-bottom: 1px solid var(--border); line-height: 1.5; }
+#data-view .asset-comparison-table thead { z-index: 3; }
+#data-view .asset-comparison-table thead th { height: 54px; padding: 8px; color: var(--asset-muted); background: var(--surface); font-size: 12px; font-weight: 500; border-bottom: 1px solid var(--border); line-height: 1.5; }
 #data-view .asset-comparison-table thead th small { display: block; color: var(--asset-muted); font: 11px/1.55 var(--font-mono); }
 /* Each heading follows its own body column; a colspan identity heading would
    scroll away from the pinned name cells on tablet and desktop overflows. */
