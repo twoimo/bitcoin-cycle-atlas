@@ -66,3 +66,11 @@ adaptive/pooled 각각731점과 30/90/180일 target·flat/shrunkenTrend를 처�
 ## Complete visual artifacts with bounded log transport
 
 All browser cases, assertions, screenshots, byte counts and SHA-256 hashes remain required. The ETH workflow uses `ETH_BROWSER_IMAGE_LOG_MODE=failures-only` so successful PNG base64 is retained in the complete Actions artifact rather than duplicated in the job log. Failure screenshots still use log transport. The default verifier mode remains `representative`; the selected mode is recorded in both the full report and compact receipt. This addresses the connector's failed retrieval of oversized completed logs without removing visual evidence or changing any UI or financial calculation.
+
+## 실제 재실행에서 발견한 범위 밖 일봉의 중복 발행
+
+소스85b958의 Coinbase 응답은 요청 종료2026-10-27T00:00Z와 같은 timestamp의 미완료 일봉도 포함했다. 이 행은 가격 계산에서 정확히 제외됐으나 전체 raw tail hash가 달라져 같은731점·outputHash를 가진 두 후보를 새 raw-run으로 추가했다. 해당 중간 실행의 총4개 기록·pending12개는 고유 원점1개이며 새로운 금융 증거가 아니다. 최초7b68 발행2개는 그대로 보존하고 중간 중복 실행의 원문·기록도 실행 증거로 남긴다.
+
+후속 scripts-only 정책eth-prospective-completed-tail-reuse-1은 base 원문·정확한 request·완료 tail6열·전체 가격 prefix·모형 sourceHash/version·옵션·기간을 묶는다. 요청 범위 밖 행만 달라져도 원문은 새 observation/acquisition에 남기되, 동일 완료 입력의 최초 발행 기록을 재사용한다. 완료OHLCV나 실제 과거가격·모형이 바뀌면 계속 새 판본이다. 같은 입력에서 output/targets/benchmarks가 다르면 실패한다. 기존 기록이 이번 시도보다 나중에 발행됐다면 재사용을 거부한다. 모델 source graph와 최초 기록의 바이트는 수정하지 않는다. 이 후속의 실제 결과는 별도 최종 영수증으로 확인한다.
+
+보존 원장에 이미 commit된 record/snapshot은 원래 파일 전체를 실행 artifact와 source-book에 계속 포함하고, 로그에서는 정확한commit/path/SHA256 참조를 남긴다. 신규 acquisition·raw·observation·evaluation·receipt는 원문 조각을 전달한다. 동일한1MiB snapshot을 매번 로그에 중복 출력해 connector 회수가 실패했던 문제를 줄이는 변경이며, 자료·검증·원본 artifact를 생략하지 않는다.

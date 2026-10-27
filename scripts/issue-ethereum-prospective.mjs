@@ -7,9 +7,10 @@ import {canonicalForecastJson,forecastHash} from '../dist/forecast-records.js';
 import {buildEthereumAdaptiveForecast,ETH_ADAPTIVE_POLICY} from '../dist/ethereum-adaptive-model.js';
 import {buildEthereumPooledForecast,ETH_POOLED_POLICY} from '../dist/ethereum-pooled-model.js';
 import {ETH_PROSPECTIVE_PRICE_POLICY,createEthereumResearchSnapshot,verifyEthereumResearchSnapshot,rebuildEthereumResearchPrices} from '../dist/ethereum-prospective-prices.js';
-import {createEthereumProspectiveRecord,verifyEthereumProspectiveRecord,decideEthereumProspectiveAppend,ethereumProspectiveIndexEntry,evaluateEthereumProspectiveRecords,replayEthereumProspectiveRecord} from '../dist/ethereum-prospective-records.js';
+import {createEthereumProspectiveRecord,verifyEthereumProspectiveRecord,ethereumProspectiveIndexEntry,evaluateEthereumProspectiveRecords,replayEthereumProspectiveRecord} from '../dist/ethereum-prospective-records.js';
 import {collectForecastModelIdentity} from './build-forecast-ledger.mjs';
 import {captureEthereumResearchTail} from './ethereum-prospective-collector-core.mjs';
+import {decideEthereumProspectiveIssue,ETH_PROSPECTIVE_REUSE_POLICY} from './ethereum-prospective-reuse.mjs';
 
 const root=fileURLToPath(new URL('..',import.meta.url)),out=resolve(root,'build/ethereum-prospective-ledger');
 const stored=resolve(root,'research-data/ethereum-prospective-ledger');
@@ -20,8 +21,8 @@ const PIN={sourceCommit:'54317f7d05abd8fe569b0912ff34caee2bbe9981',gitBlobSha:'8
 const flags=process.argv.slice(2);
 if(flags.some(f=>f!=='--verify-preserved-only')||flags.length>1)throw new Error('Unsupported prospective issuer argument');
 const verifyOnly=flags.includes('--verify-preserved-only'),receiptPath=verifyOnly?'replay-receipt.json':'receipt.json';
-const files=new Map(),records=[],snapshots={};
-const sourcePaths=['scripts/issue-ethereum-prospective.mjs','scripts/ethereum-prospective-collector-core.mjs',
+const files=new Map(),records=[],snapshots={},committedTransportReferences=new Map();
+const sourcePaths=['scripts/issue-ethereum-prospective.mjs','scripts/ethereum-prospective-collector-core.mjs','scripts/ethereum-prospective-reuse.mjs',
   'dist/ethereum-prospective-records.js','dist/ethereum-prospective-prices.js',ETH_PROSPECTIVE_PRICE_POLICY.basePath];
 if(git('status','--porcelain','--',...sourcePaths))throw new Error('Prospective issuer requires committed source and base input');
 const sourceHashes=Object.fromEntries(await Promise.all(sourcePaths.map(async p=>[p,sha(await readFile(resolve(root,p)))])));
@@ -56,10 +57,14 @@ async function loadExisting(directory=stored){
     if(sameId&&(json(sameId)!==rt||json(snapshots[snapshot.id])!==st))throw new Error('Preserved candidate archive conflict');
     if(!sameId)records.push(record);snapshots[snapshot.id]=snapshot;
     await save(entry.recordPath,rt);await save(entry.snapshotPath,st);
+    if(directory===stored){
+      committedTransportReferences.set(entry.recordPath,{path:entry.recordPath,repositoryPath:'research-data/ethereum-prospective-ledger/'+entry.recordPath,sourceCommit,sha256:sha(rt)});
+      committedTransportReferences.set(entry.snapshotPath,{path:entry.snapshotPath,repositoryPath:'research-data/ethereum-prospective-ledger/'+entry.snapshotPath,sourceCommit,sha256:sha(st)});
+    }
   }
 }
 const receipt={kind:'ethereum-prospective-issuance',sourceCommit,sourceTree,sourceHashes,runId:process.env.GITHUB_RUN_ID??null,
-  startedAt:now(),status:'started',mode:verifyOnly?'verify-preserved-only':'capture-and-issue',priceOnlyCandidates:true,economicSnapshotsActivated:0,
+  startedAt:now(),status:'started',mode:verifyOnly?'verify-preserved-only':'capture-and-issue',reusePolicy:ETH_PROSPECTIVE_REUSE_POLICY,priceOnlyCandidates:true,economicSnapshotsActivated:0,
   newRecords:0,reusedRecords:0,newSnapshots:0,prospectiveScoredTargets:0,productionAdopted:false,
   externalGeminiReview:'omitted-by-user',reverseReview:'omitted-by-user',releaseAuthorized:false,errors:[]};
 let tail=null,captureSnapshot=null;
@@ -103,8 +108,10 @@ try{
   for(const modelKey of ['adaptive','pooled']){
     const candidate=await createEthereumProspectiveRecord({snapshot:captureSnapshot,forecast:forecasts[modelKey],model:modelFor(modelKey),modelKey,
       generationStartedAt,generatedAt,issuedAt});
-    const decision=decideEthereumProspectiveAppend(records,candidate);
-    prepared.push({candidate,decision});decisions.push({modelKey,action:decision.action,id:decision.record.id,runKey:decision.record.runKey});
+    const decision=await decideEthereumProspectiveIssue({records,snapshots,candidate,candidateSnapshot:captureSnapshot});
+    prepared.push({candidate,decision});decisions.push({modelKey,action:decision.action,id:decision.record.id,runKey:decision.record.runKey,
+      attemptedRunKey:candidate.runKey,attemptedSnapshotId:captureSnapshot.id,reusePolicy:decision.reusePolicy,
+      consumedInputHash:decision.consumedInputHash,reason:decision.reason,equivalentPreservedIds:decision.equivalentPreservedIds??[]});
   }
   // Validate both candidates before the first new immutable record is written.
   for(const {candidate,decision}of prepared){
@@ -144,8 +151,10 @@ const manifest=[...files].map(([path,text])=>({path,bytes:Buffer.byteLength(text
 await save(verifyOnly?'replay-files.json':'files.json',json({files:manifest}),false);
 console.log((verifyOnly?'ETH_PROSPECTIVE_REPLAY_RECEIPT ':'ETH_PROSPECTIVE_RECEIPT ')+JSON.stringify({...receipt,acquisition:tail?{status:tail.status,requestStartedAt:tail.requestStartedAt,
   bodyCompletedAt:tail.bodyCompletedAt,requests:tail.requests,retries:tail.retries,bytes:tail.receivedBytes,rawSha256:tail.rawSha256,error:tail.error}:null,files:manifest}));
-const transportSize=[...files.values()].reduce((n,text)=>n+Buffer.byteLength(text,'utf8'),0);
+const transportFiles=[...files].filter(([path])=>!committedTransportReferences.has(path));
+const transportSize=transportFiles.reduce((n,[,text])=>n+Buffer.byteLength(text,'utf8'),0);
+if(!verifyOnly&&committedTransportReferences.size)console.log('ETH_PROSPECTIVE_COMMITTED_REFERENCES '+JSON.stringify({sourceCommit,files:[...committedTransportReferences.values()],allOriginalFilesRetainedInArtifact:true}));
 if(!verifyOnly&&transportSize<=8*1024*1024){
-  for(const [path,text]of files){const size=20000,total=Math.ceil(text.length/size);for(let index=0;index<total;index++)console.log('ETH_PROSPECTIVE_FILE_CHUNK '+JSON.stringify({path,index,total,data:text.slice(index*size,(index+1)*size)}));}
+  for(const [path,text]of transportFiles){const size=20000,total=Math.ceil(text.length/size);for(let index=0;index<total;index++)console.log('ETH_PROSPECTIVE_FILE_CHUNK '+JSON.stringify({path,index,total,data:text.slice(index*size,(index+1)*size)}));}
 }else if(!verifyOnly)console.log('ETH_PROSPECTIVE_LOG_TRANSPORT '+JSON.stringify({status:'artifact-only',bytes:transportSize,maximumRawBytes:8*1024*1024}));
 if(receipt.status==='blocked')process.exitCode=1;

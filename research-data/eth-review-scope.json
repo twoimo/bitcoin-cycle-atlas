@@ -267,7 +267,9 @@
     "research-data/ethereum-prospective-ledger/snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
     "research-data/ethereum-prospective-ledger/observations/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
     "research-data/ethereum-prospective-ledger/evaluations/798f9901977d7778a7c1a105c2c6bdf6afe2f0ad5f83a79e0273db1e876921ea.json",
-    "research-data/ethereum-prospective-ledger/files.json"
+    "research-data/ethereum-prospective-ledger/files.json",
+    "scripts/ethereum-prospective-reuse.mjs",
+    "tests/ethereum-prospective-reuse.test.mjs"
   ],
   "dynamicResolutions": [
     {

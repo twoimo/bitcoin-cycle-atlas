@@ -21,6 +21,7 @@ on:
       - 'scripts/evaluate-ethereum-monte-carlo-stability.mjs'
       - 'scripts/ethereum-monte-carlo-stability-core.mjs'
       - 'scripts/ethereum-prospective-collector-core.mjs'
+      - 'scripts/ethereum-prospective-reuse.mjs'
       - 'scripts/issue-ethereum-prospective.mjs'
       - 'scripts/build-ethereum-model-readiness.mjs'
       - 'research-data/ethereum-prospective-ledger/**'
@@ -63,7 +64,7 @@ jobs:
         run: |
           node --check scripts/verify-eth-candidate-browser.mjs
           node --check scripts/issue-ethereum-prospective.mjs
-          node --test tests/ethereum-prospective-records.test.mjs tests/ethereum-prospective-collector.test.mjs tests/ethereum-numeric-range.test.mjs tests/ethereum-monte-carlo-stability.test.mjs tests/ethereum-pow-zero.test.mjs tests/ethereum-btc-refresh-status.test.mjs tests/ethereum-offline-refresh-policy.test.mjs tests/ethereum-pooled-model.test.mjs tests/ethereum-interval-comparison.test.mjs tests/ethereum-throughput-supplement.test.mjs tests/eth-future-range.test.mjs tests/ethereum-adaptive-model.test.mjs tests/ethereum-adoption-scenarios.test.mjs tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-economic-ablation.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/eth-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs tests/ethereum-economic-data.test.mjs tests/ethereum-economic-collector.test.mjs tests/asset-forecast-records.test.mjs tests/asset-forecast-collector.test.mjs tests/asset-outcome-records.test.mjs tests/asset-outcome-collector.test.mjs tests/ethereum-historical-gas-source.test.mjs tests/asset-forecast-journal.test.mjs tests/journal-entry-ownership.test.mjs tests/eth-review-packet.test.mjs tests/treasury-model.test.mjs
+          node --test tests/ethereum-prospective-reuse.test.mjs tests/ethereum-prospective-records.test.mjs tests/ethereum-prospective-collector.test.mjs tests/ethereum-numeric-range.test.mjs tests/ethereum-monte-carlo-stability.test.mjs tests/ethereum-pow-zero.test.mjs tests/ethereum-btc-refresh-status.test.mjs tests/ethereum-offline-refresh-policy.test.mjs tests/ethereum-pooled-model.test.mjs tests/ethereum-interval-comparison.test.mjs tests/ethereum-throughput-supplement.test.mjs tests/eth-future-range.test.mjs tests/ethereum-adaptive-model.test.mjs tests/ethereum-adoption-scenarios.test.mjs tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-economic-ablation.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/eth-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs tests/ethereum-economic-data.test.mjs tests/ethereum-economic-collector.test.mjs tests/asset-forecast-records.test.mjs tests/asset-forecast-collector.test.mjs tests/asset-outcome-records.test.mjs tests/asset-outcome-collector.test.mjs tests/ethereum-historical-gas-source.test.mjs tests/asset-forecast-journal.test.mjs tests/journal-entry-ownership.test.mjs tests/eth-review-packet.test.mjs tests/treasury-model.test.mjs
       - name: Evaluate preserved asset forecasts without requiring a new forecast issue
         run: |
           node scripts/evaluate-asset-forecasts.mjs
