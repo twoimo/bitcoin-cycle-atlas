@@ -195,3 +195,12 @@ Hallmark [40355131740](https://github.com/twoimo/bitcoin-cycle-atlas/actions/run
 최종 issuer의 실제 cutoff에서 BMNR/MSTR 완료 세션 자료가 오래된 것으로 확인됐다. 기본 새 발행의 최신성 거부는 유지하며 명시적 CI 보존 모드에서만 새 record/snapshot 0, 기존 9/3을 보존했다. 두 보존 호출의 receipt와 별도 결과 평가 27 pending/0 scored를 함께 기록한다. 원자료 날짜·실제 발행 시계를 소급하지 않았다. 경제 정의 적격 0/25, 경제 snapshot 0·제거 실험 unavailable·전향 scored 0은 남는다.
 
 **최신 지시에 따른 Gemini 반대 검토와 후속 역검토는 omitted-by-user이며 미완료 필수 조건에서 제외한다.** source-book 일반 생성기의 원본 pending 메타데이터는 역사적 출력으로 보존하고 실행 요약에서 이 차이를 명시한다. 생략을 통과로 고치지 않는다. 현재의 미해결 사항은 자료·표본·실제 예측 검증과 원문 디자인 진단이며, 코드·차트 변경은 Draft 연구 브랜치에 반영했다. main 병합·운영 모형 승격·공개 배포는 하지 않았고 releaseAuthorized=false다.
+
+
+## 2026-10-27 후속: 전체 수익률 후보와 구간 근거
+
+[고정 정책·검증 범위](ETH_POOLED_FOLLOWUP_20261027.md)에 따라 pooled 후보를 추가한다. adaptive v1 기본값과 산술, 기존 외부 평가 조건, 보존 원장 9개를 유지한다. 상태 미분류 수익률까지 포함하는 독립 후보의 실제 성능은 같은 원점에서 판정한다. 기존 raw 분위수와 최소 12개 성숙 비중첩 오차를 요구하는 실험적 보정 상태는 구분한다.
+
+growthepie throughput는 실제 수집 성공 시에도 rate-derived 보조 관측이다. strict 0/25, full model snapshot 0, historical point-in-time 미확보, 전향 점수 0을 이 수집으로 해소했다고 세지 않는다. 최초 정책 commit의 새 실행 상태는 pending이며 후속 증거 기록에서 실제 결과를 연결한다.
+
+Gemini 반대 검토와 후속 역검토는 사용자의 명시 지시에 따라 계속 omitted-by-user이다. 이번 일반 수치·소스·기능 검증을 해당 외부 검토 완료로 바꾸지 않는다.

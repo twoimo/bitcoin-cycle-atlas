@@ -52,6 +52,8 @@ export async function evaluateEthereumModels({repositoryRoot=root,output=null}={
   await visit('scripts/verify-eth-candidate-browser.mjs');
   await visit('tests/ethereum-economic-ablation.test.mjs');
   await visit('tests/ethereum-adaptive-model.test.mjs');
+  await visit('tests/ethereum-pooled-model.test.mjs');
+  await visit('tests/ethereum-interval-comparison.test.mjs');
   await visit('tests/ethereum-adoption-scenarios.test.mjs');
   for(const path of ['dist/eth-view.js','dist/eth-view.css','dist/intraday-chart.js','dist/equity-forecast-chart.js','tests/equity-chart-rendering.test.mjs','tests/ethereum-forecast.test.mjs']) await visit(path);
   for(const path of ['tests/ethereum-cycle-models.test.mjs','tests/ethereum-economic-model.test.mjs','tests/ethereum-model-comparison.test.mjs','tests/ethereum-forecast-boundary.test.mjs']) await visit(path);
@@ -88,6 +90,7 @@ export function compactEthereumReport(report){
       pairedBaselines:Object.fromEntries(Object.entries(s.pairedBaselines).map(([id,p])=>[id,{n:p.disjointCases,skill:p.skill,candidateError:p.candidateMeanAbsoluteLogError,baselineError:p.baselineMeanAbsoluteLogError}])),
       interval:s.experimentalInterval,simulatedInterval:s.simulatedInterval})),
     current:Object.fromEntries(Object.entries(report.current.candidates).map(([id,c])=>[id,{status:c.status,reason:c.reason??null,predictions:c.predictions,assumptions:c.assumptions??null,feasibility:c.feasibility??null}])),
+    currentIntervalEvidence:report.currentIntervalEvidence,intervalComparisons:report.intervalComparisons,
     reviewSourceBundle:report.provenance.reviewSourceBundle,
     relativeStrength:{target:report.relativeStrength.target,unit:report.relativeStrength.unit,summaries:report.relativeStrength.summaries.map(s=>({model:s.model,horizonDays:s.horizonDays,availableOrigins:s.availableOrigins,completedOutcomes:s.completedOutcomes,pendingTargets:s.pendingTargets,missingOutcomes:s.missingOutcomes,disjointCases:s.disjointTargetIntervals,meanAbsoluteLogError:s.disjoint.meanAbsoluteLogError})),pairwise:report.relativeStrength.pairwise,scope:report.relativeStrength.scope},
     adoption:report.adoption,scope:report.scope};

@@ -8,7 +8,7 @@ import {chartPaneLayout,volumePaneMarkup,historicalMarkersMarkup} from './chart-
 import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.29.0';
 import { clearChartHover, clearChartHoverPointer, getChartHoverPointer, rememberChartHoverPointer, coalescedChartHover, paintPriceCursor } from './chart-hover.js?v=1.29.0';
 import { dateWindow, pixelExtrema } from './chart-window.js?v=1.29.0';
-import { equityForecastAnchor, equityForecastRows, equityForecastWindowRows, equityForecastLogGaps, equityForecastMarkup, equityForecastCandles, EQUITY_FORECAST_BAR_NOTE, isEthereumConditionalForecast } from "./equity-forecast-chart.js?v=1.29.0";
+import { equityForecastAnchor, equityForecastRows, equityForecastWindowRows, equityForecastLogGaps, equityForecastMarkup, equityForecastCandles, EQUITY_FORECAST_BAR_NOTE, isEthereumConditionalForecast, isEthereumSimulationForecast } from "./equity-forecast-chart.js?v=1.29.0";
 
 const numberFormats=new Map();
 const number=(value,digits=2)=>{if(!numberFormats.has(digits))numberFormats.set(digits,new Intl.NumberFormat('en-US',{maximumFractionDigits:digits}));return numberFormats.get(digits).format(value);};
@@ -35,7 +35,7 @@ export function drawIntradayChart({svg,series,chartType='candles',scale='log',pr
   const minTime=range?.start??allRows[0].time-interval.seconds,maxTime=range?.end??allRows.at(-1).time+interval.seconds;
   let rows=dateWindow(allRows,minTime,maxTime,row=>row.time);
   const forecastAnchor=equityForecastAnchor(forecast,allRows.at(-1));
-  const futureRows=equityForecastRows(forecast,forecastAnchor?.time??Infinity),visibleFuture=equityForecastWindowRows(futureRows,forecastAnchor,minTime,maxTime,scale,ethereumConditional,forecast?.researchModel!=='adaptive');
+  const futureRows=equityForecastRows(forecast,forecastAnchor?.time??Infinity),visibleFuture=equityForecastWindowRows(futureRows,forecastAnchor,minTime,maxTime,scale,ethereumConditional,!isEthereumSimulationForecast(forecast));
   const futureCandles=forecast?.pathMode==='asset-linked-daily'&&chartType==='candles'?dateWindow(equityForecastCandles(forecast,series.interval),minTime,maxTime,row=>row.time):[];
   const scaleRows=[...rows,...visibleFuture];
   const forecastLogGaps=scale==='log'?equityForecastLogGaps(futureRows,forecastAnchor,minTime,maxTime):[];

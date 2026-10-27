@@ -5,6 +5,7 @@ import * as ethData from '../../dist/eth-market-data.js';
 import * as ethState from '../../dist/eth-view-state.js';
 import {buildEthereumForecasts} from '../../dist/ethereum-forecast.js';
 import {buildEthereumAdaptiveForecast} from '../../dist/ethereum-adaptive-model.js';
+import {buildEthereumPooledForecast} from '../../dist/ethereum-pooled-model.js';
 import {ethereumResearchPanel} from '../../dist/ethereum-research-panel.js';
 import * as events from '../../dist/ethereum-events.js';
 import * as eventHistory from '../../dist/ethereum-history.js';
@@ -96,7 +97,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     const pending = deferred(); requests.push({ url, options, ...pending }); return pending.promise;
   };
   const deps = {
-    ...ohlc, ...ethData, ...ethState, ...events, ...eventHistory, marketStatusText,buildEthereumForecasts,buildEthereumAdaptiveForecast,ethereumResearchPanel,
+    ...ohlc, ...ethData, ...ethState, ...events, ...eventHistory, marketStatusText,buildEthereumForecasts,buildEthereumAdaptiveForecast,buildEthereumPooledForecast,ethereumResearchPanel,
     createMarketDataController: options => createMarketDataController({ ...options, fetchImpl }),
     fetchMarketCandles: options => {
       const pending = deferred(); liveRequests.push({ options, ...pending }); return pending.promise;

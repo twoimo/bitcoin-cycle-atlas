@@ -1,6 +1,7 @@
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
 import {buildEthereumForecasts} from './ethereum-forecast.js';
 import {buildEthereumAdaptiveForecast} from './ethereum-adaptive-model.js';
+import {buildEthereumPooledForecast} from './ethereum-pooled-model.js';
 import {ethereumResearchPanel} from './ethereum-research-panel.js';
 import { CHART_INTERVALS, chartInterval, isIntradayInterval, fetchMarketCandles } from './ohlc-data.js?v=1.29.0';
 import { parseEthArchive, mergeEthArchive } from './eth-market-data.js?v=1.29.0';
@@ -39,8 +40,8 @@ export async function initEthView() {
   document.body.dataset.market = 'ETHUSD';
   document.title = 'ETHUSD · Ethereum — Bitcoin Cycle Atlas';
   const params = new URLSearchParams(location.search);
-  const state = {...readEthView(params),ethModel:params.get('eth-model')==='valuation'||(!params.has('eth-model')&&params.has('eth-scenario'))?'valuation':'adaptive',forecastVisible:params.get('forecast')!=='off',ethScenario:['stress','base','bull'].includes(params.get('eth-scenario'))?params.get('eth-scenario'):'base',eventSettings:readEthereumEventSettings(params),selectedHistoryEvent:null,tool:'crosshair',range:null,priceDomain:null,controller:null,selectedTime:null,frame:null,loading:false,error:null,refreshError:null};
-  let forecastBundle=null,forecastError=null,adaptiveForecast=null,adaptiveError=null,infoMode='data';
+  const state = {...readEthView(params),ethModel:['pooled','valuation'].includes(params.get('eth-model'))?params.get('eth-model'):(!params.has('eth-model')&&params.has('eth-scenario'))?'valuation':'adaptive',forecastVisible:params.get('forecast')!=='off',ethScenario:['stress','base','bull'].includes(params.get('eth-scenario'))?params.get('eth-scenario'):'base',eventSettings:readEthereumEventSettings(params),selectedHistoryEvent:null,tool:'crosshair',range:null,priceDomain:null,controller:null,selectedTime:null,frame:null,loading:false,error:null,refreshError:null};
+  let forecastBundle=null,forecastError=null,adaptiveForecast=null,adaptiveError=null,pooledForecast=null,pooledError=null,infoMode='data';
   let payload = null, daily = null, weekly = null, archiveRequest = null, generation = 0, navigationRevision = 0, ready = false, suspended = false;
   const app = document.createElement('main');
   app.id = 'main';app.className = 'eth-app';app.dataset.bootContent = '';app.inert = true;app.setAttribute('aria-hidden','true');
@@ -118,6 +119,13 @@ export async function initEthView() {
   function openHistoricalEvent(id){cancelInteraction();state.selectedHistoryEvent=id;historyWorkbench.open(id);schedule();}
   function updateHistoryContext(){historyWorkbench.update({frequency:state.frequency,firstDate:daily?.firstDate?.slice(0,10),lastDate:daily?.lastDate?.slice(0,10),dailySeries:daily,visibleCount:Number(svg.dataset.historyEventCount||0)});}
   function ensureForecast(){
+    if(state.ethModel==='pooled'){
+      if(payload&&daily&&!pooledForecast&&!pooledError){
+        try{pooledForecast=buildEthereumPooledForecast({ethHistory:payload,asOf:daily.lastDate.slice(0,10)});}
+        catch(error){pooledError=error.message||'ETH 전체 수익률 입력을 확인해 주세요.';}
+      }
+      return pooledForecast;
+    }
     if(state.ethModel==='adaptive'){
       if(payload&&daily&&!adaptiveForecast&&!adaptiveError){
         try{adaptiveForecast=buildEthereumAdaptiveForecast({ethHistory:payload,asOf:daily.lastDate.slice(0,10)});}
@@ -143,9 +151,9 @@ export async function initEthView() {
     try{
     info.querySelector('#eth-data-title').textContent='ETH 조건부 미래 경로';
     const selected=ensureForecast(),model=selected?.assetPath;
-    const modelControl=`<div class="eth-forecast-controls"><label for="eth-model">미래 경로 모형</label><select id="eth-model"><option value="adaptive" ${state.ethModel==='adaptive'?'selected':''}>ETH 자체 기간·변동성 연구</option><option value="valuation" ${state.ethModel==='valuation'?'selected':''}>기존 외부 평가 조건 · BMNR 공통</option></select></div>`;
-    if(state.ethModel==='adaptive'){
-      info.querySelector('#eth-data-content').innerHTML=modelControl+`<div class="eth-forecast-controls"><label><input id="eth-forecast-visible" type="checkbox" ${state.forecastVisible?'checked':''}> 일봉·주봉에 연구 경로 표시</label></div>`+ethereumResearchPanel(selected,adaptiveError)+`<button type="button" data-open-asset-forecast-journal="ETHUSD">보존한 연구 발행본</button> <button type="button" data-open-forecast-journal="data">자료 상태·공통 기준시각</button>`;
+    const modelControl=`<div class="eth-forecast-controls"><label for="eth-model">미래 경로 모형</label><select id="eth-model"><option value="adaptive" ${state.ethModel==='adaptive'?'selected':''}>ETH 자체 기간·변동성 연구</option><option value="pooled" ${state.ethModel==='pooled'?'selected':''}>전체 수익률·변동성 비교 후보</option><option value="valuation" ${state.ethModel==='valuation'?'selected':''}>기존 외부 평가 조건 · BMNR 공통</option></select></div>`;
+    if(['adaptive','pooled'].includes(state.ethModel)){
+      info.querySelector('#eth-data-content').innerHTML=modelControl+`<div class="eth-forecast-controls"><label><input id="eth-forecast-visible" type="checkbox" ${state.forecastVisible?'checked':''}> 일봉·주봉에 연구 경로 표시</label></div>`+ethereumResearchPanel(selected,state.ethModel==='pooled'?pooledError:adaptiveError,state.ethModel)+`<button type="button" data-open-asset-forecast-journal="ETHUSD">보존한 연구 발행본</button> <button type="button" data-open-forecast-journal="data">자료 상태·공통 기준시각</button>`;
       return;
     }
     const options=[['stress','스트레스 · $360 기준선'],['base','현재 가격 기준선'],['bull','채택 확대 · $22,000 기준선']];
@@ -153,17 +161,17 @@ export async function initEthView() {
     }finally{if(['eth-model','eth-scenario','eth-forecast-visible'].includes(focused))info.querySelector('#'+focused)?.focus();}
   }
   info.addEventListener('change',event=>{
-    if(event.target.id==='eth-model'&&['adaptive','valuation'].includes(event.target.value))state.ethModel=event.target.value;
+    if(event.target.id==='eth-model'&&['adaptive','pooled','valuation'].includes(event.target.value))state.ethModel=event.target.value;
     else if(event.target.id==='eth-scenario'&&['stress','base','bull'].includes(event.target.value))state.ethScenario=event.target.value;
     else if(event.target.id==='eth-forecast-visible')state.forecastVisible=event.target.checked;else return;
     cancelInteraction();++navigationRevision;state.range=null;state.priceDomain=null;persist();renderForecastInfo();if(event.target.id==='eth-model')info.querySelector('#eth-model')?.focus();schedule();
   });
   function showReadout(row){
-    $('#eth-kind').textContent=row.kind==='forecast'?(state.ethModel==='adaptive'?'모형 예시':'무작위 예시'):'';
+    $('#eth-kind').textContent=row.kind==='forecast'?(state.ethModel!=='valuation'?'모형 예시':'무작위 예시'):'';
     if(row.kind==='forecast'){
       $('#eth-price').textContent=`$${number(row.price)}`;$('#eth-change').textContent='';
       $('#eth-bar-time').textContent=(row.date||'').slice(0,10);$('#eth-bar-time').dateTime=row.date||'';
-      $('#eth-ohlc').innerHTML=`<span>${state.ethModel==='adaptive'?'모의 10–90%':'세 조건 범위'} $${number(row.low)} – $${number(row.high)}</span><span>미래 OHLC 아님</span>`;
+      $('#eth-ohlc').innerHTML=`<span>${state.ethModel!=='valuation'?'모의 10–90%':'세 조건 범위'} $${number(row.low)} – $${number(row.high)}</span><span>미래 OHLC 아님</span>`;
       if(!row.hovered)state.selectedTime=row.time;return;
     }
     if(row.kind==='unavailable'){$('#eth-price').textContent='—';$('#eth-change').textContent='';$('#eth-bar-time').textContent='';$('#eth-ohlc').textContent='이 구간에 완료된 봉이 없습니다.';return;}
@@ -212,7 +220,7 @@ export async function initEthView() {
     const forecast=visibleForecast();
     $('#eth-forecast-note').hidden=!forecast;
     $('#eth-forecast-note').title=forecast?`${forecast.scenario.label} · 관측 ${forecast.asOf}`:'';
-    const adaptive=forecast?.researchModel==='adaptive';
+    const adaptive=['adaptive','pooled'].includes(forecast?.researchModel);
     $('#eth-forecast-note').querySelector('.eth-baseline-key').textContent=adaptive?'·· 모형 중앙값':'·· 조건 기준선';
     $('#eth-forecast-note').querySelector('.eth-envelope-key').textContent=adaptive?'음영: 모의 10–90%':'음영: 세 조건 범위';
     $('#eth-forecast-note').querySelector('.eth-sample-key').textContent=adaptive?'┄ 모형 예시 1개 · 적중률 미보정':'┄ 무작위 예시 1개 · 확률 아님';
@@ -233,7 +241,7 @@ export async function initEthView() {
     plot.dataset.tool=state.tool;navigation.update();if(info.open){if(infoMode==='forecast')renderForecastInfo();else renderInfo();}revealReady();
   }
   function schedule(){if(!suspended&&state.frame===null)state.frame=requestAnimationFrame(render);}
-  function setPayload(value){const nextDaily=parseEthArchive(value),nextWeekly=parseEthArchive(value,'weekly');payload=value;daily=nextDaily;weekly=nextWeekly;forecastBundle=null;forecastError=null;adaptiveForecast=null;adaptiveError=null;}
+  function setPayload(value){const nextDaily=parseEthArchive(value),nextWeekly=parseEthArchive(value,'weekly');payload=value;daily=nextDaily;weekly=nextWeekly;forecastBundle=null;forecastError=null;adaptiveForecast=null;adaptiveError=null;pooledForecast=null;pooledError=null;}
   async function getArchive(signal){
     const embedded=document.getElementById('embedded-eth-data')?.textContent;
     if(embedded)return JSON.parse(embedded);

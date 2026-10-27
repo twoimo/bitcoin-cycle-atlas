@@ -4,11 +4,12 @@ import {buildIndependentBenchmarks, absoluteLogError, intervalScore} from './for
 import {calibrateLogInterval} from './forecast-experiments.js';
 import {buildEthereumAssetScenarioPaths} from './ethereum-forecast.js';
 import {buildEthereumAdaptiveCandidate} from './ethereum-adaptive-model.js';
+import {buildEthereumPooledCandidate} from './ethereum-pooled-model.js';
 import {buildEthereumCycleCandidates} from './ethereum-cycle-models.js';
 import {buildEthereumEconomicCandidate} from './ethereum-economic-model.js';
 
 export const ETH_COMPARISON_POLICY = Object.freeze({
-  version: 'eth-locked-candidate-comparison-4', horizons: Object.freeze([30,90,180]),
+  version: 'eth-locked-candidate-comparison-5', horizons: Object.freeze([30,90,180]),
   minimumHistoryDays: 730, originStrideDays: 28, betaLookbackDays: 365,
   legacySeed: 20261022, minimumBlendCases: 12, intervalAlpha: 0.2,
   minimumCalibrationCases: 12, minimumDisjointPromotionCases: 30,
@@ -16,7 +17,7 @@ export const ETH_COMPARISON_POLICY = Object.freeze({
   externalReviewDecision:'User explicitly omitted Gemini opposition and follow-up reverse review on 2026-10-27; not a completed review',
 });
 export const ETH_COMPARISON_MODELS = Object.freeze([
-  'flat','shrunkenTrend','btcLinked','btcTransfer','ethRefit','adaptiveEth','legacyEth','economic','combined',
+  'flat','shrunkenTrend','btcLinked','btcTransfer','ethRefit','adaptiveEth','pooledEth','legacyEth','economic','combined',
 ]);
 const mean = values => values.length ? values.reduce((a,b)=>a+b,0)/values.length : null;
 const closeAt = date => new Date((utcDay(date)+1)*86400000).toISOString();
@@ -233,6 +234,60 @@ export function summarizeEthereumComparison(cases,{horizons=ETH_COMPARISON_POLIC
   return {summaries,common,pairwise,rankingAcrossDifferentOriginSets:false};
 }
 
+
+/** Compare equal-mass interval forecasts on their exact common mature targets.
+ * Scores are recomputed from bounds/outcomes; cached coverage cannot alter them. */
+export function summarizeEthereumIntervalPair(cases,{asOf,horizonDays,left,right,alpha=.2}={}){
+  const cutoff=utcDay(asOf);
+  if(!Array.isArray(cases)||!Number.isSafeInteger(horizonDays)||horizonDays<1||horizonDays>730||
+    !Number.isFinite(alpha)||alpha<=0||alpha>=1)throw new RangeError('Invalid paired interval settings');
+  for(const side of [left,right])if(!side||!ETH_COMPARISON_MODELS.includes(side.model)||
+    !['simulated','experimental'].includes(side.kind))throw new TypeError('Unknown paired interval model or kind');
+  function band(row,side){
+    const value=(side.kind==='simulated'?row.simulatedIntervals:row.intervals)?.[side.model];
+    if(value==null)return null;
+    if(side.kind==='experimental'&&value.status==='insufficient-matured-errors')return null;
+    if(side.kind==='experimental'&&value.status!=='experimental')throw new TypeError('Unknown empirical interval status');
+    if(!positive(value.lower)||!positive(value.upper)||value.lower>value.upper)throw new RangeError('Invalid paired interval bounds');
+    const mass=value.nominalPointwiseMass;
+    if(side.kind==='simulated'&&(!Number.isFinite(mass)||mass<=0||mass>=1))throw new RangeError('Invalid nominal interval mass');
+    const a=side.kind==='simulated'?1-mass:value.alpha;
+    if(!Number.isFinite(a)||Math.abs(a-alpha)>1e-12)throw new RangeError('Paired intervals must use the same nominal mass');
+    return {lower:value.lower,upper:value.upper};
+  }
+  const common=[],seen=new Set();
+  for(const row of cases){
+    if(row.horizonDays!==horizonDays)continue;
+    const start=utcDay(row.origin),end=utcDay(row.targetDate);
+    if(end-start!==horizonDays)throw new RangeError('Paired interval target clock mismatch');
+    if(end>cutoff||row.status==='pending'||row.actual==null)continue;
+    if(!positive(row.actual))throw new RangeError('Invalid paired interval outcome');
+    const l=band(row,left),r=band(row,right);
+    if(!l||!r)continue;
+    if(seen.has(row.origin))throw new RangeError('Duplicate paired interval origin');
+    seen.add(row.origin);common.push({...row,pairedLeft:l,pairedRight:r});
+  }
+  common.sort((a,b)=>a.origin.localeCompare(b.origin));
+  const disjoint=disjointEthereumCases(common);
+  function score(group,key){
+    const scored=group.map(row=>{
+      const b=row[key],lo=Math.log(b.lower),hi=Math.log(b.upper),y=Math.log(row.actual);
+      return {lowerMiss:row.actual<b.lower,upperMiss:row.actual>b.upper,
+        covered:row.actual>=b.lower&&row.actual<=b.upper,width:hi-lo,score:intervalScore(lo,hi,y,alpha)};
+    });
+    return {n:scored.length,empiricalCoverage:mean(scored.map(r=>Number(r.covered))),
+      meanLogWidth:mean(scored.map(r=>r.width)),meanLogIntervalScore:mean(scored.map(r=>r.score)),
+      lowerMisses:scored.filter(r=>r.lowerMiss).length,upperMisses:scored.filter(r=>r.upperMiss).length};
+  }
+  const leftScore=score(disjoint,'pairedLeft'),rightScore=score(disjoint,'pairedRight');
+  return {asOf,horizonDays,alpha,left:{...left},right:{...right},status:common.length?'evaluated':'unavailable',
+    sameOriginCases:common.length,disjointCases:disjoint.length,commonOrigins:common.map(r=>r.origin),
+    disjointOrigins:disjoint.map(r=>r.origin),allEligible:{left:score(common,'pairedLeft'),right:score(common,'pairedRight')},
+    disjoint:{left:leftScore,right:rightScore},
+    rightMinusLeftMeanLogIntervalScore:disjoint.length?rightScore.meanLogIntervalScore-leftScore.meanLogIntervalScore:null,
+    independentSampleSize:null,coverageGuarantee:false,historicalOutcomeAvailabilityProven:false};
+}
+
 // Historical comparison can retain completed earlier origins when today's BTC
 // close is absent. The strict reader still validates the entire source sequence;
 // each BTC-dependent candidate separately requires its exact origin close.
@@ -280,7 +335,8 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
       candidates={
         flat:readyPredictions(simple.targets,'flat'),shrunkenTrend:readyPredictions(simple.targets,'shrunkenTrend'),
         btcLinked:buildSimpleEthereumBtcLink({ethRows:ep,btcRows:bp,asOf:origin,horizons}),
-        btcTransfer:cycle.btcTransfer,ethRefit:cycle.ethRefit,adaptiveEth:buildEthereumAdaptiveCandidate({ethRows:ep,asOf:origin,horizons}),legacyEth:legacyCandidate(ep,origin,horizons),economic,
+        btcTransfer:cycle.btcTransfer,ethRefit:cycle.ethRefit,adaptiveEth:buildEthereumAdaptiveCandidate({ethRows:ep,asOf:origin,horizons}),
+        pooledEth:buildEthereumPooledCandidate({ethRows:ep,asOf:origin,horizons}),legacyEth:legacyCandidate(ep,origin,horizons),economic,
       };
       candidates.combined=buildEthereumCombinedCandidate({origin,horizons,cycle:candidates.ethRefit,economic,history:cases});
     }
@@ -329,6 +385,26 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
     if(origin===asOf)current={asOf,informationCutoffAt,issuedAt:issuedAt??null,candidates};
   }
   const summary=summarizeEthereumComparison(cases);
+  const currentIntervalEvidence={
+    asOf,informationCutoffAt:current.informationCutoffAt,issuedAt:current.issuedAt,
+    interpretation:'Current reconstructed forecasts; empirical-error status is separate from raw Monte Carlo bands.',
+    historicalOutcomeAvailabilityProven:false,calibratedForProduction:false,coverageGuarantee:false,
+    horizons:cases.filter(r=>r.origin===asOf).map(row=>({
+      horizonDays:row.horizonDays,targetDate:row.targetDate,
+      models:Object.fromEntries(ETH_COMPARISON_MODELS.map(model=>{
+        const raw=row.simulatedIntervals[model],empirical=row.intervals[model];
+        return [model,{modelAvailable:positive(row.predictions[model]),unavailableReason:row.unavailableModels[model]??null,
+          rawSimulation:raw?{status:'simulated',lower:raw.lower,upper:raw.upper,nominalPointwiseMass:raw.nominalPointwiseMass,coverageGuarantee:false}:null,
+          empiricalCalibration:empirical?{...empirical,usedOrigins:[...empirical.usedOrigins]}:null,
+          minimumCalibrationCases:ETH_COMPARISON_POLICY.minimumCalibrationCases,empiricalFallbackApplied:false}];
+      })),
+    })),
+  };
+  const intervalComparisons=horizons.flatMap(horizonDays=>[
+    [{model:'adaptiveEth',kind:'simulated'},{model:'pooledEth',kind:'simulated'}],
+    [{model:'adaptiveEth',kind:'simulated'},{model:'adaptiveEth',kind:'experimental'}],
+    [{model:'pooledEth',kind:'simulated'},{model:'pooledEth',kind:'experimental'}],
+  ].map(([left,right])=>summarizeEthereumIntervalPair(cases,{asOf,horizonDays,left,right,alpha:ETH_COMPARISON_POLICY.intervalAlpha})));
   return {schemaVersion:1,kind:'ethereum-candidate-comparison',asOf,policy:ETH_COMPARISON_POLICY,
     data:{ethFirstObservation:rows[0].date,btcFirstObservation:btcRows[0].date,ethObservations:rows.length,btcObservations:btcRows.length,
       ethGaps:e.gaps,discardedEarlyEthObservations:eligible.startIndex,btcGaps:b.gaps,discardedEarlyBtcObservations:0,interpolation:false,
@@ -340,7 +416,7 @@ export function runEthereumModelComparison({ethHistory,btcHistory,economicSnapsh
       priceVintageIntegration:'One selected frozen price row per date; raw multi-publication price ledgers require selection before this evaluator. Unknown historical issue/publication timestamps are not invented.'},
     uniqueOrigins:origins.length,maturedTargets:cases.filter(r=>r.actual!==null).length,
     prospectiveScoredTargets:0,independentMarketRegimes:null,independentCycleCount:null,
-    origins:originsMetadata,cases,...summary,current,
+    origins:originsMetadata,cases,...summary,current,currentIntervalEvidence,intervalComparisons,
     relativeStrength:{target:'ETH/BTC',unit:'BTC per ETH',cases:relativeCases,
       ...summarizeEthereumComparison(relativeCases,{horizons,models:['flat','shrunkenTrend','economic'],baselineModels:['flat','shrunkenTrend']}),
       scope:'ETH/BTC is scored independently from ETH/USD; observed future BTC enters only the realized target, never a predictor. Missing paired closes and absent economic forecasts are not fabricated.',

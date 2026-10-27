@@ -2,6 +2,7 @@ import {utcDay} from './cycle-engine.js?v=1.29.0';
 import {dateWindow,lowerBoundDate,upperBoundDate} from './chart-window.js?v=1.29.0';
 
 export const isEthereumConditionalForecast=forecast=>forecast?.symbol==='ETHUSD'&&forecast.pathMode==='crypto-conditional-daily';
+export const isEthereumSimulationForecast=forecast=>isEthereumConditionalForecast(forecast)&&['adaptive','pooled'].includes(forecast.researchModel);
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 function forecastTime(value){
@@ -23,7 +24,7 @@ export function equityForecastRows(forecast,lastObservedTime){
   const rows=[];let previous=-Infinity;
   for(const point of forecast.path){
     const time=forecastTime(point?.date);
-    const adaptive=forecast.researchModel==='adaptive';
+    const adaptive=isEthereumSimulationForecast(forecast);
     if(time<=previous||!Number.isFinite(point.price)||point.price<0||!Number.isFinite(point.low)||!Number.isFinite(point.high)||point.low<0||point.low>point.high||(!adaptive&&(point.low>point.price||point.high<point.price)))throw new TypeError('Invalid equity forecast path');
     if(isEthereumConditionalForecast(forecast)&&(!Number.isFinite(point.baselinePrice)||point.baselinePrice<=0))throw new TypeError('Invalid ETH conditional baseline');
     if(adaptive&&(point.price<=0||point.low<=0||!Number.isFinite(point.baselinePrice)||point.baselinePrice<point.low||point.baselinePrice>point.high))throw new TypeError('Invalid ETH adaptive percentile bounds');
@@ -100,12 +101,12 @@ export function equityForecastLogGaps(points,lastObserved,minTime,maxTime){
   return gaps;
 }
 
-export function equityForecastMarkup({forecast,points,lastObserved,x,y,left,right,top,bottom,clipId,minTime,maxTime,showBand=true,scale='log',chartType='line',candles=[],barWidth=4,visibleRows=equityForecastWindowRows(points,lastObserved,minTime,maxTime,scale,isEthereumConditionalForecast(forecast),forecast?.researchModel!=='adaptive')}){
+export function equityForecastMarkup({forecast,points,lastObserved,x,y,left,right,top,bottom,clipId,minTime,maxTime,showBand=true,scale='log',chartType='line',candles=[],barWidth=4,visibleRows=equityForecastWindowRows(points,lastObserved,minTime,maxTime,scale,isEthereumConditionalForecast(forecast),!isEthereumSimulationForecast(forecast))}){
   if(!forecast||!points.length)return {markup:'',markerIds:new Set()};
   const first=lowerBoundDate(points,minTime,row=>row.time),last=upperBoundDate(points,maxTime,row=>row.time);
   const pointBefore=points[first-1],included=points.slice(first,last),pointAfter=points[last];
   const values=[...(pointBefore?[pointBefore]:lastObserved?[{...lastObserved,price:lastObserved.close,low:lastObserved.close,high:lastObserved.close}]:[]),...included,...(pointAfter?[pointAfter]:[])];
-  const ethereum=isEthereumConditionalForecast(forecast),adaptive=forecast?.researchModel==='adaptive';
+  const ethereum=isEthereumConditionalForecast(forecast),adaptive=isEthereumSimulationForecast(forecast);
   let baselinePath='',baselineContinuous=false;
   if(ethereum)for(const row of values){
     const value=row.baselinePrice??(row.time===lastObserved?.time?lastObserved.close:NaN);

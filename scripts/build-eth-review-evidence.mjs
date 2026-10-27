@@ -8,6 +8,7 @@ const scope=JSON.parse(await readFile(resolve(root,'research-data/eth-review-sco
 const evidencePaths=[
   'build/ethereum-model-comparison.json',
   'build/ethereum-adaptive-research.json',
+  'build/ethereum-pooled-research.json',
   'build/ethereum-economic-ablation.json',
   'build/eth-browser/report.json',
 ];
@@ -20,6 +21,7 @@ async function addFiles(directory,{filter=()=>true}={}){
   }
 }
 await addFiles('build/ethereum-economic-data',{filter:path=>!path.endsWith('/capture.json')});
+await addFiles('build/ethereum-throughput-supplement');
 await addFiles('build/asset-forecast-ledger',{filter:path=>path.endsWith('.json')});
 await addFiles('build/asset-outcome-ledger',{filter:path=>path.endsWith('.json')});
 const manifest=await buildEthReviewPacket({

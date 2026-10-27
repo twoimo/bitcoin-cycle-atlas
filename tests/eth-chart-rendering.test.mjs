@@ -1,3 +1,4 @@
+import {buildEthereumPooledForecast} from '../dist/ethereum-pooled-model.js';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { drawIntradayChart } from '../dist/intraday-chart.js';
@@ -138,10 +139,10 @@ test('legacy series without an explicit product retain BTC identity in rendered 
 });
 
 
-test('adaptive SVG titles and inspection use model quantiles rather than legacy external-condition labels',async()=>{
+for(const builder of [buildEthereumAdaptiveForecast,buildEthereumPooledForecast])test(builder.name+' SVG titles and inspection use model quantiles rather than legacy external-condition labels',async()=>{
   const archive=JSON.parse(await readFile(new URL('../dist/data/eth-ohlc.json',import.meta.url),'utf8'));
   const actual=parseEthArchive(archive),asOf=actual.lastDate.slice(0,10);
-  const forecast=buildEthereumAdaptiveForecast({ethHistory:archive,asOf,horizonDays:90,sampleCount:64});
+  const forecast=builder({ethHistory:archive,asOf,horizonDays:90,sampleCount:64});
   const svg=svgFixture(),range=ethHistoryRange(actual,'all',null,forecast.displayEnd);
   const controller=drawIntradayChart({svg,series:actual,range,forecast,showVolume:false});
   assert.match(svg.innerHTML,/<title>모형 중앙값/);
@@ -154,9 +155,9 @@ test('adaptive SVG titles and inspection use model quantiles rather than legacy 
   assert.doesNotMatch(selected,/외부 평가 조건|세 조건 범위/);
 });
 
-test('an adaptive example may lie outside its quantiles without widening the band or blocking render',()=>{
+for(const researchModel of ['adaptive','pooled'])test(researchModel+' example may lie outside its quantiles without widening the band or blocking render',()=>{
   const rows=[candle(0)],anchor=rows[0].close,date=offset=>new Date((start+offset*86400)*1000).toISOString().slice(0,10);
-  const forecast={symbol:'ETHUSD',pathMode:'crypto-conditional-daily',researchModel:'adaptive',asOf:date(0),milestones:[],
+  const forecast={symbol:'ETHUSD',pathMode:'crypto-conditional-daily',researchModel,asOf:date(0),milestones:[],
     path:[{date:date(0),price:anchor,baselinePrice:anchor,low:anchor,high:anchor},
       {date:date(1),price:4000,baselinePrice:2100,low:1800,high:2400},
       {date:date(2),price:1000,baselinePrice:2200,low:1600,high:2600}]};
