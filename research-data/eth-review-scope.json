@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "baselineCommit": "30805dacdcf0aa3ea991439de87d5f9a38c59f25",
-  "scope": "All committed top-level browser JS/CSS/HTML, explicit current market and treasury inputs, changed candidate/ledger/acquisition/review sources and focused tests. Existing BTC issued-ledger JSON is unchanged and outside this delta packet; its separate CI verifies it. A parsed declared inventory is not proof of arbitrary JavaScript runtime dependency closure. Independent outcome observations and evaluations are separately preserved; their raw sources and immutable evaluation history are included as execution evidence. The retained historical gas source is a partial archive, not a complete economic input. User explicitly omitted Gemini opposition and follow-up reverse review on 2026-10-27. This source book preserves reproducibility; generation does not assert external review or production approval. The adaptive ETH mode is a research chart separate from the retained shared ETH/BMNR valuation engine. The separate pooled-return research control, fair interval comparisons and bounded growthepie throughput supplement are included. The supplement does not activate a strict economic model input. This continuation includes simple Gaussian and original empirical interval controls, source completion-time diagnostics, and a separately versioned causal state initialization control. These additions neither replace frozen issued records nor grant release authority.",
+  "scope": "All committed top-level browser JS/CSS/HTML, explicit current market and treasury inputs, changed candidate/ledger/acquisition/review sources and focused tests. Existing BTC issued-ledger JSON is unchanged and outside this delta packet; its separate CI verifies it. A parsed declared inventory is not proof of arbitrary JavaScript runtime dependency closure. Independent outcome observations and evaluations are separately preserved; their raw sources and immutable evaluation history are included as execution evidence. The retained historical gas source is a partial archive, not a complete economic input. User explicitly omitted Gemini opposition and follow-up reverse review on 2026-10-27. This source book preserves reproducibility; generation does not assert external review or production approval. The adaptive ETH mode is a research chart separate from the retained shared ETH/BMNR valuation engine. The separate pooled-return research control, fair interval comparisons and bounded growthepie throughput supplement are included. The supplement does not activate a strict economic model input. This continuation includes simple Gaussian and original empirical interval controls, source completion-time diagnostics, and a separately versioned causal state initialization control. These additions neither replace frozen issued records nor grant release authority. This continuation fixes common-origin point and interval cohorts before an eight-seed/two-draw Monte Carlo panel, separately issues an opt-in warm-start candidate while preserving the original candidate source graph, and reports per-metric economic raw-byte, definition and clock evidence without activating missing inputs.",
   "seedPaths": [
     ".github/workflows/ci.yml",
     ".github/workflows/eth-model-evaluation.yml",
@@ -281,7 +281,17 @@
     "tests/ethereum-source-timing.test.mjs",
     "tests/ethereum-warm-start-model.test.mjs",
     "research-data/eth-economic-captures/20261026T121240869Z-coinmetrics/receipt.json",
-    "research-data/eth-economic-captures/20261026T121240869Z-coinmetrics/eth.csv"
+    "research-data/eth-economic-captures/20261026T121240869Z-coinmetrics/eth.csv",
+    "dist/ethereum-economic-evidence-coverage.js",
+    "scripts/build-ethereum-economic-evidence-coverage.mjs",
+    "tests/ethereum-economic-evidence-coverage.test.mjs",
+    "scripts/ethereum-common-cohort-core.mjs",
+    "scripts/evaluate-ethereum-common-cohort.mjs",
+    "tests/ethereum-common-cohort.test.mjs",
+    "dist/ethereum-warm-start-prospective.js",
+    "dist/ethereum-prospective-dispatch.js",
+    "scripts/ethereum-prospective-options.mjs",
+    "tests/ethereum-warm-start-prospective.test.mjs"
   ],
   "dynamicResolutions": [
     {

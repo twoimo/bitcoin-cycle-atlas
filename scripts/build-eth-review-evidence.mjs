@@ -14,6 +14,8 @@ const evidencePaths=[
   'build/ethereum-source-timing.json',
   'build/ethereum-interval-controls.json',
   'build/ethereum-warm-start.json',
+  'build/ethereum-common-cohort.json',
+  'build/ethereum-economic-evidence-coverage.json',
   'build/ethereum-economic-ablation.json',
   'build/eth-browser/report.json',
 ];

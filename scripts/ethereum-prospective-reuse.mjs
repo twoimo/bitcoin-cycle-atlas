@@ -1,6 +1,6 @@
 import {canonicalForecastJson,forecastHash} from '../dist/forecast-records.js';
 import {parseCoinbaseCandles} from '../dist/ohlc-data.js';
-import {verifyEthereumProspectiveRecord,decideEthereumProspectiveAppend} from '../dist/ethereum-prospective-records.js';
+import {verifyEthereumProspectiveRecord,decideEthereumProspectiveAppend} from '../dist/ethereum-prospective-dispatch.js';
 
 export const ETH_PROSPECTIVE_REUSE_POLICY='eth-prospective-completed-tail-reuse-1';
 

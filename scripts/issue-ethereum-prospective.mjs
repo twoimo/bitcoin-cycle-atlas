@@ -7,10 +7,12 @@ import {canonicalForecastJson,forecastHash} from '../dist/forecast-records.js';
 import {buildEthereumAdaptiveForecast,ETH_ADAPTIVE_POLICY} from '../dist/ethereum-adaptive-model.js';
 import {buildEthereumPooledForecast,ETH_POOLED_POLICY} from '../dist/ethereum-pooled-model.js';
 import {ETH_PROSPECTIVE_PRICE_POLICY,createEthereumResearchSnapshot,verifyEthereumResearchSnapshot,rebuildEthereumResearchPrices} from '../dist/ethereum-prospective-prices.js';
-import {createEthereumProspectiveRecord,verifyEthereumProspectiveRecord,ethereumProspectiveIndexEntry,evaluateEthereumProspectiveRecords,replayEthereumProspectiveRecord} from '../dist/ethereum-prospective-records.js';
+import {createEthereumProspectiveRecord,verifyEthereumProspectiveRecord,ethereumProspectiveIndexEntry,evaluateEthereumProspectiveRecords,replayEthereumProspectiveRecord} from '../dist/ethereum-prospective-dispatch.js';
+import {ETH_WARM_START_PROSPECTIVE_POLICY,ETH_WARM_START_PROSPECTIVE_ENTRY,buildEthereumWarmStartProspectiveForecast} from '../dist/ethereum-warm-start-prospective.js';
 import {collectForecastModelIdentity} from './build-forecast-ledger.mjs';
 import {captureEthereumResearchTail} from './ethereum-prospective-collector-core.mjs';
 import {decideEthereumProspectiveIssue,ETH_PROSPECTIVE_REUSE_POLICY} from './ethereum-prospective-reuse.mjs';
+import {parseEthereumProspectiveArguments} from './ethereum-prospective-options.mjs';
 
 const root=fileURLToPath(new URL('..',import.meta.url)),out=resolve(root,'build/ethereum-prospective-ledger');
 const stored=resolve(root,'research-data/ethereum-prospective-ledger');
@@ -18,12 +20,12 @@ const json=x=>canonicalForecastJson(x)+'\n',now=()=>new Date().toISOString(),sha
 const git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8',timeout:10000}).trim();
 const sourceCommit=git('rev-parse','HEAD'),sourceTree=git('rev-parse','HEAD^{tree}');
 const PIN={sourceCommit:'54317f7d05abd8fe569b0912ff34caee2bbe9981',gitBlobSha:'882c49f0263034426e4e3afe377cc60a17448b6c',bytes:895609};
-const flags=process.argv.slice(2);
-if(flags.some(f=>f!=='--verify-preserved-only')||flags.length>1)throw new Error('Unsupported prospective issuer argument');
-const verifyOnly=flags.includes('--verify-preserved-only'),receiptPath=verifyOnly?'replay-receipt.json':'receipt.json';
+const {verifyOnly,includeWarmStart,modelKeys}=parseEthereumProspectiveArguments(process.argv.slice(2));
+const receiptPath=verifyOnly?'replay-receipt.json':'receipt.json';
 const files=new Map(),records=[],snapshots={},committedTransportReferences=new Map();
 const sourcePaths=['scripts/issue-ethereum-prospective.mjs','scripts/ethereum-prospective-collector-core.mjs','scripts/ethereum-prospective-reuse.mjs',
-  'dist/ethereum-prospective-records.js','dist/ethereum-prospective-prices.js',ETH_PROSPECTIVE_PRICE_POLICY.basePath];
+  'scripts/ethereum-prospective-options.mjs','dist/ethereum-prospective-dispatch.js','dist/ethereum-warm-start-prospective.js',
+  'dist/ethereum-warm-start-model.js','dist/ethereum-prospective-records.js','dist/ethereum-prospective-prices.js',ETH_PROSPECTIVE_PRICE_POLICY.basePath];
 if(git('status','--porcelain','--',...sourcePaths))throw new Error('Prospective issuer requires committed source and base input');
 const sourceHashes=Object.fromEntries(await Promise.all(sourcePaths.map(async p=>[p,sha(await readFile(resolve(root,p)))])));
 async function save(path,text,immutable=true){
@@ -67,17 +69,22 @@ const receipt={kind:'ethereum-prospective-issuance',sourceCommit,sourceTree,sour
   startedAt:now(),status:'started',mode:verifyOnly?'verify-preserved-only':'capture-and-issue',reusePolicy:ETH_PROSPECTIVE_REUSE_POLICY,priceOnlyCandidates:true,economicSnapshotsActivated:0,
   newRecords:0,reusedRecords:0,newSnapshots:0,prospectiveScoredTargets:0,productionAdopted:false,
   externalGeminiReview:'omitted-by-user',reverseReview:'omitted-by-user',releaseAuthorized:false,errors:[]};
+if(includeWarmStart)receipt.selectedModelKeys=[...modelKeys];
 let tail=null,captureSnapshot=null;
 await mkdir(out,{recursive:true});await save(receiptPath,json(receipt),false);
 try{
   await loadExisting();await loadExisting(out);receipt.preservedRecords=records.length;
   if(verifyOnly){
     const ledger=await collectForecastModelIdentity(root,'dist/ethereum-prospective-records.js');
-    const eligible=records.filter(r=>r.model.sourceHash===ledger.sourceHash);
-    if(!['adaptive','pooled'].every(k=>eligible.some(r=>r.modelKey===k)))throw new Error('Both current candidates need preserved records for replay-only verification');
+    const warmLedger=includeWarmStart||records.some(r=>r.modelKey==='warmStart')?
+      await collectForecastModelIdentity(root,ETH_WARM_START_PROSPECTIVE_ENTRY):null;
+    const models={adaptive:{...ledger,version:ETH_ADAPTIVE_POLICY.version},pooled:{...ledger,version:ETH_POOLED_POLICY.version},
+      ...(warmLedger?{warmStart:{...warmLedger,version:ETH_WARM_START_PROSPECTIVE_POLICY.modelVersion}}:{})};
+    const eligible=records.filter(r=>r.model.sourceHash===models[r.modelKey]?.sourceHash&&r.model.version===models[r.modelKey]?.version);
+    if(!modelKeys.every(k=>eligible.some(r=>r.modelKey===k)))throw new Error('All selected current candidates need preserved records for replay-only verification');
     receipt.replay=[];
     for(const record of eligible){
-      const currentModel={...ledger,version:record.modelKey==='adaptive'?ETH_ADAPTIVE_POLICY.version:ETH_POOLED_POLICY.version};
+      const currentModel=models[record.modelKey];
       receipt.replay.push(await replayEthereumProspectiveRecord({record,snapshot:snapshots[record.snapshotId],currentModel}));
     }
     receipt.status='verified-preserved';receipt.networkRequests=0;receipt.reusedRecords=eligible.length;
@@ -101,11 +108,16 @@ try{
     bodyCompletedAt:tail.bodyCompletedAt,sourceUrl:tail.sourceUrl});
   const generationStartedAt=now(),options={ethHistory:priceSource.archive,asOf:captureSnapshot.asOf,horizonDays:730,sampleCount:256,seed:20261027};
   const forecasts={adaptive:buildEthereumAdaptiveForecast(options),pooled:buildEthereumPooledForecast(options)};
+  if(includeWarmStart)forecasts.warmStart=buildEthereumWarmStartProspectiveForecast(options);
   const generatedAt=now();
   const ledger=await collectForecastModelIdentity(root,'dist/ethereum-prospective-records.js');
-  const modelFor=modelKey=>({...ledger,version:modelKey==='adaptive'?ETH_ADAPTIVE_POLICY.version:ETH_POOLED_POLICY.version});
+  const warmLedger=includeWarmStart||records.some(r=>r.modelKey==='warmStart')?
+    await collectForecastModelIdentity(root,ETH_WARM_START_PROSPECTIVE_ENTRY):null;
+  const models={adaptive:{...ledger,version:ETH_ADAPTIVE_POLICY.version},pooled:{...ledger,version:ETH_POOLED_POLICY.version},
+    ...(warmLedger?{warmStart:{...warmLedger,version:ETH_WARM_START_PROSPECTIVE_POLICY.modelVersion}}:{})};
+  const modelFor=modelKey=>models[modelKey];
   const issuedAt=now(),decisions=[],prepared=[];
-  for(const modelKey of ['adaptive','pooled']){
+  for(const modelKey of modelKeys){
     const candidate=await createEthereumProspectiveRecord({snapshot:captureSnapshot,forecast:forecasts[modelKey],model:modelFor(modelKey),modelKey,
       generationStartedAt,generatedAt,issuedAt});
     const decision=await decideEthereumProspectiveIssue({records,snapshots,candidate,candidateSnapshot:captureSnapshot});
@@ -113,7 +125,7 @@ try{
       attemptedRunKey:candidate.runKey,attemptedSnapshotId:captureSnapshot.id,reusePolicy:decision.reusePolicy,
       consumedInputHash:decision.consumedInputHash,reason:decision.reason,equivalentPreservedIds:decision.equivalentPreservedIds??[]});
   }
-  // Validate both candidates before the first new immutable record is written.
+  // Validate every selected candidate before the first new immutable record is written.
   for(const {candidate,decision}of prepared){
     if(decision.action==='append'){
       records.push(candidate);snapshots[captureSnapshot.id]=captureSnapshot;receipt.newRecords++;
@@ -126,7 +138,8 @@ try{
   // Preserve this acquisition even if an earlier economic run is reused.
   await save('observations/'+captureSnapshot.id+'.json',json(captureSnapshot));
   const evaluatedAt=now(),evaluator={...ledger,version:'eth-prospective-evaluator-1'};
-  const evaluation=await evaluateEthereumProspectiveRecords({records,snapshots,observations:[captureSnapshot],evaluatedAt,evaluator});
+  const warmStartEvaluator=warmLedger?{...warmLedger,version:'eth-warm-start-prospective-evaluator-1'}:undefined;
+  const evaluation=await evaluateEthereumProspectiveRecords({records,snapshots,observations:[captureSnapshot],evaluatedAt,evaluator,warmStartEvaluator});
   await save('evaluations/'+evaluation.id+'.json',json(evaluation));
   const index={schemaVersion:1,kind:'ethereum-prospective-index',entries:records.map(ethereumProspectiveIndexEntry).sort((a,b)=>a.id.localeCompare(b.id))};
   await save('index.json',json(index),false);
@@ -138,7 +151,7 @@ try{
   receipt.status='issued-or-reused';receipt.asOf=captureSnapshot.asOf;receipt.anchor=captureSnapshot.primaryPrices.at(-1)[1];
   receipt.informationCutoffAt=captureSnapshot.informationCutoffAt;receipt.attemptedIssueAt=issuedAt;receipt.recordIssuedAt=Object.fromEntries(decisions.map(d=>[d.modelKey,records.find(r=>r.id===d.id).issuedAt]));receipt.decisions=decisions;receipt.replay=replay;
   receipt.totalRecords=records.length;receipt.uniqueOrigins=new Set(records.map(r=>r.asOf)).size;
-  receipt.modelOrigins=Object.fromEntries(['adaptive','pooled'].map(k=>[k,new Set(records.filter(r=>r.modelKey===k).map(r=>r.asOf)).size]));
+  receipt.modelOrigins=Object.fromEntries([...new Set([...modelKeys,...records.map(r=>r.modelKey)])].map(k=>[k,new Set(records.filter(r=>r.modelKey===k).map(r=>r.asOf)).size]));
   receipt.evaluation={id:evaluation.id,evaluatedAt,pending:evaluation.pending,missingObservations:evaluation.missingObservations,scored:evaluation.scored,
     earliestOutcomeEventAt:records.flatMap(r=>r.targets.map(t=>t.eventAt)).sort()[0]};
   receipt.prospectiveScoredTargets=evaluation.scored;
