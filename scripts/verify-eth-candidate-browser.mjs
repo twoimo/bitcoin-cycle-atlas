@@ -1,3 +1,4 @@
+import {isExpectedOfflineBtcRefresh} from './btc-offline-refresh-policy.mjs';
 #!/usr/bin/env node
 // PR-only verification of checked-out dist files. Does not deploy or alter UI.
 import assert from 'node:assert/strict';
@@ -614,7 +615,7 @@ async function main(){
   assert.equal(typeof WebSocket,'function','Native WebSocket is required');
   report.sourceCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
   report.sourceHashes={};
-  for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/ethereum-adaptive-model.js','dist/ethereum-pooled-model.js','dist/eth-view-state.js','dist/ethereum-adoption-scenarios.js','dist/ethereum-research-panel.js','dist/ethereum-research-catalog.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json','dist/lab-view.js','dist/analysis-dock.css','dist/compact-chart-layout.css','dist/mobile-workspace.css','dist/mobile-preview.js','scripts/verify-workspace-browser.mjs']){
+  for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/ethereum-adaptive-model.js','dist/ethereum-pooled-model.js','dist/eth-view-state.js','dist/ethereum-adoption-scenarios.js','dist/ethereum-research-panel.js','dist/ethereum-research-catalog.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','scripts/btc-offline-refresh-policy.mjs','tests/ethereum-offline-refresh-policy.test.mjs','dist/data/btc-daily.json','dist/app.js','dist/data-source.js','dist/published-data.js','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json','dist/lab-view.js','dist/analysis-dock.css','dist/compact-chart-layout.css','dist/mobile-workspace.css','dist/mobile-preview.js','scripts/verify-workspace-browser.mjs']){
     report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   }
   for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/preserved-archive-download.js','dist/workspace-tools.js','dist/research-annotations-workbench.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
@@ -658,6 +659,11 @@ async function main(){
   const archived=parseEthArchive(JSON.parse(await readFile(resolve(dist,'data/eth-ohlc.json'),'utf8')),'daily');
   const last=archived.candles.at(-1),expected={price:'$'+new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(last.close),date:last.date.slice(0,10),close:last.close};
   report.expectedObservedEth=expected;
+  const btcArchiveBytes=await readFile(resolve(dist,'data/btc-daily.json'));
+  const btcArchive=JSON.parse(btcArchiveBytes.toString('utf8')),lastBtc=btcArchive.prices.at(-1);
+  const expectedBtc={asOf:lastBtc[0],price:lastBtc[1],formattedPrice:'$'+new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(lastBtc[1]),
+    archiveSha256:hash(btcArchiveBytes)};
+  report.expectedObservedBtc=expectedBtc;
   const index=JSON.parse(await readFile(resolve(dist,'data/asset-forecast-ledger/index.json'),'utf8'));
   const archive=[];
   for(const entry of index.entries)archive.push({entry,record:JSON.parse(await readFile(resolve(dist,'data/asset-forecast-ledger',entry.recordPath),'utf8'))});
@@ -692,17 +698,18 @@ async function main(){
   caseSpecs.push(...workspaceBrowserCases);
   for(const spec of caseSpecs){
     const {page,width,height,touch}=spec;
-    const receipt={...spec,status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[],dataResourceRequests:[]};
+    const receipt={...spec,status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[],dataResourceRequests:[],expectedOfflineRefresh:[],unexpectedResourceErrors:[]};
     report.cases.push(receipt);let cdp,targetId;
     try{
       ({targetId}=await browser.send('Target.createTarget',{url:'about:blank'}));
       const target=await until(async()=>{const list=await (await fetch(debugBase+'/json/list')).json();return list.find(t=>t.id===targetId&&t.webSocketDebuggerUrl);},'page CDP target');
       cdp=await Cdp.connect(target.webSocketDebuggerUrl);
-      const urls=new Map(),optional=url=>/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(url||'');
+      const urls=new Map(),requestDetails=new Map(),validatedOfflineRequestIds=new Set(),optional=url=>/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(url||'');
       cdp.on('Runtime.exceptionThrown',event=>receipt.runtimeErrors.push(event.exceptionDetails));
       cdp.on('Runtime.consoleAPICalled',event=>{if(event.type==='error')receipt.runtimeErrors.push({type:'console.error',args:event.args});});
       cdp.on('Network.requestWillBeSent',event=>{
         urls.set(event.requestId,event.request.url);
+        requestDetails.set(event.requestId,{requestId:event.requestId,frameId:event.frameId,loaderId:event.loaderId,method:event.request.method,resourceType:event.type,requestWallTime:event.wallTime,documentUrl:event.documentURL});
         const url=new URL(event.request.url);
         if(url.origin===base&&/\/(?:daily-data-view\.js|daily-data\.css|asset-comparison\.js|data\/asset-comparison\.json)$/.test(url.pathname))
           receipt.dataResourceRequests.push({requestId:event.requestId,url:event.request.url});
@@ -711,8 +718,47 @@ async function main(){
       cdp.on('Network.loadingFailed',event=>{
         const url=urls.get(event.requestId)||'unknown';
         if(optional(url)&&event.blockedReason)receipt.blockedOptionalFonts.push({url,reason:event.blockedReason});
-        else receipt.resourceErrors.push({url,errorText:event.errorText,blockedReason:event.blockedReason??null});
+        else receipt.resourceErrors.push({...requestDetails.get(event.requestId),networkEvent:'Network.loadingFailed',url,errorText:event.errorText,blockedReason:event.blockedReason??null});
       });
+      const verifyOfflineRefresh=async({preview=false,phase='initial-document'}={})=>{
+        const stale=(Math.floor(Date.now()/86400000)-Date.parse(expectedBtc.asOf+'T00:00:00Z')/86400000)>1;
+        if(!stale)return;
+        const read=()=>evaluate(cdp,({preview})=>{
+          const doc=preview?document.querySelector('#mobile-preview')?.contentDocument:document;
+          if(!doc)return null;
+          const button=doc.querySelector('#refresh-button');
+          const visible=Boolean(button&&button.getClientRects().length&&doc.defaultView.getComputedStyle(button).visibility==='visible');
+          return {url:doc.location.href,timeOrigin:doc.defaultView.performance.timeOrigin,
+            title:button?.title,disabled:button?.disabled,busy:button?.classList.contains('busy'),refreshButtonVisible:visible,
+            cutoff:doc.querySelector('#sidebar-asof')?.textContent,page:doc.body?.dataset.page,
+            price:doc.querySelector('#lab-metrics .readout-main > strong')?.textContent,
+            priceDate:doc.querySelector('#lab-metrics .atlas-observation-date')?.textContent,
+            priceKind:doc.querySelector('#lab-metrics')?.dataset.kind};
+        },{preview});
+        const observed=await until(async()=>{const value=await read();return value?.title==='갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.'&&value.disabled===false&&!value.busy?value:null;},'explicit failed offline refresh state');
+        assert.equal(observed.cutoff,'관측 · '+expectedBtc.asOf.replaceAll('-','.')+' UTC');
+        const priceDisplayed=observed.page==='outlook';
+        if(priceDisplayed){
+          assert.equal(observed.price,expectedBtc.formattedPrice);
+          assert.equal(observed.priceDate,expectedBtc.asOf.replaceAll('-','.')+' UTC');
+          assert.equal(observed.priceKind,'observed');
+        }
+        const frameTree=await cdp.send('Page.getFrameTree'),frames=[];
+        const walk=node=>{frames.push(node.frame);for(const child of node.childFrames??[])walk(child);};walk(frameTree.frameTree);
+        const matching=frames.filter(frame=>frame.url===observed.url);
+        assert.equal(matching.length,1,'Offline failure must bind to one current app document');
+        const frame=matching[0];
+        const candidates=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId)&&error.frameId===frame.id&&error.loaderId===frame.loaderId&&
+          isExpectedOfflineBtcRefresh(error,{surface:spec.surface,archiveAsOf:expectedBtc.asOf}));
+        assert.equal(candidates.length,1,'Each stale app document must show exactly one identified blocked initial refresh');
+        for(const error of candidates)validatedOfflineRequestIds.add(error.requestId);
+        receipt.expectedOfflineRefresh.push({phase,frameId:frame.id,loaderId:frame.loaderId,observed,
+          requestIds:candidates.map(error=>error.requestId),archiveSha256:expectedBtc.archiveSha256,
+          archiveAsOf:expectedBtc.asOf,displayedPriceVerified:priceDisplayed,displayedPricePrecision:'USD rounded to 2 decimals',
+          failureTitleVerified:true,persistentVisibleErrorVerified:false,
+          interpretation:priceDisplayed?'Expected offline refresh failure; archive cutoff and displayed BTC price retained':
+            'Expected offline refresh failure; archive cutoff retained. This surface does not display a current numeric BTC quote.'});
+      };
       await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');
       await cdp.send('Network.setBlockedURLs',{urls:['https://*']});
       await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:touch});
@@ -720,9 +766,10 @@ async function main(){
       await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'},{name:'prefers-color-scheme',value:'dark'}]});
       receipt.url=spec.route?base+spec.route:base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
-      if(spec.surface)await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot});else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
+      if(spec.surface)await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh});else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
       assert.equal(receipt.runtimeErrors.length,0,'Browser runtime errors: '+JSON.stringify(receipt.runtimeErrors));
-      assert.equal(receipt.resourceErrors.length,0,'Browser resource failures: '+JSON.stringify(receipt.resourceErrors));
+      receipt.unexpectedResourceErrors=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId));
+      assert.equal(receipt.unexpectedResourceErrors.length,0,'Unexpected browser resource failures: '+JSON.stringify(receipt.unexpectedResourceErrors));
       receipt.status='passed';
     }catch(error){
       receipt.status='failed';receipt.error=errorText(error);report.failures.push({page,width,error:receipt.error});
@@ -743,5 +790,5 @@ finally{
   if(server)await new Promise(resolve=>server.close(resolve));
   if(profile)try{await rm(profile,{recursive:true,force:true});}catch(error){report.cleanupError=errorText(error);}
   await mkdir(out,{recursive:true});await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,infoDataLinks:c.infoDataLinks,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,infoDataLinks:c.infoDataLinks,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
 }

@@ -9,7 +9,7 @@ export const workspaceBrowserCases = [320, 1440].flatMap(width =>
 workspaceBrowserCases.push({page:'workspace-btc-short',surface:'btc',width:900,height:430,touch:true,route:'/?symbol=BTCUSD&granularity=daily&type=line'});
 
 export async function verifyWorkspaceSurface(api) {
-  const {cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot}=api;
+  const {cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh}=api;
   const {width,height,surface,page}=receipt;
   receipt.workspace={surface,states:[]};
   const states=receipt.workspace.states;
@@ -73,6 +73,7 @@ export async function verifyWorkspaceSurface(api) {
     await until(()=>evaluate(cdp,()=>document.querySelector('#mobile-preview')?.contentDocument?.documentElement?.dataset.boot==='ready'),'preview actual app ready');
     const previewSettled=()=>until(()=>evaluate(cdp,()=>{const doc=document.querySelector('#mobile-preview')?.contentDocument;return doc?.documentElement?.dataset.boot==='ready'&&!doc.querySelector('.atlas-plot[aria-busy="true"]')&&!doc.querySelector('.workspace-toast:not([hidden])');}),'preview settled observed chart');
     await previewSettled();
+    await verifyOfflineRefresh({preview:true,phase:'preview-initial-actual'});
     await inspect('header','preview-controls',{opaque:false});
     receipt.workspace.actual=await evaluate(cdp,()=>{
       const frame=document.querySelector('#mobile-preview'),doc=frame.contentDocument,main=document.querySelector('main');
@@ -102,7 +103,7 @@ export async function verifyWorkspaceSurface(api) {
         const frame=document.querySelector('#mobile-preview');
         return !frame.hidden&&frame.contentDocument?.documentElement?.dataset.boot===(value==='actual'?'ready':value);
       },mode),'preview '+mode);
-      if(mode==='actual')await previewSettled();
+      if(mode==='actual'){await previewSettled();await verifyOfflineRefresh({preview:true,phase:'preview-restored-actual'});}
       const state=await evaluate(cdp,value=>{
         const frame=document.querySelector('#mobile-preview'),doc=frame.contentDocument;
         const shell=doc.getElementById('atlas-boot-shell'),status=doc.getElementById('atlas-boot-status'),error=doc.getElementById('atlas-boot-error');
@@ -149,6 +150,7 @@ export async function verifyWorkspaceSurface(api) {
     receipt.workspace.resized=true;return;
   }
   await until(()=>evaluate(cdp,()=>document.documentElement?.dataset.boot==='ready'),'app boot ready');
+  await verifyOfflineRefresh({phase:'workspace-initial-document'});
   if(surface==='legacy'){
     await until(()=>evaluate(cdp,()=>document.querySelectorAll('#structure-chart path').length>0&&document.querySelectorAll('#structure-cycles tr').length>0),'legacy chart and real cycle rows');
     const readLegacySizing=()=>['structure-chart','structure-timeline'].map(id=>{

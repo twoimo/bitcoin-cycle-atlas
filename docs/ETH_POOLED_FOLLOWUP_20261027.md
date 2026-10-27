@@ -123,3 +123,14 @@ fit은 관측 수에 선형, 모의는 horizon×draws, 날짜별 분위수 정�
 ## 6. 실행 결과
 
 이 최초 정책 commit 시점에는 새 코드가 아직 실행되지 않았다. 실제 GitHub Actions 결과, 원본 receipt, 입력 hash, 동일 원점 점수와 보정 준비 상태를 다음 증거 commit에서 추가한다. 수집 성공·정확도 향상·기본값 승격을 선행 주장하지 않는다.
+
+
+### 첫 실제 실행과 화면 검증 보완
+
+첫 소스 `92a180e61ae3bede33d6feeb557a55cc77e21553`의 [evidence 40449914791](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40449914791)은 집중 266개·수학 비교·v1 보존·throughput 수집을 통과했지만, 실제 native 34개 중 9개 shared BTC workspace에서 실패했다. 원인은 현재 UTC 날짜 2026-10-27에 보존 BTC 종료일 2026-10-25가 자동 갱신 조건에 해당하고, offline 검증이 실제 provider 요청을 차단한 것이다. 원본 오류 11개(일반 7개 문서, preview의 초기·복귀 4개 문서)와 실패 상태를 보존한다.
+
+운영 코드의 freshness, Date, 입력 가격, 모델 정책은 바꾸지 않는다. verifier는 정확한 BTC PriceUSD 초기 URL, GET/Fetch, 실제 요청 UTC 날짜, inspector 차단, frame+loader를 식별한 뒤, 해당 문서에서 실패 title·busy 해제·보존 cutoff를 실제 확인해야만 예상된 offline failure로 분류한다. BTC/preview 초기 화면에서는 소수점 2자리 표시 가격과 observed 종류도 확인한다. evidence/legacy에 현재 숫자 가격이 표시됐다는 주장은 하지 않는다. 모든 원본 resourceErrors는 남고 검증되지 않은 요청은 계속 실패다.
+
+현재 quiet 실패 안내는 숨겨질 수 있는 버튼의 title이다. 이 검사는 상시 가시적 실패 배너가 존재한다는 증거가 아니다. 이 제한을 별도 receipt에 표시한다. 최초 실패를 나중의 통과로 덮어쓰지 않는다.
+
+추가로 이전 v1 회귀 기준 두 JSON을 source-book seed 및 SHA-256 목록에 넣고, 실제 수신 완료된 master·throughput 원본을 bounded log chunk로도 보존한다. 스트림이 끝나기 전 timeout/전송 오류/상한 초과가 나면 부분 body는 보존하지 않고 실제 수신 byte 수·실패를 기록한다.

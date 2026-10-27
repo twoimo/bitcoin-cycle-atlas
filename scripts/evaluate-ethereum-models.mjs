@@ -53,6 +53,7 @@ export async function evaluateEthereumModels({repositoryRoot=root,output=null}={
   await visit('tests/ethereum-economic-ablation.test.mjs');
   await visit('tests/ethereum-adaptive-model.test.mjs');
   await visit('tests/ethereum-pooled-model.test.mjs');
+  await visit('tests/ethereum-offline-refresh-policy.test.mjs');
   await visit('tests/ethereum-interval-comparison.test.mjs');
   await visit('tests/ethereum-adoption-scenarios.test.mjs');
   for(const path of ['dist/eth-view.js','dist/eth-view.css','dist/intraday-chart.js','dist/equity-forecast-chart.js','tests/equity-chart-rendering.test.mjs','tests/ethereum-forecast.test.mjs']) await visit(path);

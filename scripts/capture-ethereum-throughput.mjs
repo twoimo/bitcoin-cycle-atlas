@@ -146,10 +146,9 @@ export async function collectEthereumThroughput({repositoryRoot=fileURLToPath(ne
   }finally{
     receipt.finishedAt=now();await writeJson('receipt.json',receipt);
     console.log('ETH_THROUGHPUT_RECEIPT '+JSON.stringify(receipt));
-    // The exact vendor bytes also remain in the source-bound Actions artifact.
-    // Emit only the compact daily payload for durable connector-only recovery.
-    const entry=receipt.rawFiles.find(item=>item.file==='throughput.raw.json');
-    if(entry&&entry.bytes<=500000){
+    // Preserve exact bounded vendor bytes through the connector logs as well.
+    // Incomplete streams retain byte counts/errors only, never fabricated JSON.
+    for(const entry of receipt.rawFiles.filter(item=>item.bytes<=500000)){
       const bytes=await readFile(join(directory,entry.file)),encoded=bytes.toString('base64'),size=20000,total=Math.ceil(encoded.length/size);
       for(let index=0;index<total;index++)console.log('ETH_THROUGHPUT_RAW_CHUNK '+JSON.stringify({file:entry.file,index,total,encoding:'base64',sha256:entry.sha256,data:encoded.slice(index*size,(index+1)*size)}));
     }

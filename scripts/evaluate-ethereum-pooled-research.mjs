@@ -15,7 +15,8 @@ const git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8',timeout:1
 const sourceCommit=git('rev-parse','HEAD'),sourceTree=git('rev-parse','HEAD^{tree}');
 const sourcePaths=['dist/ethereum-pooled-model.js','dist/ethereum-adaptive-model.js','dist/ethereum-model-comparison.js',
   'scripts/evaluate-ethereum-pooled-research.mjs','scripts/evaluate-ethereum-models.mjs',
-  'tests/ethereum-pooled-model.test.mjs','tests/ethereum-interval-comparison.test.mjs'];
+  'tests/ethereum-pooled-model.test.mjs','tests/ethereum-interval-comparison.test.mjs',
+  'docs/eth-candidate-evidence/20261027-remodel/current-path.json','docs/eth-candidate-evidence/20261027-remodel/comparison.json'];
 if(git('status','--porcelain','--',...sourcePaths,'dist/data/eth-ohlc.json','dist/data/btc-daily.json'))throw new Error('Research diagnostics require committed sources and inputs');
 const sourceHashes=Object.fromEntries(await Promise.all(sourcePaths.map(async p=>[p,sha(await readFile(resolve(root,p)))])));
 const ethText=await readFile(resolve(root,'dist/data/eth-ohlc.json'),'utf8'),btcText=await readFile(resolve(root,'dist/data/btc-daily.json'),'utf8');
