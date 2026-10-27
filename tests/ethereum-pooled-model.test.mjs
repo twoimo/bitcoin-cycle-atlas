@@ -85,7 +85,12 @@ test('comparison uses the actual pooled median and raw band and exposes current 
   const report=runEthereumModelComparison({ethHistory:rows,btcHistory:btc},{asOf});
   assert.deepEqual(report.current.candidates.pooledEth.predictions,buildEthereumPooledCandidate({ethRows:rows,asOf}).predictions);
   assert.equal(report.currentIntervalEvidence.calibratedForProduction,false);
-  assert.equal(report.intervalComparisons.length,9);
+  assert.equal(report.intervalComparisons.length,21);
+  assert.deepEqual(report.intervalComparisons.slice(0,9).map(row=>[row.horizonDays,row.left.model,row.left.kind,row.right.model,row.right.kind]),
+    [30,90,180].flatMap(h=>[[h,'adaptiveEth','simulated','pooledEth','simulated'],
+      [h,'adaptiveEth','simulated','adaptiveEth','experimental'],[h,'pooledEth','simulated','pooledEth','experimental']]));
+  assert.deepEqual(report.intervalComparisons.slice(9).map(row=>[row.horizonDays,row.left.model,row.right.model,row.right.kind]),
+    [30,90,180].flatMap(h=>['adaptiveEth','pooledEth'].flatMap(model=>['flat','shrunkenTrend'].map(baseline=>[h,model,baseline,'experimental']))));
   for(const horizon of report.currentIntervalEvidence.horizons){
     const actual=report.cases.find(r=>r.origin===asOf&&r.horizonDays===horizon.horizonDays);
     assert.deepEqual(horizon.models.pooledEth.empiricalCalibration,actual.intervals.pooledEth);
