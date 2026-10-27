@@ -69,8 +69,8 @@ const state = {
   forecast: null, forecastDataset: null, forecastView: params.get('future') === 'analogues' ? 'analogues' : 'macro',
   forecastScenario: ['bottom-holds','calendar-48m','calendar-minus-3m','calendar-minus-4m','calendar-minus-5m'].includes(params.get('scenario')) ? params.get('scenario') : 'bottom-holds',
 };
-const btcRefreshStatus=mountBtcRefreshStatus({onRetry:()=>refreshData()});
 let toastTimer;
+const btcRefreshStatus=mountBtcRefreshStatus({onRetry:()=>refreshData()});
 function toast(message) { $('#toast').textContent = message; $('#toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => $('#toast').hidden = true, 4200); }
 function persistUrl() {
   // Only rewrite parameters owned by this page/comparison controller. The

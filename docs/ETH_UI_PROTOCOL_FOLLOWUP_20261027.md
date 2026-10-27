@@ -39,4 +39,22 @@ native 검증은 원본 network failure를 보존하고 정확한 URL·method·U
 
 ## 실제 실행 기록
 
-새 소스의 run 및 결과는 아직 이 절에 추가하지 않았다. 구현과 통과를 구분한다.
+### 첫 UI 실행: 25e4d494566d1b8b8b72a3ae5d00d32d14d57fec
+
+- 일반 CI [40456290853](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40456290853): 1,410 tests 중 1,406 pass / 4 fail. app-workspace-url의 순수 상태 추출 범위에 새 화면 controller 초기화가 포함되어 ReferenceError가 발생했다. 추출 범위 밖으로 controller 초기화를 이동하며 기존 URL 상태 assertion은 유지한다.
+- 후보 근거 [40456290859](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40456290859): 집중 테스트·기존 수학 결과·원장 보존 단계 성공. native 35 cases 중 30 pass / 5 fail. 모바일 BTC/preview의 새 공지 너비와 native Enter 재시도 입력이 원인이다. 실패 후 sourcebook 단계는 skipped다.
+- 모바일 실패 PNG는 공지 재시도 버튼이 화면 밖으로 밀리는 실제 제품 문제를 보여 준다. main grid에 minmax(0,1fr) 열을 부여하고 section min-width:0로 고친다.
+- 데스크톱 retry 검사에서는 helper가 Enter keyDown/up에 문자 이벤트를 전달하지 않았다. CDP keyDown에 Enter text를 포함하고 같은 실제 요청·상태 전이 검사를 재실행한다. 앱의 click handler를 우회하지 않는다.
+- Hallmark [40456290879](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40456290879): static **0 FAIL / 0 REFLEX / 36 WARN**, render **0 FAIL / 0 REFLEX / 17 WARN**, integrity errors 0. WARN 및 기존 기록상 content-delta 경고는 그대로 남긴다. 전체 무경고 또는 모든 UI 검증 통과로 해석하지 않는다.
+
+첫 실행 원문은 [browser receipt](eth-candidate-evidence/20261027-ui-protocol/first-browser-receipt.json)와 [Hallmark findings](eth-candidate-evidence/20261027-ui-protocol/first-hallmark-records.json)에 보존한다. 후속 코드의 실제 결과는 별도 기록한다.
+
+## PoW 부분 관측 수집기 계약
+
+새 collector는 mainnet chain ID, 2022년 전환의 인접 블록, 공개 provider가 finalized라고 반환한 anchor, 정확한 28개 완료 UTC 날짜의 양 끝 인접 블록을 대조한다. 각 경계와 finalized 높이를 다시 조회하여 capture 도중 identity 변경을 검사한다. 전체 header chain 또는 독립 consensus 검증을 했다고 주장하지 않는다.
+
+EIP-3675, EIP-4399, consensus mainnet config는 고정 commit의 실제 bytes에 대해 Git blob SHA-1을 확인하고 SHA-256과 원문을 보존한다. TTD 필드가 있으면 임계값·덧셈을 검사하며 누락은 unavailable-rpc-fields로 기록한다. mixHash는 RANDAO 의미가 있으므로 0을 요구하지 않는다.
+
+핵심 RPC 읽기는 최대 61회, transport RPC 한도는 64회다. 정상 capture는 고정 원문 3회와 core 읽기 최대 61회다. 500ms 간격, 요청 10초, 전체 120초, 응답 2MiB/누적 body 16MiB, 재시도 0, redirect 금지다. 완료된 응답 원문만 전체 SHA-256으로 부르고 중단된 body는 수신 byte 수·complete:false·실패 이유를 기록한다. stdout 전송은 원문 합계 4MiB 이하일 때만 수행하며 base64로 인해 로그 크기는 이보다 커질 수 있다.
+
+성공하더라도 executionPowIssuanceEth=0 한 필드만 partialMetrics에 남긴다. publishedAt:null, PIT 적격 필드 0, 전체 25필드 snapshot 0, modelInputActivated:false다. provider capture 시각이나 block timestamp를 최초 공개 시각으로 대체하지 않는다. 실패하면 observation:null과 실제 실패 receipt를 남긴다. PoS consensus 발행·수수료·소각 및 ETH 가격을 0으로 두는 코드 경로는 없다.

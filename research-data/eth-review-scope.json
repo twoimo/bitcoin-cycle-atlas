@@ -242,7 +242,10 @@
     "tests/journal-entry-ownership.test.mjs",
     "tests/treasury-model.test.mjs",
     "dist/btc-refresh-status.js",
-    "tests/ethereum-btc-refresh-status.test.mjs"
+    "tests/ethereum-btc-refresh-status.test.mjs",
+    "scripts/ethereum-pow-zero-core.mjs",
+    "scripts/capture-ethereum-pow-zero.mjs",
+    "tests/ethereum-pow-zero.test.mjs"
   ],
   "dynamicResolutions": [
     {

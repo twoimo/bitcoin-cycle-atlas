@@ -987,9 +987,9 @@ body .footer button{min-height:var(--control-min-size)}
 
 /* An error owns a bounded row inside main, so existing details-grid and modal
    inert ownership stay intact. Legacy comparison retains document scrolling. */
-body:not([data-page=compare]) #main[data-btc-notice=true]{display:grid;grid-template-rows:auto minmax(0,1fr)}
+body:not([data-page=compare]) #main[data-btc-notice=true]{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
 body:not([data-page=compare]) #main[data-btc-notice=true]>.btc-refresh-notice{grid-row:1}
-body:not([data-page=compare]) #main[data-btc-notice=true]>section{grid-row:2;min-height:0}
+body:not([data-page=compare]) #main[data-btc-notice=true]>section{grid-row:2;min-width:0;min-height:0}
 .btc-refresh-notice{display:flex;align-items:center;gap:12px;min-width:0;padding:4px 8px;border-bottom:1px solid var(--border);background:var(--surface-raised);color:var(--text);font-size:12px;line-height:1.5}
 .btc-refresh-copy{display:flex;flex:1;align-items:baseline;flex-wrap:wrap;gap:0 12px;min-width:0}
 .btc-refresh-copy strong{font-weight:600;color:var(--accent)}

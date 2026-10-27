@@ -22,6 +22,7 @@ async function addFiles(directory,{filter=()=>true}={}){
 }
 await addFiles('build/ethereum-economic-data',{filter:path=>!path.endsWith('/capture.json')});
 await addFiles('build/ethereum-throughput-supplement');
+await addFiles('build/ethereum-pow-zero');
 await addFiles('build/asset-forecast-ledger',{filter:path=>path.endsWith('.json')});
 await addFiles('build/asset-outcome-ledger',{filter:path=>path.endsWith('.json')});
 const manifest=await buildEthReviewPacket({
