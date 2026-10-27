@@ -42,11 +42,11 @@ const manifest=await buildEthReviewPacket({
   baselineCommit:scope.baselineCommit,seedPaths:scope.seedPaths,
   dynamicResolutions:scope.dynamicResolutions,evidencePaths,
   // Source-identified revisions retain all earlier records and full snapshots.
-  // The first common-cohort run used 58,554,101 bytes. Persisting its new
-  // 1,084,123-byte snapshot and identical observation, full forecast and receipts
-  // adds more than the remaining 1,445,899 bytes. Retain every original byte.
-  // Keep a finite 64 MB resource budget; this is not a model or release gate.
-  maximumBundleBytes:64000000,
+  // The 5cbd9551 run reached 64,042,920 bytes / 519 entries after adding the
+  // prospective-only calibration gate, its raw-replay report and tests.
+  // Retain every original byte inside a finite 65 MB resource budget.
+  // This byte budget does not change model, sample-size or release conditions.
+  maximumBundleBytes:65000000,
 });
 await writeFile(resolve(root,'build/eth-review-packet/scope-notes.txt'),scope.scope+'\nScreenshots remain in the separately preserved browser artifact; report.json binds their filenames and hashes. Parsed duplicate economic rows are omitted because the exact CSV and acquisition/coverage receipts are present.\n');
 console.log('ETH_REVIEW_MANIFEST '+JSON.stringify(manifest));
