@@ -108,7 +108,7 @@ test('actual grouped source row retains fractional blob presentation without usa
     supplyWei:'122081609399981044865783235',issuanceWei:'394039220870000000000',burnWei:'37878200147066821681',
     baseFeeBurnWei:'37860860855006600241',blobBaseFeeBurnWei:'17339292060221440',consensusPenaltiesWei:'1745197704000000000',otherExecutionBurnWei:'0',netWei:'354415823018933178319'};
   const a=audit({...payload(),slots:[row]}),s=a.series.slots;
-  assert.equal(a.version,'eth-supply-accounting-audit-2');assert.equal(s.usagePresentation.blobsUsed.nonInteger,1);
+  assert.equal(a.version,'eth-supply-accounting-audit-3');assert.equal(s.usagePresentation.blobsUsed.nonInteger,1);
   assert.equal(s.usagePresentation.blobsUsed.minimum,4.641884816753927);assert.equal(s.usagePresentation.blobsUsed.additiveTotalEligible,false);
   assert.equal(Object.hasOwn(s.reportedRowSums,'gasUsed'),false);assert.equal(s.burnComponentsMismatched,0);assert.equal(s.netComponentsMismatched,0);
   assert.equal(s.reportedBurnCandidates.allDestruction.mismatched,1);assert.equal(s.reportedBurnCandidates.feePlusOtherExecution.mismatched,0);
@@ -126,3 +126,87 @@ test('reported burn conventions do not double count consensus penalties or force
   const q=audit(p).series.slots;assert.equal(q.reportedBurnCandidates.feePlusOtherExecution.mismatched,0);assert.equal(q.reportedBurnCandidates.feeOnly.mismatched,2);
   assert.equal(q.netComponentsMismatched,0);
 });
+
+test('UTC window includes slots by timestamp, preserving inclusive provider bucket ends',()=>{
+  const w=audit(payload()).utcWindow;
+  assert.equal(w.firstRequiredTimestamp,Date.parse('2026-09-29T00:00:11Z')/1000);
+  assert.equal(w.lastRequiredTimestamp,Date.parse('2026-10-26T23:59:59Z')/1000);
+  assert.equal(w.requiredSlots,201600);
+  assert.equal(w.stockFlowReconciliation.startBoundarySlot,first-1);
+  assert.equal(w.stockFlowReconciliation.startBoundaryTimestamp,Date.parse('2026-09-28T23:59:59Z')/1000);
+});
+test('an old bucket label cannot hide coverage after actual collection',()=>{
+  const collected=Date.parse(collectedAt)/1000,future=Math.floor((collected-G)/S)+6;
+  const p=payload();p.slots=[slot(last,{fromSlot:last,toSlot:future})];
+  const a=audit(p),clocks=a.observationClocks.slots;
+  assert.equal(clocks.labelsAfterActualCollection,0);
+  assert.equal(clocks.rowsAfterActualCollection,1);
+  assert.equal(clocks.latestReportedTimestamp,G+last*S);
+  assert.equal(clocks.latestCoveredTimestamp,G+future*S);
+  assert.equal(clocks.maximumLeadSeconds,G+future*S-collected);
+  assert.equal(clocks.maximumLabelLeadSeconds,0);
+  assert.equal(a.modelInputActivated,false);
+});
+test('a bucket endpoint beyond provider clock tolerance fails despite an old label',()=>{
+  const p=payload(),future=Math.floor((p.generatedAt+300-G)/S)+1;
+  p.slots=[slot(last,{fromSlot:last,toSlot:future})];
+  assert.throws(()=>audit(p),/coverage is after provider generation/);
+});
+function exactWindow(){
+  const p=payload(),middle=first+100799,startSupply=BigInt(values().supplyWei),net=BigInt(values().netWei);
+  p.slots=[slot(first-1,{issuanceWei:'6000000000000001000',netWei:'999'}),
+    slot(middle,{fromSlot:first,toSlot:middle,supplyWei:(startSupply+net).toString()}),
+    slot(last,{fromSlot:middle+1,toSlot:last,supplyWei:(startSupply+2n*net).toString()})];
+  return p;
+}
+test('requested-window stocks reconcile all exact-window flows while excluding predecessor flow',()=>{
+  const a=audit(exactWindow()),w=a.utcWindow,r=w.stockFlowReconciliation;
+  assert.equal(w.exactBucketBoundaryMatch,true);
+  assert.equal(r.status,'provider-claims-match');assert.equal(r.flowRowsIncluded,2);
+  assert.equal(r.predecessorFlowExcluded,true);assert.equal(r.supplyChangeWei,'8000000000000000000');
+  assert.equal(r.expectedChangeFromComponentsWei,'8000000000000000000');
+  assert.equal(r.reportedNetWei,'8000000000000000000');
+  assert.equal(r.componentResidualWei,'0');assert.equal(r.reportedNetResidualWei,'0');
+  assert.equal(r.startBoundaryExplicitlyFinalized,true);assert.equal(r.endBoundaryExplicitlyFinalized,true);
+  assert.deepEqual(r.unavailableReasons,[]);
+  assert.equal(r.independentCanonicalValidation,false);assert.equal(w.utcAccountingEligibilityProven,false);
+  assert.equal(a.fullModelSnapshotReady,false);assert.equal(a.modelInputActivated,false);
+});
+test('complete exact-window flows do not manufacture the missing preceding stock',()=>{
+  const p=exactWindow();p.slots.shift();const w=audit(p).utcWindow,r=w.stockFlowReconciliation;
+  assert.equal(w.exactBucketBoundaryMatch,true);assert.equal(w.providerClaimAggregates.netWei,'8000000000000000000');
+  assert.equal(r.status,'unavailable');assert.equal(r.startSupplyWei,null);
+  assert.equal(r.supplyChangeWei,null);assert.equal(r.componentResidualWei,null);assert.equal(r.reportedNetResidualWei,null);
+  assert(r.unavailableReasons.includes('preceding-boundary-stock-row-unavailable'));
+  assert(w.blockingReasons.includes('requested-window-stock-flow-reconciliation-unavailable'));
+});
+test('requested-window stock mismatch retains the exact signed one-wei residual',()=>{
+  const p=exactWindow();p.slots.at(-1).supplyWei=(BigInt(p.slots.at(-1).supplyWei)-1n).toString();
+  const w=audit(p).utcWindow,r=w.stockFlowReconciliation;
+  assert.equal(r.status,'provider-claims-mismatch');assert.equal(r.componentResidualWei,'-1');assert.equal(r.reportedNetResidualWei,'-1');
+  assert(w.blockingReasons.includes('requested-window-stock-flow-reconciliation-mismatch'));
+});
+test('unknown window supply components remain unavailable despite a reported net stock match',()=>{
+  const p=exactWindow();p.slots[1].otherExecutionBurnWei=null;const r=audit(p).utcWindow.stockFlowReconciliation;
+  assert.equal(r.status,'unavailable');assert.equal(r.componentResidualWei,null);
+  assert.equal(r.reportedNetResidualWei,'0');assert.deepEqual(r.missingFlowComponents,['otherExecutionBurnWei']);
+  assert(r.unavailableReasons.includes('window-supply-components-missing'));
+});
+test('a stock labeled inside its bucket is not silently moved to a UTC boundary',()=>{
+  const p=exactWindow();p.slots[0]=slot(first-2,{fromSlot:first-2,toSlot:first-1});
+  const start=audit(p).utcWindow.stockFlowReconciliation;
+  assert.equal(start.status,'unavailable');assert.equal(start.startSupplyWei,null);
+  assert(start.unavailableReasons.includes('preceding-stock-label-is-not-boundary-slot'));
+  const q=exactWindow(),lastRow=q.slots.at(-1);
+  lastRow.slot=lastRow.fromSlot;lastRow.timestamp=G+lastRow.slot*S;
+  const end=audit(q).utcWindow.stockFlowReconciliation;
+  assert.equal(end.status,'unavailable');assert.equal(end.endSupplyWei,null);
+  assert(end.unavailableReasons.includes('ending-stock-label-is-not-boundary-slot'));
+});
+test('matching boundary stock arithmetic does not imply predecessor finality',()=>{
+  const p=exactWindow();p.slots[0].finalized=false;const w=audit(p).utcWindow,r=w.stockFlowReconciliation;
+  assert.equal(r.status,'provider-claims-match');assert.equal(w.allSelectedBucketsExplicitlyFinalized,true);
+  assert.equal(r.startBoundaryExplicitlyFinalized,false);assert(w.blockingReasons.includes('boundary-stock-finality-not-explicit'));
+  assert.equal(w.utcAccountingEligibilityProven,false);
+});
+

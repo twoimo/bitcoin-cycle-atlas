@@ -17,6 +17,7 @@ const evidencePaths=[
   'build/ethereum-common-cohort.json',
   'build/ethereum-economic-evidence-coverage.json',
   'build/ethereum-independent-calibration.json',
+  'build/ethereum-prospective-calibration-readiness.json',
   'build/ethereum-economic-ablation.json',
   'build/eth-browser/report.json',
 ];

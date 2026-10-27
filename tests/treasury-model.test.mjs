@@ -321,9 +321,10 @@ test('capacity-limited issuance buys only remaining units and conserves net fund
   assert.deepEqual(full,issued,'a full treasury must not dilute shareholders to fund nonexistent purchases');
 });
 
-test('long-horizon default paths remain within the stated supply or strategy limit', () => {
+test('long-horizon paths from frozen market anchors remain within the stated supply or strategy limit', () => {
   for(const symbol of ['MSTR','BMNR']){
-    const result=buildTreasuryForecast({symbol,history:[{date:'2026-10-23',close:symbol==='MSTR'?146.01:22.40}],scenario:'bull',endYear:2050});
+    // Keep the 2026-10-23 fixture independent of the regenerated current catalog.
+    const result=buildTreasuryForecast({symbol,history:[{date:'2026-10-23',close:symbol==='MSTR'?146.01:22.40}],coinAnchor:{date:'2026-10-23',price:symbol==='MSTR'?80924.1837657744:2384.38},scenario:'bull',endYear:2050});
     const cap=symbol==='MSTR'?21_000_000:6_105_000;
     assert.equal(result.assumptions.holdingPolicy.maxCoinUnits,cap);
     assert.ok(result.diagnostics.capacityReachedAt);

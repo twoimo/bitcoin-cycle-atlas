@@ -12,7 +12,7 @@ export const ETH_SUPPLY_ACCOUNTING_SOURCE=Object.freeze({
   redistributionLicense:'Provider data license not established by this audit; retain attribution and source URL.',
 });
 export const ETH_SUPPLY_ACCOUNTING_POLICY=Object.freeze({
-  version:'eth-supply-accounting-audit-2',maximumRows:250000,maximumIntegerDigits:80,
+  version:'eth-supply-accounting-audit-3',maximumRows:250000,maximumIntegerDigits:80,
   requestCount:2,retries:0,historyMaximumBytes:8*1024*1024,methodologyMaximumBytes:2*1024*1024,
   formula:'netWei = issuanceWei - baseFeeBurnWei - blobBaseFeeBurnWei - consensusPenaltiesWei - otherExecutionBurnWei',
   missingPolicy:'Unknown otherExecutionBurnWei is missing, not zero; a residual is not automatically classified destruction.',
@@ -125,7 +125,10 @@ function summarizeSeries(rows,kind){
       const pair={fromPosition:previous.position,toPosition:position,supplyChangeWei:delta.toString(),reportedNetWei:v.netWei.toString(),residualWei:(delta-v.netWei).toString()};
       pairCount++;firstPair??=pair;lastPair=pair;if(pair.residualWei!=='0'){pairMismatchCount++;if(pairExamples.length<20)pairExamples.push(pair);}
     }
-    previous={index,position,timestamp:t,range,values:v};firstRow??=previous;parsed.push({...previous,row});
+    // A grouped row may carry a label inside its range. The entire inclusive
+    // fromSlot..toSlot claim is observed only after its last slot, not its label.
+    const coverageEndTimestamp=range?GENESIS+range.last*SLOT:t;
+    previous={index,position,timestamp:t,coverageEndTimestamp,range,values:v};firstRow??=previous;parsed.push({...previous,row});
   }
   let endpointDecomposition=null;
   if(rows.length>=2&&allContiguous&&firstRow.values.supplyWei!==null&&previous.values.supplyWei!==null){
@@ -139,12 +142,58 @@ function summarizeSeries(rows,kind){
       biasIfOtherExecutionBurnOmittedWei:a.omittedOtherBurnBiasWei};
   }
   return {summary:{rows:rows.length,firstTimestamp:rows[0]?.timestamp??null,lastTimestamp:rows.at(-1)?.timestamp??null,
+    lastCoveredTimestamp:parsed.at(-1)?.coverageEndTimestamp??null,
     fields,...counters,mismatchExamples:examples,reportedBurnCandidates,usagePresentation,
     excludedFromAdditiveTotals:['gasUsed','gasTarget','gasMax',...USAGE_PRESENTATION],
     usageMeaning:'Grouped source fields have unestablished aggregate/average semantics. Fractional blob presentation is retained; gas and blob presentation values are never summed or converted into model usage.',
     reportedRowSums:Object.fromEntries(Object.entries(totals).map(([f,v])=>[f,rows.length?v?.toString()??null:null])),
     endpointArithmetic:{convention:'Treat supplyWei as the end of each reported contiguous bucket and compare the later row netWei. This convention check does not establish source clock semantics.',
       adjacentPairsChecked:pairCount,mismatchedPairs:pairMismatchCount,firstPair,lastPair,mismatchExamples:pairExamples,endpointDecomposition}},parsed};
+}
+function reconcileUtcWindowStocks(parsed,intersecting,first,last,exactBuckets,aggregates){
+  const start=parsed.find(p=>p.range.last===first-1)??null;
+  const end=intersecting.at(-1)?.range.last===last?intersecting.at(-1):null;
+  // A stock at a label inside a grouped range is not necessarily the stock at
+  // the range end. Keep that ambiguity unavailable instead of moving the stock.
+  const startAtBoundary=start!==null&&start.position===first-1;
+  const endAtBoundary=end!==null&&end.position===last;
+  const startSupply=startAtBoundary?start.values.supplyWei:null;
+  const endSupply=endAtBoundary?end.values.supplyWei:null;
+  const unavailableReasons=[];
+  if(!exactBuckets)unavailableReasons.push('exact-window-flow-coverage-unavailable');
+  if(!start)unavailableReasons.push('preceding-boundary-stock-row-unavailable');
+  else if(!startAtBoundary)unavailableReasons.push('preceding-stock-label-is-not-boundary-slot');
+  else if(startSupply===null)unavailableReasons.push('preceding-boundary-supply-missing');
+  if(!end)unavailableReasons.push('ending-boundary-stock-row-unavailable');
+  else if(!endAtBoundary)unavailableReasons.push('ending-stock-label-is-not-boundary-slot');
+  else if(endSupply===null)unavailableReasons.push('ending-boundary-supply-missing');
+  const componentFields=['issuanceWei',...COMPONENTS];
+  const missingFlowComponents=exactBuckets?componentFields.filter(f=>aggregates[f]===null):componentFields;
+  if(exactBuckets&&missingFlowComponents.length)unavailableReasons.push('window-supply-components-missing');
+  if(exactBuckets&&aggregates.netWei===null)unavailableReasons.push('window-reported-net-missing');
+  const delta=startSupply!==null&&endSupply!==null?endSupply-startSupply:null;
+  const expected=exactBuckets&&missingFlowComponents.length===0?
+    BigInt(aggregates.issuanceWei)-COMPONENTS.reduce((sum,f)=>sum+BigInt(aggregates[f]),0n):null;
+  const reported=exactBuckets&&aggregates.netWei!==null?BigInt(aggregates.netWei):null;
+  const componentResidual=delta!==null&&expected!==null?delta-expected:null;
+  const reportedResidual=delta!==null&&reported!==null?delta-reported:null;
+  const mismatched=[componentResidual,reportedResidual].some(v=>v!==null&&v!==0n);
+  const complete=componentResidual!==null&&reportedResidual!==null;
+  return {
+    status:mismatched?'provider-claims-mismatch':complete?'provider-claims-match':'unavailable',
+    convention:'Conditionally treat supplyWei at the row label as the end-of-slot stock; require labels at the preceding and final requested slots. Include every exact-window flow row, exclude the predecessor flow.',
+    startBoundarySlot:first-1,endBoundarySlot:last,
+    startBoundaryTimestamp:GENESIS+(first-1)*SLOT,endBoundaryTimestamp:GENESIS+last*SLOT,
+    startRowPosition:start?.position??null,endRowPosition:end?.position??null,
+    startSupplyWei:startSupply?.toString()??null,endSupplyWei:endSupply?.toString()??null,
+    startBoundaryExplicitlyFinalized:startAtBoundary&&start.row.finalized===true,
+    endBoundaryExplicitlyFinalized:endAtBoundary&&end.row.finalized===true,
+    flowRowsIncluded:exactBuckets?intersecting.length:0,predecessorFlowExcluded:true,
+    supplyChangeWei:delta?.toString()??null,expectedChangeFromComponentsWei:expected?.toString()??null,
+    reportedNetWei:reported?.toString()??null,componentResidualWei:componentResidual?.toString()??null,
+    reportedNetResidualWei:reportedResidual?.toString()??null,missingFlowComponents,unavailableReasons,
+    independentCanonicalValidation:false,utcAccountingEligibilityProven:false,
+  };
 }
 function inspectUtcWindow(parsed,observedThrough){
   const end=date(observedThrough)+DAY,start=end-28*DAY,first=Math.ceil((start-GENESIS)/SLOT),last=Math.ceil((end-GENESIS)/SLOT)-1;
@@ -161,14 +210,20 @@ function inspectUtcWindow(parsed,observedThrough){
   const aggregates={};if(exactBuckets)for(const f of ['issuanceWei','burnWei',...COMPONENTS,'netWei']){
     aggregates[f]=missingComponents[f]===0?intersecting.reduce((s,p)=>s+p.values[f],0n).toString():null;
   }
+  const stockFlowReconciliation=reconcileUtcWindowStocks(parsed,intersecting,first,last,exactBuckets,aggregates);
   return {observedFrom:new Date(start*1000).toISOString().slice(0,10),observedThrough,windowDays:28,
+    utcIntervalConvention:'[observedFrom 00:00:00 UTC, day after observedThrough 00:00:00 UTC)',
     firstRequiredSlot:first,lastRequiredSlot:last,requiredSlots:last-first+1,coveredSlots:covered,intersectingBuckets:intersecting.length,
+    firstRequiredTimestamp:GENESIS+first*SLOT,lastRequiredTimestamp:GENESIS+last*SLOT,
     boundaryCrossingBuckets:boundaryCrossing.length,internalGapCount:gaps,providerBucketsCoverAllRequiredSlots:covers,
     exactBucketBoundaryMatch:exactBuckets,allSelectedBucketsExplicitlyFinalized:finalized,missingComponents,
-    providerClaimAggregates:aggregates,utcAccountingEligibilityProven:false,
+    providerClaimAggregates:aggregates,stockFlowReconciliation,utcAccountingEligibilityProven:false,
     excludedUsageFields:['gasUsed','gasTarget','gasMax',...USAGE_PRESENTATION],
     blockingReasons:[...(!covers?['incomplete-slot-coverage']:[]),...(boundaryCrossing.length?['source-bucket-straddles-utc-window']:[]),
       ...(!finalized?['finality-not-explicit-for-every-selected-bucket']:[]),
+      ...(stockFlowReconciliation.status==='unavailable'?['requested-window-stock-flow-reconciliation-unavailable']:[]),
+      ...(stockFlowReconciliation.status==='provider-claims-mismatch'?['requested-window-stock-flow-reconciliation-mismatch']:[]),
+      ...(!stockFlowReconciliation.startBoundaryExplicitlyFinalized||!stockFlowReconciliation.endBoundaryExplicitlyFinalized?['boundary-stock-finality-not-explicit']:[]),
       'provider-bucket-duty-and-recognition-semantics-not-independently-verified','publication-time-unknown','canonical-state-not-independently-replayed'],
     interpretation:'Bucket sums remain provider claims even when integer arithmetic and requested slot boundaries align. No proration, missing-zero fill, or epoch-to-UTC relabeling.',
   };
@@ -186,12 +241,15 @@ export function auditEthereumSupplyAccounting(payload,{collectedAt,observedThrou
   const slots=summarizeSeries(payload.slots,'slots'),epochs=summarizeSeries(payload.epochs,'epochs');
   check(slots.summary.rows+epochs.summary.rows<=ETH_SUPPLY_ACCOUNTING_POLICY.maximumRows,'Combined history exceeds row bound');
   check(slots.summary.rows+epochs.summary.rows>0,'Provider supplied no accounting rows');
-  for(const series of [slots,epochs])if(series.summary.lastTimestamp!==null)check(series.summary.lastTimestamp<=generated+300,'Accounting row is after provider generation');
+  for(const series of [slots,epochs])if(series.summary.lastCoveredTimestamp!==null)check(series.summary.lastCoveredTimestamp<=generated+300,'Accounting row coverage is after provider generation');
   const summary=payload.summary?arithmetic(rowValues(payload.summary,'summary')):null;
   const observationClocks=Object.fromEntries([['slots',slots],['epochs',epochs]].map(([name,series])=>{
-    const future=series.parsed.filter(p=>p.timestamp>collected);
-    return [name,{rowsAfterActualCollection:future.length,latestReportedTimestamp:series.summary.lastTimestamp,
-      maximumLeadSeconds:future.reduce((max,p)=>Math.max(max,p.timestamp-collected),0)}];
+    const future=series.parsed.filter(p=>p.coverageEndTimestamp>collected);
+    const futureLabels=series.parsed.filter(p=>p.timestamp>collected);
+    return [name,{rowsAfterActualCollection:future.length,labelsAfterActualCollection:futureLabels.length,
+      latestReportedTimestamp:series.summary.lastTimestamp,latestCoveredTimestamp:series.summary.lastCoveredTimestamp,
+      maximumLeadSeconds:future.reduce((max,p)=>Math.max(max,p.coverageEndTimestamp-collected),0),
+      maximumLabelLeadSeconds:futureLabels.reduce((max,p)=>Math.max(max,p.timestamp-collected),0)}];
   }));
   return {version:ETH_SUPPLY_ACCOUNTING_POLICY.version,status:'provider-accounting-audited',source:ETH_SUPPLY_ACCOUNTING_SOURCE,
     providerSchemaVersion:payload.schemaVersion,providerRevision:payload.revision,providerGeneratedAt:new Date(generated*1000).toISOString(),
@@ -215,3 +273,4 @@ export function auditEthereumSupplyAccounting(payload,{collectedAt,observedThrou
     modelInputActivated:false,modelSnapshots:[],
   };
 }
+

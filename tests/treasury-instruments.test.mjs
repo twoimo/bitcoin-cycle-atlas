@@ -87,7 +87,8 @@ test('contradictory capital dates cannot postpone a maturity or create an invali
 });
 
 test('reviewed coupons disappear from runtime cash costs after actual model principal settlements',()=>{
-  const forecast=buildTreasuryForecast({symbol:'MSTR',history:[{date:asOf,close:146.01}],scenario:'base',endYear:2035});
+  // Fixed-date accounting fixtures must not consume the daily refreshed market anchor.
+  const forecast=buildTreasuryForecast({symbol:'MSTR',history:[{date:asOf,close:146.01}],coinAnchor:{date:asOf,price:80924.1837657744},scenario:'base',endYear:2035});
   assert.equal(forecast.instruments.instruments.filter(item=>item.kind==='debt'&&item.outstandingUsd>0).length,0);
   assert.equal(forecast.instruments.knownAnnualCarry,0);
   assert.equal(forecast.instrumentEvents.filter(item=>item.kind==='cash-due').length,6);
@@ -95,7 +96,7 @@ test('reviewed coupons disappear from runtime cash costs after actual model prin
 });
 
 test('BMNP starts from the disclosed preferred adjustment and carries a distinct unconverted claim',()=>{
-  const forecast=buildTreasuryForecast({symbol:'BMNR',history:[{date:asOf,close:22.4}],scenario:'base',endYear:2027});
+  const forecast=buildTreasuryForecast({symbol:'BMNR',history:[{date:asOf,close:22.4}],coinAnchor:{date:asOf,price:2384.38},scenario:'base',endYear:2027});
   const preferred=forecast.instruments.instruments.find(item=>item.id==='bmnr-bmnp-initial');
   assert.equal(preferred.outstandingUsd,350_000_000);assert.equal(preferred.couponRate,.095);
   assert.equal(forecast.instruments.residualAnnualCarry,0);
