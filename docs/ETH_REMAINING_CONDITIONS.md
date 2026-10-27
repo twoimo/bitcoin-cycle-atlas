@@ -204,3 +204,18 @@ Hallmark [40355131740](https://github.com/twoimo/bitcoin-cycle-atlas/actions/run
 growthepie throughput는 실제 수집 성공 시에도 rate-derived 보조 관측이다. strict 0/25, full model snapshot 0, historical point-in-time 미확보, 전향 점수 0을 이 수집으로 해소했다고 세지 않는다. 최초 정책 commit의 새 실행 상태는 pending이며 후속 증거 기록에서 실제 결과를 연결한다.
 
 Gemini 반대 검토와 후속 역검토는 사용자의 명시 지시에 따라 계속 omitted-by-user이다. 이번 일반 수치·소스·기능 검증을 해당 외부 검토 완료로 바꾸지 않는다.
+
+
+### 후속 최종 결과 — 870cf93
+
+[전체 결과](ETH_POOLED_FOLLOWUP_20261027.md) · [원본 증거](eth-candidate-evidence/20261027-pooled/README.md)
+
+- pooled 후보의 1,501개 수익률 사용, 동일 원점 점·구간 비교, 현재 보정 상태 보존을 완료했다. v1 731점·27개 요약행·45개 기존 pairwise는 정확히 유지했다.
+- 실제 소스 870cf93d4c2e634dde4d7e5a0429eaaff3c5b1e0: 일반 1,403, 집중 270, native 34개 통과. runtime/unexpected resource 0/0. 예상된 offline 갱신 실패 11개는 삭제하지 않고 요청·문서별 보존 동작과 함께 기록했다.
+- 같은 v1 가용 원점에서는 90/180일 오차가 5.16%/4.26% 작지만, 더 넓은 pooled 가용 원점에서는 단순 가격 유지보다 90/180일 오차가 크다. 기본 adaptive 유지, 우월성·승격 주장 없음.
+- pooled 보정 자료는 30/90/180일에 20/10/5개다. 30일만 실험적 보정 가능하며 최소 12개 정책은 유지한다.
+- 실제 growthepie 연속 28일 throughput와 원본 bytes 수집을 완료했다. 6.094조 gas 환산값은 supplement이며 strict 0/25·full snapshot 0·historical point-in-time false를 유지한다.
+- 기존 발행본 9개·snapshot 3개·27 pending·0 scored 유지. 최신성 조건을 낮추지 않았고 새 발행은 0개다.
+- Hallmark는 8경로 전후 80 PNG와 integrity PASS, **6 FAIL / 3 REFLEX** 그대로다. 해당 workflow는 failure다.
+- 첫 native 실패 및 중간 hashbang 문법 실패와 최종 성공을 각각 보존했다. source-book generic externalReview.pending은 원본으로 남기며 현재 정책은 Gemini/역검토 omitted-by-user다.
+- PR Draft, releaseAuthorized=false. 본 후속에서 main 변경·병합·배포는 하지 않았다.
