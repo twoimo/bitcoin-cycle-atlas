@@ -62,3 +62,7 @@ adaptive/pooled 각각731점과 30/90/180일 target·flat/shrunkenTrend를 처�
 원본 기록·snapshot·raw·receipt의 실제 Git blob을 Actions의 file manifest와 대조해 별도 연구 원장에 보존한다. 후속 소스는 발행기를 다시 실행해도 이 원장과 같은 실행 디렉터리의 원장을 함께 읽고 기존 발행 시각을 재사용한다. 수집/발행 receipt는 내용 주소 경로에도 보존한다. 추가 verify-preserved-only 프로세스는 네트워크 요청0·새 발행0으로 디스크의 원본을 읽어 모형을 다시 계산한다. 이 후속 검증의 실제 상태는 최종 실행 영수증에서 확인한다.
 
 초기 수치/MC 소스a7f81838de9f1c8a480f554255b10e41dd85989e의 전체 일반1,446·집중313·native35개,181PNG가 통과했다. MC는35회 적합 재사용·64,512,000 draw-days·9.716초, default105개 원점/horizon/model 비교 정확일치다. 기존 9개 모형의731점·27요약·45pairwise 보존도 통과했다. 고정 seed 패널의 세 pooled/flat 기간 모두 skill 부호가 바뀌므로 단일seed의 작은 개선을 안정적 우월성이라고 부르지 않는다. 이 값은 최초 소스 실행 결과이며 후속 소스의 검증을 대신하지 않는다.
+
+## Complete visual artifacts with bounded log transport
+
+All browser cases, assertions, screenshots, byte counts and SHA-256 hashes remain required. The ETH workflow uses `ETH_BROWSER_IMAGE_LOG_MODE=failures-only` so successful PNG base64 is retained in the complete Actions artifact rather than duplicated in the job log. Failure screenshots still use log transport. The default verifier mode remains `representative`; the selected mode is recorded in both the full report and compact receipt. This addresses the connector's failed retrieval of oversized completed logs without removing visual evidence or changing any UI or financial calculation.

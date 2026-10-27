@@ -119,6 +119,8 @@ jobs:
           fc-list ':lang=ko' file | grep -F -- "$atlas_font_dir/NotoSansCJKkr-Regular.otf"
           echo "ATLAS_FONT_RECEIPT commit=f8d157532fbfaeda587e826d4cd5b21a49186f7c font_blob=$atlas_font_blob license_blob=$atlas_font_license_blob"
       - name: Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop
+        env:
+          ETH_BROWSER_IMAGE_LOG_MODE: failures-only
         run: node scripts/verify-eth-candidate-browser.mjs . build/eth-browser
       - name: Bind exact committed sources inputs and execution evidence for external review
         run: node scripts/build-eth-review-evidence.mjs
