@@ -25,7 +25,7 @@ const sha=value=>createHash('sha256').update(value).digest('hex');
 const objectHash=value=>sha(Buffer.from(json(value),'utf8'));
 const gitBlob=value=>createHash('sha1').update('blob '+value.length+'\0').update(value).digest('hex');
 const categories=['records','snapshots','observations','outcome-observations','acquisitions','evaluations','issuances','raw','indexes','receipts'];
-const mutable=new Set(['index.json','receipt.json','files.json','replay-receipt.json','replay-files.json']);
+const mutable=new Set(['index.json','receipt.json','files.json','replay-receipt.json','replay-files.json','acquisition.json']);
 const fail=message=>{throw new Error(message);};
 function keys(value,expected,label){
   if(!value||Object.getPrototypeOf(value)!==Object.prototype||Object.keys(value).sort().join(',')!==[...expected].sort().join(','))
@@ -51,9 +51,22 @@ function safePath(path){
 function category(path,{input=false}={}){
   safePath(path);
   if(input&&mutable.has(path))return path==='index.json'?'indexes':'receipts';
+  if(input&&path==='raw/coinbase-tail.json')return 'raw';
   if(/^(records|snapshots|observations|outcome-observations|acquisitions|evaluations|issuances|indexes|receipts)\/[a-f0-9]{64}\.json$/.test(path))return path.split('/')[0];
   if(/^raw\/coinbase-tail-[a-f0-9]{64}\.(?:json|base64\.txt)$/.test(path))return 'raw';
   throw new TypeError('Unexpected archive logical path '+path);
+}
+/** Old committed collectors used two fixed acquisition names. Preserve their
+ * original bytes in addressed checkpoints/body objects rather than treating
+ * the filenames as overwriteable archive slots. Filesystem adapters use this
+ * same explicit mapping; it does not widen immutable record path acceptance. */
+export function normalizeEthereumProspectiveArchiveInputPath(path,value){
+  const type=category(path,{input:true});
+  if((!Buffer.isBuffer(value)&&!(value instanceof Uint8Array))||value.byteLength>P.maximumObjectBytes)
+    throw new TypeError('Bounded original archive input bytes required');
+  if(path==='raw/coinbase-tail.json')return 'raw/coinbase-tail-'+sha(value)+'.json';
+  if(mutable.has(path))return (type==='indexes'?'indexes/':'receipts/')+sha(value)+'.json';
+  return path;
 }
 function captureMap(input,label){
   if(!(input instanceof Map)||input.size>P.maximumPages*P.maximumEntriesPerPage+P.maximumHistory+P.maximumPages+1)
@@ -136,7 +149,10 @@ async function validateLogicalFiles(logicalFiles){
       }
       continue;
     }
-    const item=parse(value,path,{maximumBytes:type==='records'?P.maximumRecordBytes:type==='indexes'?P.maximumActiveIndexBytes:P.maximumObjectBytes});
+    // Receipt checkpoints are exact byte-addressed historical documents, not
+    // trusted routing or forecast inputs. Legacy receipt formatting is kept;
+    // typed records, observations, acquisitions and indexes remain canonical.
+    const item=parse(value,path,{canonical:type!=='receipts',maximumBytes:type==='records'?P.maximumRecordBytes:type==='indexes'?P.maximumActiveIndexBytes:P.maximumObjectBytes});
     values.set(path,item);
     const id=path.slice(path.lastIndexOf('/')+1,-5);
     if(type==='indexes'||type==='receipts'){
@@ -266,10 +282,10 @@ export async function buildEthereumProspectiveArchive({files,previous=null,sourc
   const prior=previousBytes?await verifyCaptured(previousBytes):null;
   if(prior&&at<prior.manifest.createdAt)fail('Archive append clock precedes its retained predecessor');
   if(prior&&prior.manifest.sequence>=P.maximumHistory)throw new RangeError('Archive history budget exceeded');
-  const logicalFiles=new Map(prior?.logicalFiles??[]),newEntries=[];
+  const logicalFiles=new Map(prior?.logicalFiles??[]),newEntries=[],normalizedInputPaths=[];
   for(const [originalPath,value]of incoming){
-    const type=category(originalPath,{input:true});
-    const path=mutable.has(originalPath)?(type==='indexes'?'indexes/':'receipts/')+sha(value)+'.json':originalPath;
+    const path=normalizeEthereumProspectiveArchiveInputPath(originalPath,value);
+    if(path!==originalPath)normalizedInputPaths.push({inputPath:originalPath,archivePath:path,bytes:value.length,sha256:sha(value),gitBlobSha:gitBlob(value)});
     category(path);
     const present=logicalFiles.get(path);
     if(present&&!present.equals(value))fail('Immutable archive path conflict '+path);
@@ -299,7 +315,7 @@ export async function buildEthereumProspectiveArchive({files,previous=null,sourc
   transport.set('manifests/'+manifest.id+'.json',encoded);transport.set('manifest.json',encoded);
   const verified=await verifyCaptured(transport);
   return {manifest,files:transport,receipt:{...verified.receipt,newLogicalFiles:newEntries.length,
-    retainedLogicalFiles:prior?.entries.length??0,previousManifestId:prior?.manifest.id??null,
+    retainedLogicalFiles:prior?.entries.length??0,previousManifestId:prior?.manifest.id??null,normalizedInputPaths,
     networkRequests:0,newForecastsCreated:0,newObservationsCreated:0}};
 }
 

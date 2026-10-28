@@ -6,7 +6,8 @@ import {createHash} from 'node:crypto';
 import {canonicalForecastJson} from '../dist/forecast-records.js';
 import {validateAssetOutcomeIndex,verifyAssetOutcomeSnapshot,assetOutcomeSnapshotEntry} from '../dist/asset-outcome-records.js';
 import {readEthereumCalibrationInputs} from './build-ethereum-prospective-calibration-readiness.mjs';
-import {buildEthereumProspectiveArchive,verifyEthereumProspectiveArchive,restoreEthereumProspectiveArchive} from './ethereum-prospective-archive-core.mjs';
+import {buildEthereumProspectiveArchive,verifyEthereumProspectiveArchive,restoreEthereumProspectiveArchive,
+  normalizeEthereumProspectiveArchiveInputPath} from './ethereum-prospective-archive-core.mjs';
 import {validateEthereumArchiveRemoteReadReceipt} from './ethereum-prospective-archive-remote.mjs';
 
 const json=value=>canonicalForecastJson(value)+'\n',sha=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -101,8 +102,7 @@ async function readReceipt(root,path,{optional=false}={}){
 }
 function preserveInputs(target,input){
   for(let [path,bytes]of input){
-    if(path==='index.json')path='indexes/'+sha(bytes)+'.json';
-    else if(['receipt.json','files.json','replay-receipt.json','replay-files.json'].includes(path))path='receipts/'+sha(bytes)+'.json';
+    path=normalizeEthereumProspectiveArchiveInputPath(path,bytes);
     if(target.has(path)&&!target.get(path).equals(bytes))throw new Error('Conflicting immutable ledger bytes: '+path);
     target.set(path,bytes);
   }

@@ -6,7 +6,8 @@ import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {canonicalForecastJson} from '../dist/forecast-records.js';
-import {buildEthereumProspectiveArchive,verifyEthereumProspectiveArchive} from '../scripts/ethereum-prospective-archive-core.mjs';
+import {buildEthereumProspectiveArchive,verifyEthereumProspectiveArchive,
+  normalizeEthereumProspectiveArchiveInputPath} from '../scripts/ethereum-prospective-archive-core.mjs';
 import {ETH_PROSPECTIVE_ARCHIVE_REMOTE_POLICY,ethereumArchiveGitTree} from '../scripts/ethereum-prospective-archive-remote.mjs';
 import {ETH_ARCHIVE_IO_PATHS,readEthereumArchiveDirectory,writeEthereumArchiveDirectory,
   collectEthereumArchiveLogicalInputs,restoreEthereumArchiveIntoRepository,
@@ -36,6 +37,8 @@ function remoteReceiptFixture(files=new Map(),overrides={}){
   return {id:sha(Buffer.from(canonicalForecastJson(body))),...body};
 }
 const seedProspective=await readEthereumArchiveDirectory(resolve(root,'research-data/ethereum-prospective-ledger'));
+assert.equal(seedProspective.size,17,'The complete committed legacy seed is required; a partial local checkout cannot verify compatibility');
+assert.ok(seedProspective.has('acquisition.json'));assert.ok(seedProspective.has('raw/coinbase-tail.json'));
 const seedOutcomes=await readEthereumArchiveDirectory(resolve(root,'research-data/asset-outcome-ledger'));
 const priorRun=await readEthereumArchiveDirectory(resolve(root,'docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger'));
 const priorObservationPath=[...priorRun.keys()].find(path=>path.startsWith('observations/')&&!seedProspective.has(path));
@@ -92,7 +95,33 @@ test('real seed restore, actual prior-run append and fresh remote restore preser
   assert.equal(rerestored.basis,'verified-remote-branch');assert.equal(rerestored.sequence,2);
   assert.deepEqual(rerestored.originalIssuedAt,restored.originalIssuedAt);
   assert.equal(rerestored.preservedObservationIds.length,4);
-  for(const [path,bytes]of seedProspective)assert.deepEqual(await readFile(resolve(second.repositoryRoot,P.prospective,path)),bytes,path);
+  const verified=await verifyEthereumProspectiveArchive({files:output});
+  // Every original source byte remains reachable under its explicit mapping.
+  // Old mutable document versions are retained as immutable checkpoints, not
+  // restored over the latest working receipt or regenerated active index.
+  for(const [path,bytes]of [...seedProspective,...priorRun]){
+    const normalized=normalizeEthereumProspectiveArchiveInputPath(path,bytes);
+    assert.deepEqual(verified.logicalFiles.get(normalized),bytes,path+' -> '+normalized);
+    if(!/^(indexes|receipts)\//.test(normalized))
+      assert.deepEqual(await readFile(resolve(second.repositoryRoot,P.prospective,normalized)),bytes,'restored '+normalized);
+  }
+  for(const path of ['receipt.json','files.json']){
+    const original=normalizeEthereumProspectiveArchiveInputPath(path,seedProspective.get(path));
+    const later=normalizeEthereumProspectiveArchiveInputPath(path,priorRun.get(path));
+    assert.notEqual(original,later,'Different actual document versions retain different checkpoints');
+    assert.ok(verified.logicalFiles.has(original));assert.ok(verified.logicalFiles.has(later));
+  }
+  assert.deepEqual(JSON.parse(await readFile(resolve(second.repositoryRoot,P.prospective,'index.json'),'utf8')),
+    JSON.parse(seedProspective.get('index.json').toString('utf8')));
+  const legacyAcquisition=JSON.parse(seedProspective.get('acquisition.json').toString('utf8'));
+  const legacyRaw=seedProspective.get('raw/coinbase-tail.json');
+  assert.equal(legacyAcquisition.rawSha256,sha(legacyRaw));assert.equal(legacyAcquisition.receivedBytes,legacyRaw.length);
+  assert.equal(legacyAcquisition.rawText,legacyRaw.toString('utf8'));
+  assert.deepEqual(Buffer.from(legacyAcquisition.rawBase64,'base64'),legacyRaw);
+  const originalSnapshot=JSON.parse(seedProspective.get('snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json').toString('utf8'));
+  assert.equal(originalSnapshot.tail.sourceHash,legacyAcquisition.rawSha256);
+  assert.equal(originalSnapshot.tail.text,legacyRaw.toString('utf8'));
+  assert.equal(originalSnapshot.tail.bodyCompletedAt,legacyAcquisition.bodyCompletedAt);
   assert.deepEqual(await readFile(resolve(second.repositoryRoot,P.prospective,priorObservationPath)),priorRun.get(priorObservationPath));
   const independent=JSON.parse(seedOutcomes.get('index.json').toString('utf8')).observations.find(entry=>entry.symbol==='ETHUSD').path;
   assert.deepEqual(await readFile(resolve(second.repositoryRoot,P.outcomes,independent)),seedOutcomes.get(independent));

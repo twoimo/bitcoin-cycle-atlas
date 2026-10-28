@@ -7,7 +7,8 @@ import {createEthereumResearchSnapshot} from '../dist/ethereum-prospective-price
 import {createAssetOutcomeSnapshot,assetOutcomeSnapshotEntry} from '../dist/asset-outcome-records.js';
 import {prospectiveFixture} from './helpers/eth-prospective-fixture.mjs';
 import {ETH_PROSPECTIVE_ARCHIVE_POLICY as P,buildEthereumProspectiveArchive as build,
-  verifyEthereumProspectiveArchive as verify,restoreEthereumProspectiveArchive as restore} from '../scripts/ethereum-prospective-archive-core.mjs';
+  verifyEthereumProspectiveArchive as verify,restoreEthereumProspectiveArchive as restore,
+  normalizeEthereumProspectiveArchiveInputPath as normalizeInputPath} from '../scripts/ethereum-prospective-archive-core.mjs';
 
 // Synthetic schema inputs below never become retained market observations.
 const encode=value=>Buffer.from(canonicalForecastJson(value)+'\n');
@@ -240,6 +241,34 @@ test('complete failed HTTP text is retained byte-for-byte without treating malfo
   const built=await build(input(new Map([[path,body]]))),result=await restore(built);
   assert.deepEqual(result.files.get(path),body);assert.equal(result.receipt.observationCount,0);
   assert.equal(result.receipt.restoredRecords,0);assert.equal(result.receipt.newObservationsCreated,0);
+});
+
+test('legacy fixed acquisition and raw-tail names retain their exact original bytes in addressed archive objects',async()=>{
+  const acquisition=Buffer.from('{\n  "kind": "synthetic legacy acquisition",\n  "note": "원래 공백 보존"\n}\n');
+  const raw=Buffer.from(' [ [1,2,3] ]\n'),rawPath='raw/coinbase-tail-'+hash(raw)+'.json',receiptPath='receipts/'+hash(acquisition)+'.json';
+  const built=await build(input(new Map([['acquisition.json',acquisition],['raw/coinbase-tail.json',raw],[rawPath,raw]])));
+  const verified=await verify(built),restored=await restore(built);
+  equalOriginal(verified.logicalFiles.get(receiptPath),acquisition);
+  equalOriginal(restored.files.get(rawPath),raw);
+  assert.equal(verified.receipt.raw,1);assert.equal(verified.receipt.receipts,1);
+  assert.equal(verified.logicalFiles.has('acquisition.json'),false);assert.equal(verified.logicalFiles.has('raw/coinbase-tail.json'),false);
+  assert.equal(verified.receipt.observationCount,0);assert.equal(built.receipt.newForecastsCreated,0);
+  assert.deepEqual(built.receipt.normalizedInputPaths.map(({inputPath,archivePath,bytes,sha256})=>({inputPath,archivePath,bytes,sha256})),[
+    {inputPath:'acquisition.json',archivePath:receiptPath,bytes:acquisition.length,sha256:hash(acquisition)},
+    {inputPath:'raw/coinbase-tail.json',archivePath:rawPath,bytes:raw.length,sha256:hash(raw)},
+  ]);
+  function equalOriginal(actual,expected){assert.ok(actual?.equals(expected),'Every original legacy byte remains unchanged');}
+});
+
+test('legacy path normalization is explicit and does not relax typed immutable JSON validation',async()=>{
+  const raw=Buffer.from('{}\n');
+  assert.equal(normalizeInputPath('acquisition.json',raw),'receipts/'+hash(raw)+'.json');
+  assert.equal(normalizeInputPath('raw/coinbase-tail.json',raw),'raw/coinbase-tail-'+hash(raw)+'.json');
+  const addressed=normalizeInputPath('raw/coinbase-tail.json',raw);assert.equal(normalizeInputPath(addressed,raw),addressed);
+  for(const path of ['nested/acquisition.json','raw/other-tail.json','raw/../coinbase-tail.json','acquisitions/fixed.json'])
+    assert.throws(()=>normalizeInputPath(path,raw),/path/i);
+  const files=duplicate(initialFiles);files.set('records/'+f.record.id+'.json',Buffer.from(JSON.stringify(f.record,null,2)+'\n'));
+  await assert.rejects(()=>build(input(files)),/Noncanonical immutable|Noncanonical archive/);
 });
 
 test('captured caller maps and Buffers cannot race an asynchronous semantic validation',async()=>{
