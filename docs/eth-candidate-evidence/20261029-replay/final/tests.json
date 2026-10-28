@@ -1,0 +1,26 @@
+{
+  "group": "tests",
+  "sourceCommit": "331f17fcb0a64a8b6bae0180e352cab52b698ef3",
+  "sourceTree": "f323a23333621fb92962e343192c0aef3e95dcb3",
+  "startedAt": "2026-10-28T16:22:45.232Z",
+  "commands": [
+    {
+      "name": "tests",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "startedAt": "2026-10-28T16:22:45.233Z",
+      "log": "build/replay-verification/tests.log",
+      "finishedAt": "2026-10-28T16:24:04.844Z",
+      "seconds": 79.612,
+      "exitCode": 0,
+      "logBytes": 201847,
+      "logSha256": "97e84bbd5c1390085581fa46e659991612072ba458a85efd44a93dc1994d4602"
+    }
+  ],
+  "status": "passed",
+  "finishedAt": "2026-10-28T16:24:04.845Z",
+  "finalCommit": "331f17fcb0a64a8b6bae0180e352cab52b698ef3",
+  "sameSourceCommit": true
+}

@@ -1,0 +1,73 @@
+{
+  "group": "publication",
+  "sourceCommit": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+  "sourceTree": "f323a23333621fb92962e343192c0aef3e95dcb3",
+  "startedAt": "2026-10-28T16:33:59.897Z",
+  "commands": [
+    {
+      "name": "build-publication",
+      "command": [
+        "npm",
+        "run",
+        "build:publication"
+      ],
+      "startedAt": "2026-10-28T16:33:59.898Z",
+      "log": "build/replay-verification/build-publication.log",
+      "finishedAt": "2026-10-28T16:34:01.028Z",
+      "seconds": 1.131,
+      "exitCode": 0,
+      "logBytes": 452,
+      "logSha256": "59c0cb8d789cab98da0b9b793e7d7e9f7a1691777a83c868cdfdfaf10ef1d6ff"
+    },
+    {
+      "name": "verify-publication",
+      "command": [
+        "npm",
+        "run",
+        "verify:publication"
+      ],
+      "startedAt": "2026-10-28T16:34:01.029Z",
+      "log": "build/replay-verification/verify-publication.log",
+      "finishedAt": "2026-10-28T16:34:01.536Z",
+      "seconds": 0.507,
+      "exitCode": 0,
+      "logBytes": 372,
+      "logSha256": "03177424141e6175044a51fef7a6adc315738f2af334b7617cf8e40e9bc2eeab"
+    },
+    {
+      "name": "build-standalone",
+      "command": [
+        "node",
+        "scripts/build-standalone.mjs",
+        "build/Bitcoin_Cycles_Comparison.html"
+      ],
+      "startedAt": "2026-10-28T16:34:01.536Z",
+      "log": "build/replay-verification/build-standalone.log",
+      "finishedAt": "2026-10-28T16:34:04.668Z",
+      "seconds": 3.132,
+      "exitCode": 0,
+      "logBytes": 101,
+      "logSha256": "ff9ad80435bb422c5f6d191441fa3324932d8915102da0ba30d697e55c47424e"
+    },
+    {
+      "name": "verify-standalone",
+      "command": [
+        "node",
+        "scripts/verify-static.mjs",
+        "--standalone",
+        "build/Bitcoin_Cycles_Comparison.html"
+      ],
+      "startedAt": "2026-10-28T16:34:04.668Z",
+      "log": "build/replay-verification/verify-standalone.log",
+      "finishedAt": "2026-10-28T16:34:11.953Z",
+      "seconds": 7.284,
+      "exitCode": 0,
+      "logBytes": 139,
+      "logSha256": "d33d7536a30311a2c47752e87e5c4314ecc639d4a3037152a5b2cddaf7d944a0"
+    }
+  ],
+  "status": "passed",
+  "finishedAt": "2026-10-28T16:34:11.953Z",
+  "finalCommit": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+  "sameSourceCommit": true
+}

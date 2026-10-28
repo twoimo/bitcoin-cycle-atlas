@@ -1,0 +1,34 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.29.0 verify:forecast
+> node scripts/build-forecast-ledger.mjs --check
+
+{
+  "status": "PASS",
+  "records": 5,
+  "snapshots": 1,
+  "pendingTargets": 15,
+  "scoredTargets": 0,
+  "observationThrough": "2026-10-25",
+  "refresh": {
+    "expectedAsOf": "2026-10-25",
+    "lastPreservedAsOf": "2026-10-25",
+    "nextEligibleAsOf": "2026-11-24",
+    "nextEligibleAsOfIsEarliest": true,
+    "observationDaysSinceLast": 0,
+    "observationThrough": "2026-10-25",
+    "outcome": "retained-not-due",
+    "publicationDue": false,
+    "publicationPolicy": {
+      "basis": "completed-observation-rows",
+      "capturesInteractiveCalculations": false,
+      "intervalObservationDays": 30,
+      "scope": "scheduled-public-preservation",
+      "version": "preserved-forecast-cadence-1"
+    },
+    "publicationReasons": [
+      "interval-not-reached"
+    ],
+    "reason": "The unchanged model and settings are preserved every 30 completed observation rows. Earlier records remain immutable; observations, evaluation and active experiments continue to refresh daily."
+  }
+}

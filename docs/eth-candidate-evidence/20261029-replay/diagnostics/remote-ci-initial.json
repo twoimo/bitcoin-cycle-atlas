@@ -1,0 +1,25 @@
+{
+  "sourceCommit": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+  "mainCI": {
+    "runId": 40726062158,
+    "conclusion": "success"
+  },
+  "hallmark": {
+    "runId": 40726062106,
+    "conclusion": "success"
+  },
+  "candidate": {
+    "runId": 40726062545,
+    "jobId": 122949533588,
+    "conclusion": "failure",
+    "failedStep": 23,
+    "failedStepName": "Read the fixed prospective evidence branch without publication permission",
+    "error": "GitHub archive request failed: HTTP 403"
+  },
+  "diagnosis": {
+    "confirmed": "The workflow did not pass ETH_ARCHIVE_GITHUB_TOKEN to the existing reader; the initial REST metadata request failed with 403.",
+    "unconfirmed": "The response body and rate-limit headers were not recorded, so shared-runner anonymous API rate exhaustion is an inference, not a proven cause."
+  },
+  "releaseAuthorized": false,
+  "productionPromoted": false
+}

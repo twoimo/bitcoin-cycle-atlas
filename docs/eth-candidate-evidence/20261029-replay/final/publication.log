@@ -1,0 +1,26 @@
+Publication command logs for source 3c570470a901c4991e14ba0907f5a19f87bd6f5d
+This archival file combines the exact four logs referenced by publication.json.
+Section headers are archival labels; each following source byte sequence is preserved.
+
+SOURCE build/replay-verification/build-publication.log | SHA256 59c0cb8d789cab98da0b9b793e7d7e9f7a1691777a83c868cdfdfaf10ef1d6ff | BYTES 452
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.29.0 build:publication
+> node scripts/build-publication.mjs
+
+{"status":"PASS","sourceCommit":"3c570470a901c4991e14ba0907f5a19f87bd6f5d","files":717,"assets":22,"contentDigest":"a4dbdd46e38d33ab59f5687d8b5d560499e44a5ee4af53ad3567ebd74f86ab41","manifestSha256":"33ac5d366fff05d449da35b1e43a356ef59a182f2d4c656b6e69a3db95b1cb09"}
+
+SOURCE build/replay-verification/verify-publication.log | SHA256 03177424141e6175044a51fef7a6adc315738f2af334b7617cf8e40e9bc2eeab | BYTES 372
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.29.0 verify:publication
+> node scripts/build-publication.mjs --check
+
+{"status":"PASS","sourceCommit":"3c570470a901c4991e14ba0907f5a19f87bd6f5d","checkedFiles":717,"contentDigest":"a4dbdd46e38d33ab59f5687d8b5d560499e44a5ee4af53ad3567ebd74f86ab41"}
+
+SOURCE build/replay-verification/build-standalone.log | SHA256 ff9ad80435bb422c5f6d191441fa3324932d8915102da0ba30d697e55c47424e | BYTES 101
+{"file":"Bitcoin_Cycles_Comparison.html","bytes":29879770,"modules":123,"embeddedObservations":5944}
+
+SOURCE build/replay-verification/verify-standalone.log | SHA256 d33d7536a30311a2c47752e87e5c4314ecc639d4a3037152a5b2cddaf7d944a0 | BYTES 139
+{"status":"ok","files":718,"checkedReferences":411,"basePath":"/bitcoin-cycle-atlas/","standalone":"build/Bitcoin_Cycles_Comparison.html"}
+

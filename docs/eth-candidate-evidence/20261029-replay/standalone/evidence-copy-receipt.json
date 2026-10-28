@@ -1,0 +1,230 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-standalone-evidence-copy",
+  "status": "passed",
+  "copiedAt": "2026-10-28T16:40:09.509298+00:00",
+  "sourceCommit": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+  "scope": "Published native offline evidence and publication receipt/log; no source, model, data or runtime changes.",
+  "selectedJsonExports": [
+    "btc-desktop-strict-hidden.json",
+    "eth-desktop-historical-end.json",
+    "eth-desktop-recorded-candles.json"
+  ],
+  "all21NativeExportsClaim": "21 actual exports are recorded in the native receipt; only the selected 3 JSON bodies are copied here.",
+  "publicationLogAssembly": {
+    "missingAggregateSource": "build/replay-verification/publication.log",
+    "explanation": "No aggregate source log existed. final/publication.log is explicitly labelled and assembled from the four exact command logs referenced by publication.json.",
+    "sources": [
+      {
+        "path": "build/replay-verification/build-publication.log",
+        "bytes": 452,
+        "sha256": "59c0cb8d789cab98da0b9b793e7d7e9f7a1691777a83c868cdfdfaf10ef1d6ff",
+        "command": [
+          "npm",
+          "run",
+          "build:publication"
+        ],
+        "exitCode": 0
+      },
+      {
+        "path": "build/replay-verification/verify-publication.log",
+        "bytes": 372,
+        "sha256": "03177424141e6175044a51fef7a6adc315738f2af334b7617cf8e40e9bc2eeab",
+        "command": [
+          "npm",
+          "run",
+          "verify:publication"
+        ],
+        "exitCode": 0
+      },
+      {
+        "path": "build/replay-verification/build-standalone.log",
+        "bytes": 101,
+        "sha256": "ff9ad80435bb422c5f6d191441fa3324932d8915102da0ba30d697e55c47424e",
+        "command": [
+          "node",
+          "scripts/build-standalone.mjs",
+          "build/Bitcoin_Cycles_Comparison.html"
+        ],
+        "exitCode": 0
+      },
+      {
+        "path": "build/replay-verification/verify-standalone.log",
+        "bytes": 139,
+        "sha256": "d33d7536a30311a2c47752e87e5c4314ecc639d4a3037152a5b2cddaf7d944a0",
+        "command": [
+          "node",
+          "scripts/verify-static.mjs",
+          "--standalone",
+          "build/Bitcoin_Cycles_Comparison.html"
+        ],
+        "exitCode": 0
+      }
+    ]
+  },
+  "previousStandaloneSummary": {
+    "passed": 5,
+    "runtimeErrors": 0,
+    "unexpectedResourceErrors": 0,
+    "replayJournalFetches": 0,
+    "downloadedJson": 21,
+    "htmlBytes": 29879770,
+    "htmlSha256": "c5ce52b43b07876d75422f975b8c5553eb7c74f189a46f8de35fea4b1ecb016f",
+    "reportSha256": "8d58ff817d532d8e4fc0533e9a70573c0b5871600875d7affee0e7601f2876b4"
+  },
+  "currentStandaloneSummary": {
+    "sourceCommit": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+    "passed": 5,
+    "failed": 0,
+    "runtimeErrors": 0,
+    "unexpectedResourceErrors": 0,
+    "replayJournalFetches": 0,
+    "expectedOfflineBtcRefreshes": 1,
+    "downloadedJson": 21,
+    "preservedJsonExports": 3,
+    "capturedScreenshots": 9,
+    "preservedRepresentativeScreenshots": 3,
+    "htmlBytes": 29879770,
+    "htmlSha256": "7f07cfe79328051851687e629a0498bc3c962ad71d7bb9d041e43437099563e3",
+    "reportSha256": "1ca9faacc26c74d5d534a70903da0269245c747e91e5e0a66231cb62ddd32cac",
+    "receiptPath": "standalone/receipt.json",
+    "identityComparisonPath": "standalone/identity-comparison.json",
+    "identityComparisonSha256": "32d1663005efe2742fd105919713d48f8fe6b96939f7c1c032985296c7ca0879",
+    "byteIdenticalOutsidePublication": true,
+    "normalizedHtmlSha256": "233f3640dbb3a257d573e50d241358db004ecca698dcd44b7fd3818478c71982",
+    "previousLocalSource": {
+      "sourceCommit": "331f17fcb0a64a8b6bae0180e352cab52b698ef3",
+      "htmlSha256": "c5ce52b43b07876d75422f975b8c5553eb7c74f189a46f8de35fea4b1ecb016f",
+      "reportSha256": "8d58ff817d532d8e4fc0533e9a70573c0b5871600875d7affee0e7601f2876b4",
+      "passed": 5,
+      "receiptPath": "standalone/previous-local-source/receipt.json"
+    }
+  },
+  "copiedArtifacts": [
+    {
+      "path": "standalone/previous-local-source/receipt.json",
+      "role": "previous-local-source",
+      "bytes": 87514,
+      "sha256": "8d58ff817d532d8e4fc0533e9a70573c0b5871600875d7affee0e7601f2876b4"
+    },
+    {
+      "path": "standalone/previous-local-source/check.mjs",
+      "role": "previous-local-source",
+      "bytes": 20915,
+      "sha256": "b14ba82e96c2a46f0fdcb3edbff6c27e49d600222f6a2c557bee5f31eb60371e"
+    },
+    {
+      "path": "standalone/previous-local-source/run.log",
+      "role": "previous-local-source",
+      "bytes": 633,
+      "sha256": "90b943fe281bd936b3c4a6bf856a96ce67d10a22ec442cabc36c174db8603ba9"
+    },
+    {
+      "path": "standalone/previous-local-source/btc-desktop-strict-hidden.json",
+      "role": "previous-local-source",
+      "bytes": 4253,
+      "sha256": "19fac796607da3083cdce2119a313bd3aa23ad91472f32bdb9b29c1e6657bbc4"
+    },
+    {
+      "path": "standalone/previous-local-source/eth-desktop-historical-end.json",
+      "role": "previous-local-source",
+      "bytes": 293701,
+      "sha256": "71bfe6d2d147c8b80f3292178f07486507d2afcec38666680239eb061190bc4d"
+    },
+    {
+      "path": "standalone/previous-local-source/eth-desktop-recorded-candles.json",
+      "role": "previous-local-source",
+      "bytes": 92189,
+      "sha256": "f9d7b0d93ec365c110e1134d42ffff005e82a87561eaa5039b1065ab1685af60"
+    },
+    {
+      "path": "standalone/receipt.json",
+      "role": "published-source",
+      "bytes": 87604,
+      "sha256": "1ca9faacc26c74d5d534a70903da0269245c747e91e5e0a66231cb62ddd32cac",
+      "sourcePath": "/tmp/atlas-standalone-published-final/receipt.json"
+    },
+    {
+      "path": "standalone/check.mjs",
+      "role": "published-source",
+      "bytes": 20915,
+      "sha256": "b14ba82e96c2a46f0fdcb3edbff6c27e49d600222f6a2c557bee5f31eb60371e",
+      "sourcePath": "/tmp/atlas-standalone-published-final/check.mjs"
+    },
+    {
+      "path": "standalone/run.log",
+      "role": "published-source",
+      "bytes": 636,
+      "sha256": "ca9e0b049594469e1e23fae367566d370fd24eb5660365c319a32e0148223bcb",
+      "sourcePath": "/tmp/atlas-standalone-published-final/run.log"
+    },
+    {
+      "path": "standalone/btc-desktop-strict-hidden.json",
+      "role": "published-source",
+      "bytes": 4253,
+      "sha256": "19fac796607da3083cdce2119a313bd3aa23ad91472f32bdb9b29c1e6657bbc4",
+      "sourcePath": "/tmp/atlas-standalone-published-final/btc-desktop-strict-hidden.json"
+    },
+    {
+      "path": "standalone/eth-desktop-historical-end.json",
+      "role": "published-source",
+      "bytes": 293701,
+      "sha256": "589bc94c6852645cd596bfe8dfd4bb07e76859c4939663e4ecdaf07096b5a691",
+      "sourcePath": "/tmp/atlas-standalone-published-final/eth-desktop-historical-end.json"
+    },
+    {
+      "path": "standalone/eth-desktop-recorded-candles.json",
+      "role": "published-source",
+      "bytes": 92189,
+      "sha256": "a4b0b9875925ebfdcf61ad0af66b592a9616b035b9b79d8f793c579a357e2408",
+      "sourcePath": "/tmp/atlas-standalone-published-final/eth-desktop-recorded-candles.json"
+    },
+    {
+      "path": "standalone/identity-comparison.json",
+      "role": "publication-only-identity-comparison",
+      "bytes": 622,
+      "sha256": "32d1663005efe2742fd105919713d48f8fe6b96939f7c1c032985296c7ca0879",
+      "sourcePath": "/tmp/atlas-standalone-published-final/identity-comparison.json"
+    },
+    {
+      "path": "standalone/eth-desktop-historical-end.png",
+      "role": "representative-published-screenshot",
+      "bytes": 166941,
+      "sha256": "f17c8cdedbe5dcc57246cd2cd706285b644f3469eadf548047ee7a8e333f1206",
+      "sourcePath": "/tmp/atlas-standalone-published-final/eth-desktop-historical-end.png"
+    },
+    {
+      "path": "standalone/eth-phone-strict-hidden.png",
+      "role": "representative-published-screenshot",
+      "bytes": 33914,
+      "sha256": "a2b9e04e8b05d6b4fb793eab0fd452faec10be354dad05e35d156a4ee4102556",
+      "sourcePath": "/tmp/atlas-standalone-published-final/eth-phone-strict-hidden.png"
+    },
+    {
+      "path": "standalone/eth-phone-recorded-candles.png",
+      "role": "representative-published-screenshot",
+      "bytes": 38364,
+      "sha256": "72ba4062bf20c660482ad97581aaaa3c905bf3bf30dfa5f951d2ba64b01d04bb",
+      "sourcePath": "/tmp/atlas-standalone-published-final/eth-phone-recorded-candles.png"
+    },
+    {
+      "path": "final/publication.json",
+      "role": "published-source-build-receipt",
+      "bytes": 2269,
+      "sha256": "73735a410a11b7dd503b9ce88d7ad99c78e3182f0a863fcb96f2acce0a86b5e8",
+      "sourcePath": "/workspace/scratch/62c67615b721/bitcoin-cycle-atlas/build/replay-verification/publication.json"
+    },
+    {
+      "path": "final/publication.log",
+      "role": "labelled-publication-log-aggregate",
+      "bytes": 1877,
+      "sha256": "35bee1125a56fce3a4e43c388502bb901abb64435ce6a219d1139bc1966ec041"
+    }
+  ],
+  "summaryUpdate": {
+    "path": "final/verification-summary.json",
+    "updatedField": "standalone",
+    "unrelatedFieldsPreservedAtCopy": true,
+    "note": "The shared summary is recorded by its standalone block above, rather than binding unrelated mutable summary fields to this copy receipt."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "kind": "same-session-archive-read-authentication-review",
+  "reviewer": "verify_replay_browser",
+  "reviewedAt": "2026-10-28T16:40:47.013638+00:00",
+  "verdict": "approved-no-blocking-findings",
+  "scope": [
+    ".github/workflows/eth-model-evaluation.yml",
+    "tests/ethereum-prospective-archive-remote.test.mjs",
+    "scripts/ethereum-prospective-archive-remote.mjs"
+  ],
+  "finding": "Missing step token is confirmed; exact original HTTP403 subtype is unproven. Candidate uses read-only token and GET-only path, retaining hard failure and no stale fallback.",
+  "independentFocusedTests": {
+    "passed": 40,
+    "failed": 0,
+    "logSha256": "8d26a95320dd49848f850bca568d285f049cac4ed8db6db7b6058e11db856e93"
+  },
+  "externalProviderReviewPerformed": false,
+  "dailyWorkflowFollowup": "Daily archive definition remains unchanged and unactivated on the Draft branch. Its unauthenticated reader is a follow-up before activation; do not silently expose its existing write-capable publisher token to additional steps.",
+  "releaseAuthorized": false,
+  "productionPromoted": false
+}

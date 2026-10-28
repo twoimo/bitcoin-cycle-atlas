@@ -1,0 +1,794 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.29.0 verify:formal
+> node scripts/verify-market-state.mjs && node scripts/verify-equity-state.mjs && node scripts/verify-eth-state.mjs && node scripts/verify-publication-state.mjs
+
+TAP version 13
+# Subtest: zoom-out crosses the original 180-bar snapshot and loads real older candles without changing interval
+ok 1 - zoom-out crosses the original 180-bar snapshot and loads real older candles without changing interval
+  ---
+  duration_ms: 48.992653
+  type: 'test'
+  ...
+# Subtest: 30m and 4h history uses only complete source groups and at most 288 source bars per page
+ok 2 - 30m and 4h history uses only complete source groups and at most 288 source bars per page
+  ---
+  duration_ms: 26.196552
+  type: 'test'
+  ...
+# Subtest: empty provider pages are remembered and source gaps remain absent without repeated requests
+ok 3 - empty provider pages are remembered and source gaps remain absent without repeated requests
+  ---
+  duration_ms: 8.545885
+  type: 'test'
+  ...
+# Subtest: history download is sequential and coalesces new gestures onto its latest requested viewport
+ok 4 - history download is sequential and coalesces new gestures onto its latest requested viewport
+  ---
+  duration_ms: 6.673102
+  type: 'test'
+  ...
+# Subtest: interval cancellation drops late history responses and never publishes stale rows
+ok 5 - interval cancellation drops late history responses and never publishes stale rows
+  ---
+  duration_ms: 4.174531
+  type: 'test'
+  ...
+# Subtest: 429 preserves displayed data and cannot create an automatic retry loop
+ok 6 - 429 preserves displayed data and cannot create an automatic retry loop
+  ---
+  duration_ms: 2.521714
+  type: 'test'
+  ...
+# Subtest: a timed-out history page keeps the saved chart and clears loading state
+ok 7 - a timed-out history page keeps the saved chart and clears loading state
+  ---
+  duration_ms: 10.760985
+  type: 'test'
+  ...
+# Subtest: a new short gesture still obeys the shared request throttle and can be cancelled before HTTP starts
+ok 8 - a new short gesture still obeys the shared request throttle and can be cancelled before HTTP starts
+  ---
+  duration_ms: 2.235851
+  type: 'test'
+  ...
+# Subtest: forced refresh can refill the existing past viewport using the newer navigation baseline
+ok 9 - forced refresh can refill the existing past viewport using the newer navigation baseline
+  ---
+  duration_ms: 8.356744
+  type: 'test'
+  ...
+# Subtest: BTC-USD: explicit refresh releases history backoff when recent candles fall back to retained data
+ok 10 - BTC-USD: explicit refresh releases history backoff when recent candles fall back to retained data
+  ---
+  duration_ms: 2.035945
+  type: 'test'
+  ...
+# Subtest: ETH-USD: explicit refresh releases history backoff when recent candles fall back to retained data
+ok 11 - ETH-USD: explicit refresh releases history backoff when recent candles fall back to retained data
+  ---
+  duration_ms: 1.716012
+  type: 'test'
+  ...
+# Subtest: older panning keeps a bounded cache, every requested source bar, and the Reset snapshot
+ok 12 - older panning keeps a bounded cache, every requested source bar, and the Reset snapshot
+  ---
+  duration_ms: 106.274821
+  type: 'test'
+  ...
+# Subtest: checked coverage merges overlap and queries only the missing half-open windows
+ok 13 - checked coverage merges overlap and queries only the missing half-open windows
+  ---
+  duration_ms: 0.590184
+  type: 'test'
+  ...
+# Subtest: checked empty-window metadata is evicted with the time cache instead of growing across distant pans
+ok 14 - checked empty-window metadata is evicted with the time cache instead of growing across distant pans
+  ---
+  duration_ms: 6.1383
+  type: 'test'
+  ...
+# Subtest: network failure uses validated embedded candles and retains their original collection time
+ok 15 - network failure uses validated embedded candles and retains their original collection time
+  ---
+  duration_ms: 6.940277
+  type: 'test'
+  ...
+# Subtest: invalid saved OHLC is rejected instead of becoming a successful fallback
+ok 16 - invalid saved OHLC is rejected instead of becoming a successful fallback
+  ---
+  duration_ms: 0.663993
+  type: 'test'
+  ...
+# Subtest: failure of both exchange and saved data stays in error without an automatic retry loop
+ok 17 - failure of both exchange and saved data stays in error without an automatic retry loop
+  ---
+  duration_ms: 1.028673
+  type: 'test'
+  ...
+# Subtest: a forced refresh replaces a saved fallback after a successful validated response
+ok 18 - a forced refresh replaces a saved fallback after a successful validated response
+  ---
+  duration_ms: 8.907911
+  type: 'test'
+  ...
+# Subtest: switching intervals aborts the previous request and a late response cannot overwrite or notify
+ok 19 - switching intervals aborts the previous request and a late response cannot overwrite or notify
+  ---
+  duration_ms: 4.428257
+  type: 'test'
+  ...
+# Subtest: switching back to a cached interval still cancels the outstanding different interval
+ok 20 - switching back to a cached interval still cancels the outstanding different interval
+  ---
+  duration_ms: 11.899606
+  type: 'test'
+  ...
+# Subtest: explicit cancellation produces no stale UI callback and does not enter fallback
+ok 21 - explicit cancellation produces no stale UI callback and does not enter fallback
+  ---
+  duration_ms: 1.186677
+  type: 'test'
+  ...
+# Subtest: a saved-data response arriving after cancellation cannot publish stale fallback state
+ok 22 - a saved-data response arriving after cancellation cannot publish stale fallback state
+  ---
+  duration_ms: 0.872542
+  type: 'test'
+  ...
+# Subtest: snapshot-first loading obeys cancellation even when saved data ignores abort and arrives late
+ok 23 - snapshot-first loading obeys cancellation even when saved data ignores abort and arrives late
+  ---
+  duration_ms: 0.517496
+  type: 'test'
+  ...
+# Subtest: a late preferred snapshot cannot overwrite a newer forced refresh of the same interval
+ok 24 - a late preferred snapshot cannot overwrite a newer forced refresh of the same interval
+  ---
+  duration_ms: 1.91077
+  type: 'test'
+  ...
+# Subtest: an older saved fallback cannot replace 1m; newer first=false; saved failure=false
+ok 25 - an older saved fallback cannot replace 1m; newer first=false; saved failure=false
+  ---
+  duration_ms: 7.205579
+  type: 'test'
+  ...
+# Subtest: an older saved fallback cannot replace 1m; newer first=false; saved failure=true
+ok 26 - an older saved fallback cannot replace 1m; newer first=false; saved failure=true
+  ---
+  duration_ms: 1.959792
+  type: 'test'
+  ...
+# Subtest: an older saved fallback cannot replace 1m; newer first=true; saved failure=false
+ok 27 - an older saved fallback cannot replace 1m; newer first=true; saved failure=false
+  ---
+  duration_ms: 2.605198
+  type: 'test'
+  ...
+# Subtest: an older saved fallback cannot replace 1m; newer first=true; saved failure=true
+ok 28 - an older saved fallback cannot replace 1m; newer first=true; saved failure=true
+  ---
+  duration_ms: 2.578599
+  type: 'test'
+  ...
+# Subtest: an older saved fallback cannot replace 5m; newer first=false; saved failure=false
+ok 29 - an older saved fallback cannot replace 5m; newer first=false; saved failure=false
+  ---
+  duration_ms: 2.601072
+  type: 'test'
+  ...
+# Subtest: an older saved fallback cannot replace 5m; newer first=false; saved failure=true
+ok 30 - an older saved fallback cannot replace 5m; newer first=false; saved failure=true
+  ---
+  duration_ms: 2.353245
+  type: 'test'
+  ...
+# Subtest: an older saved fallback cannot replace 5m; newer first=true; saved failure=false
+ok 31 - an older saved fallback cannot replace 5m; newer first=true; saved failure=false
+  ---
+  duration_ms: 2.412332
+  type: 'test'
+  ...
+# Subtest: an older saved fallback cannot replace 5m; newer first=true; saved failure=true
+ok 32 - an older saved fallback cannot replace 5m; newer first=true; saved failure=true
+  ---
+  duration_ms: 1.378231
+  type: 'test'
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 354.490904
+{
+  "tool": {
+    "name": "TLC",
+    "version": "1.7.4",
+    "sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+  },
+  "bounds": {
+    "requestGenerations": 3,
+    "intervals": [
+      "1m",
+      "5m"
+    ],
+    "property": "NoStaleDisplay"
+  },
+  "historyRetryScope": {
+    "intervals": 1,
+    "existingCandles": true,
+    "clock": "boolean cooldown only",
+    "property": "RefreshCanRetry"
+  },
+  "model": {
+    "MarketRequests": {
+      "outcome": "pass",
+      "exitStatus": 0,
+      "generatedStates": 5955,
+      "distinctStates": 2081,
+      "remainingStates": 0
+    },
+    "MarketRequestsBroken": {
+      "outcome": "expected invariant violation",
+      "exitStatus": 12,
+      "generatedStates": 151,
+      "distinctStates": 109,
+      "remainingStates": 79
+    },
+    "HistoryRetry": {
+      "outcome": "pass",
+      "exitStatus": 0,
+      "generatedStates": 37,
+      "distinctStates": 15,
+      "remainingStates": 0
+    },
+    "HistoryRetryBroken": {
+      "outcome": "expected invariant violation",
+      "exitStatus": 12,
+      "generatedStates": 26,
+      "distinctStates": 13,
+      "remainingStates": 2
+    }
+  },
+  "implementation": {
+    "tests": 32,
+    "regression": "pass",
+    "restored": "pass",
+    "mutation": "expected assertion failure",
+    "historyRetryMutation": "expected assertion failure",
+    "mutationExitStatus": 1,
+    "historyRetryMutationExitStatus": 1,
+    "sourceSha256": "978ad14a70fdb3011f0761ceb7c6f6ebc0d37bc0b25aa047ad2ef2014eff07d6",
+    "mutatedSourceSha256": "029dfcd42f66ae0f90b6178e584eddb20869b8472e6f51ebba8b82d830feca32",
+    "historyRetryMutatedSourceSha256": "808a7df0ab7c90e2186a03c0a9ed4993c10bc4e4e0631cb9385fe768cc003b4d"
+  },
+  "limitations": [
+    "Separate bounded abstract models, not a composed whole-program proof",
+    "No pricing, numerical, page-content, wall-clock or liveness proof"
+  ]
+}
+current: pass
+original-boot-order: expected invariant violation
+unguarded-prices: expected invariant violation
+unguarded-projection: expected invariant violation
+unguarded-errors: expected invariant violation
+retained-old-projection: expected invariant violation
+hidden-ready: expected invariant violation
+overwritten-range: expected invariant violation
+✔ MSTR releases the usable observed chart before the coin response or projection (32.634313ms)
+✔ MSTR shows an actionable price failure and opens a requested source view once (5.384713ms)
+✔ MSTR cannot release or render a suspended document before restoration (5.438352ms)
+✔ MSTR does not reveal loaded prices after leaving before their first render (5.053323ms)
+✔ MSTR ignores revoked stock replies, success or failure=false (3.768731ms)
+✔ MSTR ignores revoked underlying replies, success or failure=false (5.522617ms)
+✔ MSTR ignores revoked stock replies, success or failure=true (3.401366ms)
+✔ MSTR ignores revoked underlying replies, success or failure=true (4.744204ms)
+✔ MSTR cancels projection after 0 paint yields (3.487133ms)
+✔ MSTR cancels projection after 1 paint yields (7.960618ms)
+✔ MSTR invalidates the previous projection when refreshed stock prices publish (4.576717ms)
+✔ MSTR preserves user interval, scenario and range while the projection is pending (7.826948ms)
+✔ MSTR keeps observed prices after coin failure and recovers on retry (4.099681ms)
+✔ MSTR keeps observed prices when projection rejects inputs and a retry can recover (3.088153ms)
+✔ BMNR releases the usable observed chart before the coin response or projection (4.434187ms)
+✔ BMNR shows an actionable price failure and opens a requested source view once (2.883169ms)
+✔ BMNR cannot release or render a suspended document before restoration (4.272397ms)
+✔ BMNR does not reveal loaded prices after leaving before their first render (4.064248ms)
+✔ BMNR ignores revoked stock replies, success or failure=false (12.323638ms)
+✔ BMNR ignores revoked underlying replies, success or failure=false (10.581433ms)
+✔ BMNR ignores revoked stock replies, success or failure=true (5.986464ms)
+✔ BMNR ignores revoked underlying replies, success or failure=true (3.798274ms)
+✔ BMNR cancels projection after 0 paint yields (5.77803ms)
+✔ BMNR cancels projection after 1 paint yields (5.654087ms)
+✔ BMNR invalidates the previous projection when refreshed stock prices publish (3.252917ms)
+✔ BMNR preserves user interval, scenario and range while the projection is pending (3.032179ms)
+✔ BMNR keeps observed prices after coin failure and recovers on retry (3.401942ms)
+✔ BMNR keeps observed prices when projection rejects inputs and a retry can recover (5.556097ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 185.3539
+{
+  "tool": {
+    "name": "TLC",
+    "release": "1.7.4",
+    "jarSha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+  },
+  "bounds": {
+    "requestGenerations": 3,
+    "intervals": [
+      "daily",
+      "weekly"
+    ],
+    "rangeChoices": [
+      "auto",
+      "custom"
+    ]
+  },
+  "model": {
+    "current": {
+      "status": "pass",
+      "invariant": null,
+      "exitStatus": 0,
+      "generated": 303261,
+      "distinct": 46252,
+      "remaining": 0
+    },
+    "original-boot-order": {
+      "status": "expected invariant violation",
+      "invariant": "UsableRenderReleasesBoot",
+      "exitStatus": 12,
+      "generated": 68,
+      "distinct": 38,
+      "remaining": 27
+    },
+    "unguarded-prices": {
+      "status": "expected invariant violation",
+      "invariant": "NoStalePublication",
+      "exitStatus": 12,
+      "generated": 40,
+      "distinct": 25,
+      "remaining": 17
+    },
+    "unguarded-projection": {
+      "status": "expected invariant violation",
+      "invariant": "NoStalePublication",
+      "exitStatus": 12,
+      "generated": 3383,
+      "distinct": 1147,
+      "remaining": 600
+    },
+    "unguarded-errors": {
+      "status": "expected invariant violation",
+      "invariant": "NoStalePublication",
+      "exitStatus": 12,
+      "generated": 41,
+      "distinct": 26,
+      "remaining": 18
+    },
+    "retained-old-projection": {
+      "status": "expected invariant violation",
+      "invariant": "ProjectionMatchesPrices",
+      "exitStatus": 12,
+      "generated": 7255,
+      "distinct": 2253,
+      "remaining": 1105
+    },
+    "hidden-ready": {
+      "status": "expected invariant violation",
+      "invariant": "NoHiddenReadiness",
+      "exitStatus": 12,
+      "generated": 265,
+      "distinct": 115,
+      "remaining": 74
+    },
+    "overwritten-range": {
+      "status": "expected invariant violation",
+      "invariant": "UserRangePreserved",
+      "exitStatus": 12,
+      "generated": 2317,
+      "distinct": 806,
+      "remaining": 429
+    }
+  },
+  "implementation": {
+    "tests": 28,
+    "original": "pass",
+    "restored": "pass",
+    "sourceSha256": "0f7f35df0133e438422c242346da9f95e9a302566435dc4d9e32c69305989ec6",
+    "mutations": {
+      "deferred-readiness": "expected assertion failure",
+      "unguarded-prices": "expected assertion failure",
+      "unguarded-projection": "expected assertion failure",
+      "unguarded-coin-error": "expected assertion failure",
+      "retained-old-projection": "expected assertion failure",
+      "hidden-ready": "expected assertion failure",
+      "overwritten-range": "expected assertion failure"
+    },
+    "mutationExitStatuses": {
+      "deferred-readiness": 1,
+      "unguarded-prices": 1,
+      "unguarded-projection": 1,
+      "unguarded-coin-error": 1,
+      "retained-old-projection": 1,
+      "hidden-ready": 1,
+      "overwritten-range": 1
+    }
+  },
+  "limitations": [
+    "Finite request-state model, not an unbounded proof",
+    "UI replay injects import, HTTP, animation-frame and DOM boundaries",
+    "No economic accuracy, visual pixels, browser timing or liveness proof"
+  ]
+}
+current: pass
+baseline/TypeOK: pass
+baseline/ReadyHasUsableView: expected invariant violation
+baseline/NoHiddenPublication: expected invariant violation
+baseline/NoStalePublication: pass
+baseline/NavigationSurvivesRefresh: expected invariant violation
+baseline/ReadinessOnce: pass
+unguarded-response/NoStalePublication: expected invariant violation
+unguarded-error/NoStalePublication: expected invariant violation
+hidden-render/NoHiddenPublication: expected invariant violation
+lost-navigation/NavigationSurvivesRefresh: expected invariant violation
+TAP version 13
+# Subtest: ETH reveals a rendered observed chart exactly once
+ok 1 - ETH reveals a rendered observed chart exactly once
+  ---
+  duration_ms: 19.90082
+  type: 'test'
+  ...
+# Subtest: ETH initial failure reveals its actionable retry and a retry can recover
+ok 2 - ETH initial failure reveals its actionable retry and a retry can recover
+  ---
+  duration_ms: 8.487098
+  type: 'test'
+  ...
+# Subtest: ETH canceled initialization cannot release the shell before restored data is usable
+ok 3 - ETH canceled initialization cannot release the shell before restored data is usable
+  ---
+  duration_ms: 5.348791
+  type: 'test'
+  ...
+# Subtest: ETH hidden initialization and late resize cannot publish retained prices
+ok 4 - ETH hidden initialization and late resize cannot publish retained prices
+  ---
+  duration_ms: 4.593102
+  type: 'test'
+  ...
+# Subtest: ETH shortest hidden-layout counterexample does not update an empty suspended page
+ok 5 - ETH shortest hidden-layout counterexample does not update an empty suspended page
+  ---
+  duration_ms: 4.464111
+  type: 'test'
+  ...
+# Subtest: ETH shortest revoked-initializer counterexample cannot release a suspended empty page
+ok 6 - ETH shortest revoked-initializer counterexample cannot release a suspended empty page
+  ---
+  duration_ms: 4.569386
+  type: 'test'
+  ...
+# Subtest: ETH revoked archive success cannot replace the restored chart
+ok 7 - ETH revoked archive success cannot replace the restored chart
+  ---
+  duration_ms: 6.302648
+  type: 'test'
+  ...
+# Subtest: ETH revoked live success cannot replace a newer refresh
+ok 8 - ETH revoked live success cannot replace a newer refresh
+  ---
+  duration_ms: 9.555359
+  type: 'test'
+  ...
+# Subtest: ETH revoked archive failure cannot replace the restored chart
+ok 9 - ETH revoked archive failure cannot replace the restored chart
+  ---
+  duration_ms: 6.437332
+  type: 'test'
+  ...
+# Subtest: ETH revoked live failure cannot replace a newer refresh
+ok 10 - ETH revoked live failure cannot replace a newer refresh
+  ---
+  duration_ms: 9.860563
+  type: 'test'
+  ...
+# Subtest: ETH refresh failure retains valid observed prices and is recoverable
+ok 11 - ETH refresh failure retains valid observed prices and is recoverable
+  ---
+  duration_ms: 7.253091
+  type: 'test'
+  ...
+# Subtest: ETH accepts consecutive refresh clicks before disabled is painted and the latest request wins
+ok 12 - ETH accepts consecutive refresh clicks before disabled is painted and the latest request wins
+  ---
+  duration_ms: 6.25323
+  type: 'test'
+  ...
+# Subtest: ETH refresh preserves a date range chosen while its request was pending
+ok 13 - ETH refresh preserves a date range chosen while its request was pending
+  ---
+  duration_ms: 7.279209
+  type: 'test'
+  ...
+# Subtest: ETH data information opens with its escaped original-data link
+ok 14 - ETH data information opens with its escaped original-data link
+  ---
+  duration_ms: 5.137728
+  type: 'test'
+  ...
+# Subtest: ETH intraday force refresh preserves later date and price navigation through the real controller
+ok 15 - ETH intraday force refresh preserves later date and price navigation through the real controller
+  ---
+  duration_ms: 15.753949
+  type: 'test'
+  ...
+# Subtest: ETH switching interval revokes the real intraday force refresh without resetting its new range
+ok 16 - ETH switching interval revokes the real intraday force refresh without resetting its new range
+  ---
+  duration_ms: 7.987359
+  type: 'test'
+  ...
+# Subtest: ETH weekly refresh preserves the later preset and updated observation bounds
+ok 17 - ETH weekly refresh preserves the later preset and updated observation bounds
+  ---
+  duration_ms: 8.740033
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 144.831359
+{
+  "baselineCommit": "64c8207cb044d8990289c5a7d39972e21b74c240",
+  "tool": {
+    "name": "TLC",
+    "release": "1.7.4",
+    "jarSha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+  },
+  "bounds": {
+    "requestGenerations": 3,
+    "intervals": [
+      "daily",
+      "weekly"
+    ],
+    "rangeChoices": [
+      "auto",
+      "custom"
+    ]
+  },
+  "model": {
+    "current": {
+      "status": "pass",
+      "invariant": null,
+      "exitStatus": 0,
+      "generated": 11109,
+      "distinct": 2243,
+      "remaining": 0
+    },
+    "baseline/TypeOK": {
+      "status": "pass",
+      "invariant": "TypeOK",
+      "exitStatus": 0,
+      "generated": 14969,
+      "distinct": 3503,
+      "remaining": 0
+    },
+    "baseline/ReadyHasUsableView": {
+      "status": "expected invariant violation",
+      "invariant": "ReadyHasUsableView",
+      "exitStatus": 12,
+      "generated": 36,
+      "distinct": 23,
+      "remaining": 13
+    },
+    "baseline/NoHiddenPublication": {
+      "status": "expected invariant violation",
+      "invariant": "NoHiddenPublication",
+      "exitStatus": 12,
+      "generated": 31,
+      "distinct": 21,
+      "remaining": 12
+    },
+    "baseline/NoStalePublication": {
+      "status": "pass",
+      "invariant": "NoStalePublication",
+      "exitStatus": 0,
+      "generated": 14969,
+      "distinct": 3503,
+      "remaining": 0
+    },
+    "baseline/NavigationSurvivesRefresh": {
+      "status": "expected invariant violation",
+      "invariant": "NavigationSurvivesRefresh",
+      "exitStatus": 12,
+      "generated": 268,
+      "distinct": 145,
+      "remaining": 87
+    },
+    "baseline/ReadinessOnce": {
+      "status": "pass",
+      "invariant": "ReadinessOnce",
+      "exitStatus": 0,
+      "generated": 14969,
+      "distinct": 3503,
+      "remaining": 0
+    },
+    "unguarded-response/NoStalePublication": {
+      "status": "expected invariant violation",
+      "invariant": "NoStalePublication",
+      "exitStatus": 12,
+      "generated": 14,
+      "distinct": 8,
+      "remaining": 3
+    },
+    "unguarded-error/NoStalePublication": {
+      "status": "expected invariant violation",
+      "invariant": "NoStalePublication",
+      "exitStatus": 12,
+      "generated": 15,
+      "distinct": 9,
+      "remaining": 4
+    },
+    "hidden-render/NoHiddenPublication": {
+      "status": "expected invariant violation",
+      "invariant": "NoHiddenPublication",
+      "exitStatus": 12,
+      "generated": 31,
+      "distinct": 21,
+      "remaining": 12
+    },
+    "lost-navigation/NavigationSurvivesRefresh": {
+      "status": "expected invariant violation",
+      "invariant": "NavigationSurvivesRefresh",
+      "exitStatus": 12,
+      "generated": 289,
+      "distinct": 160,
+      "remaining": 103
+    }
+  },
+  "implementation": {
+    "tests": 17,
+    "original": "pass",
+    "restored": "pass",
+    "originalCounts": {
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "restoredCounts": {
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "sourceSha256": "1a9bf52815832751c3b600fc95cefb7141d98af851eb3ee8a9bc23b5455550cb",
+    "mutations": {
+      "premature-ready": "expected assertion failure",
+      "hidden-render": "expected assertion failure",
+      "unguarded-archive": "expected assertion failure",
+      "unguarded-error": "expected assertion failure",
+      "lost-daily-navigation": "expected assertion failure",
+      "lost-intraday-navigation": "expected assertion failure",
+      "untracked-navigation": "expected assertion failure",
+      "repeated-ready": "expected assertion failure",
+      "missing-escaper": "expected assertion failure"
+    },
+    "mutationExitStatuses": {
+      "premature-ready": 1,
+      "hidden-render": 1,
+      "unguarded-archive": 1,
+      "unguarded-error": 1,
+      "lost-daily-navigation": 1,
+      "lost-intraday-navigation": 1,
+      "untracked-navigation": 1,
+      "repeated-ready": 1,
+      "missing-escaper": 1
+    }
+  },
+  "limitations": [
+    "Finite reachable-state check, not an unbounded or whole-program proof",
+    "HTTP abort can complete late; callbacks while suspended are a deliberate scheduler over-approximation",
+    "Initializer replay injects import, HTTP, animation-frame, timer and DOM boundaries",
+    "Intraday controller publication is covered by verify-market-state; ETH integration is replay-tested",
+    "No price accuracy, causal event effect, pixel layout, browser scheduling or liveness proof"
+  ]
+}
+{
+  "status": "PASS",
+  "tool": {
+    "name": "TLC",
+    "version": "1.7.4",
+    "sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+  },
+  "modelSources": {
+    "Publication.tla": "fbe13fb35f7a7f78e0d075930999b463bdbff7ccf1afbc274c328aaf9e1fc031",
+    "Publication.cfg": "d5d3f5e116276bd7270d037742ec2712fdd78ed35461ae347a46b00917f8118a",
+    "stale-source.cfg": "76e6d43ee6fae636b40c8952249cf6dd885c72c24e0511de0f71a9b589039a28",
+    "changed-files.cfg": "e949f78dbe6fcb188dd94b9ebd73eac81d646c3165d0adf49eefc2a5f7a6bf45",
+    "served-mismatch.cfg": "114f1abf61e830974584df4ab7f44a52a828b66c6b893fc856f5ff44e193339e",
+    "Publication.map.mjs": "2dba2022069d29c3791f3b58b6bf8ed10419c76822716a62686b95e1932f0873"
+  },
+  "model": [
+    {
+      "config": "Publication",
+      "invariant": null,
+      "status": "pass",
+      "exitStatus": 0,
+      "generatedStates": 25,
+      "distinctStates": 20,
+      "remaining": 0
+    },
+    {
+      "config": "stale-source",
+      "invariant": "PreparedRevisionMatches",
+      "status": "expected invariant violation",
+      "exitStatus": 12,
+      "generatedStates": 18,
+      "distinctStates": 14,
+      "remaining": 6
+    },
+    {
+      "config": "changed-files",
+      "invariant": "PreparedContentMatches",
+      "status": "expected invariant violation",
+      "exitStatus": 12,
+      "generatedStates": 20,
+      "distinctStates": 15,
+      "remaining": 4
+    },
+    {
+      "config": "served-mismatch",
+      "invariant": "ConfirmedIdentityMatches",
+      "status": "expected invariant violation",
+      "exitStatus": 12,
+      "generatedStates": 22,
+      "distinctStates": 17,
+      "remaining": 5
+    }
+  ],
+  "implementation": {
+    "tests": 5,
+    "sourceSha256": "faa94f8819b6c51bdf7716e2b650f8acf80ee410b6d21e96f3b792dd2ff10cc6",
+    "mutations": [
+      {
+        "guard": "source change supersedes",
+        "sha256": "3b6ecdd94f44b4a6480d76df60a58b4b549717d591354dd67d8ce715c00b44e8",
+        "outcome": "expected assertion failure",
+        "exitStatus": 1
+      },
+      {
+        "guard": "changed files cannot pass",
+        "sha256": "efae3799176946b68476b659f28cbe100faf52b02782f6a0fea19f49d883f01a",
+        "outcome": "expected assertion failure",
+        "exitStatus": 1
+      },
+      {
+        "guard": "a successful deploy API result",
+        "sha256": "b9cb0633f42dbe25d46f0e31eeab70e69319ba215c9b1a08b7413b8d3c423cc7",
+        "outcome": "expected assertion failure",
+        "exitStatus": 1
+      }
+    ],
+    "restored": "pass"
+  },
+  "scope": "One candidate; two source/file identities; deterministic preparation and served-response guards. No claim about GitHub scheduling, remote recovery, file-system transactions, cryptographic authenticity, or forecast accuracy."
+}

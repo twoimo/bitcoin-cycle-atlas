@@ -1,0 +1,6 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.29.0 verify:cycle
+> node scripts/refresh-cycle-calibration.mjs --check
+
+{"status":"verified","asOf":"2026-10-25","version":"causal-cycle-clock-v1","observationCount":5944,"state":"shortened","shiftDays":-53,"referenceCount":3,"futureApplied":true,"futureAppliedShiftDays":-53,"futureReason":"causal-daily-clock-applied","sourcePricesSha256":"b41e769d2c367c9f0c17bbb8c39c2c9dbb78edb5612230cf32b7f45b0275f85a","output":"dist/data/cycle-calibration.json"}

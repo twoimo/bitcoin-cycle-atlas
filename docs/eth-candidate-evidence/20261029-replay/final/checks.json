@@ -1,0 +1,102 @@
+{
+  "group": "checks",
+  "sourceCommit": "c09149e8489dd6b8d1d5952d6470d52f9b11b63f",
+  "sourceTree": "4c16398511a8702dd3b1eabc061bce129620d0bc",
+  "startedAt": "2026-10-28T15:34:13.028Z",
+  "commands": [
+    {
+      "name": "verify:forecast",
+      "command": [
+        "npm",
+        "run",
+        "verify:forecast"
+      ],
+      "startedAt": "2026-10-28T15:34:13.028Z",
+      "log": "build/replay-verification/verify-forecast.log",
+      "finishedAt": "2026-10-28T15:34:22.953Z",
+      "seconds": 9.925,
+      "exitCode": 0,
+      "logBytes": 1179,
+      "logSha256": "9d5d237b8c2ed5019704f2c22172b29fef13e5e3ec14adaa5c51e6850b6f1f30"
+    },
+    {
+      "name": "verify:research",
+      "command": [
+        "npm",
+        "run",
+        "verify:research"
+      ],
+      "startedAt": "2026-10-28T15:34:22.953Z",
+      "log": "build/replay-verification/verify-research.log",
+      "finishedAt": "2026-10-28T15:34:23.689Z",
+      "seconds": 0.736,
+      "exitCode": 0,
+      "logBytes": 527,
+      "logSha256": "291d96c8810d3dd1b8bb6c70d6eec086fa73bef1c92f2a797dae32f68dc1ba8c"
+    },
+    {
+      "name": "verify:eth-events",
+      "command": [
+        "npm",
+        "run",
+        "verify:eth-events"
+      ],
+      "startedAt": "2026-10-28T15:34:23.689Z",
+      "log": "build/replay-verification/verify-eth-events.log",
+      "finishedAt": "2026-10-28T15:34:24.016Z",
+      "seconds": 0.327,
+      "exitCode": 0,
+      "logBytes": 367,
+      "logSha256": "7cd4c7d350d37ddb33a074c645d1c4b3403369b5c8106053684447e20bd25be6"
+    },
+    {
+      "name": "verify:treasury-paths",
+      "command": [
+        "npm",
+        "run",
+        "verify:treasury-paths"
+      ],
+      "startedAt": "2026-10-28T15:34:24.016Z",
+      "log": "build/replay-verification/verify-treasury-paths.log",
+      "finishedAt": "2026-10-28T15:34:31.710Z",
+      "seconds": 7.694,
+      "exitCode": 0,
+      "logBytes": 8358,
+      "logSha256": "f466f3d11f783d57c984f47daafb61a935611186c2994310a1cbbbf443fe35c0"
+    },
+    {
+      "name": "verify:numerics",
+      "command": [
+        "npm",
+        "run",
+        "verify:numerics"
+      ],
+      "startedAt": "2026-10-28T15:34:31.712Z",
+      "log": "build/replay-verification/verify-numerics.log",
+      "finishedAt": "2026-10-28T15:34:46.366Z",
+      "seconds": 14.654,
+      "exitCode": 0,
+      "logBytes": 33744,
+      "logSha256": "6e4a719642408c62318cd4a2459b92f452f506221758948de00072e841c269cc"
+    },
+    {
+      "name": "verify:formal",
+      "command": [
+        "npm",
+        "run",
+        "verify:formal"
+      ],
+      "startedAt": "2026-10-28T15:34:46.375Z",
+      "log": "build/replay-verification/verify-formal.log",
+      "finishedAt": "2026-10-28T15:34:46.811Z",
+      "seconds": 0.437,
+      "exitCode": 1,
+      "logBytes": 708,
+      "logSha256": "bdf9a3230c654ee8956ebbac4071b6df07c1b271f8942b97d30244462f3dffa9"
+    }
+  ],
+  "status": "failed",
+  "finishedAt": "2026-10-28T15:34:46.812Z",
+  "finalCommit": "c09149e8489dd6b8d1d5952d6470d52f9b11b63f",
+  "sameSourceCommit": true
+}

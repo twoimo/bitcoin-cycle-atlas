@@ -1,0 +1,6 @@
+{"id":"btc-desktop","status":"passed"}
+{"id":"eth-desktop","status":"passed"}
+{"id":"mstr-desktop","status":"passed"}
+{"id":"bmnr-desktop","status":"passed"}
+{"id":"eth-phone","status":"passed"}
+{"status":"passed","artifactSha256":"c5ce52b43b07876d75422f975b8c5553eb7c74f189a46f8de35fea4b1ecb016f","publicationSourceCommit":"331f17fcb0a64a8b6bae0180e352cab52b698ef3","cases":[{"id":"btc-desktop","status":"passed"},{"id":"eth-desktop","status":"passed"},{"id":"mstr-desktop","status":"passed"},{"id":"bmnr-desktop","status":"passed"},{"id":"eth-phone","status":"passed"}],"receipt":"/tmp/atlas-standalone-native-final/receipt.json"}

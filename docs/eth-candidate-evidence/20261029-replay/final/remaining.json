@@ -1,0 +1,72 @@
+{
+  "group": "remaining",
+  "sourceCommit": "db9c6c52dd2fd564b86993224d5c571a3da47813",
+  "sourceTree": "62329948a966242daaa872a71dbc7af976757987",
+  "startedAt": "2026-10-28T15:37:52.404Z",
+  "commands": [
+    {
+      "name": "verify:formal",
+      "command": [
+        "npm",
+        "run",
+        "verify:formal"
+      ],
+      "startedAt": "2026-10-28T15:37:52.404Z",
+      "log": "build/replay-verification/verify-formal.log",
+      "finishedAt": "2026-10-28T15:38:33.000Z",
+      "seconds": 40.595,
+      "exitCode": 0,
+      "logBytes": 27741,
+      "logSha256": "18001ef3d4933eb3741fa69799d64b2476016353a11f04eb24c56ae64e59982a"
+    },
+    {
+      "name": "verify:cycle",
+      "command": [
+        "npm",
+        "run",
+        "verify:cycle"
+      ],
+      "startedAt": "2026-10-28T15:38:33.001Z",
+      "log": "build/replay-verification/verify-cycle.log",
+      "finishedAt": "2026-10-28T15:38:33.463Z",
+      "seconds": 0.462,
+      "exitCode": 0,
+      "logBytes": 577,
+      "logSha256": "3cb54eda21aeab0742bde1570329f0d6e8a7583c8e8334b5646144cef0129a6a"
+    },
+    {
+      "name": "verify:performance",
+      "command": [
+        "npm",
+        "run",
+        "verify:performance"
+      ],
+      "startedAt": "2026-10-28T15:38:33.463Z",
+      "log": "build/replay-verification/verify-performance.log",
+      "finishedAt": "2026-10-28T15:38:33.763Z",
+      "seconds": 0.3,
+      "exitCode": 0,
+      "logBytes": 1262,
+      "logSha256": "b507d54b4ce8824d9288181dd967fb407eb314a4519db5d4443fa1e7086ce302"
+    },
+    {
+      "name": "verify:static",
+      "command": [
+        "npm",
+        "run",
+        "verify:static"
+      ],
+      "startedAt": "2026-10-28T15:38:33.763Z",
+      "log": "build/replay-verification/verify-static.log",
+      "finishedAt": "2026-10-28T15:38:39.102Z",
+      "seconds": 5.339,
+      "exitCode": 0,
+      "logBytes": 282,
+      "logSha256": "66e15b085395b070eab63170c134584d80fb0722cc627bebb00c305ca7e0c3ac"
+    }
+  ],
+  "status": "passed",
+  "finishedAt": "2026-10-28T15:38:39.103Z",
+  "finalCommit": "db9c6c52dd2fd564b86993224d5c571a3da47813",
+  "sameSourceCommit": true
+}

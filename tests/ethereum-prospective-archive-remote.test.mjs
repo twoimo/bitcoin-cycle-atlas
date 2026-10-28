@@ -74,6 +74,13 @@ test('remote restore verifies actual tree and blob bytes and deduplicates identi
   assert.equal(server.calls.filter(call=>call.path.includes('/git/blobs/')).length,new Set([...seed.files.values()].map(blob)).size);
   assert.equal(writes(server).length,0);
 });
+test('authenticated restore stays read-only and never retains the credential in its receipt',async()=>{
+  const server=mock(),result=await readEthereumProspectiveArchiveRemote({fetchImpl:server.fetchImpl,token});
+  assert.equal(result.receipt.status,'restored');assert.equal(result.receipt.expectedHead,head);
+  assert.ok(server.calls.length>0);assert.ok(server.calls.every(call=>call.authorization==='Bearer '+token));
+  assert.equal(writes(server).length,0);assert.equal(JSON.stringify(result.receipt).includes(token),false);
+  assert.deepEqual([...result.files],[...seed.files].sort(([a],[b])=>a.localeCompare(b)));
+});
 test('production Git object strategy uses three metadata requests and still rehashes the complete tree',async()=>{
   const server=mock();let gitCalls=0;
   const result=await readEthereumProspectiveArchiveRemote({fetchImpl:server.fetchImpl,readGitObjects:async input=>{
@@ -236,4 +243,12 @@ test('daily workflow has no PR privilege bridge and keeps acquisition failure vi
   assert.match(workflow,/cancel-in-progress: false/);assert.match(workflow,/persist-credentials: false/);
   assert.equal((workflow.match(/ETH_ARCHIVE_GITHUB_TOKEN:/g)||[]).length,1);
   assert.match(workflow,/steps\.acquisition\.outcome == 'failure'/);assert.match(workflow,/exit 1/);
+});
+test('candidate workflow authenticates only its archive read and cannot publish repository content',async()=>{
+  const workflow=await readFile(new URL('../.github/workflows/eth-model-evaluation.yml',import.meta.url),'utf8');
+  assert.match(workflow,/\npermissions:\n  contents: read\n/);
+  assert.doesNotMatch(workflow,/\n\s+contents: write\b|pull_request_target:|ethereum-prospective-archive-remote\.mjs publish/);
+  assert.equal((workflow.match(/ETH_ARCHIVE_GITHUB_TOKEN:/g)||[]).length,1);
+  assert.match(workflow,/Read the fixed prospective evidence branch without publication permission\n\s+env:\n\s+ETH_ARCHIVE_GITHUB_TOKEN: \$\{\{ github\.token \}\}\n\s+run: node scripts\/ethereum-prospective-archive-remote\.mjs read/);
+  assert.match(workflow,/persist-credentials: false/);
 });

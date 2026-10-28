@@ -166,6 +166,8 @@ jobs:
       - name: Freeze earlier calibration errors and evaluate only later disjoint forecast windows
         run: node scripts/evaluate-ethereum-independent-calibration.mjs
       - name: Read the fixed prospective evidence branch without publication permission
+        env:
+          ETH_ARCHIVE_GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/ethereum-prospective-archive-remote.mjs read
       - name: Restore and independently validate the selected prospective archive bytes
         run: node scripts/manage-ethereum-prospective-archive.mjs restore

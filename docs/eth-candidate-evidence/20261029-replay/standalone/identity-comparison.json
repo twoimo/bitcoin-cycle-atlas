@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "scope": "Exact byte comparison after replacing only atlas-publication script text with the same marker",
+  "previousArtifactSha256": "c5ce52b43b07876d75422f975b8c5553eb7c74f189a46f8de35fea4b1ecb016f",
+  "artifactSha256": "7f07cfe79328051851687e629a0498bc3c962ad71d7bb9d041e43437099563e3",
+  "artifactBytes": 29879770,
+  "previousSourceCommit": "331f17fcb0a64a8b6bae0180e352cab52b698ef3",
+  "publicationSourceCommit": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+  "normalizedSha256": "233f3640dbb3a257d573e50d241358db004ecca698dcd44b7fd3818478c71982",
+  "byteIdenticalOutsidePublication": true
+}
