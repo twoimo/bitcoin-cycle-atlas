@@ -1,6 +1,7 @@
 import {readFile,readdir,writeFile} from 'node:fs/promises';
 import {resolve,relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
 import {buildEthReviewPacket} from './build-eth-review-packet.mjs';
 
 const root=fileURLToPath(new URL('..',import.meta.url));
@@ -19,6 +20,10 @@ const evidencePaths=[
   'build/ethereum-independent-calibration.json',
   'build/ethereum-prospective-calibration-readiness.json',
   'build/ethereum-prospective-capacity.json',
+  'build/ethereum-prospective-archive-restore.json',
+  'build/ethereum-prospective-archive-remote-receipt.json',
+  'build/ethereum-prospective-archive-append.json',
+  'build/ethereum-prospective-archive-verify.json',
   'build/ethereum-supply-resolution.json',
   'build/ethereum-economic-ablation.json',
   'build/eth-browser/report.json',
@@ -38,18 +43,33 @@ await addFiles('build/ethereum-economic-vintages');
 await addFiles('build/ethereum-supply-accounting');
 await addFiles('build/ethereum-staking-cohort');
 await addFiles('build/ethereum-prospective-ledger');
+await addFiles('build/ethereum-prospective-archive-outcomes');
+// The archive's immutable pages bind its full file inventory. Include every
+// object whose exact bytes are not already represented in the committed seed
+// or current evidence, including older mutable-run checkpoints after restore.
+await addFiles('build/ethereum-prospective-archive',{filter:path=>!path.includes('/objects/')});
 await addFiles('build/asset-forecast-ledger',{filter:path=>path.endsWith('.json')});
 await addFiles('build/asset-outcome-ledger',{filter:path=>path.endsWith('.json')});
+const representedHashes=new Set();
+for(const path of [...scope.seedPaths,...evidencePaths])
+  representedHashes.add(createHash('sha256').update(await readFile(resolve(root,path))).digest('hex'));
+for(const entry of await readdir(resolve(root,'build/ethereum-prospective-archive/objects'),{withFileTypes:true})){
+  if(!entry.isFile()||!/^[a-f0-9]{64}\.blob$/.test(entry.name))throw new Error('Unexpected archive review object');
+  const path='build/ethereum-prospective-archive/objects/'+entry.name;
+  const digest=createHash('sha256').update(await readFile(resolve(root,path))).digest('hex');
+  if(entry.name!==digest+'.blob')throw new Error('Archive object filename differs from its actual bytes');
+  if(!representedHashes.has(digest)){evidencePaths.push(path);representedHashes.add(digest);}
+}
 const manifest=await buildEthReviewPacket({
   repositoryRoot:root,outputDirectory:'build/eth-review-packet',
   baselineCommit:scope.baselineCommit,seedPaths:scope.seedPaths,
   dynamicResolutions:scope.dynamicResolutions,evidencePaths,
-  // 47f2ae58 retained 64,037,165 bytes. The next declared scope also includes
-  // the preserved 801,491-byte supply history and its acquisition receipt,
-  // fixed-cohort raw state captures, and the new capacity/validation sources.
-  // Preserve those exact inputs inside a finite 70 MB resource budget.
+  // 15b5f651 retained 65,085,434 bytes. This declared scope also includes the
+  // committed immutable archive, previously omitted acquisition vintages,
+  // separate restored ETH outcomes, append/restore receipts, and source tests.
+  // Preserve those exact inputs inside a finite 85 MB resource budget.
   // This byte budget does not change model, sample-size or release conditions.
-  maximumBundleBytes:70000000,
+  maximumBundleBytes:85000000,
 });
 await writeFile(resolve(root,'build/eth-review-packet/scope-notes.txt'),scope.scope+'\nScreenshots remain in the separately preserved browser artifact; report.json binds their filenames and hashes. Parsed duplicate economic rows are omitted because the exact CSV and acquisition/coverage receipts are present.\n');
 console.log('ETH_REVIEW_MANIFEST '+JSON.stringify(manifest));

@@ -92,6 +92,40 @@ test('independent ETH outcome metadata is bound to its preserved raw observation
   await assert.rejects(()=>load(directory),/Outcome calibration index metadata mismatch/);
 });
 
+test('relabeling a retained ETH outcome as BMNR or MSTR cannot hide it before raw index validation',async t=>{
+  const directory=await fixture(t),outcomes='research-data/asset-outcome-ledger';
+  const index=JSON.parse(await readFile(join(root,outcomes,'index.json'),'utf8'));
+  const source=index.observations.find(value=>value.symbol==='ETHUSD');
+  await put(directory,outcomes+'/'+source.path,await readFile(join(root,outcomes,source.path),'utf8'));
+  for(const symbol of ['BMNR','MSTR']){
+    await put(directory,outcomes+'/index.json',{...emptyOutcomes,observations:[{...source,symbol}]});
+    await assert.rejects(()=>load(directory),/Outcome calibration index metadata mismatch/);
+  }
+});
+
+test('a relabeled ETH outcome still requires its exact raw file and cannot conceal corrupted observations',async t=>{
+  const directory=await fixture(t),outcomes='research-data/asset-outcome-ledger';
+  const index=JSON.parse(await readFile(join(root,outcomes,'index.json'),'utf8'));
+  const source=index.observations.find(value=>value.symbol==='ETHUSD');
+  await put(directory,outcomes+'/index.json',{...emptyOutcomes,observations:[{...source,symbol:'BMNR'}]});
+  await assert.rejects(()=>load(directory),error=>error.code==='ENOENT');
+  const snapshot=JSON.parse(await readFile(join(root,outcomes,source.path),'utf8'));
+  snapshot.sourceReceipt.collectedAt='2030-01-01T00:00:00.000Z';
+  await put(directory,outcomes+'/'+source.path,snapshot);
+  await assert.rejects(()=>load(directory),/hash|identity|mismatch/i);
+});
+
+test('a genuine non-ETH outcome is verified and inventoried before exclusion from ETH calibration',async t=>{
+  const directory=await fixture(t),outcomes='research-data/asset-outcome-ledger';
+  const index=JSON.parse(await readFile(join(root,outcomes,'index.json'),'utf8'));
+  const source=index.observations.find(value=>value.symbol==='BMNR');
+  assert.ok(source,'The retained multi-asset ledger includes an actual BMNR observation');
+  await put(directory,outcomes+'/'+source.path,await readFile(join(root,outcomes,source.path),'utf8'));
+  await put(directory,outcomes+'/index.json',{...emptyOutcomes,observations:[source]});
+  const loaded=await load(directory);
+  assert.equal(loaded.observations.length,0);assert.ok(loaded.inputFiles[outcomes+'/'+source.path]);
+});
+
 test('an oversized source index fails on its byte limit before JSON decoding',async t=>{
   const directory=await fixture(t);
   await put(directory,'build/ethereum-prospective-ledger/index.json',' '.repeat(1024*1024+1));

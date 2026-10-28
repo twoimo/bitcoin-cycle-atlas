@@ -14,6 +14,8 @@ import {captureEthereumResearchTail} from './ethereum-prospective-collector-core
 import {decideEthereumProspectiveIssue,ETH_PROSPECTIVE_REUSE_POLICY} from './ethereum-prospective-reuse.mjs';
 import {parseEthereumProspectiveArguments} from './ethereum-prospective-options.mjs';
 import {readEthereumCommittedBase,ETH_COMMITTED_BASE_POLICY} from './ethereum-prospective-base.mjs';
+import {readEthereumCalibrationInputs} from './build-ethereum-prospective-calibration-readiness.mjs';
+import {validateEthereumProspectiveWriteBudget} from './ethereum-prospective-write-guard.mjs';
 
 const root=fileURLToPath(new URL('..',import.meta.url)),out=resolve(root,'build/ethereum-prospective-ledger');
 const stored=resolve(root,'research-data/ethereum-prospective-ledger');
@@ -24,7 +26,9 @@ const {verifyOnly,includeWarmStart,modelKeys}=parseEthereumProspectiveArguments(
 const receiptPath=verifyOnly?'replay-receipt.json':'receipt.json';
 const files=new Map(),records=[],snapshots={},committedTransportReferences=new Map();
 const sourcePaths=['scripts/issue-ethereum-prospective.mjs','scripts/ethereum-prospective-collector-core.mjs','scripts/ethereum-prospective-reuse.mjs',
-  'scripts/ethereum-prospective-options.mjs','scripts/ethereum-prospective-base.mjs','dist/ethereum-prospective-dispatch.js','dist/ethereum-warm-start-prospective.js',
+  'scripts/ethereum-prospective-options.mjs','scripts/ethereum-prospective-base.mjs',
+  'scripts/build-ethereum-prospective-calibration-readiness.mjs','scripts/ethereum-prospective-write-guard.mjs',
+  'scripts/ethereum-prospective-calibration-core.mjs','dist/ethereum-prospective-dispatch.js','dist/ethereum-warm-start-prospective.js',
   'dist/ethereum-warm-start-model.js','dist/ethereum-prospective-records.js','dist/ethereum-prospective-prices.js',ETH_PROSPECTIVE_PRICE_POLICY.basePath];
 if(git('status','--porcelain','--',...sourcePaths))throw new Error('Prospective issuer requires committed source and base input');
 const sourceHashes=Object.fromEntries(await Promise.all(sourcePaths.map(async p=>[p,sha(await readFile(resolve(root,p)))])));
@@ -73,6 +77,12 @@ if(includeWarmStart)receipt.selectedModelKeys=[...modelKeys];
 let tail=null,captureSnapshot=null;
 await mkdir(out,{recursive:true});await save(receiptPath,json(receipt),false);
 try{
+  // Restored and retained raw evidence is validated before capture or any new
+  // immutable forecast. The budget is separate from that evidence validation.
+  const retained=await readEthereumCalibrationInputs({repositoryRoot:root});
+  const retainedBudget=validateEthereumProspectiveWriteBudget({records:retained.records,observations:retained.observations});
+  const budgetReceipt=({projectedIndex,projectedIndexText,...receipt})=>receipt;
+  receipt.retainedWriteBudget=budgetReceipt(retainedBudget);
   await loadExisting();await loadExisting(out);receipt.preservedRecords=records.length;
   if(verifyOnly){
     const ledger=await collectForecastModelIdentity(root,'dist/ethereum-prospective-records.js');
@@ -121,11 +131,18 @@ try{
   for(const modelKey of modelKeys){
     const candidate=await createEthereumProspectiveRecord({snapshot:captureSnapshot,forecast:forecasts[modelKey],model:modelFor(modelKey),modelKey,
       generationStartedAt,generatedAt,issuedAt});
+    await verifyEthereumProspectiveRecord(candidate,captureSnapshot);
     const decision=await decideEthereumProspectiveIssue({records,snapshots,candidate,candidateSnapshot:captureSnapshot});
     prepared.push({candidate,decision});decisions.push({modelKey,action:decision.action,id:decision.record.id,runKey:decision.record.runKey,
       attemptedRunKey:candidate.runKey,attemptedSnapshotId:captureSnapshot.id,reusePolicy:decision.reusePolicy,
       consumedInputHash:decision.consumedInputHash,reason:decision.reason,equivalentPreservedIds:decision.equivalentPreservedIds??[]});
   }
+  // A full archive must stop before adding any record, snapshot, observation,
+  // or index. Acquisition attempts retain their own truthful failure receipt.
+  const writeBudget=validateEthereumProspectiveWriteBudget({records:retained.records,observations:retained.observations,
+    additionalRecords:prepared.filter(value=>value.decision.action==='append').map(value=>value.candidate),
+    additionalObservations:[captureSnapshot]});
+  receipt.projectedWriteBudget=budgetReceipt(writeBudget);
   // Validate every selected candidate before the first new immutable record is written.
   for(const {candidate,decision}of prepared){
     if(decision.action==='append'){
@@ -142,8 +159,7 @@ try{
   const warmStartEvaluator=warmLedger?{...warmLedger,version:'eth-warm-start-prospective-evaluator-1'}:undefined;
   const evaluation=await evaluateEthereumProspectiveRecords({records,snapshots,observations:[captureSnapshot],evaluatedAt,evaluator,warmStartEvaluator});
   await save('evaluations/'+evaluation.id+'.json',json(evaluation));
-  const index={schemaVersion:1,kind:'ethereum-prospective-index',entries:records.map(ethereumProspectiveIndexEntry).sort((a,b)=>a.id.localeCompare(b.id))};
-  await save('index.json',json(index),false);
+  await save('index.json',writeBudget.projectedIndexText,false);
   const replay=[];
   for(const {modelKey,action,id}of decisions){
     const record=records.find(r=>r.id===id);

@@ -18,7 +18,7 @@ import {ETH_PROSPECTIVE_CALIBRATION_POLICY,createEthereumProspectiveCalibrationS
 const HEX=/^[a-f0-9]{64}$/,json=canonicalForecastJson;
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const CANDIDATES=['research-data/ethereum-prospective-ledger','build/ethereum-prospective-ledger'];
-const OUTCOMES=['research-data/asset-outcome-ledger','build/asset-outcome-ledger'];
+const OUTCOMES=['research-data/asset-outcome-ledger','build/asset-outcome-ledger','build/ethereum-prospective-archive-outcomes'];
 const ordered=values=>[...values].sort((a,b)=>a.id.localeCompare(b.id));
 
 /** Read both retained seed and current execution evidence. New issuance is not
@@ -97,11 +97,13 @@ export async function readEthereumCalibrationInputs({repositoryRoot}={}){
     if(!input)continue;
     const index=validateAssetOutcomeIndex(input.value);
     for(const entry of index.observations){
-      if(entry.symbol!=='ETHUSD')continue;
-      if(!observations.has(entry.id)&&observations.size>=ETH_PROSPECTIVE_CALIBRATION_POLICY.maximumObservations)throw new Error('Too many merged calibration observations');
       const value=(await read(directory+'/'+entry.path,{canonical:true})).value;
       await verifyAssetOutcomeSnapshot(value);
       if(json(assetOutcomeSnapshotEntry(value))!==json(entry))throw new Error('Outcome calibration index metadata mismatch');
+      // Routing metadata is evidence too: relabeling an ETH entry as another
+      // asset must not hide a bad or missing raw observation from validation.
+      if(value.symbol!=='ETHUSD')continue;
+      if(!observations.has(entry.id)&&observations.size>=ETH_PROSPECTIVE_CALIBRATION_POLICY.maximumObservations)throw new Error('Too many merged calibration observations');
       retain(observations,value,'outcome observation');
     }
   }

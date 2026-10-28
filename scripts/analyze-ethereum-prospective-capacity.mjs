@@ -12,6 +12,8 @@ const json=canonicalForecastJson,sha=bytes=>createHash('sha256').update(bytes).d
 const SOURCES=['scripts/analyze-ethereum-prospective-capacity.mjs','scripts/ethereum-prospective-capacity-core.mjs',
   'scripts/ethereum-prospective-calibration-core.mjs','scripts/build-ethereum-prospective-calibration-readiness.mjs',
   'scripts/ethereum-prospective-base.mjs','scripts/issue-ethereum-prospective.mjs',
+  'scripts/ethereum-prospective-write-guard.mjs','scripts/ethereum-prospective-archive-core.mjs',
+  'scripts/manage-ethereum-prospective-archive.mjs','scripts/ethereum-prospective-archive-remote.mjs',
   'scripts/ethereum-prospective-collector-core.mjs','scripts/evaluate-asset-forecasts.mjs',
   'dist/ethereum-prospective-prices.js','dist/ethereum-prospective-records.js',
   'dist/ethereum-prospective-dispatch.js','dist/asset-outcome-records.js'];
