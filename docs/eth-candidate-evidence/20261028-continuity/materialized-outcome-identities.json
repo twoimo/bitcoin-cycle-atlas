@@ -1,0 +1,14 @@
+[
+  {
+    "path": "research-data/asset-outcome-ledger/observations/f623dbffd6b670fb4ac8903d7387b15d2c5f8cc8c48bb60ba2e6be1f75db27e5.json",
+    "bytes": 100161,
+    "sha256": "3b1360721875970ec848dbc20a22a68150c320d2e48dd081f6c9903634debb3d",
+    "gitBlobSha": "91a56a441fca6f751222acd877e7f68de2198b7a"
+  },
+  {
+    "path": "research-data/asset-outcome-ledger/observations/24ad59d1d0a798e0e16d118707e54cd007b93bd361ebaf3ea354dc4f43c9643f.json",
+    "bytes": 1969036,
+    "sha256": "9e9afd41df0255a780f6f6cb55c0bf4762338b119101ee139133ebd34a451035",
+    "gitBlobSha": "cfebd57206fdefc55bbc617a8a1da1503e11ae5f"
+  }
+]

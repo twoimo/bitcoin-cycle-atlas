@@ -1,0 +1,12 @@
+ETH job log acquisition evidence
+Run: 40626529467
+Job: 122612657695
+Connector: github.fetch_workflow_job_logs
+Three reads returned the same exact error, with a 30-second interval before the third read:
+
+tool call error: tool call failed for `codex_apps/github.fetch_workflow_job_logs`
+
+Caused by:
+    Transport closed
+
+No test counts or raw marker lines were obtained. Final run/job/artifact success is independently recorded from GitHub API metadata in eth-continuity-eth-first-final.json.

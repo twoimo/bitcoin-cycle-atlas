@@ -1,0 +1,185 @@
+{
+  "artifacts": [
+    {
+      "id": 12755309364,
+      "name": "eth-candidate-evidence-4bf84ce345d6468c69dc25c7a7dce50f5703ab6b",
+      "size_in_bytes": 53110121,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12755309364",
+      "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12755309364/zip",
+      "expired": false,
+      "created_at": "2026-10-27T17:48:05Z",
+      "expires_at": "2026-11-26T17:47:59Z",
+      "updated_at": "2026-10-27T17:48:05Z",
+      "digest": "sha256:fd01857628132e67b63784398b5808360ec3a4896a3ffa6070ccf8ab4246905f",
+      "workflow_run": {
+        "id": 40552717736,
+        "repository_id": 1428515198,
+        "head_repository_id": 1428515198,
+        "head_branch": "chatgpt/eth-cycle-economics-20261026",
+        "head_sha": "4bf84ce345d6468c69dc25c7a7dce50f5703ab6b"
+      }
+    }
+  ],
+  "run": {
+    "id": 40552717736,
+    "name": "ETH candidate evidence",
+    "status": "completed",
+    "conclusion": "success",
+    "event": "pull_request",
+    "path": ".github/workflows/eth-model-evaluation.yml",
+    "head_sha": "4bf84ce345d6468c69dc25c7a7dce50f5703ab6b",
+    "head_branch": "chatgpt/eth-cycle-economics-20261026",
+    "run_attempt": 1,
+    "created_at": "2026-10-27T17:39:55Z",
+    "updated_at": "2026-10-27T17:48:09Z",
+    "repositoryId": 1428515198,
+    "headRepositoryId": 1428515198
+  },
+  "committedInputVerification": {
+    "commit": "4bf84ce345d6468c69dc25c7a7dce50f5703ab6b",
+    "tree": "51b459ed978266cd5a0bd993d942e77c1ab85c39",
+    "files": [
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/acquisitions/15e1bdb3ac5757a3f038ee98e801dbd42d72695a8611c7a0543fd56f02dc305a.json",
+        "gitBlobSha": "a325e888e7cb9b407b8481ef37085c22e627617d",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/evaluations/dd53d61de277d64bc39e2942a0bc51bbf6377206da56eac26cee0575f0f1484e.json",
+        "gitBlobSha": "bfdc543a926bef87e59b9248765cb1604f8c1a4f",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/files.json",
+        "gitBlobSha": "10330af3762074b387cbc68bf4e46c11b6736a82",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/index.json",
+        "gitBlobSha": "38dfd02401188aa5aecf8a1ce8d77760a7b5190a",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/issuances/ef872e5a28aa839f4b92f69295e7d3a7d71e6bddd07b4524420c770447ff8190.json",
+        "gitBlobSha": "c21db190f2fabf8b495fb2ad29f22d012dd057ca",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/observations/278fc6046b123011216c7c59e678d6ce152824e82fd7cbc0bb843b7a112e5a36.json",
+        "gitBlobSha": "91f7196e1f0a61142588def01a37c14ca69cc657",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/raw/coinbase-tail-ea8a3b427fad1ec73692eaadadaf92c7fba0a1e38264d2915c312eb2d22a49ae.json",
+        "gitBlobSha": "93a04ef05cf4cdbaf8e0b6dba127ba6a6b439a45",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/receipt.json",
+        "gitBlobSha": "c21db190f2fabf8b495fb2ad29f22d012dd057ca",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/records/563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b.json",
+        "gitBlobSha": "28aee2d90c339465d759f84997ff07cfbd694745",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/records/d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72.json",
+        "gitBlobSha": "0e55aff15405db536335e031704fe60683b53eb5",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/records/f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1.json",
+        "gitBlobSha": "b2693e3ddbd87232b52c14d5cdf3c13e578540d1",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/replay-files.json",
+        "gitBlobSha": "a9028016398919757a9cd59a6374d69fdfe63d35",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/replay-receipt.json",
+        "gitBlobSha": "198a4a4c6c27c95c9c72dbf913e93f217dfe9cee",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+        "gitBlobSha": "15e6fffea29b75ff69c2763f8264823cff0d3115",
+        "matched": true
+      },
+      {
+        "path": "docs/eth-candidate-evidence/20261028-operating-inputs/final-run/ethereum-prospective-ledger/snapshots/da9f0f8abf60398b020501c33aaf33173fa555fcc8919b1d60975abd493d0615.json",
+        "gitBlobSha": "35db04a69508ec8df52e5b71b0d3c03dcf931076",
+        "matched": true
+      },
+      {
+        "path": "research-data/asset-outcome-ledger/index.json",
+        "gitBlobSha": "fb0ec44f7d43ca3649a4cc851437b54e43a5fe95",
+        "matched": true
+      },
+      {
+        "path": "research-data/asset-outcome-ledger/observations/e2e95e803edf9151e6bfc00b509dc124a4f25d0b623df94e00d7fb0d5b289f20.json",
+        "gitBlobSha": "dff5768f85192cb96760e3b0ac6508e4db67b3af",
+        "matched": true
+      },
+      {
+        "path": "research-data/ethereum-prospective-ledger/index.json",
+        "gitBlobSha": "38dfd02401188aa5aecf8a1ce8d77760a7b5190a",
+        "matched": true
+      },
+      {
+        "path": "research-data/ethereum-prospective-ledger/observations/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+        "gitBlobSha": "15e6fffea29b75ff69c2763f8264823cff0d3115",
+        "matched": true
+      },
+      {
+        "path": "research-data/ethereum-prospective-ledger/observations/da9f0f8abf60398b020501c33aaf33173fa555fcc8919b1d60975abd493d0615.json",
+        "gitBlobSha": "35db04a69508ec8df52e5b71b0d3c03dcf931076",
+        "matched": true
+      },
+      {
+        "path": "research-data/ethereum-prospective-ledger/records/563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b.json",
+        "gitBlobSha": "28aee2d90c339465d759f84997ff07cfbd694745",
+        "matched": true
+      },
+      {
+        "path": "research-data/ethereum-prospective-ledger/records/d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72.json",
+        "gitBlobSha": "0e55aff15405db536335e031704fe60683b53eb5",
+        "matched": true
+      },
+      {
+        "path": "research-data/ethereum-prospective-ledger/records/f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1.json",
+        "gitBlobSha": "b2693e3ddbd87232b52c14d5cdf3c13e578540d1",
+        "matched": true
+      },
+      {
+        "path": "research-data/ethereum-prospective-ledger/snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+        "gitBlobSha": "15e6fffea29b75ff69c2763f8264823cff0d3115",
+        "matched": true
+      },
+      {
+        "path": "research-data/ethereum-prospective-ledger/snapshots/da9f0f8abf60398b020501c33aaf33173fa555fcc8919b1d60975abd493d0615.json",
+        "gitBlobSha": "35db04a69508ec8df52e5b71b0d3c03dcf931076",
+        "matched": true
+      }
+    ]
+  },
+  "materializedLocalFiles": [
+    {
+      "path": "research-data/asset-outcome-ledger/observations/f623dbffd6b670fb4ac8903d7387b15d2c5f8cc8c48bb60ba2e6be1f75db27e5.json",
+      "bytes": 100161,
+      "sha256": "3b1360721875970ec848dbc20a22a68150c320d2e48dd081f6c9903634debb3d",
+      "gitBlobSha": "91a56a441fca6f751222acd877e7f68de2198b7a",
+      "gitBlobMatched": true
+    },
+    {
+      "path": "research-data/asset-outcome-ledger/observations/24ad59d1d0a798e0e16d118707e54cd007b93bd361ebaf3ea354dc4f43c9643f.json",
+      "bytes": 1969036,
+      "sha256": "9e9afd41df0255a780f6f6cb55c0bf4762338b119101ee139133ebd34a451035",
+      "gitBlobSha": "cfebd57206fdefc55bbc617a8a1da1503e11ae5f",
+      "gitBlobMatched": true
+    }
+  ]
+}

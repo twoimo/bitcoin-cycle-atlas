@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "kind": "eth-continuity-artifact-verification",
+  "status": "failed",
+  "startedAt": "2026-10-28T03:36:34.018Z",
+  "source": {
+    "expectedCommit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+    "sourceCommit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+    "sourceTree": "48474119d3ed2289adf637c4742d73e5670b1ef9",
+    "suppliedRemoteTreeJsonSha256": "5815aa2f1faa114552d805f7841b8265d051ccfb146863efa65610ed308b9f37",
+    "callerDeclaredCommit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+    "commitToTreeLookupAuthenticatedByThisOfflineVerifier": false,
+    "commitToTreeBoundary": "Caller supplies the remote tree obtained for expectedCommit; offline verification binds all payload blobs to that supplied tree.",
+    "bundleBytes": 77953226,
+    "bundleSha256": "43d0b3da3b28dd78985294fe077028ee6db3165bae59b6945d0dd1d212960dc1",
+    "bundleLimitBytes": 85000000,
+    "parts": 434,
+    "partsConcatenateExactly": true,
+    "frames": 631,
+    "committedFrames": 448,
+    "executionFrames": 183,
+    "sourceAccess": "complete-for-declared-scope",
+    "unresolvedImports": 0,
+    "allFramedPayloadsVerified": true,
+    "allCommittedGitBlobsMatchSuppliedTree": true,
+    "allExecutionFramesMatchExtractedArtifact": true,
+    "sourceBookExternalReviewStatus": "pending",
+    "externalReviewPacketDoesNotOverrideUserOmission": true
+  },
+  "localVerificationSource": {
+    "repositoryRoot": "/workspace/scratch/f88ec447ef8c/bitcoin-cycle-atlas",
+    "files": {
+      "dist/asset-daily-observations.js": {
+        "bytes": 2241,
+        "sha256": "645cdfc751ffe2a4e0ce66a10316fc493d637cd6f74a0d09ea17b4e126367c70",
+        "gitBlobSha": "53b0a767f63d4b958e351be2d7ba934a105f8018"
+      },
+      "dist/asset-forecast-records.js": {
+        "bytes": 25789,
+        "sha256": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2",
+        "gitBlobSha": "c24b372e747e6c670880f5a65609f00c427125a5"
+      },
+      "dist/asset-outcome-records.js": {
+        "bytes": 13190,
+        "sha256": "7fbc8c98eb8fcf78ab43ce5d06a28d16d1a57d9ffcf4ee872b4871ade3177257",
+        "gitBlobSha": "10a6df1761329df45027677aad988a69a9554cf2"
+      },
+      "dist/cycle-engine.js": {
+        "bytes": 14793,
+        "sha256": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+        "gitBlobSha": "2c2ec7a65c261ee7305a8d7f034b3342628eb659"
+      },
+      "dist/data-freshness.js": {
+        "bytes": 8831,
+        "sha256": "10e2348ae352ef19a840002fadc1123f055712312490d958a8559b39e814a0f1",
+        "gitBlobSha": "9e01abe64ebc9d0e88a1373c58fa48548d09db87"
+      },
+      "dist/equity-market-data.js": {
+        "bytes": 7872,
+        "sha256": "7c93eaf2471f354511e3440606cb0ed46b46242803bb7d06e3f06955a2a4cb8d",
+        "gitBlobSha": "68bdb87dc63549bd8a38b655bcc2ae0fb2631578"
+      },
+      "dist/eth-market-data.js": {
+        "bytes": 5558,
+        "sha256": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075",
+        "gitBlobSha": "10676b4efebeaa020577e9f1d37129e02963ec92"
+      },
+      "dist/ethereum-adaptive-model.js": {
+        "bytes": 14143,
+        "sha256": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d",
+        "gitBlobSha": "b91d4a56a9dd653289bf44e95aa2a3ceeb4781a7"
+      },
+      "dist/ethereum-pooled-model.js": {
+        "bytes": 10352,
+        "sha256": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467",
+        "gitBlobSha": "41eff08f89173203e812e1bf73ebf2caad715c8d"
+      },
+      "dist/ethereum-prospective-dispatch.js": {
+        "bytes": 4266,
+        "sha256": "0d94a0574b017b3eefa145006a2ca616babb199f3362f01d7e8e858fb93c5194",
+        "gitBlobSha": "4f89539c3d5875db1df4cff0c38f957ff225f388"
+      },
+      "dist/ethereum-prospective-prices.js": {
+        "bytes": 7221,
+        "sha256": "1541a414cea9c11116d9485a9ff4d26052105cb4e9e0df5a14afcc82ddd8726d",
+        "gitBlobSha": "89a3a7fc089d29261f9ec9aec8c6d25fd7299e8f"
+      },
+      "dist/ethereum-prospective-records.js": {
+        "bytes": 14875,
+        "sha256": "709cb0f968c3f961b7e1089cf79518bfb79b4fe8e7d2042f99f1387a401b734e",
+        "gitBlobSha": "d7df69fc9e16bc5c64136cad5441af5e019d9a68"
+      },
+      "dist/ethereum-warm-start-model.js": {
+        "bytes": 11503,
+        "sha256": "8b01bbf858689225926ae4d6f60fab002797690b0b7fdada772796f65736c0ff",
+        "gitBlobSha": "e9261a340fb4d836fa787a81916dee48a1eb8e9b"
+      },
+      "dist/ethereum-warm-start-prospective.js": {
+        "bytes": 15760,
+        "sha256": "f606daff3b57c0769004a6afe71f005d4bd9cd2a61a0541d775f17a39189af9b",
+        "gitBlobSha": "fa390d344b243911d4210e2b5fcde38ce519eaaf"
+      },
+      "dist/forecast-evaluation.js": {
+        "bytes": 7770,
+        "sha256": "c48123c844c1fbfd454372d0b2ed56817d1fa9e87a6547abeef2d49c145b0ea5",
+        "gitBlobSha": "268ae777bbe5c7f1901b3a4366ec826085707018"
+      },
+      "dist/forecast-information-time.js": {
+        "bytes": 8921,
+        "sha256": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23",
+        "gitBlobSha": "1aa1e2ab5545609f65deaf8fbc7b2a9229387da5"
+      },
+      "dist/forecast-records.js": {
+        "bytes": 20943,
+        "sha256": "c79893f81c6bdff97685e2c384a3d1facc6eec10effdb09346c63749a36ca308",
+        "gitBlobSha": "ed40b61b799b7bd04b2d66ce51b5f485333ed4d0"
+      },
+      "dist/ohlc-data.js": {
+        "bytes": 9968,
+        "sha256": "b2a5104c22b0fced11d747cae9fd7797a876b0c7de4e30492376acae791e7f5d",
+        "gitBlobSha": "977282f651ac5c7b29b5beb9c3c67242ab8aaca7"
+      },
+      "scripts/btc-offline-refresh-policy.mjs": {
+        "bytes": 1722,
+        "sha256": "f8f2a165a3b52ceb47f4b2102d86d82f1141c8c04022a2bf7833979a968b94ff",
+        "gitBlobSha": "ab3c155ab1b61a72597a2114ae75650b171ba857"
+      },
+      "scripts/build-eth-review-packet.mjs": {
+        "bytes": 24942,
+        "sha256": "6cadd1d74b0c79c9ff6a7f0de803bc1cf934e0d07965f12b16ab4bc80ca80f6f",
+        "gitBlobSha": "a2676432943c1d22c11da09b990377e96fa410f8"
+      },
+      "scripts/ethereum-independent-calibration-core.mjs": {
+        "bytes": 12601,
+        "sha256": "ed16303f8a189ac41f0661fbebb9493d3fb139d38e8ba6dcc12704181b6e5e29",
+        "gitBlobSha": "271deb8be414fd534617e7ff63445897cf528086"
+      },
+      "scripts/ethereum-prospective-archive-core.mjs": {
+        "bytes": 24157,
+        "sha256": "370e72f6e2f010f49ae371d0a0729eb7da3fb42a16a4130392e34662962524bd",
+        "gitBlobSha": "65eaae528afc3824a1a132938e3481566e5e3ede"
+      },
+      "scripts/ethereum-prospective-archive-remote.mjs": {
+        "bytes": 34350,
+        "sha256": "47be64ee1d22dc1e6e13f7c7563e5a476716b6deec8d235140846fb8c3b6835e",
+        "gitBlobSha": "7a0202ac0f6d90f4a70019916e0fab9b4be2c6dc"
+      },
+      "scripts/ethereum-prospective-calibration-core.mjs": {
+        "bytes": 21908,
+        "sha256": "8e17ef1be784f0b8687812361f99d31e68b045aefb6cd33f669bbbdd249a87a2",
+        "gitBlobSha": "0bed6145fe749c3c50c8753a9808ca8a5b5203ba"
+      }
+    },
+    "allHelpersMatchRemoteCommittedFrames": true,
+    "gitHeadUsedAsRemoteIdentity": false
+  },
+  "failedStage": "browser-screenshots-and-offline-failures",
+  "finishedAt": "2026-10-28T03:36:35.548Z",
+  "error": {
+    "name": "Error",
+    "message": "ENOENT: no such file or directory, lstat '/workspace/scratch/f88ec447ef8c/bitcoin-cycle-atlas/dist/data/asset-forecast-ledger/index.json'"
+  }
+}

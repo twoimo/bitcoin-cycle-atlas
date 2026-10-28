@@ -1,0 +1,157 @@
+TAP version 13
+# Subtest: real seed restore, actual prior-run append and fresh remote restore preserve original bytes, clocks and independent ETH evidence
+ok 1 - real seed restore, actual prior-run append and fresh remote restore preserve original bytes, clocks and independent ETH evidence
+  ---
+  duration_ms: 23896.494308
+  type: 'test'
+  ...
+# Subtest: filesystem reads reject root, file, directory and ancestor symlinks before following archive evidence
+ok 2 - filesystem reads reject root, file, directory and ancestor symlinks before following archive evidence
+  ---
+  duration_ms: 25.594826
+  type: 'test'
+  ...
+# Subtest: unsafe filesystem names and oversized regular inputs are rejected without accepting an archive
+ok 3 - unsafe filesystem names and oversized regular inputs are rejected without accepting an archive
+  ---
+  duration_ms: 22.914951
+  type: 'test'
+  ...
+# Subtest: write rejects traversal, symlinked parents and conflicting existing destinations while exact retries are idempotent
+ok 4 - write rejects traversal, symlinked parents and conflicting existing destinations while exact retries are idempotent
+  ---
+  duration_ms: 21.99722
+  type: 'test'
+  ...
+# Subtest: all restore destinations are checked before the first archive or ledger promotion
+ok 5 - all restore destinations are checked before the first archive or ledger promotion
+  ---
+  duration_ms: 3006.783963
+  type: 'test'
+  ...
+# Subtest: missing, corrupted and unlisted seed archive files block restoration rather than bootstrap a smaller history
+    # Subtest: missing
+    ok 1 - missing
+      ---
+      duration_ms: 32.718835
+      type: 'test'
+      ...
+    # Subtest: corrupted
+    ok 2 - corrupted
+      ---
+      duration_ms: 36.642037
+      type: 'test'
+      ...
+    # Subtest: unlisted
+    ok 3 - unlisted
+      ---
+      duration_ms: 63.030377
+      type: 'test'
+      ...
+    1..3
+ok 6 - missing, corrupted and unlisted seed archive files block restoration rather than bootstrap a smaller history
+  ---
+  duration_ms: 133.399264
+  type: 'test'
+  ...
+# Subtest: denied, malformed and mismatched remote receipts never turn into an absent-branch seed fallback
+    # Subtest: denied
+    ok 1 - denied
+      ---
+      duration_ms: 995.939447
+      type: 'test'
+      ...
+    # Subtest: malformed
+    ok 2 - malformed
+      ---
+      duration_ms: 1025.116221
+      type: 'test'
+      ...
+    # Subtest: mismatched
+    ok 3 - mismatched
+      ---
+      duration_ms: 1176.415844
+      type: 'test'
+      ...
+    1..3
+ok 7 - denied, malformed and mismatched remote receipts never turn into an absent-branch seed fallback
+  ---
+  duration_ms: 3198.995842
+  type: 'test'
+  ...
+# Subtest: an explicit absent remote may bootstrap the complete committed seed and records that basis
+ok 8 - an explicit absent remote may bootstrap the complete committed seed and records that basis
+  ---
+  duration_ms: 4755.523031
+  type: 'test'
+  ...
+# Subtest: existing remote files require a successful matching receipt and cannot be ignored as seed-only or absent
+    # Subtest: missing-receipt
+    ok 1 - missing-receipt
+      ---
+      duration_ms: 1040.167443
+      type: 'test'
+      ...
+    # Subtest: claimed-absent
+    ok 2 - claimed-absent
+      ---
+      duration_ms: 1040.035391
+      type: 'test'
+      ...
+    # Subtest: missing-files
+    ok 3 - missing-files
+      ---
+      duration_ms: 1021.901398
+      type: 'test'
+      ...
+    1..3
+ok 9 - existing remote files require a successful matching receipt and cannot be ignored as seed-only or absent
+  ---
+  duration_ms: 3103.839403
+  type: 'test'
+  ...
+# Subtest: a modified remote receipt hash is rejected before any archive or ledger is restored
+ok 10 - a modified remote receipt hash is rejected before any archive or ledger is restored
+  ---
+  duration_ms: 1103.494216
+  type: 'test'
+  ...
+# Subtest: a valid independent remote archive must still contain the complete committed seed prefix
+ok 11 - a valid independent remote archive must still contain the complete committed seed prefix
+  ---
+  duration_ms: 1112.363448
+  type: 'test'
+  ...
+# Subtest: a successful old restore receipt cannot authenticate changed working raw evidence
+ok 12 - a successful old restore receipt cannot authenticate changed working raw evidence
+  ---
+  duration_ms: 6624.120269
+  type: 'test'
+  ...
+# Subtest: previous archive storage cannot conceal deletion of a restored observation that is absent from the committed seed
+ok 13 - previous archive storage cannot conceal deletion of a restored observation that is absent from the committed seed
+  ---
+  duration_ms: 9966.526962
+  type: 'test'
+  ...
+# Subtest: mutable restore receipt inventories cannot relabel prior immutable records or observations as new
+ok 14 - mutable restore receipt inventories cannot relabel prior immutable records or observations as new
+  ---
+  duration_ms: 11405.410797
+  type: 'test'
+  ...
+# Subtest: the current restored index still has the unchanged 1 MiB read bound before JSON parsing
+ok 15 - the current restored index still has the unchanged 1 MiB read bound before JSON parsing
+  ---
+  duration_ms: 6472.51688
+  type: 'test'
+  ...
+1..15
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 75020.502647

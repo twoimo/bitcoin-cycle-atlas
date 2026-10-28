@@ -1,0 +1,238 @@
+TAP version 13
+# Subtest: remote restore verifies actual tree and blob bytes and deduplicates identical Git blob reads
+ok 1 - remote restore verifies actual tree and blob bytes and deduplicates identical Git blob reads
+  ---
+  duration_ms: 47.156079
+  type: 'test'
+  ...
+# Subtest: production Git object strategy uses three metadata requests and still rehashes the complete tree
+ok 2 - production Git object strategy uses three metadata requests and still rehashes the complete tree
+  ---
+  duration_ms: 3.07166
+  type: 'test'
+  ...
+# Subtest: Git object strategy cannot use unchanged metadata to accept mutated bytes
+ok 3 - Git object strategy cannot use unchanged metadata to accept mutated bytes
+  ---
+  duration_ms: 4.301714
+  type: 'test'
+  ...
+# Subtest: an explicitly missing data branch is reported without silently restoring a seed
+ok 4 - an explicitly missing data branch is reported without silently restoring a seed
+  ---
+  duration_ms: 1.227579
+  type: 'test'
+  ...
+# Subtest: disk receipt validation binds the compact inventory to every retained transport byte
+ok 5 - disk receipt validation binds the compact inventory to every retained transport byte
+  ---
+  duration_ms: 4.170597
+  type: 'test'
+  ...
+# Subtest: an absent-branch receipt cannot bind seed files as if they came from the remote
+ok 6 - an absent-branch receipt cannot bind seed files as if they came from the remote
+  ---
+  duration_ms: 2.469019
+  type: 'test'
+  ...
+# Subtest: permission failure is not absence and never enables seed fallback
+ok 7 - permission failure is not absence and never enables seed fallback
+  ---
+  duration_ms: 0.763557
+  type: 'test'
+  ...
+# Subtest: a ref 404 plus an inaccessible or private repository does not establish absence
+ok 8 - a ref 404 plus an inaccessible or private repository does not establish absence
+  ---
+  duration_ms: 3.050344
+  type: 'test'
+  ...
+# Subtest: truncated remote trees fail before downloading blobs
+ok 9 - truncated remote trees fail before downloading blobs
+  ---
+  duration_ms: 1.217674
+  type: 'test'
+  ...
+# Subtest: remote tree rejects path traversal
+ok 10 - remote tree rejects path traversal
+  ---
+  duration_ms: 1.166698
+  type: 'test'
+  ...
+# Subtest: remote tree rejects symlink mode
+ok 11 - remote tree rejects symlink mode
+  ---
+  duration_ms: 0.966093
+  type: 'test'
+  ...
+# Subtest: remote tree rejects executable mode
+ok 12 - remote tree rejects executable mode
+  ---
+  duration_ms: 1.486611
+  type: 'test'
+  ...
+# Subtest: remote tree rejects unexpected file
+ok 13 - remote tree rejects unexpected file
+  ---
+  duration_ms: 1.232162
+  type: 'test'
+  ...
+# Subtest: remote tree rejects oversized blob
+ok 14 - remote tree rejects oversized blob
+  ---
+  duration_ms: 1.076659
+  type: 'test'
+  ...
+# Subtest: duplicate remote inventory paths fail before any blob is trusted
+ok 15 - duplicate remote inventory paths fail before any blob is trusted
+  ---
+  duration_ms: 1.052083
+  type: 'test'
+  ...
+# Subtest: wrong blob bytes fail even with the expected returned SHA field
+ok 16 - wrong blob bytes fail even with the expected returned SHA field
+  ---
+  duration_ms: 1.424883
+  type: 'test'
+  ...
+# Subtest: malformed base64 cannot pass through permissive Buffer decoding
+ok 17 - malformed base64 cannot pass through permissive Buffer decoding
+  ---
+  duration_ms: 1.384015
+  type: 'test'
+  ...
+# Subtest: a wrong tree SHA is rejected after individual blob checks
+ok 18 - a wrong tree SHA is rejected after individual blob checks
+  ---
+  duration_ms: 1.444604
+  type: 'test'
+  ...
+# Subtest: response declared length is bounded before body consumption
+ok 19 - response declared length is bounded before body consumption
+  ---
+  duration_ms: 0.58658
+  type: 'test'
+  ...
+# Subtest: an abort-ignoring fetch still reaches the fixed total deadline
+ok 20 - an abort-ignoring fetch still reaches the fixed total deadline
+  ---
+  duration_ms: 6.016239
+  type: 'test'
+  ...
+# Subtest: a response stream that stops producing bytes reaches the deadline
+ok 21 - a response stream that stops producing bytes reaches the deadline
+  ---
+  duration_ms: 3.284162
+  type: 'test'
+  ...
+# Subtest: a stalled error-body cancellation cannot hold the request open
+ok 22 - a stalled error-body cancellation cannot hold the request open
+  ---
+  duration_ms: 0.347834
+  type: 'test'
+  ...
+# Subtest: an absent-branch body with stalled cancellation still requires an accessible repository
+ok 23 - an absent-branch body with stalled cancellation still requires an accessible repository
+  ---
+  duration_ms: 0.608274
+  type: 'test'
+  ...
+# Subtest: validated append publishes only changed blobs with the old archive as its sole parent
+ok 24 - validated append publishes only changed blobs with the old archive as its sole parent
+  ---
+  duration_ms: 7.590359
+  type: 'test'
+  ...
+# Subtest: publisher rejects pull request before using a token
+ok 25 - publisher rejects pull request before using a token
+  ---
+  duration_ms: 2.81536
+  type: 'test'
+  ...
+# Subtest: publisher rejects pull_request_target before using a token
+ok 26 - publisher rejects pull_request_target before using a token
+  ---
+  duration_ms: 4.054986
+  type: 'test'
+  ...
+# Subtest: publisher rejects other repository before using a token
+ok 27 - publisher rejects other repository before using a token
+  ---
+  duration_ms: 2.498995
+  type: 'test'
+  ...
+# Subtest: publisher rejects feature branch before using a token
+ok 28 - publisher rejects feature branch before using a token
+  ---
+  duration_ms: 2.630844
+  type: 'test'
+  ...
+# Subtest: publisher rejects archive branch before using a token
+ok 29 - publisher rejects archive branch before using a token
+  ---
+  duration_ms: 3.376717
+  type: 'test'
+  ...
+# Subtest: a tampered read receipt cannot authorize writes
+ok 30 - a tampered read receipt cannot authorize writes
+  ---
+  duration_ms: 1.97132
+  type: 'test'
+  ...
+# Subtest: a changed archive head rejects a stale append before any object upload
+ok 31 - a changed archive head rejects a stale append before any object upload
+  ---
+  duration_ms: 3.026741
+  type: 'test'
+  ...
+# Subtest: a racing sibling commit is never overwritten by a forced update
+ok 32 - a racing sibling commit is never overwritten by a forced update
+  ---
+  duration_ms: 4.587802
+  type: 'test'
+  ...
+# Subtest: changed old archive bytes fail before network publication
+ok 33 - changed old archive bytes fail before network publication
+  ---
+  duration_ms: 5.962311
+  type: 'test'
+  ...
+# Subtest: a skipped archive generation is not published as a direct append
+ok 34 - a skipped archive generation is not published as a direct append
+  ---
+  duration_ms: 4.466029
+  type: 'test'
+  ...
+# Subtest: an upload response with the wrong blob hash cannot advance the branch
+ok 35 - an upload response with the wrong blob hash cannot advance the branch
+  ---
+  duration_ms: 5.717882
+  type: 'test'
+  ...
+# Subtest: an initial archive is created only from exact committed seed bytes
+ok 36 - an initial archive is created only from exact committed seed bytes
+  ---
+  duration_ms: 7.159366
+  type: 'test'
+  ...
+# Subtest: a different committed seed denies initial branch creation
+ok 37 - a different committed seed denies initial branch creation
+  ---
+  duration_ms: 2.052815
+  type: 'test'
+  ...
+# Subtest: daily workflow has no PR privilege bridge and keeps acquisition failure visible
+ok 38 - daily workflow has no PR privilege bridge and keeps acquisition failure visible
+  ---
+  duration_ms: 4.766571
+  type: 'test'
+  ...
+1..38
+# tests 38
+# suites 0
+# pass 38
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 242.477987

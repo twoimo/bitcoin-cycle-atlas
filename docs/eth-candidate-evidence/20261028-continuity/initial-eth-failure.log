@@ -1,0 +1,694 @@
+﻿2026-10-28T03:15:45.7550829Z Current runner version: '2.338.0'
+2026-10-28T03:15:45.7584991Z ##[group]Runner Image Provisioner
+2026-10-28T03:15:45.7586012Z Hosted Compute Agent
+2026-10-28T03:15:45.7586677Z Version: 20261021.618
+2026-10-28T03:15:45.7588519Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-28T03:15:45.7589846Z Build Date: 2026-10-21T00:45:21Z
+2026-10-28T03:15:45.7590981Z Worker ID: {901b105f-57d3-484b-8e60-0c6605f6efc3}
+2026-10-28T03:15:45.7592114Z Region: eastus
+2026-10-28T03:15:45.7593068Z Cloud: Azure
+2026-10-28T03:15:45.7593920Z ##[endgroup]
+2026-10-28T03:15:45.7596154Z ##[group]Operating System
+2026-10-28T03:15:45.7597210Z Ubuntu
+2026-10-28T03:15:45.7598382Z 26.04.1
+2026-10-28T03:15:45.7599244Z LTS
+2026-10-28T03:15:45.7600185Z ##[endgroup]
+2026-10-28T03:15:45.7601132Z ##[group]Runner Image
+2026-10-28T03:15:45.7602083Z Image: ubuntu-26.04
+2026-10-28T03:15:45.7602767Z Version: 20261012.163.1
+2026-10-28T03:15:45.7604986Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261012.163/images/ubuntu/Ubuntu2604-Readme.md
+2026-10-28T03:15:45.7607987Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261012.163
+2026-10-28T03:15:45.7609687Z ##[endgroup]
+2026-10-28T03:15:45.7611554Z ##[group]GITHUB_TOKEN Permissions
+2026-10-28T03:15:45.7614352Z Contents: read
+2026-10-28T03:15:45.7615285Z Metadata: read
+2026-10-28T03:15:45.7616204Z ##[endgroup]
+2026-10-28T03:15:45.7620136Z Secret source: Actions
+2026-10-28T03:15:45.7621742Z Cache mode: write
+2026-10-28T03:15:45.7622873Z Prepare workflow directory
+2026-10-28T03:15:45.8108858Z Prepare all required actions
+2026-10-28T03:15:45.8180345Z Getting action download info
+2026-10-28T03:15:45.9914823Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-28T03:15:46.1255749Z Download action repository 'actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1' (SHA:949feb2413d6458794dcd2491c4babbbce0c15c1)
+2026-10-28T03:15:46.2880717Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-28T03:15:46.4745291Z Complete job name: evaluate
+2026-10-28T03:15:46.5933207Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-28T03:15:46.5934294Z with:
+2026-10-28T03:15:46.5934743Z   persist-credentials: false
+2026-10-28T03:15:46.5935302Z   ref: a3bd5b2fd110ca90b9c86b6b4c7b6bd6af9c4837
+2026-10-28T03:15:46.5935929Z   repository: twoimo/bitcoin-cycle-atlas
+2026-10-28T03:15:46.5940401Z   token: ***
+2026-10-28T03:15:46.5940838Z   ssh-strict: true
+2026-10-28T03:15:46.5941262Z   ssh-user: git
+2026-10-28T03:15:46.5941675Z   clean: true
+2026-10-28T03:15:46.5942112Z   sparse-checkout-cone-mode: true
+2026-10-28T03:15:46.5942637Z   fetch-depth: 1
+2026-10-28T03:15:46.5943059Z   fetch-tags: false
+2026-10-28T03:15:46.5943488Z   show-progress: true
+2026-10-28T03:15:46.5943933Z   lfs: false
+2026-10-28T03:15:46.5944339Z   submodules: false
+2026-10-28T03:15:46.5944824Z   set-safe-directory: true
+2026-10-28T03:15:46.5945326Z   allow-unsafe-pr-checkout: false
+2026-10-28T03:15:46.5946216Z ##[endgroup]
+2026-10-28T03:15:46.9654942Z Syncing repository: twoimo/bitcoin-cycle-atlas
+2026-10-28T03:15:46.9657080Z ##[group]Getting Git version info
+2026-10-28T03:15:46.9658326Z Working directory is '/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas'
+2026-10-28T03:15:46.9659786Z [command]/usr/bin/git version
+2026-10-28T03:15:46.9688253Z git version 2.55.0
+2026-10-28T03:15:46.9712282Z ##[endgroup]
+2026-10-28T03:15:46.9736830Z Temporarily overriding HOME='/home/runner/work/_temp/79690743-79e3-42b6-a835-d2e43a440536' before making global git config changes
+2026-10-28T03:15:46.9739372Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T03:15:46.9743626Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas
+2026-10-28T03:15:46.9816206Z Deleting the contents of '/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas'
+2026-10-28T03:15:46.9819828Z ##[group]Determining repository object format
+2026-10-28T03:15:46.9821335Z ##[endgroup]
+2026-10-28T03:15:46.9822503Z ##[group]Initializing the repository
+2026-10-28T03:15:46.9826700Z [command]/usr/bin/git init /home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas
+2026-10-28T03:15:47.0055210Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-28T03:15:47.0057244Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-28T03:15:47.0059175Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-28T03:15:47.0060640Z hint: call:
+2026-10-28T03:15:47.0061310Z hint:
+2026-10-28T03:15:47.0062154Z hint: 	git config --global init.defaultBranch <name>
+2026-10-28T03:15:47.0063253Z hint:
+2026-10-28T03:15:47.0064250Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-28T03:15:47.0065858Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-28T03:15:47.0067204Z hint:
+2026-10-28T03:15:47.0068117Z hint: 	git branch -m <name>
+2026-10-28T03:15:47.0068926Z hint:
+2026-10-28T03:15:47.0070026Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-28T03:15:47.0073986Z Initialized empty Git repository in /home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git/
+2026-10-28T03:15:47.0089261Z [command]/usr/bin/git remote add origin https://github.com/twoimo/bitcoin-cycle-atlas
+2026-10-28T03:15:47.0172723Z ##[endgroup]
+2026-10-28T03:15:47.0174144Z ##[group]Disabling automatic garbage collection
+2026-10-28T03:15:47.0176311Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-28T03:15:47.0223515Z ##[endgroup]
+2026-10-28T03:15:47.0225024Z ##[group]Setting up auth
+2026-10-28T03:15:47.0226015Z Removing SSH command configuration
+2026-10-28T03:15:47.0231014Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T03:15:47.0274583Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-28T03:15:47.0844417Z Removing HTTP extra header
+2026-10-28T03:15:47.0851263Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T03:15:47.0898717Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-28T03:15:47.1203340Z Removing includeIf entries pointing to credentials config files
+2026-10-28T03:15:47.1208991Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T03:15:47.1252937Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-28T03:15:47.1584990Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-d72bf880-8411-4fb5-bd13-a4fdaf874caa.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-28T03:15:47.1628662Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git.path /home/runner/work/_temp/git-credentials-d72bf880-8411-4fb5-bd13-a4fdaf874caa.config
+2026-10-28T03:15:47.1663835Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-d72bf880-8411-4fb5-bd13-a4fdaf874caa.config
+2026-10-28T03:15:47.1705049Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-d72bf880-8411-4fb5-bd13-a4fdaf874caa.config
+2026-10-28T03:15:47.1739871Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-d72bf880-8411-4fb5-bd13-a4fdaf874caa.config
+2026-10-28T03:15:47.1772966Z ##[endgroup]
+2026-10-28T03:15:47.1774476Z ##[group]Fetching the repository
+2026-10-28T03:15:47.1781482Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin a3bd5b2fd110ca90b9c86b6b4c7b6bd6af9c4837
+2026-10-28T03:15:50.9195035Z From https://github.com/twoimo/bitcoin-cycle-atlas
+2026-10-28T03:15:50.9197351Z  * branch            a3bd5b2fd110ca90b9c86b6b4c7b6bd6af9c4837 -> FETCH_HEAD
+2026-10-28T03:15:50.9205678Z [command]/usr/bin/git rev-parse --verify --quiet a3bd5b2fd110ca90b9c86b6b4c7b6bd6af9c4837^{object}
+2026-10-28T03:15:50.9237428Z a3bd5b2fd110ca90b9c86b6b4c7b6bd6af9c4837
+2026-10-28T03:15:50.9243549Z ##[endgroup]
+2026-10-28T03:15:50.9244887Z ##[group]Determining the checkout info
+2026-10-28T03:15:50.9246168Z ##[endgroup]
+2026-10-28T03:15:50.9250062Z [command]/usr/bin/git sparse-checkout disable
+2026-10-28T03:15:50.9311494Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-28T03:15:50.9348585Z ##[group]Checking out the ref
+2026-10-28T03:15:50.9353112Z [command]/usr/bin/git checkout --progress --force a3bd5b2fd110ca90b9c86b6b4c7b6bd6af9c4837
+2026-10-28T03:15:51.6142206Z Note: switching to 'a3bd5b2fd110ca90b9c86b6b4c7b6bd6af9c4837'.
+2026-10-28T03:15:51.6143267Z 
+2026-10-28T03:15:51.6143565Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-28T03:15:51.6144294Z changes and commit them, and you can discard any commits you make in this
+2026-10-28T03:15:51.6144933Z state without impacting any branches by switching back to a branch.
+2026-10-28T03:15:51.6145322Z 
+2026-10-28T03:15:51.6145562Z If you want to create a new branch to retain commits you create, you may
+2026-10-28T03:15:51.6146185Z do so (now or later) by using -c with the switch command. Example:
+2026-10-28T03:15:51.6146590Z 
+2026-10-28T03:15:51.6146726Z   git switch -c <new-branch-name>
+2026-10-28T03:15:51.6146960Z 
+2026-10-28T03:15:51.6147100Z Or undo this operation with:
+2026-10-28T03:15:51.6147344Z 
+2026-10-28T03:15:51.6147512Z   git switch -
+2026-10-28T03:15:51.6148008Z 
+2026-10-28T03:15:51.6148742Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-28T03:15:51.6149195Z 
+2026-10-28T03:15:51.6149594Z HEAD is now at a3bd5b2 Preserve ETH prospective evidence across runs with verified archive continuity
+2026-10-28T03:15:51.6181634Z ##[endgroup]
+2026-10-28T03:15:51.6238398Z [command]/usr/bin/git log -1 --format=%H
+2026-10-28T03:15:51.6267183Z a3bd5b2fd110ca90b9c86b6b4c7b6bd6af9c4837
+2026-10-28T03:15:51.6277530Z ##[group]Removing auth
+2026-10-28T03:15:51.6278344Z Removing SSH command configuration
+2026-10-28T03:15:51.6282707Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T03:15:51.6318943Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-28T03:15:51.6622359Z Removing HTTP extra header
+2026-10-28T03:15:51.6626850Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T03:15:51.6664849Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-28T03:15:51.6965857Z Removing includeIf entries pointing to credentials config files
+2026-10-28T03:15:51.6966635Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T03:15:51.6995472Z includeif.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git.path
+2026-10-28T03:15:51.6996552Z includeif.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git/worktrees/*.path
+2026-10-28T03:15:51.6997113Z includeif.gitdir:/github/workspace/.git.path
+2026-10-28T03:15:51.6997493Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-28T03:15:51.7010123Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git.path
+2026-10-28T03:15:51.7037542Z /home/runner/work/_temp/git-credentials-d72bf880-8411-4fb5-bd13-a4fdaf874caa.config
+2026-10-28T03:15:51.7056648Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-d72bf880\-8411\-4fb5\-bd13\-a4fdaf874caa\.config
+2026-10-28T03:15:51.7098938Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git/worktrees/*.path
+2026-10-28T03:15:51.7128879Z /home/runner/work/_temp/git-credentials-d72bf880-8411-4fb5-bd13-a4fdaf874caa.config
+2026-10-28T03:15:51.7140478Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-d72bf880\-8411\-4fb5\-bd13\-a4fdaf874caa\.config
+2026-10-28T03:15:51.7185220Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-28T03:15:51.7216764Z /github/runner_temp/git-credentials-d72bf880-8411-4fb5-bd13-a4fdaf874caa.config
+2026-10-28T03:15:51.7228175Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-d72bf880\-8411\-4fb5\-bd13\-a4fdaf874caa\.config
+2026-10-28T03:15:51.7272625Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-28T03:15:51.7300828Z /github/runner_temp/git-credentials-d72bf880-8411-4fb5-bd13-a4fdaf874caa.config
+2026-10-28T03:15:51.7310703Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-d72bf880\-8411\-4fb5\-bd13\-a4fdaf874caa\.config
+2026-10-28T03:15:51.7350931Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-28T03:15:51.7648588Z Removing credentials config '/home/runner/work/_temp/git-credentials-d72bf880-8411-4fb5-bd13-a4fdaf874caa.config'
+2026-10-28T03:15:51.7658162Z ##[endgroup]
+2026-10-28T03:15:51.8003883Z ##[group]Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+2026-10-28T03:15:51.8004397Z with:
+2026-10-28T03:15:51.8004601Z   node-version: 24
+2026-10-28T03:15:51.8004830Z   package-manager-cache: false
+2026-10-28T03:15:51.8005090Z   check-latest: false
+2026-10-28T03:15:51.8008141Z   token: ***
+2026-10-28T03:15:51.8008380Z ##[endgroup]
+2026-10-28T03:15:51.9469070Z Found in cache @ /opt/hostedtoolcache/node/24.21.0/x64
+2026-10-28T03:15:52.9118274Z ##[group]Environment details
+2026-10-28T03:15:54.8859100Z node: v24.21.0
+2026-10-28T03:15:54.8859411Z npm: 11.19.0
+2026-10-28T03:15:54.8859612Z yarn: 1.22.22
+2026-10-28T03:15:54.8860593Z ##[endgroup]
+2026-10-28T03:15:54.9027093Z ##[group]Run node --check scripts/verify-eth-candidate-browser.mjs
+2026-10-28T03:15:54.9028115Z [36;1mnode --check scripts/verify-eth-candidate-browser.mjs[0m
+2026-10-28T03:15:54.9028582Z [36;1mnode --check scripts/issue-ethereum-prospective.mjs[0m
+2026-10-28T03:15:54.9029018Z [36;1mnode --check scripts/evaluate-ethereum-common-cohort.mjs[0m
+2026-10-28T03:15:54.9029532Z [36;1mnode --check scripts/build-ethereum-economic-evidence-coverage.mjs[0m
+2026-10-28T03:15:54.9030002Z [36;1mnode --check scripts/ethereum-economic-vintages.mjs[0m
+2026-10-28T03:15:54.9030453Z [36;1mnode --check scripts/capture-ethereum-supply-accounting.mjs[0m
+2026-10-28T03:15:54.9030957Z [36;1mnode --check scripts/evaluate-ethereum-independent-calibration.mjs[0m
+2026-10-28T03:15:54.9031513Z [36;1mnode --check scripts/build-ethereum-prospective-calibration-readiness.mjs[0m
+2026-10-28T03:15:54.9032010Z [36;1mnode --check scripts/ethereum-prospective-base.mjs[0m
+2026-10-28T03:15:54.9032489Z [36;1mnode --check scripts/manage-ethereum-prospective-archive.mjs[0m
+2026-10-28T03:15:54.9033236Z [36;1mnode --check scripts/ethereum-prospective-archive-remote.mjs[0m
+2026-10-28T03:15:54.9033747Z [36;1mnode --check scripts/analyze-ethereum-prospective-capacity.mjs[0m
+2026-10-28T03:15:54.9034224Z [36;1mnode --check scripts/analyze-ethereum-supply-resolution.mjs[0m
+2026-10-28T03:15:54.9034674Z [36;1mnode --check scripts/capture-ethereum-staking-cohort.mjs[0m
+2026-10-28T03:15:54.9035582Z [36;1mnode --test tests/ethereum-prospective-base.test.mjs tests/ethereum-prospective-capacity.test.mjs tests/ethereum-supply-resolution.test.mjs tests/ethereum-staking-cohort.test.mjs[0m
+2026-10-28T03:15:54.9037033Z [36;1mnode --test tests/ethereum-prospective-archive.test.mjs tests/ethereum-prospective-archive-io.test.mjs tests/ethereum-prospective-archive-remote.test.mjs tests/ethereum-prospective-write-guard.test.mjs[0m
+2026-10-28T03:15:54.9038585Z [36;1mnode --test tests/ethereum-prospective-calibration.test.mjs tests/ethereum-prospective-calibration-readiness.test.mjs[0m
+2026-10-28T03:15:54.9039803Z [36;1mnode --test tests/ethereum-economic-supply-accounting.test.mjs tests/ethereum-supply-accounting.test.mjs tests/ethereum-economic-vintages.test.mjs tests/ethereum-independent-calibration.test.mjs[0m
+2026-10-28T03:15:54.9041100Z [36;1mnode --test tests/ethereum-common-cohort.test.mjs tests/ethereum-economic-evidence-coverage.test.mjs tests/ethereum-warm-start-prospective.test.mjs[0m
+2026-10-28T03:15:54.9047531Z [36;1mnode --test tests/ethereum-warm-start-model.test.mjs tests/ethereum-source-timing.test.mjs tests/ethereum-btc-link-range.test.mjs tests/ethereum-economic-readiness.test.mjs tests/ethereum-interval-benchmark.test.mjs tests/ethereum-prospective-reuse.test.mjs tests/ethereum-prospective-records.test.mjs tests/ethereum-prospective-collector.test.mjs tests/ethereum-numeric-range.test.mjs tests/ethereum-monte-carlo-stability.test.mjs tests/ethereum-pow-zero.test.mjs tests/ethereum-btc-refresh-status.test.mjs tests/ethereum-offline-refresh-policy.test.mjs tests/ethereum-pooled-model.test.mjs tests/ethereum-interval-comparison.test.mjs tests/ethereum-throughput-supplement.test.mjs tests/eth-future-range.test.mjs tests/ethereum-adaptive-model.test.mjs tests/ethereum-adoption-scenarios.test.mjs tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-economic-ablation.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/eth-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs tests/ethereum-economic-data.test.mjs tests/ethereum-economic-collector.test.mjs tests/asset-forecast-records.test.mjs tests/asset-forecast-collector.test.mjs tests/asset-outcome-records.test.mjs tests/asset-outcome-collector.test.mjs tests/ethereum-historical-gas-source.test.mjs tests/asset-forecast-journal.test.mjs tests/journal-entry-ownership.test.mjs tests/eth-review-packet.test.mjs tests/treasury-model.test.mjs[0m
+2026-10-28T03:15:54.9346938Z shell: /usr/bin/bash -e {0}
+2026-10-28T03:15:54.9347396Z ##[endgroup]
+2026-10-28T03:15:55.7100833Z ✔ exact committed archive selection preserves every original byte and clock (218.055683ms)
+2026-10-28T03:15:55.8625151Z ✔ a reviewed committed rollover keeps the frozen snapshot contract and shortens its next request (157.734667ms)
+2026-10-28T03:15:55.9012600Z ✔ dirty working bytes cannot acquire a clean committed identity (41.460583ms)
+2026-10-28T03:15:55.9340132Z ✔ unsafe paths, symlink mode, or uncertain Git identities cannot select a base (32.439817ms)
+2026-10-28T03:15:55.9707457Z ✔ future acquisition, a future base end, and a different market remain invalid (35.517152ms)
+2026-10-28T03:15:56.0026479Z ✔ empty, oversized, or lossy UTF-8 bytes cannot be accepted as a committed base (35.907974ms)
+2026-10-28T03:15:56.4352600Z ✔ first twelve actual-plus-future calendars retain the strict 30, 90 and 180 day requirements (290.005355ms)
+2026-10-28T03:15:56.4362159Z ✔ a later audit never backfills missed past origin dates or counts hypothetical windows as matured evidence (79.923997ms)
+2026-10-28T03:15:56.4364430Z ✔ capture days follow the same new-origin schedule after a missed day or a much later audit (242.191727ms)
+2026-10-28T03:15:56.4372222Z ✔ same-origin revisions do not create windows and changed model source identities remain separate (65.567845ms)
+2026-10-28T03:15:56.4374245Z ✔ compact index projection exactly reproduces the first byte-bound crossing without generating forecasts (59.304452ms)
+2026-10-28T03:15:56.4412146Z ✔ unchanged base expiry exercises the exact frozen planner boundary while committed replacement stays a separate operation (112.293908ms)
+2026-10-28T03:15:56.4414228Z ✔ each retained same-day acquisition consumes capacity while frequency and independent updates are not presumed (55.945791ms)
+2026-10-28T03:15:56.4416439Z ✔ duplicate acquisitions, unsupported metadata, future clocks and oversized inventories fail instead of improving the projection (1.736428ms)
+2026-10-28T03:15:56.4419043Z ✔ block-style trigger inspection separates market refresh from actual candidate issuance and treats unfamiliar YAML as unknown (1.200212ms)
+2026-10-28T03:15:58.0776466Z ✔ the actual report binds verified raw inventory and source bytes without claiming future samples, historical authenticity or release (1646.02615ms)
+2026-10-28T03:15:58.1088261Z ✔ fixed sample preserves 34/40 ETH effective balances, exact actual balances and all missing economic conditions (8.86848ms)
+2026-10-28T03:15:58.1089985Z ✔ response order is not trusted and exact requested IDs determine the retained order (3.919013ms)
+2026-10-28T03:15:58.1091414Z ✔ HTTP200 with a missing, duplicate, additional or unexpected validator is rejected (4.117395ms)
+2026-10-28T03:15:58.1092682Z ✔ public keys, decimal integers and protocol fields are validated before aggregation (7.25858ms)
+2026-10-28T03:15:58.1093552Z ✔ effective balance can exceed actual balance after losses without being silently corrected (1.531414ms)
+2026-10-28T03:15:58.1094363Z ✔ gwei arithmetic keeps low digits beyond Number safe integer range (1.037336ms)
+2026-10-28T03:15:58.1095089Z ✔ mainnet genesis identity is required and not inferred from the hostname (2.268286ms)
+2026-10-28T03:15:58.1096242Z ✔ header SSZ root binds state and other header fields; provider root lookup is separately bound (2.20158ms)
+2026-10-28T03:15:58.1097601Z ✔ optimistic, unfinalized and noncanonical provider assertions fail closed (5.430669ms)
+2026-10-28T03:15:58.1099307Z ✔ future header clocks and acquisition before the pinned-root request are rejected (2.717509ms)
+2026-10-28T03:15:58.1101004Z ✔ arbitrary endpoints, incomplete responses, invalid UTF8/JSON and oversized bodies are rejected (3.285084ms)
+2026-10-28T03:15:58.1102770Z ✔ earned rewards and completed exit waiting time cannot be inferred from a single status sample (1.421828ms)
+2026-10-28T03:15:58.1104502Z ✔ collector performs only genesis/header/root-pinned validator GETs and preserves all raw bytes (84.380925ms)
+2026-10-28T03:15:58.1106515Z ✔ collector retains actual HTTP failure bytes without retry or invented observations (1.126133ms)
+2026-10-28T03:15:58.1108724Z ✔ oversized streamed data retains only a marked bounded prefix and cannot become an observation (0.802125ms)
+2026-10-28T03:15:58.1110385Z ✔ combined capture byte cap remains bounded across otherwise individually valid responses (0.895851ms)
+2026-10-28T03:15:58.1111827Z ✔ invalid header is rejected before any state-root request is sent (1.343561ms)
+2026-10-28T03:15:58.1113004Z ✔ request timeout aborts once and preserves a failure receipt (11.2617ms)
+2026-10-28T03:15:58.1114209Z ✔ transport budgets cannot be raised or changed to retries or redirects (0.912181ms)
+2026-10-28T03:15:58.1115569Z ✔ complete persisted capture recomputes from all raw files without network calls (2.58995ms)
+2026-10-28T03:15:58.1117036Z ✔ replay rejects altered bytes, accounting, clocks and promoted economic claims (4.559254ms)
+2026-10-28T03:15:58.1119114Z ✔ replay rejects missing or duplicate raw files and actual failed capture receipts (3.670087ms)
+2026-10-28T03:15:58.1121234Z ✔ replay rejects each independently reproduced deadline, byte, request-count and cohort-policy mutation (2.188687ms)
+2026-10-28T03:15:58.1123071Z ✔ capture and replay accept reduced byte/time budgets with exact retained byte boundaries (2.045879ms)
+2026-10-28T03:15:58.1124833Z ✔ replay checks the complete fixed identity and the same allowed transport schema as capture (3.094426ms)
+2026-10-28T03:15:58.1126664Z ✔ replay budgets body EOF against both request and total deadlines, with consistent declared deadlines (2.660682ms)
+2026-10-28T03:15:58.1129008Z ✔ local hashing, observation processing and replay after the network deadline do not invalidate timely body EOF (1.767897ms)
+2026-10-28T03:15:58.1130779Z ✔ a signal-respecting stalled body aborts once and preserves its partial bytes on disk (17.379188ms)
+2026-10-28T03:15:58.1132240Z ✔ 960-slot epoch grid conditionally cannot label UTC boundary stocks (6.565689ms)
+2026-10-28T03:15:58.1133544Z ✔ even individual whole-epoch end stocks retain the UTC mismatch (0.546245ms)
+2026-10-28T03:15:58.1134967Z ✔ single-slot capability does not imply full historical flow availability (0.289393ms)
+2026-10-28T03:15:58.1136403Z ✔ a deliberately shifted synthetic grid exactly aligns both UTC stocks (0.844735ms)
+2026-10-28T03:15:58.1138135Z ✔ currently absent grid alignment may occur on another UTC day (0.609694ms)
+2026-10-28T03:15:58.1139527Z ✔ irregular bucket widths do not establish a persistent grid (1.727572ms)
+2026-10-28T03:15:58.1140897Z ✔ mixed interior label offsets do not become an end-stock grid (1.23123ms)
+2026-10-28T03:15:58.1142328Z ✔ a single observed bucket does not establish a repeated grid (0.210375ms)
+2026-10-28T03:15:58.1143858Z ✔ row overlap, reversed ordering and out-of-range labels are rejected (0.987392ms)
+2026-10-28T03:15:58.1145391Z ✔ slot, epoch and explicit endpoint clocks bind the original row (1.089624ms)
+2026-10-28T03:15:58.1146733Z ✔ past labels cannot hide coverage after actual collection (0.354976ms)
+2026-10-28T03:15:58.1148408Z ✔ unfinished requested days and excessive provider clocks are rejected (0.530645ms)
+2026-10-28T03:15:58.1150275Z ✔ partial, recovery and delta histories cannot masquerade as standalone snapshots (0.718729ms)
+2026-10-28T03:15:58.1151864Z ✔ missing raw rows and malformed stock values never become zeros (0.797868ms)
+2026-10-28T03:15:58.1153184Z ✔ pure geometry analysis leaves supplied rows unchanged (1.571939ms)
+2026-10-28T03:15:58.1154509Z ✔ loader replays original bound bytes and original clocks with no network (25.759009ms)
+2026-10-28T03:15:58.1156083Z ✔ audited receipt with missing raw file is invalid evidence, not an empty observation (6.743747ms)
+2026-10-28T03:15:58.1157642Z ✔ changed bytes, wrong digest and reordered acquisition clocks are rejected (9.468205ms)
+2026-10-28T03:15:58.1159122Z ✔ failed acquisition remains unavailable and cannot produce a grid diagnosis (7.762687ms)
+2026-10-28T03:15:58.1160115Z ✔ future capture and source-path escape cannot supply current evidence (6.375473ms)
+2026-10-28T03:15:58.1160806Z ✔ symlinked raw evidence is rejected even when its bytes match (4.881709ms)
+2026-10-28T03:15:58.1161466Z ✔ capture-root symlinks cannot redirect directory discovery (3.232926ms)
+2026-10-28T03:15:58.1161875Z ℹ tests 66
+2026-10-28T03:15:58.1162083Z ℹ suites 0
+2026-10-28T03:15:58.1162280Z ℹ pass 66
+2026-10-28T03:15:58.1162676Z ℹ fail 0
+2026-10-28T03:15:58.1163104Z ℹ cancelled 0
+2026-10-28T03:15:58.1163555Z ℹ skipped 0
+2026-10-28T03:15:58.1163951Z ℹ todo 0
+2026-10-28T03:15:58.1164422Z ℹ duration_ms 2736.149881
+2026-10-28T03:15:58.6572378Z ✖ real seed restore, actual prior-run append and fresh remote restore preserve original bytes, clocks and independent ETH evidence (352.130382ms)
+2026-10-28T03:15:58.6829846Z ✖ filesystem reads reject root, file, directory and ancestor symlinks before following archive evidence (27.353486ms)
+2026-10-28T03:15:58.7422856Z ✔ unsafe filesystem names and oversized regular inputs are rejected without accepting an archive (58.336382ms)
+2026-10-28T03:15:58.7689030Z ✔ write rejects traversal, symlinked parents and conflicting existing destinations while exact retries are idempotent (26.309896ms)
+2026-10-28T03:15:58.7935712Z ✖ all restore destinations are checked before the first archive or ledger promotion (24.009822ms)
+2026-10-28T03:15:58.8174583Z ▶ missing, corrupted and unlisted seed archive files block restoration rather than bootstrap a smaller history
+2026-10-28T03:15:58.8203706Z   ✖ missing (23.263677ms)
+2026-10-28T03:15:58.8428734Z   ✖ corrupted (26.917926ms)
+2026-10-28T03:15:58.8761696Z   ✖ unlisted (30.081072ms)
+2026-10-28T03:15:58.8790707Z ✖ missing, corrupted and unlisted seed archive files block restoration rather than bootstrap a smaller history (81.90101ms)
+2026-10-28T03:15:58.9105355Z ▶ denied, malformed and mismatched remote receipts never turn into an absent-branch seed fallback
+2026-10-28T03:15:58.9106708Z   ✖ denied (34.765721ms)
+2026-10-28T03:15:58.9388702Z   ✖ malformed (28.624438ms)
+2026-10-28T03:15:58.9570026Z   ✖ mismatched (17.814265ms)
+2026-10-28T03:15:58.9575253Z ✖ denied, malformed and mismatched remote receipts never turn into an absent-branch seed fallback (82.57728ms)
+2026-10-28T03:15:58.9770192Z ✖ an explicit absent remote may bootstrap the complete committed seed and records that basis (19.581582ms)
+2026-10-28T03:15:58.9948245Z ▶ existing remote files require a successful matching receipt and cannot be ignored as seed-only or absent
+2026-10-28T03:15:58.9950355Z   ✖ missing-receipt (17.447427ms)
+2026-10-28T03:15:59.0226337Z   ✖ claimed-absent (25.712284ms)
+2026-10-28T03:15:59.0395725Z   ✖ missing-files (19.122803ms)
+2026-10-28T03:15:59.0402844Z ✖ existing remote files require a successful matching receipt and cannot be ignored as seed-only or absent (63.299452ms)
+2026-10-28T03:15:59.0567437Z ✖ a modified remote receipt hash is rejected before any archive or ledger is restored (16.064192ms)
+2026-10-28T03:15:59.0793305Z ✖ a valid independent remote archive must still contain the complete committed seed prefix (23.015767ms)
+2026-10-28T03:15:59.0992371Z ✖ a successful old restore receipt cannot authenticate changed working raw evidence (19.838371ms)
+2026-10-28T03:15:59.1225398Z ✖ previous archive storage cannot conceal deletion of a restored observation that is absent from the committed seed (23.098502ms)
+2026-10-28T03:15:59.1597060Z ✖ mutable restore receipt inventories cannot relabel prior immutable records or observations as new (37.175282ms)
+2026-10-28T03:15:59.1797356Z ✖ the current restored index still has the unchanged 1 MiB read bound before JSON parsing (20.126742ms)
+2026-10-28T03:15:59.1996916Z ✔ remote restore verifies actual tree and blob bytes and deduplicates identical Git blob reads (75.576552ms)
+2026-10-28T03:15:59.1999522Z ✔ production Git object strategy uses three metadata requests and still rehashes the complete tree (4.672657ms)
+2026-10-28T03:15:59.2001482Z ✔ Git object strategy cannot use unchanged metadata to accept mutated bytes (4.611843ms)
+2026-10-28T03:15:59.2003605Z ✔ an explicitly missing data branch is reported without silently restoring a seed (1.071671ms)
+2026-10-28T03:15:59.2005551Z ✔ disk receipt validation binds the compact inventory to every retained transport byte (4.103322ms)
+2026-10-28T03:15:59.2006757Z ✔ an absent-branch receipt cannot bind seed files as if they came from the remote (1.361365ms)
+2026-10-28T03:15:59.2008355Z ✔ permission failure is not absence and never enables seed fallback (0.746491ms)
+2026-10-28T03:15:59.2009897Z ✔ a ref 404 plus an inaccessible or private repository does not establish absence (1.544799ms)
+2026-10-28T03:15:59.2011498Z ✔ truncated remote trees fail before downloading blobs (1.705107ms)
+2026-10-28T03:15:59.2012720Z ✔ remote tree rejects path traversal (1.789157ms)
+2026-10-28T03:15:59.2013729Z ✔ remote tree rejects symlink mode (1.111475ms)
+2026-10-28T03:15:59.2014716Z ✔ remote tree rejects executable mode (1.360012ms)
+2026-10-28T03:15:59.2015724Z ✔ remote tree rejects unexpected file (1.033051ms)
+2026-10-28T03:15:59.2016735Z ✔ remote tree rejects oversized blob (1.197006ms)
+2026-10-28T03:15:59.2018373Z ✔ duplicate remote inventory paths fail before any blob is trusted (1.067794ms)
+2026-10-28T03:15:59.2020278Z ✔ wrong blob bytes fail even with the expected returned SHA field (1.783687ms)
+2026-10-28T03:15:59.2021685Z ✔ malformed base64 cannot pass through permissive Buffer decoding (1.88097ms)
+2026-10-28T03:15:59.2023066Z ✔ a wrong tree SHA is rejected after individual blob checks (2.560344ms)
+2026-10-28T03:15:59.2024404Z ✔ response declared length is bounded before body consumption (0.738946ms)
+2026-10-28T03:15:59.2025807Z ✔ an abort-ignoring fetch still reaches the fixed total deadline (18.667398ms)
+2026-10-28T03:15:59.2027228Z ✔ a response stream that stops producing bytes reaches the deadline (4.390167ms)
+2026-10-28T03:15:59.2028804Z ✔ a stalled error-body cancellation cannot hold the request open (0.670518ms)
+2026-10-28T03:15:59.2030424Z ✔ an absent-branch body with stalled cancellation still requires an accessible repository (0.73592ms)
+2026-10-28T03:15:59.2032175Z ✔ validated append publishes only changed blobs with the old archive as its sole parent (9.762749ms)
+2026-10-28T03:15:59.2033634Z ✔ publisher rejects pull request before using a token (2.561507ms)
+2026-10-28T03:15:59.2035000Z ✔ publisher rejects pull_request_target before using a token (2.745261ms)
+2026-10-28T03:15:59.2036552Z ✔ publisher rejects other repository before using a token (2.779856ms)
+2026-10-28T03:15:59.2038144Z ✔ publisher rejects feature branch before using a token (2.456759ms)
+2026-10-28T03:15:59.2039578Z ✔ publisher rejects archive branch before using a token (3.640101ms)
+2026-10-28T03:15:59.2040828Z ✔ a tampered read receipt cannot authorize writes (2.798952ms)
+2026-10-28T03:15:59.2042252Z ✔ a changed archive head rejects a stale append before any object upload (5.237347ms)
+2026-10-28T03:15:59.2043680Z ✔ a racing sibling commit is never overwritten by a forced update (7.53567ms)
+2026-10-28T03:15:59.2045040Z ✔ changed old archive bytes fail before network publication (5.956958ms)
+2026-10-28T03:15:59.2046440Z ✔ a skipped archive generation is not published as a direct append (7.852054ms)
+2026-10-28T03:15:59.2048140Z ✔ an upload response with the wrong blob hash cannot advance the branch (7.700058ms)
+2026-10-28T03:15:59.2049612Z ✔ an initial archive is created only from exact committed seed bytes (7.44634ms)
+2026-10-28T03:15:59.2050960Z ✔ a different committed seed denies initial branch creation (2.430611ms)
+2026-10-28T03:15:59.2052475Z ✔ daily workflow has no PR privilege bridge and keeps acquisition failure visible (11.761462ms)
+2026-10-28T03:15:59.3136321Z ✔ archive restores the exact original issued bytes, identity, clocks and 731 points (89.838202ms)
+2026-10-28T03:15:59.3138985Z ✔ snapshot and observation logical paths share one exact object without losing either inventory entry (74.633371ms)
+2026-10-28T03:15:59.3141451Z ✔ a later acquisition appends exact previous manifests, pages and objects without replacing the original index checkpoint (426.494808ms)
+2026-10-28T03:15:59.3143998Z ✔ a repeat capture preserves inventory while recording a linked execution manifest (184.063731ms)
+2026-10-28T03:15:59.5465219Z ✔ independent ETH raw outcomes restore to the existing outcome-index format (225.958569ms)
+2026-10-28T03:15:59.5467318Z ✔ unknown traversal absolute backslash and control-character logical paths are rejected (1.451253ms)
+2026-10-28T03:15:59.6088328Z ✔ same immutable path with changed bytes cannot be appended under a prior archive (64.485756ms)
+2026-10-28T03:15:59.6090466Z ✔ a missing object blocks restoration even when every manifest is intact (1.026476ms)
+2026-10-28T03:15:59.6092276Z ✔ one changed raw byte and a forged cached success flag cannot bypass verification (0.784261ms)
+2026-10-28T03:15:59.7733451Z ✔ missing ancestor and unrelated extra transport files both block restoration (160.817405ms)
+2026-10-28T03:15:59.8192996Z ✔ altered sequence predecessor clock policy and summary cannot be legitimized by rehashing the manifest (48.526321ms)
+2026-10-28T03:15:59.9544939Z ✔ an archive cannot drop a previous page and still call itself a later generation (132.968199ms)
+2026-10-28T03:16:00.0470427Z ✔ a later generation cannot retroactively supply an ancestor record snapshot or index reference (93.721102ms)
+2026-10-28T03:16:00.0964624Z ✔ cross-page references are valid when every dependency arrives in the same generation (45.690129ms)
+2026-10-28T03:16:00.0967083Z ✔ duplicate logical paths fail even when the page and manifest are rehashed (1.644215ms)
+2026-10-28T03:16:00.0969893Z ✔ forged object byte count and Git blob identity are independently rejected (1.811689ms)
+2026-10-28T03:16:00.1860513Z ✔ index checkpoint cannot rename a record origin or point outside the archive (89.907364ms)
+2026-10-28T03:16:00.3208460Z ✔ historical subset indexes are retained while the restored index contains every verified record (135.180411ms)
+2026-10-28T03:16:00.3374763Z ✔ missing record snapshots fail before an archive checkpoint is issued (14.891732ms)
+2026-10-28T03:16:00.3783334Z ✔ modified record routing metadata cannot hide behind a recomputed object digest (40.93149ms)
+2026-10-28T03:16:00.4247145Z ✔ observation filenames and semantic clocks remain validated independently of archive hashes (46.375811ms)
+2026-10-28T03:16:00.4249189Z ✔ noncanonical immutable JSON and non-UTF-8 bytes cannot enter a valid archive (3.586309ms)
+2026-10-28T03:16:00.4254587Z ✔ raw Coinbase bodies retain their exact whitespace and fail when their filename digest disagrees (1.423631ms)
+2026-10-28T03:16:00.4319136Z ✔ acquisition and issuance filenames must match canonical receipt identities (2.347004ms)
+2026-10-28T03:16:00.4321242Z ✔ complete failed HTTP text is retained byte-for-byte without treating malformed JSON as an observation (1.026196ms)
+2026-10-28T03:16:00.5827214Z ✔ captured caller maps and Buffers cannot race an asynchronous semantic validation (134.675345ms)
+2026-10-28T03:16:00.5829290Z ✔ per-file and record byte bounds fail before parsing untrusted evidence (6.895217ms)
+2026-10-28T03:16:00.5839923Z ✔ inventory pages split at the finite descriptor bound and restore all checkpoint bytes in the archive (12.655586ms)
+2026-10-28T03:16:01.6228584Z ✔ 501 valid actual-format observations remain archived but cannot be silently pruned into a 500-observation working set (1040.265807ms)
+2026-10-28T03:16:01.6450562Z ✔ the proposed index uses every unique record, deterministic ID order and exact canonical UTF-8 bytes with LF (20.045744ms)
+2026-10-28T03:16:01.6453116Z ✔ identical seed/build and proposed duplicates consume capacity once without changing the original issue (0.827413ms)
+2026-10-28T03:16:01.6457633Z ✔ a repeated immutable ID cannot hide changed payload even when projected index metadata is identical (1.042026ms)
+2026-10-28T03:16:01.6459122Z ✔ different immutable IDs for one run are rejected across retained and proposed inventories (0.482515ms)
+2026-10-28T03:16:01.6460716Z ✔ the merged record count is bounded before writing and cannot reset in the additional list (104.545278ms)
+2026-10-28T03:16:01.6462623Z ✔ all 500 prospective and independent ETH observations share one unchanged capacity (8.464045ms)
+2026-10-28T03:16:01.6464093Z ✔ a same-ID prospective/independent collision is a conflict, not capacity deduplication (0.36248ms)
+2026-10-28T03:16:01.6465276Z ✔ exactly 1 MiB of canonical index bytes is accepted and one extra byte is blocked (107.347138ms)
+2026-10-28T03:16:01.6466307Z ✔ byte accounting includes multibyte model-version characters and is detached from caller mutation (1.569445ms)
+2026-10-28T03:16:01.6468823Z ✔ malformed identity, unsupported asset, invalid origin and unbounded supplied duplicates fail explicitly (1.130361ms)
+2026-10-28T03:16:01.6470440Z ✔ actual original records pass separate immutable raw validation before capacity checking without new issue clocks (744.44628ms)
+2026-10-28T03:16:01.6471350Z ℹ tests 102
+2026-10-28T03:16:01.6471565Z ℹ suites 0
+2026-10-28T03:16:01.6471769Z ℹ pass 80
+2026-10-28T03:16:01.6471969Z ℹ fail 22
+2026-10-28T03:16:01.6472164Z ℹ cancelled 0
+2026-10-28T03:16:01.6472396Z ℹ skipped 0
+2026-10-28T03:16:01.6472596Z ℹ todo 0
+2026-10-28T03:16:01.6473079Z ℹ duration_ms 3496.013471
+2026-10-28T03:16:01.6533046Z 
+2026-10-28T03:16:01.6533423Z ✖ failing tests:
+2026-10-28T03:16:01.6533667Z 
+2026-10-28T03:16:01.6534115Z test at tests/ethereum-prospective-archive-io.test.mjs:71:1
+2026-10-28T03:16:01.6535724Z ✖ real seed restore, actual prior-run append and fresh remote restore preserve original bytes, clocks and independent ETH evidence (352.130382ms)
+2026-10-28T03:16:01.6537029Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6538580Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6540597Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6541729Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6542764Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6543900Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6544924Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6545861Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6546473Z 
+2026-10-28T03:16:01.6546927Z test at tests/ethereum-prospective-archive-io.test.mjs:101:1
+2026-10-28T03:16:01.6548817Z ✖ filesystem reads reject root, file, directory and ancestor symlinks before following archive evidence (27.353486ms)
+2026-10-28T03:16:01.6550047Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6551441Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6553565Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6555046Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6556057Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6557202Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6558642Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6559468Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6559845Z 
+2026-10-28T03:16:01.6560128Z test at tests/ethereum-prospective-archive-io.test.mjs:136:1
+2026-10-28T03:16:01.6560981Z ✖ all restore destinations are checked before the first archive or ledger promotion (24.009822ms)
+2026-10-28T03:16:01.6561664Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6562569Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6563775Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6564906Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6566001Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6567203Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6568537Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6569097Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6569450Z 
+2026-10-28T03:16:01.6569721Z test at tests/ethereum-prospective-archive-io.test.mjs:145:64
+2026-10-28T03:16:01.6570225Z ✖ missing (23.263677ms)
+2026-10-28T03:16:01.6570626Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6571801Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6572998Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6574559Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6575682Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6576840Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6577622Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6579363Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6579712Z 
+2026-10-28T03:16:01.6579981Z test at tests/ethereum-prospective-archive-io.test.mjs:145:64
+2026-10-28T03:16:01.6580438Z ✖ corrupted (26.917926ms)
+2026-10-28T03:16:01.6580803Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6581590Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6582737Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6583927Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6584925Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6586035Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6586813Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6587511Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6588256Z 
+2026-10-28T03:16:01.6588520Z test at tests/ethereum-prospective-archive-io.test.mjs:145:64
+2026-10-28T03:16:01.6588958Z ✖ unlisted (30.081072ms)
+2026-10-28T03:16:01.6589312Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6590091Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6591236Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6592315Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6593320Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6594451Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6595555Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6596072Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6596406Z 
+2026-10-28T03:16:01.6596647Z test at tests/ethereum-prospective-archive-io.test.mjs:156:65
+2026-10-28T03:16:01.6597048Z ✖ denied (34.765721ms)
+2026-10-28T03:16:01.6597379Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6598482Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6599605Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6600689Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6601752Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6602887Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6603661Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6604168Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6604495Z 
+2026-10-28T03:16:01.6604731Z test at tests/ethereum-prospective-archive-io.test.mjs:156:65
+2026-10-28T03:16:01.6605172Z ✖ malformed (28.624438ms)
+2026-10-28T03:16:01.6605522Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6606270Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6607395Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6608759Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6609795Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6610933Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6611883Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6612397Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6612728Z 
+2026-10-28T03:16:01.6613367Z test at tests/ethereum-prospective-archive-io.test.mjs:156:65
+2026-10-28T03:16:01.6613860Z ✖ mismatched (17.814265ms)
+2026-10-28T03:16:01.6614210Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6615790Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6617160Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6619249Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6620454Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6621613Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6622679Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6623197Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6623531Z 
+2026-10-28T03:16:01.6623781Z test at tests/ethereum-prospective-archive-io.test.mjs:169:1
+2026-10-28T03:16:01.6624585Z ✖ an explicit absent remote may bootstrap the complete committed seed and records that basis (19.581582ms)
+2026-10-28T03:16:01.6625201Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6625952Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6627069Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6628449Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6629484Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6630598Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6631385Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6631892Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6632219Z 
+2026-10-28T03:16:01.6632466Z test at tests/ethereum-prospective-archive-io.test.mjs:177:82
+2026-10-28T03:16:01.6632921Z ✖ missing-receipt (17.447427ms)
+2026-10-28T03:16:01.6633284Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6634045Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6635177Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6636249Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6637260Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6638613Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6639385Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6639890Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6640215Z 
+2026-10-28T03:16:01.6640607Z test at tests/ethereum-prospective-archive-io.test.mjs:177:82
+2026-10-28T03:16:01.6641075Z ✖ claimed-absent (25.712284ms)
+2026-10-28T03:16:01.6641438Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6642182Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6643291Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6644365Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6645361Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6646474Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6647381Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6648197Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6648536Z 
+2026-10-28T03:16:01.6648793Z test at tests/ethereum-prospective-archive-io.test.mjs:177:82
+2026-10-28T03:16:01.6649227Z ✖ missing-files (19.122803ms)
+2026-10-28T03:16:01.6649583Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6650343Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6651460Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6652538Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6653546Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6654662Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6655436Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6655942Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6656271Z 
+2026-10-28T03:16:01.6656511Z test at tests/ethereum-prospective-archive-io.test.mjs:187:1
+2026-10-28T03:16:01.6657224Z ✖ a modified remote receipt hash is rejected before any archive or ledger is restored (16.064192ms)
+2026-10-28T03:16:01.6658007Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6658964Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6660094Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6661164Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6662159Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6663268Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6664035Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6664548Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6665160Z 
+2026-10-28T03:16:01.6665416Z test at tests/ethereum-prospective-archive-io.test.mjs:196:1
+2026-10-28T03:16:01.6666179Z ✖ a valid independent remote archive must still contain the complete committed seed prefix (23.015767ms)
+2026-10-28T03:16:01.6666772Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6667513Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6669641Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6670933Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6672111Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6673464Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6674572Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6675286Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6675634Z 
+2026-10-28T03:16:01.6675986Z test at tests/ethereum-prospective-archive-io.test.mjs:206:1
+2026-10-28T03:16:01.6676795Z ✖ a successful old restore receipt cannot authenticate changed working raw evidence (19.838371ms)
+2026-10-28T03:16:01.6677553Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6680984Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6682309Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6683563Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6684733Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6686012Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6687014Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6687532Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6688158Z 
+2026-10-28T03:16:01.6688420Z test at tests/ethereum-prospective-archive-io.test.mjs:215:1
+2026-10-28T03:16:01.6689500Z ✖ previous archive storage cannot conceal deletion of a restored observation that is absent from the committed seed (23.098502ms)
+2026-10-28T03:16:01.6690333Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6691151Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6692455Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6693757Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6694896Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6696261Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6697313Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6698107Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6698619Z 
+2026-10-28T03:16:01.6698884Z test at tests/ethereum-prospective-archive-io.test.mjs:226:1
+2026-10-28T03:16:01.6699860Z ✖ mutable restore receipt inventories cannot relabel prior immutable records or observations as new (37.175282ms)
+2026-10-28T03:16:01.6700545Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6701457Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6702747Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6703991Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6705154Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6706784Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6707753Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6708450Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6708786Z 
+2026-10-28T03:16:01.6709028Z test at tests/ethereum-prospective-archive-io.test.mjs:237:1
+2026-10-28T03:16:01.6709990Z ✖ the current restored index still has the unchanged 1 MiB read bound before JSON parsing (20.126742ms)
+2026-10-28T03:16:01.6710755Z   TypeError: Unexpected archive logical path acquisition.json
+2026-10-28T03:16:01.6711614Z       at category (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:56:9)
+2026-10-28T03:16:01.6712954Z       at buildEthereumProspectiveArchive (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/ethereum-prospective-archive-core.mjs:271:16)
+2026-10-28T03:16:01.6714213Z       at file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:59:12
+2026-10-28T03:16:01.6715371Z       at async fixture (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:64:53)
+2026-10-28T03:16:01.6716645Z       at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/ethereum-prospective-archive-io.test.mjs:72:15)
+2026-10-28T03:16:01.6717539Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-28T03:16:01.6718196Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+2026-10-28T03:16:01.6734708Z ##[error]Process completed with exit code 1.
+2026-10-28T03:16:01.6995614Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-28T03:16:01.6996257Z with:
+2026-10-28T03:16:01.6996602Z   name: eth-candidate-evidence-a3bd5b2fd110ca90b9c86b6b4c7b6bd6af9c4837
+2026-10-28T03:16:01.7002351Z   path: build/ethereum-model-readiness.json
+build/ethereum-source-timing.json
+build/ethereum-interval-controls.json
+build/ethereum-warm-start.json
+build/ethereum-common-cohort.json
+build/ethereum-economic-evidence-coverage.json
+build/ethereum-economic-vintages
+build/ethereum-supply-accounting
+build/ethereum-supply-resolution.json
+build/ethereum-staking-cohort
+build/ethereum-independent-calibration.json
+build/ethereum-prospective-calibration-readiness.json
+build/ethereum-prospective-capacity.json
+build/ethereum-prospective-ledger
+build/ethereum-prospective-archive
+build/ethereum-prospective-archive-outcomes
+build/ethereum-prospective-archive-remote-receipt.json
+build/ethereum-prospective-archive-restore.json
+build/ethereum-prospective-archive-append.json
+build/ethereum-prospective-archive-verify.json
+build/ethereum-monte-carlo-stability.json
+build/ethereum-pooled-research.json
+build/ethereum-throughput-supplement
+build/ethereum-pow-zero
+build/ethereum-adaptive-research.json
+build/ethereum-model-comparison.json
+build/ethereum-economic-ablation.json
+build/ethereum-economic-data
+build/asset-forecast-ledger
+build/asset-outcome-ledger
+build/eth-review-packet
+build/eth-browser
+
+2026-10-28T03:16:01.7008170Z   if-no-files-found: error
+2026-10-28T03:16:01.7008413Z   retention-days: 30
+2026-10-28T03:16:01.7008710Z   compression-level: 6
+2026-10-28T03:16:01.7009027Z   overwrite: false
+2026-10-28T03:16:01.7009244Z   include-hidden-files: false
+2026-10-28T03:16:01.7009487Z ##[endgroup]
+2026-10-28T03:16:01.9030500Z (node:2693) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-28T03:16:01.9032175Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-28T03:16:01.9121358Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-28T03:16:01.9131438Z The least common ancestor is /home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/build. This will be the root directory of the artifact
+2026-10-28T03:16:01.9155568Z ##[error]No files were found with the provided path: build/ethereum-model-readiness.json
+build/ethereum-source-timing.json
+build/ethereum-interval-controls.json
+build/ethereum-warm-start.json
+build/ethereum-common-cohort.json
+build/ethereum-economic-evidence-coverage.json
+build/ethereum-economic-vintages
+build/ethereum-supply-accounting
+build/ethereum-supply-resolution.json
+build/ethereum-staking-cohort
+build/ethereum-independent-calibration.json
+build/ethereum-prospective-calibration-readiness.json
+build/ethereum-prospective-capacity.json
+build/ethereum-prospective-ledger
+build/ethereum-prospective-archive
+build/ethereum-prospective-archive-outcomes
+build/ethereum-prospective-archive-remote-receipt.json
+build/ethereum-prospective-archive-restore.json
+build/ethereum-prospective-archive-append.json
+build/ethereum-prospective-archive-verify.json
+build/ethereum-monte-carlo-stability.json
+build/ethereum-pooled-research.json
+build/ethereum-throughput-supplement
+build/ethereum-pow-zero
+build/ethereum-adaptive-research.json
+build/ethereum-model-comparison.json
+build/ethereum-economic-ablation.json
+build/ethereum-economic-data
+build/asset-forecast-ledger
+build/asset-outcome-ledger
+build/eth-review-packet
+build/eth-browser. No artifacts will be uploaded.
+2026-10-28T03:16:01.9434781Z Post job cleanup.
+2026-10-28T03:16:02.0399349Z [command]/usr/bin/git version
+2026-10-28T03:16:02.0448622Z git version 2.55.0
+2026-10-28T03:16:02.0492110Z Temporarily overriding HOME='/home/runner/work/_temp/5289d816-b02a-4d0b-b0d8-49d036107717' before making global git config changes
+2026-10-28T03:16:02.0494654Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-28T03:16:02.0499720Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas
+2026-10-28T03:16:02.0545925Z Removing SSH command configuration
+2026-10-28T03:16:02.0554624Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-28T03:16:02.0604157Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-28T03:16:02.1013713Z Removing HTTP extra header
+2026-10-28T03:16:02.1015304Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-28T03:16:02.1056109Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-28T03:16:02.1531567Z Removing includeIf entries pointing to credentials config files
+2026-10-28T03:16:02.1540466Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-28T03:16:02.1588133Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-28T03:16:02.2136500Z Cleaning up orphan processes
+2026-10-28T03:16:02.2544715Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+

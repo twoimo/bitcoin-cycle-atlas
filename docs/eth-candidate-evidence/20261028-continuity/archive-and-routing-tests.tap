@@ -1,0 +1,274 @@
+TAP version 13
+# Subtest: archive restores the exact original issued bytes, identity, clocks and 731 points
+ok 1 - archive restores the exact original issued bytes, identity, clocks and 731 points
+  ---
+  duration_ms: 89.458477
+  type: 'test'
+  ...
+# Subtest: snapshot and observation logical paths share one exact object without losing either inventory entry
+ok 2 - snapshot and observation logical paths share one exact object without losing either inventory entry
+  ---
+  duration_ms: 70.62586
+  type: 'test'
+  ...
+# Subtest: a later acquisition appends exact previous manifests, pages and objects without replacing the original index checkpoint
+ok 3 - a later acquisition appends exact previous manifests, pages and objects without replacing the original index checkpoint
+  ---
+  duration_ms: 346.018005
+  type: 'test'
+  ...
+# Subtest: a repeat capture preserves inventory while recording a linked execution manifest
+ok 4 - a repeat capture preserves inventory while recording a linked execution manifest
+  ---
+  duration_ms: 182.09215
+  type: 'test'
+  ...
+# Subtest: independent ETH raw outcomes restore to the existing outcome-index format
+ok 5 - independent ETH raw outcomes restore to the existing outcome-index format
+  ---
+  duration_ms: 298.466099
+  type: 'test'
+  ...
+# Subtest: unknown traversal absolute backslash and control-character logical paths are rejected
+ok 6 - unknown traversal absolute backslash and control-character logical paths are rejected
+  ---
+  duration_ms: 3.0954
+  type: 'test'
+  ...
+# Subtest: same immutable path with changed bytes cannot be appended under a prior archive
+ok 7 - same immutable path with changed bytes cannot be appended under a prior archive
+  ---
+  duration_ms: 85.092329
+  type: 'test'
+  ...
+# Subtest: a missing object blocks restoration even when every manifest is intact
+ok 8 - a missing object blocks restoration even when every manifest is intact
+  ---
+  duration_ms: 2.091409
+  type: 'test'
+  ...
+# Subtest: one changed raw byte and a forged cached success flag cannot bypass verification
+ok 9 - one changed raw byte and a forged cached success flag cannot bypass verification
+  ---
+  duration_ms: 1.791427
+  type: 'test'
+  ...
+# Subtest: missing ancestor and unrelated extra transport files both block restoration
+ok 10 - missing ancestor and unrelated extra transport files both block restoration
+  ---
+  duration_ms: 263.345951
+  type: 'test'
+  ...
+# Subtest: altered sequence predecessor clock policy and summary cannot be legitimized by rehashing the manifest
+ok 11 - altered sequence predecessor clock policy and summary cannot be legitimized by rehashing the manifest
+  ---
+  duration_ms: 99.521721
+  type: 'test'
+  ...
+# Subtest: an archive cannot drop a previous page and still call itself a later generation
+ok 12 - an archive cannot drop a previous page and still call itself a later generation
+  ---
+  duration_ms: 295.77382
+  type: 'test'
+  ...
+# Subtest: a later generation cannot retroactively supply an ancestor record snapshot or index reference
+ok 13 - a later generation cannot retroactively supply an ancestor record snapshot or index reference
+  ---
+  duration_ms: 177.292507
+  type: 'test'
+  ...
+# Subtest: cross-page references are valid when every dependency arrives in the same generation
+ok 14 - cross-page references are valid when every dependency arrives in the same generation
+  ---
+  duration_ms: 80.583313
+  type: 'test'
+  ...
+# Subtest: duplicate logical paths fail even when the page and manifest are rehashed
+ok 15 - duplicate logical paths fail even when the page and manifest are rehashed
+  ---
+  duration_ms: 4.644043
+  type: 'test'
+  ...
+# Subtest: forged object byte count and Git blob identity are independently rejected
+ok 16 - forged object byte count and Git blob identity are independently rejected
+  ---
+  duration_ms: 2.487188
+  type: 'test'
+  ...
+# Subtest: index checkpoint cannot rename a record origin or point outside the archive
+ok 17 - index checkpoint cannot rename a record origin or point outside the archive
+  ---
+  duration_ms: 188.950828
+  type: 'test'
+  ...
+# Subtest: historical subset indexes are retained while the restored index contains every verified record
+ok 18 - historical subset indexes are retained while the restored index contains every verified record
+  ---
+  duration_ms: 238.152903
+  type: 'test'
+  ...
+# Subtest: missing record snapshots fail before an archive checkpoint is issued
+ok 19 - missing record snapshots fail before an archive checkpoint is issued
+  ---
+  duration_ms: 25.339932
+  type: 'test'
+  ...
+# Subtest: modified record routing metadata cannot hide behind a recomputed object digest
+ok 20 - modified record routing metadata cannot hide behind a recomputed object digest
+  ---
+  duration_ms: 72.356544
+  type: 'test'
+  ...
+# Subtest: observation filenames and semantic clocks remain validated independently of archive hashes
+ok 21 - observation filenames and semantic clocks remain validated independently of archive hashes
+  ---
+  duration_ms: 116.559484
+  type: 'test'
+  ...
+# Subtest: noncanonical immutable JSON and non-UTF-8 bytes cannot enter a valid archive
+ok 22 - noncanonical immutable JSON and non-UTF-8 bytes cannot enter a valid archive
+  ---
+  duration_ms: 8.641921
+  type: 'test'
+  ...
+# Subtest: raw Coinbase bodies retain their exact whitespace and fail when their filename digest disagrees
+ok 23 - raw Coinbase bodies retain their exact whitespace and fail when their filename digest disagrees
+  ---
+  duration_ms: 2.342374
+  type: 'test'
+  ...
+# Subtest: acquisition and issuance filenames must match canonical receipt identities
+ok 24 - acquisition and issuance filenames must match canonical receipt identities
+  ---
+  duration_ms: 3.721352
+  type: 'test'
+  ...
+# Subtest: complete failed HTTP text is retained byte-for-byte without treating malformed JSON as an observation
+ok 25 - complete failed HTTP text is retained byte-for-byte without treating malformed JSON as an observation
+  ---
+  duration_ms: 1.930601
+  type: 'test'
+  ...
+# Subtest: captured caller maps and Buffers cannot race an asynchronous semantic validation
+ok 26 - captured caller maps and Buffers cannot race an asynchronous semantic validation
+  ---
+  duration_ms: 240.567023
+  type: 'test'
+  ...
+# Subtest: per-file and record byte bounds fail before parsing untrusted evidence
+ok 27 - per-file and record byte bounds fail before parsing untrusted evidence
+  ---
+  duration_ms: 13.808064
+  type: 'test'
+  ...
+# Subtest: inventory pages split at the finite descriptor bound and restore all checkpoint bytes in the archive
+ok 28 - inventory pages split at the finite descriptor bound and restore all checkpoint bytes in the archive
+  ---
+  duration_ms: 19.643905
+  type: 'test'
+  ...
+# Subtest: 501 valid actual-format observations remain archived but cannot be silently pruned into a 500-observation working set
+ok 29 - 501 valid actual-format observations remain archived but cannot be silently pruned into a 500-observation working set
+  ---
+  duration_ms: 3498.761931
+  type: 'test'
+  ...
+# Subtest: retained ledger remains readable when a new issuer never produced a build index
+ok 30 - retained ledger remains readable when a new issuer never produced a build index
+  ---
+  duration_ms: 289.863659
+  type: 'test'
+  ...
+# Subtest: identical retained and current records are counted once and both input inventories remain bound
+ok 31 - identical retained and current records are counted once and both input inventories remain bound
+  ---
+  duration_ms: 516.82376
+  type: 'test'
+  ...
+# Subtest: index time and model metadata cannot disagree with the immutable record
+ok 32 - index time and model metadata cannot disagree with the immutable record
+  ---
+  duration_ms: 220.893618
+  type: 'test'
+  ...
+# Subtest: index traversal and duplicate run entries fail before fallback or selection
+ok 33 - index traversal and duplicate run entries fail before fallback or selection
+  ---
+  duration_ms: 227.033813
+  type: 'test'
+  ...
+# Subtest: a missing file in a present current index is an error, not permission to ignore that index
+ok 34 - a missing file in a present current index is an error, not permission to ignore that index
+  ---
+  duration_ms: 232.593223
+  type: 'test'
+  ...
+# Subtest: a captured observation survives an interrupted issue even when its build index is absent
+ok 35 - a captured observation survives an interrupted issue even when its build index is absent
+  ---
+  duration_ms: 487.207622
+  type: 'test'
+  ...
+# Subtest: an acquisition filename cannot rename an immutable observed snapshot
+ok 36 - an acquisition filename cannot rename an immutable observed snapshot
+  ---
+  duration_ms: 289.023646
+  type: 'test'
+  ...
+# Subtest: independent ETH outcome metadata is bound to its preserved raw observation
+ok 37 - independent ETH outcome metadata is bound to its preserved raw observation
+  ---
+  duration_ms: 634.538443
+  type: 'test'
+  ...
+# Subtest: relabeling a retained ETH outcome as BMNR or MSTR cannot hide it before raw index validation
+ok 38 - relabeling a retained ETH outcome as BMNR or MSTR cannot hide it before raw index validation
+  ---
+  duration_ms: 508.4682
+  type: 'test'
+  ...
+# Subtest: a relabeled ETH outcome still requires its exact raw file and cannot conceal corrupted observations
+ok 39 - a relabeled ETH outcome still requires its exact raw file and cannot conceal corrupted observations
+  ---
+  duration_ms: 1423.378129
+  type: 'test'
+  ...
+# Subtest: a genuine non-ETH outcome is verified and inventoried before exclusion from ETH calibration
+ok 40 - a genuine non-ETH outcome is verified and inventoried before exclusion from ETH calibration
+  ---
+  duration_ms: 153.852813
+  type: 'test'
+  ...
+# Subtest: an oversized source index fails on its byte limit before JSON decoding
+ok 41 - an oversized source index fails on its byte limit before JSON decoding
+  ---
+  duration_ms: 156.740763
+  type: 'test'
+  ...
+# Subtest: an oversized acquisition directory is rejected before any untrusted file body is parsed
+ok 42 - an oversized acquisition directory is rejected before any untrusted file body is parsed
+  ---
+  duration_ms: 575.348308
+  type: 'test'
+  ...
+# Subtest: an indexed record cannot follow a symlink outside the supplied repository
+ok 43 - an indexed record cannot follow a symlink outside the supplied repository
+  ---
+  duration_ms: 8.186432
+  type: 'test'
+  ...
+# Subtest: a prior opaque session cannot make a later loader read trust changed bytes under the same record ID
+ok 44 - a prior opaque session cannot make a later loader read trust changed bytes under the same record ID
+  ---
+  duration_ms: 1214.812437
+  type: 'test'
+  ...
+1..44
+# tests 44
+# suites 0
+# pass 44
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13698.076574

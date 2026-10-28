@@ -1,0 +1,808 @@
+{
+  "schemaVersion": 1,
+  "kind": "eth-prospective-continuity-publication-inventory",
+  "implementationSource": {
+    "commit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+    "tree": "48474119d3ed2289adf637c4742d73e5670b1ef9"
+  },
+  "verifiedCheckpoint": {
+    "commit": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+    "tree": "c525621d117d4727e4efd41b894021d2181ac4b6",
+    "parent": "f6739b0a5da2986cbe33d028ea8fcd3468d85012"
+  },
+  "expectedDocumentationParent": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+  "sourceBranch": "chatgpt/eth-cycle-economics-20261026",
+  "dataBranch": "eth-prospective-archive",
+  "dataPublications": [
+    {
+      "commit": "8f169b18a2eeec70fe9e57eed5bdb154e9dad3bc",
+      "tree": "2f69764587c2e5fcc7d5d29991fcee3bac3bb569",
+      "sequence": 4,
+      "files": 53,
+      "bytes": 7048545,
+      "workflowRun": 40626529467
+    },
+    {
+      "commit": "f42a4bf7662ae73987b23d117620dc9fda4a86ac",
+      "tree": "9d5728f6c95ce9c1f38d83acec537181264eae9f",
+      "sequence": 5,
+      "files": 63,
+      "bytes": 8180885,
+      "workflowRun": 40628133773
+    }
+  ],
+  "sourceDistPreservation": {
+    "comparedSourceBaseline": "4bf84ce345d6468c69dc25c7a7dce50f5703ab6b",
+    "unchangedSourceDistBlobs": 713,
+    "scope": "PR source tree; the separate data branch root intentionally contains only strict archive transport files"
+  },
+  "actualWorkflowRuns": {
+    "first": {
+      "ci": 40626529470,
+      "eth": 40626529467,
+      "hallmark": 40626529492
+    },
+    "second": {
+      "ci": 40628133630,
+      "eth": 40628133773,
+      "hallmark": 40628133593
+    }
+  },
+  "exactEthFocusedTestCounts": {
+    "first": null,
+    "second": null,
+    "reason": "Decoded job-log connector returned Transport closed; step completion is independently observed but counts are not inferred."
+  },
+  "durableArtifactScope": {
+    "completeProspectiveArchiveTransport": true,
+    "selectedSupplyAndStakingRawBytes": true,
+    "verificationReceiptsAndSourceTrees": true,
+    "completeWorkflowZip": false,
+    "completeSourceBookParts": false,
+    "allPngBytes": false,
+    "workflowArtifactRetentionDays": 30
+  },
+  "boundaries": {
+    "draft": true,
+    "releaseAuthorized": false,
+    "productionPromoted": false,
+    "automaticPublisherExecuted": false,
+    "defaultBranchDailyDefinitionPresent": false,
+    "uninterruptedDailyOperationProven": false,
+    "beyondActiveCapacityStreamingImplemented": false,
+    "geminiOpposition": "omitted-by-user",
+    "followupReverseReview": "omitted-by-user"
+  },
+  "inventorySelfExcluded": true,
+  "reasonForSelfExclusion": "A file cannot include its own final content digest; Git binds this inventory file itself in the final documentation tree.",
+  "files": [
+    {
+      "path": "docs/ETH_PROSPECTIVE_CONTINUITY_20261028.md",
+      "bytes": 73205,
+      "sha256": "752b77ee6a724b34883245ac687771d1ad495adab2999e6aea4ebbda82a9f3aa",
+      "sha": "2cf9dc65dd36519a96010db82bbd8446d1933602"
+    },
+    {
+      "path": "docs/ETH_REMAINING_CONDITIONS.md",
+      "bytes": 68753,
+      "sha256": "72b2f14e855613ff59e157362baa5ea90e4b26196175f9f67484528e041eb30c",
+      "sha": "16ff68209e41320c63a9c1d6f2783d53260d2803"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/archive-and-routing-tests.tap",
+      "bytes": 10763,
+      "sha256": "31433a70a93fc0e422f01e4557329f9547ece550e03f8d7eaf6ffd74b98052cc",
+      "sha": "dd59a262b74949068c1e5ae434f092db0c813c06"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/archive-io-complete-seed-exit.json",
+      "bytes": 7687,
+      "sha256": "9f4136bee46cae61630cecfc316719775e53e2c480da3bd586ef293fa8d4149e",
+      "sha": "2c52b04b7e045e420a21dd933af28cfb99e9970e"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/archive-io-complete-seed.tap",
+      "bytes": 5247,
+      "sha256": "b21bff19e4db9e677b01248664b52192aa6b3a629949f9b4f489d1a82532d4a6",
+      "sha": "23fefb76b4084cdef0c3146c94f4097c34713183"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/archive-remote-tests.tap",
+      "bytes": 7602,
+      "sha256": "a3bf3f23b4a00ccff176e40810b96ac768c93b2bdb35293c12de61bcbdadb42e",
+      "sha": "cf043e9ae406bc16dd89797a3fd69a9ac2453d07"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/bootstrap-final.json",
+      "bytes": 121410,
+      "sha256": "9ab4a60868f4acbc60dbc80d0b13a81ff82f8d737fe5c9d24f7003609859916e",
+      "sha": "d91c4b4b9694d2a013b1d77a5a43fa278abe0124"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/bootstrap-sequence2.json",
+      "bytes": 55553,
+      "sha256": "c62ff58212030f5c4e9c139017582c856606cec9df0c692f4278d176760fe275",
+      "sha": "604cbd45461df843dc71bc3ddcc4cf893ef4c0b0"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/checkpoint-publication.json",
+      "bytes": 1270,
+      "sha256": "3988b4f401b3cdbcee7730a548cae43e7ca82c96569f527ee655ce3694c7ce54",
+      "sha": "97848231fa768531658d7339ae6dfc32071a6c60"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/ci-second-markers.log",
+      "bytes": 1721,
+      "sha256": "091df7a07a1952d3274a607d8c665b72068da74b5ef48dfd1d02308c05b4cd47",
+      "sha": "9ff5790b5840287eb25b4bc3bef074ace1428f74"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/ci-second-result.json",
+      "bytes": 7175,
+      "sha256": "23eb7c62dc62146c1ca9d487ee91e049a6316c49bf8d4580e3ffed8e88e93283",
+      "sha": "72c4f6799dd55a134302c5cbbb1fee88d17dee8b"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/ci-source-result.json",
+      "bytes": 7700,
+      "sha256": "8baaf52377bba005c6e3fb6bf115e1fcb65ba0b384f3852e49aa56693e1757aa",
+      "sha": "0cb613b83f33b149c4b213cf41b3e3b037d7cc86"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/corrective-source-publication.json",
+      "bytes": 20654,
+      "sha256": "aa67c2b2f8067379b881281fb74c9f78379d485d55c666c859957823f779ffb0",
+      "sha": "53aec8fb6b8c1e9af7fdded349b6d71b6fe4a193"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/data-first-commit.json",
+      "bytes": 1470,
+      "sha256": "71748f39739e31eabb00e2a2db29c75d684dd460f8e4ecc926039127571ea498",
+      "sha": "27c66344c8e25cdfe6e1d76f22042e4e2d360ce8"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/data-first-ref.json",
+      "bytes": 417,
+      "sha256": "36d1b96499bd3795172964c880807e66294429fd04f0b38061e011019ffac089",
+      "sha": "28bdd376b8c2d6e00a9de1b19affe7b20aeeb1b3"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/data-first-tree.json",
+      "bytes": 16424,
+      "sha256": "79ee77b6a9db67b3d1ed5c40168806ccc7c0c1c2bf79939c5ce864e42d6a370f",
+      "sha": "aa5a299f85d3ba7d507a00bd8edbdb3b38b276e9"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/data-second-commit.json",
+      "bytes": 1527,
+      "sha256": "69b5ad512c5fc25f2fe69359390eff5a6ae5d1933a10b0f4468597c12f3e0e65",
+      "sha": "33a768d42ecfa796716bef9e529f8cd7e56f59fd"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/data-second-ref.json",
+      "bytes": 417,
+      "sha256": "962201cd2b26c36fae8c1c8adf666180fc1c5323b59e2613ee3e1410b3d4616a",
+      "sha": "59aa63e498f8505de59406a9bcb97aa8b2b9bc40"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/data-second-tree.json",
+      "bytes": 19377,
+      "sha256": "f85c355c0ef005a46419522b88ccd60b4a9b136f8d4b0e1fe7f0e5bf28e669ff",
+      "sha": "6a330bb7179ecd4336ce1a89cb5ce3ba96e46b72"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/default-branch-status.json",
+      "bytes": 5053,
+      "sha256": "dac5a686ce6f734d3559052cf7827a8f78eeff8069408ae9efc4c73dedefcf61",
+      "sha": "5cf1ebcf48fea476110513d19f0b75f64bc12dc5"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/download-verify-artifact.py",
+      "bytes": 4310,
+      "sha256": "3032a66e151bb6f05902b4e522b26c0736775da2f0f9fe981751156eafe5af77",
+      "sha": "b2d45d93aa09537a6cebac42f4c4b4ca8f7adfcd"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/eth-first-run-log-access.txt",
+      "bytes": 491,
+      "sha256": "371a4d21cf1a66d0efe23da10ad78493d7f782f03d930a3ca18d4c76ffbbc359",
+      "sha": "c19ef2d0f55eac3403238428ca1a6b754aab84e1"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/eth-first-run-result.json",
+      "bytes": 9174,
+      "sha256": "0dd2e23c059089f15b17fbcccd07b5a9d0d8993e75a1403f8d3aaa0dfecce19d",
+      "sha": "a82f392813afefb800ef30339c2d529bf06dcb14"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/eth-second-run-log-access.txt",
+      "bytes": 690,
+      "sha256": "0b95b1c352191c53aac93bc9fbfe844e3d34a4c6c666ebf2056736abaf35e5b0",
+      "sha": "83480baf0b534ef40e2ce4daed8614e7a0379fda"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/eth-second-run-result.json",
+      "bytes": 13939,
+      "sha256": "0e4617de932b19fd02dcf1fd59dcde03a2ae3898e206114597be614bb0b3e1cf",
+      "sha": "5c27dc3f225b1b0eaa1cd907eafd2f5bc34699b7"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-actual-summary.json",
+      "bytes": 22434,
+      "sha256": "e4d57a5168ace4585ac4a7257fa2385089c7bdbea31ba30b8e84ed5484e0b8bc",
+      "sha": "8eb0bf16b6dfa7b57e78d2b120caff049b553093"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-artifact-download-integrity.json",
+      "bytes": 157052,
+      "sha256": "f5a60285580800c3cfeb55adf624b63f4111ff0a73685d4b1e7933d78490d0e7",
+      "sha": "95d005124c8a51d5c5e014e3acf723a8235060aa"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-artifact-verification.json",
+      "bytes": 110723,
+      "sha256": "1bbd93a1e72f6e8b240ac4c99194034aefb95e910a8a0c2f9fec090bca1d5b38",
+      "sha": "9ea36397dbaccb8ff146eaf915b9b398ae66fe64"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-operating-evidence.json",
+      "bytes": 93512,
+      "sha256": "c654f57311a878dc9f8e8e32ef0fc5ca702b08789ffbe2af8be4afcc3e40d442",
+      "sha": "c60ae36e09ba51de4a02c8ae23be52f5d9597fd8"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/eth-browser/report.json",
+      "bytes": 999280,
+      "sha256": "0404a8d7e30cc7a82f954d64b37bab88cd24b3e4afb41c6db75d795253335ad6",
+      "sha": "565a3fe23fc41496a8a75a4be890c53dd06b1ab4"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/eth-review-packet/source-manifest.json",
+      "bytes": 473267,
+      "sha256": "e6dff46ea38f5bf2d08cf4e5a5de7baabfa919e1e4c2d56d752d48dadf8ce0e3",
+      "sha": "e7aa8acb1b4255281c8a1f78bff31158ac3256ee"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-model-readiness.json",
+      "bytes": 286227,
+      "sha256": "17d12c4c851d0398b1640d76501614704bda0abfd3b59aebcaa48f95c681115f",
+      "sha": "96f94fe6ae175cd2eee8f1f28d6f0fe282a7ea4b"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-prospective-archive-append.json",
+      "bytes": 6146,
+      "sha256": "65e198923441f2fd5ed61c589e08a76e83d79b06773202e72bac6f99c5c40ca9",
+      "sha": "d031dc76f626874e0b3e1125cffe87527e5a7e91"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-prospective-archive-remote-receipt.json",
+      "bytes": 976,
+      "sha256": "4e67cbe022b5cd0af9bb7ea7e0dcb65bf98d64a5b8d36cf653840f784ca19831",
+      "sha": "c5e8d0efe49a2ea69be9cee490c24dee123cb17f"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-prospective-archive-restore.json",
+      "bytes": 8427,
+      "sha256": "591e312d02e9ae3400db82b9e1380c8189f98514f4c2443cd3d4c09635c077f8",
+      "sha": "44cead53688b114a8cdbffbdb03d36b71a57df41"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-prospective-archive-verify.json",
+      "bytes": 3977,
+      "sha256": "4e04f0894394a616bc86b3548d4fe835b1ff3203061813e5e6c3bbdb05f165ef",
+      "sha": "6851c5ba3f1bc3d8c04c7ceecf45562a1ff51b8e"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-prospective-calibration-readiness.json",
+      "bytes": 53599,
+      "sha256": "cf1a1cf49e0e272933065adbb052acffdcd6ce3d9a3ee74d92b1171ba1bcf219",
+      "sha": "f2b01d8822d9be43008da734b088c625e1b6cc23"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-prospective-capacity.json",
+      "bytes": 45071,
+      "sha256": "21d3ef5c29e95f82ac3eebf24fd4174b24fde9bd8536096ab2c30d6d5486f7f0",
+      "sha": "044bc3ff38bbda56e35aee8e60e418606582eb18"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-staking-cohort/genesis.raw.json",
+      "bytes": 170,
+      "sha256": "55ffb0cee289551f91ce003dcee739e310b65cbadf9421c3057b29d312eabd18",
+      "sha": "b6a6f1a8f91f8127ece5d53bbb155bf69290068a"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-staking-cohort/header.raw.json",
+      "bytes": 672,
+      "sha256": "9c5a0105005170c7b529ccbe9b80103f619c6cf3669168288f859875678fa199",
+      "sha": "a1ffed265b19f88a53cf36f89dab1c11e00f5abc"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-staking-cohort/receipt.json",
+      "bytes": 17180,
+      "sha256": "63f7b100d4895adb0bdd0fd3853317f3ba20bcee613222deab706b5f1411d29b",
+      "sha": "f8fc7c6dd9f237acd7194e5449aceae4d2b1d287"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-staking-cohort/replay.json",
+      "bytes": 11291,
+      "sha256": "9a19eb5d9f58aa990a1d75ec5cddbda5e4113d4f0d2c6322bfea109fb31a28b5",
+      "sha": "9dab23d6a1fdde2da50896a919978d5afa76c973"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-staking-cohort/validators.raw.json",
+      "bytes": 3769,
+      "sha256": "67c1af6e5a2ebd88ef46b450d609121afc9ff26ca7543aa753abee44e10937ac",
+      "sha": "e33bbe2f6246c210b5f1ef4542c21d8b0e136c11"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-supply-accounting/capture-wxHSmc/history-30d.raw.json",
+      "bytes": 801492,
+      "sha256": "4d82bacfdbee069955911516c0149fae733166778005844dc6845afde60e90e1",
+      "sha": "6743ae2c6004812411e778334600281db5e97407"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-supply-accounting/capture-wxHSmc/methodology.raw.html",
+      "bytes": 125691,
+      "sha256": "fd9c3d66c4c8f7112bb44b19a99f8b11a869038b656a7726d6143e5798e73687",
+      "sha": "041f112594dbd121b7d49e0ac55c1d7704cf86e9"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-supply-accounting/capture-wxHSmc/observation.json",
+      "bytes": 19639,
+      "sha256": "569aaf1c2f2414475bc9092192535221a9daea1a13a1760f60342dfa89a42ee0",
+      "sha": "76c03f4ecd4dabeaa0465b1b580c803e3d48eb5e"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-supply-accounting/capture-wxHSmc/receipt.json",
+      "bytes": 25889,
+      "sha256": "d343c2360b4b89f701d9ea6c76c3fedd248a473dd6550ca54e3d1cf9ebb81d80",
+      "sha": "72389e2f23035d1bdb2b42e216d14334b6897895"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-supply-accounting/capture-wxHSmc/started.json",
+      "bytes": 1647,
+      "sha256": "2231335cfa4beeb00e7a1c671c3dc22bdffff2993eae74066715b7feeea201b4",
+      "sha": "bdda92be662181738fab84cf749fac4f915061c0"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-run/ethereum-supply-resolution.json",
+      "bytes": 12501,
+      "sha256": "5d841e8e11d631717f0a07166c916017e63b15a7f113983971aca8885b171efa",
+      "sha": "90a9fb9a115a29c51ec2af20c372b6e803c33f11"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-verifier-adjustments.json",
+      "bytes": 1246,
+      "sha256": "6502332a5c5469831469232ab9bec1dd7e508cad3c4ec91c758198de1cda36e9",
+      "sha": "cc3a015bd483ef10a1018dfad70fcae9aac66315"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/first-verifier-attempt1.json",
+      "bytes": 7371,
+      "sha256": "fa3bf9a3522403bef53ceb2a5e3a2fc2028748772d7db94b607efa72132a67fd",
+      "sha": "93011db84ddc2277066c7c452390e41a94436168"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/focused-existing-tests.tap",
+      "bytes": 15651,
+      "sha256": "baa531a0e7833911c72ccf39c0424be4080e77895d1477f468bf9cec6c081a13",
+      "sha": "e0054f1e61a6c9781a9e7f20363e587fdbc04eae"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/hallmark-second-markers.log",
+      "bytes": 6613,
+      "sha256": "8a2760ec914be7df909fc9201768b7e18659ca71cf58d5b0458100d069359dd0",
+      "sha": "2a0402046de38cdda2f955f67f32f736d5d416af"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/hallmark-second-result.json",
+      "bytes": 12178,
+      "sha256": "ad47fadae1c97ba2580f3fedc917a96f15f421fdc358ef4d2870d805cb6e0c27",
+      "sha": "413162a161bcef057de7493bcc2a902a0e7f7cfd"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/hallmark-source-result.json",
+      "bytes": 12933,
+      "sha256": "98c9e45d3e8df28b1d060d708c86000cc24ca3c5f93a64f3f45c15811d6c3af7",
+      "sha": "224c4d6dd32d3bf1e267c739a06c1512f8a45445"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/initial-ci-failure.json",
+      "bytes": 1772,
+      "sha256": "06824e7870aa40a7bd494e12612d41e5aba699f90ff44ba8db6a21e429191a68",
+      "sha": "29f64237bd7fa4bb0cc8d7618f4c32d6d800eb4b"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/initial-eth-failure.json",
+      "bytes": 3984,
+      "sha256": "d1d9a93a9cc4928fc84d80e155fc6703776d8a15e3f7bd228a4b450de456f6d2",
+      "sha": "eb4a5529d472a573e4c6418e416dd133d1237268"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/initial-eth-failure.log",
+      "bytes": 73737,
+      "sha256": "32159db5e7fdf7c033f8992d2b809bfcb6a242392f2eea35b35d5357bd4693a1",
+      "sha": "c83489ba3cff25c4eef8bed111babb6d321c09ce"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/legacy-archive-tests.tap",
+      "bytes": 7686,
+      "sha256": "1d05edc3affdba682af43642b48549bbcd475334dc8044f28bafa626a1361f85",
+      "sha": "bd34736d9e94ade2e82e46c55608a8f3cf824faa"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/manual-first-publication.json",
+      "bytes": 19426,
+      "sha256": "1e6deec23e7d360d5ad16d576c76ed5ed058bc374c08e0e40d42f48690826da2",
+      "sha": "f3ede39e616cc2251e38c1fa8efc0403bd7042cf"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/manual-second-publication.json",
+      "bytes": 22581,
+      "sha256": "619db92caf4e73b72299d45131a7ee43458396ffc888388e64d9606af8fead0c",
+      "sha": "d411fd3c0afca8baa65c1105c3dec2b559910c83"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/materialized-legacy-identities.json",
+      "bytes": 3480,
+      "sha256": "89e295b8e874637e7a3b4bcc2fe43d103058582df5fe1f1ea2a0a37c23c80da8",
+      "sha": "dd6cdc8a300a2767212de33f2ab2153bee3410db"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/materialized-outcome-identities.json",
+      "bytes": 616,
+      "sha256": "5ef6c94ff921f3af5c5eb14809964d2680e3dacda5bab7464d8c2f52e424d5f8",
+      "sha": "ec7b9236bd5774adb10fc631b2d262ca26b5be68"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-provenance.json",
+      "bytes": 8812,
+      "sha256": "31b7ead76a887d8f0e65a7d7bf825497764bd0ad3977b5b303283d4092751d37",
+      "sha": "02711dfc0f77b3fb174aadf318bfc4996c343cba"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf-artifact-integrity.json",
+      "bytes": 5908,
+      "sha256": "975ac3719e8da2f494d69c9cbe14d07dc555cdf770f4c1dd02a80fcb04ae8088",
+      "sha": "4e5250d303cf4396b4c681bc2f39e2bbd8829f1f"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/asset-outcome-ledger/evaluations/3a36afd51ed27037911eb6bba91cc5b081f67eda199016972a5b375dea2b8839.json",
+      "bytes": 18908,
+      "sha256": "ddb2186e80f462b7661e6186e011cad425206c9fadfc64b87bc6f9261fd1d59e",
+      "sha": "e552b803caabeb2f99ecd6d8139598fb50056dee"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/asset-outcome-ledger/evaluations/5b7104bad3f260b0a293d9de35df8870a68efaced9e133588db3583ea0ff5fd9.json",
+      "bytes": 18908,
+      "sha256": "b1f7d987deff737a22283352bba60acbad947f0c6340b7ee61cc1a57d6332189",
+      "sha": "38d6798233e84e2362fef0fbd526229de9d2e3a3"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/asset-outcome-ledger/evaluations/6dc319df260c526e2041313c75aae1d8525bb00970bc3ddc4ac526b1279363bb.json",
+      "bytes": 18908,
+      "sha256": "c6083a3127c2c604a5ac230fabf7255c63130d693d49a4c6d84746dfcf87a956",
+      "sha": "05e26bae7d7d6bc92cd3a94e2a4b6bc995461311"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/asset-outcome-ledger/evaluations/d1614210e958e2b064333704d06693d025242c323ae0bccb750483b685bfc582.json",
+      "bytes": 18908,
+      "sha256": "3ff2c6ede2ea76de1428ffa6fd934b2123e64a87c861983d17f1da6145150177",
+      "sha": "2d4ac0a9b299967297d0a4e4cd7b4b9793612f9a"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/asset-outcome-ledger/index.json",
+      "bytes": 1911,
+      "sha256": "6a118daaa0fde0ab5517dcf43d1956427d898ff785bce0cff892acd3d13b26a3",
+      "sha": "b566f8ac7d8566b0465297cb51bdbe79350696ad"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/asset-outcome-ledger/observations/24ad59d1d0a798e0e16d118707e54cd007b93bd361ebaf3ea354dc4f43c9643f.json",
+      "bytes": 1969036,
+      "sha256": "9e9afd41df0255a780f6f6cb55c0bf4762338b119101ee139133ebd34a451035",
+      "sha": "cfebd57206fdefc55bbc617a8a1da1503e11ae5f"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/asset-outcome-ledger/observations/e2e95e803edf9151e6bfc00b509dc124a4f25d0b623df94e00d7fb0d5b289f20.json",
+      "bytes": 998242,
+      "sha256": "2c1db25a208a900b9d50d6607e2e1335c193ec83259dd0c3ad15e4543c8271c2",
+      "sha": "dff5768f85192cb96760e3b0ac6508e4db67b3af"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/asset-outcome-ledger/observations/f623dbffd6b670fb4ac8903d7387b15d2c5f8cc8c48bb60ba2e6be1f75db27e5.json",
+      "bytes": 100161,
+      "sha256": "3b1360721875970ec848dbc20a22a68150c320d2e48dd081f6c9903634debb3d",
+      "sha": "91a56a441fca6f751222acd877e7f68de2198b7a"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/asset-outcome-ledger/receipts/76ffdb5605a8e13f4bb6bd0d2671a2f29a8b6226e89ed0601b34565ad9b7b0a7.json",
+      "bytes": 2174,
+      "sha256": "76ffdb5605a8e13f4bb6bd0d2671a2f29a8b6226e89ed0601b34565ad9b7b0a7",
+      "sha": "0d09c89a03050a429b907b7ee36aefe88c3ed320"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/asset-outcome-ledger/receipts/d9133b094e0c1b3b9095513b0b324117d68d7d61f6cefea454f763e4929047fc.json",
+      "bytes": 2174,
+      "sha256": "d9133b094e0c1b3b9095513b0b324117d68d7d61f6cefea454f763e4929047fc",
+      "sha": "6adc084d30e398fbed7bff2f35419b20af6f308f"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/acquisitions/4cdffdbb7b7db8aab853e3a99963a38e7efdfd5e06f130f655814f6c65fbcfee.json",
+      "bytes": 2183,
+      "sha256": "0d6eaffeb933e567e04fea7eae91c78b35fd8f8be1d7e0ae40ee42249ab11fc4",
+      "sha": "b06de5fa9f0491c2c389186e97e39694185c2d82"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/evaluations/9623af16644deaadb4aa1c11d7f2edb248113ceba9f2df6ef4ba4a73ad721264.json",
+      "bytes": 13578,
+      "sha256": "a09feffcc048d6c9bc60fa5e4d667b73ecf54494e9df1195d3776b214e14bde9",
+      "sha": "c0b712fbb6b57cecc66d77d26ffce09733d8d0e0"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/files.json",
+      "bytes": 2730,
+      "sha256": "39b7b9b9e9ea8bdd614eb7fc0bc401e3bdfe08833bf40db7c7d166faa419227a",
+      "sha": "ca65409ec2f4d74c5df4bf817c7c87d47168b8be"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/index.json",
+      "bytes": 1971,
+      "sha256": "f124b65d177b3aae9fa851a2f6204a6e1073dc288d22bf36eecf0b0e650081c2",
+      "sha": "38dfd02401188aa5aecf8a1ce8d77760a7b5190a"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/issuances/f4005cf21e338fdc6f100c71b81925b53917c849568a9751d634c71c1c604f90.json",
+      "bytes": 6586,
+      "sha256": "30a9fd910e7be0105bf6c7c8c6733f867acf3a5df9170d54e345bd27e15cdce7",
+      "sha": "75c4fce87dea546f6b7ed1b944142e46e74926ad"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/observations/f034cd8aee6d3a256364379d801750212f9eb678ef9813c37d0fcba2e103df24.json",
+      "bytes": 1084126,
+      "sha256": "d66d8d10eff61c794398b6f6bf0e4f083d49ee4526fd975e0e72411674eae21c",
+      "sha": "ce04ad1d04216851f137a9b86998dc55123db40d"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/raw/coinbase-tail-ae0894b3b33983fc18b23c39334c11a69e770b18ba719c893d1501d987c718c2.json",
+      "bytes": 530,
+      "sha256": "ae0894b3b33983fc18b23c39334c11a69e770b18ba719c893d1501d987c718c2",
+      "sha": "46aff23dbaddc5660ad223a1c8af7a359037efa7"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/receipt.json",
+      "bytes": 6586,
+      "sha256": "30a9fd910e7be0105bf6c7c8c6733f867acf3a5df9170d54e345bd27e15cdce7",
+      "sha": "75c4fce87dea546f6b7ed1b944142e46e74926ad"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/records/563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b.json",
+      "bytes": 75200,
+      "sha256": "f1a53ceda9039fc00d3c59b5ae8c887c7bf277ad4d4a866d9021a02d32e5efc8",
+      "sha": "28aee2d90c339465d759f84997ff07cfbd694745"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/records/d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72.json",
+      "bytes": 81100,
+      "sha256": "747a8ba0b9223674647408ce1757482f3969b629911f8293d97ed7e774c35673",
+      "sha": "0e55aff15405db536335e031704fe60683b53eb5"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/records/f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1.json",
+      "bytes": 74394,
+      "sha256": "15a3156fc75faff35aca7a5f52e835570a4370b4e370ac0a5961fafc8a0363ce",
+      "sha": "b2693e3ddbd87232b52c14d5cdf3c13e578540d1"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/replay-files.json",
+      "bytes": 1371,
+      "sha256": "8d7b1978a786ed0296e153a2bd23b13624dc57e46b0ebe3532208d8d76d33d79",
+      "sha": "028a448f95c03b065e21324cfc3a3c4d49b22be7"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/replay-receipt.json",
+      "bytes": 3162,
+      "sha256": "f7e78522086164bdff0a99f45caae641eded14690592951c0995f51a4d0d4f2a",
+      "sha": "75e4957546c33a044f48164479fc4bb74829554e"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+      "bytes": 1084124,
+      "sha256": "4a6d592d5d7b5e99295c8ca7f9ad843ac063a695743a7e3bee766777f38903f8",
+      "sha": "15e6fffea29b75ff69c2763f8264823cff0d3115"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/prior-run-4bf/ethereum-prospective-ledger/snapshots/da9f0f8abf60398b020501c33aaf33173fa555fcc8919b1d60975abd493d0615.json",
+      "bytes": 1084123,
+      "sha256": "1fbd7f113cf58288bbf616cfa00f684ab831f266381c10b7d9e0bbb1f82e03ec",
+      "sha": "35db04a69508ec8df52e5b71b0d3c03dcf931076"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-actual-summary.json",
+      "bytes": 20619,
+      "sha256": "01a23b076683ce05929fb07e9f1aa55e39bfe8e85b5ca299efb526486bc39b41",
+      "sha": "5e4135a3c7429983c54d2810a577f32be0528061"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-artifact-download-integrity.json",
+      "bytes": 161737,
+      "sha256": "1d241888cbbef2e5fe8678a27b69a3b31b073e4eb0628464096a093ad4869baa",
+      "sha": "7453eba2b08cf45e426b05276d559c6492c6d8f2"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-artifact-verification.json",
+      "bytes": 111899,
+      "sha256": "c283e6bc652c7add36a91d74e2ef275676a4c361f1e79d581ab0f12ae8afeeab",
+      "sha": "49192a5178a35e93b44e244d17c0b1be2757aad4"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-operating-evidence.json",
+      "bytes": 93595,
+      "sha256": "41a341239d042f730521fc1022888e0faf2e313e600461162b7d0defc6c46b69",
+      "sha": "fe01bd329bcec9e7897aa9acfecf9db54b0a11d8"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/eth-browser/report.json",
+      "bytes": 999575,
+      "sha256": "2e7e085bc2f08262475234fd1cb35e3071ad026e1be5a16d455f2e87983e2a9a",
+      "sha": "e699706845d4f3f9053e738545d1f045c8ee6950"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/eth-review-packet/source-manifest.json",
+      "bytes": 479337,
+      "sha256": "37d1120a3fc788dd1ff1042e8b95f72f8bd8b60275f95839ee5a0c1aac24c1c9",
+      "sha": "df9ffd09dd761b34f3c40d91f880e92cfd38de3b"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-model-readiness.json",
+      "bytes": 286225,
+      "sha256": "628063180f9df42e017b93e574842450e3109db4347fe4edbb2e86bfe2f87e09",
+      "sha": "c4c88c7b54d22ec4f2cacfac75abf93ce0aebcc1"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-prospective-archive-append.json",
+      "bytes": 6012,
+      "sha256": "18fb40f336d11e0b6b5c21a75e3c4f225ccef8637c982a5c060c62d606063798",
+      "sha": "08f03a956b262447d2aa1f090aa68f33bb3b9d22"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-prospective-archive-remote-receipt.json",
+      "bytes": 1436,
+      "sha256": "b93561ed2e793d6bcdcf54f847e3f342fc885fc26efd49b18cd27aeab411bb51",
+      "sha": "9805053cf364838c2827d2701f194ccc06921351"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-prospective-archive-restore.json",
+      "bytes": 11535,
+      "sha256": "11755aa326d39529b3b1c41d74d47f2be6e33e8a15d6cbdef1f9340572387b0f",
+      "sha": "58e74f32a7c63c5bf5e7d6d3000affe7ad8ace3c"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-prospective-archive-verify.json",
+      "bytes": 3977,
+      "sha256": "f53f4d165743c6b3b7475b0cfdfe1a1488f5b0dac16b308c25615e0f0606fe5c",
+      "sha": "262ade4dd858212023cde1123fd17d4cf31a9bd2"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-prospective-calibration-readiness.json",
+      "bytes": 54482,
+      "sha256": "99457f1a204f3b634deb880b01b7dcce2eca1b74ef5d95881b4973a1d4d19e0f",
+      "sha": "a0a572aaaeef5bb05a0df14ed7e93a0f02d40290"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-prospective-capacity.json",
+      "bytes": 45351,
+      "sha256": "883c180f699619d27163ee5802d6448d7a3eac57608b0a12b02088a8ff95e1ec",
+      "sha": "f07d8326eef558a90fe38d79137530fb7c4878d0"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-staking-cohort/genesis.raw.json",
+      "bytes": 170,
+      "sha256": "55ffb0cee289551f91ce003dcee739e310b65cbadf9421c3057b29d312eabd18",
+      "sha": "b6a6f1a8f91f8127ece5d53bbb155bf69290068a"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-staking-cohort/header.raw.json",
+      "bytes": 672,
+      "sha256": "3563e00c5da6683b02f621f10e655e66572be7bd5e7fe135d951f21bb52558d1",
+      "sha": "12210df549c5c9457e2eeb276a6ebe2771841963"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-staking-cohort/receipt.json",
+      "bytes": 17180,
+      "sha256": "bcf7e87150c8e475ebac606dbc24a14819d4699a35f881749444025be59af627",
+      "sha": "6ed2da999ad8f5ac233c9c81119afefc3a80d295"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-staking-cohort/replay.json",
+      "bytes": 11291,
+      "sha256": "2549ad5fb3a1c8d0d79e8634fecbe2c68d468e67795c3acd347d468c5a8b4878",
+      "sha": "869507568dfc8cceb5ab8b24eb180a9adadb6e20"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-staking-cohort/validators.raw.json",
+      "bytes": 3769,
+      "sha256": "97e5f17be5124d4b0f52a84d4b445c33ae53138debd359b430b693dcd53b68ca",
+      "sha": "7804a148856a776f1a329c61c34f095eb54d2541"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-supply-accounting/capture-xcv228/history-30d.raw.json",
+      "bytes": 801519,
+      "sha256": "468203d769635ae2cbfe9a67e067257ceccea61781c9c46467d11d9f24aff9a4",
+      "sha": "f56632ac4a7c98240c575506bd8c9eeaeb208e50"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-supply-accounting/capture-xcv228/methodology.raw.html",
+      "bytes": 125691,
+      "sha256": "fd9c3d66c4c8f7112bb44b19a99f8b11a869038b656a7726d6143e5798e73687",
+      "sha": "041f112594dbd121b7d49e0ac55c1d7704cf86e9"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-supply-accounting/capture-xcv228/observation.json",
+      "bytes": 19637,
+      "sha256": "464dc9db662bf259b9b1ee49158d3947adef57e5b3d6a772d035a861c79bdd22",
+      "sha": "99027ba7d06e16c1f0bc7eb57cfa60df7f04f6bf"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-supply-accounting/capture-xcv228/receipt.json",
+      "bytes": 25887,
+      "sha256": "1e69a113b736693ba2f36ace8fb29fd1f9cb3d923bd8fbc4ad5a661150009c19",
+      "sha": "51a4fc8c91fb4d2ebfbe67c4fc9a6a454e0afccd"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-supply-accounting/capture-xcv228/started.json",
+      "bytes": 1647,
+      "sha256": "5cbaaccdcd258ce20f0878fb7aa5e8814df5974e4292341df3d26aa6cc97a305",
+      "sha": "c9423e1d3846a0df3e4b342b3038106f16f8cbb1"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/second-run/ethereum-supply-resolution.json",
+      "bytes": 12501,
+      "sha256": "2e9a273168793dac7a808883329417d4d29642dd60c66d6e9e8a79f29007bb6e",
+      "sha": "321db774afc86947d09f5948f56bdd3312bed01f"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/source-c17-commit.json",
+      "bytes": 1458,
+      "sha256": "ac2e5437bed5a2ecaa94ad85e9cce5bf1e06db1aece3aca415f1f0e8844b615e",
+      "sha": "9e39a0894c4127496017dfe0be5bf831adcf08a5"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/source-c17-tree.json",
+      "bytes": 752305,
+      "sha256": "008ab2514118638c399d7211490e8232bf76ccf48e097f7bfe3f1e17b1994a25",
+      "sha": "f7688e9407abeb6720ec27e8074682cd94c4e50e"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/source-f673-commit.json",
+      "bytes": 1423,
+      "sha256": "3f92798ef427a6d74494db04f244fa06c8bcb20042303bebd10b2719e9c80c87",
+      "sha": "f2fa2ffc4c9e87474199005ebfe64bbec8a33f5b"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/source-f673-tree.json",
+      "bytes": 437514,
+      "sha256": "5815aa2f1faa114552d805f7841b8265d051ccfb146863efa65610ed308b9f37",
+      "sha": "6653a8aac5e4c140777c0941ef81526fc64953a4"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/verify-artifact.mjs",
+      "bytes": 42608,
+      "sha256": "9f4d11aace12b37cec98982b0f849242faaa1b2cba0a76291b5b85e943720650",
+      "sha": "3ef7364d36b56dbad21d3fd69bc4afed5a7ed645"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/verify-manual-archive.mjs",
+      "bytes": 7745,
+      "sha256": "2cc6f422988b958fdfcc182af9a3fd17406077b61577eed9b3b2d9eb7220713c",
+      "sha": "94fb743abda8434c00804e0ce5e1a2ec06b05efd"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261028-continuity/verify-operating-evidence.mjs",
+      "bytes": 15439,
+      "sha256": "4b421a041c79778a91b481bc4f33f03148d07ac63baf89afd0e9d2f26573cada",
+      "sha": "9f29ae5527878446cd00d87db57c4c4ad915b252"
+    }
+  ],
+  "fileCountExcludingInventory": 121,
+  "bytesExcludingInventory": 15171985
+}

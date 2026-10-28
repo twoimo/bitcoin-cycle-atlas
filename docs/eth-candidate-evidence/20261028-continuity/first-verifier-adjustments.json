@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "kind": "scratch-artifact-verifier-contract-corrections",
+  "sourceCommit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+  "artifactModified": false,
+  "repositoryModified": false,
+  "adjustments": [
+    {
+      "attempt": 1,
+      "failureReceipt": "/tmp/eth-continuity-first-verifier-attempt1.json",
+      "failure": "Missing partial-local dist/data/asset-forecast-ledger/index.json during exact browser source-hash validation",
+      "observedContract": "Browser hashes the committed dist/data/asset-forecast-ledger/index.json; its exact body is retained in the verified build/asset-forecast-ledger/index.json execution frame",
+      "correction": "Resolve an additional committed input from an already verified frame only if the exact target remote tree path has matching regular-file mode, blob SHA-1 and byte length; retain SHA-256 validation and record the source frame"
+    }
+  ],
+  "finalResult": {
+    "status": "verified",
+    "startedAt": "2026-10-28T03:37:28.584Z",
+    "finishedAt": "2026-10-28T03:37:41.528Z",
+    "durationMs": 12944,
+    "processExit": 0,
+    "verificationReceipt": "/tmp/eth-continuity-first-artifact-verification.json",
+    "retainedFailureDidNotChangeArtifactOrRepository": true
+  }
+}

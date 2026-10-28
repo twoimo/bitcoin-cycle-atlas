@@ -1,0 +1,525 @@
+{
+  "schemaVersion": 1,
+  "kind": "ethereum-continuity-second-actual-evidence-summary",
+  "status": "verified",
+  "sourceCommit": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+  "sourceTree": "c525621d117d4727e4efd41b894021d2181ac4b6",
+  "workflowRunId": 40628133773,
+  "artifactId": 12790338394,
+  "download": {
+    "zipBytes": 61901496,
+    "zipSha256": "428ec5d34f5748af1eda6638841d59b56bc2e708c51560d36d7b7bac384d3803",
+    "githubDigestMatch": true,
+    "zipCrcVerified": true,
+    "safePathsVerified": true,
+    "extractedFiles": 870,
+    "extractedBytes": 239125971,
+    "artifactExpiresAt": "2026-11-27T03:48:55Z"
+  },
+  "sourceBook": {
+    "expectedCommit": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+    "sourceCommit": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+    "sourceTree": "c525621d117d4727e4efd41b894021d2181ac4b6",
+    "suppliedRemoteTreeJsonSha256": "008ab2514118638c399d7211490e8232bf76ccf48e097f7bfe3f1e17b1994a25",
+    "callerDeclaredCommit": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+    "commitToTreeLookupAuthenticatedByThisOfflineVerifier": false,
+    "commitToTreeBoundary": "Caller supplies the remote tree obtained for expectedCommit; offline verification binds all payload blobs to that supplied tree.",
+    "bundleBytes": 79019126,
+    "bundleSha256": "7bed92a08cad754b0f101b6365e78493b86ca71342922ab773146d2260b143b6",
+    "bundleLimitBytes": 85000000,
+    "parts": 439,
+    "partsConcatenateExactly": true,
+    "frames": 642,
+    "committedFrames": 448,
+    "executionFrames": 194,
+    "sourceAccess": "complete-for-declared-scope",
+    "unresolvedImports": 0,
+    "allFramedPayloadsVerified": true,
+    "allCommittedGitBlobsMatchSuppliedTree": true,
+    "allExecutionFramesMatchExtractedArtifact": true,
+    "sourceBookExternalReviewStatus": "pending",
+    "externalReviewPacketDoesNotOverrideUserOmission": true,
+    "seedCount": 444,
+    "providedEvidencePaths": 194
+  },
+  "browser": {
+    "cases": 35,
+    "passedCases": 35,
+    "screenshots": 181,
+    "allActualPngFilesAccounted": true,
+    "allScreenshotBytesAndHashesMatched": true,
+    "runtimeErrors": 0,
+    "rawResourceErrors": 15,
+    "expectedOfflineBtcRefreshErrors": 15,
+    "unexpectedResourceErrors": 0,
+    "optionalFontBlocks": 41
+  },
+  "archive": {
+    "previousManifestId": "267bb2e1a6768988427d2485d32964a4fcba64be5a10e42ad8b027c758ba4ee2",
+    "previousSequence": 4,
+    "manifestId": "0a9101ef1a31dce01bfd8c92dfe9e50627fe2b914c0c20529e7f0f58068178c4",
+    "sequence": 5,
+    "createdAt": "2026-10-28T03:45:04.162Z",
+    "transportFiles": 63,
+    "transportBytes": 8180885,
+    "logicalFiles": 59,
+    "objects": 52,
+    "objectBytes": 8150282,
+    "metadataBytes": 30603,
+    "pages": 5,
+    "records": 6,
+    "observations": 7,
+    "prospectiveObservations": 6,
+    "independentEthObservations": 1,
+    "unchangedSeedImmutableFiles": 38,
+    "predecessorImmutableFilesPreserved": 52,
+    "allAncestorReferenceClosuresVerified": true,
+    "exactPredecessorReconstructedAndIndependentlyVerified": true,
+    "allIndexedOutcomesValidatedBeforeSymbolFiltering": true,
+    "remoteRead": {
+      "status": "restored",
+      "expectedHead": "8f169b18a2eeec70fe9e57eed5bdb154e9dad3bc",
+      "expectedTree": "2f69764587c2e5fcc7d5d29991fcee3bac3bb569",
+      "manifestId": "267bb2e1a6768988427d2485d32964a4fcba64be5a10e42ad8b027c758ba4ee2",
+      "receiptId": "bdfbad86d90f9abe7e547e582edf1e8a003f140aa6153f4640faeaff2d43dbea",
+      "inventory": {
+        "bytes": 7048545,
+        "files": 53,
+        "sha256": "b508268684678036e74940e5f19c931e2a855e4d6b4b10d42a562d228695f2f3"
+      },
+      "allRetainedTransportBytesBound": true,
+      "transport": {
+        "completedAt": "2026-10-28T03:44:44.014Z",
+        "git": {
+          "allBlobHashesVerified": true,
+          "apiTreeMatched": true,
+          "checkoutPerformed": false,
+          "commit": "8f169b18a2eeec70fe9e57eed5bdb154e9dad3bc",
+          "completedAt": "2026-10-28T03:44:43.038Z",
+          "credentialsPersisted": false,
+          "decodedBytes": 7046593,
+          "fetchOperations": 1,
+          "hooksEnabled": false,
+          "httpRequestCount": null,
+          "method": "git-fetch-depth-one-no-checkout",
+          "startedAt": "2026-10-28T03:44:42.503Z",
+          "tree": "2f69764587c2e5fcc7d5d29991fcee3bac3bb569",
+          "uniqueBlobs": 52,
+          "wireBytes": null
+        },
+        "method": "git-object-pack",
+        "receivedBytes": 18308,
+        "redirects": 0,
+        "requests": 3,
+        "retries": 0,
+        "startedAt": "2026-10-28T03:44:41.973Z"
+      }
+    },
+    "newRecordIds": [],
+    "newObservationIds": [
+      "e53a5bb79051e738846ec3bb01ce89e1140c4e64c7bad2217bb217b76b7d4f9a"
+    ]
+  },
+  "originalRecords": [
+    {
+      "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+      "modelKey": "adaptive",
+      "issuedAt": "2026-10-27T07:44:13.396Z",
+      "graphFiles": 14,
+      "sourceHash": "cb316276ae79f90cd44d31d7ef4ad7d404c9ced4bb49d957bb4f6f94ed030491",
+      "points": 731,
+      "originalBytesEqual": true
+    },
+    {
+      "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+      "modelKey": "pooled",
+      "issuedAt": "2026-10-27T07:44:13.396Z",
+      "graphFiles": 14,
+      "sourceHash": "cb316276ae79f90cd44d31d7ef4ad7d404c9ced4bb49d957bb4f6f94ed030491",
+      "points": 731,
+      "originalBytesEqual": true
+    },
+    {
+      "id": "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+      "modelKey": "warmStart",
+      "issuedAt": "2026-10-27T09:57:51.931Z",
+      "graphFiles": 17,
+      "sourceHash": "463085b24aa701b66a6e754c6b6437a157f2bc1cbc7fd1b2403a072b4b9d42ca",
+      "points": 731,
+      "originalBytesEqual": true
+    }
+  ],
+  "newRecords": [],
+  "newObservations": [
+    {
+      "id": "e53a5bb79051e738846ec3bb01ce89e1140c4e64c7bad2217bb217b76b7d4f9a",
+      "asOf": "2026-10-27",
+      "informationCutoffAt": "2026-10-28T03:44:50.411Z",
+      "bytes": 1084206,
+      "sha256": "71d0f49545ed665fd18f42f2f74d8d49c79c1f48e3bd54ad02b7bda84c298fdb",
+      "gitBlobSha": "4731f31eea533c3b281e92796868edef08ef3d65"
+    }
+  ],
+  "replays": [
+    {
+      "modelKey": "pooled",
+      "id": "2993a2864880b3480a6c50490092c8e3874a7a6473aa89bb76b598d9797c6a40",
+      "outputHash": "d0714eee52b81bf9203eb7a3ac02f23c3998f47455e93eda3ba64377c563d6c9",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    },
+    {
+      "modelKey": "adaptive",
+      "id": "4ee24d06bd335abf986985cde903ef750f243adb063b78d43d2a84256a3c91bd",
+      "outputHash": "a2715c465b16cf9d2b4e550a7b189a422caac18da229ccdcaaed4f303f006cbc",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    },
+    {
+      "modelKey": "adaptive",
+      "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+      "outputHash": "f5728c0632945702a839cf8722a9b8ec6af0c91346169f5b14929c6ce055fe25",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    },
+    {
+      "modelKey": "warmStart",
+      "id": "a8b4da2a30949175cae99330cdf054b3cb41677116df66e6a777cf079f76e14a",
+      "outputHash": "0c6f0d7f71c1913e98a8feb9eaeb296f0c8882db4cd7d377969a556bbc20e745",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    },
+    {
+      "modelKey": "warmStart",
+      "id": "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+      "outputHash": "b7f45f7ebada37e9a046b4e5547101bb985b43a16fbbf3ee1e34bcdc667b6dc8",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    },
+    {
+      "modelKey": "pooled",
+      "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+      "outputHash": "7b84f0fa04346be007f153a189ce4266d705cd3702c5f0d65e4ceefa3e37d570",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    }
+  ],
+  "issuance": {
+    "issuedStatus": "issued-or-reused",
+    "issuerNewRecords": 0,
+    "issuerReusedRecords": 3,
+    "issuerTotalRecords": 6,
+    "issuerErrors": []
+  },
+  "readiness": {
+    "id": "14976e2991f1a55305eddcc06ea020e57c6e33b94a024173d37c7793c312acf8",
+    "informationCutoffAt": "2026-10-28T03:44:56.483Z",
+    "records": 6,
+    "observations": 7,
+    "bindings": 9,
+    "readyBindings": 0,
+    "recomputedFromCompleteArchive": true,
+    "actualFreezesCreated": 0,
+    "actualCalibratedRecordsIssued": 0,
+    "prospectiveCalibratedTargetsScored": 0,
+    "results": [
+      {
+        "id": "d65af455e69ed49e11712977e945d56b7c7c37cb9aa350671092717a95efd3a3",
+        "modelKey": "adaptive",
+        "horizonDays": 180,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "1fa4763c5e143699cd5df84f0aa9605ac12930ff94a5b3801bc1d5e876963b2d",
+        "modelKey": "pooled",
+        "horizonDays": 180,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "113282777b44057b8468457f7c5f47e0454aa3b3ad7b141d1cb6fa5efbcb6ae4",
+        "modelKey": "warmStart",
+        "horizonDays": 180,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "cfad4112e7ddeae6eb8f2bcba434487f16dbfe4fff2c07e23895731b1a39892e",
+        "modelKey": "adaptive",
+        "horizonDays": 30,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "20bfd3d31934fd27e0bb6f9ba1add5af0eff1ce82381e0e404eb94ec775e38da",
+        "modelKey": "pooled",
+        "horizonDays": 30,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "12a407309681778bda1421208ce2244e22bea34dda578580bf7cf953472ae811",
+        "modelKey": "warmStart",
+        "horizonDays": 30,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "500a6e41b86d0cc03469e7a016a04ac8e96b2d31ce4f415bdc308ab0f7660e35",
+        "modelKey": "adaptive",
+        "horizonDays": 90,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "b220cc36bd9b92d147a8c09a3e63b4accc77164dd223f2b3f9e9cf89674786da",
+        "modelKey": "pooled",
+        "horizonDays": 90,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "545d1366ff56903c1971f973348d606af0cf7043652edd302ac46e97d515d7a7",
+        "modelKey": "warmStart",
+        "horizonDays": 90,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      }
+    ]
+  },
+  "capacity": {
+    "id": "85b9dd4f50870e561bced3d754aaff138c68646f38a329d0095d74e504a34ad4",
+    "informationCutoffAt": "2026-10-28T03:44:59.879Z",
+    "reportAndInputIdentitiesVerified": true,
+    "arithmeticRecomputedByThisVerifier": false,
+    "inventory": {
+      "acquisitionDays": [
+        {
+          "date": "2026-10-26",
+          "independentOutcome": 1,
+          "prospective": 0
+        },
+        {
+          "date": "2026-10-27",
+          "independentOutcome": 0,
+          "prospective": 4
+        },
+        {
+          "date": "2026-10-28",
+          "independentOutcome": 0,
+          "prospective": 2
+        }
+      ],
+      "completeHistoricalAcquisitionScheduleProven": false,
+      "exactExperiments": 3,
+      "independentOutcomeAcquisitions": 1,
+      "maximumObservedProspectivePerDay": 4,
+      "observationIds": [
+        "0da301019d62a8a0c2d55af377176eb6bd540dc70d16e364305a3ec224c30a08",
+        "278fc6046b123011216c7c59e678d6ce152824e82fd7cbc0bb843b7a112e5a36",
+        "bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59",
+        "da9f0f8abf60398b020501c33aaf33173fa555fcc8919b1d60975abd493d0615",
+        "e2e95e803edf9151e6bfc00b509dc124a4f25d0b623df94e00d7fb0d5b289f20",
+        "e53a5bb79051e738846ec3bb01ce89e1140c4e64c7bad2217bb217b76b7d4f9a",
+        "f034cd8aee6d3a256364379d801750212f9eb678ef9813c37d0fcba2e103df24"
+      ],
+      "observations": 7,
+      "prospectiveAcquisitions": 6,
+      "recordIds": [
+        "2993a2864880b3480a6c50490092c8e3874a7a6473aa89bb76b598d9797c6a40",
+        "4ee24d06bd335abf986985cde903ef750f243adb063b78d43d2a84256a3c91bd",
+        "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+        "a8b4da2a30949175cae99330cdf054b3cb41677116df66e6a777cf079f76e14a",
+        "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+        "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1"
+      ],
+      "records": 6,
+      "uniqueOrigins": 2
+    },
+    "dailyContinuation": {
+      "additionalIndexBytesPerCompleteOriginDay": 1903,
+      "completeAdditionalOriginDaysWithinIndexLimit": 548,
+      "completeAdditionalOriginDaysWithinRecordLimit": 664,
+      "currentMergedCompactIndexBytes": 3874,
+      "firstOriginDayExceedingIndexLimit": "2028-04-28",
+      "firstOriginDayExceedingRecordLimit": "2028-08-22",
+      "firstPossibleAdditionalOriginDate": "2026-10-28",
+      "indexByteLimitScope": "Per individual input index; this projection assumes accumulation into one retained seed index",
+      "indexProjectionBasis": "Canonical compact merged inventory with current exact experiment entry lengths; extra whitespace, revisions and changed versions can exhaust the bound sooner",
+      "observationScenarios": [
+        {
+          "additionalIndependentSnapshotsAssumed": 0,
+          "basis": "conditional single successful daily capture",
+          "completeAdditionalCaptureDaysWithinLimit": 493,
+          "firstAdditionalCaptureDate": "2026-10-29",
+          "firstExceedingCaptureDate": "2028-03-05",
+          "historicalScheduleOrFutureFrequencyProven": false,
+          "newProspectiveSnapshotsPerDay": 1
+        },
+        {
+          "additionalIndependentSnapshotsAssumed": 0,
+          "basis": "conditional repetition of maximum retained same-day prospective captures",
+          "completeAdditionalCaptureDaysWithinLimit": 123,
+          "firstAdditionalCaptureDate": "2026-10-29",
+          "firstExceedingCaptureDate": "2027-03-01",
+          "historicalScheduleOrFutureFrequencyProven": false,
+          "newProspectiveSnapshotsPerDay": 4
+        }
+      ],
+      "unchangedExperimentsPerDay": 3
+    },
+    "unchangedCurrentBase": {
+      "automaticBaseRolloverImplemented": false,
+      "boundaryPlannerChecksPassed": true,
+      "currentRequestError": null,
+      "currentRequestPlan": {
+        "expectedAsOf": "2026-10-27",
+        "granularity": 86400,
+        "requestedEnd": 1793145600,
+        "requestedStart": 1792368000,
+        "sourceUrl": "https://api.exchange.coinbase.com/products/ETH-USD/candles?granularity=86400&start=2026-10-19T00%3A00%3A00.000Z&end=2026-10-28T00%3A00%3A00.000Z"
+      },
+      "explicitCommittedBaseReplacementSupported": true,
+      "firstRejectedRequestUtcDate": "2027-08-06",
+      "lastAllowedRequestUtcDate": "2027-08-05",
+      "path": "dist/data/eth-ohlc.json",
+      "requestOverlapStartAt": "2026-10-19T00:00:00.000Z",
+      "requestedEnd": 1792972800,
+      "requestedStart": 1451606400,
+      "scope": "This boundary holds only while these exact base bytes remain unchanged. The separate committed-base reader permits an explicitly reviewed committed replacement; it does not generate or schedule that replacement."
+    },
+    "remainingOperationalRequirements": [
+      "Actually capture, publish and durably preserve each future issuance and its raw outcomes",
+      "An actually activated reviewed trigger and successful remote archive append/readback on the daily path; definitions alone cannot prove continuous operation",
+      "Reviewed committed base updates before the unchanged-base request boundary",
+      "A bounded archival/streaming design that preserves all required evidence beyond current flat inventory limits",
+      "First twelve exact-bound nonoverlapping actual windows with all selected outcomes; no substitution or retrospective issues"
+    ]
+  },
+  "economics": {
+    "requiredMetricCount": 26,
+    "providedSnapshots": 0,
+    "eligibleFullSnapshots": 0,
+    "metricEvidenceSummary": {
+      "requiredMetricCount": 26,
+      "sourceReceiptCount": 3,
+      "observedSourceFieldCount": 6,
+      "failedOrIncompleteSourceCount": 0,
+      "missingSourceKinds": [],
+      "rawVerifiedSourceCount": 3,
+      "replayedSourceCount": 3,
+      "metricsWithRelatedObservations": 10,
+      "definitionExactReportedMetricCount": 1,
+      "definitionExactReplayedMetricCount": 1,
+      "rateDerivedMetricCount": 1,
+      "scopeMismatchMetricCount": 10,
+      "notObservedMetricCount": 16,
+      "staleObservationCount": 4,
+      "unknownPublicationObservationCount": 6,
+      "reportedExactAndClockQualifiedMetricCount": 0,
+      "countsAreOverlappingEvidenceDimensions": true
+    }
+  },
+  "release": {
+    "draft": true,
+    "authorized": false,
+    "productionPromoted": false,
+    "geminiOpposition": "omitted-by-user",
+    "followupReverseReview": "omitted-by-user",
+    "gatesNotSubstitutedByCodeTests": [
+      "Mature prospective outcomes",
+      "Adequate horizon-specific nonoverlapping samples",
+      "Validated forecast calibration",
+      "Separate release authorization"
+    ]
+  },
+  "limitations": {
+    "providerAuthenticity": false,
+    "historicalPublicationAuthenticated": false,
+    "prospectivePerformanceProven": false,
+    "remoteWriterExecutedByThisVerifier": false,
+    "scheduleActivationProven": false,
+    "gitWireBytes": null,
+    "gitHttpRequestCount": null,
+    "reviewOmission": "Gemini opposition and follow-up reverse review remain omitted-by-user.",
+    "continuityScope": "Two actual pull-request executions on the same UTC day with manual first archive publication between them; not next-day operation or activated schedule."
+  },
+  "verificationExecution": {
+    "status": "verified",
+    "startedAt": "2026-10-28T03:50:50.197Z",
+    "finishedAt": "2026-10-28T03:51:10.371Z",
+    "durationMs": 20174,
+    "processExitCode": 0,
+    "verifierWasChangedForSecondArtifact": false
+  }
+}

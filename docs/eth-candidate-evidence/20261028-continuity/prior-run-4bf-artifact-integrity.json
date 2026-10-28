@@ -1,0 +1,135 @@
+{
+  "artifactId": 12755309364,
+  "runId": 40552717736,
+  "sourceCommit": "4bf84ce345d6468c69dc25c7a7dce50f5703ab6b",
+  "zipBytes": 53110121,
+  "zipSha256": "fd01857628132e67b63784398b5808360ec3a4896a3ffa6070ccf8ab4246905f",
+  "zipCrcVerified": true,
+  "selectedFiles": [
+    {
+      "path": "ethereum-prospective-ledger/acquisitions/4cdffdbb7b7db8aab853e3a99963a38e7efdfd5e06f130f655814f6c65fbcfee.json",
+      "bytes": 2183,
+      "sha256": "0d6eaffeb933e567e04fea7eae91c78b35fd8f8be1d7e0ae40ee42249ab11fc4"
+    },
+    {
+      "path": "ethereum-prospective-ledger/evaluations/9623af16644deaadb4aa1c11d7f2edb248113ceba9f2df6ef4ba4a73ad721264.json",
+      "bytes": 13578,
+      "sha256": "a09feffcc048d6c9bc60fa5e4d667b73ecf54494e9df1195d3776b214e14bde9"
+    },
+    {
+      "path": "ethereum-prospective-ledger/files.json",
+      "bytes": 2730,
+      "sha256": "39b7b9b9e9ea8bdd614eb7fc0bc401e3bdfe08833bf40db7c7d166faa419227a"
+    },
+    {
+      "path": "ethereum-prospective-ledger/index.json",
+      "bytes": 1971,
+      "sha256": "f124b65d177b3aae9fa851a2f6204a6e1073dc288d22bf36eecf0b0e650081c2"
+    },
+    {
+      "path": "ethereum-prospective-ledger/issuances/f4005cf21e338fdc6f100c71b81925b53917c849568a9751d634c71c1c604f90.json",
+      "bytes": 6586,
+      "sha256": "30a9fd910e7be0105bf6c7c8c6733f867acf3a5df9170d54e345bd27e15cdce7"
+    },
+    {
+      "path": "ethereum-prospective-ledger/raw/coinbase-tail-ae0894b3b33983fc18b23c39334c11a69e770b18ba719c893d1501d987c718c2.json",
+      "bytes": 530,
+      "sha256": "ae0894b3b33983fc18b23c39334c11a69e770b18ba719c893d1501d987c718c2"
+    },
+    {
+      "path": "ethereum-prospective-ledger/receipt.json",
+      "bytes": 6586,
+      "sha256": "30a9fd910e7be0105bf6c7c8c6733f867acf3a5df9170d54e345bd27e15cdce7"
+    },
+    {
+      "path": "ethereum-prospective-ledger/observations/f034cd8aee6d3a256364379d801750212f9eb678ef9813c37d0fcba2e103df24.json",
+      "bytes": 1084126,
+      "sha256": "d66d8d10eff61c794398b6f6bf0e4f083d49ee4526fd975e0e72411674eae21c"
+    },
+    {
+      "path": "ethereum-prospective-ledger/records/563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b.json",
+      "bytes": 75200,
+      "sha256": "f1a53ceda9039fc00d3c59b5ae8c887c7bf277ad4d4a866d9021a02d32e5efc8"
+    },
+    {
+      "path": "ethereum-prospective-ledger/records/d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72.json",
+      "bytes": 81100,
+      "sha256": "747a8ba0b9223674647408ce1757482f3969b629911f8293d97ed7e774c35673"
+    },
+    {
+      "path": "ethereum-prospective-ledger/records/f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1.json",
+      "bytes": 74394,
+      "sha256": "15a3156fc75faff35aca7a5f52e835570a4370b4e370ac0a5961fafc8a0363ce"
+    },
+    {
+      "path": "ethereum-prospective-ledger/replay-files.json",
+      "bytes": 1371,
+      "sha256": "8d7b1978a786ed0296e153a2bd23b13624dc57e46b0ebe3532208d8d76d33d79"
+    },
+    {
+      "path": "ethereum-prospective-ledger/replay-receipt.json",
+      "bytes": 3162,
+      "sha256": "f7e78522086164bdff0a99f45caae641eded14690592951c0995f51a4d0d4f2a"
+    },
+    {
+      "path": "ethereum-prospective-ledger/snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json",
+      "bytes": 1084124,
+      "sha256": "4a6d592d5d7b5e99295c8ca7f9ad843ac063a695743a7e3bee766777f38903f8"
+    },
+    {
+      "path": "ethereum-prospective-ledger/snapshots/da9f0f8abf60398b020501c33aaf33173fa555fcc8919b1d60975abd493d0615.json",
+      "bytes": 1084123,
+      "sha256": "1fbd7f113cf58288bbf616cfa00f684ab831f266381c10b7d9e0bbb1f82e03ec"
+    },
+    {
+      "path": "asset-outcome-ledger/evaluations/3a36afd51ed27037911eb6bba91cc5b081f67eda199016972a5b375dea2b8839.json",
+      "bytes": 18908,
+      "sha256": "ddb2186e80f462b7661e6186e011cad425206c9fadfc64b87bc6f9261fd1d59e"
+    },
+    {
+      "path": "asset-outcome-ledger/evaluations/5b7104bad3f260b0a293d9de35df8870a68efaced9e133588db3583ea0ff5fd9.json",
+      "bytes": 18908,
+      "sha256": "b1f7d987deff737a22283352bba60acbad947f0c6340b7ee61cc1a57d6332189"
+    },
+    {
+      "path": "asset-outcome-ledger/evaluations/6dc319df260c526e2041313c75aae1d8525bb00970bc3ddc4ac526b1279363bb.json",
+      "bytes": 18908,
+      "sha256": "c6083a3127c2c604a5ac230fabf7255c63130d693d49a4c6d84746dfcf87a956"
+    },
+    {
+      "path": "asset-outcome-ledger/evaluations/d1614210e958e2b064333704d06693d025242c323ae0bccb750483b685bfc582.json",
+      "bytes": 18908,
+      "sha256": "3ff2c6ede2ea76de1428ffa6fd934b2123e64a87c861983d17f1da6145150177"
+    },
+    {
+      "path": "asset-outcome-ledger/index.json",
+      "bytes": 1911,
+      "sha256": "6a118daaa0fde0ab5517dcf43d1956427d898ff785bce0cff892acd3d13b26a3"
+    },
+    {
+      "path": "asset-outcome-ledger/observations/24ad59d1d0a798e0e16d118707e54cd007b93bd361ebaf3ea354dc4f43c9643f.json",
+      "bytes": 1969036,
+      "sha256": "9e9afd41df0255a780f6f6cb55c0bf4762338b119101ee139133ebd34a451035"
+    },
+    {
+      "path": "asset-outcome-ledger/observations/e2e95e803edf9151e6bfc00b509dc124a4f25d0b623df94e00d7fb0d5b289f20.json",
+      "bytes": 998242,
+      "sha256": "2c1db25a208a900b9d50d6607e2e1335c193ec83259dd0c3ad15e4543c8271c2"
+    },
+    {
+      "path": "asset-outcome-ledger/observations/f623dbffd6b670fb4ac8903d7387b15d2c5f8cc8c48bb60ba2e6be1f75db27e5.json",
+      "bytes": 100161,
+      "sha256": "3b1360721875970ec848dbc20a22a68150c320d2e48dd081f6c9903634debb3d"
+    },
+    {
+      "path": "asset-outcome-ledger/receipts/76ffdb5605a8e13f4bb6bd0d2671a2f29a8b6226e89ed0601b34565ad9b7b0a7.json",
+      "bytes": 2174,
+      "sha256": "76ffdb5605a8e13f4bb6bd0d2671a2f29a8b6226e89ed0601b34565ad9b7b0a7"
+    },
+    {
+      "path": "asset-outcome-ledger/receipts/d9133b094e0c1b3b9095513b0b324117d68d7d61f6cefea454f763e4929047fc.json",
+      "bytes": 2174,
+      "sha256": "d9133b094e0c1b3b9095513b0b324117d68d7d61f6cefea454f763e4929047fc"
+    }
+  ]
+}
