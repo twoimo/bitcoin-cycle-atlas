@@ -3,6 +3,7 @@ import {isExpectedOfflineBtcRefresh} from './btc-offline-refresh-policy.mjs';
 // PR-only verification of checked-out dist files. Does not deploy or alter UI.
 import assert from 'node:assert/strict';
 import {workspaceBrowserCases,verifyWorkspaceSurface} from './verify-workspace-browser.mjs';
+import {replayBrowserCases,verifyForecastReplaySurface} from './verify-forecast-replay-browser.mjs';
 import {createServer} from 'node:http';
 import {readFile,writeFile,mkdir,mkdtemp,rm,stat} from 'node:fs/promises';
 import {resolve,relative,sep,extname} from 'node:path';
@@ -19,7 +20,9 @@ const dist=resolve(root,'dist'),out=resolve(root,'build/eth-browser');
 const widths=[320,390,768,1024,1440],height=900;
 const imageLogMode=process.env.ETH_BROWSER_IMAGE_LOG_MODE??'representative';
 if(!['representative','failures-only'].includes(imageLogMode))throw new Error('Unknown screenshot log transport mode');
-const report={schemaVersion:1,kind:'eth-candidate-real-browser',startedAt:new Date().toISOString(),status:'running',imageLogMode,cases:[],failures:[],
+const caseScope=process.env.ATLAS_BROWSER_CASE_SCOPE??'all';
+if(!['all','replay'].includes(caseScope))throw new Error('Unknown browser case scope');
+const report={schemaVersion:1,kind:'eth-candidate-real-browser',startedAt:new Date().toISOString(),status:'running',imageLogMode,caseScope,cases:[],failures:[],
   scope:'Actual checked-out static site in headless Chromium through native CDP; no production deployment, Safari or physical-device claim.'};
 let server,chrome,browser,profile,base;
 let chromeStderr='';
@@ -672,6 +675,7 @@ async function main(){
     report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   }
   for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/preserved-archive-download.js','dist/workspace-tools.js','dist/research-annotations-workbench.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
+  for(const path of ['dist/forecast-replay.js','dist/forecast-replay-sources.js','dist/forecast-replay-view.js','dist/data/replay-eth-ohlc.json','scripts/verify-forecast-replay-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   const fonts=execFileSync('fc-list',[':lang=ko'],{encoding:'utf8'}).trim();
   assert.ok(fonts.length,'Korean fonts are required; install fonts-noto-cjk in this PR runner');
   report.koreanFonts=fonts.split('\n').slice(0,10);
@@ -748,8 +752,10 @@ async function main(){
     {page:'data',width:1920,height:1440,touch:false,responsive:true,fill:true},
     {page:'data',width:900,height:430,touch:true,responsive:true,fill:false},
     {page:'data',width:320,height:568,touch:true,responsive:true,fill:false});
-  caseSpecs.push(...workspaceBrowserCases);
-  for(const spec of caseSpecs){
+  caseSpecs.push(...workspaceBrowserCases,...replayBrowserCases);
+  const selectedCases=caseSpecs.filter(spec=>caseScope==='all'||spec.replay);
+  report.declaredCaseCount=caseSpecs.length;report.expectedCaseCount=selectedCases.length;
+  for(const spec of selectedCases){
     const {page,width,height,touch}=spec;
     const receipt={...spec,status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[],dataResourceRequests:[],expectedOfflineRefresh:[],unexpectedResourceErrors:[]};
     report.cases.push(receipt);let cdp,targetId;
@@ -771,7 +777,7 @@ async function main(){
       cdp.on('Network.loadingFailed',event=>{
         const url=urls.get(event.requestId)||'unknown';
         if(optional(url)&&event.blockedReason)receipt.blockedOptionalFonts.push({url,reason:event.blockedReason});
-        else receipt.resourceErrors.push({...requestDetails.get(event.requestId),networkEvent:'Network.loadingFailed',url,errorText:event.errorText,blockedReason:event.blockedReason??null});
+        else receipt.resourceErrors.push({...requestDetails.get(event.requestId),networkEvent:'Network.loadingFailed',url,errorText:event.errorText,canceled:event.canceled??false,blockedReason:event.blockedReason??null});
       });
       const verifyOfflineRefresh=async({preview=false,phase='initial-document'}={})=>{
         const stale=(Math.floor(Date.now()/86400000)-Date.parse(expectedBtc.asOf+'T00:00:00Z')/86400000)>1;
@@ -842,20 +848,23 @@ async function main(){
       await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'},{name:'prefers-color-scheme',value:'dark'}]});
       receipt.url=spec.route?base+spec.route:base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
-      if(spec.surface)await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership:()=>verifyHeaderOwnership(cdp)});else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
+      if(spec.replay)await verifyForecastReplaySurface({cdp,browser,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
+      else if(spec.surface)await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership:()=>verifyHeaderOwnership(cdp)});else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
       assert.equal(receipt.runtimeErrors.length,0,'Browser runtime errors: '+JSON.stringify(receipt.runtimeErrors));
-      receipt.unexpectedResourceErrors=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId));
+      const verifiedReplayCancellations=new Set(receipt.replay?.expectedCanceledRequests.map(row=>row.requestId)??[]);
+      receipt.unexpectedResourceErrors=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId)&&!verifiedReplayCancellations.has(error.requestId));
       assert.equal(receipt.unexpectedResourceErrors.length,0,'Unexpected browser resource failures: '+JSON.stringify(receipt.unexpectedResourceErrors));
       receipt.status='passed';
     }catch(error){
       receipt.status='failed';receipt.error=errorText(error);report.failures.push({page,width,error:receipt.error});
       if(cdp)try{await screenshot(cdp,page+'-'+width+'-failure.png',receipt);}catch(captureError){receipt.screenshotFailure=errorText(captureError);}
     }finally{
+      console.log('ETH_BROWSER_CASE '+JSON.stringify({page,width,height,status:receipt.status,error:receipt.error}));
       if(cdp)cdp.close();
       if(targetId)try{await browser.send('Target.closeTarget',{targetId});}catch(error){report.failures.push({page,width,cleanupError:errorText(error)});}
     }
   }
-  assert.equal(report.cases.length,25+workspaceBrowserCases.length);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');
+  assert.equal(report.cases.length,selectedCases.length);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');
   report.status='passed';
 }
 try{await main();}catch(error){report.status='failed';report.error=errorText(error);process.exitCode=1;}
@@ -866,5 +875,5 @@ finally{
   if(server)await new Promise(resolve=>server.close(resolve));
   if(profile)try{await rm(profile,{recursive:true,force:true});}catch(error){report.cleanupError=errorText(error);}
   await mkdir(out,{recursive:true});await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,infoDataLinks:c.infoDataLinks,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,caseScope:report.caseScope,declaredCaseCount:report.declaredCaseCount,expectedCaseCount:report.expectedCaseCount,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,replay:c.replay,infoDataLinks:c.infoDataLinks,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
 }

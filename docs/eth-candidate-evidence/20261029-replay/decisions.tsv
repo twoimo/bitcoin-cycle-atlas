@@ -1,0 +1,9 @@
+ts	phase	decision	why	evidence	result
+2026-10-28T15:27:41Z	start	Continue Draft PR39 with isolated pstack implementation owners	Continue the user task while preserving frozen models and release boundaries	docs/FORECAST_REPLAY_WORKLOG.md	Earlier decisions in this run are recorded below from the actual conversation
+2026-10-28T15:27:41Z	architecture	Restore once and project one immutable replay frame	One disclosure boundary must govern plots, metrics, hover and exports	docs/FORECAST_REPLAY_CONTRACT.md	Engine and UI integrated
+2026-10-28T15:27:41Z	architecture	Separate historical reconstruction from actual issued forecasts	Current-model past experiments do not prove old issuance or prospective skill	dist/forecast-replay.js	Distinct modes and target statuses
+2026-10-28T15:27:41Z	baseline	Retain the before-change tests and native browser run	Final changes need a real comparison baseline	docs/eth-candidate-evidence/20261029-replay/baseline	1823 tests and35 browser cases passed on4165f309
+2026-10-28T15:27:41Z	acquisition	Preserve failed and successful ETH tail requests separately	Failure history and actual acquisition clocks must remain inspectable	research-data/forecast-replay/20261029	One successful GET588bytes; two new completed observations
+2026-10-28T15:27:41Z	capacity	Prepare a verified replacement-base candidate without promotion	Refresh inputs without changing original operating data or model graphs	scripts/prepare-ethereum-base-rollover.mjs	Candidate prepared; operating base unchanged
+2026-10-28T15:27:41Z	offline	Extend standalone assets and replay data embedding	Offline asset journal entry otherwise requires network	scripts/build-standalone.mjs	Implementation in progress
+2026-10-28T15:27:41Z	peer-review	Hide unreceived input prices and their scale in strict replay	A pre-issuance frame still showed context collected later	ceb1fe8	View guard committed; engine regression in progress

@@ -10,6 +10,7 @@ on:
       - 'tests/helpers/asset-outcome*.mjs'
       - 'tests/eth-review-packet.test.mjs'
       - 'tests/journal-entry-ownership.test.mjs'
+      - 'tests/forecast-replay*.test.mjs'
       - 'tests/equity-chart-rendering.test.mjs'
       - 'tests/eth-chart-rendering.test.mjs'
       - 'tests/eth-future-range.test.mjs'
@@ -41,6 +42,8 @@ on:
       - 'scripts/ethereum-prospective-write-guard.mjs'
       - 'scripts/ethereum-prospective-capacity-core.mjs'
       - 'scripts/analyze-ethereum-prospective-capacity.mjs'
+      - 'scripts/ethereum-base-rollover-core.mjs'
+      - 'scripts/prepare-ethereum-base-rollover.mjs'
       - 'scripts/analyze-ethereum-source-timing.mjs'
       - 'scripts/evaluate-ethereum-monte-carlo-stability.mjs'
       - 'scripts/ethereum-monte-carlo-stability-core.mjs'
@@ -51,11 +54,14 @@ on:
       - 'scripts/build-ethereum-model-readiness.mjs'
       - 'research-data/ethereum-prospective-ledger/**'
       - 'research-data/ethereum-prospective-archive/**'
+      - 'research-data/forecast-replay/**'
       - 'scripts/capture-ethereum-throughput.mjs'
       - 'scripts/ethereum-pow-zero-core.mjs'
       - 'scripts/capture-ethereum-pow-zero.mjs'
       - 'scripts/verify-eth-candidate-browser.mjs'
       - 'scripts/verify-workspace-browser.mjs'
+      - 'scripts/verify-forecast-replay-browser.mjs'
+      - 'scripts/build-standalone.mjs'
       - 'scripts/btc-offline-refresh-policy.mjs'
       - 'scripts/capture-ethereum-economic-data.mjs'
       - 'scripts/issue-asset-forecasts.mjs'
@@ -93,6 +99,8 @@ jobs:
       - name: Test candidate equations, missing inputs, clocks and future-information boundaries
         run: |
           node --check scripts/verify-eth-candidate-browser.mjs
+          node --check scripts/verify-forecast-replay-browser.mjs
+          node --check scripts/prepare-ethereum-base-rollover.mjs
           node --check scripts/issue-ethereum-prospective.mjs
           node --check scripts/evaluate-ethereum-common-cohort.mjs
           node --check scripts/build-ethereum-economic-evidence-coverage.mjs
@@ -106,6 +114,7 @@ jobs:
           node --check scripts/analyze-ethereum-prospective-capacity.mjs
           node --check scripts/analyze-ethereum-supply-resolution.mjs
           node --check scripts/capture-ethereum-staking-cohort.mjs
+          node --test tests/forecast-replay*.test.mjs tests/ethereum-base-rollover.test.mjs
           node --test tests/ethereum-prospective-base.test.mjs tests/ethereum-prospective-capacity.test.mjs tests/ethereum-supply-resolution.test.mjs tests/ethereum-staking-cohort.test.mjs
           node --test tests/ethereum-prospective-archive.test.mjs tests/ethereum-prospective-archive-io.test.mjs tests/ethereum-prospective-archive-remote.test.mjs tests/ethereum-prospective-write-guard.test.mjs
           node --test tests/ethereum-prospective-calibration.test.mjs tests/ethereum-prospective-calibration-readiness.test.mjs
@@ -169,6 +178,8 @@ jobs:
         run: node scripts/build-ethereum-prospective-calibration-readiness.mjs
       - name: Diagnose prospective calendar and retained-input capacity without relaxing sample requirements
         run: node scripts/analyze-ethereum-prospective-capacity.mjs
+      - name: Rebuild the reviewed ETH base candidate without changing the operating base
+        run: node scripts/prepare-ethereum-base-rollover.mjs --snapshot research-data/forecast-replay/20261029/acquisition-2/snapshot.json
       - name: Append current evidence and prove exact restoration of the previous archive
         run: |
           node scripts/manage-ethereum-prospective-archive.mjs append
@@ -227,6 +238,7 @@ jobs:
             build/ethereum-independent-calibration.json
             build/ethereum-prospective-calibration-readiness.json
             build/ethereum-prospective-capacity.json
+            build/ethereum-base-rollover
             build/ethereum-prospective-ledger
             build/ethereum-prospective-archive
             build/ethereum-prospective-archive-outcomes

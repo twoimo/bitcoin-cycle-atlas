@@ -3,6 +3,7 @@ import { drawAtlasPriceChart } from './atlas-price-chart.js?v=1.29.0';
 import { mountDialogViewport } from './dialog-viewport.js?v=1.29.0';
 import { describeFreshness } from './data-freshness.js?v=1.29.0';
 import { performanceSnapshot, downloadPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
+import {mountForecastReplay} from './forecast-replay-view.js?v=1.29.0';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const price=value=>Number.isFinite(value)?'$'+value.toLocaleString('en-US',{maximumFractionDigits:2}):'—';
@@ -11,7 +12,7 @@ const percent=value=>Number.isFinite(value)?(value*100).toFixed(2)+'%':'미평�
 const stamp=value=>value?new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',dateStyle:'short',timeStyle:'short'}).format(new Date(value))+' KST':'확인되지 않음';
 const day=value=>Date.parse(value+'T00:00:00Z')/86400000;
 const fromDay=value=>new Date(value*86400000).toISOString().slice(0,10);
-const tabs=[['records','보존본'],['evaluation','평가'],['changes','변경 이유'],['data','자료 상태'],['experiments','실험'],['performance','성능']];
+const tabs=[['records','보존본'],['replay','리플레이'],['evaluation','평가'],['changes','변경 이유'],['data','자료 상태'],['experiments','실험'],['performance','성능']];
 let instance=null;
 const resources=new Map();
 
@@ -42,13 +43,22 @@ function mount() {
   dialog.innerHTML=`<header class="journal-heading"><h2 id="forecast-journal-title">예측 기록과 검증</h2><button type="button" data-journal-close aria-label="예측 기록 닫기">×</button></header><nav class="journal-tabs" aria-label="예측 기록 기능">${tabs.map(([id,label])=>`<button type="button" data-journal-tab="${id}" aria-pressed="false">${label}</button>`).join('')}</nav><div class="journal-body" id="forecast-journal-body" aria-live="polite"></div>`;
   document.body.append(dialog);mountDialogViewport(dialog);
   const content=dialog.querySelector('.journal-body');
-  let generation=0,currentTab='records',opener=null,selectedId=null,comparisonId=null,days=180,selectedDate=null,resizeObserver=null,draw=null;
+  let generation=0,currentTab='records',opener=null,selectedId=null,comparisonId=null,days=180,selectedDate=null,resizeObserver=null,draw=null,replay=null;
   const checkedEntry=async entry=>{
     const [record,snapshot]=await Promise.all([cached('record:'+entry.id,()=>loadForecastRecord(entry)),cached('snapshot:'+entry.snapshotId,()=>loadForecastSnapshot(entry))]);
     await verifyForecastRecord(record,snapshot);return {record,snapshot};
   };
   const indexData=()=>cached('index',()=>loadForecastIndex());
   const selectMarkup=(entries,value,attribute)=>`<select ${attribute} aria-label="${attribute==='data-journal-record'?'보존한 예측 선택':'비교할 이전 예측 선택'}">${entries.map(entry=>`<option value="${entry.id}"${value===entry.id?' selected':''}>${esc(entry.asOf)} · ${esc(entry.scenarioLabel)} · ${entry.kind==='issued'?'생성·보존':'회고'}</option>`).join('')}</select>`;
+  async function replayBody(index,token){
+    const entries=[...index.entries].sort((a,b)=>b.issuedAt.localeCompare(a.issuedAt)||a.scenario.localeCompare(b.scenario));
+    if(!entries.length){content.innerHTML='<p>재생할 보존 예측이 아직 없습니다.</p>';return;}
+    const entry=entries.find(item=>item.id===selectedId)||entries.find(item=>item.scenario==='base')||entries[0];selectedId=entry.id;
+    const {record,snapshot}=await checkedEntry(entry);
+    if(token!==generation||!dialog.open)return;
+    content.innerHTML='<div class="journal-controls">'+selectMarkup(entries,selectedId,'data-journal-record')+'</div><div data-journal-replay-host></div>';
+    replay=mountForecastReplay(content.querySelector('[data-journal-replay-host]'),{record,snapshot,symbol:'BTCUSD',isActive:()=>dialog.open&&currentTab==='replay'&&token===generation});
+  }
   async function recordsBody(index,token) {
     const entries=[...index.entries].sort((a,b)=>b.issuedAt.localeCompare(a.issuedAt)||a.scenario.localeCompare(b.scenario));
     if(!entries.length){content.innerHTML='<p>아직 보존한 예측이 없습니다. 실제 생성본이 기록되면 이곳에서 확인할 수 있습니다.</p>';return;}
@@ -120,6 +130,7 @@ function mount() {
     content.querySelector('[data-performance-export]').onclick=downloadPerformanceDiagnostics;
   }
   async function render(tab=currentTab,focusSelector=null) {
+    replay?.destroy();replay=null;
     currentTab=tabs.some(([id])=>id===tab)?tab:'records';const token=++generation;resizeObserver?.disconnect();draw=null;
     for(const button of dialog.querySelectorAll('[data-journal-tab]'))button.setAttribute('aria-pressed',String(button.dataset.journalTab===currentTab));
     content.innerHTML='<p role="status">검증한 기록을 불러오는 중입니다.</p>';
@@ -129,7 +140,7 @@ function mount() {
       if(currentTab==='evaluation'){await evaluationBody(token);return;}
       if(currentTab==='experiments'){await experimentBody(token);return;}
       const index=await indexData();if(token!==generation||!dialog.open)return;
-      if(currentTab==='changes')await changesBody(index,token);else await recordsBody(index,token);
+      if(currentTab==='changes')await changesBody(index,token);else if(currentTab==='replay')await replayBody(index,token);else await recordsBody(index,token);
     } catch(error) {
       if(token!==generation||!dialog.open)return;
       content.innerHTML=`<p role="alert">기록을 확인하지 못했습니다. ${esc(error.message)}</p><button type="button" data-journal-retry>다시 확인</button>`;
@@ -150,9 +161,10 @@ function mount() {
     const focusSelector=['data-journal-record','data-journal-compare','data-journal-range'].find(name=>event.target.hasAttribute(name));
     void render(currentTab,focusSelector?'['+focusSelector+']':null);
   });
-  dialog.addEventListener('close',()=>{generation++;resizeObserver?.disconnect();draw=null;if(opener?.isConnected&&opener.getClientRects().length)opener.focus({preventScroll:true});});
+  dialog.addEventListener('close',()=>{if(dialog.open)return;generation++;replay?.destroy();replay=null;resizeObserver?.disconnect();draw=null;if(opener?.isConnected&&opener.getClientRects().length)opener.focus({preventScroll:true});});
   dialog.addEventListener('keydown',event=>event.stopPropagation());
   document.addEventListener('atlas:modal-open',event=>{if(event.detail?.id!==dialog.id&&dialog.open)dialog.close();});
+  window.addEventListener('pagehide',()=>{replay?.destroy();replay=null;if(dialog.open)dialog.close();});
   return {open({tab='records',opener:source=document.activeElement}={}){opener=source;for(const key of ['index','evaluation','experiments','publication','observed'])resources.delete(key);document.dispatchEvent(new CustomEvent('atlas:modal-open',{detail:{id:dialog.id}}));if(!dialog.open)dialog.showModal();dialog.querySelector('[data-journal-close]').focus({preventScroll:true});void render(tab);}};
 }
 export function openForecastJournal(options={}) {instance ||= mount();instance.open(options);}

@@ -42,6 +42,7 @@ await addFiles('build/ethereum-pow-zero');
 await addFiles('build/ethereum-economic-vintages');
 await addFiles('build/ethereum-supply-accounting');
 await addFiles('build/ethereum-staking-cohort');
+await addFiles('build/ethereum-base-rollover');
 await addFiles('build/ethereum-prospective-ledger');
 await addFiles('build/ethereum-prospective-archive-outcomes');
 // The archive's immutable pages bind its full file inventory. Include every

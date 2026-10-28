@@ -1,8 +1,9 @@
 import {canonicalForecastJson} from './forecast-records.js?v=1.29.0';
-import {validateAssetForecastIndex,verifyAssetForecastRecord,assetForecastIndexEntry,restoreAssetForecastPath} from './asset-forecast-records.js?v=1.29.0';
+import {validateAssetForecastIndex,verifyAssetForecastRecord,verifyAssetForecastArchive,assetForecastIndexEntry,restoreAssetForecastPath} from './asset-forecast-records.js?v=1.29.0';
 import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.29.0';
 import {nearestDailyIndex} from './chart-math.js?v=1.29.0';
 import {mountDialogViewport} from './dialog-viewport.js?v=1.29.0';
+import {mountForecastReplay} from './forecast-replay-view.js?v=1.29.0';
 
 const SYMBOLS=new Set(['ETHUSD','BMNR','MSTR']);
 const ROOT_PATH='data/asset-forecast-ledger/';
@@ -29,9 +30,10 @@ const aborted=()=>new DOMException('Research journal request cancelled','AbortEr
  * Abort is an optimization; generation checks also reject late ignored aborts. */
 export function createAssetJournalLoader({
   baseUrl=globalThis.document?.baseURI,fetchImpl=globalThis.fetch,
+  embeddedArchive=()=>globalThis.document?.getElementById('atlas-asset-forecast-ledger')?.textContent??null,
   timeoutMs=15000,setTimer=setTimeout,clearTimer=clearTimeout,onState=()=>{},
 }={}){
-  if(!baseUrl||typeof fetchImpl!=='function'||!Number.isFinite(timeoutMs)||timeoutMs<=0)throw new TypeError('A journal base URL, fetch implementation and positive timeout are required');
+  if(!baseUrl||typeof fetchImpl!=='function'||typeof embeddedArchive!=='function'||!Number.isFinite(timeoutMs)||timeoutMs<=0)throw new TypeError('A journal base URL, fetch implementation and positive timeout are required');
   let generation=0,current=null;
   function cancel(){
     generation++;
@@ -67,7 +69,16 @@ export function createAssetJournalLoader({
     onState({status:'loading',symbol});
     try{
       const work=(async()=>{
-        const raw=await read('index.json',request,{missingIndex:true});
+        let embedded=null;
+        const embeddedText=embeddedArchive();
+        if(embeddedText!==null&&embeddedText!==undefined){
+          if(typeof embeddedText!=='string'||embeddedText.length>64000000||new TextEncoder().encode(embeddedText).byteLength>64000000)throw new Error('내장 기록 자료의 크기 제한을 초과했습니다.');
+          embedded=JSON.parse(embeddedText);
+          if(embedded.schemaVersion!==1||embedded.kind!=='atlas-asset-forecast-archive')throw new Error('내장 자산 기록의 형식을 확인하지 못했습니다.');
+          await verifyAssetForecastArchive(embedded.index,embedded.records,embedded.snapshots);
+          if(!request.owned())throw aborted();
+        }
+        const raw=embedded?embedded.index:await read('index.json',request,{missingIndex:true});
         if(raw===null){
           if(recordId!==null)throw new Error('선택한 보존 기록이 현재 색인에 없습니다. 목록을 다시 열어 주세요.');
           return {status:'empty',symbol,entries:[]};
@@ -78,7 +89,8 @@ export function createAssetJournalLoader({
         if(recordId!==null&&!entries.some(item=>item.id===recordId))throw new Error('선택한 보존 기록이 현재 색인에 없습니다. 목록을 다시 열어 주세요.');
         if(!entries.length)return {status:'empty',symbol,entries};
         const entry=recordId!==null?entries.find(item=>item.id===recordId):entries.find(item=>item.scenario==='base')||entries[0];
-        const [record,snapshot]=await Promise.all([read(entry.recordPath,request),read(entry.snapshotPath,request)]);
+        const [record,snapshot]=embedded?[embedded.records[entry.id],embedded.snapshots[entry.snapshotId]]:
+          await Promise.all([read(entry.recordPath,request),read(entry.snapshotPath,request)]);
         if(!request.owned())throw aborted();
         await verifyAssetForecastRecord(record,snapshot);
         if(!same(assetForecastIndexEntry(record),entry))throw new Error('색인과 보존 기록의 식별자가 다릅니다.');
@@ -124,11 +136,12 @@ function mount(){
   const dialog=document.createElement('dialog');
   dialog.id='asset-forecast-journal';dialog.className='forecast-journal';
   dialog.setAttribute('aria-labelledby','asset-forecast-journal-title');
-  dialog.innerHTML='<header class="journal-heading"><h2 id="asset-forecast-journal-title">자산 연구 발행 기록</h2><button type="button" data-asset-journal-close aria-label="자산 연구 기록 닫기">×</button></header><div class="journal-body" aria-live="polite"></div>';
+  dialog.innerHTML='<header class="journal-heading"><h2 id="asset-forecast-journal-title">자산 연구 발행 기록</h2><button type="button" data-asset-journal-close aria-label="자산 연구 기록 닫기">×</button></header><nav class="journal-tabs" aria-label="자산 예측 기록 기능"><button type="button" data-asset-journal-tab="records" aria-pressed="true">보존본</button><button type="button" data-asset-journal-tab="replay" aria-pressed="false">리플레이</button></nav><div class="journal-body" aria-live="polite"></div>';
   document.body.append(dialog);
   const viewport=mountDialogViewport(dialog),content=dialog.querySelector('.journal-body');
-  let symbol='ETHUSD',recordId=null,days=180,selectedDate=null,opener=null,active=null,observer=null,draw=null,focusAfter=null;
+  let symbol='ETHUSD',recordId=null,days=180,selectedDate=null,opener=null,active=null,observer=null,draw=null,focusAfter=null,view='records',replay=null;
   function stopChart(){
+    replay?.destroy();replay=null;
     observer?.disconnect();observer=null;draw=null;
     const svg=content.querySelector('svg');
     svg?.onpointermove?.cancel?.();
@@ -143,6 +156,14 @@ function mount(){
     const {record,snapshot,entries}=state;
     if(recordId!==record.id)selectedDate=null;
     recordId=record.id;
+    for(const button of dialog.querySelectorAll('[data-asset-journal-tab]'))button.setAttribute('aria-pressed',String(button.dataset.assetJournalTab===view));
+    if(view==='replay'){
+      content.innerHTML='<div class="journal-controls"><select data-asset-journal-record aria-label="리플레이할 연구 발행본 선택">'+entries.map(entry=>'<option value="'+esc(entry.id)+'"'+(entry.id===record.id?' selected':'')+'>'+esc(entry.asOf+' · '+scenarioName(entry.scenario)+' · '+entry.id.slice(0,8))+'</option>').join('')+'</select></div><div data-asset-journal-replay-host></div>';
+      replay=mountForecastReplay(content.querySelector('[data-asset-journal-replay-host]'),{record,snapshot,symbol,isActive:()=>dialog.open&&view==='replay'&&active?.record.id===record.id});
+      if(focusAfter&&dialog.open&&(document.activeElement===document.body||document.activeElement===dialog))content.querySelector(focusAfter)?.focus({preventScroll:true});
+      focusAfter=null;
+      return;
+    }
     const timing=record.informationClock,isIssued=record.recordKind==='issued';
     const targetRows=record.targets.map(target=>[
       target.horizonDays+'일',target.targetDate,stamp(target.eventAt),
@@ -297,6 +318,10 @@ function mount(){
   }});
   dialog.addEventListener('click',event=>{
     if(event.target.closest?.('[data-asset-journal-close]'))dialog.close();
+    else if(event.target.closest?.('[data-asset-journal-tab]')){
+      view=event.target.closest('[data-asset-journal-tab]').dataset.assetJournalTab;
+      if(active)renderReady(active);
+    }
     else if(event.target.closest?.('[data-asset-journal-retry]')){focusAfter='[data-asset-journal-record]';load();}
     else if(event.target.closest?.('[data-asset-journal-list]')){recordId=null;selectedDate=null;focusAfter='[data-asset-journal-record]';load();}
     else if(event.target===dialog){
