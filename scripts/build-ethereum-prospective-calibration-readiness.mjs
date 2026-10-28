@@ -21,12 +21,22 @@ const CANDIDATES=['research-data/ethereum-prospective-ledger','build/ethereum-pr
 const OUTCOMES=['research-data/asset-outcome-ledger','build/asset-outcome-ledger','build/ethereum-prospective-archive-outcomes'];
 const ordered=values=>[...values].sort((a,b)=>a.id.localeCompare(b.id));
 
+/** A current delta cannot represent an activated archive's whole history.
+ * Keep the original flat API/limits, but refuse a misleading partial report
+ * when the explicit archive-backed workspace marker is present. */
+export async function assertEthereumLegacyFlatWorkspace({repositoryRoot}={}){
+  try{await lstat(resolve(repositoryRoot,'build/ethereum-prospective-archive-active.json'));}
+  catch(error){if(error.code==='ENOENT')return;throw error;}
+  throw new Error('Archive-backed workspace requires ethereum-prospective-archive-operations.mjs; the legacy flat reader cannot represent retained history');
+}
+
 /** Read both retained seed and current execution evidence. New issuance is not
  * required. Index metadata, original bytes and content-addressed paths agree
  * before a record can influence binding, origin selection or readiness. */
 export async function readEthereumCalibrationInputs({repositoryRoot}={}){
   if(typeof repositoryRoot!=='string'||!isAbsolute(repositoryRoot))throw new TypeError('Absolute repository root required');
   repositoryRoot=await realpath(repositoryRoot);
+  await assertEthereumLegacyFlatWorkspace({repositoryRoot});
   const records=new Map(),snapshots={},observations=new Map(),inputFiles={},directories=[];
   const paths=new Set();
   async function read(path,{optional=false,canonical=false,maximumBytes=8*1024*1024}={}){

@@ -1,10 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import {readFile,mkdtemp,mkdir,writeFile,cp,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
 import {fileURLToPath} from 'node:url';
 import {resolve,dirname} from 'node:path';
 import {canonicalForecastJson,forecastHash} from '../dist/forecast-records.js';
 import {ethereumProspectiveIndexEntry} from '../dist/ethereum-prospective-dispatch.js';
+import {ETH_PROSPECTIVE_PRICE_POLICY} from '../dist/ethereum-prospective-prices.js';
 import {readEthereumCalibrationInputs} from '../scripts/build-ethereum-prospective-calibration-readiness.mjs';
 import {projectEthereumProspectiveCapacity,inspectEthereumProspectiveWorkflow} from '../scripts/ethereum-prospective-capacity-core.mjs';
 import {buildEthereumProspectiveCapacityReport} from '../scripts/analyze-ethereum-prospective-capacity.mjs';
@@ -19,6 +21,24 @@ const observations=await Promise.all([...new Set(index.entries.map(entry=>entry.
 const baseText=observations[0].base.text;
 const project=overrides=>projectEthereumProspectiveCapacity({records,observations,baseText,informationCutoffAt:cutoff,...overrides});
 const clone=structuredClone;
+
+async function legacySeedWorkspace(t){
+  const repositoryRoot=await mkdtemp(resolve(tmpdir(),'eth-legacy-capacity-seed-'));
+  t.after(()=>rm(repositoryRoot,{recursive:true,force:true}));
+  // Copy exact retained inputs and source bytes, never the mutable root build
+  // directory. A legitimate archive-active root must not change this legacy
+  // reader fixture or tempt a test to remove its fail-closed mode guard.
+  for(const path of ['research-data/ethereum-prospective-ledger','research-data/asset-outcome-ledger',
+    'scripts','.github/workflows']){
+    const target=resolve(repositoryRoot,path);await mkdir(dirname(target),{recursive:true});
+    await cp(resolve(root,path),target,{recursive:true});
+  }
+  for(const path of [ETH_PROSPECTIVE_PRICE_POLICY.basePath,'dist/ethereum-prospective-prices.js',
+    'dist/ethereum-prospective-records.js','dist/ethereum-prospective-dispatch.js','dist/asset-outcome-records.js']){
+    const target=resolve(repositoryRoot,path);await mkdir(dirname(target),{recursive:true});await cp(resolve(root,path),target);
+  }
+  return repositoryRoot;
+}
 
 test('first twelve actual-plus-future calendars retain the strict 30, 90 and 180 day requirements',()=>{
   const report=project();assert.equal(report.calendars.length,9);
@@ -133,14 +153,23 @@ test('block-style trigger inspection separates market refresh from actual candid
   assert.equal(unknown.events,null);assert.equal(unknown.scheduledDirectIssuance,null);assert.equal(unknown.directIssuance,true);
 });
 
-test('the actual report binds verified raw inventory and source bytes without claiming future samples, historical authenticity or release',async()=>{
-  const current=await readEthereumCalibrationInputs({repositoryRoot:root});
-  const report=await buildEthereumProspectiveCapacityReport({repositoryRoot:root,informationCutoffAt:new Date().toISOString()});
+test('the isolated retained-seed report binds raw inventory while an archive-active workspace still refuses the legacy reader',async t=>{
+  const repositoryRoot=await legacySeedWorkspace(t),current=await readEthereumCalibrationInputs({repositoryRoot});
+  const report=await buildEthereumProspectiveCapacityReport({repositoryRoot,informationCutoffAt:new Date().toISOString()});
   const {id,...body}=report;assert.equal(id,await forecastHash(body));
+  assert.deepEqual(current.records.map(value=>value.id).sort(),records.map(value=>value.id).sort());
+  assert.ok(Object.keys(current.inputFiles).every(path=>path.startsWith('research-data/')));
   assert.equal(report.diagnostic.inventory.records,current.records.length);
   assert.deepEqual(report.diagnostic.inventory.recordIds,current.records.map(value=>value.id).sort());
   assert.deepEqual(report.inputFiles,current.inputFiles);assert.ok(report.sourceFiles['scripts/ethereum-prospective-base.mjs']);
   assert.equal(report.actualNewRecords,0);assert.equal(report.actualNewObservations,0);assert.equal(report.releaseAuthorized,false);
   assert.equal(report.diagnostic.calibrationReadinessClaimed,false);assert.equal(report.diagnostic.actualRawInputReadinessProven,false);
   assert.equal(report.networkRequests,0);assert.equal(report.diagnostic.workflowInspection.automaticPriorRunRestoreProven,false);
+  await mkdir(resolve(repositoryRoot,'build'),{recursive:true});
+  await writeFile(resolve(repositoryRoot,'build/ethereum-prospective-archive-active.json'),canonicalForecastJson({
+    schemaVersion:1,kind:'ethereum-prospective-archive-active',mode:'archive-backed',
+    archivePath:'build/ethereum-prospective-archive-previous',manifestId:'a'.repeat(64)})+'\n');
+  await assert.rejects(()=>readEthereumCalibrationInputs({repositoryRoot}),/Archive-backed workspace.*legacy flat reader cannot represent retained history/);
+  await assert.rejects(()=>buildEthereumProspectiveCapacityReport({repositoryRoot,informationCutoffAt:new Date().toISOString()}),
+    /Archive-backed workspace.*legacy flat reader cannot represent retained history/);
 });

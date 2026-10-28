@@ -241,8 +241,12 @@ test('daily workflow has no PR privilege bridge and keeps acquisition failure vi
   assert.match(workflow,/schedule:\n\s+- cron: '17 1 \* \* \*'/);assert.match(workflow,/workflow_dispatch:/);
   assert.doesNotMatch(workflow,/\n\s+(pull_request_target|pull_request|workflow_run):/);
   assert.match(workflow,/cancel-in-progress: false/);assert.match(workflow,/persist-credentials: false/);
-  assert.equal((workflow.match(/ETH_ARCHIVE_GITHUB_TOKEN:/g)||[]).length,1);
-  assert.match(workflow,/steps\.acquisition\.outcome == 'failure'/);assert.match(workflow,/exit 1/);
+  const [prepare,publish]=workflow.split('\n  publish:\n');
+  assert.match(prepare,/permissions:\n\s+contents: read/);assert.doesNotMatch(prepare,/contents: write/);
+  assert.match(publish,/permissions:\n\s+contents: write/);assert.doesNotMatch(publish,/archive-remote\.mjs read/);
+  assert.equal((prepare.match(/ETH_ARCHIVE_GITHUB_TOKEN:/g)||[]).length,1);
+  assert.equal((publish.match(/ETH_ARCHIVE_GITHUB_TOKEN:/g)||[]).length,1);
+  assert.match(workflow,/needs\.prepare\.outputs\.acquisition_outcome == 'failure'/);assert.match(workflow,/exit 1/);
 });
 test('candidate workflow authenticates only its archive read and cannot publish repository content',async()=>{
   const workflow=await readFile(new URL('../.github/workflows/eth-model-evaluation.yml',import.meta.url),'utf8');

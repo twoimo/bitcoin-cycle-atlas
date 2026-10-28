@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  preserve:
+  prepare:
     if: >-
       github.repository == 'twoimo/bitcoin-cycle-atlas' &&
       github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
@@ -23,7 +23,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
-      contents: write
+      contents: read
+    outputs:
+      artifact_id: ${{ steps.handoff.outputs.artifact-id }}
+      handoff_sha256: ${{ steps.seal.outputs.handoff_sha256 }}
+      acquisition_outcome: ${{ steps.acquisition.outcome }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -35,29 +39,40 @@ jobs:
           package-manager-cache: false
       - name: Validate archive integrity and publication boundaries
         run: |
-          node --test tests/ethereum-prospective-archive.test.mjs tests/ethereum-prospective-archive-remote.test.mjs tests/ethereum-prospective-archive-io.test.mjs
+          node --test tests/ethereum-prospective-archive.test.mjs tests/ethereum-prospective-archive-remote.test.mjs tests/ethereum-prospective-archive-io.test.mjs tests/ethereum-prospective-handoff.test.mjs tests/ethereum-prospective-archive-source.test.mjs tests/ethereum-prospective-archive-operations.test.mjs tests/ethereum-prospective-archive-issuer.test.mjs tests/ethereum-prospective-archive-summary.test.mjs tests/ethereum-prospective-archive-capacity.test.mjs tests/ethereum-prospective-calibration-paged.test.mjs tests/ethereum-prospective-operation-io.test.mjs tests/ethereum-prospective-archive-inventory-binding.test.mjs
       - name: Read the exact archive branch and verify all retained Git objects
+        env:
+          ETH_ARCHIVE_GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/ethereum-prospective-archive-remote.mjs read
       - name: Restore verified observations and original prospective records
-        run: node scripts/manage-ethereum-prospective-archive.mjs restore
+        run: node scripts/ethereum-prospective-archive-operations.mjs restore
       - name: Capture one current ETH tail without backdating missed issuances
         id: acquisition
         continue-on-error: true
-        run: node scripts/issue-ethereum-prospective.mjs --include-warm-start
+        run: node scripts/ethereum-prospective-archive-operations.mjs issue
       - name: Reexecute preserved records without changing their issue clocks
-        run: node scripts/issue-ethereum-prospective.mjs --verify-preserved-only --include-warm-start
+        run: node scripts/ethereum-prospective-archive-operations.mjs replay
       - name: Validate calibration cases and report remaining input capacity
         run: |
-          node scripts/build-ethereum-prospective-calibration-readiness.mjs
-          node scripts/analyze-ethereum-prospective-capacity.mjs
+          node scripts/ethereum-prospective-archive-operations.mjs readiness
+          node scripts/ethereum-prospective-archive-operations.mjs capacity
       - name: Append new immutable evidence and verify a complete second restore
         run: |
-          node scripts/manage-ethereum-prospective-archive.mjs append
-          node scripts/manage-ethereum-prospective-archive.mjs verify
-      - name: Publish only the validated append to the fixed evidence branch
+          node scripts/ethereum-prospective-archive-operations.mjs append
+          node scripts/ethereum-prospective-archive-operations.mjs verify
+      - name: Bind the complete append and original read bytes to this exact run attempt
+        id: seal
         env:
-          ETH_ARCHIVE_GITHUB_TOKEN: ${{ github.token }}
-        run: node scripts/ethereum-prospective-archive-remote.mjs publish
+          ETH_ARCHIVE_ACQUISITION_OUTCOME: ${{ steps.acquisition.outcome }}
+        run: node scripts/ethereum-prospective-handoff.mjs seal
+      - name: Upload the immutable publication handoff from this run attempt
+        id: handoff
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: eth-prospective-handoff-${{ github.run_id }}-${{ github.run_attempt }}
+          path: build/ethereum-prospective-publication-handoff
+          if-no-files-found: error
+          retention-days: 30
       - name: Preserve receipts and acquisition bytes for failed-run inspection
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -65,17 +80,67 @@ jobs:
           name: eth-prospective-archive-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             build/ethereum-prospective-archive-remote-receipt.json
+            build/ethereum-prospective-archive-active.json
+            build/ethereum-prospective-archive-evaluation.json
             build/ethereum-prospective-archive-restore.json
             build/ethereum-prospective-archive-append.json
             build/ethereum-prospective-archive-verify.json
-            build/ethereum-prospective-archive-publication.json
             build/ethereum-prospective-calibration-readiness.json
             build/ethereum-prospective-capacity.json
             build/ethereum-prospective-ledger
           if-no-files-found: warn
           retention-days: 30
+
+  publish:
+    needs: prepare
+    if: >-
+      needs.prepare.result == 'success' &&
+      needs.prepare.outputs.artifact_id != '' &&
+      needs.prepare.outputs.handoff_sha256 != '' &&
+      github.repository == 'twoimo/bitcoin-cycle-atlas' &&
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+      (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Download only the exact preparation artifact from the current workflow run
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0, verified official source
+        with:
+          artifact-ids: ${{ needs.prepare.outputs.artifact_id }}
+          merge-multiple: true
+          path: build/ethereum-prospective-publication-download
+      - name: Revalidate every handoff byte source and run before restoring fixed publication paths
+        env:
+          ETH_ARCHIVE_HANDOFF_SHA256: ${{ needs.prepare.outputs.handoff_sha256 }}
+          ETH_ARCHIVE_ACQUISITION_OUTCOME: ${{ needs.prepare.outputs.acquisition_outcome }}
+        run: node scripts/ethereum-prospective-handoff.mjs restore
+      - name: Publish only the validated append after checking the live archive head again
+        env:
+          ETH_ARCHIVE_GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/ethereum-prospective-archive-remote.mjs publish
+      - name: Preserve publication and exact handoff identity for failed-run inspection
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: eth-prospective-publication-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            build/ethereum-prospective-publication-download/handoff.json
+            build/ethereum-prospective-archive-remote-receipt.json
+            build/ethereum-prospective-archive-publication.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Report a failed acquisition even when its failure evidence was preserved
-        if: always() && steps.acquisition.outcome == 'failure'
+        if: always() && needs.prepare.outputs.acquisition_outcome == 'failure'
         run: |
           echo 'The current acquisition failed. Preserved failure evidence is not a successful daily observation.'
           exit 1

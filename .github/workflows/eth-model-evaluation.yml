@@ -36,6 +36,10 @@ on:
       - 'scripts/ethereum-prospective-calibration-core.mjs'
       - 'scripts/build-ethereum-prospective-calibration-readiness.mjs'
       - 'scripts/ethereum-prospective-base.mjs'
+      - 'scripts/ethereum-prospective-archive-*.mjs'
+      - 'scripts/ethereum-prospective-calibration-paged.mjs'
+      - 'scripts/ethereum-prospective-operation-io.mjs'
+      - 'scripts/ethereum-prospective-handoff.mjs'
       - 'scripts/ethereum-prospective-archive-core.mjs'
       - 'scripts/ethereum-prospective-archive-remote.mjs'
       - 'scripts/manage-ethereum-prospective-archive.mjs'
@@ -86,7 +90,7 @@ concurrency:
 jobs:
   evaluate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -109,6 +113,10 @@ jobs:
           node --check scripts/evaluate-ethereum-independent-calibration.mjs
           node --check scripts/build-ethereum-prospective-calibration-readiness.mjs
           node --check scripts/ethereum-prospective-base.mjs
+          node --check scripts/ethereum-prospective-archive-operations.mjs
+          node --check scripts/ethereum-prospective-archive-summary.mjs
+          node --check scripts/ethereum-prospective-calibration-paged.mjs
+          node --check scripts/ethereum-prospective-handoff.mjs
           node --check scripts/manage-ethereum-prospective-archive.mjs
           node --check scripts/ethereum-prospective-archive-remote.mjs
           node --check scripts/analyze-ethereum-prospective-capacity.mjs
@@ -117,6 +125,7 @@ jobs:
           node --test tests/forecast-replay*.test.mjs tests/ethereum-base-rollover.test.mjs
           node --test tests/ethereum-prospective-base.test.mjs tests/ethereum-prospective-capacity.test.mjs tests/ethereum-supply-resolution.test.mjs tests/ethereum-staking-cohort.test.mjs
           node --test tests/ethereum-prospective-archive.test.mjs tests/ethereum-prospective-archive-io.test.mjs tests/ethereum-prospective-archive-remote.test.mjs tests/ethereum-prospective-write-guard.test.mjs
+          node --test tests/ethereum-prospective-archive-source.test.mjs tests/ethereum-prospective-archive-operations.test.mjs tests/ethereum-prospective-archive-issuer.test.mjs tests/ethereum-prospective-archive-summary.test.mjs tests/ethereum-prospective-archive-capacity.test.mjs tests/ethereum-prospective-archive-inventory-binding.test.mjs tests/ethereum-prospective-operation-io.test.mjs tests/ethereum-prospective-handoff.test.mjs tests/ethereum-prospective-calibration-paged.test.mjs
           node --test tests/ethereum-prospective-calibration.test.mjs tests/ethereum-prospective-calibration-readiness.test.mjs
           node --test tests/ethereum-economic-supply-accounting.test.mjs tests/ethereum-supply-accounting.test.mjs tests/ethereum-economic-vintages.test.mjs tests/ethereum-independent-calibration.test.mjs
           node --test tests/ethereum-common-cohort.test.mjs tests/ethereum-economic-evidence-coverage.test.mjs tests/ethereum-warm-start-prospective.test.mjs
@@ -170,22 +179,22 @@ jobs:
           ETH_ARCHIVE_GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/ethereum-prospective-archive-remote.mjs read
       - name: Restore and independently validate the selected prospective archive bytes
-        run: node scripts/manage-ethereum-prospective-archive.mjs restore
+        run: node scripts/ethereum-prospective-archive-operations.mjs restore
       - name: Acquire one bounded ETH tail and preserve adaptive pooled and opt-in warm-start records
         continue-on-error: true
-        run: node scripts/issue-ethereum-prospective.mjs --include-warm-start
+        run: node scripts/ethereum-prospective-archive-operations.mjs issue
       - name: Reexecute preserved prospective records independently of acquisition success
-        run: node scripts/issue-ethereum-prospective.mjs --verify-preserved-only --include-warm-start
+        run: node scripts/ethereum-prospective-archive-operations.mjs replay
       - name: Validate retained prospective calibration evidence without requiring a new forecast issue
-        run: node scripts/build-ethereum-prospective-calibration-readiness.mjs
+        run: node scripts/ethereum-prospective-archive-operations.mjs readiness
       - name: Diagnose prospective calendar and retained-input capacity without relaxing sample requirements
-        run: node scripts/analyze-ethereum-prospective-capacity.mjs
+        run: node scripts/ethereum-prospective-archive-operations.mjs capacity
       - name: Rebuild the reviewed ETH base candidate without changing the operating base
         run: node scripts/prepare-ethereum-base-rollover.mjs --snapshot research-data/forecast-replay/20261029/acquisition-2/snapshot.json
       - name: Append current evidence and prove exact restoration of the previous archive
         run: |
-          node scripts/manage-ethereum-prospective-archive.mjs append
-          node scripts/manage-ethereum-prospective-archive.mjs verify
+          node scripts/ethereum-prospective-archive-operations.mjs append
+          node scripts/ethereum-prospective-archive-operations.mjs verify
       - name: Reconcile existing models and remaining evidence conditions
         run: node scripts/build-ethereum-model-readiness.mjs
       - name: Verify preserved ETH BMNR and MSTR records and issue only with current inputs
@@ -245,6 +254,8 @@ jobs:
             build/ethereum-prospective-archive
             build/ethereum-prospective-archive-outcomes
             build/ethereum-prospective-archive-remote-receipt.json
+            build/ethereum-prospective-archive-active.json
+            build/ethereum-prospective-archive-evaluation.json
             build/ethereum-prospective-archive-restore.json
             build/ethereum-prospective-archive-append.json
             build/ethereum-prospective-archive-verify.json

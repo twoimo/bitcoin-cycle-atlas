@@ -238,3 +238,117 @@ test('source-book capacity preserves complete UTF-8 bytes and enforces the exact
   await assert.rejects(readFile(join(f.root,'too-small/source-manifest.json')),error=>error.code==='ENOENT');
   for(const limit of [Infinity,NaN,0,1023,20000.5])await assert.rejects(buildEthReviewPacket({...options,maximumBundleBytes:limit}),/finite safe integer/);
 });
+
+test('the default required-review disposition preserves the original pending header and exact under-limit book bytes',async t=>{
+  const f=await fixture(t,{'source.txt':'Exact synthetic source bytes.\n'}),options={repositoryRoot:f.root,seedPaths:['source.txt']};
+  const ordinary=await buildEthReviewPacket({...options,outputDirectory:'default'}),
+    explicit=await buildEthReviewPacket({...options,outputDirectory:'required',externalReviewDisposition:'required'});
+  const first=await readFile(join(f.root,'default/source-book.txt')),second=await readFile(join(f.root,'required/source-book.txt'));
+  assert.deepEqual(first,second);assert.equal(ordinary.bundleSha256,explicit.bundleSha256);
+  assert.equal(ordinary.externalReviewDisposition,'required');assert.equal(ordinary.externalReview.status,'pending');
+  const entry=ordinary.entries[0],body=await readFile(join(f.root,'source.txt'),'utf8');
+  const original='ETH SOURCE REVIEW BOOK\nSOURCE_COMMIT '+ordinary.sourceCommit+'\nSOURCE_TREE '+ordinary.sourceTree+'\nEXTERNAL_REVIEW pending\n'+
+    '\nBEGIN FILE '+entry.path+'\nKIND '+entry.kind+'\nORIGINAL_BYTES '+entry.bytes+'\nSHA256 '+entry.sha256+'\nENCODING utf8\nPAYLOAD_BYTES '+entry.payloadBytes+'\n\n'+body+'\nEND FILE '+entry.path+'\n';
+  assert.deepEqual(first,Buffer.from(original));
+  const contract=JSON.parse(await readFile(join(f.root,'default/review-contract.json'),'utf8'));
+  assert.deepEqual(contract.requiredStages,['chatgpt-thesis','gemini-opposition','chatgpt-reverse']);
+  assert.deepEqual(Object.values(contract.stageStatus),['pending','pending','pending']);
+  assert.equal(contract.releaseAuthorized,false);
+  // Already preserved schema-1 manifests without the new field remain valid.
+  const legacy=structuredClone(ordinary);delete legacy.externalReviewDisposition;
+  assert.equal(validateEthReviewSource({manifest:legacy,sourceBook:first}).sources.size,1);
+});
+
+test('user-omitted external stages are consistently omitted in manifest, book, brief and contract without inventing thesis execution',async t=>{
+  const f=await fixture(t,{'source.txt':'Synthetic source; no provider review has been performed.\n'});
+  const manifest=await buildEthReviewPacket({repositoryRoot:f.root,outputDirectory:'omitted',seedPaths:['source.txt'],
+    externalReviewDisposition:'omitted-by-user'});
+  const sourceBook=await readFile(join(f.root,'omitted/source-book.txt')),brief=await readFile(join(f.root,'omitted/review-brief.md'),'utf8'),
+    contract=JSON.parse(await readFile(join(f.root,'omitted/review-contract.json'),'utf8'));
+  assert.equal(manifest.externalReviewDisposition,'omitted-by-user');assert.equal(manifest.externalReview.status,'omitted-by-user');
+  assert.match(sourceBook.toString('utf8'),/\nEXTERNAL_REVIEW omitted-by-user\n/);
+  assert.equal(sourceBook.includes(Buffer.from('EXTERNAL_REVIEW pending')),false);
+  assert.deepEqual(manifest.externalReview.stageStatus,{'chatgpt-thesis':'not-recorded','gemini-opposition':'omitted-by-user','chatgpt-reverse':'omitted-by-user'});
+  assert.equal(manifest.externalReview.actualChatgptThesis,null);assert.equal(manifest.externalReview.actualGeminiReport,null);
+  assert.equal(manifest.externalReview.actualChatgptReverse,null);assert.equal(manifest.externalReview.actualModelExecutionAuthenticated,false);
+  assert.equal(manifest.externalReview.releaseAuthorized,false);assert.equal(manifest.sourceAccess,'complete-for-declared-scope');
+  assert.equal(validateEthReviewSource({manifest,sourceBook}).sources.size,1);
+  assert.match(brief,/user omitted Gemini opposition.*ChatGPT reverse review/);
+  assert.match(brief,/Packet generation records no ChatGPT thesis execution/);
+  assert.equal(brief.includes('Perform actual ChatGPT thesis, actual Gemini source opposition'),false);
+  assert.equal(contract.externalReviewDisposition,'omitted-by-user');assert.deepEqual(contract.requiredStages,[]);
+  assert.deepEqual(contract.stageStatus,manifest.externalReview.stageStatus);assert.equal(contract.releaseAuthorized,false);
+  assert.match(contract.warning,/Omitted stages are not completed reports/);
+});
+
+test('omitted headers and stage labels cannot be relabeled as required, completed or released by editing manifest fields',async t=>{
+  const f=await fixture(t,{'source.txt':'Synthetic disposition-binding fixture.\n'}),options={repositoryRoot:f.root,seedPaths:['source.txt']};
+  const manifest=await buildEthReviewPacket({...options,externalReviewDisposition:'omitted-by-user'}),
+    sourceBook=await readFile(join(f.root,'build/eth-review-packet/source-book.txt'));
+  for(const mutate of [
+    value=>{value.externalReviewDisposition='required';value.externalReview.status='pending';},
+    value=>{delete value.externalReviewDisposition;},
+    value=>{value.externalReviewDisposition='passed';},
+    value=>{value.externalReview.status='pending';},
+    value=>{value.externalReview.stageStatus['gemini-opposition']='passed';},
+    value=>{value.externalReview.stageStatus['chatgpt-thesis']='completed';},
+    value=>{value.externalReview.actualChatgptThesis='unperformed';},
+    value=>{value.externalReview.releaseAuthorized=true;},
+  ]){
+    const altered=structuredClone(manifest);mutate(altered);
+    assert.throws(()=>validateEthReviewSource({manifest:altered,sourceBook}),/disposition|Omitted review|Source-book header/);
+  }
+  const swapped={manifest:structuredClone(manifest),reports:[]};
+  rebindSyntheticBook(swapped,sourceBook.toString('utf8').replace('EXTERNAL_REVIEW omitted-by-user','EXTERNAL_REVIEW pending'));
+  assert.throws(()=>validateEthReviewSource(swapped),/Source-book header/);
+  for(const disposition of ['pending','passed','complete',null,false,{}])
+    await assert.rejects(buildEthReviewPacket({...options,externalReviewDisposition:disposition}),/disposition must be required or omitted-by-user/);
+});
+
+test('an omitted policy cannot be counted as a completed external chain even with three synthetic report bodies',()=>{
+  const relabeledLegacy=reviewFixture();relabeledLegacy.manifest.externalReview={status:'omitted-by-user'};
+  assert.throws(()=>validateEthReviewChain(relabeledLegacy),/Legacy manifest review status requires an exact explicit disposition/);
+  const f=reviewFixture();f.manifest.externalReviewDisposition='omitted-by-user';
+  f.manifest.externalReview={status:'omitted-by-user',
+    stageStatus:{'chatgpt-thesis':'not-recorded','gemini-opposition':'omitted-by-user','chatgpt-reverse':'omitted-by-user'},
+    actualChatgptThesis:null,actualGeminiReport:null,actualChatgptReverse:null,actualModelExecutionAuthenticated:false,releaseAuthorized:false};
+  rebindSyntheticBook(f,f.sourceBook.replace('EXTERNAL_REVIEW pending','EXTERNAL_REVIEW omitted-by-user'));
+  assert.equal(validateEthReviewSource(f).sources.size,2);
+  assert.throws(()=>validateEthReviewChain(f),/omitted stages cannot count as a completed review chain/);
+  assert.throws(()=>validateEthReviewChain({...f,reports:[]}),/omitted stages cannot count as a completed review chain/);
+});
+
+test('cumulative committed-source framing stops at the first overflow before visiting later missing sources',async t=>{
+  const f=await fixture(t,{'a.txt':'A'.repeat(900),'b.txt':'B'.repeat(900)});
+  const prefix=await buildEthReviewPacket({repositoryRoot:f.root,outputDirectory:'prefix',seedPaths:['a.txt'],maximumBundleBytes:10000}),
+    complete=await buildEthReviewPacket({repositoryRoot:f.root,outputDirectory:'complete',seedPaths:['a.txt','b.txt'],maximumBundleBytes:10000});
+  await assert.rejects(buildEthReviewPacket({repositoryRoot:f.root,outputDirectory:'rejected',
+    seedPaths:['a.txt','b.txt','z-not-present.txt'],maximumBundleBytes:prefix.bundleBytes}),error=>{
+    assert.equal(error.code,'REVIEW_BUNDLE_TOO_LARGE');assert.equal(error.bundleBytes,complete.bundleBytes);
+    assert.equal(error.maximumBundleBytes,prefix.bundleBytes);assert.equal(error.budgetStage,'ingestion');
+    assert.equal(error.firstExcessPath,'b.txt');assert.equal(error.retainedEntryCount,1);assert.equal(error.entryCount,2);
+    assert.equal(error.measurementScope,'ingested-prefix-through-first-overflow');return true;
+  });
+  await assert.rejects(readFile(join(f.root,'rejected/source-manifest.json')),error=>error.code==='ENOENT');
+});
+
+test('cumulative evidence accounting includes binary expansion and fails before later evidence is read or output is written',async t=>{
+  const f=await fixture(t,{'source.txt':'Synthetic packet seed.\n'}),binary=Buffer.alloc(900,255);
+  await writeFile(join(f.root,'a.txt'),'A'.repeat(1200));await writeFile(join(f.root,'b.bin'),binary);
+  const options={repositoryRoot:f.root,seedPaths:['source.txt'],evidencePaths:['a.txt','b.bin']};
+  const complete=await buildEthReviewPacket({...options,outputDirectory:'complete',maximumBundleBytes:10000}),
+    entry=complete.entries.find(value=>value.path==='b.bin'),limit=complete.bundleBytes-(entry.payloadBytes-entry.bytes);
+  assert.equal(entry.encoding,'base64');assert.equal(entry.payloadBytes,1200);assert.ok(limit>=1024);
+  const diagnostics=[];
+  for(let attempt=0;attempt<2;attempt++)await assert.rejects(buildEthReviewPacket({...options,outputDirectory:'rejected',
+    evidencePaths:['a.txt','b.bin','z-not-present.bin'],maximumBundleBytes:limit}),error=>{
+    assert.equal(error.code,'REVIEW_BUNDLE_TOO_LARGE');assert.equal(error.bundleBytes,complete.bundleBytes);
+    assert.equal(error.firstExcessPath,'b.bin');assert.equal(error.retainedEntryCount,2);assert.equal(error.entryCount,3);
+    assert.equal(error.budgetStage,'ingestion');
+    diagnostics.push({message:error.message,bundleBytes:error.bundleBytes,entryCount:error.entryCount,
+      firstExcessPath:error.firstExcessPath,retainedEntryCount:error.retainedEntryCount});return true;
+  });
+  assert.deepEqual(diagnostics[0],diagnostics[1]);
+  await assert.rejects(readFile(join(f.root,'rejected/source-book.txt')),error=>error.code==='ENOENT');
+  await assert.rejects(readFile(join(f.root,'rejected/source-manifest.json')),error=>error.code==='ENOENT');
+});

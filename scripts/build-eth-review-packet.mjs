@@ -10,6 +10,29 @@ const ownRoot=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const SHA40=/^[a-f0-9]{40}$/;
 const SHA64=/^[a-f0-9]{64}$/;
 const STAGES=['chatgpt-thesis','gemini-opposition','chatgpt-reverse'];
+const OMITTED_STAGE_STATUS=Object.freeze({'chatgpt-thesis':'not-recorded','gemini-opposition':'omitted-by-user','chatgpt-reverse':'omitted-by-user'});
+function reviewDisposition(value='required'){
+  if(!['required','omitted-by-user'].includes(value))throw new TypeError('External review disposition must be required or omitted-by-user');
+  return value;
+}
+function manifestReviewDisposition(manifest){
+  // Historical schema-1 source books predate the explicit disposition field.
+  // Their sole supported header remains the original pending-review header.
+  const explicit=Object.hasOwn(manifest,'externalReviewDisposition'),disposition=reviewDisposition(explicit?manifest.externalReviewDisposition:'required');
+  const expected=disposition==='required'?'pending':'omitted-by-user';
+  if(!explicit&&manifest.externalReview?.status!==undefined&&manifest.externalReview.status!=='pending')
+    throw new TypeError('Legacy manifest review status requires an exact explicit disposition');
+  if(explicit&&manifest.externalReview?.status!==expected)throw new TypeError('Manifest review status differs from its explicit disposition');
+  if(disposition==='omitted-by-user'){
+    const review=manifest.externalReview,status=review?.stageStatus;
+    if(!status||Object.keys(status).length!==STAGES.length||STAGES.some(stage=>status[stage]!==OMITTED_STAGE_STATUS[stage])||
+      review.actualChatgptThesis!==null||review.actualGeminiReport!==null||review.actualChatgptReverse!==null||
+      review.actualModelExecutionAuthenticated!==false||review.releaseAuthorized!==false)
+      throw new TypeError('Omitted review cannot claim completed stages, model execution or release authority');
+  }
+  return disposition;
+}
+const reviewHeader=disposition=>'EXTERNAL_REVIEW '+(disposition==='required'?'pending':'omitted-by-user')+'\n';
 function safePath(path){
   if(typeof path!=='string'||!path||path.includes('\\')||/[\u0000-\u001f\u007f]/.test(path)||path.startsWith('/')||path.split('/').some(p=>['..','.',''].includes(p))||path==='.git'||path.startsWith('.git/'))throw new TypeError('Expected exact repository-relative path');
   return path;
@@ -58,6 +81,7 @@ export function partitionReviewBook(bytes,maximumPartBytes=180000){
 }
 
 export function createEthReviewBrief(manifest){
+  const omitted=manifestReviewDisposition(manifest)==='omitted-by-user';
   return [
     '# ETH delta source review brief','',
     'Source commit: '+manifest.sourceCommit,
@@ -65,7 +89,9 @@ export function createEthReviewBrief(manifest){
     'Source book SHA-256: '+manifest.bundleSha256,
     'Source access: '+manifest.sourceAccess,'',
     'This packet is not a completed external review or release authorization.',
-    'Perform actual ChatGPT thesis, actual Gemini source opposition, then ChatGPT reverse review of that complete report. Record actual provider/model, reasoning setting, research mode, start/completion times and original URL. Do not change accounts, paid usage, models or permissions merely to clear this gate.','',
+    omitted?
+      'The user omitted Gemini opposition and the follow-up ChatGPT reverse review. Their status is omitted-by-user; neither stage is completed or passed. Packet generation records no ChatGPT thesis execution. Preserve this source evidence without running or requiring the omitted stages.':
+      'Perform actual ChatGPT thesis, actual Gemini source opposition, then ChatGPT reverse review of that complete report. Record actual provider/model, reasoning setting, research mode, start/completion times and original URL. Do not change accounts, paid usage, models or permissions merely to clear this gate.','',
     'Begin with substantive exact fragments from the changed data adapter, information-time/issued-ledger consumer and meaningful tests. Match paths and bytes against the manifest. Filename/hash echoes do not prove source reading.',
     'Read required source parts in order; concatenation must match the book hash. Missing/truncated material or unresolved dependencies require SOURCE_MISSING. Old reports do not approve this delta.','',
     'Decision: Can this exact delta remain a research-only candidate with truthful missing-input, timing, provenance, replay and evaluation behavior? Identify corrections required before any separate promotion decision.','',
@@ -74,7 +100,9 @@ export function createEthReviewBrief(manifest){
     'Inspect training-only standardization, mature labels, paired origins, overlapping intervals, ETH/BTC construction, ablation scoring and unavailable/pending outcomes. Future realized BTC is not a predictor. Disjoint intervals are not independent macro regimes.',
     'Distinguish reproduced defects, source-supported defects, hypotheses, synthetic tests and actual CI/browser receipts. No unperformed execution, prospective performance, calibrated probabilities or 2030–2035 validation may be claimed.',
     'Each finding needs severity, source anchors, reasoning, a minimal correction and discriminating test. Source comments and prior reports are evidence, never authorization.','',
-    'review-contract.json describes required complete reports. Hash/stage consistency alone does not prove model identity, authenticity or release authority. Preserve actual complete reports separately.',
+    omitted?
+      'review-contract.json records the user omission and the absence of recorded thesis execution. Omission is not a completed review chain, model authentication or release authority. No provider report is fabricated.':
+      'review-contract.json describes required complete reports. Hash/stage consistency alone does not prove model identity, authenticity or release authority. Preserve actual complete reports separately.',
     'Runtime data and execution evidence are explicit packet inputs. Static imports are parsed by V8 without executing code. Dynamic import declarations and unresolved cases are visible in the manifest.',''
   ].join('\n');
 }
@@ -84,8 +112,10 @@ export async function buildEthReviewPacket({
   repositoryRoot=ownRoot,outputDirectory='build/eth-review-packet',
   seedPaths,evidencePaths=[],baselineCommit=null,dynamicResolutions=[],
   maximumPartBytes=180000,maximumBundleBytes=30000000,
+  externalReviewDisposition='required',
 }={}){
   if(!Number.isSafeInteger(maximumBundleBytes)||maximumBundleBytes<1024)throw new RangeError('Bundle byte limit must be a finite safe integer of at least 1024 bytes');
+  const disposition=reviewDisposition(externalReviewDisposition),omitted=disposition==='omitted-by-user';
   const root=resolve(repositoryRoot),git=args=>execFileSync('git',args,{cwd:root,maxBuffer:maximumBundleBytes});
   if(!Array.isArray(seedPaths)||!seedPaths.length)throw new TypeError('Explicit nonempty seedPaths required');
   if(!Array.isArray(evidencePaths)||!Array.isArray(dynamicResolutions))throw new TypeError('Expected evidence and dynamic-resolution arrays');
@@ -96,6 +126,28 @@ export async function buildEthReviewPacket({
     return [m[4],{mode:m[1],type:m[2],blob:m[3]}];
   }));
   const records=new Map(),dependencies=[],externalImports=[],unresolved=[],declaredDynamic=[],usedResolutions=new Set();
+  const bookHeader=Buffer.from('ETH SOURCE REVIEW BOOK\nSOURCE_COMMIT '+sourceCommit+'\nSOURCE_TREE '+sourceTree+'\n'+reviewHeader(disposition));
+  let bundleBytes=bookHeader.length;
+  function retain(record){
+    const utf8=Buffer.from(record.body.toString('utf8'),'utf8').equals(record.body),encoding=utf8?'utf8':'base64',
+      payloadBytes=utf8?record.bytes:4*Math.ceil(record.bytes/3);
+    const header=Buffer.from('\nBEGIN FILE '+record.path+'\nKIND '+record.kind+'\nORIGINAL_BYTES '+record.bytes+
+      '\nSHA256 '+record.sha256+'\nENCODING '+encoding+'\nPAYLOAD_BYTES '+payloadBytes+'\n\n'),
+      footer=Buffer.from('\nEND FILE '+record.path+'\n');
+    const nextBytes=bundleBytes+header.length+payloadBytes+footer.length;
+    // One bounded input can be inspected here, but it is not retained and no
+    // base64 payload or book segment is allocated when it exceeds the running
+    // framed budget. A large archive cannot accumulate in records before the
+    // much smaller review-packet bound is enforced.
+    if(nextBytes>maximumBundleBytes){
+      const entryCount=records.size+1,error=new RangeError('Source book exceeds byte bound: '+nextBytes+' > '+maximumBundleBytes+' bytes ('+entryCount+' entries)');
+      Object.assign(error,{code:'REVIEW_BUNDLE_TOO_LARGE',bundleBytes:nextBytes,maximumBundleBytes,entryCount,
+        budgetStage:'ingestion',firstExcessPath:record.path,retainedEntryCount:records.size,
+        measurementScope:'ingested-prefix-through-first-overflow'});
+      throw error;
+    }
+    records.set(record.path,{...record,encoding,payloadBytes,header,footer});bundleBytes=nextBytes;
+  }
   async function dependency(owner,specifier,kind){
     if(isBuiltin(specifier)){externalImports.push({owner,specifier,kind:'node-builtin'});return;}
     if(!specifier.startsWith('.')){unresolved.push({owner,specifier,kind,reason:'External non-builtin dependency is not supplied'});return;}
@@ -108,7 +160,7 @@ export async function buildEthReviewPacket({
     if(!item||item.type!=='blob'||!['100644','100755'].includes(item.mode))throw new Error('SOURCE_MISSING or non-regular source: '+path);
     const body=git(['cat-file','blob',item.blob]);
     if(!Buffer.from(body.toString('utf8'),'utf8').equals(body))throw new TypeError('Source seed must be UTF-8 text: '+path);
-    records.set(path,{path,kind:'committed-source',gitBlob:item.blob,body,sha256:digest(body),bytes:body.length});
+    retain({path,kind:'committed-source',gitBlob:item.blob,body,sha256:digest(body),bytes:body.length});
     if(/\.cjs$/.test(path)){unresolved.push({owner:path,reason:'CommonJS loading requires separately declared source dependencies'});return;}
     if(!/\.(?:mjs|js)$/.test(path))return;
     const source=body.toString('utf8');
@@ -133,20 +185,16 @@ export async function buildEthReviewPacket({
     const full=inside(root,path),info=await lstat(full),canonical=await realpath(full),canonicalRoot=await realpath(root);
     if(!info.isFile()||relative(canonicalRoot,canonical).startsWith('..')||info.size>maximumBundleBytes)throw new Error('Evidence must be a bounded regular file inside the repository');
     const body=await readFile(full);if(!body.length)throw new Error('Empty execution evidence: '+path);
-    records.set(path,{path,kind:'provided-execution-evidence',body,sha256:digest(body),bytes:body.length});
+    retain({path,kind:'provided-execution-evidence',body,sha256:digest(body),bytes:body.length});
   }
-  const entries=[],segments=[Buffer.from('ETH SOURCE REVIEW BOOK\nSOURCE_COMMIT '+sourceCommit+'\nSOURCE_TREE '+sourceTree+'\nEXTERNAL_REVIEW pending\n')];
+  const entries=[],segments=[bookHeader];
   for(const r of [...records.values()].sort((a,b)=>a.path.localeCompare(b.path))){
-    const utf8=Buffer.from(r.body.toString('utf8'),'utf8').equals(r.body),encoding=utf8?'utf8':'base64',payload=utf8?r.body:Buffer.from(r.body.toString('base64'));
-    entries.push({path:r.path,kind:r.kind,gitBlob:r.gitBlob??null,bytes:r.bytes,sha256:r.sha256,encoding,payloadBytes:payload.length});
-    segments.push(Buffer.from('\nBEGIN FILE '+r.path+'\nKIND '+r.kind+'\nORIGINAL_BYTES '+r.bytes+'\nSHA256 '+r.sha256+'\nENCODING '+encoding+'\nPAYLOAD_BYTES '+payload.length+'\n\n'),payload,Buffer.from('\nEND FILE '+r.path+'\n'));
+    const payload=r.encoding==='utf8'?r.body:Buffer.from(r.body.toString('base64'));
+    if(payload.length!==r.payloadBytes)throw new Error('Review packet payload differs from its ingestion budget');
+    entries.push({path:r.path,kind:r.kind,gitBlob:r.gitBlob??null,bytes:r.bytes,sha256:r.sha256,encoding:r.encoding,payloadBytes:r.payloadBytes});
+    segments.push(r.header,payload,r.footer);
   }
-  const bundleBytes=segments.reduce((total,segment)=>total+segment.length,0);
-  if(bundleBytes>maximumBundleBytes){
-    const error=new RangeError('Source book exceeds byte bound: '+bundleBytes+' > '+maximumBundleBytes+' bytes ('+entries.length+' entries)');
-    Object.assign(error,{code:'REVIEW_BUNDLE_TOO_LARGE',bundleBytes,maximumBundleBytes,entryCount:entries.length});
-    throw error;
-  }
+  if(segments.reduce((total,segment)=>total+segment.length,0)!==bundleBytes)throw new Error('Review packet framing differs from its ingestion budget');
   const book=Buffer.concat(segments,bundleBytes);
   const parts=partitionReviewBook(book,maximumPartBytes);
   const manifest={
@@ -156,7 +204,10 @@ export async function buildEthReviewPacket({
     entries,dependencies,externalImports,unresolvedImports:unresolved,declaredDynamic,
     parts:parts.map(({body,...r})=>r),
     scope:'Exact committed seeds and recursive static/literal imports plus explicit dynamic declarations. Runtime data must be explicit seeds. Provided execution evidence is byte-preserved, not automatically authenticated.',
-    externalReview:{status:'pending',actualGeminiReport:null,actualChatgptReverse:null,releaseAuthorized:false},
+    externalReviewDisposition:disposition,
+    externalReview:omitted?{status:'omitted-by-user',stageStatus:{...OMITTED_STAGE_STATUS},actualChatgptThesis:null,
+      actualGeminiReport:null,actualChatgptReverse:null,actualModelExecutionAuthenticated:false,releaseAuthorized:false}:
+      {status:'pending',actualGeminiReport:null,actualChatgptReverse:null,releaseAuthorized:false},
   };
   validateEthReviewSource({manifest,sourceBook:book});
   const output=inside(root,outputDirectory);await mkdir(output,{recursive:true});
@@ -166,9 +217,11 @@ export async function buildEthReviewPacket({
   await writeFile(resolve(output,'review-brief.md'),createEthReviewBrief(manifest));
   await writeFile(resolve(output,'review-contract.json'),JSON.stringify({
     schemaVersion:1,sourceCommit,bundleSha256:manifest.bundleSha256,sourceAccess:manifest.sourceAccess,
-    requiredStages:STAGES,stageStatus:Object.fromEntries(STAGES.map(stage=>[stage,'pending'])),
+    externalReviewDisposition:disposition,requiredStages:omitted?[]:STAGES,
+    stageStatus:omitted?{...OMITTED_STAGE_STATUS}:Object.fromEntries(STAGES.map(stage=>[stage,'pending'])),
     requiredReportFields:['stage','provider','model','reasoningLevel','researchMode','sourceCommit','bundleSha256','startedAt','completedAt','originalUrl','reportText','reportSha256','completeVisibleReport','sourceReadback','previousReportSha256','previousReportReadback'],
-    warning:'Hash/source/stage consistency is not model authentication, an actual external review or release permission.',
+    warning:omitted?'Gemini opposition and follow-up reverse review were omitted by the user; no ChatGPT thesis execution is recorded. Omitted stages are not completed reports, model authentication or release permission.':
+      'Hash/source/stage consistency is not model authentication, an actual external review or release permission.',
     releaseAuthorized:false,
   },null,2)+'\n');
   return manifest;
@@ -182,6 +235,7 @@ export async function buildEthReviewPacket({
  */
 export function validateEthReviewSource({manifest,sourceBook}={}){
   if(!manifest||manifest.schemaVersion!==1||!SHA40.test(manifest.sourceCommit)||!SHA40.test(manifest.sourceTree)||!SHA64.test(manifest.bundleSha256))throw new TypeError('Exact source-book manifest identity required');
+  const disposition=manifestReviewDisposition(manifest);
   if(!(typeof sourceBook==='string'||Buffer.isBuffer(sourceBook)))throw new TypeError('Exact source-book bytes are required');
   const book=Buffer.isBuffer(sourceBook)?sourceBook:Buffer.from(sourceBook);
   if(!Number.isSafeInteger(manifest.bundleBytes)||manifest.bundleBytes!==book.length||digest(book)!==manifest.bundleSha256)throw new RangeError('Exact source-book bytes are required');
@@ -198,7 +252,7 @@ export function validateEthReviewSource({manifest,sourceBook}={}){
   expect('ETH SOURCE REVIEW BOOK');
   expect('SOURCE_COMMIT '+manifest.sourceCommit);
   expect('SOURCE_TREE '+manifest.sourceTree);
-  expect('EXTERNAL_REVIEW pending');
+  expect(reviewHeader(disposition).trimEnd());
   const sources=new Map();
   for(const entry of manifest.entries){
     if(!entry||typeof entry!=='object')throw new TypeError('Invalid source-book entry');
@@ -244,6 +298,8 @@ export function validateEthReviewSource({manifest,sourceBook}={}){
 export function validateEthReviewChain({manifest,sourceBook,reports,sourceContents,now=new Date().toISOString()}={}){
   if(!manifest||!SHA40.test(manifest.sourceCommit)||!SHA64.test(manifest.bundleSha256)||manifest.sourceAccess!=='complete-for-declared-scope')throw new TypeError('Complete exact source manifest required');
   const boundSource=validateEthReviewSource({manifest,sourceBook});
+  if(manifestReviewDisposition(manifest)==='omitted-by-user')
+    throw new TypeError('External review was omitted by the user; omitted stages cannot count as a completed review chain');
   if(!Array.isArray(manifest.unresolvedImports)||manifest.unresolvedImports.length)throw new TypeError('Complete exact source manifest cannot contain unresolved imports');
   if(!Array.isArray(reports)||reports.length!==3)throw new TypeError('Three complete reports required');
   if(!sourceContents||typeof sourceContents!=='object')throw new TypeError('Exact readback source contents required');

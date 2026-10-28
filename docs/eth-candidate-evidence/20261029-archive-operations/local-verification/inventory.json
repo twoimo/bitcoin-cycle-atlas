@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "e41f93f58e59a05d3125f8a614a055c6b721ef88",
+  "sourceTree": "acaadcb7c74597533c4126b52606754dc6565da9",
+  "scope": "Actual final local execution; documentation-only follow-up is separate. Remote CI and acquisition are not claimed here.",
+  "logsArchive": {
+    "path": "logs.zip",
+    "bytes": 97856,
+    "sha256": "c0cf6168f7b61a15b423f69ee1ab32b3de4d8fb003cef424cc9f32d44f337290",
+    "entries": [
+      {
+        "path": "tests.log",
+        "originalPath": "build/archive-operations-verification/tests.log",
+        "bytes": 220655,
+        "sha256": "720f214a2a675c897ad0b507139451bbaf086d984c21b923ecd32cbf590194b5"
+      },
+      {
+        "path": "verify-forecast.log",
+        "originalPath": "build/archive-operations-verification/verify-forecast.log",
+        "bytes": 1179,
+        "sha256": "9d5d237b8c2ed5019704f2c22172b29fef13e5e3ec14adaa5c51e6850b6f1f30"
+      },
+      {
+        "path": "verify-research.log",
+        "originalPath": "build/archive-operations-verification/verify-research.log",
+        "bytes": 527,
+        "sha256": "291d96c8810d3dd1b8bb6c70d6eec086fa73bef1c92f2a797dae32f68dc1ba8c"
+      },
+      {
+        "path": "verify-eth-events.log",
+        "originalPath": "build/archive-operations-verification/verify-eth-events.log",
+        "bytes": 367,
+        "sha256": "7cd4c7d350d37ddb33a074c645d1c4b3403369b5c8106053684447e20bd25be6"
+      },
+      {
+        "path": "verify-treasury-paths.log",
+        "originalPath": "build/archive-operations-verification/verify-treasury-paths.log",
+        "bytes": 8358,
+        "sha256": "f466f3d11f783d57c984f47daafb61a935611186c2994310a1cbbbf443fe35c0"
+      },
+      {
+        "path": "verify-numerics.log",
+        "originalPath": "build/archive-operations-verification/verify-numerics.log",
+        "bytes": 33743,
+        "sha256": "df6ec0257d6bc510550a016865f3d34e3b1c99809d7c3a7125464e796ee410cb"
+      },
+      {
+        "path": "verify-formal.log",
+        "originalPath": "build/archive-operations-verification/verify-formal.log",
+        "bytes": 27746,
+        "sha256": "91f52b437b1dce049c3f65bdfea335d7a0dfef8fcbe15f0604a424c86c4a4953"
+      },
+      {
+        "path": "verify-cycle.log",
+        "originalPath": "build/archive-operations-verification/verify-cycle.log",
+        "bytes": 577,
+        "sha256": "3cb54eda21aeab0742bde1570329f0d6e8a7583c8e8334b5646144cef0129a6a"
+      },
+      {
+        "path": "verify-performance.log",
+        "originalPath": "build/archive-operations-verification/verify-performance.log",
+        "bytes": 1262,
+        "sha256": "b507d54b4ce8824d9288181dd967fb407eb314a4519db5d4443fa1e7086ce302"
+      },
+      {
+        "path": "verify-static.log",
+        "originalPath": "build/archive-operations-verification/verify-static.log",
+        "bytes": 282,
+        "sha256": "66e15b085395b070eab63170c134584d80fb0722cc627bebb00c305ca7e0c3ac"
+      },
+      {
+        "path": "build-publication.log",
+        "originalPath": "build/archive-operations-verification/build-publication.log",
+        "bytes": 452,
+        "sha256": "048cab154b790adc61970dd25367ae267586ed161d0bcd11681f3970338a96b1"
+      },
+      {
+        "path": "verify-publication.log",
+        "originalPath": "build/archive-operations-verification/verify-publication.log",
+        "bytes": 372,
+        "sha256": "06f0451820c82cc1392c252041d6efe2de22ba470e3ebb344de918340d923ad5"
+      },
+      {
+        "path": "build-standalone.log",
+        "originalPath": "build/archive-operations-verification/build-standalone.log",
+        "bytes": 101,
+        "sha256": "ff9ad80435bb422c5f6d191441fa3324932d8915102da0ba30d697e55c47424e"
+      },
+      {
+        "path": "verify-standalone.log",
+        "originalPath": "build/archive-operations-verification/verify-standalone.log",
+        "bytes": 139,
+        "sha256": "d33d7536a30311a2c47752e87e5c4314ecc639d4a3037152a5b2cddaf7d944a0"
+      }
+    ]
+  },
+  "publication": {
+    "sourceCommit": "e41f93f58e59a05d3125f8a614a055c6b721ef88",
+    "sourceTreeStatus": "clean",
+    "manifestSha256": "d891c8a1f858cc1792864fe9617e772bf4b0b57027a597c5506127850f95376c"
+  },
+  "standalone": {
+    "originalPath": "build/Bitcoin_Cycles_Comparison.html",
+    "bytes": 29879770,
+    "sha256": "a78d8b82ca361b0e8265b95866a32187b5d2848a87a8b4d2fbda5d2f6657a120"
+  },
+  "uiSourcesChanged": false,
+  "newRemoteAcquisitionsClaimed": false,
+  "releaseAuthorized": false,
+  "productionPromoted": false
+}

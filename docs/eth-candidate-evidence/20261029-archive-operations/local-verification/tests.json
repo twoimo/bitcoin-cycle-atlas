@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "group": "tests",
+  "sourceCommit": "e41f93f58e59a05d3125f8a614a055c6b721ef88",
+  "sourceTree": "acaadcb7c74597533c4126b52606754dc6565da9",
+  "trackedStatusBefore": "",
+  "startedAt": "2026-10-28T18:02:49.702Z",
+  "commands": [
+    {
+      "name": "tests",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "startedAt": "2026-10-28T18:02:49.702Z",
+      "log": "build/archive-operations-verification/tests.log",
+      "finishedAt": "2026-10-28T18:06:46.837Z",
+      "seconds": 237.135,
+      "exitCode": 0,
+      "logBytes": 220655,
+      "logSha256": "720f214a2a675c897ad0b507139451bbaf086d984c21b923ecd32cbf590194b5",
+      "testSummary": {
+        "tests": 2080,
+        "pass": 2080,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      }
+    }
+  ],
+  "status": "passed",
+  "finishedAt": "2026-10-28T18:06:46.851Z",
+  "finalCommit": "e41f93f58e59a05d3125f8a614a055c6b721ef88",
+  "trackedStatusAfter": "",
+  "sameSourceCommit": true
+}

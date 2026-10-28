@@ -1,0 +1,15 @@
+✔ actual preserved model replay is exact and page evaluation matches original bounded evaluator rows (7198.673921ms)
+✔ synthetic mature targets have identical exact scores and future-vintage exclusion under original evaluator (460.229416ms)
+✔ an older same-clock conflict remains fatal even when a newer valid snapshot wins every target (455.006018ms)
+✔ a schema-valid synthetic graph cannot impersonate an actual committed model replay (210.738225ms)
+✔ isolated real-model operations issue once, reuse same completed input, replay, report and append original clocks exactly (80975.425087ms)
+✔ a failed complete HTTP body is preserved without a new record, observation, or successful issuance (23422.679771ms)
+✔ preflight rejects a conflicting immutable input without writing a candidate file (11996.311436ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 124881.676395

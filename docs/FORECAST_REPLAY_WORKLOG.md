@@ -48,3 +48,12 @@ The formal remaining conditions are unchanged: complete exact economic inputs, t
 ## User path
 
 Open a saved forecast record, select **리플레이**, then use **재생**, previous/next bars, the date control, or the slider. The visible disclosure identifies whether market dates or recorded acquisition times determine availability. **과거 재구성** supports a chosen BTC or ETH origin and a 30-, 90-, 180-, or 365-day horizon. **현재 화면 JSON** exports only the disclosed frame and forecast identity. Long-horizon target status remains pending until its actual date and a valid observation are both available.
+
+
+## Archive operations continuation — 2026-10-29 KST
+
+The historical retention condition in the earlier verification section now has an explicit implemented consumer path. The archive-backed operations visit the complete verified inventory while retaining a bounded current-run delta. Issuance reuse, original model replay, global-vintage evaluation, first-twelve calibration selection, capacity, and downstream readiness all use that complete source. Issuance-time and later replay evaluations are preserved and checked separately. Legacy flat readers reject an archive-active workspace rather than emitting an incomplete history.
+
+The new path has synthetic growth tests beyond 500 observations and 2,000 records, corruption/reordering/subset checks, and actual original-source replay. It also separates read-only daily preparation from an exact-run verified publication handoff. These changes do not alter the replay UI, any frozen model graph, old issuance clocks, or original market data. They do not activate the scheduled definition or publish the evidence branch. Finite archive/transport/report/review-book limits and the original 290-day tail boundary remain explicit.
+
+The [continuation evidence](eth-candidate-evidence/20261029-archive-operations/README.md) records implementation decisions, exact source preservation, actual offline failure evidence, focused tests, and final verification status. A local remote DNS failure remains a failure; only the new remote CI can establish its own acquisition and artifact outcome. Actual mature calibration and economic-input conditions remain unchanged.

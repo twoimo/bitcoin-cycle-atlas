@@ -129,6 +129,13 @@ function metadataDescriptor(value){
   const encoded=bytes(value);
   return {id:value.id,path:'pages/'+value.id+'.json',bytes:encoded.length,sha256:sha(encoded),gitBlobSha:gitBlob(encoded),entries:value.entries.length};
 }
+/** Stateless format checks shared by the filesystem visitor. Exporting these
+ * checks does not confer verification authority: each adapter must still read
+ * and authenticate the entire inventory and all semantic references itself. */
+export const ETH_PROSPECTIVE_ARCHIVE_FORMAT=Object.freeze({
+  category,parse,descriptor,checkDescriptor,checkManifest,metadataDescriptor,
+  initialCounts,addCounts,keys,addressed,
+});
 async function validateLogicalFiles(logicalFiles){
   const values=new Map(),records=[],snapshots=new Map(),observations=new Set(),runs=new Set(),outcomes=[],references=[];
   for(const [path,value]of logicalFiles){

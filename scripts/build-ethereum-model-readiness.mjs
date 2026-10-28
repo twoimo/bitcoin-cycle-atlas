@@ -8,6 +8,7 @@ import {canonicalForecastJson,forecastHash} from '../dist/forecast-records.js';
 import {assessEthereumEconomicFeasibility,ETH_ECONOMIC_VERSION,ETH_ECONOMIC_INPUT_SCHEMA} from '../dist/ethereum-economic-model.js';
 import {auditEthereumSupplyAccounting} from './ethereum-supply-accounting-core.mjs';
 import {verifyEthereumProspectiveRecord,ethereumProspectiveIndexEntry} from '../dist/ethereum-prospective-dispatch.js';
+import {readEthereumProspectiveArchiveSummary} from './ethereum-prospective-archive-summary.mjs';
 const root=fileURLToPath(new URL('..',import.meta.url)),sha=x=>createHash('sha256').update(x).digest('hex');
 const git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8',timeout:10000}).trim();
 const sourceCommit=git('rev-parse','HEAD'),sourceTree=git('rev-parse','HEAD^{tree}'),sources={};
@@ -64,18 +65,24 @@ assert.equal(economicCoverage.sourceCommit,sourceCommit);assert.equal(economicCo
 assert.equal(economicCoverage.sourceIdentityStatus,'verified-checkout');
 for(const [path,hash]of Object.entries(economicCoverage.provenance.inputSha256))assert.equal(sha(await readFile(resolve(root,path))),hash,'Economic evidence input changed: '+path);
 assert.equal(economicCoverage.fullModelSnapshotReady,false);assert.equal(economicCoverage.modelInputActivated,false);
-const receipt=await read('build/ethereum-prospective-ledger/receipt.json'),index=await read('build/ethereum-prospective-ledger/index.json',true);
-assert.equal(comparison.provenance.sourceCommit,sourceCommit);assert.equal(stability.sourceCommit,sourceCommit);assert.equal(receipt.sourceCommit,sourceCommit);
-const records=[];
-for(const entry of index?.entries??[]){
-  assert.match(entry.id,/^[a-f0-9]{64}$/);assert.match(entry.snapshotId,/^[a-f0-9]{64}$/);
-  assert.equal(entry.recordPath,'records/'+entry.id+'.json');assert.equal(entry.snapshotPath,'snapshots/'+entry.snapshotId+'.json');
-  const record=await read('build/ethereum-prospective-ledger/'+entry.recordPath),snapshot=await read('build/ethereum-prospective-ledger/'+entry.snapshotPath);
-  await verifyEthereumProspectiveRecord(record,snapshot);assert.deepEqual(ethereumProspectiveIndexEntry(record),entry);records.push(record);
+const archiveSummary=await readEthereumProspectiveArchiveSummary({repositoryRoot:root,sourceCommit,sourceTree});
+let receipt,evaluation,replayReceipt,records=[];
+if(archiveSummary){
+  ({receipt,evaluation,replayReceipt,records}=archiveSummary);Object.assign(sources,archiveSummary.inputSha256);
+}else{
+  receipt=await read('build/ethereum-prospective-ledger/receipt.json');
+  const index=await read('build/ethereum-prospective-ledger/index.json',true);
+  for(const entry of index?.entries??[]){
+    assert.match(entry.id,/^[a-f0-9]{64}$/);assert.match(entry.snapshotId,/^[a-f0-9]{64}$/);
+    assert.equal(entry.recordPath,'records/'+entry.id+'.json');assert.equal(entry.snapshotPath,'snapshots/'+entry.snapshotId+'.json');
+    const record=await read('build/ethereum-prospective-ledger/'+entry.recordPath),snapshot=await read('build/ethereum-prospective-ledger/'+entry.snapshotPath);
+    await verifyEthereumProspectiveRecord(record,snapshot);assert.deepEqual(ethereumProspectiveIndexEntry(record),entry);records.push(record);
+  }
+  evaluation=receipt.evaluation?await read('build/ethereum-prospective-ledger/evaluations/'+receipt.evaluation.id+'.json'):null;
+  if(evaluation){const {id,...body}=evaluation;assert.equal(await forecastHash(body),id);assert.deepEqual(evaluation.recordIds,records.map(r=>r.id).sort());}
+  replayReceipt=await read('build/ethereum-prospective-ledger/replay-receipt.json',true);
 }
-const evaluation=receipt.evaluation?await read('build/ethereum-prospective-ledger/evaluations/'+receipt.evaluation.id+'.json'):null;
-if(evaluation){const {id,...body}=evaluation;assert.equal(await forecastHash(body),id);assert.deepEqual(evaluation.recordIds,records.map(r=>r.id).sort());}
-const replayReceipt=await read('build/ethereum-prospective-ledger/replay-receipt.json',true);
+assert.equal(comparison.provenance.sourceCommit,sourceCommit);assert.equal(stability.sourceCommit,sourceCommit);assert.equal(receipt.sourceCommit,sourceCommit);
 if(receipt.status==='issued-or-reused'){assert.equal(replayReceipt?.status,'verified-preserved');assert.equal(replayReceipt.networkRequests,0);assert.equal(replayReceipt.newRecords,0);}
 const previous=await read('dist/data/asset-forecast-ledger/index.json');
 const priorModels=Object.values(Object.groupBy(previous.entries,e=>e.symbol)).map(entries=>({
@@ -119,13 +126,14 @@ const report={kind:'ethereum-model-remaining-conditions',sourceCommit,sourceTree
       historicalVintagesVerified:false,coverageGuarantee:false,calibratedForProduction:false}},
   prospective:{status:receipt.status,replayFromPersistedFiles:replayReceipt?{status:replayReceipt.status,networkRequests:replayReceipt.networkRequests,newRecords:replayReceipt.newRecords,reusedRecords:replayReceipt.reusedRecords,indexUnchanged:replayReceipt.indexUnchanged}:null,previousAssetLedger:{records:previous.entries.length,models:priorModels,separateFromNewCandidates:true},
     candidateRecords:records.length,uniqueOrigins:new Set(records.map(r=>r.asOf)).size,
-    modelEvidence:[...new Set(['adaptive','pooled','warmStart',...records.map(r=>r.modelKey)])].map(modelKey=>{
+    modelEvidence:archiveSummary?.modelEvidence??[...new Set(['adaptive','pooled','warmStart',...records.map(r=>r.modelKey)])].map(modelKey=>{
       const owned=records.filter(r=>r.modelKey===modelKey),rows=(evaluation?.rows??[]).filter(r=>r.modelKey===modelKey);
       return {modelKey,recordCount:owned.length,uniqueOrigins:new Set(owned.map(r=>r.asOf)).size,
         pending:rows.filter(r=>r.status==='pending').length,scored:rows.filter(r=>r.status==='scored').length,
         earliestOutcomeEventAt:owned.flatMap(r=>r.targets.map(t=>t.eventAt)).sort()[0]??null,
         independentlyValidatedMarketRegimes:null,accuracyProven:false};
     }),issuanceReceiptSha256:sources['build/ethereum-prospective-ledger/receipt.json'],
+    ...(archiveSummary?{archiveEvidence:archiveSummary.verification}:{}),
     requiresFutureObservedAndCollectedPrices:true,multipleModelsOrHorizonsAreNotIndependentOrigins:true},
   economics:{version:ETH_ECONOMIC_VERSION,metricDefinitionVersion:ETH_ECONOMIC_INPUT_SCHEMA.snapshot.metricDefinitionVersion,
     requiredMetricCount:Object.keys(ETH_ECONOMIC_INPUT_SCHEMA.metrics).length,

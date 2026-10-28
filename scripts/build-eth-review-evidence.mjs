@@ -20,6 +20,8 @@ const evidencePaths=[
   'build/ethereum-independent-calibration.json',
   'build/ethereum-prospective-calibration-readiness.json',
   'build/ethereum-prospective-capacity.json',
+  'build/ethereum-prospective-archive-active.json',
+  'build/ethereum-prospective-archive-evaluation.json',
   'build/ethereum-prospective-archive-restore.json',
   'build/ethereum-prospective-archive-remote-receipt.json',
   'build/ethereum-prospective-archive-append.json',
@@ -65,6 +67,7 @@ const manifest=await buildEthReviewPacket({
   repositoryRoot:root,outputDirectory:'build/eth-review-packet',
   baselineCommit:scope.baselineCommit,seedPaths:scope.seedPaths,
   dynamicResolutions:scope.dynamicResolutions,evidencePaths,
+  externalReviewDisposition:'omitted-by-user',
   // 15b5f651 retained 65,085,434 bytes. This declared scope also includes the
   // committed immutable archive, previously omitted acquisition vintages,
   // separate restored ETH outcomes, append/restore receipts, and source tests.

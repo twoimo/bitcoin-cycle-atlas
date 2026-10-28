@@ -14,7 +14,7 @@ import {captureEthereumResearchTail} from './ethereum-prospective-collector-core
 import {decideEthereumProspectiveIssue,ETH_PROSPECTIVE_REUSE_POLICY} from './ethereum-prospective-reuse.mjs';
 import {parseEthereumProspectiveArguments} from './ethereum-prospective-options.mjs';
 import {readEthereumCommittedBase,ETH_COMMITTED_BASE_POLICY} from './ethereum-prospective-base.mjs';
-import {readEthereumCalibrationInputs} from './build-ethereum-prospective-calibration-readiness.mjs';
+import {readEthereumCalibrationInputs,assertEthereumLegacyFlatWorkspace} from './build-ethereum-prospective-calibration-readiness.mjs';
 import {validateEthereumProspectiveWriteBudget} from './ethereum-prospective-write-guard.mjs';
 
 const root=fileURLToPath(new URL('..',import.meta.url)),out=resolve(root,'build/ethereum-prospective-ledger');
@@ -23,6 +23,7 @@ const json=x=>canonicalForecastJson(x)+'\n',now=()=>new Date().toISOString(),sha
 const git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8',timeout:10000}).trim();
 const sourceCommit=git('rev-parse','HEAD'),sourceTree=git('rev-parse','HEAD^{tree}');
 const {verifyOnly,includeWarmStart,modelKeys}=parseEthereumProspectiveArguments(process.argv.slice(2));
+await assertEthereumLegacyFlatWorkspace({repositoryRoot:root});
 const receiptPath=verifyOnly?'replay-receipt.json':'receipt.json';
 const files=new Map(),records=[],snapshots={},committedTransportReferences=new Map();
 const sourcePaths=['scripts/issue-ethereum-prospective.mjs','scripts/ethereum-prospective-collector-core.mjs','scripts/ethereum-prospective-reuse.mjs',

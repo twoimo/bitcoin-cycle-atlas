@@ -50,8 +50,19 @@ function inventorySummary(files){
 /** Rebuild Git's actual tree object hashes, including intermediate trees.
  * No remote tree label can replace the identities of its retained bytes. */
 export function ethereumArchiveGitTree(files){
-  const captured=snapshotFiles(files),root=new Map(),entries=[];
-  for(const [path,value]of captured){
+  return ethereumArchiveGitTreeFromInventory(inventory(snapshotFiles(files)));
+}
+/** Descriptor-only form for the opaque filesystem reader. The caller must
+ * verify these hashes against every original byte before relying on this tree. */
+export function ethereumArchiveGitTreeFromInventory(items){
+  if(!Array.isArray(items)||items.length>P.maximumFiles)throw new TypeError('Bounded archive transport inventory required');
+  let total=0;
+  const root=new Map(),entries=[];
+  for(const value of items){
+    if(!value||Object.keys(value).sort().join(',')!=='bytes,gitBlobSha,path,sha256'||!safePath(value.path)||
+      !Number.isSafeInteger(value.bytes)||value.bytes<0||value.bytes>P.maximumBlobBytes||!DIGEST.test(value.sha256)||!HEX.test(value.gitBlobSha)||
+      (total+=value.bytes)>P.maximumArchiveBytes)throw new Error('Invalid bounded archive transport descriptor');
+    const path=value.path;
     const parts=path.split('/');let current=root;
     for(const part of parts.slice(0,-1)){
       if(!current.has(part))current.set(part,new Map());
@@ -64,8 +75,8 @@ export function ethereumArchiveGitTree(files){
     const chunks=[];
     const ordered=[...tree].sort(([a,av],[b,bv])=>Buffer.compare(Buffer.from(a+(av instanceof Map?'/':'')),Buffer.from(b+(bv instanceof Map?'/':''))));
     for(const [name,value]of ordered){
-      const path=prefix+name,isTree=value instanceof Map,hash=isTree?visit(value,path+'/'):blobSha(value),mode=isTree?'040000':'100644';
-      entries.push({path,mode,type:isTree?'tree':'blob',sha:hash,...(!isTree?{size:value.length}:{})});
+      const path=prefix+name,isTree=value instanceof Map,hash=isTree?visit(value,path+'/'):value.gitBlobSha,mode=isTree?'040000':'100644';
+      entries.push({path,mode,type:isTree?'tree':'blob',sha:hash,...(!isTree?{size:value.bytes}:{})});
       chunks.push(Buffer.from((isTree?'40000':'100644')+' '+name+'\0'),Buffer.from(hash,'hex'));
     }
     const bytes=Buffer.concat(chunks);return createHash('sha1').update('tree '+bytes.length+'\0').update(bytes).digest('hex');
@@ -184,6 +195,24 @@ export function validateEthereumArchiveRemoteReadReceipt({receipt,files}={}){
     fail('Explicit absent-branch receipt requires its successful public repository check');
   return {status:body.status,expectedHead:body.expectedHead,expectedTree:body.expectedTree,manifestId:body.manifestId,receiptId:receipt.id,
     inventory:JSON.parse(json(body.inventory)),allRetainedTransportBytesBound:body.status==='restored'};
+}
+
+/** Rebind a raw-verified opaque filesystem source to the original read receipt
+ * without materializing a second full archive byte Map. This function checks
+ * descriptors, not original file bytes; source verification remains mandatory. */
+export function validateEthereumArchiveRemoteReadInventory({receipt,entries,manifestId}={}){
+  const body=readBody(receipt),tree=ethereumArchiveGitTreeFromInventory(entries);
+  const ordered=[...entries].sort((a,b)=>a.path.localeCompare(b.path));
+  const summary={files:ordered.length,bytes:ordered.reduce((sum,value)=>sum+value.bytes,0),sha256:sha(Buffer.from(json(ordered)))};
+  if(json(body.inventory)!==json(summary))fail('Remote-read receipt inventory differs from verified source descriptors');
+  if(body.status==='restored'){
+    if(body.expectedTree!==tree.sha||body.manifestId!==manifestId)fail('Remote-read receipt tree or manifest differs from verified source');
+  }else{
+    if(entries.length||manifestId!==null)fail('Absent archive receipt cannot bind archive descriptors');
+    validateEthereumArchiveRemoteReadReceipt({receipt,files:new Map()});
+  }
+  return {status:body.status,expectedHead:body.expectedHead,expectedTree:body.expectedTree,manifestId:body.manifestId,
+    receiptId:receipt.id,inventory:summary,rawSourceVerificationRequired:true};
 }
 
 export async function readEthereumProspectiveArchiveRemote(options={}){

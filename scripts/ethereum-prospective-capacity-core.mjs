@@ -49,7 +49,7 @@ export function inspectEthereumProspectiveWorkflow({path,text}={}){
     const found=block.map(line=>line.match(/^  ([a-zA-Z_][a-zA-Z0-9_-]*):(?:\s|$)/)?.[1]).filter(Boolean);
     if(found.length&&new Set(found).size===found.length)events=found.sort();
   }
-  const directIssuance=/^\s+(?:-\s+)?(?:run:\s*)?node\s+scripts\/issue-ethereum-prospective\.mjs(?:\s|$)/m.test(text);
+  const directIssuance=/^\s+(?:-\s+)?(?:run:\s*)?node\s+scripts\/(?:issue-ethereum-prospective\.mjs(?:\s|$)|ethereum-prospective-archive-operations\.mjs\s+issue(?:\s|$))/m.test(text);
   const downloadAction=/^\s*(?:-\s*)?uses:\s*actions\/download-artifact@/m.test(text);
   const restoreMarker=downloadAction||/\bgh\s+run\s+download\b|restor[^\r\n]*ethereum|ethereum[^\r\n]*restor|actions\/artifacts/i.test(text);
   const retentionDays=[...text.matchAll(/^\s+retention-days:\s*(\d+)\s*(?:#.*)?$/gm)].map(match=>Number(match[1]));
@@ -63,9 +63,18 @@ export function inspectEthereumProspectiveWorkflow({path,text}={}){
 /** Calendar and size arithmetic only. The CLI first verifies raw ledgers with
  * readEthereumCalibrationInputs. This pure projection neither authenticates
  * a caller's metadata nor creates forecasts, residuals or calibration cases. */
-export function projectEthereumProspectiveCapacity({records,observations=[],baseText,informationCutoffAt,workflowSources=[]}={}){
+export function projectEthereumProspectiveCapacity(args={}){
+  return projectCapacityMetadata(args,P.maximumRecords,P.maximumObservations);
+}
+/** The archive adapter supplies metadata only after full raw-source validation.
+ * This helper retains the legacy calendar arithmetic and flat-limit comparison;
+ * its output is not itself an archive capacity or readiness assertion. */
+export function projectEthereumProspectiveArchiveCapacityMetadata(args={}){
+  return projectCapacityMetadata(args,40000,40000);
+}
+function projectCapacityMetadata({records,observations=[],baseText,informationCutoffAt,workflowSources=[]}={},maximumRecords,maximumObservations){
   const cutoff=normalizeForecastTimestamp(informationCutoffAt),today=Math.floor(Date.parse(cutoff)/DAY),latestCompleted=today-1;
-  uniqueIds(records,P.maximumRecords,'prospective metadata');uniqueIds(observations,P.maximumObservations,'observation metadata');
+  uniqueIds(records,maximumRecords,'prospective metadata');uniqueIds(observations,maximumObservations,'observation metadata');
   if(!Array.isArray(workflowSources)||workflowSources.length>100)throw new TypeError('Bounded workflow sources required');
   const groups=new Map();
   for(const record of records){
@@ -106,7 +115,7 @@ export function projectEthereumProspectiveCapacity({records,observations=[],base
   const recordDays=modelsPerDay?Math.max(0,Math.floor((P.maximumRecords-records.length)/modelsPerDay)):null;
   const indexDays=dailyIndexByteGrowth?Math.max(0,Math.floor((P.maximumCandidateIndexBytes-compactIndexBytes)/dailyIndexByteGrowth)):null;
   const observationScenarios=[...new Set([1,maximumObservedProspectivePerDay].filter(value=>value>0))].sort((a,b)=>a-b).map(perDay=>{
-    const completeDays=Math.floor((P.maximumObservations-observations.length)/perDay);
+    const completeDays=Math.max(0,Math.floor((P.maximumObservations-observations.length)/perDay));
     return {newProspectiveSnapshotsPerDay:perDay,
       basis:perDay===1?'conditional single successful daily capture':'conditional repetition of maximum retained same-day prospective captures',
       additionalIndependentSnapshotsAssumed:0,completeAdditionalCaptureDaysWithinLimit:completeDays,

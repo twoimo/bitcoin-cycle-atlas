@@ -1,0 +1,15 @@
+at_utc	phase	decision	reason	evidence	result
+2026-10-28T17:22:05.796Z	baseline	Keep frozen product and legacy interfaces	Establish an executable reference before adding archive consumers	build/operational-continuation/baseline-tests.json	158 passed; 0 failed; 0 skipped
+2026-10-28T17:29:43.000Z	domain	Add explicit archive-operations CLI	Paged storage alone does not remove downstream flat-reader limits	Existing archive, issuer, readiness and capacity source inspected	implementation in progress
+2026-10-28T17:29:43.000Z	parallel	Separate source, calibration, handoff and integration ownership	Avoid concurrent edits to shared contracts	Three isolated worktrees from baseline	interfaces agreed
+2026-10-28T17:29:43.000Z	calibration	Freeze only an immutable manifest without overlay	A current-run delta cannot truthfully claim ancestor archive membership	Source and calibration agents agreed ancestor reconstruction	implementation in progress
+2026-10-28T17:29:43.000Z	review	Deduplicate handoff predecessor bytes	Duplicated predecessor and candidate silently halve archive capacity	Root review of handoff capture bounds	fix requested before commit
+2026-10-28T17:47:46.860Z	peer-review	Require every current delta record in its index	Historical partial checkpoints do not authorize orphan current records	archive-source regression	fixed; source owner and independent reviewer
+2026-10-28T17:47:46.860Z	peer-review	Rebind active source and preflight to original read bytes	Self-consistent mutable summaries are not original-byte authority	archive-operations 21/21; pinned-map tests	passed
+2026-10-28T17:47:46.860Z	evaluation	Pack complete unchanged evaluator components in receipt pages	One object per record per run creates unnecessary file-count growth	archive-issuer 7/7	passed; synthetic score equivalence and actual retained replay
+2026-10-28T17:47:46.860Z	handoff	Deduplicate exact predecessor from candidate ancestry	Preserve capacity without changing old transport bounds	handoff+remote focused72/72; compatibility137/137	passed
+2026-10-28T17:47:46.860Z	io	Bound reads and check file and parent identity after asynchronous work	Reject growth, replacement and path redirection	IO/inventory/remote82/82	passed
+2026-10-28T17:47:46.860Z	consumer	Update final readiness consumer to whole archive	Current delta index alone omits retained history	build-ethereum-model-readiness source inspection	implementation in progress
+2026-10-28T17:47:46.860Z	review-artifact	Explicit omitted-by-user policy and incremental byte guard	Remove stale external-review status and avoid pre-limit full buffering	build-eth-review-packet source inspection	implementation in progress
+2026-10-28T18:01:16.185Z	summary-integration	Bind original issuance evaluation checkpoint independently of later replay evaluation; reexecute both and require complete semantic inventories. Final local and remote gates pending.
+2026-10-28T18:10:28.693Z	final-local-gates	e41f93f: full npm test 2080/2080, zero failures/skips, 237.135s; nine required verification and four publication/standalone commands passed with exact source unchanged. Remote CI and its acquired evidence remain separate.
