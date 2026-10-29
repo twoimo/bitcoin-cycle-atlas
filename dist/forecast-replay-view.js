@@ -178,7 +178,7 @@ export function mountForecastReplay(host,{record,snapshot,symbol=record?.symbol?
   let epoch=0,destroyed=false,request=null,session=null,archive=null,engine=null,controller=null,frame=null,observer=null;
   const active=()=>!destroyed&&host.isConnected&&isActive();
   function stop(){controller?.destroy();controller=null;observer?.disconnect();observer=null;}
-  function cancel(){epoch++;request?.abort();request=null;stop();}
+  function cancel(){epoch++;request?.abort();request=null;stop();frame=null;}
   function inspect(date){
     if(!frame)return;
     const predicted=frame.forecast.find(row=>row.date===date)?.price;
@@ -186,9 +186,16 @@ export function mountForecastReplay(host,{record,snapshot,symbol=record?.symbol?
     const input=frame.inputPrices.find(row=>row.date===date)?.price;
     query('[data-replay-selection]').textContent=date+' · '+(date<=session.asOf?'기준 관측 '+price(input):'고정 예측 '+price(predicted)+' · 공개 실제 '+price(actual));
   }
+  function fail(reason){
+    stop();frame=null;loading.hidden=true;content.hidden=true;error.hidden=false;panel.dataset.state='error';
+    delete panel.dataset.cursor;delete panel.dataset.playback;delete panel.dataset.outputHash;
+    svg.onpointermove?.cancel?.();for(const key of ['onpointermove','onpointerleave','onkeydown','onclick'])svg[key]=null;
+    error.innerHTML='<p>'+esc(reason?.message??'리플레이를 만들지 못했습니다.')+'</p><button type="button" data-replay-retry>다시 확인</button>';
+  }
   function paint(state){
     if(!active()||!session)return;
-    frame=engine.buildReplayFrame(session,{cursorIndex:state.cursorIndex,clockMode:clock.value});
+    try{frame=engine.buildReplayFrame(session,{cursorIndex:state.cursorIndex,clockMode:clock.value});}
+    catch(reason){fail(reason);return;}
     panel.dataset.playback=state.status;panel.dataset.cursor=frame.cursorDate;panel.dataset.outputHash=session.identity.outputHash;
     const play=query('[data-replay-play]');play.textContent=state.status==='playing'?'일시정지':state.status==='ended'?'다시 재생':'재생';play.setAttribute('aria-label',state.status==='playing'?'리플레이 일시정지':'리플레이 재생');play.setAttribute('aria-pressed',String(state.status==='playing'));
     play.disabled=session.timeline.length<2;query('[data-replay-previous]').disabled=state.cursorIndex===0;query('[data-replay-reset]').disabled=state.cursorIndex===0;query('[data-replay-next]').disabled=state.cursorIndex===session.timeline.length-1;
@@ -253,11 +260,10 @@ export function mountForecastReplay(host,{record,snapshot,symbol=record?.symbol?
       query('[data-replay-provenance]').innerHTML=[['재생 방식',session.mode==='recorded'?'보존한 경로':session.historicalModel?.label??'현재 모형 과거 재구성'],['종목',symbol==='BTCUSD'?'비트코인 · BTCUSD':symbol],['경로 의미',identity.pointLabel??session.historicalModel?.pointMeaning],['고정 기준일',session.asOf],['발행·생성 시각',stamp(identity.issuedAt??identity.createdAt)],['입력 공개 경계',stamp(identity.inputAvailableAt)],['모델',identity.modelVersion],['기록 ID',identity.recordId],['고정 출력 해시',identity.outputHash],['원본 코드',identity.sourceCommit??'현재 실행 모형']].map(([label,value])=>'<dt>'+esc(label)+'</dt><dd>'+esc(value)+'</dd>').join('');
       loading.hidden=true;content.hidden=false;panel.dataset.state='ready';
       controller=createReplayController({length:session.timeline.length,onChange:paint});controller.speed(Number(query('[data-replay-speed]').value));
-      if(typeof ResizeObserver==='function'){observer=new ResizeObserver(()=>{if(controller)paint(controller.getState());});observer.observe(svg.parentElement);}
+      if(controller&&typeof ResizeObserver==='function'){observer=new ResizeObserver(()=>{if(controller)paint(controller.getState());});observer.observe(svg.parentElement);}
     }catch(reason){
       if(!active()||token!==epoch)return;
-      stop();loading.hidden=true;content.hidden=true;error.hidden=false;panel.dataset.state='error';
-      error.innerHTML='<p>'+esc(current.signal.aborted?'관측 자료 확인 시간이 초과되거나 요청이 취소됐습니다.':reason?.message??'리플레이를 만들지 못했습니다.')+'</p><button type="button" data-replay-retry>다시 확인</button>';
+      fail(current.signal.aborted?new Error('관측 자료 확인 시간이 초과되거나 요청이 취소됐습니다.'):reason);
     }finally{clearTimeout(timer);current.signal.removeEventListener('abort',aborted);if(request===current)request=null;}
   }
   const click=event=>{

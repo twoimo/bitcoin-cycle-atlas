@@ -5,7 +5,7 @@ import {sessionCloseUtc} from './data-freshness.js';
 import {utcDay,dateFromDay} from './cycle-engine.js';
 import {buildIndependentBenchmarks,BENCHMARK_POLICY} from './forecast-evaluation.js';
 
-export const FORECAST_REPLAY_VERSION='forecast-replay-1';
+export const FORECAST_REPLAY_VERSION='forecast-replay-2';
 const SYMBOLS=new Set(['BTCUSD','ETHUSD','MSTR','BMNR']);
 const HEX=/^[a-f0-9]{64}$/;
 const sessions=new WeakSet();
@@ -71,6 +71,26 @@ function receiptComplete(row){
   if(!row.eventAt||!row.collectedAt||!HEX.test(row.sourceHash)||!row.vintageId||!row.sourceUrl)return false;
   try{const url=new URL(row.sourceUrl);return url.protocol==='https:'&&!url.username&&!url.password;}catch{return false;}
 }
+function currentObservations(rows,cutoff){
+  const times=new Map(),dates=new Map(),families=new Map();
+  const signature=row=>JSON.stringify([row.price,row.open??null,row.high??null,row.low??null,
+    row.close??null,row.volume??null,row.sourceHash??null]);
+  for(const row of rows){
+    if(row.eventAt!==null&&row.eventAt>cutoff||row.collectedAt!==null&&row.collectedAt>cutoff||
+      row.publishedAt!==null&&row.publishedAt>cutoff)continue;
+    const value=signature(row),key=row.date+'\0'+(row.collectedAt??'unversioned'),sameTime=times.get(key);
+    if(sameTime!==undefined&&sameTime!==value)throw new RangeError('Ambiguous equally timed replay revisions');
+    times.set(key,value);
+    const prior=dates.get(row.date),family=families.get(row.date);
+    if(family&&(family.undated||row.collectedAt===null)&&(family.mixed||family.value!==value))
+      throw new RangeError('Replay needs an unambiguous current observation vintage');
+    families.set(row.date,{value:family?.value??value,mixed:Boolean(family?.mixed||family&&family.value!==value),
+      undated:Boolean(family?.undated||row.collectedAt===null)});
+    if(!prior||(row.collectedAt??'')>(prior.collectedAt??'')||
+      row.collectedAt===prior.collectedAt&&(row.vintageId??'')>(prior.vintageId??''))dates.set(row.date,row);
+  }
+  return [...dates.values()].sort((a,b)=>a.date.localeCompare(b.date));
+}
 function visiblePath(path,asOf,horizonDays){
   const end=dateFromDay(utcDay(asOf)+horizonDays);
   return path.filter(row=>row.date>=asOf&&row.date<=end).map(row=>({date:row.date,price:row.price,
@@ -98,10 +118,6 @@ function finishSession({identity,mode,prices,path,targets,observations,observedA
   const evaluation=normalizeForecastTimestamp(evaluatedAt,'evaluatedAt');
   const relevant=normalized.filter(row=>row.date>asOf&&row.date<=endDate);
   const informationTimeAvailable=relevant.every(receiptComplete);
-  if(informationTimeAvailable&&relevant.length){
-    const lastCollection=relevant.reduce((latest,row)=>row.collectedAt>latest?row.collectedAt:latest,'');
-    selectPriceVintages(relevant,{symbol,market,informationCutoffAt:lastCollection});
-  }
   const timeline=forecast.filter(row=>row.date<=evaluation.slice(0,10)&&(row.date===asOf||market==='crypto'||sessionCloseUtc(row.date,market)!==null)).map(row=>row.date);
   if(!timeline.length)throw new RangeError('Replay origin is later than the evaluation clock');
   const session={version:FORECAST_REPLAY_VERSION,id:identity.recordId,identity:copy(identity),mode,market,asOf,startDate,endDate,evaluatedAt:evaluation,
@@ -148,13 +164,7 @@ export async function createHistoricalReplaySession({symbol,observations,asOf,ho
   const at=normalizeForecastTimestamp(generatedAt,'generatedAt');
   if(sessionCloseUtc(asOf,'crypto')>at)throw new RangeError('Historical replay origin has not completed');
   const rows=observationRows(observations,{symbol,observedAt,observedThrough,source});
-  const versions=new Map();
-  for(const row of rows){
-    const prior=versions.get(row.date);
-    if(!prior||prior.collectedAt!==null&&row.collectedAt!==null&&row.collectedAt>prior.collectedAt)versions.set(row.date,row);
-    else if(prior.price!==row.price&&(!prior.collectedAt||!row.collectedAt||prior.collectedAt===row.collectedAt))throw new RangeError('Historical replay needs an unambiguous current price vintage');
-  }
-  const current=[...versions.values()],prefix=current.filter(row=>row.date<=asOf).map(row=>[row.date,row.price]);
+  const prefix=currentObservations(rows.filter(row=>row.date<=asOf),at).map(row=>[row.date,row.price]);
   if(prefix.at(-1)?.[0]!==asOf)throw new RangeError('Historical replay requires an observed close at the exact origin');
   if(prefix.length<181)throw new RangeError('Historical replay requires at least 181 observed closes');
   const horizons=[30,90,180,365,730].filter(value=>value<=horizonDays);
@@ -208,17 +218,12 @@ function selectedObservations(session,position,clockMode){
     (row.collectedAt===null||row.collectedAt<=session.evaluatedAt)&&(row.publishedAt===null||row.publishedAt<=session.evaluatedAt));
   if(clockMode==='information-time'){
     if(!session.observationProvenance.informationTimeAvailable)throw new RangeError('Replay information time requires complete acquisition receipts');
+    currentObservations(eligible,position.cursorAt);
     const selected=selectPriceVintages(eligible,{symbol:session.identity.symbol,market:session.market,informationCutoffAt:position.cursorAt}).rows;
     const originals=new Map(eligible.map(row=>[row.date+'\0'+row.vintageId,row]));
     return selected.map(row=>originals.get(row.date+'\0'+row.vintageId));
   }
-  const selected=new Map();
-  for(const row of eligible){
-    const prior=selected.get(row.date);
-    if(!prior||row.collectedAt!==null&&prior.collectedAt!==null&&row.collectedAt>prior.collectedAt)selected.set(row.date,row);
-    else if(prior.price!==row.price&&(!prior.collectedAt||!row.collectedAt||prior.collectedAt===row.collectedAt))throw new RangeError('Replay needs an unambiguous current observation vintage');
-  }
-  return [...selected.values()];
+  return currentObservations(eligible,session.evaluatedAt);
 }
 function errors(predicted,actual,flat){
   const relative=Math.abs(predicted-actual)/actual;

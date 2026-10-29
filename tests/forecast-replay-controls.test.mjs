@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createReplayController} from '../dist/forecast-replay-view.js';
+import './helpers/forecast-replay-vintage-boundaries.mjs';
+import {verifyReplayViewFailure} from './helpers/forecast-replay-view-failure.mjs';
 
 function harness(length=6,onChange){
   let next=0;
@@ -62,4 +64,9 @@ test('one-frame and bounded-position controls cannot advance outside available b
   assert.throws(()=>multi.controller.step(2),/one bar/);
   assert.throws(()=>multi.controller.speed(0),/speed/);
   assert.throws(()=>createReplayController({length:0}),/nonempty/);
+});
+
+test('view failures stop playback, conceal stale outputs and permit a clean retry',async()=>{
+  const result=await verifyReplayViewFailure();
+  assert.equal(result.status,'passed');assert.equal(result.checks.length,4);
 });
