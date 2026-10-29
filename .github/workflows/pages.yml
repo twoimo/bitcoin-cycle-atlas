@@ -61,6 +61,9 @@ jobs:
           const manifest=JSON.parse(await readFile('dist/publication.json','utf8'));
           const head=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
           if(manifest.sourceTree?.status!=='clean'||manifest.sourceCommit!==head||!/^[a-f0-9]{64}$/.test(manifest.manifestSha256))throw new Error('Publication must identify this committed source');
+          // Only the empty, tracked Pages marker may be included as a hidden file.
+          const hidden=manifest.files.filter(file=>file.path.split('/').some(part=>part.startsWith('.')));
+          if(hidden.length!==1||hidden[0].path!=='.nojekyll'||hidden[0].bytes!==0||hidden[0].sha256!=='e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'||(await readFile('dist/.nojekyll')).byteLength!==0)throw new Error('Unexpected hidden file in public artifact');
           await appendFile(process.env.GITHUB_OUTPUT,`source_commit=${head}\nmanifest_sha256=${manifest.manifestSha256}\n`);
           NODE
       - name: Reject a superseded source before upload
@@ -81,6 +84,7 @@ jobs:
         with:
           path: dist
           retention-days: 1
+          include-hidden-files: true
   deploy:
     if: github.ref == 'refs/heads/main'
     needs: build
