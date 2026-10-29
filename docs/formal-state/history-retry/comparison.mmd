@@ -1,0 +1,32 @@
+---
+title: "명시적 새로고침 후 과거 봉 재시도: 수정 전과 후"
+---
+stateDiagram-v2
+  direction TB
+  %% Explanatory projection of the verified HistoryRetry counterexample.
+  %% Red is the reproduced pre-fix result; green is the corrected outcome.
+  %% This does not add graph counts to the pstack-generated summary.json.
+  classDef neutral fill:#f1f5f9,stroke:#64748b,color:#0f172a
+  classDef before fill:#fff1f2,stroke:#be123c,stroke-width:3px,color:#881337
+  classDef after fill:#ecfdf5,stroke:#15803d,stroke-width:3px,color:#14532d
+  state "과거 봉 조회 실패" as Failed
+  state "재시도 대기 중" as Waiting
+  state "사용자가 새로고침" as Refresh
+  state "최근 봉 조회도 실패" as RecentFailed
+  state "기존 봉을 유지" as Retained
+  state "재조회 생략" as Before
+  state "재시도 가능" as After
+  state "조회한 과거 봉 표시" as Loaded
+  [*] --> Failed
+  Failed --> Waiting : 실패에 따른 재시도 대기 설정
+  Waiting --> Waiting : 일반 이동은 대기 유지
+  Waiting --> Refresh : 명시적 새로고침
+  Refresh --> RecentFailed : 최근 봉 요청 실패
+  RecentFailed --> Retained : 기존 데이터 사용
+  Retained --> Before : 수정 전 · 대기 유지
+  Retained --> After : 수정 후 · 대기 해제
+  After --> Loaded : 과거 재요청 성공
+  After --> Waiting : 과거 재요청도 실패하면 새 대기 설정
+  class Failed,Waiting,Refresh,RecentFailed,Retained,Loaded neutral
+  class Before before
+  class After after
