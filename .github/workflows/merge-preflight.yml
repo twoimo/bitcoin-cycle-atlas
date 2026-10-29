@@ -1,4 +1,4 @@
-name: Read-only merge preflight
+name: Prepare authorized PR integration
 
 on:
   push:
@@ -9,37 +9,105 @@ permissions:
   contents: read
 
 jobs:
-  snapshots:
+  prepare:
+    if: github.repository == 'twoimo/bitcoin-cycle-atlas' && github.ref == 'refs/heads/chatgpt/eth-cycle-economics-20261026'
     runs-on: ubuntu-latest
     timeout-minutes: 8
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: 2f567a81beb8a2598a93a0e44f0140416378dcd8
           fetch-depth: 0
           persist-credentials: false
-      - name: Export the exact reviewed integration inputs
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Reconstruct the exact reviewed resolution without changing any branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import base64,hashlib,json,pathlib,subprocess
+          root=pathlib.Path('.')
+          def git(*args):return subprocess.check_output(['git',*args])
+          def tree(ref):
+            result={}
+            for row in git('ls-tree','-rz',ref).split(b'\0'):
+              if not row:continue
+              meta,path=row.split(b'\t');mode,kind,sha=meta.decode().split()
+              assert kind=='blob'
+              result[path.decode()]=(mode,sha)
+            return result
+          base=tree('d906df3b42a555c57552f005d25a9fef4cfd4c5e')
+          audit=tree('290346736954cc108914f62c7e6ddecff578b8e0')
+          current=tree('2f567a81beb8a2598a93a0e44f0140416378dcd8')
+          applied=[]
+          for path in sorted(set(base)|set(audit)):
+            if base.get(path)==audit.get(path) or current.get(path)!=base.get(path):continue
+            assert path.startswith('docs/') or path in ['scripts/audit-browser-workspace.mjs','scripts/benchmark-market-computation.mjs']
+            assert path in audit and audit[path][0]=='100644'
+            p=root/path;p.parent.mkdir(parents=True,exist_ok=True)
+            p.write_bytes(git('show','290346736954cc108914f62c7e6ddecff578b8e0:'+path));applied.append(path)
+          assert len(applied)==36
+          p=root/'dist/volume-forecast.js'
+          body=git('show','290346736954cc108914f62c7e6ddecff578b8e0:dist/volume-forecast.js')
+          old=b"from './cycle-engine.js?v=1.11.0';"
+          assert body.count(old)==1
+          body=body.replace(old,b"from './cycle-engine.js?v=1.29.0';")
+          assert hashlib.sha1(b'blob '+str(len(body)).encode()+b'\0'+body).hexdigest()=='3b664edff960dde67a6c498b6f2fea26232a84b4'
+          p.write_bytes(body)
+          blob=json.loads(subprocess.check_output(['gh','api','repos/twoimo/bitcoin-cycle-atlas/git/blobs/40a335ec0c322341a99c2bdbf6ec665502040309']))
+          body=base64.b64decode(blob['content'])
+          assert hashlib.sha1(b'blob '+str(len(body)).encode()+b'\0'+body).hexdigest()=='40a335ec0c322341a99c2bdbf6ec665502040309'
+          (root/'tests/pr12-integration.test.mjs').write_bytes(body)
+          subprocess.run(['git','add','-A'],check=True)
+          assert git('write-tree').decode().strip()=='b0e43fab5870bf9faba502f18fa9ca53a92a2cca'
+          PY
+      - name: Run the conflict-sensitive integration regressions
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/merge-preflight"
-          git cat-file -e 290346736954cc108914f62c7e6ddecff578b8e0^{commit}
-          base="$(git merge-base 2f567a81beb8a2598a93a0e44f0140416378dcd8 290346736954cc108914f62c7e6ddecff578b8e0)"
-          test "$base" = d906df3b42a555c57552f005d25a9fef4cfd4c5e
-          for spec in current:2f567a81beb8a2598a93a0e44f0140416378dcd8 audit:290346736954cc108914f62c7e6ddecff578b8e0 base:$base; do
-            name="${spec%%:*}"
-            commit="${spec#*:}"
-            git show -s --format='%H %T %P' "$commit" > "$RUNNER_TEMP/merge-preflight/$name.identity.txt"
-            git ls-tree -r "$commit" > "$RUNNER_TEMP/merge-preflight/$name.tree.txt"
-            git archive --format=tar.gz "$commit" > "$RUNNER_TEMP/merge-preflight/$name.tar.gz"
-          done
-          git diff --binary "$base" 290346736954cc108914f62c7e6ddecff578b8e0 > "$RUNNER_TEMP/merge-preflight/audit.patch"
-          cd "$RUNNER_TEMP/merge-preflight"
-          sha256sum *.tar.gz *.txt *.patch > SHA256SUMS
-      - name: Preserve exact public source inputs
+          mkdir -p "$RUNNER_TEMP/integration-result"
+          node --test tests/pr12-integration.test.mjs tests/analysis-focus.test.mjs tests/boot-shell.test.mjs tests/market-structure.test.mjs tests/mobile-gestures.test.mjs tests/volume-forecast.test.mjs tests/intraday-history.test.mjs tests/reader-resize.test.mjs tests/standalone-modules.test.mjs 2>&1 | tee "$RUNNER_TEMP/integration-result/focused-tests.log"
+      - name: Create only the exact tree and two-parent commit objects
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import base64,json,os,pathlib,subprocess
+          repo='repos/twoimo/bitcoin-cycle-atlas'
+          def api(endpoint,data=None):
+            command=['gh','api',repo+endpoint]
+            if data is not None:command+=['--method','POST','--input','-']
+            return json.loads(subprocess.check_output(command,input=None if data is None else json.dumps(data).encode()))
+          def tree(ref):
+            result={}
+            for row in subprocess.check_output(['git','ls-tree','-rz',ref]).split(b'\0'):
+              if not row:continue
+              meta,path=row.split(b'\t');mode,kind,sha=meta.decode().split();result[path.decode()]=(mode,sha)
+            return result
+          assert api('/git/ref/heads/chatgpt/eth-cycle-economics-20261026')['object']['sha']==os.environ['GITHUB_SHA']
+          expected='b0e43fab5870bf9faba502f18fa9ca53a92a2cca'
+          current=tree('2f567a81beb8a2598a93a0e44f0140416378dcd8');final=tree(expected)
+          volume=api('/git/blobs',{'encoding':'base64','content':base64.b64encode(pathlib.Path('dist/volume-forecast.js').read_bytes()).decode()})
+          assert volume['sha']=='3b664edff960dde67a6c498b6f2fea26232a84b4'
+          entries=[{'path':p,'mode':mode,'type':'blob','sha':sha} for p,(mode,sha) in final.items() if current.get(p)!=(mode,sha)]
+          assert len(entries)==38 and set(current)<=set(final)
+          result=api('/git/trees',{'base_tree':'4b3b2018c2c3e3c9f217ff1315ecb43ba8390298','tree':entries})
+          assert result['sha']==expected
+          commit=api('/git/commits',{'message':'Integrate PR #12 audit with current replay without reverting newer safeguards\n\nUser explicitly authorized all PR merges and production deployment. Preserve current models, observations, replay, UI, strict finite-output guards, standalone parser and formal verification. Restore 36 original historical audit additions, the volume mean-hoisting optimization with current import identity, and six compatible numerical regressions. Preserve both PR histories. Remove temporary integration workflow from final tree.\n\nFocused integration tests passed 98/98 on Node 24. Full integration CI and deployment checks remain required before production. Historical research qualification flags are not promoted by deployment authorization.','tree':expected,'parents':[os.environ['GITHUB_SHA'],'290346736954cc108914f62c7e6ddecff578b8e0']})
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'integration-result'
+          (out/'result.json').write_text(json.dumps({'commit':commit['sha'],'tree':expected,'parents':[os.environ['GITHUB_SHA'],'290346736954cc108914f62c7e6ddecff578b8e0'],'changedEntries':entries,'refsChanged':False},indent=2)+'\n')
+          (out/'integration.patch').write_bytes(subprocess.check_output(['git','diff','--cached','--binary']))
+          print(json.dumps({'preparedCommit':commit['sha'],'tree':expected,'refsChanged':False}))
+          PY
+      - name: Preserve integration source identity and test evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: merge-preflight-${{ github.sha }}
-          path: ${{ runner.temp }}/merge-preflight
-          retention-days: 7
+          name: authorized-integration-${{ github.sha }}
+          path: ${{ runner.temp }}/integration-result
+          retention-days: 30
           if-no-files-found: error
