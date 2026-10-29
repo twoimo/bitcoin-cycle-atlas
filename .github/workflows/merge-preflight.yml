@@ -1,0 +1,45 @@
+name: Read-only merge preflight
+
+on:
+  push:
+    branches: [chatgpt/eth-cycle-economics-20261026]
+    paths: [.github/workflows/merge-preflight.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  snapshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 2f567a81beb8a2598a93a0e44f0140416378dcd8
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Export the exact reviewed integration inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/merge-preflight"
+          git cat-file -e 290346736954cc108914f62c7e6ddecff578b8e0^{commit}
+          base="$(git merge-base 2f567a81beb8a2598a93a0e44f0140416378dcd8 290346736954cc108914f62c7e6ddecff578b8e0)"
+          test "$base" = d906df3b42a555c57552f005d25a9fef4cfd4c5e
+          for spec in current:2f567a81beb8a2598a93a0e44f0140416378dcd8 audit:290346736954cc108914f62c7e6ddecff578b8e0 base:$base; do
+            name="${spec%%:*}"
+            commit="${spec#*:}"
+            git show -s --format='%H %T %P' "$commit" > "$RUNNER_TEMP/merge-preflight/$name.identity.txt"
+            git ls-tree -r "$commit" > "$RUNNER_TEMP/merge-preflight/$name.tree.txt"
+            git archive --format=tar.gz "$commit" > "$RUNNER_TEMP/merge-preflight/$name.tar.gz"
+          done
+          git diff --binary "$base" 290346736954cc108914f62c7e6ddecff578b8e0 > "$RUNNER_TEMP/merge-preflight/audit.patch"
+          cd "$RUNNER_TEMP/merge-preflight"
+          sha256sum *.tar.gz *.txt *.patch > SHA256SUMS
+      - name: Preserve exact public source inputs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: merge-preflight-${{ github.sha }}
+          path: ${{ runner.temp }}/merge-preflight
+          retention-days: 7
+          if-no-files-found: error
