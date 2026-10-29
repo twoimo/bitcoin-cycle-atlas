@@ -1,0 +1,167 @@
+{
+  "kind": "read-only-prospective-operational-audit",
+  "executedAt": "2026-10-27T16:35:59.078Z",
+  "repositoryMutation": false,
+  "networkRequests": 0,
+  "actualInputBenchmarks": [
+    {
+      "name": "read-and-validate-original-seed",
+      "elapsedMs": 778.255335,
+      "digestStats": {
+        "calls": 47,
+        "bytes": 18228714,
+        "algorithms": {
+          "SHA-1": 5,
+          "SHA-256": 42
+        }
+      }
+    },
+    {
+      "name": "one-readiness-binding",
+      "elapsedMs": 572.108872,
+      "digestStats": {
+        "calls": 48,
+        "bytes": 18231670,
+        "algorithms": {
+          "SHA-1": 5,
+          "SHA-256": 43
+        }
+      }
+    },
+    {
+      "name": "all-nine-readiness-bindings",
+      "elapsedMs": 4623.604497,
+      "digestStats": {
+        "calls": 432,
+        "bytes": 164085108,
+        "algorithms": {
+          "SHA-1": 45,
+          "SHA-256": 387
+        }
+      }
+    },
+    {
+      "name": "original-three-model-reexecutions",
+      "elapsedMs": 833.7545090000003,
+      "digestStats": {
+        "calls": 63,
+        "bytes": 18663861,
+        "algorithms": {
+          "SHA-1": 6,
+          "SHA-256": 57
+        }
+      }
+    }
+  ],
+  "syntheticBounds": [
+    {
+      "inputKind": "501 individually valid synthetic immutable ETH outcome snapshots",
+      "count": 500,
+      "result": "insufficient-calibration-cases",
+      "invalidObservations": 0
+    },
+    {
+      "inputKind": "501 individually valid synthetic immutable ETH outcome snapshots",
+      "count": 501,
+      "error": "Unique bounded immutable outcome snapshots required"
+    },
+    {
+      "operation": "actual bounded loader over synthetic outcome files",
+      "count": 500,
+      "acceptedObservations": 500
+    },
+    {
+      "operation": "actual bounded loader over synthetic outcome files",
+      "count": 501,
+      "error": "Too many merged calibration observations"
+    }
+  ],
+  "inputCounts": {
+    "records": 3,
+    "snapshots": 2,
+    "observations": 3,
+    "files": 10
+  },
+  "allNineStatuses": [
+    {
+      "modelKey": "adaptive",
+      "horizonDays": 30,
+      "status": "insufficient-calibration-cases"
+    },
+    {
+      "modelKey": "adaptive",
+      "horizonDays": 90,
+      "status": "insufficient-calibration-cases"
+    },
+    {
+      "modelKey": "adaptive",
+      "horizonDays": 180,
+      "status": "insufficient-calibration-cases"
+    },
+    {
+      "modelKey": "warmStart",
+      "horizonDays": 30,
+      "status": "insufficient-calibration-cases"
+    },
+    {
+      "modelKey": "warmStart",
+      "horizonDays": 90,
+      "status": "insufficient-calibration-cases"
+    },
+    {
+      "modelKey": "warmStart",
+      "horizonDays": 180,
+      "status": "insufficient-calibration-cases"
+    },
+    {
+      "modelKey": "pooled",
+      "horizonDays": 30,
+      "status": "insufficient-calibration-cases"
+    },
+    {
+      "modelKey": "pooled",
+      "horizonDays": 90,
+      "status": "insufficient-calibration-cases"
+    },
+    {
+      "modelKey": "pooled",
+      "horizonDays": 180,
+      "status": "insufficient-calibration-cases"
+    }
+  ],
+  "currentModelFilesMatchPreserved": true,
+  "actualReplay": [
+    {
+      "modelKey": "adaptive",
+      "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+      "outputHash": "f5728c0632945702a839cf8722a9b8ec6af0c91346169f5b14929c6ce055fe25",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    },
+    {
+      "modelKey": "warmStart",
+      "id": "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+      "outputHash": "b7f45f7ebada37e9a046b4e5547101bb985b43a16fbbf3ee1e34bcdc667b6dc8",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    },
+    {
+      "modelKey": "pooled",
+      "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+      "outputHash": "7b84f0fa04346be007f153a189ce4266d705cd3702c5f0d65e4ceefa3e37d570",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    }
+  ],
+  "indexByteBound": {
+    "fixture": "Metadata-only synthetic daily index; no future forecasts were generated",
+    "maximumBytes": 1048576,
+    "firstTooManyEntriesByBytes": 1653,
+    "firstRejectedBytes": 1048621,
+    "recordsBeforeByteBound": 1652,
+    "dailyThreeModelOriginsBeforeByteBound": 550
+  }
+}

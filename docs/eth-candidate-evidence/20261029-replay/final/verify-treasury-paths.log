@@ -1,0 +1,196 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.29.0 verify:treasury-paths
+> node scripts/verify-treasury-paths.mjs
+
+{
+  "status": "PASS",
+  "node": "v24.22.1",
+  "asOf": "2026-10-23",
+  "endYear": 2050,
+  "seed": 20261022,
+  "scope": "Independent daily financial identities and input-boundary verification. This does not establish predictive accuracy, calibrated probabilities or feasible financing.",
+  "sourceHashes": {
+    "scripts/verify-treasury-paths.mjs": "49f1828cc90afcff1357ed79acfacbc6653aaa4e5252561335bad9b6c242953a",
+    "dist/treasury-asset-paths.js": "67d98d830ad95d54312b8cd73d5e6e48c76aec757a7ae55b09ec43b2e8918d5d",
+    "dist/asset-daily-observations.js": "645cdfc751ffe2a4e0ce66a10316fc493d637cd6f74a0d09ea17b4e126367c70",
+    "dist/ethereum-forecast.js": "b86e6e917c8d72c9db892dc4931694f915d6d73352dbab54798a64bd5ee3db4c",
+    "dist/treasury-instruments.js": "784b98684b5ffe6c8bb747b1bb6eac6cd658221a3cfa29e5c64c11b6711b102f",
+    "dist/treasury-liquidity.js": "b989adb0205ad969f3c87ccfdf71134d5448a38ebe47ed49ac1a63d5119cbd5d",
+    "dist/treasury-model.js": "4812b36b65912209201eabf46ba39868cec7d7ddb014421e556476412b8e1739",
+    "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+    "dist/long-horizon-evidence.js": "7b5f9fc162e0c621b6a7df9f0f3d77e76c274040e83b88b0a8301638cb29f2f8",
+    "dist/detailed-forecast.js": "e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e",
+    "dist/cycle-calibration.js": "f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780",
+    "dist/cycle-engine.js": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+    "dist/cycle-timing.js": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+    "dist/market-structure.js": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+    "dist/treasury-research.js": "c5a3166884c3a9db81f1cafc7223ba1a7c1c5498689ec33ea78a2d6522275fbb",
+    "dist/treasury-catalog.js": "692a136525be1f023e9e39e545ef9955ad96b88d5230ba2ab16abf4d3be91ec8"
+  },
+  "inputHashes": {
+    "dist/data/btc-daily.json": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+    "dist/data/eth-ohlc.json": "69a726d87fcea635772a806ac6a00f43880a43d8c66bd88152045dffc209106f",
+    "dist/data/mstr-ohlc.json": "abe8922091f252154e2715a0fbd69d15bfac3872565547e5bb77565f4f1529a9",
+    "dist/data/bmnr-ohlc.json": "25c312625b781582b5004db0b82d8e6fcbaa2306fb5406b3ebce400f7b9e587c",
+    "research-data/treasury-mstr.json": "cac107e363aba4ceb95db085ac351911a3771ba1c1c7818c8adebbfaa7414de1",
+    "research-data/treasury-bmnr.json": "08724dc7eee6b00c303445ef9da9aff266c1f5bb0c0ec863e87846a282041105"
+  },
+  "tolerance": "Financial and baseline identities: 1e-7 + 64 * Number.EPSILON * arithmetic scale, including cumulative quantities used in differences. ETH log residual: 512 * Number.EPSILON * (1 + absolute residual and innovation terms).",
+  "checks": [
+    "six actual-input financial paths conserve holdings, four ETH liquidity pools, cash, senior claims, issuance, arrears and daily calendar events; known coupons cease after principal settlement",
+    "every ETH baseline and residual is independently reconciled to the explicit target, actual dated post-Merge source return and declared 90-day scale/730-day persistence",
+    "MSTR asset dates and prices equal the original BTC engine for all three mapped scenarios",
+    "same seed and cutoff reproduce every path after extreme future observations are appended",
+    "same terminal asset price produces independently computed different holdings and share prices after different interim cash-outflow prices",
+    "liquidation is absorbing within its own financial path and does not propagate from another condition through the displayed envelope",
+    "wrong asset, bundle cutoff, future training, missing day, duplicate day, mismatched initial price and non-finite price are rejected",
+    "an older coin anchor is rejected even when its numeric price equals the new exact-date path anchor",
+    "raw ETH archives cannot omit their asset identity or contradict the nested Coinbase source identity"
+  ],
+  "counts": {
+    "activeSteps": 44994,
+    "absorbedSteps": 8016,
+    "financingSteps": 10840,
+    "rewardSaleSteps": 14639,
+    "debtRepayments": 15
+  },
+  "ethResidualChecks": 26505,
+  "rejectedBoundaryCases": 10,
+  "maxAbsoluteErrors": {
+    "grossAssetsUsd": 0,
+    "seniorClaimsUsd": 0,
+    "residualUsd": 0,
+    "premium": 0,
+    "sharePriceUsd": 0,
+    "coinUnits": 3.725290298461914e-9,
+    "rewardUnits": 1.1874362826347351e-8,
+    "rewardCashUsd": 0.000010170042514801025,
+    "otherAssetsUsd": 0,
+    "financingCarryUsd": 0.0000033210963010787964,
+    "principalUsd": 0,
+    "cashUsd": 0.0009765625,
+    "issuedShares": 0.0000011530391986888975,
+    "issuanceUsd": 0.0019474029541015625,
+    "liquidityUnits": 4.656612873077393e-10,
+    "stakingRewards": 8.412825991399586e-11,
+    "ethBaselineUsd": 2.9103830456733704e-11,
+    "ethResidualLog": 4.440892098500626e-16,
+    "fixtureCoinUnits": 6.461050361394882e-9,
+    "fixtureShares": 2.153683453798294e-8
+  },
+  "scenarios": [
+    {
+      "symbol": "MSTR",
+      "scenario": "stress",
+      "asOf": "2026-10-23",
+      "endDate": "2050-12-31",
+      "points": 8836,
+      "upwardAssetDays": 4199,
+      "downwardAssetDays": 4636,
+      "insolventAt": "2040-10-23",
+      "capacityReachedAt": null,
+      "lastPrice": 0,
+      "lastCoinUnits": 331179.1623502826,
+      "liquidityShortfallAt": null,
+      "knownAnnualCarryAtEnd": 0,
+      "settlements": 6
+    },
+    {
+      "symbol": "MSTR",
+      "scenario": "base",
+      "asOf": "2026-10-23",
+      "endDate": "2050-12-31",
+      "points": 8836,
+      "upwardAssetDays": 4360,
+      "downwardAssetDays": 4475,
+      "insolventAt": null,
+      "capacityReachedAt": null,
+      "lastPrice": 1301.4002510400278,
+      "lastCoinUnits": 879772.149699483,
+      "liquidityShortfallAt": null,
+      "knownAnnualCarryAtEnd": 0,
+      "settlements": 6
+    },
+    {
+      "symbol": "MSTR",
+      "scenario": "bull",
+      "asOf": "2026-10-23",
+      "endDate": "2050-12-31",
+      "points": 8836,
+      "upwardAssetDays": 4410,
+      "downwardAssetDays": 4425,
+      "insolventAt": null,
+      "capacityReachedAt": "2047-10-10",
+      "lastPrice": 14116.936676160158,
+      "lastCoinUnits": 21000000,
+      "liquidityShortfallAt": null,
+      "knownAnnualCarryAtEnd": 0,
+      "settlements": 6
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "stress",
+      "asOf": "2026-10-23",
+      "endDate": "2050-12-31",
+      "points": 8836,
+      "upwardAssetDays": 4424,
+      "downwardAssetDays": 4411,
+      "insolventAt": "2039-03-29",
+      "capacityReachedAt": null,
+      "lastPrice": 0,
+      "lastCoinUnits": 2649733.975791876,
+      "liquidityShortfallAt": "2036-06-05",
+      "knownAnnualCarryAtEnd": 33250000,
+      "settlements": 0
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "base",
+      "asOf": "2026-10-23",
+      "endDate": "2050-12-31",
+      "points": 8836,
+      "upwardAssetDays": 4469,
+      "downwardAssetDays": 4366,
+      "insolventAt": null,
+      "capacityReachedAt": "2033-10-31",
+      "lastPrice": 33.87933421309753,
+      "lastCoinUnits": 6104999.999999989,
+      "liquidityShortfallAt": null,
+      "knownAnnualCarryAtEnd": 33250000,
+      "settlements": 0
+    },
+    {
+      "symbol": "BMNR",
+      "scenario": "bull",
+      "asOf": "2026-10-23",
+      "endDate": "2050-12-31",
+      "points": 8836,
+      "upwardAssetDays": 4516,
+      "downwardAssetDays": 4319,
+      "insolventAt": null,
+      "capacityReachedAt": "2028-02-03",
+      "lastPrice": 450.70863549926025,
+      "lastCoinUnits": 6104999.999999989,
+      "liquidityShortfallAt": null,
+      "knownAnnualCarryAtEnd": 33250000,
+      "settlements": 0
+    }
+  ],
+  "syntheticPathDependence": [
+    {
+      "intermediatePrice": 50,
+      "finalCoinPrice": 100,
+      "expectedCoinUnits": 104351.32541558263,
+      "actualCoinUnits": 104351.32541558455,
+      "finalSharePrice": 9.349352380284982
+    },
+    {
+      "intermediatePrice": 150,
+      "finalCoinPrice": 100,
+      "expectedCoinUnits": 502417.4030086563,
+      "actualCoinUnits": 502417.4030086498,
+      "finalSharePrice": 45.014064977213934
+    }
+  ]
+}

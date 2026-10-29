@@ -1,0 +1,6 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.29.0 build:publication
+> node scripts/build-publication.mjs
+
+{"status":"PASS","sourceCommit":"331f17fcb0a64a8b6bae0180e352cab52b698ef3","files":717,"assets":22,"contentDigest":"a4dbdd46e38d33ab59f5687d8b5d560499e44a5ee4af53ad3567ebd74f86ab41","manifestSha256":"3c60a3fa45c65e7e939e8390f4ce0a589abbdb1c8d4d3ab41d067199482b87c3"}

@@ -1,0 +1,874 @@
+{
+  "browser": "131.0.6778.204",
+  "origin": "http://127.0.0.1:45073",
+  "cases": [
+    {
+      "symbol": "BTCUSD",
+      "mode": "loader",
+      "cdp": [
+        {
+          "event": "request",
+          "id": "29756.14",
+          "time": 6414.500681,
+          "url": "http://127.0.0.1:45073/data/btc-daily.json",
+          "initiator": {
+            "type": "script",
+            "stack": {
+              "callFrames": [
+                {
+                  "functionName": "loadReplayPriceArchive",
+                  "scriptId": "13",
+                  "url": "http://127.0.0.1:45073/forecast-replay-sources.js",
+                  "lineNumber": 67,
+                  "columnNumber": 23
+                },
+                {
+                  "functionName": "eval",
+                  "scriptId": "12",
+                  "url": "",
+                  "lineNumber": 5,
+                  "columnNumber": 34
+                }
+              ]
+            }
+          }
+        },
+        {
+          "event": "response",
+          "id": "29756.14",
+          "time": 6414.503017,
+          "status": 200,
+          "headers": {
+            "Transfer-Encoding": "chunked",
+            "Cache-Control": "no-store",
+            "Keep-Alive": "timeout=5",
+            "Date": "Wed, 28 Oct 2026 15:40:09 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive"
+          }
+        },
+        {
+          "event": "loadingFailed",
+          "requestId": "29756.14",
+          "timestamp": 6414.506516,
+          "type": "Fetch",
+          "errorText": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "playwright": [
+        {
+          "event": "requestfailed",
+          "url": "http://127.0.0.1:45073/data/btc-daily.json",
+          "failure": {
+            "errorText": "net::ERR_ABORTED"
+          }
+        }
+      ],
+      "expectedSha256": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+      "result": {
+        "durationMs": 24.40000000037253,
+        "sourceHash": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+        "observations": 5944,
+        "through": "2026-10-25",
+        "signalAborted": false
+      },
+      "hashMatches": true
+    },
+    {
+      "symbol": "BTCUSD",
+      "mode": "loader-signal",
+      "cdp": [
+        {
+          "event": "request",
+          "id": "29782.14",
+          "time": 6414.915729,
+          "url": "http://127.0.0.1:45073/data/btc-daily.json",
+          "initiator": {
+            "type": "script",
+            "stack": {
+              "callFrames": [
+                {
+                  "functionName": "loadReplayPriceArchive",
+                  "scriptId": "13",
+                  "url": "http://127.0.0.1:45073/forecast-replay-sources.js",
+                  "lineNumber": 67,
+                  "columnNumber": 23
+                },
+                {
+                  "functionName": "eval",
+                  "scriptId": "12",
+                  "url": "",
+                  "lineNumber": 5,
+                  "columnNumber": 34
+                }
+              ]
+            }
+          }
+        },
+        {
+          "event": "response",
+          "id": "29782.14",
+          "time": 6414.920834,
+          "status": 200,
+          "headers": {
+            "Transfer-Encoding": "chunked",
+            "Cache-Control": "no-store",
+            "Keep-Alive": "timeout=5",
+            "Date": "Wed, 28 Oct 2026 15:40:09 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive"
+          }
+        },
+        {
+          "event": "loadingFinished",
+          "requestId": "29782.14",
+          "timestamp": 6414.922617,
+          "encodedDataLength": 189586
+        }
+      ],
+      "playwright": [
+        {
+          "event": "requestfinished",
+          "url": "http://127.0.0.1:45073/data/btc-daily.json",
+          "failure": null
+        }
+      ],
+      "expectedSha256": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+      "result": {
+        "durationMs": 25.399999999441206,
+        "sourceHash": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+        "observations": 5944,
+        "through": "2026-10-25",
+        "signalAborted": false
+      },
+      "hashMatches": true
+    },
+    {
+      "symbol": "BTCUSD",
+      "mode": "text",
+      "cdp": [
+        {
+          "event": "request",
+          "id": "29809.14",
+          "time": 6415.321514,
+          "url": "http://127.0.0.1:45073/data/btc-daily.json",
+          "initiator": {
+            "type": "script",
+            "stack": {
+              "callFrames": [
+                {
+                  "functionName": "eval",
+                  "scriptId": "12",
+                  "url": "",
+                  "lineNumber": 8,
+                  "columnNumber": 27
+                }
+              ]
+            }
+          }
+        },
+        {
+          "event": "response",
+          "id": "29809.14",
+          "time": 6415.324526,
+          "status": 200,
+          "headers": {
+            "Transfer-Encoding": "chunked",
+            "Cache-Control": "no-store",
+            "Keep-Alive": "timeout=5",
+            "Date": "Wed, 28 Oct 2026 15:40:09 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive"
+          }
+        },
+        {
+          "event": "loadingFinished",
+          "requestId": "29809.14",
+          "timestamp": 6415.328201,
+          "encodedDataLength": 189586
+        }
+      ],
+      "playwright": [
+        {
+          "event": "requestfinished",
+          "url": "http://127.0.0.1:45073/data/btc-daily.json",
+          "failure": null
+        }
+      ],
+      "expectedSha256": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+      "result": {
+        "durationMs": 26.200000000186265,
+        "sourceHash": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+        "observations": 5944,
+        "through": "2026-10-25"
+      },
+      "hashMatches": true
+    },
+    {
+      "symbol": "BTCUSD",
+      "mode": "stream-release",
+      "cdp": [
+        {
+          "event": "request",
+          "id": "29835.14",
+          "time": 6415.713111,
+          "url": "http://127.0.0.1:45073/data/btc-daily.json",
+          "initiator": {
+            "type": "script",
+            "stack": {
+              "callFrames": [
+                {
+                  "functionName": "eval",
+                  "scriptId": "12",
+                  "url": "",
+                  "lineNumber": 8,
+                  "columnNumber": 27
+                }
+              ]
+            }
+          }
+        },
+        {
+          "event": "response",
+          "id": "29835.14",
+          "time": 6415.714934,
+          "status": 200,
+          "headers": {
+            "Transfer-Encoding": "chunked",
+            "Cache-Control": "no-store",
+            "Keep-Alive": "timeout=5",
+            "Date": "Wed, 28 Oct 2026 15:40:10 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive"
+          }
+        },
+        {
+          "event": "loadingFinished",
+          "requestId": "29835.14",
+          "timestamp": 6415.717318,
+          "encodedDataLength": 189586
+        }
+      ],
+      "playwright": [
+        {
+          "event": "requestfinished",
+          "url": "http://127.0.0.1:45073/data/btc-daily.json",
+          "failure": null
+        }
+      ],
+      "expectedSha256": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+      "result": {
+        "durationMs": 19,
+        "sourceHash": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+        "bytes": 189384,
+        "observations": 5944,
+        "through": "2026-10-25"
+      },
+      "hashMatches": true
+    },
+    {
+      "symbol": "BTCUSD",
+      "mode": "stream-hold",
+      "cdp": [
+        {
+          "event": "request",
+          "id": "29861.14",
+          "time": 6416.106828,
+          "url": "http://127.0.0.1:45073/data/btc-daily.json",
+          "initiator": {
+            "type": "script",
+            "stack": {
+              "callFrames": [
+                {
+                  "functionName": "eval",
+                  "scriptId": "12",
+                  "url": "",
+                  "lineNumber": 8,
+                  "columnNumber": 27
+                }
+              ]
+            }
+          }
+        },
+        {
+          "event": "response",
+          "id": "29861.14",
+          "time": 6416.109602,
+          "status": 200,
+          "headers": {
+            "Transfer-Encoding": "chunked",
+            "Cache-Control": "no-store",
+            "Keep-Alive": "timeout=5",
+            "Date": "Wed, 28 Oct 2026 15:40:10 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive"
+          }
+        },
+        {
+          "event": "loadingFailed",
+          "requestId": "29861.14",
+          "timestamp": 6416.111679,
+          "type": "Fetch",
+          "errorText": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "playwright": [
+        {
+          "event": "requestfailed",
+          "url": "http://127.0.0.1:45073/data/btc-daily.json",
+          "failure": {
+            "errorText": "net::ERR_ABORTED"
+          }
+        }
+      ],
+      "expectedSha256": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+      "result": {
+        "durationMs": 18.90000000037253,
+        "sourceHash": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+        "bytes": 189384,
+        "observations": 5944,
+        "through": "2026-10-25"
+      },
+      "hashMatches": true
+    },
+    {
+      "symbol": "BTCUSD",
+      "mode": "stream-release-delayed",
+      "cdp": [
+        {
+          "event": "request",
+          "id": "29887.14",
+          "time": 6416.478754,
+          "url": "http://127.0.0.1:45073/data/btc-daily.json",
+          "initiator": {
+            "type": "script",
+            "stack": {
+              "callFrames": [
+                {
+                  "functionName": "eval",
+                  "scriptId": "12",
+                  "url": "",
+                  "lineNumber": 8,
+                  "columnNumber": 27
+                }
+              ]
+            }
+          }
+        },
+        {
+          "event": "response",
+          "id": "29887.14",
+          "time": 6416.48062,
+          "status": 200,
+          "headers": {
+            "Transfer-Encoding": "chunked",
+            "Cache-Control": "no-store",
+            "Keep-Alive": "timeout=5",
+            "Date": "Wed, 28 Oct 2026 15:40:11 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive"
+          }
+        },
+        {
+          "event": "loadingFailed",
+          "requestId": "29887.14",
+          "timestamp": 6416.481457,
+          "type": "Fetch",
+          "errorText": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "playwright": [
+        {
+          "event": "requestfailed",
+          "url": "http://127.0.0.1:45073/data/btc-daily.json",
+          "failure": {
+            "errorText": "net::ERR_ABORTED"
+          }
+        }
+      ],
+      "expectedSha256": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+      "result": {
+        "durationMs": 16.700000000186265,
+        "sourceHash": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+        "bytes": 189384,
+        "observations": 5944,
+        "through": "2026-10-25"
+      },
+      "hashMatches": true
+    },
+    {
+      "symbol": "ETHUSD",
+      "mode": "loader",
+      "cdp": [
+        {
+          "event": "request",
+          "id": "29912.14",
+          "time": 6416.842404,
+          "url": "http://127.0.0.1:45073/data/replay-eth-ohlc.json",
+          "initiator": {
+            "type": "script",
+            "stack": {
+              "callFrames": [
+                {
+                  "functionName": "loadReplayPriceArchive",
+                  "scriptId": "13",
+                  "url": "http://127.0.0.1:45073/forecast-replay-sources.js",
+                  "lineNumber": 67,
+                  "columnNumber": 23
+                },
+                {
+                  "functionName": "eval",
+                  "scriptId": "12",
+                  "url": "",
+                  "lineNumber": 5,
+                  "columnNumber": 34
+                }
+              ]
+            }
+          }
+        },
+        {
+          "event": "response",
+          "id": "29912.14",
+          "time": 6416.845057,
+          "status": 200,
+          "headers": {
+            "Transfer-Encoding": "chunked",
+            "Cache-Control": "no-store",
+            "Keep-Alive": "timeout=5",
+            "Date": "Wed, 28 Oct 2026 15:40:11 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive"
+          }
+        },
+        {
+          "event": "loadingFinished",
+          "requestId": "29912.14",
+          "timestamp": 6416.847601,
+          "encodedDataLength": 897878
+        }
+      ],
+      "playwright": [
+        {
+          "event": "requestfinished",
+          "url": "http://127.0.0.1:45073/data/replay-eth-ohlc.json",
+          "failure": null
+        }
+      ],
+      "expectedSha256": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+      "result": {
+        "durationMs": 41,
+        "sourceHash": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+        "observations": 3813,
+        "through": "2026-10-27",
+        "signalAborted": false
+      },
+      "hashMatches": true
+    },
+    {
+      "symbol": "ETHUSD",
+      "mode": "loader-signal",
+      "cdp": [
+        {
+          "event": "request",
+          "id": "29938.14",
+          "time": 6417.24037,
+          "url": "http://127.0.0.1:45073/data/replay-eth-ohlc.json",
+          "initiator": {
+            "type": "script",
+            "stack": {
+              "callFrames": [
+                {
+                  "functionName": "loadReplayPriceArchive",
+                  "scriptId": "13",
+                  "url": "http://127.0.0.1:45073/forecast-replay-sources.js",
+                  "lineNumber": 67,
+                  "columnNumber": 23
+                },
+                {
+                  "functionName": "eval",
+                  "scriptId": "12",
+                  "url": "",
+                  "lineNumber": 5,
+                  "columnNumber": 34
+                }
+              ]
+            }
+          }
+        },
+        {
+          "event": "response",
+          "id": "29938.14",
+          "time": 6417.242803,
+          "status": 200,
+          "headers": {
+            "Transfer-Encoding": "chunked",
+            "Cache-Control": "no-store",
+            "Keep-Alive": "timeout=5",
+            "Date": "Wed, 28 Oct 2026 15:40:11 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive"
+          }
+        },
+        {
+          "event": "loadingFinished",
+          "requestId": "29938.14",
+          "timestamp": 6417.246428,
+          "encodedDataLength": 897878
+        }
+      ],
+      "playwright": [
+        {
+          "event": "requestfinished",
+          "url": "http://127.0.0.1:45073/data/replay-eth-ohlc.json",
+          "failure": null
+        }
+      ],
+      "expectedSha256": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+      "result": {
+        "durationMs": 41.700000000186265,
+        "sourceHash": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+        "observations": 3813,
+        "through": "2026-10-27",
+        "signalAborted": false
+      },
+      "hashMatches": true
+    },
+    {
+      "symbol": "ETHUSD",
+      "mode": "text",
+      "cdp": [
+        {
+          "event": "request",
+          "id": "29963.14",
+          "time": 6417.647284,
+          "url": "http://127.0.0.1:45073/data/replay-eth-ohlc.json",
+          "initiator": {
+            "type": "script",
+            "stack": {
+              "callFrames": [
+                {
+                  "functionName": "eval",
+                  "scriptId": "12",
+                  "url": "",
+                  "lineNumber": 8,
+                  "columnNumber": 27
+                }
+              ]
+            }
+          }
+        },
+        {
+          "event": "response",
+          "id": "29963.14",
+          "time": 6417.649458,
+          "status": 200,
+          "headers": {
+            "Transfer-Encoding": "chunked",
+            "Cache-Control": "no-store",
+            "Keep-Alive": "timeout=5",
+            "Date": "Wed, 28 Oct 2026 15:40:12 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive"
+          }
+        },
+        {
+          "event": "loadingFinished",
+          "requestId": "29963.14",
+          "timestamp": 6417.650835,
+          "encodedDataLength": 897878
+        }
+      ],
+      "playwright": [
+        {
+          "event": "requestfinished",
+          "url": "http://127.0.0.1:45073/data/replay-eth-ohlc.json",
+          "failure": null
+        }
+      ],
+      "expectedSha256": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+      "result": {
+        "durationMs": 30.59999999962747,
+        "sourceHash": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+        "observations": 3813,
+        "through": "2026-10-27"
+      },
+      "hashMatches": true
+    },
+    {
+      "symbol": "ETHUSD",
+      "mode": "stream-release",
+      "cdp": [
+        {
+          "event": "request",
+          "id": "29989.14",
+          "time": 6418.043553,
+          "url": "http://127.0.0.1:45073/data/replay-eth-ohlc.json",
+          "initiator": {
+            "type": "script",
+            "stack": {
+              "callFrames": [
+                {
+                  "functionName": "eval",
+                  "scriptId": "12",
+                  "url": "",
+                  "lineNumber": 8,
+                  "columnNumber": 27
+                }
+              ]
+            }
+          }
+        },
+        {
+          "event": "response",
+          "id": "29989.14",
+          "time": 6418.051893,
+          "status": 200,
+          "headers": {
+            "Transfer-Encoding": "chunked",
+            "Cache-Control": "no-store",
+            "Keep-Alive": "timeout=5",
+            "Date": "Wed, 28 Oct 2026 15:40:12 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive"
+          }
+        },
+        {
+          "event": "loadingFinished",
+          "requestId": "29989.14",
+          "timestamp": 6418.052792,
+          "encodedDataLength": 897878
+        }
+      ],
+      "playwright": [
+        {
+          "event": "requestfinished",
+          "url": "http://127.0.0.1:45073/data/replay-eth-ohlc.json",
+          "failure": null
+        }
+      ],
+      "expectedSha256": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+      "result": {
+        "durationMs": 38.89999999944121,
+        "sourceHash": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+        "bytes": 897676,
+        "observations": 3813,
+        "through": "2026-10-27"
+      },
+      "hashMatches": true
+    },
+    {
+      "symbol": "ETHUSD",
+      "mode": "stream-hold",
+      "cdp": [
+        {
+          "event": "request",
+          "id": "30015.14",
+          "time": 6418.438094,
+          "url": "http://127.0.0.1:45073/data/replay-eth-ohlc.json",
+          "initiator": {
+            "type": "script",
+            "stack": {
+              "callFrames": [
+                {
+                  "functionName": "eval",
+                  "scriptId": "12",
+                  "url": "",
+                  "lineNumber": 8,
+                  "columnNumber": 27
+                }
+              ]
+            }
+          }
+        },
+        {
+          "event": "response",
+          "id": "30015.14",
+          "time": 6418.440171,
+          "status": 200,
+          "headers": {
+            "Transfer-Encoding": "chunked",
+            "Cache-Control": "no-store",
+            "Keep-Alive": "timeout=5",
+            "Date": "Wed, 28 Oct 2026 15:40:13 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive"
+          }
+        },
+        {
+          "event": "loadingFinished",
+          "requestId": "30015.14",
+          "timestamp": 6418.441114,
+          "encodedDataLength": 897878
+        }
+      ],
+      "playwright": [
+        {
+          "event": "requestfinished",
+          "url": "http://127.0.0.1:45073/data/replay-eth-ohlc.json",
+          "failure": null
+        }
+      ],
+      "expectedSha256": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+      "result": {
+        "durationMs": 29.200000000186265,
+        "sourceHash": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+        "bytes": 897676,
+        "observations": 3813,
+        "through": "2026-10-27"
+      },
+      "hashMatches": true
+    },
+    {
+      "symbol": "ETHUSD",
+      "mode": "stream-release-delayed",
+      "cdp": [
+        {
+          "event": "request",
+          "id": "30040.14",
+          "time": 6418.815366,
+          "url": "http://127.0.0.1:45073/data/replay-eth-ohlc.json",
+          "initiator": {
+            "type": "script",
+            "stack": {
+              "callFrames": [
+                {
+                  "functionName": "eval",
+                  "scriptId": "12",
+                  "url": "",
+                  "lineNumber": 8,
+                  "columnNumber": 27
+                }
+              ]
+            }
+          }
+        },
+        {
+          "event": "response",
+          "id": "30040.14",
+          "time": 6418.817717,
+          "status": 200,
+          "headers": {
+            "Transfer-Encoding": "chunked",
+            "Cache-Control": "no-store",
+            "Keep-Alive": "timeout=5",
+            "Date": "Wed, 28 Oct 2026 15:40:13 GMT",
+            "Content-Type": "application/json",
+            "Connection": "keep-alive"
+          }
+        },
+        {
+          "event": "loadingFinished",
+          "requestId": "30040.14",
+          "timestamp": 6418.81894,
+          "encodedDataLength": 897878
+        }
+      ],
+      "playwright": [
+        {
+          "event": "requestfinished",
+          "url": "http://127.0.0.1:45073/data/replay-eth-ohlc.json",
+          "failure": null
+        }
+      ],
+      "expectedSha256": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+      "result": {
+        "durationMs": 29.100000000558794,
+        "sourceHash": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+        "bytes": 897676,
+        "observations": 3813,
+        "through": "2026-10-27"
+      },
+      "hashMatches": true
+    }
+  ],
+  "server": [
+    {
+      "url": "/data/btc-daily.json",
+      "start": 1793202009073,
+      "bytes": 189384,
+      "finished": 1793202009074,
+      "closed": 1793202009074
+    },
+    {
+      "url": "/data/btc-daily.json",
+      "start": 1793202009491,
+      "bytes": 189384,
+      "finished": 1793202009492,
+      "closed": 1793202009492
+    },
+    {
+      "url": "/data/btc-daily.json",
+      "start": 1793202009894,
+      "bytes": 189384,
+      "finished": 1793202009895,
+      "closed": 1793202009895
+    },
+    {
+      "url": "/data/btc-daily.json",
+      "start": 1793202010285,
+      "bytes": 189384,
+      "finished": 1793202010286,
+      "closed": 1793202010286
+    },
+    {
+      "url": "/data/btc-daily.json",
+      "start": 1793202010680,
+      "bytes": 189384,
+      "finished": 1793202010680,
+      "closed": 1793202010681
+    },
+    {
+      "url": "/data/btc-daily.json",
+      "start": 1793202011051,
+      "bytes": 189384,
+      "finished": 1793202011052,
+      "closed": 1793202011052
+    },
+    {
+      "url": "/data/replay-eth-ohlc.json",
+      "start": 1793202011415,
+      "bytes": 897676,
+      "finished": 1793202011416,
+      "closed": 1793202011416
+    },
+    {
+      "url": "/data/replay-eth-ohlc.json",
+      "start": 1793202011813,
+      "bytes": 897676,
+      "finished": 1793202011814,
+      "closed": 1793202011814
+    },
+    {
+      "url": "/data/replay-eth-ohlc.json",
+      "start": 1793202012220,
+      "bytes": 897676,
+      "finished": 1793202012221,
+      "closed": 1793202012221
+    },
+    {
+      "url": "/data/replay-eth-ohlc.json",
+      "start": 1793202012620,
+      "bytes": 897676,
+      "finished": 1793202012623,
+      "closed": 1793202012623
+    },
+    {
+      "url": "/data/replay-eth-ohlc.json",
+      "start": 1793202013010,
+      "bytes": 897676,
+      "finished": 1793202013011,
+      "closed": 1793202013011
+    },
+    {
+      "url": "/data/replay-eth-ohlc.json",
+      "start": 1793202013388,
+      "bytes": 897676,
+      "finished": 1793202013389,
+      "closed": 1793202013389
+    }
+  ]
+}

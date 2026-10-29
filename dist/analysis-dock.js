@@ -86,7 +86,7 @@ export function mountAnalysisIndicators({stage,svg,modeTabs,controls}) {
     const body=doc.createElement('div');body.id=`analysis-window-body-${mode}`;body.className='analysis-window-body';
     const meta=doc.createElement('div');meta.className='analysis-window-meta';
     const title=doc.createElement('h4'),caption=doc.createElement('p'),legend=doc.createElement('div');caption.id=`analysis-caption-${mode}`;legend.className='analysis-window-legend';meta.append(title,caption,legend);
-    const controlRow=doc.createElement('div');controlRow.className='analysis-window-controls';
+    const controlRow=doc.createElement('div');controlRow.className='analysis-parameters';controlRow.setAttribute('role','group');controlRow.setAttribute('aria-label',`${label} 분석 조건`);
     const control=controls.find(node=>node.id===controlGroups[mode]);if(control){control.hidden=false;controlRow.append(control);}else controlRow.hidden=true;
     const viewport=doc.createElement('div');viewport.className='analysis-chart-viewport';viewport.id=mode==='cycles'?'analysis-chart-viewport':`analysis-chart-viewport-${mode}`;
     const chart=mode==='cycles'?svg:doc.createElementNS('http://www.w3.org/2000/svg','svg');chart.id=mode==='cycles'?'atlas-analysis-chart':`atlas-analysis-${mode}-chart`;chart.dataset.analysisSvg=mode;chart.hidden=false;chart.removeAttribute('hidden');chart.setAttribute('role','group');chart.setAttribute('aria-describedby',caption.id);viewport.append(chart);

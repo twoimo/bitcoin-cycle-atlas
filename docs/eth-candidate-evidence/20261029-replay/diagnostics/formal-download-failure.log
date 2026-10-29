@@ -1,0 +1,21 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.29.0 verify:formal
+> node scripts/verify-market-state.mjs && node scripts/verify-equity-state.mjs && node scripts/verify-eth-state.mjs && node scripts/verify-publication-state.mjs
+
+Downloading pinned TLC 1.7.4 from its official release.
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+[TypeError: fetch failed] {
+  [cause]: Error: getaddrinfo EAI_AGAIN github.com
+      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:123:26) {
+    errno: -3001,
+    code: 'EAI_AGAIN',
+    syscall: 'getaddrinfo',
+    hostname: 'github.com'
+  }
+}
+
+Node.js v24.22.1

@@ -1,0 +1,5 @@
+
+> bitcoin-cycle-atlas@1.14.1 verify:cycle
+> node scripts/refresh-cycle-calibration.mjs --check
+
+{"status":"verified","asOf":"2026-10-22","version":"causal-cycle-clock-v1","observationCount":5941,"state":"shortened","shiftDays":-52,"referenceCount":3,"futureApplied":true,"futureAppliedShiftDays":-52,"futureReason":"causal-daily-clock-applied","sourcePricesSha256":"fbbe7ca83daac9656f76e513f87f74262359b612955cc8614284b6b6f5e905db","output":"dist/data/cycle-calibration.json"}

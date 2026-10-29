@@ -1,0 +1,268 @@
+{
+  "schemaVersion": 1,
+  "kind": "eth-ui-protocol-followup",
+  "sourceCommit": "39d380d5a05295f5180088ccfe0190ebc3b21e0d",
+  "sourceTree": "e44d085806b4d34ae59c99c88e6a64543f429669",
+  "evidenceStorage": "A subsequent documentation-only commit preserves these receipts and raw bytes; its commit is distinct from the executed application source.",
+  "ci": {
+    "runId": 40457958474,
+    "jobId": 122035586737,
+    "status": "success",
+    "checkoutCommit": "6b2875a74cbebf8eefb392e679c2075adf16813a",
+    "checkoutTree": "c9bb2f23cd6bc7047018bb59b1300c21e5fdc77a",
+    "checkoutScope": "GitHub synthetic PR merge of main and the tested source",
+    "parents": [
+      "5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+      "39d380d5a05295f5180088ccfe0190ebc3b21e0d"
+    ],
+    "tests": 1436,
+    "passed": 1436,
+    "failed": 0,
+    "skipped": 0,
+    "dailyClockTests": 28,
+    "numericalAssertions": 318010,
+    "negativeControlsPassed": 16,
+    "negativeControlsTotal": 16
+  },
+  "evidence": {
+    "runId": 40457958478,
+    "jobId": 122035586627,
+    "status": "success",
+    "checkoutScope": "exact PR head",
+    "focusedTests": 303,
+    "focusedPassed": 303,
+    "focusedFailed": 0,
+    "focusedSkipped": 0,
+    "newPowBoundaryTests": 26,
+    "nativeCases": 35,
+    "nativePassed": 35,
+    "nativeFailed": 0,
+    "syntheticZeroFixtureCases": 1,
+    "screenshots": 181,
+    "runtimeErrors": 0,
+    "unexpectedResourceErrors": 0,
+    "retainedOfflineResourceErrors": 15,
+    "verifiedOfflineRefreshAttempts": 15,
+    "artifact": {
+      "id": 12713197963,
+      "name": "eth-candidate-evidence-39d380d5a05295f5180088ccfe0190ebc3b21e0d",
+      "size_in_bytes": 43340976,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12713197963",
+      "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12713197963/zip",
+      "expired": false,
+      "created_at": "2026-10-27T06:00:52Z",
+      "expires_at": "2026-11-26T06:00:47Z",
+      "updated_at": "2026-10-27T06:00:52Z",
+      "digest": "sha256:c7d9e71046eb61393f0d398e107f5b8addfa7311a8dcb0d0808c147a17ad6f6e",
+      "workflow_run": {
+        "id": 40457958478,
+        "repository_id": 1428515198,
+        "head_repository_id": 1428515198,
+        "head_branch": "chatgpt/eth-cycle-economics-20261026",
+        "head_sha": "39d380d5a05295f5180088ccfe0190ebc3b21e0d"
+      }
+    }
+  },
+  "hallmark": {
+    "runId": 40457958468,
+    "jobId": 122035586503,
+    "status": "success",
+    "upstreamCommit": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+    "version": "2.0.0",
+    "scope": "app",
+    "designGate": {
+      "status": "pass",
+      "fails": 0,
+      "reflex": 0
+    },
+    "integrityGate": {
+      "status": "pass",
+      "errors": 0
+    },
+    "currentPhases": [
+      {
+        "name": "current-static",
+        "fails": 0,
+        "reflex": 0,
+        "warns": 36,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 26,
+        "render": "off",
+        "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX"
+      },
+      {
+        "name": "current-render",
+        "fails": 0,
+        "reflex": 0,
+        "warns": 17,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 208/209; before 53 FAIL, 211 REFLEX, now 0 FAIL, 0 REFLEX"
+      }
+    ],
+    "artifact": {
+      "id": 12712638173,
+      "name": "hallmark-design-39d380d5a05295f5180088ccfe0190ebc3b21e0d",
+      "size_in_bytes": 10408571,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12712638173",
+      "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12712638173/zip",
+      "expired": false,
+      "created_at": "2026-10-27T05:56:35Z",
+      "expires_at": "2026-11-26T05:56:33Z",
+      "updated_at": "2026-10-27T05:56:35Z",
+      "digest": "sha256:a09c62568519c5840712e16fb80382d515daeac6f9e7fcdb1e37b12d4eb4a2d2",
+      "workflow_run": {
+        "id": 40457958468,
+        "repository_id": 1428515198,
+        "head_repository_id": 1428515198,
+        "head_branch": "chatgpt/eth-cycle-economics-20261026",
+        "head_sha": "39d380d5a05295f5180088ccfe0190ebc3b21e0d"
+      }
+    },
+    "warningsWereNotWaived": true
+  },
+  "pow": {
+    "status": "partial-protocol-observation-collected",
+    "observedThrough": "2026-10-26",
+    "windowStart": "2026-09-29",
+    "partialMetric": "executionPowIssuanceEth",
+    "value": 0,
+    "unit": "ETH/28 UTC days",
+    "definitionMatchedPartialMetricCount": 1,
+    "pointInTimeEligibleMetricCount": 0,
+    "eligibleModelSnapshotCount": 0,
+    "modelInputActivated": false,
+    "publishedAt": null,
+    "rpcRequests": 51,
+    "rawFiles": 54,
+    "rawBytes": 1075342,
+    "sourceSpecifications": 3,
+    "elapsedMilliseconds": 26605,
+    "firstBlock": 26079397,
+    "lastBlock": 26280313,
+    "finalizedAnchor": 26281989,
+    "ttdThresholdComparison": "unavailable-rpc-fields",
+    "providerCount": 1,
+    "independentConsensusValidation": false,
+    "completeHeaderChainVerified": false,
+    "repeatCapturesAreNotIndependentPeriods": true
+  },
+  "preservedModel": {
+    "status": "verified",
+    "previousSourceCommit": "d629bbc0010cf23495414a9cdf102dd59b73e1aa",
+    "sameInputs": true,
+    "priorAsOf": "2026-10-25",
+    "currentAsOf": "2026-10-25",
+    "currentDefault": "adaptive",
+    "pathPointsChecked": 731,
+    "priorModelSummaryRowsChecked": 27,
+    "priorPairwiseRowsChecked": 45
+  },
+  "prospectiveOutcomes": {
+    "preservedRecords": 9,
+    "preservedSnapshots": 3,
+    "pending": 27,
+    "scored": 0,
+    "newForecastRecords": 0,
+    "issuanceStatus": "skipped-stale-inputs"
+  },
+  "sourcebook": {
+    "sourceCommit": "39d380d5a05295f5180088ccfe0190ebc3b21e0d",
+    "sourceTree": "e44d085806b4d34ae59c99c88e6a64543f429669",
+    "bundleBytes": 45771932,
+    "bundleSha256": "12bb39fc62ba05fd0b0ef3ee9b23618f15857e7327abca9edb323d6042d1a278",
+    "seedPaths": 243,
+    "entries": 346,
+    "parts": 255,
+    "unresolvedImports": 0,
+    "sourceAccess": "complete-for-declared-scope",
+    "rawExternalReview": {
+      "status": "pending",
+      "actualGeminiReport": null,
+      "actualChatgptReverse": null,
+      "releaseAuthorized": false
+    }
+  },
+  "screenshotsPreservedInRepository": [
+    {
+      "name": "workspace-btc-320x900-refresh-retry-failed.png",
+      "sha": "d256a8359332d3ce7eb88074ff6c690da3497b18",
+      "bytes": 83890,
+      "sha256": "d1090d4b73318f78cc1f41b4e6fee9d058ac58efd7d0e658a10317d7e6d8d3b1"
+    },
+    {
+      "name": "workspace-btc-1440x900-refresh-retry-failed.png",
+      "sha": "7a2a3969565a80bd01767a38a5f87595396b0404",
+      "bytes": 219415,
+      "sha256": "0909a0161b928518985175905caa752b678e3fd650f0c5e47744dd40504e2c62"
+    },
+    {
+      "name": "workspace-btc-short-900x430-refresh-retry-failed.png",
+      "sha": "e2aecfd764b62630ad01c16206d1423581af619a",
+      "bytes": 105962,
+      "sha256": "de8e24a888b2874c42ee76b52f1b23b18645cc7562b97530bc5ce27737414ffd"
+    },
+    {
+      "name": "workspace-btc-short-900x430-indicators-scroll-end.png",
+      "sha": "07e466b3fd40fc1612d4a7bec3773c24112b5fae",
+      "bytes": 71231,
+      "sha256": "84c93713d0b74b621744667c9aff3692dc95507af346e6ff7bd4691764b3d8a6"
+    },
+    {
+      "name": "data-corner-320x568.png",
+      "sha": "662e6e50da50439ed7787a591a3af05ea0577606",
+      "bytes": 32486,
+      "sha256": "4035ff958c8526302dfa1d0611f7de1e948a753e437fd738a349a30b968e2960"
+    },
+    {
+      "name": "data-corner-900x430.png",
+      "sha": "0992b6691d005724e1a6237a7bc826b677d7c78b",
+      "bytes": 61865,
+      "sha256": "e6ccab36934274cba5faaf622357a6eb44f09a458ff517c0ddeae6ba78020579"
+    },
+    {
+      "name": "workspace-legacy-375x900-legacy-sources.png",
+      "sha": "c3d1c32e43ec2e3a86ba705a634ade989c546359",
+      "bytes": 87890,
+      "sha256": "bcc4bd13675415bef79ddf759689d14a22db8c1c14fc7f8d7ee880fc755c2ed4"
+    },
+    {
+      "name": "data-fill-1620x1008.png",
+      "sha": "86ac9f249b38768b275c3c8ff9807bacf9d9d04d",
+      "bytes": 207915,
+      "sha256": "8a795ce8114eb1156abbcf132f0d55970006b29503d9271a75371e60be58afa4"
+    },
+    {
+      "name": "data-fill-1920x1440.png",
+      "sha": "1316a2bf35ee4fcc0425850bffa05ac803f65494",
+      "bytes": 217399,
+      "sha256": "05cc81f46a84dc6324e08bd18a0dfcff492f77aeaa74d1b44f88a739a545b6ca"
+    }
+  ],
+  "firstFailedScreenshot": {
+    "name": "workspace-btc-320-failure.png",
+    "gitBlobSha": "46731e62e01a9729be3444ffc828d891dd5da8b5"
+  },
+  "reviewPolicy": {
+    "externalGeminiReview": "omitted-by-user",
+    "reverseReview": "omitted-by-user",
+    "notPassed": true
+  },
+  "release": {
+    "draft": true,
+    "merged": false,
+    "deployed": false,
+    "productionPromoted": false,
+    "releaseAuthorized": false,
+    "observedMain": "5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4"
+  }
+}

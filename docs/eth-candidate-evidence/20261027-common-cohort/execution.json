@@ -1,0 +1,225 @@
+{
+  "kind": "ethereum-remaining-conditions-execution",
+  "sourceCommit": "c149d0c8e519e06f096d8b50e7c4cb68c3df726e",
+  "sourceTree": "92dc37499c3fee99f009a21ed9b1d18b0cf9f848",
+  "runs": [
+    {
+      "id": 40486179424,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "c149d0c8e519e06f096d8b50e7c4cb68c3df726e",
+      "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40486179424",
+      "createdAt": "2026-10-27T10:08:30Z",
+      "updatedAt": "2026-10-27T10:10:35Z"
+    },
+    {
+      "id": 40486179452,
+      "name": "Hallmark design audit",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "c149d0c8e519e06f096d8b50e7c4cb68c3df726e",
+      "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40486179452",
+      "createdAt": "2026-10-27T10:08:30Z",
+      "updatedAt": "2026-10-27T10:11:02Z"
+    },
+    {
+      "id": 40486179492,
+      "name": "ETH candidate evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "headSha": "c149d0c8e519e06f096d8b50e7c4cb68c3df726e",
+      "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40486179492",
+      "createdAt": "2026-10-27T10:08:30Z",
+      "updatedAt": "2026-10-27T10:15:13Z"
+    }
+  ],
+  "ciCheckout": {
+    "commit": "00fa29c8deb5f31ddc333749668cd56990f855c4",
+    "tree": "6dc83763a684d7d388889967de027960ebfc022e",
+    "parents": [
+      "5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+      "c149d0c8e519e06f096d8b50e7c4cb68c3df726e"
+    ]
+  },
+  "artifact": {
+    "id": 12725023904,
+    "name": "eth-candidate-evidence-c149d0c8e519e06f096d8b50e7c4cb68c3df726e",
+    "size_in_bytes": 50822566,
+    "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12725023904",
+    "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12725023904/zip",
+    "expired": false,
+    "created_at": "2026-10-27T10:15:09Z",
+    "expires_at": "2026-11-26T10:15:05Z",
+    "updated_at": "2026-10-27T10:15:09Z",
+    "digest": "sha256:5e2b0536f53af119ec044008841491c2aa9dd91f98aeac690b0b3b86d033654d",
+    "workflow_run": {
+      "id": 40486179492,
+      "repository_id": 1428515198,
+      "head_repository_id": 1428515198,
+      "head_branch": "chatgpt/eth-cycle-economics-20261026",
+      "head_sha": "c149d0c8e519e06f096d8b50e7c4cb68c3df726e"
+    }
+  },
+  "verification": {
+    "sourceCommit": "c149d0c8e519e06f096d8b50e7c4cb68c3df726e",
+    "sourceTree": "92dc37499c3fee99f009a21ed9b1d18b0cf9f848",
+    "artifact": {
+      "id": 12725023904,
+      "bytes": 50822566,
+      "sha256": "5e2b0536f53af119ec044008841491c2aa9dd91f98aeac690b0b3b86d033654d",
+      "digestVerified": true
+    },
+    "extractedFiles": 98,
+    "extractedBytes": 30987455,
+    "manifest": {
+      "seeds": 296,
+      "entries": 421,
+      "parts": 339,
+      "bytes": 60958464,
+      "limitBytes": 64000000,
+      "sha256": "f4eb5949416ae8be36047918ab74f5d65bfad44d5953f520d33cfb2c6425bc3d",
+      "allPartHashesVerified": true,
+      "unresolved": 0
+    },
+    "browser": {
+      "cases": 35,
+      "passed": 35,
+      "screenshots": 181,
+      "allPngHashesVerified": true,
+      "runtimeErrors": 0,
+      "resourceErrors": 15,
+      "unexpectedResourceErrors": 0
+    },
+    "cohort": {
+      "runtime": {
+        "milliseconds": 9998.852678,
+        "selectedUniqueOrigins": 10,
+        "requiredFits": 30,
+        "successfulFits": 30,
+        "gaussianOriginFits": 109,
+        "simulationAttempts": 480,
+        "successfulSimulations": 480,
+        "plannedDrawDays": 55296000,
+        "completedDrawDays": 55296000,
+        "maximumLogMatrixBytes": 1482752,
+        "physicalMobileMeasurement": false
+      },
+      "defaultReplay": 45,
+      "allNumericalOutputsMatchFirstRun": true,
+      "bytes": 658110,
+      "sha256": "87090120314c2bdfdea5fa85fcd90b36972891ffbbb2fd19ee7bbcc53401e4e2"
+    },
+    "issuance": {
+      "new": 0,
+      "reused": 3,
+      "total": 3,
+      "uniqueOrigins": 1,
+      "issuedAt": {
+        "adaptive": "2026-10-27T07:44:13.396Z",
+        "pooled": "2026-10-27T07:44:13.396Z",
+        "warmStart": "2026-10-27T09:57:51.931Z"
+      },
+      "attemptedIssueAt": "2026-10-27T10:11:20.655Z",
+      "decisions": [
+        {
+          "action": "reuse",
+          "attemptedRunKey": "5020e0c2b73e66ceecca0d8919988a8dfe97c1d7abb46990c52772fcab41af74",
+          "attemptedSnapshotId": "93154eccedc0412bcf181ac418ff03d894cda1e83b1a09d40a673c1e9620c9aa",
+          "consumedInputHash": "5caf73ad0664475b9a648802f2aa8eb03db24fa3a8cd08bf0715aa67308c8ae6",
+          "equivalentPreservedIds": [
+            "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b"
+          ],
+          "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+          "modelKey": "adaptive",
+          "reason": "same-completed-input-excluded-rows-may-differ",
+          "reusePolicy": "eth-prospective-completed-tail-reuse-1",
+          "runKey": "a0ae2e682803b573efed9ce4cfddf4235cef75f7dc45c2d5af8e9f39bdc67376"
+        },
+        {
+          "action": "reuse",
+          "attemptedRunKey": "9978715a4be8085b9ddc5e446e0e9afe10fd28ca66fefc4427f186ea9234e49d",
+          "attemptedSnapshotId": "93154eccedc0412bcf181ac418ff03d894cda1e83b1a09d40a673c1e9620c9aa",
+          "consumedInputHash": "be4bc78949b4158b3fee8d84df9766e90e62823cb762eea8745ec3387067a889",
+          "equivalentPreservedIds": [
+            "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1"
+          ],
+          "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+          "modelKey": "pooled",
+          "reason": "same-completed-input-excluded-rows-may-differ",
+          "reusePolicy": "eth-prospective-completed-tail-reuse-1",
+          "runKey": "f4cb18fb5990bf6d9ab7c6181fda127c8cc9c83c2988a1cc82753b5c51b06149"
+        },
+        {
+          "action": "reuse",
+          "attemptedRunKey": "92f911264b64094c16161469267c4c3b04f5fe81bc9eb82d3f0f0b1ece3ae750",
+          "attemptedSnapshotId": "93154eccedc0412bcf181ac418ff03d894cda1e83b1a09d40a673c1e9620c9aa",
+          "consumedInputHash": "53e3822da273952a409f4adab4ddee676ce1f6798d8905df46ce323ba7e050ca",
+          "equivalentPreservedIds": [
+            "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72"
+          ],
+          "id": "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+          "modelKey": "warmStart",
+          "reason": "same-completed-input-excluded-rows-may-differ",
+          "reusePolicy": "eth-prospective-completed-tail-reuse-1",
+          "runKey": "30e9e21284b3b98ad9f732f3043f3f056df882cd73866aec41f73a0850d89434"
+        }
+      ],
+      "evaluation": {
+        "earliestOutcomeEventAt": "2026-11-26T00:00:00.000Z",
+        "evaluatedAt": "2026-10-27T10:11:21.307Z",
+        "id": "158d1a7984982ad18b582ad94d47be895128e558f17b578f51e8de7eddd26dc4",
+        "missingObservations": 0,
+        "pending": 9,
+        "scored": 0
+      },
+      "indexUnchanged": true,
+      "allFrozenRecordsAndSnapshotsEqualCommittedBytes": true
+    },
+    "replay": {
+      "new": 0,
+      "reused": 3,
+      "networkRequests": 0,
+      "all731PointsAndIdsEqual": true
+    },
+    "economics": {
+      "requiredMetricCount": 25,
+      "sourceReceiptCount": 3,
+      "observedSourceFieldCount": 6,
+      "failedOrIncompleteSourceCount": 0,
+      "missingSourceKinds": [],
+      "rawVerifiedSourceCount": 3,
+      "replayedSourceCount": 3,
+      "metricsWithRelatedObservations": 10,
+      "definitionExactReportedMetricCount": 1,
+      "definitionExactReplayedMetricCount": 1,
+      "rateDerivedMetricCount": 1,
+      "scopeMismatchMetricCount": 10,
+      "notObservedMetricCount": 15,
+      "staleObservationCount": 4,
+      "unknownPublicationObservationCount": 6,
+      "reportedExactAndClockQualifiedMetricCount": 0,
+      "countsAreOverlappingEvidenceDimensions": true
+    },
+    "economicInputsPreserved": 66,
+    "economicAsOf": "2026-10-26",
+    "economicIssuedAt": "2026-10-27T10:10:53.886Z",
+    "initialization": {
+      "model": "eth-warm-start-initialization-research-1",
+      "classifiedReturnsBefore": 588,
+      "classifiedReturnsAfter": 1501,
+      "restoredClassifiedReturns": 913,
+      "preMergeReturnsUsed": 0,
+      "preMergeRiskDaysUsed": 0,
+      "defaultChanged": false,
+      "prospectiveRecordsIssued": 1,
+      "newProspectiveRecordsThisRun": 0,
+      "predictiveImprovementProven": false
+    }
+  },
+  "geminiOpposition": "omitted-by-user",
+  "followupReverseReview": "omitted-by-user",
+  "releaseAuthorized": false,
+  "productionPromoted": false,
+  "defaultChanged": false
+}

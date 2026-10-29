@@ -1,0 +1,641 @@
+{
+  "version": "eth-supply-accounting-audit-3",
+  "status": "provider-accounting-audited",
+  "source": {
+    "historyUrl": "https://ethsupply.fyi/api/history?range=30d",
+    "methodologyUrl": "https://ethsupply.fyi/methodology/",
+    "protocolFile": "research-data/eth-supply-accounting/eip-6780.md",
+    "protocolUrl": "https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-6780.md",
+    "protocolGitBlobSha": "1b6a0e94cc47e859b9866e570391cf37dc55059a",
+    "attribution": "ethsupply.fyi / donnoh.gwei; protocol specification: Ethereum EIPs, CC0",
+    "redistributionLicense": "Provider data license not established by this audit; retain attribution and source URL."
+  },
+  "providerSchemaVersion": 1,
+  "providerRevision": 1793158790722,
+  "providerGeneratedAt": "2026-10-28T03:39:50.000Z",
+  "providerClockAfterCollection": false,
+  "collectedAt": "2026-10-28T03:44:19.768Z",
+  "publishedAt": null,
+  "historicalAvailabilityProven": false,
+  "observationClocks": {
+    "slots": {
+      "rowsAfterActualCollection": 0,
+      "labelsAfterActualCollection": 0,
+      "latestReportedTimestamp": 1793157707,
+      "latestCoveredTimestamp": 1793157707,
+      "maximumLeadSeconds": 0,
+      "maximumLabelLeadSeconds": 0
+    },
+    "epochs": {
+      "rowsAfterActualCollection": 0,
+      "labelsAfterActualCollection": 0,
+      "latestReportedTimestamp": null,
+      "latestCoveredTimestamp": null,
+      "maximumLeadSeconds": 0,
+      "maximumLabelLeadSeconds": 0
+    }
+  },
+  "providerInterval": "30epochs",
+  "intervalSlots": 960,
+  "intervalEpochs": 30,
+  "declaredCoverage": {
+    "fromSlot": 15311808,
+    "toSlot": 15527807,
+    "slots": 216000,
+    "blocks": 215273,
+    "missedSlots": 727,
+    "complete": true
+  },
+  "declaredWarnings": [],
+  "summaryArithmetic": {
+    "componentTotalWei": "2038549321753550310020",
+    "feeBurnComponentTotalWei": "1889893591786550310020",
+    "burnResidualWei": "0",
+    "feePlusOtherBurnResidualWei": "0",
+    "allDestructionResidualWei": "-148655729967000000000",
+    "expectedNetWei": "87446550036286449689980",
+    "netResidualWei": "0",
+    "netVersusReportedBurnResidualWei": "0",
+    "omittedOtherBurnBiasWei": "0"
+  },
+  "series": {
+    "slots": {
+      "rows": 225,
+      "firstTimestamp": 1790577227,
+      "lastTimestamp": 1793157707,
+      "lastCoveredTimestamp": 1793157707,
+      "fields": {
+        "supplyWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "issuanceWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "attestationIssuanceWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "syncCommitteeIssuanceWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "proposerIssuanceWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "attestationSourceIssuanceWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "attestationTargetIssuanceWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "attestationHeadIssuanceWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "attestationInclusionIssuanceWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "syncInclusionIssuanceWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "proposerSlashingIssuanceWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "attesterSlashingIssuanceWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "otherProposerIssuanceWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "burnWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "baseFeeBurnWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "blobBaseFeeBurnWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "consensusPenaltiesWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "otherExecutionBurnWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "attestationSourcePenaltyWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "attestationTargetPenaltyWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "inactivityPenaltyWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "syncCommitteePenaltyWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "initialSlashingPenaltyWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "correlationSlashingPenaltyWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "offsetBaseFeeWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "averageBaseFeePerGasWei": {
+          "present": 0,
+          "missing": 225
+        },
+        "baseFeePerGasWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "gasUsed": {
+          "present": 225,
+          "missing": 0
+        },
+        "gasTarget": {
+          "present": 225,
+          "missing": 0
+        },
+        "gasMax": {
+          "present": 225,
+          "missing": 0
+        },
+        "blobFloorBurnWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "blobCongestionBurnWei": {
+          "present": 225,
+          "missing": 0
+        },
+        "netWei": {
+          "present": 225,
+          "missing": 0
+        }
+      },
+      "burnComponentsChecked": 225,
+      "burnComponentsMismatched": 0,
+      "netComponentsChecked": 225,
+      "netComponentsMismatched": 0,
+      "netVersusReportedBurnChecked": 225,
+      "netVersusReportedBurnMismatched": 0,
+      "otherBurnPresent": 225,
+      "otherBurnMissing": 0,
+      "otherBurnNonzero": 0,
+      "mismatchExamples": [],
+      "reportedBurnCandidates": {
+        "feeOnly": {
+          "checked": 225,
+          "mismatched": 0
+        },
+        "feePlusOtherExecution": {
+          "checked": 225,
+          "mismatched": 0
+        },
+        "allDestruction": {
+          "checked": 225,
+          "mismatched": 225
+        }
+      },
+      "usagePresentation": {
+        "blobsUsed": {
+          "present": 225,
+          "missing": 0,
+          "nonInteger": 225,
+          "minimum": 3.3239289446186,
+          "maximum": 8.353556485355648,
+          "additiveTotalEligible": false
+        },
+        "blobsTarget": {
+          "present": 225,
+          "missing": 0,
+          "nonInteger": 0,
+          "minimum": 14,
+          "maximum": 14,
+          "additiveTotalEligible": false
+        },
+        "blobsMax": {
+          "present": 225,
+          "missing": 0,
+          "nonInteger": 0,
+          "minimum": 21,
+          "maximum": 21,
+          "additiveTotalEligible": false
+        }
+      },
+      "excludedFromAdditiveTotals": [
+        "gasUsed",
+        "gasTarget",
+        "gasMax",
+        "blobsUsed",
+        "blobsTarget",
+        "blobsMax"
+      ],
+      "usageMeaning": "Grouped source fields have unestablished aggregate/average semantics. Fractional blob presentation is retained; gas and blob presentation values are never summed or converted into model usage.",
+      "reportedRowSums": {
+        "issuanceWei": "89485099358040000000000",
+        "burnWei": "1889893591786550310020",
+        "baseFeeBurnWei": "1887209851980874888324",
+        "blobBaseFeeBurnWei": "2683739805675421696",
+        "consensusPenaltiesWei": "148655729967000000000",
+        "otherExecutionBurnWei": "0",
+        "netWei": "87446550036286449689980"
+      },
+      "endpointArithmetic": {
+        "convention": "Treat supplyWei as the end of each reported contiguous bucket and compare the later row netWei. This convention check does not establish source clock semantics.",
+        "adjacentPairsChecked": 224,
+        "mismatchedPairs": 0,
+        "firstPair": {
+          "fromPosition": 15312767,
+          "toPosition": 15313727,
+          "supplyChangeWei": "387115382331068013316",
+          "reportedNetWei": "387115382331068013316",
+          "residualWei": "0"
+        },
+        "lastPair": {
+          "fromPosition": 15526847,
+          "toPosition": 15527807,
+          "supplyChangeWei": "396315155610308930165",
+          "reportedNetWei": "396315155610308930165",
+          "residualWei": "0"
+        },
+        "mismatchExamples": [],
+        "endpointDecomposition": {
+          "fromPosition": 15312767,
+          "toPosition": 15527807,
+          "startSupplyWei": "122083415985854682322411060",
+          "endSupplyWei": "122170474743109758707893351",
+          "supplyChangeWei": "87058757255076385482291",
+          "flowRowsIncluded": 224,
+          "firstRowFlowExcluded": true,
+          "componentClaims": {
+            "issuanceWei": "89087152115508000000000",
+            "burnWei": "1880367832055614517709",
+            "baseFeeBurnWei": "1877695478551365267917",
+            "blobBaseFeeBurnWei": "2672353504249249792",
+            "consensusPenaltiesWei": "148027028376000000000",
+            "otherExecutionBurnWei": "0",
+            "netWei": "87058757255076385482291"
+          },
+          "expectedChangeFromComponentsWei": "87058757255076385482291",
+          "componentResidualWei": "0",
+          "reportedNetResidualWei": "0",
+          "biasIfOtherExecutionBurnOmittedWei": "0"
+        }
+      }
+    },
+    "epochs": {
+      "rows": 0,
+      "firstTimestamp": null,
+      "lastTimestamp": null,
+      "lastCoveredTimestamp": null,
+      "fields": {
+        "supplyWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "issuanceWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "attestationIssuanceWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "syncCommitteeIssuanceWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "proposerIssuanceWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "attestationSourceIssuanceWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "attestationTargetIssuanceWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "attestationHeadIssuanceWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "attestationInclusionIssuanceWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "syncInclusionIssuanceWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "proposerSlashingIssuanceWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "attesterSlashingIssuanceWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "otherProposerIssuanceWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "burnWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "baseFeeBurnWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "blobBaseFeeBurnWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "consensusPenaltiesWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "otherExecutionBurnWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "attestationSourcePenaltyWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "attestationTargetPenaltyWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "inactivityPenaltyWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "syncCommitteePenaltyWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "initialSlashingPenaltyWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "correlationSlashingPenaltyWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "offsetBaseFeeWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "averageBaseFeePerGasWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "baseFeePerGasWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "gasUsed": {
+          "present": 0,
+          "missing": 0
+        },
+        "gasTarget": {
+          "present": 0,
+          "missing": 0
+        },
+        "gasMax": {
+          "present": 0,
+          "missing": 0
+        },
+        "blobFloorBurnWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "blobCongestionBurnWei": {
+          "present": 0,
+          "missing": 0
+        },
+        "netWei": {
+          "present": 0,
+          "missing": 0
+        }
+      },
+      "burnComponentsChecked": 0,
+      "burnComponentsMismatched": 0,
+      "netComponentsChecked": 0,
+      "netComponentsMismatched": 0,
+      "netVersusReportedBurnChecked": 0,
+      "netVersusReportedBurnMismatched": 0,
+      "otherBurnPresent": 0,
+      "otherBurnMissing": 0,
+      "otherBurnNonzero": 0,
+      "mismatchExamples": [],
+      "reportedBurnCandidates": {
+        "feeOnly": {
+          "checked": 0,
+          "mismatched": 0
+        },
+        "feePlusOtherExecution": {
+          "checked": 0,
+          "mismatched": 0
+        },
+        "allDestruction": {
+          "checked": 0,
+          "mismatched": 0
+        }
+      },
+      "usagePresentation": {
+        "blobsUsed": {
+          "present": 0,
+          "missing": 0,
+          "nonInteger": 0,
+          "minimum": null,
+          "maximum": null,
+          "additiveTotalEligible": false
+        },
+        "blobsTarget": {
+          "present": 0,
+          "missing": 0,
+          "nonInteger": 0,
+          "minimum": null,
+          "maximum": null,
+          "additiveTotalEligible": false
+        },
+        "blobsMax": {
+          "present": 0,
+          "missing": 0,
+          "nonInteger": 0,
+          "minimum": null,
+          "maximum": null,
+          "additiveTotalEligible": false
+        }
+      },
+      "excludedFromAdditiveTotals": [
+        "gasUsed",
+        "gasTarget",
+        "gasMax",
+        "blobsUsed",
+        "blobsTarget",
+        "blobsMax"
+      ],
+      "usageMeaning": "Grouped source fields have unestablished aggregate/average semantics. Fractional blob presentation is retained; gas and blob presentation values are never summed or converted into model usage.",
+      "reportedRowSums": {
+        "issuanceWei": null,
+        "burnWei": null,
+        "baseFeeBurnWei": null,
+        "blobBaseFeeBurnWei": null,
+        "consensusPenaltiesWei": null,
+        "otherExecutionBurnWei": null,
+        "netWei": null
+      },
+      "endpointArithmetic": {
+        "convention": "Treat supplyWei as the end of each reported contiguous bucket and compare the later row netWei. This convention check does not establish source clock semantics.",
+        "adjacentPairsChecked": 0,
+        "mismatchedPairs": 0,
+        "firstPair": null,
+        "lastPair": null,
+        "mismatchExamples": [],
+        "endpointDecomposition": null
+      }
+    }
+  },
+  "utcWindow": {
+    "observedFrom": "2026-09-30",
+    "observedThrough": "2026-10-27",
+    "windowDays": 28,
+    "utcIntervalConvention": "[observedFrom 00:00:00 UTC, day after observedThrough 00:00:00 UTC)",
+    "firstRequiredSlot": 15325199,
+    "lastRequiredSlot": 15526798,
+    "requiredSlots": 201600,
+    "coveredSlots": 201600,
+    "intersectingBuckets": 211,
+    "firstRequiredTimestamp": 1790726411,
+    "lastRequiredTimestamp": 1793145599,
+    "boundaryCrossingBuckets": 2,
+    "internalGapCount": 0,
+    "providerBucketsCoverAllRequiredSlots": true,
+    "exactBucketBoundaryMatch": false,
+    "allSelectedBucketsExplicitlyFinalized": true,
+    "missingComponents": {
+      "issuanceWei": 0,
+      "burnWei": 0,
+      "baseFeeBurnWei": 0,
+      "blobBaseFeeBurnWei": 0,
+      "consensusPenaltiesWei": 0,
+      "otherExecutionBurnWei": 0,
+      "netWei": 0,
+      "gasUsed": 0,
+      "supplyWei": 0
+    },
+    "providerClaimAggregates": {},
+    "stockFlowReconciliation": {
+      "status": "unavailable",
+      "convention": "Conditionally treat supplyWei at the row label as the end-of-slot stock; require labels at the preceding and final requested slots. Include every exact-window flow row, exclude the predecessor flow.",
+      "startBoundarySlot": 15325198,
+      "endBoundarySlot": 15526798,
+      "startBoundaryTimestamp": 1790726399,
+      "endBoundaryTimestamp": 1793145599,
+      "startRowPosition": null,
+      "endRowPosition": null,
+      "startSupplyWei": null,
+      "endSupplyWei": null,
+      "startBoundaryExplicitlyFinalized": false,
+      "endBoundaryExplicitlyFinalized": false,
+      "flowRowsIncluded": 0,
+      "predecessorFlowExcluded": true,
+      "supplyChangeWei": null,
+      "expectedChangeFromComponentsWei": null,
+      "reportedNetWei": null,
+      "componentResidualWei": null,
+      "reportedNetResidualWei": null,
+      "missingFlowComponents": [
+        "issuanceWei",
+        "baseFeeBurnWei",
+        "blobBaseFeeBurnWei",
+        "consensusPenaltiesWei",
+        "otherExecutionBurnWei"
+      ],
+      "unavailableReasons": [
+        "exact-window-flow-coverage-unavailable",
+        "preceding-boundary-stock-row-unavailable",
+        "ending-boundary-stock-row-unavailable"
+      ],
+      "independentCanonicalValidation": false,
+      "utcAccountingEligibilityProven": false
+    },
+    "utcAccountingEligibilityProven": false,
+    "excludedUsageFields": [
+      "gasUsed",
+      "gasTarget",
+      "gasMax",
+      "blobsUsed",
+      "blobsTarget",
+      "blobsMax"
+    ],
+    "blockingReasons": [
+      "source-bucket-straddles-utc-window",
+      "requested-window-stock-flow-reconciliation-unavailable",
+      "boundary-stock-finality-not-explicit",
+      "provider-bucket-duty-and-recognition-semantics-not-independently-verified",
+      "publication-time-unknown",
+      "canonical-state-not-independently-replayed"
+    ],
+    "interpretation": "Bucket sums remain provider claims even when integer arithmetic and requested slot boundaries align. No proration, missing-zero fill, or epoch-to-UTC relabeling."
+  },
+  "supplyIdentity": "netWei = issuanceWei - baseFeeBurnWei - blobBaseFeeBurnWei - consensusPenaltiesWei - otherExecutionBurnWei",
+  "reportedBurnInterpretation": {
+    "burnComponentsCheck": "Conditional burnWei = baseFeeBurnWei + blobBaseFeeBurnWei; consensus penalties are a separate deduction.",
+    "netVersusReportedBurnCheck": "Conditional netWei = issuanceWei - burnWei - consensusPenaltiesWei - otherExecutionBurnWei, if burnWei means fee-only burn.",
+    "alternativesRetained": [
+      "fee-only",
+      "fee-plus-other-execution",
+      "all-destruction"
+    ],
+    "ambiguity": "When otherExecutionBurnWei is zero, a matching source cannot distinguish fee-only and fee-plus-other burnWei. The independently component-computed net never depends on selecting a burnWei convention.",
+    "sourceSemanticProofEstablished": false
+  },
+  "definitionFinding": {
+    "id": "other-execution-destruction-required",
+    "sourceUrl": "https://github.com/ethereum/EIPs/blob/7372d10a457b29eceb02cd052345af165de1fb60/EIPS/eip-6780.md",
+    "field": "otherExecutionBurnEth",
+    "reason": "EIP-6780 retains same-transaction SELFDESTRUCT burns. A fee-only supply identity is incomplete without measured non-fee destruction or affirmative exact-window zero evidence.",
+    "aProposalIsNotAnActivatedFork": true,
+    "modelDefinitionVersion": "eth-economic-input-4"
+  },
+  "requiredMetricCount": 26,
+  "definitionMatchedModelMetricCount": 0,
+  "independentCanonicalValidation": false,
+  "independentProviderAudit": false,
+  "fullModelSnapshotReady": false,
+  "eligibleModelSnapshotCount": 0,
+  "modelInputActivated": false,
+  "modelSnapshots": []
+}

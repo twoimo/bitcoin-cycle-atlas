@@ -1,0 +1,275 @@
+name: ETH candidate evidence
+
+on:
+  pull_request:
+    paths:
+      - 'dist/**'
+      - 'tests/ethereum-*.test.mjs'
+      - 'tests/asset-forecast*.test.mjs'
+      - 'tests/asset-outcome*.test.mjs'
+      - 'tests/helpers/asset-outcome*.mjs'
+      - 'tests/eth-review-packet.test.mjs'
+      - 'tests/journal-entry-ownership.test.mjs'
+      - 'tests/forecast-replay*.test.mjs'
+      - 'tests/equity-chart-rendering.test.mjs'
+      - 'tests/eth-chart-rendering.test.mjs'
+      - 'tests/eth-future-range.test.mjs'
+      - 'tests/treasury-model.test.mjs'
+      - 'tests/helpers/eth-*.mjs'
+      - 'scripts/evaluate-ethereum-models.mjs'
+      - 'scripts/evaluate-ethereum-adaptive-research.mjs'
+      - 'scripts/evaluate-ethereum-pooled-research.mjs'
+      - 'scripts/evaluate-ethereum-interval-controls.mjs'
+      - 'scripts/evaluate-ethereum-warm-start.mjs'
+      - 'scripts/evaluate-ethereum-common-cohort.mjs'
+      - 'scripts/ethereum-common-cohort-core.mjs'
+      - 'scripts/build-ethereum-economic-evidence-coverage.mjs'
+      - 'scripts/ethereum-economic-vintages*.mjs'
+      - 'scripts/ethereum-supply-accounting-core.mjs'
+      - 'scripts/capture-ethereum-supply-accounting.mjs'
+      - 'scripts/ethereum-supply-resolution-core.mjs'
+      - 'scripts/analyze-ethereum-supply-resolution.mjs'
+      - 'scripts/ethereum-staking-cohort-core.mjs'
+      - 'scripts/capture-ethereum-staking-cohort.mjs'
+      - 'scripts/ethereum-independent-calibration-core.mjs'
+      - 'scripts/evaluate-ethereum-independent-calibration.mjs'
+      - 'scripts/ethereum-prospective-calibration-core.mjs'
+      - 'scripts/build-ethereum-prospective-calibration-readiness.mjs'
+      - 'scripts/ethereum-prospective-base.mjs'
+      - 'scripts/ethereum-prospective-archive-*.mjs'
+      - 'scripts/ethereum-prospective-calibration-paged.mjs'
+      - 'scripts/ethereum-prospective-operation-io.mjs'
+      - 'scripts/ethereum-prospective-handoff.mjs'
+      - 'scripts/ethereum-prospective-archive-core.mjs'
+      - 'scripts/ethereum-prospective-archive-remote.mjs'
+      - 'scripts/manage-ethereum-prospective-archive.mjs'
+      - 'scripts/ethereum-prospective-write-guard.mjs'
+      - 'scripts/ethereum-prospective-capacity-core.mjs'
+      - 'scripts/analyze-ethereum-prospective-capacity.mjs'
+      - 'scripts/ethereum-base-rollover-core.mjs'
+      - 'scripts/prepare-ethereum-base-rollover.mjs'
+      - 'scripts/analyze-ethereum-source-timing.mjs'
+      - 'scripts/evaluate-ethereum-monte-carlo-stability.mjs'
+      - 'scripts/ethereum-monte-carlo-stability-core.mjs'
+      - 'scripts/ethereum-prospective-collector-core.mjs'
+      - 'scripts/ethereum-prospective-reuse.mjs'
+      - 'scripts/ethereum-prospective-options.mjs'
+      - 'scripts/issue-ethereum-prospective.mjs'
+      - 'scripts/build-ethereum-model-readiness.mjs'
+      - 'research-data/ethereum-prospective-ledger/**'
+      - 'research-data/ethereum-prospective-archive/**'
+      - 'research-data/forecast-replay/**'
+      - 'scripts/capture-ethereum-throughput.mjs'
+      - 'scripts/ethereum-pow-zero-core.mjs'
+      - 'scripts/capture-ethereum-pow-zero.mjs'
+      - 'scripts/verify-eth-candidate-browser.mjs'
+      - 'scripts/verify-workspace-browser.mjs'
+      - 'scripts/verify-forecast-replay-browser.mjs'
+      - 'scripts/build-standalone.mjs'
+      - 'scripts/btc-offline-refresh-policy.mjs'
+      - 'scripts/capture-ethereum-economic-data.mjs'
+      - 'scripts/issue-asset-forecasts.mjs'
+      - 'scripts/evaluate-asset-forecasts.mjs'
+      - 'research-data/asset-outcome-ledger/**'
+      - 'research-data/eth-economic-captures/**'
+      - 'research-data/ethereum-economic-vintages/**'
+      - 'research-data/eth-supply-accounting/**'
+      - 'research-data/ethereum-staking-cohort/**'
+      - 'scripts/build-eth-review*.mjs'
+      - 'research-data/eth-review-scope.json'
+      - '.github/workflows/eth-model-evaluation.yml'
+      - '.github/workflows/eth-prospective-daily.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eth-candidate-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Test candidate equations, missing inputs, clocks and future-information boundaries
+        run: |
+          node --check scripts/verify-eth-candidate-browser.mjs
+          node --check scripts/verify-forecast-replay-browser.mjs
+          node --check scripts/prepare-ethereum-base-rollover.mjs
+          node --check scripts/issue-ethereum-prospective.mjs
+          node --check scripts/evaluate-ethereum-common-cohort.mjs
+          node --check scripts/build-ethereum-economic-evidence-coverage.mjs
+          node --check scripts/ethereum-economic-vintages.mjs
+          node --check scripts/capture-ethereum-supply-accounting.mjs
+          node --check scripts/evaluate-ethereum-independent-calibration.mjs
+          node --check scripts/build-ethereum-prospective-calibration-readiness.mjs
+          node --check scripts/ethereum-prospective-base.mjs
+          node --check scripts/ethereum-prospective-archive-operations.mjs
+          node --check scripts/ethereum-prospective-archive-summary.mjs
+          node --check scripts/ethereum-prospective-calibration-paged.mjs
+          node --check scripts/ethereum-prospective-handoff.mjs
+          node --check scripts/manage-ethereum-prospective-archive.mjs
+          node --check scripts/ethereum-prospective-archive-remote.mjs
+          node --check scripts/analyze-ethereum-prospective-capacity.mjs
+          node --check scripts/analyze-ethereum-supply-resolution.mjs
+          node --check scripts/capture-ethereum-staking-cohort.mjs
+          node --test tests/forecast-replay*.test.mjs tests/ethereum-base-rollover.test.mjs
+          node --test tests/ethereum-prospective-base.test.mjs tests/ethereum-prospective-capacity.test.mjs tests/ethereum-supply-resolution.test.mjs tests/ethereum-staking-cohort.test.mjs
+          node --test tests/ethereum-prospective-archive.test.mjs tests/ethereum-prospective-archive-io.test.mjs tests/ethereum-prospective-archive-remote.test.mjs tests/ethereum-prospective-write-guard.test.mjs
+          node --test tests/ethereum-prospective-archive-source.test.mjs tests/ethereum-prospective-archive-operations.test.mjs tests/ethereum-prospective-archive-issuer.test.mjs tests/ethereum-prospective-archive-summary.test.mjs tests/ethereum-prospective-archive-capacity.test.mjs tests/ethereum-prospective-archive-inventory-binding.test.mjs tests/ethereum-prospective-operation-io.test.mjs tests/ethereum-prospective-handoff.test.mjs tests/ethereum-prospective-calibration-paged.test.mjs
+          node --test tests/ethereum-prospective-calibration.test.mjs tests/ethereum-prospective-calibration-readiness.test.mjs
+          node --test tests/ethereum-economic-supply-accounting.test.mjs tests/ethereum-supply-accounting.test.mjs tests/ethereum-economic-vintages.test.mjs tests/ethereum-independent-calibration.test.mjs
+          node --test tests/ethereum-common-cohort.test.mjs tests/ethereum-economic-evidence-coverage.test.mjs tests/ethereum-warm-start-prospective.test.mjs
+          node --test tests/ethereum-warm-start-model.test.mjs tests/ethereum-source-timing.test.mjs tests/ethereum-btc-link-range.test.mjs tests/ethereum-economic-readiness.test.mjs tests/ethereum-interval-benchmark.test.mjs tests/ethereum-prospective-reuse.test.mjs tests/ethereum-prospective-records.test.mjs tests/ethereum-prospective-collector.test.mjs tests/ethereum-numeric-range.test.mjs tests/ethereum-monte-carlo-stability.test.mjs tests/ethereum-pow-zero.test.mjs tests/ethereum-btc-refresh-status.test.mjs tests/ethereum-offline-refresh-policy.test.mjs tests/ethereum-pooled-model.test.mjs tests/ethereum-interval-comparison.test.mjs tests/ethereum-throughput-supplement.test.mjs tests/eth-future-range.test.mjs tests/ethereum-adaptive-model.test.mjs tests/ethereum-adoption-scenarios.test.mjs tests/ethereum-cycle-models.test.mjs tests/ethereum-economic-model.test.mjs tests/ethereum-economic-ablation.test.mjs tests/ethereum-model-comparison.test.mjs tests/ethereum-forecast-boundary.test.mjs tests/equity-chart-rendering.test.mjs tests/eth-chart-rendering.test.mjs tests/ethereum-forecast.test.mjs tests/ethereum-economic-data.test.mjs tests/ethereum-economic-collector.test.mjs tests/asset-forecast-records.test.mjs tests/asset-forecast-collector.test.mjs tests/asset-outcome-records.test.mjs tests/asset-outcome-collector.test.mjs tests/ethereum-historical-gas-source.test.mjs tests/asset-forecast-journal.test.mjs tests/journal-entry-ownership.test.mjs tests/eth-review-packet.test.mjs tests/treasury-model.test.mjs
+      - name: Evaluate preserved asset forecasts without requiring a new forecast issue
+        run: |
+          node scripts/evaluate-asset-forecasts.mjs
+          node scripts/evaluate-asset-forecasts.mjs --emit-files
+      - name: Collect pinned public economic source with actual acquisition receipts
+        run: node scripts/capture-ethereum-economic-data.mjs
+      - name: Diagnose preserved source completion clocks and exact partial economic aggregates
+        run: node scripts/analyze-ethereum-source-timing.mjs
+      - name: Attempt a bounded public Ethereum throughput supplement and preserve actual failure receipts
+        continue-on-error: true
+        run: node scripts/capture-ethereum-throughput.mjs
+      - name: Attempt one protocol-defined PoW issuance observation without activating an economic snapshot
+        continue-on-error: true
+        run: node scripts/capture-ethereum-pow-zero.mjs
+      - name: Reconcile metric definitions raw-byte replays and actual economic source clocks
+        run: node scripts/build-ethereum-economic-evidence-coverage.mjs
+      - name: Preserve actual economic capture vintages and independently replay their raw inputs
+        run: |
+          node scripts/ethereum-economic-vintages.mjs
+          node scripts/ethereum-economic-vintages.mjs --verify-preserved-only
+      - name: Audit bounded public supply claims with exact non-fee destruction accounting
+        continue-on-error: true
+        run: node scripts/capture-ethereum-supply-accounting.mjs
+      - name: Reconcile actual supply sampling grids with exact UTC boundary stock requirements
+        run: node scripts/analyze-ethereum-supply-resolution.mjs
+      - name: Collect one pinned fixed-validator cohort state without activating economic inputs
+        continue-on-error: true
+        run: node scripts/capture-ethereum-staking-cohort.mjs
+      - name: Evaluate the exact committed candidates and current stored prices
+        run: node scripts/evaluate-ethereum-models.mjs
+      - name: Audit ETH periods, volatility, simulation and institutional arithmetic
+        run: node scripts/evaluate-ethereum-adaptive-research.mjs
+      - name: Compare pooled returns, interval evidence and exact preservation of existing adaptive results
+        run: node scripts/evaluate-ethereum-pooled-research.mjs
+      - name: Compare intervals with simple fixed-volatility and original empirical controls
+        run: node scripts/evaluate-ethereum-interval-controls.mjs
+      - name: Evaluate causal state initialization as a separate research control
+        run: node scripts/evaluate-ethereum-warm-start.mjs
+      - name: Measure fixed-seed numerical sensitivity without selecting a winning seed
+        run: node scripts/evaluate-ethereum-monte-carlo-stability.mjs
+      - name: Compare every price candidate on fixed common origins across the declared seed panel
+        run: node scripts/evaluate-ethereum-common-cohort.mjs
+      - name: Freeze earlier calibration errors and evaluate only later disjoint forecast windows
+        run: node scripts/evaluate-ethereum-independent-calibration.mjs
+      - name: Read the fixed prospective evidence branch without publication permission
+        env:
+          ETH_ARCHIVE_GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/ethereum-prospective-archive-remote.mjs read
+      - name: Restore and independently validate the selected prospective archive bytes
+        run: node scripts/ethereum-prospective-archive-operations.mjs restore
+      - name: Acquire one bounded ETH tail and preserve adaptive pooled and opt-in warm-start records
+        continue-on-error: true
+        run: node scripts/ethereum-prospective-archive-operations.mjs issue
+      - name: Reexecute preserved prospective records independently of acquisition success
+        run: node scripts/ethereum-prospective-archive-operations.mjs replay
+      - name: Validate retained prospective calibration evidence without requiring a new forecast issue
+        run: node scripts/ethereum-prospective-archive-operations.mjs readiness
+      - name: Diagnose prospective calendar and retained-input capacity without relaxing sample requirements
+        run: node scripts/ethereum-prospective-archive-operations.mjs capacity
+      - name: Rebuild the reviewed ETH base candidate without changing the operating base
+        run: node scripts/prepare-ethereum-base-rollover.mjs --snapshot research-data/forecast-replay/20261029/acquisition-2/snapshot.json
+      - name: Append current evidence and prove exact restoration of the previous archive
+        run: |
+          node scripts/ethereum-prospective-archive-operations.mjs append
+          node scripts/ethereum-prospective-archive-operations.mjs verify
+      - name: Reconcile existing models and remaining evidence conditions
+        run: node scripts/build-ethereum-model-readiness.mjs
+      - name: Verify preserved ETH BMNR and MSTR records and issue only with current inputs
+        run: |
+          node scripts/issue-asset-forecasts.mjs --replay-preserved-if-stale
+          # Replay a second time and print compact receipts. Stale prices permit
+          # preservation/replay only: no new record or false issue timestamp.
+          # The complete immutable
+          # ledger remains in the artifact below; do not duplicate it in the job log.
+          node scripts/issue-asset-forecasts.mjs --replay-preserved-if-stale
+      - name: Install a pinned Korean font with bounded network and cache time
+        timeout-minutes: 3
+        run: |
+          set -euo pipefail
+          atlas_font_dir="$HOME/.local/share/fonts/atlas-ci"
+          atlas_font_temp="$RUNNER_TEMP/atlas-noto-cjk"
+          mkdir -p "$atlas_font_dir" "$atlas_font_temp"
+          curl --fail --location --silent --show-error --proto '=https' --connect-timeout 10 --max-time 60 --output "$atlas_font_temp/NotoSansCJKkr-Regular.otf" 'https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf'
+          atlas_font_blob="$(git hash-object --no-filters "$atlas_font_temp/NotoSansCJKkr-Regular.otf")"
+          test "$atlas_font_blob" = 'dc4a7c65e6f450bf17c10a2405250b620eb78703'
+          curl --fail --location --silent --show-error --proto '=https' --connect-timeout 10 --max-time 60 --output "$atlas_font_temp/OFL.txt" 'https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/LICENSE'
+          atlas_font_license_blob="$(git hash-object --no-filters "$atlas_font_temp/OFL.txt")"
+          test "$atlas_font_license_blob" = 'd952d62c065f3f35fb83a173496e90b21525aef3'
+          install -m 0644 "$atlas_font_temp/NotoSansCJKkr-Regular.otf" "$atlas_font_dir/NotoSansCJKkr-Regular.otf"
+          install -m 0644 "$atlas_font_temp/OFL.txt" "$atlas_font_dir/OFL.txt"
+          timeout 30s fc-cache -f "$atlas_font_dir"
+          fc-scan --format '%{family}\n' "$atlas_font_dir/NotoSansCJKkr-Regular.otf"
+          fc-list ':lang=ko' file | grep -F -- "$atlas_font_dir/NotoSansCJKkr-Regular.otf"
+          echo "ATLAS_FONT_RECEIPT commit=f8d157532fbfaeda587e826d4cd5b21a49186f7c font_blob=$atlas_font_blob license_blob=$atlas_font_license_blob"
+      - name: Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop
+        env:
+          ETH_BROWSER_IMAGE_LOG_MODE: failures-only
+        run: node scripts/verify-eth-candidate-browser.mjs . build/eth-browser
+      - name: Bind exact committed sources inputs and execution evidence for external review
+        run: node scripts/build-eth-review-evidence.mjs
+      - name: Preserve complete source-identified candidate evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4, ref verified through GitHub
+        with:
+          name: eth-candidate-evidence-${{ github.event.pull_request.head.sha }}
+          path: |
+            build/ethereum-model-readiness.json
+            build/ethereum-source-timing.json
+            build/ethereum-interval-controls.json
+            build/ethereum-warm-start.json
+            build/ethereum-common-cohort.json
+            build/ethereum-economic-evidence-coverage.json
+            build/ethereum-economic-vintages
+            build/ethereum-supply-accounting
+            build/ethereum-supply-resolution.json
+            build/ethereum-staking-cohort
+            build/ethereum-independent-calibration.json
+            build/ethereum-prospective-calibration-readiness.json
+            build/ethereum-prospective-capacity.json
+            build/ethereum-base-rollover
+            build/ethereum-prospective-ledger
+            build/ethereum-prospective-archive
+            build/ethereum-prospective-archive-outcomes
+            build/ethereum-prospective-archive-remote-receipt.json
+            build/ethereum-prospective-archive-active.json
+            build/ethereum-prospective-archive-evaluation.json
+            build/ethereum-prospective-archive-restore.json
+            build/ethereum-prospective-archive-append.json
+            build/ethereum-prospective-archive-verify.json
+            build/ethereum-monte-carlo-stability.json
+            build/ethereum-pooled-research.json
+            build/ethereum-throughput-supplement
+            build/ethereum-pow-zero
+            build/ethereum-adaptive-research.json
+            build/ethereum-model-comparison.json
+            build/ethereum-economic-ablation.json
+            build/ethereum-economic-data
+            build/asset-forecast-ledger
+            build/asset-outcome-ledger
+            build/eth-review-packet
+            build/eth-browser
+          if-no-files-found: error
+          retention-days: 30

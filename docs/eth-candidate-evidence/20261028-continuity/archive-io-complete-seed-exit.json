@@ -1,0 +1,151 @@
+{
+  "kind": "local-node-test-process-exit",
+  "command": "node --test --test-isolation=none --test-reporter=tap tests/ethereum-prospective-archive-io.test.mjs",
+  "workingDirectory": "/workspace/scratch/f88ec447ef8c/bitcoin-cycle-atlas",
+  "execSessionId": 69873,
+  "exitCode": 0,
+  "exitObservedAt": "2026-10-28T03:23:43.289930Z",
+  "processStartedAt": null,
+  "processEndedAt": null,
+  "tapPath": "/tmp/eth-archive-io-complete-seed.tap",
+  "tapBytes": 5247,
+  "tapSha256": "b21bff19e4db9e677b01248664b52192aa6b3a629949f9b4f489d1a82532d4a6",
+  "counts": {
+    "tests": 24,
+    "suites": 0,
+    "pass": 24,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 75020.502647
+  },
+  "sourceFiles": {
+    "tests/ethereum-prospective-archive-io.test.mjs": {
+      "bytes": 20258,
+      "sha256": "f3a742efabafacfb0fb42f1b78132c5dc9235ce4309914fc2532f79cb8dda940",
+      "gitBlobSha": "7cf1142bab18414f01fca83af3cc534ad14bb204"
+    },
+    "scripts/manage-ethereum-prospective-archive.mjs": {
+      "bytes": 18471,
+      "sha256": "bfe33285ccc321c57b1dcc58620fe404742abcf53567f55d19f5c194533c3fc0",
+      "gitBlobSha": "af060ad5a9c9a9f9524aee227e9764323267b0d4"
+    },
+    "scripts/ethereum-prospective-archive-core.mjs": {
+      "bytes": 24157,
+      "sha256": "370e72f6e2f010f49ae371d0a0729eb7da3fb42a16a4130392e34662962524bd",
+      "gitBlobSha": "65eaae528afc3824a1a132938e3481566e5e3ede"
+    },
+    "scripts/ethereum-prospective-archive-remote.mjs": {
+      "bytes": 34350,
+      "sha256": "47be64ee1d22dc1e6e13f7c7563e5a476716b6deec8d235140846fb8c3b6835e",
+      "gitBlobSha": "7a0202ac0f6d90f4a70019916e0fab9b4be2c6dc"
+    },
+    "scripts/build-ethereum-prospective-calibration-readiness.mjs": {
+      "bytes": 14039,
+      "sha256": "fa65bf4ae61505d1daf3a125703c6d1a2c89e976ad944875c7f776762014e551",
+      "gitBlobSha": "26320126632f81b26b4cd609579a69f4642c4b7d"
+    }
+  },
+  "completeOriginalSeedFiles": {
+    "research-data/ethereum-prospective-ledger/acquisition.json": {
+      "bytes": 2177,
+      "sha256": "b7caaa59bbe987c16719d749b90f0d820f15f90b7f2019136f6094836086ffaa",
+      "gitBlobSha": "87623c0ea84ecad67f6ddf14bded587b7bac9f36"
+    },
+    "research-data/ethereum-prospective-ledger/acquisitions/d3e63c214cbdaa985625efeeb4b48e374f0882596b7d7d1790fa26e80c86eceb.json": {
+      "bytes": 2176,
+      "sha256": "8a45da75c2ca91eb0bfb4b16a2a762c92438f68ab39d1212421a494e71b52a2f",
+      "gitBlobSha": "ca098e9aa81cc3e9ecaecfc62ae7b1841bcc602e"
+    },
+    "research-data/ethereum-prospective-ledger/evaluations/798f9901977d7778a7c1a105c2c6bdf6afe2f0ad5f83a79e0273db1e876921ea.json": {
+      "bytes": 4268,
+      "sha256": "ae3cf92fd0f840548d060b048bf8a029f3c7c448f71bf1dab861d74318cca46d",
+      "gitBlobSha": "e18adbfcd637d955bffb32b6bdf77cd671e93598"
+    },
+    "research-data/ethereum-prospective-ledger/evaluations/f7ae686176ed688933365c166d84a2968549b5f4b4bdca0b60b6ca93103e3565.json": {
+      "bytes": 13578,
+      "sha256": "b807a7485c84b6c9b9fae02b8fc0b147e0c2ede2954f1d08d55051afe23362c8",
+      "gitBlobSha": "ad468500a7c52d59f6cdb8b9c6ec8ed86512eb86"
+    },
+    "research-data/ethereum-prospective-ledger/files.json": {
+      "bytes": 4158,
+      "sha256": "8c2539221cb5dcdca1f6e9b8468a16934bc08ee8f923f840f434ad58f774f849",
+      "gitBlobSha": "9ad99d4c1a77c57e2832aa667255741728fa8525"
+    },
+    "research-data/ethereum-prospective-ledger/index.json": {
+      "bytes": 1971,
+      "sha256": "f124b65d177b3aae9fa851a2f6204a6e1073dc288d22bf36eecf0b0e650081c2",
+      "gitBlobSha": "38dfd02401188aa5aecf8a1ce8d77760a7b5190a"
+    },
+    "research-data/ethereum-prospective-ledger/issuances/c9f91387867d25c19192338a010938f457ec3beb67402a7e3aa1fc3e214dfc08.json": {
+      "bytes": 5124,
+      "sha256": "9c837d145b179c6e1feb6977398a21d11e2307f5f1cd465270544b112842a870",
+      "gitBlobSha": "3301d79e70e62606880709e9db87508e10098ac0"
+    },
+    "research-data/ethereum-prospective-ledger/observations/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json": {
+      "bytes": 1084124,
+      "sha256": "4a6d592d5d7b5e99295c8ca7f9ad843ac063a695743a7e3bee766777f38903f8",
+      "gitBlobSha": "15e6fffea29b75ff69c2763f8264823cff0d3115"
+    },
+    "research-data/ethereum-prospective-ledger/observations/da9f0f8abf60398b020501c33aaf33173fa555fcc8919b1d60975abd493d0615.json": {
+      "bytes": 1084123,
+      "sha256": "1fbd7f113cf58288bbf616cfa00f684ab831f266381c10b7d9e0bbb1f82e03ec",
+      "gitBlobSha": "35db04a69508ec8df52e5b71b0d3c03dcf931076"
+    },
+    "research-data/ethereum-prospective-ledger/raw/coinbase-tail-d5c69e0d9494f287ec42038862e1e35538cd997e87bed139181dd9f19fa1ec25.json": {
+      "bytes": 527,
+      "sha256": "d5c69e0d9494f287ec42038862e1e35538cd997e87bed139181dd9f19fa1ec25",
+      "gitBlobSha": "e83d8a34f4e4900571201cdccffff64890c6544a"
+    },
+    "research-data/ethereum-prospective-ledger/raw/coinbase-tail.json": {
+      "bytes": 528,
+      "sha256": "588c843504e25a10ecd0d1e6d157b944e1abde963f1c3b504d73dd4b5ad22635",
+      "gitBlobSha": "0dc24cba98d0a38c274a9a5623879c3dcb5f087f"
+    },
+    "research-data/ethereum-prospective-ledger/receipt.json": {
+      "bytes": 2511,
+      "sha256": "9223f764375e9a457fbb03efca27f832c216e5490d05708eef2f432ad72eaf41",
+      "gitBlobSha": "b89b46d302b54a044d9eb81bb9525fabe956c8c8"
+    },
+    "research-data/ethereum-prospective-ledger/records/563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b.json": {
+      "bytes": 75200,
+      "sha256": "f1a53ceda9039fc00d3c59b5ae8c887c7bf277ad4d4a866d9021a02d32e5efc8",
+      "gitBlobSha": "28aee2d90c339465d759f84997ff07cfbd694745"
+    },
+    "research-data/ethereum-prospective-ledger/records/d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72.json": {
+      "bytes": 81100,
+      "sha256": "747a8ba0b9223674647408ce1757482f3969b629911f8293d97ed7e774c35673",
+      "gitBlobSha": "0e55aff15405db536335e031704fe60683b53eb5"
+    },
+    "research-data/ethereum-prospective-ledger/records/f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1.json": {
+      "bytes": 74394,
+      "sha256": "15a3156fc75faff35aca7a5f52e835570a4370b4e370ac0a5961fafc8a0363ce",
+      "gitBlobSha": "b2693e3ddbd87232b52c14d5cdf3c13e578540d1"
+    },
+    "research-data/ethereum-prospective-ledger/snapshots/bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59.json": {
+      "bytes": 1084124,
+      "sha256": "4a6d592d5d7b5e99295c8ca7f9ad843ac063a695743a7e3bee766777f38903f8",
+      "gitBlobSha": "15e6fffea29b75ff69c2763f8264823cff0d3115"
+    },
+    "research-data/ethereum-prospective-ledger/snapshots/da9f0f8abf60398b020501c33aaf33173fa555fcc8919b1d60975abd493d0615.json": {
+      "bytes": 1084123,
+      "sha256": "1fbd7f113cf58288bbf616cfa00f684ab831f266381c10b7d9e0bbb1f82e03ec",
+      "gitBlobSha": "35db04a69508ec8df52e5b71b0d3c03dcf931076"
+    }
+  },
+  "completeOriginalSeedFileCount": 17,
+  "coverage": {
+    "allOriginalSeedAndPriorRunBytesPreserved": true,
+    "legacyAcquisitionAndRawAliasesNormalizedWithoutRewritingBytes": true,
+    "legacyRawHashTextBase64AndSnapshotClockMatched": true,
+    "oldReceiptFilesAndIndexCheckpointVersionsPreserved": true,
+    "nonCheckpointNormalizedFilesRestoredExactly": true,
+    "originalRecordIdsAndIssueTimesUnchanged": true
+  },
+  "earlierRemoteFailure": {
+    "runId": 40625665456,
+    "sourceCommit": "a3bd5b2fd110ca90b9c86b6b4c7b6bd6af9c4837",
+    "cause": "Full committed legacy seed paths acquisition.json and raw/coinbase-tail.json were not handled by the first archive normalization. The earlier local checkout omitted these files. This run requires all 17 original seed files and tests explicit byte-preserving normalization."
+  }
+}

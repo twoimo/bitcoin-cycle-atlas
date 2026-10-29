@@ -4,7 +4,7 @@ import {buildTreasuryForecasts} from "./treasury-model.js?v=1.29.0";
 import {utcDay} from './cycle-engine.js?v=1.29.0';
 
 /** One bundle per observed-data load; switching conditions reuses its paths. */
-export function buildTreasuryProjection({symbol,history,btcHistory,ethHistory,endYear=2035,seed=20261022,asOf,capitalPolicy='cash-at-put',exitDelayDays}={}){
+export function buildTreasuryProjection({symbol,history,btcHistory,ethHistory,endYear=2035,seed=20261022,asOf,capitalPolicy='cash-at-put',exitDelayDays,informationClock=null}={}){
   const candles=Array.isArray(history)?history:history?.candles;
   if(!Array.isArray(candles)||!candles.length)throw new TypeError('Observed equity history is required');
   if(asOf!==undefined)utcDay(asOf);
@@ -21,6 +21,6 @@ export function buildTreasuryProjection({symbol,history,btcHistory,ethHistory,en
     url:symbol==='MSTR'?source?.source:'https://api.exchange.coinbase.com/products/ETH-USD/candles',
     retrievedAt:source?.retrievedAt??ethHistory?.retrievedAt??null,
     alignment:'Same date UTC end-of-day; not simultaneous with the New York equity close'};
-  const forecasts=buildTreasuryForecasts({symbol,history,asOf:cutoff,endYear,assetPaths,coinAnchor,capitalPolicy,exitDelayDays});
+  const forecasts=buildTreasuryForecasts({symbol,history,asOf:cutoff,endYear,assetPaths,coinAnchor,capitalPolicy,exitDelayDays,informationClock});
   return {symbol,asOf:cutoff,endYear,seed,forecasts,assetMetadata:assetPaths.metadata};
 }

@@ -1,0 +1,259 @@
+{
+  "version": "eth-throughput-supplement-1",
+  "status": "supplement-collected",
+  "startedAt": "2026-10-27T11:58:29.570Z",
+  "source": {
+    "masterUrl": "https://api.growthepie.com/v1/master.json",
+    "dataUrl": "https://api.growthepie.com/v1/metrics/chains/ethereum/throughput.json",
+    "termsUrl": "https://www.growthepie.com/data-terms",
+    "license": "CC-BY-4.0",
+    "attribution": "Source: growthepie, https://www.growthepie.com.",
+    "backendEvidenceCommit": "567f60415e8b48eb84f7b08e1bd83c8ca99995bf",
+    "hostedBackendVersionVerified": false
+  },
+  "outputDirectory": "build/ethereum-throughput-supplement/capture-NEviMP",
+  "runId": "40500039083",
+  "runAttempt": "1",
+  "sourceCommit": "ccac8d10dfdc76f618d906d3c3fe4a4d69d7d173",
+  "sourceTree": "ea6fd758831ce3bea8aa518fc1d009478f409529",
+  "sourceHashes": {
+    "scripts/capture-ethereum-throughput.mjs": "3a77ccf15b256192835d803773c56446cef4811911ac8edd7cafc861d0623f28",
+    "tests/ethereum-throughput-supplement.test.mjs": "32ba5115ebb38dda83bd7e92740b453d15b51e9dc9cfe2e4ba3a6b85019fed4d"
+  },
+  "network": [
+    {
+      "url": "https://api.growthepie.com/v1/master.json",
+      "requestedAt": "2026-10-27T11:58:29.583Z",
+      "responseReceivedAt": "2026-10-27T11:58:29.734Z",
+      "completedAt": "2026-10-27T11:58:29.742Z",
+      "httpStatus": 200,
+      "receivedBytes": 161732,
+      "complete": true,
+      "responseHeaders": {
+        "date": "Tue, 27 Oct 2026 06:45:02 GMT",
+        "etag": "W/\"abdc8457dd38c9f989445d96131b32a4\"",
+        "contentType": "application/json"
+      },
+      "sha256": "f36e108ed110f4039c6acaba5186988275d9cbe152cd16350d7b82719d254775"
+    },
+    {
+      "url": "https://api.growthepie.com/v1/metrics/chains/ethereum/throughput.json",
+      "requestedAt": "2026-10-27T11:58:29.745Z",
+      "responseReceivedAt": "2026-10-27T11:58:30.043Z",
+      "completedAt": "2026-10-27T11:58:30.229Z",
+      "httpStatus": 200,
+      "receivedBytes": 192196,
+      "complete": true,
+      "responseHeaders": {
+        "date": "Tue, 27 Oct 2026 11:58:30 GMT",
+        "etag": "W/\"d7049353e6516d442822b7fd09db0e4c\"",
+        "contentType": "application/json"
+      },
+      "sha256": "3455657838928477ac8ee7028deca17570ff0e73804b0388985e85cfb57e6505"
+    }
+  ],
+  "rawFiles": [
+    {
+      "file": "master.raw.json",
+      "bytes": 161732,
+      "sha256": "f36e108ed110f4039c6acaba5186988275d9cbe152cd16350d7b82719d254775",
+      "url": "https://api.growthepie.com/v1/master.json",
+      "complete": true
+    },
+    {
+      "file": "throughput.raw.json",
+      "bytes": 192196,
+      "sha256": "3455657838928477ac8ee7028deca17570ff0e73804b0388985e85cfb57e6505",
+      "url": "https://api.growthepie.com/v1/metrics/chains/ethereum/throughput.json",
+      "complete": true
+    }
+  ],
+  "observation": {
+    "status": "supplement-collected",
+    "observationKind": "ethereum-l1-gas-rate-derived-supplement",
+    "sourceUnit": "Mgas/s",
+    "derivedUnit": "gas/28 UTC days",
+    "l1GasUsedRateDerived": 6094027523397,
+    "conversion": "sum(dailyValue * 86400 * 1000000)",
+    "exactIntegerGas": false,
+    "roundingAppliedByCollector": false,
+    "sourceRows": 2491,
+    "windowObservations": 28,
+    "windowStart": "2026-09-29",
+    "observedThrough": "2026-10-26",
+    "requestedWindowEnd": "2026-10-26",
+    "requestedLatestWindowComplete": true,
+    "daysBehindRequestedEnd": 0,
+    "freshnessLimitDays": 7,
+    "collectedAt": "2026-10-27T11:58:30.231Z",
+    "providerGeneratedAt": "2026-10-27T11:15:36Z",
+    "publishedAt": null,
+    "rows": [
+      {
+        "date": "2026-09-29",
+        "unixMilliseconds": 1790640000000,
+        "mgasPerSecond": 2.507020502395833
+      },
+      {
+        "date": "2026-09-30",
+        "unixMilliseconds": 1790726400000,
+        "mgasPerSecond": 2.508427242048611
+      },
+      {
+        "date": "2026-10-01",
+        "unixMilliseconds": 1790812800000,
+        "mgasPerSecond": 2.5141713663425924
+      },
+      {
+        "date": "2026-10-02",
+        "unixMilliseconds": 1790899200000,
+        "mgasPerSecond": 2.5121354145949075
+      },
+      {
+        "date": "2026-10-03",
+        "unixMilliseconds": 1790985600000,
+        "mgasPerSecond": 2.5178179326157406
+      },
+      {
+        "date": "2026-10-04",
+        "unixMilliseconds": 1791072000000,
+        "mgasPerSecond": 2.5183406976967593
+      },
+      {
+        "date": "2026-10-05",
+        "unixMilliseconds": 1791158400000,
+        "mgasPerSecond": 2.515014801736111
+      },
+      {
+        "date": "2026-10-06",
+        "unixMilliseconds": 1791244800000,
+        "mgasPerSecond": 2.5132574648032406
+      },
+      {
+        "date": "2026-10-07",
+        "unixMilliseconds": 1791331200000,
+        "mgasPerSecond": 2.5111666097685186
+      },
+      {
+        "date": "2026-10-08",
+        "unixMilliseconds": 1791417600000,
+        "mgasPerSecond": 2.5101231567245375
+      },
+      {
+        "date": "2026-10-09",
+        "unixMilliseconds": 1791504000000,
+        "mgasPerSecond": 2.5139078165972224
+      },
+      {
+        "date": "2026-10-10",
+        "unixMilliseconds": 1791590400000,
+        "mgasPerSecond": 2.5253349595138888
+      },
+      {
+        "date": "2026-10-11",
+        "unixMilliseconds": 1791676800000,
+        "mgasPerSecond": 2.525627007175926
+      },
+      {
+        "date": "2026-10-12",
+        "unixMilliseconds": 1791763200000,
+        "mgasPerSecond": 2.521125747372685
+      },
+      {
+        "date": "2026-10-13",
+        "unixMilliseconds": 1791849600000,
+        "mgasPerSecond": 2.5165013085879626
+      },
+      {
+        "date": "2026-10-14",
+        "unixMilliseconds": 1791936000000,
+        "mgasPerSecond": 2.523008714178241
+      },
+      {
+        "date": "2026-10-15",
+        "unixMilliseconds": 1792022400000,
+        "mgasPerSecond": 2.5180301761574073
+      },
+      {
+        "date": "2026-10-16",
+        "unixMilliseconds": 1792108800000,
+        "mgasPerSecond": 2.5258440816435184
+      },
+      {
+        "date": "2026-10-17",
+        "unixMilliseconds": 1792195200000,
+        "mgasPerSecond": 2.5301874705787037
+      },
+      {
+        "date": "2026-10-18",
+        "unixMilliseconds": 1792281600000,
+        "mgasPerSecond": 2.526681529918981
+      },
+      {
+        "date": "2026-10-19",
+        "unixMilliseconds": 1792368000000,
+        "mgasPerSecond": 2.523596138935185
+      },
+      {
+        "date": "2026-10-20",
+        "unixMilliseconds": 1792454400000,
+        "mgasPerSecond": 2.5216062773379626
+      },
+      {
+        "date": "2026-10-21",
+        "unixMilliseconds": 1792540800000,
+        "mgasPerSecond": 2.5230976307291666
+      },
+      {
+        "date": "2026-10-22",
+        "unixMilliseconds": 1792627200000,
+        "mgasPerSecond": 2.5174887885648145
+      },
+      {
+        "date": "2026-10-23",
+        "unixMilliseconds": 1792713600000,
+        "mgasPerSecond": 2.518226269039352
+      },
+      {
+        "date": "2026-10-24",
+        "unixMilliseconds": 1792800000000,
+        "mgasPerSecond": 2.523787217175926
+      },
+      {
+        "date": "2026-10-25",
+        "unixMilliseconds": 1792886400000,
+        "mgasPerSecond": 2.5289001693171294
+      },
+      {
+        "date": "2026-10-26",
+        "unixMilliseconds": 1792972800000,
+        "mgasPerSecond": 2.52229947369213
+      }
+    ],
+    "chainIdentity": {
+      "provider": "growthepie",
+      "urlKey": "ethereum",
+      "caip2": "eip155:1",
+      "evmChainId": 1,
+      "chainType": "l1"
+    },
+    "upstreamSource": [
+      "growthepie"
+    ],
+    "chainCompletenessIndependentlyVerified": false,
+    "precisionPromotionPolicyEstablished": false,
+    "strictDefinitionMatchedMetricCount": 0,
+    "fullModelSnapshotReady": false,
+    "eligibleModelSnapshotCount": 0,
+    "historicalPointInTimeReady": false,
+    "modelInputActivated": false,
+    "modelSnapshots": [],
+    "interpretation": "Rate-derived latest-available supplement; no exact integer-gas, first-publication, complete-network or historical-vintage claim."
+  },
+  "strictDefinitionMatchedMetricCount": 0,
+  "fullModelSnapshotReady": false,
+  "historicalPointInTimeReady": false,
+  "modelInputActivated": false,
+  "collectedAt": "2026-10-27T11:58:30.231Z",
+  "finishedAt": "2026-10-27T11:58:30.235Z"
+}

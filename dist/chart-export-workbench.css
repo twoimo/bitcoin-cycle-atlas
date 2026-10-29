@@ -1,25 +1,29 @@
-.chart-export-dialog {width:min(920px,calc(100vw - 24px));max-height:calc(var(--dialog-viewport-height,100dvh) - 28px);padding:0;border:1px solid #41546b;border-radius:12px;background:#101923;color:#dce8f7;box-shadow:0 20px 80px #0009;font:13px/1.6 system-ui,sans-serif;box-sizing:border-box;overflow:hidden}
+/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas locked system · redesign: full · posture: restrained
+ * Scope: observed charts, comparison ledger, research and existing tool states. Verification is recorded by commit in CI.
+ */
+/* Hallmark · pre-emit critique: P4 H4 E3 S5 R4 V3 · weakest: E, uneven focus and small metadata; shared states and readable neutral ink are applied across the app. */
+.chart-export-dialog {width:min(920px,calc(100% - 24px));max-height:calc(var(--dialog-viewport-height,100dvh) - 28px);padding:0;border:1px solid var(--chart-export-workbench-rule);border-radius:12px;background:var(--chart-export-workbench-surface);color:var(--chart-export-workbench-ink);box-shadow:0 20px 80px var(--analysis-dock-shadow-3);font:13px/1.6 var(--font-system-basic);box-sizing:border-box;overflow:hidden}
 .chart-export-dialog[open]{display:flex;flex-direction:column}
 .chart-export-body{padding:0 20px;overflow:auto;min-height:0;overscroll-behavior:contain}
-.chart-export-dialog>header,.chart-export-dialog>footer{flex:none;padding:12px 20px;background:#101923}
-.chart-export-dialog>header{border-bottom:1px solid #304254}.chart-export-dialog>footer{border-top:1px solid #304254}
-.chart-export-dialog::backdrop {background:#0009}
+.chart-export-dialog>header,.chart-export-dialog>footer{flex:none;padding:12px 20px;background:var(--chart-export-workbench-surface)}
+.chart-export-dialog>header{border-bottom:1px solid var(--chart-export-workbench-rule-2)}.chart-export-dialog>footer{border-top:1px solid var(--chart-export-workbench-rule-2)}
+.chart-export-dialog::backdrop {background:var(--chart-export-workbench-surface-2)}
 .chart-export-dialog header,.chart-export-dialog footer {display:flex;align-items:center;justify-content:space-between;gap:12px}
 .chart-export-dialog h2 {font-size:18px;margin:0}
-.chart-export-dialog button,.chart-export-dialog select {font:inherit;color:inherit;background:#172638;border:1px solid #40556d;border-radius:5px;padding:7px 10px;min-height:36px}
+.chart-export-dialog button,.chart-export-dialog select {font:inherit;color:inherit;background:var(--chart-export-workbench-surface-3);border:1px solid var(--chart-export-workbench-rule-3);border-radius:5px;padding:8px 12px;min-height:36px}
 .chart-export-dialog button {cursor:pointer}
-.chart-export-dialog button:disabled {opacity:.45;cursor:default}
-.chart-export-dialog :focus-visible {outline:2px solid #8fc4ff;outline-offset:3px}
-.chart-export-help {font-size:12px;color:#b1c3d7}
+.chart-export-dialog button:disabled {opacity:.45;cursor:not-allowed}
+.chart-export-dialog :focus-visible {outline:2px solid var(--chart-export-workbench-rule-4);outline-offset:3px}
+.chart-export-help {font-size:12px;color:var(--chart-export-workbench-ink-2)}
 .chart-export-controls {display:flex;flex-wrap:wrap;gap:12px;margin:12px 0}
 .chart-export-controls label {display:grid;gap:4px;min-width:180px;max-width:100%;flex:1}
 .chart-export-controls label[hidden] {display:none}
 .chart-export-controls select {width:100%;min-width:0}
-.chart-export-facts {display:grid;grid-template-columns:145px minmax(0,1fr);font-size:12px;gap:5px 12px;margin:12px 0;padding:12px;background:#142131;border-radius:6px}
-.chart-export-facts dt {color:#99b5d2}.chart-export-facts dd {margin:0;overflow-wrap:anywhere}
-.chart-export-preview {overflow:auto;max-height:48vh;min-height:70px;border:1px solid #304254;border-radius:6px;background:#10151c}
+.chart-export-facts {display:grid;grid-template-columns:145px minmax(0,1fr);font-size:12px;gap:4px 12px;margin:12px 0;padding:12px;background:var(--chart-export-workbench-surface-4);border-radius:6px}
+.chart-export-facts dt {color:var(--chart-export-workbench-ink-3)}.chart-export-facts dd {margin:0;overflow-wrap:anywhere}
+.chart-export-preview {overflow:auto;max-height:48vh;min-height:70px;border:1px solid var(--chart-export-workbench-rule-2);border-radius:6px;background:var(--atlas-surface)}
 .chart-export-preview img {display:block;width:100%;height:auto}.chart-export-preview pre {font-size:11px;line-height:1.6;margin:12px;white-space:pre;tab-size:2}
-.chart-export-status {min-height:20px;color:#b8d7ff;font-size:12px}
-.chart-export-dialog footer {justify-content:flex-end}.chart-export-download {background:#244e78!important}
-@media(max-width:620px),(max-height:500px){.chart-export-dialog{position:fixed;inset:var(--dialog-viewport-top,0px) 0 auto;margin:8px auto;width:calc(100vw - 16px);max-height:calc(var(--dialog-viewport-height,100dvh) - 16px)}.chart-export-dialog>header,.chart-export-dialog>footer{padding:6px 12px}.chart-export-body{padding:0 12px}.chart-export-dialog button,.chart-export-dialog select{min-height:44px}.chart-export-controls{gap:8px}.chart-export-controls label{min-width:120px}.chart-export-preview{max-height:40dvh}.chart-export-dialog select{font-size:16px}}
-@media(max-width:420px){.chart-export-facts{grid-template-columns:1fr;gap:2px}.chart-export-facts dd{margin-bottom:6px}}
+.chart-export-status {min-height:20px;color:var(--chart-export-workbench-ink-4);font-size:12px}
+.chart-export-dialog footer {justify-content:flex-end}.chart-export-download {background:var(--chart-export-workbench-surface-5)!important}
+@media(max-width:620px),(max-height:500px){.chart-export-dialog{position:fixed;inset:var(--dialog-viewport-top,0px) 0 auto;margin:8px auto;width:calc(100% - 16px);max-height:calc(var(--dialog-viewport-height,100dvh) - 16px)}.chart-export-dialog>header,.chart-export-dialog>footer{padding:8px 12px}.chart-export-body{padding:0 12px}.chart-export-dialog button,.chart-export-dialog select{min-height:44px}.chart-export-controls{gap:8px}.chart-export-controls label{min-width:120px}.chart-export-preview{max-height:40dvh}.chart-export-dialog select{font-size:16px}}
+@media(max-width:420px){.chart-export-facts{grid-template-columns:1fr;gap:2px}.chart-export-facts dd{margin-bottom:8px}}

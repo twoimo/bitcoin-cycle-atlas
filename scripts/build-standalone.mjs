@@ -4,6 +4,8 @@ import { fileURLToPath } from 'node:url';
 import { standaloneModuleMap } from './standalone-modules.mjs';
 import { validateSavedJudgmentIndex, validateSavedJudgmentRecord, judgmentRecordSha256 } from '../dist/asset-judgment-records.js';
 import { readForecastArchive } from './build-forecast-ledger.mjs';
+import { readAssetForecastArchive } from './issue-asset-forecasts.mjs';
+import { REPLAY_ARCHIVE_PATHS, parseReplayPriceArchive } from '../dist/forecast-replay-sources.js';
 import { checkPublication } from './build-publication.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -41,14 +43,25 @@ const archive=await readForecastArchive(resolve(dist,'data/forecast-ledger'));
 const evaluation=JSON.parse(await readFile(resolve(dist,'data/forecast-ledger/evaluation.json'),'utf8'));
 const experiments=archive.index.experimentsPath?JSON.parse(await readFile(resolve(dist,'data/forecast-ledger',archive.index.experimentsPath),'utf8')):null;
 const forecastJson=JSON.stringify({index:archive.index,records:Object.fromEntries(archive.records.map(record=>[record.id,record])),snapshots:Object.fromEntries(archive.snapshots),evaluation,experiments}).replaceAll('<','\\u003c');
+const assetArchive=await readAssetForecastArchive(resolve(dist,'data/asset-forecast-ledger'));
+const assetForecastJson=JSON.stringify({schemaVersion:1,kind:'atlas-asset-forecast-archive',index:assetArchive.index,records:assetArchive.records,snapshots:assetArchive.snapshots}).replaceAll('<','\\u003c');
+const replayArchives={};
+for(const [symbol,archivePath] of Object.entries(REPLAY_ARCHIVE_PATHS)){
+  const sourceText=await readFile(resolve(dist,archivePath),'utf8');
+  const parsed=await parseReplayPriceArchive(symbol,sourceText,{archivePath});
+  replayArchives[symbol]={archivePath,sourceHash:parsed.source.sourceHash,sourceText};
+}
+const replayJson=JSON.stringify({schemaVersion:1,kind:'atlas-replay-price-archives',archives:replayArchives}).replaceAll('<','\\u003c');
 const publication=JSON.parse(await readFile(resolve(dist,'publication.json'),'utf8'));await checkPublication(publication);
 const publicationJson=JSON.stringify(publication).replaceAll('<','\\u003c');
 const equities=await Promise.all(['mstr','bmnr'].map(async symbol=>`<script id="embedded-${symbol}-data" type="application/json">${(await readFile(resolve(dist, `data/${symbol}-ohlc.json`),'utf8')).replaceAll('<','\\u003c')}</script>`));
 const modules = await standaloneModuleMap(dist);
 const importMap = JSON.stringify({imports:modules.imports}).replaceAll('<', '\\u003c');
 html = html.replace(/<script type="module" src="\.\/site-entry\.js(?:\?[^"\s]*)?"><\/script>/,
-  `<script id="embedded-btc-data" type="application/json">${data}</script>\n  <script id="embedded-ohlc-data" type="application/json">${ohlc}</script>\n  <script id="embedded-volume-data" type="application/json">${volume}</script>\n  <script id="embedded-eth-data" type="application/json">${eth}</script>\n  ${equities.join('\n')}\n  <script id="embedded-asset-comparison-data" type="application/json">${assetComparison}</script>\n  <script id="embedded-judgment-snapshot-index" type="application/json">${snapshotIndexJson}</script>\n  <script id="embedded-judgment-snapshots" type="application/json">${snapshotRecordsJson}</script>\n  <script type="importmap">${importMap}</script>\n  <script type="module">import ${JSON.stringify(modules.entry)};</script>`);
-html=html.replace('<script type="importmap">',`<script id="atlas-forecast-ledger" type="application/json">${forecastJson}</script>\n  <script id="atlas-publication" type="application/json">${publicationJson}</script>\n  <script type="importmap">`);
+  ()=>`<script id="embedded-btc-data" type="application/json">${data}</script>\n  <script id="embedded-ohlc-data" type="application/json">${ohlc}</script>\n  <script id="embedded-volume-data" type="application/json">${volume}</script>\n  <script id="embedded-eth-data" type="application/json">${eth}</script>\n  ${equities.join('\n')}\n  <script id="embedded-asset-comparison-data" type="application/json">${assetComparison}</script>\n  <script id="embedded-judgment-snapshot-index" type="application/json">${snapshotIndexJson}</script>\n  <script id="embedded-judgment-snapshots" type="application/json">${snapshotRecordsJson}</script>\n  <script type="importmap">${importMap}</script>\n  <script type="module">import ${JSON.stringify(modules.entry)};</script>`);
+// Source documents contain literal replacement tokens such as $& and $'.
+// A callback inserts those bytes literally instead of expanding them as HTML.
+html=html.replace('<script type="importmap">',()=>`<script id="atlas-forecast-ledger" type="application/json">${forecastJson}</script>\n  <script id="atlas-asset-forecast-ledger" type="application/json">${assetForecastJson}</script>\n  <script id="atlas-replay-price-archives" type="application/json">${replayJson}</script>\n  <script id="atlas-publication" type="application/json">${publicationJson}</script>\n  <script type="importmap">`);
 if (/\b(?:src|href)=["']\.\//.test(html)) throw new Error('Unresolved local resource');
 await mkdir(dirname(output), { recursive: true });
 await writeFile(output, html);

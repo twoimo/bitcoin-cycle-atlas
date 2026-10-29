@@ -16,7 +16,15 @@ test('explicit ETH future horizon extends navigation without changing actual bar
   assert.equal(retained.start,moved.start);assert.equal(retained.end,moved.end);
 });
 test('ETH forecast visibility and economic condition survive a shareable view URL',()=>{
-  const query=new URLSearchParams(ethViewQuery({frequency:'daily',chartType:'line',scale:'log',span:'4y',forecastVisible:false,ethScenario:'stress'}));
+  const query=new URLSearchParams(ethViewQuery({frequency:'daily',chartType:'line',scale:'log',span:'4y',forecastVisible:false,ethModel:'valuation',ethScenario:'stress'}));
   assert.equal(query.get('forecast'),'off');assert.equal(query.get('eth-scenario'),'stress');
   assert.equal(query.get('scenario'),null);
+});
+
+test('research mode URLs do not inherit valuation scenario selectors',()=>{
+  for(const ethModel of ['adaptive','pooled']){
+    const p=new URLSearchParams(ethViewQuery({frequency:'daily',chartType:'line',scale:'log',span:'4y',ethModel,ethScenario:'stress'}));
+    assert.equal(p.has('eth-scenario'),false);
+    assert.equal(p.get('eth-model'),ethModel==='pooled'?'pooled':null);
+  }
 });

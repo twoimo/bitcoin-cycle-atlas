@@ -11,6 +11,25 @@ class Element {
   getAttribute(key){return this.values.get(key)??null;}
   removeAttribute(key){this.values.delete(key);}
   get id(){return this.getAttribute('id');}
+  get tabIndex(){const value=this.getAttribute('tabindex');return value!==null?Number(value):['button','input','select','textarea'].includes(this.tagName)||(this.tagName==='a'&&this.getAttribute('href')!==null)?0:-1;}
+  set tabIndex(value){this.setAttribute('tabindex',value);}
+  closest(selector){
+    assert.equal(selector,'[hidden]','Unsupported fixture closest selector');
+    for(let node=this;node;node=node.parentElement)if(node.hidden||node.getAttribute('hidden')!==null)return node;
+    return null;
+  }
+  querySelectorAll(selector){
+    const parts=selector.split(',').map(part=>part.trim()),result=[];
+    const matches=(node,part)=>{
+      if(part==='[tabindex="0"]')return node.getAttribute('tabindex')==='0';
+      if(part==='a[href]')return node.tagName==='a'&&node.getAttribute('href')!==null;
+      const match=/^(button|input|select|textarea)(:not\(:disabled\))?$/.exec(part);
+      assert.ok(match,'Unsupported fixture selector: '+part);
+      return node.tagName===match[1]&&(!match[2]||!node.disabled);
+    };
+    const visit=node=>{for(const child of node.children){if(parts.some(part=>matches(child,part)))result.push(child);visit(child);}};
+    visit(this);return result;
+  }
   get isConnected(){return this===this.ownerDocument.body||Boolean(this.parentElement?.isConnected);}
   get textContent(){return this._text+this.children.map(child=>child.textContent).join('');}
   set textContent(value){this.replaceChildren();this._text=String(value);}
@@ -57,4 +76,30 @@ test('research dialog saves multiple measurements, edits exact raw coordinates a
 test('research dialog does not save an unfinished measurement and reports denied mutations without losing state',()=>{
   const f=fixture();let state=normalizeResearchAnnotations(null),fail=false;const context={rows,measurement:{...measurement,endDate:null},asOf:'2026-10-04'},controller=mountResearchAnnotationsWorkbench({document:f.doc,getState:()=>state,getContext:()=>context,onCommand:command=>{if(fail)throw new Error('storage test error');state=changeResearchAnnotations(state,command);}});
   controller.open();assert.equal(f.button('현재 두 점 측정 저장').disabled,true);assert.equal(controller.saveMeasurement(),false);assert.equal(state.items.length,0);context.measurement=measurement;fail=true;controller.refresh();assert.equal(controller.saveMeasurement(),false);assert.equal(state.items.length,0);assert.match(f.node('research-annotations-dialog').textContent,/storage test error/);controller.destroy();
+});
+
+test('research dialog wraps both Tab boundaries and recomputes enabled visible controls',()=>{
+  const f=fixture();let state=normalizeResearchAnnotations(null);
+  const context={rows,measurement:null,asOf:'2026-10-04',id:'keyboard-1'};
+  const controller=mountResearchAnnotationsWorkbench({document:f.doc,getState:()=>state,getContext:()=>context,onCommand:command=>{state=changeResearchAnnotations(state,command);}});
+  controller.open({opener:f.opener});
+  const dialog=f.node('research-annotations-dialog'),close=f.button('닫기'),save=f.button('현재 두 점 측정 저장'),form=f.all().find(node=>node.tagName==='form');
+  const press=(key='Tab',shiftKey=false)=>{
+    let prevented=false,stopped=false;
+    dialog.dispatchEvent({type:'keydown',key,shiftKey,preventDefault(){prevented=true;},stopPropagation(){stopped=true;}});
+    assert.equal(stopped,true);return prevented;
+  };
+  assert.equal(save.disabled,true);assert.equal(form.hidden,true);
+  for(const shift of [false,true]){close.focus();assert.equal(press('Tab',shift),true);assert.equal(f.doc.activeElement,close);}
+  context.measurement=measurement;controller.refresh();assert.equal(save.disabled,false);
+  close.focus();assert.equal(press(),false,'ordinary interior Tab retains native behavior');
+  save.focus();assert.equal(press(),true);assert.equal(f.doc.activeElement,close);
+  close.focus();assert.equal(press('Tab',true),true);assert.equal(f.doc.activeElement,save);
+  save.click();assert.equal(state.items.length,1);assert.equal(form.hidden,false);
+  const submit=f.button('변경 저장');
+  close.focus();assert.equal(press('Tab',true),true);assert.equal(f.doc.activeElement,submit);
+  submit.focus();assert.equal(press(),true);assert.equal(f.doc.activeElement,close);
+  f.node('research-note').focus();assert.equal(press(),false);
+  assert.equal(press('Escape'),false,'native dialog cancellation is not prevented');
+  close.click();assert.equal(f.doc.activeElement,f.opener);controller.destroy();
 });

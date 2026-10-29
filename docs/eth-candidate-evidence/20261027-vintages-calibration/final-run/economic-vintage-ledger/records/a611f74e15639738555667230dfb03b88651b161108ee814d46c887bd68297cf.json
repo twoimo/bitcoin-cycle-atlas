@@ -1,0 +1,203 @@
+{
+  "kind": "ethereum-economic-vintage-record",
+  "version": "eth-economic-vintages-1",
+  "captureKey": "0677d42ed8789a17a3d91a45ee88d47cb3bd18f965c8d37d6c3e2108f5407a03",
+  "recordedAt": "2026-10-27T12:00:24.122Z",
+  "sourceKind": "coinmetrics",
+  "collectorStatus": "success",
+  "collectorError": null,
+  "receipt": {
+    "path": "build/ethereum-economic-data/capture-3s5390/receipt.json",
+    "sha256": "3b18fa212ae1549754c8b5c8046b03f62af0c88cee7cdf520abc1da80c2451dd",
+    "bytes": 7157
+  },
+  "rawFiles": [
+    {
+      "path": "build/ethereum-economic-data/capture-3s5390/coinmetrics-eth.csv",
+      "sha256": "46b18f3df967405374b1f6ee8a3d11ee1b7a5b176ac9fb4342caf6bf8648f2cc",
+      "bytes": 2121732
+    }
+  ],
+  "collectorSource": {
+    "sourceCommit": "ccac8d10dfdc76f618d906d3c3fe4a4d69d7d173",
+    "sourceTree": "ea6fd758831ce3bea8aa518fc1d009478f409529",
+    "sourceHashes": {
+      "scripts/capture-ethereum-economic-data.mjs": "47903b8176d9a14f53cb3e1443f94b25b9dad758e842e24287b5078d7b623968",
+      "dist/ethereum-economic-data.js": "a9f7154ee03c435aee7f8c0f2828d738bb4e00ee014bd1947f5c54a6a81e4b9a",
+      "dist/ethereum-economic-model.js": "fecb23afa3ea4efd2e8a8bbd3be67de1dd7c6fd133302d347a703487f78951d0"
+    },
+    "runId": "40500039083",
+    "runAttempt": "1",
+    "receiptAuthenticityIndependentlyProven": false
+  },
+  "metricDefinitionVersion": "eth-economic-input-4",
+  "observations": [
+    {
+      "series": "coinmetrics/data:ethereum:csv/eth.csv",
+      "sourceField": "IssTotNtv",
+      "observedFrom": "2026-04-26",
+      "observedThrough": "2026-05-23",
+      "metricDefinitionVersion": "eth-economic-input-4",
+      "value": 78672.726006681,
+      "valueRepresentation": "replayed-javascript-number",
+      "relations": [
+        {
+          "metric": "consensusNetIssuanceEth",
+          "relation": "scope-mismatch",
+          "reason": "Gross network issuance does not subtract consensus penalties or establish layer accounting."
+        },
+        {
+          "metric": "executionPowIssuanceEth",
+          "relation": "scope-mismatch",
+          "reason": "A combined issuance field does not prove a PoW-only value."
+        }
+      ],
+      "dataKey": "1d2774eb6de8dce17084a8f1dd5f33e8d888ed1b36236f7ed77e5a569e7ad7e4",
+      "dataVersionId": "caf995f3a054b69c78f33d083d767e9acd67739715af065132f328549947c69f",
+      "sourceUrl": "https://github.com/coinmetrics/data/blob/f1a36afb962731c387bb03982758ab0103063da5/csv/eth.csv",
+      "clocks": {
+        "observedFrom": "2026-04-26",
+        "observedThrough": "2026-05-23",
+        "observedAt": "2026-05-24T00:00:00.000Z",
+        "collectedAt": "2026-10-27T11:58:29.283Z",
+        "publishedAt": null,
+        "providerGeneratedAt": null,
+        "providerCompletedAt": "2026-05-24T02:44:08.000Z"
+      },
+      "availabilityUpperBound": "2026-10-27T11:58:29.283Z",
+      "availabilityBasis": "actual-collector-receipt-clock",
+      "publicationTimeKnown": false,
+      "rawBytesVerified": true,
+      "replayedFromRaw": true,
+      "modelInputActivated": false
+    },
+    {
+      "series": "coinmetrics/data:ethereum:csv/eth.csv",
+      "sourceField": "FeeTotNtv",
+      "observedFrom": "2026-04-26",
+      "observedThrough": "2026-05-23",
+      "metricDefinitionVersion": "eth-economic-input-4",
+      "value": 9122.065722414914,
+      "valueRepresentation": "replayed-javascript-number",
+      "relations": [
+        {
+          "metric": "blobBurnEth",
+          "relation": "scope-mismatch",
+          "reason": "The total does not identify blob fee burn."
+        },
+        {
+          "metric": "blobFeesEth",
+          "relation": "scope-mismatch",
+          "reason": "The total does not identify its blob component."
+        },
+        {
+          "metric": "executionBurnEth",
+          "relation": "scope-mismatch",
+          "reason": "Total fees include priority transfers and blobs; they are not execution burn."
+        },
+        {
+          "metric": "executionFeesEth",
+          "relation": "scope-mismatch",
+          "reason": "Total fees already include blob fees; the execution/blob split is absent."
+        },
+        {
+          "metric": "l2SettlementFeesEth",
+          "relation": "scope-mismatch",
+          "reason": "No fixed-rollup settlement subset is identified."
+        }
+      ],
+      "dataKey": "425a913a264820617f024980400ee979b86b5f74b9cf517170a51fb6aac8fd69",
+      "dataVersionId": "fa2adb92d6360a324281b3fa08a36f2e4f57b6eec804af702e4ba5ccaca99f38",
+      "sourceUrl": "https://github.com/coinmetrics/data/blob/f1a36afb962731c387bb03982758ab0103063da5/csv/eth.csv",
+      "clocks": {
+        "observedFrom": "2026-04-26",
+        "observedThrough": "2026-05-23",
+        "observedAt": "2026-05-24T00:00:00.000Z",
+        "collectedAt": "2026-10-27T11:58:29.283Z",
+        "publishedAt": null,
+        "providerGeneratedAt": null,
+        "providerCompletedAt": "2026-05-24T02:44:08.000Z"
+      },
+      "availabilityUpperBound": "2026-10-27T11:58:29.283Z",
+      "availabilityBasis": "actual-collector-receipt-clock",
+      "publicationTimeKnown": false,
+      "rawBytesVerified": true,
+      "replayedFromRaw": true,
+      "modelInputActivated": false
+    },
+    {
+      "series": "coinmetrics/data:ethereum:csv/eth.csv",
+      "sourceField": "SplyCur",
+      "observedFrom": "2026-04-26",
+      "observedThrough": "2026-05-23",
+      "metricDefinitionVersion": "eth-economic-input-4",
+      "value": 121721391.22868587,
+      "valueRepresentation": "replayed-javascript-number",
+      "relations": [
+        {
+          "metric": "supplyEth",
+          "relation": "scope-mismatch",
+          "reason": "Execution/consensus supply and revision scope remain unreconciled."
+        }
+      ],
+      "dataKey": "63f84b4c2df09f94f8d92a6d340c25a196342c9d36961764b5b8fe714f304b68",
+      "dataVersionId": "2432f99ad84e4868097bfc96be5a35bdbca242d9e5186a248602684a4ed89318",
+      "sourceUrl": "https://github.com/coinmetrics/data/blob/f1a36afb962731c387bb03982758ab0103063da5/csv/eth.csv",
+      "clocks": {
+        "observedFrom": "2026-04-26",
+        "observedThrough": "2026-05-23",
+        "observedAt": "2026-05-24T00:00:00.000Z",
+        "collectedAt": "2026-10-27T11:58:29.283Z",
+        "publishedAt": null,
+        "providerGeneratedAt": null,
+        "providerCompletedAt": "2026-05-24T02:44:08.000Z"
+      },
+      "availabilityUpperBound": "2026-10-27T11:58:29.283Z",
+      "availabilityBasis": "actual-collector-receipt-clock",
+      "publicationTimeKnown": false,
+      "rawBytesVerified": true,
+      "replayedFromRaw": true,
+      "modelInputActivated": false
+    },
+    {
+      "series": "coinmetrics/data:ethereum:csv/eth.csv",
+      "sourceField": "TxCnt",
+      "observedFrom": "2026-04-26",
+      "observedThrough": "2026-05-23",
+      "metricDefinitionVersion": "eth-economic-input-4",
+      "value": 64795230,
+      "valueRepresentation": "replayed-javascript-number",
+      "relations": [
+        {
+          "metric": "l1GasUsed",
+          "relation": "incompatible-unit",
+          "reason": "L1 transaction count is not execution gas."
+        },
+        {
+          "metric": "l2Transactions",
+          "relation": "scope-mismatch",
+          "reason": "L1 transactions are not transactions on the fixed rollup universe."
+        }
+      ],
+      "dataKey": "b16c47ea97d27f8aa1f5a0e51b6efc4d5130964eadc57b3788f8dd81d6a21164",
+      "dataVersionId": "df01ffeb769c6c8dbb0c4939f53d723f26a325b67c1fa7ed81f9e8b176daca60",
+      "sourceUrl": "https://github.com/coinmetrics/data/blob/f1a36afb962731c387bb03982758ab0103063da5/csv/eth.csv",
+      "clocks": {
+        "observedFrom": "2026-04-26",
+        "observedThrough": "2026-05-23",
+        "observedAt": "2026-05-24T00:00:00.000Z",
+        "collectedAt": "2026-10-27T11:58:29.283Z",
+        "publishedAt": null,
+        "providerGeneratedAt": null,
+        "providerCompletedAt": "2026-05-24T02:44:08.000Z"
+      },
+      "availabilityUpperBound": "2026-10-27T11:58:29.283Z",
+      "availabilityBasis": "actual-collector-receipt-clock",
+      "publicationTimeKnown": false,
+      "rawBytesVerified": true,
+      "replayedFromRaw": true,
+      "modelInputActivated": false
+    }
+  ],
+  "id": "a611f74e15639738555667230dfb03b88651b161108ee814d46c887bd68297cf"
+}

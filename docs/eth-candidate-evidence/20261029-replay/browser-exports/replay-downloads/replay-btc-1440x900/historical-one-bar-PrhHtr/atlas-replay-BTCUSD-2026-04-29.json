@@ -1,0 +1,3418 @@
+{
+  "kind": "atlas-visible-replay-frame",
+  "schemaVersion": 1,
+  "identity": {
+    "symbol": "BTCUSD",
+    "recordId": "6a1b261b57bff89771aef96f1480669893854320ce45ca27d0e28215e863e3f6",
+    "recordKind": "reconstructed",
+    "asOf": "2026-04-28",
+    "issuedAt": null,
+    "createdAt": "2026-10-28T16:25:25.915Z",
+    "snapshotId": "49b781abd75c76bf2f91555d649f26ef42d5125884043904435e59a29c48106f",
+    "outputHash": "c1239b5f4d752ad21bf01fd89b8c13863d015375e8b25ddc431d38b217ac8a0c",
+    "modelVersion": "independent-price-baselines-1",
+    "sourceCommit": null,
+    "sourceHash": null,
+    "informationCutoffAt": "2026-04-29T00:00:00.000Z",
+    "historicalModelExistedAtOrigin": false,
+    "pointMeaning": "shrunken-trend-baseline",
+    "pointLabel": "가격만 사용한 축소 추세 기준모형 경로",
+    "bandMeaning": "none"
+  },
+  "mode": "historical-reconstruction",
+  "frame": {
+    "version": "forecast-replay-1",
+    "sessionId": "6a1b261b57bff89771aef96f1480669893854320ce45ca27d0e28215e863e3f6",
+    "mode": "historical-reconstruction",
+    "clockMode": "observed-date",
+    "cursorIndex": 1,
+    "cursorDate": "2026-04-29",
+    "cursorAt": "2026-04-30T00:00:00.000Z",
+    "evaluationAt": "2026-04-30T00:00:00.000Z",
+    "inputVisible": true,
+    "forecastVisible": true,
+    "inputPrices": [
+      {
+        "date": "2026-01-28",
+        "price": 89177.7892507306
+      },
+      {
+        "date": "2026-01-29",
+        "price": 84520.3973106371
+      },
+      {
+        "date": "2026-01-30",
+        "price": 84017.0340292227
+      },
+      {
+        "date": "2026-01-31",
+        "price": 78702.38550263
+      },
+      {
+        "date": "2026-02-01",
+        "price": 76911.0523772648
+      },
+      {
+        "date": "2026-02-02",
+        "price": 78716.6018088837
+      },
+      {
+        "date": "2026-02-03",
+        "price": 75684.7660277616
+      },
+      {
+        "date": "2026-02-04",
+        "price": 73095.1914646406
+      },
+      {
+        "date": "2026-02-05",
+        "price": 63494.6884456458
+      },
+      {
+        "date": "2026-02-06",
+        "price": 70647.6982188778
+      },
+      {
+        "date": "2026-02-07",
+        "price": 69166.2594424313
+      },
+      {
+        "date": "2026-02-08",
+        "price": 70522.5892393337
+      },
+      {
+        "date": "2026-02-09",
+        "price": 70244.1017773232
+      },
+      {
+        "date": "2026-02-10",
+        "price": 68688.793113384
+      },
+      {
+        "date": "2026-02-11",
+        "price": 66989.7165920514
+      },
+      {
+        "date": "2026-02-12",
+        "price": 66221.5443115137
+      },
+      {
+        "date": "2026-02-13",
+        "price": 68860.8411633548
+      },
+      {
+        "date": "2026-02-14",
+        "price": 69798.0791253653
+      },
+      {
+        "date": "2026-02-15",
+        "price": 68629.9599760374
+      },
+      {
+        "date": "2026-02-16",
+        "price": 68747.4380286383
+      },
+      {
+        "date": "2026-02-17",
+        "price": 67471.0508465809
+      },
+      {
+        "date": "2026-02-18",
+        "price": 66380.7069611339
+      },
+      {
+        "date": "2026-02-19",
+        "price": 66932.3522118644
+      },
+      {
+        "date": "2026-02-20",
+        "price": 67977.3092612507
+      },
+      {
+        "date": "2026-02-21",
+        "price": 68020.6677612507
+      },
+      {
+        "date": "2026-02-22",
+        "price": 67550.0240768556
+      },
+      {
+        "date": "2026-02-23",
+        "price": 64689.9123308007
+      },
+      {
+        "date": "2026-02-24",
+        "price": 64123.7510780245
+      },
+      {
+        "date": "2026-02-25",
+        "price": 68038.5221794272
+      },
+      {
+        "date": "2026-02-26",
+        "price": 67519.2645292227
+      },
+      {
+        "date": "2026-02-27",
+        "price": 65864.1358170661
+      },
+      {
+        "date": "2026-02-28",
+        "price": 66965.6353091759
+      },
+      {
+        "date": "2026-03-01",
+        "price": 65733.5212597896
+      },
+      {
+        "date": "2026-03-02",
+        "price": 68922.6242974869
+      },
+      {
+        "date": "2026-03-03",
+        "price": 68431.1740306838
+      },
+      {
+        "date": "2026-03-04",
+        "price": 72667.4630575687
+      },
+      {
+        "date": "2026-03-05",
+        "price": 70987.427176505
+      },
+      {
+        "date": "2026-03-06",
+        "price": 68226.7053927528
+      },
+      {
+        "date": "2026-03-07",
+        "price": 67315.5529135009
+      },
+      {
+        "date": "2026-03-08",
+        "price": 66202.6978731736
+      },
+      {
+        "date": "2026-03-09",
+        "price": 68528.5384699007
+      },
+      {
+        "date": "2026-03-10",
+        "price": 69891.8238576856
+      },
+      {
+        "date": "2026-03-11",
+        "price": 70298.5753530099
+      },
+      {
+        "date": "2026-03-12",
+        "price": 70538.1074623027
+      },
+      {
+        "date": "2026-03-13",
+        "price": 70930.0132793688
+      },
+      {
+        "date": "2026-03-14",
+        "price": 71136.2179199299
+      },
+      {
+        "date": "2026-03-15",
+        "price": 72712.1461957919
+      },
+      {
+        "date": "2026-03-16",
+        "price": 74723.9575534775
+      },
+      {
+        "date": "2026-03-17",
+        "price": 74086.013609585
+      },
+      {
+        "date": "2026-03-18",
+        "price": 71253.9579275278
+      },
+      {
+        "date": "2026-03-19",
+        "price": 69948.9048267095
+      },
+      {
+        "date": "2026-03-20",
+        "price": 70510.4196797194
+      },
+      {
+        "date": "2026-03-21",
+        "price": 69707.285009059
+      },
+      {
+        "date": "2026-03-22",
+        "price": 68018.1534815897
+      },
+      {
+        "date": "2026-03-23",
+        "price": 70726.2110461718
+      },
+      {
+        "date": "2026-03-24",
+        "price": 70610.0187121566
+      },
+      {
+        "date": "2026-03-25",
+        "price": 71281.2973921683
+      },
+      {
+        "date": "2026-03-26",
+        "price": 68722.9718366452
+      },
+      {
+        "date": "2026-03-27",
+        "price": 66214.1715134424
+      },
+      {
+        "date": "2026-03-28",
+        "price": 66351.0725251315
+      },
+      {
+        "date": "2026-03-29",
+        "price": 65966.7523939217
+      },
+      {
+        "date": "2026-03-30",
+        "price": 66651.2320037989
+      },
+      {
+        "date": "2026-03-31",
+        "price": 68214.8680388662
+      },
+      {
+        "date": "2026-04-01",
+        "price": 68116.8167933957
+      },
+      {
+        "date": "2026-04-02",
+        "price": 66908.3179918177
+      },
+      {
+        "date": "2026-04-03",
+        "price": 66891.7422279369
+      },
+      {
+        "date": "2026-04-04",
+        "price": 67295.1309137931
+      },
+      {
+        "date": "2026-04-05",
+        "price": 68921.8060911748
+      },
+      {
+        "date": "2026-04-06",
+        "price": 68742.9133085915
+      },
+      {
+        "date": "2026-04-07",
+        "price": 72057.1243614845
+      },
+      {
+        "date": "2026-04-08",
+        "price": 71085.0583702513
+      },
+      {
+        "date": "2026-04-09",
+        "price": 71788.6797825833
+      },
+      {
+        "date": "2026-04-10",
+        "price": 72945.0707241379
+      },
+      {
+        "date": "2026-04-11",
+        "price": 73119.1091168907
+      },
+      {
+        "date": "2026-04-12",
+        "price": 70685.3697019287
+      },
+      {
+        "date": "2026-04-13",
+        "price": 74632.7455856224
+      },
+      {
+        "date": "2026-04-14",
+        "price": 74173.5083603156
+      },
+      {
+        "date": "2026-04-15",
+        "price": 74761.964654588
+      },
+      {
+        "date": "2026-04-16",
+        "price": 75095.7442159556
+      },
+      {
+        "date": "2026-04-17",
+        "price": 77114.481438048
+      },
+      {
+        "date": "2026-04-18",
+        "price": 75792.0637510228
+      },
+      {
+        "date": "2026-04-19",
+        "price": 73905.2041016949
+      },
+      {
+        "date": "2026-04-20",
+        "price": 75814.1453237873
+      },
+      {
+        "date": "2026-04-21",
+        "price": 76107.4432977791
+      },
+      {
+        "date": "2026-04-22",
+        "price": 78317.7422720631
+      },
+      {
+        "date": "2026-04-23",
+        "price": 78233.6837492694
+      },
+      {
+        "date": "2026-04-24",
+        "price": 77444.269277031
+      },
+      {
+        "date": "2026-04-25",
+        "price": 77624.7114821742
+      },
+      {
+        "date": "2026-04-26",
+        "price": 78538.7733573933
+      },
+      {
+        "date": "2026-04-27",
+        "price": 77256.297159848
+      },
+      {
+        "date": "2026-04-28",
+        "price": 76295.531117183
+      }
+    ],
+    "forecast": [
+      {
+        "date": "2026-04-28",
+        "price": 76295.531117183,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-04-29",
+        "price": 76258.695684496,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-04-30",
+        "price": 76221.87803593189,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-01",
+        "price": 76185.07816290451,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-02",
+        "price": 76148.29605683184,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-03",
+        "price": 76111.53170913599,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-04",
+        "price": 76074.78511124325,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-05",
+        "price": 76038.05625458402,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-06",
+        "price": 76001.34513059285,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-07",
+        "price": 75964.6517307084,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-08",
+        "price": 75927.9760463735,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-09",
+        "price": 75891.31806903509,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-10",
+        "price": 75854.67779014423,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-11",
+        "price": 75818.05520115614,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-12",
+        "price": 75781.45029353014,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-13",
+        "price": 75744.86305872968,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-14",
+        "price": 75708.29348822232,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-15",
+        "price": 75671.74157347977,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-16",
+        "price": 75635.20730597783,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-17",
+        "price": 75598.69067719643,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-18",
+        "price": 75562.1916786196,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-19",
+        "price": 75525.71030173548,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-20",
+        "price": 75489.24653803634,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-21",
+        "price": 75452.80037901855,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-22",
+        "price": 75416.37181618257,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-23",
+        "price": 75379.96084103298,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-24",
+        "price": 75343.56744507846,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-25",
+        "price": 75307.19161983178,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-26",
+        "price": 75270.8333568098,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-27",
+        "price": 75234.49264753354,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-28",
+        "price": 75198.16948352799,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-29",
+        "price": 75161.86385632238,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-30",
+        "price": 75125.57575744989,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-31",
+        "price": 75089.30517844789,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-01",
+        "price": 75053.05211085778,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-02",
+        "price": 75016.81654622509,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-03",
+        "price": 74980.59847609936,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-04",
+        "price": 74944.39789203429,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-05",
+        "price": 74908.21478558761,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-06",
+        "price": 74872.04914832112,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-07",
+        "price": 74835.90097180074,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-08",
+        "price": 74799.7702475964,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-09",
+        "price": 74763.65696728218,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-10",
+        "price": 74727.56112243613,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-11",
+        "price": 74691.48270464047,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-12",
+        "price": 74655.42170548138,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-13",
+        "price": 74619.37811654918,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-14",
+        "price": 74583.35192943821,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-15",
+        "price": 74547.34313574691,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-16",
+        "price": 74511.35172707772,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-17",
+        "price": 74475.37769503718,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-18",
+        "price": 74439.42103123585,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-19",
+        "price": 74403.48172728837,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-20",
+        "price": 74367.5597748134,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-21",
+        "price": 74331.65516543367,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-22",
+        "price": 74295.76789077595,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-23",
+        "price": 74259.89794247103,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-24",
+        "price": 74224.04531215379,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-25",
+        "price": 74188.20999146307,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-26",
+        "price": 74152.39197204182,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-27",
+        "price": 74116.59124553701,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-28",
+        "price": 74080.80780359961,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-29",
+        "price": 74045.04163788466,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-30",
+        "price": 74009.29274005118,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-01",
+        "price": 73973.5611017623,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-02",
+        "price": 73937.84671468507,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-03",
+        "price": 73902.14957049064,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-04",
+        "price": 73866.46966085417,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-05",
+        "price": 73830.8069774548,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-06",
+        "price": 73795.16151197573,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-07",
+        "price": 73759.53325610417,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-08",
+        "price": 73723.92220153131,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-09",
+        "price": 73688.32833995238,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-10",
+        "price": 73652.75166306662,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-11",
+        "price": 73617.19216257725,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-12",
+        "price": 73581.64983019157,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-13",
+        "price": 73546.12465762078,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-14",
+        "price": 73510.61663658015,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-15",
+        "price": 73475.12575878891,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-16",
+        "price": 73439.65201597035,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-17",
+        "price": 73404.1953998517,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-18",
+        "price": 73368.7559021642,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-19",
+        "price": 73333.33351464306,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-20",
+        "price": 73297.92822902756,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-21",
+        "price": 73262.54003706084,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-22",
+        "price": 73227.16893049015,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-23",
+        "price": 73191.81490106665,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-24",
+        "price": 73156.47794054552,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-25",
+        "price": 73121.15804068587,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-26",
+        "price": 73085.85519325087,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-27",
+        "price": 73050.56939000759,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-28",
+        "price": 73015.30062272711,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-29",
+        "price": 72980.04888318449,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-30",
+        "price": 72944.81416315872,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-31",
+        "price": 72909.59645443283,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-01",
+        "price": 72874.39574879376,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-02",
+        "price": 72839.2120380324,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-03",
+        "price": 72804.04531394369,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-04",
+        "price": 72768.89556832642,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-05",
+        "price": 72733.76279298343,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-06",
+        "price": 72698.64697972147,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-07",
+        "price": 72663.54812035126,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-08",
+        "price": 72628.46620668747,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-09",
+        "price": 72593.40123054874,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-10",
+        "price": 72558.35318375763,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-11",
+        "price": 72523.32205814066,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-12",
+        "price": 72488.3078455283,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-13",
+        "price": 72453.31053775495,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-14",
+        "price": 72418.330126659,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-15",
+        "price": 72383.36660408272,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-16",
+        "price": 72348.41996187234,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-17",
+        "price": 72313.49019187804,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-18",
+        "price": 72278.57728595393,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-19",
+        "price": 72243.68123595804,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-20",
+        "price": 72208.80203375232,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-21",
+        "price": 72173.93967120271,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-22",
+        "price": 72139.094140179,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-23",
+        "price": 72104.26543255495,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-24",
+        "price": 72069.45354020825,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-25",
+        "price": 72034.65845502047,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-26",
+        "price": 71999.88016887715,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-27",
+        "price": 71965.11867366769,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-28",
+        "price": 71930.37396128547,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-29",
+        "price": 71895.64602362773,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-30",
+        "price": 71860.93485259566,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-31",
+        "price": 71826.24044009433,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-01",
+        "price": 71791.56277803273,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-02",
+        "price": 71756.90185832379,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-03",
+        "price": 71722.25767288428,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-04",
+        "price": 71687.63021363491,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-05",
+        "price": 71653.0194725003,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-06",
+        "price": 71618.42544140895,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-07",
+        "price": 71583.84811229326,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-08",
+        "price": 71549.28747708951,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-09",
+        "price": 71514.74352773793,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-10",
+        "price": 71480.21625618255,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-11",
+        "price": 71445.70565437138,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-12",
+        "price": 71411.21171425628,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-13",
+        "price": 71376.73442779297,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-14",
+        "price": 71342.27378694109,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-15",
+        "price": 71307.82978366416,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-16",
+        "price": 71273.40240992953,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-17",
+        "price": 71238.99165770852,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-18",
+        "price": 71204.59751897625,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-19",
+        "price": 71170.21998571174,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-20",
+        "price": 71135.85904989787,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-21",
+        "price": 71101.51470352142,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-22",
+        "price": 71067.186938573,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-23",
+        "price": 71032.87574704712,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-24",
+        "price": 70998.58112094214,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-25",
+        "price": 70964.30305226031,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-26",
+        "price": 70930.04153300768,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-27",
+        "price": 70895.7965551942,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-28",
+        "price": 70861.56811083369,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-29",
+        "price": 70827.3561919438,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-30",
+        "price": 70793.16079054607,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-01",
+        "price": 70758.98189866582,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-02",
+        "price": 70724.8195083323,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-03",
+        "price": 70690.67361157856,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-04",
+        "price": 70656.54420044151,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-05",
+        "price": 70622.43126696191,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-06",
+        "price": 70588.33480318435,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-07",
+        "price": 70554.25480115728,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-08",
+        "price": 70520.19125293299,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-09",
+        "price": 70486.14415056756,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-10",
+        "price": 70452.11348612096,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-11",
+        "price": 70418.09925165695,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-12",
+        "price": 70384.1014392432,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-13",
+        "price": 70350.1200409511,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-14",
+        "price": 70316.15504885594,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-15",
+        "price": 70282.20645503684,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-16",
+        "price": 70248.27425157669,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-17",
+        "price": 70214.35843056225,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-18",
+        "price": 70180.4589840841,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-19",
+        "price": 70146.5759042366,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-20",
+        "price": 70112.70918311797,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-21",
+        "price": 70078.8588128302,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-22",
+        "price": 70045.02478547915,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-23",
+        "price": 70011.20709317445,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-24",
+        "price": 69977.40572802957,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-25",
+        "price": 69943.62068216171,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      }
+    ],
+    "actual": [
+      {
+        "date": "2026-04-29",
+        "price": 75795.0098530099,
+        "eventAt": "2026-04-30T00:00:00.000Z",
+        "collectedAt": "2026-10-26T04:15:07.706Z",
+        "publishedAt": null,
+        "sourceHash": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+        "sourceUrl": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-10-26&page_size=10000&paging_from=start",
+        "vintageId": "saved-archive:ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+        "sourceObservedThrough": "2026-10-25"
+      }
+    ],
+    "rows": [
+      {
+        "date": "2026-01-28",
+        "price": 89177.7892507306
+      },
+      {
+        "date": "2026-01-29",
+        "price": 84520.3973106371
+      },
+      {
+        "date": "2026-01-30",
+        "price": 84017.0340292227
+      },
+      {
+        "date": "2026-01-31",
+        "price": 78702.38550263
+      },
+      {
+        "date": "2026-02-01",
+        "price": 76911.0523772648
+      },
+      {
+        "date": "2026-02-02",
+        "price": 78716.6018088837
+      },
+      {
+        "date": "2026-02-03",
+        "price": 75684.7660277616
+      },
+      {
+        "date": "2026-02-04",
+        "price": 73095.1914646406
+      },
+      {
+        "date": "2026-02-05",
+        "price": 63494.6884456458
+      },
+      {
+        "date": "2026-02-06",
+        "price": 70647.6982188778
+      },
+      {
+        "date": "2026-02-07",
+        "price": 69166.2594424313
+      },
+      {
+        "date": "2026-02-08",
+        "price": 70522.5892393337
+      },
+      {
+        "date": "2026-02-09",
+        "price": 70244.1017773232
+      },
+      {
+        "date": "2026-02-10",
+        "price": 68688.793113384
+      },
+      {
+        "date": "2026-02-11",
+        "price": 66989.7165920514
+      },
+      {
+        "date": "2026-02-12",
+        "price": 66221.5443115137
+      },
+      {
+        "date": "2026-02-13",
+        "price": 68860.8411633548
+      },
+      {
+        "date": "2026-02-14",
+        "price": 69798.0791253653
+      },
+      {
+        "date": "2026-02-15",
+        "price": 68629.9599760374
+      },
+      {
+        "date": "2026-02-16",
+        "price": 68747.4380286383
+      },
+      {
+        "date": "2026-02-17",
+        "price": 67471.0508465809
+      },
+      {
+        "date": "2026-02-18",
+        "price": 66380.7069611339
+      },
+      {
+        "date": "2026-02-19",
+        "price": 66932.3522118644
+      },
+      {
+        "date": "2026-02-20",
+        "price": 67977.3092612507
+      },
+      {
+        "date": "2026-02-21",
+        "price": 68020.6677612507
+      },
+      {
+        "date": "2026-02-22",
+        "price": 67550.0240768556
+      },
+      {
+        "date": "2026-02-23",
+        "price": 64689.9123308007
+      },
+      {
+        "date": "2026-02-24",
+        "price": 64123.7510780245
+      },
+      {
+        "date": "2026-02-25",
+        "price": 68038.5221794272
+      },
+      {
+        "date": "2026-02-26",
+        "price": 67519.2645292227
+      },
+      {
+        "date": "2026-02-27",
+        "price": 65864.1358170661
+      },
+      {
+        "date": "2026-02-28",
+        "price": 66965.6353091759
+      },
+      {
+        "date": "2026-03-01",
+        "price": 65733.5212597896
+      },
+      {
+        "date": "2026-03-02",
+        "price": 68922.6242974869
+      },
+      {
+        "date": "2026-03-03",
+        "price": 68431.1740306838
+      },
+      {
+        "date": "2026-03-04",
+        "price": 72667.4630575687
+      },
+      {
+        "date": "2026-03-05",
+        "price": 70987.427176505
+      },
+      {
+        "date": "2026-03-06",
+        "price": 68226.7053927528
+      },
+      {
+        "date": "2026-03-07",
+        "price": 67315.5529135009
+      },
+      {
+        "date": "2026-03-08",
+        "price": 66202.6978731736
+      },
+      {
+        "date": "2026-03-09",
+        "price": 68528.5384699007
+      },
+      {
+        "date": "2026-03-10",
+        "price": 69891.8238576856
+      },
+      {
+        "date": "2026-03-11",
+        "price": 70298.5753530099
+      },
+      {
+        "date": "2026-03-12",
+        "price": 70538.1074623027
+      },
+      {
+        "date": "2026-03-13",
+        "price": 70930.0132793688
+      },
+      {
+        "date": "2026-03-14",
+        "price": 71136.2179199299
+      },
+      {
+        "date": "2026-03-15",
+        "price": 72712.1461957919
+      },
+      {
+        "date": "2026-03-16",
+        "price": 74723.9575534775
+      },
+      {
+        "date": "2026-03-17",
+        "price": 74086.013609585
+      },
+      {
+        "date": "2026-03-18",
+        "price": 71253.9579275278
+      },
+      {
+        "date": "2026-03-19",
+        "price": 69948.9048267095
+      },
+      {
+        "date": "2026-03-20",
+        "price": 70510.4196797194
+      },
+      {
+        "date": "2026-03-21",
+        "price": 69707.285009059
+      },
+      {
+        "date": "2026-03-22",
+        "price": 68018.1534815897
+      },
+      {
+        "date": "2026-03-23",
+        "price": 70726.2110461718
+      },
+      {
+        "date": "2026-03-24",
+        "price": 70610.0187121566
+      },
+      {
+        "date": "2026-03-25",
+        "price": 71281.2973921683
+      },
+      {
+        "date": "2026-03-26",
+        "price": 68722.9718366452
+      },
+      {
+        "date": "2026-03-27",
+        "price": 66214.1715134424
+      },
+      {
+        "date": "2026-03-28",
+        "price": 66351.0725251315
+      },
+      {
+        "date": "2026-03-29",
+        "price": 65966.7523939217
+      },
+      {
+        "date": "2026-03-30",
+        "price": 66651.2320037989
+      },
+      {
+        "date": "2026-03-31",
+        "price": 68214.8680388662
+      },
+      {
+        "date": "2026-04-01",
+        "price": 68116.8167933957
+      },
+      {
+        "date": "2026-04-02",
+        "price": 66908.3179918177
+      },
+      {
+        "date": "2026-04-03",
+        "price": 66891.7422279369
+      },
+      {
+        "date": "2026-04-04",
+        "price": 67295.1309137931
+      },
+      {
+        "date": "2026-04-05",
+        "price": 68921.8060911748
+      },
+      {
+        "date": "2026-04-06",
+        "price": 68742.9133085915
+      },
+      {
+        "date": "2026-04-07",
+        "price": 72057.1243614845
+      },
+      {
+        "date": "2026-04-08",
+        "price": 71085.0583702513
+      },
+      {
+        "date": "2026-04-09",
+        "price": 71788.6797825833
+      },
+      {
+        "date": "2026-04-10",
+        "price": 72945.0707241379
+      },
+      {
+        "date": "2026-04-11",
+        "price": 73119.1091168907
+      },
+      {
+        "date": "2026-04-12",
+        "price": 70685.3697019287
+      },
+      {
+        "date": "2026-04-13",
+        "price": 74632.7455856224
+      },
+      {
+        "date": "2026-04-14",
+        "price": 74173.5083603156
+      },
+      {
+        "date": "2026-04-15",
+        "price": 74761.964654588
+      },
+      {
+        "date": "2026-04-16",
+        "price": 75095.7442159556
+      },
+      {
+        "date": "2026-04-17",
+        "price": 77114.481438048
+      },
+      {
+        "date": "2026-04-18",
+        "price": 75792.0637510228
+      },
+      {
+        "date": "2026-04-19",
+        "price": 73905.2041016949
+      },
+      {
+        "date": "2026-04-20",
+        "price": 75814.1453237873
+      },
+      {
+        "date": "2026-04-21",
+        "price": 76107.4432977791
+      },
+      {
+        "date": "2026-04-22",
+        "price": 78317.7422720631
+      },
+      {
+        "date": "2026-04-23",
+        "price": 78233.6837492694
+      },
+      {
+        "date": "2026-04-24",
+        "price": 77444.269277031
+      },
+      {
+        "date": "2026-04-25",
+        "price": 77624.7114821742
+      },
+      {
+        "date": "2026-04-26",
+        "price": 78538.7733573933
+      },
+      {
+        "date": "2026-04-27",
+        "price": 77256.297159848
+      },
+      {
+        "date": "2026-04-28",
+        "price": 76295.531117183,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-04-29",
+        "price": 76258.695684496,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-04-30",
+        "price": 76221.87803593189,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-01",
+        "price": 76185.07816290451,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-02",
+        "price": 76148.29605683184,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-03",
+        "price": 76111.53170913599,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-04",
+        "price": 76074.78511124325,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-05",
+        "price": 76038.05625458402,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-06",
+        "price": 76001.34513059285,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-07",
+        "price": 75964.6517307084,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-08",
+        "price": 75927.9760463735,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-09",
+        "price": 75891.31806903509,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-10",
+        "price": 75854.67779014423,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-11",
+        "price": 75818.05520115614,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-12",
+        "price": 75781.45029353014,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-13",
+        "price": 75744.86305872968,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-14",
+        "price": 75708.29348822232,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-15",
+        "price": 75671.74157347977,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-16",
+        "price": 75635.20730597783,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-17",
+        "price": 75598.69067719643,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-18",
+        "price": 75562.1916786196,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-19",
+        "price": 75525.71030173548,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-20",
+        "price": 75489.24653803634,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-21",
+        "price": 75452.80037901855,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-22",
+        "price": 75416.37181618257,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-23",
+        "price": 75379.96084103298,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-24",
+        "price": 75343.56744507846,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-25",
+        "price": 75307.19161983178,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-26",
+        "price": 75270.8333568098,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-27",
+        "price": 75234.49264753354,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-28",
+        "price": 75198.16948352799,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-29",
+        "price": 75161.86385632238,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-30",
+        "price": 75125.57575744989,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-05-31",
+        "price": 75089.30517844789,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-01",
+        "price": 75053.05211085778,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-02",
+        "price": 75016.81654622509,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-03",
+        "price": 74980.59847609936,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-04",
+        "price": 74944.39789203429,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-05",
+        "price": 74908.21478558761,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-06",
+        "price": 74872.04914832112,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-07",
+        "price": 74835.90097180074,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-08",
+        "price": 74799.7702475964,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-09",
+        "price": 74763.65696728218,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-10",
+        "price": 74727.56112243613,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-11",
+        "price": 74691.48270464047,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-12",
+        "price": 74655.42170548138,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-13",
+        "price": 74619.37811654918,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-14",
+        "price": 74583.35192943821,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-15",
+        "price": 74547.34313574691,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-16",
+        "price": 74511.35172707772,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-17",
+        "price": 74475.37769503718,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-18",
+        "price": 74439.42103123585,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-19",
+        "price": 74403.48172728837,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-20",
+        "price": 74367.5597748134,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-21",
+        "price": 74331.65516543367,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-22",
+        "price": 74295.76789077595,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-23",
+        "price": 74259.89794247103,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-24",
+        "price": 74224.04531215379,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-25",
+        "price": 74188.20999146307,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-26",
+        "price": 74152.39197204182,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-27",
+        "price": 74116.59124553701,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-28",
+        "price": 74080.80780359961,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-29",
+        "price": 74045.04163788466,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-06-30",
+        "price": 74009.29274005118,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-01",
+        "price": 73973.5611017623,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-02",
+        "price": 73937.84671468507,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-03",
+        "price": 73902.14957049064,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-04",
+        "price": 73866.46966085417,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-05",
+        "price": 73830.8069774548,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-06",
+        "price": 73795.16151197573,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-07",
+        "price": 73759.53325610417,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-08",
+        "price": 73723.92220153131,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-09",
+        "price": 73688.32833995238,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-10",
+        "price": 73652.75166306662,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-11",
+        "price": 73617.19216257725,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-12",
+        "price": 73581.64983019157,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-13",
+        "price": 73546.12465762078,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-14",
+        "price": 73510.61663658015,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-15",
+        "price": 73475.12575878891,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-16",
+        "price": 73439.65201597035,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-17",
+        "price": 73404.1953998517,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-18",
+        "price": 73368.7559021642,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-19",
+        "price": 73333.33351464306,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-20",
+        "price": 73297.92822902756,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-21",
+        "price": 73262.54003706084,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-22",
+        "price": 73227.16893049015,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-23",
+        "price": 73191.81490106665,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-24",
+        "price": 73156.47794054552,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-25",
+        "price": 73121.15804068587,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-26",
+        "price": 73085.85519325087,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-27",
+        "price": 73050.56939000759,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-28",
+        "price": 73015.30062272711,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-29",
+        "price": 72980.04888318449,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-30",
+        "price": 72944.81416315872,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-07-31",
+        "price": 72909.59645443283,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-01",
+        "price": 72874.39574879376,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-02",
+        "price": 72839.2120380324,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-03",
+        "price": 72804.04531394369,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-04",
+        "price": 72768.89556832642,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-05",
+        "price": 72733.76279298343,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-06",
+        "price": 72698.64697972147,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-07",
+        "price": 72663.54812035126,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-08",
+        "price": 72628.46620668747,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-09",
+        "price": 72593.40123054874,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-10",
+        "price": 72558.35318375763,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-11",
+        "price": 72523.32205814066,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-12",
+        "price": 72488.3078455283,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-13",
+        "price": 72453.31053775495,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-14",
+        "price": 72418.330126659,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-15",
+        "price": 72383.36660408272,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-16",
+        "price": 72348.41996187234,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-17",
+        "price": 72313.49019187804,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-18",
+        "price": 72278.57728595393,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-19",
+        "price": 72243.68123595804,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-20",
+        "price": 72208.80203375232,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-21",
+        "price": 72173.93967120271,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-22",
+        "price": 72139.094140179,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-23",
+        "price": 72104.26543255495,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-24",
+        "price": 72069.45354020825,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-25",
+        "price": 72034.65845502047,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-26",
+        "price": 71999.88016887715,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-27",
+        "price": 71965.11867366769,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-28",
+        "price": 71930.37396128547,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-29",
+        "price": 71895.64602362773,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-30",
+        "price": 71860.93485259566,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-08-31",
+        "price": 71826.24044009433,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-01",
+        "price": 71791.56277803273,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-02",
+        "price": 71756.90185832379,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-03",
+        "price": 71722.25767288428,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-04",
+        "price": 71687.63021363491,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-05",
+        "price": 71653.0194725003,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-06",
+        "price": 71618.42544140895,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-07",
+        "price": 71583.84811229326,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-08",
+        "price": 71549.28747708951,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-09",
+        "price": 71514.74352773793,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-10",
+        "price": 71480.21625618255,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-11",
+        "price": 71445.70565437138,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-12",
+        "price": 71411.21171425628,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-13",
+        "price": 71376.73442779297,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-14",
+        "price": 71342.27378694109,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-15",
+        "price": 71307.82978366416,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-16",
+        "price": 71273.40240992953,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-17",
+        "price": 71238.99165770852,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-18",
+        "price": 71204.59751897625,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-19",
+        "price": 71170.21998571174,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-20",
+        "price": 71135.85904989787,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-21",
+        "price": 71101.51470352142,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-22",
+        "price": 71067.186938573,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-23",
+        "price": 71032.87574704712,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-24",
+        "price": 70998.58112094214,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-25",
+        "price": 70964.30305226031,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-26",
+        "price": 70930.04153300768,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-27",
+        "price": 70895.7965551942,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-28",
+        "price": 70861.56811083369,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-29",
+        "price": 70827.3561919438,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-09-30",
+        "price": 70793.16079054607,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-01",
+        "price": 70758.98189866582,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-02",
+        "price": 70724.8195083323,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-03",
+        "price": 70690.67361157856,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-04",
+        "price": 70656.54420044151,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-05",
+        "price": 70622.43126696191,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-06",
+        "price": 70588.33480318435,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-07",
+        "price": 70554.25480115728,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-08",
+        "price": 70520.19125293299,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-09",
+        "price": 70486.14415056756,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-10",
+        "price": 70452.11348612096,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-11",
+        "price": 70418.09925165695,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-12",
+        "price": 70384.1014392432,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-13",
+        "price": 70350.1200409511,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-14",
+        "price": 70316.15504885594,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-15",
+        "price": 70282.20645503684,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-16",
+        "price": 70248.27425157669,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-17",
+        "price": 70214.35843056225,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-18",
+        "price": 70180.4589840841,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-19",
+        "price": 70146.5759042366,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-20",
+        "price": 70112.70918311797,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-21",
+        "price": 70078.8588128302,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-22",
+        "price": 70045.02478547915,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-23",
+        "price": 70011.20709317445,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-24",
+        "price": 69977.40572802957,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      },
+      {
+        "date": "2026-10-25",
+        "price": 69943.62068216171,
+        "lower": null,
+        "upper": null,
+        "baselinePrice": null
+      }
+    ],
+    "selected": {
+      "date": "2026-04-29",
+      "predicted": 76258.695684496,
+      "actual": 75795.0098530099,
+      "flat": 76295.531117183,
+      "absoluteError": 463.6858314860874,
+      "absolutePercentageError": 0.006117630070704106,
+      "absoluteLogError": 0.006098993341648651,
+      "flatAbsoluteLogError": 0.006581909274888886
+    },
+    "dailyComparisons": [
+      {
+        "date": "2026-04-29",
+        "predicted": 76258.695684496,
+        "actual": 75795.0098530099,
+        "flat": 76295.531117183,
+        "absoluteError": 463.6858314860874,
+        "absolutePercentageError": 0.006117630070704106,
+        "absoluteLogError": 0.006098993341648651,
+        "flatAbsoluteLogError": 0.006581909274888886,
+        "directionCorrect": true
+      }
+    ],
+    "targets": [
+      {
+        "horizonDays": 30,
+        "targetDate": "2026-05-28",
+        "eventAt": "2026-05-29T00:00:00.000Z",
+        "predicted": 75198.16948352799,
+        "actual": null,
+        "flat": 76295.531117183,
+        "shrunkenTrend": 75198.16948352799,
+        "status": "pending",
+        "prospective": false,
+        "absoluteLogError": null,
+        "flatAbsoluteLogError": null,
+        "actualVintage": null,
+        "actualCollectedAt": null
+      },
+      {
+        "horizonDays": 90,
+        "targetDate": "2026-07-27",
+        "eventAt": "2026-07-28T00:00:00.000Z",
+        "predicted": 73050.56939000759,
+        "actual": null,
+        "flat": 76295.531117183,
+        "shrunkenTrend": 73050.56939000759,
+        "status": "pending",
+        "prospective": false,
+        "absoluteLogError": null,
+        "flatAbsoluteLogError": null,
+        "actualVintage": null,
+        "actualCollectedAt": null
+      },
+      {
+        "horizonDays": 180,
+        "targetDate": "2026-10-25",
+        "eventAt": "2026-10-26T00:00:00.000Z",
+        "predicted": 69943.62068216171,
+        "actual": null,
+        "flat": 76295.531117183,
+        "shrunkenTrend": 69943.62068216171,
+        "status": "pending",
+        "prospective": false,
+        "absoluteLogError": null,
+        "flatAbsoluteLogError": null,
+        "actualVintage": null,
+        "actualCollectedAt": null
+      }
+    ],
+    "metrics": {
+      "matchedCount": 1,
+      "meanAbsoluteError": 463.6858314860874,
+      "meanAbsolutePercentageError": 0.006117630070704106,
+      "percentageScoredCount": 1,
+      "meanAbsoluteLogError": 0.006098993341648651,
+      "flatMeanAbsoluteLogError": 0.006581909274888886,
+      "logScoredCount": 1,
+      "skillVersusFlat": 0.07337018987524524,
+      "directionCorrectCount": 1,
+      "directionCount": 1,
+      "directionAccuracy": 1,
+      "scoredTargetCount": 0,
+      "retrospectiveTargetCount": 0,
+      "pendingTargetCount": 3,
+      "missingTargetCount": 0,
+      "independentSampleCount": null,
+      "calibrated": false
+    },
+    "priceDomain": {
+      "min": 60319.954023363505,
+      "max": 93636.67871326713
+    },
+    "scale": "log",
+    "policy": {
+      "forecastNeverRecomputedDuringReplay": true,
+      "missingValuesImputed": false,
+      "calibrated": false,
+      "dailyErrorsAreIndependentSamples": false,
+      "releaseAuthorized": false,
+      "productionPromoted": false,
+      "observationClock": "current-vintage-market-bar-reconstruction",
+      "prospectiveScoringEligible": false,
+      "historicalAvailabilityProven": false,
+      "dailyMetricMeaning": "Overlapping errors along one fixed origin path; not independent forecast trials."
+    }
+  }
+}

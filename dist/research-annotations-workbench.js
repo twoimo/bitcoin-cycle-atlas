@@ -46,7 +46,15 @@ export function mountResearchAnnotationsWorkbench({document:doc=globalThis.docum
   function saveMeasurement(){try{const context=getContext?.()||{},annotation=createResearchAnnotation(context.measurement,context);return run({type:'add',annotation},'두 점 측정과 원자료 출처를 저장했습니다.');}catch(error){announce(error.message);return false;}}
   save.onclick=saveMeasurement;close.onclick=()=>dialog.close();
   form.addEventListener('submit',event=>{event.preventDefault();if(!editingId)return;run({type:'update',id:editingId,patch:{label:fields.label.value,note:fields.note.value,color:fields.color.value,start:{date:fields.startDate.value.trim(),price:Number(fields.startPrice.value)},end:{date:fields.endDate.value.trim(),price:Number(fields.endPrice.value)}}},'연구 측정을 변경했습니다.');});
-  dialog.addEventListener('keydown',event=>{event.stopPropagation();});
+  dialog.addEventListener('keydown',event=>{
+    event.stopPropagation();
+    if(event.key!=='Tab')return;
+    const nodes=[...dialog.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),a[href],[tabindex="0"]')]
+      .filter(node=>!node.disabled&&node.tabIndex!==-1&&!node.closest('[hidden]'));
+    const first=nodes[0],last=nodes.at(-1);
+    if(event.shiftKey&&doc.activeElement===first){event.preventDefault();last?.focus();}
+    else if(!event.shiftKey&&doc.activeElement===last){event.preventDefault();first?.focus();}
+  });
   dialog.addEventListener('close',()=>{if(opener?.isConnected!==false)opener?.focus?.();});
   function open(options={}){opener=options?.opener||((options?.focus&&options?.tagName)?options:null)||doc.activeElement;if(options?.id)run({type:'select',id:options.id});refresh();if(!dialog.open){const Event=doc.defaultView?.CustomEvent||globalThis.CustomEvent;if(Event)doc.dispatchEvent(new Event('atlas:modal-open',{detail:{id:dialog.id}}));dialog.showModal();}close.focus();}
   return {open,refresh,saveMeasurement,destroy(){dialog.remove();}};

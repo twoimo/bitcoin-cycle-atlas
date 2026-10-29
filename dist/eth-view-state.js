@@ -16,7 +16,8 @@ export function ethViewQuery(state) {
   if (state.scale === 'linear') params.set('axis', 'linear');
   if (state.span !== '4y') params.set('eth-span', state.span);
   if (state.forecastVisible === false) params.set('forecast', 'off');
-  if (['stress','bull'].includes(state.ethScenario)) params.set('eth-scenario', state.ethScenario);
+  if (['pooled','valuation'].includes(state.ethModel)) params.set('eth-model', state.ethModel);
+  if (state.ethModel === 'valuation' && ['stress','bull'].includes(state.ethScenario)) params.set('eth-scenario', state.ethScenario);
   return params.toString();
 }
 

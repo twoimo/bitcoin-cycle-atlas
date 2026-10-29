@@ -16,7 +16,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       # First-party release SHAs verified on 2026-10-21.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -27,7 +27,10 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - name: Run model and data tests
-        run: npm test
+        shell: bash
+        run: |
+          mkdir -p build
+          npm test 2>&1 | tee build/ci-model-tests.log
       - name: Verify preserved forecast identities and replay
         run: npm run verify:forecast
       - name: Verify treasury sources and persistent research summaries
@@ -61,3 +64,13 @@ jobs:
           if(manifest.sourceTree?.status!=='clean'||manifest.sourceCommit!==head||!/^[a-f0-9]{64}$/.test(manifest.manifestSha256))throw new Error('Publication must identify this committed source');
           await appendFile(process.env.GITHUB_OUTPUT,`source_commit=${head}\nmanifest_sha256=${manifest.manifestSha256}\n`);
           NODE
+      - name: Preserve CI test log and publication identity
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-verification-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            build/ci-model-tests.log
+            dist/publication.json
+          retention-days: 30
+          if-no-files-found: error

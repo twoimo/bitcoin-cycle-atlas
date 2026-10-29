@@ -1,0 +1,1174 @@
+{
+  "task": "Price vintage ambiguity must be independent of archive order",
+  "recordedDateKST": "2026-10-27",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "branch": "chatgpt/eth-cycle-economics-20261026",
+  "pullRequest": 39,
+  "baselineCommit": "d5b6da1a8733dc7f38ebf6b2f9656694af2fda06",
+  "regressionCommit": "78ad471652f276358e0dea2b6616d6e551c8423b",
+  "sourceFile": "dist/forecast-information-time.js",
+  "sourceBlob": "1aa1e2ab5545609f65deaf8fbc7b2a9229387da5",
+  "red": {
+    "runId": 40365652506,
+    "jobId": 121722497953,
+    "checkout": "direct-pull-request-head",
+    "tests": 213,
+    "pass": 211,
+    "fail": 2,
+    "reason": "Expected ambiguity exception/rejection was missing",
+    "failureBlocks": [
+      "\ntest at tests/asset-forecast-records.test.mjs:100:1\n✖ visible same-time price or source conflicts are rejected in every order behind later revisions (1.230948ms)\n  AssertionError [ERR_ASSERTION]: Missing expected exception.\n      at TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/asset-forecast-records.test.mjs:107:14)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1402:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n      at Test.postRun (node:internal/test_runner/test:1542:19)\n      at Test.run (node:internal/test_runner/test:1467:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: /Ambiguous equally timed/,\n    operator: 'throws',\n    diff: 'simple'\n  }",
+      "\ntest at tests/asset-outcome-records.test.mjs:93:1\n✖ outcome evaluation cannot conceal earlier simultaneous conflicts behind a later snapshot (34.534811ms)\n  AssertionError [ERR_ASSERTION]: Missing expected rejection.\n      at async TestContext.<anonymous> (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/tests/asset-outcome-records.test.mjs:110:9)\n      at async Test.run (node:internal/test_runner/test:1409:7)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: false,\n    code: 'ERR_ASSERTION',\n    actual: undefined,\n    expected: /Ambiguous equally timed/,\n    operator: 'rejects',\n    diff: 'simple'\n  }\n##[error]Process completed with exit code 1.\n##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02\nwith:\n  name: eth-candidate-evidence-78ad471652f276358e0dea2b6616d6e551c8423b"
+    ],
+    "general": {
+      "runId": 40365652484,
+      "jobId": 121722498837,
+      "tests": 1355,
+      "pass": 1353,
+      "fail": 2,
+      "skipped": 0,
+      "cancelled": 0,
+      "checkout": "synthetic-merge",
+      "sourceCommit": "2113d23394a1cd1f76888ffd2f02460430512bb6"
+    }
+  },
+  "greenRuns": {
+    "general": 40367613955,
+    "evidence": 40367613761,
+    "hallmark": 40367613673
+  },
+  "newRegressionGroups": 5,
+  "contract": {
+    "futureDistinctRevisionsExcluded": true,
+    "immutableVintageConflictCheckedBeforeCutoff": true,
+    "equivalentPriceHashTieBreakUnchanged": true,
+    "inputMutation": false,
+    "newestSelectionUnchanged": true,
+    "schemaUnchanged": true
+  },
+  "boundaries": {
+    "financialEquationChanged": false,
+    "historicalDataChanged": false,
+    "sourceAcquisitionClaimed": true,
+    "sameModelIndependentReview": true,
+    "actualGeminiReviewCompleted": false,
+    "productionAdopted": false,
+    "releaseAuthorized": false,
+    "sourceAcquisitionScope": "Actual pinned economic source collection retained; no qualified economic snapshot or new market outcome asserted"
+  },
+  "intermediateAttempt": {
+    "sourceCommit": "096136cdd364ca9944fdca18929bf09eb5ef11af",
+    "sourceTree": "0f61c000d2fed6124f1b4ffcac71c20dc4d1f7fd",
+    "general": {
+      "runId": 40365812360,
+      "jobId": 121723144966,
+      "status": "success",
+      "sourceCommit": "c2ad1f2e3b6949990253999d8f2993f141646251",
+      "sourceTree": "c01d0a174b677ab6ea8087f2903c4d93be90bb00",
+      "checkout": "synthetic-merge",
+      "parents": [
+        "5b9246a55889b79eaedb61e9c183e124167b6ea6",
+        "096136cdd364ca9944fdca18929bf09eb5ef11af"
+      ],
+      "tests": 1355,
+      "pass": 1355,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "numericalAssertions": 318010,
+      "negativeControlsRejected": 16,
+      "negativeControlsTotal": 16
+    },
+    "candidateRunId": 40365812434,
+    "candidateJobId": 121723073739,
+    "candidateStatus": "failure",
+    "failedStep": "Bind exact committed sources inputs and execution evidence for external review",
+    "confirmedSuccessfulSteps": [
+      "Set up job",
+      "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "Test candidate equations, missing inputs, clocks and future-information boundaries",
+      "Evaluate preserved asset forecasts without requiring a new forecast issue",
+      "Collect pinned public economic source with actual acquisition receipts",
+      "Evaluate the exact committed candidates and current stored prices",
+      "Freeze and replay actual ETH BMNR and MSTR research issues",
+      "Install a pinned Korean font with bounded network and cache time",
+      "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop",
+      "Preserve complete source-identified candidate evidence",
+      "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "Complete job"
+    ],
+    "fullLogReadable": false,
+    "fullLogError": "GitHub connector transport closed",
+    "artifact": {
+      "id": 12670821322,
+      "name": "eth-candidate-evidence-096136cdd364ca9944fdca18929bf09eb5ef11af",
+      "size_in_bytes": 24804452,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12670821322",
+      "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12670821322/zip",
+      "expired": false,
+      "created_at": "2026-10-26T17:13:38Z",
+      "expires_at": "2026-11-25T17:13:35Z",
+      "updated_at": "2026-10-26T17:13:38Z",
+      "digest": "sha256:f1b3b21c6d0b19449ed16abd3d454a02f82cb1a1a8b4e9721460112cdf77d32e",
+      "workflow_run": {
+        "id": 40365812434,
+        "repository_id": 1428515198,
+        "head_repository_id": 1428515198,
+        "head_branch": "chatgpt/eth-cycle-economics-20261026",
+        "head_sha": "096136cdd364ca9944fdca18929bf09eb5ef11af"
+      }
+    },
+    "diagnosisAtThisStage": "Source inventory predicts overflow of the previous 50000000-byte bound; exception text is unobserved. Confirm against final measured book bytes.",
+    "hallmark": {
+      "runId": 40365812496,
+      "jobId": 121723382727,
+      "sourceCommit": "096136cdd364ca9944fdca18929bf09eb5ef11af",
+      "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+      "phases": [
+        {
+          "name": "baseline-static",
+          "fails": 1214,
+          "reflex": 1347,
+          "warns": 37,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 26,
+          "render": "off",
+          "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+        },
+        {
+          "name": "baseline-render",
+          "fails": 53,
+          "reflex": 211,
+          "warns": 13,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 1,
+          "render": "ran",
+          "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+        },
+        {
+          "name": "current-static",
+          "fails": 2,
+          "reflex": 0,
+          "warns": 36,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 26,
+          "render": "off",
+          "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 2 FAIL, 0 REFLEX"
+        },
+        {
+          "name": "current-render",
+          "fails": 4,
+          "reflex": 3,
+          "warns": 16,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 1,
+          "render": "ran",
+          "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 209/209; before 53 FAIL, 211 REFLEX, now 4 FAIL, 3 REFLEX"
+        }
+      ],
+      "designGate": {
+        "status": "fail",
+        "fails": 6,
+        "reflex": 3
+      },
+      "integrityGate": {
+        "status": "pass",
+        "errors": 0
+      },
+      "sourceReadOnly": {
+        "current": true,
+        "baseline": true,
+        "gitBlobsMatched": true
+      },
+      "durationMilliseconds": 130255,
+      "readiness": [
+        {
+          "version": "baseline",
+          "route": "btc",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "eth",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "bmnr",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "mstr",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "data",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "evidence",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "compare",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "mobile-preview",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "btc",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "eth",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "bmnr",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "mstr",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "data",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "evidence",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "compare",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "mobile-preview",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+          "status": "ready"
+        }
+      ],
+      "errors": [],
+      "exitCode": 1,
+      "phaseReceipts": [
+        {
+          "name": "baseline-static",
+          "code": 0,
+          "fails": 1214,
+          "reflex": 1347,
+          "warns": 37,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 26,
+          "render": "off",
+          "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it",
+          "counts": {
+            "FAIL 19": 1,
+            "FAIL 26a": 1,
+            "FAIL 34": 25,
+            "FAIL 39a": 20,
+            "FAIL 47a": 1,
+            "FAIL 48": 1127,
+            "FAIL 56": 1,
+            "FAIL 63": 17,
+            "FAIL 67": 21,
+            "REFLEX 24b": 1341,
+            "REFLEX 26b": 2,
+            "REFLEX 38iii": 4,
+            "WARN 3": 3,
+            "WARN 29": 9,
+            "WARN 40": 10,
+            "WARN 41": 6,
+            "WARN F3": 1,
+            "WARN F7": 5,
+            "WARN F23": 1,
+            "WARN F24": 2
+          }
+        },
+        {
+          "name": "baseline-render",
+          "code": 0,
+          "fails": 53,
+          "reflex": 211,
+          "warns": 13,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 1,
+          "render": "ran",
+          "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it",
+          "counts": {
+            "FAIL 26a": 2,
+            "FAIL 40": 19,
+            "FAIL 48": 24,
+            "FAIL 56": 4,
+            "FAIL 67": 4,
+            "REFLEX 24b": 194,
+            "REFLEX 26b": 1,
+            "REFLEX 39b": 5,
+            "REFLEX 49b": 2,
+            "REFLEX 72": 2,
+            "REFLEX 75": 7,
+            "WARN 29": 1,
+            "WARN 40": 4,
+            "WARN F3": 1,
+            "WARN F19": 2,
+            "WARN F24": 1,
+            "WARN F25": 4
+          },
+          "screenshots": 40,
+          "requestedUrls": 8
+        },
+        {
+          "name": "current-static",
+          "code": 1,
+          "fails": 2,
+          "reflex": 0,
+          "warns": 36,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 26,
+          "render": "off",
+          "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 2 FAIL, 0 REFLEX",
+          "counts": {
+            "FAIL 47a": 1,
+            "FAIL 56": 1,
+            "WARN 3": 3,
+            "WARN 29": 9,
+            "WARN 40": 9,
+            "WARN 41": 6,
+            "WARN F3": 1,
+            "WARN F7": 6,
+            "WARN F24": 2
+          }
+        },
+        {
+          "name": "current-render",
+          "code": 1,
+          "fails": 4,
+          "reflex": 3,
+          "warns": 16,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 1,
+          "render": "ran",
+          "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 209/209; before 53 FAIL, 211 REFLEX, now 4 FAIL, 3 REFLEX",
+          "counts": {
+            "FAIL 56": 4,
+            "REFLEX 49b": 3,
+            "WARN 29": 1,
+            "WARN 40": 4,
+            "WARN F3": 1,
+            "WARN F7": 1,
+            "WARN F19": 2,
+            "WARN F24": 1,
+            "WARN F25": 5,
+            "WARN kept": 1
+          },
+          "screenshots": 40,
+          "requestedUrls": 8
+        }
+      ],
+      "artifact": {
+        "id": 12669888217,
+        "name": "hallmark-design-096136cdd364ca9944fdca18929bf09eb5ef11af",
+        "size_in_bytes": 10433467,
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12669888217",
+        "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12669888217/zip",
+        "expired": false,
+        "created_at": "2026-10-26T17:11:46Z",
+        "expires_at": "2026-11-25T17:11:45Z",
+        "updated_at": "2026-10-26T17:11:46Z",
+        "digest": "sha256:de0cf732fb013733306422abc39b63ff693dc9fb4ec4250cd64148ab8b481c36",
+        "workflow_run": {
+          "id": 40365812496,
+          "repository_id": 1428515198,
+          "head_repository_id": 1428515198,
+          "head_branch": "chatgpt/eth-cycle-economics-20261026",
+          "head_sha": "096136cdd364ca9944fdca18929bf09eb5ef11af"
+        }
+      }
+    }
+  },
+  "finalSourceCommit": "fb2cec889c409a40ced3760c415b0b3cccdd6165",
+  "finalSourceTree": "95ad3f21f34e4e225aac2ec4bfb9240da218cdbc",
+  "capacityChange": {
+    "previousConfiguredBytes": 50000000,
+    "configuredBytes": 60000000,
+    "partBytes": 180000,
+    "completeEvidenceRetained": true,
+    "nativeCasesReduced": false,
+    "secondIssuerRunPreserved": true,
+    "fullLedgerArtifactPreserved": true,
+    "duplicateFullLedgerLogEmission": false
+  },
+  "capacityRegressionGroups": 1,
+  "finalGeneral": {
+    "runId": 40367613955,
+    "jobId": 121729470897,
+    "status": "success",
+    "checkout": "synthetic-merge",
+    "sourceCommit": "2e2f261a2b06b71a7692523b9ef015ec027bffbd",
+    "sourceTree": "beacd9d63db9267e99269fa063ee267273166849",
+    "parents": [
+      "5b9246a55889b79eaedb61e9c183e124167b6ea6",
+      "fb2cec889c409a40ced3760c415b0b3cccdd6165"
+    ],
+    "tests": 1356,
+    "pass": 1356,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "numericalAssertions": 318010,
+    "negativeControlsRejected": 16,
+    "negativeControlsTotal": 16
+  },
+  "hallmarkStartupFailure": {
+    "runId": 40367613673,
+    "jobId": 121729470685,
+    "attempt": 1,
+    "receipt": {
+      "sourceCommit": "fb2cec889c409a40ced3760c415b0b3cccdd6165",
+      "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+      "phases": [],
+      "designGate": {
+        "status": "incomplete",
+        "fails": 0,
+        "reflex": 0
+      },
+      "integrityGate": {
+        "status": "fail",
+        "errors": 1
+      },
+      "sourceReadOnly": null,
+      "durationMilliseconds": 30881,
+      "readiness": [],
+      "errors": [
+        "TimeoutError: Timed out after 30000 ms while waiting for the WS endpoint URL to appear in stdout!\n    at ChromeLauncher.launch (file:///home/runner/work/_temp/hallmark-node/node_modules/puppeteer-core/lib/puppeteer/node/BrowserLauncher.js:233:23)\n    at async ChromeLauncher.launch (file:///home/runner/work/_temp/hallmark-node/node_modules/puppeteer-core/lib/puppeteer/node/ChromeLauncher.js:39:16)\n    at async PuppeteerNode.launch (file:///home/runner/work/_temp/hallmark-node/node_modules/puppeteer-core/lib/puppeteer/node/PuppeteerNode.js:124:16)\n    at async readiness (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-hallmark-design.mjs:166:17)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-hallmark-design.mjs:238:28"
+      ],
+      "exitCode": 2
+    },
+    "artifact": {
+      "id": 12671047780,
+      "name": "hallmark-design-fb2cec889c409a40ced3760c415b0b3cccdd6165",
+      "size_in_bytes": 3905,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12671047780",
+      "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12671047780/zip",
+      "expired": false,
+      "created_at": "2026-10-26T17:21:25Z",
+      "expires_at": "2026-11-25T17:21:25Z",
+      "updated_at": "2026-10-26T17:21:25Z",
+      "digest": "sha256:b0796fdeea24554e2a0e53ff301f657b4877a707bdc55ba5e3a1d9e889be8e50",
+      "workflow_run": {
+        "id": 40367613673,
+        "repository_id": 1428515198,
+        "head_repository_id": 1428515198,
+        "head_branch": "chatgpt/eth-cycle-economics-20261026",
+        "head_sha": "fb2cec889c409a40ced3760c415b0b3cccdd6165"
+      }
+    },
+    "retryRequested": true
+  },
+  "finalCandidate": {
+    "runId": 40367613761,
+    "jobId": 121729470618,
+    "status": "success",
+    "checkout": "direct-pull-request-head",
+    "sourceCommit": "fb2cec889c409a40ced3760c415b0b3cccdd6165",
+    "sourceTree": "95ad3f21f34e4e225aac2ec4bfb9240da218cdbc",
+    "tests": 214,
+    "pass": 214,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "nativeCases": 34,
+    "nativePassed": 34,
+    "runtimeErrors": 0,
+    "resourceErrors": 0,
+    "screenshots": 161,
+    "browserVersion": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/155.0.8059.39",
+      "revision": "@3ff7ac5a9224be9156d7f8703a06e22890aafd34",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+      "jsVersion": "15.5.35.20"
+    }
+  },
+  "reviewPacket": {
+    "sourceCommit": "fb2cec889c409a40ced3760c415b0b3cccdd6165",
+    "sourceTree": "95ad3f21f34e4e225aac2ec4bfb9240da218cdbc",
+    "createdAt": "2026-10-26T17:24:59.747Z",
+    "sourceAccess": "complete-for-declared-scope",
+    "bundleBytes": 50489326,
+    "bundleLimitBytes": 60000000,
+    "bundleSha256": "836755535bc9561782926b05c648c052d5f57c44feed1e635578071a5500a43e",
+    "seeds": 216,
+    "entries": 269,
+    "parts": 281,
+    "unresolvedImports": 0,
+    "excessOverPriorLimitBytes": 489326
+  },
+  "nativeArtifact": {
+    "id": 12671627211,
+    "name": "eth-candidate-evidence-fb2cec889c409a40ced3760c415b0b3cccdd6165",
+    "size_in_bytes": 43982947,
+    "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12671627211",
+    "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12671627211/zip",
+    "expired": false,
+    "created_at": "2026-10-26T17:25:05Z",
+    "expires_at": "2026-11-25T17:25:00Z",
+    "updated_at": "2026-10-26T17:25:05Z",
+    "digest": "sha256:9d787edcde68a16074af814b9032cbc8388b77f18e5e272314f71cd2660f0ba4",
+    "workflow_run": {
+      "id": 40367613761,
+      "repository_id": 1428515198,
+      "head_repository_id": 1428515198,
+      "head_branch": "chatgpt/eth-cycle-economics-20261026",
+      "head_sha": "fb2cec889c409a40ced3760c415b0b3cccdd6165"
+    }
+  },
+  "preservedUI": [
+    {
+      "width": 1620,
+      "height": 1008,
+      "rows": 18,
+      "firstSymbol": "BTC",
+      "btcName": "비트코인",
+      "bottomGap": 0.25
+    },
+    {
+      "width": 1920,
+      "height": 1440,
+      "rows": 18,
+      "firstSymbol": "BTC",
+      "btcName": "비트코인",
+      "bottomGap": 0.25
+    }
+  ],
+  "models": {
+    "independentExistingArchive": [
+      {
+        "status": "PASS",
+        "sourceCommit": "fb2cec889c409a40ced3760c415b0b3cccdd6165",
+        "sourceTree": "95ad3f21f34e4e225aac2ec4bfb9240da218cdbc",
+        "startedAt": "2026-10-26T17:20:24.533Z",
+        "evaluatedAt": "2026-10-26T17:20:28.686Z",
+        "evaluationId": "e4cafda5cfd9230011c27fec40eb20ab84b8c99724abd9e41ed365b38c9f6711",
+        "collector": {
+          "path": "scripts/evaluate-asset-forecasts.mjs",
+          "sourceHash": "4055fe8c2c25680bf79badc8bbf0a145060368aab838fee1142926421a44d917"
+        },
+        "outputDirectory": "build/asset-outcome-ledger",
+        "preservedForecastRecords": 9,
+        "preservedForecastSnapshots": 3,
+        "forecastRecordsChanged": false,
+        "observationSnapshots": 3,
+        "evaluationRevisions": 3,
+        "pendingTargets": 27,
+        "scoredTargets": 0,
+        "missingObservationTargets": 0,
+        "retrospectiveTargets": 0,
+        "attempts": [
+          {
+            "symbol": "BMNR",
+            "status": "reused",
+            "snapshotId": "f623dbffd6b670fb4ac8903d7387b15d2c5f8cc8c48bb60ba2e6be1f75db27e5",
+            "attemptCollectedAt": "2026-10-26T17:20:28.595Z",
+            "attemptSourceUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/blob/fb2cec889c409a40ced3760c415b0b3cccdd6165/dist/data/bmnr-ohlc.json",
+            "sourceHash": "25c312625b781582b5004db0b82d8e6fcbaa2306fb5406b3ebce400f7b9e587c",
+            "retainedCollectedAt": "2026-10-26T13:51:01.821Z"
+          },
+          {
+            "symbol": "ETHUSD",
+            "status": "reused",
+            "snapshotId": "e2e95e803edf9151e6bfc00b509dc124a4f25d0b623df94e00d7fb0d5b289f20",
+            "attemptCollectedAt": "2026-10-26T17:20:28.603Z",
+            "attemptSourceUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/blob/fb2cec889c409a40ced3760c415b0b3cccdd6165/dist/data/eth-ohlc.json",
+            "sourceHash": "69a726d87fcea635772a806ac6a00f43880a43d8c66bd88152045dffc209106f",
+            "retainedCollectedAt": "2026-10-26T13:51:01.829Z"
+          },
+          {
+            "symbol": "MSTR",
+            "status": "reused",
+            "snapshotId": "24ad59d1d0a798e0e16d118707e54cd007b93bd361ebaf3ea354dc4f43c9643f",
+            "attemptCollectedAt": "2026-10-26T17:20:28.618Z",
+            "attemptSourceUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/blob/fb2cec889c409a40ced3760c415b0b3cccdd6165/dist/data/mstr-ohlc.json",
+            "sourceHash": "abe8922091f252154e2715a0fbd69d15bfac3872565547e5bb77565f4f1529a9",
+            "retainedCollectedAt": "2026-10-26T13:51:01.844Z"
+          }
+        ],
+        "acquisitionFailures": [],
+        "productionAdopted": false,
+        "automaticProductionScheduleEnabled": false
+      },
+      {
+        "status": "PASS",
+        "sourceCommit": "fb2cec889c409a40ced3760c415b0b3cccdd6165",
+        "sourceTree": "95ad3f21f34e4e225aac2ec4bfb9240da218cdbc",
+        "startedAt": "2026-10-26T17:20:31.136Z",
+        "evaluatedAt": "2026-10-26T17:20:37.224Z",
+        "evaluationId": "da3a8605eada66b2a74203b52db81ffc2cc3ea15c9e0f10fb7608f0ff2eee6c1",
+        "collector": {
+          "path": "scripts/evaluate-asset-forecasts.mjs",
+          "sourceHash": "4055fe8c2c25680bf79badc8bbf0a145060368aab838fee1142926421a44d917"
+        },
+        "outputDirectory": "build/asset-outcome-ledger",
+        "preservedForecastRecords": 9,
+        "preservedForecastSnapshots": 3,
+        "forecastRecordsChanged": false,
+        "observationSnapshots": 3,
+        "evaluationRevisions": 4,
+        "pendingTargets": 27,
+        "scoredTargets": 0,
+        "missingObservationTargets": 0,
+        "retrospectiveTargets": 0,
+        "attempts": [
+          {
+            "symbol": "BMNR",
+            "status": "reused",
+            "snapshotId": "f623dbffd6b670fb4ac8903d7387b15d2c5f8cc8c48bb60ba2e6be1f75db27e5",
+            "attemptCollectedAt": "2026-10-26T17:20:37.129Z",
+            "attemptSourceUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/blob/fb2cec889c409a40ced3760c415b0b3cccdd6165/dist/data/bmnr-ohlc.json",
+            "sourceHash": "25c312625b781582b5004db0b82d8e6fcbaa2306fb5406b3ebce400f7b9e587c",
+            "retainedCollectedAt": "2026-10-26T13:51:01.821Z"
+          },
+          {
+            "symbol": "ETHUSD",
+            "status": "reused",
+            "snapshotId": "e2e95e803edf9151e6bfc00b509dc124a4f25d0b623df94e00d7fb0d5b289f20",
+            "attemptCollectedAt": "2026-10-26T17:20:37.139Z",
+            "attemptSourceUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/blob/fb2cec889c409a40ced3760c415b0b3cccdd6165/dist/data/eth-ohlc.json",
+            "sourceHash": "69a726d87fcea635772a806ac6a00f43880a43d8c66bd88152045dffc209106f",
+            "retainedCollectedAt": "2026-10-26T13:51:01.829Z"
+          },
+          {
+            "symbol": "MSTR",
+            "status": "reused",
+            "snapshotId": "24ad59d1d0a798e0e16d118707e54cd007b93bd361ebaf3ea354dc4f43c9643f",
+            "attemptCollectedAt": "2026-10-26T17:20:37.155Z",
+            "attemptSourceUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/blob/fb2cec889c409a40ced3760c415b0b3cccdd6165/dist/data/mstr-ohlc.json",
+            "sourceHash": "abe8922091f252154e2715a0fbd69d15bfac3872565547e5bb77565f4f1529a9",
+            "retainedCollectedAt": "2026-10-26T13:51:01.844Z"
+          }
+        ],
+        "acquisitionFailures": [],
+        "productionAdopted": false,
+        "automaticProductionScheduleEnabled": false
+      }
+    ],
+    "separateResearchArtifact": [
+      {
+        "status": "PASS",
+        "outputDirectory": "build/asset-forecast-ledger",
+        "sourceCommit": "fb2cec889c409a40ced3760c415b0b3cccdd6165",
+        "receiptId": "c78167bc2e8f56d3390a98d0d623c1047eee93702eba975cee4559e036b715e0",
+        "newRecords": 9,
+        "reusedRecords": 0,
+        "preservedRecords": 18,
+        "preservedSnapshots": 6,
+        "origins": [
+          {
+            "symbol": "ETHUSD",
+            "asOf": "2026-10-25",
+            "primaryMarket": "crypto-utc-daily"
+          },
+          {
+            "symbol": "BMNR",
+            "asOf": "2026-10-23",
+            "primaryMarket": "new-york-equity-session"
+          },
+          {
+            "symbol": "MSTR",
+            "asOf": "2026-10-23",
+            "primaryMarket": "new-york-equity-session"
+          }
+        ],
+        "candidateFreezeAt": "2026-10-26T17:20:51.252Z",
+        "pendingTargets": 54,
+        "scoredTargets": 0,
+        "regeneratedRecords": 9,
+        "preservedOnlyRecords": 9,
+        "sharedEthereumPaths": "verified",
+        "productionAdopted": false,
+        "publicationScope": "draft-pr-research",
+        "artifactFiles": 27,
+        "artifactBytes": 16376097
+      },
+      {
+        "status": "PASS",
+        "outputDirectory": "build/asset-forecast-ledger",
+        "sourceCommit": "fb2cec889c409a40ced3760c415b0b3cccdd6165",
+        "receiptId": "6f9f45f79dff0138b665661948a88556dfa38ab40f38d77104496f5fe7ad8d41",
+        "newRecords": 0,
+        "reusedRecords": 9,
+        "preservedRecords": 18,
+        "preservedSnapshots": 6,
+        "origins": [
+          {
+            "symbol": "ETHUSD",
+            "asOf": "2026-10-25",
+            "primaryMarket": "crypto-utc-daily"
+          },
+          {
+            "symbol": "BMNR",
+            "asOf": "2026-10-23",
+            "primaryMarket": "new-york-equity-session"
+          },
+          {
+            "symbol": "MSTR",
+            "asOf": "2026-10-23",
+            "primaryMarket": "new-york-equity-session"
+          }
+        ],
+        "candidateFreezeAt": "2026-10-26T17:21:20.947Z",
+        "pendingTargets": 54,
+        "scoredTargets": 0,
+        "regeneratedRecords": 9,
+        "preservedOnlyRecords": 9,
+        "sharedEthereumPaths": "verified",
+        "productionAdopted": false,
+        "publicationScope": "draft-pr-research",
+        "artifactFiles": 27,
+        "artifactBytes": 16376097
+      }
+    ]
+  },
+  "applicationFixCommit": "096136cdd364ca9944fdca18929bf09eb5ef11af",
+  "applicationFixTree": "0f61c000d2fed6124f1b4ffcac71c20dc4d1f7fd",
+  "finalHallmark": {
+    "runId": 40367613673,
+    "jobId": 121731481313,
+    "attempt": 2,
+    "sourceCommit": "fb2cec889c409a40ced3760c415b0b3cccdd6165",
+    "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+    "phases": [
+      {
+        "name": "baseline-static",
+        "fails": 1214,
+        "reflex": 1347,
+        "warns": 37,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 26,
+        "render": "off",
+        "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      {
+        "name": "baseline-render",
+        "fails": 53,
+        "reflex": 211,
+        "warns": 13,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      {
+        "name": "current-static",
+        "fails": 2,
+        "reflex": 0,
+        "warns": 36,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 26,
+        "render": "off",
+        "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 2 FAIL, 0 REFLEX"
+      },
+      {
+        "name": "current-render",
+        "fails": 4,
+        "reflex": 3,
+        "warns": 16,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 209/209; before 53 FAIL, 211 REFLEX, now 4 FAIL, 3 REFLEX"
+      }
+    ],
+    "designGate": {
+      "status": "fail",
+      "fails": 6,
+      "reflex": 3
+    },
+    "integrityGate": {
+      "status": "pass",
+      "errors": 0
+    },
+    "sourceReadOnly": {
+      "current": true,
+      "baseline": true,
+      "gitBlobsMatched": true
+    },
+    "durationMilliseconds": 125237,
+    "readiness": [
+      {
+        "version": "baseline",
+        "route": "btc",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "eth",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "bmnr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "mstr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "data",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "evidence",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "compare",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "mobile-preview",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "btc",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "eth",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "bmnr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "mstr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "data",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "evidence",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "compare",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "mobile-preview",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+        "status": "ready"
+      }
+    ],
+    "errors": [],
+    "exitCode": 1,
+    "phaseReceipts": [
+      {
+        "name": "baseline-static",
+        "code": 0,
+        "fails": 1214,
+        "reflex": 1347,
+        "warns": 37,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 26,
+        "render": "off",
+        "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it",
+        "counts": {
+          "FAIL 19": 1,
+          "FAIL 26a": 1,
+          "FAIL 34": 25,
+          "FAIL 39a": 20,
+          "FAIL 47a": 1,
+          "FAIL 48": 1127,
+          "FAIL 56": 1,
+          "FAIL 63": 17,
+          "FAIL 67": 21,
+          "REFLEX 24b": 1341,
+          "REFLEX 26b": 2,
+          "REFLEX 38iii": 4,
+          "WARN 3": 3,
+          "WARN 29": 9,
+          "WARN 40": 10,
+          "WARN 41": 6,
+          "WARN F3": 1,
+          "WARN F7": 5,
+          "WARN F23": 1,
+          "WARN F24": 2
+        }
+      },
+      {
+        "name": "baseline-render",
+        "code": 0,
+        "fails": 53,
+        "reflex": 211,
+        "warns": 13,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it",
+        "counts": {
+          "FAIL 26a": 2,
+          "FAIL 40": 19,
+          "FAIL 48": 24,
+          "FAIL 56": 4,
+          "FAIL 67": 4,
+          "REFLEX 24b": 194,
+          "REFLEX 26b": 1,
+          "REFLEX 39b": 5,
+          "REFLEX 49b": 2,
+          "REFLEX 72": 2,
+          "REFLEX 75": 7,
+          "WARN 29": 1,
+          "WARN 40": 4,
+          "WARN F3": 1,
+          "WARN F19": 2,
+          "WARN F24": 1,
+          "WARN F25": 4
+        },
+        "screenshots": 40,
+        "requestedUrls": 8
+      },
+      {
+        "name": "current-static",
+        "code": 1,
+        "fails": 2,
+        "reflex": 0,
+        "warns": 36,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 26,
+        "render": "off",
+        "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 2 FAIL, 0 REFLEX",
+        "counts": {
+          "FAIL 47a": 1,
+          "FAIL 56": 1,
+          "WARN 3": 3,
+          "WARN 29": 9,
+          "WARN 40": 9,
+          "WARN 41": 6,
+          "WARN F3": 1,
+          "WARN F7": 6,
+          "WARN F24": 2
+        }
+      },
+      {
+        "name": "current-render",
+        "code": 1,
+        "fails": 4,
+        "reflex": 3,
+        "warns": 16,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 209/209; before 53 FAIL, 211 REFLEX, now 4 FAIL, 3 REFLEX",
+        "counts": {
+          "FAIL 56": 4,
+          "REFLEX 49b": 3,
+          "WARN 29": 1,
+          "WARN 40": 4,
+          "WARN F3": 1,
+          "WARN F7": 1,
+          "WARN F19": 2,
+          "WARN F24": 1,
+          "WARN F25": 5,
+          "WARN kept": 1
+        },
+        "screenshots": 40,
+        "requestedUrls": 8
+      }
+    ],
+    "artifact": {
+      "id": 12671906154,
+      "name": "hallmark-design-fb2cec889c409a40ced3760c415b0b3cccdd6165",
+      "size_in_bytes": 10433653,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12671906154",
+      "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12671906154/zip",
+      "expired": false,
+      "created_at": "2026-10-26T17:26:13Z",
+      "expires_at": "2026-11-25T17:26:11Z",
+      "updated_at": "2026-10-26T17:26:13Z",
+      "digest": "sha256:5af6b95a77dcd3b86ae32411fec50a05c3734ba4c9fbd4dde7948f327399706e",
+      "workflow_run": {
+        "id": 40367613673,
+        "repository_id": 1428515198,
+        "head_repository_id": 1428515198,
+        "head_branch": "chatgpt/eth-cycle-economics-20261026",
+        "head_sha": "fb2cec889c409a40ced3760c415b0b3cccdd6165"
+      }
+    }
+  },
+  "changedSourceFiles": [
+    {
+      "path": ".github/workflows/eth-model-evaluation.yml",
+      "blob": "31788f4b57f373ce65df511e51ed2bc8b215d51d",
+      "changes": 4
+    },
+    {
+      "path": "dist/forecast-information-time.js",
+      "blob": "1aa1e2ab5545609f65deaf8fbc7b2a9229387da5",
+      "changes": 10
+    },
+    {
+      "path": "docs/ASSET_OUTCOME_LEDGER.md",
+      "blob": "353354ac5425f89f11649e6c5235fca4747d12f9",
+      "changes": 2
+    },
+    {
+      "path": "scripts/build-eth-review-evidence.mjs",
+      "blob": "9949da3961560c8b33e6f5ea0e1ef661eb2c3bae",
+      "changes": 4
+    },
+    {
+      "path": "scripts/build-eth-review-packet.mjs",
+      "blob": "a2676432943c1d22c11da09b990377e96fa410f8",
+      "changes": 11
+    },
+    {
+      "path": "tests/asset-forecast-records.test.mjs",
+      "blob": "a3dd4cfacf6a3c8e1d987d093248e5eee3f01aa6",
+      "changes": 66
+    },
+    {
+      "path": "tests/asset-outcome-records.test.mjs",
+      "blob": "7864cbf6c7dd441fd19574d39d7ce25a9c3cb335",
+      "changes": 26
+    },
+    {
+      "path": "tests/eth-review-packet.test.mjs",
+      "blob": "4aa42d975c595e48f2212f2e7577a02a1e14c36e",
+      "changes": 22
+    }
+  ],
+  "commitPreservation": {
+    "main": "5b9246a55889b79eaedb61e9c183e124167b6ea6",
+    "otherPullRequest12": "290346736954cc108914f62c7e6ddecff578b8e0",
+    "checkedBeforeWork": true,
+    "mutated": false
+  }
+}

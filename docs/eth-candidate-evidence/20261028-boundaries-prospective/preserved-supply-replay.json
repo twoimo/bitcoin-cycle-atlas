@@ -1,0 +1,202 @@
+{
+  "version": "eth-supply-boundary-replay-1",
+  "executedAt": "2026-10-27T15:23:00.901Z",
+  "networkRequestsDuringReplay": 0,
+  "historicalSourceCommit": "c73b17b29809961dab7e9337482e22da28789c81",
+  "preservationCommit": "704b1373dc09424c8f96ec1a94d766955b7c1666",
+  "sourceDirectory": "docs/eth-candidate-evidence/20261027-vintages-calibration/final-run/ethereum-supply-accounting/capture-0kqcvW",
+  "inputs": {
+    "history-30d.raw.json": {
+      "bytes": 801491,
+      "sha256": "6c32bb06c88ea0af45ee803ce33582ee8eca2382077b422cdf045aea2391847a"
+    },
+    "observation.json": {
+      "bytes": 17650,
+      "sha256": "87de15aff4ba4271561131d322a35dfd4337a5a79cf8cdd0f613e97d69231c22"
+    },
+    "receipt.json": {
+      "bytes": 23804,
+      "sha256": "a3ea45f7ffc5be492a5e92d5946d832bf4b59e9ec7dc187ffd57ca04574cfcc0"
+    }
+  },
+  "originalCollectionClock": "2026-10-27T14:13:14.608Z",
+  "originalProviderGenerationClock": "2026-10-27T14:11:50.000Z",
+  "originalProviderRevision": 1793110310289,
+  "originalObservationReplayedExactly": true,
+  "allExistingOutputsPreserved": true,
+  "beforePolicy": "eth-supply-accounting-audit-2",
+  "afterPolicy": "eth-supply-accounting-audit-3",
+  "sourceHashes": {
+    "scripts/ethereum-supply-accounting-core.mjs": {
+      "bytes": 24439,
+      "sha256": "953181d997804f699f3800288275351ceb09e488d897e3844a68b3920848b7ee"
+    },
+    "scripts/capture-ethereum-supply-accounting.mjs": {
+      "bytes": 7582,
+      "sha256": "b5a40119dcef49887c36b52af8ee83854f61b1a24f3cdf204850f55aedba1e57"
+    },
+    "tests/ethereum-supply-accounting.test.mjs": {
+      "bytes": 17057,
+      "sha256": "8b330e23cb94972fff79248faab19dafc1cd1f14f31d46404b52cace71b5a20f"
+    },
+    "dist/ethereum-economic-model.js": {
+      "bytes": 42596,
+      "sha256": "fecb23afa3ea4efd2e8a8bbd3be67de1dd7c6fd133302d347a703487f78951d0"
+    }
+  },
+  "checks": {
+    "feeComparisons": 225,
+    "feeMismatches": 0,
+    "netComparisons": 225,
+    "netMismatches": 0,
+    "adjacentStockComparisons": 224,
+    "adjacentStockMismatches": 0,
+    "endpointComponentResidualWei": "0"
+  },
+  "observationClocks": {
+    "slots": {
+      "rowsAfterActualCollection": 0,
+      "labelsAfterActualCollection": 0,
+      "latestReportedTimestamp": 1793109323,
+      "latestCoveredTimestamp": 1793109323,
+      "maximumLeadSeconds": 0,
+      "maximumLabelLeadSeconds": 0
+    },
+    "epochs": {
+      "rowsAfterActualCollection": 0,
+      "labelsAfterActualCollection": 0,
+      "latestReportedTimestamp": null,
+      "latestCoveredTimestamp": null,
+      "maximumLeadSeconds": 0,
+      "maximumLabelLeadSeconds": 0
+    }
+  },
+  "utcWindow": {
+    "observedFrom": "2026-09-29",
+    "observedThrough": "2026-10-26",
+    "windowDays": 28,
+    "utcIntervalConvention": "[observedFrom 00:00:00 UTC, day after observedThrough 00:00:00 UTC)",
+    "firstRequiredSlot": 15317999,
+    "lastRequiredSlot": 15519598,
+    "requiredSlots": 201600,
+    "coveredSlots": 201600,
+    "intersectingBuckets": 211,
+    "firstRequiredTimestamp": 1790640011,
+    "lastRequiredTimestamp": 1793059199,
+    "boundaryCrossingBuckets": 2,
+    "internalGapCount": 0,
+    "providerBucketsCoverAllRequiredSlots": true,
+    "exactBucketBoundaryMatch": false,
+    "allSelectedBucketsExplicitlyFinalized": true,
+    "missingComponents": {
+      "issuanceWei": 0,
+      "burnWei": 0,
+      "baseFeeBurnWei": 0,
+      "blobBaseFeeBurnWei": 0,
+      "consensusPenaltiesWei": 0,
+      "otherExecutionBurnWei": 0,
+      "netWei": 0,
+      "gasUsed": 0,
+      "supplyWei": 0
+    },
+    "providerClaimAggregates": {},
+    "stockFlowReconciliation": {
+      "status": "unavailable",
+      "convention": "Conditionally treat supplyWei at the row label as the end-of-slot stock; require labels at the preceding and final requested slots. Include every exact-window flow row, exclude the predecessor flow.",
+      "startBoundarySlot": 15317998,
+      "endBoundarySlot": 15519598,
+      "startBoundaryTimestamp": 1790639999,
+      "endBoundaryTimestamp": 1793059199,
+      "startRowPosition": null,
+      "endRowPosition": null,
+      "startSupplyWei": null,
+      "endSupplyWei": null,
+      "startBoundaryExplicitlyFinalized": false,
+      "endBoundaryExplicitlyFinalized": false,
+      "flowRowsIncluded": 0,
+      "predecessorFlowExcluded": true,
+      "supplyChangeWei": null,
+      "expectedChangeFromComponentsWei": null,
+      "reportedNetWei": null,
+      "componentResidualWei": null,
+      "reportedNetResidualWei": null,
+      "missingFlowComponents": [
+        "issuanceWei",
+        "baseFeeBurnWei",
+        "blobBaseFeeBurnWei",
+        "consensusPenaltiesWei",
+        "otherExecutionBurnWei"
+      ],
+      "unavailableReasons": [
+        "exact-window-flow-coverage-unavailable",
+        "preceding-boundary-stock-row-unavailable",
+        "ending-boundary-stock-row-unavailable"
+      ],
+      "independentCanonicalValidation": false,
+      "utcAccountingEligibilityProven": false
+    },
+    "utcAccountingEligibilityProven": false,
+    "excludedUsageFields": [
+      "gasUsed",
+      "gasTarget",
+      "gasMax",
+      "blobsUsed",
+      "blobsTarget",
+      "blobsMax"
+    ],
+    "blockingReasons": [
+      "source-bucket-straddles-utc-window",
+      "requested-window-stock-flow-reconciliation-unavailable",
+      "boundary-stock-finality-not-explicit",
+      "provider-bucket-duty-and-recognition-semantics-not-independently-verified",
+      "publication-time-unknown",
+      "canonical-state-not-independently-replayed"
+    ],
+    "interpretation": "Bucket sums remain provider claims even when integer arithmetic and requested slot boundaries align. No proration, missing-zero fill, or epoch-to-UTC relabeling."
+  },
+  "newBlockingReasons": [
+    "requested-window-stock-flow-reconciliation-unavailable",
+    "boundary-stock-finality-not-explicit"
+  ],
+  "retainedRawBoundaryRows": [
+    {
+      "slot": 15318335,
+      "timestamp": 1790644043,
+      "fromSlot": 15317376,
+      "toSlot": 15318335,
+      "fromTimestamp": 1790632535,
+      "toTimestamp": 1790644043,
+      "finalized": true,
+      "supplyWei": "122085474454000048800067707",
+      "issuanceWei": "398823263859000000000",
+      "baseFeeBurnWei": "77739303821407923985",
+      "blobBaseFeeBurnWei": "69861081397198848",
+      "consensusPenaltiesWei": "539246515000000000",
+      "otherExecutionBurnWei": "0",
+      "netWei": "320474852441194877167"
+    },
+    {
+      "slot": 15519935,
+      "timestamp": 1793063243,
+      "fromSlot": 15518976,
+      "toSlot": 15519935,
+      "fromTimestamp": 1793051735,
+      "toTimestamp": 1793063243,
+      "finalized": true,
+      "supplyWei": "122167237044541845881121819",
+      "issuanceWei": "399361693450000000000",
+      "baseFeeBurnWei": "1255276700155885822",
+      "blobBaseFeeBurnWei": "1368955850719232",
+      "consensusPenaltiesWei": "588252652000000000",
+      "otherExecutionBurnWei": "0",
+      "netWei": "397516795141993394946"
+    }
+  ],
+  "economicModelActivated": false,
+  "eligibleModelSnapshotCount": 0,
+  "limitations": [
+    "This is replay of historical bytes with their original clocks, not a new collection.",
+    "Original audit-2 body is executed with only its dependency import relocated to the exact current unchanged economic module.",
+    "Neither internal provider arithmetic nor new diagnostic fields prove canonical state or UTC accounting semantics."
+  ]
+}

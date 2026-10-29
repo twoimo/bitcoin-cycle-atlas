@@ -1,0 +1,6 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.29.0 verify:static
+> node scripts/verify-static.mjs
+
+{"status":"ok","files":718,"checkedReferences":411,"basePath":"/bitcoin-cycle-atlas/","standalone":null}

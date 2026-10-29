@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "group": "publication",
+  "sourceCommit": "e41f93f58e59a05d3125f8a614a055c6b721ef88",
+  "sourceTree": "acaadcb7c74597533c4126b52606754dc6565da9",
+  "trackedStatusBefore": "",
+  "startedAt": "2026-10-28T18:09:08.505Z",
+  "commands": [
+    {
+      "name": "build-publication",
+      "command": [
+        "npm",
+        "run",
+        "build:publication"
+      ],
+      "startedAt": "2026-10-28T18:09:08.505Z",
+      "log": "build/archive-operations-verification/build-publication.log",
+      "finishedAt": "2026-10-28T18:09:09.650Z",
+      "seconds": 1.145,
+      "exitCode": 0,
+      "logBytes": 452,
+      "logSha256": "048cab154b790adc61970dd25367ae267586ed161d0bcd11681f3970338a96b1"
+    },
+    {
+      "name": "verify-publication",
+      "command": [
+        "npm",
+        "run",
+        "verify:publication"
+      ],
+      "startedAt": "2026-10-28T18:09:09.650Z",
+      "log": "build/archive-operations-verification/verify-publication.log",
+      "finishedAt": "2026-10-28T18:09:10.110Z",
+      "seconds": 0.46,
+      "exitCode": 0,
+      "logBytes": 372,
+      "logSha256": "06f0451820c82cc1392c252041d6efe2de22ba470e3ebb344de918340d923ad5"
+    },
+    {
+      "name": "build-standalone",
+      "command": [
+        "node",
+        "scripts/build-standalone.mjs",
+        "build/Bitcoin_Cycles_Comparison.html"
+      ],
+      "startedAt": "2026-10-28T18:09:10.110Z",
+      "log": "build/archive-operations-verification/build-standalone.log",
+      "finishedAt": "2026-10-28T18:09:13.322Z",
+      "seconds": 3.212,
+      "exitCode": 0,
+      "logBytes": 101,
+      "logSha256": "ff9ad80435bb422c5f6d191441fa3324932d8915102da0ba30d697e55c47424e"
+    },
+    {
+      "name": "verify-standalone",
+      "command": [
+        "node",
+        "scripts/verify-static.mjs",
+        "--standalone",
+        "build/Bitcoin_Cycles_Comparison.html"
+      ],
+      "startedAt": "2026-10-28T18:09:13.323Z",
+      "log": "build/archive-operations-verification/verify-standalone.log",
+      "finishedAt": "2026-10-28T18:09:19.610Z",
+      "seconds": 6.287,
+      "exitCode": 0,
+      "logBytes": 139,
+      "logSha256": "d33d7536a30311a2c47752e87e5c4314ecc639d4a3037152a5b2cddaf7d944a0"
+    }
+  ],
+  "status": "passed",
+  "finishedAt": "2026-10-28T18:09:19.610Z",
+  "finalCommit": "e41f93f58e59a05d3125f8a614a055c6b721ef88",
+  "trackedStatusAfter": "",
+  "sameSourceCommit": true
+}

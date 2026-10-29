@@ -1,0 +1,515 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-28T15:34:15.765Z",
+  "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+  "upstreamCommit": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+  "scope": "app",
+  "genre": "modern-minimal",
+  "auditInputs": {
+    "static": [
+      "dist"
+    ],
+    "render": [
+      "dist/styles.css",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html"
+    ],
+    "note": "The render pass also runs static gates on styles.css so upstream can read the explicit reworded stamp for kept checks. Its totals are not directly comparable with earlier URL-only passes."
+  },
+  "origin": "http://127.0.0.1:4177",
+  "workPath": "build/hallmark/work",
+  "routes": [
+    {
+      "name": "btc",
+      "path": "?symbol=BTCUSD&granularity=daily&type=line",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line"
+    },
+    {
+      "name": "eth",
+      "path": "?symbol=ETHUSD&granularity=daily&type=line",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line"
+    },
+    {
+      "name": "bmnr",
+      "path": "?symbol=BMNR&granularity=daily&type=line",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line"
+    },
+    {
+      "name": "mstr",
+      "path": "?symbol=MSTR&granularity=daily&type=line",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line"
+    },
+    {
+      "name": "data",
+      "path": "?page=data",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data"
+    },
+    {
+      "name": "evidence",
+      "path": "?page=evidence",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence"
+    },
+    {
+      "name": "compare",
+      "path": "?page=compare&legacy=1",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1"
+    },
+    {
+      "name": "mobile-preview",
+      "path": "mobile-preview.html",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html"
+    }
+  ],
+  "phases": [
+    {
+      "name": "baseline-static",
+      "code": 0,
+      "summary": {
+        "fails": 1214,
+        "reflex": 1347,
+        "warns": 37,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 26,
+        "render": "off",
+        "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      "stdoutSha256": "b793f8f2d0c4cccc50f0abb7ab6ad3622bcdb6468325042596d103fd6a77db04",
+      "findingsPath": "reports/baseline-static.stdout.json"
+    },
+    {
+      "name": "baseline-render",
+      "code": 0,
+      "summary": {
+        "fails": 28,
+        "reflex": 195,
+        "warns": 7,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "not run: Failed to launch the browser process:  Code: 1\n\nstderr:\n[19509:19509:1028/113445.199609:ERROR:zygote_host_impl_linux.cc(101)] Running as root without --no-sandbox is not supported. See https://crbug.com/638180.\n\nTROUBLESHOOTING: https://pptr.dev/troubleshooting\n",
+        "before": "before: recorded 0 links, 0 fields, 0 handlers, 0 test hooks, 0 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      "stdoutSha256": "882ce89d7959e550076ec4d259cb4dea462ae0925b38de00669f906e23a455f5",
+      "findingsPath": "reports/baseline-render.stdout.json",
+      "renderedUrls": [],
+      "actualRenderReady": [],
+      "screenshots": {
+        "expected": 40,
+        "found": 0,
+        "viewportWidths": [
+          320,
+          375,
+          414,
+          768,
+          1024,
+          1280,
+          1440,
+          1920
+        ],
+        "screenshotTags": [
+          "1280x800",
+          "375",
+          "1440x900",
+          "1440-full",
+          "1920x1080"
+        ],
+        "folder": "work/.hallmark/before",
+        "reviewImages": []
+      },
+      "requestedUrls": []
+    },
+    {
+      "name": "current-static",
+      "code": 0,
+      "summary": {
+        "fails": 0,
+        "reflex": 0,
+        "warns": 36,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 26,
+        "render": "off",
+        "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX"
+      },
+      "stdoutSha256": "5bce8662ba10014a756cda92bc8a099e90221363eceed8bbe1ae7becbb8044b1",
+      "findingsPath": "reports/current-static.stdout.json"
+    },
+    {
+      "name": "current-render",
+      "code": 0,
+      "summary": {
+        "fails": 0,
+        "reflex": 0,
+        "warns": 8,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "not run: Failed to launch the browser process:  Code: 1\n\nstderr:\n[22559:22559:1028/113507.542415:ERROR:zygote_host_impl_linux.cc(101)] Running as root without --no-sandbox is not supported. See https://crbug.com/638180.\n\nTROUBLESHOOTING: https://pptr.dev/troubleshooting\n",
+        "kept": "kept: nothing recorded; before 28 FAIL, 195 REFLEX, now 0 FAIL, 0 REFLEX"
+      },
+      "stdoutSha256": "333549d73574afb87b0bbff4df9def8d5893781b6c25e8e206eb110168b39d95",
+      "findingsPath": "reports/current-render.stdout.json",
+      "actualRenderReady": [],
+      "screenshots": {
+        "expected": 40,
+        "found": 0,
+        "viewportWidths": [
+          320,
+          375,
+          414,
+          768,
+          1024,
+          1280,
+          1440,
+          1920
+        ],
+        "screenshotTags": [
+          "1280x800",
+          "375",
+          "1440x900",
+          "1440-full",
+          "1920x1080"
+        ],
+        "folder": "work/.hallmark/shots",
+        "reviewImages": []
+      },
+      "requestedUrls": []
+    }
+  ],
+  "readiness": [
+    {
+      "version": "baseline",
+      "route": "btc",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "status": "ready"
+    },
+    {
+      "version": "baseline",
+      "route": "eth",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+      "status": "ready"
+    },
+    {
+      "version": "baseline",
+      "route": "bmnr",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+      "status": "ready"
+    },
+    {
+      "version": "baseline",
+      "route": "mstr",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+      "status": "ready"
+    },
+    {
+      "version": "baseline",
+      "route": "data",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+      "status": "ready"
+    },
+    {
+      "version": "baseline",
+      "route": "evidence",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "status": "ready"
+    },
+    {
+      "version": "baseline",
+      "route": "compare",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "status": "ready"
+    },
+    {
+      "version": "baseline",
+      "route": "mobile-preview",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+      "status": "ready"
+    },
+    {
+      "version": "current",
+      "route": "btc",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "status": "ready"
+    },
+    {
+      "version": "current",
+      "route": "eth",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+      "status": "ready"
+    },
+    {
+      "version": "current",
+      "route": "bmnr",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+      "status": "ready"
+    },
+    {
+      "version": "current",
+      "route": "mstr",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+      "status": "ready"
+    },
+    {
+      "version": "current",
+      "route": "data",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+      "status": "ready"
+    },
+    {
+      "version": "current",
+      "route": "evidence",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "status": "ready"
+    },
+    {
+      "version": "current",
+      "route": "compare",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "status": "ready"
+    },
+    {
+      "version": "current",
+      "route": "mobile-preview",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+      "status": "ready"
+    }
+  ],
+  "integrityErrors": [
+    "baseline-render: render=not run: Failed to launch the browser process:  Code: 1\n\nstderr:\n[19509:19509:1028/113445.199609:ERROR:zygote_host_impl_linux.cc(101)] Running as root without --no-sandbox is not supported. See https://crbug.com/638180.\n\nTROUBLESHOOTING: https://pptr.dev/troubleshooting\n",
+    "Baseline render inventory must contain all eight exact URLs",
+    "baseline-render: actual renderer readiness was not observed for all eight routes",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BTCUSD-granularity-daily-type-line-1280x800.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BTCUSD-granularity-daily-type-line-375.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BTCUSD-granularity-daily-type-line-1440x900.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BTCUSD-granularity-daily-type-line-1440-full.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BTCUSD-granularity-daily-type-line-1920x1080.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-ETHUSD-granularity-daily-type-line-1280x800.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-ETHUSD-granularity-daily-type-line-375.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-ETHUSD-granularity-daily-type-line-1440x900.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-ETHUSD-granularity-daily-type-line-1440-full.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-ETHUSD-granularity-daily-type-line-1920x1080.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BMNR-granularity-daily-type-line-1280x800.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BMNR-granularity-daily-type-line-375.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BMNR-granularity-daily-type-line-1440x900.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BMNR-granularity-daily-type-line-1440-full.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BMNR-granularity-daily-type-line-1920x1080.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-MSTR-granularity-daily-type-line-1280x800.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-MSTR-granularity-daily-type-line-375.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-MSTR-granularity-daily-type-line-1440x900.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-MSTR-granularity-daily-type-line-1440-full.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-MSTR-granularity-daily-type-line-1920x1080.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-data-1280x800.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-data-375.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-data-1440x900.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-data-1440-full.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-data-1920x1080.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-evidence-1280x800.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-evidence-375.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-evidence-1440x900.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-evidence-1440-full.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-evidence-1920x1080.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-compare-legacy-1-1280x800.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-compare-legacy-1-375.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-compare-legacy-1-1440x900.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-compare-legacy-1-1440-full.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-compare-legacy-1-1920x1080.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-mobile-preview.html-1280x800.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-mobile-preview.html-375.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-mobile-preview.html-1440x900.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-mobile-preview.html-1440-full.png",
+    "baseline: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-mobile-preview.html-1920x1080.png",
+    "baseline-render: not all eight URLs reached the server",
+    "current-render: render=not run: Failed to launch the browser process:  Code: 1\n\nstderr:\n[22559:22559:1028/113507.542415:ERROR:zygote_host_impl_linux.cc(101)] Running as root without --no-sandbox is not supported. See https://crbug.com/638180.\n\nTROUBLESHOOTING: https://pptr.dev/troubleshooting\n",
+    "current-render: no substantive kept comparison",
+    "current-render: actual renderer readiness was not observed for all eight routes",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BTCUSD-granularity-daily-type-line-1280x800.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BTCUSD-granularity-daily-type-line-375.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BTCUSD-granularity-daily-type-line-1440x900.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BTCUSD-granularity-daily-type-line-1440-full.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BTCUSD-granularity-daily-type-line-1920x1080.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-ETHUSD-granularity-daily-type-line-1280x800.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-ETHUSD-granularity-daily-type-line-375.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-ETHUSD-granularity-daily-type-line-1440x900.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-ETHUSD-granularity-daily-type-line-1440-full.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-ETHUSD-granularity-daily-type-line-1920x1080.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BMNR-granularity-daily-type-line-1280x800.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BMNR-granularity-daily-type-line-375.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BMNR-granularity-daily-type-line-1440x900.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BMNR-granularity-daily-type-line-1440-full.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-BMNR-granularity-daily-type-line-1920x1080.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-MSTR-granularity-daily-type-line-1280x800.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-MSTR-granularity-daily-type-line-375.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-MSTR-granularity-daily-type-line-1440x900.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-MSTR-granularity-daily-type-line-1440-full.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-symbol-MSTR-granularity-daily-type-line-1920x1080.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-data-1280x800.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-data-375.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-data-1440x900.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-data-1440-full.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-data-1920x1080.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-evidence-1280x800.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-evidence-375.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-evidence-1440x900.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-evidence-1440-full.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-evidence-1920x1080.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-compare-legacy-1-1280x800.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-compare-legacy-1-375.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-compare-legacy-1-1440x900.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-compare-legacy-1-1440-full.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-page-compare-legacy-1-1920x1080.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-mobile-preview.html-1280x800.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-mobile-preview.html-375.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-mobile-preview.html-1440x900.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-mobile-preview.html-1440-full.png",
+    "current: missing screenshot 127.0.0.1-4177-bitcoin-cycle-atlas-mobile-preview.html-1920x1080.png",
+    "current-render: not all eight URLs reached the server"
+  ],
+  "designGate": {
+    "status": "pass",
+    "fails": 0,
+    "reflex": 0
+  },
+  "sourceReadOnly": {
+    "current": true,
+    "baseline": true,
+    "gitBlobsMatched": true
+  },
+  "limits": {
+    "totalMilliseconds": 600000,
+    "staticMilliseconds": 60000,
+    "renderMilliseconds": 270000
+  },
+  "limitations": [
+    "Static Hallmark does not traverse JavaScript ES imports.",
+    "URL render checks initial route state, not every dialog or interactive state.",
+    "Existing model, data and interaction tests remain required.",
+    "Optional remote application fonts are not rewritten; upstream records fallback warnings."
+  ],
+  "toolProvenance": {
+    "schemaVersion": 1,
+    "repository": "https://github.com/Nutlope/hallmark",
+    "commit": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+    "tree": "9c337ca827537705f4c898ca6dc79cd0e9208d75",
+    "version": "2.0.0",
+    "license": "MIT",
+    "sources": [
+      {
+        "name": "sloplint.mjs",
+        "path": "skills/hallmark/scripts/sloplint.mjs",
+        "gitBlob": "9916fa07286e58d319528ad7cfe4ad94318e5796",
+        "bytes": 231622
+      },
+      {
+        "name": "sloplint-render.mjs",
+        "path": "skills/hallmark/scripts/sloplint-render.mjs",
+        "gitBlob": "0ecc64bc79aa34db1fadc7178617bcc53c47e064",
+        "bytes": 99164
+      },
+      {
+        "name": "LICENSE",
+        "path": "LICENSE",
+        "gitBlob": "f4bfc53d8d773d3b10d95c2d58a5773dd4e2f3aa",
+        "bytes": 1078
+      }
+    ],
+    "compatibilityPatch": {
+      "file": "sloplint-render.mjs",
+      "sourceGitBlob": "0ecc64bc79aa34db1fadc7178617bcc53c47e064",
+      "patchedGitBlob": "5ee4ffd59142007f586ef33429410623ba434a47",
+      "before": "  const browser = await puppeteer.launch({ executablePath: chrome, headless: true });",
+      "after": "  // Atlas CI compatibility: ephemeral GitHub runner only; all Hallmark gates stay intact.\n  const atlasCiArgs = process.env.GITHUB_ACTIONS === 'true' && process.env.HALLMARK_CI_CHROME_ARGS === 'ephemeral-ci'\n    ? ['--no-sandbox', '--disable-dev-shm-usage', '--disable-background-networking', '--no-first-run'] : [];\n  const browser = await puppeteer.launch({ executablePath: chrome, headless: true, args: atlasCiArgs });",
+      "reason": "First add Chrome launch flags only for the ephemeral GitHub runner, then apply readinessPatch. patchedGitBlob identifies both ordered build-copy patches; the source remains byte exact and all upstream gates stay intact.",
+      "launchOnlyGitBlob": "142a5516f2506987c2795e320d78893cf1d919d4"
+    },
+    "decisions": {
+      "staticTarget": "Explicit dist directory, every CSS and both HTML files",
+      "renderTarget": "Committed dist/styles.css plus eight HTTP URLs; no HTML/file:// fallback",
+      "moduleQueryPatch": "Not applied: HTTP URL rendering avoids the upstream shell-detection limitation",
+      "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+      "runtimeDependency": false,
+      "ciDependency": {
+        "name": "puppeteer-core",
+        "version": "25.16.0",
+        "source": "https://github.com/puppeteer/puppeteer/releases/tag/puppeteer-core-v25.16.0",
+        "installScripts": false
+      }
+    },
+    "gates": "All upstream gates are retained. Current FAIL or REFLEX makes CI exit 1. Incomplete coverage, internal errors, missing render or incomplete kept comparison makes CI exit 2.",
+    "readinessPatch": {
+      "file": "sloplint-render.mjs",
+      "sourceGitBlob": "142a5516f2506987c2795e320d78893cf1d919d4",
+      "patchedGitBlob": "5ee4ffd59142007f586ef33429410623ba434a47",
+      "before": "        if (nav.r && isUrl(file) && !nav.r.ok() && nav.r.status() !== 304) throw new Error(`HTTP ${nav.r.status()} from ${file}`);",
+      "after": "        if (nav.r && isUrl(file) && !nav.r.ok() && nav.r.status() !== 304) throw new Error(`HTTP ${nav.r.status()} from ${file}`);\n        if (process.env.HALLMARK_ATLAS_READY === '1') {\n          if (!isUrl(file)) throw new Error('Atlas readiness requires an HTTP URL');\n          const atlasUrl = new URL(file);\n          const atlasPage = atlasUrl.searchParams.get('page');\n          const atlasSymbol = (atlasUrl.searchParams.get('symbol') || 'BTCUSD').toUpperCase();\n          const atlasRoute = atlasUrl.pathname.endsWith('/mobile-preview.html') ? 'mobile-preview'\n            : atlasPage === 'data' ? 'data'\n            : atlasPage === 'evidence' ? 'evidence'\n            : atlasPage === 'compare' && atlasUrl.searchParams.get('legacy') === '1' ? 'compare'\n            : !atlasPage ? ({ BTCUSD: 'btc', ETHUSD: 'eth', BMNR: 'bmnr', MSTR: 'mstr' })[atlasSymbol] : null;\n          if (!atlasRoute) throw new Error('Unsupported Atlas readiness route: ' + file);\n          await page.waitForFunction((name) => {\n            const doc = name === 'mobile-preview' ? document.querySelector('#mobile-preview')?.contentDocument : document;\n            if (!doc || doc.documentElement.dataset.boot !== 'ready') return false;\n            if ((name === 'btc' || name === 'mobile-preview') && (doc.querySelector('.atlas-plot[aria-busy=\"true\"]') || doc.querySelector('.workspace-toast:not([hidden])'))) return false;\n            if (name === 'data') return doc.querySelectorAll('#data-body tr[data-asset-symbol]').length === 18;\n            if (name === 'evidence') return doc.querySelectorAll('#evidence-body [data-evidence-detail]').length > 0;\n            if (name === 'compare') return doc.querySelectorAll('#structure-chart path').length > 0 && doc.querySelectorAll('#structure-cycles tr').length > 0;\n            if (name === 'eth') return Number(doc.querySelector('#eth-chart')?.dataset.observedCandleCount) > 0;\n            if (name === 'bmnr' || name === 'mstr') return Number(doc.querySelector('#equity-chart')?.dataset.observedCandleCount) > 0;\n            return doc.querySelectorAll('#lab-chart path').length > 0;\n          }, { timeout: 30000 }, atlasRoute);\n          console.error('HALLMARK_RENDER_READY ' + JSON.stringify({ url: file, route: atlasRoute }));\n        }",
+      "environmentFlag": "HALLMARK_ATLAS_READY=1",
+      "reason": "On the same page instance used by Hallmark, require the committed Atlas route's boot state and observed content before any probe or screenshot. A timeout/unsupported route propagates through the original render failure handling. No upstream gate or severity is changed. BTC and its embedded preview must also finish the current forecast calculation and allow transient action feedback to settle before capture."
+    },
+    "buildCopyPatchOrder": [
+      "compatibilityPatch",
+      "readinessPatch"
+    ]
+  },
+  "sourceCommit": "c09149e8489dd6b8d1d5952d6470d52f9b11b63f",
+  "sourceBefore": {
+    "current": {
+      "commit": "c09149e8489dd6b8d1d5952d6470d52f9b11b63f",
+      "files": 872,
+      "bytes": 49360133,
+      "manifestSha256": "baf87fdc47e9715046e98247a15d6b2845eddc273c8e0ddcd9e91dde504b2f34",
+      "gitBlobsMatched": true
+    },
+    "baseline": {
+      "commit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+      "files": 721,
+      "bytes": 32087604,
+      "manifestSha256": "e699074e45fb90811a433199184c2ccdf5a5d0fdc38e5a316df130d167e37a1f",
+      "gitBlobsMatched": true
+    }
+  },
+  "sourceInventory": {
+    "baseline": {
+      "css": 24,
+      "html": 2
+    },
+    "current": {
+      "css": 24,
+      "html": 2
+    }
+  },
+  "browser": {
+    "puppeteerCore": "25.16.0",
+    "chrome": "Google Chrome for Testing 131.0.6778.204",
+    "node": "v24.22.1"
+  },
+  "font": {
+    "commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
+    "gitBlob": "dc4a7c65e6f450bf17c10a2405250b620eb78703",
+    "family": "Noto Sans CJK KR"
+  },
+  "integrityGate": {
+    "status": "fail",
+    "errors": 88
+  },
+  "finishedAt": "2026-10-28T15:35:07.933Z",
+  "durationMilliseconds": 52168,
+  "exitCode": 2
+}

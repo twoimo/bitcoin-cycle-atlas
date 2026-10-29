@@ -1,0 +1,18 @@
+{
+  "kind": "archive-read-authentication-regression",
+  "testedAt": "2026-10-28T16:39:35.474662+00:00",
+  "baseProductCommit": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+  "inputSha256": {
+    ".github/workflows/eth-model-evaluation.yml": "e12597b5e82f796402a0a1873037e52efd2ff6c95dc85f5837305ce848c82789",
+    "tests/ethereum-prospective-archive-remote.test.mjs": "5b509c623e41ff0e5103888eb0af26d1a77ef630b97795a9285c46aeda47e8be",
+    "scripts/ethereum-prospective-archive-remote.mjs": "47be64ee1d22dc1e6e13f7c7563e5a476716b6deec8d235140846fb8c3b6835e"
+  },
+  "command": "node --test tests/ethereum-prospective-archive-remote.test.mjs",
+  "passed": 40,
+  "failed": 0,
+  "skipped": 0,
+  "logSha256": "1c76614000f8c7b66c2591cc5ce15ed99536d24e78042870ae5ee69a1cb6a243",
+  "scope": "Existing bounded transport plus candidate read token wiring; no product model or replay source changes.",
+  "releaseAuthorized": false,
+  "productionPromoted": false
+}

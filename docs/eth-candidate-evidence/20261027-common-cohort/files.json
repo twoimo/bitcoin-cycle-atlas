@@ -1,0 +1,565 @@
+{
+  "kind": "ethereum-common-cohort-evidence-files",
+  "sourceCommit": "c149d0c8e519e06f096d8b50e7c4cb68c3df726e",
+  "selfListed": false,
+  "files": [
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/README.md",
+      "bytes": 7331,
+      "sha256": "2e7e6bef0f9735eb26777ca2da0e0c6efc55134af026cd2ec28de15a4fd1d50b",
+      "gitBlobSha": "28763eff0fd0bd7ab15aa48f6dc1cde4a33f8b60"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/artifact-verification.json",
+      "bytes": 5776,
+      "sha256": "f7a2ec5516507ccaee75cb6ef1e3ed155798ff45b1aad74d9cd58edbbfda2a28",
+      "gitBlobSha": "c3f609cc2d9e8d3b3ecec7dc4f5bf2b0d200521d"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/browser.json",
+      "bytes": 999723,
+      "sha256": "afd4399b140d53e492d385cb9c92983b6b0eccf19ea7581c39d8ba0c7860a4e9",
+      "gitBlobSha": "1e3eb10a216be8ecd3753f6492ac736e12446f1d"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/ci-summary.json",
+      "bytes": 2153,
+      "sha256": "294de18c463f53ae95b0f99ed802383cc2abf0aa1b52dc24c2c68b20a8b10b9b",
+      "gitBlobSha": "8a8af8f907703aedcba8f65cb66623d7b6507731"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/common-cohort.json",
+      "bytes": 658110,
+      "sha256": "87090120314c2bdfdea5fa85fcd90b36972891ffbbb2fd19ee7bbcc53401e4e2",
+      "gitBlobSha": "f84a284b2a87c1bcf270c98eba8a3caf2b36c50d"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-evidence-coverage.json",
+      "bytes": 58247,
+      "sha256": "d47f88f2ce2cbd4699790d8a21b8b15c9d108ff9c164b5ff940229d635a51826",
+      "gitBlobSha": "59f3afbc63d374fa21f6099bc92f77c4f6ec3624"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-input-files.json",
+      "bytes": 20411,
+      "sha256": "31b8a67015d29bf766e3f09cfe4de7e9ea88574a0b9d20c67e3d1f81c7cd0d40",
+      "gitBlobSha": "cdc7a35a4a53ecd7bb7cb73e6ab67dc03b5d51e9"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-economic-data/capture-sHeurf/receipt.json",
+      "bytes": 7126,
+      "sha256": "f31fb9730e078dd6f76c7d20bddde9b59b733cb3e3d4cdcddbf000e2a124cbcf",
+      "gitBlobSha": "6296cb4f234c0db61d26302ba9a9bfb00a04020f"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/receipt.json",
+      "bytes": 58781,
+      "sha256": "38f15454773de5cf7c4b33de5436e967f24c958c42a594117d9e5229488a5b26",
+      "gitBlobSha": "c812553e8a4f3ad56f8f455877ee32d0beb520fe"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/001.raw.json",
+      "bytes": 40,
+      "sha256": "208c0be5a34cd9b241311e625b3035aa89cb237969cbc1a0c9cbd8c8517087eb",
+      "gitBlobSha": "cf1d74a07767d40be1795aa23d883c914259f78c"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/002.raw.json",
+      "bytes": 5672,
+      "sha256": "4126ff23bf756743f84177026cc33751f8be068051488c8687dab058d3e2d884",
+      "gitBlobSha": "c094f5366609f8cf46947ff0eff36652bd07a2f1"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/003.raw.json",
+      "bytes": 1537,
+      "sha256": "19cc36ef611e0534bd06cbad7a2d88ab900c8d310cf68e474a20acab67254e41",
+      "gitBlobSha": "e61bc5058eb0553ac1ba893217ddef25b6a7046a"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/004.raw.json",
+      "bytes": 6940,
+      "sha256": "8c4c02034e90b8c12e0d2370a6a4ae02153d53df5e3be9c4351677f3933c2b85",
+      "gitBlobSha": "81cfe1c6e8b5a823a4e75f9d800d61cb269f1db9"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/005.raw.json",
+      "bytes": 17739,
+      "sha256": "165c6d00628a3e0266cbd024c0cb9a5ace32d69e9c4fd5f121983bbf4e761e8a",
+      "gitBlobSha": "97e0b97efb92b7cec13bf1c2b32fa12ddd636d17"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/006.raw.json",
+      "bytes": 11420,
+      "sha256": "04906d48d2bf29520638d0056c9ebf748dcf59ef623910562116523c6f050c3e",
+      "gitBlobSha": "ebdaa43d2683ddea428fb1d584a48918f4df33bc"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/007.raw.json",
+      "bytes": 22299,
+      "sha256": "1cda92302e3a72dece7f7a2b8d99de6e38da9c90612e9177737f189aaa499ee5",
+      "gitBlobSha": "04a3feefeebab1e23a08af3985bb2dcc128b1453"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/008.raw.json",
+      "bytes": 17919,
+      "sha256": "82bbd1a875e286aa2ad395304604bcdc16bd01111556097f303557f74f18dd36",
+      "gitBlobSha": "c5a85741d813851e43a3ffb3a421631e7d37f83a"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/009.raw.json",
+      "bytes": 14915,
+      "sha256": "ecac2766172176df7e2ce4ee3da2e909a25257c91ad587440cf73449a58c52c2",
+      "gitBlobSha": "3183fabee7947740373dd8519a296ffaa98e73d4"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/010.raw.json",
+      "bytes": 9156,
+      "sha256": "5970d2ef07242e3f3731f73e29ceb82f24e5aa688e1f51f6b8f9f37efbd65e85",
+      "gitBlobSha": "7698d817c084385f605aee18c1315544ca3f8710"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/011.raw.json",
+      "bytes": 21397,
+      "sha256": "039a9361f49ac4fea91569ae7e45e2aec77a5caad8f63ffe5fa1cf5fb1faac28",
+      "gitBlobSha": "04c0fc78e81be8f04d669dc29d651f9a375043e0"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/012.raw.json",
+      "bytes": 22972,
+      "sha256": "4a256b29bae7c7366528e35b387f798f88ffa99eb111c8cab7c9ff302ff3cb37",
+      "gitBlobSha": "6cb76316de917672d676a356e9b61f2333880d96"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/013.raw.json",
+      "bytes": 16673,
+      "sha256": "2d0fcca274d27cc7bf0f291f4930ce6459ddce283e87576a1ffe5cfc52aebd61",
+      "gitBlobSha": "8ec5c5b06027be5a542969a21d7fd1e937022836"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/014.raw.json",
+      "bytes": 22749,
+      "sha256": "84a9385624d08ebb1ec813e47fbd3ae910d083a68cd681a65493555625114d5d",
+      "gitBlobSha": "394786d7de9f63721452077a30d4f1b95ae86445"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/015.raw.json",
+      "bytes": 13585,
+      "sha256": "f871ebb520d35ec3c33d979232a3d930e9f13899ecd5bcfa927a538867b88762",
+      "gitBlobSha": "7a1a3bd596aa90ab6c5a1ea17b3303f2cf9ccc38"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/016.raw.json",
+      "bytes": 19491,
+      "sha256": "9a29eefe4fe39823afa3c28d82bc2468018927d0c96754be887124ed576727b4",
+      "gitBlobSha": "f3248ac6f24af50ac7eda792af7fc633745820c4"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/017.raw.json",
+      "bytes": 19864,
+      "sha256": "a289a258adaf84a139e2105a20a8baed1879f3aabf55c8fdd1dcef151a5b2fec",
+      "gitBlobSha": "95e88120994cbff792757db9787fb4125ec00b57"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/018.raw.json",
+      "bytes": 30078,
+      "sha256": "12f399b399aad38f62f760be5c486e3fcd2431bb16c550901f4eff36d38a796d",
+      "gitBlobSha": "2ab007e30fbb2e2dbc79a4af55ba634ad453c2bb"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/019.raw.json",
+      "bytes": 18182,
+      "sha256": "c69dcfdee95624ef8720355335e0d23639aaa26c2ba3209bf5b3f427585cbaaf",
+      "gitBlobSha": "b40a331651879a03586c1832d1b30e932c12307a"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/020.raw.json",
+      "bytes": 26766,
+      "sha256": "72484611825c21a06650c2f1cb403ae64d64354375bf7b2cbef2f6927a517cdc",
+      "gitBlobSha": "9d9b18dda646ace026ab20b327affb30494ef698"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/021.raw.json",
+      "bytes": 15447,
+      "sha256": "fce4016873ba2dc41cf3f9c816a8ee9fce3d183db2b73fe713a63bc9ef298df5",
+      "gitBlobSha": "13bf80105750a6179f97f0127bc8806c8f21f2ad"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/022.raw.json",
+      "bytes": 19376,
+      "sha256": "1135f18bc85a764ed5d43f06aca4c4e4b7fe64c8e89d53b277c7a38bebccb3be",
+      "gitBlobSha": "2ca3909d7945bf485ba2c071034830d89d60c85d"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/023.raw.json",
+      "bytes": 27215,
+      "sha256": "c444ac268e2cbe13e5450678fe236b5cc704c1fc6d6665794faf51a3f663d3e9",
+      "gitBlobSha": "a182bd825a83f052883cd627bc1df9421538afcc"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/024.raw.json",
+      "bytes": 14620,
+      "sha256": "7645d7880149d53f6eaeeafc1d2bd8022cdbe8bd446c2fbcfdb61edb00b47165",
+      "gitBlobSha": "d0c43fe846c50855a729c355a5a81889c666e169"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/025.raw.json",
+      "bytes": 81481,
+      "sha256": "65c31c380f7519dd87f682271715fb8d5ae4eec8a5bfabec69d75172fa45d357",
+      "gitBlobSha": "182e22322dbf36a53a0b19a8c567752d05a95981"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/026.raw.json",
+      "bytes": 17725,
+      "sha256": "9ad5745a8ac09e3129a0d4e0759f69a7933e49acdcba01ae03f85cf68bc32fd5",
+      "gitBlobSha": "cbbb01f416387dcad861732d43f92aaf8039918f"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/027.raw.json",
+      "bytes": 38214,
+      "sha256": "dd78770454f882abdfe75de23f3f52840a6de69bb8bb237c45589a45d8084df4",
+      "gitBlobSha": "117437db78454bd902fb19c2536c76374ee90ca8"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/028.raw.json",
+      "bytes": 15726,
+      "sha256": "1ff794cc377a183eb7bee87fd5a2bb597cc8874682e361a230d7848ae17ae595",
+      "gitBlobSha": "6abc1393f769a3693dd5a4946d4b106456fa686e"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/029.raw.json",
+      "bytes": 23042,
+      "sha256": "41bcd469eb0168b515097adade2b5c0d7221840577b69d7c7ed1909c2b7822ae",
+      "gitBlobSha": "75daf4ed4b8b367727ec050725677b1e91157e4c"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/030.raw.json",
+      "bytes": 9514,
+      "sha256": "7bc373f8f20f2a9a1a3669e8be5ded29ee75ed176d2022d6ecf92ce309798de7",
+      "gitBlobSha": "d8c3294b1132b754c1a7aa1f6007184c3a610fc8"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/031.raw.json",
+      "bytes": 28296,
+      "sha256": "1fef25a1177590570ff9b76b7eb03a7a6df83fc5ef1ebeebb6c8414f9ac93a00",
+      "gitBlobSha": "f8fe3e07c2c1b77fda5ff8aafbda34f37d271236"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/032.raw.json",
+      "bytes": 22335,
+      "sha256": "12793f79f14122e25e0ecda8d4b63b1e04dc657d417cc2e8bab364aaf2b7da34",
+      "gitBlobSha": "2afda8ed9a3ad32b301ba3f1522ea231260912b8"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/033.raw.json",
+      "bytes": 26021,
+      "sha256": "2b6e970380bb73abaa3fcc16d769568374b0c739573d6e45fa43b50dd785a644",
+      "gitBlobSha": "a41e0c4fa29712fc29894d18194cb52b4f0b9e32"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/034.raw.json",
+      "bytes": 20024,
+      "sha256": "6aec0ff443dfb6e4e71affb981e9d548de87f85987f18dcc90ca77de335c61e8",
+      "gitBlobSha": "364a997ba59d3d14fe282ececbba27c999261612"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/035.raw.json",
+      "bytes": 20572,
+      "sha256": "cb08d23cddd04f58eb09e108ddd5dbbaa9fdcefe24b512eaa0aca2372a397868",
+      "gitBlobSha": "f92b04a3f6cc21e4b9b224fdc37197ed88b7f800"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/036.raw.json",
+      "bytes": 27682,
+      "sha256": "b480d74034945bb685eb9dbab08f4b9c6e80738222ede83296c8b24fd14eb602",
+      "gitBlobSha": "99630da2e7ff99f66320d9499995f9ba3838765f"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/037.raw.json",
+      "bytes": 27677,
+      "sha256": "8e4647bf1a5958a04d2b482e49da887aeeef7eec2f030ce846937135034a01bd",
+      "gitBlobSha": "b702b448d1fc983e9690f8e8bfdec247a1e65138"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/038.raw.json",
+      "bytes": 30614,
+      "sha256": "9c5f23ed5c6e864e43237305ae17753f3381032c135f695413f5b926de9d7134",
+      "gitBlobSha": "e7f84c5e000327f4aaceb1e089ef5477a03bf14d"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/039.raw.json",
+      "bytes": 32270,
+      "sha256": "41016bed3afdf7bf67f5f73d92f4414e8638c9c395c5ec553e86c68a2793e708",
+      "gitBlobSha": "c08d52c7ef04110f70dc7e7a77b291e62dca4158"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/040.raw.json",
+      "bytes": 24228,
+      "sha256": "447bf0140aedb9b6deb71abeb9901eb0cc0bd0f251f4b99ce0557c4b4d829931",
+      "gitBlobSha": "c97f7ed69377d70e88d13386ad72a5abe7a690a5"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/041.raw.json",
+      "bytes": 17257,
+      "sha256": "997701fde5974a68d9c20bdc628f04704e750542dce7c7cdee4d3321e69bb9e3",
+      "gitBlobSha": "d7a21ee70c0d04f6aba6598bef7001e6a8592f6e"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/042.raw.json",
+      "bytes": 18160,
+      "sha256": "19c45d5cf62545ce9b22cd3d35aa81994b01c406e7c2d2687fab9564be6f85ef",
+      "gitBlobSha": "05307724db7ef08b01846e9b3543e1d70ec2e6ae"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/043.raw.json",
+      "bytes": 32511,
+      "sha256": "8c43979047ff6f73a8f9d692cb629e6b2773340cba5b95bbe3b5e7f48db22cfe",
+      "gitBlobSha": "5ac6ff48f00a371ab1b3ac5361e5578b4cc3863d"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/044.raw.json",
+      "bytes": 21232,
+      "sha256": "13b1b300d72f9d81734a0a7fdd11244865387688ea1c3342e25c4dd903e42c9c",
+      "gitBlobSha": "ba90a53eb978d9404d43666692dc3aefaeffc03b"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/045.raw.json",
+      "bytes": 18092,
+      "sha256": "b9868d52898b354b7a345c285b7f3794b506a9d70e48a6f960cb6e9bfee3b096",
+      "gitBlobSha": "1cbdf959331f0c2c0f90d3f35889415c13cc42a5"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/046.raw.json",
+      "bytes": 23957,
+      "sha256": "7a8d0f8faa47a5372986146df10ea98974f4cbc79397f016adfee6366e64a9b2",
+      "gitBlobSha": "7f1993a44dcc3b6ac87bd6839afd72e026fc59d7"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/047.raw.json",
+      "bytes": 15726,
+      "sha256": "458c99181eae3bab1e6809308a4c00886236e8a5427e07c9d7ee6dff652b84ae",
+      "gitBlobSha": "85128d1e18afd668f1209fef8f40fd264fa10861"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/048.raw.json",
+      "bytes": 38214,
+      "sha256": "a0a2f7ee152b088a52530644f5a711f76e1b85641cf0f866e9f9c8e6734381de",
+      "gitBlobSha": "cfc683b21e7a6020ed07d5338de2b6995c24f5c5"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/049.raw.json",
+      "bytes": 18092,
+      "sha256": "92bfe640f5abb3b42d9afd1a4116a83ffab152dff3f1f59918650d56efaca08a",
+      "gitBlobSha": "4b1df4a7d06497fcb12f00759d3f35749b0f823d"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/050.raw.json",
+      "bytes": 23957,
+      "sha256": "ccc24748db8697ea7b9341d6a43f3182308fcd338843772d2bc1672aecc24426",
+      "gitBlobSha": "56666cf16520c03d7696ffd9a54fde0cac2a0ec5"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/rpc/051.raw.json",
+      "bytes": 17740,
+      "sha256": "f900b8e3df6a936d7248b8eb7c3d59aa2e574d54fad4ba78fd15ff555f6e56bf",
+      "gitBlobSha": "07cb4ebe6ed755d9a3d6ff030726bf42b9d5017a"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/sources/eip-3675.raw",
+      "bytes": 22848,
+      "sha256": "7345c394b8726383a667b3e5114fa0916410c95de3c1a031663a8e07cbe40e03",
+      "gitBlobSha": "efa51f543490bd6643fa943fb963d762312bda2a"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/sources/eip-4399.raw",
+      "bytes": 12136,
+      "sha256": "3cabb6092e244042e56e28b9ce3a2920d8244cf65299c5a99ed7c8e20aeccf60",
+      "gitBlobSha": "eb7d731fa68ab1a7f52085f6ea5be79045ce6bc3"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-pow-zero/sources/mainnet-fork-clock.raw",
+      "bytes": 6972,
+      "sha256": "3dcf516197c5809c4f7db590004782b3c37300c59d8d39dd0b1ad502a5367fbb",
+      "gitBlobSha": "3dadbd7433b69a45669cdd2459fee41653cd2ac1"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-throughput-supplement/capture-EaXD9J/master.raw.json",
+      "bytes": 161732,
+      "sha256": "f36e108ed110f4039c6acaba5186988275d9cbe152cd16350d7b82719d254775",
+      "gitBlobSha": "fced1eb0f7f22e36145ee8e178b7a9e9549e4f42"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-throughput-supplement/capture-EaXD9J/receipt.json",
+      "bytes": 8226,
+      "sha256": "c03cf67e0fee8e401c95883cd033b397d3ec927e0d83ae0790eb93c4f64621e6",
+      "gitBlobSha": "c93b7c3b5380c56ed30cd773d5befbab510bd117"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/economic-inputs/ethereum-throughput-supplement/capture-EaXD9J/throughput.raw.json",
+      "bytes": 192195,
+      "sha256": "7f9019afaae9360f3096fa88b7a5fea257c00011bfdc7d943d358eae3056df16",
+      "gitBlobSha": "761df88ee3ff1de75473ed0e7db11aafe79d4fad"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/execution.json",
+      "bytes": 8687,
+      "sha256": "65a947e2dde67086a1ace1b929c03d25182ebb23bdc3d794ffacf1602f7d480c",
+      "gitBlobSha": "ec0127b665f267a999baec9dbf2ff7427d23f1bd"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/hallmark.json",
+      "bytes": 4905,
+      "sha256": "fcf5b29a4815572dfaa16c0e36ecf94be46ffae4366b1638744719d7355ec6bd",
+      "gitBlobSha": "58a802c523c35e4aad6cf3c74f3182655a1a9135"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/initial-ci-summary.json",
+      "bytes": 2153,
+      "sha256": "40b426ecdf3850cdc3f35498ae3bed1b3ea9f599215c99e6fc5cac743da5d5bf",
+      "gitBlobSha": "c1db44c037b65033bbfcdbb75f4f5fa54d3aa480"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/initial-economic-evidence-coverage.json",
+      "bytes": 58129,
+      "sha256": "2b9db5cba12494292a3d4c1f37ab58463293f8819befb08dfb5611fe48675610",
+      "gitBlobSha": "76678abec24ee587f759d4851fa9bde4118322d4"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/initial-execution.json",
+      "bytes": 5115,
+      "sha256": "890b26684872311e4b93bc30386711aa701f7f6b0ab469d73026fedc351f2b0b",
+      "gitBlobSha": "29716e48d62007be719b2890d19c7447b2bf8e91"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/initial-hallmark.json",
+      "bytes": 4905,
+      "sha256": "760f74ab23513bc1d5587a44aa97807fbe421109391b72fc6c11fff3ca30c118",
+      "gitBlobSha": "1faccaed4e6f6f4b8e556eb4172970de9a20a22e"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/initial-issuance.json",
+      "bytes": 5124,
+      "sha256": "9c837d145b179c6e1feb6977398a21d11e2307f5f1cd465270544b112842a870",
+      "gitBlobSha": "3301d79e70e62606880709e9db87508e10098ac0"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/initial-ledger-files.json",
+      "bytes": 2730,
+      "sha256": "dca4b6634ba338b61c06d4d69bf04429e1a9cf28bcda550ed6c04690229a0701",
+      "gitBlobSha": "4425d06c1614e04c66517c740f0006711cef2f5f"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/initial-replay.json",
+      "bytes": 3055,
+      "sha256": "c47429e999368b38b97932e9823a665232408d8c389f8103f9eb8ca00e04d37e",
+      "gitBlobSha": "7e07c8342e2070df1810fb9a4ca535792b5ea735"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/initial-source-manifest.json",
+      "bytes": 315352,
+      "sha256": "4ccd202550a96a8809bd1da1c59a4e2fd90df77b5ba7c5cdb046d8944f1f43f9",
+      "gitBlobSha": "6fe2e549f0310dd7c897d77594362fa52080f50b"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/legacy-files.json",
+      "bytes": 1888,
+      "sha256": "743d08ca6346dcb22ab45f0f78f1f72b5551b7e857b23bb58bfa2eae0af63e26",
+      "gitBlobSha": "cc767e9a5e598206e3b89917d89795110a33cca4"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/legacy-index.json",
+      "bytes": 1327,
+      "sha256": "3dceded0324c32acbf2efd6aafdf015e85434361aa24e807021aa1382e5d7d93",
+      "gitBlobSha": "0287108c0d8267e640f13f6c7644a3888bd020a6"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/model-readiness.json",
+      "bytes": 252359,
+      "sha256": "4fea2527ae007a095a7a9d4b84513c2b24b3fa431f10f381219cff36e06800e3",
+      "gitBlobSha": "18642ef0058047dd91e7524622c2ec2c00e2133a"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/prospective-issuance.json",
+      "bytes": 5206,
+      "sha256": "fb4000f887f45921bf5a1f87fc27b732e4955f6332093c7f70d3f79ec3ab9684",
+      "gitBlobSha": "37ad8c70f7839a0a48e5f343c1357f9022de60c6"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/prospective-replay.json",
+      "bytes": 3055,
+      "sha256": "71a54c96b6d2a7a4a28f36ade9af8c2d9374cb7629aa302207b3e6ceece22ca5",
+      "gitBlobSha": "05125aada34822a911b543daf8e905eef1c6b632"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/reuse-ledger/acquisitions/b065379d0c379cb0c7fac9a0b4e6f2f72ddecdba7deccd621b235a9a3435acd0.json",
+      "bytes": 2182,
+      "sha256": "8e334a75efbf8f6a7b1e5ff14d8f157a7e0e1aaf27d8a1795ead2070f8a2039e",
+      "gitBlobSha": "44b221b7849bd9bdd0c618f4308f7ab162714eb8"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/reuse-ledger/evaluations/158d1a7984982ad18b582ad94d47be895128e558f17b578f51e8de7eddd26dc4.json",
+      "bytes": 13578,
+      "sha256": "f75fe36199e6ab1735f50877ba89511addb8970dc642242bb37a8e95705589c7",
+      "gitBlobSha": "974ccb787cb8be6cb2735b1ef6e763d04a37f501"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/reuse-ledger/files.json",
+      "bytes": 2730,
+      "sha256": "03c65a8eaa4dcf932a10ed4eb7bd2fc04b2a11841c3f6c122c1bce3670754982",
+      "gitBlobSha": "5c2698d0f4ff838d1eefb76b7e8beb40a5cb98e2"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/reuse-ledger/index.json",
+      "bytes": 1971,
+      "sha256": "f124b65d177b3aae9fa851a2f6204a6e1073dc288d22bf36eecf0b0e650081c2",
+      "gitBlobSha": "38dfd02401188aa5aecf8a1ce8d77760a7b5190a"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/reuse-ledger/issuances/5326ba3d3b92be4a94051d780813649019893f27c367a9781224a6d6e42fd33c.json",
+      "bytes": 5206,
+      "sha256": "fb4000f887f45921bf5a1f87fc27b732e4955f6332093c7f70d3f79ec3ab9684",
+      "gitBlobSha": "37ad8c70f7839a0a48e5f343c1357f9022de60c6"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/reuse-ledger/observations/93154eccedc0412bcf181ac418ff03d894cda1e83b1a09d40a673c1e9620c9aa.json",
+      "bytes": 1084125,
+      "sha256": "772e2d82905f02b5ca632be5cfeb234f06d3eec9a8f9bd4deff4b1dbcfc8bbb9",
+      "gitBlobSha": "f61efdd5adb3fb762661e2c7f7524ef836331c3a"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/reuse-ledger/raw/coinbase-tail-49ebd6979ce2f6206953afba0d1b3b0034027eb3508544e278dd091b39a39925.json",
+      "bytes": 529,
+      "sha256": "49ebd6979ce2f6206953afba0d1b3b0034027eb3508544e278dd091b39a39925",
+      "gitBlobSha": "b2ba46b8ee421b3543d302c24e519f50fa443cb2"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/reuse-ledger/receipt.json",
+      "bytes": 5206,
+      "sha256": "fb4000f887f45921bf5a1f87fc27b732e4955f6332093c7f70d3f79ec3ab9684",
+      "gitBlobSha": "37ad8c70f7839a0a48e5f343c1357f9022de60c6"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/reuse-ledger/replay-files.json",
+      "bytes": 1371,
+      "sha256": "7a42de6ab598a110a724f4d85a4b1d08dc53234180cbe2e2652de0f065bed0cf",
+      "gitBlobSha": "569d310102617ddcae64d346fbb0e24c9f8fb488"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/reuse-ledger/replay-receipt.json",
+      "bytes": 3055,
+      "sha256": "71a54c96b6d2a7a4a28f36ade9af8c2d9374cb7629aa302207b3e6ceece22ca5",
+      "gitBlobSha": "05125aada34822a911b543daf8e905eef1c6b632"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/review-contract.json",
+      "bytes": 956,
+      "sha256": "a2ca713491da803feea4a0323c03d292e02e70d0359b5dac6b9111eab544a7cd",
+      "gitBlobSha": "fe9400d3ce97f05a4ef4f684f55280daaba7e1e3"
+    },
+    {
+      "path": "docs/eth-candidate-evidence/20261027-common-cohort/source-manifest.json",
+      "bytes": 321508,
+      "sha256": "75fec9993a352712fe5e7e902c07d5690761678eb9bdf2a04437302c2e15a310",
+      "gitBlobSha": "76d702c78c658e7167efde9477008abf5f135208"
+    }
+  ]
+}

@@ -104,7 +104,31 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
   const put = (selector, markup) => { const node = $(selector); if (node.innerHTML !== markup) node.innerHTML = markup; };
   const text = (selector, value) => { const node = $(selector); if (node.textContent !== value) node.textContent = value; };
 
+  const viewport = $('#asset-table-scroll'), table = $('.asset-comparison-table');
+  const browser = root.ownerDocument?.defaultView;
+  let rowFitFrame = null;
+
+  function fitRows() {
+    rowFitFrame = null;
+    if (disposed || root.hidden || state.status !== 'ready' || !model?.rows.length || !viewport.clientHeight || !table.tHead) return;
+    // clientHeight excludes a horizontal scrollbar; the measured header stays compact.
+    const rowHeight = Math.max(40, (viewport.clientHeight - table.tHead.getBoundingClientRect().height) / model.rows.length);
+    const next = `${rowHeight.toFixed(3)}px`;
+    if (table.style.getPropertyValue('--asset-fill-row-height') !== next) table.style.setProperty('--asset-fill-row-height', next);
+  }
+
+  function scheduleRowFit() {
+    if (disposed || rowFitFrame !== null || !browser?.requestAnimationFrame) return;
+    rowFitFrame = browser.requestAnimationFrame(fitRows);
+  }
+
+  // Observe the available space and header, never the rows changed by this callback.
+  const rowFitObserver = browser?.ResizeObserver ? new browser.ResizeObserver(scheduleRowFit) : null;
+  rowFitObserver?.observe(viewport);
+  if (table?.tHead) rowFitObserver?.observe(table.tHead);
+
   function clearRows(message, canRetry = false) {
+    table?.style?.removeProperty('--asset-fill-row-height');
     put('#data-body', `<tr><td colspan="10" class="asset-table-empty"><span>${esc(message)}</span>${canRetry ? '<button type="button" id="asset-retry">다시 불러오기</button>' : ''}</td></tr>`);
     $('#export-raw').disabled = true;
     $('#asset-history-open').disabled = true;
@@ -143,6 +167,7 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
     if ($('#asset-history-dialog').open && historyView) void historyView.open({ bundle, asOfDate: model.asOf });
     $('#asset-table-scroll').setAttribute('aria-busy', 'false');
     if ($('#daily-method-dialog').open) put('#daily-method-content', methodContent());
+    scheduleRowFit();
   }
 
   function fail(error, date) {
@@ -165,7 +190,7 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
     } catch (error) { request++; pending = null; fail(error, null); return Promise.resolve(null); }
     if (refresh || (pending && state.asOf !== date)) { request++; pending = null; model = null; if (refresh) bundle = null; state.status = 'idle'; }
     if (pending) return pending;
-    if (state.status === 'ready' && state.asOf === date) return Promise.resolve(model);
+    if (state.status === 'ready' && state.asOf === date) { scheduleRowFit(); return Promise.resolve(model); }
     if (state.status === 'error' && state.asOf === date && !refresh) return Promise.resolve(null);
     const token = ++request;
     model = null; state.status = 'loading'; state.asOf = date; state.error = null;
@@ -231,5 +256,5 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
     }
   }
   root.addEventListener('click', click);
-  return { render, refresh: () => render({ refresh: true }), get state() { return { ...state }; }, destroy() { disposed = true; request++; pending = null; model = null; bundle = null; root.removeEventListener('click', click); historyView?.destroy(); closeMethod(); } };
+  return { render, refresh: () => render({ refresh: true }), get state() { return { ...state }; }, destroy() { disposed = true; request++; pending = null; model = null; bundle = null; root.removeEventListener('click', click); historyView?.destroy(); closeMethod(); rowFitObserver?.disconnect(); if (rowFitFrame !== null) { browser?.cancelAnimationFrame(rowFitFrame); rowFitFrame = null; } } };
 }

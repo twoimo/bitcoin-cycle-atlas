@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "sourceCommit": "c302fb4f0249d6920536d2da70f58e5426e9f472",
+  "scope": "Independent read-only review and reproduction; not a whole-program proof. Browser results are recorded separately.",
+  "numericalAndInputReview": {
+    "tests": 77,
+    "files": 6,
+    "resolvedIntermediateCounterexamples": [
+      "quote-unit dependent tolerance",
+      "subnormal price ratio precision",
+      "geometric mean exponent boundary"
+    ],
+    "remainingConcreteRegression": null
+  },
+  "standaloneParserReview": {
+    "sourceParser": "Node SourceTextModule",
+    "sourceFiles": 81,
+    "sourceStaticImports": 185,
+    "regexMissingOrFalseImports": 0,
+    "embeddedModules": 76,
+    "embeddedStaticImports": 180,
+    "reachableModules": 76,
+    "uniqueDataUrls": 76,
+    "importMapBeforeEntry": true,
+    "snapshotsEqual": true,
+    "remainingConcreteRegression": null
+  },
+  "sha256": {
+    "dist/market-structure.js": "c2564780aadb72422bf50d4dacabafc407f882fb63f325c6667bbcb4a4c74214",
+    "dist/chart-touch-tracking.js": "42533c643d621d4e0b0d8fe2ec7bc5f432a6fa42635354b47aa7fb86783609c7",
+    "scripts/build-standalone.mjs": "a942feac6189d4b0d9e1160db6cd74da02fc37a08832e6a959bad1e270220c50",
+    "scripts/verify-static.mjs": "3703a2daeef4f447420b2f9d33b62d2f8db4264e7ba7ff5e7ccb8a27feca6c3d",
+    "build/Bitcoin_Cycles_Comparison.html": "7bf9dafdad6385a827a0498e80950df203091441591002769faad974c2ee583e"
+  }
+}

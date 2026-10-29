@@ -1,0 +1,421 @@
+{
+  "schemaVersion": 1,
+  "kind": "ethereum-continuity-second-hallmark-receipt",
+  "observedAt": "2026-10-28T03:44:49.685Z",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "pullRequest": 39,
+  "source": {
+    "commit": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+    "tree": "c525621d117d4727e4efd41b894021d2181ac4b6",
+    "parents": [
+      "f6739b0a5da2986cbe33d028ea8fcd3468d85012"
+    ],
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/commit/c17be870193a535860e95f41bbb6b0239fd4c22a"
+  },
+  "run": {
+    "id": 40628133593,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40628133593",
+    "event": "pull_request",
+    "headSha": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+    "runAttempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-10-28T03:41:35Z",
+    "runStartedAt": "2026-10-28T03:41:35Z",
+    "updatedAt": "2026-10-28T03:44:00Z"
+  },
+  "job": {
+    "id": 122617888419,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40628133593/job/122617888419",
+    "name": "audit",
+    "status": "completed",
+    "conclusion": "success",
+    "startedAt": "2026-10-28T03:41:39Z",
+    "completedAt": "2026-10-28T03:43:59Z"
+  },
+  "steps": [
+    {
+      "number": 1,
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:39Z",
+      "completedAt": "2026-10-28T03:41:40Z"
+    },
+    {
+      "number": 2,
+      "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:40Z",
+      "completedAt": "2026-10-28T03:41:46Z"
+    },
+    {
+      "number": 3,
+      "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:46Z",
+      "completedAt": "2026-10-28T03:41:46Z"
+    },
+    {
+      "number": 4,
+      "name": "Check out immutable design baseline",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:46Z",
+      "completedAt": "2026-10-28T03:41:49Z"
+    },
+    {
+      "number": 5,
+      "name": "Install isolated pinned browser tooling",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:49Z",
+      "completedAt": "2026-10-28T03:41:51Z"
+    },
+    {
+      "number": 6,
+      "name": "Install the source-pinned Korean font",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:51Z",
+      "completedAt": "2026-10-28T03:41:54Z"
+    },
+    {
+      "number": 7,
+      "name": "Audit all static files and eight rendered routes before and after",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:54Z",
+      "completedAt": "2026-10-28T03:43:54Z"
+    },
+    {
+      "number": 8,
+      "name": "Preserve findings, source receipts and before/after screenshots",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:43:54Z",
+      "completedAt": "2026-10-28T03:43:57Z"
+    },
+    {
+      "number": 14,
+      "name": "Post Check out immutable design baseline",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:43:57Z",
+      "completedAt": "2026-10-28T03:43:57Z"
+    },
+    {
+      "number": 15,
+      "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:43:57Z",
+      "completedAt": "2026-10-28T03:43:57Z"
+    },
+    {
+      "number": 16,
+      "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:43:57Z",
+      "completedAt": "2026-10-28T03:43:57Z"
+    },
+    {
+      "number": 17,
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:43:57Z",
+      "completedAt": "2026-10-28T03:43:57Z"
+    }
+  ],
+  "checkout": {
+    "type": "pull-request-head",
+    "commit": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+    "tree": "c525621d117d4727e4efd41b894021d2181ac4b6",
+    "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+    "verifiedBy": "Exact checkout log, exact HALLMARK_AUDIT_RECEIPT, GitHub Git commit API"
+  },
+  "auditReceipt": {
+    "sourceCommit": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+    "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+    "phases": [
+      {
+        "name": "baseline-static",
+        "fails": 1214,
+        "reflex": 1347,
+        "warns": 37,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 26,
+        "render": "off",
+        "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      {
+        "name": "baseline-render",
+        "fails": 53,
+        "reflex": 211,
+        "warns": 13,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      {
+        "name": "current-static",
+        "fails": 0,
+        "reflex": 0,
+        "warns": 36,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 26,
+        "render": "off",
+        "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX"
+      },
+      {
+        "name": "current-render",
+        "fails": 0,
+        "reflex": 0,
+        "warns": 17,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 209/210; before 53 FAIL, 211 REFLEX, now 0 FAIL, 0 REFLEX"
+      }
+    ],
+    "designGate": {
+      "status": "pass",
+      "fails": 0,
+      "reflex": 0
+    },
+    "integrityGate": {
+      "status": "pass",
+      "errors": 0
+    },
+    "sourceReadOnly": {
+      "current": true,
+      "baseline": true,
+      "gitBlobsMatched": true
+    },
+    "durationMilliseconds": 119296,
+    "readiness": [
+      {
+        "version": "baseline",
+        "route": "btc",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "eth",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "bmnr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "mstr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "data",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "evidence",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "compare",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "mobile-preview",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "btc",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "eth",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "bmnr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "mstr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "data",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "evidence",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "compare",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "mobile-preview",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+        "status": "ready"
+      }
+    ],
+    "errors": [],
+    "exitCode": 0
+  },
+  "phaseDetails": [
+    {
+      "name": "baseline-static",
+      "code": 0,
+      "counts": {
+        "FAIL 19": 1,
+        "FAIL 26a": 1,
+        "FAIL 34": 25,
+        "FAIL 39a": 20,
+        "FAIL 47a": 1,
+        "FAIL 48": 1127,
+        "FAIL 56": 1,
+        "FAIL 63": 17,
+        "FAIL 67": 21,
+        "REFLEX 24b": 1341,
+        "REFLEX 26b": 2,
+        "REFLEX 38iii": 4,
+        "WARN 3": 3,
+        "WARN 29": 9,
+        "WARN 40": 10,
+        "WARN 41": 6,
+        "WARN F3": 1,
+        "WARN F7": 5,
+        "WARN F23": 1,
+        "WARN F24": 2
+      },
+      "screenshots": null,
+      "requestedUrls": null
+    },
+    {
+      "name": "baseline-render",
+      "code": 0,
+      "counts": {
+        "FAIL 26a": 2,
+        "FAIL 40": 19,
+        "FAIL 48": 24,
+        "FAIL 56": 4,
+        "FAIL 67": 4,
+        "REFLEX 24b": 194,
+        "REFLEX 26b": 1,
+        "REFLEX 39b": 5,
+        "REFLEX 49b": 2,
+        "REFLEX 72": 2,
+        "REFLEX 75": 7,
+        "WARN 29": 1,
+        "WARN 40": 4,
+        "WARN F3": 1,
+        "WARN F19": 2,
+        "WARN F24": 1,
+        "WARN F25": 4
+      },
+      "screenshots": 40,
+      "requestedUrls": 8
+    },
+    {
+      "name": "current-static",
+      "code": 0,
+      "counts": {
+        "WARN 3": 3,
+        "WARN 29": 9,
+        "WARN 40": 9,
+        "WARN 41": 6,
+        "WARN F3": 1,
+        "WARN F7": 6,
+        "WARN F24": 2
+      },
+      "screenshots": null,
+      "requestedUrls": null
+    },
+    {
+      "name": "current-render",
+      "code": 0,
+      "counts": {
+        "WARN 29": 1,
+        "WARN 40": 4,
+        "WARN F3": 1,
+        "WARN F7": 1,
+        "WARN F19": 2,
+        "WARN F24": 1,
+        "WARN F25": 5,
+        "WARN kept": 2
+      },
+      "screenshots": 40,
+      "requestedUrls": 8
+    }
+  ],
+  "logAcquisition": {
+    "status": "success",
+    "attempts": 1,
+    "markerEvidencePath": "/tmp/eth-continuity-hallmark-second-markers.log",
+    "extractionMethod": "Only exact timestamped HALLMARK receipt markers and checkout identity lines; no image/base64 content.",
+    "currentReadyRoutes": [
+      "btc",
+      "eth",
+      "bmnr",
+      "mstr",
+      "data",
+      "evidence",
+      "compare",
+      "mobile-preview"
+    ]
+  },
+  "scope": "Read-only observation. WARN findings remain WARN findings; this receipt does not imply zero warnings, PR merge, archive publication, or default-branch schedule activation."
+}

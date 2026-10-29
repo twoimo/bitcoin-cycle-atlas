@@ -1,0 +1,133 @@
+{
+  "artifact": {
+    "id": 12733120772,
+    "runId": 40500039083,
+    "file": "eth-evidence-ccac8d10.zip",
+    "bytes": 51272903,
+    "sha256": "1bf275e1e2ff34b9314e35105c6880b9602bb757393b6bc3d571277efe2e45f1"
+  },
+  "sourceCommit": "ccac8d10dfdc76f618d906d3c3fe4a4d69d7d173",
+  "sourceTree": "ea6fd758831ce3bea8aa518fc1d009478f409529",
+  "preservedFiles": [
+    {
+      "artifactPath": "ethereum-economic-vintages/receipt.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/ethereum-economic-vintages/receipt.json",
+      "bytes": 12051,
+      "sha256": "e61b720f5f5103e65288aa266efdfef7fb1ae821598b8a1a02b67619279bb8a1"
+    },
+    {
+      "artifactPath": "ethereum-economic-vintages/replay.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/ethereum-economic-vintages/replay.json",
+      "bytes": 10346,
+      "sha256": "f88c0b4899a545aae78f1be9c7fad1f59180bea88c55aa14c35941cd208fc299"
+    },
+    {
+      "artifactPath": "ethereum-economic-vintages/index.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/ethereum-economic-vintages/index.json",
+      "bytes": 408,
+      "sha256": "2542d3505261495374509bf24eb8fd474306a91a504d5e348cff621e37c72fb9"
+    },
+    {
+      "artifactPath": "ethereum-economic-vintages/files.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/ethereum-economic-vintages/files.json",
+      "bytes": 14794,
+      "sha256": "0e50a3d3fd5d590cc38fd4484cb4f025beebecf51830c6fcecb1c70f27ca9dc2"
+    },
+    {
+      "artifactPath": "ethereum-economic-evidence-coverage.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/ethereum-economic-evidence-coverage.json",
+      "bytes": 59811,
+      "sha256": "e830145fb2cd30b1143bca9569bd575d8e33dcbbe324b0d2136c59bbcf9c783c"
+    },
+    {
+      "artifactPath": "ethereum-source-timing.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/ethereum-source-timing.json",
+      "bytes": 9883,
+      "sha256": "8805ca8e14b4e1ed814d970a7ebd0f9c75239c653459e4a2a7a736fbedf1bc35"
+    },
+    {
+      "artifactPath": "ethereum-independent-calibration.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/ethereum-independent-calibration.json",
+      "bytes": 99604,
+      "sha256": "d25ab044c4579a7c7d9210df817b1a6134fca897d0f388d0d60042b6509a8832"
+    },
+    {
+      "artifactPath": "ethereum-model-readiness.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/ethereum-model-readiness.json",
+      "bytes": 265914,
+      "sha256": "44d552b679f8cb3ac5c5ec67aaefbd4fa74a3f40a4219f701110d843a4fe2b43"
+    },
+    {
+      "artifactPath": "ethereum-prospective-ledger/receipt.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/ethereum-prospective-ledger/receipt.json",
+      "bytes": 5206,
+      "sha256": "d02d3f256dfdb5bf810c9d70c9cf9c77c7803332697c8ca5e7d3b1087f0b2ac9"
+    },
+    {
+      "artifactPath": "ethereum-prospective-ledger/replay-receipt.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/ethereum-prospective-ledger/replay-receipt.json",
+      "bytes": 3055,
+      "sha256": "de5d2eeb2a4f9fcd56b7af682570d1e29fdbc66703d5e9c6001fff490188fe78"
+    },
+    {
+      "artifactPath": "eth-browser/report.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/eth-browser/report.json",
+      "bytes": 998842,
+      "sha256": "3f97c999b42fa3be6809c836c3238768dda2cb8d5816d4d044c74109af535a17"
+    },
+    {
+      "artifactPath": "eth-review-packet/source-manifest.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/eth-review-packet/source-manifest.json",
+      "bytes": 341823,
+      "sha256": "dc832eb37fb82de45dc6e7fa9197911e9012e9c219819e0d3648316a5d63e9f2"
+    },
+    {
+      "artifactPath": "eth-review-packet/review-contract.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/eth-review-packet/review-contract.json",
+      "bytes": 956,
+      "sha256": "93dfa491c67b202178df09d16106c9c536011ca3ac1c9c38e63ac879a26f0c9e"
+    },
+    {
+      "artifactPath": "ethereum-supply-accounting/capture-uRYEbx/receipt.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/ethereum-supply-accounting/capture-uRYEbx/receipt.json",
+      "bytes": 5022,
+      "sha256": "831d4a9f00846bc84e6a718dca83852ab6dfc208067ff70fc3cde5e6c11eb887"
+    },
+    {
+      "artifactPath": "ethereum-supply-accounting/capture-uRYEbx/history-30d.raw.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/ethereum-supply-accounting/capture-uRYEbx/history-30d.raw.json",
+      "bytes": 801536,
+      "sha256": "4992d3b2f4cc6d9e353c7f52fdc88c79af2e178dbe126fe5ddbaef1d79ecbbcc"
+    },
+    {
+      "artifactPath": "ethereum-supply-accounting/capture-uRYEbx/started.json",
+      "preservedPath": "docs/eth-candidate-evidence/20261027-vintages-calibration/first-run/ethereum-supply-accounting/capture-uRYEbx/started.json",
+      "bytes": 1647,
+      "sha256": "d18496b90b34f3b5b7182b7a1357c36c53bd8cc6ebd0c415d9a01de43617d047"
+    }
+  ],
+  "sourcebook": {
+    "bytes": 62137219,
+    "sha256": "160212435cd3686ade2f1c8a6909c388769206f8cc2f7e8f919537012509287c",
+    "seeds": 307,
+    "entries": 445,
+    "parts": 346,
+    "unresolved": 0,
+    "partsRecombinedExactly": true
+  },
+  "browser": {
+    "status": "passed",
+    "cases": 35,
+    "failures": 0,
+    "verifiedScreenshots": 181,
+    "runtimeErrors": 0,
+    "unexpectedResourceErrors": 0,
+    "expectedOfflineRefresh": 15
+  },
+  "methodologyIdentity": {
+    "sourceUrl": "https://ethsupply.fyi/methodology/",
+    "bytes": 125691,
+    "sha256": "fd9c3d66c4c8f7112bb44b19a99f8b11a869038b656a7726d6143e5798e73687",
+    "fullDocumentRepublishedInRepository": false
+  }
+}

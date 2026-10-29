@@ -9,7 +9,7 @@ async function complete(fixture, symbol, offset, revision) {
 
 for (const symbol of ['MSTR', 'BMNR']) {
   test(`${symbol} releases the usable observed chart before the coin response or projection`, { timeout: 2000 }, async () => {
-    const f = await equityViewFixture(symbol);
+    const f = await equityViewFixture(symbol, { pathname: '/atlas-"quote&path' });
     assert.equal(f.document.documentElement.dataset.boot, 'loading');
     assert.equal(f.app.inert, true);
     f.reply(0, equityPayload(symbol, 1)); await f.microtasks(); await f.frame();
@@ -20,6 +20,17 @@ for (const symbol of ['MSTR', 'BMNR']) {
     assert.equal(f.app.inert, false, 'observed chart controls must be usable while the coin archive is pending');
     assert.equal(f.app.getAttribute('aria-hidden'), undefined);
     assert.match(f.status(), /계산 중/, 'forecast status must remain pending after observed readiness');
+    const dialog = f.info();
+    assert.equal(dialog.open, true, 'observed data links are usable before the coin projection completes');
+    const markup = dialog.querySelector('#equity-detail-content').innerHTML;
+    const saved = markup.match(/<a href="([^"]+)" target="_blank" rel="noopener noreferrer">보존한 일별 원자료\(JSON\) ↗<\/a>/);
+    assert.ok(saved, 'the info dialog must identify its preserved JSON archive');
+    assert.equal(saved[1], './data/'+symbol.toLowerCase()+'-ohlc.json');
+    assert.equal(saved[1], f.requests[0].url, 'the original-data link must use this symbol’s actual price archive');
+    assert.match(markup, /href="\/atlas-&quot;quote&amp;path\?page=data">18개 자산 비교표 ↗<\/a>/);
+    assert.doesNotMatch(markup, /data-asset=|일별 원자료 · 연간 수익률 · MDD/);
+    assert.equal(f.requests.length, 2, 'opening data information must not refetch or switch assets');
+    dialog.close();
     f.scenario('bull'); await f.frame();
     f.reply(1, { revision: 1 }); await f.settle(); await f.initialization;
     assert.equal(f.latest().forecast.scenario, 'bull');

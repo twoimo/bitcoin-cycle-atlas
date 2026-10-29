@@ -1,0 +1,51 @@
+{
+  "kind": "ethereum-continuity-ci-failed-run",
+  "runId": 40625665456,
+  "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40625665456",
+  "jobId": 122609835517,
+  "jobUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40625665456/job/122609835517",
+  "sourceCommit": "a3bd5b2fd110ca90b9c86b6b4c7b6bd6af9c4837",
+  "sourceTree": "adf8e54be1163b912d63add2a8b8e79e672402d0",
+  "status": "completed",
+  "conclusion": "failure",
+  "createdAt": "2026-10-28T03:15:41Z",
+  "updatedAt": "2026-10-28T03:16:52Z",
+  "runStartedAt": "2026-10-28T03:15:41Z",
+  "checkout": {
+    "kind": "pull-request-synthetic-merge",
+    "commit": "96033eb522dd965e92fa5a55e803143ecb463068",
+    "tree": "a342630702ff31207330ac52277ae84a05ad8548",
+    "parents": [
+      "5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+      "a3bd5b2fd110ca90b9c86b6b4c7b6bd6af9c4837"
+    ],
+    "sourceParentMatched": true
+  },
+  "tests": {
+    "tests": 1821,
+    "suites": 0,
+    "pass": 1799,
+    "fail": 22,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 56389.404894
+  },
+  "failure": {
+    "message": "TypeError: Unexpected archive logical path acquisition.json",
+    "affectedTestFile": "tests/ethereum-prospective-archive-io.test.mjs",
+    "cause": "Actual full committed prospective seed has legacy acquisition.json and raw/coinbase-tail.json paths absent from the earlier partial local checkout. The collector/archive normalizer did not yet preserve those legacy paths.",
+    "followupRequired": true
+  },
+  "numericalAssertions": {
+    "status": "skipped-after-test-failure",
+    "count": null
+  },
+  "negativeControls": {
+    "status": "skipped-after-test-failure",
+    "count": null
+  },
+  "releaseAuthorized": false,
+  "productionPromoted": false
+}
+

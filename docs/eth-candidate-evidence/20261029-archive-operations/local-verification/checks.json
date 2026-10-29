@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "group": "checks",
+  "sourceCommit": "e41f93f58e59a05d3125f8a614a055c6b721ef88",
+  "sourceTree": "acaadcb7c74597533c4126b52606754dc6565da9",
+  "trackedStatusBefore": "",
+  "startedAt": "2026-10-28T18:02:48.540Z",
+  "commands": [
+    {
+      "name": "verify:forecast",
+      "command": [
+        "npm",
+        "run",
+        "verify:forecast"
+      ],
+      "startedAt": "2026-10-28T18:02:48.540Z",
+      "log": "build/archive-operations-verification/verify-forecast.log",
+      "finishedAt": "2026-10-28T18:02:56.486Z",
+      "seconds": 7.947,
+      "exitCode": 0,
+      "logBytes": 1179,
+      "logSha256": "9d5d237b8c2ed5019704f2c22172b29fef13e5e3ec14adaa5c51e6850b6f1f30"
+    },
+    {
+      "name": "verify:research",
+      "command": [
+        "npm",
+        "run",
+        "verify:research"
+      ],
+      "startedAt": "2026-10-28T18:02:56.487Z",
+      "log": "build/archive-operations-verification/verify-research.log",
+      "finishedAt": "2026-10-28T18:02:57.432Z",
+      "seconds": 0.946,
+      "exitCode": 0,
+      "logBytes": 527,
+      "logSha256": "291d96c8810d3dd1b8bb6c70d6eec086fa73bef1c92f2a797dae32f68dc1ba8c"
+    },
+    {
+      "name": "verify:eth-events",
+      "command": [
+        "npm",
+        "run",
+        "verify:eth-events"
+      ],
+      "startedAt": "2026-10-28T18:02:57.433Z",
+      "log": "build/archive-operations-verification/verify-eth-events.log",
+      "finishedAt": "2026-10-28T18:02:57.715Z",
+      "seconds": 0.282,
+      "exitCode": 0,
+      "logBytes": 367,
+      "logSha256": "7cd4c7d350d37ddb33a074c645d1c4b3403369b5c8106053684447e20bd25be6"
+    },
+    {
+      "name": "verify:treasury-paths",
+      "command": [
+        "npm",
+        "run",
+        "verify:treasury-paths"
+      ],
+      "startedAt": "2026-10-28T18:02:57.715Z",
+      "log": "build/archive-operations-verification/verify-treasury-paths.log",
+      "finishedAt": "2026-10-28T18:03:03.662Z",
+      "seconds": 5.947,
+      "exitCode": 0,
+      "logBytes": 8358,
+      "logSha256": "f466f3d11f783d57c984f47daafb61a935611186c2994310a1cbbbf443fe35c0"
+    },
+    {
+      "name": "verify:numerics",
+      "command": [
+        "npm",
+        "run",
+        "verify:numerics"
+      ],
+      "startedAt": "2026-10-28T18:03:03.662Z",
+      "log": "build/archive-operations-verification/verify-numerics.log",
+      "finishedAt": "2026-10-28T18:03:15.010Z",
+      "seconds": 11.348,
+      "exitCode": 0,
+      "logBytes": 33743,
+      "logSha256": "df6ec0257d6bc510550a016865f3d34e3b1c99809d7c3a7125464e796ee410cb"
+    },
+    {
+      "name": "verify:formal",
+      "command": [
+        "npm",
+        "run",
+        "verify:formal"
+      ],
+      "startedAt": "2026-10-28T18:03:15.011Z",
+      "log": "build/archive-operations-verification/verify-formal.log",
+      "finishedAt": "2026-10-28T18:04:03.682Z",
+      "seconds": 48.671,
+      "exitCode": 0,
+      "logBytes": 27746,
+      "logSha256": "91f52b437b1dce049c3f65bdfea335d7a0dfef8fcbe15f0604a424c86c4a4953"
+    },
+    {
+      "name": "verify:cycle",
+      "command": [
+        "npm",
+        "run",
+        "verify:cycle"
+      ],
+      "startedAt": "2026-10-28T18:04:03.682Z",
+      "log": "build/archive-operations-verification/verify-cycle.log",
+      "finishedAt": "2026-10-28T18:04:04.471Z",
+      "seconds": 0.789,
+      "exitCode": 0,
+      "logBytes": 577,
+      "logSha256": "3cb54eda21aeab0742bde1570329f0d6e8a7583c8e8334b5646144cef0129a6a"
+    },
+    {
+      "name": "verify:performance",
+      "command": [
+        "npm",
+        "run",
+        "verify:performance"
+      ],
+      "startedAt": "2026-10-28T18:04:04.472Z",
+      "log": "build/archive-operations-verification/verify-performance.log",
+      "finishedAt": "2026-10-28T18:04:04.936Z",
+      "seconds": 0.464,
+      "exitCode": 0,
+      "logBytes": 1262,
+      "logSha256": "b507d54b4ce8824d9288181dd967fb407eb314a4519db5d4443fa1e7086ce302"
+    },
+    {
+      "name": "verify:static",
+      "command": [
+        "npm",
+        "run",
+        "verify:static"
+      ],
+      "startedAt": "2026-10-28T18:04:04.937Z",
+      "log": "build/archive-operations-verification/verify-static.log",
+      "finishedAt": "2026-10-28T18:04:12.428Z",
+      "seconds": 7.491,
+      "exitCode": 0,
+      "logBytes": 282,
+      "logSha256": "66e15b085395b070eab63170c134584d80fb0722cc627bebb00c305ca7e0c3ac"
+    }
+  ],
+  "status": "passed",
+  "finishedAt": "2026-10-28T18:04:12.428Z",
+  "finalCommit": "e41f93f58e59a05d3125f8a614a055c6b721ef88",
+  "trackedStatusAfter": "",
+  "sameSourceCommit": true
+}

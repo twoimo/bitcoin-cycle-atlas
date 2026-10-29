@@ -1,0 +1,2786 @@
+{
+  "kind": "ethereum-candidate-comparison",
+  "asOf": "2026-10-25",
+  "sourceCommit": "d5101631b294a25d7db2ddff1ac74a76bddf92fd",
+  "sourceTree": "10008614b61cd4d4186d250f33270cd4a8e04a32",
+  "executedAt": "2026-10-26T12:35:28.217Z",
+  "runId": "40323657043",
+  "inputSha256": {
+    "dist/data/eth-ohlc.json": "69a726d87fcea635772a806ac6a00f43880a43d8c66bd88152045dffc209106f",
+    "dist/data/btc-daily.json": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e"
+  },
+  "uniqueOrigins": 111,
+  "maturedTargets": 320,
+  "prospectiveScoredTargets": 0,
+  "historicalVintagesAvailable": false,
+  "discardedEarlyEthObservations": 3,
+  "economicSnapshotCount": 0,
+  "economicAcquisition": {
+    "source": {
+      "repository": "coinmetrics/data",
+      "commit": "f1a36afb962731c387bb03982758ab0103063da5",
+      "path": "csv/eth.csv",
+      "gitBlobSha": "d8e4f389b37626f432a923805e5cc5fa2ad5490b",
+      "bytes": 2121732,
+      "repositoryCommitTimestamp": "2026-05-24T13:37:39Z",
+      "sourceUrl": "https://github.com/coinmetrics/data/blob/f1a36afb962731c387bb03982758ab0103063da5/csv/eth.csv",
+      "rawUrl": "https://raw.githubusercontent.com/coinmetrics/data/f1a36afb962731c387bb03982758ab0103063da5/csv/eth.csv",
+      "license": "CC-BY-NC-4.0",
+      "attribution": "Coin Metrics, Inc.",
+      "licenseUrl": "https://github.com/coinmetrics/data/blob/f1a36afb962731c387bb03982758ab0103063da5/LICENSE",
+      "licenseGitBlobSha": "f8f2af023ec95cb746dd08ec624c4c147b375af9",
+      "definitionCommit": "8489126ae94aff995d01be44f965327f2640f51e",
+      "sourceSha256": "46b18f3df967405374b1f6ee8a3d11ee1b7a5b176ac9fb4342caf6bf8648f2cc"
+    },
+    "collectedAt": "2026-10-26T12:35:25.343Z",
+    "publishedAt": null,
+    "coverage": {
+      "version": "eth-economic-source-coverage-1",
+      "asOf": "2026-10-25",
+      "collectedAt": "2026-10-26T12:35:25.343Z",
+      "sourceStatus": "partial-observations-collected",
+      "requestedWindow": {
+        "observedFrom": "2026-09-28",
+        "observedThrough": "2026-10-25",
+        "observedAt": "2026-10-26T00:00:00.000Z",
+        "windowDays": 28,
+        "completeWindow": false,
+        "missingDates": [
+          "2026-09-28",
+          "2026-09-29",
+          "2026-09-30",
+          "2026-10-01",
+          "2026-10-02",
+          "2026-10-03",
+          "2026-10-04",
+          "2026-10-05",
+          "2026-10-06",
+          "2026-10-07",
+          "2026-10-08",
+          "2026-10-09",
+          "2026-10-10",
+          "2026-10-11",
+          "2026-10-12",
+          "2026-10-13",
+          "2026-10-14",
+          "2026-10-15",
+          "2026-10-16",
+          "2026-10-17",
+          "2026-10-18",
+          "2026-10-19",
+          "2026-10-20",
+          "2026-10-21",
+          "2026-10-22",
+          "2026-10-23",
+          "2026-10-24",
+          "2026-10-25"
+        ],
+        "missingFields": [],
+        "aggregate": null,
+        "providerCompletedAt": null,
+        "modelSnapshot": null,
+        "accounting": "Original provider aggregates only. Fees include blobs; issuance is gross; supply scope is unreconciled; L1 transaction count is not gas."
+      },
+      "latestCompleteWindow": {
+        "observedFrom": "2026-04-26",
+        "observedThrough": "2026-05-23",
+        "observedAt": "2026-05-24T00:00:00.000Z",
+        "windowDays": 28,
+        "completeWindow": true,
+        "missingDates": [],
+        "missingFields": [],
+        "aggregate": {
+          "totalFeesIncludingBlobEth": 9122.065722414914,
+          "grossIssuanceEth": 78672.726006681,
+          "l1TransactionCount": 64795230,
+          "providerLedgerSupplyEth": 121721391.22868587
+        },
+        "providerCompletedAt": "2026-05-24T02:44:08.000Z",
+        "modelSnapshot": null,
+        "accounting": "Original provider aggregates only. Fees include blobs; issuance is gross; supply scope is unreconciled; L1 transaction count is not gas."
+      },
+      "staleDays": 155,
+      "freshness": "stale",
+      "requiredMetricCount": 25,
+      "definitionMatchedMetricCount": 0,
+      "requirements": [
+        {
+          "metric": "l1GasUsed",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "TxCnt is L1 transaction count and cannot substitute for gas or a fixed L2 universe."
+        },
+        {
+          "metric": "l2Transactions",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "TxCnt is L1 transaction count and cannot substitute for gas or a fixed L2 universe."
+        },
+        {
+          "metric": "blobGasUsed",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "executionFeesEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "FeeTotNtv is an aggregate including blob fees; the required split is absent."
+        },
+        {
+          "metric": "executionBurnEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "blobFeesEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "FeeTotNtv is an aggregate including blob fees; the required split is absent."
+        },
+        {
+          "metric": "blobBurnEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "FeeTotNtv is an aggregate including blob fees; the required split is absent."
+        },
+        {
+          "metric": "consensusNetIssuanceEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "IssTotNtv is gross issuance; required layer, penalty and era components are absent."
+        },
+        {
+          "metric": "executionPowIssuanceEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "IssTotNtv is gross issuance; required layer, penalty and era components are absent."
+        },
+        {
+          "metric": "supplyEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "SplyCur exists but exact EL/CL scope and its revision history need reconciliation."
+        },
+        {
+          "metric": "stakedEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "exitQueueEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "l2UserFeesEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "l2SettlementFeesEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "stakingConsensusRewardsEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "stakingConsensusPenaltiesEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "stakingPriorityFeesEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "stakingMevExcludingPriorityEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "stakingServiceFeesEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "stakingOperatingCostsEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "averageRewardEligibleStakeEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "completedExitCount",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "completedExitMedianWaitDays",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "uniqueNativeCollateralEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        },
+        {
+          "metric": "uniqueStakingClaimCollateralEth",
+          "status": "unavailable",
+          "sourceField": null,
+          "reason": "Required measured field and its definition-matched provenance are absent."
+        }
+      ],
+      "publishedAt": null,
+      "historicalCollectionProven": false,
+      "historicalPointInTimeReady": false,
+      "fullModelSnapshotReady": false,
+      "eligibleModelSnapshotCount": 0,
+      "modelSnapshots": [],
+      "blockers": [
+        "This collection time applies to the exact archive captured now, not historical issue times.",
+        "Provider calculation completion and Git commit metadata are not proven publication times of historical metric vintages.",
+        "Only aggregate provider fields are present; the reviewed 25-metric definition and cohort requirements are not satisfied.",
+        "Latest complete source window is older than the seven-day model freshness limit."
+      ]
+    }
+  },
+  "common": [
+    {
+      "horizonDays": 30,
+      "coreModels": [
+        "flat",
+        "shrunkenTrend",
+        "btcLinked",
+        "btcTransfer",
+        "ethRefit",
+        "legacyEth"
+      ],
+      "coreCommonCases": 0,
+      "coreDisjointCases": 0,
+      "allRequestedCommonCases": 0,
+      "coreDisjointMeanAbsoluteLogErrors": {
+        "flat": null,
+        "shrunkenTrend": null,
+        "btcLinked": null,
+        "btcTransfer": null,
+        "ethRefit": null,
+        "legacyEth": null
+      },
+      "coreDisjointOrigins": []
+    },
+    {
+      "horizonDays": 90,
+      "coreModels": [
+        "flat",
+        "shrunkenTrend",
+        "btcLinked",
+        "btcTransfer",
+        "ethRefit",
+        "legacyEth"
+      ],
+      "coreCommonCases": 0,
+      "coreDisjointCases": 0,
+      "allRequestedCommonCases": 0,
+      "coreDisjointMeanAbsoluteLogErrors": {
+        "flat": null,
+        "shrunkenTrend": null,
+        "btcLinked": null,
+        "btcTransfer": null,
+        "ethRefit": null,
+        "legacyEth": null
+      },
+      "coreDisjointOrigins": []
+    },
+    {
+      "horizonDays": 180,
+      "coreModels": [
+        "flat",
+        "shrunkenTrend",
+        "btcLinked",
+        "btcTransfer",
+        "ethRefit",
+        "legacyEth"
+      ],
+      "coreCommonCases": 0,
+      "coreDisjointCases": 0,
+      "allRequestedCommonCases": 0,
+      "coreDisjointMeanAbsoluteLogErrors": {
+        "flat": null,
+        "shrunkenTrend": null,
+        "btcLinked": null,
+        "btcTransfer": null,
+        "ethRefit": null,
+        "legacyEth": null
+      },
+      "coreDisjointOrigins": []
+    }
+  ],
+  "pairwise": [
+    {
+      "horizonDays": 30,
+      "left": "btcTransfer",
+      "right": "ethRefit",
+      "sameOriginCases": 12,
+      "disjointCases": 7,
+      "firstCommonOrigin": "2019-09-11",
+      "lastCommonOrigin": "2022-07-13",
+      "disjointOrigins": [
+        "2019-09-11",
+        "2020-03-25",
+        "2020-05-20",
+        "2021-07-14",
+        "2021-09-08",
+        "2022-02-23",
+        "2022-06-15"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.1465419938436671,
+        "rootMeanSquaredLogError": 0.20366641436577385,
+        "directionAccuracy": 0.8571428571428571
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.14221610204839116,
+        "rootMeanSquaredLogError": 0.17239124397321864,
+        "directionAccuracy": 0.8571428571428571
+      },
+      "leftSkillAgainstRight": -0.030417735635898557,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 30,
+      "left": "btcTransfer",
+      "right": "legacyEth",
+      "sameOriginCases": 20,
+      "disjointCases": 11,
+      "firstCommonOrigin": "2024-06-12",
+      "lastCommonOrigin": "2026-09-02",
+      "disjointOrigins": [
+        "2024-06-12",
+        "2024-08-07",
+        "2024-10-02",
+        "2025-03-19",
+        "2025-05-14",
+        "2025-11-26",
+        "2026-01-21",
+        "2026-03-18",
+        "2026-05-13",
+        "2026-07-08",
+        "2026-09-02"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.14327203430830782,
+        "rootMeanSquaredLogError": 0.19382226891761775,
+        "directionAccuracy": 0.36363636363636365
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.21023420040405164,
+        "rootMeanSquaredLogError": 0.24974269113241226,
+        "directionAccuracy": 0.6363636363636364
+      },
+      "leftSkillAgainstRight": 0.318512240002095,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 30,
+      "left": "btcTransfer",
+      "right": "economic",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 30,
+      "left": "btcTransfer",
+      "right": "combined",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 30,
+      "left": "ethRefit",
+      "right": "legacyEth",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 30,
+      "left": "ethRefit",
+      "right": "economic",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 30,
+      "left": "ethRefit",
+      "right": "combined",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 30,
+      "left": "legacyEth",
+      "right": "economic",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 30,
+      "left": "legacyEth",
+      "right": "combined",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 30,
+      "left": "economic",
+      "right": "combined",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "btcTransfer",
+      "right": "ethRefit",
+      "sameOriginCases": 12,
+      "disjointCases": 5,
+      "firstCommonOrigin": "2019-09-11",
+      "lastCommonOrigin": "2022-07-13",
+      "disjointOrigins": [
+        "2019-09-11",
+        "2020-03-25",
+        "2021-07-14",
+        "2022-02-23",
+        "2022-06-15"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.29902011489854646,
+        "rootMeanSquaredLogError": 0.3596117933894283,
+        "directionAccuracy": 0.6
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.393583837172789,
+        "rootMeanSquaredLogError": 0.4555085119320156,
+        "directionAccuracy": 0.6
+      },
+      "leftSkillAgainstRight": 0.24026322562815938,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "btcTransfer",
+      "right": "legacyEth",
+      "sameOriginCases": 18,
+      "disjointCases": 6,
+      "firstCommonOrigin": "2024-06-12",
+      "lastCommonOrigin": "2026-07-08",
+      "disjointOrigins": [
+        "2024-06-12",
+        "2024-10-02",
+        "2025-03-19",
+        "2025-11-26",
+        "2026-03-18",
+        "2026-07-08"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.3426529304467758,
+        "rootMeanSquaredLogError": 0.36525662102660944,
+        "directionAccuracy": 0.5
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.37504281651161414,
+        "rootMeanSquaredLogError": 0.4053147979434964,
+        "directionAccuracy": 0.3333333333333333
+      },
+      "leftSkillAgainstRight": 0.08636316878725048,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "btcTransfer",
+      "right": "economic",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "btcTransfer",
+      "right": "combined",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "ethRefit",
+      "right": "legacyEth",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "ethRefit",
+      "right": "economic",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "ethRefit",
+      "right": "combined",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "legacyEth",
+      "right": "economic",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "legacyEth",
+      "right": "combined",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "economic",
+      "right": "combined",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "btcTransfer",
+      "right": "ethRefit",
+      "sameOriginCases": 12,
+      "disjointCases": 4,
+      "firstCommonOrigin": "2019-09-11",
+      "lastCommonOrigin": "2022-07-13",
+      "disjointOrigins": [
+        "2019-09-11",
+        "2020-03-25",
+        "2021-07-14",
+        "2022-02-23"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.40010481736058323,
+        "rootMeanSquaredLogError": 0.4551500157592589,
+        "directionAccuracy": 0.75
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.3391659649735004,
+        "rootMeanSquaredLogError": 0.38343740404419274,
+        "directionAccuracy": 0.75
+      },
+      "leftSkillAgainstRight": -0.17967266377050573,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "btcTransfer",
+      "right": "legacyEth",
+      "sameOriginCases": 15,
+      "disjointCases": 3,
+      "firstCommonOrigin": "2024-06-12",
+      "lastCommonOrigin": "2026-04-15",
+      "disjointOrigins": [
+        "2024-06-12",
+        "2025-03-19",
+        "2025-11-26"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.4261710079881225,
+        "rootMeanSquaredLogError": 0.4978994163585901,
+        "directionAccuracy": 0.6666666666666666
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.5516749474968808,
+        "rootMeanSquaredLogError": 0.6503978067821855,
+        "directionAccuracy": 0.6666666666666666
+      },
+      "leftSkillAgainstRight": 0.2274961733865356,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "btcTransfer",
+      "right": "economic",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "btcTransfer",
+      "right": "combined",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "ethRefit",
+      "right": "legacyEth",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "ethRefit",
+      "right": "economic",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "ethRefit",
+      "right": "combined",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "legacyEth",
+      "right": "economic",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "legacyEth",
+      "right": "combined",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "economic",
+      "right": "combined",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "firstCommonOrigin": null,
+      "lastCommonOrigin": null,
+      "disjointOrigins": [],
+      "leftScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": null,
+        "rootMeanSquaredLogError": null,
+        "directionAccuracy": null
+      },
+      "leftSkillAgainstRight": null,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    }
+  ],
+  "summaries": [
+    {
+      "model": "flat",
+      "horizonDays": 30,
+      "availableOrigins": 111,
+      "completedOutcomes": 109,
+      "disjointTargetIntervals": 55,
+      "meanAbsoluteLogError": 0.21181044401057628,
+      "directionAccuracy": 0,
+      "directionalCallCoverage": 0,
+      "directionAccuracyAmongDirectionalCalls": null,
+      "pairedBaselines": {
+        "flat": {
+          "n": 55,
+          "skill": 0,
+          "candidateError": 0.21181044401057628,
+          "baselineError": 0.21181044401057628
+        },
+        "shrunkenTrend": {
+          "n": 55,
+          "skill": -0.002834028943100142,
+          "candidateError": 0.21181044401057628,
+          "baselineError": 0.21121186347635817
+        },
+        "btcLinked": {
+          "n": 55,
+          "skill": 0.0006318452501486993,
+          "candidateError": 0.21181044401057628,
+          "baselineError": 0.21194436004776826
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 85,
+        "disjointCases": 43,
+        "empiricalCoverage": 0.8823529411764706,
+        "meanLogWidth": 0.7343746236404571,
+        "meanLogIntervalScore": 0.8943871707397603,
+        "disjointEmpiricalCoverage": 0.8604651162790697,
+        "disjointMeanLogWidth": 0.80139442455374,
+        "disjointMeanLogIntervalScore": 1.0133047392425847,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "shrunkenTrend",
+      "horizonDays": 30,
+      "availableOrigins": 111,
+      "completedOutcomes": 109,
+      "disjointTargetIntervals": 55,
+      "meanAbsoluteLogError": 0.21121186347635817,
+      "directionAccuracy": 0.5272727272727272,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.5272727272727272,
+      "pairedBaselines": {
+        "flat": {
+          "n": 55,
+          "skill": 0.002826019920850631,
+          "candidateError": 0.21121186347635817,
+          "baselineError": 0.21181044401057628
+        },
+        "shrunkenTrend": {
+          "n": 55,
+          "skill": 0,
+          "candidateError": 0.21121186347635817,
+          "baselineError": 0.21121186347635817
+        },
+        "btcLinked": {
+          "n": 55,
+          "skill": 0.0034560795637355035,
+          "candidateError": 0.21121186347635817,
+          "baselineError": 0.21194436004776826
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 85,
+        "disjointCases": 43,
+        "empiricalCoverage": 0.8705882352941177,
+        "meanLogWidth": 0.7164786481528758,
+        "meanLogIntervalScore": 0.872263689821317,
+        "disjointEmpiricalCoverage": 0.8604651162790697,
+        "disjointMeanLogWidth": 0.7653485132659027,
+        "disjointMeanLogIntervalScore": 0.9870711055525018,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "btcLinked",
+      "horizonDays": 30,
+      "availableOrigins": 111,
+      "completedOutcomes": 109,
+      "disjointTargetIntervals": 55,
+      "meanAbsoluteLogError": 0.21194436004776826,
+      "directionAccuracy": 0.5454545454545454,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.5454545454545454,
+      "pairedBaselines": {
+        "flat": {
+          "n": 55,
+          "skill": -0.0006322447309787815,
+          "candidateError": 0.21194436004776826,
+          "baselineError": 0.21181044401057628
+        },
+        "shrunkenTrend": {
+          "n": 55,
+          "skill": -0.003468065473945625,
+          "candidateError": 0.21194436004776826,
+          "baselineError": 0.21121186347635817
+        },
+        "btcLinked": {
+          "n": 55,
+          "skill": 0,
+          "candidateError": 0.21194436004776826,
+          "baselineError": 0.21194436004776826
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 85,
+        "disjointCases": 43,
+        "empiricalCoverage": 0.8470588235294118,
+        "meanLogWidth": 0.7189843420397908,
+        "meanLogIntervalScore": 0.8644637338333382,
+        "disjointEmpiricalCoverage": 0.8372093023255814,
+        "disjointMeanLogWidth": 0.785611274484067,
+        "disjointMeanLogIntervalScore": 0.9833411536876523,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "btcTransfer",
+      "horizonDays": 30,
+      "availableOrigins": 93,
+      "completedOutcomes": 91,
+      "disjointTargetIntervals": 48,
+      "meanAbsoluteLogError": 0.21042671592478113,
+      "directionAccuracy": 0.5208333333333334,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.5208333333333334,
+      "pairedBaselines": {
+        "flat": {
+          "n": 48,
+          "skill": 0.00948225546630721,
+          "candidateError": 0.21042671592478113,
+          "baselineError": 0.2124411370579171
+        },
+        "shrunkenTrend": {
+          "n": 48,
+          "skill": -0.0002428564652854348,
+          "candidateError": 0.21042671592478113,
+          "baselineError": 0.21037562484414926
+        },
+        "btcLinked": {
+          "n": 48,
+          "skill": 0.011853998236143415,
+          "candidateError": 0.21042671592478113,
+          "baselineError": 0.21295103714346467
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 67,
+        "disjointCases": 36,
+        "empiricalCoverage": 0.8955223880597015,
+        "meanLogWidth": 0.7540504846173477,
+        "meanLogIntervalScore": 0.8843089739185226,
+        "disjointEmpiricalCoverage": 0.8611111111111112,
+        "disjointMeanLogWidth": 0.7752003615912584,
+        "disjointMeanLogIntervalScore": 0.9504022401060301,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "ethRefit",
+      "horizonDays": 30,
+      "availableOrigins": 12,
+      "completedOutcomes": 12,
+      "disjointTargetIntervals": 7,
+      "meanAbsoluteLogError": 0.14221610204839116,
+      "directionAccuracy": 0.8571428571428571,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.8571428571428571,
+      "pairedBaselines": {
+        "flat": {
+          "n": 7,
+          "skill": 0.12562154035876683,
+          "candidateError": 0.14221610204839116,
+          "baselineError": 0.16264822226606995
+        },
+        "shrunkenTrend": {
+          "n": 7,
+          "skill": 0.12867790174398075,
+          "candidateError": 0.14221610204839116,
+          "baselineError": 0.16321874807610356
+        },
+        "btcLinked": {
+          "n": 7,
+          "skill": 0.17083612203350784,
+          "candidateError": 0.14221610204839116,
+          "baselineError": 0.17151748385032559
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "legacyEth",
+      "horizonDays": 30,
+      "availableOrigins": 32,
+      "completedOutcomes": 30,
+      "disjointTargetIntervals": 15,
+      "meanAbsoluteLogError": 0.2161565656858847,
+      "directionAccuracy": 0.4666666666666667,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.4666666666666667,
+      "pairedBaselines": {
+        "flat": {
+          "n": 15,
+          "skill": -0.6629728653731093,
+          "candidateError": 0.2161565656858847,
+          "baselineError": 0.12998201605495663
+        },
+        "shrunkenTrend": {
+          "n": 15,
+          "skill": -0.5784643694519136,
+          "candidateError": 0.2161565656858847,
+          "baselineError": 0.13694104844504043
+        },
+        "btcLinked": {
+          "n": 15,
+          "skill": -0.5673140322213845,
+          "candidateError": 0.2161565656858847,
+          "baselineError": 0.13791528771009715
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 6,
+        "disjointCases": 3,
+        "empiricalCoverage": 1,
+        "meanLogWidth": 0.9349178761713742,
+        "meanLogIntervalScore": 0.9349178761713742,
+        "disjointEmpiricalCoverage": 1,
+        "disjointMeanLogWidth": 0.8899812653179184,
+        "disjointMeanLogIntervalScore": 0.8899812653179184,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "economic",
+      "horizonDays": 30,
+      "availableOrigins": 0,
+      "completedOutcomes": 0,
+      "disjointTargetIntervals": 0,
+      "meanAbsoluteLogError": null,
+      "directionAccuracy": null,
+      "directionalCallCoverage": null,
+      "directionAccuracyAmongDirectionalCalls": null,
+      "pairedBaselines": {
+        "flat": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        },
+        "shrunkenTrend": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        },
+        "btcLinked": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "combined",
+      "horizonDays": 30,
+      "availableOrigins": 0,
+      "completedOutcomes": 0,
+      "disjointTargetIntervals": 0,
+      "meanAbsoluteLogError": null,
+      "directionAccuracy": null,
+      "directionalCallCoverage": null,
+      "directionAccuracyAmongDirectionalCalls": null,
+      "pairedBaselines": {
+        "flat": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        },
+        "shrunkenTrend": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        },
+        "btcLinked": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "flat",
+      "horizonDays": 90,
+      "availableOrigins": 111,
+      "completedOutcomes": 107,
+      "disjointTargetIntervals": 27,
+      "meanAbsoluteLogError": 0.3165436207989604,
+      "directionAccuracy": 0,
+      "directionalCallCoverage": 0,
+      "directionAccuracyAmongDirectionalCalls": null,
+      "pairedBaselines": {
+        "flat": {
+          "n": 27,
+          "skill": 0,
+          "candidateError": 0.3165436207989604,
+          "baselineError": 0.3165436207989604
+        },
+        "shrunkenTrend": {
+          "n": 27,
+          "skill": -0.007252176772507335,
+          "candidateError": 0.3165436207989604,
+          "baselineError": 0.31426451895417773
+        },
+        "btcLinked": {
+          "n": 27,
+          "skill": 0.012067348053915183,
+          "candidateError": 0.3165436207989604,
+          "baselineError": 0.32041012125210677
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 59,
+        "disjointCases": 15,
+        "empiricalCoverage": 0.9830508474576272,
+        "meanLogWidth": 1.3512041510562864,
+        "meanLogIntervalScore": 1.376230807096079,
+        "disjointEmpiricalCoverage": 1,
+        "disjointMeanLogWidth": 1.266967585966707,
+        "disjointMeanLogIntervalScore": 1.266967585966707,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "shrunkenTrend",
+      "horizonDays": 90,
+      "availableOrigins": 111,
+      "completedOutcomes": 107,
+      "disjointTargetIntervals": 27,
+      "meanAbsoluteLogError": 0.31426451895417773,
+      "directionAccuracy": 0.5925925925925926,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.5925925925925926,
+      "pairedBaselines": {
+        "flat": {
+          "n": 27,
+          "skill": 0.007199961379825703,
+          "candidateError": 0.31426451895417773,
+          "baselineError": 0.3165436207989604
+        },
+        "shrunkenTrend": {
+          "n": 27,
+          "skill": 0,
+          "candidateError": 0.31426451895417773,
+          "baselineError": 0.31426451895417773
+        },
+        "btcLinked": {
+          "n": 27,
+          "skill": 0.019180424993795797,
+          "candidateError": 0.31426451895417773,
+          "baselineError": 0.32041012125210677
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 59,
+        "disjointCases": 15,
+        "empiricalCoverage": 0.9322033898305084,
+        "meanLogWidth": 1.2934887860914979,
+        "meanLogIntervalScore": 1.3403671443902516,
+        "disjointEmpiricalCoverage": 1,
+        "disjointMeanLogWidth": 1.2000916384850453,
+        "disjointMeanLogIntervalScore": 1.2000916384850453,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "btcLinked",
+      "horizonDays": 90,
+      "availableOrigins": 111,
+      "completedOutcomes": 107,
+      "disjointTargetIntervals": 27,
+      "meanAbsoluteLogError": 0.32041012125210677,
+      "directionAccuracy": 0.5555555555555556,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.5555555555555556,
+      "pairedBaselines": {
+        "flat": {
+          "n": 27,
+          "skill": -0.012214747665384218,
+          "candidateError": 0.32041012125210677,
+          "baselineError": 0.3165436207989604
+        },
+        "shrunkenTrend": {
+          "n": 27,
+          "skill": -0.01955550794719252,
+          "candidateError": 0.32041012125210677,
+          "baselineError": 0.31426451895417773
+        },
+        "btcLinked": {
+          "n": 27,
+          "skill": 0,
+          "candidateError": 0.32041012125210677,
+          "baselineError": 0.32041012125210677
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 59,
+        "disjointCases": 15,
+        "empiricalCoverage": 0.9661016949152542,
+        "meanLogWidth": 1.3120248078453491,
+        "meanLogIntervalScore": 1.351978891864579,
+        "disjointEmpiricalCoverage": 1,
+        "disjointMeanLogWidth": 1.2539894661369064,
+        "disjointMeanLogIntervalScore": 1.2539894661369064,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "btcTransfer",
+      "horizonDays": 90,
+      "availableOrigins": 93,
+      "completedOutcomes": 89,
+      "disjointTargetIntervals": 25,
+      "meanAbsoluteLogError": 0.3124302992270281,
+      "directionAccuracy": 0.64,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.64,
+      "pairedBaselines": {
+        "flat": {
+          "n": 25,
+          "skill": 0.13841405874959556,
+          "candidateError": 0.3124302992270281,
+          "baselineError": 0.3626223273485678
+        },
+        "shrunkenTrend": {
+          "n": 25,
+          "skill": 0.12854507008882776,
+          "candidateError": 0.3124302992270281,
+          "baselineError": 0.3585157287008225
+        },
+        "btcLinked": {
+          "n": 25,
+          "skill": 0.14196129551507386,
+          "candidateError": 0.3124302992270281,
+          "baselineError": 0.36412145232373583
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 44,
+        "disjointCases": 13,
+        "empiricalCoverage": 0.9545454545454546,
+        "meanLogWidth": 1.171236866755052,
+        "meanLogIntervalScore": 1.2375102988864322,
+        "disjointEmpiricalCoverage": 0.9230769230769231,
+        "disjointMeanLogWidth": 1.175525879994487,
+        "disjointMeanLogIntervalScore": 1.3347838664905933,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "ethRefit",
+      "horizonDays": 90,
+      "availableOrigins": 12,
+      "completedOutcomes": 12,
+      "disjointTargetIntervals": 5,
+      "meanAbsoluteLogError": 0.393583837172789,
+      "directionAccuracy": 0.6,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.6,
+      "pairedBaselines": {
+        "flat": {
+          "n": 5,
+          "skill": -0.06394320485068739,
+          "candidateError": 0.393583837172789,
+          "baselineError": 0.36992936782562946
+        },
+        "shrunkenTrend": {
+          "n": 5,
+          "skill": -0.0037350399329740824,
+          "candidateError": 0.393583837172789,
+          "baselineError": 0.39211925609279435
+        },
+        "btcLinked": {
+          "n": 5,
+          "skill": 0.05202363373856078,
+          "candidateError": 0.393583837172789,
+          "baselineError": 0.415183174581637
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "legacyEth",
+      "horizonDays": 90,
+      "availableOrigins": 32,
+      "completedOutcomes": 28,
+      "disjointTargetIntervals": 7,
+      "meanAbsoluteLogError": 0.5083072027993101,
+      "directionAccuracy": 0.2857142857142857,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.2857142857142857,
+      "pairedBaselines": {
+        "flat": {
+          "n": 7,
+          "skill": -0.24910713430248088,
+          "candidateError": 0.5083072027993101,
+          "baselineError": 0.4069364339057722
+        },
+        "shrunkenTrend": {
+          "n": 7,
+          "skill": -0.17621906958072775,
+          "candidateError": 0.5083072027993101,
+          "baselineError": 0.43215351284901377
+        },
+        "btcLinked": {
+          "n": 7,
+          "skill": -0.2301592562974737,
+          "candidateError": 0.5083072027993101,
+          "baselineError": 0.4132043881287454
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "economic",
+      "horizonDays": 90,
+      "availableOrigins": 0,
+      "completedOutcomes": 0,
+      "disjointTargetIntervals": 0,
+      "meanAbsoluteLogError": null,
+      "directionAccuracy": null,
+      "directionalCallCoverage": null,
+      "directionAccuracyAmongDirectionalCalls": null,
+      "pairedBaselines": {
+        "flat": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        },
+        "shrunkenTrend": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        },
+        "btcLinked": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "combined",
+      "horizonDays": 90,
+      "availableOrigins": 0,
+      "completedOutcomes": 0,
+      "disjointTargetIntervals": 0,
+      "meanAbsoluteLogError": null,
+      "directionAccuracy": null,
+      "directionalCallCoverage": null,
+      "directionAccuracyAmongDirectionalCalls": null,
+      "pairedBaselines": {
+        "flat": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        },
+        "shrunkenTrend": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        },
+        "btcLinked": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "flat",
+      "horizonDays": 180,
+      "availableOrigins": 111,
+      "completedOutcomes": 104,
+      "disjointTargetIntervals": 15,
+      "meanAbsoluteLogError": 0.5449536093941203,
+      "directionAccuracy": 0,
+      "directionalCallCoverage": 0,
+      "directionAccuracyAmongDirectionalCalls": null,
+      "pairedBaselines": {
+        "flat": {
+          "n": 15,
+          "skill": 0,
+          "candidateError": 0.5449536093941203,
+          "baselineError": 0.5449536093941203
+        },
+        "shrunkenTrend": {
+          "n": 15,
+          "skill": 0.09170577291766457,
+          "candidateError": 0.5449536093941203,
+          "baselineError": 0.5999747583386558
+        },
+        "btcLinked": {
+          "n": 15,
+          "skill": 0.05422052100261554,
+          "candidateError": 0.5449536093941203,
+          "baselineError": 0.5761952141019412
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 20,
+        "disjointCases": 3,
+        "empiricalCoverage": 0.95,
+        "meanLogWidth": 2.100961329865786,
+        "meanLogIntervalScore": 2.135995939280554,
+        "disjointEmpiricalCoverage": 1,
+        "disjointMeanLogWidth": 2.4446223714302318,
+        "disjointMeanLogIntervalScore": 2.4446223714302318,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "shrunkenTrend",
+      "horizonDays": 180,
+      "availableOrigins": 111,
+      "completedOutcomes": 104,
+      "disjointTargetIntervals": 15,
+      "meanAbsoluteLogError": 0.5999747583386558,
+      "directionAccuracy": 0.3333333333333333,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.3333333333333333,
+      "pairedBaselines": {
+        "flat": {
+          "n": 15,
+          "skill": -0.10096483076001284,
+          "candidateError": 0.5999747583386558,
+          "baselineError": 0.5449536093941203
+        },
+        "shrunkenTrend": {
+          "n": 15,
+          "skill": 0,
+          "candidateError": 0.5999747583386558,
+          "baselineError": 0.5999747583386558
+        },
+        "btcLinked": {
+          "n": 15,
+          "skill": -0.04126994403064832,
+          "candidateError": 0.5999747583386558,
+          "baselineError": 0.5761952141019412
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 20,
+        "disjointCases": 3,
+        "empiricalCoverage": 0.9,
+        "meanLogWidth": 2.1575401793209528,
+        "meanLogIntervalScore": 2.335925188027656,
+        "disjointEmpiricalCoverage": 1,
+        "disjointMeanLogWidth": 2.740141463440858,
+        "disjointMeanLogIntervalScore": 2.740141463440858,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "btcLinked",
+      "horizonDays": 180,
+      "availableOrigins": 111,
+      "completedOutcomes": 104,
+      "disjointTargetIntervals": 15,
+      "meanAbsoluteLogError": 0.5761952141019412,
+      "directionAccuracy": 0.5333333333333333,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.5333333333333333,
+      "pairedBaselines": {
+        "flat": {
+          "n": 15,
+          "skill": -0.05732892519522048,
+          "candidateError": 0.5761952141019412,
+          "baselineError": 0.5449536093941203
+        },
+        "shrunkenTrend": {
+          "n": 15,
+          "skill": 0.03963424111801084,
+          "candidateError": 0.5761952141019412,
+          "baselineError": 0.5999747583386558
+        },
+        "btcLinked": {
+          "n": 15,
+          "skill": 0,
+          "candidateError": 0.5761952141019412,
+          "baselineError": 0.5761952141019412
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 20,
+        "disjointCases": 3,
+        "empiricalCoverage": 0.95,
+        "meanLogWidth": 2.1233418952973446,
+        "meanLogIntervalScore": 2.220774749384136,
+        "disjointEmpiricalCoverage": 1,
+        "disjointMeanLogWidth": 2.5271519205068427,
+        "disjointMeanLogIntervalScore": 2.5271519205068427,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "btcTransfer",
+      "horizonDays": 180,
+      "availableOrigins": 93,
+      "completedOutcomes": 86,
+      "disjointTargetIntervals": 14,
+      "meanAbsoluteLogError": 0.5527613034551939,
+      "directionAccuracy": 0.5,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.5,
+      "pairedBaselines": {
+        "flat": {
+          "n": 14,
+          "skill": 0.06091658635433972,
+          "candidateError": 0.5527613034551939,
+          "baselineError": 0.5886178963690701
+        },
+        "shrunkenTrend": {
+          "n": 14,
+          "skill": 0.12628064374848402,
+          "candidateError": 0.5527613034551939,
+          "baselineError": 0.6326531505799347
+        },
+        "btcLinked": {
+          "n": 14,
+          "skill": 0.076528780875036,
+          "candidateError": 0.5527613034551939,
+          "baselineError": 0.5985690642085884
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 9,
+        "disjointCases": 2,
+        "empiricalCoverage": 0.8888888888888888,
+        "meanLogWidth": 1.7417235634028378,
+        "meanLogIntervalScore": 1.8004158706470408,
+        "disjointEmpiricalCoverage": 1,
+        "disjointMeanLogWidth": 1.741723563402838,
+        "disjointMeanLogIntervalScore": 1.741723563402838,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "ethRefit",
+      "horizonDays": 180,
+      "availableOrigins": 12,
+      "completedOutcomes": 12,
+      "disjointTargetIntervals": 4,
+      "meanAbsoluteLogError": 0.3391659649735004,
+      "directionAccuracy": 0.75,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.75,
+      "pairedBaselines": {
+        "flat": {
+          "n": 4,
+          "skill": 0.30139909912768903,
+          "candidateError": 0.3391659649735004,
+          "baselineError": 0.48549316863176006
+        },
+        "shrunkenTrend": {
+          "n": 4,
+          "skill": 0.22155513731780985,
+          "candidateError": 0.3391659649735004,
+          "baselineError": 0.4356968376730994
+        },
+        "btcLinked": {
+          "n": 4,
+          "skill": 0.3017961884525462,
+          "candidateError": 0.3391659649735004,
+          "baselineError": 0.4857692830719369
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "legacyEth",
+      "horizonDays": 180,
+      "availableOrigins": 32,
+      "completedOutcomes": 25,
+      "disjointTargetIntervals": 4,
+      "meanAbsoluteLogError": 0.4434316844118871,
+      "directionAccuracy": 1,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 1,
+      "pairedBaselines": {
+        "flat": {
+          "n": 4,
+          "skill": -0.7510903463283332,
+          "candidateError": 0.4434316844118871,
+          "baselineError": 0.2532317566261899
+        },
+        "shrunkenTrend": {
+          "n": 4,
+          "skill": -0.7053966381070544,
+          "candidateError": 0.4434316844118871,
+          "baselineError": 0.26001674596009794
+        },
+        "btcLinked": {
+          "n": 4,
+          "skill": -0.7547209396380292,
+          "candidateError": 0.4434316844118871,
+          "baselineError": 0.25270780919919944
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "economic",
+      "horizonDays": 180,
+      "availableOrigins": 0,
+      "completedOutcomes": 0,
+      "disjointTargetIntervals": 0,
+      "meanAbsoluteLogError": null,
+      "directionAccuracy": null,
+      "directionalCallCoverage": null,
+      "directionAccuracyAmongDirectionalCalls": null,
+      "pairedBaselines": {
+        "flat": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        },
+        "shrunkenTrend": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        },
+        "btcLinked": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "combined",
+      "horizonDays": 180,
+      "availableOrigins": 0,
+      "completedOutcomes": 0,
+      "disjointTargetIntervals": 0,
+      "meanAbsoluteLogError": null,
+      "directionAccuracy": null,
+      "directionalCallCoverage": null,
+      "directionAccuracyAmongDirectionalCalls": null,
+      "pairedBaselines": {
+        "flat": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        },
+        "shrunkenTrend": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        },
+        "btcLinked": {
+          "n": 0,
+          "skill": null,
+          "candidateError": null,
+          "baselineError": null
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      }
+    }
+  ],
+  "current": {
+    "flat": {
+      "status": "ready",
+      "reason": null,
+      "predictions": [
+        {
+          "horizonDays": 30,
+          "targetDate": "2026-11-24",
+          "price": 2326.75
+        },
+        {
+          "horizonDays": 90,
+          "targetDate": "2027-01-23",
+          "price": 2326.75
+        },
+        {
+          "horizonDays": 180,
+          "targetDate": "2027-04-23",
+          "price": 2326.75
+        }
+      ],
+      "assumptions": null
+    },
+    "shrunkenTrend": {
+      "status": "ready",
+      "reason": null,
+      "predictions": [
+        {
+          "horizonDays": 30,
+          "targetDate": "2026-11-24",
+          "price": 2328.324066516029
+        },
+        {
+          "horizonDays": 90,
+          "targetDate": "2027-01-23",
+          "price": 2331.4753948773514
+        },
+        {
+          "horizonDays": 180,
+          "targetDate": "2027-04-23",
+          "price": 2336.210386555711
+        }
+      ],
+      "assumptions": null
+    },
+    "btcLinked": {
+      "status": "ready",
+      "reason": null,
+      "predictions": [
+        {
+          "horizonDays": 30,
+          "targetDate": "2026-11-24",
+          "price": 2332.6514879552396
+        },
+        {
+          "horizonDays": 90,
+          "targetDate": "2027-01-23",
+          "price": 2344.4994068186243
+        },
+        {
+          "horizonDays": 180,
+          "targetDate": "2027-04-23",
+          "price": 2362.3842134190954
+        }
+      ],
+      "assumptions": {
+        "formula": "log(P_ETH[t+h]/P_ETH[t]) = beta[t] * h * BTC_shrunken_daily_log_trend[t]",
+        "beta": 1.2692617675034297,
+        "estimatedBeta": true,
+        "alphaIncluded": false,
+        "btcFutureRealizationUsed": false,
+        "btcDrift": 0.00006652565599415424,
+        "btcTrendPolicy": {
+          "version": "independent-price-baselines-1",
+          "lookbackDays": 180,
+          "trendShrinkage": 0.25,
+          "maximumAnnualLogDrift": 0.6931471805599453
+        }
+      }
+    },
+    "btcTransfer": {
+      "status": "available",
+      "reason": null,
+      "predictions": [
+        {
+          "horizonDays": 30,
+          "targetDate": "2026-11-24",
+          "price": 2387.0295801072925,
+          "sourceBtcBaselinePrice": 82112.48982993698
+        },
+        {
+          "horizonDays": 90,
+          "targetDate": "2027-01-23",
+          "price": 2512.314224563517,
+          "sourceBtcBaselinePrice": 86422.21191276792
+        },
+        {
+          "horizonDays": 180,
+          "targetDate": "2027-04-23",
+          "price": 2712.6776675380524,
+          "sourceBtcBaselinePrice": 93314.60290391691
+        }
+      ],
+      "assumptions": {
+        "formula": "ETH(asOf) * BTC_baseline(asOf+h) / BTC(asOf)",
+        "sourceEngine": "historical-block-bridge-1",
+        "sourceClock": {
+          "referencePeakDate": "2025-10-06",
+          "referencePeakConfirmationDate": "2025-11-14",
+          "referenceConfirmationRule": "20% fall from the observed reference high; not proof of a completed four-year cycle",
+          "nominalTroughDate": "2026-10-06",
+          "nominalPeakDate": "2029-10-06",
+          "zoneEntryDate": "2029-05-14",
+          "effectiveTroughDate": "2026-08-14",
+          "effectivePeakDate": "2029-08-14",
+          "nextLowDate": "2030-08-14",
+          "nominalNextTroughDate": "2030-10-06",
+          "arrivalLeadMonths": 3,
+          "dwellMonths": 3,
+          "netShiftMonths": 0,
+          "nominalRiseMonths": 36,
+          "nominalDeclineMonths": 12,
+          "definitionIsConditionalPrior": true,
+          "timingAdjustment": {
+            "requested": true,
+            "available": true,
+            "asOf": "2026-10-25",
+            "requestedShiftDays": -53,
+            "appliedShiftDays": -53,
+            "applied": true,
+            "sourceReferencePeakDate": "2025-10-06",
+            "reason": "causal-daily-clock-applied",
+            "nominalZoneDate": "2029-07-06",
+            "nominalEffectivePeakDate": "2029-10-06",
+            "nominalNextLowDate": "2030-10-06",
+            "finalCycleTurnClaim": false,
+            "probability": null
+          },
+          "intermediateAnchorsAreHardConstraints": false,
+          "finalBridgeEndpointIsHardConstraint": true,
+          "futureHalvingDateAssumed": false,
+          "probability": null
+        },
+        "sourceGrowthRetention": 0.75,
+        "sourceBearDrawdownPct": 50,
+        "sourceHighZoneFraction": 0.95,
+        "residualAdded": false,
+        "bitcoinAbsoluteUsdTargetTransferred": false,
+        "btcPhaseAndRelativeAmplitudeTransferredAsHypothesis": true,
+        "internalSampleCount": 16,
+        "sampleCountMeaning": "Only the deterministic BTC baseline is consumed; internal draw count cannot affect it"
+      }
+    },
+    "ethRefit": {
+      "status": "unavailable",
+      "reason": "Estimated ETH high-zone date has expired; no additional cycle is invented",
+      "predictions": [],
+      "assumptions": {
+        "policy": {
+          "version": "eth-cycle-comparison-1",
+          "drawdownPct": 40,
+          "reversalPct": 20,
+          "confirmationDays": 14,
+          "highZoneFraction": 0.95,
+          "minimumCompletedPeakIntervals": 3,
+          "minimumGrowthTransitions": 2,
+          "btcInternalSampleCount": 16
+        },
+        "coefficientsEstimatedFromPrefix": true,
+        "assumedDetectionThresholds": [
+          "drawdownPct",
+          "reversalPct",
+          "confirmationDays",
+          "highZoneFraction"
+        ],
+        "periodFixedAt48Months": false,
+        "bitcoinHalvingApplied": false,
+        "formula": "Q_next = Q_last * (Q_last / Q_previous)^g; L_next = Q_next * retention; log B is linear between dated anchors",
+        "residualAdded": false,
+        "probabilisticIntervalAvailable": false,
+        "retrospectiveParameterDesign": true,
+        "coefficients": {
+          "growthRetention": 0.13109335273829087,
+          "periodDays": 233,
+          "bearDays": 76,
+          "riseDays": 157,
+          "zoneLeadDays": 0,
+          "troughRetention": 0.3853005903517658,
+          "bearDrawdownPct": 61.46994096482342,
+          "highZoneFraction": 0.95
+        },
+        "coefficientEstimation": {
+          "growthRetention": "Zero-intercept least squares of next completed log peak growth on previous log peak growth",
+          "periodDays": "Median confirmed peak-to-peak episode duration, rounded to whole days",
+          "bearDays": "Median confirmed peak-to-trough duration, rounded to whole days",
+          "zoneLeadDays": "Median first 95% high-zone entry to confirmed peak duration, rounded to whole days",
+          "troughRetention": "Median confirmed trough / preceding peak",
+          "growthRetentionClamped": false,
+          "dwellIsNotSeparatelyIdentified": true
+        }
+      }
+    },
+    "legacyEth": {
+      "status": "ready",
+      "reason": null,
+      "predictions": [
+        {
+          "horizonDays": 30,
+          "targetDate": "2026-11-24",
+          "price": 1945.1076550609994,
+          "scenarioLow": 1875.1314638722067,
+          "scenarioHigh": 2032.8228123741135
+        },
+        {
+          "horizonDays": 90,
+          "targetDate": "2027-01-23",
+          "price": 2958.122056061004,
+          "scenarioLow": 2650.2102169668847,
+          "scenarioHigh": 3376.6320446717964
+        },
+        {
+          "horizonDays": 180,
+          "targetDate": "2027-04-23",
+          "price": 1359.0157989794059,
+          "scenarioLow": 1090.8197039837469,
+          "scenarioHigh": 1770.7604021535003
+        }
+      ],
+      "assumptions": {
+        "seed": 20261022,
+        "sourceDate": "2024-06-05",
+        "point": "Existing base single historical-block illustration",
+        "scenarioRangeIsProbability": false
+      }
+    },
+    "economic": {
+      "status": "unavailable",
+      "reason": "No point-in-time economic snapshots; price-only data cannot activate economic inputs.",
+      "predictions": [],
+      "assumptions": null
+    },
+    "combined": {
+      "status": "unavailable",
+      "reason": "No horizon has eligible economic and cycle evidence",
+      "predictions": [],
+      "assumptions": null
+    }
+  },
+  "reviewSourceBundle": null,
+  "relativeStrength": {
+    "target": "ETH/BTC",
+    "unit": "BTC per ETH",
+    "summaries": [
+      {
+        "model": "flat",
+        "horizonDays": 30,
+        "availableOrigins": 111,
+        "completedOutcomes": 109,
+        "disjointCases": 55,
+        "meanAbsoluteLogError": 0.11845558405044987
+      },
+      {
+        "model": "shrunkenTrend",
+        "horizonDays": 30,
+        "availableOrigins": 111,
+        "completedOutcomes": 109,
+        "disjointCases": 55,
+        "meanAbsoluteLogError": 0.11712510547389182
+      },
+      {
+        "model": "economic",
+        "horizonDays": 30,
+        "availableOrigins": 0,
+        "completedOutcomes": 0,
+        "disjointCases": 0,
+        "meanAbsoluteLogError": null
+      },
+      {
+        "model": "flat",
+        "horizonDays": 90,
+        "availableOrigins": 111,
+        "completedOutcomes": 107,
+        "disjointCases": 27,
+        "meanAbsoluteLogError": 0.21136967217115152
+      },
+      {
+        "model": "shrunkenTrend",
+        "horizonDays": 90,
+        "availableOrigins": 111,
+        "completedOutcomes": 107,
+        "disjointCases": 27,
+        "meanAbsoluteLogError": 0.20734348657116847
+      },
+      {
+        "model": "economic",
+        "horizonDays": 90,
+        "availableOrigins": 0,
+        "completedOutcomes": 0,
+        "disjointCases": 0,
+        "meanAbsoluteLogError": null
+      },
+      {
+        "model": "flat",
+        "horizonDays": 180,
+        "availableOrigins": 111,
+        "completedOutcomes": 104,
+        "disjointCases": 15,
+        "meanAbsoluteLogError": 0.27979385135324475
+      },
+      {
+        "model": "shrunkenTrend",
+        "horizonDays": 180,
+        "availableOrigins": 111,
+        "completedOutcomes": 104,
+        "disjointCases": 15,
+        "meanAbsoluteLogError": 0.3081123436694861
+      },
+      {
+        "model": "economic",
+        "horizonDays": 180,
+        "availableOrigins": 0,
+        "completedOutcomes": 0,
+        "disjointCases": 0,
+        "meanAbsoluteLogError": null
+      }
+    ],
+    "pairwise": [
+      {
+        "horizonDays": 30,
+        "left": "flat",
+        "right": "shrunkenTrend",
+        "sameOriginCases": 109,
+        "disjointCases": 55,
+        "firstCommonOrigin": "2018-05-23",
+        "lastCommonOrigin": "2026-09-02",
+        "disjointOrigins": [
+          "2018-05-23",
+          "2018-07-18",
+          "2018-09-12",
+          "2018-11-07",
+          "2019-01-02",
+          "2019-02-27",
+          "2019-04-24",
+          "2019-06-19",
+          "2019-08-14",
+          "2019-10-09",
+          "2019-12-04",
+          "2020-01-29",
+          "2020-03-25",
+          "2020-05-20",
+          "2020-07-15",
+          "2020-09-09",
+          "2020-11-04",
+          "2020-12-30",
+          "2021-02-24",
+          "2021-04-21",
+          "2021-06-16",
+          "2021-08-11",
+          "2021-10-06",
+          "2021-12-01",
+          "2022-01-26",
+          "2022-03-23",
+          "2022-05-18",
+          "2022-07-13",
+          "2022-09-07",
+          "2022-11-02",
+          "2022-12-28",
+          "2023-02-22",
+          "2023-04-19",
+          "2023-06-14",
+          "2023-08-09",
+          "2023-10-04",
+          "2023-11-29",
+          "2024-01-24",
+          "2024-03-20",
+          "2024-05-15",
+          "2024-07-10",
+          "2024-09-04",
+          "2024-10-30",
+          "2024-12-25",
+          "2025-02-19",
+          "2025-04-16",
+          "2025-06-11",
+          "2025-08-06",
+          "2025-10-01",
+          "2025-11-26",
+          "2026-01-21",
+          "2026-03-18",
+          "2026-05-13",
+          "2026-07-08",
+          "2026-09-02"
+        ],
+        "leftScore": {
+          "meanAbsoluteLogError": 0.11845558405044987,
+          "rootMeanSquaredLogError": 0.16670399005210826,
+          "directionAccuracy": 0
+        },
+        "rightScore": {
+          "meanAbsoluteLogError": 0.11712510547389182,
+          "rootMeanSquaredLogError": 0.16476383722996218,
+          "directionAccuracy": 0.5818181818181818
+        },
+        "leftSkillAgainstRight": -0.011359465344128239,
+        "independentMarketRegimes": null,
+        "independentSampleSize": null
+      },
+      {
+        "horizonDays": 30,
+        "left": "flat",
+        "right": "economic",
+        "sameOriginCases": 0,
+        "disjointCases": 0,
+        "firstCommonOrigin": null,
+        "lastCommonOrigin": null,
+        "disjointOrigins": [],
+        "leftScore": {
+          "meanAbsoluteLogError": null,
+          "rootMeanSquaredLogError": null,
+          "directionAccuracy": null
+        },
+        "rightScore": {
+          "meanAbsoluteLogError": null,
+          "rootMeanSquaredLogError": null,
+          "directionAccuracy": null
+        },
+        "leftSkillAgainstRight": null,
+        "independentMarketRegimes": null,
+        "independentSampleSize": null
+      },
+      {
+        "horizonDays": 30,
+        "left": "shrunkenTrend",
+        "right": "economic",
+        "sameOriginCases": 0,
+        "disjointCases": 0,
+        "firstCommonOrigin": null,
+        "lastCommonOrigin": null,
+        "disjointOrigins": [],
+        "leftScore": {
+          "meanAbsoluteLogError": null,
+          "rootMeanSquaredLogError": null,
+          "directionAccuracy": null
+        },
+        "rightScore": {
+          "meanAbsoluteLogError": null,
+          "rootMeanSquaredLogError": null,
+          "directionAccuracy": null
+        },
+        "leftSkillAgainstRight": null,
+        "independentMarketRegimes": null,
+        "independentSampleSize": null
+      },
+      {
+        "horizonDays": 90,
+        "left": "flat",
+        "right": "shrunkenTrend",
+        "sameOriginCases": 107,
+        "disjointCases": 27,
+        "firstCommonOrigin": "2018-05-23",
+        "lastCommonOrigin": "2026-07-08",
+        "disjointOrigins": [
+          "2018-05-23",
+          "2018-09-12",
+          "2019-01-02",
+          "2019-04-24",
+          "2019-08-14",
+          "2019-12-04",
+          "2020-03-25",
+          "2020-07-15",
+          "2020-11-04",
+          "2021-02-24",
+          "2021-06-16",
+          "2021-10-06",
+          "2022-01-26",
+          "2022-05-18",
+          "2022-09-07",
+          "2022-12-28",
+          "2023-04-19",
+          "2023-08-09",
+          "2023-11-29",
+          "2024-03-20",
+          "2024-07-10",
+          "2024-10-30",
+          "2025-02-19",
+          "2025-06-11",
+          "2025-10-01",
+          "2026-01-21",
+          "2026-05-13"
+        ],
+        "leftScore": {
+          "meanAbsoluteLogError": 0.21136967217115152,
+          "rootMeanSquaredLogError": 0.2691389763377664,
+          "directionAccuracy": 0
+        },
+        "rightScore": {
+          "meanAbsoluteLogError": 0.20734348657116847,
+          "rootMeanSquaredLogError": 0.271037437610521,
+          "directionAccuracy": 0.48148148148148145
+        },
+        "leftSkillAgainstRight": -0.019417950698929154,
+        "independentMarketRegimes": null,
+        "independentSampleSize": null
+      },
+      {
+        "horizonDays": 90,
+        "left": "flat",
+        "right": "economic",
+        "sameOriginCases": 0,
+        "disjointCases": 0,
+        "firstCommonOrigin": null,
+        "lastCommonOrigin": null,
+        "disjointOrigins": [],
+        "leftScore": {
+          "meanAbsoluteLogError": null,
+          "rootMeanSquaredLogError": null,
+          "directionAccuracy": null
+        },
+        "rightScore": {
+          "meanAbsoluteLogError": null,
+          "rootMeanSquaredLogError": null,
+          "directionAccuracy": null
+        },
+        "leftSkillAgainstRight": null,
+        "independentMarketRegimes": null,
+        "independentSampleSize": null
+      },
+      {
+        "horizonDays": 90,
+        "left": "shrunkenTrend",
+        "right": "economic",
+        "sameOriginCases": 0,
+        "disjointCases": 0,
+        "firstCommonOrigin": null,
+        "lastCommonOrigin": null,
+        "disjointOrigins": [],
+        "leftScore": {
+          "meanAbsoluteLogError": null,
+          "rootMeanSquaredLogError": null,
+          "directionAccuracy": null
+        },
+        "rightScore": {
+          "meanAbsoluteLogError": null,
+          "rootMeanSquaredLogError": null,
+          "directionAccuracy": null
+        },
+        "leftSkillAgainstRight": null,
+        "independentMarketRegimes": null,
+        "independentSampleSize": null
+      },
+      {
+        "horizonDays": 180,
+        "left": "flat",
+        "right": "shrunkenTrend",
+        "sameOriginCases": 104,
+        "disjointCases": 15,
+        "firstCommonOrigin": "2018-05-23",
+        "lastCommonOrigin": "2026-04-15",
+        "disjointOrigins": [
+          "2018-05-23",
+          "2018-12-05",
+          "2019-06-19",
+          "2020-01-01",
+          "2020-07-15",
+          "2021-01-27",
+          "2021-08-11",
+          "2022-02-23",
+          "2022-09-07",
+          "2023-03-22",
+          "2023-10-04",
+          "2024-04-17",
+          "2024-10-30",
+          "2025-05-14",
+          "2025-11-26"
+        ],
+        "leftScore": {
+          "meanAbsoluteLogError": 0.27979385135324475,
+          "rootMeanSquaredLogError": 0.36435284404792356,
+          "directionAccuracy": 0
+        },
+        "rightScore": {
+          "meanAbsoluteLogError": 0.3081123436694861,
+          "rootMeanSquaredLogError": 0.3898140214782071,
+          "directionAccuracy": 0.5333333333333333
+        },
+        "leftSkillAgainstRight": 0.09190963263263074,
+        "independentMarketRegimes": null,
+        "independentSampleSize": null
+      },
+      {
+        "horizonDays": 180,
+        "left": "flat",
+        "right": "economic",
+        "sameOriginCases": 0,
+        "disjointCases": 0,
+        "firstCommonOrigin": null,
+        "lastCommonOrigin": null,
+        "disjointOrigins": [],
+        "leftScore": {
+          "meanAbsoluteLogError": null,
+          "rootMeanSquaredLogError": null,
+          "directionAccuracy": null
+        },
+        "rightScore": {
+          "meanAbsoluteLogError": null,
+          "rootMeanSquaredLogError": null,
+          "directionAccuracy": null
+        },
+        "leftSkillAgainstRight": null,
+        "independentMarketRegimes": null,
+        "independentSampleSize": null
+      },
+      {
+        "horizonDays": 180,
+        "left": "shrunkenTrend",
+        "right": "economic",
+        "sameOriginCases": 0,
+        "disjointCases": 0,
+        "firstCommonOrigin": null,
+        "lastCommonOrigin": null,
+        "disjointOrigins": [],
+        "leftScore": {
+          "meanAbsoluteLogError": null,
+          "rootMeanSquaredLogError": null,
+          "directionAccuracy": null
+        },
+        "rightScore": {
+          "meanAbsoluteLogError": null,
+          "rootMeanSquaredLogError": null,
+          "directionAccuracy": null
+        },
+        "leftSkillAgainstRight": null,
+        "independentMarketRegimes": null,
+        "independentSampleSize": null
+      }
+    ],
+    "scope": "ETH/BTC is scored independently from ETH/USD; observed future BTC enters only the realized target, never a predictor. Missing paired closes and absent economic forecasts are not fabricated."
+  },
+  "adoption": {
+    "status": "not-adopted",
+    "productionModelChanged": false,
+    "externalGeminiReview": "pending-unavailable-through-github",
+    "reasons": [
+      "Current-vintage retrospective price replay is not prospective performance",
+      "Economic point-in-time network inputs are not manufactured",
+      "Few macro cycles and overlapping outcomes do not establish a fixed cycle law",
+      "External source-read Gemini opposition and ChatGPT reverse review are not completed"
+    ],
+    "longHorizonValidation": false,
+    "calibratedForProduction": false
+  },
+  "scope": "Historical dates restrict all predictor prefixes and matured error fitting. Prices are the current stored archive, not recovered historical publication vintages. 30/90/180-day errors do not validate 2030–2035 paths. Interval results are retrospective experiments, not forecast probabilities."
+}

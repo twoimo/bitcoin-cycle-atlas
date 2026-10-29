@@ -1,0 +1,257 @@
+{
+  "schemaVersion": 1,
+  "kind": "ethereum-continuity-first-corrective-eth-run-receipt",
+  "observedAt": "2026-10-28T03:37:34.723Z",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "pullRequest": 39,
+  "source": {
+    "commit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+    "tree": "48474119d3ed2289adf637c4742d73e5670b1ef9",
+    "parents": [
+      "a3bd5b2fd110ca90b9c86b6b4c7b6bd6af9c4837"
+    ],
+    "identityBasis": "GitHub Git commit API"
+  },
+  "run": {
+    "id": 40626529467,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40626529467",
+    "event": "pull_request",
+    "headSha": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+    "runAttempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-10-28T03:24:44Z",
+    "startedAt": "2026-10-28T03:24:44Z",
+    "updatedAt": "2026-10-28T03:34:45Z"
+  },
+  "job": {
+    "id": 122612657695,
+    "name": "evaluate",
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40626529467/job/122612657695",
+    "status": "completed",
+    "conclusion": "success",
+    "startedAt": "2026-10-28T03:24:48Z",
+    "completedAt": "2026-10-28T03:34:45Z",
+    "totalSteps": 38,
+    "allStepsCompletedSuccessfully": true
+  },
+  "steps": [
+    {
+      "number": 4,
+      "name": "Test candidate equations, missing inputs, clocks and future-information boundaries",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:24:56Z",
+      "completedAt": "2026-10-28T03:26:36Z"
+    },
+    {
+      "number": 5,
+      "name": "Evaluate preserved asset forecasts without requiring a new forecast issue",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:26:36Z",
+      "completedAt": "2026-10-28T03:26:56Z"
+    },
+    {
+      "number": 6,
+      "name": "Collect pinned public economic source with actual acquisition receipts",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:26:56Z",
+      "completedAt": "2026-10-28T03:26:57Z"
+    },
+    {
+      "number": 7,
+      "name": "Diagnose preserved source completion clocks and exact partial economic aggregates",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:26:57Z",
+      "completedAt": "2026-10-28T03:26:57Z"
+    },
+    {
+      "number": 8,
+      "name": "Attempt a bounded public Ethereum throughput supplement and preserve actual failure receipts",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:26:57Z",
+      "completedAt": "2026-10-28T03:27:14Z"
+    },
+    {
+      "number": 9,
+      "name": "Attempt one protocol-defined PoW issuance observation without activating an economic snapshot",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:27:14Z",
+      "completedAt": "2026-10-28T03:29:22Z"
+    },
+    {
+      "number": 10,
+      "name": "Reconcile metric definitions raw-byte replays and actual economic source clocks",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:29:22Z",
+      "completedAt": "2026-10-28T03:29:24Z"
+    },
+    {
+      "number": 11,
+      "name": "Preserve actual economic capture vintages and independently replay their raw inputs",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:29:24Z",
+      "completedAt": "2026-10-28T03:29:25Z"
+    },
+    {
+      "number": 12,
+      "name": "Audit bounded public supply claims with exact non-fee destruction accounting",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:29:25Z",
+      "completedAt": "2026-10-28T03:29:26Z"
+    },
+    {
+      "number": 13,
+      "name": "Reconcile actual supply sampling grids with exact UTC boundary stock requirements",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:29:26Z",
+      "completedAt": "2026-10-28T03:29:26Z"
+    },
+    {
+      "number": 14,
+      "name": "Collect one pinned fixed-validator cohort state without activating economic inputs",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:29:26Z",
+      "completedAt": "2026-10-28T03:29:27Z"
+    },
+    {
+      "number": 23,
+      "name": "Read the fixed prospective evidence branch without publication permission",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:29:59Z",
+      "completedAt": "2026-10-28T03:30:00Z"
+    },
+    {
+      "number": 24,
+      "name": "Restore and independently validate the selected prospective archive bytes",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:30:00Z",
+      "completedAt": "2026-10-28T03:30:05Z"
+    },
+    {
+      "number": 25,
+      "name": "Acquire one bounded ETH tail and preserve adaptive pooled and opt-in warm-start records",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:30:05Z",
+      "completedAt": "2026-10-28T03:30:12Z"
+    },
+    {
+      "number": 26,
+      "name": "Reexecute preserved prospective records independently of acquisition success",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:30:12Z",
+      "completedAt": "2026-10-28T03:30:17Z"
+    },
+    {
+      "number": 27,
+      "name": "Validate retained prospective calibration evidence without requiring a new forecast issue",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:30:17Z",
+      "completedAt": "2026-10-28T03:30:23Z"
+    },
+    {
+      "number": 28,
+      "name": "Diagnose prospective calendar and retained-input capacity without relaxing sample requirements",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:30:23Z",
+      "completedAt": "2026-10-28T03:30:25Z"
+    },
+    {
+      "number": 29,
+      "name": "Append current evidence and prove exact restoration of the previous archive",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:30:25Z",
+      "completedAt": "2026-10-28T03:30:39Z"
+    },
+    {
+      "number": 31,
+      "name": "Verify preserved ETH BMNR and MSTR records and issue only with current inputs",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:30:40Z",
+      "completedAt": "2026-10-28T03:31:02Z"
+    },
+    {
+      "number": 33,
+      "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:31:06Z",
+      "completedAt": "2026-10-28T03:34:23Z"
+    },
+    {
+      "number": 34,
+      "name": "Bind exact committed sources inputs and execution evidence for external review",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:34:23Z",
+      "completedAt": "2026-10-28T03:34:34Z"
+    },
+    {
+      "number": 35,
+      "name": "Preserve complete source-identified candidate evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:34:34Z",
+      "completedAt": "2026-10-28T03:34:42Z"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12790530197,
+      "name": "eth-candidate-evidence-f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+      "bytes": 61175599,
+      "digest": "sha256:75b0c16efbe9261f4f755f788ca6bce2e4b7a8c5f79021fac07f11ef8026648d",
+      "expired": false,
+      "createdAt": "2026-10-28T03:34:41Z",
+      "updatedAt": "2026-10-28T03:34:41Z",
+      "expiresAt": "2026-11-27T03:34:35Z",
+      "apiUrl": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12790530197",
+      "zipApiUrl": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12790530197/zip",
+      "workflowRun": {
+        "id": 40626529467,
+        "repository_id": 1428515198,
+        "head_repository_id": 1428515198,
+        "head_branch": "chatgpt/eth-cycle-economics-20261026",
+        "head_sha": "f6739b0a5da2986cbe33d028ea8fcd3468d85012"
+      }
+    }
+  ],
+  "focusedTestGroups": null,
+  "exactLogMarkers": null,
+  "actualCheckoutCommitFromLog": null,
+  "logAcquisition": {
+    "status": "unavailable",
+    "attempts": 3,
+    "tool": "github.fetch_workflow_job_logs",
+    "jobId": 122612657695,
+    "actualError": "Transport closed",
+    "delayBeforeThirdAttemptMilliseconds": 30000,
+    "toolSupportsRangeOrPagination": false,
+    "evidencePath": "/tmp/eth-continuity-eth-first-log-access.txt",
+    "limitation": "Exact focused-test counts, raw pipeline markers, and actual checkout identity cannot be extracted until a decoded job log is available. Counts are not inferred from prior runs or source code."
+  },
+  "interpretation": {
+    "stepSuccessIsNotProofOfSuccessfulEconomicAcquisition": true,
+    "sourceCaptureFailuresMayBePreservedAsSuccessfulDiagnosticSteps": true,
+    "artifactBytesDownloadedOrIndependentlyVerifiedByThisMonitor": false,
+    "remoteReadOnly": true
+  }
+}

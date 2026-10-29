@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 1,
+  "kind": "ethereum-operating-inputs-final-execution",
+  "sourceCommit": "15b5f65158074d0e2d4e2d6ad0c64a345eed740d",
+  "sourceTree": "752b66423d2eafb92507e37b871f43a44262c631",
+  "runId": 40549330277,
+  "jobId": 122348468919,
+  "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40549330277",
+  "conclusion": "success",
+  "directPrHeadCheckout": true,
+  "focusedTests": {
+    "groups": [
+      66,
+      39,
+      66,
+      34,
+      378
+    ],
+    "tests": 583,
+    "pass": 583,
+    "fail": 0,
+    "skip": 0,
+    "cancelled": 0,
+    "overlapsGeneralCi": true
+  },
+  "browser": {
+    "cases": 35,
+    "passed": 35,
+    "pngs": 181,
+    "runtimeErrors": 0,
+    "rawResourceErrors": 15,
+    "expectedOfflineBtcRefreshFailures": 15,
+    "unexpectedResourceErrors": 0,
+    "failureNoticeAndArchivePreservationVerified": true
+  },
+  "cohort": {
+    "captureStatus": "partial-cohort-state-captured",
+    "sourceCommit": "15b5f65158074d0e2d4e2d6ad0c64a345eed740d",
+    "requests": {
+      "requests": 3,
+      "totalReceivedBytes": 4610,
+      "retainedRawBytes": 4610,
+      "retries": 0,
+      "deadlineAt": "2026-10-27T17:22:20.109Z",
+      "completedAt": "2026-10-27T17:21:35.778Z"
+    },
+    "state": {
+      "slot": "15524736",
+      "epoch": "485148",
+      "observedAt": "2026-10-27T17:07:35.000Z",
+      "blockRoot": "0x4e18befc2f5231fe10db169c3476533f634622c819f6ae669017a26c913b8bf9",
+      "stateRoot": "0xa5b836b2c96c570630d7ea02daeb3d4c95c75fbbb396ecf2a65dbddc6dc56943",
+      "parentRoot": "0xbe75a7d38261e3a1a9399220f2feed0979751bcfb73580fc3d135613fc097921",
+      "bodyRoot": "0x06a7f679d19081e8c2ebe5f6186ff36341f599d89ab4ec1952ba57f5216c41f9",
+      "proposerIndex": "267803",
+      "providerCanonicalAssertion": true,
+      "providerFinalizedAssertion": true,
+      "executionOptimistic": false,
+      "headerSszRootMatched": true,
+      "headerSignatureAuthenticated": false,
+      "independentFinalityProven": false,
+      "validatorStateMembershipProven": false
+    },
+    "totals": {
+      "unit": "gwei at the pinned state, not time-weighted principal",
+      "actualBalanceGwei": "242199834899",
+      "actualBalanceEth": "242.199834899",
+      "effectiveBalanceGwei": "234000000000",
+      "effectiveBalanceEth": "234",
+      "activeValidatorCount": 7,
+      "activeActualBalanceGwei": "242199834899",
+      "activeEffectiveBalanceGwei": "234000000000",
+      "activeCountTimes32Eth": "224",
+      "activeCountTimes32MatchesEffective": false
+    },
+    "replayStatus": "raw-replay-matched",
+    "validatorStateMembershipProven": false,
+    "independentFinalityProven": false,
+    "fullModelSnapshotReady": false
+  },
+  "supply": {
+    "id": "c96f60e868205d7fc8942e3c328277f94e35bbf4b3f477186cfb8ca39ac9703b",
+    "informationCutoffAt": "2026-10-27T17:21:35.032Z",
+    "diagnosedCaptures": 2,
+    "invalidSourceCaptures": 0,
+    "unavailableCaptures": 0,
+    "sameGridConditionalIncompatibilityCount": 2,
+    "networkRequests": 0,
+    "modelInputActivated": false,
+    "eligibleModelSnapshotCount": 0
+  },
+  "prospective": {
+    "newRecords": 0,
+    "reusedRecords": 3,
+    "preservedRecords": 3,
+    "baseSelection": {
+      "archiveRetrievedAt": "2026-10-26T06:48:37.260Z",
+      "automaticallyRefreshed": false,
+      "bytes": 895609,
+      "candles": 3811,
+      "collectedAt": "2026-10-27T17:22:01.448Z",
+      "exactCommittedBytes": true,
+      "firstDate": "2016-05-18T00:00:00.000Z",
+      "gitBlobSha": "882c49f0263034426e4e3afe377cc60a17448b6c",
+      "historicalProviderAuthenticityProven": false,
+      "lastDate": "2026-10-25T00:00:00.000Z",
+      "limitation": "A reviewed committed base can roll forward without changing model code. This reader neither refreshes that base nor authenticates historical provider publication.",
+      "mode": "100644",
+      "path": "dist/data/eth-ohlc.json",
+      "policy": "eth-current-committed-base-1",
+      "requestedEnd": 1792972800,
+      "requestedStart": 1451606400,
+      "sha256": "69a726d87fcea635772a806ac6a00f43880a43d8c66bd88152045dffc209106f",
+      "sourceCommit": "15b5f65158074d0e2d4e2d6ad0c64a345eed740d",
+      "sourceTree": "752b66423d2eafb92507e37b871f43a44262c631",
+      "sourceUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/blob/15b5f65158074d0e2d4e2d6ad0c64a345eed740d/dist/data/eth-ohlc.json",
+      "workingCopyMatched": true
+    },
+    "replay": [
+      {
+        "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+        "method": "models-reexecuted-from-own-preserved-base-and-tail",
+        "modelKey": "adaptive",
+        "outputHash": "f5728c0632945702a839cf8722a9b8ec6af0c91346169f5b14929c6ce055fe25",
+        "points": 731,
+        "recordIdentityEqual": true
+      },
+      {
+        "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+        "method": "models-reexecuted-from-own-preserved-base-and-tail",
+        "modelKey": "pooled",
+        "outputHash": "7b84f0fa04346be007f153a189ce4266d705cd3702c5f0d65e4ceefa3e37d570",
+        "points": 731,
+        "recordIdentityEqual": true
+      },
+      {
+        "id": "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+        "method": "models-reexecuted-from-own-preserved-base-and-tail",
+        "modelKey": "warmStart",
+        "outputHash": "b7f45f7ebada37e9a046b4e5547101bb985b43a16fbbf3ee1e34bcdc667b6dc8",
+        "points": 731,
+        "recordIdentityEqual": true
+      }
+    ],
+    "independentReplayStatus": "verified-preserved",
+    "originalIssuedAt": {
+      "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b": "2026-10-27T07:44:13.396Z",
+      "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72": "2026-10-27T09:57:51.931Z",
+      "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1": "2026-10-27T07:44:13.396Z"
+    },
+    "indexUnchanged": true,
+    "actualNewObservationId": "278fc6046b123011216c7c59e678d6ce152824e82fd7cbc0bb843b7a112e5a36"
+  },
+  "calibration": {
+    "id": "b0fc81a3152c66bddc845b7a26828530daca139243646f1195422d6f693bae63",
+    "informationCutoffAt": "2026-10-27T17:22:05.549Z",
+    "preservedRecords": 3,
+    "preservedObservationIds": [
+      "278fc6046b123011216c7c59e678d6ce152824e82fd7cbc0bb843b7a112e5a36",
+      "bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59",
+      "da9f0f8abf60398b020501c33aaf33173fa555fcc8919b1d60975abd493d0615",
+      "e2e95e803edf9151e6bfc00b509dc124a4f25d0b623df94e00d7fb0d5b289f20"
+    ],
+    "bindings": 9,
+    "allStatuses": "insufficient-calibration-cases",
+    "allRadiiNull": true,
+    "readyBindings": 0,
+    "freezes": 0,
+    "newCalibratedRecords": 0
+  },
+  "capacity": {
+    "id": "7ac340d71e0b24091e356d6d74322c5eb5fabf7f09e8734f6f8bdffe4e004433",
+    "informationCutoffAt": "2026-10-27T17:22:07.910Z",
+    "inventory": {
+      "acquisitionDays": [
+        {
+          "date": "2026-10-26",
+          "independentOutcome": 1,
+          "prospective": 0
+        },
+        {
+          "date": "2026-10-27",
+          "independentOutcome": 0,
+          "prospective": 3
+        }
+      ],
+      "completeHistoricalAcquisitionScheduleProven": false,
+      "exactExperiments": 3,
+      "independentOutcomeAcquisitions": 1,
+      "maximumObservedProspectivePerDay": 3,
+      "observationIds": [
+        "278fc6046b123011216c7c59e678d6ce152824e82fd7cbc0bb843b7a112e5a36",
+        "bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59",
+        "da9f0f8abf60398b020501c33aaf33173fa555fcc8919b1d60975abd493d0615",
+        "e2e95e803edf9151e6bfc00b509dc124a4f25d0b623df94e00d7fb0d5b289f20"
+      ],
+      "observations": 4,
+      "prospectiveAcquisitions": 3,
+      "recordIds": [
+        "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+        "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+        "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1"
+      ],
+      "records": 3,
+      "uniqueOrigins": 1
+    },
+    "dailyContinuation": {
+      "additionalIndexBytesPerCompleteOriginDay": 1903,
+      "completeAdditionalOriginDaysWithinIndexLimit": 549,
+      "completeAdditionalOriginDaysWithinRecordLimit": 665,
+      "currentMergedCompactIndexBytes": 1971,
+      "firstOriginDayExceedingIndexLimit": "2028-04-28",
+      "firstOriginDayExceedingRecordLimit": "2028-08-22",
+      "firstPossibleAdditionalOriginDate": "2026-10-27",
+      "indexByteLimitScope": "Per individual input index; this projection assumes accumulation into one retained seed index",
+      "indexProjectionBasis": "Canonical compact merged inventory with current exact experiment entry lengths; extra whitespace, revisions and changed versions can exhaust the bound sooner",
+      "observationScenarios": [
+        {
+          "additionalIndependentSnapshotsAssumed": 0,
+          "basis": "conditional single successful daily capture",
+          "completeAdditionalCaptureDaysWithinLimit": 496,
+          "firstAdditionalCaptureDate": "2026-10-28",
+          "firstExceedingCaptureDate": "2028-03-07",
+          "historicalScheduleOrFutureFrequencyProven": false,
+          "newProspectiveSnapshotsPerDay": 1
+        },
+        {
+          "additionalIndependentSnapshotsAssumed": 0,
+          "basis": "conditional repetition of maximum retained same-day prospective captures",
+          "completeAdditionalCaptureDaysWithinLimit": 165,
+          "firstAdditionalCaptureDate": "2026-10-28",
+          "firstExceedingCaptureDate": "2027-04-11",
+          "historicalScheduleOrFutureFrequencyProven": false,
+          "newProspectiveSnapshotsPerDay": 3
+        }
+      ],
+      "unchangedExperimentsPerDay": 3
+    }
+  },
+  "economics": {
+    "requiredMetricCount": 26,
+    "eligibleFullSnapshots": 0
+  },
+  "artifactIntegrity": "artifact-integrity.json",
+  "artifactId": 12753444465,
+  "externalGeminiReview": "omitted-by-user",
+  "reverseReview": "omitted-by-user",
+  "releaseAuthorized": false,
+  "prDraft": true,
+  "automaticDailyContinuityImplemented": false
+}

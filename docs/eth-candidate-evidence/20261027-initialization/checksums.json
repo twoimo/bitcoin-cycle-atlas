@@ -1,0 +1,113 @@
+{
+  "sourceCommit": "a1ecdcea2ed181835af65f0db6b712ba8c3ee273",
+  "files": [
+    {
+      "path": "asset-ledger-receipts.json",
+      "bytes": 10795,
+      "sha256": "f792775cab919720576897f9c161923934b7039f0531b443cd328e2c88e51511",
+      "gitBlobSha1": "6c35bf69b49875c7e7d0ae8593b9a8163abac0e7"
+    },
+    {
+      "path": "browser-receipt.json",
+      "bytes": 560693,
+      "sha256": "1103b76f8cfb4cc40aeadcfa22f5a81844f042d81b27e20779a2e441e1139a21",
+      "gitBlobSha1": "157abbefc91c2b16b063651cab6a7272f5699ae5"
+    },
+    {
+      "path": "document-value-verification.json",
+      "bytes": 994,
+      "sha256": "ca11b33a54e25209f1750b5ac82369dea103094f2f55f027062f56e8f449d296",
+      "gitBlobSha1": "1dbc4ba9e9f4f928d2c6140b2b42611ff475fdb1"
+    },
+    {
+      "path": "economic-capture-receipts.json",
+      "bytes": 82086,
+      "sha256": "c2a10b5a0914f1cad208bd2f8bd0a17cafb5fc9ac064a9273a57af6c4ce1c927",
+      "gitBlobSha1": "4b956620e0487f02dcbbb26f4bc3294d5997bf0b"
+    },
+    {
+      "path": "execution-summary.json",
+      "bytes": 14623,
+      "sha256": "1d899db375701620125414a537adcd96f654d5d862b04dda3b90340c08ca093e",
+      "gitBlobSha1": "20dca14152402c7e7b0821cfec5a54232030c3c9"
+    },
+    {
+      "path": "hallmark-audit-receipt.json",
+      "bytes": 4905,
+      "sha256": "cc7a4a63dbade86b7d461a778a3a3858bc6beffd79421c703f3e3308cd92fdbf",
+      "gitBlobSha1": "624e78924edc521e4f092ca7cf40b73f3ce272f4"
+    },
+    {
+      "path": "hallmark-current-findings.json",
+      "bytes": 16775,
+      "sha256": "20e576b61f289b78f2d039d12005ddfa5109b0f9bfe1246a1dac1aef5dcba809",
+      "gitBlobSha1": "b0cca99226f453ccb69b56968f5ec58d94cb663f"
+    },
+    {
+      "path": "initialization-control.svg",
+      "bytes": 204325,
+      "sha256": "661953080aee2bb23e21c74d99065ab11fb55506f50639b4c32dc4feca0e1759",
+      "gitBlobSha1": "a1e8a8c41a574b8af0e16a9cf7e57ed3c954b92b"
+    },
+    {
+      "path": "intermediate-executions.json",
+      "bytes": 10770,
+      "sha256": "466b0e77004238eff9ede3ba5d23c1368cadf2261b683ac66a9a4ef580dbf9d8",
+      "gitBlobSha1": "2eeecc4f3707f9305ef912b9a52db208656bb3cb"
+    },
+    {
+      "path": "interval-controls-receipt.json",
+      "bytes": 60813,
+      "sha256": "832a402101f19a6d80d2eb7b5913a4e4cf58cb042779ab5b6ba4d22d085da60c",
+      "gitBlobSha1": "4bc16dee76b85ae20284f99fde754fda73291efb"
+    },
+    {
+      "path": "model-readiness-receipt.json",
+      "bytes": 93640,
+      "sha256": "ac91de01d19902ac563e1188935c2f912216a6cb622965347fad17549ee5b8f5",
+      "gitBlobSha1": "255423a984e9e8d6edc61cdbc465b21fadd669b6"
+    },
+    {
+      "path": "monte-carlo-stability-receipt.json",
+      "bytes": 140698,
+      "sha256": "9358f4907ca71fbcb7a54339417fbb0b3ee182739fbd3bcb6c903f59068c3da9",
+      "gitBlobSha1": "0e9524a9d87715f3bcb6ee16655c4d6c77be9dd0"
+    },
+    {
+      "path": "pooled-preservation-receipt.json",
+      "bytes": 85282,
+      "sha256": "a08e5ae67fdec97ae9d93befe153785619dcb69b9f6e560651ce3253c2309863",
+      "gitBlobSha1": "e6ef77ee7a8f691c4c10ebd38fa04c4298712193"
+    },
+    {
+      "path": "prospective-receipt.json",
+      "bytes": 7299,
+      "sha256": "bab43d317bf7ecaa5bf7de0835470b19ac1d4e3597dd7020456965403c461999",
+      "gitBlobSha1": "babaabc4d96cbf70b68224e2798b8c081c2c3df5"
+    },
+    {
+      "path": "prospective-replay-receipt.json",
+      "bytes": 3582,
+      "sha256": "59630fe858ae8174007fa1e911fc637bb9b8d29fefe4571f16406239c852de29",
+      "gitBlobSha1": "b0ec9051d9f7f8e05b4bc042defc5ea39aeb97ca"
+    },
+    {
+      "path": "review-source-manifest.json",
+      "bytes": 297511,
+      "sha256": "a219258bdbade738870021c8b1c1df28a21467ba893927e3b6478a62611b050c",
+      "gitBlobSha1": "3edb064c9ecf08473f88a2731e60306a90122a90"
+    },
+    {
+      "path": "source-timing-receipt.json",
+      "bytes": 2377,
+      "sha256": "353348c0b7c6e89551160f19a4c683e7dc1e044b3cf0fd7885b905214c836932",
+      "gitBlobSha1": "2f448c1cd9d722596617e441e65b337c2c1c2492"
+    },
+    {
+      "path": "warm-start-receipt.json",
+      "bytes": 47567,
+      "sha256": "7d1f9d2719e8a1275a2ec46adb7a353915042b34c3b22058a768f74f851afdec",
+      "gitBlobSha1": "f57a38b3e555e680de048a6a7e79d811dde0582f"
+    }
+  ]
+}

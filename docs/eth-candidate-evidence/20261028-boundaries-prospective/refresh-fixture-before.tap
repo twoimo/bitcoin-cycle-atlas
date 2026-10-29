@@ -1,0 +1,325 @@
+TAP version 13
+# Subtest: reviewed June MSTR notes reconcile current source principal, not inception principal
+ok 1 - reviewed June MSTR notes reconcile current source principal, not inception principal
+  ---
+  duration_ms: 2.662562
+  type: 'test'
+  ...
+# Subtest: a cash settlement occurs once and its coupon ceases at the settlement date
+ok 2 - a cash settlement occurs once and its coupon ceases at the settlement date
+  ---
+  duration_ms: 0.519038
+  type: 'test'
+  ...
+# Subtest: conversion requires its reviewed window and removes the claim while adding shares once
+ok 3 - conversion requires its reviewed window and removes the claim while adding shares once
+  ---
+  duration_ms: 0.269189
+  type: 'test'
+  ...
+# Subtest: a coarse-step end price cannot move a conversion back to an earlier eligibility date
+ok 4 - a coarse-step end price cannot move a conversion back to an earlier eligibility date
+  ---
+  duration_ms: 0.163873
+  type: 'test'
+  ...
+# Subtest: a maturity remains payable when an eligible conversion stays out of the money
+ok 5 - a maturity remains payable when an eligible conversion stays out of the money
+  ---
+  duration_ms: 0.291181
+  type: 'test'
+  ...
+# Subtest: reviewed MSTR excludes the final thirty days under an explicit model restriction, not an invented business calendar
+ok 6 - reviewed MSTR excludes the final thirty days under an explicit model restriction, not an invented business calendar
+  ---
+  duration_ms: 0.410858
+  type: 'test'
+  ...
+# Subtest: unknown instrument coupons preserve the disclosed aggregate proxy without inventing a rate
+ok 7 - unknown instrument coupons preserve the disclosed aggregate proxy without inventing a rate
+  ---
+  duration_ms: 0.377479
+  type: 'test'
+  ...
+# Subtest: unreviewed, future, duplicate and unreconciled contracts fail at the input boundary
+ok 8 - unreviewed, future, duplicate and unreconciled contracts fail at the input boundary
+  ---
+  duration_ms: 0.495414
+  type: 'test'
+  ...
+# Subtest: contradictory capital dates cannot postpone a maturity or create an invalid conversion window
+ok 9 - contradictory capital dates cannot postpone a maturity or create an invalid conversion window
+  ---
+  duration_ms: 0.510035
+  type: 'test'
+  ...
+# Subtest: reviewed coupons disappear from runtime cash costs after actual model principal settlements
+not ok 10 - reviewed coupons disappear from runtime cash costs after actual model principal settlements
+  ---
+  duration_ms: 1.36452
+  type: 'test'
+  location: '/tmp/eth-refresh-fixture/tests/treasury-instruments.test.mjs:89:1'
+  failureType: 'testCodeFailure'
+  error: 'Future information is not permitted at the price cutoff'
+  code: 'ERR_TEST_FAILURE'
+  name: 'RangeError'
+  stack: |-
+    buildTreasuryForecasts (file:///tmp/eth-refresh-fixture/dist/treasury-model.js:301:101)
+    buildTreasuryForecast (file:///tmp/eth-refresh-fixture/dist/treasury-model.js:352:10)
+    TestContext.<anonymous> (file:///tmp/eth-refresh-fixture/tests/treasury-instruments.test.mjs:90:18)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: BMNP starts from the disclosed preferred adjustment and carries a distinct unconverted claim
+not ok 11 - BMNP starts from the disclosed preferred adjustment and carries a distinct unconverted claim
+  ---
+  duration_ms: 0.277862
+  type: 'test'
+  location: '/tmp/eth-refresh-fixture/tests/treasury-instruments.test.mjs:97:1'
+  failureType: 'testCodeFailure'
+  error: 'Future information is not permitted at the price cutoff'
+  code: 'ERR_TEST_FAILURE'
+  name: 'RangeError'
+  stack: |-
+    buildTreasuryForecasts (file:///tmp/eth-refresh-fixture/dist/treasury-model.js:301:101)
+    buildTreasuryForecast (file:///tmp/eth-refresh-fixture/dist/treasury-model.js:352:10)
+    TestContext.<anonymous> (file:///tmp/eth-refresh-fixture/tests/treasury-instruments.test.mjs:98:18)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: ordinary residual subtracts all senior and non-controlling claims once
+ok 12 - ordinary residual subtracts all senior and non-controlling claims once
+  ---
+  duration_ms: 0.213566
+  type: 'test'
+  ...
+# Subtest: the matched BMNR accounting bridge reconciles reported common book equity
+ok 13 - the matched BMNR accounting bridge reconciles reported common book equity
+  ---
+  duration_ms: 0.10142
+  type: 'test'
+  ...
+# Subtest: NET issue premium controls common-NAV accretion, including fees
+ok 14 - NET issue premium controls common-NAV accretion, including fees
+  ---
+  duration_ms: 0.348036
+  type: 'test'
+  ...
+# Subtest: NAV accretion does not imply coin-per-share accretion under senior claims
+ok 15 - NAV accretion does not imply coin-per-share accretion under senior claims
+  ---
+  duration_ms: 0.096302
+  type: 'test'
+  ...
+# Subtest: retained issuance cash and coin purchases conserve net proceeds
+ok 16 - retained issuance cash and coin purchases conserve net proceeds
+  ---
+  duration_ms: 0.10092
+  type: 'test'
+  ...
+# Subtest: cash outflows use cash first and reduce common value by the expense
+ok 17 - cash outflows use cash first and reduce common value by the expense
+  ---
+  duration_ms: 0.317931
+  type: 'test'
+  ...
+# Subtest: coin sale fees are an additional economic loss
+ok 18 - coin sale fees are an additional economic loss
+  ---
+  duration_ms: 0.095281
+  type: 'test'
+  ...
+# Subtest: unfunded operating bills remain liabilities, without negative cash or coins
+ok 19 - unfunded operating bills remain liabilities, without negative cash or coins
+  ---
+  duration_ms: 0.08759
+  type: 'test'
+  ...
+# Subtest: repaying principal preserves common residual before transaction costs
+ok 20 - repaying principal preserves common residual before transaction costs
+  ---
+  duration_ms: 0.117715
+  type: 'test'
+  ...
+# Subtest: unpaid principal is reclassified, not erased
+ok 21 - unpaid principal is reclassified, not erased
+  ---
+  duration_ms: 0.179737
+  type: 'test'
+  ...
+# Subtest: principal cannot exceed outstanding debt by even a fraction of a cent
+ok 22 - principal cannot exceed outstanding debt by even a fraction of a cent
+  ---
+  duration_ms: 0.339232
+  type: 'test'
+  ...
+# Subtest: funding and principal preserve their independent balance identities over a bounded state grid
+ok 23 - funding and principal preserve their independent balance identities over a bounded state grid
+  ---
+  duration_ms: 3.073921
+  type: 'test'
+  ...
+# Subtest: invalid numerical state cannot silently propagate NaN or negative balances
+ok 24 - invalid numerical state cannot silently propagate NaN or negative balances
+  ---
+  duration_ms: 0.354054
+  type: 'test'
+  ...
+# Subtest: missing optional claims are either zero or rejected, never NaN
+ok 25 - missing optional claims are either zero or rejected, never NaN
+  ---
+  duration_ms: 0.127619
+  type: 'test'
+  ...
+# Subtest: all forecast paths start at the observed equity price and expose the historical vintage
+ok 26 - all forecast paths start at the observed equity price and expose the historical vintage
+  ---
+  duration_ms: 92.779346
+  type: 'test'
+  ...
+# Subtest: later observed equity bars are excluded by the as-of cutoff
+ok 27 - later observed equity bars are excluded by the as-of cutoff
+  ---
+  duration_ms: 11.816659
+  type: 'test'
+  ...
+# Subtest: publication date, not balance-sheet date alone, gates historical use
+ok 28 - publication date, not balance-sheet date alone, gates historical use
+  ---
+  duration_ms: 0.643943
+  type: 'test'
+  ...
+# Subtest: current frozen research cannot be reused as a historical backtest
+ok 29 - current frozen research cannot be reused as a historical backtest
+  ---
+  duration_ms: 0.214127
+  type: 'test'
+  ...
+# Subtest: a modern requested cutoff cannot hide stale equity or coin anchors
+ok 30 - a modern requested cutoff cannot hide stale equity or coin anchors
+  ---
+  duration_ms: 0.437668
+  type: 'test'
+  ...
+# Subtest: post-snapshot adjustments cannot leak before their publication
+ok 31 - post-snapshot adjustments cannot leak before their publication
+  ---
+  duration_ms: 12.776681
+  type: 'test'
+  ...
+# Subtest: known preferred issuance adds cash AND senior claim without pretending to be current NAV
+ok 32 - known preferred issuance adds cash AND senior claim without pretending to be current NAV
+  ---
+  duration_ms: 8.136319
+  type: 'test'
+  ...
+# Subtest: a known cost reduction may reach zero but cannot create a negative financing expense
+ok 33 - a known cost reduction may reach zero but cannot create a negative financing expense
+  ---
+  duration_ms: 9.009352
+  type: 'test'
+  ...
+# Subtest: scenario endpoints and envelopes contain every scenario at each shared date
+ok 34 - scenario endpoints and envelopes contain every scenario at each shared date
+  ---
+  duration_ms: 61.153171
+  type: 'test'
+  ...
+# Subtest: forecast dates are strictly increasing and monetary outputs remain finite and nonnegative
+ok 35 - forecast dates are strictly increasing and monetary outputs remain finite and nonnegative
+  ---
+  duration_ms: 63.008478
+  type: 'test'
+  ...
+# Subtest: exhausted common residual follows an explicit absorbing-zero stress convention
+ok 36 - exhausted common residual follows an explicit absorbing-zero stress convention
+  ---
+  duration_ms: 4.14592
+  type: 'test'
+  ...
+# Subtest: invalid horizons, symbols and calendar dates fail clearly
+ok 37 - invalid horizons, symbols and calendar dates fail clearly
+  ---
+  duration_ms: 0.441414
+  type: 'test'
+  ...
+# Subtest: latest eligible observation is chosen by date without mutating source order
+ok 38 - latest eligible observation is chosen by date without mutating source order
+  ---
+  duration_ms: 8.776077
+  type: 'test'
+  ...
+# Subtest: ambiguous duplicate sessions and malformed calendar fields are rejected at the boundary
+ok 39 - ambiguous duplicate sessions and malformed calendar fields are rejected at the boundary
+  ---
+  duration_ms: 0.557716
+  type: 'test'
+  ...
+# Subtest: asset and disclosure timing cannot be reinterpreted by the treasury model
+ok 40 - asset and disclosure timing cannot be reinterpreted by the treasury model
+  ---
+  duration_ms: 0.190321
+  type: 'test'
+  ...
+# Subtest: finite operands that overflow financial arithmetic fail without returning nonfinite money
+ok 41 - finite operands that overflow financial arithmetic fail without returning nonfinite money
+  ---
+  duration_ms: 0.210392
+  type: 'test'
+  ...
+# Subtest: capacity-limited issuance buys only remaining units and conserves net funding
+ok 42 - capacity-limited issuance buys only remaining units and conserves net funding
+  ---
+  duration_ms: 0.185134
+  type: 'test'
+  ...
+# Subtest: long-horizon default paths remain within the stated supply or strategy limit
+not ok 43 - long-horizon default paths remain within the stated supply or strategy limit
+  ---
+  duration_ms: 0.238133
+  type: 'test'
+  location: '/tmp/eth-refresh-fixture/tests/treasury-model.test.mjs:324:1'
+  failureType: 'testCodeFailure'
+  error: 'Future information is not permitted at the price cutoff'
+  code: 'ERR_TEST_FAILURE'
+  name: 'RangeError'
+  stack: |-
+    buildTreasuryForecasts (file:///tmp/eth-refresh-fixture/dist/treasury-model.js:301:101)
+    buildTreasuryForecast (file:///tmp/eth-refresh-fixture/dist/treasury-model.js:352:10)
+    TestContext.<anonymous> (file:///tmp/eth-refresh-fixture/tests/treasury-model.test.mjs:326:18)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: staking rewards above the strategy cap are realized as cash after explicit sale costs
+ok 44 - staking rewards above the strategy cap are realized as cash after explicit sale costs
+  ---
+  duration_ms: 11.143352
+  type: 'test'
+  ...
+# Subtest: an already impossible holding balance is rejected instead of normalized to a plausible share price
+ok 45 - an already impossible holding balance is rejected instead of normalized to a plausible share price
+  ---
+  duration_ms: 0.306424
+  type: 'test'
+  ...
+1..45
+# tests 45
+# suites 0
+# pass 42
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 340.447474

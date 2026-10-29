@@ -1,0 +1,196 @@
+TAP version 13
+# Subtest: archive restores the exact original issued bytes, identity, clocks and 731 points
+ok 1 - archive restores the exact original issued bytes, identity, clocks and 731 points
+  ---
+  duration_ms: 82.376885
+  type: 'test'
+  ...
+# Subtest: snapshot and observation logical paths share one exact object without losing either inventory entry
+ok 2 - snapshot and observation logical paths share one exact object without losing either inventory entry
+  ---
+  duration_ms: 68.389885
+  type: 'test'
+  ...
+# Subtest: a later acquisition appends exact previous manifests, pages and objects without replacing the original index checkpoint
+ok 3 - a later acquisition appends exact previous manifests, pages and objects without replacing the original index checkpoint
+  ---
+  duration_ms: 400.010483
+  type: 'test'
+  ...
+# Subtest: a repeat capture preserves inventory while recording a linked execution manifest
+ok 4 - a repeat capture preserves inventory while recording a linked execution manifest
+  ---
+  duration_ms: 245.512751
+  type: 'test'
+  ...
+# Subtest: independent ETH raw outcomes restore to the existing outcome-index format
+ok 5 - independent ETH raw outcomes restore to the existing outcome-index format
+  ---
+  duration_ms: 279.614383
+  type: 'test'
+  ...
+# Subtest: unknown traversal absolute backslash and control-character logical paths are rejected
+ok 6 - unknown traversal absolute backslash and control-character logical paths are rejected
+  ---
+  duration_ms: 2.282288
+  type: 'test'
+  ...
+# Subtest: same immutable path with changed bytes cannot be appended under a prior archive
+ok 7 - same immutable path with changed bytes cannot be appended under a prior archive
+  ---
+  duration_ms: 67.641952
+  type: 'test'
+  ...
+# Subtest: a missing object blocks restoration even when every manifest is intact
+ok 8 - a missing object blocks restoration even when every manifest is intact
+  ---
+  duration_ms: 1.083454
+  type: 'test'
+  ...
+# Subtest: one changed raw byte and a forged cached success flag cannot bypass verification
+ok 9 - one changed raw byte and a forged cached success flag cannot bypass verification
+  ---
+  duration_ms: 1.665632
+  type: 'test'
+  ...
+# Subtest: missing ancestor and unrelated extra transport files both block restoration
+ok 10 - missing ancestor and unrelated extra transport files both block restoration
+  ---
+  duration_ms: 211.251897
+  type: 'test'
+  ...
+# Subtest: altered sequence predecessor clock policy and summary cannot be legitimized by rehashing the manifest
+ok 11 - altered sequence predecessor clock policy and summary cannot be legitimized by rehashing the manifest
+  ---
+  duration_ms: 76.636261
+  type: 'test'
+  ...
+# Subtest: an archive cannot drop a previous page and still call itself a later generation
+ok 12 - an archive cannot drop a previous page and still call itself a later generation
+  ---
+  duration_ms: 226.367723
+  type: 'test'
+  ...
+# Subtest: a later generation cannot retroactively supply an ancestor record snapshot or index reference
+ok 13 - a later generation cannot retroactively supply an ancestor record snapshot or index reference
+  ---
+  duration_ms: 103.140171
+  type: 'test'
+  ...
+# Subtest: cross-page references are valid when every dependency arrives in the same generation
+ok 14 - cross-page references are valid when every dependency arrives in the same generation
+  ---
+  duration_ms: 52.393466
+  type: 'test'
+  ...
+# Subtest: duplicate logical paths fail even when the page and manifest are rehashed
+ok 15 - duplicate logical paths fail even when the page and manifest are rehashed
+  ---
+  duration_ms: 1.484167
+  type: 'test'
+  ...
+# Subtest: forged object byte count and Git blob identity are independently rejected
+ok 16 - forged object byte count and Git blob identity are independently rejected
+  ---
+  duration_ms: 2.704848
+  type: 'test'
+  ...
+# Subtest: index checkpoint cannot rename a record origin or point outside the archive
+ok 17 - index checkpoint cannot rename a record origin or point outside the archive
+  ---
+  duration_ms: 96.686344
+  type: 'test'
+  ...
+# Subtest: historical subset indexes are retained while the restored index contains every verified record
+ok 18 - historical subset indexes are retained while the restored index contains every verified record
+  ---
+  duration_ms: 139.667926
+  type: 'test'
+  ...
+# Subtest: missing record snapshots fail before an archive checkpoint is issued
+ok 19 - missing record snapshots fail before an archive checkpoint is issued
+  ---
+  duration_ms: 15.622086
+  type: 'test'
+  ...
+# Subtest: modified record routing metadata cannot hide behind a recomputed object digest
+ok 20 - modified record routing metadata cannot hide behind a recomputed object digest
+  ---
+  duration_ms: 44.720246
+  type: 'test'
+  ...
+# Subtest: observation filenames and semantic clocks remain validated independently of archive hashes
+ok 21 - observation filenames and semantic clocks remain validated independently of archive hashes
+  ---
+  duration_ms: 45.144351
+  type: 'test'
+  ...
+# Subtest: noncanonical immutable JSON and non-UTF-8 bytes cannot enter a valid archive
+ok 22 - noncanonical immutable JSON and non-UTF-8 bytes cannot enter a valid archive
+  ---
+  duration_ms: 4.115947
+  type: 'test'
+  ...
+# Subtest: raw Coinbase bodies retain their exact whitespace and fail when their filename digest disagrees
+ok 23 - raw Coinbase bodies retain their exact whitespace and fail when their filename digest disagrees
+  ---
+  duration_ms: 1.457949
+  type: 'test'
+  ...
+# Subtest: acquisition and issuance filenames must match canonical receipt identities
+ok 24 - acquisition and issuance filenames must match canonical receipt identities
+  ---
+  duration_ms: 1.523419
+  type: 'test'
+  ...
+# Subtest: complete failed HTTP text is retained byte-for-byte without treating malformed JSON as an observation
+ok 25 - complete failed HTTP text is retained byte-for-byte without treating malformed JSON as an observation
+  ---
+  duration_ms: 0.971387
+  type: 'test'
+  ...
+# Subtest: legacy fixed acquisition and raw-tail names retain their exact original bytes in addressed archive objects
+ok 26 - legacy fixed acquisition and raw-tail names retain their exact original bytes in addressed archive objects
+  ---
+  duration_ms: 1.477493
+  type: 'test'
+  ...
+# Subtest: legacy path normalization is explicit and does not relax typed immutable JSON validation
+ok 27 - legacy path normalization is explicit and does not relax typed immutable JSON validation
+  ---
+  duration_ms: 3.128777
+  type: 'test'
+  ...
+# Subtest: captured caller maps and Buffers cannot race an asynchronous semantic validation
+ok 28 - captured caller maps and Buffers cannot race an asynchronous semantic validation
+  ---
+  duration_ms: 146.191086
+  type: 'test'
+  ...
+# Subtest: per-file and record byte bounds fail before parsing untrusted evidence
+ok 29 - per-file and record byte bounds fail before parsing untrusted evidence
+  ---
+  duration_ms: 12.8802
+  type: 'test'
+  ...
+# Subtest: inventory pages split at the finite descriptor bound and restore all checkpoint bytes in the archive
+ok 30 - inventory pages split at the finite descriptor bound and restore all checkpoint bytes in the archive
+  ---
+  duration_ms: 11.662989
+  type: 'test'
+  ...
+# Subtest: 501 valid actual-format observations remain archived but cannot be silently pruned into a 500-observation working set
+ok 31 - 501 valid actual-format observations remain archived but cannot be silently pruned into a 500-observation working set
+  ---
+  duration_ms: 1249.855715
+  type: 'test'
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3896.600692

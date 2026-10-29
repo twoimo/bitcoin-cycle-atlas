@@ -16,7 +16,7 @@ jobs:
   build:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     outputs:
       source_commit: ${{ steps.publication.outputs.source_commit }}
       manifest_sha256: ${{ steps.publication.outputs.manifest_sha256 }}

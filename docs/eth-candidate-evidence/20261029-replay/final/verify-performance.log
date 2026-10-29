@@ -1,0 +1,6 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.29.0 verify:performance
+> node scripts/verify-chart-performance.mjs
+
+{"status":"PASS","asOf":"2026-10-25","scope":"Deterministic renderer/search/selection checks; Node SVG boundary, not browser paint or input-latency measurement.","observedPriceRows":5944,"observedCandleRows":5548,"observedVolumeShapes":5548,"svgElements":100,"svgElementBudget":120,"sourceSelectionDates":["2011-08-18","2019-03-23","2026-10-25"],"complexity":[{"sourceRows":1024,"visibleRows":9,"sourceReads":29,"maxReads":33,"displayPoints":1024,"maxDisplayPoints":4004},{"sourceRows":16384,"visibleRows":9,"sourceReads":37,"maxReads":41,"displayPoints":2296,"maxDisplayPoints":4004},{"sourceRows":131072,"visibleRows":9,"sourceReads":43,"maxReads":47,"displayPoints":3978,"maxDisplayPoints":4004}],"moduleHashes":{"atlas-price-chart.js":"0a439da95ce2ca00875a817483ac3bd1062adbfa0480c7e644e74271dcc6d20e","chart-overlays.js":"0808bc0b3175eb089394493a9bab2062cdeaf190940169c3b26093c1c3f3e04a","chart-window.js":"ff1527876a0185e8f8a52211170c696bde98f0120c6f0ddde58cea987daaf7cd","chart-navigation.js":"3c155dbc8f0ee0a812ead043ea05a397364a8338b05e2b51fa9484ace3bb9bd0"}}

@@ -44,7 +44,7 @@ export function mountChartBottomBar({stage,ranges,dateButton,rangeLabel,axis,sta
   const onMenuKey=event=>{
     event.stopPropagation();const buttons=[...menu.querySelectorAll('button')].filter(node=>!node.hidden&&!node.disabled),index=buttons.indexOf(doc.activeElement);
     if(['Escape','Tab'].includes(event.key)){event.preventDefault();close(true);}
-    else if(['ArrowDown','ArrowUp','Home','End'].includes(event.key)){event.preventDefault();const next=event.key==='Home'?0:event.key==='End'?buttons.length-1:(index+(event.key==='ArrowUp'?-1:1)+buttons.length)%buttons.length;buttons[next]?.focus({preventScroll:true});}
+    else if(['ArrowDown','ArrowUp','Home','End'].includes(event.key)){event.preventDefault();const next=event.key==='Home'?0:event.key==='End'?buttons.length-1:(index+(event.key==='ArrowUp'?-1:1)+buttons.length)%buttons.length;buttons[next]?.focus();}
   };
   menu.addEventListener('keydown',onMenuKey);
   const dismiss=event=>{if(!menu.hidden&&!menu.contains(event.target)&&!more.contains(event.target))close();};

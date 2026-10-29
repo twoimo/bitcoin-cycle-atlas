@@ -1,0 +1,13 @@
+Second ETH job log acquisition evidence
+Run: 40628133773
+Job: 122617888883
+Source head: c17be870193a535860e95f41bbb6b0239fd4c22a
+Connector: github.fetch_workflow_job_logs
+Two reads returned the same exact error, with a 30-second interval before the single allowed retry:
+
+tool call error: tool call failed for `codex_apps/github.fetch_workflow_job_logs`
+
+Caused by:
+    Transport closed
+
+No test counts, actual checkout identity, or archive marker lines were obtained. Final run/job/artifact success is separately recorded from GitHub API metadata. The expected remote commit and sequence are task expectations only, pending independent artifact verification. No further retries were made.

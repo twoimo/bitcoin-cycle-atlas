@@ -1,0 +1,20 @@
+{
+  "scope": "Actual focused logs; overlapping suites are not additive; final combined gate pending",
+  "logs": [
+    {
+      "path": "handoff-compatibility.log",
+      "bytes": 13142,
+      "sha256": "1333ee35693af7d7d945932f6db3f328ecc38f315205bc75ccd3148724fde656"
+    },
+    {
+      "path": "io-inventory-remote.log",
+      "bytes": 7796,
+      "sha256": "208b0b1d9f44c90a8b5109d750af1cfa56042e79219eb9c5ff061a63389a415a"
+    },
+    {
+      "path": "issuer.log",
+      "bytes": 942,
+      "sha256": "42637b3b8ed5342acea9bae5b78a307eda15a1cd82a8294cfdebbf7a243dea79"
+    }
+  ]
+}

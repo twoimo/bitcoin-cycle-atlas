@@ -1,0 +1,117 @@
+{
+  "sourceCommit": "93810f3ae099aa8af37bc41a3762981ab749a7b4",
+  "sourceTree": "2e9fec444da0b1565ed14dcbe612e34e0e42470f",
+  "asOf": {
+    "historicalComparison": "2026-10-25",
+    "prospectiveClose": "2026-10-26"
+  },
+  "priceModelPreserved": true,
+  "existingAssetLedgerPreserved": true,
+  "numericalSimulation": {
+    "policy": "eth-monte-carlo-stability-1",
+    "seeds": [
+      20261027,
+      1,
+      104729,
+      130363,
+      155921,
+      196613,
+      262147,
+      524287
+    ],
+    "drawBudgets": [
+      256,
+      1024
+    ],
+    "pooledFlatSkillPct": [
+      {
+        "horizonDays": 30,
+        "sampleCount": 256,
+        "n": 20,
+        "minSkillPct": -1.9475015489273328,
+        "maxSkillPct": 1.0444202771614175
+      },
+      {
+        "horizonDays": 30,
+        "sampleCount": 1024,
+        "n": 20,
+        "minSkillPct": -1.1337674055890368,
+        "maxSkillPct": 0.30491840939260717
+      },
+      {
+        "horizonDays": 90,
+        "sampleCount": 256,
+        "n": 10,
+        "minSkillPct": -2.9533780719502856,
+        "maxSkillPct": 1.668385351235424
+      },
+      {
+        "horizonDays": 90,
+        "sampleCount": 1024,
+        "n": 10,
+        "minSkillPct": -1.8581002239150823,
+        "maxSkillPct": 1.0703669366939894
+      },
+      {
+        "horizonDays": 180,
+        "sampleCount": 256,
+        "n": 5,
+        "minSkillPct": -6.519707218109039,
+        "maxSkillPct": 8.429115304122847
+      },
+      {
+        "horizonDays": 180,
+        "sampleCount": 1024,
+        "n": 5,
+        "minSkillPct": -1.7609514224008027,
+        "maxSkillPct": 4.968056253735154
+      }
+    ],
+    "commonOrigins": {
+      "30": 9,
+      "90": 4,
+      "180": 2
+    },
+    "pooledFlatOrigins": {
+      "30": 20,
+      "90": 10,
+      "180": 5
+    },
+    "defaultReplayCases": 105,
+    "defaultReplayExact": true,
+    "resultIdenticalToFirstRun": true,
+    "statisticalSignificanceClaim": false,
+    "prospectiveAccuracyClaim": false
+  },
+  "prospective": {
+    "canonicalRecordIds": [
+      "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+      "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1"
+    ],
+    "originalIssuedAt": "2026-10-27T07:44:13.396Z",
+    "firstIssuedAtKst": "2026-10-27T16:44:13.396+09:00",
+    "latestAttemptedIssueAt": "2026-10-27T08:06:20.183Z",
+    "newRecords": 0,
+    "reusedRecords": 2,
+    "canonicalRecords": 2,
+    "uniqueOrigins": 1,
+    "pending": 6,
+    "scored": 0,
+    "intermediateEquivalentRecordsRetainedSeparately": 2,
+    "earliestTargetEventAt": "2026-11-26T00:00:00.000Z"
+  },
+  "remaining": {
+    "fullEconomicSnapshots": 0,
+    "minimumTrainingLabels": 16,
+    "minimumCalibrationLabels": 12,
+    "historicalVintagesProven": false,
+    "geminiOpposition": "omitted-by-user",
+    "followupReverseReview": "omitted-by-user",
+    "releaseAuthorized": false
+  },
+  "notes": [
+    "All numerical simulations ran in GitHub Actions. No local repository code execution.",
+    "Stored prices, model paths, conditional intervals and research-issued timestamps are distinct semantics.",
+    "The final docs/evidence commit must be distinguished from this tested execution source."
+  ]
+}

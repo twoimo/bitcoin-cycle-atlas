@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "kind": "forecast-replay-peer-review-receipt",
+  "reviewedAt": "2026-10-28T15:32:31Z",
+  "reviewer": {
+    "agent": "implement_replay_core",
+    "scope": "Same-session cross-agent code review of the replay UI against its core contract, followed by targeted regression verification",
+    "authoredReplayCore": true,
+    "externalProviderReviewPerformed": false,
+    "externalProvider": null,
+    "geminiOpposition": "omitted-by-user",
+    "geminiReverseReview": "omitted-by-user"
+  },
+  "reviewedCommits": {
+    "initialUiIntegrated": "f36c5850e842818b17b2915e9be08416c85cdf0c",
+    "initialCoreIntegrated": "b8860b4a29dc8ef7aab998bd2b2d4d659db994be",
+    "inputBoundaryCoreFix": "fddb90c5c45aa5b705e11e51a642fe79026b6744",
+    "emptyFrameUiFix": "ceb1fe836c8bd353158198025dba0ae3c82a0781",
+    "pathMeaningCoreFix": "4a9dc1b813ea5ebea37c80177b8dc846ade7f72f",
+    "pathMeaningUiFix": "c6917c0e0a0ee2724ecbc8c7f9f8dbf6e7782f31",
+    "standaloneReadOnlyReview": "a8d373ef770355a1468a30ccbda38789ffa4bd37"
+  },
+  "findings": [
+    {
+      "id": "replay-input-availability",
+      "severity": "P1",
+      "status": "closed",
+      "confirmedBeforeFix": true,
+      "description": "Information-time frames hid unissued forecasts but exposed later-collected input prices, the flat anchor and their derived axis.",
+      "reproduction": "The real ETH origin frame evaluated 2026-10-26T00:00:00Z exposed 91 input prices and anchor 2326.75, although its complete input collection was 2026-10-26T12:12:46.363Z. Real BMNR and MSTR origin frames likewise exposed their later-collected inputs.",
+      "fix": "Asset inputs use the verified complete input acquisition boundary; BTC conservatively uses record issuance. Hidden inputs and flat values are absent. Frames with no visible prices have null domain and scale. The UI removes old SVG content, price datasets and pointer inspection and renders a price-free empty state.",
+      "verification": "Actual ETH, BMNR and MSTR regressions cover origin, one millisecond before collection, exact collection and issuance. BTC issuance gating and hidden-value absence in frame JSON pass. Integrated empty-state UI code was inspected."
+    },
+    {
+      "id": "replay-preserved-path-meaning",
+      "severity": "P2",
+      "status": "closed",
+      "confirmedBeforeFix": true,
+      "description": "Generic replay prediction wording omitted that the original saved ETH path is one seeded random example and BMNR carries that example through conditional treasury valuation.",
+      "fix": "Identity retains pointMeaning, Korean pointLabel and the validated bandMeaning. The UI displays that interpretation in its disclosure, error explanation and provenance. Historical ETH identifies pointwise simulation medians and uncalibrated quantiles; historical BTC identifies the price-only shrunken-trend baseline.",
+      "verification": "Actual saved ETH and BMNR assertions preserve sampled-example semantics in exported identity while retaining every compared saved path value and output hash. Historical median and baseline meaning assertions pass. Integrated UI wording was inspected."
+    }
+  ],
+  "targetedVerification": {
+    "workingTree": "bitcoin-cycle-atlas",
+    "command": "node --test --test-isolation=none --test-reporter=spec tests/forecast-replay.test.mjs tests/forecast-replay-sources.test.mjs tests/forecast-replay-published-source.test.mjs",
+    "tests": 28,
+    "passed": 28,
+    "failed": 0,
+    "skipped": 0,
+    "exitCode": 0,
+    "data": "The real dedicated ETH replay archive and preserved raw acquisition evidence were present in the parent worktree. This receipt does not assert that those data had already been committed when tests ran.",
+    "coverage": [
+      "Frozen path and output-hash preservation",
+      "Future-actual invariance of earlier frames, metrics and axes",
+      "Information-time receipt, input, issuance and revision boundaries",
+      "Pending and missing observations without imputation",
+      "Historical prefix causality and retrospective-only scoring",
+      "Actual raw ETH acquisition and exact archive reconstruction",
+      "Sampled-path interpretation in real preserved ETH and BMNR exports"
+    ]
+  },
+  "uiInspection": {
+    "result": "No additional confirmed finding within the inspected scope",
+    "checked": [
+      "Hover, candles, axis and export consume the visible frame rather than the future observation inventory",
+      "Export contains identity and frame, not the complete session inventory",
+      "Pause repaints changed clock settings",
+      "Timer epochs, abort ownership and journal replacement dispose stale work",
+      "Historical daily errors remain overlapping comparisons, not independent forecast trials"
+    ],
+    "nativeBrowserExecutionByThisReviewer": false
+  },
+  "standaloneInspection": {
+    "mode": "read-only code and test inspection",
+    "result": "No additional confirmed serialization or data-trust issue within the inspected changes",
+    "checked": [
+      "JSON sourceText preserves exact archived UTF-8 content and is checked against sourceHash",
+      "HTML escaping of less-than signs round-trips through the JSON string envelope",
+      "Replacement callbacks preserve literal dollar replacement tokens",
+      "Missing or changed dedicated ETH entries fail without older-ETH fallback",
+      "Explicit archivePath retains fetch behavior",
+      "Embedded asset archives verify all indexed records before exposing a selection",
+      "Superseded verification retains generation ownership checks"
+    ],
+    "standaloneTestExecutionByThisReviewer": false
+  },
+  "confirmedRemainingFindings": [],
+  "releaseAuthorized": false,
+  "productionPromoted": false,
+  "providerAuthenticityProven": false,
+  "historicalPublicationProven": false,
+  "calibrationClaim": false
+}

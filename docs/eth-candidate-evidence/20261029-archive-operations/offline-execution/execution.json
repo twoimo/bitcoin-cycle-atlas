@@ -1,0 +1,72 @@
+{
+  "scope": "Explicit fresh committed-seed offline execution. No remote restore/publication claimed. Issue attempts the actual collector; a network failure is expected and preserved, not a successful observation.",
+  "sourceCommit": "5d6a4bcd1668ac0e5c98960fc7470e91663830f3",
+  "sourceTree": "3327f38b6329e020578def29913577857cb157bc",
+  "steps": [
+    {
+      "command": "restore",
+      "startedAt": "2026-10-28T17:49:45.573030+00:00",
+      "seconds": 5.88884027200038,
+      "exitCode": 0,
+      "log": "restore.log",
+      "bytes": 2518,
+      "sha256": "4cefc891216337ecb86ed879b3df29c2c4ea1e3a8e31a6db365687812b4751fb"
+    },
+    {
+      "command": "issue",
+      "startedAt": "2026-10-28T17:49:51.466516+00:00",
+      "seconds": 3.523896038001112,
+      "exitCode": 1,
+      "log": "issue.log",
+      "bytes": 3254,
+      "sha256": "17945ee5b16770905999a338c2c3fdfba0056db00b3109b3c0e82e88bf074234"
+    },
+    {
+      "command": "replay",
+      "startedAt": "2026-10-28T17:49:54.994845+00:00",
+      "seconds": 7.238193877999947,
+      "exitCode": 0,
+      "log": "replay.log",
+      "bytes": 6306,
+      "sha256": "ff385d79a44cd3a9c930d568e7a9a466e3095d6d29f695b4107ca82dc1d76a58"
+    },
+    {
+      "command": "readiness",
+      "startedAt": "2026-10-28T17:50:02.238429+00:00",
+      "seconds": 6.338755355998728,
+      "exitCode": 0,
+      "log": "readiness.log",
+      "bytes": 75058,
+      "sha256": "832e31a8c9ecbbd464db2b77f14c5063d91101cc560c473df90d1301dd1d5d7e"
+    },
+    {
+      "command": "capacity",
+      "startedAt": "2026-10-28T17:50:08.581374+00:00",
+      "seconds": 4.878688884999065,
+      "exitCode": 0,
+      "log": "capacity.log",
+      "bytes": 40611,
+      "sha256": "2bef8a0709d33e9edab7745971d81bd4fba315a8503cbff1dba5a2c6cd2272cb"
+    },
+    {
+      "command": "append",
+      "startedAt": "2026-10-28T17:50:13.464515+00:00",
+      "seconds": 10.619911867001065,
+      "exitCode": 0,
+      "log": "append.log",
+      "bytes": 2861,
+      "sha256": "52fae508dd8de235384b64fd42c63c96059a09a3f07f921cbc46bd78617728eb"
+    },
+    {
+      "command": "verify",
+      "startedAt": "2026-10-28T17:50:24.088638+00:00",
+      "seconds": 1.3683668970006693,
+      "exitCode": 0,
+      "log": "verify.log",
+      "bytes": 667,
+      "sha256": "710a451c7828bfee1811a4cdcf8789cb36b511592c76262a9cfcbacb6aa74ac7"
+    }
+  ],
+  "releaseAuthorized": false,
+  "productionPromoted": false
+}

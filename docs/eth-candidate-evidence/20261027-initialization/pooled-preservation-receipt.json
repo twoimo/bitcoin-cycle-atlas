@@ -1,0 +1,2982 @@
+{
+  "kind": "ethereum-pooled-followup-research",
+  "asOf": "2026-10-25",
+  "sourceCommit": "a1ecdcea2ed181835af65f0db6b712ba8c3ee273",
+  "sourceTree": "aa09ec9b42a48535647efc11b2ce325173ab76fb",
+  "sourceHashes": {
+    "dist/ethereum-pooled-model.js": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467",
+    "dist/ethereum-adaptive-model.js": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d",
+    "dist/ethereum-model-comparison.js": "4751fde042b65a8af5486363a84f22476dd1e22fcba04a0f229de81fc4e9b40e",
+    "scripts/evaluate-ethereum-pooled-research.mjs": "826323e2f0f509f5aa0a59fc43f908238447b1e694ed4c754160811ba289dcae",
+    "scripts/evaluate-ethereum-models.mjs": "6d19a8c07762ce089add190ff822509f0a6d39a1283ed9428ba9919ff518ff52",
+    "tests/ethereum-pooled-model.test.mjs": "eb9514e1ad9c858fe5b0f70305d3bec99c6002bd9153648593bf8909efcb975d",
+    "tests/ethereum-interval-comparison.test.mjs": "8612998c58705c055e5830394e6ad2e2fec2fcbe30e0b9c477e85b12f4f7c319",
+    "docs/eth-candidate-evidence/20261027-remodel/current-path.json": "8e1a69e7d594350a12a8dfe67fca5adbae81d668e5c2057bcc937a3ce79ef47e",
+    "docs/eth-candidate-evidence/20261027-remodel/comparison.json": "395163163c8da05034299a53aa94ccb2ab25b94298eaefc51917d55fac157217"
+  },
+  "inputSha256": {
+    "dist/data/eth-ohlc.json": "69a726d87fcea635772a806ac6a00f43880a43d8c66bd88152045dffc209106f",
+    "dist/data/btc-daily.json": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e"
+  },
+  "executedAt": "2026-10-27T08:50:36.398Z",
+  "runId": "40476026537",
+  "policy": {
+    "version": "eth-pooled-volatility-research-1",
+    "historyStart": "2022-09-15",
+    "minimumObservations": 366,
+    "alpha": 0.06,
+    "beta": 0.92,
+    "blockDays": 28,
+    "sampleCount": 256,
+    "maximumHorizonDays": 730,
+    "maximumSampleCount": 2048,
+    "seed": 20261027,
+    "explicitFutureLogDrift": 0
+  },
+  "training": {
+    "firstObservation": "2022-09-15",
+    "informationThrough": "2026-10-25",
+    "maxSourceDate": "2026-10-25",
+    "observations": 1502,
+    "returnCount": 1501,
+    "innovationCount": 1501,
+    "excludedObservations": 2309,
+    "missingDaysInterpolated": false,
+    "stateConditioningUsed": false,
+    "unclassifiedReturnsExcluded": false,
+    "sampleMeanUsedForResidualCentering": 0.00030472256757116856,
+    "explicitFutureLogDrift": 0,
+    "initialVariance": 0.0011107134163843976,
+    "longRunVariance": 0.0011107134163843976,
+    "currentVariance": 0.0005452089753173131,
+    "innovationPopulationMean": -1.8491389484096545e-18,
+    "innovationPopulationSecondMoment": 1.0000000000000007,
+    "historicalVintagesVerified": false,
+    "independentMarketCycles": null,
+    "pricePredictionAccuracyProven": false
+  },
+  "simulation": {
+    "version": "eth-pooled-volatility-research-1",
+    "seed": 20261027,
+    "sampleCount": 256,
+    "horizonDays": 730,
+    "blockDays": 28,
+    "probability": null,
+    "calibrated": false,
+    "nominalPointwiseMass": 0.8,
+    "bandMeaning": "Conditional Monte Carlo 10th–90th percentiles, not validated 80% coverage or a simultaneous path band",
+    "centerMeaning": "Pointwise simulated median, not forced to the anchor and not an individually realizable trajectory",
+    "representativePathIndex": 0,
+    "sharedBlockLaw": "Circular standardized return blocks; wraparound boundary assumed",
+    "stateConditioningUsed": false,
+    "explicitFutureLogDrift": 0,
+    "historicalMeanAppliedToFuture": false,
+    "conditionalMeanZeroGuaranteed": false,
+    "priceMartingaleGuaranteed": false,
+    "parametersEstimatedFrom": "All continuous post-Merge observations through the current origin only",
+    "policyParametersValidated": false,
+    "policyPreregistered": false,
+    "parameterUncertaintyIncluded": false,
+    "deterministicFourYearCycle": false,
+    "bitcoinHalvingApplied": false,
+    "historicalVintageBacktest": false,
+    "ohlcClaim": false,
+    "productionPromoted": false
+  },
+  "adaptivePreservation": {
+    "status": "verified",
+    "previousSourceCommit": "d629bbc0010cf23495414a9cdf102dd59b73e1aa",
+    "sameInputs": true,
+    "priorAsOf": "2026-10-25",
+    "currentAsOf": "2026-10-25",
+    "currentDefault": "adaptive",
+    "pathPointsChecked": 731,
+    "priorModelSummaryRowsChecked": 27,
+    "priorPairwiseRowsChecked": 45
+  },
+  "currentPointPredictions": [
+    {
+      "horizonDays": 30,
+      "targetDate": "2026-11-24",
+      "price": 2310.2271490498906,
+      "simulatedLower": 1972.9753131052476,
+      "simulatedUpper": 2813.2065303472227,
+      "nominalPointwiseMass": 0.8
+    },
+    {
+      "horizonDays": 90,
+      "targetDate": "2027-01-23",
+      "price": 2306.501234299937,
+      "simulatedLower": 1587.4503853582655,
+      "simulatedUpper": 3306.3221811790218,
+      "nominalPointwiseMass": 0.8
+    },
+    {
+      "horizonDays": 180,
+      "targetDate": "2027-04-23",
+      "price": 2350.2213712277226,
+      "simulatedLower": 1382.4837445015678,
+      "simulatedUpper": 3970.131181324457,
+      "nominalPointwiseMass": 0.8
+    }
+  ],
+  "pointComparisons": [
+    {
+      "horizonDays": 30,
+      "left": "flat",
+      "right": "pooledEth",
+      "sameOriginCases": 39,
+      "disjointCases": 20,
+      "firstCommonOrigin": "2023-10-04",
+      "lastCommonOrigin": "2026-09-02",
+      "disjointOrigins": [
+        "2023-10-04",
+        "2023-11-29",
+        "2024-01-24",
+        "2024-03-20",
+        "2024-05-15",
+        "2024-07-10",
+        "2024-09-04",
+        "2024-10-30",
+        "2024-12-25",
+        "2025-02-19",
+        "2025-04-16",
+        "2025-06-11",
+        "2025-08-06",
+        "2025-10-01",
+        "2025-11-26",
+        "2026-01-21",
+        "2026-03-18",
+        "2026-05-13",
+        "2026-07-08",
+        "2026-09-02"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.1759432259615506,
+        "rootMeanSquaredLogError": 0.21596702070873797,
+        "directionAccuracy": 0
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.17579328818765466,
+        "rootMeanSquaredLogError": 0.2147286485715465,
+        "directionAccuracy": 0.5
+      },
+      "leftSkillAgainstRight": -0.0008529209245797809,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 30,
+      "left": "shrunkenTrend",
+      "right": "pooledEth",
+      "sameOriginCases": 39,
+      "disjointCases": 20,
+      "firstCommonOrigin": "2023-10-04",
+      "lastCommonOrigin": "2026-09-02",
+      "disjointOrigins": [
+        "2023-10-04",
+        "2023-11-29",
+        "2024-01-24",
+        "2024-03-20",
+        "2024-05-15",
+        "2024-07-10",
+        "2024-09-04",
+        "2024-10-30",
+        "2024-12-25",
+        "2025-02-19",
+        "2025-04-16",
+        "2025-06-11",
+        "2025-08-06",
+        "2025-10-01",
+        "2025-11-26",
+        "2026-01-21",
+        "2026-03-18",
+        "2026-05-13",
+        "2026-07-08",
+        "2026-09-02"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.18113177865387678,
+        "rootMeanSquaredLogError": 0.21970721240367427,
+        "directionAccuracy": 0.45
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.17579328818765466,
+        "rootMeanSquaredLogError": 0.2147286485715465,
+        "directionAccuracy": 0.5
+      },
+      "leftSkillAgainstRight": -0.030367999377333588,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 30,
+      "left": "btcLinked",
+      "right": "pooledEth",
+      "sameOriginCases": 39,
+      "disjointCases": 20,
+      "firstCommonOrigin": "2023-10-04",
+      "lastCommonOrigin": "2026-09-02",
+      "disjointOrigins": [
+        "2023-10-04",
+        "2023-11-29",
+        "2024-01-24",
+        "2024-03-20",
+        "2024-05-15",
+        "2024-07-10",
+        "2024-09-04",
+        "2024-10-30",
+        "2024-12-25",
+        "2025-02-19",
+        "2025-04-16",
+        "2025-06-11",
+        "2025-08-06",
+        "2025-10-01",
+        "2025-11-26",
+        "2026-01-21",
+        "2026-03-18",
+        "2026-05-13",
+        "2026-07-08",
+        "2026-09-02"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.17744560406495297,
+        "rootMeanSquaredLogError": 0.21510912879019495,
+        "directionAccuracy": 0.6
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.17579328818765466,
+        "rootMeanSquaredLogError": 0.2147286485715465,
+        "directionAccuracy": 0.5
+      },
+      "leftSkillAgainstRight": -0.009399197741466025,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 30,
+      "left": "adaptiveEth",
+      "right": "pooledEth",
+      "sameOriginCases": 17,
+      "disjointCases": 9,
+      "firstCommonOrigin": "2025-06-11",
+      "lastCommonOrigin": "2026-09-02",
+      "disjointOrigins": [
+        "2025-06-11",
+        "2025-08-06",
+        "2025-10-01",
+        "2025-11-26",
+        "2026-01-21",
+        "2026-03-18",
+        "2026-05-13",
+        "2026-07-08",
+        "2026-09-02"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.15355313268829493,
+        "rootMeanSquaredLogError": 0.19599343002144273,
+        "directionAccuracy": 0.4444444444444444
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.15409197927102922,
+        "rootMeanSquaredLogError": 0.18707298697388,
+        "directionAccuracy": 0.5555555555555556
+      },
+      "leftSkillAgainstRight": 0.0034969151884701732,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 30,
+      "left": "pooledEth",
+      "right": "legacyEth",
+      "sameOriginCases": 30,
+      "disjointCases": 15,
+      "firstCommonOrigin": "2024-06-12",
+      "lastCommonOrigin": "2026-09-02",
+      "disjointOrigins": [
+        "2024-06-12",
+        "2024-08-07",
+        "2024-10-02",
+        "2024-11-27",
+        "2025-01-22",
+        "2025-03-19",
+        "2025-05-14",
+        "2025-07-09",
+        "2025-09-03",
+        "2025-10-29",
+        "2025-12-24",
+        "2026-02-18",
+        "2026-04-15",
+        "2026-06-10",
+        "2026-08-05"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.12693766946750498,
+        "rootMeanSquaredLogError": 0.16443241168073316,
+        "directionAccuracy": 0.6
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.2161565656858847,
+        "rootMeanSquaredLogError": 0.2610351771599205,
+        "directionAccuracy": 0.4666666666666667
+      },
+      "leftSkillAgainstRight": 0.41275126635769743,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "flat",
+      "right": "pooledEth",
+      "sameOriginCases": 37,
+      "disjointCases": 10,
+      "firstCommonOrigin": "2023-10-04",
+      "lastCommonOrigin": "2026-07-08",
+      "disjointOrigins": [
+        "2023-10-04",
+        "2024-01-24",
+        "2024-05-15",
+        "2024-09-04",
+        "2024-12-25",
+        "2025-04-16",
+        "2025-08-06",
+        "2025-11-26",
+        "2026-03-18",
+        "2026-07-08"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.3691086441515655,
+        "rootMeanSquaredLogError": 0.4079448832629934,
+        "directionAccuracy": 0
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.37985287153212577,
+        "rootMeanSquaredLogError": 0.42982654679351284,
+        "directionAccuracy": 0.3
+      },
+      "leftSkillAgainstRight": 0.028285234062398135,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "shrunkenTrend",
+      "right": "pooledEth",
+      "sameOriginCases": 37,
+      "disjointCases": 10,
+      "firstCommonOrigin": "2023-10-04",
+      "lastCommonOrigin": "2026-07-08",
+      "disjointOrigins": [
+        "2023-10-04",
+        "2024-01-24",
+        "2024-05-15",
+        "2024-09-04",
+        "2024-12-25",
+        "2025-04-16",
+        "2025-08-06",
+        "2025-11-26",
+        "2026-03-18",
+        "2026-07-08"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.3913621465665199,
+        "rootMeanSquaredLogError": 0.4352118424701013,
+        "directionAccuracy": 0.2
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.37985287153212577,
+        "rootMeanSquaredLogError": 0.42982654679351284,
+        "directionAccuracy": 0.3
+      },
+      "leftSkillAgainstRight": -0.030299297167273753,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "btcLinked",
+      "right": "pooledEth",
+      "sameOriginCases": 37,
+      "disjointCases": 10,
+      "firstCommonOrigin": "2023-10-04",
+      "lastCommonOrigin": "2026-07-08",
+      "disjointOrigins": [
+        "2023-10-04",
+        "2024-01-24",
+        "2024-05-15",
+        "2024-09-04",
+        "2024-12-25",
+        "2025-04-16",
+        "2025-08-06",
+        "2025-11-26",
+        "2026-03-18",
+        "2026-07-08"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.37520041954073974,
+        "rootMeanSquaredLogError": 0.4145116219191404,
+        "directionAccuracy": 0.4
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.37985287153212577,
+        "rootMeanSquaredLogError": 0.42982654679351284,
+        "directionAccuracy": 0.3
+      },
+      "leftSkillAgainstRight": 0.012248036911292726,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "adaptiveEth",
+      "right": "pooledEth",
+      "sameOriginCases": 15,
+      "disjointCases": 4,
+      "firstCommonOrigin": "2025-06-11",
+      "lastCommonOrigin": "2026-07-08",
+      "disjointOrigins": [
+        "2025-06-11",
+        "2025-10-01",
+        "2026-01-21",
+        "2026-05-13"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.3276080505718211,
+        "rootMeanSquaredLogError": 0.3442563448904512,
+        "directionAccuracy": 0.5
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.31068884683640174,
+        "rootMeanSquaredLogError": 0.33440949972911704,
+        "directionAccuracy": 0.75
+      },
+      "leftSkillAgainstRight": -0.05445706824593044,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 90,
+      "left": "pooledEth",
+      "right": "legacyEth",
+      "sameOriginCases": 28,
+      "disjointCases": 7,
+      "firstCommonOrigin": "2024-06-12",
+      "lastCommonOrigin": "2026-07-08",
+      "disjointOrigins": [
+        "2024-06-12",
+        "2024-10-02",
+        "2025-01-22",
+        "2025-05-14",
+        "2025-09-03",
+        "2025-12-24",
+        "2026-04-15"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.3918614556051212,
+        "rootMeanSquaredLogError": 0.41154371400320305,
+        "directionAccuracy": 0.5714285714285714
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.5083072027993101,
+        "rootMeanSquaredLogError": 0.5365836960024897,
+        "directionAccuracy": 0.2857142857142857
+      },
+      "leftSkillAgainstRight": 0.22908537701788967,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "flat",
+      "right": "pooledEth",
+      "sameOriginCases": 34,
+      "disjointCases": 5,
+      "firstCommonOrigin": "2023-10-04",
+      "lastCommonOrigin": "2026-04-15",
+      "disjointOrigins": [
+        "2023-10-04",
+        "2024-04-17",
+        "2024-10-30",
+        "2025-05-14",
+        "2025-11-26"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.3889803107377151,
+        "rootMeanSquaredLogError": 0.43962637051183934,
+        "directionAccuracy": 0
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.41434068813390484,
+        "rootMeanSquaredLogError": 0.47503989614639863,
+        "directionAccuracy": 0.2
+      },
+      "leftSkillAgainstRight": 0.06120658222200437,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "shrunkenTrend",
+      "right": "pooledEth",
+      "sameOriginCases": 34,
+      "disjointCases": 5,
+      "firstCommonOrigin": "2023-10-04",
+      "lastCommonOrigin": "2026-04-15",
+      "disjointOrigins": [
+        "2023-10-04",
+        "2024-04-17",
+        "2024-10-30",
+        "2025-05-14",
+        "2025-11-26"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.43585977406609083,
+        "rootMeanSquaredLogError": 0.4714858542389961,
+        "directionAccuracy": 0.2
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.41434068813390484,
+        "rootMeanSquaredLogError": 0.47503989614639863,
+        "directionAccuracy": 0.2
+      },
+      "leftSkillAgainstRight": -0.05193572957824388,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "btcLinked",
+      "right": "pooledEth",
+      "sameOriginCases": 34,
+      "disjointCases": 5,
+      "firstCommonOrigin": "2023-10-04",
+      "lastCommonOrigin": "2026-04-15",
+      "disjointOrigins": [
+        "2023-10-04",
+        "2024-04-17",
+        "2024-10-30",
+        "2025-05-14",
+        "2025-11-26"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.4108539657399346,
+        "rootMeanSquaredLogError": 0.4489292579118837,
+        "directionAccuracy": 0.4
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.41434068813390484,
+        "rootMeanSquaredLogError": 0.47503989614639863,
+        "directionAccuracy": 0.2
+      },
+      "leftSkillAgainstRight": 0.008415109821035549,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "adaptiveEth",
+      "right": "pooledEth",
+      "sameOriginCases": 12,
+      "disjointCases": 2,
+      "firstCommonOrigin": "2025-06-11",
+      "lastCommonOrigin": "2026-04-15",
+      "disjointOrigins": [
+        "2025-06-11",
+        "2025-12-24"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.3461857129775674,
+        "rootMeanSquaredLogError": 0.4849915039506159,
+        "directionAccuracy": 0.5
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.33144506447866595,
+        "rootMeanSquaredLogError": 0.3684322368144968,
+        "directionAccuracy": 0.5
+      },
+      "leftSkillAgainstRight": -0.044473881432167905,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    },
+    {
+      "horizonDays": 180,
+      "left": "pooledEth",
+      "right": "legacyEth",
+      "sameOriginCases": 25,
+      "disjointCases": 4,
+      "firstCommonOrigin": "2024-06-12",
+      "lastCommonOrigin": "2026-04-15",
+      "disjointOrigins": [
+        "2024-06-12",
+        "2024-12-25",
+        "2025-07-09",
+        "2026-01-21"
+      ],
+      "leftScore": {
+        "meanAbsoluteLogError": 0.24879578271696046,
+        "rootMeanSquaredLogError": 0.27775202799891396,
+        "directionAccuracy": 0.5
+      },
+      "rightScore": {
+        "meanAbsoluteLogError": 0.4434316844118871,
+        "rootMeanSquaredLogError": 0.5388990423996217,
+        "directionAccuracy": 1
+      },
+      "leftSkillAgainstRight": 0.43893097524834657,
+      "independentMarketRegimes": null,
+      "independentSampleSize": null
+    }
+  ],
+  "summaries": [
+    {
+      "model": "adaptiveEth",
+      "horizonDays": 30,
+      "availableOrigins": 19,
+      "completedOutcomes": 17,
+      "pendingTargets": 2,
+      "missingOutcomes": 0,
+      "disjointTargetIntervals": 9,
+      "meanAbsoluteLogError": 0.15355313268829493,
+      "directionAccuracy": 0.4444444444444444,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.4444444444444444,
+      "pairedBaselines": {
+        "flat": {
+          "n": 9,
+          "skill": 0.009401522321648703,
+          "candidateError": 0.15355313268829493,
+          "baselineError": 0.15501046705439603
+        },
+        "shrunkenTrend": {
+          "n": 9,
+          "skill": 0.054623274264386734,
+          "candidateError": 0.15355313268829493,
+          "baselineError": 0.16242533638514603
+        },
+        "btcLinked": {
+          "n": 9,
+          "skill": 0.019760819936311624,
+          "candidateError": 0.15355313268829493,
+          "baselineError": 0.15664863822145758
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      },
+      "simulatedInterval": {
+        "nominalPointwiseMass": 0.8,
+        "cases": 17,
+        "disjointCases": 9,
+        "empiricalCoverage": 0.6470588235294118,
+        "meanLogWidth": 0.5154815115340949,
+        "meanLogIntervalScore": 0.8231800752158577,
+        "disjointEmpiricalCoverage": 0.6666666666666666,
+        "disjointMeanLogWidth": 0.4969499210312823,
+        "disjointMeanLogIntervalScore": 0.8478924570993516,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "pooledEth",
+      "horizonDays": 30,
+      "availableOrigins": 41,
+      "completedOutcomes": 39,
+      "pendingTargets": 2,
+      "missingOutcomes": 0,
+      "disjointTargetIntervals": 20,
+      "meanAbsoluteLogError": 0.17579328818765466,
+      "directionAccuracy": 0.5,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.5,
+      "pairedBaselines": {
+        "flat": {
+          "n": 20,
+          "skill": 0.0008521940704253606,
+          "candidateError": 0.17579328818765466,
+          "baselineError": 0.1759432259615506
+        },
+        "shrunkenTrend": {
+          "n": 20,
+          "skill": 0.02947296441240932,
+          "candidateError": 0.17579328818765466,
+          "baselineError": 0.18113177865387678
+        },
+        "btcLinked": {
+          "n": 20,
+          "skill": 0.009311675462489788,
+          "candidateError": 0.17579328818765466,
+          "baselineError": 0.17744560406495297
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 15,
+        "disjointCases": 8,
+        "empiricalCoverage": 0.8666666666666667,
+        "meanLogWidth": 0.537491696574275,
+        "meanLogIntervalScore": 0.6132904885715031,
+        "disjointEmpiricalCoverage": 0.875,
+        "disjointMeanLogWidth": 0.6270824165837511,
+        "disjointMeanLogIntervalScore": 0.7177738986392704,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      },
+      "simulatedInterval": {
+        "nominalPointwiseMass": 0.8,
+        "cases": 39,
+        "disjointCases": 20,
+        "empiricalCoverage": 0.717948717948718,
+        "meanLogWidth": 0.4333006696138422,
+        "meanLogIntervalScore": 0.6997888291190029,
+        "disjointEmpiricalCoverage": 0.65,
+        "disjointMeanLogWidth": 0.42239968738719097,
+        "disjointMeanLogIntervalScore": 0.8093389035179218,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "adaptiveEth",
+      "horizonDays": 90,
+      "availableOrigins": 19,
+      "completedOutcomes": 15,
+      "pendingTargets": 4,
+      "missingOutcomes": 0,
+      "disjointTargetIntervals": 4,
+      "meanAbsoluteLogError": 0.3276080505718211,
+      "directionAccuracy": 0.5,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.5,
+      "pairedBaselines": {
+        "flat": {
+          "n": 4,
+          "skill": -0.04638541810408303,
+          "candidateError": 0.3276080505718211,
+          "baselineError": 0.3130854510237777
+        },
+        "shrunkenTrend": {
+          "n": 4,
+          "skill": 0.019496504714719864,
+          "candidateError": 0.3276080505718211,
+          "baselineError": 0.33412226692420166
+        },
+        "btcLinked": {
+          "n": 4,
+          "skill": -0.07586855828922823,
+          "candidateError": 0.3276080505718211,
+          "baselineError": 0.30450564620343656
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      },
+      "simulatedInterval": {
+        "nominalPointwiseMass": 0.8,
+        "cases": 15,
+        "disjointCases": 4,
+        "empiricalCoverage": 0.6666666666666666,
+        "meanLogWidth": 0.8308033133935168,
+        "meanLogIntervalScore": 1.1894469669006407,
+        "disjointEmpiricalCoverage": 0.75,
+        "disjointMeanLogWidth": 0.7337217656611279,
+        "disjointMeanLogIntervalScore": 1.0700218169379556,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "pooledEth",
+      "horizonDays": 90,
+      "availableOrigins": 41,
+      "completedOutcomes": 37,
+      "pendingTargets": 4,
+      "missingOutcomes": 0,
+      "disjointTargetIntervals": 10,
+      "meanAbsoluteLogError": 0.37985287153212577,
+      "directionAccuracy": 0.3,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.3,
+      "pairedBaselines": {
+        "flat": {
+          "n": 10,
+          "skill": -0.029108576975369838,
+          "candidateError": 0.37985287153212577,
+          "baselineError": 0.3691086441515655
+        },
+        "shrunkenTrend": {
+          "n": 10,
+          "skill": 0.02940824792424812,
+          "candidateError": 0.37985287153212577,
+          "baselineError": 0.3913621465665199
+        },
+        "btcLinked": {
+          "n": 10,
+          "skill": -0.012399911484856085,
+          "candidateError": 0.37985287153212577,
+          "baselineError": 0.37520041954073974
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      },
+      "simulatedInterval": {
+        "nominalPointwiseMass": 0.8,
+        "cases": 37,
+        "disjointCases": 10,
+        "empiricalCoverage": 0.5135135135135135,
+        "meanLogWidth": 0.7221309856663506,
+        "meanLogIntervalScore": 1.2403677258175665,
+        "disjointEmpiricalCoverage": 0.3,
+        "disjointMeanLogWidth": 0.7220123923146181,
+        "disjointMeanLogIntervalScore": 1.4974813723445046,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "adaptiveEth",
+      "horizonDays": 180,
+      "availableOrigins": 19,
+      "completedOutcomes": 12,
+      "pendingTargets": 7,
+      "missingOutcomes": 0,
+      "disjointTargetIntervals": 2,
+      "meanAbsoluteLogError": 0.3461857129775674,
+      "directionAccuracy": 0.5,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.5,
+      "pairedBaselines": {
+        "flat": {
+          "n": 2,
+          "skill": -0.058767081232060425,
+          "candidateError": 0.3461857129775674,
+          "baselineError": 0.32697060488008356
+        },
+        "shrunkenTrend": {
+          "n": 2,
+          "skill": 0.1218237197223393,
+          "candidateError": 0.3461857129775674,
+          "baselineError": 0.3942098195456962
+        },
+        "btcLinked": {
+          "n": 2,
+          "skill": -0.23637718722811774,
+          "candidateError": 0.3461857129775674,
+          "baselineError": 0.28000008132930265
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      },
+      "simulatedInterval": {
+        "nominalPointwiseMass": 0.8,
+        "cases": 12,
+        "disjointCases": 2,
+        "empiricalCoverage": 0.5,
+        "meanLogWidth": 1.1703562755604722,
+        "meanLogIntervalScore": 2.330942174931501,
+        "disjointEmpiricalCoverage": 0.5,
+        "disjointMeanLogWidth": 1.0887886314198707,
+        "disjointMeanLogIntervalScore": 1.6524121510782357,
+        "coverageGuarantee": false
+      }
+    },
+    {
+      "model": "pooledEth",
+      "horizonDays": 180,
+      "availableOrigins": 41,
+      "completedOutcomes": 34,
+      "pendingTargets": 7,
+      "missingOutcomes": 0,
+      "disjointTargetIntervals": 5,
+      "meanAbsoluteLogError": 0.41434068813390484,
+      "directionAccuracy": 0.2,
+      "directionalCallCoverage": 1,
+      "directionAccuracyAmongDirectionalCalls": 0.2,
+      "pairedBaselines": {
+        "flat": {
+          "n": 5,
+          "skill": -0.06519707218109039,
+          "candidateError": 0.41434068813390484,
+          "baselineError": 0.3889803107377151
+        },
+        "shrunkenTrend": {
+          "n": 5,
+          "skill": 0.04937158052333357,
+          "candidateError": 0.41434068813390484,
+          "baselineError": 0.43585977406609083
+        },
+        "btcLinked": {
+          "n": 5,
+          "skill": -0.008486524859729005,
+          "candidateError": 0.41434068813390484,
+          "baselineError": 0.4108539657399346
+        }
+      },
+      "interval": {
+        "alpha": 0.2,
+        "cases": 0,
+        "disjointCases": 0,
+        "empiricalCoverage": null,
+        "meanLogWidth": null,
+        "meanLogIntervalScore": null,
+        "disjointEmpiricalCoverage": null,
+        "disjointMeanLogWidth": null,
+        "disjointMeanLogIntervalScore": null,
+        "calibratedForProduction": false,
+        "coverageGuarantee": false
+      },
+      "simulatedInterval": {
+        "nominalPointwiseMass": 0.8,
+        "cases": 34,
+        "disjointCases": 5,
+        "empiricalCoverage": 0.6764705882352942,
+        "meanLogWidth": 0.9836028457881278,
+        "meanLogIntervalScore": 1.6718108819204445,
+        "disjointEmpiricalCoverage": 0.8,
+        "disjointMeanLogWidth": 0.9820987139266955,
+        "disjointMeanLogIntervalScore": 1.7439572038368454,
+        "coverageGuarantee": false
+      }
+    }
+  ],
+  "intervalComparisons": [
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 30,
+      "alpha": 0.2,
+      "left": {
+        "model": "adaptiveEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "pooledEth",
+        "kind": "simulated"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 17,
+      "disjointCases": 9,
+      "commonOrigins": [
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15",
+        "2026-05-13",
+        "2026-06-10",
+        "2026-07-08",
+        "2026-08-05",
+        "2026-09-02"
+      ],
+      "disjointOrigins": [
+        "2025-06-11",
+        "2025-08-06",
+        "2025-10-01",
+        "2025-11-26",
+        "2026-01-21",
+        "2026-03-18",
+        "2026-05-13",
+        "2026-07-08",
+        "2026-09-02"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 17,
+          "empiricalCoverage": 0.6470588235294118,
+          "meanLogWidth": 0.5154815115340949,
+          "meanLogIntervalScore": 0.8231800752158577,
+          "lowerMisses": 4,
+          "upperMisses": 2
+        },
+        "right": {
+          "n": 17,
+          "empiricalCoverage": 0.7058823529411765,
+          "meanLogWidth": 0.4605153402528077,
+          "meanLogIntervalScore": 0.7936356966377515,
+          "lowerMisses": 3,
+          "upperMisses": 2
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 9,
+          "empiricalCoverage": 0.6666666666666666,
+          "meanLogWidth": 0.4969499210312823,
+          "meanLogIntervalScore": 0.8478924570993516,
+          "lowerMisses": 3,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 9,
+          "empiricalCoverage": 0.7777777777777778,
+          "meanLogWidth": 0.44352921692605335,
+          "meanLogIntervalScore": 0.7973656534508133,
+          "lowerMisses": 2,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": -0.05052680364853823,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 30,
+      "alpha": 0.2,
+      "left": {
+        "model": "adaptiveEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "adaptiveEth",
+        "kind": "experimental"
+      },
+      "status": "unavailable",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "commonOrigins": [],
+      "disjointOrigins": [],
+      "allEligible": {
+        "left": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": null,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 30,
+      "alpha": 0.2,
+      "left": {
+        "model": "pooledEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "pooledEth",
+        "kind": "experimental"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 15,
+      "disjointCases": 8,
+      "commonOrigins": [
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15",
+        "2026-05-13",
+        "2026-06-10",
+        "2026-07-08",
+        "2026-08-05",
+        "2026-09-02"
+      ],
+      "disjointOrigins": [
+        "2025-08-06",
+        "2025-10-01",
+        "2025-11-26",
+        "2026-01-21",
+        "2026-03-18",
+        "2026-05-13",
+        "2026-07-08",
+        "2026-09-02"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 15,
+          "empiricalCoverage": 0.7333333333333333,
+          "meanLogWidth": 0.46449583655590815,
+          "meanLogIntervalScore": 0.7492892016655429,
+          "lowerMisses": 3,
+          "upperMisses": 1
+        },
+        "right": {
+          "n": 15,
+          "empiricalCoverage": 0.8666666666666667,
+          "meanLogWidth": 0.537491696574275,
+          "meanLogIntervalScore": 0.6132904885715031,
+          "lowerMisses": 1,
+          "upperMisses": 1
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 8,
+          "empiricalCoverage": 0.75,
+          "meanLogWidth": 0.4428792488795569,
+          "meanLogIntervalScore": 0.8409452399699119,
+          "lowerMisses": 2,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 8,
+          "empiricalCoverage": 0.875,
+          "meanLogWidth": 0.6270824165837511,
+          "meanLogIntervalScore": 0.7177738986392704,
+          "lowerMisses": 1,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": -0.12317134133064145,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 90,
+      "alpha": 0.2,
+      "left": {
+        "model": "adaptiveEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "pooledEth",
+        "kind": "simulated"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 15,
+      "disjointCases": 4,
+      "commonOrigins": [
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15",
+        "2026-05-13",
+        "2026-06-10",
+        "2026-07-08"
+      ],
+      "disjointOrigins": [
+        "2025-06-11",
+        "2025-10-01",
+        "2026-01-21",
+        "2026-05-13"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 15,
+          "empiricalCoverage": 0.6666666666666666,
+          "meanLogWidth": 0.8308033133935168,
+          "meanLogIntervalScore": 1.1894469669006407,
+          "lowerMisses": 4,
+          "upperMisses": 1
+        },
+        "right": {
+          "n": 15,
+          "empiricalCoverage": 0.7333333333333333,
+          "meanLogWidth": 0.7913247759402946,
+          "meanLogIntervalScore": 1.0066525412296785,
+          "lowerMisses": 1,
+          "upperMisses": 3
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 4,
+          "empiricalCoverage": 0.75,
+          "meanLogWidth": 0.7337217656611279,
+          "meanLogIntervalScore": 1.0700218169379556,
+          "lowerMisses": 1,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 4,
+          "empiricalCoverage": 0.75,
+          "meanLogWidth": 0.7506809174342179,
+          "meanLogIntervalScore": 0.8169120418309697,
+          "lowerMisses": 0,
+          "upperMisses": 1
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": -0.25310977510698596,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 90,
+      "alpha": 0.2,
+      "left": {
+        "model": "adaptiveEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "adaptiveEth",
+        "kind": "experimental"
+      },
+      "status": "unavailable",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "commonOrigins": [],
+      "disjointOrigins": [],
+      "allEligible": {
+        "left": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": null,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 90,
+      "alpha": 0.2,
+      "left": {
+        "model": "pooledEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "pooledEth",
+        "kind": "experimental"
+      },
+      "status": "unavailable",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "commonOrigins": [],
+      "disjointOrigins": [],
+      "allEligible": {
+        "left": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": null,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 180,
+      "alpha": 0.2,
+      "left": {
+        "model": "adaptiveEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "pooledEth",
+        "kind": "simulated"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 12,
+      "disjointCases": 2,
+      "commonOrigins": [
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15"
+      ],
+      "disjointOrigins": [
+        "2025-06-11",
+        "2025-12-24"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 12,
+          "empiricalCoverage": 0.5,
+          "meanLogWidth": 1.1703562755604722,
+          "meanLogIntervalScore": 2.330942174931501,
+          "lowerMisses": 6,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 12,
+          "empiricalCoverage": 0.75,
+          "meanLogWidth": 1.0846747651254764,
+          "meanLogIntervalScore": 1.460589880786338,
+          "lowerMisses": 3,
+          "upperMisses": 0
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 2,
+          "empiricalCoverage": 0.5,
+          "meanLogWidth": 1.0887886314198707,
+          "meanLogIntervalScore": 1.6524121510782357,
+          "lowerMisses": 1,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 2,
+          "empiricalCoverage": 0.5,
+          "meanLogWidth": 1.0646237167236166,
+          "meanLogIntervalScore": 1.1137046482510842,
+          "lowerMisses": 1,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": -0.5387075028271515,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 180,
+      "alpha": 0.2,
+      "left": {
+        "model": "adaptiveEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "adaptiveEth",
+        "kind": "experimental"
+      },
+      "status": "unavailable",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "commonOrigins": [],
+      "disjointOrigins": [],
+      "allEligible": {
+        "left": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": null,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 180,
+      "alpha": 0.2,
+      "left": {
+        "model": "pooledEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "pooledEth",
+        "kind": "experimental"
+      },
+      "status": "unavailable",
+      "sameOriginCases": 0,
+      "disjointCases": 0,
+      "commonOrigins": [],
+      "disjointOrigins": [],
+      "allEligible": {
+        "left": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 0,
+          "empiricalCoverage": null,
+          "meanLogWidth": null,
+          "meanLogIntervalScore": null,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": null,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 30,
+      "alpha": 0.2,
+      "left": {
+        "model": "adaptiveEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "flat",
+        "kind": "experimental"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 17,
+      "disjointCases": 9,
+      "commonOrigins": [
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15",
+        "2026-05-13",
+        "2026-06-10",
+        "2026-07-08",
+        "2026-08-05",
+        "2026-09-02"
+      ],
+      "disjointOrigins": [
+        "2025-06-11",
+        "2025-08-06",
+        "2025-10-01",
+        "2025-11-26",
+        "2026-01-21",
+        "2026-03-18",
+        "2026-05-13",
+        "2026-07-08",
+        "2026-09-02"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 17,
+          "empiricalCoverage": 0.6470588235294118,
+          "meanLogWidth": 0.5154815115340949,
+          "meanLogIntervalScore": 0.8231800752158577,
+          "lowerMisses": 4,
+          "upperMisses": 2
+        },
+        "right": {
+          "n": 17,
+          "empiricalCoverage": 0.8823529411764706,
+          "meanLogWidth": 0.6563189008666587,
+          "meanLogIntervalScore": 0.7462503189467051,
+          "lowerMisses": 1,
+          "upperMisses": 1
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 9,
+          "empiricalCoverage": 0.6666666666666666,
+          "meanLogWidth": 0.4969499210312823,
+          "meanLogIntervalScore": 0.8478924570993516,
+          "lowerMisses": 3,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 9,
+          "empiricalCoverage": 0.8888888888888888,
+          "meanLogWidth": 0.7232148081802076,
+          "meanLogIntervalScore": 0.8039607826551015,
+          "lowerMisses": 1,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": -0.04393167444425006,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 30,
+      "alpha": 0.2,
+      "left": {
+        "model": "adaptiveEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "shrunkenTrend",
+        "kind": "experimental"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 17,
+      "disjointCases": 9,
+      "commonOrigins": [
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15",
+        "2026-05-13",
+        "2026-06-10",
+        "2026-07-08",
+        "2026-08-05",
+        "2026-09-02"
+      ],
+      "disjointOrigins": [
+        "2025-06-11",
+        "2025-08-06",
+        "2025-10-01",
+        "2025-11-26",
+        "2026-01-21",
+        "2026-03-18",
+        "2026-05-13",
+        "2026-07-08",
+        "2026-09-02"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 17,
+          "empiricalCoverage": 0.6470588235294118,
+          "meanLogWidth": 0.5154815115340949,
+          "meanLogIntervalScore": 0.8231800752158577,
+          "lowerMisses": 4,
+          "upperMisses": 2
+        },
+        "right": {
+          "n": 17,
+          "empiricalCoverage": 0.8235294117647058,
+          "meanLogWidth": 0.6104432881707423,
+          "meanLogIntervalScore": 0.7296825012865937,
+          "lowerMisses": 2,
+          "upperMisses": 1
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 9,
+          "empiricalCoverage": 0.6666666666666666,
+          "meanLogWidth": 0.4969499210312823,
+          "meanLogIntervalScore": 0.8478924570993516,
+          "lowerMisses": 3,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 9,
+          "empiricalCoverage": 0.8888888888888888,
+          "meanLogWidth": 0.658310696490208,
+          "meanLogIntervalScore": 0.7478247185435345,
+          "lowerMisses": 1,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": -0.10006773855581708,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 30,
+      "alpha": 0.2,
+      "left": {
+        "model": "pooledEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "flat",
+        "kind": "experimental"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 39,
+      "disjointCases": 20,
+      "commonOrigins": [
+        "2023-10-04",
+        "2023-11-01",
+        "2023-11-29",
+        "2023-12-27",
+        "2024-01-24",
+        "2024-02-21",
+        "2024-03-20",
+        "2024-04-17",
+        "2024-05-15",
+        "2024-06-12",
+        "2024-07-10",
+        "2024-08-07",
+        "2024-09-04",
+        "2024-10-02",
+        "2024-10-30",
+        "2024-11-27",
+        "2024-12-25",
+        "2025-01-22",
+        "2025-02-19",
+        "2025-03-19",
+        "2025-04-16",
+        "2025-05-14",
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15",
+        "2026-05-13",
+        "2026-06-10",
+        "2026-07-08",
+        "2026-08-05",
+        "2026-09-02"
+      ],
+      "disjointOrigins": [
+        "2023-10-04",
+        "2023-11-29",
+        "2024-01-24",
+        "2024-03-20",
+        "2024-05-15",
+        "2024-07-10",
+        "2024-09-04",
+        "2024-10-30",
+        "2024-12-25",
+        "2025-02-19",
+        "2025-04-16",
+        "2025-06-11",
+        "2025-08-06",
+        "2025-10-01",
+        "2025-11-26",
+        "2026-01-21",
+        "2026-03-18",
+        "2026-05-13",
+        "2026-07-08",
+        "2026-09-02"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 39,
+          "empiricalCoverage": 0.717948717948718,
+          "meanLogWidth": 0.4333006696138422,
+          "meanLogIntervalScore": 0.6997888291190029,
+          "lowerMisses": 6,
+          "upperMisses": 5
+        },
+        "right": {
+          "n": 39,
+          "empiricalCoverage": 0.9230769230769231,
+          "meanLogWidth": 0.6713369963259412,
+          "meanLogIntervalScore": 0.7448083611459125,
+          "lowerMisses": 1,
+          "upperMisses": 2
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 20,
+          "empiricalCoverage": 0.65,
+          "meanLogWidth": 0.42239968738719097,
+          "meanLogIntervalScore": 0.8093389035179218,
+          "lowerMisses": 4,
+          "upperMisses": 3
+        },
+        "right": {
+          "n": 20,
+          "empiricalCoverage": 0.9,
+          "meanLogWidth": 0.7436705480985553,
+          "meanLogIntervalScore": 0.8468336926431622,
+          "lowerMisses": 1,
+          "upperMisses": 1
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": 0.0374947891252404,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 30,
+      "alpha": 0.2,
+      "left": {
+        "model": "pooledEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "shrunkenTrend",
+        "kind": "experimental"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 39,
+      "disjointCases": 20,
+      "commonOrigins": [
+        "2023-10-04",
+        "2023-11-01",
+        "2023-11-29",
+        "2023-12-27",
+        "2024-01-24",
+        "2024-02-21",
+        "2024-03-20",
+        "2024-04-17",
+        "2024-05-15",
+        "2024-06-12",
+        "2024-07-10",
+        "2024-08-07",
+        "2024-09-04",
+        "2024-10-02",
+        "2024-10-30",
+        "2024-11-27",
+        "2024-12-25",
+        "2025-01-22",
+        "2025-02-19",
+        "2025-03-19",
+        "2025-04-16",
+        "2025-05-14",
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15",
+        "2026-05-13",
+        "2026-06-10",
+        "2026-07-08",
+        "2026-08-05",
+        "2026-09-02"
+      ],
+      "disjointOrigins": [
+        "2023-10-04",
+        "2023-11-29",
+        "2024-01-24",
+        "2024-03-20",
+        "2024-05-15",
+        "2024-07-10",
+        "2024-09-04",
+        "2024-10-30",
+        "2024-12-25",
+        "2025-02-19",
+        "2025-04-16",
+        "2025-06-11",
+        "2025-08-06",
+        "2025-10-01",
+        "2025-11-26",
+        "2026-01-21",
+        "2026-03-18",
+        "2026-05-13",
+        "2026-07-08",
+        "2026-09-02"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 39,
+          "empiricalCoverage": 0.717948717948718,
+          "meanLogWidth": 0.4333006696138422,
+          "meanLogIntervalScore": 0.6997888291190029,
+          "lowerMisses": 6,
+          "upperMisses": 5
+        },
+        "right": {
+          "n": 39,
+          "empiricalCoverage": 0.8974358974358975,
+          "meanLogWidth": 0.6318219458148461,
+          "meanLogIntervalScore": 0.7279907920788619,
+          "lowerMisses": 2,
+          "upperMisses": 2
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 20,
+          "empiricalCoverage": 0.65,
+          "meanLogWidth": 0.42239968738719097,
+          "meanLogIntervalScore": 0.8093389035179218,
+          "lowerMisses": 4,
+          "upperMisses": 3
+        },
+        "right": {
+          "n": 20,
+          "empiricalCoverage": 0.9,
+          "meanLogWidth": 0.6782578993299605,
+          "meanLogIntervalScore": 0.8047151283203146,
+          "lowerMisses": 1,
+          "upperMisses": 1
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": -0.0046237751976072605,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 90,
+      "alpha": 0.2,
+      "left": {
+        "model": "adaptiveEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "flat",
+        "kind": "experimental"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 15,
+      "disjointCases": 4,
+      "commonOrigins": [
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15",
+        "2026-05-13",
+        "2026-06-10",
+        "2026-07-08"
+      ],
+      "disjointOrigins": [
+        "2025-06-11",
+        "2025-10-01",
+        "2026-01-21",
+        "2026-05-13"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 15,
+          "empiricalCoverage": 0.6666666666666666,
+          "meanLogWidth": 0.8308033133935168,
+          "meanLogIntervalScore": 1.1894469669006407,
+          "lowerMisses": 4,
+          "upperMisses": 1
+        },
+        "right": {
+          "n": 15,
+          "empiricalCoverage": 1,
+          "meanLogWidth": 1.16918913390897,
+          "meanLogIntervalScore": 1.16918913390897,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 4,
+          "empiricalCoverage": 0.75,
+          "meanLogWidth": 0.7337217656611279,
+          "meanLogIntervalScore": 1.0700218169379556,
+          "lowerMisses": 1,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 4,
+          "empiricalCoverage": 1,
+          "meanLogWidth": 1.0550283309094441,
+          "meanLogIntervalScore": 1.0550283309094441,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": -0.014993486028511471,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 90,
+      "alpha": 0.2,
+      "left": {
+        "model": "adaptiveEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "shrunkenTrend",
+        "kind": "experimental"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 15,
+      "disjointCases": 4,
+      "commonOrigins": [
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15",
+        "2026-05-13",
+        "2026-06-10",
+        "2026-07-08"
+      ],
+      "disjointOrigins": [
+        "2025-06-11",
+        "2025-10-01",
+        "2026-01-21",
+        "2026-05-13"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 15,
+          "empiricalCoverage": 0.6666666666666666,
+          "meanLogWidth": 0.8308033133935168,
+          "meanLogIntervalScore": 1.1894469669006407,
+          "lowerMisses": 4,
+          "upperMisses": 1
+        },
+        "right": {
+          "n": 15,
+          "empiricalCoverage": 0.9333333333333333,
+          "meanLogWidth": 1.1880837844548362,
+          "meanLogIntervalScore": 1.1971869665988726,
+          "lowerMisses": 0,
+          "upperMisses": 1
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 4,
+          "empiricalCoverage": 0.75,
+          "meanLogWidth": 0.7337217656611279,
+          "meanLogIntervalScore": 1.0700218169379556,
+          "lowerMisses": 1,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 4,
+          "empiricalCoverage": 1,
+          "meanLogWidth": 1.0437426922233568,
+          "meanLogIntervalScore": 1.0437426922233568,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": -0.02627912471459881,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 90,
+      "alpha": 0.2,
+      "left": {
+        "model": "pooledEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "flat",
+        "kind": "experimental"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 37,
+      "disjointCases": 10,
+      "commonOrigins": [
+        "2023-10-04",
+        "2023-11-01",
+        "2023-11-29",
+        "2023-12-27",
+        "2024-01-24",
+        "2024-02-21",
+        "2024-03-20",
+        "2024-04-17",
+        "2024-05-15",
+        "2024-06-12",
+        "2024-07-10",
+        "2024-08-07",
+        "2024-09-04",
+        "2024-10-02",
+        "2024-10-30",
+        "2024-11-27",
+        "2024-12-25",
+        "2025-01-22",
+        "2025-02-19",
+        "2025-03-19",
+        "2025-04-16",
+        "2025-05-14",
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15",
+        "2026-05-13",
+        "2026-06-10",
+        "2026-07-08"
+      ],
+      "disjointOrigins": [
+        "2023-10-04",
+        "2024-01-24",
+        "2024-05-15",
+        "2024-09-04",
+        "2024-12-25",
+        "2025-04-16",
+        "2025-08-06",
+        "2025-11-26",
+        "2026-03-18",
+        "2026-07-08"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 37,
+          "empiricalCoverage": 0.5135135135135135,
+          "meanLogWidth": 0.7221309856663506,
+          "meanLogIntervalScore": 1.2403677258175665,
+          "lowerMisses": 5,
+          "upperMisses": 13
+        },
+        "right": {
+          "n": 37,
+          "empiricalCoverage": 1,
+          "meanLogWidth": 1.2549555283508769,
+          "meanLogIntervalScore": 1.2549555283508769,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 10,
+          "empiricalCoverage": 0.3,
+          "meanLogWidth": 0.7220123923146181,
+          "meanLogIntervalScore": 1.4974813723445046,
+          "lowerMisses": 2,
+          "upperMisses": 5
+        },
+        "right": {
+          "n": 10,
+          "empiricalCoverage": 1,
+          "meanLogWidth": 1.4750433163111771,
+          "meanLogIntervalScore": 1.4750433163111771,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": -0.02243805603332749,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 90,
+      "alpha": 0.2,
+      "left": {
+        "model": "pooledEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "shrunkenTrend",
+        "kind": "experimental"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 37,
+      "disjointCases": 10,
+      "commonOrigins": [
+        "2023-10-04",
+        "2023-11-01",
+        "2023-11-29",
+        "2023-12-27",
+        "2024-01-24",
+        "2024-02-21",
+        "2024-03-20",
+        "2024-04-17",
+        "2024-05-15",
+        "2024-06-12",
+        "2024-07-10",
+        "2024-08-07",
+        "2024-09-04",
+        "2024-10-02",
+        "2024-10-30",
+        "2024-11-27",
+        "2024-12-25",
+        "2025-01-22",
+        "2025-02-19",
+        "2025-03-19",
+        "2025-04-16",
+        "2025-05-14",
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15",
+        "2026-05-13",
+        "2026-06-10",
+        "2026-07-08"
+      ],
+      "disjointOrigins": [
+        "2023-10-04",
+        "2024-01-24",
+        "2024-05-15",
+        "2024-09-04",
+        "2024-12-25",
+        "2025-04-16",
+        "2025-08-06",
+        "2025-11-26",
+        "2026-03-18",
+        "2026-07-08"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 37,
+          "empiricalCoverage": 0.5135135135135135,
+          "meanLogWidth": 0.7221309856663506,
+          "meanLogIntervalScore": 1.2403677258175665,
+          "lowerMisses": 5,
+          "upperMisses": 13
+        },
+        "right": {
+          "n": 37,
+          "empiricalCoverage": 0.918918918918919,
+          "meanLogWidth": 1.2340657949127687,
+          "meanLogIntervalScore": 1.2415620199186232,
+          "lowerMisses": 1,
+          "upperMisses": 2
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 10,
+          "empiricalCoverage": 0.3,
+          "meanLogWidth": 0.7220123923146181,
+          "meanLogIntervalScore": 1.4974813723445046,
+          "lowerMisses": 2,
+          "upperMisses": 5
+        },
+        "right": {
+          "n": 10,
+          "empiricalCoverage": 0.9,
+          "meanLogWidth": 1.4903936938882094,
+          "meanLogIntervalScore": 1.4994334044674205,
+          "lowerMisses": 0,
+          "upperMisses": 1
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": 0.0019520321229158366,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 180,
+      "alpha": 0.2,
+      "left": {
+        "model": "adaptiveEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "flat",
+        "kind": "experimental"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 12,
+      "disjointCases": 2,
+      "commonOrigins": [
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15"
+      ],
+      "disjointOrigins": [
+        "2025-06-11",
+        "2025-12-24"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 12,
+          "empiricalCoverage": 0.5,
+          "meanLogWidth": 1.1703562755604722,
+          "meanLogIntervalScore": 2.330942174931501,
+          "lowerMisses": 6,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 12,
+          "empiricalCoverage": 1,
+          "meanLogWidth": 1.9405596762794897,
+          "meanLogIntervalScore": 1.9405596762794897,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 2,
+          "empiricalCoverage": 0.5,
+          "meanLogWidth": 1.0887886314198707,
+          "meanLogIntervalScore": 1.6524121510782357,
+          "lowerMisses": 1,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 2,
+          "empiricalCoverage": 1,
+          "meanLogWidth": 2.302151553041409,
+          "meanLogIntervalScore": 2.302151553041409,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": 0.6497394019631733,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 180,
+      "alpha": 0.2,
+      "left": {
+        "model": "adaptiveEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "shrunkenTrend",
+        "kind": "experimental"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 12,
+      "disjointCases": 2,
+      "commonOrigins": [
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15"
+      ],
+      "disjointOrigins": [
+        "2025-06-11",
+        "2025-12-24"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 12,
+          "empiricalCoverage": 0.5,
+          "meanLogWidth": 1.1703562755604722,
+          "meanLogIntervalScore": 2.330942174931501,
+          "lowerMisses": 6,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 12,
+          "empiricalCoverage": 0.9166666666666666,
+          "meanLogWidth": 2.0338705586975627,
+          "meanLogIntervalScore": 2.0384002403870203,
+          "lowerMisses": 1,
+          "upperMisses": 0
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 2,
+          "empiricalCoverage": 0.5,
+          "meanLogWidth": 1.0887886314198707,
+          "meanLogIntervalScore": 1.6524121510782357,
+          "lowerMisses": 1,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 2,
+          "empiricalCoverage": 1,
+          "meanLogWidth": 2.362647361086063,
+          "meanLogIntervalScore": 2.362647361086063,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": 0.7102352100078275,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 180,
+      "alpha": 0.2,
+      "left": {
+        "model": "pooledEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "flat",
+        "kind": "experimental"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 20,
+      "disjointCases": 3,
+      "commonOrigins": [
+        "2024-10-30",
+        "2024-11-27",
+        "2024-12-25",
+        "2025-01-22",
+        "2025-02-19",
+        "2025-03-19",
+        "2025-04-16",
+        "2025-05-14",
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15"
+      ],
+      "disjointOrigins": [
+        "2024-10-30",
+        "2025-05-14",
+        "2025-11-26"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 20,
+          "empiricalCoverage": 0.7,
+          "meanLogWidth": 1.0514823802039888,
+          "meanLogIntervalScore": 1.6667146942444524,
+          "lowerMisses": 3,
+          "upperMisses": 3
+        },
+        "right": {
+          "n": 20,
+          "empiricalCoverage": 0.95,
+          "meanLogWidth": 2.100961329865786,
+          "meanLogIntervalScore": 2.135995939280554,
+          "lowerMisses": 0,
+          "upperMisses": 1
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 3,
+          "empiricalCoverage": 1,
+          "meanLogWidth": 1.0427333062615443,
+          "meanLogIntervalScore": 1.0427333062615443,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 3,
+          "empiricalCoverage": 1,
+          "meanLogWidth": 2.4446223714302318,
+          "meanLogIntervalScore": 2.4446223714302318,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": 1.4018890651686875,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    },
+    {
+      "asOf": "2026-10-25",
+      "horizonDays": 180,
+      "alpha": 0.2,
+      "left": {
+        "model": "pooledEth",
+        "kind": "simulated"
+      },
+      "right": {
+        "model": "shrunkenTrend",
+        "kind": "experimental"
+      },
+      "status": "evaluated",
+      "sameOriginCases": 20,
+      "disjointCases": 3,
+      "commonOrigins": [
+        "2024-10-30",
+        "2024-11-27",
+        "2024-12-25",
+        "2025-01-22",
+        "2025-02-19",
+        "2025-03-19",
+        "2025-04-16",
+        "2025-05-14",
+        "2025-06-11",
+        "2025-07-09",
+        "2025-08-06",
+        "2025-09-03",
+        "2025-10-01",
+        "2025-10-29",
+        "2025-11-26",
+        "2025-12-24",
+        "2026-01-21",
+        "2026-02-18",
+        "2026-03-18",
+        "2026-04-15"
+      ],
+      "disjointOrigins": [
+        "2024-10-30",
+        "2025-05-14",
+        "2025-11-26"
+      ],
+      "allEligible": {
+        "left": {
+          "n": 20,
+          "empiricalCoverage": 0.7,
+          "meanLogWidth": 1.0514823802039888,
+          "meanLogIntervalScore": 1.6667146942444524,
+          "lowerMisses": 3,
+          "upperMisses": 3
+        },
+        "right": {
+          "n": 20,
+          "empiricalCoverage": 0.9,
+          "meanLogWidth": 2.1575401793209528,
+          "meanLogIntervalScore": 2.335925188027656,
+          "lowerMisses": 1,
+          "upperMisses": 1
+        }
+      },
+      "disjoint": {
+        "left": {
+          "n": 3,
+          "empiricalCoverage": 1,
+          "meanLogWidth": 1.0427333062615443,
+          "meanLogIntervalScore": 1.0427333062615443,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        },
+        "right": {
+          "n": 3,
+          "empiricalCoverage": 1,
+          "meanLogWidth": 2.740141463440858,
+          "meanLogIntervalScore": 2.740141463440858,
+          "lowerMisses": 0,
+          "upperMisses": 0
+        }
+      },
+      "rightMinusLeftMeanLogIntervalScore": 1.6974081571793138,
+      "independentSampleSize": null,
+      "coverageGuarantee": false,
+      "historicalOutcomeAvailabilityProven": false
+    }
+  ],
+  "currentIntervalEvidence": {
+    "asOf": "2026-10-25",
+    "informationCutoffAt": "2026-10-26T00:00:00.000Z",
+    "issuedAt": null,
+    "interpretation": "Current reconstructed forecasts; empirical-error status is separate from raw Monte Carlo bands.",
+    "historicalOutcomeAvailabilityProven": false,
+    "calibratedForProduction": false,
+    "coverageGuarantee": false,
+    "horizons": [
+      {
+        "horizonDays": 30,
+        "targetDate": "2026-11-24",
+        "models": {
+          "adaptiveEth": {
+            "modelAvailable": true,
+            "unavailableReason": null,
+            "rawSimulation": {
+              "status": "simulated",
+              "lower": 1861.1592238938783,
+              "upper": 2922.8818620001475,
+              "nominalPointwiseMass": 0.8,
+              "coverageGuarantee": false
+            },
+            "empiricalCalibration": {
+              "origin": "2026-10-25",
+              "horizonDays": 30,
+              "alpha": 0.2,
+              "eligibleMaturedCount": 17,
+              "usedCount": 9,
+              "usedOrigins": [
+                "2026-09-02",
+                "2026-07-08",
+                "2026-05-13",
+                "2026-03-18",
+                "2026-01-21",
+                "2025-11-26",
+                "2025-10-01",
+                "2025-08-06",
+                "2025-06-11"
+              ],
+              "latestOutcomeUsed": "2026-10-02",
+              "nonoverlappingTargetIntervals": true,
+              "independentSampleSize": null,
+              "calibratedForProduction": false,
+              "guarantee": "No individual or conditional coverage guarantee; this is a retrospective empirical-error experiment.",
+              "status": "insufficient-matured-errors",
+              "lower": null,
+              "upper": null,
+              "logRadius": null
+            },
+            "minimumCalibrationCases": 12,
+            "empiricalFallbackApplied": false
+          },
+          "pooledEth": {
+            "modelAvailable": true,
+            "unavailableReason": null,
+            "rawSimulation": {
+              "status": "simulated",
+              "lower": 1972.9753131052476,
+              "upper": 2813.2065303472227,
+              "nominalPointwiseMass": 0.8,
+              "coverageGuarantee": false
+            },
+            "empiricalCalibration": {
+              "origin": "2026-10-25",
+              "horizonDays": 30,
+              "alpha": 0.2,
+              "eligibleMaturedCount": 39,
+              "usedCount": 20,
+              "usedOrigins": [
+                "2026-09-02",
+                "2026-07-08",
+                "2026-05-13",
+                "2026-03-18",
+                "2026-01-21",
+                "2025-11-26",
+                "2025-10-01",
+                "2025-08-06",
+                "2025-06-11",
+                "2025-04-16",
+                "2025-02-19",
+                "2024-12-25",
+                "2024-10-30",
+                "2024-09-04",
+                "2024-07-10",
+                "2024-05-15",
+                "2024-03-20",
+                "2024-01-24",
+                "2023-11-29",
+                "2023-10-04"
+              ],
+              "latestOutcomeUsed": "2026-10-02",
+              "nonoverlappingTargetIntervals": true,
+              "independentSampleSize": null,
+              "calibratedForProduction": false,
+              "guarantee": "No individual or conditional coverage guarantee; this is a retrospective empirical-error experiment.",
+              "status": "experimental",
+              "lower": 1705.4274204124274,
+              "upper": 3129.5084248830067,
+              "logRadius": 0.30353008684358596
+            },
+            "minimumCalibrationCases": 12,
+            "empiricalFallbackApplied": false
+          }
+        }
+      },
+      {
+        "horizonDays": 90,
+        "targetDate": "2027-01-23",
+        "models": {
+          "adaptiveEth": {
+            "modelAvailable": true,
+            "unavailableReason": null,
+            "rawSimulation": {
+              "status": "simulated",
+              "lower": 1605.975242421384,
+              "upper": 3407.6301999473058,
+              "nominalPointwiseMass": 0.8,
+              "coverageGuarantee": false
+            },
+            "empiricalCalibration": {
+              "origin": "2026-10-25",
+              "horizonDays": 90,
+              "alpha": 0.2,
+              "eligibleMaturedCount": 15,
+              "usedCount": 4,
+              "usedOrigins": [
+                "2026-07-08",
+                "2026-03-18",
+                "2025-11-26",
+                "2025-08-06"
+              ],
+              "latestOutcomeUsed": "2026-10-06",
+              "nonoverlappingTargetIntervals": true,
+              "independentSampleSize": null,
+              "calibratedForProduction": false,
+              "guarantee": "No individual or conditional coverage guarantee; this is a retrospective empirical-error experiment.",
+              "status": "insufficient-matured-errors",
+              "lower": null,
+              "upper": null,
+              "logRadius": null
+            },
+            "minimumCalibrationCases": 12,
+            "empiricalFallbackApplied": false
+          },
+          "pooledEth": {
+            "modelAvailable": true,
+            "unavailableReason": null,
+            "rawSimulation": {
+              "status": "simulated",
+              "lower": 1587.4503853582655,
+              "upper": 3306.3221811790218,
+              "nominalPointwiseMass": 0.8,
+              "coverageGuarantee": false
+            },
+            "empiricalCalibration": {
+              "origin": "2026-10-25",
+              "horizonDays": 90,
+              "alpha": 0.2,
+              "eligibleMaturedCount": 37,
+              "usedCount": 10,
+              "usedOrigins": [
+                "2026-07-08",
+                "2026-03-18",
+                "2025-11-26",
+                "2025-08-06",
+                "2025-04-16",
+                "2024-12-25",
+                "2024-09-04",
+                "2024-05-15",
+                "2024-01-24",
+                "2023-10-04"
+              ],
+              "latestOutcomeUsed": "2026-10-06",
+              "nonoverlappingTargetIntervals": true,
+              "independentSampleSize": null,
+              "calibratedForProduction": false,
+              "guarantee": "No individual or conditional coverage guarantee; this is a retrospective empirical-error experiment.",
+              "status": "insufficient-matured-errors",
+              "lower": null,
+              "upper": null,
+              "logRadius": null
+            },
+            "minimumCalibrationCases": 12,
+            "empiricalFallbackApplied": false
+          }
+        }
+      },
+      {
+        "horizonDays": 180,
+        "targetDate": "2027-04-23",
+        "models": {
+          "adaptiveEth": {
+            "modelAvailable": true,
+            "unavailableReason": null,
+            "rawSimulation": {
+              "status": "simulated",
+              "lower": 1369.7171695288048,
+              "upper": 4106.154287140353,
+              "nominalPointwiseMass": 0.8,
+              "coverageGuarantee": false
+            },
+            "empiricalCalibration": {
+              "origin": "2026-10-25",
+              "horizonDays": 180,
+              "alpha": 0.2,
+              "eligibleMaturedCount": 12,
+              "usedCount": 2,
+              "usedOrigins": [
+                "2026-04-15",
+                "2025-10-01"
+              ],
+              "latestOutcomeUsed": "2026-10-12",
+              "nonoverlappingTargetIntervals": true,
+              "independentSampleSize": null,
+              "calibratedForProduction": false,
+              "guarantee": "No individual or conditional coverage guarantee; this is a retrospective empirical-error experiment.",
+              "status": "insufficient-matured-errors",
+              "lower": null,
+              "upper": null,
+              "logRadius": null
+            },
+            "minimumCalibrationCases": 12,
+            "empiricalFallbackApplied": false
+          },
+          "pooledEth": {
+            "modelAvailable": true,
+            "unavailableReason": null,
+            "rawSimulation": {
+              "status": "simulated",
+              "lower": 1382.4837445015678,
+              "upper": 3970.131181324457,
+              "nominalPointwiseMass": 0.8,
+              "coverageGuarantee": false
+            },
+            "empiricalCalibration": {
+              "origin": "2026-10-25",
+              "horizonDays": 180,
+              "alpha": 0.2,
+              "eligibleMaturedCount": 34,
+              "usedCount": 5,
+              "usedOrigins": [
+                "2026-04-15",
+                "2025-10-01",
+                "2025-03-19",
+                "2024-09-04",
+                "2024-02-21"
+              ],
+              "latestOutcomeUsed": "2026-10-12",
+              "nonoverlappingTargetIntervals": true,
+              "independentSampleSize": null,
+              "calibratedForProduction": false,
+              "guarantee": "No individual or conditional coverage guarantee; this is a retrospective empirical-error experiment.",
+              "status": "insufficient-matured-errors",
+              "lower": null,
+              "upper": null,
+              "logRadius": null
+            },
+            "minimumCalibrationCases": 12,
+            "empiricalFallbackApplied": false
+          }
+        }
+      }
+    ]
+  },
+  "runtime": {
+    "fitAnd730Day256DrawSimulationMs": 52.283455000000004,
+    "environment": "GitHub Actions Node; not physical mobile latency",
+    "logMatrixBytes": 1497088,
+    "complexity": "O(history + horizon*draws*log(draws))",
+    "timingIsNotGuaranteed": true
+  },
+  "forecastPerformance": {
+    "prospectiveScoredTargets": 0,
+    "productionPromoted": false,
+    "policyPreregistered": false,
+    "historicalVintagesAvailable": false,
+    "externalGeminiReview": "omitted-by-user-2026-10-27",
+    "reverseReview": "omitted-by-user-2026-10-27"
+  },
+  "limitations": [
+    "Pooled candidate jointly changes state conditioning, included returns and explicit drift policy; no single-component causal attribution",
+    "Candidate was designed after examining historical data; not an untouched historical holdout",
+    "All-return origin availability differs; compare intersections before choosing disjoint target intervals",
+    "Zero explicit drift does not guarantee zero conditional mean, a price martingale or a fixed median",
+    "Fixed variance and 28-day block policies were not optimized against these new scores",
+    "Raw pointwise Monte Carlo bands omit parameter uncertainty and do not guarantee empirical coverage",
+    "Minimum 12 mature same-horizon disjoint errors is an unchanged experiment policy, not a coverage theorem",
+    "Current-vintage replay and 30/90/180-day tests do not validate a two-year price prediction",
+    "Supplemental throughput data is never passed into this price model"
+  ]
+}

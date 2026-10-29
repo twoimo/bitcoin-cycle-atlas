@@ -1,0 +1,24 @@
+2026-10-28T03:41:45.7451335Z HEAD is now at 34d00b0 Merge c17be870193a535860e95f41bbb6b0239fd4c22a into 5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4
+2026-10-28T03:41:45.7542377Z [command]/usr/bin/git log -1 --format=%H
+2026-10-28T03:41:45.7572183Z 34d00b05b826e171bab926d06440b73e51736a65
+2026-10-28T03:41:46.6587900Z > node --test tests/*.test.mjs
+2026-10-28T03:43:41.5753202Z ℹ tests 1823
+2026-10-28T03:43:41.5753413Z ℹ suites 0
+2026-10-28T03:43:41.5753621Z ℹ pass 1823
+2026-10-28T03:43:41.5753951Z ℹ fail 0
+2026-10-28T03:43:41.5754163Z ℹ cancelled 0
+2026-10-28T03:43:41.5754380Z ℹ skipped 0
+2026-10-28T03:43:41.5754579Z ℹ todo 0
+2026-10-28T03:43:41.5754816Z ℹ duration_ms 114812.943307
+2026-10-28T03:43:51.4894975Z > node scripts/verify-system-numerics.mjs && node scripts/verify-system-independent-review.mjs && node scripts/verify-cycle-decision.mjs && node scripts/verify-cycle-table-integration.mjs && node scripts/refresh-asset-comparison.mjs --check && node scripts/verify-asset-comparison.mjs
+2026-10-28T03:43:52.5442509Z   "assertions": 318010,
+2026-10-28T03:43:59.5489802Z PASS negative controls: 16/16 targeted mutants rejected at their intended assertions
+2026-10-28T03:43:59.6886340Z > node scripts/verify-market-state.mjs && node scripts/verify-equity-state.mjs && node scripts/verify-eth-state.mjs && node scripts/verify-publication-state.mjs
+2026-10-28T03:44:15.6236217Z ℹ tests 28
+2026-10-28T03:44:15.6236429Z ℹ suites 0
+2026-10-28T03:44:15.6236707Z ℹ pass 28
+2026-10-28T03:44:15.6237009Z ℹ fail 0
+2026-10-28T03:44:15.6237376Z ℹ cancelled 0
+2026-10-28T03:44:15.6237618Z ℹ skipped 0
+2026-10-28T03:44:15.6237816Z ℹ todo 0
+2026-10-28T03:44:15.6238048Z ℹ duration_ms 129.091247

@@ -1,0 +1,79 @@
+{
+  "sourceCommit": "4bf84ce345d6468c69dc25c7a7dce50f5703ab6b",
+  "files": [
+    {
+      "path": "research-data/ethereum-prospective-ledger/acquisition.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "87623c0ea84ecad67f6ddf14bded587b7bac9f36",
+      "size": 2177,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/blobs/87623c0ea84ecad67f6ddf14bded587b7bac9f36"
+    },
+    {
+      "path": "research-data/ethereum-prospective-ledger/acquisitions/d3e63c214cbdaa985625efeeb4b48e374f0882596b7d7d1790fa26e80c86eceb.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ca098e9aa81cc3e9ecaecfc62ae7b1841bcc602e",
+      "size": 2176,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/blobs/ca098e9aa81cc3e9ecaecfc62ae7b1841bcc602e"
+    },
+    {
+      "path": "research-data/ethereum-prospective-ledger/evaluations/798f9901977d7778a7c1a105c2c6bdf6afe2f0ad5f83a79e0273db1e876921ea.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e18adbfcd637d955bffb32b6bdf77cd671e93598",
+      "size": 4268,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/blobs/e18adbfcd637d955bffb32b6bdf77cd671e93598"
+    },
+    {
+      "path": "research-data/ethereum-prospective-ledger/evaluations/f7ae686176ed688933365c166d84a2968549b5f4b4bdca0b60b6ca93103e3565.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ad468500a7c52d59f6cdb8b9c6ec8ed86512eb86",
+      "size": 13578,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/blobs/ad468500a7c52d59f6cdb8b9c6ec8ed86512eb86"
+    },
+    {
+      "path": "research-data/ethereum-prospective-ledger/files.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ad99d4c1a77c57e2832aa667255741728fa8525",
+      "size": 4158,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/blobs/9ad99d4c1a77c57e2832aa667255741728fa8525"
+    },
+    {
+      "path": "research-data/ethereum-prospective-ledger/issuances/c9f91387867d25c19192338a010938f457ec3beb67402a7e3aa1fc3e214dfc08.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3301d79e70e62606880709e9db87508e10098ac0",
+      "size": 5124,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/blobs/3301d79e70e62606880709e9db87508e10098ac0"
+    },
+    {
+      "path": "research-data/ethereum-prospective-ledger/raw/coinbase-tail-d5c69e0d9494f287ec42038862e1e35538cd997e87bed139181dd9f19fa1ec25.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e83d8a34f4e4900571201cdccffff64890c6544a",
+      "size": 527,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/blobs/e83d8a34f4e4900571201cdccffff64890c6544a"
+    },
+    {
+      "path": "research-data/ethereum-prospective-ledger/raw/coinbase-tail.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0dc24cba98d0a38c274a9a5623879c3dcb5f087f",
+      "size": 528,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/blobs/0dc24cba98d0a38c274a9a5623879c3dcb5f087f"
+    },
+    {
+      "path": "research-data/ethereum-prospective-ledger/receipt.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b89b46d302b54a044d9eb81bb9525fabe956c8c8",
+      "size": 2511,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/blobs/b89b46d302b54a044d9eb81bb9525fabe956c8c8"
+    }
+  ],
+  "allGitBlobsMatched": true,
+  "newRemoteRepositoryFiles": false
+}

@@ -1,9 +1,12 @@
+import {buildEthereumPooledForecast} from '../dist/ethereum-pooled-model.js';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { drawIntradayChart } from '../dist/intraday-chart.js';
 import { CHART_INTERVALS } from '../dist/ohlc-data.js';
 import {readFile} from 'node:fs/promises';
 import {parseEthArchive} from '../dist/eth-market-data.js';
+import {equityForecastRows,equityForecastWindowRows} from '../dist/equity-forecast-chart.js';
+import {buildEthereumAdaptiveForecast} from '../dist/ethereum-adaptive-model.js';
 import {buildEthereumForecasts} from '../dist/ethereum-forecast.js';
 import {ethHistoryRange} from '../dist/eth-view-state.js';
 
@@ -133,4 +136,48 @@ test('legacy series without an explicit product retain BTC identity in rendered 
   assert.equal(inspected.product,'BTC-USD');
   assert.match(svg.innerHTML,/<title>Coinbase Exchange BTC-USD/);
   assert.match(controller.getSelection().copyText,/Coinbase Exchange · BTC-USD/);
+});
+
+
+for(const builder of [buildEthereumAdaptiveForecast,buildEthereumPooledForecast])test(builder.name+' SVG titles and inspection use model quantiles rather than legacy external-condition labels',async()=>{
+  const archive=JSON.parse(await readFile(new URL('../dist/data/eth-ohlc.json',import.meta.url),'utf8'));
+  const actual=parseEthArchive(archive),asOf=actual.lastDate.slice(0,10);
+  const forecast=builder({ethHistory:archive,asOf,horizonDays:90,sampleCount:64});
+  const svg=svgFixture(),range=ethHistoryRange(actual,'all',null,forecast.displayEnd);
+  const controller=drawIntradayChart({svg,series:actual,range,forecast,showVolume:false});
+  assert.match(svg.innerHTML,/<title>모형 중앙값/);
+  assert.match(svg.innerHTML,/점별 10–90% 모의 분위수/);
+  assert.match(svg.innerHTML,/aria-label="모형 예시 1개 · 적중률 미보정"/);
+  assert.doesNotMatch(svg.innerHTML,/같은 무작위 잔차를 사용한 세 조건/);
+  controller.selectDate(forecast.path[5].date+'T00:00:00Z');
+  const selected=controller.getSelection().copyText;
+  assert.match(selected,/모형 중앙값/);assert.match(selected,/모의 10–90%/);
+  assert.doesNotMatch(selected,/외부 평가 조건|세 조건 범위/);
+});
+
+for(const researchModel of ['adaptive','pooled'])test(researchModel+' example may lie outside its quantiles without widening the band or blocking render',()=>{
+  const rows=[candle(0)],anchor=rows[0].close,date=offset=>new Date((start+offset*86400)*1000).toISOString().slice(0,10);
+  const forecast={symbol:'ETHUSD',pathMode:'crypto-conditional-daily',researchModel,asOf:date(0),milestones:[],
+    path:[{date:date(0),price:anchor,baselinePrice:anchor,low:anchor,high:anchor},
+      {date:date(1),price:4000,baselinePrice:2100,low:1800,high:2400},
+      {date:date(2),price:1000,baselinePrice:2200,low:1600,high:2600}]};
+  const future=equityForecastRows(forecast,start);
+  assert.equal(future.length,2);
+  for(const scale of ['linear','log'])for(const fraction of [.25,.9]){
+    const min=start+(1+fraction)*86400,max=start+2*86400;
+    const interpolated=equityForecastWindowRows(future,{...rows[0],baselinePrice:anchor},min,max,scale,true,false).find(r=>r.interpolated);
+    const expectedLow=scale==='log'?1800**(1-fraction)*1600**fraction:1800*(1-fraction)+1600*fraction;
+    const expectedHigh=scale==='log'?2400**(1-fraction)*2600**fraction:2400*(1-fraction)+2600*fraction;
+    assert.ok(Math.abs(interpolated.low-expectedLow)<1e-9);
+    assert.ok(Math.abs(interpolated.high-expectedHigh)<1e-9);
+    const svg=svgFixture(320,600);
+    drawIntradayChart({svg,series:series(rows),forecast,scale,range:{start,end:start+2*86400},showVolume:false});
+    assert.equal(svg.dataset.forecastPointCount,'2');
+    assert.doesNotMatch(svg.innerHTML,/NaN|Infinity/);
+  }
+  for(const corrupted of [{low:2300},{high:2000},{price:0},{baselinePrice:NaN}]){
+    const invalid=structuredClone(forecast);Object.assign(invalid.path[1],corrupted);
+    assert.throws(()=>equityForecastRows(invalid,start),/Invalid/);
+  }
+  assert.throws(()=>equityForecastRows({...forecast,researchModel:undefined},start),/Invalid equity forecast path/);
 });

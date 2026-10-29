@@ -1,0 +1,1395 @@
+{
+  "kind": "ethereum-economic-evidence-coverage",
+  "version": "eth-economic-evidence-coverage-1",
+  "metricDefinitionVersion": "eth-economic-input-3",
+  "asOf": "2026-10-26",
+  "issuedAt": "2026-10-27T09:57:15.144Z",
+  "policy": {
+    "windowDays": 28,
+    "maximumSnapshotAgeDays": 7,
+    "missingAsZero": false,
+    "newModelVariant": false,
+    "sourceAuthenticityProven": false,
+    "providerGeneratedOrCompletedAtSubstitutesForPublishedAt": false
+  },
+  "sources": [
+    {
+      "id": "coinmetrics:0",
+      "kind": "coinmetrics",
+      "receiptPath": "build/ethereum-economic-data/capture-BjuDTk/receipt.json",
+      "receiptSha256": "9ab271af1583685f85651d97879476f0f16413eaf0da7a5d8824375ff6c4ffed",
+      "collectorStatus": "success",
+      "collectorError": null,
+      "rawAudit": {
+        "status": "verified",
+        "replayed": true,
+        "verifiedFiles": 1
+      },
+      "receiptAuthenticityProven": false
+    },
+    {
+      "id": "throughput:1",
+      "kind": "throughput",
+      "receiptPath": "build/ethereum-throughput-supplement/capture-ST47uM/receipt.json",
+      "receiptSha256": "0aee58f120451d4dc0c023344005ca3d4c2eebcd0fe2b4f5c6c928370e775ad9",
+      "collectorStatus": "supplement-collected",
+      "collectorError": null,
+      "rawAudit": {
+        "status": "verified",
+        "replayed": true,
+        "verifiedFiles": 2
+      },
+      "receiptAuthenticityProven": false
+    },
+    {
+      "id": "pow-zero:2",
+      "kind": "pow-zero",
+      "receiptPath": "build/ethereum-pow-zero/receipt.json",
+      "receiptSha256": "2be6988b7676b939c171f2069cfd21daa0f769f0769e00eeae6a4ceadd40b1d9",
+      "collectorStatus": "partial-protocol-observation-collected",
+      "collectorError": null,
+      "rawAudit": {
+        "status": "verified",
+        "replayed": true,
+        "verifiedFiles": 53
+      },
+      "receiptAuthenticityProven": false
+    }
+  ],
+  "observations": [
+    {
+      "id": "coinmetrics:0:FeeTotNtv",
+      "sourceId": "coinmetrics:0",
+      "sourceField": "FeeTotNtv",
+      "value": 9122.065722414914,
+      "sourceUrl": "https://github.com/coinmetrics/data/blob/f1a36afb962731c387bb03982758ab0103063da5/csv/eth.csv",
+      "clocks": {
+        "observedFrom": "2026-04-26",
+        "observedThrough": "2026-05-23",
+        "observedAt": "2026-05-24T00:00:00.000Z",
+        "windowDays": 28,
+        "publishedAt": null,
+        "collectedAt": "2026-10-27T09:55:05.488Z",
+        "providerGeneratedAt": null,
+        "providerCompletedAt": "2026-05-24T02:44:08.000Z",
+        "ageDays": 156,
+        "freshness": "stale",
+        "tags": [
+          "unknown-publication-time",
+          "stale"
+        ],
+        "receiptTimesQualified": false,
+        "providerClocksAreNotPublication": true
+      },
+      "rawBytesVerified": true,
+      "replayedFromRaw": true,
+      "notes": []
+    },
+    {
+      "id": "coinmetrics:0:IssTotNtv",
+      "sourceId": "coinmetrics:0",
+      "sourceField": "IssTotNtv",
+      "value": 78672.726006681,
+      "sourceUrl": "https://github.com/coinmetrics/data/blob/f1a36afb962731c387bb03982758ab0103063da5/csv/eth.csv",
+      "clocks": {
+        "observedFrom": "2026-04-26",
+        "observedThrough": "2026-05-23",
+        "observedAt": "2026-05-24T00:00:00.000Z",
+        "windowDays": 28,
+        "publishedAt": null,
+        "collectedAt": "2026-10-27T09:55:05.488Z",
+        "providerGeneratedAt": null,
+        "providerCompletedAt": "2026-05-24T02:44:08.000Z",
+        "ageDays": 156,
+        "freshness": "stale",
+        "tags": [
+          "unknown-publication-time",
+          "stale"
+        ],
+        "receiptTimesQualified": false,
+        "providerClocksAreNotPublication": true
+      },
+      "rawBytesVerified": true,
+      "replayedFromRaw": true,
+      "notes": []
+    },
+    {
+      "id": "coinmetrics:0:SplyCur",
+      "sourceId": "coinmetrics:0",
+      "sourceField": "SplyCur",
+      "value": 121721391.22868587,
+      "sourceUrl": "https://github.com/coinmetrics/data/blob/f1a36afb962731c387bb03982758ab0103063da5/csv/eth.csv",
+      "clocks": {
+        "observedFrom": "2026-04-26",
+        "observedThrough": "2026-05-23",
+        "observedAt": "2026-05-24T00:00:00.000Z",
+        "windowDays": 28,
+        "publishedAt": null,
+        "collectedAt": "2026-10-27T09:55:05.488Z",
+        "providerGeneratedAt": null,
+        "providerCompletedAt": "2026-05-24T02:44:08.000Z",
+        "ageDays": 156,
+        "freshness": "stale",
+        "tags": [
+          "unknown-publication-time",
+          "stale"
+        ],
+        "receiptTimesQualified": false,
+        "providerClocksAreNotPublication": true
+      },
+      "rawBytesVerified": true,
+      "replayedFromRaw": true,
+      "notes": []
+    },
+    {
+      "id": "coinmetrics:0:TxCnt",
+      "sourceId": "coinmetrics:0",
+      "sourceField": "TxCnt",
+      "value": 64795230,
+      "sourceUrl": "https://github.com/coinmetrics/data/blob/f1a36afb962731c387bb03982758ab0103063da5/csv/eth.csv",
+      "clocks": {
+        "observedFrom": "2026-04-26",
+        "observedThrough": "2026-05-23",
+        "observedAt": "2026-05-24T00:00:00.000Z",
+        "windowDays": 28,
+        "publishedAt": null,
+        "collectedAt": "2026-10-27T09:55:05.488Z",
+        "providerGeneratedAt": null,
+        "providerCompletedAt": "2026-05-24T02:44:08.000Z",
+        "ageDays": 156,
+        "freshness": "stale",
+        "tags": [
+          "unknown-publication-time",
+          "stale"
+        ],
+        "receiptTimesQualified": false,
+        "providerClocksAreNotPublication": true
+      },
+      "rawBytesVerified": true,
+      "replayedFromRaw": true,
+      "notes": []
+    },
+    {
+      "id": "throughput:1:l1GasUsedRateDerived",
+      "sourceId": "throughput:1",
+      "sourceField": "l1GasUsedRateDerived",
+      "value": 6094027523397,
+      "sourceUrl": "https://api.growthepie.com/v1/metrics/chains/ethereum/throughput.json",
+      "clocks": {
+        "observedFrom": "2026-09-29",
+        "observedThrough": "2026-10-26",
+        "observedAt": "2026-10-27T00:00:00.000Z",
+        "windowDays": 28,
+        "publishedAt": null,
+        "collectedAt": "2026-10-27T09:55:06.104Z",
+        "providerGeneratedAt": "2026-10-27T09:15:36Z",
+        "providerCompletedAt": null,
+        "ageDays": 0,
+        "freshness": "within-seven-days",
+        "tags": [
+          "unknown-publication-time"
+        ],
+        "receiptTimesQualified": false,
+        "providerClocksAreNotPublication": true
+      },
+      "rawBytesVerified": true,
+      "replayedFromRaw": true,
+      "notes": []
+    },
+    {
+      "id": "pow-zero:2:executionPowIssuanceEth",
+      "sourceId": "pow-zero:2",
+      "sourceField": "executionPowIssuanceEth",
+      "value": 0,
+      "sourceUrl": "https://ethereum-rpc.publicnode.com",
+      "clocks": {
+        "observedFrom": "2026-09-29",
+        "observedThrough": "2026-10-26",
+        "observedAt": "2026-10-27T00:00:00.000Z",
+        "windowDays": 28,
+        "publishedAt": null,
+        "collectedAt": "2026-10-27T09:55:51.920Z",
+        "providerGeneratedAt": null,
+        "providerCompletedAt": null,
+        "ageDays": 0,
+        "freshness": "within-seven-days",
+        "tags": [
+          "unknown-publication-time"
+        ],
+        "receiptTimesQualified": false,
+        "providerClocksAreNotPublication": true
+      },
+      "rawBytesVerified": true,
+      "replayedFromRaw": true,
+      "notes": [
+        "Single-provider canonical/finalized assertion; not independent consensus validation or a verified complete header chain.",
+        "Not total or consensus issuance."
+      ]
+    }
+  ],
+  "metrics": [
+    {
+      "metric": "l1GasUsed",
+      "unit": "gas/28 UTC days",
+      "definition": "All executed L1 gas, including rollup settlement transactions; a resource load measure, not user count.",
+      "status": "rate-derived-partial",
+      "relations": [
+        "incompatible-unit",
+        "rate-derived"
+      ],
+      "evidence": [
+        {
+          "observationId": "coinmetrics:0:TxCnt",
+          "relation": "incompatible-unit",
+          "reason": "L1 transaction count is not execution gas.",
+          "clockTags": [
+            "unknown-publication-time",
+            "stale"
+          ],
+          "rawBytesVerified": true,
+          "replayedFromRaw": true,
+          "reportedDefinitionAndTimeMatch": false
+        },
+        {
+          "observationId": "throughput:1:l1GasUsedRateDerived",
+          "relation": "rate-derived",
+          "reason": "Daily Mgas/s converted to gas; exact integer/canonical completeness has not been established.",
+          "clockTags": [
+            "unknown-publication-time"
+          ],
+          "rawBytesVerified": true,
+          "replayedFromRaw": true,
+          "reportedDefinitionAndTimeMatch": false
+        }
+      ],
+      "sourceCaptureStates": [
+        {
+          "sourceId": "coinmetrics:0",
+          "kind": "coinmetrics",
+          "collectorStatus": "success",
+          "state": "observation-reported",
+          "error": null,
+          "rawStatus": "verified",
+          "replayed": true
+        },
+        {
+          "sourceId": "throughput:1",
+          "kind": "throughput",
+          "collectorStatus": "supplement-collected",
+          "state": "observation-reported",
+          "error": null,
+          "rawStatus": "verified",
+          "replayed": true
+        }
+      ],
+      "clockTags": [
+        "unknown-publication-time",
+        "stale"
+      ],
+      "gaps": {
+        "gapCodes": [
+          "rate-is-not-exact-gas",
+          "canonical-range-unverified"
+        ],
+        "requiredEvidence": [
+          "Complete canonical UTC block range with integer gasUsed; retain missing blocks and reorg checks. A rounded Mgas/s conversion is a supplement."
+        ],
+        "sourceUrls": [
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/docs/eth_asset_methodology.md"
+        ],
+        "candidateRelation": "rate-derived"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "l2Transactions",
+      "unit": "transactions/28 UTC days",
+      "definition": "Transactions on an explicitly fixed rollup universe; not distinct people or L1 settlement transactions.",
+      "status": "scope-mismatch",
+      "relations": [
+        "scope-mismatch"
+      ],
+      "evidence": [
+        {
+          "observationId": "coinmetrics:0:TxCnt",
+          "relation": "scope-mismatch",
+          "reason": "L1 transactions are not transactions on the fixed rollup universe.",
+          "clockTags": [
+            "unknown-publication-time",
+            "stale"
+          ],
+          "rawBytesVerified": true,
+          "replayedFromRaw": true,
+          "reportedDefinitionAndTimeMatch": false
+        }
+      ],
+      "sourceCaptureStates": [
+        {
+          "sourceId": "coinmetrics:0",
+          "kind": "coinmetrics",
+          "collectorStatus": "success",
+          "state": "observation-reported",
+          "error": null,
+          "rawStatus": "verified",
+          "replayed": true
+        }
+      ],
+      "clockTags": [
+        "unknown-publication-time",
+        "stale"
+      ],
+      "gaps": {
+        "gapCodes": [
+          "l2-universe-not-fixed",
+          "filtered-transaction-scope"
+        ],
+        "requiredEvidence": [
+          "Fixed chain identities and transaction inclusion policy for all 28 days; growthepie txcount filters positive gas_price or gas_used in the pinned query. Preserve per-chain missing days."
+        ],
+        "sourceUrls": [
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/src/queries/postgres/chain_metrics/select_txcount.sql.j2",
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/src/queries/sql_queries.py"
+        ],
+        "candidateRelation": "subset"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "blobGasUsed",
+      "unit": "blob gas/28 UTC days",
+      "definition": "Consumed blob gas, with protocol era and capacity changes retained in the source vintage.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "blob-quantity-not-captured",
+          "fork-schedule-required"
+        ],
+        "requiredEvidence": [
+          "Integer blobGasUsed for every included canonical block, including zero-blob blocks; retain fork and capacity changes."
+        ],
+        "sourceUrls": [
+          "https://eips.ethereum.org/EIPS/eip-4844",
+          "https://eips.ethereum.org/EIPS/eip-7918"
+        ],
+        "candidateRelation": "unmeasured"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "executionFeesEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "L1 execution fees, base plus priority, excluding blob fees; rollup L1 payments are already included.",
+      "status": "scope-mismatch",
+      "relations": [
+        "scope-mismatch"
+      ],
+      "evidence": [
+        {
+          "observationId": "coinmetrics:0:FeeTotNtv",
+          "relation": "scope-mismatch",
+          "reason": "Total fees already include blob fees; the execution/blob split is absent.",
+          "clockTags": [
+            "unknown-publication-time",
+            "stale"
+          ],
+          "rawBytesVerified": true,
+          "replayedFromRaw": true,
+          "reportedDefinitionAndTimeMatch": false
+        }
+      ],
+      "sourceCaptureStates": [
+        {
+          "sourceId": "coinmetrics:0",
+          "kind": "coinmetrics",
+          "collectorStatus": "success",
+          "state": "observation-reported",
+          "error": null,
+          "rawStatus": "verified",
+          "replayed": true
+        }
+      ],
+      "clockTags": [
+        "unknown-publication-time",
+        "stale"
+      ],
+      "gaps": {
+        "gapCodes": [
+          "total-fees-include-blobs",
+          "execution-blob-split-missing"
+        ],
+        "requiredEvidence": [
+          "Sum gasUsed * effectiveGasPrice from execution receipts only; do not relabel total fees including blobs as execution fees."
+        ],
+        "sourceUrls": [
+          "https://gitbook-docs.coinmetrics.io/network-data/network-data-overview/fees-and-revenue/fees",
+          "https://eips.ethereum.org/EIPS/eip-1559"
+        ],
+        "candidateRelation": "scope-mismatch"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "executionBurnEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "Execution base-fee burn, already contained in execution fees.",
+      "status": "scope-mismatch",
+      "relations": [
+        "scope-mismatch"
+      ],
+      "evidence": [
+        {
+          "observationId": "coinmetrics:0:FeeTotNtv",
+          "relation": "scope-mismatch",
+          "reason": "Total fees include priority transfers and blobs; they are not execution burn.",
+          "clockTags": [
+            "unknown-publication-time",
+            "stale"
+          ],
+          "rawBytesVerified": true,
+          "replayedFromRaw": true,
+          "reportedDefinitionAndTimeMatch": false
+        }
+      ],
+      "sourceCaptureStates": [
+        {
+          "sourceId": "coinmetrics:0",
+          "kind": "coinmetrics",
+          "collectorStatus": "success",
+          "state": "observation-reported",
+          "error": null,
+          "rawStatus": "verified",
+          "replayed": true
+        }
+      ],
+      "clockTags": [
+        "unknown-publication-time",
+        "stale"
+      ],
+      "gaps": {
+        "gapCodes": [
+          "base-priority-split-missing"
+        ],
+        "requiredEvidence": [
+          "Per-block baseFeePerGas * gasUsed in exact wei across the canonical UTC window; priority fees are transfers, not burn."
+        ],
+        "sourceUrls": [
+          "https://eips.ethereum.org/EIPS/eip-1559",
+          "https://gitbook-docs.coinmetrics.io/network-data/network-data-overview/fees-and-revenue/fees"
+        ],
+        "candidateRelation": "subset"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "blobFeesEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "Blob gas fees only, separate from the execution fee of a blob-carrying transaction.",
+      "status": "scope-mismatch",
+      "relations": [
+        "scope-mismatch"
+      ],
+      "evidence": [
+        {
+          "observationId": "coinmetrics:0:FeeTotNtv",
+          "relation": "scope-mismatch",
+          "reason": "The total does not identify its blob component.",
+          "clockTags": [
+            "unknown-publication-time",
+            "stale"
+          ],
+          "rawBytesVerified": true,
+          "replayedFromRaw": true,
+          "reportedDefinitionAndTimeMatch": false
+        }
+      ],
+      "sourceCaptureStates": [
+        {
+          "sourceId": "coinmetrics:0",
+          "kind": "coinmetrics",
+          "collectorStatus": "success",
+          "state": "observation-reported",
+          "error": null,
+          "rawStatus": "verified",
+          "replayed": true
+        }
+      ],
+      "clockTags": [
+        "unknown-publication-time",
+        "stale"
+      ],
+      "gaps": {
+        "gapCodes": [
+          "blob-fee-split-missing",
+          "noninteger-blob-formula"
+        ],
+        "requiredEvidence": [
+          "Exact blobGasUsed * protocol integer blob base fee, or reconciled blob receipt fees, under the applicable fork schedule; TRUNC(EXP(...)) is not the integer fake_exponential algorithm."
+        ],
+        "sourceUrls": [
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/src/queries/postgres/da_metrics/ethereum_blob_base_fee.sql.j2",
+          "https://eips.ethereum.org/EIPS/eip-4844",
+          "https://eips.ethereum.org/EIPS/eip-7918"
+        ],
+        "candidateRelation": "scope-mismatch"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "blobBurnEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "Blob fee burn; equal to blobFeesEth under the cited protocol accounting.",
+      "status": "scope-mismatch",
+      "relations": [
+        "scope-mismatch"
+      ],
+      "evidence": [
+        {
+          "observationId": "coinmetrics:0:FeeTotNtv",
+          "relation": "scope-mismatch",
+          "reason": "The total does not identify blob fee burn.",
+          "clockTags": [
+            "unknown-publication-time",
+            "stale"
+          ],
+          "rawBytesVerified": true,
+          "replayedFromRaw": true,
+          "reportedDefinitionAndTimeMatch": false
+        }
+      ],
+      "sourceCaptureStates": [
+        {
+          "sourceId": "coinmetrics:0",
+          "kind": "coinmetrics",
+          "collectorStatus": "success",
+          "state": "observation-reported",
+          "error": null,
+          "rawStatus": "verified",
+          "replayed": true
+        }
+      ],
+      "clockTags": [
+        "unknown-publication-time",
+        "stale"
+      ],
+      "gaps": {
+        "gapCodes": [
+          "blob-fee-split-missing",
+          "noninteger-blob-formula"
+        ],
+        "requiredEvidence": [
+          "A verified blobFeesEth series supports the equal burn amount under the cited rule; equality is not permission to fill an unobserved amount with zero."
+        ],
+        "sourceUrls": [
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/src/queries/postgres/da_metrics/ethereum_blob_base_fee.sql.j2",
+          "https://eips.ethereum.org/EIPS/eip-4844"
+        ],
+        "candidateRelation": "scope-mismatch"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "consensusNetIssuanceEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "Consensus balance creation less consensus penalties/destruction; excludes deposits, withdrawals and execution fee transfers. May be negative.",
+      "status": "scope-mismatch",
+      "relations": [
+        "scope-mismatch"
+      ],
+      "evidence": [
+        {
+          "observationId": "coinmetrics:0:IssTotNtv",
+          "relation": "scope-mismatch",
+          "reason": "Gross network issuance does not subtract consensus penalties or establish layer accounting.",
+          "clockTags": [
+            "unknown-publication-time",
+            "stale"
+          ],
+          "rawBytesVerified": true,
+          "replayedFromRaw": true,
+          "reportedDefinitionAndTimeMatch": false
+        }
+      ],
+      "sourceCaptureStates": [
+        {
+          "sourceId": "coinmetrics:0",
+          "kind": "coinmetrics",
+          "collectorStatus": "success",
+          "state": "observation-reported",
+          "error": null,
+          "rawStatus": "verified",
+          "replayed": true
+        }
+      ],
+      "clockTags": [
+        "unknown-publication-time",
+        "stale"
+      ],
+      "gaps": {
+        "gapCodes": [
+          "gross-versus-net",
+          "epoch-mean-not-utc-sum",
+          "historical-theoretical-fill"
+        ],
+        "requiredEvidence": [
+          "Exact consensus creation minus all consensus destruction for the UTC window, excluding deposits/withdrawals and fee transfers.",
+          "Pinned growthepie CL series has theoretical issuance for 2025-05-07 through 2026-01-01, an interpolated participation factor, and a two-day Shapella redistribution; current epoch-normalized hourly means also require boundary reconciliation."
+        ],
+        "sourceUrls": [
+          "https://gitbook-docs.coinmetrics.io/network-data/network-data-overview/supply/supply-issuance",
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/eim/adapters/adapter_eth_supply.py",
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/docs/eth_asset_methodology.md"
+        ],
+        "candidateRelation": "scope-mismatch"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "executionPowIssuanceEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "Ethereum mainnet canonical PoW block, ommer inclusion and ommer beneficiary rewards; excludes transaction fees and consensus issuance. The source receipt must identify the canonical block range, transition boundary and reward rules. Zero requires a sourced protocol-zero receipt, not missing-data imputation. Full UTC windows starting on or after 2022-09-16 must be zero; a mixed transition window retains its actual pre-transition issuance.",
+      "status": "exact-partial",
+      "relations": [
+        "scope-mismatch",
+        "exact"
+      ],
+      "evidence": [
+        {
+          "observationId": "coinmetrics:0:IssTotNtv",
+          "relation": "scope-mismatch",
+          "reason": "A combined issuance field does not prove a PoW-only value.",
+          "clockTags": [
+            "unknown-publication-time",
+            "stale"
+          ],
+          "rawBytesVerified": true,
+          "replayedFromRaw": true,
+          "reportedDefinitionAndTimeMatch": false
+        },
+        {
+          "observationId": "pow-zero:2:executionPowIssuanceEth",
+          "relation": "exact",
+          "reason": "Sourced protocol-zero partial observation for the fully post-transition canonical range.",
+          "clockTags": [
+            "unknown-publication-time"
+          ],
+          "rawBytesVerified": true,
+          "replayedFromRaw": true,
+          "reportedDefinitionAndTimeMatch": false
+        }
+      ],
+      "sourceCaptureStates": [
+        {
+          "sourceId": "coinmetrics:0",
+          "kind": "coinmetrics",
+          "collectorStatus": "success",
+          "state": "observation-reported",
+          "error": null,
+          "rawStatus": "verified",
+          "replayed": true
+        },
+        {
+          "sourceId": "pow-zero:2",
+          "kind": "pow-zero",
+          "collectorStatus": "partial-protocol-observation-collected",
+          "state": "observation-reported",
+          "error": null,
+          "rawStatus": "verified",
+          "replayed": true
+        }
+      ],
+      "clockTags": [
+        "unknown-publication-time",
+        "stale"
+      ],
+      "gaps": {
+        "gapCodes": [
+          "protocol-zero-receipt-required"
+        ],
+        "requiredEvidence": [
+          "Use the existing sourced EIP-3675 post-transition canonical-range receipt; never infer zero from absent IssTotNtv data. Retain provider-only canonical/finalized limitations."
+        ],
+        "sourceUrls": [
+          "https://eips.ethereum.org/EIPS/eip-3675"
+        ],
+        "candidateRelation": "unmeasured"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "supplyEth",
+      "unit": "ETH at window end",
+      "definition": "Total ETH supply across execution and consensus accounting; staking does not subtract from total supply.",
+      "status": "scope-mismatch",
+      "relations": [
+        "scope-mismatch"
+      ],
+      "evidence": [
+        {
+          "observationId": "coinmetrics:0:SplyCur",
+          "relation": "scope-mismatch",
+          "reason": "Execution/consensus supply and revision scope remain unreconciled.",
+          "clockTags": [
+            "unknown-publication-time",
+            "stale"
+          ],
+          "rawBytesVerified": true,
+          "replayedFromRaw": true,
+          "reportedDefinitionAndTimeMatch": false
+        }
+      ],
+      "sourceCaptureStates": [
+        {
+          "sourceId": "coinmetrics:0",
+          "kind": "coinmetrics",
+          "collectorStatus": "success",
+          "state": "observation-reported",
+          "error": null,
+          "rawStatus": "verified",
+          "replayed": true
+        }
+      ],
+      "clockTags": [
+        "unknown-publication-time",
+        "stale"
+      ],
+      "gaps": {
+        "gapCodes": [
+          "execution-consensus-supply-unreconciled"
+        ],
+        "requiredEvidence": [
+          "Reconciled execution plus consensus supply at the exact window end, with deposits/withdrawals as transfers and a revision trail; do not subtract staked ETH."
+        ],
+        "sourceUrls": [
+          "https://gitbook-docs.coinmetrics.io/network-data/network-data-overview/supply/current-supply",
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/docs/eth_asset_methodology.md"
+        ],
+        "candidateRelation": "scope-mismatch"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "stakedEth",
+      "unit": "ETH at window end",
+      "definition": "Consensus staking balances including pending exits; not assumed economically illiquid if claims trade.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "active-balance-is-subset",
+          "stock-boundary-mismatch"
+        ],
+        "requiredEvidence": [
+          "All contract-defined staking balances including pending exits at window end. Pinned growthepie active actual balance excludes nonactive balances; its fallback can be effective balance and daily data can use start_balance."
+        ],
+        "sourceUrls": [
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/eim/adapters/adapter_eth_supply.py",
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/docs/eth_asset_methodology.md"
+        ],
+        "candidateRelation": "subset"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "exitQueueEth",
+      "unit": "ETH at window end",
+      "definition": "Subset of stakedEth with queued exits; excludes already withdrawn balances.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "pending-exit-stock-unmeasured"
+        ],
+        "requiredEvidence": [
+          "Validator-status and actual-balance stock at the same end state; exclude withdrawn balances and avoid treating completed exits as the pending queue."
+        ],
+        "sourceUrls": [
+          "https://ethereum.github.io/beacon-APIs/"
+        ],
+        "candidateRelation": "unmeasured"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "l2UserFeesEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "End-user fees collected by the same rollup universe, each execution/data/operator charge counted once; ETH converted fees require a dated conversion receipt.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "l2-universe-not-fixed",
+          "l2-fee-component-reconciliation",
+          "conversion-vintage-required"
+        ],
+        "requiredEvidence": [
+          "Same fixed L2 universe as transactions and settlement; execution, data and operator user charges once each; dated native-token conversion where needed."
+        ],
+        "sourceUrls": [
+          "https://docs.growthepie.com/metric-reference/metric-reference/fees",
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/src/queries/sql_queries.py"
+        ],
+        "candidateRelation": "scope-mismatch"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "l2SettlementFeesEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "That universe paid to L1 execution plus blob fees, a subset of total L1 fees; never added again to executionFeesEth+blobFeesEth.",
+      "status": "scope-mismatch",
+      "relations": [
+        "scope-mismatch"
+      ],
+      "evidence": [
+        {
+          "observationId": "coinmetrics:0:FeeTotNtv",
+          "relation": "scope-mismatch",
+          "reason": "No fixed-rollup settlement subset is identified.",
+          "clockTags": [
+            "unknown-publication-time",
+            "stale"
+          ],
+          "rawBytesVerified": true,
+          "replayedFromRaw": true,
+          "reportedDefinitionAndTimeMatch": false
+        }
+      ],
+      "sourceCaptureStates": [
+        {
+          "sourceId": "coinmetrics:0",
+          "kind": "coinmetrics",
+          "collectorStatus": "success",
+          "state": "observation-reported",
+          "error": null,
+          "rawStatus": "verified",
+          "replayed": true
+        }
+      ],
+      "clockTags": [
+        "unknown-publication-time",
+        "stale"
+      ],
+      "gaps": {
+        "gapCodes": [
+          "l2-universe-not-fixed",
+          "settlement-already-in-l1-fees",
+          "derived-view-zero-fill"
+        ],
+        "requiredEvidence": [
+          "Same fixed L2 universe and identified L1 settlement transactions; execution plus blob charges exactly once. rent_paid derived views can fill missing dates; obtain missingness/provenance instead of treating all displayed zeroes as observed."
+        ],
+        "sourceUrls": [
+          "https://docs.growthepie.com/metric-reference/metric-reference/rent-paid",
+          "https://eips.ethereum.org/EIPS/eip-4844"
+        ],
+        "candidateRelation": "subset"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "stakingConsensusRewardsEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "Gross consensus rewards earned by the fixed staking cohort; not ideal/theoretical reward and not duplicated across total and component API fields.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "staking-cohort-unfixed",
+          "net-not-gross-rewards",
+          "ideal-not-earned"
+        ],
+        "requiredEvidence": [
+          "Earned gross rewards for the fixed validator/investor cohort, with disjoint total/component API accounting; net CL rewards or ideal rewards cannot substitute."
+        ],
+        "sourceUrls": [
+          "https://ethereum.github.io/beacon-APIs/",
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/eim/adapters/adapter_eth_supply.py",
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/docs/eth_asset_methodology.md"
+        ],
+        "candidateRelation": "scope-mismatch"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "stakingConsensusPenaltiesEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "Consensus penalties and slashing destruction borne by that same cohort, as a nonnegative deduction.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "staking-cohort-unfixed",
+          "penalty-slashing-components"
+        ],
+        "requiredEvidence": [
+          "Actual penalties and slashing destruction of the same cohort; missing penalties are not zero."
+        ],
+        "sourceUrls": [
+          "https://ethereum.github.io/beacon-APIs/"
+        ],
+        "candidateRelation": "unmeasured"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "stakingPriorityFeesEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "Execution priority fees received by the cohort, separate from issuance and burn.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "staking-cohort-unfixed",
+          "priority-mev-disjointness"
+        ],
+        "requiredEvidence": [
+          "Priority fees actually earned by identified cohort proposers/fee recipients, separate from issuance and other builder payments."
+        ],
+        "sourceUrls": [
+          "https://eips.ethereum.org/EIPS/eip-1559",
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/docs/eth_asset_methodology.md"
+        ],
+        "candidateRelation": "scope-mismatch"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "stakingMevExcludingPriorityEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "Measured additional MEV payment to the cohort after removing priority fees already in stakingPriorityFeesEth; unknown decomposition is missing, not zero.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "staking-cohort-unfixed",
+          "priority-mev-disjointness"
+        ],
+        "requiredEvidence": [
+          "Reconciled execution/builder transfers to the same cohort after removing priority fees already counted; unknown decomposition remains missing."
+        ],
+        "sourceUrls": [
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/docs/eth_asset_methodology.md"
+        ],
+        "candidateRelation": "scope-mismatch"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "stakingServiceFeesEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "Actual pool, operator and custody charges to the measured investors; count each charge once.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "staking-cohort-unfixed",
+          "actual-service-charges-unmeasured"
+        ],
+        "requiredEvidence": [
+          "Actual pool/operator/custody charges to those investors, with each expense counted once. A network APR does not provide this field."
+        ],
+        "sourceUrls": [
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/docs/eth_asset_methodology.md"
+        ],
+        "candidateRelation": "unmeasured"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "stakingOperatingCostsEth",
+      "unit": "ETH/28 UTC days",
+      "definition": "Actual remaining operating costs not already included in service fees; non-ETH expenses require a dated conversion receipt.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "staking-cohort-unfixed",
+          "actual-operating-costs-unmeasured",
+          "conversion-vintage-required"
+        ],
+        "requiredEvidence": [
+          "Actual residual operating expenses and dated non-ETH conversion; never use an assumed APR haircut or zero default."
+        ],
+        "sourceUrls": [
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/docs/eth_asset_methodology.md"
+        ],
+        "candidateRelation": "unmeasured"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "averageRewardEligibleStakeEth",
+      "unit": "time-weighted ETH over 28 UTC days",
+      "definition": "Average cohort principal exposed to the recorded rewards/penalties during the window; denominator and all return components share the same cohort.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "staking-cohort-unfixed",
+          "time-weighted-principal-unmeasured"
+        ],
+        "requiredEvidence": [
+          "Time-weighted eligible principal for precisely the cohort earning all recorded reward/cost components; a final active-balance stock is not the denominator."
+        ],
+        "sourceUrls": [
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/eim/adapters/adapter_eth_supply.py",
+          "https://ethereum.github.io/beacon-APIs/"
+        ],
+        "candidateRelation": "scope-mismatch"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "completedExitCount",
+      "unit": "completed exits/28 UTC days",
+      "definition": "Number of eligible completed exits underlying the waiting-time statistic; zero does not imply zero waiting time.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "completed-exit-universe-unfixed"
+        ],
+        "requiredEvidence": [
+          "Count from the fixed sample of exits completed within the UTC window; keep the request and execution-availability event pair."
+        ],
+        "sourceUrls": [
+          "https://ethereum.github.io/beacon-APIs/"
+        ],
+        "candidateRelation": "unmeasured"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "completedExitMedianWaitDays",
+      "unit": "elapsed days per completed exit",
+      "definition": "Median request-to-execution-availability duration for the completed exit sample. It is not a forecast of pending exits and is completion-selection biased.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "completed-exit-universe-unfixed",
+          "request-to-availability-events"
+        ],
+        "requiredEvidence": [
+          "Median elapsed duration over that same completed sample, not pending-queue clearance time; zero completed exits leaves the median missing."
+        ],
+        "sourceUrls": [
+          "https://ethereum.github.io/beacon-APIs/"
+        ],
+        "candidateRelation": "unmeasured"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "uniqueNativeCollateralEth",
+      "unit": "unique underlying ETH at window end",
+      "definition": "Native and wrapped-native ETH pledged within the fixed collateral universe after deduplicating lending receipts and reused claims.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "collateral-universe-variable",
+          "recursive-underlying-deduplication",
+          "conversion-vintage-required"
+        ],
+        "requiredEvidence": [
+          "Fixed protocol/asset/chain coverage and backing identifiers at window end; deduplicate ETH/WETH, bridges and lending receipts. Latest USD divided by latest ETH price is not a unique-underlying ledger."
+        ],
+        "sourceUrls": [
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/eim/adapters/adapter_eth_collateral.py",
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/docs/eth_asset_methodology.md"
+        ],
+        "candidateRelation": "scope-mismatch"
+      },
+      "modelInputActivated": false
+    },
+    {
+      "metric": "uniqueStakingClaimCollateralEth",
+      "unit": "unique underlying ETH at window end",
+      "definition": "ETH backing pledged staking claims after recursive wrapper/receipt deduplication; exclude any backing unit already counted as native collateral.",
+      "status": "not-observed",
+      "relations": [],
+      "evidence": [],
+      "sourceCaptureStates": [],
+      "clockTags": [],
+      "gaps": {
+        "gapCodes": [
+          "collateral-universe-variable",
+          "recursive-underlying-deduplication",
+          "native-claim-overlap"
+        ],
+        "requiredEvidence": [
+          "Recursive LST/LRT/wrapper backing units disjoint from native collateral. Subtracting aggregate LST categories does not establish unique underlying units."
+        ],
+        "sourceUrls": [
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/eim/adapters/adapter_eth_collateral.py",
+          "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/docs/eth_asset_methodology.md"
+        ],
+        "candidateRelation": "scope-mismatch"
+      },
+      "modelInputActivated": false
+    }
+  ],
+  "summary": {
+    "requiredMetricCount": 25,
+    "sourceReceiptCount": 3,
+    "observedSourceFieldCount": 6,
+    "failedOrIncompleteSourceCount": 0,
+    "missingSourceKinds": [],
+    "rawVerifiedSourceCount": 3,
+    "replayedSourceCount": 3,
+    "metricsWithRelatedObservations": 10,
+    "definitionExactReportedMetricCount": 1,
+    "definitionExactReplayedMetricCount": 1,
+    "rateDerivedMetricCount": 1,
+    "scopeMismatchMetricCount": 10,
+    "notObservedMetricCount": 15,
+    "staleObservationCount": 4,
+    "unknownPublicationObservationCount": 6,
+    "reportedExactAndClockQualifiedMetricCount": 0,
+    "countsAreOverlappingEvidenceDimensions": true
+  },
+  "sourceMethodologyReview": {
+    "repository": "growthepie/gtp-backend",
+    "commit": "567f60415e8b48eb84f7b08e1bd83c8ca99995bf",
+    "hostedBackendVersionVerified": false,
+    "documentationIsNotObservation": true,
+    "sourceUrls": [
+      "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/docs/eth_asset_methodology.md",
+      "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/src/queries/postgres/chain_metrics/select_txcount.sql.j2",
+      "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/src/queries/sql_queries.py",
+      "https://eips.ethereum.org/EIPS/eip-4844",
+      "https://eips.ethereum.org/EIPS/eip-7918",
+      "https://gitbook-docs.coinmetrics.io/network-data/network-data-overview/fees-and-revenue/fees",
+      "https://eips.ethereum.org/EIPS/eip-1559",
+      "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/src/queries/postgres/da_metrics/ethereum_blob_base_fee.sql.j2",
+      "https://gitbook-docs.coinmetrics.io/network-data/network-data-overview/supply/supply-issuance",
+      "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/eim/adapters/adapter_eth_supply.py",
+      "https://eips.ethereum.org/EIPS/eip-3675",
+      "https://gitbook-docs.coinmetrics.io/network-data/network-data-overview/supply/current-supply",
+      "https://ethereum.github.io/beacon-APIs/",
+      "https://docs.growthepie.com/metric-reference/metric-reference/fees",
+      "https://docs.growthepie.com/metric-reference/metric-reference/rent-paid",
+      "https://github.com/growthepie/gtp-backend/blob/567f60415e8b48eb84f7b08e1bd83c8ca99995bf/backend/eim/adapters/adapter_eth_collateral.py"
+    ]
+  },
+  "nextCollectionSteps": [
+    {
+      "id": "preserve-current-partials",
+      "priority": 1,
+      "network": "existing collectors only",
+      "newModelMetrics": 0,
+      "action": "Keep raw bytes and immutable receipts from the existing Coin Metrics, throughput and PoW-zero collectors. Replay locally; preserve failures and unknown publication times."
+    },
+    {
+      "id": "bounded-l2-source-audit",
+      "priority": 2,
+      "network": "one master plus per-chain txcount/fees/rent_paid JSON; no key",
+      "urls": [
+        "https://api.growthepie.com/v1/master.json",
+        "https://api.growthepie.com/v1/metrics/chains/{origin_key}/{metric_id}.json"
+      ],
+      "action": "Freeze an explicit research chain list before collection; retain separate per-chain 28-day rows and nulls. Begin with txcount, then reconcile filters and fee components against the same declared scope.",
+      "blockedBy": [
+        "hosted-code-version-unverified",
+        "filtered-transaction-scope",
+        "derived-view-zero-fill",
+        "publication-time-unknown"
+      ],
+      "resultingStatus": "source-subset research observations until definition and vintage evidence is complete",
+      "newModelMetrics": null
+    },
+    {
+      "id": "upstream-epoch-audit",
+      "priority": 3,
+      "network": "one bounded public history response; no key",
+      "urls": [
+        "https://ethsupply.fyi/api/history?range=24h"
+      ],
+      "action": "Inspect exact integer strings, epoch coverage and issuance/penalty field semantics before any accumulation. An epoch crosses UTC boundaries; do not turn hourly means into exact UTC net issuance.",
+      "blockedBy": [
+        "epoch-boundary-allocation",
+        "destruction-component-completeness",
+        "historical-theoretical-fill",
+        "publication-time-unknown"
+      ],
+      "resultingStatus": "raw component audit, not a 28-day net issuance observation",
+      "newModelMetrics": 0
+    },
+    {
+      "id": "exact-block-accounting",
+      "priority": 4,
+      "network": "deferred: full 28-day canonical block/receipt enumeration is outside this small collector scope",
+      "action": "A later separately bounded collector can sum exact gas, base-fee burn and blob accounting using verified fork parameters and canonical boundaries.",
+      "blockedBy": [
+        "large-rpc-enumeration",
+        "canonical-completeness",
+        "publication-time-unknown"
+      ],
+      "newModelMetrics": null
+    }
+  ],
+  "accountingConstraints": [
+    "executionFeesEth + blobFeesEth is the total; executionBurnEth is a component, not additional fee revenue.",
+    "l2SettlementFeesEth is already a subset of total L1 fees; never add it to those total fees.",
+    "Epoch-average net CL rewards are neither exact UTC gross rewards nor a cohort return.",
+    "Active staking balance is not total staking balance or time-weighted cohort principal.",
+    "Native and staking-claim collateral require disjoint unique underlying units, not additive token/TVL headlines."
+  ],
+  "fullModelSnapshotReady": false,
+  "eligibleModelSnapshotCount": 0,
+  "modelSnapshots": [],
+  "historicalPointInTimeReady": false,
+  "modelInputActivated": false,
+  "productionPromoted": false,
+  "definitionContractsRelaxed": false,
+  "interpretation": "Partial observations and source-definition gaps only. A zero full-snapshot count does not mean zero observations. This inventory never certifies a model input or forecast.",
+  "sourceCommit": "55bed7daf9278f15961224be68c20b862ab8fef8",
+  "sourceTree": "74215c5c3b23e9294218ae318e2c96b5dedca7a3",
+  "sourceIdentityStatus": "verified-checkout",
+  "sourceHashes": {
+    "dist/ethereum-economic-evidence-coverage.js": "9866670afd05657e971688b992a381352b6b1eaf28a89d00ab158bd179f5478c",
+    "dist/ethereum-economic-model.js": "dcd7ea66e97d755332aafb61c95b832c2538d145b87546c694f7635186b4233b",
+    "dist/ethereum-economic-data.js": "cce2bd92b55aff2288849846e8e3e35202493a865652f17b7ceb61ace0a97081",
+    "scripts/build-ethereum-economic-evidence-coverage.mjs": "c1fa7948951655c1a03ff89d2503645653b35e9b047d826b01bca74bd91d2dae",
+    "scripts/capture-ethereum-throughput.mjs": "3a77ccf15b256192835d803773c56446cef4811911ac8edd7cafc861d0623f28",
+    "scripts/ethereum-pow-zero-core.mjs": "3d503c853ccfed54f4a75ba99115530157178b940d9cf5ae48ce7232560f0c7a"
+  },
+  "provenance": {
+    "inputSha256": {
+      "build/ethereum-economic-data/capture-BjuDTk/receipt.json": "9ab271af1583685f85651d97879476f0f16413eaf0da7a5d8824375ff6c4ffed",
+      "build/ethereum-economic-data/capture-BjuDTk/coinmetrics-eth.csv": "46b18f3df967405374b1f6ee8a3d11ee1b7a5b176ac9fb4342caf6bf8648f2cc",
+      "build/ethereum-throughput-supplement/capture-ST47uM/receipt.json": "0aee58f120451d4dc0c023344005ca3d4c2eebcd0fe2b4f5c6c928370e775ad9",
+      "build/ethereum-throughput-supplement/capture-ST47uM/master.raw.json": "f36e108ed110f4039c6acaba5186988275d9cbe152cd16350d7b82719d254775",
+      "build/ethereum-throughput-supplement/capture-ST47uM/throughput.raw.json": "7f9019afaae9360f3096fa88b7a5fea257c00011bfdc7d943d358eae3056df16",
+      "build/ethereum-pow-zero/receipt.json": "2be6988b7676b939c171f2069cfd21daa0f769f0769e00eeae6a4ceadd40b1d9",
+      "build/ethereum-pow-zero/sources/eip-3675.raw": "7345c394b8726383a667b3e5114fa0916410c95de3c1a031663a8e07cbe40e03",
+      "build/ethereum-pow-zero/sources/eip-4399.raw": "3cabb6092e244042e56e28b9ce3a2920d8244cf65299c5a99ed7c8e20aeccf60",
+      "build/ethereum-pow-zero/sources/mainnet-fork-clock.raw": "3dcf516197c5809c4f7db590004782b3c37300c59d8d39dd0b1ad502a5367fbb",
+      "build/ethereum-pow-zero/rpc/001.raw.json": "208c0be5a34cd9b241311e625b3035aa89cb237969cbc1a0c9cbd8c8517087eb",
+      "build/ethereum-pow-zero/rpc/002.raw.json": "4126ff23bf756743f84177026cc33751f8be068051488c8687dab058d3e2d884",
+      "build/ethereum-pow-zero/rpc/003.raw.json": "19cc36ef611e0534bd06cbad7a2d88ab900c8d310cf68e474a20acab67254e41",
+      "build/ethereum-pow-zero/rpc/004.raw.json": "8c4c02034e90b8c12e0d2370a6a4ae02153d53df5e3be9c4351677f3933c2b85",
+      "build/ethereum-pow-zero/rpc/005.raw.json": "389a0446eff9046255b659c4774a472e074ef644aa7073243f5f453c4d5389c9",
+      "build/ethereum-pow-zero/rpc/006.raw.json": "d8f01834ef788dfba0532228652979a29f1472561f5cc9b1d56fbeb21d2c58f7",
+      "build/ethereum-pow-zero/rpc/007.raw.json": "55e1fd6c2394688e1c0e60b1105960645b9ec3c3bc3620e81918df3f76e27151",
+      "build/ethereum-pow-zero/rpc/008.raw.json": "67d36364383dbd0b342e5f748ab89d203620b67ac32d0ada16d7b61abdd70c9a",
+      "build/ethereum-pow-zero/rpc/009.raw.json": "864fae2cd0dc9e14e34a7dded8bdc23d3d1b0e374e51874cd2e337bc13f43ac6",
+      "build/ethereum-pow-zero/rpc/010.raw.json": "1c4dc0c91078343b692dfb8dd0ca45ccdc8ed1e94629ed906154294775a07507",
+      "build/ethereum-pow-zero/rpc/011.raw.json": "88eb35faec7f4b03a5bd15b3e7011ea03817286907c55470f7d2fffc759b1b7b",
+      "build/ethereum-pow-zero/rpc/012.raw.json": "303b34c5489addba30dc9914580c5b1b0a26757e8b700e889a5df3287b2acc40",
+      "build/ethereum-pow-zero/rpc/013.raw.json": "22e8e62b72b48c630bea4ca7a9e7b0aac9777757304efd82a420cf8d41b89aa6",
+      "build/ethereum-pow-zero/rpc/014.raw.json": "f211583dc62b03e2c8e1bd7acb5d51b231af0b06045d35da5d567aa0cb6393b4",
+      "build/ethereum-pow-zero/rpc/015.raw.json": "3b99f3bdb620f1c90087d4b299fc343e1986328b05c39e50d1c514c1dd0b028c",
+      "build/ethereum-pow-zero/rpc/016.raw.json": "096a6e709e02e820bd1843b1c764a133b9f4ef1273db8ce439a460e7fa112081",
+      "build/ethereum-pow-zero/rpc/017.raw.json": "b08905201bf5d524a9e62aee84a2c1cf8af76bedffd3fe7d4bbbdb26fb3bc03e",
+      "build/ethereum-pow-zero/rpc/018.raw.json": "8336d5217b7d8c6ea785d0842a7381002cb19b6b49e02ac0257007be89270e65",
+      "build/ethereum-pow-zero/rpc/019.raw.json": "d8931a0431b60e1708174d77e0f3873962925cba11765d259b5c8ed9b5dc4e99",
+      "build/ethereum-pow-zero/rpc/020.raw.json": "9dacc72f59b3c908e51f57276610260461a375df20c8d476e6b0d64ed156c631",
+      "build/ethereum-pow-zero/rpc/021.raw.json": "6bccba3900a96cfb2e7f015d0ba1cdcc6fd803af9363fdf7a5495d02c24ac20c",
+      "build/ethereum-pow-zero/rpc/022.raw.json": "31f83f17f69ceb4d4a1daa6c0bb0aba22408ce97c4bb6b6b6305beb2d10766c0",
+      "build/ethereum-pow-zero/rpc/023.raw.json": "bc39c617bc20432e421bf790719b0856e95bc1ba402c0277f4076b6e39605c1d",
+      "build/ethereum-pow-zero/rpc/024.raw.json": "27e9b4fc24176273d4da1c898993340759a7bafdec53b9501120ad8a7c3f5637",
+      "build/ethereum-pow-zero/rpc/025.raw.json": "94450b99c30387970163a6754a2c03b99dda15f287536470ff234a8280616057",
+      "build/ethereum-pow-zero/rpc/026.raw.json": "29e9f1ddc969bfb41b30f64a20869ca16b2092fa7d2b856fdd7e45506eb6c667",
+      "build/ethereum-pow-zero/rpc/027.raw.json": "a2a7a84683c4c922c27b563f313cb6bf08aef3abbef88665ea3761f507b3db8a",
+      "build/ethereum-pow-zero/rpc/028.raw.json": "86fcae3183e6c14bd5b7e581cfca14eaf0404bac308bcbd36713b9151dc7c50b",
+      "build/ethereum-pow-zero/rpc/029.raw.json": "c328a4e3851c1ee6f6cb791f55593485a08b5fbf77f19c45cac71c0a2ba1aa77",
+      "build/ethereum-pow-zero/rpc/030.raw.json": "481a8eeb4af3f8adccb1f71fd5481489f98d3007d9c3b16ec4b21aac832a065b",
+      "build/ethereum-pow-zero/rpc/031.raw.json": "580951805273dd46e9c2c6ebbf44b4f2af667e3d1cd6fb5dbef9f511e7ff862c",
+      "build/ethereum-pow-zero/rpc/032.raw.json": "fffb34e80c984480a0bb02e65ac3ab3a661b91de68869df03b37b00bef1b0c27",
+      "build/ethereum-pow-zero/rpc/033.raw.json": "8cb35cb8f2f5c8c97dd1d5c8444168f01e710cfbffd0926270fb6dd14b3e6bc8",
+      "build/ethereum-pow-zero/rpc/034.raw.json": "39e41aa67e639665092c752d5adf9ca7b87733e9dec16ca1742feb3c33405cc4",
+      "build/ethereum-pow-zero/rpc/035.raw.json": "9de664ecfa7bd60ff327b64d2e22d7a9b6b4eb7f07cad2b486dcad685849213a",
+      "build/ethereum-pow-zero/rpc/036.raw.json": "857d508c83e3a07ae6699182212408f3f750ce0518d555418a7ec3aa41199764",
+      "build/ethereum-pow-zero/rpc/037.raw.json": "e109378a0e2bac1cd87b5a51d34668d0505e02cb81bfae45003f966ca4f60ab8",
+      "build/ethereum-pow-zero/rpc/038.raw.json": "3bcc759cf919676d99e2cffd2df88af15d8efe337f5a5b7a6b82d920fd23081d",
+      "build/ethereum-pow-zero/rpc/039.raw.json": "aaec6ac0679dc1e3202448d046a410139aa324dc23f879d064cd0c2030839744",
+      "build/ethereum-pow-zero/rpc/040.raw.json": "501d2d2bc990da24bd49a39aebc30660097720867daeb7758305dffeeb3afbe5",
+      "build/ethereum-pow-zero/rpc/041.raw.json": "4dcc474400e745eaf149e5a647ec74e199d62d5198ca8d9fdb3ca3f8d2aabecc",
+      "build/ethereum-pow-zero/rpc/042.raw.json": "d76d261fce72ce3700c00ea8d49a70777978ea1bec9b2bc60471a236bb5e2845",
+      "build/ethereum-pow-zero/rpc/043.raw.json": "12fd274b890c1fa44ef150c3b7269c75a615eadd75fa98e88c3d8a663ea0fd93",
+      "build/ethereum-pow-zero/rpc/044.raw.json": "6e84f84911ee0a635af99b6eed324b531897cd6ba24952f4eaebacf36b2d7d5b",
+      "build/ethereum-pow-zero/rpc/045.raw.json": "b9868d52898b354b7a345c285b7f3794b506a9d70e48a6f960cb6e9bfee3b096",
+      "build/ethereum-pow-zero/rpc/046.raw.json": "49c2b7766475934469bde16c577b8760a1401da16a417d5b2f0a685a65327b7d",
+      "build/ethereum-pow-zero/rpc/047.raw.json": "e6344514061afc73c97f0420a7a5a50bce365bb46a715788738951aa94ffb64b",
+      "build/ethereum-pow-zero/rpc/048.raw.json": "61eed252a62c0b02391a98302b6df28623944c3b1647f4c894013eedd25475e9",
+      "build/ethereum-pow-zero/rpc/049.raw.json": "06ab18cba2cb92f997cb6651ab123ff5f791915d75e61c7dd35244e4916dbd57",
+      "build/ethereum-pow-zero/rpc/050.raw.json": "31751702038063fd1f80969b38912d2a3c08e75e5a2b6efb23b0f540a50ac635",
+      "dist/ethereum-economic-evidence-coverage.js": "9866670afd05657e971688b992a381352b6b1eaf28a89d00ab158bd179f5478c",
+      "dist/ethereum-economic-model.js": "dcd7ea66e97d755332aafb61c95b832c2538d145b87546c694f7635186b4233b",
+      "dist/ethereum-economic-data.js": "cce2bd92b55aff2288849846e8e3e35202493a865652f17b7ceb61ace0a97081",
+      "scripts/build-ethereum-economic-evidence-coverage.mjs": "c1fa7948951655c1a03ff89d2503645653b35e9b047d826b01bca74bd91d2dae",
+      "scripts/capture-ethereum-throughput.mjs": "3a77ccf15b256192835d803773c56446cef4811911ac8edd7cafc861d0623f28",
+      "scripts/ethereum-pow-zero-core.mjs": "3d503c853ccfed54f4a75ba99115530157178b940d9cf5ae48ce7232560f0c7a"
+    },
+    "receiptInputs": [
+      {
+        "kind": "coinmetrics",
+        "path": "build/ethereum-economic-data/capture-BjuDTk/receipt.json",
+        "sha256": "9ab271af1583685f85651d97879476f0f16413eaf0da7a5d8824375ff6c4ffed",
+        "retained": false
+      },
+      {
+        "kind": "throughput",
+        "path": "build/ethereum-throughput-supplement/capture-ST47uM/receipt.json",
+        "sha256": "0aee58f120451d4dc0c023344005ca3d4c2eebcd0fe2b4f5c6c928370e775ad9",
+        "retained": false
+      },
+      {
+        "kind": "pow-zero",
+        "path": "build/ethereum-pow-zero/receipt.json",
+        "sha256": "2be6988b7676b939c171f2069cfd21daa0f769f0769e00eeae6a4ceadd40b1d9",
+        "retained": false
+      }
+    ],
+    "networkRequests": 0,
+    "executionSource": "static imports at the inspector source root; repositoryRoot selects input artifacts only",
+    "rawByteVerificationIsNotPublicationProof": true,
+    "retainedReceiptCollectionTimesUnchanged": true,
+    "generatedAt": "2026-10-27T09:57:15.266Z"
+  }
+}

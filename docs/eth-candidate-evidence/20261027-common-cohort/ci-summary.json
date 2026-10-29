@@ -1,0 +1,57 @@
+{
+  "kind": "github-ci-log-extract",
+  "sourceCommit": "c149d0c8e519e06f096d8b50e7c4cb68c3df726e",
+  "runId": 40486179424,
+  "jobId": 122128409383,
+  "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40486179424",
+  "status": "completed",
+  "conclusion": "success",
+  "checkout": {
+    "commit": "00fa29c8deb5f31ddc333749668cd56990f855c4",
+    "tree": "6dc83763a684d7d388889967de027960ebfc022e",
+    "parents": [
+      "5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+      "c149d0c8e519e06f096d8b50e7c4cb68c3df726e"
+    ]
+  },
+  "tests": {
+    "total": 1545,
+    "passed": 1545,
+    "failed": 0,
+    "skipped": 0,
+    "new": 34
+  },
+  "numericalAssertions": 318010,
+  "negativeControls": {
+    "rejected": 16,
+    "total": 16
+  },
+  "additionalSuites": [
+    32,
+    28,
+    17
+  ],
+  "exactLogLines": [
+    "2026-10-27T10:08:41.2908836Z HEAD is now at 00fa29c Merge c149d0c8e519e06f096d8b50e7c4cb68c3df726e into 5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+    "2026-10-27T10:09:28.5880643Z ℹ tests 1545",
+    "2026-10-27T10:09:28.5881007Z ℹ pass 1545",
+    "2026-10-27T10:09:28.5881180Z ℹ fail 0",
+    "2026-10-27T10:09:28.5881661Z ℹ skipped 0",
+    "2026-10-27T10:09:37.1842011Z   \"assertions\": 318010,",
+    "2026-10-27T10:09:42.3095208Z PASS negative controls: 16/16 targeted mutants rejected at their intended assertions",
+    "2026-10-27T10:09:42.3096640Z Engine SHA-256 765d85f67ffad760e75b1b8fe8600eeb274411adb154c079cc65e1ba3a9076c8",
+    "2026-10-27T10:09:42.3097412Z Bundle SHA-256 c5775f4f4f1f278564340f1dd51afeda716ca3fa581b0e8e82aade480cdb0cfd",
+    "2026-10-27T10:09:51.7531523Z # tests 32",
+    "2026-10-27T10:09:51.7531940Z # pass 32",
+    "2026-10-27T10:09:51.7532108Z # fail 0",
+    "2026-10-27T10:09:51.7532470Z # skipped 0",
+    "2026-10-27T10:10:00.1359842Z ℹ tests 28",
+    "2026-10-27T10:10:00.1360194Z ℹ pass 28",
+    "2026-10-27T10:10:00.1360367Z ℹ fail 0",
+    "2026-10-27T10:10:00.1360773Z ℹ skipped 0",
+    "2026-10-27T10:10:14.6431194Z # tests 17",
+    "2026-10-27T10:10:14.6431513Z # pass 17",
+    "2026-10-27T10:10:14.6431671Z # fail 0",
+    "2026-10-27T10:10:14.6431989Z # skipped 0"
+  ]
+}

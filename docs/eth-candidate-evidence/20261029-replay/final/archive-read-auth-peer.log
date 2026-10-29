@@ -1,0 +1,48 @@
+✔ remote restore verifies actual tree and blob bytes and deduplicates identical Git blob reads (37.621556ms)
+✔ authenticated restore stays read-only and never retains the credential in its receipt (4.386004ms)
+✔ production Git object strategy uses three metadata requests and still rehashes the complete tree (2.208811ms)
+✔ Git object strategy cannot use unchanged metadata to accept mutated bytes (1.472711ms)
+✔ an explicitly missing data branch is reported without silently restoring a seed (0.964058ms)
+✔ disk receipt validation binds the compact inventory to every retained transport byte (2.723342ms)
+✔ an absent-branch receipt cannot bind seed files as if they came from the remote (0.845683ms)
+✔ permission failure is not absence and never enables seed fallback (0.622281ms)
+✔ a ref 404 plus an inaccessible or private repository does not establish absence (1.150574ms)
+✔ truncated remote trees fail before downloading blobs (1.221438ms)
+✔ remote tree rejects path traversal (0.937509ms)
+✔ remote tree rejects symlink mode (0.863879ms)
+✔ remote tree rejects executable mode (0.910869ms)
+✔ remote tree rejects unexpected file (0.709701ms)
+✔ remote tree rejects oversized blob (0.880804ms)
+✔ duplicate remote inventory paths fail before any blob is trusted (0.826523ms)
+✔ wrong blob bytes fail even with the expected returned SHA field (1.012729ms)
+✔ malformed base64 cannot pass through permissive Buffer decoding (0.89779ms)
+✔ a wrong tree SHA is rejected after individual blob checks (1.548092ms)
+✔ response declared length is bounded before body consumption (0.480081ms)
+✔ an abort-ignoring fetch still reaches the fixed total deadline (8.415721ms)
+✔ a response stream that stops producing bytes reaches the deadline (1.873845ms)
+✔ a stalled error-body cancellation cannot hold the request open (0.45248ms)
+✔ an absent-branch body with stalled cancellation still requires an accessible repository (0.537616ms)
+✔ validated append publishes only changed blobs with the old archive as its sole parent (6.056528ms)
+✔ publisher rejects pull request before using a token (1.58077ms)
+✔ publisher rejects pull_request_target before using a token (1.707388ms)
+✔ publisher rejects other repository before using a token (1.507402ms)
+✔ publisher rejects feature branch before using a token (2.504528ms)
+✔ publisher rejects archive branch before using a token (1.804532ms)
+✔ a tampered read receipt cannot authorize writes (2.05971ms)
+✔ a changed archive head rejects a stale append before any object upload (2.507343ms)
+✔ a racing sibling commit is never overwritten by a forced update (4.796793ms)
+✔ changed old archive bytes fail before network publication (2.563607ms)
+✔ a skipped archive generation is not published as a direct append (4.137106ms)
+✔ an upload response with the wrong blob hash cannot advance the branch (4.001735ms)
+✔ an initial archive is created only from exact committed seed bytes (4.262201ms)
+✔ a different committed seed denies initial branch creation (1.558047ms)
+✔ daily workflow has no PR privilege bridge and keeps acquisition failure visible (6.725528ms)
+✔ candidate workflow authenticates only its archive read and cannot publish repository content (0.978278ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 219.125553

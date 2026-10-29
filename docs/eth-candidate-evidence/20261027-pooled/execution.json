@@ -1,0 +1,225 @@
+{
+  "schemaVersion": 1,
+  "kind": "eth-pooled-followup-execution",
+  "sourceCommit": "870cf93d4c2e634dde4d7e5a0429eaaff3c5b1e0",
+  "sourceTree": "c75c727de134e73b704598b94b8a0a68a9fec445",
+  "priceAsOf": "2026-10-25",
+  "inputSha256": {
+    "dist/data/eth-ohlc.json": "69a726d87fcea635772a806ac6a00f43880a43d8c66bd88152045dffc209106f",
+    "dist/data/btc-daily.json": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e"
+  },
+  "evidencePublication": "Receipts, raw bytes and selected PNGs are preserved in a subsequent docs-only commit; this source SHA is the executed application/test tree.",
+  "mainObservedBeforeAndAfter": "5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+  "mainChangedByThisTask": false,
+  "runs": {
+    "generalCi": {
+      "id": 40451149872,
+      "job": 122013958677,
+      "conclusion": "success",
+      "tests": 1403,
+      "passed": 1403,
+      "failed": 0,
+      "skipped": 0,
+      "numericalAssertions": 318010,
+      "negativeControls": {
+        "rejected": 16,
+        "total": 16
+      },
+      "sourceCommit": "3b9fa0a0232de45232cc220e69a5ba1badadadc3",
+      "sourceTree": "0bd6fe5e4b45f16b43b8adeb8b51967e27e664e8",
+      "publication": [
+        {
+          "status": "PASS",
+          "sourceCommit": "3b9fa0a0232de45232cc220e69a5ba1badadadc3",
+          "files": 707,
+          "assets": 22,
+          "contentDigest": "2e430a8c85ffe8a90b646b64a8e734b80f32a5019d037d78f4b1b0ac26cddb24",
+          "manifestSha256": "7be1812de38660b39cd154177927b490b0dcceb41b900c5f1e9c8e2bfe93b17c"
+        },
+        {
+          "status": "PASS",
+          "sourceCommit": "3b9fa0a0232de45232cc220e69a5ba1badadadc3",
+          "checkedFiles": 707,
+          "contentDigest": "2e430a8c85ffe8a90b646b64a8e734b80f32a5019d037d78f4b1b0ac26cddb24"
+        }
+      ]
+    },
+    "candidateEvidence": {
+      "id": 40451149941,
+      "job": 122013921615,
+      "conclusion": "success",
+      "sourceCommit": "870cf93d4c2e634dde4d7e5a0429eaaff3c5b1e0",
+      "sourceTree": "c75c727de134e73b704598b94b8a0a68a9fec445",
+      "focusedTests": {
+        "tests": 270,
+        "passed": 270,
+        "failed": 0,
+        "skipped": 0
+      },
+      "artifact": {
+        "id": 12710344162,
+        "name": "eth-candidate-evidence-870cf93d4c2e634dde4d7e5a0429eaaff3c5b1e0",
+        "size_in_bytes": 40237490,
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12710344162",
+        "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12710344162/zip",
+        "expired": false,
+        "created_at": "2026-10-27T04:46:43Z",
+        "expires_at": "2026-11-26T04:46:39Z",
+        "updated_at": "2026-10-27T04:46:43Z",
+        "digest": "sha256:9b7b6229c4dd8191e4026e346d181900e55c7d1623b5c48c054c1549eb066d61",
+        "workflow_run": {
+          "id": 40451149941,
+          "repository_id": 1428515198,
+          "head_repository_id": 1428515198,
+          "head_branch": "chatgpt/eth-cycle-economics-20261026",
+          "head_sha": "870cf93d4c2e634dde4d7e5a0429eaaff3c5b1e0"
+        }
+      }
+    },
+    "hallmark": {
+      "id": 40451149871,
+      "job": 122014173633,
+      "conclusion": "failure",
+      "sourceCommit": "870cf93d4c2e634dde4d7e5a0429eaaff3c5b1e0",
+      "designGate": {
+        "status": "fail",
+        "fails": 6,
+        "reflex": 3
+      },
+      "integrityGate": {
+        "status": "pass",
+        "errors": 0
+      },
+      "routes": 8,
+      "beforeAfterScreenshots": 80,
+      "artifact": {
+        "id": 12710946329,
+        "name": "hallmark-design-870cf93d4c2e634dde4d7e5a0429eaaff3c5b1e0",
+        "size_in_bytes": 10407814,
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12710946329",
+        "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12710946329/zip",
+        "expired": false,
+        "created_at": "2026-10-27T04:45:23Z",
+        "expires_at": "2026-11-26T04:45:20Z",
+        "updated_at": "2026-10-27T04:45:23Z",
+        "digest": "sha256:eaa558be7c51cd810ecc8646d99a9c893dd0b9a910d1245b964799a80cbc92dc",
+        "workflow_run": {
+          "id": 40451149871,
+          "repository_id": 1428515198,
+          "head_repository_id": 1428515198,
+          "head_branch": "chatgpt/eth-cycle-economics-20261026",
+          "head_sha": "870cf93d4c2e634dde4d7e5a0429eaaff3c5b1e0"
+        }
+      }
+    }
+  },
+  "browser": {
+    "cases": 34,
+    "passed": 34,
+    "screenshots": 167,
+    "runtimeErrors": 0,
+    "originalResourceErrors": 11,
+    "unexpectedResourceErrors": 0,
+    "verifiedOfflineRefreshDocuments": 11,
+    "displayedBtcQuoteVerifiedDocuments": 7,
+    "failureTitleVisibleInTheseDocuments": false,
+    "permanentVisibleErrorBannerProven": false,
+    "distinction": "Original offline-denial errors remain in browser.json. The final gate accepts only individual request IDs whose document-level fallback was verified.",
+    "modelSwitchWidths": [
+      320,
+      1440
+    ],
+    "defaultResearchModel": "adaptive",
+    "pooledAvailable": true,
+    "preservedBoard": {
+      "assetCount": 18,
+      "firstSymbol": "BTC",
+      "currentKoreanName": "비트코인",
+      "fillChecks": [
+        {
+          "width": 1620,
+          "height": 1008,
+          "innerBottomGapPx": 0.25
+        },
+        {
+          "width": 1920,
+          "height": 1440,
+          "innerBottomGapPx": 0.25
+        }
+      ]
+    }
+  },
+  "model": {
+    "prospectiveScoredTargets": 0,
+    "productionPromoted": false,
+    "policyPreregistered": false,
+    "historicalVintagesAvailable": false,
+    "externalGeminiReview": "omitted-by-user-2026-10-27",
+    "reverseReview": "omitted-by-user-2026-10-27"
+  },
+  "adaptivePreservation": {
+    "status": "verified",
+    "previousSourceCommit": "d629bbc0010cf23495414a9cdf102dd59b73e1aa",
+    "sameInputs": true,
+    "priorAsOf": "2026-10-25",
+    "currentAsOf": "2026-10-25",
+    "currentDefault": "adaptive",
+    "pathPointsChecked": 731,
+    "priorModelSummaryRowsChecked": 27,
+    "priorPairwiseRowsChecked": 45
+  },
+  "policyAndAllScoredResultsUnchangedSinceFirstExecution": true,
+  "economics": {
+    "supplementStatus": "supplement-collected",
+    "strictDefinitionMatchedMetricCount": 0,
+    "requiredMetricCount": 25,
+    "fullModelSnapshotCount": 0,
+    "historicalPointInTimeReady": false,
+    "modelInputActivated": false,
+    "sourceLicense": "CC-BY-4.0"
+  },
+  "ledger": {
+    "preservedForecastRecords": 9,
+    "preservedSnapshots": 3,
+    "newRecords": 0,
+    "newSnapshots": 0,
+    "pendingTargets": 27,
+    "scoredTargets": 0,
+    "candidateFreezeAt": null,
+    "issuance": "skipped-stale-inputs"
+  },
+  "sourceBook": {
+    "seedPaths": 238,
+    "entries": 286,
+    "parts": 248,
+    "bytes": 44463149,
+    "sha256": "63167fcb30572751af574f5f5d15bc3f15ff1003b487c8d1d85912673bdf49ce",
+    "unresolvedImports": 0,
+    "sourceAccess": "complete-for-declared-scope",
+    "preservedRawExternalReview": {
+      "status": "pending",
+      "actualGeminiReport": null,
+      "actualChatgptReverse": null,
+      "releaseAuthorized": false
+    },
+    "interpretation": "Generic pending metadata is preserved verbatim; the current user instruction explicitly omits Gemini opposition and reverse review."
+  },
+  "externalGeminiReview": "omitted-by-user-2026-10-27",
+  "reverseReview": "omitted-by-user-2026-10-27",
+  "draft": true,
+  "merged": false,
+  "deployed": false,
+  "productionPromoted": false,
+  "releaseAuthorized": false,
+  "limitations": [
+    "Pooled candidate jointly changes state conditioning, included returns and explicit drift policy; no single-component causal attribution",
+    "Candidate was designed after examining historical data; not an untouched historical holdout",
+    "All-return origin availability differs; compare intersections before choosing disjoint target intervals",
+    "Zero explicit drift does not guarantee zero conditional mean, a price martingale or a fixed median",
+    "Fixed variance and 28-day block policies were not optimized against these new scores",
+    "Raw pointwise Monte Carlo bands omit parameter uncertainty and do not guarantee empirical coverage",
+    "Minimum 12 mature same-horizon disjoint errors is an unchanged experiment policy, not a coverage theorem",
+    "Current-vintage replay and 30/90/180-day tests do not validate a two-year price prediction",
+    "Supplemental throughput data is never passed into this price model"
+  ]
+}

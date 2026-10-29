@@ -1,0 +1,327 @@
+{
+  "kind": "ethereum-economic-vintage-record",
+  "version": "eth-economic-vintages-1",
+  "captureKey": "38dd715a47b364a3c1a44f50570f108c4f48abcd9c5a77ce79b4f8dc2e696ebf",
+  "recordedAt": "2026-10-27T14:13:12.962Z",
+  "sourceKind": "pow-zero",
+  "collectorStatus": "partial-protocol-observation-collected",
+  "collectorError": null,
+  "receipt": {
+    "path": "build/ethereum-pow-zero/receipt.json",
+    "sha256": "9d9c5547c1943bbc280b1c11bf67b236603a7d635ad807fa5eff852dd92c9710",
+    "bytes": 57852
+  },
+  "rawFiles": [
+    {
+      "path": "build/ethereum-pow-zero/rpc/001.raw.json",
+      "sha256": "208c0be5a34cd9b241311e625b3035aa89cb237969cbc1a0c9cbd8c8517087eb",
+      "bytes": 40
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/002.raw.json",
+      "sha256": "4126ff23bf756743f84177026cc33751f8be068051488c8687dab058d3e2d884",
+      "bytes": 5672
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/003.raw.json",
+      "sha256": "19cc36ef611e0534bd06cbad7a2d88ab900c8d310cf68e474a20acab67254e41",
+      "bytes": 1537
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/004.raw.json",
+      "sha256": "8c4c02034e90b8c12e0d2370a6a4ae02153d53df5e3be9c4351677f3933c2b85",
+      "bytes": 6940
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/005.raw.json",
+      "sha256": "7a28f7694b7e67a135c94df25d722c5eb37aba572194e007f10108cc2bbae8c9",
+      "bytes": 23262
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/006.raw.json",
+      "sha256": "bdc212def75738caf1e94622aebf7e223184e48d8ff40b7bd2b27c982c1863f2",
+      "bytes": 9133
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/007.raw.json",
+      "sha256": "0e78d65f9dd6000fab32cd14d7d4e5bef9e04c51610aa91e2867b632f82779d1",
+      "bytes": 26015
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/008.raw.json",
+      "sha256": "35763efdbacbccc25e3fd8aa3aee35e3504c8678313f4a4dda7d0bb77c1c5e29",
+      "bytes": 22432
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/009.raw.json",
+      "sha256": "aa7c8ddd4a8c701780b8d3593c0b703138d872eb23e2de1ab8a49e18fc9f651e",
+      "bytes": 16562
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/010.raw.json",
+      "sha256": "fc047f73351c5ccb69302201508604c9a11680d87431f07b7810d4d70d4edfdc",
+      "bytes": 25884
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/011.raw.json",
+      "sha256": "1884c00683e66725b29adbd7ff20dda7594298c1b14b57a84f31de5d9a5a1276",
+      "bytes": 15538
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/012.raw.json",
+      "sha256": "d2cd5190d83ff9b6c6f05e368744b1745db277ec63fd9f66c7816bd4895f7976",
+      "bytes": 30553
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/013.raw.json",
+      "sha256": "9e35cdf5f7964eaaa502d358c00d9040e67944c163b73f3791299073005c6684",
+      "bytes": 20293
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/014.raw.json",
+      "sha256": "8406206ac3f8ccfd65bcbcdff9a07cd5bfcdf50bf04c75f84a2bd2c8d005ded4",
+      "bytes": 24781
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/015.raw.json",
+      "sha256": "82c7a814ece7c19ce87a5268cbccd8b394baabd5667882fc92fc17adf091489b",
+      "bytes": 19106
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/016.raw.json",
+      "sha256": "b236159df28546521b8cd4132137a5af38ca021c677077c516cb387eb73810cc",
+      "bytes": 19800
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/017.raw.json",
+      "sha256": "3b5f3913da4934bdaf4635890c04859bc0426b27b59c6a1f698e3daba554053b",
+      "bytes": 25868
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/018.raw.json",
+      "sha256": "95c92c68ecc658a1d30e0047e44325a0a94cf97234308dc4bd27eb7e6136ca42",
+      "bytes": 23252
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/019.raw.json",
+      "sha256": "e3cd9ea89d66e32edf6383d9913dc73b1ae65964a8c53c13fb5cf25431ef49ec",
+      "bytes": 21520
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/020.raw.json",
+      "sha256": "c4b2b4278bc4b610e590d5080f1f563701ae350e350bbfbeb37b6f849ba003df",
+      "bytes": 26145
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/021.raw.json",
+      "sha256": "3d8d7c75f6e6a7a6b4a6779e5cf4ce007e0877854d870d7ebb852e1b330ecacd",
+      "bytes": 24073
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/022.raw.json",
+      "sha256": "de303dc1c98026c126c6cdf07298f498f4f590bc7978d65ec4930b0ddeb78f95",
+      "bytes": 22563
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/023.raw.json",
+      "sha256": "7699937c8881247f8ccef9cf8b4c3feb442e9d83974dc6b38ba31eacb87da4f6",
+      "bytes": 20963
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/024.raw.json",
+      "sha256": "0931bbec392ffce7a04d4cee7c22ebe496899276354d6fa5e0df37697aa0e5bd",
+      "bytes": 19101
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/025.raw.json",
+      "sha256": "3312c995e3e5ea0cc88236e8a2e514f08ac0993ea12efa27405f21b246ceb16d",
+      "bytes": 29497
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/026.raw.json",
+      "sha256": "0cb78f53ad157bbafe3b6b95a1f303123ba8d981faf5195e0ee91f4f874c8a70",
+      "bytes": 15726
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/027.raw.json",
+      "sha256": "d46ff7b65760e13d82d67bd761945de6008d11d27ef44a0b4b1bfadb4a5b2b52",
+      "bytes": 51949
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/028.raw.json",
+      "sha256": "86fcae3183e6c14bd5b7e581cfca14eaf0404bac308bcbd36713b9151dc7c50b",
+      "bytes": 38214
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/029.raw.json",
+      "sha256": "a8822fb50d2cb816f35148afba8ce1ac2f128ccfbb1a8c78cf4546db886e591e",
+      "bytes": 8288
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/030.raw.json",
+      "sha256": "b03af214ba49f326f7665dd4e389d3622ec06c1e7829794964c8da380f9e6b7b",
+      "bytes": 24688
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/031.raw.json",
+      "sha256": "2c9a0a3ff28acdcf3561cc9d3d8cd0f7f741f93bb43c32e83288862b3e9ac520",
+      "bytes": 18638
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/032.raw.json",
+      "sha256": "4eb800045c14dd4aa9afe916a0b816c1bb7bd8bdddc4bb635ab37d259ea0f991",
+      "bytes": 18232
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/033.raw.json",
+      "sha256": "d6a8305ed0dae1ec5ad91217d9aa8f6f8f6c34509e5896fe8c2c54368d6509f0",
+      "bytes": 20365
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/034.raw.json",
+      "sha256": "3c28aa239b137322f223f18a422149c75dfcd85a3fc785a7de3c896ff52f9d79",
+      "bytes": 18470
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/035.raw.json",
+      "sha256": "db9ffae38644b6aeb21538541b2d6a7000f2e5f91bb5fec613f26c8939f94c1f",
+      "bytes": 18023
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/036.raw.json",
+      "sha256": "e618f0f33155bcab62c09fa4cbc062ea44bc413342a8e5986c22b5c95db22e10",
+      "bytes": 20293
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/037.raw.json",
+      "sha256": "d452b300073f9d9b74360fcd1c5b70fd3f42001072d1881e11be07c5e7cd048f",
+      "bytes": 33680
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/038.raw.json",
+      "sha256": "331e2e517a9a13cf6463326f87289027ff9be5dbfcfcfc50bf3ba0ac2aa6770c",
+      "bytes": 30573
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/039.raw.json",
+      "sha256": "583b5d394e82cb53b1f435b7aa29c6036eeec21e53d1547c2da207c980f07de2",
+      "bytes": 17691
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/040.raw.json",
+      "sha256": "07ac6160260d662398b7991a4c65512f83644811f917e8bc11fb300a1d7958ae",
+      "bytes": 17189
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/041.raw.json",
+      "sha256": "6de3908c8485f450b94c0ee62911fdc9e499bd969d492ee1def02351cb9f8f15",
+      "bytes": 24234
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/042.raw.json",
+      "sha256": "79c4256646214531d7b25f37666be9177f854dd1d5efb82b50cfa943cd639bc1",
+      "bytes": 15744
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/043.raw.json",
+      "sha256": "aaffb9c4b3c630f0e8116706e720ad9a4981af5a5b27fbdad083dd7161edf7f3",
+      "bytes": 18092
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/044.raw.json",
+      "sha256": "30fad1239682dd21ff159138167f9fd5d61fc2b3e4d25b1d02cdf0148351e0d1",
+      "bytes": 27677
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/045.raw.json",
+      "sha256": "8f5f4023884688c4682d1f1da40c600e431206193a71e673b623fd751bb252d5",
+      "bytes": 23957
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/046.raw.json",
+      "sha256": "49c2b7766475934469bde16c577b8760a1401da16a417d5b2f0a685a65327b7d",
+      "bytes": 15726
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/047.raw.json",
+      "sha256": "e6344514061afc73c97f0420a7a5a50bce365bb46a715788738951aa94ffb64b",
+      "bytes": 38214
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/048.raw.json",
+      "sha256": "61eed252a62c0b02391a98302b6df28623944c3b1647f4c894013eedd25475e9",
+      "bytes": 18092
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/049.raw.json",
+      "sha256": "06ab18cba2cb92f997cb6651ab123ff5f791915d75e61c7dd35244e4916dbd57",
+      "bytes": 23957
+    },
+    {
+      "path": "build/ethereum-pow-zero/rpc/050.raw.json",
+      "sha256": "a4de01ddffe4d4d3a19e30a56deaf8b8c74015fc689b1767f1ebfbbdd3d0f57c",
+      "bytes": 23263
+    },
+    {
+      "path": "build/ethereum-pow-zero/sources/eip-3675.raw",
+      "sha256": "7345c394b8726383a667b3e5114fa0916410c95de3c1a031663a8e07cbe40e03",
+      "bytes": 22848
+    },
+    {
+      "path": "build/ethereum-pow-zero/sources/eip-4399.raw",
+      "sha256": "3cabb6092e244042e56e28b9ce3a2920d8244cf65299c5a99ed7c8e20aeccf60",
+      "bytes": 12136
+    },
+    {
+      "path": "build/ethereum-pow-zero/sources/mainnet-fork-clock.raw",
+      "sha256": "3dcf516197c5809c4f7db590004782b3c37300c59d8d39dd0b1ad502a5367fbb",
+      "bytes": 6972
+    }
+  ],
+  "collectorSource": {
+    "sourceCommit": "c73b17b29809961dab7e9337482e22da28789c81",
+    "sourceTree": null,
+    "sourceHashes": {},
+    "runId": null,
+    "runAttempt": null,
+    "receiptAuthenticityIndependentlyProven": false
+  },
+  "metricDefinitionVersion": "eth-economic-input-4",
+  "observations": [
+    {
+      "series": "publicnode:ethereum-mainnet:post-transition-pow-zero",
+      "sourceField": "executionPowIssuanceEth",
+      "observedFrom": "2026-09-29",
+      "observedThrough": "2026-10-26",
+      "metricDefinitionVersion": "eth-economic-input-4",
+      "value": 0,
+      "valueRepresentation": "replayed-javascript-number",
+      "relations": [
+        {
+          "metric": "executionPowIssuanceEth",
+          "relation": "exact",
+          "reason": "Sourced protocol-zero partial observation for the fully post-transition canonical range."
+        }
+      ],
+      "dataKey": "08bd7430d9a8b62bf7d8377aa86ff5a099da59a35c9aa78eae76aa3c8bb6df1c",
+      "dataVersionId": "330d272245ab5dfccc9005de112f30ef30db4780ce333deb763dad112aef7e96",
+      "sourceUrl": "https://ethereum-rpc.publicnode.com",
+      "clocks": {
+        "observedFrom": "2026-09-29",
+        "observedThrough": "2026-10-26",
+        "observedAt": "2026-10-27T00:00:00.000Z",
+        "collectedAt": "2026-10-27T14:12:34.275Z",
+        "publishedAt": null,
+        "providerGeneratedAt": null,
+        "providerCompletedAt": null
+      },
+      "availabilityUpperBound": "2026-10-27T14:12:34.275Z",
+      "availabilityBasis": "actual-collector-receipt-clock",
+      "publicationTimeKnown": false,
+      "rawBytesVerified": true,
+      "replayedFromRaw": true,
+      "modelInputActivated": false
+    }
+  ],
+  "id": "c53eada39bf75da5d541c884c2402e3eecf61741cb86de5ae156ee7e7ab328e5"
+}

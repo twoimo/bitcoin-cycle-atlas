@@ -4,6 +4,9 @@ import * as ohlc from '../../dist/ohlc-data.js';
 import * as ethData from '../../dist/eth-market-data.js';
 import * as ethState from '../../dist/eth-view-state.js';
 import {buildEthereumForecasts} from '../../dist/ethereum-forecast.js';
+import {buildEthereumAdaptiveForecast} from '../../dist/ethereum-adaptive-model.js';
+import {buildEthereumPooledForecast} from '../../dist/ethereum-pooled-model.js';
+import {ethereumResearchPanel} from '../../dist/ethereum-research-panel.js';
 import * as events from '../../dist/ethereum-events.js';
 import * as eventHistory from '../../dist/ethereum-history.js';
 import { createMarketDataController, marketStatusText } from '../../dist/market-data-controller.js';
@@ -94,7 +97,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     const pending = deferred(); requests.push({ url, options, ...pending }); return pending.promise;
   };
   const deps = {
-    ...ohlc, ...ethData, ...ethState, ...events, ...eventHistory, marketStatusText,buildEthereumForecasts,
+    ...ohlc, ...ethData, ...ethState, ...events, ...eventHistory, marketStatusText,buildEthereumForecasts,buildEthereumAdaptiveForecast,buildEthereumPooledForecast,ethereumResearchPanel,
     createMarketDataController: options => createMarketDataController({ ...options, fetchImpl }),
     fetchMarketCandles: options => {
       const pending = deferred(); liveRequests.push({ options, ...pending }); return pending.promise;
@@ -102,6 +105,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     drawIntradayChart: options => { draws.push(options); return {}; },
     bindChartNavigation: options => { navigation = options; return { cancelGesture() {}, destroy() {}, update() {} }; },
     mountChartTouchTracking: mount, clearChartHover() {}, mountSymbolSelector: mount,
+    bindPreservedArchiveDownload() {}, // DOM download behavior is verified separately.
     mountEthereumHistory: options => { historyOptions = options; return { update() {}, setSettings() {}, open() {}, destroy() {} }; },
   };
   const source = await readFile(process.env.ETH_VIEW_SOURCE || new URL('../../dist/eth-view.js', import.meta.url), 'utf8');

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "kind": "github-actions-ci-result",
+  "sourceCommit": "15b5f65158074d0e2d4e2d6ad0c64a345eed740d",
+  "runId": 40549330339,
+  "jobId": 122348468074,
+  "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40549330339",
+  "jobConclusion": "success",
+  "checkoutCommit": "dd0d96e6c08a6f559f4237b534673e2dd4abd2a0",
+  "checkoutTree": "494b4519e43f9e74970e6df73e1fd162374ca3e6",
+  "mergeParents": [
+    "5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+    "15b5f65158074d0e2d4e2d6ad0c64a345eed740d"
+  ],
+  "directPrHeadCheckout": false,
+  "mainSuite": {
+    "tests": 1716,
+    "pass": 1716,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "numericalAssertions": 318010,
+  "targetedNegativeControls": {
+    "passed": 16,
+    "total": 16
+  },
+  "additionalSuites": [
+    32,
+    28,
+    17
+  ],
+  "overlappingTestCountsSummed": false,
+  "logEvidence": [
+    "2026-10-27T17:18:40.6147269Z HEAD is now at dd0d96e Merge 15b5f65158074d0e2d4e2d6ad0c64a345eed740d into 5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+    "2026-10-27T17:18:40.6266930Z dd0d96e6c08a6f559f4237b534673e2dd4abd2a0",
+    "2026-10-27T17:19:54.3659112Z ℹ tests 1716",
+    "2026-10-27T17:19:54.3659337Z ℹ suites 0",
+    "2026-10-27T17:19:54.3659547Z ℹ pass 1716",
+    "2026-10-27T17:19:54.3659749Z ℹ fail 0",
+    "2026-10-27T17:19:54.3660221Z ℹ cancelled 0",
+    "2026-10-27T17:19:54.3660568Z ℹ skipped 0",
+    "2026-10-27T17:19:54.3661017Z ℹ duration_ms 72684.824759",
+    "2026-10-27T17:20:05.4306723Z   \"assertions\": 318010,",
+    "2026-10-27T17:20:12.4952884Z PASS negative controls: 16/16 targeted mutants rejected at their intended assertions",
+    "2026-10-27T17:20:18.0191818Z # tests 32",
+    "2026-10-27T17:20:18.0192498Z # suites 0",
+    "2026-10-27T17:20:18.0193063Z # pass 32",
+    "2026-10-27T17:20:18.0193566Z # fail 0",
+    "2026-10-27T17:20:18.0194261Z # cancelled 0",
+    "2026-10-27T17:20:18.0194824Z # skipped 0",
+    "2026-10-27T17:20:18.0196172Z # duration_ms 275.479736",
+    "2026-10-27T17:20:28.3208440Z ℹ tests 28",
+    "2026-10-27T17:20:28.3208647Z ℹ suites 0",
+    "2026-10-27T17:20:28.3208846Z ℹ pass 28",
+    "2026-10-27T17:20:28.3209043Z ℹ fail 0",
+    "2026-10-27T17:20:28.3209256Z ℹ cancelled 0",
+    "2026-10-27T17:20:28.3209467Z ℹ skipped 0",
+    "2026-10-27T17:20:28.3209898Z ℹ duration_ms 132.878561",
+    "2026-10-27T17:20:45.6474757Z # tests 17",
+    "2026-10-27T17:20:45.6474936Z # suites 0",
+    "2026-10-27T17:20:45.6475117Z # pass 17",
+    "2026-10-27T17:20:45.6475291Z # fail 0",
+    "2026-10-27T17:20:45.6475476Z # cancelled 0",
+    "2026-10-27T17:20:45.6475663Z # skipped 0",
+    "2026-10-27T17:20:45.6476043Z # duration_ms 132.919122"
+  ],
+  "releaseAuthorized": false
+}

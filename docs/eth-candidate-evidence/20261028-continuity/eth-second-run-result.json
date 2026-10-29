@@ -1,0 +1,398 @@
+{
+  "schemaVersion": 1,
+  "kind": "ethereum-continuity-second-eth-run-receipt",
+  "observedAt": "2026-10-28T03:51:08.015Z",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "pullRequest": 39,
+  "source": {
+    "commit": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+    "tree": "c525621d117d4727e4efd41b894021d2181ac4b6",
+    "parents": [
+      "f6739b0a5da2986cbe33d028ea8fcd3468d85012"
+    ],
+    "identityBasis": "GitHub Git commit API"
+  },
+  "run": {
+    "id": 40628133773,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40628133773",
+    "event": "pull_request",
+    "headSha": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+    "runAttempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-10-28T03:41:35Z",
+    "startedAt": "2026-10-28T03:41:35Z",
+    "updatedAt": "2026-10-28T03:49:04Z"
+  },
+  "job": {
+    "id": 122617888883,
+    "name": "evaluate",
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40628133773/job/122617888883",
+    "status": "completed",
+    "conclusion": "success",
+    "startedAt": "2026-10-28T03:41:39Z",
+    "completedAt": "2026-10-28T03:49:04Z",
+    "totalSteps": 38,
+    "allStepsCompletedSuccessfully": true
+  },
+  "steps": [
+    {
+      "number": 1,
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:39Z",
+      "completedAt": "2026-10-28T03:41:41Z"
+    },
+    {
+      "number": 2,
+      "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:41Z",
+      "completedAt": "2026-10-28T03:41:46Z"
+    },
+    {
+      "number": 3,
+      "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:46Z",
+      "completedAt": "2026-10-28T03:41:46Z"
+    },
+    {
+      "number": 4,
+      "name": "Test candidate equations, missing inputs, clocks and future-information boundaries",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:46Z",
+      "completedAt": "2026-10-28T03:42:46Z"
+    },
+    {
+      "number": 5,
+      "name": "Evaluate preserved asset forecasts without requiring a new forecast issue",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:42:46Z",
+      "completedAt": "2026-10-28T03:42:58Z"
+    },
+    {
+      "number": 6,
+      "name": "Collect pinned public economic source with actual acquisition receipts",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:42:58Z",
+      "completedAt": "2026-10-28T03:42:59Z"
+    },
+    {
+      "number": 7,
+      "name": "Diagnose preserved source completion clocks and exact partial economic aggregates",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:42:59Z",
+      "completedAt": "2026-10-28T03:42:59Z"
+    },
+    {
+      "number": 8,
+      "name": "Attempt a bounded public Ethereum throughput supplement and preserve actual failure receipts",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:42:59Z",
+      "completedAt": "2026-10-28T03:43:07Z"
+    },
+    {
+      "number": 9,
+      "name": "Attempt one protocol-defined PoW issuance observation without activating an economic snapshot",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:43:07Z",
+      "completedAt": "2026-10-28T03:44:16Z"
+    },
+    {
+      "number": 10,
+      "name": "Reconcile metric definitions raw-byte replays and actual economic source clocks",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:16Z",
+      "completedAt": "2026-10-28T03:44:17Z"
+    },
+    {
+      "number": 11,
+      "name": "Preserve actual economic capture vintages and independently replay their raw inputs",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:17Z",
+      "completedAt": "2026-10-28T03:44:18Z"
+    },
+    {
+      "number": 12,
+      "name": "Audit bounded public supply claims with exact non-fee destruction accounting",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:18Z",
+      "completedAt": "2026-10-28T03:44:19Z"
+    },
+    {
+      "number": 13,
+      "name": "Reconcile actual supply sampling grids with exact UTC boundary stock requirements",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:19Z",
+      "completedAt": "2026-10-28T03:44:19Z"
+    },
+    {
+      "number": 14,
+      "name": "Collect one pinned fixed-validator cohort state without activating economic inputs",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:19Z",
+      "completedAt": "2026-10-28T03:44:20Z"
+    },
+    {
+      "number": 15,
+      "name": "Evaluate the exact committed candidates and current stored prices",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:20Z",
+      "completedAt": "2026-10-28T03:44:24Z"
+    },
+    {
+      "number": 16,
+      "name": "Audit ETH periods, volatility, simulation and institutional arithmetic",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:24Z",
+      "completedAt": "2026-10-28T03:44:24Z"
+    },
+    {
+      "number": 17,
+      "name": "Compare pooled returns, interval evidence and exact preservation of existing adaptive results",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:24Z",
+      "completedAt": "2026-10-28T03:44:24Z"
+    },
+    {
+      "number": 18,
+      "name": "Compare intervals with simple fixed-volatility and original empirical controls",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:24Z",
+      "completedAt": "2026-10-28T03:44:24Z"
+    },
+    {
+      "number": 19,
+      "name": "Evaluate causal state initialization as a separate research control",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:24Z",
+      "completedAt": "2026-10-28T03:44:25Z"
+    },
+    {
+      "number": 20,
+      "name": "Measure fixed-seed numerical sensitivity without selecting a winning seed",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:25Z",
+      "completedAt": "2026-10-28T03:44:32Z"
+    },
+    {
+      "number": 21,
+      "name": "Compare every price candidate on fixed common origins across the declared seed panel",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:32Z",
+      "completedAt": "2026-10-28T03:44:41Z"
+    },
+    {
+      "number": 22,
+      "name": "Freeze earlier calibration errors and evaluate only later disjoint forecast windows",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:41Z",
+      "completedAt": "2026-10-28T03:44:41Z"
+    },
+    {
+      "number": 23,
+      "name": "Read the fixed prospective evidence branch without publication permission",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:41Z",
+      "completedAt": "2026-10-28T03:44:44Z"
+    },
+    {
+      "number": 24,
+      "name": "Restore and independently validate the selected prospective archive bytes",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:44Z",
+      "completedAt": "2026-10-28T03:44:48Z"
+    },
+    {
+      "number": 25,
+      "name": "Acquire one bounded ETH tail and preserve adaptive pooled and opt-in warm-start records",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:48Z",
+      "completedAt": "2026-10-28T03:44:53Z"
+    },
+    {
+      "number": 26,
+      "name": "Reexecute preserved prospective records independently of acquisition success",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:53Z",
+      "completedAt": "2026-10-28T03:44:56Z"
+    },
+    {
+      "number": 27,
+      "name": "Validate retained prospective calibration evidence without requiring a new forecast issue",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:56Z",
+      "completedAt": "2026-10-28T03:44:59Z"
+    },
+    {
+      "number": 28,
+      "name": "Diagnose prospective calendar and retained-input capacity without relaxing sample requirements",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:59Z",
+      "completedAt": "2026-10-28T03:45:01Z"
+    },
+    {
+      "number": 29,
+      "name": "Append current evidence and prove exact restoration of the previous archive",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:45:01Z",
+      "completedAt": "2026-10-28T03:45:10Z"
+    },
+    {
+      "number": 30,
+      "name": "Reconcile existing models and remaining evidence conditions",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:45:10Z",
+      "completedAt": "2026-10-28T03:45:11Z"
+    },
+    {
+      "number": 31,
+      "name": "Verify preserved ETH BMNR and MSTR records and issue only with current inputs",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:45:11Z",
+      "completedAt": "2026-10-28T03:45:26Z"
+    },
+    {
+      "number": 32,
+      "name": "Install a pinned Korean font with bounded network and cache time",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:45:26Z",
+      "completedAt": "2026-10-28T03:45:29Z"
+    },
+    {
+      "number": 33,
+      "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:45:29Z",
+      "completedAt": "2026-10-28T03:48:46Z"
+    },
+    {
+      "number": 34,
+      "name": "Bind exact committed sources inputs and execution evidence for external review",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:48:46Z",
+      "completedAt": "2026-10-28T03:48:55Z"
+    },
+    {
+      "number": 35,
+      "name": "Preserve complete source-identified candidate evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:48:55Z",
+      "completedAt": "2026-10-28T03:49:01Z"
+    },
+    {
+      "number": 69,
+      "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:49:01Z",
+      "completedAt": "2026-10-28T03:49:01Z"
+    },
+    {
+      "number": 70,
+      "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:49:01Z",
+      "completedAt": "2026-10-28T03:49:01Z"
+    },
+    {
+      "number": 71,
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:49:01Z",
+      "completedAt": "2026-10-28T03:49:01Z"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12790338394,
+      "name": "eth-candidate-evidence-c17be870193a535860e95f41bbb6b0239fd4c22a",
+      "bytes": 61901496,
+      "digest": "sha256:428ec5d34f5748af1eda6638841d59b56bc2e708c51560d36d7b7bac384d3803",
+      "expired": false,
+      "createdAt": "2026-10-28T03:49:01Z",
+      "updatedAt": "2026-10-28T03:49:01Z",
+      "expiresAt": "2026-11-27T03:48:55Z",
+      "apiUrl": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12790338394",
+      "zipApiUrl": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12790338394/zip",
+      "workflowRun": {
+        "id": 40628133773,
+        "repository_id": 1428515198,
+        "head_repository_id": 1428515198,
+        "head_branch": "chatgpt/eth-cycle-economics-20261026",
+        "head_sha": "c17be870193a535860e95f41bbb6b0239fd4c22a"
+      }
+    }
+  ],
+  "focusedTestGroups": null,
+  "exactLogMarkers": null,
+  "actualCheckoutCommitFromLog": null,
+  "remoteArchiveObservedFromLog": null,
+  "expectedArchiveContinuity": {
+    "status": "task-expectation-not-observed-by-this-monitor",
+    "dataCommit": "8f169b18a2eeec70fe9e57eed5bdb154e9dad3bc",
+    "dataTree": "2f69764587c2e5fcc7d5d29991fcee3bac3bb569",
+    "manifestIdPrefix": "267bb2e1",
+    "priorSourceCommit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+    "priorRunId": 40626529467,
+    "expectedRestoredSequence": 4,
+    "expectedAppendedSequence": 5,
+    "requiresIndependentArtifactVerification": true
+  },
+  "logAcquisition": {
+    "status": "unavailable",
+    "attempts": 2,
+    "retryLimit": 1,
+    "tool": "github.fetch_workflow_job_logs",
+    "jobId": 122617888883,
+    "actualError": "Transport closed",
+    "delayBeforeRetryMilliseconds": 30000,
+    "evidencePath": "/tmp/eth-continuity-eth-second-log-access.txt",
+    "limitation": "No exact focused-test counts, raw archive markers, or actual checkout identity were extracted. Successful step metadata does not independently establish the restored remote commit/manifest or appended generation; the artifact must be verified."
+  },
+  "interpretation": {
+    "stepSuccessIsNotProofOfSuccessfulEconomicAcquisition": true,
+    "sourceCaptureFailuresMayBePreservedAsSuccessfulDiagnosticSteps": true,
+    "artifactBytesDownloadedOrIndependentlyVerifiedByThisMonitor": false,
+    "remoteReadOnly": true,
+    "archiveBranchPublishedByThisMonitor": false
+  }
+}

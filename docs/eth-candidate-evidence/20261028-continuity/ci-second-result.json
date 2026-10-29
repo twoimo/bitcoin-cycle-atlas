@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "kind": "ethereum-continuity-second-general-ci-receipt",
+  "observedAt": "2026-10-28T03:46:12.641Z",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "pullRequest": 39,
+  "source": {
+    "commit": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+    "tree": "c525621d117d4727e4efd41b894021d2181ac4b6",
+    "parents": [
+      "f6739b0a5da2986cbe33d028ea8fcd3468d85012"
+    ],
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/commit/c17be870193a535860e95f41bbb6b0239fd4c22a"
+  },
+  "run": {
+    "id": 40628133630,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40628133630",
+    "event": "pull_request",
+    "headSha": "c17be870193a535860e95f41bbb6b0239fd4c22a",
+    "runAttempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-10-28T03:41:35Z",
+    "runStartedAt": "2026-10-28T03:41:35Z",
+    "updatedAt": "2026-10-28T03:44:56Z"
+  },
+  "job": {
+    "id": 122617888365,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40628133630/job/122617888365",
+    "name": "verify",
+    "status": "completed",
+    "conclusion": "success",
+    "startedAt": "2026-10-28T03:41:38Z",
+    "completedAt": "2026-10-28T03:44:56Z"
+  },
+  "steps": [
+    {
+      "number": 1,
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:39Z",
+      "completedAt": "2026-10-28T03:41:40Z"
+    },
+    {
+      "number": 2,
+      "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:40Z",
+      "completedAt": "2026-10-28T03:41:45Z"
+    },
+    {
+      "number": 3,
+      "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:45Z",
+      "completedAt": "2026-10-28T03:41:46Z"
+    },
+    {
+      "number": 4,
+      "name": "Run model and data tests",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:41:46Z",
+      "completedAt": "2026-10-28T03:43:41Z"
+    },
+    {
+      "number": 5,
+      "name": "Verify preserved forecast identities and replay",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:43:41Z",
+      "completedAt": "2026-10-28T03:43:46Z"
+    },
+    {
+      "number": 6,
+      "name": "Verify treasury sources and persistent research summaries",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:43:46Z",
+      "completedAt": "2026-10-28T03:43:47Z"
+    },
+    {
+      "number": 7,
+      "name": "Verify reviewed Ethereum history matches the published catalog",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:43:47Z",
+      "completedAt": "2026-10-28T03:43:47Z"
+    },
+    {
+      "number": 8,
+      "name": "Independently reconcile daily treasury paths",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:43:47Z",
+      "completedAt": "2026-10-28T03:43:51Z"
+    },
+    {
+      "number": 9,
+      "name": "Independently check numerical identities and causal boundaries",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:43:51Z",
+      "completedAt": "2026-10-28T03:43:59Z"
+    },
+    {
+      "number": 10,
+      "name": "Verify bounded request ownership and negative controls",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:43:59Z",
+      "completedAt": "2026-10-28T03:44:39Z"
+    },
+    {
+      "number": 11,
+      "name": "Verify the observed daily clock and bounded chart work",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:39Z",
+      "completedAt": "2026-10-28T03:44:40Z"
+    },
+    {
+      "number": 12,
+      "name": "Verify static resources at the Pages base path",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:40Z",
+      "completedAt": "2026-10-28T03:44:44Z"
+    },
+    {
+      "number": 13,
+      "name": "Prepare the committed publication and standalone",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:44Z",
+      "completedAt": "2026-10-28T03:44:53Z"
+    },
+    {
+      "number": 25,
+      "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:53Z",
+      "completedAt": "2026-10-28T03:44:54Z"
+    },
+    {
+      "number": 26,
+      "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:54Z",
+      "completedAt": "2026-10-28T03:44:54Z"
+    },
+    {
+      "number": 27,
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-28T03:44:54Z",
+      "completedAt": "2026-10-28T03:44:54Z"
+    }
+  ],
+  "checkout": {
+    "type": "pull-request-synthetic-merge",
+    "commit": "34d00b05b826e171bab926d06440b73e51736a65",
+    "tree": "87e9701b93c8acae6178c05bb5969a7f7ecfa7dd",
+    "parents": [
+      "5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+      "c17be870193a535860e95f41bbb6b0239fd4c22a"
+    ],
+    "verifiedBy": "Exact checkout log followed by GitHub Git commit API",
+    "evidence": "2026-10-28T03:41:45.7451335Z HEAD is now at 34d00b0 Merge c17be870193a535860e95f41bbb6b0239fd4c22a into 5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/commit/34d00b05b826e171bab926d06440b73e51736a65"
+  },
+  "tests": {
+    "npmTest": {
+      "tests": 1823,
+      "suites": 0,
+      "pass": 1823,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 114812.943307
+    },
+    "separateFormalImplementationTestOutput": [
+      {
+        "tests": 28,
+        "suites": 0,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 129.091247
+      }
+    ],
+    "countsAreNotAddedTogether": true,
+    "command": "2026-10-28T03:41:46.6587900Z > node --test tests/*.test.mjs"
+  },
+  "numericalAssertions": {
+    "count": 318010,
+    "script": "scripts/verify-system-numerics.mjs",
+    "evidence": "2026-10-28T03:43:52.5442509Z   \"assertions\": 318010,"
+  },
+  "assetComparisonNegativeControls": {
+    "passed": 16,
+    "total": 16,
+    "script": "scripts/verify-asset-comparison.mjs",
+    "evidence": "2026-10-28T03:43:59.5489802Z PASS negative controls: 16/16 targeted mutants rejected at their intended assertions"
+  },
+  "logAcquisition": {
+    "status": "success",
+    "attempts": 1,
+    "markerEvidencePath": "/tmp/eth-continuity-ci-second-markers.log"
+  },
+  "scope": "Read-only verification of the second PR run. This result does not imply PR merge, default-branch schedule activation, archive publication, or matured prospective outcomes."
+}

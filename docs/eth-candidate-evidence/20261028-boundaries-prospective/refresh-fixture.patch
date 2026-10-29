@@ -1,0 +1,36 @@
+--- a/tests/treasury-instruments.test.mjs
++++ b/tests/treasury-instruments.test.mjs
+@@ -87,7 +87,8 @@
+ });
+ 
+ test('reviewed coupons disappear from runtime cash costs after actual model principal settlements',()=>{
+-  const forecast=buildTreasuryForecast({symbol:'MSTR',history:[{date:asOf,close:146.01}],scenario:'base',endYear:2035});
++  // Fixed-date accounting fixtures must not consume the daily refreshed market anchor.
++  const forecast=buildTreasuryForecast({symbol:'MSTR',history:[{date:asOf,close:146.01}],coinAnchor:{date:asOf,price:80924.1837657744},scenario:'base',endYear:2035});
+   assert.equal(forecast.instruments.instruments.filter(item=>item.kind==='debt'&&item.outstandingUsd>0).length,0);
+   assert.equal(forecast.instruments.knownAnnualCarry,0);
+   assert.equal(forecast.instrumentEvents.filter(item=>item.kind==='cash-due').length,6);
+@@ -95,7 +96,7 @@
+ });
+ 
+ test('BMNP starts from the disclosed preferred adjustment and carries a distinct unconverted claim',()=>{
+-  const forecast=buildTreasuryForecast({symbol:'BMNR',history:[{date:asOf,close:22.4}],scenario:'base',endYear:2027});
++  const forecast=buildTreasuryForecast({symbol:'BMNR',history:[{date:asOf,close:22.4}],coinAnchor:{date:asOf,price:2384.38},scenario:'base',endYear:2027});
+   const preferred=forecast.instruments.instruments.find(item=>item.id==='bmnr-bmnp-initial');
+   assert.equal(preferred.outstandingUsd,350_000_000);assert.equal(preferred.couponRate,.095);
+   assert.equal(forecast.instruments.residualAnnualCarry,0);
+--- a/tests/treasury-model.test.mjs
++++ b/tests/treasury-model.test.mjs
+@@ -321,9 +321,10 @@
+   assert.deepEqual(full,issued,'a full treasury must not dilute shareholders to fund nonexistent purchases');
+ });
+ 
+-test('long-horizon default paths remain within the stated supply or strategy limit', () => {
++test('long-horizon paths from frozen market anchors remain within the stated supply or strategy limit', () => {
+   for(const symbol of ['MSTR','BMNR']){
+-    const result=buildTreasuryForecast({symbol,history:[{date:'2026-10-23',close:symbol==='MSTR'?146.01:22.40}],scenario:'bull',endYear:2050});
++    // Keep the 2026-10-23 fixture independent of the regenerated current catalog.
++    const result=buildTreasuryForecast({symbol,history:[{date:'2026-10-23',close:symbol==='MSTR'?146.01:22.40}],coinAnchor:{date:'2026-10-23',price:symbol==='MSTR'?80924.1837657744:2384.38},scenario:'bull',endYear:2050});
+     const cap=symbol==='MSTR'?21_000_000:6_105_000;
+     assert.equal(result.assumptions.holdingPolicy.maxCoinUnits,cap);
+     assert.ok(result.diagnostics.capacityReachedAt);

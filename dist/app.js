@@ -1,6 +1,7 @@
 import { buildComparison, getAnchors, getPointAtDay, comparisonToCsv, validateDataset, utcDay } from './cycle-engine.js?v=1.29.0';
 import { fetchLatestDataset } from "./data-source.js?v=1.29.0";
 import { inspectPublishedDataset, shouldCheckPublishedSnapshot } from "./published-data.js?v=1.29.0";
+import { mountBtcRefreshStatus } from "./btc-refresh-status.js?v=1.29.0";
 import { analyzeCycleTiming } from './cycle-timing.js?v=1.29.0';
 import { renderTimingView } from './timing-view.js?v=1.29.0';
 import { analyzePeakZones } from './peak-zones.js?v=1.29.0';
@@ -69,6 +70,7 @@ const state = {
   forecastScenario: ['bottom-holds','calendar-48m','calendar-minus-3m','calendar-minus-4m','calendar-minus-5m'].includes(params.get('scenario')) ? params.get('scenario') : 'bottom-holds',
 };
 let toastTimer;
+const btcRefreshStatus=mountBtcRefreshStatus({onRetry:()=>refreshData()});
 function toast(message) { $('#toast').textContent = message; $('#toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => $('#toast').hidden = true, 4200); }
 function persistUrl() {
   // Only rewrite parameters owned by this page/comparison controller. The
@@ -132,6 +134,7 @@ const dailyDataController = initDailyDataView({
 });
 function syncPage() {
   document.body.dataset.page=state.view;
+  btcRefreshStatus.update({page:state.view});
   document.title = state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
   for (const view of ['outlook','compare','evidence','data']) document.querySelector(`#${view}-view`).hidden=state.view!==view;
   $$('[data-view]').forEach(n=>{const active=n.dataset.view===state.view;n.classList.toggle('active',active);if(active)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current');});
@@ -170,6 +173,7 @@ function render(recalculate = true) {
   if(state.view==='data') renderData();
   document.dispatchEvent(new CustomEvent('atlas:dataset',{detail:{latestObservationDate:state.dataset.prices.at(-1)[0]}}));
   $('#sidebar-asof').textContent=`관측 · ${state.dataset.prices.at(-1)[0].replaceAll('-','.')} UTC`;
+  btcRefreshStatus.update({asOf:state.dataset.prices.at(-1)[0]});
   $('#loading-state').hidden = true;
   persistUrl();
   // The first visible-page draw and validated data must both finish. Chart and
@@ -426,6 +430,9 @@ async function refreshPublishedSnapshot() {
     const detail={status:'success',checkedAt:new Date().toISOString(),latestObservationDate:state.dataset.prices.at(-1)[0],source:'published-snapshot',observationsChanged:result.changed};
     document.dispatchEvent(new CustomEvent('atlas:data-update',{detail}));
     document.dispatchEvent(new CustomEvent('atlas:published-refresh',{detail}));
+    // Re-reading the same archive cannot clear a failed provider request.
+    // A changed, completed-current publication can replace that stale archive.
+    if(result.changed&&utcDay(new Date().toISOString().slice(0,10))-utcDay(detail.latestObservationDate)<=1)btcRefreshStatus.update({phase:'published',asOf:detail.latestObservationDate});
   }catch{/* Keep the verified data and its source cutoff; retry after the bounded interval. */}
   finally{clearTimeout(timer);checkingPublished=false;}
 }
@@ -434,19 +441,23 @@ window.addEventListener('focus',refreshPublishedSnapshot);
 // A long-lived foreground tab follows the published data without downloading
 // provider history on each pointer action or each midnight tick.
 setInterval(refreshPublishedSnapshot,60*1000);
-async function refreshData({quiet=false}={}) {
+async function refreshData() {
   if(refreshing)return;refreshing=true;const button=$('#refresh-button');button.disabled=true;button.classList.add('busy');
+  btcRefreshStatus.update({phase:'refreshing',asOf:state.dataset?.prices.at(-1)?.[0]||null});
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),22000);
   try{
     const next=await fetchLatestDataset({signal:controller.signal});validateDataset(next);
     if(state.dataset && next.prices.at(-1)[0]<state.dataset.prices.at(-1)[0])throw new Error('Provider returned an older dataset');
-    const previousDate=state.dataset?.prices.at(-1)[0]; state.dataset=next;
+    state.dataset=next;
     try{localStorage.setItem('btc-cycles-daily-v1',JSON.stringify(next));}catch{}
     render();
     document.dispatchEvent(new CustomEvent('atlas:data-update',{detail:{status:'success',checkedAt:new Date().toISOString(),latestObservationDate:next.prices.at(-1)[0]}}));
     button.title=`확인 완료: ${next.prices.at(-1)[0]} UTC`;
-    if(!quiet)toast(next.prices.at(-1)[0]===previousDate?`최신 완료 관측은 ${previousDate} UTC입니다.`:`${next.prices.at(-1)[0]} UTC까지 데이터를 갱신했습니다.`);
-  }catch(error){button.title='갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.';if(!quiet)toast(`갱신하지 못했습니다. ${state.dataset?.prices.at(-1)?.[0]||'저장된'} 기준 데이터를 유지합니다.`);}
+    btcRefreshStatus.update({phase:'checked',asOf:next.prices.at(-1)[0]});
+  }catch(error){
+    button.title='갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.';
+    btcRefreshStatus.update({phase:'failed',asOf:state.dataset?.prices.at(-1)?.[0]||null});
+  }
   finally{clearTimeout(timer);refreshing=false;button.disabled=false;button.classList.remove('busy');}
 }
 $('#refresh-button').addEventListener('click',()=>{closeExport();refreshData();});
@@ -464,7 +475,7 @@ async function init() {
     const embedded=document.getElementById('embedded-btc-data');let bundled;if(embedded){bundled=JSON.parse(embedded.textContent);}else{const response=await fetch('./data/btc-daily.json',{signal:AbortSignal.timeout(15000)});if(!response.ok)throw Error('Bundled data unavailable');bundled=await response.json();}inspectPublishedDataset(bundled,null);state.dataset=bundled;
     try{const cached=JSON.parse(localStorage.getItem('btc-cycles-daily-v1'));if(cached&&inspectPublishedDataset(cached,bundled).changed)state.dataset=cached;}catch{}
     render();
-    const today=new Date().toISOString().slice(0,10);if(utcDay(today)-utcDay(state.dataset.prices.at(-1)[0])>1)refreshData({quiet:true});
+    const today=new Date().toISOString().slice(0,10);if(utcDay(today)-utcDay(state.dataset.prices.at(-1)[0])>1)refreshData();
   } catch (error) {
     console.error('Initial dataset or page setup failed', error);
     if (state.view === 'data') renderData();

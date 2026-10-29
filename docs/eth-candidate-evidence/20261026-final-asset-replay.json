@@ -1,0 +1,84 @@
+{
+  "sourceCommit": "d5101631b294a25d7db2ddff1ac74a76bddf92fd",
+  "runs": [
+    {
+      "status": "PASS",
+      "outputDirectory": "build/asset-forecast-ledger",
+      "sourceCommit": "d5101631b294a25d7db2ddff1ac74a76bddf92fd",
+      "receiptId": "cf1b000bba00ba2762434b138283b99a2f9b25d534b8c80dea09a4b02e6a9fe8",
+      "newRecords": 0,
+      "reusedRecords": 9,
+      "preservedRecords": 9,
+      "preservedSnapshots": 3,
+      "origins": [
+        {
+          "symbol": "ETHUSD",
+          "asOf": "2026-10-25",
+          "primaryMarket": "crypto-utc-daily"
+        },
+        {
+          "symbol": "BMNR",
+          "asOf": "2026-10-23",
+          "primaryMarket": "new-york-equity-session"
+        },
+        {
+          "symbol": "MSTR",
+          "asOf": "2026-10-23",
+          "primaryMarket": "new-york-equity-session"
+        }
+      ],
+      "candidateFreezeAt": "2026-10-26T12:35:32.536Z",
+      "pendingTargets": 27,
+      "scoredTargets": 0,
+      "regeneratedRecords": 9,
+      "preservedOnlyRecords": 0,
+      "sharedEthereumPaths": "verified",
+      "productionAdopted": false,
+      "publicationScope": "draft-pr-research",
+      "artifactFiles": 15,
+      "artifactBytes": 8190258
+    },
+    {
+      "status": "PASS",
+      "outputDirectory": "build/asset-forecast-ledger",
+      "sourceCommit": "d5101631b294a25d7db2ddff1ac74a76bddf92fd",
+      "receiptId": "692fbd97b773ab160f6f40f76a62953c946f2386cc849117079a7a7d7c4adb2b",
+      "newRecords": 0,
+      "reusedRecords": 9,
+      "preservedRecords": 9,
+      "preservedSnapshots": 3,
+      "origins": [
+        {
+          "symbol": "ETHUSD",
+          "asOf": "2026-10-25",
+          "primaryMarket": "crypto-utc-daily"
+        },
+        {
+          "symbol": "BMNR",
+          "asOf": "2026-10-23",
+          "primaryMarket": "new-york-equity-session"
+        },
+        {
+          "symbol": "MSTR",
+          "asOf": "2026-10-23",
+          "primaryMarket": "new-york-equity-session"
+        }
+      ],
+      "candidateFreezeAt": "2026-10-26T12:35:46.273Z",
+      "pendingTargets": 27,
+      "scoredTargets": 0,
+      "regeneratedRecords": 9,
+      "preservedOnlyRecords": 0,
+      "sharedEthereumPaths": "verified",
+      "productionAdopted": false,
+      "publicationScope": "draft-pr-research",
+      "artifactFiles": 15,
+      "artifactBytes": 8190258
+    }
+  ],
+  "firstActualIssueAt": "2026-10-26T12:12:47.948Z",
+  "originalSourceCommit": "e45c2da0329017bfe4da81d13f24af7e16567c7d",
+  "actualRecordCount": 9,
+  "actualSnapshotCount": 3,
+  "syntheticBrowserFixtureExcluded": true
+}

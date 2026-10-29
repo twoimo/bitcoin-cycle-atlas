@@ -1,0 +1,58 @@
+{
+  "localSourceCommit": "331f17fcb0a64a8b6bae0180e352cab52b698ef3",
+  "remoteSourceCommit": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+  "sourceTree": "f323a23333621fb92962e343192c0aef3e95dcb3",
+  "remoteTreeExactlyMatchesLocal": true,
+  "baseCommit": "4165f30921d1f4bb981a4f1ada7cb85ede61d7e9",
+  "draft": true,
+  "releaseAuthorized": false,
+  "productionPromoted": false,
+  "mainCommit": "30805dacdcf0aa3ea991439de87d5f9a38c59f25",
+  "tests": {
+    "passed": 1898,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "scope": "all",
+    "passed": 39,
+    "failed": 0,
+    "runtimeErrors": 0,
+    "unexpectedResourceErrors": 0,
+    "screenshots": 205,
+    "downloadedJson": 16,
+    "artifactsRehashed": true,
+    "reportSha256": "e1e0037fdd3be609f7c6fe8c70f0b7fa1e1a9f46df7f7bc4a7f692bec963135e"
+  },
+  "standalone": {
+    "sourceCommit": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+    "passed": 5,
+    "failed": 0,
+    "runtimeErrors": 0,
+    "unexpectedResourceErrors": 0,
+    "replayJournalFetches": 0,
+    "expectedOfflineBtcRefreshes": 1,
+    "downloadedJson": 21,
+    "preservedJsonExports": 3,
+    "capturedScreenshots": 9,
+    "preservedRepresentativeScreenshots": 3,
+    "htmlBytes": 29879770,
+    "htmlSha256": "7f07cfe79328051851687e629a0498bc3c962ad71d7bb9d041e43437099563e3",
+    "reportSha256": "1ca9faacc26c74d5d534a70903da0269245c747e91e5e0a66231cb62ddd32cac",
+    "receiptPath": "standalone/receipt.json",
+    "identityComparisonPath": "standalone/identity-comparison.json",
+    "identityComparisonSha256": "32d1663005efe2742fd105919713d48f8fe6b96939f7c1c032985296c7ca0879",
+    "byteIdenticalOutsidePublication": true,
+    "normalizedHtmlSha256": "233f3640dbb3a257d573e50d241358db004ecca698dcd44b7fd3818478c71982",
+    "previousLocalSource": {
+      "sourceCommit": "331f17fcb0a64a8b6bae0180e352cab52b698ef3",
+      "htmlSha256": "c5ce52b43b07876d75422f975b8c5553eb7c74f189a46f8de35fea4b1ecb016f",
+      "reportSha256": "8d58ff817d532d8e4fc0533e9a70573c0b5871600875d7affee0e7601f2876b4",
+      "passed": 5,
+      "receiptPath": "standalone/previous-local-source/receipt.json"
+    }
+  },
+  "externalGeminiReview": "omitted-by-user",
+  "reverseReview": "omitted-by-user",
+  "crossModelReviewExecuted": false
+}

@@ -32,10 +32,14 @@ function randomGenerator(seed) {
 }
 
 export function buildEthereumAssetScenarioPaths(allRows, asOf, endDate, seed) {
+  const cutoffDay = utcDay(asOf), endDay = utcDay(endDate);
+  if (endDay <= cutoffDay) throw new RangeError('ETH scenario horizon must follow its observation cutoff');
+  if (!Number.isSafeInteger(seed) || seed < 0 || seed > 4294967295) throw new RangeError('ETH scenario seed must be an unsigned 32-bit integer');
   if (asOf < ETH_SOURCE_DATE) throw new RangeError('ETH valuation conditions were not published at the observation cutoff');
   if (asOf >= ETH_TARGET_DATE) throw new RangeError('ETH valuation conditions have expired and require a new reviewed source');
   const settings = ETHEREUM_FORECAST_DEFAULTS;
-  const rows = allRows.filter(row => row.date >= settings.ethHistoryStart);
+  const observations = readAssetDailyRows(allRows, 'ETH', asOf);
+  const rows = observations.filter(row => row.date >= settings.ethHistoryStart);
   if (rows.length < settings.minimumEthObservations) throw new RangeError('ETH requires at least 366 post-Merge completed daily observations');
   for (let index = 1; index < rows.length; index++) {
     if (rows[index].epochDay !== rows[index - 1].epochDay + 1) throw new RangeError('ETH post-Merge history must be consecutive; missing dates are not interpolated');
@@ -43,7 +47,7 @@ export function buildEthereumAssetScenarioPaths(allRows, asOf, endDate, seed) {
   const returns = rows.slice(1).map((row, index) => Math.log(row.price / rows[index].price));
   const sourceStats = stats(returns), recent = stats(returns.slice(-settings.volatilityWindowDays));
   if (!(sourceStats.sd > 1e-9 && recent.sd > 1e-9)) throw new RangeError('ETH history requires positive realized return variation');
-  const current = rows.at(-1), horizonDays = utcDay(endDate) - current.epochDay;
+  const current = rows.at(-1), horizonDays = endDay - current.epochDay;
   const targetDays = utcDay(ETH_TARGET_DATE) - current.epochDay;
   const targets = { stress: 360, base: current.price, bull: 22000 };
   const random = randomGenerator((seed ^ 0x455448) >>> 0);
@@ -67,7 +71,7 @@ export function buildEthereumAssetScenarioPaths(allRows, asOf, endDate, seed) {
   }
   const training = {
     firstObservation: rows[0].date, informationThrough: asOf, maxSourceDate: asOf,
-    observations: rows.length, excludedPreMergeObservations: allRows.length - rows.length,
+    observations: rows.length, excludedPreMergeObservations: observations.length - rows.length,
     sourceReturnStartDate: rows[1].date, sourceReturnCount: returns.length,
     sourceDailyLogMean: sourceStats.mean, sourceDailyLogSd: sourceStats.sd,
     recentDailyLogSd: recent.sd, volatilityWindowDays: settings.volatilityWindowDays,

@@ -1,0 +1,231 @@
+{
+  "kind": "github-actions-ci-execution-receipt",
+  "version": 1,
+  "workflowRun": {
+    "id": 40535038425,
+    "name": "CI",
+    "event": "pull_request",
+    "headSha": "5cbd9551caeb4199ef92916a0e1c3ba50beed043",
+    "headBranch": "chatgpt/eth-cycle-economics-20261026",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-10-27T15:50:54Z",
+    "startedAt": "2026-10-27T15:50:54Z",
+    "updatedAt": "2026-10-27T15:53:03Z",
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40535038425"
+  },
+  "jobId": 122297876234,
+  "jobUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/40535038425/job/122297876234",
+  "requestedSource": {
+    "sha": "5cbd9551caeb4199ef92916a0e1c3ba50beed043",
+    "tree": "83aa847506921ea5626ffd7124e49586a9901524",
+    "parents": [
+      "704b1373dc09424c8f96ec1a94d766955b7c1666"
+    ]
+  },
+  "actualCheckout": {
+    "sha": "e156c08e64cda7cd7a199d029f4c8f91c5f4c1ce",
+    "tree": "df5b8a05bc6c440eca8366bf7cde0c8b29851fa8",
+    "parents": [
+      "5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4",
+      "5cbd9551caeb4199ef92916a0e1c3ba50beed043"
+    ],
+    "kind": "GitHub pull-request synthetic merge",
+    "directHeadExecution": false
+  },
+  "decodedJobLog": {
+    "encoding": "UTF-8",
+    "bytes": 375333,
+    "sha256": "4735f310f3c10149c15f100588b722135f815f0a010fa6b05d4497a947010ec6",
+    "lineCount": 3825,
+    "identityScope": "Exact UTF-8 encoding of decoded GitHub connector job-log content; not the original ZIP archive."
+  },
+  "checks": {
+    "mainNodeSuite": {
+      "tests": 1642,
+      "pass": 1642,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "numericalAssertions": 318010,
+    "independentAssetComparison": {
+      "assets": 18,
+      "closes": 103931,
+      "annualSamples": 400,
+      "boundedPricePaths": 360,
+      "thresholdCases": 262,
+      "targetedMutants": 16,
+      "rejectedAtIntendedAssertion": 16
+    },
+    "separateFormalReplayCounts": [
+      {
+        "scope": "market request ownership",
+        "tests": 32,
+        "pass": 32,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      {
+        "scope": "equity request ownership",
+        "tests": 28,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      {
+        "scope": "ETH request ownership",
+        "tests": 17,
+        "pass": 17,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    ]
+  },
+  "exactLogExcerpts": [
+    {
+      "line": 128,
+      "text": "2026-10-27T15:51:07.0100045Z HEAD is now at e156c08 Merge 5cbd9551caeb4199ef92916a0e1c3ba50beed043 into 5dd11c99faa1fe4a1a9adf56bc4775d35c9a41e4"
+    },
+    {
+      "line": 130,
+      "text": "2026-10-27T15:51:07.0154037Z [command]/usr/bin/git log -1 --format=%H"
+    },
+    {
+      "line": 131,
+      "text": "2026-10-27T15:51:07.0173602Z e156c08e64cda7cd7a199d029f4c8f91c5f4c1ce"
+    },
+    {
+      "line": 1901,
+      "text": "2026-10-27T15:51:59.5450735Z ℹ tests 1642"
+    },
+    {
+      "line": 1902,
+      "text": "2026-10-27T15:51:59.5451031Z ℹ suites 0"
+    },
+    {
+      "line": 1903,
+      "text": "2026-10-27T15:51:59.5451300Z ℹ pass 1642"
+    },
+    {
+      "line": 1904,
+      "text": "2026-10-27T15:51:59.5451544Z ℹ fail 0"
+    },
+    {
+      "line": 1905,
+      "text": "2026-10-27T15:51:59.5451853Z ℹ cancelled 0"
+    },
+    {
+      "line": 1906,
+      "text": "2026-10-27T15:51:59.5452148Z ℹ skipped 0"
+    },
+    {
+      "line": 1907,
+      "text": "2026-10-27T15:51:59.5452419Z ℹ todo 0"
+    },
+    {
+      "line": 1908,
+      "text": "2026-10-27T15:51:59.5452704Z ℹ duration_ms 51766.843905"
+    },
+    {
+      "line": 2236,
+      "text": "2026-10-27T15:52:08.3084419Z   \"assertions\": 318010,"
+    },
+    {
+      "line": 2940,
+      "text": "2026-10-27T15:52:13.7532668Z PASS independent reference: 18 assets, 103,931 closes, 400 annual samples"
+    },
+    {
+      "line": 2941,
+      "text": "2026-10-27T15:52:13.7533498Z PASS bounded domains: 360 price paths, 262 threshold cases"
+    },
+    {
+      "line": 2942,
+      "text": "2026-10-27T15:52:13.7534150Z PASS negative controls: 16/16 targeted mutants rejected at their intended assertions"
+    },
+    {
+      "line": 3167,
+      "text": "2026-10-27T15:52:20.1143999Z # tests 32"
+    },
+    {
+      "line": 3169,
+      "text": "2026-10-27T15:52:20.1144354Z # pass 32"
+    },
+    {
+      "line": 3170,
+      "text": "2026-10-27T15:52:20.1144558Z # fail 0"
+    },
+    {
+      "line": 3171,
+      "text": "2026-10-27T15:52:20.1144750Z # cancelled 0"
+    },
+    {
+      "line": 3172,
+      "text": "2026-10-27T15:52:20.1144955Z # skipped 0"
+    },
+    {
+      "line": 3173,
+      "text": "2026-10-27T15:52:20.1145123Z # todo 0"
+    },
+    {
+      "line": 3278,
+      "text": "2026-10-27T15:52:28.5172257Z ℹ tests 28"
+    },
+    {
+      "line": 3280,
+      "text": "2026-10-27T15:52:28.5172800Z ℹ pass 28"
+    },
+    {
+      "line": 3281,
+      "text": "2026-10-27T15:52:28.5173049Z ℹ fail 0"
+    },
+    {
+      "line": 3282,
+      "text": "2026-10-27T15:52:28.5173339Z ℹ cancelled 0"
+    },
+    {
+      "line": 3283,
+      "text": "2026-10-27T15:52:28.5173613Z ℹ skipped 0"
+    },
+    {
+      "line": 3284,
+      "text": "2026-10-27T15:52:28.5173871Z ℹ todo 0"
+    },
+    {
+      "line": 3514,
+      "text": "2026-10-27T15:52:43.2786536Z # tests 17"
+    },
+    {
+      "line": 3516,
+      "text": "2026-10-27T15:52:43.2786871Z # pass 17"
+    },
+    {
+      "line": 3517,
+      "text": "2026-10-27T15:52:43.2787044Z # fail 0"
+    },
+    {
+      "line": 3518,
+      "text": "2026-10-27T15:52:43.2787216Z # cancelled 0"
+    },
+    {
+      "line": 3519,
+      "text": "2026-10-27T15:52:43.2787391Z # skipped 0"
+    },
+    {
+      "line": 3520,
+      "text": "2026-10-27T15:52:43.2787559Z # todo 0"
+    }
+  ],
+  "limits": [
+    "This run executed the recorded synthetic merge tree, not a direct checkout of the PR head.",
+    "The passing CI run does not grant model promotion, main merge, production deployment or release authorization.",
+    "The earlier failed scheduled-refresh run was not rerun by this receipt; the refreshed-anchor fixture counterexample is preserved separately."
+  ]
+}

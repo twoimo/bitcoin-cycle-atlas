@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "kind": "ui-protocol-intermediate-executions",
+  "purpose": "Keep failures and intermediate successes distinct from the final tested source.",
+  "runs": [
+    {
+      "sourceCommit": "25e4d494566d1b8b8b72a3ae5d00d32d14d57fec",
+      "sourceTree": "20c7b6683a0746e3087c3cf911484d7e83e3d2c5",
+      "ci": {
+        "runId": 40456290853,
+        "jobId": 122030274803,
+        "checkoutCommit": "9b91182254ddd51655a4c25446d2d38e3f9625ab",
+        "status": "failure",
+        "tests": 1410,
+        "passed": 1406,
+        "failed": 4,
+        "reason": "mountBtcRefreshStatus initialization entered the VM-extracted pure URL-state section; moved outside the extraction without weakening URL assertions."
+      },
+      "evidence": {
+        "runId": 40456290859,
+        "jobId": 122030274957,
+        "status": "failure",
+        "focusedTests": 277,
+        "focusedFailed": 0,
+        "nativeCases": 35,
+        "nativePassed": 30,
+        "nativeFailed": 5,
+        "sourcesBundled": false,
+        "sourcebookStep": "skipped",
+        "browserReceipt": "first-browser-receipt.json",
+        "reason": "Mobile implicit grid columns pushed retry offscreen; CDP Enter input lacked text and did not generate native button activation. Actual failed screenshots and request errors retained."
+      },
+      "hallmark": {
+        "runId": 40456290879,
+        "jobId": 122030275085,
+        "status": "success",
+        "fails": 0,
+        "reflex": 0,
+        "staticWarnings": 36,
+        "renderWarnings": 17,
+        "records": "first-hallmark-records.json"
+      }
+    },
+    {
+      "sourceCommit": "3be16a0b151c8ca6ec5f1173a9d9f89119aaf0ab",
+      "sourceTree": "5a9b55c1fdb8b8b17609094419a8f15f26cafa56",
+      "ci": {
+        "runId": 40457254282,
+        "jobId": 122033343522,
+        "checkoutCommit": "3d121c8f417e39e49dde225b2ae3d02b6cf899be",
+        "status": "success",
+        "tests": 1432,
+        "passed": 1432,
+        "failed": 0
+      },
+      "evidence": {
+        "runId": 40457254340,
+        "jobId": 122033344245,
+        "status": "success",
+        "focusedTests": 299,
+        "focusedFailed": 0,
+        "nativeCases": 35,
+        "nativePassed": 35,
+        "screenshots": 181,
+        "runtimeErrors": 0,
+        "unexpectedResourceErrors": 0,
+        "retainedExpectedOfflineFailures": 15,
+        "artifact": {
+          "id": 12712479222,
+          "name": "eth-candidate-evidence-3be16a0b151c8ca6ec5f1173a9d9f89119aaf0ab",
+          "size_in_bytes": 43438454,
+          "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12712479222",
+          "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/12712479222/zip",
+          "expired": false,
+          "created_at": "2026-10-27T05:53:43Z",
+          "expires_at": "2026-11-26T05:53:39Z",
+          "updated_at": "2026-10-27T05:53:43Z",
+          "digest": "sha256:11a22baecb43a4e3cd2faef6120c2319ada49eaccfef9f58c739d1702f30adcf",
+          "workflow_run": {
+            "id": 40457254340,
+            "repository_id": 1428515198,
+            "head_repository_id": 1428515198,
+            "head_branch": "chatgpt/eth-cycle-economics-20261026",
+            "head_sha": "3be16a0b151c8ca6ec5f1173a9d9f89119aaf0ab"
+          }
+        }
+      },
+      "hallmark": {
+        "runId": 40457254265,
+        "jobId": 122033343560,
+        "status": "success",
+        "fails": 0,
+        "reflex": 0,
+        "staticWarnings": 36,
+        "renderWarnings": 17
+      },
+      "powObservation": {
+        "status": "partial-protocol-observation-collected",
+        "receipt": "pow-zero-first/receipt.json",
+        "rawFiles": 55,
+        "rawBytes": 1141182,
+        "rpcRequests": 52,
+        "definitionMatchedPartialMetricCount": 1,
+        "pointInTimeEligibleMetricCount": 0,
+        "eligibleModelSnapshotCount": 0,
+        "modelInputActivated": false
+      },
+      "followupReason": "Read-only source inspection found declared oversized HTTP responses should abort their fetch signal before timer cleanup. The final source adds that cleanup plus finalized-anchor, search-budget, body-timeout and cumulative-body negative tests; preserves seven additional native PNGs."
+    }
+  ],
+  "finalSourceCommit": "39d380d5a05295f5180088ccfe0190ebc3b21e0d",
+  "externalGeminiReview": "omitted-by-user",
+  "reverseReview": "omitted-by-user",
+  "releaseAuthorized": false
+}

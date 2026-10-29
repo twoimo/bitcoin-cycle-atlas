@@ -1,0 +1,581 @@
+{
+  "schemaVersion": 1,
+  "kind": "eth-continuity-first-actual-artifact-summary",
+  "status": "verified",
+  "sourceCommit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+  "sourceTree": "48474119d3ed2289adf637c4742d73e5670b1ef9",
+  "workflowRunId": 40626529467,
+  "artifactId": 12790530197,
+  "download": {
+    "zipBytes": 61175599,
+    "zipSha256": "75b0c16efbe9261f4f755f788ca6bce2e4b7a8c5f79021fac07f11ef8026648d",
+    "githubDigestMatch": true,
+    "zipCrcVerified": true,
+    "safePathsVerified": true,
+    "extractedFiles": 849,
+    "extractedBytes": 234810377,
+    "artifactExpiresAt": "2026-11-27T03:34:35Z",
+    "integrityReceipt": "/tmp/eth-continuity-first-download-integrity.json"
+  },
+  "sourceBook": {
+    "expectedCommit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+    "sourceCommit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+    "sourceTree": "48474119d3ed2289adf637c4742d73e5670b1ef9",
+    "suppliedRemoteTreeJsonSha256": "5815aa2f1faa114552d805f7841b8265d051ccfb146863efa65610ed308b9f37",
+    "callerDeclaredCommit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+    "commitToTreeLookupAuthenticatedByThisOfflineVerifier": false,
+    "commitToTreeBoundary": "Caller supplies the remote tree obtained for expectedCommit; offline verification binds all payload blobs to that supplied tree.",
+    "bundleBytes": 77953226,
+    "bundleSha256": "43d0b3da3b28dd78985294fe077028ee6db3165bae59b6945d0dd1d212960dc1",
+    "bundleLimitBytes": 85000000,
+    "parts": 434,
+    "partsConcatenateExactly": true,
+    "frames": 631,
+    "committedFrames": 448,
+    "executionFrames": 183,
+    "sourceAccess": "complete-for-declared-scope",
+    "unresolvedImports": 0,
+    "allFramedPayloadsVerified": true,
+    "allCommittedGitBlobsMatchSuppliedTree": true,
+    "allExecutionFramesMatchExtractedArtifact": true,
+    "sourceBookExternalReviewStatus": "pending",
+    "externalReviewPacketDoesNotOverrideUserOmission": true,
+    "seedCount": 444,
+    "providedEvidencePaths": 183
+  },
+  "browser": {
+    "cases": 35,
+    "passedCases": 35,
+    "screenshots": 181,
+    "allActualPngFilesAccounted": true,
+    "allScreenshotBytesAndHashesMatched": true,
+    "runtimeErrors": 0,
+    "rawResourceErrors": 15,
+    "expectedOfflineBtcRefreshErrors": 15,
+    "unexpectedResourceErrors": 0,
+    "optionalFontBlocks": 41
+  },
+  "archive": {
+    "previousManifestId": "c65342e22b783fc387b6965afe5ce5d946713a883fe7838883daa2ce64744d51",
+    "previousSequence": 3,
+    "manifestId": "267bb2e1a6768988427d2485d32964a4fcba64be5a10e42ad8b027c758ba4ee2",
+    "sequence": 4,
+    "transportFiles": 53,
+    "transportBytes": 7048545,
+    "logicalFiles": 50,
+    "objects": 44,
+    "objectBytes": 7023649,
+    "metadataBytes": 24896,
+    "pages": 4,
+    "records": 6,
+    "observations": 6,
+    "prospectiveObservations": 5,
+    "independentEthObservations": 1,
+    "unchangedSeedImmutableFiles": 38,
+    "allAncestorReferenceClosuresVerified": true,
+    "exactPredecessorReconstructedAndIndependentlyVerified": true,
+    "allIndexedOutcomesValidatedBeforeSymbolFiltering": true,
+    "remoteRead": {
+      "status": "absent",
+      "expectedHead": null,
+      "expectedTree": null,
+      "manifestId": null,
+      "receiptId": "0458b5ad1badc21845f2082bae3eef6d0872af34a1a36786ce98b2abed630039",
+      "inventory": {
+        "bytes": 0,
+        "files": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "allRetainedTransportBytesBound": false,
+      "transport": {
+        "completedAt": "2026-10-28T03:30:00.285Z",
+        "git": null,
+        "method": "git-object-pack",
+        "receivedBytes": 5486,
+        "redirects": 0,
+        "requests": 2,
+        "retries": 0,
+        "startedAt": "2026-10-28T03:29:59.686Z"
+      }
+    },
+    "newRecordIds": [
+      "2993a2864880b3480a6c50490092c8e3874a7a6473aa89bb76b598d9797c6a40",
+      "4ee24d06bd335abf986985cde903ef750f243adb063b78d43d2a84256a3c91bd",
+      "a8b4da2a30949175cae99330cdf054b3cb41677116df66e6a777cf079f76e14a"
+    ],
+    "newObservationIds": [
+      "0da301019d62a8a0c2d55af377176eb6bd540dc70d16e364305a3ec224c30a08"
+    ]
+  },
+  "originalRecords": [
+    {
+      "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+      "modelKey": "adaptive",
+      "issuedAt": "2026-10-27T07:44:13.396Z",
+      "graphFiles": 14,
+      "sourceHash": "cb316276ae79f90cd44d31d7ef4ad7d404c9ced4bb49d957bb4f6f94ed030491",
+      "points": 731,
+      "originalBytesEqual": true
+    },
+    {
+      "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+      "modelKey": "pooled",
+      "issuedAt": "2026-10-27T07:44:13.396Z",
+      "graphFiles": 14,
+      "sourceHash": "cb316276ae79f90cd44d31d7ef4ad7d404c9ced4bb49d957bb4f6f94ed030491",
+      "points": 731,
+      "originalBytesEqual": true
+    },
+    {
+      "id": "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+      "modelKey": "warmStart",
+      "issuedAt": "2026-10-27T09:57:51.931Z",
+      "graphFiles": 17,
+      "sourceHash": "463085b24aa701b66a6e754c6b6437a157f2bc1cbc7fd1b2403a072b4b9d42ca",
+      "points": 731,
+      "originalBytesEqual": true
+    }
+  ],
+  "newRecords": [
+    {
+      "id": "2993a2864880b3480a6c50490092c8e3874a7a6473aa89bb76b598d9797c6a40",
+      "modelKey": "pooled",
+      "asOf": "2026-10-27",
+      "issuedAt": "2026-10-28T03:30:08.669Z",
+      "snapshotId": "0da301019d62a8a0c2d55af377176eb6bd540dc70d16e364305a3ec224c30a08",
+      "points": 731,
+      "sourceCommit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+      "sourceHash": "cb316276ae79f90cd44d31d7ef4ad7d404c9ced4bb49d957bb4f6f94ed030491",
+      "graphFiles": 14
+    },
+    {
+      "id": "4ee24d06bd335abf986985cde903ef750f243adb063b78d43d2a84256a3c91bd",
+      "modelKey": "adaptive",
+      "asOf": "2026-10-27",
+      "issuedAt": "2026-10-28T03:30:08.669Z",
+      "snapshotId": "0da301019d62a8a0c2d55af377176eb6bd540dc70d16e364305a3ec224c30a08",
+      "points": 731,
+      "sourceCommit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+      "sourceHash": "cb316276ae79f90cd44d31d7ef4ad7d404c9ced4bb49d957bb4f6f94ed030491",
+      "graphFiles": 14
+    },
+    {
+      "id": "a8b4da2a30949175cae99330cdf054b3cb41677116df66e6a777cf079f76e14a",
+      "modelKey": "warmStart",
+      "asOf": "2026-10-27",
+      "issuedAt": "2026-10-28T03:30:08.669Z",
+      "snapshotId": "0da301019d62a8a0c2d55af377176eb6bd540dc70d16e364305a3ec224c30a08",
+      "points": 731,
+      "sourceCommit": "f6739b0a5da2986cbe33d028ea8fcd3468d85012",
+      "sourceHash": "463085b24aa701b66a6e754c6b6437a157f2bc1cbc7fd1b2403a072b4b9d42ca",
+      "graphFiles": 17
+    }
+  ],
+  "newObservations": [
+    {
+      "id": "0da301019d62a8a0c2d55af377176eb6bd540dc70d16e364305a3ec224c30a08",
+      "asOf": "2026-10-27",
+      "informationCutoffAt": "2026-10-28T03:30:08.306Z",
+      "keys": [
+        "asOf",
+        "base",
+        "economicInputHash",
+        "eventAt",
+        "historicalVintagesProven",
+        "id",
+        "informationCutoffAt",
+        "kind",
+        "merge",
+        "primaryPrices",
+        "primaryPricesHash",
+        "productionAdopted",
+        "request",
+        "schemaVersion",
+        "tail"
+      ]
+    }
+  ],
+  "replays": [
+    {
+      "modelKey": "pooled",
+      "id": "2993a2864880b3480a6c50490092c8e3874a7a6473aa89bb76b598d9797c6a40",
+      "outputHash": "d0714eee52b81bf9203eb7a3ac02f23c3998f47455e93eda3ba64377c563d6c9",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    },
+    {
+      "modelKey": "adaptive",
+      "id": "4ee24d06bd335abf986985cde903ef750f243adb063b78d43d2a84256a3c91bd",
+      "outputHash": "a2715c465b16cf9d2b4e550a7b189a422caac18da229ccdcaaed4f303f006cbc",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    },
+    {
+      "modelKey": "adaptive",
+      "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+      "outputHash": "f5728c0632945702a839cf8722a9b8ec6af0c91346169f5b14929c6ce055fe25",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    },
+    {
+      "modelKey": "warmStart",
+      "id": "a8b4da2a30949175cae99330cdf054b3cb41677116df66e6a777cf079f76e14a",
+      "outputHash": "0c6f0d7f71c1913e98a8feb9eaeb296f0c8882db4cd7d377969a556bbc20e745",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    },
+    {
+      "modelKey": "warmStart",
+      "id": "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+      "outputHash": "b7f45f7ebada37e9a046b4e5547101bb985b43a16fbbf3ee1e34bcdc667b6dc8",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    },
+    {
+      "modelKey": "pooled",
+      "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+      "outputHash": "7b84f0fa04346be007f153a189ce4266d705cd3702c5f0d65e4ceefa3e37d570",
+      "points": 731,
+      "method": "models-reexecuted-from-own-preserved-base-and-tail",
+      "recordIdentityEqual": true
+    }
+  ],
+  "readiness": {
+    "id": "035619ae4fda78633865ebac371353a069036b43bf2f583433734c642c68c7f2",
+    "informationCutoffAt": "2026-10-28T03:30:17.997Z",
+    "records": 6,
+    "observations": 6,
+    "bindings": 9,
+    "readyBindings": 0,
+    "recomputedFromCompleteArchive": true,
+    "actualFreezesCreated": 0,
+    "actualCalibratedRecordsIssued": 0,
+    "prospectiveCalibratedTargetsScored": 0,
+    "results": [
+      {
+        "id": "bb717b07ecb16d5f657fcd61b3e4f063321d89577a8524545c2d6c8bfe51b665",
+        "modelKey": "adaptive",
+        "horizonDays": 180,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "c2e80e76cdb3b8232fc5006d5ea491387111f1ff19db84edbf01484a337002ee",
+        "modelKey": "pooled",
+        "horizonDays": 180,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "39f6e54f27a51e3da1c75c2a559b37c18541c1e29819391f3d0868d06cb186f7",
+        "modelKey": "warmStart",
+        "horizonDays": 180,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "95606e9cae0d83ba17fe213129358d3becfb12d6076c7ca822761b837cdbe5cc",
+        "modelKey": "adaptive",
+        "horizonDays": 30,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "941c727dd12d7dc09188997982a9d14a8977538bdec01d7bf6bdc895088e2b9c",
+        "modelKey": "pooled",
+        "horizonDays": 30,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "975363fe372261af86a02e4a12387ce026ff25b988c43fccf98e96f308c5e19c",
+        "modelKey": "warmStart",
+        "horizonDays": 30,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "1d5bfffd122fa4f0efa5bbf296f2850320c3798d9f461f27cb7004a0ca18979d",
+        "modelKey": "adaptive",
+        "horizonDays": 90,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "4489111a99cef77dd420debc411a28ec99a737b7c906ca1862afd09f3c7c63d0",
+        "modelKey": "pooled",
+        "horizonDays": 90,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      },
+      {
+        "id": "5a02ae2b2fe2ed0d4cca262ad8f02b73df7f8a3d13af66ddf60d91ff2833581b",
+        "modelKey": "warmStart",
+        "horizonDays": 90,
+        "status": "insufficient-calibration-cases",
+        "selectedCalibrationCases": 0,
+        "validSelectedOutcomes": 0,
+        "requiredCalibrationCases": 12,
+        "missingSelectedOutcomes": 0,
+        "invalidSelectedForecasts": 0,
+        "invalidObservations": 0,
+        "pendingRecords": 2,
+        "logRadius": null
+      }
+    ]
+  },
+  "capacity": {
+    "id": "e8dfa5b7f2ecc7f3db5d4bd0b724047f837a4a73e222346e6cb6e6cc05cfbaed",
+    "informationCutoffAt": "2026-10-28T03:30:23.299Z",
+    "reportAndInputIdentitiesVerified": true,
+    "arithmeticRecomputedByThisVerifier": false,
+    "inventory": {
+      "acquisitionDays": [
+        {
+          "date": "2026-10-26",
+          "independentOutcome": 1,
+          "prospective": 0
+        },
+        {
+          "date": "2026-10-27",
+          "independentOutcome": 0,
+          "prospective": 4
+        },
+        {
+          "date": "2026-10-28",
+          "independentOutcome": 0,
+          "prospective": 1
+        }
+      ],
+      "completeHistoricalAcquisitionScheduleProven": false,
+      "exactExperiments": 3,
+      "independentOutcomeAcquisitions": 1,
+      "maximumObservedProspectivePerDay": 4,
+      "observationIds": [
+        "0da301019d62a8a0c2d55af377176eb6bd540dc70d16e364305a3ec224c30a08",
+        "278fc6046b123011216c7c59e678d6ce152824e82fd7cbc0bb843b7a112e5a36",
+        "bda159c9e30ad2f8977969d6d5f589d31cbbf60d904866807ab7216e3d023a59",
+        "da9f0f8abf60398b020501c33aaf33173fa555fcc8919b1d60975abd493d0615",
+        "e2e95e803edf9151e6bfc00b509dc124a4f25d0b623df94e00d7fb0d5b289f20",
+        "f034cd8aee6d3a256364379d801750212f9eb678ef9813c37d0fcba2e103df24"
+      ],
+      "observations": 6,
+      "prospectiveAcquisitions": 5,
+      "recordIds": [
+        "2993a2864880b3480a6c50490092c8e3874a7a6473aa89bb76b598d9797c6a40",
+        "4ee24d06bd335abf986985cde903ef750f243adb063b78d43d2a84256a3c91bd",
+        "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+        "a8b4da2a30949175cae99330cdf054b3cb41677116df66e6a777cf079f76e14a",
+        "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+        "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1"
+      ],
+      "records": 6,
+      "uniqueOrigins": 2
+    },
+    "dailyContinuation": {
+      "additionalIndexBytesPerCompleteOriginDay": 1903,
+      "completeAdditionalOriginDaysWithinIndexLimit": 548,
+      "completeAdditionalOriginDaysWithinRecordLimit": 664,
+      "currentMergedCompactIndexBytes": 3874,
+      "firstOriginDayExceedingIndexLimit": "2028-04-28",
+      "firstOriginDayExceedingRecordLimit": "2028-08-22",
+      "firstPossibleAdditionalOriginDate": "2026-10-28",
+      "indexByteLimitScope": "Per individual input index; this projection assumes accumulation into one retained seed index",
+      "indexProjectionBasis": "Canonical compact merged inventory with current exact experiment entry lengths; extra whitespace, revisions and changed versions can exhaust the bound sooner",
+      "observationScenarios": [
+        {
+          "additionalIndependentSnapshotsAssumed": 0,
+          "basis": "conditional single successful daily capture",
+          "completeAdditionalCaptureDaysWithinLimit": 494,
+          "firstAdditionalCaptureDate": "2026-10-29",
+          "firstExceedingCaptureDate": "2028-03-06",
+          "historicalScheduleOrFutureFrequencyProven": false,
+          "newProspectiveSnapshotsPerDay": 1
+        },
+        {
+          "additionalIndependentSnapshotsAssumed": 0,
+          "basis": "conditional repetition of maximum retained same-day prospective captures",
+          "completeAdditionalCaptureDaysWithinLimit": 123,
+          "firstAdditionalCaptureDate": "2026-10-29",
+          "firstExceedingCaptureDate": "2027-03-01",
+          "historicalScheduleOrFutureFrequencyProven": false,
+          "newProspectiveSnapshotsPerDay": 4
+        }
+      ],
+      "unchangedExperimentsPerDay": 3
+    },
+    "unchangedCurrentBase": {
+      "automaticBaseRolloverImplemented": false,
+      "boundaryPlannerChecksPassed": true,
+      "currentRequestError": null,
+      "currentRequestPlan": {
+        "expectedAsOf": "2026-10-27",
+        "granularity": 86400,
+        "requestedEnd": 1793145600,
+        "requestedStart": 1792368000,
+        "sourceUrl": "https://api.exchange.coinbase.com/products/ETH-USD/candles?granularity=86400&start=2026-10-19T00%3A00%3A00.000Z&end=2026-10-28T00%3A00%3A00.000Z"
+      },
+      "explicitCommittedBaseReplacementSupported": true,
+      "firstRejectedRequestUtcDate": "2027-08-06",
+      "lastAllowedRequestUtcDate": "2027-08-05",
+      "path": "dist/data/eth-ohlc.json",
+      "requestOverlapStartAt": "2026-10-19T00:00:00.000Z",
+      "requestedEnd": 1792972800,
+      "requestedStart": 1451606400,
+      "scope": "This boundary holds only while these exact base bytes remain unchanged. The separate committed-base reader permits an explicitly reviewed committed replacement; it does not generate or schedule that replacement."
+    },
+    "remainingOperationalRequirements": [
+      "Actually capture, publish and durably preserve each future issuance and its raw outcomes",
+      "An actually activated reviewed trigger and successful remote archive append/readback on the daily path; definitions alone cannot prove continuous operation",
+      "Reviewed committed base updates before the unchanged-base request boundary",
+      "A bounded archival/streaming design that preserves all required evidence beyond current flat inventory limits",
+      "First twelve exact-bound nonoverlapping actual windows with all selected outcomes; no substitution or retrospective issues"
+    ]
+  },
+  "economics": {
+    "requiredMetricCount": 26,
+    "providedSnapshots": 0,
+    "eligibleFullSnapshots": 0,
+    "metricEvidenceSummary": {
+      "requiredMetricCount": 26,
+      "sourceReceiptCount": 3,
+      "observedSourceFieldCount": 6,
+      "failedOrIncompleteSourceCount": 0,
+      "missingSourceKinds": [],
+      "rawVerifiedSourceCount": 3,
+      "replayedSourceCount": 3,
+      "metricsWithRelatedObservations": 10,
+      "definitionExactReportedMetricCount": 1,
+      "definitionExactReplayedMetricCount": 1,
+      "rateDerivedMetricCount": 1,
+      "scopeMismatchMetricCount": 10,
+      "notObservedMetricCount": 16,
+      "staleObservationCount": 4,
+      "unknownPublicationObservationCount": 6,
+      "reportedExactAndClockQualifiedMetricCount": 0,
+      "countsAreOverlappingEvidenceDimensions": true
+    }
+  },
+  "release": {
+    "draft": true,
+    "authorized": false,
+    "productionPromoted": false,
+    "geminiOpposition": "omitted-by-user",
+    "followupReverseReview": "omitted-by-user",
+    "gatesNotSubstitutedByCodeTests": [
+      "Mature prospective outcomes",
+      "Adequate horizon-specific nonoverlapping samples",
+      "Validated forecast calibration",
+      "Separate release authorization"
+    ]
+  },
+  "limitations": {
+    "providerAuthenticity": false,
+    "historicalPublicationAuthenticated": false,
+    "prospectivePerformanceProven": false,
+    "remoteWriterExecutedByThisVerifier": false,
+    "scheduleActivationProven": false,
+    "gitWireBytes": null,
+    "gitHttpRequestCount": null,
+    "reviewOmission": "Gemini opposition and follow-up reverse review remain omitted-by-user."
+  },
+  "verificationExecution": {
+    "startedAt": "2026-10-28T03:37:28.584Z",
+    "finishedAt": "2026-10-28T03:37:41.528Z",
+    "durationMs": 12944,
+    "processExit": 0
+  },
+  "fileMetadata": [
+    {
+      "path": "/tmp/verify-eth-continuity-artifact.mjs",
+      "bytes": 42608,
+      "sha256": "9f4d11aace12b37cec98982b0f849242faaa1b2cba0a76291b5b85e943720650",
+      "gitBlobSha": "3ef7364d36b56dbad21d3fd69bc4afed5a7ed645"
+    },
+    {
+      "path": "/tmp/eth-continuity-first-artifact-verification.json",
+      "bytes": 110723,
+      "sha256": "1bbd93a1e72f6e8b240ac4c99194034aefb95e910a8a0c2f9fec090bca1d5b38",
+      "gitBlobSha": "9ea36397dbaccb8ff146eaf915b9b398ae66fe64"
+    },
+    {
+      "path": "/tmp/eth-continuity-first-artifact-verifier.log",
+      "bytes": 110723,
+      "sha256": "1bbd93a1e72f6e8b240ac4c99194034aefb95e910a8a0c2f9fec090bca1d5b38",
+      "gitBlobSha": "9ea36397dbaccb8ff146eaf915b9b398ae66fe64"
+    },
+    {
+      "path": "/tmp/eth-continuity-first-verifier-adjustments.json",
+      "bytes": 1246,
+      "sha256": "6502332a5c5469831469232ab9bec1dd7e508cad3c4ec91c758198de1cda36e9",
+      "gitBlobSha": "cc3a015bd483ef10a1018dfad70fcae9aac66315"
+    },
+    {
+      "path": "/tmp/eth-continuity-first-verifier-attempt1.json",
+      "bytes": 7371,
+      "sha256": "fa3bf9a3522403bef53ceb2a5e3a2fc2028748772d7db94b607efa72132a67fd",
+      "gitBlobSha": "93011db84ddc2277066c7c452390e41a94436168"
+    }
+  ]
+}

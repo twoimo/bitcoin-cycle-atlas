@@ -1,0 +1,1874 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-standalone-native-replay-acceptance",
+  "status": "passed",
+  "startedAt": "2026-10-28T16:34:49.209Z",
+  "artifact": "/workspace/scratch/62c67615b721/bitcoin-cycle-atlas/build/Bitcoin_Cycles_Comparison.html",
+  "artifactBytes": 29879770,
+  "artifactSha256": "7f07cfe79328051851687e629a0498bc3c962ad71d7bb9d041e43437099563e3",
+  "publicationSourceCommit": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+  "publicationManifestSha256": "33ac5d366fff05d449da35b1e43a356ef59a182f2d4c656b6e69a3db95b1cb09",
+  "publicationSourceTree": {
+    "status": "clean",
+    "scope": "dist, scripts and package.json"
+  },
+  "expectedOfflineRefreshPolicySha256": "f8f2a165a3b52ceb47f4b2102d86d82f1141c8c04022a2bf7833979a968b94ff",
+  "browserVersion": "131.0.6778.204",
+  "scope": "Actual Chrome file:// artifact; native pointer/keyboard/select actions and real downloaded JSON. No production deployment or physical-device claim.",
+  "cases": [
+    {
+      "id": "btc-desktop",
+      "symbol": "BTCUSD",
+      "width": 1440,
+      "height": 900,
+      "history": {
+        "origin": "2026-04-28",
+        "outputHash": "3f21058ac490b67382b39274ae9b279a135d5949659add289aa57d39735768a8",
+        "forecastSha256": "fbf9115b488f7f9ae38f0801928411b1b86b447c62a2516f13c48d6eddb3c441",
+        "terminalCursor": "2026-10-25",
+        "terminalMatched": 180,
+        "terminalMetrics": {
+          "matchedCount": 180,
+          "meanAbsoluteError": 8613.026931482706,
+          "meanAbsolutePercentageError": 0.12157895838874713,
+          "percentageScoredCount": 180,
+          "meanAbsoluteLogError": 0.11964619344300019,
+          "flatMeanAbsoluteLogError": 0.10911169311785654,
+          "logScoredCount": 180,
+          "skillVersusFlat": -0.09654785865860283,
+          "directionCorrectCount": 91,
+          "directionCount": 180,
+          "directionAccuracy": 0.5055555555555555,
+          "scoredTargetCount": 0,
+          "retrospectiveTargetCount": 3,
+          "pendingTargetCount": 0,
+          "missingTargetCount": 0,
+          "independentSampleCount": null,
+          "calibrated": false
+        },
+        "rewoundActual": 0
+      },
+      "status": "passed",
+      "screenshots": [
+        {
+          "name": "btc-desktop-strict-hidden.png",
+          "path": "/tmp/atlas-standalone-published-final/btc-desktop-strict-hidden.png",
+          "sha256": "3a2530b35a500919ac0bc7274c02dd3cb10937a557d14f0dbac8e294808e71de"
+        },
+        {
+          "name": "btc-desktop-historical-end.png",
+          "path": "/tmp/atlas-standalone-published-final/btc-desktop-historical-end.png",
+          "sha256": "bd056df3f772aa2c19f7777bf65a1fa1caefcfef6e1d7ef1b0dda2b000ab0bdf"
+        }
+      ],
+      "exports": [
+        {
+          "label": "recorded-start",
+          "path": "/tmp/atlas-standalone-published-final/btc-desktop-recorded-start.json",
+          "sha256": "40cf09887790e829d2fa1563a3a9c09b2cbcb5973601cd484053751743b2fa06",
+          "bytes": 90565,
+          "cursor": "2026-10-25",
+          "clockMode": "observed-date",
+          "mode": "recorded",
+          "actualCount": 0,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "1b04145004d305273d56b734838b2bba716b4ef86b1f39052c6202d1aa929755",
+          "matchedCount": 0
+        },
+        {
+          "label": "strict-hidden",
+          "path": "/tmp/atlas-standalone-published-final/btc-desktop-strict-hidden.json",
+          "sha256": "19fac796607da3083cdce2119a313bd3aa23ad91472f32bdb9b29c1e6657bbc4",
+          "bytes": 4253,
+          "cursor": "2026-10-25",
+          "clockMode": "information-time",
+          "mode": "recorded",
+          "actualCount": 0,
+          "inputVisible": false,
+          "forecastVisible": false,
+          "outputHash": "1b04145004d305273d56b734838b2bba716b4ef86b1f39052c6202d1aa929755",
+          "matchedCount": 0
+        },
+        {
+          "label": "strict-end",
+          "path": "/tmp/atlas-standalone-published-final/btc-desktop-strict-end.json",
+          "sha256": "f5dc31b0011f80a1f2ad8c87ec36c62bd51bd0c8c76445a22a581c1447824d34",
+          "bytes": 90550,
+          "cursor": "2026-10-28",
+          "clockMode": "information-time",
+          "mode": "recorded",
+          "actualCount": 0,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "1b04145004d305273d56b734838b2bba716b4ef86b1f39052c6202d1aa929755",
+          "matchedCount": 0
+        },
+        {
+          "label": "historical-start",
+          "path": "/tmp/atlas-standalone-published-final/btc-desktop-historical-start.json",
+          "sha256": "6c4a25aa374e531a63fb7910160f945b34be1d06fb378ff72bb5a0d7ea423d39",
+          "bytes": 76428,
+          "cursor": "2026-04-28",
+          "clockMode": "observed-date",
+          "mode": "historical-reconstruction",
+          "actualCount": 0,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "3f21058ac490b67382b39274ae9b279a135d5949659add289aa57d39735768a8",
+          "matchedCount": 0
+        },
+        {
+          "label": "historical-end",
+          "path": "/tmp/atlas-standalone-published-final/btc-desktop-historical-end.json",
+          "sha256": "110ce2f1f918b5b69a417b1ba100305c1c4a236edb6efbbff4608335c626fa98",
+          "bytes": 265221,
+          "cursor": "2026-10-25",
+          "clockMode": "observed-date",
+          "mode": "historical-reconstruction",
+          "actualCount": 180,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "3f21058ac490b67382b39274ae9b279a135d5949659add289aa57d39735768a8",
+          "matchedCount": 180
+        },
+        {
+          "label": "historical-rewind",
+          "path": "/tmp/atlas-standalone-published-final/btc-desktop-historical-rewind.json",
+          "sha256": "6c4a25aa374e531a63fb7910160f945b34be1d06fb378ff72bb5a0d7ea423d39",
+          "bytes": 76428,
+          "cursor": "2026-04-28",
+          "clockMode": "observed-date",
+          "mode": "historical-reconstruction",
+          "actualCount": 0,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "3f21058ac490b67382b39274ae9b279a135d5949659add289aa57d39735768a8",
+          "matchedCount": 0
+        }
+      ],
+      "requests": [
+        {
+          "url": "file:///workspace/scratch/62c67615b721/bitcoin-cycle-atlas/build/Bitcoin_Cycles_Comparison.html?page=outlook&granularity=daily&type=line",
+          "method": "GET",
+          "type": "document"
+        },
+        {
+          "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-10-28&page_size=10000&paging_from=start",
+          "method": "GET",
+          "type": "fetch"
+        }
+      ],
+      "outboundRequests": [
+        {
+          "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-10-28&page_size=10000&paging_from=start",
+          "method": "GET",
+          "type": "fetch"
+        }
+      ],
+      "failedRequests": [
+        {
+          "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-10-28&page_size=10000&paging_from=start",
+          "error": "inspector",
+          "type": "fetch"
+        }
+      ],
+      "networkFailures": [
+        {
+          "requestId": "50445.25",
+          "frameId": "593B43172FF16201506D4CC730617D1E",
+          "loaderId": "DDDBCE57539241F2D6662210C931EE83",
+          "method": "GET",
+          "resourceType": "Fetch",
+          "requestWallTime": 1793205290.136597,
+          "documentUrl": "file:///workspace/scratch/62c67615b721/bitcoin-cycle-atlas/build/Bitcoin_Cycles_Comparison.html?granularity=daily&type=line",
+          "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-10-28&page_size=10000&paging_from=start",
+          "networkEvent": "Network.loadingFailed",
+          "errorText": "",
+          "canceled": false,
+          "blockedReason": "inspector"
+        }
+      ],
+      "expectedOfflineRefresh": [
+        {
+          "requestId": "50445.25",
+          "frameId": "593B43172FF16201506D4CC730617D1E",
+          "loaderId": "DDDBCE57539241F2D6662210C931EE83",
+          "method": "GET",
+          "resourceType": "Fetch",
+          "requestWallTime": 1793205290.136597,
+          "documentUrl": "file:///workspace/scratch/62c67615b721/bitcoin-cycle-atlas/build/Bitcoin_Cycles_Comparison.html?granularity=daily&type=line",
+          "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-10-28&page_size=10000&paging_from=start",
+          "networkEvent": "Network.loadingFailed",
+          "errorText": "",
+          "canceled": false,
+          "blockedReason": "inspector"
+        }
+      ],
+      "runtimeErrors": [],
+      "consoleErrors": [],
+      "domPublication": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+      "initial": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-10-25",
+        "outputHash": "1b04145004d305273d56b734838b2bba716b4ef86b1f39052c6202d1aa929755",
+        "chart": {
+          "replayChart": "",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "91",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "12",
+          "plotRight": "875",
+          "plotTop": "16",
+          "plotBottom": "294",
+          "priceBottom": "294",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "302",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "91",
+          "candleRendering": "individual",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-10-25",
+          "replayScale": "log"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "금색은 보존한 BTC 조건부 경로입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-24$83,726.55미공개미평가미도래 · 대기90일2027-01-23$84,080.73미공개미평가미도래 · 대기180일2027-04-23$86,132.62미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-10-25 · 기준 관측 $80,038.91",
+        "scroll": 1440,
+        "svgText": "BTCUSD · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$59,614$65,241$71,399$78,138$85,513$93,585$102,41826.0826.0926.1026.1126.1227.0127.0227.0327.04$80,038.912026-10-25가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-10-25"
+      },
+      "strictHidden": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-10-25",
+        "outputHash": "1b04145004d305273d56b734838b2bba716b4ef86b1f39052c6202d1aa929755",
+        "chart": {
+          "replayChart": "",
+          "replayPriceHidden": "true",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "0",
+          "replayCursor": "2026-10-25",
+          "replayScale": "none",
+          "replayInputVisible": "false"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "금색은 보존한 BTC 조건부 경로입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-24미공개미공개미평가발행 이전 · 제외90일2027-01-23미공개미공개미평가발행 이전 · 제외180일2027-04-23미공개미공개미평가발행 이전 · 제외",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 0 · 관측 미확보 0.",
+        "selection": "2026-10-25 · 기준 관측 미공개",
+        "scroll": 1440,
+        "svgText": "입력 자료 수집 이전이 시각에 확보하지 않은 입력 가격과 예측은 표시하지 않습니다. 다음 봉으로 이동해 자료가 공개되는 시각을 확인하세요.아직 확보하지 않은 입력 자료입니다다음 봉에서 공개 시각을 확인하세요",
+        "inputAvailableAt": "2026-10-26T06:01:39.187Z",
+        "evaluationAt": "2026-10-26T00:00:00.000Z"
+      },
+      "strictEnd": {
+        "actual": 0,
+        "matched": 0,
+        "evaluationAt": "2026-10-28T16:34:51.636Z"
+      },
+      "historyHover": "2026-09-09 · 고정 예측 $71,514.74 · 공개 실제 미공개",
+      "keyboardFocus": {
+        "tag": "INPUT",
+        "inside": true,
+        "outline": "solid"
+      },
+      "final": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-04-28",
+        "outputHash": "3f21058ac490b67382b39274ae9b279a135d5949659add289aa57d39735768a8",
+        "chart": {
+          "replayChart": "",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-04-28",
+          "replayScale": "log",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "91",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "12",
+          "plotRight": "875",
+          "plotTop": "16",
+          "plotBottom": "294",
+          "priceBottom": "294",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "302",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "91",
+          "candleRendering": "individual"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "가격만 사용한 축소 추세 기준모형의 과거 재구성입니다. 실서비스의 장기 BTC 예측과 별개인 비교 기준모형입니다. 선택한 기준일까지의 관측으로 한 번 계산한 뒤 고정합니다. 당시 실제 발행본·실전 성과·보정된 예측확률을 뜻하지 않습니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-05-28$75,198.17미공개미평가미도래 · 대기90일2026-07-27$73,050.57미공개미평가미도래 · 대기180일2026-10-25$69,943.62미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-09-09 · 고정 예측 $71,514.74 · 공개 실제 미공개",
+        "scroll": 1440,
+        "svgText": "BTCUSD · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$60,320$64,907$69,843$75,154$80,869$87,019$93,63726.0226.0326.0426.0526.0626.0726.0826.0926.10$76,295.532026-04-28가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-04-28"
+      },
+      "reopened": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-10-25",
+        "outputHash": "1b04145004d305273d56b734838b2bba716b4ef86b1f39052c6202d1aa929755",
+        "chart": {
+          "replayChart": "",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "91",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "12",
+          "plotRight": "875",
+          "plotTop": "16",
+          "plotBottom": "294",
+          "priceBottom": "294",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "302",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "91",
+          "candleRendering": "individual",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-10-25",
+          "replayScale": "log"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "금색은 보존한 BTC 조건부 경로입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-24$83,726.55미공개미평가미도래 · 대기90일2027-01-23$84,080.73미공개미평가미도래 · 대기180일2027-04-23$86,132.62미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-10-25 · 기준 관측 $80,038.91",
+        "scroll": 1440,
+        "svgText": "BTCUSD · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$59,614$65,241$71,399$78,138$85,513$93,585$102,41826.0826.0926.1026.1126.1227.0127.0227.0327.04$80,038.912026-10-25가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-10-25"
+      },
+      "preservedBtc": {
+        "cutoff": "관측 · 2026.10.25 UTC",
+        "notice": "failed",
+        "summary": "비트코인 일별 갱신 실패",
+        "detail": "2026.10.25 UTC 자료 유지",
+        "title": "갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.",
+        "retainedLast": [
+          "2026-10-25",
+          80038.9058032613
+        ]
+      },
+      "unexpectedNetworkFailures": [],
+      "unexpectedOutbound": [],
+      "replayAndJournalNetworkRequests": []
+    },
+    {
+      "id": "eth-desktop",
+      "symbol": "ETHUSD",
+      "width": 1440,
+      "height": 900,
+      "history": {
+        "origin": "2026-04-30",
+        "outputHash": "584d0cbca9470efbb1e0cf16af739712461c6fa29575108c97ab659db23ace79",
+        "forecastSha256": "985a80588bfd68ce8879e35eeb1c547286a520fd0328edd7942dbad724387731",
+        "terminalCursor": "2026-10-27",
+        "terminalMatched": 180,
+        "terminalMetrics": {
+          "matchedCount": 180,
+          "meanAbsoluteError": 343.01534211368426,
+          "meanAbsolutePercentageError": 0.17150012873167042,
+          "percentageScoredCount": 180,
+          "meanAbsoluteLogError": 0.161440282917317,
+          "flatMeanAbsoluteLogError": 0.15264039724925715,
+          "logScoredCount": 180,
+          "skillVersusFlat": -0.05765109254589973,
+          "directionCorrectCount": 70,
+          "directionCount": 180,
+          "directionAccuracy": 0.3888888888888889,
+          "scoredTargetCount": 0,
+          "retrospectiveTargetCount": 3,
+          "pendingTargetCount": 0,
+          "missingTargetCount": 0,
+          "independentSampleCount": null,
+          "calibrated": false
+        },
+        "rewoundActual": 0
+      },
+      "status": "passed",
+      "screenshots": [
+        {
+          "name": "eth-desktop-strict-hidden.png",
+          "path": "/tmp/atlas-standalone-published-final/eth-desktop-strict-hidden.png",
+          "sha256": "ed970518446d5adaf1110c5f735a4c2f339e496ee6cf1bd6bb4fa232d186fa34"
+        },
+        {
+          "name": "eth-desktop-recorded-candles.png",
+          "path": "/tmp/atlas-standalone-published-final/eth-desktop-recorded-candles.png",
+          "sha256": "c3f2a32551d1c6870586841f1e923bc7a6530b7d80c77374507df32f9e1e4171"
+        },
+        {
+          "name": "eth-desktop-historical-end.png",
+          "path": "/tmp/atlas-standalone-published-final/eth-desktop-historical-end.png",
+          "sha256": "f17c8cdedbe5dcc57246cd2cd706285b644f3469eadf548047ee7a8e333f1206"
+        }
+      ],
+      "exports": [
+        {
+          "label": "recorded-start",
+          "path": "/tmp/atlas-standalone-published-final/eth-desktop-recorded-start.json",
+          "sha256": "294c5e6d43e690cfc786e091a7cc32af19d6f498be058cdb5b9392007ef20680",
+          "bytes": 90038,
+          "cursor": "2026-10-25",
+          "clockMode": "observed-date",
+          "mode": "recorded",
+          "actualCount": 0,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+          "matchedCount": 0
+        },
+        {
+          "label": "strict-hidden",
+          "path": "/tmp/atlas-standalone-published-final/eth-desktop-strict-hidden.json",
+          "sha256": "1b25678978399ee029e08521f306f46925cb6c4a64104d948f24fa4280cbcafe",
+          "bytes": 4289,
+          "cursor": "2026-10-25",
+          "clockMode": "information-time",
+          "mode": "recorded",
+          "actualCount": 0,
+          "inputVisible": false,
+          "forecastVisible": false,
+          "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+          "matchedCount": 0
+        },
+        {
+          "label": "strict-end",
+          "path": "/tmp/atlas-standalone-published-final/eth-desktop-strict-end.json",
+          "sha256": "c8efb739de453e6e397737dd9f04a9ae557b5e30c7c58aafce1684d3cd379d56",
+          "bytes": 92174,
+          "cursor": "2026-10-28",
+          "clockMode": "information-time",
+          "mode": "recorded",
+          "actualCount": 2,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+          "matchedCount": 2
+        },
+        {
+          "label": "recorded-candles",
+          "path": "/tmp/atlas-standalone-published-final/eth-desktop-recorded-candles.json",
+          "sha256": "a4b0b9875925ebfdcf61ad0af66b592a9616b035b9b79d8f793c579a357e2408",
+          "bytes": 92189,
+          "cursor": "2026-10-28",
+          "clockMode": "observed-date",
+          "mode": "recorded",
+          "actualCount": 2,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+          "matchedCount": 2
+        },
+        {
+          "label": "historical-start",
+          "path": "/tmp/atlas-standalone-published-final/eth-desktop-historical-start.json",
+          "sha256": "fd46da6a289cdc40e543984097412d4312011ab4d927c8491f29cb10df27c822",
+          "bytes": 107943,
+          "cursor": "2026-04-30",
+          "clockMode": "observed-date",
+          "mode": "historical-reconstruction",
+          "actualCount": 0,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "584d0cbca9470efbb1e0cf16af739712461c6fa29575108c97ab659db23ace79",
+          "matchedCount": 0
+        },
+        {
+          "label": "historical-end",
+          "path": "/tmp/atlas-standalone-published-final/eth-desktop-historical-end.json",
+          "sha256": "589bc94c6852645cd596bfe8dfd4bb07e76859c4939663e4ecdaf07096b5a691",
+          "bytes": 293701,
+          "cursor": "2026-10-27",
+          "clockMode": "observed-date",
+          "mode": "historical-reconstruction",
+          "actualCount": 180,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "584d0cbca9470efbb1e0cf16af739712461c6fa29575108c97ab659db23ace79",
+          "matchedCount": 180
+        },
+        {
+          "label": "historical-rewind",
+          "path": "/tmp/atlas-standalone-published-final/eth-desktop-historical-rewind.json",
+          "sha256": "fd46da6a289cdc40e543984097412d4312011ab4d927c8491f29cb10df27c822",
+          "bytes": 107943,
+          "cursor": "2026-04-30",
+          "clockMode": "observed-date",
+          "mode": "historical-reconstruction",
+          "actualCount": 0,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "584d0cbca9470efbb1e0cf16af739712461c6fa29575108c97ab659db23ace79",
+          "matchedCount": 0
+        }
+      ],
+      "requests": [
+        {
+          "url": "file:///workspace/scratch/62c67615b721/bitcoin-cycle-atlas/build/Bitcoin_Cycles_Comparison.html?page=outlook&symbol=ETHUSD&granularity=daily&type=line",
+          "method": "GET",
+          "type": "document"
+        }
+      ],
+      "outboundRequests": [],
+      "failedRequests": [],
+      "networkFailures": [],
+      "expectedOfflineRefresh": [],
+      "runtimeErrors": [],
+      "consoleErrors": [],
+      "domPublication": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+      "initial": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-10-25",
+        "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+        "chart": {
+          "replayChart": "",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "91",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "12",
+          "plotRight": "875",
+          "plotTop": "16",
+          "plotBottom": "294",
+          "priceBottom": "294",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "302",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "91",
+          "candleRendering": "individual",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-10-25",
+          "replayScale": "log"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "금색은 고정한 seed로 추출한 ETH 무작위 예시 1개입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-24$1,945.11미공개미평가미도래 · 대기90일2027-01-23$2,958.12미공개미평가미도래 · 대기180일2027-04-23$1,359.02미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-10-25 · 기준 관측 $2,326.75",
+        "scroll": 1440,
+        "svgText": "ETHUSD · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$1,036$1,283$1,589$1,968$2,436$3,017$3,73626.0826.0926.1026.1126.1227.0127.0227.0327.04$2,326.752026-10-25가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-10-25"
+      },
+      "strictHidden": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-10-25",
+        "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+        "chart": {
+          "replayChart": "",
+          "replayPriceHidden": "true",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "0",
+          "replayCursor": "2026-10-25",
+          "replayScale": "none",
+          "replayInputVisible": "false"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "금색은 고정한 seed로 추출한 ETH 무작위 예시 1개입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-24미공개미공개미평가발행 이전 · 제외90일2027-01-23미공개미공개미평가발행 이전 · 제외180일2027-04-23미공개미공개미평가발행 이전 · 제외",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 0 · 관측 미확보 0.",
+        "selection": "2026-10-25 · 기준 관측 미공개",
+        "scroll": 1440,
+        "svgText": "입력 자료 수집 이전이 시각에 확보하지 않은 입력 가격과 예측은 표시하지 않습니다. 다음 봉으로 이동해 자료가 공개되는 시각을 확인하세요.아직 확보하지 않은 입력 자료입니다다음 봉에서 공개 시각을 확인하세요",
+        "inputAvailableAt": "2026-10-26T12:12:46.363Z",
+        "evaluationAt": "2026-10-26T00:00:00.000Z"
+      },
+      "strictEnd": {
+        "actual": 2,
+        "matched": 2,
+        "evaluationAt": "2026-10-28T16:34:58.628Z"
+      },
+      "candles": {
+        "count": 2,
+        "dates": [
+          "2026-10-26",
+          "2026-10-27"
+        ],
+        "matched": 2
+      },
+      "historyHover": "2026-09-11 · 고정 예측 $2,216.09 · 공개 실제 미공개",
+      "keyboardFocus": {
+        "tag": "INPUT",
+        "inside": true,
+        "outline": "solid"
+      },
+      "final": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-04-30",
+        "outputHash": "584d0cbca9470efbb1e0cf16af739712461c6fa29575108c97ab659db23ace79",
+        "chart": {
+          "replayChart": "",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-04-30",
+          "replayScale": "log",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "91",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "12",
+          "plotRight": "875",
+          "plotTop": "16",
+          "plotBottom": "294",
+          "priceBottom": "294",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "302",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "91",
+          "candleRendering": "individual"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "ETH pooled 가격 모형 중앙 경로의 과거 재구성입니다. 금색은 시뮬레이션의 중앙 경로입니다. 선택한 기준일까지의 관측으로 한 번 계산한 뒤 고정합니다. 음영은 보정하지 않은 시뮬레이션 10–90% 분위수입니다. 당시 실제 발행본·실전 성과·보정된 예측확률을 뜻하지 않습니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-05-30$2,230.28미공개미평가미도래 · 대기90일2026-07-29$2,279.12미공개미평가미도래 · 대기180일2026-10-27$2,145.99미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-09-11 · 고정 예측 $2,216.09 · 공개 실제 미공개",
+        "scroll": 1440,
+        "svgText": "ETHUSD · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$1,168$1,431$1,753$2,149$2,633$3,226$3,95426.0226.0326.0426.0526.0626.0726.0826.0926.10$2,256.82026-04-30가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-04-30"
+      },
+      "reopened": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-10-25",
+        "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+        "chart": {
+          "replayChart": "",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "91",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "12",
+          "plotRight": "875",
+          "plotTop": "16",
+          "plotBottom": "294",
+          "priceBottom": "294",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "302",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "91",
+          "candleRendering": "individual",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-10-25",
+          "replayScale": "log"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "금색은 고정한 seed로 추출한 ETH 무작위 예시 1개입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-24$1,945.11미공개미평가미도래 · 대기90일2027-01-23$2,958.12미공개미평가미도래 · 대기180일2027-04-23$1,359.02미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-10-25 · 기준 관측 $2,326.75",
+        "scroll": 1440,
+        "svgText": "ETHUSD · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$1,036$1,283$1,589$1,968$2,436$3,017$3,73626.0826.0926.1026.1126.1227.0127.0227.0327.04$2,326.752026-10-25가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-10-25"
+      },
+      "unexpectedNetworkFailures": [],
+      "unexpectedOutbound": [],
+      "replayAndJournalNetworkRequests": []
+    },
+    {
+      "id": "mstr-desktop",
+      "symbol": "MSTR",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "screenshots": [
+        {
+          "name": "mstr-desktop-recorded-end.png",
+          "path": "/tmp/atlas-standalone-published-final/mstr-desktop-recorded-end.png",
+          "sha256": "93d3cfbff4526942987b9caa6e030523b14a42328fc258f43a88ecaaf847f140"
+        }
+      ],
+      "exports": [
+        {
+          "label": "recorded-start",
+          "path": "/tmp/atlas-standalone-published-final/mstr-desktop-recorded-start.json",
+          "sha256": "c3b616c5067a6351256f339a921fbb02ffa235eb5ba38374b8ce25b2d113782a",
+          "bytes": 82587,
+          "cursor": "2026-10-23",
+          "clockMode": "observed-date",
+          "mode": "recorded",
+          "actualCount": 0,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "87f3bf92daef217c91260c130b91e3c41a2d24020eac2c4c70e61a3f20492d3f",
+          "matchedCount": 0
+        },
+        {
+          "label": "recorded-end",
+          "path": "/tmp/atlas-standalone-published-final/mstr-desktop-recorded-end.json",
+          "sha256": "6a58a7f406129c200f3e7abee017df36544d82cd8125734a390392f0c4d80370",
+          "bytes": 82586,
+          "cursor": "2026-10-28",
+          "clockMode": "observed-date",
+          "mode": "recorded",
+          "actualCount": 0,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "87f3bf92daef217c91260c130b91e3c41a2d24020eac2c4c70e61a3f20492d3f",
+          "matchedCount": 0
+        }
+      ],
+      "requests": [
+        {
+          "url": "file:///workspace/scratch/62c67615b721/bitcoin-cycle-atlas/build/Bitcoin_Cycles_Comparison.html?page=outlook&symbol=MSTR&granularity=daily&type=line",
+          "method": "GET",
+          "type": "document"
+        }
+      ],
+      "outboundRequests": [],
+      "failedRequests": [],
+      "networkFailures": [],
+      "expectedOfflineRefresh": [],
+      "runtimeErrors": [],
+      "consoleErrors": [],
+      "domPublication": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+      "initial": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-10-23",
+        "outputHash": "87f3bf92daef217c91260c130b91e3c41a2d24020eac2c4c70e61a3f20492d3f",
+        "chart": {
+          "replayChart": "",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "64",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "12",
+          "plotRight": "875",
+          "plotTop": "16",
+          "plotBottom": "294",
+          "priceBottom": "294",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "302",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "64",
+          "candleRendering": "individual",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-10-23",
+          "replayScale": "log"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "금색은 보존한 자산의 조건부 평가 경로입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-23$161.9미공개미평가미도래 · 대기90일2027-01-21$159.24미공개미평가미도래 · 대기180일2027-04-21$161.12미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-10-23 · 기준 관측 $146.01",
+        "scroll": 1440,
+        "svgText": "MSTR · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$100$20026.0826.0926.1026.1126.1227.0127.0227.0327.04$146.012026-10-23가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-10-23"
+      },
+      "equity": {
+        "scale": "log",
+        "matched": 0,
+        "pending": 3
+      },
+      "keyboardFocus": {
+        "tag": "INPUT",
+        "inside": true,
+        "outline": "solid"
+      },
+      "final": {
+        "state": "ready",
+        "playback": "ended",
+        "cursor": "2026-10-28",
+        "outputHash": "87f3bf92daef217c91260c130b91e3c41a2d24020eac2c4c70e61a3f20492d3f",
+        "chart": {
+          "replayChart": "",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "64",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "12",
+          "plotRight": "875",
+          "plotTop": "16",
+          "plotBottom": "294",
+          "priceBottom": "294",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "302",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "64",
+          "candleRendering": "individual",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-10-28",
+          "replayScale": "log"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "금색은 보존한 자산의 조건부 평가 경로입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-23$161.9미공개미평가미도래 · 대기90일2027-01-21$159.24미공개미평가미도래 · 대기180일2027-04-21$161.12미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-10-28 · 고정 예측 $152.24 · 공개 실제 미공개",
+        "scroll": 1440,
+        "svgText": "MSTR · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$100$20026.0826.0926.1026.1126.1227.0127.0227.0327.04$146.012026-10-23가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-10-23"
+      },
+      "reopened": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-10-23",
+        "outputHash": "87f3bf92daef217c91260c130b91e3c41a2d24020eac2c4c70e61a3f20492d3f",
+        "chart": {
+          "replayChart": "",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "64",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "12",
+          "plotRight": "875",
+          "plotTop": "16",
+          "plotBottom": "294",
+          "priceBottom": "294",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "302",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "64",
+          "candleRendering": "individual",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-10-23",
+          "replayScale": "log"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "금색은 보존한 자산의 조건부 평가 경로입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-23$161.9미공개미평가미도래 · 대기90일2027-01-21$159.24미공개미평가미도래 · 대기180일2027-04-21$161.12미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-10-23 · 기준 관측 $146.01",
+        "scroll": 1440,
+        "svgText": "MSTR · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$100$20026.0826.0926.1026.1126.1227.0127.0227.0327.04$146.012026-10-23가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-10-23"
+      },
+      "unexpectedNetworkFailures": [],
+      "unexpectedOutbound": [],
+      "replayAndJournalNetworkRequests": []
+    },
+    {
+      "id": "bmnr-desktop",
+      "symbol": "BMNR",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "screenshots": [
+        {
+          "name": "bmnr-desktop-recorded-end.png",
+          "path": "/tmp/atlas-standalone-published-final/bmnr-desktop-recorded-end.png",
+          "sha256": "99bcf5bc903a83d40b0148b6decc85bd4ea133bc24c241e2fd3eaf2620c49d46"
+        }
+      ],
+      "exports": [
+        {
+          "label": "recorded-start",
+          "path": "/tmp/atlas-standalone-published-final/bmnr-desktop-recorded-start.json",
+          "sha256": "3d64b5bc2647b23188d7419f63238689ff437d61032b88e5cfd0d8863d9518a6",
+          "bytes": 82660,
+          "cursor": "2026-10-23",
+          "clockMode": "observed-date",
+          "mode": "recorded",
+          "actualCount": 0,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "69db2e55aadc38ba8cf6116a7b3397031ba5008a141686266231b9a33e3b7b4f",
+          "matchedCount": 0
+        },
+        {
+          "label": "recorded-end",
+          "path": "/tmp/atlas-standalone-published-final/bmnr-desktop-recorded-end.json",
+          "sha256": "9c5a52d08a1129656223093a2d2f9aabc43c83c5f5bd74a2e92ae4434c0a724b",
+          "bytes": 82660,
+          "cursor": "2026-10-28",
+          "clockMode": "observed-date",
+          "mode": "recorded",
+          "actualCount": 0,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "69db2e55aadc38ba8cf6116a7b3397031ba5008a141686266231b9a33e3b7b4f",
+          "matchedCount": 0
+        }
+      ],
+      "requests": [
+        {
+          "url": "file:///workspace/scratch/62c67615b721/bitcoin-cycle-atlas/build/Bitcoin_Cycles_Comparison.html?page=outlook&symbol=BMNR&granularity=daily&type=line",
+          "method": "GET",
+          "type": "document"
+        }
+      ],
+      "outboundRequests": [],
+      "failedRequests": [],
+      "networkFailures": [],
+      "expectedOfflineRefresh": [],
+      "runtimeErrors": [],
+      "consoleErrors": [],
+      "domPublication": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+      "initial": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-10-23",
+        "outputHash": "69db2e55aadc38ba8cf6116a7b3397031ba5008a141686266231b9a33e3b7b4f",
+        "chart": {
+          "replayChart": "",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "64",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "12",
+          "plotRight": "875",
+          "plotTop": "16",
+          "plotBottom": "294",
+          "priceBottom": "294",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "302",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "64",
+          "candleRendering": "individual",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-10-23",
+          "replayScale": "log"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "금색은 ETH 무작위 예시 1개를 보유량·현금·선순위 청구권·희석 계산에 전달한 조건부 주당 평가 경로입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-23$19.66미공개미평가미도래 · 대기90일2027-01-21$26.66미공개미평가미도래 · 대기180일2027-04-21$16.14미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-10-23 · 기준 관측 $22.4",
+        "scroll": 1440,
+        "svgText": "BMNR · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$11.3$13.7$16.6$20.1$24.3$29.4$35.626.0826.0926.1026.1126.1227.0127.0227.0327.04$22.42026-10-23가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-10-23"
+      },
+      "equity": {
+        "scale": "log",
+        "matched": 0,
+        "pending": 3
+      },
+      "keyboardFocus": {
+        "tag": "INPUT",
+        "inside": true,
+        "outline": "solid"
+      },
+      "final": {
+        "state": "ready",
+        "playback": "ended",
+        "cursor": "2026-10-28",
+        "outputHash": "69db2e55aadc38ba8cf6116a7b3397031ba5008a141686266231b9a33e3b7b4f",
+        "chart": {
+          "replayChart": "",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "64",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "12",
+          "plotRight": "875",
+          "plotTop": "16",
+          "plotBottom": "294",
+          "priceBottom": "294",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "302",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "64",
+          "candleRendering": "individual",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-10-28",
+          "replayScale": "log"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "금색은 ETH 무작위 예시 1개를 보유량·현금·선순위 청구권·희석 계산에 전달한 조건부 주당 평가 경로입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-23$19.66미공개미평가미도래 · 대기90일2027-01-21$26.66미공개미평가미도래 · 대기180일2027-04-21$16.14미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-10-28 · 고정 예측 $20.9 · 공개 실제 미공개",
+        "scroll": 1440,
+        "svgText": "BMNR · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$11.3$13.7$16.6$20.1$24.3$29.4$35.626.0826.0926.1026.1126.1227.0127.0227.0327.04$22.42026-10-23가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-10-23"
+      },
+      "reopened": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-10-23",
+        "outputHash": "69db2e55aadc38ba8cf6116a7b3397031ba5008a141686266231b9a33e3b7b4f",
+        "chart": {
+          "replayChart": "",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "64",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "12",
+          "plotRight": "875",
+          "plotTop": "16",
+          "plotBottom": "294",
+          "priceBottom": "294",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "302",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "64",
+          "candleRendering": "individual",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-10-23",
+          "replayScale": "log"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "dialog": {
+          "left": 220,
+          "right": 1220,
+          "top": 70,
+          "bottom": 830,
+          "scrollWidth": 998,
+          "clientWidth": 998
+        },
+        "close": {
+          "left": 1170.5625,
+          "right": 1207,
+          "top": 79,
+          "bottom": 113,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 972,
+          "height": 340
+        },
+        "disclosure": "금색은 ETH 무작위 예시 1개를 보유량·현금·선순위 청구권·희석 계산에 전달한 조건부 주당 평가 경로입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-23$19.66미공개미평가미도래 · 대기90일2027-01-21$26.66미공개미평가미도래 · 대기180일2027-04-21$16.14미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-10-23 · 기준 관측 $22.4",
+        "scroll": 1440,
+        "svgText": "BMNR · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$11.3$13.7$16.6$20.1$24.3$29.4$35.626.0826.0926.1026.1126.1227.0127.0227.0327.04$22.42026-10-23가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-10-23"
+      },
+      "unexpectedNetworkFailures": [],
+      "unexpectedOutbound": [],
+      "replayAndJournalNetworkRequests": []
+    },
+    {
+      "id": "eth-phone",
+      "symbol": "ETHUSD",
+      "width": 320,
+      "height": 568,
+      "status": "passed",
+      "screenshots": [
+        {
+          "name": "eth-phone-strict-hidden.png",
+          "path": "/tmp/atlas-standalone-published-final/eth-phone-strict-hidden.png",
+          "sha256": "a2b9e04e8b05d6b4fb793eab0fd452faec10be354dad05e35d156a4ee4102556"
+        },
+        {
+          "name": "eth-phone-recorded-candles.png",
+          "path": "/tmp/atlas-standalone-published-final/eth-phone-recorded-candles.png",
+          "sha256": "72ba4062bf20c660482ad97581aaaa3c905bf3bf30dfa5f951d2ba64b01d04bb"
+        }
+      ],
+      "exports": [
+        {
+          "label": "recorded-start",
+          "path": "/tmp/atlas-standalone-published-final/eth-phone-recorded-start.json",
+          "sha256": "294c5e6d43e690cfc786e091a7cc32af19d6f498be058cdb5b9392007ef20680",
+          "bytes": 90038,
+          "cursor": "2026-10-25",
+          "clockMode": "observed-date",
+          "mode": "recorded",
+          "actualCount": 0,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+          "matchedCount": 0
+        },
+        {
+          "label": "strict-hidden",
+          "path": "/tmp/atlas-standalone-published-final/eth-phone-strict-hidden.json",
+          "sha256": "1b25678978399ee029e08521f306f46925cb6c4a64104d948f24fa4280cbcafe",
+          "bytes": 4289,
+          "cursor": "2026-10-25",
+          "clockMode": "information-time",
+          "mode": "recorded",
+          "actualCount": 0,
+          "inputVisible": false,
+          "forecastVisible": false,
+          "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+          "matchedCount": 0
+        },
+        {
+          "label": "strict-end",
+          "path": "/tmp/atlas-standalone-published-final/eth-phone-strict-end.json",
+          "sha256": "cb736c04a97537f10481099a4d0a31d39ed69bd936bea70391255b7cb846f2db",
+          "bytes": 92174,
+          "cursor": "2026-10-28",
+          "clockMode": "information-time",
+          "mode": "recorded",
+          "actualCount": 2,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+          "matchedCount": 2
+        },
+        {
+          "label": "recorded-candles",
+          "path": "/tmp/atlas-standalone-published-final/eth-phone-recorded-candles.json",
+          "sha256": "cd6a1d4a61d535ccf3d2893ecd8d3573bb99cc9d45357bb6036d43d4f83d35d7",
+          "bytes": 92189,
+          "cursor": "2026-10-28",
+          "clockMode": "observed-date",
+          "mode": "recorded",
+          "actualCount": 2,
+          "inputVisible": true,
+          "forecastVisible": true,
+          "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+          "matchedCount": 2
+        }
+      ],
+      "requests": [
+        {
+          "url": "file:///workspace/scratch/62c67615b721/bitcoin-cycle-atlas/build/Bitcoin_Cycles_Comparison.html?page=outlook&symbol=ETHUSD&granularity=daily&type=line",
+          "method": "GET",
+          "type": "document"
+        }
+      ],
+      "outboundRequests": [],
+      "failedRequests": [],
+      "networkFailures": [],
+      "expectedOfflineRefresh": [],
+      "runtimeErrors": [],
+      "consoleErrors": [],
+      "domPublication": "3c570470a901c4991e14ba0907f5a19f87bd6f5d",
+      "initial": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-10-25",
+        "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+        "chart": {
+          "replayChart": "",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "91",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "8",
+          "plotRight": "178",
+          "plotTop": "16",
+          "plotBottom": "195",
+          "priceBottom": "195",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "203",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "91",
+          "candleRendering": "individual",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-10-25",
+          "replayScale": "log"
+        },
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "dialog": {
+          "left": 16,
+          "right": 304,
+          "top": 5,
+          "bottom": 563,
+          "scrollWidth": 286,
+          "clientWidth": 286
+        },
+        "close": {
+          "left": 258.5625,
+          "right": 295,
+          "top": 10,
+          "bottom": 54,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 268,
+          "height": 248
+        },
+        "disclosure": "금색은 고정한 seed로 추출한 ETH 무작위 예시 1개입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-24$1,945.11미공개미평가미도래 · 대기90일2027-01-23$2,958.12미공개미평가미도래 · 대기180일2027-04-23$1,359.02미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-10-25 · 기준 관측 $2,326.75",
+        "scroll": 320,
+        "svgText": "ETHUSD · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$1,036$1,428$1,968$2,711$3,73627.01$2,326.752026-10-25가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-10-25"
+      },
+      "strictHidden": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-10-25",
+        "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+        "chart": {
+          "replayChart": "",
+          "replayPriceHidden": "true",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "0",
+          "replayCursor": "2026-10-25",
+          "replayScale": "none",
+          "replayInputVisible": "false"
+        },
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "dialog": {
+          "left": 16,
+          "right": 304,
+          "top": 5,
+          "bottom": 563,
+          "scrollWidth": 286,
+          "clientWidth": 286
+        },
+        "close": {
+          "left": 258.5625,
+          "right": 295,
+          "top": 10,
+          "bottom": 54,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 268,
+          "height": 248
+        },
+        "disclosure": "금색은 고정한 seed로 추출한 ETH 무작위 예시 1개입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-24미공개미공개미평가발행 이전 · 제외90일2027-01-23미공개미공개미평가발행 이전 · 제외180일2027-04-23미공개미공개미평가발행 이전 · 제외",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 0 · 관측 미확보 0.",
+        "selection": "2026-10-25 · 기준 관측 미공개",
+        "scroll": 320,
+        "svgText": "입력 자료 수집 이전이 시각에 확보하지 않은 입력 가격과 예측은 표시하지 않습니다. 다음 봉으로 이동해 자료가 공개되는 시각을 확인하세요.아직 확보하지 않은 입력 자료입니다다음 봉에서 공개 시각을 확인하세요",
+        "inputAvailableAt": "2026-10-26T12:12:46.363Z",
+        "evaluationAt": "2026-10-26T00:00:00.000Z"
+      },
+      "strictEnd": {
+        "actual": 2,
+        "matched": 2,
+        "evaluationAt": "2026-10-28T16:35:22.293Z"
+      },
+      "candles": {
+        "count": 2,
+        "dates": [
+          "2026-10-26",
+          "2026-10-27"
+        ],
+        "matched": 2
+      },
+      "keyboardFocus": {
+        "tag": "INPUT",
+        "inside": true,
+        "outline": "solid"
+      },
+      "final": {
+        "state": "ready",
+        "playback": "ended",
+        "cursor": "2026-10-28",
+        "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+        "chart": {
+          "replayChart": "",
+          "replayActualCount": "2",
+          "replayActualThrough": "2026-10-27",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-10-28",
+          "replayScale": "log",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "91",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "8",
+          "plotRight": "178",
+          "plotTop": "16",
+          "plotBottom": "195",
+          "priceBottom": "195",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "203",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "91",
+          "candleRendering": "individual"
+        },
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "dialog": {
+          "left": 16,
+          "right": 304,
+          "top": 5,
+          "bottom": 563,
+          "scrollWidth": 286,
+          "clientWidth": 286
+        },
+        "close": {
+          "left": 258.5625,
+          "right": 295,
+          "top": 10,
+          "bottom": 54,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 268,
+          "height": 248
+        },
+        "disclosure": "금색은 고정한 seed로 추출한 ETH 무작위 예시 1개입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉2개평균 절대 % 오차3.97%평균 로그 오차0.0407가격 유지 로그 오차0.0057유지 대비 개선-611.57%방향 일치50.00%",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-24$1,945.11미공개미평가미도래 · 대기90일2027-01-23$2,958.12미공개미평가미도래 · 대기180일2027-04-23$1,359.02미공개미평가미도래 · 대기",
+        "empty": "목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-10-28 · 고정 예측 $2,189.98 · 공개 실제 미공개",
+        "scroll": 320,
+        "svgText": "ETHUSD · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$1,036$1,428$1,968$2,711$3,73627.01$2,326.752026-10-25가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-10-252026-10-26 실제 시가 $2,326.58 · 고가 $2,340.4 · 저가 $2,290 · 종가 $2,320.342026-10-27 실제 시가 $2,320.33 · 고가 $2,360.92 · 저가 $2,293.58 · 종가 $2,347.01"
+      },
+      "reopened": {
+        "state": "ready",
+        "playback": "paused",
+        "cursor": "2026-10-25",
+        "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+        "chart": {
+          "replayChart": "",
+          "replayInputVisible": "true",
+          "forecastEvidenceCount": "0",
+          "cycleIntervalCount": "0",
+          "cycleIntervalLabelCount": "0",
+          "cycleMarkerCount": "0",
+          "cycleMarkerLabelCount": "0",
+          "historyLabelCount": "0",
+          "historyEventCount": "0",
+          "historyLabelMode": "off",
+          "historyHiddenLabelCount": "0",
+          "observedLineCount": "91",
+          "observedCandleCount": "0",
+          "researchAnnotationCount": "0",
+          "plotLeft": "8",
+          "plotRight": "178",
+          "plotTop": "16",
+          "plotBottom": "195",
+          "priceBottom": "195",
+          "scale": "log",
+          "unit": "usd",
+          "invertScale": "false",
+          "timeAxisTop": "203",
+          "tool": "crosshair",
+          "chartType": "line",
+          "visiblePointCount": "91",
+          "candleRendering": "individual",
+          "replayActualCount": "0",
+          "replayActualThrough": "",
+          "replayForecastPoints": "181",
+          "replayCursor": "2026-10-25",
+          "replayScale": "log"
+        },
+        "viewport": {
+          "width": 320,
+          "height": 568
+        },
+        "dialog": {
+          "left": 16,
+          "right": 304,
+          "top": 5,
+          "bottom": 563,
+          "scrollWidth": 286,
+          "clientWidth": 286
+        },
+        "close": {
+          "left": 258.5625,
+          "right": 295,
+          "top": 10,
+          "bottom": 54,
+          "topmost": true
+        },
+        "chartBox": {
+          "width": 268,
+          "height": 248
+        },
+        "disclosure": "금색은 고정한 seed로 추출한 ETH 무작위 예시 1개입니다. 음영은 저장한 조건별 범위이며 예측확률 구간이 아닙니다. 시장 날짜 모드는 현재 확보한 판본으로 실제 가격을 한 봉씩 공개하므로, 당시 그 자료를 알았다는 증거는 아닙니다.",
+        "metrics": "비교 일봉0개평균 절대 % 오차미평가평균 로그 오차미평가가격 유지 로그 오차미평가유지 대비 개선미평가방향 일치미평가",
+        "targets": "기간목표일고정 예측공개 실제로그 오차상태30일2026-11-24$1,945.11미공개미평가미도래 · 대기90일2027-01-23$2,958.12미공개미평가미도래 · 대기180일2027-04-23$1,359.02미공개미평가미도래 · 대기",
+        "empty": "현재 재생 위치에는 발행 이후 비교 가능한 실제값이 없습니다. 목표 채점 0 · 회고 0 · 대기 3 · 관측 미확보 0.",
+        "selection": "2026-10-25 · 기준 관측 $2,326.75",
+        "scroll": 320,
+        "svgText": "ETHUSD · 고정 예측과 현재 재생 시점까지 공개된 실제 가격흰색은 예측 기준일까지의 입력 관측, 금색은 고정 예측, 파란색 또는 캔들은 현재 재생 위치까지 공개한 실제값입니다. 좌우 방향키로 한 봉씩 이동하고 스페이스로 재생하거나 정지합니다.$1,036$1,428$1,968$2,711$3,73627.01$2,326.752026-10-25가격축 · 위아래로 드래그하여 확대·축소 · 두 번 눌러 자동 맞춤시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 기본 범위고정 예측 기준일 2026-10-25"
+      },
+      "unexpectedNetworkFailures": [],
+      "unexpectedOutbound": [],
+      "replayAndJournalNetworkRequests": []
+    }
+  ],
+  "finishedAt": "2026-10-28T16:35:25.985Z"
+}
