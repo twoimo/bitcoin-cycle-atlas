@@ -97,14 +97,14 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     const result=createChartReplayController({...options,now:()=>clock,setTimer:(callback,delay)=>{timers.set(++timerId,{callback,delay,due:clock+delay});return timerId;},clearTimer:id=>timers.delete(id)});controllers.push(result);return result;
   }});
   const imports={
-    './forecast-replay.js?v=1.29.3':await module(engine),
+    './forecast-replay.js?v=1.29.4':await module(engine),
     './chart-replay-renderer.js':await module({drawReplaySelection:renderer('selection'),drawChartReplay:renderer('replay')}),
     './chart-replay-sources.js':await module({loadChartReplayArchive:loadArchive,loadChartReplayRecord:loadRecord??(async()=>{throw new Error('Unexpected recorded load');})}),
     './project-replay-baseline.js':await module({loadProjectReplayBaseline:loadBaseline??(async()=>{throw new Error('Unexpected project baseline load');})}),
     './chart-replay-atlas.js':await module({createAtlasReplayContext:options=>{atlasContexts.push(options);return {...options,forecast:options.forecast.path};},drawAtlasChartReplay:renderer('atlas')}),
   };
   const view=new vm.SourceTextModule(source,{context,identifier:sourceUrl.href,importModuleDynamically:specifier=>{assert.ok(imports[specifier],specifier);return imports[specifier];}});
-  await view.link(specifier=>{assert.equal(specifier,'./chart-replay-state.js?v=1.29.3');return state;});await view.evaluate();
+  await view.link(specifier=>{assert.equal(specifier,'./chart-replay-state.js?v=1.29.4');return state;});await view.evaluate();
   const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol,getAtlasContext,getChartState,resolveAtlasRange,
     getChartRenderer:()=>({getPriceScale:()=>axis}),onAtlasFrame:detail=>frameEvents.push(detail),
     loadAtlasRenderer:()=>imports['./chart-replay-atlas.js'].namespace,restore:()=>{restores++;}});
@@ -220,7 +220,7 @@ const interactionCases=[
     const fixture=atlasFixture({missing:[0]}),h=await harness(source,fixture.options);await h.mounted.open();
     assert.equal(h.controls.get('date').min,dateAt(1));h.controls.get('select-menu').click();
     assert.equal(h.controls.get('select-panel').hidden,false);assert.equal(h.controls.get('select-menu').getAttribute('aria-expanded'),'true');
-    h.controls.get('select-date').click();assert.equal(h.doc.activeElement,h.controls.get('date'));assert.equal(h.controls.get('select-panel').hidden,true);
+    h.controls.get('select-date').click();assert.equal(h.doc.activeElement,h.controls.get('date'));assert.equal(h.controls.get('select-panel').hidden,false,'the date editor stays visible inside Select bar');
     h.controls.get('date').value=dateAt(50);h.controls.get('date').onkeydown({key:'Enter',preventDefault(){}});await flush();
     assert.equal(h.svg.dataset.replayStartDate,dateAt(50));assert.equal(h.svg.dataset.replayCursor,dateAt(49));
     h.controls.get('select-menu').click();h.controls.get('select-random').click();await flush();
@@ -233,6 +233,36 @@ const interactionCases=[
     h.mounted.handleChartCommand({action:'frequency',value:'weekly'});assert.equal(h.controls.get('date').min,dateAt(7));
     h.controls.get('select-first').click();await flush();assert.equal(h.svg.dataset.replayStartDate,dateAt(7));assert.equal(h.svg.dataset.replayCursor,dateAt(6));
     assert.equal(h.svg.dataset.replayFrequency,'weekly');assert.equal(h.svg.dataset.replayUpdateInterval,'daily');assert.equal(h.writes.length,0);h.mounted.destroy();
+  }},
+  {name:'compact transport returns to its original start and opens the explicit save choice before jumping to the live chart',async run(source){
+    const fixture=atlasFixture({frequency:'weekly'}),h=await harness(source,fixture.options);await h.mounted.open();
+    const session=h.controllers[0].getState().session,hash=h.svg.dataset.replayOutputHash,builds=h.builds.length;
+    assert.equal(h.controls.get('first').disabled,true);h.controls.get('next').click();h.controls.get('next').click();
+    h.controls.get('play').click();assert.equal(h.timers.size,1);assert.equal(h.controls.get('first').disabled,false);
+    h.controls.get('first').click();assert.equal(h.svg.dataset.replayCursor,dateAt(180));assert.equal(h.controllers[0].getState().status,'paused');assert.equal(h.timers.size,0);
+    assert.equal(h.controllers[0].getState().session,session);assert.equal(h.svg.dataset.replayOutputHash,hash);assert.equal(h.builds.length,builds);assert.equal(h.svg.dataset.replayFrequency,'weekly');
+    h.controls.get('speed').value='10';h.controls.get('speed').onchange();assert.match(h.controls.get('speed-meaning').textContent,/10×.*초당 10업데이트/);
+    h.controls.get('next').click();h.controls.get('live').click();assert.equal(h.mounted.isActive(),true);assert.equal(h.restores(),0);assert.equal(h.controls.get('exit-dialog').hidden,false);
+    assert.equal(h.controls.get('first').disabled,true);assert.equal(h.controls.get('live').disabled,true);assert.equal(h.controls.get('exit-save').checked,true);assert.equal(h.writes.length,0);
+    h.controls.get('exit-cancel').click();assert.equal(h.svg.dataset.replayCursor,dateAt(181));assert.equal(h.svg.dataset.replayOutputHash,hash);
+    h.controls.get('live').click();h.controls.get('exit-save').checked=false;h.controls.get('exit-confirm').click();
+    assert.equal(h.mounted.isActive(),false);assert.equal(h.restores(),1);assert.equal(h.writes.length,0);h.mounted.destroy();
+  }},
+  {name:'Select bar retains native form keys and closes through Escape, its close action and an outside pointer',async run(source){
+    const fixture=atlasFixture(),h=await harness(source,fixture.options);await h.mounted.open();
+    const session=h.controllers[0].getState().session,hash=h.svg.dataset.replayOutputHash,builds=h.builds.length;
+    h.controls.get('select-menu').click();h.controls.get('select-date').click();assert.equal(h.controls.get('select-panel').hidden,false);
+    for(const key of ['Tab','ArrowUp','ArrowDown','Home','End']){
+      const event={type:'keydown',key,target:h.controls.get('date'),preventDefault(){this.prevented=true;},stopPropagation(){this.stopped=true;}};
+      h.controls.get('select-panel').dispatchEvent(event);assert.equal(event.prevented,undefined,'date input owns '+key);
+    }
+    h.controls.get('select-panel').dispatchEvent({type:'keydown',key:'Escape',target:h.controls.get('date'),preventDefault(){},stopPropagation(){}});
+    assert.equal(h.controls.get('select-panel').hidden,true);assert.equal(h.doc.activeElement,h.controls.get('select-menu'));
+    h.controls.get('select-menu').click();h.controls.get('details').click();assert.equal(h.controls.get('detail-panel').hidden,false);
+    h.controls.get('select-close').click();assert.equal(h.controls.get('select-panel').hidden,true);assert.equal(h.controls.get('detail-panel').hidden,true);
+    assert.equal(h.controls.get('details').getAttribute('aria-expanded'),'false');assert.equal(h.doc.activeElement,h.controls.get('select-menu'));
+    h.controls.get('select-menu').click();h.doc.dispatchEvent({type:'pointerdown',target:h.svg});assert.equal(h.controls.get('select-panel').hidden,true);
+    assert.equal(h.controllers[0].getState().session,session);assert.equal(h.svg.dataset.replayOutputHash,hash);assert.equal(h.builds.length,builds);assert.equal(h.writes.length,0);h.mounted.destroy();
   }},
   {name:'weekly replay and all existing viewport periods route without rebuilding or changing the current orange forecast',async run(source){
     const fixture=atlasFixture({frequency:'weekly'}),ranges={focus:{start:dateAt(90),end:dateAt(700)},near:{start:dateAt(170),end:dateAt(350)},all:{start:dateAt(0),end:dateAt(900)},history:{start:dateAt(0),end:dateAt(184)}};

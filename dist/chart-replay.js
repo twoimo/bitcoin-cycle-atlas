@@ -1,4 +1,4 @@
-import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.29.3';
+import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.29.4';
 
 const day=date=>Date.parse(date+'T00:00:00Z')/86400000;
 const dateAt=value=>new Date(Math.round(value)*86400000).toISOString().slice(0,10);
@@ -8,6 +8,9 @@ const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
 const STORAGE='atlas-chart-replay-v1:';
 const intervalName=value=>({daily:'일봉',weekly:'주봉','1m':'1분봉','5m':'5분봉','15m':'15분봉','30m':'30분봉','1h':'1시간봉','4h':'4시간봉'})[value]??value;
 const speedMeaning=value=>value===.3?'3초마다 1업데이트':value===.5?'2초마다 1업데이트':value===1?'초당 1업데이트':'초당 '+value+'업데이트';
+const replayIcon=path=>'<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="'+path+'"/></svg>';
+const playIcon=()=>replayIcon('M8 5l11 7-11 7Z');
+const pauseIcon=()=>replayIcon('M8 5v14M16 5v14');
 
 export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{},getAtlasContext=null,getChartState=null,getChartRenderer=null,resolveAtlasRange=null,loadAtlasRenderer=null,onAtlasFrame=()=>{}}={}){
   if(!svg||!plot||!toolbar)throw new TypeError('The existing chart, plot and toolbar are required');
@@ -20,23 +23,30 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   trigger.setAttribute('aria-pressed','false');toolbar.insertBefore(trigger,toolbar.querySelector('.workbench-spacer,.eth-top-spacer'));
   const panel=doc.createElement('section');panel.className='chart-replay-controls';panel.hidden=true;
   panel.setAttribute('aria-label','봉 리플레이 제어');
-  panel.innerHTML='<div class="chart-replay-toolbar"><div class="chart-replay-actions">'+
-    '<button type="button" data-cr="previous" aria-label="이전 봉">‹</button><button type="button" data-cr="play" aria-label="리플레이 재생">▶</button><button type="button" data-cr="next" aria-label="다음 봉">›</button>'+
-    '<select data-cr="speed" aria-label="재생 속도">'+CHART_REPLAY_SPEEDS.map(speed=>'<option value="'+speed+'"'+(speed===1?' selected':'')+'>'+speed+'× · '+speedMeaning(speed)+'</option>').join('')+'</select>'+
-    '<label class="chart-replay-update">업데이트 <select data-cr="update-interval" aria-label="리플레이 업데이트 간격" title="확보한 실제 일봉을 하루씩 공개합니다. 주봉은 같은 주의 실제 OHLC를 갱신합니다." disabled><option value="daily">Auto · 1일</option></select></label>'+
-    '<button type="button" data-cr="pooled-retry" hidden>통합 변동성으로 같은 날짜 비교</button>'+
-    '<button type="button" data-cr="pick" title="가위로 시작 봉 다시 선택" aria-pressed="false">✂ 시작점</button><button type="button" data-cr="select-menu" aria-label="시작 봉 선택 메뉴" aria-expanded="false">▾</button><button type="button" data-cr="pick-cancel" hidden>선택 취소</button>'+
-    '<label class="chart-replay-origin"><span data-cr="date-label">기준</span> <input type="date" data-cr="date" aria-label="리플레이 예측 기준일"></label><button type="button" data-cr="start">이 날짜 시작</button>'+
-    '<select data-cr="display" aria-label="리플레이 차트 유형"><option value="candles">캔들</option><option value="line">종가선</option></select>'+
-    '<select data-cr="mode" aria-label="리플레이 예측 종류">'+(atlasAvailable?'<option value="atlas-chart">현재 예측선 고정</option><option value="project-baseline">10월 21일 당시 전망</option>':'')+(historical?'<option value="historical-reconstruction">'+(symbol==='BTCUSD'?'BTC 축소 추세 · 회고':'ETH 가격 모형 · 회고')+'</option>':'')+'<option value="recorded">보존 예측</option></select>'+
-    (symbol==='ETHUSD'?'<select data-cr="model" aria-label="ETH 리플레이 가격 모형"><option value="adaptive">국면 적응</option><option value="pooled">통합 변동성</option></select>':'')+
+  panel.innerHTML='<div class="chart-replay-bar" role="toolbar" aria-label="봉 리플레이 재생 막대"><div class="chart-replay-actions">'+
+    '<button type="button" data-cr="first" aria-label="리플레이 처음으로" title="리플레이 처음으로 · Home">'+replayIcon('M5 5v14M18 5l-10 7 10 7Z')+'</button>'+
+    '<button type="button" data-cr="select-menu" aria-label="시작 봉 선택 메뉴 · Select bar" aria-haspopup="dialog" aria-expanded="false">Select bar <span aria-hidden="true">▾</span></button>'+
+    '<button type="button" data-cr="pick" aria-label="시작점 선택 · Select starting point" title="시작점 선택 · Select starting point" aria-pressed="false">'+replayIcon('M5 3v15l4-4 3 6 3-1-3-6 6-1Z')+'</button>'+
+    '<button type="button" data-cr="play" aria-label="리플레이 재생" title="재생 / 일시정지 · Shift + ↓">'+playIcon()+'</button>'+
+    '<button type="button" data-cr="next" aria-label="다음 봉" title="실제 일봉 한 개 전진 · Shift + →">'+replayIcon('M19 5v14M6 5l10 7-10 7Z')+'</button>'+
+    '<select data-cr="speed" aria-label="재생 속도" title="초당 1업데이트">'+CHART_REPLAY_SPEEDS.map(speed=>'<option value="'+speed+'" title="'+speedMeaning(speed)+'"'+(speed===1?' selected':'')+'>'+speed+'×</option>').join('')+'</select>'+
+    '<select data-cr="update-interval" aria-label="리플레이 업데이트 간격 · D · Auto 1일" title="D · Auto 1일. 확보한 실제 일봉을 하루씩 공개하며 주봉은 같은 주의 OHLC를 갱신합니다." disabled><option value="daily">D</option></select>'+
+    '<button type="button" data-cr="live" aria-label="최신 차트로 이동 · Jump to real-time chart" title="최신 차트로 이동 · 세션 저장 선택 후 복귀">'+replayIcon('M4 5l7 7-7 7M12 5l7 7-7 7M21 5v14')+'</button></div></div>'+
+    '<button type="button" data-cr="exit" class="chart-replay-exit" aria-label="봉 리플레이 종료" title="봉 리플레이 종료">'+replayIcon('m6 6 12 12M18 6 6 18')+'</button>'+
+    '<button type="button" data-cr="pick-cancel" class="chart-replay-pick-cancel" hidden>선택 취소 · Esc</button>'+
+    '<section class="chart-replay-select-menu" data-cr="select-panel" role="dialog" aria-label="Select bar · 시작 봉과 리플레이 설정" hidden>'+
+    '<div class="chart-replay-menu-heading"><strong>Select bar</strong><button type="button" data-cr="select-close" aria-label="시작 봉 메뉴 닫기">'+replayIcon('m6 6 12 12M18 6 6 18')+'</button></div>'+
+    '<div class="chart-replay-select-actions" role="group" aria-label="시작 봉 선택"><button type="button" data-cr="select-date">날짜 선택 · Select date</button><button type="button" data-cr="select-random">무작위 봉 · Random bar</button><button type="button" data-cr="select-first">첫 사용 가능일 · First available day</button></div>'+
+    '<div class="chart-replay-date-fields"><label class="chart-replay-origin"><span data-cr="date-label">기준</span> <input type="date" data-cr="date" aria-label="리플레이 예측 기준일"></label><button type="button" data-cr="start">이 날짜 시작</button></div>'+
+    '<div class="chart-replay-menu-fields"><label>가격 표시<select data-cr="display" aria-label="리플레이 차트 유형"><option value="candles">캔들</option><option value="line">종가선</option></select></label>'+
+    '<label>예측 종류<select data-cr="mode" aria-label="리플레이 예측 종류">'+(atlasAvailable?'<option value="atlas-chart">현재 예측선 고정</option><option value="project-baseline">10월 21일 당시 전망</option>':'')+(historical?'<option value="historical-reconstruction">'+(symbol==='BTCUSD'?'BTC 축소 추세 · 회고':'ETH 가격 모형 · 회고')+'</option>':'')+'<option value="recorded">보존 예측</option></select></label>'+
+    (symbol==='ETHUSD'?'<label>가격 모형<select data-cr="model" aria-label="ETH 리플레이 가격 모형"><option value="adaptive">국면 적응</option><option value="pooled">통합 변동성</option></select></label>':'')+
     '<select data-cr="record" aria-label="리플레이 보존 예측 선택" hidden></select>'+
-    '<select data-cr="horizon" aria-label="고정 예측 기간"><option value="30">30일</option><option value="90">90일</option><option value="180" selected>180일</option><option value="365">1년</option><option value="730">2년</option></select>'+
-    '<button type="button" data-cr="random">무작위</button><button type="button" data-cr="resume" hidden>이어서</button><button type="button" data-cr="details" aria-expanded="false">평가·근거</button></div>'+
-    '<button type="button" data-cr="exit" class="chart-replay-exit" aria-label="봉 리플레이 종료하고 최신 차트 복귀">최신 복귀 ×</button></div>'+
+    '<select data-cr="horizon" aria-label="고정 예측 기간"><option value="30">30일</option><option value="90">90일</option><option value="180" selected>180일</option><option value="365">1년</option><option value="730">2년</option></select></div>'+
+    '<div class="chart-replay-menu-actions"><button type="button" data-cr="previous" aria-label="이전 봉">이전 봉 · Shift + ←</button><button type="button" data-cr="random">무작위</button><button type="button" data-cr="resume" hidden>이어서</button><button type="button" data-cr="details" aria-expanded="false">평가·근거</button><button type="button" data-cr="pooled-retry" hidden>통합 변동성으로 같은 날짜 비교</button></div>'+
+    '<p class="chart-replay-cadence" data-cr="speed-meaning">속도 1× · 초당 1업데이트</p><p class="chart-replay-cadence">D · Auto 1일. 주봉은 실제 일봉으로 같은 주의 OHLC를 하루씩 갱신합니다.</p>'+
     '<div class="chart-replay-progress"><output data-cr="cursor">시작 봉 선택</output><input data-cr="scrub" type="range" min="0" max="0" value="0" step="1" aria-label="공개된 봉 위치"><span data-cr="metric"></span></div>'+
-    '<div class="chart-replay-details" data-cr="detail-panel" hidden><strong data-cr="model-label"></strong><p data-cr="source"></p><p data-cr="chart-meaning"></p><p data-cr="detail-metric"></p><p data-cr="evaluation-meaning"></p><button type="button" data-cr="export">공개된 평가 JSON</button><button type="button" data-cr="hide-details">닫기</button></div>'+
-    '<div class="chart-replay-select-menu" data-cr="select-panel" role="menu" aria-label="시작 봉 선택" hidden><button type="button" data-cr="select-date" role="menuitem">날짜 선택 · Select date</button><button type="button" data-cr="select-random" role="menuitem">무작위 봉 · Random bar</button><button type="button" data-cr="select-first" role="menuitem">첫 사용 가능일 · First available day</button></div>'+
+    '<div class="chart-replay-details" data-cr="detail-panel" hidden><strong data-cr="model-label"></strong><p data-cr="source"></p><p data-cr="chart-meaning"></p><p data-cr="detail-metric"></p><p data-cr="evaluation-meaning"></p><button type="button" data-cr="export">공개된 평가 JSON</button><button type="button" data-cr="hide-details">평가 닫기</button></div></section>'+
     '<section class="chart-replay-choice" data-cr="entry-dialog" role="dialog" aria-modal="true" aria-label="저장된 리플레이" hidden><strong>저장된 리플레이가 있습니다</strong><p data-cr="saved-summary"></p><div><button type="button" data-cr="entry-continue">이어서 · Continue</button><button type="button" data-cr="entry-new">새로 시작 · Start new</button><button type="button" data-cr="entry-cancel">취소</button></div></section>'+
     '<section class="chart-replay-choice" data-cr="exit-dialog" role="dialog" aria-modal="true" aria-label="리플레이 종료" hidden><strong>봉 리플레이를 종료할까요?</strong><label><input type="checkbox" data-cr="exit-save" checked>현재 세션 저장</label><p>저장을 해제하면 이번 진행은 저장하지 않고 기존 저장 기록을 유지합니다.</p><div><button type="button" data-cr="exit-confirm">종료</button><button type="button" data-cr="exit-cancel">계속 보기</button></div></section>';
   const hud=doc.createElement('div');hud.className='chart-replay-hud';hud.hidden=true;
@@ -73,7 +83,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     const text=intervalName(frequency)+' 리플레이에 필요한 실제 분봉 자료가 없습니다. '+intervalName(active?replayFrequency:frequency)+' 간격을 유지합니다.';
     notice.textContent=text;notice.hidden=false;if(active)announce(text);
   }
-  function closeMenu(){q('select-panel').hidden=true;q('select-menu').setAttribute('aria-expanded','false');}
+  function closeMenu(){q('select-panel').hidden=true;q('select-menu').setAttribute('aria-expanded','false');q('detail-panel').hidden=true;q('details').setAttribute('aria-expanded','false');}
   function clearPicker(){svg.querySelector('[data-chart-replay-picker]')?.remove();delete svg.dataset.pickerDate;}
   function closeChoice(){choice=null;q('entry-dialog').hidden=true;q('exit-dialog').hidden=true;}
   function requestExit(){
@@ -139,7 +149,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     announce('리플레이 자료를 확인하고 있습니다.');
     const signal=request.signal;
     try{
-      modules??=await Promise.all([import('./forecast-replay.js?v=1.29.3'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
+      modules??=await Promise.all([import('./forecast-replay.js?v=1.29.4'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
       if(!active||token!==epoch)return;
       if(atlasMode){
         atlasCaptured??=getAtlasContext();
@@ -304,14 +314,16 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       q('model-label').textContent=state.status==='error'?'예측을 생성하지 않았습니다.':'선택한 기준의 예측을 준비합니다.';
       for(const key of Object.keys(svg.dataset))if(key.startsWith('replay')&&key!=='replayStatus')delete svg.dataset[key];
     }
-    q('play').disabled=blocked||!ready||state.length<2;q('previous').disabled=blocked||!ready||state.cursorIndex===0;q('next').disabled=blocked||!ready||state.cursorIndex>=state.length-1;q('scrub').disabled=blocked||!ready;
+    q('play').disabled=blocked||!ready||state.length<2;q('first').disabled=blocked||!ready||state.cursorIndex===0;q('previous').disabled=blocked||!ready||state.cursorIndex===0;q('next').disabled=blocked||!ready||state.cursorIndex>=state.length-1;q('scrub').disabled=blocked||!ready;
     q('speed').value=String(state.speed);q('speed').title=speedMeaning(state.speed)+' · 실제 일봉 한 개씩 공개';q('speed').disabled=Boolean(choice);
+    q('speed-meaning').textContent='속도 '+state.speed+'× · '+speedMeaning(state.speed);q('live').disabled=Boolean(choice);
     q('pick').setAttribute('aria-pressed',String(picking));q('pick-cancel').hidden=!picking;
     if(picking)svg.dataset.replaySelecting='true';else delete svg.dataset.replaySelecting;
-    q('play').textContent=playing?'Ⅱ':'▶';q('play').setAttribute('aria-label',playing?'리플레이 일시정지':'리플레이 재생');q('play').setAttribute('aria-pressed',String(playing));
+    q('play').innerHTML=playing?pauseIcon():playIcon();q('play').setAttribute('aria-label',playing?'리플레이 일시정지':'리플레이 재생');q('play').setAttribute('aria-pressed',String(playing));
     q('scrub').max=String(Math.max(0,state.length-1));q('scrub').value=String(state.cursorIndex);
     q('start').disabled=Boolean(choice)||!archive||state.status==='loading';q('random').disabled=q('start').disabled;
-    q('pick').disabled=Boolean(choice)||!archive||state.status==='loading'||q('mode').value==='recorded';q('select-menu').disabled=q('pick').disabled;
+    q('pick').disabled=Boolean(choice)||!archive||state.status==='loading'||q('mode').value==='recorded';q('select-menu').disabled=Boolean(choice);
+    for(const name of ['select-date','select-random','select-first'])q(name).disabled=q('pick').disabled;
     for(const name of ['mode','display','horizon','model','record','date'])if(q(name))q(name).disabled=Boolean(choice)||(name==='date'&&q('mode').value==='recorded');
     const adaptiveUnavailable=state.status==='error'&&symbol==='ETHUSD'&&q('mode').value==='historical-reconstruction'&&q('model')?.value==='adaptive'&&state.error==='ETH adaptive model needs at least 30 causally classified returns in each state';
     q('pooled-retry').hidden=!adaptiveUnavailable;
@@ -378,7 +390,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     }catch(error){controller.fail(error);}finally{painting=false;}
   }
   function schedulePaint(){if(!active||paintFrame!==null)return;paintFrame=win.requestAnimationFrame(()=>{paintFrame=null;paint(getState());});}
-  function resize(){if(!active)return;plot.style.setProperty('--chart-replay-controls-height',panel.getBoundingClientRect().height+'px');schedulePaint();}
+  function resize(){if(active)schedulePaint();}
   function toggle(){if(choice||picking)return;if(getState().status==='playing')controller.pause();else controller.play();}
   function chooseStart(value){
     if(choice||!archive)return;const selected=q('mode').value==='recorded'?value:nearestOrigin(value);if(!selected)return;
@@ -418,9 +430,9 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     // or the workspace that will be restored when replay ends.
     announce('이 설정은 리플레이를 종료한 뒤 바꿀 수 있습니다.');return true;
   }
-  trigger.onclick=()=>{if(active)requestExit();else void requestEntry();};q('exit').onclick=requestExit;q('pick').onclick=beginPick;q('pick-cancel').onclick=cancelPick;
+  trigger.onclick=()=>{if(active)requestExit();else void requestEntry();};q('exit').onclick=requestExit;q('live').onclick=requestExit;q('pick').onclick=beginPick;q('pick-cancel').onclick=cancelPick;
   q('start').onclick=()=>void chooseStart(q('date').value);q('date').onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();void chooseStart(q('date').value);}};
-  q('play').onclick=toggle;q('previous').onclick=()=>controller.step(-1);q('next').onclick=()=>controller.step(1);
+  q('play').onclick=toggle;q('first').onclick=()=>controller.seek(0);q('previous').onclick=()=>controller.step(-1);q('next').onclick=()=>controller.step(1);
   q('speed').onchange=()=>controller.speed(Number(q('speed').value));q('display').onchange=async()=>{
     const displayToken=++displayEpoch;
     if(getState().session?.atlasContext&&q('display').value==='candles'&&!atlasCandles){
@@ -435,12 +447,17 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   for(const key of ['mode','horizon','model'])if(q(key))q(key).onchange=()=>void open();
   q('record').onchange=()=>void open({resume:{...stored,recordId:q('record').value,mode:'recorded',horizon:Number(q('horizon').value),cursorIndex:0,outputHash:null}});
   q('random').onclick=()=>void randomStart();
-  q('select-menu').onclick=()=>{const show=q('select-panel').hidden;closeMenu();q('detail-panel').hidden=true;if(show){q('select-panel').hidden=false;q('select-menu').setAttribute('aria-expanded','true');q('select-date').focus({preventScroll:true});}};
-  q('select-date').onclick=()=>{closeMenu();controller.pause();q('date').focus({preventScroll:true});};
+  q('select-menu').onclick=()=>{const show=q('select-panel').hidden;closeMenu();if(show){q('select-panel').hidden=false;q('select-panel').scrollTop=0;q('select-menu').setAttribute('aria-expanded','true');const target=q('select-date').disabled?q('mode'):q('select-date');target.scrollIntoView?.({block:'nearest',inline:'nearest'});target.focus({preventScroll:true});}};
+  q('select-close').onclick=()=>{closeMenu();q('select-menu').focus({preventScroll:true});};
+  q('select-date').onclick=()=>{controller.pause();q('date').scrollIntoView?.({block:'center',inline:'nearest'});q('date').focus({preventScroll:true});};
   q('select-random').onclick=()=>{closeMenu();void randomStart();};q('select-first').onclick=()=>{closeMenu();void chooseStart(q('date').min);};
-  q('select-panel').addEventListener('keydown',event=>{if(!['ArrowUp','ArrowDown','Home','End','Escape','Tab'].includes(event.key))return;
-    event.preventDefault();event.stopPropagation();if(['Escape','Tab'].includes(event.key)){closeMenu();q('select-menu').focus({preventScroll:true});return;}
-    const nodes=['select-date','select-random','select-first'].map(q),index=nodes.indexOf(doc.activeElement),next=event.key==='Home'?0:event.key==='End'?nodes.length-1:(index+(event.key==='ArrowUp'?-1:1)+nodes.length)%nodes.length;nodes[next].focus();});
+  q('select-panel').addEventListener('keydown',event=>{
+    if(event.key==='Escape'){event.preventDefault();event.stopPropagation();closeMenu();q('select-menu').focus({preventScroll:true});return;}
+    if(!['ArrowUp','ArrowDown','Home','End'].includes(event.key))return;
+    const nodes=['select-date','select-random','select-first'].map(q).filter(node=>!node.disabled),index=nodes.indexOf(doc.activeElement);
+    if(index<0)return;event.preventDefault();event.stopPropagation();const next=event.key==='Home'?0:event.key==='End'?nodes.length-1:(index+(event.key==='ArrowUp'?-1:1)+nodes.length)%nodes.length;nodes[next].focus();});
+  const dismissMenu=event=>{if(active&&!q('select-panel').hidden&&!panel.contains(event.target))closeMenu();};
+  doc.addEventListener('pointerdown',dismissMenu,true);
   q('entry-continue').onclick=()=>{const saved=stored?{...stored}:null;closeChoice();if(saved)void open({resume:saved});};
   q('entry-new').onclick=()=>{closeChoice();if(atlasAvailable)q('mode').value='atlas-chart';void open({selectOnly:true});};
   q('entry-cancel').onclick=()=>exit();
@@ -512,5 +529,5 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   const resizeObserver=new ResizeObserver(resize);resizeObserver.observe(plot);resizeObserver.observe(panel);
   return {isActive:()=>active,open,exit,handleChartCommand,destroy(){if(destroyed)return;exit();destroyed=true;controller.destroy();resizeObserver.disconnect();
     for(const type of pointerTypes)plot.removeEventListener(type,pointer,true);plot.removeEventListener('click',blockChoiceClick,true);plot.removeEventListener('wheel',wheel,true);plot.removeEventListener('contextmenu',preventLiveGesture,true);plot.removeEventListener('dblclick',preventLiveGesture,true);doc.removeEventListener('keydown',key,true);
-    doc.removeEventListener('visibilitychange',visibility);win.removeEventListener('blur',pause);win.removeEventListener('pagehide',pause);trigger.remove();panel.remove();hud.remove();notice.remove();}};
+    doc.removeEventListener('pointerdown',dismissMenu,true);doc.removeEventListener('visibilitychange',visibility);win.removeEventListener('blur',pause);win.removeEventListener('pagehide',pause);trigger.remove();panel.remove();hud.remove();notice.remove();}};
 }
