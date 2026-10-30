@@ -116,10 +116,10 @@
   ],
   "sourceHashesRefreshedAt": "2026-10-30T07:51:07.873249+00:00",
   "presentationSnapshot": {
-    "recordedAt": "2026-10-30T07:51:07.873249+00:00",
+    "recordedAt": "2026-10-30T07:57:27.711417+00:00",
     "status": "source-snapshot-only-native-results-not-recorded-here",
     "sourceSha256": {
-      "dist/chart-replay.js": "26ee8cb8b15aecb5fb66e0b22f35933544ddd9cfb287e357631b2d3b017366fb",
+      "dist/chart-replay.js": "756475645fee44783e0a55662ca36fe9fc83653a99e0f8b97dcee10df31fb67e",
       "dist/chart-replay-atlas.js": "4c64a72ee1e3417c0c7f1872deebf7c35bc5c5af6d598aa1894af1e9fa5f1f99",
       "dist/atlas-price-chart.js": "9c8ca9645c2ae57f12b92a8a9124b015e347c704454a94e4927bb135969927ca",
       "dist/chart-replay.css": "aa23715e9994eb04906e67257d4a41d9a859c16526f2ac407212a5260870267e",
@@ -127,13 +127,14 @@
       "scripts/verify-chart-replay-browser.mjs": "3d2364e81b8616660bac373910ad970615a795899a85557f56d7edebcd3e844a",
       "scripts/verify-eth-candidate-browser.mjs": "508622c5bcdddc09aa4610ca6985aab5decaee47c973d440df8b27a47c00c9b6",
       "tests/chart-replay-atlas.test.mjs": "02895d7a433eeff93a9b0e34d7a19fa8e58e36913351a4949e062aa178d7ba7f",
-      "tests/chart-replay-ui.test.mjs": "f759c916b4ca9e564913ec41471480a8748fe5087e100c9f765fcfbaad4108a6"
+      "tests/chart-replay-ui.test.mjs": "0c64a9c66d4b2cfc57b0b060b7995ac4addd70b0f59161f834d1a05cc88d8114"
     },
     "notes": [
       "Current model capture follows the last painted chart snapshot.",
       "The BTC renderer loader is injected only by the BTC lab view, preserving the complete ETH dependency-graph boundary.",
       "The early preserved scenario separates Coin Metrics score/line values from optional Bitstamp candle hover and display.",
-      "These presentation hashes identify the final integration sources; the 53/17 engine execution counts do not constitute native verification of these files."
+      "These presentation hashes identify the final integration sources; the 53/17 engine execution counts do not constitute native verification of these files.",
+      "The replay engine import is versioned with v1.29.2 so a cached engine from the previous release cannot omit the new current-chart session factory."
     ]
   }
 }

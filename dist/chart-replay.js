@@ -100,7 +100,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     announce('리플레이 자료를 확인하고 있습니다.');
     const signal=request.signal;
     try{
-      modules??=await Promise.all([import('./forecast-replay.js'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
+      modules??=await Promise.all([import('./forecast-replay.js?v=1.29.2'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
       if(!active||token!==epoch)return;
       if(atlasMode){
         atlasCaptured??=getAtlasContext();

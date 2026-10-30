@@ -103,7 +103,7 @@
       "dist/data/project-origin-btc-2026-10-21.json": "571d0d3421d7ae40da4fb3020ab0290aa534822d5a439f9e98f55dc31d5f19ac",
       "scripts/build-project-replay-baseline.mjs": "1ddf49e09ad015afd526996112c521d23fba5e539af73439c85628dec13aed83"
     },
-    "postRunSourceChangesObservedAt": "2026-10-30T07:51:20Z",
+    "postRunSourceChangesObservedAt": "2026-10-30T07:57:27.711417+00:00",
     "postRunSourceChanges": [
       {
         "path": "dist/lab-view.js",
@@ -113,7 +113,7 @@
       {
         "path": "dist/chart-replay.js",
         "testedSha256": "b8fabe38bf3fd47dbd069960ea3daa47c92b1575ffff8d820a631659d3d084ab",
-        "postRunSha256": "26ee8cb8b15aecb5fb66e0b22f35933544ddd9cfb287e357631b2d3b017366fb"
+        "postRunSha256": "756475645fee44783e0a55662ca36fe9fc83653a99e0f8b97dcee10df31fb67e"
       },
       {
         "path": "dist/chart-replay-atlas.js",
@@ -121,7 +121,7 @@
         "postRunSha256": "4c64a72ee1e3417c0c7f1872deebf7c35bc5c5af6d598aa1894af1e9fa5f1f99"
       }
     ],
-    "postRunValidationRequirement": "The changed bytes below were not covered by this local browser run. They isolate the BTC-only renderer loader from the complete ETH import graph and separate forecast-price and candle-source readouts. The final PR must pass the required complete native-browser CI suite on its exact tree; retain this original local receipt without relabelling it as a final-tree run."
+    "postRunValidationRequirement": "The changed bytes below were not covered by this local browser run. They isolate the BTC-only renderer loader from the complete ETH import graph and separate forecast-price and candle-source readouts. The final PR must pass the required complete native-browser CI suite on its exact tree; retain this original local receipt without relabelling it as a final-tree run. The engine import also uses the v1.29.2 cache identity so earlier cached code cannot be selected."
   },
   "execution": {
     "startedAt": "2026-10-30T07:45:25.466Z",

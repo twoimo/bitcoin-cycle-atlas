@@ -72,7 +72,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     const result=createChartReplayController({...options,setTimer:(callback,delay)=>{timers.set(++timerId,{callback,delay});return timerId;},clearTimer:id=>timers.delete(id)});controllers.push(result);return result;
   }});
   const imports={
-    './forecast-replay.js':await module(engine),
+    './forecast-replay.js?v=1.29.2':await module(engine),
     './chart-replay-renderer.js':await module({drawReplaySelection:renderer('selection'),drawChartReplay:renderer('replay')}),
     './chart-replay-sources.js':await module({loadChartReplayArchive:loadArchive,loadChartReplayRecord:loadRecord??(async()=>{throw new Error('Unexpected recorded load');})}),
     './project-replay-baseline.js':await module({loadProjectReplayBaseline:loadBaseline??(async()=>{throw new Error('Unexpected project baseline load');})}),
