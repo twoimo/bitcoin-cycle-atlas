@@ -1,34 +1,34 @@
-.chart-replay-trigger{display:inline-flex;align-items:center;justify-content:center;flex:none;gap:4px;min-height:32px;padding:4px 10px;border:1px solid var(--border,#303641);border-radius:4px;background:var(--surface,#171c24);color:var(--text,#dbe1eb);font:600 12px var(--font,sans-serif);white-space:nowrap;cursor:pointer}
-.chart-replay-trigger[aria-pressed=true]{border-color:var(--accent,#e8ba6d);color:var(--accent,#e8ba6d)}
-.chart-replay-active{--replay-forecast:var(--accent,#e8ba6d);--replay-actual:var(--text,#dbe1eb);--replay-up:var(--green,#55b899);--replay-down:var(--red,#de6c78);position:relative!important;overflow:hidden!important}
+.chart-replay-trigger{display:inline-flex;align-items:center;justify-content:center;flex:none;gap:4px;min-height:32px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font:600 12px var(--font,sans-serif);white-space:nowrap;cursor:pointer}
+.chart-replay-trigger[aria-pressed=true]{border-color:var(--accent);color:var(--accent)}
+.chart-replay-active{--replay-forecast:var(--accent);--replay-actual:var(--text);--replay-up:var(--green);--replay-down:var(--red);position:relative!important;overflow:hidden!important}
 .chart-replay-active>svg{height:calc(100% - var(--chart-replay-controls-height,100px))!important;min-height:0!important;touch-action:none;cursor:crosshair}
 .chart-replay-active>:not(svg):not(.chart-replay-controls):not(.chart-replay-hud){display:none!important}
-.chart-replay-hud{position:absolute;top:8px;left:12px;right:84px;z-index:7;pointer-events:none;color:var(--text,#dbe1eb);font:12px var(--font,sans-serif)}
+.chart-replay-hud{position:absolute;top:8px;left:12px;right:84px;z-index:7;pointer-events:none;color:var(--text);font:12px var(--font,sans-serif)}
 .chart-replay-hud p{margin:0 0 4px;line-height:1.5;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chart-replay-hud p:first-child{font-weight:600}
-.chart-replay-inspect{color:var(--muted,#a2acba);font-variant-numeric:tabular-nums}
-.chart-replay-controls{position:absolute;left:0;right:0;bottom:0;z-index:20;border-top:1px solid var(--border,#303641);background:var(--surface,#171c24);color:var(--text,#dbe1eb);font:12px var(--font,sans-serif)}
+.chart-replay-inspect{color:var(--muted);font-variant-numeric:tabular-nums}
+.chart-replay-controls{position:absolute;left:0;right:0;bottom:0;z-index:20;border-top:1px solid var(--border);background:var(--surface);color:var(--text);font:12px var(--font,sans-serif)}
 .chart-replay-controls[hidden],.chart-replay-hud[hidden],.chart-replay-controls [hidden]{display:none!important}
-.chart-replay-toolbar{display:flex;align-items:stretch;gap:8px;padding:8px 10px 4px;min-width:0}
+.chart-replay-toolbar{display:flex;align-items:stretch;gap:8px;padding:8px 12px 4px;min-width:0}
 .chart-replay-actions{display:flex;align-items:center;gap:4px;flex:1;min-width:0;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
 .chart-replay-actions>*{flex:none}
-.chart-replay-controls button,.chart-replay-controls select,.chart-replay-controls input[type=date]{height:32px;box-sizing:border-box;border:1px solid var(--border,#303641);border-radius:4px;background:var(--surface-raised,#202731);color:var(--text,#dbe1eb);font:inherit;padding:4px 8px;white-space:nowrap;color-scheme:dark}
+.chart-replay-controls button,.chart-replay-controls select,.chart-replay-controls input[type=date]{height:32px;box-sizing:border-box;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);color:var(--text);font:inherit;padding:4px 8px;white-space:nowrap;color-scheme:dark}
 .chart-replay-controls button{cursor:pointer;min-width:32px}
-.chart-replay-controls button:hover:not(:disabled){background:var(--surface-hover,#2c3541)}
+.chart-replay-controls button:hover:not(:disabled){background:var(--surface-hover)}
 .chart-replay-controls button:disabled{opacity:.45;cursor:not-allowed}
-.chart-replay-controls :focus-visible,.chart-replay-trigger:focus-visible{outline:2px solid var(--focus,#78b8ff);outline-offset:2px}
-.chart-replay-controls [data-cr=play]{color:var(--accent,#e8ba6d);min-width:44px;font-weight:700}
+.chart-replay-controls :focus-visible,.chart-replay-trigger:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.chart-replay-controls [data-cr=play]{color:var(--accent);min-width:44px;font-weight:700}
 .chart-replay-origin{display:flex;align-items:center;gap:4px;white-space:nowrap}
 .chart-replay-controls input[type=date]{width:140px}
 .chart-replay-controls select[data-cr=record]{max-width:240px}
 .chart-replay-exit{flex:none!important;align-self:center}
-.chart-replay-progress{display:flex;gap:12px;align-items:center;padding:4px 12px 8px;min-width:0;font-variant-numeric:tabular-nums;color:var(--muted,#a2acba)}
-.chart-replay-progress output{white-space:nowrap;min-width:160px;color:var(--text,#dbe1eb)}
-.chart-replay-progress input{flex:1;min-width:40px;accent-color:var(--accent,#e8ba6d);cursor:pointer}
+.chart-replay-progress{display:flex;gap:12px;align-items:center;padding:4px 12px 8px;min-width:0;font-variant-numeric:tabular-nums;color:var(--muted)}
+.chart-replay-progress output{white-space:nowrap;min-width:160px;color:var(--text)}
+.chart-replay-progress input{flex:1;min-width:40px;accent-color:var(--accent);cursor:pointer}
 .chart-replay-progress span{white-space:nowrap}
-.chart-replay-details{position:absolute;bottom:calc(100% + 8px);right:8px;width:min(540px,calc(100% - 16px));max-height:min(360px,55dvh);overflow:auto;box-sizing:border-box;background:var(--surface-raised,#202731);border:1px solid var(--border,#303641);border-radius:6px;padding:16px;box-shadow:0 8px 30px #0006;line-height:1.7}
-.chart-replay-details p{margin:8px 0;color:var(--muted,#a2acba)}
-.chart-replay-picker{stroke:var(--focus,#78b8ff);stroke-width:2;stroke-dasharray:5 4;pointer-events:none}
+.chart-replay-details{position:absolute;bottom:calc(100% + 8px);right:8px;width:min(540px,calc(100% - 16px));max-height:min(360px,55dvh);overflow:auto;box-sizing:border-box;background:var(--surface-raised);border:1px solid var(--border);border-radius:6px;padding:16px;box-shadow:var(--shadow);line-height:1.7}
+.chart-replay-details p{margin:8px 0;color:var(--muted)}
+.chart-replay-picker{stroke:var(--focus);stroke-width:2;stroke-dasharray:5 4;pointer-events:none}
 html[data-chart-replay-active=true] .workbench-bottom,html[data-chart-replay-active=true] #eth-status,html[data-chart-replay-active=true] #equity-status{visibility:hidden}
 html[data-chart-replay-active=true] .workspace-toast{display:none!important}
 html[data-chart-replay-active=true] #workbench-frequency,html[data-chart-replay-active=true] #workbench-chart-type,html[data-chart-replay-active=true] .eth-interval-buttons,html[data-chart-replay-active=true] #eth-interval,html[data-chart-replay-active=true] .equity-intervals,html[data-chart-replay-active=true] #equity-interval,html[data-chart-replay-active=true] .eth-chart-types{display:none!important}
@@ -38,7 +38,7 @@ html[data-chart-replay-active=true] #workbench-frequency,html[data-chart-replay-
   .chart-replay-toolbar{gap:4px;padding:4px 4px 0}
   .chart-replay-controls button,.chart-replay-controls select,.chart-replay-controls input[type=date]{height:44px}
   .chart-replay-exit{max-width:86px;padding:4px!important;font-size:11px!important}
-  .chart-replay-progress{gap:6px;padding:4px 8px 8px;flex-wrap:wrap}
+  .chart-replay-progress{gap:8px;padding:4px 8px 8px;flex-wrap:wrap}
   .chart-replay-progress output{min-width:154px;font-size:11px}
   .chart-replay-progress span{font-size:11px}
   .chart-replay-progress input{min-width:70px}
