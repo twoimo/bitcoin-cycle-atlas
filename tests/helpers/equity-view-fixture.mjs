@@ -85,6 +85,8 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
       return { cancelGesture() {}, destroy() {}, update() {} };
     },
     mountChartTouchTracking: mount, clearChartHover() {}, mountSymbolSelector: mount,
+    // Inline replay owns a separate lifecycle, exercised by chart-replay-ui.test.mjs.
+    mountChartReplay: () => ({isActive:()=>false,open(){},exit(){},destroy(){}}),
     bindPreservedArchiveDownload() {}, // DOM download behavior is verified separately.
     mountDialogViewport: mount, EQUITY_FORECAST_BAR_NOTE: 'simulated values',
     TREASURY_EVENTS: [], TREASURY_SOURCES: [], treasuryEventMarkup() {},

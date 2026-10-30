@@ -1,6 +1,6 @@
 {
   "name": "bitcoin-cycle-atlas",
-  "version": "1.29.0",
+  "version": "1.29.1",
   "private": true,
   "type": "module",
   "engines": {
@@ -25,12 +25,14 @@
     "verify:eth-events": "node scripts/build-ethereum-events.mjs --check",
     "verify:cycle": "node scripts/refresh-cycle-calibration.mjs --check",
     "verify:performance": "node scripts/verify-chart-performance.mjs",
-    "verify:formal": "node scripts/verify-market-state.mjs && node scripts/verify-equity-state.mjs && node scripts/verify-eth-state.mjs && node scripts/verify-publication-state.mjs",
+    "verify:formal": "node scripts/verify-market-state.mjs && node scripts/verify-equity-state.mjs && node scripts/verify-eth-state.mjs && node scripts/verify-publication-state.mjs && node verification/replay-state/verify.mjs build/replay-state.json",
     "build:standalone": "node scripts/build-standalone.mjs",
     "release:package": "node scripts/package-release.mjs",
     "build:forecast": "node scripts/build-forecast-ledger.mjs",
     "verify:forecast": "node scripts/build-forecast-ledger.mjs --check",
     "build:publication": "node scripts/build-publication.mjs",
-    "verify:publication": "node scripts/build-publication.mjs --check"
+    "verify:publication": "node scripts/build-publication.mjs --check",
+    "verify:chart-replay": "node --test tests/chart-replay*.test.mjs tests/forecast-replay-chart-data.test.mjs",
+    "verify:chart-replay-state": "node verification/replay-state/verify.mjs build/replay-state.json"
   }
 }

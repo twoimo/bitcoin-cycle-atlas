@@ -11,6 +11,7 @@ on:
       - 'tests/eth-review-packet.test.mjs'
       - 'tests/journal-entry-ownership.test.mjs'
       - 'tests/forecast-replay*.test.mjs'
+      - 'tests/chart-replay*.test.mjs'
       - 'tests/equity-chart-rendering.test.mjs'
       - 'tests/eth-chart-rendering.test.mjs'
       - 'tests/eth-future-range.test.mjs'
@@ -65,6 +66,7 @@ on:
       - 'scripts/verify-eth-candidate-browser.mjs'
       - 'scripts/verify-workspace-browser.mjs'
       - 'scripts/verify-forecast-replay-browser.mjs'
+      - 'scripts/verify-chart-replay-browser.mjs'
       - 'scripts/build-standalone.mjs'
       - 'scripts/btc-offline-refresh-policy.mjs'
       - 'scripts/capture-ethereum-economic-data.mjs'
@@ -104,6 +106,8 @@ jobs:
         run: |
           node --check scripts/verify-eth-candidate-browser.mjs
           node --check scripts/verify-forecast-replay-browser.mjs
+          node --check scripts/verify-chart-replay-browser.mjs
+          npm run verify:chart-replay
           node --check scripts/prepare-ethereum-base-rollover.mjs
           node --check scripts/issue-ethereum-prospective.mjs
           node --check scripts/evaluate-ethereum-common-cohort.mjs

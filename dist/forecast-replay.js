@@ -1,7 +1,7 @@
 import {forecastHash,verifyForecastRecord,restoreForecastPath} from './forecast-records.js';
 import {verifyAssetForecastRecord,restoreAssetForecastPath} from './asset-forecast-records.js';
 import {normalizeForecastTimestamp,selectPriceVintages} from './forecast-information-time.js';
-import {sessionCloseUtc} from './data-freshness.js';
+import {sessionCloseUtc,isEquitySession} from './data-freshness.js';
 import {utcDay,dateFromDay} from './cycle-engine.js';
 import {buildIndependentBenchmarks,BENCHMARK_POLICY} from './forecast-evaluation.js';
 
@@ -9,6 +9,7 @@ export const FORECAST_REPLAY_VERSION='forecast-replay-2';
 const SYMBOLS=new Set(['BTCUSD','ETHUSD','MSTR','BMNR']);
 const HEX=/^[a-f0-9]{64}$/;
 const sessions=new WeakSet();
+const chartHistories=new WeakMap();
 const marketFor=symbol=>{
   if(!SYMBOLS.has(symbol))throw new RangeError('Unsupported replay symbol');
   return symbol.endsWith('USD')?'crypto':'equity';
@@ -127,6 +128,8 @@ function finishSession({identity,mode,prices,path,targets,observations,observedA
       historicalAvailabilityProven:false,providerAuthenticityProven:false},
     policy:{forecastNeverRecomputedDuringReplay:true,missingValuesImputed:false,calibrated:false,
       dailyErrorsAreIndependentSamples:false,releaseAuthorized:false,productionPromoted:false}};
+  chartHistories.set(session,{prices:freeze(prices.map(row=>({date:row.date,price:row.price}))),
+    observations:freeze(normalized.filter(row=>row.date<=asOf)),current:null});
   sessions.add(session);return freeze(session);
 }
 
@@ -298,4 +301,71 @@ export function buildReplayFrame(session,options={}){
       observationClock:clockMode==='observed-date'?'current-vintage-market-bar-reconstruction':'recorded-acquisition-cutoff',
       prospectiveScoringEligible:clockMode==='information-time'&&session.mode==='recorded'&&session.identity.recordKind==='issued',
       historicalAvailabilityProven:false,dailyMetricMeaning:'Overlapping errors along one fixed origin path; not independent forecast trials.'}});
+}
+
+function chartHistory(session,frame){
+  if(!frame.inputVisible)return [];
+  const history=chartHistories.get(session);
+  if(frame.clockMode==='observed-date'&&history.current)return history.current;
+  const cutoff=frame.clockMode==='information-time'?frame.evaluationAt:session.evaluatedAt;
+  const archive=frame.clockMode==='information-time'?history.observations.filter(receiptComplete):history.observations;
+  const observations=new Map(currentObservations(archive,cutoff).map(row=>[row.date,row]));
+  // Preserve the consumed input close. A later archive's candle is usable only
+  // when its close agrees with that frozen input and its own clock permits it.
+  const result=freeze(history.prices.map(row=>{
+    const candle=observations.get(row.date);
+    return candle?.price===row.price?candle:row;
+  }));
+  if(frame.clockMode==='observed-date')history.current=result;
+  return result;
+}
+
+function weeklyReplayCandles(rows,market,{cursorDate,evaluationAt}){
+  const groups=new Map();
+  for(const row of rows){
+    const day=utcDay(row.date),monday=day-((day+3)%7+7)%7;
+    if(!groups.has(monday))groups.set(monday,[]);
+    groups.get(monday).push(row);
+  }
+  const candles=[];let incompleteGroups=0,unreviewedGroups=0;
+  for(const [monday,days]of groups){
+    const week=Array.from({length:7},(_,offset)=>dateFromDay(monday+offset));
+    if(market==='equity'&&week.some(date=>isEquitySession(date)===null)){unreviewedGroups++;continue;}
+    const expected=market==='crypto'?week:week.filter(date=>isEquitySession(date));
+    const last=expected.at(-1);
+    if(!last||last>cursorDate||sessionCloseUtc(last,market)>evaluationAt||days.length!==expected.length||
+      days.some((row,index)=>row.date!==expected[index])){incompleteGroups++;continue;}
+    const volume=days.every(row=>Number.isFinite(row.volume))?days.reduce((sum,row)=>sum+row.volume,0):null;
+    if(volume!==null&&!Number.isFinite(volume))throw new RangeError('Weekly replay volume overflow');
+    candles.push({time:monday*86400,date:last,startDate:expected[0],endDate:last,
+      open:days[0].open,high:Math.max(...days.map(row=>row.high)),low:Math.min(...days.map(row=>row.low)),
+      close:days.at(-1).close,...(volume===null?{}:{volume}),daysIncluded:days.length,complete:true});
+  }
+  return {candles,incompleteGroups,unreviewedGroups};
+}
+
+/** Main-chart prices and genuine OHLC at the replay cursor. The full consumed
+ * history is retained privately; the journal frame keeps its 90-day contract.
+ * Cut daily observations before aggregating weeks, never the other way round. */
+export function buildReplayChartData(session,options={}){
+  const frequency=options.frequency??'daily';
+  if(!['daily','weekly'].includes(frequency))throw new RangeError('Replay supports daily or weekly observations');
+  const frame=buildReplayFrame(session,options);
+  const start=options.startDate===undefined?-Infinity:utcDay(options.startDate);
+  const end=options.endDate===undefined?Infinity:utcDay(options.endDate);
+  if(start>end)throw new RangeError('Replay chart range is reversed');
+  const inRange=row=>{const day=utcDay(row.endDate??row.date);return day>=start&&day<=end;};
+  const visible=[...chartHistory(session,frame),...frame.actual];
+  const observedRows=visible.filter(inRange).map(row=>({date:row.date,price:row.price}));
+  const dailyCandles=visible.filter(row=>['open','high','low','close'].every(key=>Number.isFinite(row[key]))).map(row=>({
+    date:row.date,time:utcDay(row.date)*86400,startDate:row.date,endDate:row.date,
+    open:row.open,high:row.high,low:row.low,close:row.close,...(row.volume===undefined?{}:{volume:row.volume}),complete:true}));
+  const weekly=frequency==='weekly'?weeklyReplayCandles(dailyCandles,session.market,frame):null;
+  const observedCandles=(weekly?.candles??dailyCandles).filter(inRange);
+  const availableDailyDates=new Set(dailyCandles.map(row=>row.date));
+  return freeze({frame,frequency,originDate:session.asOf,observedRows,observedCandles,
+    ohlcAvailable:observedCandles.length>0,
+    completeOhlcCoverage:observedRows.length>0&&observedRows.every(row=>availableDailyDates.has(row.date)),
+    partialWeekCount:weekly?.incompleteGroups??0,unreviewedWeekCount:weekly?.unreviewedGroups??0,
+    ...bounds([...observedRows,...observedCandles,...frame.forecast.filter(inRange)])});
 }

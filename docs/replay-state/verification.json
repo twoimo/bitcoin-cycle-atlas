@@ -1,0 +1,72 @@
+{
+  "kind": "atlas-replay-state-verification",
+  "schemaVersion": 1,
+  "baselineCommit": "fec62fc3c6bddee1d892efab01938102ad780b11",
+  "node": "v24.22.1",
+  "sourcePath": "dist/chart-replay-state.js",
+  "sourceSha256": "5b782ad02e80a2ffb89dec6ccf7a170720a9f55ace0f2f47a400e1ad5739e822",
+  "testPath": "tests/chart-replay-state.test.mjs",
+  "testSha256": "19ad532126d0bc7cc7b1441db0addb8962574ae2be54e79af17b19c73c7de85d",
+  "method": "Execute actual JavaScript controller; exhaustive finite command traces plus targeted async ownership cases and isolated real-source negative controls",
+  "bounds": {
+    "playbackCommands": 10,
+    "maxTraceLength": 4,
+    "traces": 10000,
+    "playbackBars": 3,
+    "asyncLoads": 2
+  },
+  "formalProof": false,
+  "modelCheckerRun": false,
+  "excluded": [
+    "Unlimited trace lengths",
+    "Browser DOM and event wiring",
+    "Forecast mathematics",
+    "Network completion fairness",
+    "Wall-clock scheduling accuracy"
+  ],
+  "original": {
+    "status": "pass",
+    "tests": 14,
+    "passed": 14,
+    "failed": 0,
+    "skipped": 0,
+    "exitStatus": 0
+  },
+  "mutations": {
+    "unguarded-session-completion": {
+      "status": "expected behavioral failure",
+      "tests": 14,
+      "passed": 11,
+      "failed": 3,
+      "skipped": 0,
+      "exitStatus": 1,
+      "sourceSha256": "ea59aa8ff44389a8b5845570a41534bbd20b34af8ae07e19d8874af7d8dbf562"
+    },
+    "unguarded-timer-generation": {
+      "status": "expected behavioral failure",
+      "tests": 14,
+      "passed": 11,
+      "failed": 3,
+      "skipped": 0,
+      "exitStatus": 1,
+      "sourceSha256": "d594050eab36a00a6cc72cd76d43d8cefe6b7fc4ff0c42168959473a4fe26b56"
+    },
+    "mutable-session-output": {
+      "status": "expected behavioral failure",
+      "tests": 14,
+      "passed": 13,
+      "failed": 1,
+      "skipped": 0,
+      "exitStatus": 1,
+      "sourceSha256": "526acc7e170eb79e3136c64adbcee7677073ac905cc1f3dc77ec3535821f6d56"
+    }
+  },
+  "restored": {
+    "status": "pass",
+    "tests": 14,
+    "passed": 14,
+    "failed": 0,
+    "skipped": 0,
+    "exitStatus": 0
+  }
+}
