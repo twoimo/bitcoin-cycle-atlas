@@ -34,7 +34,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
       if(key){if(key==='model'&&symbol!=='ETHUSD')return null;if(!controls.has(key)){
         const item=new Element(['date','scrub','exit-save'].includes(key)?'input':['mode','model','horizon','record','speed','display','update-interval'].includes(key)?'select':'button');
         item.value=({mode:'historical-reconstruction',model:'adaptive',horizon:'180',speed:'1',display:'candles',scrub:'0','update-interval':'daily'})[key]??'';
-        item.hidden=['pooled-retry','pick-cancel','record','resume','detail-panel','select-panel','entry-dialog','exit-dialog'].includes(key);
+        item.hidden=['pooled-retry','pick-cancel','record','detail-panel','select-panel','date-view','forecast-view','menu-back','entry-dialog','exit-dialog'].includes(key);
         item.disabled=key==='update-interval';item.checked=key==='exit-save';controls.set(key,item);
       }return controls.get(key);}
       if(selector==='[value="candles"]'){this.candleOption??=new Element('option');return this.candleOption;}
@@ -97,14 +97,14 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     const result=createChartReplayController({...options,now:()=>clock,setTimer:(callback,delay)=>{timers.set(++timerId,{callback,delay,due:clock+delay});return timerId;},clearTimer:id=>timers.delete(id)});controllers.push(result);return result;
   }});
   const imports={
-    './forecast-replay.js?v=1.29.4':await module(engine),
+    './forecast-replay.js?v=1.29.5':await module(engine),
     './chart-replay-renderer.js':await module({drawReplaySelection:renderer('selection'),drawChartReplay:renderer('replay')}),
     './chart-replay-sources.js':await module({loadChartReplayArchive:loadArchive,loadChartReplayRecord:loadRecord??(async()=>{throw new Error('Unexpected recorded load');})}),
     './project-replay-baseline.js':await module({loadProjectReplayBaseline:loadBaseline??(async()=>{throw new Error('Unexpected project baseline load');})}),
     './chart-replay-atlas.js':await module({createAtlasReplayContext:options=>{atlasContexts.push(options);return {...options,forecast:options.forecast.path};},drawAtlasChartReplay:renderer('atlas')}),
   };
   const view=new vm.SourceTextModule(source,{context,identifier:sourceUrl.href,importModuleDynamically:specifier=>{assert.ok(imports[specifier],specifier);return imports[specifier];}});
-  await view.link(specifier=>{assert.equal(specifier,'./chart-replay-state.js?v=1.29.4');return state;});await view.evaluate();
+  await view.link(specifier=>{assert.equal(specifier,'./chart-replay-state.js?v=1.29.5');return state;});await view.evaluate();
   const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol,getAtlasContext,getChartState,resolveAtlasRange,
     getChartRenderer:()=>({getPriceScale:()=>axis}),onAtlasFrame:detail=>frameEvents.push(detail),
     loadAtlasRenderer:()=>imports['./chart-replay-atlas.js'].namespace,restore:()=>{restores++;}});
@@ -234,6 +234,68 @@ const interactionCases=[
     h.controls.get('select-first').click();await flush();assert.equal(h.svg.dataset.replayStartDate,dateAt(7));assert.equal(h.svg.dataset.replayCursor,dateAt(6));
     assert.equal(h.svg.dataset.replayFrequency,'weekly');assert.equal(h.svg.dataset.replayUpdateInterval,'daily');assert.equal(h.writes.length,0);h.mounted.destroy();
   }},
+  {name:'Select bar opens only starting actions, keeps forecast settings separate and selects a chart bar without mutating saved state',async run(source){
+    const fixture=atlasFixture(),raw=JSON.stringify(savedFixture()),h=await harness(source,{...fixture.options,storedText:raw});
+    await h.mounted.open();const session=h.controllers[0].getState().session,hash=h.svg.dataset.replayOutputHash;
+    h.controls.get('select-menu').click();
+    assert.equal(h.controls.get('select-panel').dataset.menuView,'start');assert.equal(h.controls.get('start-view').hidden,false);
+    assert.equal(h.controls.get('date-view').hidden,true);assert.equal(h.controls.get('forecast-view').hidden,true);assert.equal(h.doc.activeElement,h.controls.get('select-chart'));
+    for(const expected of ['select-date','select-random','select-first','select-chart']){
+      h.controls.get('select-panel').dispatchEvent({type:'keydown',key:'ArrowDown',preventDefault(){},stopPropagation(){}});
+      assert.equal(h.doc.activeElement,h.controls.get(expected));
+    }
+    h.controls.get('menu-settings').click();assert.equal(h.controls.get('select-panel').dataset.menuView,'forecast');
+    assert.equal(h.controls.get('start-view').hidden,true);assert.equal(h.controls.get('date-view').hidden,true);assert.equal(h.controls.get('forecast-view').hidden,false);
+    h.controls.get('details').click();assert.equal(h.controls.get('detail-panel').hidden,false);
+    h.controls.get('menu-back').click();assert.equal(h.controls.get('select-panel').dataset.menuView,'start');assert.equal(h.controls.get('detail-panel').hidden,true);
+    h.controls.get('select-chart').click();assert.equal(h.controls.get('select-panel').hidden,true);assert.equal(h.svg.dataset.replaySelecting,'true');
+    h.pointer('pointermove',dateAt(183));assert.equal(h.svg.dataset.pickerDate,dateAt(183));
+    assert.equal(h.controllers[0].getState().session,session);assert.equal(h.svg.dataset.replayOutputHash,hash);assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);
+    h.controls.get('pick-cancel').click();assert.equal(h.svg.dataset.replaySelecting,undefined);h.mounted.destroy();
+  }},
+  {name:'the date selection editor follows the restored visible cursor and discards unapplied drafts without changing the session start',async run(source){
+    const fixture=atlasFixture(),saved=savedFixture({startDate:dateAt(184),cursorIndex:3,cursorDate:dateAt(183),frequency:'daily'}),raw=JSON.stringify(saved,null,2)+'\n';
+    const h=await harness(source,{...fixture.options,storedText:raw});h.trigger.click();h.controls.get('entry-continue').click();await flush();
+    const session=h.controllers[0].getState().session,hash=h.svg.dataset.replayOutputHash,builds=h.builds.length;
+    for(const close of ['menu-back','select-close','escape','outside']){
+      if(h.controls.get('select-panel').hidden)h.controls.get('select-menu').click();
+      h.controls.get('select-date').click();assert.equal(h.controls.get('select-panel').dataset.menuView,'date');
+      assert.equal(h.controls.get('date').value,saved.cursorDate);assert.equal(h.controls.get('date').getAttribute('aria-label'),'새 시작점 날짜');
+      assert.equal(h.controls.get('date-context').textContent,'현재 공개: '+dateAt(183)+' · 다음 봉: '+dateAt(184));
+      h.controls.get('date').value=dateAt(184);
+      if(close==='escape')h.controls.get('select-panel').dispatchEvent({type:'keydown',key:'Escape',preventDefault(){},stopPropagation(){}});
+      else if(close==='outside')h.doc.dispatchEvent({type:'pointerdown',target:h.svg});else h.controls.get(close).click();
+      assert.equal(h.controls.get('date').value,saved.startDate,'the hidden editor restores its original non-draft value');
+      assert.equal(h.controllers[0].getState().session,session);assert.equal(h.svg.dataset.replayCursor,saved.cursorDate);assert.equal(h.svg.dataset.replayStartDate,saved.startDate);
+      assert.equal(h.svg.dataset.replayOutputHash,hash);assert.equal(h.builds.length,builds);assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);
+    }
+    h.controls.get('select-menu').click();h.controls.get('select-date').click();h.controls.get('date').value=dateAt(182);
+    h.controls.get('next').click();assert.equal(h.controls.get('date').value,dateAt(182),'transport must not overwrite an in-progress date draft');
+    assert.equal(h.controls.get('date-context').textContent,'현재 공개: '+dateAt(184)+' · 다음 봉: 확보한 자료 끝');
+    h.controls.get('first').click();assert.equal(h.controls.get('date').value,dateAt(182));
+    assert.equal(h.controls.get('date-context').textContent,'현재 공개: '+dateAt(180)+' · 다음 봉: '+dateAt(181));
+    h.controls.get('select-close').click();for(let i=0;i<3;i++)h.controls.get('next').click();
+    h.controls.get('select-menu').click();h.controls.get('select-date').click();h.controls.get('start').click();await flush();
+    assert.equal(h.svg.dataset.replayStartDate,dateAt(183));assert.equal(h.svg.dataset.replayCursor,dateAt(182));
+    assert.equal(h.svg.dataset.replayOutputHash,hash);h.controls.get('next').click();assert.equal(h.svg.dataset.replayCursor,dateAt(183));
+    assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);h.mounted.destroy();
+  }},
+  {name:'date editing preserves the default first candle and reports empty cutoffs and actual gaps truthfully',async run(source){
+    const fixture=atlasFixture({missing:[182]}),h=await harness(source,fixture.options);await h.mounted.open();
+    assert.equal(h.svg.dataset.replayStartDate,dateAt(181));assert.equal(h.svg.dataset.replayCursor,dateAt(180));
+    h.controls.get('select-menu').click();h.controls.get('select-date').click();assert.equal(h.controls.get('date').value,dateAt(180));
+    h.controls.get('date').value=dateAt(183);h.controls.get('select-close').click();h.controls.get('next').click();
+    assert.equal(h.svg.dataset.replayCursor,dateAt(181));assert.equal(h.svg.dataset.replayStartDate,dateAt(181));
+    h.controls.get('select-menu').click();h.controls.get('select-date').click();
+    assert.equal(h.controls.get('date-context').textContent,'현재 공개: '+dateAt(181)+' · 다음 봉: '+dateAt(183),'next is a real archive date, not cursor plus one day');
+    h.controls.get('menu-back').click();h.controls.get('select-first').click();await flush();
+    h.controls.get('select-menu').click();h.controls.get('select-date').click();
+    assert.equal(h.controls.get('date').value,dateAt(0));assert.equal(h.controls.get('date-context').textContent,'현재 공개: 없음 · 다음 봉: '+dateAt(0));
+    h.mounted.exit();await h.mounted.open({selectOnly:true});const initial=h.controls.get('date').value;
+    h.controls.get('select-menu').click();h.controls.get('select-date').click();h.controls.get('date').value=dateAt(183);h.controls.get('menu-back').click();
+    assert.equal(h.controls.get('date').value,initial);h.controls.get('select-date').click();assert.equal(h.controls.get('date').value,initial);
+    assert.match(h.controls.get('date-context').textContent,/시작점 미확정/);assert.equal(h.controllers[0].getState().session,null);assert.equal(h.writes.length,0);h.mounted.destroy();
+  }},
   {name:'compact transport returns to its original start and opens the explicit save choice before jumping to the live chart',async run(source){
     const fixture=atlasFixture({frequency:'weekly'}),h=await harness(source,fixture.options);await h.mounted.open();
     const session=h.controllers[0].getState().session,hash=h.svg.dataset.replayOutputHash,builds=h.builds.length;
@@ -258,7 +320,7 @@ const interactionCases=[
     }
     h.controls.get('select-panel').dispatchEvent({type:'keydown',key:'Escape',target:h.controls.get('date'),preventDefault(){},stopPropagation(){}});
     assert.equal(h.controls.get('select-panel').hidden,true);assert.equal(h.doc.activeElement,h.controls.get('select-menu'));
-    h.controls.get('select-menu').click();h.controls.get('details').click();assert.equal(h.controls.get('detail-panel').hidden,false);
+    h.controls.get('select-menu').click();h.controls.get('menu-settings').click();h.controls.get('details').click();assert.equal(h.controls.get('detail-panel').hidden,false);
     h.controls.get('select-close').click();assert.equal(h.controls.get('select-panel').hidden,true);assert.equal(h.controls.get('detail-panel').hidden,true);
     assert.equal(h.controls.get('details').getAttribute('aria-expanded'),'false');assert.equal(h.doc.activeElement,h.controls.get('select-menu'));
     h.controls.get('select-menu').click();h.doc.dispatchEvent({type:'pointerdown',target:h.svg});assert.equal(h.controls.get('select-panel').hidden,true);
@@ -297,6 +359,10 @@ const interactionCases=[
     assert.equal(h.timers.size,1);assert.equal([...h.timers.values()][0].delay,1000);h.tick();assert.equal(h.svg.dataset.replayCursor,dateAt(181));
     keyEvent(h,'ArrowDown',{shiftKey:true});assert.equal(h.controllers[0].getState().status,'paused');assert.equal(h.timers.size,0);
     keyEvent(h,'ArrowRight',{shiftKey:true});assert.equal(h.svg.dataset.replayCursor,dateAt(182));
+    const session=h.controllers[0].getState().session,hash=h.svg.dataset.replayOutputHash,builds=h.builds.length;
+    for(const extra of [{},{shiftKey:true}]){keyEvent(h,'ArrowLeft',extra);assert.equal(h.svg.dataset.replayCursor,dateAt(182));}
+    assert.equal(h.controls.has('previous'),false);assert.equal(h.controllers[0].getState().session,session);assert.equal(h.svg.dataset.replayOutputHash,hash);assert.equal(h.builds.length,builds);
+    const nativeLeft=keyEvent(h,'ArrowLeft',{shiftKey:true,target:h.controls.get('date')});assert.equal(nativeLeft.prevented,undefined);assert.equal(nativeLeft.stopped,undefined);
     h.controls.get('speed').value='.3';h.controls.get('speed').onchange();keyEvent(h,'ArrowDown',{shiftKey:true});assert.equal([...h.timers.values()][0].delay,3000);
     h.win.dispatchEvent({type:'blur'});h.win.dispatchEvent({type:'pagehide'});assert.equal(h.controllers[0].getState().status,'paused');assert.equal(h.timers.size,0);assert.equal(h.saved(),null);assert.equal(h.writes.length,0);
     h.controls.get('pick').click();const cursor=h.svg.dataset.replayCursor;keyEvent(h,'ArrowRight',{shiftKey:true});assert.equal(h.svg.dataset.replayCursor,cursor);
