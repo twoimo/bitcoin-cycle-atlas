@@ -108,7 +108,7 @@ document.addEventListener('atlas:page-ready', onInitialPageReady);
 let outlookController = null, workspacePromise = null, evidencePromise = null, evidenceModule = null;
 function ensureWorkspace() {
   if (!workspacePromise) workspacePromise = Promise.all([
-    import('./viewport-workspace.js?v=1.29.5'), import('./lab-view.js?v=1.29.5'),
+    import('./viewport-workspace.js?v=1.29.6'), import('./lab-view.js?v=1.29.6'),
   ]).then(([workspace, lab]) => {
     workspace.initViewportWorkspace(icon);
     outlookController = lab.initLabView();

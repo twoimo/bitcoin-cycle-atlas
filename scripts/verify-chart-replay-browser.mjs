@@ -274,12 +274,16 @@ export async function verifyChartReplaySurface(api) {
     evidence.popovers.push({ label: 'native-secondary-date-settings-back-escape-and-outside-dismissal', menu, date, settings, before, after });
   }
 
-  function assertSameReplayFrame(actual, expected, label) {
+  function assertSameReplayFrame(actual, expected, label, { selectionPreview = false } = {}) {
     for (const field of ['state', 'origin', 'cursor', 'playbackStartDate', 'index', 'actualThrough', 'actualCount', 'observedCandleCount', 'volumeCount', 'frequency',
       'outputHash', 'forecastValueSignature', 'annotationSignature', 'priceMinimum', 'priceMaximum', 'viewStart', 'viewEnd']) {
       assert.equal(actual[field], expected[field], label + ' changed ' + field);
     }
-    for (const field of ['candles', 'volumeBars', 'observedIndicatorDates', 'confirmedCursorXs']) assert.deepEqual(actual[field], expected[field], label + ' changed ' + field);
+    for (const field of ['candles', 'volumeBars', 'observedIndicatorDates']) assert.deepEqual(actual[field], expected[field], label + ' changed ' + field);
+    if (selectionPreview) {
+      assert.equal(actual.origins, 0, 'Selecting a new start still paints a committed origin');
+      assert.equal(actual.cursors, 0, 'Selecting a new start still paints a committed cutoff');
+    } else assert.deepEqual(actual.confirmedCursorXs, expected.confirmedCursorXs, label + ' changed confirmedCursorXs');
   }
   async function verifySavedDateEditor(before, label) {
     const saved = await storedBytes(); assert.ok(saved);
@@ -521,7 +525,9 @@ export async function verifyChartReplaySurface(api) {
         scrollX, documentScrollLeft: document.documentElement.scrollLeft, bodyScrollLeft: document.body.scrollLeft,
         scrolledAncestors: (() => { const values = []; for (let parent = svg.parentElement; parent; parent = parent.parentElement) if (parent.scrollLeft || parent.scrollTop) values.push({ id: parent.id, className: parent.className, scrollLeft: parent.scrollLeft, scrollTop: parent.scrollTop }); return values; })(),
         chart: { left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width, height: box.height },
-        nextDisabled: q('next').disabled, previousPresent: Boolean(q('previous')) };
+        playDisabled: q('play').disabled, nextDisabled: q('next').disabled, liveDisabled: q('live').disabled,
+        nativeCrosshairVisible: (() => { const node = svg.querySelector('[id$="-cross"]'); return Boolean(node && getComputedStyle(node).display !== 'none' && getComputedStyle(node).visibility !== 'hidden'); })(),
+        previousPresent: Boolean(q('previous')) };
     }, { chartSelector, panel });
     evidence.lastObservation = { label, ...value, candles: value.candles.map(row => row.date), annotationSignature: undefined,
       annotationSha256: value.annotationSignature === null ? null : digest(value.annotationSignature) };
@@ -686,6 +692,71 @@ export async function verifyChartReplaySurface(api) {
     }
     await click(cdp, decision(name));
   }
+  async function previewStart(label, target, expectedDate) {
+    const hit = await evaluate(cdp, ({ selector, target }) => {
+      const node = document.elementFromPoint(target.x, target.y);
+      return { chart: Boolean(node && document.querySelector(selector).contains(node)), tag: node?.tagName,
+        control: node?.closest('[data-cr]')?.dataset.cr ?? null };
+    }, { selector: chartSelector, target });
+    assert.equal(hit.chart, true, 'Native picker target is covered by another control: ' + JSON.stringify({ target, hit }));
+    await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...target }); await settled(cdp);
+    const value = await evaluate(cdp, ({ selector, panel }) => {
+      const svg = document.querySelector(selector), line = svg.querySelector('[data-chart-replay-picker] line.chart-replay-picker');
+      const cross = svg.querySelector('[id$="-cross"]'), controls = document.querySelector(panel), q = name => controls.querySelector('[data-cr="' + name + '"]');
+      return { cursor: svg.dataset.replayCursor ?? null, origin: svg.dataset.replayOrigin ?? null,
+        pickerDate: svg.dataset.pickerDate ?? svg.dataset.replayPickerDate ?? null,
+        selecting: svg.dataset.replaySelecting, stroke: line ? getComputedStyle(line).stroke : null,
+        scissors: Boolean(svg.querySelector('[data-chart-replay-scissors]')),
+        scissorsLabel: svg.querySelector('[data-chart-replay-scissors]')?.textContent ?? null,
+        inspect: document.querySelector('.chart-replay-inspect')?.textContent ?? null,
+        playDisabled: q('play').disabled, nextDisabled: q('next').disabled, liveDisabled: q('live').disabled,
+        nativeCrosshairVisible: Boolean(cross && getComputedStyle(cross).display !== 'none' && getComputedStyle(cross).visibility !== 'hidden'),
+        confirmedXs: [...svg.querySelectorAll('[data-replay-cursor-line]')].map(node => node.getAttribute('x1')),
+        origins: svg.querySelectorAll('[data-replay-origin-boundary]').length,
+        line: line ? { x1: line.getAttribute('x1'), x2: line.getAttribute('x2'), y1: line.getAttribute('y1'), y2: line.getAttribute('y2') } : null };
+    }, { selector: chartSelector, panel });
+    evidence.selections.push({ label, validated: false, target, hit, ...value });
+    assert.equal(value.selecting, 'true'); assert.ok(value.line); assert.equal(value.line.x1, value.line.x2); assert.notEqual(value.line.y1, value.line.y2);
+    assert.ok(value.scissors, 'Start-point preview omitted the scissors indicator');
+    const rgb = value.stroke?.match(/\d+(?:\.\d+)?/g)?.map(Number);
+    assert.ok(rgb && rgb[2] > rgb[0] && rgb[2] > rgb[1], 'The start-point preview is not visibly blue');
+    assert.ok(btcCandles.some(row => row.date === value.pickerDate), 'The hovered start date is not a genuine source date');
+    if (expectedDate) assert.equal(value.pickerDate, expectedDate, 'The start preview did not identify the pointed-to source candle');
+    assert.ok(value.scissorsLabel?.includes(value.pickerDate), 'The blue scissors line omitted its pointed-to bar date');
+    assert.ok(value.inspect?.includes(value.pickerDate), 'The displayed preview readout disagrees with the pointed-to bar');
+    assert.equal(value.nativeCrosshairVisible, false, 'A fixed ordinary chart crosshair competes with the unconfirmed scissors preview');
+    assert.equal(value.playDisabled, true); assert.equal(value.nextDisabled, true); assert.equal(value.liveDisabled, true, 'Jump to real-time remained enabled before the start click');
+    assert.deepEqual(value.confirmedXs, []); assert.equal(value.origins, 0);
+    evidence.selections.at(-1).validated = true;
+    return value;
+  }
+  async function verifyUnconfirmedSelection(label, frequency, liveContext) {
+    const saved = await storedBytes(), before = await snapshot(label + '-unconfirmed', true);
+    assert.equal(before.state, 'selecting'); assert.equal(before.selecting, true); assert.equal(before.frequency, frequency);
+    assert.equal(before.origin ?? null, null); assert.equal(before.cursor ?? null, null);
+    assert.equal(before.origins, 0); assert.equal(before.cursors, 0, 'Unconfirmed selection invented a committed cutoff');
+    assert.equal(before.nativeCrosshairVisible, false, 'Initial selection paints a fixed last-observed crosshair');
+    assert.equal(before.playDisabled, true); assert.equal(before.nextDisabled, true); assert.equal(before.liveDisabled, true);
+    assert.equal(before.forecastValueSignature, liveContext.forecastValueSignature);
+    const source = frequency === 'weekly' ? disclosedBitcoinWeeks(btcCandles, btcCandles.at(-1).date) : btcCandles;
+    const dateFor = row => frequency === 'weekly' ? row.periodStart : row.date;
+    const visible = source.filter(row => dateFor(row) >= before.viewStart && dateFor(row) <= before.viewEnd);
+    assert.ok(visible.length >= 8, 'The native picker requires distinct genuine bars in the visible range');
+    const leftDate = dateFor(visible[Math.floor(visible.length * .1)]), centerDate = dateFor(visible.at(-3));
+    assert.ok(leftDate < centerDate);
+    const leftPoint = await chartPoint(leftDate), centerPoint = await chartPoint(centerDate);
+    const left = await previewStart(label + '-left-bar-hover', leftPoint, leftDate);
+    await screenshot(cdp, prefix + '-' + label + '-left-hover.png', receipt);
+    const center = await previewStart(label + '-center-bar-hover', centerPoint, centerDate);
+    assert.notEqual(left.pickerDate, center.pickerDate); assert.notEqual(left.line.x1, center.line.x1, 'The blue scissors line is stuck while the pointer crosses source bars');
+    assert.equal(left.cursor, null); assert.equal(center.cursor, null); assert.equal(left.origin, null); assert.equal(center.origin, null);
+    const expectedX = date => before.plotLeft + (day(date) - day(before.viewStart)) / (day(before.viewEnd) - day(before.viewStart)) * (before.plotRight - before.plotLeft);
+    for (const hover of [left, center]) assert.ok(Math.abs(Number(hover.line.x1) - expectedX(hover.pickerDate)) < .01, 'Scissors line does not align with its actual bar coordinate');
+    const after = await snapshot(label + '-hover-is-still-unconfirmed', true);
+    for (const field of ['state', 'origin', 'cursor', 'outputHash', 'forecastValueSignature', 'annotationSignature', 'actualThrough', 'observedCandleCount', 'volumeCount']) assert.equal(after[field], before[field], 'Pointer movement silently committed or changed ' + field);
+    await storedUnchanged(saved, label + '-hover-does-not-save');
+    return { before, left, center, centerPoint };
+  }
   async function measureCadence() {
     const expected = [['10', 100], ['1', 1000], ['0.5', 2000], ['0.3', 3000]];
     for (const [speed, milliseconds] of expected) {
@@ -737,7 +808,7 @@ export async function verifyChartReplaySurface(api) {
     await selectMenu('select-chart'); await pickerReady();
     assert.equal(await menuIsOpen(), false, 'Select bar did not hand selection back to the chart');
     const menuSelected = await snapshot('four-action-menu-selects-chart');
-    assert.equal(menuSelected.selecting, true); assertSameReplayFrame(menuSelected, beforeCancel, 'Selecting a chart start from the four-action menu');
+    assert.equal(menuSelected.selecting, true); assertSameReplayFrame(menuSelected, beforeCancel, 'Selecting a chart start from the four-action menu', { selectionPreview: true });
     await click(cdp, control('pick-cancel')); await ready();
     await storedUnchanged(savedBefore, 'menu-chart-selection-cancel-keeps-saved-session');
     if (touch) {
@@ -815,28 +886,11 @@ export async function verifyChartReplaySurface(api) {
     await click(cdp, control('pick')); await pickerReady();
     const selecting = await snapshot('playing-enters-scissors-selection');
     assert.notEqual(selecting.state, 'playing');
-    const point = await chartPoint('2026-10-21');
-    const preview = async (label, target = point) => {
-      await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...target }); await settled(cdp);
-      const value = await evaluate(cdp, selector => {
-        const svg = document.querySelector(selector), line = svg.querySelector('[data-chart-replay-picker] line.chart-replay-picker');
-        return { cursor: svg.dataset.replayCursor, pickerDate: svg.dataset.pickerDate ?? svg.dataset.replayPickerDate,
-          selecting: svg.dataset.replaySelecting, stroke: line ? getComputedStyle(line).stroke : null,
-          scissors: svg.textContent.includes('✂') || Boolean(svg.querySelector('[data-chart-replay-scissors]')),
-          confirmedXs: [...svg.querySelectorAll('[data-replay-cursor-line]')].map(node => node.getAttribute('x1')),
-          line: line ? { x1: line.getAttribute('x1'), x2: line.getAttribute('x2'), y1: line.getAttribute('y1'), y2: line.getAttribute('y2') } : null };
-      }, chartSelector);
-      assert.equal(value.selecting, 'true'); assert.ok(value.line); assert.equal(value.line.x1, value.line.x2); assert.notEqual(value.line.y1, value.line.y2);
-      assert.ok(value.scissors, 'Start-point preview omitted the scissors indicator');
-      const rgb = value.stroke?.match(/\d+(?:\.\d+)?/g)?.map(Number);
-      assert.ok(rgb && rgb[2] > rgb[0] && rgb[2] > rgb[1], 'The start-point preview is not visibly blue');
-      assert.ok(btcCandles.some(row => row.date === value.pickerDate), 'The hovered start date is not a genuine source date');
-      evidence.selections.push({ label, ...value }); return value;
-    };
-    const hovered = await preview('scissors-hover-during-paused-reselection');
+    const point = await chartPoint('2026-10-19');
+    const hovered = await previewStart('scissors-hover-during-paused-reselection', point, '2026-10-19');
     assert.equal(hovered.cursor, selecting.cursor);
     assert.deepEqual(hovered.confirmedXs, selecting.confirmedCursorXs, 'Hover moved the confirmed cutoff before a click');
-    const movedHover = await preview('scissors-follows-pointer-without-moving-cutoff', await chartPoint('2026-10-23'));
+    const movedHover = await previewStart('scissors-follows-pointer-without-moving-cutoff', await chartPoint('2026-10-12'), '2026-10-12');
     assert.notEqual(movedHover.line.x1, hovered.line.x1); assert.equal(movedHover.cursor, selecting.cursor);
     assert.deepEqual(movedHover.confirmedXs, selecting.confirmedCursorXs);
     const during = await snapshot('scissors-preview-keeps-confirmed-cutoff', true);
@@ -850,7 +904,7 @@ export async function verifyChartReplaySurface(api) {
     await click(cdp, control('scrub')); await key('End', 'End', 35);
     const uncut = await snapshot('before-new-start-cut');
     await click(cdp, control('pick')); await pickerReady();
-    const chosen = await preview('scissors-before-native-click');
+    const chosen = await previewStart('scissors-before-native-click', point, '2026-10-19');
     assert.equal(chosen.cursor, uncut.cursor);
     await pointAction('click', point); await ready();
     const cut = await snapshot('scissors-click-cuts-future-actuals', true);
@@ -913,11 +967,28 @@ export async function verifyChartReplaySurface(api) {
     // A new draft and an unchecked exit must keep the previously explicitly
     // saved session byte-for-byte. Continue then restores that exact session.
     await exitReplay('discard-current-draft', { save: false });
+    await interval('weekly'); await settled(cdp);
     await reopenSaved('start-new-keeps-prior-save', 'entry-new');
     await storedUnchanged(savedBefore, 'start-new-before-selection');
-    await click(cdp, control('start')); await ready();
-    const newDraft = await snapshot('start-new-explicit-date');
-    if (!newDraft.nextDisabled) await click(cdp, control('next'));
+    const fresh = await verifyUnconfirmedSelection('weekly-start-new', 'weekly', liveContext);
+    await pointAction('click', fresh.centerPoint); await ready();
+    const newDraft = await snapshot('weekly-start-new-native-click-confirms', true);
+    assert.equal(newDraft.playbackStartDate, fresh.center.pickerDate); assert.equal(newDraft.cursor, dateAt(day(fresh.center.pickerDate) - 1));
+    assert.equal(newDraft.selecting, false); assert.equal(newDraft.pickerCount, 0);
+    assert.equal(newDraft.playDisabled, false); assert.equal(newDraft.nextDisabled, false); assert.equal(newDraft.liveDisabled, false);
+    assert.equal(newDraft.forecastValueSignature, liveContext.forecastValueSignature); assert.equal(newDraft.outputHash, direct.outputHash);
+    await click(cdp, control('next')); const monday = await snapshot('weekly-new-start-first-source-day', true);
+    await click(cdp, control('next')); const tuesday = await snapshot('weekly-new-start-second-source-day', true);
+    const mondayCandle = monday.candles.find(row => row.date === monday.cursor), tuesdayCandle = tuesday.candles.find(row => row.date === tuesday.cursor);
+    assert.equal(monday.cursor, fresh.center.pickerDate); assert.equal(tuesday.cursor, dateAt(day(monday.cursor) + 1));
+    assert.equal(monday.frequency, 'weekly'); assert.equal(tuesday.frequency, 'weekly');
+    assert.ok(mondayCandle && tuesdayCandle); assert.equal(mondayCandle.periodStart, tuesdayCandle.periodStart);
+    assert.equal(mondayCandle.open, tuesdayCandle.open); assert.equal(mondayCandle.x, tuesdayCandle.x);
+    assert.equal(mondayCandle.daysIncluded, 1); assert.equal(tuesdayCandle.daysIncluded, 2);
+    assert.equal(mondayCandle.complete, false); assert.equal(tuesdayCandle.complete, false);
+    for (const state of [monday, tuesday]) assert.equal(state.forecastValueSignature, liveContext.forecastValueSignature);
+    evidence.weekly.push({ label: 'native-start-click-keeps-daily-updates-within-selected-week', selectedMonday: fresh.center.pickerDate,
+      first: mondayCandle, second: tuesdayCandle, expectedFirst: disclosedBitcoinWeeks(btcCandles, monday.cursor).at(-1), expectedSecond: disclosedBitcoinWeeks(btcCandles, tuesday.cursor).at(-1) });
     await storedUnchanged(savedBefore, 'new-draft-step-does-not-overwrite-saved-session');
     await exitReplay('discard-new-session', { save: false });
     await reopenSaved('continue-after-discarding-new-session');
@@ -976,15 +1047,24 @@ export async function verifyChartReplaySurface(api) {
     globalThis.__mainReplayNode = document.querySelector(selector); globalThis.__mainReplayTime = performance.timeOrigin;
     const box = globalThis.__mainReplayNode.getBoundingClientRect(); return { left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width, height: box.height };
   }, chartSelector);
-  await click(cdp, '#workbench-replay'); await ready(crypto && !btc);
+  await click(cdp, '#workbench-replay'); await ready(crypto);
   await verifyFloatingBar();
-  if (btc) await verifyPopoverLifecycle();
+  if (btc) {
+    await verifyUnconfirmedSelection('first-entry', entryFrequency, liveContext);
+    // The suggested project start remains available, but opening replay no
+    // longer commits it. Use the real Select date confirmation explicitly so
+    // every established source-prefix and saved-session check still runs.
+    await openDate();
+    assert.equal(await evaluate(cdp, selector => document.querySelector(selector).value, control('date')), '2026-10-21');
+    await click(cdp, control('start')); await ready();
+    await verifyPopoverLifecycle();
+  }
   else { await verifyLandingMenu('select-bar-only-four-start-actions', true); await closeMenu(); }
   if (btc) {
     const direct = await snapshot('atlas-project-start', true);
     assert.equal(direct.frequency, entryFrequency);
     await assertToolbars(entryFrequency, 'original-timeframe-and-period-tools-retained');
-    assert.equal(direct.mode, 'atlas-chart', 'One click did not open replay on the current BTC chart');
+    assert.equal(direct.mode, 'atlas-chart', 'Explicit project start did not preserve the current BTC chart');
     assert.equal(direct.state, 'paused'); assert.equal(direct.dateInput, '2026-10-21');
     assert.equal(direct.playbackStartDate, '2026-10-21');
     assert.equal(direct.origin, '2026-10-20'); assert.equal(direct.cursor, '2026-10-20'); assert.equal(direct.index, 0); assert.equal(direct.actualCount, 0);

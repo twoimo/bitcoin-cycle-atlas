@@ -1,4 +1,4 @@
-import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.29.5';
+import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.29.6';
 import {buildCycleMilestones} from './cycle-milestones.js?v=1.29.0';
 import {validateDataset,utcDay,dateFromDay} from './cycle-engine.js?v=1.29.0';
 import {detectDirectionalChanges,computeRollingStates} from './market-structure.js?v=1.29.0';
@@ -121,10 +121,30 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
     onCycleMarker:id=>{const marker=cycleMarkers.find(row=>row.id===id);if(marker)inspect(marker);},
     onCycleInterval:id=>{const interval=cycleIntervals.find(row=>row.id===id);if(interval)inspect({date:interval.endDate});},
     selectedDate:cursorDate});
-  if(selectionPreview)svg.querySelector('.observed-split-boundary')?.remove();
+  if(selectionPreview){
+    svg.querySelector('.observed-split-boundary')?.remove();
+    // The ordinary chart initializes a selected-date crosshair. During start
+    // selection only the coordinator's moving scissors may indicate a date;
+    // retaining that crosshair would look like an already committed cutoff.
+    svg.querySelector('[id$="-cross"]')?.setAttribute('display','none');
+  }
   const axis=chart.getPriceScale(),width=Math.max(1,Math.round(svg.clientWidth||svg.parentElement?.clientWidth||1100));
   const span=Math.max(1,lastDay-firstDay),x=date=>axis.left+(utcDay(typeof date==='string'?date:date.date)-firstDay)/span*(axis.right-axis.left);
-  const dateAt=clientX=>{const rect=svg.getBoundingClientRect();if(!(rect.width>0)||!Number.isFinite(clientX))return null;const local=(clientX-rect.left)/rect.width*width;return dateFromDay(Math.round(firstDay+Math.max(0,Math.min(1,(local-axis.left)/Math.max(1,axis.right-axis.left)))*(lastDay-firstDay)));};
+  const dayAt=clientX=>{const rect=svg.getBoundingClientRect();if(!(rect.width>0)||!Number.isFinite(clientX))return null;const local=(clientX-rect.left)/rect.width*width;return firstDay+Math.max(0,Math.min(1,(local-axis.left)/Math.max(1,axis.right-axis.left)))*(lastDay-firstDay);};
+  const dateAt=clientX=>{const value=dayAt(clientX);return value===null?null:dateFromDay(Math.round(value));};
+  // A forming weekly candle is drawn at its Monday opening coordinate even
+  // when inspection reports the last disclosed daily close. Start selection
+  // must snap to that actual bar, not to an arbitrary day between two bars.
+  const barDates=[...new Set((observedCandles.length?observedCandles.map(row=>frequency==='weekly'?row.periodStartDate??row.startDate:row.endDate):actual.map(row=>row.date))
+    .filter(date=>date>=start&&date<=end))].sort();
+  const barDays=barDates.map(utcDay);
+  const barDateAt=clientX=>{
+    const value=dayAt(clientX);if(value===null||!barDates.length)return null;
+    let low=0,high=barDays.length-1;
+    while(low<high){const mid=(low+high)>>1;if(barDays[mid]<value)low=mid+1;else high=mid;}
+    if(low>0&&value-barDays[low-1]<=barDays[low]-value)low--;
+    return barDates[low];
+  };
   const overlay=svgNode(svg,'g',{'data-chart-replay-overlay':'true','data-replay-overlay':'true','pointer-events':'none'});
   const boundary=(date,name,label,color)=>{if(date<start||date>end)return;const line=svgNode(svg,'line',{x1:x(date),x2:x(date),y1:axis.top,y2:axis.bottom,[name]:'true',stroke:color,'stroke-width':1,'stroke-dasharray':'3 5'});line.append(svgNode(svg,'title',{},label+' '+date));overlay.append(line);};
   if(!selectionPreview){
@@ -143,7 +163,7 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
   if(description)description.textContent='주황색 미래 가정은 시작할 때의 현재 차트 값 그대로 고정하고, 실제 봉만 재생 시점까지 공개합니다. 현재 가정은 과거에 발행한 예측 성적이 아닙니다. 사이클 표식과 기간선은 보존된 경로의 표시이며 당시 발행된 표식 기록이 아닙니다.';
   const nativeHandlers=Object.fromEntries(['onpointermove','onpointerleave','onclick','onkeydown','onkeyup','onblur'].map(key=>[key,svg[key]]));
   let destroyed=false;
-  const controller={axis,x,dateAt,getPriceScale:()=>axis,previewPointer:event=>!destroyed&&chart.previewPointer?.(event),
+  const controller={axis,x,dateAt,barDateAt,getPriceScale:()=>axis,previewPointer:event=>!destroyed&&chart.previewPointer?.(event),
     selectDate(date){if(destroyed)return;utcDay(date);chart.selectDate?.(date);selected=date;onInspect(inspection(date));},
     getSelection(){const value=inspection(selected);return {...value,copyText:`${selected}\n실제: ${money(value.actual)}\n고정 예측: ${money(value.predicted)}`};},
     destroy(){if(destroyed)return;destroyed=true;if(renderers.get(svg)!==controller)return;clearChartHover(svg);for(const [key,handler]of Object.entries(nativeHandlers))if(svg[key]===handler)svg[key]=null;overlay.remove();renderers.delete(svg);}};
