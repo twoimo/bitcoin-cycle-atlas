@@ -1,4 +1,4 @@
-import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.29.4';
+import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.29.5';
 import {buildCycleMilestones} from './cycle-milestones.js?v=1.29.0';
 import {validateDataset,utcDay,dateFromDay} from './cycle-engine.js?v=1.29.0';
 import {detectDirectionalChanges,computeRollingStates} from './market-structure.js?v=1.29.0';

@@ -39,15 +39,19 @@
 
 /* Menus scroll inside the chart; their heading and close action stay visible. */
 .chart-replay-select-menu,.chart-replay-choice{position:absolute;bottom:calc(var(--replay-bottom) + var(--replay-bar-height) + 8px);left:50%;transform:translateX(-50%);z-index:22;box-sizing:border-box;width:420px;max-width:calc(100% - 16px);max-height:min(540px,calc(100% - var(--replay-bottom) - var(--replay-bar-height) - 16px));overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;background:var(--surface-raised);border:1px solid var(--border);border-radius:6px;padding:12px;box-shadow:var(--shadow);line-height:1.6;pointer-events:auto}
-.chart-replay-menu-heading{position:sticky;top:-12px;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-12px -12px 12px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--surface-raised)}
-.chart-replay-menu-heading strong{min-width:0;font-size:13px}
-.chart-replay-menu-heading [data-cr=select-close]{flex:none;width:var(--replay-control-size);padding:0;text-align:center}
-.chart-replay-select-actions{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
-.chart-replay-select-actions>button{flex:1 1 100px;height:auto;min-height:var(--replay-control-size);white-space:normal;text-align:left;justify-content:flex-start}
+.chart-replay-select-menu{width:280px}
+.chart-replay-select-menu[data-menu-view=forecast]{width:420px}
+.chart-replay-menu-heading{position:sticky;top:-12px;z-index:1;display:flex;align-items:center;gap:4px;margin:-12px -12px 12px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--surface-raised)}
+.chart-replay-menu-heading strong{flex:1;min-width:0;font-size:13px}
+.chart-replay-menu-heading [data-cr=menu-back],.chart-replay-menu-heading [data-cr=menu-settings],.chart-replay-menu-heading [data-cr=select-close]{flex:none;width:var(--replay-control-size);padding:0;text-align:center}
+.chart-replay-select-actions{display:flex;flex-direction:column;gap:0;margin:0}
+.chart-replay-select-actions>button{flex:none;width:100%;height:auto;min-height:max(36px,var(--replay-control-size));padding:8px 12px;border-color:transparent;background:transparent;white-space:normal;text-align:left;justify-content:flex-start}
 .chart-replay-date-fields{display:flex;align-items:end;gap:8px;min-width:0;margin-bottom:12px}
 .chart-replay-date-fields .chart-replay-origin{flex:1;flex-direction:column;align-items:stretch;min-width:0}
 .chart-replay-date-fields input[type=date]{width:100%;min-width:0}
 .chart-replay-date-fields>button{flex:none}
+.chart-replay-controls .chart-replay-select-menu [data-cr=date-view]>p{margin:8px 0;color:var(--muted);white-space:normal;overflow-wrap:anywhere}
+.chart-replay-select-menu [data-cr=date-view]>p:first-of-type{font-variant-numeric:tabular-nums}
 .chart-replay-menu-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .chart-replay-menu-fields>label{display:flex;flex-direction:column;gap:4px;min-width:0;color:var(--muted)}
 .chart-replay-menu-fields>label:has(>select[hidden]){display:none}
@@ -95,9 +99,7 @@ html[data-chart-replay-active=true] .eth-interval-buttons,html[data-chart-replay
 @media(max-width:620px){
   .atlas-canvas-heading,.eth-topbar{min-width:0;max-width:100%;box-sizing:border-box;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none}
   .chart-replay-bar{left:8px;right:60px;transform:none;width:auto;max-width:none}
-  .chart-replay-select-menu,.chart-replay-choice{left:8px;right:8px;transform:none;width:auto;max-width:none}
-  .chart-replay-select-actions{flex-direction:column}
-  .chart-replay-select-actions>button{flex:none}
+  .chart-replay-select-menu,.chart-replay-select-menu[data-menu-view=forecast],.chart-replay-choice{left:8px;right:8px;transform:none;width:auto;max-width:none}
   .chart-replay-menu-fields{grid-template-columns:minmax(0,1fr)}
   .chart-replay-hud{left:8px;right:76px;font-size:11px}
   .chart-replay-notice{left:8px;right:8px;max-width:calc(100% - 16px)}

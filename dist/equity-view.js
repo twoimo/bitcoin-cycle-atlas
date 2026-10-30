@@ -21,7 +21,7 @@ const icon=name=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 const button=(action,label,glyph)=>`<button type="button" class="eth-icon" data-equity-action="${action}" aria-label="${label}" title="${label}">${icon(glyph)}</button>`;
 const COLORS={financing:'#9eaff5',governance:'#b5a5df',treasury:'#e6b66d',capital:'#9eaff5',corporate:'#9eaff5',policy:'#ce94c7',market:'#d8909e',protocol:'#7dcbbb',earnings:'#7dcbbb',claims:'#c4b2ed'};
 
-import {mountChartReplay} from './chart-replay.js?v=1.29.4';
+import {mountChartReplay} from './chart-replay.js?v=1.29.5';
 
 export async function initEquityView({symbol}={}){
   const instrument=EQUITIES[symbol];if(!instrument)throw new RangeError('Unsupported equity view');

@@ -48,7 +48,7 @@ export async function verifyChartReplaySurface(api) {
   const decision = name => '[data-cr="' + name + '"]';
   const prefix = receipt.page + '-' + width + 'x' + height;
   const evidence = receipt.chartReplay = { symbol, nativeInput: true, storageIsolation: 'independent-browser-context', states: [], exports: [], lifecycle: [],
-    timing: [], weekly: [], selections: [], storage: [], floatingBar: [], popovers: [],
+    timing: [], weekly: [], selections: [], storage: [], floatingBar: [], popovers: [], dateEditors: [], removedBackwardInputs: [],
     scope: 'Existing main chart node, real page controls, native pointer/touch/keyboard, current interval and range, disclosed daily/weekly prefixes, explicit session decisions, and downloaded visible-frame JSON. Current-vintage replay is retrospective.' };
   assert.ok(browserContextId, 'Replay scenarios must not share persisted user sessions across viewport cases');
   const ledger = resolve(root, 'dist/data', btc ? 'forecast-ledger' : 'asset-forecast-ledger');
@@ -63,10 +63,25 @@ export async function verifyChartReplaySurface(api) {
   const storedBytes = () => evaluate(cdp, symbol => localStorage.getItem('atlas-chart-replay-v1:' + symbol), symbol);
 
   const menuIsOpen = () => evaluate(cdp, selector => Boolean(document.querySelector(selector)?.getClientRects().length), control('select-panel'));
-  async function openMenu() {
+  async function openMenu(view = 'start') {
     if (!await menuIsOpen()) await nativeClick(cdp, control('select-menu'));
     await until(menuIsOpen, 'native Select bar popover opens');
+    if (view === null) return;
+    const currentView = () => evaluate(cdp, selector => document.querySelector(selector).dataset.menuView, control('select-panel'));
+    if (await currentView() !== view) {
+      if (await currentView() !== 'start') {
+        await nativeClick(cdp, control('menu-back'));
+        await until(async () => await currentView() === 'start', 'native menu back returns to four starting actions');
+      }
+      if (view !== 'start') {
+        const selector = control(view === 'date' ? 'select-date' : 'menu-settings');
+        await revealOwnedControl(selector); await nativeClick(cdp, selector);
+      }
+    }
+    await until(async () => await currentView() === view, 'native replay menu view ' + view);
   }
+  const openDate = () => openMenu('date');
+  const openForecast = () => openMenu('forecast');
   async function closeMenu() {
     if (await menuIsOpen()) await nativeClick(cdp, control('select-close'));
     assert.equal(await menuIsOpen(), false, 'The Select bar close action did not dismiss its popover');
@@ -98,9 +113,14 @@ export async function verifyChartReplaySurface(api) {
   async function click(connection, selector) {
     const target = await evaluate(cdp, selector => {
       const node = document.querySelector(selector);
-      return { menu: Boolean(node?.closest('[data-cr="select-panel"]')), toggle: node?.dataset.cr === 'select-menu' };
+      const view = node?.closest('[data-cr="start-view"],[data-cr="date-view"],[data-cr="forecast-view"]')?.dataset.cr.replace('-view', '') ?? null;
+      return { menu: Boolean(node?.closest('[data-cr="select-panel"]')), view, toggle: node?.dataset.cr === 'select-menu' };
     }, selector);
-    if (target.menu) await openMenu();
+    if (target.menu) {
+      if (target.view === 'date') await openDate();
+      else if (target.view === 'forecast') await openForecast();
+      else await openMenu(target.view);
+    }
     else if (!target.toggle) await closeMenu();
     await revealOwnedControl(selector);
     await nativeClick(connection, selector);
@@ -115,7 +135,8 @@ export async function verifyChartReplaySurface(api) {
         bar: rect(bar), actions: { ...rect(actions), scrollLeft: actions.scrollLeft, scrollWidth: actions.scrollWidth, clientWidth: actions.clientWidth, flexWrap: getComputedStyle(actions).flexWrap },
         controls: [...actions.children].map(node => ({ name: node.dataset.cr, ...rect(node) })), exit: { ...rect(exit), separate: !bar.contains(exit) },
         menuHidden: root.querySelector('[data-cr="select-panel"]').hidden, pointerReachesChart: svg.contains(document.elementFromPoint(point.x, point.y)),
-        settingsInPopover: ['date', 'start', 'display', 'mode', 'record', 'horizon', 'previous', 'random', 'resume', 'details', 'pooled-retry', 'scrub', 'export'].every(name => root.querySelector('[data-cr="select-panel"]').contains(root.querySelector('[data-cr="' + name + '"]'))),
+        settingsInPopover: ['date', 'start', 'display', 'mode', 'record', 'horizon', 'details', 'pooled-retry', 'scrub', 'export'].every(name => root.querySelector('[data-cr="select-panel"]').contains(root.querySelector('[data-cr="' + name + '"]'))),
+        removedControls: ['previous', 'random', 'resume'].flatMap(name => [...root.querySelectorAll('[data-cr="' + name + '"]')].map(() => name)),
         pageWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth), scrollX, scrollY,
         cursor: svg.dataset.replayCursor ?? null, hash: svg.dataset.replayOutputHash ?? null, viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null };
     }, { chartSelector, panel });
@@ -124,6 +145,7 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(geometry.root.pointerEvents, 'none', 'The positioning overlay blocks the chart');
     assert.match(geometry.root.background, /rgba\(0, 0, 0, 0\)|transparent/, 'A full-width replay surface still covers the plot');
     assert.equal(geometry.menuHidden, true); assert.equal(geometry.settingsInPopover, true); assert.equal(geometry.pointerReachesChart, true);
+    assert.deepEqual(geometry.removedControls, [], 'Removed previous/duplicate random/menu-resume controls remain in the DOM');
     assert.deepEqual(geometry.controls.map(node => node.name), ['first', 'select-menu', 'pick', 'play', 'next', 'speed', 'update-interval', 'live']);
     assert.equal(geometry.actions.flexWrap, 'nowrap');
     const centerY = geometry.bar.top + geometry.bar.height / 2;
@@ -174,26 +196,70 @@ export async function verifyChartReplaySurface(api) {
       evidence.floatingBar.push({ label: 'native-horizontal-toolbar-scroll-without-chart-or-page-scroll', before, after, unchanged });
     }
   }
+  async function verifyLandingMenu(label, capture = false) {
+    await openMenu();
+    const observed = await evaluate(cdp, selector => {
+      const menu = document.querySelector(selector), q = name => menu.querySelector('[data-cr="' + name + '"]');
+      const shown = node => Boolean(node?.getClientRects().length);
+      return { view: menu.dataset.menuView, title: q('menu-title').textContent, nonmodal: menu.getAttribute('aria-modal') === null,
+        actions: [...q('start-view').querySelectorAll('button')].map(node => ({ name: node.dataset.cr, text: node.textContent, visible: shown(node), disabled: node.disabled })),
+        visibleInputs: [...menu.querySelectorAll('input,select,textarea')].filter(shown).map(node => node.dataset.cr),
+        dateHidden: q('date-view').hidden, forecastHidden: q('forecast-view').hidden, detailsHidden: q('detail-panel').hidden,
+        backHidden: q('menu-back').hidden, settingsVisible: shown(q('menu-settings')), settingsExpanded: q('menu-settings').getAttribute('aria-expanded'),
+        misplacedControls: [...q('start-view').querySelectorAll('[data-cr]')].filter(node => !['select-chart', 'select-date', 'select-random', 'select-first'].includes(node.dataset.cr)).map(node => node.dataset.cr) };
+    }, control('select-panel'));
+    const recorded = { label, validated: false, ...observed }; evidence.popovers.push(recorded);
+    assert.equal(observed.view, 'start'); assert.equal(observed.title, 'Select bar'); assert.equal(observed.nonmodal, true);
+    assert.deepEqual(observed.actions.map(node => node.name), ['select-chart', 'select-date', 'select-random', 'select-first']);
+    assert.ok(observed.actions.every(node => node.visible), 'The four start actions are not rendered in their landing view');
+    assert.deepEqual(observed.visibleInputs, [], 'Select bar exposed date or forecast settings before a secondary action');
+    assert.deepEqual(observed.misplacedControls, []);
+    assert.equal(observed.dateHidden, true); assert.equal(observed.forecastHidden, true); assert.equal(observed.detailsHidden, true);
+    assert.equal(observed.backHidden, true); assert.equal(observed.settingsVisible, true); assert.equal(observed.settingsExpanded, 'false');
+    for (const { name } of observed.actions) { await revealOwnedControl(control(name)); visibleBounds(await bounds(cdp, control(name)), width, height); }
+    visibleBounds(await bounds(cdp, control('menu-settings')), width, height); visibleBounds(await bounds(cdp, control('select-close')), width, height);
+    recorded.validated = true;
+    if (capture) await screenshot(cdp, prefix + '-' + label + '.png', receipt);
+    return observed;
+  }
   async function verifyPopoverLifecycle() {
     const saved = await storedBytes(), before = await evaluate(cdp, selector => ({ cursor: document.querySelector(selector).dataset.replayCursor, hash: document.querySelector(selector).dataset.replayOutputHash }), chartSelector);
-    await openMenu();
+    await verifyLandingMenu('select-bar-only-four-start-actions', true);
     const menu = await bounds(cdp, control('select-panel')); visibleBounds(menu, width, height);
     assert.equal(await evaluate(cdp, selector => document.querySelector(selector).getAttribute('aria-modal'), control('select-panel')), null, 'Select bar became a blocking modal');
     await click(cdp, control('select-date'));
     const date = await evaluate(cdp, selector => {
       const node = document.querySelector(selector), menu = node.closest('[data-cr="select-panel"]'), box = node.getBoundingClientRect(), area = menu.getBoundingClientRect();
       const heading = menu.querySelector('.chart-replay-menu-heading').getBoundingClientRect();
-      return { focused: document.activeElement === node, open: !menu.hidden, top: box.top, bottom: box.bottom, left: box.left, right: box.right,
+      return { focused: document.activeElement === node, open: !menu.hidden, view: menu.dataset.menuView, value: node.value,
+        forecastHidden: menu.querySelector('[data-cr="forecast-view"]').hidden, startHidden: menu.querySelector('[data-cr="start-view"]').hidden,
+        top: box.top, bottom: box.bottom, left: box.left, right: box.right,
         clipTop: Math.max(area.top + menu.clientTop, heading.bottom), clipBottom: area.top + menu.clientTop + menu.clientHeight,
         hit: document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2) === node, scrollTop: menu.scrollTop };
     }, control('date'));
     assert.equal(date.focused, true); assert.equal(date.open, true); assert.equal(date.hit, true, 'Select date focused an input hidden under another control');
+    assert.equal(date.view, 'date'); assert.equal(date.forecastHidden, true); assert.equal(date.startHidden, true);
+    assert.equal(date.value, before.cursor, 'The date view displayed the next hidden bar instead of the current replay cursor');
     assert.ok(date.top >= date.clipTop - 1 && date.bottom <= date.clipBottom + 1, 'Select date left the native input outside the menu viewport');
     visibleBounds(await bounds(cdp, control('select-close')), width, height);
     await screenshot(cdp, prefix + '-floating-menu-date.png', receipt);
     await key('Escape', 'Escape', 27);
     assert.equal(await menuIsOpen(), false); assert.equal(await evaluate(cdp, selector => document.activeElement === document.querySelector(selector), control('select-menu')), true);
-    await openMenu();
+    await verifyLandingMenu('escape-reopens-the-four-action-landing');
+    await click(cdp, control('menu-settings'));
+    const settings = await evaluate(cdp, selector => {
+      const menu = document.querySelector(selector), q = name => menu.querySelector('[data-cr="' + name + '"]');
+      return { view: menu.dataset.menuView, title: q('menu-title').textContent, startHidden: q('start-view').hidden, dateHidden: q('date-view').hidden,
+        forecastHidden: q('forecast-view').hidden, backVisible: Boolean(q('menu-back').getClientRects().length),
+        contained: ['display', 'mode', 'record', 'horizon', 'details', 'pooled-retry', 'scrub', 'export'].every(name => q('forecast-view').contains(q(name))),
+        dateOutsideForecast: !q('forecast-view').contains(q('date')) };
+    }, control('select-panel'));
+    assert.equal(settings.view, 'forecast'); assert.match(settings.title, /예측·평가/); assert.equal(settings.startHidden, true); assert.equal(settings.dateHidden, true);
+    assert.equal(settings.forecastHidden, false); assert.equal(settings.backVisible, true); assert.equal(settings.contained, true); assert.equal(settings.dateOutsideForecast, true);
+    visibleBounds(await bounds(cdp, control('menu-back')), width, height);
+    await click(cdp, control('menu-back'));
+    await verifyLandingMenu('forecast-back-restores-four-start-actions');
+    await openForecast(); await closeMenu(); await verifyLandingMenu('settings-close-reopens-four-start-actions');
     const outside = await evaluate(cdp, selector => {
       const svg = document.querySelector(selector), b = svg.getBoundingClientRect();
       return [[3, b.height * .25], [b.width - 3, b.height * .25], [b.width * .5, 3], [b.width * .1, b.height * .1]]
@@ -205,7 +271,64 @@ export async function verifyChartReplaySurface(api) {
     const after = await evaluate(cdp, selector => ({ cursor: document.querySelector(selector).dataset.replayCursor, hash: document.querySelector(selector).dataset.replayOutputHash }), chartSelector);
     assert.deepEqual(after, before, 'Menu focus or dismissal changed the confirmed replay cutoff');
     await storedUnchanged(saved, 'floating-menu-focus-escape-and-outside-click-do-not-save');
-    evidence.popovers.push({ label: 'native-select-date-focus-escape-and-outside-dismissal', menu, date, before, after });
+    evidence.popovers.push({ label: 'native-secondary-date-settings-back-escape-and-outside-dismissal', menu, date, settings, before, after });
+  }
+
+  function assertSameReplayFrame(actual, expected, label) {
+    for (const field of ['state', 'origin', 'cursor', 'playbackStartDate', 'index', 'actualThrough', 'actualCount', 'observedCandleCount', 'volumeCount', 'frequency',
+      'outputHash', 'forecastValueSignature', 'annotationSignature', 'priceMinimum', 'priceMaximum', 'viewStart', 'viewEnd']) {
+      assert.equal(actual[field], expected[field], label + ' changed ' + field);
+    }
+    for (const field of ['candles', 'volumeBars', 'observedIndicatorDates', 'confirmedCursorXs']) assert.deepEqual(actual[field], expected[field], label + ' changed ' + field);
+  }
+  async function verifySavedDateEditor(before, label) {
+    const saved = await storedBytes(); assert.ok(saved);
+    assert.equal(JSON.parse(saved).cursorDate, before.cursor);
+    await openDate();
+    const observed = await evaluate(cdp, selector => {
+      const menu = document.querySelector(selector), q = name => menu.querySelector('[data-cr="' + name + '"]'), context = q('date-context');
+      return { view: menu.dataset.menuView, value: q('date').value, minimum: q('date').min, maximum: q('date').max,
+        label: q('date-label').textContent, ariaLabel: q('date').getAttribute('aria-label'), context: context.textContent, hint: q('date-hint').textContent,
+        contextReadOnly: !context.matches('input,select,textarea,[contenteditable="true"]') && !context.querySelector('input,select,textarea,[contenteditable="true"]'),
+        focused: document.activeElement === q('date') };
+    }, control('select-panel'));
+    const expected = before.cursor < observed.minimum ? observed.minimum : before.cursor > observed.maximum ? observed.maximum : before.cursor;
+    const next = archiveRows(before.mode).find(row => row.date > before.cursor)?.date;
+    assert.equal(observed.view, 'date'); assert.equal(observed.value, expected); assert.equal(observed.focused, true); assert.equal(observed.contextReadOnly, true);
+    assert.equal(observed.label, '새 시작점 날짜'); assert.equal(observed.ariaLabel, '새 시작점 날짜'); assert.match(observed.hint, /이 날짜 선택.*적용/);
+    assert.ok(observed.context.includes('현재 공개: ' + before.cursor));
+    assert.ok(observed.context.includes('다음 봉: ' + (next ?? '확보한 자료 끝')));
+    assertSameReplayFrame(await snapshot(label + '-editor-open'), before, 'Opening the saved-date editor');
+    await screenshot(cdp, prefix + '-' + label + '-current-date.png', receipt);
+    // A native, unconfirmed edit must neither seek nor overwrite the save.
+    await click(cdp, control('date'));
+    for (let segment = 0; segment < 5; segment++) await key('ArrowRight', 'ArrowRight', 39, 0, false);
+    await key('ArrowDown', 'ArrowDown', 40);
+    const draft = await evaluate(cdp, selector => document.querySelector(selector).value, control('date'));
+    assert.equal(draft, String(Number(expected.slice(0, 4)) - 1) + expected.slice(4));
+    assertSameReplayFrame(await snapshot(label + '-unapplied-date'), before, 'Editing an unconfirmed start date');
+    await storedUnchanged(saved, label + '-date-editor-does-not-save');
+    await click(cdp, control('menu-back')); await verifyLandingMenu(label + '-back-cancels-date-draft');
+    await openDate();
+    const reopened = await evaluate(cdp, selector => document.querySelector(selector).value, control('date'));
+    assert.equal(reopened, expected, 'Reopening Select date retained an unapplied date instead of the current cursor');
+    assertSameReplayFrame(await snapshot(label + '-date-reopened'), before, 'Reopening Select date');
+    await closeMenu(); await storedUnchanged(saved, label + '-date-close-keeps-saved-session');
+    evidence.dateEditors.push({ label, originalStart: before.playbackStartDate, cursor: before.cursor, next, ...observed, canceledDraft: draft, reopened });
+  }
+  async function verifyRemovedBackwardInputs(before, label) {
+    const saved = await storedBytes();
+    assert.equal(before.previousPresent, false, 'The removed previous-bar button remains in the replay controls');
+    await click(cdp, chartSelector);
+    assert.equal(await evaluate(cdp, selector => document.activeElement === document.querySelector(selector), chartSelector), true, 'Native backward-shortcut check did not focus the chart');
+    for (const modifiers of [8, 0]) {
+      await key('ArrowLeft', 'ArrowLeft', 37, modifiers);
+      const after = await snapshot(label + (modifiers ? '-shift-left-no-op' : '-left-no-op'));
+      assertSameReplayFrame(after, before, 'Removed ' + (modifiers ? 'Shift+Left' : 'Left') + ' input');
+      evidence.removedBackwardInputs.push({ label, key: modifiers ? 'Shift+Left' : 'Left', cursor: after.cursor, index: after.index, outputHash: after.outputHash,
+        priceDomain: [after.priceMinimum, after.priceMaximum], observedCandleCount: after.observedCandleCount, unchanged: true });
+    }
+    await storedUnchanged(saved, label + '-removed-backward-shortcuts-do-not-save');
   }
 
   async function key(value, code, number, modifiers = 0, wait = true) {
@@ -368,7 +491,9 @@ export async function verifyChartReplaySurface(api) {
         priceMaximum: svg.dataset.replayPriceMax === undefined ? null : Number(svg.dataset.replayPriceMax),
         formingWeekCount: Number(svg.dataset.replayFormingWeekCount ?? 0), missingWeekCount: Number(svg.dataset.replayMissingWeekCount ?? 0),
         index: Number(q('scrub').value), lastIndex: Number(q('scrub').max), outputHash: svg.dataset.replayOutputHash,
-        mode: q('mode').value, model: q('model')?.value ?? null, dateInput: q('date').value, dateMinimum: q('date').min, dateMaximum: q('date').max, source: q('source').textContent, metric: q('metric').textContent,
+        mode: q('mode').value, model: q('model')?.value ?? null, dateInput: q('date').value, dateMinimum: q('date').min, dateMaximum: q('date').max,
+        menuView: q('select-panel').dataset.menuView, menuHidden: q('select-panel').hidden, dateContext: q('date-context').textContent,
+        source: q('source').textContent, metric: q('metric').textContent,
         updateInterval: q('update-interval')?.value ?? null, updateIntervalLocked: q('update-interval')?.disabled ?? false,
         renderer: svg.dataset.replayRenderer ?? null, viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null,
         scale: svg.dataset.scale, unit: svg.dataset.unit, chartType: svg.dataset.chartType,
@@ -396,13 +521,14 @@ export async function verifyChartReplaySurface(api) {
         scrollX, documentScrollLeft: document.documentElement.scrollLeft, bodyScrollLeft: document.body.scrollLeft,
         scrolledAncestors: (() => { const values = []; for (let parent = svg.parentElement; parent; parent = parent.parentElement) if (parent.scrollLeft || parent.scrollTop) values.push({ id: parent.id, className: parent.className, scrollLeft: parent.scrollLeft, scrollTop: parent.scrollTop }); return values; })(),
         chart: { left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width, height: box.height },
-        nextDisabled: q('next').disabled, previousDisabled: q('previous').disabled };
+        nextDisabled: q('next').disabled, previousPresent: Boolean(q('previous')) };
     }, { chartSelector, panel });
     evidence.lastObservation = { label, ...value, candles: value.candles.map(row => row.date), annotationSignature: undefined,
       annotationSha256: value.annotationSignature === null ? null : digest(value.annotationSignature) };
     assert.ok(value.sameNode && value.sameDocument, 'Replay replaced the main chart or document');
     assert.equal(value.updateInterval, 'daily'); assert.equal(value.updateIntervalLocked, true, 'The source advances by completed daily observations');
     assert.equal(value.active, true); assert.equal(value.separateReplayCharts, 0); assert.equal(value.dialogs, 0);
+    assert.equal(value.previousPresent, false, 'The removed previous-bar action is still mounted');
     assert.equal(value.invalidPaths, 0); assert.equal(value.liveReadouts, 0, 'Latest quote/readout remained visible during replay');
     assert.ok(value.pageWidth <= width + 1, 'Replay caused horizontal page overflow');
     assert.ok(value.chart.height >= 80 && value.chart.width > 100, 'Replay controls consumed the chart viewport');
@@ -555,7 +681,7 @@ export async function verifyChartReplaySurface(api) {
   }
   async function selectMenu(name) {
     await openMenu();
-    for (const key of ['select-date', 'select-random', 'select-first']) {
+    for (const key of ['select-chart', 'select-date', 'select-random', 'select-first']) {
       await revealOwnedControl(decision(key)); visibleBounds(await bounds(cdp, decision(key)), width, height);
     }
     await click(cdp, decision(name));
@@ -608,6 +734,12 @@ export async function verifyChartReplaySurface(api) {
     const canceled = await snapshot('start-point-canceled', touch);
     assert.equal(canceled.cursor, beforeCancel.cursor); assert.equal(canceled.outputHash, beforeCancel.outputHash);
     await storedUnchanged(savedBefore, 'cancel-start-point-keeps-saved-session');
+    await selectMenu('select-chart'); await pickerReady();
+    assert.equal(await menuIsOpen(), false, 'Select bar did not hand selection back to the chart');
+    const menuSelected = await snapshot('four-action-menu-selects-chart');
+    assert.equal(menuSelected.selecting, true); assertSameReplayFrame(menuSelected, beforeCancel, 'Selecting a chart start from the four-action menu');
+    await click(cdp, control('pick-cancel')); await ready();
+    await storedUnchanged(savedBefore, 'menu-chart-selection-cancel-keeps-saved-session');
     if (touch) {
       await interval('daily'); await ready(); await assertToolbars('daily', 'touch-timeframe-restored-for-historical-comparisons');
       return;
@@ -647,7 +779,7 @@ export async function verifyChartReplaySurface(api) {
       expectedFirst: disclosedBitcoinWeeks(btcCandles, first.cursor).at(-1), expectedNext: disclosedBitcoinWeeks(btcCandles, second.cursor).at(-1),
       firstVolumeScope, nextVolumeScope,
       firstDomain: [first.priceMinimum, first.priceMaximum], nextDomain: [second.priceMinimum, second.priceMaximum] });
-    await click(cdp, control('previous'));
+    await click(cdp, control('scrub')); await key('Home', 'Home', 36); await key('ArrowRight', 'ArrowRight', 39);
     const rewound = await snapshot('weekly-rewind-identical');
     assert.deepEqual(rewound.candles, first.candles, 'Weekly rewind did not reproduce the exact disclosed prefix');
     assert.deepEqual([rewound.priceMinimum, rewound.priceMaximum], [first.priceMinimum, first.priceMaximum], 'Weekly rewind retained a later actual price domain');
@@ -847,6 +979,7 @@ export async function verifyChartReplaySurface(api) {
   await click(cdp, '#workbench-replay'); await ready(crypto && !btc);
   await verifyFloatingBar();
   if (btc) await verifyPopoverLifecycle();
+  else { await verifyLandingMenu('select-bar-only-four-start-actions', true); await closeMenu(); }
   if (btc) {
     const direct = await snapshot('atlas-project-start', true);
     assert.equal(direct.frequency, entryFrequency);
@@ -864,7 +997,7 @@ export async function verifyChartReplaySurface(api) {
     const dates = liveContext.range.match(/\d{4}\.\d{2}\.\d{2}/g);
     assert.equal(dates?.length, 2, 'Live chart did not expose its current date range');
     assert.deepEqual([direct.viewStart, direct.viewEnd], dates.map(value => value.replaceAll('.', '-')), 'Replay discarded the current chart viewport');
-    assert.match(direct.metric, /현재 예측선 고정.*실제 0봉/); assert.equal(direct.previousDisabled, true);
+    assert.match(direct.metric, /현재 예측선 고정.*실제 0봉/); assert.equal(direct.previousPresent, false);
     const originalAtlas = await exported('atlas-project-start');
     assert.equal(originalAtlas.identity.playbackStartDate, '2026-10-21'); assert.equal(originalAtlas.frame.actual.length, 0);
     await click(cdp, control('next'));
@@ -887,6 +1020,7 @@ export async function verifyChartReplaySurface(api) {
     const firstRestored = await snapshot('floating-first-forward-restores');
     assert.equal(firstRestored.cursor, firstAtlas.cursor); assert.equal(firstRestored.outputHash, firstAtlas.outputHash);
     assert.equal(firstRestored.forecastValueSignature, firstAtlas.forecastValueSignature); assert.deepEqual(firstRestored.candles, firstAtlas.candles);
+    await verifyRemovedBackwardInputs(firstRestored, 'current-chart-backward-inputs-removed');
     const firstAtlasExport = await exported('atlas-first-project-bar');
     assert.deepEqual(firstAtlasExport.frame.forecast, originalAtlas.frame.forecast, 'First actual bar rewrote the initial Atlas forecast');
     await click(cdp, control('scrub')); await key('End', 'End', 35);
@@ -906,6 +1040,15 @@ export async function verifyChartReplaySurface(api) {
     let pausedAtlas = await snapshot('atlas-play-paused'); assert.notEqual(pausedAtlas.state, 'playing');
     await delay(450); assert.equal((await snapshot('atlas-pause-stable')).index, pausedAtlas.index);
     assert.equal(await storedBytes(), null, 'Playing a fresh session silently saved it before an exit decision');
+    // Reproduce the reported saved 24th / input 25th discrepancy with a real
+    // saved session. Native slider keys choose the exact disclosed cursor.
+    await click(cdp, control('scrub')); await key('Home', 'Home', 36);
+    const saveIndex = btcCandles.filter(row => row.date > direct.origin && row.date <= '2026-10-24').length;
+    assert.equal(saveIndex, 4);
+    for (let index = 0; index < saveIndex; index++) await key('ArrowRight', 'ArrowRight', 39);
+    await closeMenu(); pausedAtlas = await snapshot('atlas-exact-october24-save-position');
+    assert.equal(pausedAtlas.cursor, '2026-10-24'); assert.equal(pausedAtlas.index, 4); assert.equal(pausedAtlas.playbackStartDate, '2026-10-21');
+    assert.equal(pausedAtlas.outputHash, direct.outputHash);
     if (touch) pausedAtlas = await touchPan('atlas-touch');
     visibleBounds(await bounds(cdp, control('exit')), width, height);
     await exitReplay('atlas-explicit-save', { cancelFirst: true });
@@ -926,6 +1069,7 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(resumedAtlas.forecastValueSignature, liveContext.forecastValueSignature);
     for (const field of ['cycleMarkerLayers', 'cycleMarkerCount', 'cycleIntervalLayers', 'cycleIntervalCount']) assert.equal(resumedAtlas[field], pausedAtlas[field], 'Continue changed the frozen visible ' + field);
     assert.notEqual(resumedAtlas.state, 'playing'); await delay(450); assert.equal((await snapshot('atlas-resume-stable')).index, resumedAtlas.index);
+    await verifySavedDateEditor(resumedAtlas, 'saved-october24-current-date');
     evidence.lifecycle.push({ label: 'direct-current-chart-project-replay', projectStart: '2026-10-21', initialObservationCutoff: direct.origin, forecastAsOf: currentAtlasModel.asOf,
       firstRevealedDate: firstAtlas.cursor, finalObservedDate: endAtlas.cursor, outputHash: direct.outputHash, annotationSha256: digest(direct.annotationSignature) });
     await verifyCurrentControls(direct, liveContext);
@@ -1006,7 +1150,7 @@ export async function verifyChartReplaySurface(api) {
           }, { panel, chartSelector });
           return result.state === 'error' ? result : false;
         }, 'unsupported adaptive origin is explicitly rejected');
-        await openMenu(); await revealOwnedControl(control('pooled-retry'));
+        await openForecast(); await revealOwnedControl(control('pooled-retry'));
         failure.retryVisible = await evaluate(cdp, selector => Boolean(document.querySelector(selector)?.getClientRects().length), control('pooled-retry'));
         assert.equal(failure.sameNode, true); assert.equal(failure.date, date); assert.equal(failure.model, 'adaptive');
         assert.match(failure.message, /각 30개 이상 필요/); assert.equal(failure.forecasts, 0);
@@ -1028,7 +1172,7 @@ export async function verifyChartReplaySurface(api) {
   const origin = await snapshot('fixed-origin', true); assert.equal(origin.index, 0); assert.equal(origin.actualCount, 0);
   if (crypto && origin.mode === 'historical-reconstruction') assert.ok(origin.observedCandleCount > 0, 'Historical reconstruction stopped painting genuine candles');
   let progressed = origin;
-  assert.ok(origin.metric.includes('평가 대기')); assert.equal(origin.previousDisabled, true);
+  assert.ok(origin.metric.includes('평가 대기')); assert.equal(origin.previousPresent, false);
   const original = await exported('fixed-origin'); assert.equal(original.frame.actual.length, 0);
   if (symbol === 'ETHUSD' && !touch) assert.match(original.identity.modelVersion, /pooled/, 'Export did not disclose the explicitly chosen alternative model');
   if (origin.lastIndex > 0) {
@@ -1037,8 +1181,9 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(first.index, 1); assert.equal(first.outputHash, origin.outputHash);
     const next = archiveRows(first.mode).find(row => row.date > origin.origin); assert.equal(first.cursor, next.date);
     const step = await exported('next-bar'); assert.deepEqual(step.frame.forecast, original.frame.forecast, 'Next bar changed the fixed prediction'); assert.equal(step.frame.actual.length, 1);
-    await click(cdp, chartSelector); await key('ArrowLeft', 'ArrowLeft', 37, 8);
-    const rewound = await snapshot('keyboard-rewind'); assert.equal(rewound.index, 0); assert.equal(rewound.outputHash, origin.outputHash);
+    await verifyRemovedBackwardInputs(first, 'fixed-forecast-backward-inputs-removed');
+    await key('Home', 'Home', 36);
+    const rewound = await snapshot('keyboard-home-rewind'); assert.equal(rewound.index, 0); assert.equal(rewound.outputHash, origin.outputHash);
     const rewindExport = await exported('rewound-origin'); assert.deepEqual(rewindExport.frame.forecast, original.frame.forecast, 'Rewind changed preserved forecast values');
     await key('ArrowRight', 'ArrowRight', 39, 8); progressed = await snapshot('keyboard-forward'); assert.equal(progressed.index, 1);
     if (crypto && origin.lastIndex > 8) {
