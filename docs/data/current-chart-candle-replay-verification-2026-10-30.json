@@ -1,0 +1,1285 @@
+{
+  "schemaVersion": 1,
+  "kind": "current-chart-candle-replay-browser-verification",
+  "version": "1.29.2",
+  "status": "passed",
+  "scope": "Actual local Chromium interaction with the checked-out static site. This receipt covers the seven replay cases; the complete 46-case browser suite remains a separate required CI gate.",
+  "sourceBinding": {
+    "workingTreeBaseCommit": "e2da5c4df57568553144921c931a0ebbfef4bddb",
+    "sourceHashesAreTheTestedWorkingTree": true,
+    "sourceFileCount": 91,
+    "sourceHashesMatchedImmediatelyAfterExecution": true,
+    "sourceNote": "The base commit identifies the checkout, not the uncommitted feature contents. The exact tested contents are identified by sourceHashes. Later edits require their own verification receipt.",
+    "sourceHashes": {
+      "dist/index.html": "8cf93fe48cd783512e96b149a3a7b98ff061311abafda37c55a34a42d345e5b0",
+      "dist/site-entry.js": "769d94feb47504c5228922f79e76fd5a3269ea9bf087d021c4df47e6c9b44f0f",
+      "dist/asset-comparison.js": "765d85f67ffad760e75b1b8fe8600eeb274411adb154c079cc65e1ba3a9076c8",
+      "dist/asset-judgment-history.js": "986b299bb7dc2c8e28cb2668bb2b7b3b7b0e507ba2b2f8ecb9040771d89ead9a",
+      "dist/daily-data-view.js": "28437a09dd97c58992b361bd3003795ad377f5ca2fb0aa8863f9d7804f388f57",
+      "dist/daily-data.css": "1fbf27cd8a2ab1bfb648c43b0aea004bea70ee523776194858680c2b58728273",
+      "dist/eth-view.js": "414cf51dc800ec52f44c3c1552718549f32ebca0fbc892e3fd59d1a619e628e8",
+      "dist/eth-view.css": "d33ba605310a4611e0379d6fe02379df027780b5e01918840c1510d9c0b98263",
+      "dist/ethereum-forecast.js": "b86e6e917c8d72c9db892dc4931694f915d6d73352dbab54798a64bd5ee3db4c",
+      "dist/ethereum-adaptive-model.js": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d",
+      "dist/ethereum-pooled-model.js": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467",
+      "dist/eth-view-state.js": "152003eacf02bd0e889b2ec8f89a867e702ab0d9db97a66e06ea7528a16021d1",
+      "dist/ethereum-adoption-scenarios.js": "f49532abd2479a2531bb7e23aaf7ff2b8505a3c2ce0a84436f3768a25c18dc86",
+      "dist/ethereum-research-panel.js": "f699155933c465057d8f1dc442c9b0de699e3a9d9eb1090a6566f46b724b93cc",
+      "dist/ethereum-research-catalog.js": "1c7638bec65dd4f948bc260434355f7e79c3ff9d572515d3fa5ec142dcf38e35",
+      "dist/eth-market-data.js": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075",
+      "dist/intraday-chart.js": "1e44773709a57ee9d74567001555a7b3ffa1f90c0915e35355f580c96c676c3f",
+      "dist/equity-forecast-chart.js": "a5601464a89dbfbda508d8de69a7d4a84b6858cc8981bef237eee0412676b75c",
+      "dist/equity-view.js": "625fbe0ccb2cffadb31f1ba0329ca53a0c23d52da374d41c3b50343f2992181d",
+      "dist/treasury-projection.js": "9cf7e6660124880e5a9ad654f41c846d10deb309ace18cf59b96699963948fd1",
+      "dist/treasury-model.js": "4812b36b65912209201eabf46ba39868cec7d7ddb014421e556476412b8e1739",
+      "dist/forecast-information-time.js": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23",
+      "dist/data/bmnr-ohlc.json": "3f6730e62cc37541666a3f58e10f8ac8d975964b67617f5027f68025cfc14a2e",
+      "dist/data/eth-ohlc.json": "cb9d11205c6e8f54a2d5f879dbbebb6baf6e73c4e123b9b673ca7c9085b64f0c",
+      "scripts/verify-eth-candidate-browser.mjs": "508622c5bcdddc09aa4610ca6985aab5decaee47c973d440df8b27a47c00c9b6",
+      "scripts/btc-offline-refresh-policy.mjs": "f8f2a165a3b52ceb47f4b2102d86d82f1141c8c04022a2bf7833979a968b94ff",
+      "tests/ethereum-offline-refresh-policy.test.mjs": "29ce072ed9919f3f66bafa389d6c894f14f2c126aea7c90ab3e2b4f98c05e3c4",
+      "dist/data/btc-daily.json": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+      "dist/app.js": "e4cbc6846f2f34eb7a276d340cf436e5a4576b237a44046cc0492631a1f9f3ca",
+      "dist/btc-refresh-status.js": "806ca5d59e4a9194bc9c2759c60821da154173a65944328a24010307808b2036",
+      "tests/ethereum-btc-refresh-status.test.mjs": "a840171a6fa636993b9ae735cf1c8b3089ca76f9ef05d17bd98846da75372b73",
+      "dist/data-source.js": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b",
+      "dist/published-data.js": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010",
+      "dist/asset-forecast-journal.js": "9f9e6ddd327e81858bd7827d7d3a3769c47645e2f9b3eaef647c55b8808ef805",
+      "dist/asset-forecast-records.js": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2",
+      "dist/journal-entry.js": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0",
+      "dist/forecast-journal.css": "35c88354953aa69e357ed84f007a8ba7233dec4035b72f703b52dfbe73d92d16",
+      "dist/data/asset-forecast-ledger/index.json": "2620f75f54b9755f417296348a4e31e14d584c338bcd2b67b0ac15c2c59bbe62",
+      "dist/data/mstr-ohlc.json": "61ecfab8b2f7b73c81fd9150297c35e5320d2cb1d17a6dd73e59f9e8db9b7059",
+      "dist/lab-view.js": "b2d21b4fa3f579f3df76915b3ffe730705d18f6c7315f68fa0d8c2929fc2b28b",
+      "dist/analysis-dock.css": "8081f9877382dd36173eb9b72789e0eb7dd3d70a6b424160567008a50f49834b",
+      "dist/compact-chart-layout.css": "48a9fef4f6d2f706b0b11a6d6ff738ada49bff0741bb82366f764a57ead01729",
+      "dist/mobile-workspace.css": "312e201062422ef5cee65c4e88c7741abaaeb37a48f3aebe05273b37eda28c54",
+      "dist/mobile-preview.js": "9d1ad1cdaf3e316579e4a33054d81d300e002b0214635a1481140b1a133acc9c",
+      "scripts/verify-workspace-browser.mjs": "03a262148dec93fee8840ac64d9ad84d56e4a12dc6346cabe505f0dc34e3caab",
+      "dist/atlas.css": "354c3a622418cd1b8842a33db951b10a3cf40c6e2fa017d3d6626627b8937377",
+      "dist/chart-bottom-bar.css": "7377e4a465413816bc252606fabd2ca0f9422b2166637b1c68159a049d9c663c",
+      "dist/chart-details-panel.css": "3c6106e58ee174ca284ade143fe57bf47d1b4e9780956395b8ee9ef48d7b98f7",
+      "dist/chart-export-workbench.css": "f3b1ad506c66d9e0611491778101cf080bbc79537f38daaf0d46fa00eb24ddad",
+      "dist/chart-magnet.css": "288666621e835fae74b3b67ec14a73e661d7dbb21b27e8052c9c0f78d0c6e72c",
+      "dist/chart-workspace-controls.css": "c37d0e5313b4fd587fb8102b2c41bcf3a06ffda16b4b1f1b7459d0cbe18999de",
+      "dist/compact.css": "e44b63bd942bd01d8e09514fadfc2f39e3fb94f37433fb0725a4033ba5937d83",
+      "dist/cycle-milestones.css": "25d4ab2655eb49673865105637467ccffa8da671009e3acd1ca0cd80cc9121ff",
+      "dist/equity-view.css": "99026cd6229df757176a648fc0f2c2ed88d7916a4e5eb65bcd8f9957db1ff5ad",
+      "dist/ethereum-history.css": "10613686f73ea72a6505664cb1748f92da10aacab78fd3ae6a2442889dc77340",
+      "dist/lab.css": "27c27efce2b5278dd85ffa50c4c79e8db081ca3d7ae784ae2c40a41dbcaee94e",
+      "dist/outlook.css": "4ccd3de4d698735928b50900778b21eef3b14f67c2443bc88fa5c25535af18ae",
+      "dist/research-annotations.css": "051c412f2f05e8ff695ae2ec4bb937269ad30511571f11469c640ce2f24ae2cc",
+      "dist/research-reader.css": "d9bac6ee4853c536b90683db3777dffdf23a557726699c867f5d1795ff2cd740",
+      "dist/styles.css": "57b3baabd84ba4d2936e6e44a75cd6f5fe4c8fe3479a8ee494e90aac15914fab",
+      "dist/symbol-selector.css": "d1940fe09caf936159fbd739cc43e26c153219288a87ba0c86ab2eaa3c9306bb",
+      "dist/viewport.css": "6080f2021db87c9d0b8f8cf14149af571fe75fede3bc9b152f0d706c2af6977a",
+      "dist/workspace-tools.css": "27b0af7348ea8361cbb1ca02dfc0045673de35ff80b2a549dbd4bb91b91f827d",
+      "dist/chart-bottom-bar.js": "e7dcdfce8326d5d4cf83265d1bd3fb715d26490b489b43523bbd72befd273b06",
+      "dist/preserved-archive-download.js": "fdc1ae671b866a2d3731d645b57998bdb23a53de6b3bfd0b61946faeda5434fd",
+      "dist/workspace-tools.js": "0e94b855cd8cd30c0a4a9c80c90a19a7774a133bdc587704774a13d23b3ad7c1",
+      "dist/research-annotations-workbench.js": "296c51cce5f994df1f08dab65d263f2e82d94ab4e81280d8170b88b0ab4a0d5f",
+      "dist/mobile-preview.html": "2761e4e567853672a375c13064fbcd83b7c7d56801536add1f6a08c1ed34f589",
+      "dist/symbol-selector.js": "d9bc6cfc74f665813024ec3dc1231bd77ebe967fa1ad9364563818695f61e73c",
+      "dist/research-reader.js": "c8869e264aba1125bd56a23138d581287912b3e6b27ea6d392c4652c3d991575",
+      "dist/evidence-view.js": "9a5852d5790ae1392297bcc10dd27cadbd32dbba645dce93163fe5ed56d08eb8",
+      "dist/viewport-workspace.js": "ead338025907c90362d2b87f129b8b70a5fae627537ac36bdf9d5111a7158ba0",
+      "dist/workbench-chrome.js": "17a3f95d121f3f0187e43b46be14a5b0fa1beeb934b4dd33f0b7ab380fc80abb",
+      "dist/forecast-replay.js": "6978b25f41edc24c8e53157efd55d0a4e9bc3667fa4ba3c6d57bec9fd9572234",
+      "dist/forecast-replay-sources.js": "26d99528a81a49e8c738c542a2e2fbd911674efd874f02070c1ddd958e07cd52",
+      "dist/forecast-replay-view.js": "416317a53886c59b3334573f2dbd2bc72cf26fb8cd9bfc895ed140c3503ec8e4",
+      "dist/data/replay-eth-ohlc.json": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+      "scripts/verify-forecast-replay-browser.mjs": "8781c035d976cb017a5b619e29b07d0037b92497f04ca6539bc941fab43013f4",
+      "dist/chart-replay.js": "b8fabe38bf3fd47dbd069960ea3daa47c92b1575ffff8d820a631659d3d084ab",
+      "dist/chart-replay-state.js": "5b782ad02e80a2ffb89dec6ccf7a170720a9f55ace0f2f47a400e1ad5739e822",
+      "dist/chart-replay-renderer.js": "ba06b1369f92c596bd12abfd8256dd044be38097807718fc12550e81cc369d6b",
+      "dist/chart-replay-sources.js": "eda71aeffa8739bb233a9fb8413883ee0be3be357a271e761073873bacd63e3d",
+      "dist/chart-replay.css": "aa23715e9994eb04906e67257d4a41d9a859c16526f2ac407212a5260870267e",
+      "dist/asset-forecast-loader.js": "2d373afa2f588f8d640b7432b1e226d64580fb1a96efc6631c6e2dcb7e1168cb",
+      "dist/data/btc-volume.json": "9f0d0e26e69e37a845e8000ccac248c775c0d86506c48c1f25f940a5b2c5b7d7",
+      "scripts/verify-chart-replay-browser.mjs": "3d2364e81b8616660bac373910ad970615a795899a85557f56d7edebcd3e844a",
+      "dist/chart-replay-atlas.js": "7e2eed1d5085f6bdc2f09e5fdb8b2c8003f2c6fa61de2ef49cc460b5d5f80b30",
+      "dist/atlas-price-chart.js": "9c8ca9645c2ae57f12b92a8a9124b015e347c704454a94e4927bb135969927ca",
+      "dist/project-replay-baseline.js": "b24462b0b8ac13b8640fc0717e98ed5cf198a779281cbd64bd3551a4529c6861",
+      "dist/data/project-origin-btc-2026-10-21.json": "571d0d3421d7ae40da4fb3020ab0290aa534822d5a439f9e98f55dc31d5f19ac",
+      "scripts/build-project-replay-baseline.mjs": "1ddf49e09ad015afd526996112c521d23fba5e539af73439c85628dec13aed83"
+    },
+    "postRunSourceChangesObservedAt": "2026-10-30T07:57:27.711417+00:00",
+    "postRunSourceChanges": [
+      {
+        "path": "dist/lab-view.js",
+        "testedSha256": "b2d21b4fa3f579f3df76915b3ffe730705d18f6c7315f68fa0d8c2929fc2b28b",
+        "postRunSha256": "8a3d89a8bab8bf52f8340f61ae72659d95c7c259bdda02a91f780f771a742a7a"
+      },
+      {
+        "path": "dist/chart-replay.js",
+        "testedSha256": "b8fabe38bf3fd47dbd069960ea3daa47c92b1575ffff8d820a631659d3d084ab",
+        "postRunSha256": "756475645fee44783e0a55662ca36fe9fc83653a99e0f8b97dcee10df31fb67e"
+      },
+      {
+        "path": "dist/chart-replay-atlas.js",
+        "testedSha256": "7e2eed1d5085f6bdc2f09e5fdb8b2c8003f2c6fa61de2ef49cc460b5d5f80b30",
+        "postRunSha256": "4c64a72ee1e3417c0c7f1872deebf7c35bc5c5af6d598aa1894af1e9fa5f1f99"
+      }
+    ],
+    "postRunValidationRequirement": "The changed bytes below were not covered by this local browser run. They isolate the BTC-only renderer loader from the complete ETH import graph and separate forecast-price and candle-source readouts. The final PR must pass the required complete native-browser CI suite on its exact tree; retain this original local receipt without relabelling it as a final-tree run. The engine import also uses the v1.29.2 cache identity so earlier cached code cannot be selected."
+  },
+  "execution": {
+    "startedAt": "2026-10-30T07:45:25.466Z",
+    "finishedAt": "2026-10-30T07:47:51.812Z",
+    "timezoneForUserFacingDates": "Asia/Seoul",
+    "browser": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/156.0.8078.80",
+      "revision": "@fb096c0011f9d50f0a264a9376420cdea9c421e3",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+      "jsVersion": "15.6.75.27"
+    },
+    "caseScope": "chart-replay",
+    "declaredCaseCount": 46,
+    "expectedCaseCount": 7,
+    "executedCaseCount": 7,
+    "passedCaseCount": 7,
+    "stateSnapshots": 152,
+    "screenshots": 55,
+    "downloadedReplayJson": 37,
+    "downloadedCurrentModelJson": 3,
+    "runtimeErrors": 0,
+    "unexpectedResourceErrors": 0,
+    "reportSha256": "9f1a1fdca2646cea761b77bb09af58869e110206a436c4f28941eae4c9fff058",
+    "reportPath": "build/eth-browser/report.json",
+    "command": "ATLAS_BROWSER_CASE_SCOPE=chart-replay ETH_BROWSER_IMAGE_LOG_MODE=failures-only node scripts/verify-eth-candidate-browser.mjs",
+    "environment": "An explicit Chromium binary and Korean font configuration were supplied. Local subprocess execution required sandbox escalation; the first blocked attempt executed zero cases and is not counted as a pass."
+  },
+  "verifiedBehavior": [
+    "A single native click starts BTC replay inside the same main SVG and document.",
+    "The default keeps the current orange forecast, range and cycle presentation while showing genuine Bitstamp candles.",
+    "Every exported current forecast point equals the native current-model JSON exported immediately before replay; 8,834 points in this preserved fixture.",
+    "The project start date is 2026-10-21; the initial actual cutoff is 2026-10-20 and the first next action reveals exactly the 2026-10-21 candle.",
+    "Dense candle rendering preserves the source-visible candle count and one wick per candle; no actual wick paints beyond the reveal cursor.",
+    "New actual OHLC values equal their preserved source values; missing future actual bars are never invented.",
+    "The current forecast snapshot is not scored as a forecast issued at the old playback date.",
+    "Native play, pause, scrub End/Home, 650 ms touch hold then pan, exit and paused resume retain the fixed forecast.",
+    "Returning to the latest view restores the original range, line/candle selection, scale, price unit and cycle counts.",
+    "The explicit project-baseline alternative retains all 1,098 original forecast points and compares the first actual observation against Coin Metrics.",
+    "The earlier historical-reconstruction, stored-record, ETH explicit pooled retry and equity replay journeys remain covered.",
+    "Desktop and mobile screenshots were inspected after the legend visibility correction."
+  ],
+  "cases": [
+    {
+      "page": "chart-replay-btc",
+      "symbol": "BTCUSD",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "stateSnapshots": 32,
+      "screenshots": [
+        {
+          "file": "chart-replay-btc-1440x900-current-chart-before-replay.png",
+          "bytes": 205104,
+          "sha256": "95cd373907cc0bbe4022e5440fbe12e478708294f6566d1d3140c6d155af81c5"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-atlas-project-start.png",
+          "bytes": 176926,
+          "sha256": "dc05508e2fc8562feadc52e418b7c8bc9e58888ee5e01071ef5b5a0d4606289c"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-atlas-first-project-bar.png",
+          "bytes": 176520,
+          "sha256": "12ea24fbbdeb8c9033974bd780a94adf8ef22c4dd6746245b14919ad86508b7f"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-atlas-last-observed-bar.png",
+          "bytes": 177907,
+          "sha256": "b2d819d45d2168210abd851da6c27c8238e118450227652c30dd00decd06cf40"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-original-project-forecast.png",
+          "bytes": 156647,
+          "sha256": "bf71bd40017f88b0c128e9927959c61666d37fc3a642080924243fef3fd3b60e"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-original-project-first-observation.png",
+          "bytes": 157231,
+          "sha256": "3d2b748cd2b50fb5160b74099c0d53a8106f295b7c6bba15a37ea542fa89ba31"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-start-selection.png",
+          "bytes": 100376,
+          "sha256": "bd84d0e259e1e3cf47a62092efc87c893e763e6418f92ff6b2f68208644a74f1"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-fixed-origin.png",
+          "bytes": 76408,
+          "sha256": "419ea30d34c5c8f29662d373735814012c2cf5da4577587c9fbf41407039afe5"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-next-bar.png",
+          "bytes": 77259,
+          "sha256": "309cbc1a9c24739b550771e0628fb9771d9efbf5b284a51c32c455127119d93c"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-preserved-record.png",
+          "bytes": 107601,
+          "sha256": "644677c033c47cd4e8b05ce6a58a85ebf458bcc6bde74e7d73626c62856d7105"
+        },
+        {
+          "file": "chart-replay-btc-1440x900-latest-restored.png",
+          "bytes": 200527,
+          "sha256": "c18905185767333a8804b57ecd56c510db63403977a222ceb1804d6bcc0b4d32"
+        }
+      ],
+      "exports": [
+        {
+          "label": "atlas-project-start",
+          "file": "chart-replay-downloads/chart-replay-btc-1440x900/atlas-project-start-EmZpVA/atlas-chart-replay-BTCUSD-2026-10-20.json",
+          "bytes": 3542818,
+          "sha256": "28b80341dc3a116494c2f2537022b91b987a2123b267bd684f3fa681dcbeb6d7",
+          "outputHash": "51316b4204674109c6476e375a6f40edf85139441bb4c7fc2c395e8307163d2d",
+          "cursor": "2026-10-20",
+          "actualDates": [],
+          "forecastSha256": "29f939b48919f1dee660aa9d9953f6195639c8b6854459906676ee7a21ab018a"
+        },
+        {
+          "label": "atlas-first-project-bar",
+          "file": "chart-replay-downloads/chart-replay-btc-1440x900/atlas-first-project-bar-jgOSGf/atlas-chart-replay-BTCUSD-2026-10-21.json",
+          "bytes": 3543537,
+          "sha256": "0a2e5769642ea7099ca2ad5956d1c757d7021ef3cca8f4f795ca2d1d0a7a120d",
+          "outputHash": "51316b4204674109c6476e375a6f40edf85139441bb4c7fc2c395e8307163d2d",
+          "cursor": "2026-10-21",
+          "actualDates": [
+            "2026-10-21"
+          ],
+          "forecastSha256": "29f939b48919f1dee660aa9d9953f6195639c8b6854459906676ee7a21ab018a"
+        },
+        {
+          "label": "atlas-last-observed-bar",
+          "file": "chart-replay-downloads/chart-replay-btc-1440x900/atlas-last-observed-bar-43oysH/atlas-chart-replay-BTCUSD-2026-10-25.json",
+          "bytes": 3546392,
+          "sha256": "5dc2ad41e32d81e2e639321e79e817ea8008e6e8b20725368d1b10b771d9919c",
+          "outputHash": "51316b4204674109c6476e375a6f40edf85139441bb4c7fc2c395e8307163d2d",
+          "cursor": "2026-10-25",
+          "actualDates": [
+            "2026-10-21",
+            "2026-10-22",
+            "2026-10-23",
+            "2026-10-24",
+            "2026-10-25"
+          ],
+          "forecastSha256": "29f939b48919f1dee660aa9d9953f6195639c8b6854459906676ee7a21ab018a"
+        },
+        {
+          "label": "original-project-forecast",
+          "file": "chart-replay-downloads/chart-replay-btc-1440x900/original-project-forecast-IpydV8/atlas-chart-replay-BTCUSD-2026-10-20.json",
+          "bytes": 433231,
+          "sha256": "eec7d4f96fdab07f1b1985cdbeb1134849453beee6a7600a04684ce73fb76494",
+          "outputHash": "0e0703b557cb586618b65449e5eea78516e11d81b882787ab06cfa39c71e5dc6",
+          "cursor": "2026-10-20",
+          "actualDates": [],
+          "forecastSha256": "33172929eddbc24badc4ad1c3d13f477a423a6b30b9ba1e64fb33693822d16c6"
+        },
+        {
+          "label": "original-project-first-observation",
+          "file": "chart-replay-downloads/chart-replay-btc-1440x900/original-project-first-observation-XuLjrv/atlas-chart-replay-BTCUSD-2026-10-21.json",
+          "bytes": 434466,
+          "sha256": "203645be1fcff83dc5d6fc3912561d18e21cfde3a07390a41576c5247069b41f",
+          "outputHash": "0e0703b557cb586618b65449e5eea78516e11d81b882787ab06cfa39c71e5dc6",
+          "cursor": "2026-10-21",
+          "actualDates": [
+            "2026-10-21"
+          ],
+          "forecastSha256": "33172929eddbc24badc4ad1c3d13f477a423a6b30b9ba1e64fb33693822d16c6"
+        },
+        {
+          "label": "fixed-origin",
+          "file": "chart-replay-downloads/chart-replay-btc-1440x900/fixed-origin-cWzVBi/atlas-chart-replay-BTCUSD-2025-04-28.json",
+          "bytes": 76117,
+          "sha256": "95b278de90dce5eec6914d87350059ea02ec6cd6aab38e12137eb6a43bd0061c",
+          "outputHash": "aa13cab47482113b25575d6919e73d09f324df84a91b7e97ff69e60901eecc05",
+          "cursor": "2025-04-28",
+          "actualDates": [],
+          "forecastSha256": "73b77f7242fa503a278032c9445cedf7370e4c2948ae072267a05298f61f1109"
+        },
+        {
+          "label": "next-bar",
+          "file": "chart-replay-downloads/chart-replay-btc-1440x900/next-bar-GA3mYr/atlas-chart-replay-BTCUSD-2025-04-29.json",
+          "bytes": 77379,
+          "sha256": "59630267a8d8520babe4d07b5000081d96ecaa67329c020727481f59fcd54c2a",
+          "outputHash": "aa13cab47482113b25575d6919e73d09f324df84a91b7e97ff69e60901eecc05",
+          "cursor": "2025-04-29",
+          "actualDates": [
+            "2025-04-29"
+          ],
+          "forecastSha256": "73b77f7242fa503a278032c9445cedf7370e4c2948ae072267a05298f61f1109"
+        },
+        {
+          "label": "rewound-origin",
+          "file": "chart-replay-downloads/chart-replay-btc-1440x900/rewound-origin-svU7rG/atlas-chart-replay-BTCUSD-2025-04-28.json",
+          "bytes": 76117,
+          "sha256": "95b278de90dce5eec6914d87350059ea02ec6cd6aab38e12137eb6a43bd0061c",
+          "outputHash": "aa13cab47482113b25575d6919e73d09f324df84a91b7e97ff69e60901eecc05",
+          "cursor": "2025-04-28",
+          "actualDates": [],
+          "forecastSha256": "73b77f7242fa503a278032c9445cedf7370e4c2948ae072267a05298f61f1109"
+        },
+        {
+          "label": "preserved-record",
+          "file": "chart-replay-downloads/chart-replay-btc-1440x900/preserved-record-rWuRya/atlas-chart-replay-BTCUSD-2026-10-25.json",
+          "bytes": 91485,
+          "sha256": "d0b6c45e60f0a8c937c40238498b3e590aaf839b906d25e3ce50e6939b153c6f",
+          "outputHash": "1b04145004d305273d56b734838b2bba716b4ef86b1f39052c6202d1aa929755",
+          "cursor": "2026-10-25",
+          "actualDates": [],
+          "forecastSha256": "58f25017b9adefb6b7518cb54bea1b2c983e86676c1ffc3844fdd39f188c2f0c"
+        }
+      ],
+      "currentModelExport": {
+        "file": "chart-replay-downloads/chart-replay-btc-1440x900/current-model-before-replay-yUk4b3/Bitcoin_Long_Horizon_Scenarios.json",
+        "bytes": 15041090,
+        "sha256": "cf434ecdca2df46da7c0130b06960061feb6ba515fb7afaac55da1ec62809e13",
+        "asOf": "2026-10-25",
+        "scenario": "base",
+        "pathPoints": 8834
+      },
+      "lifecycle": [
+        {
+          "label": "current-chart-restored-with-original-presentation",
+          "sameNode": true,
+          "range": "2024.10.25 — 2028.10.25",
+          "scale": "log",
+          "unit": "usd",
+          "chartType": "line",
+          "cycleMarkers": 5,
+          "cycleIntervals": 12
+        },
+        {
+          "label": "direct-current-chart-project-replay",
+          "projectStart": "2026-10-21",
+          "initialObservationCutoff": "2026-10-20",
+          "forecastAsOf": "2026-10-25",
+          "firstRevealedDate": "2026-10-21",
+          "finalObservedDate": "2026-10-25",
+          "outputHash": "51316b4204674109c6476e375a6f40edf85139441bb4c7fc2c395e8307163d2d",
+          "annotationSha256": "d4a97c3a72fe4f896be1732d18105a8357c294fff8622bc1eacbfd88519503f0"
+        },
+        {
+          "label": "explicit-original-project-forecast-is-preserved",
+          "outputHash": "0e0703b557cb586618b65449e5eea78516e11d81b882787ab06cfa39c71e5dc6",
+          "forecastPoints": 1098,
+          "firstActual": 84176.0796455874,
+          "comparisonSource": "2026-10-21 첫 커밋의 3년 전망 · 성적 비교 Coin Metrics Community API 종가 · 2026-10-25까지 현재 보존 판본"
+        },
+        {
+          "label": "native-date-request",
+          "previous": "2026-04-28",
+          "requested": "2025-04-28"
+        },
+        {
+          "label": "native-date-edit-and-enter",
+          "requested": "2025-04-28",
+          "origin": "2025-04-28"
+        },
+        {
+          "label": "pause-stops-playback",
+          "index": 5,
+          "waitMilliseconds": 450
+        },
+        {
+          "label": "resume-session-policy",
+          "behavior": "unprogressed-record-keeps-prior-progress",
+          "previousOrigin": "2025-04-28",
+          "selectedOrigin": "2026-10-25",
+          "selectedIndex": 0,
+          "expectedOrigin": "2025-04-28",
+          "expectedIndex": 5
+        },
+        {
+          "label": "resume-restores-exact-fixed-path-and-pauses",
+          "origin": "2025-04-28",
+          "index": 5,
+          "outputHash": "aa13cab47482113b25575d6919e73d09f324df84a91b7e97ff69e60901eecc05"
+        }
+      ]
+    },
+    {
+      "page": "chart-replay-btc",
+      "symbol": "BTCUSD",
+      "width": 320,
+      "height": 568,
+      "status": "passed",
+      "stateSnapshots": 35,
+      "screenshots": [
+        {
+          "file": "chart-replay-btc-320x568-current-chart-before-replay.png",
+          "bytes": 64506,
+          "sha256": "a92a327f2bb9babad60b52f6232206392b74c31b14851d7e443ab9823f6cefab"
+        },
+        {
+          "file": "chart-replay-btc-320x568-atlas-project-start.png",
+          "bytes": 55541,
+          "sha256": "33e8bcd6797d794431db0a8ca30c6af336953d4fb4b69cb786d13f204ccf5001"
+        },
+        {
+          "file": "chart-replay-btc-320x568-atlas-first-project-bar.png",
+          "bytes": 55984,
+          "sha256": "f1397e16d9e7888b21a6bcd5764801fd0f8bb2efe9ead2399d70778d49709042"
+        },
+        {
+          "file": "chart-replay-btc-320x568-atlas-last-observed-bar.png",
+          "bytes": 55921,
+          "sha256": "81ba761352595000367e10098f6ce3f4704bcf1800af309f3ac8b253162dedcb"
+        },
+        {
+          "file": "chart-replay-btc-320x568-atlas-touch-hold-pan.png",
+          "bytes": 56860,
+          "sha256": "1c98432b1e90c4b9398aeaf0bee2265cc102a96f94524e102ae1dd95fc028426"
+        },
+        {
+          "file": "chart-replay-btc-320x568-original-project-forecast.png",
+          "bytes": 52395,
+          "sha256": "b298f2308f3cc02509808a43425c686970def2ffe62086aa6d2274602e77a45b"
+        },
+        {
+          "file": "chart-replay-btc-320x568-original-project-first-observation.png",
+          "bytes": 52014,
+          "sha256": "8293fd7235fd3f3655ea2d8c462d3ceb7fa04528c258cdd395df3934c615021b"
+        },
+        {
+          "file": "chart-replay-btc-320x568-start-selection.png",
+          "bytes": 38386,
+          "sha256": "1c0d499032bf8d8c63227f56cb1cff1f61b1e63715eeb03058dad6a959d59c64"
+        },
+        {
+          "file": "chart-replay-btc-320x568-fixed-origin.png",
+          "bytes": 33230,
+          "sha256": "c52cd1f096827024866fac5c601f251b4131b7ac9e23d04287b2f544c157cd41"
+        },
+        {
+          "file": "chart-replay-btc-320x568-next-bar.png",
+          "bytes": 33333,
+          "sha256": "1650333ae35beefb34da81be68cd3647f32d35a2a227062e5a197ab7229242c9"
+        },
+        {
+          "file": "chart-replay-btc-320x568-touch-hold-pan.png",
+          "bytes": 34456,
+          "sha256": "d72f348834793f9dcf8fd141839df15c8b65510503592107c34d237456d86723"
+        },
+        {
+          "file": "chart-replay-btc-320x568-preserved-record.png",
+          "bytes": 36896,
+          "sha256": "738ee7f2a38162a9c05bd86fb015c7e0574ddbc41f49d540ee5a3ae1caae747b"
+        },
+        {
+          "file": "chart-replay-btc-320x568-latest-restored.png",
+          "bytes": 61511,
+          "sha256": "6753eb6ade22c4f3515908467924a1fdf9ced27a55394231219ae5f6f19480d1"
+        }
+      ],
+      "exports": [
+        {
+          "label": "atlas-project-start",
+          "file": "chart-replay-downloads/chart-replay-btc-320x568/atlas-project-start-7xNlH7/atlas-chart-replay-BTCUSD-2026-10-20.json",
+          "bytes": 3542818,
+          "sha256": "c35666fed291ccc8df89b1842746bece01f9230f24ab6970a020346c582b757f",
+          "outputHash": "51316b4204674109c6476e375a6f40edf85139441bb4c7fc2c395e8307163d2d",
+          "cursor": "2026-10-20",
+          "actualDates": [],
+          "forecastSha256": "29f939b48919f1dee660aa9d9953f6195639c8b6854459906676ee7a21ab018a"
+        },
+        {
+          "label": "atlas-first-project-bar",
+          "file": "chart-replay-downloads/chart-replay-btc-320x568/atlas-first-project-bar-f7o5No/atlas-chart-replay-BTCUSD-2026-10-21.json",
+          "bytes": 3543537,
+          "sha256": "76fb3f4622a959ad94ee78c9ef240ce5922a14012c6d40a178e67ddc60822cb9",
+          "outputHash": "51316b4204674109c6476e375a6f40edf85139441bb4c7fc2c395e8307163d2d",
+          "cursor": "2026-10-21",
+          "actualDates": [
+            "2026-10-21"
+          ],
+          "forecastSha256": "29f939b48919f1dee660aa9d9953f6195639c8b6854459906676ee7a21ab018a"
+        },
+        {
+          "label": "atlas-last-observed-bar",
+          "file": "chart-replay-downloads/chart-replay-btc-320x568/atlas-last-observed-bar-OFDTTo/atlas-chart-replay-BTCUSD-2026-10-25.json",
+          "bytes": 3546392,
+          "sha256": "413e21c5cbf21d4378d220cd70d7c9ae9fe0e612a36aca51e095eae9bfc898e2",
+          "outputHash": "51316b4204674109c6476e375a6f40edf85139441bb4c7fc2c395e8307163d2d",
+          "cursor": "2026-10-25",
+          "actualDates": [
+            "2026-10-21",
+            "2026-10-22",
+            "2026-10-23",
+            "2026-10-24",
+            "2026-10-25"
+          ],
+          "forecastSha256": "29f939b48919f1dee660aa9d9953f6195639c8b6854459906676ee7a21ab018a"
+        },
+        {
+          "label": "original-project-forecast",
+          "file": "chart-replay-downloads/chart-replay-btc-320x568/original-project-forecast-HrFWER/atlas-chart-replay-BTCUSD-2026-10-20.json",
+          "bytes": 433231,
+          "sha256": "eec7d4f96fdab07f1b1985cdbeb1134849453beee6a7600a04684ce73fb76494",
+          "outputHash": "0e0703b557cb586618b65449e5eea78516e11d81b882787ab06cfa39c71e5dc6",
+          "cursor": "2026-10-20",
+          "actualDates": [],
+          "forecastSha256": "33172929eddbc24badc4ad1c3d13f477a423a6b30b9ba1e64fb33693822d16c6"
+        },
+        {
+          "label": "original-project-first-observation",
+          "file": "chart-replay-downloads/chart-replay-btc-320x568/original-project-first-observation-oIR4Xr/atlas-chart-replay-BTCUSD-2026-10-21.json",
+          "bytes": 434466,
+          "sha256": "203645be1fcff83dc5d6fc3912561d18e21cfde3a07390a41576c5247069b41f",
+          "outputHash": "0e0703b557cb586618b65449e5eea78516e11d81b882787ab06cfa39c71e5dc6",
+          "cursor": "2026-10-21",
+          "actualDates": [
+            "2026-10-21"
+          ],
+          "forecastSha256": "33172929eddbc24badc4ad1c3d13f477a423a6b30b9ba1e64fb33693822d16c6"
+        },
+        {
+          "label": "fixed-origin",
+          "file": "chart-replay-downloads/chart-replay-btc-320x568/fixed-origin-OFyhV1/atlas-chart-replay-BTCUSD-2026-04-28.json",
+          "bytes": 76017,
+          "sha256": "f4e1068d814a776bae6674da9c882abf8c497bb6892412c53f91b32fb48a68f1",
+          "outputHash": "284659ef980c614517034e8fc438ac3f0746fcc74239a2f4fd49865e35db86a5",
+          "cursor": "2026-04-28",
+          "actualDates": [],
+          "forecastSha256": "da68098c12dff940f92b6f34e0a61a53b965d672507a79652b384c7d94007ccb"
+        },
+        {
+          "label": "next-bar",
+          "file": "chart-replay-downloads/chart-replay-btc-320x568/next-bar-nGWcgz/atlas-chart-replay-BTCUSD-2026-04-29.json",
+          "bytes": 77275,
+          "sha256": "0c107fb92f535abc1c5ca1d1fffbcd2356dbe49a498fc3750c42d8d529b470f6",
+          "outputHash": "284659ef980c614517034e8fc438ac3f0746fcc74239a2f4fd49865e35db86a5",
+          "cursor": "2026-04-29",
+          "actualDates": [
+            "2026-04-29"
+          ],
+          "forecastSha256": "da68098c12dff940f92b6f34e0a61a53b965d672507a79652b384c7d94007ccb"
+        },
+        {
+          "label": "rewound-origin",
+          "file": "chart-replay-downloads/chart-replay-btc-320x568/rewound-origin-zTwUgN/atlas-chart-replay-BTCUSD-2026-04-28.json",
+          "bytes": 76017,
+          "sha256": "f4e1068d814a776bae6674da9c882abf8c497bb6892412c53f91b32fb48a68f1",
+          "outputHash": "284659ef980c614517034e8fc438ac3f0746fcc74239a2f4fd49865e35db86a5",
+          "cursor": "2026-04-28",
+          "actualDates": [],
+          "forecastSha256": "da68098c12dff940f92b6f34e0a61a53b965d672507a79652b384c7d94007ccb"
+        },
+        {
+          "label": "preserved-record",
+          "file": "chart-replay-downloads/chart-replay-btc-320x568/preserved-record-1Tfc55/atlas-chart-replay-BTCUSD-2026-10-25.json",
+          "bytes": 91485,
+          "sha256": "d0b6c45e60f0a8c937c40238498b3e590aaf839b906d25e3ce50e6939b153c6f",
+          "outputHash": "1b04145004d305273d56b734838b2bba716b4ef86b1f39052c6202d1aa929755",
+          "cursor": "2026-10-25",
+          "actualDates": [],
+          "forecastSha256": "58f25017b9adefb6b7518cb54bea1b2c983e86676c1ffc3844fdd39f188c2f0c"
+        }
+      ],
+      "currentModelExport": {
+        "file": "chart-replay-downloads/chart-replay-btc-320x568/current-model-before-replay-zbP27U/Bitcoin_Long_Horizon_Scenarios.json",
+        "bytes": 15041090,
+        "sha256": "cf434ecdca2df46da7c0130b06960061feb6ba515fb7afaac55da1ec62809e13",
+        "asOf": "2026-10-25",
+        "scenario": "base",
+        "pathPoints": 8834
+      },
+      "lifecycle": [
+        {
+          "label": "atlas-touch-hold-pans-without-live-tracker",
+          "holdMilliseconds": 650,
+          "originBeforeX": 123.12662559890485,
+          "originAfterX": 165.20739219712527,
+          "cursor": "2026-10-22"
+        },
+        {
+          "label": "current-chart-restored-with-original-presentation",
+          "sameNode": true,
+          "range": "2024.10.25 — 2028.10.25",
+          "scale": "log",
+          "unit": "usd",
+          "chartType": "line",
+          "cycleMarkers": 5,
+          "cycleIntervals": 12
+        },
+        {
+          "label": "direct-current-chart-project-replay",
+          "projectStart": "2026-10-21",
+          "initialObservationCutoff": "2026-10-20",
+          "forecastAsOf": "2026-10-25",
+          "firstRevealedDate": "2026-10-21",
+          "finalObservedDate": "2026-10-25",
+          "outputHash": "51316b4204674109c6476e375a6f40edf85139441bb4c7fc2c395e8307163d2d",
+          "annotationSha256": "d4a97c3a72fe4f896be1732d18105a8357c294fff8622bc1eacbfd88519503f0"
+        },
+        {
+          "label": "explicit-original-project-forecast-is-preserved",
+          "outputHash": "0e0703b557cb586618b65449e5eea78516e11d81b882787ab06cfa39c71e5dc6",
+          "forecastPoints": 1098,
+          "firstActual": 84176.0796455874,
+          "comparisonSource": "2026-10-21 첫 커밋의 3년 전망 · 성적 비교 Coin Metrics Community API 종가 · 2026-10-25까지 현재 보존 판본"
+        },
+        {
+          "label": "pause-stops-playback",
+          "index": 5,
+          "waitMilliseconds": 450
+        },
+        {
+          "label": "touch-hold-pans-without-live-tracker",
+          "holdMilliseconds": 650,
+          "originBeforeX": 124,
+          "originAfterX": 166.53333333333333,
+          "cursor": "2026-05-03"
+        },
+        {
+          "label": "resume-session-policy",
+          "behavior": "unprogressed-record-keeps-prior-progress",
+          "previousOrigin": "2026-04-28",
+          "selectedOrigin": "2026-10-25",
+          "selectedIndex": 0,
+          "expectedOrigin": "2026-04-28",
+          "expectedIndex": 5
+        },
+        {
+          "label": "resume-restores-exact-fixed-path-and-pauses",
+          "origin": "2026-04-28",
+          "index": 5,
+          "outputHash": "284659ef980c614517034e8fc438ac3f0746fcc74239a2f4fd49865e35db86a5"
+        }
+      ]
+    },
+    {
+      "page": "chart-replay-btc",
+      "symbol": "BTCUSD",
+      "width": 900,
+      "height": 430,
+      "status": "passed",
+      "stateSnapshots": 35,
+      "screenshots": [
+        {
+          "file": "chart-replay-btc-900x430-current-chart-before-replay.png",
+          "bytes": 97695,
+          "sha256": "b68f1156e491ba3c3a4dc3f3de8c6f721bbfa228954ea2cc6891684cf0c2daa9"
+        },
+        {
+          "file": "chart-replay-btc-900x430-atlas-project-start.png",
+          "bytes": 93029,
+          "sha256": "78117f02827aaaf5dffdc3d108f3b82b878fff37686e2797659604c3c79ee729"
+        },
+        {
+          "file": "chart-replay-btc-900x430-atlas-first-project-bar.png",
+          "bytes": 92728,
+          "sha256": "dad31883a8c07f2e5a9c5c47091c2848aaab8c750043dd3b6d62589ad0622dda"
+        },
+        {
+          "file": "chart-replay-btc-900x430-atlas-last-observed-bar.png",
+          "bytes": 94195,
+          "sha256": "f31d4a07b73b4bfdae3c6128317ed26daf2172bdc647ab328538e5c9ed049230"
+        },
+        {
+          "file": "chart-replay-btc-900x430-atlas-touch-hold-pan.png",
+          "bytes": 91506,
+          "sha256": "fc06cceabb36aced9b34aa5903759295f57d085fd4506b26713091f1708b49f2"
+        },
+        {
+          "file": "chart-replay-btc-900x430-original-project-forecast.png",
+          "bytes": 86164,
+          "sha256": "9462975e73a1f9246e4ef4ee7b97665f8ee5ad5d9640dc98ad5452ea5dca8179"
+        },
+        {
+          "file": "chart-replay-btc-900x430-original-project-first-observation.png",
+          "bytes": 86358,
+          "sha256": "4c65539f71174ba4540b8ba0fcb229f8cf28572aef99e828c144757d7050b1ce"
+        },
+        {
+          "file": "chart-replay-btc-900x430-start-selection.png",
+          "bytes": 61063,
+          "sha256": "5c8eb0b3dcdc64ddcd93f4fe42b9c9aa449c08981a66657056873258b94379a4"
+        },
+        {
+          "file": "chart-replay-btc-900x430-fixed-origin.png",
+          "bytes": 51722,
+          "sha256": "85b4fa41c130f71d1a12f9540b0580854804df41377de79348c08c882aab1a39"
+        },
+        {
+          "file": "chart-replay-btc-900x430-next-bar.png",
+          "bytes": 51414,
+          "sha256": "eda96c156b3a6fbf3c2ee293bd75c523ff204a8bda5df8f3f6bcce9ae60f0277"
+        },
+        {
+          "file": "chart-replay-btc-900x430-touch-hold-pan.png",
+          "bytes": 52544,
+          "sha256": "acf04b6cb5c51e87600d6724bbdbcf4a920ace9669430866b36d9aaad5d6200c"
+        },
+        {
+          "file": "chart-replay-btc-900x430-preserved-record.png",
+          "bytes": 56788,
+          "sha256": "d84ed431455c049205b1bf32e988451ae36695c00d8da0c5d3a371fc5a33e305"
+        },
+        {
+          "file": "chart-replay-btc-900x430-latest-restored.png",
+          "bytes": 93098,
+          "sha256": "0f77fbaddad64165c7701031212c941b5999356b67139a234892fe33691666b5"
+        }
+      ],
+      "exports": [
+        {
+          "label": "atlas-project-start",
+          "file": "chart-replay-downloads/chart-replay-btc-900x430/atlas-project-start-HbrVvT/atlas-chart-replay-BTCUSD-2026-10-20.json",
+          "bytes": 3542818,
+          "sha256": "727b2d0721a9a9631188bf7f37dc8343224ca81bfa01fd774644adae4052795d",
+          "outputHash": "51316b4204674109c6476e375a6f40edf85139441bb4c7fc2c395e8307163d2d",
+          "cursor": "2026-10-20",
+          "actualDates": [],
+          "forecastSha256": "29f939b48919f1dee660aa9d9953f6195639c8b6854459906676ee7a21ab018a"
+        },
+        {
+          "label": "atlas-first-project-bar",
+          "file": "chart-replay-downloads/chart-replay-btc-900x430/atlas-first-project-bar-jqwbmx/atlas-chart-replay-BTCUSD-2026-10-21.json",
+          "bytes": 3543537,
+          "sha256": "d8ded4dac50af9b8132b923d107b36317e9f50a242d853cff8460e7753bb7d0b",
+          "outputHash": "51316b4204674109c6476e375a6f40edf85139441bb4c7fc2c395e8307163d2d",
+          "cursor": "2026-10-21",
+          "actualDates": [
+            "2026-10-21"
+          ],
+          "forecastSha256": "29f939b48919f1dee660aa9d9953f6195639c8b6854459906676ee7a21ab018a"
+        },
+        {
+          "label": "atlas-last-observed-bar",
+          "file": "chart-replay-downloads/chart-replay-btc-900x430/atlas-last-observed-bar-t7vm29/atlas-chart-replay-BTCUSD-2026-10-25.json",
+          "bytes": 3546392,
+          "sha256": "8b21b44c915a4ae487e86148476511c21ff2a7320ea993bf567d45d45a767066",
+          "outputHash": "51316b4204674109c6476e375a6f40edf85139441bb4c7fc2c395e8307163d2d",
+          "cursor": "2026-10-25",
+          "actualDates": [
+            "2026-10-21",
+            "2026-10-22",
+            "2026-10-23",
+            "2026-10-24",
+            "2026-10-25"
+          ],
+          "forecastSha256": "29f939b48919f1dee660aa9d9953f6195639c8b6854459906676ee7a21ab018a"
+        },
+        {
+          "label": "original-project-forecast",
+          "file": "chart-replay-downloads/chart-replay-btc-900x430/original-project-forecast-R8ujtg/atlas-chart-replay-BTCUSD-2026-10-20.json",
+          "bytes": 433231,
+          "sha256": "eec7d4f96fdab07f1b1985cdbeb1134849453beee6a7600a04684ce73fb76494",
+          "outputHash": "0e0703b557cb586618b65449e5eea78516e11d81b882787ab06cfa39c71e5dc6",
+          "cursor": "2026-10-20",
+          "actualDates": [],
+          "forecastSha256": "33172929eddbc24badc4ad1c3d13f477a423a6b30b9ba1e64fb33693822d16c6"
+        },
+        {
+          "label": "original-project-first-observation",
+          "file": "chart-replay-downloads/chart-replay-btc-900x430/original-project-first-observation-gkFREO/atlas-chart-replay-BTCUSD-2026-10-21.json",
+          "bytes": 434466,
+          "sha256": "203645be1fcff83dc5d6fc3912561d18e21cfde3a07390a41576c5247069b41f",
+          "outputHash": "0e0703b557cb586618b65449e5eea78516e11d81b882787ab06cfa39c71e5dc6",
+          "cursor": "2026-10-21",
+          "actualDates": [
+            "2026-10-21"
+          ],
+          "forecastSha256": "33172929eddbc24badc4ad1c3d13f477a423a6b30b9ba1e64fb33693822d16c6"
+        },
+        {
+          "label": "fixed-origin",
+          "file": "chart-replay-downloads/chart-replay-btc-900x430/fixed-origin-sQHQd2/atlas-chart-replay-BTCUSD-2026-04-28.json",
+          "bytes": 76017,
+          "sha256": "133448cd437a45407449bef668a48ed8042cebc23bc20982013c390404b2270c",
+          "outputHash": "284659ef980c614517034e8fc438ac3f0746fcc74239a2f4fd49865e35db86a5",
+          "cursor": "2026-04-28",
+          "actualDates": [],
+          "forecastSha256": "da68098c12dff940f92b6f34e0a61a53b965d672507a79652b384c7d94007ccb"
+        },
+        {
+          "label": "next-bar",
+          "file": "chart-replay-downloads/chart-replay-btc-900x430/next-bar-XN6T7s/atlas-chart-replay-BTCUSD-2026-04-29.json",
+          "bytes": 77275,
+          "sha256": "faa1cd49baf0a955cb75bbc348a83625db64d7e77984367af710cf25b9043549",
+          "outputHash": "284659ef980c614517034e8fc438ac3f0746fcc74239a2f4fd49865e35db86a5",
+          "cursor": "2026-04-29",
+          "actualDates": [
+            "2026-04-29"
+          ],
+          "forecastSha256": "da68098c12dff940f92b6f34e0a61a53b965d672507a79652b384c7d94007ccb"
+        },
+        {
+          "label": "rewound-origin",
+          "file": "chart-replay-downloads/chart-replay-btc-900x430/rewound-origin-3PECpg/atlas-chart-replay-BTCUSD-2026-04-28.json",
+          "bytes": 76017,
+          "sha256": "133448cd437a45407449bef668a48ed8042cebc23bc20982013c390404b2270c",
+          "outputHash": "284659ef980c614517034e8fc438ac3f0746fcc74239a2f4fd49865e35db86a5",
+          "cursor": "2026-04-28",
+          "actualDates": [],
+          "forecastSha256": "da68098c12dff940f92b6f34e0a61a53b965d672507a79652b384c7d94007ccb"
+        },
+        {
+          "label": "preserved-record",
+          "file": "chart-replay-downloads/chart-replay-btc-900x430/preserved-record-o7rRG1/atlas-chart-replay-BTCUSD-2026-10-25.json",
+          "bytes": 91485,
+          "sha256": "d0b6c45e60f0a8c937c40238498b3e590aaf839b906d25e3ce50e6939b153c6f",
+          "outputHash": "1b04145004d305273d56b734838b2bba716b4ef86b1f39052c6202d1aa929755",
+          "cursor": "2026-10-25",
+          "actualDates": [],
+          "forecastSha256": "58f25017b9adefb6b7518cb54bea1b2c983e86676c1ffc3844fdd39f188c2f0c"
+        }
+      ],
+      "currentModelExport": {
+        "file": "chart-replay-downloads/chart-replay-btc-900x430/current-model-before-replay-XYmr4K/Bitcoin_Long_Horizon_Scenarios.json",
+        "bytes": 15041090,
+        "sha256": "cf434ecdca2df46da7c0130b06960061feb6ba515fb7afaac55da1ec62809e13",
+        "asOf": "2026-10-25",
+        "scenario": "base",
+        "pathPoints": 8834
+      },
+      "lifecycle": [
+        {
+          "label": "atlas-touch-hold-pans-without-live-tracker",
+          "holdMilliseconds": 650,
+          "originBeforeX": 367.8008213552361,
+          "originAfterX": 421.78439425051334,
+          "cursor": "2026-10-22"
+        },
+        {
+          "label": "current-chart-restored-with-original-presentation",
+          "sameNode": true,
+          "range": "2024.10.25 — 2028.10.25",
+          "scale": "log",
+          "unit": "usd",
+          "chartType": "line",
+          "cycleMarkers": 5,
+          "cycleIntervals": 12
+        },
+        {
+          "label": "direct-current-chart-project-replay",
+          "projectStart": "2026-10-21",
+          "initialObservationCutoff": "2026-10-20",
+          "forecastAsOf": "2026-10-25",
+          "firstRevealedDate": "2026-10-21",
+          "finalObservedDate": "2026-10-25",
+          "outputHash": "51316b4204674109c6476e375a6f40edf85139441bb4c7fc2c395e8307163d2d",
+          "annotationSha256": "d4a97c3a72fe4f896be1732d18105a8357c294fff8622bc1eacbfd88519503f0"
+        },
+        {
+          "label": "explicit-original-project-forecast-is-preserved",
+          "outputHash": "0e0703b557cb586618b65449e5eea78516e11d81b882787ab06cfa39c71e5dc6",
+          "forecastPoints": 1098,
+          "firstActual": 84176.0796455874,
+          "comparisonSource": "2026-10-21 첫 커밋의 3년 전망 · 성적 비교 Coin Metrics Community API 종가 · 2026-10-25까지 현재 보존 판본"
+        },
+        {
+          "label": "pause-stops-playback",
+          "index": 5,
+          "waitMilliseconds": 450
+        },
+        {
+          "label": "touch-hold-pans-without-live-tracker",
+          "holdMilliseconds": 650,
+          "originBeforeX": 370.5,
+          "originAfterX": 424.275,
+          "cursor": "2026-05-03"
+        },
+        {
+          "label": "resume-session-policy",
+          "behavior": "unprogressed-record-keeps-prior-progress",
+          "previousOrigin": "2026-04-28",
+          "selectedOrigin": "2026-10-25",
+          "selectedIndex": 0,
+          "expectedOrigin": "2026-04-28",
+          "expectedIndex": 5
+        },
+        {
+          "label": "resume-restores-exact-fixed-path-and-pauses",
+          "origin": "2026-04-28",
+          "index": 5,
+          "outputHash": "284659ef980c614517034e8fc438ac3f0746fcc74239a2f4fd49865e35db86a5"
+        }
+      ]
+    },
+    {
+      "page": "chart-replay-eth",
+      "symbol": "ETHUSD",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "stateSnapshots": 19,
+      "screenshots": [
+        {
+          "file": "chart-replay-eth-1440x900-start-selection.png",
+          "bytes": 82849,
+          "sha256": "edc6a60f6f70c86182bdaf84b9dcd854812958ab935d1146352d98175711b90c"
+        },
+        {
+          "file": "chart-replay-eth-1440x900-unsupported-origin.png",
+          "bytes": 39173,
+          "sha256": "b864e55a1b443e9b4177c9137345ae4c08e02a62d1ea16c20eef11f6cd3e9c7f"
+        },
+        {
+          "file": "chart-replay-eth-1440x900-explicit-pooled-retry.png",
+          "bytes": 76223,
+          "sha256": "9b8463d9d15246db9d0ae430760493c6a9b486d6eb5fbdc0ac9d8126876755ef"
+        },
+        {
+          "file": "chart-replay-eth-1440x900-fixed-origin.png",
+          "bytes": 76223,
+          "sha256": "9b8463d9d15246db9d0ae430760493c6a9b486d6eb5fbdc0ac9d8126876755ef"
+        },
+        {
+          "file": "chart-replay-eth-1440x900-next-bar.png",
+          "bytes": 76798,
+          "sha256": "ca88431ae522c12c4e9fe62dd7c736466409ae40eca34c66db064cf46a2daefd"
+        },
+        {
+          "file": "chart-replay-eth-1440x900-preserved-record.png",
+          "bytes": 91407,
+          "sha256": "9932689e88396e7d2a96fbb5bdcb948f16aacefa5f7fa4476f0780e82a4261be"
+        },
+        {
+          "file": "chart-replay-eth-1440x900-latest-restored.png",
+          "bytes": 140362,
+          "sha256": "2ca770678c2f48a2238d2d12cebcf988afb864135fc16b691833dccf74fc1f7c"
+        }
+      ],
+      "exports": [
+        {
+          "label": "fixed-origin",
+          "file": "chart-replay-downloads/chart-replay-eth-1440x900/fixed-origin-zYOvix/atlas-chart-replay-ETHUSD-2025-04-30.json",
+          "bytes": 110799,
+          "sha256": "5b055fa1448549016e526889faff650b92134c1c579257800e742592012c2b41",
+          "outputHash": "2384c98924cd1950736844939257bf68217f66c39d15fa7d9fce33ce71cd50fd",
+          "cursor": "2025-04-30",
+          "actualDates": [],
+          "forecastSha256": "2e6e0866c796ae8d6969c23df4d7dfa05617db2d0b62e800f53e29f308fe8ad8"
+        },
+        {
+          "label": "next-bar",
+          "file": "chart-replay-downloads/chart-replay-eth-1440x900/next-bar-IMXRsv/atlas-chart-replay-ETHUSD-2025-05-01.json",
+          "bytes": 112013,
+          "sha256": "9bbd74c7dea451d1c36e8027eed049697ef310e4f8bf8d602f68836bae75fde7",
+          "outputHash": "2384c98924cd1950736844939257bf68217f66c39d15fa7d9fce33ce71cd50fd",
+          "cursor": "2025-05-01",
+          "actualDates": [
+            "2025-05-01"
+          ],
+          "forecastSha256": "2e6e0866c796ae8d6969c23df4d7dfa05617db2d0b62e800f53e29f308fe8ad8"
+        },
+        {
+          "label": "rewound-origin",
+          "file": "chart-replay-downloads/chart-replay-eth-1440x900/rewound-origin-KAEN1U/atlas-chart-replay-ETHUSD-2025-04-30.json",
+          "bytes": 110799,
+          "sha256": "5b055fa1448549016e526889faff650b92134c1c579257800e742592012c2b41",
+          "outputHash": "2384c98924cd1950736844939257bf68217f66c39d15fa7d9fce33ce71cd50fd",
+          "cursor": "2025-04-30",
+          "actualDates": [],
+          "forecastSha256": "2e6e0866c796ae8d6969c23df4d7dfa05617db2d0b62e800f53e29f308fe8ad8"
+        },
+        {
+          "label": "preserved-record",
+          "file": "chart-replay-downloads/chart-replay-eth-1440x900/preserved-record-ffc8rj/atlas-chart-replay-ETHUSD-2026-10-25.json",
+          "bytes": 92692,
+          "sha256": "4ef10aa470b1f37fd0e41dbf3acb847237556015d50a73fccce0ce4c073d14df",
+          "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+          "cursor": "2026-10-25",
+          "actualDates": [],
+          "forecastSha256": "0be28ff4614a6679582672aa3760d8f1d692ea26e75fbac6f93bca642923fbce"
+        }
+      ],
+      "currentModelExport": null,
+      "lifecycle": [
+        {
+          "label": "native-date-request",
+          "previous": "2026-04-30",
+          "requested": "2025-04-30"
+        },
+        {
+          "label": "unsupported-adaptive-origin-disclosed",
+          "state": "error",
+          "date": "2025-04-30",
+          "model": "adaptive",
+          "message": "선택 기준일까지 확정된 상승·하락 수익률 표본이 각 30개 이상 필요합니다. 날짜를 바꾸거나 통합 변동성 모형으로 같은 날짜를 비교해 주세요.",
+          "inspect": "",
+          "forecasts": 0,
+          "sameNode": true,
+          "retryVisible": true
+        },
+        {
+          "label": "explicit-alternative-keeps-origin",
+          "origin": "2025-04-30",
+          "model": "pooled",
+          "outputHash": "2384c98924cd1950736844939257bf68217f66c39d15fa7d9fce33ce71cd50fd"
+        },
+        {
+          "label": "native-date-edit-and-enter",
+          "requested": "2025-04-30",
+          "origin": "2025-04-30"
+        },
+        {
+          "label": "pause-stops-playback",
+          "index": 5,
+          "waitMilliseconds": 450
+        },
+        {
+          "label": "resume-session-policy",
+          "behavior": "progressed-session-becomes-resume-target",
+          "previousOrigin": "2025-04-30",
+          "selectedOrigin": "2026-10-25",
+          "selectedIndex": 1,
+          "expectedOrigin": "2026-10-25",
+          "expectedIndex": 1
+        },
+        {
+          "label": "resume-restores-exact-fixed-path-and-pauses",
+          "origin": "2026-10-25",
+          "index": 1,
+          "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c"
+        }
+      ]
+    },
+    {
+      "page": "chart-replay-eth",
+      "symbol": "ETHUSD",
+      "width": 320,
+      "height": 568,
+      "status": "passed",
+      "stateSnapshots": 19,
+      "screenshots": [
+        {
+          "file": "chart-replay-eth-320x568-start-selection.png",
+          "bytes": 32107,
+          "sha256": "ed006b5a6d3af026b5e7b4816482696d3cd7ea73246d163080a5f4979a40b28c"
+        },
+        {
+          "file": "chart-replay-eth-320x568-fixed-origin.png",
+          "bytes": 33701,
+          "sha256": "493c04a588d9ac39f5f67c9174276c2521122cf94245e2e5e32ebc05593a9b51"
+        },
+        {
+          "file": "chart-replay-eth-320x568-next-bar.png",
+          "bytes": 34301,
+          "sha256": "4353ba6309eebf4bacaaf4f56b7bb414b1198466b5adc313b5544f1e8631a3d3"
+        },
+        {
+          "file": "chart-replay-eth-320x568-touch-hold-pan.png",
+          "bytes": 34164,
+          "sha256": "68bf750f92c698b29f34bae9366322da483603a79f79aa4b1b5c26493f864029"
+        },
+        {
+          "file": "chart-replay-eth-320x568-preserved-record.png",
+          "bytes": 36901,
+          "sha256": "42df04512ceb8f53ca5b997435f63aef6330b3382424f40fdcf4e82c172d90b5"
+        },
+        {
+          "file": "chart-replay-eth-320x568-latest-restored.png",
+          "bytes": 52377,
+          "sha256": "b3c2371e47c710374057dec894c897b8edc23d40417c12e93d45e359cbccf9f8"
+        }
+      ],
+      "exports": [
+        {
+          "label": "fixed-origin",
+          "file": "chart-replay-downloads/chart-replay-eth-320x568/fixed-origin-ka2MjW/atlas-chart-replay-ETHUSD-2026-04-30.json",
+          "bytes": 110504,
+          "sha256": "9b6bb0b3890e16c29b8b8b72d04f086c79791ba8ef74410036a52eb3a5af930f",
+          "outputHash": "bb2cfd3e9741843d0bb457f988ecc831736c7d0c90d0a88acbe24934330d8fd7",
+          "cursor": "2026-04-30",
+          "actualDates": [],
+          "forecastSha256": "9e8603cdac618c41a6cf7ea2de33f1619fd605b78fae5b5866966ce8cd899fe2"
+        },
+        {
+          "label": "next-bar",
+          "file": "chart-replay-downloads/chart-replay-eth-320x568/next-bar-Kz9lrS/atlas-chart-replay-ETHUSD-2026-05-01.json",
+          "bytes": 111729,
+          "sha256": "279fc55cd1a8d82fba08d0660e55541fe540b6bef16fa4d47226dd0843a7b6ba",
+          "outputHash": "bb2cfd3e9741843d0bb457f988ecc831736c7d0c90d0a88acbe24934330d8fd7",
+          "cursor": "2026-05-01",
+          "actualDates": [
+            "2026-05-01"
+          ],
+          "forecastSha256": "9e8603cdac618c41a6cf7ea2de33f1619fd605b78fae5b5866966ce8cd899fe2"
+        },
+        {
+          "label": "rewound-origin",
+          "file": "chart-replay-downloads/chart-replay-eth-320x568/rewound-origin-4Jw7YN/atlas-chart-replay-ETHUSD-2026-04-30.json",
+          "bytes": 110504,
+          "sha256": "9b6bb0b3890e16c29b8b8b72d04f086c79791ba8ef74410036a52eb3a5af930f",
+          "outputHash": "bb2cfd3e9741843d0bb457f988ecc831736c7d0c90d0a88acbe24934330d8fd7",
+          "cursor": "2026-04-30",
+          "actualDates": [],
+          "forecastSha256": "9e8603cdac618c41a6cf7ea2de33f1619fd605b78fae5b5866966ce8cd899fe2"
+        },
+        {
+          "label": "preserved-record",
+          "file": "chart-replay-downloads/chart-replay-eth-320x568/preserved-record-7W4igX/atlas-chart-replay-ETHUSD-2026-10-25.json",
+          "bytes": 92692,
+          "sha256": "4ef10aa470b1f37fd0e41dbf3acb847237556015d50a73fccce0ce4c073d14df",
+          "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c",
+          "cursor": "2026-10-25",
+          "actualDates": [],
+          "forecastSha256": "0be28ff4614a6679582672aa3760d8f1d692ea26e75fbac6f93bca642923fbce"
+        }
+      ],
+      "currentModelExport": null,
+      "lifecycle": [
+        {
+          "label": "pause-stops-playback",
+          "index": 5,
+          "waitMilliseconds": 450
+        },
+        {
+          "label": "touch-hold-pans-without-live-tracker",
+          "holdMilliseconds": 650,
+          "originBeforeX": 124,
+          "originAfterX": 166.53333333333333,
+          "cursor": "2026-05-05"
+        },
+        {
+          "label": "resume-session-policy",
+          "behavior": "progressed-session-becomes-resume-target",
+          "previousOrigin": "2026-04-30",
+          "selectedOrigin": "2026-10-25",
+          "selectedIndex": 1,
+          "expectedOrigin": "2026-10-25",
+          "expectedIndex": 1
+        },
+        {
+          "label": "resume-restores-exact-fixed-path-and-pauses",
+          "origin": "2026-10-25",
+          "index": 1,
+          "outputHash": "6b0c5ab480280f516bfe2c2263557fe1a791eb0398968afca1d045ea2fd6d25c"
+        }
+      ]
+    },
+    {
+      "page": "chart-replay-mstr",
+      "symbol": "MSTR",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "stateSnapshots": 5,
+      "screenshots": [
+        {
+          "file": "chart-replay-mstr-1440x900-fixed-origin.png",
+          "bytes": 77988,
+          "sha256": "8a871a857f7620da3ad6ae1d06e52ca8180cc126e89a955e4eb0b309cc677cee"
+        },
+        {
+          "file": "chart-replay-mstr-1440x900-latest-restored.png",
+          "bytes": 150039,
+          "sha256": "c5be284e73e2515bd74cf94b808257b351c8b63df111e3fb2cd9995168fbbef0"
+        }
+      ],
+      "exports": [
+        {
+          "label": "fixed-origin",
+          "file": "chart-replay-downloads/chart-replay-mstr-1440x900/fixed-origin-26MleS/atlas-chart-replay-MSTR-2026-10-23.json",
+          "bytes": 83434,
+          "sha256": "eb0281a867f374fdbd01b3d337f28ec44af21d0009d760e40679af247f7fbfb3",
+          "outputHash": "87f3bf92daef217c91260c130b91e3c41a2d24020eac2c4c70e61a3f20492d3f",
+          "cursor": "2026-10-23",
+          "actualDates": [],
+          "forecastSha256": "8b8ca8e2152975290a6d66c8b89eae0cf27bdcecdca5cf31edce21477440501f"
+        }
+      ],
+      "currentModelExport": null,
+      "lifecycle": [
+        {
+          "label": "no-future-observations",
+          "inventedBars": false
+        },
+        {
+          "label": "resume-session-policy",
+          "behavior": "progressed-session-becomes-resume-target",
+          "previousOrigin": "2026-10-23",
+          "selectedOrigin": "2026-10-23",
+          "selectedIndex": 0,
+          "expectedOrigin": "2026-10-23",
+          "expectedIndex": 0
+        },
+        {
+          "label": "resume-restores-exact-fixed-path-and-pauses",
+          "origin": "2026-10-23",
+          "index": 0,
+          "outputHash": "87f3bf92daef217c91260c130b91e3c41a2d24020eac2c4c70e61a3f20492d3f"
+        }
+      ]
+    },
+    {
+      "page": "chart-replay-bmnr",
+      "symbol": "BMNR",
+      "width": 390,
+      "height": 844,
+      "status": "passed",
+      "stateSnapshots": 7,
+      "screenshots": [
+        {
+          "file": "chart-replay-bmnr-390x844-fixed-origin.png",
+          "bytes": 48523,
+          "sha256": "af9cbb0a29fee995ced602c9c7cfa2328162e66bc8589cabd1b3476269b8bd45"
+        },
+        {
+          "file": "chart-replay-bmnr-390x844-touch-hold-pan.png",
+          "bytes": 46337,
+          "sha256": "2f3564047b0aed37cb09312ecbd9dcf491e3775f33184439714734727f8b321f"
+        },
+        {
+          "file": "chart-replay-bmnr-390x844-latest-restored.png",
+          "bytes": 66337,
+          "sha256": "127f5df94fdfd7065063d1b618a05c63eec75e636b57ed4b10c7d7720c38bef7"
+        }
+      ],
+      "exports": [
+        {
+          "label": "fixed-origin",
+          "file": "chart-replay-downloads/chart-replay-bmnr-390x844/fixed-origin-hANkkQ/atlas-chart-replay-BMNR-2026-10-23.json",
+          "bytes": 83507,
+          "sha256": "e75c55b6946a54fd1c82cdec6faf0369605abb45d7288dc07d4a4f9e0b70b4f3",
+          "outputHash": "69db2e55aadc38ba8cf6116a7b3397031ba5008a141686266231b9a33e3b7b4f",
+          "cursor": "2026-10-23",
+          "actualDates": [],
+          "forecastSha256": "76ca589e1e87598271d45f97ed8e9524ee13b73453b1df7ac412b922754cc4a3"
+        }
+      ],
+      "currentModelExport": null,
+      "lifecycle": [
+        {
+          "label": "no-future-observations",
+          "inventedBars": false
+        },
+        {
+          "label": "touch-hold-pans-without-live-tracker",
+          "holdMilliseconds": 650,
+          "originBeforeX": 160.5,
+          "originAfterX": 214.36666666666667,
+          "cursor": "2026-10-23"
+        },
+        {
+          "label": "resume-session-policy",
+          "behavior": "progressed-session-becomes-resume-target",
+          "previousOrigin": "2026-10-23",
+          "selectedOrigin": "2026-10-23",
+          "selectedIndex": 0,
+          "expectedOrigin": "2026-10-23",
+          "expectedIndex": 0
+        },
+        {
+          "label": "resume-restores-exact-fixed-path-and-pauses",
+          "origin": "2026-10-23",
+          "index": 0,
+          "outputHash": "69db2e55aadc38ba8cf6116a7b3397031ba5008a141686266231b9a33e3b7b4f"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Chromium with emulated viewport/touch input is not a physical-device or Safari certification.",
+    "The static Bitstamp fixture ends on 2026-10-25, providing five actual replay candles after the initial cutoff; a live Coin Metrics chart may have a later observation date.",
+    "Forecast source identity and actual-candle source identity remain distinct.",
+    "The older project baseline is an explicitly selected historical artifact; it does not replace the current orange curve in the default mode.",
+    "No prospective calibration, improved investment performance or independent daily forecast-trial claim is made."
+  ]
+}

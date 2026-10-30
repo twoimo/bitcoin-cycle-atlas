@@ -2,8 +2,9 @@ import {forecastHash,verifyForecastRecord,restoreForecastPath} from './forecast-
 import {verifyAssetForecastRecord,restoreAssetForecastPath} from './asset-forecast-records.js';
 import {normalizeForecastTimestamp,selectPriceVintages} from './forecast-information-time.js';
 import {sessionCloseUtc,isEquitySession} from './data-freshness.js';
-import {utcDay,dateFromDay} from './cycle-engine.js';
+import {utcDay,dateFromDay,validateDataset} from './cycle-engine.js';
 import {buildIndependentBenchmarks,BENCHMARK_POLICY} from './forecast-evaluation.js';
+import {requireVerifiedProjectReplayBaseline,PROJECT_REPLAY_ORIGIN} from './project-replay-baseline.js';
 
 export const FORECAST_REPLAY_VERSION='forecast-replay-2';
 const SYMBOLS=new Set(['BTCUSD','ETHUSD','MSTR','BMNR']);
@@ -108,26 +109,29 @@ function preservedPathMeaning(record){
   return {pointMeaning:record.symbol==='BTCUSD'?'preserved-conditional-btc-path':'preserved-conditional-asset-valuation',
     pointLabel:record.symbol==='BTCUSD'?'보존한 BTC 조건부 경로':'보존한 자산의 조건부 평가 경로',bandMeaning};
 }
-function finishSession({identity,mode,prices,path,targets,observations,observedAt,observedThrough,source,horizonDays,evaluatedAt,historicalModel=null,training=null}){
+function finishSession({identity,mode,prices,path,targets,observations,observedAt,observedThrough,source,horizonDays,evaluatedAt,historicalModel=null,training=null,chartDataset=null,chartForecast=null,forecastOriginDate=identity.asOf,timelineDates=null,scorePolicy=null}){
   const {symbol,asOf}=identity,market=marketFor(symbol);
   const normalized=observationRows(observations,{symbol,observedAt,observedThrough,source});
-  const forecast=visiblePath(path,asOf,horizonDays);
-  if(!forecast.length||forecast[0].date!==asOf)throw new RangeError('Replay path must begin at its origin');
+  const forecast=visiblePath(path,forecastOriginDate,horizonDays);
+  if(!forecast.length||forecast[0].date!==forecastOriginDate)throw new RangeError('Replay path must begin at its forecast origin');
   const startDate=dateFromDay(Math.max(utcDay(prices[0].date),utcDay(asOf)-90));
   const inputPrices=prices.filter(row=>row.date>=startDate&&row.date<=asOf).map(row=>({date:row.date,price:row.price}));
   const endDate=forecast.at(-1).date;
   const evaluation=normalizeForecastTimestamp(evaluatedAt,'evaluatedAt');
   const relevant=normalized.filter(row=>row.date>asOf&&row.date<=endDate);
   const informationTimeAvailable=relevant.every(receiptComplete);
-  const timeline=forecast.filter(row=>row.date<=evaluation.slice(0,10)&&(row.date===asOf||market==='crypto'||sessionCloseUtc(row.date,market)!==null)).map(row=>row.date);
+  const timeline=timelineDates??forecast.filter(row=>row.date<=evaluation.slice(0,10)&&(row.date===asOf||market==='crypto'||sessionCloseUtc(row.date,market)!==null)).map(row=>row.date);
   if(!timeline.length)throw new RangeError('Replay origin is later than the evaluation clock');
   const session={version:FORECAST_REPLAY_VERSION,id:identity.recordId,identity:copy(identity),mode,market,asOf,startDate,endDate,evaluatedAt:evaluation,
     timeline,inputPrices,forecast,observations:relevant,targets:copy(targets),historicalModel,training,
+    ...(chartDataset?{chartDataset}:{}),...(chartForecast?{chartForecast}:{}),
+    ...(forecastOriginDate!==asOf?{forecastOriginDate}:{}),
     observationProvenance:{observedAt:observedAt??null,observedThrough:observedThrough??normalized.at(-1)?.date??null,
       source:source===null||source===undefined?null:copy(source),informationTimeAvailable,
       historicalAvailabilityProven:false,providerAuthenticityProven:false},
     policy:{forecastNeverRecomputedDuringReplay:true,missingValuesImputed:false,calibrated:false,
-      dailyErrorsAreIndependentSamples:false,releaseAuthorized:false,productionPromoted:false}};
+      dailyErrorsAreIndependentSamples:false,releaseAuthorized:false,productionPromoted:false,
+      ...(scorePolicy??{})}};
   chartHistories.set(session,{prices:freeze(prices.map(row=>({date:row.date,price:row.price}))),
     observations:freeze(normalized.filter(row=>row.date<=asOf)),current:null});
   sessions.add(session);return freeze(session);
@@ -158,6 +162,79 @@ export async function createRecordedReplaySession({record,snapshot,observations=
   const targets=record.targets.map(target=>({...target,eventAt:target.eventAt??sessionCloseUtc(target.targetDate,'crypto')}));
   return finishSession({identity,mode:'recorded',prices:prices.map(([date,price])=>({date,price})),path,targets,
     observations,observedAt,observedThrough,source,horizonDays,evaluatedAt});
+}
+
+/** Replay the first saved Atlas artifact unchanged. Its original three-year
+ * extent is fixed; the 730-day reconstruction/ledger contract is unaffected. */
+export async function createProjectReplaySession({baseline,observations=[],observedAt=null,observedThrough=null,source=null,evaluatedAt=new Date().toISOString()}={}){
+  requireVerifiedProjectReplayBaseline(baseline);
+  const origin=PROJECT_REPLAY_ORIGIN,prices=baseline.dataset.prices.map(([date,price])=>({date,price}));
+  const path=baseline.forecast.path,horizonDays=utcDay(path.at(-1).date)-utcDay(origin.asOf);
+  if(horizonDays!==1097||prices.at(-1)?.date!==origin.asOf)throw new RangeError('The preserved project replay extent must remain unchanged');
+  const horizons=[30,90,180,365,730,1097];
+  const benchmarks=buildIndependentBenchmarks(baseline.dataset.prices,{asOf:origin.asOf,horizons});
+  const byDate=new Map(path.map(row=>[row.date,row]));
+  const targets=benchmarks.targets.map(target=>({...target,price:byDate.get(target.targetDate).price,eventAt:sessionCloseUtc(target.targetDate,'crypto')}));
+  const identity={symbol:'BTCUSD',recordId:baseline.id,recordKind:'archived-project-baseline',
+    asOf:origin.asOf,issuedAt:null,preservedAt:origin.preservedAt,preservationBasis:origin.preservationBasis,
+    projectStartDate:origin.startDate,playbackStartDate:origin.startDate,referenceTimezone:origin.timezone,
+    snapshotId:baseline.inputHash,outputHash:baseline.outputHash,modelVersion:origin.modelVersion,
+    sourceCommit:origin.sourceCommit,sourceHash:origin.sourceArtifactSha256,
+    informationCutoffAt:sessionCloseUtc(origin.asOf,'crypto'),inputAvailableAt:origin.preservedAt,
+    inputAvailabilityBasis:'conservative-first-commit-preservation',historicalModelExistedAtOrigin:false,
+    modelPreservedOnProjectStartDate:true,
+    pointMeaning:'preserved-initial-project-conditional-path',pointLabel:'프로젝트 시작 당시 보존한 3년 기본 경로',
+    bandMeaning:'user-assumption-sensitivity-not-calibrated',publicationTimeProven:false,
+    provenance:baseline.provenance};
+  return finishSession({identity,mode:'project-baseline',prices,path,targets,observations,observedAt,observedThrough,source,
+    horizonDays,evaluatedAt,chartDataset:baseline.dataset,chartForecast:baseline.forecast});
+}
+
+/** Keep the current chart's orange curve exactly as captured while revealing
+ * genuine past bars. A current snapshot is not a forecast issued in the past,
+ * and its Coin Metrics curve is not scored against another provider's candles. */
+export async function createCurrentChartReplaySession({dataset,forecast,asOf=PROJECT_REPLAY_ORIGIN.asOf,
+  playbackStartDate=PROJECT_REPLAY_ORIGIN.startDate,observations=[],observedAt=null,observedThrough=null,source=null,
+  createdAt=new Date().toISOString(),evaluatedAt=createdAt}={}){
+  utcDay(asOf);utcDay(playbackStartDate);
+  const created=normalizeForecastTimestamp(createdAt,'createdAt'),evaluation=normalizeForecastTimestamp(evaluatedAt,'evaluatedAt');
+  const forecastOriginDate=forecast?.asOf;utcDay(forecastOriginDate);
+  if(asOf>forecastOriginDate||playbackStartDate!==dateFromDay(utcDay(asOf)+1)||created>evaluation)throw new RangeError('Current-chart replay clocks are inconsistent');
+  const input=validateDataset(dataset).filter(row=>row.date<=forecastOriginDate);
+  if(input.at(-1)?.date!==forecastOriginDate||sessionCloseUtc(forecastOriginDate,'crypto')>created)throw new RangeError('The current forecast needs its completed input anchor');
+  if(!Array.isArray(forecast.path)||forecast.path.length<2||forecast.path.length>36501)throw new RangeError('A bounded current-chart forecast path is required');
+  let prior=null;
+  for(const row of forecast.path){
+    utcDay(row.date);if(prior!==null&&row.date<=prior)throw new RangeError('Current-chart forecast dates must be strictly increasing');prior=row.date;
+    if(!Number.isFinite(row.price)||row.price<=0)throw new RangeError('Current-chart forecast prices must be positive and finite');
+    for(const key of ['lower','upper','baselinePrice','representativePrice'])if(row[key]!==undefined&&row[key]!==null&&(!Number.isFinite(row[key])||row[key]<0))throw new RangeError('Invalid current-chart forecast value');
+    if(row.lower!==undefined&&row.lower!==null&&row.upper!==undefined&&row.upper!==null&&row.lower>row.upper)throw new RangeError('Current-chart forecast band is reversed');
+  }
+  if(forecast.path[0].date!==forecastOriginDate||forecast.path[0].price!==input.at(-1).price)throw new RangeError('Current-chart forecast must preserve its original input anchor');
+  const horizonDays=utcDay(forecast.path.at(-1).date)-utcDay(forecastOriginDate);
+  if(horizonDays<1||horizonDays>36500)throw new RangeError('Current-chart forecast extent exceeds its limit');
+  const normalized=observationRows(observations,{symbol:'BTCUSD',observedAt,observedThrough,source});
+  const current=currentObservations(normalized,evaluation),prices=current.filter(row=>row.date<=asOf).map(row=>({date:row.date,price:row.price}));
+  if(prices.at(-1)?.date!==asOf)throw new RangeError('Current-chart replay requires an observed bar immediately before its start date');
+  const fixedForecast=copy(forecast),fixedDataset=copy(dataset);
+  const output=visiblePath(fixedForecast.path,forecastOriginDate,horizonDays);
+  const outputHash=await forecastHash(output),originalPathHash=await forecastHash(fixedForecast.path),inputHash=await forecastHash(input.map(row=>[row.date,row.price]));
+  const recordId=await forecastHash({kind:'current-chart-snapshot',asOf,playbackStartDate,forecastOriginDate,inputHash,outputHash});
+  const timeline=[asOf,...current.filter(row=>row.date>asOf&&row.date<=fixedForecast.path.at(-1).date&&row.eventAt<=evaluation).map(row=>row.date)];
+  const identity={symbol:'BTCUSD',recordId,recordKind:'current-chart-snapshot',asOf,issuedAt:null,createdAt:created,
+    playbackStartDate,projectStartDate:PROJECT_REPLAY_ORIGIN.startDate,forecastOriginDate,
+    snapshotId:inputHash,outputHash,originalPathHash,modelVersion:forecast.version??'current-chart-conditional-model',sourceCommit:null,sourceHash:null,
+    informationCutoffAt:sessionCloseUtc(forecastOriginDate,'crypto'),inputAvailableAt:created,inputAvailabilityBasis:'current-chart-capture',
+    historicalModelExistedAtOrigin:false,currentChartSnapshot:true,
+    pointMeaning:'current-chart-conditional-path-fixed-at-replay-open',pointLabel:'현재 차트의 미래 가정 고정',
+    bandMeaning:'current-chart-conditional-range-not-calibrated',publicationTimeProven:false,
+    forecastSource:{provider:dataset?.meta?.sourceName??null,sourceUrl:dataset?.meta?.source??null,
+      priceDefinition:dataset?.meta?.priceDefinition??null,asOf:forecastOriginDate,inputHash},
+    observationSource:{provider:source?.provider??null,sourceHash:source?.sourceHash??null,priceMeaning:source?.priceMeaning??null}};
+  return finishSession({identity,mode:'current-chart-snapshot',prices,path:fixedForecast.path,targets:[],observations,observedAt,observedThrough,source,
+    horizonDays,evaluatedAt:evaluation,chartDataset:fixedDataset,chartForecast:fixedForecast,forecastOriginDate,timelineDates:timeline,
+    scorePolicy:{forecastScoringEnabled:false,forecastScoringReason:'current-chart-snapshot-not-issued-at-replay-origin-and-different-observation-source',
+      currentForecastPreservedWithoutBackdating:true}});
 }
 
 export async function createHistoricalReplaySession({symbol,observations,asOf,horizonDays=180,modelKey,
@@ -254,17 +331,19 @@ export function buildReplayFrame(session,options={}){
   const position=cursor(session,options),evaluationAt=position.cursorAt<session.evaluatedAt?position.cursorAt:session.evaluatedAt;
   const inputVisible=clockMode==='observed-date'||evaluationAt>=session.identity.inputAvailableAt;
   const inputPrices=inputVisible?session.inputPrices:[];
-  const forecastVisible=clockMode==='observed-date'||session.identity.issuedAt!==null&&evaluationAt>=session.identity.issuedAt;
+  const forecastAvailableAt=session.identity.issuedAt??(session.mode==='project-baseline'?session.identity.preservedAt:session.mode==='current-chart-snapshot'?session.identity.createdAt:null);
+  const forecastVisible=clockMode==='observed-date'||forecastAvailableAt!==null&&evaluationAt>=forecastAvailableAt;
   const forecast=forecastVisible?session.forecast:[];
   const actual=selectedObservations(session,{...position,cursorAt:evaluationAt},clockMode).filter(row=>row.eventAt===null||row.eventAt<=evaluationAt);
   const byDate=new Map(forecast.map(row=>[row.date,row])),actualByDate=new Map(actual.map(row=>[row.date,row]));
   const flat=inputPrices.at(-1)?.price??null;
-  const daily=actual.flatMap(row=>{
+  const scoringEnabled=session.policy.forecastScoringEnabled!==false;
+  const daily=scoringEnabled?actual.flatMap(row=>{
     const predicted=byDate.get(row.date);
     if(!predicted||row.date<=session.asOf)return [];
     return [{date:row.date,predicted:predicted.price,actual:row.price,flat,...errors(predicted.price,row.price,flat),
       directionCorrect:Math.sign(predicted.price-flat)===Math.sign(row.price-flat)}];
-  });
+  }):[];
   const targets=session.targets.map(target=>{
     const visible=actualByDate.get(target.targetDate);
     const mature=target.targetDate<=position.cursorDate&&target.eventAt<=evaluationAt;
@@ -293,8 +372,8 @@ export function buildReplayFrame(session,options={}){
   const point=byDate.get(position.cursorDate),observed=actualByDate.get(position.cursorDate);
   const selected={date:position.cursorDate,predicted:point?.price??null,actual:observed?.price??null,flat,
     absoluteError:null,absolutePercentageError:null,absoluteLogError:null};
-  if(point&&observed)Object.assign(selected,errors(point.price,observed.price,flat));
-  const rows=[...inputPrices.filter(row=>row.date<session.asOf||!forecastVisible),...forecast];
+  if(scoringEnabled&&point&&observed)Object.assign(selected,errors(point.price,observed.price,flat));
+  const rows=[...inputPrices.filter(row=>row.date<(session.forecastOriginDate??session.asOf)||!forecastVisible),...forecast];
   return freeze({version:FORECAST_REPLAY_VERSION,sessionId:session.id,mode:session.mode,clockMode,...position,evaluationAt,
     inputVisible,forecastVisible,inputPrices,forecast,actual,rows,selected,dailyComparisons:daily,targets,metrics,
     ...bounds([...rows,...actual]),policy:{...session.policy,

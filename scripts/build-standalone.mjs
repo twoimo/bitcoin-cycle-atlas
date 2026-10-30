@@ -7,6 +7,7 @@ import { readForecastArchive } from './build-forecast-ledger.mjs';
 import { readAssetForecastArchive } from './issue-asset-forecasts.mjs';
 import { REPLAY_ARCHIVE_PATHS, parseReplayPriceArchive } from '../dist/forecast-replay-sources.js';
 import { checkPublication } from './build-publication.mjs';
+import { PROJECT_REPLAY_ORIGIN,parseProjectReplayBaseline } from '../dist/project-replay-baseline.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = resolve(root, 'dist');
@@ -52,6 +53,11 @@ for(const [symbol,archivePath] of Object.entries(REPLAY_ARCHIVE_PATHS)){
   replayArchives[symbol]={archivePath,sourceHash:parsed.source.sourceHash,sourceText};
 }
 const replayJson=JSON.stringify({schemaVersion:1,kind:'atlas-replay-price-archives',archives:replayArchives}).replaceAll('<','\\u003c');
+const projectBaselineText=await readFile(resolve(dist,PROJECT_REPLAY_ORIGIN.archivePath),'utf8');
+await parseProjectReplayBaseline(projectBaselineText);
+// Preserve the exact verified source text inside a JSON string. HTML escaping
+// must not change the bytes checked again by the offline loader.
+const projectBaselineJson=JSON.stringify({sourceText:projectBaselineText}).replaceAll('<','\\u003c');
 const publication=JSON.parse(await readFile(resolve(dist,'publication.json'),'utf8'));await checkPublication(publication);
 const publicationJson=JSON.stringify(publication).replaceAll('<','\\u003c');
 const equities=await Promise.all(['mstr','bmnr'].map(async symbol=>`<script id="embedded-${symbol}-data" type="application/json">${(await readFile(resolve(dist, `data/${symbol}-ohlc.json`),'utf8')).replaceAll('<','\\u003c')}</script>`));
@@ -61,7 +67,7 @@ html = html.replace(/<script type="module" src="\.\/site-entry\.js(?:\?[^"\s]*)?
   ()=>`<script id="embedded-btc-data" type="application/json">${data}</script>\n  <script id="embedded-ohlc-data" type="application/json">${ohlc}</script>\n  <script id="embedded-volume-data" type="application/json">${volume}</script>\n  <script id="embedded-eth-data" type="application/json">${eth}</script>\n  ${equities.join('\n')}\n  <script id="embedded-asset-comparison-data" type="application/json">${assetComparison}</script>\n  <script id="embedded-judgment-snapshot-index" type="application/json">${snapshotIndexJson}</script>\n  <script id="embedded-judgment-snapshots" type="application/json">${snapshotRecordsJson}</script>\n  <script type="importmap">${importMap}</script>\n  <script type="module">import ${JSON.stringify(modules.entry)};</script>`);
 // Source documents contain literal replacement tokens such as $& and $'.
 // A callback inserts those bytes literally instead of expanding them as HTML.
-html=html.replace('<script type="importmap">',()=>`<script id="atlas-forecast-ledger" type="application/json">${forecastJson}</script>\n  <script id="atlas-asset-forecast-ledger" type="application/json">${assetForecastJson}</script>\n  <script id="atlas-replay-price-archives" type="application/json">${replayJson}</script>\n  <script id="atlas-publication" type="application/json">${publicationJson}</script>\n  <script type="importmap">`);
+html=html.replace('<script type="importmap">',()=>`<script id="atlas-forecast-ledger" type="application/json">${forecastJson}</script>\n  <script id="atlas-asset-forecast-ledger" type="application/json">${assetForecastJson}</script>\n  <script id="atlas-replay-price-archives" type="application/json">${replayJson}</script>\n  <script id="atlas-project-origin-baseline" type="application/json">${projectBaselineJson}</script>\n  <script id="atlas-publication" type="application/json">${publicationJson}</script>\n  <script type="importmap">`);
 if (/\b(?:src|href)=["']\.\//.test(html)) throw new Error('Unresolved local resource');
 await mkdir(dirname(output), { recursive: true });
 await writeFile(output, html);

@@ -46,8 +46,18 @@ function dailyRuns(rows,omit=()=>false){
   return runs;
 }
 
+/** A compact, non-cryptographic identity of the values handed to the painter.
+ * Browser interaction checks compare this before/after replay independently
+ * from screen geometry; provenance integrity uses the separate SHA-256 record. */
+export function forecastValueSignature(rows){
+  let a=2166136261,b=2246822507;
+  const text=JSON.stringify(rows.map(row=>[row.date,row.price,row.lower??row.price,row.upper??row.price]));
+  for(let index=0;index<text.length;index++){const code=text.charCodeAt(index);a=Math.imul(a^code,16777619);b=Math.imul(b^code,3266489909);}
+  return (a>>>0).toString(16).padStart(8,'0')+(b>>>0).toString(16).padStart(8,'0');
+}
+
 /** Rendering and inspection only. It never changes prices, paths or model dates. */
-export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,frequency='daily',chartType='line',observedCandles=[],candleSource='Bitstamp',volumeBars=[],volumeProjection=null,volumeSource='Bitstamp',showVolume=false,historicalEvents=[],cycleCalibration=null,showCycleTiming=false,headerInset=null,dateTickMinSpacing=0,showHistoricalEvents=true,activeHistoricalEventId=null,onHistoricalEvent=()=>{},stateStepDays=1,unit='usd',denominator=1,scale='log',priceDomain=null,invertScale=false,priceOnlyAuto=false,researchAnnotations=[],activeAnnotationId=null,onAnnotation=null,activeResearchAnnotationId=null,onResearchAnnotation=()=>{},scenarioId=null,tool='crosshair',magnet='off',measurement=null,onMeasurement=()=>{},onHover=()=>{},band=false,turns=[],showTurns=true,cycleMarkers=[],showCycleMarkers=true,activeCycleMarkerId=null,activeCycleMarkerIds=[],activeCycleInterval=null,onCycleMarker=()=>{},cycleIntervals=[],showCycleIntervals=false,cycleRelation='all',cycleOverlayObstacles=[],onCycleInterval=()=>{},events=[],forecastEvidence=[],onForecastEvidence=()=>{},states=[],fib=[],historical=false,nextTurn=null,showNextTurnLabel=true,onNextTurn=()=>{},showDrawdown=true,showStates=false,threshold=.12,onInspect=()=>{},selectedDate}){
+export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForecast=null,forecastOrigin=split,forecastIdentityRows=null,frequency='daily',chartType='line',observedCandles=[],candleSource='Bitstamp',volumeBars=[],volumeProjection=null,volumeSource='Bitstamp',showVolume=false,historicalEvents=[],cycleCalibration=null,showCycleTiming=false,headerInset=null,dateTickMinSpacing=0,showHistoricalEvents=true,activeHistoricalEventId=null,onHistoricalEvent=()=>{},stateStepDays=1,unit='usd',denominator=1,scale='log',priceDomain=null,invertScale=false,priceOnlyAuto=false,researchAnnotations=[],activeAnnotationId=null,onAnnotation=null,activeResearchAnnotationId=null,onResearchAnnotation=()=>{},scenarioId=null,tool='crosshair',magnet='off',measurement=null,onMeasurement=()=>{},onHover=()=>{},band=false,turns=[],showTurns=true,cycleMarkers=[],showCycleMarkers=true,activeCycleMarkerId=null,activeCycleMarkerIds=[],activeCycleInterval=null,onCycleMarker=()=>{},cycleIntervals=[],showCycleIntervals=false,cycleRelation='all',cycleOverlayObstacles=[],onCycleInterval=()=>{},events=[],forecastEvidence=[],onForecastEvidence=()=>{},states=[],fib=[],historical=false,nextTurn=null,showNextTurnLabel=true,onNextTurn=()=>{},showDrawdown=true,showStates=false,threshold=.12,onInspect=()=>{},selectedDate}){
   clearChartHover(svg,{preservePointer:true});
   const selectedAnnotation=activeAnnotationId??activeResearchAnnotationId,activateAnnotation=onAnnotation||onResearchAnnotation;
   // Match the allocated viewport instead of shrinking a fixed-height drawing.
@@ -60,6 +70,12 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,frequency=
   svg.dataset.forecastEvidenceCount='0';svg.dataset.cycleIntervalCount='0';svg.dataset.cycleIntervalLabelCount='0';svg.dataset.cycleMarkerCount='0';svg.dataset.cycleMarkerLabelCount='0';svg.dataset.historyLabelCount='0';svg.dataset.historyEventCount='0';svg.dataset.historyLabelMode='off';svg.dataset.historyHiddenLabelCount='0';
   delete svg.dataset.cycleIntervalBandTop;delete svg.dataset.cycleIntervalBandBottom;
   svg.dataset.observedLineCount='0';svg.dataset.observedCandleCount='0';
+  // A replay supplies its immutable forecast independently from the observed
+  // cutoff. This keeps the original chart, overlays and axes while permitting
+  // a fixed prediction and subsequently revealed actual price on the same day.
+  const hasFixedForecast=Array.isArray(fixedForecast);
+  const isAssumption=point=>hasFixedForecast?point.replaySource==='forecast':Boolean(split&&point.date>split);
+  svg.dataset.forecastValueSignature=hasFixedForecast?forecastValueSignature(fixedForecast):Array.isArray(forecastIdentityRows)?forecastValueSignature(forecastIdentityRows):'';
   const originalVisible=dateWindow(rows,start,end).filter(p=>p.price>0);
   const visibleCycleMarkers=showCycleMarkers?cycleMarkers.filter(marker=>{
     if(!marker?.id||!milestoneTypeIds.has(marker.type)||typeof marker.date!=='string'||marker.date<start||marker.date>end||!Number.isFinite(marker.price)||marker.price<=0)return false;
@@ -76,15 +92,17 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,frequency=
   if(!visible.length)return renderEmptyPriceViewport({svg,layout,axisText,width:W,height:H,start,end,scale,priceDomain,unit,denominator,denominatorDate:split,fallbackPrice:denominator,invertScale,tool,onHover,frequency,researchAnnotations,activeResearchAnnotationId:selectedAnnotation,onResearchAnnotation:activateAnnotation,scenarioId});
   // The same pre-pixel-reduction vertices back the weekly path and cursor.
   // Daily milestone anchors remain exact, even between completed Sunday closes.
-  const observed=visible.filter(p=>!split||p.date<=split);
+  const observed=visible.filter(p=>!isAssumption(p));
   svg.dataset.observedLineCount=String(observed.filter(point=>!point.candle).length);
   const observedRuns=dailyRuns(observed,point=>Boolean(point.candle)).map(run=>sample(run,frequency,retainedDates));
-  const future=sample(originalVisible.filter(p=>split&&p.date>=split),frequency,retainedDates).map(p=>({...p,lower:p.lower??p.price,upper:p.upper??p.price}));
+  const future=sample(hasFixedForecast?dateWindow(fixedForecast,start,end).filter(p=>p.date>=forecastOrigin&&p.price>0):originalVisible.filter(p=>split&&p.date>=split),frequency,retainedDates).map(p=>({...p,lower:p.lower??p.price,upper:p.upper??p.price}));
+  if(!hasFixedForecast&&!Array.isArray(forecastIdentityRows))svg.dataset.forecastValueSignature=forecastValueSignature(future);
   const displayedDates=frequency==='weekly'?new Set([...observedRuns.flat(),...future,...visible.filter(point=>point.candle)].map(point=>point.date)):null;
   const selectionRows=displayedDates?visible.filter(point=>displayedDates.has(point.date)):visible;
   const display=createPriceDisplay({unit,rows:selectionRows,denominator,denominatorDate:split,scale}),{factor,offset,effectiveScale}=display;
   let valueLow=Infinity,valueHigh=-Infinity;const includePrice=value=>{if(Number.isFinite(value)&&value>0){valueLow=Math.min(valueLow,value);valueHigh=Math.max(valueHigh,value);}};
   for(const point of selectionRows){includePrice(point.price);if(!priceOnlyAuto&&band&&point.lower>0&&point.upper>0){includePrice(point.lower);includePrice(point.upper);}}for(const candle of candleRows){includePrice(candle.low);includePrice(candle.high);}
+  if(hasFixedForecast)for(const point of future){includePrice(point.price);if(!priceOnlyAuto&&band){includePrice(point.lower);includePrice(point.upper);}}
   // Landmarks remain Coin Metrics / model values when venue candles are shown.
   // Keep those prices on the axis without changing any exchange OHLC values.
   if(!priceOnlyAuto)for(const marker of visibleCycleMarkers)includePrice(marker.price);
@@ -136,6 +154,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,frequency=
   if(fib.length)s+='<g data-indicator-layer="fibonacci">';
   for(const f of fib.filter(f=>f.price>min&&f.price<max&&(!f.startDate||f.startDate<=end))){const yy=y(f.price),from=xday(Math.max(minDay,f.startDate?dayOf(f.startDate):minDay));s+=`<line data-indicator-line x1="${from}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="#b4a7d6" opacity=".55" stroke-dasharray="3 5"/><text data-indicator-axis-label x="${W-R-4}" y="${yy-5}" text-anchor="end" fill="#c2b5e0" font-size="11">${nf(f.ratio*100,1)}% · ${formatDisplayPrice(f.price,display,1)}</text>`;}
   if(fib.length)s+='</g>';
+  if(hasFixedForecast&&future.length)s+=`<path data-replay-forecast-path="true" d="${path(future)}" fill="none" stroke="#f2b960" stroke-width="1.8" stroke-dasharray="5 3"/>`;
   if(observed.length){
     const trace=observedTrace(observed,y,'price',point=>Boolean(point.candle));
     s+=`<path class="observed-close-line" d="${trace.path}" fill="none" stroke="#e2eaf3" stroke-width="1.8"/>`;
@@ -151,12 +170,12 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,frequency=
   }else {
   for(const c of candleRows){const xx=xday(dayOf(c.endDate)),color=c.close>=c.open?'#62bca5':'#dd7e8d',top=Math.min(y(c.open),y(c.close)),height=Math.max(1,Math.abs(y(c.open)-y(c.close)));s+=`<g class="observed-candle" data-date="${c.endDate}" data-open="${c.open}" data-high="${c.high}" data-low="${c.low}" data-close="${c.close}"><line x1="${xx}" x2="${xx}" y1="${y(c.high)}" y2="${y(c.low)}" stroke="${color}"/><rect x="${xx-candleWidth/2}" y="${top}" width="${candleWidth}" height="${height}" fill="${color}"/><title>${esc(candleSource)} BTC-USD · ${c.startDate}${candleDays>1?`–${c.endDate}`:''} UTC · O ${money(c.open)} H ${money(c.high)} L ${money(c.low)} C ${money(c.close)}</title></g>`;}
   }
-  if(future.length)s+=`<path d="${path(future)}" fill="none" stroke="#f2b960" stroke-width="1.8" stroke-dasharray="5 3"/>`;
+  if(!hasFixedForecast&&future.length)s+=`<path d="${path(future)}" fill="none" stroke="#f2b960" stroke-width="1.8" stroke-dasharray="5 3"/>`;
   s+='</g>';
   if(showDrawdown){
     s+='<g data-indicator-layer="drawdown">';
     if(observed.length){
-      const trace=observedTrace(originalVisible.filter(p=>!split||p.date<=split),yd,'drawdownPct');
+      const trace=observedTrace(originalVisible.filter(p=>!isAssumption(p)),yd,'drawdownPct');
       s+=`<path d="${trace.path}" data-indicator-line fill="none" stroke="#a7b8cd" stroke-width="1.1"/>`;
       for(const p of trace.isolated)s+=`<circle class="observed-drawdown-point" cx="${x(p).toFixed(2)}" cy="${yd(p.drawdownPct).toFixed(2)}" r="1.1" fill="#a7b8cd"/>`;
     }
@@ -165,15 +184,15 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,frequency=
   }
   if(showStates){s+='<g data-indicator-layer="states">';let segments=[];for(const p of dateWindow(states,start,end)){const last=segments.at(-1);if(last&&last.state===p.state&&dayOf(p.date)===dayOf(last.end)+stateStepDays)last.end=p.date;else segments.push({start:p.date,end:p.date,state:p.state});}for(const seg of segments){const xx=xday(dayOf(seg.start)),width=xday(dayOf(seg.end)+stateStepDays)-xx;s+=`<rect x="${xx}" y="${stateTop}" width="${Math.max(.7,width)}" height="${stateHeight}" data-indicator-fill fill="${COLORS[seg.state]||COLORS.transition}"><title>${esc(STATE_LABELS[seg.state])} ${seg.start}–${seg.end}</title></rect>`;}s+='</g>';}
   const confirmedTurns=turns.filter(point=>point.confirmationDate).sort((a,b)=>a.confirmationDate.localeCompare(b.confirmationDate));
-  const turnAt=value=>{const point=confirmedTurns[upperBoundDate(confirmedTurns,value,turn=>turn.confirmationDate)-1];return point?{...point,kind:split&&point.date>split?'simulated':'observed'}:null;};
+  const turnAt=value=>{const point=confirmedTurns[upperBoundDate(confirmedTurns,value,turn=>turn.confirmationDate)-1];return point?{...point,kind:isAssumption(point)?'simulated':'observed'}:null;};
   const visibleTurns=turns.filter(p=>p.date>=start&&p.date<=end);
   if(showTurns&&visibleTurns.length)s+='<g data-indicator-layer="turns">';
-  if(showTurns)for(const p of visibleTurns){const actual=!split||p.date<=split,color=p.type==='high'?'#e7bb73':'#85bfdc';s+=`<circle data-date="${p.date}" clip-path="url(#${priceClip})" data-indicator-line cx="${xday(dayOf(p.date))}" cy="${y(p.price)}" r="${fullHistory?2.5:4}" fill="${actual?color:'#10151c'}" stroke="${color}" stroke-width="1.4"><title>${esc(`${actual?'관측':'예시 경로'} ${p.type==='high'?'고점':'저점'} ${date(p.date)} · ${money(p.price)}`)}</title></circle>`;}
+  if(showTurns)for(const p of visibleTurns){const actual=!isAssumption(p),color=p.type==='high'?'#e7bb73':'#85bfdc';s+=`<circle data-date="${p.date}" clip-path="url(#${priceClip})" data-indicator-line cx="${xday(dayOf(p.date))}" cy="${y(p.price)}" r="${fullHistory?2.5:4}" fill="${actual?color:'#10151c'}" stroke="${color}" stroke-width="1.4"><title>${esc(`${actual?'관측':'예시 경로'} ${p.type==='high'?'고점':'저점'} ${date(p.date)} · ${money(p.price)}`)}</title></circle>`;}
   if(showTurns&&visibleTurns.length)s+='</g>';s+='</g>';
   if(showCycleTiming)s+=cycleTimingMarkup({points:visibleTiming,x,left:L,right:W-R,top:cycleTop,bottom:cycleBottom,titleY:layout.cycleTitleY,titleFontSize:layout.cycleTitleFontSize,dayWidth:(W-L-R)/span,split}).markup;
   if(showVolume)s+=volumePaneMarkup({bars:visibleVolume,x:bar=>xday(dayOf(bar.date)),left:L,right:W-R,top:volumeTop,bottom:volumeBottom,titleY:layout.volumeTitleY,titleFontSize:layout.volumeTitleFontSize,separatorY:layout.volumeSeparatorY,barWidth:Math.max(.6,Math.min(12,(W-L-R)*candleDays/span*.72)),source:volumeSource,projectionLabel:volumeProjection?.summary?.centralMethod==='persistence'?'중앙 · 최근 90일 활동 유지':'점선 · 조건부 평균 거래량',projection:projectedVolume,clipId:`${svg.id}-volume-clip`,futureX:split&&dayOf(split)>=minDay&&dayOf(split)<maxDay?xday(dayOf(split)):null}).markup;
   if(showHistoricalEvents){
-    const actual=originalVisible.filter(point=>!split||point.date<=split);
+    const actual=originalVisible.filter(point=>!isAssumption(point));
     const anchors=historicalEvents.filter(event=>event.date>=start&&event.date<=end&&actual.length&&event.date>=actual[0].date&&(!split||event.date<=split)).map(event=>{const point=actual[nearest(actual,dayOf(event.date))];return {event,x:xday(dayOf(event.date)),y:y(point.price)};});
     const labels=historicalMarkersMarkup(anchors,{left:L,right:W-R,top:T+5,bottom:priceBottom-4,visibleSpanDays:span,activeEventId:activeHistoricalEventId});
     s+=`<g class="history-events-layer" data-indicator-layer="history">${labels.markup}</g>`;svg.dataset.historyLabelCount=String(labels.labelCount);svg.dataset.historyEventCount=String(labels.totalCount);svg.dataset.historyLabelMode=labels.labelMode;svg.dataset.historyHiddenLabelCount=String(labels.hiddenLabelCount);
@@ -239,9 +258,9 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,frequency=
     if(frequency==='weekly')while(index>=0&&new Date(`${rows[index].date}T00:00:00Z`).getUTCDay()!==0)index--;
     const previous=rows[index];
     // A model path never presents its first change as an observed market return.
-    return previous&&Boolean(split&&previous.date>split)===Boolean(split&&point.date>split)?previous:null;
+    return previous&&isAssumption(previous)===isAssumption(point)?previous:null;
   };
-  const hoverInfo=(index,hovered)=>{const point=selectionRows[index],previous=previousClosePoint(point),c=point.candle,v=volumeByDate.get(point.date),projected=projectedVolumeAt(point.date);return {date:point.date,price:point.price,displayedPrice:display.toDisplay(point.price),display:display.metadata,...barPriceChange(point.price,previous?.price,c?.open),previousCloseDate:previous?.date??null,changeInterval:frequency==='weekly'?'1W':'1D',drawdownPct:c?null:point.drawdownPct??null,kind:split&&point.date>split?'simulated':'observed',...(v?{volume:v.volume,volumeSource,volumeUnit:'BTC',volumeStartDate:v.startDate||v.date,volumeEndDate:v.endDate||v.date}:{}),...(projected?{volume:projected.volume,volumeLower:projected.lower,volumeUpper:projected.upper,volumeKind:'scenario',volumeSource,volumeUnit:'BTC',volumeStartDate:projected.startDate,volumeEndDate:projected.endDate}:{}),...(c?{open:c.open,high:c.high,low:c.low,close:c.close,volume:c.volume,source:candleSource,product:'BTC-USD',interval:frequency==='weekly'?'1W':'1D',completed:true}:{}),lower:point.lower,upper:point.upper,marketState:stateByDate.get(point.date)?.state,marketStateLabel:plainState[stateByDate.get(point.date)?.state],cycleTiming:split&&point.date>split?cycleCalibration?.current:intervalAtDate(timingSeries,point.date),turn:turnAt(point.date),fib,hovered};};
+  const hoverInfo=(index,hovered)=>{const point=selectionRows[index],previous=previousClosePoint(point),c=point.candle,v=volumeByDate.get(point.date),projected=projectedVolumeAt(point.date);return {date:point.date,price:point.price,displayedPrice:display.toDisplay(point.price),display:display.metadata,...barPriceChange(point.price,previous?.price,c?.open),previousCloseDate:previous?.date??null,changeInterval:frequency==='weekly'?'1W':'1D',drawdownPct:c?null:point.drawdownPct??null,kind:isAssumption(point)?'simulated':'observed',...(v?{volume:v.volume,volumeSource,volumeUnit:'BTC',volumeStartDate:v.startDate||v.date,volumeEndDate:v.endDate||v.date}:{}),...(projected?{volume:projected.volume,volumeLower:projected.lower,volumeUpper:projected.upper,volumeKind:'scenario',volumeSource,volumeUnit:'BTC',volumeStartDate:projected.startDate,volumeEndDate:projected.endDate}:{}),...(c?{open:c.open,high:c.high,low:c.low,close:c.close,volume:c.volume,source:candleSource,product:'BTC-USD',interval:frequency==='weekly'?'1W':'1D',completed:true}:{}),lower:point.lower,upper:point.upper,marketState:stateByDate.get(point.date)?.state,marketStateLabel:plainState[stateByDate.get(point.date)?.state],cycleTiming:isAssumption(point)?cycleCalibration?.current:intervalAtDate(timingSeries,point.date),turn:turnAt(point.date),fib,hovered};};
   const measurementMoney=value=>`$${nf(value,Math.abs(value)<1?6:2)}`;
   const measurementOverlay=createMeasurementOverlay(svg,{x:value=>xday(dayOf(value)),y,left:L,right:W-R,top:T,bottom:priceBottom,small,formatPrice:measurementMoney,formatDate:date,formatChange:percent,formatDuration:result=>`${result.deltaDays>0?'+':''}${result.deltaDays}일`});
   const lookupMeasurement=value=>{const point=rows[nearest(rows,value)],candle=candleByDate.get(point.date);return candle?{...point,price:candle.close}:point;};
@@ -250,10 +269,10 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,frequency=
     const row=selectionRows[index],box=event?svg.getBoundingClientRect():null;
     const pointerY=event?Math.max(T,Math.min(priceBottom,(event.clientY-box.top)/box.height*H)):undefined;
     const point=resolveMagnetPoint({row,pointerY,y,invertY:priceScale.invert,mode:magnet,ctrlKey:event?.ctrlKey,metaKey:event?.metaKey,thresholdPx:(event?.pointerType==='touch'?20:12)*(box?H/box.height:1)});
-    return point?{...point,date:row.date,kind:split&&row.date>split?'simulated':'observed'}:null;
+    return point?{...point,date:row.date,kind:isAssumption(row)?'simulated':'observed'}:null;
   }
 
-  const inspection=index=>{const p=selectionRows[index],isFuture=Boolean(split&&p.date>split),isLong=isFuture&&(p.phase==='long-horizon'||p.kind==='conditional-long-horizon-path'),flow=stateByDate.get(p.date),event=visibleTurns.find(t=>t.date===p.date),fields=[{label:display.label,value:formatDisplayPrice(p.price,display,2)},{label:'이전 최고가 대비',value:percent(p.drawdownPct)},{label:'가격 흐름',value:plainState[flow?.state]||'—'}];
+  const inspection=index=>{const p=selectionRows[index],isFuture=isAssumption(p),isLong=isFuture&&(p.phase==='long-horizon'||p.kind==='conditional-long-horizon-path'),flow=stateByDate.get(p.date),event=visibleTurns.find(t=>t.date===p.date),fields=[{label:display.label,value:formatDisplayPrice(p.price,display,2)},{label:'이전 최고가 대비',value:percent(p.drawdownPct)},{label:'가격 흐름',value:plainState[flow?.state]||'—'}];
     if(p.candle){fields.splice(0,fields.length,{label:'시가 O',value:money(p.candle.open)},{label:'고가 H',value:money(p.candle.high)},{label:'저가 L',value:money(p.candle.low)},{label:'종가 C',value:money(p.candle.close)},{label:'거래량 · BTC',value:nf(p.candle.volume,4)},{label:'출처',value:`${candleSource} · BTC-USD`});}
     if(unit!=='usd')fields.push({label:'표시 기준 · UTC',value:`${display.baseDate||'—'} · ${money(display.basePrice)}`});
     const volume=volumeByDate.get(p.date);if(!p.candle&&volume)fields.push({label:'거래량 · BTC',value:nf(volume.volume,4)},{label:'거래량 출처',value:`${volumeSource} · BTC/USD 현물`});

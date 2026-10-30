@@ -141,5 +141,11 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   const archiveMatch=html.match(/(<script id="atlas-forecast-ledger" type="application\/json">)([\s\S]*?)(<\/script>)/);
   const archive=JSON.parse(archiveMatch[2]);Object.values(archive.records)[0].targets[0].price+=1;
   await assert.rejects(verifyStandaloneArtifact(html.replace(archiveMatch[0],archiveMatch[1]+JSON.stringify(archive)+archiveMatch[3]),resolve(root,'dist')),/Changed embedded forecast archive/);
+  const projectMatch=html.match(/(<script id="atlas-project-origin-baseline" type="application\/json">)([\s\S]*?)(<\/script>)/);
+  const project=JSON.parse(projectMatch[2]);
+  assert.equal(project.sourceText,await readFile(resolve(root,'dist/data/project-origin-btc-2026-10-21.json'),'utf8'));
+  const changedProject=JSON.parse(project.sourceText);changedProject.scenario.path[1].price+=1;
+  project.sourceText=JSON.stringify(changedProject);
+  await assert.rejects(verifyStandaloneArtifact(html.replace(projectMatch[0],projectMatch[1]+JSON.stringify(project)+projectMatch[3]),resolve(root,'dist')),/Changed embedded project origin baseline/);
   await assert.rejects(verifyStandaloneArtifact(html.replace(mapMatch[0], ''), resolve(root, 'dist')), /exactly one import map/);
 });
