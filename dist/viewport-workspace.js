@@ -1,6 +1,6 @@
 import { mountCompactChartLayout } from './compact-chart-layout.js?v=1.29.0';
 import { DATA_UPDATE } from './data-update.js?v=1.29.0';
-import { mountWorkbenchChrome } from './workbench-chrome.js?v=1.29.5';
+import { mountWorkbenchChrome } from './workbench-chrome.js?v=1.29.6';
 import { mountResearchWorkbench } from './research-workbench.js?v=1.29.0';
 import { mountAnalysisIndicators } from "./analysis-dock.js?v=1.29.0";
 import { mountIndicatorWorkbench } from './indicator-workbench.js?v=1.29.0';

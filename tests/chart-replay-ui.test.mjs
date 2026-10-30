@@ -8,6 +8,7 @@ import * as vm from 'node:vm';
 import {createChartReplayController,CHART_REPLAY_SPEEDS} from '../dist/chart-replay-state.js';
 
 const sourceUrl=new URL('../dist/chart-replay.js',import.meta.url);
+const {version:releaseVersion}=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
 const dateAt=offset=>new Date(Date.UTC(2024,0,1+offset)).toISOString().slice(0,10);
 const dateAfter=(date,days)=>new Date(Date.parse(date+'T00:00:00Z')+days*86400000).toISOString().slice(0,10);
 const evaluatedAt='2026-10-30T12:00:00.000Z';
@@ -18,7 +19,7 @@ const archive=(name,{missing=[],length=185}={})=>({observations:Array.from({leng
   observedThrough:dateAt(length-1),observedAt:dateAt(length)+'T00:00:00Z',source:{provider:name,sourceHash:name,ohlcAvailable:true}});
 
 async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('current'),loadRecord,stored=null,storedText=null,buildSession,
-  getAtlasContext=null,getChartState=null,resolveAtlasRange=null,loadBaseline,random=()=>.5,storageFailure=false,rendererAxis=null}={}){
+  getAtlasContext=null,getChartState=null,resolveAtlasRange=null,loadBaseline,random=()=>.5,storageFailure=false,rendererAxis=null,rendererBarDateAt=null}={}){
   const storageKey='atlas-chart-replay-v1:'+symbol;
   const controls=new Map(),saved=new Map(storedText!==null?[[storageKey,storedText]]:stored?[[storageKey,JSON.stringify(stored)]]:[]),timers=new Map(),frames=new Map();
   const builds=[],factories=[],draws=[],controllers=[],atlasContexts=[],chartCalls=[],displayCalls=[],frameEvents=[],writes=[],capabilityCalls=[];
@@ -89,7 +90,9 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
         evaluationAt:dateAfter(cursorDate,1)+'T00:00:00.000Z',selected:{actual:actual.at(-1)?.price??null,predicted:session.forecast.find(row=>row.date===cursorDate)?.price??null},
         metrics:{matchedCount:1,meanAbsolutePercentageError:.01,pendingTargetCount:0,missingTargetCount:0}}};}};
   const axis=rendererAxis??{top:0,bottom:400,left:0,right:800};
-  const renderer=kind=>options=>{draws.push({...options,renderer:kind});return {axis,x:()=>100,dateAt:()=>pointerDate,getPriceScale:()=>axis,destroy(){}};};
+  const renderer=kind=>options=>{draws.push({...options,renderer:kind});return {axis,
+    x:date=>axis.left+(Date.parse(date)-Date.parse(options.start))/Math.max(1,Date.parse(options.end)-Date.parse(options.start))*(axis.right-axis.left),
+    dateAt:()=>pointerDate,...(rendererBarDateAt?{barDateAt:()=>rendererBarDateAt(pointerDate)}:{}),getPriceScale:()=>axis,destroy(){}};};
   const math=Object.create(Math);math.random=random;
   const context=vm.createContext({Date,Math:math,AbortController,URL,Blob,console,ResizeObserver:class{observe(){}disconnect(){}}});
   async function module(exports){const result=new vm.SyntheticModule(Object.keys(exports),function(){for(const [key,value]of Object.entries(exports))this.setExport(key,value);},{context});await result.link(()=>{throw new Error('Unexpected test-module import');});await result.evaluate();return result;}
@@ -97,14 +100,14 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     const result=createChartReplayController({...options,now:()=>clock,setTimer:(callback,delay)=>{timers.set(++timerId,{callback,delay,due:clock+delay});return timerId;},clearTimer:id=>timers.delete(id)});controllers.push(result);return result;
   }});
   const imports={
-    './forecast-replay.js?v=1.29.5':await module(engine),
+    ['./forecast-replay.js?v='+releaseVersion]:await module(engine),
     './chart-replay-renderer.js':await module({drawReplaySelection:renderer('selection'),drawChartReplay:renderer('replay')}),
     './chart-replay-sources.js':await module({loadChartReplayArchive:loadArchive,loadChartReplayRecord:loadRecord??(async()=>{throw new Error('Unexpected recorded load');})}),
     './project-replay-baseline.js':await module({loadProjectReplayBaseline:loadBaseline??(async()=>{throw new Error('Unexpected project baseline load');})}),
     './chart-replay-atlas.js':await module({createAtlasReplayContext:options=>{atlasContexts.push(options);return {...options,forecast:options.forecast.path};},drawAtlasChartReplay:renderer('atlas')}),
   };
   const view=new vm.SourceTextModule(source,{context,identifier:sourceUrl.href,importModuleDynamically:specifier=>{assert.ok(imports[specifier],specifier);return imports[specifier];}});
-  await view.link(specifier=>{assert.equal(specifier,'./chart-replay-state.js?v=1.29.5');return state;});await view.evaluate();
+  await view.link(specifier=>{assert.equal(specifier,'./chart-replay-state.js?v='+releaseVersion);return state;});await view.evaluate();
   const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol,getAtlasContext,getChartState,resolveAtlasRange,
     getChartRenderer:()=>({getPriceScale:()=>axis}),onAtlasFrame:detail=>frameEvents.push(detail),
     loadAtlasRenderer:()=>imports['./chart-replay-atlas.js'].namespace,restore:()=>{restores++;}});
@@ -141,6 +144,21 @@ function savedFixture(extra={}){
 const keyEvent=(h,key,extra={})=>{const event={type:'keydown',key,target:h.svg,preventDefault(){this.prevented=true;},stopImmediatePropagation(){this.stopped=true;this.immediatePropagationStopped=true;},...extra};h.doc.dispatchEvent(event);return event;};
 
 const interactionCases=[
+  {name:'first weekly replay entry waits for an explicit start while keeping the project default date',async run(source){
+    const fixture=atlasFixture({frequency:'weekly'}),h=await harness(source,fixture.options);
+    h.trigger.click();await flush();
+    assert.equal(h.controls.get('entry-dialog').hidden,true);assert.equal(h.controllers[0].getState().status,'selecting');
+    assert.equal(h.controllers[0].getState().session,null);assert.equal(h.draws.at(-1).selectionPreview,true);
+    assert.equal(h.svg.dataset.replayCursor,undefined);assert.equal(h.svg.dataset.replayOrigin,undefined);
+    assert.equal(h.controls.get('date').value,fixture.baseline.forecast.referenceDate,'the project date remains an available default, not an implicit commitment');
+    for(const name of ['play','next','live'])assert.equal(h.controls.get(name).disabled,true,name+' waits for confirmation on first entry');
+    h.controls.get('select-menu').click();h.controls.get('select-date').click();
+    assert.equal(h.controls.get('date').value,fixture.baseline.forecast.referenceDate);assert.equal(h.controllers[0].getState().session,null);
+    h.controls.get('start').click();await flush();
+    assert.equal(h.svg.dataset.replayStartDate,fixture.baseline.forecast.referenceDate);assert.equal(h.svg.dataset.replayCursor,dateAt(180));
+    assert.equal(h.svg.dataset.replayFrequency,'weekly');assert.equal(h.controls.get('live').disabled,false);
+    assert.equal(h.saved(),null);assert.equal(h.writes.length,0);h.mounted.destroy();
+  }},
   {name:'saved replay entry requires Continue or Start new and restores the original origin separately from its selected date',async run(source){
     const fixture=atlasFixture(),saved=savedFixture({startDate:dateAt(183),cursorIndex:3,cursorDate:dateAt(183)}),raw=JSON.stringify(saved,null,2)+'\n';
     let loads=0;const h=await harness(source,{...fixture.options,storedText:raw,loadArchive:async()=>{loads++;return fixture.observed;}});
@@ -174,6 +192,38 @@ const interactionCases=[
     h.trigger.click();h.controls.get('entry-new').click();await flush();h.controls.get('exit').click();
     assert.equal(h.controls.get('exit-dialog').hidden,false);assert.equal(h.controls.get('exit-save').disabled,true);assert.equal(h.controls.get('exit-save').checked,false);
     h.controls.get('exit-confirm').click();assert.equal(h.mounted.isActive(),false);assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);h.mounted.destroy();
+  }},
+  {name:'weekly start preview blocks Play, Forward and Jump to real-time until a clicked bar is confirmed',async run(source){
+    const fixture=atlasFixture({frequency:'weekly'}),raw=JSON.stringify(savedFixture(),null,2)+'\n';
+    const h=await harness(source,{...fixture.options,storedText:raw,
+      rendererBarDateAt:date=>dateAfter(date,-((new Date(date+'T00:00:00Z').getUTCDay()+6)%7))});
+    const assertBlocked=()=>{
+      for(const name of ['play','next','live'])assert.equal(h.controls.get(name).disabled,true,name+' must be disabled before confirmation');
+      h.controls.get('live').click();assert.equal(h.controls.get('exit-dialog').hidden,true,'unconfirmed live jump must not open the exit/save choice');
+    };
+    h.trigger.click();h.controls.get('entry-new').click();await flush();
+    assert.equal(h.controllers[0].getState().session,null);assertBlocked();
+    const builds=h.builds.length,path=JSON.stringify(fixture.forecast.path),positions=[];
+    for(const [hover,date] of [[dateAt(99),dateAt(98)],[dateAt(143),dateAt(140)],[dateAt(106),dateAt(105)]]){
+      h.pointer('pointermove',hover);assert.equal(h.svg.dataset.pickerDate,date,'use the actual chart bar date instead of the continuous calendar coordinate');
+      assert.match(h.svg.querySelector('[data-chart-replay-scissors]').textContent,new RegExp(date));
+      positions.push(h.svg.querySelector('[data-chart-replay-picker]').children[0].getAttribute('x1'));
+      assert.equal(h.controllers[0].getState().session,null);assert.equal(h.svg.dataset.replayCursor,undefined);
+      assert.equal(h.builds.length,builds);assert.equal(h.savedText(),raw);assertBlocked();
+    }
+    assert.equal(new Set(positions).size,3,'each hovered weekly bar moves the scissors line');
+    h.pointer('pointerdown',dateAt(106));h.pointer('pointerup',dateAt(106));
+    assert.equal(h.controllers[0].getState().status,'loading');assertBlocked();await flush();
+    assert.equal(h.controllers[0].getState().status,'paused');assert.equal(h.svg.dataset.replayStartDate,dateAt(105));
+    assert.equal(h.svg.dataset.replayCursor,dateAt(104));assert.equal(h.svg.dataset.replayFrequency,'weekly');
+    for(const name of ['play','next','live'])assert.equal(h.controls.get(name).disabled,false,name+' is available after confirmation');
+    const session=h.controllers[0].getState().session;
+    h.controls.get('next').click();assert.equal(h.svg.dataset.replayCursor,dateAt(105));
+    h.controls.get('pick').click();assertBlocked();assert.equal(h.draws.at(-1).selectionPreview,true);h.pointer('pointermove',dateAt(140));
+    assert.equal(h.controllers[0].getState().session,session);assert.equal(h.svg.dataset.replayCursor,dateAt(105));
+    h.controls.get('pick-cancel').click();assert.equal(h.controls.get('live').disabled,false);assert.equal(h.draws.at(-1).selectionPreview,false);
+    assert.equal(h.controllers[0].getState().session,session);assert.equal(h.svg.dataset.replayCursor,dateAt(105));
+    assert.equal(JSON.stringify(fixture.forecast.path),path);assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);h.mounted.destroy();
   }},
   {name:'only checked confirmed exit persists a draft and a saved line chart resumes with its actual archive',async run(source){
     const fixture=atlasFixture(),raw=JSON.stringify(savedFixture(),null,2)+'\n';
@@ -349,8 +399,9 @@ const interactionCases=[
     h.trigger.click();await flush();assert.equal(h.mounted.isActive(),false);assert.equal(h.builds.length,0);assert.equal(state.frequency,'1h');
     assert.equal(h.notice().hidden,false);assert.match(h.notice().textContent,/1시간봉.*실제 분봉.*1시간봉 간격을 유지/);assert.equal(h.frequencyControl.inert,false);
     await h.mounted.open();assert.equal(h.mounted.isActive(),false);assert.equal(h.builds.length,0);
-    state.frequency='weekly';h.trigger.click();await flush();assert.equal(h.mounted.isActive(),true);assert.equal(h.svg.dataset.replayFrequency,'weekly');
-    assert.equal(h.chartCalls.at(-1).frequency,'weekly');assert.equal(h.notice().hidden,true);assert.equal(h.writes.length,0);h.mounted.destroy();
+    state.frequency='weekly';h.trigger.click();await flush();assert.equal(h.mounted.isActive(),true);assert.equal(h.controllers[0].getState().status,'selecting');
+    assert.equal(h.draws.at(-1).data.frequency,'weekly');assert.equal(h.frameEvents.at(-1).frequency,'weekly');assert.equal(h.chartCalls.at(-1).frequency,'weekly');
+    await h.start(h.controls.get('date').value);assert.equal(h.svg.dataset.replayFrequency,'weekly');assert.equal(h.notice().hidden,true);assert.equal(h.writes.length,0);h.mounted.destroy();
   }},
   {name:'Shift replay shortcuts retain native input behavior and never persist on blur or page hide',async run(source){
     const fixture=atlasFixture(),h=await harness(source,fixture.options);await h.mounted.open();const initial=h.svg.dataset.replayCursor;

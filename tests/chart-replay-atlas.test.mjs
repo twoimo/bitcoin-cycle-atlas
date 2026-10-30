@@ -231,4 +231,33 @@ test('unconfirmed start selection keeps the Atlas chart and coordinates without 
   assert.equal(preview.svg.dataset.replayAnnotationSignature,confirmed.svg.dataset.replayAnnotationSignature);
   assert.equal(selecting.x(originDate),normal.x(originDate));assert.equal(selecting.dateAt(selecting.x(originDate)),originDate);
   assert.equal(preview.svg.dataset.replayCursor,undefined);
+  assert.equal(confirmed.svg.querySelector('[id$="-cross"]').getAttribute('display'),null);
+  assert.equal(preview.svg.querySelector('[id$="-cross"]').getAttribute('display'),'none');
+  draw(preview.svg);
+  assert.equal(preview.svg.querySelector('[id$="-cross"]').getAttribute('display'),null,'committing a start restores normal inspection');
+});
+
+test('weekly start selection follows actual opening coordinates without selecting or changing a forming candle',()=>{
+  const {svg}=fixture();
+  svg.getBoundingClientRect=()=>({left:20,top:10,width:720,height:350});
+  const daily=Array.from({length:23},(_,index)=>({date:dateFromDay(utcDay('2026-09-28')+index),price:63000+index*10}));
+  const weeks=[['2026-09-28','2026-10-04'],['2026-10-05','2026-10-11'],['2026-10-12','2026-10-18'],['2026-10-19',originDate]].map(([start,end],index)=>({
+    date:end,startDate:start,endDate:end,periodStartDate:start,periodEndDate:dateFromDay(utcDay(start)+6),
+    open:62832+index*100,high:65000,low:62690,close:64000+index*10,daysIncluded:index===3?2:7,complete:index!==3
+  }));
+  const input={...data(),frequency:'weekly',observedRows:daily,observedCandles:weeks,candleSource:'Bitstamp'};
+  const chart=draw(svg,{start:'2026-09-28',end:'2026-10-25',data:input,chartType:'candles',selectionPreview:true});
+  const before=svg.innerHTML,selection=chart.getSelection(),signature=svg.dataset.forecastValueSignature;
+  const pointer=date=>20+chart.x(date)/2;
+  assert.equal(chart.dateAt(pointer('2026-10-01')),'2026-10-01','the ordinary date lookup keeps its existing calendar contract');
+  assert.equal(chart.barDateAt(pointer('2026-10-01')),'2026-09-28');
+  assert.equal(chart.barDateAt(pointer('2026-10-06')),'2026-10-05');
+  assert.equal(chart.barDateAt(pointer('2026-10-13')),'2026-10-12');
+  assert.equal(chart.barDateAt(pointer(originDate)),'2026-10-19','the forming bar uses its Monday coordinate rather than its current daily close');
+  assert.equal(chart.barDateAt(NaN),null);
+  assert.deepEqual(chart.getSelection(),selection,'hover lookup must not commit a start or change selected OHLC');
+  assert.equal(svg.innerHTML,before);assert.equal(svg.dataset.forecastValueSignature,signature);
+  const candle=svg.querySelectorAll('.observed-candle').at(-1);
+  assert.equal(candle.dataset.open,'63132');assert.equal(candle.dataset.date,originDate);
+  assert.equal(Number(candle.querySelector('line').getAttribute('x1')),chart.x('2026-10-19'));
 });

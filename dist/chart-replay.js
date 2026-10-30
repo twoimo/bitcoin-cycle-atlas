@@ -1,4 +1,4 @@
-import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.29.5';
+import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.29.6';
 
 const day=date=>Date.parse(date+'T00:00:00Z')/86400000;
 const dateAt=value=>new Date(Math.round(value)*86400000).toISOString().slice(0,10);
@@ -125,7 +125,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(atlasAvailable)q('mode').value='atlas-chart';
     if(stored){activate();choice='entry';q('saved-summary').textContent=(stored.cursorDate??stored.origin)+' · '+intervalName(stored.frequency??replayFrequency)+' · 일시정지 상태로 이어집니다.';
       q('entry-dialog').hidden=false;paint(getState());q('entry-continue').focus({preventScroll:true});return;}
-    return open();
+    return open({selectOnly:true});
   }
   function blockSurrounding(on){
     if(on){
@@ -176,7 +176,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     announce('리플레이 자료를 확인하고 있습니다.');
     const signal=request.signal;
     try{
-      modules??=await Promise.all([import('./forecast-replay.js?v=1.29.5'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
+      modules??=await Promise.all([import('./forecast-replay.js?v=1.29.6'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
       if(!active||token!==epoch)return;
       if(atlasMode){
         atlasCaptured??=getAtlasContext();
@@ -344,7 +344,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     }
     q('play').disabled=blocked||!ready||state.length<2;q('first').disabled=blocked||!ready||state.cursorIndex===0;q('next').disabled=blocked||!ready||state.cursorIndex>=state.length-1;q('scrub').disabled=blocked||!ready;
     q('speed').value=String(state.speed);q('speed').title=speedMeaning(state.speed)+' · 실제 일봉 한 개씩 공개';q('speed').disabled=Boolean(choice);
-    q('speed-meaning').textContent='속도 '+state.speed+'× · '+speedMeaning(state.speed);q('live').disabled=Boolean(choice);
+    q('speed-meaning').textContent='속도 '+state.speed+'× · '+speedMeaning(state.speed);q('live').disabled=blocked||!ready;
     q('pick').setAttribute('aria-pressed',String(picking));q('pick-cancel').hidden=!picking;
     if(picking)svg.dataset.replaySelecting='true';else delete svg.dataset.replaySelecting;
     q('play').innerHTML=playing?pauseIcon():playIcon();q('play').setAttribute('aria-label',playing?'리플레이 일시정지':'리플레이 재생');q('play').setAttribute('aria-pressed',String(playing));
@@ -391,7 +391,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       }
       if(session.mode==='project-baseline')q('source').textContent='2026-10-21 첫 커밋의 3년 전망 · 성적 비교 '+archive.source.provider+' 종가 · '+archive.observedThrough+'까지 현재 보존 판본'+
         (q('display').value==='candles'&&atlasCandles?' · 표시 캔들 '+atlasCandles.source.provider+' 실제 OHLC (성적의 종가와 제공자 다름)':'');
-      rendered=atlasMode?atlasModules[1].drawAtlasChartReplay({svg,session,data:chartData,...range,chartType:q('display').value,context:state.session.atlasContext,onInspect}):
+      rendered=atlasMode?atlasModules[1].drawAtlasChartReplay({svg,session,data:chartData,...range,chartType:q('display').value,context:state.session.atlasContext,onInspect,selectionPreview:picking}):
         modules[1].drawChartReplay({svg,session,data:chartData,...range,chartType:q('display').value,onInspect});
       svg.dataset.replayOutputHash=session.identity.outputHash;svg.dataset.replayOrigin=session.asOf;
       if(atlasMode){svg.dataset.replayStartDate=state.session.replaySettings.startDate;svg.dataset.replayForecastOrigin=session.identity.forecastOriginDate??session.asOf;}
@@ -458,7 +458,8 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     // or the workspace that will be restored when replay ends.
     announce('이 설정은 리플레이를 종료한 뒤 바꿀 수 있습니다.');return true;
   }
-  trigger.onclick=()=>{if(active)requestExit();else void requestEntry();};q('exit').onclick=requestExit;q('live').onclick=requestExit;q('pick').onclick=beginPick;q('pick-cancel').onclick=cancelPick;
+  trigger.onclick=()=>{if(active)requestExit();else void requestEntry();};q('exit').onclick=requestExit;
+  q('live').onclick=()=>{if(!choice&&!picking&&getState().session)requestExit();};q('pick').onclick=beginPick;q('pick-cancel').onclick=cancelPick;
   q('start').onclick=()=>void chooseStart(q('date').value);q('date').onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();void chooseStart(q('date').value);}};
   q('play').onclick=toggle;q('first').onclick=()=>controller.seek(0);q('next').onclick=()=>controller.step(1);
   q('speed').onchange=()=>controller.speed(Number(q('speed').value));q('display').onchange=async()=>{
@@ -511,11 +512,11 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       if(gesture?.start){
         const dx=event.clientX-gesture.x,dy=event.clientY-gesture.y;if(Math.hypot(dx,dy)>7)gesture.moved=true;
         if(gesture.moved){event.preventDefault();follow=false;customRange=true;const width=Math.max(1,svg.getBoundingClientRect().width-90),shift=-dx/width*(day(gesture.start.end)-day(gesture.start.start));range={start:dateAt(day(gesture.start.start)+shift),end:dateAt(day(gesture.start.end)+shift)};schedulePaint();}
-      }else if(picking||getState().status==='selecting'){const date=rendered?.dateAt?.(event.clientX);if(date)onInspect(date);}
+      }else if(picking||getState().status==='selecting'){const date=(rendered?.barDateAt??rendered?.dateAt)?.(event.clientX);if(date)onInspect(date);}
       else if(rendered?.previewPointer)rendered.previewPointer(event);
     }else if(event.type==='pointerup'||event.type==='pointercancel'){
       const prior=gesture;gesture=null;if(prior)try{plot.releasePointerCapture?.(prior.id);}catch{}
-      if(event.type==='pointerup'&&prior&&!prior.moved&&(picking||getState().status==='selecting')){const date=rendered?.dateAt?.(event.clientX);if(date)void chooseStart(date);}
+      if(event.type==='pointerup'&&prior&&!prior.moved&&(picking||getState().status==='selecting')){const date=(rendered?.barDateAt??rendered?.dateAt)?.(event.clientX);if(date)void chooseStart(date);}
     }else if(event.type==='pointerleave'&&!gesture){pickerDate=null;clearPicker();}
   }
   const pointerTypes=['pointerdown','pointermove','pointerup','pointercancel','pointerleave'];for(const type of pointerTypes)plot.addEventListener(type,pointer,{capture:true,passive:false});

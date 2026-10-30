@@ -1,13 +1,13 @@
 import { beginAction, finishAction, measureSync } from './performance-diagnostics.js?v=1.29.0';
-import {mountChartReplay} from './chart-replay.js?v=1.29.5';
+import {mountChartReplay} from './chart-replay.js?v=1.29.6';
 import { createForecastComputation, browserForecastWorkerFactory } from './forecast-computation.js?v=1.29.0';
 import {bitcoinForecastEvidence} from './forecast-evidence.js?v=1.29.0';
 import {openResearchArticle} from './research-reader.js?v=1.29.0';
-import {priceLegendMarkup,priceReadoutKind,observedPriceSourceLabel} from './price-legend.js?v=1.29.5';
+import {priceLegendMarkup,priceReadoutKind,observedPriceSourceLabel} from './price-legend.js?v=1.29.6';
 import { buildCycleMilestones, INTERVAL_RELATIONS, MILESTONE_TYPES } from "./cycle-milestones.js?v=1.29.0";
 import { cycleLegendMarkup, cycleMilestoneInspection, cycleIntervalInspection, cycleDurationLabel } from "./cycle-milestones-view.js?v=1.29.0";
 import { resolveCycleSelection, cycleSelectionViewport, cycleOverviewViewport } from './cycle-selection.js?v=1.29.0';
-import { drawAtlasPriceChart as drawChart } from "./atlas-price-chart.js?v=1.29.5";
+import { drawAtlasPriceChart as drawChart } from "./atlas-price-chart.js?v=1.29.6";
 import { renderCryptoConAudit } from './cryptocon-audit.js?v=1.29.0';
 import { bindChartNavigation, panRange } from './chart-navigation.js?v=1.29.0';
 import { renderAtlasAnalysis } from "./atlas-analysis.js?v=1.29.0";
@@ -707,7 +707,7 @@ export function initLabView() {
       const first=captured.dataset.prices[0];
       return chartPresetRange({asOf:captured.forecast.asOf,referenceDate:captured.forecast.referenceDate??captured.forecast.asOf,firstDate:Array.isArray(first)?first[0]:first.date,lastDate:captured.forecast.path.at(-1).date,span});
     },
-    loadAtlasRenderer:()=>import('./chart-replay-atlas.js?v=1.29.5'),
+    loadAtlasRenderer:()=>import('./chart-replay-atlas.js?v=1.29.6'),
     onAtlasFrame:({session,data,start,end,chartType,context,frequency=data.frequency??'daily',window=state.chartReplaySnapshot?.window??DEFAULT_CHART_SPAN,customRange=false,axis})=>{
       const candles=chartType==='candles'&&data.observedCandles.length>0;
       const p=context.presentation,cursorDate=data.frame.cursorDate,lastCandle=data.observedCandles.at(-1);
