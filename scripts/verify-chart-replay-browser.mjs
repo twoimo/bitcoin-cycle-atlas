@@ -40,7 +40,7 @@ function disclosedBitcoinWeeks(rows, cursor) {
 }
 
 export async function verifyChartReplaySurface(api) {
-  const { cdp, browser, browserContextId, receipt, root, outputDirectory, evaluate, until, settled, click, bounds, visibleBounds, screenshot, verifyOfflineRefresh } = api;
+  const { cdp, browser, browserContextId, receipt, root, outputDirectory, evaluate, until, settled, click: nativeClick, bounds, visibleBounds, screenshot, verifyOfflineRefresh } = api;
   const { symbol, width, height, touch } = receipt;
   const crypto = ['BTCUSD', 'ETHUSD'].includes(symbol), btc = symbol === 'BTCUSD';
   const chartSelector = btc ? '#lab-chart' : symbol === 'ETHUSD' ? '#eth-chart' : '#equity-chart';
@@ -48,7 +48,7 @@ export async function verifyChartReplaySurface(api) {
   const decision = name => '[data-cr="' + name + '"]';
   const prefix = receipt.page + '-' + width + 'x' + height;
   const evidence = receipt.chartReplay = { symbol, nativeInput: true, storageIsolation: 'independent-browser-context', states: [], exports: [], lifecycle: [],
-    timing: [], weekly: [], selections: [], storage: [],
+    timing: [], weekly: [], selections: [], storage: [], floatingBar: [], popovers: [],
     scope: 'Existing main chart node, real page controls, native pointer/touch/keyboard, current interval and range, disclosed daily/weekly prefixes, explicit session decisions, and downloaded visible-frame JSON. Current-vintage replay is retrospective.' };
   assert.ok(browserContextId, 'Replay scenarios must not share persisted user sessions across viewport cases');
   const ledger = resolve(root, 'dist/data', btc ? 'forecast-ledger' : 'asset-forecast-ledger');
@@ -57,10 +57,154 @@ export async function verifyChartReplaySurface(api) {
   const priceArchive = await raw(btc ? 'data/btc-daily.json' : symbol === 'ETHUSD' ? 'data/replay-eth-ohlc.json' : 'data/' + symbol.toLowerCase() + '-ohlc.json');
   const btcCandles = btc ? (await raw('data/btc-volume.json')).bars : null;
   const initialAtlas = btc ? await raw('data/project-origin-btc-2026-10-21.json') : null;
-  let currentAtlasModel = null, originalAtlasViewport = null;
+  let currentAtlasModel = null, originalAtlasViewport = null, originalChartBox = null;
   const archiveRows = mode => btc ? ['recorded', 'project-baseline'].includes(mode) ? priceArchive.prices.map(([date, price]) => ({ date, price })) : btcCandles.map(row => ({ ...row, price: row.close })) :
     (symbol === 'ETHUSD' ? priceArchive.dailyHistory.candles : priceArchive.candles).map(row => ({ ...row, date: row.date.slice(0, 10), price: row.close }));
   const storedBytes = () => evaluate(cdp, symbol => localStorage.getItem('atlas-chart-replay-v1:' + symbol), symbol);
+
+  const menuIsOpen = () => evaluate(cdp, selector => Boolean(document.querySelector(selector)?.getClientRects().length), control('select-panel'));
+  async function openMenu() {
+    if (!await menuIsOpen()) await nativeClick(cdp, control('select-menu'));
+    await until(menuIsOpen, 'native Select bar popover opens');
+  }
+  async function closeMenu() {
+    if (await menuIsOpen()) await nativeClick(cdp, control('select-close'));
+    assert.equal(await menuIsOpen(), false, 'The Select bar close action did not dismiss its popover');
+  }
+  async function revealOwnedControl(selector) {
+    // The expanded menu owns vertical scrolling. Wheel real UI content into
+    // its visible region, including the area below its sticky close header.
+    // Never expose a hidden control by rewriting its style or invoking it.
+    for (let attempt = 0; attempt < 10; attempt++) {
+      const target = await evaluate(cdp, selector => {
+        const node = document.querySelector(selector), owner = node?.closest('[data-cr="select-panel"],.chart-replay-choice');
+        if (!owner || !node.getClientRects().length) return null;
+        const box = node.getBoundingClientRect(), area = owner.getBoundingClientRect();
+        const heading = owner.querySelector('.chart-replay-menu-heading'), footer = owner.querySelector(':scope > div:last-child');
+        const top = heading && !heading.contains(node) ? Math.max(area.top + owner.clientTop, heading.getBoundingClientRect().bottom) : area.top + owner.clientTop;
+        const bottom = footer && getComputedStyle(footer).position === 'sticky' && !footer.contains(node) ? Math.min(area.top + owner.clientTop + owner.clientHeight, footer.getBoundingClientRect().top) : area.top + owner.clientTop + owner.clientHeight;
+        const delta = box.bottom > bottom - 3 ? box.bottom - bottom + 4 : box.top < top + 3 ? box.top - top - 4 : 0;
+        return { delta, x: area.left + 6, y: top + Math.max(8, Math.min(24, (bottom - top) / 2)), scrollTop: owner.scrollTop,
+          box: { top: box.top, bottom: box.bottom }, clip: { top, bottom } };
+      }, selector);
+      if (!target || Math.abs(target.delta) < 1) return;
+      await cdp.send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: target.x, y: target.y, deltaX: 0, deltaY: target.delta });
+      await settled(cdp);
+      const current = await evaluate(cdp, selector => document.querySelector(selector).closest('[data-cr="select-panel"],.chart-replay-choice').scrollTop, selector);
+      assert.notEqual(current, target.scrollTop, 'The owned replay popover cannot reveal its control: ' + selector + ' ' + JSON.stringify(target));
+    }
+    throw new Error('Replay popover scrolling did not expose ' + selector);
+  }
+  async function click(connection, selector) {
+    const target = await evaluate(cdp, selector => {
+      const node = document.querySelector(selector);
+      return { menu: Boolean(node?.closest('[data-cr="select-panel"]')), toggle: node?.dataset.cr === 'select-menu' };
+    }, selector);
+    if (target.menu) await openMenu();
+    else if (!target.toggle) await closeMenu();
+    await revealOwnedControl(selector);
+    await nativeClick(connection, selector);
+  }
+  async function verifyFloatingBar() {
+    const geometry = await evaluate(cdp, ({ chartSelector, panel }) => {
+      const svg = document.querySelector(chartSelector), plot = svg.closest('.atlas-plot'), root = document.querySelector(panel);
+      const bar = root.querySelector('.chart-replay-bar'), actions = root.querySelector('.chart-replay-actions'), exit = root.querySelector('[data-cr="exit"]');
+      const rect = node => { const b = node.getBoundingClientRect(); return { left: b.left, right: b.right, top: b.top, bottom: b.bottom, width: b.width, height: b.height }; };
+      const box = rect(svg), point = { x: box.left + box.width * .5, y: box.top + box.height * .35 };
+      return { chart: box, plot: { ...rect(plot), clientHeight: plot.clientHeight }, root: { ...rect(root), pointerEvents: getComputedStyle(root).pointerEvents, background: getComputedStyle(root).backgroundColor },
+        bar: rect(bar), actions: { ...rect(actions), scrollLeft: actions.scrollLeft, scrollWidth: actions.scrollWidth, clientWidth: actions.clientWidth, flexWrap: getComputedStyle(actions).flexWrap },
+        controls: [...actions.children].map(node => ({ name: node.dataset.cr, ...rect(node) })), exit: { ...rect(exit), separate: !bar.contains(exit) },
+        menuHidden: root.querySelector('[data-cr="select-panel"]').hidden, pointerReachesChart: svg.contains(document.elementFromPoint(point.x, point.y)),
+        settingsInPopover: ['date', 'start', 'display', 'mode', 'record', 'horizon', 'previous', 'random', 'resume', 'details', 'pooled-retry', 'scrub', 'export'].every(name => root.querySelector('[data-cr="select-panel"]').contains(root.querySelector('[data-cr="' + name + '"]'))),
+        pageWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth), scrollX, scrollY,
+        cursor: svg.dataset.replayCursor ?? null, hash: svg.dataset.replayOutputHash ?? null, viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null };
+    }, { chartSelector, panel });
+    assert.equal(geometry.root.pointerEvents, 'none', 'The positioning overlay blocks the chart');
+    assert.match(geometry.root.background, /rgba\(0, 0, 0, 0\)|transparent/, 'A full-width replay surface still covers the plot');
+    assert.equal(geometry.menuHidden, true); assert.equal(geometry.settingsInPopover, true); assert.equal(geometry.pointerReachesChart, true);
+    assert.deepEqual(geometry.controls.map(node => node.name), ['first', 'select-menu', 'pick', 'play', 'next', 'speed', 'update-interval', 'live']);
+    assert.equal(geometry.actions.flexWrap, 'nowrap');
+    const centerY = geometry.bar.top + geometry.bar.height / 2;
+    for (const node of geometry.controls) assert.ok(Math.abs(node.top + node.height / 2 - centerY) <= 1, 'Replay controls wrapped into a second row');
+    assert.ok(geometry.bar.height <= (touch || width <= 620 ? 57 : 45), 'The floating replay bar is no longer compact');
+    assert.ok(geometry.bar.top > geometry.plot.top + geometry.plot.height / 2, 'Replay controls returned to a large upper panel');
+    assert.ok(geometry.plot.bottom - geometry.bar.bottom >= 8, 'The floating bar is outside the chart');
+    assert.ok(geometry.chart.height >= originalChartBox.height - 1, 'Entering replay reduced the existing chart height');
+    assert.ok(geometry.chart.height >= geometry.plot.clientHeight - 2, 'The chart does not own its full allocated plot height');
+    assert.ok(geometry.pageWidth <= width + 1); assert.equal(geometry.scrollX, 0);
+    assert.equal(geometry.exit.separate, true); assert.ok(Math.abs(geometry.exit.width - 44) <= 1 && Math.abs(geometry.exit.height - 44) <= 1);
+    assert.ok(Math.abs(geometry.plot.right - geometry.exit.right - 8) <= 1, 'The exit X is not at the right of the chart');
+    assert.ok(Math.abs(geometry.exit.top + geometry.exit.height / 2 - centerY) <= 1, 'Exit X does not align with the floating controls');
+    if (width > 620) {
+      assert.ok(geometry.bar.width <= 421, 'Desktop replay expanded into a full-width toolbar');
+      assert.ok(Math.abs((geometry.bar.left + geometry.bar.right - geometry.plot.left - geometry.plot.right) / 2) <= 1, 'Desktop replay is not centered on the current chart');
+    } else {
+      assert.ok(geometry.bar.left >= geometry.plot.left + 7 && geometry.bar.right <= geometry.exit.left - 7, 'Mobile replay controls overlap the separate exit X');
+      for (const node of geometry.controls) assert.ok(node.width >= 43 && node.height >= 43, 'Mobile replay lost its 44px control target: ' + node.name);
+    }
+    evidence.floatingBar.push({ label: 'compact-floating-controls-preserve-full-chart', ...geometry, originalChart: originalChartBox });
+    await screenshot(cdp, prefix + '-floating-bar.png', receipt);
+    if (touch && width <= 620) {
+      assert.ok(geometry.actions.scrollWidth > geometry.actions.clientWidth + 20, 'The narrow toolbar does not provide an owned horizontal scroll area');
+      const scroll = () => evaluate(cdp, () => { const node = document.querySelector('.chart-replay-actions'); return { left: node.scrollLeft, maximum: node.scrollWidth - node.clientWidth }; });
+      const swipe = async direction => {
+        const b = await bounds(cdp, '.chart-replay-actions'), distance = Math.min(150, b.width * .65);
+        const x = direction < 0 ? b.right - 12 : b.left + 12, y = b.top + b.height / 2;
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y, id: 0, radiusX: 1, radiusY: 1, force: 1 }] });
+        for (const fraction of [.2, .45, .7, 1]) {
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x + direction * distance * fraction, y, id: 0, radiusX: 1, radiusY: 1, force: 1 }] });
+          await delay(30);
+        }
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await settled(cdp);
+      };
+      const before = await scroll();
+      for (let i = 0; i < 4 && (await scroll()).left < before.maximum - 1; i++) await swipe(-1);
+      const after = await scroll(); assert.ok(after.left > before.left + 20 && after.left >= after.maximum - 1, 'Native touch did not expose the right end of the replay bar');
+      const live = await bounds(cdp, control('live'));
+      assert.ok(live.left >= geometry.actions.left - 1 && live.right <= geometry.actions.right + 1, 'The Live action cannot be reached by native toolbar scrolling');
+      await screenshot(cdp, prefix + '-floating-bar-native-scroll.png', receipt);
+      const unchanged = await evaluate(cdp, selector => { const svg = document.querySelector(selector); return { cursor: svg.dataset.replayCursor ?? null, hash: svg.dataset.replayOutputHash ?? null,
+        viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null, scrollX, scrollY, pageWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) }; }, chartSelector);
+      for (const name of ['cursor', 'hash', 'viewStart', 'viewEnd', 'scrollX', 'scrollY']) assert.equal(unchanged[name], geometry[name], 'Toolbar scrolling changed the chart or document ' + name);
+      assert.ok(unchanged.pageWidth <= width + 1);
+      for (let i = 0; i < 4 && (await scroll()).left > 1; i++) await swipe(1);
+      assert.ok((await scroll()).left <= 1, 'Native toolbar swipe could not return to Select bar');
+      evidence.floatingBar.push({ label: 'native-horizontal-toolbar-scroll-without-chart-or-page-scroll', before, after, unchanged });
+    }
+  }
+  async function verifyPopoverLifecycle() {
+    const saved = await storedBytes(), before = await evaluate(cdp, selector => ({ cursor: document.querySelector(selector).dataset.replayCursor, hash: document.querySelector(selector).dataset.replayOutputHash }), chartSelector);
+    await openMenu();
+    const menu = await bounds(cdp, control('select-panel')); visibleBounds(menu, width, height);
+    assert.equal(await evaluate(cdp, selector => document.querySelector(selector).getAttribute('aria-modal'), control('select-panel')), null, 'Select bar became a blocking modal');
+    await click(cdp, control('select-date'));
+    const date = await evaluate(cdp, selector => {
+      const node = document.querySelector(selector), menu = node.closest('[data-cr="select-panel"]'), box = node.getBoundingClientRect(), area = menu.getBoundingClientRect();
+      const heading = menu.querySelector('.chart-replay-menu-heading').getBoundingClientRect();
+      return { focused: document.activeElement === node, open: !menu.hidden, top: box.top, bottom: box.bottom, left: box.left, right: box.right,
+        clipTop: Math.max(area.top + menu.clientTop, heading.bottom), clipBottom: area.top + menu.clientTop + menu.clientHeight,
+        hit: document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2) === node, scrollTop: menu.scrollTop };
+    }, control('date'));
+    assert.equal(date.focused, true); assert.equal(date.open, true); assert.equal(date.hit, true, 'Select date focused an input hidden under another control');
+    assert.ok(date.top >= date.clipTop - 1 && date.bottom <= date.clipBottom + 1, 'Select date left the native input outside the menu viewport');
+    visibleBounds(await bounds(cdp, control('select-close')), width, height);
+    await screenshot(cdp, prefix + '-floating-menu-date.png', receipt);
+    await key('Escape', 'Escape', 27);
+    assert.equal(await menuIsOpen(), false); assert.equal(await evaluate(cdp, selector => document.activeElement === document.querySelector(selector), control('select-menu')), true);
+    await openMenu();
+    const outside = await evaluate(cdp, selector => {
+      const svg = document.querySelector(selector), b = svg.getBoundingClientRect();
+      return [[3, b.height * .25], [b.width - 3, b.height * .25], [b.width * .5, 3], [b.width * .1, b.height * .1]]
+        .map(([dx, dy]) => ({ x: b.left + dx, y: b.top + dy })).find(point => svg.contains(document.elementFromPoint(point.x, point.y)));
+    }, chartSelector);
+    assert.ok(outside, 'An open nonmodal Select bar menu leaves no chart target');
+    await pointAction(touch ? 'tap' : 'click', outside);
+    assert.equal(await menuIsOpen(), false, 'A native outside click did not close Select bar');
+    const after = await evaluate(cdp, selector => ({ cursor: document.querySelector(selector).dataset.replayCursor, hash: document.querySelector(selector).dataset.replayOutputHash }), chartSelector);
+    assert.deepEqual(after, before, 'Menu focus or dismissal changed the confirmed replay cutoff');
+    await storedUnchanged(saved, 'floating-menu-focus-escape-and-outside-click-do-not-save');
+    evidence.popovers.push({ label: 'native-select-date-focus-escape-and-outside-dismissal', menu, date, before, after });
+  }
 
   async function key(value, code, number, modifiers = 0, wait = true) {
     for (const type of ['keyDown', 'keyUp']) await cdp.send('Input.dispatchKeyEvent', { type, key: value, code, windowsVirtualKeyCode: number, nativeVirtualKeyCode: number, modifiers,
@@ -94,11 +238,11 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(after, before, label + ' changed the saved session without exit confirmation');
     evidence.storage.push({ label, unchanged: true, bytes: after?.length ?? 0, sha256: after === null ? null : digest(after) });
   }
-  async function exitReplay(label, { save = true, cancelFirst = false } = {}) {
+  async function exitReplay(label, { save = true, cancelFirst = false, opener = 'exit' } = {}) {
     const before = await snapshot(label + '-before-dialog'), savedBefore = await storedBytes();
     let backgroundChecked = false;
     const open = async () => {
-      await click(cdp, control('exit'));
+      await click(cdp, control(opener));
       await until(() => evaluate(cdp, selector => Boolean(document.querySelector(selector)?.getClientRects().length), decision('exit-confirm')), 'explicit replay exit decision');
       const state = await evaluate(cdp, selector => {
         const input = document.querySelector(selector), dialog = input.closest('[role="dialog"],dialog');
@@ -106,6 +250,7 @@ export async function verifyChartReplaySurface(api) {
           active: document.documentElement.dataset.chartReplayActive === 'true' };
       }, decision('exit-save'));
       assert.equal(state.type, 'checkbox'); assert.equal(state.checked, true); assert.equal(state.dialog, true); assert.equal(state.active, true);
+      evidence.floatingBar.push({ label: label + '-exit-decision', opener, defaultSaveChecked: state.checked });
       visibleBounds(await bounds(cdp, decision('exit-confirm')), width, height);
       visibleBounds(await bounds(cdp, decision('exit-cancel')), width, height);
       await storedUnchanged(savedBefore, label + '-dialog-open');
@@ -182,9 +327,11 @@ export async function verifyChartReplaySurface(api) {
         intervalOptions: [...document.querySelector('#workbench-interval-select').options].map(node => node.value),
         accessibleIntervals: buttons.filter(usable).map(node => node.dataset.labFrequency), intervalSelect: usable(document.querySelector('#workbench-interval-select')),
         accessibleSpans: spans.filter(usable).map(node => node.dataset.chartSpan), spanSelect: usable(document.querySelector('#workbench-range-select')),
-        range: document.querySelector('#workbench-range-label').textContent };
+        range: document.querySelector('#workbench-range-label').textContent,
+        outsideReplayOverlay: [...buttons, ...spans, document.querySelector('#workbench-interval-select'), document.querySelector('#workbench-range-select')].filter(Boolean).every(node => !node.closest('.chart-replay-controls')) };
     }, frequency);
     assert.equal(observed.selected, frequency);
+    assert.equal(observed.outsideReplayOverlay, true, 'The original interval or period toolbar was moved into replay settings');
     assert.deepEqual(observed.intervalOptions, ['1m', '5m', '15m', '30m', '1h', '4h', 'daily', 'weekly']);
     assert.ok(observed.accessibleIntervals.includes(frequency) || observed.intervalSelect, 'The original timeframe control disappeared during replay');
     assert.ok(observed.accessibleSpans.length === 4 || observed.spanSelect, 'The original period control disappeared during replay');
@@ -257,6 +404,7 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(value.invalidPaths, 0); assert.equal(value.liveReadouts, 0, 'Latest quote/readout remained visible during replay');
     assert.ok(value.pageWidth <= width + 1, 'Replay caused horizontal page overflow');
     assert.ok(value.chart.height >= 80 && value.chart.width > 100, 'Replay controls consumed the chart viewport');
+    assert.ok(value.chart.height >= originalChartBox.height - 1, 'Replay settings reduced the existing full-height chart');
     assert.ok(value.chart.left >= -1 && value.chart.right <= width + 1 && value.chart.top >= -1 && value.chart.bottom <= height + 1, 'Main replay SVG escaped viewport: ' + JSON.stringify({ chart: value.chart, width, height, scrollX: value.scrollX, scrolledAncestors: value.scrolledAncestors }));
     if (value.state !== 'selecting') {
       if (btc) {
@@ -348,7 +496,7 @@ export async function verifyChartReplaySurface(api) {
     }
     evidence.exports.push({ label, file: relative(outputDirectory, resolve(directory, file)), bytes: bytes.length, sha256: digest(bytes), outputHash: payload.identity.outputHash,
       cursor: before.cursor, actualDates: payload.frame.actual.map(row => row.date), forecastSha256: digest(JSON.stringify(payload.frame.forecast)) });
-    await click(cdp, control('hide-details')); return payload;
+    await click(cdp, control('hide-details')); await closeMenu(); return payload;
   }
   async function pointAction(type, point) {
     if (type === 'tap') {
@@ -404,8 +552,10 @@ export async function verifyChartReplaySurface(api) {
     }, { selector: chartSelector, date });
   }
   async function selectMenu(name) {
-    await click(cdp, control('select-menu'));
-    for (const key of ['select-date', 'select-random', 'select-first']) visibleBounds(await bounds(cdp, decision(key)), width, height);
+    await openMenu();
+    for (const key of ['select-date', 'select-random', 'select-first']) {
+      await revealOwnedControl(decision(key)); visibleBounds(await bounds(cdp, decision(key)), width, height);
+    }
     await click(cdp, decision(name));
   }
   async function measureCadence() {
@@ -688,8 +838,13 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(originalAtlasViewport?.length, 2);
     await screenshot(cdp, prefix + '-current-chart-before-replay.png', receipt);
   }
-  await evaluate(cdp, selector => { globalThis.__mainReplayNode = document.querySelector(selector); globalThis.__mainReplayTime = performance.timeOrigin; }, chartSelector);
+  originalChartBox = await evaluate(cdp, selector => {
+    globalThis.__mainReplayNode = document.querySelector(selector); globalThis.__mainReplayTime = performance.timeOrigin;
+    const box = globalThis.__mainReplayNode.getBoundingClientRect(); return { left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width, height: box.height };
+  }, chartSelector);
   await click(cdp, '#workbench-replay'); await ready(crypto && !btc);
+  await verifyFloatingBar();
+  if (btc) await verifyPopoverLifecycle();
   if (btc) {
     const direct = await snapshot('atlas-project-start', true);
     assert.equal(direct.frequency, entryFrequency);
@@ -723,6 +878,13 @@ export async function verifyChartReplaySurface(api) {
       assert.equal(forming.periodStart, '2026-10-19'); assert.equal(forming.daysIncluded, 3); assert.equal(forming.complete, false);
       evidence.weekly.push({ label: 'weekly-entry-first-daily-forward', candle: forming, expected: disclosedBitcoinWeeks(btcCandles, '2026-10-21').at(-1) });
     }
+    await click(cdp, control('first'));
+    const firstReset = await snapshot('floating-first-rewinds');
+    assert.equal(firstReset.index, 0); assert.equal(firstReset.cursor, direct.cursor); assert.equal(firstReset.actualCount, 0); assert.equal(firstReset.outputHash, direct.outputHash);
+    await click(cdp, control('next'));
+    const firstRestored = await snapshot('floating-first-forward-restores');
+    assert.equal(firstRestored.cursor, firstAtlas.cursor); assert.equal(firstRestored.outputHash, firstAtlas.outputHash);
+    assert.equal(firstRestored.forecastValueSignature, firstAtlas.forecastValueSignature); assert.deepEqual(firstRestored.candles, firstAtlas.candles);
     const firstAtlasExport = await exported('atlas-first-project-bar');
     assert.deepEqual(firstAtlasExport.frame.forecast, originalAtlas.frame.forecast, 'First actual bar rewrote the initial Atlas forecast');
     await click(cdp, control('scrub')); await key('End', 'End', 35);
@@ -826,6 +988,8 @@ export async function verifyChartReplaySurface(api) {
           }, { panel, chartSelector });
           return result.state === 'error' ? result : false;
         }, 'unsupported adaptive origin is explicitly rejected');
+        await openMenu(); await revealOwnedControl(control('pooled-retry'));
+        failure.retryVisible = await evaluate(cdp, selector => Boolean(document.querySelector(selector)?.getClientRects().length), control('pooled-retry'));
         assert.equal(failure.sameNode, true); assert.equal(failure.date, date); assert.equal(failure.model, 'adaptive');
         assert.match(failure.message, /각 30개 이상 필요/); assert.equal(failure.forecasts, 0);
         assert.equal(failure.inspect, '', 'Failed model retained a stale actual/forecast readout'); assert.equal(failure.retryVisible, true);
@@ -901,7 +1065,7 @@ export async function verifyChartReplaySurface(api) {
     behavior: 'only-explicit-checked-exit-saves-the-selected-session',
     previousOrigin: origin.origin, selectedOrigin: beforeExit.origin, selectedIndex: beforeExit.index,
     expectedOrigin: expectedResume.origin, expectedIndex: expectedResume.index });
-  await exitReplay('selected-session-explicit-save', { cancelFirst: !btc });
+  await exitReplay('selected-session-explicit-save', { cancelFirst: !btc, opener: 'live' });
   await until(() => evaluate(cdp, selector => document.querySelector(selector)?.dataset.chartReplayActive !== 'true' && document.querySelector(selector)?.querySelector('path'), chartSelector), 'restore main chart');
   const restored = await evaluate(cdp, ({ chartSelector, panel }) => ({ sameNode: document.querySelector(chartSelector) === globalThis.__mainReplayNode,
     controlsHidden: document.querySelector(panel).hidden, active: document.documentElement.dataset.chartReplayActive,
