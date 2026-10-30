@@ -10,13 +10,13 @@ const bootSymbol = document.querySelector('.atlas-boot-symbol');
 if (bootSymbol) bootSymbol.textContent = symbol;
 try {
   if (symbol === 'ETHUSD') {
-    const { initEthView } = await import("./eth-view.js?v=1.29.2");
+    const { initEthView } = await import("./eth-view.js?v=1.29.3");
     await initEthView();
   } else if (symbol === 'MSTR' || symbol === 'BMNR') {
-    const { initEquityView } = await import("./equity-view.js?v=1.29.2");
+    const { initEquityView } = await import("./equity-view.js?v=1.29.3");
     await initEquityView({symbol});
   } else {
-    await import("./app.js?v=1.29.2");
+    await import("./app.js?v=1.29.3");
   }
 } catch (error) {
   console.error('Chart initialization failed', error);

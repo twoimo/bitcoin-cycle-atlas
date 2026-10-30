@@ -156,3 +156,79 @@ test('an empty replay viewport does not inherit unrevealed live prices and still
   assert.equal(svg.dataset.forecastValueSignature,forecastValueSignature(context.forecast));
   assert.ok(svg.querySelector('.chart-empty-message'));assert.doesNotMatch(svg.innerHTML,/9000000000000000/);
 });
+
+test('one daily step grows the same weekly candle and volume at their fixed week coordinate',()=>{
+  const {svg}=fixture(),weeklyContext=createAtlasReplayContext({dataset,forecast:current,originDate,presentation:{...presentation,scale:'linear',showCycleMarkers:false,showCycleIntervals:false,showTurns:false,showVolume:true}});
+  const daily=[{date:'2026-10-19',price:63000},{date:'2026-10-20',price:64485},{date:'2026-10-21',price:64686}];
+  const week=(date,high,close,volume,daysIncluded)=>({date,startDate:'2026-10-19',endDate:date,periodStartDate:'2026-10-19',periodEndDate:'2026-10-25',time:Date.parse('2026-10-19T00:00:00Z')/1000,open:62832,high,low:62690,close,volume,daysIncluded,complete:false});
+  const input=(date,candle)=>({...data(date),frequency:'weekly',observedRows:daily,observedCandles:[candle],priceSource:'Bitstamp',candleSource:'Bitstamp',formingWeekCount:1,missingWeekCount:0});
+  const before=week(originDate,64551,64485,20,2);
+  let chart=draw(svg,{context:weeklyContext,start:'2026-10-19',end:'2026-10-25',chartType:'candles',data:input(originDate,before)});
+  const candle=svg.querySelector('.observed-candle'),x=candle.querySelector('line').getAttribute('x1'),signature=svg.dataset.forecastValueSignature;
+  assert.equal(candle.dataset.periodStart,'2026-10-19');assert.equal(candle.dataset.periodEnd,'2026-10-25');assert.equal(candle.dataset.date,originDate);
+  assert.equal(candle.dataset.complete,'false');assert.equal(candle.dataset.daysIncluded,'2');assert.equal(candle.dataset.high,'64551');assert.equal(candle.dataset.close,'64485');
+  assert.equal(Number(x),chart.x('2026-10-19'));
+  const volume=svg.querySelector('.volume-bar');assert.equal(volume.dataset.volume,'20');assert.equal(Number(volume.getAttribute('x'))+Number(volume.getAttribute('width'))/2,Number(x));
+  chart.previewPointer({clientX:Number(x)+.5,clientY:chart.axis.top+30,pointerType:'mouse'});
+  assert.equal(chart.getSelection().date,originDate);assert.equal(chart.getSelection().candle.close,64485);
+  assert.match(candle.textContent,/진행 중 주봉/);
+
+  const after=week('2026-10-21',65000,64686,35,3);
+  chart=draw(svg,{context:weeklyContext,start:'2026-10-19',end:'2026-10-25',chartType:'candles',data:input('2026-10-21',after)});
+  const next=svg.querySelector('.observed-candle');
+  assert.equal(svg.querySelectorAll('.observed-candle').length,1);assert.equal(next.querySelector('line').getAttribute('x1'),x);
+  assert.equal(next.dataset.open,'62832');assert.equal(next.dataset.high,'65000');assert.equal(next.dataset.low,'62690');assert.equal(next.dataset.close,'64686');assert.equal(next.dataset.daysIncluded,'3');
+  assert.equal(svg.querySelector('.volume-bar').dataset.volume,'35');
+  assert.equal(svg.dataset.replayFrequency,'weekly');assert.equal(svg.dataset.replayFormingWeekCount,'1');assert.equal(svg.dataset.replayMissingWeekCount,'0');
+  assert.equal(svg.dataset.forecastValueSignature,signature);assert.equal(svg.dataset.replayActualThrough,'2026-10-21');
+  chart.previewPointer({clientX:Number(x)+.5,clientY:chart.axis.top+30,pointerType:'mouse'});
+  assert.equal(chart.getSelection().date,'2026-10-21');assert.equal(chart.getSelection().candle.close,64686);
+  assert.equal(svg.querySelector('.cross-time').getAttribute('x1'),x);
+});
+
+test('unrevealed weekly OHLC and volume cannot expand the replay scale or enter a forming bar',()=>{
+  const clean=fixture(),poisoned=fixture(),settings={...presentation,showCycleMarkers:false,showCycleIntervals:false,showTurns:false,showVolume:true,scale:'linear'};
+  const weeklyContext=createAtlasReplayContext({dataset,forecast:current,originDate,presentation:settings});
+  const candle={date:originDate,startDate:'2026-10-19',endDate:originDate,periodStartDate:'2026-10-19',periodEndDate:'2026-10-25',time:Date.parse('2026-10-19T00:00:00Z')/1000,open:62832,high:64551,low:62690,close:64485,volume:20,daysIncluded:2,complete:false};
+  const plain={...data(),frequency:'weekly',observedRows:[{date:'2026-10-19',price:63000},{date:originDate,price:64485}],observedCandles:[candle],candleSource:'Bitstamp'};
+  const future=structuredClone(plain);future.observedRows.push({date:'2026-10-21',price:9e15});future.observedCandles.push({...candle,date:'2026-10-21',endDate:'2026-10-21',open:9e15,high:1e16,low:8e15,close:9e15,volume:1e18,daysIncluded:3});
+  const options={context:weeklyContext,start:'2026-10-19',end:'2026-10-25',chartType:'candles'};
+  const a=draw(clean.svg,{...options,data:plain}),b=draw(poisoned.svg,{...options,data:future});
+  assert.equal(a.axis.min,b.axis.min);assert.equal(a.axis.max,b.axis.max);assert.ok(b.axis.max<100000);
+  assert.equal(poisoned.svg.dataset.replayPriceMin,String(b.axis.min));assert.equal(poisoned.svg.dataset.replayPriceMax,String(b.axis.max));
+  assert.equal(poisoned.svg.querySelectorAll('.observed-candle').length,1);assert.equal(poisoned.svg.querySelector('.volume-bar').dataset.volume,'20');
+  assert.doesNotMatch(poisoned.svg.innerHTML,/9000000000000000|10000000000000000|1000000000000000000/);
+  b.selectDate('2026-10-21');assert.equal(b.getSelection().actual,null);assert.equal(b.getSelection().candle,null);
+});
+
+test('a first-available replay can have an empty earlier prefix while retaining only the frozen assumptions',()=>{
+  const first=rows[0].date,origin=dateFromDay(utcDay(first)-1),{svg}=fixture();
+  const emptyContext=createAtlasReplayContext({dataset,forecast:current,originDate:origin,presentation:{...presentation,showStates:true}});
+  assert.equal(emptyContext.cycleMarkers.filter(marker=>marker.kind==='observed').length,0);
+  assert.equal(emptyContext.turns.filter(turn=>turn.replaySource==='observed').length,0);
+  const chart=drawAtlasChartReplay({svg,session:{asOf:origin},context:emptyContext,chartType:'candles',start:'2026-10-01',end:'2028-10-01',data:{originDate:origin,frequency:'daily',observedRows:[],observedCandles:[],frame:{...frame(),cursorDate:origin}}});
+  assert.equal(svg.dataset.replayObservedCount,'0');assert.equal(svg.dataset.observedCandleCount,'0');assert.equal(svg.dataset.observedLineCount,'0');
+  assert.equal(svg.dataset.forecastValueSignature,forecastValueSignature(current.path));
+  chart.selectDate(first);assert.equal(chart.getSelection().actual,null);assert.equal(chart.getSelection().candle,null);
+});
+
+test('an intraday interval cannot silently reuse daily data as shorter candles',()=>{
+  const {svg}=fixture();
+  assert.throws(()=>draw(svg,{data:{...data(),frequency:'1m'},chartType:'candles'}),/intraday candles cannot be made from daily closes/);
+  assert.equal(svg.querySelectorAll('.observed-candle').length,0);
+});
+
+test('unconfirmed start selection keeps the Atlas chart and coordinates without confirmed replay boundaries',()=>{
+  const confirmed=fixture(),preview=fixture();
+  const normal=draw(confirmed.svg),selecting=draw(preview.svg,{selectionPreview:true});
+  for(const selector of ['[data-replay-origin-boundary]','[data-replay-forecast-origin]','[data-replay-cursor-line]','.observed-split-boundary']){
+    assert.equal(confirmed.svg.querySelectorAll(selector).length,1);
+    assert.equal(preview.svg.querySelectorAll(selector).length,0);
+  }
+  assert.equal(preview.svg.querySelector('[data-replay-forecast-path]').getAttribute('d'),confirmed.svg.querySelector('[data-replay-forecast-path]').getAttribute('d'));
+  assert.equal(preview.svg.querySelector('.observed-close-line').getAttribute('d'),confirmed.svg.querySelector('.observed-close-line').getAttribute('d'));
+  assert.equal(preview.svg.dataset.forecastValueSignature,confirmed.svg.dataset.forecastValueSignature);
+  assert.equal(preview.svg.dataset.replayAnnotationSignature,confirmed.svg.dataset.replayAnnotationSignature);
+  assert.equal(selecting.x(originDate),normal.x(originDate));assert.equal(selecting.dateAt(selecting.x(originDate)),originDate);
+  assert.equal(preview.svg.dataset.replayCursor,undefined);
+});

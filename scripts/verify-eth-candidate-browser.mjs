@@ -761,9 +761,14 @@ async function main(){
   for(const spec of selectedCases){
     const {page,width,height,touch}=spec;
     const receipt={...spec,status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[],dataResourceRequests:[],expectedOfflineRefresh:[],unexpectedResourceErrors:[]};
-    report.cases.push(receipt);let cdp,targetId;
+    report.cases.push(receipt);let cdp,targetId,browserContextId;
     try{
-      ({targetId}=await browser.send('Target.createTarget',{url:'about:blank'}));
+      // A saved replay belongs to one user's browser. Each replay scenario
+      // gets its own context so an earlier viewport's explicit save cannot
+      // pre-populate the next scenario's Continue / Start new decision.
+      // The existing 39 cases retain their established context and guards.
+      if(spec.chartReplay)({browserContextId}=await browser.send('Target.createBrowserContext',{}));
+      ({targetId}=await browser.send('Target.createTarget',{url:'about:blank',...(browserContextId?{browserContextId}:{})}));
       const target=await until(async()=>{const list=await (await fetch(debugBase+'/json/list')).json();return list.find(t=>t.id===targetId&&t.webSocketDebuggerUrl);},'page CDP target');
       cdp=await Cdp.connect(target.webSocketDebuggerUrl);
       const urls=new Map(),requestDetails=new Map(),validatedOfflineRequestIds=new Set(),optional=url=>/^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(url||'');
@@ -851,7 +856,7 @@ async function main(){
       await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'},{name:'prefers-color-scheme',value:'dark'}]});
       receipt.url=spec.route?base+spec.route:base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
-      if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
+      if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,browserContextId,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
       else if(spec.replay)await verifyForecastReplaySurface({cdp,browser,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
       else if(spec.surface)await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership:()=>verifyHeaderOwnership(cdp)});else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
       assert.equal(receipt.runtimeErrors.length,0,'Browser runtime errors: '+JSON.stringify(receipt.runtimeErrors));
@@ -866,6 +871,7 @@ async function main(){
       console.log('ETH_BROWSER_CASE '+JSON.stringify({page,width,height,status:receipt.status,error:receipt.error}));
       if(cdp)cdp.close();
       if(targetId)try{await browser.send('Target.closeTarget',{targetId});}catch(error){report.failures.push({page,width,cleanupError:errorText(error)});}
+      if(browserContextId)try{await browser.send('Target.disposeBrowserContext',{browserContextId});}catch(error){report.failures.push({page,width,cleanupError:errorText(error)});}
     }
   }
   assert.equal(report.cases.length,selectedCases.length);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');

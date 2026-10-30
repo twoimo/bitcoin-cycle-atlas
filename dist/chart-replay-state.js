@@ -1,4 +1,7 @@
-export const CHART_REPLAY_SPEEDS=Object.freeze([.5,1,2,4,8,10]);
+export const CHART_REPLAY_SPEEDS=Object.freeze([.3,.5,1,2,4,8,10]);
+// The 0.3× setting intentionally means three seconds per source observation.
+// It is an explicit product cadence, rather than the reciprocal 3333… ms.
+export const CHART_REPLAY_DELAYS=Object.freeze({0.3:3000,0.5:2000,1:1000,2:500,4:250,8:125,10:100});
 
 function freeze(value,seen=new WeakSet()){
   if(value&&typeof value==='object'&&!seen.has(value)){
@@ -23,15 +26,16 @@ function checkedSession(session){
   return freeze(session);
 }
 
-export function createChartReplayController({onChange=()=>{},setTimer=setTimeout,clearTimer=clearTimeout,intervalMs=700}={}){
-  if(typeof onChange!=='function'||typeof setTimer!=='function'||typeof clearTimer!=='function'||
+export function createChartReplayController({onChange=()=>{},setTimer=setTimeout,clearTimer=clearTimeout,
+  intervalMs=1000,now=()=>globalThis.performance?.now?.()??Date.now()}={}){
+  if(typeof onChange!=='function'||typeof setTimer!=='function'||typeof clearTimer!=='function'||typeof now!=='function'||
     !Number.isFinite(intervalMs)||intervalMs<=0)throw new TypeError('Replay callbacks and a positive interval are required');
   let state={status:'idle',session:null,origin:null,cursorIndex:0,length:0,speed:1,error:null,generation:0};
-  let request=null,timer=null,timerGeneration=0,destroyed=false;
+  let request=null,timer=null,timerGeneration=0,timerDeadline=null,destroyed=false;
   const snapshot=()=>Object.freeze({...state});
   const notify=()=>{if(!destroyed)onChange(snapshot());};
   function cancelTimer(){
-    timerGeneration++;
+    timerGeneration++;timerDeadline=null;
     if(timer!==null){clearTimer(timer);timer=null;}
   }
   function revoke(){
@@ -49,16 +53,23 @@ export function createChartReplayController({onChange=()=>{},setTimer=setTimeout
   function schedule(){
     if(destroyed||state.status!=='playing'||timer!==null)return;
     const generation=state.generation,owned=++timerGeneration;
+    const period=CHART_REPLAY_DELAYS[state.speed]*intervalMs/1000,started=now();
+    const deadline=timerDeadline??started+period;
+    timerDeadline=deadline;
     timer=setTimer(()=>{
       if(destroyed||generation!==state.generation||owned!==timerGeneration||state.status!=='playing')return;
       timer=null;
       // A queued callback is single-use, even if a scheduler delivers it twice.
       timerGeneration++;
+      // Charge rendering to this period instead of waiting a whole period after
+      // every paint. A late/background callback still reveals only one bar.
+      const tickAt=now();
+      timerDeadline=deadline+period>tickAt?deadline+period:tickAt+period;
       const cursorIndex=Math.min(state.length-1,state.cursorIndex+1);
       state={...state,cursorIndex,status:cursorIndex===state.length-1?'ended':'playing'};
       notify();
       if(!destroyed&&generation===state.generation)schedule();
-    },intervalMs/state.speed);
+    },Math.max(0,deadline-started));
   }
   function open(){
     if(destroyed)return;

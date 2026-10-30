@@ -49,21 +49,60 @@ test('future candle extremes cannot change an earlier main chart or its scale',a
   assert.equal(before.frame.metrics.matchedCount,5);
 });
 
-test('week aggregation occurs after disclosure and admits only complete observed weeks',async()=>{
+test('weekly replay updates one forming candle from completed daily prefixes, then opens the next week',async()=>{
   const session=await historical(),options={frequency:'weekly',startDate:'2025-12-29'};
   const thursday=buildReplayChartData(session,{...options,cursorIndex:1});
-  assert.equal(thursday.observedCandles.length,0);
+  assert.equal(thursday.observedCandles.length,1);
   assert.ok(thursday.partialWeekCount>0);
+  assert.equal(thursday.formingWeekCount,1);
   assert.equal(thursday.observedRows.at(-1).date,'2026-01-01');
+  const forming=thursday.observedCandles[0],prefix=observations.filter(row=>row.date>='2025-12-29'&&row.date<='2026-01-01');
+  assert.equal(forming.time,utcDay('2025-12-29')*86400);
+  assert.equal(forming.periodStartDate,'2025-12-29');assert.equal(forming.periodEndDate,'2026-01-04');
+  assert.equal(forming.startDate,'2025-12-29');assert.equal(forming.endDate,'2026-01-01');
+  assert.equal(forming.open,prefix[0].open);assert.equal(forming.high,prefix.at(-1).high);
+  assert.equal(forming.low,prefix[0].low);assert.equal(forming.close,prefix.at(-1).close);
+  assert.equal(forming.volume,prefix.reduce((sum,row)=>sum+row.volume,0));
+  assert.equal(forming.daysIncluded,4);assert.equal(forming.complete,false);
   const sunday=buildReplayChartData(session,{...options,cursorIndex:4}),week=sunday.observedCandles[0];
   assert.equal(sunday.observedCandles.length,1);
   assert.equal(week.startDate,'2025-12-29');assert.equal(week.endDate,'2026-01-04');
+  assert.equal(week.time,forming.time);assert.equal(week.open,forming.open);
   assert.equal(week.daysIncluded,7);assert.equal(week.complete,true);
   const days=observations.filter(row=>row.date>=week.startDate&&row.date<=week.endDate);
   assert.equal(week.open,days[0].open);assert.equal(week.close,days.at(-1).close);
   assert.equal(week.high,days.at(-1).high);assert.equal(week.low,days[0].low);
   assert.equal(week.volume,days.reduce((sum,row)=>sum+row.volume,0));
+  const monday=buildReplayChartData(session,{...options,cursorIndex:5});
+  assert.equal(monday.observedCandles.length,2);
+  assert.deepEqual(monday.observedCandles[0],week);
+  assert.equal(monday.observedCandles[1].startDate,'2026-01-05');
+  assert.equal(monday.observedCandles[1].daysIncluded,1);assert.equal(monday.observedCandles[1].complete,false);
+  const mondayOpen=buildReplayChartData(session,{...options,cursorIndex:5,cursorAt:'2026-01-05T00:00:00.000Z'});
+  assert.deepEqual(mondayOpen.observedCandles,[week],'Monday OHLC remains hidden until its daily close');
   assert.deepEqual(buildReplayChartData(session,{...options,cursorIndex:1}),thursday);
+  assert.deepEqual(monday.frame.forecast,thursday.frame.forecast);
+});
+
+test('forming weekly OHLC uses the real first open and only revealed highs, lows, closes and volume',async()=>{
+  const sample=new Map([
+    ['2025-12-29',{open:62832,high:63500,low:62690,close:63200,volume:10}],
+    ['2025-12-30',{open:63200,high:64000,low:63000,close:63800,volume:20}],
+    ['2025-12-31',{open:63800,high:64551,low:63700,close:64485,volume:30}],
+    ['2026-01-01',{open:64485,high:65000,low:64000,close:64686,volume:40}],
+  ]);
+  const rows=observations.map(row=>sample.has(row.date)?{...row,...sample.get(row.date),price:sample.get(row.date).close}:row);
+  const session=await historical(rows),options={frequency:'weekly',startDate:'2025-12-29'};
+  const before=buildReplayChartData(session,options),after=buildReplayChartData(session,{...options,cursorIndex:1});
+  const values=bar=>[bar.open,bar.high,bar.low,bar.close,bar.volume,bar.daysIncluded,bar.complete];
+  assert.deepEqual(values(before.observedCandles[0]),[62832,64551,62690,64485,60,3,false]);
+  assert.deepEqual(values(after.observedCandles[0]),[62832,65000,62690,64686,100,4,false]);
+  assert.equal(before.observedCandles[0].time,after.observedCandles[0].time);
+  const poisoned=rows.map(row=>row.date>'2026-01-01'?{...row,price:row.price*1e8,open:row.open*1e8,high:row.high*1e8,low:row.low/1e8,close:row.close*1e8,volume:1e100}:row);
+  assert.deepEqual(buildReplayChartData(await historical(poisoned),{...options,cursorIndex:1}),after,
+    'future OHLC, volume and extrema cannot change the visible weekly candle or its price domain');
+  buildReplayChartData(session,{...options,cursorIndex:30});
+  assert.deepEqual(buildReplayChartData(session,options),before);
 });
 
 test('missing genuine candles remain missing and cannot become a manufactured week',async()=>{
@@ -72,11 +111,24 @@ test('missing genuine candles remain missing and cannot become a manufactured we
   assert.equal(daily.observedRows.length,7);assert.equal(daily.observedCandles.length,6);
   assert.equal(daily.completeOhlcCoverage,false);
   assert.ok(!daily.observedCandles.some(row=>row.date==='2026-01-01'));
-  assert.equal(buildReplayChartData(session,{cursorIndex:4,startDate:'2025-12-29',frequency:'weekly'}).observedCandles.length,0);
+  const weekly=buildReplayChartData(session,{cursorIndex:4,startDate:'2025-12-29',frequency:'weekly'});
+  assert.equal(weekly.observedCandles.length,0);assert.ok(weekly.missingWeekCount>0);
+  const earlier=buildReplayChartData(session,{cursorIndex:0,startDate:'2025-12-29',frequency:'weekly'});
+  assert.equal(earlier.observedCandles.length,1,'not-yet-disclosed Thursday is not a missing completed session on Wednesday');
   const closes=await historical(observations.map(({date,price})=>({date,price})));
   const line=buildReplayChartData(closes,{cursorIndex:4});
   assert.equal(line.ohlcAvailable,false);assert.equal(line.completeOhlcCoverage,false);
   assert.deepEqual(line.observedCandles,[]);assert.equal(line.observedRows.length,404);
+});
+
+test('weekly volume stays unknown if a disclosed day lacks volume and preserves genuine zeroes',async()=>{
+  const options={cursorIndex:1,startDate:'2025-12-29',frequency:'weekly'};
+  const missing=observations.map(row=>row.date==='2025-12-30'?Object.fromEntries(Object.entries(row).filter(([key])=>key!=='volume')):row);
+  const unknown=buildReplayChartData(await historical(missing),options).observedCandles[0];
+  assert.equal(Object.hasOwn(unknown,'volume'),false);
+  const zeroes=observations.map(row=>row.date>='2025-12-29'&&row.date<='2026-01-01'?{...row,volume:0}:row);
+  const zero=buildReplayChartData(await historical(zeroes),options).observedCandles[0];
+  assert.equal(zero.volume,0);assert.equal(zero.complete,false);
 });
 
 test('strict replay hides pre-origin OHLC revisions until their actual collection clock',async()=>{

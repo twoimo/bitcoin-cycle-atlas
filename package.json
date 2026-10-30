@@ -1,6 +1,6 @@
 {
   "name": "bitcoin-cycle-atlas",
-  "version": "1.29.2",
+  "version": "1.29.3",
   "private": true,
   "type": "module",
   "engines": {
@@ -32,7 +32,7 @@
     "verify:forecast": "node scripts/build-forecast-ledger.mjs --check",
     "build:publication": "node scripts/build-publication.mjs",
     "verify:publication": "node scripts/build-publication.mjs --check",
-    "verify:chart-replay": "node scripts/build-project-replay-baseline.mjs --check && node --test tests/chart-replay*.test.mjs tests/current-chart-replay-session.test.mjs tests/project-replay-baseline.test.mjs tests/forecast-replay-chart-data.test.mjs",
+    "verify:chart-replay": "node scripts/build-project-replay-baseline.mjs --check && node --test tests/chart-replay*.test.mjs tests/current-chart-replay-session.test.mjs tests/project-replay-baseline.test.mjs tests/forecast-replay-chart-data.test.mjs tests/replay-interval-capabilities.test.mjs tests/replay-observed-candles.test.mjs",
     "verify:chart-replay-state": "node verification/replay-state/verify.mjs build/replay-state.json"
   }
 }
