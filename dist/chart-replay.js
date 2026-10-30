@@ -7,13 +7,14 @@ const percent=value=>Number.isFinite(value)?(value*100).toFixed(2)+'%':'평가 �
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
 const STORAGE='atlas-chart-replay-v1:';
 
-export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{}}={}){
+export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{},getAtlasContext=null,loadAtlasRenderer=null,onAtlasFrame=()=>{}}={}){
   if(!svg||!plot||!toolbar)throw new TypeError('The existing chart, plot and toolbar are required');
   const doc=svg.ownerDocument,win=doc.defaultView;
   const historical=['BTCUSD','ETHUSD'].includes(symbol);
+  const atlasAvailable=symbol==='BTCUSD'&&typeof getAtlasContext==='function';
   const minimumOriginIndex=symbol==='ETHUSD'?365:180;
   const trigger=doc.createElement('button');trigger.type='button';trigger.id='workbench-replay';
-  trigger.className='chart-replay-trigger';trigger.textContent='↶ 봉 리플레이';trigger.title='현재 차트에서 시작 봉을 선택하고 고정 예측과 비교';
+  trigger.className='chart-replay-trigger';trigger.textContent='↶ 봉 리플레이';trigger.title=atlasAvailable?'현재 주황색 예측선을 고정하고 프로젝트 시작일부터 실제 캔들 리플레이':'현재 차트에서 시작 봉을 선택하고 고정 예측과 비교';
   trigger.setAttribute('aria-pressed','false');toolbar.insertBefore(trigger,toolbar.querySelector('.workbench-spacer,.eth-top-spacer'));
   const panel=doc.createElement('section');panel.className='chart-replay-controls';panel.hidden=true;
   panel.setAttribute('aria-label','봉 리플레이 제어');
@@ -22,25 +23,27 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     '<select data-cr="speed" aria-label="재생 속도">'+CHART_REPLAY_SPEEDS.map(speed=>'<option value="'+speed+'"'+(speed===1?' selected':'')+'>'+speed+'×</option>').join('')+'</select>'+
     '<button type="button" data-cr="pooled-retry" hidden>통합 변동성으로 같은 날짜 비교</button>'+
     '<button type="button" data-cr="pick" title="시작 봉 다시 선택">시작점</button>'+
-    '<label class="chart-replay-origin">기준 <input type="date" data-cr="date" aria-label="리플레이 예측 기준일"></label><button type="button" data-cr="start">이 날짜 시작</button>'+
+    '<label class="chart-replay-origin"><span data-cr="date-label">기준</span> <input type="date" data-cr="date" aria-label="리플레이 예측 기준일"></label><button type="button" data-cr="start">이 날짜 시작</button>'+
     '<select data-cr="display" aria-label="리플레이 차트 유형"><option value="candles">캔들</option><option value="line">종가선</option></select>'+
-    '<select data-cr="mode" aria-label="리플레이 예측 종류">'+(historical?'<option value="historical-reconstruction">'+(symbol==='BTCUSD'?'BTC 축소 추세 · 회고':'ETH 가격 모형 · 회고')+'</option>':'')+'<option value="recorded">보존 예측</option></select>'+
+    '<select data-cr="mode" aria-label="리플레이 예측 종류">'+(atlasAvailable?'<option value="atlas-chart">현재 예측선 고정</option><option value="project-baseline">10월 21일 당시 전망</option>':'')+(historical?'<option value="historical-reconstruction">'+(symbol==='BTCUSD'?'BTC 축소 추세 · 회고':'ETH 가격 모형 · 회고')+'</option>':'')+'<option value="recorded">보존 예측</option></select>'+
     (symbol==='ETHUSD'?'<select data-cr="model" aria-label="ETH 리플레이 가격 모형"><option value="adaptive">국면 적응</option><option value="pooled">통합 변동성</option></select>':'')+
     '<select data-cr="record" aria-label="리플레이 보존 예측 선택" hidden></select>'+
     '<select data-cr="horizon" aria-label="고정 예측 기간"><option value="30">30일</option><option value="90">90일</option><option value="180" selected>180일</option><option value="365">1년</option><option value="730">2년</option></select>'+
     '<button type="button" data-cr="random">무작위</button><button type="button" data-cr="resume" hidden>이어서</button><button type="button" data-cr="details" aria-expanded="false">평가·근거</button></div>'+
     '<button type="button" data-cr="exit" class="chart-replay-exit" aria-label="봉 리플레이 종료하고 최신 차트 복귀">최신 복귀 ×</button></div>'+
     '<div class="chart-replay-progress"><output data-cr="cursor">시작 봉 선택</output><input data-cr="scrub" type="range" min="0" max="0" value="0" step="1" aria-label="공개된 봉 위치"><span data-cr="metric"></span></div>'+
-    '<div class="chart-replay-details" data-cr="detail-panel" hidden><strong data-cr="model-label"></strong><p data-cr="source"></p><p>금색 점선은 기준일에 고정한 예측, 실제 가격은 재생 위치까지만 공개합니다. 미래 실제값·사후 고저점·사건·지표는 숨깁니다. 음영은 조건 범위 또는 보정 전 모형 구간이며 적중 확률이 아닙니다.</p><p data-cr="detail-metric"></p><p>과거 재구성은 현재 코드와 보존 판본으로 다시 계산한 연구입니다. 당시 실제 발행한 예측 성적이 아니며, 한 경로의 여러 일봉은 독립 예측 횟수가 아닙니다. 보존 예측도 현재 판본의 시장 날짜 기준 회고 비교입니다.</p><button type="button" data-cr="export">공개된 평가 JSON</button><button type="button" data-cr="hide-details">닫기</button></div>';
+    '<div class="chart-replay-details" data-cr="detail-panel" hidden><strong data-cr="model-label"></strong><p data-cr="source"></p><p data-cr="chart-meaning"></p><p data-cr="detail-metric"></p><p data-cr="evaluation-meaning"></p><button type="button" data-cr="export">공개된 평가 JSON</button><button type="button" data-cr="hide-details">닫기</button></div>';
   const hud=doc.createElement('div');hud.className='chart-replay-hud';hud.hidden=true;
   const status=doc.createElement('p');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
   const inspect=doc.createElement('p');inspect.className='chart-replay-inspect';hud.append(status,inspect);plot.append(hud,panel);
   const q=key=>panel.querySelector('[data-cr="'+key+'"]');
+  if(atlasAvailable)q('mode').value='atlas-chart';
   let active=false,epoch=0,request=null,modules=null,archive=null,record=null,entries=[],rendered=null,range=null,frame=null;
-  let gesture=null,follow=true,paintFrame=null,destroyed=false,lastSave=0,painting=false;
+  let atlasModules=null,atlasBaseline=null,atlasCaptured=null,atlasCandles=null;
+  let gesture=null,follow=true,paintFrame=null,destroyed=false,lastSave=0,painting=false,displayEpoch=0;
   const oldLabel=svg.getAttribute('aria-label'),ownedInert=new Map(),engagedSessions=new WeakSet();
   let stored=null;try{stored=JSON.parse(win.localStorage.getItem(STORAGE+symbol));}catch{}
-  if(stored?.version!==1||stored.symbol!==symbol||!['recorded','historical-reconstruction'].includes(stored.mode)||!/^\d{4}-\d{2}-\d{2}$/.test(stored.origin??'')||!Number.isSafeInteger(stored.cursorIndex))stored=null;
+  if(stored?.version!==1||stored.symbol!==symbol||!['recorded','historical-reconstruction',...(atlasAvailable?['atlas-chart','project-baseline']:[])].includes(stored.mode)||!/^\d{4}-\d{2}-\d{2}$/.test(stored.origin??'')||!Number.isSafeInteger(stored.cursorIndex))stored=null;
   q('resume').hidden=!stored;
   const controller=createChartReplayController({onChange:paint});
   const getState=()=>controller.getState();
@@ -75,34 +78,62 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(!active)return;preserve();epoch++;request?.abort();request=null;active=false;controller.exit();
     if(paintFrame!==null){win.cancelAnimationFrame(paintFrame);paintFrame=null;}
     gesture=null;disposeDrawing();plot.classList.remove('chart-replay-active');plot.style.removeProperty('--chart-replay-controls-height');
-    delete svg.dataset.chartReplayActive;delete doc.documentElement.dataset.chartReplayActive;
+    delete svg.dataset.chartReplayActive;delete doc.documentElement.dataset.chartReplayActive;delete doc.documentElement.dataset.chartReplayMode;
+    delete plot.dataset.chartReplayMode;plot.classList.remove('chart-replay-atlas');
     for(const key of Object.keys(svg.dataset))if(key.startsWith('replay'))delete svg.dataset[key];
     if(oldLabel!==null)svg.setAttribute('aria-label',oldLabel);
     panel.hidden=true;hud.hidden=true;q('detail-panel').hidden=true;trigger.setAttribute('aria-pressed','false');
-    blockSurrounding(false);frame=null;archive=null;restore();trigger.focus({preventScroll:true});
+    blockSurrounding(false);frame=null;archive=null;atlasCaptured=null;atlasCandles=null;restore();trigger.focus({preventScroll:true});
   }
   async function open({resume=null}={}){
     if(destroyed)return;activate();preserve();const token=++epoch;request?.abort();request=new AbortController();
-    controller.open();disposeDrawing();svg.replaceChildren();archive=null;frame=null;record=null;entries=[];range=null;follow=true;
+    disposeDrawing();archive=null;frame=null;record=null;entries=[];range=null;follow=true;controller.open();
     if(resume){q('mode').value=resume.mode;q('horizon').value=String(resume.horizon);if(q('model')&&resume.model)q('model').value=resume.model;}
+    const atlasMode=atlasAvailable&&['atlas-chart','project-baseline'].includes(q('mode').value),currentMode=q('mode').value==='atlas-chart';
+    doc.documentElement.dataset.chartReplayMode=q('mode').value;plot.dataset.chartReplayMode=q('mode').value;
+    if(atlasMode)plot.classList.add('chart-replay-atlas');else{plot.classList.remove('chart-replay-atlas');svg.replaceChildren();}
+    q('date-label').textContent=atlasMode?'시작':'기준';
+    q('date').setAttribute('aria-label',atlasMode?'리플레이 첫 공개 봉 날짜':'리플레이 예측 기준일');
+    q('horizon').hidden=atlasMode;
+    q('chart-meaning').textContent=currentMode?'지금 차트에 있던 주황색 예측선과 범위를 그대로 고정합니다. 그 위에 Bitstamp 실제 일봉을 시작일부터 하나씩 공개합니다. 재생 중 예측선을 다시 계산하지 않습니다. 실제 관측이 없는 미래 캔들은 만들지 않습니다.':atlasMode?'현재 차트의 눈금·표시 기간·사이클 레이어로 첫 보존 전망을 봅니다. 금색 점선과 음영은 당시 조건부 경로이며 재생 중 바뀌지 않습니다. 사이클 표시는 기준일까지의 관측과 그 경로로 고정합니다. 실제 가격은 재생 위치까지만 공개합니다.':'금색 점선은 기준일에 고정한 예측, 실제 가격은 재생 위치까지만 공개합니다. 미래 실제값·사후 고저점·사건·지표는 숨깁니다. 음영은 조건 범위 또는 보정 전 모형 구간이며 적중 확률이 아닙니다.';
+    q('evaluation-meaning').textContent=currentMode?'2026-10-21은 프로젝트 시작일이며 재생할 첫 봉입니다. 주황색 선은 지금 선택한 가정이므로 그 날짜에 발행한 예측 성적으로 평가하지 않습니다. 캔들은 Bitstamp, 현재 전망의 가격 기준은 Coin Metrics로 제공자가 다릅니다. 당시 예측과 실제 종가를 평가하려면 「10월 21일 당시 전망」 또는 「보존 예측」을 선택하세요.':atlasMode?'프로젝트 시작은 2026-10-21 한국시간, 당시 완료된 마지막 일봉은 2026-10-20 UTC입니다. 다음 봉부터 10월 21일 실제값을 공개합니다. 첫 커밋에 보존된 3년 전망을 현재 판본의 Coin Metrics 종가와 비교하며, 현재 장기 모형의 과거 실적을 뜻하지 않습니다. 사이클 표시는 현재 표시 규칙으로 그린 주석이며, 당시 화면의 표식이 그대로 보존됐다는 뜻은 아닙니다. 음영은 적중 확률이 아니며 한 경로의 일별 오차는 독립 예측 횟수가 아닙니다.':'과거 재구성은 현재 코드와 보존 판본으로 다시 계산한 연구입니다. 당시 실제 발행한 예측 성적이 아니며, 한 경로의 여러 일봉은 독립 예측 횟수가 아닙니다. 보존 예측도 현재 판본의 시장 날짜 기준 회고 비교입니다.';
     announce('리플레이 자료를 확인하고 있습니다.');
     const signal=request.signal;
     try{
       modules??=await Promise.all([import('./forecast-replay.js'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
       if(!active||token!==epoch)return;
-      const loadedArchive=await modules[2].loadChartReplayArchive(symbol,{mode:q('mode').value,signal});
+      if(atlasMode){
+        atlasCaptured??=getAtlasContext();
+        if(!atlasCaptured)throw new Error('현재 차트가 준비된 후 봉 리플레이를 다시 눌러 주세요.');
+        q('display').value=currentMode?'candles':atlasCaptured.chartType==='candles'?'candles':'line';
+        if(typeof loadAtlasRenderer!=='function')throw new Error('현재 차트 리플레이 연결을 확인해 주세요.');
+        atlasModules??=await Promise.all([import('./project-replay-baseline.js'),loadAtlasRenderer()]);
+        if(!active||token!==epoch)return;
+        atlasBaseline=await atlasModules[0].loadProjectReplayBaseline({signal});
+        if(!active||token!==epoch)return;
+        if(q('display').value==='candles')atlasCandles=await modules[2].loadChartReplayArchive(symbol,{mode:'historical-reconstruction',signal});
+        if(!active||token!==epoch)return;
+      }
+      const loadedArchive=currentMode?atlasCandles:await modules[2].loadChartReplayArchive(symbol,{mode:atlasMode?'recorded':q('mode').value,signal});
       if(!active||token!==epoch)return;
       archive=loadedArchive;
       const candlesOption=q('display').querySelector('[value="candles"]');
       if(candlesOption.disabled&&archive.source.ohlcAvailable)q('display').value='candles';
-      candlesOption.disabled=!archive.source.ohlcAvailable;
-      if(!archive.source.ohlcAvailable)q('display').value='line';
+      candlesOption.disabled=!atlasMode&&!archive.source.ohlcAvailable;
+      if(!atlasMode&&!archive.source.ohlcAvailable)q('display').value='line';
       const rows=archive.observations;
-      q('record').hidden=q('mode').value!=='recorded';q('random').hidden=!historical||q('mode').value==='recorded';
+      q('record').hidden=q('mode').value!=='recorded';q('random').hidden=atlasMode||!historical||q('mode').value==='recorded';
       q('date').disabled=q('mode').value==='recorded';q('start').hidden=q('mode').value==='recorded';q('pick').disabled=!historical||q('mode').value==='recorded';
       if(q('model'))q('model').hidden=q('mode').value==='recorded';
       q('source').textContent=archive.source.provider+' · '+archive.observedThrough+'까지 실제 관측 · 수집 '+archive.observedAt+' · 현재 보존 판본';
-      if(q('mode').value==='recorded'){
+      if(atlasMode){
+        const first=atlasBaseline.forecast.referenceDate;
+        q('date').min=first;q('date').max=rows.at(-1).date;
+        q('date').value=resume?.startDate??first;
+        q('source').textContent=currentMode?'현재 차트의 예측선 고정 · 가정 입력 '+atlasCaptured.forecast.asOf+' UTC까지 · 실제 캔들 '+archive.source.provider+' · '+archive.observedThrough+'까지':
+          '2026-10-21 첫 커밋의 3년 전망 · 마지막 입력 '+atlasBaseline.forecast.asOf+' UTC · 실제 비교 '+archive.source.provider+' · '+archive.observedThrough+'까지 현재 보존 판본';
+        await start(q('date').value,{resume,automatic:true});
+      }else if(q('mode').value==='recorded'){
         const loadedRecord=await modules[2].loadChartReplayRecord(symbol,{signal,recordId:resume?.recordId});
         if(!active||token!==epoch)return;record=loadedRecord;entries=record.entries;
         q('record').replaceChildren(...entries.map(entry=>{const option=doc.createElement('option');option.value=entry.id;option.textContent=entry.asOf+' · '+(entry.scenarioLabel??entry.scenario??entry.scenarioId??'보존본');return option;}));
@@ -128,20 +159,28 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   async function start(value,{resume=null,automatic=false}={}){
     if(!active||!archive||!modules)return;
     const source=archive,recorded=q('mode').value==='recorded',selectedRecord=record;
-    const replaySettings={mode:q('mode').value,horizon:Number(q('horizon').value),model:q('model')?.value??null,recordId:recorded?selectedRecord.record.id:null};
-    const asOf=recorded?record.record.asOf:nearestOrigin(value);if(!asOf)return;
-    q('date').value=asOf;follow=true;range={start:dateAt(day(asOf)-120),end:dateAt(day(asOf)+Math.min(Number(q('horizon').value),120))};
+    const atlasMode=atlasAvailable&&['atlas-chart','project-baseline'].includes(q('mode').value),currentMode=q('mode').value==='atlas-chart';
+    const first=atlasMode?atlasBaseline.forecast.referenceDate:null;
+    const startDate=atlasMode?dateAt(clamp(day(value||first),day(first),day(source.observedThrough))):null;
+    const replaySettings={mode:q('mode').value,horizon:Number(q('horizon').value),model:q('model')?.value??null,recordId:recorded?selectedRecord.record.id:null,...(atlasMode?{startDate}:{})};
+    const asOf=atlasMode?atlasBaseline.forecast.asOf:recorded?record.record.asOf:nearestOrigin(value);if(!asOf)return;
+    q('date').value=atlasMode?startDate:asOf;follow=!atlasMode;
+    range=atlasMode?{start:atlasCaptured.start,end:atlasCaptured.end}:{start:dateAt(day(asOf)-120),end:dateAt(day(asOf)+Math.min(Number(q('horizon').value),120))};
     const accepted=await controller.selectOrigin(asOf,async({signal})=>{
       const engine=modules[0],options={symbol,observations:source.observations,observedAt:source.observedAt,observedThrough:source.observedThrough,source:source.source,horizonDays:replaySettings.horizon};
-      const session=recorded?await engine.createRecordedReplaySession({...options,record:selectedRecord.record,snapshot:selectedRecord.snapshot}):
+      const session=currentMode?await engine.createCurrentChartReplaySession({...options,dataset:atlasCaptured.dataset,forecast:atlasCaptured.forecast,asOf,playbackStartDate:first}):
+        atlasMode?await engine.createProjectReplaySession({...options,baseline:atlasBaseline}):
+        recorded?await engine.createRecordedReplaySession({...options,record:selectedRecord.record,snapshot:selectedRecord.snapshot}):
         await engine.createHistoricalReplaySession({...options,asOf,modelKey:symbol==='ETHUSD'?replaySettings.model:'shrunken-trend'});
       signal.throwIfAborted();
       const dates=new Set(source.observations.map(row=>row.date));
       // Playback advances by actual observed bars; missing days remain gaps.
       const timeline=session.timeline.filter(date=>date===session.asOf||dates.has(date));
-      return Object.freeze({...session,engineSession:session,autoOpened:automatic,replaySettings:Object.freeze(replaySettings),timeline:Object.freeze(timeline)});
+      const atlasContext=atlasMode?atlasModules[1].createAtlasReplayContext({dataset:session.chartDataset,forecast:session.chartForecast,presentation:atlasCaptured.presentation,originDate:session.asOf}):null;
+      return Object.freeze({...session,engineSession:session,autoOpened:automatic,replaySettings:Object.freeze(replaySettings),timeline:Object.freeze(timeline),atlasContext});
     });
     if(!accepted||!active||!getState().session)return;
+    if(atlasMode&&!resume){const index=Math.max(0,getState().session.timeline.findLastIndex(date=>date<startDate));if(index>0)controller.seek(index);}
     if(resume){
       if(getState().session.identity.outputHash===resume.outputHash){
         const dates=getState().session.timeline;
@@ -157,7 +196,12 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     const date=typeof value==='string'?value:value.date;
     if(getState().status==='selecting'){
       const selected=nearestOrigin(date);if(selected){q('date').value=selected;inspect.textContent=selected+' · 클릭 또는 탭하여 예측 기준일 선택';showPickLine(selected);}
-    }else inspect.textContent=date+' · 실제 '+price(value.actual??value.price)+' · 고정 예측 '+price(value.predicted);
+    }else inspect.textContent=inspectionText(value);
+  }
+  function inspectionText(value){
+    const actual=Object.hasOwn(value,'actual')?value.actual:value.price;
+    const separate=value.candle&&value.source&&value.candleSource&&value.source!==value.candleSource;
+    return value.date+' · '+(separate?'평가 종가 ('+value.source+') '+price(actual)+' · 캔들 종가 ('+value.candleSource+') '+price(value.candle.close):'실제 '+price(actual))+' · 고정 예측 '+price(value.predicted);
   }
   function showPickLine(date){
     if(!rendered?.x||!rendered?.axis)return;
@@ -173,7 +217,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(!ready){
       inspect.textContent='';q('metric').textContent='';q('detail-metric').textContent='';
       q('model-label').textContent=state.status==='error'?'예측을 생성하지 않았습니다.':'선택한 기준의 예측을 준비합니다.';
-      for(const key of ['replayOutputHash','replayOrigin','replayCursor','replayActualThrough'])delete svg.dataset[key];
+      for(const key of Object.keys(svg.dataset))if(key.startsWith('replay')&&key!=='replayStatus')delete svg.dataset[key];
     }
     q('play').disabled=!ready||state.length<2;q('previous').disabled=!ready||state.cursorIndex===0;q('next').disabled=!ready||state.cursorIndex>=state.length-1;q('scrub').disabled=!ready;
     q('play').textContent=playing?'Ⅱ':'▶';q('play').setAttribute('aria-label',playing?'리플레이 일시정지':'리플레이 재생');q('play').setAttribute('aria-pressed',String(playing));
@@ -183,7 +227,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     q('pooled-retry').hidden=!adaptiveUnavailable;
     if(state.status==='error'){
       disposeDrawing();svg.replaceChildren();frame=null;inspect.textContent='';q('cursor').textContent=adaptiveUnavailable?'예측 준비 조건 미충족':'리플레이 오류';q('metric').textContent='';q('detail-metric').textContent='';
-      for(const key of ['replayOutputHash','replayOrigin','replayCursor','replayActualThrough'])delete svg.dataset[key];
+      for(const key of Object.keys(svg.dataset))if(key.startsWith('replay')&&key!=='replayStatus')delete svg.dataset[key];
       const reason=adaptiveUnavailable?'선택 기준일까지 확정된 상승·하락 수익률 표본이 각 30개 이상 필요합니다. 날짜를 바꾸거나 통합 변동성 모형으로 같은 날짜를 비교해 주세요.':state.error+' · 시작점 또는 예측 종류를 다시 선택해 주세요.';
       announce(reason);return;
     }
@@ -202,17 +246,29 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       const session=state.session.engineSession,date=state.session.timeline[state.cursorIndex];
       if(follow&&day(date)>day(range.end)-20){const width=day(range.end)-day(range.start);range={start:dateAt(day(date)+40-width),end:dateAt(day(date)+40)};}
       const data=modules[0].buildReplayChartData(session,{cursorDate:date,clockMode:'observed-date',frequency:'daily'});frame=data.frame;
-      rendered=modules[1].drawChartReplay({svg,session,data:{...data,symbol,candleSource:archive.source.provider},...range,chartType:q('display').value,onInspect});
+      const atlasMode=Boolean(state.session.atlasContext),currentMode=session.mode==='current-chart-snapshot';
+      const chartData={...data,symbol,priceSource:archive.source.provider,candleSource:archive.source.provider};
+      if(atlasMode&&atlasCandles){
+        chartData.observedCandles=atlasCandles.observations.filter(row=>row.date<=date).map(row=>({...row,time:day(row.date)*86400,startDate:row.date,endDate:row.date,complete:true}));
+        chartData.candleSource=atlasCandles.source.provider;
+      }
+      if(session.mode==='project-baseline')q('source').textContent='2026-10-21 첫 커밋의 3년 전망 · 성적 비교 '+archive.source.provider+' 종가 · '+archive.observedThrough+'까지 현재 보존 판본'+
+        (q('display').value==='candles'&&atlasCandles?' · 표시 캔들 '+atlasCandles.source.provider+' 실제 OHLC (성적의 종가와 제공자 다름)':'');
+      rendered=atlasMode?atlasModules[1].drawAtlasChartReplay({svg,session,data:chartData,...range,chartType:q('display').value,context:state.session.atlasContext,onInspect}):
+        modules[1].drawChartReplay({svg,session,data:chartData,...range,chartType:q('display').value,onInspect});
       svg.dataset.replayOutputHash=session.identity.outputHash;svg.dataset.replayOrigin=session.asOf;
+      if(atlasMode){svg.dataset.replayStartDate=state.session.replaySettings.startDate;svg.dataset.replayForecastOrigin=session.identity.forecastOriginDate??session.asOf;onAtlasFrame({session,data:chartData,...range,chartType:q('display').value,context:state.session.atlasContext});}
       svg.dataset.replayCursor=date;svg.dataset.replayActualThrough=frame.actual.at(-1)?.date??session.asOf;
       const m=frame.metrics;q('cursor').textContent=date+' · '+state.cursorIndex+'/'+(state.length-1)+'봉';q('scrub').setAttribute('aria-valuetext',date);
-      q('metric').textContent='오차 '+percent(m.meanAbsolutePercentageError)+' · '+m.matchedCount+'개';
-      q('detail-metric').textContent='평균 절대 % 오차 '+percent(m.meanAbsolutePercentageError)+' · 가격 유지 대비 개선 '+percent(m.skillVersusFlat)+' · 방향 일치 '+percent(m.directionAccuracy)+' · 비교 '+m.matchedCount+'개 일봉. 개선율은 양수일 때 가격 유지 기준보다 유리합니다. 결과 대기 '+m.pendingTargetCount+'개 / 관측 미확보 '+m.missingTargetCount+'개 목표.';
-      q('model-label').textContent=(session.mode==='recorded'?'보존 예측 · ':'과거 재구성 · ')+(session.historicalModel?.label??session.identity.pointLabel??session.identity.modelVersion);
-      if(!data.ohlcAvailable){q('display').value='line';q('display').querySelector('[value="candles"]').disabled=true;}else q('display').querySelector('[value="candles"]').disabled=false;
+      q('metric').textContent=currentMode?'현재 예측선 고정 · 실제 '+state.cursorIndex+'봉':'오차 '+percent(m.meanAbsolutePercentageError)+' · '+m.matchedCount+'개';
+      q('detail-metric').textContent=currentMode?'이 화면은 현재 예측선과 실제 캔들의 시각 비교입니다. 현재 전망을 프로젝트 시작일에 미리 발행한 예측으로 채점하지 않습니다.':'평균 절대 % 오차 '+percent(m.meanAbsolutePercentageError)+' · 가격 유지 대비 개선 '+percent(m.skillVersusFlat)+' · 방향 일치 '+percent(m.directionAccuracy)+' · 비교 '+m.matchedCount+'개 일봉. 개선율은 양수일 때 가격 유지 기준보다 유리합니다. 결과 대기 '+m.pendingTargetCount+'개 / 관측 미확보 '+m.missingTargetCount+'개 목표.';
+      q('model-label').textContent=(currentMode?'현재 차트의 가정 고정 · ':session.mode==='project-baseline'?'프로젝트 시작일 보존 전망 · ':session.mode==='recorded'?'보존 예측 · ':'과거 재구성 · ')+(session.historicalModel?.label??session.identity.pointLabel??session.identity.modelVersion);
+      if(!atlasMode&&!data.ohlcAvailable){q('display').value='line';q('display').querySelector('[value="candles"]').disabled=true;}else q('display').querySelector('[value="candles"]').disabled=false;
       const label={paused:'일시정지',playing:'재생 중',ended:'확보한 실제 봉까지 재생 완료'}[state.status]??'';
-      announce(symbol+' · 1일 봉 · '+label+' · 예측 기준 '+session.asOf+' · '+(session.mode==='recorded'?'보존 경로':'과거 재구성'));
-      const point=frame.selected;inspect.textContent=date+' · 실제 '+price(point.actual??(date===session.asOf?point.flat:null))+' · 고정 예측 '+price(point.predicted);
+      announce(atlasMode?'시작 '+state.session.replaySettings.startDate+' · 실제 '+date+'까지 · '+label+' · '+(currentMode?'현재 주황색 예측선 고정':'10월 21일 당시 전망'):
+        symbol+' · 1일 봉 · '+label+' · 예측 기준 '+session.asOf+' · '+(session.mode==='recorded'?'보존 경로':'과거 재구성'));
+      const point=frame.selected;inspect.textContent=inspectionText({date,actual:point.actual??(date===session.asOf?point.flat:null),predicted:point.predicted,
+        source:chartData.priceSource,candleSource:chartData.candleSource,candle:q('display').value==='candles'?chartData.observedCandles?.findLast(row=>row.date===date):null});
       q('export').disabled=false;
       if(state.status!=='playing'||Date.now()-lastSave>1000)preserve();
     }catch(error){controller.fail(error);}finally{painting=false;}
@@ -220,10 +276,18 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   function schedulePaint(){if(!active||paintFrame!==null)return;paintFrame=win.requestAnimationFrame(()=>{paintFrame=null;paint(getState());});}
   function resize(){if(!active)return;plot.style.setProperty('--chart-replay-controls-height',panel.getBoundingClientRect().height+'px');schedulePaint();}
   function toggle(){if(getState().status==='playing')controller.pause();else controller.play();}
-  trigger.onclick=()=>active?exit():void open();q('exit').onclick=exit;q('pick').onclick=()=>void open();
+  trigger.onclick=()=>{if(active)exit();else{if(atlasAvailable)q('mode').value='atlas-chart';void open();}};q('exit').onclick=exit;q('pick').onclick=()=>{if(['atlas-chart','project-baseline'].includes(q('mode').value))q('date').focus({preventScroll:true});else void open();};
   q('start').onclick=()=>void start(q('date').value);q('date').onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();void start(q('date').value);}};
   q('play').onclick=toggle;q('previous').onclick=()=>controller.step(-1);q('next').onclick=()=>controller.step(1);
-  q('speed').onchange=()=>controller.speed(Number(q('speed').value));q('display').onchange=()=>paint(getState());
+  q('speed').onchange=()=>controller.speed(Number(q('speed').value));q('display').onchange=async()=>{
+    const displayToken=++displayEpoch;
+    if(getState().session?.atlasContext&&q('display').value==='candles'&&!atlasCandles){
+      const token=epoch;
+      try{const candles=await modules[2].loadChartReplayArchive(symbol,{mode:'historical-reconstruction',signal:request?.signal});if(!active||token!==epoch||displayToken!==displayEpoch)return;atlasCandles=candles;}
+      catch(error){if(active&&token===epoch&&displayToken===displayEpoch)controller.fail(error);return;}
+    }
+    paint(getState());
+  };
   q('pooled-retry').onclick=()=>{const state=getState();if(q('pooled-retry').hidden||state.status!=='error'||!state.origin)return;q('model').value='pooled';void start(state.origin);};
   q('scrub').oninput=()=>controller.seek(Number(q('scrub').value));
   for(const key of ['mode','horizon','model'])if(q(key))q(key).onchange=()=>void open();

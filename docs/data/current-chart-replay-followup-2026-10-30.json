@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-current-chart-replay-followup-verification",
+  "releaseVersion": "1.29.2",
+  "recordedAt": "2026-10-30T07:43:05.760445+00:00",
+  "referenceTimezone": "Asia/Seoul",
+  "status": "engine-and-source-verified-integration-not-recorded-here",
+  "feature": {
+    "defaultMode": "current-chart-snapshot",
+    "uiMode": "atlas-chart",
+    "projectStartDate": "2026-10-21",
+    "initialCursorDate": "2026-10-20",
+    "currentForecastOrigin": "original-current-model-asOf",
+    "currentForecastRecomputedDuringReplay": false,
+    "pastForecastScoringEnabled": false,
+    "actualCandleSource": "Bitstamp",
+    "currentForecastInputSource": "Coin Metrics Community API",
+    "secondaryMode": "project-baseline"
+  },
+  "sourceHashScope": "Direct engine, loader, model entry, tests and fixtures used by the listed engine checks. This is not the complete application dependency graph.",
+  "sourceSha256": {
+    "dist/forecast-replay.js": "6978b25f41edc24c8e53157efd55d0a4e9bc3667fa4ba3c6d57bec9fd9572234",
+    "dist/project-replay-baseline.js": "b24462b0b8ac13b8640fc0717e98ed5cf198a779281cbd64bd3551a4529c6861",
+    "dist/forecast-replay-sources.js": "26d99528a81a49e8c738c542a2e2fbd911674efd874f02070c1ddd958e07cd52",
+    "dist/chart-replay-sources.js": "eda71aeffa8739bb233a9fb8413883ee0be3be357a271e761073873bacd63e3d",
+    "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+    "dist/data/btc-daily.json": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+    "dist/data/btc-volume.json": "9f0d0e26e69e37a845e8000ccac248c775c0d86506c48c1f25f940a5b2c5b7d7",
+    "dist/data/project-origin-btc-2026-10-21.json": "571d0d3421d7ae40da4fb3020ab0290aa534822d5a439f9e98f55dc31d5f19ac",
+    "docs/THREE_YEAR_RESULTS.json": "d487ab7c27f4a36a54f5b92e7b43faecd9691740b2484d54372727a754473c98",
+    "research-data/project-origin/bitcoin-first-input.json": "c76403669531763b20ab6f25179d2cd7394cdbca96819197e05f1cb51facd6ed",
+    "scripts/build-project-replay-baseline.mjs": "1ddf49e09ad015afd526996112c521d23fba5e539af73439c85628dec13aed83",
+    "tests/current-chart-replay-session.test.mjs": "60ad18729d9d40a2e677bf7bef320201419c0cf7afba2f22c43f409cd9872714",
+    "tests/project-replay-baseline.test.mjs": "66d960e892eeeae512dfe8ef702d3934c618a65e75d8318c496f78ec6f9b3f76",
+    "tests/forecast-replay-chart-data.test.mjs": "d55e83150868937536115367db123cfbf851ab34715f0f65edfcd15cac202098",
+    "tests/forecast-replay.test.mjs": "ae0e480ca6e148d1d36c68a5197dec20642d361640cdecde046dbcce0f2aa0ae",
+    "tests/forecast-replay-sources.test.mjs": "f1f69ce314a0ec7b21e7c5478c6415bcc74a80e4bece748c7994d503975605c2"
+  },
+  "checks": [
+    {
+      "name": "affected-engine-and-source-behaviors",
+      "command": "node --experimental-vm-modules --test --test-isolation=none tests/current-chart-replay-session.test.mjs tests/project-replay-baseline.test.mjs tests/forecast-replay-chart-data.test.mjs tests/forecast-replay.test.mjs tests/forecast-replay-sources.test.mjs",
+      "status": "passed",
+      "tests": 53,
+      "pass": 53,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "durationMs": 5063.745351,
+      "rawLog": null,
+      "evidence": "Actual individually named assertions and counts observed in process output. The new tests subsequently received evaluation-clock setup changes, covered by the final 17-case rerun below."
+    },
+    {
+      "name": "new-current-curve-and-first-artifact-behaviors-final-rerun",
+      "command": "node --experimental-vm-modules --test --test-isolation=none tests/current-chart-replay-session.test.mjs tests/project-replay-baseline.test.mjs",
+      "status": "passed",
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "durationMs": 5009.403789,
+      "rawLog": "docs/data/current-chart-replay-engine-tests-2026-10-30.tap",
+      "rawLogSha256": "298d97069e8a1f4bef824efbe8e70106061d408b95a28a1841105627cdd052c8",
+      "overlap": "These 17 cases are included in the preceding 53-case scope; do not add the counts."
+    },
+    {
+      "name": "first-commit-source-and-extraction",
+      "command": "node scripts/build-project-replay-baseline.mjs --check",
+      "status": "passed",
+      "bytes": 517358,
+      "sha256": "571d0d3421d7ae40da4fb3020ab0290aa534822d5a439f9e98f55dc31d5f19ac",
+      "forecastArtifactGitBlob": "ceb7a5558ffea68eeca705ec85a70bbf86915f20",
+      "inputArtifactGitBlob": "d8774079d15f21857db1531bb47984eb5712a525"
+    }
+  ],
+  "pstack": {
+    "repository": "https://github.com/cursor/plugins",
+    "sourceCommit": "4dd1d05818d19792e7cd6e818f1667f95f7e1dbe",
+    "principles": [
+      {
+        "name": "principle-test-behavior-not-implementation",
+        "gitBlob": "78c9389bfe707d6d56485ade32c59150958228f9",
+        "url": "https://github.com/cursor/plugins/blob/4dd1d05818d19792e7cd6e818f1667f95f7e1dbe/pstack/skills/principle-test-behavior-not-implementation/SKILL.md"
+      },
+      {
+        "name": "principle-prove-it-works",
+        "gitBlob": "5dc14a3b06f9d579e5c17cd8a7242f432ddb3125",
+        "url": "https://github.com/cursor/plugins/blob/4dd1d05818d19792e7cd6e818f1667f95f7e1dbe/pstack/skills/principle-prove-it-works/SKILL.md"
+      },
+      {
+        "name": "principle-separate-before-serializing-shared-state",
+        "gitBlob": "ff93b4a2032c08e2232992a9a24f2891ee14e58f",
+        "url": "https://github.com/cursor/plugins/blob/4dd1d05818d19792e7cd6e818f1667f95f7e1dbe/pstack/skills/principle-separate-before-serializing-shared-state/SKILL.md"
+      }
+    ]
+  },
+  "runnerCaveat": "Initial isolated node --test invocations displayed file-level successes while child creation in this environment could fail with EPERM. Those file-level results are excluded. The recorded tests used --test-isolation=none and produced individual named test results.",
+  "integration": {
+    "nativeBrowser": "not-recorded-here",
+    "fullRegression": "not-recorded-here",
+    "formalChecks": "not-recorded-here",
+    "design": "not-recorded-here",
+    "standaloneRuntime": "not-recorded-here",
+    "remoteChecks": "not-recorded-here",
+    "deployment": "not-recorded-here"
+  },
+  "preservedEarlierReceipt": "docs/data/in-chart-replay-verification-2026-10-30.json",
+  "limitations": [
+    "Current orange path capture is not a forecast issued on the replay start date.",
+    "Bitstamp candles and Coin Metrics forecast inputs remain distinct price sources.",
+    "A first Git commit timestamp proves preservation in that commit, not exact public webpage availability.",
+    "Passing implementation checks does not demonstrate predictive accuracy, investment returns, probability calibration or a mature prospective sample."
+  ],
+  "sourceHashesRefreshedAt": "2026-10-30T07:51:07.873249+00:00",
+  "presentationSnapshot": {
+    "recordedAt": "2026-10-30T07:51:07.873249+00:00",
+    "status": "source-snapshot-only-native-results-not-recorded-here",
+    "sourceSha256": {
+      "dist/chart-replay.js": "26ee8cb8b15aecb5fb66e0b22f35933544ddd9cfb287e357631b2d3b017366fb",
+      "dist/chart-replay-atlas.js": "4c64a72ee1e3417c0c7f1872deebf7c35bc5c5af6d598aa1894af1e9fa5f1f99",
+      "dist/atlas-price-chart.js": "9c8ca9645c2ae57f12b92a8a9124b015e347c704454a94e4927bb135969927ca",
+      "dist/chart-replay.css": "aa23715e9994eb04906e67257d4a41d9a859c16526f2ac407212a5260870267e",
+      "dist/lab-view.js": "8a3d89a8bab8bf52f8340f61ae72659d95c7c259bdda02a91f780f771a742a7a",
+      "scripts/verify-chart-replay-browser.mjs": "3d2364e81b8616660bac373910ad970615a795899a85557f56d7edebcd3e844a",
+      "scripts/verify-eth-candidate-browser.mjs": "508622c5bcdddc09aa4610ca6985aab5decaee47c973d440df8b27a47c00c9b6",
+      "tests/chart-replay-atlas.test.mjs": "02895d7a433eeff93a9b0e34d7a19fa8e58e36913351a4949e062aa178d7ba7f",
+      "tests/chart-replay-ui.test.mjs": "f759c916b4ca9e564913ec41471480a8748fe5087e100c9f765fcfbaad4108a6"
+    },
+    "notes": [
+      "Current model capture follows the last painted chart snapshot.",
+      "The BTC renderer loader is injected only by the BTC lab view, preserving the complete ETH dependency-graph boundary.",
+      "The early preserved scenario separates Coin Metrics score/line values from optional Bitstamp candle hover and display.",
+      "These presentation hashes identify the final integration sources; the 53/17 engine execution counts do not constitute native verification of these files."
+    ]
+  }
+}

@@ -4,6 +4,7 @@ import { resolve, dirname, relative, sep } from 'node:path';
 import { javascriptModuleReferences, javascriptModuleSpecifiers } from './module-references.mjs';
 import { readForecastArchive } from './build-forecast-ledger.mjs';
 import { checkPublication } from './build-publication.mjs';
+import { PROJECT_REPLAY_ORIGIN,parseProjectReplayBaseline } from '../dist/project-replay-baseline.js';
 
 export async function verifyStandaloneArtifact(html, dist) {
   assert(!/id="atlas-(?:optional-fonts|fonts-script)"/.test(html), 'Standalone must not request external font stylesheets');
@@ -78,6 +79,9 @@ export async function verifyStandaloneArtifact(html, dist) {
   const evaluation=JSON.parse(await readFile(resolve(directory,'data/forecast-ledger/evaluation.json'),'utf8'));
   const experiments=archive.index.experimentsPath?JSON.parse(await readFile(resolve(directory,'data/forecast-ledger',archive.index.experimentsPath),'utf8')):null;
   assert.deepEqual(embeddedJson('atlas-forecast-ledger'),{index:archive.index,records:Object.fromEntries(archive.records.map(record=>[record.id,record])),snapshots:Object.fromEntries(archive.snapshots),evaluation,experiments},'Changed embedded forecast archive');
+  const projectBaselineText=await readFile(resolve(directory,PROJECT_REPLAY_ORIGIN.archivePath),'utf8');
+  assert.deepEqual(embeddedJson('atlas-project-origin-baseline'),{sourceText:projectBaselineText},'Changed embedded project origin baseline');
+  await parseProjectReplayBaseline(projectBaselineText);
   const publication=JSON.parse(await readFile(resolve(directory,'publication.json'),'utf8'));
   await checkPublication(publication,{directory});
   assert.deepEqual(embeddedJson('atlas-publication'),publication,'Changed embedded publication manifest');

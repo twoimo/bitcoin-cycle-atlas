@@ -1,0 +1,25 @@
+✔ current chart replay retains every point of the actual displayed model at its own origin (1055.459656ms)
+✔ the first next bar reveals genuine October 21 OHLC while the orange curve stays frozen (444.718881ms)
+✔ future bars do not affect earlier candles, y bounds or the fixed current forecast (865.334054ms)
+✔ the current capture cannot be shown as a historically issued prediction in strict clock mode (425.693892ms)
+✔ the replay owns an immutable copy while later live model edits remain independent (516.762371ms)
+✔ missing observed dates are skipped without manufacturing candles or scoring another source (330.092421ms)
+✔ inconsistent current-curve anchors and replay clocks are rejected instead of silently joined (174.702317ms)
+✔ the project start and first model preserve the actual initial Git artifacts (36.666274ms)
+✔ every original forecast point survives export and the first next bar reveals October 21 (50.360488ms)
+✔ future observations and later input revisions cannot change an earlier frame or original chart history (156.204896ms)
+✔ the first-commit clock is separate from model input day and does not claim prospective issuance (45.759659ms)
+✔ unverified objects and changed source bytes cannot be passed off as the first forecast (27.81749ms)
+✔ the network loader verifies the actual response and uses its bounded local path (59.898209ms)
+✔ a hanging fetch is stopped by the loader even when the injected fetch ignores abort (11.340918ms)
+✔ streamed oversized input fails before it can be parsed or accepted (1.768423ms)
+✔ pre-aborted, failed and corrupt loads do not silently substitute another forecast (1.457965ms)
+✔ offline loading uses exact embedded bytes and rejects corrupt content without network fallback (28.144984ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5009.403789
