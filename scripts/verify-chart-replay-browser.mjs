@@ -119,6 +119,8 @@ export async function verifyChartReplaySurface(api) {
         pageWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth), scrollX, scrollY,
         cursor: svg.dataset.replayCursor ?? null, hash: svg.dataset.replayOutputHash ?? null, viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null };
     }, { chartSelector, panel });
+    const observedGeometry = { label: 'floating-controls-observed-geometry', validated: false, ...geometry, originalChart: originalChartBox };
+    evidence.floatingBar.push(observedGeometry);
     assert.equal(geometry.root.pointerEvents, 'none', 'The positioning overlay blocks the chart');
     assert.match(geometry.root.background, /rgba\(0, 0, 0, 0\)|transparent/, 'A full-width replay surface still covers the plot');
     assert.equal(geometry.menuHidden, true); assert.equal(geometry.settingsInPopover, true); assert.equal(geometry.pointerReachesChart, true);
@@ -142,7 +144,7 @@ export async function verifyChartReplaySurface(api) {
       assert.ok(geometry.bar.left >= geometry.plot.left + 7 && geometry.bar.right <= geometry.exit.left - 7, 'Mobile replay controls overlap the separate exit X');
       for (const node of geometry.controls) assert.ok(node.width >= 43 && node.height >= 43, 'Mobile replay lost its 44px control target: ' + node.name);
     }
-    evidence.floatingBar.push({ label: 'compact-floating-controls-preserve-full-chart', ...geometry, originalChart: originalChartBox });
+    observedGeometry.validated = true;
     await screenshot(cdp, prefix + '-floating-bar.png', receipt);
     if (touch && width <= 620) {
       assert.ok(geometry.actions.scrollWidth > geometry.actions.clientWidth + 20, 'The narrow toolbar does not provide an owned horizontal scroll area');
@@ -967,9 +969,17 @@ export async function verifyChartReplaySurface(api) {
     await pointAction(touch ? 'tap' : 'click', point); await ready();
     const picked = await snapshot('chart-picked'); assert.equal(picked.origin, hoveredDate);
     if (!touch) {
-      await click(cdp, control('date')); await key('ArrowDown', 'ArrowDown', 40);
+      await click(cdp, control('date'));
+      // The native date control's center can land on a different segment
+      // when the popover changes its width. ArrowRight stops at the final
+      // year segment in the tested Chromium; select it before decrementing.
+      // A real native-input probe covered 140, 280 and 400px field widths.
+      for (let segment = 0; segment < 5; segment++) await key('ArrowRight', 'ArrowRight', 39, 0, false);
+      await key('ArrowDown', 'ArrowDown', 40);
       const date = await evaluate(cdp, selector => document.querySelector(selector).value, control('date'));
       assert.match(date, /^\d{4}-\d{2}-\d{2}$/); assert.notEqual(date, picked.origin, 'Native date editing did not change the chosen origin');
+      assert.equal(date, String(Number(picked.origin.slice(0, 4)) - 1) + picked.origin.slice(4), 'Native keyboard editing did not decrement the explicitly selected year');
+      if (symbol === 'ETHUSD') assert.equal(date, '2025-04-30', 'The preserved adaptive-model negative case changed its requested origin');
       evidence.lifecycle.push({ label: 'native-date-request', previous: picked.origin, requested: date });
       await key('Enter', 'Enter', 13);
       if (symbol === 'ETHUSD') {

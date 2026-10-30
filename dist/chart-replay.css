@@ -29,7 +29,7 @@
 .chart-replay-actions :focus-visible{outline-offset:-2px}
 .chart-replay-actions [data-cr=select-menu]{padding-inline:8px}
 .chart-replay-actions [data-cr=select-menu][aria-expanded=true],.chart-replay-actions [data-cr=pick][aria-pressed=true]{background:var(--surface-hover);color:var(--focus)}
-.chart-replay-actions [data-cr=play]{color:var(--accent);min-width:36px;font-weight:700}
+.chart-replay-actions [data-cr=play]{color:var(--accent);min-width:max(36px,var(--replay-control-size));font-weight:700}
 .chart-replay-actions [data-cr=speed]{width:60px;font-variant-numeric:tabular-nums}
 .chart-replay-actions [data-cr=update-interval]{width:32px;appearance:none;text-align:center;opacity:1;color:var(--muted);cursor:not-allowed}
 .chart-replay-origin,.chart-replay-update{display:flex;align-items:center;gap:4px;white-space:nowrap}
@@ -88,6 +88,9 @@ html[data-chart-replay-active=true] .eth-interval-buttons,html[data-chart-replay
   .chart-replay-actions [data-cr=update-interval]{width:44px}
   .chart-replay-controls>.chart-replay-exit{bottom:calc(var(--replay-bottom) + 6px)}
   .chart-replay-progress input{min-height:44px}
+}
+@media(pointer:coarse) and (min-width:621px){
+  .atlas-canvas-heading:has(>.chart-replay-trigger){height:48px;min-height:48px;padding-block:0}
 }
 @media(max-width:620px){
   .atlas-canvas-heading,.eth-topbar{min-width:0;max-width:100%;box-sizing:border-box;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none}
