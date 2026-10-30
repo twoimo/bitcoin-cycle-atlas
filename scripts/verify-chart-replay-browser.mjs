@@ -953,6 +953,9 @@ export async function verifyChartReplaySurface(api) {
     await select(control('display'), 'candles'); await ready(true);
   }
   if (crypto) {
+    // Display settings intentionally leave the nonmodal menu open. Dismiss
+    // it through its real close control before hovering the underlying chart.
+    await closeMenu();
     const selection = await snapshot('start-selection', true); assert.equal(selection.forecastCount, 0);
     assert.equal(selection.origin || null, null); assert.equal(selection.cursor || null, null);
     assert.equal(selection.origins, 0); assert.equal(selection.cursors, 0, 'Unconfirmed historical selection invented a committed cutoff');
@@ -963,6 +966,11 @@ export async function verifyChartReplaySurface(api) {
       return { x: rect.left + (Number(svg.dataset.plotLeft) + fraction * (Number(svg.dataset.plotRight) - Number(svg.dataset.plotLeft))) / view.width * rect.width,
         y: rect.top + (Number(svg.dataset.plotTop) + Number(svg.dataset.priceBottom)) / 2 / view.height * rect.height };
     }, { selector: chartSelector, fraction: (day(selection.dateInput) - selectionStart) / (selectionEnd - selectionStart) });
+    const pointHit = await evaluate(cdp, ({ selector, point }) => {
+      const node = document.elementFromPoint(point.x, point.y);
+      return { chart: Boolean(node && document.querySelector(selector).contains(node)), tag: node?.tagName, id: node?.id, control: node?.closest('[data-cr]')?.dataset.cr ?? null };
+    }, { selector: chartSelector, point });
+    assert.equal(pointHit.chart, true, 'Native start-selector pointer is occluded: ' + JSON.stringify({ point, pointHit }));
     await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...point }); await settled(cdp);
     const hoveredDate = await evaluate(cdp, selector => document.querySelector(selector).dataset.pickerDate, chartSelector);
     assert.ok(sourceDates.includes(hoveredDate), 'Native initial selector did not resolve a real source date');
