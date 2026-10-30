@@ -8,15 +8,16 @@ const session=(id='one',length=3)=>({identity:{outputHash:id,recordId:id},
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 
 function harness(onChange){
-  let id=0;
+  let id=0,clock=0;
   const pending=new Map(),all=new Map(),states=[];
-  const controller=createChartReplayController({intervalMs:800,
-    setTimer(callback,delay){const key=++id;all.set(key,{callback,delay});pending.set(key,{callback,delay});return key;},
+  const controller=createChartReplayController({now:()=>clock,
+    setTimer(callback,delay){const key=++id,item={callback,delay,due:clock+delay};all.set(key,item);pending.set(key,item);return key;},
     clearTimer(key){pending.delete(key);},
     onChange(state){states.push(state);onChange?.(state,controller);},
   });
   return {controller,pending,all,states,
-    fire(key=[...pending.keys()][0]){if(key===undefined)return;pending.delete(key);all.get(key).callback();},
+    advance(milliseconds){clock+=milliseconds;},
+    fire(key=[...pending.keys()][0]){if(key===undefined)return;const active=pending.get(key);if(active)clock=Math.max(clock,active.due);pending.delete(key);all.get(key).callback();},
     load(value=session()){return controller.selectOrigin({symbol:'BTCUSD',asOf:'2026-01-01'},async()=>value);},
   };
 }
@@ -90,15 +91,28 @@ test('one bar is terminal and seeks clamp to available bars without fabricating 
 
 test('play is idempotent and all speeds own exactly one correctly timed callback',async()=>{
   const h=harness();await h.load(session('speed',20));
+  const expected=new Map([[.3,3000],[.5,2000],[1,1000],[2,500],[4,250],[8,125],[10,100]]);
+  assert.deepEqual(CHART_REPLAY_SPEEDS,[...expected.keys()]);
+  h.controller.play();assert.equal([...h.pending.values()][0].delay,1000);
   for(const value of CHART_REPLAY_SPEEDS){
     h.controller.play();h.controller.play();h.controller.speed(value);
-    assert.equal(h.pending.size,1);assert.equal([...h.pending.values()][0].delay,800/value);
+    assert.equal(h.pending.size,1);assert.equal([...h.pending.values()][0].delay,expected.get(value));
     const stale=[...h.all.keys()].slice(0,-1),position=h.controller.getState().cursorIndex;
     for(const key of stale)h.fire(key);
     assert.equal(h.controller.getState().cursorIndex,position);assert.equal(h.pending.size,1);
     h.fire();assert.equal(h.controller.getState().cursorIndex,position+1);
   }
   h.controller.pause();assert.equal(h.pending.size,0);
+  const painted=harness(state=>{if(state.status==='playing')painted.advance(35);});
+  await painted.load(session('render-time',20));painted.controller.speed(10);painted.controller.play();
+  assert.equal([...painted.pending.values()][0].delay,100);
+  painted.fire();assert.equal([...painted.pending.values()][0].delay,65,'paint time belongs to the 100 ms period');
+  painted.controller.pause();painted.advance(5000);painted.controller.speed(.3);painted.controller.play();
+  assert.equal([...painted.pending.values()][0].delay,3000,'resuming starts a fresh explicit cadence');
+  painted.fire();assert.equal([...painted.pending.values()][0].delay,2965);
+  painted.advance(10000);const previous=painted.controller.getState().cursorIndex;painted.fire();
+  assert.equal(painted.controller.getState().cursorIndex,previous+1,'a late callback reveals one bar, never a catch-up batch');
+  assert.equal([...painted.pending.values()][0].delay,2965);
 });
 
 test('a timer callback can never be replayed twice or after pause, exit or a new origin',async()=>{
@@ -120,7 +134,7 @@ test('reentrant chart callbacks cannot resurrect playback or schedule competing 
   await h.load(session('reentrant',5));action=controller=>controller.exit();h.controller.play();
   assert.equal(h.controller.getState().status,'idle');assert.equal(h.pending.size,0);
   await h.load(session('reentrant',5));h.controller.play();action=controller=>controller.speed(4);h.fire();
-  assert.equal(h.pending.size,1);assert.equal([...h.pending.values()][0].delay,200);
+  assert.equal(h.pending.size,1);assert.equal([...h.pending.values()][0].delay,250);
   action=controller=>controller.pause();h.fire();assert.equal(h.pending.size,0);
 });
 

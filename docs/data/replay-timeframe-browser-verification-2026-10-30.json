@@ -1,0 +1,863 @@
+{
+  "schemaVersion": 1,
+  "kind": "in-chart-replay-timeframe-native-verification",
+  "status": "local-passed-final-source-ci-required",
+  "scope": "Actual headless Chrome native CDP interactions on the local static build. No forecast calibration, production deployment, Safari, or physical-device certification.",
+  "localRun": {
+    "status": "passed",
+    "startedAt": "2026-10-30T09:13:34.742Z",
+    "finishedAt": "2026-10-30T09:17:58.144Z",
+    "browserVersion": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/156.0.8078.80",
+      "revision": "@fb096c0011f9d50f0a264a9376420cdea9c421e3",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+      "jsVersion": "15.6.75.27"
+    },
+    "cases": [
+      {
+        "page": "chart-replay-btc",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-btc",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-btc",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-eth",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-eth",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-mstr",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-bmnr",
+        "width": 390,
+        "height": 844,
+        "status": "passed"
+      }
+    ],
+    "sourceCount": 91,
+    "sourceDifferences": [],
+    "runtimeErrors": 0,
+    "unexpectedResourceErrors": 0,
+    "counts": {
+      "states": 242,
+      "screenshots": 70,
+      "exports": 42,
+      "currentModelExports": 3
+    },
+    "timing": [
+      {
+        "speed": 10,
+        "expectedMilliseconds": 100,
+        "meanMilliseconds": 100.84999999962747,
+        "averageUpdatesPerSecond": 9.915716410547287,
+        "intervals": [
+          98.60000000149012,
+          99.79999999701977,
+          102.90000000223517,
+          102.09999999776483
+        ]
+      },
+      {
+        "speed": 1,
+        "expectedMilliseconds": 1000,
+        "meanMilliseconds": 1001,
+        "averageUpdatesPerSecond": 0.999000999000999,
+        "intervals": [
+          1086.300000000745,
+          937.6999999992549,
+          983.3000000007451,
+          996.6999999992549
+        ]
+      },
+      {
+        "speed": 0.5,
+        "expectedMilliseconds": 2000,
+        "meanMilliseconds": 2000.1500000003725,
+        "averageUpdatesPerSecond": 0.49996250281219595,
+        "intervals": [
+          1997.6000000014901,
+          2005.699999999255,
+          1991.1000000014901,
+          2006.199999999255
+        ]
+      },
+      {
+        "speed": 0.3,
+        "expectedMilliseconds": 3000,
+        "meanMilliseconds": 3004.2000000001863,
+        "averageUpdatesPerSecond": 0.33286731908659145,
+        "intervals": [
+          3005.5,
+          3006.5,
+          3018,
+          2986.800000000745
+        ]
+      }
+    ],
+    "artifactFiles": 117,
+    "reportSha256": "071ccd2cd5a68eef6b6e7ccd7a9b1d21ea0eb02756fcb099c6d69bd728503c43",
+    "preservedAt": "/tmp/atlas-replay-timeframe-native-run2-evidence",
+    "sourceCommitAtExecution": "0e1419b8979797f98fbd41905c6863148055f7f2",
+    "declaredFullBrowserCases": 46,
+    "executedCaseScope": "chart-replay",
+    "expectedCaseCount": 7,
+    "expectedOfflineRefreshes": 3,
+    "sourceBindingMeaning": "All 91 source files matched the execution receipt at preservation time. The reported git commit identifies the checkout base; the per-file hashes identify the tested working tree."
+  },
+  "sourceHashes": {
+    "dist/index.html": "98e46b6e9f91dede46b0a060c413b6f253fdf900a3fe1004a64bb0c3b9bacd9a",
+    "dist/site-entry.js": "1e819d4224245c917c02f1d15047c4d35063e5fb89384ff1a491770076c32afd",
+    "dist/asset-comparison.js": "765d85f67ffad760e75b1b8fe8600eeb274411adb154c079cc65e1ba3a9076c8",
+    "dist/asset-judgment-history.js": "986b299bb7dc2c8e28cb2668bb2b7b3b7b0e507ba2b2f8ecb9040771d89ead9a",
+    "dist/daily-data-view.js": "28437a09dd97c58992b361bd3003795ad377f5ca2fb0aa8863f9d7804f388f57",
+    "dist/daily-data.css": "1fbf27cd8a2ab1bfb648c43b0aea004bea70ee523776194858680c2b58728273",
+    "dist/eth-view.js": "9c69dbc12d6f8b66e875b4dd1b54da6da651240cce02a9b46ba318b532c78669",
+    "dist/eth-view.css": "d33ba605310a4611e0379d6fe02379df027780b5e01918840c1510d9c0b98263",
+    "dist/ethereum-forecast.js": "b86e6e917c8d72c9db892dc4931694f915d6d73352dbab54798a64bd5ee3db4c",
+    "dist/ethereum-adaptive-model.js": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d",
+    "dist/ethereum-pooled-model.js": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467",
+    "dist/eth-view-state.js": "152003eacf02bd0e889b2ec8f89a867e702ab0d9db97a66e06ea7528a16021d1",
+    "dist/ethereum-adoption-scenarios.js": "f49532abd2479a2531bb7e23aaf7ff2b8505a3c2ce0a84436f3768a25c18dc86",
+    "dist/ethereum-research-panel.js": "f699155933c465057d8f1dc442c9b0de699e3a9d9eb1090a6566f46b724b93cc",
+    "dist/ethereum-research-catalog.js": "1c7638bec65dd4f948bc260434355f7e79c3ff9d572515d3fa5ec142dcf38e35",
+    "dist/eth-market-data.js": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075",
+    "dist/intraday-chart.js": "1e44773709a57ee9d74567001555a7b3ffa1f90c0915e35355f580c96c676c3f",
+    "dist/equity-forecast-chart.js": "a5601464a89dbfbda508d8de69a7d4a84b6858cc8981bef237eee0412676b75c",
+    "dist/equity-view.js": "664ebc5c6d06114c1c6f3f43e39b33cc4474cc4d1589684e95d7d8e9e0ff8fb0",
+    "dist/treasury-projection.js": "9cf7e6660124880e5a9ad654f41c846d10deb309ace18cf59b96699963948fd1",
+    "dist/treasury-model.js": "4812b36b65912209201eabf46ba39868cec7d7ddb014421e556476412b8e1739",
+    "dist/forecast-information-time.js": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23",
+    "dist/data/bmnr-ohlc.json": "3f6730e62cc37541666a3f58e10f8ac8d975964b67617f5027f68025cfc14a2e",
+    "dist/data/eth-ohlc.json": "cb9d11205c6e8f54a2d5f879dbbebb6baf6e73c4e123b9b673ca7c9085b64f0c",
+    "scripts/verify-eth-candidate-browser.mjs": "7932ef52847ebcf76127529f821a6a88ed6c4e9116dae5c036039613046bc449",
+    "scripts/btc-offline-refresh-policy.mjs": "f8f2a165a3b52ceb47f4b2102d86d82f1141c8c04022a2bf7833979a968b94ff",
+    "tests/ethereum-offline-refresh-policy.test.mjs": "29ce072ed9919f3f66bafa389d6c894f14f2c126aea7c90ab3e2b4f98c05e3c4",
+    "dist/data/btc-daily.json": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e",
+    "dist/app.js": "ebdc982937897d34aa2250d9a1021935b9f0a8c427ffee413ee736f65f87e982",
+    "dist/btc-refresh-status.js": "806ca5d59e4a9194bc9c2759c60821da154173a65944328a24010307808b2036",
+    "tests/ethereum-btc-refresh-status.test.mjs": "a840171a6fa636993b9ae735cf1c8b3089ca76f9ef05d17bd98846da75372b73",
+    "dist/data-source.js": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b",
+    "dist/published-data.js": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010",
+    "dist/asset-forecast-journal.js": "9f9e6ddd327e81858bd7827d7d3a3769c47645e2f9b3eaef647c55b8808ef805",
+    "dist/asset-forecast-records.js": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2",
+    "dist/journal-entry.js": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0",
+    "dist/forecast-journal.css": "35c88354953aa69e357ed84f007a8ba7233dec4035b72f703b52dfbe73d92d16",
+    "dist/data/asset-forecast-ledger/index.json": "2620f75f54b9755f417296348a4e31e14d584c338bcd2b67b0ac15c2c59bbe62",
+    "dist/data/mstr-ohlc.json": "61ecfab8b2f7b73c81fd9150297c35e5320d2cb1d17a6dd73e59f9e8db9b7059",
+    "dist/lab-view.js": "49b5ad53b8383f01247c6289f2a1ac9be28ca1473743a588bba7d09e554f781a",
+    "dist/analysis-dock.css": "8081f9877382dd36173eb9b72789e0eb7dd3d70a6b424160567008a50f49834b",
+    "dist/compact-chart-layout.css": "48a9fef4f6d2f706b0b11a6d6ff738ada49bff0741bb82366f764a57ead01729",
+    "dist/mobile-workspace.css": "312e201062422ef5cee65c4e88c7741abaaeb37a48f3aebe05273b37eda28c54",
+    "dist/mobile-preview.js": "9d1ad1cdaf3e316579e4a33054d81d300e002b0214635a1481140b1a133acc9c",
+    "scripts/verify-workspace-browser.mjs": "03a262148dec93fee8840ac64d9ad84d56e4a12dc6346cabe505f0dc34e3caab",
+    "dist/atlas.css": "354c3a622418cd1b8842a33db951b10a3cf40c6e2fa017d3d6626627b8937377",
+    "dist/chart-bottom-bar.css": "7377e4a465413816bc252606fabd2ca0f9422b2166637b1c68159a049d9c663c",
+    "dist/chart-details-panel.css": "3c6106e58ee174ca284ade143fe57bf47d1b4e9780956395b8ee9ef48d7b98f7",
+    "dist/chart-export-workbench.css": "f3b1ad506c66d9e0611491778101cf080bbc79537f38daaf0d46fa00eb24ddad",
+    "dist/chart-magnet.css": "288666621e835fae74b3b67ec14a73e661d7dbb21b27e8052c9c0f78d0c6e72c",
+    "dist/chart-workspace-controls.css": "c37d0e5313b4fd587fb8102b2c41bcf3a06ffda16b4b1f1b7459d0cbe18999de",
+    "dist/compact.css": "e44b63bd942bd01d8e09514fadfc2f39e3fb94f37433fb0725a4033ba5937d83",
+    "dist/cycle-milestones.css": "25d4ab2655eb49673865105637467ccffa8da671009e3acd1ca0cd80cc9121ff",
+    "dist/equity-view.css": "99026cd6229df757176a648fc0f2c2ed88d7916a4e5eb65bcd8f9957db1ff5ad",
+    "dist/ethereum-history.css": "10613686f73ea72a6505664cb1748f92da10aacab78fd3ae6a2442889dc77340",
+    "dist/lab.css": "27c27efce2b5278dd85ffa50c4c79e8db081ca3d7ae784ae2c40a41dbcaee94e",
+    "dist/outlook.css": "4ccd3de4d698735928b50900778b21eef3b14f67c2443bc88fa5c25535af18ae",
+    "dist/research-annotations.css": "051c412f2f05e8ff695ae2ec4bb937269ad30511571f11469c640ce2f24ae2cc",
+    "dist/research-reader.css": "d9bac6ee4853c536b90683db3777dffdf23a557726699c867f5d1795ff2cd740",
+    "dist/styles.css": "57b3baabd84ba4d2936e6e44a75cd6f5fe4c8fe3479a8ee494e90aac15914fab",
+    "dist/symbol-selector.css": "d1940fe09caf936159fbd739cc43e26c153219288a87ba0c86ab2eaa3c9306bb",
+    "dist/viewport.css": "6080f2021db87c9d0b8f8cf14149af571fe75fede3bc9b152f0d706c2af6977a",
+    "dist/workspace-tools.css": "27b0af7348ea8361cbb1ca02dfc0045673de35ff80b2a549dbd4bb91b91f827d",
+    "dist/chart-bottom-bar.js": "e7dcdfce8326d5d4cf83265d1bd3fb715d26490b489b43523bbd72befd273b06",
+    "dist/preserved-archive-download.js": "fdc1ae671b866a2d3731d645b57998bdb23a53de6b3bfd0b61946faeda5434fd",
+    "dist/workspace-tools.js": "0e94b855cd8cd30c0a4a9c80c90a19a7774a133bdc587704774a13d23b3ad7c1",
+    "dist/research-annotations-workbench.js": "296c51cce5f994df1f08dab65d263f2e82d94ab4e81280d8170b88b0ab4a0d5f",
+    "dist/mobile-preview.html": "2761e4e567853672a375c13064fbcd83b7c7d56801536add1f6a08c1ed34f589",
+    "dist/symbol-selector.js": "d9bc6cfc74f665813024ec3dc1231bd77ebe967fa1ad9364563818695f61e73c",
+    "dist/research-reader.js": "c8869e264aba1125bd56a23138d581287912b3e6b27ea6d392c4652c3d991575",
+    "dist/evidence-view.js": "9a5852d5790ae1392297bcc10dd27cadbd32dbba645dce93163fe5ed56d08eb8",
+    "dist/viewport-workspace.js": "c27ef143f47c70309aae2df34a6c1d3f89f5e65c643f4ba823d35d97c6ea45e7",
+    "dist/workbench-chrome.js": "17a3f95d121f3f0187e43b46be14a5b0fa1beeb934b4dd33f0b7ab380fc80abb",
+    "dist/forecast-replay.js": "f8d1bf3d62f620f31802987abb2f6dfb756c256ff9d83f68246a60ecadc84ab8",
+    "dist/forecast-replay-sources.js": "26d99528a81a49e8c738c542a2e2fbd911674efd874f02070c1ddd958e07cd52",
+    "dist/forecast-replay-view.js": "416317a53886c59b3334573f2dbd2bc72cf26fb8cd9bfc895ed140c3503ec8e4",
+    "dist/data/replay-eth-ohlc.json": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+    "scripts/verify-forecast-replay-browser.mjs": "8781c035d976cb017a5b619e29b07d0037b92497f04ca6539bc941fab43013f4",
+    "dist/chart-replay.js": "73482ae02d342a64cfa4411affe208bb39859ed034b7b2bceafb16b69ed4def7",
+    "dist/chart-replay-state.js": "b04ef0e061a1bcd536ba14384dcd0c560bf2023ba4b5abeb36cfc2e143ec2483",
+    "dist/chart-replay-renderer.js": "ba06b1369f92c596bd12abfd8256dd044be38097807718fc12550e81cc369d6b",
+    "dist/chart-replay-sources.js": "eda71aeffa8739bb233a9fb8413883ee0be3be357a271e761073873bacd63e3d",
+    "dist/chart-replay.css": "bbe8ce068827e7290698a45e69667da4469afe140d113eb59d34a01b1f59822d",
+    "dist/asset-forecast-loader.js": "2d373afa2f588f8d640b7432b1e226d64580fb1a96efc6631c6e2dcb7e1168cb",
+    "dist/data/btc-volume.json": "9f0d0e26e69e37a845e8000ccac248c775c0d86506c48c1f25f940a5b2c5b7d7",
+    "scripts/verify-chart-replay-browser.mjs": "916db126bd3c46f4d4d1b8f0b0fe1c89a661a2ae3adc0086d7f77b6b55709cd5",
+    "dist/chart-replay-atlas.js": "0ba0f8ede5817d73fdd575a414de5eb30adb2458c253eaaa647d4462abe8223d",
+    "dist/atlas-price-chart.js": "11900369d7e47d5dfa5ccdc25442a73066f68d16517ffb811afd8d98a782ac6e",
+    "dist/project-replay-baseline.js": "b24462b0b8ac13b8640fc0717e98ed5cf198a779281cbd64bd3551a4529c6861",
+    "dist/data/project-origin-btc-2026-10-21.json": "571d0d3421d7ae40da4fb3020ab0290aa534822d5a439f9e98f55dc31d5f19ac",
+    "scripts/build-project-replay-baseline.mjs": "1ddf49e09ad015afd526996112c521d23fba5e539af73439c85628dec13aed83"
+  },
+  "currentForecastExports": [
+    {
+      "width": 1440,
+      "height": 900,
+      "file": "chart-replay-downloads/chart-replay-btc-1440x900/current-model-before-replay-gSKH8t/Bitcoin_Long_Horizon_Scenarios.json",
+      "bytes": 15041090,
+      "sha256": "cf434ecdca2df46da7c0130b06960061feb6ba515fb7afaac55da1ec62809e13",
+      "asOf": "2026-10-25",
+      "scenario": "base",
+      "pathPoints": 8834
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "file": "chart-replay-downloads/chart-replay-btc-320x568/current-model-before-replay-GGTPH7/Bitcoin_Long_Horizon_Scenarios.json",
+      "bytes": 15041090,
+      "sha256": "cf434ecdca2df46da7c0130b06960061feb6ba515fb7afaac55da1ec62809e13",
+      "asOf": "2026-10-25",
+      "scenario": "base",
+      "pathPoints": 8834
+    },
+    {
+      "width": 900,
+      "height": 430,
+      "file": "chart-replay-downloads/chart-replay-btc-900x430/current-model-before-replay-pPqFyz/Bitcoin_Long_Horizon_Scenarios.json",
+      "bytes": 15041090,
+      "sha256": "cf434ecdca2df46da7c0130b06960061feb6ba515fb7afaac55da1ec62809e13",
+      "asOf": "2026-10-25",
+      "scenario": "base",
+      "pathPoints": 8834
+    }
+  ],
+  "weeklyEvidence": [
+    {
+      "label": "same-forming-week-updates-one-source-day",
+      "first": {
+        "date": "2026-10-21",
+        "open": 82001.58,
+        "high": 84842.65,
+        "low": 81102.28,
+        "close": 84023.24,
+        "volume": 4673.36359013,
+        "periodStart": "2026-10-19",
+        "periodEnd": "2026-10-25",
+        "daysIncluded": 3,
+        "complete": false,
+        "x": 634.9075975359343
+      },
+      "next": {
+        "date": "2026-10-22",
+        "open": 82001.58,
+        "high": 84842.65,
+        "low": 80835.75,
+        "close": 81315.35,
+        "volume": 6864.784608110001,
+        "periodStart": "2026-10-19",
+        "periodEnd": "2026-10-25",
+        "daysIncluded": 4,
+        "complete": false,
+        "x": 634.9075975359343
+      },
+      "expectedFirst": {
+        "date": "2026-10-21",
+        "periodStart": "2026-10-19",
+        "periodEnd": "2026-10-25",
+        "open": 82001.58,
+        "high": 84842.65,
+        "low": 81102.28,
+        "close": 84023.24,
+        "volume": 4673.36359013,
+        "daysIncluded": 3,
+        "complete": false
+      },
+      "expectedNext": {
+        "date": "2026-10-22",
+        "periodStart": "2026-10-19",
+        "periodEnd": "2026-10-25",
+        "open": 82001.58,
+        "high": 84842.65,
+        "low": 80835.75,
+        "close": 81315.35,
+        "volume": 6864.784608110001,
+        "daysIncluded": 4,
+        "complete": false
+      },
+      "firstVolumeScope": {
+        "cursor": "2026-10-21",
+        "expectedVisibleVolumeCount": 104,
+        "outsideCandleCoordinates": [
+          {
+            "date": "2024-10-27",
+            "periodStart": "2024-10-21",
+            "x": 8.558521560574949
+          }
+        ],
+        "priceCandidateMeaning": "Price candle metadata retains end-date candidates; volume excludes Monday coordinates outside the plot. Both use the same disclosed daily prefixes."
+      },
+      "nextVolumeScope": {
+        "cursor": "2026-10-22",
+        "expectedVisibleVolumeCount": 104,
+        "outsideCandleCoordinates": [
+          {
+            "date": "2024-10-27",
+            "periodStart": "2024-10-21",
+            "x": 8.558521560574949
+          }
+        ],
+        "priceCandidateMeaning": "Price candle metadata retains end-date candidates; volume excludes Monday coordinates outside the plot. Both use the same disclosed daily prefixes."
+      },
+      "firstDomain": [
+        47966.33756069531,
+        325662.768100136
+      ],
+      "nextDomain": [
+        47966.33756069531,
+        325662.768100136
+      ]
+    }
+  ],
+  "nativeTiming": [
+    {
+      "speed": 10,
+      "expectedMilliseconds": 100,
+      "observations": [
+        {
+          "cursor": "2026-10-21",
+          "at": 27181
+        },
+        {
+          "cursor": "2026-10-22",
+          "at": 27279.60000000149
+        },
+        {
+          "cursor": "2026-10-23",
+          "at": 27379.39999999851
+        },
+        {
+          "cursor": "2026-10-24",
+          "at": 27482.300000000745
+        },
+        {
+          "cursor": "2026-10-25",
+          "at": 27584.39999999851
+        }
+      ],
+      "intervals": [
+        98.60000000149012,
+        99.79999999701977,
+        102.90000000223517,
+        102.09999999776483
+      ],
+      "meanMilliseconds": 100.84999999962747,
+      "averageUpdatesPerSecond": 9.915716410547287,
+      "allowedMeanRatio": [
+        0.85,
+        1.3
+      ]
+    },
+    {
+      "speed": 1,
+      "expectedMilliseconds": 1000,
+      "observations": [
+        {
+          "cursor": "2026-10-21",
+          "at": 30174.39999999851
+        },
+        {
+          "cursor": "2026-10-22",
+          "at": 31260.699999999255
+        },
+        {
+          "cursor": "2026-10-23",
+          "at": 32198.39999999851
+        },
+        {
+          "cursor": "2026-10-24",
+          "at": 33181.699999999255
+        },
+        {
+          "cursor": "2026-10-25",
+          "at": 34178.39999999851
+        }
+      ],
+      "intervals": [
+        1086.300000000745,
+        937.6999999992549,
+        983.3000000007451,
+        996.6999999992549
+      ],
+      "meanMilliseconds": 1001,
+      "averageUpdatesPerSecond": 0.999000999000999,
+      "allowedMeanRatio": [
+        0.85,
+        1.3
+      ]
+    },
+    {
+      "speed": 0.5,
+      "expectedMilliseconds": 2000,
+      "observations": [
+        {
+          "cursor": "2026-10-21",
+          "at": 37721.699999999255
+        },
+        {
+          "cursor": "2026-10-22",
+          "at": 39719.300000000745
+        },
+        {
+          "cursor": "2026-10-23",
+          "at": 41725
+        },
+        {
+          "cursor": "2026-10-24",
+          "at": 43716.10000000149
+        },
+        {
+          "cursor": "2026-10-25",
+          "at": 45722.300000000745
+        }
+      ],
+      "intervals": [
+        1997.6000000014901,
+        2005.699999999255,
+        1991.1000000014901,
+        2006.199999999255
+      ],
+      "meanMilliseconds": 2000.1500000003725,
+      "averageUpdatesPerSecond": 0.49996250281219595,
+      "allowedMeanRatio": [
+        0.85,
+        1.3
+      ]
+    },
+    {
+      "speed": 0.3,
+      "expectedMilliseconds": 3000,
+      "observations": [
+        {
+          "cursor": "2026-10-21",
+          "at": 50266.89999999851
+        },
+        {
+          "cursor": "2026-10-22",
+          "at": 53272.39999999851
+        },
+        {
+          "cursor": "2026-10-23",
+          "at": 56278.89999999851
+        },
+        {
+          "cursor": "2026-10-24",
+          "at": 59296.89999999851
+        },
+        {
+          "cursor": "2026-10-25",
+          "at": 62283.699999999255
+        }
+      ],
+      "intervals": [
+        3005.5,
+        3006.5,
+        3018,
+        2986.800000000745
+      ],
+      "meanMilliseconds": 3004.2000000001863,
+      "averageUpdatesPerSecond": 0.33286731908659145,
+      "allowedMeanRatio": [
+        0.85,
+        1.3
+      ]
+    }
+  ],
+  "explicitSessionDecisions": [
+    {
+      "label": "atlas-explicit-save-dialog-open",
+      "unchanged": true,
+      "bytes": 0,
+      "sha256": null
+    },
+    {
+      "label": "atlas-explicit-save-modal-blocks-background-input",
+      "unchanged": true,
+      "bytes": 0,
+      "sha256": null
+    },
+    {
+      "label": "atlas-explicit-save-exit-canceled",
+      "unchanged": true,
+      "bytes": 0,
+      "sha256": null
+    },
+    {
+      "label": "atlas-explicit-save-dialog-open",
+      "unchanged": true,
+      "bytes": 0,
+      "sha256": null
+    },
+    {
+      "label": "atlas-explicit-save-confirmed-save",
+      "cursor": "2026-10-22",
+      "mode": "atlas-chart",
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "atlas-saved-session-entry-choice",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "atlas-saved-session-entry-continue",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "start-point-button-opens-without-saving",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "cancel-start-point-keeps-saved-session",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "scissors-hover-does-not-save",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "scissors-escape-does-not-save",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "committed-start-and-next-remain-unsaved-draft",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "random-start-does-not-save",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "unavailable-intraday-does-not-save",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "discard-current-draft-dialog-open",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "discard-current-draft-exit-without-save",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "start-new-keeps-prior-save-entry-choice",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "start-new-keeps-prior-save-entry-new",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "start-new-before-selection",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "new-draft-step-does-not-overwrite-saved-session",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "discard-new-session-dialog-open",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "discard-new-session-exit-without-save",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "continue-after-discarding-new-session-entry-choice",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "continue-after-discarding-new-session-entry-continue",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "continue-after-discard-is-read-only",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "historical-explicit-save-dialog-open",
+      "unchanged": true,
+      "bytes": 483,
+      "sha256": "a0bfaf56c657af65d9586456d38125fae6d5294b40b10452a7dce8981e8519b6"
+    },
+    {
+      "label": "historical-explicit-save-confirmed-save",
+      "cursor": "2025-05-02",
+      "mode": "historical-reconstruction",
+      "bytes": 472,
+      "sha256": "12e9d1766d4a743e70d9609d89a4c152a0b5f9df9ef5d0262adba9983231a422"
+    },
+    {
+      "label": "historical-explicit-continue-entry-choice",
+      "unchanged": true,
+      "bytes": 472,
+      "sha256": "12e9d1766d4a743e70d9609d89a4c152a0b5f9df9ef5d0262adba9983231a422"
+    },
+    {
+      "label": "historical-explicit-continue-entry-continue",
+      "unchanged": true,
+      "bytes": 472,
+      "sha256": "12e9d1766d4a743e70d9609d89a4c152a0b5f9df9ef5d0262adba9983231a422"
+    },
+    {
+      "label": "viewing-record-does-not-overwrite-progressed-reconstruction",
+      "unchanged": true,
+      "bytes": 472,
+      "sha256": "12e9d1766d4a743e70d9609d89a4c152a0b5f9df9ef5d0262adba9983231a422"
+    },
+    {
+      "label": "record-inspection-without-save-dialog-open",
+      "unchanged": true,
+      "bytes": 472,
+      "sha256": "12e9d1766d4a743e70d9609d89a4c152a0b5f9df9ef5d0262adba9983231a422"
+    },
+    {
+      "label": "record-inspection-without-save-exit-without-save",
+      "unchanged": true,
+      "bytes": 472,
+      "sha256": "12e9d1766d4a743e70d9609d89a4c152a0b5f9df9ef5d0262adba9983231a422"
+    },
+    {
+      "label": "historical-survives-unsaved-record-entry-choice",
+      "unchanged": true,
+      "bytes": 472,
+      "sha256": "12e9d1766d4a743e70d9609d89a4c152a0b5f9df9ef5d0262adba9983231a422"
+    },
+    {
+      "label": "historical-survives-unsaved-record-entry-continue",
+      "unchanged": true,
+      "bytes": 472,
+      "sha256": "12e9d1766d4a743e70d9609d89a4c152a0b5f9df9ef5d0262adba9983231a422"
+    },
+    {
+      "label": "selected-session-explicit-save-dialog-open",
+      "unchanged": true,
+      "bytes": 472,
+      "sha256": "12e9d1766d4a743e70d9609d89a4c152a0b5f9df9ef5d0262adba9983231a422"
+    },
+    {
+      "label": "selected-session-explicit-save-confirmed-save",
+      "cursor": "2026-10-25",
+      "mode": "recorded",
+      "bytes": 514,
+      "sha256": "ca45519ef3c35002f15278d50f9a14f7c3091a91ac10f507470d754a32ff498b"
+    },
+    {
+      "label": "selected-session-explicit-continue-entry-choice",
+      "unchanged": true,
+      "bytes": 514,
+      "sha256": "ca45519ef3c35002f15278d50f9a14f7c3091a91ac10f507470d754a32ff498b"
+    },
+    {
+      "label": "selected-session-explicit-continue-entry-continue",
+      "unchanged": true,
+      "bytes": 514,
+      "sha256": "ca45519ef3c35002f15278d50f9a14f7c3091a91ac10f507470d754a32ff498b"
+    },
+    {
+      "label": "final-return-without-overwriting-save-dialog-open",
+      "unchanged": true,
+      "bytes": 514,
+      "sha256": "ca45519ef3c35002f15278d50f9a14f7c3091a91ac10f507470d754a32ff498b"
+    },
+    {
+      "label": "final-return-without-overwriting-save-exit-without-save",
+      "unchanged": true,
+      "bytes": 514,
+      "sha256": "ca45519ef3c35002f15278d50f9a14f7c3091a91ac10f507470d754a32ff498b"
+    }
+  ],
+  "initialFailure": {
+    "status": "failed",
+    "passedCases": 3,
+    "failedCases": 4,
+    "sourceHashesMatched": true,
+    "sourceCount": 91,
+    "preservedEvidence": "/tmp/atlas-replay-timeframe-native-run1-evidence",
+    "causes": [
+      {
+        "case": "BTC1440",
+        "cause": "The added test equated price end-date candidate count (105) with visible volume Monday-coordinate count (104). The first Monday lies outside the viewport.",
+        "correction": "Preserve price/candle behavior and compare volume membership, values and x against independently grouped source daily rows whose Monday lies inside the viewport."
+      },
+      {
+        "cases": [
+          "BTC320",
+          "BTC900",
+          "ETH320"
+        ],
+        "cause": "The previous viewport scenario saved a session in the shared browser context, so the next scenario correctly presented Continue / Start new instead of a fresh replay.",
+        "correction": "Isolate only the seven chart-replay scenarios in independent CDP browser contexts; retain the original 39 scenarios and every error/source guard. Bind downloads to the scenario context."
+      }
+    ]
+  },
+  "knownPostRunCorrection": {
+    "status": "final-source-native-ci-required",
+    "finding": "Visual review of the BTC900 stored-record screen found the live weekly header could remain selected while a resumed generic replay frame was daily.",
+    "preservedScreenshot": "artifacts/chart-replay-btc-900x430-preserved-record.png",
+    "screenshotSha256": "529b20d6dc268af2fa91527f46bec922ebbccd68ad29d073063777d26faff23a",
+    "addedBehaviorAssertion": "Both original BTC interval controls must equal the rendered replay frequency on every confirmed frame, including historical Continue and recorded mode.",
+    "rule": "Do not present the seven-case local result as validation of the later generic-header correction. Final CI must execute all 46 scenarios with matching final source hashes."
+  },
+  "representativeScreenshots": [
+    {
+      "file": "chart-replay-btc-1440x900-atlas-first-project-bar.png",
+      "bytes": 187203,
+      "sha256": "c76f31f1f6669e99afd2987ab61395f3eea2c09ac0411733e254648cf12e570a"
+    },
+    {
+      "file": "chart-replay-btc-1440x900-atlas-explicit-save-save-choice.png",
+      "bytes": 200661,
+      "sha256": "9dcaf6674d43478d01a5d752abb37cf7a3c1cec86194afc72bc3c4086f38de3c"
+    },
+    {
+      "file": "chart-replay-btc-1440x900-weekly-first-daily-forward.png",
+      "bytes": 164674,
+      "sha256": "8bfe756b1ea1dda4c811b62898747b19cbb70249ac80fc339183f5e333f137a1"
+    },
+    {
+      "file": "chart-replay-btc-1440x900-weekly-second-daily-forward.png",
+      "bytes": 164671,
+      "sha256": "39f5d1f2b748c6c1afe3d56cc9a8b590f2474a8e6ad6826be711864a2d80bde6"
+    },
+    {
+      "file": "chart-replay-btc-1440x900-scissors-preview-keeps-confirmed-cutoff.png",
+      "bytes": 169137,
+      "sha256": "775af43649a201eef8887dfdb087d51419465b68787acecbd80cb595f3fef76e"
+    },
+    {
+      "file": "chart-replay-btc-1440x900-scissors-click-cuts-future-actuals.png",
+      "bytes": 165208,
+      "sha256": "4cb69fd33fde6c1f677ca99bc91fd720e725fe6abcb33b44129a962204a683e8"
+    },
+    {
+      "file": "chart-replay-btc-320x568-atlas-first-project-bar.png",
+      "bytes": 57445,
+      "sha256": "6788f0a53eefa1843f0371bd93c463688e3788a234488d03a5e296e51885fb53"
+    },
+    {
+      "file": "chart-replay-btc-320x568-atlas-explicit-save-save-choice.png",
+      "bytes": 44237,
+      "sha256": "b0d73facbbfe8552670b621bed47022430a36fbede77780c99d688edc86bceba"
+    },
+    {
+      "file": "chart-replay-btc-320x568-start-point-canceled.png",
+      "bytes": 58462,
+      "sha256": "5c449b60829405e090d5b4113a78685c59c1756411d8aaa2bde55fd5f7fd7a44"
+    },
+    {
+      "file": "chart-replay-btc-900x430-atlas-first-project-bar.png",
+      "bytes": 93477,
+      "sha256": "2e2c33ee21bf149b53253777a1fb614b3189f856f00b25cce789f228c1bab9ab"
+    },
+    {
+      "file": "chart-replay-btc-900x430-atlas-explicit-save-save-choice.png",
+      "bytes": 87094,
+      "sha256": "38f9330c6d8a862bda1b8af0af3564dd50a966b645971ec0a7bc744a6e93e198"
+    },
+    {
+      "file": "chart-replay-btc-900x430-start-point-canceled.png",
+      "bytes": 92304,
+      "sha256": "045a0b6bc175b84a98ae1ef45efcf53be04426daf2a1cbd33eff9d4b7d6ba2d0"
+    },
+    {
+      "file": "chart-replay-eth-1440x900-selected-session-explicit-save-save-choice.png",
+      "bytes": 109748,
+      "sha256": "7deabaa6ce441938886a4200de7d8353f2da110a0b42f7f87e0df4cdb751d57b"
+    },
+    {
+      "file": "chart-replay-eth-320x568-selected-session-explicit-save-save-choice.png",
+      "bytes": 39789,
+      "sha256": "56090bc1ad13aafda526953599b76ee932b50ce7b3d73989daf1753c961452d2"
+    },
+    {
+      "file": "chart-replay-mstr-1440x900-selected-session-explicit-save-save-choice.png",
+      "bytes": 97521,
+      "sha256": "4701556cf93a332c297401e3a89f95e3403913891bd8ec6f23cc1fbd75746894"
+    },
+    {
+      "file": "chart-replay-bmnr-390x844-selected-session-explicit-save-save-choice.png",
+      "bytes": 56112,
+      "sha256": "527956374b165bf5ce23070c9387b718a62700b1d3e955f20a01dba4e450b7d9"
+    }
+  ],
+  "recordScope": "Fixed historical local run2 receipt, before the later generic-header correction. Do not interpret this receipt as a final-version result.",
+  "finalVersionEvidence": {
+    "location": "Final change PR body and GitHub Actions artifacts bound to its exact final commit/tree and source hashes",
+    "pullRequestsUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/pulls",
+    "actionsUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions",
+    "subsequentLocalRun": "run3 is recorded independently; this run2 evidence is not overwritten"
+  }
+}

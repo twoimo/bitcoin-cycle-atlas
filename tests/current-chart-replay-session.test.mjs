@@ -3,7 +3,7 @@ import test from 'node:test';
 import {readFile} from 'node:fs/promises';
 import {buildLongHorizonForecast} from '../dist/long-horizon-forecast.js';
 import {parseBitcoinReplayCandles} from '../dist/chart-replay-sources.js';
-import {createCurrentChartReplaySession,buildReplayFrame,buildReplayChartData} from '../dist/forecast-replay.js';
+import {createCurrentChartReplaySession,buildReplayFrame,buildReplayChartData,getReplayIntervalCapabilities} from '../dist/forecast-replay.js';
 import {forecastHash} from '../dist/forecast-records.js';
 import {dateFromDay,utcDay} from '../dist/cycle-engine.js';
 
@@ -56,13 +56,34 @@ test('the first next bar reveals genuine October 21 OHLC while the orange curve 
 });
 
 test('future bars do not affect earlier candles, y bounds or the fixed current forecast',async()=>{
-  const session=await create(),before=buildReplayChartData(session,{cursorIndex:1});
-  const changed=archive.observations.map(row=>row.date>'2026-10-21'?{...row,price:row.price*100,open:row.open*100,high:row.high*100,low:row.low*100,close:row.close*100}:row);
+  const session=await create();
+  const changed=archive.observations.map(row=>row.date>'2026-10-21'?{...row,price:row.price*1e8,open:row.open*1e8,high:row.high*1e8,low:row.low/1e8,close:row.close*1e8,volume:1e100}:row);
   const altered=await create({observations:changed});
-  assert.deepEqual(buildReplayChartData(altered,{cursorIndex:1}),before);
+  for(const frequency of ['daily','weekly']){
+    const options={cursorIndex:1,frequency},before=buildReplayChartData(session,options);
+    assert.deepEqual(buildReplayChartData(altered,options),before);
+    buildReplayChartData(session,{cursorIndex:session.timeline.length-1,frequency});
+    assert.deepEqual(buildReplayChartData(session,options),before);
+    assert.equal(before.frame.policy.forecastScoringEnabled,false);
+  }
   assert.equal(altered.identity.outputHash,session.identity.outputHash);
-  buildReplayChartData(session,{cursorIndex:session.timeline.length-1});
-  assert.deepEqual(buildReplayChartData(session,{cursorIndex:1}),before);
+});
+
+test('first available source day begins at an empty cutoff and reveals its exact real candle',async()=>{
+  const first=archive.observations[0],origin=dateFromDay(utcDay(first.date)-1);
+  const capabilities=getReplayIntervalCapabilities({...archive,evaluatedAt:at});
+  assert.equal(capabilities.intervals.daily.firstReplayDate,first.date);
+  const session=await create({asOf:origin,playbackStartDate:first.date});
+  assert.deepEqual(session.inputPrices,[]);assert.equal(session.timeline[0],origin);assert.equal(session.timeline[1],first.date);
+  const empty=buildReplayChartData(session),next=buildReplayChartData(session,{cursorIndex:1});
+  assert.deepEqual(empty.observedRows,[]);assert.deepEqual(empty.observedCandles,[]);
+  assert.equal(empty.frame.selected.actual,null);assert.equal(empty.frame.selected.flat,null);
+  assert.equal(next.observedRows.length,1);assert.equal(next.observedCandles.length,1);
+  for(const key of ['date','open','high','low','close','volume'])assert.equal(next.observedCandles[0][key],first[key]);
+  assert.equal(next.frame.selected.actual,first.close);assert.equal(next.frame.selected.predicted,null);
+  assert.equal(next.frame.selected.absoluteError,null);assert.deepEqual(next.frame.forecast,empty.frame.forecast);
+  assert.deepEqual(session.chartForecast,forecast);
+  await assert.rejects(create({asOf:dateFromDay(utcDay(origin)-1),playbackStartDate:origin}),/immediately before/);
 });
 
 test('the current capture cannot be shown as a historically issued prediction in strict clock mode',async()=>{

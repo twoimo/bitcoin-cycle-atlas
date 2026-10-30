@@ -114,7 +114,7 @@ function finishSession({identity,mode,prices,path,targets,observations,observedA
   const normalized=observationRows(observations,{symbol,observedAt,observedThrough,source});
   const forecast=visiblePath(path,forecastOriginDate,horizonDays);
   if(!forecast.length||forecast[0].date!==forecastOriginDate)throw new RangeError('Replay path must begin at its forecast origin');
-  const startDate=dateFromDay(Math.max(utcDay(prices[0].date),utcDay(asOf)-90));
+  const startDate=dateFromDay(Math.max(utcDay(prices[0]?.date??asOf),utcDay(asOf)-90));
   const inputPrices=prices.filter(row=>row.date>=startDate&&row.date<=asOf).map(row=>({date:row.date,price:row.price}));
   const endDate=forecast.at(-1).date;
   const evaluation=normalizeForecastTimestamp(evaluatedAt,'evaluatedAt');
@@ -215,7 +215,10 @@ export async function createCurrentChartReplaySession({dataset,forecast,asOf=PRO
   if(horizonDays<1||horizonDays>36500)throw new RangeError('Current-chart forecast extent exceeds its limit');
   const normalized=observationRows(observations,{symbol:'BTCUSD',observedAt,observedThrough,source});
   const current=currentObservations(normalized,evaluation),prices=current.filter(row=>row.date<=asOf).map(row=>({date:row.date,price:row.price}));
-  if(prices.at(-1)?.date!==asOf)throw new RangeError('Current-chart replay requires an observed bar immediately before its start date');
+  // The very first real source bar has no preceding observation. Its empty
+  // cutoff is valid: do not manufacture an anchor close before source coverage.
+  const startsAtFirstObservation=current[0]?.date===playbackStartDate&&prices.length===0;
+  if(prices.at(-1)?.date!==asOf&&!startsAtFirstObservation)throw new RangeError('Current-chart replay requires an observed bar immediately before its start date or the first available observation');
   const fixedForecast=copy(forecast),fixedDataset=copy(dataset);
   const output=visiblePath(fixedForecast.path,forecastOriginDate,horizonDays);
   const outputHash=await forecastHash(output),originalPathHash=await forecastHash(fixedForecast.path),inputHash=await forecastHash(input.map(row=>[row.date,row.price]));
@@ -399,28 +402,93 @@ function chartHistory(session,frame){
   return result;
 }
 
+function replayWeekStart(date){const day=utcDay(date);return day-((day+3)%7+7)%7;}
+function replayWeekSessions(monday,market){
+  const week=Array.from({length:7},(_,offset)=>dateFromDay(monday+offset));
+  if(market==='equity'&&week.some(date=>isEquitySession(date)===null))return null;
+  return market==='crypto'?week:week.filter(date=>isEquitySession(date));
+}
+function dailyReplayCandles(rows){
+  return rows.filter(row=>['open','high','low','close'].every(key=>Number.isFinite(row[key]))).map(row=>({
+    date:row.date,time:utcDay(row.date)*86400,startDate:row.date,endDate:row.date,
+    open:row.open,high:row.high,low:row.low,close:row.close,...(row.volume===undefined?{}:{volume:row.volume}),complete:true}));
+}
 function weeklyReplayCandles(rows,market,{cursorDate,evaluationAt}){
   const groups=new Map();
   for(const row of rows){
-    const day=utcDay(row.date),monday=day-((day+3)%7+7)%7;
+    const monday=replayWeekStart(row.date);
     if(!groups.has(monday))groups.set(monday,[]);
     groups.get(monday).push(row);
   }
-  const candles=[];let incompleteGroups=0,unreviewedGroups=0;
+  const candles=[];let incompleteGroups=0,formingGroups=0,missingGroups=0,unreviewedGroups=0;
   for(const [monday,days]of groups){
-    const week=Array.from({length:7},(_,offset)=>dateFromDay(monday+offset));
-    if(market==='equity'&&week.some(date=>isEquitySession(date)===null)){unreviewedGroups++;continue;}
-    const expected=market==='crypto'?week:week.filter(date=>isEquitySession(date));
-    const last=expected.at(-1);
-    if(!last||last>cursorDate||sessionCloseUtc(last,market)>evaluationAt||days.length!==expected.length||
-      days.some((row,index)=>row.date!==expected[index])){incompleteGroups++;continue;}
+    const expected=replayWeekSessions(monday,market);
+    if(expected===null){unreviewedGroups++;continue;}
+    // A forming week uses every completed daily observation from its actual
+    // opening session through this cursor. Missing completed sessions are not
+    // partial future days, and may never produce a manufactured weekly candle.
+    const disclosed=expected.filter(date=>date<=cursorDate&&sessionCloseUtc(date,market)<=evaluationAt);
+    if(!disclosed.length||days.length!==disclosed.length||days.some((row,index)=>row.date!==disclosed[index])){
+      incompleteGroups++;missingGroups++;continue;
+    }
+    const complete=disclosed.length===expected.length,last=disclosed.at(-1);
+    if(!complete){incompleteGroups++;formingGroups++;}
     const volume=days.every(row=>Number.isFinite(row.volume))?days.reduce((sum,row)=>sum+row.volume,0):null;
     if(volume!==null&&!Number.isFinite(volume))throw new RangeError('Weekly replay volume overflow');
     candles.push({time:monday*86400,date:last,startDate:expected[0],endDate:last,
+      periodStartDate:dateFromDay(monday),periodEndDate:dateFromDay(monday+6),
       open:days[0].open,high:Math.max(...days.map(row=>row.high)),low:Math.min(...days.map(row=>row.low)),
-      close:days.at(-1).close,...(volume===null?{}:{volume}),daysIncluded:days.length,complete:true});
+      close:days.at(-1).close,...(volume===null?{}:{volume}),daysIncluded:days.length,complete});
   }
-  return {candles,incompleteGroups,unreviewedGroups};
+  return {candles,incompleteGroups,formingGroups,missingGroups,unreviewedGroups};
+}
+
+/** Independently sourced display candles for a preserved forecast comparison.
+ * The caller's forecast/scoring series is never replaced by this OHLC layer. */
+export function buildReplayObservedCandles({symbol='BTCUSD',observations=[],observedAt=null,observedThrough=null,
+  source=null,cursorDate,frequency='daily',evaluatedAt=new Date().toISOString(),clockMode='observed-date',cursorAt}={}){
+  if(!['daily','weekly'].includes(frequency))throw new RangeError('Replay supports daily or weekly observations');
+  if(!['observed-date','information-time'].includes(clockMode))throw new RangeError('Unknown replay clock mode');
+  utcDay(cursorDate);
+  const market=marketFor(symbol),evaluation=normalizeForecastTimestamp(evaluatedAt,'evaluatedAt');
+  const at=cursorAt===undefined?sessionCloseUtc(cursorDate,market):normalizeForecastTimestamp(cursorAt,'cursorAt');
+  if(at===null)throw new RangeError('Replay market close is outside the reviewed calendar');
+  const evaluationAt=at<evaluation?at:evaluation;
+  const normalized=observationRows(observations,{symbol,observedAt,observedThrough,source}).filter(row=>row.date<=cursorDate);
+  if(clockMode==='information-time'&&!normalized.every(receiptComplete))throw new RangeError('Replay information time requires complete acquisition receipts');
+  const visible=currentObservations(normalized,clockMode==='information-time'?evaluationAt:evaluation)
+    .filter(row=>row.eventAt!==null&&row.eventAt<=evaluationAt);
+  const daily=dailyReplayCandles(visible),weekly=frequency==='weekly'?weeklyReplayCandles(daily,market,{cursorDate,evaluationAt}):null;
+  const candles=weekly?.candles??daily;
+  return freeze({candles,metadata:{frequency,sourceFrequency:'daily',forwardFrequency:'daily',weekStartsOn:'monday-utc',
+    cursorDate,evaluationAt,observedThrough:daily.at(-1)?.date??null,firstOhlcDate:daily[0]?.date??null,
+    ohlcAvailable:candles.length>0,completeOhlcCoverage:visible.length>0&&daily.length===visible.length,
+    partialWeekCount:weekly?.incompleteGroups??0,formingWeekCount:weekly?.formingGroups??0,
+    missingWeekCount:weekly?.missingGroups??0,unreviewedWeekCount:weekly?.unreviewedGroups??0,
+    observationClock:clockMode==='observed-date'?'current-vintage-market-bar-reconstruction':'recorded-acquisition-cutoff',
+    displayOnly:true,historicalAvailabilityProven:false,providerAuthenticityProven:false,
+    source:source===null?null:copy(source)}});
+}
+
+/** Source capability, not an instruction to change the selected interval.
+ * Daily OHLC can form a weekly prefix; it cannot reconstruct intraday bars.
+ * Dates describe acquired, completed observations without exposing their prices. */
+export function getReplayIntervalCapabilities({symbol='BTCUSD',observations=[],observedAt=null,observedThrough=null,
+  source=null,evaluatedAt=new Date().toISOString()}={}){
+  const market=marketFor(symbol),evaluation=normalizeForecastTimestamp(evaluatedAt,'evaluatedAt');
+  const normalized=observationRows(observations,{symbol,observedAt,observedThrough,source});
+  const current=currentObservations(normalized,evaluation).filter(row=>row.eventAt!==null&&row.eventAt<=evaluation);
+  const candles=current.filter(row=>['open','high','low','close'].every(key=>Number.isFinite(row[key])));
+  const firstOhlcDate=candles[0]?.date??null,lastOhlcDate=candles.at(-1)?.date??null;
+  const firstWeeklyDate=candles.find(row=>replayWeekSessions(replayWeekStart(row.date),market)?.[0]===row.date)?.date??null;
+  const capability=(firstDate,lastDate,reason)=>({supported:firstDate!==null,reason:firstDate===null?reason:null,
+    firstDate,lastDate:firstDate===null?null:lastDate,firstReplayDate:firstDate});
+  const intervals=Object.fromEntries(['1m','5m','15m','30m','1h','4h'].map(id=>[id,capability(null,null,'intraday-source-unavailable')]));
+  intervals.daily=capability(firstOhlcDate,lastOhlcDate,'genuine-ohlc-unavailable');
+  intervals.weekly=capability(firstWeeklyDate,lastOhlcDate,'weekly-opening-observation-unavailable');
+  return freeze({sourceFrequency:'daily',forwardFrequency:'daily',weekStartsOn:'monday-utc',
+    firstObservationDate:current[0]?.date??null,lastObservationDate:current.at(-1)?.date??null,
+    firstOhlcDate,lastOhlcDate,availableDates:candles.map(row=>row.date),intervals});
 }
 
 /** Main-chart prices and genuine OHLC at the replay cursor. The full consumed
@@ -436,15 +504,14 @@ export function buildReplayChartData(session,options={}){
   const inRange=row=>{const day=utcDay(row.endDate??row.date);return day>=start&&day<=end;};
   const visible=[...chartHistory(session,frame),...frame.actual];
   const observedRows=visible.filter(inRange).map(row=>({date:row.date,price:row.price}));
-  const dailyCandles=visible.filter(row=>['open','high','low','close'].every(key=>Number.isFinite(row[key]))).map(row=>({
-    date:row.date,time:utcDay(row.date)*86400,startDate:row.date,endDate:row.date,
-    open:row.open,high:row.high,low:row.low,close:row.close,...(row.volume===undefined?{}:{volume:row.volume}),complete:true}));
+  const dailyCandles=dailyReplayCandles(visible);
   const weekly=frequency==='weekly'?weeklyReplayCandles(dailyCandles,session.market,frame):null;
   const observedCandles=(weekly?.candles??dailyCandles).filter(inRange);
   const availableDailyDates=new Set(dailyCandles.map(row=>row.date));
   return freeze({frame,frequency,originDate:session.asOf,observedRows,observedCandles,
     ohlcAvailable:observedCandles.length>0,
     completeOhlcCoverage:observedRows.length>0&&observedRows.every(row=>availableDailyDates.has(row.date)),
-    partialWeekCount:weekly?.incompleteGroups??0,unreviewedWeekCount:weekly?.unreviewedGroups??0,
+    partialWeekCount:weekly?.incompleteGroups??0,formingWeekCount:weekly?.formingGroups??0,
+    missingWeekCount:weekly?.missingGroups??0,unreviewedWeekCount:weekly?.unreviewedGroups??0,
     ...bounds([...observedRows,...observedCandles,...frame.forecast.filter(inRange)])});
 }

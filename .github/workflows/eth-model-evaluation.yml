@@ -13,6 +13,8 @@ on:
       - 'tests/forecast-replay*.test.mjs'
       - 'tests/chart-replay*.test.mjs'
       - 'tests/current-chart-replay-session.test.mjs'
+      - 'tests/replay-interval-capabilities.test.mjs'
+      - 'tests/replay-observed-candles.test.mjs'
       - 'tests/project-replay-baseline.test.mjs'
       - 'tests/equity-chart-rendering.test.mjs'
       - 'tests/eth-chart-rendering.test.mjs'

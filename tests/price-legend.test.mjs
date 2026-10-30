@@ -15,6 +15,17 @@ test('observed line and candle legends identify their source and completed-price
   assert.ok(bodies.every(body=>Number(body.width)>0&&Number(body.height)>0));assert.deepEqual(new Set(wicks.map(wick=>wick.stroke)),new Set(bodies.map(body=>body.fill)));
 });
 
+test('a forming replay week explains its disclosed daily OHLC without claiming the week is complete',()=>{
+  const completed=items(priceLegendMarkup({candles:true,source:'Bitstamp'}))[0];
+  const forming=items(priceLegendMarkup({candles:true,forming:true,source:'Bitstamp'}))[0];
+  assert.equal(forming.label,'관측 캔들');assert.equal(forming.sample,completed.sample);
+  assert.match(forming.title,/Bitstamp.*공개된 실제 일봉.*진행 중 주봉/);
+  assert.match(forming.title,/다음 일봉.*OHLC가 갱신/);assert.match(forming.title,/실시간 현재가.*아닙니다/);
+  assert.doesNotMatch(forming.title,/완료된 OHLC/);assert.match(completed.title,/완료된 OHLC/);
+  const line=items(priceLegendMarkup({forming:true,source:'Coin Metrics'}))[0];
+  assert.match(line.title,/관측 종가/);assert.doesNotMatch(line.title,/진행 중 주봉/);
+});
+
 test('future path and assumption band appear only for forecast geometry and cannot imply a live quote or probability interval',()=>{
   assert.deepEqual(items(priceLegendMarkup({forecast:false,band:true})).map(item=>item.label),['관측 가격선']);
   assert.deepEqual(items(priceLegendMarkup({forecast:true,band:false})).map(item=>item.label),['관측 가격선','미래 가정']);

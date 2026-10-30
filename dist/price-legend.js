@@ -9,9 +9,9 @@ const samples={
 };
 const item=(kind,label,title)=>`<span class="price-legend-item" title="${esc(title)}"><svg class="price-legend-swatch" width="18" height="12" viewBox="0 0 18 12" aria-hidden="true" focusable="false" fill="none">${samples[kind]}</svg><span>${label}</span></span>`;
 
-export function priceLegendMarkup({candles=false,source='Coin Metrics',observed=true,mixedLine=false,forecast=false,band=false,turns=false}={}){
+export function priceLegendMarkup({candles=false,forming=false,source='Coin Metrics',observed=true,mixedLine=false,forecast=false,band=false,turns=false}={}){
   const label=candles?'관측 캔들':'관측 가격선';
-  const meaning=candles?`${source}의 완료된 OHLC 봉입니다. 실시간 현재가 표시는 아닙니다.`:`${source}의 관측 종가를 이은 선입니다. 실시간 현재가 표시는 아닙니다.`;
+  const meaning=candles?forming?`${source}의 공개된 실제 일봉을 합산한 진행 중 주봉입니다. 다음 일봉을 공개하면 OHLC가 갱신됩니다. 실시간 현재가 표시는 아닙니다.`:`${source}의 완료된 OHLC 봉입니다. 실시간 현재가 표시는 아닙니다.`:`${source}의 관측 종가를 이은 선입니다. 실시간 현재가 표시는 아닙니다.`;
   return '<div class="price-legend" role="group" aria-label="가격 표시 범례">'+(observed?item(candles?'candles':'line',label,meaning):'')
     +(observed&&candles&&mixedLine?item('line','관측 가격선','완료된 거래소 봉이 없는 구간은 Coin Metrics의 실제 일말 가격선입니다. 진행 중인 봉을 만들지 않습니다.'):'')
     +(forecast?item('future','미래 가정','관측 이후의 조건부 가격 경로입니다. 실제 거래 가격이 아닙니다.'):'')
