@@ -33,6 +33,8 @@ const stamp = value => value ? value.replace('T',' ').slice(0,16) + ' UTC' : 'â€
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const actionButton = (action,label,glyph) => `<button type="button" class="eth-icon" data-eth-action="${action}" aria-label="${label}" title="${label}">${icon(glyph)}</button>`;
 
+import {mountChartReplay} from './chart-replay.js?v=1.29.1';
+
 export async function initEthView() {
   // Keep the boot controller and embedded JSON; remove BTC-only controls from
   // the document as well as the accessibility tree before opening this view.
@@ -91,14 +93,16 @@ export async function initEthView() {
   const currentSeries = () => isIntradayInterval(state.frequency) ? market.get(state.frequency).series : state.frequency==='weekly'?weekly:daily;
   const announce = text => {$('#eth-announcement').textContent=text;};
   const touch = mountChartTouchTracking({element:plot,getTool:()=>state.tool,canStart:point=>{
+    if(svg.dataset.chartReplayActive==='true')return false;
     const b=svg.getBoundingClientRect(),v=svg.viewBox.baseVal,x=(point.clientX-b.left)/b.width*v.width,y=(point.clientY-b.top)/b.height*v.height;
     return Boolean(state.controller)&&x>=Number(svg.dataset.plotLeft)&&x<=Number(svg.dataset.plotRight)&&y>=Number(svg.dataset.plotTop)&&y<=Number(svg.dataset.priceBottom);
   },preview:point=>state.controller?.previewPointer?.(point),clear:()=>state.controller?.clearPreview?.(),cancelNavigation:()=>navigation.cancelGesture(),resumeNavigation:points=>navigation.resumeTouchGesture(points),onChange:active=>{$('#eth-touch-hint').hidden=!active;}});
   $('#eth-touch-hint').onclick=()=>touch.cancel();
-  const navigation = bindChartNavigation({element:plot,getRange:()=>state.range,getTool:()=>state.tool,getPriceAxis:()=>state.controller?.getPriceScale?.(),getContext:context=>state.controller?.getSelection?.(context),
+  const navigation = bindChartNavigation({element:plot,getRange:()=>svg.dataset.chartReplayActive==='true'?null:state.range,getTool:()=>state.tool,getPriceAxis:()=>state.controller?.getPriceScale?.(),getContext:context=>state.controller?.getSelection?.(context),
     onGestureStart:()=>touch.cancelPending(),onMenuOpen:()=>touch.cancel(),onRangeChange:range=>{++navigationRevision;state.range=range;if(isIntradayInterval(state.frequency))void market.ensureRange(state.frequency,range);schedule();},
     onPriceRangeChange:domain=>{++navigationRevision;state.priceDomain=domain;schedule();},onPriceReset:()=>{++navigationRevision;state.priceDomain=null;schedule();},onReset:()=>resetRange(false),onAnnounce:announce});
   document.addEventListener('atlas:modal-open',event=>{touch.cancel();navigation.cancelGesture();if(event.detail?.id!==info.id&&info.open)info.close();});
+  document.addEventListener('atlas:chart-replay-open',()=>{touch.cancel();navigation.cancelGesture();});
   const historyWorkbench = mountEthereumHistory({button:$('#eth-history-trigger'),initialSettings:state.eventSettings,
     onSettingsChange:settings=>{cancelInteraction();state.eventSettings=settings;persist();schedule();},onFocusEvent:focusHistoricalEvent});
 
@@ -194,7 +198,7 @@ export async function initEthView() {
   }
   function revealReady(){if(ready)return;ready=true;document.dispatchEvent(new CustomEvent('atlas:ready'));}
   function render(){
-    state.frame=null;if(suspended)return;
+    state.frame=null;if(suspended||svg.dataset.chartReplayActive==='true')return;
     const series=currentSeries(),intraday=isIntradayInterval(state.frequency),entry=intraday?market.get(state.frequency):null;
     $('#eth-interval').value=state.frequency;
     $('#eth-readout-interval').textContent=`Â· ${chartInterval(state.frequency).label}`;
@@ -307,7 +311,8 @@ export async function initEthView() {
     const buttons=$$('[data-eth-interval]'),i=buttons.indexOf(event.target),n=event.key==='Home'?0:event.key==='End'?buttons.length-1:(i+(event.key==='ArrowRight'?1:-1)+buttons.length)%buttons.length;
     buttons[n].click();buttons[n].focus();
   });
-  document.addEventListener('keydown',event=>{if(event.ctrlKey||event.metaKey||event.altKey||event.isComposing||event.target.closest('input,select,textarea,dialog,[contenteditable="true"]'))return;const action={c:'crosshair',h:'pan'}[event.key.toLowerCase()];if(action){event.preventDefault();$(`[data-eth-action="${action}"]`).click();}});
+  document.addEventListener('keydown',event=>{if(svg.dataset.chartReplayActive==='true'||event.ctrlKey||event.metaKey||event.altKey||event.isComposing||event.target.closest('input,select,textarea,dialog,[contenteditable="true"]'))return;const action={c:'crosshair',h:'pan'}[event.key.toLowerCase()];if(action){event.preventDefault();$(`[data-eth-action="${action}"]`).click();}});
+  mountChartReplay({svg,plot,toolbar:$('.eth-topbar'),symbol:'ETHUSD',restore:schedule});
   const observer=new ResizeObserver(()=>schedule());observer.observe(plot);
   document.fonts?.ready.then(()=>schedule());
   window.addEventListener('pagehide',event=>{

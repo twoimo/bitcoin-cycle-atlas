@@ -4,6 +4,7 @@ import {isExpectedOfflineBtcRefresh} from './btc-offline-refresh-policy.mjs';
 import assert from 'node:assert/strict';
 import {workspaceBrowserCases,verifyWorkspaceSurface} from './verify-workspace-browser.mjs';
 import {replayBrowserCases,verifyForecastReplaySurface} from './verify-forecast-replay-browser.mjs';
+import {chartReplayBrowserCases,verifyChartReplaySurface} from './verify-chart-replay-browser.mjs';
 import {createServer} from 'node:http';
 import {readFile,writeFile,mkdir,mkdtemp,rm,stat} from 'node:fs/promises';
 import {resolve,relative,sep,extname} from 'node:path';
@@ -21,7 +22,7 @@ const widths=[320,390,768,1024,1440],height=900;
 const imageLogMode=process.env.ETH_BROWSER_IMAGE_LOG_MODE??'representative';
 if(!['representative','failures-only'].includes(imageLogMode))throw new Error('Unknown screenshot log transport mode');
 const caseScope=process.env.ATLAS_BROWSER_CASE_SCOPE??'all';
-if(!['all','replay'].includes(caseScope))throw new Error('Unknown browser case scope');
+if(!['all','replay','chart-replay'].includes(caseScope))throw new Error('Unknown browser case scope');
 const report={schemaVersion:1,kind:'eth-candidate-real-browser',startedAt:new Date().toISOString(),status:'running',imageLogMode,caseScope,cases:[],failures:[],
   scope:'Actual checked-out static site in headless Chromium through native CDP; no production deployment, Safari or physical-device claim.'};
 let server,chrome,browser,profile,base;
@@ -83,7 +84,7 @@ async function screenshot(cdp,name,receipt){
   const bytes=Buffer.from(result.data,'base64');
   await writeFile(resolve(out,name),bytes);
   receipt.screenshots.push({file:name,bytes:bytes.length,sha256:hash(bytes)});
-  if((imageLogMode==='representative'&&["workspace-btc-320x900-refresh-retry-failed.png","workspace-btc-1440x900-refresh-retry-failed.png","workspace-btc-short-900x430-refresh-retry-failed.png","workspace-btc-short-900x430-indicators-scroll-end.png","data-corner-320x568.png","data-corner-900x430.png","workspace-legacy-375x900-legacy-sources.png","eth-320-pooled-chart.png","eth-1440-pooled-chart.png","eth-320-pooled-model.png","eth-1440-pooled-model.png","data-fill-1620x1008.png","data-fill-1920x1440.png","ethusd-journal-320-base.png","bmnr-journal-320-stress.png","workspace-btc-320x900-annotations-empty.png","workspace-btc-320x900-go-to.png","workspace-btc-320x900-export-preview.png","workspace-btc-short-900x430-btc-journal.png","workspace-btc-short-900x430-bottom-menu.png","workspace-legacy-320x900-legacy-scroll-owner.png","workspace-legacy-1440x900-legacy-scroll-owner.png","workspace-evidence-320x900-research-reader.png","workspace-evidence-320x900-research-empty.png","workspace-preview-320x900-preview-scroll-end.png","workspace-preview-1440x900-preview-scroll-end.png","workspace-preview-320x900-preview-loading.png","workspace-preview-320x900-preview-error.png"].includes(name))||name.endsWith('-failure.png')){
+  if((imageLogMode==='representative'&&["workspace-btc-320x900-refresh-retry-failed.png","workspace-btc-1440x900-refresh-retry-failed.png","workspace-btc-short-900x430-refresh-retry-failed.png","workspace-btc-short-900x430-indicators-scroll-end.png","data-corner-320x568.png","data-corner-900x430.png","workspace-legacy-375x900-legacy-sources.png","eth-320-pooled-chart.png","eth-1440-pooled-chart.png","eth-320-pooled-model.png","eth-1440-pooled-model.png","data-fill-1620x1008.png","data-fill-1920x1440.png","ethusd-journal-320-base.png","bmnr-journal-320-stress.png","workspace-btc-320x900-annotations-empty.png","workspace-btc-320x900-go-to.png","workspace-btc-320x900-export-preview.png","workspace-btc-short-900x430-btc-journal.png","workspace-btc-short-900x430-bottom-menu.png","workspace-legacy-320x900-legacy-scroll-owner.png","workspace-legacy-1440x900-legacy-scroll-owner.png","workspace-evidence-320x900-research-reader.png","workspace-evidence-320x900-research-empty.png","workspace-preview-320x900-preview-scroll-end.png","workspace-preview-1440x900-preview-scroll-end.png","workspace-preview-320x900-preview-loading.png","workspace-preview-320x900-preview-error.png"].includes(name))||(imageLogMode==='representative'&&['chart-replay-btc-1440x900-fixed-origin.png','chart-replay-btc-320x568-next-bar.png','chart-replay-eth-320x568-next-bar.png'].includes(name))||name.endsWith('-failure.png')){
     const size=30000,total=Math.ceil(result.data.length/size);
     for(let index=0;index<total;index++)console.log('ETH_BROWSER_IMAGE_CHUNK '+JSON.stringify({name,index,total,data:result.data.slice(index*size,(index+1)*size)}));
   }
@@ -676,6 +677,7 @@ async function main(){
   }
   for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/preserved-archive-download.js','dist/workspace-tools.js','dist/research-annotations-workbench.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   for(const path of ['dist/forecast-replay.js','dist/forecast-replay-sources.js','dist/forecast-replay-view.js','dist/data/replay-eth-ohlc.json','scripts/verify-forecast-replay-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
+  for(const path of ['dist/chart-replay.js','dist/chart-replay-state.js','dist/chart-replay-renderer.js','dist/chart-replay-sources.js','dist/chart-replay.css','dist/asset-forecast-loader.js','dist/data/btc-volume.json','scripts/verify-chart-replay-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   const fonts=execFileSync('fc-list',[':lang=ko'],{encoding:'utf8'}).trim();
   assert.ok(fonts.length,'Korean fonts are required; install fonts-noto-cjk in this PR runner');
   report.koreanFonts=fonts.split('\n').slice(0,10);
@@ -752,8 +754,8 @@ async function main(){
     {page:'data',width:1920,height:1440,touch:false,responsive:true,fill:true},
     {page:'data',width:900,height:430,touch:true,responsive:true,fill:false},
     {page:'data',width:320,height:568,touch:true,responsive:true,fill:false});
-  caseSpecs.push(...workspaceBrowserCases,...replayBrowserCases);
-  const selectedCases=caseSpecs.filter(spec=>caseScope==='all'||spec.replay);
+  caseSpecs.push(...workspaceBrowserCases,...replayBrowserCases,...chartReplayBrowserCases);
+  const selectedCases=caseSpecs.filter(spec=>caseScope==='all'||caseScope==='replay'&&spec.replay||caseScope==='chart-replay'&&spec.chartReplay);
   report.declaredCaseCount=caseSpecs.length;report.expectedCaseCount=selectedCases.length;
   for(const spec of selectedCases){
     const {page,width,height,touch}=spec;
@@ -848,7 +850,8 @@ async function main(){
       await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'},{name:'prefers-color-scheme',value:'dark'}]});
       receipt.url=spec.route?base+spec.route:base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
-      if(spec.replay)await verifyForecastReplaySurface({cdp,browser,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
+      if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
+      else if(spec.replay)await verifyForecastReplaySurface({cdp,browser,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
       else if(spec.surface)await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership:()=>verifyHeaderOwnership(cdp)});else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
       assert.equal(receipt.runtimeErrors.length,0,'Browser runtime errors: '+JSON.stringify(receipt.runtimeErrors));
       const verifiedReplayCancellations=new Set(receipt.replay?.expectedCanceledRequests.map(row=>row.requestId)??[]);
@@ -875,5 +878,5 @@ finally{
   if(server)await new Promise(resolve=>server.close(resolve));
   if(profile)try{await rm(profile,{recursive:true,force:true});}catch(error){report.cleanupError=errorText(error);}
   await mkdir(out,{recursive:true});await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,caseScope:report.caseScope,declaredCaseCount:report.declaredCaseCount,expectedCaseCount:report.expectedCaseCount,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,replay:c.replay,infoDataLinks:c.infoDataLinks,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,caseScope:report.caseScope,declaredCaseCount:report.declaredCaseCount,expectedCaseCount:report.expectedCaseCount,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,replay:c.replay,chartReplay:c.chartReplay,infoDataLinks:c.infoDataLinks,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
 }

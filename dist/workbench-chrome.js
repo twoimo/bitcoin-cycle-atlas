@@ -2,7 +2,7 @@ import { CHART_INTERVALS,isIntradayInterval } from './ohlc-data.js?v=1.29.0';
 import { MAGNET_MODES, MAGNET_LABELS, normalizeMagnetMode } from './chart-magnet.js?v=1.29.0';
 import { mountChartGoTo } from './chart-go-to.js?v=1.29.0';
 import { isStartPriceUnit } from './price-display.js?v=1.29.0';
-import { mountWorkspaceTools } from './workspace-tools.js?v=1.29.0';
+import { mountWorkspaceTools } from './workspace-tools.js?v=1.29.1';
 import { mountChartBottomBar } from './chart-bottom-bar.js?v=1.29.0';
 import { mountSymbolSelector } from './symbol-selector.js?v=1.29.0';
 const $ = selector => document.querySelector(selector);
@@ -207,6 +207,7 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
     nodes[next].focus({preventScroll:true});nodes[next].click();
   };
   const handleKey=event=>{
+    if(document.documentElement.dataset.chartReplayActive==='true')return;
     if(event.defaultPrevented||document.body.dataset.page!=='outlook'||event.ctrlKey||event.metaKey||event.target.closest?.('input,textarea,select,[contenteditable=true],#chart-reader,#indicator-library,#workspace-dialog,#chart-indicator-manager,.analysis-indicator-window,.chart-context-menu,.chart-go-to-dialog,.chart-bottom-popover'))return;
     if(workspace.dataset.chartMode!=='price')return;
     const key=event.key.toLowerCase(),intraday=plot.dataset.intraday==='true';

@@ -119,8 +119,11 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   assert.equal(verification.modules, Object.keys(bundle.imports).length);
   assert.equal(verification.snapshots, 7);
   assert.ok(verification.forecastRecords>=5,'all five initial economic scenarios have actual preserved outputs');
-  assert.equal(verification.stylesheets, 24);
+  assert.equal(verification.stylesheets, 25);
   assert.match(html,/\.forecast-journal\s*\{/,'the archived forecast workspace retains its offline styles');
+  const replayStyle = `<style>\n${await readFile(resolve(root, 'dist/chart-replay.css'), 'utf8')}\n</style>`;
+  assert.equal(html.split(replayStyle).length - 1, 1, 'inline chart replay embeds its exact stylesheet once');
+  await assert.rejects(verifyStandaloneArtifact(html.replace(replayStyle, '<style>.chart-replay-controls{display:none}</style>'), resolve(root, 'dist')), /Missing or changed stylesheet: chart-replay\.css/);
   const {stdout} = await run(process.execPath, ['--experimental-vm-modules', runtime, 'artifact', first]);
   assert.deepEqual(JSON.parse(stdout), {modules:verification.modules, parsed:true, linked:true});
   const mapMatch = html.match(/<script type="importmap">([\s\S]*?)<\/script>/);

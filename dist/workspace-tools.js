@@ -145,7 +145,7 @@ export function mountWorkspaceTools({trigger, plot, openReader, closeReader}) {
   });
   dialog.addEventListener('close',()=>{if(dialog.open)return;trigger.setAttribute('aria-expanded','false');if(!restoreAfterClose){restoreAfterClose=true;return;}const target=opener?.isConnected&&opener.getClientRects().length?opener:doc.getElementById('mobile-details-toggle')?.getClientRects().length?doc.getElementById('mobile-details-toggle'):plot.querySelector('svg:not([hidden])');target?.focus({preventScroll:true});});
   trigger.onclick=()=>open();
-  const onKey=event=>{if(event.defaultPrevented||doc.body.dataset.page!=='outlook'||event.altKey||event.shiftKey||!(event.ctrlKey||event.metaKey)||event.key.toLowerCase()!=='k'||event.target.closest?.('input,textarea,select,[contenteditable=true],dialog[open]'))return;event.preventDefault();open('commands',doc.activeElement);};
+  const onKey=event=>{if(doc.documentElement.dataset.chartReplayActive==='true'||event.defaultPrevented||doc.body.dataset.page!=='outlook'||event.altKey||event.shiftKey||!(event.ctrlKey||event.metaKey)||event.key.toLowerCase()!=='k'||event.target.closest?.('input,textarea,select,[contenteditable=true],dialog[open]'))return;event.preventDefault();open('commands',doc.activeElement);};
   const onState=event=>{latest=event.detail;if(dialog.open&&tab==='saved')renderSaved();};
   const onHistory=event=>{if(latest)latest={...latest,history:event.detail};if(dialog.open&&tab==='commands')paintCommands();};
   const onOpen=event=>open(event.detail?.tab==='saved'?'saved':'commands',event.detail?.opener||doc.activeElement);

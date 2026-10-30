@@ -42,7 +42,7 @@ export async function structureViewFixture({ root = fileURLToPath(new URL('../..
   }
   const mounts = () => ({ cancel() {}, cancelPending() {}, destroy() {}, update() {}, refresh() {}, open() {}, toolbar: new NodeBoundary() });
   Object.assign(deps, {
-    mountResearchAnnotationsWorkbench: mounts, mountChartTouchTracking: mounts, mountChartExportWorkbench: mounts,
+    mountResearchAnnotationsWorkbench: mounts, mountChartTouchTracking: mounts, mountChartExportWorkbench: mounts, mountChartReplay: mounts,
     bindChartNavigation: () => ({ ...mounts(), cancelGesture() {}, resumeTouchGesture() {} }),
     createMarketDataController: () => ({ cancel() {}, get() { return { status: 'idle' }; } }),
   });

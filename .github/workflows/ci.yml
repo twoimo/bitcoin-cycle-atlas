@@ -71,6 +71,7 @@ jobs:
           name: ci-verification-${{ github.sha }}-${{ github.run_attempt }}
           path: |
             build/ci-model-tests.log
+            build/replay-state.json
             dist/publication.json
           retention-days: 30
           if-no-files-found: error

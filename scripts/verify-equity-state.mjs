@@ -109,7 +109,8 @@ async function implementation(work) {
       failure: /new prices must never be displayed with the previous projection/,
     },
     {
-      id: 'hidden-ready', from: 'state.frame=null;if(suspended)return;const series=current();', to: 'state.frame=null;const series=current();',
+      // Remove only suspension ownership; keep inline replay ownership intact.
+      id: 'hidden-ready', from: "state.frame=null;if(suspended||svg.dataset.chartReplayActive==='true')return;const series=current();", to: "state.frame=null;if(svg.dataset.chartReplayActive==='true')return;const series=current();",
       failure: /a hidden initialization callback must not release the boot shell/,
     },
     {
