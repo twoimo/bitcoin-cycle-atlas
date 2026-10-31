@@ -1,0 +1,85 @@
+name: Replay v1.29.9 second independent QA
+on:
+  push:
+    branches: [qa/replay-v1.29.9-second-20261101]
+    paths: [.github/workflows/replay-second-qa.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: a91cc16b62d536c7ad3fee8e722298a4ce8d5077
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Full current source regression and lifecycle guards
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/qa2-regression"
+          git rev-parse HEAD > "$RUNNER_TEMP/qa2-regression/source.txt"
+          npm test 2>&1 | tee "$RUNNER_TEMP/qa2-regression/tests.log"
+          npm run verify:formal 2>&1 | tee "$RUNNER_TEMP/qa2-regression/formal.log"
+          npm run verify:cycle 2>&1 | tee "$RUNNER_TEMP/qa2-regression/cycle.log"
+          npm run verify:performance 2>&1 | tee "$RUNNER_TEMP/qa2-regression/performance.log"
+          npm run verify:static 2>&1 | tee "$RUNNER_TEMP/qa2-regression/static.log"
+          git status --porcelain > "$RUNNER_TEMP/qa2-regression/working-tree.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa2-current-regression
+          path: ${{ runner.temp }}/qa2-regression
+          retention-days: 14
+  public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: a91cc16b62d536c7ad3fee8e722298a4ce8d5077
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Reuse exact accepted assertions, not old results
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/qa2-program"
+          gh api repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/13047877236/zip > "$RUNNER_TEMP/qa2-program/prior.zip"
+          python3 - <<'PY'
+          import os,hashlib,zipfile
+          from pathlib import Path
+          p=Path(os.environ['RUNNER_TEMP'])/'qa2-program'
+          b=(p/'prior.zip').read_bytes()
+          assert hashlib.sha256(b).hexdigest()=='5f7d758715bba694cf2868e150720021876541b366d4e474b8f8d90a61e1d11e'
+          with zipfile.ZipFile(p/'prior.zip') as z: code=z.read('verification-source.mjs')
+          assert hashlib.sha256(code).hexdigest()=='1c88d9d8b0b65ca4538f6c43c3814c210860e84b7ea872ed41a857aa729a8eff'
+          (p/'baseline.mjs').write_bytes(code)
+          PY
+      - name: Install pinned Korean font
+        run: node scripts/install-hallmark-font.mjs
+      - name: New isolated Chrome profile, actual public URL and hard reload
+        env:
+          EXPECTED_SOURCE: a91cc16b62d536c7ad3fee8e722298a4ce8d5077
+        run: node "$RUNNER_TEMP/qa2-program/baseline.mjs"
+      - name: Preserve exact source for independent inspection
+        if: always()
+        run: |
+          mkdir -p build/public-overlay
+          cp "$RUNNER_TEMP/qa2-program/baseline.mjs" build/public-overlay/verification-source.mjs
+          git archive --format=tar.gz HEAD > build/public-overlay/source.tar.gz
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa2-public-repeat
+          path: build/public-overlay
+          retention-days: 14
