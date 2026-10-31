@@ -1,3 +1,4 @@
+import {frozenMarketText} from './helpers/frozen-market-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -9,7 +10,7 @@ import {createAtlasReplayContext,drawAtlasChartReplay} from '../dist/chart-repla
 const {drawAtlasPriceChart,forecastValueSignature}=await import('../dist/atlas-price-chart.js');
 const {captureAtlasReplaySnapshot}=await import('../dist/chart-replay.js');
 const at='2026-10-31T02:00:00.000Z';
-const archive=await parseBitcoinReplayCandles(await readFile(new URL('../dist/data/btc-volume.json',import.meta.url),'utf8'),{now:Date.parse(at)});
+const archive=await parseBitcoinReplayCandles(await frozenMarketText('btc-volume'),{now:Date.parse(at)});
 const saved=await parseProjectReplayBaseline(await readFile(new URL('../dist/data/project-origin-btc-2026-10-21.json',import.meta.url),'utf8'));
 const forecast=saved.forecast,dataset=saved.dataset;
 const presentation={band:true,scale:'log',unit:'usd',showCycleMarkers:true,showCycleIntervals:true,showTurns:true,showHistoricalEvents:true};

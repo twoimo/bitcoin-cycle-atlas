@@ -1,3 +1,4 @@
+import {frozenMarketText} from './helpers/frozen-market-fixture.mjs';
 import nodeTest from 'node:test';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
@@ -13,8 +14,8 @@ import {buildLongHorizonForecast} from '../dist/long-horizon-forecast.js';
 import {createCurrentChartReplaySession} from '../dist/forecast-replay.js';
 import {forecastValueSignature} from '../dist/atlas-price-chart.js';
 import {parseProjectReplayBaseline} from '../dist/project-replay-baseline.js';
-const archive=await parseBitcoinReplayCandles(await readFile(new URL('../dist/data/btc-volume.json',import.meta.url),'utf8'),{now:Date.parse('2026-10-31T02:00:00Z')});
-const dataset=JSON.parse(await readFile(new URL('../dist/data/btc-daily.json',import.meta.url),'utf8'));
+const archive=await parseBitcoinReplayCandles(await frozenMarketText('btc-volume'),{now:Date.parse('2026-10-31T02:00:00Z')});
+const dataset=JSON.parse(await frozenMarketText('btc-daily'));
 const forecast=buildLongHorizonForecast(dataset,{scenario:'base',sampleCount:64});
 const old=await parseProjectReplayBaseline(await readFile(new URL('../dist/data/project-origin-btc-2026-10-21.json',import.meta.url),'utf8'));
 const capture=()=>({dataset:structuredClone(dataset),forecast:structuredClone(forecast),start:'2024-10-29',end:'2028-10-29',frequency:'weekly',window:'focus',chartType:'candles',presentation:{band:true,scale:'log',unit:'usd',showCycleMarkers:true,showCycleIntervals:true}});
@@ -105,6 +106,55 @@ test('a corrupt saved capture fails closed and preserves stored bytes and disabl
   assert.equal(resumed.state().session,null);assert.equal(resumed.calls.current,0);
   for(const name of ['play','next','live','export'])assert.equal(resumed.controls.get(name).disabled,true);
   assert.equal(resumed.savedText(),bytes);assert.equal(resumed.writes.length,0);resumed.mounted.destroy();
+});
+
+// Issue #48: a tab's immutable replay and the shared saved pointer have different owners.
+async function seededSave(){
+  const h=await fixtures({captured:{...capture(),dataset:structuredClone(old.dataset),forecast:structuredClone(old.forecast)}});
+  await h.open();await h.start('2026-08-17');h.key('ArrowRight');h.key('ArrowRight');
+  await h.mounted.exit({saveSession:true});const text=h.savedText();h.mounted.destroy();return text;
+}
+async function resumed(h){h.controls.get('entry-continue').click();await until(()=>['paused','error'].includes(h.state().status),'latest Continue');assert.equal(h.state().status,'paused',h.state().error);}
+test('an already-mounted tab reads the newest explicit save at entry even without a storage event',async()=>{
+  const initial=await seededSave(),newest=JSON.stringify({...JSON.parse(initial),cursorDate:'2026-08-23',cursorIndex:7,saveRevision:'other-tab-save'});
+  const h=await fixtures({storedText:initial});h.externalSave(newest,{notify:false});h.trigger.click();
+  assert.match(h.controls.get('saved-summary').textContent,/2026-08-23/);await resumed(h);
+  assert.equal(h.svg.dataset.replayCursor,'2026-08-23');assert.equal(h.writes.length,0);h.mounted.destroy();
+});
+test('Continue re-reads a new save arriving after its entry dialog was opened',async()=>{
+  const initial=await seededSave(),newest=JSON.stringify({...JSON.parse(initial),cursorDate:'2026-08-24',cursorIndex:8,saveRevision:'late-save'});
+  const h=await fixtures({storedText:initial});h.trigger.click();h.externalSave(newest,{notify:false});await resumed(h);
+  assert.equal(h.svg.dataset.replayCursor,'2026-08-24');assert.equal(h.savedText(),newest);h.mounted.destroy();
+});
+test('external save never changes an active frozen curve and stale exit cannot overwrite it',async()=>{
+  const initial=await seededSave(),h=await fixtures({storedText:initial});h.trigger.click();await resumed(h);
+  const digest=h.state().session.replaySnapshot.digest,signature=h.svg.dataset.forecastValueSignature;
+  h.key('ArrowRight');const newest=JSON.stringify({...JSON.parse(initial),cursorDate:'2026-08-23',cursorIndex:7,saveRevision:'new-generation'});h.externalSave(newest);
+  assert.equal(h.svg.dataset.replayCursor,'2026-08-19');assert.equal(h.svg.dataset.forecastValueSignature,signature);
+  await h.mounted.exit({saveSession:true});assert.equal(h.mounted.isActive(),true);assert.equal(h.savedText(),newest);assert.equal(h.writes.length,0);
+  assert.match(h.controls.get('save-status').textContent,/다른 탭/);assert.equal(h.state().session.replaySnapshot.digest,digest);
+  await h.mounted.exit({saveSession:false});h.trigger.click();await resumed(h);assert.equal(h.svg.dataset.replayCursor,'2026-08-23');h.mounted.destroy();
+});
+test('storage deletion and corruption while the entry dialog is open cannot restore an obsolete closure',async()=>{
+  for(const replacement of [null,'{broken']){
+    const h=await fixtures({storedText:await seededSave()});h.trigger.click();h.externalSave(replacement);
+    assert.equal(h.controls.get('entry-continue').disabled,true);h.controls.get('entry-continue').click();assert.equal(h.state().session,null);
+    assert.equal(h.savedText(),replacement);assert.equal(h.writes.length,0);h.mounted.destroy();
+  }
+});
+test('storage listener is detached on destroy and missing locks preserve the original save',async()=>{
+  const initial=await seededSave(),h=await fixtures({storedText:initial});h.trigger.click();await resumed(h);h.win.navigator.locks=null;
+  await h.mounted.exit({saveSession:true});assert.equal(h.mounted.isActive(),true);assert.equal(h.savedText(),initial);
+  assert.match(h.controls.get('save-status').textContent,/잠금/);h.mounted.destroy();assert.equal(h.win.listeners.get('storage').length,0);
+});
+
+test('visual overlap excludes the observed forecast anchor and counts only disclosed future dates',async()=>{
+  const h=await fixtures({captured:{...capture(),dataset:structuredClone(old.dataset),forecast:structuredClone(old.forecast)}});
+  await h.open();await h.start('2026-10-21');
+  assert.equal(h.svg.dataset.replayOverlapCount,'0');
+  assert.match(h.controls.get('detail-metric').textContent,/미래 구간 시작 2026-10-21/);
+  h.key('ArrowRight');assert.equal(h.svg.dataset.replayOverlapCount,'1');
+  assert.equal(h.state().session.policy.forecastScoringEnabled,false);h.mounted.destroy();
 });
 
 // Match the existing UI suite: run the exact same assertions in an explicitly

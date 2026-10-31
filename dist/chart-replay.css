@@ -106,3 +106,9 @@ html[data-chart-replay-active=true] .eth-interval-buttons,html[data-chart-replay
 }
 @media(max-height:430px){.chart-replay-hud{top:4px}.chart-replay-hud .chart-replay-inspect{display:none}}
 @media(prefers-reduced-motion:reduce){.chart-replay-controls *{scroll-behavior:auto}}
+
+/* Overflow affordances never widen the accepted transport or intercept taps. */
+.chart-replay-bar::before,.chart-replay-bar::after{position:absolute;z-index:2;top:5px;bottom:5px;width:12px;display:none;align-items:center;color:var(--muted);font-size:18px;pointer-events:none}
+.chart-replay-bar[data-scroll-left=true]::before{content:'‹';display:flex;left:0;background:linear-gradient(to right,var(--surface),transparent)}
+.chart-replay-bar[data-scroll-right=true]::after{content:'›';display:flex;right:0;justify-content:flex-end;background:linear-gradient(to left,var(--surface),transparent)}
+.chart-replay-scroll-hint{position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);max-width:100%;padding:0 4px;background:var(--surface);color:var(--muted);font:11px/1.5 var(--font,sans-serif);white-space:nowrap;pointer-events:none}
