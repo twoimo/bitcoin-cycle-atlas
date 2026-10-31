@@ -19,15 +19,17 @@ jobs:
           cat qa-transfer/replay48-{0,1,2,3}.b64 > /tmp/replay48-stage/received.b64
           python3 - <<'PY'
           from pathlib import Path
-          import base64,gzip,hashlib
+          import base64,gzip,hashlib,re
           root=Path('/tmp/replay48-stage')
           text=''.join((root/'received.b64').read_text().split())
-          # Transport corrections are still bound by the complete patch digest.
           text=text.replace('haY63lAGca','haY63l+AGca')
           patch=gzip.decompress(base64.b64decode(text,validate=True))
           assert len(patch)==54810
           assert hashlib.sha256(patch).hexdigest()=='9a41d5532e2ea80e07d7e80d8766e2c8b3a3707e5a861285af3cd2d7f2d3f072'
-          (root/'candidate.patch').write_bytes(patch)
+          (root/'candidate-original.patch').write_bytes(patch)
+          text,count=re.subn(r'(diff --git [^\n]+\n)(--- /dev/null\n)',r'\1new file mode 100644\n\2',patch.decode())
+          assert count==3
+          (root/'candidate.patch').write_text(text)
           PY
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -48,8 +50,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import subprocess
-          root=Path('.')
-          destination=root/'tests/fixtures/market-v1.29.8'
+          destination=Path('tests/fixtures/market-v1.29.8')
           destination.mkdir(parents=True,exist_ok=True)
           for name in ['btc-volume','eth-ohlc','btc-daily']:
               data=subprocess.check_output(['git','show','HEAD:dist/data/'+name+'.json'])
@@ -60,6 +61,7 @@ jobs:
           PY
           git add -- dist docs package.json tests
           git diff --cached --check
+          git write-tree | tee /tmp/replay48-stage/tree.txt
           test "$(git write-tree)" = b41c6e5e9fe9e0c7f525e00180fc74d473b668d7
           node --check dist/chart-replay.js
           node --check dist/chart-replay-snapshot.js
@@ -69,7 +71,6 @@ jobs:
           git commit -m 'fix: isolate historical fixtures and synchronize replay saves across tabs (v1.29.9)'
           git push origin HEAD:refs/heads/fix/replay-qa-48-v1.29.9
           git rev-parse HEAD > /tmp/replay48-stage/commit.txt
-          git rev-parse HEAD^{tree} > /tmp/replay48-stage/tree.txt
           git diff HEAD^ HEAD --stat > /tmp/replay48-stage/changes.txt
       - uses: actions/upload-artifact@v4
         if: always()
