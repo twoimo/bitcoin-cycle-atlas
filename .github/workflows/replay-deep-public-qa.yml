@@ -1,0 +1,68 @@
+name: Replay independent public deep QA
+on:
+  push:
+    branches: [qa/replay-v1.29.8-deep-20261031]
+    paths: [.github/workflows/replay-deep-public-qa.yml, qa/extra-public-checks.mjs]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Assemble pinned baseline and new independent QA
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/atlas-deep-program
+          gh api repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/13042233606/zip > /tmp/atlas-deep-program/prior.zip
+          cp qa/extra-public-checks.mjs /tmp/atlas-deep-program/extra.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib
+          root=Path('/tmp/atlas-deep-program')
+          assert hashlib.sha256((root/'prior.zip').read_bytes()).hexdigest()=='dab3574e72ed1c7c8c6b976dae7d58fe2f26114e97e1370ea72804d02f6e2157'
+          with ZipFile(root/'prior.zip') as z:
+              code=z.read('verification-source.mjs')
+          assert hashlib.sha256(code).hexdigest()=='ce95aa266c1173fa4e48b7e2e46c0fdda8bc8ee8a0375a35fd32869f3012fa5f'
+          old="assert.equal(report.runtimeErrors.length,0);report.status='pass';"
+          text=code.decode(); assert text.count(old)==1
+          text=text.replace(old,(root/'extra.mjs').read_text()+"\nassert.equal(report.runtimeErrors.length,0);report.status=report.deepSummary.failed?'findings':'pass';")
+          (root/'deep-public.mjs').write_text(text)
+          PY
+          node --check /tmp/atlas-deep-program/deep-public.mjs
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: a5feac9ee94fe73f849659221b1d43af7eee53b0
+          persist-credentials: false
+      - name: Install source-pinned Korean font
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/atlas-qa"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 -o /tmp/NotoSansCJKkr-Regular.otf https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf
+          test "$(git hash-object /tmp/NotoSansCJKkr-Regular.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
+          cp /tmp/NotoSansCJKkr-Regular.otf "$HOME/.local/share/fonts/atlas-qa/"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-qa"
+      - name: Run real public UI and isolated storage fault probes
+        env:
+          EXPECTED_SOURCE: a5feac9ee94fe73f849659221b1d43af7eee53b0
+        run: node /tmp/atlas-deep-program/deep-public.mjs
+      - name: Preserve QA program
+        if: always()
+        run: |
+          mkdir -p build/public-overlay
+          cp /tmp/atlas-deep-program/deep-public.mjs build/public-overlay/verification-source.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: replay-independent-deep-public-qa
+          path: build/public-overlay
+          retention-days: 14
