@@ -1,0 +1,38 @@
+name: Replay QA refresh failure evidence
+on:
+  push:
+    branches: [qa/replay-v1.29.8-deep-20261031]
+    paths: [.github/workflows/replay-qa-refresh-log.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read the actual failed refresh job without rerunning publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/refresh-failure
+          gh api repos/twoimo/bitcoin-cycle-atlas/actions/jobs/124537637039/logs > /tmp/refresh-failure/refresh.log
+          gh api repos/twoimo/bitcoin-cycle-atlas/actions/runs/41201353190 > /tmp/refresh-failure/run.json
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,hashlib,re
+          root=Path('/tmp/refresh-failure');raw=(root/'refresh.log').read_bytes();lines=raw.decode('utf-8-sig').splitlines()
+          starts=[i for i,l in enumerate(lines) if re.search(r'\bnot ok \d+ - ',l)]
+          excerpts=[]
+          for i in starts:
+              end=next((j for j in range(i+1,min(i+250,len(lines))) if '# Subtest:' in lines[j]),min(i+100,len(lines)))
+              excerpts.append({'line':i+1,'text':'\n'.join(lines[max(0,i-2):end])})
+          result={'run':41201353190,'job':124537637039,'source':'a5feac9ee94fe73f849659221b1d43af7eee53b0','logSha256':hashlib.sha256(raw).hexdigest(),'failures':excerpts,'summary':[l for l in lines if re.search(r'# (tests|pass|fail|cancelled|skipped|todo|duration_ms) ',l)][-10:]}
+          (root/'failures.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+          print(json.dumps(result,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: replay-qa-scheduled-refresh-failure
+          path: /tmp/refresh-failure
+          retention-days: 14
