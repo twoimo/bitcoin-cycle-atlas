@@ -1,0 +1,78 @@
+name: Replay second public adversarial QA
+on:
+  push:
+    branches: [qa/replay-v1.29.9-second-20261101]
+    paths: [.github/workflows/replay-second-browser.yml, qa/second-browser-extra.mjs]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Assemble exact prior assertions and new independent cases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/qa2-program
+          cp qa/second-browser-extra.mjs /tmp/qa2-program/extra-original.mjs
+          gh api repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/13047877236/zip > /tmp/qa2-program/prior.zip
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          p=Path('/tmp/qa2-program')
+          assert hashlib.sha256((p/'prior.zip').read_bytes()).hexdigest()=='5f7d758715bba694cf2868e150720021876541b366d4e474b8f8d90a61e1d11e'
+          with zipfile.ZipFile(p/'prior.zip') as z: code=z.read('verification-source.mjs')
+          assert hashlib.sha256(code).hexdigest()=='1c88d9d8b0b65ca4538f6c43c3814c210860e84b7ea872ed41a857aa729a8eff'
+          extra=(p/'extra-original.mjs').read_text()
+          # Resolve test constants before first execution. Known forecast rows
+          # in exports are intentional; test only actual-value collections.
+          assert extra.count('innerHeightValue')==1
+          extra=extra.replace('innerHeightValue','360').replace('[10,1100,7,13]','[10,900,7,13]')
+          assert extra.count('walk(value.frame);')==1
+          extra=extra.replace('walk(value.frame);','walk({actual:value.frame.actual,inputPrices:value.frame.inputPrices,dailyComparisons:value.frame.dailyComparisons}); for(const target of value.frame.targets??[])if(target.targetDate>s.data.replayCursor)assert.equal(target.actual,null);')
+          (p/'extra-effective.mjs').write_text(extra)
+          text=code.decode(); marker='report.deepSummary={passed:'
+          assert text.count(marker)==1
+          text=text.replace(marker,extra+'\n'+marker)
+          text=text.replace("assert.equal(report.runtimeErrors.length,0);report.status='pass';","assert.equal(report.runtimeErrors.length,0);assert.equal(report.secondSummary.failed,0,JSON.stringify(report.secondChecks.filter(c=>c.status==='fail')));report.status='pass';")
+          (p/'verify.mjs').write_text(text)
+          PY
+          node --check /tmp/qa2-program/verify.mjs
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: a91cc16b62d536c7ad3fee8e722298a4ce8d5077
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Install source-pinned Korean font
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/atlas-ci"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 -o /tmp/NotoSansCJKkr-Regular.otf https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf
+          test "$(git hash-object /tmp/NotoSansCJKkr-Regular.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
+          cp /tmp/NotoSansCJKkr-Regular.otf "$HOME/.local/share/fonts/atlas-ci/"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-ci"
+      - name: Exercise actual public site, new profiles and controlled faults
+        env:
+          EXPECTED_SOURCE: a91cc16b62d536c7ad3fee8e722298a4ce8d5077
+          MIN_ACTUAL_THROUGH: '2026-10-30'
+        run: node /tmp/qa2-program/verify.mjs
+      - name: Preserve every outcome and exact tested program
+        if: always()
+        run: |
+          mkdir -p build/public-overlay
+          cp /tmp/qa2-program/{verify,extra-original,extra-effective}.mjs build/public-overlay/
+          git rev-parse HEAD > build/public-overlay/source.txt
+          git status --porcelain > build/public-overlay/status.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa2-public-adversarial
+          path: build/public-overlay
+          retention-days: 14
