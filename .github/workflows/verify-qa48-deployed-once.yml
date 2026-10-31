@@ -1,0 +1,121 @@
+name: QA48 actual refreshed publication acceptance
+on:
+  push:
+    branches: [stage/replay-qa-48-v1.29.9]
+    paths: [.github/workflows/verify-qa48-deployed-once.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  bind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    outputs:
+      source: ${{ steps.identity.outputs.source }}
+    steps:
+      - name: Observe the real operating refresh without bypassing any gate
+        id: identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/qa48-public
+          for attempt in $(seq 1 66); do
+            gh api repos/twoimo/bitcoin-cycle-atlas/actions/runs/41215026518 > /tmp/qa48-public/refresh-run.json
+            status="$(jq -r .status /tmp/qa48-public/refresh-run.json)"
+            if [ "$status" = completed ]; then break; fi
+            sleep 20
+          done
+          test "$(jq -r .status /tmp/qa48-public/refresh-run.json)" = completed
+          test "$(jq -r .conclusion /tmp/qa48-public/refresh-run.json)" = success
+          test "$(jq -r .head_sha /tmp/qa48-public/refresh-run.json)" = 9f8ebd066dd70013fe4fb2d8293b7547c024a036
+          test "$(jq -r .event /tmp/qa48-public/refresh-run.json)" = workflow_dispatch
+          gh api repos/twoimo/bitcoin-cycle-atlas/actions/runs/41215026518/jobs > /tmp/qa48-public/refresh-jobs.json
+          jq -e '.jobs | length == 2 and all(.[]; .conclusion == "success")' /tmp/qa48-public/refresh-jobs.json
+          for job in $(jq -r '.jobs[].id' /tmp/qa48-public/refresh-jobs.json); do
+            gh api --allow-escape-sequences repos/twoimo/bitcoin-cycle-atlas/actions/jobs/$job/logs > /tmp/qa48-public/refresh-$job.log
+          done
+          source="$(gh api repos/twoimo/bitcoin-cycle-atlas/git/ref/heads/main --jq .object.sha)"
+          gh api repos/twoimo/bitcoin-cycle-atlas/git/commits/$source > /tmp/qa48-public/data-commit.json
+          jq -e '.parents | length == 1 and .[0].sha == "9f8ebd066dd70013fe4fb2d8293b7547c024a036"' /tmp/qa48-public/data-commit.json
+          printf 'source=%s\n' "$source" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$source" > /tmp/qa48-public/expected-source.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa48-real-refresh-receipt
+          path: /tmp/qa48-public
+          retention-days: 14
+  public:
+    needs: bind
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.bind.outputs.source }}
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Recover the exact accepted program and inspect data-only changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/qa48-program
+          gh api repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/13047343290/zip > /tmp/qa48-program/tested.zip
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib,subprocess,re
+          r=Path('/tmp/qa48-program');b=(r/'tested.zip').read_bytes()
+          assert hashlib.sha256(b).hexdigest()=='2335e9d6b2f4c8ae758c94dd52cb0a277e27ebcabdb69e7c3219806aa77b0a2c'
+          with ZipFile(r/'tested.zip') as z: code=z.read('verification-source.mjs')
+          assert hashlib.sha256(code).hexdigest()=='1c88d9d8b0b65ca4538f6c43c3814c210860e84b7ea872ed41a857aa729a8eff'
+          (r/'verify.mjs').write_bytes(code)
+          paths=subprocess.check_output(['git','diff','HEAD^','HEAD','--name-only'],text=True).splitlines()
+          allowed={'dist/data/btc-daily.json','dist/data-update.js','dist/data/btc-ohlc.json','dist/data/btc-volume.json','dist/data/cycle-calibration.json','dist/data/eth-ohlc.json','dist/data/mstr-ohlc.json','dist/data/bmnr-ohlc.json','dist/data/asset-comparison.json','dist/treasury-catalog.js','dist/data/judgment-snapshots/index.json','dist/data/forecast-ledger/index.json','dist/data/forecast-ledger/evaluation.json','dist/data/forecast-ledger/experiments.json'}
+          for p in paths:
+              assert p in allowed or re.fullmatch(r'dist/data/judgment-snapshots/\d{4}-\d{2}-\d{2}T\d{9}Z-[a-f0-9]{12}\.json',p) or re.fullmatch(r'dist/data/forecast-ledger/(records|snapshots)/[a-f0-9]{64}\.json',p),p
+          (r/'data-only-changes.txt').write_text('\n'.join(paths)+'\n')
+          PY
+      - name: Install the same pinned font
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/atlas-ci"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 -o /tmp/NotoSansCJKkr-Regular.otf https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf
+          test "$(git hash-object /tmp/NotoSansCJKkr-Regular.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
+          cp /tmp/NotoSansCJKkr-Regular.otf "$HOME/.local/share/fonts/atlas-ci/"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-ci"
+      - name: Hard reload the actual public site and reproduce all QA48 corrections
+        env:
+          EXPECTED_SOURCE: ${{ needs.bind.outputs.source }}
+          MIN_ACTUAL_THROUGH: '2026-10-30'
+        run: node /tmp/qa48-program/verify.mjs
+      - name: Independently compare the changed replay stylesheet body
+        env:
+          EXPECTED_SOURCE: ${{ needs.bind.outputs.source }}
+        run: |
+          node --input-type=module <<'JS'
+          import {readFile,writeFile} from 'node:fs/promises';
+          import {createHash} from 'node:crypto';
+          import assert from 'node:assert/strict';
+          const url='https://twoimo.github.io/bitcoin-cycle-atlas/chart-replay.css?qa48='+process.env.EXPECTED_SOURCE;
+          const response=await fetch(url,{headers:{'Cache-Control':'no-cache'},signal:AbortSignal.timeout(20000)});assert.equal(response.status,200);
+          const bytes=Buffer.from(await response.arrayBuffer()),local=await readFile('dist/chart-replay.css');assert.deepEqual(bytes,local);
+          await writeFile('build/public-overlay/replay-css-http.json',JSON.stringify({path:'chart-replay.css',bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex'),source:process.env.EXPECTED_SOURCE}));
+          JS
+      - name: Preserve verification program and actual changed paths
+        if: always()
+        run: |
+          mkdir -p build/public-overlay
+          cp /tmp/qa48-program/verify.mjs build/public-overlay/verification-source.mjs
+          cp /tmp/qa48-program/data-only-changes.txt build/public-overlay/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa48-deployed-native-acceptance
+          path: build/public-overlay
+          retention-days: 14
