@@ -1,0 +1,86 @@
+name: QA48 final native acceptance
+on:
+  push:
+    branches: [stage/replay-qa-48-v1.29.9]
+    paths: [.github/workflows/verify-replay48-native.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Assemble the pinned original checks and QA48 acceptance
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/qa48-program
+          gh api repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/13043931007/zip > /tmp/qa48-program/prior.zip
+          cp qa-transfer/verify-replay48-extra.mjs /tmp/qa48-program/extra.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib
+          root=Path('/tmp/qa48-program');data=(root/'prior.zip').read_bytes()
+          assert hashlib.sha256(data).hexdigest()=='27de4f5d7e5b9b6d9e3e97472165cd0c2355d6b5da7a6eb5d8e1e5e4d2375671'
+          with ZipFile(root/'prior.zip') as z: source=z.read('verification-source.mjs')
+          assert hashlib.sha256(source).hexdigest()=='01fef5655b7f73e8152d55e5a70ae1e614579b5b191464f5be75b1d3eb773f7d'
+          text=source.decode();start=text.index(' report.deepChecks=[];');end=text.index('}catch(e){report.status=',start)
+          text=text[:start]+(root/'extra.mjs').read_text()+text[end:]
+          text=text.replace('1.29.8','1.29.9')
+          text=text.replace("const base='https://twoimo.github.io/bitcoin-cycle-atlas/';","const base=process.env.ATLAS_QA_URL||'https://twoimo.github.io/bitcoin-cycle-atlas/';")
+          text=text.replace("rows.at(-1).date>='2026-10-30'","rows.at(-1).date>=(process.env.MIN_ACTUAL_THROUGH||'2026-10-30')")
+          text=text.replace("status:'running',startedAt:","status:'running',verificationScope:process.env.ATLAS_QA_URL?'candidate localhost, not deployed site':'deployed public site',startedAt:")
+          (root/'verify.mjs').write_text(text)
+          PY
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 87690bf46e1a8ded356df9507fdf605ac5698b3b
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Install source-pinned Korean font
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/atlas-ci"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 -o /tmp/NotoSansCJKkr-Regular.otf https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf
+          test "$(git hash-object /tmp/NotoSansCJKkr-Regular.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
+          cp /tmp/NotoSansCJKkr-Regular.otf "$HOME/.local/share/fonts/atlas-ci/"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-ci"
+      - name: Execute every existing native browser scenario
+        env:
+          ETH_BROWSER_IMAGE_LOG_MODE: failures-only
+        run: node scripts/verify-eth-candidate-browser.mjs . build/eth-browser
+      - name: Prepare exact candidate publication without deployment
+        run: |
+          test "$(git rev-parse HEAD^{tree})" = 8ac98467e427cd7b17528027516dce3ab4d53813
+          node scripts/build-publication.mjs
+      - name: Execute new actual two-tab save and narrow touch scenarios
+        env:
+          EXPECTED_SOURCE: 87690bf46e1a8ded356df9507fdf605ac5698b3b
+          ATLAS_QA_URL: http://127.0.0.1:8765/
+          MIN_ACTUAL_THROUGH: '2026-10-25'
+        run: |
+          node --check /tmp/qa48-program/verify.mjs
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory dist > /tmp/qa48-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server" || true' EXIT
+          node /tmp/qa48-program/verify.mjs
+      - name: Preserve exact new verification program
+        if: always()
+        run: |
+          mkdir -p build/public-overlay
+          cp /tmp/qa48-program/verify.mjs build/public-overlay/verification-source.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa48-final-native
+          path: |
+            build/eth-browser
+            build/public-overlay
+          retention-days: 14
