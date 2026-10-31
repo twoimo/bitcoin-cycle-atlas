@@ -512,11 +512,12 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       if(atlasMode){svg.dataset.replayStartDate=state.session.replaySettings.startDate;svg.dataset.replayForecastOrigin=session.identity.forecastOriginDate??session.asOf;}
       svg.dataset.replayFrequency=replayFrequency;svg.dataset.replayUpdateInterval='daily';
       svg.dataset.replayCursor=date;svg.dataset.replayActualThrough=frame.actual.at(-1)?.date??session.asOf;
-      const firstForecast=session.forecast[0]?.date??session.identity.forecastOriginDate;
-      const forecastDates=new Set(session.forecast.map(row=>row.date));
+      const forecastOrigin=session.identity.forecastOriginDate??session.asOf;
+      const firstForecast=session.forecast.find(row=>row.date>forecastOrigin)?.date??'없음';
+      const forecastDates=new Set(session.forecast.filter(row=>row.date>forecastOrigin).map(row=>row.date));
       const overlap=chartData.observedRows.filter(row=>forecastDates.has(row.date)).length;
       svg.dataset.replayActualArchiveThrough=archive.observedThrough;svg.dataset.replayOverlapCount=String(overlap);
-      const coverage='예측 시작 '+firstForecast+' · 실제 자료 끝 '+archive.observedThrough+' · 공개된 시각 비교 '+overlap+'일'+(overlap===0?' (날짜가 겹치는 실제 봉 대기)':'');
+      const coverage='예측 기준 '+forecastOrigin+' · 미래 구간 시작 '+firstForecast+' · 실제 자료 끝 '+archive.observedThrough+' · 공개된 시각 비교 '+overlap+'일'+(overlap===0?' (날짜가 겹치는 실제 봉 대기)':'');
       const m=frame.metrics;q('cursor').textContent=date+' · '+state.cursorIndex+'/'+(state.length-1)+'일 업데이트';q('scrub').setAttribute('aria-valuetext',date);
       q('metric').textContent=currentMode?'현재 예측선 고정 · 실제 '+state.cursorIndex+'봉':'오차 '+percent(m.meanAbsolutePercentageError)+' · '+m.matchedCount+'개';
       q('detail-metric').textContent=currentMode?'이 화면은 고정 예측선과 실제 캔들의 시각 비교입니다. 캡처 '+(state.session.replaySnapshot?.capturedAt??session.identity.createdAt)+' · '+coverage+' · 경로·범위·표식을 함께 보존합니다. 현재 전망을 프로젝트 시작일에 미리 발행한 예측으로 채점하지 않습니다.':'평균 절대 % 오차 '+percent(m.meanAbsolutePercentageError)+' · 가격 유지 대비 개선 '+percent(m.skillVersusFlat)+' · 방향 일치 '+percent(m.directionAccuracy)+' · 비교 '+m.matchedCount+'개 일봉. 개선율은 양수일 때 가격 유지 기준보다 유리합니다. 결과 대기 '+m.pendingTargetCount+'개 / 관측 미확보 '+m.missingTargetCount+'개 목표.';

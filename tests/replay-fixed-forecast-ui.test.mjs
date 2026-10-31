@@ -148,6 +148,15 @@ test('storage listener is detached on destroy and missing locks preserve the ori
   assert.match(h.controls.get('save-status').textContent,/잠금/);h.mounted.destroy();assert.equal(h.win.listeners.get('storage').length,0);
 });
 
+test('visual overlap excludes the observed forecast anchor and counts only disclosed future dates',async()=>{
+  const h=await fixtures({captured:{...capture(),dataset:structuredClone(old.dataset),forecast:structuredClone(old.forecast)}});
+  await h.open();await h.start('2026-10-21');
+  assert.equal(h.svg.dataset.replayOverlapCount,'0');
+  assert.match(h.controls.get('detail-metric').textContent,/미래 구간 시작 2026-10-21/);
+  h.key('ArrowRight');assert.equal(h.svg.dataset.replayOverlapCount,'1');
+  assert.equal(h.state().session.policy.forecastScoringEnabled,false);h.mounted.destroy();
+});
+
 // Match the existing UI suite: run the exact same assertions in an explicitly
 // enabled VM child when npm test starts Node without experimental VM modules.
 if(process.argv.includes('--fixed-overlay-case')){
