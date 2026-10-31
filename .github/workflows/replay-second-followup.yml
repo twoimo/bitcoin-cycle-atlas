@@ -1,0 +1,69 @@
+name: Replay second QA discriminating follow-up
+on:
+  push:
+    branches: [qa/replay-v1.29.9-second-20261101]
+    paths: [.github/workflows/replay-second-followup.yml, qa/second-followup.mjs]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Assemble the unchanged baseline with discriminating cases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/qa2-followup
+          cp qa/second-followup.mjs /tmp/qa2-followup/extra.mjs
+          gh api repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/13047877236/zip > /tmp/qa2-followup/prior.zip
+          python3 - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          p=Path('/tmp/qa2-followup')
+          assert hashlib.sha256((p/'prior.zip').read_bytes()).hexdigest()=='5f7d758715bba694cf2868e150720021876541b366d4e474b8f8d90a61e1d11e'
+          with zipfile.ZipFile(p/'prior.zip') as z: code=z.read('verification-source.mjs')
+          assert hashlib.sha256(code).hexdigest()=='1c88d9d8b0b65ca4538f6c43c3814c210860e84b7ea872ed41a857aa729a8eff'
+          extra=(p/'extra.mjs').read_text().replace('/year/i','/year|년/i')
+          text=code.decode();marker='report.deepSummary={passed:';assert text.count(marker)==1
+          text=text.replace(marker,extra+'\n'+marker)
+          text=text.replace("assert.equal(report.runtimeErrors.length,0);report.status='pass';","assert.equal(report.runtimeErrors.length,0);assert.equal(report.followupSummary.failed,0,JSON.stringify(report.followupChecks.filter(x=>x.status==='fail')));report.status='pass';")
+          (p/'verify.mjs').write_text(text)
+          PY
+          node --check /tmp/qa2-followup/verify.mjs
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: a91cc16b62d536c7ad3fee8e722298a4ce8d5077
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Install pinned font
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/atlas-ci"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 -o /tmp/NotoSansCJKkr-Regular.otf https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf
+          test "$(git hash-object /tmp/NotoSansCJKkr-Regular.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
+          cp /tmp/NotoSansCJKkr-Regular.otf "$HOME/.local/share/fonts/atlas-ci/"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-ci"
+      - name: Fresh Chrome profile and real public UI, no application patches
+        env:
+          EXPECTED_SOURCE: a91cc16b62d536c7ad3fee8e722298a4ce8d5077
+          MIN_ACTUAL_THROUGH: '2026-10-30'
+        run: node /tmp/qa2-followup/verify.mjs
+      - name: Preserve outcomes including failures
+        if: always()
+        run: |
+          mkdir -p build/public-overlay
+          cp /tmp/qa2-followup/{verify,extra}.mjs build/public-overlay/
+          git rev-parse HEAD > build/public-overlay/source.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa2-discriminating-followup
+          path: build/public-overlay
+          retention-days: 14
