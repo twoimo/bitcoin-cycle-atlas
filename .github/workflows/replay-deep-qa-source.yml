@@ -1,0 +1,42 @@
+name: Replay deep QA source and regressions
+on:
+  push:
+    branches: [qa/replay-v1.29.8-deep-20261031]
+    paths: [.github/workflows/replay-deep-qa-source.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: a5feac9ee94fe73f849659221b1d43af7eee53b0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Export exact source without credentials
+        run: |
+          mkdir -p /tmp/replay-qa-source
+          git rev-parse HEAD > /tmp/replay-qa-source/source-commit.txt
+          git rev-parse HEAD^{tree} > /tmp/replay-qa-source/source-tree.txt
+          git archive --format=tar.gz HEAD > /tmp/replay-qa-source/source.tar.gz
+          sha256sum /tmp/replay-qa-source/source.tar.gz > /tmp/replay-qa-source/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: replay-deep-qa-source-v1.29.8
+          path: /tmp/replay-qa-source
+          retention-days: 14
+      - name: Run unchanged full regression suite
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee /tmp/replay-qa-tests.tap
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: replay-deep-qa-regressions-v1.29.8
+          path: /tmp/replay-qa-tests.tap
+          retention-days: 14
