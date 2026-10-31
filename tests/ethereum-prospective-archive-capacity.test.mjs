@@ -1,7 +1,8 @@
+import {frozenMarketText} from './helpers/frozen-market-fixture.mjs';
 import test,{before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises';
+import {mkdtemp,mkdir,writeFile,readFile,rm,cp} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {resolve,dirname,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -19,7 +20,8 @@ import {ETH_PROSPECTIVE_PAGED_CALIBRATION_POLICY as CALIBRATION} from '../script
 // All generated prices, acquisition clocks, source identities and record graphs
 // below are SYNTHETIC CONTRACT FIXTURES. They do not establish market accuracy,
 // historical acquisition, source-graph replay, or an actually activated trigger.
-const repositoryRoot=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const sourceRoot=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+let repositoryRoot;
 const cutoff='2026-10-29T12:00:00.000Z',encode=value=>Buffer.from(canonicalForecastJson(value)+'\n');
 const sha=value=>createHash('sha256').update(value).digest('hex');
 const sourceIdentity={sourceCommit:'a'.repeat(40),sourceTree:'b'.repeat(40),runId:'1234'};
@@ -50,6 +52,11 @@ before(async()=>{
   archive=await buildEthereumProspectiveArchive({files,source:sourceIdentity,createdAt:cutoff});
   await write(root,archive.files);source=await openEthereumProspectiveArchiveSource({repositoryRoot:root,archivePath:'archive'});
   summary=ethereumProspectiveArchiveSourceInfo(source);
+  repositoryRoot=join(root,'capacity-source');
+  await cp(resolve(sourceRoot,'scripts'),join(repositoryRoot,'scripts'),{recursive:true});
+  await cp(resolve(sourceRoot,'.github/workflows'),join(repositoryRoot,'.github/workflows'),{recursive:true});
+  await mkdir(join(repositoryRoot,'dist/data'),{recursive:true});
+  await writeFile(join(repositoryRoot,'dist/data/eth-ohlc.json'),await frozenMarketText('eth-ohlc'));
   capacity=await buildEthereumArchiveCapacityReport({source,repositoryRoot,informationCutoffAt:cutoff});
 });
 after(async()=>{if(root)await rm(root,{recursive:true,force:true});});

@@ -59,7 +59,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     click(){if(!this.disabled)return this.onclick?.({target:this});}
   }
   doc=new Element('document');doc.documentElement=new Element('html');doc.createElement=tag=>new Element(tag);doc.createElementNS=(_,tag)=>new Element(tag);
-  const win=new Element('window');doc.defaultView=win;win.localStorage={getItem:key=>saved.get(key)??null,setItem:(key,value)=>{
+  const win=new Element('window');doc.defaultView=win;win.navigator={locks:{request:async(_name,_options,work)=>work({name:_name})}};win.localStorage={getItem:key=>saved.get(key)??null,setItem:(key,value)=>{
     if(storageFailure)throw new Error('Storage quota denied');writes.push({key,value});saved.set(key,value);
   }};
   win.requestAnimationFrame=callback=>{frames.set(++rafId,callback);return rafId;};win.cancelAnimationFrame=id=>frames.delete(id);

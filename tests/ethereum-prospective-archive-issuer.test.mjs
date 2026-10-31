@@ -1,3 +1,4 @@
+import {frozenMarketText} from './helpers/frozen-market-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,writeFile,mkdir,mkdtemp,rm} from 'node:fs/promises';
@@ -96,7 +97,7 @@ test('a schema-valid synthetic graph cannot impersonate an actual committed mode
 async function committedOperationFixture(t){
   const repositoryRoot=await temporary(t,'eth-archive-operation-git-'),identities=await collectEthereumArchiveModelIdentities(root);
   const paths=new Set([...Object.keys(identities.evaluator.files),...Object.keys(identities.warmStartEvaluator.files),ETH_PROSPECTIVE_PRICE_POLICY.basePath]);
-  for(const path of paths){const output=resolve(repositoryRoot,path);await mkdir(dirname(output),{recursive:true});await writeFile(output,await readFile(resolve(root,path)));}
+  for(const path of paths){const output=resolve(repositoryRoot,path);await mkdir(dirname(output),{recursive:true});await writeFile(output,path===ETH_PROSPECTIVE_PRICE_POLICY.basePath?await frozenMarketText('eth-ohlc'):await readFile(resolve(root,path)));}
   const git=(...args)=>execFileSync('git',args,{cwd:repositoryRoot,encoding:'utf8',stdio:['ignore','pipe','pipe']}).trim();
   git('init','--initial-branch=main');git('config','user.name','Synthetic operations test');git('config','user.email','synthetic@example.invalid');
   git('add','dist');git('commit','-m','Synthetic isolated fixture with exact committed model and base bytes');

@@ -85,21 +85,39 @@ export async function restoreReplaySnapshot(snapshot,{outputHash,origin,now=Date
 
 /** One explicit save, one atomic storage replacement. On quota/security failure
  * the caller keeps the session open and the previous stored bytes untouched. */
-export async function persistReplayDraft(storage,key,draft,{indexedDB=globalThis.indexedDB,snapshotStore=null}={}){
+export async function persistReplayDraft(storage,key,draft,options={}){
+  const {indexedDB=globalThis.indexedDB,snapshotStore=null,locks=globalThis.navigator?.locks,isCurrent=()=>true}=options;
+  const guarded=Object.hasOwn(options,'expectedText'),expected=options.expectedText;
+  if(guarded&&expected!==null&&typeof expected!=='string')throw new Error('기존 저장 상태를 확인하지 못해 저장하지 않았습니다.');
+  const check=()=>{
+    if(!isCurrent())throw new Error('종료된 리플레이의 저장을 중단했습니다.');
+    if(guarded&&(storage.getItem(key)??null)!==expected)throw new Error('다른 탭에서 저장한 세션이 변경되었습니다. 최신 저장을 덮어쓰지 않았습니다. 저장을 해제해 종료한 뒤 Continue로 최신 저장을 여세요.');
+  };
   if(draft?.mode==='atlas-chart'&&!draft.forecastSnapshot)throw new Error('고정 예측 원본이 없어 이번 세션을 저장하지 않았습니다.');
   const packed=draft?.mode==='atlas-chart'?packedCaptures.get(draft.forecastSnapshot):null;
   if(draft?.mode==='atlas-chart'&&!packed)throw new Error('검증된 고정 예측 저장본을 준비하지 못했습니다.');
-  let text=JSON.stringify(packed?{...draft,forecastSnapshot:packed}:draft);
-  if(new TextEncoder().encode(text).byteLength>MAX_REPLAY_SAVE_BYTES){
-    if(!packed)throw new RangeError('리플레이 저장 한도를 초과했습니다.');
-    const id=key+':'+packed.digest;
-    // Write the immutable large capture first. Replace the small pointer only
-    // after transaction completion. Any failure preserves the previous pointer.
-    await (snapshotStore??createReplaySnapshotStore(indexedDB)).put(id,packed);
-    text=JSON.stringify({...draft,forecastSnapshot:{kind:REFERENCE_KIND,version:1,id,
-      digest:packed.digest,outputHash:packed.outputHash,origin:packed.origin}});
-  }
-  storage.setItem(key,text);
+  // A revision also detects A→B→A changes where the cursor values happen to match.
+  const owned=guarded?{...draft,saveRevision:globalThis.crypto.randomUUID()}:draft;
+  const write=async()=>{
+    check();
+    let text=JSON.stringify(packed?{...owned,forecastSnapshot:packed}:owned);
+    if(new TextEncoder().encode(text).byteLength>MAX_REPLAY_SAVE_BYTES){
+      if(!packed)throw new RangeError('리플레이 저장 한도를 초과했습니다.');
+      const id=key+':'+packed.digest;
+      await (snapshotStore??createReplaySnapshotStore(indexedDB)).put(id,packed);
+      text=JSON.stringify({...owned,forecastSnapshot:{kind:REFERENCE_KIND,version:1,id,
+        digest:packed.digest,outputHash:packed.outputHash,origin:packed.origin}});
+    }
+    // Check again after an asynchronous database commit; no await separates
+    // this comparison and pointer replacement. Old clients still cannot be trusted.
+    check();storage.setItem(key,text);return text;
+  };
+  if(!guarded)return write(); // Uncoordinated low-level callers are explicit.
+  if(typeof locks?.request!=='function')throw new Error('이 브라우저는 탭 간 안전한 저장 잠금을 지원하지 않습니다. 기존 저장은 유지됩니다.');
+  return locks.request('atlas-replay-save:'+key,{mode:'exclusive',ifAvailable:true},lock=>{
+    if(!lock)throw new Error('다른 탭에서 리플레이를 저장 중입니다. 저장을 완료한 뒤 다시 시도해 주세요.');
+    return write();
+  });
 }
 
 

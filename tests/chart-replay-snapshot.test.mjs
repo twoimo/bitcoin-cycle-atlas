@@ -1,3 +1,4 @@
+import {frozenMarketText} from './helpers/frozen-market-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -10,7 +11,7 @@ import {parseBitcoinReplayCandles} from '../dist/chart-replay-sources.js';
 const capturedAt='2026-10-26T23:00:00.000Z';
 const later='2026-10-31T00:00:00.000Z';
 const baseline=await parseProjectReplayBaseline(await readFile(new URL('../dist/data/project-origin-btc-2026-10-21.json',import.meta.url),'utf8'));
-const archive=await parseBitcoinReplayCandles(await readFile(new URL('../dist/data/btc-volume.json',import.meta.url),'utf8'),{now:Date.parse(later)});
+const archive=await parseBitcoinReplayCandles(await frozenMarketText('btc-volume'),{now:Date.parse(later)});
 function view(){return {dataset:structuredClone(baseline.dataset),forecast:structuredClone(baseline.forecast),start:'2024-10-20',end:'2028-10-20',
   frequency:'weekly',chartType:'candles',window:'focus',presentation:{band:true,scale:'log',unit:'usd',showCycleMarkers:true,showCycleIntervals:true}};}
 async function fixture(){
@@ -120,7 +121,7 @@ test('compressed capture round-trips every value without inflating local storage
 });
 test('full operating long-horizon capture uses a database reference and restores all rows',async()=>{
   const {buildLongHorizonForecast}=await import('../dist/long-horizon-forecast.js');
-  const dataset=JSON.parse(await readFile(new URL('../dist/data/btc-daily.json',import.meta.url),'utf8'));
+  const dataset=JSON.parse(await frozenMarketText('btc-daily'));
   const forecast=buildLongHorizonForecast(dataset,{scenario:'base',sampleCount:64});
   const captured=captureReplayView({...view(),dataset,forecast});
   const session=await createCurrentChartReplaySession({...archive,dataset,forecast,asOf:'2026-10-20',playbackStartDate:'2026-10-21',createdAt:capturedAt,evaluatedAt:later});
@@ -139,5 +140,32 @@ test('full operating long-horizon capture uses a database reference and restores
   const prior=store.getItem(key);
   await assert.rejects(persistReplayDraft(store,key,draft,{snapshotStore:{async put(){throw new Error('transaction aborted');}}}),/transaction aborted/);
   assert.equal(store.getItem(key),prior);
+  // Hold the real large-capture path across its database suspension. A second
+  // cooperating writer must not enter; a legacy writer must not be overwritten.
+  let unblock,entered;const started=new Promise(r=>{entered=r;}),held=new Promise(r=>{unblock=r;});
+  let occupied=false;const locks={async request(name,options,work){if(occupied)return work(null);occupied=true;try{return await work({name});}finally{occupied=false;}}};
+  const pending=persistReplayDraft(store,key,draft,{expectedText:prior,locks,snapshotStore:{async put(){entered();await held;}}});
+  await started;
+  await assert.rejects(persistReplayDraft(store,key,draft,{expectedText:prior,locks,snapshotStore}),/저장 중/);
+  store.setItem(key,'newer external generation');unblock();
+  await assert.rejects(pending,/다른 탭/);assert.equal(store.getItem(key),'newer external generation');
   await assert.rejects(restoreReplaySnapshot(ref,{snapshotStore:{async get(){return null;}},outputHash:draft.outputHash,origin:draft.origin}),/원본/);
+});
+
+const immediateLock={request:async(name,options,work)=>work({name})};
+test('guarded save compares the whole prior pointer and refuses stale or deleted generations',async()=>{
+  const store=storage('newest'),draft={mode:'recorded',cursorDate:'2026-08-18'};
+  await assert.rejects(persistReplayDraft(store,'replay',draft,{expectedText:'older',locks:immediateLock}),/다른 탭/);
+  assert.equal(store.getItem('replay'),'newest');
+  const text=await persistReplayDraft(store,'replay',draft,{expectedText:'newest',locks:immediateLock});
+  assert.equal(store.getItem('replay'),text);assert.ok(JSON.parse(text).saveRevision);
+  await assert.rejects(persistReplayDraft(store,'replay',draft,{expectedText:'newest',locks:immediateLock}),/다른 탭/);
+  await assert.rejects(persistReplayDraft(store,'replay',draft,{expectedText:text,locks:{request:async(n,o,work)=>work(null)}}),/保存|저장 중/);
+  assert.equal(store.getItem('replay'),text);
+});
+test('unsupported lock and revoked save ownership fail before changing any saved bytes',async()=>{
+  const store=storage('previous'),draft={mode:'recorded'};
+  await assert.rejects(persistReplayDraft(store,'replay',draft,{expectedText:'previous',locks:null}),/잠금/);
+  await assert.rejects(persistReplayDraft(store,'replay',draft,{expectedText:'previous',locks:immediateLock,isCurrent:()=>false}),/중단/);
+  assert.equal(store.getItem('replay'),'previous');
 });

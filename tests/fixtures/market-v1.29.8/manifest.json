@@ -1,0 +1,21 @@
+{
+  "sourceCommit": "a5feac9ee94fe73f849659221b1d43af7eee53b0",
+  "purpose": "Fixed historical replay tests; not a source for operating data refresh",
+  "files": {
+    "btc-volume": {
+      "path": "btc-volume.json",
+      "bytes": 897919,
+      "sha256": "9f0d0e26e69e37a845e8000ccac248c775c0d86506c48c1f25f940a5b2c5b7d7"
+    },
+    "btc-daily": {
+      "path": "btc-daily.json",
+      "bytes": 189384,
+      "sha256": "ba7339b10019a2ee5a0d4ffa219f34e8364ae8efd99f1ff60211eaed9db10a4e"
+    },
+    "eth-ohlc": {
+      "path": "eth-ohlc.json",
+      "bytes": 895677,
+      "sha256": "cb9d11205c6e8f54a2d5f879dbbebb6baf6e73c4e123b9b673ca7c9085b64f0c"
+    }
+  }
+}

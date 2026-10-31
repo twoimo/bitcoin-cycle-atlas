@@ -26,7 +26,7 @@ export async function uiFixture({captured,archive,storedText=null,getAtlasContex
     getBoundingClientRect(){return {left:0,top:0,width:1000,height:700};}focus(){doc.activeElement=this;}remove(){if(this.parentElement)this.parentElement.children=this.parentElement.children.filter(c=>c!==this);}click(){if(!this.disabled)return this.onclick?.({target:this});}
   }
   doc=new Element('document');doc.documentElement=new Element('html');doc.createElement=t=>new Element(t);doc.createElementNS=(_,t)=>actualPainter?new SvgNode(t,doc):new Element(t);
-  const win=new Element('window');doc.defaultView=win;const writes=[];win.localStorage={getItem:()=>storedText,setItem:(k,v)=>{writes.push([k,v]);storedText=v;}};win.requestAnimationFrame=()=>1;win.cancelAnimationFrame=()=>{};win.CustomEvent=class{constructor(type){this.type=type;}};win.setTimeout=()=>0;
+  const win=new Element('window');doc.defaultView=win;win.navigator={locks:{request:async(_name,_options,work)=>work({name:_name})}};const writes=[];win.localStorage={getItem:()=>storedText,setItem:(k,v)=>{writes.push([k,v]);storedText=v;}};win.requestAnimationFrame=()=>1;win.cancelAnimationFrame=()=>{};win.CustomEvent=class{constructor(type){this.type=type;}};win.setTimeout=()=>0;
   const svg=actualPainter?new SvgNode('svg',doc):new Element('svg');
   if(actualPainter)Object.assign(svg,{id:'lab-chart',clientWidth:1440,clientHeight:760,focus(){doc.activeElement=svg;},getBoundingClientRect:()=>({left:0,top:0,width:1440,height:760})});
   const plot=new Element('div'),toolbar=new Element('nav');plot.append(svg);const axis={min:1,max:1e6,left:8,right:900,top:18,bottom:650};
@@ -47,7 +47,7 @@ export async function uiFixture({captured,archive,storedText=null,getAtlasContex
   const trigger=toolbar.children.find(n=>n.id==='workbench-replay');const panel=plot.children.find(n=>n.className==='chart-replay-controls');for(const m of panel.innerHTML.matchAll(/data-cr="([^"]+)"/g))panel.querySelector('[data-cr="'+m[1]+'"]');
   const ready=()=>until(()=>controllers[0].getState().status==='error'||controllers[0].getState().status==='selecting'&&Boolean(draws.at(-1)?.session?.identity?.outputHash),'fully drawn replay selection');
   return {ready,mounted,svg,controls,draws,frames,calls,writes,controllers,panel,trigger,
-    savedText:()=>storedText,
+    savedText:()=>storedText,externalSave(text,{notify=true}={}){storedText=text;if(notify)win.dispatchEvent({type:'storage',key:'atlas-chart-replay-v1:BTCUSD'});},win,doc,
     state:()=>controllers[0].getState(),lastDraw:()=>draws.at(-1),
     async open(){trigger.click();await ready();},
     async start(date,{pending=false}={}){controls.get('date').value=date;controls.get('start').onclick();await until(()=>pending?controllers[0].getState().status==='loading':['paused','error'].includes(controllers[0].getState().status),'selected-start '+(pending?'loading':'completion'));},

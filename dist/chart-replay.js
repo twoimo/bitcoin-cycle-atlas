@@ -1,4 +1,4 @@
-import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.29.8';
+import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.29.9';
 import {captureReplayView,sealReplaySnapshot,restoreReplaySnapshot,persistReplayDraft} from './chart-replay-snapshot.js';
 
 const day=date=>Date.parse(date+'T00:00:00Z')/86400000;
@@ -59,20 +59,61 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     '<div class="chart-replay-progress"><output data-cr="cursor">시작 봉 선택</output><input data-cr="scrub" type="range" min="0" max="0" value="0" step="1" aria-label="공개된 봉 위치"><span data-cr="metric"></span></div>'+
     '<div class="chart-replay-details" data-cr="detail-panel" hidden><strong data-cr="model-label"></strong><p data-cr="source"></p><p data-cr="chart-meaning"></p><p data-cr="detail-metric"></p><p data-cr="evaluation-meaning"></p><button type="button" data-cr="export">공개된 평가 JSON</button><button type="button" data-cr="hide-details">평가 닫기</button></div></div></section>'+
     '<section class="chart-replay-choice" data-cr="entry-dialog" role="dialog" aria-modal="true" aria-label="저장된 리플레이" hidden><strong>저장된 리플레이가 있습니다</strong><p data-cr="saved-summary"></p><div><button type="button" data-cr="entry-continue">이어서 · Continue</button><button type="button" data-cr="entry-new">새로 시작 · Start new</button><button type="button" data-cr="entry-cancel">취소</button></div></section>'+
-    '<section class="chart-replay-choice" data-cr="exit-dialog" role="dialog" aria-modal="true" aria-label="리플레이 종료" hidden><strong>봉 리플레이를 종료할까요?</strong><label><input type="checkbox" data-cr="exit-save" checked>현재 세션 저장</label><p>저장을 해제하면 이번 진행은 저장하지 않고 기존 저장 기록을 유지합니다.</p><div><button type="button" data-cr="exit-confirm">종료</button><button type="button" data-cr="exit-cancel">계속 보기</button></div></section>';
+    '<section class="chart-replay-choice" data-cr="exit-dialog" role="dialog" aria-modal="true" aria-label="리플레이 종료" hidden><strong>봉 리플레이를 종료할까요?</strong><label><input type="checkbox" data-cr="exit-save" checked>현재 세션 저장</label><p>저장을 해제하면 이번 진행은 저장하지 않고 기존 저장 기록을 유지합니다.</p><p data-cr="save-status" role="status" hidden></p><div><button type="button" data-cr="exit-confirm">종료</button><button type="button" data-cr="exit-cancel">계속 보기</button></div></section>';
   const hud=doc.createElement('div');hud.className='chart-replay-hud';hud.hidden=true;
   const status=doc.createElement('p');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
   const inspect=doc.createElement('p');inspect.className='chart-replay-inspect';hud.append(status,inspect);
   const notice=doc.createElement('p');notice.className='chart-replay-notice';notice.hidden=true;notice.setAttribute('role','status');notice.setAttribute('aria-live','polite');plot.append(hud,panel,notice);
   const q=key=>panel.querySelector('[data-cr="'+key+'"]');
+  const transport=panel.querySelector('.chart-replay-actions'),bar=panel.querySelector('.chart-replay-bar');
+  const scrollHint=doc.createElement('span');scrollHint.className='chart-replay-scroll-hint';scrollHint.id='replay-scroll-hint-'+symbol;
+  scrollHint.textContent='좌우로 밀어 더 보기';scrollHint.hidden=true;bar?.append(scrollHint);
+  transport?.setAttribute('aria-describedby',scrollHint.id);
+  function transportHints(){
+    if(!transport||!bar)return;
+    const overflow=transport.scrollWidth>transport.clientWidth+1;
+    bar.dataset.scrollLeft=String(overflow&&transport.scrollLeft>1);
+    bar.dataset.scrollRight=String(overflow&&transport.scrollLeft+transport.clientWidth<transport.scrollWidth-1);
+    scrollHint.hidden=!overflow||!q('select-panel').hidden||!q('entry-dialog').hidden||!q('exit-dialog').hidden;
+  }
+  function revealControl(event){
+    if(!transport||!event.target?.getBoundingClientRect)return;
+    const parent=transport.getBoundingClientRect(),child=event.target.getBoundingClientRect();
+    if(child.left<parent.left+2)transport.scrollLeft-=parent.left+2-child.left;
+    else if(child.right>parent.right-2)transport.scrollLeft+=child.right-parent.right+2;
+    transportHints();
+  }
+  transport?.addEventListener('scroll',transportHints,{passive:true});transport?.addEventListener('focusin',revealControl);
   if(atlasAvailable)q('mode').value='atlas-chart';
   let active=false,epoch=0,request=null,modules=null,archive=null,record=null,entries=[],rendered=null,range=null,frame=null;
   let atlasModules=null,atlasBaseline=null,atlasCaptured=null,atlasCandles=null,atlasPreview=null,pendingAtlas=null,restoredSnapshot=null,atlasCapturedAt=null;
   let gesture=null,follow=true,paintFrame=null,destroyed=false,lastSave=0,painting=false,displayEpoch=0,saving=false;
   let picking=false,pickerDate=null,choice=null,draft=null,dateDraftBase=null,capabilities=null,candleCapabilities=null,replayFrequency='daily',replayWindow='focus',customRange=false;
   const oldLabel=svg.getAttribute('aria-label'),ownedInert=new Map();
-  let stored=null;try{stored=JSON.parse(win.localStorage.getItem(STORAGE+symbol));}catch{}
-  if(stored?.version!==1||stored.symbol!==symbol||!['recorded','historical-reconstruction',...(atlasAvailable?['atlas-chart','project-baseline']:[])].includes(stored.mode)||!/^\d{4}-\d{2}-\d{2}$/.test(stored.origin??'')||!Number.isSafeInteger(stored.cursorIndex))stored=null;
+  let stored=null,storedText=null,saveBaseText,storageReadError=null;
+  function readStored(){
+    storageReadError=null;
+    try{
+      storedText=win.localStorage.getItem(STORAGE+symbol)??null;
+      if(storedText!==null&&storedText.length>2*1024*1024)throw new Error('저장된 리플레이의 크기 제한을 초과했습니다.');
+      stored=storedText===null?null:JSON.parse(storedText);
+      if(stored&&(stored.version!==1||stored.symbol!==symbol||!['recorded','historical-reconstruction',...(atlasAvailable?['atlas-chart','project-baseline']:[])].includes(stored.mode)||!/^\d{4}-\d{2}-\d{2}$/.test(stored.origin??'')||!Number.isSafeInteger(stored.cursorIndex)))throw new Error('저장된 리플레이의 형식이 올바르지 않습니다.');
+    }catch(error){stored=null;storageReadError=error;}
+    return !storageReadError;
+  }
+  function savedSummary(){
+    q('entry-continue').disabled=!stored||Boolean(storageReadError);
+    q('saved-summary').textContent=storageReadError?'저장된 세션을 읽지 못했습니다. 기존 저장은 변경하지 않습니다.':stored?(stored.cursorDate??stored.origin)+' · '+intervalName(stored.frequency??replayFrequency)+' · 일시정지 상태로 이어집니다.':'저장된 세션이 다른 탭에서 삭제되었습니다. 새로 시작을 선택하세요.';
+  }
+  function savedChanged(event){
+    if(event.key!==null&&event.key!==STORAGE+symbol)return;
+    readStored();if(choice==='entry')savedSummary();
+    // An active replay keeps its own immutable capture and expected save revision.
+    if(active&&choice!=='entry'&&storedText!==saveBaseText){
+      q('save-status').textContent='다른 탭에서 저장이 변경되었습니다. 현재 재생은 유지하며 최신 저장을 덮어쓰지 않습니다.';q('save-status').hidden=false;
+    }
+  }
+  readStored();
   const controller=createChartReplayController({onChange:paint});
   const getState=()=>controller.getState();
   function announce(message){status.textContent=message;}
@@ -87,8 +128,14 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   }
   async function save(){
     preserve();if(!draft)return true;
-    try{await persistReplayDraft(win.localStorage,STORAGE+symbol,draft,{indexedDB:win.indexedDB});stored={...draft};return true;}
-    catch(error){announce((error?.message??'이 브라우저에 세션을 저장하지 못했습니다.')+' 기존 저장은 유지됩니다. 저장 체크를 해제하거나 다시 시도해 주세요.');return false;}
+    const token=epoch;
+    try{
+      saveBaseText=await persistReplayDraft(win.localStorage,STORAGE+symbol,draft,{indexedDB:win.indexedDB,locks:win.navigator?.locks,expectedText:saveBaseText,isCurrent:()=>active&&!destroyed&&epoch===token});
+      readStored();q('save-status').hidden=true;return true;
+    }catch(error){
+      const text=(error?.message??'이 브라우저에 세션을 저장하지 못했습니다.')+' 기존 저장은 유지됩니다. 저장 체크를 해제하거나 다시 시도해 주세요.';
+      announce(text);q('save-status').textContent=text;q('save-status').hidden=false;return false;
+    }
   }
   function unavailable(frequency){
     const text=intervalName(frequency)+' 리플레이에 필요한 실제 분봉 자료가 없습니다. '+intervalName(active?replayFrequency:frequency)+' 간격을 유지합니다.';
@@ -103,7 +150,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     q('menu-title').textContent=({start:'Select bar',date:'Select date',forecast:'예측·평가'})[view];
     q('select-panel').setAttribute('aria-label',({start:'Select bar · 시작 봉 선택',date:'Select date · 새 시작점 선택',forecast:'리플레이 예측·평가 설정'})[view]);
     if(view!=='forecast'){q('detail-panel').hidden=true;q('details').setAttribute('aria-expanded','false');}
-    q('select-panel').scrollTop=0;
+    q('select-panel').scrollTop=0;transportHints();
     if(focus){const target=view==='date'?q('date'):view==='forecast'?q('mode'):q('select-chart').disabled?q('menu-settings'):q('select-chart');target.focus({preventScroll:true});}
   }
   function closeMenu(){q('select-panel').hidden=true;q('select-menu').setAttribute('aria-expanded','false');menuView('start',{focus:false});}
@@ -134,7 +181,8 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(atlasAvailable&&!['daily','weekly'].includes(current.frequency??'daily')){unavailable(current.frequency);return;}
     notice.hidden=true;atlasCaptured=null;atlasCapturedAt=null;draft=null;replayFrequency=current.frequency??'daily';replayWindow=current.window??'focus';customRange=Boolean(current.customRange);
     if(atlasAvailable)q('mode').value='atlas-chart';
-    if(stored){activate();choice='entry';q('saved-summary').textContent=(stored.cursorDate??stored.origin)+' · '+intervalName(stored.frequency??replayFrequency)+' · 일시정지 상태로 이어집니다.';
+    readStored();saveBaseText=storageReadError?undefined:storedText;q('save-status').hidden=true;
+    if(stored||storageReadError){activate();choice='entry';savedSummary();
       q('entry-dialog').hidden=false;paint(getState());q('entry-continue').focus({preventScroll:true});return;}
     return open({selectOnly:true});
   }
@@ -175,7 +223,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(destroyed||saving)return;
     const current=getChartState?.()??getAtlasContext?.()??{};
     if(!active&&atlasAvailable&&!['daily','weekly'].includes(current.frequency??'daily')){unavailable(current.frequency);return;}
-    if(!active){replayFrequency=current.frequency??'daily';replayWindow=current.window??'focus';customRange=Boolean(current.customRange);}
+    if(!active){readStored();saveBaseText=storageReadError?undefined:storedText;replayFrequency=current.frequency??'daily';replayWindow=current.window??'focus';customRange=Boolean(current.customRange);}
     if(resume){replayFrequency=['daily','weekly'].includes(resume.frequency)?resume.frequency:replayFrequency;replayWindow=resume.window??replayWindow;customRange=Boolean(resume.customRange);}
     closeChoice();closeMenu();notice.hidden=true;picking=selectOnly;pickerDate=null;clearPicker();activate();preserve();const token=++epoch;request?.abort();request=new AbortController();
     disposeDrawing();archive=null;frame=null;record=null;entries=[];range=null;atlasPreview=null;pendingAtlas=null;restoredSnapshot=null;follow=true;controller.open();
@@ -202,7 +250,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
         if(!active||token!==epoch||signal.aborted)return;
         restoredSnapshot=saved;atlasCaptured=saved.view;atlasCapturedAt=saved.capturedAt;
       }
-      modules??=await Promise.all([import('./forecast-replay.js?v=1.29.8'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
+      modules??=await Promise.all([import('./forecast-replay.js?v=1.29.9'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
       if(!active||token!==epoch)return;
       if(atlasMode){
         atlasCaptured??=captureReplayView(getAtlasContext());
@@ -392,6 +440,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   }
   function paint(state){
     if(!active||destroyed)return;
+    transportHints();
     panel.dataset.state=state.status;svg.dataset.replayStatus=state.status;
     const ready=Boolean(state.session),playing=state.status==='playing';
     const blocked=Boolean(choice)||picking;
@@ -463,9 +512,14 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       if(atlasMode){svg.dataset.replayStartDate=state.session.replaySettings.startDate;svg.dataset.replayForecastOrigin=session.identity.forecastOriginDate??session.asOf;}
       svg.dataset.replayFrequency=replayFrequency;svg.dataset.replayUpdateInterval='daily';
       svg.dataset.replayCursor=date;svg.dataset.replayActualThrough=frame.actual.at(-1)?.date??session.asOf;
+      const firstForecast=session.forecast[0]?.date??session.identity.forecastOriginDate;
+      const forecastDates=new Set(session.forecast.map(row=>row.date));
+      const overlap=chartData.observedRows.filter(row=>forecastDates.has(row.date)).length;
+      svg.dataset.replayActualArchiveThrough=archive.observedThrough;svg.dataset.replayOverlapCount=String(overlap);
+      const coverage='예측 시작 '+firstForecast+' · 실제 자료 끝 '+archive.observedThrough+' · 공개된 시각 비교 '+overlap+'일'+(overlap===0?' (날짜가 겹치는 실제 봉 대기)':'');
       const m=frame.metrics;q('cursor').textContent=date+' · '+state.cursorIndex+'/'+(state.length-1)+'일 업데이트';q('scrub').setAttribute('aria-valuetext',date);
       q('metric').textContent=currentMode?'현재 예측선 고정 · 실제 '+state.cursorIndex+'봉':'오차 '+percent(m.meanAbsolutePercentageError)+' · '+m.matchedCount+'개';
-      q('detail-metric').textContent=currentMode?'이 화면은 고정 예측선과 실제 캔들의 시각 비교입니다. 캡처 '+(state.session.replaySnapshot?.capturedAt??session.identity.createdAt)+' · 경로·범위·표식을 함께 보존합니다. 현재 전망을 프로젝트 시작일에 미리 발행한 예측으로 채점하지 않습니다.':'평균 절대 % 오차 '+percent(m.meanAbsolutePercentageError)+' · 가격 유지 대비 개선 '+percent(m.skillVersusFlat)+' · 방향 일치 '+percent(m.directionAccuracy)+' · 비교 '+m.matchedCount+'개 일봉. 개선율은 양수일 때 가격 유지 기준보다 유리합니다. 결과 대기 '+m.pendingTargetCount+'개 / 관측 미확보 '+m.missingTargetCount+'개 목표.';
+      q('detail-metric').textContent=currentMode?'이 화면은 고정 예측선과 실제 캔들의 시각 비교입니다. 캡처 '+(state.session.replaySnapshot?.capturedAt??session.identity.createdAt)+' · '+coverage+' · 경로·범위·표식을 함께 보존합니다. 현재 전망을 프로젝트 시작일에 미리 발행한 예측으로 채점하지 않습니다.':'평균 절대 % 오차 '+percent(m.meanAbsolutePercentageError)+' · 가격 유지 대비 개선 '+percent(m.skillVersusFlat)+' · 방향 일치 '+percent(m.directionAccuracy)+' · 비교 '+m.matchedCount+'개 일봉. 개선율은 양수일 때 가격 유지 기준보다 유리합니다. 결과 대기 '+m.pendingTargetCount+'개 / 관측 미확보 '+m.missingTargetCount+'개 목표.';
       q('model-label').textContent=(currentMode?'현재 차트의 가정 고정 · ':session.mode==='project-baseline'?'프로젝트 시작일 보존 전망 · ':session.mode==='recorded'?'보존 예측 · ':'과거 재구성 · ')+(session.historicalModel?.label??session.identity.pointLabel??session.identity.modelVersion);
       if(!atlasMode&&!data.ohlcAvailable){q('display').value='line';q('display').querySelector('[value="candles"]').disabled=true;}else q('display').querySelector('[value="candles"]').disabled=false;
       if(atlasAvailable){
@@ -484,7 +538,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     }catch(error){controller.fail(error);}finally{painting=false;}
   }
   function schedulePaint(){if(!active||paintFrame!==null)return;paintFrame=win.requestAnimationFrame(()=>{paintFrame=null;paint(getState());});}
-  function resize(){if(active)schedulePaint();}
+  function resize(){if(active){transportHints();schedulePaint();}}
   function toggle(){if(choice||picking)return;if(getState().status==='playing')controller.pause();else controller.play();}
   function chooseStart(value){
     if(choice||!archive)return;const selected=q('mode').value==='recorded'?value:nearestOrigin(value);if(!selected)return;
@@ -553,8 +607,8 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(index<0)return;event.preventDefault();event.stopPropagation();const next=event.key==='Home'?0:event.key==='End'?nodes.length-1:(index+(event.key==='ArrowUp'?-1:1)+nodes.length)%nodes.length;nodes[next].focus();});
   const dismissMenu=event=>{if(active&&!q('select-panel').hidden&&!panel.contains(event.target))closeMenu();};
   doc.addEventListener('pointerdown',dismissMenu,true);
-  q('entry-continue').onclick=()=>{const saved=stored?{...stored}:null;closeChoice();if(saved)void open({resume:saved});};
-  q('entry-new').onclick=()=>{closeChoice();if(atlasAvailable)q('mode').value='atlas-chart';void open({selectOnly:true});};
+  q('entry-continue').onclick=()=>{readStored();savedSummary();if(!stored||storageReadError)return;saveBaseText=storedText;const saved={...stored};closeChoice();void open({resume:saved});};
+  q('entry-new').onclick=()=>{readStored();saveBaseText=storageReadError?undefined:storedText;closeChoice();if(atlasAvailable)q('mode').value='atlas-chart';void open({selectOnly:true});};
   q('entry-cancel').onclick=()=>exit();
   q('exit-confirm').onclick=()=>exit({saveSession:q('exit-save').checked});
   q('exit-cancel').onclick=()=>{closeChoice();paint(getState());svg.focus({preventScroll:true});};
@@ -620,9 +674,9 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   doc.addEventListener('keydown',key,true);
   const pause=()=>{if(active){controller.pause();preserve();}};
   const visibility=()=>{if(doc.hidden)pause();};
-  doc.addEventListener('visibilitychange',visibility);win.addEventListener('blur',pause);win.addEventListener('pagehide',pause);
+  doc.addEventListener('visibilitychange',visibility);win.addEventListener('blur',pause);win.addEventListener('pagehide',pause);win.addEventListener('storage',savedChanged);
   const resizeObserver=new ResizeObserver(resize);resizeObserver.observe(plot);resizeObserver.observe(panel);
   return {isActive:()=>active,open,exit,handleChartCommand,destroy(){if(destroyed)return;exit();destroyed=true;controller.destroy();resizeObserver.disconnect();
     for(const type of pointerTypes)plot.removeEventListener(type,pointer,true);plot.removeEventListener('click',blockChoiceClick,true);plot.removeEventListener('wheel',wheel,true);plot.removeEventListener('contextmenu',preventLiveGesture,true);plot.removeEventListener('dblclick',preventLiveGesture,true);doc.removeEventListener('keydown',key,true);
-    doc.removeEventListener('pointerdown',dismissMenu,true);doc.removeEventListener('visibilitychange',visibility);win.removeEventListener('blur',pause);win.removeEventListener('pagehide',pause);trigger.remove();panel.remove();hud.remove();notice.remove();}};
+    doc.removeEventListener('pointerdown',dismissMenu,true);doc.removeEventListener('visibilitychange',visibility);win.removeEventListener('blur',pause);win.removeEventListener('pagehide',pause);win.removeEventListener('storage',savedChanged);transport?.removeEventListener('scroll',transportHints);transport?.removeEventListener('focusin',revealControl);trigger.remove();panel.remove();hud.remove();notice.remove();}};
 }

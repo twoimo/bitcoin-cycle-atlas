@@ -1,3 +1,4 @@
+import {frozenMarketText} from './helpers/frozen-market-fixture.mjs';
 import test,{after} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,writeFile,mkdir,mkdtemp,rm,cp} from 'node:fs/promises';
@@ -30,7 +31,7 @@ async function prepared(){
     preparedRoot=await mkdtemp(resolve(tmpdir(),'eth-summary-template-'));
     const repositoryRoot=preparedRoot,identities=await collectEthereumArchiveModelIdentities(root);
     for(const path of new Set([...Object.keys(identities.evaluator.files),...Object.keys(identities.warmStartEvaluator.files),ETH_PROSPECTIVE_PRICE_POLICY.basePath]))
-      await put(repositoryRoot,path,await readFile(resolve(root,path)));
+      await put(repositoryRoot,path,path===ETH_PROSPECTIVE_PRICE_POLICY.basePath?await frozenMarketText('eth-ohlc'):await readFile(resolve(root,path)));
     const git=(...args)=>execFileSync('git',args,{cwd:repositoryRoot,encoding:'utf8',stdio:['ignore','pipe','pipe']}).trim();
     git('init','--initial-branch=main');git('config','user.name','Synthetic summary test');git('config','user.email','synthetic@example.invalid');
     git('add','dist');git('commit','-m','Synthetic fixture with exact preserved model and base bytes');

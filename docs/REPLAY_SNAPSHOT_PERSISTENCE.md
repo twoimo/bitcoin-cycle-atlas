@@ -27,3 +27,9 @@ The compact center transport, external exit X, four starting-point actions, movi
 ## Verification
 
 Run `node --test tests/chart-replay-snapshot.test.mjs tests/chart-replay-ui.test.mjs tests/replay-fixed-forecast*.test.mjs`, `npm test`, and the existing native browser workflow. Fixtures cover the actual engine, coordinator and SVG painter but do not replace real Chrome verification. The native suite checks actual save/exit/Continue and the complete-capture digest. Remote CI and deployed-site evidence are recorded in PR #46; this document is not a claim that an unrun gate passed.
+
+## v1.29.9: multiple tabs and refresh QA
+
+Entry and Continue each read the current localStorage pointer. A storage event updates an open entry choice, but never replaces a running capture. The active session retains its entry pointer as a compare-and-swap precondition. Explicit saving takes an exclusive origin-scoped Web Lock (non-waiting), checks the original pointer before and after any IndexedDB write, and only then replaces it. Every save has a new revision. Conflict, lock unavailability or revoked ownership leaves the newest pointer intact and displays the reason in the exit dialog. Unchecked exit discards only this tab's progress; Continue then reads the newest saved generation. Browsers without Web Locks may still replay, but guarded saving fails explicitly. This is not cross-device synchronization or a guarantee about old clients that bypass the protocol.
+
+Historical replay tests use exact byte-hashed market fixtures from commit a5feac9. Current-operation tests separately consume the changing archives using their true acquisition clocks. The production future-information guards remain unchanged. A data-refresh pass must include the newly collected inputs; passing the checked-in data alone does not establish freshness.

@@ -1,3 +1,4 @@
+import {frozenMarketText} from './helpers/frozen-market-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -231,7 +232,7 @@ test('BTC historical baseline consumes only the prefix and records reconstructio
 });
 
 test('ETH historical median is prefix-causal, deterministic and separate from the representative simulation',async()=>{
-  const data=await parseReplayPriceArchive('ETHUSD',await readFile(new URL('../dist/data/eth-ohlc.json',import.meta.url),'utf8'),{archivePath:'data/eth-ohlc.json'});
+  const data=await parseReplayPriceArchive('ETHUSD',await frozenMarketText('eth-ohlc'),{archivePath:'data/eth-ohlc.json'});
   const options={...data,asOf:'2026-04-28',horizonDays:30,generatedAt:'2026-10-28T15:00:00Z'};
   const first=await createHistoricalReplaySession(options);
   const changed=await createHistoricalReplaySession({...options,observations:data.observations.map(row=>row.date>options.asOf?{...row,price:row.price*100,open:row.open*100,high:row.high*100,low:row.low*100,close:row.close*100}:row)});
