@@ -1,0 +1,71 @@
+name: Verify full snapshot reload before publication
+on:
+  push:
+    branches: [verify/replay-persistence-reload-v1.29.8]
+permissions:
+  contents: read
+jobs:
+  verify-reload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Prepare the source-bound read-only reload check outside checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/verification/extend-persistence.py .github/verification/public-base.mjs "$RUNNER_TEMP/persistence-check.mjs"
+          echo 'ce95aa266c1173fa4e48b7e2e46c0fdda8bc8ee8a0375a35fd32869f3012fa5f  '"$RUNNER_TEMP/persistence-check.mjs" | sha256sum -c -
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ['RUNNER_TEMP'])/'persistence-check.mjs'
+          s=p.read_text().replace("const base='https://twoimo.github.io/bitcoin-cycle-atlas/';", "const base='http://127.0.0.1:4177/bitcoin-cycle-atlas/';")
+          s=s.replace("const report={version:","const report={scope:'candidate-local-not-public-site',version:")
+          p.write_text(s)
+          PY
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: d2d09d36116f81324c2fe8011911068d46f2c412
+          persist-credentials: false
+      - name: Bind candidate and install its source-pinned font
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{tree})" = '8976bc99e80525f4f3d4926bba728b038e646f09'
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          s=Path('.github/workflows/eth-model-evaluation.yml').read_text()
+          a=s.index('      - name: Install a pinned Korean font with bounded network and cache time')
+          b=s.index('      - name: Render comparison',a)
+          body=s[a:b].split('        run: |\n',1)[1]
+          Path(os.environ['RUNNER_TEMP']+'/atlas-font.sh').write_text('\n'.join(line[10:] for line in body.splitlines())+'\n')
+          PY
+          bash "$RUNNER_TEMP/atlas-font.sh"
+      - name: Save the complete curve, hard reload, change live assumptions, Continue and advance
+        env:
+          EXPECTED_SOURCE: d2d09d36116f81324c2fe8011911068d46f2c412
+        run: |
+          set -euo pipefail
+          npm run build:publication
+          mkdir -p "$RUNNER_TEMP/atlas-serve"
+          ln -s "$GITHUB_WORKSPACE/dist" "$RUNNER_TEMP/atlas-serve/bitcoin-cycle-atlas"
+          python3 -m http.server 4177 --directory "$RUNNER_TEMP/atlas-serve" > "$RUNNER_TEMP/http.log" 2>&1 &
+          server=$!
+          trap 'kill "$server" || true' EXIT
+          node "$RUNNER_TEMP/persistence-check.mjs"
+      - name: Preserve the exact test program
+        if: always()
+        run: mkdir -p build/public-overlay; cp "$RUNNER_TEMP/persistence-check.mjs" build/public-overlay/verification-source.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: candidate-snapshot-reload-d2d09d3
+          path: build/public-overlay
+          retention-days: 14
