@@ -94,7 +94,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     x:date=>axis.left+(Date.parse(date)-Date.parse(options.start))/Math.max(1,Date.parse(options.end)-Date.parse(options.start))*(axis.right-axis.left),
     dateAt:()=>pointerDate,...(rendererBarDateAt?{barDateAt:()=>rendererBarDateAt(pointerDate)}:{}),getPriceScale:()=>axis,destroy(){}};};
   const math=Object.create(Math);math.random=random;
-  const context=vm.createContext({Date,Math:math,AbortController,URL,Blob,console,ResizeObserver:class{observe(){}disconnect(){}}});
+  const context=vm.createContext({Date,Math:math,structuredClone,AbortController,URL,Blob,console,ResizeObserver:class{observe(){}disconnect(){}}});
   async function module(exports){const result=new vm.SyntheticModule(Object.keys(exports),function(){for(const [key,value]of Object.entries(exports))this.setExport(key,value);},{context});await result.link(()=>{throw new Error('Unexpected test-module import');});await result.evaluate();return result;}
   const state=await module({CHART_REPLAY_SPEEDS,createChartReplayController:options=>{
     const result=createChartReplayController({...options,now:()=>clock,setTimer:(callback,delay)=>{timers.set(++timerId,{callback,delay,due:clock+delay});return timerId;},clearTimer:id=>timers.delete(id)});controllers.push(result);return result;
@@ -103,7 +103,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     ['./forecast-replay.js?v='+releaseVersion]:await module(engine),
     './chart-replay-renderer.js':await module({drawReplaySelection:renderer('selection'),drawChartReplay:renderer('replay')}),
     './chart-replay-sources.js':await module({loadChartReplayArchive:loadArchive,loadChartReplayRecord:loadRecord??(async()=>{throw new Error('Unexpected recorded load');})}),
-    './project-replay-baseline.js':await module({loadProjectReplayBaseline:loadBaseline??(async()=>{throw new Error('Unexpected project baseline load');})}),
+    './project-replay-baseline.js':await module({PROJECT_REPLAY_ORIGIN:{startDate:dateAt(181)},loadProjectReplayBaseline:loadBaseline??(async()=>{throw new Error('Unexpected project baseline load');})}),
     './chart-replay-atlas.js':await module({createAtlasReplayContext:options=>{atlasContexts.push(options);return {...options,forecast:options.forecast.path};},drawAtlasChartReplay:renderer('atlas')}),
   };
   const view=new vm.SourceTextModule(source,{context,identifier:sourceUrl.href,importModuleDynamically:specifier=>{assert.ok(imports[specifier],specifier);return imports[specifier];}});
@@ -387,7 +387,7 @@ const interactionCases=[
       assert.equal(h.mounted.handleChartCommand({action:'span',value:span}),true);assert.equal(h.draws.at(-1).start,ranges[span].start);assert.equal(h.draws.at(-1).end,ranges[span].end);
       assert.equal(h.frameEvents.at(-1).window,span);assert.equal(h.frameEvents.at(-1).customRange,false);
     }
-    assert.ok(rangeCalls.every(call=>call.captured===fixture.captured));
+    for(const call of rangeCalls){assert.notEqual(call.captured,fixture.captured);assert.deepEqual(call.captured,fixture.captured);assert.ok(Object.isFrozen(call.captured.forecast.path));}
     for(const frequency of ['daily','weekly']){h.mounted.handleChartCommand({action:'frequency',value:frequency});assert.equal(h.chartCalls.at(-1).frequency,frequency);}
     h.mounted.handleChartCommand({action:'frequency',value:'1h'});assert.equal(h.svg.dataset.replayFrequency,'weekly');assert.match(h.notice().textContent,/실제 분봉.*주봉 간격을 유지/);
     h.mounted.handleChartCommand({action:'scenario',value:'stress'});assert.equal(h.controllers[0].getState().session,original);assert.deepEqual(h.factories,['current']);
@@ -444,7 +444,7 @@ const interactionCases=[
     const fixture=atlasFixture(),raw=JSON.stringify(savedFixture({outputHash:'previous-forecast-output'}),null,2)+'\n';
     const h=await harness(source,{...fixture.options,storedText:raw});h.trigger.click();h.controls.get('entry-continue').click();await flush();
     assert.equal(h.controllers[0].getState().status,'error');assert.equal(h.controllers[0].getState().session,null);assert.equal(h.controls.get('export').disabled,true);
-    assert.match(h.status(),/예측이 달라.*기존 저장은 유지/);assert.equal(h.draws.filter(draw=>draw.session&&!draw.selectionPreview).length,0);
+    assert.match(h.status(),/예측이 달라.*기존 저장은 유지/);assert.equal(h.draws.filter(draw=>draw.session?.identity?.outputHash&&!draw.selectionPreview).length,0);
     assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);h.mounted.exit();h.trigger.click();
     assert.equal(h.controls.get('entry-dialog').hidden,false);h.controls.get('entry-new').click();await flush();
     assert.equal(h.controllers[0].getState().status,'selecting');assert.equal(h.savedText(),raw);h.controls.get('pick-cancel').click();assert.equal(h.savedText(),raw);h.mounted.destroy();
@@ -632,7 +632,7 @@ export async function verifyChartReplayUi(){
     assert.equal(h.controls.get('mode').value,'atlas-chart');assert.equal(h.controls.get('display').value,'candles');
     assert.equal(h.controllers[0].getState().status,'paused');assert.equal(h.controls.get('date').value,dateAt(181));
     assert.deepEqual(h.factories,['current'],'one-click entry must capture the currently displayed forecast without reconstructing an earlier model');
-    assert.equal(h.builds[0].dataset,dataset);assert.equal(h.builds[0].forecast,forecast);
+    assert.notEqual(h.builds[0].dataset,dataset);assert.notEqual(h.builds[0].forecast,forecast);assert.deepEqual(h.builds[0].dataset,dataset);assert.deepEqual(h.builds[0].forecast,forecast);assert.ok(Object.isFrozen(h.builds[0].forecast.path));
     assert.equal(h.atlasContexts[0].originDate,dateAt(180));assert.equal(h.atlasContexts[0].forecast.asOf,dateAt(184));
     assert.equal(h.draws.at(-1).renderer,'atlas');assert.equal(h.draws.at(-1).start,captured.start);assert.equal(h.draws.at(-1).end,captured.end);
     const path=JSON.stringify(h.draws.at(-1).data.frame.forecast);
@@ -656,7 +656,7 @@ export async function verifyChartReplayUi(){
     const captured={dataset,forecast,start:dateAt(90),end:dateAt(700),chartType:'line',presentation:{scale:'log'}};
     const baseline={dataset,forecast:{asOf:dateAt(180),referenceDate:dateAt(181),path:[{date:dateAt(180),price:280},{date:dateAt(181),price:290}]}};
     const waiting=deferred();let baselineCalls=0;
-    const h=await harness(source,{getAtlasContext:()=>captured,loadBaseline:()=>++baselineCalls===2?waiting.promise:baseline});
+    const h=await harness(source,{getAtlasContext:()=>captured,loadBaseline:()=>++baselineCalls===1?waiting.promise:baseline});
     await h.mounted.open();h.controls.get('next').onclick();
     const before=h.draws.length;
     h.controls.get('mode').value='project-baseline';h.controls.get('mode').onchange();await flush();
@@ -670,7 +670,7 @@ export async function verifyChartReplayUi(){
     await h.start();assert.equal(h.factories.at(-1),'historical');
     h.controls.get('mode').value='atlas-chart';h.controls.get('mode').onchange();await flush();
     assert.equal(h.factories.at(-1),'current');assert.equal(h.draws.at(-1).renderer,'atlas');
-    assert.equal(h.builds.at(-1).forecast,forecast);assert.deepEqual(h.factories,['current','project','historical','current']);
+    assert.notEqual(h.builds.at(-1).forecast,forecast);assert.deepEqual(h.builds.at(-1).forecast,forecast);assert.deepEqual(h.factories,['current','project','historical','current']);
     h.mounted.destroy();checks.push('asynchronous mode changes keep the prior cutoff until the newly selected source is ready');
   }
   {

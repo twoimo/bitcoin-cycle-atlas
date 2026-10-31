@@ -512,6 +512,8 @@ export async function verifyChartReplaySurface(api) {
         batchedWickCount: wickXs.length, lastBatchedCandleX: wickXs.length ? Math.max(...wickXs) : null,
         plotLeft: Number(svg.dataset.plotLeft), plotRight: Number(svg.dataset.plotRight),
         forecastPath: svg.querySelector('[data-replay-forecast-path]')?.getAttribute('d') ?? null,
+        forecastAboveActuals: (() => { const path = svg.querySelector('[data-replay-forecast-path]'); return path ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(node.compareDocumentPosition(path) & Node.DOCUMENT_POSITION_FOLLOWING)) : null; })(),
+        forecastPointerEvents: svg.querySelector('[data-replay-forecast-path]')?.getAttribute('pointer-events') ?? null,
         origins: svg.querySelectorAll('[data-replay-origin-boundary]').length, cursors: svg.querySelectorAll('[data-replay-cursor-line]').length,
         confirmedCursorXs: [...svg.querySelectorAll('[data-replay-cursor-line]')].map(node => node.getAttribute('x1')),
         pickerCount: svg.querySelectorAll('[data-chart-replay-picker]').length,
@@ -535,6 +537,10 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(value.updateInterval, 'daily'); assert.equal(value.updateIntervalLocked, true, 'The source advances by completed daily observations');
     assert.equal(value.active, true); assert.equal(value.separateReplayCharts, 0); assert.equal(value.dialogs, 0);
     assert.equal(value.previousPresent, false, 'The removed previous-bar action is still mounted');
+    if (value.renderer === 'atlas' && value.forecastPath) {
+      assert.equal(value.forecastAboveActuals, true, 'Actual candles cover the immutable comparison curve');
+      assert.equal(value.forecastPointerEvents, 'none', 'The fixed forecast intercepts native chart selection');
+    }
     assert.equal(value.invalidPaths, 0); assert.equal(value.liveReadouts, 0, 'Latest quote/readout remained visible during replay');
     assert.ok(value.pageWidth <= width + 1, 'Replay caused horizontal page overflow');
     assert.ok(value.chart.height >= 80 && value.chart.width > 100, 'Replay controls consumed the chart viewport');
