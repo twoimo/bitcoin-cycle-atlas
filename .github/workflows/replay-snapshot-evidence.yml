@@ -1,0 +1,50 @@
+name: Replay snapshot evidence
+
+on:
+  pull_request:
+    paths:
+      - 'dist/chart-replay*.js'
+      - 'tests/chart-replay*.test.mjs'
+      - '.github/workflows/replay-snapshot-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: replay-snapshot-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Capture the exact public source for reproducible offline verification
+        shell: bash
+        run: |
+          mkdir -p build/replay-snapshot
+          git rev-parse HEAD > build/replay-snapshot/source-commit.txt
+          git rev-parse HEAD^{tree} > build/replay-snapshot/source-tree.txt
+          git archive --format=tar.gz --output=build/replay-snapshot/source.tar.gz HEAD
+          sha256sum build/replay-snapshot/source.tar.gz > build/replay-snapshot/SHA256SUMS
+      - name: Check frozen captures against the real replay engine
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test tests/chart-replay-snapshot.test.mjs 2>&1 | tee build/replay-snapshot/tests.tap
+      - name: Preserve source-bound replay evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: replay-snapshot-evidence-${{ github.sha }}
+          path: build/replay-snapshot/
+          retention-days: 7
+          if-no-files-found: error
