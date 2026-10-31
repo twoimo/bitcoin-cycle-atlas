@@ -1,0 +1,35 @@
+--- a/tests/replay-fixed-forecast-ui.test.mjs
++++ b/tests/replay-fixed-forecast-ui.test.mjs
+@@ -1,4 +1,10 @@
+-import test from 'node:test';
++import nodeTest from 'node:test';
++import {execFileSync} from 'node:child_process';
++import {fileURLToPath} from 'node:url';
++import * as vm from 'node:vm';
++
++const cases=[];
++const test=(name,run)=>cases.push({name,run});
+ import assert from 'node:assert/strict';
+ import {readFile} from 'node:fs/promises';
+ import {uiFixture,flush,deferred} from './replay-ui-fixture.mjs';
+@@ -50,3 +56,20 @@
+   assert.match(h.controls.get('model-label').textContent,/현재 예측선 보존/);
+   h.mounted.destroy();
+ });
++
++// Match the existing UI suite: run the exact same assertions in an explicitly
++// enabled VM child when npm test starts Node without experimental VM modules.
++if(process.argv.includes('--fixed-overlay-case')){
++  const index=Number(process.argv[process.argv.indexOf('--fixed-overlay-case')+1]);
++  const item=cases[index];assert.ok(item,'A named overlay case is required');
++  assert.equal(typeof vm.SourceTextModule,'function','VM child must enable modules');
++  await item.run();console.log(JSON.stringify({status:'pass',name:item.name}));
++}else{
++  for(const [index,item] of cases.entries())nodeTest(item.name,async()=>{
++    if(typeof vm.SourceTextModule==='function'){await item.run();return;}
++    const result=JSON.parse(execFileSync(process.execPath,
++      ['--experimental-vm-modules',fileURLToPath(import.meta.url),'--fixed-overlay-case',String(index)],
++      {encoding:'utf8',timeout:30000,stdio:['ignore','pipe','pipe']}));
++    assert.equal(result.status,'pass');assert.equal(result.name,item.name);
++  });
++}
