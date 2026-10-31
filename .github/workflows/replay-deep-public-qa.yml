@@ -2,7 +2,7 @@ name: Replay independent public deep QA
 on:
   push:
     branches: [qa/replay-v1.29.8-deep-20261031]
-    paths: [.github/workflows/replay-deep-public-qa.yml, qa/extra-public-checks.mjs]
+    paths: [.github/workflows/replay-deep-public-qa.yml, qa/followup-public-checks.mjs]
 permissions:
   contents: read
   actions: read
@@ -18,13 +18,13 @@ jobs:
         with:
           node-version: 24
           package-manager-cache: false
-      - name: Assemble pinned baseline and new independent QA
+      - name: Assemble pinned baseline and independent follow-up
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p /tmp/atlas-deep-program
           gh api repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/13042233606/zip > /tmp/atlas-deep-program/prior.zip
-          cp qa/extra-public-checks.mjs /tmp/atlas-deep-program/extra.mjs
+          cp qa/followup-public-checks.mjs /tmp/atlas-deep-program/extra.mjs
           python3 - <<'PY'
           from pathlib import Path
           from zipfile import ZipFile
@@ -51,7 +51,7 @@ jobs:
           test "$(git hash-object /tmp/NotoSansCJKkr-Regular.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
           cp /tmp/NotoSansCJKkr-Regular.otf "$HOME/.local/share/fonts/atlas-qa/"
           timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-qa"
-      - name: Run real public UI and isolated storage fault probes
+      - name: Run real public UI follow-up in an isolated profile
         env:
           EXPECTED_SOURCE: a5feac9ee94fe73f849659221b1d43af7eee53b0
         run: node /tmp/atlas-deep-program/deep-public.mjs
@@ -63,6 +63,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: replay-independent-deep-public-qa
+          name: replay-independent-deep-public-followup
           path: build/public-overlay
           retention-days: 14
