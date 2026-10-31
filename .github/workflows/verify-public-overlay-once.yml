@@ -1,0 +1,70 @@
+name: Verify deployed fixed overlay once
+
+on:
+  push:
+    branches: ['verify/replay-fixed-overlay-public-v1.29.7']
+    paths:
+      - '.github/verification/public-overlay.mjs'
+      - '.github/workflows/verify-public-overlay-once.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-public-fixed-overlay-v1.29.7
+  cancel-in-progress: false
+
+jobs:
+  verify-public:
+    if: github.repository == 'twoimo/bitcoin-cycle-atlas' && github.ref == 'refs/heads/verify/replay-fixed-overlay-public-v1.29.7'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      EXPECTED_SOURCE: 2e8d6a7155f6ac6dbcbb40d74ed99c0b4c1ed92c
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Bind the check to the exact deployed source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git show -s --format=%P HEAD)" = "$EXPECTED_SOURCE"
+          echo '0770318fc0e1962ba2e162d33fdbb7555bd181271e08378eaa9f7a797bd26cc6  .github/verification/public-overlay.mjs' | sha256sum --check
+          cp .github/verification/public-overlay.mjs "$RUNNER_TEMP/public-overlay.mjs"
+          git checkout --detach "$EXPECTED_SOURCE"
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE"
+          test -z "$(git status --porcelain)"
+          node --check "$RUNNER_TEMP/public-overlay.mjs"
+      - name: Install the same immutable Korean font as the native tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          root='https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c'
+          mkdir -p "$HOME/.local/share/fonts/atlas-ci"
+          curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 "$root/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf" -o "$RUNNER_TEMP/atlas-korean.otf"
+          curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 "$root/Sans/LICENSE" -o "$RUNNER_TEMP/atlas-font-LICENSE"
+          test "$(git hash-object "$RUNNER_TEMP/atlas-korean.otf")" = 'dc4a7c65e6f450bf17c10a2405250b620eb78703'
+          test "$(git hash-object "$RUNNER_TEMP/atlas-font-LICENSE")" = 'd952d62c065f3f35fb83a173496e90b21525aef3'
+          install -m 0644 "$RUNNER_TEMP/atlas-korean.otf" "$HOME/.local/share/fonts/atlas-ci/NotoSansCJKkr-Regular.otf"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-ci"
+      - name: Hard reload the public site and compare frozen path with actual daily weekly updates
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/public-overlay
+          cp "$RUNNER_TEMP/public-overlay.mjs" build/public-overlay/verification-source.mjs
+          node "$RUNNER_TEMP/public-overlay.mjs" 2>&1 | tee build/public-overlay/execution.log
+      - name: Preserve actual public screenshots and source-bound observations
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: public-overlay-v1.29.7-${{ github.sha }}
+          path: build/public-overlay/
+          retention-days: 30
+          if-no-files-found: error
