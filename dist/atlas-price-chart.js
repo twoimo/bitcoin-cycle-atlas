@@ -160,6 +160,9 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   if(fib.length)s+='<g data-indicator-layer="fibonacci">';
   for(const f of fib.filter(f=>f.price>min&&f.price<max&&(!f.startDate||f.startDate<=end))){const yy=y(f.price),from=xday(Math.max(minDay,f.startDate?dayOf(f.startDate):minDay));s+=`<line data-indicator-line x1="${from}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="#b4a7d6" opacity=".55" stroke-dasharray="3 5"/><text data-indicator-axis-label x="${W-R-4}" y="${yy-5}" text-anchor="end" fill="#c2b5e0" font-size="11">${nf(f.ratio*100,1)}% · ${formatDisplayPrice(f.price,display,1)}</text>`;}
   if(fib.length)s+='</g>';
+  // Range -> fixed forecast -> actual candles. Keep the complete immutable
+  // path underneath the actual bodies/wicks; never translate it to fit outcomes.
+  if(hasFixedForecast&&future.length)s+=`<path data-replay-forecast-path="true" d="${path(future)}" fill="none" stroke="#f2b960" stroke-width="1.8" stroke-dasharray="5 3" pointer-events="none"/>`;
   if(observed.length){
     const trace=observedTrace(observed,y,'price',point=>Boolean(point.candle));
     s+=`<path class="observed-close-line" d="${trace.path}" fill="none" stroke="#e2eaf3" stroke-width="1.8"/>`;
@@ -175,9 +178,6 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   }else {
   for(const c of candleRows){const xx=xday(dayOf(candleCoordinate(c))),color=c.close>=c.open?'#62bca5':'#dd7e8d',top=Math.min(y(c.open),y(c.close)),height=Math.max(1,Math.abs(y(c.open)-y(c.close)));s+=`<g class="observed-candle" data-date="${c.endDate}" data-open="${c.open}" data-high="${c.high}" data-low="${c.low}" data-close="${c.close}"${Number.isFinite(c.volume)?` data-volume="${c.volume}"`:''}${c.periodStartDate?` data-period-start="${c.periodStartDate}" data-period-end="${c.periodEndDate}" data-complete="${c.complete!==false}" data-days-included="${c.daysIncluded}"`:''}><line x1="${xx}" x2="${xx}" y1="${y(c.high)}" y2="${y(c.low)}" stroke="${color}"/><rect x="${xx-candleWidth/2}" y="${top}" width="${candleWidth}" height="${height}" fill="${color}"/><title>${esc(candleSource)} BTC-USD · ${c.startDate}${candleDays>1?`–${c.endDate}`:''} UTC${c.complete===false?' · 진행 중 주봉':''} · O ${money(c.open)} H ${money(c.high)} L ${money(c.low)} C ${money(c.close)}</title></g>`;}
   }
-  // Keep the immutable comparison curve above both individual and batched
-  // actual candles. The range remains below them; values and sampling do not change.
-  if(hasFixedForecast&&future.length)s+=`<path data-replay-forecast-path="true" d="${path(future)}" fill="none" stroke="#f2b960" stroke-width="1.8" stroke-dasharray="5 3" pointer-events="none"/>`;
   if(!hasFixedForecast&&future.length)s+=`<path d="${path(future)}" fill="none" stroke="#f2b960" stroke-width="1.8" stroke-dasharray="5 3"/>`;
   s+='</g>';
   if(showDrawdown){
