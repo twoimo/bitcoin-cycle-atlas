@@ -1,0 +1,45 @@
+name: Verify integrated replay snapshots once
+on:
+  push:
+    branches: [verify/replay-persistence-native-v1.29.8]
+permissions:
+  contents: read
+jobs:
+  native-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: d2d09d36116f81324c2fe8011911068d46f2c412
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Bind exact source and reuse the committed pinned font setup
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{tree})" = '8976bc99e80525f4f3d4926bba728b038e646f09'
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          s=Path('.github/workflows/eth-model-evaluation.yml').read_text()
+          a=s.index('      - name: Install a pinned Korean font with bounded network and cache time')
+          b=s.index('      - name: Render comparison',a)
+          body=s[a:b].split('        run: |\n',1)[1]
+          Path(os.environ['RUNNER_TEMP']+'/atlas-font.sh').write_text('\n'.join(line[10:] for line in body.splitlines())+'\n')
+          PY
+          bash "$RUNNER_TEMP/atlas-font.sh"
+      - name: Run the existing seven replay viewport and asset cases
+        env:
+          ATLAS_BROWSER_CASE_SCOPE: chart-replay
+          ETH_BROWSER_IMAGE_LOG_MODE: failures-only
+        run: node scripts/verify-eth-candidate-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: replay-persistence-native-d2d09d3
+          path: build/eth-browser
+          retention-days: 14
