@@ -7,7 +7,7 @@ permissions:
 jobs:
   verify-public:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -41,6 +41,22 @@ jobs:
           Path(os.environ['RUNNER_TEMP']+'/atlas-font.sh').write_text('\n'.join(line[10:] for line in body.splitlines())+'\n')
           PY
           bash "$RUNNER_TEMP/atlas-font.sh"
+      - name: Wait within a fixed bound for the exact publication identity
+        env:
+          EXPECTED_SOURCE: a5feac9ee94fe73f849659221b1d43af7eee53b0
+        run: |
+          node --input-type=module <<'NODE'
+          import {setTimeout as delay} from 'node:timers/promises';
+          let ready=false;
+          for(let i=0;i<30;i++){
+            try{
+              const response=await fetch('https://twoimo.github.io/bitcoin-cycle-atlas/publication.json',{cache:'no-store',signal:AbortSignal.timeout(10000)});
+              if(response.ok){const publication=await response.json();if(publication.sourceCommit===process.env.EXPECTED_SOURCE){ready=true;break;}}
+            }catch(error){console.log('Publication read attempt',i+1,error.message);}
+            if(i<29)await delay(20000);
+          }
+          if(!ready)throw new Error('Expected source was not published within the verification bound. No success asserted.');
+          NODE
       - name: Hard reload production, save full curve, change live assumptions and Continue
         env:
           EXPECTED_SOURCE: a5feac9ee94fe73f849659221b1d43af7eee53b0
