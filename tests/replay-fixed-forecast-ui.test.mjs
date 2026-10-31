@@ -7,7 +7,7 @@ const cases=[];
 const test=(name,run)=>cases.push({name,run});
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {uiFixture,flush,deferred} from './replay-ui-fixture.mjs';
+import {uiFixture,flush,deferred,until} from './replay-ui-fixture.mjs';
 import {parseBitcoinReplayCandles} from '../dist/chart-replay-sources.js';
 import {buildLongHorizonForecast} from '../dist/long-horizon-forecast.js';
 import {createCurrentChartReplaySession} from '../dist/forecast-replay.js';
@@ -55,6 +55,56 @@ test('real SVG painter preserves assumptions after an OHLC source error with zer
   assert.equal(h.controls.get('export').disabled,true);
   assert.match(h.controls.get('model-label').textContent,/현재 예측선 보존/);
   h.mounted.destroy();
+});
+
+
+// These use the real coordinator, storage codec, replay engine and SVG painter.
+// The DOM boundary is still a fixture; native Chrome is a separate gate.
+test('Continue restores the saved dotted path and band after live assumptions change',async()=>{
+  const view={...capture(),dataset:structuredClone(old.dataset),forecast:structuredClone(old.forecast)};
+  const first=await fixtures({captured:view,actualPainter:true});await first.open();await first.start('2026-10-21');
+  first.key('ArrowRight');first.key('ArrowRight');
+  const previous=first.state().session,signature=first.svg.dataset.forecastValueSignature;
+  await first.mounted.exit({saveSession:true});const bytes=first.savedText();
+  assert.ok(JSON.parse(bytes).forecastSnapshot,'a hash-only save cannot restore a former curve');first.mounted.destroy();
+  const changed=structuredClone(view);changed.forecast.path[10].price*=1.2;changed.forecast.path[10].upper*=1.3;changed.presentation.band=false;
+  const resumed=await fixtures({captured:changed,storedText:bytes,actualPainter:true});
+  resumed.trigger.click();resumed.controls.get('entry-continue').click();
+  await until(()=>['paused','error'].includes(resumed.state().status),'restored saved capture');
+  assert.equal(resumed.state().status,'paused',resumed.state().error);
+  assert.equal(resumed.svg.dataset.replayCursor,'2026-10-22');
+  assert.equal(resumed.svg.dataset.forecastValueSignature,signature);
+  assert.deepEqual(resumed.state().session.forecast,previous.forecast);
+  assert.equal(resumed.state().session.replaySnapshot.digest,previous.replaySnapshot.digest);
+  assert.equal(resumed.state().session.identity.issuedAt,null);
+  assert.equal(resumed.state().session.policy.forecastScoringEnabled,false);
+  assert.ok(resumed.svg.querySelector('[data-indicator-layer="range"]'));
+  resumed.key('ArrowRight');assert.equal(resumed.svg.dataset.replayCursor,'2026-10-23');
+  assert.equal(resumed.svg.dataset.forecastValueSignature,signature);
+  const layer=resumed.svg.querySelector('.price-series-layer'),path=layer.querySelector('[data-replay-forecast-path]');
+  for(const node of layer.querySelectorAll('.observed-candle,.observed-candles-batched'))assert.ok(layer.children.indexOf(node)>layer.children.indexOf(path));
+  assert.equal(resumed.savedText(),bytes);assert.equal(resumed.writes.length,0);resumed.mounted.destroy();
+});
+test('Continue does not require the newest live model to restore a full saved curve',async()=>{
+  const view={...capture(),dataset:structuredClone(old.dataset),forecast:structuredClone(old.forecast)};
+  const first=await fixtures({captured:view});await first.open();await first.start('2026-10-21');
+  first.key('ArrowRight');await first.mounted.exit({saveSession:true});const bytes=first.savedText();first.mounted.destroy();
+  const resumed=await fixtures({getAtlasContext:()=>null,storedText:bytes});
+  resumed.trigger.click();resumed.controls.get('entry-continue').click();
+  await until(()=>['paused','error'].includes(resumed.state().status),'saved model without live input');
+  assert.equal(resumed.state().status,'paused');assert.equal(resumed.svg.dataset.replayCursor,'2026-10-21');
+  assert.equal(resumed.writes.length,0);resumed.mounted.destroy();
+});
+test('a corrupt saved capture fails closed and preserves stored bytes and disabled controls',async()=>{
+  const view={...capture(),dataset:structuredClone(old.dataset),forecast:structuredClone(old.forecast)};
+  const first=await fixtures({captured:view});await first.open();await first.start('2026-10-21');
+  await first.mounted.exit({saveSession:true});const saved=JSON.parse(first.savedText());first.mounted.destroy();
+  saved.forecastSnapshot.digest='0'.repeat(64);const bytes=JSON.stringify(saved);
+  const resumed=await fixtures({storedText:bytes});resumed.trigger.click();resumed.controls.get('entry-continue').click();
+  await until(()=>resumed.state().status==='error','corrupt capture rejected');
+  assert.equal(resumed.state().session,null);assert.equal(resumed.calls.current,0);
+  for(const name of ['play','next','live','export'])assert.equal(resumed.controls.get(name).disabled,true);
+  assert.equal(resumed.savedText(),bytes);assert.equal(resumed.writes.length,0);resumed.mounted.destroy();
 });
 
 // Match the existing UI suite: run the exact same assertions in an explicitly

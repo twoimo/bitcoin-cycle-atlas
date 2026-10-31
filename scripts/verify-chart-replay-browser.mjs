@@ -502,6 +502,7 @@ export async function verifyChartReplaySurface(api) {
         renderer: svg.dataset.replayRenderer ?? null, viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null,
         scale: svg.dataset.scale, unit: svg.dataset.unit, chartType: svg.dataset.chartType,
         forecastValueSignature: svg.dataset.forecastValueSignature ?? null,
+        snapshotDigest: svg.dataset.replaySnapshotHash ?? null,
         annotationSignature: svg.dataset.replayAnnotationSignature ?? null,
         atlasPriceLayer: svg.querySelectorAll('.price-series-layer').length,
         cycleMarkerCount: Number(svg.dataset.cycleMarkerCount ?? 0), cycleIntervalCount: Number(svg.dataset.cycleIntervalCount ?? 0),
@@ -512,7 +513,7 @@ export async function verifyChartReplaySurface(api) {
         batchedWickCount: wickXs.length, lastBatchedCandleX: wickXs.length ? Math.max(...wickXs) : null,
         plotLeft: Number(svg.dataset.plotLeft), plotRight: Number(svg.dataset.plotRight),
         forecastPath: svg.querySelector('[data-replay-forecast-path]')?.getAttribute('d') ?? null,
-        forecastAboveActuals: (() => { const path = svg.querySelector('[data-replay-forecast-path]'); return path ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(node.compareDocumentPosition(path) & Node.DOCUMENT_POSITION_FOLLOWING)) : null; })(),
+        forecastBelowActuals: (() => { const path = svg.querySelector('[data-replay-forecast-path]'); return path ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(path.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)) : null; })(),
         forecastPointerEvents: svg.querySelector('[data-replay-forecast-path]')?.getAttribute('pointer-events') ?? null,
         origins: svg.querySelectorAll('[data-replay-origin-boundary]').length, cursors: svg.querySelectorAll('[data-replay-cursor-line]').length,
         confirmedCursorXs: [...svg.querySelectorAll('[data-replay-cursor-line]')].map(node => node.getAttribute('x1')),
@@ -538,7 +539,7 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(value.active, true); assert.equal(value.separateReplayCharts, 0); assert.equal(value.dialogs, 0);
     assert.equal(value.previousPresent, false, 'The removed previous-bar action is still mounted');
     if (value.renderer === 'atlas' && value.forecastPath) {
-      assert.equal(value.forecastAboveActuals, true, 'Actual candles cover the immutable comparison curve');
+      assert.equal(value.forecastBelowActuals, true, 'Actual candles must be above the intact immutable comparison curve');
       assert.equal(value.forecastPointerEvents, 'none', 'The fixed forecast intercepts native chart selection');
     }
     assert.equal(value.invalidPaths, 0); assert.equal(value.liveReadouts, 0, 'Latest quote/readout remained visible during replay');
@@ -1040,6 +1041,7 @@ export async function verifyChartReplaySurface(api) {
     return { range: document.querySelector('#workbench-range-label').textContent, scale: svg.dataset.scale, unit: svg.dataset.unit,
       chartType: svg.dataset.chartType, atlasPriceLayer: svg.querySelectorAll('.price-series-layer').length,
       forecastValueSignature: svg.dataset.forecastValueSignature ?? null,
+        snapshotDigest: svg.dataset.replaySnapshotHash ?? null,
       frequency: document.querySelector('#workbench-interval-select').value,
       cycleMarkers: Number(svg.dataset.cycleMarkerCount), cycleIntervals: Number(svg.dataset.cycleIntervalCount) };
   }, chartSelector) : null;
@@ -1148,8 +1150,14 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(restoredAtlas.sameNode, true);
     for (const key of ['range', 'scale', 'unit', 'chartType', 'frequency', 'cycleMarkers', 'cycleIntervals']) assert.equal(restoredAtlas[key], liveContext[key], 'Returning from Atlas replay changed ' + key);
     evidence.lifecycle.push({ label: 'current-chart-restored-with-original-presentation', ...restoredAtlas });
+    const persistedCapture=JSON.parse(await storedBytes()).forecastSnapshot;
+    assert.ok(persistedCapture,'Explicit save must preserve the full forecast or its verified database reference');
+    assert.ok(['atlas-local-replay-snapshot','atlas-replay-snapshot-reference'].includes(persistedCapture.kind));
+    assert.match(persistedCapture.digest,/^[a-f0-9]{64}$/);
+    evidence.lifecycle.push({label:'full-forecast-explicitly-persisted',kind:persistedCapture.kind,digest:persistedCapture.digest,storedBytes:Buffer.byteLength(await storedBytes())});
     await reopenSaved('atlas-saved-session');
     const resumedAtlas = await snapshot('atlas-resumed-paused');
+    assert.equal(resumedAtlas.snapshotDigest,persistedCapture.digest,'Continue changed the stored capture');
     assert.equal(resumedAtlas.mode, 'atlas-chart'); assert.equal(resumedAtlas.index, pausedAtlas.index); assert.equal(resumedAtlas.cursor, pausedAtlas.cursor);
     assert.equal(resumedAtlas.outputHash, pausedAtlas.outputHash); assert.equal(resumedAtlas.annotationSignature, pausedAtlas.annotationSignature);
     assert.equal(resumedAtlas.forecastValueSignature, liveContext.forecastValueSignature);

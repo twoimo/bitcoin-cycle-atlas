@@ -5,15 +5,22 @@ import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import * as vm from 'node:vm';
+import * as snapshotHelpers from '../dist/chart-replay-snapshot.js';
 import {createChartReplayController,CHART_REPLAY_SPEEDS} from '../dist/chart-replay-state.js';
 
+const FIXED_OUTPUT='c'.repeat(64);
 const sourceUrl=new URL('../dist/chart-replay.js',import.meta.url);
 const {version:releaseVersion}=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
 const dateAt=offset=>new Date(Date.UTC(2024,0,1+offset)).toISOString().slice(0,10);
 const dateAfter=(date,days)=>new Date(Date.parse(date+'T00:00:00Z')+days*86400000).toISOString().slice(0,10);
 const evaluatedAt='2026-10-30T12:00:00.000Z';
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
-const flush=async()=>{for(let i=0;i<5;i++)await new Promise(setImmediate);};
+const snapshotOperations=new Set();
+const trackSnapshot=operation=>(...args)=>{
+  const pending=operation(...args);snapshotOperations.add(pending);
+  void pending.finally(()=>snapshotOperations.delete(pending)).catch(()=>{});return pending;
+};
+const flush=async()=>{for(let i=0;i<5;i++){await new Promise(setImmediate);await Promise.allSettled([...snapshotOperations]);}};
 const archive=(name,{missing=[],length=185}={})=>({observations:Array.from({length},(_,i)=>({date:dateAt(i),price:100+i,
   open:99+i,high:102+i,low:98+i,close:100+i,volume:10+i})).filter((_,i)=>!missing.includes(i)),
   observedThrough:dateAt(length-1),observedAt:dateAt(length)+'T00:00:00Z',source:{provider:name,sourceHash:name,ohlcAvailable:true}});
@@ -64,7 +71,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     builds.push(options);factories.push(factory);
     const asOf=options.asOf??options.record?.asOf??options.baseline?.forecast.asOf;
     const session={asOf,evaluatedAt,timeline:Array.from({length:5},(_,i)=>dateAfter(asOf,i)),fixtureObservations:options.observations,
-      identity:{outputHash:'fixed-output',pointLabel:'fixture'},mode:options.record?'recorded':'historical-reconstruction',
+      identity:{outputHash:FIXED_OUTPUT,pointLabel:'fixture'},mode:options.record?'recorded':'historical-reconstruction',
       observationProvenance:{source:options.source},forecast:[],inputPrices:[]};
     if(factory==='current'||factory==='project'){
       if(factory==='current')assert.equal(options.playbackStartDate,dateAfter(asOf,1),'the coordinator must preserve the engine origin/playback contract');
@@ -73,6 +80,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
       session.chartForecast=options.forecast??options.baseline.forecast;
       session.forecast=session.chartForecast.path;
       session.identity.forecastOriginDate=session.chartForecast.asOf;
+      if(factory==='current')Object.assign(session.identity,{asOf,currentChartSnapshot:true,issuedAt:null,createdAt:options.createdAt??evaluatedAt});
     }
     return buildSession?buildSession(options,session):session;
   }
@@ -99,15 +107,16 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
   const state=await module({CHART_REPLAY_SPEEDS,createChartReplayController:options=>{
     const result=createChartReplayController({...options,now:()=>clock,setTimer:(callback,delay)=>{timers.set(++timerId,{callback,delay,due:clock+delay});return timerId;},clearTimer:id=>timers.delete(id)});controllers.push(result);return result;
   }});
+  const snapshotModule=await module({...snapshotHelpers,sealReplaySnapshot:trackSnapshot(snapshotHelpers.sealReplaySnapshot),restoreReplaySnapshot:trackSnapshot(snapshotHelpers.restoreReplaySnapshot)});
   const imports={
     ['./forecast-replay.js?v='+releaseVersion]:await module(engine),
     './chart-replay-renderer.js':await module({drawReplaySelection:renderer('selection'),drawChartReplay:renderer('replay')}),
     './chart-replay-sources.js':await module({loadChartReplayArchive:loadArchive,loadChartReplayRecord:loadRecord??(async()=>{throw new Error('Unexpected recorded load');})}),
     './project-replay-baseline.js':await module({PROJECT_REPLAY_ORIGIN:{startDate:dateAt(181)},loadProjectReplayBaseline:loadBaseline??(async()=>{throw new Error('Unexpected project baseline load');})}),
-    './chart-replay-atlas.js':await module({createAtlasReplayContext:options=>{atlasContexts.push(options);return {...options,forecast:options.forecast.path};},drawAtlasChartReplay:renderer('atlas')}),
+    './chart-replay-atlas.js':await module({createAtlasReplayContext:options=>{atlasContexts.push(options);return {...options,forecast:options.forecast.path,forecastOrigin:options.forecast.asOf};},drawAtlasChartReplay:renderer('atlas')}),
   };
   const view=new vm.SourceTextModule(source,{context,identifier:sourceUrl.href,importModuleDynamically:specifier=>{assert.ok(imports[specifier],specifier);return imports[specifier];}});
-  await view.link(specifier=>{assert.equal(specifier,'./chart-replay-state.js?v='+releaseVersion);return state;});await view.evaluate();
+  await view.link(specifier=>{if(specifier==='./chart-replay-snapshot.js')return snapshotModule;assert.equal(specifier,'./chart-replay-state.js?v='+releaseVersion);return state;});await view.evaluate();
   const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol,getAtlasContext,getChartState,resolveAtlasRange,
     getChartRenderer:()=>({getPriceScale:()=>axis}),onAtlasFrame:detail=>frameEvents.push(detail),
     loadAtlasRenderer:()=>imports['./chart-replay-atlas.js'].namespace,restore:()=>{restores++;}});
@@ -138,7 +147,7 @@ function atlasFixture({frequency='daily',chartType='line',missing=[]}={}){
 }
 function savedFixture(extra={}){
   return {version:1,symbol:'BTCUSD',mode:'atlas-chart',horizon:180,model:null,recordId:null,
-    origin:dateAt(180),startDate:dateAt(181),cursorIndex:2,cursorDate:dateAt(182),sourceHash:'previous-source',outputHash:'fixed-output',
+    origin:dateAt(180),startDate:dateAt(181),cursorIndex:2,cursorDate:dateAt(182),sourceHash:'previous-source',outputHash:FIXED_OUTPUT,
     speed:.5,frequency:'weekly',chartType:'candles',window:'near',customRange:true,range:{start:dateAt(80),end:dateAt(400)},...extra};
 }
 const keyEvent=(h,key,extra={})=>{const event={type:'keydown',key,target:h.svg,preventDefault(){this.prevented=true;},stopImmediatePropagation(){this.stopped=true;this.immediatePropagationStopped=true;},...extra};h.doc.dispatchEvent(event);return event;};
@@ -191,7 +200,7 @@ const interactionCases=[
     h.controls.get('pick-cancel').click();assert.equal(h.mounted.isActive(),false);assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);
     h.trigger.click();h.controls.get('entry-new').click();await flush();h.controls.get('exit').click();
     assert.equal(h.controls.get('exit-dialog').hidden,false);assert.equal(h.controls.get('exit-save').disabled,true);assert.equal(h.controls.get('exit-save').checked,false);
-    h.controls.get('exit-confirm').click();assert.equal(h.mounted.isActive(),false);assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);h.mounted.destroy();
+    await h.controls.get('exit-confirm').click();assert.equal(h.mounted.isActive(),false);assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);h.mounted.destroy();
   }},
   {name:'weekly start preview blocks Play, Forward and Jump to real-time until a clicked bar is confirmed',async run(source){
     const fixture=atlasFixture({frequency:'weekly'}),raw=JSON.stringify(savedFixture(),null,2)+'\n';
@@ -235,15 +244,15 @@ const interactionCases=[
     assert.equal(h.svg.dataset.replayCursor,dateAt(183));assert.equal(h.controls.get('display').value,'line');assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);
     h.controls.get('exit').click();assert.equal(h.controls.get('exit-save').checked,true);assert.equal(h.controllers[0].getState().status,'paused');
     h.controls.get('exit-cancel').click();assert.equal(h.mounted.isActive(),true);assert.equal(h.savedText(),raw);assert.equal(h.controls.get('exit-dialog').hidden,true);
-    h.controls.get('exit').click();h.controls.get('exit-save').checked=false;h.controls.get('exit-confirm').click();
+    h.controls.get('exit').click();h.controls.get('exit-save').checked=false;await h.controls.get('exit-confirm').click();
     assert.equal(h.mounted.isActive(),false);assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);
     h.trigger.click();h.controls.get('entry-continue').click();await flush();h.controls.get('next').click();
     h.controls.get('speed').value='.3';h.controls.get('speed').onchange();h.mounted.handleChartCommand({action:'span',value:'near'});
-    h.mounted.handleChartCommand({action:'chart-type',value:'line'});await flush();h.controls.get('exit').click();h.controls.get('exit-confirm').click();
+    h.mounted.handleChartCommand({action:'chart-type',value:'line'});await flush();h.controls.get('exit').click();await h.controls.get('exit-confirm').click();
     assert.equal(h.mounted.isActive(),false);assert.equal(h.writes.length,1);
     const saved=h.saved();assert.equal(saved.cursorDate,dateAt(183));assert.equal(saved.origin,dateAt(180));assert.equal(saved.startDate,dateAt(181));
     assert.equal(saved.speed,.3);assert.equal(saved.frequency,'weekly');assert.equal(saved.chartType,'line');assert.equal(saved.window,'near');assert.equal(saved.customRange,false);
-    assert.deepEqual(saved.range,near);assert.equal(saved.sourceHash,fixture.observed.source.sourceHash);assert.equal(saved.outputHash,'fixed-output');
+    assert.deepEqual(saved.range,near);assert.equal(saved.sourceHash,fixture.observed.source.sourceHash);assert.equal(saved.outputHash,FIXED_OUTPUT);
     const written=h.savedText();h.trigger.click();h.controls.get('entry-continue').click();await flush();
     assert.equal(h.controllers[0].getState().status,'paused');assert.equal(h.controls.get('display').value,'line');assert.equal(h.svg.dataset.replayCursor,dateAt(183));
     assert.equal(h.svg.dataset.replayFrequency,'weekly');assert.equal(h.builds.at(-1).source,fixture.observed.source);
@@ -357,7 +366,7 @@ const interactionCases=[
     h.controls.get('next').click();h.controls.get('live').click();assert.equal(h.mounted.isActive(),true);assert.equal(h.restores(),0);assert.equal(h.controls.get('exit-dialog').hidden,false);
     assert.equal(h.controls.get('first').disabled,true);assert.equal(h.controls.get('live').disabled,true);assert.equal(h.controls.get('exit-save').checked,true);assert.equal(h.writes.length,0);
     h.controls.get('exit-cancel').click();assert.equal(h.svg.dataset.replayCursor,dateAt(181));assert.equal(h.svg.dataset.replayOutputHash,hash);
-    h.controls.get('live').click();h.controls.get('exit-save').checked=false;h.controls.get('exit-confirm').click();
+    h.controls.get('live').click();h.controls.get('exit-save').checked=false;await h.controls.get('exit-confirm').click();
     assert.equal(h.mounted.isActive(),false);assert.equal(h.restores(),1);assert.equal(h.writes.length,0);h.mounted.destroy();
   }},
   {name:'Select bar retains native form keys and closes through Escape, its close action and an outside pointer',async run(source){
@@ -391,7 +400,7 @@ const interactionCases=[
     for(const frequency of ['daily','weekly']){h.mounted.handleChartCommand({action:'frequency',value:frequency});assert.equal(h.chartCalls.at(-1).frequency,frequency);}
     h.mounted.handleChartCommand({action:'frequency',value:'1h'});assert.equal(h.svg.dataset.replayFrequency,'weekly');assert.match(h.notice().textContent,/실제 분봉.*주봉 간격을 유지/);
     h.mounted.handleChartCommand({action:'scenario',value:'stress'});assert.equal(h.controllers[0].getState().session,original);assert.deepEqual(h.factories,['current']);
-    assert.equal(JSON.stringify(h.draws.at(-1).data.frame.forecast),path);assert.equal(JSON.stringify(fixture.forecast.path),path);assert.equal(h.svg.dataset.replayOutputHash,'fixed-output');
+    assert.equal(JSON.stringify(h.draws.at(-1).data.frame.forecast),path);assert.equal(JSON.stringify(fixture.forecast.path),path);assert.equal(h.svg.dataset.replayOutputHash,FIXED_OUTPUT);
     assert.equal(h.writes.length,0);h.mounted.destroy();assert.equal(h.frequencyControl.inert,false);assert.equal(h.typeControl.inert,false);assert.equal(h.liveControl.inert,false);
   }},
   {name:'unsupported intraday entry stays on the selected interval and displays the missing-source reason',async run(source){
@@ -562,14 +571,14 @@ export async function verifyChartReplayUi(){
     await h.mounted.open();await h.start();assert.equal(h.saved(),null);assert.equal(h.writes.length,0);
     h.controls.get('horizon').value='365';h.controls.get('horizon').onchange();await flush();
     assert.equal(h.saved(),null,'changing a select must not persist or relabel the previously fixed session');
-    h.mounted.exit({saveSession:true});assert.equal(h.saved().horizon,180,'explicit save preserves the fixed session settings, not the edited select');
+    await h.mounted.exit({saveSession:true});assert.equal(h.saved().horizon,180,'explicit save preserves the fixed session settings, not the edited select');
     waiting.resolve(archive('later'));await flush();assert.equal(h.mounted.isActive(),false);assert.equal(h.restores(),1);
     assert.equal(h.svg.dataset.chartReplayActive,undefined);h.mounted.destroy();checks.push('settings identity and exit during load');
   }
   {
     let calls=0;const h=await harness(source,{loadArchive:()=>++calls===1?archive('first',{missing:[182]}):archive('second')});
     await h.mounted.open();await h.start();h.controls.get('next').onclick();h.controls.get('next').onclick();
-    assert.equal(h.svg.dataset.replayCursor,dateAt(183));assert.equal(h.saved(),null);h.mounted.exit({saveSession:true});
+    assert.equal(h.svg.dataset.replayCursor,dateAt(183));assert.equal(h.saved(),null);await h.mounted.exit({saveSession:true});
     const saved=h.saved();assert.equal(saved.cursorDate,dateAt(183));await h.mounted.open({resume:saved});
     assert.equal(h.svg.dataset.replayCursor,dateAt(183),'filled archive gaps must not move a saved replay date');
     assert.equal(h.controllers[0].getState().status,'paused');h.mounted.destroy();checks.push('resume by calendar date after outcome revision');
@@ -619,13 +628,13 @@ export async function verifyChartReplayUi(){
     assert.equal(h.controls.get('model').value,'pooled');assert.equal(h.controls.get('date').value,chosen);
     assert.equal(h.svg.dataset.replayOrigin,chosen);assert.equal(h.svg.dataset.replayCursor,chosen);
     assert.equal(h.controls.get('pooled-retry').hidden,true);assert.equal(h.saved(),null);
-    h.mounted.exit({saveSession:true});assert.equal(h.saved().model,'pooled');assert.equal(h.saved().origin,chosen);
+    await h.mounted.exit({saveSession:true});assert.equal(h.saved().model,'pooled');assert.equal(h.saved().origin,chosen);
     h.mounted.destroy();checks.push('unsupported ETH adaptive origin requires explicit pooled comparison at the same date');
   }
   {
     const dataset={prices:archive('current').observations.map(row=>[row.date,row.price])};
     const forecast={asOf:dateAt(184),referenceDate:dateAt(181),path:[{date:dateAt(184),price:284,lower:284,upper:284},{date:dateAt(185),price:300,lower:250,upper:350}]};
-    const captured={dataset,forecast,start:dateAt(90),end:dateAt(700),chartType:'line',presentation:{scale:'log',unit:'usd'}};
+    const captured={dataset,forecast,start:dateAt(90),end:dateAt(700),chartType:'line',frequency:'daily',presentation:{scale:'log',unit:'usd'}};
     const baseline={dataset,forecast:{asOf:dateAt(180),referenceDate:dateAt(181),path:[{date:dateAt(180),price:280},{date:dateAt(181),price:290}]}};
     const h=await harness(source,{getAtlasContext:()=>captured,loadBaseline:async()=>baseline});
     await h.mounted.open();
@@ -645,7 +654,7 @@ export async function verifyChartReplayUi(){
     assert.match(h.inspection(),/실제 — · 고정 예측 \$300/,'a forecast-only hover cannot label the prediction as an actual price');
     h.draws.at(-1).onInspect({date:dateAt(181),actual:84176.08,predicted:82967.49,source:'Coin Metrics',candleSource:'Bitstamp',candle:{close:84023.24}});
     assert.match(h.inspection(),/평가 종가 \(Coin Metrics\) \$84,176\.08 · 캔들 종가 \(Bitstamp\) \$84,023\.24/,'a separately sourced candle must not relabel the comparison close');
-    assert.equal(h.saved(),null);h.mounted.exit({saveSession:true});const saved=h.saved();await h.mounted.open({resume:saved});
+    assert.equal(h.saved(),null);await h.mounted.exit({saveSession:true});const saved=h.saved();await h.mounted.open({resume:saved});
     assert.equal(h.svg.dataset.replayCursor,dateAt(183));assert.equal(h.controllers[0].getState().status,'paused');
     assert.ok(h.factories.every(factory=>factory==='current'));assert.equal(JSON.stringify(h.draws.at(-1).data.frame.forecast),path);
     h.mounted.destroy();checks.push('current-chart entry, changed start date, playback and resume retain the original forecast and distinguish unknown actuals');
@@ -653,7 +662,7 @@ export async function verifyChartReplayUi(){
   {
     const dataset={prices:archive('current').observations.map(row=>[row.date,row.price])};
     const forecast={asOf:dateAt(184),path:[{date:dateAt(184),price:284},{date:dateAt(185),price:300}]};
-    const captured={dataset,forecast,start:dateAt(90),end:dateAt(700),chartType:'line',presentation:{scale:'log'}};
+    const captured={dataset,forecast,start:dateAt(90),end:dateAt(700),chartType:'line',frequency:'daily',presentation:{scale:'log'}};
     const baseline={dataset,forecast:{asOf:dateAt(180),referenceDate:dateAt(181),path:[{date:dateAt(180),price:280},{date:dateAt(181),price:290}]}};
     const waiting=deferred();let baselineCalls=0;
     const h=await harness(source,{getAtlasContext:()=>captured,loadBaseline:()=>++baselineCalls===1?waiting.promise:baseline});
@@ -676,7 +685,7 @@ export async function verifyChartReplayUi(){
   {
     const dataset={prices:archive('current').observations.map(row=>[row.date,row.price])};
     const baseline={dataset,forecast:{asOf:dateAt(180),referenceDate:dateAt(181),path:[{date:dateAt(180),price:280},{date:dateAt(181),price:290}]}};
-    const captured={dataset,forecast:baseline.forecast,start:dateAt(90),end:dateAt(700),chartType:'line',presentation:{scale:'log'}};
+    const captured={dataset,forecast:baseline.forecast,start:dateAt(90),end:dateAt(700),chartType:'line',frequency:'daily',presentation:{scale:'log'}};
     const waiting=deferred();let candleLoads=0;
     const h=await harness(source,{getAtlasContext:()=>captured,loadBaseline:async()=>baseline,
       loadArchive:async(_symbol,{mode})=>{if(mode==='historical-reconstruction'){candleLoads++;return waiting.promise;}return archive('Coin Metrics');}});
