@@ -1,0 +1,52 @@
+name: Stage QA48 future overlap boundary
+on:
+  push:
+    branches: [stage/replay-qa-48-v1.29.9]
+    paths: [.github/workflows/stage-replay48-coverage-once.yml]
+permissions:
+  contents: write
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 322bb442de6f520198b1d9e6925358ccacb9cd51
+          persist-credentials: true
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Refine only the overlap boundary and its regression
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('dist/chart-replay.js');s=p.read_text()
+          old="const firstForecast=session.forecast[0]?.date??session.identity.forecastOriginDate;\n      const forecastDates=new Set(session.forecast.map(row=>row.date));"
+          new="const forecastOrigin=session.identity.forecastOriginDate??session.asOf;\n      const firstForecast=session.forecast.find(row=>row.date>forecastOrigin)?.date??'없음';\n      const forecastDates=new Set(session.forecast.filter(row=>row.date>forecastOrigin).map(row=>row.date));"
+          assert s.count(old)==1;s=s.replace(old,new)
+          old="const coverage='예측 시작 '+firstForecast"
+          assert s.count(old)==1;s=s.replace(old,"const coverage='예측 기준 '+forecastOrigin+' · 미래 구간 시작 '+firstForecast")
+          p.write_text(s)
+          p=Path('tests/replay-fixed-forecast-ui.test.mjs');s=p.read_text()
+          marker='// Match the existing UI suite:'
+          addition="""test('visual overlap excludes the observed forecast anchor and counts only disclosed future dates',async()=>{
+            const h=await fixtures({captured:{...capture(),dataset:structuredClone(old.dataset),forecast:structuredClone(old.forecast)}});
+            await h.open();await h.start('2026-10-21');
+            assert.equal(h.svg.dataset.replayOverlapCount,'0');
+            assert.match(h.controls.get('detail-metric').textContent,/미래 구간 시작 2026-10-21/);
+            h.key('ArrowRight');assert.equal(h.svg.dataset.replayOverlapCount,'1');
+            assert.equal(h.state().session.policy.forecastScoringEnabled,false);h.mounted.destroy();
+          });
+
+          """
+          assert s.count(marker)==1;p.write_text(s.replace(marker,addition+marker))
+          PY
+          git add dist/chart-replay.js tests/replay-fixed-forecast-ui.test.mjs
+          test "$(git write-tree)" = 8ac98467e427cd7b17528027516dce3ab4d53813
+          node --experimental-vm-modules --test tests/replay-fixed-forecast-ui.test.mjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: distinguish observed anchor from future replay comparison dates'
+          git push origin HEAD:refs/heads/fix/replay-qa-48-v1.29.9
