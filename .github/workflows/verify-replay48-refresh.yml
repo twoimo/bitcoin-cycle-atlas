@@ -1,0 +1,75 @@
+name: QA48 fresh data compatibility
+on:
+  push:
+    branches: [stage/replay-qa-48-v1.29.9]
+    paths: [.github/workflows/verify-replay48-refresh.yml]
+permissions:
+  contents: read
+jobs:
+  fresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 322bb442de6f520198b1d9e6925358ccacb9cd51
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Acquire and validate actual new provider observations
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/replay48-fresh"
+          mkdir -p "$out"
+          test "$(git rev-parse HEAD^{tree})" = b41c6e5e9fe9e0c7f525e00180fc74d473b668d7
+          git rev-parse HEAD > "$out/source.txt"
+          export QA48_OUT="$out"
+          node --input-type=module <<'JS'
+          import {spawnSync} from 'node:child_process';
+          import {writeFileSync} from 'node:fs';
+          const steps=[['btc','scripts/refresh-data.mjs'],['cycle','scripts/refresh-cycle-calibration.mjs'],['ohlc','scripts/refresh-ohlc.mjs'],['volume','scripts/refresh-volume.mjs'],['eth','scripts/refresh-eth.mjs'],['equities','scripts/refresh-equities.mjs'],['comparison','scripts/refresh-asset-comparison.mjs']];
+          const outcomes={};
+          for(const [name,path] of steps){
+            const attemptedAt=new Date().toISOString().replace(/\.\d{3}Z$/,'Z');
+            const r=spawnSync(process.execPath,[path],{encoding:'utf8',timeout:180000,maxBuffer:16*1024*1024});
+            writeFileSync(process.env.QA48_OUT+'/'+name+'.log',(r.stdout||'')+(r.stderr||''));
+            outcomes[name]={outcome:r.status===0&&!r.signal&&!r.error?'success':'failure',attemptedAt};
+            writeFileSync(process.env.QA48_OUT+'/outcomes.json',JSON.stringify(outcomes));
+            if(outcomes[name].outcome!=='success')throw new Error(name+' refresh failed: '+r.status+' '+r.signal);
+          }
+          JS
+          export ATLAS_REFRESH_OUTCOMES="$(cat "$out/outcomes.json")"
+          npm run verify:asset-comparison 2>&1 | tee "$out/comparison-verify.log"
+          node scripts/capture-asset-judgments.mjs 2>&1 | tee "$out/capture.log"
+          npm run build:research 2>&1 | tee "$out/research.log"
+          npm run build:forecast 2>&1 | tee "$out/forecast-build.log"
+          npm run verify:forecast 2>&1 | tee "$out/forecast-verify.log"
+      - name: Run unchanged full gate on refreshed observations
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/replay48-fresh"
+          export ATLAS_REFRESH_OUTCOMES="$(cat "$out/outcomes.json")"
+          npm test 2>&1 | tee "$out/npm-test.log"
+          npm run verify:formal 2>&1 | tee "$out/formal.log"
+          npm run verify:cycle 2>&1 | tee "$out/cycle-verify.log"
+          npm run verify:performance 2>&1 | tee "$out/performance.log"
+          node scripts/verify-static.mjs 2>&1 | tee "$out/static.log"
+          echo PASS > "$out/result.txt"
+      - name: Retain original new data and identities without committing
+        if: always()
+        run: |
+          out="$RUNNER_TEMP/replay48-fresh"
+          mkdir -p "$out/data"
+          cp dist/data/{btc-volume,btc-daily,eth-ohlc}.json "$out/data/"
+          git diff --stat > "$out/refreshed-changes.txt"
+          (cd "$out" && sha256sum data/*.json > data-sha256.txt)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: replay48-fresh-data-evidence
+          path: ${{ runner.temp }}/replay48-fresh
+          retention-days: 14
