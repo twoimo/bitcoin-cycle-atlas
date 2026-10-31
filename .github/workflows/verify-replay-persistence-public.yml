@@ -1,0 +1,56 @@
+name: Verify published replay persistence once
+on:
+  push:
+    branches: [verify/replay-persistence-public-v1.29.8]
+permissions:
+  contents: read
+jobs:
+  verify-public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Prepare the exact independently tested browser check outside checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/verification/extend-persistence.py .github/verification/public-base.mjs "$RUNNER_TEMP/public-persistence.mjs"
+          echo 'ce95aa266c1173fa4e48b7e2e46c0fdda8bc8ee8a0375a35fd32869f3012fa5f  '"$RUNNER_TEMP/public-persistence.mjs" | sha256sum -c -
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: a5feac9ee94fe73f849659221b1d43af7eee53b0
+          persist-credentials: false
+      - name: Bind the exact deployed source and install its pinned Korean font
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 'a5feac9ee94fe73f849659221b1d43af7eee53b0'
+          test "$(git rev-parse HEAD^{tree})" = '8976bc99e80525f4f3d4926bba728b038e646f09'
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          s=Path('.github/workflows/eth-model-evaluation.yml').read_text()
+          a=s.index('      - name: Install a pinned Korean font with bounded network and cache time')
+          b=s.index('      - name: Render comparison',a)
+          body=s[a:b].split('        run: |\n',1)[1]
+          Path(os.environ['RUNNER_TEMP']+'/atlas-font.sh').write_text('\n'.join(line[10:] for line in body.splitlines())+'\n')
+          PY
+          bash "$RUNNER_TEMP/atlas-font.sh"
+      - name: Hard reload production, save full curve, change live assumptions and Continue
+        env:
+          EXPECTED_SOURCE: a5feac9ee94fe73f849659221b1d43af7eee53b0
+        run: node "$RUNNER_TEMP/public-persistence.mjs"
+      - name: Preserve the exact verification program
+        if: always()
+        run: mkdir -p build/public-overlay; cp "$RUNNER_TEMP/public-persistence.mjs" build/public-overlay/verification-source.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public-replay-persistence-v1.29.8-${{ github.sha }}
+          path: build/public-overlay
+          retention-days: 30
