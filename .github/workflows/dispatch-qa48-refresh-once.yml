@@ -1,0 +1,35 @@
+name: Dispatch QA48 operating refresh once
+on:
+  push:
+    branches: [stage/replay-qa-48-v1.29.9]
+    paths: [.github/workflows/dispatch-qa48-refresh-once.yml]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Dispatch only the existing main workflow from the verified merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/qa48-dispatch
+          expected=9f8ebd066dd70013fe4fb2d8293b7547c024a036
+          test "$(gh api repos/twoimo/bitcoin-cycle-atlas/git/ref/heads/main --jq .object.sha)" = "$expected"
+          test "$(gh api repos/twoimo/bitcoin-cycle-atlas/git/commits/$expected --jq .tree.sha)" = 8ac98467e427cd7b17528027516dce3ab4d53813
+          gh api repos/twoimo/bitcoin-cycle-atlas/actions/workflows/refresh-data.yml > /tmp/qa48-dispatch/workflow.json
+          test "$(jq -r .state /tmp/qa48-dispatch/workflow.json)" = active
+          date -u +%Y-%m-%dT%H:%M:%SZ > /tmp/qa48-dispatch/dispatched-at.txt
+          gh api --method POST repos/twoimo/bitcoin-cycle-atlas/actions/workflows/refresh-data.yml/dispatches -f ref=main
+          printf '%s\n' "$expected" > /tmp/qa48-dispatch/expected-source.txt
+          # Existing pages concurrency serializes this refresh behind code deployment.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qa48-main-refresh-dispatch
+          path: /tmp/qa48-dispatch
+          retention-days: 14
