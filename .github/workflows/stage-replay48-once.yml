@@ -1,0 +1,79 @@
+name: Stage replay QA48 candidate once
+on:
+  push:
+    branches: [stage/replay-qa-48-v1.29.9]
+    paths: [.github/workflows/stage-replay48-once.yml]
+permissions:
+  contents: write
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Preserve and validate exact patch transfer
+        run: |
+          mkdir -p /tmp/replay48-stage
+          cat qa-transfer/replay48-{0,1,2,3}.b64 > /tmp/replay48-stage/received.b64
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64,gzip,hashlib
+          root=Path('/tmp/replay48-stage')
+          text=''.join((root/'received.b64').read_text().split())
+          # Transport corrections are still bound by the complete patch digest.
+          text=text.replace('haY63lAGca','haY63l+AGca')
+          patch=gzip.decompress(base64.b64decode(text,validate=True))
+          assert len(patch)==54810
+          assert hashlib.sha256(patch).hexdigest()=='9a41d5532e2ea80e07d7e80d8766e2c8b3a3707e5a861285af3cd2d7f2d3f072'
+          (root/'candidate.patch').write_bytes(patch)
+          PY
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: a5feac9ee94fe73f849659221b1d43af7eee53b0
+          persist-credentials: true
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Apply only the exact tested product tree
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api repos/twoimo/bitcoin-cycle-atlas/git/ref/heads/main --jq .object.sha)" = a5feac9ee94fe73f849659221b1d43af7eee53b0
+          test "$(git rev-parse HEAD^{tree})" = 8976bc99e80525f4f3d4926bba728b038e646f09
+          git apply --check /tmp/replay48-stage/candidate.patch
+          git apply /tmp/replay48-stage/candidate.patch
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          root=Path('.')
+          destination=root/'tests/fixtures/market-v1.29.8'
+          destination.mkdir(parents=True,exist_ok=True)
+          for name in ['btc-volume','eth-ohlc','btc-daily']:
+              data=subprocess.check_output(['git','show','HEAD:dist/data/'+name+'.json'])
+              (destination/(name+'.json')).write_bytes(data)
+          for path in [*Path('dist').glob('*.js'),Path('dist/index.html'),Path('package.json')]:
+              text=path.read_text()
+              if '1.29.8' in text:path.write_text(text.replace('1.29.8','1.29.9'))
+          PY
+          git add -- dist docs package.json tests
+          git diff --cached --check
+          test "$(git write-tree)" = b41c6e5e9fe9e0c7f525e00180fc74d473b668d7
+          node --check dist/chart-replay.js
+          node --check dist/chart-replay-snapshot.js
+          node --test tests/chart-replay-snapshot.test.mjs tests/replay-fixed-forecast-ui.test.mjs tests/refresh-replay-compatibility.test.mjs > /tmp/replay48-stage/targeted.log
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: isolate historical fixtures and synchronize replay saves across tabs (v1.29.9)'
+          git push origin HEAD:refs/heads/fix/replay-qa-48-v1.29.9
+          git rev-parse HEAD > /tmp/replay48-stage/commit.txt
+          git rev-parse HEAD^{tree} > /tmp/replay48-stage/tree.txt
+          git diff HEAD^ HEAD --stat > /tmp/replay48-stage/changes.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: replay48-stage-evidence
+          path: /tmp/replay48-stage
+          retention-days: 14
