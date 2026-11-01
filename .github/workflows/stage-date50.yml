@@ -46,7 +46,14 @@ jobs:
           set -euo pipefail
           node --test tests/chart-replay-ui.test.mjs tests/replay-fixed-forecast-ui.test.mjs tests/replay-date-input.test.mjs > /tmp/date50/targeted.log 2>&1
           cp dist/chart-replay.js /tmp/date50/fixed-controller.js
-          git show 9919b71a1e41db8d94bd510d70239467c476a61b:dist/chart-replay.js > dist/chart-replay.js
+          git show 9919b71a1e41db8d94bd510d70239467c476a61b:dist/chart-replay.js > /tmp/date50/original-controller.js
+          python3 - <<'PY'
+          from pathlib import Path
+          # The VM fixture keys imports by package version. Align cache keys only;
+          # retain the original invalid-date handler and all behavioral statements.
+          old=Path('/tmp/date50/original-controller.js').read_text()
+          Path('dist/chart-replay.js').write_text(old.replace('?v=1.29.9','?v=1.29.10'))
+          PY
           set +e
           node --test --test-name-pattern='issue50 invalid manual dates' tests/replay-fixed-forecast-ui.test.mjs > /tmp/date50/negative-old-code.log 2>&1
           status=$?
