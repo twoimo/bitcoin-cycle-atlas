@@ -97,7 +97,7 @@ function persistUrl() {
 document.documentElement.dataset.theme = 'dark';
 let initialPageRendered = false;
 function finishInitialPage() {
-  if (document.documentElement.dataset.boot !== 'loading' || (!state.dataset && state.view !== 'data') || !initialPageRendered) return;
+  if (document.documentElement.dataset.boot !== 'loading' || (!state.dataset && !['data','ipo'].includes(state.view)) || !initialPageRendered) return;
   document.removeEventListener('atlas:page-ready', onInitialPageReady);
   document.dispatchEvent(new CustomEvent('atlas:ready'));
 }
@@ -110,7 +110,7 @@ document.addEventListener('atlas:page-ready', onInitialPageReady);
 let outlookController = null, workspacePromise = null, evidencePromise = null, evidenceModule = null;
 function ensureWorkspace() {
   if (!workspacePromise) workspacePromise = Promise.all([
-    import('./viewport-workspace.js?v=1.29.9'), import('./lab-view.js?v=1.29.9'),
+    import('./viewport-workspace.js?v=1.30.0'), import('./lab-view.js?v=1.30.0'),
   ]).then(([workspace, lab]) => {
     workspace.initViewportWorkspace(icon);
     outlookController = lab.initLabView();
@@ -142,7 +142,7 @@ const dailyDataController = initDailyDataView({
 });
 function syncPage() {
   document.body.dataset.page=state.view;
-  btcRefreshStatus.update({page:state.view});
+  btcRefreshStatus.update({page:state.view==='ipo'?'data':state.view});
   document.title = state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
   for (const view of ['outlook','compare','evidence','data','ipo']) document.querySelector(`#${view}-view`).hidden=state.view!==view;
   $$('[data-view]').forEach(n=>{const active=n.dataset.view===state.view;n.classList.toggle('active',active);if(active)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current');});
@@ -151,6 +151,7 @@ function syncPage() {
   outlookController?.showCompare(state.view==='compare');
   if (['outlook','compare'].includes(state.view)) void ensureWorkspace();
   if (state.view === 'evidence') void ensureEvidence();
+  if (state.view === 'ipo') void ipoController.render();
 }
 syncPage();
 if (state.view === 'data') renderData();
@@ -373,7 +374,7 @@ function renderData() {
 }
 $$('[data-view]').forEach(b => b.addEventListener('click', () => {
   state.view = b.dataset.view;
-  if (state.view !== 'data') void ensureDataset();
+  if (!['data','ipo'].includes(state.view)) void ensureDataset();
   syncPage();
   closeExport();
   if(state.view==='compare') requestAnimationFrame(()=>render()); else if(state.view==='data') renderData();
@@ -490,4 +491,4 @@ async function init() {
     else document.dispatchEvent(new CustomEvent('atlas:boot-error'));
   }
 }
-if (state.view !== 'data') void ensureDataset();
+if (!['data','ipo'].includes(state.view)) void ensureDataset();

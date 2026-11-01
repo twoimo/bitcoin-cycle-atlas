@@ -11,28 +11,31 @@ export function ipoMilestone(item) {
   return forecast || subscribe ? { label: forecast ? '수요예측' : '청약', date: forecast || subscribe } : null;
 }
 
-// 상태는 마일스톤 우선: 수요예측이 미래면 예측 예정, 그다음이 청약이면 청약 예정, 둘 다 지났으면 마감.
+// During a date range keep the current milestone active through its inclusive end.
+function milestoneAt(item, today) {
+  for (const [key, label] of [['수요예측', '수요예측'], ['청약', '청약']]) {
+    const [start, end = start] = item?.[key] ?? [];
+    if (start && (end ?? start) >= today) return { label, start, end: end ?? start, active: start <= today };
+  }
+  return null;
+}
+
 export function ipoStatus(item, today) {
-  const t = utcDay(today);
-  const f = item?.['수요예측']?.[0] ?? null, q = item?.['청약']?.[0] ?? null;
-  if (f && utcDay(f) >= t) return '수요예측 예정';
-  if (q && utcDay(q) >= t) return '청약 예정';
-  if (f || q) return '마감';
-  return '일정 미확인';
+  const next = milestoneAt(item, today);
+  if (next) return `${next.label} ${next.active ? '진행 중' : '예정'}`;
+  return item?.['수요예측']?.[0] || item?.['청약']?.[0] ? '마감' : '일정 미확인';
 }
 
 export function ipoNextDate(item, today) {
-  const t = utcDay(today);
-  for (const d of [item?.['수요예측']?.[0], item?.['청약']?.[0]]) if (d && utcDay(d) >= t) return d;
-  return null;
+  const next = milestoneAt(item, today);
+  return next ? (next.active ? today : next.start) : null;
 }
 
 export function ipoDaysLeft(item, today) {
   const next = ipoNextDate(item, today);
   if (next !== null) return Math.round((utcDay(next) - utcDay(today)) / DAY);
-  // Nothing pending: elapsed days since the last known milestone, if any.
-  const last = [item?.['청약']?.[0], item?.['수요예측']?.[0]].find(Boolean);
-  return last === undefined || last === null ? null : Math.round((utcDay(last) - utcDay(today)) / DAY);
+  const last = [...(item?.['청약'] ?? []), ...(item?.['수요예측'] ?? [])].filter(Boolean).sort().at(-1);
+  return last ? Math.round((utcDay(last) - utcDay(today)) / DAY) : null;
 }
 
 export function ipoCalendarRows(doc, today) {
@@ -42,7 +45,7 @@ export function ipoCalendarRows(doc, today) {
     .sort((a, b) => String(ipoNextDate(a, today) ?? '9999-99-99').localeCompare(String(ipoNextDate(b, today) ?? '9999-99-99')) || String(a['종목']).localeCompare(String(b['종목'])));
 }
 
-const range = ([a, b]) => !a ? '—' : a === b ? a.slice(5).replace('-', '.') : `${a.slice(5).replace('-', '.')}~${b ? b.slice(5).replace('-', '.') : '미정'}`;
+const range = ([a, b] = []) => !a ? '—' : a === b ? a.slice(5).replace('-', '.') : `${a.slice(5).replace('-', '.')}~${b ? b.slice(5).replace('-', '.') : '미정'}`;
 const price = v => { const n = Number(String(v).replace(/[^0-9.-]/g, '')); return Number.isFinite(n) ? n.toLocaleString('ko-KR') : null; };
 // 공모가는 확정가(숫자)와 희망 구간("18000~25000") 문자열이 섞여 있어 둘 다 쉼표 표기로 처리한다.
 const won = v => {
@@ -52,9 +55,9 @@ const won = v => {
   const n = price(s);
   return n ? `${n}원` : s;
 };
-const money = v => v == null ? '—' : `${(v / 1000).toLocaleString('ko-KR', { maximumFractionDigits: 1 })}억`;
+const money = v => v == null ? '—' : `${(v / 100).toLocaleString('ko-KR', { maximumFractionDigits: 1 })}억`;
 const dday = d => d == null ? '—' : d === 0 ? 'D-DAY' : d > 0 ? `D-${d}` : `D+${-d}`;
-const STATE_CLASS = { '수요예측 예정': 'forecast', '청약 예정': 'subscribe', '마감': 'closed', '일정 미확인': 'unknown' };
+const STATE_CLASS = { '수요예측 예정': 'forecast', '수요예측 진행 중': 'forecast', '청약 예정': 'subscribe', '청약 진행 중': 'subscribe', '마감': 'closed', '일정 미확인': 'unknown' };
 
 export function ipoRowMarkup(row) {
   const cls = STATE_CLASS[row.상태] ?? 'unknown';
@@ -71,19 +74,22 @@ export function ipoRowMarkup(row) {
 export function initIpoView({ root, load = null, embeddedData = () => null, now = () => new Date(), onReady = null } = {}) {
   const state = { doc: null, rows: [], filter: 'upcoming', query: '', status: 'idle', error: '' };
   const el = sel => root.querySelector(sel);
+  let pending = null;
   async function ensureData() {
     if (state.doc) return;
     state.status = 'loading';
     try {
       const embedded = embeddedData();
       state.doc = embedded ? JSON.parse(embedded) : await (load ?? (() => fetch('./data/ipo-calendar.json').then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })))();
+      if (!Array.isArray(state.doc?.['항목'])) throw new Error('잘못된 일정 데이터 형식');
+      state.rows = [];
       state.status = 'ready';
-    } catch (cause) { state.status = 'error'; state.error = String(cause?.message ?? cause); }
+    } catch (cause) { state.doc = null; state.status = 'error'; state.error = String(cause?.message ?? cause); }
   }
   function filtered() {
     const terms = normalize(state.query).trim().split(/\s+/).filter(Boolean);
     return state.rows.filter(r => {
-      const passState = state.filter === 'all' || (state.filter === 'closed') === (r.상태 === '마감');
+      const passState = state.filter === 'all' || (state.filter === 'closed' ? r.상태 === '마감' : !['마감','일정 미확인'].includes(r.상태));
       return passState && terms.every(term => normalize(`${r['종목']} ${(r['주간사'] ?? []).join(' ')}`).includes(term));
     });
   }
@@ -103,5 +109,6 @@ export function initIpoView({ root, load = null, embeddedData = () => null, now 
     const b = e.target.closest('[data-ipo-filter]');
     if (b) { state.filter = b.dataset.ipoFilter; root.querySelectorAll('[data-ipo-filter]').forEach(n => n.setAttribute('aria-pressed', String(n === b))); render(); }
   });
-  return { state, render: () => ensureData().then(render), refresh: () => { state.doc = null; state.rows = []; return ensureData().then(render); } };
+  function draw() { return pending ??= ensureData().then(render).finally(() => { pending = null; }); }
+  return { state, render: draw, refresh: () => { state.doc = null; state.rows = []; return draw(); } };
 }

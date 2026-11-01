@@ -21,13 +21,13 @@ test('status recomputes from viewing date instead of trusting stored labels', ()
   assert.equal(ipoStatus(doc['항목'][2], TODAY), '마감');
   assert.equal(ipoStatus(doc['항목'][3], TODAY), '일정 미확인');
   // After the forecast passes, the same item becomes a subscription item.
-  assert.equal(ipoStatus(doc['항목'][0], '2026-11-15'), '청약 예정');
+  assert.equal(ipoStatus(doc['항목'][0], '2026-11-15'), '수요예측 진행 중');
 });
 
 test('D-day counts calendar days and closes become elapsed', () => {
   assert.equal(ipoDaysLeft(doc['항목'][0], TODAY), 11);
   assert.equal(ipoDaysLeft(doc['항목'][1], '2026-11-03'), 0);
-  assert.equal(ipoDaysLeft(doc['항목'][2], TODAY), -10);
+  assert.equal(ipoDaysLeft(doc['항목'][2], TODAY), -9);
   assert.equal(ipoDaysLeft(doc['항목'][3], TODAY), null);
 });
 
@@ -69,7 +69,7 @@ test('controller renders rows, filters closed items, and reports source freshnes
   const view = initIpoView({ root, load: async () => doc, now: () => new Date('2026-11-01T06:00:00+09:00'), onReady: () => { ready += 1; } });
   await view.render();
   assert.equal(view.state.status, 'ready');
-  assert.equal((body.innerHTML.match(/<tr /g) || []).length, 3, 'upcoming filter hides closed and undated-only rows');
+  assert.equal((body.innerHTML.match(/<tr /g) || []).length, 2, 'upcoming filter hides closed and undated-only rows');
   assert.ok(body.innerHTML.includes('ipo-badge-forecast') && body.innerHTML.includes('ipo-badge-subscribe'));
   assert.ok(count.textContent.includes('/ 4건'));
   assert.ok(source.textContent.includes('재계산'));
@@ -94,4 +94,39 @@ test('the shipped calendar document parses and every row carries weekday-safe da
   const rows = ipoCalendarRows(shipped, '2026-11-01');
   assert.ok(rows.some(r => r['종목'] === '아델' && r.상태 === '수요예측 예정'));
   assert.ok(rows.some(r => r['종목'] === '넥스아이' && r.상태 === '청약 예정'));
+});
+
+
+test('ranges stay active through the inclusive end and roll over only the next day', () => {
+  const item = doc['항목'][0];
+  assert.equal(ipoStatus(item, '2026-11-18'), '수요예측 진행 중');
+  assert.equal(ipoStatus(item, '2026-11-19'), '청약 예정');
+  assert.equal(ipoStatus(item, '2026-11-23'), '청약 진행 중');
+  assert.equal(ipoStatus(item, '2026-11-24'), '청약 진행 중');
+  assert.equal(ipoStatus(item, '2026-11-25'), '마감');
+  assert.equal(ipoDaysLeft(item, '2026-11-24'), 0);
+  assert.equal(ipoDaysLeft(item, '2026-11-25'), -1);
+});
+
+test('million KRW converts to hundred-million KRW without a tenfold error', () => {
+  const row = ipoCalendarRows(doc, TODAY).find(r => r['종목'] === '아델');
+  assert.ok(ipoRowMarkup(row).includes('543억'));
+});
+
+test('malformed documents become an error rather than a successful empty calendar', async () => {
+  const { root, body } = surface();
+  const view = initIpoView({ root, load: async () => ({notItems: []}) });
+  await view.render();
+  assert.equal(view.state.status, 'error');
+  assert.match(body.innerHTML, /잘못된 일정 데이터 형식/);
+});
+
+test('refresh invalidates the same-day row cache', async () => {
+  const {root, body} = surface();
+  let count = 0;
+  const view = initIpoView({root, load: async () => ({항목: count++ ? [] : doc['항목']}), now: () => new Date('2026-11-01T00:00:00Z')});
+  await view.render();
+  assert.match(body.innerHTML, /아델/);
+  await view.refresh();
+  assert.doesNotMatch(body.innerHTML, /아델/);
 });
