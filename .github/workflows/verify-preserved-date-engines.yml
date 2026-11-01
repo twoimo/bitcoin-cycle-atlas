@@ -1,0 +1,88 @@
+name: Date50 preserved cross-engine diagnostics
+on:
+  push:
+    branches: [stage/replay-date-50-v1.29.10]
+    paths: [.github/workflows/verify-preserved-date-engines.yml]
+permissions:
+  contents: read
+jobs:
+  engine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Preserve exact input checks and record menu event boundaries
+        run: |
+          mkdir -p /tmp/date50-engine-evidence
+          cp qa-transfer/cross-engine.mjs /tmp/date50-engine-evidence/original.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/date50-engine-evidence/original.mjs');s=p.read_text()
+          needle="async function dateView(){await q('select-menu').click();await q('select-date').click();}"
+          assert s.count(needle)==1
+          replacement="""async function settled(){await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));}
+          async function dateView(){
+            await settled();
+            const before=await q('select-panel').getAttribute('hidden');
+            report.menuTransitions??=[];report.menuTransitions.push({phase:'before-open',hidden:before,cursor:(await snap()).cursor});
+            assert.equal(await q('select-panel').isVisible(),false,'previous menu must be closed before a new open');
+            await q('select-menu').click();await settled();
+            report.menuTransitions.push({phase:'after-open',visible:await q('select-panel').isVisible(),events:await page.evaluate(()=>window.qaMenuEvents)});
+            assert.equal(await q('select-panel').isVisible(),true,'a single Select bar click must open the menu');
+            await q('select-date').click();await settled();
+          }
+          async function closeDate(){
+            await q('select-close').click();await settled();
+            report.menuTransitions??=[];report.menuTransitions.push({phase:'after-close',visible:await q('select-panel').isVisible(),events:await page.evaluate(()=>window.qaMenuEvents)});
+            assert.equal(await q('select-panel').isVisible(),false,'a single close click must close the menu');
+          }"""
+          s=s.replace(needle,replacement)
+          s=s.replace("await q('select-close').click();return {value,error:after.hint};","await closeDate();return {value,error:after.hint};")
+          needle=" report.capabilities=await page.evaluate"
+          assert s.count(needle)==1
+          s=s.replace(needle," await page.evaluate(()=>{window.qaMenuEvents=[];for(const type of ['pointerdown','pointerup','click','dblclick','keydown'])document.addEventListener(type,e=>{window.qaMenuEvents.push({type,target:e.target.dataset?.cr??e.target.id??e.target.tagName,key:e.key,time:performance.now(),hidden:document.querySelector('[data-cr=\"select-panel\"]')?.hidden});if(window.qaMenuEvents.length>60)window.qaMenuEvents.shift();},true);});\n"+needle)
+          s=s.replace("await writeFile(out+'/verification.json',JSON.stringify(report,null,2));","report.events=await page.evaluate(()=>window.qaMenuEvents).catch(()=>null);await writeFile(out+'/verification.json',JSON.stringify(report,null,2));")
+          Path('/tmp/date50-engine-evidence/verification-source.mjs').write_text(s)
+          PY
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 99c9692bad01e6f2293dbf2b1f501f68914d9be2
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install pinned isolated verification dependency
+        run: |
+          npm install --prefix /tmp/date50-engines --save-exact --no-audit --no-fund --ignore-scripts playwright@1.64.1
+          cp /tmp/date50-engines/package-lock.json /tmp/date50-engine-evidence/
+          node /tmp/date50-engines/node_modules/playwright/cli.js install --with-deps ${{ matrix.browser }}
+      - name: Install pinned Korean font
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/atlas-ci"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 -o /tmp/date50-font.otf https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf
+          test "$(git hash-object /tmp/date50-font.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
+          cp /tmp/date50-font.otf "$HOME/.local/share/fonts/atlas-ci/"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-ci"
+      - name: Run bounded engine acceptance without product mutation
+        env:
+          QA_ENGINE: ${{ matrix.browser }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --directory dist > /tmp/date50-engine-evidence/server.log 2>&1 &
+          server=$!; trap 'kill "$server" 2>/dev/null || true' EXIT
+          timeout 180s node /tmp/date50-engine-evidence/verification-source.mjs 2>&1 | tee /tmp/date50-engine-evidence/browser.log
+          git diff --exit-code
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: date50-preserved-${{ matrix.browser }}
+          path: /tmp/date50-engine-evidence
+          retention-days: 14
