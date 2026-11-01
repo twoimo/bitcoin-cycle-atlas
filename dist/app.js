@@ -12,7 +12,7 @@ import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29
 // leave a new long-horizon page running the old three-year workbench.
 import { initDailyDataView } from './daily-data-view.js?v=1.29.0';
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.29.0';
-import { initIpoView } from './ipo-view.js?v=1.30.1';
+import { initIpoView } from './ipo-view.js?v=1.30.1-ipo-compact.1';
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];

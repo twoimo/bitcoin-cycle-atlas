@@ -41,6 +41,8 @@ test('every visible badge has a full accessible event label and safe escaped tex
   const html=ipoMonthMarkup([evil],'2026-11','2026-11-01');
   assert.ok(!html.includes('<img'));assert.ok(html.includes('&lt;img onerror=x&gt;'));
   assert.ok(html.includes('aria-current="date"'));assert.ok(html.includes('aria-label="2026-11-02'));
+  assert.ok(html.includes('<h2>2026년 11월</h2>'));
+  assert.ok(!html.includes('ipo-month-hint'));
   assert.ok(html.includes('style="--ipo-weeks:5"'));
 });
 test('overflow counts retain all events in the accessible name rather than dropping rows',()=>{
@@ -61,6 +63,20 @@ test('a continuous long interval includes intermediate month pages rather than e
   assert.deepEqual(ipoMonthKeys(long,'2026-01-01'),['2026-01','2026-02','2026-03','2026-04']);
 });
 
+test('compact IPO controls keep one-line header rows and source notes available',()=>{
+  const html=readFileSync(new URL('../dist/index.html',import.meta.url),'utf8');
+  const css=readFileSync(new URL('../dist/ipo-view.css',import.meta.url),'utf8');
+  const view=html.slice(html.indexOf('<section id="ipo-view"'),html.indexOf('<footer class="footer"'));
+  assert.ok(view.includes('<div class="ipo-heading-title"><button class="ipo-back" type="button" data-view="outlook" aria-label="통합 차트로 돌아가기">←</button><h1>공모주 캘린더</h1></div>'));
+  assert.ok(view.includes('<div class="ipo-toolbar">'));
+  assert.ok(view.includes('<details class="ipo-source-disclosure"><summary>출처</summary>'));
+  assert.ok(view.includes('<caption>수요예측·청약 일정 <span class="ipo-count" aria-live="polite"></span></caption>'));
+  assert.ok(view.includes('class="ipo-source-notes"')&&view.includes('일정은 정정·연기될 수')&&view.includes('상태와 D-day를 계산합니다')&&view.includes('투자 권유가 아닙니다'));
+  assert.ok(view.includes('<p>달력은 공고 기간 기준이며, 실제 접수 가능일·시간은 최신 공시와 증권사 공고를 확인하세요.</p>'));
+  assert.ok(css.includes('.ipo-heading {')&&css.includes('flex-wrap: nowrap;'));
+  assert.ok(css.includes('.ipo-toolbar {')&&css.includes('.ipo-calendar-nav {'));
+  assert.ok(css.includes('.ipo-source-disclosure[open] .ipo-source-panel {')&&css.includes('position: absolute;')&&css.includes('background: var(--surface-raised);'));
+});
 
 function monthSurface(reduced=false) {
   const calls=[],listeners={},sections=Array.from({length:4},(_,i)=>({offsetTop:i*100,inert:false}));
@@ -73,12 +89,12 @@ function monthSurface(reduced=false) {
 }
 
 test('calendar opens this month and makes only that page interactive',()=>{
-  const ui=monthSurface();assert.equal(ui.pages.scrollTop,100);assert.equal(ui.label.textContent,'2026년 11월 · 2/4장');
+  const ui=monthSurface();assert.equal(ui.pages.scrollTop,100);assert.equal(ui.label.textContent,'2/4');
   assert.deepEqual(ui.sections.map(x=>x.inert),[true,false,true,true]);
 });
 test('hidden route resize preserves the selected month instead of snapping back to October',()=>{
   const ui=monthSurface();ui.pages.clientHeight=0;ui.pages.scrollTop=0;ui.resize();
-  ui.pages.clientHeight=100;ui.resize();assert.equal(ui.pages.scrollTop,100);assert.equal(ui.label.textContent,'2026년 11월 · 2/4장');
+  ui.pages.clientHeight=100;ui.resize();assert.equal(ui.pages.scrollTop,100);assert.equal(ui.label.textContent,'2/4');
 });
 test('keyboard page navigation is bounded and reduced-motion uses instant scrolling',()=>{
   const ui=monthSurface(true);let prevented=0;
@@ -89,10 +105,10 @@ test('keyboard page navigation is bounded and reduced-motion uses instant scroll
 });
 test('native scroll state uses actual page offsets, including taller short-viewport pages',()=>{
   const ui=monthSurface();ui.sections.forEach((x,i)=>{x.offsetTop=i*160;});ui.pages.scrollTop=320;ui.listeners.scroll();
-  assert.equal(ui.label.textContent,'2026년 12월 · 3/4장');
+  assert.equal(ui.label.textContent,'3/4');
 });
 test('filter rerender retains the list page while updating month events',()=>{
   const ui=monthSurface();ui.listeners.keydown({target:ui.pages,key:'End',preventDefault(){}});
   ui.calendar.render([], [{종목:'기간',청약:['2026-10-30','2026-12-02'],수요예측:[]}], '2026-11-01');
-  assert.equal(ui.pages.scrollTop,300);assert.match(ui.label.textContent,/전체 목록/);
+  assert.equal(ui.pages.scrollTop,300);assert.equal(ui.label.textContent,'목록');
 });

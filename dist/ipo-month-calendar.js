@@ -50,7 +50,6 @@ export function ipoMonthMarkup(rows, month, today) {
       return `<button type="button" data-ipo-date="${cell.date}" class="ipo-month-day${cell.outside?' is-outside':''}${cell.date===today?' is-today':''}" ${cell.date===today?'aria-current="date"':''} aria-label="${esc(cell.date)}${cell.outside?' (다른 달)':''} · ${events.length?esc(summary):'일정 없음'}">
         <span class="ipo-day-number">${cell.day}</span><span class="ipo-day-events">${events.slice(0,2).map(event=>`<span class="ipo-cal-event" data-kind="${event.kind}"><span>${event.kind==='forecast'?'예측':'청약'}</span><strong>${esc(event.row['종목'])}</strong></span>`).join('')}</span>${events.length>2?`<span class="ipo-day-more">외 ${events.length-2}건</span>`:''}</button>`;
     }).join('')}</div>
-    <p class="ipo-month-hint">청=청약 · 예=수요예측 기간 · 날짜 선택</p>
   </section>`;
 }
 
@@ -65,7 +64,7 @@ export function mountIpoMonthCalendar(root) {
     if(!pages.clientHeight)return;
     const visible=sections();
     if(visible.length)active=visible.reduce((best,section,index)=>Math.abs(section.offsetTop-(pages.scrollTop??0))<Math.abs(visible[best].offsetTop-(pages.scrollTop??0))?index:best,0);
-    const text=active<months.length?`${monthName(months[active])} · ${active+1}/${months.length+1}장`:`전체 목록 · ${months.length+1}/${months.length+1}장`;
+    const text=active<months.length?`${active+1}/${months.length+1}`:'목록';
     if(label())label().textContent=text;
     sections().forEach((section,index)=>{section.inert=index!==active;});
     const prev=root.querySelector('[data-ipo-page="previous"]'),next=root.querySelector('[data-ipo-page="next"]');
