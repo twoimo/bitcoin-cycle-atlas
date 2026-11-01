@@ -11,7 +11,7 @@ const sourcePath='dist/chart-replay-state.js',testPath='tests/chart-replay-state
 const source=await readFile(path.join(root,sourcePath),'utf8');
 const tests=await readFile(path.join(root,testPath),'utf8');
 const hash=value=>createHash('sha256').update(value).digest('hex');
-const expectedTests=14;
+const expectedTests=16;
 
 function check(cwd,{broken=false,expectedFailure}={}){
   const run=spawnSync(process.execPath,['--test-reporter=tap',testPath],{
@@ -41,7 +41,11 @@ const mutations=[
     before:'generation!==state.generation||owned!==timerGeneration||state.status',after:'generation!==state.generation||state.status',
     expectedFailure:'a timer callback can never be replayed twice or after pause, exit or a new origin'},
   {name:'mutable-session-output',before:'return freeze(session);',after:'return session;',
-    expectedFailure:'main replay loads a fixed branded object and keeps it through forward, reverse and restart'},
+    expectedFailure:'main replay loads a fixed branded object and keeps it through forward, reverse and explicit restart'},
+  {name:'implicit-rewind-at-archive-end',
+    before:"if(destroyed||!state.session||state.length<2||state.status==='playing'||state.cursorIndex>=state.length-1)return;",
+    after:"if(destroyed||!state.session||state.length<2||state.status==='playing')return;\n    if(state.cursorIndex===state.length-1)state={...state,cursorIndex:0};",
+    expectedFailure:'play at the last available observation never rewinds or schedules another callback'},
 ];
 const results={original:check(root),mutations:{}};
 const scratch=await mkdtemp(path.join(tmpdir(),'atlas-replay-state-'));

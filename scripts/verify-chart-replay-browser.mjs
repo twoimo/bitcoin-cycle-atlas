@@ -529,6 +529,8 @@ export async function verifyChartReplaySurface(api) {
         scrolledAncestors: (() => { const values = []; for (let parent = svg.parentElement; parent; parent = parent.parentElement) if (parent.scrollLeft || parent.scrollTop) values.push({ id: parent.id, className: parent.className, scrollLeft: parent.scrollLeft, scrollTop: parent.scrollTop }); return values; })(),
         chart: { left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width, height: box.height },
         playDisabled: q('play').disabled, nextDisabled: q('next').disabled, liveDisabled: q('live').disabled,
+        playLabel: q('play').getAttribute('aria-label'), playTitle: q('play').title, speed: q('speed').value,
+        visibleReplayDialogs: [...controls.querySelectorAll('[role="dialog"]')].filter(node => node.getClientRects().length && getComputedStyle(node).visibility !== 'hidden').map(node => node.dataset.cr),
         nativeCrosshairVisible: (() => { const node = svg.querySelector('[id$="-cross"]'); return Boolean(node && getComputedStyle(node).display !== 'none' && getComputedStyle(node).visibility !== 'hidden'); })(),
         previousPresent: Boolean(q('previous')) };
     }, { chartSelector, panel });
@@ -537,6 +539,9 @@ export async function verifyChartReplaySurface(api) {
     assert.ok(value.sameNode && value.sameDocument, 'Replay replaced the main chart or document');
     assert.equal(value.updateInterval, 'daily'); assert.equal(value.updateIntervalLocked, true, 'The source advances by completed daily observations');
     assert.equal(value.active, true); assert.equal(value.separateReplayCharts, 0); assert.equal(value.dialogs, 0);
+    assert.ok(value.visibleReplayDialogs.length <= 1, 'Replay dialogs overlap: ' + value.visibleReplayDialogs.join(', '));
+    assert.equal(value.playLabel, value.state === 'playing' ? '리플레이 일시정지' : '리플레이 재생', 'The transport label contradicts its playback state');
+    if (value.state === 'playing') assert.equal(value.playDisabled, false, 'Pause must stay available while playing');
     assert.equal(value.previousPresent, false, 'The removed previous-bar action is still mounted');
     if (value.renderer === 'atlas' && value.forecastPath) {
       assert.equal(value.forecastBelowActuals, true, 'Actual candles must be above the intact immutable comparison curve');
@@ -802,6 +807,69 @@ export async function verifyChartReplaySurface(api) {
     }
     await select(control('speed'), '1');
   }
+  async function verifyWeeklyTransportResume() {
+    const savedBefore = await storedBytes(), initial = await snapshot('weekly-current-position-before-play');
+    assert.equal(initial.frequency, 'weekly'); assert.equal(initial.state, 'paused');
+    assert.ok(initial.index > 0 && initial.index + 1 < initial.lastIndex, 'Resume check requires a nonzero position with later source observations');
+    const nextDate = btcCandles.find(row => row.date > initial.cursor)?.date;
+    assert.ok(nextDate, 'The next genuine daily observation must exist');
+    // Slow playback leaves time for native menu interaction before the next
+    // source update; no application timers or controller state are replaced.
+    await select(control('speed'), '0.3');
+    await nativeClick(cdp, control('play'));
+    await nativeClick(cdp, control('select-menu'));
+    const playing = await snapshot('weekly-resumes-current-position-with-menu-open');
+    assert.equal(playing.state, 'playing'); assert.equal(playing.menuHidden, false); assert.equal(playing.menuView, 'start');
+    assert.equal(playing.index, initial.index, 'Play rewound or advanced the current position before its first source interval');
+    assert.equal(playing.cursor, initial.cursor); assert.equal(playing.speed, '0.3');
+    assert.deepEqual(playing.visibleReplayDialogs, ['select-panel']);
+    assert.match(playing.playTitle, /일시정지/);
+    await until(() => evaluate(cdp, ({ selector, index }) => Number(document.querySelector(selector).value) > index,
+      { selector: control('scrub'), index: initial.index }), 'resumed weekly playback reveals the next actual day');
+    // Deliberately bypass click(): that helper closes Select bar first and
+    // would hide the reported menu-open Pause failure.
+    await nativeClick(cdp, control('play'));
+    const paused = await snapshot('weekly-native-pause-with-menu-still-open', true);
+    assert.equal(paused.state, 'paused'); assert.equal(paused.menuHidden, false);
+    assert.equal(paused.index, initial.index + 1); assert.equal(paused.cursor, nextDate, 'Resume skipped or rewound a genuine daily observation');
+    assert.equal(paused.playDisabled, false); assert.equal(paused.nextDisabled, false);
+    for (const field of ['origin', 'playbackStartDate', 'outputHash', 'forecastValueSignature', 'annotationSignature', 'snapshotDigest'])
+      assert.equal(paused[field], initial[field], 'Menu-open playback changed ' + field);
+
+    await nativeClick(cdp, control('play'));
+    await nativeClick(cdp, control('menu-settings'));
+    const focused = await evaluate(cdp, selector => ({ focused: document.activeElement === document.querySelector(selector), value: document.querySelector(selector).value }), control('mode'));
+    assert.equal(focused.focused, true, 'The shortcut check must actually focus a select inside the open menu');
+    const playingInMenu = await snapshot('weekly-playing-with-forecast-select-focused');
+    assert.equal(playingInMenu.state, 'playing'); assert.equal(playingInMenu.menuHidden, false);
+    await key('ArrowDown', 'ArrowDown', 40, 8);
+    const shortcutPaused = await snapshot('weekly-shift-down-pauses-inside-open-menu', true);
+    assert.equal(shortcutPaused.state, 'paused'); assert.equal(shortcutPaused.menuHidden, false); assert.equal(shortcutPaused.menuView, 'forecast');
+    assert.equal(shortcutPaused.mode, focused.value, 'Pause shortcut changed the focused forecast option');
+    assertSameReplayFrame(shortcutPaused, paused, 'Shift+Down with an open menu');
+    await delay(3300);
+    assertSameReplayFrame(await snapshot('weekly-menu-pause-remains-stopped'), shortcutPaused, 'Paused menu frame');
+
+    await click(cdp, control('scrub')); await key('End', 'End', 35); await closeMenu();
+    const terminal = await snapshot('weekly-terminal-play-is-disabled');
+    assert.equal(terminal.state, 'ended'); assert.equal(terminal.cursor, btcCandles.at(-1).date);
+    assert.equal(terminal.index, terminal.lastIndex); assert.equal(terminal.playDisabled, true); assert.equal(terminal.nextDisabled, true);
+    // NativeClick intentionally rejects disabled buttons. Send a real pointer
+    // click at the visible disabled button, then a real chart keyboard shortcut.
+    const playBox = await bounds(cdp, control('play')); visibleBounds(playBox, width, height);
+    await pointAction('click', { x: (playBox.left + playBox.right) / 2, y: (playBox.top + playBox.bottom) / 2 });
+    await nativeClick(cdp, chartSelector); await key('ArrowDown', 'ArrowDown', 40, 8);
+    const terminalAfter = await snapshot('weekly-terminal-play-and-shortcut-do-not-rewind');
+    assertSameReplayFrame(terminalAfter, terminal, 'Terminal Play / Shift+Down');
+    assert.equal(terminalAfter.playDisabled, true);
+    await storedUnchanged(savedBefore, 'weekly-native-transport-does-not-save');
+    evidence.lifecycle.push({ label: 'weekly-current-position-resume-menu-open-pause-and-terminal-no-rewind',
+      before: { cursor: initial.cursor, index: initial.index }, resumed: { cursor: paused.cursor, index: paused.index },
+      menuStayedOpen: !paused.menuHidden && !shortcutPaused.menuHidden, focusedPauseTarget: 'mode',
+      terminal: { cursor: terminalAfter.cursor, index: terminalAfter.index, playDisabled: terminalAfter.playDisabled },
+      outputHash: paused.outputHash, forecastValueSignature: paused.forecastValueSignature });
+    await select(control('speed'), initial.speed);
+  }
   async function verifyCurrentControls(direct, liveContext) {
     const savedBefore = await storedBytes();
     // The mobile start button must enter a real cancellable selector as well.
@@ -857,13 +925,18 @@ export async function verifyChartReplaySurface(api) {
       expectedFirst: disclosedBitcoinWeeks(btcCandles, first.cursor).at(-1), expectedNext: disclosedBitcoinWeeks(btcCandles, second.cursor).at(-1),
       firstVolumeScope, nextVolumeScope,
       firstDomain: [first.priceMinimum, first.priceMaximum], nextDomain: [second.priceMinimum, second.priceMaximum] });
+    await verifyWeeklyTransportResume();
     await click(cdp, control('scrub')); await key('Home', 'Home', 36); await key('ArrowRight', 'ArrowRight', 39);
     const rewound = await snapshot('weekly-rewind-identical');
     assert.deepEqual(rewound.candles, first.candles, 'Weekly rewind did not reproduce the exact disclosed prefix');
     assert.deepEqual([rewound.priceMinimum, rewound.priceMaximum], [first.priceMinimum, first.priceMaximum], 'Weekly rewind retained a later actual price domain');
     await exported('weekly-disclosed-prefix');
-    await click(cdp, control('scrub')); await key('End', 'End', 35);
-    const completed = await snapshot('weekly-completed-sunday');
+    const sunday = dateAt(day(candle1.periodStart) + 6);
+    assert.ok(btcCandles.some(row => row.date === sunday), 'The completed first-week Sunday must be present in the actual archive');
+    const sundayIndex = btcCandles.filter(row => row.date > direct.origin && row.date <= sunday).length;
+    await click(cdp, control('scrub')); await key('Home', 'Home', 36);
+    for (let index = 0; index < sundayIndex; index++) await key('ArrowRight', 'ArrowRight', 39);
+    const completed = await snapshot('weekly-completed-sunday'); assert.equal(completed.cursor, sunday);
     const completeCandle = completed.candles.find(row => row.date === completed.cursor);
     assert.equal(completeCandle.periodStart, candle1.periodStart); assert.equal(completeCandle.complete, true); assert.equal(completeCandle.daysIncluded, 7);
 

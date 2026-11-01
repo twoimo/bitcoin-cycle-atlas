@@ -68,12 +68,12 @@ const manifest=await buildEthReviewPacket({
   baselineCommit:scope.baselineCommit,seedPaths:scope.seedPaths,
   dynamicResolutions:scope.dynamicResolutions,evidencePaths,
   externalReviewDisposition:'omitted-by-user',
-  // 15b5f651 retained 65,085,434 bytes. This declared scope also includes the
-  // committed immutable archive, previously omitted acquisition vintages,
-  // separate restored ETH outcomes, append/restore receipts, and source tests.
-  // Preserve those exact inputs inside a finite 85 MB resource budget.
+  // The complete 04f0ec5 CI evidence retained 94,684,113 bytes in 754 entries.
+  // Keep every declared source, immutable archive object and browser receipt
+  // inside a finite 100 MB aggregate budget. The separate per-file ceiling
+  // remains 85 MB; increasing aggregate capacity cannot admit a larger input.
   // This byte budget does not change model, sample-size or release conditions.
-  maximumBundleBytes:85000000,
+  maximumBundleBytes:100000000,maximumFileBytes:85000000,
 });
 await writeFile(resolve(root,'build/eth-review-packet/scope-notes.txt'),scope.scope+'\nScreenshots remain in the separately preserved browser artifact; report.json binds their filenames and hashes. Parsed duplicate economic rows are omitted because the exact CSV and acquisition/coverage receipts are present.\n');
 console.log('ETH_REVIEW_MANIFEST '+JSON.stringify(manifest));
