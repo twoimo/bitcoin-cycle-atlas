@@ -22,7 +22,7 @@ function harness(onChange){
   };
 }
 
-test('main replay loads a fixed branded object and keeps it through forward, reverse and restart',async()=>{
+test('main replay loads a fixed branded object and keeps it through forward, reverse and explicit restart',async()=>{
   const h=harness(),fixed=session();h.controller.open();
   assert.equal(h.controller.getState().status,'selecting');
   assert.equal(await h.load(fixed),true);
@@ -32,10 +32,46 @@ test('main replay loads a fixed branded object and keeps it through forward, rev
   h.controller.step(1);assert.equal(h.controller.getState().cursorIndex,1);
   h.controller.step(-1);assert.equal(h.controller.getState().cursorIndex,0);
   h.controller.seek(2);assert.equal(h.controller.getState().status,'ended');
-  h.controller.play();assert.equal(h.controller.getState().cursorIndex,0);
+  h.controller.play();assert.equal(h.controller.getState().cursorIndex,2);
+  assert.equal(h.controller.getState().status,'ended');assert.equal(h.pending.size,0);
+  h.controller.seek(0);h.controller.play();assert.equal(h.controller.getState().cursorIndex,0);
   h.fire();h.fire();assert.equal(h.controller.getState().status,'ended');
   assert.equal(h.controller.getState().session,fixed);assert.equal(JSON.stringify(fixed),original);
   assert.equal(h.pending.size,0);
+});
+
+test('play resumes the current daily cursor at the selected speed without replacing its forecast',async()=>{
+  const h=harness(),fixed={...session('weekly'),timeline:['2026-07-17','2026-10-26','2026-10-27','2026-10-28','2026-10-29','2026-10-30']};
+  assert.equal(await h.controller.selectOrigin({symbol:'BTCUSD',asOf:'2026-07-17'},async()=>fixed),true);
+  h.controller.seek(3);h.controller.speed(8);
+  const original=JSON.stringify(fixed),origin=h.controller.getState().origin;
+  h.controller.play();
+  assert.equal(h.controller.getState().cursorIndex,3,'Play must keep the already revealed 28 October observation');
+  assert.equal(h.controller.getState().session.timeline[3],'2026-10-28');
+  assert.equal([...h.pending.values()][0].delay,125);
+  h.fire();assert.equal(h.controller.getState().session.timeline[h.controller.getState().cursorIndex],'2026-10-29');
+  const stale=[...h.pending.keys()][0];h.controller.pause();h.controller.play();
+  assert.equal(h.controller.getState().cursorIndex,4);
+  h.fire(stale);assert.equal(h.controller.getState().cursorIndex,4,'the pre-pause callback must not advance resumed playback');
+  assert.equal(h.pending.size,1);assert.equal([...h.pending.values()][0].delay,125);
+  h.fire();assert.equal(h.controller.getState().cursorIndex,5);assert.equal(h.controller.getState().status,'ended');
+  assert.equal(h.controller.getState().speed,8);assert.equal(h.controller.getState().origin,origin);
+  assert.equal(h.controller.getState().session,fixed);assert.equal(JSON.stringify(fixed),original);
+});
+
+test('play at the last available observation never rewinds or schedules another callback',async()=>{
+  const h=harness(),fixed={...session('archive-end'),timeline:['2026-07-17','2026-10-26','2026-10-27','2026-10-28']};
+  await h.load(fixed);h.controller.speed(8);h.controller.play();
+  const stale=[...h.pending.keys()][0];h.controller.seek(3);
+  const terminal=h.controller.getState(),count=h.states.length;
+  h.controller.play();h.controller.play();h.controller.pause();h.fire(stale);
+  assert.deepEqual(h.controller.getState(),terminal);
+  assert.equal(h.controller.getState().session.timeline[h.controller.getState().cursorIndex],'2026-10-28');
+  assert.equal(h.controller.getState().status,'ended');assert.equal(h.states.length,count);
+  assert.equal(h.pending.size,0);
+  h.controller.seek(0);h.controller.play();
+  assert.equal(h.controller.getState().cursorIndex,0,'explicit first/seek may still restart the session');
+  assert.equal(h.pending.size,1);assert.equal([...h.pending.values()][0].delay,125);
 });
 
 test('superseded origin success and failure cannot replace the current chart',async()=>{
@@ -180,6 +216,7 @@ test('all 10000 four-command playback traces preserve cursor, identity and timer
     const h=harness();await h.load();let digits=encoded,trace=[];
     for(let depth=0;depth<4;depth++){
       const action=actions[digits%actions.length];digits=Math.floor(digits/actions.length);trace.push(action);
+      const before=h.controller.getState();
       if(action==='play'||action==='pause'||action==='exit')h.controller[action]();
       else if(action==='next'||action==='back')h.controller.step(action==='next'?1:-1);
       else if(action==='first'||action==='last')h.controller.seek(action==='first'?0:2);
@@ -187,6 +224,7 @@ test('all 10000 four-command playback traces preserve cursor, identity and timer
       else if(action==='tick')h.fire();
       else for(const key of h.all.keys())if(!h.pending.has(key))h.fire(key);
       const state=h.controller.getState(),label=trace.join(' → ');
+      if(action==='play')assert.equal(state.cursorIndex,before.cursorIndex,'Play cannot move the cursor: '+label);
       assert.equal(h.pending.size,state.status==='playing'?1:0,label);
       assert.ok(state.cursorIndex>=0&&state.cursorIndex<Math.max(1,state.length),label);
       if(state.session){assert.equal(state.session.identity.outputHash,'one',label);assert.equal(state.session.forecast[1].price,105,label);}

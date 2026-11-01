@@ -106,10 +106,12 @@ export function createChartReplayController({onChange=()=>{},setTimer=setTimeout
     state={...state,status:state.cursorIndex===state.length-1?'ended':'paused'};notify();
   }
   function play(){
-    if(destroyed||!state.session||state.length<2||state.status==='playing')return;
+    if(destroyed||!state.session||state.length<2||state.status==='playing'||state.cursorIndex>=state.length-1)return;
     cancelTimer();
     const generation=state.generation;
-    state={...state,cursorIndex:state.cursorIndex===state.length-1?0:state.cursorIndex,status:'playing'};
+    // Play always resumes the revealed cursor. Rewinding requires an explicit
+    // seek, including when the archive has no later actual observation yet.
+    state={...state,status:'playing'};
     notify();
     if(!destroyed&&generation===state.generation)schedule();
   }
