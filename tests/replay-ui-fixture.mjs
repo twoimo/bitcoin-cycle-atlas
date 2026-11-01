@@ -2,6 +2,7 @@ import {readFile} from 'node:fs/promises';
 import * as vm from 'node:vm';
 import * as stateModule from '../dist/chart-replay-state.js';
 import * as realEngine from '../dist/forecast-replay.js';
+import * as retrospectiveModel from '../dist/replay-retrospective.js';
 import * as snapshotHelpers from '../dist/chart-replay-snapshot.js';
 import {PROJECT_REPLAY_ORIGIN} from '../dist/project-replay-baseline.js';
 import {SvgNode} from './replay-svg-fixture.mjs';
@@ -11,9 +12,9 @@ const {version:releaseVersion}=JSON.parse(await readFile(new URL('../package.jso
 export const flush=async()=>{for(let i=0;i<8;i++)await new Promise(setImmediate);};
 export const until=async(predicate,label='UI state')=>{const deadline=Date.now()+15000;while(!predicate()){if(Date.now()>deadline)throw new Error('Timed out waiting for '+label);await new Promise(resolve=>setTimeout(resolve,2));}};
 export const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
-export async function uiFixture({captured,archive,storedText=null,getAtlasContext=()=>captured,actualPainter=false,loadArchive=async()=>archive,buildCurrent=realEngine.createCurrentChartReplaySession,loadBaseline=async()=>{throw new Error('Historical baseline not needed');}}){
+export async function uiFixture({captured,archive,storedText=null,getAtlasContext=()=>captured,actualPainter=false,loadArchive=async()=>archive,buildCurrent=realEngine.createCurrentChartReplaySession,loadRetrospectiveModel=()=>retrospectiveModel,loadBaseline=async()=>{throw new Error('Historical baseline not needed');}}){
   const source=await readFile(new URL('../dist/chart-replay.js',import.meta.url),'utf8');
-  const controls=new Map(),draws=[],frames=[],controllers=[],calls={baseline:0,current:0};let doc;
+  const controls=new Map(),draws=[],frames=[],controllers=[],calls={baseline:0,current:0,retrospectiveLoads:0};let doc;
   class Element{
     constructor(tag='div'){this.tag=tag;this.ownerDocument=doc;this.dataset={};this.attributes={};this.children=[];this.listeners=new Map();this.hidden=false;this.value='';this.inert=false;this.textContent='';this.style={setProperty(){},removeProperty(){}};this.classList={add(){},remove(){}};this.disabled=false;this.checked=false;}
     setAttribute(k,v){this.attributes[k]=String(v);}getAttribute(k){return this.attributes[k]??null;}
@@ -43,7 +44,7 @@ export async function uiFixture({captured,archive,storedText=null,getAtlasContex
     './project-replay-baseline.js':await mod({PROJECT_REPLAY_ORIGIN,loadProjectReplayBaseline:()=>{calls.baseline++;return loadBaseline();}}),
   };
   const view=new vm.SourceTextModule(source,{context,identifier:'chart-replay-view',importModuleDynamically:s=>{if(!imports[s])throw new Error('Unexpected dynamic import '+s);return imports[s];}});await view.link(s=>imports[s]);await view.evaluate();
-  const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol:'BTCUSD',getAtlasContext,getChartState:()=>({frequency:'weekly',chartType:'candles',window:'focus'}),getChartRenderer:()=>({getPriceScale:()=>axis}),loadAtlasRenderer:()=>atlas.namespace,onAtlasFrame:f=>frames.push(f)});
+  const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol:'BTCUSD',getAtlasContext,getChartState:()=>({frequency:'weekly',chartType:'candles',window:'focus'}),getChartRenderer:()=>({getPriceScale:()=>axis}),loadAtlasRenderer:()=>atlas.namespace,loadRetrospectiveModel:()=>{calls.retrospectiveLoads++;return loadRetrospectiveModel();},onAtlasFrame:f=>frames.push(f)});
   const trigger=toolbar.children.find(n=>n.id==='workbench-replay');const panel=plot.children.find(n=>n.className==='chart-replay-controls');for(const m of panel.innerHTML.matchAll(/data-cr="([^"]+)"/g))panel.querySelector('[data-cr="'+m[1]+'"]');
   const ready=()=>until(()=>controllers[0].getState().status==='error'||controllers[0].getState().status==='selecting'&&Boolean(draws.at(-1)?.session?.identity?.outputHash),'fully drawn replay selection');
   return {ready,mounted,svg,controls,draws,frames,calls,writes,controllers,panel,trigger,

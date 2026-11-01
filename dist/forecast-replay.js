@@ -5,7 +5,6 @@ import {sessionCloseUtc,isEquitySession} from './data-freshness.js';
 import {utcDay,dateFromDay,validateDataset} from './cycle-engine.js';
 import {buildIndependentBenchmarks,BENCHMARK_POLICY} from './forecast-evaluation.js';
 import {requireVerifiedProjectReplayBaseline,PROJECT_REPLAY_ORIGIN} from './project-replay-baseline.js';
-import {createReplayRetrospectiveForecast,restoreReplayRetrospectiveForecast} from './replay-retrospective.js';
 
 export const FORECAST_REPLAY_VERSION='forecast-replay-2';
 const SYMBOLS=new Set(['BTCUSD','ETHUSD','MSTR','BMNR']);
@@ -197,7 +196,7 @@ export async function createProjectReplaySession({baseline,observations=[],obser
  * and its Coin Metrics curve is not scored against another provider's candles. */
 export async function createCurrentChartReplaySession({dataset,forecast,asOf=PROJECT_REPLAY_ORIGIN.asOf,
   playbackStartDate=PROJECT_REPLAY_ORIGIN.startDate,observations=[],observedAt=null,observedThrough=null,source=null,
-  createdAt=new Date().toISOString(),evaluatedAt=createdAt,createRetrospective=false,retrospectiveForecast=null,modelOptions={}}={}){
+  createdAt=new Date().toISOString(),evaluatedAt=createdAt,createRetrospective=false,retrospectiveForecast=null,retrospectiveModel=null,modelOptions={}}={}){
   utcDay(asOf);utcDay(playbackStartDate);
   if(typeof createRetrospective!=='boolean')throw new TypeError('Retrospective creation must be explicitly enabled');
   const created=normalizeForecastTimestamp(createdAt,'createdAt'),evaluation=normalizeForecastTimestamp(evaluatedAt,'evaluatedAt');
@@ -226,9 +225,16 @@ export async function createCurrentChartReplaySession({dataset,forecast,asOf=PRO
   const output=visiblePath(fixedForecast.path,forecastOriginDate,horizonDays);
   const outputHash=await forecastHash(output),originalPathHash=await forecastHash(fixedForecast.path),inputHash=await forecastHash(input.map(row=>[row.date,row.price]));
   const retrospectiveOptions={dataset:fixedDataset,forecast:fixedForecast,asOf,displayEnd:forecastOriginDate,originalOutputHash:outputHash};
-  const retrospective=retrospectiveForecast!==null
-    ?await restoreReplayRetrospectiveForecast(retrospectiveForecast,{...retrospectiveOptions,evaluatedAt:evaluation})
-    :createRetrospective?await createReplayRetrospectiveForecast({...retrospectiveOptions,createdAt:evaluation,modelOptions}):null;
+  let retrospective=null;
+  if(retrospectiveForecast!==null||createRetrospective){
+    // The BTC workspace owns this model dependency. Other assets, previews and
+    // older saved sessions do not load or execute the BTC forecast engines.
+    if(typeof retrospectiveModel?.createReplayRetrospectiveForecast!=='function'||typeof retrospectiveModel?.restoreReplayRetrospectiveForecast!=='function')
+      throw new TypeError('A BTC retrospective model capability is required');
+    retrospective=retrospectiveForecast!==null
+      ?await retrospectiveModel.restoreReplayRetrospectiveForecast(retrospectiveForecast,{...retrospectiveOptions,evaluatedAt:evaluation})
+      :await retrospectiveModel.createReplayRetrospectiveForecast({...retrospectiveOptions,createdAt:evaluation,modelOptions});
+  }
   const recordId=await forecastHash({kind:'current-chart-snapshot',asOf,playbackStartDate,forecastOriginDate,inputHash,outputHash});
   const timeline=[asOf,...current.filter(row=>row.date>asOf&&row.date<=fixedForecast.path.at(-1).date&&row.eventAt<=evaluation).map(row=>row.date)];
   const identity={symbol:'BTCUSD',recordId,recordKind:'current-chart-snapshot',asOf,issuedAt:null,createdAt:created,

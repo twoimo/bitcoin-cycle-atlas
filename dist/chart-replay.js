@@ -22,7 +22,7 @@ export function captureAtlasReplaySnapshot(value){
   return freeze(snapshot);
 }
 
-export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{},getAtlasContext=null,getChartState=null,getChartRenderer=null,resolveAtlasRange=null,loadAtlasRenderer=null,onAtlasFrame=()=>{}}={}){
+export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{},getAtlasContext=null,getChartState=null,getChartRenderer=null,resolveAtlasRange=null,loadAtlasRenderer=null,loadRetrospectiveModel=null,onAtlasFrame=()=>{}}={}){
   if(!svg||!plot||!toolbar)throw new TypeError('The existing chart, plot and toolbar are required');
   const doc=svg.ownerDocument,win=doc.defaultView;
   const historical=['BTCUSD','ETHUSD'].includes(symbol);
@@ -365,8 +365,14 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     }
     const accepted=await controller.selectOrigin(asOf,async({signal})=>{
       const engine=modules[0],options={symbol,observations:source.observations,observedAt:source.observedAt,observedThrough:source.observedThrough,source:source.source,horizonDays:replaySettings.horizon};
+      let retrospectiveModel=null;
+      if(currentMode&&(!resume||restoredSnapshot?.retrospectiveForecast)){
+        if(typeof loadRetrospectiveModel!=='function')throw new Error('BTC 회고 모형 연결을 확인해 주세요.');
+        retrospectiveModel=await loadRetrospectiveModel();
+        signal.throwIfAborted();
+      }
       const session=currentMode?await engine.createCurrentChartReplaySession({...options,dataset:atlasCaptured.dataset,forecast:atlasCaptured.forecast,asOf,playbackStartDate:dateAt(day(asOf)+1),
-          createRetrospective:!resume,retrospectiveForecast:resume?restoredSnapshot?.retrospectiveForecast??null:null,modelOptions:atlasCaptured.modelOptions??{},
+          createRetrospective:!resume,retrospectiveForecast:resume?restoredSnapshot?.retrospectiveForecast??null:null,retrospectiveModel,modelOptions:atlasCaptured.modelOptions??{},
           createdAt:atlasCapturedAt??undefined,evaluatedAt:new Date().toISOString()}):
         atlasMode?await engine.createProjectReplaySession({...options,baseline:atlasBaseline}):
         recorded?await engine.createRecordedReplaySession({...options,record:selectedRecord.record,snapshot:selectedRecord.snapshot}):

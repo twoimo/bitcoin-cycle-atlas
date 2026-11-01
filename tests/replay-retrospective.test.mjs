@@ -22,7 +22,8 @@ const archive=await parseBitcoinReplayCandles(venueText,{now:Date.parse(evaluate
 const asOf='2026-08-16',playbackStartDate='2026-08-17';
 const modelOptions={scenario:'base',seed:20261022,sampleCount:128,blockDays:28};
 const forecast=longModel.buildLongHorizonForecast(dataset,modelOptions);
-const options={...archive,dataset,forecast,asOf,playbackStartDate,createdAt:capturedAt,evaluatedAt,modelOptions};
+const retrospectiveModel={createReplayRetrospectiveForecast,restoreReplayRetrospectiveForecast};
+const options={...archive,dataset,forecast,asOf,playbackStartDate,createdAt:capturedAt,evaluatedAt,modelOptions,retrospectiveModel};
 const original=await createCurrentChartReplaySession(options);
 const session=await createCurrentChartReplaySession({...options,createRetrospective:true});
 const retrospective=session.retrospectiveForecast;
@@ -126,6 +127,13 @@ if(process.argv.includes('--check-single-build')){
 
   test('older sessions and selection previews do not acquire a retrospective automatically',()=>{
     assert.equal(original.retrospectiveForecast,undefined);assert.deepEqual(buildReplayFrame(original).retrospectiveForecast,[]);
+  });
+
+  test('the shared replay engine requires the BTC capability only when creating or restoring a retrospective',async()=>{
+    const preview=await createCurrentChartReplaySession({...options,retrospectiveModel:null});
+    assert.deepEqual(preview.identity,original.identity);assert.equal(preview.retrospectiveForecast,undefined);
+    await assert.rejects(createCurrentChartReplaySession({...options,createRetrospective:true,retrospectiveModel:null}),/BTC retrospective model capability is required/);
+    await assert.rejects(createCurrentChartReplaySession({...options,retrospectiveForecast:retrospective,retrospectiveModel:null}),/BTC retrospective model capability is required/);
   });
 
   test('unsupported historical research and missing prefix prices produce explicit unavailable records without invented data',async()=>{

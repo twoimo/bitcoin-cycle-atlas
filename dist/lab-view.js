@@ -708,6 +708,7 @@ export function initLabView() {
       return chartPresetRange({asOf:captured.forecast.asOf,referenceDate:captured.forecast.referenceDate??captured.forecast.asOf,firstDate:Array.isArray(first)?first[0]:first.date,lastDate:captured.forecast.path.at(-1).date,span});
     },
     loadAtlasRenderer:()=>import('./chart-replay-atlas.js?v=1.30.4'),
+    loadRetrospectiveModel:()=>import('./replay-retrospective.js'),
     onAtlasFrame:({session,data,start,end,chartType,context,frequency=data.frequency??'daily',window=state.chartReplaySnapshot?.window??DEFAULT_CHART_SPAN,customRange=false,axis})=>{
       const candles=chartType==='candles'&&data.observedCandles.length>0;
       const p=context.presentation,cursorDate=data.frame.cursorDate,lastCandle=data.observedCandles.at(-1);

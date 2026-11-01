@@ -4,11 +4,12 @@ import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import * as vm from 'node:vm';
 import {frozenMarketText} from './helpers/frozen-market-fixture.mjs';
-import {uiFixture,until} from './replay-ui-fixture.mjs';
+import {uiFixture,until,deferred,flush} from './replay-ui-fixture.mjs';
 import {buildLongHorizonForecast} from '../dist/long-horizon-forecast.js';
 import {parseBitcoinReplayCandles} from '../dist/chart-replay-sources.js';
 import {createCurrentChartReplaySession} from '../dist/forecast-replay.js';
 import {restoreReplaySnapshot} from '../dist/chart-replay-snapshot.js';
+import * as retrospectiveModel from '../dist/replay-retrospective.js';
 
 const dataset=JSON.parse(await frozenMarketText('btc-daily'));
 const archive=await parseBitcoinReplayCandles(await frozenMarketText('btc-volume'),{now:Date.parse('2026-10-31T02:00:00Z')});
@@ -33,9 +34,10 @@ test('August weekly replay generates once and restores both frozen paths without
   };
   const h=await uiFixture({captured:captured(),archive,actualPainter:true,buildCurrent});
   await h.open();assert.equal(generations,0,'moving the unconfirmed picker must not generate a path');
+  assert.equal(h.calls.retrospectiveLoads,0,'the unconfirmed picker must not load the BTC-only model capability');
   await h.start('2026-08-17');assert.equal(h.state().status,'paused',h.state().error);
   const session=h.state().session,record=session.retrospectiveForecast;
-  assert.equal(generations,1);assert.equal(record.status,'ready');assert.equal(record.asOf,'2026-08-16');
+  assert.equal(generations,1);assert.equal(h.calls.retrospectiveLoads,1);assert.equal(record.status,'ready');assert.equal(record.asOf,'2026-08-16');
   assert.equal(record.issuedAt,null);assert.equal(record.forecastScoringEnabled,false);
   assert.ok(Object.isFrozen(record.path[1]));
   const fixed=JSON.stringify(record),original=JSON.stringify(session.forecast),signature=h.svg.dataset.forecastValueSignature;
@@ -56,7 +58,7 @@ test('August weekly replay generates once and restores both frozen paths without
   h.controls.get('play').click();assert.equal(h.state().status,'paused');
   h.mounted.handleChartCommand({action:'frequency',value:'daily'});
   h.mounted.handleChartCommand({action:'frequency',value:'weekly'});
-  assert.equal(generations,1);assert.equal(JSON.stringify(h.state().session.retrospectiveForecast),fixed);
+  assert.equal(generations,1);assert.equal(h.calls.retrospectiveLoads,1);assert.equal(JSON.stringify(h.state().session.retrospectiveForecast),fixed);
   assert.equal(JSON.stringify(h.state().session.forecast),original);assert.equal(h.svg.dataset.forecastValueSignature,signature);
   await h.mounted.exit({saveSession:true});assert.equal(h.mounted.isActive(),false);
   const saved=h.savedText();assert.ok(saved);h.mounted.destroy();
@@ -67,18 +69,29 @@ test('August weekly replay generates once and restores both frozen paths without
   await until(()=>['paused','error'].includes(resumed.state().status),'saved August retrospective path');
   assert.equal(resumed.state().status,'paused',resumed.state().error);
   assert.equal(resumed.svg.dataset.replayCursor,'2026-08-18');
-  assert.equal(generations,1);assert.equal(restorations,1);
+  assert.equal(generations,1);assert.equal(restorations,1);assert.equal(resumed.calls.retrospectiveLoads,1);
   assert.equal(JSON.stringify(resumed.state().session.retrospectiveForecast),fixed);
   assert.equal(JSON.stringify(resumed.state().session.forecast),original);
   assert.equal(resumed.svg.dataset.forecastValueSignature,signature);
   assert.equal(resumed.state().session.replaySnapshot.digest,session.replaySnapshot.digest);
   assert.ok(resumed.svg.querySelector('[data-replay-retrospective-path]'));
   resumed.key('ArrowRight');assert.equal(resumed.svg.dataset.replayCursor,'2026-08-19');
-  assert.equal(generations,1);assert.equal(JSON.stringify(resumed.state().session.retrospectiveForecast),fixed);
+  assert.equal(generations,1);assert.equal(resumed.calls.retrospectiveLoads,1);assert.equal(JSON.stringify(resumed.state().session.retrospectiveForecast),fixed);
   const changed=structuredClone(resumed.state().session.replaySnapshot);
   changed.retrospectiveForecast.path[1].price+=1;
   await assert.rejects(restoreReplaySnapshot(changed,{outputHash:changed.outputHash,origin:changed.origin}),/변경/);
   assert.equal(resumed.savedText(),saved);resumed.mounted.destroy();
+});
+
+test('exiting while the BTC model capability loads cannot create a stale retrospective session',async()=>{
+  const pending=deferred();let generations=0;
+  const h=await uiFixture({captured:captured(),archive,loadRetrospectiveModel:()=>pending.promise,
+    buildCurrent:options=>{if(options.createRetrospective)generations++;return createCurrentChartReplaySession(options);}});
+  await h.open();assert.equal(h.calls.retrospectiveLoads,0);
+  await h.start('2026-08-17',{pending:true});assert.equal(h.calls.retrospectiveLoads,1);assert.equal(generations,0);
+  await h.mounted.exit();pending.resolve(retrospectiveModel);await flush();
+  assert.equal(h.mounted.isActive(),false);assert.equal(h.state().status,'idle');assert.equal(generations,0);assert.equal(h.savedText(),null);
+  h.mounted.destroy();
 });
 
 if(process.argv.includes('--retrospective-ui-case')){
