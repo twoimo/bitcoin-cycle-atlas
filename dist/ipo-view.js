@@ -1,3 +1,4 @@
+import { mountIpoMonthCalendar } from './ipo-month-calendar.js?v=1.30.1';
 // 공모주 청약·수요예측 캘린더. 38커뮤니케이션 집계 원자료를 표시만 하며,
 // 상태와 D-day는 열람 시점의 날짜로 다시 계산한다(저장된 상태 문자열을 신뢰하지 않는다).
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -75,6 +76,7 @@ export function initIpoView({ root, load = null, embeddedData = () => null, now 
   const state = { doc: null, rows: [], filter: 'upcoming', query: '', status: 'idle', error: '' };
   const el = sel => root.querySelector(sel);
   let pending = null;
+  const calendar = mountIpoMonthCalendar(root);
   async function ensureData() {
     if (state.doc) return;
     state.status = 'loading';
@@ -114,10 +116,14 @@ export function initIpoView({ root, load = null, embeddedData = () => null, now 
       : list.length ? list.map(ipoRowMarkup).join('') : '<tr><td colspan="9">조건에 맞는 공모 일정이 없습니다.</td></tr>';
     el('.ipo-count').textContent = `${list.length} / ${state.rows.length}건`;
     el('.ipo-source').textContent = `원자료 수집 ${state.doc?.['수집일시_KST']?.slice(0, 10) ?? '미확인'} · 상태·D-day는 ${today} 기준 재계산`;
+    calendar.render(list,state.rows,today);
+    const message=el('.ipo-calendar-message');
+    if(message){message.hidden=state.status!=='error';message.textContent=state.status==='error'?'일정 자료를 불러오지 못했습니다. 목록에서 오류 내용을 확인하세요.':'';}
     onReady?.();
   }
   root.addEventListener('input', e => { if (e.target.matches('.ipo-search')) { state.query = e.target.value; render(); } });
   root.addEventListener('click', e => {
+    calendar.handleClick(e);
     const b = e.target.closest('[data-ipo-filter]');
     if (b) { state.filter = b.dataset.ipoFilter; root.querySelectorAll('[data-ipo-filter]').forEach(n => n.setAttribute('aria-pressed', String(n === b))); render(); }
   });
