@@ -1,0 +1,82 @@
+name: Stage and verify replay date50
+on:
+  push:
+    branches: [stage/replay-date-50-v1.29.10]
+    paths: [.github/workflows/stage-date50.yml]
+permissions:
+  contents: write
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Preserve readable candidate instructions
+        run: |
+          mkdir -p /tmp/date50
+          cp qa-transfer/{apply-date50.py,ui-tests.mjs,date-input.test.mjs,verify-date-browser.mjs,README.md} /tmp/date50/
+          sha256sum /tmp/date50/* > /tmp/date50/transfer-sha256.txt
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 9919b71a1e41db8d94bd510d70239467c476a61b
+          persist-credentials: true
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Apply minimal fix and create a source-identified local commit
+        run: |
+          python3 /tmp/date50/apply-date50.py
+          git diff --check
+          node --check dist/chart-replay.js
+          node --check scripts/verify-replay-date-browser.mjs
+          git add -- dist package.json tests docs/REPLAY_DATE_VALIDATION.md scripts/verify-replay-date-browser.mjs
+          git diff --cached --stat > /tmp/date50/changes.txt
+          git diff --cached > /tmp/date50/candidate.patch
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: validate manual replay dates before session mutation (v1.29.10)'
+          git rev-parse HEAD > /tmp/date50/source.txt
+          git rev-parse HEAD^{tree} > /tmp/date50/tree.txt
+      - name: Focused regression and real-old-code negative control
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/chart-replay-ui.test.mjs tests/replay-fixed-forecast-ui.test.mjs tests/replay-date-input.test.mjs > /tmp/date50/targeted.log 2>&1
+          cp dist/chart-replay.js /tmp/date50/fixed-controller.js
+          git show 9919b71a1e41db8d94bd510d70239467c476a61b:dist/chart-replay.js > dist/chart-replay.js
+          set +e
+          node --test --test-name-pattern='issue50 invalid manual dates' tests/replay-fixed-forecast-ui.test.mjs > /tmp/date50/negative-old-code.log 2>&1
+          status=$?
+          set -e
+          cp /tmp/date50/fixed-controller.js dist/chart-replay.js
+          test "$status" -ne 0
+          grep -q 'manual invalid input must not replace the session' /tmp/date50/negative-old-code.log
+          git diff --exit-code
+      - name: Install source-pinned Korean font
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/atlas-ci"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 -o /tmp/date50-font.otf https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf
+          test "$(git hash-object /tmp/date50-font.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
+          cp /tmp/date50-font.otf "$HOME/.local/share/fonts/atlas-ci/"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-ci"
+      - name: Exercise actual Chrome date fields against the candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --directory dist > /tmp/date50/server.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+          ATLAS_QA_URL=http://127.0.0.1:8765/ QA_OUT=/tmp/date50/browser node scripts/verify-replay-date-browser.mjs 2>&1 | tee /tmp/date50/browser.log
+          git diff --exit-code
+      - name: Publish only the verified candidate branch
+        run: |
+          git push origin HEAD:refs/heads/fix/replay-date-50-v1.29.10
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: date50-stage-evidence
+          path: /tmp/date50
+          retention-days: 14
