@@ -109,7 +109,7 @@ function preservedPathMeaning(record){
   return {pointMeaning:record.symbol==='BTCUSD'?'preserved-conditional-btc-path':'preserved-conditional-asset-valuation',
     pointLabel:record.symbol==='BTCUSD'?'보존한 BTC 조건부 경로':'보존한 자산의 조건부 평가 경로',bandMeaning};
 }
-function finishSession({identity,mode,prices,path,targets,observations,observedAt,observedThrough,source,horizonDays,evaluatedAt,historicalModel=null,training=null,chartDataset=null,chartForecast=null,forecastOriginDate=identity.asOf,timelineDates=null,scorePolicy=null}){
+function finishSession({identity,mode,prices,path,targets,observations,observedAt,observedThrough,source,horizonDays,evaluatedAt,historicalModel=null,training=null,chartDataset=null,chartForecast=null,forecastOriginDate=identity.asOf,timelineDates=null,scorePolicy=null,retrospectiveForecast=null}){
   const {symbol,asOf}=identity,market=marketFor(symbol);
   const normalized=observationRows(observations,{symbol,observedAt,observedThrough,source});
   const forecast=visiblePath(path,forecastOriginDate,horizonDays);
@@ -125,6 +125,7 @@ function finishSession({identity,mode,prices,path,targets,observations,observedA
   const session={version:FORECAST_REPLAY_VERSION,id:identity.recordId,identity:copy(identity),mode,market,asOf,startDate,endDate,evaluatedAt:evaluation,
     timeline,inputPrices,forecast,observations:relevant,targets:copy(targets),historicalModel,training,
     ...(chartDataset?{chartDataset}:{}),...(chartForecast?{chartForecast}:{}),
+    ...(retrospectiveForecast?{retrospectiveForecast}:{}),
     ...(forecastOriginDate!==asOf?{forecastOriginDate}:{}),
     observationProvenance:{observedAt:observedAt??null,observedThrough:observedThrough??normalized.at(-1)?.date??null,
       source:source===null||source===undefined?null:copy(source),informationTimeAvailable,
@@ -195,8 +196,9 @@ export async function createProjectReplaySession({baseline,observations=[],obser
  * and its Coin Metrics curve is not scored against another provider's candles. */
 export async function createCurrentChartReplaySession({dataset,forecast,asOf=PROJECT_REPLAY_ORIGIN.asOf,
   playbackStartDate=PROJECT_REPLAY_ORIGIN.startDate,observations=[],observedAt=null,observedThrough=null,source=null,
-  createdAt=new Date().toISOString(),evaluatedAt=createdAt}={}){
+  createdAt=new Date().toISOString(),evaluatedAt=createdAt,createRetrospective=false,retrospectiveForecast=null,retrospectiveModel=null,modelOptions={}}={}){
   utcDay(asOf);utcDay(playbackStartDate);
+  if(typeof createRetrospective!=='boolean')throw new TypeError('Retrospective creation must be explicitly enabled');
   const created=normalizeForecastTimestamp(createdAt,'createdAt'),evaluation=normalizeForecastTimestamp(evaluatedAt,'evaluatedAt');
   const forecastOriginDate=forecast?.asOf;utcDay(forecastOriginDate);
   if(asOf>forecastOriginDate||playbackStartDate!==dateFromDay(utcDay(asOf)+1)||created>evaluation)throw new RangeError('Current-chart replay clocks are inconsistent');
@@ -222,6 +224,17 @@ export async function createCurrentChartReplaySession({dataset,forecast,asOf=PRO
   const fixedForecast=copy(forecast),fixedDataset=copy(dataset);
   const output=visiblePath(fixedForecast.path,forecastOriginDate,horizonDays);
   const outputHash=await forecastHash(output),originalPathHash=await forecastHash(fixedForecast.path),inputHash=await forecastHash(input.map(row=>[row.date,row.price]));
+  const retrospectiveOptions={dataset:fixedDataset,forecast:fixedForecast,asOf,displayEnd:forecastOriginDate,originalOutputHash:outputHash};
+  let retrospective=null;
+  if(retrospectiveForecast!==null||createRetrospective){
+    // The BTC workspace owns this model dependency. Other assets, previews and
+    // older saved sessions do not load or execute the BTC forecast engines.
+    if(typeof retrospectiveModel?.createReplayRetrospectiveForecast!=='function'||typeof retrospectiveModel?.restoreReplayRetrospectiveForecast!=='function')
+      throw new TypeError('A BTC retrospective model capability is required');
+    retrospective=retrospectiveForecast!==null
+      ?await retrospectiveModel.restoreReplayRetrospectiveForecast(retrospectiveForecast,{...retrospectiveOptions,evaluatedAt:evaluation})
+      :await retrospectiveModel.createReplayRetrospectiveForecast({...retrospectiveOptions,createdAt:evaluation,modelOptions});
+  }
   const recordId=await forecastHash({kind:'current-chart-snapshot',asOf,playbackStartDate,forecastOriginDate,inputHash,outputHash});
   const timeline=[asOf,...current.filter(row=>row.date>asOf&&row.date<=fixedForecast.path.at(-1).date&&row.eventAt<=evaluation).map(row=>row.date)];
   const identity={symbol:'BTCUSD',recordId,recordKind:'current-chart-snapshot',asOf,issuedAt:null,createdAt:created,
@@ -235,7 +248,7 @@ export async function createCurrentChartReplaySession({dataset,forecast,asOf=PRO
       priceDefinition:dataset?.meta?.priceDefinition??null,asOf:forecastOriginDate,inputHash},
     observationSource:{provider:source?.provider??null,sourceHash:source?.sourceHash??null,priceMeaning:source?.priceMeaning??null}};
   return finishSession({identity,mode:'current-chart-snapshot',prices,path:fixedForecast.path,targets:[],observations,observedAt,observedThrough,source,
-    horizonDays,evaluatedAt:evaluation,chartDataset:fixedDataset,chartForecast:fixedForecast,forecastOriginDate,timelineDates:timeline,
+    horizonDays,evaluatedAt:evaluation,chartDataset:fixedDataset,chartForecast:fixedForecast,forecastOriginDate,timelineDates:timeline,retrospectiveForecast:retrospective,
     scorePolicy:{forecastScoringEnabled:false,forecastScoringReason:'current-chart-snapshot-not-issued-at-replay-origin-and-different-observation-source',
       currentForecastPreservedWithoutBackdating:true}});
 }
@@ -337,6 +350,7 @@ export function buildReplayFrame(session,options={}){
   const forecastAvailableAt=session.identity.issuedAt??(session.mode==='project-baseline'?session.identity.preservedAt:session.mode==='current-chart-snapshot'?session.identity.createdAt:null);
   const forecastVisible=clockMode==='observed-date'||forecastAvailableAt!==null&&evaluationAt>=forecastAvailableAt;
   const forecast=forecastVisible?session.forecast:[];
+  const retrospectiveForecast=session.retrospectiveForecast&&(clockMode==='observed-date'||evaluationAt>=session.retrospectiveForecast.createdAt)?session.retrospectiveForecast.path:[];
   const actual=selectedObservations(session,{...position,cursorAt:evaluationAt},clockMode).filter(row=>row.eventAt===null||row.eventAt<=evaluationAt);
   const byDate=new Map(forecast.map(row=>[row.date,row])),actualByDate=new Map(actual.map(row=>[row.date,row]));
   const flat=inputPrices.at(-1)?.price??null;
@@ -378,8 +392,8 @@ export function buildReplayFrame(session,options={}){
   if(scoringEnabled&&point&&observed)Object.assign(selected,errors(point.price,observed.price,flat));
   const rows=[...inputPrices.filter(row=>row.date<(session.forecastOriginDate??session.asOf)||!forecastVisible),...forecast];
   return freeze({version:FORECAST_REPLAY_VERSION,sessionId:session.id,mode:session.mode,clockMode,...position,evaluationAt,
-    inputVisible,forecastVisible,inputPrices,forecast,actual,rows,selected,dailyComparisons:daily,targets,metrics,
-    ...bounds([...rows,...actual]),policy:{...session.policy,
+    inputVisible,forecastVisible,inputPrices,forecast,retrospectiveForecast,actual,rows,selected,dailyComparisons:daily,targets,metrics,
+    ...bounds([...rows,...actual,...retrospectiveForecast]),policy:{...session.policy,
       observationClock:clockMode==='observed-date'?'current-vintage-market-bar-reconstruction':'recorded-acquisition-cutoff',
       prospectiveScoringEligible:clockMode==='information-time'&&session.mode==='recorded'&&session.identity.recordKind==='issued',
       historicalAvailabilityProven:false,dailyMetricMeaning:'Overlapping errors along one fixed origin path; not independent forecast trials.'}});
@@ -513,5 +527,5 @@ export function buildReplayChartData(session,options={}){
     completeOhlcCoverage:observedRows.length>0&&observedRows.every(row=>availableDailyDates.has(row.date)),
     partialWeekCount:weekly?.incompleteGroups??0,formingWeekCount:weekly?.formingGroups??0,
     missingWeekCount:weekly?.missingGroups??0,unreviewedWeekCount:weekly?.unreviewedGroups??0,
-    ...bounds([...observedRows,...observedCandles,...frame.forecast.filter(inRange)])});
+    ...bounds([...observedRows,...observedCandles,...frame.forecast.filter(inRange),...frame.retrospectiveForecast.filter(inRange)])});
 }

@@ -116,10 +116,12 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     './chart-replay-atlas.js':await module({createAtlasReplayContext:options=>{atlasContexts.push(options);return {...options,forecast:options.forecast.path,forecastOrigin:options.forecast.asOf};},drawAtlasChartReplay:renderer('atlas')}),
   };
   const view=new vm.SourceTextModule(source,{context,identifier:sourceUrl.href,importModuleDynamically:specifier=>{assert.ok(imports[specifier],specifier);return imports[specifier];}});
-  await view.link(specifier=>{if(specifier==='./chart-replay-snapshot.js')return snapshotModule;assert.equal(specifier,'./chart-replay-state.js?v='+releaseVersion);return state;});await view.evaluate();
+  await view.link(specifier=>{if(specifier==='./chart-replay-snapshot.js?v='+releaseVersion)return snapshotModule;assert.equal(specifier,'./chart-replay-state.js?v='+releaseVersion);return state;});await view.evaluate();
   const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol,getAtlasContext,getChartState,resolveAtlasRange,
     getChartRenderer:()=>({getPriceScale:()=>axis}),onAtlasFrame:detail=>frameEvents.push(detail),
-    loadAtlasRenderer:()=>imports['./chart-replay-atlas.js'].namespace,restore:()=>{restores++;}});
+    loadAtlasRenderer:()=>imports['./chart-replay-atlas.js'].namespace,
+    loadRetrospectiveModel:()=>({createReplayRetrospectiveForecast(){throw new Error('The coordinator fixture must use its session factory');},restoreReplayRetrospectiveForecast(){throw new Error('The coordinator fixture must use its session factory');}}),
+    restore:()=>{restores++;}});
   const trigger=toolbar.children.find(node=>node.id==='workbench-replay');
   const panel=plot.children.find(node=>node.className==='chart-replay-controls');
   for(const match of panel.innerHTML.matchAll(/data-cr="([^"]+)"/g))panel.querySelector('[data-cr="'+match[1]+'"]');
