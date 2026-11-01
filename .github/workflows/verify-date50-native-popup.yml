@@ -1,0 +1,78 @@
+name: Date50 native popup boundary
+on:
+  push:
+    branches: [stage/replay-date-50-v1.29.10]
+    paths: [.github/workflows/verify-date50-native-popup.yml]
+permissions:
+  contents: read
+jobs:
+  engine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Preserve assertions and use native Escape to dismiss validity UI
+        run: |
+          mkdir -p /tmp/date50-engine-evidence
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('qa-transfer/cross-engine.mjs').read_text()
+          a="async function dateView(){await q('select-menu').click();await q('select-date').click();}"
+          b="""async function dateView(){assert.equal(await q('select-panel').isVisible(),false);await q('select-menu').click();await q('select-date').click();}
+          async function closeDate(){
+            // A native validity popover is browser chrome, not an app DOM click target.
+            // Explicit Escape is a real user action; no DOM setter or forced click.
+            await page.keyboard.press('Escape');
+            if(await q('select-panel').isVisible())await q('select-close').click();
+            await page.waitForFunction(()=>document.querySelector('[data-cr="select-panel"]').hidden);
+          }"""
+          assert s.count(a)==1;s=s.replace(a,b)
+          a="await q('select-close').click();return {value,error:after.hint};"
+          assert s.count(a)==1;s=s.replace(a,"await closeDate();return {value,error:after.hint,nativeValidityDismissedWithEscape:true};")
+          s=s.replace("await page.screenshot({path});","await page.screenshot({path,timeout:5000});")
+          a="async function check(id,fn){try{const result=await fn();report.checks.push({id,status:'pass',result});}catch(e){report.checks.push({id,status:'fail',error:String(e.stack??e)});await shot('failed-'+id);throw e;}}"
+          b="""async function check(id,fn){
+            report.currentCheck=id;await writeFile(out+'/checkpoint.json',JSON.stringify(report,null,2));
+            let timer;
+            try{const result=await Promise.race([fn(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('Bounded engine case timed out: '+id)),45000);})]);report.checks.push({id,status:'pass',result});}
+            catch(e){report.checks.push({id,status:'fail',error:String(e.stack??e)});await writeFile(out+'/checkpoint.json',JSON.stringify(report,null,2));try{await shot('failed-'+id);}catch{}throw e;}
+            finally{clearTimeout(timer);await writeFile(out+'/checkpoint.json',JSON.stringify(report,null,2));}
+          }"""
+          assert s.count(a)==1;s=s.replace(a,b)
+          Path('/tmp/date50-engine-evidence/verification-source.mjs').write_text(s)
+          PY
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 99c9692bad01e6f2293dbf2b1f501f68914d9be2
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install isolated pinned engine
+        run: |
+          npm install --prefix /tmp/date50-engines --save-exact --no-audit --no-fund --ignore-scripts playwright@1.64.1
+          cp /tmp/date50-engines/package-lock.json /tmp/date50-engine-evidence/
+          node /tmp/date50-engines/node_modules/playwright/cli.js install --with-deps ${{ matrix.browser }}
+      - name: Run exact candidate with explicit native popup dismissal
+        env:
+          QA_ENGINE: ${{ matrix.browser }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --directory dist > /tmp/date50-engine-evidence/server.log 2>&1 &
+          server=$!; trap 'kill "$server" 2>/dev/null || true' EXIT
+          timeout 200s node /tmp/date50-engine-evidence/verification-source.mjs 2>&1 | tee /tmp/date50-engine-evidence/browser.log
+          git diff --exit-code
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: date50-native-popup-${{ matrix.browser }}
+          path: /tmp/date50-engine-evidence
+          retention-days: 14
