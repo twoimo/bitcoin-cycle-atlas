@@ -1,4 +1,4 @@
-import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.29.9';
+import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.29.10';
 import {captureReplayView,sealReplaySnapshot,restoreReplaySnapshot,persistReplayDraft} from './chart-replay-snapshot.js';
 
 const day=date=>Date.parse(date+'T00:00:00Z')/86400000;
@@ -20,6 +20,21 @@ export function captureAtlasReplaySnapshot(value){
   const snapshot=structuredClone(value),seen=new WeakSet();
   const freeze=node=>{if(node&&typeof node==='object'&&!seen.has(node)){seen.add(node);for(const child of Object.values(node))freeze(child);Object.freeze(node);}return node;};
   return freeze(snapshot);
+}
+
+/** Manual date entry is an exact UTC calendar selection, not pointer snapping.
+ * Validate domain bounds even if a browser does not expose native validity. */
+export function replayDateInputError(value,min,max){
+  const calendarDate=text=>{
+    if(typeof text!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(text)||text.startsWith('0000-'))return false;
+    const time=Date.parse(text+'T00:00:00Z');
+    return Number.isFinite(time)&&new Date(time).toISOString().slice(0,10)===text;
+  };
+  if(!value)return '새 시작점 날짜를 입력해 주세요.';
+  if(!calendarDate(value))return '존재하는 날짜를 연·월·일로 입력해 주세요.';
+  if(!calendarDate(min)||!calendarDate(max)||min>max)return '선택 가능한 실제 봉의 날짜 범위를 확인할 수 없습니다.';
+  if(value<min||value>max)return '선택 가능한 날짜는 '+min+' ~ '+max+'입니다. 기존 시작점은 유지됩니다.';
+  return '';
 }
 
 export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{},getAtlasContext=null,getChartState=null,getChartRenderer=null,resolveAtlasRange=null,loadAtlasRenderer=null,onAtlasFrame=()=>{}}={}){
@@ -47,7 +62,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     '<section class="chart-replay-select-menu" data-cr="select-panel" data-menu-view="start" role="dialog" aria-label="Select bar · 시작 봉 선택" hidden>'+
     '<div class="chart-replay-menu-heading"><button type="button" data-cr="menu-back" aria-label="시작 봉 선택으로 돌아가기" hidden>'+replayIcon('m14 6-6 6 6 6')+'</button><strong data-cr="menu-title">Select bar</strong><button type="button" data-cr="menu-settings" aria-label="예측·평가 설정 열기" title="예측·평가 · 별도 설정" aria-expanded="false">'+replayIcon('M4 6h16M4 12h16M4 18h16M8 3v6M16 9v6M10 15v6')+'</button><button type="button" data-cr="select-close" aria-label="시작 봉 메뉴 닫기">'+replayIcon('m6 6 12 12M18 6 6 18')+'</button></div>'+
     '<div data-cr="start-view"><div class="chart-replay-select-actions" role="group" aria-label="시작 봉 선택"><button type="button" data-cr="select-chart">차트에서 선택 · Select bar</button><button type="button" data-cr="select-date">날짜 선택 · Select date</button><button type="button" data-cr="select-random">무작위 봉 · Random bar</button><button type="button" data-cr="select-first">첫 사용 가능일 · First available day</button></div></div>'+
-    '<div data-cr="date-view" hidden><div class="chart-replay-date-fields"><label class="chart-replay-origin"><span data-cr="date-label">새 시작점 날짜</span> <input type="date" data-cr="date" aria-label="새 시작점 날짜"></label><button type="button" data-cr="start">이 날짜 선택</button></div><p class="chart-replay-date-context" data-cr="date-context"></p><p class="chart-replay-date-hint" data-cr="date-hint"></p></div>'+
+    '<div data-cr="date-view" hidden><div class="chart-replay-date-fields"><label class="chart-replay-origin"><span data-cr="date-label">새 시작점 날짜</span> <input type="date" data-cr="date" aria-label="새 시작점 날짜" required></label><button type="button" data-cr="start">이 날짜 선택</button></div><p class="chart-replay-date-context" data-cr="date-context"></p><p class="chart-replay-date-hint" data-cr="date-hint"></p></div>'+
     '<div data-cr="forecast-view" hidden>'+
     '<div class="chart-replay-menu-fields"><label>가격 표시<select data-cr="display" aria-label="리플레이 차트 유형"><option value="candles">캔들</option><option value="line">종가선</option></select></label>'+
     '<label>예측 종류<select data-cr="mode" aria-label="리플레이 예측 종류">'+(atlasAvailable?'<option value="atlas-chart">현재 예측선 고정</option><option value="project-baseline">10월 21일 당시 전망</option>':'')+(historical?'<option value="historical-reconstruction">'+(symbol==='BTCUSD'?'BTC 축소 추세 · 회고':'ETH 가격 모형 · 회고')+'</option>':'')+'<option value="recorded">보존 예측</option></select></label>'+
@@ -65,6 +80,8 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   const inspect=doc.createElement('p');inspect.className='chart-replay-inspect';hud.append(status,inspect);
   const notice=doc.createElement('p');notice.className='chart-replay-notice';notice.hidden=true;notice.setAttribute('role','status');notice.setAttribute('aria-live','polite');plot.append(hud,panel,notice);
   const q=key=>panel.querySelector('[data-cr="'+key+'"]');
+  q('date-hint').id='replay-date-hint-'+symbol;q('date-hint').setAttribute('aria-live','polite');
+  q('date').setAttribute('aria-describedby',q('date-hint').id);
   const transport=panel.querySelector('.chart-replay-actions'),bar=panel.querySelector('.chart-replay-bar');
   const scrollHint=doc.createElement('span');scrollHint.className='chart-replay-scroll-hint';scrollHint.id='replay-scroll-hint-'+symbol;
   scrollHint.textContent='좌우로 밀어 더 보기';scrollHint.hidden=true;bar?.append(scrollHint);
@@ -141,7 +158,9 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     const text=intervalName(frequency)+' 리플레이에 필요한 실제 분봉 자료가 없습니다. '+intervalName(active?replayFrequency:frequency)+' 간격을 유지합니다.';
     notice.textContent=text;notice.hidden=false;if(active)announce(text);
   }
-  function discardDateDraft(){if(dateDraftBase!==null){q('date').value=dateDraftBase;dateDraftBase=null;}}
+  function dateHint(){return atlasAvailable&&['atlas-chart','project-baseline'].includes(q('mode').value)?'선택한 날짜부터 실제 봉을 숨깁니다. 「이 날짜 선택」을 눌러야 적용됩니다.':'선택한 날짜까지의 자료로 예측을 고정합니다. 「이 날짜 선택」을 눌러야 적용됩니다.';}
+  function clearDateValidation(){q('date').setCustomValidity?.('');q('date').setAttribute('aria-invalid','false');q('date-hint').textContent=dateHint();}
+  function discardDateDraft(){if(dateDraftBase!==null){q('date').value=dateDraftBase;dateDraftBase=null;}clearDateValidation();}
   function menuView(view,{focus=true}={}){
     if(view!=='date')discardDateDraft();
     q('select-panel').dataset.menuView=view;
@@ -159,7 +178,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     q('date-context').textContent=state.session?'현재 공개: '+(visible??'없음')+' · 다음 봉: '+(next??'확보한 자료 끝'):'시작점 미확정 · 날짜를 선택해 적용하세요.';
   }
   function openDateView(){
-    controller.pause();
+    controller.pause();clearDateValidation();
     if(dateDraftBase===null)dateDraftBase=q('date').value;
     const state=getState(),date=state.session?.timeline[state.cursorIndex];
     // This editor proposes a new selection; it is neither the saved session's
@@ -233,7 +252,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(atlasMode)plot.classList.add('chart-replay-atlas');else{plot.classList.remove('chart-replay-atlas');svg.replaceChildren();}
     q('date-label').textContent=atlasMode?'새 시작점 날짜':'예측 기준일 선택';
     q('date').setAttribute('aria-label',atlasMode?'새 시작점 날짜':'리플레이 예측 기준일 선택');
-    q('date-hint').textContent=atlasMode?'선택한 날짜부터 실제 봉을 숨깁니다. 「이 날짜 선택」을 눌러야 적용됩니다.':'선택한 날짜까지의 자료로 예측을 고정합니다. 「이 날짜 선택」을 눌러야 적용됩니다.';
+    clearDateValidation();
     q('horizon').hidden=atlasMode;
     q('chart-meaning').textContent=currentMode?'지금 차트에 있던 주황색 예측선과 범위를 그대로 고정합니다. 그 위에 Bitstamp 실제 일봉을 시작일부터 하나씩 공개합니다. 재생 중 예측선을 다시 계산하지 않습니다. 실제 관측이 없는 미래 캔들은 만들지 않습니다.':atlasMode?'현재 차트의 눈금·표시 기간·사이클 레이어로 첫 보존 전망을 봅니다. 금색 점선과 음영은 당시 조건부 경로이며 재생 중 바뀌지 않습니다. 사이클 표시는 기준일까지의 관측과 그 경로로 고정합니다. 실제 가격은 재생 위치까지만 공개합니다.':'금색 점선은 기준일에 고정한 예측, 실제 가격은 재생 위치까지만 공개합니다. 미래 실제값·사후 고저점·사건·지표는 숨깁니다. 음영은 조건 범위 또는 보정 전 모형 구간이며 적중 확률이 아닙니다.';
     q('evaluation-meaning').textContent=currentMode?'2026-10-21은 프로젝트 시작일이며 재생할 첫 봉입니다. 주황색 선은 지금 선택한 가정이므로 그 날짜에 발행한 예측 성적으로 평가하지 않습니다. 캔들은 Bitstamp, 현재 전망의 가격 기준은 Coin Metrics로 제공자가 다릅니다. 당시 예측과 실제 종가를 평가하려면 「10월 21일 당시 전망」 또는 「보존 예측」을 선택하세요.':atlasMode?'프로젝트 시작은 2026-10-21 한국시간, 당시 완료된 마지막 일봉은 2026-10-20 UTC입니다. 다음 봉부터 10월 21일 실제값을 공개합니다. 첫 커밋에 보존된 3년 전망을 현재 판본의 Coin Metrics 종가와 비교하며, 현재 장기 모형의 과거 실적을 뜻하지 않습니다. 사이클 표시는 현재 표시 규칙으로 그린 주석이며, 당시 화면의 표식이 그대로 보존됐다는 뜻은 아닙니다. 음영은 적중 확률이 아니며 한 경로의 일별 오차는 독립 예측 횟수가 아닙니다.':'과거 재구성은 현재 코드와 보존 판본으로 다시 계산한 연구입니다. 당시 실제 발행한 예측 성적이 아니며, 한 경로의 여러 일봉은 독립 예측 횟수가 아닙니다. 보존 예측도 현재 판본의 시장 날짜 기준 회고 비교입니다.';
@@ -250,7 +269,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
         if(!active||token!==epoch||signal.aborted)return;
         restoredSnapshot=saved;atlasCaptured=saved.view;atlasCapturedAt=saved.capturedAt;
       }
-      modules??=await Promise.all([import('./forecast-replay.js?v=1.29.9'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
+      modules??=await Promise.all([import('./forecast-replay.js?v=1.29.10'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
       if(!active||token!==epoch)return;
       if(atlasMode){
         atlasCaptured??=captureReplayView(getAtlasContext());
@@ -548,6 +567,22 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     }
     return start(selected);
   }
+  function submitDateStart(){
+    const input=q('date');
+    if(!active||choice||!archive||input.disabled||q('start').disabled)return;
+    clearDateValidation();
+    const value=input.value;
+    let error=replayDateInputError(value,input.min,input.max);
+    if(!error&&input.checkValidity?.()===false)error='유효한 시작점 날짜를 입력해 주세요.';
+    // In-range gaps must not silently select a different observed day either.
+    if(!error&&nearestOrigin(value)!==value)error='이 날짜의 실제 봉이 없습니다. 다른 날짜를 선택해 주세요.';
+    if(error){
+      input.setCustomValidity?.(error);input.setAttribute('aria-invalid','true');
+      q('date-hint').textContent=error;input.reportValidity?.();
+      return;
+    }
+    return chooseStart(value);
+  }
   function randomStart(){
     if(!archive||choice)return;
     if(atlasAvailable&&['atlas-chart','project-baseline'].includes(q('mode').value)){
@@ -581,7 +616,8 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   }
   trigger.onclick=()=>{if(active)requestExit();else void requestEntry();};q('exit').onclick=requestExit;
   q('live').onclick=()=>{if(!choice&&!picking&&getState().session)requestExit();};q('pick').onclick=beginPick;q('pick-cancel').onclick=cancelPick;
-  q('start').onclick=()=>void chooseStart(q('date').value);q('date').onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();void chooseStart(q('date').value);}};
+  q('start').onclick=()=>void submitDateStart();q('date').onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();void submitDateStart();}};
+  q('date').oninput=clearDateValidation;q('date').onchange=clearDateValidation;
   q('play').onclick=toggle;q('first').onclick=()=>controller.seek(0);q('next').onclick=()=>controller.step(1);
   q('speed').onchange=()=>controller.speed(Number(q('speed').value));q('display').onchange=async()=>{
     const displayToken=++displayEpoch;
