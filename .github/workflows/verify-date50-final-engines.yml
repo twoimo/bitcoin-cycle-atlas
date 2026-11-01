@@ -1,0 +1,75 @@
+name: Date50 final engine roundtrips
+on:
+  push:
+    branches: [stage/replay-date-50-v1.29.10]
+    paths: [.github/workflows/verify-date50-final-engines.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  engine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: f14b65cb8f3b1f8ea97e3100ee2514b98f69aa44
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Recover prior assertions and separately budget the twenty-session loop
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/date50-engine-evidence
+          gh api repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/13073864680/zip > /tmp/date50-engine-evidence/prior.zip
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib
+          root=Path('/tmp/date50-engine-evidence');raw=(root/'prior.zip').read_bytes()
+          assert hashlib.sha256(raw).hexdigest()=='998fc02ce089b792e313b94b8e2b7914461f07db4f374e44491115a85f9dd6d7'
+          with ZipFile(root/'prior.zip') as z:code=z.read('verification-source.mjs')
+          assert hashlib.sha256(code).hexdigest()=='a1f26badef933ee8512512571f9b54dc08e6b2ae04af90a4fc8d300e4d095aba'
+          text=code.decode();assert text.count(',45000)')==1
+          text=text.replace(',45000)',",id==='twenty-reentries-one-forward-per-click'?180000:45000)")
+          old='starts.push([a.cursor,b.cursor]);'
+          assert text.count(old)==1
+          text=text.replace(old,old+"report.reentryTransitions=[...starts];await writeFile(out+'/checkpoint.json',JSON.stringify(report,null,2));")
+          (root/'verification-source.mjs').write_text(text)
+          PY
+          node --check /tmp/date50-engine-evidence/verification-source.mjs
+      - name: Install isolated pinned browser engine
+        run: |
+          npm install --prefix /tmp/date50-engines --save-exact --no-audit --no-fund --ignore-scripts playwright@1.64.1
+          cp /tmp/date50-engines/package-lock.json /tmp/date50-engine-evidence/
+          node /tmp/date50-engines/node_modules/playwright/cli.js install --with-deps ${{ matrix.browser }}
+      - name: Install pinned Korean font
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/atlas-ci"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 -o /tmp/date50-font.otf https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf
+          test "$(git hash-object /tmp/date50-font.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
+          cp /tmp/date50-font.otf "$HOME/.local/share/fonts/atlas-ci/"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-ci"
+      - name: Execute twenty complete roundtrips with unchanged assertions
+        env:
+          QA_ENGINE: ${{ matrix.browser }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --directory dist > /tmp/date50-engine-evidence/server.log 2>&1 &
+          server=$!; trap 'kill "$server" 2>/dev/null || true' EXIT
+          timeout 250s node /tmp/date50-engine-evidence/verification-source.mjs 2>&1 | tee /tmp/date50-engine-evidence/browser.log
+          git diff --exit-code
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: date50-final-${{ matrix.browser }}
+          path: /tmp/date50-engine-evidence
+          retention-days: 14
