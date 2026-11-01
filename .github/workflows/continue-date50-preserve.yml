@@ -1,0 +1,146 @@
+name: Date50 preserve confirmed replay
+on:
+  push:
+    branches: [stage/replay-date-50-v1.29.10]
+    paths: [.github/workflows/continue-date50-preserve.yml]
+permissions:
+  contents: read
+jobs:
+  prepare:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    outputs:
+      source: ${{ steps.candidate.outputs.source }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Preserve reviewed preparers outside product tree
+        run: |
+          mkdir -p /tmp/date50-continue
+          cp qa50/continue-preserved-replay.py qa50/finalize-preservation-checks.py /tmp/date50-continue/
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 20dbfd73e53905c10e50b5e9524da12a979cc22b
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Bind current-main-compatible candidate without publication
+        id: candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api repos/twoimo/bitcoin-cycle-atlas/git/ref/heads/main --jq .object.sha)" = 20dbfd73e53905c10e50b5e9524da12a979cc22b
+          test "$(gh api repos/twoimo/bitcoin-cycle-atlas/git/ref/heads/fix/replay-date-50-v1.29.10 --jq .object.sha)" = 709da73c042625c8c4a84373818e0bf52703b940
+          python3 /tmp/date50-continue/continue-preserved-replay.py
+          python3 /tmp/date50-continue/finalize-preservation-checks.py
+          node --check dist/chart-replay.js
+          node --check scripts/verify-replay-date-browser.mjs
+          node --check scripts/verify-chart-replay-browser.mjs
+          git add -- dist docs tests scripts package.json
+          git diff --cached --check
+          git diff --cached --stat > /tmp/date50-continue/changes.txt
+          git diff --cached > /tmp/date50-continue/candidate.patch
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          tree=$(git write-tree)
+          source=$(printf '%s\n' 'fix: preserve confirmed replay layers while validating manual dates (v1.30.1)' | git commit-tree "$tree" -p 709da73c042625c8c4a84373818e0bf52703b940 -p 20dbfd73e53905c10e50b5e9524da12a979cc22b)
+          git checkout --detach "$source"
+          printf '%s\n' "$source" > /tmp/date50-continue/source.txt
+          printf '%s\n' "$tree" > /tmp/date50-continue/tree.txt
+          printf 'source=%s\n' "$source" >> "$GITHUB_OUTPUT"
+          git archive --format=tar.gz HEAD > /tmp/date50-continue/source.tar.gz
+      - name: Run unchanged date and replay invariants
+        run: |
+          set -euo pipefail
+          node --experimental-vm-modules --test tests/chart-replay-ui.test.mjs tests/replay-fixed-forecast-ui.test.mjs tests/replay-date-input.test.mjs 2>&1 | tee /tmp/date50-continue/targeted.log
+      - name: Install pinned Korean font
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/atlas-ci"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 -o /tmp/NotoSansCJKkr-Regular.otf https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf
+          test "$(git hash-object /tmp/NotoSansCJKkr-Regular.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
+          cp /tmp/NotoSansCJKkr-Regular.otf "$HOME/.local/share/fonts/atlas-ci/"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-ci"
+      - name: Native invalid dates and exact user-confirmed October 26 daily replay
+        env:
+          ATLAS_QA_URL: http://127.0.0.1:8765/
+          QA_OUT: /tmp/date50-continue/browser
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --directory dist > /tmp/date50-continue/server.log 2>&1 &
+          server=$!; trap 'kill "$server" 2>/dev/null || true' EXIT
+          node scripts/verify-replay-date-browser.mjs 2>&1 | tee /tmp/date50-continue/browser.log
+      - name: Advance only existing feature branch after acceptance
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api repos/twoimo/bitcoin-cycle-atlas/git/ref/heads/main --jq .object.sha)" = 20dbfd73e53905c10e50b5e9524da12a979cc22b
+          test "$(gh api repos/twoimo/bitcoin-cycle-atlas/git/ref/heads/fix/replay-date-50-v1.29.10 --jq .object.sha)" = 709da73c042625c8c4a84373818e0bf52703b940
+          git push origin HEAD:refs/heads/fix/replay-date-50-v1.29.10
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: date50-preserved-candidate
+          path: /tmp/date50-continue
+          retention-days: 14
+  full:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.prepare.outputs.source }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: |
+          set -euo pipefail
+          mkdir -p build/date50-full
+          npm test 2>&1 | tee build/date50-full/tests.log
+          npm run verify:formal 2>&1 | tee build/date50-full/formal.log
+          npm run verify:performance 2>&1 | tee build/date50-full/performance.log
+          npm run verify:static 2>&1 | tee build/date50-full/static.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: date50-current-main-regression
+          path: build/date50-full
+          retention-days: 14
+  native:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.prepare.outputs.source }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Install pinned Korean font
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/atlas-ci"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 -o /tmp/NotoSansCJKkr-Regular.otf https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf
+          test "$(git hash-object /tmp/NotoSansCJKkr-Regular.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
+          cp /tmp/NotoSansCJKkr-Regular.otf "$HOME/.local/share/fonts/atlas-ci/"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-ci"
+      - name: Run full real browser suite with current observed-data oracles
+        run: node scripts/verify-eth-candidate-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: date50-current-main-native
+          path: build/eth-browser
+          retention-days: 14
