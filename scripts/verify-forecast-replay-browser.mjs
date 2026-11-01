@@ -171,10 +171,13 @@ export async function verifyForecastReplaySurface(api){
   assert.ok(initial.disclosure.includes(original.identity.pointLabel)&&initial.metricNote.includes(original.identity.pointLabel),'Saved path interpretation is missing from the visible comparison');
   const columns=record.output.columns,stored=new Map(record.output.path.map(row=>[row[0],row]));
   for(const row of original.frame.forecast)for(const key of ['price','lower','upper','baselinePrice'])assert.equal(row[key],stored.get(row.date)[columns.indexOf(key)]??null,'Export changed preserved forecast '+key);
+  const expectedObservedDates=cursor=>[...stored.keys()].filter(date=>date>initial.cursor&&date<=cursor&&observed.has(date)).sort();
   await click(cdp,control('next'));
-  const first=await snapshot('recorded-next');assert.equal(first.index,1);assert.equal(first.cursor,nextDate(initial.cursor));assert.equal(first.actualCount,btc?0:1);assert.equal(first.outputHash,initial.outputHash);
+  const first=await snapshot('recorded-next');assert.equal(first.index,1);assert.equal(first.cursor,nextDate(initial.cursor));assert.equal(first.actualCount,expectedObservedDates(first.cursor).length);assert.equal(first.outputHash,initial.outputHash);
+  const firstActual=await exported('recorded-next');assert.deepEqual(firstActual.frame.actual.map(row=>row.date),expectedObservedDates(first.cursor));
   await chartKey('End','End',35);const last=await snapshot('recorded-latest',{capture:true});
-  assert.equal(last.index,last.lastIndex);assert.equal(last.actualCount,btc?0:2);assert.ok(last.targets.every(row=>row.at(-1)==='미도래 · 대기'));
+  assert.equal(last.index,last.lastIndex);assert.equal(last.actualCount,expectedObservedDates(last.cursor).length);assert.ok(last.targets.every(row=>row.at(-1)==='미도래 · 대기'));
+  const lastActual=await exported('recorded-latest');assert.deepEqual(lastActual.frame.actual.map(row=>row.date),expectedObservedDates(last.cursor));
   assert.ok(last.cursor<=new Date().toISOString().slice(0,10),'Cursor advanced beyond actual evaluation date');
   if(!btc){
     await select(control('clock'),'information-time');

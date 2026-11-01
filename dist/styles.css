@@ -977,6 +977,7 @@ body .footer button{min-height:var(--control-min-size)}
 .indicator-library[open] > .indicator-library-heading,
 .atlas-plot[data-compact-layout] > .analysis-indicator-windows:not([hidden]):not([data-maximized=true]) > .analysis-pane-access:not([hidden]),
 #evidence-view:not([hidden]) .evidence-table thead,
+#ipo-view:not([hidden]) .ipo-table thead,
 #data-view:not([hidden]) .asset-comparison-table thead {
   position: sticky;
   top: 0;

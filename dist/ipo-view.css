@@ -1,0 +1,44 @@
+/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas locked system · scope: IPO ledger; shares global financial-workbench tokens. */
+#ipo-view { padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 12px; height: 100%; overflow: hidden; }
+.ipo-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.ipo-heading h1 { margin: 2px 0 0; font-size: 24px; letter-spacing: -.01em; text-wrap: balance; }
+.ipo-eyebrow { font-size: 12px; color: var(--muted); }
+.ipo-source { font-size: 11px; color: var(--muted); }
+.ipo-toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.ipo-segmented { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.ipo-segmented button { background: transparent; color: var(--muted); border: 0; padding: 8px 12px; font-size: 12px; cursor: pointer; }
+.ipo-segmented button[aria-pressed="true"] { background: var(--accent-soft); color: var(--text); }
+.ipo-search { flex: 1 1 180px; max-width: 260px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 12px; }
+.ipo-table-shell { flex: 1 1 auto; overflow: auto; border: 1px solid var(--border); border-radius: 10px; }
+.ipo-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.ipo-table caption { text-align: left; padding: 12px; font-size: 12px; color: var(--text); border-bottom: 1px solid var(--border); }
+.ipo-table caption span { display: block; font-size: 11px; color: var(--muted); margin-top: 4px; }
+.ipo-table caption .ipo-count { display: inline; margin: 0 8px; color: var(--accent); }
+.ipo-table th { background: var(--surface); text-align: left; font-weight: 600; font-size: 11px; color: var(--muted); padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.ipo-table td { padding: 8px 12px; border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent); vertical-align: top; }
+.ipo-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.ipo-name { font-weight: 600; }
+.ipo-num { font-variant-numeric: tabular-nums; text-align: right; }
+.ipo-num::before { content: ''; }
+.ipo-badge { display: inline-block; padding: 4px 8px; border-radius: 999px; font-size: 11px; white-space: nowrap; }
+.ipo-badge-forecast { background: var(--accent-soft); color: var(--accent); }
+.ipo-badge-subscribe { background: color-mix(in srgb, var(--green) 12%, var(--surface)); color: var(--green); }
+.ipo-badge-closed { background: var(--surface-raised); color: var(--muted); }
+.ipo-badge-unknown { background: var(--surface-raised); color: var(--muted); }
+.ipo-dday { font-variant-numeric: tabular-nums; font-weight: 600; }
+.ipo-state-closed { opacity: .62; }
+.ipo-disclaimer { margin: 0; font-size: 11.5px; line-height: 1.55; color: var(--muted); }
+
+/* Keep company identities readable inside the table's own horizontal scroll. */
+.ipo-table { min-width: 920px; }
+.ipo-table .ipo-name { position: sticky; left: 0; min-width: 130px; white-space: nowrap; background: var(--bg); z-index: 1; }
+.ipo-table th:first-child { position: sticky; left: 0; z-index: 3; min-width: 130px; }
+.ipo-table td:not(.ipo-name) { white-space: nowrap; }
+.ipo-back { display: none; }
+@media (max-width: 760px) {
+  .ipo-back { display: inline-flex; min-height: 44px; align-items: center; color: var(--muted); font-size: 12px; }
+  .ipo-segmented button, .ipo-search { min-height: 44px; }
+}
+
+#ipo-view :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.ipo-segmented button:active, .ipo-back:active { background: var(--surface-hover); color: var(--text); }

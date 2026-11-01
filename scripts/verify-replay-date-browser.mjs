@@ -1,6 +1,6 @@
 // Issue #50 acceptance: real native date segments, visible controls, no app state setters.
 import assert from 'node:assert/strict';
-import {readFile,writeFile,mkdir,mkdtemp} from 'node:fs/promises';
+import {readFile,writeFile,mkdir,mkdtemp,readdir} from 'node:fs/promises';
 import {spawn,execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {resolve} from 'node:path';
@@ -114,6 +114,34 @@ try{
    assert.equal(s.frequency,'weekly');assert.equal(s.interval,'daily');assert.equal(c.periodStart,'2026-08-17');assert.equal(+c.open,rs[0].open);assert.equal(+c.high,Math.max(...rs.map(r=>r.high)));assert.equal(+c.low,Math.min(...rs.map(r=>r.low)));assert.equal(+c.close,rs.at(-1).close);assert.equal(s.signature,fixed.signature);assert.ok(s.band&&s.path&&s.foreground);steps.push(c);
   }
   await screenshot(cdp,'fixed-forecast-weekly.png',report);return steps;
+ });
+ await check('confirmed-daily-26-preserves-future-assumptions',async()=>{
+  await click(cdp,'[data-lab-frequency="daily"]');await until(async()=>(await snap()).frequency==='daily','daily interval');await settled(cdp);
+  await selectDate('2026-10-26');const before=await snap();assert.equal(before.cursor,'2026-10-25');
+  const future=()=>evaluate(cdp,()=>{const s=document.querySelector('#lab-chart');return {
+   markers:[...s.querySelectorAll('[data-cycle-marker]')].filter(n=>n.dataset.date>'2026-10-26').map(n=>({id:n.dataset.cycleMarker,date:n.dataset.date,type:n.dataset.milestoneType,label:n.getAttribute('aria-label')})),
+   periods:[...s.querySelectorAll('[data-cycle-interval]')].filter(n=>n.dataset.endDate>'2026-10-26').map(n=>({id:n.dataset.cycleInterval,start:n.dataset.startDate,end:n.dataset.endDate,days:n.dataset.days})),
+   mode:document.querySelector('[data-cr="mode"]').value,
+   disclosure:document.querySelector('[data-cr="evaluation-meaning"]').textContent};});
+  const annotations=await future();assert.equal(annotations.mode,'atlas-chart');assert.ok(annotations.markers.some(n=>n.type==='mid-top'||n.label?.includes('MID-TOP')));assert.ok(annotations.periods.length>0);assert.match(annotations.disclosure,/발행한 예측 성적으로 평가하지 않습니다/);
+  await key('ArrowRight','ArrowRight',39,8);await until(async()=>(await snap()).cursor==='2026-10-26','user-confirmed October 26');const after=await snap();
+  assert.equal(after.signature,before.signature);assert.equal(after.snapshot,before.snapshot);assert.ok(after.band&&after.path&&after.foreground);assert.deepEqual(await future(),annotations);
+  // The four-year daily view intentionally batches SVG candles. Read the
+  // actual native download rather than narrowing the viewport to inspect it.
+  const downloads=await mkdtemp(resolve(out,'daily26-export-'));await browser.send('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:downloads,eventsEnabled:true});
+  await click(cdp,'[data-cr="select-menu"]');await click(cdp,'[data-cr="menu-settings"]');await click(cdp,'[data-cr="details"]');await click(cdp,'[data-cr="export"]');
+  let filename;await until(async()=>{filename=(await readdir(downloads)).find(n=>n.endsWith('.json'));return !!filename;},'native daily JSON download');
+  const payload=JSON.parse(await readFile(resolve(downloads,filename),'utf8'));await closeDate();
+  assert.equal(payload.frame.cursorDate,'2026-10-26');assert.ok(payload.frame.actual.length>0);assert.ok(payload.frame.actual.every(r=>r.date<='2026-10-26'));
+  assert.equal(payload.identity.currentChartSnapshot,true);assert.equal(payload.identity.publicationTimeProven,false);assert.equal(payload.identity.issuedAt,null);assert.equal(payload.frame.metrics.independentSampleCount,null);
+  const c=payload.frame.actual.at(-1),source=JSON.parse(await readFile('dist/data/btc-volume.json','utf8')).bars.find(n=>n.date==='2026-10-26');assert.ok(source);
+  assert.ok(await evaluate(cdp,()=>document.querySelector('#lab-chart .observed-candles-batched')||document.querySelector('#lab-chart .observed-candle')));
+  for(const name of ['open','high','low','close'])assert.equal(+c[name],source[name]);
+  assert.deepEqual(['open','high','low','close'].map(k=>+c[k]),[80047.79,80696.96,79260.02,80005.52]);
+  assert.ok(await evaluate(cdp,()=>[...document.querySelectorAll('#lab-chart .observed-candle')].every(n=>n.dataset.date<='2026-10-26')));
+  await screenshot(cdp,'confirmed-daily-26-fixed-forecast.png',report);
+  await dateView();await segment('year','2099');await click(cdp,'[data-cr="start"]');assert.deepEqual(invariants(await snap()),invariants(after));assert.deepEqual(await future(),annotations);await closeDate();
+  return {before:invariants(before),after:invariants(after),ohlc:c,future:annotations};
  });
  const bounds=await evaluate(cdp,()=>{const n=document.querySelector('[data-cr="date"]');return {min:n.min,max:n.max};});
  for(const [name,date] of Object.entries(bounds))await check('exact-'+name+'-boundary',async()=>{

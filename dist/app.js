@@ -12,6 +12,7 @@ import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29
 // leave a new long-horizon page running the old three-year workbench.
 import { initDailyDataView } from './daily-data-view.js?v=1.29.0';
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.29.0';
+import { initIpoView } from './ipo-view.js?v=1.30.1';
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -28,6 +29,7 @@ const icons = {
   layers:'<path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/>',
   table:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/>',
   book:'<path d="M12 6c-3-2-6-2-10-1v14c4-1 7-1 10 1 3-2 6-2 10-1V5c-4-1-7-1-10 1Zm0 0v14"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/>',
   external:'<path d="M14 3h7v7M21 3l-10 10M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"/>',
   sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/>',
   moon:'<path d="M21 13A9 9 0 0 1 11 3a9 9 0 1 0 10 10Z"/>',
@@ -61,7 +63,7 @@ const state = {
   horizon: ['365','730','1461','current','all'].includes(params.get('range')) ? params.get('range') : '1461',
   cursor: /^\d{1,5}$/.test(params.get('day') || '') ? Number(params.get('day')) : null,
   hidden: new Set((params.get('hide') || '').split(',').filter(Boolean)),
-  view: params.get('page')==='compare'&&!params.has('legacy')?'outlook':['outlook','compare','evidence','data'].includes(params.get('page')) ? params.get('page') : 'outlook', dataset: null, comparison: null, chart: null,
+  view: params.get('page')==='compare'&&!params.has('legacy')?'outlook':['outlook','compare','evidence','data','ipo'].includes(params.get('page')) ? params.get('page') : 'outlook', dataset: null, comparison: null, chart: null,
   timing: null, timingDataset: null, timingBaseline: ['previous','recent2','all3'].includes(params.get('baseline')) ? params.get('baseline') : 'recent2',
   analysisView: ['forecast','peak','timing'].includes(params.get('analysis')) ? params.get('analysis') : 'forecast',
   peakThreshold: ['0.9','0.93','0.94','0.95','0.98'].includes(params.get('zone')) ? Number(params.get('zone')) : .95,
@@ -95,7 +97,7 @@ function persistUrl() {
 document.documentElement.dataset.theme = 'dark';
 let initialPageRendered = false;
 function finishInitialPage() {
-  if (document.documentElement.dataset.boot !== 'loading' || (!state.dataset && state.view !== 'data') || !initialPageRendered) return;
+  if (document.documentElement.dataset.boot !== 'loading' || (!state.dataset && !['data','ipo'].includes(state.view)) || !initialPageRendered) return;
   document.removeEventListener('atlas:page-ready', onInitialPageReady);
   document.dispatchEvent(new CustomEvent('atlas:ready'));
 }
@@ -108,7 +110,7 @@ document.addEventListener('atlas:page-ready', onInitialPageReady);
 let outlookController = null, workspacePromise = null, evidencePromise = null, evidenceModule = null;
 function ensureWorkspace() {
   if (!workspacePromise) workspacePromise = Promise.all([
-    import('./viewport-workspace.js?v=1.29.10'), import('./lab-view.js?v=1.29.10'),
+    import('./viewport-workspace.js?v=1.30.1'), import('./lab-view.js?v=1.30.1'),
   ]).then(([workspace, lab]) => {
     workspace.initViewportWorkspace(icon);
     outlookController = lab.initLabView();
@@ -126,6 +128,12 @@ function ensureEvidence() {
   }).catch(error => { evidencePromise = null; console.error('Evidence initialization failed', error); if (state.view === 'evidence') document.dispatchEvent(new CustomEvent('atlas:boot-error')); });
   return evidencePromise;
 }
+const ipoController = initIpoView({
+  root: $('#ipo-view'),
+  now: () => new Date(),
+  onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'ipo' } })),
+  embeddedData: () => document.getElementById('embedded-ipo-calendar-data')?.textContent ?? null,
+});
 const dailyDataController = initDailyDataView({
   root: $('#data-view'), download, toast,
   getComparisonDataset: createAssetComparisonLoader({
@@ -134,15 +142,16 @@ const dailyDataController = initDailyDataView({
 });
 function syncPage() {
   document.body.dataset.page=state.view;
-  btcRefreshStatus.update({page:state.view});
-  document.title = state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
-  for (const view of ['outlook','compare','evidence','data']) document.querySelector(`#${view}-view`).hidden=state.view!==view;
+  btcRefreshStatus.update({page:state.view==='ipo'?'data':state.view});
+  document.title = state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
+  for (const view of ['outlook','compare','evidence','data','ipo']) document.querySelector(`#${view}-view`).hidden=state.view!==view;
   $$('[data-view]').forEach(n=>{const active=n.dataset.view===state.view;n.classList.toggle('active',active);if(active)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current');});
   evidenceModule?.showEvidenceView(state.view==='evidence');
   outlookController?.show(state.view==='outlook');
   outlookController?.showCompare(state.view==='compare');
   if (['outlook','compare'].includes(state.view)) void ensureWorkspace();
   if (state.view === 'evidence') void ensureEvidence();
+  if (state.view === 'ipo') void ipoController.render();
 }
 syncPage();
 if (state.view === 'data') renderData();
@@ -365,7 +374,7 @@ function renderData() {
 }
 $$('[data-view]').forEach(b => b.addEventListener('click', () => {
   state.view = b.dataset.view;
-  if (state.view !== 'data') void ensureDataset();
+  if (!['data','ipo'].includes(state.view)) void ensureDataset();
   syncPage();
   closeExport();
   if(state.view==='compare') requestAnimationFrame(()=>render()); else if(state.view==='data') renderData();
@@ -482,4 +491,4 @@ async function init() {
     else document.dispatchEvent(new CustomEvent('atlas:boot-error'));
   }
 }
-if (state.view !== 'data') void ensureDataset();
+if (!['data','ipo'].includes(state.view)) void ensureDataset();
