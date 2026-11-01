@@ -38,14 +38,25 @@ export function captureReplayView(view){
   return view===null||view===undefined?null:freeze(clone(checkedView(view)));
 }
 
+function checkedRetrospective(record,atlasContext,origin){
+  const captured=atlasContext?.retrospectiveForecast??null;
+  if(JSON.stringify(record??null)!==JSON.stringify(captured))throw new TypeError('회고 예측 원본과 표시 경로가 일치하지 않습니다.');
+  if(record&&(record.asOf!==origin||record.issuedAt!==null||record.publicationTimeProven!==false||
+    !Number.isFinite(Date.parse(record.createdAt))||!Array.isArray(record.path)))
+    throw new TypeError('고정 회고 예측의 기준일 또는 생성 시각이 올바르지 않습니다.');
+  return record??null;
+}
+
 /** Prepared in memory, once per committed origin. Nothing is persisted here. */
-export async function sealReplaySnapshot({view,atlasContext,identity}){
+export async function sealReplaySnapshot({view,atlasContext,identity,retrospectiveForecast=null}){
   if(identity?.currentChartSnapshot!==true||identity.issuedAt!==null||!HEX.test(identity.outputHash)||
     !validDate(identity.asOf)||!Number.isFinite(Date.parse(identity.createdAt))||
     atlasContext?.originDate!==identity.asOf||atlasContext?.forecastOrigin!==view?.forecast?.asOf)
     throw new TypeError('현재 차트 고정 예측의 세션 식별자가 일치하지 않습니다.');
+  checkedRetrospective(retrospectiveForecast,atlasContext,identity.asOf);
   const payload=clone({kind:KIND,version:1,origin:identity.asOf,capturedAt:identity.createdAt,
     outputHash:identity.outputHash,view:checkedView(view),atlasContext,
+    ...(retrospectiveForecast?{retrospectiveForecast}:{}),
     meaning:'local-visual-comparison-not-issued-forecast',publicationTimeProven:false});
   const snapshot=freeze({...payload,digest:await digest(payload)});
   await prepareStorage(snapshot);
@@ -78,9 +89,12 @@ export async function restoreReplaySnapshot(snapshot,{outputHash,origin,now=Date
   if(!Number.isFinite(captured)||captured>now||!validDate(origin)||
     payload.atlasContext?.originDate!==origin||payload.atlasContext?.forecastOrigin!==payload.view.forecast.asOf)
     throw new RangeError('저장된 고정 예측의 기준일 또는 캡처 시각이 올바르지 않습니다.');
+  checkedRetrospective(payload.retrospectiveForecast??null,payload.atlasContext,origin);
+  if(payload.retrospectiveForecast&&Date.parse(payload.retrospectiveForecast.createdAt)>now)
+    throw new RangeError('회고 예측의 생성 시각이 현재보다 늦습니다.');
   freeze(owned);
   await prepareStorage(owned);
-  return Object.freeze({snapshot:owned,view:owned.view,atlasContext:owned.atlasContext,capturedAt:owned.capturedAt});
+  return Object.freeze({snapshot:owned,view:owned.view,atlasContext:owned.atlasContext,capturedAt:owned.capturedAt,retrospectiveForecast:owned.retrospectiveForecast??null});
 }
 
 /** One explicit save, one atomic storage replacement. On quota/security failure

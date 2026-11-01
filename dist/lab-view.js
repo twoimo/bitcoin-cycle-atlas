@@ -1,5 +1,5 @@
 import { beginAction, finishAction, measureSync } from './performance-diagnostics.js?v=1.29.0';
-import {mountChartReplay} from './chart-replay.js?v=1.30.3';
+import {mountChartReplay} from './chart-replay.js?v=1.30.4';
 import { createForecastComputation, browserForecastWorkerFactory } from './forecast-computation.js?v=1.29.0';
 import {bitcoinForecastEvidence} from './forecast-evidence.js?v=1.29.0';
 import {openResearchArticle} from './research-reader.js?v=1.29.0';
@@ -7,7 +7,7 @@ import {priceLegendMarkup,priceReadoutKind,observedPriceSourceLabel} from './pri
 import { buildCycleMilestones, INTERVAL_RELATIONS, MILESTONE_TYPES } from "./cycle-milestones.js?v=1.29.0";
 import { cycleLegendMarkup, cycleMilestoneInspection, cycleIntervalInspection, cycleDurationLabel } from "./cycle-milestones-view.js?v=1.29.0";
 import { resolveCycleSelection, cycleSelectionViewport, cycleOverviewViewport } from './cycle-selection.js?v=1.29.0';
-import { drawAtlasPriceChart as drawChart } from "./atlas-price-chart.js?v=1.30.1";
+import { drawAtlasPriceChart as drawChart } from "./atlas-price-chart.js?v=1.30.4";
 import { renderCryptoConAudit } from './cryptocon-audit.js?v=1.29.0';
 import { bindChartNavigation, panRange } from './chart-navigation.js?v=1.29.0';
 import { renderAtlasAnalysis } from "./atlas-analysis.js?v=1.29.0";
@@ -549,7 +549,7 @@ export function initLabView() {
         }
         const cycleObstacles=cycleHudObstacles();
         state.priceController=drawChart({svg:$('#lab-chart'),tooltip:$('#lab-tooltip'),rows:allRows,forecastIdentityRows:m.path,start,end:chartEnd,split:m.asOf,frequency:state.frequency,chartType:state.chartType,observedCandles,candleSource:history?.source||'Bitstamp',volumeBars:history?.bars||[],volumeProjection:state.volumeProjection,volumeSource:history?.source||'Bitstamp',showVolume:$('#atlas-volume').checked,historicalEvents:BITCOIN_EVENTS.filter(event=>state.historyCategory==='all'||event.category===state.historyCategory),showHistoricalEvents:$('#atlas-history-events').checked,activeHistoricalEventId:state.selectedHistoryEvent,onHistoricalEvent:id=>focusHistoricalEvent(id,false),scale:state.scale,invertScale:state.invertScale,priceOnlyAuto:state.priceOnlyAuto,priceDomain:state.priceDomain,tool:state.tool,magnet:state.magnet,measurement:state.measurement,researchAnnotations:state.annotations.items,activeAnnotationId:state.annotations.selectedId,scenarioId:state.scenario,onAnnotation:id=>annotationWorkbench.open({id,opener:$('#lab-chart')}),onMeasurement:value=>workspaceHistory.run('두 점 측정',()=>{state.measurement=value;if(value)state.selectedDate=value.endDate||value.startDate;schedule();}),onHover:renderHover,unit:state.unit,denominator:last.price,headerInset:18,cycleCalibration:m.cycleCalibration,showCycleTiming:shown('cycle-timing'),band:$('#lab-band').checked,turns:prepared.turns,showTurns:$('#lab-turns').checked,cycleMarkers:milestones.markers,showCycleMarkers:shown('cycle-landmarks'),activeCycleMarkerId:cycleSelection?.marker?.id,activeCycleMarkerIds:cycleSelection?.markerIds||[],activeCycleInterval:cycleSelection?.interval,onCycleMarker:id=>inspectCycle('marker',id),cycleIntervals:milestones.intervals,showCycleIntervals:shown('cycle-intervals')&&!state.cycleCollapsed,cycleRelation:state.cycleRelation,cycleOverlayObstacles:cycleObstacles,onCycleInterval:id=>inspectCycle('interval',id),events:prepared.events,forecastEvidence:bitcoinForecastEvidence(m),onForecastEvidence:id=>{const entry=bitcoinForecastEvidence(m).find(item=>item.id===id);if(entry)openResearchArticle(entry.sourceIds[0],{opener:$('#lab-chart')});},states:state.futureStates.get(state.scenario),fib:$('#lab-fib').checked?currentFib():[],nextTurn:$('#lab-turns').checked?activeMarker:null,showNextTurnLabel:false,onNextTurn:()=>focusEvent(activeMarker.type),showDrawdown:$('#atlas-drawdown').checked,showStates:$('#atlas-states').checked,onInspect:inspectPriceSelection,selectedDate:state.selectedDate||m.asOf});
-        state.chartReplaySnapshot={dataset:state.dataset,forecast:m,start,end:chartEnd,frequency:state.frequency,window:state.window,customRange:Boolean(state.priceRange),chartType:state.chartType,presentation:captureReplayPresentation()};
+        state.chartReplaySnapshot={dataset:state.dataset,forecast:m,modelOptions:modelOptions(state.scenario),start,end:chartEnd,frequency:state.frequency,window:state.window,customRange:Boolean(state.priceRange),chartType:state.chartType,presentation:captureReplayPresentation()};
         $('#atlas-date').min=b.rows[0].date;$('#atlas-date').max=end;
         $('#lab-chart-title').textContent=`${dateLabel(start)} — ${dateLabel(chartEnd)} · ${state.frequency==='daily'?'일별':'주별'} 가격`;
         $('#atlas-chart-legend').innerHTML=priceLegendMarkup({candles:Number($('#lab-chart').dataset.observedCandleCount)>0,observed:Number($('#lab-chart').dataset.observedCandleCount)>0||Number($('#lab-chart').dataset.observedLineCount)>0,mixedLine:Number($('#lab-chart').dataset.observedLineCount)>0,source:Number($('#lab-chart').dataset.observedCandleCount)>0?history?.source||'Bitstamp':'Coin Metrics',forecast:true,band:$('#lab-band').checked,turns:$('#lab-turns').checked})+((shown('cycle-landmarks')||(shown('cycle-intervals')&&!state.cycleCollapsed))?cycleLegendMarkup():'');
@@ -707,7 +707,7 @@ export function initLabView() {
       const first=captured.dataset.prices[0];
       return chartPresetRange({asOf:captured.forecast.asOf,referenceDate:captured.forecast.referenceDate??captured.forecast.asOf,firstDate:Array.isArray(first)?first[0]:first.date,lastDate:captured.forecast.path.at(-1).date,span});
     },
-    loadAtlasRenderer:()=>import('./chart-replay-atlas.js?v=1.30.1'),
+    loadAtlasRenderer:()=>import('./chart-replay-atlas.js?v=1.30.4'),
     onAtlasFrame:({session,data,start,end,chartType,context,frequency=data.frequency??'daily',window=state.chartReplaySnapshot?.window??DEFAULT_CHART_SPAN,customRange=false,axis})=>{
       const candles=chartType==='candles'&&data.observedCandles.length>0;
       const p=context.presentation,cursorDate=data.frame.cursorDate,lastCandle=data.observedCandles.at(-1);
@@ -720,8 +720,9 @@ export function initLabView() {
       const marketStatus=candleClock?candleClock+(priceSource!==candleSource||observedDate>candleDate?' · '+closeClock:''):closeClock;
       const band=Boolean(p.band&&data.frame.forecast.some(row=>Number.isFinite(row.lower)&&Number.isFinite(row.upper)));
       const reconstructedRecord=session.identity.recordKind==='reconstructed';
+      const retrospective=session.retrospectiveForecast?.status==='ready'?session.retrospectiveForecast:null;
       const replayMeaning={
-        'current-chart-snapshot':{label:'현재 예측선 고정',description:'현재 차트의 주황색 가정 경로를 고정했습니다. 리플레이 시작일에 발행한 예측으로 채점하지 않습니다.'},
+        'current-chart-snapshot':{label:retrospective?'현재·회고 예측선 고정':'현재 예측선 고정',description:'현재 차트의 주황색 가정 경로를 고정했습니다.'+(retrospective?' '+retrospective.asOf+'까지의 가격과 현재 모형으로 만든 별도 회고 경로를 '+retrospective.displayEnd+'까지 함께 표시합니다.':'')+' 두 경로는 과거에 발행한 예측 성적으로 채점하지 않습니다.'},
         'project-baseline':{label:'10월 21일 보존 전망',description:'2026-10-21 첫 커밋에 보존된 3년 전망입니다.'},
         'historical-reconstruction':{label:'BTC 축소 추세 · 과거 재구성',description:`기준일 ${session.asOf}까지의 관측으로 만든 BTC 축소 추세 기준모형입니다. 현재 자료 판본으로 과거를 재구성한 경로이며 당시 발행된 예측이 아닙니다.`},
         recorded:{label:reconstructedRecord?'보존 예측 · 재구성 기록':'보존 예측',description:`예측 기준 ${session.asOf}의 보존 기록을 그대로 재생합니다.${reconstructedRecord?' 과거를 재구성해 보존한 기록이며 당시 발행된 예측이 아닙니다.':''}`}

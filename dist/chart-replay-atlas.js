@@ -1,4 +1,4 @@
-import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.30.1';
+import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.30.4';
 import {buildCycleMilestones} from './cycle-milestones.js?v=1.29.0';
 import {validateDataset,utcDay,dateFromDay} from './cycle-engine.js?v=1.29.0';
 import {detectDirectionalChanges,computeRollingStates} from './market-structure.js?v=1.29.0';
@@ -15,12 +15,25 @@ const sourceLabel=value=>typeof value==='string'?value:value?.name??value?.label
 const canonicalRows=values=>values.map(row=>Array.isArray(row)?{date:row[0],price:row[1]}:{...row});
 function drawdown(rows,initialPeak=0){let peak=initialPeak;return rows.map(row=>{peak=Math.max(peak,row.price);return {...row,drawdownPct:(row.price/peak-1)*100};});}
 function signature(value){let hash=2166136261;for(const char of JSON.stringify(value)){hash^=char.charCodeAt(0);hash=Math.imul(hash,16777619);}return (hash>>>0).toString(16).padStart(8,'0');}
+function preserveRetrospective(record,originDate,forecastOrigin){
+  if(record===null||record===undefined)return null;
+  if(record.kind!=='atlas-replay-retrospective-forecast'||!['ready','unavailable'].includes(record.status)||!Array.isArray(record.path))throw new TypeError('A separate retrospective forecast record is required');
+  if(record.asOf!==originDate||record.displayEnd!==forecastOrigin||record.issuedAt!==null||record.publicationTimeProven!==false||record.forecastScoringEnabled!==false)throw new RangeError('Retrospective forecast identity does not match this replay');
+  if(typeof record.createdAt!=='string'||!Number.isFinite(Date.parse(record.createdAt)))throw new RangeError('A retrospective creation time is required');
+  if(record.status==='unavailable'&&record.path.length||record.status==='ready'&&!record.path.length)throw new RangeError('Retrospective availability does not match its path');
+  for(const [index,row] of record.path.entries()){
+    utcDay(row.date);
+    if(row.date<originDate||row.date>forecastOrigin||index&&row.date<=record.path[index-1].date||!positive(row.price)||!positive(row.lower??row.price)||!positive(row.upper??row.price)||(row.lower??row.price)>row.price||(row.upper??row.price)<row.price)throw new RangeError('Retrospective forecast is not a valid independent price path');
+  }
+  if(record.path.length&&record.path[0].date!==originDate)throw new RangeError('Retrospective forecast must retain its own origin');
+  return clone(record);
+}
 
 /** Freeze presentation annotations from the already preserved model and its
  * consumed price prefix. The current model is never run to recreate an old
  * prediction. Labels are a present-day visualization of those preserved bytes,
  * not a claim that the annotation code existed when the model was published. */
-export function createAtlasReplayContext({dataset,forecast,presentation={},originDate=forecast?.asOf}={}){
+export function createAtlasReplayContext({dataset,forecast,presentation={},originDate=forecast?.asOf,retrospectiveForecast=null}={}){
   if(!forecast||typeof forecast.asOf!=='string'||!Array.isArray(forecast.path))throw new TypeError('A preserved Atlas forecast and its input dataset are required');
   utcDay(forecast.asOf);utcDay(originDate);
   if(originDate>forecast.asOf)throw new RangeError('Replay origin cannot follow the captured forecast origin');
@@ -49,10 +62,11 @@ export function createAtlasReplayContext({dataset,forecast,presentation={},origi
   const futureTurns=detectDirectionalChanges(complete,{threshold:.12}).pivots.filter(point=>point.eventDate>forecast.asOf)
     .map(point=>({date:point.eventDate,price:point.eventPrice,type:point.type,confirmationDate:point.confirmationDate,replaySource:'forecast'}));
   const frozenPath=drawdown(path,Math.max(...prefix.map(row=>row.price)));
+  const retrospective=preserveRetrospective(retrospectiveForecast,originDate,forecast.asOf);
   // This signature identifies an unchanged annotation set during one replay.
   // Source authenticity uses the engine's cryptographic source/output hashes.
   const annotationSignature=signature({origin:originDate,forecastOrigin:forecast.asOf,markers:milestones.markers,intervals:milestones.intervals});
-  return freeze({originDate,forecastOrigin:forecast.asOf,forecast:frozenPath,cycleMarkers:milestones.markers,cycleIntervals:milestones.intervals,
+  return freeze({originDate,forecastOrigin:forecast.asOf,forecast:frozenPath,retrospectiveForecast:retrospective,cycleMarkers:milestones.markers,cycleIntervals:milestones.intervals,
     turns:[...pastTurns,...futureTurns],events:(forecast.events??[]).filter(event=>event.inHorizon!==false&&event.date>=forecast.asOf),
     cycleCalibration:forecast.cycleCalibration?clone(forecast.cycleCalibration):null,
     states:presentation.showStates?computeRollingStates(complete).points.filter(row=>row.date>forecast.asOf):[],
@@ -82,6 +96,10 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
   const fixed=context.forecast.filter(row=>dates.has(row.date)).map(row=>({...row,replaySource:'forecast'}));
   const fixedByDate=new Map(fixed.map(row=>[row.date,row]));
   if(frame.forecast.some(row=>{const frozen=fixedByDate.get(row.date);return !frozen||['price','lower','upper'].some(key=>row[key]!==undefined&&row[key]!==null&&row[key]!==frozen[key]);}))throw new RangeError('Displayed Atlas path does not match the scored replay forecast');
+  const retrospectiveFrame=frame.retrospectiveForecast??[],retrospectiveDates=new Set(retrospectiveFrame.map(row=>row.date));
+  const retrospective=(context.retrospectiveForecast?.path??[]).filter(row=>retrospectiveDates.has(row.date)&&row.date>=origin&&row.date<=context.forecastOrigin).map(row=>({...row,replaySource:'retrospective'}));
+  const retrospectiveByDate=new Map(retrospective.map(row=>[row.date,row]));
+  if(retrospectiveFrame.some(row=>{const frozen=retrospectiveByDate.get(row.date);return !frozen||['price','lower','upper'].some(key=>row[key]!==undefined&&row[key]!==null&&row[key]!==frozen[key]);}))throw new RangeError('Displayed retrospective path does not match its separate frozen record');
   const actualByDate=new Map(actual.map(row=>[row.date,row]));
   const predictionByDate=new Map(fixed.map(row=>[row.date,row]));
   const observedCandles=(data.observedCandles??[]).filter(row=>{
@@ -90,11 +108,12 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
   const candleByDate=new Map(observedCandles.map(row=>[row.endDate,row]));
   // The inspection series uses actuals where available. Missing actual dates
   // keep a labelled forecast point and can never become a fabricated close.
-  const rows=[...actual,...fixed.filter(row=>!actualByDate.has(row.date))].sort((a,b)=>a.date.localeCompare(b.date));
+  const rows=[...actual,...fixed.filter(row=>!actualByDate.has(row.date)),...retrospective.filter(row=>!actualByDate.has(row.date)&&!predictionByDate.has(row.date))].sort((a,b)=>a.date.localeCompare(b.date));
   if(!rows.some(row=>row.date>=start&&row.date<=end))retainPriceViewport(svg,{min:1,max:10});
-  const inspection=date=>{const actualPoint=actualByDate.get(date),predicted=predictionByDate.get(date),candle=chartType==='candles'?candleByDate.get(date):null;
-    return {date,actual:actualPoint?.price??null,predicted:predicted?.price??null,price:actualPoint?.price??predicted?.price??null,
-      candle:candle??null,kind:actualPoint?'observed':predicted?'forecast':'missing',source:sourceLabel(data.priceSource??data.candleSource),candleSource:sourceLabel(data.candleSource),forecastOrigin:context.forecastOrigin,replayOrigin:origin};};
+  const inspection=date=>{const actualPoint=actualByDate.get(date),original=predictionByDate.get(date),retrospectivePoint=retrospectiveByDate.get(date),predicted=original??retrospectivePoint,candle=chartType==='candles'?candleByDate.get(date):null;
+    return {date,actual:actualPoint?.price??null,predicted:predicted?.price??null,originalPredicted:original?.price??null,retrospectivePredicted:retrospectivePoint?.price??null,predictedKind:original?'original':retrospectivePoint?'retrospective':null,price:actualPoint?.price??predicted?.price??null,
+      candle:candle??null,kind:actualPoint?'observed':original?'forecast':retrospectivePoint?'retrospective':'missing',source:sourceLabel(data.priceSource??data.candleSource),candleSource:sourceLabel(data.candleSource),forecastOrigin:context.forecastOrigin,replayOrigin:origin,
+      retrospectiveOrigin:context.retrospectiveForecast?.asOf??null,retrospectiveCreatedAt:context.retrospectiveForecast?.createdAt??null};};
   let selected=cursorDate;
   const inspect=value=>{if(!value?.date)return;selected=value.date;onInspect(inspection(value.date));};
   const forecastThrough=fixed.at(-1)?.date??origin;
@@ -104,7 +123,7 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
   const cycleIntervals=context.cycleIntervals.filter(interval=>markerIds.has(interval.fromId)&&markerIds.has(interval.toId));
   const states=p.showStates?[...(actual.length?computeRollingStates(actual).points:[]),...context.states.filter(row=>row.date>cursorDate&&row.date<=forecastThrough)]:[];
   const calibration=context.cycleCalibration?{...context.cycleCalibration,series:(context.cycleCalibration.series??[]).filter(row=>row.date<=cursorDate)}:null;
-  const chart=drawAtlasPriceChart({svg,rows,start,end,split:cursorDate,fixedForecast:fixed,forecastOrigin:context.forecastOrigin,
+  const chart=drawAtlasPriceChart({svg,rows,start,end,split:cursorDate,fixedForecast:fixed,forecastOrigin:context.forecastOrigin,retrospectiveForecast:retrospective,
     frequency,chartType,observedCandles,candleSource:sourceLabel(data.candleSource),
     volumeBars:observedCandles.filter(row=>Number.isFinite(row.volume)),showVolume:Boolean(p.showVolume),volumeSource:sourceLabel(data.candleSource),
     historicalEvents:BITCOIN_EVENTS.filter(event=>event.date<=cursorDate),showHistoricalEvents:p.showHistoricalEvents!==false,
@@ -155,17 +174,20 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
   svg.append(overlay);
   Object.assign(svg.dataset,{replayRenderer:'atlas',replayViewStart:start,replayViewEnd:end,replayAnnotationSignature:context.annotationSignature,
     replayActualThrough:actual.at(-1)?.date??origin,replayObservedCount:String(actual.length),replayActualCount:String(actual.filter(row=>row.date>origin).length),replayForecastPoints:String(fixed.length),
+    replayRetrospectiveStatus:context.retrospectiveForecast?.status??'absent',replayRetrospectiveOrigin:context.retrospectiveForecast?.asOf??'',replayRetrospectiveThrough:retrospective.at(-1)?.date??'',replayRetrospectivePoints:String(retrospective.length),
+    replayRetrospectiveInputHash:context.retrospectiveForecast?.inputHash??'',replayRetrospectiveOutputHash:context.retrospectiveForecast?.outputHash??'',replayRetrospectiveCreatedAt:context.retrospectiveForecast?.createdAt??'',
+    replayRetrospectiveIssuedAt:context.retrospectiveForecast?'null':'',replayRetrospectiveScoringEnabled:'false',
     replayForecastCandleCount:'0',replayOhlcAvailable:String(observedCandles.length>0),replayPriceHidden:'false',replayScale:axis.scale,
     replayFrequency:frequency,replayPriceMin:String(axis.min),replayPriceMax:String(axis.max),
     replayFormingWeekCount:String(observedCandles.filter(row=>row.complete===false).length),replayMissingWeekCount:String(data.missingWeekCount??0)});
   const title=svg.querySelector('title'),description=svg.querySelector('desc');
   if(title)title.textContent='비트코인 사이클 아틀라스 · 현재 차트 봉 리플레이';
-  if(description)description.textContent='주황색 미래 가정은 시작할 때의 현재 차트 값 그대로 고정하고, 실제 봉만 재생 시점까지 공개합니다. 현재 가정은 과거에 발행한 예측 성적이 아닙니다. 사이클 표식과 기간선은 보존된 경로의 표시이며 당시 발행된 표식 기록이 아닙니다.';
+  if(description)description.textContent='주황색 미래 가정은 시작할 때의 현재 차트 값 그대로 고정하고, 실제 봉만 재생 시점까지 공개합니다. 현재 가정은 과거에 발행한 예측 성적이 아닙니다.'+(retrospective.length?' 회고 점선과 범위는 선택한 시작일 전날까지의 입력으로 현재 생성해 별도로 고정한 경로이며, 당시 발행한 예측이나 원래 주황선의 연장이 아닙니다.':'')+' 사이클 표식과 기간선은 보존된 경로의 표시이며 당시 발행된 표식 기록이 아닙니다.';
   const nativeHandlers=Object.fromEntries(['onpointermove','onpointerleave','onclick','onkeydown','onkeyup','onblur'].map(key=>[key,svg[key]]));
   let destroyed=false;
   const controller={axis,x,dateAt,barDateAt,getPriceScale:()=>axis,previewPointer:event=>!destroyed&&chart.previewPointer?.(event),
     selectDate(date){if(destroyed)return;utcDay(date);chart.selectDate?.(date);selected=date;onInspect(inspection(date));},
-    getSelection(){const value=inspection(selected);return {...value,copyText:`${selected}\n실제: ${money(value.actual)}\n고정 예측: ${money(value.predicted)}`};},
+    getSelection(){const value=inspection(selected);return {...value,copyText:`${selected}\n실제: ${money(value.actual)}\n고정 예측: ${money(value.originalPredicted)}`+(value.retrospectivePredicted!==null?`\n회고 경로(현재 생성): ${money(value.retrospectivePredicted)}`:'')};},
     destroy(){if(destroyed)return;destroyed=true;if(renderers.get(svg)!==controller)return;clearChartHover(svg);for(const [key,handler]of Object.entries(nativeHandlers))if(svg[key]===handler)svg[key]=null;overlay.remove();renderers.delete(svg);}};
   renderers.set(svg,controller);return controller;
 }

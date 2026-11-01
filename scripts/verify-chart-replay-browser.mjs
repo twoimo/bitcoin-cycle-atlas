@@ -521,6 +521,28 @@ export async function verifyChartReplaySurface(api) {
         forecastHaloPointerEvents: svg.querySelector('[data-replay-forecast-halo]')?.getAttribute('pointer-events') ?? null,
         forecastHaloAboveActuals: (() => { const halo = svg.querySelector('[data-replay-forecast-halo]'); return halo ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(halo.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_PRECEDING)) : null; })(),
         forecastHaloBelowPath: (() => { const halo = svg.querySelector('[data-replay-forecast-halo]'), path = svg.querySelector('[data-replay-forecast-path]'); return Boolean(halo && path && (halo.compareDocumentPosition(path) & Node.DOCUMENT_POSITION_FOLLOWING)); })(),
+        retrospective: (() => {
+          const path = svg.querySelector('[data-replay-retrospective-path]'), band = svg.querySelector('[data-replay-retrospective-band]'), halo = svg.querySelector('[data-replay-retrospective-halo]');
+          const actuals = [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')];
+          const box = node => { if (!node) return null; const value = node.getBBox(); return { x: value.x, y: value.y, width: value.width, height: value.height }; };
+          const visible = node => Boolean(node && node.getClientRects().length && getComputedStyle(node).display !== 'none' && getComputedStyle(node).visibility !== 'hidden' && Number(getComputedStyle(node).opacity) > 0);
+          return { status: svg.dataset.replayRetrospectiveStatus ?? null, origin: svg.dataset.replayRetrospectiveOrigin ?? null,
+            through: svg.dataset.replayRetrospectiveThrough ?? null, points: Number(svg.dataset.replayRetrospectivePoints ?? 0),
+            inputHash: svg.dataset.replayRetrospectiveInputHash ?? null, outputHash: svg.dataset.replayRetrospectiveOutputHash ?? null,
+            createdAt: svg.dataset.replayRetrospectiveCreatedAt ?? null, issuedAt: svg.dataset.replayRetrospectiveIssuedAt ?? null,
+            scoringEnabled: svg.dataset.replayRetrospectiveScoringEnabled ?? null, valueSignature: svg.dataset.retrospectiveForecastValueSignature ?? null,
+            pathCount: svg.querySelectorAll('[data-replay-retrospective-path]').length, bandCount: svg.querySelectorAll('[data-replay-retrospective-band]').length,
+            pathVisible: visible(path), bandVisible: visible(band), pathLength: path?.getTotalLength() ?? 0,
+            pathBounds: box(path), bandBounds: box(band), pointerEvents: path?.getAttribute('pointer-events') ?? null,
+            bandPointerEvents: band?.getAttribute('pointer-events') ?? null,
+            aboveActuals: path ? actuals.every(node => Boolean(path.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_PRECEDING)) : null,
+            bandBelowActuals: band ? actuals.every(node => Boolean(band.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)) : null,
+            haloMatchesPath: Boolean(halo && path && halo.getAttribute('d') === path.getAttribute('d')),
+            haloPointerEvents: halo?.getAttribute('pointer-events') ?? null,
+            haloAboveActuals: halo ? actuals.every(node => Boolean(halo.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_PRECEDING)) : null,
+            haloBelowPath: Boolean(halo && path && (halo.compareDocumentPosition(path) & Node.DOCUMENT_POSITION_FOLLOWING)),
+            independentCurrentPath: Boolean(path && svg.querySelector('[data-replay-forecast-path]') && path !== svg.querySelector('[data-replay-forecast-path]')) };
+        })(),
         origins: svg.querySelectorAll('[data-replay-origin-boundary]').length, cursors: svg.querySelectorAll('[data-replay-cursor-line]').length,
         confirmedCursorXs: [...svg.querySelectorAll('[data-replay-cursor-line]')].map(node => node.getAttribute('x1')),
         pickerCount: svg.querySelectorAll('[data-chart-replay-picker]').length,
@@ -880,6 +902,101 @@ export async function verifyChartReplaySurface(api) {
       terminal: { cursor: terminalAfter.cursor, index: terminalAfter.index, playDisabled: terminalAfter.playDisabled },
       outputHash: paused.outputHash, forecastValueSignature: paused.forecastValueSignature });
     await select(control('speed'), initial.speed);
+  }
+  async function verifyAugustRetrospectiveOverlap() {
+    const start = '2026-08-17', asOf = '2026-08-16', next = '2026-08-18', savedBefore = await storedBytes();
+    assert.ok(savedBefore, 'The August scenario must preserve the already explicitly saved replay');
+    assert.ok(btcCandles.some(row => row.date === start) && btcCandles.some(row => row.date === next), 'The August comparison needs both genuine source days');
+    await interval('weekly'); await ready();
+    await click(cdp, '[data-chart-span="focus"]'); await settled(cdp);
+    const before = await snapshot('weekly-august-retrospective-before-selection');
+    assert.ok(before.viewStart <= asOf && before.viewEnd >= currentAtlasModel.asOf, 'The comparison viewport must include both independent forecast origins');
+    await click(cdp, control('pick')); await pickerReady();
+    const point = await chartPoint(start);
+    await previewStart('weekly-august-retrospective-native-start-preview', point, start);
+    await pointAction('click', point); await ready();
+    const initial = await snapshot('weekly-august-retrospective-fixed-before-reveal');
+    assert.equal(initial.playbackStartDate, start); assert.equal(initial.origin, asOf); assert.equal(initial.cursor, asOf);
+    assert.equal(initial.index, 0); assert.equal(initial.actualCount, 0);
+    assert.match(initial.snapshotDigest, /^[a-f0-9]{64}$/);
+    await click(cdp, control('next'));
+    const monday = await snapshot('weekly-august-retrospective-first-daily-observation');
+    await click(cdp, control('next'));
+    const tuesday = await snapshot('weekly-august-retrospective-visible-over-revealed-actuals', true);
+    assert.equal(monday.cursor, start); assert.equal(monday.index, 1); assert.equal(monday.actualCount, 1);
+    assert.equal(tuesday.cursor, next); assert.equal(tuesday.index, 2); assert.equal(tuesday.actualCount, 2);
+    const firstCandle = monday.candles.find(row => row.date === start), secondCandle = tuesday.candles.find(row => row.date === next);
+    assert.ok(firstCandle && secondCandle, 'The August source observations did not form the selected weekly candle');
+    for (const candle of [firstCandle, secondCandle]) { assert.equal(candle.periodStart, start); assert.equal(candle.complete, false); }
+    assert.equal(firstCandle.daysIncluded, 1); assert.equal(secondCandle.daysIncluded, 2);
+    assert.equal(firstCandle.open, secondCandle.open); assert.equal(firstCandle.x, secondCandle.x);
+    for (const [state, candle] of [[monday, firstCandle], [tuesday, secondCandle]]) {
+      const expected = disclosedBitcoinWeeks(btcCandles, state.cursor).at(-1);
+      for (const field of ['open', 'high', 'low', 'close', 'volume']) assert.equal(candle[field], expected[field], 'The August weekly candle used an undisclosed daily ' + field);
+    }
+    for (const state of [initial, monday, tuesday]) {
+      const retrospective = state.retrospective;
+      assert.equal(state.frequency, 'weekly'); assert.equal(state.outputHash, before.outputHash);
+      assert.equal(state.forecastValueSignature, before.forecastValueSignature, 'The additional retrospective path rewrote the current orange forecast');
+      assert.equal(retrospective.status, 'ready'); assert.equal(retrospective.origin, asOf); assert.equal(retrospective.through, currentAtlasModel.asOf);
+      assert.equal(retrospective.points, day(currentAtlasModel.asOf) - day(asOf) + 1);
+      assert.match(retrospective.inputHash, /^[a-f0-9]{64}$/); assert.match(retrospective.outputHash, /^[a-f0-9]{64}$/);
+      assert.equal(retrospective.issuedAt, 'null'); assert.equal(retrospective.scoringEnabled, 'false');
+      assert.equal(retrospective.pathCount, 1); assert.equal(retrospective.bandCount, 1);
+      assert.equal(retrospective.pathVisible, true); assert.equal(retrospective.bandVisible, true); assert.ok(retrospective.pathLength > 0);
+      assert.equal(retrospective.independentCurrentPath, true, 'The retrospective path was spliced into the current forecast');
+      assert.equal(retrospective.pointerEvents, 'none'); assert.equal(retrospective.bandPointerEvents, 'none');
+      assert.equal(retrospective.aboveActuals, true); assert.equal(retrospective.bandBelowActuals, true);
+      assert.equal(retrospective.haloMatchesPath, true); assert.equal(retrospective.haloPointerEvents, 'none');
+      assert.equal(retrospective.haloAboveActuals, true); assert.equal(retrospective.haloBelowPath, true);
+      for (const field of ['inputHash', 'outputHash', 'createdAt', 'valueSignature']) assert.equal(retrospective[field], initial.retrospective[field], 'One actual source day changed retrospective ' + field);
+      assert.ok(retrospective.valueSignature, 'The frozen retrospective price identity is missing');
+      assert.equal(state.snapshotDigest, initial.snapshotDigest, 'Revealing actuals replaced the fixed retrospective capture');
+      for (const date of [start, next]) {
+        const x = state.plotLeft + (day(date) - day(state.viewStart)) / (day(state.viewEnd) - day(state.viewStart)) * (state.plotRight - state.plotLeft);
+        for (const [name, box] of [['line', retrospective.pathBounds], ['band', retrospective.bandBounds]])
+          assert.ok(box && box.width > 0 && x >= box.x - .02 && x <= box.x + box.width + .02, 'The retrospective ' + name + ' does not cover the August comparison date ' + date);
+      }
+    }
+    const payload = await exported('weekly-august-retrospective-two-observations'), record = payload.retrospectiveForecast;
+    assert.ok(record, 'The visible retrospective layer lacks its separate downloadable provenance record');
+    assert.equal(record.status, 'ready'); assert.equal(record.asOf, asOf); assert.equal(record.issuedAt, null);
+    assert.equal(record.forecastScoringEnabled, false); assert.equal(record.prospectiveScoringEligible, false);
+    assert.equal(record.publicationTimeProven, false); assert.equal(record.calibrated, false);
+    assert.equal(record.modelOptions.asOf, asOf); assert.equal(record.modelOptions.referenceDate, start); assert.equal(record.modelOptions.researchAsOf, asOf);
+    const inputPrefix = priceArchive.prices.filter(row => row[0] <= asOf).map(row => [row[0], row[1]]);
+    assert.equal(inputPrefix.at(-1)[0], asOf);
+    assert.equal(record.inputHash, digest(JSON.stringify(inputPrefix)), 'The retrospective input hash includes prices beyond the selected cutoff or changes its source prefix');
+    assert.equal(record.provenance.prices.informationThrough, asOf); assert.equal(record.provenance.prices.lastObservation, asOf);
+    assert.equal(record.provenance.prices.firstObservation, inputPrefix[0][0]); assert.equal(record.provenance.prices.observations, inputPrefix.length);
+    assert.equal(record.provenance.prices.inputField, 'dataset.prices'); assert.equal(record.provenance.futurePriceRowsConsumed, false);
+    assert.deepEqual(payload.frame.retrospectiveForecast, record.path, 'The displayed retrospective values differ from their fixed record');
+    assert.equal(record.path[0].date, asOf); assert.equal(record.path[0].price, inputPrefix.at(-1)[1]);
+    assert.equal(record.path.at(-1).date, currentAtlasModel.asOf); assert.equal(record.path.length, initial.retrospective.points);
+    for (const row of record.path) assert.ok(Number.isFinite(row.price) && Number.isFinite(row.lower) && Number.isFinite(row.upper) && row.lower > 0 && row.lower <= row.price && row.upper >= row.price);
+    const canonicalPath = JSON.stringify(record.path.map(row => Object.fromEntries(Object.keys(row).sort().map(key => [key, row[key]]))));
+    assert.equal(record.outputHash, digest(canonicalPath), 'The frozen retrospective output hash does not match its exact values');
+    assert.equal(record.outputHash, tuesday.retrospective.outputHash); assert.equal(record.inputHash, tuesday.retrospective.inputHash);
+    assert.equal(record.originalOutputHash, tuesday.outputHash, 'The separate retrospective record lost the original forecast identity');
+    assert.equal(record.createdAt, tuesday.retrospective.createdAt); assert.ok(Number.isFinite(Date.parse(record.createdAt)));
+    assert.ok(Date.parse(record.createdAt) >= Date.parse(currentAtlasModel.asOf + 'T00:00:00Z'), 'The current-model reconstruction creation time was backdated');
+    assert.deepEqual(payload.frame.actual.map(row => row.date), [start, next], 'The retrospective overlay revealed an extra actual observation');
+    const comparisonRows = record.path.filter(row => [start, next].includes(row.date));
+    assert.deepEqual(comparisonRows.map(row => row.date), [start, next]);
+    assert.ok(comparisonRows.some(row => row.price !== priceArchive.prices.find(source => source[0] === row.date)?.[1]), 'The retrospective curve merely relabels later Coin Metrics input prices');
+    assert.ok(comparisonRows.some(row => row.price !== btcCandles.find(source => source.date === row.date).close), 'The retrospective curve merely relabels later venue closes');
+    evidence.weekly.push({ label: 'august-prefix-retrospective-stays-visible-and-fixed-over-two-disclosed-days', asOf, playbackStartDate: start,
+      first: firstCandle, second: secondCandle, inputObservations: inputPrefix.length, inputHash: record.inputHash, outputHash: record.outputHash,
+      currentForecastOutputHash: tuesday.outputHash, currentForecastValueSignature: tuesday.forecastValueSignature,
+      retrospectiveValueSignature: tuesday.retrospective.valueSignature, retrospectivePoints: record.path.length,
+      actualDates: payload.frame.actual.map(row => row.date), createdAt: record.createdAt, issuedAt: record.issuedAt,
+      pathBounds: tuesday.retrospective.pathBounds, bandBounds: tuesday.retrospective.bandBounds });
+    await storedUnchanged(savedBefore, 'august-retrospective-selection-and-two-steps-remain-an-unsaved-draft');
+    await exitReplay('august-retrospective-discard-draft', { save: false });
+    await reopenSaved('august-retrospective-restore-prior-save');
+    const restored = await snapshot('august-retrospective-prior-save-restored');
+    for (const field of ['origin', 'cursor', 'playbackStartDate', 'index', 'outputHash', 'snapshotDigest']) assert.equal(restored[field], before[field], 'The August verification changed the prior saved ' + field);
+    await storedUnchanged(savedBefore, 'august-retrospective-preserves-prior-saved-bytes');
   }
   async function verifyCurrentControls(direct, liveContext) {
     const savedBefore = await storedBytes();
@@ -1251,6 +1368,7 @@ export async function verifyChartReplaySurface(api) {
     evidence.lifecycle.push({ label: 'direct-current-chart-project-replay', projectStart: '2026-10-21', initialObservationCutoff: direct.origin, forecastAsOf: currentAtlasModel.asOf,
       firstRevealedDate: firstAtlas.cursor, finalObservedDate: endAtlas.cursor, outputHash: direct.outputHash, annotationSha256: digest(direct.annotationSignature) });
     await verifyCurrentControls(direct, liveContext);
+    if (!touch) await verifyAugustRetrospectiveOverlap();
     // The old prediction is a separate, explicit choice. It must retain the
     // actual original artifact and its Coin Metrics comparison source.
     await select(control('mode'), 'project-baseline'); await ready();

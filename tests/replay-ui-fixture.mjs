@@ -35,7 +35,7 @@ export async function uiFixture({captured,archive,storedText=null,getAtlasContex
   async function mod(exports){const m=new vm.SyntheticModule(Object.keys(exports),function(){for(const [k,v]of Object.entries(exports))this.setExport(k,v);},{context});await m.link(()=>{throw new Error('Unexpected fixture import');});await m.evaluate();return m;}
   const atlas=await mod({createAtlasReplayContext,drawAtlasChartReplay:render});
   const imports={
-    './chart-replay-snapshot.js':await mod(snapshotHelpers),
+    ['./chart-replay-snapshot.js?v='+releaseVersion]:await mod(snapshotHelpers),
     ['./chart-replay-state.js?v='+releaseVersion]:await mod({...stateModule,createChartReplayController:options=>{const c=stateModule.createChartReplayController({...options,setTimer:()=>1,clearTimer:()=>{}});controllers.push(c);return c;}}),
     ['./forecast-replay.js?v='+releaseVersion]:await mod({...realEngine,createCurrentChartReplaySession:options=>{calls.current++;return buildCurrent({...options,createdAt:options.createdAt??'2026-10-31T02:00:00.000Z',evaluatedAt:options.evaluatedAt??'2026-10-31T02:00:00.000Z'});}}),
     './chart-replay-renderer.js':await mod({}),

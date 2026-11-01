@@ -1,5 +1,5 @@
-import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.30.3';
-import {captureReplayView,sealReplaySnapshot,restoreReplaySnapshot,persistReplayDraft} from './chart-replay-snapshot.js';
+import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.30.4';
+import {captureReplayView,sealReplaySnapshot,restoreReplaySnapshot,persistReplayDraft} from './chart-replay-snapshot.js?v=1.30.4';
 
 const day=date=>Date.parse(date+'T00:00:00Z')/86400000;
 const dateAt=value=>new Date(Math.round(value)*86400000).toISOString().slice(0,10);
@@ -253,8 +253,8 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     q('date').setAttribute('aria-label',atlasMode?'새 시작점 날짜':'리플레이 예측 기준일 선택');
     q('date-hint').textContent=atlasMode?'선택한 날짜부터 실제 봉을 숨깁니다. 「이 날짜 선택」을 눌러야 적용됩니다.':'선택한 날짜까지의 자료로 예측을 고정합니다. 「이 날짜 선택」을 눌러야 적용됩니다.';
     q('horizon').hidden=atlasMode;
-    q('chart-meaning').textContent=currentMode?'지금 차트에 있던 주황색 예측선과 범위를 그대로 고정합니다. 그 위에 Bitstamp 실제 일봉을 시작일부터 하나씩 공개합니다. 재생 중 예측선을 다시 계산하지 않습니다. 실제 관측이 없는 미래 캔들은 만들지 않습니다.':atlasMode?'현재 차트의 눈금·표시 기간·사이클 레이어로 첫 보존 전망을 봅니다. 금색 점선과 음영은 당시 조건부 경로이며 재생 중 바뀌지 않습니다. 사이클 표시는 기준일까지의 관측과 그 경로로 고정합니다. 실제 가격은 재생 위치까지만 공개합니다.':'금색 점선은 기준일에 고정한 예측, 실제 가격은 재생 위치까지만 공개합니다. 미래 실제값·사후 고저점·사건·지표는 숨깁니다. 음영은 조건 범위 또는 보정 전 모형 구간이며 적중 확률이 아닙니다.';
-    q('evaluation-meaning').textContent=currentMode?'2026-10-21은 프로젝트 시작일이며 재생할 첫 봉입니다. 주황색 선은 지금 선택한 가정이므로 그 날짜에 발행한 예측 성적으로 평가하지 않습니다. 캔들은 Bitstamp, 현재 전망의 가격 기준은 Coin Metrics로 제공자가 다릅니다. 당시 예측과 실제 종가를 평가하려면 「10월 21일 당시 전망」 또는 「보존 예측」을 선택하세요.':atlasMode?'프로젝트 시작은 2026-10-21 한국시간, 당시 완료된 마지막 일봉은 2026-10-20 UTC입니다. 다음 봉부터 10월 21일 실제값을 공개합니다. 첫 커밋에 보존된 3년 전망을 현재 판본의 Coin Metrics 종가와 비교하며, 현재 장기 모형의 과거 실적을 뜻하지 않습니다. 사이클 표시는 현재 표시 규칙으로 그린 주석이며, 당시 화면의 표식이 그대로 보존됐다는 뜻은 아닙니다. 음영은 적중 확률이 아니며 한 경로의 일별 오차는 독립 예측 횟수가 아닙니다.':'과거 재구성은 현재 코드와 보존 판본으로 다시 계산한 연구입니다. 당시 실제 발행한 예측 성적이 아니며, 한 경로의 여러 일봉은 독립 예측 횟수가 아닙니다. 보존 예측도 현재 판본의 시장 날짜 기준 회고 비교입니다.';
+    q('chart-meaning').textContent=currentMode?'지금 차트의 주황색 예측선과 범위를 그대로 고정합니다. 그 앞 구간에는 선택한 시작일 전날까지의 가격에 현재 모형을 적용한 별도 회고 경로를 한 번 생성해 고정합니다. 실제 Bitstamp 일봉은 시작일부터 하나씩 공개하며 두 예측은 재생 중 다시 계산하지 않습니다.':atlasMode?'현재 차트의 눈금·표시 기간·사이클 레이어로 첫 보존 전망을 봅니다. 금색 점선과 음영은 당시 조건부 경로이며 재생 중 바뀌지 않습니다. 사이클 표시는 기준일까지의 관측과 그 경로로 고정합니다. 실제 가격은 재생 위치까지만 공개합니다.':'금색 점선은 기준일에 고정한 예측, 실제 가격은 재생 위치까지만 공개합니다. 미래 실제값·사후 고저점·사건·지표는 숨깁니다. 음영은 조건 범위 또는 보정 전 모형 구간이며 적중 확률이 아닙니다.';
+    q('evaluation-meaning').textContent=currentMode?'현재 차트의 가정과 별도 회고 경로는 2026-10-21에 발행한 예측 성적으로 채점하지 않습니다. 회고 경로는 현재 코드와 현재 보존 판본의 과거 가격으로 생성하며, 당시 발행되거나 당시 확보된 자료라는 뜻이 아닙니다. 캔들은 Bitstamp, 모형 입력은 Coin Metrics이므로 제공자도 구분합니다.':atlasMode?'프로젝트 시작은 2026-10-21 한국시간, 당시 완료된 마지막 일봉은 2026-10-20 UTC입니다. 다음 봉부터 10월 21일 실제값을 공개합니다. 첫 커밋에 보존된 3년 전망을 현재 판본의 Coin Metrics 종가와 비교하며, 현재 장기 모형의 과거 실적을 뜻하지 않습니다. 사이클 표시는 현재 표시 규칙으로 그린 주석이며, 당시 화면의 표식이 그대로 보존됐다는 뜻은 아닙니다. 음영은 적중 확률이 아니며 한 경로의 일별 오차는 독립 예측 횟수가 아닙니다.':'과거 재구성은 현재 코드와 보존 판본으로 다시 계산한 연구입니다. 당시 실제 발행한 예측 성적이 아니며, 한 경로의 여러 일봉은 독립 예측 횟수가 아닙니다. 보존 예측도 현재 판본의 시장 날짜 기준 회고 비교입니다.';
     announce('리플레이 자료를 확인하고 있습니다.');
     const signal=request.signal;
     try{
@@ -268,7 +268,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
         if(!active||token!==epoch||signal.aborted)return;
         restoredSnapshot=saved;atlasCaptured=saved.view;atlasCapturedAt=saved.capturedAt;
       }
-      modules??=await Promise.all([import('./forecast-replay.js?v=1.30.3'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
+      modules??=await Promise.all([import('./forecast-replay.js?v=1.30.4'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
       if(!active||token!==epoch)return;
       if(atlasMode){
         atlasCaptured??=captureReplayView(getAtlasContext());
@@ -366,6 +366,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     const accepted=await controller.selectOrigin(asOf,async({signal})=>{
       const engine=modules[0],options={symbol,observations:source.observations,observedAt:source.observedAt,observedThrough:source.observedThrough,source:source.source,horizonDays:replaySettings.horizon};
       const session=currentMode?await engine.createCurrentChartReplaySession({...options,dataset:atlasCaptured.dataset,forecast:atlasCaptured.forecast,asOf,playbackStartDate:dateAt(day(asOf)+1),
+          createRetrospective:!resume,retrospectiveForecast:resume?restoredSnapshot?.retrospectiveForecast??null:null,modelOptions:atlasCaptured.modelOptions??{},
           createdAt:atlasCapturedAt??undefined,evaluatedAt:new Date().toISOString()}):
         atlasMode?await engine.createProjectReplaySession({...options,baseline:atlasBaseline}):
         recorded?await engine.createRecordedReplaySession({...options,record:selectedRecord.record,snapshot:selectedRecord.snapshot}):
@@ -375,9 +376,9 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       const dates=new Set(source.observations.map(row=>row.date));
       // Playback advances by actual observed bars; missing days remain gaps.
       const timeline=session.timeline.filter(date=>date===session.asOf||dates.has(date));
-      const atlasContext=currentMode&&resume&&restoredSnapshot?restoredSnapshot.atlasContext:atlasMode?(currentMode&&pendingAtlas?.context?.originDate===session.asOf?pendingAtlas.context:
-        atlasModules[1].createAtlasReplayContext({dataset:session.chartDataset,forecast:session.chartForecast,presentation:atlasCaptured.presentation,originDate:session.asOf})):null;
-      const replaySnapshot=currentMode?(resume&&restoredSnapshot?restoredSnapshot.snapshot:await sealReplaySnapshot({view:atlasCaptured,atlasContext,identity:session.identity})):null;
+      const atlasContext=currentMode&&resume&&restoredSnapshot?restoredSnapshot.atlasContext:atlasMode?
+        atlasModules[1].createAtlasReplayContext({dataset:session.chartDataset,forecast:session.chartForecast,presentation:atlasCaptured.presentation,originDate:session.asOf,retrospectiveForecast:session.retrospectiveForecast??null}):null;
+      const replaySnapshot=currentMode?(resume&&restoredSnapshot?restoredSnapshot.snapshot:await sealReplaySnapshot({view:atlasCaptured,atlasContext,identity:session.identity,retrospectiveForecast:session.retrospectiveForecast??null})):null;
       signal.throwIfAborted();
       return Object.freeze({...session,engineSession:session,autoOpened:automatic,replaySettings:Object.freeze(replaySettings),timeline:Object.freeze(timeline),atlasContext,replaySnapshot});
     });
@@ -428,7 +429,8 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     const separate=value.candle&&value.source&&value.candleSource&&value.source!==value.candleSource;
     const candle=value.candle,ohlc=candle?' · O '+price(candle.open)+' H '+price(candle.high)+' L '+price(candle.low)+' C '+price(candle.close):'';
     const forming=candle&&replayFrequency==='weekly'?' · '+(candle.complete?'완료 주봉':'형성 중 주봉 · '+candle.daysIncluded+'일 공개'):'';
-    return value.date+' · '+(separate?'평가 종가 ('+value.source+') '+price(actual)+' · 캔들 종가 ('+value.candleSource+') '+price(value.candle.close):'실제 '+price(actual))+ohlc+forming+' · 고정 예측 '+price(value.predicted);
+    const predictionLabel=value.predictedKind==='retrospective'?'회고 예측 고정':'고정 예측';
+    return value.date+' · '+(separate?'평가 종가 ('+value.source+') '+price(actual)+' · 캔들 종가 ('+value.candleSource+') '+price(value.candle.close):'실제 '+price(actual))+ohlc+forming+' · '+predictionLabel+' '+price(value.predicted);
   }
   function showPickLine(date){
     if(!rendered?.x||!rendered?.axis)return;
@@ -532,12 +534,14 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       svg.dataset.replayCursor=date;svg.dataset.replayActualThrough=frame.actual.at(-1)?.date??session.asOf;
       const forecastOrigin=session.identity.forecastOriginDate??session.asOf;
       const firstForecast=session.forecast.find(row=>row.date>forecastOrigin)?.date??'없음';
-      const forecastDates=new Set(session.forecast.filter(row=>row.date>forecastOrigin).map(row=>row.date));
+      const retrospective=session.retrospectiveForecast,retrospectiveReady=retrospective?.status==='ready';
+      const forecastDates=new Set([...session.forecast.filter(row=>row.date>forecastOrigin),...(frame.retrospectiveForecast??[]).filter(row=>row.date>session.asOf)].map(row=>row.date));
       const overlap=chartData.observedRows.filter(row=>forecastDates.has(row.date)).length;
       svg.dataset.replayActualArchiveThrough=archive.observedThrough;svg.dataset.replayOverlapCount=String(overlap);
-      const coverage='예측 기준 '+forecastOrigin+' · 미래 구간 시작 '+firstForecast+' · 실제 자료 끝 '+archive.observedThrough+' · 공개된 시각 비교 '+overlap+'일'+(overlap===0?' (날짜가 겹치는 실제 봉 대기)':'');
+      const retrospectiveNote=retrospectiveReady?' · 회고 입력 '+retrospective.asOf+'까지 · 회고 표시 '+retrospective.path[0].date+'–'+retrospective.path.at(-1).date+' · 회고 생성 '+retrospective.createdAt:retrospective?.status==='unavailable'?' · 회고 경로 없음: '+retrospective.reason:'';
+      const coverage='현재 예측 기준 '+forecastOrigin+' · 미래 구간 시작 '+firstForecast+retrospectiveNote+' · 실제 자료 끝 '+archive.observedThrough+' · 공개된 시각 비교 '+overlap+'일'+(overlap===0?' (날짜가 겹치는 실제 봉 대기)':'');
       const m=frame.metrics;q('cursor').textContent=date+' · '+state.cursorIndex+'/'+(state.length-1)+'일 업데이트';q('scrub').setAttribute('aria-valuetext',date);
-      q('metric').textContent=currentMode?'현재 예측선 고정 · 실제 '+state.cursorIndex+'봉':'오차 '+percent(m.meanAbsolutePercentageError)+' · '+m.matchedCount+'개';
+      q('metric').textContent=currentMode?(retrospectiveReady?'현재·회고 예측선 고정':'현재 예측선 고정')+' · 실제 '+state.cursorIndex+'봉':'오차 '+percent(m.meanAbsolutePercentageError)+' · '+m.matchedCount+'개';
       q('detail-metric').textContent=currentMode?'이 화면은 고정 예측선과 실제 캔들의 시각 비교입니다. 캡처 '+(state.session.replaySnapshot?.capturedAt??session.identity.createdAt)+' · '+coverage+' · 경로·범위·표식을 함께 보존합니다. 현재 전망을 프로젝트 시작일에 미리 발행한 예측으로 채점하지 않습니다.':'평균 절대 % 오차 '+percent(m.meanAbsolutePercentageError)+' · 가격 유지 대비 개선 '+percent(m.skillVersusFlat)+' · 방향 일치 '+percent(m.directionAccuracy)+' · 비교 '+m.matchedCount+'개 일봉. 개선율은 양수일 때 가격 유지 기준보다 유리합니다. 결과 대기 '+m.pendingTargetCount+'개 / 관측 미확보 '+m.missingTargetCount+'개 목표.';
       q('model-label').textContent=(currentMode?'현재 차트의 가정 고정 · ':session.mode==='project-baseline'?'프로젝트 시작일 보존 전망 · ':session.mode==='recorded'?'보존 예측 · ':'과거 재구성 · ')+(session.historicalModel?.label??session.identity.pointLabel??session.identity.modelVersion);
       if(!atlasMode&&!data.ohlcAvailable){q('display').value='line';q('display').querySelector('[value="candles"]').disabled=true;}else q('display').querySelector('[value="candles"]').disabled=false;
@@ -547,9 +551,10 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
         onAtlasFrame({session,data:chartData,...range,chartType:q('display').value,context,frequency:replayFrequency,window:replayWindow,customRange,axis});
       }
       const label={paused:'일시정지',playing:'재생 중',ended:'확보한 실제 봉까지 재생 완료'}[state.status]??'';
-      announce(atlasMode?'시작 '+state.session.replaySettings.startDate+' · '+intervalName(replayFrequency)+' / 업데이트 Auto 1일 · 실제 '+date+'까지 · '+label+' · '+(currentMode?'현재 주황색 예측선 고정':'10월 21일 당시 전망'):
+      announce(atlasMode?'시작 '+state.session.replaySettings.startDate+' · '+intervalName(replayFrequency)+' / 업데이트 Auto 1일 · 실제 '+date+'까지 · '+label+' · '+(currentMode?'현재 주황색 예측선 고정'+(retrospectiveReady?' · 회고 예측 고정 (입력 '+retrospective.asOf+')':''):'10월 21일 당시 전망'):
         symbol+' · '+intervalName(replayFrequency)+' / 업데이트 1일 · '+label+' · 예측 기준 '+session.asOf+' · '+(session.mode==='recorded'?'보존 경로':'과거 재구성'));
-      const point=frame.selected;inspect.textContent=inspectionText({date,actual:point.actual??chartData.observedRows?.findLast(row=>row.date===date)?.price??null,predicted:point.predicted,
+      const point=frame.selected,retrospectivePoint=(frame.retrospectiveForecast??[]).find(row=>row.date===date);
+      inspect.textContent=inspectionText({date,actual:point.actual??chartData.observedRows?.findLast(row=>row.date===date)?.price??null,predicted:point.predicted??retrospectivePoint?.price??null,predictedKind:point.predicted!==null?'original':retrospectivePoint?'retrospective':null,
         source:chartData.priceSource,candleSource:chartData.candleSource,candle:q('display').value==='candles'?chartData.observedCandles?.findLast(row=>row.date===date):null});
       q('export').disabled=hasChoice()||picking;
       if(picking){announce('✂ 시작점 선택 중 · 파란 선을 클릭하면 그 날짜부터 실제 봉을 숨깁니다. Esc로 취소합니다.');if(pickerDate)showPickLine(pickerDate);}
@@ -641,6 +646,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   q('export').onclick=()=>{
     const session=getState().session;if(!frame||!session)return;
     const payload={kind:'atlas-visible-chart-replay',schemaVersion:1,identity:session.identity,mode:session.mode,source:archive.source,frame,
+      ...(session.retrospectiveForecast?{retrospectiveForecast:session.retrospectiveForecast}:{}),
       ...(session.replaySnapshot?{fixedCapture:{digest:session.replaySnapshot.digest,capturedAt:session.replaySnapshot.capturedAt,meaning:session.replaySnapshot.meaning,publicationTimeProven:false}}:{})};
     const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)+'\n'],{type:'application/json'}));
     const link=doc.createElement('a');link.href=url;link.download='atlas-chart-replay-'+symbol+'-'+frame.cursorDate+'.json';link.click();win.setTimeout(()=>URL.revokeObjectURL(url),1000);
