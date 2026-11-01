@@ -57,7 +57,7 @@ export function forecastValueSignature(rows){
 }
 
 /** Rendering and inspection only. It never changes prices, paths or model dates. */
-export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForecast=null,forecastOrigin=split,forecastIdentityRows=null,retrospectiveForecast=null,frequency='daily',chartType='line',observedCandles=[],candleSource='Bitstamp',volumeBars=[],volumeProjection=null,volumeSource='Bitstamp',showVolume=false,historicalEvents=[],cycleCalibration=null,showCycleTiming=false,headerInset=null,dateTickMinSpacing=0,showHistoricalEvents=true,activeHistoricalEventId=null,onHistoricalEvent=()=>{},stateStepDays=1,unit='usd',denominator=1,scale='log',priceDomain=null,invertScale=false,priceOnlyAuto=false,researchAnnotations=[],activeAnnotationId=null,onAnnotation=null,activeResearchAnnotationId=null,onResearchAnnotation=()=>{},scenarioId=null,tool='crosshair',magnet='off',measurement=null,onMeasurement=()=>{},onHover=()=>{},band=false,turns=[],showTurns=true,cycleMarkers=[],showCycleMarkers=true,activeCycleMarkerId=null,activeCycleMarkerIds=[],activeCycleInterval=null,onCycleMarker=()=>{},cycleIntervals=[],showCycleIntervals=false,cycleRelation='all',cycleOverlayObstacles=[],onCycleInterval=()=>{},events=[],forecastEvidence=[],onForecastEvidence=()=>{},states=[],fib=[],historical=false,nextTurn=null,showNextTurnLabel=true,onNextTurn=()=>{},showDrawdown=true,showStates=false,threshold=.12,onInspect=()=>{},selectedDate}){
+export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForecast=null,forecastOrigin=split,forecastIdentityRows=null,retrospectiveForecast=null,retrospectiveOrigin=null,frequency='daily',chartType='line',observedCandles=[],candleSource='Bitstamp',volumeBars=[],volumeProjection=null,volumeSource='Bitstamp',showVolume=false,historicalEvents=[],cycleCalibration=null,showCycleTiming=false,headerInset=null,dateTickMinSpacing=0,showHistoricalEvents=true,activeHistoricalEventId=null,onHistoricalEvent=()=>{},stateStepDays=1,unit='usd',denominator=1,scale='log',priceDomain=null,invertScale=false,priceOnlyAuto=false,researchAnnotations=[],activeAnnotationId=null,onAnnotation=null,activeResearchAnnotationId=null,onResearchAnnotation=()=>{},scenarioId=null,tool='crosshair',magnet='off',measurement=null,onMeasurement=()=>{},onHover=()=>{},band=false,turns=[],showTurns=true,cycleMarkers=[],showCycleMarkers=true,activeCycleMarkerId=null,activeCycleMarkerIds=[],activeCycleInterval=null,onCycleMarker=()=>{},cycleIntervals=[],showCycleIntervals=false,cycleRelation='all',cycleOverlayObstacles=[],onCycleInterval=()=>{},events=[],forecastEvidence=[],onForecastEvidence=()=>{},states=[],fib=[],historical=false,nextTurn=null,showNextTurnLabel=true,onNextTurn=()=>{},showDrawdown=true,showStates=false,threshold=.12,onInspect=()=>{},selectedDate}){
   clearChartHover(svg,{preservePointer:true});
   const selectedAnnotation=activeAnnotationId??activeResearchAnnotationId,activateAnnotation=onAnnotation||onResearchAnnotation;
   // Match the allocated viewport instead of shrinking a fixed-height drawing.
@@ -186,11 +186,23 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   // Independent fixed records never share a connecting segment. Keep both
   // ranges below actuals, then every contrast halo below every dashed path.
   const fixedPaths=[];
-  if(retrospective.length)fixedPaths.push({kind:'retrospective',d:path(retrospective)});
-  if(hasFixedForecast&&future.length)fixedPaths.push({kind:'forecast',d:path(future)});
-  for(const line of fixedPaths)s+=`<path data-replay-${line.kind}-halo="true" d="${line.d}" fill="none" stroke="var(--bg,#10151c)" stroke-width="4.2" stroke-dasharray="5 3" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>`;
-  for(const line of fixedPaths)s+=`<path data-replay-${line.kind}-path="true" d="${line.d}" fill="none" stroke="#f2b960" stroke-width="2.2" stroke-dasharray="5 3" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>`;
+  if(retrospective.length)fixedPaths.push({kind:'retrospective',d:path(retrospective),dash:'1 5'});
+  if(hasFixedForecast&&future.length)fixedPaths.push({kind:'forecast',d:path(future),dash:'5 3'});
+  for(const line of fixedPaths)s+=`<path data-replay-${line.kind}-halo="true" d="${line.d}" fill="none" stroke="var(--bg,#10151c)" stroke-width="4.2" stroke-dasharray="${line.dash}" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>`;
+  for(const line of fixedPaths)s+=`<path data-replay-${line.kind}-path="true" d="${line.d}" fill="none" stroke="#f2b960" stroke-width="2.2" stroke-dasharray="${line.dash}" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>`;
   if(!hasFixedForecast&&future.length)s+=`<path d="${path(future)}" fill="none" stroke="#f2b960" stroke-width="1.8" stroke-dasharray="5 3"/>`;
+  // The label belongs to the frozen record's actual input anchor, never the
+  // first point left after a pan or the advancing disclosure cursor.
+  const retrospectiveAnchor=retrospectiveForecast?.find(point=>point.date===retrospectiveOrigin);
+  if(retrospectiveAnchor&&retrospectiveOrigin>=start&&retrospectiveOrigin<=end){
+    const xx=x(retrospectiveAnchor),yy=y(retrospectiveAnchor.price),fontSize=small?10:11,label=`회고 · 입력 ${retrospectiveOrigin}`;
+    const labelWidth=Array.from(label).reduce((width,char)=>width+(char.charCodeAt(0)>255?1:.62),0)*fontSize;
+    if(yy>=T&&yy<=priceBottom&&labelWidth+8<=W-L-R){
+      const rightFits=xx+10+labelWidth<=W-R-4,leftFits=xx-10-labelWidth>=L+4,anchor=rightFits||!leftFits?'start':'end';
+      const tx=rightFits?xx+10:leftFits?xx-10:L+4,ty=Math.max(T+fontSize+4,Math.min(priceBottom-4,yy-T>=fontSize+20?yy-14:yy+fontSize+14));
+      s+=`<g data-replay-retrospective-origin-label="true" data-input-through="${esc(retrospectiveOrigin)}" data-anchor-x="${xx}" data-anchor-y="${yy}" role="img" aria-label="${esc(label)}까지의 자료로 현재 생성한 고정 회고 경로" pointer-events="none"><title>${esc(label)}까지의 자료로 현재 생성한 고정 회고 경로</title><path d="M${xx},${yy}V${ty+3}H${tx+(anchor==='end'?4:-4)}" fill="none" stroke="var(--accent,#f2b960)" stroke-width="1" opacity=".65"/><circle cx="${xx}" cy="${yy}" r="2.8" fill="var(--accent,#f2b960)" stroke="var(--bg,#10151c)" stroke-width="1.5"/><text data-replay-retrospective-input-date="true" x="${tx}" y="${ty}" text-anchor="${anchor}" fill="var(--accent,#f2b960)" stroke="var(--bg,#10151c)" stroke-width="3" stroke-linejoin="round" paint-order="stroke" font-size="${fontSize}">${esc(label)}</text></g>`;
+    }
+  }
   s+='</g>';
   if(showDrawdown){
     s+='<g data-indicator-layer="drawdown">';

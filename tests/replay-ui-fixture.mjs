@@ -47,7 +47,7 @@ export async function uiFixture({captured,archive,storedText=null,getAtlasContex
   const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol:'BTCUSD',getAtlasContext,getChartState:()=>({frequency:'weekly',chartType:'candles',window:'focus'}),getChartRenderer:()=>({getPriceScale:()=>axis}),loadAtlasRenderer:()=>atlas.namespace,loadRetrospectiveModel:()=>{calls.retrospectiveLoads++;return loadRetrospectiveModel();},onAtlasFrame:f=>frames.push(f)});
   const trigger=toolbar.children.find(n=>n.id==='workbench-replay');const panel=plot.children.find(n=>n.className==='chart-replay-controls');for(const m of panel.innerHTML.matchAll(/data-cr="([^"]+)"/g))panel.querySelector('[data-cr="'+m[1]+'"]');
   const ready=()=>until(()=>controllers[0].getState().status==='error'||controllers[0].getState().status==='selecting'&&Boolean(draws.at(-1)?.session?.identity?.outputHash),'fully drawn replay selection');
-  return {ready,mounted,svg,controls,draws,frames,calls,writes,controllers,panel,trigger,
+  return {ready,mounted,svg,controls,draws,frames,calls,writes,controllers,panel,trigger,hud:plot.children.find(n=>n.className==='chart-replay-hud'),
     savedText:()=>storedText,externalSave(text,{notify=true}={}){storedText=text;if(notify)win.dispatchEvent({type:'storage',key:'atlas-chart-replay-v1:BTCUSD'});},win,doc,
     state:()=>controllers[0].getState(),lastDraw:()=>draws.at(-1),
     async open(){trigger.click();await ready();},

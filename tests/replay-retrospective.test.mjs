@@ -125,8 +125,40 @@ if(process.argv.includes('--check-single-build')){
     saved.path[1].price*=2;assert.deepEqual(resumed.retrospectiveForecast,retrospective);assert.throws(()=>{resumed.retrospectiveForecast.path[1].price=1;},TypeError);
   });
 
-  test('older sessions and selection previews do not acquire a retrospective automatically',()=>{
+  test('the shared engine leaves unconfirmed previews without a retrospective until the coordinator requests creation',()=>{
     assert.equal(original.retrospectiveForecast,undefined);assert.deepEqual(buildReplayFrame(original).retrospectiveForecast,[]);
+  });
+
+  test('different confirmed starts use their own cutoff prefix and retain one immutable path across daily and weekly disclosure',async()=>{
+    const records=[];
+    for(const startDate of ['2026-06-01','2026-08-17','2026-09-07']){
+      const cutoff=cycle.dateFromDay(cycle.utcDay(startDate)-1),next=cycle.dateFromDay(cycle.utcDay(startDate)+1);
+      const configured={...options,asOf:cutoff,playbackStartDate:startDate,createRetrospective:true};
+      const current=await createCurrentChartReplaySession(configured),record=current.retrospectiveForecast;
+      const selected=dataset.prices.filter(([date])=>date<=cutoff).map(([date,price])=>[date,price]);
+      assert.equal(record.status,'ready');assert.equal(record.asOf,cutoff);
+      assert.equal(record.modelOptions.referenceDate,startDate);assert.equal(record.provenance.prices.lastObservation,cutoff);
+      assert.equal(record.inputHash,await recordTools.forecastHash(selected));
+      assert.equal(record.path.length,cycle.utcDay(forecast.asOf)-cycle.utcDay(cutoff)+1);
+      assert.equal(record.path[0].date,cutoff);assert.equal(record.path.at(-1).date,forecast.asOf);
+      assert.equal(record.path[0].price,selected.at(-1)[1]);assert.equal(current.identity.outputHash,original.identity.outputHash);
+      assert.deepEqual(current.chartForecast,forecast);
+      const fixed=JSON.stringify(record);
+      for(const frequency of ['daily','weekly'])for(const cursorDate of [cutoff,startDate,next]){
+        const data=buildReplayChartData(current,{cursorDate,frequency});
+        assert.strictEqual(data.frame.retrospectiveForecast,record.path);
+        assert.equal(JSON.stringify(current.retrospectiveForecast),fixed);
+        assert.ok(data.observedRows.every(row=>row.date<=cursorDate));
+        assert.ok(data.observedCandles.every(row=>row.endDate<=cursorDate));
+        assert.deepEqual(data.frame.dailyComparisons,[]);assert.equal(data.frame.policy.forecastScoringEnabled,false);
+      }
+      const revised=structuredClone(dataset);revised.prices=revised.prices.map(([date,price])=>[date,date>cutoff?price*1e8:price]);
+      const changed=await createReplayRetrospectiveForecast({...generateOptions,dataset:revised,asOf:cutoff});
+      assert.equal(changed.inputHash,record.inputHash);assert.equal(changed.outputHash,record.outputHash);
+      records.push(record);
+    }
+    assert.equal(new Set(records.map(record=>record.inputHash)).size,records.length);
+    assert.equal(new Set(records.map(record=>record.outputHash)).size,records.length);
   });
 
   test('the shared replay engine requires the BTC capability only when creating or restoring a retrospective',async()=>{

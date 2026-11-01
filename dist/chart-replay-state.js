@@ -75,9 +75,13 @@ export function createChartReplayController({onChange=()=>{},setTimer=setTimeout
     if(destroyed)return;
     revoke();clearSession('selecting');notify();
   }
-  async function selectOrigin(origin,loadSession){
+  async function selectOrigin(origin,loadSession,{cursorDate=null,cursorIndex=0}={}){
     if(destroyed)return false;
     if(typeof loadSession!=='function')throw new TypeError('A replay session loader is required');
+    if(!Number.isSafeInteger(cursorIndex))throw new TypeError('A restored replay position must be an integer');
+    if(cursorDate!==null&&(typeof cursorDate!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(cursorDate)||
+      !Number.isFinite(Date.parse(cursorDate+'T00:00:00Z'))||new Date(cursorDate+'T00:00:00Z').toISOString().slice(0,10)!==cursorDate))
+      throw new TypeError('A restored replay date must be a valid calendar date');
     const selected=freeze(structuredClone(origin));
     revoke();
     const owner=new AbortController(),generation=state.generation;
@@ -95,8 +99,12 @@ export function createChartReplayController({onChange=()=>{},setTimer=setTimeout
       notify();return false;
     }
     request=null;
-    state={...state,status:session.timeline.length===1?'ended':'paused',session,length:session.timeline.length,
-      cursorIndex:0,error:null};
+    // Continue accepts the disclosed position atomically. No ready notification
+    // may briefly expose an origin frame before the saved cursor is restored.
+    const initialIndex=cursorDate===null?Math.max(0,Math.min(session.timeline.length-1,cursorIndex)):
+      Math.max(0,session.timeline.findLastIndex(date=>date<=cursorDate));
+    state={...state,status:initialIndex===session.timeline.length-1?'ended':'paused',session,length:session.timeline.length,
+      cursorIndex:initialIndex,error:null};
     notify();return !destroyed&&state.generation===generation&&state.session===session;
   }
   function pause(){
