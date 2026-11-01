@@ -13,6 +13,8 @@ for p in paths:assert normal(show(MAIN,p))==normal(show(OLD_MAIN,p)),'Intervenin
 for p in paths+['tests/replay-date-input.test.mjs','scripts/verify-replay-date-browser.mjs','docs/REPLAY_DATE_VALIDATION.md']:
  Path(p).parent.mkdir(parents=True,exist_ok=True);Path(p).write_text(show(PR,p).replace('1.30.1','1.30.2'))
 for p in [*Path('dist').glob('*.js'),Path('dist/index.html'),Path('package.json')]:
+ # Existing IPO-internal dependency versions remain valid; its bytes are not ours to change.
+ if p.name.startswith('ipo-'):continue
  t=p.read_text()
  if '1.30.1' in t:p.write_text(t.replace('1.30.1','1.30.2'))
 for p in ['dist/atlas-price-chart.js','dist/chart-replay-snapshot.js','dist/chart-replay-renderer.js','dist/chart-replay.css','dist/long-horizon-forecast.js','dist/cycle-milestones-view.js','dist/cycle-interval-overlay.js','dist/data/btc-volume.json','dist/ipo-view.js','dist/ipo-view.css','tests/ipo-view.test.mjs']:
