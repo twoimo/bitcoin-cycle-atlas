@@ -1,0 +1,112 @@
+name: Date50 final current-main integration
+on:
+  push:
+    branches: [stage/replay-date-50-v1.29.10]
+    paths: [.github/workflows/reconcile-date50-final.yml]
+permissions:
+  contents: read
+jobs:
+  prepare:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      source: ${{ steps.source.outputs.source }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: |
+          mkdir -p /tmp/date50-final
+          cp qa50/reconcile-current-main.py /tmp/date50-final/
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 851a8c80137e9433d80666df14da70f522ee1028
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Preserve both independently changed scopes with exact source checks
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api repos/twoimo/bitcoin-cycle-atlas/git/ref/heads/main --jq .object.sha)" = 851a8c80137e9433d80666df14da70f522ee1028
+          python3 /tmp/date50-final/reconcile-current-main.py
+          git add -- dist tests scripts docs package.json
+          git diff --cached --check
+          git diff --cached > /tmp/date50-final/final.patch
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          tree=$(git write-tree)
+          source=$(printf '%s\n' 'fix: preserve fixed forecasts and reject invalid replay dates (v1.30.2)' | git commit-tree "$tree" -p 99c9692bad01e6f2293dbf2b1f501f68914d9be2 -p 851a8c80137e9433d80666df14da70f522ee1028)
+          git checkout --detach "$source"
+          printf '%s\n' "$source" > /tmp/date50-final/source.txt
+          printf '%s\n' "$tree" > /tmp/date50-final/tree.txt
+          printf 'source=%s\n' "$source" >> "$GITHUB_OUTPUT"
+          git archive --format=tar.gz HEAD > /tmp/date50-final/source.tar.gz
+      - name: Check replay guards and preserved latest IPO functionality
+        run: |
+          set -euo pipefail
+          node --experimental-vm-modules --test tests/chart-replay-ui.test.mjs tests/replay-fixed-forecast-ui.test.mjs tests/replay-date-input.test.mjs tests/ipo-view.test.mjs 2>&1 | tee /tmp/date50-final/targeted.log
+          node scripts/verify-static.mjs > /tmp/date50-final/static.log
+      - name: Install pinned font
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/atlas-ci"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 -o /tmp/font.otf https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf
+          test "$(git hash-object /tmp/font.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
+          cp /tmp/font.otf "$HOME/.local/share/fonts/atlas-ci/"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-ci"
+      - name: Keep all 14 native date and confirmed-price checks unchanged
+        env:
+          ATLAS_QA_URL: http://127.0.0.1:8765/
+          QA_OUT: /tmp/date50-final/browser
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --directory dist > /tmp/date50-final/server.log 2>&1 &
+          server=$!; trap 'kill "$server" 2>/dev/null || true' EXIT
+          node scripts/verify-replay-date-browser.mjs 2>&1 | tee /tmp/date50-final/browser.log
+      - name: Publish only feature candidate, never force current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api repos/twoimo/bitcoin-cycle-atlas/git/ref/heads/main --jq .object.sha)" = 851a8c80137e9433d80666df14da70f522ee1028
+          test "$(gh api repos/twoimo/bitcoin-cycle-atlas/git/ref/heads/fix/replay-date-50-v1.29.10 --jq .object.sha)" = 99c9692bad01e6f2293dbf2b1f501f68914d9be2
+          git push origin HEAD:refs/heads/fix/replay-date-50-v1.29.10
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: date50-final-candidate
+          path: /tmp/date50-final
+          retention-days: 14
+  native:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.prepare.outputs.source }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Install pinned font
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/atlas-ci"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 -o /tmp/font.otf https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf
+          test "$(git hash-object /tmp/font.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
+          cp /tmp/font.otf "$HOME/.local/share/fonts/atlas-ci/"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-ci"
+      - name: Recheck all native scenarios against integrated final tree
+        run: node scripts/verify-eth-candidate-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: date50-final-all-native
+          path: build/eth-browser
+          retention-days: 14
