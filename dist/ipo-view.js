@@ -82,6 +82,18 @@ export function initIpoView({ root, load = null, embeddedData = () => null, now 
       const embedded = embeddedData();
       state.doc = embedded ? JSON.parse(embedded) : await (load ?? (() => fetch('./data/ipo-calendar.json').then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })))();
       if (!Array.isArray(state.doc?.['항목'])) throw new Error('잘못된 일정 데이터 형식');
+      for (const item of state.doc['항목']) {
+        if (typeof item?.['종목'] !== 'string') throw new Error('잘못된 종목 데이터');
+        for (const key of ['수요예측', '청약']) {
+          const dates = item[key] ?? [];
+          if (!Array.isArray(dates)) throw new Error('잘못된 일정 날짜 형식');
+          for (const date of dates.filter(Boolean)) {
+            if (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+              !Number.isFinite(Date.parse(date)) || new Date(date).toISOString().slice(0, 10) !== date) throw new Error('잘못된 일정 날짜');
+          }
+          if (dates[0] && dates[1] && dates[1] < dates[0]) throw new Error('일정 종료일이 시작일보다 빠릅니다');
+        }
+      }
       state.rows = [];
       state.status = 'ready';
     } catch (cause) { state.doc = null; state.status = 'error'; state.error = String(cause?.message ?? cause); }

@@ -130,3 +130,23 @@ test('refresh invalidates the same-day row cache', async () => {
   await view.refresh();
   assert.doesNotMatch(body.innerHTML, /아델/);
 });
+
+
+test('shipped month-crossing intervals retain their end month and every interval is ordered', () => {
+  const shipped = JSON.parse(readFileSync(new URL('../dist/data/ipo-calendar.json', import.meta.url), 'utf8'));
+  const robot = shipped['항목'].find(row => row['종목'] === '에이엘로봇');
+  assert.deepEqual(robot['수요예측'], ['2026-10-28', '2026-11-03']);
+  assert.equal(ipoStatus(robot, '2026-11-01'), '수요예측 진행 중');
+  for (const item of shipped['항목']) for (const key of ['수요예측','청약']) {
+    const [start,end] = item[key];
+    assert.ok(!start || !end || start <= end, `${item['종목']} ${key} is reversed`);
+  }
+});
+
+test('a reversed date range fails closed rather than showing a misleading next milestone', async () => {
+  const { root, body } = surface();
+  const view = initIpoView({root, load: async () => ({항목:[{종목:'역전일정',수요예측:['2026-10-28','2026-10-03'],청약:[]} ]})});
+  await view.render();
+  assert.equal(view.state.status, 'error');
+  assert.match(body.innerHTML, /종료일이 시작일보다 빠릅니다/);
+});
