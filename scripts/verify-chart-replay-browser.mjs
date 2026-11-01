@@ -513,8 +513,14 @@ export async function verifyChartReplaySurface(api) {
         batchedWickCount: wickXs.length, lastBatchedCandleX: wickXs.length ? Math.max(...wickXs) : null,
         plotLeft: Number(svg.dataset.plotLeft), plotRight: Number(svg.dataset.plotRight),
         forecastPath: svg.querySelector('[data-replay-forecast-path]')?.getAttribute('d') ?? null,
-        forecastBelowActuals: (() => { const path = svg.querySelector('[data-replay-forecast-path]'); return path ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(path.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)) : null; })(),
+        forecastAboveActuals: (() => { const path = svg.querySelector('[data-replay-forecast-path]'); return path ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(path.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_PRECEDING)) : null; })(),
         forecastPointerEvents: svg.querySelector('[data-replay-forecast-path]')?.getAttribute('pointer-events') ?? null,
+        forecastBandEnabled: document.querySelector('#lab-band')?.checked ?? null,
+        forecastRangeBelowActuals: (() => { const range = svg.querySelector('[data-indicator-layer="range"] [data-indicator-fill]'); return range ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(range.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)) : null; })(),
+        forecastHaloMatchesPath: (() => { const halo = svg.querySelector('[data-replay-forecast-halo]'), path = svg.querySelector('[data-replay-forecast-path]'); return Boolean(halo && path && halo.getAttribute('d') === path.getAttribute('d')); })(),
+        forecastHaloPointerEvents: svg.querySelector('[data-replay-forecast-halo]')?.getAttribute('pointer-events') ?? null,
+        forecastHaloAboveActuals: (() => { const halo = svg.querySelector('[data-replay-forecast-halo]'); return halo ? [...svg.querySelectorAll('.observed-candle,.observed-candles-batched,.observed-close-line')].every(node => Boolean(halo.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_PRECEDING)) : null; })(),
+        forecastHaloBelowPath: (() => { const halo = svg.querySelector('[data-replay-forecast-halo]'), path = svg.querySelector('[data-replay-forecast-path]'); return Boolean(halo && path && (halo.compareDocumentPosition(path) & Node.DOCUMENT_POSITION_FOLLOWING)); })(),
         origins: svg.querySelectorAll('[data-replay-origin-boundary]').length, cursors: svg.querySelectorAll('[data-replay-cursor-line]').length,
         confirmedCursorXs: [...svg.querySelectorAll('[data-replay-cursor-line]')].map(node => node.getAttribute('x1')),
         pickerCount: svg.querySelectorAll('[data-chart-replay-picker]').length,
@@ -544,8 +550,13 @@ export async function verifyChartReplaySurface(api) {
     if (value.state === 'playing') assert.equal(value.playDisabled, false, 'Pause must stay available while playing');
     assert.equal(value.previousPresent, false, 'The removed previous-bar action is still mounted');
     if (value.renderer === 'atlas' && value.forecastPath) {
-      assert.equal(value.forecastBelowActuals, true, 'Actual candles must be above the intact immutable comparison curve');
+      assert.equal(value.forecastAboveActuals, true, 'The intact immutable comparison curve must stay readable above actual candles');
       assert.equal(value.forecastPointerEvents, 'none', 'The fixed forecast intercepts native chart selection');
+      if (value.forecastBandEnabled || value.forecastRangeBelowActuals !== null) assert.equal(value.forecastRangeBelowActuals, true, 'The forecast range must remain below actual candles');
+      assert.equal(value.forecastHaloMatchesPath, true, 'The forecast contrast halo must preserve the exact comparison path');
+      assert.equal(value.forecastHaloPointerEvents, 'none', 'The forecast contrast halo intercepts native chart selection');
+      assert.equal(value.forecastHaloAboveActuals, true, 'The forecast contrast halo must stay above actual candles');
+      assert.equal(value.forecastHaloBelowPath, true, 'The forecast contrast halo must stay below the orange comparison path');
     }
     assert.equal(value.invalidPaths, 0); assert.equal(value.liveReadouts, 0, 'Latest quote/readout remained visible during replay');
     assert.ok(value.pageWidth <= width + 1, 'Replay caused horizontal page overflow');

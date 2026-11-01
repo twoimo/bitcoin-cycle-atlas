@@ -83,7 +83,8 @@ test('Continue restores the saved dotted path and band after live assumptions ch
   resumed.key('ArrowRight');assert.equal(resumed.svg.dataset.replayCursor,'2026-10-23');
   assert.equal(resumed.svg.dataset.forecastValueSignature,signature);
   const layer=resumed.svg.querySelector('.price-series-layer'),path=layer.querySelector('[data-replay-forecast-path]');
-  for(const node of layer.querySelectorAll('.observed-candle,.observed-candles-batched'))assert.ok(layer.children.indexOf(node)>layer.children.indexOf(path));
+  for(const node of layer.querySelectorAll('.observed-candle,.observed-candles-batched'))assert.ok(layer.children.indexOf(node)<layer.children.indexOf(path));
+  assert.equal(layer.querySelector('[data-replay-forecast-halo]').getAttribute('d'),path.getAttribute('d'));
   assert.equal(resumed.savedText(),bytes);assert.equal(resumed.writes.length,0);resumed.mounted.destroy();
 });
 test('Continue does not require the newest live model to restore a full saved curve',async()=>{
