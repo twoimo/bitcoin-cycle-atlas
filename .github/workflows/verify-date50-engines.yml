@@ -1,0 +1,61 @@
+name: Date50 additional browser engines
+on:
+  push:
+    branches: [stage/replay-date-50-v1.29.10]
+    paths: [.github/workflows/verify-date50-engines.yml]
+permissions:
+  contents: read
+jobs:
+  engine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Preserve isolated verification program
+        run: |
+          mkdir -p /tmp/date50-engine-evidence
+          cp qa-transfer/cross-engine.mjs /tmp/date50-engine-evidence/verification-source.mjs
+          sha256sum /tmp/date50-engine-evidence/verification-source.mjs > /tmp/date50-engine-evidence/program-sha256.txt
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 709da73c042625c8c4a84373818e0bf52703b940
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install pinned isolated verification dependency
+        run: |
+          npm install --prefix /tmp/date50-engines --save-exact --no-audit --no-fund --ignore-scripts playwright@1.64.1
+          cp /tmp/date50-engines/package-lock.json /tmp/date50-engine-evidence/
+          node /tmp/date50-engines/node_modules/playwright/cli.js install --with-deps ${{ matrix.browser }}
+      - name: Install source-pinned Korean font
+        run: |
+          mkdir -p "$HOME/.local/share/fonts/atlas-ci"
+          curl --fail --location --silent --show-error --connect-timeout 10 --max-time 60 -o /tmp/date50-font.otf https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf
+          test "$(git hash-object /tmp/date50-font.otf)" = dc4a7c65e6f450bf17c10a2405250b620eb78703
+          cp /tmp/date50-font.otf "$HOME/.local/share/fonts/atlas-ci/"
+          timeout 30s fc-cache -f "$HOME/.local/share/fonts/atlas-ci"
+      - name: Test date guards, frozen forecasts and twenty repeat sessions
+        env:
+          QA_ENGINE: ${{ matrix.browser }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --directory dist > /tmp/date50-engine-evidence/server.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+          node /tmp/date50-engine-evidence/verification-source.mjs 2>&1 | tee /tmp/date50-engine-evidence/browser.log
+          git diff --exit-code
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: date50-${{ matrix.browser }}
+          path: /tmp/date50-engine-evidence
+          retention-days: 14
