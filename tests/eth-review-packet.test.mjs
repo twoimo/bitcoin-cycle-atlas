@@ -352,3 +352,53 @@ test('cumulative evidence accounting includes binary expansion and fails before 
   await assert.rejects(readFile(join(f.root,'rejected/source-book.txt')),error=>error.code==='ENOENT');
   await assert.rejects(readFile(join(f.root,'rejected/source-manifest.json')),error=>error.code==='ENOENT');
 });
+
+test('an independent committed-file bound rejects oversized blobs despite spare aggregate capacity',async t=>{
+  const body=Buffer.from('합성 source🙂\n'.repeat(200)),f=await fixture(t,{'source.txt':body});
+  const options={repositoryRoot:f.root,seedPaths:['source.txt'],maximumBundleBytes:10000};
+  const original=await buildEthReviewPacket({...options,outputDirectory:'default'});
+  assert.equal(original.fileLimitBytes,10000,'omitting the file option preserves the previous caller limit');
+  assert.ok(original.bundleBytes<options.maximumBundleBytes);
+  const exact=await buildEthReviewPacket({...options,outputDirectory:'exact',maximumFileBytes:body.length});
+  assert.equal(exact.fileLimitBytes,body.length);assert.equal(exact.bundleLimitBytes,10000);
+  assert.equal(exact.bundleSha256,original.bundleSha256,'separate limits must not rewrite retained source bytes');
+  const book=await readFile(join(f.root,'exact/source-book.txt'));
+  assert.deepEqual(validateEthReviewSource({manifest:exact,sourceBook:book}).sources.get('source.txt').body,body);
+  await assert.rejects(buildEthReviewPacket({...options,outputDirectory:'rejected',maximumFileBytes:body.length-1}),error=>{
+    assert.equal(error.code,'REVIEW_FILE_TOO_LARGE');assert.equal(error.path,'source.txt');
+    assert.equal(error.maximumFileBytes,body.length-1);return true;
+  });
+  await assert.rejects(readFile(join(f.root,'rejected/source-book.txt')),error=>error.code==='ENOENT');
+  await assert.rejects(readFile(join(f.root,'rejected/source-manifest.json')),error=>error.code==='ENOENT');
+  const legacy={...exact};delete legacy.fileLimitBytes;
+  assert.equal(validateEthReviewSource({manifest:legacy,sourceBook:book}).sources.size,1,'historical schema-1 manifests remain readable');
+  assert.throws(()=>validateEthReviewSource({manifest:{...exact,fileLimitBytes:body.length-1},sourceBook:book}),/entry exceeds file byte bound/);
+});
+
+test('an independent evidence-file bound counts raw bytes and rejects before unused aggregate space can admit them',async t=>{
+  const f=await fixture(t,{'source.txt':'Synthetic bounded source.\n'}),body=Buffer.alloc(2000,255);
+  await writeFile(join(f.root,'evidence.bin'),body);
+  const options={repositoryRoot:f.root,seedPaths:['source.txt'],evidencePaths:['evidence.bin'],maximumBundleBytes:10000};
+  const original=await buildEthReviewPacket({...options,outputDirectory:'default'});
+  assert.ok(original.bundleBytes<options.maximumBundleBytes);
+  const exact=await buildEthReviewPacket({...options,outputDirectory:'exact',maximumFileBytes:body.length});
+  const entry=exact.entries.find(value=>value.path==='evidence.bin');
+  assert.equal(entry.bytes,2000);assert.equal(entry.payloadBytes,4*Math.ceil(body.length/3));
+  assert.equal(entry.encoding,'base64');assert.equal(exact.fileLimitBytes,2000);
+  assert.equal(exact.bundleSha256,original.bundleSha256,'binary expansion remains governed by the unchanged aggregate framing guard');
+  const book=await readFile(join(f.root,'exact/source-book.txt'));
+  assert.deepEqual(validateEthReviewSource({manifest:exact,sourceBook:book}).sources.get('evidence.bin').body,body);
+  await assert.rejects(buildEthReviewPacket({...options,outputDirectory:'rejected',maximumFileBytes:body.length-1}),error=>{
+    assert.equal(error.code,'REVIEW_FILE_TOO_LARGE');assert.equal(error.path,'evidence.bin');
+    assert.equal(error.fileBytes,body.length);assert.equal(error.maximumFileBytes,body.length-1);return true;
+  });
+  await assert.rejects(readFile(join(f.root,'rejected/source-book.txt')),error=>error.code==='ENOENT');
+  await assert.rejects(readFile(join(f.root,'rejected/source-manifest.json')),error=>error.code==='ENOENT');
+});
+
+test('file limits reject nonfinite fractional and nonpositive values before reading any input',async()=>{
+  for(const maximumFileBytes of [Infinity,NaN,0,-1,1.5,Number.MAX_SAFE_INTEGER+1]){
+    await assert.rejects(buildEthReviewPacket({repositoryRoot:'/unused-file-limit-fixture',seedPaths:['absent.txt'],
+      maximumBundleBytes:10000,maximumFileBytes}),/File byte limit must be a positive finite safe integer/);
+  }
+});

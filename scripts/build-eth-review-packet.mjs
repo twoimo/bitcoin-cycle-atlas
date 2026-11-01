@@ -111,12 +111,13 @@ export function createEthReviewBrief(manifest){
 export async function buildEthReviewPacket({
   repositoryRoot=ownRoot,outputDirectory='build/eth-review-packet',
   seedPaths,evidencePaths=[],baselineCommit=null,dynamicResolutions=[],
-  maximumPartBytes=180000,maximumBundleBytes=30000000,
+  maximumPartBytes=180000,maximumBundleBytes=30000000,maximumFileBytes=maximumBundleBytes,
   externalReviewDisposition='required',
 }={}){
   if(!Number.isSafeInteger(maximumBundleBytes)||maximumBundleBytes<1024)throw new RangeError('Bundle byte limit must be a finite safe integer of at least 1024 bytes');
+  if(!Number.isSafeInteger(maximumFileBytes)||maximumFileBytes<1)throw new RangeError('File byte limit must be a positive finite safe integer');
   const disposition=reviewDisposition(externalReviewDisposition),omitted=disposition==='omitted-by-user';
-  const root=resolve(repositoryRoot),git=args=>execFileSync('git',args,{cwd:root,maxBuffer:maximumBundleBytes});
+  const root=resolve(repositoryRoot),git=(args,maximumBytes=maximumBundleBytes)=>execFileSync('git',args,{cwd:root,maxBuffer:maximumBytes});
   if(!Array.isArray(seedPaths)||!seedPaths.length)throw new TypeError('Explicit nonempty seedPaths required');
   if(!Array.isArray(evidencePaths)||!Array.isArray(dynamicResolutions))throw new TypeError('Expected evidence and dynamic-resolution arrays');
   if(baselineCommit!==null&&!SHA40.test(baselineCommit))throw new TypeError('Baseline must be exact commit');
@@ -128,7 +129,12 @@ export async function buildEthReviewPacket({
   const records=new Map(),dependencies=[],externalImports=[],unresolved=[],declaredDynamic=[],usedResolutions=new Set();
   const bookHeader=Buffer.from('ETH SOURCE REVIEW BOOK\nSOURCE_COMMIT '+sourceCommit+'\nSOURCE_TREE '+sourceTree+'\n'+reviewHeader(disposition));
   let bundleBytes=bookHeader.length;
+  function fileLimitError(path,fileBytes=null){
+    const error=new RangeError('Review input exceeds file byte bound ('+maximumFileBytes+' bytes): '+path);
+    return Object.assign(error,{code:'REVIEW_FILE_TOO_LARGE',path,fileBytes,maximumFileBytes});
+  }
   function retain(record){
+    if(record.bytes>maximumFileBytes)throw fileLimitError(record.path,record.bytes);
     const utf8=Buffer.from(record.body.toString('utf8'),'utf8').equals(record.body),encoding=utf8?'utf8':'base64',
       payloadBytes=utf8?record.bytes:4*Math.ceil(record.bytes/3);
     const header=Buffer.from('\nBEGIN FILE '+record.path+'\nKIND '+record.kind+'\nORIGINAL_BYTES '+record.bytes+
@@ -158,7 +164,9 @@ export async function buildEthReviewPacket({
     safePath(path);if(records.has(path))return;
     const item=tracked.get(path);
     if(!item||item.type!=='blob'||!['100644','100755'].includes(item.mode))throw new Error('SOURCE_MISSING or non-regular source: '+path);
-    const body=git(['cat-file','blob',item.blob]);
+    let body;
+    try{body=git(['cat-file','blob',item.blob],maximumFileBytes);}
+    catch(error){if(error.code==='ENOBUFS')throw fileLimitError(path);throw error;}
     if(!Buffer.from(body.toString('utf8'),'utf8').equals(body))throw new TypeError('Source seed must be UTF-8 text: '+path);
     retain({path,kind:'committed-source',gitBlob:item.blob,body,sha256:digest(body),bytes:body.length});
     if(/\.cjs$/.test(path)){unresolved.push({owner:path,reason:'CommonJS loading requires separately declared source dependencies'});return;}
@@ -183,7 +191,8 @@ export async function buildEthReviewPacket({
   for(const path of [...new Set(evidencePaths)].sort()){
     safePath(path);if(records.has(path))throw new TypeError('Evidence must not shadow committed source');
     const full=inside(root,path),info=await lstat(full),canonical=await realpath(full),canonicalRoot=await realpath(root);
-    if(!info.isFile()||relative(canonicalRoot,canonical).startsWith('..')||info.size>maximumBundleBytes)throw new Error('Evidence must be a bounded regular file inside the repository');
+    if(!info.isFile()||relative(canonicalRoot,canonical).startsWith('..'))throw new Error('Evidence must be a bounded regular file inside the repository');
+    if(info.size>maximumFileBytes)throw fileLimitError(path,info.size);
     const body=await readFile(full);if(!body.length)throw new Error('Empty execution evidence: '+path);
     retain({path,kind:'provided-execution-evidence',body,sha256:digest(body),bytes:body.length});
   }
@@ -200,7 +209,7 @@ export async function buildEthReviewPacket({
   const manifest={
     schemaVersion:1,sourceCommit,sourceTree,baselineCommit,createdAt:new Date().toISOString(),
     seedPaths:[...new Set(seedPaths)].sort(),evidencePaths:[...new Set(evidencePaths)].sort(),
-    bundleSha256:digest(book),bundleBytes:book.length,bundleLimitBytes:maximumBundleBytes,sourceAccess:unresolved.length?'SOURCE_MISSING':'complete-for-declared-scope',
+    bundleSha256:digest(book),bundleBytes:book.length,bundleLimitBytes:maximumBundleBytes,fileLimitBytes:maximumFileBytes,sourceAccess:unresolved.length?'SOURCE_MISSING':'complete-for-declared-scope',
     entries,dependencies,externalImports,unresolvedImports:unresolved,declaredDynamic,
     parts:parts.map(({body,...r})=>r),
     scope:'Exact committed seeds and recursive static/literal imports plus explicit dynamic declarations. Runtime data must be explicit seeds. Provided execution evidence is byte-preserved, not automatically authenticated.',
@@ -239,6 +248,7 @@ export function validateEthReviewSource({manifest,sourceBook}={}){
   if(!(typeof sourceBook==='string'||Buffer.isBuffer(sourceBook)))throw new TypeError('Exact source-book bytes are required');
   const book=Buffer.isBuffer(sourceBook)?sourceBook:Buffer.from(sourceBook);
   if(!Number.isSafeInteger(manifest.bundleBytes)||manifest.bundleBytes!==book.length||digest(book)!==manifest.bundleSha256)throw new RangeError('Exact source-book bytes are required');
+  if(Object.hasOwn(manifest,'fileLimitBytes')&&(!Number.isSafeInteger(manifest.fileLimitBytes)||manifest.fileLimitBytes<1))throw new RangeError('File byte limit must be a positive finite safe integer');
   if(!Array.isArray(manifest.entries)||!manifest.entries.length)throw new TypeError('Nonempty source-book entries required');
   let offset=0;
   const line=()=>{
@@ -260,6 +270,7 @@ export function validateEthReviewSource({manifest,sourceBook}={}){
     if(sources.has(path))throw new RangeError('Duplicate source-book path');
     if(!['committed-source','provided-execution-evidence'].includes(entry.kind)||!['utf8','base64'].includes(entry.encoding)||!SHA64.test(entry.sha256))throw new TypeError('Invalid source-book entry metadata');
     if(!Number.isSafeInteger(entry.bytes)||entry.bytes<0||!Number.isSafeInteger(entry.payloadBytes)||entry.payloadBytes<0)throw new TypeError('Invalid source-book byte lengths');
+    if(Object.hasOwn(manifest,'fileLimitBytes')&&entry.bytes>manifest.fileLimitBytes)throw new RangeError('Source-book entry exceeds file byte bound: '+path);
     expect('');expect('BEGIN FILE '+path);expect('KIND '+entry.kind);
     expect('ORIGINAL_BYTES '+entry.bytes);expect('SHA256 '+entry.sha256);
     expect('ENCODING '+entry.encoding);expect('PAYLOAD_BYTES '+entry.payloadBytes);expect('');
