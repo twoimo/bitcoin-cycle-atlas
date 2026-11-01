@@ -2,7 +2,7 @@ name: Date50 final current-main integration
 on:
   push:
     branches: [stage/replay-date-50-v1.29.10]
-    paths: [.github/workflows/reconcile-date50-final.yml]
+    paths: [.github/workflows/reconcile-date50-final.yml, qa50/reconcile-current-main.py]
 permissions:
   contents: read
 jobs:
