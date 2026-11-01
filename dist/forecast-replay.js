@@ -227,8 +227,8 @@ export async function createCurrentChartReplaySession({dataset,forecast,asOf=PRO
   const retrospectiveOptions={dataset:fixedDataset,forecast:fixedForecast,asOf,displayEnd:forecastOriginDate,originalOutputHash:outputHash};
   let retrospective=null;
   if(retrospectiveForecast!==null||createRetrospective){
-    // The BTC workspace owns this model dependency. Other assets, previews and
-    // older saved sessions do not load or execute the BTC forecast engines.
+    // The BTC workspace owns this model dependency. Other assets and
+    // unconfirmed previews do not load or execute the BTC forecast engines.
     if(typeof retrospectiveModel?.createReplayRetrospectiveForecast!=='function'||typeof retrospectiveModel?.restoreReplayRetrospectiveForecast!=='function')
       throw new TypeError('A BTC retrospective model capability is required');
     retrospective=retrospectiveForecast!==null

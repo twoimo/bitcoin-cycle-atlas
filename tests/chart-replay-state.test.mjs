@@ -77,10 +77,11 @@ test('play at the last available observation never rewinds or schedules another 
 test('superseded origin success and failure cannot replace the current chart',async()=>{
   for(const outcome of ['resolve','reject']){
     const h=harness(),old=deferred(),fresh=deferred();let oldSignal;
-    const a=h.controller.selectOrigin('old',({signal})=>{oldSignal=signal;return old.promise;});
-    const b=h.controller.selectOrigin('new',()=>fresh.promise);
+    const a=h.controller.selectOrigin('old',({signal})=>{oldSignal=signal;return old.promise;},{cursorDate:'2026-01-03'});
+    const b=h.controller.selectOrigin('new',()=>fresh.promise,{cursorDate:'2026-01-02'});
     assert.equal(oldSignal.aborted,true);fresh.resolve(session('new'));assert.equal(await b,true);
     const expected=h.controller.getState(),count=h.states.length;
+    assert.equal(expected.cursorIndex,1);
     old[outcome](outcome==='resolve'?session('old'):new Error('old request failure'));
     assert.equal(await a,false);assert.deepEqual(h.controller.getState(),expected);
     assert.equal(h.states.length,count,'revoked request must not notify the chart');
@@ -114,6 +115,11 @@ test('invalid sessions cannot enter a playable state',async()=>{
     assert.equal(h.controller.getState().status,'error');assert.equal(h.controller.getState().session,null);
     h.controller.play();assert.equal(h.pending.size,0);
   }
+  for(const position of [{cursorIndex:1.5},{cursorIndex:NaN},{cursorDate:23},{cursorDate:'2026-02-30'},{cursorDate:'not-a-date'}]){
+    const h=harness();await h.load();const before=h.controller.getState();let calls=0;
+    await assert.rejects(h.controller.selectOrigin('invalid-position',async()=>{calls++;return session();},position),TypeError);
+    assert.equal(calls,0);assert.deepEqual(h.controller.getState(),before,'invalid restore coordinates cannot revoke a valid session');
+  }
 });
 
 test('one bar is terminal and seeks clamp to available bars without fabricating more',async()=>{
@@ -123,6 +129,15 @@ test('one bar is terminal and seeks clamp to available bars without fabricating 
   h.controller.seek(-100);assert.equal(h.controller.getState().cursorIndex,0);
   assert.throws(()=>h.controller.seek(1.5),TypeError);assert.throws(()=>h.controller.step(2),RangeError);
   assert.throws(()=>h.controller.speed(0),RangeError);
+  for(const [position,index,status]of [[{cursorIndex:99},2,'ended'],[{cursorIndex:-99},0,'paused'],
+    [{cursorDate:'2025-12-31'},0,'paused'],[{cursorDate:'2026-01-04',cursorIndex:2},1,'paused'],[{cursorDate:'2026-02-01'},2,'ended']]){
+    const restored=harness(),fixed={...session(),timeline:['2026-01-01','2026-01-03','2026-01-05']};
+    assert.equal(await restored.controller.selectOrigin('saved',async()=>fixed,position),true);
+    const ready=restored.states.filter(state=>state.session);
+    assert.equal(ready.length,1);assert.equal(ready[0].cursorIndex,index);assert.equal(ready[0].status,status);
+    assert.equal(restored.pending.size,0,'restoration is paused or terminal, never automatic playback');
+    if(status==='ended'){restored.controller.play();assert.equal(restored.controller.getState().cursorIndex,index);assert.equal(restored.pending.size,0);}
+  }
 });
 
 test('play is idempotent and all speeds own exactly one correctly timed callback',async()=>{
@@ -198,6 +213,15 @@ test('origin snapshots cannot be changed by the caller while a request waits',as
   });
   origin.asOf='2030-01-01';work.resolve(session());await promise;
   assert.equal(h.controller.getState().origin.asOf,'2026-01-01');assert.ok(Object.isFrozen(h.controller.getState()));
+  const restored=harness(),pending=deferred(),position={cursorDate:'2026-01-03',cursorIndex:0};
+  const loading=restored.controller.selectOrigin('saved',()=>pending.promise,position);
+  position.cursorDate='2026-01-01';position.cursorIndex=4;
+  assert.equal(restored.states.some(state=>state.session),false);
+  pending.resolve(session('saved',5));assert.equal(await loading,true);
+  const first=restored.states.find(state=>state.session);
+  assert.equal(first.cursorIndex,2,'the very first ready frame must use the owned saved date');assert.equal(first.status,'paused');
+  assert.ok(restored.states.filter(state=>state.session).every(state=>state.cursorIndex===2));
+  restored.controller.play();assert.equal(restored.controller.getState().cursorIndex,2);restored.fire();assert.equal(restored.controller.getState().cursorIndex,3);
 });
 
 test('display failure revokes loaders and timers; destroy remains terminal without notifications',async()=>{

@@ -2,7 +2,7 @@ import {frozenMarketText} from './helpers/frozen-market-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {captureReplayView,sealReplaySnapshot,restoreReplaySnapshot,persistReplayDraft} from '../dist/chart-replay-snapshot.js';
+import {captureReplayView,sealReplaySnapshot,supplementReplaySnapshot,restoreReplaySnapshot,persistReplayDraft} from '../dist/chart-replay-snapshot.js';
 import {createCurrentChartReplaySession,buildReplayChartData,buildReplayFrame} from '../dist/forecast-replay.js';
 import {createAtlasReplayContext} from '../dist/chart-replay-atlas.js';
 import {parseProjectReplayBaseline} from '../dist/project-replay-baseline.js';
@@ -47,6 +47,26 @@ test('saved curve restores despite a different current live model',async()=>{
   assert.notEqual(newer.forecast.path[1].price,resumed.chartForecast.path[1].price);
   assert.equal(resumed.identity.issuedAt,null);assert.equal(resumed.policy.forecastScoringEnabled,false);
   assert.deepEqual(buildReplayFrame(resumed,{cursorDate:'2026-10-24'}).dailyComparisons,[]);
+});
+test('a legacy snapshot supplement changes only its missing retrospective and digest',async()=>{
+  const {snapshot,draft,session}=await fixture(),before=JSON.stringify(snapshot);
+  const restored=await restoreReplaySnapshot(snapshot,{outputHash:draft.outputHash,origin:draft.origin,now:Date.parse(later)});
+  // Model validation belongs to the engine. This boundary verifies additive
+  // capture ownership, including an honest unavailable result with no path.
+  const retrospectiveForecast={asOf:session.asOf,createdAt:later,issuedAt:null,publicationTimeProven:false,status:'unavailable',reason:'fixture inputs unavailable',path:[]};
+  const supplemented=await supplementReplaySnapshot(restored,{identity:session.identity,retrospectiveForecast});
+  assert.notEqual(supplemented.digest,snapshot.digest);
+  const {digest,retrospectiveForecast:record,atlasContext,...rest}=supplemented;
+  const {digest:oldDigest,atlasContext:oldContext,...old}=snapshot;
+  assert.deepEqual(rest,old);assert.deepEqual(record,retrospectiveForecast);
+  assert.deepEqual(atlasContext,{...oldContext,retrospectiveForecast});
+  assert.equal(JSON.stringify(snapshot),before);assert.equal(supplemented.capturedAt,capturedAt);
+  assert.ok(Object.isFrozen(supplemented.atlasContext));
+  const checked=await restoreReplaySnapshot(supplemented,{outputHash:draft.outputHash,origin:draft.origin,now:Date.parse(later)});
+  assert.deepEqual(checked.retrospectiveForecast,retrospectiveForecast);
+  await assert.rejects(supplementReplaySnapshot(checked,{identity:session.identity,retrospectiveForecast}),/없는 검증된 저장본/);
+  await assert.rejects(supplementReplaySnapshot(restored,{identity:{...session.identity,createdAt:later},retrospectiveForecast}),/원본 식별자/);
+  await assert.rejects(supplementReplaySnapshot(restored,{identity:{...session.identity,outputHash:'f'.repeat(64)},retrospectiveForecast}),/원본 식별자/);
 });
 test('a later actual observation can be revealed without changing the old curve or capture time',async()=>{
   const {snapshot,draft,session}=await fixture(),restored=await restoreReplaySnapshot(snapshot,{outputHash:draft.outputHash,origin:draft.origin,now:Date.parse(later)});

@@ -22,14 +22,15 @@ const retrospective={kind:'atlas-replay-retrospective-forecast',schemaVersion:1,
   path:Array.from({length:utcDay(original.asOf)-utcDay(originDate)+1},(_,i)=>{const price=anchor*(1+i*.003);return {date:dateFromDay(utcDay(originDate)+i),price,lower:price*.9,upper:price*1.12};})};
 const presentation={band:true,scale:'log',unit:'usd',showCycleMarkers:true,showCycleIntervals:true,showTurns:false,showHistoricalEvents:false};
 const context=createAtlasReplayContext({dataset,forecast:original,presentation,originDate,retrospectiveForecast:retrospective});
-function dataAt(cursorDate){
-  return {originDate,frequency:'weekly',observedRows:archive.observations.map(row=>({date:row.date,price:row.price})),
+function dataAt(cursorDate,{origin=originDate,captured=context,record=retrospective}={}){
+  return {originDate:origin,frequency:'weekly',observedRows:archive.observations.map(row=>({date:row.date,price:row.price})),
     observedCandles:buildReplayObservedCandles({...archive,cursorDate,frequency:'weekly',evaluatedAt:createdAt}).candles,
     priceSource:archive.source.provider,candleSource:archive.source.provider,
-    frame:{cursorDate,inputVisible:true,forecastVisible:true,forecast:context.forecast,retrospectiveForecast:retrospective.path}};
+    frame:{cursorDate,inputVisible:true,forecastVisible:true,forecast:captured.forecast,retrospectiveForecast:record.path}};
 }
 function paint(data,options={}){
-  const {svg}=svgFixture(1440,760),chart=drawAtlasChartReplay({svg,session:{asOf:originDate},data,start:'2026-08-08',end:'2026-11-15',chartType:'candles',context,...options});
+  const {width=1440,height=760,...chartOptions}=options;
+  const {svg}=svgFixture(width,height),chart=drawAtlasChartReplay({svg,session:{asOf:originDate},data,start:'2026-08-08',end:'2026-11-15',chartType:'candles',context,...chartOptions});
   return {svg,chart};
 }
 const vertices=node=>[...node.getAttribute('d').matchAll(/[ML](-?[\d.]+),(-?[\d.]+)/g)].map(match=>({x:Number(match[1]),y:Number(match[2])}));
@@ -46,6 +47,8 @@ function assertIndependentLayers(svg){
   for(const [index,kind] of ['retrospective','forecast'].entries()){
     assert.equal(series.querySelectorAll('[data-replay-'+kind+'-path]').length,1);
     assert.equal(paths[index].getAttribute('d'),halos[index].getAttribute('d'));
+    assert.equal(paths[index].getAttribute('stroke-dasharray'),kind==='retrospective'?'1 5':'5 3','retrospective dots stay distinct while the original dash remains unchanged');
+    assert.equal(halos[index].getAttribute('stroke-dasharray'),paths[index].getAttribute('stroke-dasharray'));
     assert.equal((paths[index].getAttribute('d').match(/M/g)??[]).length,1,'one record must remain one independent path');
     for(const node of [paths[index],halos[index],series.querySelector('[data-replay-'+kind+'-band]')])assert.equal(node.getAttribute('pointer-events'),'none');
   }
@@ -60,6 +63,38 @@ test('a separate frozen retrospective record leaves the original forecast and an
   record.path[1].price*=2;record.createdAt='2030-01-01T00:00:00.000Z';
   assert.deepEqual(captured.retrospectiveForecast,retrospective);
   assert.equal(forecastValueSignature(captured.forecast),forecastValueSignature(original.path));
+});
+
+test('each origin labels its own cutoff at the fixed path anchor on desktop and narrow charts',()=>{
+  for(const asOf of ['2026-05-31','2026-08-16']){
+    const startPrice=dataset.prices.find(row=>row[0]===asOf)[1];
+    const record={...retrospective,asOf,path:Array.from({length:utcDay(original.asOf)-utcDay(asOf)+1},(_,i)=>{const price=startPrice*(1+i*.003);return {date:dateFromDay(utcDay(asOf)+i),price,lower:price*.9,upper:price*1.12};})};
+    const captured=createAtlasReplayContext({dataset,forecast:original,presentation:{...presentation,priceDomain:{min:30000,max:200000}},originDate:asOf,retrospectiveForecast:record});
+    for(const width of [1440,320]){
+      let prior=null;
+      for(const days of [1,2]){
+        const cursorDate=dateFromDay(utcDay(asOf)+days),data=dataAt(cursorDate,{origin:asOf,captured,record});
+        const {svg,chart}=paint(data,{width,session:{asOf},context:captured,start:dateFromDay(utcDay(asOf)-8),end:'2026-11-15'});
+        const marker=svg.querySelector('[data-replay-retrospective-origin-label]'),label=marker?.querySelector('[data-replay-retrospective-input-date]');
+        assert.ok(marker);assert.equal(label.textContent,`회고 · 입력 ${asOf}`);assert.equal(marker.dataset.inputThrough,asOf);
+        assert.equal(marker.getAttribute('pointer-events'),'none');assert.equal(marker.querySelector('rect'),null,'the input date is an annotation, not a price-difference badge');
+        near(Number(marker.dataset.anchorX),chart.x(asOf));near(Number(marker.dataset.anchorY),chart.axis.y(startPrice));
+        const first=vertices(svg.querySelector('[data-replay-retrospective-path]'))[0];near(first.x,Number(marker.dataset.anchorX));near(first.y,Number(marker.dataset.anchorY));
+        const tx=Number(label.getAttribute('x')),ty=Number(label.getAttribute('y'));
+        assert.ok(tx>=chart.axis.left+4&&tx<=chart.axis.right-4);assert.ok(ty>=chart.axis.top+14&&ty<=chart.axis.bottom-4);
+        const state={label:marker.innerHTML,geometry:frozenGeometry(svg)};if(prior)assert.deepEqual(state,prior);else prior=state;
+        assertIndependentLayers(svg);assert.equal(svg.dataset.forecastValueSignature,forecastValueSignature(original.path));
+      }
+    }
+  }
+});
+
+test('panning past the retrospective origin does not move its date label to another point',()=>{
+  const {svg}=paint(dataAt('2026-08-18'),{start:'2026-08-17'});
+  assert.ok(svg.querySelector('[data-replay-retrospective-path]'));
+  assert.equal(svg.querySelector('[data-replay-retrospective-origin-label]'),null);
+  const clipped=paint(dataAt('2026-08-18'),{context:createAtlasReplayContext({dataset,forecast:original,presentation:{...presentation,priceDomain:{min:100000,max:200000}},originDate,retrospectiveForecast:retrospective})});
+  assert.equal(clipped.svg.querySelector('[data-replay-retrospective-origin-label]'),null,'an off-scale origin must not be relabelled at an invented boundary price');
 });
 
 test('August 17 and 18 grow one genuine weekly candle underneath two independent fixed paths and ranges',()=>{
@@ -109,6 +144,7 @@ test('unrevealed high, low and close values cannot affect the scale or either fi
 test('a withheld or unavailable retrospective path cannot be replaced by actuals or joined to the original',()=>{
   const hidden=dataAt('2026-08-18');hidden.frame.retrospectiveForecast=[];
   const a=paint(hidden);assert.equal(a.svg.querySelector('[data-replay-retrospective-path]'),null);assert.equal(a.svg.querySelector('[data-replay-retrospective-band]'),null);
+  assert.equal(a.svg.querySelector('[data-replay-retrospective-origin-label]'),null);
   a.chart.selectDate('2026-08-19');assert.equal(a.chart.getSelection().predicted,null);
   const unavailable={...retrospective,status:'unavailable',path:[],reason:'fixture-input-unavailable'};
   const unavailableContext=createAtlasReplayContext({dataset,forecast:original,presentation,originDate,retrospectiveForecast:unavailable});

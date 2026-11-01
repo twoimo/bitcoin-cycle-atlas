@@ -1,4 +1,4 @@
-import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.30.4';
+import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.30.5';
 import {buildCycleMilestones} from './cycle-milestones.js?v=1.29.0';
 import {validateDataset,utcDay,dateFromDay} from './cycle-engine.js?v=1.29.0';
 import {detectDirectionalChanges,computeRollingStates} from './market-structure.js?v=1.29.0';
@@ -123,7 +123,7 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
   const cycleIntervals=context.cycleIntervals.filter(interval=>markerIds.has(interval.fromId)&&markerIds.has(interval.toId));
   const states=p.showStates?[...(actual.length?computeRollingStates(actual).points:[]),...context.states.filter(row=>row.date>cursorDate&&row.date<=forecastThrough)]:[];
   const calibration=context.cycleCalibration?{...context.cycleCalibration,series:(context.cycleCalibration.series??[]).filter(row=>row.date<=cursorDate)}:null;
-  const chart=drawAtlasPriceChart({svg,rows,start,end,split:cursorDate,fixedForecast:fixed,forecastOrigin:context.forecastOrigin,retrospectiveForecast:retrospective,
+  const chart=drawAtlasPriceChart({svg,rows,start,end,split:cursorDate,fixedForecast:fixed,forecastOrigin:context.forecastOrigin,retrospectiveForecast:retrospective,retrospectiveOrigin:context.retrospectiveForecast?.asOf??null,
     frequency,chartType,observedCandles,candleSource:sourceLabel(data.candleSource),
     volumeBars:observedCandles.filter(row=>Number.isFinite(row.volume)),showVolume:Boolean(p.showVolume),volumeSource:sourceLabel(data.candleSource),
     historicalEvents:BITCOIN_EVENTS.filter(event=>event.date<=cursorDate),showHistoricalEvents:p.showHistoricalEvents!==false,

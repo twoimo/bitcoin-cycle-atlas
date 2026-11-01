@@ -1,5 +1,5 @@
-import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.30.4';
-import {captureReplayView,sealReplaySnapshot,restoreReplaySnapshot,persistReplayDraft} from './chart-replay-snapshot.js?v=1.30.4';
+import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.30.5';
+import {captureReplayView,sealReplaySnapshot,supplementReplaySnapshot,restoreReplaySnapshot,persistReplayDraft} from './chart-replay-snapshot.js?v=1.30.5';
 
 const day=date=>Date.parse(date+'T00:00:00Z')/86400000;
 const dateAt=value=>new Date(Math.round(value)*86400000).toISOString().slice(0,10);
@@ -268,7 +268,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
         if(!active||token!==epoch||signal.aborted)return;
         restoredSnapshot=saved;atlasCaptured=saved.view;atlasCapturedAt=saved.capturedAt;
       }
-      modules??=await Promise.all([import('./forecast-replay.js?v=1.30.4'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
+      modules??=await Promise.all([import('./forecast-replay.js?v=1.30.5'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
       if(!active||token!==epoch)return;
       if(atlasMode){
         atlasCaptured??=captureReplayView(getAtlasContext());
@@ -354,25 +354,29 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     const startDate=atlasMode?nearestOrigin(value||first):null;
     const replaySettings={mode:q('mode').value,horizon:Number(q('horizon').value),model:q('model')?.value??null,recordId:recorded?selectedRecord.record.id:null,...(atlasMode?{startDate}:{})};
     const asOf=currentMode?(resume?.origin??(startDate?dateAt(day(startDate)-1):null)):atlasMode?atlasBaseline.forecast.asOf:recorded?record.record.asOf:nearestOrigin(value);if(!asOf)return;
+    const restored=currentMode&&resume?restoredSnapshot:null,savedRetrospective=restored?.retrospectiveForecast??null;
+    const supplement=currentMode&&Boolean(resume)&&!savedRetrospective,expectedSaveText=saveBaseText;
+    const resumeIndex=dates=>resume?.cursorDate?Math.max(0,dates.findLastIndex(date=>date<=resume.cursorDate)):clamp(resume?.cursorIndex??0,0,dates.length-1);
     releaseGesture();picking=false;pickerDate=null;clearPicker();closeMenu();notice.hidden=true;
     q('date').value=atlasMode?startDate:asOf;follow=!atlasMode;
     range=atlasMode?(range??{start:atlasCaptured.start,end:atlasCaptured.end}):{start:dateAt(day(asOf)-120),end:dateAt(day(asOf)+Math.min(Number(q('horizon').value),120))};
     if(!atlasMode)customRange=resume?.range?Boolean(resume.customRange):true;
     if(resume?.range&&[resume.range.start,resume.range.end].every(date=>typeof date==='string'&&Number.isFinite(day(date)))&&resume.range.start<resume.range.end)range={...resume.range};
     if(currentMode){
-      try{prepareAtlasPending(asOf,{confirmed:true});}
+      const pendingDates=[asOf,...source.observations.filter(row=>row.date>asOf&&row.date<=atlasCaptured.forecast.path.at(-1).date).map(row=>row.date)];
+      try{prepareAtlasPending(asOf,{confirmed:true,cursorDate:resume?pendingDates[resumeIndex(pendingDates)]:asOf});}
       catch(error){pendingAtlas=null;controller.fail(error);return;}
     }
     const accepted=await controller.selectOrigin(asOf,async({signal})=>{
       const engine=modules[0],options={symbol,observations:source.observations,observedAt:source.observedAt,observedThrough:source.observedThrough,source:source.source,horizonDays:replaySettings.horizon};
       let retrospectiveModel=null;
-      if(currentMode&&(!resume||restoredSnapshot?.retrospectiveForecast)){
+      if(currentMode){
         if(typeof loadRetrospectiveModel!=='function')throw new Error('BTC 회고 모형 연결을 확인해 주세요.');
         retrospectiveModel=await loadRetrospectiveModel();
         signal.throwIfAborted();
       }
       const session=currentMode?await engine.createCurrentChartReplaySession({...options,dataset:atlasCaptured.dataset,forecast:atlasCaptured.forecast,asOf,playbackStartDate:dateAt(day(asOf)+1),
-          createRetrospective:!resume,retrospectiveForecast:resume?restoredSnapshot?.retrospectiveForecast??null:null,retrospectiveModel,modelOptions:atlasCaptured.modelOptions??{},
+          createRetrospective:!savedRetrospective,retrospectiveForecast:savedRetrospective,retrospectiveModel,modelOptions:atlasCaptured.modelOptions??{},
           createdAt:atlasCapturedAt??undefined,evaluatedAt:new Date().toISOString()}):
         atlasMode?await engine.createProjectReplaySession({...options,baseline:atlasBaseline}):
         recorded?await engine.createRecordedReplaySession({...options,record:selectedRecord.record,snapshot:selectedRecord.snapshot}):
@@ -382,27 +386,46 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       const dates=new Set(source.observations.map(row=>row.date));
       // Playback advances by actual observed bars; missing days remain gaps.
       const timeline=session.timeline.filter(date=>date===session.asOf||dates.has(date));
-      const atlasContext=currentMode&&resume&&restoredSnapshot?restoredSnapshot.atlasContext:atlasMode?
+      let atlasContext=restored?restored.atlasContext:atlasMode?
         atlasModules[1].createAtlasReplayContext({dataset:session.chartDataset,forecast:session.chartForecast,presentation:atlasCaptured.presentation,originDate:session.asOf,retrospectiveForecast:session.retrospectiveForecast??null}):null;
-      const replaySnapshot=currentMode?(resume&&restoredSnapshot?restoredSnapshot.snapshot:await sealReplaySnapshot({view:atlasCaptured,atlasContext,identity:session.identity,retrospectiveForecast:session.retrospectiveForecast??null})):null;
+      const replaySnapshot=currentMode?(restored?(supplement&&session.retrospectiveForecast?
+        await supplementReplaySnapshot(restored,{identity:session.identity,retrospectiveForecast:session.retrospectiveForecast}):restored.snapshot):
+        await sealReplaySnapshot({view:atlasCaptured,atlasContext,identity:session.identity,retrospectiveForecast:session.retrospectiveForecast??null})):null;
+      if(replaySnapshot)atlasContext=replaySnapshot.atlasContext;
       signal.throwIfAborted();
       return Object.freeze({...session,engineSession:session,autoOpened:automatic,replaySettings:Object.freeze(replaySettings),timeline:Object.freeze(timeline),atlasContext,replaySnapshot});
-    });
+    },resume?.outputHash?{cursorDate:resume.cursorDate??null,cursorIndex:resume.cursorIndex??0}:{});
     if(!accepted||!active||!getState().session)return;
     if(atlasMode&&!resume){const index=Math.max(0,getState().session.timeline.findLastIndex(date=>date<startDate));if(index>0)controller.seek(index);}
     if(resume){
       if(getState().session.identity.outputHash===resume.outputHash){
-        const dates=getState().session.timeline;
-        const index=resume.cursorDate?Math.max(0,dates.findLastIndex(date=>date<=resume.cursorDate)):clamp(resume.cursorIndex,0,getState().length-1);
-        controller.seek(index);if(CHART_REPLAY_SPEEDS.includes(resume.speed))controller.speed(resume.speed);
-        announce('저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다.'+(resume.sourceHash&&resume.sourceHash!==source.source.sourceHash?' 실제 관측 판본은 갱신되었습니다.':''));
+        if(CHART_REPLAY_SPEEDS.includes(resume.speed))controller.speed(resume.speed);
+        const retrospective=getState().session.retrospectiveForecast;
+        announce('저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다.'+(resume.sourceHash&&resume.sourceHash!==source.source.sourceHash?' 실제 관측 판본은 갱신되었습니다.':'')+
+          (retrospective?.status==='unavailable'?' · 회고 경로 없음: '+retrospective.reason:''));
       }
     }
     svg.focus({preventScroll:true});
+    if(supplement&&getState().session.retrospectiveForecast&&resume.outputHash===getState().session.identity.outputHash&&typeof expectedSaveText==='string'){
+      const owner=getState().session,token=epoch;
+      const isCurrent=()=>active&&!destroyed&&epoch===token&&getState().session===owner;
+      try{
+        // Continue authorizes completion of this saved capture, not a save of
+        // newly revealed bars or changed source/range/display preferences.
+        const text=await persistReplayDraft(win.localStorage,STORAGE+symbol,{...resume,forecastSnapshot:owner.replaySnapshot},
+          {indexedDB:win.indexedDB,locks:win.navigator?.locks,expectedText:expectedSaveText,isCurrent});
+        if(!isCurrent())return;
+        saveBaseText=text;readStored();q('save-status').hidden=true;
+      }catch(error){
+        if(!isCurrent())return;
+        const text=(error?.message??'회고 경로를 저장하지 못했습니다.')+' 현재 회고 경로와 재생 위치는 유지되며 기존 저장은 변경하지 않았습니다.';
+        announce(text);q('save-status').textContent=text;q('save-status').hidden=false;
+      }
+    }
   }
-  function prepareAtlasPending(origin,{confirmed}={}){
+  function prepareAtlasPending(origin,{confirmed,cursorDate=origin}={}){
     if(q('mode').value!=='atlas-chart'||!atlasCaptured||!atlasModules)return;
-    pendingAtlas={context:restoredSnapshot?.atlasContext?.originDate===origin?restoredSnapshot.atlasContext:null,confirmed:Boolean(confirmed),cursor:origin,
+    pendingAtlas={context:restoredSnapshot?.atlasContext?.originDate===origin?restoredSnapshot.atlasContext:null,confirmed:Boolean(confirmed),cursor:cursorDate,
       session:{asOf:origin,mode:'current-chart-snapshot',chartForecast:atlasCaptured.forecast,identity:{recordKind:'current-chart-snapshot'}}};
   }
   function drawAtlasPending(){
@@ -415,7 +438,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     const displayed=archive?modules[0].buildReplayObservedCandles({...archive,symbol,cursorDate:cursor,frequency:replayFrequency,evaluatedAt:new Date().toISOString()}):null;
     const data={...displayed?.metadata,symbol,frequency:replayFrequency,observedRows,observedCandles:displayed?.candles??[],
       priceSource:archive?.source?.provider??'Bitstamp',candleSource:archive?.source?.provider??'Bitstamp',
-      frame:{cursorDate:cursor,inputVisible:true,forecastVisible:true,forecast:context.forecast}};
+      frame:{cursorDate:cursor,inputVisible:true,forecastVisible:true,forecast:context.forecast,retrospectiveForecast:context.retrospectiveForecast?.path??[]}};
     rendered=atlasModules[1].drawAtlasChartReplay({svg,session,data,...range,chartType:q('display').value,context,onInspect:()=>{},selectionPreview:!confirmed});
     // Disable hover/inspection of a pending frame; it is not a verified session.
     const axis=rendered.getPriceScale?.();disposeDrawing();
@@ -557,7 +580,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
         onAtlasFrame({session,data:chartData,...range,chartType:q('display').value,context,frequency:replayFrequency,window:replayWindow,customRange,axis});
       }
       const label={paused:'일시정지',playing:'재생 중',ended:'확보한 실제 봉까지 재생 완료'}[state.status]??'';
-      announce(atlasMode?'시작 '+state.session.replaySettings.startDate+' · '+intervalName(replayFrequency)+' / 업데이트 Auto 1일 · 실제 '+date+'까지 · '+label+' · '+(currentMode?'현재 주황색 예측선 고정'+(retrospectiveReady?' · 회고 예측 고정 (입력 '+retrospective.asOf+')':''):'10월 21일 당시 전망'):
+      announce(atlasMode?'시작 '+state.session.replaySettings.startDate+' · '+intervalName(replayFrequency)+' / 업데이트 Auto 1일 · 실제 '+date+'까지 · '+label+' · '+(currentMode?'현재 주황색 예측선 고정'+(retrospectiveReady?' · 회고 예측 고정 (입력 '+retrospective.asOf+')':retrospective?.status==='unavailable'?' · 회고 경로 없음: '+retrospective.reason:''):'10월 21일 당시 전망'):
         symbol+' · '+intervalName(replayFrequency)+' / 업데이트 1일 · '+label+' · 예측 기준 '+session.asOf+' · '+(session.mode==='recorded'?'보존 경로':'과거 재구성'));
       const point=frame.selected,retrospectivePoint=(frame.retrospectiveForecast??[]).find(row=>row.date===date);
       inspect.textContent=inspectionText({date,actual:point.actual??chartData.observedRows?.findLast(row=>row.date===date)?.price??null,predicted:point.predicted??retrospectivePoint?.price??null,predictedKind:point.predicted!==null?'original':retrospectivePoint?'retrospective':null,

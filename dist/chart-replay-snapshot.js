@@ -63,6 +63,17 @@ export async function sealReplaySnapshot({view,atlasContext,identity,retrospecti
   return snapshot;
 }
 
+/** Add only the missing retrospective record to a verified legacy capture.
+ * Original assumptions, annotations and capture time remain byte-equivalent. */
+export async function supplementReplaySnapshot(restored,{identity,retrospectiveForecast}){
+  const previous=restored?.snapshot;
+  if(!previous||previous.retrospectiveForecast||restored.retrospectiveForecast||!retrospectiveForecast)
+    throw new TypeError('회고 경로가 없는 검증된 저장본만 보완할 수 있습니다.');
+  if(identity?.outputHash!==previous.outputHash||identity.asOf!==previous.origin||identity.createdAt!==previous.capturedAt)
+    throw new TypeError('보완할 고정 예측의 원본 식별자가 일치하지 않습니다.');
+  return sealReplaySnapshot({view:restored.view,atlasContext:{...restored.atlasContext,retrospectiveForecast},identity,retrospectiveForecast});
+}
+
 /** Validate the saved capture before using it; never fall back to a new curve
  * when an existing capture is corrupt. The engine separately verifies output. */
 export async function restoreReplaySnapshot(snapshot,{outputHash,origin,now=Date.now(),indexedDB=globalThis.indexedDB,snapshotStore=null}={}){
