@@ -65,7 +65,7 @@ export function ipoRowMarkup(row) {
     + `<td class="ipo-status"><span class="ipo-badge ipo-badge-${cls}">${esc(row.상태)}</span></td>`
     + `<td class="ipo-dday">${esc(dday(row.Dday))}</td>`
     + `<td>${esc(range(row['수요예측']))}</td><td>${esc(range(row['청약']))}</td>`
-    + `<td class="ipo-num">${esc(won(row['확정공모가'] ?? row['희망공모가']))}</td>`
+    + `<td class="ipo-num">${esc(won(row['확정공모가'] ?? row['희망공모가']))}${row['확정공모가'] ? ' <small>(확정)</small>' : row['희망공모가'] ? ' <small>(희망)</small>' : ''}</td>`
     + `<td class="ipo-num">${esc(money(row['공모금액_백만원']))}</td>`
     + `<td class="ipo-num">${esc(row['일반청약경쟁률'] ?? '—')}</td>`
     + `<td>${esc((row['주간사'] ?? []).join(' · ') || '—')}</td></tr>`;

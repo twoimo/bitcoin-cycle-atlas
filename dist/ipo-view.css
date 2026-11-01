@@ -27,3 +27,14 @@
 .ipo-dday { font-variant-numeric: tabular-nums; font-weight: 600; }
 .ipo-state-closed { opacity: .62; }
 .ipo-disclaimer { margin: 0; font-size: 11.5px; line-height: 1.55; color: var(--muted, #8b93a7); }
+
+/* Keep company identities readable inside the table's own horizontal scroll. */
+.ipo-table { min-width: 920px; }
+.ipo-table .ipo-name { position: sticky; left: 0; min-width: 130px; white-space: nowrap; background: var(--bg); z-index: 1; }
+.ipo-table th:first-child { position: sticky; left: 0; z-index: 3; min-width: 130px; }
+.ipo-table td:not(.ipo-name) { white-space: nowrap; }
+.ipo-back { display: none; }
+@media (max-width: 760px) {
+  .ipo-back { display: inline-flex; min-height: 44px; align-items: center; color: var(--muted); font-size: 12px; }
+  .ipo-segmented button, .ipo-search { min-height: 44px; }
+}
