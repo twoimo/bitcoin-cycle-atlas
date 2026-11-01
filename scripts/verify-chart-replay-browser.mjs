@@ -862,8 +862,11 @@ export async function verifyChartReplaySurface(api) {
     assert.deepEqual(rewound.candles, first.candles, 'Weekly rewind did not reproduce the exact disclosed prefix');
     assert.deepEqual([rewound.priceMinimum, rewound.priceMaximum], [first.priceMinimum, first.priceMaximum], 'Weekly rewind retained a later actual price domain');
     await exported('weekly-disclosed-prefix');
-    await click(cdp, control('scrub')); await key('End', 'End', 35);
-    const completed = await snapshot('weekly-completed-sunday');
+    const sunday=dateAt(day(candle1.periodStart)+6);
+    assert.ok(btcCandles.some(row=>row.date===sunday),'The completed first-week Sunday must be present in the actual archive');
+    await click(cdp, control('scrub')); await key('Home', 'Home', 36);
+    for(let i=0;i<day(sunday)-day(direct.origin);i++)await key('ArrowRight','ArrowRight',39);
+    const completed = await snapshot('weekly-completed-sunday');assert.equal(completed.cursor,sunday);
     const completeCandle = completed.candles.find(row => row.date === completed.cursor);
     assert.equal(completeCandle.periodStart, candle1.periodStart); assert.equal(completeCandle.complete, true); assert.equal(completeCandle.daysIncluded, 7);
 
