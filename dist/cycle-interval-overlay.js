@@ -62,7 +62,13 @@ function labelAt(item, y, { bounds, placed, obstacles, segments }) {
     const width = variant.width ?? textWidth(variant.text) * variant.fontSize / 10 + 4;
     if (width > available || variant.top < bounds.top + 1 || variant.top + variant.height > bounds.bottom) continue;
     const start = item.x1 + 6, end = item.x2 - width - 6, center = (start + end) / 2;
-    for (const x of new Set([center, start, end, (start + center) / 2, (center + end) / 2])) {
+    // A HUD may leave enough room beside it even when the usual centered and
+    // quarter-span positions are blocked. Use those horizontal gaps before
+    // falling back to a shorter label; the UTC endpoints never move.
+    const blockers = [...obstacles, ...placed.flatMap(other => other.labelBox ? [other.labelBox] : [])];
+    const edges = blockers.filter(box => box.y < variant.top + variant.height + labelGap && box.y + box.height + labelGap > variant.top)
+      .flatMap(box => [box.x - width - labelGap - 3, box.x + box.width + labelGap + 3]);
+    for (const x of new Set([center, start, end, (start + center) / 2, (center + end) / 2, ...edges].map(value => clamp(value, start, end)))) {
       const box = { x, y: variant.top, width, height: variant.height };
       if (obstacles.some(other => intersects(box, other, 2)) || placed.some(other => (other.labelBox && intersects(box, other.labelBox, labelGap)) || intersects(box, { x: other.x1, y: other.y - 2, width: other.x2 - other.x1, height: 4 }, 1))) continue;
       const priceHits = segments.reduce((count, segment) => count + Number(segmentIntersectsBox(segment, box)), 0);
@@ -141,8 +147,9 @@ function spanMarkup(item) {
 /**
  * Internal SVG group only. x receives the original endpoint as { date }; right
  * is the absolute price-plot edge. clipId refers to the caller's price clip.
- * Every valid visible span remains in a bounded bottom band. Relation rows and
- * original-date subtracks are independent of zoom, price values and selection.
+ * Every valid visible span remains in a bounded interior band, above measured
+ * bottom-docked controls. Relation rows and original-date subtracks are
+ * independent of zoom, price values and selection.
  * Labels use horizontal room first and may be omitted; title/ARIA and the
  * caller's interval selection remain available without adding chart height.
  */
@@ -152,9 +159,15 @@ export function cycleIntervalsOverlayMarkup({ intervals = [], start, end, x, lef
   const empty = { markup: '', visibleCount: 0, labelCount: 0, hiddenLabelCount: 0, items: [], rows, relations: rows, lanes: [], bandTop: null, bandBottom: null };
   const first = dayOf(start), last = dayOf(end);
   if (first === null || last === null || last <= first || ![left, right, top, bottom].every(finite) || right <= left || bottom <= top || typeof x !== 'function') return empty;
-  // This is an annotation region inside the unchanged price plot, not reserved
-  // layout space. Its height never depends on the visible data, HUDs or prices.
-  const bandTop = bottom - Math.min(200, (bottom - top) * .4), bandBottom = bottom;
+  const safeObstacles = (Array.isArray(obstacles) ? obstacles : []).filter(box => box && [box.x, box.y, box.width, box.height].every(finite) && box.width > 0 && box.height > 0);
+  // The existing legend and replay transport belong inside the same plot. A
+  // bottom-docked HUD explicitly reserves its top edge so complete continuous
+  // period lines sit above it; arbitrary marker/readout boxes affect labels
+  // only. This moves annotations, never the price/date axes or price scale.
+  const plotHeight = bottom - top, inset = Math.min(28, plotHeight / 4);
+  const docks = safeObstacles.filter(box => box.dock === 'bottom' && box.x < right && box.x + box.width > left && box.y < bottom && box.y + box.height > top);
+  const bandBottom = Math.max(top + inset, Math.min(bottom - inset, ...docks.map(box => box.y - 8)));
+  const bandTop = Math.max(top, bandBottom - Math.min(200, plotHeight * .4));
   const bounds = { left, right, top: bandTop, bottom: bandBottom }, selectedRelations = new Set(displayedRelations.map(item => item.id)), candidates = [], items = [];
   for (const interval of Array.isArray(intervals) ? intervals : []) {
     if (!interval?.id || !selectedRelations.has(interval.relation)) continue;
@@ -170,7 +183,6 @@ export function cycleIntervalsOverlayMarkup({ intervals = [], start, end, x, lef
     Object.assign(item, { days: to - from, duration: durationLabel(to - from), rawX1, rawX2, x1, x2, clippedStart: from < first || rawX1 < left, clippedEnd: to > last || rawX2 > right, active: interval.id === activeIntervalId, related: Boolean(activeMarkerId && (interval.fromId === activeMarkerId || interval.toId === activeMarkerId)) });
     items.push(item);
   }
-  const safeObstacles = (Array.isArray(obstacles) ? obstacles : []).filter(box => box && [box.x, box.y, box.width, box.height].every(finite) && box.width > 0 && box.height > 0);
   const segments = priceSegments(pricePoints), order = new Map(displayedRelations.map((item, index) => [item.id, index]));
   const byDate = (a, b) => a.first - b.first || a.last - b.last || String(a.interval.id).localeCompare(String(b.interval.id));
   let trackCount = 0;

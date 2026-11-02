@@ -78,7 +78,12 @@
 .chart-replay-picker{stroke:var(--focus);stroke-width:2;stroke-dasharray:5 4;pointer-events:none}
 .chart-replay-picker-label{fill:var(--focus);stroke:var(--bg);stroke-width:4;paint-order:stroke;stroke-linejoin:round;font:600 12px var(--font,sans-serif);pointer-events:none}
 .chart-replay-notice{position:absolute;left:12px;right:84px;top:88px;z-index:23;width:fit-content;max-width:calc(100% - 96px);box-sizing:border-box;margin:0;padding:8px 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);color:var(--text);font:12px/1.6 var(--font,sans-serif);box-shadow:var(--shadow)}
-.chart-replay-active.chart-replay-atlas[data-chart-replay-mode]>.lab-chart-foot{display:flex!important;top:8px;bottom:auto}
+.chart-replay-active.chart-replay-atlas.atlas-plot:not([data-chart-focus=true])>.lab-chart-foot:not([hidden]){display:flex!important;top:auto;bottom:var(--plot-legend-bottom,var(--plot-bottom-gap,52px))}
+/* Keep the accepted transport width/order. Its lower edge clears the single
+   legend row, and the exit button stays out of the price-axis gutter. */
+.chart-replay-active.chart-replay-atlas.atlas-plot>.chart-replay-controls{--replay-bottom:calc(var(--plot-legend-bottom,var(--plot-bottom-gap,52px)) + 34px)}
+.chart-replay-active.chart-replay-atlas.atlas-plot .chart-replay-bar{max-width:min(420px,calc(100% - var(--plot-right-gap,80px) - var(--plot-right-gap,80px) - 104px))}
+.chart-replay-active.chart-replay-atlas.atlas-plot .chart-replay-exit{right:var(--plot-right-gap,80px)}
 .chart-replay-atlas>.chart-replay-hud{top:44px}
 .chart-replay-atlas .chart-replay-inspect{max-width:100%;background:var(--surface);width:max-content;padding:0 4px}
 html[data-chart-replay-active=true] #eth-status,html[data-chart-replay-active=true] #equity-status{visibility:hidden}
@@ -99,6 +104,7 @@ html[data-chart-replay-active=true] .eth-interval-buttons,html[data-chart-replay
 @media(max-width:620px){
   .atlas-canvas-heading,.eth-topbar{min-width:0;max-width:100%;box-sizing:border-box;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none}
   .chart-replay-bar{left:8px;right:60px;transform:none;width:auto;max-width:none}
+  .chart-replay-active.chart-replay-atlas.atlas-plot .chart-replay-bar{right:calc(var(--plot-right-gap,80px) + 52px);max-width:none}
   .chart-replay-select-menu,.chart-replay-select-menu[data-menu-view=forecast],.chart-replay-choice{left:8px;right:8px;transform:none;width:auto;max-width:none}
   .chart-replay-menu-fields{grid-template-columns:minmax(0,1fr)}
   .chart-replay-hud{left:8px;right:76px;font-size:11px}

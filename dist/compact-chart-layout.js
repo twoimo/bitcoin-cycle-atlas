@@ -32,7 +32,9 @@ export function mountCompactChartLayout({plot}={}) {
   const doc=plot.ownerDocument,win=doc.defaultView||globalThis;
   const manager=plot.querySelector('.chart-indicator-manager'),list=manager?.querySelector('.chart-indicator-list');
   const fold=manager?.querySelector('.indicator-legend-toggle'),windows=plot.querySelector('.analysis-indicator-windows');
-  const hud=[plot.querySelector('#lab-metrics'),plot.querySelector('.workbench-market-info'),plot.querySelector('.lab-chart-foot')].filter(Boolean);
+  // The legend belongs to the bottom of the price plot. Only the upper-left
+  // readout and source own space above the indicator controls and panes.
+  const hud=[plot.querySelector('#lab-metrics'),plot.querySelector('.workbench-market-info')].filter(Boolean);
   let size='balanced',active=false,destroyed=false,scheduled=false,frame=null,lastLayout=null;
   let header=null,sizeLabel=null,sizeSelect=null;
   if(manager&&fold){
