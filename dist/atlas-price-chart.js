@@ -1,4 +1,4 @@
-import { cycleIntervalsOverlayMarkup } from "./cycle-interval-overlay.js?v=1.29.0";
+import { cycleIntervalsOverlayMarkup } from "./cycle-interval-overlay.js?v=1.30.6";
 import { milestoneMarkersMarkup } from "./cycle-milestones-view.js?v=1.29.0";
 import { MILESTONE_TYPES } from "./cycle-milestones.js?v=1.29.0";
 import { utcDay } from './cycle-engine.js?v=1.29.0';
@@ -56,6 +56,20 @@ export function forecastValueSignature(rows){
   return (a>>>0).toString(16).padStart(8,'0')+(b>>>0).toString(16).padStart(8,'0');
 }
 
+/** Measured presentation obstacles only. Replay owns a separate controller, so
+ * every ordinary price render measures its own visible overlays as well. */
+export function priceChartOverlayObstacles(svg){
+  const plot=svg?.parentElement,origin=svg?.getBoundingClientRect?.();
+  if(!plot?.querySelectorAll||!origin?.width||!origin?.height)return [];
+  const sx=(svg.clientWidth||origin.width)/origin.width,sy=(svg.clientHeight||origin.height)/origin.height;
+  return [...plot.querySelectorAll('.atlas-readout,.workbench-market-info,#chart-indicator-manager,.lab-chart-foot,.chart-replay-bar,.chart-replay-exit,.chart-replay-hud')].flatMap(node=>{
+    if(node.hidden||node.closest?.('[hidden]'))return [];
+    const rect=node.getBoundingClientRect();if(!(rect.width>0&&rect.height>0))return [];
+    return [{x:(rect.left-origin.left)*sx-4,y:(rect.top-origin.top)*sy-4,width:rect.width*sx+8,height:rect.height*sy+8,
+      ...(node.matches?.('.lab-chart-foot,.chart-replay-bar,.chart-replay-exit')?{dock:'bottom'}:{})}];
+  });
+}
+
 /** Rendering and inspection only. It never changes prices, paths or model dates. */
 export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForecast=null,forecastOrigin=split,forecastIdentityRows=null,retrospectiveForecast=null,retrospectiveOrigin=null,frequency='daily',chartType='line',observedCandles=[],candleSource='Bitstamp',volumeBars=[],volumeProjection=null,volumeSource='Bitstamp',showVolume=false,historicalEvents=[],cycleCalibration=null,showCycleTiming=false,headerInset=null,dateTickMinSpacing=0,showHistoricalEvents=true,activeHistoricalEventId=null,onHistoricalEvent=()=>{},stateStepDays=1,unit='usd',denominator=1,scale='log',priceDomain=null,invertScale=false,priceOnlyAuto=false,researchAnnotations=[],activeAnnotationId=null,onAnnotation=null,activeResearchAnnotationId=null,onResearchAnnotation=()=>{},scenarioId=null,tool='crosshair',magnet='off',measurement=null,onMeasurement=()=>{},onHover=()=>{},band=false,turns=[],showTurns=true,cycleMarkers=[],showCycleMarkers=true,activeCycleMarkerId=null,activeCycleMarkerIds=[],activeCycleInterval=null,onCycleMarker=()=>{},cycleIntervals=[],showCycleIntervals=false,cycleRelation='all',cycleOverlayObstacles=[],onCycleInterval=()=>{},events=[],forecastEvidence=[],onForecastEvidence=()=>{},states=[],fib=[],historical=false,nextTurn=null,showNextTurnLabel=true,onNextTurn=()=>{},showDrawdown=true,showStates=false,threshold=.12,onInspect=()=>{},selectedDate}){
   clearChartHover(svg,{preservePointer:true});
@@ -66,6 +80,11 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   const layout=chartPaneLayout({width:W,height:H,volume:showVolume,drawdown:showDrawdown,states:showStates,cycleTiming:showCycleTiming,top:Number.isFinite(headerInset)?Math.max(8,headerInset):compactHeight?62:70});
   const axisText=createPriceAxisLayout({svg,width:W,left:layout.left,minRight:layout.right});layout.right=axisText.right;
   const {left:L,right:R,top:T,axisY,priceBottom,ddTop,ddBottom,stateTop,stateBottom,volumeTop,volumeBottom,cycleTop,cycleBottom}=layout,stateHeight=stateBottom-stateTop,ddHeight=ddBottom-ddTop;
+  // Position HTML annotations from the same measured price plot. This does not
+  // reserve another pane or change the price/date coordinate transforms.
+  svg.parentElement?.style.setProperty('--plot-legend-bottom',`${H-priceBottom+4}px`);
+  svg.parentElement?.style.setProperty('--plot-left-gap',`${L}px`);
+  svg.parentElement?.style.setProperty('--plot-right-gap',`${R+7}px`);
   // A replay week keeps the opening coordinate while its disclosed daily
   // prefix grows. Its endDate remains the last actual day used for inspection.
   // Ordinary completed-week archives retain their existing display date.
@@ -243,11 +262,11 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
     const pricePoints=selectionRows.filter((_,index)=>index%stride===0||index===selectionRows.length-1).flatMap(point=>point.candle?[{x:x(point),y:y(point.candle.high)},{x:x(point),y:y(point.candle.low)}]:[{x:x(point),y:y(point.price)}]);
     const periodClip=`${svg.id}-cycle-periods`;
     s+=`<defs><clipPath id="${periodClip}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${priceBottom-T}"/></clipPath></defs>`;
-    const renderPeriods=obstacles=>cycleIntervalsOverlayMarkup({intervals:cycleIntervals,start,end,x,left:L,right:W-R,top:T,bottom:priceBottom,clipId:periodClip,relation:cycleRelation,activeIntervalId:activeCycleInterval?.id,activeMarkerId:activeCycleMarkerId,obstacles:[...(obstacles||[]),...markerObstacles],pricePoints});
+    const renderPeriods=obstacles=>cycleIntervalsOverlayMarkup({intervals:cycleIntervals,start,end,x,left:L,right:W-R,top:T,bottom:priceBottom,clipId:periodClip,relation:cycleRelation,activeIntervalId:activeCycleInterval?.id,activeMarkerId:activeCycleMarkerId,obstacles:[...(obstacles||[]),...priceChartOverlayObstacles(svg),...markerObstacles],pricePoints});
     const periodMetadata=periods=>{svg.dataset.cycleIntervalCount=String(periods.visibleCount);svg.dataset.cycleIntervalLabelCount=String(periods.labelCount);if(Number.isFinite(periods.bandTop)&&Number.isFinite(periods.bandBottom)){svg.dataset.cycleIntervalBandTop=String(periods.bandTop);svg.dataset.cycleIntervalBandBottom=String(periods.bandBottom);}return {visibleCount:periods.visibleCount,labelCount:periods.labelCount,bandTop:periods.bandTop,bandBottom:periods.bandBottom};};
     const periods=renderPeriods(cycleOverlayObstacles);let periodMarkup=periods.markup;
     s+=`<g class="cycle-interval-overlay-layer" data-indicator-layer="cycle-intervals">${periodMarkup}</g>`;periodMetadata(periods);
-    // HUD wrapping only affects period labels. Replacing the entire price SVG
+    // HUD changes only repack period annotations. Replacing the entire price SVG
     // here would reset a live pointer to the selected observation on every size
     // change and could create a readout → resize → redraw feedback loop.
     updateCycleOverlayObstacles=obstacles=>{

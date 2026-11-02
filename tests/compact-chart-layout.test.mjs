@@ -63,7 +63,7 @@ function fixture({width=390,height=693,collapsed=false,panes=5}={}){
   doc.createElement=tag=>new Element(tag,doc);doc.body=doc.createElement('body');doc.activeElement=doc.body;
   const add=(parent,tag,className,box={})=>{const node=doc.createElement(tag);node.className=className;node.box={...node.box,...box};parent.append(node);return node;};
   const plot=add(doc.body,'div','atlas-plot',{top:40,width,height}),readout=add(plot,'div','atlas-readout',{top:48,height:38,width:320});readout.id='lab-metrics';
-  const source=add(plot,'p','workbench-market-info',{top:90,height:18,width:320}),legend=add(plot,'div','lab-chart-foot',{top:114,height:50,width:220});
+  const source=add(plot,'p','workbench-market-info',{top:90,height:18,width:320}),legend=add(plot,'div','lab-chart-foot',{top:40+height-46-24,height:24,width:220});
   const manager=add(plot,'section','chart-indicator-manager');manager.dataset.collapsed=String(collapsed);
   const list=add(manager,'div','chart-indicator-list');list.id='chart-indicator-list';list.scrollHeight=420;list.hidden=collapsed;
   const fold=add(manager,'button','indicator-legend-toggle');fold.setAttribute('aria-expanded',String(!collapsed));
@@ -76,31 +76,35 @@ function fixture({width=390,height=693,collapsed=false,panes=5}={}){
 
 test('measured HUD bottoms, explicit list height and focus mode preserve canonical visibility/folds and the existing fold control',async()=>{
   const f=fixture(),state=()=>JSON.stringify({collapsed:f.manager.dataset.collapsed,listHidden:f.list.hidden,windowsHidden:f.windows.hidden,panes:f.windows.children.map(card=>({hidden:card.hidden,minimized:card.dataset.minimized}))});
-  const before=state();assert.equal(f.plot.style.getPropertyValue('--compact-content-top'),'130px');assert.equal(f.doc.activeElement,f.fold);
+  const before=state();assert.equal(f.plot.style.getPropertyValue('--compact-content-top'),'74px');assert.equal(f.doc.activeElement,f.fold);
   assert.equal(f.fold.parentElement.className,'compact-indicator-controls');assert.equal(f.select.getAttribute('aria-controls'),'chart-indicator-list');
   const initialTop=Number.parseFloat(f.plot.style.getPropertyValue('--compact-analysis-top'));
   f.select.value='small';f.select.dispatchEvent({type:'change'});assert.equal(f.plot.style.getPropertyValue('--compact-list-max-height'),'56px');assert.ok(Number.parseFloat(f.plot.style.getPropertyValue('--compact-analysis-top'))<initialTop);
   const writes=f.plot.writes;f.controller.refresh();assert.equal(f.plot.writes,writes,'unchanged geometry produces no style writes');
   f.plot.dataset.chartFocus='true';f.legend.box.height=0;f.readout.box.height=0;f.source.box.height=0;f.doc.dispatchEvent({type:'atlas:chart-focus',detail:{focused:true}});await Promise.resolve();
   assert.equal(f.plot.writes,writes);assert.equal(state(),before);
-  f.legend.box.height=66;f.readout.box.height=38;f.source.box.height=18;f.plot.dataset.chartFocus='false';f.doc.dispatchEvent({type:'atlas:chart-focus',detail:{focused:false}});await Promise.resolve();
-  assert.equal(f.plot.style.getPropertyValue('--compact-content-top'),'146px');assert.equal(f.plot.style.getPropertyValue('--compact-list-max-height'),'56px');assert.equal(state(),before);assert.deepEqual(f.commands,[]);
+  f.legend.box.height=24;f.readout.box.height=38;f.source.box.height=34;f.plot.dataset.chartFocus='false';f.doc.dispatchEvent({type:'atlas:chart-focus',detail:{focused:false}});await Promise.resolve();
+  assert.equal(f.plot.style.getPropertyValue('--compact-content-top'),'90px');assert.equal(f.plot.style.getPropertyValue('--compact-list-max-height'),'56px');assert.equal(state(),before);assert.deepEqual(f.commands,[]);
   f.controller.destroy();assert.equal(f.fold.parentElement,f.manager);assert.equal(f.plot.dataset.compactLayout,undefined);assert.equal(f.manager.querySelector('.compact-indicator-controls'),null);
 });
 
 test('observed resize and hidden HUD changes are coalesced, desktop exits cleanly and a folded list stays folded',async()=>{
   const f=fixture({width:320,height:589,collapsed:true});
   assert.equal(f.manager.querySelector('.compact-list-size').hidden,true);assert.equal(f.plot.style.getPropertyValue('--compact-list-max-height'),'0px');
-  f.legend.hidden=true;for(const observer of f.observers){observer.callback([]);observer.callback([]);}await Promise.resolve();
-  assert.equal(f.plot.style.getPropertyValue('--compact-content-top'),'74px');assert.equal(f.manager.dataset.collapsed,'true');assert.equal(f.list.hidden,true);
+  let measurements=0;const measure=f.plot.getBoundingClientRect.bind(f.plot);f.plot.getBoundingClientRect=()=>{measurements++;return measure();};
+  f.source.hidden=true;f.legend.hidden=true;for(const observer of f.observers){observer.callback([]);observer.callback([]);}await Promise.resolve();
+  assert.equal(measurements,1,'duplicate resize notifications share one layout measurement');
+  assert.equal(f.plot.style.getPropertyValue('--compact-content-top'),'52px');assert.equal(f.manager.dataset.collapsed,'true');assert.equal(f.list.hidden,true);
   f.plot.box.width=1200;f.plot.box.height=833;f.win.dispatchEvent({type:'resize'});await Promise.resolve();assert.equal(f.plot.dataset.compactLayout,undefined);assert.equal(f.fold.parentElement,f.manager);
   f.plot.box.width=456;f.win.dispatchEvent({type:'resize'});await Promise.resolve();assert.equal(f.plot.dataset.compactLayout,'stack');assert.equal(f.fold.parentElement.className,'compact-indicator-controls');
   f.controller.destroy();const writes=f.plot.writes;for(const observer of f.observers)observer.callback([]);await Promise.resolve();assert.equal(f.plot.writes,writes);assert.deepEqual(f.commands,[]);
 });
 
-test('a CSS-hidden mobile legend contributes no empty HUD slot while the upper-left values remain usable',()=>{
+test('a visible bottom legend contributes no upper HUD slot while the upper-left values remain usable',()=>{
   const f=fixture({width:320,height:589});
-  f.legend.box.height=0;assert.equal(f.legend.hidden,false,'the mobile rule hides only its layout, not the user preference');
+  assert.equal(f.legend.hidden,false);assert.equal(f.legend.box.height,24);assert.ok(f.legend.box.top>f.source.box.top+f.source.box.height);
+  assert.equal(f.plot.style.getPropertyValue('--compact-content-top'),'74px');
+  f.legend.box.top-=32;f.legend.box.width=260;
   f.controller.refresh();assert.equal(f.plot.style.getPropertyValue('--compact-content-top'),'74px');
   assert.equal(f.plot.style.getPropertyValue('--compact-list-max-height'),'112px');assert.equal(f.manager.dataset.collapsed,'false');
   f.controller.destroy();

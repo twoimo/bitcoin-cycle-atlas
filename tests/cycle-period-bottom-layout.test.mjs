@@ -119,11 +119,11 @@ const periods = svg => svg.querySelectorAll('[data-cycle-interval]');
 const placements = svg => new Map(periods(svg).map(node => [node.dataset.cycleInterval, number(node, 'data-y')]));
 function assertBottom(svg) {
   const overlay = svg.querySelector('.cycle-interval-overlay'); assert.ok(overlay, 'periods share the price SVG');
-  assert.notEqual(overlay.getAttribute('data-band-top'), null, 'the SVG exposes its actual bottom band');
+  assert.notEqual(overlay.getAttribute('data-band-top'), null, 'the SVG exposes its actual in-plot annotation band');
   const top = number(overlay, 'data-band-top'), bottom = number(overlay, 'data-band-bottom');
   assert.ok(Number.isFinite(top) && Number.isFinite(bottom) && top < bottom);
   assert.ok(top >= Number(svg.dataset.plotTop) && bottom <= Number(svg.dataset.priceBottom) + .025);
-  assert.ok(Number(svg.dataset.priceBottom) - bottom <= 12, 'the band remains attached to the bottom of the price plot');
+  assert.ok(bottom < Number(svg.dataset.priceBottom), 'the band clears the legend above the date axis');
   for (const line of overlay.querySelectorAll('.cycle-interval-line')) {
     near(number(line, 'y1'), number(line, 'y2'), 'duration lines remain horizontal');
     assert.ok(number(line, 'y1') >= top && number(line, 'y1') <= bottom, 'every duration line stays in the bottom band');
@@ -143,7 +143,7 @@ function assertBottom(svg) {
   return { top, bottom };
 }
 
-test('all 44 observed and scenario periods stay inside the existing price bottom band on desktop and phones', () => {
+test('all 44 observed and scenario periods stay inside the existing price plot above the legend on desktop and phones', () => {
   assert.equal(baseline.annotations.intervals.length, 44);
   for (const layout of [{ width: 1280, height: 720 }, { width: 390, height: 500 }, { width: 320, height: 260, showVolume: true, showDrawdown: true }]) {
     const { svg } = render(layout), plain = render({ ...layout, showCycleIntervals: false }).svg;
@@ -256,7 +256,7 @@ test('SVG export preserves the actual bottom layout once, with source dates, nin
   assert.equal(serialize(svg), before, 'export removes temporary interactions only from its clone');
 });
 
-test('HUD geometry updates only period labels without rebuilding the price SVG or moving the live crosshair', () => {
+test('HUD geometry updates only period annotations without rebuilding the price SVG or moving the live crosshair', () => {
   const readouts = [], inspections = [], { svg, controller } = render({ onHover: value => readouts.push(value), onInspect: value => inspections.push(value) });
   const band = assertBottom(svg), positions = placements(svg), initialLabels = Number(svg.dataset.cycleIntervalLabelCount);
   assert.ok(initialLabels > 0, 'the fixture has visible labels to relayout');
@@ -276,6 +276,15 @@ test('HUD geometry updates only period labels without rebuilding the price SVG o
   assert.deepEqual(placements(svg), positions); assertBottom(svg);
   controller.updateCycleOverlayObstacles([]); assert.equal(Number(svg.dataset.cycleIntervalLabelCount), initialLabels);
   assert.equal(controller.updateCycleOverlayObstacles([]).changed, false, 'identical HUD geometry does not replace annotations again');
+  const transport = { x: 410, y: Number(svg.dataset.priceBottom) - 84, width: 420, height: 44, dock: 'bottom' };
+  controller.updateCycleOverlayObstacles([transport]);
+  assert.ok(assertBottom(svg).bottom < transport.y, 'the measured replay bar has no period line behind it');
+  assert.equal(periods(svg).length, 44);
+  assert.strictEqual(svg.querySelector('[id$="-cross"]'), cross);
+  assert.strictEqual(svg.querySelector('.observed-close-line'), price);
+  assert.equal(cross.querySelector('.cross-time').getAttribute('x1'), x); assert.equal(cross.querySelector('.cross-price').getAttribute('y1'), y);
+  assert.equal(controller.getDate(), selection); assert.equal(readouts.length, beforeReadouts); assert.equal(inspections.length, beforeInspections);
+  controller.updateCycleOverlayObstacles([]); assert.deepEqual(placements(svg), positions, 'closing the transport restores the same annotation rows');
   drawAtlasPriceChart({ svg, rows: baseline.rows, start: baseline.start, end: baseline.end, split: baseline.split, showDrawdown: false, showCycleIntervals: false });
   const replacement = serialize(svg);
   assert.equal(controller.updateCycleOverlayObstacles([]), null, 'a retired controller cannot relayout a newer drawing');

@@ -1,13 +1,13 @@
 import { beginAction, finishAction, measureSync } from './performance-diagnostics.js?v=1.29.0';
-import {mountChartReplay} from './chart-replay.js?v=1.30.5';
+import {mountChartReplay} from './chart-replay.js?v=1.30.6';
 import { createForecastComputation, browserForecastWorkerFactory } from './forecast-computation.js?v=1.29.0';
 import {bitcoinForecastEvidence} from './forecast-evidence.js?v=1.29.0';
 import {openResearchArticle} from './research-reader.js?v=1.29.0';
-import {priceLegendMarkup,priceReadoutKind,observedPriceSourceLabel} from './price-legend.js?v=1.30.1';
+import {priceLegendMarkup,priceReadoutKind,observedPriceSourceLabel} from './price-legend.js?v=1.30.6';
 import { buildCycleMilestones, INTERVAL_RELATIONS, MILESTONE_TYPES } from "./cycle-milestones.js?v=1.29.0";
 import { cycleLegendMarkup, cycleMilestoneInspection, cycleIntervalInspection, cycleDurationLabel } from "./cycle-milestones-view.js?v=1.29.0";
 import { resolveCycleSelection, cycleSelectionViewport, cycleOverviewViewport } from './cycle-selection.js?v=1.29.0';
-import { drawAtlasPriceChart as drawChart } from "./atlas-price-chart.js?v=1.30.5";
+import { drawAtlasPriceChart as drawChart, priceChartOverlayObstacles } from "./atlas-price-chart.js?v=1.30.6";
 import { renderCryptoConAudit } from './cryptocon-audit.js?v=1.29.0';
 import { bindChartNavigation, panRange } from './chart-navigation.js?v=1.29.0';
 import { renderAtlasAnalysis } from "./atlas-analysis.js?v=1.29.0";
@@ -319,7 +319,7 @@ export function initLabView() {
       $('#atlas-cycle-focus').hidden=!selection.interval;
     }
     state.cycleVisibleIntervals=Number($('#lab-chart').dataset.cycleIntervalCount||0);
-    const note=`기간선은 가격 그래프 하단의 고정된 관계별 행에 표시됩니다. 확대·이동해도 위로 올라가지 않으며, 날짜축에 맞춰 가로 길이만 바뀝니다. 좁은 구간의 전체 이름·날짜는 선택해서 확인할 수 있습니다. 기간은 종료 UTC 날짜 − 시작 UTC 날짜이며, 화면 밖으로 이어지는 구간도 전체 기간을 표시합니다. 색 원·기간선의 실선은 사후 기준, 점선은 잠정 또는 가정입니다. ${data.futureStatus?.reason||''}`;
+    const note=`기간선은 가격 그래프 안에서 범례와 재생 막대 위에 관계별로 표시됩니다. 날짜축에 맞춰 가로 길이가 바뀌며, 라벨은 남는 가로 공간을 사용합니다. 좁은 구간의 전체 이름·날짜는 선택해서 확인할 수 있습니다. 기간은 종료 UTC 날짜 − 시작 UTC 날짜이며, 화면 밖으로 이어지는 구간도 전체 기간을 표시합니다. 색 원·기간선의 실선은 사후 기준, 점선은 잠정 또는 가정입니다. ${data.futureStatus?.reason||''}`;
     $('#atlas-cycle-note').textContent=note;
     const ref=data.sourceReference;
     $('#atlas-cycle-reference').innerHTML=`<p><strong>${esc(ref.title)}</strong> · ${esc(ref.author)} · 2024.08.06 · ${esc(ref.instrument)}</p><p>${esc(ref.note)} 아래는 원본에 적힌 주 수이며, 위 차트의 계산값과 구분합니다.</p><div class="cycle-reference-table"><table><thead><tr><th scope="col">원본 관계 · 주</th>${ref.cycles.map(label=>`<th scope="col">${esc(label)}</th>`).join('')}</tr></thead><tbody>${INTERVAL_RELATIONS.map(item=>`<tr><th scope="row">${esc(item.label)}</th>${ref.periodClaims[item.id].map(value=>`<td>${esc(value)}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p><strong>선정 기준</strong><br>${Object.entries(data.methodology).filter(([key])=>!['general','duration','future'].includes(key)).map(([key,value])=>`${esc(key.toUpperCase())}: ${esc(value)}`).join('<br>')}</p><p>모형에 기준점이 없는 장기 구간에는 날짜나 고점을 만들어 넣지 않습니다. 구간 막대나 원을 선택하면 정확한 날짜와 기준을 확인할 수 있습니다.</p>`;
@@ -327,20 +327,12 @@ export function initLabView() {
   // HUDs stay in the allocated viewport. They are placement obstacles, never
   // reasons to shrink or move the price/date axes.
   function cycleHudObstacles(){
-    const box=$('#lab-chart').getBoundingClientRect();
-    return [...plot.querySelectorAll('.atlas-readout,.workbench-market-info,#chart-indicator-manager,.lab-chart-foot')].filter(node=>!node.hidden).map(node=>{
-      const rect=node.getBoundingClientRect();
-      return {x:rect.left-box.left-5,y:rect.top-box.top-5,width:rect.width+10,height:rect.height+10};
-    }).filter(rect=>rect.width>10&&rect.height>10);
+    return priceChartOverlayObstacles($('#lab-chart'));
   }
   // Readout text may resize while the pointer moves. Repack only the period
   // annotations; rebuilding the price chart here would reset its live cursor.
   function refreshCycleHudPlacement(){
-    // Float beside the left HUD only when the measured boxes leave room.
-    const origin=plot.getBoundingClientRect(),legend=plot.querySelector('.lab-chart-foot')?.getBoundingClientRect();
-    const infoRight=Math.max(origin.left,...[...plot.querySelectorAll('.atlas-readout,.workbench-market-info')].map(node=>node.getBoundingClientRect()).filter(box=>box.width>0&&box.height>0).map(box=>box.right));
-    const dock=origin.width>850&&legend?.width>0&&legend.left>=infoRight+12?'top':'stack';
-    if(plot.dataset.legendDock!==dock)plot.dataset.legendDock=dock;
+    if(plot.dataset.legendDock!=='bottom')plot.dataset.legendDock='bottom';
     if(!isIntradayInterval(state.frequency)&&shown('cycle-intervals')&&!state.cycleCollapsed){state.priceController?.updateCycleOverlayObstacles?.(cycleHudObstacles());applyIndicatorPresentation($('#lab-chart'),state.indicators,state.frequency);}
   }
   function currentFib(){
@@ -480,7 +472,7 @@ export function initLabView() {
       const focusId=document.activeElement?.id,focusEventId=document.activeElement?.dataset?.atlasEvent,focusCycleMarker=document.activeElement?.dataset?.cycleMarker,focusCycleInterval=document.activeElement?.dataset?.cycleInterval,focusResearchAnnotation=document.activeElement?.dataset?.researchAnnotation;
       const m=model(),b=base(),next=nextTurnInfo(m),intraday=isIntradayInterval(state.frequency);
       publishIndicators();
-      plot.dataset.mode='price';plot.dataset.intraday=String(intraday);plot.dataset.cyclePeriodsVisible=String(!intraday&&shown('cycle-intervals')&&!state.cycleCollapsed);$('#lab-metrics').hidden=!shown('readout');
+      plot.dataset.mode='price';plot.dataset.intraday=String(intraday);if(intraday)plot.style.removeProperty('--plot-legend-bottom');plot.dataset.cyclePeriodsVisible=String(!intraday&&shown('cycle-intervals')&&!state.cycleCollapsed);$('#lab-metrics').hidden=!shown('readout');
       $('#lab-chart').removeAttribute('hidden');$('#lab-tooltip').hidden=true;
       $('#atlas-price-controls').hidden=false;
       $('[data-lab-frequency]').closest('fieldset').hidden=false;
@@ -552,7 +544,7 @@ export function initLabView() {
         state.chartReplaySnapshot={dataset:state.dataset,forecast:m,modelOptions:modelOptions(state.scenario),start,end:chartEnd,frequency:state.frequency,window:state.window,customRange:Boolean(state.priceRange),chartType:state.chartType,presentation:captureReplayPresentation()};
         $('#atlas-date').min=b.rows[0].date;$('#atlas-date').max=end;
         $('#lab-chart-title').textContent=`${dateLabel(start)} — ${dateLabel(chartEnd)} · ${state.frequency==='daily'?'일별':'주별'} 가격`;
-        $('#atlas-chart-legend').innerHTML=priceLegendMarkup({candles:Number($('#lab-chart').dataset.observedCandleCount)>0,observed:Number($('#lab-chart').dataset.observedCandleCount)>0||Number($('#lab-chart').dataset.observedLineCount)>0,mixedLine:Number($('#lab-chart').dataset.observedLineCount)>0,source:Number($('#lab-chart').dataset.observedCandleCount)>0?history?.source||'Bitstamp':'Coin Metrics',forecast:true,band:$('#lab-band').checked,turns:$('#lab-turns').checked})+((shown('cycle-landmarks')||(shown('cycle-intervals')&&!state.cycleCollapsed))?cycleLegendMarkup():'');
+        $('#atlas-chart-legend').innerHTML=priceLegendMarkup({compact:true,candles:Number($('#lab-chart').dataset.observedCandleCount)>0,observed:Number($('#lab-chart').dataset.observedCandleCount)>0||Number($('#lab-chart').dataset.observedLineCount)>0,mixedLine:Number($('#lab-chart').dataset.observedLineCount)>0,source:Number($('#lab-chart').dataset.observedCandleCount)>0?history?.source||'Bitstamp':'Coin Metrics',forecast:true,band:$('#lab-band').checked,turns:$('#lab-turns').checked})+((shown('cycle-landmarks')||(shown('cycle-intervals')&&!state.cycleCollapsed))?cycleLegendMarkup():'');
         renderCycleControls(milestones);
         // One follow-up layout after a HUD wraps keeps the period labels clear
         // without reserving vertical chart space or altering the price scale.
@@ -707,7 +699,7 @@ export function initLabView() {
       const first=captured.dataset.prices[0];
       return chartPresetRange({asOf:captured.forecast.asOf,referenceDate:captured.forecast.referenceDate??captured.forecast.asOf,firstDate:Array.isArray(first)?first[0]:first.date,lastDate:captured.forecast.path.at(-1).date,span});
     },
-    loadAtlasRenderer:()=>import('./chart-replay-atlas.js?v=1.30.5'),
+    loadAtlasRenderer:()=>import('./chart-replay-atlas.js?v=1.30.6'),
     loadRetrospectiveModel:()=>import('./replay-retrospective.js'),
     onAtlasFrame:({session,data,start,end,chartType,context,frequency=data.frequency??'daily',window=state.chartReplaySnapshot?.window??DEFAULT_CHART_SPAN,customRange=false,axis})=>{
       const candles=chartType==='candles'&&data.observedCandles.length>0;
@@ -728,7 +720,7 @@ export function initLabView() {
         'historical-reconstruction':{label:'BTC 축소 추세 · 과거 재구성',description:`기준일 ${session.asOf}까지의 관측으로 만든 BTC 축소 추세 기준모형입니다. 현재 자료 판본으로 과거를 재구성한 경로이며 당시 발행된 예측이 아닙니다.`},
         recorded:{label:reconstructedRecord?'보존 예측 · 재구성 기록':'보존 예측',description:`예측 기준 ${session.asOf}의 보존 기록을 그대로 재생합니다.${reconstructedRecord?' 과거를 재구성해 보존한 기록이며 당시 발행된 예측이 아닙니다.':''}`}
       }[session.mode]??{label:'고정 경로 리플레이',description:'선택한 고정 경로를 재생합니다.'};
-      $('#atlas-chart-legend').innerHTML=priceLegendMarkup({candles,forming,source:candles?candleSource:priceSource,forecast:true,band,turns:p.showTurns})+
+      $('#atlas-chart-legend').innerHTML=priceLegendMarkup({compact:true,candles,forming,source:candles?candleSource:priceSource,forecast:true,band,turns:p.showTurns})+
         ((p.showCycleMarkers||p.showCycleIntervals)?cycleLegendMarkup():'');
       $('#atlas-chart-caveat').textContent=replayMeaning.label;
       $('#lab-chart-title').textContent=`${replayMeaning.label} · ${dateLabel(start)} — ${dateLabel(end)} · ${frequency==='weekly'?'주별':'일별'} 리플레이`;

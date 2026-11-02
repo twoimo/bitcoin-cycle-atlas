@@ -26,8 +26,8 @@ test('all nine relationships render inside the caller plot without another SVG, 
   assert.equal(new Set(result.items.map(item => item.y)).size, 9, 'simultaneously overlapping relations get distinct lanes when space is available');
   assert.equal(result.labelCount, 9);
   assert.equal(result.hiddenLabelCount, 0);
-  assert.ok(result.bandTop > config.top + (config.bottom - config.top) / 2, 'all annotations belong to the lower price area');
-  assert.equal(result.bandBottom, config.bottom);
+  assert.ok(result.bandTop > config.top, 'annotations stay in the existing price plot');
+  assert.ok(result.bandBottom <= config.bottom - 24, 'the one-line legend has clearance above the date axis');
   assert.equal(groups(result.markup).length, 9);
   assert.equal(tags(result.markup, 'cycle-interval-line').length, 9);
   assert.match(result.markup, /^<g class="cycle-interval-overlay" clip-path="url\(#main-price-clip\)"/);
@@ -109,7 +109,7 @@ test('labels keep full names on one line, then two smaller lines, then duration 
   assert.doesNotMatch(tiny.markup, /class="cycle-interval-duration cycle-interval-label"/);
 });
 
-test('HUD and marker obstacles change horizontal label placement without moving a bottom-anchored span', () => {
+test('ordinary HUDs use horizontal label gaps and bottom-docked controls keep continuous spans clear', () => {
   const source = interval('main', 'bottom-bottom', '2020-01-01', '2025-01-01');
   const config = options({ intervals: [source] }), clear = cycleIntervalsOverlayMarkup(config);
   const obstacle = { x: (config.left + config.right) / 2 - 50, y: clear.bandTop, width: 100, height: clear.bandBottom - clear.bandTop };
@@ -123,6 +123,13 @@ test('HUD and marker obstacles change horizontal label placement without moving 
   const blocked = cycleIntervalsOverlayMarkup({ ...config, obstacles: [{ x: config.left, y: clear.bandTop, width: config.right - config.left, height: clear.bandBottom - clear.bandTop }] });
   assert.equal(blocked.items[0].y, item.y);assert.equal(blocked.items[0].labelBox, null);
   assert.equal(blocked.visibleCount, 1);assert.match(groups(blocked.markup)[0]['aria-label'], /BOTTOM → BOTTOM/);
+  const transport = { x: 330, y: config.bottom - 70, width: 280, height: 44, dock: 'bottom' };
+  const docked = cycleIntervalsOverlayMarkup({ ...config, obstacles: [transport] });
+  assert.ok(docked.bandBottom < transport.y, 'the period band clears the measured transport instead of painting behind it');
+  assert.equal(docked.items[0].x1, item.x1); assert.equal(docked.items[0].x2, item.x2);
+  assert.equal(docked.items[0].days, item.days);
+  assert.equal(tags(docked.markup, 'cycle-interval-line').length, 1, 'a dock never splits or shortens a UTC period');
+  assert.ok(docked.items[0].labelBox && !overlap(docked.items[0].labelBox, transport));
 });
 
 test('price segments can shift labels horizontally but can never move a duration row upward', () => {
@@ -237,7 +244,7 @@ test('same-relation subtracks use all original UTC intervals, including overlaps
   for (const item of zoom.items) assert.equal(item.y, byId.get(item.interval.id).y, 'panning the earlier overlap offscreen cannot compact later rows upward');
 });
 
-test('resizing keeps lines, caps, labels and previews inside the bounded bottom of the unchanged price plot', () => {
+test('resizing keeps lines, caps, labels and previews above the legend in the unchanged price plot', () => {
   const entries = INTERVAL_RELATIONS.map((relation, index) => interval(`resize-${index}`, relation.id, '2020-01-01', '2024-01-01'));
   const baseline = cycleIntervalsOverlayMarkup(options({ intervals: entries }));
   const layouts = [
@@ -248,9 +255,9 @@ test('resizing keeps lines, caps, labels and previews inside the bounded bottom 
   ];
   for (const layout of layouts) {
     const config = options({ intervals: entries, ...layout }), result = cycleIntervalsOverlayMarkup(config);
-    assert.ok(result.bandTop >= config.top + (config.bottom - config.top) / 2);
-    assert.ok(result.bandBottom - result.bandTop <= 200);assert.equal(result.bandBottom, config.bottom);
-    assert.equal(config.bottom - result.items[0].y, 7, 'the lowest canonical row stays attached to the price bottom');
+    assert.ok(result.bandTop >= config.top);
+    assert.ok(result.bandBottom - result.bandTop <= 200);assert.ok(result.bandBottom < config.bottom);
+    assert.ok(config.bottom - result.items[0].y >= 28, 'the lowest canonical row leaves space for the one-line legend');
     const group = attrs(result.markup.slice(0, result.markup.indexOf('>') + 1));
     assert.ok(Math.abs(Number(group['data-band-top']) - result.bandTop) < 1e-6);assert.equal(Number(group['data-band-bottom']), result.bandBottom);
     for (const item of result.items) {
