@@ -123,41 +123,137 @@ export async function verifyChartReplaySurface(api) {
     }
     else if (!target.toggle) await closeMenu();
     await revealOwnedControl(selector);
+    if (btc && selector === chartSelector) {
+      const focusTarget = await evaluate(connection, selector => {
+        const svg = document.querySelector(selector);
+        if (svg.dataset.chartReplayActive !== 'true') return null;
+        const box = svg.getBoundingClientRect();
+        // A chart-focus click belongs to the existing left SVG gutter, not
+        // the whole SVG's center where the legitimate replay bar can sit.
+        const point = { x: box.left + 3, y: box.top + box.height * .25 };
+        const hit = document.elementFromPoint(point.x, point.y);
+        return { point, chart: { left: box.left, right: box.right, top: box.top, bottom: box.bottom },
+          reachesChart: svg.contains(hit), owner: hit ? { tag: hit.tagName, id: hit.id || null, className: hit.getAttribute('class'), control: hit.closest('[data-cr]')?.dataset.cr ?? null } : null };
+      }, selector);
+      if (focusTarget) {
+        const recorded = { label: 'native-chart-focus-click-in-left-svg-gutter', validated: false, ...focusTarget };
+        evidence.lifecycle.push(recorded);
+        assert.ok(focusTarget.point.x > 0 && focusTarget.point.x < width && focusTarget.point.y > 0 && focusTarget.point.y < height, 'Chart-focus click escaped the viewport');
+        assert.ok(focusTarget.point.x > focusTarget.chart.left && focusTarget.point.x < focusTarget.chart.right && focusTarget.point.y > focusTarget.chart.top && focusTarget.point.y < focusTarget.chart.bottom, 'Chart-focus click escaped the main SVG');
+        assert.equal(focusTarget.reachesChart, true, 'The deterministic chart-focus gutter is covered: ' + JSON.stringify(focusTarget));
+        await pointAction('click', focusTarget.point);
+        recorded.validated = true;
+        return;
+      }
+    }
     await nativeClick(connection, selector);
   }
   async function verifyFloatingBar() {
-    const geometry = await evaluate(cdp, ({ chartSelector, panel }) => {
+    const geometry = await evaluate(cdp, ({ chartSelector, panel, btc }) => {
       const svg = document.querySelector(chartSelector), plot = svg.closest('.atlas-plot'), root = document.querySelector(panel);
       const bar = root.querySelector('.chart-replay-bar'), actions = root.querySelector('.chart-replay-actions'), exit = root.querySelector('[data-cr="exit"]');
       const rect = node => { const b = node.getBoundingClientRect(); return { left: b.left, right: b.right, top: b.top, bottom: b.bottom, width: b.width, height: b.height }; };
-      const box = rect(svg), point = { x: box.left + box.width * .5, y: box.top + box.height * .35 };
+      const visible = node => {
+        if (!node || node.hidden || node.closest('[hidden]') || !node.getClientRects().length) return false;
+        const style = getComputedStyle(node), box = rect(node);
+        return style.display !== 'none' && style.visibility === 'visible' && Number(style.opacity) > 0 && box.width > 0 && box.height > 0;
+      };
+      const box = rect(svg), originalPoint = { x: box.left + box.width * .5, y: box.top + box.height * .35 };
+      const priceCoordinates = btc ? { left: Number(svg.dataset.plotLeft), right: Number(svg.dataset.plotRight), top: Number(svg.dataset.plotTop), bottom: Number(svg.dataset.priceBottom) } : null;
+      const matrix = btc ? svg.getScreenCTM() : null;
+      let pricePane = null;
+      if (matrix && Object.values(priceCoordinates).every(Number.isFinite) && priceCoordinates.right > priceCoordinates.left && priceCoordinates.bottom > priceCoordinates.top) {
+        const corners = [[priceCoordinates.left, priceCoordinates.top], [priceCoordinates.right, priceCoordinates.top],
+          [priceCoordinates.left, priceCoordinates.bottom], [priceCoordinates.right, priceCoordinates.bottom]].map(([x, y]) => {
+          const point = svg.createSVGPoint(); point.x = x; point.y = y; return point.matrixTransform(matrix);
+        });
+        pricePane = { left: Math.min(...corners.map(point => point.x)), right: Math.max(...corners.map(point => point.x)),
+          top: Math.min(...corners.map(point => point.y)), bottom: Math.max(...corners.map(point => point.y)) };
+        pricePane.width = pricePane.right - pricePane.left; pricePane.height = pricePane.bottom - pricePane.top;
+      }
+      const legendNode = plot.querySelector('.lab-chart-foot'), legend = visible(legendNode) ? { ...rect(legendNode),
+        flexWrap: getComputedStyle(legendNode).flexWrap, scrollWidth: legendNode.scrollWidth, clientWidth: legendNode.clientWidth,
+        groups: [...legendNode.querySelectorAll('.lab-legend,.price-legend,.cycle-legend')].filter(visible).map(node => ({ className: node.className, flexWrap: getComputedStyle(node).flexWrap })),
+        items: [...legendNode.querySelectorAll('.price-legend-item,.cycle-legend-item')].filter(visible).map(node => ({ text: node.textContent.replace(/\s+/g, ' ').trim(), ...rect(node) })) } : null;
+      // Choose probes from measured geometry before looking at hit ownership.
+      // Only these visible controls may exclude points; never the full root,
+      // arbitrary blockers, or a point that merely failed its SVG hit test.
+      const excludedRects = [['bar', bar], ['exit', exit], ['pick-cancel', root.querySelector('[data-cr="pick-cancel"]')], ['legend', legendNode]]
+        .filter(([, node]) => visible(node)).map(([name, node]) => ({ name, ...rect(node) }));
+      const probePane = pricePane ?? box;
+      const candidates = [.18, .38, .58, .78].flatMap(yFraction => [.16, .5, .84].map(xFraction => {
+        const point = { x: probePane.left + probePane.width * xFraction, y: probePane.top + probePane.height * yFraction, xFraction, yFraction };
+        return { ...point, excludedBy: excludedRects.filter(area => point.x >= area.left && point.x <= area.right && point.y >= area.top && point.y <= area.bottom).map(area => area.name) };
+      }));
+      const freeProbes = candidates.filter(point => point.excludedBy.length === 0);
+      const hit = point => {
+        const node = document.elementFromPoint(point.x, point.y), control = node?.closest('[data-cr]');
+        return { ...point, reachesChart: svg.contains(node), owner: node ? { tag: node.tagName, id: node.id || null, className: node.getAttribute('class'), control: control?.dataset.cr ?? null } : null };
+      };
+      const probes = freeProbes.map(hit), originalProbe = hit(originalPoint);
       return { chart: box, plot: { ...rect(plot), clientHeight: plot.clientHeight }, root: { ...rect(root), pointerEvents: getComputedStyle(root).pointerEvents, background: getComputedStyle(root).backgroundColor },
         bar: rect(bar), actions: { ...rect(actions), scrollLeft: actions.scrollLeft, scrollWidth: actions.scrollWidth, clientWidth: actions.clientWidth, flexWrap: getComputedStyle(actions).flexWrap },
         controls: [...actions.children].map(node => ({ name: node.dataset.cr, ...rect(node) })), exit: { ...rect(exit), separate: !bar.contains(exit) },
-        menuHidden: root.querySelector('[data-cr="select-panel"]').hidden, pointerReachesChart: svg.contains(document.elementFromPoint(point.x, point.y)),
+        atlas: plot.classList.contains('chart-replay-atlas'), priceCoordinates, pricePane, legend,
+        priceMatrix: matrix ? Object.fromEntries(['a', 'b', 'c', 'd', 'e', 'f'].map(key => [key, matrix[key]])) : null,
+        priceAxis: pricePane ? { left: pricePane.right, right: box.right, top: pricePane.top, bottom: pricePane.bottom } : null,
+        originalProbe, excludedRects, probeCandidates: candidates, probes, requiredProbeCount: probePane.width >= 160 && probePane.height >= 100 ? 3 : 1,
+        menuHidden: root.querySelector('[data-cr="select-panel"]').hidden, pointerReachesChart: probes.length > 0 && probes.every(point => point.reachesChart),
         settingsInPopover: ['date', 'start', 'display', 'mode', 'record', 'horizon', 'details', 'pooled-retry', 'scrub', 'export'].every(name => root.querySelector('[data-cr="select-panel"]').contains(root.querySelector('[data-cr="' + name + '"]'))),
         removedControls: ['previous', 'random', 'resume'].flatMap(name => [...root.querySelectorAll('[data-cr="' + name + '"]')].map(() => name)),
         pageWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth), scrollX, scrollY,
         cursor: svg.dataset.replayCursor ?? null, hash: svg.dataset.replayOutputHash ?? null, viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null };
-    }, { chartSelector, panel });
+    }, { chartSelector, panel, btc });
     const observedGeometry = { label: 'floating-controls-observed-geometry', validated: false, ...geometry, originalChart: originalChartBox };
     evidence.floatingBar.push(observedGeometry);
     assert.equal(geometry.root.pointerEvents, 'none', 'The positioning overlay blocks the chart');
     assert.match(geometry.root.background, /rgba\(0, 0, 0, 0\)|transparent/, 'A full-width replay surface still covers the plot');
-    assert.equal(geometry.menuHidden, true); assert.equal(geometry.settingsInPopover, true); assert.equal(geometry.pointerReachesChart, true);
+    assert.equal(geometry.menuHidden, true); assert.equal(geometry.settingsInPopover, true);
+    assert.ok(geometry.probes.length >= geometry.requiredProbeCount, 'Visible replay controls leave too few independently chosen chart probes');
+    for (const point of geometry.probes) assert.equal(point.reachesChart, true, 'An unobstructed price-pane probe cannot reach the SVG: ' + JSON.stringify(point));
+    assert.equal(geometry.pointerReachesChart, true);
     assert.deepEqual(geometry.removedControls, [], 'Removed previous/duplicate random/menu-resume controls remain in the DOM');
     assert.deepEqual(geometry.controls.map(node => node.name), ['first', 'select-menu', 'pick', 'play', 'next', 'speed', 'update-interval', 'live']);
     assert.equal(geometry.actions.flexWrap, 'nowrap');
     const centerY = geometry.bar.top + geometry.bar.height / 2;
     for (const node of geometry.controls) assert.ok(Math.abs(node.top + node.height / 2 - centerY) <= 1, 'Replay controls wrapped into a second row');
     assert.ok(geometry.bar.height <= (touch || width <= 620 ? 57 : 45), 'The floating replay bar is no longer compact');
-    assert.ok(geometry.bar.top > geometry.plot.top + geometry.plot.height / 2, 'Replay controls returned to a large upper panel');
+    if (btc) {
+      assert.equal(geometry.atlas, true, 'BTC replay must use the existing Atlas price plot');
+      assert.ok(geometry.pricePane && geometry.pricePane.width > 0 && geometry.pricePane.height > 0, 'BTC replay did not expose transformable price-pane bounds');
+    }
+    const controlArea = btc ? geometry.pricePane : geometry.plot;
+    assert.ok(geometry.bar.top > controlArea.top + controlArea.height / 2, 'Replay controls returned to a large upper panel');
     assert.ok(geometry.plot.bottom - geometry.bar.bottom >= 8, 'The floating bar is outside the chart');
     assert.ok(geometry.chart.height >= originalChartBox.height - 1, 'Entering replay reduced the existing chart height');
     assert.ok(geometry.chart.height >= geometry.plot.clientHeight - 2, 'The chart does not own its full allocated plot height');
     assert.ok(geometry.pageWidth <= width + 1); assert.equal(geometry.scrollX, 0);
     assert.equal(geometry.exit.separate, true); assert.ok(Math.abs(geometry.exit.width - 44) <= 1 && Math.abs(geometry.exit.height - 44) <= 1);
-    assert.ok(Math.abs(geometry.plot.right - geometry.exit.right - 8) <= 1, 'The exit X is not at the right of the chart');
+    if (btc) {
+      const inside = (item, area) => item.left >= area.left - 1 && item.right <= area.right + 1 && item.top >= area.top - 1 && item.bottom <= area.bottom + 1;
+      const overlaps = (a, b) => Math.min(a.right, b.right) - Math.max(a.left, b.left) > 1 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 1;
+      assert.ok(geometry.bar.left >= geometry.plot.left - 1 && geometry.bar.right <= geometry.plot.right + 1 &&
+        geometry.bar.top >= geometry.pricePane.top - 1 && geometry.bar.bottom <= geometry.pricePane.bottom + 1 && geometry.bar.right <= geometry.pricePane.right + 1,
+      'BTC replay toolbar escaped the chart or covered the price-axis boundary');
+      assert.ok(inside(geometry.exit, geometry.pricePane), 'BTC exit X escaped the price pane');
+      assert.ok(Math.abs(geometry.pricePane.right - geometry.exit.right - 7) <= 1, 'BTC exit X must be inset 7px from the measured price-axis boundary');
+      assert.equal(overlaps(geometry.bar, geometry.priceAxis), false, 'BTC replay toolbar covers the price axis');
+      assert.equal(overlaps(geometry.exit, geometry.priceAxis), false, 'BTC exit X covers the price axis');
+      assert.equal(overlaps(geometry.bar, geometry.exit), false, 'BTC replay toolbar overlaps its separate exit X');
+      assert.ok(geometry.legend, 'BTC replay is missing its visible in-plot legend');
+      assert.ok(inside(geometry.legend, geometry.pricePane), 'BTC legend escaped the price pane');
+      assert.equal(overlaps(geometry.legend, geometry.priceAxis), false, 'BTC legend covers the price axis');
+      assert.ok(Math.abs(geometry.legend.height - 26) <= 1, 'BTC legend must retain its compact 26px row');
+      assert.ok(Math.abs(geometry.legend.top - geometry.bar.bottom - 8) <= 1, 'BTC replay toolbar must end 8px above the legend');
+      assert.equal(geometry.legend.flexWrap, 'nowrap');
+      for (const group of geometry.legend.groups) assert.equal(group.flexWrap, 'nowrap', 'BTC legend group wrapped: ' + group.className);
+      assert.deepEqual(geometry.legend.items.map(item => item.text), ['실제 가격', '미래 가정', '가정 범위', '고점·저점', 'CYCLE TOP', 'PIT STOP', 'FIRST TOP', 'ATH', 'MID-TOP', 'BOTTOM']);
+      const legendCenter = geometry.legend.items[0].top + geometry.legend.items[0].height / 2;
+      for (const item of geometry.legend.items) {
+        assert.ok(item.top >= geometry.legend.top - 1 && item.bottom <= geometry.legend.bottom + 1, 'BTC legend item is clipped vertically: ' + item.text);
+        assert.ok(Math.abs(item.top + item.height / 2 - legendCenter) <= 1, 'BTC legend item moved onto another row: ' + item.text);
+      }
+    } else assert.ok(Math.abs(geometry.plot.right - geometry.exit.right - 8) <= 1, 'The exit X is not at the right of the chart');
     assert.ok(Math.abs(geometry.exit.top + geometry.exit.height / 2 - centerY) <= 1, 'Exit X does not align with the floating controls');
     if (width > 620) {
       assert.ok(geometry.bar.width <= 421, 'Desktop replay expanded into a full-width toolbar');
@@ -726,14 +822,46 @@ export async function verifyChartReplaySurface(api) {
     return after;
   }
   async function chartPoint(date) {
-    return evaluate(cdp, ({ selector, date }) => {
+    const geometry = await evaluate(cdp, ({ selector, date, btc }) => {
       const svg = document.querySelector(selector), box = svg.getBoundingClientRect(), view = svg.viewBox.baseVal;
       const left = Number(svg.dataset.plotLeft), right = Number(svg.dataset.plotRight);
       const fraction = (Date.parse(date) - Date.parse(svg.dataset.replayViewStart)) / (Date.parse(svg.dataset.replayViewEnd) - Date.parse(svg.dataset.replayViewStart));
       if (!(fraction >= 0 && fraction <= 1)) throw new Error('Requested native pointer date is outside the current chart');
-      return { x: box.left + (left + fraction * (right - left)) / view.width * box.width,
-        y: box.top + (Number(svg.dataset.plotTop) + (Number(svg.dataset.priceBottom) - Number(svg.dataset.plotTop)) * .4) / view.height * box.height };
-    }, { selector: chartSelector, date });
+      // Keep the original date projection exactly. Only y may avoid a visible
+      // floating control; choosing another x would silently point at a new bar.
+      const x = box.left + (left + fraction * (right - left)) / view.width * box.width;
+      const yAt = yFraction => box.top + (Number(svg.dataset.plotTop) + (Number(svg.dataset.priceBottom) - Number(svg.dataset.plotTop)) * yFraction) / view.height * box.height;
+      if (!btc) return { point: { x, y: yAt(.4) } };
+      const plot = svg.closest('.atlas-plot'), root = plot.querySelector('.chart-replay-controls');
+      const excludedRects = [['bar', root?.querySelector('.chart-replay-bar')], ['exit', root?.querySelector('[data-cr="exit"]')],
+        ['pick-cancel', root?.querySelector('[data-cr="pick-cancel"]')], ['legend', plot.querySelector('.lab-chart-foot')]].flatMap(([name, node]) => {
+        if (!node || node.hidden || node.closest('[hidden]') || !node.getClientRects().length) return [];
+        const style = getComputedStyle(node), area = node.getBoundingClientRect();
+        if (style.display === 'none' || style.visibility !== 'visible' || Number(style.opacity) <= 0 || !(area.width > 0 && area.height > 0)) return [];
+        return [{ name, left: area.left, right: area.right, top: area.top, bottom: area.bottom }];
+      });
+      const candidates = [.4, .25, .15, .65].map(yFraction => {
+        const point = { x, y: yAt(yFraction), yFraction };
+        return { ...point, excludedBy: excludedRects.filter(area => point.x >= area.left && point.x <= area.right && point.y >= area.top && point.y <= area.bottom).map(area => area.name) };
+      });
+      // Select from geometry first. A failed SVG hit is a failure, never a
+      // reason to discard this point and search for a passing hit elsewhere.
+      const chosen = candidates.find(point => point.excludedBy.length === 0) ?? null;
+      const hit = chosen ? document.elementFromPoint(chosen.x, chosen.y) : null;
+      return { date, dateFraction: fraction, x, candidates, excludedRects, chosenYFraction: chosen?.yFraction ?? null,
+        point: chosen ? { x: chosen.x, y: chosen.y } : null, reachesChart: svg.contains(hit),
+        owner: hit ? { tag: hit.tagName, id: hit.id || null, className: hit.getAttribute('class'), control: hit.closest('[data-cr]')?.dataset.cr ?? null } : null };
+    }, { selector: chartSelector, date, btc });
+    if (btc) {
+      const recorded = { label: 'native-picker-point-preserves-date-x', validated: false, ...geometry };
+      evidence.selections.push(recorded);
+      assert.ok(geometry.point, 'Every deterministic y probe for the requested date is covered by a visible replay control');
+      assert.equal(geometry.point.x, geometry.x, 'Avoiding a replay control changed the exact requested date x');
+      assert.ok(geometry.point.x >= 0 && geometry.point.x < width && geometry.point.y >= 0 && geometry.point.y < height, 'Native picker point escaped the viewport');
+      assert.equal(geometry.reachesChart, true, 'The selected date-preserving picker point is covered: ' + JSON.stringify(geometry));
+      recorded.validated = true;
+    }
+    return geometry.point;
   }
   async function selectMenu(name) {
     await openMenu();
