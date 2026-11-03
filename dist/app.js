@@ -13,6 +13,7 @@ import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29
 import { initDailyDataView } from './daily-data-view.js?v=1.29.0';
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.29.0';
 import { initIpoView } from './ipo-view.js?v=1.30.1-ipo-compact.1';
+import { initMarketLabView } from './market-lab-view.js?v=1.30.6-plspo.12';
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -63,7 +64,7 @@ const state = {
   horizon: ['365','730','1461','current','all'].includes(params.get('range')) ? params.get('range') : '1461',
   cursor: /^\d{1,5}$/.test(params.get('day') || '') ? Number(params.get('day')) : null,
   hidden: new Set((params.get('hide') || '').split(',').filter(Boolean)),
-  view: params.get('page')==='compare'&&!params.has('legacy')?'outlook':['outlook','compare','evidence','data','ipo'].includes(params.get('page')) ? params.get('page') : 'outlook', dataset: null, comparison: null, chart: null,
+  view: params.get('page')==='compare'&&!params.has('legacy')?'outlook':['outlook','compare','evidence','data','ipo','market'].includes(params.get('page')) ? params.get('page') : 'outlook', dataset: null, comparison: null, chart: null,
   timing: null, timingDataset: null, timingBaseline: ['previous','recent2','all3'].includes(params.get('baseline')) ? params.get('baseline') : 'recent2',
   analysisView: ['forecast','peak','timing'].includes(params.get('analysis')) ? params.get('analysis') : 'forecast',
   peakThreshold: ['0.9','0.93','0.94','0.95','0.98'].includes(params.get('zone')) ? Number(params.get('zone')) : .95,
@@ -97,7 +98,7 @@ function persistUrl() {
 document.documentElement.dataset.theme = 'dark';
 let initialPageRendered = false;
 function finishInitialPage() {
-  if (document.documentElement.dataset.boot !== 'loading' || (!state.dataset && !['data','ipo'].includes(state.view)) || !initialPageRendered) return;
+  if (document.documentElement.dataset.boot !== 'loading' || (!state.dataset && !['data','ipo','market'].includes(state.view)) || !initialPageRendered) return;
   document.removeEventListener('atlas:page-ready', onInitialPageReady);
   document.dispatchEvent(new CustomEvent('atlas:ready'));
 }
@@ -134,6 +135,15 @@ const ipoController = initIpoView({
   onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'ipo' } })),
   embeddedData: () => document.getElementById('embedded-ipo-calendar-data')?.textContent ?? null,
 });
+const marketController = initMarketLabView({
+  root: $('#market-view'), now: () => new Date(),
+  onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'market' } })),
+  embeddedData: document.getElementById('embedded-market-lab-data')?.textContent ?? undefined,
+});
+$('#market-view').addEventListener('click', event => {
+  if (state.view !== 'market' || !event.target.closest('[data-view="outlook"]')) return;
+  state.view = 'outlook'; syncPage(); persistUrl(); void ensureDataset();
+});
 const dailyDataController = initDailyDataView({
   root: $('#data-view'), download, toast,
   getComparisonDataset: createAssetComparisonLoader({
@@ -141,10 +151,10 @@ const dailyDataController = initDailyDataView({
   }),
 });
 function syncPage() {
-  document.body.dataset.page=state.view;
-  btcRefreshStatus.update({page:state.view==='ipo'?'data':state.view});
-  document.title = state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
-  for (const view of ['outlook','compare','evidence','data','ipo']) document.querySelector(`#${view}-view`).hidden=state.view!==view;
+  document.body.dataset.page=state.view; if(state.view!=='market'){const slot=document.getElementById('market-header-slot'); if(slot){slot.hidden=true; slot.replaceChildren();}}
+  btcRefreshStatus.update({page:['ipo','market'].includes(state.view)?'data':state.view});
+  document.title = state.view === 'market' ? '세 축 연구실 · Bitcoin Cycle Atlas' : state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
+  for (const view of ['outlook','compare','evidence','data','ipo','market']) document.querySelector(`#${view}-view`).hidden=state.view!==view;
   $$('[data-view]').forEach(n=>{const active=n.dataset.view===state.view;n.classList.toggle('active',active);if(active)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current');});
   evidenceModule?.showEvidenceView(state.view==='evidence');
   outlookController?.show(state.view==='outlook');
@@ -152,6 +162,7 @@ function syncPage() {
   if (['outlook','compare'].includes(state.view)) void ensureWorkspace();
   if (state.view === 'evidence') void ensureEvidence();
   if (state.view === 'ipo') void ipoController.render();
+  if (state.view === 'market') void marketController.render();
 }
 syncPage();
 if (state.view === 'data') renderData();
@@ -374,7 +385,7 @@ function renderData() {
 }
 $$('[data-view]').forEach(b => b.addEventListener('click', () => {
   state.view = b.dataset.view;
-  if (!['data','ipo'].includes(state.view)) void ensureDataset();
+  if (!['data','ipo','market'].includes(state.view)) void ensureDataset();
   syncPage();
   closeExport();
   if(state.view==='compare') requestAnimationFrame(()=>render()); else if(state.view==='data') renderData();
@@ -491,4 +502,4 @@ async function init() {
     else document.dispatchEvent(new CustomEvent('atlas:boot-error'));
   }
 }
-if (!['data','ipo'].includes(state.view)) void ensureDataset();
+if (!['data','ipo','market'].includes(state.view)) void ensureDataset();

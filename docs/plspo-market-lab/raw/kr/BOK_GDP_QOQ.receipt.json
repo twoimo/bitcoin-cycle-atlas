@@ -1,0 +1,23 @@
+{
+  "series": "BOK_GDP_QOQ",
+  "source": "Bank of Korea Financial Economic Snapshot / ECOS",
+  "sourcePage": "https://snapshot.bok.or.kr/search/%EA%B2%BD%EC%A0%9C%EC%84%B1%EC%9E%A5%EB%A5%A0",
+  "title": "경제성장률 및 재화의 수출증가율",
+  "note": "1) 실질, 계절조정 전기대비 기준(2020년 기준년 국민소득통계 기준)",
+  "unit": "percent quarter-on-quarter, nonannualized",
+  "frequency": "quarterly",
+  "rawWorkbook": "BOK_GDP_RAW.xlsx",
+  "rawWorkbookSha256": "635c308b05119c37133251cf2ddef9cfe2cd444000fe831990c03bd0beab7214",
+  "csvSha256": "be6a179df05ff3bf140862555280626ad9bbb862e6bd440e4eaf6c80a22c577a",
+  "workbookCreatedAt": "2026-11-02 07:52:04",
+  "fileSavedAt": "2026-11-02T07:52:28.618724+00:00",
+  "fileSavedClockIsPublisherRelease": false,
+  "extractedAt": "2026-11-02T07:56:57.894905+00:00",
+  "rawRows": 266,
+  "firstPeriod": "1960-Q2",
+  "lastPeriod": "2026-Q3",
+  "publishedDecimalPlaces": 1,
+  "column": "B8:B273",
+  "extraction": "openpyxl3 + csv standard library; bundled pandas unavailable, no installation",
+  "revisions": "snapshot as downloaded; historical vintages unavailable"
+}

@@ -1,0 +1,103 @@
+{
+  "recordedAt": "2026-11-02T08:23:11.665042+00:00",
+  "kind": "uncommitted-local-research-candidate",
+  "modelVersion": "research-0.3-macro-provenance",
+  "baseCommit": "b43cbf0348526b64d7c4c6d547fc8de2db974c35",
+  "newTests": 38,
+  "focusedTestsIncludingExistingPackaging": 44,
+  "fullSuite": {
+    "baselineCases": 2335,
+    "candidateCases": 2373,
+    "newCases": 38,
+    "baselineFailures": 23,
+    "candidateFailures": 23,
+    "newFailures": [],
+    "resolvedFailures": [],
+    "comparison": "multiset of failure names plus case/failure denominators"
+  },
+  "data": {
+    "usCoverage": "3/3",
+    "krCoverage": "3/3",
+    "krGdpRows": 67,
+    "krGdpLatest": [
+      "2026-09-30",
+      1.0
+    ],
+    "krGdpPublishedDecimals": 1,
+    "krRateRows": 201,
+    "krRateLatest": [
+      "2026-09-30",
+      3.17
+    ],
+    "meaning": "Coverage and research composite only, not predictive validity or trading signal"
+  },
+  "native": {
+    "pass": 16,
+    "fail": 0,
+    "pageErrors": 0,
+    "mobileWidths": [
+      320,
+      390
+    ],
+    "offlineHttpRequests": 0
+  },
+  "design": {
+    "originalCommittedInputWrapper": "NOT_RUN / NOT_PASSED",
+    "alternativeSourceSnapshotMethod": "COMPLETE: unchanged pinned judges, ordered provenance patches, source hash and owned origin",
+    "existingRoutePairs": 8,
+    "readiness": 16,
+    "beforePng": 40,
+    "afterPng": 40,
+    "currentStatic": {
+      "fails": 0,
+      "reflex": 0,
+      "warns": 37
+    },
+    "currentRender": {
+      "fails": 0,
+      "reflex": 0,
+      "warns": 17
+    },
+    "newFourTabAfterOnly": {
+      "status": "COMPLETE",
+      "fails": 0,
+      "reflex": 0,
+      "warns": 11
+    },
+    "waivers": 0,
+    "warnings": "All preserved; no full headings/figures equivalence claimed",
+    "sourceScope": {
+      "checkedFilesInRenderedSourceSnapshot": 743,
+      "allIncludedFilesUnchanged": true,
+      "differentIncludedFiles": [],
+      "generatedFileOutsideSourceSnapshot": [
+        "dist/publication.json"
+      ],
+      "generatedFileIgnoredByGit": true,
+      "generatedFileCurrentSha256": "2d68cb8702df56efa588c7a353e527a7b52226194ae13ec749bd2b323010f7ca",
+      "meaning": "Working-source rendering was audited; this is not byte-for-byte confirmation of a complete deployed publication artifact. Dedicated R3 HTML has its own exact hash/offline proof."
+    }
+  },
+  "postAuditDelta": "Importer/test deterministic clock injection only; all 743 selected dist bytes and dedicated HTML unchanged. Documentation updated after audit.",
+  "externalReview": {
+    "status": "BLOCKED / NOT_SUBMITTED",
+    "provider": "web GPT-6 Pro",
+    "reason": "Shared primary:gpt-6-pro unknown allowance / admission_blocked; no inferred quota or unauthorized correction",
+    "preparedInputs": "Latest question, source bundle and sufficient windows in review-inputs-r3; not a provider report",
+    "geminiAndReverse": "NOT_RUN"
+  },
+  "sideEffects": {
+    "code": "uncommitted",
+    "priorOwnTemporaryCommitWithdrawn": true,
+    "merge": 0,
+    "push": 0,
+    "deployment": 0
+  },
+  "limits": [
+    "Public release/vintage clock unverified; no point-in-time backtest.",
+    "Kiwoom RSI equivalence and complete domestic/semiconductor order rules unverified.",
+    "Original conference all-claims fact check not performed.",
+    "23 existing baseline failures remain; not silently cancelled.",
+    "Generated publication manifest and deployed byte identity not included in source-snapshot UI audit."
+  ]
+}

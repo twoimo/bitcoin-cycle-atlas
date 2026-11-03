@@ -117,9 +117,9 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   const verification = await verifyStandaloneArtifact(html, resolve(root, 'dist'));
   const bundle = await standaloneModuleMap(resolve(root, 'dist'));
   assert.equal(verification.modules, Object.keys(bundle.imports).length);
-  assert.equal(verification.snapshots, 8);
+  assert.equal(verification.snapshots, 9); // Existing eight plus the research snapshot.
   assert.ok(verification.forecastRecords>=5,'all five initial economic scenarios have actual preserved outputs');
-  assert.equal(verification.stylesheets, 26);
+  assert.equal(verification.stylesheets, 27); // Existing 26 plus scoped market-lab.css.
   assert.match(html,/\.forecast-journal\s*\{/,'the archived forecast workspace retains its offline styles');
   const replayStyle = `<style>\n${await readFile(resolve(root, 'dist/chart-replay.css'), 'utf8')}\n</style>`;
   assert.equal(html.split(replayStyle).length - 1, 1, 'inline chart replay embeds its exact stylesheet once');
@@ -138,6 +138,12 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   const data = JSON.parse(dataMatch[2]);
   data.prices[0][1] += 1;
   await assert.rejects(verifyStandaloneArtifact(html.replace(dataMatch[0], dataMatch[1] + JSON.stringify(data) + dataMatch[3]), resolve(root, 'dist')), /Changed embedded snapshot/);
+  const marketMatch=html.match(/(<script id="embedded-market-lab-data" type="application\/json">)([\s\S]*?)(<\/script>)/);
+  assert.ok(marketMatch,'research snapshot must be embedded');
+  const market=JSON.parse(marketMatch[2]);market.markets[0].prices[0][1]+=1;
+  await assert.rejects(verifyStandaloneArtifact(html.replace(marketMatch[0],marketMatch[1]+JSON.stringify(market)+marketMatch[3]),resolve(root,'dist')),/Changed embedded snapshot: market-lab/);
+  const marketStyle=`<style>\n${await readFile(resolve(root,'dist/market-lab.css'),'utf8')}\n</style>`;
+  await assert.rejects(verifyStandaloneArtifact(html.replace(marketStyle,''),resolve(root,'dist')),/Missing or changed stylesheet: market-lab\.css/);
   const archiveMatch=html.match(/(<script id="atlas-forecast-ledger" type="application\/json">)([\s\S]*?)(<\/script>)/);
   const archive=JSON.parse(archiveMatch[2]);Object.values(archive.records)[0].targets[0].price+=1;
   await assert.rejects(verifyStandaloneArtifact(html.replace(archiveMatch[0],archiveMatch[1]+JSON.stringify(archive)+archiveMatch[3]),resolve(root,'dist')),/Changed embedded forecast archive/);

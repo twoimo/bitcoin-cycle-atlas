@@ -1,0 +1,12 @@
+{
+  "GDPC1": {
+    "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=GDPC1&cosd=2010-01-01&coed=2026-12-31",
+    "sha256": "4001160e214c244e8eef3de0a3031b26c5ea5fafdb453a746053d8be854fe536",
+    "fileSavedAt": "2026-11-02T05:08:26Z"
+  },
+  "TB3MS": {
+    "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=TB3MS&cosd=2010-01-01&coed=2026-12-31",
+    "sha256": "6bfc218919eac3635605cf7480693d9cd2779e6de22e612a40b4dc9f1f755ff4",
+    "fileSavedAt": "2026-11-02T05:08:15Z"
+  }
+}

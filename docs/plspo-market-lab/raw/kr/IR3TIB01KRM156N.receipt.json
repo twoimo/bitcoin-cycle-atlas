@@ -1,0 +1,18 @@
+{
+  "series": "IR3TIB01KRM156N",
+  "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=IR3TIB01KRM156N&cosd=2010-01-01&coed=2026-12-31",
+  "requestedAt": "2026-11-02T07:44:45.589Z",
+  "receivedAt": "2026-11-02T07:44:46.075Z",
+  "httpStatus": 200,
+  "contentType": "application/csv",
+  "serverDate": "Mon, 02 Nov 2026 07:44:46 GMT",
+  "bytes": 3249,
+  "sha256": "bf568fae61a4899360fb8db8e9ba297f96aa48113b4ba15ce5371fdd8ccfda3a",
+  "header": "observation_date,IR3TIB01KRM156N",
+  "lastRows": [
+    "2026-07-01,2.91",
+    "2026-08-01,2.97",
+    "2026-09-01,3.17"
+  ],
+  "dataRows": 201
+}
