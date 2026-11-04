@@ -14,12 +14,35 @@ const fixtureTime=Date.parse(fixture.generatedAt);
 const now = new Date(fixtureTime+3*86400000);
 if (!process.env.TEST_DATABASE_URL) throw new Error('TEST_DATABASE_URL is required; service checks must exercise real PostgreSQL');
 
-test('canonical domain keeps original formulas with only explicit instrument identity expansion', async () => {
+test('canonical domain preserves original formulas with reviewed instrument and RSI boundary guards', async () => {
   const canonical = await readFile(new URL('../../packages/domain/src/market-lab-math.js', import.meta.url));
   const published = await readFile(new URL('../../dist/market-lab-math.js', import.meta.url));
   assert.deepEqual(canonical, published);
-  // The original source identity is recorded in the migration receipt as well.
-  assert.equal(createHash('sha256').update(canonical.toString().replace("tqqq:'America/New_York', soxl:'America/New_York', 'kodex-kosdaq150':'Asia/Seoul', vix:","tqqq:'America/New_York', vix:").replace("['spx','nasdaq','kospi','kosdaq','tqqq','soxl','kodex-kosdaq150'].includes(m.id)","['spx','nasdaq','kospi','kosdaq','tqqq'].includes(m.id)")).digest('hex'), snapshotMathHash);
+  // Keep the migration's original source hash. Only these exact reviewed edits
+  // may differ: two instrument identities and three RSI input-range guards.
+  // Wilder seeding, recurrence, signal averaging and all other formulas remain
+  // covered by the original hash. Runtime edge cases have separate regressions.
+  const approvedEdits = [
+    ["tqqq:'America/New_York', soxl:'America/New_York', 'kodex-kosdaq150':'Asia/Seoul', vix:", "tqqq:'America/New_York', vix:"],
+    ["['spx','nasdaq','kospi','kosdaq','tqqq','soxl','kodex-kosdaq150'].includes(m.id)", "['spx','nasdaq','kospi','kosdaq','tqqq'].includes(m.id)"],
+    ['  if (!prices.length) return [];\n', ''],
+    ['  let factor = anchor < 1 ? Math.min(1/anchor,Number.MAX_VALUE) : 1;\n', '  const factor = anchor > 0 && anchor < 1 ? 1/anchor : 1;\n'],
+    [`      const change=close-prices[i-1][1];
+      if (!Number.isFinite(change*factor)) {
+        // Both Wilder averages must change units together. Only this observed
+        // prefix sets the scale; a later large price cannot rewrite earlier RSI.
+        const nextFactor=1/Math.max(close,prices[i-1][1]),ratio=nextFactor/factor;
+        avgGain*=ratio;avgLoss*=ratio;factor=nextFactor;
+      }
+      const delta=change*factor,gain=Math.max(delta,0),loss=Math.max(-delta,0);`,
+    '      const delta=(close-prices[i-1][1])*factor,gain=Math.max(delta,0),loss=Math.max(-delta,0);'],
+  ];
+  let originalSource = canonical.toString();
+  for (const [reviewed, original] of approvedEdits) {
+    assert.equal(originalSource.split(reviewed).length - 1, 1, 'Each approved source edit must occur exactly once');
+    originalSource = originalSource.replace(reviewed, original);
+  }
+  assert.equal(createHash('sha256').update(originalSource).digest('hex'), snapshotMathHash);
 });
 const snapshotMathHash = '04f76285edfd22996dc3bc922f98e9e5baeca70a4a137310b72c57370159176a';
 

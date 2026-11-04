@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "kind": "deep-audit-source-and-verification-receipt",
-  "generatedAt": "2026-11-04T07:29:35.351377+00:00",
+  "generatedAt": "2026-11-04T07:50:46.026096+00:00",
   "baselineCommit": "94a1b1dda9eb359de70747043808340da369d087",
   "identityMeaning": "File SHA-256 values identify the tested combined working sources; the commit containing this receipt and the PR checks provide Git synchronization. This receipt does not self-reference a future commit hash.",
   "sourceHashes": {
-    ".agents/skills/verify-replay-state/SKILL.md": "038074591f1c959938d1a55d9ced09be91c6fb34e5d39cbc28989027c557b5b1",
+    ".agents/skills/verify-replay-state/SKILL.md": "944923048fa3eeedbf370b8d87fa0b743725ad62819dd16c567c165a165efe24",
     ".agents/skills/verify-replay-state/agents/openai.yaml": "a878d794b31bace5c1113732e1b9c86aa12c43c370d953ff9309aef1793e4779",
     "apps/api/src/repository.ts": "f87bd1878debb4bdc6d9b4c6b037971e00992c59bd445b46725dbf8aacbf194a",
     "apps/api/src/us-collector.ts": "5bf55c2aff8c3adbb36aa42ed179f9453a73e0759062bc6f2b88272f13673d9f",
@@ -43,7 +43,8 @@
     "scripts/verify-hallmark-design.mjs": "1b52595d1f238aaf910d02da837bf2a7ef36c0b8c5709bc5ea8f8d56a5c6edba",
     "scripts/hallmark-source-scope.mjs": "805d505d4f4634743bb4825bc56f6030a975be2fd562a07e5fa5d8a820dd5e7b",
     "tests/hallmark-source-scope.test.mjs": "4eb6735bfab9f64c24e5eb4f402334c7cf393f20b9c19c9dcbe5605bee7f0d09",
-    ".github/workflows/hallmark-design.yml": "047d3855389f5f13adbe8ac4f65b7fb4231d19c16ff52f491bb09eb5eb380d11"
+    ".github/workflows/hallmark-design.yml": "047d3855389f5f13adbe8ac4f65b7fb4231d19c16ff52f491bb09eb5eb380d11",
+    "tests/service/market-lab.test.ts": "89414524fd6ec455bafecd94e021d346d6b15cf3d7cad267cd881a9c90f22ae3"
   },
   "checks": [
     {
@@ -183,6 +184,31 @@
       },
       "requiredBaselinePaths": 26,
       "fullDesignAuditResult": "Reported separately by the final PR workflow; this focused check does not substitute for actual rendering."
+    },
+    {
+      "name": "Original mathematical-source provenance with exact reviewed exceptions",
+      "status": "passed",
+      "focusedTests": 1,
+      "numericRegressions": 32,
+      "intendedNegativeControls": 2,
+      "localPostgresqlExercised": false,
+      "evidence": "evidence/math-source-compatibility.json"
+    },
+    {
+      "name": "Complete Hallmark before/after design audit",
+      "sourceCommit": "c377760f7464c9b6ab274b5b93e97f1ec7d96825",
+      "runId": 41793929768,
+      "status": "failed",
+      "integrityStatus": "passed",
+      "integrityErrors": 0,
+      "renderedRoutesPerVersion": 8,
+      "screenshots": 80,
+      "staticFailures": 19,
+      "staticReflex": 3,
+      "renderFailures": 0,
+      "renderReflex": 2,
+      "waived": 0,
+      "evidence": "evidence/hallmark-triage.json"
     }
   ],
   "protectedPathsUnchanged": [
@@ -236,5 +262,29 @@
     "Native Chromium Linux only; no Safari or physical-device execution",
     "No live provider refresh claimed by synthetic-input rehearsals",
     "Microbenchmarks exclude HTTP, database and browser rendering"
-  ]
+  ],
+  "combinedProductRemoteChecks": {
+    "commit": "c377760f7464c9b6ab274b5b93e97f1ec7d96825",
+    "ci": {
+      "runId": 41793929798,
+      "conclusion": "failure",
+      "modelAggregateComplete": true,
+      "modelTests": 2473,
+      "modelFailures": 0,
+      "modelSkipped": 0,
+      "subsequentFailure": "Service migration source-hash guard did not yet allow the reviewed RSI repair; corrected by the exact-snippet provenance regression."
+    },
+    "service": {
+      "runId": 41793929794,
+      "conclusion": "failure",
+      "failure": "The same canonical source-hash assertion; full final-head PostgreSQL execution is still required."
+    },
+    "hallmark": {
+      "runId": 41793929768,
+      "conclusion": "failure",
+      "integrityStatus": "pass",
+      "designStatus": "fail",
+      "evidence": "evidence/hallmark-triage.json"
+    }
+  }
 }
