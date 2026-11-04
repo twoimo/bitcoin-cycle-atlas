@@ -39,10 +39,12 @@ export async function migrate(pool: pg.Pool) {
   } finally { client.release(); }
 }
 
-export async function publishSnapshot(pool: pg.Pool, input: unknown, expectedRevision?: string, onAccepted?: (client: pg.PoolClient, revision: string) => Promise<void>) {
+export async function publishSnapshot(pool: pg.Pool, input: unknown, expectedRevision?: string, onAccepted?: (client: pg.PoolClient, revision: string) => Promise<void>, signal?: AbortSignal) {
+  signal?.throwIfAborted();
   const { snapshot, body, revision } = snapshotIdentity(input);
   const client = await pool.connect();
   try {
+    signal?.throwIfAborted();
     await client.query('BEGIN');
     await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [LOCK]);
     const current = await client.query('SELECT r.revision,r.generated_at FROM market_lab_publications p JOIN market_lab_revisions r USING (revision) WHERE p.channel=$1', ['market-lab']);
@@ -79,6 +81,7 @@ export async function publishSnapshot(pool: pg.Pool, input: unknown, expectedRev
       if (!published) throw new Error('Publication overtaken; acceptance callback not run');
       await onAccepted(client, revision);
     }
+    signal?.throwIfAborted();
     await client.query('COMMIT');
     return { revision, inserted: Boolean(inserted.rowCount), published };
   } catch (error) {

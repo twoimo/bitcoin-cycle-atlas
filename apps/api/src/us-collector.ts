@@ -122,6 +122,7 @@ export async function runUsCollection(pool: pg.Pool, { fetchImpl = fetch, clock 
     if (fetched.some(item => item.receipt.status !== 'ready')) throw new Error('One or more US sources failed; previous snapshot preserved');
     signal?.throwIfAborted();
     const current = await readSnapshot(pool);
+    signal?.throwIfAborted();
     if (!current) throw new Error('Import a validated market snapshot first');
     const snapshot: MarketSnapshot = structuredClone(current.snapshot);
     let changed = false;
@@ -147,7 +148,7 @@ export async function runUsCollection(pool: pg.Pool, { fetchImpl = fetch, clock 
       validateSnapshot(snapshot);
       const accepted = await publishSnapshot(pool, snapshot, current.revision, async (transaction, revision) => {
         await transaction.query("UPDATE market_lab_collection_runs SET status='published',finished_at=$2,revision=$3,sources=$4 WHERE id=$1", [id, clock().toISOString(), revision, JSON.stringify(receipts)]);
-      });
+      }, signal);
       if (!accepted.published) throw new Error('Publication overtaken; previous channel preserved');
       revision = accepted.revision;
     }

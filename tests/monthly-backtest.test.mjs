@@ -1,8 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
-import {parseBitcoinReplayCandles} from '../dist/chart-replay-sources.js';
+import {frozenReplayArchive} from './helpers/frozen-replay-fixture.mjs';
 import {monthlyOrigins,monthlyOriginKey,runMonthlyBacktests,summarizeMonthlyBacktests,evaluateMonthlyOrigin,monthlyReplayForecast} from '../dist/monthly-backtest.js';
 import {restoreCutoffBacktestForecast,createCutoffBacktestForecast} from '../dist/replay-cutoff-forecast.js';
 import {forecastHash} from '../dist/forecast-records.js';
@@ -10,7 +9,7 @@ import {monthlyRowsMarkup,monthlySummaryMarkup} from '../dist/monthly-backtest-v
 import {loadMonthlyModelIdentity} from '../dist/monthly-backtest-source.js';
 
 const evaluatedAt='2026-11-04T00:00:00.000Z';
-const archive=await parseBitcoinReplayCandles(await readFile(new URL('../dist/data/btc-volume.json',import.meta.url),'utf8'),{now:Date.parse(evaluatedAt)});
+const archive=await frozenReplayArchive();
 const files={'bounded-test-model.js':'a'.repeat(64)},modelIdentity={files,hash:await forecastHash(files)};
 function memoryStore(){const entries=new Map();return {entries,get:async key=>entries.get(key),putIfAbsent:async(key,value)=>{if(!entries.has(key))entries.set(key,structuredClone(value));return structuredClone(entries.get(key));}};}
 const store=memoryStore();let builds=0;

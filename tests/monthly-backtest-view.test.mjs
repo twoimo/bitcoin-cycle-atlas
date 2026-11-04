@@ -1,14 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
 import {parseHTML} from 'linkedom';
 import {mountMonthlyBacktest} from '../dist/monthly-backtest-view.js';
-import {parseBitcoinReplayCandles} from '../dist/chart-replay-sources.js';
+import {frozenReplayArchive} from './helpers/frozen-replay-fixture.mjs';
 import {createCutoffBacktestForecast} from '../dist/replay-cutoff-forecast.js';
 import {forecastHash} from '../dist/forecast-records.js';
 
 const evaluatedAt='2026-11-04T00:00:00Z';
-const archive=await parseBitcoinReplayCandles(await readFile(new URL('../dist/data/btc-volume.json',import.meta.url),'utf8'),{now:Date.parse(evaluatedAt)});
+const archive=await frozenReplayArchive();
 const files={'test-model.js':'a'.repeat(64)},identity={files,hash:await forecastHash(files)};
 function fixture(options={}){
   const {document}=parseHTML('<html><body><button id="trigger">月</button><div id="plot"></div></body></html>');

@@ -1,16 +1,15 @@
 import nodeTest from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import * as vm from 'node:vm';
 import {uiFixture} from './replay-ui-fixture.mjs';
-import {parseBitcoinReplayCandles} from '../dist/chart-replay-sources.js';
+import {frozenReplayArchive} from './helpers/frozen-replay-fixture.mjs';
 import {buildLongHorizonForecast} from '../dist/long-horizon-forecast.js';
 import {createCutoffBacktestForecast} from '../dist/replay-cutoff-forecast.js';
 import {monthlyReplayForecast} from '../dist/monthly-backtest.js';
 
-const archive=await parseBitcoinReplayCandles(await readFile(new URL('../dist/data/btc-volume.json',import.meta.url),'utf8'),{now:Date.parse('2026-11-04T00:00:00Z')});
+const archive=await frozenReplayArchive();
 const dataset={prices:archive.observations.map(r=>[r.date,r.price]),meta:{sourceName:'Bitstamp'}};
 const forecast=buildLongHorizonForecast(dataset,{scenario:'base',seed:20261022,sampleCount:64});
 const captured={dataset,forecast,start:'2026-05-01',end:'2027-02-01',frequency:'daily',window:'half',chartType:'candles',presentation:{band:true,scale:'log'}};
