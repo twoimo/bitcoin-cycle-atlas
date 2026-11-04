@@ -1,5 +1,5 @@
 import {macroClockMarkup} from './cycle-period-comparison.js';
-import { cycleIntervalsOverlayMarkup } from "./cycle-interval-overlay.js?v=1.31.1";
+import { cycleIntervalsOverlayMarkup } from "./cycle-interval-overlay.js?v=1.31.2";
 import { milestoneMarkersMarkup } from "./cycle-milestones-view.js?v=1.29.0";
 import { MILESTONE_TYPES } from "./cycle-milestones.js?v=1.29.0";
 import { utcDay } from './cycle-engine.js?v=1.29.0';

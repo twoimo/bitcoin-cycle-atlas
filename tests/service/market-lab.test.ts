@@ -10,7 +10,8 @@ import { loadSnapshot } from '../../apps/web/src/load-snapshot.js';
 import { refreshMarketLab } from '../../scripts/refresh-market-lab.mjs';
 
 const fixture = JSON.parse(await readFile(new URL('../../dist/data/market-lab.json', import.meta.url), 'utf8'));
-const now = new Date('2026-11-03T06:00:00Z');
+const fixtureTime=Date.parse(fixture.generatedAt);
+const now = new Date(fixtureTime+3*86400000);
 if (!process.env.TEST_DATABASE_URL) throw new Error('TEST_DATABASE_URL is required; service checks must exercise real PostgreSQL');
 
 test('canonical domain keeps original formulas with only explicit instrument identity expansion', async () => {
@@ -107,7 +108,10 @@ test('real PostgreSQL publication, API and calculation parity', async t => {
     assert.equal(value.revision,stored.revision);assert.equal(value.symbol,'TQQQ');assert.equal(value.result.sessions,4206);assert(value.result.trades.length>0);
     assert.equal((await send({...body,extra:'ignored?'})).statusCode,400);
     assert.equal((await send({...body,symbol:'BTCUSD'})).statusCode,400);
-    assert.equal((await send({...body,symbol:'SOXL'})).statusCode,422);
+    assert.equal((await send({...body,symbol:'SOXL'})).statusCode,200);
+    const missing=structuredClone(fixture);missing.generatedAt=new Date(fixtureTime-1).toISOString();missing.markets=missing.markets.filter((m:{id:string})=>m.id!=='soxl');
+    const absent=await publishSnapshot(pool,missing);assert.equal(absent.published,false);
+    assert.equal((await send({...body,symbol:'SOXL',revision:absent.revision})).statusCode,422);
     assert.equal((await send({...body,revision:'0'.repeat(64)})).statusCode,404);
     assert.equal((await send({...body,buy:50,sell:40})).statusCode,422);
     assert.equal((await send({...body,start:'2025-02-30'})).statusCode,422);
@@ -115,7 +119,7 @@ test('real PostgreSQL publication, API and calculation parity', async t => {
   await t.test('real constraint failure rolls back data and publication together', async () => {
     const previous = await readSnapshot(pool);
     await pool.query("ALTER TABLE market_lab_observations ADD CONSTRAINT injected_failure CHECK (series_key<>'market:tqqq') NOT VALID");
-    const changed = structuredClone(fixture); changed.generatedAt = '2026-11-03T00:00:00Z';
+    const changed = structuredClone(fixture); changed.generatedAt = new Date(fixtureTime+86400000).toISOString();
     const { revision } = snapshotIdentity(changed);
     await assert.rejects(publishSnapshot(pool, changed), /injected_failure/);
     assert.equal((await pool.query('SELECT revision FROM market_lab_revisions WHERE revision=$1', [revision])).rowCount, 0);
@@ -123,8 +127,8 @@ test('real PostgreSQL publication, API and calculation parity', async t => {
     await pool.query('ALTER TABLE market_lab_observations DROP CONSTRAINT injected_failure');
   });
   await t.test('concurrent new/older imports do not roll back the public clock; old revision remains readable', async () => {
-    const older = structuredClone(fixture); older.generatedAt = '2026-11-03T00:00:00Z';
-    const newer = structuredClone(fixture); newer.generatedAt = '2026-11-03T01:00:00Z';
+    const older = structuredClone(fixture); older.generatedAt = new Date(fixtureTime+86400000).toISOString();
+    const newer = structuredClone(fixture); newer.generatedAt = new Date(fixtureTime+2*86400000).toISOString();
     const original = snapshotIdentity(fixture).revision;
     await Promise.all([publishSnapshot(pool, newer), publishSnapshot(pool, older)]);
     assert.deepEqual((await readSnapshot(pool))?.snapshot, newer);

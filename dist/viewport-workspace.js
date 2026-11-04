@@ -1,4 +1,4 @@
-import { mountCompactChartLayout } from './compact-chart-layout.js?v=1.31.1';
+import { mountCompactChartLayout } from './compact-chart-layout.js?v=1.31.2';
 import { DATA_UPDATE } from './data-update.js?v=1.29.0';
 import { mountWorkbenchChrome } from './workbench-chrome.js?v=1.30.1';
 import { mountResearchWorkbench } from './research-workbench.js?v=1.29.0';

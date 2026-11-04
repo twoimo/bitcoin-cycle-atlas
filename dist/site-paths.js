@@ -6,7 +6,7 @@ export function atlasRootPath(doc=globalThis.document){
     return declared;
   }
   const url=new URL(import.meta.url);
-  return /^https?:$/.test(url.protocol)&&url.pathname.endsWith('/site-paths.js')?url.pathname.slice(0,-'site-paths.js'.length):'/';
+  return /^https?:$/.test(url.protocol)&&!url.pathname.includes('/@fs/')&&url.pathname.endsWith('/site-paths.js')?url.pathname.slice(0,-'site-paths.js'.length):'/';
 }
 export function atlasSitePath(path,root=atlasRootPath()){
   if(typeof path!=='string'||!path.startsWith('/')||path.startsWith('//')||/[\\\r\n]/.test(path)||path.split(/[?#]/)[0].split('/').some(part=>part==='.'||part==='..'))throw new Error('Invalid Atlas resource path');

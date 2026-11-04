@@ -1,6 +1,6 @@
 import { enhanceBootSkeleton } from './loading-surfaces.js';
 enhanceBootSkeleton();
-import { initAtlasShell } from './atlas-shell.js?v=1.31.1';
+import { initAtlasShell } from './atlas-shell.js?v=1.31.2';
 initAtlasShell();
 import { mountJournalEntry } from './journal-entry.js?v=1.29.0';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
@@ -20,7 +20,7 @@ try {
     const { initEquityView } = await import("./equity-view.js?v=1.30.5");
     await initEquityView({symbol});
   } else {
-    await import("./app.js?v=1.31.1");
+    await import("./app.js?v=1.31.2");
   }
 } catch (error) {
   console.error('Chart initialization failed', error);

@@ -26,7 +26,7 @@ SOFTWARE.
 import {atlasSitePath} from './site-paths.js';
 import { atlasPages, labPageFromLocation } from './atlas-navigation.js';
 import { readShellPreference, writeShellPreference } from './atlas-shell-state.js';
-import { mountCenterWorkbench } from './center-workbench.js';
+import { mountCenterWorkbench } from './center-workbench.js?v=1.31.2';
 
 const pageNames = { outlook: '통합 차트', compare: '사이클 비교', evidence: '리서치 자료', data: '자산 비교표', ipo: '공모주 캘린더', market: '세 축 연구실' };
 export function initAtlasShell() {

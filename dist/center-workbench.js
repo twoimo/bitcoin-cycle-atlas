@@ -10,6 +10,8 @@ export function mountCenterWorkbench() {
   const service=document.querySelector('meta[name="atlas-service-base"]');
   const staticEntry=!service&&/^https?:$/.test(location.protocol)?document.querySelector('meta[name="atlas-static-entry"]')?.getAttribute('content'):null;
   if (window.parent !== window || !(service||staticEntry)) return;
+  // Freeze document-relative icons before history changes the route depth.
+  if(staticEntry)for(const icon of document.querySelectorAll('link[rel~="icon"][href]'))icon.href=new URL(icon.getAttribute('href'),document.baseURI).href;
   const home=atlasSitePath('/');
   if(staticEntry&&new URLSearchParams(location.search).get('page')==='market'){
     const page=labPageFromLocation(location),url=new URL(atlasSitePath(page.href),location.origin);
