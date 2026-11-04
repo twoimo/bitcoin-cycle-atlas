@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { extendRsiHistory } from '../../scripts/extend-rsi-history.mjs';
 const previous=JSON.parse(await readFile(new URL('../../dist/data/market-lab.json',import.meta.url),'utf8'));
+// This test deliberately exercises missing-instrument import, independently of published coverage.
+previous.markets=previous.markets.filter((m:any)=>!['soxl','kodex-kosdaq150'].includes(m.id));
+previous.sources=previous.sources.filter((s:any)=>!['market-soxl','market-kodex-kosdaq150'].includes(s.id));
 const now=new Date('2026-11-03T06:00:00Z');
 function payload(symbol:string,currency:string) {
   return {chart:{result:[{meta:{symbol,currency,dataGranularity:'1d',exchangeTimezoneName:currency==='KRW'?'Asia/Seoul':'America/New_York'},timestamp:Array.from({length:35},(_,i)=>Date.UTC(2026,8,i+1,15)/1000),indicators:{quote:[{close:Array.from({length:35},(_,i)=>100+i)}]}}],error:null}};

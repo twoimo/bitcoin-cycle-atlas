@@ -15,7 +15,8 @@ import { MarketLabApp } from '../../apps/web/src/app.js';
 import type { Root } from 'react-dom/client';
 
 const snapshot = JSON.parse(await readFile(new URL('../../dist/data/market-lab.json', import.meta.url), 'utf8')) as MarketSnapshot;
-const now = new Date('2026-11-03T06:00:00Z');
+// The retained OHLC snapshot was prepared on Nov3 after11:00 UTC.
+const now = new Date('2026-11-04T06:00:00Z');
 const noChange = () => {};
 
 async function legacy(tab: string, doc: MarketSnapshot, state = {}, action?: (document: ReturnType<typeof parseHTML>['document']) => void, selector = '#ml-panel') {
@@ -101,7 +102,7 @@ test('React RSI never substitutes missing, errored or future observations for a 
   const failed = structuredClone(snapshot), future = structuredClone(snapshot), missing = structuredClone(snapshot), empty = structuredClone(snapshot);
   failed.sources.find(source => source.id === 'market-tqqq')!.status = 'error';
   failed.sources.find(source => source.id === 'market-tqqq')!.error = '원천을 읽을 수 없습니다.';
-  future.generatedAt = '2026-11-04T06:00:00Z';
+  future.generatedAt = new Date(+now + 86400000).toISOString();
   missing.markets = missing.markets.filter(market => market.id !== 'tqqq');
   empty.markets.find(market => market.id === 'tqqq')!.prices = [];
   for (const doc of [failed, future, missing, empty]) {
