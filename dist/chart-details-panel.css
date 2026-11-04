@@ -214,7 +214,7 @@ body:not([data-page=outlook]) .workbench-detail-tools>[data-reader=selection],bo
 }
 
 /* Shared legend placement is completed by the upper-right context HUD rules. */
-.atlas-plot>.lab-chart-foot{position:absolute;inset:calc(var(--chart-hud-top,8px) + var(--chart-hud-countdown-height,0px)) var(--plot-right-gap,80px) auto auto;width:var(--chart-hud-width,430px);max-width:calc(100% - var(--plot-right-gap,80px) - 20px);max-height:none;min-height:0;margin:0;box-sizing:border-box;justify-content:flex-start;padding:4px 8px;border:1px solid var(--chart-details-panel-rule-7);border-radius:6px;background:var(--chart-details-panel-surface-18);backdrop-filter:blur(4px);z-index:7}
+.atlas-plot>.lab-chart-foot{position:absolute;inset:calc(var(--chart-hud-top,8px) + var(--chart-hud-countdown-height,0px)) var(--plot-right-gap,80px) auto auto;width:var(--chart-hud-width,430px);max-width:calc(100% - var(--plot-right-gap,80px) - 20px);max-height:none;min-height:0;margin:0;box-sizing:border-box;justify-content:flex-start;padding:4px 8px;border:1px solid var(--chart-details-panel-rule-7);border-radius:6px;background:var(--chart-details-panel-surface-18);backdrop-filter:none;z-index:7}
 .atlas-plot>.lab-chart-foot .lab-legend{flex-wrap:wrap;gap:4px 12px;justify-content:flex-end}
 .atlas-plot>.lab-chart-foot .lab-legend span{font-size:11px;line-height:12px;color:var(--chart-details-panel-ink-31)}
 .atlas-plot>.atlas-readout{display:flex;flex-direction:column;align-items:flex-start;gap:4px;max-width:calc(100% - 90px);pointer-events:none}
@@ -230,7 +230,7 @@ body:not([data-page=outlook]) .workbench-detail-tools>[data-reader=selection],bo
 .history-event-marker:hover>rect,.history-event-marker:focus-visible>rect{fill:var(--chart-details-panel-mark);stroke-width:1.5;stroke-opacity:1}
 .history-event-marker:hover>circle,.history-event-marker:focus-visible>circle{stroke:var(--chart-details-panel-rule-8);stroke-width:2.5}
 .atlas-plot[data-dragging=true]>svg{cursor:grabbing}
-.chart-context-menu{position:absolute;z-index:52;display:flex;flex-direction:column;gap:2px;width:240px;max-width:calc(100% - 16px);max-height:calc(100% - 16px);overflow:auto;padding:8px;border:1px solid var(--chart-details-panel-rule-9);border-radius:6px;background:var(--chart-details-panel-surface-19);box-shadow:0 12px 32px var(--atlas-shadow);box-sizing:border-box;color:var(--chart-details-panel-ink-35);font-size:11px}
+.chart-context-menu{position:absolute;z-index:52;display:flex;flex-direction:column;gap:2px;width:240px;max-width:calc(100% - 16px);max-height:calc(100% - 16px);overflow:auto;padding:8px;border:1px solid var(--chart-details-panel-rule-9);border-radius:6px;background:var(--chart-details-panel-surface-19);box-shadow:none;box-sizing:border-box;color:var(--chart-details-panel-ink-35);font-size:11px}
 .chart-context-menu[hidden]{display:none}
 .chart-context-heading{font-size:11px;font-weight:500;color:var(--chart-details-panel-ink-36);border-bottom:1px solid var(--chart-bottom-bar-rule-3);padding:8px 8px;overflow-wrap:anywhere}
 .chart-context-menu button{display:flex;justify-content:space-between;align-items:center;width:100%;padding:8px 8px;min-height:33px;margin:0;border:0;border-radius:3px;background:transparent;color:var(--chart-details-panel-ink-37);text-align:left;font-size:11px;cursor:pointer}

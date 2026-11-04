@@ -54,7 +54,7 @@
 .cycle-chart-controls>details>summary::-webkit-details-marker{display:none}
 .cycle-chart-controls>details[open]>summary{background:var(--cycle-milestones-surface-2);border-color:var(--cycle-milestones-rule-5);color:var(--cycle-milestones-ink-5)}
 .atlas-canvas-heading:has(#atlas-cycle-options[open]){position:relative;z-index:60;overflow:visible}
-.cycle-chart-menu{position:absolute;top:calc(100% + 7px);right:0;z-index:61;width:490px;max-width:calc(100vw - 100px);max-height:calc(100dvh - 100px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;box-sizing:border-box;border:1px solid var(--cycle-milestones-rule-6);border-radius:6px;background:var(--cycle-milestones-surface-3);box-shadow:0 10px 28px var(--atlas-shadow);color:var(--cycle-milestones-ink-6)}
+.cycle-chart-menu{position:absolute;top:calc(100% + 7px);right:0;z-index:61;width:490px;max-width:calc(100vw - 100px);max-height:calc(100dvh - 100px);overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;box-sizing:border-box;border:1px solid var(--cycle-milestones-rule-6);border-radius:6px;background:var(--cycle-milestones-surface-3);box-shadow:none;color:var(--cycle-milestones-ink-6)}
 .cycle-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;border-bottom:1px solid var(--cycle-milestones-rule-7)}
 .cycle-panel-heading h2{margin:0;font-size:11px;font-weight:550;line-height:1.5;color:var(--cycle-milestones-ink-7);white-space:nowrap}
 .cycle-panel-heading h2 small{font-size:11px;font-weight:400;color:var(--cycle-milestones-ink-8);margin-left:8px}
@@ -63,7 +63,7 @@
 .cycle-chart-menu button{font:inherit;font-size:11px;line-height:1.5;min-height:28px;padding:4px 8px;color:var(--cycle-milestones-ink-10);border:1px solid var(--cycle-milestones-rule-9);border-radius:4px;background:var(--cycle-milestones-surface-5);cursor:pointer;white-space:nowrap}
 .cycle-chart-menu button:hover{background:var(--cycle-milestones-surface-6);color:var(--cycle-milestones-ink-11)}
 .cycle-chart-controls :focus-visible{outline:2px solid var(--cycle-milestones-rule-10);outline-offset:2px}
-.cycle-panel-selection{display:flex;align-items:center;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:8px 12px;border-block:1px solid var(--chart-export-workbench-rule-2);background:var(--cycle-milestones-surface-7)}
+.cycle-panel-selection{display:flex;align-items:center;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:8px 12px;border-block:1px solid var(--chart-export-workbench-rule-2);background:var(--surface-raised);color:var(--text)}
 .cycle-panel-selection[hidden]{display:none!important}
 .cycle-panel-selection p{margin:0;min-width:0;flex:1 1 260px;font-size:11px;line-height:1.6;color:var(--chart-bottom-bar-ink-7);overflow-wrap:anywhere}
 .cycle-selection-actions{display:flex;align-items:center;gap:4px;margin-left:auto}
@@ -110,3 +110,33 @@
  .atlas-canvas-heading>#workbench-chart-type,.atlas-canvas-heading>#atlas-mode-menu,.atlas-canvas-heading>#mobile-tools-toggle,.atlas-canvas-heading>#mobile-details-toggle{width:40px;min-width:40px;max-width:40px;padding:8px}
 }
 @media(prefers-reduced-motion:reduce){.cycle-marker,.cycle-interval{transition:none}}
+
+/* The macro clock is a date guide; it never contributes a price to the axis. */
+.cycle-macro-clocks [data-cycle-clock]{cursor:pointer;outline:none}
+.cycle-macro-clocks [data-cycle-clock]:focus-visible .cycle-macro-clock-label{stroke:var(--focus);stroke-width:2}
+.cycle-macro-clocks [data-cycle-clock]:hover .cycle-macro-clock-label{fill:var(--surface-hover)}
+.cycle-reference-comparison{border-top:1px solid var(--border);padding-top:8px;margin-top:8px;color:var(--text);font-size:12px}
+.cycle-macro-clock-table{display:flex;flex-wrap:wrap;gap:8px}
+.cycle-macro-clock-table button{flex:1;min-width:200px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px;padding:8px;background:var(--surface);border:1px solid var(--border);color:var(--text);font:inherit;text-align:left}
+.cycle-macro-clock-table small{flex-basis:100%;color:var(--muted)}
+.cycle-comparison-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 0 8px}
+.cycle-comparison-heading [role=status]{font-size:11px;color:var(--muted)}
+.cycle-comparison-scroll{overflow-x:auto;overscroll-behavior-x:contain}
+.cycle-comparison-scroll table{width:100%;min-width:560px;border-collapse:collapse;text-align:left;font-variant-numeric:tabular-nums}
+.cycle-comparison-scroll :is(th,td){padding:8px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap;font-size:11px}
+.cycle-comparison-scroll th button{padding:4px 0;border:0;background:transparent;color:var(--text);font:inherit;text-align:left}
+.cycle-comparison-scroll td small{display:block;color:var(--muted);font-size:10px}
+.cycle-history-distribution{display:block;width:120px;height:16px}
+.cycle-reference-comparison details{padding-block:8px}
+.cycle-reference-comparison details p{white-space:normal;line-height:1.6;color:var(--muted)}
+.cycle-reference-comparison :focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+@media(max-width:620px){.cycle-reference-comparison button{min-height:44px}.cycle-macro-clock-table button{min-width:0;flex-basis:100%}}
+
+.atlas-chart-stage .cycle-comparison-scroll svg.cycle-history-distribution{position:static;width:120px;min-width:120px;max-width:120px;height:16px;min-height:0;max-height:16px;margin:0;flex:none}
+@media(min-width:1100px){.cycle-chart-menu:has(.cycle-reference-comparison){width:640px}}
+
+.cycle-reference-key{font:10px var(--font);color:var(--muted);white-space:nowrap;flex:none}
+
+.cycle-comparison-scroll-cue{display:none;color:var(--muted);padding-left:4px}
+.cycle-comparison-scroll :is(thead th:first-child,tbody th){position:sticky;left:0;z-index:1;background:var(--surface)}
+@media(max-width:620px){.cycle-comparison-scroll-cue{display:inline}}

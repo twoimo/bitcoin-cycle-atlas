@@ -1,0 +1,10 @@
+{
+  "name": "@atlas/jobs",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@atlas/domain": "*",
+    "@atlas/contracts": "*",
+    "@atlas/api": "*"
+  }
+}

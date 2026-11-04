@@ -1,0 +1,22 @@
+// One menu contract for the React service and the static/offline shell.
+export const atlasPages = Object.freeze([
+  {id:'outlook', label:'가격 차트', title:'가격 차트', view:'outlook', href:'/?page=outlook', icon:'M3 17l5-6 4 3 8-10M15 4h5v5'},
+  {id:'market-us', badge:'US', label:'미국 시장', title:'미국 시장 진단', view:'market', tab:'diagnosis', region:'us', href:'/market-lab/us/', icon:'M4 20V10m8 10V4m8 16v-7'},
+  {id:'market-kr', badge:'KR', label:'국내 시장', title:'국내 시장 진단', view:'market', tab:'diagnosis', region:'kr', href:'/market-lab/kr/', icon:'M4 20V10m8 10V4m8 16v-7'},
+  {id:'scenario', label:'조건 실험', title:'조건 실험', view:'market', tab:'scenario', href:'/market-lab/scenario/', icon:'M3 12h4l3-8 4 16 3-8h4'},
+  {id:'cashflow', label:'현금흐름', title:'현금흐름', view:'market', tab:'ai', href:'/market-lab/cashflow/', icon:'M3 6h18v12H3zM3 10h18M7 14h3'},
+  {id:'rsi', label:'삼플레·RSI', title:'삼플레·RSI', view:'market', tab:'rsi', href:'/market-lab/rsi/', icon:'M3 4v16h18M4 14l4-3 4 4 4-9 5 4'},
+  {id:'housing', label:'부동산', title:'부동산 거래량·가격', view:'market', tab:'housing', href:'/market-lab/housing/', icon:'M3 11l9-8 9 8M5 10v11h14V10M9 21v-7h6v7'},
+  {id:'themes', label:'테마·재료', title:'테마·재료', view:'market', tab:'themes', href:'/market-lab/themes/', icon:'M3 5h7l3 3h8v12H3zM7 12h10M7 16h6'},
+  {id:'evidence', label:'리서치', title:'리서치', view:'evidence', href:'/?page=evidence', icon:'M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1m0-14c3-2 6-2 9-1v14c-3-1-6-1-9 1V6'},
+  {id:'data', label:'자산 비교', title:'자산 비교', view:'data', href:'/?page=data', icon:'M3 4h18v16H3zM3 10h18M3 15h18M9 4v16'},
+  {id:'ipo', label:'공모주', title:'공모주', view:'ipo', href:'/?page=ipo', icon:'M3 6h18v15H3zM3 11h18M8 3v5M16 3v5'},
+]);
+export function labPageFromLocation(location) {
+  const pathname=location?.pathname||'';
+  const direct=atlasPages.find(page=>page.tab&&page.href===pathname);
+  if(direct)return direct;
+  const query=new URLSearchParams(location?.search||'');
+  const tab=query.get('lab-tab')||'diagnosis';
+  return atlasPages.find(page=>page.tab===tab&&(tab!=='diagnosis'||page.region===(query.get('lab-region')==='kr'?'kr':'us')))||atlasPages[1];
+}

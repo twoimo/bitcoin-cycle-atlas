@@ -1,3 +1,4 @@
+import {setLoadingSurface} from './loading-surfaces.js';
 import {BITCOIN_EVENTS,BITCOIN_EVENT_CATEGORIES,BITCOIN_EVENTS_REVIEW_DATE} from './bitcoin-events.js?v=1.29.0';
 import {EVENT_COLORS,formatBtcVolume} from './chart-overlays.js?v=1.29.0';
 import {mountHistoryJournal} from './history-journal.js?v=1.29.0';
@@ -67,6 +68,9 @@ export function mountResearchWorkbench({stage,controlStore,liveControls,openRead
   function paintVolume(state){
     const target=volume.querySelector('#volume-source-status'),meta=state?.volumeMeta;
     volume.querySelector('#volume-forecast-status').innerHTML=state?.intraday?'<p class="volume-intraday-note">분·시간 차트는 실제 완료 봉을 표시합니다. 장기 거래량 시나리오는 1D·1W에서 가격 전망과 함께 볼 수 있습니다.</p>':volumeForecastSummaryMarkup(state?.volumeForecast);
+    const pending=state?.intraday?Boolean(state.marketLoading&&!state.marketSeries):!meta&&!state?.volumeError;
+    if(pending){setLoadingSurface(target,true,{kind:'detail',label:'거래량 자료 로딩'});return;}
+    setLoadingSurface(target,false);
     if(state?.intraday&&state.marketSeries){
       const series=state.marketSeries,bar=series.candles.at(-1);
       target.innerHTML=`<span class="source-badge">실제 완료 봉 · BTC</span><h3>${esc(series.source)} · ${esc(series.product)}</h3><dl class="source-stats"><dt>범위</dt><dd>${stamp(series.firstDate)} — ${stamp(series.lastDate)} UTC</dd><dt>표시 간격</dt><dd>${esc(state.intervalLabel)}</dd><dt>수집 시각</dt><dd>${stamp(series.retrievedAt)} UTC${series.snapshot?' · 저장 자료':''}</dd><dt>완료 봉</dt><dd>${series.candles.length}개 · 빈 봉 ${series.gapCount||0}개</dd><dt>최근 봉 거래량</dt><dd>${formatBtcVolume(bar.volume)} BTC</dd></dl><p>이 거래소 BTC/USD 현물의 물량입니다. 전 세계 거래소 합계가 아닙니다.</p><p>기존 Coinbase 저장본에는 일봉·시간봉 합계의 작은 차이가 확인되어, Bitstamp 일봉 검증과 구분합니다. 차이는 원문 그대로 보존합니다.</p><p><a href="${esc(series.documentationUrl)}" target="_blank" rel="noopener noreferrer">거래소 공식 데이터 정의 ↗</a></p>`;

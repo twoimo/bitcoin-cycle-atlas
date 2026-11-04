@@ -1,0 +1,32 @@
+[
+  {
+    "id": "hype-spot",
+    "url": "https://api.hyperliquid.xyz/info",
+    "request": {
+      "type": "candleSnapshot",
+      "req": {
+        "coin": "@107",
+        "interval": "1d",
+        "startTime": 1730419200000,
+        "endTime": 1793712644529
+      }
+    },
+    "retrievedAt": "2026-11-03T13:30:44.625585+00:00",
+    "sha256": "7acff971c1ce50d18a5e5bf1f6d6a8a754e222ef05c26d549330811f8c8b7bb2"
+  },
+  {
+    "id": "btc-perp",
+    "url": "https://api.hyperliquid.xyz/info",
+    "request": {
+      "type": "candleSnapshot",
+      "req": {
+        "coin": "BTC",
+        "interval": "1d",
+        "startTime": 1730419200000,
+        "endTime": 1793712644529
+      }
+    },
+    "retrievedAt": "2026-11-03T13:30:44.756228+00:00",
+    "sha256": "d4999b0542ae57e215609b85a628b0d9d305886a6c4c56b2fbb74f727232f54a"
+  }
+]

@@ -1,0 +1,336 @@
+{
+  "observedAt": "2026-11-03T11:31:37.763492+00:00",
+  "worktree": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service",
+  "branch": "codex/market-lab-service-20261103",
+  "outcome": "Local RSI price/oscillator workbench uses the actual BTC gesture/axis controller, verified real OHLC, and scope-bound original perimeter controls. No remote release.",
+  "acceptance": {
+    "typecheck": "pass",
+    "webBuild": "pass",
+    "uiAndImport": {
+      "tests": 28,
+      "pass": 28,
+      "fail": 0,
+      "skipped": 0
+    },
+    "realPostgresApi": {
+      "tests": 12,
+      "pass": 12,
+      "fail": 0,
+      "skipped": 0
+    },
+    "navigationMobileAndRealStandalone": {
+      "tests": 172,
+      "pass": 172,
+      "fail": 0,
+      "skipped": 0
+    },
+    "static": {
+      "status": "ok",
+      "files": 753,
+      "checkedReferences": 470,
+      "basePath": "/bitcoin-cycle-atlas/",
+      "standalone": null
+    },
+    "domainStaticCopyExact": true,
+    "diffCheck": "pass"
+  },
+  "data": {
+    "observedAt": "2026-11-03T11:25:04.236439+00:00",
+    "revision": "a855c157ff696ff609798b791ebbca26fa659b7174b56d53a90d7d3f75f2bcc5",
+    "original7MarketPriceSeriesUnchanged": true,
+    "original13SourcesUnchanged": true,
+    "originalRegionsUnchanged": true,
+    "frozenModelSourceGraph": 17,
+    "results": [
+      {
+        "symbol": "TQQQ",
+        "unit": "USD",
+        "observations": 4206,
+        "ohlc": 4206,
+        "first": "2010-02-11",
+        "last": "2026-10-30",
+        "allClosesExact": true,
+        "backtestAllFieldsExactToPriorIndependentPythonReplay": true,
+        "fills": 94,
+        "finalEquity": 91440.31319421472,
+        "ohlcEvidence": {
+          "responseSha256": "d4b2df5446ce4b21539d5b74b12e3d85416da21b9abab0dd09be8044a7096830",
+          "retrievedAt": "2026-11-03T10:29:45.997Z",
+          "retrievalClockBasis": "owned raw file write time; HTTP receipt time not retained",
+          "preparedAt": "2026-11-03T11:06:13.389Z",
+          "timezone": "America/New_York",
+          "matchedClosesOnly": true,
+          "omittedDates": []
+        }
+      },
+      {
+        "symbol": "SOXL",
+        "unit": "USD",
+        "observations": 4188,
+        "ohlc": 4188,
+        "first": "2010-03-11",
+        "last": "2026-11-02",
+        "allClosesExact": true,
+        "backtestAllFieldsExactToPriorIndependentPythonReplay": true,
+        "fills": 78,
+        "finalEquity": 40751.02103937239,
+        "ohlcEvidence": {
+          "responseSha256": "74aa3393b896ca1f1de11b84ee2c6b8ad87e749116ed06500f25b25cb0fcb408",
+          "retrievedAt": "2026-11-03T09:19:36.882Z",
+          "retrievalClockBasis": "original source receipt",
+          "preparedAt": "2026-11-03T11:06:13.389Z",
+          "timezone": "America/New_York",
+          "matchedClosesOnly": true,
+          "omittedDates": []
+        }
+      },
+      {
+        "symbol": "233740",
+        "unit": "KRW",
+        "observations": 2633,
+        "ohlc": 2633,
+        "first": "2015-12-17",
+        "last": "2026-11-02",
+        "allClosesExact": true,
+        "backtestAllFieldsExactToPriorIndependentPythonReplay": true,
+        "fills": 81,
+        "finalEquity": 21947164.918194085,
+        "ohlcEvidence": {
+          "responseSha256": "86ba119a8745afc969c5b3dd0bc486c507e20fe121480a928c1f3400e5d68a19",
+          "retrievedAt": "2026-11-03T09:19:36.882Z",
+          "retrievalClockBasis": "original source receipt",
+          "preparedAt": "2026-11-03T11:06:13.389Z",
+          "timezone": "Asia/Seoul",
+          "matchedClosesOnly": true,
+          "omittedDates": []
+        }
+      }
+    ]
+  },
+  "dataLimits": [
+    "Only daily and weekly charts. No synthetic intraday data.",
+    "Weekly closes/RSI/SMA are display calculations; latest week can be incomplete. Daily backtest is independent of display timeframe.",
+    "Provider split conventions retained; dividend adjustment and Kiwoom numerical equivalence not verified.",
+    "TQQQ OHLC clock is the owned raw file write time, not a claimed HTTP receipt. Other two original receipt clocks retained when raw hashes match.",
+    "Single-threshold next-observed-close all-in long/cash experiment remains unchanged; original scale-in strategy was not reconstructed."
+  ],
+  "ownership": {
+    "navigation": "Parent controls origin, source, symbol and monotonic epoch; stale frames cannot steer current controls.",
+    "view": "Per-instrument view/undo cache; hidden frame interaction suspended; controller listeners released on unmount.",
+    "perimeter": "Original button nodes/listeners preserved; late BTC label paints reassert only owned perimeter, never observe/rewrite the price renderer.",
+    "btcRestore": "BTC intraday/forecast/replay/tools and original selection reader restored on return.",
+    "originalWorktree": "Untouched"
+  },
+  "actualIab": {
+    "browser": "Codex in-app browser 2",
+    "desktopTab": "13",
+    "desktopViewport": [
+      1168,
+      954
+    ],
+    "mobileViewport": [
+      390,
+      844
+    ],
+    "desktopCases": [
+      "Wheel zoom around pointer; 1-year range 2025-10-30..2026-10-30 zoomed to 2026-04-14..2026-09-09.",
+      "Pan changes both time and price, with undo restoring initial range/domain and redo restoring moved view.",
+      "Right price-axis drag changes domain while dates remain fixed; time-axis drag changes dates while manual price domain stays fixed.",
+      "Date jump to 2020-03-20 selects exact observed close 4.43874979019165, RSI 31.931285983655926 and SMA 33.34018699381597. Native key date editing confirmed.",
+      "Date pane opens with current range; final values 2026-10-30 / 2025-10-30 / 2026-10-30.",
+      "Measurement shows USD delta, percentage and elapsed days; clear removes overlay. Strong magnet anchors match exact real OHLC on 2026-03-24 (44.54999923706055) and 2026-07-13 (74.8499984741211).",
+      "RSI/SMA/reference/Buy-Sell/volume controls change actual SVG layers. 310 visible volumes; markers 0 -> 26; disabled SMA/reference paths absent.",
+      "Candles and weekly interval render actual OHLC. SOXL returned with 27 weekly candles and its own 2026-05-06..2026-11-02 range; TQQQ returned with independent 1-year view and magnet setting.",
+      "KODEX selection uses KRW, KRX dates and its actual observations.",
+      "Top settings routes to settings; price inversion and magnet controls operate. Instrument command search and native context menu show selected symbol.",
+      "SVG/PNG generation creates actual loaded 1532x1546 preview for selected viewport. OS download acceptance was not checked.",
+      "BTC selection reader hidden on RSI entry and restored with original values on BTC return.",
+      "Daily TQQQ backtest UI shows 91,440.31 USD final equity, 55.88% drawdown, 94 fills and 47 closed trades; full table has 4206 daily rows plus 94 fills.",
+      "Final desktop contains 252 actual candles, 252 volume bars and visible Buy and Sell names; no console errors observed."
+    ],
+    "mobileCases": [
+      "Daily/weekly native select, candle toggle, 1-year range and zoom button work.",
+      "Actual pointer drag at mobile dimensions changes time and manual price domain.",
+      "Indicators including volume and close action remain reachable; information/tools trays close after routing.",
+      "390px full-canvas render and contextual drawer inspected and captured."
+    ],
+    "mobileLimit": "Input.dispatchTouchEvent is not supported in this IAB. Real two-finger pinch remains unverified; shared BTC controller local touch tests passed. No browser substitution.",
+    "cleanup": "Tab 14 emulation/touch override cleared and tab closed. Tab 13 retained as deliverable with TQQQ 1-year candles/volume, crosshair, magnet off, no ruler.",
+    "toolingObservation": "Playwright date fill updated DOM value but did not trigger React change in this adapter. Native date key editing and submit confirmed correct navigation; no product workaround inferred."
+  },
+  "design": {
+    "checkerCommit": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+    "checkerSha256": "f8ada364c68a9db4b3dd5784bd416a7c412125e887aeae87d627e072d3848289",
+    "command": "node build/rsi-history/hallmark/sloplint.mjs dist apps/web/src --genre modern-minimal --scope app --json",
+    "summary": {
+      "fails": 1,
+      "reflex": 0,
+      "warns": 8,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 46,
+      "render": "off"
+    },
+    "remaining": [
+      {
+        "gate": "56",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/styles.css",
+        "line": 981,
+        "evidence": "two sticky top:0 elements: .rsi-ledger-scroll thead th + .indicator-library[op…",
+        "fix": "Offset the second sticky by banner height"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/analysis-dock.css",
+        "line": 8,
+        "evidence": "same container recipe on 18 selectors (.chart-indicator-manager button, .analysis-wind…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/analysis-dock.css",
+        "line": 62,
+        "evidence": "same container recipe on 9 selectors (.indicator-library-eye, .indicator-library-favo…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/atlas-shell.css",
+        "line": 104,
+        "evidence": "same container recipe on 16 selectors (.rsi-toolbar button, .workbench-bottom-bar .wor…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/atlas-shell.css",
+        "line": 151,
+        "evidence": "same container recipe on 7 selectors (.rsi-backtest-form input, .rsi-history button, …...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/chart-export-workbench.css",
+        "line": 13,
+        "evidence": "same container recipe on 6 selectors (.chart-export-dialog button, .chart-export-dial…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/compact.css",
+        "line": 91,
+        "evidence": "same container recipe on 10 selectors (.data-summary, .research-chart-shell, .ipo-sear…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/daily-data.css",
+        "line": 188,
+        "evidence": "same container recipe on 8 selectors (#data-view .asset-history-mode button, #data-vi…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/styles.css",
+        "line": 883,
+        "evidence": "same container recipe on 10 selectors (dialog(.workspace-dialog, .chart-export-dialog,…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      }
+    ],
+    "assessment": "FAIL56 is the retained cross-document/independent-scroll sticky-header false positive. Desktop/mobile show no overlapping headers. F7 WARN8 are repeated common control/frame recipes. Findings preserved, no waiver/checker modification.",
+    "upstreamRender": "NOT_RUN; actual IAB rendering used.",
+    "sourceCheck": "build/rsi-workbench/frontend-source.json; review_required upstream not auto-adopted.",
+    "earlierOmittedGenreInvocation": "build/rsi-workbench/design-unspecified-genre.json retained separately; corrected command uses established genre."
+  },
+  "regressionLimit": "This stage ran 28 UI/import +12 API +172 affected artifact cases, not a new full 2403 run. The 17 preserved immutable model source files retain prior canonical replay evidence. Prior broad checksum failure and final repair remain recorded at original times in rsi-history-verification.json.",
+  "notRun": [
+    "External thesis/Gemini/reverse review remains NOT_RUN under prior holds.",
+    "Kiwoom authentication, broker connection and live orders.",
+    "Remote CI, merge and deployment.",
+    "Real-device touch pinch and OS file download acceptance."
+  ],
+  "logs": {
+    "typecheck-delivery.log": "fb0819098087f3423e17448306bb7a2fa0eccf94000c9584002be69605262333",
+    "build-delivery.log": "0f108d5e4775128313183b8379219197b0ebf9860d204e014d00061f7a3eb50c",
+    "panels-delivery.log": "679d75596bda38aa3697c8470e641b3723b9acd256190a244f336d8ea359c933",
+    "service.log": "295b0ca983d6dcd6a40f5a58c202e224333d8ddd7b441f378c887cae0c03dc0b",
+    "artifacts-delivery.log": "588cd5b0268f269c0cc5d1f65d852337d211193654fd5604f72e3510218bbc37",
+    "static-delivery.json": "3eb4e8636f16b8d51df340b67a2ce8263eac4d80573c58615723e31e5b7ce26e",
+    "design-delivery.json": "4f28639aeab519127b7c8c9aba9656c39ff8400744c71e5b6a119b4422a46592",
+    "live-parity.json": "aa08b40bf44eca16cb6c470fa5d42a5ba562cd12b7a5c49d5662d6f53c5fd1b2",
+    "raw-ohlc-parity.json": "ae700580b703940fef4a3890a6642e6e9fd520634961cd0d55d37d84d9fdbdcf",
+    "import-final.log": "bd136dc74a4e5dea66268e5c8df72176fe080111060a48df79eee7623d4f789b"
+  },
+  "sourceSha256": {
+    "apps/web/src/components/rsi-chart-canvas.tsx": "894c4cfc73f3016cfdbe71714df2eec7455b00b16f0455e529c186216071f9a2",
+    "apps/web/src/panels/rsi-workbench.tsx": "b1a98170bd517ae3a781459977b71a11c959c947faa4f97b7a92dbd6f2dfb46a",
+    "apps/web/src/panels/rsi-panel.tsx": "171bcf218d6b8584e0348de69f9d275d999aae277fb9970525cd8a90fa2ed9d2",
+    "apps/web/src/rsi-chart-model.ts": "df2c077fe6ea13137c9dcd1711f236c7496cd0280e7b2458579034f57773b56b",
+    "apps/web/src/rsi-workbench.css": "bd29b802e353610449d03c81f742321dc4057c22fd9002dbf5dfe54c5d9cb3ae",
+    "apps/web/src/main.tsx": "a60783ed2c33281014a37e8d2ace42c1f898ae9d61c6046b9033f1697525c71e",
+    "dist/rsi-workbench-controls.js": "19007bb783d753bef07018e55a2debf799543108014744d296b473048af7e605",
+    "dist/center-workbench.js": "53bbfc57ad73a2b87bc3277a7076499c8d9775829e2f92604940dffb153e7ecd",
+    "dist/atlas-shell.css": "ac4075e8ddbf8d370cbefeabe3f1e148919091821258f5b340adc0fdcd94e76c",
+    "dist/chart-navigation.js": "3c155dbc8f0ee0a812ead043ea05a397364a8338b05e2b51fa9484ace3bb9bd0",
+    "dist/chart-navigation.d.ts": "d4dfc9523cdc5d0e2d5e28d21b54ead45dbdd00e16093b94a08b0c79aeb5b76f",
+    "packages/domain/src/market-lab-math.js": "58d893589d8a2f0a07f95c081cec41207bf410854279909ddcd9d7f4b447ecc8",
+    "dist/market-lab-math.js": "58d893589d8a2f0a07f95c081cec41207bf410854279909ddcd9d7f4b447ecc8",
+    "packages/domain/src/rsi-bars.js": "e940f4ec4cfd5091916755967b11d21526bc66d32889731444573700c32367f0",
+    "packages/domain/src/rsi-bars.d.ts": "f5d14d2e6a1f3c1e48b84440ce84e32f489601c29ce7eae74e67d0d77b709ef0",
+    "scripts/enrich-rsi-bars.mjs": "44eebc9041a889839f29cf8516e163fae9ffe66e8b00af443c7ae4acd5ad428a",
+    "tests/web/rsi-chart-model.test.tsx": "b5b8b94c96a2b35c41da3e01482a49de469bafcce71ae1b74eb2ccd4ba8ba573",
+    "tests/web/rsi-workbench-controls.test.tsx": "c955b8ad4b9f1459e1798407142a8bbccdbc862c548b913734ca4ba19777362c",
+    "tests/web/center-workbench.test.tsx": "b07cd0a0169861e7c817d85ed143dfdfc1aa18877a723363deeb251190465507",
+    "tests/web/market-lab-panels.test.tsx": "cfe092d8ddf701c5a2baa6194d13bcef18b7fcdec6f1dd32edcfc443e7e4f9ee"
+  },
+  "screenshots": [
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/rsi-workbench/screenshots/backtest.png",
+      "sha256": "85360fd552ca29455e2860aed5f7696fe68025416244afdc31509bc61e15426e"
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/rsi-workbench/screenshots/desktop-final.png",
+      "sha256": "38ca9d3b4f499d6da55690655a7f34c74d2dd56609f76412edfbc8f0811630c1"
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/rsi-workbench/screenshots/export-preview.png",
+      "sha256": "8af1cc58169989017cc2c6110c7a4e0ca02c0e6dc032052a9242b5eaf2688415"
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/rsi-workbench/screenshots/kodex-candles.png",
+      "sha256": "8a77b4f88fcbcaf9b429aa0d1b54eee6d7c347f6a4b08e49c38cc8eeffe74f22"
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/rsi-workbench/screenshots/measurement.png",
+      "sha256": "dd91e76b32bbd03e17ef38ab20e15d506c5f5f43312c2f9cadef34ba54903604"
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/rsi-workbench/screenshots/mobile-chart.png",
+      "sha256": "725b669d54a3c7d9ccc9155341edc65741d7834b2383d1adc446490b9b31af7e"
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/rsi-workbench/screenshots/mobile-indicators.png",
+      "sha256": "0271e7fd0d86446584de1ed510a83726426921f1f26333fa5c3da4576b10f245"
+    }
+  ]
+}

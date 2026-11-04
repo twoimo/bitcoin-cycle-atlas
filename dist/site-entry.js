@@ -1,3 +1,7 @@
+import { enhanceBootSkeleton } from './loading-surfaces.js';
+enhanceBootSkeleton();
+import { initAtlasShell } from './atlas-shell.js?v=20261103';
+initAtlasShell();
 import { mountJournalEntry } from './journal-entry.js?v=1.29.0';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
 initPerformanceDiagnostics();

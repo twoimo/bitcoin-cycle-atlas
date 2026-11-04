@@ -1,0 +1,876 @@
+{
+  "observedAt": "2026-11-03T12:36:47.958351+00:00",
+  "worktree": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service",
+  "branch": "codex/market-lab-service-20261103",
+  "outcome": "Skullet installed, pinned and applied to the implemented pending surfaces in the React and legacy workbench. Existing data and synchronous calculators remain usable. Local delivery only.",
+  "package": {
+    "name": "skullet",
+    "version": "0.0.3",
+    "license": "MIT",
+    "repository": "https://github.com/lochie/skullet",
+    "inspectedHead": "770cba428e6954977fd97938f0f06a7cade2fc2d",
+    "npmMetadata": {
+      "version": "0.0.3",
+      "dist": {
+        "shasum": "0da818798566395a6300c16c9ed2eb46942c79cb",
+        "tarball": "https://registry.npmjs.org/skullet/-/skullet-0.0.3.tgz",
+        "fileCount": 31,
+        "integrity": "sha512-YPKHasYQxuZTQ6Tf6ap61lseIjdAklQlScg48HMKJW/AiGg8HaVdbfzg5XW/j6OdRuJbITpwsG5vJ8LAapmMJA==",
+        "signatures": [
+          {
+            "sig": "MEYCIQD/eFS00Qnmb12iMdMfz42QAVbdlwBVi5CQ//L831aRoQIhAN7c9t49yvhisKxTXvTJyqM46mOxbeXh3/9U1zZcOPVw",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          },
+          {
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+            "sig": "MEUCIQCDPPJpMjxiy2ylZ3iE6U7gkDRl9u5bVjiS6hQobRS1uAIgTE83qBtlabLFnz0rbKyF9n+fK21585G65LD+yz3gxW4="
+          }
+        ],
+        "unpackedSize": 264582
+      },
+      "repository": {
+        "url": "git+https://github.com/lochie/skullet.git",
+        "type": "git",
+        "directory": "packages/skullet"
+      },
+      "scripts": {
+        "dev": "node scripts/build-inline.mjs && tsup --watch",
+        "lint": "eslint",
+        "test": "vitest run",
+        "build": "node scripts/build-inline.mjs && tsup && node scripts/build-svelte.mjs && node scripts/build-css.mjs",
+        "lint:fix": "eslint --fix",
+        "typecheck": "tsc --noEmit",
+        "pre-commit": "lint-staged"
+      }
+    },
+    "npmRepositoryHeadNotProvided": true,
+    "repositoryHeadAndPublishedBuildByteEquivalence": "NOT_CLAIMED",
+    "install": "npm install skullet@0.0.3 --workspace apps/web --save-exact --ignore-scripts",
+    "lifecycleScriptsRun": false,
+    "runtimeDependencyCountAdded": 1,
+    "vendor": {
+      "version": "0.0.3",
+      "license": "MIT",
+      "hashes": {
+        "skullet.js": "159653b71266900bcff7df3403c1e04cf34d1822074431a131716eedda15e71c",
+        "styles.css": "2d5fd47eb1956d1406cb5a6a6abcc8ecb90a7766015ea30425ffe6ce80491243",
+        "LICENSE": "352ea4bc404c267caeac26864b5a3fafb9ce9502cb1e1db32ec301ee33b51dbf"
+      },
+      "checked": false
+    },
+    "runtimeCdnRequired": false
+  },
+  "checks": {
+    "fullRegression": {
+      "complete": true,
+      "tests": 2404,
+      "pass": 2404,
+      "fail": 0,
+      "skipped": 0,
+      "batches": 2
+    },
+    "fullLog": "build/skullet/full-tests-delivery.log",
+    "ui": {
+      "tests": 31,
+      "pass": 31,
+      "fail": 0,
+      "skipped": 0
+    },
+    "postgresApi": {
+      "tests": 12,
+      "pass": 12,
+      "fail": 0,
+      "skipped": 0
+    },
+    "finalPaintBootPriceLifecycleAndRealStandalone": {
+      "tests": 103,
+      "pass": 103,
+      "fail": 0,
+      "skipped": 0
+    },
+    "repairedImportBoundariesAndRealOfflineReplay": {
+      "tests": 82,
+      "pass": 82,
+      "fail": 0,
+      "skipped": 0
+    },
+    "typecheck": "pass",
+    "build": "pass",
+    "static": {
+      "status": "ok",
+      "files": 759,
+      "checkedReferences": 487,
+      "basePath": "/bitcoin-cycle-atlas/",
+      "standalone": null
+    },
+    "formal": {
+      "eth": {
+        "bounds": {
+          "requestGenerations": 3,
+          "intervals": [
+            "daily",
+            "weekly"
+          ],
+          "rangeChoices": [
+            "auto",
+            "custom"
+          ]
+        },
+        "currentModel": {
+          "status": "pass",
+          "invariant": null,
+          "exitStatus": 0,
+          "generated": 11109,
+          "distinct": 2243,
+          "remaining": 0
+        },
+        "implementation": {
+          "tests": 17,
+          "original": "pass",
+          "restored": "pass",
+          "originalCounts": {
+            "tests": 17,
+            "pass": 17,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "restoredCounts": {
+            "tests": 17,
+            "pass": 17,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "sourceSha256": "ef6e99760567649f3ab8705ef49c52e47726cb28486225847bafa4ede5066519",
+          "mutations": {
+            "premature-ready": "expected assertion failure",
+            "hidden-render": "expected assertion failure",
+            "unguarded-archive": "expected assertion failure",
+            "unguarded-error": "expected assertion failure",
+            "lost-daily-navigation": "expected assertion failure",
+            "lost-intraday-navigation": "expected assertion failure",
+            "untracked-navigation": "expected assertion failure",
+            "repeated-ready": "expected assertion failure",
+            "missing-escaper": "expected assertion failure"
+          },
+          "mutationExitStatuses": {
+            "premature-ready": 1,
+            "hidden-render": 1,
+            "unguarded-archive": 1,
+            "unguarded-error": 1,
+            "lost-daily-navigation": 1,
+            "lost-intraday-navigation": 1,
+            "untracked-navigation": 1,
+            "repeated-ready": 1,
+            "missing-escaper": 1
+          }
+        },
+        "negativeControlModels": {
+          "baseline/TypeOK": {
+            "status": "pass",
+            "invariant": "TypeOK",
+            "exitStatus": 0,
+            "generated": 14969,
+            "distinct": 3503,
+            "remaining": 0
+          },
+          "baseline/ReadyHasUsableView": {
+            "status": "expected invariant violation",
+            "invariant": "ReadyHasUsableView",
+            "exitStatus": 12,
+            "generated": 36,
+            "distinct": 23,
+            "remaining": 13
+          },
+          "baseline/NoHiddenPublication": {
+            "status": "expected invariant violation",
+            "invariant": "NoHiddenPublication",
+            "exitStatus": 12,
+            "generated": 31,
+            "distinct": 21,
+            "remaining": 12
+          },
+          "baseline/NoStalePublication": {
+            "status": "pass",
+            "invariant": "NoStalePublication",
+            "exitStatus": 0,
+            "generated": 14969,
+            "distinct": 3503,
+            "remaining": 0
+          },
+          "baseline/NavigationSurvivesRefresh": {
+            "status": "expected invariant violation",
+            "invariant": "NavigationSurvivesRefresh",
+            "exitStatus": 12,
+            "generated": 268,
+            "distinct": 145,
+            "remaining": 87
+          },
+          "baseline/ReadinessOnce": {
+            "status": "pass",
+            "invariant": "ReadinessOnce",
+            "exitStatus": 0,
+            "generated": 14969,
+            "distinct": 3503,
+            "remaining": 0
+          },
+          "unguarded-response/NoStalePublication": {
+            "status": "expected invariant violation",
+            "invariant": "NoStalePublication",
+            "exitStatus": 12,
+            "generated": 14,
+            "distinct": 8,
+            "remaining": 3
+          },
+          "unguarded-error/NoStalePublication": {
+            "status": "expected invariant violation",
+            "invariant": "NoStalePublication",
+            "exitStatus": 12,
+            "generated": 15,
+            "distinct": 9,
+            "remaining": 4
+          },
+          "hidden-render/NoHiddenPublication": {
+            "status": "expected invariant violation",
+            "invariant": "NoHiddenPublication",
+            "exitStatus": 12,
+            "generated": 31,
+            "distinct": 21,
+            "remaining": 12
+          },
+          "lost-navigation/NavigationSurvivesRefresh": {
+            "status": "expected invariant violation",
+            "invariant": "NavigationSurvivesRefresh",
+            "exitStatus": 12,
+            "generated": 289,
+            "distinct": 160,
+            "remaining": 103
+          }
+        }
+      },
+      "equity": {
+        "bounds": {
+          "requestGenerations": 3,
+          "intervals": [
+            "daily",
+            "weekly"
+          ],
+          "rangeChoices": [
+            "auto",
+            "custom"
+          ]
+        },
+        "currentModel": {
+          "status": "pass",
+          "invariant": null,
+          "exitStatus": 0,
+          "generated": 303261,
+          "distinct": 46252,
+          "remaining": 0
+        },
+        "implementation": {
+          "tests": 28,
+          "original": "pass",
+          "restored": "pass",
+          "sourceSha256": "19716e251cbb3af657e66a1cad955aaf1324749dd20b281391c608e7e70d0168",
+          "mutations": {
+            "deferred-readiness": "expected assertion failure",
+            "unguarded-prices": "expected assertion failure",
+            "unguarded-projection": "expected assertion failure",
+            "unguarded-coin-error": "expected assertion failure",
+            "retained-old-projection": "expected assertion failure",
+            "hidden-ready": "expected assertion failure",
+            "overwritten-range": "expected assertion failure"
+          },
+          "mutationExitStatuses": {
+            "deferred-readiness": 1,
+            "unguarded-prices": 1,
+            "unguarded-projection": 1,
+            "unguarded-coin-error": 1,
+            "retained-old-projection": 1,
+            "hidden-ready": 1,
+            "overwritten-range": 1
+          }
+        },
+        "negativeControlModels": {
+          "original-boot-order": {
+            "status": "expected invariant violation",
+            "invariant": "UsableRenderReleasesBoot",
+            "exitStatus": 12,
+            "generated": 68,
+            "distinct": 38,
+            "remaining": 27
+          },
+          "unguarded-prices": {
+            "status": "expected invariant violation",
+            "invariant": "NoStalePublication",
+            "exitStatus": 12,
+            "generated": 40,
+            "distinct": 25,
+            "remaining": 17
+          },
+          "unguarded-projection": {
+            "status": "expected invariant violation",
+            "invariant": "NoStalePublication",
+            "exitStatus": 12,
+            "generated": 3383,
+            "distinct": 1147,
+            "remaining": 600
+          },
+          "unguarded-errors": {
+            "status": "expected invariant violation",
+            "invariant": "NoStalePublication",
+            "exitStatus": 12,
+            "generated": 41,
+            "distinct": 26,
+            "remaining": 18
+          },
+          "retained-old-projection": {
+            "status": "expected invariant violation",
+            "invariant": "ProjectionMatchesPrices",
+            "exitStatus": 12,
+            "generated": 7255,
+            "distinct": 2253,
+            "remaining": 1105
+          },
+          "hidden-ready": {
+            "status": "expected invariant violation",
+            "invariant": "NoHiddenReadiness",
+            "exitStatus": 12,
+            "generated": 265,
+            "distinct": 115,
+            "remaining": 74
+          },
+          "overwritten-range": {
+            "status": "expected invariant violation",
+            "invariant": "UserRangePreserved",
+            "exitStatus": 12,
+            "generated": 2317,
+            "distinct": 806,
+            "remaining": 429
+          }
+        }
+      }
+    },
+    "diffCheck": "pass"
+  },
+  "preservation": {
+    "observedAt": "2026-11-03T12:20:42.218172+00:00",
+    "revision": "a855c157ff696ff609798b791ebbca26fa659b7174b56d53a90d7d3f75f2bcc5",
+    "original7MarketPriceSeriesUnchanged": true,
+    "original13SourcesUnchanged": true,
+    "originalRegionsUnchanged": true,
+    "frozenModelSourceGraph": 17,
+    "results": [
+      {
+        "symbol": "TQQQ",
+        "unit": "USD",
+        "observations": 4206,
+        "ohlc": 4206,
+        "first": "2010-02-11",
+        "last": "2026-10-30",
+        "allClosesExact": true,
+        "backtestAllFieldsExactToPriorIndependentPythonReplay": true,
+        "fills": 94,
+        "finalEquity": 91440.31319421472,
+        "ohlcEvidence": {
+          "responseSha256": "d4b2df5446ce4b21539d5b74b12e3d85416da21b9abab0dd09be8044a7096830",
+          "retrievedAt": "2026-11-03T10:29:45.997Z",
+          "retrievalClockBasis": "owned raw file write time; HTTP receipt time not retained",
+          "preparedAt": "2026-11-03T11:06:13.389Z",
+          "timezone": "America/New_York",
+          "matchedClosesOnly": true,
+          "omittedDates": []
+        }
+      },
+      {
+        "symbol": "SOXL",
+        "unit": "USD",
+        "observations": 4188,
+        "ohlc": 4188,
+        "first": "2010-03-11",
+        "last": "2026-11-02",
+        "allClosesExact": true,
+        "backtestAllFieldsExactToPriorIndependentPythonReplay": true,
+        "fills": 78,
+        "finalEquity": 40751.02103937239,
+        "ohlcEvidence": {
+          "responseSha256": "74aa3393b896ca1f1de11b84ee2c6b8ad87e749116ed06500f25b25cb0fcb408",
+          "retrievedAt": "2026-11-03T09:19:36.882Z",
+          "retrievalClockBasis": "original source receipt",
+          "preparedAt": "2026-11-03T11:06:13.389Z",
+          "timezone": "America/New_York",
+          "matchedClosesOnly": true,
+          "omittedDates": []
+        }
+      },
+      {
+        "symbol": "233740",
+        "unit": "KRW",
+        "observations": 2633,
+        "ohlc": 2633,
+        "first": "2015-12-17",
+        "last": "2026-11-02",
+        "allClosesExact": true,
+        "backtestAllFieldsExactToPriorIndependentPythonReplay": true,
+        "fills": 81,
+        "finalEquity": 21947164.918194085,
+        "ohlcEvidence": {
+          "responseSha256": "86ba119a8745afc969c5b3dd0bc486c507e20fe121480a928c1f3400e5d68a19",
+          "retrievedAt": "2026-11-03T09:19:36.882Z",
+          "retrievalClockBasis": "original source receipt",
+          "preparedAt": "2026-11-03T11:06:13.389Z",
+          "timezone": "Asia/Seoul",
+          "matchedClosesOnly": true,
+          "omittedDates": []
+        }
+      }
+    ]
+  },
+  "executionHistory": {
+    "firstFullAttempt": {
+      "tests": 2404,
+      "pass": 2334,
+      "fail": 70,
+      "skipped": 0,
+      "log": "build/skullet/full-tests.log"
+    },
+    "cause": "Explicit VM module maps lacked the new presentation module; the offline DOM lacked querySelectorAll at vendor module initialization; stylesheet contract expected 28 instead of the new 30. Only these dependency/DOM/presentation boundaries changed. Strict data hashes, tolerances, cancellation/actor guards and symlink refusal were not relaxed.",
+    "subsequentFullAttempt": "2404/2404, no skip.",
+    "postFullVisualDelta": "After the native batch, corrected first-paint tokens/stamp and embedded-only boot rails, the relative/absolute stock loading height, and the research boot shape. Final actual IAB screenshots and 103 boot/price-lifecycle/standalone tests passed. API first-paint assertion updated from an empty root to a genuine pending root; 12/12 passed. No model-source delta.",
+    "java": "Default java launcher had no runtime; installed Homebrew java exited 137. Used the already-installed Android Studio JBR 25.0.3 via per-command JAVA. No install or global setting change.",
+    "initialApiTestFailure": "The old test expected an empty React root. The intentional first-paint skeleton now has a status and busy root; DB/API semantics unchanged."
+  },
+  "coverageIndex": "docs/architecture-migration/skullet-loading.md",
+  "actualIab": {
+    "browser": "Codex in-app browser 2",
+    "productionTab": "15",
+    "productionUrl": "http://127.0.0.1:4319/market-lab/rsi/?symbol=TQQQ",
+    "delayHarness": "Task-owned port 4321 proxy to original port 4319; 2.5/4.5-second response delays and explicit HTTP503 only. No production data or broker mutation.",
+    "observations": [
+      "RSI pending skeleton is enhanced by Skullet; zero interactive controls, separate status, inert and aria-hidden paint. Full allocated iframe width/height, e.g. 1198x632.",
+      "Mobile: 390x844 viewport, skeleton width and document scrollWidth both 390; pending height752. Reduced-motion CSS animationName is none. SOXL returns to 68.17 USD and all skeletons are removed.",
+      "API and saved JSON both HTTP503: busy false, skeleton count0, original error and retry visible.",
+      "Condition experiment stays usable in the error state and shows 87.52; during a delayed reconnect busy true, result87.52 remains with no blanket skeleton.",
+      "18-asset comparison returns 18 rows with BTC first, busyfalse, no skeleton; actual delayed table skeleton captured.",
+      "IPO pending calendar has42 neutral cells, no controls, actual Skullet enhancement; empty/error data are not invented.",
+      "Nested boot originally duplicated chart rails; final actual embedded columns1198px and duplicate rail displaynone.",
+      "ETH initial delayed archive uses ETHUSD boot identity; on refresh of an existing1-year chart, busytrue while 13 chart paths and $2252.66 remain visible, no blanket skeleton.",
+      "MSTR archive HTTP503 releases boot to ready and shows original retry, skeleton count0. A subsequent delayed retry uses a full877px price area after fixing the relative-position clash.",
+      "Backtest waiting has1 result skeleton of280px, capital10000 and4206 real historical rows remain. Completion removes the skeleton, shows91440.31 USD, drawdown55.88%,47 closed trades and94 fills.",
+      "Final production tab: busyfalse, skeleton0, TQQQ62.01 USD,252 actual candles; no console errors observed."
+    ],
+    "scopeLimits": [
+      "Other paths, including BTC intraday and replay request interleavings, are covered by source integration and local real-entry regression fixtures; not every variant was driven in IAB.",
+      "DOM bridge does not expose getAnimations; reduced-motion CSS and pinned library source were checked, not a frame-rate or CLS benchmark.",
+      "No performance/token/quota saving claimed."
+    ],
+    "cleanup": "Temporary mobile media/viewport overrides cleared; mobile tab16 and loading tab17 closed. Raw Fetch patterns cleared. Owned proxy stopped, port4321 closed, rules reset. Production tab15 retained; existing tabs/accounts and original API/DB preserved."
+  },
+  "design": {
+    "command": "node build/rsi-history/hallmark/sloplint.mjs dist apps/web/src apps/web/index.html --genre modern-minimal --scope app --json",
+    "checkerCommit": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+    "summary": {
+      "fails": 9,
+      "reflex": 2,
+      "warns": 10,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 50,
+      "render": "off"
+    },
+    "findings": [
+      {
+        "gate": "20",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 1,
+        "evidence": "no Hallmark stamp on the first non-empty line of any CSS",
+        "fix": "The stamp comment is line 1 of the CSS; only @charset may precede it"
+      },
+      {
+        "gate": "26a",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 1,
+        "evidence": "no :focus-visible styling anywhere",
+        "fix": "A focus ring at 3:1 or better, instant"
+      },
+      {
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 36,
+        "evidence": "colour literal rgb(128 128 128 / 0.2) outside tokens (background-color on [skullet-bar])",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 72,
+        "evidence": "colour literal rgb(128 128 128 / 0.2) outside tokens (text-decoration on :scope, :scope *)",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 79,
+        "evidence": "colour literal rgb(128 128 128 / 0.2) outside tokens (background on :scope :is(audio, canvas, emb\u2026)",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 108,
+        "evidence": "colour literal rgb(255 0 80 / 0.7) outside tokens (color on [skullet-xray] [skullet-loadi\u2026)",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 109,
+        "evidence": "colour literal rgb(255 0 80 / 0.7) outside tokens (-webkit-text-fill-color on [skullet-xray] [skullet-loadi\u2026)",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "gate": "56",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/styles.css",
+        "line": 981,
+        "evidence": "two sticky top:0 elements: .rsi-ledger-scroll thead th + .indicator-library[op\u2026",
+        "fix": "Offset the second sticky by banner height"
+      },
+      {
+        "gate": "62",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 10,
+        "evidence": "skullet-reveal[loading]:not(:defined) is hidden at rest (visibility: hidden) and depends on a script to appear",
+        "fix": "Visible by default: scope the hidden state under a .js class the script adds, or animate from visible with @starting-style"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/loading-surfaces.css",
+        "line": 43,
+        "evidence": "padding: 18px 84px 28px 12px (off the 4px scale) on .atlas-skeleton-rsi-panels",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "26b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 1,
+        "evidence": "no :active styling anywhere",
+        "fix": "All eight states; guard: not a form control, no aria-disabled anywhere"
+      },
+      {
+        "gate": "F3",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 55,
+        "evidence": "no text-wrap: balance on any display head (1 head rule(s), e.g. :scope :is(a, b, code, dd, dt, \u2026)",
+        "fix": "Add text-wrap: balance to h1/h2-level heads"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/analysis-dock.css",
+        "line": 8,
+        "evidence": "same container recipe on 18 selectors (.chart-indicator-manager button, .analysis-wind\u2026...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/analysis-dock.css",
+        "line": 62,
+        "evidence": "same container recipe on 9 selectors (.indicator-library-eye, .indicator-library-favo\u2026...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/atlas-shell.css",
+        "line": 104,
+        "evidence": "same container recipe on 16 selectors (.rsi-toolbar button, .workbench-bottom-bar .wor\u2026...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/atlas-shell.css",
+        "line": 151,
+        "evidence": "same container recipe on 7 selectors (.rsi-backtest-form input, .rsi-history button, \u2026...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/chart-export-workbench.css",
+        "line": 13,
+        "evidence": "same container recipe on 6 selectors (.chart-export-dialog button, .chart-export-dial\u2026...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/compact.css",
+        "line": 91,
+        "evidence": "same container recipe on 10 selectors (.data-summary, .research-chart-shell, .ipo-sear\u2026...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/daily-data.css",
+        "line": 188,
+        "evidence": "same container recipe on 8 selectors (#data-view .asset-history-mode button, #data-vi\u2026...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/styles.css",
+        "line": 883,
+        "evidence": "same container recipe on 10 selectors (dialog(.workspace-dialog, .chart-export-dialog,\u2026...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F23",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "apps/web/index.html",
+        "line": 1,
+        "evidence": "the document lacks a meta description",
+        "fix": "Name the language, title the page in its own words, and describe it in one sentence for link previews"
+      }
+    ],
+    "classification": "8 FAIL and1 REFLEX are exact upstream vendor CSS: noninteractive skin/stamp, tokens/debug colors, and an unused unregistered custom-element rule. Owned remaining FAIL56 is the known separate-scroll sticky-header false positive. Owned REFLEX24b is the actual18px SVG top inset. No checker edit or waiver. App-owned token/stamp/overflow findings fixed.",
+    "upstreamRender": "NOT_RUN; actual IAB used.",
+    "sourceCheck": "build/skullet/frontend-source.json; upstream review_required was not auto-adopted."
+  },
+  "notDone": [
+    "Remote CI, merge and deployment.",
+    "External cross-audit stages remain NOT_RUN under prior holds.",
+    "Kiwoom authentication, broker integration or orders.",
+    "Real-device performance/CLS/accessibility certification."
+  ],
+  "cleanup": {
+    "ownedProxyStopped": true,
+    "port4321Closed": true,
+    "rulesCleared": true,
+    "primaryServiceLeftRunning": true
+  },
+  "liveService": {
+    "revision": "a855c157ff696ff609798b791ebbca26fa659b7174b56d53a90d7d3f75f2bcc5",
+    "evaluatedAt": "2026-11-03T12:36:47.885Z",
+    "status": "ready"
+  },
+  "sourceSha256": {
+    "apps/web/package.json": "f110a9afc70f48c49763d31b2699c96fba7c3e1c6ea43a1682ced3cc77ecb853",
+    "apps/web/src/app.tsx": "a59575ba32f8dc0cc7b4ed3d0a3e0857c536da2b9214adee55bc1e890e2fec73",
+    "apps/web/src/components/loading-skeleton.tsx": "1c6fa556a11008b27772337c780a828274e1b901313e80d3a1c80ecce99662c2",
+    "apps/web/src/main.tsx": "d7b1cafa89d4138c53782aebc0b01783d563e38d951dc27d447362cd585d4684",
+    "apps/web/src/panels/rsi-history.tsx": "01bbd6cc6799d7e928fa47bec21f6738a01c88431852a88765e6a86c67537a07",
+    "apps/web/vite.config.ts": "cdbc56b178023a421a28e2b718b47cad9e5d4ecde0b8cbd9ef926aaf506f2187",
+    "dist/asset-forecast-journal.js": "95298b2a35ced2ee51e7b3953bec6e520006edd102f0ee15187edb505f62da9c",
+    "dist/asset-judgment-history-view.js": "cf639e88d6672be54f234c185cf535539d1154ad70d63fd1e36bb9ec72169b1e",
+    "dist/center-workbench.js": "248b14b508ae40336de4a71e86af991d068fdeadf57b616e22dc9e2e28e6fe4d",
+    "dist/chart-replay.js": "dee288e3ff498c5590c24e2b9d0b5daac2d79071a4d7b2edee8fb23fed114ade",
+    "dist/daily-data-view.js": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+    "dist/equity-view.js": "19716e251cbb3af657e66a1cad955aaf1324749dd20b281391c608e7e70d0168",
+    "dist/eth-view.js": "ef6e99760567649f3ab8705ef49c52e47726cb28486225847bafa4ede5066519",
+    "dist/forecast-journal.js": "e872f495d95f3041dfd77bbfae8262476eb29a1f21b7c86e51ee15136588d129",
+    "dist/forecast-replay-view.js": "ecd6ea1880d3e7b6d682860f35f9a4593267f8a5c560c475c23db901b4c2c93b",
+    "dist/index.html": "f8e023877d6fc55a67e0046866816a08f38414169069c92a5e8a89bc9bf06db6",
+    "dist/ipo-view.js": "915da935a0c4e4414345abbdc6c9cf7a9cb79214a7aff6afd003dfda1e22b155",
+    "dist/lab-view.js": "4050b9c57bb0a1bdf5582a5f00e6e005eea70b3415b51a20920df5ec16e05b82",
+    "dist/loading-surfaces.css": "62365401f0ab6f6781292f7d17e2f5833f0e2311e4d7a3ea1dcd777ab945133d",
+    "dist/loading-surfaces.d.ts": "df2123fa805d7a48e4a437b342b624ca964d90ec1c24ac214ec33ff67e3215c5",
+    "dist/loading-surfaces.js": "acf1163210be23adebf1cbb9e11c509d35d7987caf0705e3b3bb45da3eb6cb7d",
+    "dist/market-lab-view.js": "33d697910b67d0d3f55c32c6cdd64e321305f5f309cf7789df15ed6696ca0d2c",
+    "dist/research-workbench.js": "04411f6bf87c616e04ec04e6d3bc1b944b3790ba4825c599b90fcc1e7db7ae93",
+    "dist/rsi-workbench-controls.js": "4923890d7cb17a161751c6ca65ab321030e593df00b05046821e5f41481e92c9",
+    "dist/site-entry.js": "929f3782acce09f92d66a98121114d3ba77bf6f4c0b157616e07968b4343128b",
+    "dist/vendor/skullet/LICENSE": "352ea4bc404c267caeac26864b5a3fafb9ce9502cb1e1db32ec301ee33b51dbf",
+    "dist/vendor/skullet/skullet.js": "159653b71266900bcff7df3403c1e04cf34d1822074431a131716eedda15e71c",
+    "dist/vendor/skullet/styles.css": "2d5fd47eb1956d1406cb5a6a6abcc8ecb90a7766015ea30425ffe6ce80491243",
+    "package-lock.json": "42b87dd06aa89dc5d34bd1d46f2e3b2074a4c1098f72402fcc667a042e9df28c",
+    "package.json": "4b0abe336e8f1cc84fb1e6dda49908504554e6d5205589354b76deb6d681c646",
+    "scripts/build-standalone.mjs": "e71f16e877adfe922acfa022c9384537fd184b7da88b728ca497fa368f2d13eb",
+    "scripts/sync-skullet.mjs": "95f3298bd68c981340534bf7b22db901aad50906b8237263cd0c8c9dd4e61e78",
+    "tests/chart-replay-ui.test.mjs": "67df983964ef488d9c1738370bf3e87853dea1cf68698c7f9161505feafd6d8c",
+    "tests/eth-view-state.test.mjs": "eddbece8c67a9d446f3a5d2b13c72e135093659b3b826313f9428af306adaefa",
+    "tests/forecast-replay-standalone.test.mjs": "d27a6c287daabc37896eda1f050e439d1cdad623cb3777c26cb961abeb0f8f8e",
+    "tests/helpers/equity-view-fixture.mjs": "f41aec038ed76c8eaa65f8f716ec3fa9b94eadc629444e088c9d892258ef7496",
+    "tests/helpers/eth-view-fixture.mjs": "c45b7ddc76fac824aae9f44652b194b77b01bdefbcaea28da6f237bcf1a3e89b",
+    "tests/helpers/forecast-replay-view-failure.mjs": "3db78098ab1d37ad411992a59ba28997656c565a9708ce3b8523a55d453d6fee",
+    "tests/replay-ui-fixture.mjs": "0ec234598b0640467924279c69620b0ca1f9369f3e344c7a8bc9df0fb63b94d7",
+    "tests/service/market-lab.test.ts": "807fecace99f4bfa3b13861fb642b359543fa12ef5e13a53331e42d031888bb1",
+    "tests/standalone-packaging.test.mjs": "dc003b20b4cdada5462ddafec5a50f212fd46919751cc6544c475c365db5a7df",
+    "tests/web/loading-skeleton.test.tsx": "93ab5ac3e07cf9123c4efd38e4fe986d8de368ca18180c7b4c5fa62a647ae9a0",
+    "tests/web/market-lab-panels.test.tsx": "4b6a838199ff7bcad735eaa461881f76acf683d03d5f3b3fb9ecc6cb5daa2296"
+  },
+  "logs": {
+    "install.log": "075db014a67e8195087d217089d35edb6acb7a48f1cf2dd6632415f9c1370096",
+    "typecheck-final-accepted.log": "fb0819098087f3423e17448306bb7a2fa0eccf94000c9584002be69605262333",
+    "build-final-accepted.log": "bb9f80975efbfbceef2edba170282c4751c1a5fb84266416771af3ae4ba8fe5b",
+    "panels-accepted.log": "f678ae3523c4f2dbcc9fa0a86a575cefeec6ee5bc0b6beeb4ac1635fa08c0389",
+    "service-final-accepted.log": "a92447aa5ea995fcc77261104c78b5f499e94145f5fc07ffda584785c9b0264c",
+    "accepted-artifacts.log": "bbd224833d20fc02d35d0413705a319159c72195d1cb4524b4772ffb48c6a7bf",
+    "repaired-regressions.log": "9647169b66e385982560d8a75238eaaf53b6c7236dff787add7969fb11e4ee90",
+    "full-tests.log": "a77f84e0008768de9b976d5a52f09a60751e3e2baa5e21247718ddf893908d52",
+    "full-tests-delivery.log": "4735820810a1127e877b3262241c941f602aa355301a40eddbf779e6526d5248",
+    "formal-eth-final.json": "ca14a9ac3183b16b3571f8167ab7119854de71e7981f1ad5cc031c5513dd4785",
+    "formal-equity-final.json": "f95e284856d727c301b4c4a434a4f0cdfd5f44a67cfb4382917503f7c786543e",
+    "design-final-accepted.json": "6dd9e2631ce600143f0ee9df42067e01e481860dea3504f8c869f553818d757b",
+    "static-final-accepted.json": "0a2e93680cff6e6bcb98d02fb12a6bbc9cc8774692c5134a3e2e3d2c5ec6109b",
+    "live-parity.json": "6bdd614f8572caa3ab26f6d92422346f0b4266b66468397b3c0baaa0691aaeae",
+    "cleanup.json": "1a4cf76d95f0c3ff1845cb9a2d1db5f5a9d0e46f63dbd4e82b90f6b0a1b115a2"
+  },
+  "screenshots": [
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/api-error.png",
+      "sha256": "0287f725f26afee172285c8b0a7c374d1e2beb3579578abfbfdc38dc45b935ee",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": false
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/asset-table-loading-final.png",
+      "sha256": "bfa4eda3d1e5dcc57259ad4e1297c3f26cd39311cf459e7b448a47e516174de7",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": false
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/asset-table-loading.png",
+      "sha256": "ae11e89fbb00ce2446ccbc6916c473fa3bf8b175d5588b0d23ea6a5aa61a7f07",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": true
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/backtest-loading.png",
+      "sha256": "c7dfc5f13aac3a52ad84af2234add850c4e6b20e23d2c3b95e452c18f4e63c9c",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": false
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/equity-error.png",
+      "sha256": "d0f9321864ec114f787861e32905e1800929a592559590923eb396d5310d2370",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": false
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/equity-retry-loading-final.png",
+      "sha256": "d7ee45cdf9b01de4e6bc26f2d60b6ded15274f904f81f6747c31ba7a267aa03d",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": false
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/equity-retry-loading.png",
+      "sha256": "9b5149ec302719727e51c460948ac1b690206ea6e921c2738985480c5366cd3b",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": true
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/eth-loading.png",
+      "sha256": "71d3ad8a84b027377f2000ad3d6bb6020fca347deb3175851e7f2941f1086bbb",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": false
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/ipo-calendar-loading.png",
+      "sha256": "3f7816e8892a48ab978c14914829a81e7febd69e6ac83d035d57fbeacff6e4d9",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": false
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/loading-final.png",
+      "sha256": "f6eb858419477a62d5755f3cb70b79b73371cabbb4a766ec9f27f8221b6a6b5b",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": false
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/mobile-reduced-motion.png",
+      "sha256": "6954c12646c58a3bf99e2346fb6ca12526452282b228b69795599025ebe0c6b7",
+      "width": 390,
+      "height": 844,
+      "superseded": false
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/production-ready.png",
+      "sha256": "60cfb8ea49838ada29e48fe03e694e1eafece927e40d0e24b8557257d4fdbdaf",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": false
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/rsi-aligned.png",
+      "sha256": "bda73adb26ef4bda83bdac7687127b030d6772b38f2e9823241ffc9b8404694d",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": false
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/rsi-delayed.png",
+      "sha256": "8494bc43e0750859b27dec306167fcffabf12a234d554fc35f3daf3df05dd9d4",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": true
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/rsi-loading-first.png",
+      "sha256": "5c88885cec66de4f90a8e83c98538989bcd768287c463222eef68d6ce761bbfb",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": true
+    },
+    {
+      "path": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service/build/skullet/screenshots/rsi-loading.png",
+      "sha256": "ee0a4b51657977a99d4f81d7778be6480de62b3a3401d57cf69e6aecb4c4ba83",
+      "width": 65536,
+      "height": 4292542531,
+      "superseded": true
+    }
+  ]
+}

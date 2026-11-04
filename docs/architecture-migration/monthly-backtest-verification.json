@@ -1,0 +1,317 @@
+{
+  "dateKst": "2026-11-04",
+  "status": "local-implemented-and-verified",
+  "branch": "codex/market-lab-service-20261103",
+  "scope": "BTC monthly fixed-cutoff reconstruction; original replay, calculations and four perimeter regions preserved",
+  "archive": {
+    "observedThrough": "2026-10-31",
+    "evaluatedAt": "2026-11-03T17:38:57.894Z",
+    "provider": "Bitstamp",
+    "originCount": 13,
+    "origins": [
+      "2025-10-31",
+      "2025-11-30",
+      "2025-12-31",
+      "2026-01-31",
+      "2026-02-28",
+      "2026-03-31",
+      "2026-04-30",
+      "2026-05-31",
+      "2026-06-30",
+      "2026-07-31",
+      "2026-08-31",
+      "2026-09-30",
+      "2026-10-31"
+    ],
+    "scenario": "base",
+    "seed": 20261022,
+    "sampleCount": 128,
+    "blockDays": 28,
+    "fixedPathDays": 365,
+    "horizons": [
+      30,
+      90,
+      180,
+      365
+    ],
+    "historicalVintageAvailable": false,
+    "prospectiveScoringEligible": false
+  },
+  "performance": {
+    "summary": [
+      {
+        "horizonDays": 30,
+        "completedOrigins": 12,
+        "mape": 0.08115217054862413,
+        "skillVersusFlat": -0.06476369380861113
+      },
+      {
+        "horizonDays": 90,
+        "completedOrigins": 10,
+        "mape": 0.13998673230950184,
+        "skillVersusFlat": 0.06191175348239486
+      },
+      {
+        "horizonDays": 180,
+        "completedOrigins": 7,
+        "mape": 0.2159522172976979,
+        "skillVersusFlat": -0.22417168556995093
+      },
+      {
+        "horizonDays": 365,
+        "completedOrigins": 1,
+        "mape": 0.3472810197848564,
+        "skillVersusFlat": 0.2036151793694485
+      }
+    ],
+    "commonOriginSummary": [
+      {
+        "horizonDays": 30,
+        "completedOrigins": 1,
+        "mape": 0.10282184280301852,
+        "skillVersusFlat": 0.28767629295627706
+      },
+      {
+        "horizonDays": 90,
+        "completedOrigins": 1,
+        "mape": 0.1399794604233493,
+        "skillVersusFlat": 0.26463974934411216
+      },
+      {
+        "horizonDays": 180,
+        "completedOrigins": 1,
+        "mape": 0.2698953223076083,
+        "skillVersusFlat": 0.24644291990596756
+      },
+      {
+        "horizonDays": 365,
+        "completedOrigins": 1,
+        "mape": 0.3472810197848564,
+        "skillVersusFlat": 0.2036151793694485
+      }
+    ]
+  },
+  "checks": {
+    "fullTests": {
+      "complete": true,
+      "tests": 2438,
+      "pass": 2438,
+      "fail": 0,
+      "skipped": 0,
+      "batches": 2
+    },
+    "hostTests": 2397,
+    "linuxFrozenTests": 41,
+    "finalAffected": {
+      "pass": 47,
+      "fail": 0
+    },
+    "finalScenarioClockView": {
+      "pass": 2,
+      "fail": 0
+    },
+    "independentPythonCompletedWindows": 30,
+    "typecheck": "pass",
+    "webBuild": "pass",
+    "static": {
+      "status": "ok",
+      "files": 770,
+      "checkedReferences": 519,
+      "basePath": "/bitcoin-cycle-atlas/",
+      "standalone": null
+    },
+    "preservation": {
+      "unchanged": {
+        "dist/replay-cutoff-forecast.js": true,
+        "dist/replay-retrospective.js": true,
+        "dist/long-horizon-forecast.js": true,
+        "dist/detailed-forecast.js": true,
+        "dist/cycle-calibration.js": true,
+        "dist/cycle-milestones.js": true,
+        "dist/cycle-decision.js": true,
+        "dist/forecast-replay.js": true,
+        "dist/chart-replay.css": true
+      },
+      "browserModelFilesVerified": 19,
+      "frozenRecordsVerified": 13,
+      "modelSourceHash": "59024a528eba2401a666c537c9950e46063f9a1ed3ced362b78fd892a409f5a9"
+    },
+    "initialFullFailure": "Standalone stylesheet count was30; added monthly CSS requires31 and exact one-copy inclusion. Corrected while preserving original modules and snapshots."
+  },
+  "invariants": {
+    "sameSource": "Bitstamp inputs and evaluation, no current Coin Metrics forecast consumed",
+    "onlyPrefix": "Each month uses its own completed price prefix and dated research claims",
+    "fixedPath": "One365-day path; short replays reuse verified exact prefixes",
+    "futureSuffix": "Stored forecast bytes retained on later actuals; evaluation may advance",
+    "persistence": "Separate atlas-monthly-backtests/forecasts IDB, atomic first-writer-wins under input/settings/source identity key",
+    "revision": "Changed prefix/settings/source -> separate key, old records retained",
+    "corruption": "No automatic replacement of corrupt saved bytes",
+    "uncertainSave": "Stop batch; retry reads the original key before computing",
+    "ownership": "Cancelled/late archives and workers cannot replace current rows/export",
+    "maturity": "Complete daily observations required for summary; future/data lag/gaps remain unscored",
+    "cohorts": "Equal weight per origin; optional common origin set; overlapping windows not independent cycles"
+  },
+  "IAB": {
+    "browser": "2",
+    "deliverableTab": "24",
+    "origin": "http://127.0.0.1:4319",
+    "desktop": [
+      1168,
+      954
+    ],
+    "mobile": [
+      390,
+      700
+    ],
+    "ready": "13개 기준일 · 새 고정 0 · 복원 13 · 실패 0",
+    "pageHorizontalOverflow": false,
+    "mobileCloseHeight": 44,
+    "mobileLedgerHeight": 198,
+    "nativeTableScroll": {
+      "horizontal": 386,
+      "vertical": 712,
+      "stickyHeaderAndRegionTop": 415
+    },
+    "metricsCleared": true,
+    "linkedReplay": {
+      "asOf": "2025-10-31",
+      "horizon": 90,
+      "through": "2026-01-29",
+      "count": 90,
+      "mapePercent": 14.0,
+      "flatSkillPercent": 26.46,
+      "selectionLocked": true,
+      "methodAndExportAvailable": true,
+      "closeMenuFocus": "mode-badge"
+    },
+    "priorManualReplayRestored": {
+      "asOf": "2026-07-09",
+      "through": "2026-10-31",
+      "count": 114,
+      "horizon": 180,
+      "mapePercent": 9.75,
+      "flatSkillPercent": 36.86,
+      "savedAgain": false
+    },
+    "negativeProxy": {
+      "origin": "http://127.0.0.1:4324",
+      "tab": "26",
+      "delayMs": 3000,
+      "SkulletPending": true,
+      "cancelled": true,
+      "failedOrigins": 13,
+      "state": "partial",
+      "noFakeScores": true,
+      "retryReady": 13
+    },
+    "consoleWarningsAndErrors": [],
+    "storageReadbackLimit": "Raw CDP DOMStorage unsupported; saved-byte preservation tested in maintained replay fixture and prior saved replay restored via actual UI",
+    "clientRecovery": "Reset only stale CUA client, retained IAB2/tab24"
+  },
+  "design": {
+    "hallmark": {
+      "fails": 9,
+      "reflex": 2,
+      "warns": 10,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 58,
+      "render": "off"
+    },
+    "monthlyFindings": [
+      {
+        "gate": "56",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/monthly-backtest.css",
+        "line": 25,
+        "evidence": "two sticky top:0 elements: .rsi-ledger-scroll thead th + .monthly-ledger thead…",
+        "fix": "Offset the second sticky by banner height"
+      }
+    ],
+    "interpretation": "gate56 combines separate RSI/monthly scroll roots. Actual native sticky headers verified. No waiver, scanner patch or incorrect offset. Existing global findings remain.",
+    "upstreamRender": "off"
+  },
+  "cleanup": {
+    "proxyPid": 2403,
+    "proxy4324Closed": true,
+    "tab26Closed": true,
+    "tab24Deliverable": true,
+    "api4319Pid": 77535,
+    "apiRestarted": false,
+    "databaseOrUsCollectorChanged": false,
+    "otherTabsPreserved": true
+  },
+  "limits": [
+    "Current-model reconstruction; no historical issuance, vintage or profitability claim",
+    "365-day completed origin count1; no independent cycle count established",
+    "Model identity is locally observed source bytes, not authenticated historical code existence",
+    "Automatic batch on open/check; no background collector or schedule installed",
+    "Single-file offline artifact retains old features; new monthly verification requires local HTTP service",
+    "Gemini/reverse audit omitted per existing user choice; no deployment/model promotion/physical-device pinch test"
+  ],
+  "sourceSha256": {
+    "dist/monthly-backtest.js": "10fd7a2eb0d72ad126cdfd927d20bb80c84246fb3dc10d6a1b602dbf77c70284",
+    "dist/monthly-backtest-store.js": "33da0e2a147d0d6b99b391af90de61789c32b9a1db8736f6e28ae2c255bf0fb8",
+    "dist/monthly-backtest-worker.js": "f8e94b3d1c264bbc1d6f405170579113e7a86c72e433fc52164c7955a11345ac",
+    "dist/monthly-backtest-source.js": "e037e2074dbe26073f8292b4938f2d05e68dc327f57595cf064def5dc2d91456",
+    "dist/monthly-backtest-view.js": "140d5e025850455983a49e3e733ad9f9937a7476268be58e5ca27c85e346c8c8",
+    "dist/monthly-backtest.css": "bf80be2b3ca0a4660447e19cf21530276a065a5c862b4ac24ee52ff63a00d340",
+    "dist/chart-replay.js": "ed8c73a6121f64fe312c7af87b8033a94a586578532c9bad68360c3804955fc5",
+    "dist/lab-view.js": "13faccab03e0536109e4f7abfc7132b23fd3b88de60470087ec355eea1b3fe52",
+    "dist/workbench-chrome.js": "82717c08789e53ffee6d2667ff6b342e59ed3954d3d566ab3f8c3c9d7f6d63e4",
+    "dist/index.html": "eff25b6074de9b9ddd8be7f59e21a8ab90c2e309364450a578af4125e372c0c1",
+    "scripts/build-standalone.mjs": "3d1138a68f9937c7afa5ac564452b26227f3f3b05109e3f542120a3397256302",
+    "scripts/verify-monthly-backtest.py": "61a4fd7be5d4c02d73217166c431dacd0a45e69abcc242e39a71699b32348b30",
+    "tests/monthly-backtest.test.mjs": "3595c24373d94b34991472860e05c3a7992f7901ec058b738bb2f0bf5a26367b",
+    "tests/monthly-backtest-view.test.mjs": "ef431669abcaf949301c96afbfca5216dd8120cb11c2e6a4fd01bea2ce238622",
+    "tests/monthly-backtest-replay.test.mjs": "05ff09f96329edeedc23bef90696930bb137926f8a1919b42d4145975c93ca55",
+    "tests/standalone-packaging.test.mjs": "d4cd51d60158cb81f560627cd8a5168b58afa85fc6319a5a707245a1825e6e35"
+  },
+  "evidenceSha256": {
+    "mobile-final.png": "d33351b6139a0b4820eb212680339a6d57f8a2db121eb2dc89bb2f2fa1c82aa1",
+    "scenario-clock-tests.log": "ef931ba68fb02c9165710b7cb2cc880d89865bc4f200a1062ec964ea2aa885f7",
+    "acceptance-tests.log": "ca0213b180f6913ae5309488c911df6de2fc85b1ffcce6b4d5b64c1d3bb1e73c",
+    "initial-result.json": "3cb3513c0ecf221bf81bbaa1bf245744759c5f6ec61b7d08a6349f44f840fa73",
+    "error-final.png": "e3ae78e6aa0b5c65386de9fe00b7c0fe110ef80dfc92536cd83fb4868e61cb50",
+    "build-web.log": "0ff5779c9160ef7884d7e0c683d1c097871869cf95178b01f9213c5020be3e42",
+    "typecheck-final.log": "fb0819098087f3423e17448306bb7a2fa0eccf94000c9584002be69605262333",
+    "hallmark-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "monthly-tests.log": "b206df03580d04d5782e123eb14ee22f9f7ca2e3995944e4609110d0d2c5fca3",
+    "desktop-final.png": "ff15891c2cc3d0f1adc37ed4c8c69039ab1bbbd4de0eea5dda24753863d11655",
+    "static-final.log": "103e479e2e2012224e5f6c9ab4bff33276ef1df086601a26fc4c2125fa6c515e",
+    "frontend-source.json": "3ac9192dc594ab1a7764b946e26f57e6cbae9383250e8968868d06c1ba428a2d",
+    "domain-tests-refined.log": "7a3cb45eb15aa273f32d0cb13ba9927f3970dc73d529c317958c2d3881af3ece",
+    "before-hashes.json": "70e497462c0c2db80f680caae1f6d34cf83d2ab2e86aaf656278371b2e2384bc",
+    "build-web-final.log": "9b120ad86d88ce1b1f2bbcf036982979df3d270858d09845b70c2bb2f496a046",
+    "model-preservation.json": "39995e0db05d3fa1efe7c5f6e9b9b9fa14d6f30c55a7ae5d95d4b4f1c4bfeadb",
+    "typecheck.log": "fb0819098087f3423e17448306bb7a2fa0eccf94000c9584002be69605262333",
+    "browser-acceptance.json": "1f043621760fc959d9830fe25e66e2987038c9ee95ae05f2e812e7e38775b65d",
+    "latest-tests.log": "179132f2aa9934286ddabfae4e9c6478e6d8a22d513ab947b66194a4c8b649ba",
+    "existing-first.log": "2cf0cdd9c8b31582d36b1272685ada96ac843f78f88b0da4f5447e6c7cc1afc1",
+    "browser-python.json": "6e4bbf3e9f0725191b172b981168e31fee9dcbb2dec44a5bd95c23007da41f5d",
+    "replay-tests.log": "60b2a7e3f7b2633b48536a99f42dc7f2f2b1fa926cde0a3e8879eab77f24eaed",
+    "full-tests.log": "d8107ae2f8f1c1bd4959c960f13a82f79bf0ea36cd165889b8af38aa5c918555",
+    "browser-python-acceptance.json": "6e4bbf3e9f0725191b172b981168e31fee9dcbb2dec44a5bd95c23007da41f5d",
+    "last-refinement-tests.log": "4325251b79e86d0a438fee10edc6bb0302d7217686f57907209f2846dd7ef3c9",
+    "browser-console.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "full-tests-acceptance.log": "9ac6a6c3bb498217fd504e7ecdaa12330bc0ba46ed7e9b94f89d4d7f0a1c209c",
+    "hallmark-final-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "domain-tests.log": "1ab2548a0012a8436e55e0173940ac4dbf6a1be3b47bdd9715e5569b015e802d",
+    "browser-result.json": "6d8ba451ef96e52a413a7adcf0eead0eddfbc0bbf1eb925e5052a61a5aedb20f",
+    "replay-desktop.png": "24c77f75075a75a5238f5ddb71611fe77f3a59960c0d628014a64a3416f4f4e1",
+    "browser-python-final.json": "6e4bbf3e9f0725191b172b981168e31fee9dcbb2dec44a5bd95c23007da41f5d",
+    "refined-tests.log": "14d881ebb9189bad6ac91c0c2fe7344045c1feec353cedf8f05892323421b769",
+    "static.log": "a7f4d7357468ecbdb525454c618e3b55a571b9334bcf75d65c0bf94a5d726872",
+    "full-tests-final.log": "5ddf1fb788f0ab783558903a9e7955ee9f6225e1e379f9ed4e13a23a46ebf0cf",
+    "browser-final.json": "e3d9c6d14eb7da1d3ddad83c15562da27b9e337f5cca41413741c74d28283e20",
+    "replay-final-tests.log": "70384aa71dafff7c048e4a8e4841564947e32d37da823a5f40e4aa121f1ee6ca",
+    "final-affected-tests.log": "0c9f6bd21a0f2c02028eeff9464d7e679ad6664a32ab8bea8debe1e13a334e41",
+    "hallmark.json": "4d94a5a70bf95d5905fcb5e17b21dc0b16f25727583086838af1fc8865587aa6",
+    "frontend-source.log": "c80aa423aa3ed0987b6de2b3b6cf64d1ace5453af8f3b2eaf23fca930de0bb71",
+    "hallmark-final.json": "26ec51e1d4f539ce9a5b6c1f4891b98e697515676c678ca53b2d70ad9bdcbea2"
+  }
+}

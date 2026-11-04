@@ -1,0 +1,145 @@
+{
+  "observedAt": "2026-11-03T06:30:17.144627+00:00",
+  "status": "local-first-slice-verified-external-review-pending",
+  "branch": "codex/market-lab-service-20261103",
+  "baseCommit": "db794bc4e6bfbdf35b035850ee8ddba3a73b584b",
+  "upstreamMain": "b43cbf0348526b64d7c4c6d547fc8de2db974c35",
+  "database": {
+    "revision": "d3393bfbee731d8d09454fe7c9f65708764f3edcab27feb2563911c67dce544c",
+    "revisions": 1,
+    "sources": 11,
+    "observations": 29831,
+    "canonicalBodySha256": "d3393bfbee731d8d09454fe7c9f65708764f3edcab27feb2563911c67dce544c",
+    "restoreMatches": true,
+    "dumpBytes": 496794
+  },
+  "domainMath": "unchanged-byte-for-byte-from-base",
+  "checks": {
+    "typecheck": "passed",
+    "frontendBuild": "passed",
+    "static": {
+      "status": "passed",
+      "files": 744,
+      "references": 461
+    },
+    "service": {
+      "tests": 11,
+      "pass": 11,
+      "fail": 0,
+      "skipped": 0
+    },
+    "existingMarketLab": {
+      "tests": 56,
+      "pass": 56,
+      "fail": 0
+    },
+    "wholeLegacyRegression": {
+      "baseline_commit": "db794bc4e6bfbdf35b035850ee8ddba3a73b584b",
+      "baseline": {
+        "tests": 2403,
+        "pass": 2255,
+        "fail": 148,
+        "skipped": 0
+      },
+      "after": {
+        "tests": 2403,
+        "pass": 2255,
+        "fail": 148,
+        "skipped": 0
+      },
+      "new_failures": [],
+      "resolved_failures": []
+    },
+    "dependencyAudit": {
+      "reportedVulnerabilities": 0,
+      "note": "registry audit result only; no security-scan claim"
+    }
+  },
+  "browser": {
+    "surface": "Codex IAB",
+    "desktop": "observed",
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "documentScrollWidth": 390
+    },
+    "journeys": [
+      "US/KR diagnosis",
+      "all four tabs",
+      "negative two-axis scenario: 87.52",
+      "economics example: NPV 6623.58",
+      "manual RSI: 33.5",
+      "selected 2026-10-29 price and RSI alignment",
+      "keyboard Home/End focus",
+      "actual PostgreSQL stop: API 503, saved-data banner",
+      "actual PostgreSQL restart: retry recovery"
+    ],
+    "consoleErrorsObserved": []
+  },
+  "boundaries": {
+    "panels": "legacy renderer retained behind React-owned controls/lifecycle",
+    "liveExternalCollection": "not-run",
+    "productionSchedule": "not-configured",
+    "remoteCI": "authored-not-run",
+    "push": false,
+    "merge": false,
+    "deployment": false,
+    "externalAudit": {
+      "thesis": "NOT_RUN",
+      "gemini": "NOT_RUN",
+      "reverse": "NOT_RUN",
+      "blocker": "both shared service slots occupied by preserved other-owner operations"
+    }
+  },
+  "sourceSha256": {
+    "package.json": "831565c636f746a31e4a5d1b26789cf4a530bbe1ad764d60ce161726de61ed14",
+    "package-lock.json": "4feb215c895c4cee20b0c123ee2188b04013a875b2a79fef87bbdbf546a59e70",
+    "db/migrations/001_market_lab.sql": "93e62748f648b99e9c8fa891ee8796bbafce42bef276c5a5807d4bafe3b3a928",
+    "packages/domain/src/market-lab-math.js": "04f76285edfd22996dc3bc922f98e9e5baeca70a4a137310b72c57370159176a",
+    "packages/contracts/src/market-lab.ts": "ac89447c74ffd6649dad1d77d920d51d38619fd76397abe83a2e609cf029f3cc",
+    "apps/api/src/repository.ts": "b5d079a5ae00890776fee722e9881c51ce701f8b646887ccdb09ff9177db04e4",
+    "apps/api/src/server.ts": "7dd16cf34ce96259ac4f5906b3b8f9efc419c0e736a7cdc180e2009f03ac34a0",
+    "apps/api/src/main.ts": "5299090a92d2bafecb84914b4f64ecb00b4dc38d2cd5320488d8625a08784740",
+    "apps/jobs/src/market-lab.ts": "9969496b4aa3584cb9c42d0659f111506951dc6148fde684b6dcfbefdee8a210",
+    "apps/web/src/main.tsx": "329e1d4073e2dae797af65bc804bb64a7db956a64546864e97d62340dc1d31f6",
+    "apps/web/src/load-snapshot.ts": "1ac3c22bf5b540e2ddff454823f501eda8f153d222a2b414f6ad8b373cf26671",
+    "apps/web/src/web.css": "2d4b73399187b01daeb84bc5985ef6d670c9a3528750e769c0a2d8f1aff42b56",
+    "dist/market-lab-view.js": "68fa813325a9ac3479fbea3212d2a6b6f10bfc436c1fba3f84cf96c373b61be4",
+    "scripts/refresh-market-lab.mjs": "34c9ae3e36e26ca6fc9e1650e2f305e00816f6d4119225c1afb10018e11f1fa2",
+    ".github/workflows/market-lab-service.yml": "2c53ff43e5f367b57e39436db8bcc1d2fc65aecc819523555f4c0fece1042c30"
+  },
+  "localEvidence": {
+    "baseline-tap.log": {
+      "relativePath": "build/architecture-migration/baseline-tap.log",
+      "sha256": "d14d78e4315e907b91268ff48eb3d212058d946eb2f9babc5c43e606f7a51662"
+    },
+    "after-tap.log": {
+      "relativePath": "build/architecture-migration/after-tap.log",
+      "sha256": "2741a6a610866946392489a1e48a1686e1cf3b0db37eabab6bd6c315d683032e"
+    },
+    "market-tests.log": {
+      "relativePath": "build/architecture-migration/market-tests.log",
+      "sha256": "432c16a94c29de3cb655c7bf7020a2aef8b7895a8c6dcc952e8481f6b7eb35d9"
+    },
+    "service-tests-final.log": {
+      "relativePath": "build/architecture-migration/service-tests-final.log",
+      "sha256": "c5618f8efd71b935b064cc0799211b31c6d4bbdc8470f9efc8f08cdad75f97b8"
+    },
+    "frontend-source-20261103.json": {
+      "relativePath": "build/architecture-migration/frontend-source-20261103.json",
+      "sha256": "dfab3c6917e543d26726b2e2e5fc7d4e95d82fcebc780c8f77e042c69099a3bd"
+    },
+    "desktop-db.jpg": {
+      "relativePath": "build/architecture-migration/screenshots/desktop-db.jpg",
+      "sha256": "ef53124f4584dc3555e8ee77b8d622a3bfabcb096ea3848f4824d759845dbfa7"
+    },
+    "mobile-db.jpg": {
+      "relativePath": "build/architecture-migration/screenshots/mobile-db.jpg",
+      "sha256": "aaee66e3eedf2acf96a2ae75d42a023bef577e5e6cbc2b23715a7c438d39f47c"
+    },
+    "market-lab.dump": {
+      "relativePath": "build/architecture-migration/market-lab.dump",
+      "sha256": "86f8c72e9810d9a49080866c888119242b96344dcfa4967394d800af4b7e9633"
+    }
+  }
+}

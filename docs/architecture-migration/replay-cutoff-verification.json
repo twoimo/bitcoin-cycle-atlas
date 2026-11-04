@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-03T15:53:15.980514+00:00",
+  "status": "complete-local-implementation-and-verification",
+  "scope": "BTC fixed cutoff reconstructed forecast comparison, preserving current mode and perimeter",
+  "tests": {
+    "full": {
+      "complete": true,
+      "tests": 2414,
+      "pass": 2414,
+      "fail": 0,
+      "skipped": 0,
+      "batches": 2
+    },
+    "chartReplay": {
+      "tests": 149,
+      "pass": 149,
+      "fail": 0
+    },
+    "newCutoff": {
+      "tests": 10,
+      "pass": 10
+    },
+    "initialFull": {
+      "tests": 2414,
+      "pass": 2412,
+      "fail": 2,
+      "resolved": [
+        "BTC-only capability injected to preserve ETH module graph",
+        "Transport contract includes the two authorized new controls while preserving original action order"
+      ]
+    },
+    "boundedController": {
+      "tests": 16,
+      "traces": 10000,
+      "formalProof": false
+    }
+  },
+  "typecheck": "pass",
+  "buildWeb": "pass",
+  "static": {
+    "status": "ok",
+    "files": 762,
+    "checkedReferences": 494,
+    "basePath": "/bitcoin-cycle-atlas/",
+    "standalone": null
+  },
+  "hallmark": {
+    "scope": "app",
+    "inputs": [
+      "dist",
+      "apps/web/src"
+    ],
+    "genre": "modern-minimal",
+    "summary": {
+      "fails": 9,
+      "reflex": 2,
+      "warns": 10,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 57,
+      "render": "off"
+    },
+    "changedReplayFindings": [],
+    "upstreamRender": "not-run",
+    "allGlobalFindingsPassed": false
+  },
+  "browser": {
+    "browser": "Codex IAB2",
+    "deliverableTab": "22",
+    "desktop": [
+      1168,
+      954
+    ],
+    "mobile": [
+      390,
+      700
+    ],
+    "normalSelection": true,
+    "oneDayReveal": true,
+    "resultReveal": true,
+    "frozenAcrossTypeAndRange": true,
+    "continueExactHash": true,
+    "mobileEntryViaInformationTray": true,
+    "mobileScoreVisible": true,
+    "mobileControlMinimumPx": 44,
+    "mobileHorizontalOverflow": 0,
+    "nativeTabScrollPx": 78,
+    "consoleErrorsAndWarnings": 0,
+    "emulationCleared": true,
+    "priorAuditTab15": "not present at final inventory; not closed or recovered by this task",
+    "currentForecastOutputHash": "ee210e3651ddb46c72fdb9c83d826d19b2ab35cf9400a2c4fff156a98ad2faa2",
+    "currentCurveRgb": [
+      242,
+      185,
+      96
+    ],
+    "reconstructionRgb": [
+      116,
+      167,
+      238
+    ],
+    "originalStorage": {
+      "length": 889,
+      "beforeAndAfterSha256": "b303471d661167427396e2994975aee5a041633a9c773d17d695a077ad717b74"
+    }
+  },
+  "actualExample": {
+    "method": "Independent Python actual browser export recomputation; direction relative to cutoff close, not trading win rate",
+    "metrics": {
+      "matchedCount": 114,
+      "meanAbsoluteError": 7652.3447617208785,
+      "meanAbsolutePercentageError": 0.09754408558596833,
+      "skillVersusFlat": 0.36856326739567713,
+      "directionCorrectCount": 102
+    },
+    "pathHash": "437fc246da22f45ae08a3a08a89737e2e01e6d03cd61f7026c134d1d647dc356",
+    "cutoff": "2026-07-09",
+    "trainingCount": 5440,
+    "horizonDays": 180,
+    "recordId": "07c075b072e53646d516e602002ff4ebbd82eec7c6c43a39c2bab9563b572388",
+    "match": true
+  },
+  "modelPreservation": {
+    "existing17": true,
+    "longHorizonAndCycleCalibration": true,
+    "oldSnapshotHelper": true
+  },
+  "sources": {
+    "dist/replay-cutoff-forecast.js": "a276e470e0f8450f3b39e06411c57bb66526f3ca6290019f78356814c4b375da",
+    "dist/replay-retrospective.js": "d70354b18a6b9eb211106a48b7f50cb4265d29100877a0f2abc286a8fe959081",
+    "dist/forecast-replay.js": "a50725737d9deb6cdb851867dcc60bcc202b19818d6bbccc88e67b986d2f2b13",
+    "dist/chart-replay-atlas.js": "2fcb3eb73c9af5aace73e6aa8485066d4c8726626c8e38ce426d10537ce58dce",
+    "dist/chart-replay.js": "694e0585886c6196a7237d70a0dab8cf578e78424d95b4b4ba976842367d97b9",
+    "dist/chart-replay.css": "3f65e703003afd404befcd5031103ff8b3fd261d4fb4b1fe819ed9454de60a76",
+    "dist/atlas-price-chart.js": "8e78f527f0fa953eb6f942059d1106de8d8dd5c545b23f08e8f9c6ed81af579f",
+    "dist/lab-view.js": "148782316e4e849e2998f0a21c4b6af2f34315888b7ca26fa04ea0701b5210b8",
+    "tests/replay-cutoff-backtest.test.mjs": "beaccee74212e3c764c8d186a8bb1e0d56d7de351d54e9a14b41d4f581947318",
+    "tests/replay-cutoff-ui.test.mjs": "d8cb8a556c08bc100cddca62befc9f53b9c851a62ac60a9a2db08d44cd71a996",
+    "tests/replay-ui-fixture.mjs": "72af8be4d3ef4bf7e798bdc6c6e130b7301843445ca4eef5a87454ad6181e4d6",
+    "tests/chart-replay-ui.test.mjs": "3ceb8ac63aa2b8b3c8aae23d820901640b581e6a519f36821e7193e63acb10f3",
+    "tests/replay-fixed-forecast-ui.test.mjs": "5e40359f3fe3c1b5fae6211fd52d189cc38709ccf827b7ade358de222023aea9",
+    "package.json": "51115d40f47fa7aa10cb26df1e05f1101ba7e32c9debc8c4270ebce8cadbbd2f"
+  },
+  "evidence": {
+    "mobile-final.png": "da1bbe277a2f7a1b245704b2698ddcd728cde44209cfa844f1b6aab3eef0312d",
+    "desktop-final.png": "50c753112bd038eb82b47942f2f05e9dc8cfc8d0e10ad773d90d2216d24c57fe",
+    "hallmark-app-final.json": "be115609f179cb8b7cfb32fd9c998bb6dec30d99f97a806af6d4b1e16104dd07",
+    "model-preservation.json": "7433150b6f1dd95456925899cc2f6774fe07e89313cefbce249e3dc8590bcf7a",
+    "browser-python.json": "982e631d6d8d8f9e2220c6f51e58351a07d7e70507939537e3ef57332892caa3",
+    "browser-export.json": "3941d065bb9ab35366afa29bb84caff8bb78aefc4c9b7e5db370ec038204b146",
+    "full-tests-final.log": "1d3cd3582b781efdccc6e7826467bacf5872ff24d5bbc8d2baaa594205e64218",
+    "additional-preservation.json": "8b2f93433fdf1f859af9b78e2663fe18ea51bd33d2258af03150a6a1177e4289",
+    "browser-restore.json": "79cb111b0fdca32e9443f623c6eecac0a9cb9fbd1073606662ad0f7575643de1",
+    "replay-final.log": "a6c99367d03f94aad802ee25fa0de5c219f8d568057b5fa8529c6dfff47bae1d"
+  },
+  "limits": [
+    "Current-code/current-vintage historical reconstruction, not contemporaneously issued predictions",
+    "Direction versus the cutoff close is not a daily-return hit rate or trading win rate",
+    "Daily comparisons from one path are not independent forecasts",
+    "Bands are conditional, not calibrated probabilities",
+    "No external review, deployment or model promotion",
+    "No real-device pinch gesture verification"
+  ],
+  "unchangedServices": {
+    "apiListenerPid": 77535,
+    "port": 4319,
+    "restarted": false,
+    "databaseModifiedByThisTask": false,
+    "usCollectorModified": false
+  },
+  "finalWhitespaceCheck": "pass"
+}

@@ -2,10 +2,10 @@
  * Scope: observed charts, comparison ledger, research and existing tool states. Verification is recorded by commit in CI.
  */
 /* Hallmark · pre-emit critique: P4 H4 E3 S5 R4 V3 · weakest: E, uneven focus and small metadata; shared states and readable neutral ink are applied across the app. */
-.chart-export-dialog {width:min(920px,calc(100% - 24px));max-height:calc(var(--dialog-viewport-height,100dvh) - 28px);padding:0;border:1px solid var(--chart-export-workbench-rule);border-radius:12px;background:var(--chart-export-workbench-surface);color:var(--chart-export-workbench-ink);box-shadow:0 20px 80px var(--analysis-dock-shadow-3);font:13px/1.6 var(--font-system-basic);box-sizing:border-box;overflow:hidden}
+.chart-export-dialog {width:min(920px,calc(100% - 24px));max-height:calc(var(--dialog-viewport-height,100dvh) - 28px);padding:0;border:1px solid var(--chart-export-workbench-rule);border-radius:12px;background:var(--chart-export-workbench-surface);color:var(--chart-export-workbench-ink);box-shadow:none;font:13px/1.6 var(--font-system-basic);box-sizing:border-box;overflow:hidden}
 .chart-export-dialog[open]{display:flex;flex-direction:column}
 .chart-export-body{padding:0 20px;overflow:auto;min-height:0;overscroll-behavior:contain}
-.chart-export-dialog>header,.chart-export-dialog>footer{flex:none;padding:12px 20px;background:var(--chart-export-workbench-surface)}
+.chart-export-dialog>header,.chart-export-dialog>footer{flex:none;padding:12px 20px;background:var(--surface-raised);color:var(--text)}
 .chart-export-dialog>header{border-bottom:1px solid var(--chart-export-workbench-rule-2)}.chart-export-dialog>footer{border-top:1px solid var(--chart-export-workbench-rule-2)}
 .chart-export-dialog::backdrop {background:var(--chart-export-workbench-surface-2)}
 .chart-export-dialog header,.chart-export-dialog footer {display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -25,5 +25,5 @@
 .chart-export-preview img {display:block;width:100%;height:auto}.chart-export-preview pre {font-size:11px;line-height:1.6;margin:12px;white-space:pre;tab-size:2}
 .chart-export-status {min-height:20px;color:var(--chart-export-workbench-ink-4);font-size:12px}
 .chart-export-dialog footer {justify-content:flex-end}.chart-export-download {background:var(--chart-export-workbench-surface-5)!important}
-@media(max-width:620px),(max-height:500px){.chart-export-dialog{position:fixed;inset:var(--dialog-viewport-top,0px) 0 auto;margin:8px auto;width:calc(100% - 16px);max-height:calc(var(--dialog-viewport-height,100dvh) - 16px)}.chart-export-dialog>header,.chart-export-dialog>footer{padding:8px 12px}.chart-export-body{padding:0 12px}.chart-export-dialog button,.chart-export-dialog select{min-height:44px}.chart-export-controls{gap:8px}.chart-export-controls label{min-width:120px}.chart-export-preview{max-height:40dvh}.chart-export-dialog select{font-size:16px}}
+@media(max-width:620px),(max-height:500px){.chart-export-dialog{position:fixed;inset:var(--dialog-viewport-top,0px) 0 auto;margin:8px auto;width:calc(100% - 16px);max-height:calc(var(--dialog-viewport-height,100dvh) - 16px)}.chart-export-dialog>header,.chart-export-dialog>footer{padding:8px 12px;background:var(--surface-raised);color:var(--text)}.chart-export-body{padding:0 12px}.chart-export-dialog button,.chart-export-dialog select{min-height:44px}.chart-export-controls{gap:8px}.chart-export-controls label{min-width:120px}.chart-export-preview{max-height:40dvh}.chart-export-dialog select{font-size:16px}}
 @media(max-width:420px){.chart-export-facts{grid-template-columns:1fr;gap:2px}.chart-export-facts dd{margin-bottom:8px}}

@@ -1,3 +1,4 @@
+import { replaceWithSkeleton } from './loading-surfaces.js';
 import {restoreAssetForecastPath} from './asset-forecast-records.js?v=1.29.0';
 import {createAssetJournalLoader} from './asset-forecast-loader.js?v=1.29.0';
 export {createAssetJournalLoader};
@@ -220,7 +221,7 @@ function mount(){
     if(!dialog.open||!dialog.isConnected)return;
     dialog.dataset.state=state.status;dialog.dataset.symbol=state.symbol;
     if(state.status==='ready')dialog.dataset.recordId=state.record.id;else delete dialog.dataset.recordId;
-    if(state.status==='loading')content.innerHTML='<p role="status">보존한 입력과 경로를 검증하고 있습니다.</p>';
+    if(state.status==='loading')replaceWithSkeleton(content,'chart','보존한 입력과 경로 로딩');
     else if(state.status==='error'){stopChart();active=null;errorBody(state.message);}
     else if(state.status==='empty'){
       stopChart();active=null;

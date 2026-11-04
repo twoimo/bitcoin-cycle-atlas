@@ -1,0 +1,350 @@
+{
+  "observedAt": "2026-11-03T08:53:59.641490+00:00",
+  "worktree": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service",
+  "branch": "codex/market-lab-service-20261103",
+  "base": "db794bc4e6bfbdf35b035850ee8ddba3a73b584b",
+  "outcome": "Local regression repair, direct sidebar pages and large RSI workbench verified; not deployed.",
+  "regression": {
+    "command": "npm test",
+    "combined": {
+      "complete": true,
+      "tests": 2403,
+      "pass": 2403,
+      "fail": 0,
+      "skipped": 0,
+      "batches": 2
+    },
+    "finalNativeRerun": {
+      "tests": 2362,
+      "pass": 2362,
+      "fail": 0,
+      "skipped": 0
+    },
+    "frozenReplay": {
+      "tests": 41,
+      "pass": 41,
+      "fail": 0,
+      "retainedAfterFinalPaintChanges": true,
+      "runtime": {
+        "node": "v24.22.2",
+        "platform": "linux",
+        "arch": "x64"
+      },
+      "image": "node@sha256:e7add2a490bb17d97b485b8641bd88455fff7839ade0f5eba493c3508124d413",
+      "platform": "linux/amd64"
+    },
+    "repair": "Normal temp fixtures use physical paths on macOS. Exact frozen-output replay uses the original Linux/x64 runtime. No tolerance, formula, stored record or model source changes."
+  },
+  "checks": {
+    "typecheck": "pass",
+    "buildWeb": "pass",
+    "reactPanels": {
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "skipped": 0
+    },
+    "postgresApi": {
+      "tests": 11,
+      "pass": 11,
+      "fail": 0,
+      "skipped": 0
+    },
+    "static": {
+      "status": "ok",
+      "files": 749,
+      "checkedReferences": 465,
+      "basePath": "/bitcoin-cycle-atlas/",
+      "standalone": null
+    },
+    "targeted": {
+      "native-final-tests.log": {
+        "tests": 2362,
+        "pass": 2362,
+        "fail": 0,
+        "skipped": 0
+      },
+      "panel-tests-final.log": {
+        "tests": 17,
+        "pass": 17,
+        "fail": 0,
+        "skipped": 0
+      },
+      "service-tests-final.log": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "skipped": 0
+      },
+      "navigation-offline-final.log": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "skipped": 0
+      },
+      "style-offline-final.log": {
+        "tests": 50,
+        "pass": 50,
+        "fail": 0,
+        "skipped": 0
+      },
+      "final-artifact-tests.log": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "skipped": 0
+      }
+    },
+    "diffCheck": "pass"
+  },
+  "liveService": {
+    "health": {
+      "status": "ready"
+    },
+    "revision": "d3393bfbee731d8d09454fe7c9f65708764f3edcab27feb2563911c67dce544c",
+    "routes": {
+      "/market-lab/us/": {
+        "status": 200,
+        "title": "미국 시장 진단 · Cycle Atlas"
+      },
+      "/market-lab/kr/": {
+        "status": 200,
+        "title": "국내 시장 진단 · Cycle Atlas"
+      },
+      "/market-lab/scenario/": {
+        "status": 200,
+        "title": "조건 실험 · Cycle Atlas"
+      },
+      "/market-lab/cashflow/": {
+        "status": 200,
+        "title": "현금흐름 · Cycle Atlas"
+      },
+      "/market-lab/rsi/": {
+        "status": 200,
+        "title": "삼플레·RSI · Cycle Atlas"
+      }
+    }
+  },
+  "preservation": {
+    "canonicalMathSha256": "04f76285edfd22996dc3bc922f98e9e5baeca70a4a137310b72c57370159176a",
+    "frozenModelSourceFiles": 17,
+    "frozenModels": {
+      "records": [
+        {
+          "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+          "model": "adaptive",
+          "outputHash": "f5728c0632945702a839cf8722a9b8ec6af0c91346169f5b14929c6ce055fe25"
+        },
+        {
+          "id": "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+          "model": "warmStart",
+          "outputHash": "b7f45f7ebada37e9a046b4e5547101bb985b43a16fbbf3ee1e34bcdc667b6dc8"
+        },
+        {
+          "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+          "model": "pooled",
+          "outputHash": "7b84f0fa04346be007f153a189ce4266d705cd3702c5f0d65e4ceefa3e37d570"
+        }
+      ],
+      "sourceSha256": {
+        "dist/asset-daily-observations.js": "645cdfc751ffe2a4e0ce66a10316fc493d637cd6f74a0d09ea17b4e126367c70",
+        "dist/asset-forecast-records.js": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2",
+        "dist/cycle-engine.js": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+        "dist/data-freshness.js": "10e2348ae352ef19a840002fadc1123f055712312490d958a8559b39e814a0f1",
+        "dist/equity-market-data.js": "7c93eaf2471f354511e3440606cb0ed46b46242803bb7d06e3f06955a2a4cb8d",
+        "dist/eth-market-data.js": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075",
+        "dist/ethereum-adaptive-model.js": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d",
+        "dist/ethereum-pooled-model.js": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467",
+        "dist/ethereum-prospective-prices.js": "1541a414cea9c11116d9485a9ff4d26052105cb4e9e0df5a14afcc82ddd8726d",
+        "dist/ethereum-prospective-records.js": "709cb0f968c3f961b7e1089cf79518bfb79b4fe8e7d2042f99f1387a401b734e",
+        "dist/forecast-evaluation.js": "c48123c844c1fbfd454372d0b2ed56817d1fa9e87a6547abeef2d49c145b0ea5",
+        "dist/forecast-information-time.js": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23",
+        "dist/forecast-records.js": "c79893f81c6bdff97685e2c384a3d1facc6eec10effdb09346c63749a36ca308",
+        "dist/ohlc-data.js": "b2a5104c22b0fced11d747cae9fd7797a876b0c7de4e30492376acae791e7f5d",
+        "dist/ethereum-prospective-dispatch.js": "0d94a0574b017b3eefa145006a2ca616babb199f3362f01d7e8e858fb93c5194",
+        "dist/ethereum-warm-start-model.js": "8b01bbf858689225926ae4d6f60fab002797690b0b7fdada772796f65736c0ff",
+        "dist/ethereum-warm-start-prospective.js": "f606daff3b57c0769004a6afe71f005d4bd9cd2a61a0541d775f17a39189af9b"
+      }
+    },
+    "originalPanelOracle": "build/architecture-migration/react-panels/before/browser-panels.json",
+    "oracleNote": "Full-series SSR comparison excludes new marker annotations and presentation controls; independent crossing tests verify boundaries, equality, missing data and causal prefixes."
+  },
+  "browser": {
+    "engine": "Codex IAB",
+    "desktop": [
+      1280,
+      720
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "screenshots": {
+      "build/regression-repair/screenshots/asset-table.jpg": "565df70e4cec5423b0657ba0e840cf3e9b91f76d8acb467249cda5b51e556727",
+      "build/regression-repair/screenshots/bmnr-chart.jpg": "5596e81bef45bc700cf85c1259f9752fadaa732a45ff04512716b3596e222104",
+      "build/regression-repair/screenshots/eth-chart.jpg": "02413d4c1c62e1f40625e232555515d65a530e19e5ab398451045e6aec39babd",
+      "build/regression-repair/screenshots/ipo-calendar.jpg": "f2cdc7498b98f1538866ab1757bdb79acde4b01a164245357f557d963ffb1f05",
+      "build/regression-repair/screenshots/mstr-chart.jpg": "2d12cef07dfd191b6cebb26b8855d82cdc7ccc30fd6cbb9d877a2cd00c8c76c0",
+      "build/regression-repair/screenshots/research-reader.jpg": "a7d70c275fc114105c581b918c1d74c8033f2df8681932f4974e84447b596c48",
+      "build/regression-repair/screenshots/rsi-desktop.jpg": "ab84399b60515934bce9611bc331e3ee2532c24537d848df35caa5b2345afbbb",
+      "build/regression-repair/screenshots/rsi-mobile.png": "8aad8cc176fda0f24bf8c67b5295d0408490e1bf05f49a545c0d969ded1bb502"
+    },
+    "verified": [
+      "Five tool routes, legacy aliases and titles",
+      "US 0.52 / 0.27 / -0.99; KR 0.47 / -0.25 / -0.40",
+      "Scenario 87.52, economics NPV 6623.58, manual RSI 33.5 retained across navigation/back",
+      "Latest TQQQ 2026-10-30 price 62.01 / RSI14 33.95",
+      "2026-07-29 price 57.75 / RSI14 32.00 / SMA9 39.69",
+      "1y / 3y / all; out-of-range selection expansion; synchronized date; marker toggles",
+      "Mobile no horizontal overflow; chart bottoms 559.375 / 822.15625 at height 844; US/KR badges",
+      "BTC / ETH / MSTR / BMNR chart regions and original annotations",
+      "Research search/reader, asset table, short IPO calendar after overlap repair"
+    ]
+  },
+  "design": {
+    "checkerCommit": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+    "result": {
+      "summary": {
+        "fails": 0,
+        "reflex": 0,
+        "warns": 7,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 41,
+        "render": "off"
+      },
+      "findings": [
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/analysis-dock.css",
+          "line": 8,
+          "evidence": "same container recipe on 18 selectors (.chart-indicator-manager button, .analysis-wind…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/analysis-dock.css",
+          "line": 62,
+          "evidence": "same container recipe on 9 selectors (.indicator-library-eye, .indicator-library-favo…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/atlas-shell.css",
+          "line": 104,
+          "evidence": "same container recipe on 16 selectors (.rsi-toolbar button, .workbench-bottom-bar .wor…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/chart-export-workbench.css",
+          "line": 13,
+          "evidence": "same container recipe on 6 selectors (.chart-export-dialog button, .chart-export-dial…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/compact.css",
+          "line": 91,
+          "evidence": "same container recipe on 10 selectors (.data-summary, .research-chart-shell, .ipo-sear…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/daily-data.css",
+          "line": 188,
+          "evidence": "same container recipe on 8 selectors (#data-view .asset-history-mode button, #data-vi…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/styles.css",
+          "line": 883,
+          "evidence": "same container recipe on 10 selectors (dialog(.workspace-dialog, .chart-export-dialog,…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        }
+      ]
+    },
+    "warningDisposition": "Seven F7 common control/frame recipe warnings reviewed and retained for shared workbench consistency. No waiver or checker changes.",
+    "renderRunner": "Not run; external Chrome exception not authorized. Actual IAB verification recorded separately."
+  },
+  "kiwoom": {
+    "availability": "Official REST API supports domestic and US stocks and Mac. Account, linked HTS ID, API application and App Key/Secret required.",
+    "sources": [
+      "https://openapi.kiwoom.com/intro?dummyVal=0",
+      "https://openapi.kiwoom.com/guide/apiguide?dummyVal=0",
+      "https://github.com/Kiwoom-Securities/Kiwoom-REST-API"
+    ],
+    "connected": false,
+    "htsRsiEquivalenceVerified": false,
+    "credentialsOrOrdersPerformed": false
+  },
+  "sourceSha256": {
+    "apps/api/src/server.ts": "1e0c1179e31074f1a82e647931f0eba28e06566ecea83716b4c41db1546c503d",
+    "apps/web/src/app.tsx": "1ca3c4d137b05f942dbe3fbf9a04ed4cba66474343361f67dcb45f356c2c9b23",
+    "apps/web/src/components/app-shell.tsx": "14f242154021907af32b81ebb50b151f4860605b7570e114078cdfeb3a9584bc",
+    "apps/web/src/components/common.tsx": "6e8b4bd1da3f1b5a8be4b70824675fc14065f867b42e28fb513c31c0160afcb7",
+    "apps/web/src/components/observed-chart.tsx": "c0ef3b00ac0cca2544b806cef92be994e2b9877d8a84fca1a88ec905ffec3a54",
+    "apps/web/src/components/source-disclosure.tsx": "11d3c82044be99b68a11022b08316e6549af3af2f27a0345109860479d7b6fce",
+    "apps/web/src/panels/rsi-panel.tsx": "33ab4359a76f3bdcb6a61063fd7bf0b097b7989a490ab918717eff7921c027b4",
+    "apps/web/src/rsi-crossings.ts": "b65e7fcc649627fe1757584e4975a2e0e015a7789948fcfd47338969a160ac4a",
+    "dist/atlas-navigation.js": "6daf9398d382e77a3080a9e7fe9362edf2738ce8928fd2e061a114394f8e3761",
+    "dist/atlas-shell.css": "110a2d157af45641df93b118144b7128df40269dc9320aa0b29cae69f34d9744",
+    "dist/atlas-shell.js": "9ef9bfe84202e5140831c4a4be66093e6e2b8577d69084ca605897680e0408e9",
+    "packages/domain/src/market-lab-math.js": "04f76285edfd22996dc3bc922f98e9e5baeca70a4a137310b72c57370159176a",
+    "scripts/test.mjs": "e5bbefcc06a25ffa0c48bd73725c6bb4f72670848b8d283f8e91d9d7e8ccee60",
+    "tests/helpers/physical-temp-directory.mjs": "3f60193f29b53ad6818b57f212a8692334a594216ab12a24316a9d06d20aee24",
+    "tests/service/market-lab.test.ts": "3386433645c977e225886bb64380ce4c83ae12369cad35c9d85eb2c4bf9c69e9",
+    "tests/web/rsi-crossings.test.tsx": "2d90647a0165c889d3bbbb089438775b057bb291a8015c2269ec0787332381e5"
+  },
+  "logSha256": {
+    "build/regression-repair/all-container-probe.log": "60cc10a5b3f93503acc22993a72891335c43c3a8580742282370546e0c88e9fa",
+    "build/regression-repair/api.log": "7498460fa9caff6713c1c66dddbc3bfdc12883cab3570918e4c84de66c995d6f",
+    "build/regression-repair/before-legacy-final.log": "cc9ea7312a7c481f32871d7b4d9a0d5174943c639a2617e016377770702fbdf2",
+    "build/regression-repair/build.log": "556eee98e84ba500eaeca01213faac143fd8019dbebc80592043fd41a394444d",
+    "build/regression-repair/final-artifact-tests.log": "270b5961012cd09cfc5d0dbf69b2b7dd56f5a386f8ae5fafe5e269f95c14c3db",
+    "build/regression-repair/full-tests.log": "1771bc386fe5cad030db6670698e179953c15d76e8cdce3294571385749260f5",
+    "build/regression-repair/ipo-offline-final.log": "4127ec57eb8964821d9ab477005c4701e1c6145d885e555b529d81bc1b257bfe",
+    "build/regression-repair/jitless-replay.log": "5c83839d08dd1ab73de427512bd0df029cb2e16b0edc4f3f2cbc74520f36a579",
+    "build/regression-repair/linux-replay.log": "9ba2005c197d518d84d5c4a6212f968371a948148daeb96cce8e8d91c9079039",
+    "build/regression-repair/linux-x64-replay.log": "de641099f9abce2791c1bcde4efab31aa0f26f945b8bcc48976b406c9335b684",
+    "build/regression-repair/native-final-tests.log": "26c105d052e02a4ad446ea8ec52b451e1c0b03bb8b7ecb2980bf8b8c62394c14",
+    "build/regression-repair/navigation-offline-final.log": "f1bfb724536a05dcfb79d97827c9fea220464c63eebe8600d5b5868e9c92cc7a",
+    "build/regression-repair/node26-replay.log": "e1c1ca9d32d104f8c2548050188d66839936636b87858508594334721c50439d",
+    "build/regression-repair/panel-tests-final.log": "eb3fe436ba6317cf622fc29eade46c0c4569bf0ffe5539e3caf8c68e98ebe3e4",
+    "build/regression-repair/panel-tests.log": "2ad087a858f9aff722899bbc0a7a1088ae628547ddc16c4339e7d98d5e877d78",
+    "build/regression-repair/path-tests.log": "b3f5e6ffde15c6bf261d7900b7e46d5921b9c4fa4f5880eb0b30d49d6b07c76e",
+    "build/regression-repair/service-tests-final.log": "deecb774e1b454e122e6613c1f173b2b7590db963cdcc950551896d9e23244d3",
+    "build/regression-repair/service-tests.log": "0ff7ec6c6e7021cbe82ba4d1ca21d2b93c0b2b16a7d9b4df04fd63186eba9932",
+    "build/regression-repair/static-final.log": "de8e545ccac5064de0d5f80f80e0c7f7c3a3fb2af11124c6475e5448b1e55378",
+    "build/regression-repair/static.log": "de8e545ccac5064de0d5f80f80e0c7f7c3a3fb2af11124c6475e5448b1e55378",
+    "build/regression-repair/std-pow-replay.log": "5086fff356ac191b934a5f1761ba78bbed2dd39494928a751dc6d16b14e48625",
+    "build/regression-repair/style-offline-final.log": "e7caaeb19210593c034034865289e389ca47a6630621cbeca3a90f5471b24652",
+    "build/regression-repair/typecheck-final.log": "fb0819098087f3423e17448306bb7a2fa0eccf94000c9584002be69605262333",
+    "build/regression-repair/typecheck.log": "fb0819098087f3423e17448306bb7a2fa0eccf94000c9584002be69605262333",
+    "build/regression-repair/v8-pow-replay.log": "c1dbe494d78bd5669ce0ec9411d9a74717d92f858a3e922f934c6157a997255e"
+  },
+  "limits": [
+    "Buy/Sell marks directional threshold crossings, not a reconstructed original trading strategy, position state or order execution.",
+    "Other non-lab renderers remain legacy; whole-app React migration is unfinished.",
+    "Live collector execution, scheduling/hosting, remote CI, external cross-audit, Kiwoom authentication and deployment not run.",
+    "Historical receipts are retained. This receipt supersedes the earlier 143-failure status for this current local worktree."
+  ]
+}

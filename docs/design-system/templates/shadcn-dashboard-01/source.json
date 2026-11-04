@@ -1,0 +1,26 @@
+{
+  "repository": "shadcn-ui/ui",
+  "commit": "4aaea19d9cff3e0908e12a8c1d504b8c5ec34610",
+  "files": {
+    "LICENSE.md": {
+      "savedAs": "LICENSE.md",
+      "sha256": "1564074e13439397221ffd522e2e504d56561994a23d371aa5e3ad43e4f5423f"
+    },
+    "apps/v4/registry/new-york-v4/blocks/dashboard-01/page.tsx": {
+      "savedAs": "page.tsx",
+      "sha256": "042f13bbb8c0033e4546232b6767f83349ec29db3b2bcd93a07291ff549b6a65"
+    },
+    "apps/v4/registry/new-york-v4/blocks/dashboard-01/components/app-sidebar.tsx": {
+      "savedAs": "app-sidebar.tsx",
+      "sha256": "4b5d8891b26d61f651059f240a85a1294fdcea7b9f27e7ade467412a6847cf33"
+    },
+    "apps/v4/registry/new-york-v4/blocks/dashboard-01/components/site-header.tsx": {
+      "savedAs": "site-header.tsx",
+      "sha256": "ed1cd67ed4663f47908f64d3df288435c7e49ec24a09f0ae22adf3b2c11289a2"
+    },
+    "apps/v4/registry/new-york-v4/blocks/dashboard-01/components/section-cards.tsx": {
+      "savedAs": "section-cards.tsx",
+      "sha256": "680e2816e3161c5d2e05eb833b6f39cb268690b2135a5303cc76fd7968d15ea1"
+    }
+  }
+}

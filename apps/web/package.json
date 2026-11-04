@@ -1,0 +1,12 @@
+{
+  "name": "@atlas/web",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@atlas/contracts": "*",
+    "@atlas/domain": "*",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "skullet": "0.0.3"
+  }
+}

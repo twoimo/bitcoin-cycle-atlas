@@ -5,7 +5,7 @@
 .research-annotation {cursor:pointer;outline:none}
 .research-annotation:focus-visible .research-annotation-line,.research-annotation:hover .research-annotation-line {stroke-width:3}
 .research-annotation:focus-visible .research-annotation-label rect {stroke:var(--chart-details-panel-rule-8);stroke-width:2}
-.research-annotations-dialog {width:min(780px,calc(100% - 24px));max-height:calc(100dvh - 32px);padding:20px;border:1px solid var(--chart-export-workbench-rule);border-radius:12px;background:var(--chart-export-workbench-surface);color:var(--chart-export-workbench-ink);box-shadow:0 20px 80px var(--analysis-dock-shadow-3);font:13px/1.6 var(--font-system-basic)}
+.research-annotations-dialog {width:min(780px,calc(100% - 24px));max-height:calc(100dvh - 32px);padding:20px;border:1px solid var(--chart-export-workbench-rule);border-radius:12px;background:var(--chart-export-workbench-surface);color:var(--chart-export-workbench-ink);box-shadow:none;font:13px/1.6 var(--font-system-basic)}
 .research-annotations-dialog::backdrop {background:var(--chart-export-workbench-surface-2)}
 .research-annotations-dialog header {display:flex;justify-content:space-between;align-items:center;gap:12px}
 .research-annotations-dialog h2 {font-size:18px;margin:0}
@@ -18,7 +18,7 @@
 .research-annotations-list {display:grid;gap:8px;max-height:240px;overflow:auto;margin:12px 0}
 .research-annotation-row {display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:8px;border:1px solid var(--chart-export-workbench-rule-2);border-radius:6px}
 .research-annotation-row.is-selected {border-color:var(--research-annotations-rule);background:var(--research-annotations-surface)}
-.research-annotation-row>button {text-align:left;border-left:4px solid var(--annotation-color,var(--research-annotations-rule-2));overflow-wrap:anywhere}
+.research-annotation-row>button {text-align:left;border-left:2px solid var(--annotation-color,var(--research-annotations-rule-2));overflow-wrap:anywhere}
 .research-annotation-row small {grid-column:1/-1;color:var(--research-annotations-ink);overflow-wrap:anywhere}
 .research-annotation-actions {display:flex;gap:4px;align-items:center}
 .research-annotation-actions button {padding:4px 8px;font-size:11px}

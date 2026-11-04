@@ -1,0 +1,475 @@
+{
+  "dateKst": "2026-11-04",
+  "status": "local-implementation-and-verification-complete",
+  "branch": "codex/market-lab-service-20261103",
+  "input": {
+    "source": "Coin Metrics Community API",
+    "asOf": "2026-11-03",
+    "observations": 5953,
+    "firstObservation": "2010-07-18",
+    "inputHash": "4c624163f43edeff8b4ea9e4d02bdc0e8fa452ec0fe9b9fa3abd575bc14ecc30",
+    "forecastHashReadbackMatches": true,
+    "bundledArchiveThrough": "2026-10-31",
+    "previousTaskInputThrough": "2026-11-02",
+    "dateDrift": "Existing app automatic source update after reload; no core calculation change"
+  },
+  "coverage": {
+    "historicalCycleCount": 3,
+    "baselineCycleCount": 2,
+    "pairedCycleCount": 1,
+    "pairedOrigins": 9,
+    "baselineOnlyOrigins": 21,
+    "unavailableOrigins": 9,
+    "pendingOrigins": 26,
+    "invalidOrigins": 0,
+    "insufficientOrigins": 43
+  },
+  "originRange": [
+    "2010-09-30",
+    "2026-09-30"
+  ],
+  "historicalTargets": [
+    {
+      "targetId": "halving-2012:peak",
+      "cycleId": "halving-2012",
+      "cycleYear": 2012,
+      "type": "peak",
+      "targetDate": "2013-12-04",
+      "targetKnownAt": "2016-07-09",
+      "originCount": 9,
+      "baselineOriginCount": 0,
+      "pairedOriginCount": 0,
+      "insufficientOriginCount": 9,
+      "baselineMaeDays": null,
+      "pairedBaselineMaeDays": null,
+      "adjustedMaeDays": null
+    },
+    {
+      "targetId": "halving-2012:trough",
+      "cycleId": "halving-2012",
+      "cycleYear": 2012,
+      "type": "trough",
+      "targetDate": "2015-01-14",
+      "targetKnownAt": "2016-07-09",
+      "originCount": 9,
+      "baselineOriginCount": 0,
+      "pairedOriginCount": 0,
+      "insufficientOriginCount": 9,
+      "baselineMaeDays": null,
+      "pairedBaselineMaeDays": null,
+      "adjustedMaeDays": null
+    },
+    {
+      "targetId": "halving-2016:peak",
+      "cycleId": "halving-2016",
+      "cycleYear": 2016,
+      "type": "peak",
+      "targetDate": "2017-12-16",
+      "targetKnownAt": "2020-05-11",
+      "originCount": 15,
+      "baselineOriginCount": 15,
+      "pairedOriginCount": 0,
+      "insufficientOriginCount": 15,
+      "baselineMaeDays": 84.13333333333334,
+      "pairedBaselineMaeDays": null,
+      "adjustedMaeDays": null
+    },
+    {
+      "targetId": "halving-2016:trough",
+      "cycleId": "halving-2016",
+      "cycleYear": 2016,
+      "type": "trough",
+      "targetDate": "2018-12-15",
+      "targetKnownAt": "2020-05-11",
+      "originCount": 15,
+      "baselineOriginCount": 15,
+      "pairedOriginCount": 0,
+      "insufficientOriginCount": 15,
+      "baselineMaeDays": 83.13333333333334,
+      "pairedBaselineMaeDays": null,
+      "adjustedMaeDays": null
+    },
+    {
+      "targetId": "halving-2020:peak",
+      "cycleId": "halving-2020",
+      "cycleYear": 2020,
+      "type": "peak",
+      "targetDate": "2021-11-08",
+      "targetKnownAt": "2024-04-20",
+      "originCount": 15,
+      "baselineOriginCount": 15,
+      "pairedOriginCount": 9,
+      "insufficientOriginCount": 6,
+      "baselineMaeDays": 109.46666666666667,
+      "pairedBaselineMaeDays": 38,
+      "adjustedMaeDays": 22.11111111111111
+    },
+    {
+      "targetId": "halving-2020:trough",
+      "cycleId": "halving-2020",
+      "cycleYear": 2020,
+      "type": "trough",
+      "targetDate": "2022-11-09",
+      "targetKnownAt": "2024-04-20",
+      "originCount": 15,
+      "baselineOriginCount": 15,
+      "pairedOriginCount": 9,
+      "insufficientOriginCount": 6,
+      "baselineMaeDays": 109.13333333333334,
+      "pairedBaselineMaeDays": 37,
+      "adjustedMaeDays": 21.555555555555557
+    }
+  ],
+  "pairedSummary": [
+    {
+      "type": "peak",
+      "uniqueTargetCount": 1,
+      "uniqueCycleCount": 1,
+      "originCount": 9,
+      "baselineMaeDays": 38,
+      "adjustedMaeDays": 22.11111111111111,
+      "improvementDays": 15.88888888888889,
+      "targetWeight": "equal-after-mean-absolute-origin-errors",
+      "sufficientForPredictiveSuperiorityClaim": false
+    },
+    {
+      "type": "trough",
+      "uniqueTargetCount": 1,
+      "uniqueCycleCount": 1,
+      "originCount": 9,
+      "baselineMaeDays": 37,
+      "adjustedMaeDays": 21.555555555555557,
+      "improvementDays": 15.444444444444443,
+      "targetWeight": "equal-after-mean-absolute-origin-errors",
+      "sufficientForPredictiveSuperiorityClaim": false
+    }
+  ],
+  "allBaselineSummary": [
+    {
+      "type": "peak",
+      "uniqueTargetCount": 2,
+      "uniqueCycleCount": 2,
+      "originCount": 30,
+      "baselineMaeDays": 96.80000000000001,
+      "targetWeight": "equal-after-mean-absolute-origin-errors"
+    },
+    {
+      "type": "trough",
+      "uniqueTargetCount": 2,
+      "uniqueCycleCount": 2,
+      "originCount": 30,
+      "baselineMaeDays": 96.13333333333334,
+      "targetWeight": "equal-after-mean-absolute-origin-errors"
+    }
+  ],
+  "policy": {
+    "originSelection": "Every completed UTC quarter end from the first observed price through the evaluation cutoff; no selection by future peaks, availability or audit scores",
+    "targetSelection": "Next closed halving era’s last running high with persistent deep drawdown. Pre-first-halving origins are coverage only: no reference clock is invented.",
+    "grouping": "Distinct halving-era target and turn type; average absolute errors at distinct origins, then equal target weight",
+    "pairedComparison": "Only identical origins with an available causal correction enter both sides of the correction comparison. Broader baseline-only results are separate.",
+    "lowRule": "Unadjusted peak +12 calendar months, then the same integer day shift as the peak",
+    "meaning": "current-rule-retrospective-clock-audit-not-contemporaneously-issued",
+    "futureOutcomesUsedInPrediction": false,
+    "historicalVintageAvailable": false,
+    "settingsSelectedFromAuditScores": false,
+    "sufficientForPredictiveSuperiorityClaim": false,
+    "excludes": "Scenario arrival/dwell offsets, price-path extrema and renderer feasibility fallbacks are not this causal clock-rule audit"
+  },
+  "checks": {
+    "fullTests": {
+      "complete": true,
+      "tests": 2461,
+      "pass": 2461,
+      "fail": 0,
+      "skipped": 0,
+      "batches": 2
+    },
+    "hostTests": 2420,
+    "linuxFrozenTests": 41,
+    "targetedTests": {
+      "tests": 23,
+      "pass": 23,
+      "newThisTask": 9
+    },
+    "typecheck": "pass",
+    "webBuild": "pass",
+    "static": {
+      "status": "ok",
+      "files": 773,
+      "checkedReferences": 528,
+      "basePath": "/bitcoin-cycle-atlas/",
+      "standalone": null
+    },
+    "independentPython": {
+      "status": "pass",
+      "history": {
+        "origins": 65,
+        "baselineRecords": 60,
+        "coverage": {
+          "historicalCycleCount": 3,
+          "baselineCycleCount": 2,
+          "pairedCycleCount": 1,
+          "pairedOrigins": 9,
+          "baselineOnlyOrigins": 21,
+          "unavailableOrigins": 9,
+          "pendingOrigins": 26,
+          "invalidOrigins": 0,
+          "insufficientOrigins": 43
+        },
+        "baselineSummary": [
+          {
+            "type": "peak",
+            "uniqueTargetCount": 2,
+            "uniqueCycleCount": 2,
+            "originCount": 30,
+            "baselineMaeDays": 96.80000000000001,
+            "targetWeight": "equal-after-mean-absolute-origin-errors"
+          },
+          {
+            "type": "trough",
+            "uniqueTargetCount": 2,
+            "uniqueCycleCount": 2,
+            "originCount": 30,
+            "baselineMaeDays": 96.13333333333334,
+            "targetWeight": "equal-after-mean-absolute-origin-errors"
+          }
+        ]
+      },
+      "method": "Python stdlib calendar/date arithmetic, independent closed-era persistent-drawdown target scan, and hierarchical mean absolute errors",
+      "records": 18,
+      "uniqueCycles": 1,
+      "scoredOrigins": 9,
+      "excludedOrigins": 56,
+      "targets": [
+        {
+          "targetId": "halving-2020:peak",
+          "cycle": "halving-2020",
+          "type": "peak",
+          "origins": 9,
+          "baseline": 38,
+          "adjusted": 22.11111111111111
+        },
+        {
+          "targetId": "halving-2020:trough",
+          "cycle": "halving-2020",
+          "type": "trough",
+          "origins": 9,
+          "baseline": 37,
+          "adjusted": 21.555555555555557
+        }
+      ],
+      "summary": [
+        {
+          "type": "peak",
+          "uniqueTargetCount": 1,
+          "uniqueCycleCount": 1,
+          "originCount": 9,
+          "baselineMaeDays": 38,
+          "adjustedMaeDays": 22.11111111111111,
+          "improvementDays": 15.88888888888889,
+          "targetWeight": "equal-after-mean-absolute-origin-errors",
+          "sufficientForPredictiveSuperiorityClaim": false
+        },
+        {
+          "type": "trough",
+          "uniqueTargetCount": 1,
+          "uniqueCycleCount": 1,
+          "originCount": 9,
+          "baselineMaeDays": 37,
+          "adjustedMaeDays": 21.555555555555557,
+          "improvementDays": 15.444444444444443,
+          "targetWeight": "equal-after-mean-absolute-origin-errors",
+          "sufficientForPredictiveSuperiorityClaim": false
+        }
+      ],
+      "excludes": "An independent implementation of the entire smoothed calibration rule, historical issuance/vintage verification and predictive-superiority inference"
+    },
+    "all65OriginFutureRevisionInvariance": "pass",
+    "legacy8OriginExactOutputs": "pass",
+    "duplicate65OriginSet": "pass",
+    "unavailableCorrectionNegativeControl": "rejected"
+  },
+  "invariants": {
+    "sourceSha256Unchanged": {
+      "dist/cycle-calibration.js": true,
+      "dist/cycle-timing.js": true,
+      "dist/long-horizon-forecast.js": true,
+      "dist/detailed-forecast.js": true,
+      "dist/cycle-engine.js": true,
+      "dist/monthly-backtest.js": true,
+      "dist/monthly-backtest-store.js": true,
+      "dist/chart-replay.js": true,
+      "dist/lab-view.js": true,
+      "dist/index.html": true
+    },
+    "monthlyExact": {
+      "modelIdentity": true,
+      "rows": true,
+      "summary": true,
+      "commonOriginSummary": true
+    },
+    "monthlyRestored": 13,
+    "monthlyCreated": 0
+  },
+  "IAB": {
+    "browserId": "2",
+    "normalTab": "24",
+    "desktop": {
+      "regionCount": 4,
+      "regionsUnchanged": true,
+      "pathCount": 62,
+      "pathsUnchanged": true,
+      "urlUnchanged": true,
+      "desktop": {
+        "width": 1168,
+        "height": 954
+      },
+      "negative": {
+        "clockHidden": true,
+        "visibleCenters": [
+          "월말 백테스트"
+        ]
+      },
+      "consoleErrors": []
+    },
+    "mobile": {
+      "closeHeight": 44,
+      "height": 700,
+      "ledger": {
+        "headerY": 490.375,
+        "maxX": 716,
+        "maxY": 756,
+        "scrollLeft": 40,
+        "scrollTop": 70,
+        "stickyLeft": "sticky",
+        "top": 490.375
+      },
+      "overflow": 0,
+      "summaryLeft": 40,
+      "width": 390
+    },
+    "pastTargetSelection": [
+      "halving-2012:peak",
+      "halving-2016:peak",
+      "halving-2020:trough"
+    ],
+    "excludedRows": 56,
+    "errorTab": "28",
+    "errorProxyOrigin": "http://127.0.0.1:4324",
+    "workerErrorClearsSummaryAndCoverage": true,
+    "exportDisabledOnError": true,
+    "normalRetry": "ready",
+    "lateResultAfterModeSwitch": "ignored",
+    "viewportOverrideCleared": true,
+    "clientRecovery": "Reinitialized automation client after two unavailable-API failures; existing browser, accounts and tab preserved"
+  },
+  "design": {
+    "hallmark": {
+      "fails": 9,
+      "reflex": 2,
+      "warns": 10,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 58,
+      "render": "off"
+    },
+    "findingsInAffectedStyle": [
+      {
+        "gate": "56",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/monthly-backtest.css",
+        "line": 25,
+        "evidence": "two sticky top:0 elements: .rsi-ledger-scroll thead th + .monthly-ledger thead…",
+        "fix": "Offset the second sticky by banner height"
+      }
+    ],
+    "interpretation": "Existing gate56 merges independent RSI/monthly scroll roots; actual sticky header verified; no scanner severity changes. Existing global findings retained.",
+    "upstreamRender": "off",
+    "sourceCheck": {
+      "status": "review_required",
+      "applied": false,
+      "localHashMismatches": []
+    },
+    "authorSeriesFreshness": "unverified; no reviewed method promotion"
+  },
+  "cleanup": {
+    "ownedProxyPid": 58844,
+    "proxy4324Closed": true,
+    "testTab28Closed": true,
+    "tab24Deliverable": true,
+    "api4319Pid": 77535,
+    "apiNotRestarted": true,
+    "dbAndUsCollectorNotModified": true,
+    "otherUserTabsPreserved": true
+  },
+  "limits": [
+    "Three closed historical target cycles, two baseline-evaluable cycles, still one matched correction cycle under the unchanged rule.",
+    "No future-reference borrowing or new bootstrap rule to inflate independent samples.",
+    "Current-vintage historical reconstruction; historical issuance and exact vintages unavailable.",
+    "Python independently verifies target/calendar/provenance/cohort/statistics, not the entire smoothing algorithm.",
+    "Desktop and emulated mobile IAB checked, not physical-phone pinch.",
+    "Existing user-excluded external model audits, deployment and model promotion not run."
+  ],
+  "sourceSha256": {
+    "design.md": "fd3f0f87ee2950f19f20ca9fe6b20fe15d1f8ab039565ee69b4ebee72748f0d6",
+    "dist/chart-replay.js": "ed8c73a6121f64fe312c7af87b8033a94a586578532c9bad68360c3804955fc5",
+    "dist/cycle-calibration.js": "f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780",
+    "dist/cycle-clock-backtest-view.js": "b82d63bc36b708f383db37c192699569f3b012482c35192790df77f127d89449",
+    "dist/cycle-clock-backtest.js": "a53bf4b3d32aaf79fc4f80d14bdab2432cf40f4d62b7f5db6d2bdc1073b8842c",
+    "dist/cycle-engine.js": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+    "dist/cycle-timing.js": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+    "dist/detailed-forecast.js": "e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e",
+    "dist/index.html": "8287fb2bb14d2f8d7a262378b9e1132292c5c8e16321c71ce899d77b3f01643f",
+    "dist/lab-view.js": "d371f5e268bee23416d842803ffe6484278c2189cd6015daa96f3dcb8e5407a0",
+    "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+    "dist/monthly-backtest-store.js": "33da0e2a147d0d6b99b391af90de61789c32b9a1db8736f6e28ae2c255bf0fb8",
+    "dist/monthly-backtest.css": "73215d161f56d24cf458bfca421dc272965a859a1639f2da2c010e02f4e026de",
+    "dist/monthly-backtest.js": "10fd7a2eb0d72ad126cdfd927d20bb80c84246fb3dc10d6a1b602dbf77c70284",
+    "docs/architecture-migration/clock-history-2026-11-04.md": "6c4469bee95b3a6dbf1a0f0a45ed3fa4b7698ff4cca0b97d2ebd19b4a1c161a2",
+    "scripts/verify-cycle-clock-backtest.py": "4f5df9a8505b5a56d4e5bab0bb30c5c58dcc0722ee237096d51c25dc1057460d",
+    "tests/cycle-clock-backtest-view.test.mjs": "962df139ac3de60a1cd0ca9302dabdb5579a4d77539fcdeb5f409ab2df1560cd",
+    "tests/cycle-clock-backtest.test.mjs": "ad452a524abf4449c63deea604f0f07022201d767c9f0cf9169c5c26f7c625cf"
+  },
+  "evidenceSha256": {
+    "before-hashes.json": "917d1fd1b7e39c1bf2f2978b9e015bfcc3dbcdb5046e536ae7b8423203c94aaa",
+    "browser-before.json": "2e6334daa05a5170feec745d6a439b7e4d232f0bc899a15adeab31ba9dd4f603",
+    "browser.json": "349439901baaae36db66836f9b8be8e3b78edec920b2b2acb2461d414e8e5bb7",
+    "build-web.log": "ccdb08de95ffb401fd45a45820934e5580b4bb9551f978a263e43bf152a07d17",
+    "desktop-initial.png": "7169663bdd9f41190edd83d269166f2e766ed5a0ffe58d509aee4bb44d510ba7",
+    "desktop-no-clock.png": "cc0c5d1f806125ab043bf4d48fed629f1f87b2e8a8d570aa2b5fc9d130859857",
+    "desktop.png": "92366594c4de1fdeddfaffe75d9138bfafed85b06d381bcfb766047c533e9505",
+    "diagnostic.json": "fb4b675929f7f908a6cb678a7cf61ff33ad7b69f4a631bf2731c8bc43b942a95",
+    "extend-domain.py": "70b79bef6c369356a6f2e63c1349bc2e67d81a6e78450acee09e066f138d2148",
+    "extend-independent.py": "691423608541037a671c437d643ef62b79a7d2b13da94f852e21608f5f5652d6",
+    "extend-view.py": "eb23913afeb0c0a37bcf499b11c40b5204a6783ecf711bf264f86d3fabb9e724",
+    "first-tests.log": "031c290642d03bf1c4d344c38f689505468176f88a619e1249836f07eb8df471",
+    "frontend-source.json": "176baa9f5e413d7e9b09f12b53b072408322132b5c9e76e798260dc895955774",
+    "full-final-tests.log": "78c7586fa6504ea90c3783c7383acb4fefa3b2884828a0c41be10f0b9b247534",
+    "full-tests.log": "45352063805552065ac07e63f0773bf29ef954b46eada9162ef2bfa70a3b3861",
+    "hallmark-final-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hallmark-final.json": "26ec51e1d4f539ce9a5b6c1f4891b98e697515676c678ca53b2d70ad9bdcbea2",
+    "hallmark-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "hallmark.json": "26ec51e1d4f539ce9a5b6c1f4891b98e697515676c678ca53b2d70ad9bdcbea2",
+    "initial.json": "95a2dc0ab540b58a5bb5e7f96bfc8445e7746fcb70d79303415491ac34206464",
+    "mobile-initial.png": "3d2653b1f786f826359e96416cb80dfb05e4533af0b34e5f318c8fe959365edd",
+    "mobile-ui.json": "a5eefb7386faf286aeeb84c8ff3c49a2d9b81a91c493776ad64dc27ee8d08fe4",
+    "mobile.png": "e458abd392d7cec6350f7dafdb98d3ebebf6f72cc2b0b8cb91154db590fa88af",
+    "monthly-preserved.json": "66c5bc1ccf7fc68733c86e8f244f2fd849cff20822721d9f0c0b737c555d689f",
+    "proxy.mjs": "93622f95e7127597616369b43940d6478912e090d8da4a4051ac6c0401c980c8",
+    "pstack-source.json": "74a99af0f0e27840e59f6aa5853d1d40cf0642755159782a57a5d7de073b61db",
+    "python-browser.json": "2a5438167fd0513e800c608b11e3837fab99bb7ca9cea0b5888ef2c473a70803",
+    "python-initial.json": "2a5438167fd0513e800c608b11e3837fab99bb7ca9cea0b5888ef2c473a70803",
+    "skill-source-limits.json": "50b137c6e79510615f676962d35dd819cff02c8c64459d00046bcdb32f4f0dcb",
+    "static-final.log": "27789d796917ff249c85912cda6868baf5e494a833fc202488ad16522902d3f9",
+    "static.log": "27789d796917ff249c85912cda6868baf5e494a833fc202488ad16522902d3f9",
+    "targeted-final-tests.log": "ef5e379503ddc9c4c50794b9aabea229982390a91134167858758094c6976992",
+    "targeted-tests.log": "a288a3a11164a9ddce24bd1c4d16d777c260852a33dddfe75b03e81f00a4b4b5",
+    "typecheck-final.log": "fb0819098087f3423e17448306bb7a2fa0eccf94000c9584002be69605262333",
+    "typecheck.log": "fb0819098087f3423e17448306bb7a2fa0eccf94000c9584002be69605262333",
+    "ui.json": "609c248a0412640c05ac6d261a551b68b57af191727c0b1be68581a894f3c4e9"
+  }
+}

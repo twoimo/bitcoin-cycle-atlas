@@ -13,6 +13,8 @@ export const MARKET_DEFINITIONS=Object.freeze([
   {id:'kospi',symbol:'^KS11',name:'KOSPI',region:'kr',unit:'지수 pt'},
   {id:'kosdaq',symbol:'^KQ11',name:'KOSDAQ',region:'kr',unit:'지수 pt'},
   {id:'tqqq',symbol:'TQQQ',name:'TQQQ',region:'us',unit:'USD'},
+  {id:'soxl',symbol:'SOXL',name:'SOXL',region:'us',unit:'USD'},
+  {id:'kodex-kosdaq150',symbol:'233740.KS',name:'KODEX 코스닥150 레버리지',region:'kr',unit:'KRW'},
 ]);
 export function parseCsv(text){
   if(typeof text!=='string'||text.length>8*1024*1024)throw new Error('CSV size/type invalid');
@@ -84,8 +86,9 @@ export function parseYahoo(payload,symbol,{now=new Date()}={}){
   validateSeries(rows,{positive:true});if(rows.length<30)throw new Error('Yahoo completed history insufficient');
   return{prices:rows,timezone:zone,priceBasis:'Yahoo quote.close; provider historical split conventions; dividend-adjusted adjclose NOT used',sessionPolicy:'현재 거래소 현지 날짜 전부 제외(장 마감 후에도 다음 현지 날짜부터 편입)',currency:result.meta.currency??null};
 }
-export async function refreshMarketLab(output=resolve(ROOT,'dist/data/market-lab.json'),{now=new Date(),fetchImpl=globalThis.fetch,rawDir=null,scope='all',replaceMacroDefinitions=false}={}){
-  if(!Number.isFinite(+now))throw new Error('Invalid retrieval clock');let previous=null;try{previous=validateSnapshot(JSON.parse(await readFile(output,'utf8')));}catch(e){if(e.code!=='ENOENT')throw e;}
+/** @param {string|undefined} output @param {{now?:Date,fetchImpl?:typeof fetch,rawDir?:string|null,scope?:'all'|'macro',replaceMacroDefinitions?:boolean,persist?:boolean,previousSnapshot?:any}} options */
+export async function refreshMarketLab(output=resolve(ROOT,'dist/data/market-lab.json'),{now=new Date(),fetchImpl=globalThis.fetch,rawDir=null,scope='all',replaceMacroDefinitions=false,persist=true,previousSnapshot}={}){
+  if(!Number.isFinite(+now))throw new Error('Invalid retrieval clock');let previous=previousSnapshot===undefined?null:validateSnapshot(previousSnapshot);if(previousSnapshot===undefined){try{previous=validateSnapshot(JSON.parse(await readFile(output,'utf8')));}catch(e){if(e.code!=='ENOENT')throw e;}}
   if(!['all','macro'].includes(scope)||scope==='macro'&&!previous)throw new Error('Macro-only refresh needs an existing validated snapshot');
   const generatedAt=now.toISOString(),sources=scope==='macro'?previous.sources.filter(s=>!['us-gdp','kr-gdp','us-rate','kr-rate','kr-realized-vol'].includes(s.id)):[],markets=scope==='macro'?previous.markets:[],warnings=[];const countries={us:'미국',kr:'한국'};let gdp={us:[],kr:[]},rates={us:[],kr:[]},vix=[];
   const rawWrites=[];async function get(url,key){const response=await fetchImpl(url,{signal:AbortSignal.timeout(30000),headers:{'User-Agent':'Bitcoin-Cycle-Atlas research (public data; no credentials)'}});if(!response.ok)throw new Error(`HTTP ${response.status}`);const raw=await response.text();if(raw.length>8*1024*1024)throw new Error('Response exceeds8MiB');if(rawDir)rawWrites.push({key,text:raw});return{raw,hash:createHash('sha256').update(raw).digest('hex'),contentType:response.headers.get('content-type')};}
@@ -109,9 +112,10 @@ export async function refreshMarketLab(output=resolve(ROOT,'dist/data/market-lab
   const doc=validateSnapshot({schemaVersion:1,generatedAt,modelVersion:'research-0.1',sources,regions,markets,collectionWarnings:warnings,publicationStatus:'local_candidate_unreviewed'});
   // A partial new fetch must not erase a previously valid collection. Its failure
   // receipt remains separate, while the old snapshot retains its original clocks.
-  const preserveR3=previous?.modelVersion===PRESERVED_MACRO_VERSION&&replaceMacroDefinitions!==true;if(previous&&warnings.length){await writeFile(`${output}.last-failure.json`,JSON.stringify({attemptedAt:generatedAt,warnings},null,2)+'\n');throw new Error('Partial refresh preserved previous snapshot; see last-failure receipt');}
-  let next=doc;if(preserveR3){if(scope==='macro'){await writeFile(`${output}.last-failure.json`,JSON.stringify({attemptedAt:generatedAt,warnings:['R3 macro definitions preserved; successful OECD refresh was not applied']},null,2)+'\n');throw new Error('R3 macro definitions preserved; OECD refresh did not replace snapshot');}next=structuredClone(previous);next.generatedAt=generatedAt;next.markets=markets;const replacementIds=new Set(sources.filter(s=>s.id.startsWith('market-')||s.id==='kr-realized-vol').map(s=>s.id));next.sources=next.sources.filter(s=>!replacementIds.has(s.id)).concat(sources.filter(s=>replacementIds.has(s.id)));if(next.regions?.kr?.axes?.gamma)next.regions.kr.axes.gamma.values=krVol;if(next.regions?.us?.axes?.gamma&&vix.length)next.regions.us.axes.gamma.values=vix;next.collectionWarnings=warnings;next=validateSnapshot(next);}
-  await commitRefreshFiles({output,body:JSON.stringify(next)+'\n',rawDir,files:rawWrites});return next;
+  if(!persist&&warnings.length)throw new Error('Partial refresh preserved previous snapshot: '+warnings.join('; '));
+  const preserveR3=previous?.modelVersion===PRESERVED_MACRO_VERSION&&replaceMacroDefinitions!==true;if(previous&&warnings.length){if(persist)await writeFile(`${output}.last-failure.json`,JSON.stringify({attemptedAt:generatedAt,warnings},null,2)+'\n');throw new Error('Partial refresh preserved previous snapshot; see last-failure receipt');}
+  let next=doc;if(preserveR3){if(scope==='macro'){if(persist)await writeFile(`${output}.last-failure.json`,JSON.stringify({attemptedAt:generatedAt,warnings:['R3 macro definitions preserved; successful OECD refresh was not applied']},null,2)+'\n');throw new Error('R3 macro definitions preserved; OECD refresh did not replace snapshot');}next=structuredClone(previous);next.generatedAt=generatedAt;next.markets=markets;const replacementIds=new Set(sources.filter(s=>s.id.startsWith('market-')||s.id==='kr-realized-vol').map(s=>s.id));next.sources=next.sources.filter(s=>!replacementIds.has(s.id)).concat(sources.filter(s=>replacementIds.has(s.id)));if(next.regions?.kr?.axes?.gamma)next.regions.kr.axes.gamma.values=krVol;if(next.regions?.us?.axes?.gamma&&vix.length)next.regions.us.axes.gamma.values=vix;next.collectionWarnings=warnings;next=validateSnapshot(next);}
+  if(persist)await commitRefreshFiles({output,body:JSON.stringify(next)+'\n',rawDir,files:rawWrites});return next;
 }
 if(resolve(process.argv[1]||'')===fileURLToPath(import.meta.url)){
  const raw=process.env.ATLAS_MARKET_RAW_DIR??null;const doc=await refreshMarketLab(undefined,{rawDir:raw,scope:process.argv.includes('--macro-only')?'macro':'all'});console.log(JSON.stringify({generatedAt:doc.generatedAt,sourceReady:doc.sources.filter(s=>s.status==='ready').length,sources:doc.sources.length,warnings:doc.collectionWarnings,markets:doc.markets.map(m=>({id:m.id,rows:m.prices.length,last:m.prices.at(-1)})),axes:Object.fromEntries(Object.entries(doc.regions).map(([k,v])=>[k,Object.fromEntries(Object.entries(v.axes).map(([a,x])=>[a,{rows:x.values.length,last:x.values.at(-1)}]))]))},null,2));

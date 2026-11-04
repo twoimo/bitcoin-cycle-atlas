@@ -7,7 +7,7 @@
 .ipo-source-disclosure summary { min-height: 36px; line-height: 36px; cursor: pointer; }
 .ipo-source { max-width: 100%; padding-top: 4px; font-size: 11px; line-height: 1.45; }
 .ipo-source-panel { display: none; }
-.ipo-source-disclosure[open] .ipo-source-panel { position: absolute; z-index: 5; top: calc(100% + 4px); right: 0; display: block; width: min(420px, 100%); max-height: min(60dvh, 440px); overflow: auto; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-raised); color: var(--text); box-shadow: 0 8px 24px color-mix(in srgb, var(--bg) 35%, transparent); }
+.ipo-source-disclosure[open] .ipo-source-panel { position: absolute; z-index: 5; top: calc(100% + 4px); right: 0; display: block; width: min(420px, 100%); max-height: min(60dvh, 440px); overflow: auto; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-raised); color: var(--text); box-shadow:none; }
 .ipo-source-panel p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
 .ipo-source-panel p + p { margin-top: 8px; }
 .ipo-toolbar { display: flex; flex: 1 1 auto; min-width: 0; gap: 8px; align-items: center; flex-wrap: nowrap; }
@@ -122,4 +122,11 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .ipo-pages { scroll-behavior: auto; }
+}
+/* Keep calendar labels from shrinking into each other in short workspaces. */
+@media (max-height:800px) {
+  .ipo-month-day{padding:4px;gap:0}
+  .ipo-day-number{flex:none;min-height:16px;line-height:16px}
+  .ipo-day-events{gap:0;flex:none}
+  .ipo-cal-event,.ipo-day-more{flex:none;line-height:16px}
 }

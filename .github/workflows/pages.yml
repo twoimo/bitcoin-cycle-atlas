@@ -26,8 +26,10 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '24'
+          node-version: '24.22.2'
           package-manager-cache: false
+      - name: Install locked workspace dependencies
+        run: npm ci --ignore-scripts
       - name: Test before deployment
         run: npm test
       - name: Verify preserved forecast identities and replay
@@ -105,7 +107,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: '24'
+          node-version: '24.22.2'
           package-manager-cache: false
       - name: Reject a superseded source before deployment
         shell: bash

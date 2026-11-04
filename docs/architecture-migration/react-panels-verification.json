@@ -1,0 +1,139 @@
+{
+  "observedAt": "2026-11-03T07:38:26.441075+00:00",
+  "status": "local-react-panels-and-shared-ui-verified-with-recorded-limits",
+  "branch": "codex/market-lab-service-20261103",
+  "baseCommit": "db794bc4e6bfbdf35b035850ee8ddba3a73b584b",
+  "panels": [
+    "diagnosis",
+    "scenario",
+    "ai",
+    "rsi"
+  ],
+  "math": {
+    "sha256": "04f76285edfd22996dc3bc922f98e9e5baeca70a4a137310b72c57370159176a",
+    "unchanged": true
+  },
+  "baselineBrowserParityBeforeCopySimplification": {
+    "text": true,
+    "controls": true,
+    "svg": true,
+    "panels": 4,
+    "evidence": [
+      "build/architecture-migration/react-panels/before/browser-panels.json",
+      "build/architecture-migration/react-panels/after-browser-panels.json"
+    ]
+  },
+  "currentRendererParity": {
+    "checks": 15,
+    "passed": 15,
+    "scope": "Legacy-oracle numerical values, source gates, controls and SVG geometry; client loading/error/empty/retry/abort and tab state; shell ownership/preferences",
+    "copy": "Visible labels shortened and longer methodology folded. Source disclosure clocks/links/caveats retained."
+  },
+  "checks": {
+    "typecheck": "passed",
+    "webBuild": "passed",
+    "domainBytes": "passed",
+    "postgresqlApi": {
+      "tests": 11,
+      "pass": 11,
+      "fail": 0,
+      "skipped": 0
+    },
+    "legacyLab": {
+      "tests": 56,
+      "pass": 56,
+      "fail": 0,
+      "skipped": 0
+    },
+    "legacyFull": {
+      "tests": 2403,
+      "pass": 2260,
+      "fail": 143,
+      "skipped": 0,
+      "newFailuresAgainstReactCheckpoint": [],
+      "removedFailuresAgainstReactCheckpoint": []
+    }
+  },
+  "liveLocal": {
+    "health": "ready",
+    "apiRevision": "d3393bfbee731d8d09454fe7c9f65708764f3edcab27feb2563911c67dce544c",
+    "evaluatedAt": "2026-11-03T07:38:26.563Z"
+  },
+  "browserCases": [
+    "US/KR and four tabs",
+    "negative example 87.52 and empty weight",
+    "NPV example 6623.58 and edited revenue NPV 46550.68",
+    "manual RSI 33.5 / 101 rejection",
+    "two-way date matching and early no-RSI date",
+    "tab state preservation",
+    "actual database stop/fallback/restart/retry with retained scenario",
+    "390px tabs/regions/chart controls",
+    "mobile chart replay entry/exit and React navigation",
+    "research search/reader, CSV 18 rows and IPO date dialog"
+  ],
+  "sourceSha256": {
+    "apps/api/package.json": "91d76e6d6d2d44b7db0edba500d802a0008f83a550c4d4a790b9d043f931bdbd",
+    "apps/api/src/main.ts": "5299090a92d2bafecb84914b4f64ecb00b4dc38d2cd5320488d8625a08784740",
+    "apps/api/src/repository.ts": "b5d079a5ae00890776fee722e9881c51ce701f8b646887ccdb09ff9177db04e4",
+    "apps/api/src/server.ts": "befc86049eb76165b3447fdce8554f0c76cce3513535cdb629949d75208cfde9",
+    "apps/jobs/package.json": "37d46ea75df24d905d89acb3ac4f91054146f96cac48459fa097f84bcdcc42d9",
+    "apps/jobs/src/market-lab.ts": "9969496b4aa3584cb9c42d0659f111506951dc6148fde684b6dcfbefdee8a210",
+    "apps/web/index.html": "af68cf068f2710062dce51c60be289d831d8c25706fd85ca986e6d86e384cec7",
+    "apps/web/package.json": "44564059843ac0de5acea799513b08bf6615ea0b22b2f6ca805fc28764c8f6cb",
+    "apps/web/src/app.tsx": "a400cad2dcb6b919d242768413f46ea289a778aa73bad31e7c4582ae6c796dca",
+    "apps/web/src/components/app-shell.tsx": "b4af2485e17b40e90a999cb7539e8729b7dd1b834a8e356dd04e18c39a0b9cae",
+    "apps/web/src/components/common.tsx": "6e8b4bd1da3f1b5a8be4b70824675fc14065f867b42e28fb513c31c0160afcb7",
+    "apps/web/src/components/observed-chart.tsx": "7ba87289608d4e708d485917bb2f1eb3ceeee80d40567cb79a107343a6195074",
+    "apps/web/src/components/source-disclosure.tsx": "11d3c82044be99b68a11022b08316e6549af3af2f27a0345109860479d7b6fce",
+    "apps/web/src/env.d.ts": "da5bf71d48cf909584a01c80b445f730507068f5b34c920f352e2bfcf0315e4c",
+    "apps/web/src/load-snapshot.ts": "1ac3c22bf5b540e2ddff454823f501eda8f153d222a2b414f6ad8b373cf26671",
+    "apps/web/src/main.tsx": "b7a034fd860ad0fccec3fdeac65e91aa3d5a003c35a9cc8e75dead08a31db222",
+    "apps/web/src/market-data.ts": "5bbe5a807fe103be4788d73d980cbd3b8e0d54a597acc6385184b5f86bb956f4",
+    "apps/web/src/panels/diagnosis-panel.tsx": "ccbbb072228343841a84cb96be4056821a5e1e240c2f03b18c318d6a473bff2f",
+    "apps/web/src/panels/economics-panel.tsx": "8b44050329b7095632c6eceffb73df89b0017b598d0c233b381a2f3f837c11de",
+    "apps/web/src/panels/rsi-panel.tsx": "192eae006d6d585d17309152a6fe75c99d3e6b331cd7b8d01c420b97f84d77b0",
+    "apps/web/src/panels/scenario-panel.tsx": "683044c624c634bdcc7e76e293ceaf23585ca9379e20af035045df2e01fae047",
+    "apps/web/src/web.css": "27a07cca7422bdbfa560de57a1ab3e4c42d5c2f6861a932cb4750d980bb2a925",
+    "apps/web/vite.config.ts": "2df12b436521c8d42b1e694c028851b00f907a29b8dd719507b7e985c9703f25",
+    "dist/atlas-shell-state.js": "9c420fcb99ce1a344adb4fb38313339fd5c1f16f1a987e92e6aad56a85c8aa12",
+    "dist/atlas-shell.css": "aac028650545bf3268de9b9d0f0802d0ef576ecbd0c927583c6cb96eb460d761",
+    "dist/atlas-shell.js": "ec3f13eba01d17ed549e342547e7c847f15bcd27c284beded6fac011f4c1b7e7",
+    "dist/index.html": "2365a17c7661f5d17c913565817aaa7d58a30cd0ec67bc31be8ddfc943523582",
+    "dist/mobile-workspace.js": "1a4e3231a784f2f6b56a76a5fb609222b08ec632fc1399345a936306693b5f9f",
+    "dist/site-entry.js": "92558c708931a27d8db8ef287f65a5e0530c901f8adbc1def978b544d99e7046",
+    "packages/contracts/package.json": "fbbd12b0e933590043c6d4a384759cfb5594bf5ecb6a2211403df8ebaae690ec",
+    "packages/contracts/src/market-lab.ts": "63d74cf223c08438030cf9e3486391818402a227c32463e69989be51c9d293ad",
+    "packages/domain/package.json": "a155f744e28069e06ca3689143cfdb339ed4c421d4873447890e8fe2279180c8",
+    "packages/domain/src/market-lab-math.d.ts": "e2664ca215b34cdbfd421bbcd906cbcd62cf06df5caa491a88fec2088b9eadfd",
+    "packages/domain/src/market-lab-math.js": "04f76285edfd22996dc3bc922f98e9e5baeca70a4a137310b72c57370159176a",
+    "scripts/build-standalone.mjs": "f4038ca9e4fbcb8354d31a0e68bc227d41f70e13e6abcd1031e3438210ee9e7b",
+    "tests/eth-view-state.test.mjs": "ca0a5bb3e3ca26c3e2a39aaa37067ff985e83133f45ec13039ad6daff680d3d7",
+    "tests/forecast-replay-standalone.test.mjs": "74a3177eb00e718cda641417138c08c762c367471126dbd5ca790b2b5f018e9e",
+    "tests/service/market-lab.test.ts": "aa43a5127ad22aa4302c969e603914b819baa0336ec79d1f09bc6ed13c9383f0",
+    "tests/standalone-packaging.test.mjs": "62470e8c2eced69644c88ec9ea0082c3e02ab5a9c7dab5d15605df3bcd56c19e",
+    "tests/web/atlas-shell.test.tsx": "dbac3909638038db84e87e6a7f000fc80cfbd798cadf7077cadc9f22737de160",
+    "tests/web/market-lab-panels.test.tsx": "c730c5bc4c7f49f1a9fa908305d41efbefa94df6ea957998f240d94e61333fe9"
+  },
+  "logSha256": {
+    "build/design-system/legacy-full-tap-stable.log": "481d8ab0c8ac19aa42c73c13fcb98e6a91199a05cc28cf8e5df42dd075dd955f",
+    "build/design-system/service-tests.log": "500555a427735de3303ee077a2797ef8fba156249fa8ecb2583ef99c97a6e210",
+    "build/design-system/legacy-lab-tests.log": "1153b883cd898bc9935fdd856615693d4a9aba32a45be9b2ac838b79713876dc",
+    "build/design-system/legacy-final.log": "cc9ea7312a7c481f32871d7b4d9a0d5174943c639a2617e016377770702fbdf2",
+    "build/design-system/legacy-full-tap.log": "1b7c67aca4c99432c208621eb74b38d7b28515c2aa142f02e05e67aaf5960c32",
+    "build/design-system/static-final.log": "8312c30939278fa45830cde3db9669c0b0089ef8d8d1f87f7216e99aec474e83",
+    "build/design-system/panel-tests-final.log": "04fdebf3ef32dca7ba001bccf45bdf57de81d8c1943f58023de11a9c95ef9aad",
+    "build/design-system/typecheck.log": "fb0819098087f3423e17448306bb7a2fa0eccf94000c9584002be69605262333",
+    "build/design-system/service-tests-final.log": "ec75d5bb6e094411335cc10e4e6863053f06769eab4f6a7599b7faf9d038393d",
+    "build/design-system/legacy-full-tap-verified.log": "256a5f5108a754188689c3543414ad254a65cb4050d00d97894f9c3f716b694f",
+    "build/design-system/legacy-full-tap-final.log": "4721468327b74340a3351b53aff421d1ff94544a6f39f0b7de57ccd26be64743",
+    "build/design-system/static.log": "8312c30939278fa45830cde3db9669c0b0089ef8d8d1f87f7216e99aec474e83",
+    "build/design-system/panel-tests.log": "3a1a39a059c38c5b5c4135f1c75124a6ab32f577e369100634fb90dcf138d24d",
+    "build/design-system/build.log": "d8f6bfcbf76a4a69a407430fe4bf843c3f2bdfbf8cfc1a0a2b5f20a8585ce7e4"
+  },
+  "limits": [
+    "Other pages still use their existing renderers; React/DB migration beyond the lab is unfinished.",
+    "Existing 143 full-suite failures remain.",
+    "Collector provider execution, production scheduling/hosting, remote CI and external cross-audit not run.",
+    "See ../design-system/verification.json for design checker findings; no whole-app Hallmark pass."
+  ]
+}

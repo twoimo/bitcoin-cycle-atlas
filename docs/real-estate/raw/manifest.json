@@ -1,0 +1,52 @@
+[
+  {
+    "tableId": "A_2024_00178",
+    "url": "https://www.reb.or.kr/r-one/portal/stat/sttsDataPreviewList.do",
+    "method": "POST",
+    "parameters": {
+      "statblId": "A_2024_00178",
+      "viewLocOpt": "B",
+      "wrttimeType": "B",
+      "dtadvsVal": "OD",
+      "wrttimeOrder": "A",
+      "dtacycleCd": "MM",
+      "wrttimeStartYear": "2006",
+      "wrttimeEndYear": "2026",
+      "wrttimeStartQt": "01",
+      "wrttimeEndQt": "10",
+      "optDivVal": "00",
+      "isRegionData": "Y",
+      "chkItms": "100001",
+      "chkClss": "500001,500007,500008,500015",
+      "langGb": "",
+      "dmPointVal": "2"
+    },
+    "retrievedAt": "2026-11-03T12:45:38.961025+00:00",
+    "sha256": "80f11249e9b9b4bc682da38794771fd68f473b57e38d7651ad276a65c0770d6f"
+  },
+  {
+    "tableId": "A_2024_00554",
+    "url": "https://www.reb.or.kr/r-one/portal/stat/sttsDataPreviewList.do",
+    "method": "POST",
+    "parameters": {
+      "statblId": "A_2024_00554",
+      "viewLocOpt": "B",
+      "wrttimeType": "B",
+      "dtadvsVal": "OD",
+      "wrttimeOrder": "A",
+      "dtacycleCd": "MM",
+      "wrttimeStartYear": "2006",
+      "wrttimeEndYear": "2026",
+      "wrttimeStartQt": "01",
+      "wrttimeEndQt": "10",
+      "optDivVal": "00",
+      "isRegionData": "Y",
+      "chkItms": "100001",
+      "chkClss": "500001,500002,500003,500010",
+      "langGb": "",
+      "dmPointVal": "2"
+    },
+    "retrievedAt": "2026-11-03T12:45:46.319633+00:00",
+    "sha256": "97206bddbc5fce241f44542cadbf14ea5716f96b60bb08f769d083f0a7e0dcef"
+  }
+]

@@ -1,0 +1,428 @@
+{
+  "observedAt": "2026-11-03T13:18:22.981179+00:00",
+  "worktree": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service",
+  "branch": "codex/market-lab-service-20261103",
+  "route": "http://127.0.0.1:4319/market-lab/housing/",
+  "snapshot": {
+    "observedAt": "2026-11-03T13:07:08.823736+00:00",
+    "marketRevision": "a855c157ff696ff609798b791ebbca26fa659b7174b56d53a90d7d3f75f2bcc5",
+    "entireMarketSnapshotUnchanged": true,
+    "frozenModelFiles": 17,
+    "allFrozenModelHashesUnchanged": true,
+    "housingRevision": "88076a589400547379bf2a1fc678bf0650f8f9bf491bee7deb2feda3759ab686"
+  },
+  "coverage": {
+    "regions": [
+      "busan",
+      "seoul",
+      "gyeonggi",
+      "national"
+    ],
+    "volumeMonthsPerRegion": 249,
+    "priceMonthsPerRegion": 248,
+    "start": "2006-01",
+    "volumeEnd": "2026-09",
+    "priceEnd": "2026-08",
+    "indexBase": "2026.06=100",
+    "volumeClock": "report-month",
+    "priceClock": "contract-month"
+  },
+  "recording": {
+    "name": "플스포 컨퍼런스 2026 (1)",
+    "fileId": "of_aaa4560219367a8bff097ddd33a1c2dd",
+    "date": "2026-10-31",
+    "nameSearchComplete": true,
+    "scanned": 71,
+    "matched": 2,
+    "relevantMarks": [
+      "00:40:43.737 photo highlight",
+      "00:41:01.880 user-edited memo",
+      "00:44:49.817 user-edited memo"
+    ],
+    "audioTranscriptAvailable": false,
+    "audioListened": false,
+    "privateEvidence": "build/housing-research/recording-evidence.json",
+    "audioAndBulkNotesShipped": false
+  },
+  "checks": {
+    "typecheck": "passed",
+    "viteBuild": "passed",
+    "legacyFullRegression": {
+      "tests": 2404,
+      "pass": 2404,
+      "fail": 0,
+      "skip": 0,
+      "stage": "before final perimeter button observer; final guard has dedicated regression and real browser checks"
+    },
+    "reactPanels": {
+      "tests": 37,
+      "pass": 37,
+      "fail": 0
+    },
+    "realPostgreSQLAndApi": {
+      "tests": 13,
+      "pass": 13,
+      "fail": 0
+    },
+    "finalCenterAndRsiControls": {
+      "tests": 2,
+      "pass": 2
+    },
+    "independentNumerics": {
+      "checkedAt": "2026-11-03T12:55:19.197780+00:00",
+      "combinations": 192,
+      "regions": 4,
+      "windows": [
+        12,
+        36,
+        60
+      ],
+      "bands": [
+        0,
+        5,
+        10,
+        20
+      ],
+      "lags": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "horizons": [
+        1,
+        3,
+        6,
+        12
+      ],
+      "assertions": 1284288,
+      "independentLanguage": "Python statistics + calendar dictionaries",
+      "status": "passed",
+      "liveVintageBacktest": false
+    },
+    "static": {
+      "status": "ok",
+      "files": 760,
+      "checkedReferences": 487,
+      "basePath": "/bitcoin-cycle-atlas/",
+      "standalone": null
+    }
+  },
+  "browser": {
+    "host": "Codex IAB",
+    "deliveredTab": "15",
+    "temporaryTab18Closed": true,
+    "temporaryProxy4322Closed": true,
+    "temporaryMetricsCleared": true,
+    "checks": [
+      "Official API revision and browser calculation confirmation",
+      "Busan and Seoul results, all 4 option sets selectable",
+      "Wheel zoom, pointer drag to past, +/- buttons, Home full history, 5-year range",
+      "Keyboard tab ArrowRight, 249 monthly rows with 2026-09 price unavailable and 2006-01 warmup",
+      "Actual month keyboard changes select 69 months since 2021-01",
+      "RSI TQQQ 62.01/OHLC preserved and housing mean/band/lag/history tab survive navigation",
+      "Hidden BTC zoom buttons remain disabled after late BTC render; RSI zoom re-enables",
+      "API+saved snapshot HTTP503 produces explicit error/retry",
+      "Four-second retry displays actual Skullet skeleton without invented observations",
+      "Refresh preserves Seoul 3915, 60-month mean4287 and settings while busy",
+      "API503 uses hash-validated saved snapshot with explicit saved status",
+      "390px DOM/page and 374px embedded content have no horizontal page overflow; chart and backtest inspected",
+      "Final normal-origin console error inventory empty"
+    ],
+    "limits": [
+      "CSV button clicked, download event timed out; filesystem landing unverified, no retry",
+      "Native mobile pinch not tested",
+      "Initial 390x844 compositor capture tiled beyond physical window; accepted mobile visual uses390x700 CDP PNG",
+      "Horizontal table keyboard focus checked; actual horizontal movement not established"
+    ],
+    "finalQuote": {
+      "region": "busan",
+      "volume": 2395,
+      "prior36MonthMeanRounded": 2769,
+      "state": "below",
+      "levelCorrelation": -0.19581915105339276,
+      "levelPairs": 248,
+      "outerZoomDisabled": true,
+      "status": "계산 완료"
+    }
+  },
+  "design": {
+    "tool": "pinned Hallmark app scan dist + apps/web/src",
+    "summary": {
+      "fails": 9,
+      "reflex": 83,
+      "warns": 9,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 52,
+      "render": "off"
+    },
+    "newHousingFindings": [],
+    "existingFindingsPreserved": true,
+    "upstreamRender": "NOT_RUN",
+    "actualIabRender": true
+  },
+  "limits": [
+    "Retrospective latest-revised monthly data, not point-in-time tradable backtest",
+    "Report-month volume and contract-month price are different cohorts",
+    "Mean window, neutral band, evaluation lag are explicit app assumptions",
+    "Overlapping monthly outcomes, small recent/non-overlap groups; no causality or investment-performance claim",
+    "Seasonality, rates, policy, costs and taxes not controlled",
+    "External cross-audit, release/publication/deployment NOT_RUN; prior holds unchanged"
+  ],
+  "next": [
+    "Align contract-month volume and cancellation definitions",
+    "Capture monthly official vintages and release availability times",
+    "Predefine seasonal/rate controls and forward evaluation before tuning"
+  ],
+  "artifacts": [
+    {
+      "path": "dist/data/housing.json",
+      "sha256": "c39382261ca09e4ffe49accbce80d8eef20baab4c3cf38d4e2f04273e4923146",
+      "bytes": 36364
+    },
+    {
+      "path": "dist/atlas-navigation.js",
+      "sha256": "dd89fcc14e1108f943935a00bdef29c20fb7434653db698d2e81d556751c51d5",
+      "bytes": 2150
+    },
+    {
+      "path": "dist/center-workbench.js",
+      "sha256": "7bb253a1712464878fb44c30553aa0fd478e764b6c04709c1f67212893a8ee69",
+      "bytes": 10440
+    },
+    {
+      "path": "packages/domain/src/housing.ts",
+      "sha256": "66c74b7457b556cf25b5366b9fe97fe7ffe1dc4fd8eee11d80448dd3751eaa9f",
+      "bytes": 8102
+    },
+    {
+      "path": "apps/api/src/housing-repository.ts",
+      "sha256": "2a183849f97663f8c66e92c1f7fa3a08a339bea951f1babb7181601b97aebcca",
+      "bytes": 3215
+    },
+    {
+      "path": "apps/api/src/server.ts",
+      "sha256": "c60f64d8c31e1ff5177303b24bdb170db8f717e1af5ae6648234ee6066e665de",
+      "bytes": 7779
+    },
+    {
+      "path": "db/migrations/002_housing.sql",
+      "sha256": "b89abce010c69aab8124c9fb71e74e65bf1a543532c19a6466c2038d71ebe336",
+      "bytes": 451
+    },
+    {
+      "path": "apps/web/src/app.tsx",
+      "sha256": "004ac493fc4ec0a7013babcb233bbd99cab2435dd73e451724006ab8b17a0e31",
+      "bytes": 9609
+    },
+    {
+      "path": "apps/web/src/housing-loader.ts",
+      "sha256": "6b9c772aef72dcf57aa7d26cff2314b7ae1a4c395c57eecbd898aecb98b46d04",
+      "bytes": 1346
+    },
+    {
+      "path": "apps/web/src/housing.css",
+      "sha256": "87675aaa304c79281611277f996cdacb5f8ce3fece8f24403afc8d591a940ce5",
+      "bytes": 6977
+    },
+    {
+      "path": "apps/web/src/panels/housing-chart.tsx",
+      "sha256": "1452f5d0f6024c59f2ad082b782a19551851f357b04761ad54c69c285d2211bc",
+      "bytes": 7909
+    },
+    {
+      "path": "apps/web/src/panels/housing-panel.tsx",
+      "sha256": "b60803ff115037a588c0a348f1e4829f521db2768f87dd9669b4a528bfbf1406",
+      "bytes": 16412
+    },
+    {
+      "path": "scripts/import-housing.mts",
+      "sha256": "6e69f80916e329d863b3dc7c678291b3c2ca6d9a56cff1778111f21cfdae105b",
+      "bytes": 2877
+    },
+    {
+      "path": "scripts/verify-housing.mts",
+      "sha256": "d33d46039dea3a8670fa6ce32f1759407ece1e2dc112e07049e1ecdb6eeb064e",
+      "bytes": 1246
+    },
+    {
+      "path": "scripts/verify-housing-independent.py",
+      "sha256": "d0f9a31fe5aa0664f132b284a3b75fae2f4b11c0f922a67d27086864852d9d64",
+      "bytes": 6046
+    },
+    {
+      "path": "tests/web/housing.test.tsx",
+      "sha256": "7c533ef96baa43e29d2d49eb93a89e168947d1e1b9a79c8393ee1ddce3ff7db8",
+      "bytes": 4551
+    },
+    {
+      "path": "tests/service/housing.test.ts",
+      "sha256": "cd10c3f9ef846a1cb473c10d9a4a050052d0129aa99f9067687759fc8380b632",
+      "bytes": 3618
+    },
+    {
+      "path": "tests/web/center-workbench.test.tsx",
+      "sha256": "b5753689d3c636fe6038e0385462fabfa80c67d32e3738c1fec2bdc86f4e22d0",
+      "bytes": 4643
+    },
+    {
+      "path": "docs/real-estate/README.md",
+      "sha256": "13addf35032feff966a5bd315e933c380a748ddd2c4b7a336f04072d16ae2581",
+      "bytes": 6244
+    },
+    {
+      "path": "build/housing-research/recording-evidence.json",
+      "sha256": "190823e8f0b1d1bf58a0d23aea2356fa1b4d90379bd831b0a4b7625398e6a53d",
+      "bytes": 3871
+    },
+    {
+      "path": "build/housing-research/default-results.json",
+      "sha256": "b7a19406260d7db56c8434dd4c021c4ac607ee504fa76689dc38e57bd58574cb",
+      "bytes": 98882
+    },
+    {
+      "path": "build/housing-research/independent-parity.json",
+      "sha256": "28d214172becc322faf57c02c4a940f289b3d0d8968e8d0d35654e98c26c2200",
+      "bytes": 425
+    },
+    {
+      "path": "build/housing-research/full-regression.log",
+      "sha256": "f34bf4935ee0a5c99411a76539c02f1b1603d5c68c283b929285cfe7533c0bc3",
+      "bytes": 589165
+    },
+    {
+      "path": "build/housing-research/panels-final-accepted.log",
+      "sha256": "10ddd2da23f108fc8c04603010095e8acc9d362c8169ce3273a2162f01b5863a",
+      "bytes": 4325
+    },
+    {
+      "path": "build/housing-research/service-final.log",
+      "sha256": "ad7000fe381e336eb76280cb98dc5fe566205704322b81046adf52e8e35724ca",
+      "bytes": 1467
+    },
+    {
+      "path": "build/housing-research/center-final.log",
+      "sha256": "da35c83a2f1da3865d298161796804d7b65829aa2a459c61c9e4e6a076bb5560",
+      "bytes": 349
+    },
+    {
+      "path": "build/housing-research/hallmark-final-accepted.json",
+      "sha256": "8146d5b8c5a64480d8073c4c20fa2ba4bb897c9db2d97584748227d94eb1a8bd",
+      "bytes": 29278
+    },
+    {
+      "path": "build/housing-research/preservation.json",
+      "sha256": "9f7d80f2afd0f1d8fea1d673a819d4a5a05769fa702ea153d4eddfcac49f98bf",
+      "bytes": 340
+    },
+    {
+      "path": "build/housing-research/pstack-source.json",
+      "sha256": "7a2aeb73eabe0e081b9ddd2c01277b86512bfb1e570d6b2f5c13325de5a4d310",
+      "bytes": 1092
+    },
+    {
+      "path": "build/housing-research/frontend-source-20261103.json",
+      "sha256": "e38400e590dd1c066b460ca11bae422b92842bc497dce69431907f3893c6c3e4",
+      "bytes": 3570
+    },
+    {
+      "path": "docs/real-estate/raw/A_2024_00554-meta.json",
+      "sha256": "796543ab55038e5ef093ba06dbc8308bd80124b395a5ac964108e1203ba58395",
+      "bytes": 3320
+    },
+    {
+      "path": "docs/real-estate/raw/A_2024_00554.json",
+      "sha256": "97206bddbc5fce241f44542cadbf14ea5716f96b60bb08f769d083f0a7e0dcef",
+      "bytes": 32493
+    },
+    {
+      "path": "docs/real-estate/raw/A_2024_00554-C.json",
+      "sha256": "813dcd9b094ba6d4e103fcc8977247f1ddb799e6f1aaeb88b322ce97460722cb",
+      "bytes": 95008
+    },
+    {
+      "path": "docs/real-estate/raw/A_2024_00178.json",
+      "sha256": "80f11249e9b9b4bc682da38794771fd68f473b57e38d7651ad276a65c0770d6f",
+      "bytes": 29024
+    },
+    {
+      "path": "docs/real-estate/raw/A_2024_00178-meta.json",
+      "sha256": "1ff59c2cf6d7a125ac20ea2be70638c4c5bb25f032eb95c2449ee675310f4c56",
+      "bytes": 3426
+    },
+    {
+      "path": "docs/real-estate/raw/manifest.json",
+      "sha256": "794f2e1d6e281d62056ab03043e8f5ad6c079394339e8112f32282455c4f4be1",
+      "bytes": 1523
+    },
+    {
+      "path": "docs/real-estate/raw/A_2024_00178-C.json",
+      "sha256": "b665004c3397122bb3320b0317bc3d828be45879d4d350db7baf94640629001a",
+      "bytes": 8603
+    },
+    {
+      "path": "build/housing-research/load-error.png",
+      "sha256": "79bdbd18a2ce2a7de74ee618fbe2fe8049a9a24ac390b901a47955f2e192390c",
+      "bytes": 33122
+    },
+    {
+      "path": "build/housing-research/first-housing.png",
+      "sha256": "6fd921adbf314ae6263cc30aeebf0e7e24c3666570e604b958abd543fa50d8d2",
+      "bytes": 86260
+    },
+    {
+      "path": "build/housing-research/mobile-chart-accepted.png",
+      "sha256": "eaa0df599ff3eaa8838ad26e4391478b35f4cdf994579a3150c807bc217e682c",
+      "bytes": 34610
+    },
+    {
+      "path": "build/housing-research/backtest-busan.png",
+      "sha256": "deebd59b431121ec7b0e4a8473738d6f52384af5b4d8796f9fbf49bc29d8b58f",
+      "bytes": 96412
+    },
+    {
+      "path": "build/housing-research/relations-busan.png",
+      "sha256": "3973682a9c10bbb0671aa69b0c9fe9c10d3677570dadefed758ecf1aabd44f24",
+      "bytes": 77669
+    },
+    {
+      "path": "build/housing-research/before-rsi.png",
+      "sha256": "60cfb8ea49838ada29e48fe03e694e1eafece927e40d0e24b8557257d4fdbdaf",
+      "bytes": 91661
+    },
+    {
+      "path": "build/housing-research/mobile-chart.png",
+      "sha256": "64f38ede8b454413023c4cf319e524780e704fd7963aa1fedffdac358303e011",
+      "bytes": 5715
+    },
+    {
+      "path": "build/housing-research/mobile-chart-viewport.png",
+      "sha256": "ab49b1983c8e0ac06855dda14c0fa425d54c77c4faaa447805f2b6f1779c6069",
+      "bytes": 51721
+    },
+    {
+      "path": "build/housing-research/housing-final.png",
+      "sha256": "04e557ad4ba2ac822637f395316ec91566ea6de4534e3434e9e9bd5df3ecf2e5",
+      "bytes": 99163
+    },
+    {
+      "path": "build/housing-research/mobile-backtest.png",
+      "sha256": "f32e0144277db0d2842ba64334aba401aa611822b94a73a170680a42c13cbf6c",
+      "bytes": 58908
+    },
+    {
+      "path": "build/housing-research/refresh-retained.png",
+      "sha256": "bdfcd57dd523d6a4cfe6fd4a8316b26b3e1be91de4e38c28358c5186e948f5e2",
+      "bytes": 64660
+    },
+    {
+      "path": "build/housing-research/loading.png",
+      "sha256": "8bb468996b348ebf080467a15818af47f64574b0058fecb2eeea697518399a6f",
+      "bytes": 32733
+    }
+  ]
+}

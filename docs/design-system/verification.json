@@ -1,0 +1,720 @@
+{
+  "observedAt": "2026-11-03T07:38:26.441075+00:00",
+  "template": {
+    "repository": "shadcn-ui/ui",
+    "commit": "4aaea19d9cff3e0908e12a8c1d504b8c5ec34610",
+    "files": {
+      "LICENSE.md": {
+        "savedAs": "LICENSE.md",
+        "sha256": "1564074e13439397221ffd522e2e504d56561994a23d371aa5e3ad43e4f5423f"
+      },
+      "apps/v4/registry/new-york-v4/blocks/dashboard-01/page.tsx": {
+        "savedAs": "page.tsx",
+        "sha256": "042f13bbb8c0033e4546232b6767f83349ec29db3b2bcd93a07291ff549b6a65"
+      },
+      "apps/v4/registry/new-york-v4/blocks/dashboard-01/components/app-sidebar.tsx": {
+        "savedAs": "app-sidebar.tsx",
+        "sha256": "4b5d8891b26d61f651059f240a85a1294fdcea7b9f27e7ade467412a6847cf33"
+      },
+      "apps/v4/registry/new-york-v4/blocks/dashboard-01/components/site-header.tsx": {
+        "savedAs": "site-header.tsx",
+        "sha256": "ed1cd67ed4663f47908f64d3df288435c7e49ec24a09f0ae22adf3b2c11289a2"
+      },
+      "apps/v4/registry/new-york-v4/blocks/dashboard-01/components/section-cards.tsx": {
+        "savedAs": "section-cards.tsx",
+        "sha256": "680e2816e3161c5d2e05eb833b6f39cb268690b2135a5303cc76fd7968d15ea1"
+      }
+    }
+  },
+  "status": "implemented-and-IAB-checked-with-gates-pending",
+  "surfaces": [
+    "BTC",
+    "ETH",
+    "MSTR",
+    "BMNR",
+    "React market lab",
+    "data",
+    "evidence",
+    "IPO"
+  ],
+  "viewports": [
+    {
+      "width": 390,
+      "height": 844,
+      "scope": "task-owned disposable tab; reset requested and tab closed after checks"
+    },
+    {
+      "width": 1203,
+      "height": 954,
+      "scope": "desktop lab and chart delivery"
+    }
+  ],
+  "references": [
+    "https://www.tradingview.com/charting-library-docs/latest/ui_elements/Toolbars/",
+    "https://ui.shadcn.com/blocks?category=dashboard"
+  ],
+  "sourceSha256": {
+    "apps/api/package.json": "91d76e6d6d2d44b7db0edba500d802a0008f83a550c4d4a790b9d043f931bdbd",
+    "apps/api/src/main.ts": "5299090a92d2bafecb84914b4f64ecb00b4dc38d2cd5320488d8625a08784740",
+    "apps/api/src/repository.ts": "b5d079a5ae00890776fee722e9881c51ce701f8b646887ccdb09ff9177db04e4",
+    "apps/api/src/server.ts": "befc86049eb76165b3447fdce8554f0c76cce3513535cdb629949d75208cfde9",
+    "apps/jobs/package.json": "37d46ea75df24d905d89acb3ac4f91054146f96cac48459fa097f84bcdcc42d9",
+    "apps/jobs/src/market-lab.ts": "9969496b4aa3584cb9c42d0659f111506951dc6148fde684b6dcfbefdee8a210",
+    "apps/web/index.html": "af68cf068f2710062dce51c60be289d831d8c25706fd85ca986e6d86e384cec7",
+    "apps/web/package.json": "44564059843ac0de5acea799513b08bf6615ea0b22b2f6ca805fc28764c8f6cb",
+    "apps/web/src/app.tsx": "a400cad2dcb6b919d242768413f46ea289a778aa73bad31e7c4582ae6c796dca",
+    "apps/web/src/components/app-shell.tsx": "b4af2485e17b40e90a999cb7539e8729b7dd1b834a8e356dd04e18c39a0b9cae",
+    "apps/web/src/components/common.tsx": "6e8b4bd1da3f1b5a8be4b70824675fc14065f867b42e28fb513c31c0160afcb7",
+    "apps/web/src/components/observed-chart.tsx": "7ba87289608d4e708d485917bb2f1eb3ceeee80d40567cb79a107343a6195074",
+    "apps/web/src/components/source-disclosure.tsx": "11d3c82044be99b68a11022b08316e6549af3af2f27a0345109860479d7b6fce",
+    "apps/web/src/env.d.ts": "da5bf71d48cf909584a01c80b445f730507068f5b34c920f352e2bfcf0315e4c",
+    "apps/web/src/load-snapshot.ts": "1ac3c22bf5b540e2ddff454823f501eda8f153d222a2b414f6ad8b373cf26671",
+    "apps/web/src/main.tsx": "b7a034fd860ad0fccec3fdeac65e91aa3d5a003c35a9cc8e75dead08a31db222",
+    "apps/web/src/market-data.ts": "5bbe5a807fe103be4788d73d980cbd3b8e0d54a597acc6385184b5f86bb956f4",
+    "apps/web/src/panels/diagnosis-panel.tsx": "ccbbb072228343841a84cb96be4056821a5e1e240c2f03b18c318d6a473bff2f",
+    "apps/web/src/panels/economics-panel.tsx": "8b44050329b7095632c6eceffb73df89b0017b598d0c233b381a2f3f837c11de",
+    "apps/web/src/panels/rsi-panel.tsx": "192eae006d6d585d17309152a6fe75c99d3e6b331cd7b8d01c420b97f84d77b0",
+    "apps/web/src/panels/scenario-panel.tsx": "683044c624c634bdcc7e76e293ceaf23585ca9379e20af035045df2e01fae047",
+    "apps/web/src/web.css": "27a07cca7422bdbfa560de57a1ab3e4c42d5c2f6861a932cb4750d980bb2a925",
+    "apps/web/vite.config.ts": "2df12b436521c8d42b1e694c028851b00f907a29b8dd719507b7e985c9703f25",
+    "dist/atlas-shell-state.js": "9c420fcb99ce1a344adb4fb38313339fd5c1f16f1a987e92e6aad56a85c8aa12",
+    "dist/atlas-shell.css": "aac028650545bf3268de9b9d0f0802d0ef576ecbd0c927583c6cb96eb460d761",
+    "dist/atlas-shell.js": "ec3f13eba01d17ed549e342547e7c847f15bcd27c284beded6fac011f4c1b7e7",
+    "dist/index.html": "2365a17c7661f5d17c913565817aaa7d58a30cd0ec67bc31be8ddfc943523582",
+    "dist/mobile-workspace.js": "1a4e3231a784f2f6b56a76a5fb609222b08ec632fc1399345a936306693b5f9f",
+    "dist/site-entry.js": "92558c708931a27d8db8ef287f65a5e0530c901f8adbc1def978b544d99e7046",
+    "packages/contracts/package.json": "fbbd12b0e933590043c6d4a384759cfb5594bf5ecb6a2211403df8ebaae690ec",
+    "packages/contracts/src/market-lab.ts": "63d74cf223c08438030cf9e3486391818402a227c32463e69989be51c9d293ad",
+    "packages/domain/package.json": "a155f744e28069e06ca3689143cfdb339ed4c421d4873447890e8fe2279180c8",
+    "packages/domain/src/market-lab-math.d.ts": "e2664ca215b34cdbfd421bbcd906cbcd62cf06df5caa491a88fec2088b9eadfd",
+    "packages/domain/src/market-lab-math.js": "04f76285edfd22996dc3bc922f98e9e5baeca70a4a137310b72c57370159176a",
+    "scripts/build-standalone.mjs": "f4038ca9e4fbcb8354d31a0e68bc227d41f70e13e6abcd1031e3438210ee9e7b",
+    "tests/eth-view-state.test.mjs": "ca0a5bb3e3ca26c3e2a39aaa37067ff985e83133f45ec13039ad6daff680d3d7",
+    "tests/forecast-replay-standalone.test.mjs": "74a3177eb00e718cda641417138c08c762c367471126dbd5ca790b2b5f018e9e",
+    "tests/service/market-lab.test.ts": "aa43a5127ad22aa4302c969e603914b819baa0336ec79d1f09bc6ed13c9383f0",
+    "tests/standalone-packaging.test.mjs": "62470e8c2eced69644c88ec9ea0082c3e02ab5a9c7dab5d15605df3bcd56c19e",
+    "tests/web/atlas-shell.test.tsx": "dbac3909638038db84e87e6a7f000fc80cfbd798cadf7077cadc9f22737de160",
+    "tests/web/market-lab-panels.test.tsx": "c730c5bc4c7f49f1a9fa908305d41efbefa94df6ea957998f240d94e61333fe9"
+  },
+  "screenshots": {
+    "build/design-system/screenshots/lab-desktop.jpg": "799dc9a9e9301a4ea3c58133fff74d6b37c163f417313dec9decdc94a77e8d33",
+    "build/design-system/screenshots/bmnr-desktop.jpg": "0f6583dfe039d36b10be0a213b20ccdd3f79c6bd404c9f4148d0a7af9da70ddc",
+    "build/design-system/screenshots/mstr-desktop.jpg": "acd107b74da1c65b3bde3740d465c7aacc1365a2b3c604a3a36ac8e684446682",
+    "build/design-system/screenshots/chart-desktop.jpg": "5ab07878fb75ed6050230c25e0bf6ff470d58189e0fbf49ba597b483ec4971af",
+    "build/design-system/screenshots/chart-mobile.jpg": "621f877224798958dcd094f6578d52b81deef726f8ed6ed987c3e82337f2bf0d",
+    "build/design-system/screenshots/lab-mobile.jpg": "737a65912424e57d3d483441a9d03c3c373cd74eb772957c37876f5752cc43c4",
+    "build/design-system/screenshots/research-desktop.jpg": "443782dcbc9bcca0f526148a0ce84540d79acfa539a69ab30a7371fbb22105ff"
+  },
+  "csv": {
+    "rowsExcludingHeader": 18,
+    "columns": 34,
+    "bytes": 16470
+  },
+  "staticReferences": {
+    "status": "ok",
+    "files": 748,
+    "checkedReferences": 464
+  },
+  "hallmark": {
+    "upstreamCommit": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+    "summary": {
+      "fails": 7,
+      "reflex": 20,
+      "warns": 37,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 41,
+      "render": "off"
+    },
+    "findings": [
+      {
+        "gate": "54",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "apps/web/src/panels/economics-panel.tsx",
+        "line": 49,
+        "evidence": "eyebrow \"누적\" before <h3>",
+        "fix": "Cut it; the heading already says this (craft.md § 7 has twelve other openings)"
+      },
+      {
+        "gate": "54",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "apps/web/src/panels/economics-panel.tsx",
+        "line": 50,
+        "evidence": "eyebrow \"증명\" before <h3>",
+        "fix": "Cut it; the heading already says this (craft.md § 7 has twelve other openings)"
+      },
+      {
+        "gate": "54",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "apps/web/src/panels/economics-panel.tsx",
+        "line": 51,
+        "evidence": "eyebrow \"자산화\" before <h3>",
+        "fix": "Cut it; the heading already says this (craft.md § 7 has twelve other openings)"
+      },
+      {
+        "gate": "54",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "apps/web/src/panels/rsi-panel.tsx",
+        "line": 71,
+        "evidence": "eyebrow \"미국 · 종목 확인\" before <h3>",
+        "fix": "Cut it; the heading already says this (craft.md § 7 has twelve other openings)"
+      },
+      {
+        "gate": "54",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "apps/web/src/panels/rsi-panel.tsx",
+        "line": 72,
+        "evidence": "eyebrow \"국내 · 구두 식별\" before <h3>",
+        "fix": "Cut it; the heading already says this (craft.md § 7 has twelve other openings)"
+      },
+      {
+        "gate": "54",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "apps/web/src/panels/rsi-panel.tsx",
+        "line": 73,
+        "evidence": "eyebrow \"반도체 · 구두 표현만\" before <h3>",
+        "fix": "Cut it; the heading already says this (craft.md § 7 has twelve other openings)"
+      },
+      {
+        "gate": "56",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/market-lab.css",
+        "line": 45,
+        "evidence": "two sticky top:0 elements: body[data-page=\"market\"] .atlas-sidebar + body .atl…",
+        "fix": "Offset the second sticky by banner height"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 9,
+        "evidence": "gap: 14px (off the 4px scale) on .atlas-dashboard-header",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 23,
+        "evidence": "padding: 0 10px (off the 4px scale) on body[data-shell=dashboard] .atlas-sidebar .atlas-brand",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 23,
+        "evidence": "margin: 0 0 30px (off the 4px scale) on body[data-shell=dashboard] .atlas-sidebar .atlas-brand",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 27,
+        "evidence": "margin-top: 3px (off the 4px scale) on body[data-shell=dashboard] .atlas-sidebar .atlas-brand small",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 29,
+        "evidence": "gap: 6px (off the 4px scale) on body[data-shell=dashboard] .atlas-sidebar .atlas-nav",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 30,
+        "evidence": "padding: 10px 12px (off the 4px scale) on body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(a,button)",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 58,
+        "evidence": "padding: 6px 3px (off the 4px scale) on body[data-shell=chart] .atlas-sidebar",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 58,
+        "evidence": "gap: 6px (off the 4px scale) on body[data-shell=chart] .atlas-sidebar",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 64,
+        "evidence": "padding: 6px (off the 4px scale) on body[data-shell=chart] .workbench-rail .atlas-nav button",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 72,
+        "evidence": "gap: 10px (off the 4px scale) on .atlas-dashboard-header",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 79,
+        "evidence": "padding-inline: 6px (off the 4px scale) on body[data-shell=dashboard] #market-header-slot .ml-tabs button",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 82,
+        "evidence": "padding: 10px 4px (off the 4px scale) on body[data-shell=dashboard] .atlas-sidebar,body[data-shell=dashboard] #root>.at…",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 84,
+        "evidence": "padding-inline: 10px (off the 4px scale) on .atlas-dashboard-header",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/atlas-shell.css",
+        "line": 90,
+        "evidence": "gap: 6px (off the 4px scale) on body[data-shell=dashboard] .ml-score-row",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/market-lab.css",
+        "line": 33,
+        "evidence": "padding: 0 10px (off the 4px scale) on body[data-page=\"market\"] .atlas-nav button",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/market-lab.css",
+        "line": 45,
+        "evidence": "gap: 6px (off the 4px scale) on body .atlas-sidebar",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/market-lab.css",
+        "line": 52,
+        "evidence": "gap: 6px (off the 4px scale) on body .daily-heading,body .ipo-heading,body .evidence-controls,body .atlas-canvas-heading",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/market-lab.css",
+        "line": 53,
+        "evidence": "gap: 6px (off the 4px scale) on body .daily-heading-actions,body .ipo-toolbar",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "gate": "26b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "apps/web/src/web.css",
+        "line": 1,
+        "evidence": "no :active styling anywhere",
+        "fix": "All eight states; guard: not a form control, no aria-disabled anywhere"
+      },
+      {
+        "gate": "26b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "apps/web/src/web.css",
+        "line": 1,
+        "evidence": "no :disabled styling anywhere",
+        "fix": "All eight states; guard: not a form control, no aria-disabled anywhere"
+      },
+      {
+        "gate": "3",
+        "grade": "WARN",
+        "tier": "reflex",
+        "file": "dist/daily-data.css",
+        "line": 120,
+        "evidence": "side stripe border-left: 3px solid var(--asset-sign) on #data-view .asset-selected-reason",
+        "fix": "Hairline all round, none, or an accent square"
+      },
+      {
+        "gate": "3",
+        "grade": "WARN",
+        "tier": "reflex",
+        "file": "dist/market-lab.css",
+        "line": 6,
+        "evidence": "side stripe border-left: 3px solid var(--ml-alpha) on .ml-axis",
+        "fix": "Hairline all round, none, or an accent square"
+      },
+      {
+        "gate": "3",
+        "grade": "WARN",
+        "tier": "reflex",
+        "file": "dist/research-annotations.css",
+        "line": 21,
+        "evidence": "side stripe border-left: 4px solid var(--annotation-colo… on .research-annotation-row>button",
+        "fix": "Hairline all round, none, or an accent square"
+      },
+      {
+        "gate": "3",
+        "grade": "WARN",
+        "tier": "reflex",
+        "file": "dist/research-reader.css",
+        "line": 6,
+        "evidence": "side stripe border-left: 3px solid var(--reader-accent) on .research-provenance",
+        "fix": "Hairline all round, none, or an accent square"
+      },
+      {
+        "gate": "29",
+        "grade": "WARN",
+        "tier": "reflex",
+        "file": "dist/analysis-dock.css",
+        "line": 38,
+        "evidence": "glass panel: backdrop-filter blur over a translucent black on .indicator-library::backdrop",
+        "fix": "Solid or grained surface; elevation by lightness"
+      },
+      {
+        "gate": "29",
+        "grade": "WARN",
+        "tier": "reflex",
+        "file": "dist/analysis-dock.css",
+        "line": 149,
+        "evidence": "glass panel: backdrop-filter blur over a translucent black on .indicator-settings-dialog::backdrop",
+        "fix": "Solid or grained surface; elevation by lightness"
+      },
+      {
+        "gate": "29",
+        "grade": "WARN",
+        "tier": "reflex",
+        "file": "dist/chart-details-panel.css",
+        "line": 217,
+        "evidence": "glass panel: backdrop-filter blur over a translucent black on .atlas-plot>.lab-chart-foot",
+        "fix": "Solid or grained surface; elevation by lightness"
+      },
+      {
+        "gate": "29",
+        "grade": "WARN",
+        "tier": "reflex",
+        "file": "dist/chart-workspace-controls.css",
+        "line": 11,
+        "evidence": "glass panel: backdrop-filter blur over a translucent black on .chart-go-to-dialog::backdrop",
+        "fix": "Solid or grained surface; elevation by lightness"
+      },
+      {
+        "gate": "29",
+        "grade": "WARN",
+        "tier": "reflex",
+        "file": "dist/ethereum-history.css",
+        "line": 7,
+        "evidence": "glass panel: backdrop-filter blur over a translucent black on .eth-history-dialog::backdrop",
+        "fix": "Solid or grained surface; elevation by lightness"
+      },
+      {
+        "gate": "29",
+        "grade": "WARN",
+        "tier": "reflex",
+        "file": "dist/research-reader.css",
+        "line": 6,
+        "evidence": "glass panel: backdrop-filter blur over a translucent black on .research-reader::backdrop",
+        "fix": "Solid or grained surface; elevation by lightness"
+      },
+      {
+        "gate": "29",
+        "grade": "WARN",
+        "tier": "reflex",
+        "file": "dist/styles.css",
+        "line": 8,
+        "evidence": "glass panel: backdrop-filter blur over a translucent black on dialog::backdrop",
+        "fix": "Solid or grained surface; elevation by lightness"
+      },
+      {
+        "gate": "29",
+        "grade": "WARN",
+        "tier": "reflex",
+        "file": "dist/viewport.css",
+        "line": 89,
+        "evidence": "glass panel: backdrop-filter blur over a translucent black on .viewport-reader::backdrop",
+        "fix": "Solid or grained surface; elevation by lightness"
+      },
+      {
+        "gate": "29",
+        "grade": "WARN",
+        "tier": "reflex",
+        "file": "dist/workspace-tools.css",
+        "line": 7,
+        "evidence": "glass panel: backdrop-filter blur over a translucent black on .workspace-dialog::backdrop",
+        "fix": "Solid or grained surface; elevation by lightness"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/analysis-dock.css",
+        "line": 6,
+        "evidence": "1.96:1 < 4.5:1 on .chart-indicator-manager",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/compact.css",
+        "line": 8,
+        "evidence": "2.95:1 < 4.5:1 on .comparison-table th",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/forecast-journal.css",
+        "line": 5,
+        "evidence": "1.19:1 < 4.5:1 on .forecast-journal",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/lab.css",
+        "line": 6,
+        "evidence": "3.60:1 < 4.5:1 on .lab-error",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/outlook.css",
+        "line": 10,
+        "evidence": "2.95:1 < 4.5:1 on .outlook-events th",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/outlook.css",
+        "line": 10,
+        "evidence": "2.95:1 < 4.5:1 on .outlook-method-body th",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/styles.css",
+        "line": 8,
+        "evidence": "2.95:1 < 4.5:1 on .tiny-pill",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/styles.css",
+        "line": 8,
+        "evidence": "3.37:1 < 4.5:1 on dialog code",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/styles.css",
+        "line": 8,
+        "evidence": "3.37:1 < 4.5:1 on dialog .method-formula",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/chart-export-workbench.css",
+        "line": 8,
+        "evidence": "dark surface (L 21%) on .chart-export-dialog>header,.chart-export-dialog>footer sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/cycle-milestones.css",
+        "line": 66,
+        "evidence": "dark surface (L 26%) on .cycle-panel-selection sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/ethereum-history.css",
+        "line": 33,
+        "evidence": "dark surface (L 25%) on .eth-history-card sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/ethereum-history.css",
+        "line": 35,
+        "evidence": "dark surface (L 33%) on .eth-history-card[aria-current=\"true\"] sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/lab.css",
+        "line": 6,
+        "evidence": "dark surface (L 19%) on .lab-panel sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/lab.css",
+        "line": 6,
+        "evidence": "dark surface (L 19%) on .lab-timeline-panel sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/analysis-dock.css",
+        "line": 8,
+        "evidence": "same container recipe on 18 selectors (.chart-indicator-manager button, .analysis-wind…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/analysis-dock.css",
+        "line": 62,
+        "evidence": "same container recipe on 9 selectors (.indicator-library-eye, .indicator-library-favo…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/chart-bottom-bar.css",
+        "line": 12,
+        "evidence": "same container recipe on 15 selectors (.workbench-bottom-bar .workbench-ranges button,…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/chart-export-workbench.css",
+        "line": 13,
+        "evidence": "same container recipe on 6 selectors (.chart-export-dialog button, .chart-export-dial…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/compact.css",
+        "line": 91,
+        "evidence": "same container recipe on 9 selectors (.data-summary, .research-chart-shell, .ipo-sear…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/daily-data.css",
+        "line": 188,
+        "evidence": "same container recipe on 8 selectors (#data-view .asset-history-mode button, #data-vi…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/styles.css",
+        "line": 883,
+        "evidence": "same container recipe on 10 selectors (dialog(.workspace-dialog, .chart-export-dialog,…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "gate": "F24",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/analysis-dock.css",
+        "line": 36,
+        "evidence": "a hairline border under a wide soft shadow on .indicator-library",
+        "fix": "Commit to one: a defined edge, or elevation by shadow"
+      },
+      {
+        "gate": "F24",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/mobile-preview.html",
+        "line": 30,
+        "evidence": "a hairline border under a wide soft shadow on iframe",
+        "fix": "Commit to one: a defined edge, or elevation by shadow"
+      }
+    ],
+    "renderStatus": "upstream Chrome runner not run; IAB rendered checks recorded separately",
+    "status": "not-pass"
+  },
+  "fullRegression": {
+    "tests": 2403,
+    "pass": 2260,
+    "fail": 143,
+    "skipped": 0
+  },
+  "reviewAndDeployment": "not-run"
+}

@@ -1,13 +1,13 @@
 {
   "name": "bitcoin-cycle-atlas",
-  "version": "1.30.6",
+  "version": "1.31.0",
   "private": true,
   "type": "module",
   "engines": {
     "node": ">=24"
   },
   "scripts": {
-    "test": "node --test tests/*.test.mjs",
+    "test": "node scripts/test.mjs",
     "verify:treasury-paths": "node scripts/verify-treasury-paths.mjs",
     "verify:numerics": "node scripts/verify-system-numerics.mjs && node scripts/verify-system-independent-review.mjs && node scripts/verify-cycle-decision.mjs && node scripts/verify-cycle-table-integration.mjs && node scripts/refresh-asset-comparison.mjs --check && node scripts/verify-asset-comparison.mjs",
     "verify:asset-comparison": "node scripts/refresh-asset-comparison.mjs --check && node scripts/verify-asset-comparison.mjs",
@@ -32,7 +32,38 @@
     "verify:forecast": "node scripts/build-forecast-ledger.mjs --check",
     "build:publication": "node scripts/build-publication.mjs",
     "verify:publication": "node scripts/build-publication.mjs --check",
-    "verify:chart-replay": "node scripts/build-project-replay-baseline.mjs --check && node --test tests/chart-replay*.test.mjs tests/current-chart-replay-session.test.mjs tests/project-replay-baseline.test.mjs tests/forecast-replay-chart-data.test.mjs tests/replay-interval-capabilities.test.mjs tests/replay-observed-candles.test.mjs",
-    "verify:chart-replay-state": "node verification/replay-state/verify.mjs build/replay-state.json"
+    "verify:chart-replay": "node scripts/build-project-replay-baseline.mjs --check && node --test tests/chart-replay*.test.mjs tests/current-chart-replay-session.test.mjs tests/replay-cutoff*.test.mjs tests/project-replay-baseline.test.mjs tests/forecast-replay-chart-data.test.mjs tests/replay-interval-capabilities.test.mjs tests/replay-observed-candles.test.mjs",
+    "verify:chart-replay-state": "node verification/replay-state/verify.mjs build/replay-state.json",
+    "build:domain": "node scripts/sync-market-domain.mjs",
+    "verify:domain": "node scripts/sync-market-domain.mjs --check",
+    "typecheck": "tsc --noEmit",
+    "dev:web": "vite --config apps/web/vite.config.ts",
+    "build:web": "npm run verify:domain && npm run verify:skullet && vite build --config apps/web/vite.config.ts",
+    "start:api": "tsx apps/api/src/main.ts",
+    "db:migrate": "tsx apps/jobs/src/market-lab.ts migrate",
+    "db:import": "tsx apps/jobs/src/market-lab.ts import",
+    "refresh:market-lab": "tsx apps/jobs/src/market-lab.ts refresh",
+    "collect:us": "tsx apps/jobs/src/us-market.ts collect",
+    "test:service": "npm run build:web && tsx --test tests/service/*.test.ts",
+    "test:panels": "tsx --test tests/web/*.test.tsx",
+    "verify:skullet": "node scripts/sync-skullet.mjs --check"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "linkedom": "0.18.15",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vite": "8.3.5"
+  },
+  "overrides": {
+    "glob": "14.0.2",
+    "minimatch": "11.0.1"
   }
 }

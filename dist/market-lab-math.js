@@ -43,7 +43,7 @@ export function matchingIndex(rows, date, readDate = row => Array.isArray(row) ?
   const index = rows.findIndex(row => readDate(row) === date);
   return index < 0 ? null : index;
 }
-export const EXCHANGE_TIMEZONES = Object.freeze({ spx:'America/New_York', nasdaq:'America/New_York', tqqq:'America/New_York', vix:'America/New_York', kospi:'Asia/Seoul', kosdaq:'Asia/Seoul' });
+export const EXCHANGE_TIMEZONES = Object.freeze({ spx:'America/New_York', nasdaq:'America/New_York', tqqq:'America/New_York', soxl:'America/New_York', 'kodex-kosdaq150':'Asia/Seoul', vix:'America/New_York', kospi:'Asia/Seoul', kosdaq:'Asia/Seoul' });
 export function exchangeTimezoneFor(id) { return EXCHANGE_TIMEZONES[id] || null; }
 export function withExchangeTimezones(doc) {
   if (!object(doc)) fail('스냅샷이 없습니다.');
@@ -113,7 +113,7 @@ export function validateSnapshot(doc) {
   }
   const markets = new Set();
   for (const m of doc.markets) {
-    if (!object(m) || !['spx','nasdaq','kospi','kosdaq','tqqq'].includes(m.id) || markets.has(m.id) || !text(m.symbol) || !text(m.name) || !['us','kr'].includes(m.region) || !text(m.unit) || !ids.has(m.sourceId)) fail('관측 시장의 식별 정보를 확인하세요.');
+    if (!object(m) || !['spx','nasdaq','kospi','kosdaq','tqqq','soxl','kodex-kosdaq150'].includes(m.id) || markets.has(m.id) || !text(m.symbol) || !text(m.name) || !['us','kr'].includes(m.region) || !text(m.unit) || !ids.has(m.sourceId)) fail('관측 시장의 식별 정보를 확인하세요.');
     validateSeries(m.prices, { positive: true });
     if (m.prices.some(([date]) => date > doc.generatedAt.slice(0,10))) fail('수집 시각 이후의 가격은 관측값이 아닙니다.');
     markets.add(m.id);

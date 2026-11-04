@@ -3,8 +3,8 @@
  */
 /* Hallmark · pre-emit critique: P4 H4 E3 S5 R4 V3 · weakest: E, uneven focus and small metadata; shared states and readable neutral ink are applied across the app. */
 /* Indicator controls stay inside the chart; there is no lower analysis dock. */
-.chart-indicator-manager{position:absolute;top:var(--indicator-top,75px);left:10px;z-index:9;width:max-content;max-width:min(620px,calc(100% - 95px));color:var(--analysis-dock-ink);font-size:11px;line-height:1.4;background:var(--surface);border:0;border-radius:0;box-shadow:none;text-shadow:none}
-.chart-indicator-manager:has(:focus-visible){z-index:13;background:var(--surface);box-shadow:0 0 0 4px var(--analysis-dock-shadow-2)}
+.chart-indicator-manager{position:absolute;top:var(--indicator-top,75px);left:10px;z-index:9;width:max-content;max-width:min(620px,calc(100% - 95px));color:var(--muted);font-size:11px;line-height:1.4;background:transparent;border:0;border-radius:0;box-shadow:none;text-shadow:none}
+.chart-indicator-manager:has(:focus-visible){z-index:13;background:transparent;box-shadow:none}
 .chart-indicator-manager button,.analysis-window-heading button{display:grid;place-items:center;width:24px;height:24px;min-height:0;flex:none;margin:0;padding:4px;border:0;border-radius:3px;color:var(--analysis-dock-ink-2);background:transparent;cursor:pointer}
 .chart-indicator-manager button:hover,.analysis-window-heading button:hover{background:var(--analysis-dock-surface-2);color:var(--analysis-dock-ink-3)}
 .chart-indicator-manager svg,.analysis-window-heading button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
@@ -33,9 +33,9 @@
 }
 @media(hover:none),(pointer:coarse){.indicator-row-action{opacity:1;pointer-events:auto}}
 .indicator-empty{font-size:11px;color:var(--analysis-dock-ink-14);padding:12px;margin:0;line-height:1.5}
-.indicator-library{width:min(720px,calc(100% - 32px));max-width:720px;max-height:min(760px,calc(var(--dialog-viewport-height,100dvh) - 48px));padding:0;margin:auto;border:1px solid var(--analysis-dock-rule-2);border-radius:12px;background:var(--analysis-dock-surface-6);color:var(--analysis-dock-ink-15);box-shadow:0 24px 100px var(--analysis-dock-shadow-3);font-family:var(--font);overflow:hidden}
+.indicator-library{width:min(720px,calc(100% - 32px));max-width:720px;max-height:min(760px,calc(var(--dialog-viewport-height,100dvh) - 48px));padding:0;margin:auto;border:1px solid var(--analysis-dock-rule-2);border-radius:12px;background:var(--analysis-dock-surface-6);color:var(--analysis-dock-ink-15);box-shadow:none;font-family:var(--font);overflow:hidden}
 .indicator-library[open]{display:flex;flex-direction:column}
-.indicator-library::backdrop{background:var(--analysis-dock-surface-7);backdrop-filter:blur(3px)}
+.indicator-library::backdrop{background:var(--analysis-dock-surface-7);backdrop-filter:none}
 .indicator-library-heading{z-index:2;background:var(--analysis-dock-surface-6);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px 12px;flex:none}
 .indicator-library-heading h2{margin:0;font-size:21px;line-height:1.4;font-weight:600;letter-spacing:-.5px}
 .indicator-library-heading>button{width:34px;height:34px;display:grid;place-items:center;background:none;border:0;color:var(--analysis-dock-ink-16);border-radius:5px;padding:8px;min-height:0}
@@ -100,7 +100,7 @@
 .analysis-indicator-windows{--analysis-stack-top:78px;--analysis-bottom-gap:60px;--analysis-safe-bottom:var(--analysis-bottom-gap);position:absolute;top:max(8px,var(--analysis-stack-top));right:10px;bottom:var(--analysis-safe-bottom);width:min(640px,62%);max-width:calc(100% - 20px);z-index:12;display:flex;flex-direction:column;gap:12px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scroll-padding-top:52px;pointer-events:auto;padding:0 4px 4px 0;box-sizing:border-box}
 .analysis-indicator-windows[hidden],.analysis-indicator-window[hidden],.chart-indicator-list[hidden],.chart-indicator-manager[hidden]{display:none!important}
 .analysis-indicator-windows[data-minimized-all=true]{bottom:auto;max-height:calc(var(--plot-height,700px) - 16px)}
-.analysis-indicator-window{pointer-events:auto;flex:0 0 auto;display:flex;flex-direction:column;height:auto;min-height:330px;max-height:none;overflow:visible;box-sizing:border-box;background:var(--analysis-dock-surface);border:1px solid var(--analysis-dock-rule-11);border-radius:7px;box-shadow:0 8px 30px var(--analysis-dock-shadow-4);color:var(--analysis-dock-ink-40);padding:0 8px 8px;gap:4px}
+.analysis-indicator-window{pointer-events:auto;flex:0 0 auto;display:flex;flex-direction:column;height:auto;min-height:330px;max-height:none;overflow:visible;box-sizing:border-box;background:var(--analysis-dock-surface);border:1px solid var(--analysis-dock-rule-11);border-radius:7px;box-shadow:none;color:var(--analysis-dock-ink-40);padding:0 8px 8px;gap:4px}
 .analysis-window-body{display:contents}.analysis-window-body[hidden]{display:none!important}
 .analysis-indicator-window[data-minimized=true]{min-height:0;padding-bottom:0;gap:0}
 .analysis-indicator-window[data-minimized=true]>.analysis-window-heading{border-bottom:0}
@@ -144,9 +144,9 @@
 .analysis-indicator-window[data-maximized=true] .analysis-chart-viewport{flex:1 0 140px}
 .indicator-value[hidden]{display:none!important}
 .cycle-milestone-markers .cycle-marker:is(:hover,:focus-visible) .cycle-marker-ring{stroke-width:calc(3px * var(--cycle-marker-line-scale,1))}
-.indicator-settings-dialog{width:min(540px,calc(100% - 24px));max-width:540px;max-height:calc(100dvh - 24px);box-sizing:border-box;padding:0;border:1px solid var(--analysis-dock-rule-16);border-radius:10px;background:var(--analysis-dock-surface-29);color:var(--analysis-dock-ink-52);font-family:var(--font);box-shadow:0 20px 80px var(--analysis-dock-shadow-3);overflow:hidden}
+.indicator-settings-dialog{width:min(540px,calc(100% - 24px));max-width:540px;max-height:calc(100dvh - 24px);box-sizing:border-box;padding:0;border:1px solid var(--analysis-dock-rule-16);border-radius:10px;background:var(--analysis-dock-surface-29);color:var(--analysis-dock-ink-52);font-family:var(--font);box-shadow:none;overflow:hidden}
 .indicator-settings-dialog[open]{display:flex;flex-direction:column}
-.indicator-settings-dialog::backdrop{background:var(--analysis-dock-surface-7);backdrop-filter:blur(3px)}
+.indicator-settings-dialog::backdrop{background:var(--analysis-dock-surface-7);backdrop-filter:none}
 .indicator-settings-dialog>header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px 8px;flex:none}
 .indicator-settings-dialog h2{margin:0;font-size:18px;font-weight:600;line-height:1.5}
 .indicator-settings-dialog button{min-height:36px;padding:8px 12px;border:1px solid var(--analysis-dock-rule-17);border-radius:5px;background:var(--analysis-dock-surface-30);color:var(--analysis-dock-ink-53);font:inherit;font-size:12px;cursor:pointer}
@@ -177,7 +177,7 @@
 @media(max-width:380px){.indicator-settings-content{padding:0 12px 12px}.indicator-settings-content fieldset{padding:8px}.indicator-settings-content .indicator-setting-range{grid-template-columns:minmax(85px,1fr) minmax(58px,.8fr) 34px;gap:4px}.indicator-settings-content .indicator-setting-intervals{grid-template-columns:repeat(3,minmax(0,1fr))}.indicator-settings-dialog h2{font-size:16px}}
 .atlas-plot>#lab-metrics[hidden],.atlas-plot>.workbench-market-info[hidden],.atlas-plot>.lab-chart-foot[hidden]{display:none!important}
 .atlas-plot>.workbench-market-info{top:var(--source-top,47px)}
-@media(max-width:800px){.analysis-indicator-windows{--analysis-stack-top:88px;width:66%;right:8px}.indicator-library{width:calc(100% - 24px);max-height:calc(100dvh - 32px)}}
+@media(max-width:800px){.analysis-indicator-windows{--analysis-stack-top:88px;width:66%;right:8px}.indicator-library{width:calc(100% - 24px);max-height:calc(100dvh - 32px);box-shadow:none}}
 @media(max-width:540px){.analysis-indicator-windows{left:8px;right:8px;width:auto;--analysis-stack-top:115px;--analysis-bottom-gap:46px}.indicator-library-heading{padding:16px 16px 8px}#indicator-library-description{padding:0 16px 12px}#indicator-search{width:calc(100% - 32px);margin:0 16px 12px}.indicator-categories{padding:0 16px 12px;gap:4px}.indicator-categories button{padding:4px 8px;font-size:11px}.indicator-result-count{padding:8px 16px 4px}.indicator-library-item{padding:12px 8px;gap:12px}.indicator-library-item strong{font-size:12px}.indicator-library-item small{font-size:11px}.indicator-library-status{font-size:11px}.indicator-library footer{padding:12px 16px}}
 /* OHLC and provenance float with the plot; the price axis needs no header band. */
 .atlas-plot>#lab-metrics{left:10px;right:90px;max-width:620px;width:max-content;box-sizing:border-box;padding:2px 4px;border-radius:3px;background:var(--analysis-dock-surface-32);text-shadow:0 1px 2px var(--analysis-dock-shadow)}

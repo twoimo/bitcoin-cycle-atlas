@@ -1,3 +1,4 @@
+import { replaceWithSkeleton } from './loading-surfaces.js';
 import { loadForecastIndex, loadForecastRecord, loadForecastSnapshot, loadForecastEvaluation, loadForecastExperiments, verifyForecastRecord, restoreForecastPath, compareForecastRecords } from './forecast-records.js?v=1.29.0';
 import { drawAtlasPriceChart } from './atlas-price-chart.js?v=1.29.0';
 import { mountDialogViewport } from './dialog-viewport.js?v=1.29.0';
@@ -133,7 +134,7 @@ function mount() {
     replay?.destroy();replay=null;
     currentTab=tabs.some(([id])=>id===tab)?tab:'records';const token=++generation;resizeObserver?.disconnect();draw=null;
     for(const button of dialog.querySelectorAll('[data-journal-tab]'))button.setAttribute('aria-pressed',String(button.dataset.journalTab===currentTab));
-    content.innerHTML='<p role="status">검증한 기록을 불러오는 중입니다.</p>';
+    replaceWithSkeleton(content,'list','검증한 기록 로딩');
     try {
       if(currentTab==='performance'){performanceBody();return;}
       if(currentTab==='data'){await dataBody(token);return;}

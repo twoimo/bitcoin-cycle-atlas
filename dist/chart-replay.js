@@ -1,3 +1,4 @@
+import {setChartLoading} from './loading-surfaces.js';
 import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.30.6';
 import {captureReplayView,sealReplaySnapshot,supplementReplaySnapshot,restoreReplaySnapshot,persistReplayDraft} from './chart-replay-snapshot.js?v=1.30.6';
 
@@ -22,20 +23,23 @@ export function captureAtlasReplaySnapshot(value){
   return freeze(snapshot);
 }
 
-export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{},getAtlasContext=null,getChartState=null,getChartRenderer=null,resolveAtlasRange=null,loadAtlasRenderer=null,loadRetrospectiveModel=null,onAtlasFrame=()=>{}}={}){
+export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{},getAtlasContext=null,getChartState=null,getChartRenderer=null,resolveAtlasRange=null,loadAtlasRenderer=null,loadRetrospectiveModel=null,loadCutoffModel=null,onAtlasFrame=()=>{},initialMode='cutoff-backtest'}={}){
   if(!svg||!plot||!toolbar)throw new TypeError('The existing chart, plot and toolbar are required');
   const doc=svg.ownerDocument,win=doc.defaultView;
   const historical=['BTCUSD','ETHUSD'].includes(symbol);
   const atlasAvailable=symbol==='BTCUSD'&&typeof getAtlasContext==='function';
   const minimumOriginIndex=symbol==='ETHUSD'?365:180;
+  const preferredMode=atlasAvailable&&initialMode==='cutoff-backtest'?'cutoff-backtest':'atlas-chart';
   const trigger=doc.createElement('button');trigger.type='button';trigger.id='workbench-replay';
-  trigger.className='chart-replay-trigger';trigger.textContent='↶ 봉 리플레이';trigger.title=atlasAvailable?'현재 주황색 예측선을 고정하고 프로젝트 시작일부터 실제 캔들 리플레이':'현재 차트에서 시작 봉을 선택하고 고정 예측과 비교';
+  trigger.className='chart-replay-trigger';trigger.textContent='↶ 봉 리플레이';trigger.title=atlasAvailable?'선택 시점의 예측을 고정하고 이후 실제 봉과 비교':'현재 차트에서 시작 봉을 선택하고 고정 예측과 비교';
   trigger.setAttribute('aria-pressed','false');toolbar.insertBefore(trigger,toolbar.querySelector('.workbench-spacer,.eth-top-spacer'));
   const panel=doc.createElement('section');panel.className='chart-replay-controls';panel.hidden=true;
   panel.setAttribute('aria-label','봉 리플레이 제어');
   panel.innerHTML='<div class="chart-replay-bar" role="toolbar" aria-label="봉 리플레이 재생 막대"><div class="chart-replay-actions">'+
     '<button type="button" data-cr="first" aria-label="리플레이 처음으로" title="리플레이 처음으로 · Home">'+replayIcon('M5 5v14M18 5l-10 7 10 7Z')+'</button>'+
     '<button type="button" data-cr="select-menu" aria-label="시작 봉 선택 메뉴 · Select bar" aria-haspopup="dialog" aria-expanded="false">Select bar <span aria-hidden="true">▾</span></button>'+
+    '<button type="button" data-cr="mode-badge" aria-label="리플레이 모드 설정">백테스트</button>'+
+    '<button type="button" data-cr="result" hidden>결과 보기</button>'+
     '<button type="button" data-cr="pick" aria-label="시작점 선택 · Select starting point" title="시작점 선택 · Select starting point" aria-pressed="false">'+replayIcon('M5 3v15l4-4 3 6 3-1-3-6 6-1Z')+'</button>'+
     '<button type="button" data-cr="play" aria-label="리플레이 재생" title="재생 / 일시정지 · Shift + ↓">'+playIcon()+'</button>'+
     '<button type="button" data-cr="next" aria-label="다음 봉" title="실제 일봉 한 개 전진 · Shift + →">'+replayIcon('M19 5v14M6 5l10 7-10 7Z')+'</button>'+
@@ -50,7 +54,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     '<div data-cr="date-view" hidden><div class="chart-replay-date-fields"><label class="chart-replay-origin"><span data-cr="date-label">새 시작점 날짜</span> <input type="date" data-cr="date" aria-label="새 시작점 날짜"></label><button type="button" data-cr="start">이 날짜 선택</button></div><p class="chart-replay-date-context" data-cr="date-context"></p><p class="chart-replay-date-hint" data-cr="date-hint"></p></div>'+
     '<div data-cr="forecast-view" hidden>'+
     '<div class="chart-replay-menu-fields"><label>가격 표시<select data-cr="display" aria-label="리플레이 차트 유형"><option value="candles">캔들</option><option value="line">종가선</option></select></label>'+
-    '<label>예측 종류<select data-cr="mode" aria-label="리플레이 예측 종류">'+(atlasAvailable?'<option value="atlas-chart">현재 예측선 고정</option><option value="project-baseline">10월 21일 당시 전망</option>':'')+(historical?'<option value="historical-reconstruction">'+(symbol==='BTCUSD'?'BTC 축소 추세 · 회고':'ETH 가격 모형 · 회고')+'</option>':'')+'<option value="recorded">보존 예측</option></select></label>'+
+    '<label>예측 종류<select data-cr="mode" aria-label="리플레이 예측 종류">'+(atlasAvailable?'<option value="cutoff-backtest">기준시점 백테스트</option><option value="atlas-chart">현재 예측선 고정</option><option value="project-baseline">10월 21일 당시 전망</option>':'')+(historical?'<option value="historical-reconstruction">'+(symbol==='BTCUSD'?'BTC 축소 추세 · 회고':'ETH 가격 모형 · 회고')+'</option>':'')+'<option value="recorded">보존 예측</option></select></label>'+
     (symbol==='ETHUSD'?'<label>가격 모형<select data-cr="model" aria-label="ETH 리플레이 가격 모형"><option value="adaptive">국면 적응</option><option value="pooled">통합 변동성</option></select></label>':'')+
     '<select data-cr="record" aria-label="리플레이 보존 예측 선택" hidden></select>'+
     '<select data-cr="horizon" aria-label="고정 예측 기간"><option value="30">30일</option><option value="90">90일</option><option value="180" selected>180일</option><option value="365">1년</option><option value="730">2년</option></select></div>'+
@@ -62,7 +66,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     '<section class="chart-replay-choice" data-cr="exit-dialog" role="dialog" aria-modal="true" aria-label="리플레이 종료" hidden><strong>봉 리플레이를 종료할까요?</strong><label><input type="checkbox" data-cr="exit-save" checked>현재 세션 저장</label><p>저장을 해제하면 이번 진행은 저장하지 않고 기존 저장 기록을 유지합니다.</p><p data-cr="save-status" role="status" hidden></p><div><button type="button" data-cr="exit-confirm">종료</button><button type="button" data-cr="exit-cancel">계속 보기</button></div></section>';
   const hud=doc.createElement('div');hud.className='chart-replay-hud';hud.hidden=true;
   const status=doc.createElement('p');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
-  const inspect=doc.createElement('p');inspect.className='chart-replay-inspect';hud.append(status,inspect);
+  const inspect=doc.createElement('p');inspect.className='chart-replay-inspect';const seriesKey=doc.createElement('p');seriesKey.className='chart-replay-series-key';const compactScore=doc.createElement('p');compactScore.className='chart-replay-compact-score';compactScore.hidden=true;hud.append(status,inspect,compactScore,seriesKey);
   const notice=doc.createElement('p');notice.className='chart-replay-notice';notice.hidden=true;notice.setAttribute('role','status');notice.setAttribute('aria-live','polite');plot.append(hud,panel,notice);
   const q=key=>panel.querySelector('[data-cr="'+key+'"]');
   const transport=panel.querySelector('.chart-replay-actions'),bar=panel.querySelector('.chart-replay-bar');
@@ -84,21 +88,24 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     transportHints();
   }
   transport?.addEventListener('scroll',transportHints,{passive:true});transport?.addEventListener('focusin',revealControl);
-  if(atlasAvailable)q('mode').value='atlas-chart';
+  if(atlasAvailable)q('mode').value=preferredMode;
   let active=false,epoch=0,request=null,modules=null,archive=null,record=null,entries=[],rendered=null,range=null,frame=null;
-  let atlasModules=null,atlasBaseline=null,atlasCaptured=null,atlasCandles=null,atlasPreview=null,pendingAtlas=null,restoredSnapshot=null,atlasCapturedAt=null;
+  let cutoffModel=null,atlasModules=null,atlasBaseline=null,atlasCaptured=null,atlasCandles=null,atlasPreview=null,pendingAtlas=null,restoredSnapshot=null,atlasCapturedAt=null;
   let gesture=null,follow=true,paintFrame=null,destroyed=false,lastSave=0,painting=false,displayEpoch=0,saving=false;
   let picking=false,pickerDate=null,overlay=null,draft=null,dateDraftBase=null,capabilities=null,candleCapabilities=null,replayFrequency='daily',replayWindow='focus',customRange=false;
+  let externalBacktest=false;
   const hasChoice=()=>overlay==='entry'||overlay==='exit';
   const oldLabel=svg.getAttribute('aria-label'),ownedInert=new Map();
+  const storageKey=()=>q('mode').value==='cutoff-backtest'?'atlas-cutoff-backtest-v1:'+symbol:STORAGE+symbol;
+  let readKey=null;
   let stored=null,storedText=null,saveBaseText,storageReadError=null;
   function readStored(){
-    storageReadError=null;
+    storageReadError=null;readKey=storageKey();
     try{
-      storedText=win.localStorage.getItem(STORAGE+symbol)??null;
+      storedText=win.localStorage.getItem(storageKey())??null;
       if(storedText!==null&&storedText.length>2*1024*1024)throw new Error('저장된 리플레이의 크기 제한을 초과했습니다.');
       stored=storedText===null?null:JSON.parse(storedText);
-      if(stored&&(stored.version!==1||stored.symbol!==symbol||!['recorded','historical-reconstruction',...(atlasAvailable?['atlas-chart','project-baseline']:[])].includes(stored.mode)||!/^\d{4}-\d{2}-\d{2}$/.test(stored.origin??'')||!Number.isSafeInteger(stored.cursorIndex)))throw new Error('저장된 리플레이의 형식이 올바르지 않습니다.');
+      if(stored&&(stored.version!==1||stored.symbol!==symbol||!['recorded','historical-reconstruction',...(atlasAvailable?['atlas-chart','project-baseline','cutoff-backtest']:[])].includes(stored.mode)||!/^\d{4}-\d{2}-\d{2}$/.test(stored.origin??'')||!Number.isSafeInteger(stored.cursorIndex)))throw new Error('저장된 리플레이의 형식이 올바르지 않습니다.');
     }catch(error){stored=null;storageReadError=error;}
     return !storageReadError;
   }
@@ -107,7 +114,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     q('saved-summary').textContent=storageReadError?'저장된 세션을 읽지 못했습니다. 기존 저장은 변경하지 않습니다.':stored?(stored.cursorDate??stored.origin)+' · '+intervalName(stored.frequency??replayFrequency)+' · 일시정지 상태로 이어집니다.':'저장된 세션이 다른 탭에서 삭제되었습니다. 새로 시작을 선택하세요.';
   }
   function savedChanged(event){
-    if(event.key!==null&&event.key!==STORAGE+symbol)return;
+    if(event.key!==null&&event.key!==storageKey())return;
     readStored();if(overlay==='entry')savedSummary();
     // An active replay keeps its own immutable capture and expected save revision.
     if(active&&overlay!=='entry'&&storedText!==saveBaseText){
@@ -119,19 +126,22 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   const getState=()=>controller.getState();
   function announce(message){status.textContent=message;}
   function preserve(){
+    if(externalBacktest)return;
     const state=getState();if(!state.session)return;
     draft={version:1,symbol,...state.session.replaySettings,origin:state.session.asOf,cursorIndex:state.cursorIndex,
       cursorDate:state.session.timeline[state.cursorIndex],sourceHash:state.session.observationProvenance.source?.sourceHash??null,
       outputHash:state.session.identity.outputHash,speed:state.speed,frequency:replayFrequency,chartType:q('display').value,
       window:replayWindow,customRange,range:range?{...range}:null,
-      ...(state.session.replaySnapshot?{forecastSnapshot:state.session.replaySnapshot}:{})};
+      ...(state.session.replaySnapshot?{forecastSnapshot:state.session.replaySnapshot}:{}),
+      ...(state.session.cutoffForecast?{cutoffForecast:state.session.cutoffForecast}:{})};
     lastSave=Date.now();
   }
   async function save(){
+    if(externalBacktest)return true;
     preserve();if(!draft)return true;
     const token=epoch;
     try{
-      saveBaseText=await persistReplayDraft(win.localStorage,STORAGE+symbol,draft,{indexedDB:win.indexedDB,locks:win.navigator?.locks,expectedText:saveBaseText,isCurrent:()=>active&&!destroyed&&epoch===token});
+      saveBaseText=await persistReplayDraft(win.localStorage,storageKey(),draft,{indexedDB:win.indexedDB,locks:win.navigator?.locks,expectedText:saveBaseText,isCurrent:()=>active&&!destroyed&&epoch===token});
       readStored();q('save-status').hidden=true;return true;
     }catch(error){
       const text=(error?.message??'이 브라우저에 세션을 저장하지 못했습니다.')+' 기존 저장은 유지됩니다. 저장 체크를 해제하거나 다시 시도해 주세요.';
@@ -152,7 +162,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     q('select-panel').setAttribute('aria-label',({start:'Select bar · 시작 봉 선택',date:'Select date · 새 시작점 선택',forecast:'리플레이 예측·평가 설정'})[view]);
     if(view!=='forecast'){q('detail-panel').hidden=true;q('details').setAttribute('aria-expanded','false');}
     q('select-panel').scrollTop=0;transportHints();
-    if(focus){const target=view==='date'?q('date'):view==='forecast'?q('mode'):q('select-chart').disabled?q('menu-settings'):q('select-chart');target.focus({preventScroll:true});}
+    if(focus){const target=view==='date'?q('date'):view==='forecast'?(externalBacktest?q('details'):q('mode')):q('select-chart').disabled?q('menu-settings'):q('select-chart');target.focus({preventScroll:true});}
   }
   function releaseGesture(){
     const prior=gesture;gesture=null;
@@ -167,6 +177,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     panel.dataset.overlay=next??'none';transportHints();
   }
   function closeMenu(){if(overlay==='menu')setOverlay(null);menuView('start',{focus:false});}
+  function focusMenuTrigger(){q(externalBacktest?'mode-badge':'select-menu').focus({preventScroll:true});}
   function updateDateContext(state=getState()){
     const date=state.session?.timeline[state.cursorIndex],visible=date?archive?.observations.findLast(row=>row.date<=date)?.date:null,next=state.session?.timeline[state.cursorIndex+1];
     q('date-context').textContent=state.session?'현재 공개: '+(visible??'없음')+' · 다음 봉: '+(next??'확보한 자료 끝'):'시작점 미확정 · 날짜를 선택해 적용하세요.';
@@ -195,10 +206,11 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   }
   function requestEntry(){
     if(destroyed||active)return;
+    externalBacktest=false;
     const current=getChartState?.()??getAtlasContext?.()??{};
     if(atlasAvailable&&!['daily','weekly'].includes(current.frequency??'daily')){unavailable(current.frequency);return;}
     notice.hidden=true;atlasCaptured=null;atlasCapturedAt=null;draft=null;replayFrequency=current.frequency??'daily';replayWindow=current.window??'focus';customRange=Boolean(current.customRange);
-    if(atlasAvailable)q('mode').value='atlas-chart';
+    if(atlasAvailable)q('mode').value=preferredMode;
     readStored();saveBaseText=storageReadError?undefined:storedText;q('save-status').hidden=true;
     if(stored||storageReadError){activate();setOverlay('entry');savedSummary();
       paint(getState());q('entry-continue').focus({preventScroll:true});return;}
@@ -227,7 +239,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       const token=epoch,ok=await save();
       saving=false;q('exit-confirm').disabled=false;q('exit-cancel').disabled=false;q('exit-save').disabled=false;
       if(!ok||!active||token!==epoch)return;
-    }epoch++;request?.abort();request=null;active=false;controller.exit();
+    }epoch++;request?.abort();request=null;active=false;externalBacktest=false;controller.exit();
     if(paintFrame!==null){win.cancelAnimationFrame(paintFrame);paintFrame=null;}
     releaseGesture();picking=false;pickerDate=null;closeChoice();closeMenu();clearPicker();disposeDrawing();plot.classList.remove('chart-replay-active');plot.style.removeProperty('--chart-replay-controls-height');
     delete svg.dataset.chartReplayActive;delete doc.documentElement.dataset.chartReplayActive;delete doc.documentElement.dataset.chartReplayMode;
@@ -237,24 +249,25 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     panel.hidden=true;hud.hidden=true;notice.hidden=true;q('detail-panel').hidden=true;trigger.setAttribute('aria-pressed','false');
     blockSurrounding(false);frame=null;archive=null;atlasCaptured=null;atlasCandles=null;atlasPreview=null;pendingAtlas=null;restoredSnapshot=null;atlasCapturedAt=null;capabilities=null;candleCapabilities=null;draft=null;restore();trigger.focus({preventScroll:true});
   }
-  async function open({resume=null,selectOnly=false}={}){
+  async function open({resume=null,selectOnly=false,startDateOverride=null}={}){
     if(destroyed||saving)return;
+    if(readKey!==storageKey()){readStored();saveBaseText=storageReadError?undefined:storedText;draft=null;}
     const current=getChartState?.()??getAtlasContext?.()??{};
-    if(!active&&atlasAvailable&&!['daily','weekly'].includes(current.frequency??'daily')){unavailable(current.frequency);return;}
+    if(!active&&atlasAvailable&&!externalBacktest&&!['daily','weekly'].includes(current.frequency??'daily')){unavailable(current.frequency);return;}
     if(!active){readStored();saveBaseText=storageReadError?undefined:storedText;replayFrequency=current.frequency??'daily';replayWindow=current.window??'focus';customRange=Boolean(current.customRange);}
     if(resume){replayFrequency=['daily','weekly'].includes(resume.frequency)?resume.frequency:replayFrequency;replayWindow=resume.window??replayWindow;customRange=Boolean(resume.customRange);}
-    releaseGesture();closeChoice();closeMenu();notice.hidden=true;picking=selectOnly;pickerDate=null;clearPicker();activate();preserve();const token=++epoch;request?.abort();request=new AbortController();
+    releaseGesture();closeChoice();closeMenu();notice.hidden=true;picking=selectOnly;pickerDate=null;clearPicker();activate();preserve();if(draft?.mode!==q('mode').value)draft=null;const token=++epoch;request?.abort();request=new AbortController();
     disposeDrawing();archive=null;frame=null;record=null;entries=[];range=null;atlasPreview=null;pendingAtlas=null;restoredSnapshot=null;follow=true;controller.open();
     if(resume){q('mode').value=resume.mode;q('horizon').value=String(resume.horizon);if(q('model')&&resume.model)q('model').value=resume.model;}
-    const atlasMode=atlasAvailable&&['atlas-chart','project-baseline'].includes(q('mode').value),currentMode=q('mode').value==='atlas-chart';
+    const atlasMode=atlasAvailable&&['atlas-chart','project-baseline','cutoff-backtest'].includes(q('mode').value),currentMode=q('mode').value==='atlas-chart',backtestMode=q('mode').value==='cutoff-backtest';
     doc.documentElement.dataset.chartReplayMode=q('mode').value;plot.dataset.chartReplayMode=q('mode').value;
     if(atlasMode)plot.classList.add('chart-replay-atlas');else{plot.classList.remove('chart-replay-atlas');svg.replaceChildren();}
     q('date-label').textContent=atlasMode?'새 시작점 날짜':'예측 기준일 선택';
     q('date').setAttribute('aria-label',atlasMode?'새 시작점 날짜':'리플레이 예측 기준일 선택');
     q('date-hint').textContent=atlasMode?'선택한 날짜부터 실제 봉을 숨깁니다. 「이 날짜 선택」을 눌러야 적용됩니다.':'선택한 날짜까지의 자료로 예측을 고정합니다. 「이 날짜 선택」을 눌러야 적용됩니다.';
-    q('horizon').hidden=atlasMode;
-    q('chart-meaning').textContent=currentMode?'지금 차트의 주황색 예측선과 범위를 그대로 고정합니다. 그 앞 구간에는 선택한 시작일 전날까지의 가격에 현재 모형을 적용한 별도 회고 경로를 한 번 생성해 고정합니다. 실제 Bitstamp 일봉은 시작일부터 하나씩 공개하며 두 예측은 재생 중 다시 계산하지 않습니다.':atlasMode?'현재 차트의 눈금·표시 기간·사이클 레이어로 첫 보존 전망을 봅니다. 금색 점선과 음영은 당시 조건부 경로이며 재생 중 바뀌지 않습니다. 사이클 표시는 기준일까지의 관측과 그 경로로 고정합니다. 실제 가격은 재생 위치까지만 공개합니다.':'금색 점선은 기준일에 고정한 예측, 실제 가격은 재생 위치까지만 공개합니다. 미래 실제값·사후 고저점·사건·지표는 숨깁니다. 음영은 조건 범위 또는 보정 전 모형 구간이며 적중 확률이 아닙니다.';
-    q('evaluation-meaning').textContent=currentMode?'현재 차트의 가정과 별도 회고 경로는 2026-10-21에 발행한 예측 성적으로 채점하지 않습니다. 회고 경로는 현재 코드와 현재 보존 판본의 과거 가격으로 생성하며, 당시 발행되거나 당시 확보된 자료라는 뜻이 아닙니다. 캔들은 Bitstamp, 모형 입력은 Coin Metrics이므로 제공자도 구분합니다.':atlasMode?'프로젝트 시작은 2026-10-21 한국시간, 당시 완료된 마지막 일봉은 2026-10-20 UTC입니다. 다음 봉부터 10월 21일 실제값을 공개합니다. 첫 커밋에 보존된 3년 전망을 현재 판본의 Coin Metrics 종가와 비교하며, 현재 장기 모형의 과거 실적을 뜻하지 않습니다. 사이클 표시는 현재 표시 규칙으로 그린 주석이며, 당시 화면의 표식이 그대로 보존됐다는 뜻은 아닙니다. 음영은 적중 확률이 아니며 한 경로의 일별 오차는 독립 예측 횟수가 아닙니다.':'과거 재구성은 현재 코드와 보존 판본으로 다시 계산한 연구입니다. 당시 실제 발행한 예측 성적이 아니며, 한 경로의 여러 일봉은 독립 예측 횟수가 아닙니다. 보존 예측도 현재 판본의 시장 날짜 기준 회고 비교입니다.';
+    q('horizon').hidden=atlasMode&&!backtestMode;
+    q('chart-meaning').textContent=backtestMode?'선택 시작일 전날까지의 Bitstamp 종가만 입력해 예측을 한 번 계산하고 고정합니다. 이후 실제 Bitstamp 종가와 비교하며 현재 전망·현재 차트 주석은 계산과 비교에서 제외합니다.':currentMode?'지금 차트의 주황색 예측선과 범위를 그대로 고정합니다. 그 앞 구간에는 선택한 시작일 전날까지의 가격에 현재 모형을 적용한 별도 회고 경로를 한 번 생성해 고정합니다. 실제 Bitstamp 일봉은 시작일부터 하나씩 공개하며 두 예측은 재생 중 다시 계산하지 않습니다.':atlasMode?'현재 차트의 눈금·표시 기간·사이클 레이어로 첫 보존 전망을 봅니다. 금색 점선과 음영은 당시 조건부 경로이며 재생 중 바뀌지 않습니다. 사이클 표시는 기준일까지의 관측과 그 경로로 고정합니다. 실제 가격은 재생 위치까지만 공개합니다.':'금색 점선은 기준일에 고정한 예측, 실제 가격은 재생 위치까지만 공개합니다. 미래 실제값·사후 고저점·사건·지표는 숨깁니다. 음영은 조건 범위 또는 보정 전 모형 구간이며 적중 확률이 아닙니다.';
+    q('evaluation-meaning').textContent=backtestMode?'현재 코드와 보존된 과거 가격으로 재구성한 백테스트입니다. 당시 발행한 예측이나 당시 자료 판본을 입증하지 않습니다. MAPE와 종가 유지 대비 로그오차 개선을 비교하며, 기준 종가 대비 방향 일치는 일일 수익률 적중이나 매매 승률이 아닙니다. 한 경로의 일별 오차는 독립 예측 횟수가 아닙니다.':currentMode?'현재 차트의 가정과 별도 회고 경로는 2026-10-21에 발행한 예측 성적으로 채점하지 않습니다. 회고 경로는 현재 코드와 현재 보존 판본의 과거 가격으로 생성하며, 당시 발행되거나 당시 확보된 자료라는 뜻이 아닙니다. 캔들은 Bitstamp, 모형 입력은 Coin Metrics이므로 제공자도 구분합니다.':atlasMode?'프로젝트 시작은 2026-10-21 한국시간, 당시 완료된 마지막 일봉은 2026-10-20 UTC입니다. 다음 봉부터 10월 21일 실제값을 공개합니다. 첫 커밋에 보존된 3년 전망을 현재 판본의 Coin Metrics 종가와 비교하며, 현재 장기 모형의 과거 실적을 뜻하지 않습니다. 사이클 표시는 현재 표시 규칙으로 그린 주석이며, 당시 화면의 표식이 그대로 보존됐다는 뜻은 아닙니다. 음영은 적중 확률이 아니며 한 경로의 일별 오차는 독립 예측 횟수가 아닙니다.':'과거 재구성은 현재 코드와 보존 판본으로 다시 계산한 연구입니다. 당시 실제 발행한 예측 성적이 아니며, 한 경로의 여러 일봉은 독립 예측 횟수가 아닙니다. 보존 예측도 현재 판본의 시장 날짜 기준 회고 비교입니다.';
     announce('리플레이 자료를 확인하고 있습니다.');
     const signal=request.signal;
     try{
@@ -277,15 +290,16 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
         if(typeof loadAtlasRenderer!=='function')throw new Error('현재 차트 리플레이 연결을 확인해 주세요.');
         atlasModules??=await Promise.all([import('./project-replay-baseline.js'),loadAtlasRenderer()]);
         if(!active||token!==epoch)return;
+        if(backtestMode){if(typeof loadCutoffModel!=='function')throw new Error('BTC 백테스트 모형 연결을 확인해 주세요.');cutoffModel??=await loadCutoffModel();if(!active||token!==epoch)return;}
         if(currentMode){
           range??={start:atlasCaptured.start,end:atlasCaptured.end};
           prepareAtlasPending(atlasCaptured.forecast.asOf,{confirmed:false});
-        }else atlasBaseline=await atlasModules[0].loadProjectReplayBaseline({signal});
+        }else if(!backtestMode)atlasBaseline=await atlasModules[0].loadProjectReplayBaseline({signal});
         if(!active||token!==epoch)return;
-        if(currentMode||q('display').value==='candles')atlasCandles=await modules[2].loadChartReplayArchive(symbol,{mode:'historical-reconstruction',signal});
+        if(currentMode||backtestMode||q('display').value==='candles')atlasCandles=await modules[2].loadChartReplayArchive(symbol,{mode:'historical-reconstruction',signal});
         if(!active||token!==epoch)return;
       }
-      const loadedArchive=currentMode?atlasCandles:await modules[2].loadChartReplayArchive(symbol,{mode:atlasMode?'recorded':q('mode').value,signal});
+      const loadedArchive=currentMode||backtestMode?atlasCandles:await modules[2].loadChartReplayArchive(symbol,{mode:atlasMode?'recorded':q('mode').value,signal});
       if(!active||token!==epoch)return;
       archive=loadedArchive;
       capabilities=modules[0].getReplayIntervalCapabilities?.({...archive,symbol,evaluatedAt:new Date().toISOString()})??null;
@@ -300,13 +314,14 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       if(q('model'))q('model').hidden=q('mode').value==='recorded';
       q('source').textContent=archive.source.provider+' · '+archive.observedThrough+'까지 실제 관측 · 수집 '+archive.observedAt+' · 현재 보존 판본';
       if(atlasMode){
-        const first=currentMode?atlasModules[0].PROJECT_REPLAY_ORIGIN.startDate:atlasBaseline.forecast.referenceDate;
-        q('date').min=currentMode?(capabilities?.intervals[replayFrequency]?.firstReplayDate??rows[0].date):first;q('date').max=rows.at(-1).date;
-        q('date').value=resume?.startDate??first;
-        q('source').textContent=currentMode?'현재 차트의 예측선 고정 · 가정 입력 '+atlasCaptured.forecast.asOf+' UTC까지 · 실제 캔들 '+archive.source.provider+' · '+archive.observedThrough+'까지':
+        const first=currentMode||backtestMode?atlasModules[0].PROJECT_REPLAY_ORIGIN.startDate:atlasBaseline.forecast.referenceDate;
+        q('date').min=backtestMode?cutoffModel.firstCutoffBacktestStart(rows):currentMode?(capabilities?.intervals[replayFrequency]?.firstReplayDate??rows[0].date):first;q('date').max=rows.at(-1).date;
+        q('date').value=resume?.startDate??startDateOverride??first;
+        q('source').textContent=backtestMode?'예측 입력·실제 비교 모두 Bitstamp 완료 종가 · 확보 '+archive.observedThrough+'까지':currentMode?'현재 차트의 예측선 고정 · 가정 입력 '+atlasCaptured.forecast.asOf+' UTC까지 · 실제 캔들 '+archive.source.provider+' · '+archive.observedThrough+'까지':
           '2026-10-21 첫 커밋의 3년 전망 · 마지막 입력 '+atlasBaseline.forecast.asOf+' UTC · 실제 비교 '+archive.source.provider+' · '+archive.observedThrough+'까지 현재 보존 판본';
         if(selectOnly){
           range={start:atlasCaptured.start,end:atlasCaptured.end};
+          if(backtestMode){paint(getState());beginPick();return;}
           const previewOrigin=archive.observedThrough<atlasCaptured.forecast.asOf?archive.observedThrough:atlasCaptured.forecast.asOf;
           const preview=await modules[0].createCurrentChartReplaySession({symbol,observations:archive.observations,observedAt:archive.observedAt,observedThrough:archive.observedThrough,source:archive.source,
             dataset:atlasCaptured.dataset,forecast:atlasCaptured.forecast,asOf:previewOrigin,playbackStartDate:dateAt(day(previewOrigin)+1)});
@@ -334,7 +349,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   function nearestOrigin(value){
     const rows=archive?.observations;if(!rows?.length)return null;
     if(!Number.isFinite(day(value)))return null;
-    if(atlasAvailable&&['atlas-chart','project-baseline'].includes(q('mode').value)){
+    if(atlasAvailable&&['atlas-chart','project-baseline','cutoff-backtest'].includes(q('mode').value)){
       const allowed=(q('mode').value==='atlas-chart'?(capabilities?.availableDates??rows.map(row=>row.date)):rows.map(row=>row.date)).filter(date=>date>=q('date').min&&date<=q('date').max);
       if(!allowed.length)return null;
       let low=0,high=allowed.length-1;while(low<high){const mid=(low+high)>>1;if(allowed[mid]<value)low=mid+1;else high=mid;}
@@ -349,13 +364,14 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   async function start(value,{resume=null,automatic=false}={}){
     if(!active||!archive||!modules)return;
     const source=archive,recorded=q('mode').value==='recorded',selectedRecord=record;
-    const atlasMode=atlasAvailable&&['atlas-chart','project-baseline'].includes(q('mode').value),currentMode=q('mode').value==='atlas-chart';
-    const first=atlasMode?(currentMode?atlasModules[0].PROJECT_REPLAY_ORIGIN.startDate:atlasBaseline.forecast.referenceDate):null;
+    const atlasMode=atlasAvailable&&['atlas-chart','project-baseline','cutoff-backtest'].includes(q('mode').value),currentMode=q('mode').value==='atlas-chart',backtestMode=q('mode').value==='cutoff-backtest';
+    const first=atlasMode?(currentMode||backtestMode?atlasModules[0].PROJECT_REPLAY_ORIGIN.startDate:atlasBaseline.forecast.referenceDate):null;
     const startDate=atlasMode?nearestOrigin(value||first):null;
     const replaySettings={mode:q('mode').value,horizon:Number(q('horizon').value),model:q('model')?.value??null,recordId:recorded?selectedRecord.record.id:null,...(atlasMode?{startDate}:{})};
-    const asOf=currentMode?(resume?.origin??(startDate?dateAt(day(startDate)-1):null)):atlasMode?atlasBaseline.forecast.asOf:recorded?record.record.asOf:nearestOrigin(value);if(!asOf)return;
+    const asOf=currentMode||backtestMode?(resume?.origin??(startDate?dateAt(day(startDate)-1):null)):atlasMode?atlasBaseline.forecast.asOf:recorded?record.record.asOf:nearestOrigin(value);if(!asOf)return;
     const restored=currentMode&&resume?restoredSnapshot:null,savedRetrospective=restored?.retrospectiveForecast??null;
     const supplement=currentMode&&Boolean(resume)&&!savedRetrospective,expectedSaveText=saveBaseText;
+    if(backtestMode&&resume&&!resume.cutoffForecast){controller.fail(new Error('저장된 백테스트에 고정 예측이 없습니다. 새로 시작을 선택해 주세요.'));return;}
     const resumeIndex=dates=>resume?.cursorDate?Math.max(0,dates.findLastIndex(date=>date<=resume.cursorDate)):clamp(resume?.cursorIndex??0,0,dates.length-1);
     releaseGesture();picking=false;pickerDate=null;clearPicker();closeMenu();notice.hidden=true;
     q('date').value=atlasMode?startDate:asOf;follow=!atlasMode;
@@ -375,7 +391,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
         retrospectiveModel=await loadRetrospectiveModel();
         signal.throwIfAborted();
       }
-      const session=currentMode?await engine.createCurrentChartReplaySession({...options,dataset:atlasCaptured.dataset,forecast:atlasCaptured.forecast,asOf,playbackStartDate:dateAt(day(asOf)+1),
+      const session=backtestMode?await engine.createCutoffBacktestReplaySession({...options,cutoffModel,asOf,playbackStartDate:dateAt(day(asOf)+1),modelOptions:{scenario:atlasCaptured?.modelOptions?.scenario??'base',seed:20261022,sampleCount:128,blockDays:28},forecastRecord:resume?.cutoffForecast??null,evaluatedAt:new Date().toISOString()}):currentMode?await engine.createCurrentChartReplaySession({...options,dataset:atlasCaptured.dataset,forecast:atlasCaptured.forecast,asOf,playbackStartDate:dateAt(day(asOf)+1),
           createRetrospective:!savedRetrospective,retrospectiveForecast:savedRetrospective,retrospectiveModel,modelOptions:atlasCaptured.modelOptions??{},
           createdAt:atlasCapturedAt??undefined,evaluatedAt:new Date().toISOString()}):
         atlasMode?await engine.createProjectReplaySession({...options,baseline:atlasBaseline}):
@@ -387,7 +403,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       // Playback advances by actual observed bars; missing days remain gaps.
       const timeline=session.timeline.filter(date=>date===session.asOf||dates.has(date));
       let atlasContext=restored?restored.atlasContext:atlasMode?
-        atlasModules[1].createAtlasReplayContext({dataset:session.chartDataset,forecast:session.chartForecast,presentation:atlasCaptured.presentation,originDate:session.asOf,retrospectiveForecast:session.retrospectiveForecast??null}):null;
+        atlasModules[1].createAtlasReplayContext({dataset:session.chartDataset,forecast:session.chartForecast,presentation:atlasCaptured.presentation,originDate:session.asOf,retrospectiveForecast:session.retrospectiveForecast??null,includeAnnotations:!backtestMode}):null;
       const replaySnapshot=currentMode?(restored?(supplement&&session.retrospectiveForecast?
         await supplementReplaySnapshot(restored,{identity:session.identity,retrospectiveForecast:session.retrospectiveForecast}):restored.snapshot):
         await sealReplaySnapshot({view:atlasCaptured,atlasContext,identity:session.identity,retrospectiveForecast:session.retrospectiveForecast??null})):null;
@@ -412,7 +428,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       try{
         // Continue authorizes completion of this saved capture, not a save of
         // newly revealed bars or changed source/range/display preferences.
-        const text=await persistReplayDraft(win.localStorage,STORAGE+symbol,{...resume,forecastSnapshot:owner.replaySnapshot},
+        const text=await persistReplayDraft(win.localStorage,storageKey(),{...resume,forecastSnapshot:owner.replaySnapshot},
           {indexedDB:win.indexedDB,locks:win.navigator?.locks,expectedText:expectedSaveText,isCurrent});
         if(!isCurrent())return;
         saveBaseText=text;readStored();q('save-status').hidden=true;
@@ -491,7 +507,12 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(!active||destroyed)return;
     transportHints();
     panel.dataset.state=state.status;svg.dataset.replayStatus=state.status;
-    const ready=Boolean(state.session),playing=state.status==='playing';
+    const ready=Boolean(state.session),playing=state.status==='playing',backtest=q('mode').value==='cutoff-backtest';
+    compactScore.hidden=!backtest||!ready;
+    seriesKey.textContent=backtest?'파랑 · 기준시점 고정 예측 / '+(q('display').value==='candles'?'캔들':'실선')+' · 실제 가격':q('mode').value==='atlas-chart'?'주황 · 현재 예측선 / 파랑 · 회고선 (채점 제외)':'';
+    q('mode-badge').textContent=externalBacktest?'월말 고정본':backtest?'기준시점 백테스트':q('mode').value==='atlas-chart'?'현재선 비교':'예측 비교';
+    q('mode-badge').disabled=hasChoice();q('result').hidden=!backtest;q('result').disabled=!ready||hasChoice()||picking||state.status==='selecting';
+    setChartLoading(svg.parentElement,!ready&&state.status==='loading'&&!pendingAtlas,'리플레이 자료 로딩');
     const blocked=hasChoice()||picking||state.status==='selecting';
     updateDateContext(state);
     q('export').disabled=true;
@@ -511,6 +532,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     q('pick').disabled=hasChoice()||!archive||state.status==='loading'||q('mode').value==='recorded';q('select-menu').disabled=hasChoice();
     for(const name of ['select-chart','select-date','select-random','select-first'])q(name).disabled=q('pick').disabled;
     for(const name of ['mode','display','horizon','model','record','date'])if(q(name))q(name).disabled=hasChoice()||(name==='date'&&q('mode').value==='recorded');
+    if(externalBacktest)for(const name of ['select-menu','pick','start','mode','horizon','model','record','date','select-chart','select-date','select-random','select-first'])if(q(name))q(name).disabled=true;
     const adaptiveUnavailable=state.status==='error'&&symbol==='ETHUSD'&&q('mode').value==='historical-reconstruction'&&q('model')?.value==='adaptive'&&state.error==='ETH adaptive model needs at least 30 causally classified returns in each state';
     q('pooled-retry').hidden=!adaptiveUnavailable;
     if(state.status==='error'){
@@ -535,7 +557,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
         }else rendered=selectingAtlas?selectionRenderer():modules[1].drawReplaySelection({svg,observations:archive.observations,...range,symbol,source:archive.source.provider,chartType:q('display').value,frequency:replayFrequency,onInspect});
         frame=null;q('metric').textContent='';q('cursor').textContent='시작 봉 선택';
         announce(symbol+' · ✂ 파란 가위선은 선택 미리보기입니다. 클릭 또는 날짜 선택으로 확정하세요.');
-        q('model-label').textContent=selectingAtlas?'현재 주황색 예측선 고정 · 시작점 선택 중':symbol==='BTCUSD'?'BTC 축소 추세 기준모형 · 과거 재구성':'ETH 가격 모형 · 과거 재구성';
+        q('model-label').textContent=backtest?'기준시점 백테스트 · 시작점 선택 중':selectingAtlas?'현재 주황색 예측선 고정 · 시작점 선택 중':symbol==='BTCUSD'?'BTC 축소 추세 기준모형 · 과거 재구성':'ETH 가격 모형 · 과거 재구성';
         svg.dataset.replaySelecting='true';if(pickerDate)showPickLine(pickerDate);return;
       }
       if(!ready){if(!drawAtlasPending())svg.replaceChildren();frame=null;announce(q('mode').value==='atlas-chart'?'현재 예측선을 유지하며 선택한 시작점의 실제 봉을 확인하고 있습니다.':'기준일까지의 자료로 예측을 고정하고 있습니다.');return;}
@@ -555,7 +577,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
         modules[1].drawChartReplay({svg,session,data:chartData,...range,chartType:q('display').value,onInspect});
       delete svg.dataset.replayPending;
       if(currentMode)pendingAtlas={context:state.session.atlasContext,session,cursor:date,confirmed:true};
-      svg.dataset.replayOutputHash=session.identity.outputHash;svg.dataset.replayOrigin=session.asOf;
+      svg.dataset.replayOutputHash=session.identity.outputHash;svg.dataset.replayComparisonMode=session.mode;svg.dataset.replayOrigin=session.asOf;
       if(state.session.replaySnapshot){svg.dataset.replaySnapshotHash=state.session.replaySnapshot.digest;svg.dataset.replaySnapshotCapturedAt=state.session.replaySnapshot.capturedAt;}
       else{delete svg.dataset.replaySnapshotHash;delete svg.dataset.replaySnapshotCapturedAt;}
       if(atlasMode){svg.dataset.replayStartDate=state.session.replaySettings.startDate;svg.dataset.replayForecastOrigin=session.identity.forecastOriginDate??session.asOf;}
@@ -569,10 +591,10 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       svg.dataset.replayActualArchiveThrough=archive.observedThrough;svg.dataset.replayOverlapCount=String(overlap);
       const retrospectiveNote=retrospectiveReady?' · 회고 입력 '+retrospective.asOf+'까지 · 회고 표시 '+retrospective.path[0].date+'–'+retrospective.path.at(-1).date+' · 회고 생성 '+retrospective.createdAt:retrospective?.status==='unavailable'?' · 회고 경로 없음: '+retrospective.reason:'';
       const coverage='현재 예측 기준 '+forecastOrigin+' · 미래 구간 시작 '+firstForecast+retrospectiveNote+' · 실제 자료 끝 '+archive.observedThrough+' · 공개된 시각 비교 '+overlap+'일'+(overlap===0?' (날짜가 겹치는 실제 봉 대기)':'');
-      const m=frame.metrics;q('cursor').textContent=date+' · '+state.cursorIndex+'/'+(state.length-1)+'일 업데이트';q('scrub').setAttribute('aria-valuetext',date);
-      q('metric').textContent=currentMode?'현재 예측선 고정 · 실제 '+state.cursorIndex+'봉':'오차 '+percent(m.meanAbsolutePercentageError)+' · '+m.matchedCount+'개';
-      q('detail-metric').textContent=currentMode?'이 화면은 고정 예측선과 실제 캔들의 시각 비교입니다. 캡처 '+(state.session.replaySnapshot?.capturedAt??session.identity.createdAt)+' · '+coverage+' · 경로·범위·표식을 함께 보존합니다. 현재 전망을 프로젝트 시작일에 미리 발행한 예측으로 채점하지 않습니다.':'평균 절대 % 오차 '+percent(m.meanAbsolutePercentageError)+' · 가격 유지 대비 개선 '+percent(m.skillVersusFlat)+' · 방향 일치 '+percent(m.directionAccuracy)+' · 비교 '+m.matchedCount+'개 일봉. 개선율은 양수일 때 가격 유지 기준보다 유리합니다. 결과 대기 '+m.pendingTargetCount+'개 / 관측 미확보 '+m.missingTargetCount+'개 목표.';
-      q('model-label').textContent=(currentMode?'현재 차트의 가정 고정 · ':session.mode==='project-baseline'?'프로젝트 시작일 보존 전망 · ':session.mode==='recorded'?'보존 예측 · ':'과거 재구성 · ')+(session.historicalModel?.label??session.identity.pointLabel??session.identity.modelVersion);
+      const m=frame.metrics;compactScore.textContent=backtest?'MAPE '+percent(m.meanAbsolutePercentageError)+' · '+m.matchedCount+'/'+(session.forecast.length-1)+'일 비교':'';q('cursor').textContent=date+' · '+state.cursorIndex+'/'+(state.length-1)+'일 업데이트';q('scrub').setAttribute('aria-valuetext',date);
+      q('metric').textContent=backtest?'MAPE '+percent(m.meanAbsolutePercentageError)+' · '+m.matchedCount+'개 비교':currentMode?'현재 예측선 고정 · 실제 '+state.cursorIndex+'봉':'오차 '+percent(m.meanAbsolutePercentageError)+' · '+m.matchedCount+'개';
+      q('detail-metric').textContent=backtest?'입력 마감 '+session.asOf+' · 이후 공개 실제 '+date+'까지 · 비교 '+m.matchedCount+'/'+(session.forecast.length-1)+'일 · 미공개·미확보 '+(session.forecast.length-1-m.matchedCount)+'일 · MAPE '+percent(m.meanAbsolutePercentageError)+' · 종가 유지 대비 로그오차 개선 '+percent(m.skillVersusFlat)+' · 기준 종가 대비 방향 일치 '+percent(m.directionAccuracy)+' ('+m.directionCorrectCount+'/'+m.directionCount+')':currentMode?'이 화면은 고정 예측선과 실제 캔들의 시각 비교입니다. 캡처 '+(state.session.replaySnapshot?.capturedAt??session.identity.createdAt)+' · '+coverage+' · 경로·범위·표식을 함께 보존합니다. 현재 전망을 프로젝트 시작일에 미리 발행한 예측으로 채점하지 않습니다.':'평균 절대 % 오차 '+percent(m.meanAbsolutePercentageError)+' · 가격 유지 대비 개선 '+percent(m.skillVersusFlat)+' · 방향 일치 '+percent(m.directionAccuracy)+' · 비교 '+m.matchedCount+'개 일봉. 개선율은 양수일 때 가격 유지 기준보다 유리합니다. 결과 대기 '+m.pendingTargetCount+'개 / 관측 미확보 '+m.missingTargetCount+'개 목표.';
+      q('model-label').textContent=backtest?'기준시점 백테스트 · Bitstamp 종가':(currentMode?'현재 차트의 가정 고정 · ':session.mode==='project-baseline'?'프로젝트 시작일 보존 전망 · ':session.mode==='recorded'?'보존 예측 · ':'과거 재구성 · ')+(session.historicalModel?.label??session.identity.pointLabel??session.identity.modelVersion);
       if(!atlasMode&&!data.ohlcAvailable){q('display').value='line';q('display').querySelector('[value="candles"]').disabled=true;}else q('display').querySelector('[value="candles"]').disabled=false;
       if(atlasAvailable){
         const axis=rendered.getPriceScale?.()??rendered.axis;
@@ -580,7 +602,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
         onAtlasFrame({session,data:chartData,...range,chartType:q('display').value,context,frequency:replayFrequency,window:replayWindow,customRange,axis});
       }
       const label={paused:'일시정지',playing:'재생 중',ended:'확보한 실제 봉까지 재생 완료'}[state.status]??'';
-      announce(atlasMode?'시작 '+state.session.replaySettings.startDate+' · '+intervalName(replayFrequency)+' / 업데이트 Auto 1일 · 실제 '+date+'까지 · '+label+' · '+(currentMode?'현재 주황색 예측선 고정'+(retrospectiveReady?' · 회고 예측 고정 (입력 '+retrospective.asOf+')':retrospective?.status==='unavailable'?' · 회고 경로 없음: '+retrospective.reason:''):'10월 21일 당시 전망'):
+      announce(backtest?'기준시점 백테스트 · 입력 '+session.asOf+'까지 · 실제 '+date+'까지 · '+label+' · MAPE '+percent(m.meanAbsolutePercentageError)+' · '+m.matchedCount+'개 비교':atlasMode?'시작 '+state.session.replaySettings.startDate+' · '+intervalName(replayFrequency)+' / 업데이트 Auto 1일 · 실제 '+date+'까지 · '+label+' · '+(currentMode?'현재 주황색 예측선 고정'+(retrospectiveReady?' · 회고 예측 고정 (입력 '+retrospective.asOf+')':retrospective?.status==='unavailable'?' · 회고 경로 없음: '+retrospective.reason:''):'10월 21일 당시 전망'):
         symbol+' · '+intervalName(replayFrequency)+' / 업데이트 1일 · '+label+' · 예측 기준 '+session.asOf+' · '+(session.mode==='recorded'?'보존 경로':'과거 재구성'));
       const point=frame.selected,retrospectivePoint=(frame.retrospectiveForecast??[]).find(row=>row.date===date);
       inspect.textContent=inspectionText({date,actual:point.actual??chartData.observedRows?.findLast(row=>row.date===date)?.price??null,predicted:point.predicted??retrospectivePoint?.price??null,predictedKind:point.predicted!==null?'original':retrospectivePoint?'retrospective':null,
@@ -600,14 +622,14 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   }
   function chooseStart(value){
     if(hasChoice()||!archive)return;const selected=q('mode').value==='recorded'?value:nearestOrigin(value);if(!selected)return;
-    if(atlasAvailable&&['atlas-chart','project-baseline'].includes(q('mode').value)&&range&&(selected<range.start||selected>range.end)){
+    if(atlasAvailable&&['atlas-chart','project-baseline','cutoff-backtest'].includes(q('mode').value)&&range&&(selected<range.start||selected>range.end)){
       const width=Math.max(14,day(range.end)-day(range.start)),left=day(selected)-Math.min(120,width*.2);range={start:dateAt(left),end:dateAt(left+width)};customRange=true;
     }
     return start(selected);
   }
   function randomStart(){
     if(!archive||hasChoice())return;
-    if(atlasAvailable&&['atlas-chart','project-baseline'].includes(q('mode').value)){
+    if(atlasAvailable&&['atlas-chart','project-baseline','cutoff-backtest'].includes(q('mode').value)){
       const dates=(q('mode').value==='atlas-chart'?(capabilities?.availableDates??archive.observations.map(row=>row.date)):archive.observations.map(row=>row.date)).filter(date=>date>=q('date').min&&date<=q('date').max);
       if(dates.length)return chooseStart(dates[Math.floor(Math.random()*dates.length)]);
     }else{const rows=archive.observations,index=minimumOriginIndex+Math.floor(Math.random()*Math.max(1,rows.length-minimumOriginIndex-1));return chooseStart(rows[index].date);}
@@ -638,6 +660,8 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   }
   trigger.onclick=()=>{if(active)requestExit();else void requestEntry();};q('exit').onclick=requestExit;
   q('live').onclick=()=>{if(!hasChoice()&&!picking&&getState().session)requestExit();};q('pick').onclick=beginPick;q('pick-cancel').onclick=cancelPick;
+  q('mode-badge').onclick=()=>{if(hasChoice())return;setOverlay('menu');menuView('forecast');};
+  q('result').onclick=()=>{if(q('mode').value!=='cutoff-backtest'||hasChoice()||picking)return;controller.pause();const s=getState().session;if(s){range={start:dateAt(day(s.asOf)-45),end:dateAt(day(s.forecast.at(-1).date)+14)};customRange=true;follow=false;}controller.seek(Math.max(0,getState().length-1));};
   q('start').onclick=()=>void chooseStart(q('date').value);q('date').onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();void chooseStart(q('date').value);}};
   q('play').onclick=toggle;q('first').onclick=()=>controller.seek(0);q('next').onclick=()=>controller.step(1);
   q('speed').onchange=()=>controller.speed(Number(q('speed').value));q('display').onchange=async()=>{
@@ -651,22 +675,23 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   };
   q('pooled-retry').onclick=()=>{const state=getState();if(q('pooled-retry').hidden||state.status!=='error'||!state.origin)return;q('model').value='pooled';void start(state.origin);};
   q('scrub').oninput=()=>controller.seek(Number(q('scrub').value));
-  for(const key of ['mode','horizon','model'])if(q(key))q(key).onchange=()=>void open();
+  for(const key of ['mode','model'])if(q(key))q(key).onchange=()=>{if(!externalBacktest)void open();};
+  q('horizon').onchange=()=>{if(!externalBacktest)void open({startDateOverride:getState().session?.replaySettings?.startDate??null});};
   q('record').onchange=()=>void open({resume:{...stored,recordId:q('record').value,mode:'recorded',horizon:Number(q('horizon').value),cursorIndex:0,outputHash:null}});
   q('select-menu').onclick=()=>{if(hasChoice())return;const show=overlay!=='menu';closeMenu();if(show){setOverlay('menu');menuView('start');}};
-  q('select-close').onclick=()=>{closeMenu();q('select-menu').focus({preventScroll:true});};
+  q('select-close').onclick=()=>{closeMenu();focusMenuTrigger();};
   q('menu-back').onclick=()=>menuView('start');q('menu-settings').onclick=()=>menuView('forecast');
   q('select-chart').onclick=beginPick;q('select-date').onclick=openDateView;
   q('select-random').onclick=()=>{closeMenu();void randomStart();};q('select-first').onclick=()=>{closeMenu();void chooseStart(q('date').min);};
   q('select-panel').addEventListener('keydown',event=>{
-    if(event.key==='Escape'){event.preventDefault();event.stopPropagation();closeMenu();q('select-menu').focus({preventScroll:true});return;}
+    if(event.key==='Escape'){event.preventDefault();event.stopPropagation();closeMenu();focusMenuTrigger();return;}
     if(event.shiftKey||event.ctrlKey||event.metaKey||event.altKey||!['ArrowUp','ArrowDown','Home','End'].includes(event.key))return;
     const nodes=['select-chart','select-date','select-random','select-first'].map(q).filter(node=>!node.disabled),index=nodes.indexOf(doc.activeElement);
     if(index<0)return;event.preventDefault();event.stopPropagation();const next=event.key==='Home'?0:event.key==='End'?nodes.length-1:(index+(event.key==='ArrowUp'?-1:1)+nodes.length)%nodes.length;nodes[next].focus();});
   const dismissMenu=event=>{if(active&&!q('select-panel').hidden&&!panel.contains(event.target))closeMenu();};
   doc.addEventListener('pointerdown',dismissMenu,true);
   q('entry-continue').onclick=()=>{readStored();savedSummary();if(!stored||storageReadError)return;saveBaseText=storedText;const saved={...stored};closeChoice();void open({resume:saved});};
-  q('entry-new').onclick=()=>{readStored();saveBaseText=storageReadError?undefined:storedText;closeChoice();if(atlasAvailable)q('mode').value='atlas-chart';void open({selectOnly:true});};
+  q('entry-new').onclick=()=>{readStored();saveBaseText=storageReadError?undefined:storedText;closeChoice();if(atlasAvailable)q('mode').value=preferredMode;void open({selectOnly:true});};
   q('entry-cancel').onclick=()=>exit();
   q('exit-confirm').onclick=()=>exit({saveSession:q('exit-save').checked});
   q('exit-cancel').onclick=()=>{closeChoice();paint(getState());svg.focus({preventScroll:true});};
@@ -676,6 +701,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     const session=getState().session;if(!frame||!session)return;
     const payload={kind:'atlas-visible-chart-replay',schemaVersion:1,identity:session.identity,mode:session.mode,source:archive.source,frame,
       ...(session.retrospectiveForecast?{retrospectiveForecast:session.retrospectiveForecast}:{}),
+      ...(session.cutoffForecast?{cutoffForecast:session.cutoffForecast}:{}),
       ...(session.replaySnapshot?{fixedCapture:{digest:session.replaySnapshot.digest,capturedAt:session.replaySnapshot.capturedAt,meaning:session.replaySnapshot.meaning,publicationTimeProven:false}}:{})};
     const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)+'\n'],{type:'application/json'}));
     const link=doc.createElement('a');link.href=url;link.download='atlas-chart-replay-'+symbol+'-'+frame.cursorDate+'.json';link.click();win.setTimeout(()=>URL.revokeObjectURL(url),1000);
@@ -729,7 +755,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     }
     if(event.ctrlKey||event.metaKey||event.altKey)return;
     if(event.target.closest?.('input,select,textarea,[contenteditable=true],dialog'))return;
-    if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();if(picking)cancelPick();else if(!q('select-panel').hidden){closeMenu();q('select-menu').focus();}else if(!q('detail-panel').hidden)q('hide-details').click();else requestExit();return;}
+    if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();if(picking)cancelPick();else if(!q('select-panel').hidden){closeMenu();focusMenuTrigger();}else if(!q('detail-panel').hidden)q('hide-details').click();else requestExit();return;}
     if(picking||getState().status==='selecting')return;
     if((event.shiftKey&&event.key==='ArrowDown')||(event.key===' '&&event.target===svg)){event.preventDefault();event.stopImmediatePropagation();toggle();}
     else if((event.shiftKey&&event.key==='ArrowRight')||(event.target===svg&&['ArrowRight','Home','End'].includes(event.key))){event.preventDefault();event.stopImmediatePropagation();if(event.key==='Home')controller.seek(0);else if(event.key==='End')controller.seek(getState().length-1);else controller.step(1);}
@@ -740,7 +766,16 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   const visibility=()=>{if(doc.hidden)pause();};
   doc.addEventListener('visibilitychange',visibility);win.addEventListener('blur',pause);win.addEventListener('pagehide',pause);win.addEventListener('storage',savedChanged);
   const resizeObserver=new ResizeObserver(resize);resizeObserver.observe(plot);resizeObserver.observe(panel);
-  return {isActive:()=>active,open,exit,handleChartCommand,destroy(){if(destroyed)return;exit();destroyed=true;controller.destroy();resizeObserver.disconnect();
+  async function openFixedBacktest(forecast){
+    if(!atlasAvailable||active||destroyed||saving)throw new Error('현재 리플레이를 종료한 뒤 월말 고정본을 열어 주세요.');
+    if(forecast?.kind!=='atlas-cutoff-backtest-forecast'||forecast.symbol!==symbol||![30,90,180,365].includes(forecast.horizonDays))throw new TypeError('월말 고정 경로가 올바르지 않습니다.');
+    externalBacktest=true;
+    q('mode').value='cutoff-backtest';q('horizon').value=String(forecast.horizonDays);
+    await open({resume:{version:1,symbol,mode:'cutoff-backtest',origin:forecast.asOf,startDate:dateAt(day(forecast.asOf)+1),horizon:forecast.horizonDays,
+      cutoffForecast:forecast,outputHash:forecast.outputHash,cursorIndex:0,cursorDate:forecast.asOf,frequency:'daily',chartType:'candles',window:'half'}});
+    return getState().status;
+  }
+  return {isActive:()=>active,open,openFixedBacktest,exit,handleChartCommand,destroy(){if(destroyed)return;exit();destroyed=true;controller.destroy();resizeObserver.disconnect();
     for(const type of pointerTypes)plot.removeEventListener(type,pointer,true);plot.removeEventListener('click',blockChoiceClick,true);plot.removeEventListener('wheel',wheel,true);plot.removeEventListener('contextmenu',preventLiveGesture,true);plot.removeEventListener('dblclick',preventLiveGesture,true);doc.removeEventListener('keydown',key,true);
     doc.removeEventListener('pointerdown',dismissMenu,true);doc.removeEventListener('visibilitychange',visibility);win.removeEventListener('blur',pause);win.removeEventListener('pagehide',pause);win.removeEventListener('storage',savedChanged);transport?.removeEventListener('scroll',transportHints);transport?.removeEventListener('focusin',revealControl);trigger.remove();panel.remove();hud.remove();notice.remove();}};
 }

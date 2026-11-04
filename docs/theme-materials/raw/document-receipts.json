@@ -1,0 +1,20 @@
+[
+  {
+    "id": "bitwise-etp",
+    "url": "https://bitwiseinvestments.eu/newsroom/Press_Release_09_04_2026/",
+    "retrievedAt": "2026-11-03T13:33:27.381936+00:00",
+    "sha256": "b76972ebc3bd40496cf91d4bc04a6e93e41809fa86db4012922c20ac0da961d9"
+  },
+  {
+    "id": "hip3-docs",
+    "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/hip-3-builder-deployed-perpetuals.md",
+    "retrievedAt": "2026-11-03T13:33:27.743201+00:00",
+    "sha256": "31358d37ccd0ace67ab941f70215b4a0e648973dc519666a51928cd1a915eb79"
+  },
+  {
+    "id": "hyperevm-docs",
+    "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/hyperevm.md",
+    "retrievedAt": "2026-11-03T13:33:28.098138+00:00",
+    "sha256": "0c38c14d89f7f559e5a3a3d2d91f0953ac2c636f0fbc995b465abd4ead6c0d4c"
+  }
+]

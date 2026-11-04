@@ -2,9 +2,9 @@
  * Scope: observed charts, comparison ledger, research and existing tool states. Verification is recorded by commit in CI.
  */
 /* Hallmark · pre-emit critique: P4 H4 E3 S5 R4 V3 · weakest: E, uneven focus and small metadata; shared states and readable neutral ink are applied across the app. */
-.eth-history-dialog{position:fixed;inset:var(--dialog-viewport-top,0px) 0 auto;width:min(870px,calc(100% - 36px));height:710px;max-height:calc(var(--dialog-viewport-height,100dvh) - 40px);margin:20px auto;padding:0;border:1px solid var(--ethereum-history-rule);border-radius:10px;background:var(--ethereum-history-surface);color:var(--ethereum-history-ink);box-shadow:0 24px 90px var(--analysis-dock-shadow-3);font-family:var(--font,system-ui);overflow:hidden}
+.eth-history-dialog{position:fixed;inset:var(--dialog-viewport-top,0px) 0 auto;width:min(870px,calc(100% - 36px));height:710px;max-height:calc(var(--dialog-viewport-height,100dvh) - 40px);margin:20px auto;padding:0;border:1px solid var(--ethereum-history-rule);border-radius:10px;background:var(--ethereum-history-surface);color:var(--ethereum-history-ink);box-shadow:none;font-family:var(--font,system-ui);overflow:hidden}
 .eth-history-dialog[open]{display:flex;flex-direction:column}
-.eth-history-dialog::backdrop{background:var(--ethereum-history-surface-2);backdrop-filter:blur(3px)}
+.eth-history-dialog::backdrop{background:var(--ethereum-history-surface-2);backdrop-filter:none}
 .eth-history-dialog [hidden]{display:none!important}
 .eth-history-dialog button,.eth-history-dialog input,.eth-history-dialog select{font:inherit;color:inherit}
 .eth-history-dialog button{cursor:pointer}
@@ -30,9 +30,9 @@
 .eth-history-list-filters select{box-sizing:border-box;width:100%;height:30px;padding:4px 8px;border:1px solid var(--ethereum-history-rule-4);border-radius:5px;background:var(--ethereum-history-surface-6);font-size:11px}
 #eth-history-count{flex:none;margin:12px 0;color:var(--ethereum-history-ink-10);font-size:11px;font-variant-numeric:tabular-nums}
 #eth-history-list{display:flex;flex:1;min-height:0;flex-direction:column;gap:8px;overflow:auto;overscroll-behavior:contain;padding:0 1px 16px;scrollbar-width:thin;scrollbar-color:var(--ethereum-history-ink-11) transparent}
-.eth-history-card{display:flex;flex:none;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;width:100%;box-sizing:border-box;padding:12px 12px;border:1px solid var(--ethereum-history-rule-6);border-left:2px solid var(--event-color);border-radius:5px;background:var(--ethereum-history-surface-7)}
+.eth-history-card{display:flex;flex:none;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;width:100%;box-sizing:border-box;padding:12px 12px;border:1px solid var(--ethereum-history-rule-6);border-left:2px solid var(--event-color);border-radius:5px;background:var(--surface);color:var(--text)}
 .eth-history-card:hover{background:var(--ethereum-history-surface-8)}
-.eth-history-card[aria-current="true"]{background:var(--ethereum-history-surface-9);border-color:var(--ethereum-history-rule-7);border-left-color:var(--event-color)}
+.eth-history-card[aria-current="true"]{background:var(--surface-raised);border-color:var(--ethereum-history-rule-7);border-left-color:var(--event-color);color:var(--text)}
 .eth-history-card time{font-size:11px;color:var(--ethereum-history-ink-12);font-variant-numeric:tabular-nums}
 .eth-history-card strong{font-size:11px;line-height:1.55;font-weight:550;color:var(--ethereum-history-ink-13)}
 .eth-history-card span{font-size:11px;color:var(--event-color)}

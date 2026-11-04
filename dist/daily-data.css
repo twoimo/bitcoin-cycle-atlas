@@ -91,7 +91,7 @@
 #data-view .asset-comparison-table .asset-table-empty { height: 220px; padding: 36px 20px; background: var(--asset-paper); color: var(--asset-muted); font-size: 13px; }
 #data-view .asset-table-empty > span { display: block; }
 #data-view #asset-retry { margin-top: 16px; min-height: 34px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface-raised); color: var(--asset-ink); font-size: 12px; }
-#data-view .daily-method-dialog { width: min(740px, calc(100% - 28px)); max-height: 88dvh; padding: 20px 24px 24px; border: 1px solid var(--border); border-radius: 8px; color: var(--asset-ink); background: var(--surface); box-shadow: var(--shadow); }
+#data-view .daily-method-dialog { width: min(740px, calc(100% - 28px)); max-height: 88dvh; padding: 20px 24px 24px; border: 1px solid var(--border); border-radius: 8px; color: var(--asset-ink); background: var(--surface); box-shadow:none; }
 #data-view .daily-method-dialog::backdrop { background: var(--daily-data-surface); }
 #data-view .daily-method-heading { display: flex; position: sticky; top: -20px; z-index: 1; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 0 12px; background: var(--surface); border-bottom: 1px solid var(--asset-grid); }
 #data-view .daily-method-heading h2 { margin: 0; color: var(--asset-ink); font-size: 17px; font-weight: 600; }
@@ -117,7 +117,7 @@
 #data-view .asset-source-details ul { margin: 12px 0 0; padding-left: 20px; }
 #data-view .asset-source-details li + li { margin-top: 12px; }
 #data-view .asset-source-issue { color: var(--red, var(--daily-data-ink-2)); }
-#data-view .asset-selected-reason { padding: 0 16px 12px; border-left: 3px solid var(--asset-sign); background: var(--surface-raised, var(--daily-data-surface-2)); }
+#data-view .asset-selected-reason { padding: 0 16px 12px; border-left:2px solid var(--asset-sign); background: var(--surface-raised, var(--daily-data-surface-2)); }
 @media (max-width: 760px) {
   #data-view .daily-heading { gap: 8px; padding: 4px 8px; }
   #data-view .daily-heading-actions { gap: 2px; }
@@ -178,7 +178,7 @@
 #data-view .asset-comparison-table thead th.asset-stat-header small { font: 500 11px/1.4 var(--font); white-space: nowrap; margin-bottom: 4px; }
 #data-view .asset-comparison-table thead th.asset-stat-header span { display: block; color: var(--asset-ink); font-size: 12px; font-weight: 650; white-space: nowrap; }
 
-#data-view .asset-history-dialog { width: min(1180px, calc(100% - 28px)); max-height: 94dvh; padding: 20px 24px 24px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--asset-ink); box-shadow: var(--shadow); scroll-padding-top: 72px; }
+#data-view .asset-history-dialog { width: min(1180px, calc(100% - 28px)); max-height: 94dvh; padding: 20px 24px 24px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--asset-ink); box-shadow:none; scroll-padding-top: 72px; }
 #data-view .asset-history-heading { position: sticky; top: -20px; z-index: 6; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 4px 0 12px; border-bottom: 1px solid var(--asset-grid); background: var(--surface); }
 #data-view .asset-history-heading p { margin: 0 0 4px; font: 600 11px/1.4 var(--font); letter-spacing:normal; color: var(--asset-muted); }
 #data-view .asset-history-heading h2 { margin: 0; font-size: 18px; font-weight: 600; }

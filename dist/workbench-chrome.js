@@ -97,7 +97,7 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
   const chartType=button('candles','가격 표시 · 캔들로 변경',{'id':'workbench-chart-type','aria-pressed':'false'});chartType.onclick=()=>command('chart-type',chartType.getAttribute('aria-pressed')==='true'?'line':'candles');
   const chartMenu=button('more','차트 빠른 조작 · 우클릭 / Shift+F10',{'id':'workbench-chart-menu','aria-haspopup':'menu','aria-controls':'atlas-chart-context-menu'});chartMenu.onclick=()=>command('context-menu');
   const workspaceButton=button('search','작업 화면·명령 검색 · Ctrl/⌘ K',{'id':'workbench-workspace'});
-  heading.append(symbol,frequency,chartType,menu,scenario,$('#atlas-cycle-panel'),spacer,workspaceButton,chartMenu,save,settingButton);stage.prepend(heading);
+  heading.append(symbol,frequency,chartType,menu,scenario,$('#atlas-cycle-panel'),$('#workbench-monthly-backtest'),spacer,workspaceButton,chartMenu,save,settingButton);stage.prepend(heading);
   const workspaceTools=mountWorkspaceTools({trigger:workspaceButton,plot,openReader,closeReader});
   const marketInfo=document.createElement('div');marketInfo.className='workbench-market-info';marketInfo.hidden=true;
   const marketStatus=document.createElement('span');marketStatus.id='workbench-market-status';marketStatus.setAttribute('role','status');marketStatus.setAttribute('aria-live','polite');
@@ -168,7 +168,9 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
   $('.atlas-controls').remove();tools.remove();
   const live=document.createElement('span');live.id='workbench-announcement';live.className='lab-visually-hidden';live.setAttribute('role','status');live.setAttribute('aria-live','polite');stage.append(live);
   $('#lab-metrics').removeAttribute('aria-live');
+  let deferredState=null;
   const handleState=event=>{
+    if(document.body.dataset.centerTool){deferredState=event.detail;return;}
     const s=event.detail,price=s.mode==='price',intraday=price&&isIntradayInterval(s.frequency),candles=s.chartType==='candles';plot.dataset.tool=s.tool;plot.dataset.intraday=String(intraday);workspace.dataset.chartMode=s.mode;
     workspace.dataset.analysisMode=s.analysisMode||'';goTo.update(s);
     left.hidden=!price;left.querySelector('[data-chart-tool=measure]').hidden=false;clear.hidden=false;chartMenu.hidden=!price;chartMenu.disabled=s.navigationAvailable===false;scenario.hidden=!price||intraday;layerButton.hidden=!price;ranges.hidden=!price;axis.hidden=!price;next.hidden=!price||intraday;goDate.hidden=!price;chartType.hidden=!price;
@@ -225,6 +227,8 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
   };
   scale.setAttribute('aria-keyshortcuts','Alt+L');goDate.setAttribute('aria-keyshortcuts','Alt+G');
   document.addEventListener('atlas:workbench-state',handleState);
+  const restoreCenter=()=>{if(deferredState){const detail=deferredState;deferredState=null;handleState({detail});}};
+  document.addEventListener('atlas:center-restored',restoreCenter);
   document.addEventListener('keydown',handleKey);intervalButtons.addEventListener('keydown',handleIntervalKey);
-  return {destroy(){symbolSelector.destroy();goTo.destroy();workspaceTools.destroy();bottomBar.destroy();document.removeEventListener('atlas:workbench-state',handleState);document.removeEventListener('keydown',handleKey);intervalButtons.removeEventListener('keydown',handleIntervalKey);document.removeEventListener('pointerdown',dismissMagnet,true);document.removeEventListener('focusin',dismissMagnet);document.removeEventListener('scroll',scrollMagnet,true);document.removeEventListener('visibilitychange',visibilityMagnet);window.removeEventListener('resize',resizeMagnet);window.removeEventListener('blur',resizeMagnet);magnetMenu.remove();}};
+  return {destroy(){symbolSelector.destroy();goTo.destroy();workspaceTools.destroy();bottomBar.destroy();document.removeEventListener('atlas:workbench-state',handleState);document.removeEventListener('atlas:center-restored',restoreCenter);document.removeEventListener('keydown',handleKey);intervalButtons.removeEventListener('keydown',handleIntervalKey);document.removeEventListener('pointerdown',dismissMagnet,true);document.removeEventListener('focusin',dismissMagnet);document.removeEventListener('scroll',scrollMagnet,true);document.removeEventListener('visibilitychange',visibilityMagnet);window.removeEventListener('resize',resizeMagnet);window.removeEventListener('blur',resizeMagnet);magnetMenu.remove();}};
 }

@@ -1,0 +1,39 @@
+/* Hallmark app: existing Atlas financial-workbench tokens and scroll owners. */
+.monthly-backtest{position:absolute;inset:0;z-index:24;display:flex;flex-direction:column;min-height:0;background:var(--bg);color:var(--text);font:12px var(--font)}
+.monthly-backtest[hidden],.monthly-backtest [hidden]{display:none!important}
+.monthly-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);flex:none}
+.monthly-heading h2{margin:0;font-size:14px;font-weight:600}.monthly-heading>span{margin-right:auto;color:var(--muted);font-size:11px;font-weight:400}
+.monthly-backtest button,.monthly-backtest select{min-height:32px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font:inherit;padding:4px 8px;cursor:pointer}
+.monthly-backtest button:hover:not(:disabled){background:var(--surface-hover)}
+.monthly-backtest button:disabled{opacity:.5;cursor:not-allowed}
+.monthly-backtest :focus-visible,#workbench-monthly-backtest:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.monthly-heading button{width:36px;font-size:20px;flex:none}
+.monthly-toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;overflow-x:auto;flex:none;white-space:nowrap;border-bottom:1px solid var(--border)}
+.monthly-toolbar label{display:flex;align-items:center;gap:4px;flex:none}.monthly-toolbar button{flex:none}
+.monthly-clock,.monthly-status{padding:4px 12px;color:var(--muted);font-size:11px;flex:none;overflow-wrap:anywhere}
+.monthly-status{min-height:24px;color:var(--text)}
+.monthly-content{display:flex;flex-direction:column;min-height:0;overflow:hidden;overscroll-behavior:contain;padding:0 12px 12px;flex:1}
+.monthly-summary,.monthly-ledger{overflow-x:auto;overscroll-behavior-x:contain;font-variant-numeric:tabular-nums}
+.monthly-backtest table{width:100%;border-collapse:separate;border-spacing:0;text-align:left;white-space:nowrap;font-size:12px}
+.monthly-backtest caption{text-align:left;color:var(--muted);padding:8px 0;font-size:11px}
+.monthly-backtest :is(th,td){padding:8px;border-bottom:1px solid var(--border);font-weight:400}
+.monthly-backtest thead th{color:var(--muted);font-size:11px;background:var(--surface)}
+.monthly-backtest tbody th{position:sticky;left:0;z-index:1;background:var(--bg);font-weight:500}
+.monthly-backtest th small{display:block;margin-top:4px;font-size:10px;color:var(--muted);font-weight:400}
+.monthly-summary table{min-width:680px}.monthly-ledger table{min-width:760px}
+.monthly-summary{margin-bottom:12px;flex:none}.monthly-ledger{flex:1;min-height:96px;overflow:auto}.monthly-ledger td{padding:0}
+.monthly-ledger thead th{position:sticky;top:0;z-index:2}.monthly-ledger thead th:first-child{left:0;z-index:3}
+.monthly-ledger td button{display:block;width:100%;border:0;border-radius:0;background:transparent;text-align:left;padding:8px 12px;min-height:64px}
+.monthly-ledger td button strong{font-size:13px;font-weight:500}.monthly-ledger td button small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.monthly-error{padding:12px;display:block;color:var(--red)}
+.monthly-method{flex:none;max-height:30%;overflow:auto;font-size:11px;line-height:1.7;color:var(--muted);padding-top:12px}.monthly-method summary{cursor:pointer}.monthly-method p{max-width:70ch}
+@media(max-width:620px){.monthly-toolbar,.monthly-heading{padding:4px 8px}.monthly-backtest button,.monthly-backtest select,.monthly-toolbar label{min-height:44px}.monthly-content{padding-inline:8px}.monthly-clock,.monthly-status{padding-inline:8px}.monthly-heading button{width:44px}.monthly-heading h2{font-size:13px}}
+.backtest-view-tabs{display:flex;gap:4px;flex:none}.monthly-heading .backtest-view-tabs button{width:auto;font-size:12px;white-space:nowrap}.backtest-view-tabs [aria-pressed=true]{background:var(--surface-hover);border-color:var(--focus)}
+.clock-backtest .monthly-content{overflow-y:auto}.clock-target-meta{flex:none;color:var(--muted);font-size:11px;line-height:1.7;padding-bottom:8px;overflow-wrap:anywhere}
+.clock-backtest .monthly-summary table{min-width:620px}.clock-ledger table{min-width:960px}.clock-ledger td{padding:8px}.clock-ledger th{min-width:120px}
+.clock-backtest [data-cb=current]{flex:none;max-height:30%;overflow:auto}.clock-backtest .clock-conditional{padding-top:8px;max-height:none;overflow:visible}.clock-conditional table{min-width:420px}
+.clock-backtest select[data-cb=target]{max-width:240px}
+@media(max-width:620px){.monthly-heading:has(.backtest-view-tabs){flex-wrap:wrap;gap:4px}.monthly-heading:has(.backtest-view-tabs) h2{font-size:12px}.monthly-heading:has(.backtest-view-tabs)>span{display:none}.monthly-heading .backtest-view-tabs{margin-left:auto}.monthly-heading .backtest-view-tabs button{width:auto;padding-inline:8px;font-size:11px}.monthly-heading:has(.backtest-view-tabs)>button{width:44px}.clock-backtest .monthly-method>summary{min-height:44px;line-height:44px}}
+
+.clock-history-coverage{flex:none;color:var(--muted);font-size:11px;margin-bottom:8px}.clock-history-coverage summary{cursor:pointer;min-height:32px;line-height:32px}.clock-history-coverage p{max-width:70ch;line-height:1.7}.clock-history-coverage .monthly-summary table{min-width:980px}.clock-history-coverage .monthly-summary{margin-bottom:0}.clock-ledger table{min-width:1060px}.clock-ledger td small{display:block;margin-top:4px;color:var(--muted);font-size:10px}.clock-ledger .clock-missing-reason{white-space:normal;min-width:120px;max-width:160px;line-height:1.6}
+@media(max-width:620px){.clock-history-coverage summary{min-height:44px;line-height:44px}}

@@ -86,7 +86,7 @@ main{height:100%;width:100%;max-width:none;padding:var(--viewport-gap);min-heigh
 .lab-error{position:absolute;top:40%;left:15%;right:10%;z-index:10;background:var(--viewport-surface-2);padding:12px}
 .viewport-reader{width:min(660px,calc(100% - var(--sidebar-width) - 16px));max-width:none;height:min(560px,calc(100dvh - 20px));max-height:none;margin:auto auto auto calc(var(--sidebar-width) + (100vw - var(--sidebar-width) - min(660px,100vw - var(--sidebar-width) - 16px))/2);padding:16px;overflow:hidden;box-sizing:border-box;border:1px solid var(--viewport-rule-2);border-radius:8px;background:var(--forecast-journal-surface-7);color:var(--chart-details-panel-ink)}
 .viewport-reader[open]{display:flex;flex-direction:column;gap:8px}
-.viewport-reader::backdrop{background:var(--viewport-surface-3);backdrop-filter:blur(2px)}
+.viewport-reader::backdrop{background:var(--viewport-surface-3);backdrop-filter:none}
 .reader-heading,.viewport-reader .dialog-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex:none;margin:0}
 .reader-heading h2,.viewport-reader h2{font-size:16px;line-height:1.5;margin:0;flex:none;overflow-wrap:anywhere}
 .reader-heading button{width:32px;height:32px;display:grid;place-items:center;color:var(--viewport-ink-6);flex:none}
@@ -156,7 +156,7 @@ body[data-page=compare] .footer{display:flex}
 .atlas-mode-menu>summary,.atlas-canvas-heading .atlas-settings>summary{display:grid;place-items:center;list-style:none;padding:4px;border:0;border-radius:4px;cursor:pointer;width:28px;height:26px;color:var(--viewport-ink-12)}
 .atlas-mode-menu>summary::-webkit-details-marker{display:none}
 .atlas-mode-menu[open]>summary,.atlas-settings[open]>summary{background:var(--chart-details-panel-surface-3);color:var(--chart-details-panel-ink-10)}
-.atlas-mode-menu .atlas-mode-tabs{position:absolute;top:31px;left:0;z-index:35;background:var(--viewport-surface-5);border:1px solid var(--viewport-rule-6);box-shadow:0 12px 32px var(--atlas-shadow);border-radius:5px;display:flex;flex-direction:column;width:176px;padding:4px}
+.atlas-mode-menu .atlas-mode-tabs{position:absolute;top:31px;left:0;z-index:35;background:var(--viewport-surface-5);border:1px solid var(--viewport-rule-6);box-shadow:none;border-radius:5px;display:flex;flex-direction:column;width:176px;padding:4px}
 .atlas-mode-menu .atlas-mode-tabs button,.atlas-mode-menu .atlas-mode-tabs button:nth-child(n){min-height:34px;text-align:left;font-size:12px;border:0;padding:8px 12px;border-radius:3px;flex:none}
 .atlas-mode-menu .atlas-mode-tabs button[aria-pressed=true]{background:var(--viewport-surface-6);color:var(--chart-details-panel-ink-12)}
 .atlas-canvas-heading .atlas-settings-body{top:31px;right:0;width:282px;max-width:calc(100vw - var(--sidebar-width) - 20px);gap:8px;max-height:calc(100dvh - 62px);box-sizing:border-box}

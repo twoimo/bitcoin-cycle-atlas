@@ -1,0 +1,312 @@
+{
+  "observedAt": "2026-11-03T14:55:30.408120+00:00",
+  "worktree": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service",
+  "branch": "codex/market-lab-service-20261103",
+  "route": "http://127.0.0.1:4319/market-lab/us/",
+  "model": {
+    "version": "proxy-product-1",
+    "definition": "product sign of existing clipped robust z scores",
+    "actual": {
+      "version": "proxy-product-1",
+      "direction": "DOWN",
+      "product": -0.09096167380412551,
+      "factors": [
+        {
+          "key": "alpha",
+          "z": 0.5248506538880526,
+          "date": "2026-09-30",
+          "status": "ready"
+        },
+        {
+          "key": "beta",
+          "z": 0.17129924050199255,
+          "date": "2026-10-31",
+          "status": "ready"
+        },
+        {
+          "key": "gamma",
+          "z": -1.0117361392148936,
+          "date": "2026-10-30",
+          "status": "ready"
+        }
+      ],
+      "reason": "",
+      "kind": "proxy_model_direction"
+    },
+    "actualFutureReturnPrediction": false,
+    "originalQuantitativeCoefficientsVerified": false,
+    "zeroMissingFutureStale": "withheld",
+    "legacyAverageFormulaPreserved": true
+  },
+  "sources": [
+    {
+      "series": "GDPC1",
+      "rows": 66,
+      "lastObservation": "2026-09-30",
+      "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=GDPC1&cosd=2010-01-01",
+      "sha256": "4001160e214c244e8eef3de0a3031b26c5ea5fafdb453a746053d8be854fe536",
+      "acquiredAt": "2026-11-03T14:45:02.279Z"
+    },
+    {
+      "series": "TB3MS",
+      "rows": 202,
+      "lastObservation": "2026-10-31",
+      "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=TB3MS&cosd=2010-01-01",
+      "sha256": "1e50db2a32bbf14931b5d39b393e3cf9389e5ff8c472b98fa1b403a5e86ccabd",
+      "acquiredAt": "2026-11-03T14:45:02.263Z"
+    },
+    {
+      "series": "VIXCLS",
+      "rows": 4266,
+      "lastObservation": "2026-10-30",
+      "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS&cosd=2010-01-01",
+      "sha256": "fcf41457e3f210751fa70acb2830532dfc73b64ac94fd9458d4a04d401070fc4",
+      "acquiredAt": "2026-11-03T14:45:02.265Z"
+    }
+  ],
+  "runtime": {
+    "apiSession": 39009,
+    "port": 4319,
+    "postgresPort": 55439,
+    "schedule": {
+      "enabled": true,
+      "intervalMs": 900000,
+      "running": false,
+      "nextDueAt": "2026-11-03T15:00:02.605Z"
+    },
+    "latestCollection": {
+      "id": "90efa092-9e06-4fae-9225-80e6a3082556",
+      "startedAt": "2026-11-03T14:45:02.200Z",
+      "finishedAt": "2026-11-03T14:45:02.605Z",
+      "status": "published",
+      "revision": "fcb68e704e6164b569a571bcd359e1d94f57346d4b4b0635d6f5636b85fad400",
+      "sources": [
+        {
+          "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=GDPC1&cosd=2010-01-01",
+          "axis": "alpha",
+          "rows": 66,
+          "series": "GDPC1",
+          "sha256": "4001160e214c244e8eef3de0a3031b26c5ea5fafdb453a746053d8be854fe536",
+          "status": "ready",
+          "checkedAt": "2026-11-03T14:45:02.279Z",
+          "lastObservation": "2026-09-30"
+        },
+        {
+          "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=TB3MS&cosd=2010-01-01",
+          "axis": "beta",
+          "rows": 202,
+          "series": "TB3MS",
+          "sha256": "1e50db2a32bbf14931b5d39b393e3cf9389e5ff8c472b98fa1b403a5e86ccabd",
+          "status": "ready",
+          "checkedAt": "2026-11-03T14:45:02.263Z",
+          "lastObservation": "2026-10-31"
+        },
+        {
+          "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS&cosd=2010-01-01",
+          "axis": "gamma",
+          "rows": 4266,
+          "series": "VIXCLS",
+          "sha256": "fcf41457e3f210751fa70acb2830532dfc73b64ac94fd9458d4a04d401070fc4",
+          "status": "ready",
+          "checkedAt": "2026-11-03T14:45:02.265Z",
+          "lastObservation": "2026-10-30"
+        }
+      ],
+      "error": null
+    },
+    "firstAutomaticRunId": "dc2cdf2b-6f82-4dc2-b7e4-2fdfd8faca92",
+    "metadataCorrectionManualRunId": "90efa092-9e06-4fae-9225-80e6a3082556",
+    "continuouslyRunningServiceRequired": true,
+    "osAutostartInstalled": false,
+    "deploymentPerformed": false,
+    "laterTimedProviderCycleElapsedDuringVerification": false
+  },
+  "checks": {
+    "legacyRegression": {
+      "tests": 2404,
+      "pass": 2404,
+      "fail": 0,
+      "skipped": 0
+    },
+    "reactPanels": {
+      "tests": 51,
+      "pass": 51,
+      "fail": 0
+    },
+    "postgresApi": {
+      "tests": 21,
+      "pass": 21,
+      "fail": 0
+    },
+    "finalCollectorSubset": {
+      "tests": 7,
+      "pass": 7,
+      "fail": 0,
+      "includedIn21": true
+    },
+    "signCases": 27,
+    "typecheck": "passed",
+    "build": "passed",
+    "static": {
+      "files": 761,
+      "references": 487,
+      "status": "passed"
+    },
+    "independentPython": {
+      "checkedAt": "2026-11-03T14:41:55.415586+00:00",
+      "method": "Independent Python median/MAD, excluding latest value, clip +/-3, product sign",
+      "axes": {
+        "alpha": {
+          "n": 66,
+          "median": 0.67787475634834,
+          "madScale": 0.293587894191279,
+          "z": 0.5248506538880526
+        },
+        "beta": {
+          "n": 202,
+          "median": 4.21,
+          "madScale": 0.9340380000000001,
+          "z": 0.17129924050199255
+        },
+        "gamma": {
+          "n": 4266,
+          "median": 17.095,
+          "madScale": 2.298030000000001,
+          "z": -1.0117361392148936
+        }
+      },
+      "product": -0.09096167380412551,
+      "direction": "DOWN",
+      "legacyMean": -0.10519541494161615,
+      "sourceVintageVerified": false,
+      "predictiveValidity": false
+    },
+    "sequence": "Full legacy check preceded bounded React polling/hash-binding and collection metadata/cleanup refinements; affected final panel51 and service21/collector7/type/build/static/UI checks cover the final changes."
+  },
+  "iab": {
+    "browser": 2,
+    "deliverableTab": 19,
+    "temporaryTab21Closed": true,
+    "desktopViewport": [
+      1280,
+      720
+    ],
+    "mobileViewport": [
+      390,
+      700
+    ],
+    "mobileHorizontalOverflow": 0,
+    "verified": [
+      "UP/DOWN and precise product match API",
+      "actual FRED October4.05 vs September3.94",
+      "four perimeter regions preserved",
+      "no manual refresh/reload: minute polling changed beta3.94->4.05 and product-0.1408->-0.0910",
+      "API-only503 with older saved fallback preserved newer4.05",
+      "API plus saved-data503 showed error/retry and preserved4.05",
+      "partial collection failure fixture explicitly retained last good model direction",
+      "collection-status503 explicitly showed status-check failure",
+      "normal retry restores source checks",
+      "NASDAQ selection and past observation index4231 survive refresh",
+      "Korean view contains no US direction panel; returning restores US DOWN",
+      "method disclosure keyboard Enter toggles",
+      "temporary mobile metrics cleared"
+    ],
+    "automaticReadEvidence": [
+      {
+        "at": "2026-11-03T14:41:41.141Z",
+        "path": "/api/v1/market-lab",
+        "override": "before-market.json",
+        "status": 200
+      },
+      {
+        "at": "2026-11-03T14:42:41.336Z",
+        "path": "/api/v1/market-lab",
+        "status": 200
+      },
+      {
+        "at": "2026-11-03T14:43:41.338Z",
+        "path": "/api/v1/market-lab",
+        "status": 200
+      },
+      {
+        "at": "2026-11-03T14:44:41.321Z",
+        "path": "/api/v1/market-lab",
+        "status": 200
+      },
+      {
+        "at": "2026-11-03T14:47:41.328Z",
+        "path": "/api/v1/market-lab",
+        "status": 200
+      }
+    ],
+    "screenshots": {
+      "build/us-direction/final-desktop.png": "e375800fdb4a8bbc757c13efb4d9425c64f38b3e6f622f945523a6257be35adc",
+      "build/us-direction/mobile.png": "7957ab5cae370a42f490c71aab5c7749cdb651e2ab843a40e2126efba0e004c8"
+    },
+    "finalConsoleErrors": 0
+  },
+  "preservation": {
+    "previousRevision": "a855c157ff696ff609798b791ebbca26fa659b7174b56d53a90d7d3f75f2bcc5",
+    "currentRevision": "fcb68e704e6164b569a571bcd359e1d94f57346d4b4b0635d6f5636b85fad400",
+    "previousSnapshotStillIdentical": true,
+    "koreaIdentical": true,
+    "allMarketPriceSeriesIdentical": true,
+    "nonUsSourceMetadataIdentical": true,
+    "otherRevisions": {
+      "housing": "88076a589400547379bf2a1fc678bf0650f8f9bf491bee7deb2feda3759ab686",
+      "themes": "9148b7435b6afa33c772ccd97d60c71b93e0f21cbbbebc5c2443d7e717663204"
+    },
+    "modelFiles": 17,
+    "modelMismatches": [],
+    "proxyClosed": true
+  },
+  "design": {
+    "newUsDirectionFindings": [],
+    "wholeAppStatic": {
+      "fails": 9,
+      "reflex": 79,
+      "warns": 10,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 57,
+      "render": "off"
+    },
+    "upstreamRender": "NOT_RUN",
+    "actualIabRender": "verified"
+  },
+  "cleanup": {
+    "proxy4323Closed": true,
+    "rules": [],
+    "temporaryMetricsCleared": true,
+    "temporaryFaultTab21Closed": true,
+    "liveApiAndPostgresPreserved": true
+  },
+  "sourceHashes": {
+    "apps/api/src/us-collector.ts": "6d8081a9a79ebad85b568d88876d0c4c030a25ecfa3d85824d6cecd08aed3d3a",
+    "apps/api/src/repository.ts": "3c59f1cb5db1790a781d41ed9c5b9c26e58cd85d53b7d7e173dbce16098368b7",
+    "apps/api/src/main.ts": "23b2dd176e52533db5dbda666e35bb69f79caffce47db9402d6de0dc59b9dfff",
+    "apps/api/src/server.ts": "65e937fbd4c5aa838a247c4cc6d8d4cd06020adb80cabdf1b62e23f3648c1f4f",
+    "apps/web/src/app.tsx": "6f2cebdef69d34ead5dc0bddd2c8352de76fb3aba5a4a109d8382a5b46e9244b",
+    "apps/web/src/components/us-direction.tsx": "599f62cb6f39c1f2e5ca1d1e670afbafe9288316750ede0226001064b1c7d39a",
+    "apps/web/src/us-collection.ts": "66d41e1f3c7ce11d1ff1e6cb8e113c29628b18988043439c942bd93eadbc9ddf",
+    "apps/web/src/us-direction.css": "92ce22662763f60e3409185ed0be9f396c9a1059d2bc00285d060bb21697caef",
+    "apps/web/src/panels/diagnosis-panel.tsx": "42494e9dff60175eb977e2cc11e6e3a248943b95743a04221e3daefcecceb97a",
+    "packages/domain/src/us-direction.ts": "3ae4d6641b327365c97cfe757807fa50357a09f2614d76c1723eb849030f071d",
+    "packages/contracts/src/us-collection.ts": "fb8448dce41b6b4d8ab1ad4b68beca786b4029b62583e99acdbb1e521061b3c7",
+    "db/migrations/004_us_collection.sql": "654fb77e31d5c40643c0ce807bb40238691866ea544664933791d627f8418a1d",
+    "tests/service/us-collection.test.ts": "84530d78fa715690eb56c834a5bd6018ac57b56029e5d63cc707e06d0090b97d",
+    "tests/web/us-direction.test.tsx": "6ae0c53b709fa8e0d5688a1b39f03672d4fa359ab959bc09443305d7fdc8ee7f"
+  },
+  "limits": [
+    "GDP quarterly, TB3MS monthly, VIX daily-close: not intraday realtime feeds",
+    "Exact release time and point-in-time vintage unavailable",
+    "Proxy definitions differ from lecture EPS/liquidity/sentiment measures",
+    "S&P500 price chart retained its independent existing source/history; this job does not fetch SPX intraday quotes",
+    "No prediction accuracy/backtest or trading-PnL assertion",
+    "Static cold-start fallback is previously sealed data; existing newer UI data is preserved through outages",
+    "Original audio transcription, external cross-review, upstream render and production deployment not completed"
+  ]
+}

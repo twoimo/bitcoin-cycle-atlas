@@ -1,0 +1,12 @@
+.ml-direction-panel{border-bottom:1px solid var(--border);margin-bottom:20px}
+.ml-direction-main{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:4px 0 16px;font-variant-numeric:tabular-nums}
+.ml-direction-main>div:first-child{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.ml-direction-label{font-size:15px;font-weight:600}.ml-direction-value{font-size:34px;line-height:1.2;font-weight:600;letter-spacing:-.5px}.ml-direction-value[data-direction=UP]{color:var(--green)}.ml-direction-value[data-direction=DOWN]{color:var(--red)}.ml-direction-value[data-direction=pending]{font-size:24px;color:var(--muted)}
+.ml-direction-kind,.ml-direction-formula>span{color:var(--muted);font-size:11px}
+.ml-direction-formula{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}.ml-direction-formula strong{font-size:20px;font-weight:500}
+.ml-collection-line{display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--muted);padding:8px 0;border-top:1px solid var(--border);font-variant-numeric:tabular-nums}.ml-collection-line>span:first-child{color:var(--text)}.ml-collection-line button{margin-left:auto;min-height:32px}
+.ml-direction-method{margin-bottom:12px}.ml-direction-method summary,.ml-legacy-score summary{color:var(--muted);cursor:pointer;font-size:11px;width:fit-content;padding:8px 0}.ml-direction-method p,.ml-legacy-score p{max-width:72ch;color:var(--muted);line-height:1.65;font-size:12px}
+.ml-axis-collection{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:10px;color:var(--muted);margin-bottom:0;font-variant-numeric:tabular-nums}.ml-legacy-score{margin:4px 0 12px}.ml-legacy-score strong{color:var(--text);font-weight:500;margin-left:8px}
+@media(max-width:640px){.ml-direction-main{align-items:flex-start;flex-direction:column;gap:12px}.ml-direction-formula{justify-content:flex-start}.ml-collection-line{gap:8px 12px}.ml-collection-line button{min-height:44px}.ml-direction-method summary,.ml-legacy-score summary{min-height:44px;display:flex;align-items:center}}
+
+.ml-direction-panel :is(button,summary):focus-visible,.ml-legacy-score summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}

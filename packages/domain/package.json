@@ -1,0 +1,16 @@
+{
+  "name": "@atlas/domain",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./market-lab": "./src/market-lab-math.js",
+    "./rsi-backtest": "./src/rsi-backtest.js",
+    "./rsi-bars": "./src/rsi-bars.js",
+    "./housing": "./src/housing.ts",
+    "./themes": "./src/themes.ts",
+    "./us-direction": "./src/us-direction.ts"
+  },
+  "dependencies": {
+    "@atlas/contracts": "*"
+  }
+}

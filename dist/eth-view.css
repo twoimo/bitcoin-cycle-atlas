@@ -48,7 +48,7 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
 #eth-period-select{display:none}
 #eth-status{margin-left:auto;min-width:0;overflow:hidden;text-overflow:ellipsis;padding:0 8px;color:var(--eth-view-ink-16);font-size:11px}
 .eth-timezone{font-size:11px;padding:0 8px;border-right:1px solid var(--eth-view-rule-2)}
-.eth-data-dialog{width:min(490px,calc(100% - 28px));max-height:calc(100dvh - 40px);margin:auto;padding:20px;border:1px solid var(--eth-view-rule-4);border-radius:9px;background:var(--chart-details-panel-surface-12);color:var(--eth-view-ink-17);box-shadow:0 22px 90px var(--atlas-shadow);overflow:auto;font-family:var(--font,system-ui)}
+.eth-data-dialog{width:min(490px,calc(100% - 28px));max-height:calc(100dvh - 40px);margin:auto;padding:20px;border:1px solid var(--eth-view-rule-4);border-radius:9px;background:var(--chart-details-panel-surface-12);color:var(--eth-view-ink-17);box-shadow:none;overflow:auto;font-family:var(--font,system-ui)}
 .eth-data-dialog::backdrop{background:var(--eth-view-surface-5)}
 .eth-data-dialog header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
 .eth-data-dialog h2{font-size:16px;margin:0;color:var(--eth-view-ink-18)}

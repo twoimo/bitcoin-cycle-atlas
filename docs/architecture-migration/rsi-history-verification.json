@@ -1,0 +1,389 @@
+{
+  "observedAt": "2026-11-03T10:14:10.596202+00:00",
+  "worktree": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service",
+  "branch": "codex/market-lab-service-20261103",
+  "outcome": "Local service: retained top/bottom/left/right workbench, center-only tools, three instruments, full history and explicit assumption backtest. Not deployed.",
+  "checks": {
+    "typecheck": "pass",
+    "buildWeb": "pass",
+    "featureAndImport": {
+      "tests": 23,
+      "pass": 23,
+      "fail": 0,
+      "skipped": 0
+    },
+    "realPostgresApi": {
+      "tests": 12,
+      "pass": 12,
+      "fail": 0,
+      "skipped": 0
+    },
+    "standaloneSymbolAndFooter": {
+      "tests": 23,
+      "pass": 23,
+      "fail": 0,
+      "skipped": 0
+    },
+    "static": {
+      "status": "ok",
+      "files": 751,
+      "checkedReferences": 469,
+      "basePath": "/bitcoin-cycle-atlas/",
+      "standalone": null
+    },
+    "diffCheck": "pass"
+  },
+  "broadRegression": {
+    "nativeAttempt": {
+      "tests": 2362,
+      "pass": 2361,
+      "fail": 1,
+      "skipped": 0,
+      "log": "build/rsi-history/native.log"
+    },
+    "failure": "Real standalone publication checksum changed while atlas-shell.css was still being edited. Source was then held stable and the real standalone, symbol selector and footer cases were rerun successfully in artifacts-final.log. No weakened checksum checks.",
+    "priorFrozenReplay": {
+      "tests": 41,
+      "pass": 41,
+      "rerunThisStage": false,
+      "preservedSourceGraphFiles": 17,
+      "proof": "build/regression-repair/model-preservation.json",
+      "log": "build/regression-repair/full-tests.log"
+    },
+    "claimLimit": "This stage does not claim one new all-green 2403-case npm-test run. Prior all-green receipt is retained at its original observation time."
+  },
+  "data": {
+    "health": {
+      "status": "ready"
+    },
+    "revision": "6188bff09e4e17cd990c9f6c9a1a780cd7519fc3cb3018b7e0e92736759d31b4",
+    "oldRevision": "d3393bfbee731d8d09454fe7c9f65708764f3edcab27feb2563911c67dce544c",
+    "oldRevisionReadable": true,
+    "priorMarketObjectsPreserved": 5,
+    "priorSourceObjectsPreserved": 11,
+    "regionDefinitionsAndValuesPreserved": 2,
+    "markets": 7,
+    "sources": 13,
+    "histories": [
+      {
+        "symbol": "TQQQ",
+        "sessions": 4206,
+        "first": "2010-02-11",
+        "last": "2026-10-30",
+        "unit": "USD",
+        "trades": 94,
+        "finalEquity": 91440.31319421472,
+        "maxDrawdownPct": 55.88030159661177,
+        "closedTrades": 47,
+        "winRatePct": 70.2127659574468,
+        "independentPythonParity": true
+      },
+      {
+        "symbol": "SOXL",
+        "sessions": 4188,
+        "first": "2010-03-11",
+        "last": "2026-11-02",
+        "unit": "USD",
+        "trades": 78,
+        "finalEquity": 40751.02103937239,
+        "maxDrawdownPct": 72.29092280639307,
+        "closedTrades": 39,
+        "winRatePct": 71.7948717948718,
+        "independentPythonParity": true
+      },
+      {
+        "symbol": "233740",
+        "sessions": 2633,
+        "first": "2015-12-17",
+        "last": "2026-11-02",
+        "unit": "KRW",
+        "trades": 81,
+        "finalEquity": 21947164.918194085,
+        "maxDrawdownPct": 51.57923670012921,
+        "closedTrades": 40,
+        "winRatePct": 67.5,
+        "independentPythonParity": true
+      }
+    ],
+    "provider": "Yahoo completed quote.close with provider split conventions, no dividend adjustment; the current exchange-local date is excluded.",
+    "newRawSha256": {
+      "build/rsi-history/raw/233740.json": "86ba119a8745afc969c5b3dd0bc486c507e20fe121480a928c1f3400e5d68a19",
+      "build/rsi-history/raw/SOXL.json": "74aa3393b896ca1f1de11b84ee2c6b8ad87e749116ed06500f25b25cb0fcb408"
+    }
+  },
+  "calculationPreservation": {
+    "change": "Only allowed instrument IDs and exchange timezone mappings expanded in canonical market-lab-math.js. The service test reverses just those two explicit expansions and verifies the original complete file SHA256. Numerical functions are unchanged.",
+    "originalSha256": "04f76285edfd22996dc3bc922f98e9e5baeca70a4a137310b72c57370159176a",
+    "canonicalNowSha256": "58d893589d8a2f0a07f95c081cec41207bf410854279909ddcd9d7f4b447ecc8",
+    "publishedCopyEqual": true,
+    "frozenSourceGraphSha256": {
+      "dist/asset-daily-observations.js": "645cdfc751ffe2a4e0ce66a10316fc493d637cd6f74a0d09ea17b4e126367c70",
+      "dist/asset-forecast-records.js": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2",
+      "dist/cycle-engine.js": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+      "dist/data-freshness.js": "10e2348ae352ef19a840002fadc1123f055712312490d958a8559b39e814a0f1",
+      "dist/equity-market-data.js": "7c93eaf2471f354511e3440606cb0ed46b46242803bb7d06e3f06955a2a4cb8d",
+      "dist/eth-market-data.js": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075",
+      "dist/ethereum-adaptive-model.js": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d",
+      "dist/ethereum-pooled-model.js": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467",
+      "dist/ethereum-prospective-prices.js": "1541a414cea9c11116d9485a9ff4d26052105cb4e9e0df5a14afcc82ddd8726d",
+      "dist/ethereum-prospective-records.js": "709cb0f968c3f961b7e1089cf79518bfb79b4fe8e7d2042f99f1387a401b734e",
+      "dist/forecast-evaluation.js": "c48123c844c1fbfd454372d0b2ed56817d1fa9e87a6547abeef2d49c145b0ea5",
+      "dist/forecast-information-time.js": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23",
+      "dist/forecast-records.js": "c79893f81c6bdff97685e2c384a3d1facc6eec10effdb09346c63749a36ca308",
+      "dist/ohlc-data.js": "b2a5104c22b0fced11d747cae9fd7797a876b0c7de4e30492376acae791e7f5d",
+      "dist/ethereum-prospective-dispatch.js": "0d94a0574b017b3eefa145006a2ca616babb199f3362f01d7e8e858fb93c5194",
+      "dist/ethereum-warm-start-model.js": "8b01bbf858689225926ae4d6f60fab002797690b0b7fdada772796f65736c0ff",
+      "dist/ethereum-warm-start-prospective.js": "f606daff3b57c0769004a6afe71f005d4bd9cd2a61a0541d775f17a39189af9b"
+    }
+  },
+  "backtest": {
+    "api": "POST /api/v1/market-lab/backtest",
+    "revisionBound": true,
+    "defaults": {
+      "buyDownCross": 33.5,
+      "sellUpCross": 43,
+      "oneWayCostBps": 10,
+      "initialUsd": 10000,
+      "initialKrw": 10000000
+    },
+    "execution": "next observed session close, fractional all-in long/cash, no extra buy while held, no short, final marked valuation without forced liquidation, end signal may remain pending",
+    "excluded": [
+      "original lecture portfolio/scale-in/reentry rules",
+      "Kiwoom RSI equivalence",
+      "dividends",
+      "taxes",
+      "FX conversion",
+      "point-in-time historical provider vintages"
+    ],
+    "independentPythonVerification": {
+      "revision": "6188bff09e4e17cd990c9f6c9a1a780cd7519fc3cb3018b7e0e92736759d31b4",
+      "results": [
+        {
+          "symbol": "TQQQ",
+          "sessions": 4206,
+          "first": "2010-02-11",
+          "last": "2026-10-30",
+          "unit": "USD",
+          "trades": 94,
+          "finalEquity": 91440.31319421472,
+          "maxDrawdownPct": 55.88030159661177,
+          "closedTrades": 47,
+          "winRatePct": 70.2127659574468,
+          "independentPythonParity": true
+        },
+        {
+          "symbol": "SOXL",
+          "sessions": 4188,
+          "first": "2010-03-11",
+          "last": "2026-11-02",
+          "unit": "USD",
+          "trades": 78,
+          "finalEquity": 40751.02103937239,
+          "maxDrawdownPct": 72.29092280639307,
+          "closedTrades": 39,
+          "winRatePct": 71.7948717948718,
+          "independentPythonParity": true
+        },
+        {
+          "symbol": "233740",
+          "sessions": 2633,
+          "first": "2015-12-17",
+          "last": "2026-11-02",
+          "unit": "KRW",
+          "trades": 81,
+          "finalEquity": 21947164.918194085,
+          "maxDrawdownPct": 51.57923670012921,
+          "closedTrades": 40,
+          "winRatePct": 67.5,
+          "independentPythonParity": true
+        }
+      ]
+    }
+  },
+  "browser": {
+    "engine": "Codex IAB only",
+    "desktop": [
+      1280,
+      720
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "mobileOverrideClearedAndOwnedTestTabClosed": true,
+    "verified": [
+      "Top selector supports TQQQ / SOXL / KODEX 233740; aliases searched by Korean names",
+      "Actual full-history runs for all three symbols; independent replay matches every fill date and side and account metrics",
+      "Sidebar scenario returns 87.52 and asset table opens in the same center; original four perimeter nodes retained",
+      "BTC return hides center and restores controls; direct URL reload works",
+      "Scenario, legacy data page and RSI return retain TQQQ 91440.31 result",
+      "TQQQ full records 4206, signal/fill filter 413, visible CSV 4207 lines including header from 2010-02-11 to 2026-10-30",
+      "Mobile country/stock label remains readable, no horizontal overflow, right-menu navigation closes tray and keeps perimeter",
+      "Mobile KODEX full history 2633 observations; charts and menu toggles usable"
+    ],
+    "csv": "Inline copyable CSV was verified. Initial blob-download acceptance could not be established; that implementation was replaced, not retried.",
+    "screenshots": {
+      "build/rsi-history/screenshots/backtest-desktop.jpg": "8de860ac054192a5df9a0f6ef203b72ac977279874f2ed726ddd5247aca214df",
+      "build/rsi-history/screenshots/rsi-desktop.jpg": "47385281dfb28a1b1ab07394c895cecc4ee7056821aa62a38e092dae9a4b1cc1",
+      "build/rsi-history/screenshots/rsi-mobile.png": "b27ebb8465c59610a9838736c5e9d58360bb7c4f8a6e2f998a8ebe265557750a"
+    }
+  },
+  "design": {
+    "checkerCommit": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+    "command": "node build/rsi-history/hallmark/sloplint.mjs dist apps/web/src --genre modern-minimal --scope app --json",
+    "result": {
+      "summary": {
+        "fails": 1,
+        "reflex": 0,
+        "warns": 8,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 43,
+        "render": "off"
+      },
+      "findings": [
+        {
+          "gate": "56",
+          "grade": "FAIL",
+          "tier": "floor",
+          "file": "dist/styles.css",
+          "line": 981,
+          "evidence": "two sticky top:0 elements: .rsi-ledger-scroll thead th + .indicator-library[op…",
+          "fix": "Offset the second sticky by banner height"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/analysis-dock.css",
+          "line": 8,
+          "evidence": "same container recipe on 18 selectors (.chart-indicator-manager button, .analysis-wind…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/analysis-dock.css",
+          "line": 62,
+          "evidence": "same container recipe on 9 selectors (.indicator-library-eye, .indicator-library-favo…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/atlas-shell.css",
+          "line": 104,
+          "evidence": "same container recipe on 16 selectors (.rsi-toolbar button, .workbench-bottom-bar .wor…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/atlas-shell.css",
+          "line": 151,
+          "evidence": "same container recipe on 7 selectors (.rsi-backtest-form input, .rsi-history button, …...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/chart-export-workbench.css",
+          "line": 13,
+          "evidence": "same container recipe on 6 selectors (.chart-export-dialog button, .chart-export-dial…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/compact.css",
+          "line": 91,
+          "evidence": "same container recipe on 10 selectors (.data-summary, .research-chart-shell, .ipo-sear…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/daily-data.css",
+          "line": 188,
+          "evidence": "same container recipe on 8 selectors (#data-view .asset-history-mode button, #data-vi…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        },
+        {
+          "gate": "F7",
+          "grade": "WARN",
+          "tier": "finish",
+          "file": "dist/styles.css",
+          "line": 883,
+          "evidence": "same container recipe on 10 selectors (dialog(.workspace-dialog, .chart-export-dialog,…...)",
+          "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+        }
+      ]
+    },
+    "reviewedMechanicalFailure": "Gate56 combines sticky headers from independent scroll containers and different host/embedded documents. The ledger header and modal header each own their local top:0; adding an offset would create a gap. Raw FAIL1 retained, not waived or claimed as zero.",
+    "warnings": "Eight F7 shared control/frame recipe warnings retained for coherent workbench styling.",
+    "externalChromeRenderRunner": "not run; no external-browser exception"
+  },
+  "identitySources": [
+    "https://www.direxion.com/product/daily-semiconductor-bull-bear-3x-etfs",
+    "https://www.samsungfund.com/etf/product/list.do"
+  ],
+  "sourceSha256": {
+    "dist/center-workbench.js": "e2fd071deba87efa96b1639f7e5a084470f74e9216af337624c01958c7811cf7",
+    "dist/atlas-shell.js": "ddd725575faaa7caac3da800f9b39960447a8f71cb4382cc9171956104345571",
+    "dist/atlas-shell.css": "d9671afa55db808e2c748c53e0c8a87ffb83304c3e7915b6d23a42c4777e05b3",
+    "dist/symbol-selector.js": "86a41a84b273d59bfd26a9bf3a093e7ca5d684175cddb3f977e166968a473f4a",
+    "dist/symbol-selector.css": "0d48ba9c389718c6afd4a259200d87cee3119c87095daf50c683ac5ca8df1ca4",
+    "dist/rsi-instruments.js": "019ea9bac6ff5ad792cc9ed070bd37c55290dae3e2374f5ea38ef25dad4cb6a2",
+    "dist/workbench-chrome.js": "7fec79bf4e9a31a4324b2b009004b9e11a36d176ad9e4c261f8e909e917a168e",
+    "packages/domain/src/market-lab-math.js": "58d893589d8a2f0a07f95c081cec41207bf410854279909ddcd9d7f4b447ecc8",
+    "packages/domain/src/rsi-backtest.js": "f6d49914c6cbbcda24360882e3c87a79a2165643a3d1a895a7304e3ccf458492",
+    "packages/domain/src/rsi-backtest.d.ts": "67f445a555ff54842eb986ba58e972cd597604249bd642e05422fd31b9532d75",
+    "apps/api/src/server.ts": "8b689f6504093e5b0d07c89d7ee1127665a54623c916e7e610d1e6399031f363",
+    "apps/web/src/app.tsx": "a9b41a4329c74a64223745ac38d467b8c0aecc9f005698e7f53214a11c9cfc6f",
+    "apps/web/src/main.tsx": "4162dea8a56c573c678f6a1ae6c7e5783b6b897aefdaf64389de9b881acb07c3",
+    "apps/web/src/market-data.ts": "60ec8e0ad33f18454c2b7f74f3c7c297db4ad805f7938d861ba40ff7f964c42e",
+    "apps/web/src/components/symbol-picker.tsx": "a7b953dd3986fc31e004e52e121ced9b76cf1d2ab4062714a38f575a549e6a47",
+    "apps/web/src/components/observed-chart.tsx": "db772b969ac3dc1b34b67c62a2033bdc30b096c82bbbc035f304036543fccbd9",
+    "apps/web/src/panels/rsi-panel.tsx": "d2ba9b18a794aca37222ce275ad3ed303b153176dde9ab18d36e0cbce8f414af",
+    "apps/web/src/panels/rsi-history.tsx": "fc10be67f8d03fc65c2605c03c495b325743b40f3489fb0ffb175cb8c8f9c999",
+    "scripts/extend-rsi-history.mjs": "b520bcbe68dce7203f5e5d30ebdc906183c6bb3bcc82edafc4d634a08454d190",
+    "scripts/refresh-market-lab.mjs": "c2fcdf37c8c51f4d4d3aca78de5df20df7dd04800957af453e7a8ddeec04f7af",
+    "tests/web/center-workbench.test.tsx": "599551e537326a050e51c890ff756a62a6290abe355cf1959f725072d3620bc1",
+    "tests/web/rsi-backtest.test.tsx": "056edb9345b262c1ae6909a4e6987b762f8a5bbc08056f56219ca09d9068e8b6",
+    "tests/web/rsi-history-import.test.tsx": "1e4584a9927c19cf62b391000a021ca0a97bd3a804bf247a449b243028665bbd",
+    "tests/symbol-selector.test.mjs": "79458255183bb014703de570e733a173814594849659460a940d06569acf5905"
+  },
+  "evidenceSha256": {
+    "build/rsi-history/api-final.log": "b23ebcc2847b1061621dc36eec58f9164cfac06d6ac79a9da20a5989e9651c29",
+    "build/rsi-history/api.log": "1d3abc97a6b927fc96341b33373b51aa31f5cae8f4cc19f8dd1412b4e53d448c",
+    "build/rsi-history/artifacts-final.log": "5b812287f6a4e8436232600ed1bd7fe51cbc380d6c8f5a14e094dcc3f2e6abcf",
+    "build/rsi-history/build-final.log": "b0395130a8d41e1f9f8e534c30530273593a5a6c58802fd54571f01475031947",
+    "build/rsi-history/build.log": "ede08686ca6d879bde37968b6b3aa5521a27cc9dfc1e689e14ec80257c771243",
+    "build/rsi-history/import.log": "928203a5538d3c114c60d5b9955bd712dc8c4169fa180534d7c55db712be2675",
+    "build/rsi-history/legacy.log": "20036e2a110a018d9dca4bea28481d34336c83adbcabe78732b3422f2fd699f6",
+    "build/rsi-history/native.log": "75c7f0ef8a29e8814938792190d2fc4463d7c1f82d9edd9a3216ede9fd6f39e1",
+    "build/rsi-history/panels-final.log": "5ff921632730f6752e0f3f6a84b4602155120a60b444033788bfb2312363a517",
+    "build/rsi-history/panels.log": "735e02ab43c6e01a3026cf327a8696b5870f4f696bc18122a6a07e2852dfd567",
+    "build/rsi-history/service-final.log": "9d2b915f48828fee518077f85ca41f57fcdd05d6f99cd1d4bd67b17a71549d27",
+    "build/rsi-history/service.log": "dbfafb453a44481ac6f4031b609161b6aed499546da096b8273648879dd59e5a",
+    "build/rsi-history/static-final.log": "1f6b0ba15db4fc6495f3d1f93cb91e69975d4c4b4d32528ca93b0766aa48ba95",
+    "build/rsi-history/static.log": "1f6b0ba15db4fc6495f3d1f93cb91e69975d4c4b4d32528ca93b0766aa48ba95",
+    "build/rsi-history/typecheck-final.log": "fb0819098087f3423e17448306bb7a2fa0eccf94000c9584002be69605262333",
+    "build/rsi-history/typecheck.log": "fb0819098087f3423e17448306bb7a2fa0eccf94000c9584002be69605262333"
+  },
+  "limits": [
+    "New ETF observations and backtests require the DB/API service; the original static fallback/standalone data is retained and the static selector does not advertise missing ETF histories.",
+    "BTC-only drawing/export/forecast controls remain visible but inert/disabled during other center tools; restored on BTC return.",
+    "Whole-app React migration beyond the lab remains unfinished; legacy pages have isolated center adapters.",
+    "Kiwoom authentication/data/order integration, remote CI, external cross-audit, production collector scheduling/hosting and deployment not run."
+  ]
+}

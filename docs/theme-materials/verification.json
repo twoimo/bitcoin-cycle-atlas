@@ -1,0 +1,186 @@
+{
+  "observedAt": "2026-11-03T14:10:10.916316+00:00",
+  "worktree": "/Users/twoimo/Documents/projects/bitcoin-cycle-atlas-service",
+  "branch": "codex/market-lab-service-20261103",
+  "route": "http://127.0.0.1:4319/market-lab/themes/",
+  "preservation": {
+    "market": {
+      "revision": "a855c157ff696ff609798b791ebbca26fa659b7174b56d53a90d7d3f75f2bcc5",
+      "snapshotEqual": true
+    },
+    "housing": {
+      "revision": "88076a589400547379bf2a1fc678bf0650f8f9bf491bee7deb2feda3759ab686",
+      "snapshotEqual": true
+    },
+    "frozenModelFiles": {
+      "n": 17,
+      "mismatches": []
+    },
+    "themes": {
+      "revision": "9148b7435b6afa33c772ccd97d60c71b93e0f21cbbbebc5c2443d7e717663204",
+      "records": 4,
+      "savedIdCount": 1
+    }
+  },
+  "coverage": {
+    "asset": "HYPE/USDC spot @107",
+    "completedAssetDailyBars": 704,
+    "completedBenchmarkDailyBars": 732,
+    "benchmark": "BTC/USD perpetual, price only",
+    "evidence": 8,
+    "reconstructedRecords": 2,
+    "seedRecordedRecords": 1,
+    "appendedReviewRecords": 1,
+    "currentRubric": [
+      "pass",
+      "hold",
+      "hold"
+    ],
+    "pricesThrough": "2026-11-02"
+  },
+  "tests": {
+    "legacy": {
+      "tests": 2404,
+      "pass": 2404,
+      "fail": 0,
+      "skipped": 0
+    },
+    "reactPanels": {
+      "tests": 46,
+      "pass": 46,
+      "fail": 0
+    },
+    "postgresApi": {
+      "tests": 14,
+      "pass": 14,
+      "fail": 0,
+      "isolatedSchemasCleaned": true
+    },
+    "independent": {
+      "checkedAt": "2026-11-03T13:52:27.996418+00:00",
+      "decisionDates": 704,
+      "horizons": [
+        1,
+        5,
+        20
+      ],
+      "windows": 2112,
+      "assertions": 23232,
+      "status": "passed",
+      "method": "independent Python UTC calendar and raw OHLC dictionaries",
+      "predictiveValidity": false
+    },
+    "typecheck": "passed",
+    "build": "passed",
+    "staticReferences": {
+      "files": 761,
+      "references": 487,
+      "status": "passed"
+    },
+    "scopeNote": "Full legacy run preceded bounded SVG-click, local write-parser and focus-range changes; final type/build/panel checks and actual UI cover those changes. Backend/domain unchanged after service/oracle checks."
+  },
+  "actualIab": {
+    "browser": "2",
+    "deliverableTab": "19",
+    "desktop": "1280x720",
+    "mobile": "390x700",
+    "pageHorizontalOverflow": 0,
+    "performanceTable": {
+      "client": 374,
+      "scroll": 635,
+      "nativeKeyboardScrollLeft": 80
+    },
+    "verified": [
+      "preserved four perimeter regions",
+      "HYPE actual quote and closed candle date",
+      "mouse E marker selects correct evidence after hit-area fix",
+      "keyboard marker activation",
+      "same-day E2 evidence selection",
+      "timeline disclosure and chart focus",
+      "native wheel zoom and drag pan",
+      "RSI outer navigation restored on round trip",
+      "theme range preserved on return",
+      "historical 1/5/20-day visible values match oracle",
+      "initial/current records pending",
+      "API plus saved-data 503 error and retry",
+      "API-only error uses saved copy and disables writes",
+      "same revision retains four already-read judgments on fallback",
+      "Skullet theme-specific pending skeleton",
+      "committed POST with lost response -> hard reload -> receipt lookup -> one append only",
+      "newest evidence focus clamped to Dec04 maximum",
+      "default final chart reset"
+    ],
+    "writeRecovery": [
+      {
+        "at": "2026-11-03T14:03:11.392Z",
+        "method": "POST",
+        "path": "/api/v1/themes/judgments",
+        "status": 201,
+        "replyStatus": 503,
+        "requestId": "745be394-f480-4c8e-8793-8c8c098c0b98"
+      },
+      {
+        "at": "2026-11-03T14:03:53.666Z",
+        "method": "GET",
+        "path": "/api/v1/themes/receipts/745be394-f480-4c8e-8793-8c8c098c0b98",
+        "status": 200,
+        "replyStatus": 200
+      }
+    ],
+    "screenshots": {
+      "build/theme-materials/final-desktop.png": "0fe6d146ba580482fd35ef2fa123e671101faff3dd8bc3af3316c41d56e446d8",
+      "build/theme-materials/desktop-performance.png": "e0e7f4b129d0d61ef941df410e5410591744bf0aa8af073861cf39b1b0191af1",
+      "build/theme-materials/mobile-chart.png": "d3b6b8deb0a713bd3288a8d4fcf728c3243ddc101dc93a41b5d544050961227d",
+      "build/theme-materials/mobile-performance.png": "4ee1542b2a3767c702afaddba489535c129916758c472f469c243cadc73e2e3d",
+      "build/theme-materials/theme-loading.png": "5366adf7a1f0f4bf51aff4432d30200080734e13c7311027abb6f87abb6e225f"
+    },
+    "consoleErrorEntries": 0
+  },
+  "design": {
+    "hallmarkStatic": {
+      "fails": 9,
+      "reflex": 83,
+      "warns": 10,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 55,
+      "render": "off"
+    },
+    "newThemeFindings": [],
+    "resolvedFinding": "Removed unnecessary sticky header from short theme comparison tables that do not own vertical scrolling. Original cross-page double-sticky finding retained in hallmark-static.json.",
+    "upstreamRender": "NOT_RUN",
+    "actualIabRender": "verified"
+  },
+  "sourceHashes": {
+    "packages/domain/src/themes.ts": "78a78374951da917e6e091c8513053f4628f766dde8387253222a544d8b6c021",
+    "apps/api/src/theme-repository.ts": "7e689181a02bc4dd5474240ec67b46f9579b5ff0a25eb80b39f96e37998f49e1",
+    "apps/api/src/server.ts": "54f00e53a5579a92376592936ae9a040acc80178e84843aa015cecd79da542c4",
+    "apps/web/src/theme-loader.ts": "682a277c0a7d5a20cc69eac4e3e61425cac0957cff603b21472520e3e4b7f7af",
+    "apps/web/src/theme-write.ts": "4e578d3ddf0b36651ad752ab198a8a06585bbd12cc04ce1fca7aa81892fb4941",
+    "apps/web/src/panels/theme-panel.tsx": "1e0fc7f81c4b6c9bfcf8d62e173e38d8c0afee212d87a16c132144aafd8bf15f",
+    "apps/web/src/components/theme-chart.tsx": "fb53ff78ced85caebc0aad70671efcc33fa43b22b2853ae35caa33878d996692",
+    "apps/web/src/themes.css": "01abc183ce37933ebe4d8f7a8182e973737a3b77dedfa9f53733d68b758127f5",
+    "db/migrations/003_themes.sql": "5115b866ac6c049e9a8d4a5cfaffdabc342b40101785fd49ab27dbcfe350bb57",
+    "scripts/import-themes.mts": "a0366403580e56671272210863c3ea7c2e77e49e570bd7c05e91871175c395db",
+    "dist/data/themes.json": "0446c265f4e7141c348dd406ea1635663c6d005b01b4d77d837a4786c04bad17"
+  },
+  "cleanup": {
+    "proxy4323Closed": true,
+    "rules": [],
+    "mobileOverrideCleared": true,
+    "temporaryFaultTab20Closed": true,
+    "api4319Preserved": true,
+    "postgres55439Preserved": true
+  },
+  "limits": [
+    "No raw recording listen/transcription or exact speech-time proof",
+    "Historical reconstruction does not prove point-in-time vintages",
+    "No predictive validity or actual trade-PnL claim",
+    "No external cross-review, deployment, broker/account or trading action",
+    "Acquisition is a sealed snapshot; refresh rereads DB, not upstream price refresh",
+    "Real touch pinch not tested"
+  ]
+}

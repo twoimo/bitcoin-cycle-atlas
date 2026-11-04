@@ -1,0 +1,53 @@
+/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas locked system · redesign: repair · posture: restrained */
+/* Shared loading geometry. Price paths and invented numeric samples have no place here. */
+:root{--loading-surface:var(--bg,#0b0e14);--loading-border:var(--border-soft,#20252e);--skullet-base:var(--surface-hover,#202a39);--skullet-highlight:#52617433;--skullet-animation:pulse;--skullet-speed:slow;--skullet-radius:3px}
+.atlas-loading-label{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.atlas-skeleton{position:relative;min-width:0;width:100%;height:100%;min-height:220px;overflow:hidden;pointer-events:none;user-select:none}
+.atlas-skeleton-paint,.atlas-skeleton-paint>[skullet-pane],.atlas-skeleton-paint [skullet-loading],.atlas-skeleton-paint [skullet-ghost]{width:100%;height:100%;min-height:inherit}
+.atlas-skeleton-shape{height:100%;min-height:inherit;display:flex;flex-direction:column;padding:16px;gap:20px;box-sizing:border-box}
+.atlas-skeleton-heading,.atlas-skeleton-footer{display:flex;align-items:center;gap:16px;min-height:24px;flex:none}
+.atlas-skeleton [skullet-bar]{background:var(--skullet-base);border-radius:var(--skullet-radius);flex:none;max-width:100%}
+.atlas-skeleton-paint:not([data-enhanced]) [skullet-bar],.atlas-inline-loading [skullet-bar]{animation:atlas-skeleton-pulse 2.4s ease-in-out infinite}
+.atlas-skeleton-plot{flex:1;min-height:120px;border-radius:3px;background:var(--skullet-base);opacity:.32}
+.atlas-skeleton-oscillator{height:24%;min-height:64px;border-radius:3px;background:var(--skullet-base);opacity:.32}
+.atlas-skeleton-footer{margin-top:auto}
+.atlas-skeleton-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.atlas-skeleton-fields>div{display:grid;gap:12px}
+.atlas-skeleton-rows{display:flex;flex:1;flex-direction:column;justify-content:space-around;gap:20px}
+.atlas-skeleton-row{display:flex;align-items:center;gap:24px;min-height:28px;border-bottom:1px solid var(--loading-border);padding-bottom:12px;overflow:hidden}
+.atlas-skeleton-row>[skullet-bar]{flex:0 1 auto}
+.atlas-has-skeleton{position:relative;min-height:240px}
+.atlas-has-skeleton>:not(.atlas-skeleton){visibility:hidden!important;pointer-events:none!important}
+.atlas-has-skeleton>.atlas-skeleton{position:absolute;inset:0;z-index:1;background:var(--loading-surface)}
+.atlas-inline-loading{height:3px;position:relative;flex:none;overflow:hidden;width:100%}
+.atlas-inline-loading>[skullet-bar]{display:block;width:40%;height:3px;background:var(--skullet-base)}
+.atlas-center-loading{position:absolute;inset:0;z-index:5;background:var(--loading-surface)}
+.atlas-chart-pending{position:absolute;inset:0;z-index:2;pointer-events:none}
+.atlas-chart-pending[hidden],body[data-center-tool] .atlas-chart-pending{display:none}
+.eth-empty.atlas-has-skeleton{position:absolute;inset:0;display:block;padding:0;transform:none;max-width:none;min-height:0}
+.eth-empty .atlas-skeleton{min-height:0}
+.atlas-skeleton[data-atlas-skeleton=detail]{min-height:180px}
+.atlas-boot-bar[data-skullet-boot]{animation:none}
+.atlas-boot-canvas.atlas-has-skeleton{min-height:0}
+@keyframes atlas-skeleton-pulse{0%,100%{opacity:.45}50%{opacity:.85}}
+@media(max-width:620px){.atlas-skeleton-shape{padding:12px;gap:16px}.atlas-skeleton-heading{gap:12px}.atlas-skeleton-heading>[skullet-bar]:last-child{display:none}.atlas-skeleton-fields{gap:12px}.atlas-skeleton-row{gap:16px}.atlas-skeleton-row>[skullet-bar]:nth-child(n+4){display:none}}
+@media(prefers-reduced-motion:reduce){.atlas-skeleton *,.atlas-inline-loading *{animation:none!important;transition:none!important}}
+
+body[data-center-tool] .workspace-toast{display:none!important}
+.atlas-plot[aria-busy=true]::after{content:"";position:absolute;top:0;left:0;width:36%;height:3px;background:var(--skullet-base);animation:atlas-skeleton-pulse 2.4s ease-in-out infinite;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.atlas-plot[aria-busy=true]::after{animation:none}}
+
+.atlas-skeleton[data-atlas-skeleton=rsi] .atlas-skeleton-shape{padding:0;gap:0;min-height:0}
+.atlas-skeleton[data-atlas-skeleton=rsi] .atlas-skeleton-heading{min-height:44px;padding:4px 12px;box-sizing:border-box;border-bottom:1px solid var(--border-soft)}
+.atlas-skeleton-rsi-meta{display:flex;align-items:center;gap:12px;height:24px;padding:0 12px;overflow:hidden;flex:none}
+.atlas-skeleton-rsi-panels{flex:1;min-height:0;padding:18px 84px 28px 12px;display:grid;grid-template-rows:minmax(0,69fr) minmax(0,31fr);gap:24px}
+.atlas-skeleton-rsi-panels>.atlas-skeleton-plot,.atlas-skeleton-rsi-panels>.atlas-skeleton-oscillator{height:auto;min-height:0}
+@media(max-width:620px){.atlas-skeleton[data-atlas-skeleton=rsi] .atlas-skeleton-heading{height:48px}.atlas-skeleton-rsi-panels{padding-right:72px}}
+
+.atlas-skeleton-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr));gap:4px;flex:1;min-height:180px}
+.atlas-skeleton-calendar>[skullet-block]{background:var(--skullet-base);opacity:.55;border-radius:3px}
+
+/* A nested page has a center only; the parent already owns all four tool rails. */
+body[data-embedded=true] #atlas-boot-shell{grid-template-columns:minmax(0,1fr)}
+body[data-embedded=true] #atlas-boot-shell .atlas-boot-main{grid-template-rows:minmax(0,1fr)}
+body[data-embedded=true] #atlas-boot-shell :is(.atlas-boot-side,.atlas-boot-top,.atlas-boot-bottom){display:none!important}

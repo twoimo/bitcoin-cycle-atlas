@@ -1,0 +1,32 @@
+/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas locked system · redesign: full · posture: restrained */
+html, body, #root { margin: 0; width: 100%; height: 100%; }
+#root { display: flex; flex-direction: column; min-height: 0; }
+html, body { overflow-x: clip; }
+body { overflow-y: hidden; background: var(--bg); color: var(--text); font-family: var(--font); }
+body #root > .atlas-sidebar { flex: none; overflow-x: auto; }
+.atlas-service-workspace { display: flex; flex: 1; flex-direction: column; min-height: 0; margin: 0; }
+.atlas-service-workspace #market-view { flex: 1; min-height: 0; height: auto; }
+.atlas-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+body .atlas-nav a { padding: 8px; color: var(--muted); font-size: 12px; text-decoration: none; white-space: nowrap; }
+body .atlas-nav a:hover { color: var(--text); background: var(--surface-hover); }
+body a.atlas-brand { display: grid; place-items: center; color: var(--accent); text-decoration: none; }
+.ml-delivery { display: flex; align-items: center; gap: 12px; padding: 8px 16px; font-size: 12px; background: var(--surface); color: var(--muted); }
+.ml-delivery button { flex: none; color: var(--text); background: var(--surface-raised); border: 1px solid var(--border); border-radius: 4px; padding: 8px; cursor: pointer; }
+#root :is(a, button):focus-visible { outline: 2px solid var(--focus, var(--accent)); outline-offset: -2px; }
+body[data-page="market"] #root .atlas-nav { flex: none; overflow: visible; }
+body[data-page="market"] #root #market-header-slot { flex: none; overflow: visible; }
+body[data-page="market"] #root #market-header-slot .ml-tabs { overflow: visible; }
+@media (max-width: 640px) {
+  body #root > .atlas-sidebar { height: 48px; }
+  body #root .atlas-nav a, body #root #market-header-slot button { min-height: 44px; display: inline-flex; align-items: center; }
+  .ml-delivery { align-items: flex-start; }
+}
+
+#root :is(button,a):active{filter:brightness(.92)}
+#root button:disabled{opacity:.45;cursor:not-allowed}
+
+.ml-loading-skeleton{height:100%;min-height:240px;width:100%;flex:1}
+#market-view[aria-busy=true] .ml-scroll{display:flex;flex-direction:column;min-height:0}
+#market-view[aria-busy=true] #ml-panel{flex:1;min-height:0;width:100%}
+#market-view[aria-busy=true] .ml-sources{display:none}
+.rsi-history>.ml-loading-skeleton{height:280px;min-height:280px}

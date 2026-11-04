@@ -1,3 +1,4 @@
+import { setLoadingSurface } from './loading-surfaces.js';
 import { buildAssetComparison } from './asset-comparison.js?v=1.29.0';
 import { initAssetJudgmentHistoryView } from './asset-judgment-history-view.js?v=1.29.0';
 
@@ -166,6 +167,7 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
     $('#asset-history-open').disabled = false;
     if ($('#asset-history-dialog').open && historyView) void historyView.open({ bundle, asOfDate: model.asOf });
     $('#asset-table-scroll').setAttribute('aria-busy', 'false');
+    setLoadingSurface($('#asset-table-scroll'),false);
     if ($('#daily-method-dialog').open) put('#daily-method-content', methodContent());
     scheduleRowFit();
   }
@@ -177,6 +179,7 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
     $('#asset-context').title = state.error;
     $('#asset-context').hidden = false;
     $('#asset-table-scroll').setAttribute('aria-busy', 'false');
+    setLoadingSurface($('#asset-table-scroll'),false);
     clearRows('자료를 확인할 수 없어 가격과 판단을 표시하지 않습니다.', true);
     if ($('#daily-method-dialog').open) put('#daily-method-content', methodContent());
   }
@@ -199,6 +202,7 @@ export function initDailyDataView({ root, getComparisonDataset, download, toast 
     $('#asset-context').hidden = false;
     $('#asset-table-scroll').setAttribute('aria-busy', 'true');
     clearRows('자산별 가격 자료를 불러오는 중입니다.');
+    setLoadingSurface($('#asset-table-scroll'),true,{kind:'table',label:'자산 비교표 로딩'});
     pending = (async () => {
       await Promise.resolve();
       if (disposed || token !== request) return null;

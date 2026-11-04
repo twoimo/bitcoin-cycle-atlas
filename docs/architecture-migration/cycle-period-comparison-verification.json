@@ -1,0 +1,316 @@
+{
+  "date": "2026-11-04",
+  "scope": "Local BTC current-chart annotations and period comparisons; source math and shared perimeter unchanged",
+  "branch": "codex/market-lab-service-20261103",
+  "dataAsOf": "2026-11-02",
+  "scenario": "base",
+  "testTotals": {
+    "complete": true,
+    "tests": 2423,
+    "pass": 2423,
+    "fail": 0,
+    "skipped": 0,
+    "batches": 2
+  },
+  "targetedNew": {
+    "tests": 9,
+    "pass": 9
+  },
+  "legacyRendererReplayEth": {
+    "tests": 63,
+    "pass": 63
+  },
+  "workerFactoryRegression": {
+    "tests": 20,
+    "pass": 20
+  },
+  "latestRefinement": {
+    "tests": 11,
+    "pass": 11
+  },
+  "initialFailure": {
+    "total": 2423,
+    "fail": 2,
+    "reason": "import.meta in lab-view was incompatible with the inert-VM integration fixture",
+    "resolution": "Moved Worker URL factory into the dedicated comparison module; preserved existing fixture and real chart ownership"
+  },
+  "cycleDecision": {
+    "status": "PASS",
+    "boundedOnly": true,
+    "negativeControls": 27
+  },
+  "cycleTableIntegration": {
+    "status": "PASS",
+    "asOf": "2026-10-31",
+    "normalRows": 104,
+    "inertDomOnly": true
+  },
+  "typecheck": "pass",
+  "webBuild": "pass",
+  "staticReferences": {
+    "status": "ok",
+    "files": 764,
+    "checkedReferences": 501,
+    "basePath": "/bitcoin-cycle-atlas/",
+    "standalone": null
+  },
+  "unchangedFiles": {
+    "dist/cycle-milestones.js": true,
+    "dist/long-horizon-forecast.js": true,
+    "dist/detailed-forecast.js": true,
+    "dist/cycle-calibration.js": true,
+    "dist/cycle-decision.js": true,
+    "dist/chart-replay.css": true
+  },
+  "statistics": "Python stdlib median and quantiles(method=inclusive) independently match 9 relation rows; one excluded historical definition",
+  "hallmark": {
+    "summary": {
+      "fails": 9,
+      "reflex": 2,
+      "warns": 10,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 57,
+      "render": "off"
+    },
+    "changedAreaFindings": 0,
+    "upstreamRender": "off",
+    "globalClean": false
+  },
+  "actualIab": {
+    "browserId": "2",
+    "tab": "24",
+    "origin": "http://127.0.0.1:4319",
+    "desktop": {
+      "width": 1168,
+      "height": 954,
+      "pageHorizontalOverflow": false,
+      "readyRelations": 9
+    },
+    "mobile": {
+      "width": 390,
+      "height": 700,
+      "pageHorizontalOverflow": false,
+      "tableNativeScroll": true,
+      "stickyRelationHeaders": true,
+      "minButtonHeight": 44,
+      "overrideCleared": true
+    },
+    "inspection": "Both existing reader pages verified; page 2 includes all seven case dates/durations",
+    "macroKeyboard": "Enter opens time-only detail",
+    "errorRetry": "Temporary proxy4324 explicit worker failure -> retry ready; current selected path signature d4353463a252e705 unchanged",
+    "requestOwnership": "Delayed worker with rapid base/stress/accelerated choices settled ready accelerated; stale results not shown",
+    "consoleWarningsAndErrors": [],
+    "pathSignature": "d4353463a252e705"
+  },
+  "macroAnchors": [
+    {
+      "id": "macro-peak",
+      "type": "peak",
+      "label": "거시 고점 시계",
+      "date": "2029-08-11",
+      "earliest": "2029-08-01",
+      "latest": "2029-10-06",
+      "price": null,
+      "role": "conditional-time-prior",
+      "probability": null
+    },
+    {
+      "id": "macro-low",
+      "type": "low",
+      "label": "거시 저점 시계",
+      "date": "2030-08-11",
+      "earliest": "2030-08-01",
+      "latest": "2030-10-06",
+      "price": null,
+      "role": "conditional-time-prior",
+      "probability": null
+    }
+  ],
+  "bottomBottom": {
+    "id": "scenario-base-2029-08-11:bottom-bottom",
+    "relation": "bottom-bottom",
+    "days": 1190,
+    "comparable": true,
+    "history": {
+      "status": "ready",
+      "distribution": {
+        "n": 3,
+        "min": 1153,
+        "q1": 1289,
+        "median": 1425,
+        "q3": 1428,
+        "max": 1431,
+        "values": [
+          1153,
+          1425,
+          1431
+        ]
+      },
+      "records": [
+        {
+          "cycleId": "peak-2013",
+          "label": "2013년 사이클",
+          "startDate": "2011-11-18",
+          "endDate": "2015-01-14",
+          "days": 1153
+        },
+        {
+          "cycleId": "peak-2017",
+          "label": "2017년 사이클",
+          "startDate": "2015-01-14",
+          "endDate": "2018-12-15",
+          "days": 1431
+        },
+        {
+          "cycleId": "peak-2021",
+          "label": "2021년 사이클",
+          "startDate": "2018-12-15",
+          "endDate": "2022-11-09",
+          "days": 1425
+        }
+      ],
+      "reason": "완료된 관측 기준점의 관계별 기간 · 잠정·가정·부분 구간 제외"
+    },
+    "sensitivity": {
+      "status": "ready",
+      "distribution": {
+        "n": 7,
+        "min": 667,
+        "q1": 1147,
+        "median": 1190,
+        "q3": 1229.5,
+        "max": 1279,
+        "values": [
+          667,
+          1128,
+          1166,
+          1190,
+          1215,
+          1244,
+          1279
+        ]
+      },
+      "samples": [
+        {
+          "caseId": "economic:base",
+          "label": "base",
+          "days": 1190,
+          "startDate": "2026-06-30",
+          "endDate": "2029-10-02"
+        },
+        {
+          "caseId": "economic:accelerated",
+          "label": "accelerated",
+          "days": 1128,
+          "startDate": "2026-06-30",
+          "endDate": "2029-08-01"
+        },
+        {
+          "caseId": "economic:wait",
+          "label": "wait",
+          "days": 1215,
+          "startDate": "2026-06-30",
+          "endDate": "2029-10-27"
+        },
+        {
+          "caseId": "economic:late",
+          "label": "late",
+          "days": 667,
+          "startDate": "2026-06-30",
+          "endDate": "2028-04-27"
+        },
+        {
+          "caseId": "economic:stress",
+          "label": "stress",
+          "days": 1244,
+          "startDate": "2026-06-30",
+          "endDate": "2029-11-25"
+        },
+        {
+          "caseId": "seed:20261023",
+          "label": "base · 시드 20261023",
+          "days": 1166,
+          "startDate": "2026-06-30",
+          "endDate": "2029-09-08"
+        },
+        {
+          "caseId": "seed:20261024",
+          "label": "base · 시드 20261024",
+          "days": 1279,
+          "startDate": "2026-06-30",
+          "endDate": "2029-12-30"
+        }
+      ],
+      "missing": [],
+      "expectedCount": 7,
+      "error": null,
+      "meaning": "기존 경제 가정 5개와 선택 가정의 보조 시드 2개 · 7개 설정의 최솟값–최댓값 · 확률구간 아님"
+    }
+  },
+  "cleanup": {
+    "proxy4324Stopped": true,
+    "proxyTab25Closed": true,
+    "iab24Deliverable": true,
+    "api4319ExistingPid": 77535,
+    "apiRestarted": false,
+    "databaseOrUsCollectorChanged": false
+  },
+  "limits": [
+    "Past landmarks are selected retrospectively; their windows do not establish predictive equivalence to future clock windows",
+    "7 settings are explicit economic/seed sensitivity, not probability or confidence coverage",
+    "MID-TOP past distribution excluded because historical halving window and future first-third window differ",
+    "No contemporaneously issued historical forecast, independent timing calibration or profitability claim",
+    "External Gemini/reverse review omitted per existing user instruction; no deployment or model promotion"
+  ],
+  "sourceSha256": {
+    "dist/cycle-period-comparison.js": "d44f90bb5d172064a67e62910b0d48c9866c71e55bc3199a65f962d9593c97b8",
+    "dist/cycle-period-worker.js": "9ecaae94018aad35359b5534f11b43c3f6ea9aef2a899ad358030b3ea83761cc",
+    "dist/atlas-price-chart.js": "b6ab3293bf7311387614566bad4383922e75b6e6d552c867bb199d2c520dafe2",
+    "dist/cycle-interval-overlay.js": "ea37009cb4c19df6df1111b297df3d9a4adbeeb7cd06724c3ce0b5dfc1a207d2",
+    "dist/cycle-milestones-view.js": "632e1a6d93c17fa30dcb7ebbe51fbd2298d6257df06e5da468993bf58e4c9c9c",
+    "dist/cycle-milestones.css": "22a9a9a21251a92a9310e2dc5d8cd0cfab809ee502db45991953a73905562712",
+    "dist/index.html": "2b1db75e51277075cf8136bf5d61fda6c41866fd9ba5caeafba0515d192c5c98",
+    "dist/lab-view.js": "1fb7a9a2b5b4b34bb800972d22e78ed3c919fee31a2e466605df7cc4554007a4",
+    "tests/cycle-period-comparison.test.mjs": "eae5a97d5b7d5519d89d4fcf32793a9c0560657af51d81de7e35c9e0537c5500"
+  },
+  "evidenceSha256": {
+    "menu-initial.png": "f1de9a4942db23b63ab5104eac7804bd5ee82f83ec43723bcc73f3c6cce15ef3",
+    "final-refinement-tests.log": "cc673833725092b522b6e5e7330b50138cc5fff6a038c286e98bf421e0410de7",
+    "mobile-menu.png": "3ff4e63891ab91caa697a0e73fc3e6ffe25737e974223a08cce5eab037721abc",
+    "browser-console-final.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "build-web.log": "6ba9c86143e5dcb2568296812cbb05516f02ccc6f1ade3710d22981599135d4a",
+    "typecheck-final.log": "fb0819098087f3423e17448306bb7a2fa0eccf94000c9584002be69605262333",
+    "menu-desktop-final.png": "0692a30fb9c0be877d051b62cdb03e477e44dbbdc2e31b7aaa55e7f28a393b46",
+    "targeted-final.log": "3de3a729223962d02118f4aa4b02e1ae5b14709a7d8eb16a06f2c4285bc6b658",
+    "static-final.log": "9b6eb836680f9bdc51318b216eea152d449cb6e0575a460dc7fc8a3382841a62",
+    "frontend-source.json": "c7522d1e4adcb6b49082485fad75cc0402c2d52198cc17e3dc07abf5d63d3a15",
+    "cycle-table-integration.log": "da5423ae63e937fd3f5f55b98d3fb12e3b7f985aba12b6c8c907d479fa54dbad",
+    "before-hashes.json": "ee41508cadc3d5ffbd8bca28f70d5da1bf2dabe101cccae383411403515561a2",
+    "menu-desktop.png": "373c9554b392d0fcac061fc5a2be9e45bed8c65661e3322249e438bfdb96e8ce",
+    "regression-fixes.log": "f864f469527a30e461472f6fd9f67812c7d88762605780c11dc2ed4053c67bf9",
+    "build-web-final.log": "4899a03cbf757526d15a1227cd31deee18dfc6bedf379fb5ba6db62701097538",
+    "model-preservation.json": "20d700a014e06f7febba49ae382cbed4f21d273cbe71435560e821446f387535",
+    "typecheck.log": "fb0819098087f3423e17448306bb7a2fa0eccf94000c9584002be69605262333",
+    "mobile-menu-final.png": "9c0f813e1fb3f02ae22c02060f6be00d599cfc6588f3aa2b0d10a460d51c91c8",
+    "python-quantiles.json": "90127ca84db05028f900124dcf3d29c7f83ab915ba1f877c95168ebb8b23ef2b",
+    "full-tests.log": "3c4d9f586a88d616e5f2cf8cfe40c1346c1b0e6f2d87a952155f5f5fcbca29a0",
+    "actual-analysis.json": "0438a2a735e8a70dffb4af4282aa318dc8d0a3ebc53d1f70e1d97da11799067c",
+    "latest-targeted.log": "c683a5e7bbae97d5d1a0ae086863b9aa5bc108c9a23ef613eb775187e980429a",
+    "chart-desktop-final.png": "eaef858e45c5261f8dcc51517566b0e96d42dfd97ef7ef5de03949c90e1c501b",
+    "desktop-dom.json": "e2af01e8580569db246ad52e4e419f37737ada1b840a296d1eee77d26d0447a2",
+    "cycle-decision.log": "46b82f970880e73081f43a298db50dda31e3cbb790ebcd94dc3515833bf444a8",
+    "new-tests.log": "5ec43f57148b08e42e20117d059cd303292d649745ff0d41c1585bf050000711",
+    "static.log": "9b6eb836680f9bdc51318b216eea152d449cb6e0575a460dc7fc8a3382841a62",
+    "full-tests-final.log": "87542022168ec409d383b0a42bc66472e521a5ade03945141c1edd15e305e4c1",
+    "hallmark-refined.json": "be115609f179cb8b7cfb32fd9c998bb6dec30d99f97a806af6d4b1e16104dd07",
+    "hallmark.json": "be115609f179cb8b7cfb32fd9c998bb6dec30d99f97a806af6d4b1e16104dd07",
+    "new-tests-final.log": "d355c37227c08725ae056829eb70a40171eb9af3db7a46a9c523cb1cf6439fe4",
+    "frontend-source.log": "98f60951a123fde0eb035f44b1ee7aabd1281d164c36e7b15d606bf55f59b8d4",
+    "existing-tests.log": "46884b6a7de7620bce1bbd1219d451ef467a89850242c16bccd1ad23c4e79b26",
+    "hallmark-final.json": "be115609f179cb8b7cfb32fd9c998bb6dec30d99f97a806af6d4b1e16104dd07"
+  }
+}

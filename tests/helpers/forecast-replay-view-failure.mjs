@@ -51,13 +51,14 @@ export async function verifyReplayViewFailure(sourceUrl=new URL('../../dist/fore
       const result=new vm.SyntheticModule(Object.keys(exports),function(){for(const [key,value]of Object.entries(exports))this.setExport(key,value);},{context});
       await result.link(()=>{throw new Error('Unexpected stub dependency');});await result.evaluate();return result;
     }
+    const loadingView=await module({setLoadingSurface(element,busy){element.skeleton=busy;}});
     const engine=await module(api),sources=await module({loadReplayPriceArchive:async()=>archive}),chart=await module({drawAtlasPriceChart(){throw new Error('Unexpected visible-chart rendering in hidden-input fixture');}});
     const view=new vm.SourceTextModule(source,{context,identifier:sourceUrl.href,importModuleDynamically:specifier=>{
       if(specifier.startsWith('./forecast-replay-sources.js'))return sources;
       if(specifier.startsWith('./forecast-replay.js'))return engine;
       throw new Error('Unexpected view dependency '+specifier);
     }});
-    await view.link(specifier=>{assert.ok(specifier.startsWith('./atlas-price-chart.js'));return chart;});await view.evaluate();
+    await view.link(specifier=>{if(specifier==='./loading-surfaces.js')return loadingView;assert.ok(specifier.startsWith('./atlas-price-chart.js'));return chart;});await view.evaluate();
     const mounted=view.namespace.mountForecastReplay(host,{record:{symbol:'BTCUSD',asOf:timeline[0]},snapshot:{}});
     const flush=async()=>{for(let i=0;i<3;i++)await new Promise(setImmediate);};
     const click=selector=>panel.listeners.get('click')({target:{closest:value=>value===selector}});

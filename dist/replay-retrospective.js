@@ -68,6 +68,9 @@ function modelSettings(forecast,provided,asOf){
   Object.assign(options,{asOf,referenceDate:nextDate(asOf),researchAsOf:asOf,horizonYears:3,includeSamplePaths:false,claims:eligibleClaims(asOf)});
   return checkedSettings(options,asOf);
 }
+// A cutoff backtest uses explicit settings and dated research, never settings
+// inferred from a later live forecast or its fitted outputs.
+export function cutoffBacktestSettings(provided,asOf){return modelSettings(null,clone(provided??{}),asOf);}
 function unavailable(prefix,asOf,options){
   if(!prefix.length)return {code:'no-price-history',label:'기준일 이전의 실제 일별 가격이 없어 회고 경로를 계산하지 못했습니다.'};
   if(prefix.at(-1)[0]!==asOf)return {code:'cutoff-not-observed',label:'기준일의 실제 종가가 없어 회고 경로를 계산하지 못했습니다.'};

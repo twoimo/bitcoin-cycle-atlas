@@ -33,7 +33,7 @@ function preserveRetrospective(record,originDate,forecastOrigin){
  * consumed price prefix. The current model is never run to recreate an old
  * prediction. Labels are a present-day visualization of those preserved bytes,
  * not a claim that the annotation code existed when the model was published. */
-export function createAtlasReplayContext({dataset,forecast,presentation={},originDate=forecast?.asOf,retrospectiveForecast=null}={}){
+export function createAtlasReplayContext({dataset,forecast,presentation={},originDate=forecast?.asOf,retrospectiveForecast=null,includeAnnotations=true}={}){
   if(!forecast||typeof forecast.asOf!=='string'||!Array.isArray(forecast.path))throw new TypeError('A preserved Atlas forecast and its input dataset are required');
   utcDay(forecast.asOf);utcDay(originDate);
   if(originDate>forecast.asOf)throw new RangeError('Replay origin cannot follow the captured forecast origin');
@@ -44,6 +44,9 @@ export function createAtlasReplayContext({dataset,forecast,presentation={},origi
   if(path.some((row,index)=>!positive(row.price)||!positive(row.lower)||!positive(row.upper)||row.lower>row.price||row.upper<row.price||index&&row.date<=path[index-1].date))throw new RangeError('Preserved chart path is not a valid ordered price path');
   path.forEach(row=>utcDay(row.date));
   const normalized={...clone(forecast),path,nominalClock:clone(forecast.nominalClock??forecast.timing??null)};
+  if(!includeAnnotations)return freeze({originDate,forecastOrigin:forecast.asOf,forecast:drawdown(path,Math.max(...prefix.map(row=>row.price))),retrospectiveForecast:null,
+    cycleMarkers:[],cycleIntervals:[],turns:[],events:[],cycleCalibration:null,states:[],presentation:clone(presentation),
+    annotationSignature:signature({originDate,forecastOrigin:forecast.asOf,markers:[],intervals:[]}),annotationMeaning:'Cutoff forecast comparison excludes current-chart annotations.'});
   const futureMilestones=buildCycleMilestones(prefix,{forecast:normalized,asOf:forecast.asOf});
   // Selecting the first available venue bar puts the replay origin on the
   // preceding day. A missing earlier observation remains empty; it must not be
@@ -182,7 +185,7 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
     replayFormingWeekCount:String(observedCandles.filter(row=>row.complete===false).length),replayMissingWeekCount:String(data.missingWeekCount??0)});
   const title=svg.querySelector('title'),description=svg.querySelector('desc');
   if(title)title.textContent='비트코인 사이클 아틀라스 · 현재 차트 봉 리플레이';
-  if(description)description.textContent='주황색 미래 가정은 시작할 때의 현재 차트 값 그대로 고정하고, 실제 봉만 재생 시점까지 공개합니다. 현재 가정은 과거에 발행한 예측 성적이 아닙니다.'+(retrospective.length?' 회고 점선과 범위는 선택한 시작일 전날까지의 입력으로 현재 생성해 별도로 고정한 경로이며, 당시 발행한 예측이나 원래 주황선의 연장이 아닙니다.':'')+' 사이클 표식과 기간선은 보존된 경로의 표시이며 당시 발행된 표식 기록이 아닙니다.';
+  if(description)description.textContent=session.mode==='cutoff-backtest'?'파란 점선은 선택한 시작일 전날까지의 Bitstamp 종가와 그때까지 발표된 평가 자료로 현재 재구성해 고정한 예측입니다. 실선 또는 캔들은 공개된 실제 가격입니다. 당시 발행 기록이나 보정된 확률 구간은 아닙니다.':'주황색 미래 가정은 시작할 때의 현재 차트 값 그대로 고정하고, 실제 봉만 재생 시점까지 공개합니다. 현재 가정은 과거에 발행한 예측 성적이 아닙니다.'+(retrospective.length?' 회고 점선과 범위는 선택한 시작일 전날까지의 입력으로 현재 생성해 별도로 고정한 경로이며, 당시 발행한 예측이나 원래 주황선의 연장이 아닙니다.':'')+' 사이클 표식과 기간선은 보존된 경로의 표시이며 당시 발행된 표식 기록이 아닙니다.';
   const nativeHandlers=Object.fromEntries(['onpointermove','onpointerleave','onclick','onkeydown','onkeyup','onblur'].map(key=>[key,svg[key]]));
   let destroyed=false;
   const controller={axis,x,dateAt,barDateAt,getPriceScale:()=>axis,previewPointer:event=>!destroyed&&chart.previewPointer?.(event),

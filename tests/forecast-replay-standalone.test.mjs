@@ -1,6 +1,6 @@
 import test, {before, after} from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp, cp, copyFile, readFile, rm} from 'node:fs/promises';
+import {mkdtemp, cp, copyFile, readFile, rm, realpath} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {resolve, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -28,7 +28,7 @@ async function packagedRuntime(file){
   let networkCalls=0;
   const context=vm.createContext({
     crypto:webcrypto,TextEncoder,TextDecoder,URL,DOMException,AbortController,setTimeout,clearTimeout,structuredClone,
-    document:{baseURI:'file:///offline-atlas.html',getElementById:id=>nodes.get(id)??null},
+    document:{querySelectorAll:()=>[],baseURI:'file:///offline-atlas.html',getElementById:id=>nodes.get(id)??null},
     fetch:async()=>{networkCalls++;throw new Error('Offline runtime forbids network');},
   });
   const imports=JSON.parse(html.match(/<script type="importmap">([\s\S]*?)<\/script>/)[1]).imports;
@@ -70,7 +70,9 @@ if(process.argv[2]==='--packaged-runtime'){
 }else{
   let directory,html,archive,assetArchive,runtime;
   before(async()=>{
-    directory=await mkdtemp(resolve(tmpdir(),'atlas-replay-standalone-'));
+    // Node resolves import.meta.url to /private/var on macOS. Use the same
+    // physical fixture path for the CLI entry check so --preview really runs.
+    directory=await realpath(await mkdtemp(resolve(tmpdir(),'atlas-replay-standalone-')));
     // Isolate the publication manifest from other packaging tests and the checkout.
     await Promise.all([
       cp(resolve(root,'dist'),resolve(directory,'dist'),{recursive:true}),

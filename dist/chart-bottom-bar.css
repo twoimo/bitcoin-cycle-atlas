@@ -28,7 +28,7 @@
 .workbench-bottom-bar button:disabled{opacity:.5;cursor:not-allowed}
 .workbench-bottom-bar [hidden]{display:none!important}
 
-.chart-bottom-popover{color:var(--chart-bottom-bar-ink-5);background:var(--chart-bottom-bar-surface-3);border:1px solid var(--analysis-dock-rule-6);border-radius:7px;box-shadow:0 10px 32px var(--atlas-shadow);box-sizing:border-box}
+.chart-bottom-popover{color:var(--chart-bottom-bar-ink-5);background:var(--chart-bottom-bar-surface-3);border:1px solid var(--analysis-dock-rule-6);border-radius:7px;box-shadow:none;box-sizing:border-box}
 .chart-bottom-popover[hidden]{display:none!important}
 .workbench-bottom-menu{position:fixed;z-index:75;padding:8px;overflow:auto;overscroll-behavior:contain}
 .bottom-menu-context{padding:4px 8px 8px;margin-bottom:4px;border-bottom:1px solid var(--chart-bottom-bar-rule-3)}

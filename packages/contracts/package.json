@@ -1,0 +1,6 @@
+{
+  "name": "@atlas/contracts",
+  "private": true,
+  "type": "module",
+  "exports": { "./market-lab": "./src/market-lab.ts", "./us-collection": "./src/us-collection.ts" }
+}

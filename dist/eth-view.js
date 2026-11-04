@@ -1,3 +1,4 @@
+import { setLoadingSurface } from './loading-surfaces.js';
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
 import {buildEthereumForecasts} from './ethereum-forecast.js';
 import {buildEthereumAdaptiveForecast} from './ethereum-adaptive-model.js';
@@ -213,6 +214,7 @@ export async function initEthView() {
     $('[data-eth-action="refresh"]').disabled=busy;plot.setAttribute('aria-busy',String(busy));
     $('#eth-empty').hidden=Boolean(series);
     readout.hidden=!series;
+    setLoadingSurface($('#eth-empty'),!series&&!(state.error||entry?.error),{kind:'chart',label:'ETH-USD 가격 자료 로딩'});
     if(!series){
       svg.innerHTML='';state.controller=null;state.range=null;
       svg.dataset.historyEventCount='0';updateHistoryContext();

@@ -34,7 +34,7 @@ export function cycleDurationLabel(days) {
 
 function markerTitle(marker) {
   const type = types.get(marker.type);
-  return `${type?.label || marker.label || marker.type} · ${marker.date} UTC · $${formatPrice(marker.price)}\n${status(marker)}${marker.definition ? `\n${marker.definition}` : ''}`;
+  return `${marker.displayLabel || type?.label || marker.label || marker.type} · ${marker.date} UTC · $${formatPrice(marker.price)}\n${status(marker)}${marker.definition ? `\n${marker.definition}` : ''}`;
 }
 
 function labelBox(point, bounds, placed, points, active = false) {
@@ -89,7 +89,7 @@ export function milestoneMarkersMarkup({ markers = [], start, end, x, y, left, r
     if (!type || !marker.id || day === null || day < first || day > last || !finite(marker.price) || marker.price <= 0) continue;
     const xx = position(x, marker), yy = position(y, marker.price);
     if (xx === null || yy === null || xx < left || xx > right || yy < top || yy > bottom) continue;
-    valid.push({ marker, x: xx, y: yy, label: type.label, color: type.color, active: activeIds.has(marker.id), selectedEndpoint: intervalEndpointIds.has(marker.id), box: null });
+    valid.push({ marker, x: xx, y: yy, label: marker.displayLabel || type.label, color: type.color, active: activeIds.has(marker.id), selectedEndpoint: intervalEndpointIds.has(marker.id), box: null });
   }
   const width = right - left, height = bottom - top;
   const dense = valid.length > width / 22, overview = width / Math.max(1, last - first) < .45;

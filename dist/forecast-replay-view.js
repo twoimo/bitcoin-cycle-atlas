@@ -1,3 +1,4 @@
+import { setLoadingSurface } from './loading-surfaces.js';
 import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.29.0';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -187,7 +188,7 @@ export function mountForecastReplay(host,{record,snapshot,symbol=record?.symbol?
     query('[data-replay-selection]').textContent=date+' · '+(date<=session.asOf?'기준 관측 '+price(input):'고정 예측 '+price(predicted)+' · 공개 실제 '+price(actual));
   }
   function fail(reason){
-    stop();frame=null;loading.hidden=true;content.hidden=true;error.hidden=false;panel.dataset.state='error';
+    stop();frame=null;setLoadingSurface(loading,false);loading.hidden=true;content.hidden=true;error.hidden=false;panel.dataset.state='error';
     delete panel.dataset.cursor;delete panel.dataset.playback;delete panel.dataset.outputHash;
     svg.onpointermove?.cancel?.();for(const key of ['onpointermove','onpointerleave','onkeydown','onclick'])svg[key]=null;
     error.innerHTML='<p>'+esc(reason?.message??'리플레이를 만들지 못했습니다.')+'</p><button type="button" data-replay-retry>다시 확인</button>';
@@ -229,7 +230,7 @@ export function mountForecastReplay(host,{record,snapshot,symbol=record?.symbol?
   }
   async function load(){
     cancel();const token=epoch;request=new AbortController();const current=request;
-    content.hidden=true;loading.hidden=false;error.hidden=true;panel.dataset.state='loading';settings();
+    content.hidden=true;loading.hidden=false;setLoadingSurface(loading,true,{kind:'chart',label:'보존본·관측 자료 로딩'});error.hidden=true;panel.dataset.state='loading';settings();
     let rejectStop;
     const stopped=new Promise((_,reject)=>{rejectStop=reject;});
     const aborted=()=>rejectStop(current.signal.reason??new Error('리플레이 요청이 취소됐습니다.'));
@@ -258,7 +259,7 @@ export function mountForecastReplay(host,{record,snapshot,symbol=record?.symbol?
       query('[data-replay-display] [value="candles"]').disabled=!hasCandles;if(!hasCandles)query('[data-replay-display]').value='line';
       const identity=session.identity;
       query('[data-replay-provenance]').innerHTML=[['재생 방식',session.mode==='recorded'?'보존한 경로':session.historicalModel?.label??'현재 모형 과거 재구성'],['종목',symbol==='BTCUSD'?'비트코인 · BTCUSD':symbol],['경로 의미',identity.pointLabel??session.historicalModel?.pointMeaning],['고정 기준일',session.asOf],['발행·생성 시각',stamp(identity.issuedAt??identity.createdAt)],['입력 공개 경계',stamp(identity.inputAvailableAt)],['모델',identity.modelVersion],['기록 ID',identity.recordId],['고정 출력 해시',identity.outputHash],['원본 코드',identity.sourceCommit??'현재 실행 모형']].map(([label,value])=>'<dt>'+esc(label)+'</dt><dd>'+esc(value)+'</dd>').join('');
-      loading.hidden=true;content.hidden=false;panel.dataset.state='ready';
+      setLoadingSurface(loading,false);loading.hidden=true;content.hidden=false;panel.dataset.state='ready';
       controller=createReplayController({length:session.timeline.length,onChange:paint});controller.speed(Number(query('[data-replay-speed]').value));
       if(controller&&typeof ResizeObserver==='function'){observer=new ResizeObserver(()=>{if(controller)paint(controller.getState());});observer.observe(svg.parentElement);}
     }catch(reason){

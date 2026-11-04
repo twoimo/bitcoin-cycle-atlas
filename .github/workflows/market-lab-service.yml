@@ -1,0 +1,39 @@
+name: Market lab service
+on:
+  pull_request:
+    paths: ['apps/**', 'packages/**', 'db/**', 'dist/market-lab*', 'dist/data/market-lab.json', 'scripts/*market*.mjs', 'tests/market-lab*', 'tests/service/**', 'tests/web/**', 'package*.json', 'tsconfig.json', '.github/workflows/market-lab-service.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17.11@sha256:3b0cda93be7c8dba2ed484d19393d93845dc3dafb88973e248ba8e6d99d784e1
+        env:
+          POSTGRES_USER: atlas
+          POSTGRES_PASSWORD: isolated-ci-only
+          POSTGRES_DB: atlas_market_lab
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://atlas:isolated-ci-only@localhost:5432/atlas_market_lab
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run typecheck
+      - run: npm run test:panels
+      - run: npm run test:service
+      - run: node --test tests/market-lab*.test.mjs

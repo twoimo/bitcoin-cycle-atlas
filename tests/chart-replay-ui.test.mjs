@@ -109,6 +109,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
   }});
   const snapshotModule=await module({...snapshotHelpers,sealReplaySnapshot:trackSnapshot(snapshotHelpers.sealReplaySnapshot),restoreReplaySnapshot:trackSnapshot(snapshotHelpers.restoreReplaySnapshot)});
   const imports={
+    './loading-surfaces.js':await module({setChartLoading(plot,busy){if(plot?.dataset)plot.dataset.skeleton=String(busy);}}),
     ['./forecast-replay.js?v='+releaseVersion]:await module(engine),
     './chart-replay-renderer.js':await module({drawReplaySelection:renderer('selection'),drawChartReplay:renderer('replay')}),
     './chart-replay-sources.js':await module({loadChartReplayArchive:loadArchive,loadChartReplayRecord:loadRecord??(async()=>{throw new Error('Unexpected recorded load');})}),
@@ -116,8 +117,8 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     './chart-replay-atlas.js':await module({createAtlasReplayContext:options=>{atlasContexts.push(options);return {...options,forecast:options.forecast.path,forecastOrigin:options.forecast.asOf};},drawAtlasChartReplay:renderer('atlas')}),
   };
   const view=new vm.SourceTextModule(source,{context,identifier:sourceUrl.href,importModuleDynamically:specifier=>{assert.ok(imports[specifier],specifier);return imports[specifier];}});
-  await view.link(specifier=>{if(specifier==='./chart-replay-snapshot.js?v='+releaseVersion)return snapshotModule;assert.equal(specifier,'./chart-replay-state.js?v='+releaseVersion);return state;});await view.evaluate();
-  const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol,getAtlasContext,getChartState,resolveAtlasRange,
+  await view.link(specifier=>{if(specifier==='./loading-surfaces.js')return imports[specifier];if(specifier==='./chart-replay-snapshot.js?v='+releaseVersion)return snapshotModule;assert.equal(specifier,'./chart-replay-state.js?v='+releaseVersion);return state;});await view.evaluate();
+  const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol,initialMode:'atlas-chart',getAtlasContext,getChartState,resolveAtlasRange,
     getChartRenderer:()=>({getPriceScale:()=>axis}),onAtlasFrame:detail=>frameEvents.push(detail),
     loadAtlasRenderer:()=>imports['./chart-replay-atlas.js'].namespace,
     loadRetrospectiveModel:()=>({createReplayRetrospectiveForecast(){throw new Error('The coordinator fixture must use its session factory');},restoreReplayRetrospectiveForecast(){throw new Error('The coordinator fixture must use its session factory');}}),

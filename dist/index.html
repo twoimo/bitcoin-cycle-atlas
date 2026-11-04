@@ -73,8 +73,8 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
     .atlas-boot-bottom>div{display:flex;align-items:center;gap:12px;padding:0 12px;overflow:hidden}
     .atlas-boot-bottom>div+div{border-top:1px solid var(--boot-rule)}
     .atlas-boot-message{position:absolute;inset:0;display:grid;align-content:center;justify-items:center;padding:24px;text-align:center}
-    #atlas-boot-status{margin:0;color:var(--boot-ink-3);font-size:13px;background:var(--boot-surface-5);padding:12px 20px;border-radius:6px}
-    #atlas-boot-error{max-width:390px;padding:24px;background:var(--boot-surface-6);border:1px solid var(--boot-rule-2);border-radius:8px;box-shadow:0 12px 40px var(--boot-shadow)}
+    #atlas-boot-status{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+    #atlas-boot-error{max-width:390px;padding:24px;background:var(--boot-surface-6);border:1px solid var(--boot-rule-2);border-radius:8px;box-shadow:none}
     #atlas-boot-error strong{display:block;color:var(--boot-ink-4);font-size:15px}
     #atlas-boot-error p{margin:8px 0 20px;font-size:13px;color:var(--boot-ink-5)}
     #atlas-boot-retry{min-height:44px;padding:8px 20px;border:1px solid var(--boot-rule-3);border-radius:5px;background:var(--boot-surface-7);color:var(--boot-ink-6);font:inherit;cursor:pointer}
@@ -139,26 +139,30 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
   <link rel="stylesheet" href="./daily-data.css?v=1.29.0">
   <link rel="stylesheet" href="./forecast-journal.css?v=1.29.0">
   <link rel="stylesheet" href="./chart-replay.css?v=1.30.6">
+  <link rel="stylesheet" href="./monthly-backtest.css">
   <link rel="stylesheet" href="./ipo-view.css?v=1.30.1-ipo-compact.1">
   <link rel="stylesheet" href="./market-lab.css?v=1.30.6-plspo.13">
+  <link rel="stylesheet" href="./atlas-shell.css?v=20261103">
+  <link rel="stylesheet" href="./vendor/skullet/styles.css?v=0.0.3">
+  <link rel="stylesheet" href="./loading-surfaces.css?v=20261103">
 </head>
 <body>
   <div id="atlas-boot-shell">
-    <div class="atlas-boot-side" aria-hidden="true"><span class="atlas-boot-brand">₿</span><i class="atlas-boot-bar atlas-boot-square"></i><i class="atlas-boot-bar atlas-boot-square"></i><i class="atlas-boot-bar atlas-boot-square"></i><i class="atlas-boot-bar atlas-boot-square"></i><i class="atlas-boot-bar atlas-boot-square"></i></div>
+    <div class="atlas-boot-side" aria-hidden="true"><span class="atlas-boot-brand">₿</span><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i></div>
     <div class="atlas-boot-main">
-      <div class="atlas-boot-top" aria-hidden="true"><span class="atlas-boot-symbol">비트코인</span><i class="atlas-boot-bar atlas-boot-short"></i><i class="atlas-boot-bar atlas-boot-wide"></i><i class="atlas-boot-bar"></i><i class="atlas-boot-bar atlas-boot-square"></i></div>
+      <div class="atlas-boot-top" aria-hidden="true"><span class="atlas-boot-symbol">비트코인</span><i skullet-bar class="atlas-boot-bar atlas-boot-short"></i><i skullet-bar class="atlas-boot-bar atlas-boot-wide"></i><i skullet-bar class="atlas-boot-bar"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i></div>
       <div class="atlas-boot-canvas">
-        <div class="atlas-boot-readout" aria-hidden="true"><i class="atlas-boot-bar atlas-boot-wide"></i><i class="atlas-boot-bar"></i><i class="atlas-boot-bar atlas-boot-short"></i></div>
-        <div class="atlas-boot-indicators" aria-hidden="true"><i class="atlas-boot-bar atlas-boot-wide"></i><i class="atlas-boot-bar"></i></div>
+        <div class="atlas-boot-readout" aria-hidden="true"><i skullet-bar class="atlas-boot-bar atlas-boot-wide"></i><i skullet-bar class="atlas-boot-bar"></i><i skullet-bar class="atlas-boot-bar atlas-boot-short"></i></div>
+        <div class="atlas-boot-indicators" aria-hidden="true"><i skullet-bar class="atlas-boot-bar atlas-boot-wide"></i><i skullet-bar class="atlas-boot-bar"></i></div>
         <div class="atlas-boot-message">
           <p id="atlas-boot-status" role="status" aria-live="polite" aria-busy="true">화면과 데이터를 준비하고 있습니다.</p>
           <div id="atlas-boot-error" role="alert" hidden><strong>화면을 불러오지 못했습니다.</strong><p>연결을 확인한 뒤 다시 불러와 주세요.</p><button id="atlas-boot-retry" type="button">다시 불러오기</button></div>
           <noscript><p class="atlas-boot-noscript">이 차트는 JavaScript가 필요합니다. 브라우저에서 JavaScript를 허용한 뒤 다시 불러와 주세요.</p></noscript>
         </div>
       </div>
-      <div class="atlas-boot-bottom" aria-hidden="true"><div><i class="atlas-boot-bar atlas-boot-short"></i><i class="atlas-boot-bar atlas-boot-short"></i><i class="atlas-boot-bar atlas-boot-short"></i><i class="atlas-boot-bar atlas-boot-short"></i></div></div>
+      <div class="atlas-boot-bottom" aria-hidden="true"><div><i skullet-bar class="atlas-boot-bar atlas-boot-short"></i><i skullet-bar class="atlas-boot-bar atlas-boot-short"></i><i skullet-bar class="atlas-boot-bar atlas-boot-short"></i><i skullet-bar class="atlas-boot-bar atlas-boot-short"></i></div></div>
     </div>
-    <div class="atlas-boot-side" aria-hidden="true"><i class="atlas-boot-bar atlas-boot-square"></i><i class="atlas-boot-bar atlas-boot-square"></i><i class="atlas-boot-bar atlas-boot-square"></i><i class="atlas-boot-bar atlas-boot-square"></i></div>
+    <div class="atlas-boot-side" aria-hidden="true"><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i><i skullet-bar class="atlas-boot-bar atlas-boot-square"></i></div>
   </div>
   <script id="atlas-boot-script">
     (() => {
@@ -257,9 +261,11 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
               <div class="cycle-panel-heading"><h2>차트 안 사이클 기간 <small>9가지 관계</small></h2><button id="atlas-cycle-toggle" type="button" aria-pressed="true" aria-controls="lab-chart">기간선 숨기기</button></div>
               <div class="cycle-panel-actions"><select id="atlas-cycle-relation" aria-label="표시할 사이클 기간 관계"><option value="all">모든 기간 관계</option></select><button id="atlas-cycle-overview" type="button" title="관측과 현재 가정의 모든 사이클 기준점을 한 화면에 보기">전체 사이클</button></div>
               <div id="atlas-cycle-selection" class="cycle-panel-selection" hidden><p id="atlas-cycle-selection-summary" aria-live="polite"></p><div class="cycle-selection-actions"><button id="atlas-cycle-focus" type="button">전체 구간 보기</button><button id="atlas-cycle-clear" type="button">선택 해제</button></div></div>
+              <div id="atlas-cycle-comparison"></div>
               <p id="atlas-cycle-note" class="cycle-panel-note">기간선을 선택하면 양 끝점과 정확한 날짜·경과일을 확인할 수 있습니다.</p><details class="cycle-reference"><summary>첨부 이미지와 계산 기준 비교</summary><div id="atlas-cycle-reference"></div></details>
             </div></details>
           </section>
+          <button id="workbench-monthly-backtest" type="button" aria-haspopup="dialog" aria-expanded="false" title="월말 가격·거시 시계 백테스트">백테스트</button>
           <div class="lab-chart-foot" tabindex="0" role="region" aria-label="차트 범례 · 좁은 화면에서는 좌우로 이동"><div id="atlas-chart-legend" class="lab-legend"></div><span id="atlas-chart-caveat" class="lab-caveat">미래는 가정에 따른 예시</span></div>
           <div class="atlas-inspector" aria-label="선택한 날짜와 구간의 값">
             <div class="atlas-inspector-top"><div><span id="atlas-inspector-kind" class="atlas-kind">실제 관측</span><strong id="atlas-inspector-title">그래프를 눌러 확인하세요</strong></div><div class="atlas-inspector-actions"><label id="atlas-date-label" class="atlas-date-input"><span class="lab-visually-hidden">확인할 날짜</span><input id="atlas-date" type="date" aria-label="확인할 날짜"></label><button id="atlas-inspect-prev" aria-label="이전 고점·저점">이전</button><button id="atlas-inspect-next" aria-label="다음 고점·저점">다음</button><button id="atlas-latest">최근 관측</button></div></div>
@@ -274,7 +280,7 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
       </section>
       <section id="evidence-view" aria-label="리서치 우선순위" hidden>
         <header class="evidence-mobile-heading"><button id="evidence-back" type="button" data-view="outlook" aria-label="통합 차트로 돌아가기"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m14 6-6 6 6 6"/></svg>통합 차트</button><span>리서치</span></header>
-        <div class="evidence-table-shell"><table class="evidence-table"><caption>리서치 읽기 순서 <span id="evidence-total"></span><span>공시·원자료 → 모델 → 주장·반론 → 출처 보존</span></caption><colgroup><col class="evidence-rank-col" style="width:52px"><col><col class="evidence-publisher-col" style="width:140px"><col class="evidence-date-col" style="width:108px"><col class="evidence-role-col" style="width:125px"><col class="evidence-grade-col" style="width:68px"></colgroup><thead><tr><th scope="col">순서</th><th scope="col">자료 제목</th><th class="evidence-publisher" scope="col">출처</th><th class="evidence-date" scope="col">발행일</th><th class="evidence-role" scope="col">읽는 목적</th><th scope="col">근거</th></tr></thead><tbody id="evidence-body"></tbody><tfoot><tr id="evidence-sentinel"><td colspan="6"><button id="evidence-more">다음 자료 더 보기</button><span id="evidence-progress" role="status" aria-live="polite"></span><span id="evidence-end" hidden></span></td></tr></tfoot></table></div>
+        <div class="evidence-table-shell"><table class="evidence-table"><caption>자료 목록 <span id="evidence-total"></span></caption><colgroup><col class="evidence-rank-col" style="width:52px"><col><col class="evidence-publisher-col" style="width:140px"><col class="evidence-date-col" style="width:108px"><col class="evidence-role-col" style="width:125px"><col class="evidence-grade-col" style="width:68px"></colgroup><thead><tr><th scope="col">순서</th><th scope="col">자료 제목</th><th class="evidence-publisher" scope="col">출처</th><th class="evidence-date" scope="col">발행일</th><th class="evidence-role" scope="col">읽는 목적</th><th scope="col">근거</th></tr></thead><tbody id="evidence-body"></tbody><tfoot><tr id="evidence-sentinel"><td colspan="6"><button id="evidence-more">다음 자료 더 보기</button><span id="evidence-progress" role="status" aria-live="polite"></span><span id="evidence-end" hidden></span></td></tr></tfoot></table></div>
       </section>
       <section id="compare-view" class="lab-page" hidden>
         <header class="lab-heading"><div><span class="lab-eyebrow">2010년부터 현재까지</span><h1>사이클 내부의 구조</h1></div><div class="lab-date" id="structure-range">일별, 주별, 월별, 분기별<small>완료되지 않은 기간은 별도 표시</small></div></header>

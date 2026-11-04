@@ -1,3 +1,4 @@
+import { setLoadingSurface } from './loading-surfaces.js';
 import { mountIpoMonthCalendar } from './ipo-month-calendar.js?v=1.30.1-ipo-compact.1';
 // 공모주 청약·수요예측 캘린더. 38커뮤니케이션 집계 원자료를 표시만 하며,
 // 상태와 D-day는 열람 시점의 날짜로 다시 계산한다(저장된 상태 문자열을 신뢰하지 않는다).
@@ -80,6 +81,7 @@ export function initIpoView({ root, load = null, embeddedData = () => null, now 
   async function ensureData() {
     if (state.doc) return;
     state.status = 'loading';
+    setLoadingSurface(el('.ipo-pages'),true,{kind:'calendar',label:'공모주 일정 로딩'});
     try {
       const embedded = embeddedData();
       state.doc = embedded ? JSON.parse(embedded) : await (load ?? (() => fetch('./data/ipo-calendar.json').then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })))();
@@ -108,6 +110,7 @@ export function initIpoView({ root, load = null, embeddedData = () => null, now 
     });
   }
   function render() {
+    setLoadingSurface(el('.ipo-pages'),state.status==='loading',{kind:'calendar',label:'공모주 일정 로딩'});
     const today = todayIso(now());
     if (!state.rows.length || root.dataset.ipoToday !== today) { state.rows = ipoCalendarRows(state.doc ?? { '항목': [] }, today); root.dataset.ipoToday = today; }
     const list = state.status === 'error' ? [] : filtered();

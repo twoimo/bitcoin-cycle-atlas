@@ -7,8 +7,8 @@
 .workspace-history-controls .workbench-icon:disabled{opacity:.3;cursor:not-allowed}
 .chart-touch-tracking-hint{position:absolute;left:50%;bottom:32px;transform:translateX(-50%);max-width:calc(100% - 100px);z-index:12;white-space:nowrap;padding:8px 12px;border:1px solid var(--chart-workspace-controls-rule-2);border-radius:16px;background:var(--chart-workspace-controls-surface);color:var(--chart-workspace-controls-ink);font:11px/1.35 var(--font-system-basic);box-shadow:0 3px 14px var(--chart-workspace-controls-shadow);cursor:pointer}
 .chart-touch-tracking-hint[hidden]{display:none}
-.chart-go-to-dialog{width:min(560px,calc(100% - 24px));max-height:calc(100dvh - 24px);margin:auto;padding:20px;border:1px solid var(--chart-workspace-controls-rule-3);border-radius:10px;background:var(--analysis-dock-surface-6);color:var(--chart-workspace-controls-ink-2);box-shadow:0 20px 70px var(--analysis-dock-shadow-3);font:13px/1.6 var(--font-system-basic);overflow:auto;box-sizing:border-box}
-.chart-go-to-dialog::backdrop{background:var(--chart-workspace-controls-surface-2);backdrop-filter:blur(2px)}
+.chart-go-to-dialog{width:min(560px,calc(100% - 24px));max-height:calc(100dvh - 24px);margin:auto;padding:20px;border:1px solid var(--chart-workspace-controls-rule-3);border-radius:10px;background:var(--analysis-dock-surface-6);color:var(--chart-workspace-controls-ink-2);box-shadow:none;font:13px/1.6 var(--font-system-basic);overflow:auto;box-sizing:border-box}
+.chart-go-to-dialog::backdrop{background:var(--chart-workspace-controls-surface-2);backdrop-filter:none}
 .chart-go-to-dialog *{box-sizing:border-box}
 .chart-go-to-dialog header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .chart-go-to-dialog h2{font-size:17px;margin:0}
@@ -25,7 +25,7 @@
 .price-axis-options>summary{list-style:none;cursor:pointer;border:1px solid transparent;border-radius:4px;min-height:28px;padding:4px 8px;color:var(--chart-workspace-controls-ink-8);font:11px/1.5 var(--font-system-basic);white-space:nowrap}
 .price-axis-options>summary::-webkit-details-marker{display:none}
 .price-axis-options[open]>summary{background:var(--chart-workspace-controls-surface-5);border-color:var(--chart-workspace-controls-rule-7);color:var(--analysis-dock-ink-27)}
-.price-axis-options>div,.price-axis-options>fieldset{position:absolute;z-index:50;bottom:calc(100% + 7px);right:0;width:250px;max-width:calc(100vw - 24px);max-height:min(420px,75dvh);overflow:auto;padding:12px;border:1px solid var(--chart-workspace-controls-rule-8);border-radius:7px;background:var(--chart-workspace-controls-surface-6);box-shadow:0 10px 40px var(--atlas-shadow);box-sizing:border-box}
+.price-axis-options>div,.price-axis-options>fieldset{position:absolute;z-index:50;bottom:calc(100% + 7px);right:0;width:250px;max-width:calc(100vw - 24px);max-height:min(420px,75dvh);overflow:auto;padding:12px;border:1px solid var(--chart-workspace-controls-rule-8);border-radius:7px;background:var(--chart-workspace-controls-surface-6);box-shadow:none;box-sizing:border-box}
 .price-axis-options label{display:flex;gap:8px;align-items:center;min-height:34px;color:var(--chart-workspace-controls-ink-9);font:12px/1.5 var(--font-system-basic)}
 .price-axis-options select{width:100%;min-width:0;border:1px solid var(--chart-workspace-controls-rule-9);border-radius:4px;padding:8px;background:var(--chart-workspace-controls-surface-7);color:var(--chart-workspace-controls-ink-6);font:inherit;color-scheme:dark}
 .price-axis-options small,.price-axis-options p{display:block;color:var(--chart-workspace-controls-ink-10);font:11px/1.6 var(--font-system-basic);overflow-wrap:anywhere}

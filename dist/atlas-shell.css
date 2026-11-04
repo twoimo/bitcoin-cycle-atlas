@@ -1,0 +1,172 @@
+/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas locked system · redesign: full · posture: restrained */
+/* Dashboard-01 composition: shadcn/ui (MIT). Local tokens and financial semantics remain Atlas-owned. */
+:root{
+  --app-sidebar-width:224px;--app-header-height:64px;--ui-primary:#7da7ff;--nav-active-bg:#21304a;--nav-active-text:#b6cdff;
+  --bg:#0b0e14;--sidebar:#10141c;--surface:#131922;--surface-raised:#1b2330;--surface-hover:#202a39;
+  --border:#27303e;--border-soft:#1d2633;--text:#e6ebf2;--muted:#a1adbf;--subtle:#8493a8;--focus:#8db2ff;
+}
+body[data-sidebar=compact]{--app-sidebar-width:68px}
+.atlas-dashboard-header{position:fixed;top:0;left:var(--app-sidebar-width);right:0;z-index:45;height:var(--app-header-height);display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid var(--border);background:var(--bg)}
+.atlas-dashboard-header[hidden]{display:none}
+.atlas-sidebar-toggle{width:32px;height:36px;flex:none;display:grid;place-items:center;border:0;background:transparent;color:var(--muted);font-size:18px;cursor:pointer;border-radius:6px}
+.atlas-sidebar-toggle:hover{background:var(--surface-hover);color:var(--text)}
+.atlas-shell-heading{font-size:17px;font-weight:600;line-height:1.3;letter-spacing:-.03em;margin:0;white-space:nowrap}
+.atlas-shell-controls{margin-left:auto;min-width:0;display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none}
+body[data-shell=dashboard] #market-header-slot.atlas-shell-controls{display:flex;align-items:center;min-width:0;max-width:100%;overflow-x:auto;overflow-y:hidden;gap:12px}
+body[data-shell=dashboard] #market-header-slot .ml-tabs{flex:none;overflow:visible}
+body[data-shell=dashboard] #market-header-slot .ml-region{flex:none;margin:0}
+body[data-shell=dashboard] .atlas-sidebar,body[data-shell=dashboard] #root>.atlas-sidebar{
+  position:fixed;inset:0 auto 0 0;width:var(--app-sidebar-width);height:100dvh;min-height:100dvh;max-height:none;
+  display:flex;flex-direction:column;align-items:stretch;gap:0;padding:24px 12px;border:0;border-right:1px solid var(--border);background:var(--sidebar);overflow-x:hidden;overflow-y:auto;z-index:46;
+}
+body[data-shell=dashboard] .atlas-sidebar .atlas-brand{
+  display:flex;align-items:center;justify-content:flex-start;gap:12px;width:100%;height:44px;min-height:44px;padding:0 12px;margin:0 0 32px;border:0;background:none;text-decoration:none;white-space:nowrap;
+}
+body[data-shell=dashboard] .atlas-sidebar .atlas-brand>span{font-size:26px;color:var(--accent);flex:none}
+body[data-shell=dashboard] .atlas-sidebar .atlas-brand>div,body[data-shell=dashboard] .atlas-sidebar .atlas-brand>strong{display:block!important;color:var(--text);font-size:15px;font-weight:650;letter-spacing:-.02em}
+body[data-shell=dashboard] .atlas-sidebar .atlas-brand small{display:block!important;font-size:10px;letter-spacing:normal;color:var(--subtle);font-weight:500;margin-top:4px}
+.atlas-sidebar-group{display:none}
+body[data-shell=dashboard] .atlas-sidebar .atlas-nav{display:flex;flex-direction:column;align-items:stretch;gap:8px;width:100%;margin:0;overflow:visible;order:2}
+body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(a,button){position:relative;display:flex;align-items:center;gap:12px;width:100%;height:42px;min-height:42px;padding:12px 12px;border:0;border-radius:7px;background:none;color:var(--muted);font-size:12px;font-weight:500;text-decoration:none;text-align:left;white-space:nowrap}
+body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(a,button):hover{background:var(--surface-hover);color:var(--text)}
+body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(.active,[aria-current=page]){background:var(--nav-active-bg);color:var(--nav-active-text)}
+body[data-shell=dashboard] .atlas-nav svg{width:18px;height:18px;flex:none}
+body[data-shell=dashboard] .atlas-nav button>span:last-child:not([data-icon]){position:static;clip-path:none;width:auto;height:auto;overflow:visible;margin:0}
+body[data-shell=dashboard] .atlas-side-foot,body[data-shell=dashboard] .workbench-tools,body[data-shell=dashboard] .workbench-rail,body[data-shell=dashboard] .mobile-chart-home{display:none!important}
+body[data-shell=dashboard] .workspace,body[data-shell=dashboard] #root>.workspace{
+  margin-left:var(--app-sidebar-width)!important;margin-top:var(--app-header-height);width:calc(100% - var(--app-sidebar-width));height:calc(100dvh - var(--app-header-height));min-height:0;
+}
+body[data-shell=dashboard] .workspace.atlas-details-layout{display:block;grid-template-columns:none}
+body[data-shell=dashboard] #main{height:100%;min-height:0;padding-top:0!important}
+body[data-shell=dashboard] :is(.daily-heading,.ipo-heading,.evidence-controls){position:relative;top:auto;right:auto;left:auto;height:auto;min-height:46px;width:100%;max-width:none;z-index:2;display:flex;align-items:center;gap:12px;padding:8px 0;margin:0 0 12px;background:transparent;border:0;box-shadow:none;overflow-x:auto;white-space:nowrap}
+body[data-shell=dashboard] :is(.daily-heading-title,.ipo-heading-title,.evidence-mobile-heading){display:none!important}
+body[data-shell=dashboard] #data-view .daily-heading{padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);margin:0}
+body[data-shell=dashboard] #ipo-view{padding:16px 24px 24px;gap:12px}
+body[data-shell=dashboard] .ipo-heading{justify-content:space-between;flex:none;margin:0}
+body[data-shell=dashboard] :is(.ipo-table-shell,.daily-table-shell,.evidence-table-wrap){border:1px solid var(--border);border-radius:10px;background:var(--surface);overflow:auto}
+body[data-shell=dashboard] #evidence-view{padding:16px 24px 24px}
+body[data-shell=dashboard] .ml-scroll{padding:8px 24px 24px}
+body[data-shell=dashboard] .ml-score-row{gap:16px;margin:16px 0}
+body[data-shell=dashboard] .ml-score{border-radius:10px;min-height:144px;background:var(--surface);border-left-width:2px}
+body[data-shell=dashboard] .ml-score .ml-axis-value{font-size:36px}
+body[data-shell=dashboard] .ml-card{border-radius:10px;background:var(--surface)}
+body[data-shell=dashboard] .ml-sources,body[data-shell=dashboard] .ml-original{background:transparent;border-color:var(--border);border-radius:7px}
+body[data-sidebar=compact][data-shell=dashboard] .atlas-brand :is(div,strong),body[data-sidebar=compact][data-shell=dashboard] .atlas-sidebar-group,body[data-sidebar=compact][data-shell=dashboard] .atlas-nav .atlas-nav-label,body[data-sidebar=compact][data-shell=dashboard] .atlas-nav button>span:last-child:not([data-icon]){display:none!important}
+body[data-sidebar=compact][data-shell=dashboard] .atlas-sidebar :is(.atlas-brand,.atlas-nav a,.atlas-nav button){justify-content:center;padding-inline:0}
+/* The chart keeps TradingView's top/left/right/bottom working regions. */
+@media(min-width:621px){
+  body[data-shell=chart] .atlas-sidebar{position:fixed;inset:0 auto 0 0;width:44px;height:100dvh;min-height:100dvh;max-height:none;padding:4px 4px;display:flex;flex-direction:column;gap:8px;align-items:center;border-right:1px solid var(--border);border-bottom:0;overflow:visible;background:var(--bg)}
+  body[data-shell=chart] .workspace{margin-left:44px!important;margin-top:0;width:calc(100% - 44px);height:100dvh}
+  body[data-shell=chart] .atlas-sidebar .atlas-brand{width:36px;height:36px;padding:0;flex:none}
+  body[data-shell=chart] .atlas-canvas-heading{position:relative;left:auto;right:auto;top:auto;width:100%;max-width:none;height:44px;min-height:44px;padding:0 8px;z-index:30;overflow-x:auto;overflow-y:hidden;flex:none;gap:4px;background:var(--bg);border-bottom:1px solid var(--border)}
+  body[data-shell=chart] .workbench-rail{width:38px;border-left:1px solid var(--border);background:var(--bg)}
+  body[data-shell=chart] .workbench-rail .atlas-nav{display:flex;flex-direction:column;gap:4px;align-items:center;width:100%;margin:8px 0;overflow:visible}
+  body[data-shell=chart] .workbench-rail .atlas-nav :is(a,button){display:grid;place-items:center;width:34px;min-height:34px;height:34px;padding:8px;overflow:hidden}
+  body[data-shell=chart] .workbench-rail .atlas-nav :is(a,button)>span:last-child:not([data-icon]){position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden;margin:0}
+}
+@media(max-width:1000px){
+  .atlas-dashboard-header>.atlas-sidebar-toggle{display:none}
+  body[data-shell=dashboard]{--app-sidebar-width:68px}
+  body[data-shell=dashboard] .atlas-sidebar .atlas-brand :is(div,strong),body[data-shell=dashboard] .atlas-sidebar-group,body[data-shell=dashboard] .atlas-nav .atlas-nav-label,body[data-shell=dashboard] .atlas-nav button>span:last-child:not([data-icon]){display:none!important}
+  body[data-shell=dashboard] .atlas-sidebar :is(.atlas-brand,.atlas-nav a,.atlas-nav button){justify-content:center;padding-inline:0}
+  .atlas-dashboard-header{padding-inline:16px;gap:12px}
+}
+@media(max-width:640px){
+  body[data-shell=dashboard]{--app-sidebar-width:52px;--app-header-height:56px}
+  body[data-shell=dashboard] .atlas-sidebar,body[data-shell=dashboard] #root>.atlas-sidebar{padding:12px 4px}
+  body[data-shell=dashboard] .atlas-sidebar :is(.atlas-brand,.atlas-nav a,.atlas-nav button){min-height:44px;height:44px}
+  .atlas-dashboard-header{padding-inline:12px;gap:8px}
+  .atlas-shell-heading{font-size:15px}
+  .atlas-dashboard-header:has(.atlas-shell-controls:not(:empty)) .atlas-shell-heading{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .atlas-shell-controls{margin-left:0}
+  body[data-shell=dashboard] :is(#ipo-view,#evidence-view){padding:8px 12px 12px}
+  body[data-shell=dashboard] .ml-scroll{padding:0 12px 16px}
+  body[data-shell=dashboard] .ml-score-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  body[data-shell=dashboard] .ml-score{padding:12px 8px;min-height:140px}
+  body[data-shell=dashboard] .ml-score h3{font-size:12px;white-space:nowrap}
+  body[data-shell=dashboard] .ml-score h3 span{font-size:17px}
+  body[data-shell=dashboard] .ml-score .ml-axis-value{font-size:24px;letter-spacing:-.04em}
+  body[data-shell=dashboard] .ml-score .ml-axis-stats{display:flex;flex-direction:column;gap:2px;font-size:10px}
+}
+@media(max-width:620px){
+  body[data-shell=chart] .atlas-sidebar:not([data-mobile-open=true]),body[data-shell=chart] .workbench-rail:not([data-mobile-open=true]){display:none}
+  body[data-shell=chart] .workspace{margin:0!important;width:100%;height:100dvh}
+  body[data-shell=chart] .atlas-canvas-heading{position:relative;inset:auto;width:100%;max-width:none;height:calc(48px + var(--mobile-top));min-height:calc(48px + var(--mobile-top));padding:var(--mobile-top) 8px 0;gap:1px;overflow:visible;flex:none;z-index:46;background:var(--bg);border-bottom:1px solid var(--border)}
+  body[data-shell=chart] .atlas-canvas-heading :is(#workbench-replay,.workspace-history-controls){display:none}
+  body[data-shell=chart] .atlas-canvas-heading .workbench-symbol{max-width:92px;min-width:0;flex:1}
+  body[data-shell=chart] .atlas-canvas-heading>.mobile-workbench-button{width:44px;min-width:44px;height:44px;min-height:44px;flex:none}
+  body[data-shell=chart] .atlas-sidebar[data-mobile-open=true]{min-height:0;flex-direction:column;align-items:stretch;gap:8px}
+  body[data-shell=chart] .workbench-rail[data-mobile-open=true] .atlas-nav{display:flex;flex-direction:row;flex-wrap:wrap;gap:4px;overflow:visible}
+}
+/* RSI is a chart workspace. The source comparison stays available below it. */
+.rsi-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--border)}
+.rsi-toolbar strong{font-size:16px;white-space:nowrap}.rsi-toolbar strong span{font-size:12px;color:var(--muted);font-weight:400;margin-left:8px}
+.rsi-toolbar button{min-height:36px;border:0;border-radius:4px;padding:8px 12px;background:transparent;color:var(--muted);cursor:pointer}
+.rsi-toolbar button[aria-pressed=true]{background:var(--nav-active-bg);color:var(--nav-active-text)}
+.rsi-toolbar label{display:flex;align-items:center;gap:8px;margin-left:auto;color:var(--muted);font-size:11px}
+.rsi-toolbar select{max-width:260px;min-height:36px}
+.rsi-level-key{display:flex;gap:16px;flex-wrap:wrap;padding:12px 0;margin:0;color:var(--muted);font-size:11px}
+.rsi-level-key span:first-child{color:var(--green)}.rsi-level-key span:nth-child(2){color:var(--red)}
+.rsi-workbench{display:grid;gap:16px}.rsi-chart-panel{padding:12px 16px}.rsi-chart-panel>h3{display:none}
+.rsi-chart-panel .ml-chart{margin-top:8px}.rsi-chart-panel [data-chart=rsi-price]{border-bottom:1px solid var(--border)}
+.rsi-crossing{fill:var(--green);font-family:var(--font);font-size:10px}.rsi-crossing-sell{fill:var(--red)}
+.rsi-crossing text{paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.rsi-comparison>summary{font-size:12px;color:var(--muted);cursor:pointer;min-height:32px}
+.rsi-chart-panel svg{cursor:crosshair}
+.atlas-sidebar :is(a,button):active{background:var(--surface-hover)}
+.atlas-sidebar :is(a,button):disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:640px){.rsi-toolbar{gap:8px}.rsi-toolbar label{margin-left:0;width:100%;justify-content:space-between}.rsi-toolbar select{max-width:220px}.rsi-toolbar button{min-height:44px;padding:8px}.rsi-level-key{gap:8px}.rsi-chart-panel{padding:12px 8px}}
+body[data-shell=dashboard] .atlas-service-workspace{padding:0}
+.rsi-chart-panel>.ml-source-line{display:none}
+.rsi-chart-panel [data-chart=rsi] .ml-date-selector{display:none}
+.rsi-chart-panel .ml-chart-legend{margin-bottom:0}
+
+body[data-shell=chart] .workbench-rail .atlas-nav svg{width:18px;height:18px;flex:none}
+body[data-shell=chart] .workbench-rail .atlas-nav :is(a,button){color:var(--muted);text-decoration:none}
+body[data-shell=chart] .workbench-rail .atlas-nav .active{color:var(--nav-active-text);background:var(--nav-active-bg)}
+@media(max-width:620px){body[data-shell=chart] .workbench-rail[data-mobile-open=true] .atlas-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:1 1 72px;min-height:64px;padding:8px 4px;text-decoration:none;font-size:11px;text-align:center;white-space:normal}}
+
+.atlas-nav-code{display:inline-grid;place-items:center;flex:none;width:18px;height:18px;font-family:var(--font-mono,monospace);font-size:10px;font-weight:600;line-height:1}
+.atlas-center-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg);z-index:20}
+.atlas-center-frame[hidden]{display:none}
+body.js[data-center-tool] .atlas-plot>:not(.atlas-center-frame){visibility:hidden;pointer-events:none}
+body[data-center-tool] .atlas-canvas-heading::after{content:attr(data-center-page);font-size:12px;color:var(--muted);white-space:nowrap;padding-inline:8px}
+body[data-center-tool] :is(.atlas-canvas-heading,.workbench-bottom-bar,.workbench-tools,.workbench-detail-tools,.mobile-extra-actions) :disabled{color:var(--subtle);background:var(--surface);cursor:default}
+body[data-center-tool] :is(.mobile-gesture-hint,.mobile-gesture-help){display:none}
+body[data-embedded=true] :is(.atlas-sidebar,.atlas-dashboard-header,.workbench-tools,.workbench-rail,.atlas-canvas-heading,.workbench-bottom-bar,.atlas-readout,.mobile-chart-home){display:none!important}
+body[data-embedded=true] .workspace{margin:0!important;width:100%!important;height:100dvh}
+body[data-shell=embedded]{overflow:hidden;margin:0}
+.atlas-embedded-workspace{height:100dvh;min-width:0;overflow:hidden}
+body #root main.atlas-embedded-workspace{box-sizing:border-box;width:100%;max-width:none;margin:0;padding:0}
+.atlas-embedded-workspace #market-view{width:100%;margin:0;padding:0}
+.atlas-embedded-workspace .rsi-toolbar>.symbol-selector-trigger{display:none}
+body.js[data-center-tool] :is(#workbench-range-label,.workbench-status){visibility:hidden}
+body[data-embedded=true] #main{box-sizing:border-box;width:100%;max-width:none;margin:0;padding:8px 16px}
+.atlas-embedded-workspace .market-lab{height:100%;padding:0}
+.atlas-embedded-workspace .ml-scroll{height:100%;overflow:auto;padding:12px 16px 24px}
+.rsi-history{margin-top:24px;padding-top:16px;border-top:1px solid var(--border)}
+.rsi-history h2{margin:0;font-size:15px;font-weight:600}.rsi-history h2 small{margin-left:12px;font-size:11px;font-weight:400;color:var(--muted)}
+.rsi-backtest-form{display:flex;align-items:end;flex-wrap:wrap;gap:12px;margin-block:16px}
+.rsi-backtest-form label{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--muted)}
+.rsi-backtest-form input{box-sizing:border-box;width:112px;min-height:32px;padding:4px 8px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:4px;font:12px var(--font-mono)}
+.rsi-backtest-form input[type=date]{width:140px}
+.rsi-history button{min-height:32px;padding:4px 12px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);cursor:pointer;font:12px var(--font)}
+.rsi-history button:hover{background:var(--surface-hover)}.rsi-history button:active{background:var(--nav-active-bg)}.rsi-history button:focus-visible,.rsi-backtest-form input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}.rsi-history button:disabled{color:var(--subtle);background:var(--bg);cursor:default}
+.rsi-history-meta{display:flex;flex-wrap:wrap;gap:12px;margin-block:8px;font-size:11px;color:var(--muted)}
+.rsi-csv textarea{box-sizing:border-box;width:100%;height:200px;padding:12px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font:11px/1.6 var(--font-mono);resize:vertical;white-space:pre;overflow:auto}
+.rsi-csv .rsi-history-heading{margin-block:12px}.rsi-csv .rsi-history-heading button{margin-left:auto}
+@media(max-width:620px){body[data-center-tool] .atlas-canvas-heading :is(#workbench-chart-type,#atlas-mode-menu,#atlas-cycle-panel){display:none}body[data-center-tool] .atlas-canvas-heading .workbench-symbol{flex:0 0 80px;min-width:80px;max-width:none}}
+body[data-rsi-controls] :is(#workbench-scenario,#atlas-cycle-panel,#workbench-replay,.workbench-rail [data-mobile-target=focus],.mobile-gesture-hint,.mobile-gesture-help){display:none!important}
+body[data-rsi-controls] #workbench-frequency [data-lab-frequency]:not([data-lab-frequency=daily]):not([data-lab-frequency=weekly]){display:none}
+body[data-rsi-controls=ready] :is(#workbench-range-label,.workbench-status){visibility:visible!important}
+body[data-rsi-controls] .mobile-extra-actions :is([data-mobile-target="#workbench-scenario"],[data-mobile-target="#workbench-replay"],[data-mobile-target=focus]){display:none!important}
+body[data-rsi-controls=ready] :is(.atlas-canvas-heading,.workbench-tools,.workbench-detail-tools,.workbench-bottom-bar,.mobile-extra-actions) :disabled{color:var(--subtle);background:var(--surface);cursor:default}
+@media(max-width:620px){body[data-rsi-controls] .atlas-canvas-heading :is(#workbench-chart-type,#atlas-mode-menu){display:flex}body[data-rsi-controls] .atlas-canvas-heading::after{display:none}body[data-rsi-controls] .atlas-canvas-heading .workbench-symbol{flex:0 0 80px}}
+body[data-center-tool] #chart-reader{display:none!important}
+@media(min-width:621px){body[data-center-tool] .workspace.atlas-details-layout{grid-template-columns:minmax(0,1fr) 0 var(--rail-width,38px)}}
+.rsi-backtest-metrics{display:flex;flex-wrap:wrap;gap:24px;margin-block:24px}.rsi-backtest-metrics dt{font-size:11px;color:var(--muted)}.rsi-backtest-metrics dd{margin:4px 0 0;font:18px var(--font-mono)}
+.rsi-history-heading{display:flex;align-items:center;gap:16px;margin-block:24px 12px}.rsi-history-heading label{margin-left:auto;font-size:11px;color:var(--muted)}
+.rsi-ledger-scroll{max-height:360px;overflow:auto;border:1px solid var(--border);margin-top:12px}.rsi-ledger-scroll thead th{position:sticky;top:0;background:var(--surface);z-index:1}.rsi-ledger-scroll td{white-space:nowrap;font-variant-numeric:tabular-nums}.rsi-ledger-scroll td button{border:0;background:transparent;color:var(--muted);min-height:28px;padding:0}
+.rsi-trades summary{cursor:pointer;font-size:12px}
+.symbol-search-mark-tqqq,.symbol-search-mark-soxl,.symbol-search-mark-233740{font-size:14px;color:var(--muted)}
+@media(max-width:640px){.atlas-embedded-workspace .ml-scroll{padding:8px 8px 16px}.rsi-history h2 small{display:block;margin:8px 0 0}.rsi-backtest-form{gap:8px}.rsi-backtest-form label{flex:1 0 44%}.rsi-backtest-form input,.rsi-backtest-form input[type=date]{width:100%}.rsi-history-heading{flex-wrap:wrap;gap:8px}.rsi-backtest-metrics{gap:16px}}

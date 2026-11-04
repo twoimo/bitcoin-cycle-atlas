@@ -109,7 +109,7 @@ function preservedPathMeaning(record){
   return {pointMeaning:record.symbol==='BTCUSD'?'preserved-conditional-btc-path':'preserved-conditional-asset-valuation',
     pointLabel:record.symbol==='BTCUSD'?'보존한 BTC 조건부 경로':'보존한 자산의 조건부 평가 경로',bandMeaning};
 }
-function finishSession({identity,mode,prices,path,targets,observations,observedAt,observedThrough,source,horizonDays,evaluatedAt,historicalModel=null,training=null,chartDataset=null,chartForecast=null,forecastOriginDate=identity.asOf,timelineDates=null,scorePolicy=null,retrospectiveForecast=null}){
+function finishSession({identity,mode,prices,path,targets,observations,observedAt,observedThrough,source,horizonDays,evaluatedAt,historicalModel=null,training=null,chartDataset=null,chartForecast=null,forecastOriginDate=identity.asOf,timelineDates=null,scorePolicy=null,retrospectiveForecast=null,cutoffForecast=null}){
   const {symbol,asOf}=identity,market=marketFor(symbol);
   const normalized=observationRows(observations,{symbol,observedAt,observedThrough,source});
   const forecast=visiblePath(path,forecastOriginDate,horizonDays);
@@ -126,6 +126,7 @@ function finishSession({identity,mode,prices,path,targets,observations,observedA
     timeline,inputPrices,forecast,observations:relevant,targets:copy(targets),historicalModel,training,
     ...(chartDataset?{chartDataset}:{}),...(chartForecast?{chartForecast}:{}),
     ...(retrospectiveForecast?{retrospectiveForecast}:{}),
+    ...(cutoffForecast?{cutoffForecast}:{}),
     ...(forecastOriginDate!==asOf?{forecastOriginDate}:{}),
     observationProvenance:{observedAt:observedAt??null,observedThrough:observedThrough??normalized.at(-1)?.date??null,
       source:source===null||source===undefined?null:copy(source),informationTimeAvailable,
@@ -136,6 +137,29 @@ function finishSession({identity,mode,prices,path,targets,observations,observedA
   chartHistories.set(session,{prices:freeze(prices.map(row=>({date:row.date,price:row.price}))),
     observations:freeze(normalized.filter(row=>row.date<=asOf)),current:null});
   sessions.add(session);return freeze(session);
+}
+
+export async function createCutoffBacktestReplaySession({symbol='BTCUSD',asOf,playbackStartDate,observations=[],observedAt=null,observedThrough=null,source=null,horizonDays=180,evaluatedAt=new Date().toISOString(),forecastRecord=null,modelOptions={},cutoffModel=null}={}){
+  if(symbol!=='BTCUSD')throw new RangeError('Cutoff long-horizon backtest is BTC-only');
+  horizon(horizonDays);utcDay(asOf);
+  if(playbackStartDate!==dateFromDay(utcDay(asOf)+1))throw new RangeError('Backtest starts after its completed input day');
+  const evaluated=normalizeForecastTimestamp(evaluatedAt,'evaluatedAt');
+  const all=currentObservations(observationRows(observations,{symbol,observedAt,observedThrough,source}),evaluated);
+  const prices=all.filter(row=>row.date<=asOf).map(row=>({date:row.date,price:row.price}));
+  const capability=cutoffModel;
+  if(typeof capability?.createCutoffBacktestForecast!=='function'||typeof capability?.restoreCutoffBacktestForecast!=='function')throw new TypeError('A BTC-owned cutoff model capability is required');
+  const parameters={prices,asOf,horizonDays,source};
+  const fixed=forecastRecord?await capability.restoreCutoffBacktestForecast(forecastRecord,{...parameters,evaluatedAt:evaluated}):await capability.createCutoffBacktestForecast({...parameters,modelOptions,createdAt:evaluated});
+  const identity={symbol,recordId:fixed.id,recordKind:'reconstructed-cutoff-forecast',asOf,issuedAt:null,createdAt:fixed.createdAt,
+    playbackStartDate,forecastOriginDate:asOf,inputHash:fixed.inputHash,outputHash:fixed.outputHash,modelVersion:fixed.modelVersion,
+    informationCutoffAt:sessionCloseUtc(asOf,'crypto'),historicalModelExistedAtOrigin:false,publicationTimeProven:false,
+    pointLabel:'기준시점 고정 예측 · 과거 재구성',pointMeaning:fixed.meaning,bandMeaning:fixed.bandMeaning};
+  const chartDataset={prices:prices.map(row=>[row.date,row.price]),meta:{sourceName:source.provider,priceDefinition:source.priceMeaning}};
+  const chartForecast={version:fixed.modelVersion,asOf,path:fixed.path};
+  const end=fixed.path.at(-1).date;
+  const timeline=[asOf,...all.filter(row=>row.date>asOf&&row.date<=end).map(row=>row.date)];
+  return finishSession({identity,mode:'cutoff-backtest',prices,path:fixed.path,targets:[],observations,observedAt,observedThrough,source,horizonDays,evaluatedAt:evaluated,chartDataset,chartForecast,timelineDates:timeline,cutoffForecast:fixed,
+    training:{through:asOf,observations:prices.length,inputHash:fixed.inputHash},scorePolicy:{forecastScoringEnabled:true,samePriceSource:true,comparisonKind:'reconstructed-fixed-cutoff-price-comparison',currentForecastUsed:false,prospectiveScoringEligible:false}});
 }
 
 export async function createRecordedReplaySession({record,snapshot,observations=[],observedAt=null,observedThrough=null,source=null,horizonDays=180,evaluatedAt=new Date().toISOString()}={}){
@@ -343,7 +367,7 @@ export function buildReplayFrame(session,options={}){
   if(!sessions.has(session))throw new TypeError('Create and verify a replay session before rendering');
   const clockMode=options.clockMode??'observed-date';
   if(!['observed-date','information-time'].includes(clockMode))throw new RangeError('Unknown replay clock mode');
-  if(session.mode==='historical-reconstruction'&&clockMode!=='observed-date')throw new RangeError('Historical reconstruction is a current-vintage bar replay');
+  if(['historical-reconstruction','cutoff-backtest'].includes(session.mode)&&clockMode!=='observed-date')throw new RangeError('Historical reconstruction is a current-vintage bar replay');
   const position=cursor(session,options),evaluationAt=position.cursorAt<session.evaluatedAt?position.cursorAt:session.evaluatedAt;
   const inputVisible=clockMode==='observed-date'||evaluationAt>=session.identity.inputAvailableAt;
   const inputPrices=inputVisible?session.inputPrices:[];

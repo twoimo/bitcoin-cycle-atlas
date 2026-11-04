@@ -1,3 +1,4 @@
+import {cycleComparisonSummary} from './cycle-period-comparison.js';
 import { utcDay } from './cycle-engine.js?v=1.29.0';
 import { INTERVAL_RELATIONS } from "./cycle-milestones.js?v=1.29.0";
 
@@ -53,7 +54,8 @@ function labelAt(item, y, { bounds, placed, obstacles, segments }) {
   if (available <= 0) return null;
   const dense = item.lanePitch < 18, fontSize = dense ? 8 : 10, height = dense ? 10 : 14, labelGap = dense ? 1 : 3;
   const variants = [
-    { mode: 'full', text: `${item.relation.label} · ${item.duration}`, top: y - height / 2, height, fontSize, baseline: y + 3, penalty: 0 },
+    ...(item.comparison?[{mode:'comparison',text:`경로 ${item.relation.label} · ${item.duration} · ${cycleComparisonSummary(item.comparison)}`,top:y-height/2,height,fontSize,baseline:y+3,penalty:-4}]:[]),
+    { mode: 'full', text: `${item.comparison?'경로 ':''}${item.relation.label} · ${item.duration}`, top: y - height / 2, height, fontSize, baseline: y + 3, penalty: 0 },
     { mode: 'compact', text: `${item.relation.label}\n${item.duration}`, top: y - 24, height: 22, fontSize: 10, width: Math.max(textWidth(item.relation.label) * .8, textWidth(item.duration) * .9) + 4, penalty: 36 },
     { mode: 'duration', text: item.duration, top: y - height / 2, height, fontSize, baseline: y + 3, penalty: item.active ? 320 : 240 },
   ];
@@ -117,7 +119,7 @@ function spanMarkup(item) {
   const { interval, relation, x1, x2, y, active, related, clippedStart, clippedEnd, labelBox, previewBox } = item;
   const color = relation.color, weight = active ? 2.6 : related ? 2 : 1.6;
   const dash = isDashed(interval) ? ' stroke-dasharray="5 3"' : '';
-  const title = `${relation.label} · ${interval.startDate} → ${interval.endDate} UTC\n${item.duration} · ${item.days}일 · ${status(interval)}${clippedStart || clippedEnd ? '\n현재 화면에는 일부만 표시됩니다. 기간은 전체 양 끝 날짜의 차이입니다.' : ''}`;
+  const title = `${item.comparison?'경로 ':''}${relation.label} · ${interval.startDate} → ${interval.endDate} UTC\n${item.duration} · ${item.days}일 · ${status(interval)}${item.comparison?'\n'+cycleComparisonSummary(item.comparison):''}${clippedStart || clippedEnd ? '\n현재 화면에는 일부만 표시됩니다. 기간은 전체 양 끝 날짜의 차이입니다.' : ''}`;
   const edge = Math.min(3, item.capHeight), head = Math.min(4, (x2 - x1) / 3);
   let markup = `<g class="cycle-interval-span cycle-interval${active ? ' is-active' : ''}${related ? ' is-related' : ''}${item.crowded ? ' is-crowded' : ''}" data-cycle-interval="${esc(interval.id)}" data-cycle-relation="${relation.id}" data-kind="${esc(interval.kind || 'observed')}" data-start-date="${interval.startDate}" data-end-date="${interval.endDate}" data-days="${item.days}" data-clipped-start="${clippedStart}" data-clipped-end="${clippedEnd}" data-x1="${fmt(x1)}" data-x2="${fmt(x2)}" data-raw-x1="${fmt(item.rawX1)}" data-raw-x2="${fmt(item.rawX2)}" data-y="${fmt(y)}" data-label-mode="${item.labelMode}" role="button" tabindex="0" aria-pressed="${active}" aria-label="${esc(title.replaceAll('\n', ' · '))}"><title>${esc(title)}</title>`;
   // Only the 8px line and painted text receive pointers. There is no broad hit
@@ -153,7 +155,7 @@ function spanMarkup(item) {
  * Labels use horizontal room first and may be omitted; title/ARIA and the
  * caller's interval selection remain available without adding chart height.
  */
-export function cycleIntervalsOverlayMarkup({ intervals = [], start, end, x, left, right, top, bottom, clipId = 'price', relation = 'all', activeIntervalId = null, activeMarkerId = null, obstacles = [], pricePoints = [] } = {}) {
+export function cycleIntervalsOverlayMarkup({ intervals = [], comparisons = null, start, end, x, left, right, top, bottom, clipId = 'price', relation = 'all', activeIntervalId = null, activeMarkerId = null, obstacles = [], pricePoints = [] } = {}) {
   const displayedRelations = relationById.has(relation) ? INTERVAL_RELATIONS.filter(item => item.id === relation) : [...INTERVAL_RELATIONS];
   const rows = displayedRelations.map(item => ({ ...item, spans: [], active: false, related: false }));
   const empty = { markup: '', visibleCount: 0, labelCount: 0, hiddenLabelCount: 0, items: [], rows, relations: rows, lanes: [], bandTop: null, bandBottom: null };
@@ -173,7 +175,7 @@ export function cycleIntervalsOverlayMarkup({ intervals = [], start, end, x, lef
     if (!interval?.id || !selectedRelations.has(interval.relation)) continue;
     const from = dayOf(interval.startDate), to = dayOf(interval.endDate);
     if (from === null || to === null || to <= from) continue;
-    const item = { interval, relation: relationById.get(interval.relation), first: from, last: to };
+    const item = { interval, comparison:comparisons?.[interval.id]??null, relation: relationById.get(interval.relation), first: from, last: to };
     candidates.push(item);
     if (to <= first || from >= last) continue;
     const rawX1 = project(x, interval.startDate), rawX2 = project(x, interval.endDate);

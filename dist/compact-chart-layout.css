@@ -7,7 +7,7 @@
 .compact-indicator-controls,.analysis-pane-access{display:none}
 .atlas-plot[data-compact-layout]>#chart-indicator-manager.chart-indicator-manager{
  top:var(--compact-content-top);left:8px;right:auto;width:max-content;
- max-width:var(--compact-list-width);padding:0;box-sizing:border-box;z-index:11;background:var(--surface)
+ max-width:var(--compact-list-width);padding:0;box-sizing:border-box;z-index:11;background:transparent
 }
 .atlas-plot[data-compact-layout]>#chart-indicator-manager.chart-indicator-manager[data-collapsed=true]{width:max-content;max-width:calc(100% - 16px)}
 .atlas-plot[data-compact-layout] .compact-indicator-controls{

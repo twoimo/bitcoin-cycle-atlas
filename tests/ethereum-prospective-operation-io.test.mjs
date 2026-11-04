@@ -1,6 +1,7 @@
+import {mkdtemp} from './helpers/physical-temp-directory.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,mkdir,writeFile,readFile,appendFile,truncate,rm,lstat,readdir,rename,symlink,open} from 'node:fs/promises';
+import {mkdir,writeFile,readFile,appendFile,truncate,rm,lstat,readdir,rename,symlink,open} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {resolve,dirname} from 'node:path';
 import {ethereumOperationJson as encoded,readEthereumOperationFile as readOperation,

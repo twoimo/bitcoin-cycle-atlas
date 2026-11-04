@@ -1,0 +1,15 @@
+{
+  "name": "@atlas/api",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "fastify": "5.12.8",
+    "@fastify/static": "10.1.8",
+    "pg": "8.23.1",
+    "@atlas/domain": "*",
+    "@atlas/contracts": "*"
+  },
+  "exports": {
+    "./repository": "./src/repository.ts"
+  }
+}

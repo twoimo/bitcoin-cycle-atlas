@@ -1,0 +1,641 @@
+{
+  "checkedAt": "2026-11-03T15:59:12.530244+00:00",
+  "scope": "Read-only explanation of observed and conditional cycle interval disparity",
+  "inputThrough": "2026-11-02",
+  "arithmetic": {
+    "intervalsChecked": 45,
+    "utcDateDifferencesMatch": true,
+    "weekConversionsMatch": true,
+    "displayedTroughPrecedesMacroClockDays": 313
+  },
+  "currentClock": {
+    "referencePeakDate": "2025-10-06",
+    "referencePeakConfirmationDate": "2025-11-14",
+    "referenceConfirmationRule": "20% fall from the observed reference high; not proof of a completed four-year cycle",
+    "nominalTroughDate": "2026-10-06",
+    "nominalPeakDate": "2029-10-06",
+    "zoneEntryDate": "2029-05-11",
+    "effectiveTroughDate": "2026-08-11",
+    "effectivePeakDate": "2029-08-11",
+    "nextLowDate": "2030-08-11",
+    "nominalNextTroughDate": "2030-10-06",
+    "arrivalLeadMonths": 3,
+    "dwellMonths": 3,
+    "netShiftMonths": 0,
+    "nominalRiseMonths": 36,
+    "nominalDeclineMonths": 12,
+    "definitionIsConditionalPrior": true,
+    "timingAdjustment": {
+      "requested": true,
+      "available": true,
+      "asOf": "2026-11-02",
+      "requestedShiftDays": -56,
+      "appliedShiftDays": -56,
+      "applied": true,
+      "sourceReferencePeakDate": "2025-10-06",
+      "reason": "causal-daily-clock-applied",
+      "nominalZoneDate": "2029-07-06",
+      "nominalEffectivePeakDate": "2029-10-06",
+      "nominalNextLowDate": "2030-10-06",
+      "finalCycleTurnClaim": false,
+      "probability": null
+    },
+    "intermediateAnchorsAreHardConstraints": false,
+    "finalBridgeEndpointIsHardConstraint": true,
+    "futureHalvingDateAssumed": false,
+    "probability": null
+  },
+  "currentCorrection": {
+    "date": "2026-11-02",
+    "epochDay": 20759,
+    "state": "shortened",
+    "label": "단축 가정",
+    "color": "#df7c83",
+    "shiftDays": -55.5061952711458,
+    "appliedShiftDays": -56,
+    "cycleLengthDays": 1405,
+    "causal": true,
+    "probability": null,
+    "asOf": "2026-11-02",
+    "available": true,
+    "rawShiftDays": -66,
+    "referencePeakDate": "2025-10-06",
+    "referencePeakPrice": 124824.453666861,
+    "candidateTroughDate": "2026-06-30",
+    "candidateTroughPrice": 58525.0753614845,
+    "peakConfirmedAt": "2026-02-17",
+    "troughConfirmedAt": "2026-09-02",
+    "candidateIsFinalCycleTurn": false,
+    "nominalPeakDate": "2029-10-06",
+    "expectedNextPeakDate": "2029-08-11",
+    "nextPeakDateIsConditionalClock": true,
+    "referenceCount": 3,
+    "cycleIntervalCount": 3,
+    "observedBearDays": 267,
+    "medianBearDays": 366,
+    "peakComponentDays": -16.5,
+    "bearComponentDays": -49.5,
+    "peakWeight": 0.5,
+    "bearWeight": 0.5,
+    "resetReason": null,
+    "unavailableReason": null,
+    "sensitivity": {
+      "lowerShiftDays": -66,
+      "upperShiftDays": 0,
+      "meaning": "Sensitivity spanning the unadjusted calendar prior, current smoothed correction and current raw rule. It is not a prediction interval.",
+      "probability": null,
+      "calibrated": false
+    }
+  },
+  "conditionalIntervals": [
+    {
+      "cycle": "2029년 조건부 사이클",
+      "relation": "bottom-bottom",
+      "start": "2026-06-30",
+      "end": "2029-10-02",
+      "days": 1190,
+      "weeks": 170,
+      "kind": "mixed",
+      "provisional": true
+    },
+    {
+      "cycle": "2029년 조건부 사이클",
+      "relation": "bottom-cycle-top",
+      "start": "2026-06-30",
+      "end": "2029-07-19",
+      "days": 1115,
+      "weeks": 159.28571428571428,
+      "kind": "mixed",
+      "provisional": true
+    },
+    {
+      "cycle": "2029년 조건부 사이클",
+      "relation": "bottom-first-top",
+      "start": "2026-06-30",
+      "end": "2029-01-05",
+      "days": 920,
+      "weeks": 131.42857142857142,
+      "kind": "mixed",
+      "provisional": true
+    },
+    {
+      "cycle": "2029년 조건부 사이클",
+      "relation": "mid-top-cycle-top",
+      "start": "2027-04-02",
+      "end": "2029-07-19",
+      "days": 839,
+      "weeks": 119.85714285714286,
+      "kind": "scenario",
+      "provisional": true
+    },
+    {
+      "cycle": "2029년 조건부 사이클",
+      "relation": "bottom-ath",
+      "start": "2026-06-30",
+      "end": "2028-02-11",
+      "days": 591,
+      "weeks": 84.42857142857143,
+      "kind": "mixed",
+      "provisional": true
+    },
+    {
+      "cycle": "2029년 조건부 사이클",
+      "relation": "cycle-top-bottom",
+      "start": "2029-07-19",
+      "end": "2029-10-02",
+      "days": 75,
+      "weeks": 10.714285714285714,
+      "kind": "scenario",
+      "provisional": true
+    },
+    {
+      "cycle": "2029년 조건부 사이클",
+      "relation": "first-top-cycle-top",
+      "start": "2029-01-05",
+      "end": "2029-07-19",
+      "days": 195,
+      "weeks": 27.857142857142858,
+      "kind": "scenario",
+      "provisional": true
+    },
+    {
+      "cycle": "2029년 조건부 사이클",
+      "relation": "ath-cycle-top",
+      "start": "2028-02-11",
+      "end": "2029-07-19",
+      "days": 524,
+      "weeks": 74.85714285714286,
+      "kind": "scenario",
+      "provisional": true
+    },
+    {
+      "cycle": "2029년 조건부 사이클",
+      "relation": "pit-stop-cycle-top",
+      "start": "2029-04-27",
+      "end": "2029-07-19",
+      "days": 83,
+      "weeks": 11.857142857142858,
+      "kind": "scenario",
+      "provisional": true
+    }
+  ],
+  "sensitivityCases": [
+    {
+      "options": {
+        "scenario": "base",
+        "seed": 20261022
+      },
+      "peakClock": "2029-08-11",
+      "lowClock": "2030-08-11",
+      "nearEnd": "2029-11-03",
+      "future": [
+        {
+          "relation": "bottom-bottom",
+          "start": "2026-06-30",
+          "end": "2029-10-02",
+          "days": 1190
+        },
+        {
+          "relation": "bottom-cycle-top",
+          "start": "2026-06-30",
+          "end": "2029-07-19",
+          "days": 1115
+        },
+        {
+          "relation": "bottom-first-top",
+          "start": "2026-06-30",
+          "end": "2029-01-05",
+          "days": 920
+        },
+        {
+          "relation": "mid-top-cycle-top",
+          "start": "2027-04-02",
+          "end": "2029-07-19",
+          "days": 839
+        },
+        {
+          "relation": "bottom-ath",
+          "start": "2026-06-30",
+          "end": "2028-02-11",
+          "days": 591
+        },
+        {
+          "relation": "cycle-top-bottom",
+          "start": "2029-07-19",
+          "end": "2029-10-02",
+          "days": 75
+        },
+        {
+          "relation": "first-top-cycle-top",
+          "start": "2029-01-05",
+          "end": "2029-07-19",
+          "days": 195
+        },
+        {
+          "relation": "ath-cycle-top",
+          "start": "2028-02-11",
+          "end": "2029-07-19",
+          "days": 524
+        },
+        {
+          "relation": "pit-stop-cycle-top",
+          "start": "2029-04-27",
+          "end": "2029-07-19",
+          "days": 83
+        }
+      ]
+    },
+    {
+      "options": {
+        "scenario": "accelerated",
+        "seed": 20261022
+      },
+      "peakClock": "2029-08-11",
+      "lowClock": "2030-08-11",
+      "nearEnd": "2029-11-03",
+      "future": [
+        {
+          "relation": "bottom-bottom",
+          "start": "2026-06-30",
+          "end": "2029-08-01",
+          "days": 1128
+        },
+        {
+          "relation": "bottom-cycle-top",
+          "start": "2026-06-30",
+          "end": "2029-07-19",
+          "days": 1115
+        },
+        {
+          "relation": "bottom-first-top",
+          "start": "2026-06-30",
+          "end": "2029-02-18",
+          "days": 964
+        },
+        {
+          "relation": "mid-top-cycle-top",
+          "start": "2027-06-27",
+          "end": "2029-07-19",
+          "days": 753
+        },
+        {
+          "relation": "bottom-ath",
+          "start": "2026-06-30",
+          "end": "2027-12-12",
+          "days": 530
+        },
+        {
+          "relation": "cycle-top-bottom",
+          "start": "2029-07-19",
+          "end": "2029-08-01",
+          "days": 13
+        },
+        {
+          "relation": "first-top-cycle-top",
+          "start": "2029-02-18",
+          "end": "2029-07-19",
+          "days": 151
+        },
+        {
+          "relation": "ath-cycle-top",
+          "start": "2027-12-12",
+          "end": "2029-07-19",
+          "days": 585
+        },
+        {
+          "relation": "pit-stop-cycle-top",
+          "start": "2029-04-27",
+          "end": "2029-07-19",
+          "days": 83
+        }
+      ]
+    },
+    {
+      "options": {
+        "scenario": "wait",
+        "seed": 20261022
+      },
+      "peakClock": "2029-08-11",
+      "lowClock": "2030-08-11",
+      "nearEnd": "2029-11-03",
+      "future": [
+        {
+          "relation": "bottom-bottom",
+          "start": "2026-06-30",
+          "end": "2029-10-27",
+          "days": 1215
+        },
+        {
+          "relation": "bottom-cycle-top",
+          "start": "2026-06-30",
+          "end": "2029-07-19",
+          "days": 1115
+        },
+        {
+          "relation": "bottom-first-top",
+          "start": "2026-06-30",
+          "end": "2029-01-05",
+          "days": 920
+        },
+        {
+          "relation": "mid-top-cycle-top",
+          "start": "2027-04-02",
+          "end": "2029-07-19",
+          "days": 839
+        },
+        {
+          "relation": "bottom-ath",
+          "start": "2026-06-30",
+          "end": "2028-04-07",
+          "days": 647
+        },
+        {
+          "relation": "cycle-top-bottom",
+          "start": "2029-07-19",
+          "end": "2029-10-27",
+          "days": 100
+        },
+        {
+          "relation": "first-top-cycle-top",
+          "start": "2029-01-05",
+          "end": "2029-07-19",
+          "days": 195
+        },
+        {
+          "relation": "ath-cycle-top",
+          "start": "2028-04-07",
+          "end": "2029-07-19",
+          "days": 468
+        },
+        {
+          "relation": "pit-stop-cycle-top",
+          "start": "2029-04-27",
+          "end": "2029-07-19",
+          "days": 83
+        }
+      ]
+    },
+    {
+      "options": {
+        "scenario": "late",
+        "seed": 20261022
+      },
+      "peakClock": "2029-08-11",
+      "lowClock": "2030-08-11",
+      "nearEnd": "2029-11-03",
+      "future": [
+        {
+          "relation": "bottom-bottom",
+          "start": "2026-06-30",
+          "end": "2028-04-27",
+          "days": 667
+        },
+        {
+          "relation": "bottom-cycle-top",
+          "start": "2026-06-30",
+          "end": "2028-04-20",
+          "days": 660
+        },
+        {
+          "relation": "mid-top-cycle-top",
+          "start": "2026-10-04",
+          "end": "2028-04-20",
+          "days": 564
+        },
+        {
+          "relation": "bottom-ath",
+          "start": "2026-06-30",
+          "end": "2028-04-19",
+          "days": 659
+        },
+        {
+          "relation": "cycle-top-bottom",
+          "start": "2028-04-20",
+          "end": "2028-04-27",
+          "days": 7
+        },
+        {
+          "relation": "ath-cycle-top",
+          "start": "2028-04-19",
+          "end": "2028-04-20",
+          "days": 1
+        }
+      ]
+    },
+    {
+      "options": {
+        "scenario": "stress",
+        "seed": 20261022
+      },
+      "peakClock": "2029-08-11",
+      "lowClock": "2030-08-11",
+      "nearEnd": "2029-11-03",
+      "future": [
+        {
+          "relation": "bottom-bottom",
+          "start": "2026-06-30",
+          "end": "2029-11-25",
+          "days": 1244
+        },
+        {
+          "relation": "bottom-cycle-top",
+          "start": "2026-06-30",
+          "end": "2028-04-20",
+          "days": 660
+        },
+        {
+          "relation": "mid-top-cycle-top",
+          "start": "2026-10-04",
+          "end": "2028-04-20",
+          "days": 564
+        },
+        {
+          "relation": "cycle-top-bottom",
+          "start": "2028-04-20",
+          "end": "2029-11-25",
+          "days": 584
+        }
+      ]
+    },
+    {
+      "options": {
+        "scenario": "base",
+        "seed": 20261023
+      },
+      "peakClock": "2029-08-11",
+      "lowClock": "2030-08-11",
+      "nearEnd": "2029-11-03",
+      "future": [
+        {
+          "relation": "bottom-bottom",
+          "start": "2026-06-30",
+          "end": "2029-09-08",
+          "days": 1166
+        },
+        {
+          "relation": "bottom-cycle-top",
+          "start": "2026-06-30",
+          "end": "2029-06-03",
+          "days": 1069
+        },
+        {
+          "relation": "mid-top-cycle-top",
+          "start": "2027-05-31",
+          "end": "2029-06-03",
+          "days": 734
+        },
+        {
+          "relation": "bottom-ath",
+          "start": "2026-06-30",
+          "end": "2027-05-17",
+          "days": 321
+        },
+        {
+          "relation": "cycle-top-bottom",
+          "start": "2029-06-03",
+          "end": "2029-09-08",
+          "days": 97
+        },
+        {
+          "relation": "ath-cycle-top",
+          "start": "2027-05-17",
+          "end": "2029-06-03",
+          "days": 748
+        }
+      ]
+    },
+    {
+      "options": {
+        "scenario": "base",
+        "seed": 20261024
+      },
+      "peakClock": "2029-08-11",
+      "lowClock": "2030-08-11",
+      "nearEnd": "2029-11-03",
+      "future": [
+        {
+          "relation": "bottom-bottom",
+          "start": "2026-06-30",
+          "end": "2029-12-30",
+          "days": 1279
+        },
+        {
+          "relation": "bottom-cycle-top",
+          "start": "2026-06-30",
+          "end": "2029-05-18",
+          "days": 1053
+        },
+        {
+          "relation": "mid-top-cycle-top",
+          "start": "2027-07-14",
+          "end": "2029-05-18",
+          "days": 674
+        },
+        {
+          "relation": "bottom-ath",
+          "start": "2026-06-30",
+          "end": "2028-03-10",
+          "days": 619
+        },
+        {
+          "relation": "cycle-top-bottom",
+          "start": "2029-05-18",
+          "end": "2029-12-30",
+          "days": 226
+        },
+        {
+          "relation": "ath-cycle-top",
+          "start": "2028-03-10",
+          "end": "2029-05-18",
+          "days": 434
+        }
+      ]
+    },
+    {
+      "options": {
+        "scenario": "base",
+        "seed": 20261022,
+        "applyCycleCalibration": false
+      },
+      "peakClock": "2029-10-06",
+      "lowClock": "2030-10-06",
+      "nearEnd": "2029-11-03",
+      "future": [
+        {
+          "relation": "bottom-bottom",
+          "start": "2026-06-30",
+          "end": "2029-10-14",
+          "days": 1202
+        },
+        {
+          "relation": "bottom-cycle-top",
+          "start": "2026-06-30",
+          "end": "2029-09-23",
+          "days": 1181
+        },
+        {
+          "relation": "bottom-first-top",
+          "start": "2026-06-30",
+          "end": "2029-04-27",
+          "days": 1032
+        },
+        {
+          "relation": "mid-top-cycle-top",
+          "start": "2027-04-02",
+          "end": "2029-09-23",
+          "days": 905
+        },
+        {
+          "relation": "bottom-ath",
+          "start": "2026-06-30",
+          "end": "2028-02-11",
+          "days": 591
+        },
+        {
+          "relation": "cycle-top-bottom",
+          "start": "2029-09-23",
+          "end": "2029-10-14",
+          "days": 21
+        },
+        {
+          "relation": "first-top-cycle-top",
+          "start": "2029-04-27",
+          "end": "2029-09-23",
+          "days": 149
+        },
+        {
+          "relation": "ath-cycle-top",
+          "start": "2028-02-11",
+          "end": "2029-09-23",
+          "days": 590
+        }
+      ]
+    }
+  ],
+  "clockEvaluation": {
+    "originCount": 8,
+    "independentTargetCount": 1,
+    "adjustedMaeDays": 21,
+    "calendarMaeDays": 38,
+    "sufficientForPredictiveSuperiorityClaim": false,
+    "limitation": "Overlapping origins, very few completed independent cycles, and a chosen cycle definition preclude a reliable accuracy or superiority claim."
+  },
+  "findings": [
+    "Displayed period is a date difference of extrema selected from one illustrative path, not a historical-period forecast",
+    "Macro low clock 2030-08-11 differs by 313 days from path minimum 2029-10-02",
+    "Baseline decline 75 days differs from completed 2013/2017/2021 declines 406/364/366 days",
+    "Same base scenario and same macro clock with seeds 20261022/23/24 produce decline durations 75/97/226 days",
+    "Historical MID-TOP is selected before an observed halving; future MID-TOP before a chosen one-third clock boundary, so the definitions are not identical",
+    "Calibration has three completed training eras and only one independent target in its existing retrospective quarterly evaluation; no superiority or landmark-period validation claim"
+  ],
+  "sourceSha256": {
+    "dist/cycle-milestones.js": "bed3032cd8efaec067f0aedfaf42e8c170e43d00ea7c979791eb7028cb6714da",
+    "dist/cycle-calibration.js": "f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780",
+    "dist/detailed-forecast.js": "e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e",
+    "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089"
+  },
+  "productChanged": false,
+  "modelChanged": false,
+  "externalReview": "not run; existing user-omitted stages preserved",
+  "nextApproach": "Separate macro timing priors from path turning points, display historical interval distribution and scenario sensitivity, then validate landmark timing at rolling cutoffs without optimizing on outcomes"
+}

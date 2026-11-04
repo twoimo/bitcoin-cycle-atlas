@@ -3,11 +3,11 @@ import test from 'node:test';
 import { SYMBOLS, normalizeSymbol, searchSymbols, createSymbolUrl, mountSymbolSelector } from '../dist/symbol-selector.js';
 
 test('only supported true USD symbols resolve and symbol search includes both names and venue',()=>{
-  assert.deepEqual(SYMBOLS.map(item=>item.product),['BTC-USD','ETH-USD','MSTR','BMNR']);
+  assert.deepEqual(SYMBOLS.map(item=>item.product),['BTC-USD','ETH-USD','MSTR','BMNR','TQQQ','SOXL','233740.KS']);
   for(const value of ['ETHUSD','ethusd','ETH-USD',' ETH/USD '])assert.equal(normalizeSymbol(value),'ETHUSD');
   for(const value of ['ETHUSDT','ETHBTC','javascript:ETHUSD',null,undefined])assert.equal(normalizeSymbol(value),'BTCUSD');
   for(const query of ['ethereum','이더리움','ETH/USD','eth usd','ETH Coinbase'])assert.deepEqual(searchSymbols(query).map(item=>item.symbol),['ETHUSD']);
-  assert.equal(searchSymbols('USDT').length,0);assert.equal(searchSymbols('btc').length,1);assert.equal(searchSymbols('').length,4);
+  assert.equal(searchSymbols('USDT').length,0);assert.equal(searchSymbols('btc').length,1);assert.equal(searchSymbols('').length,7);
 });
 
 test('switching preserves supported chart choices and removes cross-asset models, bounds and layers',()=>{
@@ -64,8 +64,9 @@ class Element extends Surface {
   findAll(predicate){return [...(predicate(this)?[this]:[]),...this.children.flatMap(child=>child.findAll(predicate))];}
 }
 function event(type,extra={}){return {type,defaultPrevented:false,stopped:false,...extra,preventDefault(){this.defaultPrevented=true;},stopPropagation(){this.stopped=true;}};}
-function fixture(t,{symbol='BTCUSD',onSelect=null}={}){
+function fixture(t,{symbol='BTCUSD',onSelect=null,service=false}={}){
   const doc=new Surface(),destinations=[];doc.createElement=tag=>new Element(tag,doc);doc.body=doc.createElement('body');
+  if(service)doc.querySelector=selector=>selector==='meta[name="atlas-service-base"]'?{getAttribute:()=>'/market-lab/'}:null;
   doc.defaultView={location:{href:'https://example.com/chart?granularity=1h&type=candles&price-min=85000&assumption=base',assign:url=>destinations.push(url)},CustomEvent:class {constructor(type,options){this.type=type;this.detail=options.detail;}}};
   const button=doc.createElement('button');doc.body.append(button);doc.activeElement=button;
   const selector=mountSymbolSelector({button,symbol,document:doc,onSelect});t.after(()=>selector.destroy());
@@ -82,6 +83,12 @@ test('search keyboard selects ETH, cleans asset state and restores trigger focus
   assert.equal(f.key('ArrowDown').defaultPrevented,true);assert.equal(f.input.getAttribute('aria-activedescendant'),'symbol-option-ETHUSD');
   f.key('Enter');assert.equal(f.selector.isOpen(),false);assert.equal(f.doc.activeElement,f.button);
   assert.equal(f.destinations[0],'https://example.com/chart?symbol=ETHUSD&granularity=1h&type=candles');
+});
+
+test('standalone preserves its four supported charts while the service exposes ETF destinations',t=>{
+  const offline=fixture(t);offline.selector.open();assert.equal(offline.node('symbol-search-results').children.length,4);assert.equal(offline.node('symbol-option-SOXL'),null);
+  const service=fixture(t,{service:true});service.selector.open();assert.equal(service.node('symbol-search-results').children.length,7);
+  service.node('symbol-option-SOXL').click();assert.equal(service.destinations[0],'https://example.com/market-lab/rsi/?symbol=SOXL');
 });
 
 test('search input filters safely; IME confirmation and empty results cannot navigate',t=>{
