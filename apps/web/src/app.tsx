@@ -1,3 +1,4 @@
+import {atlasSitePath,isAtlasStatic} from '../../../dist/site-paths.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { validateSnapshot } from '@atlas/domain/market-lab';
 import type { MarketSnapshot, Region } from '@atlas/contracts/market-lab';
@@ -48,7 +49,7 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
   const themeCache=useRef<ThemeCache>({});
   const [centerEpoch,setCenterEpoch]=useState(()=>Number(new URLSearchParams(globalThis.location?.search).get('epoch'))||0);
   const [centerActive,setCenterActive]=useState(true);
-  const liveUs = navigation.tab==='diagnosis'&&navigation.region==='us'&&centerActive;
+  const liveUs = navigation.tab==='diagnosis'&&navigation.region==='us'&&centerActive&&!isAtlasStatic();
   const collection = useUsCollection(liveUs,attempt);
   const requestedCollection=useRef<string|null>(null);
   const now = clock();
@@ -105,12 +106,12 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
     const region: Region = next.region === 'kr' ? 'kr' : next.region === 'us' ? 'us' : navigation.region;
     if (region !== navigation.region) { setMarketId(null); setPriceIndex(null); }
     setNavigation({ tab: next.tab as Tab, region });
-    if (!embedded) try { globalThis.history.pushState(globalThis.history.state, '', next.href+(next.tab === 'rsi' ? `?symbol=${rsiSymbol}` : '')); } catch { /* Embedded preview. */ }
+    if (!embedded) try { globalThis.history.pushState(globalThis.history.state, '', atlasSitePath(next.href)+(next.tab === 'rsi' ? `?symbol=${rsiSymbol}` : '')); } catch { /* Embedded preview. */ }
   }
   const selectRsi = useCallback((symbol:string) => {
     if (!rsiInstrument(symbol)) return;
     setRsiSymbol(symbol);
-    if (!embedded) try { globalThis.history.pushState(globalThis.history.state,'',`/market-lab/rsi/?symbol=${symbol}`); } catch { /* Embedded preview. */ }
+    if (!embedded) try { globalThis.history.pushState(globalThis.history.state,'',atlasSitePath(`/market-lab/rsi/?symbol=${symbol}`)); } catch { /* Embedded preview. */ }
   },[embedded]);
   useEffect(() => {
     if (!embedded) return;
@@ -136,7 +137,7 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
   return <>
     {!embedded && <DashboardChrome title={page.title} currentPage={page.id} onNavigate={navigatePage} />}
     <main data-loading-kind={data.phase==='loading'&&!data.doc&&!independent?navigation.tab:undefined} className={embedded?'atlas-embedded-workspace':'workspace atlas-service-workspace'}><h1 className="atlas-sr-only">{page.title}</h1>
-      {!independent&&delivery?.kind === 'saved' && <div className="ml-delivery" role="status"><span>연결 실패 · 저장본 표시</span><button type="button" onClick={retry}>다시 연결</button></div>}
+      {!independent&&delivery?.kind === 'saved' && <div className="ml-delivery" role="status"><span>{delivery.reason==='static-hosting'?'저장 자료':'연결 실패 · 저장본 표시'}</span><button type="button" onClick={retry}>{delivery.reason==='static-hosting'?'다시 읽기':'다시 연결'}</button></div>}
       <section id="market-view" className="market-lab" aria-label={page.title} aria-busy={!independent&&data.phase === 'loading'}>
         <div className="ml-scroll">
           {!independent&&data.phase === 'loading' && <div className="atlas-inline-loading" role="status"><span className="atlas-loading-label">자료를 읽고 있습니다.</span><i skullet-bar="" /></div>}

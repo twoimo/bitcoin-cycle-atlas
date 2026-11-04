@@ -1,3 +1,4 @@
+import { atlasResourcePath } from './site-paths.js';
 import { buildComparison, getAnchors, getPointAtDay, comparisonToCsv, validateDataset, utcDay } from './cycle-engine.js?v=1.29.0';
 import { fetchLatestDataset } from "./data-source.js?v=1.29.0";
 import { inspectPublishedDataset, shouldCheckPublishedSnapshot } from "./published-data.js?v=1.29.0";
@@ -13,7 +14,7 @@ import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29
 import { initDailyDataView } from './daily-data-view.js?v=1.29.0';
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.29.0';
 import { initIpoView } from './ipo-view.js?v=1.30.1-ipo-compact.1';
-import { initMarketLabView } from './market-lab-view.js?v=1.31.0';
+import { initMarketLabView } from './market-lab-view.js?v=1.31.1';
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -111,7 +112,7 @@ document.addEventListener('atlas:page-ready', onInitialPageReady);
 let outlookController = null, workspacePromise = null, evidencePromise = null, evidenceModule = null;
 function ensureWorkspace() {
   if (!workspacePromise) workspacePromise = Promise.all([
-    import('./viewport-workspace.js?v=1.31.0'), import('./lab-view.js?v=1.31.0'),
+    import('./viewport-workspace.js?v=1.31.1'), import('./lab-view.js?v=1.31.1'),
   ]).then(([workspace, lab]) => {
     workspace.initViewportWorkspace(icon);
     outlookController = lab.initLabView();
@@ -435,7 +436,7 @@ async function refreshPublishedSnapshot() {
   const requestedDataset=state.dataset;
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
   try {
-    const response=await fetch('./data/btc-daily.json',{cache:'no-store',credentials:'omit',signal:controller.signal});
+    const response=await fetch(atlasResourcePath('data/btc-daily.json'),{cache:'no-store',credentials:'omit',signal:controller.signal});
     if(!response.ok)throw new Error(`Published data HTTP ${response.status}`);
     const next=await response.json();
     // A manual refresh completed while this request was in flight. Keep its
@@ -492,7 +493,7 @@ function ensureDataset() {
 }
 async function init() {
   try {
-    const embedded=document.getElementById('embedded-btc-data');let bundled;if(embedded){bundled=JSON.parse(embedded.textContent);}else{const response=await fetch('./data/btc-daily.json',{signal:AbortSignal.timeout(15000)});if(!response.ok)throw Error('Bundled data unavailable');bundled=await response.json();}inspectPublishedDataset(bundled,null);state.dataset=bundled;
+    const embedded=document.getElementById('embedded-btc-data');let bundled;if(embedded){bundled=JSON.parse(embedded.textContent);}else{const response=await fetch(atlasResourcePath('data/btc-daily.json'),{signal:AbortSignal.timeout(15000)});if(!response.ok)throw Error('Bundled data unavailable');bundled=await response.json();}inspectPublishedDataset(bundled,null);state.dataset=bundled;
     try{const cached=JSON.parse(localStorage.getItem('btc-cycles-daily-v1'));if(cached&&inspectPublishedDataset(cached,bundled).changed)state.dataset=cached;}catch{}
     render();
     const today=new Date().toISOString().slice(0,10);if(utcDay(today)-utcDay(state.dataset.prices.at(-1)[0])>1)refreshData();

@@ -14,7 +14,7 @@ export const atlasPages = Object.freeze([
 ]);
 export function labPageFromLocation(location) {
   const pathname=location?.pathname||'';
-  const direct=atlasPages.find(page=>page.tab&&page.href===pathname);
+  const direct=atlasPages.find(page=>page.tab&&(page.href===pathname||pathname.endsWith(page.href)));
   if(direct)return direct;
   const query=new URLSearchParams(location?.search||'');
   const tab=query.get('lab-tab')||'diagnosis';

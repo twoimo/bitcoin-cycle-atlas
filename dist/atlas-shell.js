@@ -23,6 +23,7 @@ SOFTWARE.
 /*! Layout composition adapted from shadcn/ui dashboard-01, MIT, copyright (c) 2023 shadcn.
  * Exact source and license: docs/design-system/templates/shadcn-dashboard-01; /vendor/shadcn-ui-LICENSE.txt.
  * Existing chart/data controls retain their original DOM owners and handlers. */
+import {atlasSitePath} from './site-paths.js';
 import { atlasPages, labPageFromLocation } from './atlas-navigation.js';
 import { readShellPreference, writeShellPreference } from './atlas-shell-state.js';
 import { mountCenterWorkbench } from './center-workbench.js';
@@ -42,7 +43,7 @@ export function initAtlasShell() {
     if (page.tab && page.id !== 'market-us') item = null;
     if (!item && originalNav) {
       item = document.createElement('a');
-      item.href = service === '/market-lab/' || !page.tab ? page.href : `?page=market&lab-tab=${page.tab}&lab-region=${page.region || 'us'}`;
+      item.href = service === '/market-lab/' || document.querySelector('meta[name="atlas-static-entry"]') || !page.tab ? atlasSitePath(page.href) : `?page=market&lab-tab=${page.tab}&lab-region=${page.region || 'us'}`;
       item.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="${page.icon}"/></svg><span>${page.label}</span>`;
     }
     if (!item) continue;
@@ -60,9 +61,9 @@ export function initAtlasShell() {
   const routeToService = event => {
     const target = event.target instanceof Element ? event.target.closest('[data-atlas-page]') : null;
     const page = atlasPages.find(page => page.id === target?.dataset.atlasPage);
-    if (page?.tab && target.tagName === 'BUTTON') { event.preventDefault(); event.stopPropagation(); location.assign(page.href); }
+    if (page?.tab && target.tagName === 'BUTTON') { event.preventDefault(); event.stopPropagation(); location.assign(atlasSitePath(page.href)); }
   };
-  if (service === '/market-lab/') mountCenterWorkbench();
+  if (service === '/market-lab/' || document.querySelector('meta[name="atlas-static-entry"]')) mountCenterWorkbench();
   const header = document.createElement('header'); header.className = 'atlas-dashboard-header'; header.dataset.atlasShell = 'dashboard-01';
   const toggle = document.createElement('button'); toggle.type = 'button'; toggle.className = 'atlas-sidebar-toggle';
   toggle.textContent = '☰';

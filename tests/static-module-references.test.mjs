@@ -107,6 +107,7 @@ async function fixture(t) {
   await writeFile(path.join(root, 'dist', 'index.html'), '<script type="module" src="./site-entry.js"></script>');
   await writeFile(path.join(root, 'dist', 'dependency.js'), 'export default 1; export const value = 2;');
   return {
+    async html(name,html){ await mkdir(path.dirname(path.join(root,'dist',name)),{recursive:true});await writeFile(path.join(root,'dist',name),html); },
     async verify(source) {
       await writeFile(path.join(root, 'dist', 'site-entry.js'), source);
       return run(process.execPath, ['scripts/verify-static.mjs'], {cwd:root, timeout:15000});
@@ -138,4 +139,15 @@ test('the unchanged Pages resource validator still rejects bare, root, escaping 
   ]) {
     await assert.rejects(app.verify(source), error => expected.test(error.stderr), source);
   }
+});
+
+
+test('Pages directory index links resolve at the project root while missing directories and escapes fail',async t=>{
+  const app=await fixture(t);
+  await app.html('nested/route/index.html','<a href="../../?page=compare">Home</a>');
+  await app.verify('export const ready=true;');
+  await app.html('nested/route/index.html','<a href="../missing/">Missing</a>');
+  await assert.rejects(app.verify('export const ready=true;'),error=>/Missing static resource/.test(error.stderr));
+  await app.html('nested/route/index.html','<a href="../../../">Escape</a>');
+  await assert.rejects(app.verify('export const ready=true;'),error=>/Resource escapes Pages base path/.test(error.stderr));
 });

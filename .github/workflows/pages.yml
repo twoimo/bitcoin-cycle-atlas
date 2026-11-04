@@ -30,6 +30,8 @@ jobs:
           package-manager-cache: false
       - name: Install locked workspace dependencies
         run: npm ci --ignore-scripts
+      - name: Verify generated static React routes
+        run: npm run verify:pages
       - name: Test before deployment
         run: npm test
       - name: Verify preserved forecast identities and replay

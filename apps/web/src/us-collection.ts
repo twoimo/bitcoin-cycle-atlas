@@ -1,3 +1,4 @@
+import {atlasSitePath,isAtlasStatic} from '../../../dist/site-paths.js';
 import type { UsCollectionStatus } from '@atlas/contracts/us-collection';
 import type {MarketSnapshot} from '@atlas/contracts/market-lab';
 const stamp = (value: unknown) => typeof value === 'string' && Number.isFinite(Date.parse(value));
@@ -25,7 +26,8 @@ export function collectionMatchesSnapshot(snapshot:MarketSnapshot|null,collectio
   }));
 }
 export async function loadUsCollection(signal: AbortSignal, fetchImpl = fetch) {
-  const response = await fetchImpl('/api/v1/market-lab/collection',{cache:'no-store',signal:AbortSignal.any([signal,AbortSignal.timeout(6000)])});
+  if(isAtlasStatic())throw new Error('저장 자료');
+  const response = await fetchImpl(atlasSitePath('/api/v1/market-lab/collection'),{cache:'no-store',signal:AbortSignal.any([signal,AbortSignal.timeout(6000)])});
   if (!response.ok) throw new Error('수집 상태 연결 실패');
   const text = await response.text();
   if (text.length > 16384) throw new Error('수집 상태 크기 초과');

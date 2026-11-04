@@ -1,3 +1,4 @@
+import {atlasSitePath} from '../../../../dist/site-paths.js';
 import { useEffect,useMemo,useState } from 'react';
 import { analyzeHousing,type HousingOptions } from '@atlas/domain/housing';
 import { loadHousing,type HousingDelivery } from '../housing-loader.js';
@@ -17,7 +18,7 @@ export function HousingPanel({cache}:{cache:HousingCache}){
   useEffect(()=>{cache.options=options;cache.range=range;cache.selected=selected;cache.view=view;},[cache,options,range,selected,view]);
   useEffect(()=>{
     if(!delivery||!analysis)return;const abort=new AbortController();setConfirmation(delivery.kind==='saved'?'저장본 계산':'계산 확인 중');
-    if(delivery.kind==='api')void (async()=>{try{const r=await fetch('/api/v1/housing/analysis',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...options,revision:delivery.revision}),signal:AbortSignal.any([abort.signal,AbortSignal.timeout(6000)])});if(!r.ok)throw new Error('API 계산 실패');const body=await r.json();if(body.revision!==delivery.revision||JSON.stringify(body.result)!==JSON.stringify(analysis))throw new Error('계산 판본 불일치');if(!abort.signal.aborted)setConfirmation('계산 완료');}catch(e){if(!abort.signal.aborted)setConfirmation(e instanceof Error&&e.message==='계산 판본 불일치'?'계산 불일치 · 로컬 결과':'저장본 계산 · 연결 실패');}})();
+    if(delivery.kind==='api')void (async()=>{try{const r=await fetch(atlasSitePath('/api/v1/housing/analysis'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...options,revision:delivery.revision}),signal:AbortSignal.any([abort.signal,AbortSignal.timeout(6000)])});if(!r.ok)throw new Error('API 계산 실패');const body=await r.json();if(body.revision!==delivery.revision||JSON.stringify(body.result)!==JSON.stringify(analysis))throw new Error('계산 판본 불일치');if(!abort.signal.aborted)setConfirmation('계산 완료');}catch(e){if(!abort.signal.aborted)setConfirmation(e instanceof Error&&e.message==='계산 판본 불일치'?'계산 불일치 · 로컬 결과':'저장본 계산 · 연결 실패');}})();
     return()=>abort.abort();
   },[delivery,analysis,options]);
   function change<K extends keyof HousingOptions>(key:K,value:HousingOptions[K]){setOptions(o=>({...o,[key]:value}));}

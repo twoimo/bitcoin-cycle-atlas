@@ -1,3 +1,5 @@
+import {atlasSitePath,isAtlasStatic} from '../../../../dist/site-paths.js';
+import {backtestRsi} from '@atlas/domain/rsi-backtest';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Point } from '@atlas/contracts/market-lab';
 import type { RsiRow } from '@atlas/domain/market-lab';
@@ -27,7 +29,7 @@ export function RsiHistory({symbol,unit,prices,rows,revision,onDate,cache}:{symb
   async function run(event:React.FormEvent) {
     event.preventDefault(); active.current?.abort(); const request = new AbortController(); active.current=request;setBusy(true);setError('');setResult(null);
     try {
-      const response = await fetch('/api/v1/market-lab/backtest',{method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.any([request.signal,AbortSignal.timeout(15000)]),body:JSON.stringify({...options,symbol,revision})});
+      const response = isAtlasStatic()?Response.json({symbol,revision,result:backtestRsi(prices,options)}):await fetch(atlasSitePath('/api/v1/market-lab/backtest'),{method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.any([request.signal,AbortSignal.timeout(15000)]),body:JSON.stringify({...options,symbol,revision})});
       const body = await response.json();
       if (!response.ok) throw new Error(body.message || `HTTP ${response.status}`);
       if (body.revision !== revision || body.symbol !== symbol || !Array.isArray(body.result?.equity) || !Array.isArray(body.result?.trades) || !Number.isFinite(body.result?.finalEquity)) throw new Error('백테스트 응답을 확인할 수 없습니다.');

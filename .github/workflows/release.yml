@@ -42,6 +42,8 @@ jobs:
           if(process.env.GITHUB_REF.startsWith('refs/tags/') && process.env.GITHUB_REF_NAME!==tag)throw new Error('Tag/version mismatch');
           await appendFile(process.env.GITHUB_OUTPUT,`tag=${tag}\n`);
           NODE
+      - name: Verify generated static React routes
+        run: npm run verify:pages
       - name: Test release source
         run: npm test
       - name: Verify preserved forecast identities and replay

@@ -1,6 +1,6 @@
 {
   "name": "bitcoin-cycle-atlas",
-  "version": "1.31.0",
+  "version": "1.31.1",
   "private": true,
   "type": "module",
   "engines": {
@@ -46,7 +46,9 @@
     "collect:us": "tsx apps/jobs/src/us-market.ts collect",
     "test:service": "npm run build:web && tsx --test tests/service/*.test.ts",
     "test:panels": "tsx --test tests/web/*.test.tsx",
-    "verify:skullet": "node scripts/sync-skullet.mjs --check"
+    "verify:skullet": "node scripts/sync-skullet.mjs --check",
+    "build:pages": "npm run verify:domain && npm run verify:skullet && node scripts/build-pages.mjs",
+    "verify:pages": "npm run verify:domain && npm run verify:skullet && node scripts/build-pages.mjs --check"
   },
   "workspaces": [
     "apps/*",

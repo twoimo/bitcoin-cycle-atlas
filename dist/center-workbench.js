@@ -1,3 +1,4 @@
+import {atlasSitePath,atlasRootPath} from './site-paths.js';
 import { atlasPages,labPageFromLocation } from './atlas-navigation.js';
 import { rsiInstrument } from './rsi-instruments.js';
 import { createRsiWorkbenchControls } from './rsi-workbench-controls.js';
@@ -6,7 +7,14 @@ import { setLoadingSurface,clearLoadingSurface } from './loading-surfaces.js';
 // The original chart owns all four perimeter regions. Only its center is
 // replaced; the same-origin frame keeps React's DOM and styles independently owned.
 export function mountCenterWorkbench() {
-  if (window.parent !== window || !document.querySelector('meta[name="atlas-service-base"]')) return;
+  const service=document.querySelector('meta[name="atlas-service-base"]');
+  const staticEntry=!service&&/^https?:$/.test(location.protocol)?document.querySelector('meta[name="atlas-static-entry"]')?.getAttribute('content'):null;
+  if (window.parent !== window || !(service||staticEntry)) return;
+  const home=atlasSitePath('/');
+  if(staticEntry&&new URLSearchParams(location.search).get('page')==='market'){
+    const page=labPageFromLocation(location),url=new URL(atlasSitePath(page.href),location.origin);
+    const query=new URLSearchParams(location.search);for(const key of ['page','lab-tab','lab-region','embedded'])query.delete(key);url.search=query.toString();window.history.replaceState(null,'',url);
+  }
   document.body.classList.add('js');
   let frame, plot, activePage=null, activeSymbol='TQQQ', originalUrl=null, originalTitle=null, waiting=null;
   const frames=new Map();
@@ -81,19 +89,22 @@ export function mountCenterWorkbench() {
     if(frame.dataset.centerLoaded!=='true'){loadingLayer=document.createElement('div');loadingLayer.className='atlas-center-loading';plot.append(loadingLayer);setLoadingSurface(loadingLayer,true,{kind:page.id==='rsi'?'rsi':page.tab==='diagnosis'?'diagnosis':page.id==='data'?'table':'chart',label:`${page.title} 로딩`});}
     const symbolQuery=page.id==='rsi'?`&symbol=${activeSymbol}`:'';
     if(existing && page.tab) frame.contentWindow.postMessage({kind:'atlas:center-navigate',page:page.id,symbol:activeSymbol,epoch},location.origin);
-    else if(!existing) frame.src=page.tab?`${page.href}?embedded=1${symbolQuery}&epoch=${epoch}`:`/?page=${page.view}&embedded=1`;
-    if(history) window.history.pushState(null,'',page.tab?`${page.href}${page.id==='rsi'?`?symbol=${activeSymbol}`:''}`:`/?page=outlook&center=${page.id}`);
+    else if(!existing) {
+      if(page.tab&&staticEntry){const target=new URL(staticEntry,new URL(home,location.origin));if(target.origin!==location.origin||!target.pathname.startsWith(atlasRootPath()))throw new Error('Static frame escaped Atlas root');target.search=new URLSearchParams({embedded:'1','lab-tab':page.tab,'lab-region':page.region||'us',epoch:String(epoch),...(page.id==='rsi'?{symbol:activeSymbol}:{})}).toString();frame.src=target.href;}
+      else frame.src=page.tab?`${atlasSitePath(page.href)}?embedded=1${symbolQuery}&epoch=${epoch}`:`${home}?page=${page.view}&embedded=1`;
+    }
+    if(history) window.history.pushState(null,'',page.tab?`${atlasSitePath(page.href)}${page.id==='rsi'?`?symbol=${activeSymbol}`:''}`:`${home}?page=outlook&center=${page.id}`);
   }
   function click(event) {
     if(event.button>0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
     const item=event.target.closest?.('[data-atlas-page],.atlas-brand'),page=atlasPages.find(page=>page.id===(item?.classList.contains('atlas-brand')?'outlook':item?.dataset.atlasPage));
     if(!page)return;
-    if(page.id==='outlook') {if(!activePage)return;event.preventDefault();event.stopImmediatePropagation();restore();window.history.pushState(null,'',originalUrl && !originalUrl.includes('/market-lab/') ? originalUrl : '/?page=outlook');return;}
+    if(page.id==='outlook') {if(!activePage)return;event.preventDefault();event.stopImmediatePropagation();restore();window.history.pushState(null,'',originalUrl && !originalUrl.includes('/market-lab/') ? originalUrl : home+'?page=outlook');return;}
     event.preventDefault();event.stopImmediatePropagation();open(page,activeSymbol);
   }
   document.addEventListener('click',click,true);
   document.addEventListener('atlas:symbol-select',event=>{
-    if(event.detail?.symbol==='BTCUSD' && activePage) {event.preventDefault();restore();window.history.pushState(null,'',originalUrl && !originalUrl.includes('/market-lab/') ? originalUrl : '/?page=outlook');return;}
+    if(event.detail?.symbol==='BTCUSD' && activePage) {event.preventDefault();restore();window.history.pushState(null,'',originalUrl && !originalUrl.includes('/market-lab/') ? originalUrl : home+'?page=outlook');return;}
     const instrument=rsiInstrument(event.detail?.symbol);
     if(!instrument)return;event.preventDefault();open(atlasPages.find(page=>page.id==='rsi'),instrument.symbol);
   });

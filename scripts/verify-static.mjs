@@ -32,9 +32,15 @@ async function checkReference(specifier, source, { module = false } = {}) {
   assert(resolved.origin === base.origin && resolved.pathname.startsWith(base.pathname),
     `Resource escapes Pages base path: ${sourceRelative}: ${specifier}`);
   const relative = decodeURIComponent(resolved.pathname.slice(base.pathname.length));
-  const target = path.resolve(dist, relative);
-  assert(target.startsWith(`${dist}${path.sep}`), `Resource escapes dist: ${specifier}`);
-  const stat = await lstat(target).catch(() => null);
+  let target = path.resolve(dist, relative);
+  assert(target === dist || target.startsWith(`${dist}${path.sep}`), `Resource escapes dist: ${specifier}`);
+  let stat = await lstat(target).catch(() => null);
+  // Pages serves a directory's index.html. Query-only links from nested
+  // wrappers can legitimately resolve to the project root directory.
+  if (stat?.isDirectory() && resolved.pathname.endsWith('/')) {
+    target = path.join(target, 'index.html');
+    stat = await lstat(target).catch(() => null);
+  }
   assert(stat?.isFile() && !stat.isSymbolicLink(), `Missing static resource: ${sourceRelative}: ${specifier}`);
   checkedReferences += 1;
 }
