@@ -74,7 +74,7 @@ test('deployment checks out the prepared commit and confirms its exact public ma
   for(const name of ['pages','refresh-data']){
     const text=await workflow(name),deploy=text.slice(text.indexOf('\n  deploy:'));
     assert.match(deploy,/ref: \$\{\{ needs\.[\w-]+\.outputs\.source_commit \}\}/);
-    assert.match(deploy,/contents: read/);assert.match(deploy,/node-version: '24'/);
+    assert.match(deploy,/contents: read/);assert.match(deploy,/node-version: '24(?:\.\d+\.\d+)?'/);
     const verify=script(step(deploy,'Confirm the served publication identity'));
     assert.match(verify,/--expected-manifest "\$EXPECTED_MANIFEST"/);assert.match(verify,/--expected-source "\$EXPECTED_SOURCE"/);
     assert.match(verify,/for attempt in 1 2 3 4/);assert.match(verify,/exit 1/);assert.doesNotMatch(verify,/\|\| true|continue-on-error/);
