@@ -93,7 +93,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   let cutoffModel=null,atlasModules=null,atlasBaseline=null,atlasCaptured=null,atlasCandles=null,atlasPreview=null,pendingAtlas=null,restoredSnapshot=null,atlasCapturedAt=null;
   let gesture=null,follow=true,paintFrame=null,destroyed=false,lastSave=0,painting=false,displayEpoch=0,saving=false;
   let picking=false,pickerDate=null,overlay=null,draft=null,dateDraftBase=null,capabilities=null,candleCapabilities=null,replayFrequency='daily',replayWindow='focus',customRange=false;
-  let externalBacktest=false;
+  let externalBacktest=false,entryOpened=false;
   const hasChoice=()=>overlay==='entry'||overlay==='exit';
   const oldLabel=svg.getAttribute('aria-label'),ownedInert=new Map();
   const storageKey=()=>q('mode').value==='cutoff-backtest'?'atlas-cutoff-backtest-v1:'+symbol:STORAGE+symbol;
@@ -105,7 +105,9 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       storedText=win.localStorage.getItem(storageKey())??null;
       if(storedText!==null&&storedText.length>2*1024*1024)throw new Error('저장된 리플레이의 크기 제한을 초과했습니다.');
       stored=storedText===null?null:JSON.parse(storedText);
+      if(storedText!==null&&(!stored||typeof stored!=='object'||Array.isArray(stored)))throw new Error('저장된 리플레이의 형식이 올바르지 않습니다.');
       if(stored&&(stored.version!==1||stored.symbol!==symbol||!['recorded','historical-reconstruction',...(atlasAvailable?['atlas-chart','project-baseline','cutoff-backtest']:[])].includes(stored.mode)||!/^\d{4}-\d{2}-\d{2}$/.test(stored.origin??'')||!Number.isSafeInteger(stored.cursorIndex)))throw new Error('저장된 리플레이의 형식이 올바르지 않습니다.');
+      if(stored&&(stored.mode==='cutoff-backtest')!==(q('mode').value==='cutoff-backtest'))throw new Error('저장된 리플레이의 모드와 저장 위치가 다릅니다.');
     }catch(error){stored=null;storageReadError=error;}
     return !storageReadError;
   }
@@ -210,8 +212,16 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     const current=getChartState?.()??getAtlasContext?.()??{};
     if(atlasAvailable&&!['daily','weekly'].includes(current.frequency??'daily')){unavailable(current.frequency);return;}
     notice.hidden=true;atlasCaptured=null;atlasCapturedAt=null;draft=null;replayFrequency=current.frequency??'daily';replayWindow=current.window??'focus';customRange=Boolean(current.customRange);
-    if(atlasAvailable)q('mode').value=preferredMode;
-    readStored();saveBaseText=storageReadError?undefined:storedText;q('save-status').hidden=true;
+    // Keep the selected mode on return, so its saved capture remains reachable.
+    // On first entry only, an absent default-cutoff slot may offer the older
+    // generic capture. Invalid or existing records never fall through to it.
+    const firstEntry=!entryOpened;entryOpened=true;readStored();
+    if(firstEntry&&atlasAvailable&&q('mode').value==='cutoff-backtest'&&storedText===null&&!storageReadError){
+      q('mode').value='atlas-chart';readStored();
+      if(stored)q('mode').value=stored.mode;
+      else if(!storageReadError){q('mode').value=preferredMode;readStored();}
+    }
+    saveBaseText=storageReadError?undefined:storedText;q('save-status').hidden=true;
     if(stored||storageReadError){activate();setOverlay('entry');savedSummary();
       paint(getState());q('entry-continue').focus({preventScroll:true});return;}
     return open({selectOnly:true});
@@ -675,8 +685,10 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   };
   q('pooled-retry').onclick=()=>{const state=getState();if(q('pooled-retry').hidden||state.status!=='error'||!state.origin)return;q('model').value='pooled';void start(state.origin);};
   q('scrub').oninput=()=>controller.seek(Number(q('scrub').value));
-  for(const key of ['mode','model'])if(q(key))q(key).onchange=()=>{if(!externalBacktest)void open();};
-  q('horizon').onchange=()=>{if(!externalBacktest)void open({startDateOverride:getState().session?.replaySettings?.startDate??null});};
+  // A settings change reloads the preview; only a start action may confirm it.
+  // Preserve an open picker even when it was entered from a committed session.
+  for(const key of ['mode','model'])if(q(key))q(key).onchange=()=>{if(!externalBacktest)void open({selectOnly:picking||!getState().session});};
+  q('horizon').onchange=()=>{if(!externalBacktest)void open({selectOnly:picking||!getState().session,startDateOverride:getState().session?.replaySettings?.startDate??null});};
   q('record').onchange=()=>void open({resume:{...stored,recordId:q('record').value,mode:'recorded',horizon:Number(q('horizon').value),cursorIndex:0,outputHash:null}});
   q('select-menu').onclick=()=>{if(hasChoice())return;const show=overlay!=='menu';closeMenu();if(show){setOverlay('menu');menuView('start');}};
   q('select-close').onclick=()=>{closeMenu();focusMenuTrigger();};

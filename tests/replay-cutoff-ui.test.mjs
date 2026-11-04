@@ -14,7 +14,12 @@ const fixture=options=>uiFixture({captured,archive,initialMode:'cutoff-backtest'
 const cases=[];const test=(name,run)=>cases.push({name,run});
 test('cutoff selection, result reveal and save resume retain the exact forecast and old storage',async()=>{
   const h=await fixture({actualPainter:true});h.storage.set('atlas-chart-replay-v1:BTCUSD','old-user-state');
-  await h.open();assert.equal(h.controls.get('mode').value,'cutoff-backtest');assert.equal(h.controls.get('date').min,'2025-10-16');
+  h.trigger.click();await until(()=>h.controls.get('entry-dialog').hidden===false,'invalid saved replay choice');
+  assert.equal(h.controls.get('entry-continue').disabled,true);assert.match(h.controls.get('saved-summary').textContent,/읽지 못했습니다/);
+  assert.equal(h.storage.get('atlas-chart-replay-v1:BTCUSD'),'old-user-state');assert.equal(h.writes.length,0);
+  h.controls.get('entry-new').click();await h.ready();
+  assert.equal(h.controls.get('mode').value,'cutoff-backtest');assert.equal(h.controls.get('date').min,'2025-10-16');
+  assert.equal(h.storage.get('atlas-chart-replay-v1:BTCUSD'),'old-user-state');assert.equal(h.writes.length,0);
   assert.equal(h.controls.get('result').disabled,true);assert.equal(h.calls.current,0);
   await h.start('2026-07-10');assert.equal(h.state().status,'paused',h.state().error);
   const record=h.state().session.cutoffForecast,hash=record.outputHash;
@@ -43,7 +48,8 @@ test('a different horizon retains the selected start, while an invalid saved for
 test('unavailable source stays an error, and retry accepts a supported date without saving preview',async()=>{
   let fail=true;const h=await fixture({loadArchive:async()=>{if(fail)throw new Error('archive unavailable');return archive;}});
   await h.open();assert.equal(h.state().status,'error');assert.match(h.hud.children[0].textContent,/archive unavailable/);assert.equal(h.writes.length,0);
-  fail=false;h.controls.get('mode').onchange();await until(()=>h.state().status==='paused'||h.state().status==='error');await flush();
+  fail=false;h.controls.get('mode').onchange();await h.ready();
+  assert.equal(h.state().status,'selecting',h.state().error);assert.equal(h.state().session,null);assert.equal(h.writes.length,0);
   await h.start('2026-07-10');assert.equal(h.state().status,'paused',h.state().error);assert.equal(h.writes.length,0);h.mounted.destroy();
 });
 if(process.argv.includes('--cutoff-ui-case')){const item=cases[Number(process.argv.at(-1))];await item.run();console.log(JSON.stringify({status:'pass',name:item.name}));}

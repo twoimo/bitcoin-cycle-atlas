@@ -9,9 +9,12 @@ import {utcDay,dateFromDay} from '../dist/cycle-engine.js';
 import {clockOriginRowsMarkup,clockSummaryMarkup,clockExcludedRowsMarkup} from '../dist/cycle-clock-backtest-view.js';
 
 const data=JSON.parse(await readFile(new URL('../dist/data/btc-daily.json',import.meta.url),'utf8'));
-const legacy=evaluateCycleCalibration(data);
+// Historical cohort counts have a declared evaluation cutoff. The moving
+// observed archive is exercised separately below and still rejects future days.
+const historicalAsOf='2026-10-31';
+const legacy=evaluateCycleCalibration(data,{asOf:historicalAsOf});
 const legacyOrigins=[...legacy.records,...legacy.excluded].map(r=>r.origin);
-const result=buildCycleClockBacktest(data,{origins:legacyOrigins});
+const result=buildCycleClockBacktest(data,{asOf:historicalAsOf,origins:legacyOrigins});
 
 test('existing high forecasts are unchanged; eight origins stay one peak, one low and one cycle',()=>{
   assert.equal(result.records.length,16);assert.equal(result.scoredOriginCount,8);assert.equal(result.requestedOriginCount,16);assert.equal(result.excluded.length,8);assert.equal(result.uniqueCycleCount,1);
@@ -69,7 +72,8 @@ test('an unclosed actual target stays excluded even if its historical peak/low a
 });
 
 test('invalid cutoffs, before-history and missing origin closes remain explicit',()=>{
-  assert.throws(()=>buildCycleClockBacktest(data,{asOf:'2026-11-03'}),/actual completed/);
+  const nextUnobservedDay=dateFromDay(utcDay(data.prices.at(-1)[0])+1);
+  assert.throws(()=>buildCycleClockBacktest(data,{asOf:nextUnobservedDay}),/actual completed/);
   const early=buildCycleClockBacktest(data,{origins:['2000-01-01','2099-12-31']});assert.deepEqual(early.excluded.map(r=>r.reason),['origin-before-history','origin-not-observed']);
   const gap={prices:data.prices.filter(([date])=>date!=='2018-03-31')},r=buildCycleClockBacktest(gap,{origins:['2018-03-31']});
   assert.equal(r.records.length,0);assert.equal(r.excluded.length,1);
@@ -96,7 +100,7 @@ test('worker result validation rejects inflated target counts, stale cutoffs and
   for(const mutate of [r=>r.uniqueCycleCount=8,r=>r.summary[0].uniqueTargetCount=8,r=>r.records[0].adjustedErrorDays++,r=>r.records[0].trainingThrough='2026-01-01',r=>r.currentClock.adjustedTrough='2020-01-01',r=>r.targets[0].targetKnownAt='2019-01-01']){
     const r=structuredClone(result);mutate(r);assert.throws(()=>assertCycleClockBacktest(r));
   }
-  assert.throws(()=>assertCycleClockBacktest(result,{asOf:'2026-11-02'}));assert.throws(()=>assertCycleClockBacktest(result,{inputHash:'b'.repeat(64)}));
+  assert.throws(()=>assertCycleClockBacktest(result,{asOf:dateFromDay(utcDay(result.asOf)-1)}));assert.throws(()=>assertCycleClockBacktest(result,{inputHash:'b'.repeat(64)}));
 });
 
 test('the UI names goal/origin counts, exact signed errors, unavailable targets and excluded causes',()=>{
@@ -105,7 +109,7 @@ test('the UI names goal/origin counts, exact signed errors, unavailable targets 
 });
 
 
-const expanded=buildCycleClockBacktest(data);
+const expanded=buildCycleClockBacktest(data,{asOf:historicalAsOf});
 test('all fixed quarter ends are covered without selecting favorable origins',()=>{
   const dates=quarterlyClockOrigins('2010-07-18','2026-10-31');assert.equal(dates.length,65);assert.equal(dates[0],'2010-09-30');assert.equal(dates.at(-1),'2026-09-30');
   assert.deepEqual(expanded.originAssessments.map(a=>a.origin),dates);
@@ -142,7 +146,7 @@ test('paired errors use the identical nine origins, separate from thirty baselin
 });
 
 test('duplicating the full history cannot inflate any coverage, goal or score',()=>{
-  const origins=expanded.originAssessments.map(a=>a.origin),twice=buildCycleClockBacktest(data,{origins:[...origins,...origins]});
+  const origins=expanded.originAssessments.map(a=>a.origin),twice=buildCycleClockBacktest(data,{asOf:historicalAsOf,origins:[...origins,...origins]});
   for(const key of ['records','baselineRecords','targets','summary','baselineSummary','historicalTargets','coverageStats'])assert.deepEqual(twice[key],expanded[key]);
   assert.equal(twice.duplicateOriginsRemoved,65);
 });
@@ -163,6 +167,13 @@ test('gapped and truncated origin eras are retained but cannot contribute invent
 test('independent Python verifies the extended coverage and rejects a fabricated unknown correction',()=>{
   const script=new URL('../scripts/verify-cycle-clock-backtest.py',import.meta.url).pathname;
   const code="import importlib.util,json,sys\nspec=importlib.util.spec_from_file_location('audit',sys.argv[1]);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)\np=json.load(sys.stdin);r=m.verify(p);assert r['history']['origins']==65\np['originAssessments'][0]['adjustedPeak']='2014-01-01'\ntry: m.verify(p)\nexcept AssertionError: print('pass; negative control rejected')\nelse: raise AssertionError('fabricated correction accepted')";
-  const out=execFileSync('python3',['-c',code,script],{input:JSON.stringify({...expanded,evaluationPrices:data.prices}),encoding:'utf8'});assert.match(out,/negative control rejected/);
+  const out=execFileSync('python3',['-c',code,script],{input:JSON.stringify({...expanded,evaluationPrices:data.prices.filter(([date])=>date<=expanded.asOf)}),encoding:'utf8'});assert.match(out,/negative control rejected/);
   const tampered=structuredClone(expanded);tampered.closedTargetCatalog[0].cycleYear='<bad>';assert.throws(()=>assertCycleClockBacktest(tampered));
+});
+
+test('latest observed archive includes every completed quarter without fixing the current date',()=>{
+  const latest=buildCycleClockBacktest(data);
+  assert.equal(latest.asOf,data.prices.at(-1)[0]);
+  assert.deepEqual(latest.originAssessments.map(a=>a.origin),quarterlyClockOrigins(data.prices[0][0],latest.asOf));
+  assert.doesNotThrow(()=>assertCycleClockBacktest(latest,{asOf:latest.asOf}));
 });

@@ -1,0 +1,121 @@
+{
+  "kind": "synthetic-refresh-advancement-rehearsal",
+  "status": "PASS",
+  "notActualProviderRefresh": true,
+  "baselineCommit": "94a1b1dda9eb359de70747043808340da369d087",
+  "sourceHead": "d6e737e68d487652e5bb14e9f4d3289a418749e2",
+  "sourceMode": "current working tree copied before test execution",
+  "runtime": "v24.22.2",
+  "startedAt": "2026-11-04T07:20:25.761Z",
+  "finishedAt": "2026-11-04T07:20:43.159Z",
+  "disposableDirectory": "/tmp/atlas-refresh-advancement-Qn4pQy",
+  "command": [
+    "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node/bin/node",
+    "--test",
+    "tests/cycle-clock-backtest.test.mjs",
+    "tests/chart-replay-atlas.test.mjs",
+    "tests/monthly-backtest.test.mjs",
+    "tests/monthly-backtest-replay.test.mjs",
+    "tests/monthly-backtest-view.test.mjs",
+    "tests/replay-cutoff-backtest.test.mjs",
+    "tests/replay-cutoff-ui.test.mjs",
+    "tests/refresh-replay-compatibility.test.mjs"
+  ],
+  "syntheticDaily": {
+    "originalThrough": "2026-10-31",
+    "through": "2026-11-03",
+    "appendedRows": 3,
+    "method": "repeat last accepted positive close",
+    "alignedMetadata": [
+      "lastDate",
+      "count",
+      "retrievedAt",
+      "source end_time",
+      "completedDaysBeforeUtc"
+    ],
+    "removedUnsupportedProvenance": [
+      "rawSha256",
+      "rawSha256Scope",
+      "responsePages",
+      "pageCount"
+    ],
+    "refreshSchemaValidation": "PASS"
+  },
+  "syntheticVolume": {
+    "originalThrough": "2026-10-31",
+    "through": "2026-11-03",
+    "asOf": "2026-11-03",
+    "acquiredAt": "2026-11-04T06:30:00.000Z",
+    "appendedBars": 3,
+    "method": "flat OHLC at last positive close, repeat last positive volume",
+    "alignedMetadata": [
+      "lastDate",
+      "asOf",
+      "coverage",
+      "retrievedAt"
+    ],
+    "removedUnsupportedProvenance": [
+      "collection",
+      "validation"
+    ],
+    "archiveValidation": "PASS",
+    "futureAcquisitionRejected": true
+  },
+  "testFileSha256": {
+    "tests/cycle-clock-backtest.test.mjs": "c56d2ae827f678994ba3126cf04973a75af5066ad9d4eec34dcaff2191c51e17",
+    "tests/chart-replay-atlas.test.mjs": "dba52bd354de7b1c8107e817ad7a7debdc421257fdeae09ebd43c7d40064e93e",
+    "tests/monthly-backtest.test.mjs": "ea85ea3b343f81f39e828a996b029fb8aa319581182e124717fffd15acf0048a",
+    "tests/monthly-backtest-replay.test.mjs": "4b63f2dcb382bb26f76e8b0420fb66f2ccde2ed2b46f0d8ef7933d4b8a75db66",
+    "tests/monthly-backtest-view.test.mjs": "3597f0d753e460056b369ca05d26d63634190c444bf4e9a21bea9e31f3246128",
+    "tests/replay-cutoff-backtest.test.mjs": "db93c4b8e97f9c1af8cc4acc4833af677df5257501db0570294b9701dd650d1c",
+    "tests/replay-cutoff-ui.test.mjs": "a6cbfe13db59b8d1779a2ac0f18c187917af2d38aac71a69eab960858b420871",
+    "tests/refresh-replay-compatibility.test.mjs": "7f5a82fefb635bbd9bc117cacd3cb96b14d93485d75af6cc1fb935fa15f5562e"
+  },
+  "inputSha256Before": {
+    "dist/data/btc-daily.json": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf",
+    "dist/data/btc-volume.json": "09ac13fed80490c774b3c597f79882ae2b5ab3038cc968f182d163f49fa2a8b1",
+    "tests/fixtures/btc-replay-2026-10-31.json": "09ac13fed80490c774b3c597f79882ae2b5ab3038cc968f182d163f49fa2a8b1",
+    "tests/fixtures/btc-replay-2026-10-31.manifest.json": "f7508f75d84196672a24fbc0d2dc986a12720cfbac584b13449678742ccc32de"
+  },
+  "realFilesUnchanged": {
+    "dist/data/btc-daily.json": true,
+    "dist/data/btc-volume.json": true,
+    "tests/fixtures/btc-replay-2026-10-31.json": true,
+    "tests/fixtures/btc-replay-2026-10-31.manifest.json": true
+  },
+  "fixedFixtureUnchangedInDisposableCopy": true,
+  "exitCode": 0,
+  "error": null,
+  "logSha256": "c570aa90711de0393f1b7215bd65d06324b409fdd92ae15d6e2d9b799201eade",
+  "limitations": [
+    "Synthetic suffixes are test inputs, not observed market prices or venue receipts.",
+    "Existing historical prefixes were preserved as identical parsed rows; live and frozen repository files were not edited.",
+    "The rehearsal checks the eight requested regression files and their schema/clock assumptions, not a live network refresh, provider authenticity, a full CI workflow or benchmark.",
+    "Original collection and native OHLC proof receipts were removed from the disposable volume fixture so they do not falsely attest to synthetic suffixes."
+  ],
+  "testSummary": {
+    "tests": 62,
+    "passed": 62,
+    "failed": 0,
+    "skipped": 0
+  },
+  "initialAttempt": {
+    "status": "FAIL",
+    "tests": 62,
+    "passed": 60,
+    "failed": 2,
+    "receipt": "refresh-advancement.initial.json",
+    "log": "refresh-advancement.initial.log",
+    "receiptSha256": "48cf6c062758e8c6757c1f804fe140b6728f536cfec34a1318f64cad8de8250f",
+    "logSha256": "096649c9e11adf087b78a8023ad379c371616a4e49aabed898f34b4f90d422ad",
+    "cause": "Two existing cutoff UI assertions did not perform the explicit saved-entry choice and start confirmation required by the integrated replay behavior. Neither failure was caused by synthetic prices or acquisition validation."
+  },
+  "changedTestFilesBetweenAttempts": [
+    "tests/replay-cutoff-ui.test.mjs"
+  ],
+  "rehearsalProductionChanges": false,
+  "timeoutRelaxation": false,
+  "realInputAndFrozenFixtureHashesIdenticalBetweenAttempts": true,
+  "capturedLogSha256": "c570aa90711de0393f1b7215bd65d06324b409fdd92ae15d6e2d9b799201eade",
+  "logPresentation": "Terminal output with trailing whitespace removed only; messages, values, order and outcomes are preserved."
+}

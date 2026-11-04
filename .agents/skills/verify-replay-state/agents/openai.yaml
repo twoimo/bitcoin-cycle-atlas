@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verify Replay State"
+  short_description: "Check replay selection, ownership and fixed forecasts"
+  default_prompt: "Use $verify-replay-state to verify replay lifecycle changes and source synchronization."

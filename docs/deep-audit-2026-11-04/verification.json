@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "kind": "deep-audit-source-and-verification-receipt",
+  "generatedAt": "2026-11-04T07:29:35.351377+00:00",
+  "baselineCommit": "94a1b1dda9eb359de70747043808340da369d087",
+  "identityMeaning": "File SHA-256 values identify the tested combined working sources; the commit containing this receipt and the PR checks provide Git synchronization. This receipt does not self-reference a future commit hash.",
+  "sourceHashes": {
+    ".agents/skills/verify-replay-state/SKILL.md": "038074591f1c959938d1a55d9ced09be91c6fb34e5d39cbc28989027c557b5b1",
+    ".agents/skills/verify-replay-state/agents/openai.yaml": "a878d794b31bace5c1113732e1b9c86aa12c43c370d953ff9309aef1793e4779",
+    "apps/api/src/repository.ts": "f87bd1878debb4bdc6d9b4c6b037971e00992c59bd445b46725dbf8aacbf194a",
+    "apps/api/src/us-collector.ts": "5bf55c2aff8c3adbb36aa42ed179f9453a73e0759062bc6f2b88272f13673d9f",
+    "apps/web/src/app.tsx": "740ba2905caed0c04b2f3e841698f5439e47bd68a701e6656fbd0f7dd9c276e4",
+    "apps/web/src/snapshot-state.ts": "2ebe3fbffaa6b449ecfb327a769f9afcb7cc0f179e05e366be2beb46a7f60ee0",
+    "dist/chart-replay.css": "211009c38aa3b7716e566ab8c1a94002ea15f2557d905e26d3a39107902d85bf",
+    "dist/chart-replay.js": "f0fb4cef01d5fe0d3361c0416c56260e3670f442b91528ba3a2743d748f94c56",
+    "dist/market-lab-math.js": "fbf92300b64e3e5e320386c7ddacc9d533cff5d7447620b3d6a365d66cdc2579",
+    "dist/market-lab/app/assets/index-DA-MnXHe.js": "42b754d8c471c0302490be8d52fc76e32f817009e96ed7c1fce32004079b4dc0",
+    "dist/market-lab/app/index.html": "2d88cc041d8f4110d7aee0c54ed221960b54d801814f83b22ba7d5ba41ddd489",
+    "packages/domain/src/market-lab-math.js": "fbf92300b64e3e5e320386c7ddacc9d533cff5d7447620b3d6a365d66cdc2579",
+    "packages/domain/src/themes.ts": "44fae94a1a7f58a297fafa5928891433543e0bf075bdd6a412d93087142ae8fc",
+    "scripts/benchmark-theme-comparison.mjs": "8884f4feef186e60734352a1c80899bcf2314d54e86fa6ffd221bdbb0490ddf1",
+    "scripts/verify-chart-replay-browser.mjs": "43007bbcc95caa31b7c3df5d66b7a85a1191ebe6c7bc6ad74498109c0cb50860",
+    "scripts/verify-snapshot-browser.mjs": "cbb05b9b83cbfbc995bb0130dc9938c2915ff12e741b66c73fa3dfa01d48b8d3",
+    "tests/chart-replay-atlas.test.mjs": "dba52bd354de7b1c8107e817ad7a7debdc421257fdeae09ebd43c7d40064e93e",
+    "tests/chart-replay-state.test.mjs": "1ae620d55fd750fbc951b0980f8eed58a2a64cf4eb2a83dc9b74626601badabc",
+    "tests/chart-replay-ui.test.mjs": "92f6b7e08961281a8190ed1eb3cc5c79c4f09ee24849789f8570c39f8bd9e63b",
+    "tests/cycle-clock-backtest.test.mjs": "c56d2ae827f678994ba3126cf04973a75af5066ad9d4eec34dcaff2191c51e17",
+    "tests/fixtures/btc-replay-2026-10-31.json": "09ac13fed80490c774b3c597f79882ae2b5ab3038cc968f182d163f49fa2a8b1",
+    "tests/fixtures/btc-replay-2026-10-31.manifest.json": "f7508f75d84196672a24fbc0d2dc986a12720cfbac584b13449678742ccc32de",
+    "tests/helpers/frozen-replay-fixture.mjs": "9b21f03d3af826589516e83f2b1f7689f29bf6b668518a4fa33bcfbcca5a9671",
+    "tests/market-lab-math.test.mjs": "1e15fd53e3bb62a74e15ee5f6b79c245331bc35ac65bfe712c4bea0c8d0bb360",
+    "tests/monthly-backtest-replay.test.mjs": "4b63f2dcb382bb26f76e8b0420fb66f2ccde2ed2b46f0d8ef7933d4b8a75db66",
+    "tests/monthly-backtest-view.test.mjs": "3597f0d753e460056b369ca05d26d63634190c444bf4e9a21bea9e31f3246128",
+    "tests/monthly-backtest.test.mjs": "ea85ea3b343f81f39e828a996b029fb8aa319581182e124717fffd15acf0048a",
+    "tests/replay-cutoff-backtest.test.mjs": "db93c4b8e97f9c1af8cc4acc4833af677df5257501db0570294b9701dd650d1c",
+    "tests/replay-cutoff-ui.test.mjs": "a6cbfe13db59b8d1779a2ac0f18c187917af2d38aac71a69eab960858b420871",
+    "tests/service/us-collection-cancellation.test.ts": "828d6303ceb16a800e13ee05eeb0c265cbbb5483843f63c13ebb8c9e21f97472",
+    "tests/service/us-collection.test.ts": "b4e0bcdd117ca1ced4219f7f1b392b1828b2da749494d6946dfe2c7ea9ad111c",
+    "tests/web/market-lab-panels.test.tsx": "477f0e59550874e9a8264d9bb113f931f5665984039abfd729a82097bab9a746",
+    "tests/web/snapshot-state.test.tsx": "243a4e195d49b5fad9bfb03e0885b0553deb40c61f7e4356f67a6be0fa26275e",
+    "tests/web/theme-comparison.test.tsx": "127156bdcb39e0b65c9434f30ad0522802d854c7f11098f04d77e2ea7e2a4613",
+    "verification/replay-state/verify.mjs": "bf44029ceb936f29a72de9695b68bfc67c94dcc9614dda6bd6f3f4cbf74eafb5"
+  },
+  "checks": [
+    {
+      "name": "TypeScript",
+      "command": "npm run typecheck",
+      "status": "passed"
+    },
+    {
+      "name": "React panels and mounted state transitions",
+      "command": "node --import tsx --test tests/web/*.test.tsx",
+      "status": "passed",
+      "tests": 64,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "Current/frozen chart replay and source boundaries",
+      "command": "npm run verify:chart-replay",
+      "status": "passed",
+      "tests": 152,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "Synthetic advanced-data refresh regression",
+      "status": "passed",
+      "tests": 62,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "evidence/refresh-advancement.json"
+    },
+    {
+      "name": "Real Chromium replay interaction",
+      "status": "passed",
+      "cases": 7,
+      "failed": 0,
+      "browser": {
+        "protocolVersion": "1.3",
+        "product": "HeadlessChrome/143.0.7499.0",
+        "revision": "@b30439823e5177773584139e72e0593e36863899",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/143.0.7499.0 Safari/537.36",
+        "jsVersion": "14.3.127"
+      },
+      "evidence": "evidence/replay-browser.json"
+    },
+    {
+      "name": "Real Chromium accepted snapshot/revision identity",
+      "status": "passed",
+      "checks": 3,
+      "evidence": "evidence/snapshot-browser.json",
+      "syntheticHttpResponses": true
+    },
+    {
+      "name": "Actual JavaScript bounded replay state exploration",
+      "status": "passed",
+      "controllerTraces": 10000,
+      "selectionTraces": 259,
+      "intendedNegativeControls": 8,
+      "formalProof": false,
+      "evidence": "../replay-state/verification.json"
+    },
+    {
+      "name": "Existing market/equity/ETH/publication TLC and actual-source mutation checks",
+      "status": "passed",
+      "coveredProductionFilesUnchangedFromBaseline": true
+    },
+    {
+      "name": "Independent numerical identities",
+      "command": "npm run verify:numerics",
+      "status": "passed",
+      "assetCount": 18,
+      "closeCount": 104022,
+      "annualSamples": 400,
+      "intendedAssetComparisonMutants": 16
+    },
+    {
+      "name": "Static resources",
+      "command": "npm run verify:static",
+      "status": "passed",
+      "files": 786,
+      "checkedReferences": 803
+    },
+    {
+      "name": "Generated Pages artifacts",
+      "command": "npm run build:pages && npm run verify:pages",
+      "status": "passed",
+      "files": 11,
+      "routes": 8
+    },
+    {
+      "name": "Bounded chart rendering/search",
+      "command": "npm run verify:performance",
+      "status": "passed",
+      "browserLatencyMeasurement": false
+    },
+    {
+      "name": "Unchanged forecast/research/ETH-event/treasury/cycle artifacts",
+      "commands": [
+        "npm run verify:forecast",
+        "npm run verify:research",
+        "npm run verify:eth-events",
+        "npm run verify:treasury-paths",
+        "npm run verify:cycle"
+      ],
+      "status": "passed"
+    },
+    {
+      "name": "Collector commit-boundary regression",
+      "status": "passed",
+      "focusedTests": 5,
+      "preFixCounterexamples": 3,
+      "removedFinalGuardFailures": 3,
+      "evidence": [
+        "evidence/collector-before.log",
+        "evidence/collector-after.log",
+        "evidence/collector-mutant.log"
+      ]
+    },
+    {
+      "name": "Theme-comparison equivalence and A/B timing",
+      "status": "passed",
+      "pairs": 24,
+      "samplesPerVariantPerWorkload": 6,
+      "evidence": "theme-comparison-benchmark.json"
+    }
+  ],
+  "protectedPathsUnchanged": [
+    "dist/data",
+    "dist/index.html",
+    "dist/ipo-view.js",
+    "dist/ipo-view.css",
+    "dist/ipo-month-calendar.js",
+    "docs/THREE_YEAR_RESULTS.json",
+    ".github/workflows/refresh-data.yml"
+  ],
+  "historicalInputsMeaning": "Frozen historical fixtures remain distinct from the current acquisition-aware archive; all advancement observations in the rehearsal are synthetic.",
+  "initialRemoteChecks": {
+    "commit": "d6e737e68d487652e5bb14e9f4d3289a418749e2",
+    "ci": {
+      "runId": 41789168113,
+      "conclusion": "success",
+      "modelTests": 2462,
+      "modelFailures": 0,
+      "skipped": 0
+    },
+    "service": {
+      "runId": 41789168142,
+      "conclusion": "success",
+      "tests": 28,
+      "postgresql": "17.11"
+    }
+  },
+  "combinedCandidateRemoteChecks": "Use the final head check results on https://github.com/twoimo/bitcoin-cycle-atlas/pull/61; initial-commit results above are not substituted for final-head results.",
+  "incompleteLocalFullSuiteAttempts": [
+    {
+      "runtime": "Node24.22.2",
+      "defaultConcurrency": true,
+      "reportedPassingTestsBeforeStop": 30,
+      "completeAggregateReceipt": false,
+      "exitCode": 1
+    },
+    {
+      "runtime": "Node24.22.2",
+      "concurrency": 4,
+      "reportedPassingTestsBeforeStop": 879,
+      "completeAggregateReceipt": false,
+      "exitCode": 1
+    }
+  ],
+  "incompleteAttemptMeaning": "Both local full-suite attempts ended without an aggregate receipt or a reported assertion failure. The cause was not established; neither is counted as a full-suite pass. Required CI on the combined committed source supplies the full-suite gate.",
+  "limits": [
+    "Finite executable verification, not an unbounded proof",
+    "Same-model parallel reviewers, not independent multi-model certification",
+    "No predictive-superiority or calibration guarantee",
+    "Native Chromium Linux only; no Safari or physical-device execution",
+    "No live provider refresh claimed by synthetic-input rehearsals",
+    "Microbenchmarks exclude HTTP, database and browser rendering"
+  ]
+}

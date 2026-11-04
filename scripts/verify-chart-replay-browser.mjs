@@ -111,6 +111,13 @@ export async function verifyChartReplaySurface(api) {
     throw new Error('Replay popover scrolling did not expose ' + selector);
   }
   async function click(connection, selector) {
+    if(selector==='#workbench-replay'&&width<=620&&await evaluate(cdp,()=>{
+      const target=document.querySelector('#workbench-replay'),toggle=document.querySelector('#mobile-details-toggle'),box=target?.getBoundingClientRect();
+      return Boolean(toggle&&box&&(!box.width||!box.height));
+    })){
+      if(await evaluate(cdp,()=>document.querySelector('#mobile-details-toggle').getAttribute('aria-expanded')!=='true'))await nativeClick(connection,'#mobile-details-toggle');
+      selector='[data-mobile-target="#workbench-replay"]';
+    }
     const target = await evaluate(cdp, selector => {
       const node = document.querySelector(selector);
       const view = node?.closest('[data-cr="start-view"],[data-cr="date-view"],[data-cr="forecast-view"]')?.dataset.cr.replace('-view', '') ?? null;
@@ -193,7 +200,7 @@ export async function verifyChartReplaySurface(api) {
       const probes = freeProbes.map(hit), originalProbe = hit(originalPoint);
       return { chart: box, plot: { ...rect(plot), clientHeight: plot.clientHeight }, root: { ...rect(root), pointerEvents: getComputedStyle(root).pointerEvents, background: getComputedStyle(root).backgroundColor },
         bar: rect(bar), actions: { ...rect(actions), scrollLeft: actions.scrollLeft, scrollWidth: actions.scrollWidth, clientWidth: actions.clientWidth, flexWrap: getComputedStyle(actions).flexWrap },
-        controls: [...actions.children].map(node => ({ name: node.dataset.cr, ...rect(node) })), exit: { ...rect(exit), separate: !bar.contains(exit) },
+        controls: [...actions.children].filter(visible).map(node => ({ name: node.dataset.cr, ...rect(node) })), exit: { ...rect(exit), separate: !bar.contains(exit) },
         atlas: plot.classList.contains('chart-replay-atlas'), priceCoordinates, pricePane, legend,
         priceMatrix: matrix ? Object.fromEntries(['a', 'b', 'c', 'd', 'e', 'f'].map(key => [key, matrix[key]])) : null,
         priceAxis: pricePane ? { left: pricePane.right, right: box.right, top: pricePane.top, bottom: pricePane.bottom } : null,
@@ -213,7 +220,7 @@ export async function verifyChartReplaySurface(api) {
     for (const point of geometry.probes) assert.equal(point.reachesChart, true, 'An unobstructed price-pane probe cannot reach the SVG: ' + JSON.stringify(point));
     assert.equal(geometry.pointerReachesChart, true);
     assert.deepEqual(geometry.removedControls, [], 'Removed previous/duplicate random/menu-resume controls remain in the DOM');
-    assert.deepEqual(geometry.controls.map(node => node.name), ['first', 'select-menu', 'pick', 'play', 'next', 'speed', 'update-interval', 'live']);
+    assert.deepEqual(geometry.controls.map(node => node.name), ['first', 'select-menu', 'mode-badge', 'pick', 'play', 'next', 'speed', 'update-interval', 'live']);
     assert.equal(geometry.actions.flexWrap, 'nowrap');
     const centerY = geometry.bar.top + geometry.bar.height / 2;
     for (const node of geometry.controls) assert.ok(Math.abs(node.top + node.height / 2 - centerY) <= 1, 'Replay controls wrapped into a second row');
@@ -534,7 +541,13 @@ export async function verifyChartReplaySurface(api) {
     for (const name of ['entry-continue', 'entry-new']) visibleBounds(await bounds(cdp, decision(name)), width, height);
     await storedUnchanged(before, label + '-entry-choice');
     await click(cdp, decision(choice));
-    if (choice === 'entry-continue') await ready(); else await pickerReady();
+    if (choice === 'entry-continue') await ready(); else {
+      await pickerReady();
+      if(btc){
+        assert.equal(await evaluate(cdp,selector=>document.querySelector(selector).value,control('mode')),'cutoff-backtest','Start new must use the default cutoff mode');
+        await select(control('mode'),'atlas-chart');await ready(true);await closeMenu();
+      }
+    }
     await storedUnchanged(before, label + '-' + choice);
   }
   async function interval(value) {
@@ -1399,6 +1412,10 @@ export async function verifyChartReplaySurface(api) {
     const box = globalThis.__mainReplayNode.getBoundingClientRect(); return { left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width, height: box.height };
   }, chartSelector);
   await click(cdp, '#workbench-replay'); await ready(crypto);
+  if(btc){
+    assert.equal(await evaluate(cdp,selector=>document.querySelector(selector).value,control('mode')),'cutoff-backtest','New BTC sessions must default to cutoff reconstruction');
+    await select(control('mode'),'atlas-chart');await ready(true);await closeMenu();
+  }
   await verifyFloatingBar();
   if (btc) {
     await verifyUnconfirmedSelection('first-entry', entryFrequency, liveContext);

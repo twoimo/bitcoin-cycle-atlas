@@ -1,0 +1,29 @@
+stateDiagram-v2
+    direction TB
+    state "Live chart" as Idle
+    state "Saved replay choice" as SavedChoice
+    state "Unconfirmed start" as Selecting
+    state "Preparing fixed replay" as Loading
+    state "Paused fixed replay" as Paused
+    state "Playing observed bars" as Playing
+    state "Last observed bar" as Ended
+    state "Preparation failed" as Failed
+    [*] --> Idle
+    Idle --> Selecting: Enter without saved history
+    Idle --> SavedChoice: Enter with saved or invalid history
+    SavedChoice --> Loading: Continue valid saved mode
+    SavedChoice --> Selecting: Start new
+    SavedChoice --> Idle: Cancel
+    Selecting --> Selecting: Change mode or horizon
+    Selecting --> Loading: Confirm date or bar
+    Loading --> Selecting: Change unconfirmed settings
+    Loading --> Paused: Current request succeeds
+    Loading --> Failed: Current request fails
+    Failed --> Loading: Retry selected origin
+    Paused --> Playing: Play
+    Playing --> Paused: Pause or seek
+    Playing --> Ended: Reveal last observation
+    Ended --> Ended: Play without a later observation
+    Ended --> Paused: Explicit seek backward
+    Paused --> Selecting: Change settings while picking
+    Selecting --> Idle: Exit

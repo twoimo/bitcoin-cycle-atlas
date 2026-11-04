@@ -232,3 +232,40 @@ test('React app aborts an unmounted load and ignores its late completion', async
   await act(async () => resolve(snapshot));
   assert.equal(fixture.document.getElementById('root')!.childNodes.length, 0);
 });
+
+test('React app retains a newer populated document when an older empty fallback arrives', async t => {
+  const older=structuredClone(snapshot);older.generatedAt=new Date(Date.parse(snapshot.generatedAt)-86400000).toISOString();older.markets=[];
+  for(const region of Object.values(older.regions))for(const axis of Object.values(region.axes))axis.values=[];
+  let calls=0;
+  const fixture=await mountedApp(async options=>{
+    calls++;options?.onDelivery?.(calls===1?{kind:'api',revision:'a'.repeat(64)}:{kind:'saved',reason:'API unavailable'});
+    return calls===1?snapshot:older;
+  });t.after(fixture.cleanup);
+  const score=fixture.document.querySelector('.ml-axis-value')!.textContent;
+  await fixture.click('.ml-collection-line button');
+  assert.equal(fixture.document.querySelector('.ml-axis-value')!.textContent,score);
+  assert.doesNotMatch(fixture.document.body.textContent!,/스냅샷은 읽었지만 관측 자료가 없습니다/);
+  assert.match(fixture.document.querySelector('.ml-delivery')!.textContent!,/연결 실패 · 직전 자료 유지/);
+  assert.doesNotMatch(fixture.document.querySelector('.ml-delivery')!.textContent!,/저장본 표시/);
+  await fixture.click('[data-atlas-page="rsi"]');
+  await fixture.click('.rsi-workbench-tabs button:nth-child(2)');
+  assert.equal(fixture.document.querySelector('.rsi-backtest-form button[type=submit]')!.hasAttribute('disabled'),false,'retained API revision still owns the retained observations');
+});
+
+test('React retry retains accepted RSI revision while replacement is pending and after failure', async t => {
+  let calls=0,reject!: (error:Error)=>void;
+  const fixture=await mountedApp(options=>{
+    calls++;
+    if(calls===1){options?.onDelivery?.({kind:'api',revision:'a'.repeat(64)});return Promise.resolve(snapshot);}
+    return new Promise((_,fail)=>{reject=fail;});
+  });t.after(fixture.cleanup);
+  await fixture.click('.ml-collection-line button');
+  assert(fixture.document.querySelector('.atlas-inline-loading'));
+  await fixture.click('[data-atlas-page="rsi"]');
+  await fixture.click('.rsi-workbench-tabs button:nth-child(2)');
+  const enabled=()=>assert.equal(fixture.document.querySelector('.rsi-backtest-form button[type=submit]')!.hasAttribute('disabled'),false);
+  enabled();
+  await act(async()=>reject(new Error('second request failed')));
+  enabled();
+  assert.match(fixture.document.querySelector('.ml-delivery')!.textContent!,/연결 실패 · 직전 자료 유지/);
+});

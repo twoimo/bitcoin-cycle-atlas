@@ -169,13 +169,21 @@ export function positiveFactorScenario({ alpha=0, beta=0, gamma=0, weights=[1,1,
 export function calculateRsiSeries(prices, period=14, signalPeriod=9) {
   validateSeries(prices,{positive:true});
   if (!Number.isInteger(period)||period<2||period>250||!Number.isInteger(signalPeriod)||signalPeriod<1||signalPeriod>250) fail('RSI와 시그널 기간을 확인하세요.');
+  if (!prices.length) return [];
   const anchor = prices[0][1];
-  const factor = anchor > 0 && anchor < 1 ? 1/anchor : 1;
+  let factor = anchor < 1 ? Math.min(1/anchor,Number.MAX_VALUE) : 1;
   let avgGain=0, avgLoss=0; const buffer=[];
   return prices.map(([date,close],i)=>{
     let rsi=null,signal=null;
     if (i>0) {
-      const delta=(close-prices[i-1][1])*factor,gain=Math.max(delta,0),loss=Math.max(-delta,0);
+      const change=close-prices[i-1][1];
+      if (!Number.isFinite(change*factor)) {
+        // Both Wilder averages must change units together. Only this observed
+        // prefix sets the scale; a later large price cannot rewrite earlier RSI.
+        const nextFactor=1/Math.max(close,prices[i-1][1]),ratio=nextFactor/factor;
+        avgGain*=ratio;avgLoss*=ratio;factor=nextFactor;
+      }
+      const delta=change*factor,gain=Math.max(delta,0),loss=Math.max(-delta,0);
       if(i<=period){avgGain+=gain/period;avgLoss+=loss/period;}else{avgGain+=(gain-avgGain)/period;avgLoss+=(loss-avgLoss)/period;}
       if(i>=period){rsi=avgGain===0&&avgLoss===0?50:avgLoss===0?100:avgGain===0?0:100-100/(1+avgGain/avgLoss);buffer.push(rsi);if(buffer.length>signalPeriod)buffer.shift();if(buffer.length===signalPeriod)signal=buffer.reduce((a,b)=>a+b,0)/signalPeriod;}
     }

@@ -1,0 +1,2664 @@
+{
+  "scope": "Native Chromium Playwright/CDP touch and keyboard entry; actual static checkout; two viewport regression reproduction",
+  "browser": "Chromium143.0.7499.0",
+  "candidateCssSha256": "211009c38aa3b7716e566ab8c1a94002ea15f2557d905e26d3a39107902d85bf",
+  "before": [
+    {
+      "width": 320,
+      "height": 568,
+      "steps": [
+        {
+          "label": "entry",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 18,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": -5,
+            "right": 147,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "forecast-menu",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 18,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": -10,
+            "right": 294,
+            "top": 109,
+            "bottom": 333,
+            "width": 304,
+            "height": 224,
+            "scrollTop": 0,
+            "scrollHeight": 517,
+            "clientHeight": 222
+          },
+          "mode": {
+            "left": 3,
+            "right": 266,
+            "top": 281.375,
+            "bottom": 325.375,
+            "width": 263,
+            "height": 44
+          },
+          "heading": {
+            "left": -9,
+            "right": 278,
+            "top": 110,
+            "bottom": 171,
+            "width": 287,
+            "height": 61
+          },
+          "actions": {
+            "left": -5,
+            "right": 147,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        },
+        {
+          "label": "mode-changed",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 18,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": -5,
+            "right": 147,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "menu-closed",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 18,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": -5,
+            "right": 147,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe--1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 18,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": -5,
+            "right": 147,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 84
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe--1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 18,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": -5,
+            "right": 147,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 168
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe--1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 18,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": -5,
+            "right": 147,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 251
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe--1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 18,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": -5,
+            "right": 147,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 335
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe-1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 18,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": -5,
+            "right": 147,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 251
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe-1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 18,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": -5,
+            "right": 147,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 168
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe-1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 18,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": -5,
+            "right": 147,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 84
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe-1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 18,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": -18,
+            "right": 302,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": -5,
+            "right": 147,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        }
+      ]
+    },
+    {
+      "width": 900,
+      "height": 430,
+      "steps": [
+        {
+          "label": "entry",
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "forecast-menu",
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 243,
+            "right": 663,
+            "top": 97,
+            "bottom": 205,
+            "width": 420,
+            "height": 108,
+            "scrollTop": 0,
+            "scrollHeight": 442,
+            "clientHeight": 106
+          },
+          "mode": {
+            "left": 449.5,
+            "right": 635,
+            "top": 194.1875,
+            "bottom": 238.1875,
+            "width": 185.5,
+            "height": 44
+          },
+          "heading": {
+            "left": 244,
+            "right": 647,
+            "top": 98,
+            "bottom": 159,
+            "width": 403,
+            "height": 61
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        },
+        {
+          "label": "reveal-0",
+          "delta": 38.1875,
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 243,
+            "right": 663,
+            "top": 97,
+            "bottom": 205,
+            "width": 420,
+            "height": 108,
+            "scrollTop": 0,
+            "scrollHeight": 442,
+            "clientHeight": 106
+          },
+          "mode": {
+            "left": 449.5,
+            "right": 635,
+            "top": 194.1875,
+            "bottom": 238.1875,
+            "width": 185.5,
+            "height": 44
+          },
+          "heading": {
+            "left": 244,
+            "right": 647,
+            "top": 98,
+            "bottom": 159,
+            "width": 403,
+            "height": 61
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        },
+        {
+          "label": "reveal-1",
+          "delta": -6.8125,
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 243,
+            "right": 663,
+            "top": 97,
+            "bottom": 205,
+            "width": 420,
+            "height": 108,
+            "scrollTop": 38,
+            "scrollHeight": 442,
+            "clientHeight": 106
+          },
+          "mode": {
+            "left": 449.5,
+            "right": 635,
+            "top": 156.1875,
+            "bottom": 200.1875,
+            "width": 185.5,
+            "height": 44
+          },
+          "heading": {
+            "left": 244,
+            "right": 647,
+            "top": 98,
+            "bottom": 159,
+            "width": 403,
+            "height": 61
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        },
+        {
+          "label": "reveal-2",
+          "delta": 7.1875,
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 243,
+            "right": 663,
+            "top": 97,
+            "bottom": 205,
+            "width": 420,
+            "height": 108,
+            "scrollTop": 31,
+            "scrollHeight": 442,
+            "clientHeight": 106
+          },
+          "mode": {
+            "left": 449.5,
+            "right": 635,
+            "top": 163.1875,
+            "bottom": 207.1875,
+            "width": 185.5,
+            "height": 44
+          },
+          "heading": {
+            "left": 244,
+            "right": 647,
+            "top": 98,
+            "bottom": 159,
+            "width": 403,
+            "height": 61
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        },
+        {
+          "label": "reveal-3",
+          "delta": -7.8125,
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 243,
+            "right": 663,
+            "top": 97,
+            "bottom": 205,
+            "width": 420,
+            "height": 108,
+            "scrollTop": 39,
+            "scrollHeight": 442,
+            "clientHeight": 106
+          },
+          "mode": {
+            "left": 449.5,
+            "right": 635,
+            "top": 155.1875,
+            "bottom": 199.1875,
+            "width": 185.5,
+            "height": 44
+          },
+          "heading": {
+            "left": 244,
+            "right": 647,
+            "top": 98,
+            "bottom": 159,
+            "width": 403,
+            "height": 61
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        },
+        {
+          "label": "reveal-4",
+          "delta": 7.1875,
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 243,
+            "right": 663,
+            "top": 97,
+            "bottom": 205,
+            "width": 420,
+            "height": 108,
+            "scrollTop": 31,
+            "scrollHeight": 442,
+            "clientHeight": 106
+          },
+          "mode": {
+            "left": 449.5,
+            "right": 635,
+            "top": 163.1875,
+            "bottom": 207.1875,
+            "width": 185.5,
+            "height": 44
+          },
+          "heading": {
+            "left": 244,
+            "right": 647,
+            "top": 98,
+            "bottom": 159,
+            "width": 403,
+            "height": 61
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        },
+        {
+          "label": "reveal-5",
+          "delta": -6.8125,
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 243,
+            "right": 663,
+            "top": 97,
+            "bottom": 205,
+            "width": 420,
+            "height": 108,
+            "scrollTop": 38,
+            "scrollHeight": 442,
+            "clientHeight": 106
+          },
+          "mode": {
+            "left": 449.5,
+            "right": 635,
+            "top": 156.1875,
+            "bottom": 200.1875,
+            "width": 185.5,
+            "height": 44
+          },
+          "heading": {
+            "left": 244,
+            "right": 647,
+            "top": 98,
+            "bottom": 159,
+            "width": 403,
+            "height": 61
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        },
+        {
+          "label": "reveal-6",
+          "delta": 7.1875,
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 243,
+            "right": 663,
+            "top": 97,
+            "bottom": 205,
+            "width": 420,
+            "height": 108,
+            "scrollTop": 31,
+            "scrollHeight": 442,
+            "clientHeight": 106
+          },
+          "mode": {
+            "left": 449.5,
+            "right": 635,
+            "top": 163.1875,
+            "bottom": 207.1875,
+            "width": 185.5,
+            "height": 44
+          },
+          "heading": {
+            "left": 244,
+            "right": 647,
+            "top": 98,
+            "bottom": 159,
+            "width": 403,
+            "height": 61
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        },
+        {
+          "label": "reveal-7",
+          "delta": -6.8125,
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 243,
+            "right": 663,
+            "top": 97,
+            "bottom": 205,
+            "width": 420,
+            "height": 108,
+            "scrollTop": 38,
+            "scrollHeight": 442,
+            "clientHeight": 106
+          },
+          "mode": {
+            "left": 449.5,
+            "right": 635,
+            "top": 156.1875,
+            "bottom": 200.1875,
+            "width": 185.5,
+            "height": 44
+          },
+          "heading": {
+            "left": 244,
+            "right": 647,
+            "top": 98,
+            "bottom": 159,
+            "width": 403,
+            "height": 61
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        },
+        {
+          "label": "reveal-8",
+          "delta": 6.1875,
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 243,
+            "right": 663,
+            "top": 97,
+            "bottom": 205,
+            "width": 420,
+            "height": 108,
+            "scrollTop": 32,
+            "scrollHeight": 442,
+            "clientHeight": 106
+          },
+          "mode": {
+            "left": 449.5,
+            "right": 635,
+            "top": 162.1875,
+            "bottom": 206.1875,
+            "width": 185.5,
+            "height": 44
+          },
+          "heading": {
+            "left": 244,
+            "right": 647,
+            "top": 98,
+            "bottom": 159,
+            "width": 403,
+            "height": 61
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        },
+        {
+          "label": "reveal-9",
+          "delta": -6.8125,
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 243,
+            "right": 663,
+            "top": 97,
+            "bottom": 205,
+            "width": 420,
+            "height": 108,
+            "scrollTop": 38,
+            "scrollHeight": 442,
+            "clientHeight": 106
+          },
+          "mode": {
+            "left": 449.5,
+            "right": 635,
+            "top": 156.1875,
+            "bottom": 200.1875,
+            "width": 185.5,
+            "height": 44
+          },
+          "heading": {
+            "left": 244,
+            "right": 647,
+            "top": 98,
+            "bottom": 159,
+            "width": 403,
+            "height": 61
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        }
+      ]
+    }
+  ],
+  "after": [
+    {
+      "width": 320,
+      "height": 568,
+      "steps": [
+        {
+          "label": "entry",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 0,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": 13,
+            "right": 165,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "forecast-menu",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 0,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 8,
+            "right": 312,
+            "top": 109,
+            "bottom": 333,
+            "width": 304,
+            "height": 224,
+            "scrollTop": 0,
+            "scrollHeight": 517,
+            "clientHeight": 222
+          },
+          "mode": {
+            "left": 21,
+            "right": 284,
+            "top": 281.375,
+            "bottom": 325.375,
+            "width": 263,
+            "height": 44
+          },
+          "heading": {
+            "left": 9,
+            "right": 296,
+            "top": 110,
+            "bottom": 171,
+            "width": 287,
+            "height": 61
+          },
+          "actions": {
+            "left": 13,
+            "right": 165,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        },
+        {
+          "label": "mode-changed",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 0,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": 13,
+            "right": 165,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "menu-closed",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 0,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": 13,
+            "right": 165,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe--1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 0,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": 13,
+            "right": 165,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 165
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe--1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 0,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": 13,
+            "right": 165,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 265
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe--1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 0,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": 13,
+            "right": 165,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 349
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe--1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 0,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": 13,
+            "right": 165,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 370
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe-1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 0,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": 13,
+            "right": 165,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 209
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe-1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 0,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": 13,
+            "right": 165,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 117
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe-1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 0,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": 13,
+            "right": 165,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 33
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "swipe-1",
+          "stage": {
+            "left": 0,
+            "right": 320,
+            "top": 53,
+            "bottom": 568,
+            "width": 320,
+            "height": 515,
+            "scrollLeft": 0,
+            "scrollWidth": 338,
+            "clientWidth": 320
+          },
+          "plot": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "svg": {
+            "left": 0,
+            "right": 320,
+            "top": 101,
+            "bottom": 524,
+            "width": 320,
+            "height": 423
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": 13,
+            "right": 165,
+            "top": 347,
+            "bottom": 391,
+            "width": 152,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        }
+      ]
+    },
+    {
+      "width": 900,
+      "height": 430,
+      "steps": [
+        {
+          "label": "entry",
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0,
+            "scrollTop": 0,
+            "scrollHeight": 0,
+            "clientHeight": 0
+          },
+          "mode": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "heading": {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<svg id=\"lab-chart\" role=\"group\" tabindex=\"0\" aria-label=\"실제 비트코인 가격과 미래 가정의 그래프. 누르거나 좌우 방향키로 값을 확인하세요.\" data-forecast-evidence-count=\"0\" d"
+        },
+        {
+          "label": "forecast-menu",
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 243,
+            "right": 663,
+            "top": 97,
+            "bottom": 378,
+            "width": 420,
+            "height": 281,
+            "scrollTop": 0,
+            "scrollHeight": 442,
+            "clientHeight": 279
+          },
+          "mode": {
+            "left": 449.5,
+            "right": 635,
+            "top": 194.1875,
+            "bottom": 238.1875,
+            "width": 185.5,
+            "height": 44
+          },
+          "heading": {
+            "left": 244,
+            "right": 647,
+            "top": 98,
+            "bottom": 159,
+            "width": 403,
+            "height": 61
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        },
+        {
+          "label": "reveal-0",
+          "delta": 0,
+          "stage": {
+            "left": 44,
+            "right": 862,
+            "top": 45,
+            "bottom": 430,
+            "width": 818,
+            "height": 385,
+            "scrollLeft": 0,
+            "scrollWidth": 818,
+            "clientWidth": 818
+          },
+          "plot": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "svg": {
+            "left": 44,
+            "right": 862,
+            "top": 89,
+            "bottom": 386,
+            "width": 818,
+            "height": 297
+          },
+          "menu": {
+            "left": 243,
+            "right": 663,
+            "top": 97,
+            "bottom": 378,
+            "width": 420,
+            "height": 281,
+            "scrollTop": 0,
+            "scrollHeight": 442,
+            "clientHeight": 279
+          },
+          "mode": {
+            "left": 449.5,
+            "right": 635,
+            "top": 194.1875,
+            "bottom": 238.1875,
+            "width": 185.5,
+            "height": 44
+          },
+          "heading": {
+            "left": 244,
+            "right": 647,
+            "top": 98,
+            "bottom": 159,
+            "width": 403,
+            "height": 61
+          },
+          "actions": {
+            "left": 248,
+            "right": 658,
+            "top": 219,
+            "bottom": 263,
+            "width": 410,
+            "height": 44,
+            "scrollLeft": 0
+          },
+          "focus": "<select data-cr=\"mode\" aria-label=\"리플레이 예측 종류\"><option value=\"cutoff-backtest\">기준시점 백테스트</option><option value=\"atlas-chart\">현재 예측선 고정</opti"
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "mobileStageAndSvgStable": true,
+    "nativeHorizontalTransportScrolled": true,
+    "landscapeModeFullyVisible": true,
+    "modeHeight44": true
+  },
+  "limits": "Focused geometry regression; complete replay interactions validated separately by integration owner"
+}
