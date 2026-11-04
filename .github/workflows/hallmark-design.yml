@@ -6,6 +6,8 @@ on:
       - 'dist/**'
       - 'tools/hallmark/**'
       - 'scripts/verify-hallmark-design.mjs'
+      - 'scripts/hallmark-source-scope.mjs'
+      - 'tests/hallmark-source-scope.test.mjs'
       - '.github/workflows/hallmark-design.yml'
   workflow_dispatch:
 
@@ -71,6 +73,7 @@ jobs:
           echo "HALLMARK_FONT_RECEIPT commit=f8d157532fbfaeda587e826d4cd5b21a49186f7c font_blob=$hallmark_font_blob license_blob=$hallmark_font_license_blob"
       - name: Audit all static files and eight rendered routes before and after
         run: |
+          node --test tests/hallmark-source-scope.test.mjs
           node --check scripts/verify-hallmark-design.mjs
           node scripts/verify-hallmark-design.mjs --baseline build/hallmark-baseline --out build/hallmark
       - name: Preserve findings, source receipts and before/after screenshots

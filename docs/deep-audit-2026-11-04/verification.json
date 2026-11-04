@@ -39,7 +39,11 @@
     "tests/web/market-lab-panels.test.tsx": "477f0e59550874e9a8264d9bb113f931f5665984039abfd729a82097bab9a746",
     "tests/web/snapshot-state.test.tsx": "243a4e195d49b5fad9bfb03e0885b0553deb40c61f7e4356f67a6be0fa26275e",
     "tests/web/theme-comparison.test.tsx": "127156bdcb39e0b65c9434f30ad0522802d854c7f11098f04d77e2ea7e2a4613",
-    "verification/replay-state/verify.mjs": "bf44029ceb936f29a72de9695b68bfc67c94dcc9614dda6bd6f3f4cbf74eafb5"
+    "verification/replay-state/verify.mjs": "bf44029ceb936f29a72de9695b68bfc67c94dcc9614dda6bd6f3f4cbf74eafb5",
+    "scripts/verify-hallmark-design.mjs": "1b52595d1f238aaf910d02da837bf2a7ef36c0b8c5709bc5ea8f8d56a5c6edba",
+    "scripts/hallmark-source-scope.mjs": "805d505d4f4634743bb4825bc56f6030a975be2fd562a07e5fa5d8a820dd5e7b",
+    "tests/hallmark-source-scope.test.mjs": "4eb6735bfab9f64c24e5eb4f402334c7cf393f20b9c19c9dcbe5605bee7f0d09",
+    ".github/workflows/hallmark-design.yml": "047d3855389f5f13adbe8ac4f65b7fb4231d19c16ff52f491bb09eb5eb380d11"
   },
   "checks": [
     {
@@ -164,6 +168,21 @@
       "pairs": 24,
       "samplesPerVariantPerWorkload": 6,
       "evidence": "theme-comparison-benchmark.json"
+    },
+    {
+      "name": "Hallmark baseline screen/style scope preservation",
+      "status": "passed",
+      "tests": 4,
+      "baseline": {
+        "css": 24,
+        "html": 2
+      },
+      "current": {
+        "css": 32,
+        "html": 11
+      },
+      "requiredBaselinePaths": 26,
+      "fullDesignAuditResult": "Reported separately by the final PR workflow; this focused check does not substitute for actual rendering."
     }
   ],
   "protectedPathsUnchanged": [
