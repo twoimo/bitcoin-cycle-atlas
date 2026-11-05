@@ -1,0 +1,304 @@
+{
+  "status": "passed",
+  "scope": "Prospective native IntersectionObserver clipping experiment; no shared helper implementation changed by this probe.",
+  "cases": [
+    {
+      "label": "modal outside clipped DOM ancestor",
+      "expectedAccept": true,
+      "observed": {
+        "target": {
+          "left": 39,
+          "right": 119,
+          "top": 39,
+          "bottom": 83,
+          "width": 80,
+          "height": 44
+        },
+        "intersection": {
+          "left": 39,
+          "right": 119,
+          "top": 39,
+          "bottom": 83,
+          "width": 80,
+          "height": 44
+        },
+        "root": {
+          "left": 0,
+          "right": 800,
+          "top": 0,
+          "bottom": 600,
+          "width": 800,
+          "height": 600
+        },
+        "ratio": 1,
+        "isIntersecting": true,
+        "fullBounds": true,
+        "topmost": true,
+        "accept": true
+      },
+      "fixtureSha256": "819bbed2b8c20d1274c3b54754205ac189ed86650b743ffa3311c65e801ff7ee",
+      "status": "passed"
+    },
+    {
+      "label": "modal internally clipped target",
+      "expectedAccept": false,
+      "observed": {
+        "target": {
+          "left": 39,
+          "right": 119,
+          "top": 39,
+          "bottom": 83,
+          "width": 80,
+          "height": 44
+        },
+        "intersection": {
+          "left": 39,
+          "right": 89,
+          "top": 39,
+          "bottom": 83,
+          "width": 50,
+          "height": 44
+        },
+        "root": {
+          "left": 0,
+          "right": 800,
+          "top": 0,
+          "bottom": 600,
+          "width": 800,
+          "height": 600
+        },
+        "ratio": 0.625,
+        "isIntersecting": true,
+        "fullBounds": false,
+        "topmost": true,
+        "accept": false
+      },
+      "fixtureSha256": "b076e694d8447fd28096ca5142a250cae4bd1351cd86937d1192d2b01eeb1039",
+      "status": "passed"
+    },
+    {
+      "label": "ordinary internally clipped target",
+      "expectedAccept": false,
+      "observed": {
+        "target": {
+          "left": 40,
+          "right": 120,
+          "top": 380,
+          "bottom": 424,
+          "width": 80,
+          "height": 44
+        },
+        "intersection": {
+          "left": 40,
+          "right": 90,
+          "top": 380,
+          "bottom": 424,
+          "width": 50,
+          "height": 44
+        },
+        "root": {
+          "left": 0,
+          "right": 800,
+          "top": 0,
+          "bottom": 600,
+          "width": 800,
+          "height": 600
+        },
+        "ratio": 0.625,
+        "isIntersecting": true,
+        "fullBounds": false,
+        "topmost": true,
+        "accept": false
+      },
+      "fixtureSha256": "2dc8c45233c88d4ab6c7571cdf30321aeb4a622c8ffc4287d8931870636e0adf",
+      "status": "passed"
+    },
+    {
+      "label": "ordinary occluded target",
+      "expectedAccept": false,
+      "observed": {
+        "target": {
+          "left": 300,
+          "right": 380,
+          "top": 400,
+          "bottom": 444,
+          "width": 80,
+          "height": 44
+        },
+        "intersection": {
+          "left": 300,
+          "right": 380,
+          "top": 400,
+          "bottom": 444,
+          "width": 80,
+          "height": 44
+        },
+        "root": {
+          "left": 0,
+          "right": 800,
+          "top": 0,
+          "bottom": 600,
+          "width": 800,
+          "height": 600
+        },
+        "ratio": 1,
+        "isIntersecting": true,
+        "fullBounds": true,
+        "topmost": false,
+        "accept": false
+      },
+      "fixtureSha256": "9db656f39574fd0fed8064d76de130bdf6835127cafd43c1490c2a507b34da09",
+      "status": "passed"
+    },
+    {
+      "label": "viewport-fixed sidebar above shifted clipped body",
+      "expectedAccept": true,
+      "observed": {
+        "target": {
+          "left": 0,
+          "right": 44,
+          "top": 12,
+          "bottom": 56,
+          "width": 44,
+          "height": 44
+        },
+        "intersection": {
+          "left": 0,
+          "right": 44,
+          "top": 12,
+          "bottom": 56,
+          "width": 44,
+          "height": 44
+        },
+        "root": {
+          "left": 0,
+          "right": 800,
+          "top": 0,
+          "bottom": 600,
+          "width": 800,
+          "height": 600
+        },
+        "ratio": 1,
+        "isIntersecting": true,
+        "fullBounds": true,
+        "topmost": true,
+        "accept": true
+      },
+      "fixtureSha256": "450c41418e14d31910cd1d36beb25aab3f8a2f3840a5d6d509c6e35e76ce7978",
+      "status": "passed"
+    },
+    {
+      "label": "fixed child clipped by transformed containing block",
+      "expectedAccept": false,
+      "observed": {
+        "target": {
+          "left": 200,
+          "right": 280,
+          "top": 200,
+          "bottom": 244,
+          "width": 80,
+          "height": 44
+        },
+        "intersection": {
+          "left": 200,
+          "right": 250,
+          "top": 200,
+          "bottom": 244,
+          "width": 50,
+          "height": 44
+        },
+        "root": {
+          "left": 0,
+          "right": 800,
+          "top": 0,
+          "bottom": 600,
+          "width": 800,
+          "height": 600
+        },
+        "ratio": 0.625,
+        "isIntersecting": true,
+        "fullBounds": false,
+        "topmost": true,
+        "accept": false
+      },
+      "fixtureSha256": "b94216f6e558a330268a24779e8160e3f070b35deb6921f1ffcc013cb8077fb9",
+      "status": "passed"
+    },
+    {
+      "label": "fixed child escaping untransformed overflow ancestor",
+      "expectedAccept": true,
+      "observed": {
+        "target": {
+          "left": 40,
+          "right": 120,
+          "top": 40,
+          "bottom": 84,
+          "width": 80,
+          "height": 44
+        },
+        "intersection": {
+          "left": 40,
+          "right": 120,
+          "top": 40,
+          "bottom": 84,
+          "width": 80,
+          "height": 44
+        },
+        "root": {
+          "left": 0,
+          "right": 800,
+          "top": 0,
+          "bottom": 600,
+          "width": 800,
+          "height": 600
+        },
+        "ratio": 1,
+        "isIntersecting": true,
+        "fullBounds": true,
+        "topmost": true,
+        "accept": true
+      },
+      "fixtureSha256": "1856b97d638376d48558ebb43f3233cff096d2ee0a412fed150bfbafec368206",
+      "status": "passed"
+    },
+    {
+      "label": "viewport-clipped fixed target",
+      "expectedAccept": false,
+      "observed": {
+        "target": {
+          "left": -20,
+          "right": 60,
+          "top": 40,
+          "bottom": 84,
+          "width": 80,
+          "height": 44
+        },
+        "intersection": {
+          "left": 0,
+          "right": 60,
+          "top": 40,
+          "bottom": 84,
+          "width": 60,
+          "height": 44
+        },
+        "root": {
+          "left": 0,
+          "right": 800,
+          "top": 0,
+          "bottom": 600,
+          "width": 800,
+          "height": 600
+        },
+        "ratio": 0.75,
+        "isIntersecting": true,
+        "fullBounds": false,
+        "topmost": true,
+        "accept": false
+      },
+      "fixtureSha256": "fef9dd990b1cde09be2f5f90917ae5a965f9ecc2fc4cf419f68275d19188e42a",
+      "status": "passed"
+    }
+  ],
+  "browser": "143.0.7499.0",
+  "probeSha256": "d4c58f0d2212b3259ac09b20f451562b9a6a1ef2444e0af82088dac0ab901025"
+}

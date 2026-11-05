@@ -1,0 +1,80 @@
+✔ capture owns the painted path, range and presentation before a live mutation (21.616842ms)
+✔ saved curve restores despite a different current live model (714.060296ms)
+✔ a legacy snapshot supplement changes only its missing retrospective and digest (482.698222ms)
+✔ a later actual observation can be revealed without changing the old curve or capture time (410.330634ms)
+✔ changed saved price fails closed without replacing prior bytes (231.645845ms)
+✔ changed saved lower fails closed without replacing prior bytes (251.048737ms)
+✔ changed saved upper fails closed without replacing prior bytes (238.61687ms)
+✔ changed saved cycle annotations fail integrity verification (230.256113ms)
+✔ snapshot cannot be substituted for a different saved session (196.512636ms)
+✔ capture and verification do not persist; only explicit save writes (312.262468ms)
+✔ quota failure keeps the previous saved session byte-for-byte (200.374041ms)
+✔ current-chart save cannot silently degrade into a hash-only save (187.781611ms)
+✔ other replay modes keep their existing small session format (0.295698ms)
+✔ weekly D updates retain the open and all frozen forecast rows (243.686627ms)
+✔ unrevealed actual extremes cannot change the disclosed replay data (410.714869ms)
+✔ compressed capture round-trips every value without inflating local storage (409.17471ms)
+✔ full operating long-horizon capture uses a database reference and restores all rows (5578.708943ms)
+✔ guarded save compares the whole prior pointer and refuses stale or deleted generations (0.789178ms)
+✔ unsupported lock and revoked save ownership fail before changing any saved bytes (0.279493ms)
+✔ main replay loads a fixed branded object and keeps it through forward, reverse and explicit restart (2.21655ms)
+✔ play resumes the current daily cursor at the selected speed without replacing its forecast (0.549163ms)
+✔ play at the last available observation never rewinds or schedules another callback (2.05766ms)
+✔ superseded origin success and failure cannot replace the current chart (1.488152ms)
+✔ exit, start selection and destroy revoke pending work even when its loader ignores abort (1.317059ms)
+✔ load errors clear stale session output and a retry can recover (0.48693ms)
+✔ invalid sessions cannot enter a playable state (2.298461ms)
+✔ one bar is terminal and seeks clamp to available bars without fabricating more (0.90536ms)
+✔ play is idempotent and all speeds own exactly one correctly timed callback (0.897227ms)
+✔ a timer callback can never be replayed twice or after pause, exit or a new origin (0.526068ms)
+✔ reentrant chart callbacks cannot resurrect playback or schedule competing timers (0.536053ms)
+✔ a loading notification can revoke the request before the loader starts (0.506159ms)
+✔ a rejected ready frame cannot report an accepted session to its awaiting caller (0.388214ms)
+✔ origin snapshots cannot be changed by the caller while a request waits (0.390418ms)
+✔ display failure revokes loaders and timers; destroy remains terminal without notifications (0.176702ms)
+✔ all 10000 four-command playback traces preserve cursor, identity and timer ownership (337.451417ms)
+ℹ BOUNDED_REPLAY {"commands":10,"maxTraceLength":4,"traces":10000,"prefixes":11111,"transitions":40000,"observableStates":52,"observableEdges":380,"playbackBars":3}
+(node:19) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ main replay coordinator guards source identity, exact resume, input boundaries and explicit model comparison (206.993405ms)
+ℹ late archive completion
+ℹ late record completion
+ℹ settings identity and exit during load
+ℹ resume by calendar date after outcome revision
+ℹ keyboard controls and visibility pause
+ℹ unsupported ETH adaptive origin requires explicit pooled comparison at the same date
+ℹ current-chart entry, changed start date, playback and resume retain the original forecast and distinguish unknown actuals
+ℹ asynchronous mode changes keep the prior cutoff until the newly selected source is ready
+ℹ an obsolete candle-request failure cannot invalidate the resumed line display
+✔ default cutoff entry preserves current-chart save and Continue across mode changes (32.730604ms)
+✔ saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories (53.205301ms)
+✔ destroy during an explicit save releases replay once and ignores late completion (45.028727ms)
+✔ forecast settings cannot confirm an unselected replay start (35.828102ms)
+✔ first weekly replay entry waits for an explicit start while keeping the project default date (17.441559ms)
+✔ saved replay entry requires Continue or Start new and restores the original origin separately from its selected date (13.333751ms)
+✔ Start new, scissors hover, selection cancellation and unconfirmed exit preserve saved bytes without a fake cutoff (13.601306ms)
+✔ weekly start preview blocks Play, Forward and Jump to real-time until a clicked bar is confirmed (27.113471ms)
+✔ only checked confirmed exit persists a draft and a saved line chart resumes with its actual archive (33.215716ms)
+✔ reselecting during playback previews independently and pointer confirmation cuts actual data before the selected bar (29.383445ms)
+✔ Select date, Random bar and First available day use the real capability range including an empty first cutoff (30.603326ms)
+✔ Select bar opens only starting actions, keeps forecast settings separate and selects a chart bar without mutating saved state (16.498774ms)
+✔ the date selection editor follows the restored visible cursor and discards unapplied drafts without changing the session start (27.201166ms)
+✔ date editing preserves the default first candle and reports empty cutoffs and actual gaps truthfully (23.860618ms)
+✔ compact transport returns to its original start and opens the explicit save choice before jumping to the live chart (18.765458ms)
+✔ Select bar retains native form keys and closes through Escape, its close action and an outside pointer (15.211535ms)
+✔ weekly replay and all existing viewport periods route without rebuilding or changing the current orange forecast (20.73997ms)
+✔ unsupported intraday entry stays on the selected interval and displays the missing-source reason (24.32121ms)
+✔ Shift replay shortcuts retain native input behavior and never persist on blur or page hide (25.003299ms)
+✔ baseline close-only scoring dates and separate weekly candles retain distinct source and evaluation clocks (18.542559ms)
+✔ a changed forecast hash rejects Continue while preserving the exact previous saved session (13.528048ms)
+✔ entry and exit choices stop pointer, click, wheel and keyboard propagation to the chart behind the modal (24.454221ms)
+✔ a close-only recorded visit cannot overwrite the saved line display when Continue reloads genuine candles (37.840505ms)
+✔ generic BTC Continue synchronizes a live weekly header with the actual daily renderer and recorded line fallback (25.110178ms)
+ℹ tests 60
+ℹ suites 0
+ℹ pass 60
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10376.582328

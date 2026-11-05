@@ -1,0 +1,1496 @@
+{
+  "schemaVersion": 1,
+  "kind": "preview-native-negative-controls",
+  "startedAt": "2026-11-05T08:06:30.206Z",
+  "sourceCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "nodeVersion": "v24.22.2",
+  "sourceHashes": {
+    "scripts/verify-workspace-browser.mjs": "032249fe9c93acdb78a331833fd883119e9b4e89b793fa9318eddf617f2dff5b",
+    "dist/mobile-preview.html": "ef350dc53c4c61ca2bff5d4cf37d183ea13a5866cae9074f2522b7b7bd756379",
+    "dist/mobile-preview.js": "9d1ad1cdaf3e316579e4a33054d81d300e002b0214635a1481140b1a133acc9c",
+    "dist/index.html": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+    "dist/loading-surfaces.css": "62365401f0ab6f6781292f7d17e2f5833f0e2311e4d7a3ea1dcd777ab945133d",
+    "dist/vendor/skullet/styles.css": "2d5fd47eb1956d1406cb5a6a6abcc8ecb90a7766015ea30425ffe6ce80491243"
+  },
+  "probeSha256": "414de1e58f3af3cf8db49c8bb071e804f0e61b82b1526b953da1888684f97105",
+  "cases": [
+    {
+      "width": 320,
+      "height": 900,
+      "touch": true,
+      "runtimeErrors": [],
+      "positive": [
+        {
+          "state": "loading",
+          "mode": "loading",
+          "boot": "loading",
+          "shellHidden": false,
+          "statusHidden": false,
+          "errorHidden": true,
+          "kind": "skeleton",
+          "status": {
+            "role": "status",
+            "live": "polite",
+            "busy": "true",
+            "text": "화면과 데이터를 준비하고 있습니다.",
+            "excluded": false
+          },
+          "paint": [
+            {
+              "rendered": true,
+              "visibleWidth": 106,
+              "visibleHeight": 15,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            },
+            {
+              "rendered": true,
+              "visibleWidth": 64,
+              "visibleHeight": 9,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            },
+            {
+              "rendered": false,
+              "visibleWidth": 0,
+              "visibleHeight": 0,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            },
+            {
+              "rendered": true,
+              "visibleWidth": 106,
+              "visibleHeight": 9,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            },
+            {
+              "rendered": true,
+              "visibleWidth": 64,
+              "visibleHeight": 9,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            }
+          ]
+        },
+        {
+          "state": "error",
+          "mode": "error",
+          "boot": "error",
+          "shellHidden": false,
+          "statusHidden": true,
+          "errorHidden": false,
+          "kind": "error",
+          "retry": {
+            "id": "atlas-boot-retry",
+            "rendered": true,
+            "local": {
+              "left": 136,
+              "right": 254,
+              "top": 438.390625,
+              "bottom": 482.390625
+            },
+            "visible": {
+              "left": 145,
+              "right": 263,
+              "top": 649.765625,
+              "bottom": 693.765625
+            },
+            "visibleWidth": 118,
+            "visibleHeight": 44,
+            "disabled": false,
+            "name": "다시 불러오기"
+          }
+        },
+        {
+          "state": "actual",
+          "mode": "actual",
+          "boot": "ready",
+          "shellHidden": true,
+          "statusHidden": false,
+          "errorHidden": true
+        }
+      ],
+      "negative": [
+        {
+          "id": "loading-paint-hidden",
+          "rejected": true,
+          "error": "Preview loading skeleton paint is missing: [{\"id\":\"atlas-boot-bar atlas-boot-wide\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":9,\"right\":9,\"top\":259.375,\"bottom\":211.375},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true},{\"id\":\"atlas-boot-bar\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":9,\"right\":9,\"top\":259.375,\"bottom\":211.375},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true},{\"id\":\"atlas-boot-bar atlas-boot-short\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":9,\"right\":9,\"top\":259.375,\"bottom\":211.375},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true},{\"id\":\"atlas-boot-bar atlas-boot-wide\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":9,\"right\":9,\"top\":259.375,\"bottom\":211.375},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true},{\"id\":\"atlas-boot-bar\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":9,\"right\":9,\"top\":259.375,\"bottom\":211.375},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true}]",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-role-removed",
+          "rejected": true,
+          "error": "Expected values to be strictly equal:\n\nnull !== 'status'\n",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": null,
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-live-removed",
+          "rejected": true,
+          "error": "Expected values to be strictly equal:\n\nnull !== 'polite'\n",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": null,
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-busy-removed",
+          "rejected": true,
+          "error": "Expected values to be strictly equal:\n\nnull !== 'true'\n",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": null,
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-aria-excluded",
+          "rejected": true,
+          "error": "Preview loading status must remain available independently of decorative paint",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": true
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-css-excluded",
+          "rejected": false,
+          "error": null,
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-visibility-excluded",
+          "rejected": false,
+          "error": null,
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-css-ancestor-excluded",
+          "rejected": false,
+          "error": null,
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-content-ancestor-excluded",
+          "rejected": false,
+          "error": null,
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "error-retry-hidden",
+          "rejected": true,
+          "error": "Preview retry action is missing",
+          "measured": {
+            "mode": "error",
+            "boot": "error",
+            "shellHidden": false,
+            "statusHidden": true,
+            "errorHidden": false,
+            "kind": "error",
+            "retry": {
+              "id": "atlas-boot-retry",
+              "rendered": false,
+              "local": {
+                "left": 0,
+                "right": 0,
+                "top": 48,
+                "bottom": 0
+              },
+              "visible": {
+                "left": 9,
+                "right": 9,
+                "top": 259.375,
+                "bottom": 211.375
+              },
+              "visibleWidth": 0,
+              "visibleHeight": 0,
+              "disabled": false,
+              "name": "다시 불러오기"
+            }
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "error-retry-disabled",
+          "rejected": true,
+          "error": "Preview retry action is missing",
+          "measured": {
+            "mode": "error",
+            "boot": "error",
+            "shellHidden": false,
+            "statusHidden": true,
+            "errorHidden": false,
+            "kind": "error",
+            "retry": {
+              "id": "atlas-boot-retry",
+              "rendered": true,
+              "local": {
+                "left": 136,
+                "right": 254,
+                "top": 438.390625,
+                "bottom": 482.390625
+              },
+              "visible": {
+                "left": 145,
+                "right": 263,
+                "top": 649.765625,
+                "bottom": 693.765625
+              },
+              "visibleWidth": 118,
+              "visibleHeight": 44,
+              "disabled": true,
+              "name": "다시 불러오기"
+            }
+          },
+          "restoredPass": true
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "preview-320-loading-original.png",
+          "bytes": 19464,
+          "sha256": "ed4be7317be9637df8a4e353d067083686016931d2d52804cf171fb536501311"
+        },
+        {
+          "file": "preview-320-loading-paint-hidden.png",
+          "bytes": 19009,
+          "sha256": "f72918c1911c2662d1c65b77e7109d6dff489c33f7292dc064a707c7202b82e9"
+        },
+        {
+          "file": "preview-320-error-original.png",
+          "bytes": 27464,
+          "sha256": "7d9ee0a295af780f028eaf6cc9cd1514914e15859f51b9519394950cfedb23ac"
+        },
+        {
+          "file": "preview-320-error-retry-hidden.png",
+          "bytes": 26153,
+          "sha256": "d007ffb263f794d53415e893b19173bf955758fdb003c63e78f54f51d4bf3161"
+        },
+        {
+          "file": "preview-320-error-retry-disabled.png",
+          "bytes": 27442,
+          "sha256": "5daf1815a3590799d531e452df2c9acd860a1641957c7328b7ddeb8dbc78687c"
+        }
+      ],
+      "actualChartPaths": 41,
+      "status": "complete"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "runtimeErrors": [],
+      "positive": [
+        {
+          "state": "loading",
+          "mode": "loading",
+          "boot": "loading",
+          "shellHidden": false,
+          "statusHidden": false,
+          "errorHidden": true,
+          "kind": "skeleton",
+          "status": {
+            "role": "status",
+            "live": "polite",
+            "busy": "true",
+            "text": "화면과 데이터를 준비하고 있습니다.",
+            "excluded": false
+          },
+          "paint": [
+            {
+              "rendered": true,
+              "visibleWidth": 106,
+              "visibleHeight": 15,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            },
+            {
+              "rendered": true,
+              "visibleWidth": 64,
+              "visibleHeight": 9,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            },
+            {
+              "rendered": false,
+              "visibleWidth": 0,
+              "visibleHeight": 0,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            },
+            {
+              "rendered": true,
+              "visibleWidth": 106,
+              "visibleHeight": 9,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            },
+            {
+              "rendered": true,
+              "visibleWidth": 64,
+              "visibleHeight": 9,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            }
+          ]
+        },
+        {
+          "state": "error",
+          "mode": "error",
+          "boot": "error",
+          "shellHidden": false,
+          "statusHidden": true,
+          "errorHidden": false,
+          "kind": "error",
+          "retry": {
+            "id": "atlas-boot-retry",
+            "rendered": true,
+            "local": {
+              "left": 136,
+              "right": 254,
+              "top": 438.390625,
+              "bottom": 482.390625
+            },
+            "visible": {
+              "left": 653.5,
+              "right": 771.5,
+              "top": 538.578125,
+              "bottom": 582.578125
+            },
+            "visibleWidth": 118,
+            "visibleHeight": 44,
+            "disabled": false,
+            "name": "다시 불러오기"
+          }
+        },
+        {
+          "state": "actual",
+          "mode": "actual",
+          "boot": "ready",
+          "shellHidden": true,
+          "statusHidden": false,
+          "errorHidden": true
+        }
+      ],
+      "negative": [
+        {
+          "id": "loading-paint-hidden",
+          "rejected": true,
+          "error": "Preview loading skeleton paint is missing: [{\"id\":\"atlas-boot-bar atlas-boot-wide\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":517.5,\"right\":517.5,\"top\":148.1875,\"bottom\":100.1875},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true},{\"id\":\"atlas-boot-bar\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":517.5,\"right\":517.5,\"top\":148.1875,\"bottom\":100.1875},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true},{\"id\":\"atlas-boot-bar atlas-boot-short\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":517.5,\"right\":517.5,\"top\":148.1875,\"bottom\":100.1875},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true},{\"id\":\"atlas-boot-bar atlas-boot-wide\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":517.5,\"right\":517.5,\"top\":148.1875,\"bottom\":100.1875},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true},{\"id\":\"atlas-boot-bar\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":517.5,\"right\":517.5,\"top\":148.1875,\"bottom\":100.1875},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true}]",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-role-removed",
+          "rejected": true,
+          "error": "Expected values to be strictly equal:\n\nnull !== 'status'\n",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": null,
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-live-removed",
+          "rejected": true,
+          "error": "Expected values to be strictly equal:\n\nnull !== 'polite'\n",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": null,
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-busy-removed",
+          "rejected": true,
+          "error": "Expected values to be strictly equal:\n\nnull !== 'true'\n",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": null,
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-aria-excluded",
+          "rejected": true,
+          "error": "Preview loading status must remain available independently of decorative paint",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": true
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-css-excluded",
+          "rejected": false,
+          "error": null,
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-visibility-excluded",
+          "rejected": false,
+          "error": null,
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-css-ancestor-excluded",
+          "rejected": false,
+          "error": null,
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-content-ancestor-excluded",
+          "rejected": false,
+          "error": null,
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "error-retry-hidden",
+          "rejected": true,
+          "error": "Preview retry action is missing",
+          "measured": {
+            "mode": "error",
+            "boot": "error",
+            "shellHidden": false,
+            "statusHidden": true,
+            "errorHidden": false,
+            "kind": "error",
+            "retry": {
+              "id": "atlas-boot-retry",
+              "rendered": false,
+              "local": {
+                "left": 0,
+                "right": 0,
+                "top": 48,
+                "bottom": 0
+              },
+              "visible": {
+                "left": 517.5,
+                "right": 517.5,
+                "top": 148.1875,
+                "bottom": 100.1875
+              },
+              "visibleWidth": 0,
+              "visibleHeight": 0,
+              "disabled": false,
+              "name": "다시 불러오기"
+            }
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "error-retry-disabled",
+          "rejected": true,
+          "error": "Preview retry action is missing",
+          "measured": {
+            "mode": "error",
+            "boot": "error",
+            "shellHidden": false,
+            "statusHidden": true,
+            "errorHidden": false,
+            "kind": "error",
+            "retry": {
+              "id": "atlas-boot-retry",
+              "rendered": true,
+              "local": {
+                "left": 136,
+                "right": 254,
+                "top": 438.390625,
+                "bottom": 482.390625
+              },
+              "visible": {
+                "left": 653.5,
+                "right": 771.5,
+                "top": 538.578125,
+                "bottom": 582.578125
+              },
+              "visibleWidth": 118,
+              "visibleHeight": 44,
+              "disabled": true,
+              "name": "다시 불러오기"
+            }
+          },
+          "restoredPass": true
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "preview-1440-loading-original.png",
+          "bytes": 26112,
+          "sha256": "31df24b01dbd24cd7e48a2138a174e33c14146b32c027983fb5315ed30ebf596"
+        },
+        {
+          "file": "preview-1440-loading-paint-hidden.png",
+          "bytes": 25547,
+          "sha256": "325df43e92ac99dc1d98efb725fd5f48b95c7a8e1090427fa27c91a6aa2992ca"
+        },
+        {
+          "file": "preview-1440-error-original.png",
+          "bytes": 34860,
+          "sha256": "3dace1e623746b031071b1038ea9bacaf10766d7db7f3da41c61063dd4d24044"
+        },
+        {
+          "file": "preview-1440-error-retry-hidden.png",
+          "bytes": 33550,
+          "sha256": "6bc67752111f882cc223a1b5f237dc05674f138b32b601bdf0d6175ba364f23d"
+        },
+        {
+          "file": "preview-1440-error-retry-disabled.png",
+          "bytes": 34847,
+          "sha256": "417aef4caadf2fb2e5c5f453e09d0ee0891298608b0e502e5116c614be866e2c"
+        }
+      ],
+      "actualChartPaths": 41,
+      "status": "complete"
+    }
+  ],
+  "unexpectedPasses": [
+    {
+      "width": 320,
+      "id": "loading-status-css-excluded"
+    },
+    {
+      "width": 320,
+      "id": "loading-status-visibility-excluded"
+    },
+    {
+      "width": 320,
+      "id": "loading-status-css-ancestor-excluded"
+    },
+    {
+      "width": 320,
+      "id": "loading-status-content-ancestor-excluded"
+    },
+    {
+      "width": 1440,
+      "id": "loading-status-css-excluded"
+    },
+    {
+      "width": 1440,
+      "id": "loading-status-visibility-excluded"
+    },
+    {
+      "width": 1440,
+      "id": "loading-status-css-ancestor-excluded"
+    },
+    {
+      "width": 1440,
+      "id": "loading-status-content-ancestor-excluded"
+    }
+  ],
+  "scope": "Actual local mobile-preview.html, actual exported measurement and assertions, native Chromium, neutral frozen loading/error previews; no provider refresh, deployment, timing, model-promotion or physical-device claim.",
+  "browserVersion": "143.0.7499.0",
+  "sourcesUnchangedDuringRun": true,
+  "status": "failed",
+  "error": "AssertionError [ERR_ASSERTION]: A broken preview state incorrectly passed the actual assertion boundary\n\n8 !== 0\n\n    at file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/docs/deep-audit-2026-11-05/evidence/verify-preview-native.mjs:70:9",
+  "finishedAt": "2026-11-05T08:06:40.973Z"
+}

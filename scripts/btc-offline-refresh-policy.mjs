@@ -3,7 +3,7 @@
  * A true result is only eligibility; the caller must verify the actual document's
  * failed-refresh UI and preserved archive cutoff before accepting its request ID. */
 export function isExpectedOfflineBtcRefresh(error,{surface,archiveAsOf}={}){
-  if(!['btc','evidence','legacy','preview'].includes(surface)||!error||
+  if(!['btc','evidence','legacy','preview','center-data'].includes(surface)||!error||
     error.networkEvent!=='Network.loadingFailed'||typeof error.errorText!=='string'||error.blockedReason!=='inspector'||error.method!=='GET'||error.resourceType!=='Fetch'||
     error.httpStatus!=null||typeof error.requestId!=='string'||!error.requestId||
     typeof error.frameId!=='string'||!error.frameId||typeof error.loaderId!=='string'||!error.loaderId||

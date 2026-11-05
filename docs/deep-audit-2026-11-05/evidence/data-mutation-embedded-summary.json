@@ -1,0 +1,39 @@
+{
+  "mutation": "embedded-toolbar",
+  "runnerExitCode": 1,
+  "status": "failed",
+  "expectedFailure": "Embedded action row must fit",
+  "complete": false,
+  "unexpectedFailures": [],
+  "killed": false,
+  "cases": [
+    {
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Embedded action row must fit its actual board owner\n    at verifyEmbeddedDataSurface (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/scripts/verify-workspace-browser.mjs:154:10)\n    at async main (file:///tmp/atlas-css-mutation-wi8dxg/runner.mjs:909:28)\n    at async file:///tmp/atlas-css-mutation-wi8dxg/runner.mjs:933:5"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Embedded action row must fit its actual board owner\n    at verifyEmbeddedDataSurface (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/scripts/verify-workspace-browser.mjs:154:10)\n    at async main (file:///tmp/atlas-css-mutation-wi8dxg/runner.mjs:909:28)\n    at async file:///tmp/atlas-css-mutation-wi8dxg/runner.mjs:933:5"
+    },
+    {
+      "width": 900,
+      "height": 430,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Embedded action row must fit its actual board owner\n    at verifyEmbeddedDataSurface (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/scripts/verify-workspace-browser.mjs:154:10)\n    at async main (file:///tmp/atlas-css-mutation-wi8dxg/runner.mjs:909:28)\n    at async file:///tmp/atlas-css-mutation-wi8dxg/runner.mjs:933:5"
+    }
+  ],
+  "testMutation": {
+    "mode": "embedded-toolbar",
+    "scope": "HTTP response substitution only; repository product and harness sources remain unchanged.",
+    "path": "dist/daily-data.css",
+    "originalCssSha256": "f45a6226526795d926caf2fe8c8df386f22f24c7a4383e05986b1b3df5b3366a",
+    "servedCssSha256": "097d1ab8615f4ac18462d38e4b98a96b21abd8f74cb5b8e84727ecce82c7e45c",
+    "originalRunnerSha256": "3590829a4a77d153468c4e98250feb4b269a501bce8601787c01f8ce76d29a29",
+    "probeSha256": "60f6767605eb35e770728636e3a1b96795be8b503e8a592a93c42828262119fd",
+    "servedResponses": 6
+  }
+}

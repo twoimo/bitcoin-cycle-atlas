@@ -2,6 +2,8 @@
 
 **Forecast settings cannot confirm a start the user has not chosen; an obsolete session load or timer cannot alter the current replay.** A violation silently chooses a comparison cutoff or reveals observations while the chart appears unconfirmed or paused.
 
+Terminal destruction must also release replay ownership while an explicit save is pending. The 2026-11-05 follow-up adds two focused completion schedules and two negative controls for that exported coordinator contract; it does not extend the finite playback/selection alphabets.
+
 This verification executes the actual JavaScript controller and coordinator. It combines exhaustive bounded command traces with focused asynchronous races and isolated mutations of the real source. It is not a TLA+ run or an unbounded mathematical proof. The project-local `verify-replay-state` skill provides the repeatable workflow requested through pstack's `create-formal-verification-skill`.
 
 ## Reproduce
@@ -23,6 +25,7 @@ The command requires no dependency install, edits no production file and rejects
 | Same file: `checkedSession`, `destroy` | Session values stay fixed; destroy prevents later state publications. |
 | `dist/chart-replay.js`: settings `onchange`, `open`, `start`, `beginPick` | Settings reload a preview while its start is unconfirmed. Explicit confirmation permits a fixed session; confirmed sessions remain playable. |
 | Same coordinator: `requestEntry`, `readStored`, `storageKey` | Reentry reads the slot selected by the mode family: cutoff history stays separate from the shared generic replay slot; invalid records cannot borrow another slot’s hash. |
+| Same coordinator: `save`, `exit`, `finishExit`, `destroy` | Interactive Exit keeps its pending-save guard; terminal destroy releases markers and inert controls once, and revoked save completions cannot publish or alter detached controls. |
 | `tests/chart-replay-state.test.mjs`, `tests/chart-replay-ui.test.mjs` | Actual production exports, deterministic clocks and controlled async completions; coordinator DOM, source, model and renderer doubles. |
 
 A controller call and its synchronous notifications are one JavaScript turn. Awaited source/forecast completions and each timer callback are separate steps. The tests include reentrant notifications that close, fail or replace replay before an outer call returns. Session restoration accepts a validated saved cursor with the first ready notification, without briefly exposing the origin frame.
@@ -31,7 +34,7 @@ The coordinator's picker can preview a new start while retaining an older paused
 
 ## State transitions
 
-The following statechart is grounded in the actual transitions, with fewer than 20 arrows. It is an explanatory projection, not TLC output. `statechart.mmd` contains the same diagram. Every active state can exit to live; every state can be destroyed permanently. Those repeated exit/destroy edges, no-op stale completions, speed-only changes, direct seeks to the end, one-bar completion and confirmed-settings preparation are omitted. Terminal Play stays at the last observed bar; only an explicit seek can rewind.
+The following statechart is grounded in the actual transitions, with fewer than 20 arrows. It is an explanatory projection, not TLC output. `statechart.mmd` contains the same diagram. Every active state can exit to live; every state can be destroyed permanently. An interactive exit waits for its explicit save, while destroy releases ownership synchronously even during that wait. Those repeated exit/destroy edges, the save substate, no-op stale completions, speed-only changes, direct seeks to the end, one-bar completion and confirmed-settings preparation are omitted. Terminal Play stays at the last observed bar; only an explicit seek can rewind.
 
 ```mermaid
 stateDiagram-v2
@@ -74,6 +77,7 @@ The controller supports 0.3, 0.5, 1, 2, 4, 8 and 10 times playback. The 0.3 sett
 | Actual controller playback | 10 commands, every length-four sequence, three observed bars | 10,000 traces, 11,111 distinct prefixes including empty, 40,000 executed transitions, **52 observable states / 380 observable edges** |
 | Actual coordinator selection | Six actions, every length zero through three sequence after entry | **259 traces, 726 executed transitions, 24 observable states / 78 observable edges** |
 | Async ownership and edge cases | Two overlapping loads; focused success/failure/ignored-abort orderings | All **16 controller tests pass**, including restore, reentrancy, duplicate callbacks and destruction |
+| Coordinator destruction during an explicit save | One pending save; its deferred callback resumes or rejects; destroy is called twice in each schedule | Both focused schedules pass; markers/inert state release once, stale writes remain zero and detached controls remain unchanged |
 
 Playback commands are play, pause, next, back, first, last, speed 4, current timer, stale timers and exit. The coordinator alphabet is current-chart mode, project-baseline mode, horizon 90, horizon 365, explicit date confirmation and opening the picker. Its entry state is fresh current-chart start selection. The model selector shares the mode handler, but ETH's other model paths and the default cutoff model are not exhaustively enumerated here.
 
@@ -98,9 +102,17 @@ The repaired policy keeps the user's selected mode when reopening the same mount
 
 Focused actual-coordinator cases cover current-chart save/reentry, current-only fallback, both slots, malformed JSON, a cross-mode record in the cutoff slot and stale forecast identity. These are bounded behavior cases rather than an exhaustive storage concurrency proof. The engine/snapshot checks still own full saved-capture authenticity and integrity rules.
 
+## Destruction during a pending save
+
+On baseline `4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc`, the exported coordinator destructor called interactive `exit()`. That method deliberately refused a competing exit while `saving` was true. Destroy therefore removed its controls while leaving `isActive()`, document/SVG replay markers and unrelated inert controls behind. The production-source regression reproduces the path **start → Save/Exit waits → destroy**, before any late completion is required. This is a focused counterexample, not a shortest-path claim from the selection explorer.
+
+The repair separates synchronous `finishExit()` cleanup from interactive save/exit. Destroy marks itself terminal before cleanup; repeated destruction restores the prior controls only once. `save()` checks its request ownership before using a resolved result or displaying a failure, and `exit()` checks again before touching its controls after the await. The persistence helper's existing `isCurrent` check still rejects a pending write after ownership is revoked. A successful write completed before destruction is not retroactively undone.
+
+The test exercises late callback resumption and rejection, preserves the existing saved bytes, and verifies that ordinary Exit remains blocked during the pending explicit save. No current production call site invoking the returned coordinator destructor was found in the reviewed baseline. This is an exported lifecycle API repair, not a claimed native user-flow failure. The [dated follow-up and before/after evidence](../deep-audit-2026-11-05/replay-destroy.md) are separate from the November 4 audit receipts.
+
 ## Negative controls
 
-All **eight** mutations are rejected by intended behavioral assertions:
+All **ten** mutations are rejected by intended behavioral assertions:
 
 | Mutation of real source | Required failure |
 | --- | --- |
@@ -112,13 +124,15 @@ All **eight** mutations are rejected by intended behavioral assertions:
 | Remove horizon selection preservation | Settings cannot commit an unconfirmed start |
 | Reset the selected mode before reentry | Current-chart save must remain reachable through Continue |
 | Remove storage-slot/mode validation | A saved cutoff/current hash cannot be borrowed across slots |
+| Route destroy through the interactive save guard | Terminal destruction must still release replay ownership |
+| Remove the post-await exit ownership check | A revoked save completion cannot update detached controls |
 
 The runner restores the exact original files in its temporary copy and requires the controller and coordinator checks to pass again. Failed imports, syntax errors, timeouts or missing assertions never count as detected controls.
 
 ## Source synchronization and limits
 
-The reviewed baseline is `94a1b1dda9eb359de70747043808340da369d087`; the receipt identifies the patched working sources by SHA-256. The baseline alone does not identify the fix. Covered controller SHA-256: `063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908`. Covered coordinator SHA-256: `f0fb4cef01d5fe0d3361c0416c56260e3670f442b91528ba3a2743d748f94c56`.
+The 2026-11-05 follow-up baseline is `4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc`; the original 2026-11-04 audit began at `94a1b1dda9eb359de70747043808340da369d087`. The current receipt identifies the new patched working sources by SHA-256, not as code already present at either baseline. Covered controller SHA-256: `063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908`. Covered coordinator SHA-256: `96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5`. The dated follow-up receipt is `docs/deep-audit-2026-11-05/replay-state-verification.json`; the previous receipt remains in the Git tree at `4dc877a`.
 
-Review correspondence whenever a listed function, callback boundary, session shape, supported control or fixture changes. Rerun the command and review all eight controls before advancing a synchronization record. Keep the skill, verifier, tests, diagram and receipt in the same Git change. A later source hash mismatch means the old receipt is stale, not that the changed code passed. Use pstack `maintain-formal-verification-skill` for drift review. If this becomes a TLA+ model, interpret it with pstack `statechart` and retain actual TLC evidence.
+Review correspondence whenever a listed function, callback boundary, session shape, supported control or fixture changes. Rerun the command and review all ten controls before advancing a synchronization record. Keep the skill, verifier, tests, diagram and receipt in the same Git change. A later source hash mismatch means the old receipt is stale, not that the changed code passed. Use pstack `maintain-formal-verification-skill` for drift review. If this becomes a TLA+ model, interpret it with pstack `statechart` and retain actual TLC evidence.
 
-The bounded checks do not prove forecasting mathematics, market predictability, provider availability, wall-clock scheduling, native DOM behavior, pixels, save/storage races, arbitrary event schedules or every cutoff-model load path. The coordinator doubles do not recompute a real forecast. Existing actual-engine, source-provenance, snapshot and native browser suites remain necessary. No replay forecast is published or reclassified as the 2026-10-21 issuance by these checks.
+The bounded checks do not prove forecasting mathematics, market predictability, provider availability, wall-clock scheduling, native DOM behavior, pixels, every persistence/concurrent-tab interleaving, arbitrary event schedules or every cutoff-model load path. The coordinator doubles do not recompute a real forecast. Existing actual-engine, source-provenance, snapshot and native browser suites remain necessary. No replay forecast is published or reclassified as the 2026-10-21 initial-commit preserved baseline by these checks; that baseline's publication time remains unproven.

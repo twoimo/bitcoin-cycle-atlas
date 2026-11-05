@@ -141,11 +141,14 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   async function save(){
     if(externalBacktest)return true;
     preserve();if(!draft)return true;
-    const token=epoch;
+    const token=epoch,isCurrent=()=>active&&!destroyed&&epoch===token;
     try{
-      saveBaseText=await persistReplayDraft(win.localStorage,storageKey(),draft,{indexedDB:win.indexedDB,locks:win.navigator?.locks,expectedText:saveBaseText,isCurrent:()=>active&&!destroyed&&epoch===token});
+      const savedText=await persistReplayDraft(win.localStorage,storageKey(),draft,{indexedDB:win.indexedDB,locks:win.navigator?.locks,expectedText:saveBaseText,isCurrent});
+      if(!isCurrent())return false;
+      saveBaseText=savedText;
       readStored();q('save-status').hidden=true;return true;
     }catch(error){
+      if(!isCurrent())return false;
       const text=(error?.message??'이 브라우저에 세션을 저장하지 못했습니다.')+' 기존 저장은 유지됩니다. 저장 체크를 해제하거나 다시 시도해 주세요.';
       announce(text);q('save-status').textContent=text;q('save-status').hidden=false;return false;
     }
@@ -247,9 +250,17 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(saveSession){
       saving=true;q('exit-confirm').disabled=true;q('exit-cancel').disabled=true;q('exit-save').disabled=true;
       const token=epoch,ok=await save();
+      if(destroyed||!active||token!==epoch)return;
       saving=false;q('exit-confirm').disabled=false;q('exit-cancel').disabled=false;q('exit-save').disabled=false;
-      if(!ok||!active||token!==epoch)return;
-    }epoch++;request?.abort();request=null;active=false;externalBacktest=false;controller.exit();
+      if(!ok)return;
+    }
+    finishExit();
+  }
+  // Interactive exit waits for its explicit save; terminal destruction must
+  // release DOM ownership synchronously even while that save is pending.
+  function finishExit(){
+    if(!active)return;
+    epoch++;request?.abort();request=null;active=false;saving=false;externalBacktest=false;controller.exit();
     if(paintFrame!==null){win.cancelAnimationFrame(paintFrame);paintFrame=null;}
     releaseGesture();picking=false;pickerDate=null;closeChoice();closeMenu();clearPicker();disposeDrawing();plot.classList.remove('chart-replay-active');plot.style.removeProperty('--chart-replay-controls-height');
     delete svg.dataset.chartReplayActive;delete doc.documentElement.dataset.chartReplayActive;delete doc.documentElement.dataset.chartReplayMode;
@@ -787,7 +798,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       cutoffForecast:forecast,outputHash:forecast.outputHash,cursorIndex:0,cursorDate:forecast.asOf,frequency:'daily',chartType:'candles',window:'half'}});
     return getState().status;
   }
-  return {isActive:()=>active,open,openFixedBacktest,exit,handleChartCommand,destroy(){if(destroyed)return;exit();destroyed=true;controller.destroy();resizeObserver.disconnect();
+  return {isActive:()=>active,open,openFixedBacktest,exit,handleChartCommand,destroy(){if(destroyed)return;destroyed=true;finishExit();controller.destroy();resizeObserver.disconnect();
     for(const type of pointerTypes)plot.removeEventListener(type,pointer,true);plot.removeEventListener('click',blockChoiceClick,true);plot.removeEventListener('wheel',wheel,true);plot.removeEventListener('contextmenu',preventLiveGesture,true);plot.removeEventListener('dblclick',preventLiveGesture,true);doc.removeEventListener('keydown',key,true);
     doc.removeEventListener('pointerdown',dismissMenu,true);doc.removeEventListener('visibilitychange',visibility);win.removeEventListener('blur',pause);win.removeEventListener('pagehide',pause);win.removeEventListener('storage',savedChanged);transport?.removeEventListener('scroll',transportHints);transport?.removeEventListener('focusin',revealControl);trigger.remove();panel.remove();hud.remove();notice.remove();}};
 }

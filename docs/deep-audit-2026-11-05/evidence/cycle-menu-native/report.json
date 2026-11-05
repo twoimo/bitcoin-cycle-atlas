@@ -1,0 +1,1140 @@
+{
+  "schemaVersion": 1,
+  "kind": "mobile-cycle-menu-native",
+  "startedAt": "2026-11-05T08:34:53.386Z",
+  "sourceCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "sourceHashes": {
+    "dist/index.html": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+    "dist/atlas-shell.css": "41b8900500edbe67de4e4a3d643b71be8bd5fbb2df54be79a86ccacf6cba5f71",
+    "dist/cycle-milestones.css": "22a9a9a21251a92a9310e2dc5d8cd0cfab809ee502db45991953a73905562712",
+    "dist/lab.css": "517b84062e65c98b9c8171556edc25502a4fab079512f6b3a81ba245d37f30fc",
+    "dist/mobile-workspace.js": "1a4e3231a784f2f6b56a76a5fb609222b08ec632fc1399345a936306693b5f9f",
+    "dist/atlas-shell.js": "b833182a77be1b97002c8cf06563da343f5f32da7e9063a34c9364d9d56a99bd",
+    "dist/lab-view.js": "e128e9f6cd0e046f67e291ecc20beee2ee9d20069ed8ec49108dcfbc96e628a2",
+    "scripts/verify-workspace-browser.mjs": "e510dd2a7815a99243f32a394433c5b3b8503694eed74cbfed5326a192f14f36"
+  },
+  "probeSha256": "f56f12d91537be3f236a9af4f4c34e8d33dd256ebe21d44c177760a2202ace08",
+  "viewport": {
+    "width": 320,
+    "height": 900,
+    "touch": true
+  },
+  "scope": "Local actual chart and period menu, native Chromium input/layout only; not a provider refresh, physical-device or predictive-validity test.",
+  "states": [
+    {
+      "label": "initial",
+      "open": false,
+      "heading": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 101,
+        "width": 320,
+        "height": 48,
+        "scrollLeft": 0,
+        "scrollWidth": 437,
+        "overflowX": "auto"
+      },
+      "stage": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 900,
+        "width": 320,
+        "height": 847,
+        "scrollLeft": 0,
+        "scrollTop": 0,
+        "scrollWidth": 320
+      },
+      "menu": {
+        "left": 238,
+        "right": 270,
+        "top": 150.5,
+        "bottom": 978.5,
+        "width": 32,
+        "height": 828,
+        "scrollTop": 0,
+        "scrollHeight": 1070,
+        "clientHeight": 826
+      },
+      "perimeter": {
+        ".atlas-canvas-heading": {
+          "left": 0,
+          "right": 320,
+          "top": 53,
+          "bottom": 101,
+          "width": 320,
+          "height": 48
+        },
+        ".workbench-bottom-bar": {
+          "left": 0,
+          "right": 320,
+          "top": 856,
+          "bottom": 900,
+          "width": 320,
+          "height": 44
+        },
+        ".atlas-sidebar": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        ".workbench-rail": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      "documentWidth": 320
+    },
+    {
+      "label": "after-native-heading-pan",
+      "open": false,
+      "heading": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 101,
+        "width": 320,
+        "height": 48,
+        "scrollLeft": 117,
+        "scrollWidth": 437,
+        "overflowX": "auto"
+      },
+      "stage": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 900,
+        "width": 320,
+        "height": 847,
+        "scrollLeft": 0,
+        "scrollTop": 0,
+        "scrollWidth": 320
+      },
+      "menu": {
+        "left": 121,
+        "right": 153,
+        "top": 150.5,
+        "bottom": 978.5,
+        "width": 32,
+        "height": 828,
+        "scrollTop": 0,
+        "scrollHeight": 1070,
+        "clientHeight": 826
+      },
+      "perimeter": {
+        ".atlas-canvas-heading": {
+          "left": 0,
+          "right": 320,
+          "top": 53,
+          "bottom": 101,
+          "width": 320,
+          "height": 48
+        },
+        ".workbench-bottom-bar": {
+          "left": 0,
+          "right": 320,
+          "top": 856,
+          "bottom": 900,
+          "width": 320,
+          "height": 44
+        },
+        ".atlas-sidebar": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        ".workbench-rail": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      "documentWidth": 320
+    },
+    {
+      "label": "pointer-open",
+      "open": true,
+      "heading": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 101,
+        "width": 320,
+        "height": 48,
+        "scrollLeft": 0,
+        "scrollWidth": 429,
+        "overflowX": "visible"
+      },
+      "stage": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 900,
+        "width": 320,
+        "height": 847,
+        "scrollLeft": 0,
+        "scrollTop": 0,
+        "scrollWidth": 429
+      },
+      "menu": {
+        "left": 8,
+        "right": 312,
+        "top": 52,
+        "bottom": 880,
+        "width": 304,
+        "height": 828,
+        "scrollTop": 0,
+        "scrollHeight": 1025,
+        "clientHeight": 826
+      },
+      "perimeter": {
+        ".atlas-canvas-heading": {
+          "left": 0,
+          "right": 320,
+          "top": 53,
+          "bottom": 101,
+          "width": 320,
+          "height": 48
+        },
+        ".workbench-bottom-bar": {
+          "left": 0,
+          "right": 320,
+          "top": 856,
+          "bottom": 900,
+          "width": 320,
+          "height": 44
+        },
+        ".atlas-sidebar": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        ".workbench-rail": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      "documentWidth": 320
+    },
+    {
+      "label": "menu-scroll-end",
+      "open": true,
+      "heading": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 101,
+        "width": 320,
+        "height": 48,
+        "scrollLeft": 0,
+        "scrollWidth": 429,
+        "overflowX": "visible"
+      },
+      "stage": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 900,
+        "width": 320,
+        "height": 847,
+        "scrollLeft": 0,
+        "scrollTop": 0,
+        "scrollWidth": 429
+      },
+      "menu": {
+        "left": 8,
+        "right": 312,
+        "top": 52,
+        "bottom": 880,
+        "width": 304,
+        "height": 828,
+        "scrollTop": 199,
+        "scrollHeight": 1025,
+        "clientHeight": 826
+      },
+      "perimeter": {
+        ".atlas-canvas-heading": {
+          "left": 0,
+          "right": 320,
+          "top": 53,
+          "bottom": 101,
+          "width": 320,
+          "height": 48
+        },
+        ".workbench-bottom-bar": {
+          "left": 0,
+          "right": 320,
+          "top": 856,
+          "bottom": 900,
+          "width": 320,
+          "height": 44
+        },
+        ".atlas-sidebar": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        ".workbench-rail": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      "documentWidth": 320
+    },
+    {
+      "label": "final-disclosure-restored",
+      "open": true,
+      "heading": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 101,
+        "width": 320,
+        "height": 48,
+        "scrollLeft": 0,
+        "scrollWidth": 429,
+        "overflowX": "visible"
+      },
+      "stage": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 900,
+        "width": 320,
+        "height": 847,
+        "scrollLeft": 0,
+        "scrollTop": 0,
+        "scrollWidth": 429
+      },
+      "menu": {
+        "left": 8,
+        "right": 312,
+        "top": 52,
+        "bottom": 880,
+        "width": 304,
+        "height": 828,
+        "scrollTop": 199,
+        "scrollHeight": 1025,
+        "clientHeight": 826
+      },
+      "perimeter": {
+        ".atlas-canvas-heading": {
+          "left": 0,
+          "right": 320,
+          "top": 53,
+          "bottom": 101,
+          "width": 320,
+          "height": 48
+        },
+        ".workbench-bottom-bar": {
+          "left": 0,
+          "right": 320,
+          "top": 856,
+          "bottom": 900,
+          "width": 320,
+          "height": 44
+        },
+        ".atlas-sidebar": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        ".workbench-rail": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      "documentWidth": 320
+    },
+    {
+      "label": "escape-close",
+      "open": false,
+      "heading": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 101,
+        "width": 320,
+        "height": 48,
+        "scrollLeft": 117,
+        "scrollWidth": 437,
+        "overflowX": "auto"
+      },
+      "stage": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 900,
+        "width": 320,
+        "height": 847,
+        "scrollLeft": 0,
+        "scrollTop": 0,
+        "scrollWidth": 320
+      },
+      "menu": {
+        "left": 121,
+        "right": 153,
+        "top": 150.5,
+        "bottom": 978.5,
+        "width": 32,
+        "height": 828,
+        "scrollTop": 221,
+        "scrollHeight": 1070,
+        "clientHeight": 826
+      },
+      "perimeter": {
+        ".atlas-canvas-heading": {
+          "left": 0,
+          "right": 320,
+          "top": 53,
+          "bottom": 101,
+          "width": 320,
+          "height": 48
+        },
+        ".workbench-bottom-bar": {
+          "left": 0,
+          "right": 320,
+          "top": 856,
+          "bottom": 900,
+          "width": 320,
+          "height": 44
+        },
+        ".atlas-sidebar": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        ".workbench-rail": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      "documentWidth": 320
+    },
+    {
+      "label": "keyboard-close",
+      "open": false,
+      "heading": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 101,
+        "width": 320,
+        "height": 48,
+        "scrollLeft": 117,
+        "scrollWidth": 437,
+        "overflowX": "auto"
+      },
+      "stage": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 900,
+        "width": 320,
+        "height": 847,
+        "scrollLeft": 0,
+        "scrollTop": 0,
+        "scrollWidth": 320
+      },
+      "menu": {
+        "left": 121,
+        "right": 153,
+        "top": 150.5,
+        "bottom": 978.5,
+        "width": 32,
+        "height": 828,
+        "scrollTop": 221,
+        "scrollHeight": 1070,
+        "clientHeight": 826
+      },
+      "perimeter": {
+        ".atlas-canvas-heading": {
+          "left": 0,
+          "right": 320,
+          "top": 53,
+          "bottom": 101,
+          "width": 320,
+          "height": 48
+        },
+        ".workbench-bottom-bar": {
+          "left": 0,
+          "right": 320,
+          "top": 856,
+          "bottom": 900,
+          "width": 320,
+          "height": 44
+        },
+        ".atlas-sidebar": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        ".workbench-rail": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      "documentWidth": 320
+    },
+    {
+      "label": "keyboard-open",
+      "open": true,
+      "heading": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 101,
+        "width": 320,
+        "height": 48,
+        "scrollLeft": 0,
+        "scrollWidth": 429,
+        "overflowX": "visible"
+      },
+      "stage": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 900,
+        "width": 320,
+        "height": 847,
+        "scrollLeft": 0,
+        "scrollTop": 0,
+        "scrollWidth": 429
+      },
+      "menu": {
+        "left": 8,
+        "right": 312,
+        "top": 52,
+        "bottom": 880,
+        "width": 304,
+        "height": 828,
+        "scrollTop": 199,
+        "scrollHeight": 1025,
+        "clientHeight": 826
+      },
+      "perimeter": {
+        ".atlas-canvas-heading": {
+          "left": 0,
+          "right": 320,
+          "top": 53,
+          "bottom": 101,
+          "width": 320,
+          "height": 48
+        },
+        ".workbench-bottom-bar": {
+          "left": 0,
+          "right": 320,
+          "top": 856,
+          "bottom": 900,
+          "width": 320,
+          "height": 44
+        },
+        ".atlas-sidebar": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        ".workbench-rail": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      "documentWidth": 320
+    },
+    {
+      "label": "final-close",
+      "open": false,
+      "heading": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 101,
+        "width": 320,
+        "height": 48,
+        "scrollLeft": 117,
+        "scrollWidth": 437,
+        "overflowX": "auto"
+      },
+      "stage": {
+        "left": 0,
+        "right": 320,
+        "top": 53,
+        "bottom": 900,
+        "width": 320,
+        "height": 847,
+        "scrollLeft": 0,
+        "scrollTop": 0,
+        "scrollWidth": 320
+      },
+      "menu": {
+        "left": 121,
+        "right": 153,
+        "top": 150.5,
+        "bottom": 978.5,
+        "width": 32,
+        "height": 828,
+        "scrollTop": 221,
+        "scrollHeight": 1070,
+        "clientHeight": 826
+      },
+      "perimeter": {
+        ".atlas-canvas-heading": {
+          "left": 0,
+          "right": 320,
+          "top": 53,
+          "bottom": 101,
+          "width": 320,
+          "height": 48
+        },
+        ".workbench-bottom-bar": {
+          "left": 0,
+          "right": 320,
+          "top": 856,
+          "bottom": 900,
+          "width": 320,
+          "height": 44
+        },
+        ".atlas-sidebar": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        },
+        ".workbench-rail": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0
+        }
+      },
+      "documentWidth": 320
+    }
+  ],
+  "inputs": [
+    {
+      "kind": "native-touch-pan",
+      "from": 280,
+      "to": 136,
+      "y": 77,
+      "before": 0,
+      "after": 117
+    },
+    {
+      "kind": "native-pointer",
+      "selector": "#atlas-cycle-options > summary",
+      "target": {
+        "selector": "#atlas-cycle-options > summary",
+        "box": {
+          "left": 113,
+          "right": 161,
+          "top": 54.5,
+          "bottom": 98.5,
+          "width": 48,
+          "height": 44
+        },
+        "clip": {
+          "left": 113,
+          "right": 161,
+          "top": 54.5,
+          "bottom": 98.5,
+          "width": 48,
+          "height": 44
+        },
+        "x": 137,
+        "y": 76.5,
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "inside": true,
+        "painted": true,
+        "disabled": false,
+        "topmost": true,
+        "tag": "SUMMARY",
+        "label": "기간선",
+        "outline": "none",
+        "outlineWidth": 0,
+        "outlineColor": "rgb(185, 205, 227)"
+      }
+    },
+    {
+      "kind": "native-geometry",
+      "selector": "#atlas-cycle-toggle",
+      "target": {
+        "selector": "#atlas-cycle-toggle",
+        "box": {
+          "left": 217,
+          "right": 299,
+          "top": 61,
+          "bottom": 95,
+          "width": 82,
+          "height": 34
+        },
+        "clip": {
+          "left": 217,
+          "right": 299,
+          "top": 61,
+          "bottom": 95,
+          "width": 82,
+          "height": 34
+        },
+        "x": 258,
+        "y": 78,
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "inside": true,
+        "painted": true,
+        "disabled": false,
+        "topmost": true,
+        "tag": "BUTTON",
+        "label": "기간선 숨기기",
+        "outline": "none",
+        "outlineWidth": 0,
+        "outlineColor": "rgb(189, 209, 232)"
+      }
+    },
+    {
+      "kind": "native-geometry",
+      "selector": "#atlas-cycle-relation",
+      "target": {
+        "selector": "#atlas-cycle-relation",
+        "box": {
+          "left": 17,
+          "right": 223,
+          "top": 114,
+          "bottom": 144,
+          "width": 206,
+          "height": 30
+        },
+        "clip": {
+          "left": 17,
+          "right": 223,
+          "top": 114,
+          "bottom": 144,
+          "width": 206,
+          "height": 30
+        },
+        "x": 120,
+        "y": 129,
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "inside": true,
+        "painted": true,
+        "disabled": false,
+        "topmost": true,
+        "tag": "SELECT",
+        "label": "표시할 사이클 기간 관계",
+        "outline": "none",
+        "outlineWidth": 0,
+        "outlineColor": "rgb(198, 218, 239)"
+      }
+    },
+    {
+      "kind": "native-geometry",
+      "selector": "#atlas-cycle-overview",
+      "target": {
+        "selector": "#atlas-cycle-overview",
+        "box": {
+          "left": 231,
+          "right": 303,
+          "top": 112,
+          "bottom": 146,
+          "width": 72,
+          "height": 34
+        },
+        "clip": {
+          "left": 231,
+          "right": 303,
+          "top": 112,
+          "bottom": 146,
+          "width": 72,
+          "height": 34
+        },
+        "x": 267,
+        "y": 129,
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "inside": true,
+        "painted": true,
+        "disabled": false,
+        "topmost": true,
+        "tag": "BUTTON",
+        "label": "전체 사이클",
+        "outline": "none",
+        "outlineWidth": 0,
+        "outlineColor": "rgb(189, 209, 232)"
+      }
+    },
+    {
+      "kind": "native-pointer",
+      "selector": "#atlas-cycle-toggle",
+      "target": {
+        "selector": "#atlas-cycle-toggle",
+        "box": {
+          "left": 217,
+          "right": 299,
+          "top": 61,
+          "bottom": 95,
+          "width": 82,
+          "height": 34
+        },
+        "clip": {
+          "left": 217,
+          "right": 299,
+          "top": 61,
+          "bottom": 95,
+          "width": 82,
+          "height": 34
+        },
+        "x": 258,
+        "y": 78,
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "inside": true,
+        "painted": true,
+        "disabled": false,
+        "topmost": true,
+        "tag": "BUTTON",
+        "label": "기간선 숨기기",
+        "outline": "none",
+        "outlineWidth": 0,
+        "outlineColor": "rgb(189, 209, 232)"
+      }
+    },
+    {
+      "kind": "native-pointer",
+      "selector": "#atlas-cycle-toggle",
+      "target": {
+        "selector": "#atlas-cycle-toggle",
+        "box": {
+          "left": 217,
+          "right": 299,
+          "top": 61,
+          "bottom": 95,
+          "width": 82,
+          "height": 34
+        },
+        "clip": {
+          "left": 217,
+          "right": 299,
+          "top": 61,
+          "bottom": 95,
+          "width": 82,
+          "height": 34
+        },
+        "x": 258,
+        "y": 78,
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "inside": true,
+        "painted": true,
+        "disabled": false,
+        "topmost": true,
+        "tag": "BUTTON",
+        "label": "기간선 보이기",
+        "outline": "none",
+        "outlineWidth": 0,
+        "outlineColor": "rgb(230, 239, 249)"
+      }
+    },
+    {
+      "kind": "native-menu-wheel",
+      "type": "mouseWheel",
+      "x": 160,
+      "y": 466,
+      "deltaX": 0,
+      "deltaY": 220
+    },
+    {
+      "kind": "native-end-control",
+      "selector": ".cycle-chart-menu > .cycle-reference > summary",
+      "target": {
+        "selector": ".cycle-chart-menu > .cycle-reference > summary",
+        "box": {
+          "left": 21,
+          "right": 299,
+          "top": 841.0625,
+          "bottom": 866.65625,
+          "width": 278,
+          "height": 25.59375
+        },
+        "clip": {
+          "left": 21,
+          "right": 299,
+          "top": 841.0625,
+          "bottom": 866.65625,
+          "width": 278,
+          "height": 25.59375
+        },
+        "x": 160,
+        "y": 853.859375,
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "inside": true,
+        "painted": true,
+        "disabled": false,
+        "topmost": true,
+        "tag": "SUMMARY",
+        "label": "첨부 이미지와 계산 기준 비교",
+        "outline": "none",
+        "outlineWidth": 0,
+        "outlineColor": "rgb(197, 214, 236)"
+      }
+    },
+    {
+      "kind": "native-pointer",
+      "selector": ".cycle-chart-menu > .cycle-reference > summary",
+      "target": {
+        "selector": ".cycle-chart-menu > .cycle-reference > summary",
+        "box": {
+          "left": 21,
+          "right": 299,
+          "top": 841.0625,
+          "bottom": 866.65625,
+          "width": 278,
+          "height": 25.59375
+        },
+        "clip": {
+          "left": 21,
+          "right": 299,
+          "top": 841.0625,
+          "bottom": 866.65625,
+          "width": 278,
+          "height": 25.59375
+        },
+        "x": 160,
+        "y": 853.859375,
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "inside": true,
+        "painted": true,
+        "disabled": false,
+        "topmost": true,
+        "tag": "SUMMARY",
+        "label": "첨부 이미지와 계산 기준 비교",
+        "outline": "none",
+        "outlineWidth": 0,
+        "outlineColor": "rgb(197, 214, 236)"
+      }
+    },
+    {
+      "kind": "native-pointer",
+      "selector": ".cycle-chart-menu > .cycle-reference > summary",
+      "target": {
+        "selector": ".cycle-chart-menu > .cycle-reference > summary",
+        "box": {
+          "left": 21,
+          "right": 299,
+          "top": 841.0625,
+          "bottom": 866.65625,
+          "width": 278,
+          "height": 25.59375
+        },
+        "clip": {
+          "left": 21,
+          "right": 299,
+          "top": 841.0625,
+          "bottom": 866.65625,
+          "width": 278,
+          "height": 25.59375
+        },
+        "x": 160,
+        "y": 853.859375,
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "inside": true,
+        "painted": true,
+        "disabled": false,
+        "topmost": true,
+        "tag": "SUMMARY",
+        "label": "첨부 이미지와 계산 기준 비교",
+        "outline": "none",
+        "outlineWidth": 0,
+        "outlineColor": "rgb(197, 214, 236)"
+      }
+    },
+    {
+      "kind": "native-key",
+      "value": "Escape",
+      "code": "Escape"
+    },
+    {
+      "kind": "native-pointer",
+      "selector": "#atlas-cycle-options > summary",
+      "target": {
+        "selector": "#atlas-cycle-options > summary",
+        "box": {
+          "left": 113,
+          "right": 161,
+          "top": 54.5,
+          "bottom": 98.5,
+          "width": 48,
+          "height": 44
+        },
+        "clip": {
+          "left": 113,
+          "right": 161,
+          "top": 54.5,
+          "bottom": 98.5,
+          "width": 48,
+          "height": 44
+        },
+        "x": 137,
+        "y": 76.5,
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "inside": true,
+        "painted": true,
+        "disabled": false,
+        "topmost": true,
+        "tag": "SUMMARY",
+        "label": "기간선",
+        "outline": "none",
+        "outlineWidth": 0,
+        "outlineColor": "rgb(185, 205, 227)"
+      }
+    },
+    {
+      "kind": "native-key",
+      "value": "Enter",
+      "code": "Enter"
+    },
+    {
+      "kind": "native-key",
+      "value": "Enter",
+      "code": "Enter"
+    },
+    {
+      "kind": "native-key",
+      "value": "Escape",
+      "code": "Escape"
+    }
+  ],
+  "runtimeErrors": [],
+  "browserVersion": "143.0.7499.0",
+  "menuTarget": {
+    "selector": ".cycle-chart-menu",
+    "box": {
+      "left": 8,
+      "right": 312,
+      "top": 52,
+      "bottom": 880,
+      "width": 304,
+      "height": 828
+    },
+    "clip": {
+      "left": 8,
+      "right": 312,
+      "top": 52,
+      "bottom": 880,
+      "width": 304,
+      "height": 828
+    },
+    "x": 160,
+    "y": 466,
+    "viewport": {
+      "width": 320,
+      "height": 900
+    },
+    "inside": true,
+    "painted": true,
+    "disabled": false,
+    "topmost": true,
+    "tag": "DIV",
+    "label": "\n              차트 안 사이클 기간 9가지 관계기간선 숨기기\n              모든 기간 관계BOTTOM → BOTTOMBO",
+    "outline": "none",
+    "outlineWidth": 0,
+    "outlineColor": "rgb(188, 208, 231)"
+  },
+  "status": "passed",
+  "finalSourceHashes": {
+    "dist/index.html": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+    "dist/atlas-shell.css": "41b8900500edbe67de4e4a3d643b71be8bd5fbb2df54be79a86ccacf6cba5f71",
+    "dist/cycle-milestones.css": "22a9a9a21251a92a9310e2dc5d8cd0cfab809ee502db45991953a73905562712",
+    "dist/lab.css": "517b84062e65c98b9c8171556edc25502a4fab079512f6b3a81ba245d37f30fc",
+    "dist/mobile-workspace.js": "1a4e3231a784f2f6b56a76a5fb609222b08ec632fc1399345a936306693b5f9f",
+    "dist/atlas-shell.js": "b833182a77be1b97002c8cf06563da343f5f32da7e9063a34c9364d9d56a99bd",
+    "dist/lab-view.js": "e128e9f6cd0e046f67e291ecc20beee2ee9d20069ed8ec49108dcfbc96e628a2",
+    "scripts/verify-workspace-browser.mjs": "e510dd2a7815a99243f32a394433c5b3b8503694eed74cbfed5326a192f14f36"
+  },
+  "sourcesUnchangedDuringRun": true,
+  "finishedAt": "2026-11-05T08:34:57.593Z"
+}

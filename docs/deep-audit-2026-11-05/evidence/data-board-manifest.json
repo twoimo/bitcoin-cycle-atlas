@@ -1,0 +1,249 @@
+{
+  "scope": "Dated source/artifact binding. Each receipt retains its actual measured source snapshot; packaging hashes do not relabel intermediate results as final-head CI. No complete 49-case pass is claimed here.",
+  "generatedAt": "2026-11-05T08:40:42.885744+00:00",
+  "baselineCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "results": {
+    "directDataCases": {
+      "passed": 9,
+      "declaredInventoryAtCollection": 46,
+      "receipt": "evidence/data-board-native.json",
+      "sha256": "cfbd2ac8b363dcfa66918df62d97ca0cf205b9ba331db95c169fce0cef37b023"
+    },
+    "embeddedDataCases": {
+      "passed": 3,
+      "declaredInventoryAtCollection": 49,
+      "receipt": "evidence/center-data-native.json",
+      "sha256": "51e8d07e9453837747c9a7d30ce8b5b6366ec2868a472fce72cb057ff199c6da",
+      "sourceIntegrity": {
+        "checkedFiles": 98,
+        "changedSources": [],
+        "unchangedDuringRun": true
+      }
+    },
+    "actualClickHelperControls": {
+      "passed": 10,
+      "snapshot": "evidence/click-modal-negative-control.json",
+      "finalWholeFileRerun": false
+    },
+    "optionalMutations": {
+      "embeddedToolbar": "Expected geometry rejection in all three cases; incomplete final source proof, not accepted as killed.",
+      "headingIconGesture": "Survived this native gesture workload; not killed.",
+      "railScroll": "Not run.",
+      "stageClip": "Not run."
+    }
+  },
+  "sourceIdentities": [
+    {
+      "path": "dist/daily-data.css",
+      "baselineSha256": "dd7aabd155dfeb885def2f699bdf76e38a6308f623e2f38b2d80d75eb201d66d",
+      "baselineProbeSha256": "dd7aabd155dfeb885def2f699bdf76e38a6308f623e2f38b2d80d75eb201d66d",
+      "baselineProbeMatchesCommit": true,
+      "packagingSnapshotSha256": "f45a6226526795d926caf2fe8c8df386f22f24c7a4383e05986b1b3df5b3366a",
+      "directNineReceiptSha256": "f45a6226526795d926caf2fe8c8df386f22f24c7a4383e05986b1b3df5b3366a",
+      "embeddedThreeReceiptSha256": "f45a6226526795d926caf2fe8c8df386f22f24c7a4383e05986b1b3df5b3366a",
+      "embeddedReceiptMatchesPackagingSnapshot": true
+    },
+    {
+      "path": "dist/atlas-shell.css",
+      "baselineSha256": "ac4075e8ddbf8d370cbefeabe3f1e148919091821258f5b340adc0fdcd94e76c",
+      "baselineProbeSha256": "ac4075e8ddbf8d370cbefeabe3f1e148919091821258f5b340adc0fdcd94e76c",
+      "baselineProbeMatchesCommit": true,
+      "packagingSnapshotSha256": "41b8900500edbe67de4e4a3d643b71be8bd5fbb2df54be79a86ccacf6cba5f71",
+      "directNineReceiptSha256": "9d8b1e1e0a3755585d375dde1eca2f76a08b689a2bf8e4e9e6446ee3b5500445",
+      "embeddedThreeReceiptSha256": "41b8900500edbe67de4e4a3d643b71be8bd5fbb2df54be79a86ccacf6cba5f71",
+      "embeddedReceiptMatchesPackagingSnapshot": true
+    },
+    {
+      "path": "dist/daily-data-view.js",
+      "baselineSha256": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+      "baselineProbeSha256": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+      "baselineProbeMatchesCommit": true,
+      "packagingSnapshotSha256": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+      "directNineReceiptSha256": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+      "embeddedThreeReceiptSha256": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+      "embeddedReceiptMatchesPackagingSnapshot": true
+    },
+    {
+      "path": "dist/atlas-shell.js",
+      "baselineSha256": "b833182a77be1b97002c8cf06563da343f5f32da7e9063a34c9364d9d56a99bd",
+      "baselineProbeSha256": "b833182a77be1b97002c8cf06563da343f5f32da7e9063a34c9364d9d56a99bd",
+      "baselineProbeMatchesCommit": true,
+      "packagingSnapshotSha256": "b833182a77be1b97002c8cf06563da343f5f32da7e9063a34c9364d9d56a99bd",
+      "directNineReceiptSha256": "b833182a77be1b97002c8cf06563da343f5f32da7e9063a34c9364d9d56a99bd",
+      "embeddedThreeReceiptSha256": "b833182a77be1b97002c8cf06563da343f5f32da7e9063a34c9364d9d56a99bd",
+      "embeddedReceiptMatchesPackagingSnapshot": true
+    },
+    {
+      "path": "dist/market-lab.css",
+      "baselineSha256": "effe6742749417c388f40ed75a8ab3c1c6dc184f7ff9b718112e8ea01b7adc44",
+      "baselineProbeSha256": "effe6742749417c388f40ed75a8ab3c1c6dc184f7ff9b718112e8ea01b7adc44",
+      "baselineProbeMatchesCommit": true,
+      "packagingSnapshotSha256": "effe6742749417c388f40ed75a8ab3c1c6dc184f7ff9b718112e8ea01b7adc44",
+      "directNineReceiptSha256": "effe6742749417c388f40ed75a8ab3c1c6dc184f7ff9b718112e8ea01b7adc44",
+      "embeddedThreeReceiptSha256": "effe6742749417c388f40ed75a8ab3c1c6dc184f7ff9b718112e8ea01b7adc44",
+      "embeddedReceiptMatchesPackagingSnapshot": true
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "baselineSha256": "1944e07774c34b01e11f68e983f348ea130e05772ef1c4158aa4607720d9b7a1",
+      "baselineProbeSha256": null,
+      "baselineProbeMatchesCommit": null,
+      "packagingSnapshotSha256": "3590829a4a77d153468c4e98250feb4b269a501bce8601787c01f8ce76d29a29",
+      "directNineReceiptSha256": "00da0949c72b24d665e34d7fc99da42e625f476af65507b5aa8c0a6f7c219898",
+      "embeddedThreeReceiptSha256": "3590829a4a77d153468c4e98250feb4b269a501bce8601787c01f8ce76d29a29",
+      "embeddedReceiptMatchesPackagingSnapshot": true
+    },
+    {
+      "path": "scripts/verify-workspace-browser.mjs",
+      "baselineSha256": "03a262148dec93fee8840ac64d9ad84d56e4a12dc6346cabe505f0dc34e3caab",
+      "baselineProbeSha256": null,
+      "baselineProbeMatchesCommit": null,
+      "packagingSnapshotSha256": "e510dd2a7815a99243f32a394433c5b3b8503694eed74cbfed5326a192f14f36",
+      "directNineReceiptSha256": "9119a36ad0c960cc193247ba3f2caa6b2a251a2d8107f22b48a06214cc0ed19d",
+      "embeddedThreeReceiptSha256": "e510dd2a7815a99243f32a394433c5b3b8503694eed74cbfed5326a192f14f36",
+      "embeddedReceiptMatchesPackagingSnapshot": true
+    },
+    {
+      "path": "dist/center-workbench.js",
+      "baselineSha256": "9e8481440f1237f10e98ccd95e9b6a9770b23751dea55ec1313ceecab5a0d411",
+      "baselineProbeSha256": null,
+      "baselineProbeMatchesCommit": null,
+      "packagingSnapshotSha256": "9e8481440f1237f10e98ccd95e9b6a9770b23751dea55ec1313ceecab5a0d411",
+      "directNineReceiptSha256": null,
+      "embeddedThreeReceiptSha256": "9e8481440f1237f10e98ccd95e9b6a9770b23751dea55ec1313ceecab5a0d411",
+      "embeddedReceiptMatchesPackagingSnapshot": true
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "data-board-followup.md",
+      "bytes": 14177,
+      "sha256": "6773350310ec316eb3ca6e5eb5a173bbb2542b51b4f561dbc2482f5cbaa30a00"
+    },
+    {
+      "path": "evidence/center-data-320-after.png",
+      "bytes": 52036,
+      "sha256": "2fee83b350aa562656b8f0d9fe81bae5994085e055f546066690698a37189da0"
+    },
+    {
+      "path": "evidence/center-data-320-returned.png",
+      "bytes": 89709,
+      "sha256": "6f62d35da1c64d5289f0afc52b538da70b97b7969281db8a3e3d4667c1fd74e4"
+    },
+    {
+      "path": "evidence/center-data-initial-findings.json",
+      "bytes": 79421,
+      "sha256": "35bd964d97b0009d80d6e5972ef12d8474bba600dba540380050b9137881ef99"
+    },
+    {
+      "path": "evidence/center-data-method-900.png",
+      "bytes": 67965,
+      "sha256": "4490fb30c5eee75a2cca4173e891a9ebc1b96320699746888131559ee43438d1"
+    },
+    {
+      "path": "evidence/center-data-native.json",
+      "bytes": 148883,
+      "sha256": "51e8d07e9453837747c9a7d30ce8b5b6366ec2868a472fce72cb057ff199c6da"
+    },
+    {
+      "path": "evidence/click-modal-intermediate.json",
+      "bytes": 6706,
+      "sha256": "0f67c66a322c96b0be155b2b0a4dfded532f1105e54179bdf3fc00bd2348e18e"
+    },
+    {
+      "path": "evidence/click-modal-negative-control.json",
+      "bytes": 9291,
+      "sha256": "523528b16d7735e3097ca927d2dc8167ef5d2fb74b7396e71e35b1c0948f7f4e"
+    },
+    {
+      "path": "evidence/data-board-320-after.png",
+      "bytes": 49183,
+      "sha256": "3146b008a1231c3335bfa213f3a4eed404dd74a1ff79a3bce129d44220afe63b"
+    },
+    {
+      "path": "evidence/data-board-320-before.png",
+      "bytes": 48815,
+      "sha256": "3d8012a20f44f3aa82f5df25ecc2bcf66443047ac12da10c77893cbfbfabf63f"
+    },
+    {
+      "path": "evidence/data-board-baseline.json",
+      "bytes": 16420,
+      "sha256": "523a430f769d96ee15bc980af321599a841ed511844a04e752347598232cbad0"
+    },
+    {
+      "path": "evidence/data-board-embedded-before.json",
+      "bytes": 20934,
+      "sha256": "440110884ef9fc60a084ac3d37448d56076302385422c1cd24c2f9966da36f57"
+    },
+    {
+      "path": "evidence/data-board-embedded-before.png",
+      "bytes": 49783,
+      "sha256": "bc3e3ce74d043982b8957771502a22eb5a67523bb288794fbfd502ee0fc80c2a"
+    },
+    {
+      "path": "evidence/data-board-focused-native.json",
+      "bytes": 19214,
+      "sha256": "92a41dfd4591dd400cb4eefc73f208225d910f6d0d64a30a1ccb88169db169ba"
+    },
+    {
+      "path": "evidence/data-board-method-900.png",
+      "bytes": 73020,
+      "sha256": "f34521ba18f34827ba37ed5845d66114610d1738192452a5df88976b7586f31d"
+    },
+    {
+      "path": "evidence/data-board-native.json",
+      "bytes": 291301,
+      "sha256": "cfbd2ac8b363dcfa66918df62d97ca0cf205b9ba331db95c169fce0cef37b023"
+    },
+    {
+      "path": "evidence/data-board-original-failures.json",
+      "bytes": 41617,
+      "sha256": "0638382b86085102ec0fae6be1c4cc4162d2daa1a73d6d212105fb6b50493130"
+    },
+    {
+      "path": "evidence/data-mutation-embedded-observation.json",
+      "bytes": 69178,
+      "sha256": "df22f5d4e3d7c5104bd758739de9b92973198d9799c69ece7c79bdaecff5283b"
+    },
+    {
+      "path": "evidence/data-mutation-embedded-summary.json",
+      "bytes": 2209,
+      "sha256": "9383b8f66e965d7c4dc0ac8056b9bf609c0ec1917188062a70a71841c3d36c08"
+    },
+    {
+      "path": "evidence/data-mutation-heading-observation.json",
+      "bytes": 149492,
+      "sha256": "4d9e5d01ad1cd443ec1968c435d0c2bcce4feacc12fdd99c32c48b67e09d9238"
+    },
+    {
+      "path": "evidence/data-mutation-heading-summary.json",
+      "bytes": 1155,
+      "sha256": "b9c2910cd6168ed116d695dba11ac3a94c27516a80bf769d94a5a5e335086a2a"
+    },
+    {
+      "path": "evidence/intersection-clipping-experiment.json",
+      "bytes": 7380,
+      "sha256": "8b8b1c4ca1e68f9916e4e7bdcbf86b0f714ba27c3759bd2398705856d00b71f2"
+    },
+    {
+      "path": "probes/browser-css-mutation.cjs",
+      "bytes": 5797,
+      "sha256": "60f6767605eb35e770728636e3a1b96795be8b503e8a592a93c42828262119fd"
+    },
+    {
+      "path": "probes/click-modal-probe.cjs",
+      "bytes": 8634,
+      "sha256": "b4c304540eeae8992d0f618e4ef38c386209badcbad3e1d15e2cdbe1273bb3c9"
+    },
+    {
+      "path": "probes/data-board-probe.cjs",
+      "bytes": 17399,
+      "sha256": "f67316f0b1be19235cfb549de26b37a27fff2bde9c9fff0b272ef90375077268"
+    },
+    {
+      "path": "probes/intersection-clipping-probe.cjs",
+      "bytes": 5271,
+      "sha256": "c035415226121e2e065041035f7d7767d42166d6c371120ca7ed9553060c08c7"
+    }
+  ]
+}

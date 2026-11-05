@@ -1,0 +1,13 @@
+stateDiagram-v2
+    direction TB
+    state "Live chart" as Live
+    state "Active replay" as Replay
+    state "Explicit save pending" as Saving
+    state "Coordinator destroyed" as Destroyed
+    Live --> Replay: Confirm replay
+    Replay --> Saving: Save and exit
+    Saving --> Live: Current save succeeds
+    Saving --> Replay: Current save fails
+    Replay --> Destroyed: Destroy
+    Saving --> Destroyed: Destroy and release once
+    Destroyed --> Destroyed: Ignore late completion

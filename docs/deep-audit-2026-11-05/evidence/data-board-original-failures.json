@@ -1,0 +1,1330 @@
+{
+  "sourceCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "completeOriginalReport": {
+    "bytes": 5512710,
+    "sha256": "5c946af698805b0601a3af039006305d2e8183df56ac7984654f5fb467211794",
+    "caseCount": 46,
+    "status": "failed",
+    "failureCount": 16
+  },
+  "scope": "Exact original data-case failure records extracted from the complete recovered 46-case report; other cases are not evaluated by this extraction.",
+  "sourceHashes": {
+    "dist/index.html": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+    "dist/site-entry.js": "645d41c07ef1ef9f9cba2282e34c5a723b6c356f1dfbab7fba8f3fbb39fcaf0e",
+    "dist/asset-comparison.js": "765d85f67ffad760e75b1b8fe8600eeb274411adb154c079cc65e1ba3a9076c8",
+    "dist/asset-judgment-history.js": "986b299bb7dc2c8e28cb2668bb2b7b3b7b0e507ba2b2f8ecb9040771d89ead9a",
+    "dist/daily-data-view.js": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+    "dist/daily-data.css": "dd7aabd155dfeb885def2f699bdf76e38a6308f623e2f38b2d80d75eb201d66d",
+    "dist/eth-view.js": "ef6e99760567649f3ab8705ef49c52e47726cb28486225847bafa4ede5066519",
+    "dist/eth-view.css": "1f09834a4460821c83496ea97fc70a6fb2371ad8ef2560ca1dd48395eeb42d05",
+    "dist/ethereum-forecast.js": "b86e6e917c8d72c9db892dc4931694f915d6d73352dbab54798a64bd5ee3db4c",
+    "dist/ethereum-adaptive-model.js": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d",
+    "dist/ethereum-pooled-model.js": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467",
+    "dist/eth-view-state.js": "152003eacf02bd0e889b2ec8f89a867e702ab0d9db97a66e06ea7528a16021d1",
+    "dist/ethereum-adoption-scenarios.js": "f49532abd2479a2531bb7e23aaf7ff2b8505a3c2ce0a84436f3768a25c18dc86",
+    "dist/ethereum-research-panel.js": "f699155933c465057d8f1dc442c9b0de699e3a9d9eb1090a6566f46b724b93cc",
+    "dist/ethereum-research-catalog.js": "1c7638bec65dd4f948bc260434355f7e79c3ff9d572515d3fa5ec142dcf38e35",
+    "dist/eth-market-data.js": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075",
+    "dist/intraday-chart.js": "1e44773709a57ee9d74567001555a7b3ffa1f90c0915e35355f580c96c676c3f",
+    "dist/equity-forecast-chart.js": "a5601464a89dbfbda508d8de69a7d4a84b6858cc8981bef237eee0412676b75c",
+    "dist/equity-view.js": "19716e251cbb3af657e66a1cad955aaf1324749dd20b281391c608e7e70d0168",
+    "dist/treasury-projection.js": "9cf7e6660124880e5a9ad654f41c846d10deb309ace18cf59b96699963948fd1",
+    "dist/treasury-model.js": "4812b36b65912209201eabf46ba39868cec7d7ddb014421e556476412b8e1739",
+    "dist/forecast-information-time.js": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23",
+    "dist/data/bmnr-ohlc.json": "9a5e78b32ee5a78a82225d86b7aac4776efda6590f376e233eb364a66bb2763d",
+    "dist/data/eth-ohlc.json": "ebe83ad68d163df89cadb1fed1cc28e8053ce60d817485e6b31408dab27d1574",
+    "scripts/verify-eth-candidate-browser.mjs": "1944e07774c34b01e11f68e983f348ea130e05772ef1c4158aa4607720d9b7a1",
+    "scripts/btc-offline-refresh-policy.mjs": "f8f2a165a3b52ceb47f4b2102d86d82f1141c8c04022a2bf7833979a968b94ff",
+    "tests/ethereum-offline-refresh-policy.test.mjs": "29ce072ed9919f3f66bafa389d6c894f14f2c126aea7c90ab3e2b4f98c05e3c4",
+    "dist/data/btc-daily.json": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf",
+    "dist/app.js": "ce9dbbdb6bf50a9b19208cfc8aa424f1395a95cd56d83afb7ab5370a87da4acd",
+    "dist/btc-refresh-status.js": "806ca5d59e4a9194bc9c2759c60821da154173a65944328a24010307808b2036",
+    "tests/ethereum-btc-refresh-status.test.mjs": "a840171a6fa636993b9ae735cf1c8b3089ca76f9ef05d17bd98846da75372b73",
+    "dist/data-source.js": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b",
+    "dist/published-data.js": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010",
+    "dist/asset-forecast-journal.js": "95298b2a35ced2ee51e7b3953bec6e520006edd102f0ee15187edb505f62da9c",
+    "dist/asset-forecast-records.js": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2",
+    "dist/journal-entry.js": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0",
+    "dist/forecast-journal.css": "e8bb880c5a91a7729c3ff490aff6e21e86950faefb9b265bec36d000287a3683",
+    "dist/data/asset-forecast-ledger/index.json": "2620f75f54b9755f417296348a4e31e14d584c338bcd2b67b0ac15c2c59bbe62",
+    "dist/data/mstr-ohlc.json": "a0db690fb421df3a4cd60173ea6620c16d113d30af5923b12c47e9e6bc03adbf",
+    "dist/lab-view.js": "e128e9f6cd0e046f67e291ecc20beee2ee9d20069ed8ec49108dcfbc96e628a2",
+    "dist/analysis-dock.css": "43b46d05978a7499823ef54d598f936de3279fbe3dc59cf77a8d66811f5e3fa9",
+    "dist/compact-chart-layout.css": "9c428bd2800a687469d3a60a39e836fc04e9f8f6c6d68210cdedf9f9c22f12c5",
+    "dist/mobile-workspace.css": "90a375739f01826b0a71c57789f50a09be6a6f944020194f6b70882f88578d3f",
+    "dist/mobile-preview.js": "9d1ad1cdaf3e316579e4a33054d81d300e002b0214635a1481140b1a133acc9c",
+    "scripts/verify-workspace-browser.mjs": "03a262148dec93fee8840ac64d9ad84d56e4a12dc6346cabe505f0dc34e3caab",
+    "dist/atlas.css": "a9a3abf1ef26eefb93d518a0af826387dc40939fa9354427b7496f9a24207485",
+    "dist/chart-bottom-bar.css": "67ef233b70921763ef1a91cc394d333a1ef755fca28d5e0d21b1e7f7773bbe3a",
+    "dist/chart-details-panel.css": "614f3998b3d38b9347fb92a5bda6966ed1115889f071d44b689b60dd92072516",
+    "dist/chart-export-workbench.css": "5cfffd7d47507a90252b2e2b5b29ce448f95d13e56951d00e600eb43fb3321d5",
+    "dist/chart-magnet.css": "5c7645a9f74619aaed469826bf599502dda56296a3aafcce548dfe30f4935b53",
+    "dist/chart-workspace-controls.css": "708e87841f3d01e806be0ec7dfe1a69caa39780b658291aeee68661ae02073f9",
+    "dist/compact.css": "e44b63bd942bd01d8e09514fadfc2f39e3fb94f37433fb0725a4033ba5937d83",
+    "dist/cycle-milestones.css": "22a9a9a21251a92a9310e2dc5d8cd0cfab809ee502db45991953a73905562712",
+    "dist/equity-view.css": "99026cd6229df757176a648fc0f2c2ed88d7916a4e5eb65bcd8f9957db1ff5ad",
+    "dist/ethereum-history.css": "017cf5ea799495460353b389a8265ca87a5c0ecbe35268c08ca5c8ed5ca1e896",
+    "dist/lab.css": "517b84062e65c98b9c8171556edc25502a4fab079512f6b3a81ba245d37f30fc",
+    "dist/outlook.css": "f513be9f01dce9c994e169a935d4214c9eaf815ad0da2811ba59d42e92fbce35",
+    "dist/research-annotations.css": "d21629aadbb87bf1124f47a5dbe56a84cf5e725fcb4f300519720f4b169c650a",
+    "dist/research-reader.css": "5bf214c68872359ddb882cfb8a5ec6085dee118e07c5bb850d2c7a2b8b6627ee",
+    "dist/styles.css": "18b0a9b2c245853a5a20f08a89c7eecc06073261f9166510d07e23db14740cf5",
+    "dist/symbol-selector.css": "0d48ba9c389718c6afd4a259200d87cee3119c87095daf50c683ac5ca8df1ca4",
+    "dist/viewport.css": "36aecacae5e796bf5028a1e6963a217cc5eec5234f92184d134daa3ca312ec07",
+    "dist/workspace-tools.css": "33c8052eb528b1d6882aefd3bcef02c6785b1058fe3216d56d011b149000a701",
+    "dist/chart-bottom-bar.js": "e7dcdfce8326d5d4cf83265d1bd3fb715d26490b489b43523bbd72befd273b06",
+    "dist/preserved-archive-download.js": "fdc1ae671b866a2d3731d645b57998bdb23a53de6b3bfd0b61946faeda5434fd",
+    "dist/workspace-tools.js": "0e94b855cd8cd30c0a4a9c80c90a19a7774a133bdc587704774a13d23b3ad7c1",
+    "dist/research-annotations-workbench.js": "296c51cce5f994df1f08dab65d263f2e82d94ab4e81280d8170b88b0ab4a0d5f",
+    "dist/mobile-preview.html": "ef350dc53c4c61ca2bff5d4cf37d183ea13a5866cae9074f2522b7b7bd756379",
+    "dist/symbol-selector.js": "86a41a84b273d59bfd26a9bf3a093e7ca5d684175cddb3f977e166968a473f4a",
+    "dist/research-reader.js": "c8869e264aba1125bd56a23138d581287912b3e6b27ea6d392c4652c3d991575",
+    "dist/evidence-view.js": "9a5852d5790ae1392297bcc10dd27cadbd32dbba645dce93163fe5ed56d08eb8",
+    "dist/viewport-workspace.js": "88c8cba821e866a87a5bbbbbec5172d473c0e290b0366fe2a60a807337d2fb80",
+    "dist/workbench-chrome.js": "82717c08789e53ffee6d2667ff6b342e59ed3954d3d566ab3f8c3c9d7f6d63e4",
+    "dist/forecast-replay.js": "a50725737d9deb6cdb851867dcc60bcc202b19818d6bbccc88e67b986d2f2b13",
+    "dist/forecast-replay-sources.js": "26d99528a81a49e8c738c542a2e2fbd911674efd874f02070c1ddd958e07cd52",
+    "dist/forecast-replay-view.js": "ecd6ea1880d3e7b6d682860f35f9a4593267f8a5c560c475c23db901b4c2c93b",
+    "dist/data/replay-eth-ohlc.json": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+    "scripts/verify-forecast-replay-browser.mjs": "d63cef852ce682cf8c63b9a0ab0c31ea76e2cec52330cc271c56af2ce77b195e",
+    "dist/chart-replay.js": "f0fb4cef01d5fe0d3361c0416c56260e3670f442b91528ba3a2743d748f94c56",
+    "dist/chart-replay-snapshot.js": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
+    "dist/chart-replay-state.js": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
+    "dist/chart-replay-renderer.js": "ba06b1369f92c596bd12abfd8256dd044be38097807718fc12550e81cc369d6b",
+    "dist/chart-replay-sources.js": "eda71aeffa8739bb233a9fb8413883ee0be3be357a271e761073873bacd63e3d",
+    "dist/chart-replay.css": "211009c38aa3b7716e566ab8c1a94002ea15f2557d905e26d3a39107902d85bf",
+    "dist/asset-forecast-loader.js": "2d373afa2f588f8d640b7432b1e226d64580fb1a96efc6631c6e2dcb7e1168cb",
+    "dist/data/btc-volume.json": "09ac13fed80490c774b3c597f79882ae2b5ab3038cc968f182d163f49fa2a8b1",
+    "scripts/verify-chart-replay-browser.mjs": "43007bbcc95caa31b7c3df5d66b7a85a1191ebe6c7bc6ad74498109c0cb50860",
+    "dist/chart-replay-atlas.js": "b647d085796353b9cf21edebed98890bba89fb10cb54de0568b0060fc6d3fcf3",
+    "dist/atlas-price-chart.js": "e3726e135dcd552777021de5282d1616120c0493d7b10b56fd4f129f812995d8",
+    "dist/project-replay-baseline.js": "b24462b0b8ac13b8640fc0717e98ed5cf198a779281cbd64bd3551a4529c6861",
+    "dist/data/project-origin-btc-2026-10-21.json": "571d0d3421d7ae40da4fb3020ab0290aa534822d5a439f9e98f55dc31d5f19ac",
+    "scripts/build-project-replay-baseline.mjs": "1ddf49e09ad015afd526996112c521d23fba5e539af73439c85628dec13aed83"
+  },
+  "cases": [
+    {
+      "page": "data",
+      "width": 320,
+      "height": 900,
+      "touch": true,
+      "status": "failed",
+      "layout": {
+        "width": 320,
+        "scrollWidth": 320,
+        "symbols": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "btcName": "비트코인",
+        "judgments": [
+          "중립",
+          "분할 매도",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "분할 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매도"
+        ],
+        "controls": [
+          {
+            "id": "daily-back",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "H1",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "asset-refresh",
+            "left": 176,
+            "right": 208,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44
+          },
+          {
+            "id": "asset-history-open",
+            "left": 208,
+            "right": 240,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44
+          },
+          {
+            "id": "daily-method-open",
+            "left": 240,
+            "right": 272,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44
+          },
+          {
+            "id": "export-raw",
+            "left": 272,
+            "right": 304,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44
+          }
+        ],
+        "headingHeight": 69,
+        "headingBackground": "rgb(19, 25, 34)",
+        "bodyBackground": "rgb(11, 14, 20)",
+        "coarse": true,
+        "headerOwnership": [
+          {
+            "id": "data",
+            "present": true,
+            "active": true,
+            "position": "sticky",
+            "top": "0px",
+            "rendered": true
+          },
+          {
+            "id": "evidence",
+            "present": true,
+            "active": false,
+            "position": "static",
+            "top": "auto",
+            "rendered": false
+          },
+          {
+            "id": "indicator",
+            "present": false
+          }
+        ]
+      },
+      "error": "AssertionError [ERR_ASSERTION]: Heading must remain one compact toolbar row\n    at dataCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:175:10)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:861:319)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:880:5"
+    },
+    {
+      "page": "data",
+      "width": 390,
+      "height": 900,
+      "touch": true,
+      "status": "failed",
+      "layout": {
+        "width": 390,
+        "scrollWidth": 390,
+        "symbols": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "btcName": "비트코인",
+        "judgments": [
+          "중립",
+          "분할 매도",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "분할 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매도"
+        ],
+        "controls": [
+          {
+            "id": "daily-back",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "H1",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "asset-refresh",
+            "left": 240,
+            "right": 272,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44
+          },
+          {
+            "id": "asset-history-open",
+            "left": 274,
+            "right": 306,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44
+          },
+          {
+            "id": "daily-method-open",
+            "left": 308,
+            "right": 340,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44
+          },
+          {
+            "id": "export-raw",
+            "left": 342,
+            "right": 374,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44
+          }
+        ],
+        "headingHeight": 69,
+        "headingBackground": "rgb(19, 25, 34)",
+        "bodyBackground": "rgb(11, 14, 20)",
+        "coarse": true,
+        "headerOwnership": [
+          {
+            "id": "data",
+            "present": true,
+            "active": true,
+            "position": "sticky",
+            "top": "0px",
+            "rendered": true
+          },
+          {
+            "id": "evidence",
+            "present": true,
+            "active": false,
+            "position": "static",
+            "top": "auto",
+            "rendered": false
+          },
+          {
+            "id": "indicator",
+            "present": false
+          }
+        ]
+      },
+      "error": "AssertionError [ERR_ASSERTION]: Heading must remain one compact toolbar row\n    at dataCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:175:10)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:861:319)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:880:5"
+    },
+    {
+      "page": "data",
+      "width": 768,
+      "height": 900,
+      "touch": false,
+      "status": "failed",
+      "layout": {
+        "width": 768,
+        "scrollWidth": 768,
+        "symbols": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "btcName": "비트코인",
+        "judgments": [
+          "중립",
+          "분할 매도",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "분할 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매도"
+        ],
+        "controls": [
+          {
+            "id": "daily-back",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "H1",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "asset-refresh",
+            "left": 441.5,
+            "right": 506.59375,
+            "top": 76,
+            "bottom": 108,
+            "width": 65.09375,
+            "height": 32
+          },
+          {
+            "id": "asset-history-open",
+            "left": 510.59375,
+            "right": 601.125,
+            "top": 76,
+            "bottom": 108,
+            "width": 90.53125,
+            "height": 32
+          },
+          {
+            "id": "daily-method-open",
+            "left": 605.125,
+            "right": 683.609375,
+            "top": 76,
+            "bottom": 108,
+            "width": 78.484375,
+            "height": 32
+          },
+          {
+            "id": "export-raw",
+            "left": 687.609375,
+            "right": 752,
+            "top": 76,
+            "bottom": 108,
+            "width": 64.390625,
+            "height": 32
+          }
+        ],
+        "headingHeight": 57,
+        "headingBackground": "rgb(19, 25, 34)",
+        "bodyBackground": "rgb(11, 14, 20)",
+        "coarse": false,
+        "headerOwnership": [
+          {
+            "id": "data",
+            "present": true,
+            "active": true,
+            "position": "sticky",
+            "top": "0px",
+            "rendered": true
+          },
+          {
+            "id": "evidence",
+            "present": true,
+            "active": false,
+            "position": "static",
+            "top": "auto",
+            "rendered": false
+          },
+          {
+            "id": "indicator",
+            "present": false
+          }
+        ]
+      },
+      "error": "AssertionError [ERR_ASSERTION]: Heading controls wrapped into separate rows\n    at dataCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:177:10)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:861:319)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:880:5"
+    },
+    {
+      "page": "data",
+      "width": 1024,
+      "height": 900,
+      "touch": false,
+      "status": "failed",
+      "layout": {
+        "width": 1024,
+        "scrollWidth": 1024,
+        "symbols": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "btcName": "비트코인",
+        "judgments": [
+          "중립",
+          "분할 매도",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "분할 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매도"
+        ],
+        "controls": [
+          {
+            "id": "daily-back",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "H1",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "asset-refresh",
+            "left": 697.5,
+            "right": 762.59375,
+            "top": 76,
+            "bottom": 108,
+            "width": 65.09375,
+            "height": 32
+          },
+          {
+            "id": "asset-history-open",
+            "left": 766.59375,
+            "right": 857.125,
+            "top": 76,
+            "bottom": 108,
+            "width": 90.53125,
+            "height": 32
+          },
+          {
+            "id": "daily-method-open",
+            "left": 861.125,
+            "right": 939.609375,
+            "top": 76,
+            "bottom": 108,
+            "width": 78.484375,
+            "height": 32
+          },
+          {
+            "id": "export-raw",
+            "left": 943.609375,
+            "right": 1008,
+            "top": 76,
+            "bottom": 108,
+            "width": 64.390625,
+            "height": 32
+          }
+        ],
+        "headingHeight": 57,
+        "headingBackground": "rgb(19, 25, 34)",
+        "bodyBackground": "rgb(11, 14, 20)",
+        "coarse": false,
+        "headerOwnership": [
+          {
+            "id": "data",
+            "present": true,
+            "active": true,
+            "position": "sticky",
+            "top": "0px",
+            "rendered": true
+          },
+          {
+            "id": "evidence",
+            "present": true,
+            "active": false,
+            "position": "static",
+            "top": "auto",
+            "rendered": false
+          },
+          {
+            "id": "indicator",
+            "present": false
+          }
+        ]
+      },
+      "error": "AssertionError [ERR_ASSERTION]: Heading controls wrapped into separate rows\n    at dataCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:177:10)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:861:319)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:880:5"
+    },
+    {
+      "page": "data",
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "status": "failed",
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "symbols": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "btcName": "비트코인",
+        "judgments": [
+          "중립",
+          "분할 매도",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "분할 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매도"
+        ],
+        "controls": [
+          {
+            "id": "daily-back",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "H1",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "asset-refresh",
+            "left": 1113.5,
+            "right": 1178.59375,
+            "top": 76,
+            "bottom": 108,
+            "width": 65.09375,
+            "height": 32
+          },
+          {
+            "id": "asset-history-open",
+            "left": 1182.59375,
+            "right": 1273.125,
+            "top": 76,
+            "bottom": 108,
+            "width": 90.53125,
+            "height": 32
+          },
+          {
+            "id": "daily-method-open",
+            "left": 1277.125,
+            "right": 1355.609375,
+            "top": 76,
+            "bottom": 108,
+            "width": 78.484375,
+            "height": 32
+          },
+          {
+            "id": "export-raw",
+            "left": 1359.609375,
+            "right": 1424,
+            "top": 76,
+            "bottom": 108,
+            "width": 64.390625,
+            "height": 32
+          }
+        ],
+        "headingHeight": 57,
+        "headingBackground": "rgb(19, 25, 34)",
+        "bodyBackground": "rgb(11, 14, 20)",
+        "coarse": false,
+        "headerOwnership": [
+          {
+            "id": "data",
+            "present": true,
+            "active": true,
+            "position": "sticky",
+            "top": "0px",
+            "rendered": true
+          },
+          {
+            "id": "evidence",
+            "present": true,
+            "active": false,
+            "position": "static",
+            "top": "auto",
+            "rendered": false
+          },
+          {
+            "id": "indicator",
+            "present": false
+          }
+        ]
+      },
+      "error": "AssertionError [ERR_ASSERTION]: Heading controls wrapped into separate rows\n    at dataCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:177:10)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:861:319)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:880:5"
+    },
+    {
+      "page": "data",
+      "width": 1620,
+      "height": 1008,
+      "touch": false,
+      "responsive": true,
+      "fill": true,
+      "status": "failed",
+      "layout": {
+        "width": 1620,
+        "scrollWidth": 1620,
+        "symbols": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "btcName": "비트코인",
+        "judgments": [
+          "중립",
+          "분할 매도",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "분할 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매도"
+        ],
+        "controls": [
+          {
+            "id": "daily-back",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "H1",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "asset-refresh",
+            "left": 1293.5,
+            "right": 1358.59375,
+            "top": 76,
+            "bottom": 108,
+            "width": 65.09375,
+            "height": 32
+          },
+          {
+            "id": "asset-history-open",
+            "left": 1362.59375,
+            "right": 1453.125,
+            "top": 76,
+            "bottom": 108,
+            "width": 90.53125,
+            "height": 32
+          },
+          {
+            "id": "daily-method-open",
+            "left": 1457.125,
+            "right": 1535.609375,
+            "top": 76,
+            "bottom": 108,
+            "width": 78.484375,
+            "height": 32
+          },
+          {
+            "id": "export-raw",
+            "left": 1539.609375,
+            "right": 1604,
+            "top": 76,
+            "bottom": 108,
+            "width": 64.390625,
+            "height": 32
+          }
+        ],
+        "headingHeight": 57,
+        "headingBackground": "rgb(19, 25, 34)",
+        "bodyBackground": "rgb(11, 14, 20)",
+        "coarse": false,
+        "headerOwnership": [
+          {
+            "id": "data",
+            "present": true,
+            "active": true,
+            "position": "sticky",
+            "top": "0px",
+            "rendered": true
+          },
+          {
+            "id": "evidence",
+            "present": true,
+            "active": false,
+            "position": "static",
+            "top": "auto",
+            "rendered": false
+          },
+          {
+            "id": "indicator",
+            "present": false
+          }
+        ]
+      },
+      "error": "AssertionError [ERR_ASSERTION]: Heading controls wrapped into separate rows\n    at dataCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:177:10)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:861:319)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:880:5"
+    },
+    {
+      "page": "data",
+      "width": 1920,
+      "height": 1440,
+      "touch": false,
+      "responsive": true,
+      "fill": true,
+      "status": "failed",
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "symbols": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "btcName": "비트코인",
+        "judgments": [
+          "중립",
+          "분할 매도",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "분할 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매도"
+        ],
+        "controls": [
+          {
+            "id": "daily-back",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "H1",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "asset-refresh",
+            "left": 1593.5,
+            "right": 1658.59375,
+            "top": 76,
+            "bottom": 108,
+            "width": 65.09375,
+            "height": 32
+          },
+          {
+            "id": "asset-history-open",
+            "left": 1662.59375,
+            "right": 1753.125,
+            "top": 76,
+            "bottom": 108,
+            "width": 90.53125,
+            "height": 32
+          },
+          {
+            "id": "daily-method-open",
+            "left": 1757.125,
+            "right": 1835.609375,
+            "top": 76,
+            "bottom": 108,
+            "width": 78.484375,
+            "height": 32
+          },
+          {
+            "id": "export-raw",
+            "left": 1839.609375,
+            "right": 1904,
+            "top": 76,
+            "bottom": 108,
+            "width": 64.390625,
+            "height": 32
+          }
+        ],
+        "headingHeight": 57,
+        "headingBackground": "rgb(19, 25, 34)",
+        "bodyBackground": "rgb(11, 14, 20)",
+        "coarse": false,
+        "headerOwnership": [
+          {
+            "id": "data",
+            "present": true,
+            "active": true,
+            "position": "sticky",
+            "top": "0px",
+            "rendered": true
+          },
+          {
+            "id": "evidence",
+            "present": true,
+            "active": false,
+            "position": "static",
+            "top": "auto",
+            "rendered": false
+          },
+          {
+            "id": "indicator",
+            "present": false
+          }
+        ]
+      },
+      "error": "AssertionError [ERR_ASSERTION]: Heading controls wrapped into separate rows\n    at dataCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:177:10)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:861:319)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:880:5"
+    },
+    {
+      "page": "data",
+      "width": 900,
+      "height": 430,
+      "touch": true,
+      "responsive": true,
+      "fill": false,
+      "status": "failed",
+      "layout": {
+        "width": 900,
+        "scrollWidth": 900,
+        "symbols": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "btcName": "비트코인",
+        "judgments": [
+          "중립",
+          "분할 매도",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "분할 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매도"
+        ],
+        "controls": [
+          {
+            "id": "daily-back",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "H1",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "asset-refresh",
+            "left": 573.5,
+            "right": 638.59375,
+            "top": 76,
+            "bottom": 120,
+            "width": 65.09375,
+            "height": 44
+          },
+          {
+            "id": "asset-history-open",
+            "left": 642.59375,
+            "right": 733.125,
+            "top": 76,
+            "bottom": 120,
+            "width": 90.53125,
+            "height": 44
+          },
+          {
+            "id": "daily-method-open",
+            "left": 737.125,
+            "right": 815.609375,
+            "top": 76,
+            "bottom": 120,
+            "width": 78.484375,
+            "height": 44
+          },
+          {
+            "id": "export-raw",
+            "left": 819.609375,
+            "right": 884,
+            "top": 76,
+            "bottom": 120,
+            "width": 64.390625,
+            "height": 44
+          }
+        ],
+        "headingHeight": 69,
+        "headingBackground": "rgb(19, 25, 34)",
+        "bodyBackground": "rgb(11, 14, 20)",
+        "coarse": true,
+        "headerOwnership": [
+          {
+            "id": "data",
+            "present": true,
+            "active": true,
+            "position": "sticky",
+            "top": "0px",
+            "rendered": true
+          },
+          {
+            "id": "evidence",
+            "present": true,
+            "active": false,
+            "position": "static",
+            "top": "auto",
+            "rendered": false
+          },
+          {
+            "id": "indicator",
+            "present": false
+          }
+        ]
+      },
+      "error": "AssertionError [ERR_ASSERTION]: Heading must remain one compact toolbar row\n    at dataCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:175:10)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:861:319)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:880:5"
+    },
+    {
+      "page": "data",
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "responsive": true,
+      "fill": false,
+      "status": "failed",
+      "layout": {
+        "width": 320,
+        "scrollWidth": 320,
+        "symbols": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "btcName": "비트코인",
+        "judgments": [
+          "중립",
+          "분할 매도",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "중립",
+          "분할 매수",
+          "분할 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매수",
+          "적극 매도"
+        ],
+        "controls": [
+          {
+            "id": "daily-back",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "H1",
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "id": "asset-refresh",
+            "left": 176,
+            "right": 208,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44
+          },
+          {
+            "id": "asset-history-open",
+            "left": 208,
+            "right": 240,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44
+          },
+          {
+            "id": "daily-method-open",
+            "left": 240,
+            "right": 272,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44
+          },
+          {
+            "id": "export-raw",
+            "left": 272,
+            "right": 304,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44
+          }
+        ],
+        "headingHeight": 69,
+        "headingBackground": "rgb(19, 25, 34)",
+        "bodyBackground": "rgb(11, 14, 20)",
+        "coarse": true,
+        "headerOwnership": [
+          {
+            "id": "data",
+            "present": true,
+            "active": true,
+            "position": "sticky",
+            "top": "0px",
+            "rendered": true
+          },
+          {
+            "id": "evidence",
+            "present": true,
+            "active": false,
+            "position": "static",
+            "top": "auto",
+            "rendered": false
+          },
+          {
+            "id": "indicator",
+            "present": false
+          }
+        ]
+      },
+      "error": "AssertionError [ERR_ASSERTION]: Heading must remain one compact toolbar row\n    at dataCase (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:175:10)\n    at async main (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:861:319)\n    at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:880:5"
+    }
+  ]
+}

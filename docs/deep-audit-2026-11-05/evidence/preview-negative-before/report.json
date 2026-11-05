@@ -1,0 +1,452 @@
+{
+  "schemaVersion": 1,
+  "kind": "preview-native-negative-controls",
+  "startedAt": "2026-11-05T08:05:40.266Z",
+  "sourceCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "nodeVersion": "v24.22.2",
+  "sourceHashes": {
+    "scripts/verify-workspace-browser.mjs": "032249fe9c93acdb78a331833fd883119e9b4e89b793fa9318eddf617f2dff5b",
+    "dist/mobile-preview.html": "ef350dc53c4c61ca2bff5d4cf37d183ea13a5866cae9074f2522b7b7bd756379",
+    "dist/mobile-preview.js": "9d1ad1cdaf3e316579e4a33054d81d300e002b0214635a1481140b1a133acc9c",
+    "dist/index.html": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+    "dist/loading-surfaces.css": "62365401f0ab6f6781292f7d17e2f5833f0e2311e4d7a3ea1dcd777ab945133d",
+    "dist/vendor/skullet/styles.css": "2d5fd47eb1956d1406cb5a6a6abcc8ecb90a7766015ea30425ffe6ce80491243"
+  },
+  "probeSha256": "bfd69bff6e3fe428aebebbf89e07c5be636fe9057f90b123866316ffd290045d",
+  "cases": [
+    {
+      "width": 320,
+      "height": 900,
+      "touch": true,
+      "runtimeErrors": [],
+      "positive": [
+        {
+          "state": "loading",
+          "mode": "loading",
+          "boot": "loading",
+          "shellHidden": false,
+          "statusHidden": false,
+          "errorHidden": true,
+          "kind": "skeleton",
+          "status": {
+            "role": "status",
+            "live": "polite",
+            "busy": "true",
+            "text": "화면과 데이터를 준비하고 있습니다.",
+            "excluded": false
+          },
+          "paint": [
+            {
+              "rendered": true,
+              "visibleWidth": 106,
+              "visibleHeight": 15,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            },
+            {
+              "rendered": true,
+              "visibleWidth": 64,
+              "visibleHeight": 9,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            },
+            {
+              "rendered": false,
+              "visibleWidth": 0,
+              "visibleHeight": 0,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            },
+            {
+              "rendered": true,
+              "visibleWidth": 106,
+              "visibleHeight": 9,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            },
+            {
+              "rendered": true,
+              "visibleWidth": 64,
+              "visibleHeight": 9,
+              "background": "rgb(32, 42, 57)",
+              "decorative": true
+            }
+          ]
+        }
+      ],
+      "negative": [
+        {
+          "id": "loading-paint-hidden",
+          "rejected": true,
+          "error": "Preview loading skeleton paint is missing: [{\"id\":\"atlas-boot-bar atlas-boot-wide\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":9,\"right\":9,\"top\":259.375,\"bottom\":211.375},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true},{\"id\":\"atlas-boot-bar\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":9,\"right\":9,\"top\":259.375,\"bottom\":211.375},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true},{\"id\":\"atlas-boot-bar atlas-boot-short\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":9,\"right\":9,\"top\":259.375,\"bottom\":211.375},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true},{\"id\":\"atlas-boot-bar atlas-boot-wide\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":9,\"right\":9,\"top\":259.375,\"bottom\":211.375},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true},{\"id\":\"atlas-boot-bar\",\"rendered\":false,\"local\":{\"left\":0,\"right\":0,\"top\":48,\"bottom\":0},\"visible\":{\"left\":9,\"right\":9,\"top\":259.375,\"bottom\":211.375},\"visibleWidth\":0,\"visibleHeight\":0,\"background\":\"rgb(32, 42, 57)\",\"decorative\":true}]",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-role-removed",
+          "rejected": true,
+          "error": "Expected values to be strictly equal:\n\nnull !== 'status'\n",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": null,
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-live-removed",
+          "rejected": true,
+          "error": "Expected values to be strictly equal:\n\nnull !== 'polite'\n",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": null,
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-busy-removed",
+          "rejected": true,
+          "error": "Expected values to be strictly equal:\n\nnull !== 'true'\n",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": null,
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-aria-excluded",
+          "rejected": true,
+          "error": "Preview loading status must remain available independently of decorative paint",
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": true
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        },
+        {
+          "id": "loading-status-css-excluded",
+          "rejected": false,
+          "error": null,
+          "measured": {
+            "mode": "loading",
+            "boot": "loading",
+            "shellHidden": false,
+            "statusHidden": false,
+            "errorHidden": true,
+            "kind": "skeleton",
+            "status": {
+              "role": "status",
+              "live": "polite",
+              "busy": "true",
+              "text": "화면과 데이터를 준비하고 있습니다.",
+              "excluded": false
+            },
+            "paint": [
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 15,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": false,
+                "visibleWidth": 0,
+                "visibleHeight": 0,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 106,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              },
+              {
+                "rendered": true,
+                "visibleWidth": 64,
+                "visibleHeight": 9,
+                "background": "rgb(32, 42, 57)",
+                "decorative": true
+              }
+            ]
+          },
+          "restoredPass": true
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "preview-320-loading-original.png",
+          "bytes": 19467,
+          "sha256": "812148c890d00096115f7fea335344c24e5480179ff3177410eb61801da424d9"
+        },
+        {
+          "file": "preview-320-loading-paint-hidden.png",
+          "bytes": 19016,
+          "sha256": "9e715d455d473c1f0bfa5609cd7b199bb51aa51395f617896cf213137d94c568"
+        }
+      ]
+    }
+  ],
+  "unexpectedPasses": [
+    {
+      "width": 320,
+      "id": "loading-status-css-excluded"
+    }
+  ],
+  "scope": "Actual local mobile-preview.html, actual exported measurement and assertions, native Chromium, neutral frozen loading/error previews; no provider refresh, deployment, timing, model-promotion or physical-device claim.",
+  "browserVersion": "143.0.7499.0",
+  "status": "failed",
+  "error": "page.waitForFunction: TypeError: Cannot read properties of null (reading 'dataset')\n    at eval (eval at predicate (eval at evaluate (:311:30)), <anonymous>:1:111)\n    at predicate (eval at evaluate (:311:30), <anonymous>:7:27)\n    at next (eval at evaluate (:311:30), <anonymous>:29:33)\n    at mode (/workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/docs/deep-audit-2026-11-05/evidence/verify-preview-native.mjs:47:88)\n    at async file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/docs/deep-audit-2026-11-05/evidence/verify-preview-native.mjs:49:18",
+  "finishedAt": "2026-11-05T08:05:43.503Z"
+}

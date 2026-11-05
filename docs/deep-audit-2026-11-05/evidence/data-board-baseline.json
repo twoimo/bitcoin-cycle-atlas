@@ -1,0 +1,574 @@
+{
+  "label": "baseline",
+  "sourceCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "sourceHashes": {
+    "dist/daily-data.css": "dd7aabd155dfeb885def2f699bdf76e38a6308f623e2f38b2d80d75eb201d66d",
+    "dist/atlas-shell.css": "ac4075e8ddbf8d370cbefeabe3f1e148919091821258f5b340adc0fdcd94e76c",
+    "dist/daily-data-view.js": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+    "dist/atlas-shell.js": "b833182a77be1b97002c8cf06563da343f5f32da7e9063a34c9364d9d56a99bd",
+    "dist/market-lab.css": "effe6742749417c388f40ed75a8ab3c1c6dc184f7ff9b718112e8ea01b7adc44"
+  },
+  "cases": [
+    {
+      "width": 320,
+      "height": 900,
+      "touch": true,
+      "runtimeErrors": [],
+      "requestFailures": [
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-05&page_size=10000&paging_from=start",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        }
+      ],
+      "geometry": {
+        "shell": "dashboard",
+        "page": "data",
+        "viewport": {
+          "width": 320,
+          "height": 900
+        },
+        "documentWidth": 320,
+        "toolbar": {
+          "left": 52,
+          "right": 320,
+          "top": 56,
+          "bottom": 125,
+          "width": 268,
+          "height": 69,
+          "display": "flex",
+          "visible": true,
+          "name": "자산 비교표MARKET BOARD갱신판단 이력?읽는 법CSV",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "relative"
+        },
+        "actions": [
+          {
+            "id": "asset-refresh",
+            "left": 176,
+            "right": 208,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44,
+            "display": "flex",
+            "visible": true,
+            "name": "가격 자료 갱신",
+            "outline": "rgb(161, 173, 191) none 0px",
+            "position": "static"
+          },
+          {
+            "id": "asset-history-open",
+            "left": 208,
+            "right": 240,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44,
+            "display": "flex",
+            "visible": true,
+            "name": "자산군별 판단 이력",
+            "outline": "rgb(161, 173, 191) none 0px",
+            "position": "static"
+          },
+          {
+            "id": "daily-method-open",
+            "left": 240,
+            "right": 272,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44,
+            "display": "flex",
+            "visible": true,
+            "name": "자산 비교표 읽는 법",
+            "outline": "rgb(161, 173, 191) none 0px",
+            "position": "static"
+          },
+          {
+            "id": "export-raw",
+            "left": 272,
+            "right": 304,
+            "top": 68,
+            "bottom": 112,
+            "width": 32,
+            "height": 44,
+            "display": "flex",
+            "visible": true,
+            "name": "18개 자산 CSV 내려받기",
+            "outline": "rgb(161, 173, 191) none 0px",
+            "position": "static"
+          }
+        ],
+        "shellTitle": {
+          "left": 64,
+          "right": 122.765625,
+          "top": 17.75,
+          "bottom": 37.25,
+          "width": 58.765625,
+          "height": 19.5,
+          "display": "block",
+          "visible": true,
+          "name": "자산 비교",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "static"
+        },
+        "returnAction": {
+          "left": 4,
+          "right": 47,
+          "top": 12,
+          "bottom": 56,
+          "width": 43,
+          "height": 44,
+          "display": "flex",
+          "visible": true,
+          "name": "비트코인 사이클 통합 차트",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "static"
+        },
+        "oldBack": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0,
+          "display": "none",
+          "visible": false,
+          "name": "통합 차트로 돌아가기",
+          "outline": "rgb(161, 173, 191) none 0px",
+          "position": "static"
+        },
+        "oldTitle": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0,
+          "display": "block",
+          "visible": false,
+          "name": "자산 비교표",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "static"
+        },
+        "tableRows": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "panel": {
+          "left": 53,
+          "right": 319,
+          "top": 174,
+          "bottom": 899,
+          "width": 266,
+          "height": 725,
+          "display": "block",
+          "visible": true,
+          "name": "자산 비교표. 작은 화면에서는 좌우로 이동할 수 있습니다.",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "static"
+        }
+      },
+      "returnFocus": {
+        "onBrand": true,
+        "label": "비트코인 사이클 통합 차트",
+        "outline": "rgb(141, 178, 255) solid 2px",
+        "focusVisible": true
+      },
+      "returnedChart": {
+        "page": "outlook",
+        "shell": "chart",
+        "dataHidden": true,
+        "headerHidden": true,
+        "paths": 41,
+        "detailsToggle": "정보와 설정"
+      },
+      "returnedData": {
+        "page": "outlook",
+        "shell": "chart",
+        "rows": 18,
+        "active": "page"
+      }
+    },
+    {
+      "width": 900,
+      "height": 430,
+      "touch": true,
+      "runtimeErrors": [],
+      "requestFailures": [
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        }
+      ],
+      "geometry": {
+        "shell": "dashboard",
+        "page": "data",
+        "viewport": {
+          "width": 900,
+          "height": 430
+        },
+        "documentWidth": 900,
+        "toolbar": {
+          "left": 68,
+          "right": 900,
+          "top": 64,
+          "bottom": 133,
+          "width": 832,
+          "height": 69,
+          "display": "flex",
+          "visible": true,
+          "name": "자산 비교표MARKET BOARD갱신판단 이력?읽는 법CSV",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "relative"
+        },
+        "actions": [
+          {
+            "id": "asset-refresh",
+            "left": 570,
+            "right": 635,
+            "top": 76,
+            "bottom": 120,
+            "width": 65,
+            "height": 44,
+            "display": "flex",
+            "visible": true,
+            "name": "가격 자료 갱신",
+            "outline": "rgb(161, 173, 191) none 0px",
+            "position": "static"
+          },
+          {
+            "id": "asset-history-open",
+            "left": 639,
+            "right": 730,
+            "top": 76,
+            "bottom": 120,
+            "width": 91,
+            "height": 44,
+            "display": "flex",
+            "visible": true,
+            "name": "자산군별 판단 이력",
+            "outline": "rgb(161, 173, 191) none 0px",
+            "position": "static"
+          },
+          {
+            "id": "daily-method-open",
+            "left": 734,
+            "right": 813,
+            "top": 76,
+            "bottom": 120,
+            "width": 79,
+            "height": 44,
+            "display": "flex",
+            "visible": true,
+            "name": "자산 비교표 읽는 법",
+            "outline": "rgb(161, 173, 191) none 0px",
+            "position": "static"
+          },
+          {
+            "id": "export-raw",
+            "left": 817,
+            "right": 884,
+            "top": 76,
+            "bottom": 120,
+            "width": 67,
+            "height": 44,
+            "display": "flex",
+            "visible": true,
+            "name": "18개 자산 CSV 내려받기",
+            "outline": "rgb(161, 173, 191) none 0px",
+            "position": "static"
+          }
+        ],
+        "shellTitle": {
+          "left": 84,
+          "right": 151.453125,
+          "top": 20.453125,
+          "bottom": 42.546875,
+          "width": 67.453125,
+          "height": 22.09375,
+          "display": "block",
+          "visible": true,
+          "name": "자산 비교",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "static"
+        },
+        "returnAction": {
+          "left": 12,
+          "right": 55,
+          "top": 24,
+          "bottom": 68,
+          "width": 43,
+          "height": 44,
+          "display": "flex",
+          "visible": true,
+          "name": "비트코인 사이클 통합 차트",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "static"
+        },
+        "oldBack": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0,
+          "display": "none",
+          "visible": false,
+          "name": "통합 차트로 돌아가기",
+          "outline": "rgb(161, 173, 191) none 0px",
+          "position": "static"
+        },
+        "oldTitle": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0,
+          "display": "block",
+          "visible": false,
+          "name": "자산 비교표",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "static"
+        },
+        "tableRows": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "panel": {
+          "left": 69,
+          "right": 899,
+          "top": 133,
+          "bottom": 429,
+          "width": 830,
+          "height": 296,
+          "display": "block",
+          "visible": true,
+          "name": "자산 비교표. 작은 화면에서는 좌우로 이동할 수 있습니다.",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "static"
+        }
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "runtimeErrors": [],
+      "requestFailures": [
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        }
+      ],
+      "geometry": {
+        "shell": "dashboard",
+        "page": "data",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "documentWidth": 1440,
+        "toolbar": {
+          "left": 224,
+          "right": 1440,
+          "top": 64,
+          "bottom": 121,
+          "width": 1216,
+          "height": 57,
+          "display": "flex",
+          "visible": true,
+          "name": "자산 비교표MARKET BOARD갱신판단 이력?읽는 법CSV",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "relative"
+        },
+        "actions": [
+          {
+            "id": "asset-refresh",
+            "left": 1110,
+            "right": 1175,
+            "top": 76,
+            "bottom": 108,
+            "width": 65,
+            "height": 32,
+            "display": "flex",
+            "visible": true,
+            "name": "가격 자료 갱신",
+            "outline": "rgb(161, 173, 191) none 0px",
+            "position": "static"
+          },
+          {
+            "id": "asset-history-open",
+            "left": 1179,
+            "right": 1270,
+            "top": 76,
+            "bottom": 108,
+            "width": 91,
+            "height": 32,
+            "display": "flex",
+            "visible": true,
+            "name": "자산군별 판단 이력",
+            "outline": "rgb(161, 173, 191) none 0px",
+            "position": "static"
+          },
+          {
+            "id": "daily-method-open",
+            "left": 1274,
+            "right": 1353,
+            "top": 76,
+            "bottom": 108,
+            "width": 79,
+            "height": 32,
+            "display": "flex",
+            "visible": true,
+            "name": "자산 비교표 읽는 법",
+            "outline": "rgb(161, 173, 191) none 0px",
+            "position": "static"
+          },
+          {
+            "id": "export-raw",
+            "left": 1357,
+            "right": 1424,
+            "top": 76,
+            "bottom": 108,
+            "width": 67,
+            "height": 32,
+            "display": "flex",
+            "visible": true,
+            "name": "18개 자산 CSV 내려받기",
+            "outline": "rgb(161, 173, 191) none 0px",
+            "position": "static"
+          }
+        ],
+        "shellTitle": {
+          "left": 292,
+          "right": 359.453125,
+          "top": 20.453125,
+          "bottom": 42.546875,
+          "width": 67.453125,
+          "height": 22.09375,
+          "display": "block",
+          "visible": true,
+          "name": "자산 비교",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "static"
+        },
+        "returnAction": {
+          "left": 12,
+          "right": 211,
+          "top": 24,
+          "bottom": 68,
+          "width": 199,
+          "height": 44,
+          "display": "flex",
+          "visible": true,
+          "name": "비트코인 사이클 통합 차트",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "static"
+        },
+        "oldBack": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0,
+          "display": "none",
+          "visible": false,
+          "name": "통합 차트로 돌아가기",
+          "outline": "rgb(161, 173, 191) none 0px",
+          "position": "static"
+        },
+        "oldTitle": {
+          "left": 0,
+          "right": 0,
+          "top": 0,
+          "bottom": 0,
+          "width": 0,
+          "height": 0,
+          "display": "block",
+          "visible": false,
+          "name": "자산 비교표",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "static"
+        },
+        "tableRows": [
+          "BTC",
+          "SPY",
+          "QQQ",
+          "NVDA",
+          "AAPL",
+          "GOOG",
+          "MSFT",
+          "AMZN",
+          "META",
+          "AVGO",
+          "PLTR",
+          "TSLA",
+          "HOOD",
+          "TLT",
+          "IEF",
+          "GLD",
+          "SLV",
+          "PDBC"
+        ],
+        "panel": {
+          "left": 225,
+          "right": 1439,
+          "top": 121,
+          "bottom": 899,
+          "width": 1214,
+          "height": 778,
+          "display": "block",
+          "visible": true,
+          "name": "자산 비교표. 작은 화면에서는 좌우로 이동할 수 있습니다.",
+          "outline": "rgb(230, 235, 242) none 0px",
+          "position": "static"
+        }
+      }
+    }
+  ],
+  "scope": "Focused native geometry and return navigation probe; not the full browser or Hallmark gate.",
+  "browser": "143.0.7499.0"
+}

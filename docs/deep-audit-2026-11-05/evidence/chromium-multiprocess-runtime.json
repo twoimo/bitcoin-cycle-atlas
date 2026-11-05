@@ -1,0 +1,39 @@
+{
+  "kind": "chromium-multiprocess-runtime-isolation",
+  "startedAt": "2026-11-05T08:21:02.854Z",
+  "nodeVersion": "v24.22.2",
+  "browserPath": "/workspace/scratch/82e52cfd9693/browser-native/chromium",
+  "requestedArgs": [
+    "--no-sandbox",
+    "--no-zygote",
+    "--disable-gpu"
+  ],
+  "singleProcessRequested": false,
+  "contexts": [
+    {
+      "index": 0,
+      "url": "about:blank",
+      "title": "Atlas runtime context 0",
+      "text": "Context 0",
+      "marker": 0,
+      "rendered": true
+    },
+    {
+      "index": 1,
+      "url": "about:blank",
+      "title": "Atlas runtime context 1",
+      "text": "Context 1",
+      "marker": 1,
+      "rendered": true
+    }
+  ],
+  "scope": "Runtime-only probe using two isolated browser contexts and about:blank DOM. No Atlas application, network/provider request, product verification, performance benchmark or deployment.",
+  "browserVersion": "143.0.7499.0",
+  "nativeContextIds": [
+    "68E5E512B3F03FB9AB254FFE524656C4",
+    "B404FDDE14C72D2988345F7400F4733C"
+  ],
+  "status": "passed",
+  "disconnectedAt": "2026-11-05T08:21:03.037Z",
+  "finishedAt": "2026-11-05T08:21:03.052Z"
+}

@@ -61,12 +61,14 @@ const savedEntryCases=[
   {index:1,name:'saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories',
     assertion:'invalid or cross-mode records must not borrow another slot'},
 ];
+const destructionCase={index:2,name:'destroy during an explicit save releases replay once and ignores late completion',
+  assertion:'destroy must release replay even while an explicit save is pending'};
 function checkSavedEntry(cwd,item,{broken=false}={}){
   const run=spawnSync(process.execPath,['--experimental-vm-modules',coordinatorTestPath,'--replay-ui-extra',String(item.index)],
     {cwd,encoding:'utf8',timeout:30000,maxBuffer:4*1024*1024});
   assert.equal(run.error,undefined);assert.equal(run.signal,null);assert.equal(run.status,broken?1:0,run.stdout+'\n'+run.stderr);
   if(broken){
-    assert.match(run.stderr,/ERR_ASSERTION/);assert.ok(run.stderr.includes(item.assertion),'The saved-entry invariant must reject the mutation');
+    assert.match(run.stderr,/ERR_ASSERTION/);assert.ok(run.stderr.includes(item.assertion),'The targeted coordinator invariant must reject the mutation');
     return {status:'expected behavioral failure',name:item.name,assertion:item.assertion,exitStatus:run.status};
   }
   const result=JSON.parse(run.stdout.trim());assert.equal(result.status,'pass');assert.equal(result.name,item.name);
@@ -90,6 +92,7 @@ const mutations=[
 const results={original:check(root),mutations:{}};
 results.selection={original:checkSelection(root),mutations:{}};
 results.savedEntry={original:savedEntryCases.map(item=>checkSavedEntry(root,item)),mutations:{}};
+results.destruction={original:checkSavedEntry(root,destructionCase),mutations:{}};
 const scratch=await mkdtemp(path.join(tmpdir(),'atlas-replay-state-'));
 try{
   await mkdir(path.join(scratch,'dist'));await mkdir(path.join(scratch,'tests'));
@@ -135,16 +138,34 @@ try{
   }
   await writeFile(path.join(scratch,coordinatorPath),coordinator);
   results.savedEntry.restored=savedEntryCases.map(item=>checkSavedEntry(scratch,item));
+  const destructionMutations=[
+    {name:'destroy-defers-to-interactive-save-guard',test:destructionCase,
+      before:'destroy(){if(destroyed)return;destroyed=true;finishExit();',
+      after:'destroy(){if(destroyed)return;destroyed=true;exit();'},
+    {name:'late-exit-completion-updates-destroyed-controls',
+      test:{...destructionCase,assertion:'destroyed save completion cannot update detached controls'},
+      before:'if(destroyed||!active||token!==epoch)return;',after:'/* Mutation: accept a revoked save completion. */'},
+  ];
+  for(const mutation of destructionMutations){
+    assert.equal(coordinator.split(mutation.before).length,2,'Destruction mutation selector drifted: '+mutation.name);
+    const mutated=coordinator.replace(mutation.before,mutation.after);
+    await writeFile(path.join(scratch,coordinatorPath),mutated);
+    results.destruction.mutations[mutation.name]={...checkSavedEntry(scratch,mutation.test,{broken:true}),sourceSha256:hash(mutated)};
+  }
+  await writeFile(path.join(scratch,coordinatorPath),coordinator);
+  results.destruction.restored=checkSavedEntry(scratch,destructionCase);
 }finally{await rm(scratch,{recursive:true,force:true});}
 const receipt={kind:'atlas-replay-state-verification',schemaVersion:1,
-  baselineCommit:'94a1b1dda9eb359de70747043808340da369d087',
+  baselineCommit:'4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc',
+  originalAuditBaselineCommit:'94a1b1dda9eb359de70747043808340da369d087',
   node:process.version,sourcePath,sourceSha256:hash(source),testPath,testSha256:hash(tests),
-  method:'Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry cases and isolated real-source negative controls',
+  method:'Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, destroy-during-save cases and isolated real-source negative controls',
   coordinatorPath,coordinatorSha256:hash(coordinator),coordinatorTestPath,coordinatorTestSha256:hash(coordinatorTests),
   snapshotPath,snapshotSha256:hash(snapshotSource),
-  bounds:{playback:results.original.enumeration,asyncLoads:2,selectionCommands:6,selectionMaxTraceLength:3,selectionTraces:259},
+  bounds:{playback:results.original.enumeration,asyncLoads:2,selectionCommands:6,selectionMaxTraceLength:3,selectionTraces:259,
+    destruction:{pendingExplicitSaves:1,completionSchedules:['deferred callback resumes','deferred callback rejects'],destroyCallsPerSchedule:2}},
   formalProof:false,modelCheckerRun:false,
-  excluded:['Unlimited trace lengths','Native browser DOM, rendering and events','Real forecast generation and scoring in coordinator doubles','Exhaustive network completion schedules','Wall-clock scheduling accuracy','Cutoff-model loading in the coordinator fixture'],
+  excluded:['Unlimited trace lengths','Native browser DOM, rendering and events','Real forecast generation and scoring in coordinator doubles','Exhaustive network completion schedules','Exhaustive persistence and concurrent-tab schedules','Wall-clock scheduling accuracy','Cutoff-model loading in the coordinator fixture'],
   ...results};
 if(process.argv[2]){
   const destination=path.resolve(process.argv[2]);await mkdir(path.dirname(destination),{recursive:true});

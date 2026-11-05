@@ -198,6 +198,44 @@ const interactionCases=[
     assert.equal(stale.controllers[0].getState().status,'error');assert.match(stale.controllers[0].getState().error,/저장된 예측/);
     assert.equal(stale.savedText(),before);assert.equal(stale.writes.length,0);stale.mounted.destroy();
   }},
+  {name:'destroy during an explicit save releases replay once and ignores late completion',async run(source){
+    for(const completion of ['resolve','reject']){
+      const raw=JSON.stringify(savedFixture(),null,2)+'\n',h=await harness(source,{...atlasFixture().options,storedText:raw});
+      h.trigger.click();h.controls.get('entry-continue').click();await flush();await h.start(dateAt(183));
+      const owner=h.controllers[0].getState().session,entered=deferred(),gate=deferred(),finished=deferred();
+      h.win.navigator.locks.request=async(name,_options,work)=>{
+        entered.resolve();
+        try{await gate.promise;return await work({name});}finally{finished.resolve();}
+      };
+      try{
+        h.controls.get('exit').click();h.controls.get('exit-confirm').click();await entered.promise;
+        assert.equal(h.mounted.isActive(),true);assert.equal(h.liveControl.inert,true);assert.equal(h.controls.get('exit-confirm').disabled,true);
+        await h.mounted.exit();
+        assert.equal(h.mounted.isActive(),true,'interactive exit must not race a pending explicit save');
+        assert.equal(h.controllers[0].getState().session,owner);assert.equal(h.restores(),0);
+        h.mounted.destroy();
+        assert.equal(h.mounted.isActive(),false,'destroy must release replay even while an explicit save is pending');
+        assert.equal(h.controllers[0].getState().status,'idle');assert.equal(h.timers.size,0);
+        assert.equal(h.liveControl.inert,false);assert.equal(h.doc.documentElement.dataset.chartReplayActive,undefined);
+        assert.equal(h.doc.documentElement.dataset.chartReplayMode,undefined);assert.equal(h.svg.dataset.chartReplayActive,undefined);
+        assert.equal(h.plot.dataset.chartReplayMode,undefined);assert.equal(h.svg.dataset.replayOrigin,undefined);
+        assert.equal(h.svg.dataset.replayCursor,undefined);assert.equal(h.restores(),1);
+        assert.equal(h.trigger.parentElement,null);assert.equal(h.plot.children.some(node=>node.className==='chart-replay-controls'),false);
+        const detached={text:h.controls.get('save-status').textContent,hidden:h.controls.get('save-status').hidden,
+          disabled:['exit-confirm','exit-cancel','exit-save'].map(key=>h.controls.get(key).disabled)};
+        h.mounted.destroy();await h.mounted.exit();await h.mounted.open();
+        assert.equal(h.restores(),1);assert.equal(h.mounted.isActive(),false);
+        if(completion==='resolve')gate.resolve();else gate.reject(new Error('late save lock failure'));
+        await finished.promise;await flush();
+        assert.equal(h.writes.length,0,'a destroyed replay must not publish its pending save');assert.equal(h.savedText(),raw);
+        assert.equal(h.restores(),1);assert.equal(h.mounted.isActive(),false);assert.equal(h.liveControl.inert,false);
+        assert.equal(h.doc.documentElement.dataset.chartReplayActive,undefined);assert.equal(h.controllers[0].getState().status,'idle');
+        assert.deepEqual({text:h.controls.get('save-status').textContent,hidden:h.controls.get('save-status').hidden,
+          disabled:['exit-confirm','exit-cancel','exit-save'].map(key=>h.controls.get(key).disabled)},detached,
+          'destroyed save completion cannot update detached controls');
+      }finally{gate.resolve();await finished.promise;await flush();h.mounted.destroy();}
+    }
+  }},
   {name:'forecast settings cannot confirm an unselected replay start',async run(source){
     const fixture=atlasFixture(),h=await harness(source,fixture.options);
     h.trigger.click();await flush();

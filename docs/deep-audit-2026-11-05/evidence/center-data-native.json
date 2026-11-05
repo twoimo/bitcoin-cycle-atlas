@@ -1,0 +1,4357 @@
+{
+  "schemaVersion": 1,
+  "kind": "eth-candidate-real-browser",
+  "startedAt": "2026-11-05T08:31:40.721Z",
+  "status": "passed",
+  "imageLogMode": "failures-only",
+  "caseScope": "center-data",
+  "cases": [
+    {
+      "page": "workspace-center-data",
+      "surface": "center-data",
+      "width": 320,
+      "height": 900,
+      "touch": true,
+      "route": "/?symbol=BTCUSD&granularity=daily&type=line",
+      "status": "passed",
+      "screenshots": [
+        {
+          "file": "workspace-center-data-320x900-board.png",
+          "bytes": 52036,
+          "sha256": "2fee83b350aa562656b8f0d9fe81bae5994085e055f546066690698a37189da0"
+        },
+        {
+          "file": "workspace-center-data-320x900-method.png",
+          "bytes": 70851,
+          "sha256": "9bc25c3e4769721dee16ad652175c633060cf6400c7c10441a7de16658ebb757"
+        },
+        {
+          "file": "workspace-center-data-320x900-returned.png",
+          "bytes": 89709,
+          "sha256": "6f62d35da1c64d5289f0afc52b538da70b97b7969281db8a3e3d4667c1fd74e4"
+        }
+      ],
+      "runtimeErrors": [],
+      "resourceErrors": [
+        {
+          "requestId": "75.112",
+          "frameId": "F353ED68EA7350E32D448C216F912A60",
+          "loaderId": "88CFC831AD1DEF26255AF9B483E9E9BD",
+          "method": "GET",
+          "resourceType": "Fetch",
+          "requestWallTime": 1793867501.509744,
+          "documentUrl": "http://127.0.0.1:36483/?symbol=BTCUSD&granularity=daily&type=line",
+          "networkEvent": "Network.loadingFailed",
+          "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-05&page_size=10000&paging_from=start",
+          "errorText": "",
+          "canceled": false,
+          "blockedReason": "inspector"
+        },
+        {
+          "requestId": "75.299",
+          "frameId": "F353ED68EA7350E32D448C216F912A60",
+          "loaderId": "88CFC831AD1DEF26255AF9B483E9E9BD",
+          "method": "GET",
+          "resourceType": "Fetch",
+          "requestWallTime": 1793867505.468645,
+          "documentUrl": "http://127.0.0.1:36483/?symbol=BTCUSD&indicator-hide=volume&indicator-list=closed&indicator-settings=%7B%7D",
+          "networkEvent": "Network.loadingFailed",
+          "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-05&page_size=10000&paging_from=start",
+          "errorText": "",
+          "canceled": false,
+          "blockedReason": "inspector"
+        }
+      ],
+      "blockedOptionalFonts": [
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "reason": "inspector"
+        },
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "reason": "inspector"
+        },
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "reason": "inspector"
+        },
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "reason": "inspector"
+        }
+      ],
+      "dataResourceRequests": [
+        {
+          "requestId": "75.24",
+          "url": "http://127.0.0.1:36483/daily-data.css?v=1.29.0"
+        },
+        {
+          "requestId": "75.91",
+          "url": "http://127.0.0.1:36483/daily-data-view.js?v=1.29.0"
+        },
+        {
+          "requestId": "75.96",
+          "url": "http://127.0.0.1:36483/asset-comparison.js?v=1.29.0"
+        },
+        {
+          "requestId": "75.221",
+          "url": "http://127.0.0.1:36483/daily-data.css?v=1.29.0"
+        },
+        {
+          "requestId": "75.288",
+          "url": "http://127.0.0.1:36483/daily-data-view.js?v=1.29.0"
+        },
+        {
+          "requestId": "75.293",
+          "url": "http://127.0.0.1:36483/asset-comparison.js?v=1.29.0"
+        },
+        {
+          "requestId": "75.298",
+          "url": "http://127.0.0.1:36483/data/asset-comparison.json"
+        }
+      ],
+      "expectedOfflineRefresh": [
+        {
+          "phase": "center-data-initial-parent",
+          "frameId": "F353ED68EA7350E32D448C216F912A60",
+          "loaderId": "88CFC831AD1DEF26255AF9B483E9E9BD",
+          "observed": {
+            "url": "http://127.0.0.1:36483/?symbol=BTCUSD&indicator-hide=volume&indicator-list=closed&indicator-settings=%7B%7D",
+            "timeOrigin": 1793867501278.1,
+            "notice": {
+              "state": "failed",
+              "visible": true,
+              "box": {
+                "left": 0,
+                "right": 320,
+                "top": 0,
+                "bottom": 53,
+                "width": 320,
+                "height": 53
+              },
+              "summary": "비트코인 일별 갱신 실패",
+              "detail": "2026.10.31 UTC 자료 유지",
+              "summaryUnclipped": true,
+              "detailUnclipped": true,
+              "retryBox": {
+                "left": 256,
+                "right": 312,
+                "top": 4,
+                "bottom": 48,
+                "width": 56,
+                "height": 44
+              },
+              "retryDisabled": false,
+              "retryTopmost": true,
+              "summaryTopmost": true,
+              "liveRole": "status",
+              "livePoliteness": "polite",
+              "liveAtomic": "true",
+              "announcement": "비트코인 일별 갱신에 실패했습니다. 2026.10.31 UTC 자료를 유지합니다.",
+              "duplicateAnnouncements": 1,
+              "viewportWidth": 320,
+              "viewportHeight": 900
+            },
+            "title": "갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.",
+            "disabled": false,
+            "busy": false,
+            "refreshButtonVisible": false,
+            "cutoff": "관측 · 2026.10.31 UTC",
+            "page": "outlook",
+            "price": "$77,401.02",
+            "priceDate": "2026.10.31 UTC",
+            "priceKind": "observed"
+          },
+          "requestIds": [
+            "75.112"
+          ],
+          "archiveSha256": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf",
+          "archiveAsOf": "2026-10-31",
+          "displayedPriceVerified": true,
+          "displayedPricePrecision": "USD rounded to 2 decimals",
+          "failureTitleVerified": true,
+          "persistentVisibleErrorVerified": true,
+          "noticeVisibilityScope": "actual viewport",
+          "interpretation": "Expected offline refresh failure; archive cutoff and displayed BTC price retained"
+        },
+        {
+          "phase": "center-data-return-parent-retry",
+          "frameId": "F353ED68EA7350E32D448C216F912A60",
+          "loaderId": "88CFC831AD1DEF26255AF9B483E9E9BD",
+          "observed": {
+            "url": "http://127.0.0.1:36483/?symbol=BTCUSD&indicator-hide=volume&indicator-list=closed&indicator-settings=%7B%7D",
+            "timeOrigin": 1793867501278.1,
+            "notice": {
+              "state": "failed",
+              "visible": true,
+              "box": {
+                "left": 0,
+                "right": 320,
+                "top": 0,
+                "bottom": 53,
+                "width": 320,
+                "height": 53
+              },
+              "summary": "비트코인 일별 갱신 실패",
+              "detail": "2026.10.31 UTC 자료 유지",
+              "summaryUnclipped": true,
+              "detailUnclipped": true,
+              "retryBox": {
+                "left": 256,
+                "right": 312,
+                "top": 4,
+                "bottom": 48,
+                "width": 56,
+                "height": 44
+              },
+              "retryDisabled": false,
+              "retryTopmost": true,
+              "summaryTopmost": true,
+              "liveRole": "status",
+              "livePoliteness": "polite",
+              "liveAtomic": "true",
+              "announcement": "비트코인 일별 갱신에 실패했습니다. 2026.10.31 UTC 자료를 유지합니다.",
+              "duplicateAnnouncements": 1,
+              "viewportWidth": 320,
+              "viewportHeight": 900
+            },
+            "title": "갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.",
+            "disabled": false,
+            "busy": false,
+            "refreshButtonVisible": false,
+            "cutoff": "관측 · 2026.10.31 UTC",
+            "page": "outlook",
+            "price": "$77,401.02",
+            "priceDate": "2026.10.31 UTC",
+            "priceKind": "observed"
+          },
+          "requestIds": [
+            "75.299"
+          ],
+          "archiveSha256": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf",
+          "archiveAsOf": "2026-10-31",
+          "displayedPriceVerified": true,
+          "displayedPricePrecision": "USD rounded to 2 decimals",
+          "failureTitleVerified": true,
+          "persistentVisibleErrorVerified": true,
+          "noticeVisibilityScope": "actual viewport",
+          "interpretation": "Expected offline refresh failure; archive cutoff and displayed BTC price retained"
+        }
+      ],
+      "unexpectedResourceErrors": [],
+      "url": "http://127.0.0.1:36483/?symbol=BTCUSD&granularity=daily&type=line",
+      "workspace": {
+        "surface": "center-data",
+        "states": [],
+        "centerData": {
+          "inputs": [
+            {
+              "kind": "native-heading-swipe",
+              "before": 0,
+              "after": 117,
+              "x": 296,
+              "y": 77,
+              "distance": 144,
+              "direction": -1,
+              "parentAfter": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": null,
+                "documentWidth": 320,
+                "bodyWidth": 320,
+                "stage": {
+                  "left": 0,
+                  "right": 320,
+                  "top": 53,
+                  "bottom": 900,
+                  "width": 320,
+                  "height": 847,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 320,
+                  "scrollWidth": 320
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 53,
+                    "bottom": 101,
+                    "width": 320,
+                    "height": 48
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 856,
+                    "bottom": 900,
+                    "width": 320,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": "#mobile-details-toggle",
+              "frameId": null,
+              "target": {
+                "selector": "#mobile-details-toggle",
+                "box": {
+                  "left": 268,
+                  "right": 312,
+                  "top": 54.5,
+                  "bottom": 98.5,
+                  "width": 44,
+                  "height": 44
+                },
+                "clip": {
+                  "left": 268,
+                  "right": 312,
+                  "top": 54.5,
+                  "bottom": 98.5,
+                  "width": 44,
+                  "height": 44
+                },
+                "x": 290,
+                "y": 76.5,
+                "viewport": {
+                  "width": 320,
+                  "height": 900
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "정보와 설정",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(158, 175, 196)"
+              },
+              "point": {
+                "x": 290,
+                "y": 76.5
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": null,
+                "documentWidth": 320,
+                "bodyWidth": 320,
+                "stage": {
+                  "left": 0,
+                  "right": 320,
+                  "top": 53,
+                  "bottom": 900,
+                  "width": 320,
+                  "height": 847,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 320,
+                  "scrollWidth": 320
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 53,
+                    "bottom": 101,
+                    "width": 320,
+                    "height": 48
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 856,
+                    "bottom": 900,
+                    "width": 320,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": ".atlas-nav [data-atlas-page=\"data\"]",
+              "frameId": null,
+              "target": {
+                "selector": ".atlas-nav [data-atlas-page=\"data\"]",
+                "box": {
+                  "left": 202.171875,
+                  "right": 258,
+                  "top": 681.78125,
+                  "bottom": 745.78125,
+                  "width": 55.828125,
+                  "height": 64
+                },
+                "clip": {
+                  "left": 202.171875,
+                  "right": 258,
+                  "top": 681.78125,
+                  "bottom": 745.78125,
+                  "width": 55.828125,
+                  "height": 64
+                },
+                "x": 230.0859375,
+                "y": 713.78125,
+                "viewport": {
+                  "width": 320,
+                  "height": 900
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "자산 비교",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(161, 173, 191)"
+              },
+              "point": {
+                "x": 230.0859375,
+                "y": 713.78125
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": null,
+                "documentWidth": 320,
+                "bodyWidth": 320,
+                "stage": {
+                  "left": 0,
+                  "right": 320,
+                  "top": 53,
+                  "bottom": 900,
+                  "width": 320,
+                  "height": 847,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 320,
+                  "scrollWidth": 320
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 53,
+                    "bottom": 101,
+                    "width": 320,
+                    "height": 48
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 856,
+                    "bottom": 900,
+                    "width": 320,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 8,
+                    "right": 312,
+                    "top": 109,
+                    "bottom": 810.78125,
+                    "width": 304,
+                    "height": 701.78125
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": "#daily-method-open",
+              "frameId": "6EC07AD46021190EFE74078CE830A7EE",
+              "target": {
+                "selector": "#daily-method-open",
+                "box": {
+                  "left": 208,
+                  "right": 252,
+                  "top": 12,
+                  "bottom": 56,
+                  "width": 44,
+                  "height": 44
+                },
+                "clip": {
+                  "left": 208,
+                  "right": 252,
+                  "top": 12,
+                  "bottom": 56,
+                  "width": 44,
+                  "height": 44
+                },
+                "x": 230,
+                "y": 34,
+                "viewport": {
+                  "width": 320,
+                  "height": 755
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "자산 비교표 읽는 법",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(161, 173, 191)"
+              },
+              "point": {
+                "x": 230,
+                "y": 135
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": "data",
+                "documentWidth": 320,
+                "bodyWidth": 320,
+                "stage": {
+                  "left": 0,
+                  "right": 320,
+                  "top": 53,
+                  "bottom": 900,
+                  "width": 320,
+                  "height": 847,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 320,
+                  "scrollWidth": 320
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 53,
+                    "bottom": 101,
+                    "width": 320,
+                    "height": 48
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 856,
+                    "bottom": 900,
+                    "width": 320,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": "#daily-method-close",
+              "frameId": "6EC07AD46021190EFE74078CE830A7EE",
+              "target": {
+                "selector": "#daily-method-close",
+                "box": {
+                  "left": 243,
+                  "right": 287,
+                  "top": 50.296875,
+                  "bottom": 94.296875,
+                  "width": 44,
+                  "height": 44
+                },
+                "clip": {
+                  "left": 243,
+                  "right": 287,
+                  "top": 50.296875,
+                  "bottom": 94.296875,
+                  "width": 44,
+                  "height": 44
+                },
+                "x": 265,
+                "y": 72.296875,
+                "viewport": {
+                  "width": 320,
+                  "height": 755
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "읽는 법 닫기",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(161, 173, 191)"
+              },
+              "point": {
+                "x": 265,
+                "y": 173.296875
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": "data",
+                "documentWidth": 320,
+                "bodyWidth": 320,
+                "stage": {
+                  "left": 0,
+                  "right": 320,
+                  "top": 53,
+                  "bottom": 900,
+                  "width": 320,
+                  "height": 847,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 320,
+                  "scrollWidth": 320
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 53,
+                    "bottom": 101,
+                    "width": 320,
+                    "height": 48
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 856,
+                    "bottom": 900,
+                    "width": 320,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": "#mobile-details-toggle",
+              "frameId": null,
+              "target": {
+                "selector": "#mobile-details-toggle",
+                "box": {
+                  "left": 203,
+                  "right": 247,
+                  "top": 54.5,
+                  "bottom": 98.5,
+                  "width": 44,
+                  "height": 44
+                },
+                "clip": {
+                  "left": 203,
+                  "right": 247,
+                  "top": 54.5,
+                  "bottom": 98.5,
+                  "width": 44,
+                  "height": 44
+                },
+                "x": 225,
+                "y": 76.5,
+                "viewport": {
+                  "width": 320,
+                  "height": 900
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "정보와 설정",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(158, 175, 196)"
+              },
+              "point": {
+                "x": 225,
+                "y": 76.5
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": "data",
+                "documentWidth": 320,
+                "bodyWidth": 320,
+                "stage": {
+                  "left": 0,
+                  "right": 320,
+                  "top": 53,
+                  "bottom": 900,
+                  "width": 320,
+                  "height": 847,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 320,
+                  "scrollWidth": 320
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 53,
+                    "bottom": 101,
+                    "width": 320,
+                    "height": 48
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 856,
+                    "bottom": 900,
+                    "width": 320,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": ".atlas-nav [data-atlas-page=\"outlook\"]",
+              "frameId": null,
+              "target": {
+                "selector": ".atlas-nav [data-atlas-page=\"outlook\"]",
+                "box": {
+                  "left": 17,
+                  "right": 72.828125,
+                  "top": 545.78125,
+                  "bottom": 609.78125,
+                  "width": 55.828125,
+                  "height": 64
+                },
+                "clip": {
+                  "left": 17,
+                  "right": 72.828125,
+                  "top": 545.78125,
+                  "bottom": 609.78125,
+                  "width": 55.828125,
+                  "height": 64
+                },
+                "x": 44.9140625,
+                "y": 577.78125,
+                "viewport": {
+                  "width": 320,
+                  "height": 900
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "가격 차트",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(161, 173, 191)"
+              },
+              "point": {
+                "x": 44.9140625,
+                "y": 577.78125
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": "data",
+                "documentWidth": 320,
+                "bodyWidth": 320,
+                "stage": {
+                  "left": 0,
+                  "right": 320,
+                  "top": 53,
+                  "bottom": 900,
+                  "width": 320,
+                  "height": 847,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 320,
+                  "scrollWidth": 320
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 53,
+                    "bottom": 101,
+                    "width": 320,
+                    "height": 48
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 856,
+                    "bottom": 900,
+                    "width": 320,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 8,
+                    "right": 312,
+                    "top": 109,
+                    "bottom": 810.78125,
+                    "width": 304,
+                    "height": 701.78125
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": "#btc-refresh-retry",
+              "frameId": null,
+              "target": {
+                "selector": "#btc-refresh-retry",
+                "box": {
+                  "left": 256,
+                  "right": 312,
+                  "top": 4,
+                  "bottom": 48,
+                  "width": 56,
+                  "height": 44
+                },
+                "clip": {
+                  "left": 256,
+                  "right": 312,
+                  "top": 4,
+                  "bottom": 48,
+                  "width": 56,
+                  "height": 44
+                },
+                "x": 284,
+                "y": 26,
+                "viewport": {
+                  "width": 320,
+                  "height": 900
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "비트코인 일별 자료 다시 확인",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(230, 235, 242)"
+              },
+              "point": {
+                "x": 284,
+                "y": 26
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": null,
+                "documentWidth": 320,
+                "bodyWidth": 320,
+                "stage": {
+                  "left": 0,
+                  "right": 320,
+                  "top": 53,
+                  "bottom": 900,
+                  "width": 320,
+                  "height": 847,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 320,
+                  "scrollWidth": 320
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 53,
+                    "bottom": 101,
+                    "width": 320,
+                    "height": 48
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 320,
+                    "top": 856,
+                    "bottom": 900,
+                    "width": 320,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                    "bottom": 0,
+                    "width": 0,
+                    "height": 0
+                  }
+                }
+              }
+            }
+          ],
+          "states": [],
+          "sourceBefore": {
+            "timeOrigin": 1793867501278.1,
+            "price": "$77,401.02",
+            "date": "2026.10.31 UTC",
+            "kind": "observed",
+            "cutoff": "관측 · 2026.10.31 UTC"
+          },
+          "before": {
+            "page": "outlook",
+            "shell": "chart",
+            "center": null,
+            "documentWidth": 320,
+            "bodyWidth": 320,
+            "stage": {
+              "left": 0,
+              "right": 320,
+              "top": 53,
+              "bottom": 900,
+              "width": 320,
+              "height": 847,
+              "scrollLeft": 0,
+              "scrollTop": 0,
+              "clientWidth": 320,
+              "scrollWidth": 320
+            },
+            "perimeter": {
+              ".atlas-canvas-heading": {
+                "connected": true,
+                "left": 0,
+                "right": 320,
+                "top": 53,
+                "bottom": 101,
+                "width": 320,
+                "height": 48
+              },
+              ".workbench-bottom-bar": {
+                "connected": true,
+                "left": 0,
+                "right": 320,
+                "top": 856,
+                "bottom": 900,
+                "width": 320,
+                "height": 44
+              },
+              ".atlas-sidebar": {
+                "connected": true,
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              },
+              ".workbench-rail": {
+                "connected": true,
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              }
+            }
+          },
+          "entered": {
+            "page": "outlook",
+            "shell": "chart",
+            "center": "data",
+            "documentWidth": 320,
+            "bodyWidth": 320,
+            "stage": {
+              "left": 0,
+              "right": 320,
+              "top": 53,
+              "bottom": 900,
+              "width": 320,
+              "height": 847,
+              "scrollLeft": 0,
+              "scrollTop": 0,
+              "clientWidth": 320,
+              "scrollWidth": 320
+            },
+            "perimeter": {
+              ".atlas-canvas-heading": {
+                "connected": true,
+                "left": 0,
+                "right": 320,
+                "top": 53,
+                "bottom": 101,
+                "width": 320,
+                "height": 48
+              },
+              ".workbench-bottom-bar": {
+                "connected": true,
+                "left": 0,
+                "right": 320,
+                "top": 856,
+                "bottom": 900,
+                "width": 320,
+                "height": 44
+              },
+              ".atlas-sidebar": {
+                "connected": true,
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              },
+              ".workbench-rail": {
+                "connected": true,
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              }
+            }
+          },
+          "childContext": {
+            "frameId": "6EC07AD46021190EFE74078CE830A7EE",
+            "parentFrameId": "F353ED68EA7350E32D448C216F912A60",
+            "url": "http://127.0.0.1:36483/?page=data&embedded=1",
+            "executionContextId": 5
+          },
+          "board": {
+            "embedded": "true",
+            "coarse": true,
+            "width": 320,
+            "height": 755,
+            "documentWidth": 320,
+            "root": {
+              "left": 16,
+              "right": 304,
+              "top": 8,
+              "bottom": 747,
+              "width": 288,
+              "height": 739
+            },
+            "toolbar": {
+              "left": 16,
+              "right": 304,
+              "top": 8,
+              "bottom": 61,
+              "width": 288,
+              "height": 53
+            },
+            "symbols": [
+              "BTC",
+              "SPY",
+              "QQQ",
+              "NVDA",
+              "AAPL",
+              "GOOG",
+              "MSFT",
+              "AMZN",
+              "META",
+              "AVGO",
+              "PLTR",
+              "TSLA",
+              "HOOD",
+              "TLT",
+              "IEF",
+              "GLD",
+              "SLV",
+              "PDBC"
+            ],
+            "btcName": "비트코인",
+            "actionIds": [
+              "asset-refresh",
+              "asset-history-open",
+              "daily-method-open",
+              "export-raw"
+            ]
+          },
+          "actions": [
+            {
+              "selector": "#asset-refresh",
+              "box": {
+                "left": 120,
+                "right": 164,
+                "top": 12,
+                "bottom": 56,
+                "width": 44,
+                "height": 44
+              },
+              "clip": {
+                "left": 120,
+                "right": 164,
+                "top": 12,
+                "bottom": 56,
+                "width": 44,
+                "height": 44
+              },
+              "x": 142,
+              "y": 34,
+              "viewport": {
+                "width": 320,
+                "height": 755
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "가격 자료 갱신",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            },
+            {
+              "selector": "#asset-history-open",
+              "box": {
+                "left": 164,
+                "right": 208,
+                "top": 12,
+                "bottom": 56,
+                "width": 44,
+                "height": 44
+              },
+              "clip": {
+                "left": 164,
+                "right": 208,
+                "top": 12,
+                "bottom": 56,
+                "width": 44,
+                "height": 44
+              },
+              "x": 186,
+              "y": 34,
+              "viewport": {
+                "width": 320,
+                "height": 755
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "자산군별 판단 이력",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            },
+            {
+              "selector": "#daily-method-open",
+              "box": {
+                "left": 208,
+                "right": 252,
+                "top": 12,
+                "bottom": 56,
+                "width": 44,
+                "height": 44
+              },
+              "clip": {
+                "left": 208,
+                "right": 252,
+                "top": 12,
+                "bottom": 56,
+                "width": 44,
+                "height": 44
+              },
+              "x": 230,
+              "y": 34,
+              "viewport": {
+                "width": 320,
+                "height": 755
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "자산 비교표 읽는 법",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            },
+            {
+              "selector": "#export-raw",
+              "box": {
+                "left": 252,
+                "right": 296,
+                "top": 12,
+                "bottom": 56,
+                "width": 44,
+                "height": 44
+              },
+              "clip": {
+                "left": 252,
+                "right": 296,
+                "top": 12,
+                "bottom": 56,
+                "width": 44,
+                "height": 44
+              },
+              "x": 274,
+              "y": 34,
+              "viewport": {
+                "width": 320,
+                "height": 755
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "18개 자산 CSV 내려받기",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            }
+          ],
+          "method": {
+            "modal": true,
+            "scrollTop": 1184,
+            "maxScroll": 1185,
+            "#daily-method-title": {
+              "selector": "#daily-method-title",
+              "box": {
+                "left": 33,
+                "right": 161.46875,
+                "top": 59.890625,
+                "bottom": 84.6875,
+                "width": 128.46875,
+                "height": 24.796875
+              },
+              "clip": {
+                "left": 33,
+                "right": 161.46875,
+                "top": 59.890625,
+                "bottom": 84.6875,
+                "width": 128.46875,
+                "height": 24.796875
+              },
+              "x": 97.234375,
+              "y": 72.2890625,
+              "viewport": {
+                "width": 320,
+                "height": 755
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "H2",
+              "label": "자산 비교표 읽는 법",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(230, 235, 242)"
+            },
+            "#daily-method-close": {
+              "selector": "#daily-method-close",
+              "box": {
+                "left": 243,
+                "right": 287,
+                "top": 50.296875,
+                "bottom": 94.296875,
+                "width": 44,
+                "height": 44
+              },
+              "clip": {
+                "left": 243,
+                "right": 287,
+                "top": 50.296875,
+                "bottom": 94.296875,
+                "width": 44,
+                "height": 44
+              },
+              "x": 265,
+              "y": 72.296875,
+              "viewport": {
+                "width": 320,
+                "height": 755
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "읽는 법 닫기",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            }
+          },
+          "afterMethod": {
+            "page": "outlook",
+            "shell": "chart",
+            "center": "data",
+            "documentWidth": 320,
+            "bodyWidth": 320,
+            "stage": {
+              "left": 0,
+              "right": 320,
+              "top": 53,
+              "bottom": 900,
+              "width": 320,
+              "height": 847,
+              "scrollLeft": 0,
+              "scrollTop": 0,
+              "clientWidth": 320,
+              "scrollWidth": 320
+            },
+            "perimeter": {
+              ".atlas-canvas-heading": {
+                "connected": true,
+                "left": 0,
+                "right": 320,
+                "top": 53,
+                "bottom": 101,
+                "width": 320,
+                "height": 48
+              },
+              ".workbench-bottom-bar": {
+                "connected": true,
+                "left": 0,
+                "right": 320,
+                "top": 856,
+                "bottom": 900,
+                "width": 320,
+                "height": 44
+              },
+              ".atlas-sidebar": {
+                "connected": true,
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              },
+              ".workbench-rail": {
+                "connected": true,
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              }
+            }
+          },
+          "returned": {
+            "page": "outlook",
+            "shell": "chart",
+            "center": null,
+            "documentWidth": 320,
+            "bodyWidth": 320,
+            "stage": {
+              "left": 0,
+              "right": 320,
+              "top": 53,
+              "bottom": 900,
+              "width": 320,
+              "height": 847,
+              "scrollLeft": 0,
+              "scrollTop": 0,
+              "clientWidth": 320,
+              "scrollWidth": 320
+            },
+            "perimeter": {
+              ".atlas-canvas-heading": {
+                "connected": true,
+                "left": 0,
+                "right": 320,
+                "top": 53,
+                "bottom": 101,
+                "width": 320,
+                "height": 48
+              },
+              ".workbench-bottom-bar": {
+                "connected": true,
+                "left": 0,
+                "right": 320,
+                "top": 856,
+                "bottom": 900,
+                "width": 320,
+                "height": 44
+              },
+              ".atlas-sidebar": {
+                "connected": true,
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              },
+              ".workbench-rail": {
+                "connected": true,
+                "left": 0,
+                "right": 0,
+                "top": 0,
+                "bottom": 0,
+                "width": 0,
+                "height": 0
+              }
+            }
+          },
+          "sourceAfter": {
+            "timeOrigin": 1793867501278.1,
+            "price": "$77,401.02",
+            "date": "2026.10.31 UTC",
+            "kind": "observed",
+            "cutoff": "관측 · 2026.10.31 UTC"
+          },
+          "sourceAfterRetry": {
+            "timeOrigin": 1793867501278.1,
+            "price": "$77,401.02",
+            "date": "2026.10.31 UTC",
+            "kind": "observed",
+            "cutoff": "관측 · 2026.10.31 UTC"
+          }
+        }
+      },
+      "lastRefreshObservation": {
+        "phase": "center-data-return-parent-retry",
+        "observed": {
+          "url": "http://127.0.0.1:36483/?symbol=BTCUSD&indicator-hide=volume&indicator-list=closed&indicator-settings=%7B%7D",
+          "timeOrigin": 1793867501278.1,
+          "notice": {
+            "state": "failed",
+            "visible": true,
+            "box": {
+              "left": 0,
+              "right": 320,
+              "top": 0,
+              "bottom": 53,
+              "width": 320,
+              "height": 53
+            },
+            "summary": "비트코인 일별 갱신 실패",
+            "detail": "2026.10.31 UTC 자료 유지",
+            "summaryUnclipped": true,
+            "detailUnclipped": true,
+            "retryBox": {
+              "left": 256,
+              "right": 312,
+              "top": 4,
+              "bottom": 48,
+              "width": 56,
+              "height": 44
+            },
+            "retryDisabled": false,
+            "retryTopmost": true,
+            "summaryTopmost": true,
+            "liveRole": "status",
+            "livePoliteness": "polite",
+            "liveAtomic": "true",
+            "announcement": "비트코인 일별 갱신에 실패했습니다. 2026.10.31 UTC 자료를 유지합니다.",
+            "duplicateAnnouncements": 1,
+            "viewportWidth": 320,
+            "viewportHeight": 900
+          },
+          "title": "갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.",
+          "disabled": false,
+          "busy": false,
+          "refreshButtonVisible": false,
+          "cutoff": "관측 · 2026.10.31 UTC",
+          "page": "outlook",
+          "price": "$77,401.02",
+          "priceDate": "2026.10.31 UTC",
+          "priceKind": "observed"
+        }
+      }
+    },
+    {
+      "page": "workspace-center-data",
+      "surface": "center-data",
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "route": "/?symbol=BTCUSD&granularity=daily&type=line",
+      "status": "passed",
+      "screenshots": [
+        {
+          "file": "workspace-center-data-1440x900-board.png",
+          "bytes": 215495,
+          "sha256": "fcfc55071a263308ea23a445f8dc6070f9cde0aacf60568b23f823c06e786ac3"
+        },
+        {
+          "file": "workspace-center-data-1440x900-method.png",
+          "bytes": 214882,
+          "sha256": "90116650cffc7078d19cadfc61e62c803d634b3e637ed2ae9088c0363017ba22"
+        },
+        {
+          "file": "workspace-center-data-1440x900-returned.png",
+          "bytes": 263254,
+          "sha256": "e913b5ef2abeb51d7db0e6ec57a9f832e0fa4b268d6f477bc642851f11f7f7f3"
+        }
+      ],
+      "runtimeErrors": [],
+      "resourceErrors": [
+        {
+          "requestId": "102.149",
+          "frameId": "85A58BA88F36EC5A2274011D5E4090F6",
+          "loaderId": "0D855FB4C64E22BA98829C9DDC85E25F",
+          "method": "GET",
+          "resourceType": "Fetch",
+          "requestWallTime": 1793867505.992951,
+          "documentUrl": "http://127.0.0.1:36483/?symbol=BTCUSD&granularity=daily&type=line",
+          "networkEvent": "Network.loadingFailed",
+          "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-05&page_size=10000&paging_from=start",
+          "errorText": "",
+          "canceled": false,
+          "blockedReason": "inspector"
+        },
+        {
+          "requestId": "102.299",
+          "frameId": "85A58BA88F36EC5A2274011D5E4090F6",
+          "loaderId": "0D855FB4C64E22BA98829C9DDC85E25F",
+          "method": "GET",
+          "resourceType": "Fetch",
+          "requestWallTime": 1793867509.078092,
+          "documentUrl": "http://127.0.0.1:36483/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+          "networkEvent": "Network.loadingFailed",
+          "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-05&page_size=10000&paging_from=start",
+          "errorText": "",
+          "canceled": false,
+          "blockedReason": "inspector"
+        }
+      ],
+      "blockedOptionalFonts": [
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "reason": "inspector"
+        },
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "reason": "inspector"
+        },
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "reason": "inspector"
+        },
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "reason": "inspector"
+        }
+      ],
+      "dataResourceRequests": [
+        {
+          "requestId": "102.24",
+          "url": "http://127.0.0.1:36483/daily-data.css?v=1.29.0"
+        },
+        {
+          "requestId": "102.91",
+          "url": "http://127.0.0.1:36483/daily-data-view.js?v=1.29.0"
+        },
+        {
+          "requestId": "102.96",
+          "url": "http://127.0.0.1:36483/asset-comparison.js?v=1.29.0"
+        },
+        {
+          "requestId": "102.221",
+          "url": "http://127.0.0.1:36483/daily-data.css?v=1.29.0"
+        },
+        {
+          "requestId": "102.288",
+          "url": "http://127.0.0.1:36483/daily-data-view.js?v=1.29.0"
+        },
+        {
+          "requestId": "102.293",
+          "url": "http://127.0.0.1:36483/asset-comparison.js?v=1.29.0"
+        },
+        {
+          "requestId": "102.298",
+          "url": "http://127.0.0.1:36483/data/asset-comparison.json"
+        }
+      ],
+      "expectedOfflineRefresh": [
+        {
+          "phase": "center-data-initial-parent",
+          "frameId": "85A58BA88F36EC5A2274011D5E4090F6",
+          "loaderId": "0D855FB4C64E22BA98829C9DDC85E25F",
+          "observed": {
+            "url": "http://127.0.0.1:36483/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+            "timeOrigin": 1793867505732,
+            "notice": {
+              "state": "failed",
+              "visible": true,
+              "box": {
+                "left": 44,
+                "right": 1402,
+                "top": 0,
+                "bottom": 45,
+                "width": 1358,
+                "height": 45
+              },
+              "summary": "비트코인 일별 갱신 실패",
+              "detail": "2026.10.31 UTC 자료 유지",
+              "summaryUnclipped": true,
+              "detailUnclipped": true,
+              "retryBox": {
+                "left": 1338,
+                "right": 1394,
+                "top": 4,
+                "bottom": 40,
+                "width": 56,
+                "height": 36
+              },
+              "retryDisabled": false,
+              "retryTopmost": true,
+              "summaryTopmost": true,
+              "liveRole": "status",
+              "livePoliteness": "polite",
+              "liveAtomic": "true",
+              "announcement": "비트코인 일별 갱신에 실패했습니다. 2026.10.31 UTC 자료를 유지합니다.",
+              "duplicateAnnouncements": 1,
+              "viewportWidth": 1440,
+              "viewportHeight": 900
+            },
+            "title": "갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.",
+            "disabled": false,
+            "busy": false,
+            "refreshButtonVisible": false,
+            "cutoff": "관측 · 2026.10.31 UTC",
+            "page": "outlook",
+            "price": "$77,401.02",
+            "priceDate": "2026.10.31 UTC",
+            "priceKind": "observed"
+          },
+          "requestIds": [
+            "102.149"
+          ],
+          "archiveSha256": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf",
+          "archiveAsOf": "2026-10-31",
+          "displayedPriceVerified": true,
+          "displayedPricePrecision": "USD rounded to 2 decimals",
+          "failureTitleVerified": true,
+          "persistentVisibleErrorVerified": true,
+          "noticeVisibilityScope": "actual viewport",
+          "interpretation": "Expected offline refresh failure; archive cutoff and displayed BTC price retained"
+        },
+        {
+          "phase": "center-data-return-parent-retry",
+          "frameId": "85A58BA88F36EC5A2274011D5E4090F6",
+          "loaderId": "0D855FB4C64E22BA98829C9DDC85E25F",
+          "observed": {
+            "url": "http://127.0.0.1:36483/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+            "timeOrigin": 1793867505732,
+            "notice": {
+              "state": "failed",
+              "visible": true,
+              "box": {
+                "left": 44,
+                "right": 1402,
+                "top": 0,
+                "bottom": 45,
+                "width": 1358,
+                "height": 45
+              },
+              "summary": "비트코인 일별 갱신 실패",
+              "detail": "2026.10.31 UTC 자료 유지",
+              "summaryUnclipped": true,
+              "detailUnclipped": true,
+              "retryBox": {
+                "left": 1338,
+                "right": 1394,
+                "top": 4,
+                "bottom": 40,
+                "width": 56,
+                "height": 36
+              },
+              "retryDisabled": false,
+              "retryTopmost": true,
+              "summaryTopmost": true,
+              "liveRole": "status",
+              "livePoliteness": "polite",
+              "liveAtomic": "true",
+              "announcement": "비트코인 일별 갱신에 실패했습니다. 2026.10.31 UTC 자료를 유지합니다.",
+              "duplicateAnnouncements": 1,
+              "viewportWidth": 1440,
+              "viewportHeight": 900
+            },
+            "title": "갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.",
+            "disabled": false,
+            "busy": false,
+            "refreshButtonVisible": false,
+            "cutoff": "관측 · 2026.10.31 UTC",
+            "page": "outlook",
+            "price": "$77,401.02",
+            "priceDate": "2026.10.31 UTC",
+            "priceKind": "observed"
+          },
+          "requestIds": [
+            "102.299"
+          ],
+          "archiveSha256": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf",
+          "archiveAsOf": "2026-10-31",
+          "displayedPriceVerified": true,
+          "displayedPricePrecision": "USD rounded to 2 decimals",
+          "failureTitleVerified": true,
+          "persistentVisibleErrorVerified": true,
+          "noticeVisibilityScope": "actual viewport",
+          "interpretation": "Expected offline refresh failure; archive cutoff and displayed BTC price retained"
+        }
+      ],
+      "unexpectedResourceErrors": [],
+      "url": "http://127.0.0.1:36483/?symbol=BTCUSD&granularity=daily&type=line",
+      "workspace": {
+        "surface": "center-data",
+        "states": [],
+        "centerData": {
+          "inputs": [
+            {
+              "kind": "raw-native-pointer",
+              "selector": ".atlas-nav [data-atlas-page=\"data\"]",
+              "frameId": null,
+              "target": {
+                "selector": ".atlas-nav [data-atlas-page=\"data\"]",
+                "box": {
+                  "left": 1404.5,
+                  "right": 1438.5,
+                  "top": 575,
+                  "bottom": 609,
+                  "width": 34,
+                  "height": 34
+                },
+                "clip": {
+                  "left": 1404.5,
+                  "right": 1438.5,
+                  "top": 575,
+                  "bottom": 609,
+                  "width": 34,
+                  "height": 34
+                },
+                "x": 1421.5,
+                "y": 592,
+                "viewport": {
+                  "width": 1440,
+                  "height": 900
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "자산 비교",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(161, 173, 191)"
+              },
+              "point": {
+                "x": 1421.5,
+                "y": 592
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": null,
+                "documentWidth": 1440,
+                "bodyWidth": 1440,
+                "stage": {
+                  "left": 44,
+                  "right": 1402,
+                  "top": 45,
+                  "bottom": 900,
+                  "width": 1358,
+                  "height": 855,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 1358,
+                  "scrollWidth": 1358
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 1402,
+                    "top": 45,
+                    "bottom": 89,
+                    "width": 1358,
+                    "height": 44
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 1402,
+                    "top": 856,
+                    "bottom": 900,
+                    "width": 1358,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 44,
+                    "top": 0,
+                    "bottom": 900,
+                    "width": 44,
+                    "height": 900
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 1402,
+                    "right": 1440,
+                    "top": 0,
+                    "bottom": 900,
+                    "width": 38,
+                    "height": 900
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": "#daily-method-open",
+              "frameId": "405D7E9CB2C1F6B4247E8C414C691A43",
+              "target": {
+                "selector": "#daily-method-open",
+                "box": {
+                  "left": 1183.953125,
+                  "right": 1262.78125,
+                  "top": 14.5,
+                  "bottom": 46.5,
+                  "width": 78.828125,
+                  "height": 32
+                },
+                "clip": {
+                  "left": 1183.953125,
+                  "right": 1262.78125,
+                  "top": 14.5,
+                  "bottom": 46.5,
+                  "width": 78.828125,
+                  "height": 32
+                },
+                "x": 1223.3671875,
+                "y": 30.5,
+                "viewport": {
+                  "width": 1358,
+                  "height": 767
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "자산 비교표 읽는 법",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(161, 173, 191)"
+              },
+              "point": {
+                "x": 1267.3671875,
+                "y": 119.5
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": "data",
+                "documentWidth": 1440,
+                "bodyWidth": 1440,
+                "stage": {
+                  "left": 44,
+                  "right": 1402,
+                  "top": 45,
+                  "bottom": 900,
+                  "width": 1358,
+                  "height": 855,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 1358,
+                  "scrollWidth": 1358
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 1402,
+                    "top": 45,
+                    "bottom": 89,
+                    "width": 1358,
+                    "height": 44
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 1402,
+                    "top": 856,
+                    "bottom": 900,
+                    "width": 1358,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 44,
+                    "top": 0,
+                    "bottom": 900,
+                    "width": 44,
+                    "height": 900
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 1402,
+                    "right": 1440,
+                    "top": 0,
+                    "bottom": 900,
+                    "width": 38,
+                    "height": 900
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": "#daily-method-close",
+              "frameId": "405D7E9CB2C1F6B4247E8C414C691A43",
+              "target": {
+                "selector": "#daily-method-close",
+                "box": {
+                  "left": 976.890625,
+                  "right": 1009,
+                  "top": 51.015625,
+                  "bottom": 90.203125,
+                  "width": 32.109375,
+                  "height": 39.1875
+                },
+                "clip": {
+                  "left": 976.890625,
+                  "right": 1009,
+                  "top": 51.015625,
+                  "bottom": 90.203125,
+                  "width": 32.109375,
+                  "height": 39.1875
+                },
+                "x": 992.9453125,
+                "y": 70.609375,
+                "viewport": {
+                  "width": 1358,
+                  "height": 767
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "읽는 법 닫기",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(161, 173, 191)"
+              },
+              "point": {
+                "x": 1036.9453125,
+                "y": 159.609375
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": "data",
+                "documentWidth": 1440,
+                "bodyWidth": 1440,
+                "stage": {
+                  "left": 44,
+                  "right": 1402,
+                  "top": 45,
+                  "bottom": 900,
+                  "width": 1358,
+                  "height": 855,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 1358,
+                  "scrollWidth": 1358
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 1402,
+                    "top": 45,
+                    "bottom": 89,
+                    "width": 1358,
+                    "height": 44
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 1402,
+                    "top": 856,
+                    "bottom": 900,
+                    "width": 1358,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 44,
+                    "top": 0,
+                    "bottom": 900,
+                    "width": 44,
+                    "height": 900
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 1402,
+                    "right": 1440,
+                    "top": 0,
+                    "bottom": 900,
+                    "width": 38,
+                    "height": 900
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": ".atlas-nav [data-atlas-page=\"outlook\"]",
+              "frameId": null,
+              "target": {
+                "selector": ".atlas-nav [data-atlas-page=\"outlook\"]",
+                "box": {
+                  "left": 1404.5,
+                  "right": 1438.5,
+                  "top": 233,
+                  "bottom": 267,
+                  "width": 34,
+                  "height": 34
+                },
+                "clip": {
+                  "left": 1404.5,
+                  "right": 1438.5,
+                  "top": 233,
+                  "bottom": 267,
+                  "width": 34,
+                  "height": 34
+                },
+                "x": 1421.5,
+                "y": 250,
+                "viewport": {
+                  "width": 1440,
+                  "height": 900
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "가격 차트",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(161, 173, 191)"
+              },
+              "point": {
+                "x": 1421.5,
+                "y": 250
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": "data",
+                "documentWidth": 1440,
+                "bodyWidth": 1440,
+                "stage": {
+                  "left": 44,
+                  "right": 1402,
+                  "top": 45,
+                  "bottom": 900,
+                  "width": 1358,
+                  "height": 855,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 1358,
+                  "scrollWidth": 1358
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 1402,
+                    "top": 45,
+                    "bottom": 89,
+                    "width": 1358,
+                    "height": 44
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 1402,
+                    "top": 856,
+                    "bottom": 900,
+                    "width": 1358,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 44,
+                    "top": 0,
+                    "bottom": 900,
+                    "width": 44,
+                    "height": 900
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 1402,
+                    "right": 1440,
+                    "top": 0,
+                    "bottom": 900,
+                    "width": 38,
+                    "height": 900
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": "#btc-refresh-retry",
+              "frameId": null,
+              "target": {
+                "selector": "#btc-refresh-retry",
+                "box": {
+                  "left": 1338,
+                  "right": 1394,
+                  "top": 4,
+                  "bottom": 40,
+                  "width": 56,
+                  "height": 36
+                },
+                "clip": {
+                  "left": 1338,
+                  "right": 1394,
+                  "top": 4,
+                  "bottom": 40,
+                  "width": 56,
+                  "height": 36
+                },
+                "x": 1366,
+                "y": 22,
+                "viewport": {
+                  "width": 1440,
+                  "height": 900
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "비트코인 일별 자료 다시 확인",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(230, 235, 242)"
+              },
+              "point": {
+                "x": 1366,
+                "y": 22
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": null,
+                "documentWidth": 1440,
+                "bodyWidth": 1440,
+                "stage": {
+                  "left": 44,
+                  "right": 1402,
+                  "top": 45,
+                  "bottom": 900,
+                  "width": 1358,
+                  "height": 855,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 1358,
+                  "scrollWidth": 1358
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 1402,
+                    "top": 45,
+                    "bottom": 89,
+                    "width": 1358,
+                    "height": 44
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 1402,
+                    "top": 856,
+                    "bottom": 900,
+                    "width": 1358,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 44,
+                    "top": 0,
+                    "bottom": 900,
+                    "width": 44,
+                    "height": 900
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 1402,
+                    "right": 1440,
+                    "top": 0,
+                    "bottom": 900,
+                    "width": 38,
+                    "height": 900
+                  }
+                }
+              }
+            }
+          ],
+          "states": [],
+          "sourceBefore": {
+            "timeOrigin": 1793867505732,
+            "price": "$77,401.02",
+            "date": "2026.10.31 UTC",
+            "kind": "observed",
+            "cutoff": "관측 · 2026.10.31 UTC"
+          },
+          "before": {
+            "page": "outlook",
+            "shell": "chart",
+            "center": null,
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "stage": {
+              "left": 44,
+              "right": 1402,
+              "top": 45,
+              "bottom": 900,
+              "width": 1358,
+              "height": 855,
+              "scrollLeft": 0,
+              "scrollTop": 0,
+              "clientWidth": 1358,
+              "scrollWidth": 1358
+            },
+            "perimeter": {
+              ".atlas-canvas-heading": {
+                "connected": true,
+                "left": 44,
+                "right": 1402,
+                "top": 45,
+                "bottom": 89,
+                "width": 1358,
+                "height": 44
+              },
+              ".workbench-bottom-bar": {
+                "connected": true,
+                "left": 44,
+                "right": 1402,
+                "top": 856,
+                "bottom": 900,
+                "width": 1358,
+                "height": 44
+              },
+              ".atlas-sidebar": {
+                "connected": true,
+                "left": 0,
+                "right": 44,
+                "top": 0,
+                "bottom": 900,
+                "width": 44,
+                "height": 900
+              },
+              ".workbench-rail": {
+                "connected": true,
+                "left": 1402,
+                "right": 1440,
+                "top": 0,
+                "bottom": 900,
+                "width": 38,
+                "height": 900
+              }
+            }
+          },
+          "entered": {
+            "page": "outlook",
+            "shell": "chart",
+            "center": "data",
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "stage": {
+              "left": 44,
+              "right": 1402,
+              "top": 45,
+              "bottom": 900,
+              "width": 1358,
+              "height": 855,
+              "scrollLeft": 0,
+              "scrollTop": 0,
+              "clientWidth": 1358,
+              "scrollWidth": 1358
+            },
+            "perimeter": {
+              ".atlas-canvas-heading": {
+                "connected": true,
+                "left": 44,
+                "right": 1402,
+                "top": 45,
+                "bottom": 89,
+                "width": 1358,
+                "height": 44
+              },
+              ".workbench-bottom-bar": {
+                "connected": true,
+                "left": 44,
+                "right": 1402,
+                "top": 856,
+                "bottom": 900,
+                "width": 1358,
+                "height": 44
+              },
+              ".atlas-sidebar": {
+                "connected": true,
+                "left": 0,
+                "right": 44,
+                "top": 0,
+                "bottom": 900,
+                "width": 44,
+                "height": 900
+              },
+              ".workbench-rail": {
+                "connected": true,
+                "left": 1402,
+                "right": 1440,
+                "top": 0,
+                "bottom": 900,
+                "width": 38,
+                "height": 900
+              }
+            }
+          },
+          "childContext": {
+            "frameId": "405D7E9CB2C1F6B4247E8C414C691A43",
+            "parentFrameId": "85A58BA88F36EC5A2274011D5E4090F6",
+            "url": "http://127.0.0.1:36483/?page=data&embedded=1",
+            "executionContextId": 5
+          },
+          "board": {
+            "embedded": "true",
+            "coarse": false,
+            "width": 1358,
+            "height": 767,
+            "documentWidth": 1358,
+            "root": {
+              "left": 16,
+              "right": 1342,
+              "top": 8,
+              "bottom": 759,
+              "width": 1326,
+              "height": 751
+            },
+            "toolbar": {
+              "left": 16,
+              "right": 1342,
+              "top": 8,
+              "bottom": 54,
+              "width": 1326,
+              "height": 46
+            },
+            "symbols": [
+              "BTC",
+              "SPY",
+              "QQQ",
+              "NVDA",
+              "AAPL",
+              "GOOG",
+              "MSFT",
+              "AMZN",
+              "META",
+              "AVGO",
+              "PLTR",
+              "TSLA",
+              "HOOD",
+              "TLT",
+              "IEF",
+              "GLD",
+              "SLV",
+              "PDBC"
+            ],
+            "btcName": "비트코인",
+            "actionIds": [
+              "asset-refresh",
+              "asset-history-open",
+              "daily-method-open",
+              "export-raw"
+            ]
+          },
+          "actions": [
+            {
+              "selector": "#asset-refresh",
+              "box": {
+                "left": 1020.125,
+                "right": 1085.125,
+                "top": 14.5,
+                "bottom": 46.5,
+                "width": 65,
+                "height": 32
+              },
+              "clip": {
+                "left": 1020.125,
+                "right": 1085.125,
+                "top": 14.5,
+                "bottom": 46.5,
+                "width": 65,
+                "height": 32
+              },
+              "x": 1052.625,
+              "y": 30.5,
+              "viewport": {
+                "width": 1358,
+                "height": 767
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "가격 자료 갱신",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            },
+            {
+              "selector": "#asset-history-open",
+              "box": {
+                "left": 1089.125,
+                "right": 1179.953125,
+                "top": 14.5,
+                "bottom": 46.5,
+                "width": 90.828125,
+                "height": 32
+              },
+              "clip": {
+                "left": 1089.125,
+                "right": 1179.953125,
+                "top": 14.5,
+                "bottom": 46.5,
+                "width": 90.828125,
+                "height": 32
+              },
+              "x": 1134.5390625,
+              "y": 30.5,
+              "viewport": {
+                "width": 1358,
+                "height": 767
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "자산군별 판단 이력",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            },
+            {
+              "selector": "#daily-method-open",
+              "box": {
+                "left": 1183.953125,
+                "right": 1262.78125,
+                "top": 14.5,
+                "bottom": 46.5,
+                "width": 78.828125,
+                "height": 32
+              },
+              "clip": {
+                "left": 1183.953125,
+                "right": 1262.78125,
+                "top": 14.5,
+                "bottom": 46.5,
+                "width": 78.828125,
+                "height": 32
+              },
+              "x": 1223.3671875,
+              "y": 30.5,
+              "viewport": {
+                "width": 1358,
+                "height": 767
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "자산 비교표 읽는 법",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            },
+            {
+              "selector": "#export-raw",
+              "box": {
+                "left": 1266.78125,
+                "right": 1334,
+                "top": 14.5,
+                "bottom": 46.5,
+                "width": 67.21875,
+                "height": 32
+              },
+              "clip": {
+                "left": 1266.78125,
+                "right": 1334,
+                "top": 14.5,
+                "bottom": 46.5,
+                "width": 67.21875,
+                "height": 32
+              },
+              "x": 1300.390625,
+              "y": 30.5,
+              "viewport": {
+                "width": 1358,
+                "height": 767
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "18개 자산 CSV 내려받기",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            }
+          ],
+          "method": {
+            "modal": true,
+            "scrollTop": 438,
+            "maxScroll": 438,
+            "#daily-method-title": {
+              "selector": "#daily-method-title",
+              "box": {
+                "left": 334,
+                "right": 471.515625,
+                "top": 57.4375,
+                "bottom": 83.78125,
+                "width": 137.515625,
+                "height": 26.34375
+              },
+              "clip": {
+                "left": 334,
+                "right": 471.515625,
+                "top": 57.4375,
+                "bottom": 83.78125,
+                "width": 137.515625,
+                "height": 26.34375
+              },
+              "x": 402.7578125,
+              "y": 70.609375,
+              "viewport": {
+                "width": 1358,
+                "height": 767
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "H2",
+              "label": "자산 비교표 읽는 법",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(230, 235, 242)"
+            },
+            "#daily-method-close": {
+              "selector": "#daily-method-close",
+              "box": {
+                "left": 976.890625,
+                "right": 1009,
+                "top": 51.015625,
+                "bottom": 90.203125,
+                "width": 32.109375,
+                "height": 39.1875
+              },
+              "clip": {
+                "left": 976.890625,
+                "right": 1009,
+                "top": 51.015625,
+                "bottom": 90.203125,
+                "width": 32.109375,
+                "height": 39.1875
+              },
+              "x": 992.9453125,
+              "y": 70.609375,
+              "viewport": {
+                "width": 1358,
+                "height": 767
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "읽는 법 닫기",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            }
+          },
+          "afterMethod": {
+            "page": "outlook",
+            "shell": "chart",
+            "center": "data",
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "stage": {
+              "left": 44,
+              "right": 1402,
+              "top": 45,
+              "bottom": 900,
+              "width": 1358,
+              "height": 855,
+              "scrollLeft": 0,
+              "scrollTop": 0,
+              "clientWidth": 1358,
+              "scrollWidth": 1358
+            },
+            "perimeter": {
+              ".atlas-canvas-heading": {
+                "connected": true,
+                "left": 44,
+                "right": 1402,
+                "top": 45,
+                "bottom": 89,
+                "width": 1358,
+                "height": 44
+              },
+              ".workbench-bottom-bar": {
+                "connected": true,
+                "left": 44,
+                "right": 1402,
+                "top": 856,
+                "bottom": 900,
+                "width": 1358,
+                "height": 44
+              },
+              ".atlas-sidebar": {
+                "connected": true,
+                "left": 0,
+                "right": 44,
+                "top": 0,
+                "bottom": 900,
+                "width": 44,
+                "height": 900
+              },
+              ".workbench-rail": {
+                "connected": true,
+                "left": 1402,
+                "right": 1440,
+                "top": 0,
+                "bottom": 900,
+                "width": 38,
+                "height": 900
+              }
+            }
+          },
+          "returned": {
+            "page": "outlook",
+            "shell": "chart",
+            "center": null,
+            "documentWidth": 1440,
+            "bodyWidth": 1440,
+            "stage": {
+              "left": 44,
+              "right": 1402,
+              "top": 45,
+              "bottom": 900,
+              "width": 1358,
+              "height": 855,
+              "scrollLeft": 0,
+              "scrollTop": 0,
+              "clientWidth": 1358,
+              "scrollWidth": 1358
+            },
+            "perimeter": {
+              ".atlas-canvas-heading": {
+                "connected": true,
+                "left": 44,
+                "right": 1402,
+                "top": 45,
+                "bottom": 89,
+                "width": 1358,
+                "height": 44
+              },
+              ".workbench-bottom-bar": {
+                "connected": true,
+                "left": 44,
+                "right": 1402,
+                "top": 856,
+                "bottom": 900,
+                "width": 1358,
+                "height": 44
+              },
+              ".atlas-sidebar": {
+                "connected": true,
+                "left": 0,
+                "right": 44,
+                "top": 0,
+                "bottom": 900,
+                "width": 44,
+                "height": 900
+              },
+              ".workbench-rail": {
+                "connected": true,
+                "left": 1402,
+                "right": 1440,
+                "top": 0,
+                "bottom": 900,
+                "width": 38,
+                "height": 900
+              }
+            }
+          },
+          "sourceAfter": {
+            "timeOrigin": 1793867505732,
+            "price": "$77,401.02",
+            "date": "2026.10.31 UTC",
+            "kind": "observed",
+            "cutoff": "관측 · 2026.10.31 UTC"
+          },
+          "sourceAfterRetry": {
+            "timeOrigin": 1793867505732,
+            "price": "$77,401.02",
+            "date": "2026.10.31 UTC",
+            "kind": "observed",
+            "cutoff": "관측 · 2026.10.31 UTC"
+          }
+        }
+      },
+      "lastRefreshObservation": {
+        "phase": "center-data-return-parent-retry",
+        "observed": {
+          "url": "http://127.0.0.1:36483/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+          "timeOrigin": 1793867505732,
+          "notice": {
+            "state": "failed",
+            "visible": true,
+            "box": {
+              "left": 44,
+              "right": 1402,
+              "top": 0,
+              "bottom": 45,
+              "width": 1358,
+              "height": 45
+            },
+            "summary": "비트코인 일별 갱신 실패",
+            "detail": "2026.10.31 UTC 자료 유지",
+            "summaryUnclipped": true,
+            "detailUnclipped": true,
+            "retryBox": {
+              "left": 1338,
+              "right": 1394,
+              "top": 4,
+              "bottom": 40,
+              "width": 56,
+              "height": 36
+            },
+            "retryDisabled": false,
+            "retryTopmost": true,
+            "summaryTopmost": true,
+            "liveRole": "status",
+            "livePoliteness": "polite",
+            "liveAtomic": "true",
+            "announcement": "비트코인 일별 갱신에 실패했습니다. 2026.10.31 UTC 자료를 유지합니다.",
+            "duplicateAnnouncements": 1,
+            "viewportWidth": 1440,
+            "viewportHeight": 900
+          },
+          "title": "갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.",
+          "disabled": false,
+          "busy": false,
+          "refreshButtonVisible": false,
+          "cutoff": "관측 · 2026.10.31 UTC",
+          "page": "outlook",
+          "price": "$77,401.02",
+          "priceDate": "2026.10.31 UTC",
+          "priceKind": "observed"
+        }
+      }
+    },
+    {
+      "page": "workspace-center-data",
+      "surface": "center-data",
+      "width": 900,
+      "height": 430,
+      "touch": true,
+      "route": "/?symbol=BTCUSD&granularity=daily&type=line",
+      "status": "passed",
+      "screenshots": [
+        {
+          "file": "workspace-center-data-900x430-board.png",
+          "bytes": 59792,
+          "sha256": "ce5f953de74e7020d3637c89923d2f802ce8337d80f495a9eb81570aa529aeb2"
+        },
+        {
+          "file": "workspace-center-data-900x430-method.png",
+          "bytes": 67965,
+          "sha256": "4490fb30c5eee75a2cca4173e891a9ebc1b96320699746888131559ee43438d1"
+        },
+        {
+          "file": "workspace-center-data-900x430-returned.png",
+          "bytes": 129401,
+          "sha256": "e34d4cf9475e281f084d244d0b310ee3d98e8fdf7f4b4021682c521b03d6810e"
+        }
+      ],
+      "runtimeErrors": [],
+      "resourceErrors": [
+        {
+          "requestId": "127.149",
+          "frameId": "91C97DFFCC24DFA9740AF14B6286E450",
+          "loaderId": "6F5AF0A9C839DC5D36D93C4A232A71DD",
+          "method": "GET",
+          "resourceType": "Fetch",
+          "requestWallTime": 1793867509.69845,
+          "documentUrl": "http://127.0.0.1:36483/?symbol=BTCUSD&granularity=daily&type=line",
+          "networkEvent": "Network.loadingFailed",
+          "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-05&page_size=10000&paging_from=start",
+          "errorText": "",
+          "canceled": false,
+          "blockedReason": "inspector"
+        },
+        {
+          "requestId": "127.299",
+          "frameId": "91C97DFFCC24DFA9740AF14B6286E450",
+          "loaderId": "6F5AF0A9C839DC5D36D93C4A232A71DD",
+          "method": "GET",
+          "resourceType": "Fetch",
+          "requestWallTime": 1793867512.861558,
+          "documentUrl": "http://127.0.0.1:36483/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+          "networkEvent": "Network.loadingFailed",
+          "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-05&page_size=10000&paging_from=start",
+          "errorText": "",
+          "canceled": false,
+          "blockedReason": "inspector"
+        }
+      ],
+      "blockedOptionalFonts": [
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "reason": "inspector"
+        },
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "reason": "inspector"
+        },
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "reason": "inspector"
+        },
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+          "reason": "inspector"
+        }
+      ],
+      "dataResourceRequests": [
+        {
+          "requestId": "127.24",
+          "url": "http://127.0.0.1:36483/daily-data.css?v=1.29.0"
+        },
+        {
+          "requestId": "127.91",
+          "url": "http://127.0.0.1:36483/daily-data-view.js?v=1.29.0"
+        },
+        {
+          "requestId": "127.95",
+          "url": "http://127.0.0.1:36483/asset-comparison.js?v=1.29.0"
+        },
+        {
+          "requestId": "127.221",
+          "url": "http://127.0.0.1:36483/daily-data.css?v=1.29.0"
+        },
+        {
+          "requestId": "127.288",
+          "url": "http://127.0.0.1:36483/daily-data-view.js?v=1.29.0"
+        },
+        {
+          "requestId": "127.293",
+          "url": "http://127.0.0.1:36483/asset-comparison.js?v=1.29.0"
+        },
+        {
+          "requestId": "127.298",
+          "url": "http://127.0.0.1:36483/data/asset-comparison.json"
+        }
+      ],
+      "expectedOfflineRefresh": [
+        {
+          "phase": "center-data-initial-parent",
+          "frameId": "91C97DFFCC24DFA9740AF14B6286E450",
+          "loaderId": "6F5AF0A9C839DC5D36D93C4A232A71DD",
+          "observed": {
+            "url": "http://127.0.0.1:36483/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+            "timeOrigin": 1793867509445.6,
+            "notice": {
+              "state": "failed",
+              "visible": true,
+              "box": {
+                "left": 44,
+                "right": 862,
+                "top": 0,
+                "bottom": 45,
+                "width": 818,
+                "height": 45
+              },
+              "summary": "비트코인 일별 갱신 실패",
+              "detail": "2026.10.31 UTC 자료 유지",
+              "summaryUnclipped": true,
+              "detailUnclipped": true,
+              "retryBox": {
+                "left": 798,
+                "right": 854,
+                "top": 4,
+                "bottom": 40,
+                "width": 56,
+                "height": 36
+              },
+              "retryDisabled": false,
+              "retryTopmost": true,
+              "summaryTopmost": true,
+              "liveRole": "status",
+              "livePoliteness": "polite",
+              "liveAtomic": "true",
+              "announcement": "비트코인 일별 갱신에 실패했습니다. 2026.10.31 UTC 자료를 유지합니다.",
+              "duplicateAnnouncements": 1,
+              "viewportWidth": 900,
+              "viewportHeight": 430
+            },
+            "title": "갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.",
+            "disabled": false,
+            "busy": false,
+            "refreshButtonVisible": false,
+            "cutoff": "관측 · 2026.10.31 UTC",
+            "page": "outlook",
+            "price": "$77,401.02",
+            "priceDate": "2026.10.31 UTC",
+            "priceKind": "observed"
+          },
+          "requestIds": [
+            "127.149"
+          ],
+          "archiveSha256": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf",
+          "archiveAsOf": "2026-10-31",
+          "displayedPriceVerified": true,
+          "displayedPricePrecision": "USD rounded to 2 decimals",
+          "failureTitleVerified": true,
+          "persistentVisibleErrorVerified": true,
+          "noticeVisibilityScope": "actual viewport",
+          "interpretation": "Expected offline refresh failure; archive cutoff and displayed BTC price retained"
+        },
+        {
+          "phase": "center-data-return-parent-retry",
+          "frameId": "91C97DFFCC24DFA9740AF14B6286E450",
+          "loaderId": "6F5AF0A9C839DC5D36D93C4A232A71DD",
+          "observed": {
+            "url": "http://127.0.0.1:36483/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+            "timeOrigin": 1793867509445.6,
+            "notice": {
+              "state": "failed",
+              "visible": true,
+              "box": {
+                "left": 44,
+                "right": 862,
+                "top": 0,
+                "bottom": 45,
+                "width": 818,
+                "height": 45
+              },
+              "summary": "비트코인 일별 갱신 실패",
+              "detail": "2026.10.31 UTC 자료 유지",
+              "summaryUnclipped": true,
+              "detailUnclipped": true,
+              "retryBox": {
+                "left": 798,
+                "right": 854,
+                "top": 4,
+                "bottom": 40,
+                "width": 56,
+                "height": 36
+              },
+              "retryDisabled": false,
+              "retryTopmost": true,
+              "summaryTopmost": true,
+              "liveRole": "status",
+              "livePoliteness": "polite",
+              "liveAtomic": "true",
+              "announcement": "비트코인 일별 갱신에 실패했습니다. 2026.10.31 UTC 자료를 유지합니다.",
+              "duplicateAnnouncements": 1,
+              "viewportWidth": 900,
+              "viewportHeight": 430
+            },
+            "title": "갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.",
+            "disabled": false,
+            "busy": false,
+            "refreshButtonVisible": false,
+            "cutoff": "관측 · 2026.10.31 UTC",
+            "page": "outlook",
+            "price": "$77,401.02",
+            "priceDate": "2026.10.31 UTC",
+            "priceKind": "observed"
+          },
+          "requestIds": [
+            "127.299"
+          ],
+          "archiveSha256": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf",
+          "archiveAsOf": "2026-10-31",
+          "displayedPriceVerified": true,
+          "displayedPricePrecision": "USD rounded to 2 decimals",
+          "failureTitleVerified": true,
+          "persistentVisibleErrorVerified": true,
+          "noticeVisibilityScope": "actual viewport",
+          "interpretation": "Expected offline refresh failure; archive cutoff and displayed BTC price retained"
+        }
+      ],
+      "unexpectedResourceErrors": [],
+      "url": "http://127.0.0.1:36483/?symbol=BTCUSD&granularity=daily&type=line",
+      "workspace": {
+        "surface": "center-data",
+        "states": [],
+        "centerData": {
+          "inputs": [
+            {
+              "kind": "native-navigation-scroll",
+              "selector": ".atlas-nav [data-atlas-page=\"data\"]",
+              "point": {
+                "x": 881,
+                "y": 215
+              },
+              "deltaY": 180
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": ".atlas-nav [data-atlas-page=\"data\"]",
+              "frameId": null,
+              "target": {
+                "selector": ".atlas-nav [data-atlas-page=\"data\"]",
+                "box": {
+                  "left": 864.5,
+                  "right": 898.5,
+                  "top": 375,
+                  "bottom": 409,
+                  "width": 34,
+                  "height": 34
+                },
+                "clip": {
+                  "left": 864.5,
+                  "right": 898.5,
+                  "top": 375,
+                  "bottom": 409,
+                  "width": 34,
+                  "height": 34
+                },
+                "x": 881.5,
+                "y": 392,
+                "viewport": {
+                  "width": 900,
+                  "height": 430
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "자산 비교",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(161, 173, 191)"
+              },
+              "point": {
+                "x": 881.5,
+                "y": 392
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": null,
+                "documentWidth": 900,
+                "bodyWidth": 900,
+                "stage": {
+                  "left": 44,
+                  "right": 862,
+                  "top": 45,
+                  "bottom": 430,
+                  "width": 818,
+                  "height": 385,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 818,
+                  "scrollWidth": 818
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 862,
+                    "top": 45,
+                    "bottom": 89,
+                    "width": 818,
+                    "height": 44
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 862,
+                    "top": 386,
+                    "bottom": 430,
+                    "width": 818,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 44,
+                    "top": 0,
+                    "bottom": 430,
+                    "width": 44,
+                    "height": 430
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 862,
+                    "right": 900,
+                    "top": 0,
+                    "bottom": 430,
+                    "width": 38,
+                    "height": 430
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": "#daily-method-open",
+              "frameId": "1AE5C3744ACFBCF94EDCBE4BF15DB486",
+              "target": {
+                "selector": "#daily-method-open",
+                "box": {
+                  "left": 643.953125,
+                  "right": 722.78125,
+                  "top": 12,
+                  "bottom": 56,
+                  "width": 78.828125,
+                  "height": 44
+                },
+                "clip": {
+                  "left": 643.953125,
+                  "right": 722.78125,
+                  "top": 12,
+                  "bottom": 56,
+                  "width": 78.828125,
+                  "height": 44
+                },
+                "x": 683.3671875,
+                "y": 34,
+                "viewport": {
+                  "width": 818,
+                  "height": 297
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "자산 비교표 읽는 법",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(161, 173, 191)"
+              },
+              "point": {
+                "x": 727.3671875,
+                "y": 123
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": "data",
+                "documentWidth": 900,
+                "bodyWidth": 900,
+                "stage": {
+                  "left": 44,
+                  "right": 862,
+                  "top": 45,
+                  "bottom": 430,
+                  "width": 818,
+                  "height": 385,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 818,
+                  "scrollWidth": 818
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 862,
+                    "top": 45,
+                    "bottom": 89,
+                    "width": 818,
+                    "height": 44
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 862,
+                    "top": 386,
+                    "bottom": 430,
+                    "width": 818,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 44,
+                    "top": 0,
+                    "bottom": 430,
+                    "width": 44,
+                    "height": 430
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 862,
+                    "right": 900,
+                    "top": 0,
+                    "bottom": 430,
+                    "width": 38,
+                    "height": 430
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": "#daily-method-close",
+              "frameId": "1AE5C3744ACFBCF94EDCBE4BF15DB486",
+              "target": {
+                "selector": "#daily-method-close",
+                "box": {
+                  "left": 710,
+                  "right": 754,
+                  "top": 22.8125,
+                  "bottom": 66.8125,
+                  "width": 44,
+                  "height": 44
+                },
+                "clip": {
+                  "left": 710,
+                  "right": 754,
+                  "top": 22.8125,
+                  "bottom": 66.8125,
+                  "width": 44,
+                  "height": 44
+                },
+                "x": 732,
+                "y": 44.8125,
+                "viewport": {
+                  "width": 818,
+                  "height": 297
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "읽는 법 닫기",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(161, 173, 191)"
+              },
+              "point": {
+                "x": 776,
+                "y": 133.8125
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": "data",
+                "documentWidth": 900,
+                "bodyWidth": 900,
+                "stage": {
+                  "left": 44,
+                  "right": 862,
+                  "top": 45,
+                  "bottom": 430,
+                  "width": 818,
+                  "height": 385,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 818,
+                  "scrollWidth": 818
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 862,
+                    "top": 45,
+                    "bottom": 89,
+                    "width": 818,
+                    "height": 44
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 862,
+                    "top": 386,
+                    "bottom": 430,
+                    "width": 818,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 44,
+                    "top": 0,
+                    "bottom": 430,
+                    "width": 44,
+                    "height": 430
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 862,
+                    "right": 900,
+                    "top": 0,
+                    "bottom": 430,
+                    "width": 38,
+                    "height": 430
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": ".atlas-nav [data-atlas-page=\"outlook\"]",
+              "frameId": null,
+              "target": {
+                "selector": ".atlas-nav [data-atlas-page=\"outlook\"]",
+                "box": {
+                  "left": 864.5,
+                  "right": 898.5,
+                  "top": 33,
+                  "bottom": 67,
+                  "width": 34,
+                  "height": 34
+                },
+                "clip": {
+                  "left": 864.5,
+                  "right": 898.5,
+                  "top": 33,
+                  "bottom": 67,
+                  "width": 34,
+                  "height": 34
+                },
+                "x": 881.5,
+                "y": 50,
+                "viewport": {
+                  "width": 900,
+                  "height": 430
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "가격 차트",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(161, 173, 191)"
+              },
+              "point": {
+                "x": 881.5,
+                "y": 50
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": "data",
+                "documentWidth": 900,
+                "bodyWidth": 900,
+                "stage": {
+                  "left": 44,
+                  "right": 862,
+                  "top": 45,
+                  "bottom": 430,
+                  "width": 818,
+                  "height": 385,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 818,
+                  "scrollWidth": 818
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 862,
+                    "top": 45,
+                    "bottom": 89,
+                    "width": 818,
+                    "height": 44
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 862,
+                    "top": 386,
+                    "bottom": 430,
+                    "width": 818,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 44,
+                    "top": 0,
+                    "bottom": 430,
+                    "width": 44,
+                    "height": 430
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 862,
+                    "right": 900,
+                    "top": 0,
+                    "bottom": 430,
+                    "width": 38,
+                    "height": 430
+                  }
+                }
+              }
+            },
+            {
+              "kind": "raw-native-pointer",
+              "selector": "#btc-refresh-retry",
+              "frameId": null,
+              "target": {
+                "selector": "#btc-refresh-retry",
+                "box": {
+                  "left": 798,
+                  "right": 854,
+                  "top": 4,
+                  "bottom": 40,
+                  "width": 56,
+                  "height": 36
+                },
+                "clip": {
+                  "left": 798,
+                  "right": 854,
+                  "top": 4,
+                  "bottom": 40,
+                  "width": 56,
+                  "height": 36
+                },
+                "x": 826,
+                "y": 22,
+                "viewport": {
+                  "width": 900,
+                  "height": 430
+                },
+                "inside": true,
+                "painted": true,
+                "disabled": false,
+                "topmost": true,
+                "tag": "BUTTON",
+                "label": "비트코인 일별 자료 다시 확인",
+                "outline": "none",
+                "outlineWidth": 0,
+                "outlineColor": "rgb(230, 235, 242)"
+              },
+              "point": {
+                "x": 826,
+                "y": 22
+              },
+              "parentBefore": {
+                "page": "outlook",
+                "shell": "chart",
+                "center": null,
+                "documentWidth": 900,
+                "bodyWidth": 900,
+                "stage": {
+                  "left": 44,
+                  "right": 862,
+                  "top": 45,
+                  "bottom": 430,
+                  "width": 818,
+                  "height": 385,
+                  "scrollLeft": 0,
+                  "scrollTop": 0,
+                  "clientWidth": 818,
+                  "scrollWidth": 818
+                },
+                "perimeter": {
+                  ".atlas-canvas-heading": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 862,
+                    "top": 45,
+                    "bottom": 89,
+                    "width": 818,
+                    "height": 44
+                  },
+                  ".workbench-bottom-bar": {
+                    "connected": true,
+                    "left": 44,
+                    "right": 862,
+                    "top": 386,
+                    "bottom": 430,
+                    "width": 818,
+                    "height": 44
+                  },
+                  ".atlas-sidebar": {
+                    "connected": true,
+                    "left": 0,
+                    "right": 44,
+                    "top": 0,
+                    "bottom": 430,
+                    "width": 44,
+                    "height": 430
+                  },
+                  ".workbench-rail": {
+                    "connected": true,
+                    "left": 862,
+                    "right": 900,
+                    "top": 0,
+                    "bottom": 430,
+                    "width": 38,
+                    "height": 430
+                  }
+                }
+              }
+            }
+          ],
+          "states": [],
+          "sourceBefore": {
+            "timeOrigin": 1793867509445.6,
+            "price": "$77,401.02",
+            "date": "2026.10.31 UTC",
+            "kind": "observed",
+            "cutoff": "관측 · 2026.10.31 UTC"
+          },
+          "before": {
+            "page": "outlook",
+            "shell": "chart",
+            "center": null,
+            "documentWidth": 900,
+            "bodyWidth": 900,
+            "stage": {
+              "left": 44,
+              "right": 862,
+              "top": 45,
+              "bottom": 430,
+              "width": 818,
+              "height": 385,
+              "scrollLeft": 0,
+              "scrollTop": 0,
+              "clientWidth": 818,
+              "scrollWidth": 818
+            },
+            "perimeter": {
+              ".atlas-canvas-heading": {
+                "connected": true,
+                "left": 44,
+                "right": 862,
+                "top": 45,
+                "bottom": 89,
+                "width": 818,
+                "height": 44
+              },
+              ".workbench-bottom-bar": {
+                "connected": true,
+                "left": 44,
+                "right": 862,
+                "top": 386,
+                "bottom": 430,
+                "width": 818,
+                "height": 44
+              },
+              ".atlas-sidebar": {
+                "connected": true,
+                "left": 0,
+                "right": 44,
+                "top": 0,
+                "bottom": 430,
+                "width": 44,
+                "height": 430
+              },
+              ".workbench-rail": {
+                "connected": true,
+                "left": 862,
+                "right": 900,
+                "top": 0,
+                "bottom": 430,
+                "width": 38,
+                "height": 430
+              }
+            }
+          },
+          "entered": {
+            "page": "outlook",
+            "shell": "chart",
+            "center": "data",
+            "documentWidth": 900,
+            "bodyWidth": 900,
+            "stage": {
+              "left": 44,
+              "right": 862,
+              "top": 45,
+              "bottom": 430,
+              "width": 818,
+              "height": 385,
+              "scrollLeft": 0,
+              "scrollTop": 0,
+              "clientWidth": 818,
+              "scrollWidth": 818
+            },
+            "perimeter": {
+              ".atlas-canvas-heading": {
+                "connected": true,
+                "left": 44,
+                "right": 862,
+                "top": 45,
+                "bottom": 89,
+                "width": 818,
+                "height": 44
+              },
+              ".workbench-bottom-bar": {
+                "connected": true,
+                "left": 44,
+                "right": 862,
+                "top": 386,
+                "bottom": 430,
+                "width": 818,
+                "height": 44
+              },
+              ".atlas-sidebar": {
+                "connected": true,
+                "left": 0,
+                "right": 44,
+                "top": 0,
+                "bottom": 430,
+                "width": 44,
+                "height": 430
+              },
+              ".workbench-rail": {
+                "connected": true,
+                "left": 862,
+                "right": 900,
+                "top": 0,
+                "bottom": 430,
+                "width": 38,
+                "height": 430
+              }
+            }
+          },
+          "childContext": {
+            "frameId": "1AE5C3744ACFBCF94EDCBE4BF15DB486",
+            "parentFrameId": "91C97DFFCC24DFA9740AF14B6286E450",
+            "url": "http://127.0.0.1:36483/?page=data&embedded=1",
+            "executionContextId": 5
+          },
+          "board": {
+            "embedded": "true",
+            "coarse": true,
+            "width": 818,
+            "height": 297,
+            "documentWidth": 818,
+            "root": {
+              "left": 16,
+              "right": 802,
+              "top": 8,
+              "bottom": 289,
+              "width": 786,
+              "height": 281
+            },
+            "toolbar": {
+              "left": 16,
+              "right": 802,
+              "top": 8,
+              "bottom": 61,
+              "width": 786,
+              "height": 53
+            },
+            "symbols": [
+              "BTC",
+              "SPY",
+              "QQQ",
+              "NVDA",
+              "AAPL",
+              "GOOG",
+              "MSFT",
+              "AMZN",
+              "META",
+              "AVGO",
+              "PLTR",
+              "TSLA",
+              "HOOD",
+              "TLT",
+              "IEF",
+              "GLD",
+              "SLV",
+              "PDBC"
+            ],
+            "btcName": "비트코인",
+            "actionIds": [
+              "asset-refresh",
+              "asset-history-open",
+              "daily-method-open",
+              "export-raw"
+            ]
+          },
+          "actions": [
+            {
+              "selector": "#asset-refresh",
+              "box": {
+                "left": 480.125,
+                "right": 545.125,
+                "top": 12,
+                "bottom": 56,
+                "width": 65,
+                "height": 44
+              },
+              "clip": {
+                "left": 480.125,
+                "right": 545.125,
+                "top": 12,
+                "bottom": 56,
+                "width": 65,
+                "height": 44
+              },
+              "x": 512.625,
+              "y": 34,
+              "viewport": {
+                "width": 818,
+                "height": 297
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "가격 자료 갱신",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            },
+            {
+              "selector": "#asset-history-open",
+              "box": {
+                "left": 549.125,
+                "right": 639.953125,
+                "top": 12,
+                "bottom": 56,
+                "width": 90.828125,
+                "height": 44
+              },
+              "clip": {
+                "left": 549.125,
+                "right": 639.953125,
+                "top": 12,
+                "bottom": 56,
+                "width": 90.828125,
+                "height": 44
+              },
+              "x": 594.5390625,
+              "y": 34,
+              "viewport": {
+                "width": 818,
+                "height": 297
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "자산군별 판단 이력",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            },
+            {
+              "selector": "#daily-method-open",
+              "box": {
+                "left": 643.953125,
+                "right": 722.78125,
+                "top": 12,
+                "bottom": 56,
+                "width": 78.828125,
+                "height": 44
+              },
+              "clip": {
+                "left": 643.953125,
+                "right": 722.78125,
+                "top": 12,
+                "bottom": 56,
+                "width": 78.828125,
+                "height": 44
+              },
+              "x": 683.3671875,
+              "y": 34,
+              "viewport": {
+                "width": 818,
+                "height": 297
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "자산 비교표 읽는 법",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            },
+            {
+              "selector": "#export-raw",
+              "box": {
+                "left": 726.78125,
+                "right": 794,
+                "top": 12,
+                "bottom": 56,
+                "width": 67.21875,
+                "height": 44
+              },
+              "clip": {
+                "left": 726.78125,
+                "right": 794,
+                "top": 12,
+                "bottom": 56,
+                "width": 67.21875,
+                "height": 44
+              },
+              "x": 760.390625,
+              "y": 34,
+              "viewport": {
+                "width": 818,
+                "height": 297
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "18개 자산 CSV 내려받기",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            }
+          ],
+          "method": {
+            "modal": true,
+            "scrollTop": 857,
+            "maxScroll": 857,
+            "#daily-method-title": {
+              "selector": "#daily-method-title",
+              "box": {
+                "left": 64,
+                "right": 201.515625,
+                "top": 31.640625,
+                "bottom": 57.984375,
+                "width": 137.515625,
+                "height": 26.34375
+              },
+              "clip": {
+                "left": 64,
+                "right": 201.515625,
+                "top": 31.640625,
+                "bottom": 57.984375,
+                "width": 137.515625,
+                "height": 26.34375
+              },
+              "x": 132.7578125,
+              "y": 44.8125,
+              "viewport": {
+                "width": 818,
+                "height": 297
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "H2",
+              "label": "자산 비교표 읽는 법",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(230, 235, 242)"
+            },
+            "#daily-method-close": {
+              "selector": "#daily-method-close",
+              "box": {
+                "left": 710,
+                "right": 754,
+                "top": 22.8125,
+                "bottom": 66.8125,
+                "width": 44,
+                "height": 44
+              },
+              "clip": {
+                "left": 710,
+                "right": 754,
+                "top": 22.8125,
+                "bottom": 66.8125,
+                "width": 44,
+                "height": 44
+              },
+              "x": 732,
+              "y": 44.8125,
+              "viewport": {
+                "width": 818,
+                "height": 297
+              },
+              "inside": true,
+              "painted": true,
+              "disabled": false,
+              "topmost": true,
+              "tag": "BUTTON",
+              "label": "읽는 법 닫기",
+              "outline": "none",
+              "outlineWidth": 0,
+              "outlineColor": "rgb(161, 173, 191)"
+            }
+          },
+          "afterMethod": {
+            "page": "outlook",
+            "shell": "chart",
+            "center": "data",
+            "documentWidth": 900,
+            "bodyWidth": 900,
+            "stage": {
+              "left": 44,
+              "right": 862,
+              "top": 45,
+              "bottom": 430,
+              "width": 818,
+              "height": 385,
+              "scrollLeft": 0,
+              "scrollTop": 0,
+              "clientWidth": 818,
+              "scrollWidth": 818
+            },
+            "perimeter": {
+              ".atlas-canvas-heading": {
+                "connected": true,
+                "left": 44,
+                "right": 862,
+                "top": 45,
+                "bottom": 89,
+                "width": 818,
+                "height": 44
+              },
+              ".workbench-bottom-bar": {
+                "connected": true,
+                "left": 44,
+                "right": 862,
+                "top": 386,
+                "bottom": 430,
+                "width": 818,
+                "height": 44
+              },
+              ".atlas-sidebar": {
+                "connected": true,
+                "left": 0,
+                "right": 44,
+                "top": 0,
+                "bottom": 430,
+                "width": 44,
+                "height": 430
+              },
+              ".workbench-rail": {
+                "connected": true,
+                "left": 862,
+                "right": 900,
+                "top": 0,
+                "bottom": 430,
+                "width": 38,
+                "height": 430
+              }
+            }
+          },
+          "returned": {
+            "page": "outlook",
+            "shell": "chart",
+            "center": null,
+            "documentWidth": 900,
+            "bodyWidth": 900,
+            "stage": {
+              "left": 44,
+              "right": 862,
+              "top": 45,
+              "bottom": 430,
+              "width": 818,
+              "height": 385,
+              "scrollLeft": 0,
+              "scrollTop": 0,
+              "clientWidth": 818,
+              "scrollWidth": 818
+            },
+            "perimeter": {
+              ".atlas-canvas-heading": {
+                "connected": true,
+                "left": 44,
+                "right": 862,
+                "top": 45,
+                "bottom": 89,
+                "width": 818,
+                "height": 44
+              },
+              ".workbench-bottom-bar": {
+                "connected": true,
+                "left": 44,
+                "right": 862,
+                "top": 386,
+                "bottom": 430,
+                "width": 818,
+                "height": 44
+              },
+              ".atlas-sidebar": {
+                "connected": true,
+                "left": 0,
+                "right": 44,
+                "top": 0,
+                "bottom": 430,
+                "width": 44,
+                "height": 430
+              },
+              ".workbench-rail": {
+                "connected": true,
+                "left": 862,
+                "right": 900,
+                "top": 0,
+                "bottom": 430,
+                "width": 38,
+                "height": 430
+              }
+            }
+          },
+          "sourceAfter": {
+            "timeOrigin": 1793867509445.6,
+            "price": "$77,401.02",
+            "date": "2026.10.31 UTC",
+            "kind": "observed",
+            "cutoff": "관측 · 2026.10.31 UTC"
+          },
+          "sourceAfterRetry": {
+            "timeOrigin": 1793867509445.6,
+            "price": "$77,401.02",
+            "date": "2026.10.31 UTC",
+            "kind": "observed",
+            "cutoff": "관측 · 2026.10.31 UTC"
+          }
+        }
+      },
+      "lastRefreshObservation": {
+        "phase": "center-data-return-parent-retry",
+        "observed": {
+          "url": "http://127.0.0.1:36483/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+          "timeOrigin": 1793867509445.6,
+          "notice": {
+            "state": "failed",
+            "visible": true,
+            "box": {
+              "left": 44,
+              "right": 862,
+              "top": 0,
+              "bottom": 45,
+              "width": 818,
+              "height": 45
+            },
+            "summary": "비트코인 일별 갱신 실패",
+            "detail": "2026.10.31 UTC 자료 유지",
+            "summaryUnclipped": true,
+            "detailUnclipped": true,
+            "retryBox": {
+              "left": 798,
+              "right": 854,
+              "top": 4,
+              "bottom": 40,
+              "width": 56,
+              "height": 36
+            },
+            "retryDisabled": false,
+            "retryTopmost": true,
+            "summaryTopmost": true,
+            "liveRole": "status",
+            "livePoliteness": "polite",
+            "liveAtomic": "true",
+            "announcement": "비트코인 일별 갱신에 실패했습니다. 2026.10.31 UTC 자료를 유지합니다.",
+            "duplicateAnnouncements": 1,
+            "viewportWidth": 900,
+            "viewportHeight": 430
+          },
+          "title": "갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.",
+          "disabled": false,
+          "busy": false,
+          "refreshButtonVisible": false,
+          "cutoff": "관측 · 2026.10.31 UTC",
+          "page": "outlook",
+          "price": "$77,401.02",
+          "priceDate": "2026.10.31 UTC",
+          "priceKind": "observed"
+        }
+      }
+    }
+  ],
+  "failures": [],
+  "scope": "Actual checked-out static site in headless Chromium through native CDP; no production deployment, Safari or physical-device claim.",
+  "sourceCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "sourceHashes": {
+    "dist/index.html": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+    "dist/site-entry.js": "645d41c07ef1ef9f9cba2282e34c5a723b6c356f1dfbab7fba8f3fbb39fcaf0e",
+    "dist/asset-comparison.js": "765d85f67ffad760e75b1b8fe8600eeb274411adb154c079cc65e1ba3a9076c8",
+    "dist/asset-judgment-history.js": "986b299bb7dc2c8e28cb2668bb2b7b3b7b0e507ba2b2f8ecb9040771d89ead9a",
+    "dist/daily-data-view.js": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+    "dist/daily-data.css": "f45a6226526795d926caf2fe8c8df386f22f24c7a4383e05986b1b3df5b3366a",
+    "dist/eth-view.js": "ef6e99760567649f3ab8705ef49c52e47726cb28486225847bafa4ede5066519",
+    "dist/eth-view.css": "1f09834a4460821c83496ea97fc70a6fb2371ad8ef2560ca1dd48395eeb42d05",
+    "dist/ethereum-forecast.js": "b86e6e917c8d72c9db892dc4931694f915d6d73352dbab54798a64bd5ee3db4c",
+    "dist/ethereum-adaptive-model.js": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d",
+    "dist/ethereum-pooled-model.js": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467",
+    "dist/eth-view-state.js": "152003eacf02bd0e889b2ec8f89a867e702ab0d9db97a66e06ea7528a16021d1",
+    "dist/ethereum-adoption-scenarios.js": "f49532abd2479a2531bb7e23aaf7ff2b8505a3c2ce0a84436f3768a25c18dc86",
+    "dist/ethereum-research-panel.js": "f699155933c465057d8f1dc442c9b0de699e3a9d9eb1090a6566f46b724b93cc",
+    "dist/ethereum-research-catalog.js": "1c7638bec65dd4f948bc260434355f7e79c3ff9d572515d3fa5ec142dcf38e35",
+    "dist/eth-market-data.js": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075",
+    "dist/intraday-chart.js": "1e44773709a57ee9d74567001555a7b3ffa1f90c0915e35355f580c96c676c3f",
+    "dist/equity-forecast-chart.js": "a5601464a89dbfbda508d8de69a7d4a84b6858cc8981bef237eee0412676b75c",
+    "dist/equity-view.js": "19716e251cbb3af657e66a1cad955aaf1324749dd20b281391c608e7e70d0168",
+    "dist/treasury-projection.js": "9cf7e6660124880e5a9ad654f41c846d10deb309ace18cf59b96699963948fd1",
+    "dist/treasury-model.js": "4812b36b65912209201eabf46ba39868cec7d7ddb014421e556476412b8e1739",
+    "dist/forecast-information-time.js": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23",
+    "dist/data/bmnr-ohlc.json": "9a5e78b32ee5a78a82225d86b7aac4776efda6590f376e233eb364a66bb2763d",
+    "dist/data/eth-ohlc.json": "ebe83ad68d163df89cadb1fed1cc28e8053ce60d817485e6b31408dab27d1574",
+    "scripts/verify-eth-candidate-browser.mjs": "3590829a4a77d153468c4e98250feb4b269a501bce8601787c01f8ce76d29a29",
+    "scripts/btc-offline-refresh-policy.mjs": "2129f5274e0338c2d747d45af29eacc1d00c7ee5bbcea99925faf53d23f75740",
+    "tests/ethereum-offline-refresh-policy.test.mjs": "5697ad32f15a5f6a8a8d0a48dbd6546d5f72c6bdb64c645013e7ce836ac34c3d",
+    "dist/data/btc-daily.json": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf",
+    "dist/app.js": "ce9dbbdb6bf50a9b19208cfc8aa424f1395a95cd56d83afb7ab5370a87da4acd",
+    "dist/btc-refresh-status.js": "806ca5d59e4a9194bc9c2759c60821da154173a65944328a24010307808b2036",
+    "tests/ethereum-btc-refresh-status.test.mjs": "a840171a6fa636993b9ae735cf1c8b3089ca76f9ef05d17bd98846da75372b73",
+    "dist/data-source.js": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b",
+    "dist/published-data.js": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010",
+    "dist/asset-forecast-journal.js": "95298b2a35ced2ee51e7b3953bec6e520006edd102f0ee15187edb505f62da9c",
+    "dist/asset-forecast-records.js": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2",
+    "dist/journal-entry.js": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0",
+    "dist/forecast-journal.css": "e8bb880c5a91a7729c3ff490aff6e21e86950faefb9b265bec36d000287a3683",
+    "dist/data/asset-forecast-ledger/index.json": "2620f75f54b9755f417296348a4e31e14d584c338bcd2b67b0ac15c2c59bbe62",
+    "dist/data/mstr-ohlc.json": "a0db690fb421df3a4cd60173ea6620c16d113d30af5923b12c47e9e6bc03adbf",
+    "dist/lab-view.js": "e128e9f6cd0e046f67e291ecc20beee2ee9d20069ed8ec49108dcfbc96e628a2",
+    "dist/analysis-dock.css": "43b46d05978a7499823ef54d598f936de3279fbe3dc59cf77a8d66811f5e3fa9",
+    "dist/compact-chart-layout.css": "b429642986c9d73b930b49b48da7a710d8403965c4f50ee06263338c12c14f30",
+    "dist/mobile-workspace.css": "90a375739f01826b0a71c57789f50a09be6a6f944020194f6b70882f88578d3f",
+    "dist/mobile-preview.js": "9d1ad1cdaf3e316579e4a33054d81d300e002b0214635a1481140b1a133acc9c",
+    "scripts/verify-workspace-browser.mjs": "e510dd2a7815a99243f32a394433c5b3b8503694eed74cbfed5326a192f14f36",
+    "dist/atlas.css": "a9a3abf1ef26eefb93d518a0af826387dc40939fa9354427b7496f9a24207485",
+    "dist/atlas-shell.css": "41b8900500edbe67de4e4a3d643b71be8bd5fbb2df54be79a86ccacf6cba5f71",
+    "dist/atlas-shell.js": "b833182a77be1b97002c8cf06563da343f5f32da7e9063a34c9364d9d56a99bd",
+    "dist/center-workbench.js": "9e8481440f1237f10e98ccd95e9b6a9770b23751dea55ec1313ceecab5a0d411",
+    "dist/market-lab.css": "effe6742749417c388f40ed75a8ab3c1c6dc184f7ff9b718112e8ea01b7adc44",
+    "dist/loading-surfaces.css": "62365401f0ab6f6781292f7d17e2f5833f0e2311e4d7a3ea1dcd777ab945133d",
+    "dist/loading-surfaces.js": "acf1163210be23adebf1cbb9e11c509d35d7987caf0705e3b3bb45da3eb6cb7d",
+    "dist/chart-bottom-bar.css": "67ef233b70921763ef1a91cc394d333a1ef755fca28d5e0d21b1e7f7773bbe3a",
+    "dist/chart-details-panel.css": "614f3998b3d38b9347fb92a5bda6966ed1115889f071d44b689b60dd92072516",
+    "dist/chart-export-workbench.css": "5cfffd7d47507a90252b2e2b5b29ce448f95d13e56951d00e600eb43fb3321d5",
+    "dist/chart-magnet.css": "5c7645a9f74619aaed469826bf599502dda56296a3aafcce548dfe30f4935b53",
+    "dist/chart-workspace-controls.css": "708e87841f3d01e806be0ec7dfe1a69caa39780b658291aeee68661ae02073f9",
+    "dist/compact.css": "e44b63bd942bd01d8e09514fadfc2f39e3fb94f37433fb0725a4033ba5937d83",
+    "dist/cycle-milestones.css": "22a9a9a21251a92a9310e2dc5d8cd0cfab809ee502db45991953a73905562712",
+    "dist/equity-view.css": "99026cd6229df757176a648fc0f2c2ed88d7916a4e5eb65bcd8f9957db1ff5ad",
+    "dist/ethereum-history.css": "017cf5ea799495460353b389a8265ca87a5c0ecbe35268c08ca5c8ed5ca1e896",
+    "dist/lab.css": "517b84062e65c98b9c8171556edc25502a4fab079512f6b3a81ba245d37f30fc",
+    "dist/outlook.css": "f513be9f01dce9c994e169a935d4214c9eaf815ad0da2811ba59d42e92fbce35",
+    "dist/research-annotations.css": "d21629aadbb87bf1124f47a5dbe56a84cf5e725fcb4f300519720f4b169c650a",
+    "dist/research-reader.css": "fb41b38773dce8872ff0320951202346bc01c46bbb2f92a19a4d63a8ede3c4c8",
+    "dist/styles.css": "18b0a9b2c245853a5a20f08a89c7eecc06073261f9166510d07e23db14740cf5",
+    "dist/symbol-selector.css": "0d48ba9c389718c6afd4a259200d87cee3119c87095daf50c683ac5ca8df1ca4",
+    "dist/viewport.css": "36aecacae5e796bf5028a1e6963a217cc5eec5234f92184d134daa3ca312ec07",
+    "dist/workspace-tools.css": "33c8052eb528b1d6882aefd3bcef02c6785b1058fe3216d56d011b149000a701",
+    "dist/chart-bottom-bar.js": "e7dcdfce8326d5d4cf83265d1bd3fb715d26490b489b43523bbd72befd273b06",
+    "dist/preserved-archive-download.js": "fdc1ae671b866a2d3731d645b57998bdb23a53de6b3bfd0b61946faeda5434fd",
+    "dist/workspace-tools.js": "0e94b855cd8cd30c0a4a9c80c90a19a7774a133bdc587704774a13d23b3ad7c1",
+    "dist/research-annotations-workbench.js": "296c51cce5f994df1f08dab65d263f2e82d94ab4e81280d8170b88b0ab4a0d5f",
+    "dist/mobile-preview.html": "ef350dc53c4c61ca2bff5d4cf37d183ea13a5866cae9074f2522b7b7bd756379",
+    "dist/symbol-selector.js": "86a41a84b273d59bfd26a9bf3a093e7ca5d684175cddb3f977e166968a473f4a",
+    "dist/research-reader.js": "c8869e264aba1125bd56a23138d581287912b3e6b27ea6d392c4652c3d991575",
+    "dist/evidence-view.js": "fee4c064ed597fdba398a623846e00a96d590b2e85e1645976c787f55c3b6330",
+    "dist/viewport-workspace.js": "88c8cba821e866a87a5bbbbbec5172d473c0e290b0366fe2a60a807337d2fb80",
+    "dist/workbench-chrome.js": "82717c08789e53ffee6d2667ff6b342e59ed3954d3d566ab3f8c3c9d7f6d63e4",
+    "dist/forecast-replay.js": "a50725737d9deb6cdb851867dcc60bcc202b19818d6bbccc88e67b986d2f2b13",
+    "dist/forecast-replay-sources.js": "26d99528a81a49e8c738c542a2e2fbd911674efd874f02070c1ddd958e07cd52",
+    "dist/forecast-replay-view.js": "ecd6ea1880d3e7b6d682860f35f9a4593267f8a5c560c475c23db901b4c2c93b",
+    "dist/data/replay-eth-ohlc.json": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+    "scripts/verify-forecast-replay-browser.mjs": "d63cef852ce682cf8c63b9a0ab0c31ea76e2cec52330cc271c56af2ce77b195e",
+    "dist/chart-replay.js": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+    "dist/chart-replay-snapshot.js": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
+    "dist/chart-replay-state.js": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
+    "dist/chart-replay-renderer.js": "ba06b1369f92c596bd12abfd8256dd044be38097807718fc12550e81cc369d6b",
+    "dist/chart-replay-sources.js": "eda71aeffa8739bb233a9fb8413883ee0be3be357a271e761073873bacd63e3d",
+    "dist/chart-replay.css": "211009c38aa3b7716e566ab8c1a94002ea15f2557d905e26d3a39107902d85bf",
+    "dist/asset-forecast-loader.js": "2d373afa2f588f8d640b7432b1e226d64580fb1a96efc6631c6e2dcb7e1168cb",
+    "dist/data/btc-volume.json": "09ac13fed80490c774b3c597f79882ae2b5ab3038cc968f182d163f49fa2a8b1",
+    "scripts/verify-chart-replay-browser.mjs": "43007bbcc95caa31b7c3df5d66b7a85a1191ebe6c7bc6ad74498109c0cb50860",
+    "dist/chart-replay-atlas.js": "b647d085796353b9cf21edebed98890bba89fb10cb54de0568b0060fc6d3fcf3",
+    "dist/atlas-price-chart.js": "e3726e135dcd552777021de5282d1616120c0493d7b10b56fd4f129f812995d8",
+    "dist/project-replay-baseline.js": "b24462b0b8ac13b8640fc0717e98ed5cf198a779281cbd64bd3551a4529c6861",
+    "dist/data/project-origin-btc-2026-10-21.json": "571d0d3421d7ae40da4fb3020ab0290aa534822d5a439f9e98f55dc31d5f19ac",
+    "scripts/build-project-replay-baseline.mjs": "1ddf49e09ad015afd526996112c521d23fba5e539af73439c85628dec13aed83"
+  },
+  "koreanFonts": [
+    "/root/.local/share/fonts/atlas-audit/NotoSansCJKkr-Regular.otf: Noto Sans CJK KR:style=Regular"
+  ],
+  "browserBinary": "/workspace/scratch/82e52cfd9693/browser-native/chromium-audit-multiprocess",
+  "browserVersion": {
+    "protocolVersion": "1.3",
+    "product": "HeadlessChrome/143.0.7499.0",
+    "revision": "@b30439823e5177773584139e72e0593e36863899",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/143.0.7499.0 Safari/537.36",
+    "jsVersion": "14.3.127"
+  },
+  "expectedObservedEth": {
+    "price": "$2,252.66",
+    "date": "2026-10-31",
+    "close": 2252.66
+  },
+  "expectedObservedBtc": {
+    "sourceUrl": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-01&page_size=10000&paging_from=start",
+    "asOf": "2026-10-31",
+    "price": 77401.0172870368,
+    "formattedPrice": "$77,401.02",
+    "archiveSha256": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf"
+  },
+  "syntheticFixture": {
+    "file": "zero-fixture.json",
+    "bytes": 35829,
+    "sha256": "faa764978988026cd735714fc7ccb50dc683545f3b3ef0ecc6cf027a1473575e",
+    "recordId": "64b1dbb05801f8b1e46b28b44253d32681225957e43e9c7c7feefc99e16e8632",
+    "snapshotId": "924ce95aa5a5e9cda7de95fd5f4061ae7f2517b4856bf7ef5e0f91ca3445d6c5"
+  },
+  "declaredCaseCount": 49,
+  "expectedCaseCount": 3,
+  "sourceIntegrity": {
+    "checkedFiles": 98,
+    "changedSources": [],
+    "unchangedDuringRun": true
+  },
+  "finishedAt": "2026-11-05T08:31:53.122Z",
+  "chromeStderrTail": "[1105/173140.805854:ERROR:../net/base/address_tracker_linux.cc:223] Could not create NETLINK socket: Operation not permitted (1)\n\nDevTools listening on ws://127.0.0.1:44047/devtools/browser/524d538d-5d64-4ad1-9eca-90f0ca6ea031\n[1105/173140.827656:WARNING:../sandbox/policy/linux/sandbox_linux.cc:404] InitializeSandbox() called with multiple threads in process gpu-process.\n"
+}

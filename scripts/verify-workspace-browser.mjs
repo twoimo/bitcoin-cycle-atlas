@@ -9,10 +9,279 @@ export const workspaceBrowserCases = [320, 1440].flatMap(width =>
 workspaceBrowserCases.push({page:'workspace-btc-short',surface:'btc',width:900,height:430,touch:true,route:'/?symbol=BTCUSD&granularity=daily&type=line'});
 
 workspaceBrowserCases.push({page:'workspace-legacy',surface:'legacy',width:375,height:900,touch:true,route:'/?page=compare&legacy=1'});
+workspaceBrowserCases.push(...[{width:320,height:900,touch:true},{width:1440,height:900,touch:false},{width:900,height:430,touch:true}].map(size=>({
+  page:'workspace-center-data',surface:'center-data',...size,route:'/?symbol=BTCUSD&granularity=daily&type=line'
+})));
+
+// Let native layout resolve the containing-block and top-layer clip chain.
+// DOM ancestry alone incorrectly clips both modal dialogs and fixed rails.
+export async function readNativeInteractiveTarget(selector,focused=false){
+  const container=document.querySelector(selector),el=focused?document.activeElement:container;
+  if(!el)throw new Error('Missing interactive target '+selector);
+  const entry=await new Promise((accept,reject)=>{
+    const observer=new IntersectionObserver(entries=>{
+      const current=entries.find(item=>item.target===el);if(!current)return;
+      clearTimeout(timer);observer.disconnect();accept(current);
+    });
+    const timer=setTimeout(()=>{observer.disconnect();reject(new Error('Native intersection unavailable for '+selector));},5000);
+    observer.observe(el);
+  });
+  const rect=box=>({left:box.left,right:box.right,top:box.top,bottom:box.bottom,width:box.width,height:box.height});
+  const box=rect(entry.boundingClientRect),clip=rect(entry.intersectionRect),x=box.left+box.width/2,y=box.top+box.height/2;
+  const hit=document.elementFromPoint(x,y),style=getComputedStyle(el);
+  return {selector,box,clip,x,y,viewport:{width:innerWidth,height:innerHeight},inside:Boolean(container?.contains(el)),
+    painted:el.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),disabled:Boolean(el.disabled),
+    topmost:Boolean(hit&&(hit===el||el.contains(hit))),tag:el.tagName,label:el.getAttribute('aria-label')||el.textContent.slice(0,80),
+    outline:style.outlineStyle,outlineWidth:parseFloat(style.outlineWidth),outlineColor:style.outlineColor};
+}
+
+/** Actual parent chart -> embedded asset board -> chart, with native mapped inputs. */
+export async function verifyEmbeddedDataSurface(api){
+  const {cdp,receipt,evaluate,until,settled,bounds,visibleBounds,screenshot,verifyOfflineRefresh,expectedBtc}=api;
+  const {width,height,page}=receipt,frameSelector='.atlas-center-frame:not([hidden])';
+  const evidence={inputs:[],states:[]};receipt.workspace={surface:'center-data',states:evidence.states,centerData:evidence};
+  const complete=target=>target.painted&&!target.disabled&&target.topmost&&target.box.width>0&&target.box.height>0&&target.clip.width>0&&target.clip.height>0&&
+    target.box.left>=target.clip.left-1&&target.box.right<=target.clip.right+1&&target.box.top>=target.clip.top-1&&target.box.bottom<=target.clip.bottom+1;
+  const readParent=()=>{
+    const rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+    const stage=document.querySelector('#lab-chart-stage');
+    return {page:document.body.dataset.page,shell:document.body.dataset.shell,center:document.body.dataset.centerTool||null,
+      documentWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,
+      stage:{...rect(stage),scrollLeft:stage.scrollLeft,scrollTop:stage.scrollTop,clientWidth:stage.clientWidth,scrollWidth:stage.scrollWidth},
+      perimeter:Object.fromEntries(['.atlas-canvas-heading','.workbench-bottom-bar','.atlas-sidebar','.workbench-rail'].map(selector=>{
+        const el=document.querySelector(selector);return [selector,{connected:Boolean(el?.isConnected),...rect(el)}];
+      }))};
+  };
+  const readSource=()=>({timeOrigin:performance.timeOrigin,price:document.querySelector('#lab-metrics .readout-main > strong')?.textContent,
+    date:document.querySelector('#lab-metrics .atlas-observation-date')?.textContent,kind:document.querySelector('#lab-metrics')?.dataset.kind,
+    cutoff:document.querySelector('#sidebar-asof')?.textContent,product:document.querySelector('#lab-chart')?.dataset.product});
+  const rawPointer=async(selector,context=cdp,frame=null)=>{
+    const target=await evaluate(context,readNativeInteractiveTarget,selector);
+    assert.ok(complete(target),'Native target is clipped, hidden, disabled or occluded: '+JSON.stringify(target));
+    let point={x:target.x,y:target.y};
+    if(frame){
+      const owner=await evaluate(cdp,readNativeInteractiveTarget,frameSelector);
+      assert.ok(complete(owner),'Embedded frame is clipped or occluded: '+JSON.stringify(owner));
+      assert.ok(Math.abs(owner.box.width-target.viewport.width)<=1&&Math.abs(owner.box.height-target.viewport.height)<=1,'Embedded control mapping requires actual 1:1 iframe pixels');
+      point={x:owner.box.left+target.x,y:owner.box.top+target.y};
+      assert.equal(await evaluate(cdp,({x,y})=>document.elementFromPoint(x,y)===document.querySelector('.atlas-center-frame:not([hidden])'),point),true,'Mapped pointer must hit the active iframe');
+    }
+    evidence.inputs.push({kind:'raw-native-pointer',selector,frameId:frame?.id||null,target,point,parentBefore:await evaluate(cdp,readParent)});
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...point});
+    await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});
+    await settled(context);
+  };
+  const chooseNavigation=async(id)=>{
+    if(width<=620){
+      for(let attempt=0;attempt<5;attempt++){
+        const target=await evaluate(cdp,readNativeInteractiveTarget,'#mobile-details-toggle');
+        if(complete(target))break;
+        const heading=await bounds(cdp,'.atlas-canvas-heading');visibleBounds(heading,width,height);
+        const before=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading').scrollLeft);
+        const direction=target.box.left<heading.left?1:-1,distance=Math.min(144,heading.width/2),x=direction<0?heading.right-24:heading.left+24,y=(heading.top+heading.bottom)/2;
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});
+        for(let step=1;step<=12;step++){
+          await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+direction*distance*step/12,y,id:1}]});
+          await new Promise(resolve=>setTimeout(resolve,16));
+        }
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+        await until(()=>evaluate(cdp,value=>Math.abs(document.querySelector('.atlas-canvas-heading').scrollLeft-value)>1,before),'native heading pan',5000);
+        let previous=null,stable=0;
+        await until(async()=>{const left=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading').scrollLeft);stable=previous!==null&&Math.abs(left-previous)<.1?stable+1:0;previous=left;return stable>=3;},'native heading pan end',5000);
+        evidence.inputs.push({kind:'native-heading-swipe',before,after:previous,x,y,distance,direction,parentAfter:await evaluate(cdp,readParent)});
+      }
+      const target=await evaluate(cdp,readNativeInteractiveTarget,'#mobile-details-toggle');
+      assert.ok(target.box.width>=44&&target.box.height>=44,'Mobile navigation must retain its full touch target');
+      await rawPointer('#mobile-details-toggle');
+    }
+    const selector='.atlas-nav [data-atlas-page="'+id+'"]';
+    // Scroll only the actual navigation tray with native wheel input when needed.
+    for(let attempt=0;attempt<12;attempt++){
+      const target=await evaluate(cdp,readNativeInteractiveTarget,selector);
+      if(complete(target)){await rawPointer(selector);return;}
+      const rail=await bounds(cdp,'.workbench-rail');visibleBounds(rail,width,height);
+      const point={x:(rail.left+rail.right)/2,y:Math.max(rail.top+24,Math.min(rail.bottom-24,(rail.top+rail.bottom)/2))};
+      const deltaY=target.y<(rail.top+rail.bottom)/2?-180:180;
+      evidence.inputs.push({kind:'native-navigation-scroll',selector,point,deltaY});
+      await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...point,deltaX:0,deltaY});await settled(cdp);
+    }
+    throw new Error('Native navigation never exposed '+id);
+  };
+  await until(()=>evaluate(cdp,()=>document.documentElement?.dataset.boot==='ready'&&document.querySelectorAll('#lab-chart path').length>0),'center-data initial chart');
+  const initialPage=await evaluate(cdp,readParent);
+  assert.equal(initialPage.page,'outlook');assert.equal(initialPage.center,null);
+  const initialRefreshVerified=await verifyOfflineRefresh({phase:'center-data-initial-parent'});
+  await settled(cdp);
+  evidence.sourceBefore=await evaluate(cdp,readSource);evidence.before=await evaluate(cdp,readParent);
+  assert.equal(evidence.sourceBefore.price,expectedBtc.formattedPrice);assert.equal(evidence.sourceBefore.kind,'observed');
+  assert.equal(evidence.sourceBefore.date,expectedBtc.asOf.replaceAll('-','.')+' UTC');
+  assert.equal(evidence.sourceBefore.cutoff,'관측 · '+expectedBtc.asOf.replaceAll('-','.')+' UTC');
+  const samePerimeter=(current,label)=>{
+    assert.equal(current.stage.scrollLeft,0,label+' must not scroll the outer chart stage');
+    assert.equal(current.stage.scrollTop,0,label+' must not vertically scroll the outer chart stage');
+    assert.ok(Math.max(current.documentWidth,current.bodyWidth)<=width+1,label+' must not overflow the parent document');
+    for(const [selector,original] of Object.entries(evidence.before.perimeter)){
+      const actual=current.perimeter[selector];assert.ok(original.connected&&actual.connected,'Missing perimeter '+selector);
+      for(const key of ['left','right','top','bottom','width','height'])assert.ok(Math.abs(actual[key]-original[key])<=1,label+' moved '+selector+' '+key+': '+JSON.stringify({original,actual}));
+    }
+  };
+  samePerimeter(evidence.before,'Initial chart');
+  await chooseNavigation('data');
+  await until(()=>evaluate(cdp,()=>document.body.dataset.centerTool==='data'&&document.querySelector('.atlas-center-frame:not([hidden])')?.contentDocument?.querySelectorAll('#data-body tr[data-asset-symbol]').length===18),'native center-data entry');
+  evidence.entered=await evaluate(cdp,readParent);samePerimeter(evidence.entered,'Embedded data entry');
+  assert.equal(evidence.entered.page,'outlook');assert.equal(evidence.entered.shell,'chart');assert.equal(evidence.entered.center,'data');
+  const activeFrame=await evaluate(cdp,()=>{const frame=document.querySelector('.atlas-center-frame:not([hidden])');return {src:frame.src,title:frame.title,borderLeft:frame.clientLeft,borderTop:frame.clientTop};});
+  assert.equal(activeFrame.borderLeft,0);assert.equal(activeFrame.borderTop,0);assert.equal(activeFrame.title,'자산 비교');
+  const tree=await cdp.send('Page.getFrameTree'),frames=[];
+  const collect=node=>{frames.push(node.frame);for(const child of node.childFrames||[])collect(child);};collect(tree.frameTree);
+  const matches=frames.filter(frame=>frame.parentId===tree.frameTree.frame.id&&frame.url===activeFrame.src);
+  assert.equal(matches.length,1,'Exactly one current child frame must own the embedded board');
+  const frame=matches[0],world=await cdp.send('Page.createIsolatedWorld',{frameId:frame.id,worldName:'atlas-center-data-audit'});
+  const child={send:(method,params={})=>cdp.send(method,method==='Runtime.evaluate'?{...params,contextId:world.executionContextId}:params)};
+  evidence.childContext={frameId:frame.id,parentFrameId:frame.parentId,url:frame.url,executionContextId:world.executionContextId};
+  await settled(child);
+  evidence.board=await evaluate(child,()=>{
+    const root=document.querySelector('#data-view'),heading=root.querySelector('.daily-heading'),rows=[...root.querySelectorAll('#data-body tr[data-asset-symbol]')];
+    const rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+    return {embedded:document.body.dataset.embedded,coarse:matchMedia('(pointer:coarse)').matches,width:innerWidth,height:innerHeight,documentWidth:document.documentElement.scrollWidth,
+      root:rect(root),toolbar:rect(heading),symbols:rows.map(row=>row.dataset.assetSymbol),btcName:rows[0]?.querySelector('.asset-name-label').textContent,
+      actionIds:[...heading.querySelectorAll('.daily-action')].map(button=>button.id)};
+  });
+  assert.equal(evidence.board.embedded,'true');assert.equal(evidence.board.symbols.length,18);assert.equal(new Set(evidence.board.symbols).size,18);
+  assert.equal(evidence.board.symbols[0],'BTC');assert.equal(evidence.board.btcName,'비트코인');assert.ok(evidence.board.documentWidth<=evidence.board.width+1);
+  assert.deepEqual(evidence.board.actionIds,['asset-refresh','asset-history-open','daily-method-open','export-raw']);
+  assert.ok(evidence.board.toolbar.height<=64&&Math.abs(evidence.board.toolbar.width-evidence.board.root.width)<=1,'Embedded action row must fit its actual board owner');
+  evidence.actions=[];const minimum=evidence.board.coarse||evidence.board.width<=760?44:32;
+  for(const id of evidence.board.actionIds){
+    const target=await evaluate(child,readNativeInteractiveTarget,'#'+id);evidence.actions.push(target);
+    assert.ok(complete(target)&&target.label&&target.tag==='BUTTON','Embedded action must be named, enabled and physically reachable: '+id);
+    assert.ok(target.box.width>=minimum&&target.box.height>=minimum,'Embedded action hit target compressed: '+id);
+  }
+  await screenshot(cdp,page+'-'+width+'x'+height+'-board.png',receipt);
+  await rawPointer('#daily-method-open',child,frame);
+  const dialog=await bounds(child,'#daily-method-dialog');assert.equal(dialog.open,true);visibleBounds(dialog,evidence.board.width,evidence.board.height);
+  assert.ok(dialog.text.includes('자산 비교표')&&dialog.text.includes('판단 보류'),'Actual comparison method must be present');
+  const frameBox=await bounds(cdp,frameSelector);
+  const dialogPoint={x:frameBox.left+dialog.left+dialog.width/2,y:frameBox.top+dialog.top+dialog.height*.7};
+  await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...dialogPoint,deltaX:0,deltaY:10000});await settled(child);
+  await until(()=>evaluate(child,()=>{const d=document.querySelector('#daily-method-dialog');return d.scrollHeight<=d.clientHeight+1||d.scrollTop>=d.scrollHeight-d.clientHeight-2;}),'embedded method native scroll end');
+  evidence.method=await evaluate(child,()=>{const d=document.querySelector('#daily-method-dialog');return {modal:d.matches(':modal'),scrollTop:d.scrollTop,maxScroll:d.scrollHeight-d.clientHeight};});
+  assert.equal(evidence.method.modal,true);
+  for(const selector of ['#daily-method-title','#daily-method-close']){
+    const target=await evaluate(child,readNativeInteractiveTarget,selector);assert.ok(complete(target),'Scrolled embedded method clips '+selector);evidence.method[selector]=target;
+  }
+  const close=evidence.method['#daily-method-close'];assert.ok(close.box.width>=minimum&&close.box.height>=minimum,'Embedded close must retain a usable hit target');
+  await screenshot(cdp,page+'-'+width+'x'+height+'-method.png',receipt);
+  await rawPointer('#daily-method-close',child,frame);
+  assert.equal(await evaluate(child,()=>document.querySelector('#daily-method-dialog').open),false);
+  evidence.afterMethod=await evaluate(cdp,readParent);samePerimeter(evidence.afterMethod,'Embedded method close');
+  await chooseNavigation('outlook');
+  await until(()=>evaluate(cdp,()=>!document.body.dataset.centerTool&&document.querySelectorAll('.atlas-center-frame:not([hidden])').length===0),'native return from embedded data');
+  evidence.returned=await evaluate(cdp,readParent);samePerimeter(evidence.returned,'Return to chart');
+  evidence.sourceAfter=await evaluate(cdp,readSource);assert.deepEqual(evidence.sourceAfter,evidence.sourceBefore,'Returning from the board must retain the actual BTC source and observation');
+  if(initialRefreshVerified){
+    // A second verification consumes a distinct, explicitly triggered parent request.
+    assert.equal(evidence.returned.page,'outlook');assert.equal(evidence.returned.center,null);
+    await rawPointer('#btc-refresh-retry');await verifyOfflineRefresh({phase:'center-data-return-parent-retry'});
+    evidence.sourceAfterRetry=await evaluate(cdp,readSource);assert.deepEqual(evidence.sourceAfterRetry,evidence.sourceBefore);
+  }
+  await screenshot(cdp,page+'-'+width+'x'+height+'-returned.png',receipt);
+}
+
+// Export the actual native measurement/assertion boundary so negative controls
+// can prove that missing paint or missing status semantics still fail.
+export function readPreviewBootSurface(mode){
+  const frame=document.querySelector('#mobile-preview'),doc=frame.contentDocument;
+  const shell=doc.getElementById('atlas-boot-shell'),status=doc.getElementById('atlas-boot-status'),error=doc.getElementById('atlas-boot-error');
+  const canvas=shell.querySelector('.atlas-boot-canvas'),main=document.querySelector('main');
+  if(!canvas||!main)throw new Error('Preview clipping containers are missing');
+  const rect=el=>{const b=el.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom};};
+  const client=el=>{const b=rect(el);return {left:b.left+el.clientLeft,right:b.left+el.clientLeft+el.clientWidth,top:b.top+el.clientTop,bottom:b.top+el.clientTop+el.clientHeight};};
+  const intersect=(...boxes)=>({left:Math.max(...boxes.map(b=>b.left)),right:Math.min(...boxes.map(b=>b.right)),top:Math.max(...boxes.map(b=>b.top)),bottom:Math.min(...boxes.map(b=>b.bottom))});
+  const rendered=el=>Boolean(el?.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}));
+  const measure=el=>{
+    if(!el)return null;
+    const local=intersect(rect(el),client(canvas),{left:0,right:frame.contentWindow.innerWidth,top:0,bottom:frame.contentWindow.innerHeight});
+    const f=client(frame),visible=intersect({left:f.left+local.left,right:f.left+local.right,top:f.top+local.top,bottom:f.top+local.bottom},f,client(main),{left:0,right:innerWidth,top:0,bottom:innerHeight});
+    return {id:el.id||el.className,rendered:[el,canvas,shell,frame,main].every(rendered),local,visible,
+      visibleWidth:Math.max(0,visible.right-visible.left),visibleHeight:Math.max(0,visible.bottom-visible.top)};
+  };
+  let active=null;
+  if(mode==='loading'){
+    const paint=[...canvas.querySelectorAll('.atlas-boot-readout .atlas-boot-bar,.atlas-boot-indicators .atlas-boot-bar')].map(el=>{
+      const css=doc.defaultView.getComputedStyle(el);
+      return {...measure(el),background:css.backgroundColor,decorative:Boolean(el.closest('[aria-hidden="true"]'))};
+    });
+    active={kind:'skeleton',paint,status:{role:status.getAttribute('role'),live:status.getAttribute('aria-live'),busy:status.getAttribute('aria-busy'),
+      text:status.textContent.trim(),available:status.checkVisibility({checkVisibilityCSS:true}),excluded:Boolean(status.closest('[hidden],[inert],[aria-hidden="true"]'))}};
+  }else if(mode==='error'){
+    const retry=doc.getElementById('atlas-boot-retry');
+    active={kind:'error',...measure(error),role:error.getAttribute('role'),retry:{...measure(retry),disabled:retry.disabled,name:retry.textContent.trim()}};
+  }
+  return {mode,boot:doc.documentElement?.dataset.boot,shellHidden:shell.hidden,
+    statusHidden:status.hidden,errorHidden:error.hidden,active,caption:document.getElementById('preview-caption').textContent};
+}
+
+function computedColorAlpha(color){
+  if(color==='transparent')return 0;
+  const rgb=color?.match(/^rgba?\(\s*[\d.]+(?:\s*,\s*|\s+)[\d.]+(?:\s*,\s*|\s+)[\d.]+(?:\s*(?:,|\/)\s*([\d.]+))?\s*\)$/);
+  const alpha=rgb?Number(rgb[1]??1):NaN;
+  return Number.isFinite(alpha)&&alpha>=0&&alpha<=1?alpha:NaN;
+}
+
+export function assertPreviewBootSurface(state){
+  if(state.mode==='actual'){assert.equal(state.shellHidden,true);return;}
+  assert.equal(state.shellHidden,false);
+  assert.equal(state.statusHidden,state.mode==='error');
+  assert.equal(state.errorHidden,state.mode!=='error');
+  assert.ok(state.caption.includes('실제 로딩 시간'));
+  const visible=item=>item?.rendered&&item.visibleWidth>0&&item.visibleHeight>0;
+  if(state.mode==='loading'){
+    const {paint,status}=state.active;
+    const visiblePaint=paint.filter(item=>visible(item)&&computedColorAlpha(item.background)>0);
+    assert.ok(visiblePaint.length>=2&&visiblePaint.every(item=>item.decorative),'Preview loading skeleton paint is missing: '+JSON.stringify(paint));
+    assert.equal(status.role,'status');assert.equal(status.live,'polite');assert.equal(status.busy,'true');
+    assert.ok(status.text&&status.available&&!status.excluded,'Preview loading status must remain available independently of decorative paint');
+  }else{
+    assert.ok(visible(state.active),'Preview error panel is not visible: '+JSON.stringify(state.active));
+    assert.equal(state.active.role,'alert');
+    assert.ok(visible(state.active.retry)&&state.active.retry.name&&!state.active.retry.disabled,'Preview retry action is missing');
+  }
+}
+
+export function readIndicatorLegendSurface(){
+  const manager=document.querySelector('#chart-indicator-manager'),list=manager.querySelector('.chart-indicator-list'),toggle=manager.querySelector('.indicator-legend-toggle');
+  const b=manager.getBoundingClientRect(),rows=[...list.querySelectorAll('.indicator-label')];
+  return {background:getComputedStyle(manager).backgroundColor,listBackground:getComputedStyle(list).backgroundColor,
+    collapsed:manager.dataset.collapsed==='true',listHidden:list.hidden,expanded:toggle.getAttribute('aria-expanded'),
+    mobile:matchMedia('(max-width:620px)').matches,disabled:toggle.disabled,name:toggle.getAttribute('aria-label'),controls:toggle.getAttribute('aria-controls'),listId:list.id,
+    painted:manager.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height,
+    rowCount:rows.length,visibleLabels:rows.filter(el=>{
+      const r=el.getBoundingClientRect(),l=list.getBoundingClientRect();
+      return el.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})&&r.bottom>l.top&&r.top<l.bottom;
+    }).map(el=>({text:el.textContent.trim(),color:getComputedStyle(el).color}))};
+}
+
+export function assertIndicatorLegendSurface(state){
+  for(const [name,color] of [['manager',state.background],['list',state.listBackground]]){
+    assert.equal(computedColorAlpha(color),0,'Indicator '+name+' must retain the requested transparent background: '+color);
+  }
+  assert.ok(state.painted&&state.width>0&&state.height>0,'Indicator manager is missing');
+  assert.ok(state.name&&state.controls===state.listId&&state.rowCount>0,'Indicator legend lost its named controls or actual rows');
+  assert.equal(state.listHidden,state.collapsed);assert.equal(state.expanded,String(!state.collapsed));
+  if(state.mobile){
+    assert.equal(state.collapsed,true);assert.equal(state.disabled,true);
+    assert.match(state.name,/모바일.*인디케이터 메뉴/,'Mobile fixed collapse must explain its menu owner');
+  }else assert.equal(state.disabled,false);
+  if(!state.collapsed)assert.ok(state.visibleLabels.length>0&&state.visibleLabels.every(label=>label.text&&computedColorAlpha(label.color)>0),
+    'Expanded indicator labels are missing');
+}
 
 export async function verifyWorkspaceSurface(api) {
   const {cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership}=api;
   const {width,height,surface,page}=receipt;
+  if(surface==='center-data')return verifyEmbeddedDataSurface(api);
   receipt.workspace={surface,states:[]};
   const states=receipt.workspace.states;
   async function key(key,code,number,modifiers=0){
@@ -35,22 +304,11 @@ export async function verifyWorkspaceSurface(api) {
     return box;
   }
   async function focused(selector){
-    const focus=await evaluate(cdp,s=>{
-      const container=document.querySelector(s),el=document.activeElement;
-      const b=el.getBoundingClientRect(),style=getComputedStyle(el),clip={left:0,right:innerWidth,top:0,bottom:innerHeight};
-      for(let parent=el.parentElement;parent;parent=parent.parentElement){
-        const p=parent.getBoundingClientRect(),css=getComputedStyle(parent);
-        if(css.overflowX!=='visible'){clip.left=Math.max(clip.left,p.left+parent.clientLeft);clip.right=Math.min(clip.right,p.left+parent.clientLeft+parent.clientWidth);}
-        if(css.overflowY!=='visible'){clip.top=Math.max(clip.top,p.top+parent.clientTop);clip.bottom=Math.min(clip.bottom,p.top+parent.clientTop+parent.clientHeight);}
-      }
-      const hit=document.elementFromPoint(b.left+b.width/2,b.top+b.height/2);
-      return {clip,topmost:Boolean(hit&&(hit===el||el.contains(hit))),inside:container.contains(el),tag:el.tagName,label:el.getAttribute('aria-label')||el.textContent.slice(0,80),
-        left:b.left,right:b.right,top:b.top,bottom:b.bottom,outline:style.outlineStyle,width:parseFloat(style.outlineWidth),color:style.outlineColor};
-    },selector);
+    const focus=await evaluate(cdp,readNativeInteractiveTarget,selector,true),b=focus.box;
     assert.ok(focus.inside,'Keyboard focus escaped '+selector+': '+JSON.stringify(focus));
-    assert.ok(focus.left>=-1&&focus.right<=width+1&&focus.top>=-1&&focus.bottom<=height+1,'Focused action is outside viewport: '+JSON.stringify(focus));
-    assert.ok(focus.topmost&&focus.left>=focus.clip.left-1&&focus.right<=focus.clip.right+1&&focus.top>=focus.clip.top-1&&focus.bottom<=focus.clip.bottom+1,'Focused action is clipped or occluded: '+JSON.stringify(focus));
-    assert.ok(focus.width>=2&&focus.outline!=='none','Keyboard focus lacks common visible ring: '+JSON.stringify(focus));
+    assert.ok(focus.painted&&b.left>=-1&&b.right<=width+1&&b.top>=-1&&b.bottom<=height+1,'Focused action is outside viewport: '+JSON.stringify(focus));
+    assert.ok(focus.topmost&&b.left>=focus.clip.left-1&&b.right<=focus.clip.right+1&&b.top>=focus.clip.top-1&&b.bottom<=focus.clip.bottom+1,'Focused action is clipped or occluded: '+JSON.stringify(focus));
+    assert.ok(focus.outlineWidth>=2&&focus.outline!=='none','Keyboard focus lacks common visible ring: '+JSON.stringify(focus));
     states.push({label:'keyboard-focus',selector,focus});
   }
   async function escape(selector){
@@ -106,34 +364,8 @@ export async function verifyWorkspaceSurface(api) {
         return !frame.hidden&&frame.contentDocument?.documentElement?.dataset.boot===(value==='actual'?'ready':value);
       },mode),'preview '+mode);
       if(mode==='actual'){await previewSettled();await verifyOfflineRefresh({preview:true,phase:'preview-restored-actual'});}
-      const state=await evaluate(cdp,value=>{
-        const frame=document.querySelector('#mobile-preview'),doc=frame.contentDocument;
-        const shell=doc.getElementById('atlas-boot-shell'),status=doc.getElementById('atlas-boot-status'),error=doc.getElementById('atlas-boot-error');
-        const rect=el=>{const b=el.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom};};
-        const client=el=>{const b=rect(el);return {left:b.left+el.clientLeft,right:b.left+el.clientLeft+el.clientWidth,top:b.top+el.clientTop,bottom:b.top+el.clientTop+el.clientHeight};};
-        const intersect=(...boxes)=>({left:Math.max(...boxes.map(b=>b.left)),right:Math.min(...boxes.map(b=>b.right)),top:Math.max(...boxes.map(b=>b.top)),bottom:Math.min(...boxes.map(b=>b.bottom))});
-        const rendered=el=>{const css=el.ownerDocument.defaultView.getComputedStyle(el);return el.getClientRects().length>0&&css.display!=='none'&&!['hidden','collapse'].includes(css.visibility)&&Number(css.opacity)>0;};
-        let active=null;
-        if(value!=='actual'){
-          const panel=value==='loading'?status:error,canvas=panel.closest('.atlas-boot-canvas'),main=document.querySelector('main');
-          if(!canvas||!main)throw new Error('Preview clipping containers are missing');
-          const local=intersect(rect(panel),client(canvas),{left:0,right:frame.contentWindow.innerWidth,top:0,bottom:frame.contentWindow.innerHeight});
-          const f=client(frame),visible=intersect({left:f.left+local.left,right:f.left+local.right,top:f.top+local.top,bottom:f.top+local.bottom},f,client(main),{left:0,right:innerWidth,top:0,bottom:innerHeight});
-          active={id:panel.id,rendered:[panel,canvas,shell,frame,main].every(rendered),local,visible,
-            visibleWidth:Math.max(0,visible.right-visible.left),visibleHeight:Math.max(0,visible.bottom-visible.top)};
-        }
-        return {mode:value,boot:doc.documentElement?.dataset.boot,shellHidden:shell.hidden,
-          statusHidden:status.hidden,errorHidden:error.hidden,active,caption:document.getElementById('preview-caption').textContent};
-      },mode);
-      if(mode==='actual')assert.equal(state.shellHidden,true);
-      else {
-        assert.equal(state.shellHidden,false);
-        assert.equal(state.statusHidden,mode==='error');
-        assert.equal(state.errorHidden,mode!=='error');
-        assert.ok(state.caption.includes('실제 로딩 시간'));
-        assert.ok(state.active.rendered&&state.active.visibleWidth>0&&state.active.visibleHeight>0,
-          'Preview active boot panel is not visible: '+JSON.stringify(state.active));
-      }
+      const state=await evaluate(cdp,readPreviewBootSurface,mode);
+      assertPreviewBootSurface(state);
       states.push({label:'preview-'+mode,...state});
       await screenshot(cdp,page+'-'+width+'x'+height+'-preview-'+mode+'.png',receipt);
       await screenshot(cdp,page+'-'+width+'-'+mode+'.png',receipt);
@@ -253,7 +485,13 @@ export async function verifyWorkspaceSurface(api) {
     assert.ok((await bounds(cdp,'#evidence-body')).text.includes('일치하는 자료가 없습니다'));
     assert.ok((await evaluate(cdp,()=>location.search)).includes('research-q='));
     await inspect('#evidence-view','research-empty',{opaque:false});
-    await click(cdp,'#evidence-clear');
+    for(const id of ['evidence-asset','evidence-filter','evidence-clear']){
+      await key('Tab','Tab',9);await focused('.evidence-controls');
+      assert.equal(await evaluate(cdp,()=>document.activeElement.id),id,'Research filter tab order changed');
+    }
+    await key('Enter','Enter',13);
+    assert.equal(await evaluate(cdp,()=>document.querySelector('#evidence-search').value),'');
+    assert.equal(await evaluate(cdp,()=>new URLSearchParams(location.search).has('research-q')),false);
     await click(cdp,'#evidence-body [data-evidence-detail]');
     await inspect('#research-reader','research-reader',{dialog:true});
     const childColors=await evaluate(cdp,()=>{
@@ -270,9 +508,10 @@ export async function verifyWorkspaceSurface(api) {
     await click(cdp,'[data-reader-action="close"]');
     assert.equal(await evaluate(cdp,()=>document.querySelector('#research-reader').open),false);
     if(width<=620){
-      await click(cdp,'#evidence-back');
+      const returnSelector=await evaluate(cdp,()=>document.body.dataset.shell==='dashboard'?'.atlas-sidebar .atlas-brand[data-view="outlook"]':'#evidence-back');
+      await click(cdp,returnSelector);
       await until(()=>evaluate(cdp,()=>document.body.dataset.page==='outlook'&&document.querySelectorAll('#lab-chart path').length>0),'mobile research back to chart');
-      receipt.workspace.mobileReturn=true;
+      receipt.workspace.mobileReturn={selector:returnSelector,actualChart:true};
     }
     return;
   }
@@ -349,13 +588,21 @@ export async function verifyWorkspaceSurface(api) {
     if(label==='annotations-empty')assert.ok((await bounds(cdp,'.research-annotations-list')).text.includes('아직 저장한 측정이 없습니다'),'Annotation empty state missing');
     await key('Tab','Tab',9);await focused(selector);await escape(selector);
   }
-  const indicatorSurface=await evaluate(cdp,()=>{
-    const manager=document.querySelector('#chart-indicator-manager'),list=manager.querySelector('.chart-indicator-list'),b=manager.getBoundingClientRect();
-    return {background:getComputedStyle(manager).backgroundColor,listBackground:getComputedStyle(list).backgroundColor,collapsed:manager.dataset.collapsed,left:b.left,top:b.top,width:b.width,height:b.height};
-  });
-  dark(indicatorSurface.background,'indicator list owned surface');
-  assert.ok(!indicatorSurface.background.startsWith('rgba(')||indicatorSurface.background.endsWith(', 1)'),'Chart event labels must not show through the indicator surface');
-  receipt.workspace.indicatorSurface=indicatorSurface;
+  const indicatorSurface=await evaluate(cdp,readIndicatorLegendSurface);
+  assertIndicatorLegendSurface(indicatorSurface);
+  receipt.workspace.indicatorSurface={initial:indicatorSurface,transitions:[]};
+  if(!indicatorSurface.mobile){
+    await click(cdp,'#indicator-legend-toggle');
+    const pointerState=await evaluate(cdp,readIndicatorLegendSurface);assertIndicatorLegendSurface(pointerState);
+    assert.equal(pointerState.collapsed,!indicatorSurface.collapsed,'Pointer action did not toggle the indicator list');
+    receipt.workspace.indicatorSurface.transitions.push({input:'pointer',...pointerState});
+    await key('Tab','Tab',9,8);await key('Tab','Tab',9);await focused('#indicator-legend-toggle');
+    await key('Enter','Enter',13);
+    const keyboardState=await evaluate(cdp,readIndicatorLegendSurface);assertIndicatorLegendSurface(keyboardState);
+    assert.equal(keyboardState.collapsed,indicatorSurface.collapsed,'Keyboard action did not restore the indicator list');
+    receipt.workspace.indicatorSurface.transitions.push({input:'keyboard',...keyboardState});
+  }
+  await screenshot(cdp,page+'-'+width+'x'+height+'-indicator-surface.png',receipt);
   await click(cdp,'#workbench-bottom-more');
   await inspect('#workbench-bottom-menu','bottom-menu');
   await key('End','End',35);await focused('#workbench-bottom-menu');

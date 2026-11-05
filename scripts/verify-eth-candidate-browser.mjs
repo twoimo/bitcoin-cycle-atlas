@@ -2,7 +2,7 @@
 import {isExpectedOfflineBtcRefresh} from './btc-offline-refresh-policy.mjs';
 // PR-only verification of checked-out dist files. Does not deploy or alter UI.
 import assert from 'node:assert/strict';
-import {workspaceBrowserCases,verifyWorkspaceSurface} from './verify-workspace-browser.mjs';
+import {workspaceBrowserCases,verifyWorkspaceSurface,readNativeInteractiveTarget} from './verify-workspace-browser.mjs';
 import {replayBrowserCases,verifyForecastReplaySurface} from './verify-forecast-replay-browser.mjs';
 import {chartReplayBrowserCases,verifyChartReplaySurface} from './verify-chart-replay-browser.mjs';
 import {createServer} from 'node:http';
@@ -17,12 +17,12 @@ import {createAssetForecastRecord,assetForecastIndexEntry} from '../dist/asset-f
 import {forecastHash} from '../dist/forecast-records.js';
 
 const root=resolve(fileURLToPath(new URL('..',import.meta.url)));
-const dist=resolve(root,'dist'),out=resolve(root,'build/eth-browser');
+const dist=resolve(root,'dist'),out=resolve(root,process.env.ATLAS_BROWSER_OUT??'build/eth-browser');
 const widths=[320,390,768,1024,1440],height=900;
 const imageLogMode=process.env.ETH_BROWSER_IMAGE_LOG_MODE??'representative';
 if(!['representative','failures-only'].includes(imageLogMode))throw new Error('Unknown screenshot log transport mode');
 const caseScope=process.env.ATLAS_BROWSER_CASE_SCOPE??'all';
-if(!['all','replay','chart-replay'].includes(caseScope))throw new Error('Unknown browser case scope');
+if(!['all','replay','chart-replay','data','center-data','workspace','workspace-btc','workspace-evidence','workspace-preview','workspace-legacy'].includes(caseScope))throw new Error('Unknown browser case scope');
 const report={schemaVersion:1,kind:'eth-candidate-real-browser',startedAt:new Date().toISOString(),status:'running',imageLogMode,caseScope,cases:[],failures:[],
   scope:'Actual checked-out static site in headless Chromium through native CDP; no production deployment, Safari or physical-device claim.'};
 let server,chrome,browser,profile,base;
@@ -92,22 +92,13 @@ async function screenshot(cdp,name,receipt){
 async function click(cdp,selector){
   await evaluate(cdp,s=>{const el=document.querySelector(s);if(!el)throw new Error('Missing click target '+s);el.scrollIntoView({behavior:'instant',block:'nearest',inline:'nearest'});},selector);
   await settled(cdp);
-  const point=await evaluate(cdp,s=>{
-    const el=document.querySelector(s);if(!el)throw new Error('Missing click target '+s);
-    if(el.disabled)throw new Error('Disabled click target '+s);
-    const b=el.getBoundingClientRect(),x=b.left+b.width/2,y=b.top+b.height/2;
-    if(!b.width||!b.height||x<0||y<0||x>=innerWidth||y>=innerHeight)throw new Error('Click target outside viewport '+s);
-    const clip={left:0,right:innerWidth,top:0,bottom:innerHeight};
-    for(let p=el.parentElement;p;p=p.parentElement){
-      const r=p.getBoundingClientRect(),css=getComputedStyle(p);
-      if(css.overflowX!=='visible'){clip.left=Math.max(clip.left,r.left+p.clientLeft);clip.right=Math.min(clip.right,r.left+p.clientLeft+p.clientWidth);}
-      if(css.overflowY!=='visible'){clip.top=Math.max(clip.top,r.top+p.clientTop);clip.bottom=Math.min(clip.bottom,r.top+p.clientTop+p.clientHeight);}
-    }
-    if(b.left<clip.left-1||b.right>clip.right+1||b.top<clip.top-1||b.bottom>clip.bottom+1)throw new Error('Click target clipped '+s+' '+JSON.stringify({box:{left:b.left,right:b.right,top:b.top,bottom:b.bottom},clip}));
-    const top=document.elementFromPoint(x,y);
-    if(!top||!(top===el||el.contains(top)))throw new Error('Click target occluded '+s);
-    return {x,y};
-  },selector);
+  const target=await evaluate(cdp,readNativeInteractiveTarget,selector);
+  const {box:b,clip,x,y,viewport}=target;
+  if(target.disabled)throw new Error('Disabled click target '+selector);
+  if(!target.painted||!b.width||!b.height||x<0||y<0||x>=viewport.width||y>=viewport.height)throw new Error('Click target outside viewport or hidden '+selector);
+  if(b.left<clip.left-1||b.right>clip.right+1||b.top<clip.top-1||b.bottom>clip.bottom+1)throw new Error('Click target clipped '+selector+' '+JSON.stringify({box:b,clip}));
+  if(!target.topmost)throw new Error('Click target occluded '+selector);
+  const point={x,y};
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...point});
   await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});
@@ -157,11 +148,26 @@ async function dataCase(cdp,width,receipt){
   await settled(cdp);
   receipt.layout=await evaluate(cdp,()=>{
     const rows=[...document.querySelectorAll('#data-body tr[data-asset-symbol]')];
-    const controls=[...document.querySelectorAll('.daily-heading .daily-back, .daily-heading h1, .daily-heading .daily-action')].map(el=>{
-      const r=el.getBoundingClientRect();return {id:el.id||el.className||el.tagName,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};
-    });
+    const read=el=>{
+      if(!el)return null;
+      const r=el.getBoundingClientRect(),css=getComputedStyle(el),hit=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);
+      return {id:el.id||el.className||el.tagName,selector:el.id?'#'+el.id:'.'+el.className.split(' ')[0],
+        left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height,
+        display:css.display,visibility:css.visibility,painted:el.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),
+        topmost:Boolean(hit&&(hit===el||el.contains(hit))),tag:el.tagName,tabIndex:el.tabIndex,disabled:el.disabled??false,
+        name:el.getAttribute('aria-label')||el.textContent.trim()};
+    };
+    const controls=[...document.querySelectorAll('.daily-heading .daily-action')].map(read);
+    const sidebar=document.querySelector('.atlas-sidebar'),sidebarBox=sidebar.getBoundingClientRect();
+    const navigation={shell:document.body.dataset.shell,page:document.body.dataset.page,
+      heading:read(document.querySelector('.atlas-dashboard-header .atlas-shell-heading')),
+      returnAction:read(document.querySelector('.atlas-sidebar .atlas-brand[data-view="outlook"]')),
+      returnClip:{left:sidebarBox.left+sidebar.clientLeft,top:sidebarBox.top+sidebar.clientTop,
+        right:sidebarBox.left+sidebar.clientLeft+sidebar.clientWidth,bottom:sidebarBox.top+sidebar.clientTop+sidebar.clientHeight},
+      activeData:document.querySelector('.atlas-sidebar [data-atlas-page="data"]')?.getAttribute('aria-current'),
+      legacy:[read(document.querySelector('.daily-heading .daily-back')),read(document.querySelector('.daily-heading h1'))]};
     return {width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
-      symbols:rows.map(r=>r.dataset.assetSymbol),btcName:rows[0].querySelector('.asset-name-label').textContent,judgments:rows.map(r=>r.querySelector('.asset-judgment')?.textContent),controls,headingHeight:document.querySelector('.daily-heading').getBoundingClientRect().height,headingBackground:getComputedStyle(document.querySelector('.daily-heading')).backgroundColor,
+      symbols:rows.map(r=>r.dataset.assetSymbol),btcName:rows[0].querySelector('.asset-name-label').textContent,judgments:rows.map(r=>r.querySelector('.asset-judgment')?.textContent),controls,navigation,headingHeight:document.querySelector('.daily-heading').getBoundingClientRect().height,headingBackground:getComputedStyle(document.querySelector('.daily-heading')).backgroundColor,
       bodyBackground:getComputedStyle(rows[0].querySelector('.asset-name')).backgroundColor,
       coarse:matchMedia('(pointer:coarse)').matches};
   });
@@ -171,16 +177,56 @@ async function dataCase(cdp,width,receipt){
   assert.equal(layout.width,width);assert.ok(layout.scrollWidth<=width+1,'Page horizontal overflow');
   assert.equal(layout.symbols.length,18);assert.equal(new Set(layout.symbols).size,18);assert.equal(layout.symbols[0],'BTC');assert.equal(layout.btcName,'비트코인');
   assert.ok(layout.judgments.every(j=>['적극 매수','분할 매수','중립','분할 매도','적극 매도','판단 보류'].includes(j)),'Unknown or missing comparison judgment');
-  assert.equal(layout.controls.length,6,'Expected back, title and four action controls');
+  assert.deepEqual(layout.controls.map(control=>control.id),['asset-refresh','asset-history-open','daily-method-open','export-raw'],'Expected all four actual board actions');
+  const navigation=layout.navigation;
+  assert.equal(navigation.shell,'dashboard');assert.equal(navigation.page,'data');assert.equal(navigation.activeData,'page');
+  assert.equal(navigation.heading?.name,'자산 비교','The dashboard must own the visible page title');
+  assert.match(navigation.returnAction?.name||'',/통합 차트|가격 차트/,'The visible chart return needs an explicit accessible name');
+  for(const owner of [navigation.heading,navigation.returnAction]){
+    assert.ok(owner?.painted&&owner.topmost,'Missing or occluded dashboard title/return ownership');
+    visibleBounds(owner,width,receipt.height);
+  }
+  assert.equal(navigation.returnAction.tag,'BUTTON');assert.equal(navigation.returnAction.disabled,false);assert.ok(navigation.returnAction.tabIndex>=0);
+  const back=navigation.returnAction,clip=navigation.returnClip;
+  assert.ok(back.left>=clip.left&&back.right<=clip.right&&back.top>=clip.top&&back.bottom<=clip.bottom,'Chart return is clipped by its sidebar');
+  if(layout.coarse||width<=760)assert.ok(back.width>=44&&back.height>=44,'Chart return must retain its full touch target');
+  assert.ok(navigation.legacy.every(control=>control&&!control.painted),'Legacy heading/return must not compete with the dashboard owners');
   assert.ok(layout.headingHeight<=64,'Heading must remain one compact toolbar row');
   const centers=layout.controls.map(c=>(c.top+c.bottom)/2);
   assert.ok(Math.max(...centers)-Math.min(...centers)<=10,'Heading controls wrapped into separate rows');
-  for(const control of layout.controls){assert.ok(control.width>0&&control.height>0,'Invisible heading control');assert.ok(control.left>=-1&&control.right<=width+1,'Heading control clipped');}
+  for(const control of layout.controls){
+    const minimum=layout.coarse||width<=760?44:32;
+    assert.ok(control.painted&&control.topmost,'Invisible or occluded board action '+control.id);
+    assert.ok(control.width>=minimum&&control.height>=minimum,'Board action hit target compressed: '+JSON.stringify(control));
+    assert.equal(control.tag,'BUTTON');assert.ok(control.name&&control.tabIndex>=0&&!control.disabled,'Board action must remain named and operable: '+control.id);
+    visibleBounds(control,width,receipt.height);
+  }
   for(let i=0;i<layout.controls.length;i++)for(let j=i+1;j<layout.controls.length;j++){
     const a=layout.controls[i],b=layout.controls[j];
     assert.ok(!(Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1),'Overlapping heading controls '+a.id+' / '+b.id);
   }
   dark(layout.headingBackground,'data heading');dark(layout.bodyBackground,'data sticky body');
+  if(layout.coarse){
+    const gesture=await evaluate(cdp,()=>{
+      const panel=document.querySelector('#asset-table-scroll'),box=panel.getBoundingClientRect();
+      return {x:box.right-24,y:box.top+Math.min(96,box.height/2),distance:Math.min(144,box.width/2),before:panel.scrollLeft};
+    });
+    await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:gesture.x,y:gesture.y,id:1}]});
+    for(let step=1;step<=12;step++){
+      await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:gesture.x-gesture.distance*step/12,y:gesture.y,id:1}]});
+      await delay(16);
+    }
+    await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    await until(()=>evaluate(cdp,before=>document.querySelector('#asset-table-scroll').scrollLeft>before+1,gesture.before),'native horizontal table gesture');
+    // Let native momentum finish before the independent start/middle/end checks.
+    let priorLeft=null,stableSamples=0;
+    await until(async()=>{
+      const left=await evaluate(cdp,()=>document.querySelector('#asset-table-scroll').scrollLeft);
+      stableSamples=priorLeft!==null&&Math.abs(left-priorLeft)<.1?stableSamples+1:0;priorLeft=left;
+      return stableSamples>=3;
+    },'native horizontal scroll end',5000);
+    receipt.nativeTableScroll={...gesture,after:priorLeft};
+  }
   receipt.sticky=[];
   for(const fraction of [0,.5,1]){
     await evaluate(cdp,f=>{const box=document.querySelector('#asset-table-scroll');box.scrollLeft=(box.scrollWidth-box.clientWidth)*f;},fraction);
@@ -675,7 +721,7 @@ async function main(){
   for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/ethereum-adaptive-model.js','dist/ethereum-pooled-model.js','dist/eth-view-state.js','dist/ethereum-adoption-scenarios.js','dist/ethereum-research-panel.js','dist/ethereum-research-catalog.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','scripts/btc-offline-refresh-policy.mjs','tests/ethereum-offline-refresh-policy.test.mjs','dist/data/btc-daily.json','dist/app.js','dist/btc-refresh-status.js','tests/ethereum-btc-refresh-status.test.mjs','dist/data-source.js','dist/published-data.js','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json','dist/lab-view.js','dist/analysis-dock.css','dist/compact-chart-layout.css','dist/mobile-workspace.css','dist/mobile-preview.js','scripts/verify-workspace-browser.mjs']){
     report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   }
-  for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/preserved-archive-download.js','dist/workspace-tools.js','dist/research-annotations-workbench.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
+  for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/atlas-shell.css','dist/atlas-shell.js','dist/center-workbench.js','dist/market-lab.css','dist/loading-surfaces.css','dist/loading-surfaces.js','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/preserved-archive-download.js','dist/workspace-tools.js','dist/research-annotations-workbench.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   for(const path of ['dist/forecast-replay.js','dist/forecast-replay-sources.js','dist/forecast-replay-view.js','dist/data/replay-eth-ohlc.json','scripts/verify-forecast-replay-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   for(const path of ['dist/chart-replay.js','dist/chart-replay-snapshot.js','dist/chart-replay-state.js','dist/chart-replay-renderer.js','dist/chart-replay-sources.js','dist/chart-replay.css','dist/asset-forecast-loader.js','dist/data/btc-volume.json','scripts/verify-chart-replay-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   for(const path of ['dist/chart-replay-atlas.js','dist/atlas-price-chart.js','dist/project-replay-baseline.js','dist/data/project-origin-btc-2026-10-21.json','scripts/build-project-replay-baseline.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
@@ -756,7 +802,9 @@ async function main(){
     {page:'data',width:900,height:430,touch:true,responsive:true,fill:false},
     {page:'data',width:320,height:568,touch:true,responsive:true,fill:false});
   caseSpecs.push(...workspaceBrowserCases,...replayBrowserCases,...chartReplayBrowserCases);
-  const selectedCases=caseSpecs.filter(spec=>caseScope==='all'||caseScope==='replay'&&spec.replay||caseScope==='chart-replay'&&spec.chartReplay);
+  const selectedCases=caseSpecs.filter(spec=>caseScope==='all'||caseScope==='replay'&&spec.replay||caseScope==='chart-replay'&&spec.chartReplay||caseScope==='center-data'&&spec.surface==='center-data'
+    ||caseScope==='data'&&spec.page==='data'||caseScope.startsWith('workspace')&&(spec.page===caseScope||spec.page.startsWith(caseScope+'-')));
+  assert.ok(selectedCases.length,'The selected browser scope must execute at least one declared case');
   report.declaredCaseCount=caseSpecs.length;report.expectedCaseCount=selectedCases.length;
   for(const spec of selectedCases){
     const {page,width,height,touch}=spec;
@@ -766,7 +814,7 @@ async function main(){
       // A saved replay belongs to one user's browser. Each replay scenario
       // gets its own context so an earlier viewport's explicit save cannot
       // pre-populate the next scenario's Continue / Start new decision.
-      // The existing 39 cases retain their established context and guards.
+      // Existing shared-workspace/model cases retain their context and guards.
       if(spec.chartReplay)({browserContextId}=await browser.send('Target.createBrowserContext',{}));
       ({targetId}=await browser.send('Target.createTarget',{url:'about:blank',...(browserContextId?{browserContextId}:{})}));
       const target=await until(async()=>{const list=await (await fetch(debugBase+'/json/list')).json();return list.find(t=>t.id===targetId&&t.webSocketDebuggerUrl);},'page CDP target');
@@ -875,6 +923,10 @@ async function main(){
     }
   }
   assert.equal(report.cases.length,selectedCases.length);assert.equal(report.failures.length,0,'Real browser verification failed; inspect report.json and screenshots');
+  const changedSources=[];
+  for(const [path,expected] of Object.entries(report.sourceHashes))if(hash(await readFile(resolve(root,path)))!==expected)changedSources.push(path);
+  report.sourceIntegrity={checkedFiles:Object.keys(report.sourceHashes).length,changedSources,unchangedDuringRun:changedSources.length===0};
+  assert.deepEqual(changedSources,[],'Browser evidence cannot bind sources that changed during the run');
   report.status='passed';
 }
 try{await main();}catch(error){report.status='failed';report.error=errorText(error);process.exitCode=1;}
@@ -885,5 +937,5 @@ finally{
   if(server)await new Promise(resolve=>server.close(resolve));
   if(profile)try{await rm(profile,{recursive:true,force:true});}catch(error){report.cleanupError=errorText(error);}
   await mkdir(out,{recursive:true});await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,caseScope:report.caseScope,declaredCaseCount:report.declaredCaseCount,expectedCaseCount:report.expectedCaseCount,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,replay:c.replay,chartReplay:c.chartReplay,infoDataLinks:c.infoDataLinks,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:'build/eth-browser/report.json'}));
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,caseScope:report.caseScope,declaredCaseCount:report.declaredCaseCount,expectedCaseCount:report.expectedCaseCount,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,sourceIntegrity:report.sourceIntegrity,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,replay:c.replay,chartReplay:c.chartReplay,infoDataLinks:c.infoDataLinks,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:relative(root,resolve(out,'report.json'))}));
 }

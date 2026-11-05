@@ -18,6 +18,8 @@
 #data-view button { font: inherit; }
 #data-view button:focus-visible, #data-view [tabindex]:focus-visible, #data-view a:focus-visible, #data-view summary:focus-visible { outline: 2px solid var(--asset-sign); outline-offset: -2px; }
 #data-view .daily-heading { display: flex; flex: none; align-items: center; gap: 8px; min-width: 0; min-height: 46px; padding: 4px 8px; background: var(--surface); border-bottom: 1px solid var(--asset-grid); }
+/* Embedded boards own their action row inside the parent's chart perimeter. */
+body[data-embedded=true] #data-view .daily-heading { position: relative; inset: auto; width: 100%; max-width: none; height: auto; padding: 4px 8px; margin: 0; overflow-x: auto; overflow-y: hidden; background: var(--surface); border-bottom: 1px solid var(--asset-grid); }
 #data-view .daily-heading-title { display: flex; align-items: center; min-width: 0; }
 #data-view .daily-heading h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -.35px; line-height: 1.4; white-space: nowrap; }
 #data-view .daily-board-label { display: none; }
@@ -121,7 +123,7 @@
 @media (max-width: 760px) {
   #data-view .daily-heading { gap: 8px; padding: 4px 8px; }
   #data-view .daily-heading-actions { gap: 2px; }
-  #data-view .daily-action { width: 32px; min-height: 32px; padding: 4px; font-size: 11px; gap: 0; }
+  #data-view .daily-action { width: 44px; min-width: 44px; min-height: 44px; padding: 4px; font-size: 11px; gap: 0; }
   #data-view .daily-action > span:not(.daily-help-icon) { display: none; }
   #data-view .asset-context { gap: 4px 12px; font-size: 11px; }
   #data-view .asset-scroll-hint { display: none; }
@@ -308,7 +310,7 @@
   #data-view .asset-history-date-control input { width: 100%; min-width: 0; box-sizing: border-box; }
 }
 
-/* Touch input keeps full-height controls without expanding the narrow toolbar. */
+/* Touch input keeps both hit-target dimensions without wrapping the toolbar. */
 @media (pointer: coarse) {
   #data-view .daily-back, #data-view .daily-action, #data-view .asset-mobile-nav button,
   #data-view .asset-identity, #data-view .asset-judgment,
@@ -316,8 +318,11 @@
   #data-view #asset-history-close, #data-view #history-export, #data-view #history-more,
   #data-view #history-newer, #data-view #history-record-more, #data-view #history-retry,
   #data-view #asset-retry, #data-view #history-date, #data-view #history-slider { min-height: 44px; }
-  #data-view .daily-method-heading button, #data-view #asset-history-close { min-width: 44px; }
+  #data-view .daily-action, #data-view .daily-method-heading button, #data-view #asset-history-close { min-width: 44px; }
   #data-view .asset-comparison-table tbody th, #data-view .asset-comparison-table tbody td { height: 48px; padding-block: 1px; }
+}
+@media (max-width: 760px), (pointer: coarse) {
+  body[data-shell=dashboard][data-page=data] .atlas-sidebar .atlas-brand { min-width: 44px; }
 }
 
 #data-view .daily-method-dialog p, #data-view .daily-method-dialog li { font-size: var(--copy-size); line-height: var(--copy-leading); }

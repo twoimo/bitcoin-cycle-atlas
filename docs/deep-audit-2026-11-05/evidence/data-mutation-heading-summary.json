@@ -1,0 +1,41 @@
+{
+  "mutation": "heading-icon-gesture",
+  "runnerExitCode": 0,
+  "status": "passed",
+  "expectedFailure": "native heading pan",
+  "complete": true,
+  "unexpectedFailures": [],
+  "killed": false,
+  "cases": [
+    {
+      "width": 320,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "width": 900,
+      "height": 430,
+      "status": "passed"
+    }
+  ],
+  "sourceIntegrity": {
+    "checkedFiles": 98,
+    "changedSources": [],
+    "unchangedDuringRun": true
+  },
+  "testMutation": {
+    "mode": "heading-icon-gesture",
+    "scope": "HTTP response substitution only; repository product and harness sources remain unchanged.",
+    "path": "dist/atlas-shell.css",
+    "originalCssSha256": "41b8900500edbe67de4e4a3d643b71be8bd5fbb2df54be79a86ccacf6cba5f71",
+    "servedCssSha256": "56212fb6c56e6ca9a473e0956a95e7e0018e98e87c74671f8cd0a4af0d8531e6",
+    "originalRunnerSha256": "3590829a4a77d153468c4e98250feb4b269a501bce8601787c01f8ce76d29a29",
+    "probeSha256": "60f6767605eb35e770728636e3a1b96795be8b503e8a592a93c42828262119fd",
+    "servedResponses": 6
+  }
+}

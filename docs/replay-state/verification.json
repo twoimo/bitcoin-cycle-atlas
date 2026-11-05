@@ -1,17 +1,18 @@
 {
   "kind": "atlas-replay-state-verification",
   "schemaVersion": 1,
-  "baselineCommit": "94a1b1dda9eb359de70747043808340da369d087",
+  "baselineCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "originalAuditBaselineCommit": "94a1b1dda9eb359de70747043808340da369d087",
   "node": "v24.22.2",
   "sourcePath": "dist/chart-replay-state.js",
   "sourceSha256": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
   "testPath": "tests/chart-replay-state.test.mjs",
   "testSha256": "1ae620d55fd750fbc951b0980f8eed58a2a64cf4eb2a83dc9b74626601badabc",
-  "method": "Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry cases and isolated real-source negative controls",
+  "method": "Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, destroy-during-save cases and isolated real-source negative controls",
   "coordinatorPath": "dist/chart-replay.js",
-  "coordinatorSha256": "f0fb4cef01d5fe0d3361c0416c56260e3670f442b91528ba3a2743d748f94c56",
+  "coordinatorSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
   "coordinatorTestPath": "tests/chart-replay-ui.test.mjs",
-  "coordinatorTestSha256": "92f6b7e08961281a8190ed1eb3cc5c79c4f09ee24849789f8570c39f8bd9e63b",
+  "coordinatorTestSha256": "d3f658ecf9f942604d263d29103abab9f936a93aed1e986af2383fdacab0ed27",
   "snapshotPath": "dist/chart-replay-snapshot.js",
   "snapshotSha256": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
   "bounds": {
@@ -28,7 +29,15 @@
     "asyncLoads": 2,
     "selectionCommands": 6,
     "selectionMaxTraceLength": 3,
-    "selectionTraces": 259
+    "selectionTraces": 259,
+    "destruction": {
+      "pendingExplicitSaves": 1,
+      "completionSchedules": [
+        "deferred callback resumes",
+        "deferred callback rejects"
+      ],
+      "destroyCallsPerSchedule": 2
+    }
   },
   "formalProof": false,
   "modelCheckerRun": false,
@@ -37,6 +46,7 @@
     "Native browser DOM, rendering and events",
     "Real forecast generation and scoring in coordinator doubles",
     "Exhaustive network completion schedules",
+    "Exhaustive persistence and concurrent-tab schedules",
     "Wall-clock scheduling accuracy",
     "Cutoff-model loading in the coordinator fixture"
   ],
@@ -132,7 +142,7 @@
       "transitions": 726,
       "observableStates": 24,
       "observableEdges": 78,
-      "sourceSha256": "f0fb4cef01d5fe0d3361c0416c56260e3670f442b91528ba3a2743d748f94c56",
+      "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
       "scope": "Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging"
     },
     "mutations": {
@@ -148,7 +158,7 @@
         "transitions": 0,
         "observableStates": 1,
         "observableEdges": 0,
-        "sourceSha256": "a5bd49e66331661cce96b0b822849ecf03b951fd3b3cd9b5df9785b211b41328"
+        "sourceSha256": "8430ab071333194a17cfd5fabbac3e5bd55b55dd024f13416d9614b4a805b770"
       },
       "horizon-settings-confirm-start": {
         "status": "fail",
@@ -162,7 +172,7 @@
         "transitions": 2,
         "observableStates": 2,
         "observableEdges": 2,
-        "sourceSha256": "306f94d8db415fd3598955970195e5e5daad83787d2ad776c7c09559353576d2"
+        "sourceSha256": "ea5bf406e3de7d244d28f56f6b5d6604d9b8d8f9980ada9c001263b1044d2c96"
       }
     },
     "restored": {
@@ -180,7 +190,7 @@
       "transitions": 726,
       "observableStates": 24,
       "observableEdges": 78,
-      "sourceSha256": "f0fb4cef01d5fe0d3361c0416c56260e3670f442b91528ba3a2743d748f94c56",
+      "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
       "scope": "Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging"
     }
   },
@@ -189,13 +199,13 @@
       {
         "status": "pass",
         "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
-        "sourceSha256": "f0fb4cef01d5fe0d3361c0416c56260e3670f442b91528ba3a2743d748f94c56",
+        "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
         "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
       },
       {
         "status": "pass",
         "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
-        "sourceSha256": "f0fb4cef01d5fe0d3361c0416c56260e3670f442b91528ba3a2743d748f94c56",
+        "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
         "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
       }
     ],
@@ -205,30 +215,60 @@
         "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
         "assertion": "the last selected current-chart mode must find its own saved slot",
         "exitStatus": 1,
-        "sourceSha256": "23c71a3ebca090e35f2d06465c4fe62c5ddf7a61f85e2a5716a9a204802209fc"
+        "sourceSha256": "ada8a89c19b83254be0576c1d527b3ee0e4aaaff67caa8277f9b9b9368676f24"
       },
       "entry-accepts-cross-mode-storage": {
         "status": "expected behavioral failure",
         "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
         "assertion": "invalid or cross-mode records must not borrow another slot",
         "exitStatus": 1,
-        "sourceSha256": "8cde540777d3402a21fa0ce544d4a021f3d7f42e4ac968fe1b2e0eda2d032855"
+        "sourceSha256": "f242419b26290b06991d7a68c170a8c359589f1bd7b8a6619ae35a7c84083aac"
       }
     },
     "restored": [
       {
         "status": "pass",
         "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
-        "sourceSha256": "f0fb4cef01d5fe0d3361c0416c56260e3670f442b91528ba3a2743d748f94c56",
+        "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
         "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
       },
       {
         "status": "pass",
         "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
-        "sourceSha256": "f0fb4cef01d5fe0d3361c0416c56260e3670f442b91528ba3a2743d748f94c56",
+        "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
         "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
       }
     ]
+  },
+  "destruction": {
+    "original": {
+      "status": "pass",
+      "name": "destroy during an explicit save releases replay once and ignores late completion",
+      "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    },
+    "mutations": {
+      "destroy-defers-to-interactive-save-guard": {
+        "status": "expected behavioral failure",
+        "name": "destroy during an explicit save releases replay once and ignores late completion",
+        "assertion": "destroy must release replay even while an explicit save is pending",
+        "exitStatus": 1,
+        "sourceSha256": "087528c878e646d3b3d68c8909cd91eee157a4be107561ad453a716c5f9247a2"
+      },
+      "late-exit-completion-updates-destroyed-controls": {
+        "status": "expected behavioral failure",
+        "name": "destroy during an explicit save releases replay once and ignores late completion",
+        "assertion": "destroyed save completion cannot update detached controls",
+        "exitStatus": 1,
+        "sourceSha256": "c591378bb6a91216f3736bc39b9441dd9bc654adb08fc54ce86e0dfe4935ade7"
+      }
+    },
+    "restored": {
+      "status": "pass",
+      "name": "destroy during an explicit save releases replay once and ignores late completion",
+      "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    }
   },
   "restored": {
     "status": "pass",
