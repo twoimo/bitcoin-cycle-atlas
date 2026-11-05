@@ -3,28 +3,28 @@
   "generatedBy": "node scripts/refresh-cycle-calibration.mjs",
   "source": {
     "path": "dist/data/btc-daily.json",
-    "pricesSha256": "cb959a5a8853cfbf7806be0828b8dee363f9b516047293c7b58ce878182091cf",
+    "pricesSha256": "6c1340966e61d5a0ff661af33eb14aa13ff71f57e1e735e908f45a92a843845c",
     "provider": "Coin Metrics Community API",
     "metric": "PriceUSD",
     "firstDate": "2010-07-18",
-    "lastDate": "2026-10-31",
-    "observationCount": 5950,
+    "lastDate": "2026-11-04",
+    "observationCount": 5954,
     "completedUtcObservationsOnly": true
   },
   "version": "causal-cycle-clock-v1",
-  "asOf": "2026-10-31",
+  "asOf": "2026-11-04",
   "current": {
-    "date": "2026-10-31",
-    "epochDay": 20757,
+    "date": "2026-11-04",
+    "epochDay": 20761,
     "state": "shortened",
     "label": "단축 가정",
     "color": "#df7c83",
-    "shiftDays": -55.009899981443695,
-    "appliedShiftDays": -55,
-    "cycleLengthDays": 1406,
+    "shiftDays": -55.98007866157814,
+    "appliedShiftDays": -56,
+    "cycleLengthDays": 1405,
     "causal": true,
     "probability": null,
-    "asOf": "2026-10-31",
+    "asOf": "2026-11-04",
     "available": true,
     "rawShiftDays": -66,
     "referencePeakDate": "2025-10-06",
@@ -35,7 +35,7 @@
     "troughConfirmedAt": "2026-09-02",
     "candidateIsFinalCycleTurn": false,
     "nominalPeakDate": "2029-10-06",
-    "expectedNextPeakDate": "2029-08-12",
+    "expectedNextPeakDate": "2029-08-11",
     "nextPeakDateIsConditionalClock": true,
     "referenceCount": 3,
     "cycleIntervalCount": 3,
@@ -142,26 +142,26 @@
     "https://www.fidelity.com/learning-center/trading-investing/four-year-bitcoin-and-crypto-cycles",
     "https://fidelitydigitalassets.com/research-and-insights/bitcoins-four-year-cycle-over"
   ],
-  "observationCount": 5950,
+  "observationCount": 5954,
   "futureApplication": {
     "enabled": true,
-    "requestedShiftDays": -55,
-    "appliedShiftDays": -55,
+    "requestedShiftDays": -56,
+    "appliedShiftDays": -56,
     "applied": true,
     "reason": "causal-daily-clock-applied",
     "sourceValuationAnchorsChanged": false,
     "scope": "The optional near-phase clock only; no automatic repetition of four-year waves through 2050.",
     "displayEnd": "2050-12-31",
     "nominalPeakDate": "2029-10-06",
-    "effectivePeakDate": "2029-08-12",
+    "effectivePeakDate": "2029-08-11",
     "nominalTroughDate": "2026-10-06",
-    "nextLowDate": "2030-08-12",
+    "nextLowDate": "2030-08-11",
     "timingAdjustment": {
       "requested": true,
       "available": true,
-      "asOf": "2026-10-31",
-      "requestedShiftDays": -55,
-      "appliedShiftDays": -55,
+      "asOf": "2026-11-04",
+      "requestedShiftDays": -56,
+      "appliedShiftDays": -56,
       "applied": true,
       "sourceReferencePeakDate": "2025-10-06",
       "reason": "causal-daily-clock-applied",
@@ -174,30 +174,6 @@
     "clockVerifiedWithSampleCount": 16
   },
   "recentDailyStates": [
-    {
-      "date": "2026-05-05",
-      "state": "aligned",
-      "appliedShiftDays": -14,
-      "cycleLengthDays": 1447
-    },
-    {
-      "date": "2026-05-06",
-      "state": "aligned",
-      "appliedShiftDays": -14,
-      "cycleLengthDays": 1447
-    },
-    {
-      "date": "2026-05-07",
-      "state": "aligned",
-      "appliedShiftDays": -14,
-      "cycleLengthDays": 1447
-    },
-    {
-      "date": "2026-05-08",
-      "state": "aligned",
-      "appliedShiftDays": -14,
-      "cycleLengthDays": 1447
-    },
     {
       "date": "2026-05-09",
       "state": "aligned",
@@ -1253,6 +1229,30 @@
       "state": "shortened",
       "appliedShiftDays": -55,
       "cycleLengthDays": 1406
+    },
+    {
+      "date": "2026-11-01",
+      "state": "shortened",
+      "appliedShiftDays": -55,
+      "cycleLengthDays": 1406
+    },
+    {
+      "date": "2026-11-02",
+      "state": "shortened",
+      "appliedShiftDays": -56,
+      "cycleLengthDays": 1405
+    },
+    {
+      "date": "2026-11-03",
+      "state": "shortened",
+      "appliedShiftDays": -56,
+      "cycleLengthDays": 1405
+    },
+    {
+      "date": "2026-11-04",
+      "state": "shortened",
+      "appliedShiftDays": -56,
+      "cycleLengthDays": 1405
     }
   ],
   "interpretation": {
