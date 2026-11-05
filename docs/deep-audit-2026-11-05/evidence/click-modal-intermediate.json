@@ -1,0 +1,139 @@
+{
+  "status": "passed",
+  "startedAt": "2026-11-05T08:07:24.006Z",
+  "runtime": {
+    "node": "v24.22.2",
+    "browserPath": "/workspace/scratch/82e52cfd9693/browser-native/chromium",
+    "launchArgs": [
+      "--no-sandbox",
+      "--no-zygote",
+      "--single-process",
+      "--disable-gpu"
+    ]
+  },
+  "baseline": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "file": "scripts/verify-eth-candidate-browser.mjs",
+  "cases": [
+    {
+      "label": "baseline incorrectly clips visible top-layer target",
+      "selector": "#modal-free",
+      "modal": true,
+      "expectedError": "Click target clipped",
+      "error": "Browser evaluation failed: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":11,\"columnNumber\":90,\"scriptId\":\"14\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"14\",\"url\":\"\",\"lineNumber\":11,\"columnNumber\":96},{\"functionName\":\"\",\"scriptId\":\"14\",\"url\":\"\",\"lineNumber\":15,\"columnNumber\":4}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Click target clipped #modal-free {\\\"box\\\":{\\\"left\\\":39,\\\"right\\\":119,\\\"top\\\":39,\\\"bottom\\\":83},\\\"clip\\\":{\\\"left\\\":120,\\\"right\\\":437,\\\"top\\\":180,\\\"bottom\\\":277}}\\n    at <anonymous>:12:97\\n    at <anonymous>:16:5\",\"objectId\":\"4075579843191398653.1.2\"}}",
+      "observed": {
+        "clicks": [],
+        "target": {
+          "left": 39,
+          "right": 119,
+          "top": 39,
+          "bottom": 83,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": true,
+        "modal": true
+      },
+      "status": "passed"
+    },
+    {
+      "label": "candidate clicks visible top-layer target outside DOM ancestor bounds",
+      "selector": "#modal-free",
+      "modal": true,
+      "expectedError": null,
+      "observed": {
+        "clicks": [
+          "modal-free"
+        ],
+        "target": {
+          "left": 39,
+          "right": 119,
+          "top": 39,
+          "bottom": 83,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": true,
+        "modal": true
+      },
+      "status": "passed"
+    },
+    {
+      "label": "candidate rejects genuinely internally clipped modal target",
+      "selector": "#modal-clipped",
+      "modal": true,
+      "expectedError": "Click target clipped",
+      "error": "Browser evaluation failed: {\"exceptionId\":2,\"text\":\"Uncaught\",\"lineNumber\":14,\"columnNumber\":90,\"scriptId\":\"22\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"22\",\"url\":\"\",\"lineNumber\":14,\"columnNumber\":96},{\"functionName\":\"\",\"scriptId\":\"22\",\"url\":\"\",\"lineNumber\":18,\"columnNumber\":4}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Click target clipped #modal-clipped {\\\"box\\\":{\\\"left\\\":39,\\\"right\\\":119,\\\"top\\\":95,\\\"bottom\\\":139},\\\"clip\\\":{\\\"left\\\":39,\\\"right\\\":89,\\\"top\\\":95,\\\"bottom\\\":145}}\\n    at <anonymous>:15:97\\n    at <anonymous>:19:5\",\"objectId\":\"4075579843191398653.1.4\"}}",
+      "observed": {
+        "clicks": [],
+        "target": {
+          "left": 39,
+          "right": 119,
+          "top": 95,
+          "bottom": 139,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": true,
+        "modal": true
+      },
+      "status": "passed"
+    },
+    {
+      "label": "candidate rejects nonmodal clipped target",
+      "selector": "#ordinary-clipped",
+      "modal": false,
+      "expectedError": "Click target clipped",
+      "error": "Browser evaluation failed: {\"exceptionId\":3,\"text\":\"Uncaught\",\"lineNumber\":14,\"columnNumber\":90,\"scriptId\":\"27\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"27\",\"url\":\"\",\"lineNumber\":14,\"columnNumber\":96},{\"functionName\":\"\",\"scriptId\":\"27\",\"url\":\"\",\"lineNumber\":18,\"columnNumber\":4}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Click target clipped #ordinary-clipped {\\\"box\\\":{\\\"left\\\":40,\\\"right\\\":120,\\\"top\\\":392,\\\"bottom\\\":436},\\\"clip\\\":{\\\"left\\\":40,\\\"right\\\":90,\\\"top\\\":392,\\\"bottom\\\":442}}\\n    at <anonymous>:15:97\\n    at <anonymous>:19:5\",\"objectId\":\"4075579843191398653.1.6\"}}",
+      "observed": {
+        "clicks": [],
+        "target": {
+          "left": 40,
+          "right": 120,
+          "top": 392,
+          "bottom": 436,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": true,
+        "modal": false
+      },
+      "status": "passed"
+    },
+    {
+      "label": "candidate rejects nonmodal occluded target",
+      "selector": "#occluded",
+      "modal": false,
+      "expectedError": "Click target occluded",
+      "error": "Browser evaluation failed: {\"exceptionId\":4,\"text\":\"Uncaught\",\"lineNumber\":16,\"columnNumber\":43,\"scriptId\":\"31\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"31\",\"url\":\"\",\"lineNumber\":16,\"columnNumber\":49},{\"functionName\":\"\",\"scriptId\":\"31\",\"url\":\"\",\"lineNumber\":18,\"columnNumber\":4}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Click target occluded #occluded\\n    at <anonymous>:17:50\\n    at <anonymous>:19:5\",\"objectId\":\"4075579843191398653.1.8\"}}",
+      "observed": {
+        "clicks": [],
+        "target": {
+          "left": 300,
+          "right": 380,
+          "top": 400,
+          "bottom": 444,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": false,
+        "modal": false
+      },
+      "status": "passed"
+    }
+  ],
+  "scope": "Actual native click helper extracted without edits from each source; controlled DOM fixtures test modal/ancestor clipping and occlusion. Production data dialog is verified separately by the nine-case data suite.",
+  "sources": {
+    "baseline": {
+      "sourceSha256": "1944e07774c34b01e11f68e983f348ea130e05772ef1c4158aa4607720d9b7a1",
+      "helperSha256": "3593448d3745f71d6c64dcbecea93dd38890a46a64f126e5d0c836b47df0160b"
+    },
+    "candidate": {
+      "sourceSha256": "9b2a42fc4b4874226e852f871e9ea4aeba2cfa964d88f55bbd4aa478d8fcde6e",
+      "helperSha256": "95400e8ab417f325c30cde4880cbc0044ee7bdfa0acce926ec353eea1a5fc43b"
+    }
+  },
+  "browser": "143.0.7499.0",
+  "fixtureSha256": "0153e260f5752062d0213b9d9e01e2b1b2f446301a27a43fe927d6b38bd9d20f",
+  "finishedAt": "2026-11-05T08:07:25.561Z",
+  "probeSha256": "1fbfa99506a5ea3213eb8cfbd219a1c7bc7aa9ab3f3828dd80b7aaa67f80f64f"
+}

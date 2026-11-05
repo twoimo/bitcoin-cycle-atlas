@@ -1,0 +1,427 @@
+{
+  "baselineSha": "94a1b1dda9eb359de70747043808340da369d087",
+  "candidateSourceSha256": "44fae94a1a7f58a297fafa5928891433543e0bf075bdd6a412d93087142ae8fc",
+  "baselineSourceSha256": "78a78374951da917e6e091c8513053f4628f766dde8387253222a544d8b6c021",
+  "candidateDiff": "diff --git a/packages/domain/src/themes.ts b/packages/domain/src/themes.ts\nindex 7e6c1f0..0bbc9b2 100644\n--- a/packages/domain/src/themes.ts\n+++ b/packages/domain/src/themes.ts\n@@ -36,11 +36,12 @@ export function normalizeThemeDraft(input:ThemeDraft,evidence:ThemeEvidence[],as\n }\n export function themeStatus(j:ThemeJudgment){return axes.some(a=>j.criteria[a].state==='fail')?'fail':axes.every(a=>j.criteria[a].state==='pass')?'pass':'hold';}\n const dayAfter=(s:string,n=1)=>new Date(Date.parse(s.slice(0,10)+'T00:00:00Z')+n*86400000).toISOString().slice(0,10);\n-export function themePerformance(snapshot:ThemeSnapshot,judgment:ThemeJudgment){\n-  validateThemeJudgment(judgment,snapshot);\n-  const bars=new Map(snapshot.asset.bars.map(b=>[b[0],b])),benchmark=new Map(snapshot.benchmark.bars.map(b=>[b[0],b]));\n+function indexThemePrices(snapshot:ThemeSnapshot){\n+  return {bars:new Map(snapshot.asset.bars.map(b=>[b[0],b])),benchmark:new Map(snapshot.benchmark.bars.map(b=>[b[0],b])),last:snapshot.asset.bars.at(-1)![0]};\n+}\n+function performanceWithPrices(judgment:ThemeJudgment,{bars,benchmark,last}:ReturnType<typeof indexThemePrices>){\n   // Entry uses the close of the next UTC day, whose entire bar follows the decision.\n-  const entryDate=dayAfter(judgment.asOf),entry=bars.get(entryDate),last=snapshot.asset.bars.at(-1)![0];\n+  const entryDate=dayAfter(judgment.asOf),entry=bars.get(entryDate);\n   return [1,5,20].map(horizon=>{\n     const exitDate=dayAfter(entryDate,horizon),exit=bars.get(exitDate),path=Array.from({length:horizon},(_,i)=>bars.get(dayAfter(entryDate,i+1)));\n     const status=exitDate>last?'pending':!entry||!exit||path.some(b=>!b)?'unavailable':'observed';\n@@ -50,10 +51,20 @@ export function themePerformance(snapshot:ThemeSnapshot,judgment:ThemeJudgment){\n     return {horizon,status,entryDate,exitDate,entry:entry![4],exit:exit![4],change,benchmarkChange,excess:benchmarkChange===null?null:change-benchmarkChange,adverse:Math.min(0,...path.map(b=>100*(b![3]/entry![4]-1))),favorable:Math.max(0,...path.map(b=>100*(b![2]/entry![4]-1)))};\n   });\n }\n+export function themePerformance(snapshot:ThemeSnapshot,judgment:ThemeJudgment){\n+  validateThemeJudgment(judgment,snapshot);\n+  return performanceWithPrices(judgment,indexThemePrices(snapshot));\n+}\n export function themeComparison(snapshot:ThemeSnapshot,judgments:ThemeJudgment[]){\n-  return (['recorded','reconstructed'] as const).flatMap(mode=>(['pass','hold','fail'] as const).flatMap(status=>[1,5,20].map(horizon=>{\n-    const records=judgments.filter(j=>j.mode===mode&&themeStatus(j)===status),results=records.map(j=>themePerformance(snapshot,j).find(p=>p.horizon===horizon)!);\n+  // Keep indexes local to this call: a refreshed or mutated snapshot must never reuse stale prices.\n+  let prices:ReturnType<typeof indexThemePrices>|undefined;\n+  return (['recorded','reconstructed'] as const).flatMap(mode=>(['pass','hold','fail'] as const).flatMap(status=>{\n+    const records=judgments.filter(j=>j.mode===mode&&themeStatus(j)===status);\n+    const performance=records.map(j=>{validateThemeJudgment(j,snapshot);prices??=indexThemePrices(snapshot);return performanceWithPrices(j,prices);});\n+    return [1,5,20].map((horizon,index)=>{\n+    const results=performance.map(p=>p[index]!);\n     const completed=results.filter(p=>p.status==='observed'),returns=completed.map(p=>p.change!),excess=completed.flatMap(p=>p.excess===null?[]:[p.excess]);\n     return {mode,status,horizon,records:records.length,n:completed.length,pending:results.filter(p=>p.status==='pending').length,unavailable:results.filter(p=>p.status==='unavailable').length,up:returns.filter(v=>v>0).length,down:returns.filter(v=>v<0).length,flat:returns.filter(v=>v===0).length,mean:returns.length?returns.reduce((s,v)=>s+v,0)/returns.length:null,excessN:excess.length,meanExcess:excess.length?excess.reduce((s,v)=>s+v,0)/excess.length:null};\n-  })));\n+    });\n+  }));\n }\n",
+  "runtime": "v24.22.1",
+  "platform": "linux",
+  "arch": "x64",
+  "cpu": "AMD EPYC 9V74 80-Core Processor",
+  "logicalCpus": 9,
+  "loadAverageAtEnd": [
+    0.77,
+    0.32,
+    0.54
+  ],
+  "recordedAt": "2026-11-04T07:00:14.014Z",
+  "sampleOrder": "A,B repeated six times for each workload; A=baseline, B=candidate",
+  "sampleDefinition": "Fixed completed calls including JSON serialization, elapsed loop wall time divided by call count; no forced GC",
+  "fixtureHashes": {
+    "realFile": "0446c265f4e7141c348dd406ea1635663c6d005b01b4d77d837a4786c04bad17",
+    "upperBoundJson": "7212be5311f76d487ff53ed596df063469e0ed2feaffdda9c7967dc4228406f9"
+  },
+  "fixtureSizes": {
+    "real": {
+      "assetBars": 704,
+      "benchmarkBars": 732,
+      "judgments": 3
+    },
+    "upperBound": {
+      "assetBars": 5000,
+      "benchmarkBars": 5000,
+      "judgments": 50
+    }
+  },
+  "measurements": [
+    {
+      "fixture": "real",
+      "scope": "comparison",
+      "iterations": 400,
+      "warmupIterations": 50,
+      "samples": [
+        {
+          "pair": 1,
+          "baseline": {
+            "elapsedMs": 511.8722980000001,
+            "msPerCall": 1.2796807450000003,
+            "checksum": 1214800
+          },
+          "candidate": {
+            "elapsedMs": 109.41483700000003,
+            "msPerCall": 0.2735370925000001,
+            "checksum": 1214800
+          }
+        },
+        {
+          "pair": 2,
+          "baseline": {
+            "elapsedMs": 531.9139460000001,
+            "msPerCall": 1.3297848650000004,
+            "checksum": 1214800
+          },
+          "candidate": {
+            "elapsedMs": 103.7192030000001,
+            "msPerCall": 0.25929800750000026,
+            "checksum": 1214800
+          }
+        },
+        {
+          "pair": 3,
+          "baseline": {
+            "elapsedMs": 508.01614100000006,
+            "msPerCall": 1.2700403525000001,
+            "checksum": 1214800
+          },
+          "candidate": {
+            "elapsedMs": 108.10737599999993,
+            "msPerCall": 0.27026843999999983,
+            "checksum": 1214800
+          }
+        },
+        {
+          "pair": 4,
+          "baseline": {
+            "elapsedMs": 496.4827809999997,
+            "msPerCall": 1.2412069524999993,
+            "checksum": 1214800
+          },
+          "candidate": {
+            "elapsedMs": 106.51017899999988,
+            "msPerCall": 0.2662754474999997,
+            "checksum": 1214800
+          }
+        },
+        {
+          "pair": 5,
+          "baseline": {
+            "elapsedMs": 486.4460359999998,
+            "msPerCall": 1.2161150899999995,
+            "checksum": 1214800
+          },
+          "candidate": {
+            "elapsedMs": 107.58153399999992,
+            "msPerCall": 0.2689538349999998,
+            "checksum": 1214800
+          }
+        },
+        {
+          "pair": 6,
+          "baseline": {
+            "elapsedMs": 471.764952,
+            "msPerCall": 1.17941238,
+            "checksum": 1214800
+          },
+          "candidate": {
+            "elapsedMs": 103.4838679999998,
+            "msPerCall": 0.2587096699999995,
+            "checksum": 1214800
+          }
+        }
+      ],
+      "baseline": {
+        "medianMs": 1.2556236524999997,
+        "minMs": 1.17941238,
+        "maxMs": 1.3297848650000004
+      },
+      "candidate": {
+        "medianMs": 0.2676146412499998,
+        "minMs": 0.2587096699999995,
+        "maxMs": 0.2735370925000001
+      },
+      "medianReductionPercent": 78.68671550450902
+    },
+    {
+      "fixture": "real",
+      "scope": "api-calculation",
+      "iterations": 400,
+      "warmupIterations": 50,
+      "samples": [
+        {
+          "pair": 1,
+          "baseline": {
+            "elapsedMs": 637.5474040000008,
+            "msPerCall": 1.593868510000002,
+            "checksum": 2132800
+          },
+          "candidate": {
+            "elapsedMs": 267.1108320000003,
+            "msPerCall": 0.6677770800000008,
+            "checksum": 2132800
+          }
+        },
+        {
+          "pair": 2,
+          "baseline": {
+            "elapsedMs": 619.8631829999995,
+            "msPerCall": 1.5496579574999987,
+            "checksum": 2132800
+          },
+          "candidate": {
+            "elapsedMs": 268.02559999999994,
+            "msPerCall": 0.6700639999999999,
+            "checksum": 2132800
+          }
+        },
+        {
+          "pair": 3,
+          "baseline": {
+            "elapsedMs": 632.4927660000003,
+            "msPerCall": 1.5812319150000007,
+            "checksum": 2132800
+          },
+          "candidate": {
+            "elapsedMs": 272.9918740000003,
+            "msPerCall": 0.6824796850000007,
+            "checksum": 2132800
+          }
+        },
+        {
+          "pair": 4,
+          "baseline": {
+            "elapsedMs": 646.0343379999995,
+            "msPerCall": 1.6150858449999987,
+            "checksum": 2132800
+          },
+          "candidate": {
+            "elapsedMs": 270.95661199999995,
+            "msPerCall": 0.6773915299999999,
+            "checksum": 2132800
+          }
+        },
+        {
+          "pair": 5,
+          "baseline": {
+            "elapsedMs": 664.9926100000002,
+            "msPerCall": 1.6624815250000007,
+            "checksum": 2132800
+          },
+          "candidate": {
+            "elapsedMs": 289.9914150000004,
+            "msPerCall": 0.7249785375000011,
+            "checksum": 2132800
+          }
+        },
+        {
+          "pair": 6,
+          "baseline": {
+            "elapsedMs": 664.8076650000003,
+            "msPerCall": 1.6620191625000007,
+            "checksum": 2132800
+          },
+          "candidate": {
+            "elapsedMs": 271.8623719999996,
+            "msPerCall": 0.679655929999999,
+            "checksum": 2132800
+          }
+        }
+      ],
+      "baseline": {
+        "medianMs": 1.6044771775000004,
+        "minMs": 1.5496579574999987,
+        "maxMs": 1.6624815250000007
+      },
+      "candidate": {
+        "medianMs": 0.6785237299999994,
+        "minMs": 0.6677770800000008,
+        "maxMs": 0.7249785375000011
+      },
+      "medianReductionPercent": 57.7106025866174
+    },
+    {
+      "fixture": "upperBound",
+      "scope": "comparison",
+      "iterations": 8,
+      "warmupIterations": 2,
+      "samples": [
+        {
+          "pair": 1,
+          "baseline": {
+            "elapsedMs": 1258.5320069999998,
+            "msPerCall": 157.31650087499997,
+            "checksum": 26568
+          },
+          "candidate": {
+            "elapsedMs": 22.667692999999417,
+            "msPerCall": 2.833461624999927,
+            "checksum": 26568
+          }
+        },
+        {
+          "pair": 2,
+          "baseline": {
+            "elapsedMs": 1117.2344529999991,
+            "msPerCall": 139.6543066249999,
+            "checksum": 26568
+          },
+          "candidate": {
+            "elapsedMs": 37.84971500000029,
+            "msPerCall": 4.731214375000036,
+            "checksum": 26568
+          }
+        },
+        {
+          "pair": 3,
+          "baseline": {
+            "elapsedMs": 1125.3630389999998,
+            "msPerCall": 140.67037987499998,
+            "checksum": 26568
+          },
+          "candidate": {
+            "elapsedMs": 24.921571000000768,
+            "msPerCall": 3.115196375000096,
+            "checksum": 26568
+          }
+        },
+        {
+          "pair": 4,
+          "baseline": {
+            "elapsedMs": 1104.0565659999993,
+            "msPerCall": 138.0070707499999,
+            "checksum": 26568
+          },
+          "candidate": {
+            "elapsedMs": 24.307635999999547,
+            "msPerCall": 3.0384544999999434,
+            "checksum": 26568
+          }
+        },
+        {
+          "pair": 5,
+          "baseline": {
+            "elapsedMs": 983.8208040000009,
+            "msPerCall": 122.97760050000011,
+            "checksum": 26568
+          },
+          "candidate": {
+            "elapsedMs": 28.059016999999585,
+            "msPerCall": 3.507377124999948,
+            "checksum": 26568
+          }
+        },
+        {
+          "pair": 6,
+          "baseline": {
+            "elapsedMs": 1030.4468909999996,
+            "msPerCall": 128.80586137499995,
+            "checksum": 26568
+          },
+          "candidate": {
+            "elapsedMs": 24.57288299999709,
+            "msPerCall": 3.0716103749996364,
+            "checksum": 26568
+          }
+        }
+      ],
+      "baseline": {
+        "medianMs": 138.8306886874999,
+        "minMs": 122.97760050000011,
+        "maxMs": 157.31650087499997
+      },
+      "candidate": {
+        "medianMs": 3.093403374999866,
+        "minMs": 2.833461624999927,
+        "maxMs": 4.731214375000036
+      },
+      "medianReductionPercent": 97.77181586849076
+    },
+    {
+      "fixture": "upperBound",
+      "scope": "api-calculation",
+      "iterations": 8,
+      "warmupIterations": 2,
+      "samples": [
+        {
+          "pair": 1,
+          "baseline": {
+            "elapsedMs": 1427.4661120000019,
+            "msPerCall": 178.43326400000024,
+            "checksum": 339824
+          },
+          "candidate": {
+            "elapsedMs": 382.014350999998,
+            "msPerCall": 47.75179387499975,
+            "checksum": 339824
+          }
+        },
+        {
+          "pair": 2,
+          "baseline": {
+            "elapsedMs": 1409.5431800000006,
+            "msPerCall": 176.19289750000007,
+            "checksum": 339824
+          },
+          "candidate": {
+            "elapsedMs": 392.6692770000009,
+            "msPerCall": 49.08365962500011,
+            "checksum": 339824
+          }
+        },
+        {
+          "pair": 3,
+          "baseline": {
+            "elapsedMs": 1407.9097539999966,
+            "msPerCall": 175.98871924999958,
+            "checksum": 339824
+          },
+          "candidate": {
+            "elapsedMs": 370.45118899999943,
+            "msPerCall": 46.30639862499993,
+            "checksum": 339824
+          }
+        },
+        {
+          "pair": 4,
+          "baseline": {
+            "elapsedMs": 1357.7774050000007,
+            "msPerCall": 169.7221756250001,
+            "checksum": 339824
+          },
+          "candidate": {
+            "elapsedMs": 365.2133959999992,
+            "msPerCall": 45.6516744999999,
+            "checksum": 339824
+          }
+        },
+        {
+          "pair": 5,
+          "baseline": {
+            "elapsedMs": 1388.501909999999,
+            "msPerCall": 173.56273874999988,
+            "checksum": 339824
+          },
+          "candidate": {
+            "elapsedMs": 353.3857709999975,
+            "msPerCall": 44.173221374999684,
+            "checksum": 339824
+          }
+        },
+        {
+          "pair": 6,
+          "baseline": {
+            "elapsedMs": 1346.974341000001,
+            "msPerCall": 168.37179262500013,
+            "checksum": 339824
+          },
+          "candidate": {
+            "elapsedMs": 354.41875399999844,
+            "msPerCall": 44.302344249999805,
+            "checksum": 339824
+          }
+        }
+      ],
+      "baseline": {
+        "medianMs": 174.77572899999973,
+        "minMs": 168.37179262500013,
+        "maxMs": 178.43326400000024
+      },
+      "candidate": {
+        "medianMs": 45.979036562499914,
+        "minMs": 44.173221374999684,
+        "maxMs": 49.08365962500011
+      },
+      "medianReductionPercent": 73.69255054716437
+    }
+  ],
+  "consumed": 45588000,
+  "limits": "Synchronous comparison and API calculation only; excludes I/O, database, HTTP, rendering. Shared-host scheduling uncontrolled; do not extrapolate to site-wide performance."
+}

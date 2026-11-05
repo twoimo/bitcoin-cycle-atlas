@@ -1,0 +1,1602 @@
+{
+  "schemaVersion": 1,
+  "requestBase": "94a1b1dda9eb359de70747043808340da369d087",
+  "auditedCommit": "c377760f7464c9b6ab274b5b93e97f1ec7d96825",
+  "remoteAudit": {
+    "source": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/41793929768",
+    "jobId": 126453455284,
+    "artifactId": 13304791057,
+    "receipt": {
+      "sourceCommit": "c377760f7464c9b6ab274b5b93e97f1ec7d96825",
+      "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+      "phases": [
+        {
+          "name": "baseline-static",
+          "fails": 1214,
+          "reflex": 1347,
+          "warns": 37,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 26,
+          "render": "off",
+          "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+        },
+        {
+          "name": "baseline-render",
+          "fails": 53,
+          "reflex": 211,
+          "warns": 13,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 1,
+          "render": "ran",
+          "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+        },
+        {
+          "name": "current-static",
+          "fails": 19,
+          "reflex": 3,
+          "warns": 42,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 43,
+          "render": "off",
+          "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 19 FAIL, 3 REFLEX"
+        },
+        {
+          "name": "current-render",
+          "fails": 0,
+          "reflex": 2,
+          "warns": 11,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 1,
+          "render": "ran",
+          "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 144/206; before 53 FAIL, 211 REFLEX, now 0 FAIL, 2 REFLEX"
+        }
+      ],
+      "designGate": {
+        "status": "fail",
+        "fails": 19,
+        "reflex": 5
+      },
+      "integrityGate": {
+        "status": "pass",
+        "errors": 0
+      },
+      "sourceReadOnly": {
+        "current": true,
+        "baseline": true,
+        "gitBlobsMatched": true
+      },
+      "durationMilliseconds": 128005,
+      "readiness": [
+        {
+          "version": "baseline",
+          "route": "btc",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "eth",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "bmnr",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "mstr",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "data",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "evidence",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "compare",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+          "status": "ready"
+        },
+        {
+          "version": "baseline",
+          "route": "mobile-preview",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "btc",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "eth",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "bmnr",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "mstr",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "data",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "evidence",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "compare",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+          "status": "ready"
+        },
+        {
+          "version": "current",
+          "route": "mobile-preview",
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+          "status": "ready"
+        }
+      ],
+      "errors": [],
+      "exitCode": 1
+    },
+    "currentFindings": [
+      {
+        "phase": "current-static",
+        "gate": "20",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "no Hallmark stamp on the first non-empty line of any CSS",
+        "fix": "The stamp comment is line 1 of the CSS; only @charset may precede it"
+      },
+      {
+        "phase": "current-static",
+        "gate": "20",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 1,
+        "evidence": "no Hallmark stamp on the first non-empty line of any CSS",
+        "fix": "The stamp comment is line 1 of the CSS; only @charset may precede it"
+      },
+      {
+        "phase": "current-static",
+        "gate": "26a",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 1,
+        "evidence": "no :focus-visible styling anywhere",
+        "fix": "A focus ring at 3:1 or better, instant"
+      },
+      {
+        "phase": "current-static",
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "colour literal #80808033 outside tokens (background-color on [skullet-bar])",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "phase": "current-static",
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "colour literal #80808033 outside tokens (-webkit-text-decoration on :scope,:scope *)",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "phase": "current-static",
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "colour literal #80808033 outside tokens (text-decoration on :scope,:scope *)",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "phase": "current-static",
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "colour literal #80808033 outside tokens (background on :scope :is(audio,canvas,embed…)",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "phase": "current-static",
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "colour literal #ff0050b3 outside tokens (color on [skullet-xray] [skullet-loadi…)",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "phase": "current-static",
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "colour literal #ff0050b3 outside tokens (-webkit-text-fill-color on [skullet-xray] [skullet-loadi…)",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "phase": "current-static",
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 36,
+        "evidence": "colour literal rgb(128 128 128 / 0.2) outside tokens (background-color on [skullet-bar])",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "phase": "current-static",
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 72,
+        "evidence": "colour literal rgb(128 128 128 / 0.2) outside tokens (text-decoration on :scope, :scope *)",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "phase": "current-static",
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 79,
+        "evidence": "colour literal rgb(128 128 128 / 0.2) outside tokens (background on :scope :is(audio, canvas, emb…)",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "phase": "current-static",
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 108,
+        "evidence": "colour literal rgb(255 0 80 / 0.7) outside tokens (color on [skullet-xray] [skullet-loadi…)",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "phase": "current-static",
+        "gate": "48",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 109,
+        "evidence": "colour literal rgb(255 0 80 / 0.7) outside tokens (-webkit-text-fill-color on [skullet-xray] [skullet-loadi…)",
+        "fix": "Lift the value into the token block"
+      },
+      {
+        "phase": "current-static",
+        "gate": "56",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "two sticky top:0 elements: .indicator-library[open]>.indicator-library-heading…",
+        "fix": "Offset the second sticky by banner height"
+      },
+      {
+        "phase": "current-static",
+        "gate": "56",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/monthly-backtest.css",
+        "line": 25,
+        "evidence": "two sticky top:0 elements: .rsi-ledger-scroll thead th + .monthly-ledger thead…",
+        "fix": "Offset the second sticky by banner height"
+      },
+      {
+        "phase": "current-static",
+        "gate": "56",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/symbol-selector.css",
+        "line": 12,
+        "evidence": "two sticky top:0 elements: .indicator-library[open] > .indicator-library-headi…",
+        "fix": "Offset the second sticky by banner height"
+      },
+      {
+        "phase": "current-static",
+        "gate": "62",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "skullet-reveal[loading]:not(:defined) is hidden at rest (visibility: hidden) and depends on a script to appear",
+        "fix": "Visible by default: scope the hidden state under a .js class the script adds, or animate from visible with @starting-style"
+      },
+      {
+        "phase": "current-static",
+        "gate": "62",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 10,
+        "evidence": "skullet-reveal[loading]:not(:defined) is hidden at rest (visibility: hidden) and depends on a script to appear",
+        "fix": "Visible by default: scope the hidden state under a .js class the script adds, or animate from visible with @starting-style"
+      },
+      {
+        "phase": "current-static",
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/loading-surfaces.css",
+        "line": 43,
+        "evidence": "padding: 18px 84px 28px 12px (off the 4px scale) on .atlas-skeleton-rsi-panels",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "phase": "current-static",
+        "gate": "24b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "padding: 18px 84px 28px 12px (off the 4px scale) on .atlas-skeleton-rsi-panels",
+        "fix": "Use the 4px spacing scale"
+      },
+      {
+        "phase": "current-static",
+        "gate": "26b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 1,
+        "evidence": "no :active styling anywhere",
+        "fix": "All eight states; guard: not a form control, no aria-disabled anywhere"
+      },
+      {
+        "phase": "current-static",
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/lab.css",
+        "line": 6,
+        "evidence": "3.02:1 < 4.5:1 on .lab-error",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "phase": "current-static",
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "3.43:1 < 4.5:1 on dialog code",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "phase": "current-static",
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "3.43:1 < 4.5:1 on dialog .method-formula",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "phase": "current-static",
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/styles.css",
+        "line": 8,
+        "evidence": "3.43:1 < 4.5:1 on dialog code",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "phase": "current-static",
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/styles.css",
+        "line": 8,
+        "evidence": "3.43:1 < 4.5:1 on dialog .method-formula",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/atlas-shell.css",
+        "line": 52,
+        "evidence": "dark surface (L 21%) on body[data-shell=dashboard] .ml-card sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/compact.css",
+        "line": 134,
+        "evidence": "dark surface (L 16%) on .research-detail-content .formula-block sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/loading-surfaces.css",
+        "line": 48,
+        "evidence": "dark surface (L 28%) on .atlas-skeleton-calendar>[skullet-block] sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/market-lab.css",
+        "line": 6,
+        "evidence": "dark surface (L 21%) on .ml-card sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "dark surface (L 21%) on .chart-card sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "dark surface (L 21%) on .method-card,.reading-card sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "dark surface (L 21%) on .data-panel sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "dark surface (L 21%) on .ml-card sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "dark surface (L 28%) on :scope :is(audio,canvas,embed,iframe,img,input,object,picture,select,svg,textarea,video,[skulle…",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "dark surface (L 28%) on .atlas-skeleton-calendar>[skullet-block] sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "dark surface (L 21%) on body[data-shell=dashboard] .ml-card sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "dark surface (L 16%) on .rsi-workbench-panel sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/outlook.css",
+        "line": 10,
+        "evidence": "dark surface (L 21%) on .outlook-card sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/styles.css",
+        "line": 8,
+        "evidence": "dark surface (L 21%) on .chart-card sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/styles.css",
+        "line": 8,
+        "evidence": "dark surface (L 21%) on .method-card,.reading-card sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/styles.css",
+        "line": 8,
+        "evidence": "dark surface (L 21%) on .data-panel sets no text colour",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "41",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 79,
+        "evidence": "dark surface (L 28%) on :scope :is(audio, canvas, embed, iframe, img, input, object, picture, select, svg, textarea, vi…",
+        "fix": "Swap text to paper in the same rule"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F3",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/vendor/skullet/styles.css",
+        "line": 55,
+        "evidence": "no text-wrap: balance on any display head (1 head rule(s), e.g. :scope :is(a, b, code, dd, dt, …)",
+        "fix": "Add text-wrap: balance to h1/h2-level heads"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/analysis-dock.css",
+        "line": 8,
+        "evidence": "same container recipe on 18 selectors (.chart-indicator-manager button, .analysis-wind…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/analysis-dock.css",
+        "line": 62,
+        "evidence": "same container recipe on 9 selectors (.indicator-library-eye, .indicator-library-favo…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/analysis-dock.css",
+        "line": 62,
+        "evidence": "same container recipe on 8 selectors (.indicator-library-eye, .indicator-library-favo…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/atlas-shell.css",
+        "line": 104,
+        "evidence": "same container recipe on 16 selectors (.rsi-toolbar button, .workbench-bottom-bar .wor…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/atlas-shell.css",
+        "line": 151,
+        "evidence": "same container recipe on 9 selectors (.rsi-backtest-form input, .rsi-history button, …...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/chart-details-panel.css",
+        "line": 12,
+        "evidence": "same container recipe on 16 selectors (.chart-details-panel .reader-heading button, .a…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/chart-export-workbench.css",
+        "line": 13,
+        "evidence": "same container recipe on 6 selectors (.chart-export-dialog button, .chart-export-dial…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/compact.css",
+        "line": 91,
+        "evidence": "same container recipe on 10 selectors (.data-summary, .research-chart-shell, .ipo-sear…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/daily-data.css",
+        "line": 188,
+        "evidence": "same container recipe on 8 selectors (#data-view .asset-history-mode button, #data-vi…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "same container recipe on 13 selectors (.day-selector input[type=number], .btc-refresh-…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "same container recipe on 6 selectors (.table-scroll, .data-summary, .ml-region, .ml-c…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+        "line": 1,
+        "evidence": "same container recipe on 10 selectors (dialog(.workspace-dialog, .chart-export-dialog,…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/market-lab/app/index.html",
+        "line": 7,
+        "evidence": "same container recipe on 6 selectors (#root>.atlas-skeleton [skullet-bar], #root>.atl…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/research-annotations.css",
+        "line": 12,
+        "evidence": "same container recipe on 6 selectors (.research-annotations-dialog button, .research-…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/styles.css",
+        "line": 8,
+        "evidence": "same container recipe on 9 selectors (.day-selector input[type=\"number\"], .btc-refres…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/styles.css",
+        "line": 8,
+        "evidence": "same container recipe on 10 selectors (.table-scroll, .data-summary, .research-chart-s…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/styles.css",
+        "line": 883,
+        "evidence": "same container recipe on 10 selectors (dialog(.workspace-dialog, .chart-export-dialog,…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/viewport.css",
+        "line": 194,
+        "evidence": "same container recipe on 18 selectors (.chart-navigation button, .atlas-chart-commands…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-static",
+        "gate": "F23",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/market-lab/app/index.html",
+        "line": 1,
+        "evidence": "the document lacks a meta description",
+        "fix": "Name the language, title the page in its own words, and describe it in one sentence for link previews"
+      },
+      {
+        "phase": "current-render",
+        "gate": "49b",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "line": 1,
+        "evidence": "[320px] link \"8·12·20% 전체 계산값 ↗\" wraps to 2 lines (a)",
+        "fix": "Shorten the label or set nowrap"
+      },
+      {
+        "phase": "current-render",
+        "gate": "72",
+        "grade": "REFLEX",
+        "tier": "reflex",
+        "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "line": 1,
+        "evidence": "[1440px] text crowds the edge of its box: details.lab-details bottom -1080px; details.lab-details bottom -1140px; detai…",
+        "fix": "Pad the box: max(8px, 0.5em) at the sides, max(4px, 0.3em) above and below"
+      },
+      {
+        "phase": "current-render",
+        "gate": "F3",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/styles.css",
+        "line": 7,
+        "evidence": "no text-wrap: balance on any display head (16 head rule(s), e.g. h1,h2,h3,p)",
+        "fix": "Add text-wrap: balance to h1/h2-level heads"
+      },
+      {
+        "phase": "current-render",
+        "gate": "F7",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "dist/styles.css",
+        "line": 883,
+        "evidence": "same container recipe on 10 selectors (dialog(.workspace-dialog, .chart-export-dialog,…...)",
+        "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+      },
+      {
+        "phase": "current-render",
+        "gate": "F19",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "line": 1,
+        "evidence": "[1440px] 4 font weights in running use (400, 500, 600, 700)",
+        "fix": "Three weights at most, display and body together, picked as extremes"
+      },
+      {
+        "phase": "current-render",
+        "gate": "F19",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "line": 1,
+        "evidence": "[1440px] 4 font weights in running use (400, 500, 600, 700)",
+        "fix": "Three weights at most, display and body together, picked as extremes"
+      },
+      {
+        "phase": "current-render",
+        "gate": "F25",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "line": 1,
+        "evidence": "[375px] 326 words shown at 1440 are hidden on a phone (first: \"2010-07-18 → 2011-06-082011-11-18\")",
+        "fix": "If it matters, make it work on a phone; if it does not, cut it everywhere"
+      },
+      {
+        "phase": "current-render",
+        "gate": "F25",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "line": 1,
+        "evidence": "[375px] a table opens with 16 columns off-screen (from \"합계\")",
+        "fix": "Keep the column that names the row and the one that acts on it in view: restack each row, or pin the first column"
+      },
+      {
+        "phase": "current-render",
+        "gate": "F25",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "line": 1,
+        "evidence": "[375px] a table opens with 4 columns off-screen (from \"연초 종가종목별 기준일\")",
+        "fix": "Keep the column that names the row and the one that acts on it in view: restack each row, or pin the first column"
+      },
+      {
+        "phase": "current-render",
+        "gate": "F25",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+        "line": 1,
+        "evidence": "[375px] 95 words shown at 1440 are hidden on a phone (first: \"MSTR 실제 가격 · 일별 OHLCMSTR\")",
+        "fix": "If it matters, make it work on a phone; if it does not, cut it everywhere"
+      },
+      {
+        "phase": "current-render",
+        "gate": "F25",
+        "grade": "WARN",
+        "tier": "finish",
+        "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "line": 1,
+        "evidence": "[375px] a table opens with 5 columns off-screen (from \"과거 관측 분포\")",
+        "fix": "Keep the column that names the row and the one that acts on it in view: restack each row, or pin the first column"
+      },
+      {
+        "phase": "current-render",
+        "gate": "kept",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": ".hallmark/before.json",
+        "line": 1,
+        "evidence": "headings gone or reworded since the before record: 고점 · 저점 · 다음 사이클",
+        "fix": "Restore it, or record it in the stamp: /* Hallmark · reworded \"<old>\" to \"<new>\" · <the gate that named it> */ or dropped <item> · <the reason>"
+      },
+      {
+        "phase": "current-render",
+        "gate": "kept",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": ".hallmark/before.json",
+        "line": 1,
+        "evidence": "figures gone or reworded since the before record: 10.26, 15:48, $500, 042024-112025-062026-012026-082027-032027-09202…, $2,326.75, 1.21%, 2,355, 2,368 and 54 more",
+        "fix": "Restore it, or record it in the stamp: /* Hallmark · reworded \"<old>\" to \"<new>\" · <the gate that named it> */ or dropped <item> · <the reason>"
+      }
+    ]
+  },
+  "designStatusUnchanged": "fail",
+  "waiversAdded": 0,
+  "productEdits": 0,
+  "pinnedVendorEdits": 0,
+  "sourceIdentities": [
+    {
+      "file": "dist/market-lab/app/assets/index-aLhLaYOa.css",
+      "baseSha256": "2940129891729ba19636cac9ef82d3ba9d06268fb4fecd239628d922f6443fee",
+      "candidateSha256": "2940129891729ba19636cac9ef82d3ba9d06268fb4fecd239628d922f6443fee",
+      "unchangedSinceRequestBase": true
+    },
+    {
+      "file": "dist/vendor/skullet/styles.css",
+      "baseSha256": "2d5fd47eb1956d1406cb5a6a6abcc8ecb90a7766015ea30425ffe6ce80491243",
+      "candidateSha256": "2d5fd47eb1956d1406cb5a6a6abcc8ecb90a7766015ea30425ffe6ce80491243",
+      "unchangedSinceRequestBase": true
+    },
+    {
+      "file": "dist/monthly-backtest.css",
+      "baseSha256": "73215d161f56d24cf458bfca421dc272965a859a1639f2da2c010e02f4e026de",
+      "candidateSha256": "73215d161f56d24cf458bfca421dc272965a859a1639f2da2c010e02f4e026de",
+      "unchangedSinceRequestBase": true
+    },
+    {
+      "file": "dist/symbol-selector.css",
+      "baseSha256": "0d48ba9c389718c6afd4a259200d87cee3119c87095daf50c683ac5ca8df1ca4",
+      "candidateSha256": "0d48ba9c389718c6afd4a259200d87cee3119c87095daf50c683ac5ca8df1ca4",
+      "unchangedSinceRequestBase": true
+    },
+    {
+      "file": "dist/loading-surfaces.css",
+      "baseSha256": "62365401f0ab6f6781292f7d17e2f5833f0e2311e4d7a3ea1dcd777ab945133d",
+      "candidateSha256": "62365401f0ab6f6781292f7d17e2f5833f0e2311e4d7a3ea1dcd777ab945133d",
+      "unchangedSinceRequestBase": true
+    },
+    {
+      "file": "dist/index.html",
+      "baseSha256": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+      "candidateSha256": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+      "unchangedSinceRequestBase": true
+    },
+    {
+      "file": "dist/lab-view.js",
+      "baseSha256": "e128e9f6cd0e046f67e291ecc20beee2ee9d20069ed8ec49108dcfbc96e628a2",
+      "candidateSha256": "e128e9f6cd0e046f67e291ecc20beee2ee9d20069ed8ec49108dcfbc96e628a2",
+      "unchangedSinceRequestBase": true
+    },
+    {
+      "file": "dist/lab.css",
+      "baseSha256": "517b84062e65c98b9c8171556edc25502a4fab079512f6b3a81ba245d37f30fc",
+      "candidateSha256": "517b84062e65c98b9c8171556edc25502a4fab079512f6b3a81ba245d37f30fc",
+      "unchangedSinceRequestBase": true
+    },
+    {
+      "file": "dist/styles.css",
+      "baseSha256": "18b0a9b2c245853a5a20f08a89c7eecc06073261f9166510d07e23db14740cf5",
+      "candidateSha256": "18b0a9b2c245853a5a20f08a89c7eecc06073261f9166510d07e23db14740cf5",
+      "unchangedSinceRequestBase": true
+    },
+    {
+      "file": "dist/viewport.css",
+      "baseSha256": "36aecacae5e796bf5028a1e6963a217cc5eec5234f92184d134daa3ca312ec07",
+      "candidateSha256": "36aecacae5e796bf5028a1e6963a217cc5eec5234f92184d134daa3ca312ec07",
+      "unchangedSinceRequestBase": true
+    },
+    {
+      "file": "dist/atlas.css",
+      "baseSha256": "a9a3abf1ef26eefb93d518a0af826387dc40939fa9354427b7496f9a24207485",
+      "candidateSha256": "a9a3abf1ef26eefb93d518a0af826387dc40939fa9354427b7496f9a24207485",
+      "unchangedSinceRequestBase": true
+    },
+    {
+      "file": "dist/atlas-shell.css",
+      "baseSha256": "ac4075e8ddbf8d370cbefeabe3f1e148919091821258f5b340adc0fdcd94e76c",
+      "candidateSha256": "ac4075e8ddbf8d370cbefeabe3f1e148919091821258f5b340adc0fdcd94e76c",
+      "unchangedSinceRequestBase": true
+    },
+    {
+      "file": "dist/loading-surfaces.js",
+      "baseSha256": "acf1163210be23adebf1cbb9e11c509d35d7987caf0705e3b3bb45da3eb6cb7d",
+      "candidateSha256": "acf1163210be23adebf1cbb9e11c509d35d7987caf0705e3b3bb45da3eb6cb7d",
+      "unchangedSinceRequestBase": true
+    },
+    {
+      "file": "apps/web/src/rsi-chart-model.ts",
+      "baseSha256": "df2c077fe6ea13137c9dcd1711f236c7496cd0280e7b2458579034f57773b56b",
+      "candidateSha256": "df2c077fe6ea13137c9dcd1711f236c7496cd0280e7b2458579034f57773b56b",
+      "unchangedSinceRequestBase": true
+    }
+  ],
+  "classifications": [
+    {
+      "gates": [
+        "20"
+      ],
+      "fail": 2,
+      "reflex": 0,
+      "classification": "Existing metadata/pinned-vendor policy conflict",
+      "evidence": "Vendor stylesheet is the exact pinned Skullet0.0.3 source; Vite output CSS is a byte-identical existing minified build. Neither has the required leading Hallmark stamp. These are actual unsatisfied scanner requirements; no demonstrated interactive defect."
+    },
+    {
+      "gates": [
+        "26a",
+        "26b"
+      ],
+      "fail": 1,
+      "reflex": 1,
+      "classification": "Inert loading-surface context",
+      "evidence": "Vendor generic selectors mention controls, but the application adapter supplies noninteractive placeholder divs/spans under aria-hidden=true and inert. Application-owned controls have separate focus/active styling. No keyboard-focus regression was established by these vendor-only findings."
+    },
+    {
+      "gates": [
+        "48"
+      ],
+      "fail": 11,
+      "reflex": 0,
+      "classification": "Existing vendor fallbacks and debug selectors, compiled mirror",
+      "evidence": "Neutral literals occur as --skullet-base fallbacks; loading-surfaces.css supplies the actual themed token. Pink literals belong to unused skullet-xray selectors. Vite prefixes duplicate one text-decoration occurrence. Vendor bytes remain unmodified."
+    },
+    {
+      "gates": [
+        "56"
+      ],
+      "fail": 3,
+      "reflex": 0,
+      "classification": "Independent scroll-owner heuristic mismatch",
+      "evidence": "Pinned check56 flags two sticky top:0 selectors without computing DOM ancestry/scroll owners. The cited modal headings and RSI/monthly table headers have separate owners and cannot be fixed by globally offsetting the second header."
+    },
+    {
+      "gates": [
+        "62"
+      ],
+      "fail": 2,
+      "reflex": 0,
+      "classification": "Unused custom-element selector in pinned vendor and compiled mirror",
+      "evidence": "The flagged selector is skullet-reveal[loading]:not(:defined). The actual application uses div/span skeletonMarkup plus new Reveal(paint), not skullet-reveal tags. No application custom-element markup or xray activation was found."
+    },
+    {
+      "gates": [
+        "24b"
+      ],
+      "fail": 0,
+      "reflex": 2,
+      "classification": "Intentional measured chart geometry",
+      "evidence": "The 18px top inset matches chartGeometry top=18 in apps/web/src/rsi-chart-model.ts and the explicit existing design.md requirement. Other insets match the real plot geometry; changing to a4px multiple would misalign the pending placeholder."
+    },
+    {
+      "gates": [
+        "49b"
+      ],
+      "fail": 0,
+      "reflex": 1,
+      "classification": "Minor pre-existing wrapping when disclosure is opened",
+      "evidence": "Remote320px finding originates inside closed details; local native probe finds checkVisibility=false while closed and true after opening. The link still uses two lines when open but all rectangles stay inside the viewport. Optional presentation polish, no demonstrated clipping or broken access."
+    },
+    {
+      "gates": [
+        "72"
+      ],
+      "fail": 0,
+      "reflex": 1,
+      "classification": "Confirmed closed-details geometry false positive",
+      "evidence": "Pinned vis() checks computed display/visibility/opacity and nonzero rectangles, but not closed-details visibility. Native1440px probe finds the content is not painted (checkVisibility=false) while raw text rectangles extend below the closed summary. Opening the first disclosure changes apparent bottom inset from -1079.1875px to +35.1875px."
+    }
+  ],
+  "focusedProbe": {
+    "environment": "Native Chromium143.0.7499.0 on Linux; local static checkout; Noto Korean font; actual pointer activation of disclosure summary; source/DOM read-only",
+    "purpose": "Distinguish hidden-details Range geometry from painted content and inspect narrow link wrapping; not a replacement full audit",
+    "results": [
+      {
+        "width": 320,
+        "closed": {
+          "link": {
+            "text": "8·12·20% 전체 계산값 ↗",
+            "box": {
+              "left": 65,
+              "right": 306,
+              "top": 3327.84375,
+              "bottom": 3361.03125,
+              "width": 241,
+              "height": 33.1875
+            },
+            "rects": [
+              {
+                "left": 221,
+                "right": 306,
+                "top": 3327.84375,
+                "bottom": 3341.84375
+              },
+              {
+                "left": 65,
+                "right": 112,
+                "top": 3347.03125,
+                "bottom": 3361.03125
+              }
+            ],
+            "detailsOpen": false,
+            "checkVisibility": false,
+            "computedVisibility": "visible"
+          },
+          "details": [
+            {
+              "summary": "국면 길이 · 단축/연장 민감도",
+              "open": false,
+              "box": {
+                "left": 52,
+                "right": 320,
+                "top": 2178.890625,
+                "bottom": 2229.9375,
+                "width": 268,
+                "height": 51.046875
+              },
+              "content": {
+                "box": {
+                  "left": 53,
+                  "right": 319,
+                  "top": 2228.9375,
+                  "bottom": 3392.21875,
+                  "width": 266,
+                  "height": 1163.28125
+                },
+                "checkVisibility": false,
+                "computedVisibility": "visible"
+              },
+              "rawTextRects": 106,
+              "hiddenTextRects": 105,
+              "rawTextBottom": 3361.03125,
+              "computedBottomInset": -1132.09375
+            },
+            {
+              "summary": "피보나치 되돌림 · 대조 비율 검증",
+              "open": false,
+              "box": {
+                "left": 52,
+                "right": 320,
+                "top": 2245.9375,
+                "bottom": 2296.984375,
+                "width": 268,
+                "height": 51.046875
+              },
+              "content": {
+                "box": {
+                  "left": 53,
+                  "right": 319,
+                  "top": 2295.984375,
+                  "bottom": 3601.59375,
+                  "width": 266,
+                  "height": 1305.609375
+                },
+                "checkVisibility": false,
+                "computedVisibility": "visible"
+              },
+              "rawTextRects": 86,
+              "hiddenTextRects": 85,
+              "rawTextBottom": 3570.40625,
+              "computedBottomInset": -1274.421875
+            },
+            {
+              "summary": "정의와 수식, 데이터의 한계",
+              "open": false,
+              "box": {
+                "left": 52,
+                "right": 320,
+                "top": 2312.984375,
+                "bottom": 2364.03125,
+                "width": 268,
+                "height": 51.046875
+              },
+              "content": {
+                "box": {
+                  "left": 53,
+                  "right": 319,
+                  "top": 2363.03125,
+                  "bottom": 3113.796875,
+                  "width": 266,
+                  "height": 750.765625
+                },
+                "checkVisibility": false,
+                "computedVisibility": "visible"
+              },
+              "rawTextRects": 31,
+              "hiddenTextRects": 30,
+              "rawTextBottom": 3082.609375,
+              "computedBottomInset": -719.578125
+            }
+          ]
+        },
+        "open": {
+          "link": {
+            "text": "8·12·20% 전체 계산값 ↗",
+            "box": {
+              "left": 65,
+              "right": 306,
+              "top": 1610.84375,
+              "bottom": 1644.03125,
+              "width": 241,
+              "height": 33.1875
+            },
+            "rects": [
+              {
+                "left": 221,
+                "right": 306,
+                "top": 1610.84375,
+                "bottom": 1624.84375
+              },
+              {
+                "left": 65,
+                "right": 112,
+                "top": 1630.03125,
+                "bottom": 1644.03125
+              }
+            ],
+            "detailsOpen": true,
+            "checkVisibility": true,
+            "computedVisibility": "visible"
+          },
+          "details": [
+            {
+              "summary": "국면 길이 · 단축/연장 민감도",
+              "open": true,
+              "box": {
+                "left": 52,
+                "right": 320,
+                "top": 460.890625,
+                "bottom": 1676.21875,
+                "width": 268,
+                "height": 1215.328125
+              },
+              "content": {
+                "box": {
+                  "left": 53,
+                  "right": 319,
+                  "top": 511.9375,
+                  "bottom": 1675.21875,
+                  "width": 266,
+                  "height": 1163.28125
+                },
+                "checkVisibility": true,
+                "computedVisibility": "visible"
+              },
+              "rawTextRects": 106,
+              "hiddenTextRects": 0,
+              "rawTextBottom": 1644.03125,
+              "computedBottomInset": 31.1875
+            },
+            {
+              "summary": "피보나치 되돌림 · 대조 비율 검증",
+              "open": false,
+              "box": {
+                "left": 52,
+                "right": 320,
+                "top": 1692.21875,
+                "bottom": 1743.265625,
+                "width": 268,
+                "height": 51.046875
+              },
+              "content": {
+                "box": {
+                  "left": 53,
+                  "right": 319,
+                  "top": 1742.265625,
+                  "bottom": 3047.875,
+                  "width": 266,
+                  "height": 1305.609375
+                },
+                "checkVisibility": false,
+                "computedVisibility": "visible"
+              },
+              "rawTextRects": 86,
+              "hiddenTextRects": 85,
+              "rawTextBottom": 3016.6875,
+              "computedBottomInset": -1274.421875
+            },
+            {
+              "summary": "정의와 수식, 데이터의 한계",
+              "open": false,
+              "box": {
+                "left": 52,
+                "right": 320,
+                "top": 1759.265625,
+                "bottom": 1810.3125,
+                "width": 268,
+                "height": 51.046875
+              },
+              "content": {
+                "box": {
+                  "left": 53,
+                  "right": 319,
+                  "top": 1809.3125,
+                  "bottom": 2560.078125,
+                  "width": 266,
+                  "height": 750.765625
+                },
+                "checkVisibility": false,
+                "computedVisibility": "visible"
+              },
+              "rawTextRects": 31,
+              "hiddenTextRects": 30,
+              "rawTextBottom": 2528.890625,
+              "computedBottomInset": -719.578125
+            }
+          ]
+        }
+      },
+      {
+        "width": 1440,
+        "closed": {
+          "link": {
+            "text": "8·12·20% 전체 계산값 ↗",
+            "box": {
+              "left": 401,
+              "right": 537,
+              "top": 3278.609375,
+              "bottom": 3292.609375,
+              "width": 136,
+              "height": 14
+            },
+            "rects": [
+              {
+                "left": 401,
+                "right": 537,
+                "top": 3278.609375,
+                "bottom": 3292.609375
+              }
+            ],
+            "detailsOpen": false,
+            "checkVisibility": false,
+            "computedVisibility": "visible"
+          },
+          "details": [
+            {
+              "summary": "국면 길이 · 단축/연장 민감도",
+              "open": false,
+              "box": {
+                "left": 224,
+                "right": 1440,
+                "top": 2161.828125,
+                "bottom": 2214.421875,
+                "width": 1216,
+                "height": 52.59375
+              },
+              "content": {
+                "box": {
+                  "left": 225,
+                  "right": 1439,
+                  "top": 2213.421875,
+                  "bottom": 3327.796875,
+                  "width": 1214,
+                  "height": 1114.375
+                },
+                "checkVisibility": false,
+                "computedVisibility": "visible"
+              },
+              "rawTextRects": 97,
+              "hiddenTextRects": 96,
+              "rawTextBottom": 3292.609375,
+              "computedBottomInset": -1079.1875
+            },
+            {
+              "summary": "피보나치 되돌림 · 대조 비율 검증",
+              "open": false,
+              "box": {
+                "left": 224,
+                "right": 1440,
+                "top": 2230.421875,
+                "bottom": 2283.015625,
+                "width": 1216,
+                "height": 52.59375
+              },
+              "content": {
+                "box": {
+                  "left": 225,
+                  "right": 1439,
+                  "top": 2282.015625,
+                  "bottom": 3475.859375,
+                  "width": 1214,
+                  "height": 1193.84375
+                },
+                "checkVisibility": false,
+                "computedVisibility": "visible"
+              },
+              "rawTextRects": 74,
+              "hiddenTextRects": 73,
+              "rawTextBottom": 3440.671875,
+              "computedBottomInset": -1158.65625
+            },
+            {
+              "summary": "정의와 수식, 데이터의 한계",
+              "open": false,
+              "box": {
+                "left": 224,
+                "right": 1440,
+                "top": 2299.015625,
+                "bottom": 2351.609375,
+                "width": 1216,
+                "height": 52.59375
+              },
+              "content": {
+                "box": {
+                  "left": 225,
+                  "right": 1439,
+                  "top": 2350.609375,
+                  "bottom": 2783.5625,
+                  "width": 1214,
+                  "height": 432.953125
+                },
+                "checkVisibility": false,
+                "computedVisibility": "visible"
+              },
+              "rawTextRects": 14,
+              "hiddenTextRects": 13,
+              "rawTextBottom": 2748.375,
+              "computedBottomInset": -397.765625
+            }
+          ]
+        },
+        "open": {
+          "link": {
+            "text": "8·12·20% 전체 계산값 ↗",
+            "box": {
+              "left": 401,
+              "right": 537,
+              "top": 1638.609375,
+              "bottom": 1652.609375,
+              "width": 136,
+              "height": 14
+            },
+            "rects": [
+              {
+                "left": 401,
+                "right": 537,
+                "top": 1638.609375,
+                "bottom": 1652.609375
+              }
+            ],
+            "detailsOpen": true,
+            "checkVisibility": true,
+            "computedVisibility": "visible"
+          },
+          "details": [
+            {
+              "summary": "국면 길이 · 단축/연장 민감도",
+              "open": true,
+              "box": {
+                "left": 224,
+                "right": 1440,
+                "top": 520.828125,
+                "bottom": 1688.796875,
+                "width": 1216,
+                "height": 1167.96875
+              },
+              "content": {
+                "box": {
+                  "left": 225,
+                  "right": 1439,
+                  "top": 573.421875,
+                  "bottom": 1687.796875,
+                  "width": 1214,
+                  "height": 1114.375
+                },
+                "checkVisibility": true,
+                "computedVisibility": "visible"
+              },
+              "rawTextRects": 97,
+              "hiddenTextRects": 0,
+              "rawTextBottom": 1652.609375,
+              "computedBottomInset": 35.1875
+            },
+            {
+              "summary": "피보나치 되돌림 · 대조 비율 검증",
+              "open": false,
+              "box": {
+                "left": 224,
+                "right": 1440,
+                "top": 1704.796875,
+                "bottom": 1757.390625,
+                "width": 1216,
+                "height": 52.59375
+              },
+              "content": {
+                "box": {
+                  "left": 225,
+                  "right": 1439,
+                  "top": 1756.390625,
+                  "bottom": 2950.234375,
+                  "width": 1214,
+                  "height": 1193.84375
+                },
+                "checkVisibility": false,
+                "computedVisibility": "visible"
+              },
+              "rawTextRects": 74,
+              "hiddenTextRects": 73,
+              "rawTextBottom": 2915.046875,
+              "computedBottomInset": -1158.65625
+            },
+            {
+              "summary": "정의와 수식, 데이터의 한계",
+              "open": false,
+              "box": {
+                "left": 224,
+                "right": 1440,
+                "top": 1773.390625,
+                "bottom": 1825.984375,
+                "width": 1216,
+                "height": 52.59375
+              },
+              "content": {
+                "box": {
+                  "left": 225,
+                  "right": 1439,
+                  "top": 1824.984375,
+                  "bottom": 2257.9375,
+                  "width": 1214,
+                  "height": 432.953125
+                },
+                "checkVisibility": false,
+                "computedVisibility": "visible"
+              },
+              "rawTextRects": 14,
+              "hiddenTextRects": 13,
+              "rawTextBottom": 2222.75,
+              "computedBottomInset": -397.765625
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "verification": {
+    "skulletSourceCheck": {
+      "command": "node scripts/sync-skullet.mjs --check",
+      "status": "pass",
+      "version": "0.0.3",
+      "stylesSha256": "2d5fd47eb1956d1406cb5a6a6abcc8ecb90a7766015ea30425ffe6ce80491243"
+    },
+    "allReportedStaticFilesUnchanged": true
+  },
+  "limits": [
+    "Pre-existing relative to the request base does not waive or dismiss a finding.",
+    "The two local full audit attempts failed Chromium sandbox launch and are not counted as completed rendering. The remote audit completed with integrity pass.",
+    "No whole-site accessibility certification or rejection of the separate WARN findings is implied."
+  ]
+}

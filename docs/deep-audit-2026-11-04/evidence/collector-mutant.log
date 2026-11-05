@@ -1,0 +1,67 @@
+✔ collector cancellation at snapshot-read preserves the last accepted snapshot (105.543249ms)
+✖ collector cancellation at publication-lock preserves the last accepted snapshot (238.420904ms)
+✖ collector cancellation at acceptance-receipt preserves the last accepted snapshot (245.063266ms)
+✔ the same acquisition without cancellation reaches publication and its receipt (221.419191ms)
+✖ cancellation queued by the acceptance callback is checked at the commit owner (86.053465ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 2
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1282.444484
+
+✖ failing tests:
+
+test at tests/service/us-collection-cancellation.test.ts:1:3059
+✖ collector cancellation at publication-lock preserves the last accepted snapshot (238.420904ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'published'
+  - 'failed'
+
+      at TestContext.<anonymous> (/tmp/atlas-cancel-mutant-FU0qFz/tests/service/us-collection-cancellation.test.ts:47:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'published',
+    expected: 'failed',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/service/us-collection-cancellation.test.ts:1:3059
+✖ collector cancellation at acceptance-receipt preserves the last accepted snapshot (245.063266ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'published'
+  - 'failed'
+
+      at TestContext.<anonymous> (/tmp/atlas-cancel-mutant-FU0qFz/tests/service/us-collection-cancellation.test.ts:47:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'published',
+    expected: 'failed',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/service/us-collection-cancellation.test.ts:1:3959
+✖ cancellation queued by the acceptance callback is checked at the commit owner (86.053465ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection (AbortError).
+      at async TestContext.<anonymous> (/tmp/atlas-cancel-mutant-FU0qFz/tests/service/us-collection-cancellation.test.ts:67:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { name: 'AbortError' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

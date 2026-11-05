@@ -1,0 +1,36 @@
+✔ monthly fixed replay keeps its exact path, transport and both existing saved sessions (1595.054042ms)
+✔ a corrupted monthly record is rejected without silently calculating a replacement (1134.414922ms)
+✔ a late cancelled archive cannot replace the current export or source clock (4968.6476ms)
+✔ unavailable persistence remains an error and a retry can create and retain valid records (4071.722147ms)
+✔ only completed UTC month ends with available dated inputs become automatic origins (8.749192ms)
+✔ all four windows and endpoint metrics match independent Python arithmetic on actual paths (72.663692ms)
+✔ maturity, missing observations and stale actuals never become complete performance (228.178347ms)
+✔ common-origin summaries use identical month ends; log skill is a ratio of equal-origin means (1.148531ms)
+✔ future actual additions reuse byte-identical frozen records, while revised prefixes/settings get separate keys (1526.397718ms)
+✔ short replay records are verified exact prefixes of the 365-day record without forecast regeneration (39.636066ms)
+✔ corrupt saved bytes fail closed and preserve the accepted record instead of regenerating it (1238.105124ms)
+✔ cancellation at a completed origin retains only accepted records and permits cache-first retry (3824.794757ms)
+✔ period tables retain missing/error states and identify replay origin and fixed horizon (7.76672ms)
+✔ an uncertain accepted save stops the batch; retry reconciles its original key before computing (3412.719751ms)
+✔ local source identities reject failed, oversized and escaping dependency responses (7.140296ms)
+✔ mutable BTC replay observations use their real acquisition clock; future acquisition is still rejected (374.802567ms)
+✔ mutable ETH replay integration uses an observed date and its actual acquisition, not a fixed historical clock (177.174805ms)
+✔ fixed historical fixtures remain byte-bound independently of any published refresh (72.443268ms)
+✔ fixed cutoff uses only completed Bitstamp closes and eligible dated evidence, with no current forecast (35.413545ms)
+✔ changing or removing all post-cutoff prices cannot change the generated forecast (625.858587ms)
+✔ reveal, seek and weekly aggregation keep the frozen path while withholding later OHLC (182.689845ms)
+✔ 114 revealed daily comparisons match an independent Python calculation and flat baseline (54.872205ms)
+✔ save restore uses exact stored bytes, accepts a changed future suffix, rejects revised prefix and tampering (78.932677ms)
+✔ insufficient, gapped, unsupported research and premature completion inputs fail explicitly (30.441739ms)
+✔ new backtest context carries no current cycle or forecast annotations (5.805873ms)
+✔ cutoff selection, result reveal and save resume retain the exact forecast and old storage (2654.124726ms)
+✔ a different horizon retains the selected start, while an invalid saved forecast fails without regeneration (2118.562425ms)
+✔ unavailable source stays an error, and retry accepts a supported date without saving preview (1756.055457ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15952.977161

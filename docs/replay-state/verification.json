@@ -1,72 +1,291 @@
 {
   "kind": "atlas-replay-state-verification",
   "schemaVersion": 1,
-  "baselineCommit": "fec62fc3c6bddee1d892efab01938102ad780b11",
-  "node": "v24.22.1",
+  "baselineCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "originalAuditBaselineCommit": "94a1b1dda9eb359de70747043808340da369d087",
+  "node": "v24.22.2",
   "sourcePath": "dist/chart-replay-state.js",
-  "sourceSha256": "5b782ad02e80a2ffb89dec6ccf7a170720a9f55ace0f2f47a400e1ad5739e822",
+  "sourceSha256": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
   "testPath": "tests/chart-replay-state.test.mjs",
-  "testSha256": "19ad532126d0bc7cc7b1441db0addb8962574ae2be54e79af17b19c73c7de85d",
-  "method": "Execute actual JavaScript controller; exhaustive finite command traces plus targeted async ownership cases and isolated real-source negative controls",
+  "testSha256": "1ae620d55fd750fbc951b0980f8eed58a2a64cf4eb2a83dc9b74626601badabc",
+  "method": "Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, destroy-during-save cases and isolated real-source negative controls",
+  "coordinatorPath": "dist/chart-replay.js",
+  "coordinatorSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+  "coordinatorTestPath": "tests/chart-replay-ui.test.mjs",
+  "coordinatorTestSha256": "d3f658ecf9f942604d263d29103abab9f936a93aed1e986af2383fdacab0ed27",
+  "snapshotPath": "dist/chart-replay-snapshot.js",
+  "snapshotSha256": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
   "bounds": {
-    "playbackCommands": 10,
-    "maxTraceLength": 4,
-    "traces": 10000,
-    "playbackBars": 3,
-    "asyncLoads": 2
+    "playback": {
+      "commands": 10,
+      "maxTraceLength": 4,
+      "traces": 10000,
+      "prefixes": 11111,
+      "transitions": 40000,
+      "observableStates": 52,
+      "observableEdges": 380,
+      "playbackBars": 3
+    },
+    "asyncLoads": 2,
+    "selectionCommands": 6,
+    "selectionMaxTraceLength": 3,
+    "selectionTraces": 259,
+    "destruction": {
+      "pendingExplicitSaves": 1,
+      "completionSchedules": [
+        "deferred callback resumes",
+        "deferred callback rejects"
+      ],
+      "destroyCallsPerSchedule": 2
+    }
   },
   "formalProof": false,
   "modelCheckerRun": false,
   "excluded": [
     "Unlimited trace lengths",
-    "Browser DOM and event wiring",
-    "Forecast mathematics",
-    "Network completion fairness",
-    "Wall-clock scheduling accuracy"
+    "Native browser DOM, rendering and events",
+    "Real forecast generation and scoring in coordinator doubles",
+    "Exhaustive network completion schedules",
+    "Exhaustive persistence and concurrent-tab schedules",
+    "Wall-clock scheduling accuracy",
+    "Cutoff-model loading in the coordinator fixture"
   ],
   "original": {
     "status": "pass",
-    "tests": 14,
-    "passed": 14,
+    "tests": 16,
+    "passed": 16,
     "failed": 0,
     "skipped": 0,
-    "exitStatus": 0
+    "exitStatus": 0,
+    "enumeration": {
+      "commands": 10,
+      "maxTraceLength": 4,
+      "traces": 10000,
+      "prefixes": 11111,
+      "transitions": 40000,
+      "observableStates": 52,
+      "observableEdges": 380,
+      "playbackBars": 3
+    }
   },
   "mutations": {
     "unguarded-session-completion": {
       "status": "expected behavioral failure",
-      "tests": 14,
-      "passed": 11,
+      "tests": 16,
+      "passed": 13,
       "failed": 3,
       "skipped": 0,
       "exitStatus": 1,
-      "sourceSha256": "ea59aa8ff44389a8b5845570a41534bbd20b34af8ae07e19d8874af7d8dbf562"
+      "enumeration": {
+        "commands": 10,
+        "maxTraceLength": 4,
+        "traces": 10000,
+        "prefixes": 11111,
+        "transitions": 40000,
+        "observableStates": 52,
+        "observableEdges": 380,
+        "playbackBars": 3
+      },
+      "sourceSha256": "348148c6695a199177d96df3d21a128732f8b5c4b8874e89e5b29888a4705033"
     },
     "unguarded-timer-generation": {
       "status": "expected behavioral failure",
-      "tests": 14,
-      "passed": 11,
-      "failed": 3,
+      "tests": 16,
+      "passed": 12,
+      "failed": 4,
       "skipped": 0,
       "exitStatus": 1,
-      "sourceSha256": "d594050eab36a00a6cc72cd76d43d8cefe6b7fc4ff0c42168959473a4fe26b56"
+      "sourceSha256": "4b4f3ff7fba8c67aec5c703c378b6f33a0e5d3f29353de100abbea9080ec666f"
     },
     "mutable-session-output": {
       "status": "expected behavioral failure",
-      "tests": 14,
-      "passed": 13,
+      "tests": 16,
+      "passed": 15,
       "failed": 1,
       "skipped": 0,
       "exitStatus": 1,
-      "sourceSha256": "526acc7e170eb79e3136c64adbcee7677073ac905cc1f3dc77ec3535821f6d56"
+      "enumeration": {
+        "commands": 10,
+        "maxTraceLength": 4,
+        "traces": 10000,
+        "prefixes": 11111,
+        "transitions": 40000,
+        "observableStates": 52,
+        "observableEdges": 380,
+        "playbackBars": 3
+      },
+      "sourceSha256": "e34df04a83296d59bb4422159b8cc580c080867dc94725214a6e7775e1e3119e"
+    },
+    "implicit-rewind-at-archive-end": {
+      "status": "expected behavioral failure",
+      "tests": 16,
+      "passed": 12,
+      "failed": 4,
+      "skipped": 0,
+      "exitStatus": 1,
+      "sourceSha256": "464d1bf9f32f230405b54914963b0f9a16029068f8e9abcb392738b2e99c2418"
+    }
+  },
+  "selection": {
+    "original": {
+      "status": "pass",
+      "commands": [
+        "mode:atlas-chart",
+        "mode:project-baseline",
+        "horizon:90",
+        "horizon:365",
+        "confirm",
+        "pick"
+      ],
+      "maxTraceLength": 3,
+      "traces": 259,
+      "transitions": 726,
+      "observableStates": 24,
+      "observableEdges": 78,
+      "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+      "scope": "Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging"
+    },
+    "mutations": {
+      "mode-model-settings-confirm-start": {
+        "status": "fail",
+        "invariant": "settings-preserve-unconfirmed-start",
+        "code": "ERR_ASSERTION",
+        "shortestCounterexample": [
+          "open selection",
+          "mode:atlas-chart"
+        ],
+        "traces": 2,
+        "transitions": 0,
+        "observableStates": 1,
+        "observableEdges": 0,
+        "sourceSha256": "8430ab071333194a17cfd5fabbac3e5bd55b55dd024f13416d9614b4a805b770"
+      },
+      "horizon-settings-confirm-start": {
+        "status": "fail",
+        "invariant": "settings-preserve-unconfirmed-start",
+        "code": "ERR_ASSERTION",
+        "shortestCounterexample": [
+          "open selection",
+          "horizon:90"
+        ],
+        "traces": 4,
+        "transitions": 2,
+        "observableStates": 2,
+        "observableEdges": 2,
+        "sourceSha256": "ea5bf406e3de7d244d28f56f6b5d6604d9b8d8f9980ada9c001263b1044d2c96"
+      }
+    },
+    "restored": {
+      "status": "pass",
+      "commands": [
+        "mode:atlas-chart",
+        "mode:project-baseline",
+        "horizon:90",
+        "horizon:365",
+        "confirm",
+        "pick"
+      ],
+      "maxTraceLength": 3,
+      "traces": 259,
+      "transitions": 726,
+      "observableStates": 24,
+      "observableEdges": 78,
+      "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+      "scope": "Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging"
+    }
+  },
+  "savedEntry": {
+    "original": [
+      {
+        "status": "pass",
+        "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
+        "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+        "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+      },
+      {
+        "status": "pass",
+        "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
+        "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+        "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+      }
+    ],
+    "mutations": {
+      "entry-resets-selected-storage-mode": {
+        "status": "expected behavioral failure",
+        "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
+        "assertion": "the last selected current-chart mode must find its own saved slot",
+        "exitStatus": 1,
+        "sourceSha256": "ada8a89c19b83254be0576c1d527b3ee0e4aaaff67caa8277f9b9b9368676f24"
+      },
+      "entry-accepts-cross-mode-storage": {
+        "status": "expected behavioral failure",
+        "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
+        "assertion": "invalid or cross-mode records must not borrow another slot",
+        "exitStatus": 1,
+        "sourceSha256": "f242419b26290b06991d7a68c170a8c359589f1bd7b8a6619ae35a7c84083aac"
+      }
+    },
+    "restored": [
+      {
+        "status": "pass",
+        "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
+        "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+        "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+      },
+      {
+        "status": "pass",
+        "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
+        "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+        "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+      }
+    ]
+  },
+  "destruction": {
+    "original": {
+      "status": "pass",
+      "name": "destroy during an explicit save releases replay once and ignores late completion",
+      "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+    },
+    "mutations": {
+      "destroy-defers-to-interactive-save-guard": {
+        "status": "expected behavioral failure",
+        "name": "destroy during an explicit save releases replay once and ignores late completion",
+        "assertion": "destroy must release replay even while an explicit save is pending",
+        "exitStatus": 1,
+        "sourceSha256": "087528c878e646d3b3d68c8909cd91eee157a4be107561ad453a716c5f9247a2"
+      },
+      "late-exit-completion-updates-destroyed-controls": {
+        "status": "expected behavioral failure",
+        "name": "destroy during an explicit save releases replay once and ignores late completion",
+        "assertion": "destroyed save completion cannot update detached controls",
+        "exitStatus": 1,
+        "sourceSha256": "c591378bb6a91216f3736bc39b9441dd9bc654adb08fc54ce86e0dfe4935ade7"
+      }
+    },
+    "restored": {
+      "status": "pass",
+      "name": "destroy during an explicit save releases replay once and ignores late completion",
+      "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+      "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
     }
   },
   "restored": {
     "status": "pass",
-    "tests": 14,
-    "passed": 14,
+    "tests": 16,
+    "passed": 16,
     "failed": 0,
     "skipped": 0,
-    "exitStatus": 0
+    "exitStatus": 0,
+    "enumeration": {
+      "commands": 10,
+      "maxTraceLength": 4,
+      "traces": 10000,
+      "prefixes": 11111,
+      "transitions": 40000,
+      "observableStates": 52,
+      "observableEdges": 380,
+      "playbackBars": 3
+    }
   }
 }

@@ -1,0 +1,455 @@
+{
+  "schemaVersion": 1,
+  "kind": "eth-candidate-native-research-followup",
+  "date": "2026-11-05",
+  "baseCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "scope": "Research UI and native verification only; no model promotion, forecast revision, calibration or provider refresh.",
+  "originalRemoteEvidence": {
+    "repository": "twoimo/bitcoin-cycle-atlas",
+    "pullRequest": 61,
+    "runId": 41795371676,
+    "jobId": 126458590558,
+    "runUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/41795371676",
+    "jobUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/41795371676/job/126458590558",
+    "conclusion": "failure",
+    "failedStep": {
+      "number": 34,
+      "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+    },
+    "artifact": {
+      "id": 13305864387,
+      "name": "eth-candidate-evidence-4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+      "bytes": 62141126,
+      "sha256": "b9930d3cee196b3caaab01fcf238585ae00487f6751a710d161fe1d240d8ff91",
+      "digestMatchesGitHub": true
+    },
+    "browserReport": {
+      "member": "eth-browser/report.json",
+      "schemaVersion": 1,
+      "sha256": "5c946af698805b0601a3af039006305d2e8183df56ac7984654f5fb467211794",
+      "browserVersion": {
+        "protocolVersion": "1.3",
+        "product": "Chrome/156.0.8078.47",
+        "revision": "@1d17a2e2ee147bb7d6ae2ab6abdb3a2510c17775",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+        "jsVersion": "15.6.75.19"
+      },
+      "expectedCases": 46,
+      "executedCases": 46,
+      "passedCases": 30,
+      "failedCases": 16
+    },
+    "researchFailures": [
+      {
+        "page": "workspace-evidence",
+        "width": 320,
+        "height": 900,
+        "error": "AssertionError [ERR_ASSERTION]: Research filters consume the reading viewport",
+        "runtimeErrors": []
+      },
+      {
+        "page": "workspace-evidence",
+        "width": 1440,
+        "height": 900,
+        "error": "Error: Browser evaluation failed: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":11,\"columnNumber\":90,\"scriptId\":\"66\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"66\",\"url\":\"\",\"lineNumber\":11,\"columnNumber\":96},{\"functionName\":\"\",\"scriptId\":\"66\",\"url\":\"\",\"lineNumber\":15,\"columnNumber\":4}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Click target clipped [data-reader-action=\\\"close\\\"] {\\\"box\\\":{\\\"left\\\":1123.546875,\\\"right\\\":1187,\\\"top\\\":39.703125,\\\"bottom\\\":73.296875},\\\"clip\\\":{\\\"left\\\":221,\\\"right\\\":1219,\\\"top\\\":64,\\\"bottom\\\":875}}\\n    at <anonymous>:12:97\\n    at <anonymous>:16:5\",\"objectId\":\"8845922102912700114.2.2\"}}",
+        "runtimeErrors": []
+      }
+    ],
+    "interpretation": "The native browser gate failed. Earlier successful candidate steps do not override this result; the subsequent review binding step was skipped. Other failure groups are tracked by the integrating audit, not cleared by this research-only receipt."
+  },
+  "findings": [
+    {
+      "id": "research-mobile-rows",
+      "classification": "production-layout",
+      "cause": "The dashboard hides its duplicate mobile heading, but the mobile evidence grid still reserved four rows. The three visible children placed the table in an auto row and the pager in the flexible row. Wrapped filters also consumed 172 pixels.",
+      "fix": "Use three dashboard rows for filters/table/pager and one native horizontally scrolling mobile filter row; retain 44-pixel controls."
+    },
+    {
+      "id": "research-filter-focus",
+      "classification": "production-keyboard-access",
+      "cause": "After the layout repair, Chromium could focus the partially visible first select without scrolling its final three pixels into view. A CSS-only scroll-margin/scroll-padding probe did not correct native focus.",
+      "fix": "When the research controls overflow horizontally, focusin scrolls the focused control fully into view with nearest alignment. Four-pixel padding and scroll margin retain the focus ring."
+    },
+    {
+      "id": "research-modal-close",
+      "classification": "verification-oracle",
+      "cause": "The click helper intersected a native :modal dialog with BODY overflow:clip at y=64. Top-layer modal content is painted above that ancestor clip. The untouched close button at y=39.70..73.30 was visible and topmost.",
+      "nativeCounterexample": "Before any reader change, native pointer click closed the dialog at the real reading scroll end and restored focus to its opener at both widths.",
+      "productionReaderChange": "none",
+      "harnessRemedyOwner": "root: include the modal clip but stop clipping-ancestor traversal above :modal; preserve viewport, descendant scrollport and hit-test checks."
+    }
+  ],
+  "productionChanges": [
+    "dist/research-reader.css",
+    "dist/evidence-view.js"
+  ],
+  "sourceHashesAfter": {
+    "dist/research-reader.css": "fb41b38773dce8872ff0320951202346bc01c46bbb2f92a19a4d63a8ede3c4c8",
+    "dist/research-reader.js": "c8869e264aba1125bd56a23138d581287912b3e6b27ea6d392c4652c3d991575",
+    "dist/evidence-view.js": "fee4c064ed597fdba398a623846e00a96d590b2e85e1645976c787f55c3b6330"
+  },
+  "independentNativeVerification": {
+    "browserVersion": "143.0.7499.0",
+    "nodeVersion": "v24.22.2",
+    "method": "Playwright native Chromium with a persistent profile per width and an in-process HTTP server; external requests blocked.",
+    "flags": [
+      "--no-sandbox",
+      "--no-zygote",
+      "--single-process",
+      "--disable-gpu"
+    ],
+    "probeScriptSha256": "5726103870fbea3a12c30af746c512faaf5770559055e5c5cc9b9edc52694d3a",
+    "beforeReportSha256": "216416025285e1cd54396c4c768fe193174f200a33aed9229452a34d93f3eab9",
+    "afterReportSha256": "78ed4779a68b3d441a9a6ed39704c0cb1df61070ebf2c86cac3a0d8b8e93f865",
+    "beforeMobile": {
+      "gridRows": "184px 150.141px 424.859px 0px",
+      "controls": {
+        "left": 64,
+        "right": 308,
+        "top": 117,
+        "bottom": 289,
+        "width": 244,
+        "height": 172
+      },
+      "table": {
+        "left": 64,
+        "right": 308,
+        "top": 305,
+        "bottom": 455.140625,
+        "width": 244,
+        "height": 150.140625
+      },
+      "rowsInView": 1
+    },
+    "beforeModal": [
+      {
+        "width": 320,
+        "reader": {
+          "box": {
+            "left": 249,
+            "right": 308,
+            "top": 12.34375,
+            "bottom": 44.640625,
+            "width": 59,
+            "height": 32.296875
+          },
+          "topmost": true,
+          "isModal": true,
+          "ancestors": [
+            {
+              "tag": "DIV",
+              "id": "",
+              "modal": false,
+              "top": 12.34375,
+              "bottom": 44.640625,
+              "overflowX": "visible",
+              "overflowY": "visible"
+            },
+            {
+              "tag": "HEADER",
+              "id": "",
+              "modal": false,
+              "top": 0,
+              "bottom": 58,
+              "overflowX": "visible",
+              "overflowY": "visible"
+            },
+            {
+              "tag": "DIALOG",
+              "id": "research-reader",
+              "modal": true,
+              "top": 0,
+              "bottom": 900,
+              "overflowX": "hidden",
+              "overflowY": "hidden"
+            },
+            {
+              "tag": "BODY",
+              "id": "",
+              "modal": false,
+              "top": 56,
+              "bottom": 956,
+              "overflowX": "clip",
+              "overflowY": "clip"
+            },
+            {
+              "tag": "HTML",
+              "id": "",
+              "modal": false,
+              "top": 0,
+              "bottom": 900,
+              "overflowX": "clip",
+              "overflowY": "clip"
+            }
+          ],
+          "scroll": {
+            "top": 986,
+            "max": 986
+          },
+          "nativeClickClosed": true,
+          "focusRestored": true
+        }
+      },
+      {
+        "width": 1440,
+        "reader": {
+          "box": {
+            "left": 1125,
+            "right": 1187,
+            "top": 39.703125,
+            "bottom": 73.296875,
+            "width": 62,
+            "height": 33.59375
+          },
+          "topmost": true,
+          "isModal": true,
+          "ancestors": [
+            {
+              "tag": "DIV",
+              "id": "",
+              "modal": false,
+              "top": 39.703125,
+              "bottom": 73.296875,
+              "overflowX": "visible",
+              "overflowY": "visible"
+            },
+            {
+              "tag": "HEADER",
+              "id": "",
+              "modal": false,
+              "top": 25,
+              "bottom": 89,
+              "overflowX": "visible",
+              "overflowY": "visible"
+            },
+            {
+              "tag": "DIALOG",
+              "id": "research-reader",
+              "modal": true,
+              "top": 24,
+              "bottom": 876,
+              "overflowX": "hidden",
+              "overflowY": "hidden"
+            },
+            {
+              "tag": "BODY",
+              "id": "",
+              "modal": false,
+              "top": 64,
+              "bottom": 964,
+              "overflowX": "clip",
+              "overflowY": "clip"
+            },
+            {
+              "tag": "HTML",
+              "id": "",
+              "modal": false,
+              "top": 0,
+              "bottom": 900,
+              "overflowX": "clip",
+              "overflowY": "clip"
+            }
+          ],
+          "scroll": {
+            "top": 656,
+            "max": 656
+          },
+          "nativeClickClosed": true,
+          "focusRestored": true
+        }
+      }
+    ],
+    "intermediateRegression": {
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:",
+      "focus": {
+        "id": "evidence-asset",
+        "left": 228,
+        "right": 311,
+        "top": 121,
+        "bottom": 165,
+        "height": 44,
+        "clip": {
+          "left": 64,
+          "right": 308,
+          "top": 117,
+          "bottom": 169
+        },
+        "scrollLeft": 0,
+        "outline": "solid",
+        "outlineWidth": 2
+      }
+    },
+    "finalStatus": "passed",
+    "cases": [
+      {
+        "width": 320,
+        "height": 900,
+        "pointerCoarse": true,
+        "controlsHeight": 52,
+        "tableHeight": 673,
+        "rowsInView": 9,
+        "gridRows": "56px 673px 34px",
+        "pageOverflow": false,
+        "filterFocus": [
+          {
+            "id": "evidence-asset",
+            "left": 221,
+            "right": 304,
+            "top": 121,
+            "bottom": 165,
+            "height": 44,
+            "clip": {
+              "left": 64,
+              "right": 308,
+              "top": 117,
+              "bottom": 169
+            },
+            "scrollLeft": 11,
+            "outline": "solid",
+            "outlineWidth": 2
+          },
+          {
+            "id": "evidence-filter",
+            "left": 134,
+            "right": 250,
+            "top": 121,
+            "bottom": 165,
+            "height": 44,
+            "clip": {
+              "left": 64,
+              "right": 308,
+              "top": 117,
+              "bottom": 169
+            },
+            "scrollLeft": 189,
+            "outline": "solid",
+            "outlineWidth": 2
+          },
+          {
+            "id": "evidence-clear",
+            "left": 258,
+            "right": 304,
+            "top": 121,
+            "bottom": 165,
+            "height": 44,
+            "clip": {
+              "left": 64,
+              "right": 308,
+              "top": 117,
+              "bottom": 169
+            },
+            "scrollLeft": 189,
+            "outline": "solid",
+            "outlineWidth": 2
+          }
+        ],
+        "filterReset": "",
+        "filterUrlCleared": true,
+        "readerScroll": {
+          "top": 986,
+          "max": 986
+        },
+        "readerNativeClickClosed": true,
+        "openerFocusRestored": true,
+        "runtimeErrors": []
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "pointerCoarse": false,
+        "controlsHeight": 48,
+        "tableHeight": 649,
+        "rowsInView": 10,
+        "gridRows": "60px 649px 34px",
+        "pageOverflow": false,
+        "filterFocus": [
+          {
+            "id": "evidence-asset",
+            "left": 428,
+            "right": 511,
+            "top": 133,
+            "bottom": 165,
+            "height": 32,
+            "clip": {
+              "left": 248,
+              "right": 1416,
+              "top": 125,
+              "bottom": 173
+            },
+            "scrollLeft": 0,
+            "outline": "solid",
+            "outlineWidth": 2
+          },
+          {
+            "id": "evidence-filter",
+            "left": 523,
+            "right": 639,
+            "top": 133,
+            "bottom": 165,
+            "height": 32,
+            "clip": {
+              "left": 248,
+              "right": 1416,
+              "top": 125,
+              "bottom": 173
+            },
+            "scrollLeft": 0,
+            "outline": "solid",
+            "outlineWidth": 2
+          },
+          {
+            "id": "evidence-clear",
+            "left": 651,
+            "right": 697,
+            "top": 133,
+            "bottom": 165,
+            "height": 32,
+            "clip": {
+              "left": 248,
+              "right": 1416,
+              "top": 125,
+              "bottom": 173
+            },
+            "scrollLeft": 0,
+            "outline": "solid",
+            "outlineWidth": 2
+          }
+        ],
+        "filterReset": "",
+        "filterUrlCleared": true,
+        "readerScroll": {
+          "top": 656,
+          "max": 656
+        },
+        "readerNativeClickClosed": true,
+        "openerFocusRestored": true,
+        "runtimeErrors": []
+      }
+    ],
+    "assertions": [
+      "filters at most112px high",
+      "table at least540px high and6 complete rows",
+      "no document horizontal overflow",
+      "touch filters at least44px high",
+      "Tab visits asset/category/reset and every focused control is fully inside its scrollport with a2px ring",
+      "Enter resets query and removes research-q from URL",
+      "reader reaches real scroll end, native close succeeds and opener regains focus",
+      "no page runtime errors"
+    ],
+    "limits": [
+      "Local Chromium143 is independent corroboration, not a replacement for original CI Chrome156 or an exact new-head CI pass.",
+      "The initial persistent-profile desktop counterexample used touch emulation; final verification launched separate correctly configured320px touch and1440px fine-pointer profiles.",
+      "An initial nonpersistent Playwright browser.newPage launch failed in the local single-process runtime before any case. It is not counted as a test pass.",
+      "No Safari, physical-device, live-provider refresh, production deployment or predictive-validity claim."
+    ]
+  },
+  "existingRegressionTests": {
+    "command": "node --test tests/research-reader.test.mjs tests/research-source-reader.test.mjs tests/research-workbench.test.mjs",
+    "passed": 14,
+    "failed": 0,
+    "skipped": 0,
+    "logSha256": "ec4ba85a1dc3a5aee26a0c09f2bd15b4910243e83243ebd48ac7198ca12e83a8"
+  },
+  "integrationGate": "The integrating agent must run the repaired native workspace gate and final checked-out head CI. ETH promotion and immutable-record holds remain in force."
+}

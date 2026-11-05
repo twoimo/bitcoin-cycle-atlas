@@ -1,0 +1,140 @@
+✔ a captured current forecast keeps its distinct input date and immutable path, while historical labels use only the replay origin (492.127682ms)
+✔ the same primary SVG retains Atlas cycle and interval layers and the exact orange forecast before and after revealing actual bars (362.328904ms)
+✔ unrevealed closes and candles cannot change the actual line, axis, inspection or frozen forecast (174.653307ms)
+✔ real venue candles are revealed by their actual date without replacing Coin Metrics comparison values (84.707322ms)
+✔ mismatched forecast values and origins fail instead of scoring a different orange path (103.477658ms)
+✔ the original publication path remains a separately supported context with its original origin (79.91547ms)
+✔ a forecast-only viewport never exposes a nearest actual and preserves correct scaled coordinates (117.034989ms)
+✔ old replay disposal cannot detach the newer native Atlas chart handlers (95.873338ms)
+✔ an empty replay viewport does not inherit unrevealed live prices and still identifies the frozen orange path (45.286926ms)
+✔ one daily step grows the same weekly candle and volume at their fixed week coordinate (305.627862ms)
+✔ unrevealed weekly OHLC and volume cannot expand the replay scale or enter a forming bar (249.070921ms)
+✔ a first-available replay can have an empty earlier prefix while retaining only the frozen assumptions (316.245091ms)
+✔ an intraday interval cannot silently reuse daily data as shorter candles (3.799586ms)
+✔ unconfirmed start selection keeps the Atlas chart and coordinates without confirmed replay boundaries (143.118276ms)
+✔ weekly start selection follows actual opening coordinates without selecting or changing a forming candle (65.671258ms)
+✔ existing high forecasts are unchanged; eight origins stay one peak, one low and one cycle (1.987806ms)
+✔ each origin reproduces its clock from its own prefix, regardless of future revisions (1179.151313ms)
+✔ low clock applies the exact integer day correction after nominal peak plus12months (0.75629ms)
+✔ duplicate origins/rows cannot inflate goal counts, and conflicting duplicates fail (104.390569ms)
+✔ targets receive equal weight even when their numbers of origins differ (0.25833ms)
+✔ an unclosed actual target stays excluded even if its historical peak/low are visible (743.724192ms)
+✔ invalid cutoffs, before-history and missing origin closes remain explicit (79.995242ms)
+✔ signed errors and target-weighted MAE match an independent Python calendar calculation (39.015181ms)
+✔ worker result validation rejects inflated target counts, stale cutoffs and altered dates (4.043844ms)
+✔ the UI names goal/origin counts, exact signed errors, unavailable targets and excluded causes (10.607935ms)
+✔ all fixed quarter ends are covered without selecting favorable origins (0.284649ms)
+✔ every historical origin clock survives arbitrary changes after that origin (1125.130188ms)
+✔ early eras never borrow later closed references or manufacture zero corrections (391.827645ms)
+✔ paired errors use the identical nine origins, separate from thirty baseline origins (0.606935ms)
+✔ duplicating the full history cannot inflate any coverage, goal or score (674.448548ms)
+✔ extended worker guard rejects future references, zero-filled unknowns and mismatched cohorts (15.118298ms)
+✔ gapped and truncated origin eras are retained but cannot contribute invented baseline scores (86.827663ms)
+✔ independent Python verifies the extended coverage and rejects a fabricated unknown correction (178.974028ms)
+✔ latest observed archive includes every completed quarter without fixing the current date (628.256236ms)
+✔ monthly fixed replay keeps its exact path, transport and both existing saved sessions (2306.687683ms)
+✔ a corrupted monthly record is rejected without silently calculating a replacement (1142.311201ms)
+✔ a late cancelled archive cannot replace the current export or source clock (6409.764292ms)
+✔ unavailable persistence remains an error and a retry can create and retain valid records (4007.718834ms)
+✔ only completed UTC month ends with available dated inputs become automatic origins (6.653439ms)
+✔ all four windows and endpoint metrics match independent Python arithmetic on actual paths (63.900028ms)
+✔ maturity, missing observations and stale actuals never become complete performance (209.491443ms)
+✔ common-origin summaries use identical month ends; log skill is a ratio of equal-origin means (0.687827ms)
+✔ future actual additions reuse byte-identical frozen records, while revised prefixes/settings get separate keys (1564.238206ms)
+✔ short replay records are verified exact prefixes of the 365-day record without forecast regeneration (43.101739ms)
+✔ corrupt saved bytes fail closed and preserve the accepted record instead of regenerating it (1223.923331ms)
+✔ cancellation at a completed origin retains only accepted records and permits cache-first retry (4089.925898ms)
+✔ period tables retain missing/error states and identify replay origin and fixed horizon (10.183731ms)
+✔ an uncertain accepted save stops the batch; retry reconciles its original key before computing (4234.28713ms)
+✔ local source identities reject failed, oversized and escaping dependency responses (10.500393ms)
+✔ mutable BTC replay observations use their real acquisition clock; future acquisition is still rejected (522.979614ms)
+✔ mutable ETH replay integration uses an observed date and its actual acquisition, not a fixed historical clock (191.450145ms)
+✔ fixed historical fixtures remain byte-bound independently of any published refresh (119.091908ms)
+✔ fixed cutoff uses only completed Bitstamp closes and eligible dated evidence, with no current forecast (26.410805ms)
+✔ changing or removing all post-cutoff prices cannot change the generated forecast (826.228622ms)
+✔ reveal, seek and weekly aggregation keep the frozen path while withholding later OHLC (240.86049ms)
+✔ 114 revealed daily comparisons match an independent Python calculation and flat baseline (33.188014ms)
+✔ save restore uses exact stored bytes, accepts a changed future suffix, rejects revised prefix and tampering (220.007154ms)
+✔ insufficient, gapped, unsupported research and premature completion inputs fail explicitly (37.913985ms)
+✔ new backtest context carries no current cycle or forecast annotations (6.545845ms)
+✖ cutoff selection, result reveal and save resume retain the exact forecast and old storage (16007.534908ms)
+✔ a different horizon retains the selected start, while an invalid saved forecast fails without regeneration (1937.772425ms)
+✖ unavailable source stays an error, and retry accepts a supported date without saving preview (15562.076512ms)
+ℹ tests 62
+ℹ suites 0
+ℹ pass 60
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 35432.633617
+
+✖ failing tests:
+
+test at tests/replay-cutoff-ui.test.mjs:50:48
+✖ cutoff selection, result reveal and save resume retain the exact forecast and old storage (16007.534908ms)
+  Error: Command failed: /workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node/bin/node --experimental-vm-modules /tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs --cutoff-ui-case 0
+  (node:133) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+  (Use `node --trace-warnings ...` to show where the warning was created)
+  file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:14
+  export const until=async(predicate,label='UI state')=>{const deadline=Date.now()+15000;while(!predicate()){if(Date.now()>deadline)throw new Error('Timed out waiting for '+label);await new Promise(resolve=>setTimeout(resolve,2));}};
+                                                                                                                                          ^
+
+  Error: Timed out waiting for fully drawn replay selection
+      at until (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:14:137)
+      at async Object.open (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:55:34)
+      at async Object.run (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:17:3)
+      at async file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:49:93
+
+  Node.js v24.22.2
+
+      at genericNodeError (node:internal/errors:986:15)
+      at wrappedFn (node:internal/errors:540:14)
+      at checkExecSyncError (node:child_process:943:11)
+      at execFileSync (node:child_process:979:15)
+      at TestContext.<anonymous> (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:52:27)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    status: 1,
+    signal: null,
+    output: [ null, '', "(node:133) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nfile:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:14\nexport const until=async(predicate,label='UI state')=>{const deadline=Date.now()+15000;while(!predicate()){if(Date.now()>deadline)throw new Error('Timed out waiting for '+label);await new Promise(resolve=>setTimeout(resolve,2));}};\n                                                                                                                                        ^\n\nError: Timed out waiting for fully drawn replay selection\n    at until (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:14:137)\n    at async Object.open (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:55:34)\n    at async Object.run (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:17:3)\n    at async file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:49:93\n\nNode.js v24.22.2\n" ],
+    pid: 133,
+    stdout: '',
+    stderr: "(node:133) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nfile:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:14\nexport const until=async(predicate,label='UI state')=>{const deadline=Date.now()+15000;while(!predicate()){if(Date.now()>deadline)throw new Error('Timed out waiting for '+label);await new Promise(resolve=>setTimeout(resolve,2));}};\n                                                                                                                                        ^\n\nError: Timed out waiting for fully drawn replay selection\n    at until (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:14:137)\n    at async Object.open (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:55:34)\n    at async Object.run (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:17:3)\n    at async file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:49:93\n\nNode.js v24.22.2\n"
+  }
+
+test at tests/replay-cutoff-ui.test.mjs:50:48
+✖ unavailable source stays an error, and retry accepts a supported date without saving preview (15562.076512ms)
+  Error: Command failed: /workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node/bin/node --experimental-vm-modules /tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs --cutoff-ui-case 2
+  (node:173) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+  (Use `node --trace-warnings ...` to show where the warning was created)
+  file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:14
+  export const until=async(predicate,label='UI state')=>{const deadline=Date.now()+15000;while(!predicate()){if(Date.now()>deadline)throw new Error('Timed out waiting for '+label);await new Promise(resolve=>setTimeout(resolve,2));}};
+                                                                                                                                          ^
+
+  Error: Timed out waiting for UI state
+      at until (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:14:137)
+      at async Object.run (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:46:48)
+      at async file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:49:93
+
+  Node.js v24.22.2
+
+      at genericNodeError (node:internal/errors:986:15)
+      at wrappedFn (node:internal/errors:540:14)
+      at checkExecSyncError (node:child_process:943:11)
+      at execFileSync (node:child_process:979:15)
+      at TestContext.<anonymous> (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:52:27)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12) {
+    status: 1,
+    signal: null,
+    output: [ null, '', "(node:173) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nfile:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:14\nexport const until=async(predicate,label='UI state')=>{const deadline=Date.now()+15000;while(!predicate()){if(Date.now()>deadline)throw new Error('Timed out waiting for '+label);await new Promise(resolve=>setTimeout(resolve,2));}};\n                                                                                                                                        ^\n\nError: Timed out waiting for UI state\n    at until (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:14:137)\n    at async Object.run (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:46:48)\n    at async file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:49:93\n\nNode.js v24.22.2\n" ],
+    pid: 173,
+    stdout: '',
+    stderr: "(node:173) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nfile:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:14\nexport const until=async(predicate,label='UI state')=>{const deadline=Date.now()+15000;while(!predicate()){if(Date.now()>deadline)throw new Error('Timed out waiting for '+label);await new Promise(resolve=>setTimeout(resolve,2));}};\n                                                                                                                                        ^\n\nError: Timed out waiting for UI state\n    at until (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-ui-fixture.mjs:14:137)\n    at async Object.run (file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:46:48)\n    at async file:///tmp/atlas-refresh-advancement-aiAyl9/tests/replay-cutoff-ui.test.mjs:49:93\n\nNode.js v24.22.2\n"
+  }

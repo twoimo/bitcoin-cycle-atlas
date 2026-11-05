@@ -24,7 +24,7 @@
 .compact-list-size[hidden],.compact-indicator-controls[hidden],.analysis-pane-access[hidden]{display:none!important}
 .atlas-plot[data-compact-layout] .chart-indicator-list{
  min-height:0;max-height:var(--compact-list-max-height);margin:0;padding:0 4px 0 0;overflow:auto;
- overscroll-behavior:contain;scrollbar-gutter:stable;background:var(--surface);border-radius:0
+ overscroll-behavior:contain;scrollbar-gutter:stable;background:transparent;border-radius:0
 }
 .atlas-plot[data-compact-layout] .indicator-row{min-height:28px;align-items:center;gap:1px}
 .atlas-plot[data-compact-layout] .indicator-row .indicator-name{display:flex;flex-wrap:nowrap;align-items:baseline;min-width:0;padding:2px 4px;gap:4px;white-space:nowrap;overflow:hidden;background:transparent;box-shadow:none}

@@ -36,11 +36,12 @@ export function normalizeThemeDraft(input:ThemeDraft,evidence:ThemeEvidence[],as
 }
 export function themeStatus(j:ThemeJudgment){return axes.some(a=>j.criteria[a].state==='fail')?'fail':axes.every(a=>j.criteria[a].state==='pass')?'pass':'hold';}
 const dayAfter=(s:string,n=1)=>new Date(Date.parse(s.slice(0,10)+'T00:00:00Z')+n*86400000).toISOString().slice(0,10);
-export function themePerformance(snapshot:ThemeSnapshot,judgment:ThemeJudgment){
-  validateThemeJudgment(judgment,snapshot);
-  const bars=new Map(snapshot.asset.bars.map(b=>[b[0],b])),benchmark=new Map(snapshot.benchmark.bars.map(b=>[b[0],b]));
+function indexThemePrices(snapshot:ThemeSnapshot){
+  return {bars:new Map(snapshot.asset.bars.map(b=>[b[0],b])),benchmark:new Map(snapshot.benchmark.bars.map(b=>[b[0],b])),last:snapshot.asset.bars.at(-1)![0]};
+}
+function performanceWithPrices(judgment:ThemeJudgment,{bars,benchmark,last}:ReturnType<typeof indexThemePrices>){
   // Entry uses the close of the next UTC day, whose entire bar follows the decision.
-  const entryDate=dayAfter(judgment.asOf),entry=bars.get(entryDate),last=snapshot.asset.bars.at(-1)![0];
+  const entryDate=dayAfter(judgment.asOf),entry=bars.get(entryDate);
   return [1,5,20].map(horizon=>{
     const exitDate=dayAfter(entryDate,horizon),exit=bars.get(exitDate),path=Array.from({length:horizon},(_,i)=>bars.get(dayAfter(entryDate,i+1)));
     const status=exitDate>last?'pending':!entry||!exit||path.some(b=>!b)?'unavailable':'observed';
@@ -50,10 +51,20 @@ export function themePerformance(snapshot:ThemeSnapshot,judgment:ThemeJudgment){
     return {horizon,status,entryDate,exitDate,entry:entry![4],exit:exit![4],change,benchmarkChange,excess:benchmarkChange===null?null:change-benchmarkChange,adverse:Math.min(0,...path.map(b=>100*(b![3]/entry![4]-1))),favorable:Math.max(0,...path.map(b=>100*(b![2]/entry![4]-1)))};
   });
 }
+export function themePerformance(snapshot:ThemeSnapshot,judgment:ThemeJudgment){
+  validateThemeJudgment(judgment,snapshot);
+  return performanceWithPrices(judgment,indexThemePrices(snapshot));
+}
 export function themeComparison(snapshot:ThemeSnapshot,judgments:ThemeJudgment[]){
-  return (['recorded','reconstructed'] as const).flatMap(mode=>(['pass','hold','fail'] as const).flatMap(status=>[1,5,20].map(horizon=>{
-    const records=judgments.filter(j=>j.mode===mode&&themeStatus(j)===status),results=records.map(j=>themePerformance(snapshot,j).find(p=>p.horizon===horizon)!);
+  // Keep indexes local to this call: a refreshed or mutated snapshot must never reuse stale prices.
+  let prices:ReturnType<typeof indexThemePrices>|undefined;
+  return (['recorded','reconstructed'] as const).flatMap(mode=>(['pass','hold','fail'] as const).flatMap(status=>{
+    const records=judgments.filter(j=>j.mode===mode&&themeStatus(j)===status);
+    const performance=records.map(j=>{validateThemeJudgment(j,snapshot);prices??=indexThemePrices(snapshot);return performanceWithPrices(j,prices);});
+    return [1,5,20].map((horizon,index)=>{
+    const results=performance.map(p=>p[index]!);
     const completed=results.filter(p=>p.status==='observed'),returns=completed.map(p=>p.change!),excess=completed.flatMap(p=>p.excess===null?[]:[p.excess]);
     return {mode,status,horizon,records:records.length,n:completed.length,pending:results.filter(p=>p.status==='pending').length,unavailable:results.filter(p=>p.status==='unavailable').length,up:returns.filter(v=>v>0).length,down:returns.filter(v=>v<0).length,flat:returns.filter(v=>v===0).length,mean:returns.length?returns.reduce((s,v)=>s+v,0)/returns.length:null,excessN:excess.length,meanExcess:excess.length?excess.reduce((s,v)=>s+v,0)/excess.length:null};
-  })));
+    });
+  }));
 }

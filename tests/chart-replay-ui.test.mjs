@@ -26,9 +26,10 @@ const archive=(name,{missing=[],length=185}={})=>({observations:Array.from({leng
   observedThrough:dateAt(length-1),observedAt:dateAt(length)+'T00:00:00Z',source:{provider:name,sourceHash:name,ohlcAvailable:true}});
 
 async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('current'),loadRecord,stored=null,storedText=null,buildSession,
-  getAtlasContext=null,getChartState=null,resolveAtlasRange=null,loadBaseline,random=()=>.5,storageFailure=false,rendererAxis=null,rendererBarDateAt=null}={}){
+  getAtlasContext=null,getChartState=null,resolveAtlasRange=null,loadBaseline,random=()=>.5,storageFailure=false,rendererAxis=null,rendererBarDateAt=null,
+  initialMode='atlas-chart',additionalStored={}}={}){
   const storageKey='atlas-chart-replay-v1:'+symbol;
-  const controls=new Map(),saved=new Map(storedText!==null?[[storageKey,storedText]]:stored?[[storageKey,JSON.stringify(stored)]]:[]),timers=new Map(),frames=new Map();
+  const controls=new Map(),saved=new Map([...Object.entries(additionalStored),...(storedText!==null?[[storageKey,storedText]]:stored?[[storageKey,JSON.stringify(stored)]]:[])]),timers=new Map(),frames=new Map();
   const builds=[],factories=[],draws=[],controllers=[],atlasContexts=[],chartCalls=[],displayCalls=[],frameEvents=[],writes=[],capabilityCalls=[];
   let doc,timerId=0,rafId=0,restores=0,clock=0,pointerDate=dateAt(180);
   class Element{
@@ -118,9 +119,10 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
   };
   const view=new vm.SourceTextModule(source,{context,identifier:sourceUrl.href,importModuleDynamically:specifier=>{assert.ok(imports[specifier],specifier);return imports[specifier];}});
   await view.link(specifier=>{if(specifier==='./loading-surfaces.js')return imports[specifier];if(specifier==='./chart-replay-snapshot.js?v='+releaseVersion)return snapshotModule;assert.equal(specifier,'./chart-replay-state.js?v='+releaseVersion);return state;});await view.evaluate();
-  const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol,initialMode:'atlas-chart',getAtlasContext,getChartState,resolveAtlasRange,
+  const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol,initialMode,getAtlasContext,getChartState,resolveAtlasRange,
     getChartRenderer:()=>({getPriceScale:()=>axis}),onAtlasFrame:detail=>frameEvents.push(detail),
     loadAtlasRenderer:()=>imports['./chart-replay-atlas.js'].namespace,
+    loadCutoffModel:async()=>({firstCutoffBacktestStart:()=>dateAt(181)}),
     loadRetrospectiveModel:()=>({createReplayRetrospectiveForecast(){throw new Error('The coordinator fixture must use its session factory');},restoreReplayRetrospectiveForecast(){throw new Error('The coordinator fixture must use its session factory');}}),
     restore:()=>{restores++;}});
   const trigger=toolbar.children.find(node=>node.id==='workbench-replay');
@@ -156,6 +158,108 @@ function savedFixture(extra={}){
 const keyEvent=(h,key,extra={})=>{const event={type:'keydown',key,target:h.svg,preventDefault(){this.prevented=true;},stopImmediatePropagation(){this.stopped=true;this.immediatePropagationStopped=true;},...extra};h.doc.dispatchEvent(event);return event;};
 
 const interactionCases=[
+  {name:'default cutoff entry preserves current-chart save and Continue across mode changes',async run(source){
+    const h=await harness(source,{...atlasFixture().options,initialMode:'cutoff-backtest'});
+    h.trigger.click();await flush();assert.equal(h.controls.get('mode').value,'cutoff-backtest');
+    assert.equal(h.controllers[0].getState().status,'selecting');
+    h.controls.get('mode').value='atlas-chart';h.controls.get('mode').onchange();await flush();await h.start(dateAt(183));
+    const original=h.controllers[0].getState().session;
+    h.controls.get('exit').click();h.controls.get('exit-confirm').click();await flush();
+    assert.equal(h.mounted.isActive(),false);const saved=h.savedText();assert.ok(saved);
+    h.trigger.click();await flush();
+    assert.equal(h.controls.get('entry-dialog').hidden,false,'the last selected current-chart mode must find its own saved slot');
+    assert.equal(h.controls.get('mode').value,'atlas-chart');h.controls.get('entry-continue').click();await flush();
+    assert.equal(h.controllers[0].getState().status,'paused');assert.equal(h.controllers[0].getState().session.identity.outputHash,original.identity.outputHash);
+    assert.equal(h.savedText(),saved);h.mounted.destroy();
+  }},
+  {name:'saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories',async run(source){
+    const options={...atlasFixture().options,initialMode:'cutoff-backtest'},key='atlas-cutoff-backtest-v1:BTCUSD';
+    const generic=JSON.stringify(savedFixture()),cutoff=JSON.stringify(savedFixture({mode:'cutoff-backtest',outputHash:'d'.repeat(64),cutoffForecast:{kind:'fixture'}}));
+    const fallback=await harness(source,{...options,storedText:generic});fallback.trigger.click();await flush();
+    assert.equal(fallback.controls.get('entry-dialog').hidden,false);assert.equal(fallback.controls.get('mode').value,'atlas-chart');
+    fallback.controls.get('entry-continue').click();await flush();assert.equal(fallback.controllers[0].getState().status,'paused');
+    assert.equal(fallback.controllers[0].getState().session.identity.outputHash,FIXED_OUTPUT);assert.equal(fallback.savedText(),generic);fallback.mounted.destroy();
+    const both=await harness(source,{...options,storedText:generic,additionalStored:{[key]:cutoff}});both.trigger.click();await flush();
+    assert.equal(both.controls.get('entry-dialog').hidden,false);assert.equal(both.controls.get('mode').value,'cutoff-backtest','the fresh preferred slot takes precedence when both exist');
+    both.controls.get('entry-new').click();await flush();both.controls.get('mode').value='atlas-chart';both.controls.get('mode').onchange();await flush();
+    both.controls.get('exit').click();both.controls.get('exit-confirm').click();await flush();both.trigger.click();await flush();
+    assert.equal(both.controls.get('entry-dialog').hidden,false);assert.equal(both.controls.get('mode').value,'atlas-chart');
+    both.controls.get('entry-continue').click();await flush();assert.equal(both.controllers[0].getState().status,'paused');
+    assert.equal(both.controllers[0].getState().session.identity.outputHash,FIXED_OUTPUT,'a cutoff slot hash cannot be applied to the current-chart capture');
+    assert.equal(both.win.localStorage.getItem(key),cutoff);assert.equal(both.savedText(),generic);both.mounted.destroy();
+    for(const malformed of ['{broken',generic]){
+      const h=await harness(source,{...options,storedText:generic,additionalStored:{[key]:malformed}});h.trigger.click();await flush();
+      assert.equal(h.controls.get('mode').value,'cutoff-backtest');assert.equal(h.controls.get('entry-dialog').hidden,false);
+      assert.equal(h.controls.get('entry-continue').disabled,true,'invalid or cross-mode records must not borrow another slot');
+      assert.equal(h.win.localStorage.getItem(key),malformed);assert.equal(h.savedText(),generic);assert.equal(h.writes.length,0);h.mounted.destroy();
+    }
+    const stale=await harness(source,{...options,stored:savedFixture({outputHash:'e'.repeat(64)})});const before=stale.savedText();
+    stale.trigger.click();await flush();stale.controls.get('entry-continue').click();await flush();
+    assert.equal(stale.controllers[0].getState().status,'error');assert.match(stale.controllers[0].getState().error,/저장된 예측/);
+    assert.equal(stale.savedText(),before);assert.equal(stale.writes.length,0);stale.mounted.destroy();
+  }},
+  {name:'destroy during an explicit save releases replay once and ignores late completion',async run(source){
+    for(const completion of ['resolve','reject']){
+      const raw=JSON.stringify(savedFixture(),null,2)+'\n',h=await harness(source,{...atlasFixture().options,storedText:raw});
+      h.trigger.click();h.controls.get('entry-continue').click();await flush();await h.start(dateAt(183));
+      const owner=h.controllers[0].getState().session,entered=deferred(),gate=deferred(),finished=deferred();
+      h.win.navigator.locks.request=async(name,_options,work)=>{
+        entered.resolve();
+        try{await gate.promise;return await work({name});}finally{finished.resolve();}
+      };
+      try{
+        h.controls.get('exit').click();h.controls.get('exit-confirm').click();await entered.promise;
+        assert.equal(h.mounted.isActive(),true);assert.equal(h.liveControl.inert,true);assert.equal(h.controls.get('exit-confirm').disabled,true);
+        await h.mounted.exit();
+        assert.equal(h.mounted.isActive(),true,'interactive exit must not race a pending explicit save');
+        assert.equal(h.controllers[0].getState().session,owner);assert.equal(h.restores(),0);
+        h.mounted.destroy();
+        assert.equal(h.mounted.isActive(),false,'destroy must release replay even while an explicit save is pending');
+        assert.equal(h.controllers[0].getState().status,'idle');assert.equal(h.timers.size,0);
+        assert.equal(h.liveControl.inert,false);assert.equal(h.doc.documentElement.dataset.chartReplayActive,undefined);
+        assert.equal(h.doc.documentElement.dataset.chartReplayMode,undefined);assert.equal(h.svg.dataset.chartReplayActive,undefined);
+        assert.equal(h.plot.dataset.chartReplayMode,undefined);assert.equal(h.svg.dataset.replayOrigin,undefined);
+        assert.equal(h.svg.dataset.replayCursor,undefined);assert.equal(h.restores(),1);
+        assert.equal(h.trigger.parentElement,null);assert.equal(h.plot.children.some(node=>node.className==='chart-replay-controls'),false);
+        const detached={text:h.controls.get('save-status').textContent,hidden:h.controls.get('save-status').hidden,
+          disabled:['exit-confirm','exit-cancel','exit-save'].map(key=>h.controls.get(key).disabled)};
+        h.mounted.destroy();await h.mounted.exit();await h.mounted.open();
+        assert.equal(h.restores(),1);assert.equal(h.mounted.isActive(),false);
+        if(completion==='resolve')gate.resolve();else gate.reject(new Error('late save lock failure'));
+        await finished.promise;await flush();
+        assert.equal(h.writes.length,0,'a destroyed replay must not publish its pending save');assert.equal(h.savedText(),raw);
+        assert.equal(h.restores(),1);assert.equal(h.mounted.isActive(),false);assert.equal(h.liveControl.inert,false);
+        assert.equal(h.doc.documentElement.dataset.chartReplayActive,undefined);assert.equal(h.controllers[0].getState().status,'idle');
+        assert.deepEqual({text:h.controls.get('save-status').textContent,hidden:h.controls.get('save-status').hidden,
+          disabled:['exit-confirm','exit-cancel','exit-save'].map(key=>h.controls.get(key).disabled)},detached,
+          'destroyed save completion cannot update detached controls');
+      }finally{gate.resolve();await finished.promise;await flush();h.mounted.destroy();}
+    }
+  }},
+  {name:'forecast settings cannot confirm an unselected replay start',async run(source){
+    const fixture=atlasFixture(),h=await harness(source,fixture.options);
+    h.trigger.click();await flush();
+    const assertUnconfirmed=()=>{
+      assert.equal(h.controllers[0].getState().status,'selecting','changing forecast settings must preserve the explicit start boundary');
+      assert.equal(h.controllers[0].getState().session,null);
+      assert.equal(h.svg.dataset.replayCursor,undefined);assert.equal(h.svg.dataset.replayOrigin,undefined);
+      for(const key of ['play','next','live'])assert.equal(h.controls.get(key).disabled,true,key+' requires a confirmed start');
+      assert.equal(h.writes.length,0);
+    };
+    assertUnconfirmed();
+    for(const [key,value]of [['mode','project-baseline'],['mode','atlas-chart'],['horizon','90'],['horizon','365']]){
+      h.controls.get(key).value=value;h.controls.get(key).onchange();await flush();assertUnconfirmed();
+    }
+    await h.start(dateAt(183));
+    assert.equal(h.controllers[0].getState().status,'paused');assert.equal(h.svg.dataset.replayOrigin,dateAt(182));
+    assert.equal(h.svg.dataset.replayStartDate,dateAt(183));
+    const fixed=h.controllers[0].getState().session.forecast;
+    h.controls.get('play').click();h.tick();h.controls.get('play').click();
+    assert.equal(h.controllers[0].getState().session.forecast,fixed,'explicitly confirmed sessions retain their fixed forecast through playback');
+    h.controls.get('horizon').value='90';h.controls.get('horizon').onchange();await flush();
+    assert.equal(h.controllers[0].getState().status,'paused','a confirmed session remains confirmed when settings change');
+    assert.equal(h.svg.dataset.replayStartDate,dateAt(183));h.mounted.destroy();
+  }},
   {name:'first weekly replay entry waits for an explicit start while keeping the project default date',async run(source){
     const fixture=atlasFixture({frequency:'weekly'}),h=await harness(source,fixture.options);
     h.trigger.click();await flush();
@@ -708,7 +812,52 @@ export async function verifyChartReplayUi(){
     scope:'Actual coordinator and lifecycle controller with deterministic DOM, loader, forecast and renderer doubles; not native browser verification'};
 }
 
-if(process.argv.includes('--replay-ui-extra'))console.log(JSON.stringify(await verifyInteractionCase(Number(process.argv[process.argv.indexOf('--replay-ui-extra')+1]))));
+async function exploreSelectionBoundary(){
+  const source=await readFile(sourceUrl,'utf8'),actions=['mode:atlas-chart','mode:project-baseline','horizon:90','horizon:365','confirm','pick'];
+  const states=new Set(),edges=new Set();let traces=0,transitions=0;
+  const key=h=>{const s=h.controllers[0].getState();return JSON.stringify({status:s.status,mode:h.controls.get('mode').value,
+    horizon:h.controls.get('horizon').value,origin:h.svg.dataset.replayOrigin??null,cursor:h.svg.dataset.replayCursor??null,
+    output:s.session?.identity.outputHash??null,playDisabled:h.controls.get('play').disabled});};
+  // Enumerate in increasing length to retain the shortest violating action
+  // sequence in this alphabet. Recreate the real coordinator for every trace;
+  // observable state counts are not used to merge private implementation state.
+  for(let length=0;length<=3;length++)for(let encoded=0;encoded<actions.length**length;encoded++){
+    const h=await harness(source,atlasFixture().options),trace=['open selection'];let unconfirmed=true,code=encoded;
+    try{
+      h.trigger.click();await flush();states.add(key(h));traces++;
+      for(let depth=0;depth<length;depth++){
+        const action=actions[code%actions.length];code=Math.floor(code/actions.length);trace.push(action);
+        const from=key(h);
+        if(action==='confirm'){await h.start(dateAt(183));unconfirmed=false;}
+        else if(action==='pick'){h.controls.get('pick').click();unconfirmed=true;}
+        else{
+          const [control,value]=action.split(':');h.controls.get(control).value=value;h.controls.get(control).onchange();await flush();
+          if(unconfirmed){
+            const state=h.controllers[0].getState();
+            assert.equal(state.status,'selecting','settings-preserve-unconfirmed-start');
+            assert.equal(state.session,null,'settings-preserve-unconfirmed-start');
+            assert.equal(h.svg.dataset.replayOrigin,undefined,'settings-preserve-unconfirmed-start');
+            assert.equal(h.svg.dataset.replayCursor,undefined,'settings-preserve-unconfirmed-start');
+          }
+        }
+        const to=key(h);states.add(to);edges.add(JSON.stringify([from,action,to]));transitions++;
+        assert.equal(h.writes.length,0,'selection-does-not-persist');
+      }
+    }catch(error){
+      if(error?.code!=='ERR_ASSERTION')throw error;
+      return {status:'fail',invariant:error.message.split('\n')[0],code:error.code,shortestCounterexample:trace,
+        traces,transitions,observableStates:states.size,observableEdges:edges.size,sourceSha256:createHash('sha256').update(source).digest('hex')};
+    }finally{h.mounted.destroy();}
+  }
+  return {status:'pass',commands:actions,maxTraceLength:3,traces,transitions,observableStates:states.size,observableEdges:edges.size,
+    sourceSha256:createHash('sha256').update(source).digest('hex'),
+    scope:'Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging'};
+}
+
+if(process.argv.includes('--replay-ui-explore')){
+  const result=await exploreSelectionBoundary();console.log(JSON.stringify(result));if(result.status!=='pass')process.exitCode=1;
+}
+else if(process.argv.includes('--replay-ui-extra'))console.log(JSON.stringify(await verifyInteractionCase(Number(process.argv[process.argv.indexOf('--replay-ui-extra')+1]))));
 else if(process.argv.includes('--replay-ui-child'))console.log(JSON.stringify(await verifyChartReplayUi()));
 else{
   test('main replay coordinator guards source identity, exact resume, input boundaries and explicit model comparison',async t=>{

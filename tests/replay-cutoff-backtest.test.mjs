@@ -1,14 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
-import {parseBitcoinReplayCandles} from '../dist/chart-replay-sources.js';
+import {frozenReplayArchive} from './helpers/frozen-replay-fixture.mjs';
 import * as cutoffModel from '../dist/replay-cutoff-forecast.js';
 import {createCutoffBacktestForecast,restoreCutoffBacktestForecast,firstCutoffBacktestStart} from '../dist/replay-cutoff-forecast.js';
 import {createCutoffBacktestReplaySession,buildReplayFrame,buildReplayChartData} from '../dist/forecast-replay.js';
 import {createAtlasReplayContext} from '../dist/chart-replay-atlas.js';
 import {forecastHash} from '../dist/forecast-records.js';
-const archive=await parseBitcoinReplayCandles(await readFile(new URL('../dist/data/btc-volume.json',import.meta.url),'utf8'),{now:Date.parse('2026-11-04T00:00:00Z')});
+const archive=await frozenReplayArchive();
 const asOf='2026-07-09',evaluatedAt='2026-11-04T00:00:00Z',horizonDays=180;
 const opts={...archive,cutoffModel,asOf,playbackStartDate:'2026-07-10',horizonDays,evaluatedAt,modelOptions:{scenario:'base',seed:20261022,sampleCount:64,blockDays:28}};
 const session=await createCutoffBacktestReplaySession(opts),record=session.cutoffForecast;

@@ -1,8 +1,9 @@
 import {atlasSitePath,isAtlasStatic} from '../../../dist/site-paths.js';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { validateSnapshot } from '@atlas/domain/market-lab';
-import type { MarketSnapshot, Region } from '@atlas/contracts/market-lab';
+import type { Region } from '@atlas/contracts/market-lab';
 import { loadSnapshot, type Delivery } from './load-snapshot.js';
+import { initialSnapshotState, snapshotNotice, snapshotReducer } from './snapshot-state.js';
 import { errorText } from './components/common.js';
 import { LoadingSkeleton } from './components/loading-skeleton.js';
 import { SourceDisclosure } from './components/source-disclosure.js';
@@ -23,7 +24,6 @@ import {collectionMatchesSnapshot} from './us-collection.js';
 const tabs = [['diagnosis', '시장 진단'], ['scenario', '조건 실험'], ['ai', '현금흐름'], ['rsi', '삼플레·RSI'],['housing','부동산'],['themes','테마·재료']] as const;
 type Tab = typeof tabs[number][0];
 type Navigation = { tab: Tab; region: Region };
-type LoadState = { phase: 'loading' | 'loaded' | 'empty' | 'error'; doc: MarketSnapshot | null; error: string };
 const systemClock = () => new Date();
 const selectedRsiSymbol = () => rsiInstrument(new URLSearchParams(globalThis.location?.search).get('symbol'))?.symbol || 'TQQQ';
 function initialNavigation(): Navigation {
@@ -33,9 +33,9 @@ function initialNavigation(): Navigation {
 
 export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedded = false }: { load?: typeof loadSnapshot; clock?: () => Date; embedded?:boolean }) {
   const [navigation, setNavigation] = useState(initialNavigation);
-  const [delivery, setDelivery] = useState<Delivery | null>(null);
   const [attempt, setAttempt] = useState(0);
-  const [data, setData] = useState<LoadState>({ phase: 'loading', doc: null, error: '' });
+  const [data, dispatchData] = useReducer(snapshotReducer, initialSnapshotState);
+  const delivery = data.delivery, notice = snapshotNotice(data);
   const [marketId, setMarketId] = useState<string | null>(null);
   const [priceIndex, setPriceIndex] = useState<number | null>(null);
   const [scenario, setScenario] = useState(initialScenario);
@@ -69,20 +69,16 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
   useEffect(() => {
     const abort = new AbortController();
     let active = true;
-    setData(previous => ({ ...previous, phase: 'loading', error: '' }));
+    dispatchData({ type: 'loading' });
     void (async () => {
       try {
         let received: Delivery|null=null;
         const doc = validateSnapshot(await load({ signal: abort.signal, onDelivery: value => { received=value; } }));
-        const populated = doc.markets.some(market => market.prices.length)
-          || Object.values(doc.regions).some(region => Object.values(region.axes).some(axis => axis.values.length));
         if (active) {
-          const latestDelivery=received as Delivery|null;
-          setDelivery(latestDelivery);
-          setData(previous=>({phase:populated?'loaded':'empty',doc:latestDelivery?.kind==='saved'&&previous.doc&&Date.parse(previous.doc.generatedAt)>Date.parse(doc.generatedAt)?previous.doc:doc,error:''}));
+          dispatchData({ type: 'received', doc, delivery: received });
         }
       } catch (error) {
-        if (active) setData(previous=>({ ...previous, phase: 'error', error: errorText(error) }));
+        if (active) dispatchData({ type: 'failed', error: errorText(error) });
       } finally {
         if (active) document.documentElement.dataset.labReady = 'ready';
       }
@@ -90,7 +86,7 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
     return () => { active = false; abort.abort(); };
   }, [attempt, load]);
 
-  function retry() { setDelivery(null); setAttempt(value => value + 1); }
+  function retry() { setAttempt(value => value + 1); }
   const page = atlasPages.find(page => page.tab === navigation.tab && (navigation.tab !== 'diagnosis' || page.region === navigation.region))!;
   useEffect(() => {
     document.title = `${page.title} · Cycle Atlas`;
@@ -137,14 +133,14 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
   return <>
     {!embedded && <DashboardChrome title={page.title} currentPage={page.id} onNavigate={navigatePage} />}
     <main data-loading-kind={data.phase==='loading'&&!data.doc&&!independent?navigation.tab:undefined} className={embedded?'atlas-embedded-workspace':'workspace atlas-service-workspace'}><h1 className="atlas-sr-only">{page.title}</h1>
-      {!independent&&delivery?.kind === 'saved' && <div className="ml-delivery" role="status"><span>{delivery.reason==='static-hosting'?'저장 자료':'연결 실패 · 저장본 표시'}</span><button type="button" onClick={retry}>{delivery.reason==='static-hosting'?'다시 읽기':'다시 연결'}</button></div>}
+      {!independent&&notice && <div className="ml-delivery" role="status"><span>{notice.text}</span><button type="button" onClick={retry}>{notice.retry}</button></div>}
       <section id="market-view" className="market-lab" aria-label={page.title} aria-busy={!independent&&data.phase === 'loading'}>
         <div className="ml-scroll">
           {!independent&&data.phase === 'loading' && <div className="atlas-inline-loading" role="status"><span className="atlas-loading-label">자료를 읽고 있습니다.</span><i skullet-bar="" /></div>}
           {!independent&&data.phase === 'error' && <div className="ml-status" aria-live="polite">자료 오류 · {data.error} <button type="button" data-action="retry" onClick={retry}>데이터 다시 읽기</button></div>}
           {!independent&&data.phase === 'empty' && <div className="ml-status" aria-live="polite">스냅샷은 읽었지만 관측 자료가 없습니다. 없는 지표는 판단을 유보합니다.</div>}
           <section id="ml-panel" role="region" aria-label={page.title} tabIndex={0}>
-            {navigation.tab === 'diagnosis' && (data.phase==='loading'&&!data.doc?<LoadingSkeleton kind="diagnosis" label="시장 자료 로딩"/>:<DiagnosisPanel snapshot={data.doc} region={navigation.region} now={now} marketId={marketId} priceIndex={priceIndex} collection={collection.data} collectionError={collection.error} saved={data.phase==='error'||delivery?.kind==='saved'} onRefresh={retry}
+            {navigation.tab === 'diagnosis' && (data.phase==='loading'&&!data.doc?<LoadingSkeleton kind="diagnosis" label="시장 자료 로딩"/>:<DiagnosisPanel snapshot={data.doc} region={navigation.region} now={now} marketId={marketId} priceIndex={priceIndex} collection={collection.data} collectionError={collection.error} saved={data.phase==='error'||delivery?.kind==='saved'||data.retainedPrevious} onRefresh={retry}
               onMarket={market => { setMarketId(market); setPriceIndex(null); }} onDate={setPriceIndex} />)}
             {navigation.tab === 'scenario' && <ScenarioPanel state={scenario} onChange={setScenario} />}
             {navigation.tab === 'ai' && <EconomicsPanel state={economics} onChange={setEconomics} />}

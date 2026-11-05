@@ -28,6 +28,15 @@
 
 /* The direct evidence route does not mount the chart workspace's mobile chrome. */
 .evidence-mobile-heading{display:none}
+/* The dashboard owns the heading, so only filters, table and pager occupy rows. */
+body[data-shell=dashboard] #evidence-view{grid-template-rows:auto minmax(0,1fr) auto}
+@media(max-width:640px){
+  body[data-shell=dashboard] #evidence-view .evidence-controls{flex-wrap:nowrap;gap:8px;margin-bottom:4px;padding:4px;overflow-y:hidden}
+  body[data-shell=dashboard] #evidence-view .evidence-controls>*{flex:none}
+  body[data-shell=dashboard] #evidence-view .evidence-controls :is(input,select,button){scroll-margin-inline:4px}
+  body[data-shell=dashboard] #evidence-view .evidence-search{flex:1 0 156px;min-width:156px}
+  body[data-shell=dashboard] #evidence-view .evidence-search input{width:100%}
+}
 @media(max-width:620px){
   #evidence-view{grid-template-rows:auto auto minmax(0,1fr) auto}
   .evidence-controls{align-content:flex-start;align-items:center}

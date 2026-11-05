@@ -121,7 +121,8 @@ test('mismatched forecast values and origins fail instead of scoring a different
   assert.throws(()=>draw(svg,{session:{asOf:'2026-10-19'}}),/different forecast origin/);
   const changed=structuredClone(current);changed.path[0].price+=1;
   assert.throws(()=>createAtlasReplayContext({dataset,forecast:changed,originDate}),/exact origin/);
-  assert.throws(()=>createAtlasReplayContext({dataset,forecast:current,originDate:'2026-11-01'}),/cannot follow/);
+  const afterForecastOrigin=new Date(Date.parse(current.asOf+'T00:00:00Z')+86400000).toISOString().slice(0,10);
+  assert.throws(()=>createAtlasReplayContext({dataset,forecast:current,originDate:afterForecastOrigin}),/cannot follow/);
 });
 
 test('the original publication path remains a separately supported context with its original origin',()=>{

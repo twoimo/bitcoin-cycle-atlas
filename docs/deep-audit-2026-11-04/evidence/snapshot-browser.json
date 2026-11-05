@@ -1,0 +1,21 @@
+{
+  "kind": "native-snapshot-provenance",
+  "status": "passed",
+  "startedAt": "2026-11-04T07:09:23.334Z",
+  "syntheticResponses": true,
+  "revision": "a855c157ff696ff609798b791ebbca26fa659b7174b56d53a90d7d3f75f2bcc5",
+  "checks": [
+    "older empty fallback retains populated API observations and accurate notice",
+    "real RSI request retains the revision of its displayed API observations",
+    "pending and failed retries retain the accepted revision and available backtest action"
+  ],
+  "runtimeErrors": [],
+  "sourceHashes": {
+    "apps/web/src/app.tsx": "740ba2905caed0c04b2f3e841698f5439e47bd68a701e6656fbd0f7dd9c276e4",
+    "apps/web/src/snapshot-state.ts": "2ebe3fbffaa6b449ecfb327a769f9afcb7cc0f179e05e366be2beb46a7f60ee0",
+    "scripts/verify-snapshot-browser.mjs": "cbb05b9b83cbfbc995bb0130dc9938c2915ff12e741b66c73fa3dfa01d48b8d3",
+    "build/web/assets/index-DA-MnXHe.js": "42b754d8c471c0302490be8d52fc76e32f817009e96ed7c1fce32004079b4dc0"
+  },
+  "browserVersion": "143.0.7499.0",
+  "finishedAt": "2026-11-04T07:09:33.039Z"
+}

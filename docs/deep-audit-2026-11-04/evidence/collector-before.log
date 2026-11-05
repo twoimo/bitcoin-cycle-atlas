@@ -1,0 +1,71 @@
+✖ collector cancellation at snapshot-read preserves the last accepted snapshot (309.186082ms)
+✖ collector cancellation at publication-lock preserves the last accepted snapshot (268.458472ms)
+✖ collector cancellation at acceptance-receipt preserves the last accepted snapshot (261.046875ms)
+✔ the same acquisition without cancellation reaches publication and its receipt (217.358111ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 1
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1475.24436
+
+✖ failing tests:
+
+test at tests/service/us-collection-cancellation.test.ts:1:2920
+✖ collector cancellation at snapshot-read preserves the last accepted snapshot (309.186082ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'published'
+  - 'failed'
+
+      at TestContext.<anonymous> (/workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/tests/service/us-collection-cancellation.test.ts:46:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'published',
+    expected: 'failed',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/service/us-collection-cancellation.test.ts:1:2920
+✖ collector cancellation at publication-lock preserves the last accepted snapshot (268.458472ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'published'
+  - 'failed'
+
+      at TestContext.<anonymous> (/workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/tests/service/us-collection-cancellation.test.ts:46:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'published',
+    expected: 'failed',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/service/us-collection-cancellation.test.ts:1:2920
+✖ collector cancellation at acceptance-receipt preserves the last accepted snapshot (261.046875ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'published'
+  - 'failed'
+
+      at TestContext.<anonymous> (/workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/tests/service/us-collection-cancellation.test.ts:46:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'published',
+    expected: 'failed',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

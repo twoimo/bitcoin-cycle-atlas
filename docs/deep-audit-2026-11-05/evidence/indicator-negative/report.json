@@ -1,0 +1,1071 @@
+{
+  "schemaVersion": 1,
+  "kind": "indicator-native-negative-controls",
+  "startedAt": "2026-11-05T08:12:33.802Z",
+  "sourceCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "nodeVersion": "v24.22.2",
+  "sourceHashes": {
+    "scripts/verify-workspace-browser.mjs": "9119a36ad0c960cc193247ba3f2caa6b2a251a2d8107f22b48a06214cc0ed19d",
+    "dist/indicator-workbench.js": "79dfbf2e43bfdea9e76278e1ec85d56df1f79a678da1df2edcc441876aa277ed",
+    "dist/indicator-state.js": "dc0da197cf7274d5068682631921dc065ecfbb1e8630bca815b2eeb4ddf3617e",
+    "dist/compact-chart-layout.css": "b429642986c9d73b930b49b48da7a710d8403965c4f50ee06263338c12c14f30",
+    "dist/chart-workspace-controls.css": "708e87841f3d01e806be0ec7dfe1a69caa39780b658291aeee68661ae02073f9",
+    "dist/atlas-shell.css": "9d8b1e1e0a3755585d375dde1eca2f76a08b689a2bf8e4e9e6446ee3b5500445",
+    "dist/mobile-workspace.css": "90a375739f01826b0a71c57789f50a09be6a6f944020194f6b70882f88578d3f",
+    "dist/styles.css": "18b0a9b2c245853a5a20f08a89c7eecc06073261f9166510d07e23db14740cf5",
+    "dist/index.html": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+    "dist/app.js": "ce9dbbdb6bf50a9b19208cfc8aa424f1395a95cd56d83afb7ab5370a87da4acd",
+    "dist/data/btc-daily.json": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf"
+  },
+  "probeSha256": "7052b628b7c1523a07dbaf80e9b72c3ec28db41a01644c4ba1469feeecdbc8e8",
+  "cases": [
+    {
+      "width": 320,
+      "height": 900,
+      "touch": true,
+      "positive": [
+        {
+          "id": "original",
+          "state": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": true,
+            "listHidden": true,
+            "expanded": "false",
+            "mobile": true,
+            "disabled": true,
+            "name": "모바일에서는 지표 이름·값 항상 접힘 · 인디케이터 메뉴에서 관리",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 8,
+            "right": 36,
+            "top": 157,
+            "bottom": 185,
+            "width": 28,
+            "height": 28,
+            "rowCount": 7,
+            "visibleLabels": []
+          }
+        },
+        {
+          "id": "collapsed",
+          "state": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": true,
+            "listHidden": true,
+            "expanded": "false",
+            "mobile": true,
+            "disabled": true,
+            "name": "모바일에서는 지표 이름·값 항상 접힘 · 인디케이터 메뉴에서 관리",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 8,
+            "right": 36,
+            "top": 157,
+            "bottom": 185,
+            "width": 28,
+            "height": 28,
+            "rowCount": 7,
+            "visibleLabels": []
+          }
+        },
+        {
+          "id": "colored-transparent-manager-and-list",
+          "state": {
+            "background": "rgba(255, 0, 0, 0)",
+            "listBackground": "rgba(255, 0, 0, 0)",
+            "collapsed": true,
+            "listHidden": true,
+            "expanded": "false",
+            "mobile": true,
+            "disabled": true,
+            "name": "모바일에서는 지표 이름·값 항상 접힘 · 인디케이터 메뉴에서 관리",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 8,
+            "right": 36,
+            "top": 157,
+            "bottom": 185,
+            "width": 28,
+            "height": 28,
+            "rowCount": 7,
+            "visibleLabels": []
+          }
+        },
+        {
+          "id": "restored-original",
+          "state": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": true,
+            "listHidden": true,
+            "expanded": "false",
+            "mobile": true,
+            "disabled": true,
+            "name": "모바일에서는 지표 이름·값 항상 접힘 · 인디케이터 메뉴에서 관리",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 8,
+            "right": 36,
+            "top": 157,
+            "bottom": 185,
+            "width": 28,
+            "height": 28,
+            "rowCount": 7,
+            "visibleLabels": []
+          }
+        }
+      ],
+      "negative": [
+        {
+          "id": "manager-opaque",
+          "measured": {
+            "background": "rgb(19, 25, 34)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": true,
+            "listHidden": true,
+            "expanded": "false",
+            "mobile": true,
+            "disabled": true,
+            "name": "모바일에서는 지표 이름·값 항상 접힘 · 인디케이터 메뉴에서 관리",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 8,
+            "right": 36,
+            "top": 157,
+            "bottom": 185,
+            "width": 28,
+            "height": 28,
+            "rowCount": 7,
+            "visibleLabels": []
+          },
+          "rejected": true,
+          "error": "Indicator manager must retain the requested transparent background: rgb(19, 25, 34)\n\n1 !== 0\n",
+          "restoredPass": true
+        },
+        {
+          "id": "collapsed-list-opaque",
+          "measured": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgb(19, 25, 34)",
+            "collapsed": true,
+            "listHidden": true,
+            "expanded": "false",
+            "mobile": true,
+            "disabled": true,
+            "name": "모바일에서는 지표 이름·값 항상 접힘 · 인디케이터 메뉴에서 관리",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 8,
+            "right": 36,
+            "top": 157,
+            "bottom": 185,
+            "width": 28,
+            "height": 28,
+            "rowCount": 7,
+            "visibleLabels": []
+          },
+          "rejected": true,
+          "error": "Indicator list must retain the requested transparent background: rgb(19, 25, 34)\n\n1 !== 0\n",
+          "restoredPass": true
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "indicator-320x900-original.png",
+          "bytes": 86117,
+          "sha256": "0ea703ab662700fb3bfc9494704877e4fbd30c918d2b5579420ec1f9070efd19"
+        },
+        {
+          "file": "indicator-320x900-manager-opaque.png",
+          "bytes": 86119,
+          "sha256": "5b9d3bfd8171fa98094a505f3246b0e993bd137bbdbbf67f53c2f2d1b59f3608"
+        },
+        {
+          "file": "indicator-320x900-collapsed-list-opaque.png",
+          "bytes": 86117,
+          "sha256": "0ea703ab662700fb3bfc9494704877e4fbd30c918d2b5579420ec1f9070efd19"
+        }
+      ],
+      "runtimeErrors": [],
+      "expandedLabelControl": "Not applicable: the real mobile legend is deliberately collapsed with disabled toggle and an indicator-menu label.",
+      "status": "passed"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "positive": [
+        {
+          "id": "original",
+          "state": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 54,
+            "right": 360,
+            "top": 146,
+            "bottom": 337,
+            "width": 306,
+            "height": 191,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 주요 지점",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 기간 비교",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 시계",
+                "color": "rgb(139, 160, 186)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "collapsed",
+          "state": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": true,
+            "listHidden": true,
+            "expanded": "false",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 펼치기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 54,
+            "right": 83,
+            "top": 146,
+            "bottom": 167,
+            "width": 29,
+            "height": 21,
+            "rowCount": 7,
+            "visibleLabels": []
+          }
+        },
+        {
+          "id": "expanded",
+          "state": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 54,
+            "right": 360,
+            "top": 146,
+            "bottom": 337,
+            "width": 306,
+            "height": 191,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 주요 지점",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 기간 비교",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 시계",
+                "color": "rgb(139, 160, 186)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "colored-transparent-manager-and-list",
+          "state": {
+            "background": "rgba(255, 0, 0, 0)",
+            "listBackground": "rgba(255, 0, 0, 0)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 54,
+            "right": 360,
+            "top": 146,
+            "bottom": 337,
+            "width": 306,
+            "height": 191,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 주요 지점",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 기간 비교",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 시계",
+                "color": "rgb(139, 160, 186)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "restored-original",
+          "state": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 54,
+            "right": 360,
+            "top": 146,
+            "bottom": 337,
+            "width": 306,
+            "height": 191,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 주요 지점",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 기간 비교",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 시계",
+                "color": "rgb(139, 160, 186)"
+              }
+            ]
+          }
+        }
+      ],
+      "negative": [
+        {
+          "id": "manager-opaque",
+          "measured": {
+            "background": "rgb(19, 25, 34)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 54,
+            "right": 360,
+            "top": 146,
+            "bottom": 337,
+            "width": 306,
+            "height": 191,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 주요 지점",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 기간 비교",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 시계",
+                "color": "rgb(139, 160, 186)"
+              }
+            ]
+          },
+          "rejected": true,
+          "error": "Indicator manager must retain the requested transparent background: rgb(19, 25, 34)\n\n1 !== 0\n",
+          "restoredPass": true
+        },
+        {
+          "id": "collapsed-list-opaque",
+          "measured": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgb(19, 25, 34)",
+            "collapsed": true,
+            "listHidden": true,
+            "expanded": "false",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 펼치기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 54,
+            "right": 83,
+            "top": 146,
+            "bottom": 167,
+            "width": 29,
+            "height": 21,
+            "rowCount": 7,
+            "visibleLabels": []
+          },
+          "rejected": true,
+          "error": "Indicator list must retain the requested transparent background: rgb(19, 25, 34)\n\n1 !== 0\n",
+          "restoredPass": true
+        },
+        {
+          "id": "expanded-list-opaque",
+          "measured": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgb(19, 25, 34)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 54,
+            "right": 360,
+            "top": 146,
+            "bottom": 337,
+            "width": 306,
+            "height": 191,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 주요 지점",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 기간 비교",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "사이클 시계",
+                "color": "rgb(139, 160, 186)"
+              }
+            ]
+          },
+          "rejected": true,
+          "error": "Indicator list must retain the requested transparent background: rgb(19, 25, 34)\n\n1 !== 0\n",
+          "restoredPass": true
+        },
+        {
+          "id": "expanded-label-colored-alpha-zero",
+          "measured": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 54,
+            "right": 360,
+            "top": 146,
+            "bottom": 337,
+            "width": 306,
+            "height": 191,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgba(255, 0, 0, 0)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgba(255, 0, 0, 0)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgba(255, 0, 0, 0)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgba(255, 0, 0, 0)"
+              },
+              {
+                "text": "사이클 주요 지점",
+                "color": "rgba(255, 0, 0, 0)"
+              },
+              {
+                "text": "사이클 기간 비교",
+                "color": "rgba(255, 0, 0, 0)"
+              },
+              {
+                "text": "사이클 시계",
+                "color": "rgba(255, 0, 0, 0)"
+              }
+            ]
+          },
+          "rejected": true,
+          "error": "Expanded indicator labels are missing",
+          "restoredPass": true
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "indicator-1440x900-original.png",
+          "bytes": 235568,
+          "sha256": "5b49d6e8adef2f3a9470a547b762bfa2f3acd3ffa0e56fa3f807f3bda0e4a08d"
+        },
+        {
+          "file": "indicator-1440x900-manager-opaque.png",
+          "bytes": 235199,
+          "sha256": "448fe0423779deb30c5246fe7c431952b1867f29b2e0c5f8184e72b0b7e25718"
+        },
+        {
+          "file": "indicator-1440x900-collapsed-list-opaque.png",
+          "bytes": 219052,
+          "sha256": "511c4f980b12c35ae9b7893cf50a857ec26035452e99c23fe625e9b80d5c256f"
+        },
+        {
+          "file": "indicator-1440x900-expanded.png",
+          "bytes": 236534,
+          "sha256": "5a5cff4b5f1483e99042300be1e976a316414363ad101dc81316936fd372ae29"
+        },
+        {
+          "file": "indicator-1440x900-expanded-list-opaque.png",
+          "bytes": 236268,
+          "sha256": "d31409b09b5ab30f7786326182b6da5140338055f3cd68ea86aeddfae160e487"
+        },
+        {
+          "file": "indicator-1440x900-expanded-label-colored-alpha-zero.png",
+          "bytes": 230101,
+          "sha256": "1b6f82596f4a6497b43604df58954880522404017798e5652c96cba77964d347"
+        }
+      ],
+      "runtimeErrors": [],
+      "status": "passed"
+    },
+    {
+      "width": 900,
+      "height": 430,
+      "touch": true,
+      "positive": [
+        {
+          "id": "original",
+          "state": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 52,
+            "right": 373,
+            "top": 146,
+            "bottom": 286,
+            "width": 321,
+            "height": 140,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgb(139, 160, 186)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "collapsed",
+          "state": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": true,
+            "listHidden": true,
+            "expanded": "false",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 펼치기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 52,
+            "right": 80,
+            "top": 146,
+            "bottom": 174,
+            "width": 28,
+            "height": 28,
+            "rowCount": 7,
+            "visibleLabels": []
+          }
+        },
+        {
+          "id": "expanded",
+          "state": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 52,
+            "right": 373,
+            "top": 146,
+            "bottom": 286,
+            "width": 321,
+            "height": 140,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgb(139, 160, 186)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "colored-transparent-manager-and-list",
+          "state": {
+            "background": "rgba(255, 0, 0, 0)",
+            "listBackground": "rgba(255, 0, 0, 0)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 52,
+            "right": 373,
+            "top": 146,
+            "bottom": 286,
+            "width": 321,
+            "height": 140,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgb(139, 160, 186)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "restored-original",
+          "state": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 52,
+            "right": 373,
+            "top": 146,
+            "bottom": 286,
+            "width": 321,
+            "height": 140,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgb(139, 160, 186)"
+              }
+            ]
+          }
+        }
+      ],
+      "negative": [
+        {
+          "id": "manager-opaque",
+          "measured": {
+            "background": "rgb(19, 25, 34)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 52,
+            "right": 373,
+            "top": 146,
+            "bottom": 286,
+            "width": 321,
+            "height": 140,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgb(139, 160, 186)"
+              }
+            ]
+          },
+          "rejected": true,
+          "error": "Indicator manager must retain the requested transparent background: rgb(19, 25, 34)\n\n1 !== 0\n",
+          "restoredPass": true
+        },
+        {
+          "id": "collapsed-list-opaque",
+          "measured": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgb(19, 25, 34)",
+            "collapsed": true,
+            "listHidden": true,
+            "expanded": "false",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 펼치기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 52,
+            "right": 80,
+            "top": 146,
+            "bottom": 174,
+            "width": 28,
+            "height": 28,
+            "rowCount": 7,
+            "visibleLabels": []
+          },
+          "rejected": true,
+          "error": "Indicator list must retain the requested transparent background: rgb(19, 25, 34)\n\n1 !== 0\n",
+          "restoredPass": true
+        },
+        {
+          "id": "expanded-list-opaque",
+          "measured": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgb(19, 25, 34)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 52,
+            "right": 373,
+            "top": 146,
+            "bottom": 286,
+            "width": 321,
+            "height": 140,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgb(139, 160, 186)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgb(139, 160, 186)"
+              }
+            ]
+          },
+          "rejected": true,
+          "error": "Indicator list must retain the requested transparent background: rgb(19, 25, 34)\n\n1 !== 0\n",
+          "restoredPass": true
+        },
+        {
+          "id": "expanded-label-colored-alpha-zero",
+          "measured": {
+            "background": "rgba(0, 0, 0, 0)",
+            "listBackground": "rgba(0, 0, 0, 0)",
+            "collapsed": false,
+            "listHidden": false,
+            "expanded": "true",
+            "mobile": false,
+            "disabled": false,
+            "name": "지표 이름·값 접기 · 7개",
+            "controls": "chart-indicator-list",
+            "listId": "chart-indicator-list",
+            "painted": true,
+            "left": 52,
+            "right": 373,
+            "top": 146,
+            "bottom": 286,
+            "width": 321,
+            "height": 140,
+            "rowCount": 7,
+            "visibleLabels": [
+              {
+                "text": "Vol",
+                "color": "rgba(255, 0, 0, 0)"
+              },
+              {
+                "text": "역사 사건",
+                "color": "rgba(255, 0, 0, 0)"
+              },
+              {
+                "text": "수요·채택 범위",
+                "color": "rgba(255, 0, 0, 0)"
+              },
+              {
+                "text": "고점·저점",
+                "color": "rgba(255, 0, 0, 0)"
+              }
+            ]
+          },
+          "rejected": true,
+          "error": "Expanded indicator labels are missing",
+          "restoredPass": true
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "indicator-900x430-original.png",
+          "bytes": 123739,
+          "sha256": "9501ce5dc85f7028a9e60a8b03f4c9a065495ea91d95d0507c1c19eb245953df"
+        },
+        {
+          "file": "indicator-900x430-manager-opaque.png",
+          "bytes": 104688,
+          "sha256": "de364959327cf14f9d694689ba797317552a2c74f93852806f5040ba5bbc1fa6"
+        },
+        {
+          "file": "indicator-900x430-collapsed-list-opaque.png",
+          "bytes": 117307,
+          "sha256": "7ff54acc534757a7461694626e4d131e9d9dfc5f060de53f508cb905b8b22d14"
+        },
+        {
+          "file": "indicator-900x430-expanded.png",
+          "bytes": 123763,
+          "sha256": "be23202b5688125b52092b285633fe0ffb665d27a6502c91d6e804066a3c36c3"
+        },
+        {
+          "file": "indicator-900x430-expanded-list-opaque.png",
+          "bytes": 104852,
+          "sha256": "6e1c5eec2ff338ab572934aebaa3983d385eab5872cadc431a8262ec8b065309"
+        },
+        {
+          "file": "indicator-900x430-expanded-label-colored-alpha-zero.png",
+          "bytes": 121592,
+          "sha256": "6629eb0d446bad07073574577b4636f1089f40ff7ce0a56f2c228f24b14de7ef"
+        }
+      ],
+      "runtimeErrors": [],
+      "status": "passed"
+    }
+  ],
+  "scope": "Actual local BTC chart and original exported indicator measurement/assertions in native Chromium. External requests blocked; no provider refresh, data mutation, forecast revision, deployment or predictive-validity claim.",
+  "browserVersion": "143.0.7499.0",
+  "sourcesUnchangedDuringRun": true,
+  "status": "passed",
+  "finishedAt": "2026-11-05T08:12:40.047Z"
+}

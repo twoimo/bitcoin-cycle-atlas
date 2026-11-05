@@ -1,0 +1,64 @@
+{
+  "kind": "reviewed-math-source-compatibility",
+  "createdAt": "2026-11-04T07:49:47.999Z",
+  "sourceHead": "c377760f7464c9b6ab274b5b93e97f1ec7d96825",
+  "runtime": "v24.22.2",
+  "originalMigrationSourceSha256": "04f76285edfd22996dc3bc922f98e9e5baeca70a4a137310b72c57370159176a",
+  "canonicalSha256": "fbf92300b64e3e5e320386c7ddacc9d533cff5d7447620b3d6a365d66cdc2579",
+  "publishedSha256": "fbf92300b64e3e5e320386c7ddacc9d533cff5d7447620b3d6a365d66cdc2579",
+  "originalCiFailure": {
+    "file": "tests/service/market-lab.test.ts",
+    "test": "canonical domain keeps original formulas with only explicit instrument identity expansion",
+    "expected": "04f76285edfd22996dc3bc922f98e9e5baeca70a4a137310b72c57370159176a",
+    "actual": "d2133723a605077bc23bec85df83b06c934093bb017b2b157405513b72482150",
+    "reason": "The legacy source identity allowed only instrument expansion and did not acknowledge the reviewed RSI boundary fixes."
+  },
+  "approvedExactOnceExceptions": [
+    "SOXL and KODEX exchange timezone identities",
+    "SOXL and KODEX valid instrument identities",
+    "Empty validated RSI series returns an empty result",
+    "Overflowing reciprocal is capped at the finite maximum",
+    "Overflowing delta rescales both Wilder averages using the current observation only"
+  ],
+  "normalizedOriginalSourceSha256": "04f76285edfd22996dc3bc922f98e9e5baeca70a4a137310b72c57370159176a",
+  "preservedRegression": [
+    "canonical source equals published source byte-for-byte",
+    "exact approved snippets must each occur once",
+    "all original Wilder seeding/recurrence/signal formulas and all other original source bytes retain their migration SHA-256"
+  ],
+  "verification": {
+    "canonicalServiceNamePattern": {
+      "passed": 1,
+      "failed": 0,
+      "postgresqlExercised": false,
+      "databaseUrl": "dummy source-check-only.invalid; database tests not selected"
+    },
+    "focusedMathRegressions": {
+      "passed": 32,
+      "failed": 0
+    },
+    "typescript": "PASS",
+    "diffCheck": "PASS",
+    "inMemoryNegativeControls": {
+      "ordinaryRecurrenceChange": {
+        "status": "REJECTED",
+        "mutation": "avgGain+=gain/period -> avgGain+=gain/(period+1)",
+        "failure": {
+          "expected": "04f76285edfd22996dc3bc922f98e9e5baeca70a4a137310b72c57370159176a",
+          "actual": "d580ba4068fd71efcf61385a9c3b0e68bddf7dacdaf3bdad7b2f057573a8d76a"
+        }
+      },
+      "removedApprovedGuard": {
+        "status": "REJECTED",
+        "failure": "Each approved source edit must occur exactly once\n\n0 !== 1\n"
+      },
+      "sourceFilesModified": false
+    }
+  },
+  "historicalMigrationReceiptsModified": false,
+  "productionFilesModified": false,
+  "limits": [
+    "This is the focused source/provenance and numeric regression check, not a local PostgreSQL service-suite run.",
+    "Finite range guards intentionally repair empty/subnormal/overflow inputs; they do not establish predictive accuracy or exact arithmetic over all real numbers."
+  ]
+}

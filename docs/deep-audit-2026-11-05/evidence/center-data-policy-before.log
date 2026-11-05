@@ -1,0 +1,6 @@
+✔ only the exact stale BTC archive request is eligible for a separately verified offline failure (2.983318ms)
+✖ center-data admits only the existing stale BTC request eligibility (0.847564ms)
+✔ center-data cannot excuse ETH, missing document identity or other network failures (0.258132ms)
+✔ different hosts, metrics, query keys, credentials and request methods stay failures (0.567379ms)
+✔ a fresh or malformed archive cannot justify an ignored resource failure (0.15552ms)
+✔ midnight uses the actual request day rather than a guessed fixed cutoff (0.270369ms)

@@ -1,0 +1,10 @@
+{
+  "sourceCommit": "94a1b1dda9eb359de70747043808340da369d087",
+  "originalPath": "dist/data/btc-volume.json",
+  "file": "btc-replay-2026-10-31.json",
+  "bytes": 874346,
+  "sha256": "09ac13fed80490c774b3c597f79882ae2b5ab3038cc968f182d163f49fa2a8b1",
+  "observedThrough": "2026-10-31",
+  "retrievedAt": "2026-11-01T22:02:21.330Z",
+  "evaluatedAt": "2026-11-04T00:00:00.000Z"
+}

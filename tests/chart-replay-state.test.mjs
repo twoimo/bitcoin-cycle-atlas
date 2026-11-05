@@ -234,13 +234,20 @@ test('display failure revokes loaders and timers; destroy remains terminal witho
   assert.deepEqual(h.controller.getState(),expected);assert.equal(h.states.length,count);
 });
 
-test('all 10000 four-command playback traces preserve cursor, identity and timer ownership',async()=>{
+test('all 10000 four-command playback traces preserve cursor, identity and timer ownership',async t=>{
   const actions=['play','pause','next','back','first','last','speed','tick','stale','exit'];
+  const states=new Set(),edges=new Set(),prefixes=new Set(['']);let transitions=0;
+  // Count an explicitly documented observable projection, without merging or
+  // pruning executions whose private timer generations may differ.
+  const key=h=>{const s=h.controller.getState();return JSON.stringify({status:s.status,cursor:s.cursorIndex,length:s.length,
+    speed:s.speed,generation:s.generation,output:s.session?.identity.outputHash??null,
+    timers:h.pending.size,queuedCallbacks:h.all.size});};
   for(let encoded=0;encoded<actions.length**4;encoded++){
     const h=harness();await h.load();let digits=encoded,trace=[];
+    states.add(key(h));
     for(let depth=0;depth<4;depth++){
       const action=actions[digits%actions.length];digits=Math.floor(digits/actions.length);trace.push(action);
-      const before=h.controller.getState();
+      const before=h.controller.getState(),from=key(h);
       if(action==='play'||action==='pause'||action==='exit')h.controller[action]();
       else if(action==='next'||action==='back')h.controller.step(action==='next'?1:-1);
       else if(action==='first'||action==='last')h.controller.seek(action==='first'?0:2);
@@ -248,6 +255,7 @@ test('all 10000 four-command playback traces preserve cursor, identity and timer
       else if(action==='tick')h.fire();
       else for(const key of h.all.keys())if(!h.pending.has(key))h.fire(key);
       const state=h.controller.getState(),label=trace.join(' → ');
+      const to=key(h);states.add(to);edges.add(JSON.stringify([from,action,to]));prefixes.add(trace.join(','));transitions++;
       if(action==='play')assert.equal(state.cursorIndex,before.cursorIndex,'Play cannot move the cursor: '+label);
       assert.equal(h.pending.size,state.status==='playing'?1:0,label);
       assert.ok(state.cursorIndex>=0&&state.cursorIndex<Math.max(1,state.length),label);
@@ -256,4 +264,6 @@ test('all 10000 four-command playback traces preserve cursor, identity and timer
     }
     h.controller.destroy();
   }
+  t.diagnostic('BOUNDED_REPLAY '+JSON.stringify({commands:actions.length,maxTraceLength:4,traces:actions.length**4,
+    prefixes:prefixes.size,transitions,observableStates:states.size,observableEdges:edges.size,playbackBars:3}));
 });

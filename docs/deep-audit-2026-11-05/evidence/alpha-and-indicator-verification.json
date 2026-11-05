@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "kind": "preview-alpha-and-indicator-native-verification",
+  "date": "2026-11-05",
+  "baseCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "binding": "These results identify the current dirty working tree by SHA-256. Historical22-control receipts retain their historical harness hashes; they do not claim equality with this later harness or final CI.",
+  "harnessSha256": "9119a36ad0c960cc193247ba3f2caa6b2a251a2d8107f22b48a06214cc0ed19d",
+  "provenance": {
+    "earlier22ControlIndex": {
+      "path": "docs/deep-audit-2026-11-05/evidence/preview-verification.json",
+      "sha256": "ba137dc2c56029b539e221cda3985d07a3dc5db2f25feea5b79308f382ef95f8",
+      "bytes": 35240
+    },
+    "unchanged22ControlProbe": {
+      "path": "docs/deep-audit-2026-11-05/evidence/verify-preview-native.mjs",
+      "sha256": "414de1e58f3af3cf8db49c8bb071e804f0e61b82b1526b953da1888684f97105",
+      "bytes": 9782
+    },
+    "new24ControlProbe": {
+      "path": "docs/deep-audit-2026-11-05/evidence/verify-preview-native-alpha.mjs",
+      "sha256": "02ea3fe8f2bc73383fc399e1bf944b0cc4d4d4d6766e004a6bede927e1d8d7e1",
+      "bytes": 10018
+    },
+    "indicatorProbe": {
+      "path": "docs/deep-audit-2026-11-05/evidence/verify-indicator-native.mjs",
+      "sha256": "7052b628b7c1523a07dbaf80e9b72c3ec28db41a01644c4ba1469feeecdbc8e8",
+      "bytes": 9040
+    },
+    "formalColoredAlphaCounterexample": {
+      "path": "docs/deep-audit-2026-11-05/evidence/preview-colored-alpha-before.json",
+      "sha256": "10e7ed57df166e17e37585ba8efac9d0919fea985170bc4a765cdfa1f8323317",
+      "bytes": 8626
+    }
+  },
+  "exactPreviewBoundaryChange": {
+    "beforeExpression": "const visiblePaint=paint.filter(item=>visible(item)&&item.background!=='rgba(0, 0, 0, 0)'&&item.background!=='transparent');",
+    "afterExpression": "const visiblePaint=paint.filter(item=>visible(item)&&computedColorAlpha(item.background)>0);",
+    "addedHelper": "function computedColorAlpha(color){\n  if(color==='transparent')return 0;\n  const rgb=color?.match(/^rgba?\\(\\s*[\\d.]+(?:\\s*,\\s*|\\s+)[\\d.]+(?:\\s*,\\s*|\\s+)[\\d.]+(?:\\s*(?:,|\\/)\\s*([\\d.]+))?\\s*\\)$/);\n  const alpha=rgb?Number(rgb[1]??1):NaN;\n  return Number.isFinite(alpha)&&alpha>=0&&alpha<=1?alpha:NaN;\n}",
+    "note": "This exact assertion-boundary change addresses colored alpha-zero paint. Other independently documented harness changes include native clipping ownership and indicator policy; historical whole-file hashes are retained as measured."
+  },
+  "preview": {
+    "report": {
+      "path": "docs/deep-audit-2026-11-05/evidence/preview-negative-alpha/report.json",
+      "sha256": "1cfa976a352bca6108a2ee2d9614d3a76b9437a6ab37e60de6a3bae1743e9156",
+      "bytes": 56625
+    },
+    "log": {
+      "path": "docs/deep-audit-2026-11-05/evidence/preview-negative-alpha.log",
+      "sha256": "8d5c26a155a0ed58c2a81474614b8f5b3899311cb6958ea13c1168bd1302ff2e",
+      "bytes": 2061
+    },
+    "browserVersion": "143.0.7499.0",
+    "nodeVersion": "v24.22.2",
+    "sourcesUnchangedDuringRun": true,
+    "negativeControlsRejected": 24,
+    "restoredStatesPassed": 24,
+    "originalStatesPassed": 6,
+    "cases": [
+      {
+        "width": 320,
+        "height": 900,
+        "coloredAlphaZeroRejected": true,
+        "runtimeErrors": []
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "coloredAlphaZeroRejected": true,
+        "runtimeErrors": []
+      }
+    ],
+    "screenshots": "Original and damaged screenshots are retained in preview-negative-alpha; every file is hashed in its report."
+  },
+  "indicator": {
+    "report": {
+      "path": "docs/deep-audit-2026-11-05/evidence/indicator-negative/report.json",
+      "sha256": "839416e8a803d766e72c4b9bb86cb2f7390a20ed9ac3413c382f5b7ab11d7180",
+      "bytes": 34791
+    },
+    "log": {
+      "path": "docs/deep-audit-2026-11-05/evidence/indicator-negative.log",
+      "sha256": "0a10a53f0ae972e655b735ab94e64ce8d96e7f4bbb3bcde356391be3d1baa1a8",
+      "bytes": 1043
+    },
+    "browserVersion": "143.0.7499.0",
+    "nodeVersion": "v24.22.2",
+    "sourcesUnchangedDuringRun": true,
+    "negativeControlsRejected": 10,
+    "restoredStatesPassed": 10,
+    "cases": [
+      {
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "originalCollapsed": true,
+        "originalToggleDisabled": true,
+        "originalBackground": "rgba(0, 0, 0, 0)",
+        "originalListBackground": "rgba(0, 0, 0, 0)",
+        "realRows": 7,
+        "originalBounds": {
+          "left": 8,
+          "right": 36,
+          "top": 157,
+          "bottom": 185,
+          "width": 28,
+          "height": 28
+        },
+        "expandedVisibleLabels": null,
+        "collapsedListOpaqueRejected": true,
+        "negativeControls": [
+          {
+            "id": "manager-opaque",
+            "rejected": true,
+            "restoredPass": true
+          },
+          {
+            "id": "collapsed-list-opaque",
+            "rejected": true,
+            "restoredPass": true
+          }
+        ],
+        "coloredTransparentSurfacePass": true,
+        "runtimeErrors": []
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "originalCollapsed": false,
+        "originalToggleDisabled": false,
+        "originalBackground": "rgba(0, 0, 0, 0)",
+        "originalListBackground": "rgba(0, 0, 0, 0)",
+        "realRows": 7,
+        "originalBounds": {
+          "left": 54,
+          "right": 360,
+          "top": 146,
+          "bottom": 337,
+          "width": 306,
+          "height": 191
+        },
+        "expandedVisibleLabels": 7,
+        "collapsedListOpaqueRejected": true,
+        "negativeControls": [
+          {
+            "id": "manager-opaque",
+            "rejected": true,
+            "restoredPass": true
+          },
+          {
+            "id": "collapsed-list-opaque",
+            "rejected": true,
+            "restoredPass": true
+          },
+          {
+            "id": "expanded-list-opaque",
+            "rejected": true,
+            "restoredPass": true
+          },
+          {
+            "id": "expanded-label-colored-alpha-zero",
+            "rejected": true,
+            "restoredPass": true
+          }
+        ],
+        "coloredTransparentSurfacePass": true,
+        "runtimeErrors": []
+      },
+      {
+        "width": 900,
+        "height": 430,
+        "touch": true,
+        "originalCollapsed": false,
+        "originalToggleDisabled": false,
+        "originalBackground": "rgba(0, 0, 0, 0)",
+        "originalListBackground": "rgba(0, 0, 0, 0)",
+        "realRows": 7,
+        "originalBounds": {
+          "left": 52,
+          "right": 373,
+          "top": 146,
+          "bottom": 286,
+          "width": 321,
+          "height": 140
+        },
+        "expandedVisibleLabels": 4,
+        "collapsedListOpaqueRejected": true,
+        "negativeControls": [
+          {
+            "id": "manager-opaque",
+            "rejected": true,
+            "restoredPass": true
+          },
+          {
+            "id": "collapsed-list-opaque",
+            "rejected": true,
+            "restoredPass": true
+          },
+          {
+            "id": "expanded-list-opaque",
+            "rejected": true,
+            "restoredPass": true
+          },
+          {
+            "id": "expanded-label-colored-alpha-zero",
+            "rejected": true,
+            "restoredPass": true
+          }
+        ],
+        "coloredTransparentSurfacePass": true,
+        "runtimeErrors": []
+      }
+    ],
+    "mobileContract": "At320px the real legend is intentionally collapsed, disabled and names its indicator-menu owner. Expanded-label mutation is not applicable there. Both nonmobile widths use real native toggle actions to exercise expanded and collapsed states.",
+    "policy": "Both manager and list background alpha must be zero, including a hidden list; visible expanded label text must have positive alpha. Colored fully transparent manager/list positive controls remain accepted."
+  },
+  "actualPreviewScope": {
+    "report": {
+      "path": "build/followup-preview-alpha-after/report.json",
+      "sha256": "06d197850304596296056dadd8166670cbb1e93213aade16409b83b61ee3d354",
+      "bytes": 54168
+    },
+    "log": {
+      "path": "docs/deep-audit-2026-11-05/evidence/preview-scope-alpha-after.log",
+      "sha256": "350bb661dd7a9eb671480fe4da0f4137a437354a37d150e10f3d6a2e5afd9ad0",
+      "bytes": 32837
+    },
+    "status": "passed",
+    "expectedCases": 2,
+    "executedCases": 2,
+    "cases": [
+      {
+        "width": 320,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": [],
+        "unexpectedResourceErrors": []
+      },
+      {
+        "width": 1440,
+        "height": 900,
+        "status": "passed",
+        "runtimeErrors": [],
+        "unexpectedResourceErrors": []
+      }
+    ],
+    "harnessSha256": "9119a36ad0c960cc193247ba3f2caa6b2a251a2d8107f22b48a06214cc0ed19d"
+  },
+  "limits": [
+    "Independent native tests use local Chromium143, not original CI Chrome156; integrated46-case verification and final-head CI remain separate.",
+    "Frozen preview states do not measure actual loading time, device performance or provider freshness.",
+    "The probe changes only disposable browser DOM, then restores it. No source-data, formula, immutable forecast, model promotion or deployment change.",
+    "No additional optional tests were run beyond the requested preview and indicator coverage."
+  ]
+}

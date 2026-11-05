@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "baseline": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "attempts": [
+    {
+      "kind": "unit",
+      "path": "docs/deep-audit-2026-11-05/evidence/local-full-unit-incomplete.log.gz",
+      "rawBytes": 290796,
+      "rawSha256": "749649d7e1093334c1660969eb6d0922f6dde81aa7781760cc119659e8f9b10d",
+      "gzipBytes": 58495,
+      "gzipSha256": "054506fe24544a2216efc012e93475a8435294993d4404424163055364892902",
+      "countedAsCompletePass": false,
+      "toolExitCode": 0,
+      "hasRequiredAggregate": false,
+      "reason": "The local tool returned exit0 but the retained log ends at1146 reported cases without the required combined aggregate. Completion is unproven; cause is not established. Do not substitute this for final CI."
+    },
+    {
+      "kind": "native",
+      "path": "docs/deep-audit-2026-11-05/evidence/local-native-single-process.json.gz",
+      "rawBytes": 1669564,
+      "rawSha256": "15389ef4df1fd15c7b82b13b1b0565ea3d17ea3849750c14601d2c5a7cd4f6db",
+      "gzipBytes": 283354,
+      "gzipSha256": "539eb93a4c544b7885689b12f21a79f209952de493c593db97f2985afa5137e5",
+      "countedAsCompletePass": false,
+      "status": "failed",
+      "expectedCaseCount": 46,
+      "casePasses": 39,
+      "caseFailures": 7,
+      "startedAt": "2026-11-05T08:11:25.471Z",
+      "finishedAt": "2026-11-05T08:20:02.049Z",
+      "failures": [
+        {
+          "page": "chart-replay-btc",
+          "width": 1440,
+          "height": 900,
+          "error": "Error: CDP socket error\n    at WebSocket.<anonymous> (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:49:47)\n    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:869:20)\n    at WebSocket.dispatchEvent (node:internal/event_target:810:26)\n    at fireEvent (node:internal/deps/undici/undici:14494:14)\n    at #onSocketClose (node:internal/deps/undici/undici:15858:11)\n    at Socket.onSocketClose (node:internal/deps/undici/undici:15556:72)\n    at Socket.emit (node:events:526:24)\n    at TCP.<anonymous> (node:net:362:12)"
+        },
+        {
+          "page": "chart-replay-btc",
+          "width": 320,
+          "height": 568,
+          "error": "Error: CDP command timeout: Target.createBrowserContext\n    at Timeout._onTimeout (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:65:66)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        {
+          "page": "chart-replay-btc",
+          "width": 900,
+          "height": 430,
+          "error": "Error: CDP command timeout: Target.createBrowserContext\n    at Timeout._onTimeout (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:65:66)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        {
+          "page": "chart-replay-eth",
+          "width": 1440,
+          "height": 900,
+          "error": "Error: CDP command timeout: Target.createBrowserContext\n    at Timeout._onTimeout (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:65:66)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        {
+          "page": "chart-replay-eth",
+          "width": 320,
+          "height": 568,
+          "error": "Error: CDP command timeout: Target.createBrowserContext\n    at Timeout._onTimeout (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:65:66)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        {
+          "page": "chart-replay-mstr",
+          "width": 1440,
+          "height": 900,
+          "error": "Error: CDP command timeout: Target.createBrowserContext\n    at Timeout._onTimeout (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:65:66)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        },
+        {
+          "page": "chart-replay-bmnr",
+          "width": 390,
+          "height": 844,
+          "error": "Error: CDP command timeout: Target.createBrowserContext\n    at Timeout._onTimeout (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:65:66)\n    at listOnTimeout (node:internal/timers:685:17)\n    at process.processTimers (node:internal/timers:618:7)"
+        }
+      ],
+      "reason": "The single-process Chromium143 runtime terminated at the first isolated chart-replay context. Prior39 cases passed, next7 failed by CDP process/context errors; no product pass is inferred. Source changes made during this intermediate local run also prevent final-source binding. Multiprocess runtime is independently verified."
+    }
+  ],
+  "authoritativeFinalStatus": "Read exact-final-head GitHub CI; incomplete local attempts are retained, not promoted to passes."
+}

@@ -1,0 +1,259 @@
+{
+  "status": "passed",
+  "startedAt": "2026-11-05T08:11:26.591Z",
+  "runtime": {
+    "node": "v24.22.2",
+    "browserPath": "/workspace/scratch/82e52cfd9693/browser-native/chromium",
+    "launchArgs": [
+      "--no-sandbox",
+      "--no-zygote",
+      "--single-process",
+      "--disable-gpu"
+    ]
+  },
+  "baseline": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "file": "scripts/verify-eth-candidate-browser.mjs",
+  "cases": [
+    {
+      "label": "baseline incorrectly clips visible top-layer target",
+      "selector": "#modal-free",
+      "modal": true,
+      "expectedError": "Click target clipped",
+      "fixtureSha256": "0153e260f5752062d0213b9d9e01e2b1b2f446301a27a43fe927d6b38bd9d20f",
+      "error": "Browser evaluation failed: {\"exceptionId\":1,\"text\":\"Uncaught\",\"lineNumber\":11,\"columnNumber\":90,\"scriptId\":\"14\",\"stackTrace\":{\"callFrames\":[{\"functionName\":\"\",\"scriptId\":\"14\",\"url\":\"\",\"lineNumber\":11,\"columnNumber\":96},{\"functionName\":\"\",\"scriptId\":\"14\",\"url\":\"\",\"lineNumber\":15,\"columnNumber\":4}]},\"exception\":{\"type\":\"object\",\"subtype\":\"error\",\"className\":\"Error\",\"description\":\"Error: Click target clipped #modal-free {\\\"box\\\":{\\\"left\\\":39,\\\"right\\\":119,\\\"top\\\":39,\\\"bottom\\\":83},\\\"clip\\\":{\\\"left\\\":120,\\\"right\\\":437,\\\"top\\\":180,\\\"bottom\\\":277}}\\n    at <anonymous>:12:97\\n    at <anonymous>:16:5\",\"objectId\":\"2827793559718046388.1.2\"}}",
+      "observed": {
+        "clicks": [],
+        "target": {
+          "left": 39,
+          "right": 119,
+          "top": 39,
+          "bottom": 83,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": true,
+        "modal": true
+      },
+      "status": "passed"
+    },
+    {
+      "label": "candidate clicks visible top-layer target outside DOM ancestor bounds",
+      "selector": "#modal-free",
+      "modal": true,
+      "expectedError": null,
+      "fixtureSha256": "0153e260f5752062d0213b9d9e01e2b1b2f446301a27a43fe927d6b38bd9d20f",
+      "observed": {
+        "clicks": [
+          "modal-free"
+        ],
+        "target": {
+          "left": 39,
+          "right": 119,
+          "top": 39,
+          "bottom": 83,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": true,
+        "modal": true
+      },
+      "status": "passed"
+    },
+    {
+      "label": "candidate rejects genuinely internally clipped modal target",
+      "selector": "#modal-clipped",
+      "modal": true,
+      "expectedError": "Click target clipped",
+      "fixtureSha256": "0153e260f5752062d0213b9d9e01e2b1b2f446301a27a43fe927d6b38bd9d20f",
+      "error": "Click target clipped #modal-clipped {\"box\":{\"left\":39,\"right\":119,\"top\":95,\"bottom\":139,\"width\":80,\"height\":44},\"clip\":{\"left\":39,\"right\":89,\"top\":95,\"bottom\":139,\"width\":50,\"height\":44}}",
+      "observed": {
+        "clicks": [],
+        "target": {
+          "left": 39,
+          "right": 119,
+          "top": 95,
+          "bottom": 139,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": true,
+        "modal": true
+      },
+      "status": "passed"
+    },
+    {
+      "label": "candidate rejects nonmodal clipped target",
+      "selector": "#ordinary-clipped",
+      "modal": false,
+      "expectedError": "Click target clipped",
+      "fixtureSha256": "0153e260f5752062d0213b9d9e01e2b1b2f446301a27a43fe927d6b38bd9d20f",
+      "error": "Click target clipped #ordinary-clipped {\"box\":{\"left\":40,\"right\":120,\"top\":392,\"bottom\":436,\"width\":80,\"height\":44},\"clip\":{\"left\":40,\"right\":90,\"top\":392,\"bottom\":436,\"width\":50,\"height\":44}}",
+      "observed": {
+        "clicks": [],
+        "target": {
+          "left": 40,
+          "right": 120,
+          "top": 392,
+          "bottom": 436,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": true,
+        "modal": false
+      },
+      "status": "passed"
+    },
+    {
+      "label": "candidate rejects nonmodal occluded target",
+      "selector": "#occluded",
+      "modal": false,
+      "expectedError": "Click target occluded",
+      "fixtureSha256": "0153e260f5752062d0213b9d9e01e2b1b2f446301a27a43fe927d6b38bd9d20f",
+      "error": "Click target occluded #occluded",
+      "observed": {
+        "clicks": [],
+        "target": {
+          "left": 300,
+          "right": 380,
+          "top": 400,
+          "bottom": 444,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": false,
+        "modal": false
+      },
+      "status": "passed"
+    },
+    {
+      "label": "candidate clicks viewport-fixed return above shifted clipped body",
+      "selector": "#fixed-return",
+      "modal": false,
+      "expectedError": null,
+      "fixtureSha256": "9ef37fa83e1edd2cafffab2574e3ed7d52ba23cbb00d8468a8d1047140efc496",
+      "observed": {
+        "clicks": [
+          "fixed-return"
+        ],
+        "target": {
+          "left": 0,
+          "right": 44,
+          "top": 12,
+          "bottom": 56,
+          "width": 44,
+          "height": 44
+        },
+        "centerTopmost": true,
+        "modal": false
+      },
+      "status": "passed"
+    },
+    {
+      "label": "candidate rejects fixed target clipped by transformed containing block",
+      "selector": "#fixed-clipped",
+      "modal": false,
+      "expectedError": "Click target clipped",
+      "fixtureSha256": "8e81a23963c790cd46ac8ccda1158fef4dfe08bbdf6b564f458a18829c85158d",
+      "error": "Click target clipped #fixed-clipped {\"box\":{\"left\":200,\"right\":280,\"top\":200,\"bottom\":244,\"width\":80,\"height\":44},\"clip\":{\"left\":200,\"right\":250,\"top\":200,\"bottom\":244,\"width\":50,\"height\":44}}",
+      "observed": {
+        "clicks": [],
+        "target": {
+          "left": 200,
+          "right": 280,
+          "top": 200,
+          "bottom": 244,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": true,
+        "modal": false
+      },
+      "status": "passed"
+    },
+    {
+      "label": "candidate clicks fixed target escaping untransformed overflow ancestor",
+      "selector": "#fixed-free",
+      "modal": false,
+      "expectedError": null,
+      "fixtureSha256": "5d7ac070276311917ab610c053e4ac1bc958e1d87935a5580d5f85d45fd8db97",
+      "observed": {
+        "clicks": [
+          "fixed-free"
+        ],
+        "target": {
+          "left": 40,
+          "right": 120,
+          "top": 40,
+          "bottom": 84,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": true,
+        "modal": false
+      },
+      "status": "passed"
+    },
+    {
+      "label": "candidate rejects viewport-clipped fixed target",
+      "selector": "#viewport-clipped",
+      "modal": false,
+      "expectedError": "Click target clipped",
+      "fixtureSha256": "66a16084ca6ea0b54c620ad27611dff74d4b31d46b53ac1a5952645784ad0906",
+      "error": "Click target clipped #viewport-clipped {\"box\":{\"left\":-20,\"right\":60,\"top\":40,\"bottom\":84,\"width\":80,\"height\":44},\"clip\":{\"left\":0,\"right\":60,\"top\":40,\"bottom\":84,\"width\":60,\"height\":44}}",
+      "observed": {
+        "clicks": [],
+        "target": {
+          "left": -20,
+          "right": 60,
+          "top": 40,
+          "bottom": 84,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": true,
+        "modal": false
+      },
+      "status": "passed"
+    },
+    {
+      "label": "candidate rejects CSS-hidden target with nonzero layout bounds",
+      "selector": "#css-hidden",
+      "modal": false,
+      "expectedError": "hidden",
+      "fixtureSha256": "b47d9919a61b56abc015dc0f628dd43688b7efb2767cb4f1caea90cb44213b43",
+      "error": "Click target outside viewport or hidden #css-hidden",
+      "observed": {
+        "clicks": [],
+        "target": {
+          "left": 40,
+          "right": 120,
+          "top": 40,
+          "bottom": 84,
+          "width": 80,
+          "height": 44
+        },
+        "centerTopmost": false,
+        "modal": false
+      },
+      "status": "passed"
+    }
+  ],
+  "scope": "Actual native click helper extracted without edits from each source; controlled DOM fixtures test modal/ancestor clipping and occlusion. Production data dialog is verified separately by the nine-case data suite.",
+  "sources": {
+    "baseline": {
+      "sourceSha256": "1944e07774c34b01e11f68e983f348ea130e05772ef1c4158aa4607720d9b7a1",
+      "helperSha256": "3593448d3745f71d6c64dcbecea93dd38890a46a64f126e5d0c836b47df0160b"
+    },
+    "candidate": {
+      "sourceSha256": "00da0949c72b24d665e34d7fc99da42e625f476af65507b5aa8c0a6f7c219898",
+      "helperSha256": "d70d8b2789e258bd9e6843b689afff706bc0ccb18c985a166309fafa06e26d63",
+      "geometryPath": "scripts/verify-workspace-browser.mjs",
+      "geometrySourceSha256": "9119a36ad0c960cc193247ba3f2caa6b2a251a2d8107f22b48a06214cc0ed19d",
+      "geometryFunctionSha256": "7c4d9fd0d98a50315ce051dfd86ae57a45fc131c4b50fb208483d51b0b33ce4b"
+    }
+  },
+  "browser": "143.0.7499.0",
+  "fixtureSha256": "0153e260f5752062d0213b9d9e01e2b1b2f446301a27a43fe927d6b38bd9d20f",
+  "finishedAt": "2026-11-05T08:11:29.183Z",
+  "probeSha256": "ade00d3e1438493ec5d9a568ff9b2a89f9b0d441388e86821649ec5fcc1a570a"
+}

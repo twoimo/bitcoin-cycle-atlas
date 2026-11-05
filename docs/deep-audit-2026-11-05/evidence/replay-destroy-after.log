@@ -1,0 +1,3 @@
+(node:5) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"status":"pass","name":"destroy during an explicit save releases replay once and ignores late completion","sourceSha256":"96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5","scope":"Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"}

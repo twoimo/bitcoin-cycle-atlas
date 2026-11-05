@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 1,
+  "kind": "preview-colored-zero-alpha-counterexample",
+  "startedAt": "2026-11-05T08:10:19.436Z",
+  "baselineCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "node": "v24.22.2",
+  "width": 320,
+  "height": 900,
+  "sourceHashes": {
+    "scripts/verify-workspace-browser.mjs": "e13e38093f0b2e9f97c46206d2a597d613508ac5792fa654b489356bdb48f56a",
+    "dist/index.html": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+    "dist/mobile-preview.html": "ef350dc53c4c61ca2bff5d4cf37d183ea13a5866cae9074f2522b7b7bd756379",
+    "dist/mobile-preview.js": "9d1ad1cdaf3e316579e4a33054d81d300e002b0214635a1481140b1a133acc9c",
+    "dist/loading-surfaces.css": "62365401f0ab6f6781292f7d17e2f5833f0e2311e4d7a3ea1dcd777ab945133d",
+    "dist/vendor/skullet/styles.css": "2d5fd47eb1956d1406cb5a6a6abcc8ecb90a7766015ea30425ffe6ce80491243"
+  },
+  "scope": "Actual frozen preview and exported verification boundary in native Chromium; in-memory DOM mutation only, no product source or forecast changes.",
+  "browser": "143.0.7499.0",
+  "original": {
+    "mode": "loading",
+    "boot": "loading",
+    "shellHidden": false,
+    "statusHidden": false,
+    "errorHidden": true,
+    "active": {
+      "kind": "skeleton",
+      "paint": [
+        {
+          "id": "atlas-boot-bar atlas-boot-wide",
+          "rendered": true,
+          "local": {
+            "left": 16,
+            "right": 122,
+            "top": 64,
+            "bottom": 79
+          },
+          "visible": {
+            "left": 25,
+            "right": 131,
+            "top": 275.375,
+            "bottom": 290.375
+          },
+          "visibleWidth": 106,
+          "visibleHeight": 15,
+          "background": "rgb(32, 42, 57)",
+          "decorative": true
+        },
+        {
+          "id": "atlas-boot-bar",
+          "rendered": true,
+          "local": {
+            "left": 134,
+            "right": 198,
+            "top": 67,
+            "bottom": 76
+          },
+          "visible": {
+            "left": 143,
+            "right": 207,
+            "top": 278.375,
+            "bottom": 287.375
+          },
+          "visibleWidth": 64,
+          "visibleHeight": 9,
+          "background": "rgb(32, 42, 57)",
+          "decorative": true
+        },
+        {
+          "id": "atlas-boot-bar atlas-boot-short",
+          "rendered": false,
+          "local": {
+            "left": 0,
+            "right": 0,
+            "top": 48,
+            "bottom": 0
+          },
+          "visible": {
+            "left": 9,
+            "right": 9,
+            "top": 259.375,
+            "bottom": 211.375
+          },
+          "visibleWidth": 0,
+          "visibleHeight": 0,
+          "background": "rgb(32, 42, 57)",
+          "decorative": true
+        },
+        {
+          "id": "atlas-boot-bar atlas-boot-wide",
+          "rendered": true,
+          "local": {
+            "left": 16,
+            "right": 122,
+            "top": 103,
+            "bottom": 112
+          },
+          "visible": {
+            "left": 25,
+            "right": 131,
+            "top": 314.375,
+            "bottom": 323.375
+          },
+          "visibleWidth": 106,
+          "visibleHeight": 9,
+          "background": "rgb(32, 42, 57)",
+          "decorative": true
+        },
+        {
+          "id": "atlas-boot-bar",
+          "rendered": true,
+          "local": {
+            "left": 16,
+            "right": 80,
+            "top": 128,
+            "bottom": 137
+          },
+          "visible": {
+            "left": 25,
+            "right": 89,
+            "top": 339.375,
+            "bottom": 348.375
+          },
+          "visibleWidth": 64,
+          "visibleHeight": 9,
+          "background": "rgb(32, 42, 57)",
+          "decorative": true
+        }
+      ],
+      "status": {
+        "role": "status",
+        "live": "polite",
+        "busy": "true",
+        "text": "화면과 데이터를 준비하고 있습니다.",
+        "available": true,
+        "excluded": false
+      }
+    },
+    "caption": "선택한 로딩 상태를 멈춘 표시 미리보기 · 실제 로딩 시간·기기 성능 측정은 아닙니다."
+  },
+  "originalPassed": true,
+  "originalScreenshot": {
+    "file": "preview-alpha-original-320.png",
+    "bytes": 19467,
+    "sha256": "812148c890d00096115f7fea335344c24e5480179ff3177410eb61801da424d9"
+  },
+  "mutation": {
+    "selector": ".atlas-boot-readout .atlas-boot-bar,.atlas-boot-indicators .atlas-boot-bar",
+    "property": "background",
+    "value": "rgba(255, 0, 0, 0)",
+    "priority": "important"
+  },
+  "changed": {
+    "mode": "loading",
+    "boot": "loading",
+    "shellHidden": false,
+    "statusHidden": false,
+    "errorHidden": true,
+    "active": {
+      "kind": "skeleton",
+      "paint": [
+        {
+          "id": "atlas-boot-bar atlas-boot-wide",
+          "rendered": true,
+          "local": {
+            "left": 16,
+            "right": 122,
+            "top": 64,
+            "bottom": 79
+          },
+          "visible": {
+            "left": 25,
+            "right": 131,
+            "top": 275.375,
+            "bottom": 290.375
+          },
+          "visibleWidth": 106,
+          "visibleHeight": 15,
+          "background": "rgba(255, 0, 0, 0)",
+          "decorative": true
+        },
+        {
+          "id": "atlas-boot-bar",
+          "rendered": true,
+          "local": {
+            "left": 134,
+            "right": 198,
+            "top": 67,
+            "bottom": 76
+          },
+          "visible": {
+            "left": 143,
+            "right": 207,
+            "top": 278.375,
+            "bottom": 287.375
+          },
+          "visibleWidth": 64,
+          "visibleHeight": 9,
+          "background": "rgba(255, 0, 0, 0)",
+          "decorative": true
+        },
+        {
+          "id": "atlas-boot-bar atlas-boot-short",
+          "rendered": false,
+          "local": {
+            "left": 0,
+            "right": 0,
+            "top": 48,
+            "bottom": 0
+          },
+          "visible": {
+            "left": 9,
+            "right": 9,
+            "top": 259.375,
+            "bottom": 211.375
+          },
+          "visibleWidth": 0,
+          "visibleHeight": 0,
+          "background": "rgba(255, 0, 0, 0)",
+          "decorative": true
+        },
+        {
+          "id": "atlas-boot-bar atlas-boot-wide",
+          "rendered": true,
+          "local": {
+            "left": 16,
+            "right": 122,
+            "top": 103,
+            "bottom": 112
+          },
+          "visible": {
+            "left": 25,
+            "right": 131,
+            "top": 314.375,
+            "bottom": 323.375
+          },
+          "visibleWidth": 106,
+          "visibleHeight": 9,
+          "background": "rgba(255, 0, 0, 0)",
+          "decorative": true
+        },
+        {
+          "id": "atlas-boot-bar",
+          "rendered": true,
+          "local": {
+            "left": 16,
+            "right": 80,
+            "top": 128,
+            "bottom": 137
+          },
+          "visible": {
+            "left": 25,
+            "right": 89,
+            "top": 339.375,
+            "bottom": 348.375
+          },
+          "visibleWidth": 64,
+          "visibleHeight": 9,
+          "background": "rgba(255, 0, 0, 0)",
+          "decorative": true
+        }
+      ],
+      "status": {
+        "role": "status",
+        "live": "polite",
+        "busy": "true",
+        "text": "화면과 데이터를 준비하고 있습니다.",
+        "available": true,
+        "excluded": false
+      }
+    },
+    "caption": "선택한 로딩 상태를 멈춘 표시 미리보기 · 실제 로딩 시간·기기 성능 측정은 아닙니다."
+  },
+  "rejected": false,
+  "mutatedScreenshot": {
+    "file": "preview-alpha-hidden-320.png",
+    "bytes": 19017,
+    "sha256": "2b8bc3e77b87ff7890416a26ddd0af76816398857fd0ca599003858b9754744d"
+  },
+  "restoredPassed": true,
+  "finalSourceHashes": {
+    "scripts/verify-workspace-browser.mjs": "e13e38093f0b2e9f97c46206d2a597d613508ac5792fa654b489356bdb48f56a",
+    "dist/index.html": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+    "dist/mobile-preview.html": "ef350dc53c4c61ca2bff5d4cf37d183ea13a5866cae9074f2522b7b7bd756379",
+    "dist/mobile-preview.js": "9d1ad1cdaf3e316579e4a33054d81d300e002b0214635a1481140b1a133acc9c",
+    "dist/loading-surfaces.css": "62365401f0ab6f6781292f7d17e2f5833f0e2311e4d7a3ea1dcd777ab945133d",
+    "dist/vendor/skullet/styles.css": "2d5fd47eb1956d1406cb5a6a6abcc8ecb90a7766015ea30425ffe6ce80491243"
+  },
+  "sourcesUnchangedDuringRun": true,
+  "status": "confirmed-false-pass",
+  "finishedAt": "2026-11-05T08:10:20.910Z"
+}

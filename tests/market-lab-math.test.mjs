@@ -31,6 +31,26 @@ test('clip sign reversal withholds the composite instead of flipping its label',
 test('calendar dates use an explicit zone and timestamp skew stays five minutes',()=>{const now=new Date('2026-11-01T16:00:00Z');assert.equal(isFutureStamp('2026-11-02',now,CLOCK_SKEW_MS,'Asia/Seoul'),false);assert.equal(isFutureStamp('2026-11-02',now,CLOCK_SKEW_MS,'America/New_York'),true);assert.equal(isFutureStamp('2026-11-02',now),true);assert.equal(isFutureStamp('2026-01-01',now,CLOCK_SKEW_MS,'Not/AZone'),true);assert.equal(isFutureStamp(new Date(+now+299000).toISOString(),now),false);assert.equal(isFutureStamp(new Date(+now+301000).toISOString(),now),true);const source={status:'ready',retrievedAt:'2026-11-01T16:00:00Z',timezone:'America/New_York'};assert.equal(observationGate({generatedAt:'2026-11-01T16:00:00Z',source,prices:[['2026-11-02',1]],now,timeZone:'America/New_York'}).ok,false);assert.equal(observationGate({generatedAt:'2026-11-01T16:00:00Z',source:{...source,timezone:'Asia/Seoul'},prices:[['2026-11-02',1]],now,timeZone:'Asia/Seoul'}).ok,true);assert.equal(matchingIndex([['2026-03-02',1],['2026-03-04',2]],'2026-03-04'),1);});
 test('price date without RSI does not keep the previous RSI selection',()=>{const prices=[['2026-01-01',1],['2026-01-02',2]],rows=[{date:'2026-01-02',rsi:40}];const picked=resolveRsiSelection(prices,rows,0);assert.equal(picked.unmatched,true);assert.equal(picked.rsiOscIndex,null);assert.equal(picked.date,'2026-01-01');});
 test('tiny RSI scale is anchored to the first price so later prices do not rewrite history',()=>{const prefix=prices(20,i=>(i+1)*Number.MIN_VALUE),extra=[...prefix,['2026-01-21',1]];assert.deepEqual(calculateRsiSeries(prefix),calculateRsiSeries(extra).slice(0,20));assert.equal(calculateRsiSeries(prefix).at(-1).rsi,100);});
+test('RSI returns an empty series for valid empty observations',()=>{assert.deepEqual(calculateRsiSeries([]),[]);assert.throws(()=>calculateRsiSeries([],0));});
+test('subnormal flat and mixed RSI prices retain scale-invariant finite values',()=>{
+  for(const period of [2,14,250]){
+    const n=period+20,pattern=[1,2,1,4,3,3,2,5];
+    const ordinary=calculateRsiSeries(prices(n,i=>pattern[i%pattern.length]),period);
+    const tiny=calculateRsiSeries(prices(n,i=>pattern[i%pattern.length]*Number.MIN_VALUE),period);
+    const flat=calculateRsiSeries(prices(n,()=>Number.MIN_VALUE),period);
+    for(let i=period;i<n;i++){
+      close(tiny[i].rsi,ordinary[i].rsi);assert.equal(flat[i].rsi,50);
+      if(ordinary[i].signal!==null){close(tiny[i].signal,ordinary[i].signal);assert.equal(flat[i].signal,50);}
+    }
+  }
+});
+test('finite RSI scaling survives an extreme later observation without rewriting its prefix',()=>{
+  const prefix=prices(24,i=>(1+i%2)*Number.MIN_VALUE);
+  const all=[...prefix,...prices(24,i=>i%2?Number.MAX_VALUE:Number.MAX_VALUE/2).map(([,price],i)=>[new Date(Date.UTC(2026,0,25+i)).toISOString().slice(0,10),price])];
+  const rows=calculateRsiSeries(all);assert.deepEqual(rows.slice(0,prefix.length),calculateRsiSeries(prefix));
+  assert.ok(rows.slice(14).every(row=>Number.isFinite(row.rsi)&&row.rsi>=0&&row.rsi<=100));
+  assert.ok(rows.slice(22).every(row=>Number.isFinite(row.signal)&&row.signal>=0&&row.signal<=100));
+});
 test('negative overflow and unprintable payback are rejected',()=>{assert.throws(()=>assetEconomics({costBasis:100,residual:0,lifeYears:100,annualRevenue:0,annualOpex:1e15}));assert.throws(()=>assetEconomics({costBasis:1,residual:0,lifeYears:5,annualRevenue:1e-307,annualOpex:0}));});
 test('missing snapshot timezone uses the symbol exchange default and does not overwrite an observed zone',()=>{const d=fixture();d.markets=[{id:'tqqq',symbol:'TQQQ',name:'TQQQ',region:'us',unit:'USD',sourceId:'a',prices:[['2026-03-11',1]]},{id:'kospi',symbol:'^KS11',name:'KOSPI',region:'kr',unit:'pt',sourceId:'a',prices:[['2026-03-11',1]],timezone:'UTC',timezoneBasis:'provider-observed'}];d.sources.push({id:'market-tqqq',label:'tqqq',url:'https://example.com/t',unit:'USD',frequency:'daily',retrievedAt:'2026-03-12T00:00:00Z',lastObservation:'2026-03-11',status:'ready',releaseTimeKnown:false});const next=withExchangeTimezones(d);assert.equal(next.markets.find(m=>m.id==='tqqq').timezone,'America/New_York');assert.equal(next.markets.find(m=>m.id==='tqqq').timezoneBasis,'symbol-exchange-default');assert.equal(next.markets.find(m=>m.id==='kospi').timezone,'UTC');assert.equal(next.sources.find(s=>s.id==='market-tqqq').timezone,'America/New_York');});
 test('kiwoom equivalence and GDP vintage stay deferred without source files',()=>{const held=evidenceHolds();assert.equal(held.kiwoomEquivalent,false);assert.equal(held.realtimeBacktest,false);assert.equal(held.holds.length,2);});

@@ -93,7 +93,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   let cutoffModel=null,atlasModules=null,atlasBaseline=null,atlasCaptured=null,atlasCandles=null,atlasPreview=null,pendingAtlas=null,restoredSnapshot=null,atlasCapturedAt=null;
   let gesture=null,follow=true,paintFrame=null,destroyed=false,lastSave=0,painting=false,displayEpoch=0,saving=false;
   let picking=false,pickerDate=null,overlay=null,draft=null,dateDraftBase=null,capabilities=null,candleCapabilities=null,replayFrequency='daily',replayWindow='focus',customRange=false;
-  let externalBacktest=false;
+  let externalBacktest=false,entryOpened=false;
   const hasChoice=()=>overlay==='entry'||overlay==='exit';
   const oldLabel=svg.getAttribute('aria-label'),ownedInert=new Map();
   const storageKey=()=>q('mode').value==='cutoff-backtest'?'atlas-cutoff-backtest-v1:'+symbol:STORAGE+symbol;
@@ -105,7 +105,9 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       storedText=win.localStorage.getItem(storageKey())??null;
       if(storedText!==null&&storedText.length>2*1024*1024)throw new Error('저장된 리플레이의 크기 제한을 초과했습니다.');
       stored=storedText===null?null:JSON.parse(storedText);
+      if(storedText!==null&&(!stored||typeof stored!=='object'||Array.isArray(stored)))throw new Error('저장된 리플레이의 형식이 올바르지 않습니다.');
       if(stored&&(stored.version!==1||stored.symbol!==symbol||!['recorded','historical-reconstruction',...(atlasAvailable?['atlas-chart','project-baseline','cutoff-backtest']:[])].includes(stored.mode)||!/^\d{4}-\d{2}-\d{2}$/.test(stored.origin??'')||!Number.isSafeInteger(stored.cursorIndex)))throw new Error('저장된 리플레이의 형식이 올바르지 않습니다.');
+      if(stored&&(stored.mode==='cutoff-backtest')!==(q('mode').value==='cutoff-backtest'))throw new Error('저장된 리플레이의 모드와 저장 위치가 다릅니다.');
     }catch(error){stored=null;storageReadError=error;}
     return !storageReadError;
   }
@@ -139,11 +141,14 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   async function save(){
     if(externalBacktest)return true;
     preserve();if(!draft)return true;
-    const token=epoch;
+    const token=epoch,isCurrent=()=>active&&!destroyed&&epoch===token;
     try{
-      saveBaseText=await persistReplayDraft(win.localStorage,storageKey(),draft,{indexedDB:win.indexedDB,locks:win.navigator?.locks,expectedText:saveBaseText,isCurrent:()=>active&&!destroyed&&epoch===token});
+      const savedText=await persistReplayDraft(win.localStorage,storageKey(),draft,{indexedDB:win.indexedDB,locks:win.navigator?.locks,expectedText:saveBaseText,isCurrent});
+      if(!isCurrent())return false;
+      saveBaseText=savedText;
       readStored();q('save-status').hidden=true;return true;
     }catch(error){
+      if(!isCurrent())return false;
       const text=(error?.message??'이 브라우저에 세션을 저장하지 못했습니다.')+' 기존 저장은 유지됩니다. 저장 체크를 해제하거나 다시 시도해 주세요.';
       announce(text);q('save-status').textContent=text;q('save-status').hidden=false;return false;
     }
@@ -210,8 +215,16 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     const current=getChartState?.()??getAtlasContext?.()??{};
     if(atlasAvailable&&!['daily','weekly'].includes(current.frequency??'daily')){unavailable(current.frequency);return;}
     notice.hidden=true;atlasCaptured=null;atlasCapturedAt=null;draft=null;replayFrequency=current.frequency??'daily';replayWindow=current.window??'focus';customRange=Boolean(current.customRange);
-    if(atlasAvailable)q('mode').value=preferredMode;
-    readStored();saveBaseText=storageReadError?undefined:storedText;q('save-status').hidden=true;
+    // Keep the selected mode on return, so its saved capture remains reachable.
+    // On first entry only, an absent default-cutoff slot may offer the older
+    // generic capture. Invalid or existing records never fall through to it.
+    const firstEntry=!entryOpened;entryOpened=true;readStored();
+    if(firstEntry&&atlasAvailable&&q('mode').value==='cutoff-backtest'&&storedText===null&&!storageReadError){
+      q('mode').value='atlas-chart';readStored();
+      if(stored)q('mode').value=stored.mode;
+      else if(!storageReadError){q('mode').value=preferredMode;readStored();}
+    }
+    saveBaseText=storageReadError?undefined:storedText;q('save-status').hidden=true;
     if(stored||storageReadError){activate();setOverlay('entry');savedSummary();
       paint(getState());q('entry-continue').focus({preventScroll:true});return;}
     return open({selectOnly:true});
@@ -237,9 +250,17 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(saveSession){
       saving=true;q('exit-confirm').disabled=true;q('exit-cancel').disabled=true;q('exit-save').disabled=true;
       const token=epoch,ok=await save();
+      if(destroyed||!active||token!==epoch)return;
       saving=false;q('exit-confirm').disabled=false;q('exit-cancel').disabled=false;q('exit-save').disabled=false;
-      if(!ok||!active||token!==epoch)return;
-    }epoch++;request?.abort();request=null;active=false;externalBacktest=false;controller.exit();
+      if(!ok)return;
+    }
+    finishExit();
+  }
+  // Interactive exit waits for its explicit save; terminal destruction must
+  // release DOM ownership synchronously even while that save is pending.
+  function finishExit(){
+    if(!active)return;
+    epoch++;request?.abort();request=null;active=false;saving=false;externalBacktest=false;controller.exit();
     if(paintFrame!==null){win.cancelAnimationFrame(paintFrame);paintFrame=null;}
     releaseGesture();picking=false;pickerDate=null;closeChoice();closeMenu();clearPicker();disposeDrawing();plot.classList.remove('chart-replay-active');plot.style.removeProperty('--chart-replay-controls-height');
     delete svg.dataset.chartReplayActive;delete doc.documentElement.dataset.chartReplayActive;delete doc.documentElement.dataset.chartReplayMode;
@@ -675,8 +696,10 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   };
   q('pooled-retry').onclick=()=>{const state=getState();if(q('pooled-retry').hidden||state.status!=='error'||!state.origin)return;q('model').value='pooled';void start(state.origin);};
   q('scrub').oninput=()=>controller.seek(Number(q('scrub').value));
-  for(const key of ['mode','model'])if(q(key))q(key).onchange=()=>{if(!externalBacktest)void open();};
-  q('horizon').onchange=()=>{if(!externalBacktest)void open({startDateOverride:getState().session?.replaySettings?.startDate??null});};
+  // A settings change reloads the preview; only a start action may confirm it.
+  // Preserve an open picker even when it was entered from a committed session.
+  for(const key of ['mode','model'])if(q(key))q(key).onchange=()=>{if(!externalBacktest)void open({selectOnly:picking||!getState().session});};
+  q('horizon').onchange=()=>{if(!externalBacktest)void open({selectOnly:picking||!getState().session,startDateOverride:getState().session?.replaySettings?.startDate??null});};
   q('record').onchange=()=>void open({resume:{...stored,recordId:q('record').value,mode:'recorded',horizon:Number(q('horizon').value),cursorIndex:0,outputHash:null}});
   q('select-menu').onclick=()=>{if(hasChoice())return;const show=overlay!=='menu';closeMenu();if(show){setOverlay('menu');menuView('start');}};
   q('select-close').onclick=()=>{closeMenu();focusMenuTrigger();};
@@ -775,7 +798,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       cutoffForecast:forecast,outputHash:forecast.outputHash,cursorIndex:0,cursorDate:forecast.asOf,frequency:'daily',chartType:'candles',window:'half'}});
     return getState().status;
   }
-  return {isActive:()=>active,open,openFixedBacktest,exit,handleChartCommand,destroy(){if(destroyed)return;exit();destroyed=true;controller.destroy();resizeObserver.disconnect();
+  return {isActive:()=>active,open,openFixedBacktest,exit,handleChartCommand,destroy(){if(destroyed)return;destroyed=true;finishExit();controller.destroy();resizeObserver.disconnect();
     for(const type of pointerTypes)plot.removeEventListener(type,pointer,true);plot.removeEventListener('click',blockChoiceClick,true);plot.removeEventListener('wheel',wheel,true);plot.removeEventListener('contextmenu',preventLiveGesture,true);plot.removeEventListener('dblclick',preventLiveGesture,true);doc.removeEventListener('keydown',key,true);
     doc.removeEventListener('pointerdown',dismissMenu,true);doc.removeEventListener('visibilitychange',visibility);win.removeEventListener('blur',pause);win.removeEventListener('pagehide',pause);win.removeEventListener('storage',savedChanged);transport?.removeEventListener('scroll',transportHints);transport?.removeEventListener('focusin',revealControl);trigger.remove();panel.remove();hud.remove();notice.remove();}};
 }

@@ -68,6 +68,29 @@ test('US collector PostgreSQL: complete acquisition, exclusion, no-op, partial f
       assert.equal((await runUsCollection(pool,{fetchImpl,clock,force:true})).status,'unchanged');
       assert.equal((await pool.query('SELECT status FROM market_lab_collection_runs WHERE id=$1',[id])).rows[0].status,'interrupted');
     });
+    await t.test('cancellation during database work rolls back publication and its success receipt together',async()=>{
+      for(const point of ['snapshot-read','publication-lock','acceptance-receipt']){
+        const before=await readSnapshot(pool),beforeCount=(await pool.query('SELECT count(*) FROM market_lab_revisions')).rows[0].count,abort=new AbortController();let interrupted=false;
+        const intercept=(sql:unknown)=>{
+          const text=String(sql);
+          if(point==='snapshot-read'&&text.startsWith('SELECT r.*,p.published_at')||point==='publication-lock'&&text.includes('pg_advisory_xact_lock')||point==='acceptance-receipt'&&text.includes("SET status='published'")){interrupted=true;abort.abort();}
+        };
+        const delayedPool=new Proxy(pool,{get(target,property){
+          if(property==='query')return async(...args:unknown[])=>{const result=await (target.query as Function).apply(target,args);intercept(args[0]);return result;};
+          if(property==='connect')return async()=>{const client=await target.connect();return new Proxy(client,{get(owner,key){
+            if(key==='query')return async(...args:unknown[])=>{const result=await (owner.query as Function).apply(owner,args);intercept(args[0]);return result;};
+            const value=Reflect.get(owner,key);return typeof value==='function'?value.bind(owner):value;
+          }});};
+          const value=Reflect.get(target,property);return typeof value==='function'?value.bind(target):value;
+        }});
+        const revised:typeof fetch=async url=>new URL(String(url)).searchParams.get('id')==='GDPC1'?new Response(gdp+'\n'):fetchImpl(url);
+        assert.equal((await runUsCollection(delayedPool,{fetchImpl:revised,clock,force:true,signal:abort.signal})).status,'failed',point);
+        assert.equal(interrupted,true,point);assert.deepEqual(await readSnapshot(pool),before,point);
+        assert.equal((await readUsCollection(pool)).latest?.status,'failed',point);
+        assert.equal((await pool.query('SELECT count(*) FROM market_lab_revisions')).rows[0].count,beforeCount,point);
+      }
+      assert.equal((await runUsCollection(pool,{fetchImpl,clock,force:true})).status,'unchanged');
+    });
     await t.test('API exposes the same product and explicit collector state; disabled scheduler never announces active collection',async()=>{
       const market=await app.inject({url:'/api/v1/market-lab'});assert.equal(market.statusCode,200);const body=market.json();assert.deepEqual(body.usDirection,spxDirection(body.snapshot,new Date(body.evaluatedAt)));
       const response=await app.inject({url:'/api/v1/market-lab/collection'});assert.equal(response.statusCode,200);assert.equal(response.json().latest.status,'unchanged');assert.equal(response.json().schedule.enabled,false);

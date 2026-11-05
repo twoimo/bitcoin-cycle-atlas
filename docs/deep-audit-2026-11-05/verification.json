@@ -1,0 +1,329 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-deep-audit-followup-integration",
+  "recordedAt": "2026-11-05T08:45:03.244203+00:00",
+  "date": "2026-11-05",
+  "requestBaseCommit": "94a1b1dda9eb359de70747043808340da369d087",
+  "checkoutBaseCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "sourceBinding": "This pre-publication receipt identifies actual working-tree sources by SHA-256. Historical focused runs retain their own measured snapshots; their case counts are not summed into an all-scope pass. Remote CI must bind the eventual published head separately.",
+  "runtime": {
+    "node": "v24.22.2",
+    "localChromium": "143.0.7499.0",
+    "previousRemoteChromium": "156.0.8078.47",
+    "isolation": "Final seven-case replay and three-case embedded-data runs use normal multiprocess Chromium with real isolated browser contexts."
+  },
+  "completedLocalVerification": {
+    "replayFocused": {
+      "passed": 60,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "evidence/replay-destroy-focused.log"
+    },
+    "workspaceFocused": {
+      "passed": 85,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "evidence/workspace-regression.log",
+      "scope": "Ten existing workspace, mobile, dialog, indicator and viewport test files; overlaps with other suites are not added together."
+    },
+    "offlinePolicy": {
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "evidence/center-data-offline-policy.json"
+    },
+    "researchExistingRegressions": {
+      "command": "node --test tests/research-reader.test.mjs tests/research-source-reader.test.mjs tests/research-workbench.test.mjs",
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "logSha256": "ec4ba85a1dc3a5aee26a0c09f2bd15b4910243e83243ebd48ac7198ca12e83a8"
+    },
+    "boundedReplay": {
+      "playbackTraceCount": 10000,
+      "maxPlaybackLength": 4,
+      "selectionTraceCount": 259,
+      "maxSelectionLength": 3,
+      "playbackObservableStates": 52,
+      "playbackObservableEdges": 380,
+      "selectionObservableStates": 24,
+      "selectionObservableEdges": 78,
+      "negativeControlsRejected": 10,
+      "formalProof": false,
+      "modelCheckerRun": false,
+      "receipt": "replay-state-verification.json"
+    },
+    "nativeReplayFinalSources": {
+      "passed": 7,
+      "failed": 0,
+      "sourceIntegrity": {
+        "checkedFiles": 98,
+        "changedSources": [],
+        "unchangedDuringRun": true
+      },
+      "receipt": "evidence/chart-replay-native.json"
+    },
+    "nativeEmbeddedDataFinalSources": {
+      "passed": 3,
+      "failed": 0,
+      "sourceIntegrity": {
+        "checkedFiles": 98,
+        "changedSources": [],
+        "unchangedDuringRun": true
+      },
+      "receipt": "evidence/center-data-native.json"
+    },
+    "nativeDirectDataFocusedSnapshot": {
+      "passed": 9,
+      "failed": 0,
+      "receipt": "evidence/data-board-native.json",
+      "binding": "See measured source identities and packaging distinctions in data-board-manifest.json."
+    },
+    "nativeResearchFocusedSnapshot": {
+      "passed": 2,
+      "failed": 0,
+      "receipt": "evidence/research-native.json"
+    },
+    "nativePreviewNegativeControls": {
+      "rejected": 24,
+      "restoredPassed": 24,
+      "originalStatesPassed": 6,
+      "receipt": "evidence/alpha-and-indicator-verification.json"
+    },
+    "nativeIndicatorNegativeControls": {
+      "rejected": 10,
+      "restoredPassed": 10,
+      "originalViewportsPassed": 3,
+      "receipt": "evidence/alpha-and-indicator-verification.json"
+    },
+    "nativeClickHelperControls": {
+      "status": "passed",
+      "cases": 10,
+      "receipt": "evidence/click-modal-negative-control.json",
+      "binding": "Actual helper at the recorded focused snapshot; not a relabeled final whole-script run."
+    },
+    "nativeCycleMenu": {
+      "status": "passed",
+      "states": 9,
+      "sourcesUnchanged": true,
+      "receipt": "evidence/cycle-menu-native/report.json",
+      "scope": "Separate extra regression, outside the full 49-case inventory."
+    },
+    "pages": {
+      "build": "passed",
+      "generatedCheck": "passed",
+      "generatedFiles": 11,
+      "routes": 8,
+      "staticFiles": 786,
+      "checkedReferences": 803,
+      "receipt": "evidence/generated-pages-static.log"
+    }
+  },
+  "fullNativeInventory": {
+    "originalCases": 46,
+    "addedEmbeddedCases": 3,
+    "totalCases": 49,
+    "originalCasesRetained": true,
+    "localFullScopeFinalPassClaimed": false,
+    "finalHeadCIStatusAtRecording": "not yet run",
+    "pullRequest": "https://github.com/twoimo/bitcoin-cycle-atlas/pull/61"
+  },
+  "failedAndIncompleteAttempts": {
+    "receipt": "evidence/local-validation-attempts.json",
+    "unitAggregateMissing": "Not counted as a complete pass despite tool exit0.",
+    "singleProcessBrowser": "39 earlier cases passed and7 isolated-context cases failed. Intermediate source changes also prevent final-source binding. Retained as a failed attempt."
+  },
+  "priorRemote": {
+    "ethRun": 41795371676,
+    "ethConclusion": "failure",
+    "nativePassed": 30,
+    "nativeFailed": 16,
+    "evidenceBinding": "skipped",
+    "hallmarkRun": 41795371716,
+    "hallmarkIntegrity": "passed",
+    "hallmarkDesign": "failed",
+    "hallmarkStaticFails": 19,
+    "hallmarkTotalReflex": 5,
+    "newHeadResults": "Not inferred from the previous head; review the new exact-head CI and raw artifacts."
+  },
+  "protectedPaths": {
+    "comparisonBase": "94a1b1dda9eb359de70747043808340da369d087",
+    "gitDiffExitCode": 0,
+    "paths": [
+      "dist/data",
+      "dist/index.html",
+      "dist/ipo-view.js",
+      "dist/ipo-view.css",
+      "dist/ipo-month-calendar.js",
+      "docs/THREE_YEAR_RESULTS.json",
+      ".github/workflows/refresh-data.yml"
+    ],
+    "unchanged": true
+  },
+  "sourceIdentities": [
+    {
+      "path": ".agents/skills/verify-replay-state/SKILL.md",
+      "bytes": 8129,
+      "sha256": "c7bbefa7899d1984924e767f466cbe549ebe18bb2a9b702c39e6d81c34b81aa4"
+    },
+    {
+      "path": "dist/atlas-shell.css",
+      "bytes": 21229,
+      "sha256": "41b8900500edbe67de4e4a3d643b71be8bd5fbb2df54be79a86ccacf6cba5f71"
+    },
+    {
+      "path": "dist/chart-replay.js",
+      "bytes": 86088,
+      "sha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5"
+    },
+    {
+      "path": "dist/compact-chart-layout.css",
+      "bytes": 7520,
+      "sha256": "b429642986c9d73b930b49b48da7a710d8403965c4f50ee06263338c12c14f30"
+    },
+    {
+      "path": "dist/daily-data.css",
+      "bytes": 33945,
+      "sha256": "f45a6226526795d926caf2fe8c8df386f22f24c7a4383e05986b1b3df5b3366a"
+    },
+    {
+      "path": "dist/evidence-view.js",
+      "bytes": 7577,
+      "sha256": "fee4c064ed597fdba398a623846e00a96d590b2e85e1645976c787f55c3b6330"
+    },
+    {
+      "path": "dist/market-lab/app/assets/index-DnjoUSQA.css",
+      "bytes": 143521,
+      "sha256": "a866aaf16004c5753136c70e87e5ea88f32e54f61909c9c0cca4c3386e692372"
+    },
+    {
+      "path": "dist/market-lab/app/assets/index-DurH6u7_.js",
+      "bytes": 468053,
+      "sha256": "42b754d8c471c0302490be8d52fc76e32f817009e96ed7c1fce32004079b4dc0"
+    },
+    {
+      "path": "dist/market-lab/app/index.html",
+      "bytes": 2317,
+      "sha256": "20801347d761797d713658d446f8feb70ae6e8cd705ab9364a54154b9d199ede"
+    },
+    {
+      "path": "dist/research-reader.css",
+      "bytes": 12369,
+      "sha256": "fb41b38773dce8872ff0320951202346bc01c46bbb2f92a19a4d63a8ede3c4c8"
+    },
+    {
+      "path": "scripts/btc-offline-refresh-policy.mjs",
+      "bytes": 1736,
+      "sha256": "2129f5274e0338c2d747d45af29eacc1d00c7ee5bbcea99925faf53d23f75740"
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "bytes": 86200,
+      "sha256": "3590829a4a77d153468c4e98250feb4b269a501bce8601787c01f8ce76d29a29"
+    },
+    {
+      "path": "scripts/verify-workspace-browser.mjs",
+      "bytes": 52560,
+      "sha256": "e510dd2a7815a99243f32a394433c5b3b8503694eed74cbfed5326a192f14f36"
+    },
+    {
+      "path": "tests/chart-replay-ui.test.mjs",
+      "bytes": 90216,
+      "sha256": "d3f658ecf9f942604d263d29103abab9f936a93aed1e986af2383fdacab0ed27"
+    },
+    {
+      "path": "tests/ethereum-offline-refresh-policy.test.mjs",
+      "bytes": 3454,
+      "sha256": "5697ad32f15a5f6a8a8d0a48dbd6546d5f72c6bdb64c645013e7ce836ac34c3d"
+    },
+    {
+      "path": "verification/replay-state/verify.mjs",
+      "bytes": 12690,
+      "sha256": "47f372d00cf6131234c69669fcfe95c1cb93fa634c666adc825c277ae5e087bf"
+    }
+  ],
+  "evidenceIdentities": [
+    {
+      "path": "docs/deep-audit-2026-11-05/replay-state-verification.json",
+      "bytes": 11181,
+      "sha256": "6f0d2b5ef19d08d27e6ad10e494e3401dfd9d1fc62b5f9f5ce15b039089f7d45"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/replay-destroy-focused.log",
+      "bytes": 7272,
+      "sha256": "1159fee58858aa4aa1b5f53b6f867c35e24f9887fc6612e3f008e0357de48e89"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/replay-state-verifier.log",
+      "bytes": 11181,
+      "sha256": "6f0d2b5ef19d08d27e6ad10e494e3401dfd9d1fc62b5f9f5ce15b039089f7d45"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/workspace-regression.log",
+      "bytes": 9234,
+      "sha256": "402fd9b99d0cf2b461a0a3c19b58d7b5535147bab031f0f663325c884bb555fe"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/center-data-offline-policy.json",
+      "bytes": 3828,
+      "sha256": "2715527472e6bb6388533c1d75a09130ee109f015483641a2e5ab9b627a3c503"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/center-data-policy-after.log",
+      "bytes": 686,
+      "sha256": "c0ac78678aec46b513cbe4e74bb0fd1d647ebdc2e456d888e0bc44f21d603e11"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/generated-pages-static.log",
+      "bytes": 1092,
+      "sha256": "3396c27bdc7153d744e4e32d01e7861400fe4dbe4d6e3ea3d641969c678a59ec"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/chart-replay-native.json",
+      "bytes": 13916,
+      "sha256": "a8a91464e7746747e6fec3b718c6571868459652ed2d948546d9a45ff0a180f2"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/center-data-native.json",
+      "bytes": 148883,
+      "sha256": "51e8d07e9453837747c9a7d30ce8b5b6366ec2868a472fce72cb057ff199c6da"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/data-board-manifest.json",
+      "bytes": 10882,
+      "sha256": "807874b2afa463aaac0ab5b47fd2555fb591e210379579705b7bde0ff561c76f"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/research-native.json",
+      "bytes": 15745,
+      "sha256": "42747cc2ee9cad74270f84fcde9f0332f05d77ca594648dfc2ea070b939aef9a"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/alpha-and-indicator-verification.json",
+      "bytes": 9463,
+      "sha256": "f7fbe2d02fe17d8e98fad978f97d29597554ae522b41ead5a40ee150ec4a7c04"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/click-modal-negative-control.json",
+      "bytes": 9291,
+      "sha256": "523528b16d7735e3097ca927d2dc8167ef5d2fb74b7396e71e35b1c0948f7f4e"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/cycle-menu-native/report.json",
+      "bytes": 26673,
+      "sha256": "a772aa10d1a651277f838865b7d675f3b81dc4c9f42d61f8166c317850bf1622"
+    },
+    {
+      "path": "docs/deep-audit-2026-11-05/evidence/local-validation-attempts.json",
+      "bytes": 5186,
+      "sha256": "1cc15322422c8c301d5dc253fe578b119e6b6c80e0c441fd8e41ef0dcf97c8a1"
+    }
+  ],
+  "limits": [
+    "No unconditional financial or statistical proof; all trace enumeration bounds and floating-point limits remain explicit.",
+    "No model promotion, source refresh, forecast reissuance or change to the October21 initial-commit preserved baseline; its publication time remains unproven.",
+    "No full 49-case final-head result, PostgreSQL result, Hallmark result or deployment is asserted by this pre-publication receipt.",
+    "Local Chromium/Linux checks do not establish Safari, all browsers or physical-device behavior.",
+    "Failed/intermediate negative-control observations remain visible and are not counted as successful mutation proofs."
+  ]
+}

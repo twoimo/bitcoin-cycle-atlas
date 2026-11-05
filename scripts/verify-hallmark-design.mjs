@@ -8,6 +8,7 @@ import {readFile,writeFile,mkdir,rm,cp,readdir,stat} from 'node:fs/promises';
 import {resolve,join,relative,sep,extname} from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {createRequire} from 'node:module';
+import {countHallmarkSources,verifyHallmarkSourceScope} from './hallmark-source-scope.mjs';
 
 const ROOT=resolve(fileURLToPath(new URL('..',import.meta.url)));
 const PIN='0c1ed40e1b9b6c76f5621d087737dc57f174b51e';
@@ -66,7 +67,7 @@ async function inventory(dir,prefix=''){
 }
 async function sourceProof(dir){
   const commit=git(dir,'rev-parse','HEAD');
-  const raw=execFileSync('git',['-C',dir,'ls-tree','-rz','HEAD','--','dist','research-data','tools/hallmark','scripts/verify-hallmark-design.mjs','.github/workflows/hallmark-design.yml'],{encoding:'utf8',timeout:30000,maxBuffer:16*1024*1024});
+  const raw=execFileSync('git',['-C',dir,'ls-tree','-rz','HEAD','--','dist','research-data','tools/hallmark','scripts/verify-hallmark-design.mjs','scripts/hallmark-source-scope.mjs','.github/workflows/hallmark-design.yml'],{encoding:'utf8',timeout:30000,maxBuffer:16*1024*1024});
   let files=0,bytes=0;const aggregate=createHash('sha256');
   for(const item of raw.split('\0').filter(Boolean)){
     const split=item.indexOf('\t'),[mode,type,expected]=item.slice(0,split).split(' '),path=item.slice(split+1);
@@ -75,7 +76,7 @@ async function sourceProof(dir){
     files++;bytes+=data.length;aggregate.update(path+'\0'+expected+'\n');
   }
   assert.ok(files>0,'No tracked source files');
-  assert.equal(git(dir,'diff','--name-only','HEAD','--','dist','research-data','tools/hallmark','scripts/verify-hallmark-design.mjs','.github/workflows/hallmark-design.yml'),'','Tracked inputs must be read-only');
+  assert.equal(git(dir,'diff','--name-only','HEAD','--','dist','research-data','tools/hallmark','scripts/verify-hallmark-design.mjs','scripts/hallmark-source-scope.mjs','.github/workflows/hallmark-design.yml'),'','Tracked inputs must be read-only');
   return {commit,files,bytes,manifestSha256:aggregate.digest('hex'),gitBlobsMatched:true};
 }
 async function runChild(name,cli,timeout){
@@ -215,10 +216,10 @@ try{
   const beforeCurrent=await sourceProof(ROOT),beforeBaseline=await sourceProof(BASELINE);assert.equal(beforeBaseline.commit,PIN,'Baseline checkout must match the fixed source commit');
   receipt.sourceCommit=beforeCurrent.commit;receipt.sourceBefore={current:beforeCurrent,baseline:beforeBaseline};
   const baselineFiles=await inventory(join(BASELINE,'dist')),currentFiles=await inventory(join(ROOT,'dist'));
-  const count=files=>({css:files.filter(p=>p.endsWith('.css')).length,html:files.filter(p=>p.endsWith('.html')).length});
-  receipt.sourceInventory={baseline:count(baselineFiles),current:count(currentFiles)};
-  assert.deepEqual(count(baselineFiles),{css:24,html:2},'Pinned baseline inventory changed');
-  assert.ok(count(currentFiles).css>=24&&count(currentFiles).html===2,'Current source must keep the complete baseline screen/style scope');
+  const count=countHallmarkSources;
+  // Keep the pinned screens and styles by identity, while including every
+  // added entrypoint in the explicit dist scan and its expected file count.
+  receipt.sourceInventory=verifyHallmarkSourceScope(baselineFiles,currentFiles);
   const installed=JSON.parse(await readFile(join(process.env.HALLMARK_PUPPETEER||'','node_modules/puppeteer-core/package.json'),'utf8'));
   assert.equal(installed.version,'25.16.0','Unexpected browser tooling version');assert.ok(process.env.CHROME_PATH,'CHROME_PATH required');
   receipt.browser={puppeteerCore:installed.version,chrome:execFileSync(process.env.CHROME_PATH,['--version'],{encoding:'utf8',timeout:15000}).trim(),node:process.version};

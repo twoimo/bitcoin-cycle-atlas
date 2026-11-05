@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "kind": "center-data-offline-refresh-eligibility",
+  "date": "2026-11-05",
+  "baseCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+  "change": "Add only literal surface 'center-data' to the whitelist. Eligibility itself does not accept a resource failure.",
+  "policy": {
+    "path": "scripts/btc-offline-refresh-policy.mjs",
+    "sha256": "2129f5274e0338c2d747d45af29eacc1d00c7ee5bbcea99925faf53d23f75740",
+    "baseSha256": "f8f2a165a3b52ceb47f4b2102d86d82f1141c8c04022a2bf7833979a968b94ff",
+    "allOtherBytesEqualAfterRemovingTheOneAddedLiteral": true
+  },
+  "regressionTest": {
+    "path": "tests/ethereum-offline-refresh-policy.test.mjs",
+    "sha256": "5697ad32f15a5f6a8a8d0a48dbd6546d5f72c6bdb64c645013e7ce836ac34c3d"
+  },
+  "before": {
+    "path": "docs/deep-audit-2026-11-05/evidence/center-data-policy-before.log",
+    "sha256": "0f31dd376f1d9114ac6df3986f163e146f44bbfeede09134d54f56b864236952",
+    "tests": 6,
+    "pass": 5,
+    "fail": 1,
+    "countSource": "Individual test result lines; baseline failure is the new positive center-data case."
+  },
+  "after": {
+    "path": "docs/deep-audit-2026-11-05/evidence/center-data-policy-after.log",
+    "sha256": "c0ac78678aec46b513cbe4e74bb0fd1d647ebdc2e456d888e0bc44f21d603e11",
+    "tests": 6,
+    "pass": 6,
+    "fail": 0,
+    "skipped": 0,
+    "countSource": "Node test runner summary"
+  },
+  "nodeVersion": "v24.22.2",
+  "newCoverage": [
+    "Exact existing stale BTC request is eligible in center-data.",
+    "data, center-data-eth and center-data-frame remain ineligible.",
+    "ETH URL, duplicate query key, HTTP503 response event, POST, Script resource type, other blocking reason, missing frame/loader/request IDs and invalid request clock remain ineligible.",
+    "Fresh archive remains ineligible."
+  ],
+  "callerReview": {
+    "workspaceScript": {
+      "path": "scripts/verify-workspace-browser.mjs",
+      "sha256": "35a370402b0b06a421bb3d52c580ea0d01c101ffb97c54a36df37e81a1c95b02"
+    },
+    "helper": "verifyEmbeddedDataSurface",
+    "helperSha256": "bc4fce1ecd2cca1df92bc24c051ff11e96df7056eca672fc565c5d6d2e54bc84",
+    "phases": [
+      "center-data-initial-parent",
+      "center-data-return-parent-retry"
+    ],
+    "checks": [
+      "All3 new routes select BTCUSD daily line chart.",
+      "Initial callback follows parent outlook/no center assertions.",
+      "The child comparison frame is matched by parent ID and URL; no offline refresh callback is invoked in the child.",
+      "Return requires center removal and unchanged parent timeOrigin/price/date/kind/cutoff/product.",
+      "Return verification requires initial validation and an explicit native parent retry creating a distinct request."
+    ],
+    "mainGuardUnchangedFromBase": true,
+    "mainGuardSha256": "18dc75e16d488779ac6608ff354b6cadaa5a488ba4ea0ba42170c7308fa605d4",
+    "mainGuardScript": {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "sha256": "d660c06ef77e819b9a384bb97c1e6a76d0d5726cc8129d50d0cca3dde2661bae"
+    },
+    "remainingGuards": [
+      "Exact current document URL binds one frame and loader.",
+      "Failed-refresh UI, visible enabled retry, live announcement, retained cutoff and displayed actual BTC price/date/kind must agree.",
+      "Exactly one new request ID must match that frame/loader and the precise stale BTC CoinMetrics query.",
+      "All other resource errors remain unexpected failures."
+    ]
+  },
+  "limits": [
+    "Policy unit verification and caller source review only; native center-data cases are executed by the performance/integration owner.",
+    "Historical preview and indicator receipts retain the policy hash measured in those runs.",
+    "No production URL, source data, price, immutable forecast, mathematics, ETH error classification or model promotion was changed."
+  ]
+}

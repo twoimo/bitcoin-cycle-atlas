@@ -9,6 +9,19 @@ test('only the exact stale BTC archive request is eligible for a separately veri
   for(const surface of ['btc','evidence','legacy','preview'])assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface}),true);
   for(const surface of ['eth','data',undefined])assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface}),false);
 });
+test('center-data admits only the existing stale BTC request eligibility',()=>{
+  assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface:'center-data'}),true);
+  for(const surface of ['data','center-data-eth','center-data-frame'])
+    assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface}),false);
+});
+test('center-data cannot excuse ETH, missing document identity or other network failures',()=>{
+  const centerPolicy={...policy,surface:'center-data'};
+  for(const change of [{url:error.url.replace('assets=btc','assets=eth')},{url:error.url+'&assets=btc'},
+    {networkEvent:'Network.responseReceived',httpStatus:503},{method:'POST'},{resourceType:'Script'},
+    {blockedReason:'other'},{frameId:''},{loaderId:''},{requestId:''},{requestWallTime:NaN}])
+    assert.equal(isExpectedOfflineBtcRefresh({...error,...change},centerPolicy),false);
+  assert.equal(isExpectedOfflineBtcRefresh(error,{...centerPolicy,archiveAsOf:'2026-10-27'}),false);
+});
 test('different hosts, metrics, query keys, credentials and request methods stay failures',()=>{
   for(const url of [error.url.replace('coinmetrics.io','coinmetrics.io.evil.example'),error.url.replace('assets=btc','assets=eth'),
     error.url.replace('PriceUSD','CapMrktCurUSD'),error.url+'&next_page_token=other',error.url+'&assets=btc',
