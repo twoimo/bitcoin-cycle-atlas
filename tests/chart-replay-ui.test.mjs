@@ -58,6 +58,9 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     getBoundingClientRect(){return {left:0,top:0,width:800,height:400};}
     focus(){doc.activeElement=this;}remove(){if(this.parentElement)this.parentElement.children=this.parentElement.children.filter(child=>child!==this);this.parentElement=null;}
     click(){if(!this.disabled)return this.onclick?.({target:this});}
+    setCustomValidity(message){this.validationMessage=message;}
+    checkValidity(){return !this.validationMessage&&this.nativeValidity!==false;}
+    reportValidity(){this.validityReports=(this.validityReports??0)+1;this.focus();return this.checkValidity();}
   }
   doc=new Element('document');doc.documentElement=new Element('html');doc.createElement=tag=>new Element(tag);doc.createElementNS=(_,tag)=>new Element(tag);
   const win=new Element('window');doc.defaultView=win;win.navigator={locks:{request:async(_name,_options,work)=>work({name:_name})}};win.localStorage={getItem:key=>saved.get(key)??null,setItem:(key,value)=>{
@@ -234,6 +237,69 @@ const interactionCases=[
           disabled:['exit-confirm','exit-cancel','exit-save'].map(key=>h.controls.get(key).disabled)},detached,
           'destroyed save completion cannot update detached controls');
       }finally{gate.resolve();await finished.promise;await flush();h.mounted.destroy();}
+    }
+  }},
+  {name:'manual date button and Enter reject invalid dates without changing a resumed capture',async run(source){
+    for(const submit of ['button','Enter']){
+      const raw=JSON.stringify(savedFixture(),null,2)+'\n',h=await harness(source,{...atlasFixture({frequency:'weekly'}).options,storedText:raw});
+      h.trigger.click();h.controls.get('entry-continue').click();await flush();
+      h.controls.get('select-menu').click();h.controls.get('select-date').click();
+      const input=h.controls.get('date'),state=h.controllers[0].getState(),session=state.session;
+      const before={svg:JSON.stringify(h.svg.dataset),session:JSON.stringify(session),builds:h.builds.length,draws:h.draws.length,status:h.status()};
+      assert.ok(session.replaySnapshot?.digest,'the rejection test must own a sealed capture');
+      const invalid=[dateAfter(input.max,1),dateAfter(input.min,-1),'','not-a-date','2024-02-30','2024-13-01','0000-01-01'];
+      for(const value of invalid){
+        const reports=input.validityReports??0;input.value=value;
+        if(submit==='button')h.controls.get('start').click();else input.onkeydown({key:'Enter',preventDefault(){}});
+        await flush();
+        assert.equal(h.controllers[0].getState().session,session,'manual invalid date cannot replace the current session');
+        assert.equal(h.controllers[0].getState().cursorIndex,state.cursorIndex,'manual invalid date cannot seek');
+        assert.equal(h.controllers[0].getState().status,state.status);
+        assert.equal(JSON.stringify(h.svg.dataset),before.svg,'manual invalid date cannot change the rendered origin, cursor or snapshot');
+        assert.equal(JSON.stringify(session),before.session,'manual invalid date cannot alter frozen forecast or capture bytes');
+        assert.equal(h.builds.length,before.builds);assert.equal(h.draws.length,before.draws);
+        assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);
+        assert.equal(h.status(),before.status,'date validity feedback must not replace the current replay status');
+        assert.equal(input.value,value,'the rejected draft must not be silently clamped');
+        assert.equal(input.validityReports,reports+1,'manual invalid date must report native validity');
+        assert.ok(input.validationMessage);assert.equal(h.doc.activeElement,input);
+        assert.equal(h.controls.get('select-panel').hidden,false);assert.equal(h.controls.get('select-panel').dataset.menuView,'date');
+      }
+      assert.ok(input.validationMessage);input.value=dateAt(50);input.oninput();
+      assert.equal(input.validationMessage,'','editing clears an existing custom validity error');
+      assert.equal(h.status(),before.status,'correcting the draft preserves the replay status');
+      input.nativeValidity=false;const reports=input.validityReports;
+      if(submit==='button')h.controls.get('start').click();else input.onkeydown({key:'Enter',preventDefault(){}});
+      await flush();assert.equal(input.validityReports,reports+1,'native invalidity must also block an otherwise valid domain date');
+      assert.equal(h.controllers[0].getState().session,session);assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);input.nativeValidity=true;
+      for(const value of [input.min,input.max]){
+        input.value=value;
+        if(submit==='button')h.controls.get('start').click();else input.onkeydown({key:'Enter',preventDefault(){}});
+        await flush();assert.equal(h.svg.dataset.replayStartDate,value,'a valid boundary remains selectable');
+        assert.equal(h.svg.dataset.replayCursor,dateAfter(value,-1));assert.equal(input.validationMessage,'');
+        assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);
+        h.controls.get('select-menu').click();h.controls.get('select-date').click();
+      }
+      const statusBeforeCancel=h.status();input.value=dateAfter(input.max,1);h.controls.get('start').click();
+      h.controls.get('menu-back').click();assert.equal(input.validationMessage,'','canceling a date draft clears its validation error');
+      assert.equal(h.status(),statusBeforeCancel,'canceling an invalid date must not leave stale replay status');
+      h.controls.get('select-first').click();await flush();assert.equal(h.svg.dataset.replayStartDate,input.min);
+      h.mounted.destroy();
+    }
+  }},
+  {name:'manual invalid dates leave an unconfirmed replay start unconfirmed',async run(source){
+    for(const submit of ['button','Enter']){
+      const h=await harness(source,atlasFixture().options);h.trigger.click();await flush();
+      h.controls.get('select-menu').click();h.controls.get('select-date').click();
+      const input=h.controls.get('date'),before=JSON.stringify(h.svg.dataset),builds=h.builds.length;
+      for(const value of ['',dateAfter(input.min,-1),dateAfter(input.max,1),'2024-02-30']){
+        input.value=value;
+        if(submit==='button')h.controls.get('start').click();else input.onkeydown({key:'Enter',preventDefault(){}});
+        await flush();assert.equal(h.controllers[0].getState().status,'selecting','invalid manual input cannot confirm a start');
+        assert.equal(h.controllers[0].getState().session,null);assert.equal(JSON.stringify(h.svg.dataset),before);
+        assert.equal(h.builds.length,builds);assert.equal(h.savedText(),null);assert.equal(h.writes.length,0);
+      }
+      h.mounted.destroy();
     }
   }},
   {name:'forecast settings cannot confirm an unselected replay start',async run(source){

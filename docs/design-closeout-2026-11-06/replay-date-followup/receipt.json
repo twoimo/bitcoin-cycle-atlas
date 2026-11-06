@@ -1,0 +1,162 @@
+{
+  "kind": "replay-manual-date-followup",
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-06T09:51:50.242618+00:00",
+  "status": "LOCAL_CHECKS_PASSED_NATIVE_PENDING",
+  "baselineCommit": "aca73b74a5128a5466488a0c701e86f5e854af46",
+  "baselineCoordinatorSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+  "sourceBinding": "Uncommitted follow-up over the named baseline; current source identities are the SHA-256 values below, not the baseline commit.",
+  "runtime": "v24.22.1",
+  "focused": {
+    "command": "node --test tests/chart-replay-ui.test.mjs tests/chart-replay-atlas.test.mjs tests/chart-replay-state.test.mjs tests/chart-replay-snapshot.test.mjs tests/replay-cutoff*.test.mjs",
+    "tests": 87,
+    "pass": 87,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "manual": {
+    "command": "node --test --test-name-pattern='manual.*date' tests/chart-replay-ui.test.mjs",
+    "tests": 2,
+    "pass": 2,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "formal": {
+    "command": "node verification/replay-state/verify.mjs docs/replay-state/verification.json",
+    "status": "pass",
+    "controllerTests": 16,
+    "playback": {
+      "commands": 10,
+      "maxTraceLength": 4,
+      "traces": 10000,
+      "prefixes": 11111,
+      "transitions": 40000,
+      "observableStates": 52,
+      "observableEdges": 380,
+      "playbackBars": 3
+    },
+    "selection": {
+      "status": "pass",
+      "commands": [
+        "mode:atlas-chart",
+        "mode:project-baseline",
+        "horizon:90",
+        "horizon:365",
+        "confirm",
+        "pick"
+      ],
+      "maxTraceLength": 3,
+      "traces": 259,
+      "transitions": 726,
+      "observableStates": 24,
+      "observableEdges": 78,
+      "sourceSha256": "4bd6c239ffe783cf5731bdb1dd229ee79956964f8449f3fc9ffc1aba2e461055",
+      "scope": "Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging"
+    },
+    "detectedMutations": 11,
+    "manualDates": {
+      "original": [
+        {
+          "status": "pass",
+          "name": "manual date button and Enter reject invalid dates without changing a resumed capture",
+          "sourceSha256": "4bd6c239ffe783cf5731bdb1dd229ee79956964f8449f3fc9ffc1aba2e461055",
+          "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+        },
+        {
+          "status": "pass",
+          "name": "manual invalid dates leave an unconfirmed replay start unconfirmed",
+          "sourceSha256": "4bd6c239ffe783cf5731bdb1dd229ee79956964f8449f3fc9ffc1aba2e461055",
+          "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+        }
+      ],
+      "mutations": {
+        "manual-date-validation-bypassed": {
+          "status": "expected behavioral failure",
+          "name": "manual date button and Enter reject invalid dates without changing a resumed capture",
+          "assertion": "manual invalid date cannot replace the current session",
+          "exitStatus": 1,
+          "sourceSha256": "2d9047d9a6c5523fb217ca301528e467b22bdd1251fca435c5854e3995914f65"
+        }
+      },
+      "restored": [
+        {
+          "status": "pass",
+          "name": "manual date button and Enter reject invalid dates without changing a resumed capture",
+          "sourceSha256": "4bd6c239ffe783cf5731bdb1dd229ee79956964f8449f3fc9ffc1aba2e461055",
+          "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+        },
+        {
+          "status": "pass",
+          "name": "manual invalid dates leave an unconfirmed replay start unconfirmed",
+          "sourceSha256": "4bd6c239ffe783cf5731bdb1dd229ee79956964f8449f3fc9ffc1aba2e461055",
+          "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+        }
+      ]
+    },
+    "formalProof": false,
+    "modelCheckerRun": false
+  },
+  "skillValidation": {
+    "status": "pass",
+    "helper": "skill-creator/scripts/quick_validate.py",
+    "target": ".agents/skills/verify-replay-state",
+    "output": "Skill is valid!",
+    "agentMetadata": "Existing selection/lifecycle prompt remains consistent; no metadata change."
+  },
+  "syntax": {
+    "status": "pass",
+    "files": [
+      "dist/chart-replay.js",
+      "scripts/verify-chart-replay-browser.mjs",
+      "verification/replay-state/verify.mjs"
+    ]
+  },
+  "preservedAttempts": {
+    "initial-regression-failure.log": "The first added regression revision failed on the unchanged baseline coordinator: missing native feedback and an invalid date confirming a start. The current test revision also rejects the isolated mutation restoring the old unguarded handlers.",
+    "fixture-api-failure.log": "The expanded focused run exposed missing native input validity methods in tests/replay-ui-fixture.mjs. Only the DOM boundary was supplied; production APIs were not weakened."
+  },
+  "native": {
+    "status": "not-run-locally",
+    "reason": "This checkout has no available Chromium plus Korean-font runtime. Exact-head CI must execute the new native checks before issue closure.",
+    "requiredCases": [
+      "desktop BTC native keyboard above maximum with button",
+      "desktop BTC native keyboard above maximum with Enter",
+      "desktop BTC native keyboard below minimum with button",
+      "desktop BTC native keyboard below minimum with Enter",
+      "same-field valid edit clears each custom error",
+      "replay HUD remains unchanged after invalid input, correction and cancel",
+      "native minimum with button",
+      "native maximum with Enter",
+      "discard and Continue restore the original saved capture"
+    ],
+    "unverifiedClaims": [
+      "Native keyboard field segmentation and validity popup behavior",
+      "Native rejection screenshots and saved snapshot preservation",
+      "Actual deployed behavior"
+    ]
+  },
+  "sourceHashes": {
+    "dist/chart-replay.js": "4bd6c239ffe783cf5731bdb1dd229ee79956964f8449f3fc9ffc1aba2e461055",
+    "dist/chart-replay-state.js": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
+    "dist/chart-replay-snapshot.js": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
+    "tests/chart-replay-ui.test.mjs": "61870821827d6a928a568e716ca343ef08f1302abed9c79f45af0795104d6f01",
+    "tests/replay-ui-fixture.mjs": "a40ee1d07687850138e89c6a0ec8fd96632f32e0233c15bb4eedeac758e609c5",
+    "scripts/verify-chart-replay-browser.mjs": "04e419ba8e1858153385d134e9e765b8458a0b763a158f935e7ccd0a4656fcad",
+    "verification/replay-state/verify.mjs": "f315e68047e33f1ef558281e226344c6d565ec7eaba5e2d334ed693465494577",
+    ".agents/skills/verify-replay-state/SKILL.md": "d7d36292cdc4914c4a1ba8b5103d25204c1c2536c15f669e81939802c6489852",
+    ".agents/skills/verify-replay-state/agents/openai.yaml": "a878d794b31bace5c1113732e1b9c86aa12c43c370d953ff9309aef1793e4779",
+    "docs/replay-state/README.md": "eaa20683e2feac2a2e3f7f3d4c8745bfc99980e31d5576c8ee3191a8eddc5e87",
+    "docs/replay-state/statechart.mmd": "d5176e9ab16a08d75869ae478e1ec32c66c8616336e94bac9c04b0665bb00ff4",
+    "docs/replay-state/verification.json": "f5c375a1c847a2488999ca5a63a0231f2292a070df34a6934ffeec9e68b25e60"
+  },
+  "logHashes": {
+    "initial-regression-failure.log": "11de6c5299a2a1645c762708287c81b32feb9620192c0acbc5786fe9188dfaa2",
+    "fixture-api-failure.log": "7b958486756303e9f61f6f9b2822a8141619054c4ef2bc05d6a881cd71028cec",
+    "focused-final.log": "bdc7f89a547e01c9bfa611446d5d5acb3bae021773191f33f20b167d29a21f0f",
+    "manual-final.log": "8f36339896a68329918373f93471cf69810e814fec15697bdd3bb03f64d4f04b"
+  }
+}

@@ -68,11 +68,12 @@ const manifest=await buildEthReviewPacket({
   baselineCommit:scope.baselineCommit,seedPaths:scope.seedPaths,
   dynamicResolutions:scope.dynamicResolutions,evidencePaths,
   externalReviewDisposition:'omitted-by-user',
-  // The complete aca73b7 CI evidence requires 105,721,764 bytes in 862 entries,
-  // before adding the missing browser stylesheet and Worker source inventory.
-  // Keep every declared source, immutable archive object and browser receipt
-  // inside a finite 128 MB aggregate budget. The separate per-file ceiling
-  // remains 85 MB; increasing aggregate capacity cannot admit a larger input.
+  // The preserved aca73b7 CI inputs require 105,721,764 framed bytes in 862
+  // entries; the previous 100 MB budget cannot retain that complete scope.
+  // Keep every source, archive object and receipt within a finite 128 MB
+  // aggregate budget. The separate per-file ceiling remains 85 MB.
+  // Future growth still fails closed at either bound; this is not unbounded
+  // archive capacity or a reason to omit evidence that no longer fits.
   // This byte budget does not change model, sample-size or release conditions.
   maximumBundleBytes:128000000,maximumFileBytes:85000000,
 });

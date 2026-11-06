@@ -35,3 +35,7 @@ The complete native gate passed 49/49 cases on `5ddc2175764b8cad383c04ad9ff2940b
 ## Packet capacity closeout
 
 The exact failed CI artifact was replayed after measuring its complete evidence size. The caller retains all original bytes within a finite 128 MB total cap and unchanged 85 MB input cap. One inventory regression enforces the existing declared browser-source scope. The corrected committed replay passes with 872 entries; all 335 execution-evidence inputs, product files and 203 protected financial/research/IPO inputs remain unchanged. The sole protected-path metadata change is the additive review inventory. See [packet evidence](packet/README.md). Final exact-head workflows, merge and actual public publication verification are still required.
+
+## Final integration
+
+The concurrent packet continuation at `1bba1a4baa616ca7849134c0b925143cde96bb18` is retained together with the manual-date follow-up. The actual `aca73b7` CI evidence book exceeded its aggregate packaging capacity, and open issue #50 still allowed invalid manual dates to select another replay origin. Their original failures, corrections and verification scope are preserved in [capacity follow-up](release-followup-ci.md) and [manual-date follow-up](replay-date-followup.md). The integration adds the date guard after the packet-only receipts; those historical receipts do not claim to cover this product delta. The completed release receipt is maintained in [PR #62](https://github.com/twoimo/bitcoin-cycle-atlas/pull/62), with actual final CI, merged source and served identity.

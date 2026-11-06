@@ -14,13 +14,14 @@ stateDiagram-v2
     SavedChoice --> Loading: Continue valid saved mode
     SavedChoice --> Selecting: Start new
     SavedChoice --> Idle: Cancel
-    Selecting --> Selecting: Change mode or horizon
+    Selecting --> Selecting: Change settings or reject invalid date
     Selecting --> Loading: Confirm date or bar
     Loading --> Selecting: Change unconfirmed settings
     Loading --> Paused: Current request succeeds
     Loading --> Failed: Current request fails
     Failed --> Loading: Retry selected origin
     Paused --> Playing: Play
+    Paused --> Paused: Reject invalid manual date
     Playing --> Paused: Pause or seek
     Playing --> Ended: Reveal last observation
     Ended --> Ended: Play without a later observation

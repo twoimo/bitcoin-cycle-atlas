@@ -26,6 +26,9 @@ export async function uiFixture({captured,archive,initialMode='atlas-chart',stor
     addEventListener(t,fn){this.listeners.set(t,[...this.listeners.get(t)??[],fn]);}removeEventListener(t,fn){this.listeners.set(t,(this.listeners.get(t)??[]).filter(f=>f!==fn));}
     dispatchEvent(e){for(const fn of this.listeners.get(e.type)??[]){fn(e);if(e.stopped)break;}return true;}
     getBoundingClientRect(){return {left:0,top:0,width:1000,height:700};}focus(){doc.activeElement=this;}remove(){if(this.parentElement)this.parentElement.children=this.parentElement.children.filter(c=>c!==this);}click(){if(!this.disabled)return this.onclick?.({target:this});}
+    setCustomValidity(message){this.validationMessage=message;}
+    checkValidity(){return !this.validationMessage;}
+    reportValidity(){this.focus();return this.checkValidity();}
   }
   doc=new Element('document');doc.documentElement=new Element('html');doc.createElement=t=>new Element(t);doc.createElementNS=(_,t)=>actualPainter?new SvgNode(t,doc):new Element(t);
   const win=new Element('window');doc.defaultView=win;win.navigator={locks:{request:async(_name,_options,work)=>work({name:_name})}};const writes=[],storage=new Map([[initialMode==='cutoff-backtest'?'atlas-cutoff-backtest-v1:BTCUSD':'atlas-chart-replay-v1:BTCUSD',storedText]]);win.localStorage={getItem:k=>storage.get(k)??null,setItem:(k,v)=>{writes.push([k,v]);storage.set(k,v);storedText=v;}};win.requestAnimationFrame=()=>1;win.cancelAnimationFrame=()=>{};win.CustomEvent=class{constructor(type){this.type=type;}};win.setTimeout=()=>0;
