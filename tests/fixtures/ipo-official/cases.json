@@ -1,0 +1,196 @@
+{
+  "cases": [
+    {
+      "id": "synthetic-table-sample",
+      "synthetic": true,
+      "board": [
+        "<div class=\"pageInfo\">[1/1] [총 1건]</div><table><tbody><tr>\n<td>1</td>\n<td><span class=\"tagCom_etc\" title=\"기타법인\">기</span><a href=\"javascript:openCorpInfoNew('00000001', 'winCorpInfo', '/dsae001/selectPopup.ax');\" title=\"표본전자 기업개황 새창\">표본전자</a></td>\n<td><a href=\"/dsaf001/main.do?rcpNo=20261101000001\" onclick=\"openReportViewer('20261101000001');\">증권신고서(지분증권)</a></td>\n<td title=\"보통주\">보통주</td>\n<td>2026.11.02~2026.11.03</td>\n<td>2026.11.01</td>\n</tr></tbody></table>"
+      ],
+      "openDart": [
+        "<div class=\"page_info\">[1/1] [총 1건]</div><table><tbody><tr><td><span class=\"tagCom_etc\" alt=\"기타법인\"></span><span class=\"com\" title=\"표본전자 기업개황 새창\">표본전자</span></td><td title=\"2026-11-01\">2026-11-01</td><td title=\"2026년 11월 02일 ~ 2026년 11월 03일\"><a onclick=\"openReportViewerDetail('20261101000001','7','','A','10001');\">2026년 11월 02일 ~ 2026년 11월 03일</a></td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\"><a onclick=\"openReportViewerDetail('20261101000001','7','','A','10001');\">-</a></td></tr></tbody></table>"
+      ],
+      "documents": [
+        {
+          "rcpNo": "20261101000001",
+          "html": "<table><tr><td>인수(주선) 여부</td><td colspan=\"3\">지분증권 등 상장을 위한 공모여부</td></tr><tr><td>인수</td><td>예</td><td>코스닥시장</td><td>신규상장</td></tr></table><table><tr><td>청약기일</td><td>납입기일</td></tr><tr><td>2026년 11월 02일 ~ 2026년 11월 03일</td><td>2026년 11월 06일</td></tr></table>"
+        }
+      ],
+      "expect": {
+        "verified": false,
+        "status": "needs_review",
+        "candidateNames": [
+          "표본전자"
+        ]
+      }
+    },
+    {
+      "id": "page-omission",
+      "board": [
+        "<div class=\"pageInfo\">[1/2] [총 2건]</div><table><tbody><tr>\n<td>1</td>\n<td><span class=\"tagCom_etc\" title=\"기타법인\">기</span><a href=\"javascript:openCorpInfoNew('00000001', 'winCorpInfo', '/dsae001/selectPopup.ax');\" title=\"누락기업 기업개황 새창\">누락기업</a></td>\n<td><a href=\"/dsaf001/main.do?rcpNo=20261101000002\" onclick=\"openReportViewer('20261101000002');\">증권신고서(지분증권)</a></td>\n<td title=\"보통주\">보통주</td>\n<td>2026.11.02~2026.11.03</td>\n<td>2026.11.01</td>\n</tr></tbody></table>"
+      ],
+      "openDart": [
+        "<div class=\"page_info\">[1/1] [총 1건]</div><table><tbody><tr><td><span class=\"tagCom_etc\" alt=\"기타법인\"></span><span class=\"com\" title=\"누락기업 기업개황 새창\">누락기업</span></td><td title=\"2026-11-01\">2026-11-01</td><td title=\"2026년 11월 02일 ~ 2026년 11월 03일\"><a onclick=\"openReportViewerDetail('20261101000002','7','','A','10001');\">2026년 11월 02일 ~ 2026년 11월 03일</a></td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\"><a onclick=\"openReportViewerDetail('20261101000002','7','','A','10001');\">-</a></td></tr></tbody></table>"
+      ],
+      "expect": {
+        "verified": false,
+        "status": "source_failed",
+        "mustNotVerify": [
+          "누락기업"
+        ],
+        "reasons": [
+          "list_coverage_incomplete"
+        ]
+      }
+    },
+    {
+      "id": "follow-on-excluded",
+      "board": [
+        "<div class=\"pageInfo\">[1/1] [총 1건]</div><table><tbody><tr>\n<td>1</td>\n<td><span class=\"tagCom_kospi\" title=\"유가증권시장\">기</span><a href=\"javascript:openCorpInfoNew('00000001', 'winCorpInfo', '/dsae001/selectPopup.ax');\" title=\"삼성바이오로직스 기업개황 새창\">삼성바이오로직스</a></td>\n<td><a href=\"/dsaf001/main.do?rcpNo=20261022000473\" onclick=\"openReportViewer('20261022000473');\">증권신고서(지분증권)</a></td>\n<td title=\"보통주\">보통주</td>\n<td>2026.11.02~2026.11.03</td>\n<td>2026.11.01</td>\n</tr></tbody></table>"
+      ],
+      "documents": [
+        {
+          "rcpNo": "20261022000473",
+          "html": "<p>기존 상장사의 유상증자 청약이다. 일반공모라는 단어만 있다.</p>"
+        }
+      ],
+      "expect": {
+        "verified": false,
+        "mustNotVerify": [
+          "삼성바이오로직스"
+        ],
+        "reasons": [
+          "follow_on_excluded"
+        ]
+      }
+    },
+    {
+      "id": "withdrawal-stale-summary",
+      "board": [
+        "<div class=\"pageInfo\">[1/1] [총 1건]</div><table><tbody><tr>\n<td>1</td>\n<td><span class=\"tagCom_etc\" title=\"기타법인\">기</span><a href=\"javascript:openCorpInfoNew('00000001', 'winCorpInfo', '/dsae001/selectPopup.ax');\" title=\"SimwonAmericaCorp. 기업개황 새창\">SimwonAmericaCorp.</a></td>\n<td><a href=\"/dsaf001/main.do?rcpNo=20261030000200\" onclick=\"openReportViewer('20261030000200');\">[철회]증권신고서(지분증권)</a></td>\n<td title=\"보통주\">보통주</td>\n<td>-</td>\n<td>2026.10.12</td>\n</tr></tbody></table>"
+      ],
+      "openDart": [
+        "<div class=\"page_info\">[1/1] [총 1건]</div><table><tbody><tr><td><span class=\"tagCom_etc\" alt=\"기타법인\"></span><span class=\"com\" title=\"SimwonAmericaCorp. 기업개황 새창\">SimwonAmericaCorp.</span></td><td title=\"2026-10-12\">2026-10-12</td><td title=\"2026년 11월 05일\"><a onclick=\"openReportViewerDetail('20261012000149','7','','A','10001');\">2026년 11월 05일</a></td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"2026년 07월 06일 최종보고서\"><a onclick=\"openReportViewerDetail('20260706000444','7','','A','10001');\">2026년 07월 06일 최종보고서</a></td></tr></tbody></table>"
+      ],
+      "expect": {
+        "verified": false,
+        "mustNotVerify": [
+          "SimwonAmericaCorp."
+        ],
+        "reasons": [
+          "withdrawn",
+          "correction_conflict"
+        ]
+      }
+    },
+    {
+      "id": "reversed-period",
+      "board": [
+        "<div class=\"pageInfo\">[1/1] [총 1건]</div><table><tbody><tr>\n<td>1</td>\n<td><span class=\"tagCom_etc\" title=\"기타법인\">기</span><a href=\"javascript:openCorpInfoNew('00000001', 'winCorpInfo', '/dsae001/selectPopup.ax');\" title=\"반전기업 기업개황 새창\">반전기업</a></td>\n<td><a href=\"/dsaf001/main.do?rcpNo=20261101000003\" onclick=\"openReportViewer('20261101000003');\">증권신고서(지분증권)</a></td>\n<td title=\"보통주\">보통주</td>\n<td>2026.11.04~2026.11.03</td>\n<td>2026.11.01</td>\n</tr></tbody></table>"
+      ],
+      "expect": {
+        "verified": false,
+        "mustNotVerify": [
+          "반전기업"
+        ],
+        "reasons": [
+          "reversed_period"
+        ]
+      }
+    },
+    {
+      "id": "http-403",
+      "httpStatus": 403,
+      "source": "opendart-list",
+      "expect": {
+        "verified": false,
+        "status": "source_failed",
+        "mustNotVerify": []
+      }
+    },
+    {
+      "id": "unclear-without-table",
+      "board": [
+        "<div class=\"pageInfo\">[1/1] [총 1건]</div><table><tbody><tr>\n<td>1</td>\n<td><span class=\"tagCom_etc\" title=\"기타법인\">기</span><a href=\"javascript:openCorpInfoNew('00000001', 'winCorpInfo', '/dsae001/selectPopup.ax');\" title=\"기타표본 기업개황 새창\">기타표본</a></td>\n<td><a href=\"/dsaf001/main.do?rcpNo=20261101000004\" onclick=\"openReportViewer('20261101000004');\">증권신고서(지분증권)</a></td>\n<td title=\"보통주\">보통주</td>\n<td>2026.11.02~2026.11.03</td>\n<td>2026.11.01</td>\n</tr></tbody></table>"
+      ],
+      "documents": [
+        {
+          "rcpNo": "20261101000004",
+          "html": "<p>최종보고서 일반공모 corp_cls=E 코스닥시장</p>"
+        }
+      ],
+      "expect": {
+        "verified": false,
+        "mustNotVerify": [
+          "기타표본"
+        ],
+        "reasons": [
+          "listing_table_cell_absent"
+        ]
+      }
+    },
+    {
+      "id": "narrative-not-table",
+      "board": [
+        "<div class=\"pageInfo\">[1/1] [총 1건]</div><table><tbody><tr>\n<td>1</td>\n<td><span class=\"tagCom_etc\" title=\"기타법인\">기</span><a href=\"javascript:openCorpInfoNew('00000001', 'winCorpInfo', '/dsae001/selectPopup.ax');\" title=\"멜콘 기업개황 새창\">멜콘</a></td>\n<td><a href=\"/dsaf001/main.do?rcpNo=20260929000191\" onclick=\"openReportViewer('20260929000191');\">증권신고서(지분증권)</a></td>\n<td title=\"보통주\">보통주</td>\n<td>2026.10.01~2026.10.02</td>\n<td>2026.09.29</td>\n</tr></tbody></table>"
+      ],
+      "documents": [
+        {
+          "rcpNo": "20260929000191",
+          "html": "<p>본 주식은 코스닥시장 상장을 목적으로 모집하는 것으로 일반공모 신규상장 예비심사를 받았다.</p>"
+        }
+      ],
+      "expect": {
+        "verified": false,
+        "mustNotVerify": [
+          "멜콘"
+        ],
+        "reasons": [
+          "narrative_phrase_not_table",
+          "listing_table_cell_absent"
+        ]
+      }
+    },
+    {
+      "id": "year-rollover",
+      "board": [
+        "<div class=\"pageInfo\">[1/1] [총 1건]</div><table><tbody><tr>\n<td>1</td>\n<td><span class=\"tagCom_etc\" title=\"기타법인\">기</span><a href=\"javascript:openCorpInfoNew('00000001', 'winCorpInfo', '/dsae001/selectPopup.ax');\" title=\"한솔아이원스 기업개황 새창\">한솔아이원스</a></td>\n<td><a href=\"/dsaf001/main.do?rcpNo=20261023000337\" onclick=\"openReportViewer('20261023000337');\">증권신고서(지분증권)</a></td>\n<td title=\"보통주\">보통주</td>\n<td>2026.12.31~2027.01.22</td>\n<td>2026.10.23</td>\n</tr></tbody></table>"
+      ],
+      "expect": {
+        "verified": false,
+        "mustNotVerify": [
+          "한솔아이원스"
+        ],
+        "date": {
+          "name": "한솔아이원스",
+          "start": "2026-12-31",
+          "end": "2027-01-22"
+        }
+      }
+    },
+    {
+      "id": "final-label-conflict",
+      "board": [
+        "<div class=\"pageInfo\">[1/1] [총 1건]</div><table><tbody><tr>\n<td>1</td>\n<td><span class=\"tagCom_etc\" title=\"기타법인\">기</span><a href=\"javascript:openCorpInfoNew('00000001', 'winCorpInfo', '/dsae001/selectPopup.ax');\" title=\"넥스아이 기업개황 새창\">넥스아이</a></td>\n<td><a href=\"/dsaf001/main.do?rcpNo=20261030000467\" onclick=\"openReportViewer('20261030000467');\">[발행조건확정]증권신고서(지분증권)</a></td>\n<td title=\"보통주\">보통주</td>\n<td>2026.11.03~2026.11.04</td>\n<td>2026.10.30</td>\n</tr></tbody></table>"
+      ],
+      "openDart": [
+        "<div class=\"page_info\">[1/1] [총 1건]</div><table><tbody><tr><td><span class=\"tagCom_etc\" alt=\"기타법인\"></span><span class=\"com\" title=\"넥스아이 기업개황 새창\">넥스아이</span></td><td title=\"2026-10-16\">2026-10-16</td><td title=\"2026년 11월 03일 ~ 2026년 11월 04일\"><a onclick=\"openReportViewerDetail('20261016000268','7','','A','10001');\">2026년 11월 03일 ~ 2026년 11월 04일</a></td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"-\">-</td><td title=\"2026년 10월 16일 최종보고서\"><a onclick=\"openReportViewerDetail('20261016000268','7','','A','10001');\">2026년 10월 16일 최종보고서</a></td></tr></tbody></table>"
+      ],
+      "documents": [
+        {
+          "rcpNo": "20261030000467",
+          "html": "<p>본 주식은 코스닥시장 상장을 목적으로 모집하는 것으로 일반공모 신규상장 예비심사를 받았다.</p>"
+        }
+      ],
+      "expect": {
+        "verified": false,
+        "mustNotVerify": [
+          "넥스아이"
+        ],
+        "reasons": [
+          "correction_conflict",
+          "listing_table_cell_absent"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+name: Check offline IPO candidate boundaries
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ipo-official-candidates
+  cancel-in-progress: false
+
+jobs:
+  inspect:
+    # No schedule and no disallowed HTML requests. Only offline contracts and
+    # an explicit source-policy checkpoint are exercised.
+    if: github.repository == 'twoimo/bitcoin-cycle-atlas' && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Check collection and failure-boundary fixtures
+        run: node --test tests/ipo-official-refresh.test.mjs tests/ipo-official-boundaries.test.mjs
+      - name: Record this actual attempt
+        run: |
+          mkdir -p build/ipo-official
+          node --input-type=module <<'NODE'
+          import {writeFile} from 'node:fs/promises';
+          await writeFile('build/ipo-official/attempt.json',JSON.stringify({
+            kind:'ipo-offline-audit-attempt',attemptedAt:new Date().toISOString(),
+            sourceCommit:process.env.GITHUB_SHA,runId:process.env.GITHUB_RUN_ID,
+            runAttempt:process.env.GITHUB_RUN_ATTEMPT,publicDataReplaced:false,
+          })+'\n');
+          NODE
+      - name: Record the source-policy checkpoint without live collection
+        id: collect
+        run: node scripts/refresh-ipo-official.mjs --policy-check --out build/ipo-official/policy-checkpoint.json --evidence-dir build/ipo-official/policy-evidence
+      - name: Record actual result, not a public-update claim
+        if: always()
+        env:
+          COLLECTION_OUTCOME: ${{ steps.collect.outcome }}
+        run: |
+          node --input-type=module <<'NODE'
+          import {readFile,writeFile,appendFile,mkdir} from 'node:fs/promises';
+          await mkdir('build/ipo-official',{recursive:true});
+          let candidate=null,error=null;
+          try{candidate=JSON.parse(await readFile('build/ipo-official/policy-checkpoint.json','utf8'));}
+          catch(cause){error=cause.code==='ENOENT'?'No candidate file was produced':'Candidate JSON was not readable';}
+          const result={kind:'ipo-candidate-run-result',finishedAt:new Date().toISOString(),
+            sourceCommit:process.env.GITHUB_SHA,outcome:process.env.COLLECTION_OUTCOME||'skipped',
+            candidatePresent:Boolean(candidate),candidateStatus:candidate?.status??null,
+            checkedAt:candidate?.checkedAt??null,coverage:candidate?.coverage??null,
+            publicDataReplaced:false,publicDeploymentPerformed:false,error};
+          await writeFile('build/ipo-official/result.json',JSON.stringify(result,null,2)+'\n');
+          await appendFile(process.env.GITHUB_STEP_SUMMARY,
+            `## Offline IPO boundary inspection\n\nPolicy checkpoint step: ${result.outcome}\n\nCandidate status: ${result.candidateStatus??'unavailable'}\n\nSource: ${result.sourceCommit}\n\nChecked: ${result.checkedAt??'not confirmed'}\n\nPublic calendar replaced: **no**\n\nPublic deployment: **not performed**\n\nLive HTML collection is blocked by DART robots. No recurring trigger or public-data promotion exists. Offline candidates and coverage require inspection; unknown, conflicting, stale or withdrawn offerings are not promoted to verified IPO schedules. Raw HTML is not uploaded. This workflow has read-only repository permissions and does not commit or deploy.\n`);
+          if(result.outcome==='success'&&(!candidate||!candidate.checkedAt||!candidate.coverage))throw new Error('A successful process did not produce the required candidate evidence');
+          NODE
+      - name: Preserve minimal candidate and coverage evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ipo-official-candidates-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            build/ipo-official/attempt.json
+            build/ipo-official/result.json
+            build/ipo-official/policy-checkpoint.json
+          retention-days: 7
+          if-no-files-found: warn
