@@ -123,10 +123,10 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     await bindChild();
   }
 
-  await until(() => evaluate(cdp, () => document.querySelector('.atlas-center-frame:not([hidden])')?.contentDocument?.querySelector('[data-workspace="market"]')), 'legacy US URL enters the unified workspace');
+  await until(() => evaluate(cdp, () => Boolean(document.querySelector('.atlas-center-frame:not([hidden])')?.contentDocument?.querySelector('[data-workspace="market"]'))), 'legacy US URL enters the unified workspace');
   await bindChild();
   await verifyOfflineRefresh({ phase: 'consolidated-initial-document' });
-  await until(() => evaluate(child, () => document.querySelector('[data-ztd-chart="observed"] svg')), 'actual ztd diagnosis chart');
+  await until(() => evaluate(child, () => Boolean(document.querySelector('[data-ztd-chart="observed"] svg'))), 'actual ztd diagnosis chart');
   const initial = await state('us');
   assert.equal(new URL(initial.url).pathname, `${consolidatedPagesBase}market-lab/`);
   assert.equal(initial.tab, 'market-us');
@@ -179,7 +179,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   assert.equal(await evaluate(child, () => document.querySelector('[aria-label="부동산 지역"]').value), 'seoul');
   await state('housing-seoul'); await snap('housing');
   await chartSearch('하이퍼리퀴드', 'HYPE', 'themes');
-  await until(() => evaluate(child, () => document.querySelector('.theme-chart-readout')), 'HYPE actual chart');
+  await until(() => evaluate(child, () => Boolean(document.querySelector('.theme-chart-readout'))), 'HYPE actual chart');
   assert.match(await evaluate(child, () => document.querySelector('.theme-identity').textContent), /HYPE\/USDC/);
   await state('hype'); await snap('hype');
 

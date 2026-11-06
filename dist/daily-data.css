@@ -33,7 +33,7 @@ body[data-embedded=true] #data-view .daily-heading { position: relative; inset: 
 #data-view .daily-action:disabled { opacity: .4; cursor:not-allowed; }
 /* Keep intrinsic control widths inside this scroll owner, including grid parents. */
 #data-view .asset-filters { display:flex; flex:none; align-items:center; gap:8px; width:100%; min-width:0; max-width:100%; padding:8px; overflow-x:auto; background:var(--surface); scrollbar-width:thin; }
-#data-view .asset-filters label { flex:none; min-width:0; }
+#data-view .asset-filters label { position:relative; flex:none; min-width:0; }
 #data-view .asset-filters .asset-search { flex:1; min-width:160px; }
 #data-view .asset-filters input, #data-view .asset-filters select { width:100%; min-height:32px; padding:4px 8px; border:1px solid var(--border-strong); border-radius:4px; background:var(--bg); color:var(--text); font:12px/1.5 var(--font); }
 #data-view .asset-filters input::placeholder { color:var(--muted); }
