@@ -1,4 +1,7 @@
-// One menu contract for the React service and the static/offline shell.
+import { workspaceInstrument } from './workspace-instruments.js';
+
+// Route identities remain stable for saved links; the visible navigation groups
+// the former seven tools into two workspaces.
 export const atlasPages = Object.freeze([
   {id:'outlook', label:'가격 차트', title:'가격 차트', view:'outlook', href:'/?page=outlook', icon:'M3 17l5-6 4 3 8-10M15 4h5v5'},
   {id:'market-us', badge:'US', label:'미국 시장', title:'미국 시장 진단', view:'market', tab:'diagnosis', region:'us', href:'/market-lab/us/', icon:'M4 20V10m8 10V4m8 16v-7'},
@@ -12,11 +15,49 @@ export const atlasPages = Object.freeze([
   {id:'data', label:'자산 비교', title:'자산 비교', view:'data', href:'/?page=data', icon:'M3 4h18v16H3zM3 10h18M3 15h18M9 4v16'},
   {id:'ipo', label:'공모주', title:'공모주', view:'ipo', href:'/?page=ipo', icon:'M3 6h18v15H3zM3 11h18M8 3v5M16 3v5'},
 ]);
+export function atlasNavigationId(page) {
+  const id=typeof page==='string'?page:page?.id;
+  return ['market-us','market-kr','scenario','cashflow'].includes(id)?'market-us'
+    : ['rsi','housing','themes'].includes(id)?'rsi':id;
+}
+export const atlasNavigationPages=Object.freeze(atlasPages
+  .filter(page=>atlasNavigationId(page)===page.id)
+  .map(page=>Object.freeze(page.id==='market-us'
+    ? {...page,badge:null,label:'시장 분석',title:'시장 분석',href:'/market-lab/'}
+    :page.id==='rsi'?{...page,label:'종목 차트',title:'종목 차트',href:'/market-lab/charts/'}:page)));
+
+export function atlasPageHref(page,{symbol,region}={}) {
+  const item=typeof page==='string'?atlasPages.find(item=>item.id===page):page;
+  if(!item)return '/?page=outlook';
+  if(atlasNavigationId(item)==='market-us') {
+    const query=new URLSearchParams();
+    if(item.id==='market-kr')query.set('region','kr');
+    if(item.id==='scenario'||item.id==='cashflow')query.set('view',item.id);
+    return '/market-lab/'+(query.size?'?'+query:'');
+  }
+  if(atlasNavigationId(item)==='rsi') {
+    const candidate=workspaceInstrument(symbol);
+    const fallback=item.id==='themes'?'HYPE':item.id==='housing'?`HOUSING-${String(region||'busan').toUpperCase()}`:'TQQQ';
+    const selected=candidate?.page===item.id?candidate:workspaceInstrument(fallback)||workspaceInstrument('HOUSING-BUSAN');
+    const query=new URLSearchParams({symbol:selected.symbol});
+    if(selected.page==='housing')query.set('region',selected.region);
+    return '/market-lab/charts/?'+query;
+  }
+  return item.href;
+}
 export function labPageFromLocation(location) {
   const pathname=location?.pathname||'';
+  const query=new URLSearchParams(location?.search||'');
+  if(/\/market-lab\/charts\/?$/.test(pathname)) {
+    const selected=workspaceInstrument(query.get('symbol'));
+    return atlasPages.find(page=>page.id===(selected?.page||'rsi'))||atlasPages[5];
+  }
   const direct=atlasPages.find(page=>page.tab&&(page.href===pathname||pathname.endsWith(page.href)));
   if(direct)return direct;
-  const query=new URLSearchParams(location?.search||'');
+  if(query.has('view')) {
+    const view=query.get('view');
+    if(view==='scenario'||view==='cashflow')return atlasPages.find(page=>page.id===view)||atlasPages[1];
+  }
   const tab=query.get('lab-tab')||'diagnosis';
-  return atlasPages.find(page=>page.tab===tab&&(tab!=='diagnosis'||page.region===(query.get('lab-region')==='kr'?'kr':'us')))||atlasPages[1];
+  return atlasPages.find(page=>page.tab===tab&&(tab!=='diagnosis'||page.region===((query.get('region')||query.get('lab-region'))==='kr'?'kr':'us')))||atlasPages[1];
 }

@@ -11,5 +11,6 @@ import './rsi-workbench.css';
 import './housing.css';
 import './themes.css';
 import './us-direction.css';
+import './workspace.css';
 
 createRoot(document.getElementById('root')!).render(<MarketLabApp embedded={new URLSearchParams(location.search).get('embedded')==='1'} />);

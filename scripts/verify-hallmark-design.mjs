@@ -38,11 +38,11 @@ const URLS=ROUTES.map(route=>route.url),started=Date.now(),deadline=started+6000
 const receipt={schemaVersion:1,startedAt:new Date(started).toISOString(),baselineCommit:PIN,
   upstreamCommit:'7ec868225c6caa040558c321ee0fefa0e73f83a8',scope:'app',genre:'modern-minimal',
   auditInputs:{static:['dist'],render:['dist/styles.css',...URLS],note:'The render pass also runs static gates on styles.css so upstream can read the explicit reworded stamp for kept checks. Its totals are not directly comparable with earlier URL-only passes.'},
-  origin:ORIGIN,workPath:relative(ROOT,WORK),routes:ROUTES,phases:[],readiness:[],integrityErrors:[],
+  origin:ORIGIN,workPath:relative(ROOT,WORK),routes:ROUTES,phases:[],readiness:[],assetSnapshots:{},integrityErrors:[],
   designGate:{status:'not-run',fails:0,reflex:0},sourceReadOnly:null,
   limits:{totalMilliseconds:600000,staticMilliseconds:60000,renderMilliseconds:270000},
   limitations:['Static Hallmark does not traverse JavaScript ES imports.','URL render checks initial route state, not every dialog or interactive state.','Existing model, data and interaction tests remain required.','Optional remote application fonts are not rewritten; upstream records fallback warnings.']};
-let server=null,activePhase='',activeChild=null;
+let server=null,activePhase='',activeChild=null,assetSymbols=[];
 const requestCounts=new Map();
 const blob=bytes=>createHash('sha1').update('blob '+bytes.length+'\0').update(bytes).digest('hex');
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -85,7 +85,7 @@ async function runChild(name,cli,timeout){
   console.log('HALLMARK_PHASE_START '+JSON.stringify({name,at:new Date().toISOString(),args:cli}));
   return await new Promise(resolveRun=>{
     const child=spawn(process.execPath,[join(PATCHED,'sloplint.mjs'),...cli],{
-      cwd:WORK,env:{...process.env,HALLMARK_CI_CHROME_ARGS:'ephemeral-ci',HALLMARK_ATLAS_READY:'1'},stdio:['ignore','pipe','pipe'],detached:process.platform!=='win32'});
+      cwd:WORK,env:{...process.env,HALLMARK_CI_CHROME_ARGS:'ephemeral-ci',HALLMARK_ATLAS_READY:'1',HALLMARK_ATLAS_ASSET_SYMBOLS:JSON.stringify(assetSymbols)},stdio:['ignore','pipe','pipe'],detached:process.platform!=='win32'});
     activeChild=child;let stdout='',stderr='',timedOut=false,outputExceeded=false;
     const stop=()=>{try{if(process.platform==='win32')child.kill('SIGKILL');else process.kill(-child.pid,'SIGKILL');}catch{}};
     const timer=setTimeout(()=>{timedOut=true;stop();},Math.min(timeout,remaining-500));
@@ -160,7 +160,44 @@ async function phase(version,kind,mode,expectedFiles){
   console.log('HALLMARK_PHASE_RECEIPT '+JSON.stringify({name:activePhase,code:result.code,...summary,counts,screenshots:detail.screenshots?.found,requestedUrls:detail.requestedUrls?.length}));
   if(version==='current')for(const finding of findings)console.log('HALLMARK_FINDING '+JSON.stringify({phase:activePhase,...finding}));
 }
-async function copyDist(from){await rm(DIST,{recursive:true,force:true});await cp(join(from,'dist'),DIST,{recursive:true,dereference:false});}
+async function copyDist(from){
+  await rm(DIST,{recursive:true,force:true});await cp(join(from,'dist'),DIST,{recursive:true,dereference:false});
+  const snapshot=JSON.parse(await readFile(join(DIST,'data/asset-comparison.json'),'utf8'));
+  assetSymbols=snapshot.assets?.map(asset=>asset.symbol);
+  assert.ok(Array.isArray(assetSymbols)&&assetSymbols.length>0&&assetSymbols.every(symbol=>typeof symbol==='string'&&symbol.length>0),'Audit snapshot must declare its actual asset identities');
+  assert.equal(new Set(assetSymbols).size,assetSymbols.length,'Audit snapshot contains duplicate asset identities');
+  assert.equal(assetSymbols[0],'BTC','Audit snapshot must keep BTC first');
+  const version=from===BASELINE?'baseline':'current';
+  if(version==='baseline')assert.equal(assetSymbols.length,18,'Pinned Hallmark baseline must retain all 18 assets');
+  receipt.assetSnapshots[version]={count:assetSymbols.length,symbols:[...assetSymbols]};
+}
+
+// First verify the original upstream and both pinned compatibility patches.
+// This additional build-only adapter changes the asset readiness input, while
+// retaining every Hallmark gate and the baseline's fixed 18-asset contract.
+function adaptSnapshotAssetReadiness(source){
+  const patches=[
+    [
+      '          await page.waitForFunction((name) => {',
+      `          const atlasAssetSymbols = JSON.parse(process.env.HALLMARK_ATLAS_ASSET_SYMBOLS || 'null');
+          if (!Array.isArray(atlasAssetSymbols) || !atlasAssetSymbols.length || atlasAssetSymbols[0] !== 'BTC' || atlasAssetSymbols.some(symbol => typeof symbol !== 'string' || !symbol) || new Set(atlasAssetSymbols).size !== atlasAssetSymbols.length) throw new Error('Atlas asset readiness requires the exact copied snapshot identities');
+          await page.waitForFunction((name, expectedSymbols) => {`
+    ],
+    [
+      "            if (name === 'data') return doc.querySelectorAll('#data-body tr[data-asset-symbol]').length === 18;",
+      `            if (name === 'data') {
+              const symbols = [...doc.querySelectorAll('#data-body tr[data-asset-symbol]')].map(row => row.dataset.assetSymbol);
+              return symbols[0] === 'BTC' && symbols.length === expectedSymbols.length && new Set(symbols).size === expectedSymbols.length && expectedSymbols.every(symbol => symbols.includes(symbol));
+            }`
+    ],
+    ['          }, { timeout: 30000 }, atlasRoute);','          }, { timeout: 30000 }, atlasRoute, atlasAssetSymbols);']
+  ];
+  for(const [before,after] of patches){
+    assert.equal(source.split(before).length-1,1,'Snapshot readiness adapter anchor must occur exactly once');
+    source=source.replace(before,after);
+  }
+  return source;
+}
 async function readiness(version){
   activePhase=version+'-readiness';
   const req=createRequire(join(process.env.HALLMARK_PUPPETEER,'noop.js')),puppeteer=(await import(pathToFileURL(req.resolve('puppeteer-core')).href)).default;
@@ -173,19 +210,22 @@ async function readiness(version){
       try{
         await page.setViewport({width:1440,height:900});
         await page.goto(route.url,{waitUntil:'domcontentloaded',timeout:remainingBudget()});
-        await page.waitForFunction(name=>{
+        await page.waitForFunction((name,expectedSymbols)=>{
           const doc=name==='mobile-preview'?document.querySelector('#mobile-preview')?.contentDocument:document;
           if(!doc||doc.documentElement.dataset.boot!=='ready')return false;
           if((name==='btc'||name==='mobile-preview')&&(doc.querySelector('.atlas-plot[aria-busy="true"]')||doc.querySelector('.workspace-toast:not([hidden])')))return false;
-          if(name==='data')return doc.querySelectorAll('#data-body tr[data-asset-symbol]').length===18;
+          if(name==='data'){
+            const symbols=[...doc.querySelectorAll('#data-body tr[data-asset-symbol]')].map(row=>row.dataset.assetSymbol);
+            return symbols[0]==='BTC'&&symbols.length===expectedSymbols.length&&new Set(symbols).size===expectedSymbols.length&&expectedSymbols.every(symbol=>symbols.includes(symbol));
+          }
           if(name==='evidence')return doc.querySelectorAll('#evidence-body [data-evidence-detail]').length>0;
           if(name==='compare')return doc.querySelectorAll('#structure-chart path').length>0&&doc.querySelectorAll('#structure-cycles tr').length>0;
           if(name==='eth')return Number(doc.querySelector('#eth-chart')?.dataset.observedCandleCount)>0;
           if(name==='bmnr'||name==='mstr')return Number(doc.querySelector('#equity-chart')?.dataset.observedCandleCount)>0;
           return doc.querySelectorAll('#lab-chart path').length>0;
-        },{timeout:remainingBudget()},route.name);
+        },{timeout:remainingBudget()},route.name,assetSymbols);
         assert.equal(errors.length,0,'Runtime errors in '+version+' '+route.name+': '+errors.join('; '));
-        receipt.readiness.push({version,route:route.name,url:route.url,status:'ready'});
+        receipt.readiness.push({version,route:route.name,url:route.url,status:'ready',...(route.name==='data'?{expectedSymbols:[...assetSymbols]}:{})});
       }finally{await page.close();}
     }
   }finally{await browser.close();}
@@ -210,6 +250,10 @@ try{
       text=text.replace(ready.before,ready.after);output=Buffer.from(text);
       assert.equal(blob(output),ready.patchedGitBlob,'Readiness-patched renderer hash mismatch');
       assert.equal(blob(output),launch.patchedGitBlob,'Final renderer hash mismatch');
+      output=Buffer.from(adaptSnapshotAssetReadiness(output.toString('utf8')));
+      receipt.assetReadinessPatch={file:source.name,sourceGitBlob:ready.patchedGitBlob,patchedGitBlob:blob(output),
+        buildCopyPatchOrder:[...manifest.buildCopyPatchOrder,'snapshotAssetReadiness'],
+        reason:'Both readiness passes require every unique asset identity from the exact copied snapshot, with BTC first. The pinned baseline remains 18 assets; upstream design gates and severities are unchanged.'};
     }
     await writeFile(join(PATCHED,source.name),output);
   }

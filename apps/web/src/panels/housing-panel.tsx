@@ -9,9 +9,10 @@ export type HousingCache={options?:HousingOptions;range?:[number,number];view?:s
 const n=(v:number|null,d=1)=>v===null?'—':v.toLocaleString('ko-KR',{minimumFractionDigits:d,maximumFractionDigits:d});
 const signed=(v:number|null,d=1)=>v===null?'—':`${v>0?'+':''}${n(v,d)}`;
 const direction=(r:number|null)=>r===null?'산정 불가':r>=.2?'양의 상관':r<=-.2?'음의 상관':'뚜렷하지 않음';
-export function HousingPanel({cache}:{cache:HousingCache}){
+export function HousingPanel({cache,selectedRegion,onRegion}:{cache:HousingCache;selectedRegion?:string;onRegion?:(region:string)=>void}){
   const [delivery,setDelivery]=useState<HousingDelivery|null>(null),[error,setError]=useState(''),[attempt,setAttempt]=useState(0),[loading,setLoading]=useState(true);
-  const [options,setOptions]=useState<HousingOptions>(cache.options??{region:'busan',window:36,band:10,lag:2,start:'2006-01',end:'2026-09'});
+  const [options,setOptions]=useState<HousingOptions>(()=>({...cache.options??{region:'busan',window:36,band:10,lag:2,start:'2006-01',end:'2026-09'},...(selectedRegion?{region:selectedRegion}:{})}));
+  useEffect(()=>{if(selectedRegion&&['busan','seoul','gyeonggi','national'].includes(selectedRegion))setOptions(previous=>previous.region===selectedRegion?previous:{...previous,region:selectedRegion});},[selectedRegion]);
   const [range,setRange]=useState<[number,number]>(cache.range??[129,248]),[selected,setSelected]=useState(cache.selected??'2026-09'),[view,setView]=useState(cache.view??'chart'),[confirmation,setConfirmation]=useState('');
   useEffect(()=>{const abort=new AbortController();setLoading(true);setError('');loadHousing(abort.signal).then(d=>{setDelivery(d);setOptions(o=>({...o,end:o.end>d.snapshot.regions[0].volume.at(-1)![0]?d.snapshot.regions[0].volume.at(-1)![0]:o.end}));},e=>{if(!abort.signal.aborted)setError(e instanceof Error?e.message:'자료 오류');}).finally(()=>{if(!abort.signal.aborted)setLoading(false);});return()=>abort.abort();},[attempt]);
   const analysis=useMemo(()=>{if(!delivery)return null;try{return analyzeHousing(delivery.snapshot,options);}catch{return null;}},[delivery,options]);
@@ -30,7 +31,7 @@ export function HousingPanel({cache}:{cache:HousingCache}){
   const selectedRows=analysis?.rows.filter(r=>r.month>=options.start&&r.month<=options.end)??[];
   const inRange=(v:number)=>Math.max(0,Math.min((analysis?.rows.length??1)-1,v));
   return <div className="housing-workbench" aria-label="부동산 거래량·실거래가격" aria-busy={loading}>
-    <div className="housing-toolbar"><label>지역<select aria-label="부동산 지역" value={options.region} onChange={e=>change('region',e.target.value)}><option value="busan">부산</option><option value="seoul">서울</option><option value="gyeonggi">경기</option><option value="national">전국</option></select></label>
+    <div className="housing-toolbar"><label>지역<select aria-label="부동산 지역" value={options.region} onChange={e=>onRegion?onRegion(e.target.value):change('region',e.target.value)}><option value="busan">부산</option><option value="seoul">서울</option><option value="gyeonggi">경기</option><option value="national">전국</option></select></label>
       <label>과거 평균<select aria-label="거래량 평균 기간" value={options.window} onChange={e=>change('window',Number(e.target.value))}>{[12,36,60].map(w=><option key={w} value={w}>{w}개월</option>)}</select></label>
       <label>중립 범위<select aria-label="거래량 중립 범위" value={options.band} onChange={e=>change('band',Number(e.target.value))}>{[0,5,10,20].map(w=><option key={w} value={w}>±{w}%</option>)}</select></label>
       <label>평가 시차<select aria-label="백테스트 평가 시차" value={options.lag} onChange={e=>change('lag',Number(e.target.value))}>{[0,1,2,3].map(w=><option key={w} value={w}>{w}개월</option>)}</select></label>

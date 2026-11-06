@@ -161,7 +161,7 @@ export function buildAssetComparison(bundle, { asOfDate } = {}) {
     if (!asset || typeof asset.symbol !== 'string' || !/^[A-Z][A-Z0-9.-]{0,14}$/.test(asset.symbol) || symbols.has(asset.symbol)) throw new TypeError('Invalid or duplicate asset comparison symbol');
     symbols.add(asset.symbol);
     for (const field of ['name', 'group', 'category']) if (typeof asset[field] !== 'string' || !asset[field].trim()) throw new TypeError(`Missing asset comparison ${field}`);
-    if (asset.currency !== 'USD') throw new TypeError('Asset comparison requires consistently USD-denominated prices');
+    if (asset.currency !== (asset.symbol === 'HYPE' ? 'USDC' : 'USD')) throw new TypeError('Asset comparison requires the original USD or HYPE spot USDC quote currency');
     const meta = asset.meta ?? {};
     if (typeof meta !== 'object' || Array.isArray(meta)) throw new TypeError('Asset comparison metadata must be an object');
     if (meta.calendar !== undefined && !['sessions', 'calendar-days'].includes(meta.calendar)) throw new TypeError('Asset comparison expects exchange sessions or UTC calendar days');

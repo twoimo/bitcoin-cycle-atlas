@@ -28,6 +28,39 @@ export const YAHOO_COMPARISON_UNIVERSE=Object.freeze([
   {symbol:'SLV',name:'은',group:'안전 자산',category:'은',type:'ETF',firstYear:2006},
   {symbol:'PDBC',name:'원자재',group:'대체자산',category:'원자재',type:'ETF',firstYear:2014},
 ]);
+const DIGITAL_COMPARISON_UNIVERSE=Object.freeze({
+  ETH:{name:'이더리움',currency:'USD',sourceName:'Coinbase Exchange',product:'ETH-USD'},
+  HYPE:{name:'하이퍼리퀴드',currency:'USDC',sourceName:'Hyperliquid',product:'@107'},
+});
+function calendarGaps(prices){
+  const missing=[];for(let index=1;index<prices.length;index++)for(let day=dayNumber(prices[index-1][0])+1;day<dayNumber(prices[index][0]);day++)missing.push(utcDate(day*DAY));return missing;
+}
+function digitalAsset(symbol,prices,metadata){
+  const expected=DIGITAL_COMPARISON_UNIVERSE[symbol],missingDates=calendarGaps(prices);
+  return {symbol,name:expected.name,group:'위험 자산',category:'디지털 자산',currency:expected.currency,prices,meta:{...metadata,sourceName:expected.sourceName,product:expected.product,baseCurrency:symbol,quoteCurrency:expected.currency,instrumentType:'SPOT',calendar:'calendar-days',timezone:'UTC',dataGranularity:'1d',adjustment:'none',completedOnly:true,completionRule:'utc-calendar-date-before-source-retrieval-date',firstDate:prices[0]?.[0],lastDate:prices.at(-1)?.[0],count:prices.length,pricesSha256:sha256(JSON.stringify(prices)),unavailableSessions:missingDates,missingDates}};
+}
+/** Reuse completed, independently collected candles without converting USDC to USD. */
+export function parseDigitalComparisonArchives(ethArchive,themesArchive,{ethArchiveSha256,themesArchiveSha256}={}){
+  const history=ethArchive?.dailyHistory,asset=themesArchive?.asset,source=themesArchive?.priceSources?.find(item=>item.id==='hype-spot');
+  if(history?.source!=='Coinbase Exchange'||history.product!=='ETH-USD'||history.baseCurrency!=='ETH'||history.quoteCurrency!=='USD'||history.interval!=='daily'||history.seconds!==86400||history.completedOnly!==true||history.aggregation!=='native'||!Array.isArray(history.candles)||!history.candles.length||!Array.isArray(history.sourceUrls)||!history.sourceUrls.length)throw new TypeError('ETH: daily archive identity mismatch');
+  if(asset?.symbol!=='HYPE'||asset.id!=='hype'||asset.pair!=='@107'||asset.quote!=='USDC'||!Array.isArray(asset.bars)||!asset.bars.length||source?.url!=='https://api.hyperliquid.xyz/info'||!/^[a-f0-9]{64}$/.test(source.sha256))throw new TypeError('HYPE: spot USDC archive identity mismatch');
+  const ethPrices=history.candles.map(candle=>{
+    if(!Number.isSafeInteger(candle.time)||candle.time%86400!==0||new Date(candle.time*1000).toISOString()!==candle.date||![candle.open,candle.high,candle.low,candle.close,candle.volume].every(Number.isFinite)||candle.volume<0||candle.low<=0||candle.high<Math.max(candle.open,candle.close)||candle.low>Math.min(candle.open,candle.close))throw new TypeError('ETH: invalid daily OHLCV candle');
+    return [candle.date.slice(0,10),candle.close];
+  });
+  const hypePrices=asset.bars.map(bar=>{
+    if(!Array.isArray(bar)||bar.length!==6||!isDate(bar[0])||!bar.slice(1).every(Number.isFinite)||bar[5]<0||bar[3]<=0||bar[2]<Math.max(bar[1],bar[4])||bar[3]>Math.min(bar[1],bar[4]))throw new TypeError('HYPE: invalid daily spot OHLCV candle');
+    return [bar[0],bar[4]];
+  });
+  const eth=digitalAsset('ETH',ethPrices,{retrievedAt:history.retrievedAt,sourceUrl:history.sourceUrls.at(-1),sourceUrls:history.sourceUrls,documentationUrl:history.documentationUrl,archiveFile:'eth-ohlc.json',archiveSha256:ethArchiveSha256??null,priceDefinition:'Coinbase Exchange ETH-USD completed UTC daily spot close, in USD. No interpolation or staking yield.'});
+  const hype=digitalAsset('HYPE',hypePrices,{retrievedAt:source.retrievedAt,sourceUrl:source.url,sourceRequest:{type:'candleSnapshot',req:{coin:'@107',interval:'1d'}},responseSha256:source.sha256,archiveFile:'themes.json',archiveSha256:themesArchiveSha256??null,refreshMode:'retained-theme-archive',priceDefinition:'Hyperliquid HYPE/USDC spot market @107 completed UTC daily close, in USDC. Not a USD conversion or perpetual price. Saved theme archive; the original source collection timestamp is retained.'});
+  if(history.firstDate.slice(0,10)!==eth.meta.firstDate||history.lastDate.slice(0,10)!==eth.meta.lastDate||eth.meta.missingDates.length!==history.gapCount)throw new TypeError('ETH: archive range or gap metadata mismatch');
+  return [eth,hype];
+}
+export async function readDigitalComparisonArchives(){
+  const [ethRaw,themesRaw]=await Promise.all([readFile(resolve(root,'dist/data/eth-ohlc.json'),'utf8'),readFile(resolve(root,'dist/data/themes.json'),'utf8')]);
+  return parseDigitalComparisonArchives(JSON.parse(ethRaw),JSON.parse(themesRaw),{ethArchiveSha256:sha256(ethRaw),themesArchiveSha256:sha256(themesRaw)});
+}
 const dates=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'});
 function sessionDate(seconds){
   if(!Number.isSafeInteger(seconds))throw new TypeError('Invalid provider session timestamp');
@@ -78,6 +111,20 @@ export function parseYahooComparisonAsset(payload,{symbol,retrievedAt,sourceUrl,
 }
 function validateAsset(asset,{retrievedAt}){
   const meta=asset?.meta;
+  if(Object.hasOwn(DIGITAL_COMPARISON_UNIVERSE,asset?.symbol??'')){
+    const expected=DIGITAL_COMPARISON_UNIVERSE[asset.symbol];
+    if(asset.name!==expected.name||asset.group!=='위험 자산'||asset.category!=='디지털 자산'||asset.currency!==expected.currency||meta?.sourceName!==expected.sourceName||meta.product!==expected.product||meta.baseCurrency!==asset.symbol||meta.quoteCurrency!==expected.currency||meta.instrumentType!=='SPOT'||meta.calendar!=='calendar-days'||meta.timezone!=='UTC'||meta.dataGranularity!=='1d'||meta.adjustment!=='none'||meta.completedOnly!==true||meta.completionRule!=='utc-calendar-date-before-source-retrieval-date'||!Array.isArray(asset.prices)||!asset.prices.length)throw new TypeError(`${asset.symbol}: invalid digital-asset identity or provenance`);
+    if(!Number.isFinite(Date.parse(meta.retrievedAt))||Date.parse(meta.retrievedAt)>Date.parse(retrievedAt)||!/^[a-f0-9]{64}$/.test(meta.pricesSha256))throw new TypeError(`${asset.symbol}: invalid source collection timestamp or hash`);
+    if(asset.symbol==='HYPE'?(meta.sourceUrl!=='https://api.hyperliquid.xyz/info'||meta.sourceRequest?.req?.coin!=='@107'||meta.sourceRequest?.req?.interval!=='1d'||meta.sourceRequest?.type!=='candleSnapshot'||!/^[a-f0-9]{64}$/.test(meta.responseSha256)):(!Array.isArray(meta.sourceUrls)||!meta.sourceUrls.length||meta.sourceUrls.some(url=>!url.startsWith('https://api.exchange.coinbase.com/products/ETH-USD/candles?'))||meta.sourceUrl!==meta.sourceUrls.at(-1)))throw new TypeError(`${asset.symbol}: invalid source market or request provenance`);
+    const cutoff=utcDate(Date.parse(meta.retrievedAt)),years=new Map();let previous='',maxGapDays=0;
+    for(const pair of asset.prices){
+      if(!Array.isArray(pair)||pair.length!==2||!isDate(pair[0])||pair[0]<=previous||pair[0]>=cutoff||!Number.isFinite(pair[1])||pair[1]<=0)throw new TypeError(`${asset.symbol}: invalid completed UTC daily close`);
+      if(previous)maxGapDays=Math.max(maxGapDays,dayNumber(pair[0])-dayNumber(previous));previous=pair[0];const year=Number(pair[0].slice(0,4));years.set(year,(years.get(year)||0)+1);
+    }
+    const missing=calendarGaps(asset.prices);
+    if(meta.firstDate!==asset.prices[0][0]||meta.lastDate!==asset.prices.at(-1)[0]||meta.count!==asset.prices.length||sha256(JSON.stringify(asset.prices))!==meta.pricesSha256||JSON.stringify(meta.missingDates)!==JSON.stringify(missing)||JSON.stringify(meta.unavailableSessions)!==JSON.stringify(missing))throw new TypeError(`${asset.symbol}: daily archive coverage or hash mismatch`);
+    return {symbol:asset.symbol,currency:asset.currency,firstDate:meta.firstDate,lastDate:meta.lastDate,observations:asset.prices.length,completedCalendarLabels:[...years.keys()].filter(year=>year<Number(utcDate(Date.parse(retrievedAt)).slice(0,4))).length,firstYearSessions:years.get(Number(meta.firstDate.slice(0,4))),maxGapDays,unavailableSessions:missing.length,calendar:'calendar-days'};
+  }
   if(asset?.symbol==='BTC'){
     if(asset.name!=='Bitcoin'||asset.group!=='위험 자산'||asset.category!=='디지털 자산'||asset.currency!=='USD'||meta?.sourceName!=='Coin Metrics Community API'||meta.metric!=='PriceUSD'||meta.frequency!=='1d'||meta.timezone!=='UTC'||meta.calendar!=='calendar-days'||meta.adjustment!=='none'||meta.completedOnly!==true||!Array.isArray(asset.prices)||!asset.prices.length)throw new TypeError('BTC: invalid calendar-day archive identity or provenance');
     let previous='',yearCounts=new Map();for(const pair of asset.prices){if(!Array.isArray(pair)||pair.length!==2||!isDate(pair[0])||pair[0]<=previous||pair[0]>=utcDate(Date.parse(retrievedAt))||!Number.isFinite(pair[1])||pair[1]<=0)throw new TypeError('BTC: invalid archived UTC daily price');if(previous&&dayNumber(pair[0])-dayNumber(previous)!==1)throw new RangeError('BTC: calendar-day archive has a missing date');previous=pair[0];const year=Number(pair[0].slice(0,4));yearCounts.set(year,(yearCounts.get(year)||0)+1);}
@@ -131,8 +178,8 @@ export function attachPeerSessionMetadata(bundle){
   return bundle;
 }
 export function validateAssetComparisonBundle(bundle){
-  if(bundle?.version!==1||!Number.isFinite(Date.parse(bundle.retrievedAt))||!Array.isArray(bundle.assets)||bundle.assets.length!==YAHOO_COMPARISON_UNIVERSE.length+1)throw new TypeError('Invalid asset-comparison bundle');
-  const expectedSymbols=['BTC',...YAHOO_COMPARISON_UNIVERSE.map(asset=>asset.symbol)];
+  if(bundle?.version!==1||!Number.isFinite(Date.parse(bundle.retrievedAt))||!Array.isArray(bundle.assets)||![18,20].includes(bundle.assets.length))throw new TypeError('Invalid asset-comparison bundle');
+  const expectedSymbols=['BTC',...(bundle.assets.length===20?['ETH','HYPE']:[]),...YAHOO_COMPARISON_UNIVERSE.map(asset=>asset.symbol)];
   if(bundle.assets.some((asset,index)=>asset.symbol!==expectedSymbols[index]))throw new TypeError('Comparison universe ordering or membership mismatch');
   const coverage=bundle.assets.map(asset=>validateAsset(asset,bundle)),comparisons=crossAssetSessionCoverage(bundle);
   return coverage.map((entry,index)=>{
@@ -143,13 +190,13 @@ export function validateAssetComparisonBundle(bundle){
 export function assetComparisonAcquisitionManifest(bundle){
   const coverage=validateAssetComparisonBundle(bundle);
   return {
-    version:1,retrievedAt:bundle.retrievedAt,source:'Yahoo Finance chart endpoint',
-    requestStart:'1970-01-01',interval:'1d',priceField:'indicators.quote[0].close',
-    priceDefinition:'Split-adjusted closing market price in USD; dividends and distributions excluded.',
-    completionRule:'Exchange session date strictly before the retrieval UTC date.',
+    version:1,retrievedAt:bundle.retrievedAt,source:[...new Set(bundle.assets.map(asset=>asset.meta.sourceName))].join('; '),
+    requestStart:'1970-01-01 (Yahoo Finance requests only)',interval:'1d',priceField:'Per-asset completed daily close; see priceDefinition and calendar for each source.',
+    priceDefinition:'Original quote-currency prices: USD, except HYPE spot in USDC. US-listed securities use split-adjusted close excluding dividends and distributions; digital assets use their observed UTC daily price without yield or quote conversion.',
+    completionRule:'Per-asset UTC calendar-day or exchange-session completion rules; original source collection timestamps are retained separately from bundle generation.',
     historyPolicy:'Full available provider history; listing year may be partial. No interpolation, screenshot values, or substitute tickers.',
     totalObservations:coverage.reduce((sum,asset)=>sum+asset.observations,0),
-    assets:coverage.map((entry,index)=>({...entry,providerFirstTradeDate:bundle.assets[index].meta.providerFirstTradeDate,sourceUrl:bundle.assets[index].meta.sourceUrl,sourcePage:bundle.assets[index].meta.sourcePage,responseSha256:bundle.assets[index].meta.responseSha256,pricesSha256:bundle.assets[index].meta.pricesSha256})),
+    assets:coverage.map((entry,index)=>{const asset=bundle.assets[index],meta=asset.meta;return {...entry,currency:asset.currency,sourceName:meta.sourceName,sourceRetrievedAt:meta.retrievedAt,priceDefinition:meta.priceDefinition,calendar:meta.calendar,completionRule:meta.completionRule??'completed UTC daily observation',refreshMode:meta.refreshMode??'source-archive',product:meta.product??null,providerFirstTradeDate:meta.providerFirstTradeDate,sourceUrl:meta.sourceUrl,sourcePage:meta.sourcePage,responseSha256:meta.responseSha256,archiveSha256:meta.archiveSha256??null,pricesSha256:meta.pricesSha256};}),
     primaryCrossChecks:[
       {symbol:'PDBC',fact:'Issuer inception is 2014-11-07; include its 37 observed 2014 sessions when counting available calendar labels in this snapshot.',url:'https://www.invesco.com/us/en/insights/opportunities-commodities-amid-volatility.html'},
       {fact:'Yahoo historical close is split-adjusted; adjusted close additionally accounts for distributions.',url:'https://finance.yahoo.com/quote/SPY/history/'},
@@ -189,14 +236,15 @@ export async function fetchAssetComparisonBundle({now=Date.now(),fetchImpl=globa
   const failure=results.find(result=>result.status==='rejected');if(failure)throw failure.reason;
   const btcArchive=JSON.parse(await readFile(resolve(root,'dist/data/btc-daily.json'),'utf8'));
   const btc={symbol:'BTC',name:'Bitcoin',group:'위험 자산',category:'디지털 자산',currency:'USD',prices:btcArchive.prices,meta:{...btcArchive.meta,calendar:'calendar-days',adjustment:'none',completedOnly:true}};
-  const bundle=attachPeerSessionMetadata({version:1,retrievedAt,assets:[btc,...assets]});validateAssetComparisonBundle(bundle);return bundle;
+  const digital=await readDigitalComparisonArchives();
+  const bundle=attachPeerSessionMetadata({version:1,retrievedAt,assets:[btc,...digital,...assets]});validateAssetComparisonBundle(bundle);return bundle;
 }
 export async function refreshAssetComparisonFile(output,{now=Date.now(),fetchImpl=globalThis.fetch,onAsset}={}){
   let previous=null;
   try{previous=JSON.parse(await readFile(output,'utf8'));validateAssetComparisonBundle(previous);}catch(error){if(error.code!=='ENOENT')throw error;}
   const next=await fetchAssetComparisonBundle({now,fetchImpl,onAsset});
   if(previous)for(let index=0;index<next.assets.length;index++){
-    const old=previous.assets[index],asset=next.assets[index];
+    const asset=next.assets[index],old=previous.assets.find(item=>item.symbol===asset.symbol);if(!old)continue;
     if(asset.meta.firstDate>old.meta.firstDate||asset.meta.lastDate<old.meta.lastDate||asset.prices.length<old.prices.length)throw new Error(`${asset.symbol}: refresh would truncate existing history`);
     const dates=new Set(asset.prices.map(row=>row[0]));
     if(old.prices.some(row=>!dates.has(row[0])))throw new Error(`${asset.symbol}: refresh omits previously observed session`);

@@ -122,7 +122,7 @@ test('ETH data information opens with its escaped original-data link', async () 
   assert.ok(saved, 'the info dialog must identify its preserved JSON archive');
   assert.equal(saved[1], './data/eth-ohlc.json');
   assert.equal(saved[1], f.requests[0].url, 'the original-data link must use the actual observed-price archive');
-  assert.match(markup, /href="\/atlas-&quot;quote&amp;path\?page=data">18개 자산 비교표 ↗<\/a>/);
+  assert.match(markup, /href="\/atlas-&quot;quote&amp;path\?page=data">20개 자산 비교표 ↗<\/a>/);
   assert.doesNotMatch(markup, /data-asset=|일별 원자료 · 연간 수익률 · MDD/);
 });
 

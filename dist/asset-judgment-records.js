@@ -1,5 +1,6 @@
 /** Saved calculation captures, never proof of deployment or historical availability. */
-export const SAVED_JUDGMENT_SYMBOLS = Object.freeze(['BTC','SPY','QQQ','NVDA','AAPL','GOOG','MSFT','AMZN','META','AVGO','PLTR','TSLA','HOOD','TLT','IEF','GLD','SLV','PDBC']);
+export const LEGACY_SAVED_JUDGMENT_SYMBOLS = Object.freeze(['BTC','SPY','QQQ','NVDA','AAPL','GOOG','MSFT','AMZN','META','AVGO','PLTR','TSLA','HOOD','TLT','IEF','GLD','SLV','PDBC']);
+export const SAVED_JUDGMENT_SYMBOLS = Object.freeze(['BTC','ETH','HYPE',...LEGACY_SAVED_JUDGMENT_SYMBOLS.slice(1)]);
 export const SAVED_JUDGMENT_KIND = 'saved-snapshot';
 export const SAVED_JUDGMENT_FILE = /^\d{4}-\d{2}-\d{2}T\d{9}Z-[a-f0-9]{12}\.json$/;
 const HASH=/^[a-f0-9]{64}$/;
@@ -31,16 +32,17 @@ export function validateSavedJudgmentIndex(index){
   return index;
 }
 export function validateSavedJudgmentRecord(record,{entry}={}){
-  if(!record||record.version!==1||record.kind!==SAVED_JUDGMENT_KIND||!Array.isArray(record.rows)||record.rows.length!==18)fail('실제 저장 스냅샷·18개 자산 필요');
+  if(!record||record.version!==1||record.kind!==SAVED_JUDGMENT_KIND||!Array.isArray(record.rows)||![18,20].includes(record.rows.length))fail('실제 저장 스냅샷·과거 18개 또는 현재 20개 자산 필요');
+  const expectedSymbols=record.rows.length===18?LEGACY_SAVED_JUDGMENT_SYMBOLS:SAVED_JUDGMENT_SYMBOLS;
   if(!stamp(record.capturedAt)||new Date(record.capturedAt).toISOString()!==record.capturedAt||!date(record.asOf)||record.asOf!==record.capturedAt.slice(0,10))fail('실제 UTC 저장일과 판단 기준일');
   if(!SAVED_JUDGMENT_FILE.test(record.id+'.json')||!record.id.startsWith(record.capturedAt.replace(/[:.]/g,'')+'-'))fail('기록 식별자');
   if(!record.source||!isHash(record.source.hash)||!stamp(record.source.retrievedAt)||Date.parse(record.source.retrievedAt)>Date.parse(record.capturedAt))fail('원자료 버전·수집 시각');
   if(!record.rules||!isHash(record.rules.sha256)||!Number.isSafeInteger(record.rules.version)||record.rules.version<1)fail('계산 규칙 버전');
   const symbols=new Set();
   for(const row of record.rows){
-    if(!row||!SAVED_JUDGMENT_SYMBOLS.includes(row.symbol)||symbols.has(row.symbol))fail('자산 누락 또는 중복');symbols.add(row.symbol);
+    if(!row||!expectedSymbols.includes(row.symbol)||symbols.has(row.symbol))fail('자산 누락 또는 중복');symbols.add(row.symbol);
     for(const key of strings)text(row[key],`${row.symbol} ${key}`);
-    if(row.group!==groupFor(row.symbol)||row.currency!=='USD'||own(row,'meta')||own(row,'samples'))fail('자산군·통화·제외 필드');
+    if(row.group!==groupFor(row.symbol)||row.currency!==(row.symbol==='HYPE'?'USDC':'USD')||own(row,'meta')||own(row,'samples'))fail('자산군·통화·제외 필드');
     for(const key of numeric){if(!own(row,key))fail(key);numberOrNull(row[key],key);}
     for(const key of dates){if(!own(row,key))fail(key);dateOrNull(row[key],key);}
     if((row.latestPrice!==null&&row.latestPrice<=0)||(row.yearStartPrice!==null&&row.yearStartPrice<=0))fail('양수 종가');
@@ -52,7 +54,7 @@ export function validateSavedJudgmentRecord(record,{entry}={}){
     if(j.thresholds!==null){if(!j.thresholds||typeof j.thresholds!=='object')fail('판단 경계');for(const key of ['strongBuyPct','buyPct','sellPct','strongSellPct'])if(typeof j.thresholds[key]!=='number'||!Number.isFinite(j.thresholds[key]))fail('판단 경계');}
     const c=row.coverage;if(!c||!['observed','incomplete','unavailable'].includes(c.status)||typeof c.complete!=='boolean'||!Array.isArray(c.issues)||!c.issues.every(x=>typeof x==='string')||!Array.isArray(c.missingDates)||!c.missingDates.every(date)||!Array.isArray(c.missingYears)||!c.missingYears.every(Number.isSafeInteger)||!Number.isSafeInteger(c.gapCount)||c.gapCount<0||typeof c.firstYearPartial!=='boolean'||c.complete!==(c.status==='observed'))fail('관측 범위');dateOrNull(c.firstPartialStartDate,'첫 부분 연도');
     if(j.available&&(row.sampleYears<5||!c.complete||!(row.meanRisePct>0&&row.meanFallPct<0)||row.ytdPct===null||row.yearStartPrice===null||row.latestPrice===null))fail('유효하지 않은 판단');
-    const source=row.source;if(!source||source.currency!=='USD'||!stamp(source.retrievedAt)||Date.parse(source.retrievedAt)>Date.parse(record.capturedAt)||!Number.isSafeInteger(source.count)||source.count<1)fail('종목별 출처·수집 시각');
+    const source=row.source;if(!source||source.currency!==row.currency||!stamp(source.retrievedAt)||Date.parse(source.retrievedAt)>Date.parse(record.capturedAt)||!Number.isSafeInteger(source.count)||source.count<1)fail('종목별 출처·수집 시각');
     for(const key of ['name','url','priceDefinition'])text(source[key],'종목별 출처');
     try{if(!['https:','http:'].includes(new URL(source.url).protocol))fail('출처 URL');}catch{fail('출처 URL');}
     if(!date(source.firstDate)||!date(source.lastDate)||source.firstDate>source.lastDate)fail('출처 관측 범위');
@@ -76,4 +78,4 @@ export function createSavedJudgmentLoader({fetchImpl=globalThis.fetch,embeddedIn
   return Object.freeze({list,load});
 }
 function cell(value){if(value===null||value===undefined)return '';let s=String(value);if(typeof value!=='number'&&(/^[\u0000-\u0020]*[=+\-@]/.test(s)||/^[\t\r]/.test(s)))s="'"+s;return /[",\r\n]/.test(s)?'"'+s.replaceAll('"','""')+'"':s;}
-export function savedJudgmentsCsv(record){validateSavedJudgmentRecord(record);const head=['kind','captured_at_utc','as_of_utc_date','source_version_sha256','rules_sha256','rules_version','group','symbol','name','observation_date','year_start_date','year_start_close','latest_close','year_to_date_pct','sample_years','mean_rise_pct','mean_fall_pct_not_mdd','judgment','judgment_available','judgment_reason','asset_source','asset_source_url','asset_retrieved_at'];const rows=record.rows.map(r=>[record.kind,record.capturedAt,record.asOf,record.source.hash,record.rules.sha256,record.rules.version,r.group,r.symbol,r.name,r.latestDate,r.yearStartDate,r.yearStartPrice,r.latestPrice,r.ytdPct,r.sampleYears,r.meanRisePct,r.meanFallPct,r.judgment.label,r.judgment.available,r.judgment.reason,r.source.name,r.source.url,r.source.retrievedAt]);return '\uFEFF'+[head,...rows].map(r=>r.map(cell).join(',')).join('\r\n')+'\r\n';}
+export function savedJudgmentsCsv(record){validateSavedJudgmentRecord(record);const head=['kind','captured_at_utc','as_of_utc_date','source_version_sha256','rules_sha256','rules_version','group','symbol','name','observation_date','year_start_date','year_start_close','latest_close','year_to_date_pct','sample_years','mean_rise_pct','mean_fall_pct_not_mdd','judgment','judgment_available','judgment_reason','asset_source','asset_source_url','asset_retrieved_at','currency'];const rows=record.rows.map(r=>[record.kind,record.capturedAt,record.asOf,record.source.hash,record.rules.sha256,record.rules.version,r.group,r.symbol,r.name,r.latestDate,r.yearStartDate,r.yearStartPrice,r.latestPrice,r.ytdPct,r.sampleYears,r.meanRisePct,r.meanFallPct,r.judgment.label,r.judgment.available,r.judgment.reason,r.source.name,r.source.url,r.source.retrievedAt,r.currency]);return '\uFEFF'+[head,...rows].map(r=>r.map(cell).join(',')).join('\r\n')+'\r\n';}

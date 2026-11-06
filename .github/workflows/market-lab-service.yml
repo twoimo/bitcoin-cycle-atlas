@@ -1,7 +1,21 @@
 name: Market lab service
 on:
   pull_request:
-    paths: ['apps/**', 'packages/**', 'db/**', 'dist/market-lab*', 'dist/data/market-lab.json', 'scripts/*market*.mjs', 'tests/market-lab*', 'tests/service/**', 'tests/web/**', 'package*.json', 'tsconfig.json', '.github/workflows/market-lab-service.yml']
+    paths:
+      - 'apps/**'
+      - 'packages/**'
+      - 'db/**'
+      - 'dist/**'
+      - 'scripts/*market*.mjs'
+      - 'scripts/verify-eth-candidate-browser.mjs'
+      - 'scripts/verify-workspace-browser.mjs'
+      - 'scripts/verify-consolidated-workspace-browser.mjs'
+      - 'tests/market-lab*'
+      - 'tests/service/**'
+      - 'tests/web/**'
+      - 'package*.json'
+      - 'tsconfig.json'
+      - '.github/workflows/market-lab-service.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -37,3 +51,65 @@ jobs:
       - run: npm run test:panels
       - run: npm run test:service
       - run: node --test tests/market-lab*.test.mjs
+  consolidated-browser:
+    name: Consolidated workspace browser (${{ matrix.scope }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        scope: [workspace-consolidated, data]
+    env:
+      ATLAS_BROWSER_CASE_SCOPE: ${{ matrix.scope }}
+      ATLAS_BROWSER_OUT: build/consolidated-browser/${{ matrix.scope }}
+      ETH_BROWSER_IMAGE_LOG_MODE: failures-only
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Locate runner Chrome and record the checked-out source
+        timeout-minutes: 1
+        run: |
+          set -euo pipefail
+          mkdir -p "$ATLAS_BROWSER_OUT"
+          git rev-parse HEAD > "$ATLAS_BROWSER_OUT/source-commit.txt"
+          node --version > "$ATLAS_BROWSER_OUT/node-version.txt"
+          atlas_consolidated_chrome_path="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)"
+          test -n "$atlas_consolidated_chrome_path"
+          test -x "$atlas_consolidated_chrome_path"
+          echo "ATLAS_BROWSER_PATH=$atlas_consolidated_chrome_path" >> "$GITHUB_ENV"
+          "$atlas_consolidated_chrome_path" --version | tee "$ATLAS_BROWSER_OUT/chrome-version.txt"
+      - name: Install the source-pinned Korean font
+        timeout-minutes: 3
+        run: |
+          set -euo pipefail
+          atlas_consolidated_font_dir="$HOME/.local/share/fonts/atlas-ci"
+          atlas_consolidated_font_temp="$RUNNER_TEMP/consolidated-noto-cjk"
+          mkdir -p "$atlas_consolidated_font_dir" "$atlas_consolidated_font_temp"
+          curl --fail --location --silent --show-error --proto '=https' --connect-timeout 10 --max-time 60 --output "$atlas_consolidated_font_temp/NotoSansCJKkr-Regular.otf" 'https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf'
+          atlas_consolidated_font_blob="$(git hash-object --no-filters "$atlas_consolidated_font_temp/NotoSansCJKkr-Regular.otf")"
+          test "$atlas_consolidated_font_blob" = 'dc4a7c65e6f450bf17c10a2405250b620eb78703'
+          curl --fail --location --silent --show-error --proto '=https' --connect-timeout 10 --max-time 60 --output "$atlas_consolidated_font_temp/OFL.txt" 'https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/LICENSE'
+          atlas_consolidated_font_license_blob="$(git hash-object --no-filters "$atlas_consolidated_font_temp/OFL.txt")"
+          test "$atlas_consolidated_font_license_blob" = 'd952d62c065f3f35fb83a173496e90b21525aef3'
+          install -m 0644 "$atlas_consolidated_font_temp/NotoSansCJKkr-Regular.otf" "$atlas_consolidated_font_dir/NotoSansCJKkr-Regular.otf"
+          install -m 0644 "$atlas_consolidated_font_temp/OFL.txt" "$atlas_consolidated_font_dir/OFL.txt"
+          timeout 30s fc-cache -f "$atlas_consolidated_font_dir"
+          fc-scan --format '%{family}\n' "$atlas_consolidated_font_dir/NotoSansCJKkr-Regular.otf"
+          fc-list ':lang=ko' file | grep -F -- "$atlas_consolidated_font_dir/NotoSansCJKkr-Regular.otf"
+          echo "ATLAS_FONT_RECEIPT commit=f8d157532fbfaeda587e826d4cd5b21a49186f7c font_blob=$atlas_consolidated_font_blob license_blob=$atlas_consolidated_font_license_blob" | tee "$ATLAS_BROWSER_OUT/font-receipt.txt"
+      - name: Verify committed consolidated screens in native Chrome
+        run: node scripts/verify-eth-candidate-browser.mjs
+      - name: Preserve consolidated browser receipts and screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: consolidated-browser-${{ matrix.scope }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ env.ATLAS_BROWSER_OUT }}
+          if-no-files-found: error
+          retention-days: 30

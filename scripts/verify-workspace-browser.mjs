@@ -1,4 +1,13 @@
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+
+export async function readComparisonAssetSymbols(source=new URL('../dist/data/asset-comparison.json',import.meta.url)){
+  const snapshot=JSON.parse(await readFile(source,'utf8')),symbols=snapshot.assets?.map(asset=>asset.symbol);
+  assert.ok(Array.isArray(symbols)&&symbols.length>0&&symbols.every(symbol=>typeof symbol==='string'&&symbol.length>0),'Comparison snapshot must declare its actual asset identities');
+  assert.equal(new Set(symbols).size,symbols.length,'Comparison snapshot contains duplicate asset identities');
+  assert.equal(symbols[0],'BTC','Comparison snapshot must keep BTC first');
+  return symbols;
+}
 
 export const workspaceBrowserCases = [320, 1440].flatMap(width =>
   ['btc', 'evidence', 'legacy', 'preview'].map(surface => ({
@@ -39,7 +48,8 @@ export async function readNativeInteractiveTarget(selector,focused=false){
 export async function verifyEmbeddedDataSurface(api){
   const {cdp,receipt,evaluate,until,settled,bounds,visibleBounds,screenshot,verifyOfflineRefresh,expectedBtc}=api;
   const {width,height,page}=receipt,frameSelector='.atlas-center-frame:not([hidden])';
-  const evidence={inputs:[],states:[]};receipt.workspace={surface:'center-data',states:evidence.states,centerData:evidence};
+  const expectedSymbols=await readComparisonAssetSymbols();
+  const evidence={inputs:[],states:[],expectedSymbols};receipt.workspace={surface:'center-data',states:evidence.states,centerData:evidence};
   const complete=target=>target.painted&&!target.disabled&&target.topmost&&target.box.width>0&&target.box.height>0&&target.clip.width>0&&target.clip.height>0&&
     target.box.left>=target.clip.left-1&&target.box.right<=target.clip.right+1&&target.box.top>=target.clip.top-1&&target.box.bottom<=target.clip.bottom+1;
   const readParent=()=>{
@@ -72,26 +82,36 @@ export async function verifyEmbeddedDataSurface(api){
     await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});
     await settled(context);
   };
-  const chooseNavigation=async(id)=>{
-    if(width<=620){
+  const revealHeadingControl=async(selector)=>{
       for(let attempt=0;attempt<5;attempt++){
-        const target=await evaluate(cdp,readNativeInteractiveTarget,'#mobile-details-toggle');
-        if(complete(target))break;
+        const target=await evaluate(cdp,readNativeInteractiveTarget,selector);
+        if(complete(target))return target;
+        assert.ok(target.painted&&!target.disabled,'Header action is hidden or disabled: '+selector);
         const heading=await bounds(cdp,'.atlas-canvas-heading');visibleBounds(heading,width,height);
         const before=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading').scrollLeft);
         const direction=target.box.left<heading.left?1:-1,distance=Math.min(144,heading.width/2),x=direction<0?heading.right-24:heading.left+24,y=(heading.top+heading.bottom)/2;
-        await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});
-        for(let step=1;step<=12;step++){
-          await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+direction*distance*step/12,y,id:1}]});
-          await new Promise(resolve=>setTimeout(resolve,16));
+        if(receipt.touch){
+          await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});
+          for(let step=1;step<=12;step++){
+            await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+direction*distance*step/12,y,id:1}]});
+            await new Promise(resolve=>setTimeout(resolve,16));
+          }
+          await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+        }else{
+          await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',x,y,deltaX:-direction*distance,deltaY:0});
         }
-        await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
         await until(()=>evaluate(cdp,value=>Math.abs(document.querySelector('.atlas-canvas-heading').scrollLeft-value)>1,before),'native heading pan',5000);
         let previous=null,stable=0;
         await until(async()=>{const left=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading').scrollLeft);stable=previous!==null&&Math.abs(left-previous)<.1?stable+1:0;previous=left;return stable>=3;},'native heading pan end',5000);
-        evidence.inputs.push({kind:'native-heading-swipe',before,after:previous,x,y,distance,direction,parentAfter:await evaluate(cdp,readParent)});
+        evidence.inputs.push({kind:receipt.touch?'native-heading-swipe':'native-heading-wheel',selector,before,after:previous,x,y,distance,direction,parentAfter:await evaluate(cdp,readParent)});
       }
-      const target=await evaluate(cdp,readNativeInteractiveTarget,'#mobile-details-toggle');
+      const target=await evaluate(cdp,readNativeInteractiveTarget,selector);
+      assert.ok(complete(target),'Native heading pan never exposed '+selector+': '+JSON.stringify(target));return target;
+  };
+  const headerPointer=async selector=>{await revealHeadingControl(selector);await rawPointer(selector);};
+  const chooseNavigation=async(id)=>{
+    if(width<=620){
+      const target=await revealHeadingControl('#mobile-details-toggle');
       assert.ok(target.box.width>=44&&target.box.height>=44,'Mobile navigation must retain its full touch target');
       await rawPointer('#mobile-details-toggle');
     }
@@ -111,6 +131,14 @@ export async function verifyEmbeddedDataSurface(api){
   await until(()=>evaluate(cdp,()=>document.documentElement?.dataset.boot==='ready'&&document.querySelectorAll('#lab-chart path').length>0),'center-data initial chart');
   const initialPage=await evaluate(cdp,readParent);
   assert.equal(initialPage.page,'outlook');assert.equal(initialPage.center,null);
+  evidence.navigation=await evaluate(cdp,()=>[...document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(item=>({id:item.dataset.atlasPage,label:item.getAttribute('aria-label'),href:item.getAttribute('href')})));
+  assert.deepEqual(evidence.navigation.map(item=>item.id),['outlook','market-us','rsi','evidence','data','ipo'],'The sidebar must expose the two consolidated workspaces');
+  assert.equal(evidence.navigation.find(item=>item.id==='market-us').label,'시장 분석');
+  assert.equal(evidence.navigation.find(item=>item.id==='rsi').label,'종목 차트');
+  for(const [id,path] of [['market-us','/market-lab/'],['rsi','/market-lab/charts/']]){
+    const entry=evidence.navigation.find(item=>item.id===id);
+    if(entry.href)assert.ok(new URL(entry.href,'http://atlas.test').pathname.endsWith(path),'Workspace link must use its canonical route: '+id);
+  }
   const initialRefreshVerified=await verifyOfflineRefresh({phase:'center-data-initial-parent'});
   await settled(cdp);
   evidence.sourceBefore=await evaluate(cdp,readSource);evidence.before=await evaluate(cdp,readParent);
@@ -128,7 +156,10 @@ export async function verifyEmbeddedDataSurface(api){
   };
   samePerimeter(evidence.before,'Initial chart');
   await chooseNavigation('data');
-  await until(()=>evaluate(cdp,()=>document.body.dataset.centerTool==='data'&&document.querySelector('.atlas-center-frame:not([hidden])')?.contentDocument?.querySelectorAll('#data-body tr[data-asset-symbol]').length===18),'native center-data entry');
+  await until(()=>evaluate(cdp,expected=>{
+    const rows=[...document.querySelector('.atlas-center-frame:not([hidden])')?.contentDocument?.querySelectorAll('#data-body tr[data-asset-symbol]')||[]];
+    return document.body.dataset.centerTool==='data'&&rows.length===expected.length&&expected.every(symbol=>rows.some(row=>row.dataset.assetSymbol===symbol))&&document.querySelectorAll('.center-data-actions .center-data-action:not(:disabled)').length===4;
+  },expectedSymbols),'native center-data entry');
   evidence.entered=await evaluate(cdp,readParent);samePerimeter(evidence.entered,'Embedded data entry');
   assert.equal(evidence.entered.page,'outlook');assert.equal(evidence.entered.shell,'chart');assert.equal(evidence.entered.center,'data');
   const activeFrame=await evaluate(cdp,()=>{const frame=document.querySelector('.atlas-center-frame:not([hidden])');return {src:frame.src,title:frame.title,borderLeft:frame.clientLeft,borderTop:frame.clientTop};});
@@ -142,24 +173,33 @@ export async function verifyEmbeddedDataSurface(api){
   evidence.childContext={frameId:frame.id,parentFrameId:frame.parentId,url:frame.url,executionContextId:world.executionContextId};
   await settled(child);
   evidence.board=await evaluate(child,()=>{
-    const root=document.querySelector('#data-view'),heading=root.querySelector('.daily-heading'),rows=[...root.querySelectorAll('#data-body tr[data-asset-symbol]')];
+    const root=document.querySelector('#data-view'),heading=root.querySelector('.daily-heading'),actions=heading.querySelector('.daily-heading-actions'),rows=[...root.querySelectorAll('#data-body tr[data-asset-symbol]')];
     const rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
     return {embedded:document.body.dataset.embedded,coarse:matchMedia('(pointer:coarse)').matches,width:innerWidth,height:innerHeight,documentWidth:document.documentElement.scrollWidth,
       root:rect(root),toolbar:rect(heading),symbols:rows.map(row=>row.dataset.assetSymbol),btcName:rows[0]?.querySelector('.asset-name-label').textContent,
-      actionIds:[...heading.querySelectorAll('.daily-action')].map(button=>button.id)};
+      hosted:document.body.dataset.dataActionsHosted,ownerActionsVisible:actions.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),
+      ownerActionIds:[...heading.querySelectorAll('.daily-action')].map(button=>button.id)};
   });
-  assert.equal(evidence.board.embedded,'true');assert.equal(evidence.board.symbols.length,18);assert.equal(new Set(evidence.board.symbols).size,18);
+  assert.equal(evidence.board.embedded,'true');assert.equal(evidence.board.symbols.length,expectedSymbols.length);assert.equal(new Set(evidence.board.symbols).size,expectedSymbols.length);
+  assert.deepEqual([...evidence.board.symbols].sort(),[...expectedSymbols].sort(),'Every committed asset must appear exactly once');
   assert.equal(evidence.board.symbols[0],'BTC');assert.equal(evidence.board.btcName,'비트코인');assert.ok(evidence.board.documentWidth<=evidence.board.width+1);
-  assert.deepEqual(evidence.board.actionIds,['asset-refresh','asset-history-open','daily-method-open','export-raw']);
-  assert.ok(evidence.board.toolbar.height<=64&&Math.abs(evidence.board.toolbar.width-evidence.board.root.width)<=1,'Embedded action row must fit its actual board owner');
+  assert.deepEqual(evidence.board.ownerActionIds,['asset-refresh','asset-history-open','daily-method-open','export-raw']);
+  assert.equal(evidence.board.hosted,'true');assert.equal(evidence.board.ownerActionsVisible,false,'Embedded source controls must not duplicate the parent header');
+  evidence.header=await evaluate(cdp,()=>{
+    const heading=document.querySelector('.atlas-canvas-heading'),bar=heading.querySelector('.center-data-actions'),rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+    return {heading:rect(heading),toolbar:rect(bar),actionIds:[...bar.querySelectorAll('.center-data-action')].map(button=>button.id),coarse:matchMedia('(pointer:coarse)').matches};
+  });
+  assert.deepEqual(evidence.header.actionIds,evidence.board.ownerActionIds.map(id=>'center-'+id));
+  assert.ok(evidence.header.toolbar.height<=evidence.header.heading.height+1&&evidence.header.toolbar.top>=evidence.header.heading.top-1&&evidence.header.toolbar.bottom<=evidence.header.heading.bottom+1,'Hosted actions must fit the single parent toolbar row');
   evidence.actions=[];const minimum=evidence.board.coarse||evidence.board.width<=760?44:32;
-  for(const id of evidence.board.actionIds){
-    const target=await evaluate(child,readNativeInteractiveTarget,'#'+id);evidence.actions.push(target);
-    assert.ok(complete(target)&&target.label&&target.tag==='BUTTON','Embedded action must be named, enabled and physically reachable: '+id);
-    assert.ok(target.box.width>=minimum&&target.box.height>=minimum,'Embedded action hit target compressed: '+id);
+  const headerMinimum=evidence.header.coarse||width<=760?44:32;
+  for(const id of evidence.header.actionIds){
+    const target=await revealHeadingControl('#'+id);evidence.actions.push(target);
+    assert.ok(complete(target)&&target.label&&target.tag==='BUTTON','Hosted action must be named, enabled and physically reachable: '+id);
+    assert.ok(target.box.width>=headerMinimum&&target.box.height>=headerMinimum,'Hosted action hit target compressed: '+id);
   }
   await screenshot(cdp,page+'-'+width+'x'+height+'-board.png',receipt);
-  await rawPointer('#daily-method-open',child,frame);
+  await headerPointer('#center-daily-method-open');
   const dialog=await bounds(child,'#daily-method-dialog');assert.equal(dialog.open,true);visibleBounds(dialog,evidence.board.width,evidence.board.height);
   assert.ok(dialog.text.includes('자산 비교표')&&dialog.text.includes('판단 보류'),'Actual comparison method must be present');
   const frameBox=await bounds(cdp,frameSelector);
@@ -175,7 +215,53 @@ export async function verifyEmbeddedDataSurface(api){
   await screenshot(cdp,page+'-'+width+'x'+height+'-method.png',receipt);
   await rawPointer('#daily-method-close',child,frame);
   assert.equal(await evaluate(child,()=>document.querySelector('#daily-method-dialog').open),false);
+  await until(()=>evaluate(cdp,()=>document.activeElement===document.querySelector('#center-daily-method-open')),'embedded method returns focus to its parent header trigger');
   evidence.afterMethod=await evaluate(cdp,readParent);samePerimeter(evidence.afterMethod,'Embedded method close');
+  await headerPointer('#center-asset-history-open');
+  await until(()=>evaluate(child,()=>document.querySelector('#asset-history-dialog')?.open),'parent header opens the actual child history dialog');
+  const history=await bounds(child,'#asset-history-dialog');visibleBounds(history,evidence.board.width,evidence.board.height);
+  assert.ok(history.text.includes('판단 이력')&&history.text.includes('과거 재계산'),'Actual judgment history must retain its source disclosure');
+  evidence.history=await evaluate(child,()=>({modal:document.querySelector('#asset-history-dialog').matches(':modal'),state:document.querySelector('#history-state')?.textContent}));
+  assert.equal(evidence.history.modal,true);
+  const historyClose=await evaluate(child,readNativeInteractiveTarget,'#asset-history-close');
+  assert.ok(complete(historyClose)&&historyClose.box.width>=minimum&&historyClose.box.height>=minimum,'Embedded history close must remain reachable');
+  await rawPointer('#asset-history-close',child,frame);
+  await until(()=>evaluate(cdp,()=>document.activeElement===document.querySelector('#center-asset-history-open')),'embedded history returns focus to its parent header trigger');
+  assert.equal(await evaluate(child,()=>document.querySelector('#asset-history-dialog').open),false);
+
+  // Observe the actual owner transitions; no synthetic click or loader replaces
+  // the parent pointer input or the child data handler.
+  await evaluate(child,()=>{
+    const target=document.querySelector('#asset-table-scroll'),probe={transitions:[]};
+    probe.observer=new MutationObserver(records=>{for(const record of records)probe.transitions.push({before:record.oldValue,after:target.getAttribute('aria-busy')});});
+    probe.observer.observe(target,{attributes:true,attributeFilter:['aria-busy'],attributeOldValue:true});
+    globalThis.__atlasAssetRefreshProbe=probe;
+  });
+  await headerPointer('#center-asset-refresh');
+  await until(()=>evaluate(cdp,expected=>{
+    const doc=document.querySelector('.atlas-center-frame:not([hidden])')?.contentDocument,rows=[...doc?.querySelectorAll('#data-body tr[data-asset-symbol]')||[]];
+    return rows.length===expected.length&&expected.every(symbol=>rows.some(row=>row.dataset.assetSymbol===symbol))&&doc.querySelector('#asset-table-scroll').getAttribute('aria-busy')!=='true'&&!document.querySelector('#center-asset-refresh').disabled;
+  },expectedSymbols),'parent refresh returns the complete committed asset board');
+  evidence.refresh=await evaluate(child,()=>{const probe=globalThis.__atlasAssetRefreshProbe;probe.observer.disconnect();delete globalThis.__atlasAssetRefreshProbe;return {transitions:probe.transitions,symbols:[...document.querySelectorAll('#data-body tr[data-asset-symbol]')].map(row=>row.dataset.assetSymbol)};});
+  assert.ok(evidence.refresh.transitions.some(state=>state.before==='true'||state.after==='true'),'Parent refresh must enter the real child loading state');
+  assert.deepEqual([...evidence.refresh.symbols].sort(),[...expectedSymbols].sort());
+
+  await evaluate(child,()=>{
+    const probe={completed:null,error:null};
+    probe.listener=event=>{
+      const link=event.target.closest?.('a[download]');if(!link||!/^asset-comparison-.*\.csv$/.test(link.download))return;
+      const filename=link.download;
+      void fetch(link.href).then(response=>response.blob()).then(async blob=>{probe.completed={filename,type:blob.type,bytes:blob.size,columns:(await blob.text()).replace(/^\uFEFF/,'').split(/\r?\n/,1)[0]};}).catch(error=>{probe.error=String(error);});
+    };
+    document.addEventListener('click',probe.listener,true);globalThis.__atlasAssetCsvProbe=probe;
+  });
+  await headerPointer('#center-export-raw');
+  await until(()=>evaluate(child,()=>Boolean(globalThis.__atlasAssetCsvProbe.completed||globalThis.__atlasAssetCsvProbe.error)),'parent CSV action produces the actual child export');
+  evidence.csv=await evaluate(child,()=>{const probe=globalThis.__atlasAssetCsvProbe;document.removeEventListener('click',probe.listener,true);delete globalThis.__atlasAssetCsvProbe;return {error:probe.error,...probe.completed};});
+  assert.equal(evidence.csv.error,null);assert.match(evidence.csv.filename,/^asset-comparison-\d{4}-\d{2}-\d{2}\.csv$/);
+  assert.match(evidence.csv.type,/^text\/csv/);assert.ok(evidence.csv.bytes>0);
+  for(const column of ['comparison_as_of','symbol','price_definition','retrieved_at'])assert.ok(evidence.csv.columns.split(',').includes(column),'Actual CSV omitted '+column);
+  samePerimeter(await evaluate(cdp,readParent),'Hosted data actions');
   await chooseNavigation('outlook');
   await until(()=>evaluate(cdp,()=>!document.body.dataset.centerTool&&document.querySelectorAll('.atlas-center-frame:not([hidden])').length===0),'native return from embedded data');
   evidence.returned=await evaluate(cdp,readParent);samePerimeter(evidence.returned,'Return to chart');

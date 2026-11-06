@@ -2,11 +2,11 @@ import { diagnoseRegion } from '@atlas/domain/market-lab';
 import type { MarketSnapshot, Region } from '@atlas/contracts/market-lab';
 import { PublicLink, sourceMeta } from './common.js';
 
-export function SourceDisclosure({ snapshot, region, now }: { snapshot: MarketSnapshot | null; region: Region; now: Date }) {
+export function SourceDisclosure({ snapshot, region, now, onOpen }: { snapshot: MarketSnapshot | null; region: Region; now: Date; onOpen?:()=>void }) {
   let notes: string[] = [];
   try { if (snapshot) notes = diagnoseRegion(snapshot, region, { now }).notes || []; } catch { /* Missing/invalid observations remain withheld. */ }
   const sources = snapshot?.sources || [];
-  return <details className="ml-sources"><summary>출처·시점·모형 한계{snapshot && ` · ${sources.length}개 출처`}</summary><div className="ml-source-body">
+  return <details className="ml-sources" onToggle={event=>{if(event.currentTarget.open)onOpen?.();}}><summary>출처·시점·모형 한계{snapshot && ` · ${sources.length}개 출처`}</summary><div className="ml-source-body">
     <p>스냅샷 생성 {snapshot?.generatedAt || '미수신'} · 모형 {snapshot?.modelVersion || 'research-0.1'}</p>
     <p>미국과 국내를 구분합니다. 국내 적용은 서비스의 새 가정으로, 원문 멘토 검증이 아닙니다. 수정 이력과 최초 공개 시점은 미확인입니다. 현재 자료로 과거 시점 백테스트를 재현했다고 주장하지 않습니다.</p>
     <p>관측값은 연결된 스냅샷만 사용합니다. 실시간 호가·자동매매 모형이 아닙니다. 마지막 저장 관측의 종가이며 전망선이나 가상 가격을 섞지 않습니다.</p>

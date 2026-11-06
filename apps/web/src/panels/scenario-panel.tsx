@@ -1,6 +1,7 @@
 import { positiveFactorScenario, type ScenarioResult } from '@atlas/domain/market-lab';
 import type { Axis } from '@atlas/contracts/market-lab';
 import { axes, errorText, finite, fmt } from '../components/common.js';
+import { ScenarioContributionChart } from '../components/ztd-research-charts.js';
 
 export interface ScenarioState {
   alpha: number; beta: number; gamma: number; weights: string[]; sensitivity: string;
@@ -37,6 +38,7 @@ export function ScenarioPanel({ state, onChange }: { state: ScenarioState; onCha
       <div id="ml-scenario-output" aria-live="polite">{result ? <>
         <div className="ml-index"><strong>{fmt(result.index)}</strong><span>무차원 가상 지수 / 기준 100</span></div>
         <p className="ml-formula">I = 100 × exp(λ × 압력)</p><p>부호 있는 압력 <b>{fmt(result.pressure, 3)}</b> · λ {fmt(result.sensitivity, 2)}</p>
+        <ScenarioContributionChart contributions={result.contributions} />
         <div className="ml-table-wrap"><table><caption>축별 정규화 기여와 양수 인자</caption><thead><tr><th>축</th><th>충격</th><th>정규화 기여</th><th>양수 인자</th></tr></thead>
           <tbody>{axes.map(([key, symbol, name], index) => <tr key={key}><th>{symbol} {name}</th><td>{fmt(state[key], 1)}</td><td>{fmt(result.contributions[index], 3)}</td><td>{fmt(result.factors[index], 4)}</td></tr>)}</tbody></table></div>
 

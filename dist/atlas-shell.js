@@ -24,9 +24,9 @@ SOFTWARE.
  * Exact source and license: docs/design-system/templates/shadcn-dashboard-01; /vendor/shadcn-ui-LICENSE.txt.
  * Existing chart/data controls retain their original DOM owners and handlers. */
 import {atlasSitePath} from './site-paths.js';
-import { atlasPages, labPageFromLocation } from './atlas-navigation.js';
+import { atlasPages, atlasNavigationPages, atlasNavigationId, labPageFromLocation } from './atlas-navigation.js?v=1.32.0';
 import { readShellPreference, writeShellPreference } from './atlas-shell-state.js';
-import { mountCenterWorkbench } from './center-workbench.js?v=1.31.3';
+import { mountCenterWorkbench } from './center-workbench.js?v=1.32.0';
 
 const pageNames = { outlook: '통합 차트', compare: '사이클 비교', evidence: '리서치 자료', data: '자산 비교표', ipo: '공모주 캘린더', market: '세 축 연구실' };
 export function initAtlasShell() {
@@ -38,7 +38,7 @@ export function initAtlasShell() {
   const originalNav = document.querySelector('.atlas-nav');
   const service = document.querySelector('meta[name="atlas-service-base"]')?.getAttribute('content');
   const originalItems = new Map([...originalNav?.querySelectorAll('[data-view]') || []].map(item => [item.dataset.view, item]));
-  for (const page of atlasPages) {
+  for (const page of atlasNavigationPages) {
     let item = originalItems.get(page.view);
     if (page.tab && page.id !== 'market-us') item = null;
     if (!item && originalNav) {
@@ -85,7 +85,7 @@ export function initAtlasShell() {
     const navigation = document.querySelector('.atlas-nav'), rail = document.querySelector('.workbench-rail');
     if (navigation && chart && rail && navigation.parentElement !== rail) rail.append(navigation);
     if (navigation && !chart && navigation.parentElement !== sidebar) sidebar.append(navigation);
-    const activePage = page === 'market' ? labPageFromLocation(globalThis.location).id : atlasPages.find(item => item.view === page)?.id;
+    const activePage = atlasNavigationId(page === 'market' ? labPageFromLocation(globalThis.location).id : atlasPages.find(item => item.view === page)?.id);
     for (const item of navigation?.querySelectorAll('[data-atlas-page]') || []) {
       const active = item.dataset.atlasPage === activePage;
       item.classList.toggle('active', active);

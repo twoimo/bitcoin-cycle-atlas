@@ -49,10 +49,14 @@ function meaningful(html: string) {
 }
 // The user explicitly requested shorter copy and a different page composition.
 // Keep the old renderer as the independent oracle for calculations, form
-// constraints, observations, clock labels, errors and fixed-width SVG geometry.
-function calculations(html: string) {
+// constraints, observations, clock labels, errors and the unchanged RSI SVG.
+// Diagnosis now uses ztd-charts: its source/date semantics have dedicated tests,
+// while this oracle still independently compares its market/range controls and
+// every calculation. Renderer-specific geometry is deliberately excluded there.
+function calculations(html: string, options: { ztdDiagnosis?: boolean } = {}) {
   const presentation = parseHTML(`<html><body>${html}</body></html>`).document;
-  for (const node of presentation.querySelectorAll('[data-presentation-control],.rsi-crossing')) node.remove();
+  for (const node of presentation.querySelectorAll('[data-presentation-control],[data-presentation-chart],.rsi-crossing')) node.remove();
+  if (options.ztdDiagnosis) for (const node of presentation.querySelectorAll('[data-chart="price"] svg,[data-chart="price"] .ztd-sr')) node.remove();
   html = presentation.body.innerHTML;
   const { text: _copy, ...semantics } = meaningful(html);
   const { document } = parseHTML(`<html><body><main>${html}</main></body></html>`);
@@ -66,10 +70,10 @@ function calculations(html: string) {
   };
 }
 for (const region of ['us', 'kr'] as Region[]) {
-  test(`React diagnosis ${region}: values, controls and SVG coordinates match the previous renderer`, async () => {
+  test(`React diagnosis ${region}: values and original date/market controls match the previous renderer`, async () => {
     const before = await legacy('diagnosis', snapshot, { region });
     const after = renderToStaticMarkup(<DiagnosisPanel snapshot={snapshot} region={region} now={now} marketId={null} priceIndex={null} onMarket={noChange} onDate={noChange} />);
-    assert.deepEqual(calculations(after), calculations(before));
+    assert.deepEqual(calculations(after, { ztdDiagnosis: true }), calculations(before, { ztdDiagnosis: true }));
   });
 }
 test('React diagnosis preserves selected market/date and source-error chart withholding', async () => {
@@ -84,7 +88,7 @@ test('React diagnosis preserves selected market/date and source-error chart with
   for (const { doc, marketId, priceIndex } of cases) {
     const before = await legacy('diagnosis', doc, { region: 'us', marketId, priceIndex });
     const after = renderToStaticMarkup(<DiagnosisPanel snapshot={doc} region="us" now={now} marketId={marketId} priceIndex={priceIndex} onMarket={noChange} onDate={noChange} />);
-    assert.deepEqual(calculations(after), calculations(before));
+    assert.deepEqual(calculations(after, { ztdDiagnosis: true }), calculations(before, { ztdDiagnosis: true }));
   }
 });
 
@@ -195,21 +199,22 @@ test('React app keeps calculation controls usable while loading and preserves re
   t.after(fixture.cleanup);
   assert.match(fixture.document.querySelector('.atlas-inline-loading')!.textContent!, /자료를 읽고 있습니다/);
   assert(fixture.document.querySelector('[data-atlas-skeleton=diagnosis]'),'pending market data gets neutral skeleton geometry');
-  await fixture.click('[data-atlas-page="scenario"]'); await fixture.click('[data-action="negative"]');
+  await fixture.click('[data-workspace-page="scenario"]'); await fixture.click('[data-action="negative"]');
   assert.equal(fixture.document.querySelector('.ml-index strong')!.textContent, '87.52');
-  await fixture.click('[data-atlas-page="cashflow"]'); await fixture.click('[data-action="economics-example"]');
+  await fixture.click('[data-workspace-page="cashflow"]'); await fixture.click('[data-action="economics-example"]');
   assert.match(fixture.document.querySelector('#ml-economics-output')!.textContent!, /6,623\.58/);
-  await fixture.click('[data-atlas-page="scenario"]');
+  await fixture.click('[data-workspace-page="scenario"]');
   assert.equal(fixture.document.querySelector('.ml-index strong')!.textContent, '87.52');
   await act(async () => resolve(snapshot));
-  await fixture.click('[data-atlas-page="market-us"]');
+  await fixture.click('[data-workspace-page="market-us"]');
   assert.equal(fixture.document.querySelector('.ml-axis-value')!.textContent, '0.52');
-  await fixture.click('[data-atlas-page="cashflow"]');
+  await fixture.click('[data-workspace-page="cashflow"]');
   assert.match(fixture.document.querySelector('#ml-economics-output')!.textContent!, /6,623\.58/);
   await fixture.click('[data-atlas-page="rsi"]');
   const selectedRange = [...fixture.document.querySelectorAll('.rsi-toolbar button[aria-pressed="true"]')].map(node => node.textContent);
   assert(selectedRange.includes('전체'), 'all retained history is initially visible');
-  assert.equal(fixture.document.querySelectorAll('[role=tablist]').length, 0, 'tools are distinct sidebar pages');
+  assert.equal(fixture.document.querySelectorAll('.atlas-nav [data-atlas-page="scenario"],.atlas-nav [data-atlas-page="cashflow"],.atlas-nav [data-atlas-page="housing"],.atlas-nav [data-atlas-page="themes"]').length, 0, 'the unified workspaces own the former sidebar tools');
+  assert(fixture.document.querySelector('[role=combobox][aria-label="종목·지역 검색"]'), 'chart selection is available in the same workspace');
   assert.match(fixture.document.querySelector('[data-chart="rsi"] .rsi-axis')!.textContent!, /33\.95/);
 });
 test('React app renders empty and error states distinctly and retries without discarding scenario input', async t => {
@@ -219,7 +224,7 @@ test('React app renders empty and error states distinctly and retries without di
   const fixture = await mountedApp(async () => { attempts++; if (attempts === 1) throw new Error('원천 연결 오류'); return empty; });
   t.after(fixture.cleanup);
   assert.match(fixture.document.querySelector('.ml-status')!.textContent!, /자료 오류 · 원천 연결 오류/);
-  await fixture.click('[data-atlas-page="scenario"]'); await fixture.click('[data-action="negative"]');
+  await fixture.click('[data-workspace-page="scenario"]'); await fixture.click('[data-action="negative"]');
   await fixture.click('[data-action="retry"]');
   assert.match(fixture.document.querySelector('.ml-status')!.textContent!, /관측 자료가 없습니다/);
   assert.equal(fixture.document.querySelector('.ml-index strong')!.textContent, '87.52');

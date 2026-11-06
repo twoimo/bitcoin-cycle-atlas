@@ -1,5 +1,5 @@
 import { mountDialogViewport } from './dialog-viewport.js?v=1.29.0';
-import { RSI_INSTRUMENTS } from './rsi-instruments.js';
+import { WORKSPACE_INSTRUMENTS } from './workspace-instruments.js';
 
 /** Supported instruments are explicit: equity, spot USD and USDT are distinct. */
 export const SYMBOLS = Object.freeze([
@@ -7,33 +7,36 @@ export const SYMBOLS = Object.freeze([
   Object.freeze({ symbol:'ETHUSD', product:'ETH-USD', name:'Ethereum', koreanName:'이더리움', source:'Coinbase', description:'Coinbase Exchange · 현물 USD', base:'ETH' }),
   Object.freeze({ symbol:'MSTR', product:'MSTR', name:'Strategy', koreanName:'스트래티지', source:'Nasdaq', description:'MicroStrategy · Michael Saylor · 마이클 세일러 · 미국 주식', base:'MSTR', assetClass:'equity' }),
   Object.freeze({ symbol:'BMNR', product:'BMNR', name:'Bitmine', koreanName:'비트마인', source:'NYSE', description:'Bitmine Immersion Technologies · Tom Lee · 톰 리 · 미국 주식', base:'BMNR', assetClass:'equity' }),
-  ...RSI_INSTRUMENTS,
+  ...WORKSPACE_INSTRUMENTS,
 ]);
 const intervals = new Set(['1m','5m','15m','30m','1h','4h','daily','weekly']);
 const symbolValue = value => typeof value === 'string' ? value.toUpperCase().replace(/[\s/\-]/g,'') : '';
 
 export function normalizeSymbol(value) {
-  return SYMBOLS.find(item => item.symbol === symbolValue(value))?.symbol || 'BTCUSD';
+  return SYMBOLS.find(item => symbolValue(item.symbol) === symbolValue(value) || symbolValue(item.product) === symbolValue(value))?.symbol || 'BTCUSD';
 }
 
 export function searchSymbols(query = '') {
   const terms = String(query).trim().toLocaleLowerCase().split(/\s+/u).filter(Boolean);
-  return SYMBOLS.filter(item => terms.every(term => `${item.symbol} ${item.product} ${item.base}/${item.currency || 'USD'} ${item.name} ${item.koreanName} ${item.currency === 'KRW' ? '국내 한국 원화 KRW' : '미국 달러 USD'} ${item.source} ${item.description}`.toLocaleLowerCase().includes(term)));
+  return SYMBOLS.filter(item => terms.every(term => `${item.symbol} ${item.product} ${item.base}/${item.currency || 'USD'} ${item.name} ${item.koreanName} ${item.assetClass==='housing'?'국내 한국 부동산 지수':item.currency === 'KRW' ? '국내 한국 원화 KRW' : item.currency==='USDC'?'USDC 현물':'미국 달러 USD'} ${item.source} ${item.description}`.toLocaleLowerCase().includes(term)));
 }
 
 /** A symbol change keeps presentation choices, but resets asset-owned ranges,
  * price bounds, research layers and scenarios. Navigation also resets pending
  * requests, so a late BTC response cannot paint over the ETH chart. */
 export function createSymbolUrl(currentUrl, targetSymbol) {
-  const instrument = SYMBOLS.find(item => item.symbol === symbolValue(targetSymbol));
+  const instrument = SYMBOLS.find(item => symbolValue(item.symbol) === symbolValue(targetSymbol) || symbolValue(item.product) === symbolValue(targetSymbol));
   if (!instrument) throw new RangeError('Unsupported chart symbol');
   const current = new URL(currentUrl), next = new URL(current);
   if (!['https:','http:','file:'].includes(current.protocol)) throw new TypeError('Invalid chart URL');
   next.search = ''; next.hash = '';
   const labRoot = next.pathname.indexOf('/market-lab/');
   if (labRoot >= 0) next.pathname = next.pathname.slice(0,labRoot+1);
-  if (instrument.assetClass === 'etf') {
-    next.searchParams.set('page','market'); next.searchParams.set('lab-tab','rsi'); next.searchParams.set('symbol',instrument.symbol);
+  if (instrument.page) {
+    if(current.protocol==='file:')throw new RangeError('Workspace charts require the web app');
+    next.pathname=(next.pathname.endsWith('/')?next.pathname:next.pathname.slice(0,next.pathname.lastIndexOf('/')+1))+'market-lab/charts/';
+    next.searchParams.set('symbol',instrument.symbol);
+    if(instrument.page==='housing')next.searchParams.set('region',instrument.region);
     return next.href;
   }
   if (instrument.symbol !== 'BTCUSD') next.searchParams.set('symbol',instrument.symbol);
@@ -55,7 +58,7 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
   let currentSymbol = normalizeSymbol(symbol);
   const current = SYMBOLS.find(item => item.symbol === currentSymbol);
   const win = document.defaultView || globalThis.window;
-  const supported = onSelect || document.querySelector?.('meta[name="atlas-service-base"]') ? SYMBOLS : SYMBOLS.filter(item=>item.assetClass!=='etf');
+  const supported = onSelect || document.querySelector?.('meta[name="atlas-service-base"]') || document.querySelector?.('meta[name="atlas-static-entry"]') ? SYMBOLS : SYMBOLS.filter(item=>!item.page);
   const add = (parent,tag,className,text) => {
     const node = document.createElement(tag); if (className) node.className = className;
     if (text !== undefined) node.textContent = text; parent.append(node); return node;
@@ -75,12 +78,12 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
   const search = add(dialog,'div','symbol-search-input'); add(search,'span','symbol-search-icon').innerHTML = searchIcon;
   const input = add(search,'input',''); input.type = 'search'; input.placeholder = '심볼 또는 이름 검색'; input.autocomplete = 'off'; input.spellcheck = false;
   input.setAttribute('aria-label','심볼 또는 이름 검색'); input.setAttribute('role','combobox'); input.setAttribute('aria-autocomplete','list'); input.setAttribute('aria-controls','symbol-search-results'); input.setAttribute('aria-expanded','true');
-  const filters = add(dialog,'div','symbol-search-filters'); add(filters,'span','','암호화폐 · 주식 · ETF'); add(filters,'span','','USD · KRW');
+  const filters = add(dialog,'div','symbol-search-filters'); add(filters,'span','','디지털 자산 · 주식 · ETF · 부동산'); add(filters,'span','','USD · KRW · USDC · 지수');
   const results = add(dialog,'div','symbol-search-results'); results.id = 'symbol-search-results'; results.setAttribute('role','listbox'); results.setAttribute('aria-label','지원 종목');
   const empty = add(dialog,'p','symbol-search-empty','일치하는 종목이 없습니다.'); empty.hidden = true; empty.setAttribute('role','status');
   const count = add(dialog,'span','symbol-search-count'); count.setAttribute('role','status'); count.setAttribute('aria-live','polite');
   const footer = add(dialog,'footer','symbol-search-footer');
-  add(footer,'span','',`${supported.length}개 종목 · 출처별 실제 가격`); add(footer,'small','','↑ ↓ 이동 · Enter 선택 · Esc 닫기');
+  add(footer,'span','',`${supported.length}개 종목·지역 · 실제 관측 자료`); add(footer,'small','','↑ ↓ 이동 · Enter 선택 · Esc 닫기');
   document.body.append(dialog);
   const viewport = mountDialogViewport(dialog);
   let opened = false, activeIndex = 0, rows = [], matches = [];
@@ -103,12 +106,12 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
     for (const instrument of matches) {
       const row = add(results,'button','symbol-search-row'); row.id = `symbol-option-${instrument.symbol}`; row.type = 'button'; row.setAttribute('role','option'); row.dataset.symbol = instrument.symbol;
       const mark = add(row,'span',`symbol-search-mark symbol-search-mark-${instrument.base.toLowerCase()}`); mark.setAttribute('aria-hidden','true');
-      instrument.base === 'ETH' ? mark.innerHTML = ethIcon : mark.textContent = instrument.assetClass==='etf' ? 'E' : instrument.assetClass==='equity'?instrument.symbol==='MSTR'?'M':'B':'₿';
+      instrument.base === 'ETH' ? mark.innerHTML = ethIcon : mark.textContent = instrument.assetClass==='housing'?'집':instrument.base==='HYPE'?'H':instrument.assetClass==='etf' ? 'E' : instrument.assetClass==='equity'?instrument.symbol==='MSTR'?'M':'B':'₿';
       const identity = add(row,'span','symbol-search-identity');
-      const symbolLine = add(identity,'span','symbol-search-symbol'); add(symbolLine,'strong','',instrument.symbol);
+      const symbolLine = add(identity,'span','symbol-search-symbol'); add(symbolLine,'strong','',instrument.assetClass==='housing'?instrument.product:instrument.symbol);
       if (instrument.symbol === currentSymbol) add(symbolLine,'small','symbol-search-current','현재');
       add(identity,'span','symbol-search-name',instrument.symbol==='BTCUSD'?instrument.koreanName:`${instrument.name} · ${instrument.koreanName}`);
-      const source = add(row,'span','symbol-search-source'); add(source,'span','',instrument.source); add(source,'small','',instrument.assetClass==='etf'?`ETF · ${instrument.currency}`:instrument.assetClass==='equity'?'주식 · USD':'현물 · USD');
+      const source = add(row,'span','symbol-search-source'); add(source,'span','',instrument.source); add(source,'small','',instrument.assetClass==='housing'?'월별 지수 · 거래량':instrument.assetClass==='etf'?`ETF · ${instrument.currency}`:instrument.assetClass==='equity'?'주식 · USD':`현물 · ${instrument.currency||'USD'}`);
       row.title = `${instrument.description} · ${instrument.koreanName} / ${instrument.currency || 'USD'}`;
       row.onclick = () => choose(instrument.symbol);
       row.onfocus = () => activate(rows.indexOf(row));
@@ -127,10 +130,10 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
   function choose(value) {
     if (!opened) return;
     const instrument = SYMBOLS.find(item => item.symbol === value); if (!instrument) return;
-    close(); if (instrument.symbol === currentSymbol && !(instrument.symbol==='BTCUSD' && document.body?.dataset?.centerTool)) return;
+    close(); if (instrument.symbol === currentSymbol && !document.body?.dataset?.centerTool) return;
     let url = createSymbolUrl(getUrl ? getUrl() : win.location.href,instrument.symbol);
     const service = document.querySelector?.('meta[name="atlas-service-base"]')?.getAttribute('content');
-    if (service && instrument.assetClass === 'etf') url = new URL(`rsi/?symbol=${instrument.symbol}`, new URL(service, win.location.href)).href;
+    if (service && instrument.page) url = new URL(`charts/?symbol=${instrument.symbol}${instrument.page==='housing'?`&region=${instrument.region}`:''}`, new URL(service, win.location.href)).href;
     const SelectedEvent = win?.CustomEvent || globalThis.CustomEvent;
     if (SelectedEvent && !document.dispatchEvent(new SelectedEvent('atlas:symbol-select',{cancelable:true,detail:{symbol:instrument.symbol,url}}))) return;
     if (onSelect) onSelect(instrument.symbol,url);
@@ -173,7 +176,7 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
   document.addEventListener('atlas:modal-open',onOtherModal);
   const activeSymbol = event => {
     const instrument=SYMBOLS.find(item=>item.symbol===event.detail?.symbol);if(!instrument)return;currentSymbol=instrument.symbol;
-    button.querySelector?.('.symbol-selector-label')?.replaceChildren(document.createTextNode(instrument.symbol));
+    button.querySelector?.('.symbol-selector-label')?.replaceChildren(document.createTextNode(instrument.assetClass==='housing'?instrument.koreanName:instrument.symbol));
     button.title=`종목 선택 · ${instrument.koreanName} / ${instrument.currency || 'USD'}`;button.setAttribute('aria-label',`${button.title} · ${instrument.symbol}`);
   };
   document.addEventListener('atlas:active-symbol',activeSymbol);

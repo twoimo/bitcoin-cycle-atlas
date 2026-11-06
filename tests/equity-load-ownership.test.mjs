@@ -27,7 +27,7 @@ for (const symbol of ['MSTR', 'BMNR']) {
     assert.ok(saved, 'the info dialog must identify its preserved JSON archive');
     assert.equal(saved[1], './data/'+symbol.toLowerCase()+'-ohlc.json');
     assert.equal(saved[1], f.requests[0].url, 'the original-data link must use this symbol’s actual price archive');
-    assert.match(markup, /href="\/atlas-&quot;quote&amp;path\?page=data">18개 자산 비교표 ↗<\/a>/);
+    assert.match(markup, /href="\/atlas-&quot;quote&amp;path\?page=data">20개 자산 비교표 ↗<\/a>/);
     assert.doesNotMatch(markup, /data-asset=|일별 원자료 · 연간 수익률 · MDD/);
     assert.equal(f.requests.length, 2, 'opening data information must not refetch or switch assets');
     dialog.close();

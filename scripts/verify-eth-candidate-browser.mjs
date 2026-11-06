@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import {workspaceBrowserCases,verifyWorkspaceSurface,readNativeInteractiveTarget} from './verify-workspace-browser.mjs';
 import {replayBrowserCases,verifyForecastReplaySurface} from './verify-forecast-replay-browser.mjs';
 import {chartReplayBrowserCases,verifyChartReplaySurface} from './verify-chart-replay-browser.mjs';
+import {consolidatedPagesBase,consolidatedWorkspaceCases,verifyConsolidatedWorkspaceSurface} from './verify-consolidated-workspace-browser.mjs';
 import {createServer} from 'node:http';
 import {readFile,writeFile,mkdir,mkdtemp,rm,stat} from 'node:fs/promises';
 import {resolve,relative,sep,extname} from 'node:path';
@@ -18,11 +19,21 @@ import {forecastHash} from '../dist/forecast-records.js';
 
 const root=resolve(fileURLToPath(new URL('..',import.meta.url)));
 const dist=resolve(root,'dist'),out=resolve(root,process.env.ATLAS_BROWSER_OUT??'build/eth-browser');
+const comparisonAssets=JSON.parse(await readFile(resolve(dist,'data/asset-comparison.json'),'utf8')).assets;
+const expectedAssetSymbols=comparisonAssets.map(asset=>asset.symbol);
+assert.equal(expectedAssetSymbols.length,20,'The current comparison archive must include all 20 assets');
+assert.ok(['BTC','ETH','HYPE'].every(symbol=>expectedAssetSymbols.includes(symbol)),'All requested digital assets must be preserved');
+const expectedAssetGroups=comparisonAssets.reduce((groups,asset,index)=>{
+  const last=groups.at(-1);
+  if(last?.name===asset.group)last.span++;
+  else groups.push({name:asset.group,first:index,span:1});
+  return groups;
+},[]);
 const widths=[320,390,768,1024,1440],height=900;
 const imageLogMode=process.env.ETH_BROWSER_IMAGE_LOG_MODE??'representative';
 if(!['representative','failures-only'].includes(imageLogMode))throw new Error('Unknown screenshot log transport mode');
 const caseScope=process.env.ATLAS_BROWSER_CASE_SCOPE??'all';
-if(!['all','replay','chart-replay','data','center-data','workspace','workspace-btc','workspace-evidence','workspace-preview','workspace-legacy'].includes(caseScope))throw new Error('Unknown browser case scope');
+if(!['all','replay','chart-replay','data','center-data','workspace','workspace-consolidated','workspace-btc','workspace-evidence','workspace-preview','workspace-legacy'].includes(caseScope))throw new Error('Unknown browser case scope');
 const report={schemaVersion:1,kind:'eth-candidate-real-browser',startedAt:new Date().toISOString(),status:'running',imageLogMode,caseScope,cases:[],failures:[],
   scope:'Actual checked-out static site in headless Chromium through native CDP; no production deployment, Safari or physical-device claim.'};
 let server,chrome,browser,profile,base;
@@ -84,7 +95,7 @@ async function screenshot(cdp,name,receipt){
   const bytes=Buffer.from(result.data,'base64');
   await writeFile(resolve(out,name),bytes);
   receipt.screenshots.push({file:name,bytes:bytes.length,sha256:hash(bytes)});
-  if((imageLogMode==='representative'&&["workspace-btc-320x900-refresh-retry-failed.png","workspace-btc-1440x900-refresh-retry-failed.png","workspace-btc-short-900x430-refresh-retry-failed.png","workspace-btc-short-900x430-indicators-scroll-end.png","data-corner-320x568.png","data-corner-900x430.png","workspace-legacy-375x900-legacy-sources.png","eth-320-pooled-chart.png","eth-1440-pooled-chart.png","eth-320-pooled-model.png","eth-1440-pooled-model.png","data-fill-1620x1008.png","data-fill-1920x1440.png","ethusd-journal-320-base.png","bmnr-journal-320-stress.png","workspace-btc-320x900-annotations-empty.png","workspace-btc-320x900-go-to.png","workspace-btc-320x900-export-preview.png","workspace-btc-short-900x430-btc-journal.png","workspace-btc-short-900x430-bottom-menu.png","workspace-legacy-320x900-legacy-scroll-owner.png","workspace-legacy-1440x900-legacy-scroll-owner.png","workspace-evidence-320x900-research-reader.png","workspace-evidence-320x900-research-empty.png","workspace-preview-320x900-preview-scroll-end.png","workspace-preview-1440x900-preview-scroll-end.png","workspace-preview-320x900-preview-loading.png","workspace-preview-320x900-preview-error.png"].includes(name))||(imageLogMode==='representative'&&['chart-replay-btc-1440x900-fixed-origin.png','chart-replay-btc-320x568-next-bar.png','chart-replay-eth-320x568-next-bar.png'].includes(name))||name.endsWith('-failure.png')){
+  if((imageLogMode==='representative'&&["workspace-btc-320x900-refresh-retry-failed.png","workspace-btc-1440x900-refresh-retry-failed.png","workspace-btc-short-900x430-refresh-retry-failed.png","workspace-btc-short-900x430-indicators-scroll-end.png","data-corner-320x568.png","data-corner-900x430.png","workspace-legacy-375x900-legacy-sources.png","eth-320-pooled-chart.png","eth-1440-pooled-chart.png","eth-320-pooled-model.png","eth-1440-pooled-model.png","data-fill-1620x1008.png","data-fill-1620x1100.png","data-fill-1920x1440.png","ethusd-journal-320-base.png","bmnr-journal-320-stress.png","workspace-btc-320x900-annotations-empty.png","workspace-btc-320x900-go-to.png","workspace-btc-320x900-export-preview.png","workspace-btc-short-900x430-btc-journal.png","workspace-btc-short-900x430-bottom-menu.png","workspace-legacy-320x900-legacy-scroll-owner.png","workspace-legacy-1440x900-legacy-scroll-owner.png","workspace-evidence-320x900-research-reader.png","workspace-evidence-320x900-research-empty.png","workspace-preview-320x900-preview-scroll-end.png","workspace-preview-1440x900-preview-scroll-end.png","workspace-preview-320x900-preview-loading.png","workspace-preview-320x900-preview-error.png"].includes(name))||(imageLogMode==='representative'&&/^workspace-consolidated-(390|1440)-(market-us|scenario|digital-assets|ipo)\.png$/.test(name))||(imageLogMode==='representative'&&['chart-replay-btc-1440x900-fixed-origin.png','chart-replay-btc-320x568-next-bar.png','chart-replay-eth-320x568-next-bar.png'].includes(name))||name.endsWith('-failure.png')){
     const size=30000,total=Math.ceil(result.data.length/size);
     for(let index=0;index<total;index++)console.log('ETH_BROWSER_IMAGE_CHUNK '+JSON.stringify({name,index,total,data:result.data.slice(index*size,(index+1)*size)}));
   }
@@ -144,7 +155,7 @@ async function verifyHeaderOwnership(cdp){
 }
 async function dataCase(cdp,width,receipt){
   const imagePrefix=receipt.height===900?'data-'+width:'data-'+width+'x'+receipt.height;
-  await until(()=>evaluate(cdp,()=>document.querySelectorAll('#data-body tr[data-asset-symbol]').length===18),'18 asset rows');
+  await until(()=>evaluate(cdp,expected=>document.querySelectorAll('#data-body tr[data-asset-symbol]').length===expected,expectedAssetSymbols.length),'all comparison asset rows');
   await settled(cdp);
   receipt.layout=await evaluate(cdp,()=>{
     const rows=[...document.querySelectorAll('#data-body tr[data-asset-symbol]')];
@@ -175,7 +186,7 @@ async function dataCase(cdp,width,receipt){
   assert.equal(await evaluate(cdp,()=>document.querySelector('#btc-refresh-notice')?.hidden),true,'BTC source notice must not be shown on the independent asset board');
   const layout=receipt.layout;
   assert.equal(layout.width,width);assert.ok(layout.scrollWidth<=width+1,'Page horizontal overflow');
-  assert.equal(layout.symbols.length,18);assert.equal(new Set(layout.symbols).size,18);assert.equal(layout.symbols[0],'BTC');assert.equal(layout.btcName,'비트코인');
+  assert.deepEqual(layout.symbols,expectedAssetSymbols);assert.equal(new Set(layout.symbols).size,expectedAssetSymbols.length);assert.equal(layout.symbols[0],'BTC');assert.equal(layout.btcName,'비트코인');
   assert.ok(layout.judgments.every(j=>['적극 매수','분할 매수','중립','분할 매도','적극 매도','판단 보류'].includes(j)),'Unknown or missing comparison judgment');
   assert.deepEqual(layout.controls.map(control=>control.id),['asset-refresh','asset-history-open','daily-method-open','export-raw'],'Expected all four actual board actions');
   const navigation=layout.navigation;
@@ -301,7 +312,7 @@ function readDataGeometry(){
 function assertDataGeometry(g,{width,height,fill}){
   assert.equal(g.width,width);assert.equal(g.height,height);
   assert.ok(Math.max(g.documentWidth,g.bodyWidth)<=width+1,'Body horizontal overflow');
-  assert.equal(g.symbols.length,18);assert.equal(new Set(g.symbols).size,18);assert.equal(g.symbols[0],'BTC');assert.equal(g.btcName,'비트코인');
+  assert.deepEqual(g.symbols,expectedAssetSymbols);assert.equal(new Set(g.symbols).size,expectedAssetSymbols.length);assert.equal(g.symbols[0],'BTC');assert.equal(g.btcName,'비트코인');
   assert.ok(Math.abs(g.header.height-54)<=1,'Header expanded instead of body rows');
   assert.ok(Math.abs(g.root.bottom-height)<=2,'Data view no longer fills the viewport');
   // The inner client area may be shorter by its horizontal scrollbar; the panel itself reaches the bottom.
@@ -310,13 +321,13 @@ function assertDataGeometry(g,{width,height,fill}){
   const buttonMin=g.coarse||width<=760?44:30;
   assert.ok(g.buttons.every(b=>b.height>=buttonMin-1),'Reading or touch target compressed');
   assert.ok(Math.abs(g.pinnedHead.left-g.pinnedBody.left)<=1,'Pinned column misalignment');
-  assert.deepEqual(g.groups.map(x=>x.span),[13,4,1]);assert.deepEqual(g.groups.map(x=>x.first),[0,13,17]);
+  assert.deepEqual(g.groups.map(x=>x.span),expectedAssetGroups.map(x=>x.span));assert.deepEqual(g.groups.map(x=>x.first),expectedAssetGroups.map(x=>x.first));
   for(const group of g.groups.filter(x=>x.visible)){
     assert.ok(Math.abs(group.cell.top-group.firstRow.top)<=1,'Rowspan starts outside its group');
     assert.ok(Math.abs(group.cell.bottom-group.lastRow.bottom)<=1,'Rowspan ends outside its group');
   }
   if(fill){
-    assert.ok(Math.abs(g.rows.at(-1).bottom-g.clientBottom)<=2,'Unused space below final asset');
+    assert.ok(Math.abs(g.rows.at(-1).bottom-g.clientBottom)<=2,'Final asset does not align with the table viewport bottom');
     assert.ok(g.scrollHeight<=g.clientHeight+2,'Tall viewport has unnecessary vertical scrolling');
   }else assert.ok(g.scrollHeight>g.clientHeight+1,'Short viewport must retain internal scrolling');
 }
@@ -352,16 +363,20 @@ async function responsiveDataCase(cdp,receipt){
       };
       return {x:panel.scrollLeft,maxX:panel.scrollWidth-panel.clientWidth,y:panel.scrollTop,maxY:panel.scrollHeight-panel.clientHeight,clip,head:rect(table.tHead),headPosition:getComputedStyle(table.tHead).position,lastSymbol:last.dataset.assetSymbol,cells:Object.fromEntries(Object.entries(cells).map(([key,el])=>[key,read(el)]))};
     });
-    assert.ok(corner.maxX>0&&corner.maxY>0,'Both table axes must actually scroll');
+    const horizontalScroll=receipt.horizontalScroll!==false;
+    assert.ok(corner.maxY>0,'The table must actually scroll vertically');
+    if(horizontalScroll)assert.ok(corner.maxX>0,'The narrow table must actually scroll horizontally');
+    else assert.equal(corner.maxX,0,'The wide table must fit without horizontal scrolling');
     assert.ok(Math.abs(corner.x-corner.maxX)<=2&&Math.abs(corner.y-corner.maxY)<=2,'Both table ends must be reachable');
     assert.equal(corner.headPosition,'sticky');assert.ok(Math.abs(corner.head.top-corner.clip.top)<=1,'thead lost vertical pinning');
     for(const key of ['nameHead','judgmentHead'])assert.ok(Math.abs(corner.cells[key].top-corner.clip.top)<=1,'Header is not at the scrollport edge');
     assert.equal(corner.cells.nameHead.position,'sticky');assert.equal(corner.cells.nameHead.topInset,'auto');
-    assert.ok(Math.abs(corner.cells.nameHead.left-corner.cells.name.left)<=1&&Math.abs(corner.cells.nameHead.left-corner.clip.left)<=1,'Pinned name column drifts');
+    const expectedNameLeft=horizontalScroll?corner.clip.left:receipt.geometry.pinnedHead.left;
+    assert.ok(Math.abs(corner.cells.nameHead.left-corner.cells.name.left)<=1&&Math.abs(corner.cells.nameHead.left-expectedNameLeft)<=1,'Pinned name column drifts');
     assert.ok(Math.abs(corner.cells.nameHead.width-corner.cells.name.width)<=1);
     assert.ok(corner.cells.judgment.left>=corner.cells.name.right-1&&corner.cells.judgment.right<=corner.clip.right+1&&corner.cells.judgment.bottom<=corner.clip.bottom+1,'Final judgment is clipped or covered');
     assert.ok(Object.values(corner.cells).every(cell=>cell.topmost),'Sticky corner or final row is occluded');
-    receipt.geometry.dualAxis=corner;
+    receipt.geometry[horizontalScroll?'dualAxis':'verticalOnly']=corner;
     await screenshot(cdp,'data-corner-'+receipt.width+'x'+receipt.height+'.png',receipt);
 
   }
@@ -373,7 +388,7 @@ async function responsiveDataCase(cdp,receipt){
       table,head:table.tHead,body,rows:[...body.querySelectorAll('tr[data-asset-symbol]')],bodyMarkup:body.innerHTML,timeOrigin:performance.timeOrigin};
   });
   const resourcesBefore=structuredClone(receipt.dataResourceRequests);receipt.resize=[];
-  for(const target of [{width:900,height:430,fill:false},{width:1620,height:1008,fill:true}]){
+  for(const target of [{width:900,height:430,fill:false},{width:1620,height:1008,fill:false},{width:receipt.width,height:receipt.height,fill:receipt.fill}]){
     await cdp.send('Emulation.setDeviceMetricsOverride',{width:target.width,height:target.height,deviceScaleFactor:1,mobile:false});
     await settled(cdp);await resetDataScroll(cdp);
     const geometry=await evaluate(cdp,readDataGeometry);assertDataGeometry(geometry,target);
@@ -613,7 +628,7 @@ async function verifyInfoDataLinks(cdp,symbol){
     if(!dialog?.open)throw new Error('Data information did not open');
     const links=[...dialog.querySelectorAll('a')];
     const saved=links.find(a=>a.textContent.trim()==='보존한 일별 원자료(JSON) ↗');
-    const comparison=links.find(a=>a.textContent.trim()==='18개 자산 비교표 ↗');
+    const comparison=links.find(a=>a.textContent.trim()==='20개 자산 비교표 ↗');
     if(!saved||!comparison)throw new Error('Truthful data destinations are missing');
     const raw=new URL(saved.href),table=new URL(comparison.href);
     if(raw.origin!==location.origin)throw new Error('Archive link left the current origin');
@@ -725,6 +740,7 @@ async function main(){
   for(const path of ['dist/forecast-replay.js','dist/forecast-replay-sources.js','dist/forecast-replay-view.js','dist/data/replay-eth-ohlc.json','scripts/verify-forecast-replay-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   for(const path of ['dist/chart-replay.js','dist/chart-replay-snapshot.js','dist/chart-replay-state.js','dist/chart-replay-renderer.js','dist/chart-replay-sources.js','dist/chart-replay.css','dist/asset-forecast-loader.js','dist/data/btc-volume.json','scripts/verify-chart-replay-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   for(const path of ['dist/chart-replay-atlas.js','dist/atlas-price-chart.js','dist/project-replay-baseline.js','dist/data/project-origin-btc-2026-10-21.json','scripts/build-project-replay-baseline.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
+  for(const path of ['scripts/verify-consolidated-workspace-browser.mjs','dist/atlas-navigation.js','dist/workspace-instruments.js','dist/data-header-actions.js','dist/data/asset-comparison.json','dist/ipo-view.js','dist/ipo-view.css','dist/ipo-month-calendar.js',...execFileSync('git',['ls-files','dist/market-lab/app'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean)])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   const fonts=execFileSync('fc-list',[':lang=ko'],{encoding:'utf8'}).trim();
   assert.ok(fonts.length,'Korean fonts are required; install fonts-noto-cjk in this PR runner');
   report.koreanFonts=fonts.split('\n').slice(0,10);
@@ -738,11 +754,15 @@ async function main(){
   server=createServer(async(req,res)=>{
     try{
       const url=new URL(req.url,'http://127.0.0.1'),synthetic=url.pathname.startsWith('/__synthetic-zero__/');
-      const pathname=synthetic?url.pathname.slice('/__synthetic-zero__'.length):url.pathname;
+      // Generated Pages documents declare this subpath and request their frame,
+      // modules and data from it. Serve identical committed bytes under that
+      // mount while retaining the existing root and synthetic verification cases.
+      const pathname=synthetic?url.pathname.slice('/__synthetic-zero__'.length)
+        :url.pathname.startsWith(consolidatedPagesBase)?url.pathname.slice(consolidatedPagesBase.length-1):url.pathname;
       if(synthetic&&syntheticJournalFiles.has(pathname)){
         res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(syntheticJournalFiles.get(pathname));return;
       }
-      const path=resolve(dist,'.'+decodeURIComponent(pathname==='/'?'/index.html':pathname)),rel=relative(dist,path);
+      const path=resolve(dist,'.'+decodeURIComponent(pathname.endsWith('/')?pathname+'index.html':pathname)),rel=relative(dist,path);
       if(rel==='..'||rel.startsWith('..'+sep)){res.writeHead(403);res.end('Forbidden');return;}
       if(!(await stat(path)).isFile())throw new Error('Not a file');
       const bytes=await readFile(path);res.writeHead(200,{'Content-Type':mime[extname(path)]||'application/octet-stream','Cache-Control':'no-store'});res.end(bytes);
@@ -797,18 +817,21 @@ async function main(){
   report.syntheticFixture={file:'zero-fixture.json',bytes:fixtureBytes.length,sha256:hash(fixtureBytes),recordId:syntheticZeroRecord.id,snapshotId:snapshot.id};
   const caseSpecs=widths.flatMap(width=>(width===320?['data','eth','bmnr','mstr','zero-fixture']:['data','eth','bmnr','mstr']).map(page=>({page,width,height:900,touch:width<=390})));
   caseSpecs.push(
-    {page:'data',width:1620,height:1008,touch:false,responsive:true,fill:true,resize:true},
+    // Twenty 40px rows plus the 54px header exceed the 817px scrollport at this height.
+    // Retain this viewport as a vertical-scroll case and cover fill/resize above that threshold.
+    {page:'data',width:1620,height:1008,touch:false,responsive:true,fill:false,horizontalScroll:false},
+    {page:'data',width:1620,height:1100,touch:false,responsive:true,fill:true,resize:true},
     {page:'data',width:1920,height:1440,touch:false,responsive:true,fill:true},
     {page:'data',width:900,height:430,touch:true,responsive:true,fill:false},
     {page:'data',width:320,height:568,touch:true,responsive:true,fill:false});
-  caseSpecs.push(...workspaceBrowserCases,...replayBrowserCases,...chartReplayBrowserCases);
+  caseSpecs.push(...workspaceBrowserCases,...replayBrowserCases,...chartReplayBrowserCases,...consolidatedWorkspaceCases);
   const selectedCases=caseSpecs.filter(spec=>caseScope==='all'||caseScope==='replay'&&spec.replay||caseScope==='chart-replay'&&spec.chartReplay||caseScope==='center-data'&&spec.surface==='center-data'
     ||caseScope==='data'&&spec.page==='data'||caseScope.startsWith('workspace')&&(spec.page===caseScope||spec.page.startsWith(caseScope+'-')));
   assert.ok(selectedCases.length,'The selected browser scope must execute at least one declared case');
   report.declaredCaseCount=caseSpecs.length;report.expectedCaseCount=selectedCases.length;
   for(const spec of selectedCases){
     const {page,width,height,touch}=spec;
-    const receipt={...spec,status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[],dataResourceRequests:[],expectedOfflineRefresh:[],unexpectedResourceErrors:[]};
+    const receipt={...spec,status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[],dataResourceRequests:[],unscopedLocalRequests:[],expectedOfflineRefresh:[],unexpectedResourceErrors:[]};
     report.cases.push(receipt);let cdp,targetId,browserContextId;
     try{
       // A saved replay belongs to one user's browser. Each replay scenario
@@ -826,6 +849,8 @@ async function main(){
         urls.set(event.requestId,event.request.url);
         requestDetails.set(event.requestId,{requestId:event.requestId,frameId:event.frameId,loaderId:event.loaderId,method:event.request.method,resourceType:event.type,requestWallTime:event.wallTime,documentUrl:event.documentURL});
         const url=new URL(event.request.url);
+        if(spec.consolidated&&url.origin===base&&!url.pathname.startsWith(consolidatedPagesBase))
+          receipt.unscopedLocalRequests.push({requestId:event.requestId,url:event.request.url,resourceType:event.type});
         if(url.origin===base&&/\/(?:daily-data-view\.js|daily-data\.css|asset-comparison\.js|data\/asset-comparison\.json)$/.test(url.pathname))
           receipt.dataResourceRequests.push({requestId:event.requestId,url:event.request.url});
       });
@@ -904,10 +929,12 @@ async function main(){
       await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'},{name:'prefers-color-scheme',value:'dark'}]});
       receipt.url=spec.route?base+spec.route:base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
-      if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,browserContextId,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
+      if(spec.consolidated)await verifyConsolidatedWorkspaceSurface({cdp,receipt,evaluate,until,settled,screenshot,verifyOfflineRefresh});
+      else if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,browserContextId,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
       else if(spec.replay)await verifyForecastReplaySurface({cdp,browser,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
       else if(spec.surface)await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership:()=>verifyHeaderOwnership(cdp)});else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
       assert.equal(receipt.runtimeErrors.length,0,'Browser runtime errors: '+JSON.stringify(receipt.runtimeErrors));
+      assert.equal(receipt.unscopedLocalRequests.length,0,'Consolidated workspace requested resources outside the Pages project root: '+JSON.stringify(receipt.unscopedLocalRequests));
       const verifiedReplayCancellations=new Set(receipt.replay?.expectedCanceledRequests.map(row=>row.requestId)??[]);
       receipt.unexpectedResourceErrors=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId)&&!verifiedReplayCancellations.has(error.requestId));
       assert.equal(receipt.unexpectedResourceErrors.length,0,'Unexpected browser resource failures: '+JSON.stringify(receipt.unexpectedResourceErrors));
@@ -937,5 +964,5 @@ finally{
   if(server)await new Promise(resolve=>server.close(resolve));
   if(profile)try{await rm(profile,{recursive:true,force:true});}catch(error){report.cleanupError=errorText(error);}
   await mkdir(out,{recursive:true});await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,caseScope:report.caseScope,declaredCaseCount:report.declaredCaseCount,expectedCaseCount:report.expectedCaseCount,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,sourceIntegrity:report.sourceIntegrity,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,replay:c.replay,chartReplay:c.chartReplay,infoDataLinks:c.infoDataLinks,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:relative(root,resolve(out,'report.json'))}));
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,caseScope:report.caseScope,declaredCaseCount:report.declaredCaseCount,expectedCaseCount:report.expectedCaseCount,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,sourceIntegrity:report.sourceIntegrity,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,consolidated:c.consolidated,replay:c.replay,chartReplay:c.chartReplay,infoDataLinks:c.infoDataLinks,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:relative(root,resolve(out,'report.json'))}));
 }

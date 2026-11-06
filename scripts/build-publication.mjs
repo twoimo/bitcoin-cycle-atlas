@@ -40,7 +40,8 @@ export function publicationAsset(input,{symbol,role,sourcePath,market,outcome=nu
   const observedAt=meta.retrievedAt || input.dailyHistory?.retrievedAt || input.retrievedAt || null;
   const gaps=meta.missingDayCount || input.dailyHistory?.gapCount || meta.unavailableSessions?.length || meta.missingDates?.length || 0;
   return {id:role==='chart'?symbol:`comparison:${symbol}`,symbol,role,sourcePath,latestPrice:latest[1],observationCount:prices.length,
-    source:meta.sourceName || input.source || null,sourceUrl:meta.source || null,priceDefinition:meta.priceDefinition || null,
+    source:meta.sourceName || input.source || null,sourceUrl:meta.sourceUrl || meta.source || null,priceDefinition:meta.priceDefinition || null,
+    currency:input.currency || input.quoteCurrency || input.dailyHistory?.quoteCurrency || meta.quoteCurrency || 'USD',
     freshness:describeFreshness({latestDate:latest[0],market,observedAt,gaps,lastOutcome:outcome?.outcome || null,lastAttemptAt:outcome?.attemptedAt || null},now)};
 }
 async function assetInventory(now,outcomes) {
@@ -56,7 +57,7 @@ async function assetInventory(now,outcomes) {
   const comparison=await readJson('data/asset-comparison.json');
   for (const asset of comparison.assets) {
     // The enclosing bundle assembly time is not a provider collection time.
-    assets.push(publicationAsset(asset,{symbol:asset.symbol,role:'comparison',sourcePath:'data/asset-comparison.json',market:asset.symbol==='BTC'?'crypto':'equity',outcome:outcomes.comparison},now));
+    assets.push(publicationAsset(asset,{symbol:asset.symbol,role:'comparison',sourcePath:'data/asset-comparison.json',market:['BTC','ETH','HYPE'].includes(asset.symbol)?'crypto':'equity',outcome:outcomes.comparison},now));
   }
   const comparisonTime=series.map(item=>observationTiming(item.prices.at(-1)[0],item.market).eligibleAt).sort()[0];
   return {assets,alignment:alignObservations(series,comparisonTime,{mode:'reconstructed'})};

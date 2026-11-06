@@ -46,7 +46,7 @@ test('refresh retains judgment capture gating and records actual attempt times b
   const text=await workflow('refresh-data');
   const capture=step(text,'Save an immutable current calculation snapshot');
   assert.match(capture,/steps\.asset_comparison_refresh\.outcome == 'success'/);
-  for(const [name,command] of [['Fetch and validate completed UTC daily observations','refresh-data.mjs'],['Refresh completed exchange candle fallback','refresh-ohlc.mjs'],['Refresh and cross-check historical spot volume','refresh-volume.mjs'],['Refresh completed ETH-USD price candles','refresh-eth.mjs'],['Refresh completed US equity sessions','refresh:equities'],['Refresh the full 18-asset comparison history','refresh:asset-comparison']]){
+  for(const [name,command] of [['Fetch and validate completed UTC daily observations','refresh-data.mjs'],['Refresh completed exchange candle fallback','refresh-ohlc.mjs'],['Refresh and cross-check historical spot volume','refresh-volume.mjs'],['Refresh completed ETH-USD price candles','refresh-eth.mjs'],['Refresh completed US equity sessions','refresh:equities'],['Refresh the 20-asset comparison history','refresh:asset-comparison']]){
     const block=step(text,name),body=script(block);
     assert.ok(body.indexOf('attempted_at=')>=0&&body.indexOf('attempted_at=')<body.indexOf(command));
     if(name!=='Fetch and validate completed UTC daily observations')assert.match(block,/continue-on-error: true/);

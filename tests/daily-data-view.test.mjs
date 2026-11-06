@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
-import { assetComparisonCsv, formatDailyPercent, initDailyDataView, renderAssetComparisonRows } from '../dist/daily-data-view.js';
+import { assetComparisonCsv, filterAssetComparisonRows, formatDailyPercent, initDailyDataView, renderAssetComparisonRows } from '../dist/daily-data-view.js';
 import { COMPARISON_SYMBOLS, comparisonViewModel, dailyViewSurface, deferred } from './helpers/daily-data-view-fixture.mjs';
 
 const symbols = markup => [...markup.matchAll(/data-asset-symbol="([^"]+)"/g)].map(match => match[1]);
@@ -19,19 +19,41 @@ test('percentage formatting distinguishes missing, zero, signed values and sub-c
   assert.equal(formatDailyPercent(-12.5, 1), '−12.5%');
 });
 
-test('opening the view creates exactly one grouped comparison table with all 18 assets', async () => {
+test('sector, asset group, search and sort select exactly the rows exported in the visible order', async()=>{
+  const downloads=[],model=comparisonViewModel();
+  const {view,ui}=setup({model,download:(name,blob)=>downloads.push({name,blob})});await view.render();
+  ui.change('asset-sector-filter','디지털 자산');
+  assert.deepEqual(symbols(ui.node('data-body').innerHTML),['BTC','ETH','HYPE']);
+  assert.match(ui.node('data-body').innerHTML,/하이퍼리퀴드<small class="asset-quote">USDC/);
+  assert.equal(ui.node('asset-visible-count').textContent,'표시 3 / 전체 20개');
+  ui.change('asset-sort','name');
+  ui.change('asset-columns','performance');
+  assert.equal(ui.root.querySelector('.asset-comparison-table').getAttribute('data-columns'),'performance');
+  ui.click('export-raw');
+  const lines=(await downloads[0].blob.text()).trimEnd().split('\r\n'),head=lines.shift().replace(/^\uFEFF/,'').split(',');
+  assert.deepEqual(lines.map(line=>line.split(',')[head.indexOf('symbol')]),symbols(ui.node('data-body').innerHTML));
+  assert.equal(lines.find(line=>line.split(',')[head.indexOf('symbol')]==='HYPE').split(',')[head.indexOf('currency')],'USDC');
+  ui.input('asset-search','이더리움');assert.deepEqual(symbols(ui.node('data-body').innerHTML),['ETH']);
+  ui.change('asset-group-filter','안전 자산');assert.deepEqual(symbols(ui.node('data-body').innerHTML),[]);assert.equal(ui.node('export-raw').disabled,true);
+  ui.click('export-raw');assert.equal(downloads.length,1);
+  ui.click('asset-filter-reset');assert.deepEqual(symbols(ui.node('data-body').innerHTML),COMPARISON_SYMBOLS);assert.equal(ui.node('asset-search').value,'');
+  assert.deepEqual(filterAssetComparisonRows(model.rows,{sector:'반도체',sort:'ytd'}).map(row=>row.symbol),['NVDA','AVGO'].sort((a,b)=>model.rows.find(r=>r.symbol===b).ytdPct-model.rows.find(r=>r.symbol===a).ytdPct||a.localeCompare(b)));
+  view.destroy();
+});
+
+test('opening the view creates exactly one grouped comparison table with all 20 assets', async () => {
   const { view, ui } = setup(); await view.render();
   assert.equal(view.state.status, 'ready');
   assert.equal((ui.root.innerHTML.match(/<table\b/g) || []).length, 1);
   assert.equal((ui.root.innerHTML.match(/<col\b/g) || []).length, 10);
   assert.match(ui.root.innerHTML, /colspan="3" scope="colgroup"[^>]*>종목명/);
   assert.match(ui.root.innerHTML, /<h1>자산 비교표/);
-  assert.doesNotMatch(ui.root.innerHTML, /SMA|RSI|사이클 판단표|일별 원자료|cycle-scope|<select/);
+  assert.doesNotMatch(ui.root.innerHTML, /SMA|RSI|사이클 판단표|일별 원자료|cycle-scope/);
   const table = ui.node('data-body').innerHTML;
   assert.deepEqual(symbols(table), COMPARISON_SYMBOLS);
-  assert.deepEqual([...table.matchAll(/rowspan="(\d+)"/g)].map(match => Number(match[1])), [13, 4, 1]);
+  assert.deepEqual([...table.matchAll(/rowspan="(\d+)"/g)].map(match => Number(match[1])), [15, 4, 1]);
   assert.match(table, /asset-return-gain/); assert.match(table, /asset-return-loss/);
-  assert.equal(symbols(table).length, 18);
+  assert.equal(symbols(table).length, 20);
   assert.doesNotMatch(table, /data-cycle|data-evidence|M7/);
   view.destroy();
 });
@@ -57,7 +79,7 @@ test('the ready board removes the metadata strip without losing source and date 
 test('the board has no footer, reserved footer styles or dangling note description', async () => {
   const { view, ui } = setup(); await view.render();
   assert.doesNotMatch(ui.root.innerHTML, /asset-table-footer|asset-table-meta|asset-color-key|asset-row-count|asset-sample-note|asset-table-note/);
-  assert.match(ui.root.innerHTML, /<caption class="sr-only">18개 자산별/);
+  assert.match(ui.root.innerHTML, /<caption class="sr-only">20개 자산별/);
   const css = readFileSync(new URL('../dist/daily-data.css', import.meta.url), 'utf8');
   assert.doesNotMatch(css, /asset-table-footer|asset-color-key|asset-row-count|asset-sample-note/);
   ui.click('daily-method-open');
@@ -232,13 +254,13 @@ test('unavailable samples never become neutral; individual observed prices remai
   view.destroy();
 });
 
-test('CSV contains the same 18 rows, unrounded metrics, provenance, boundaries and price dates', async () => {
+test('CSV contains the same 20 rows, unrounded metrics, provenance, boundaries and price dates', async () => {
   const downloads = [], model = comparisonViewModel(); model.rows[0].meanRisePct = 20.123456789;
   const { view, ui } = setup({ model, download: (name, blob) => downloads.push({ name, blob }) }); await view.render();
   ui.click('export-raw'); assert.equal(downloads.length, 1);
   assert.equal(downloads[0].name, 'asset-comparison-2026-10-25.csv');
   const csv = await downloads[0].blob.text();
-  assert.equal(csv.trimEnd().split('\r\n').length, 19);
+  assert.equal(csv.trimEnd().split('\r\n').length, 21);
   assert.match(csv, /mean_annual_fall_pct_not_mdd/); assert.match(csv, /20\.123456789/);
   assert.match(csv, /2026-01-02,100,2026-10-23,85,-15,적극 매수/);
   assert.match(csv, /current year excluded/); assert.match(csv, /https:\/\/example\.test\/prices\/SPY/);
@@ -253,7 +275,7 @@ test('method explains MDD distinction, operational boundaries, sample years and 
   assert.match(content, /100 → 150 → 120/); assert.match(content, /MDD는 −20%/);
   assert.match(content, /D &lt; r ≤ D ÷ 2/); assert.match(content, /U ÷ 2 ≤ r &lt; U/);
   assert.match(content, /상장 첫해 일부 기간/); assert.match(content, /5개 연도 미만/);
-  assert.match(content, /종목별 출처·표본 범위 \(18개\)/);
+  assert.match(content, /종목별 출처·표본 범위 \(20개\)/);
   assert.match(content, /총수익률/); assert.doesNotMatch(content, /<table\b|SMA|RSI/);
   view.destroy();
 });
@@ -305,7 +327,7 @@ test('comparison uses the shared chart theme and keeps navigation and actions in
   assert.match(ui.root.innerHTML, /class="daily-heading"><button[^>]*class="daily-back"/);
   assert.match(ui.root.innerHTML, /MARKET BOARD/);
   assert.match(ui.root.innerHTML, /aria-label="통합 차트로 돌아가기"/);
-  assert.match(ui.root.innerHTML, /aria-label="18개 자산 CSV 내려받기"/);
+  assert.match(ui.root.innerHTML, /aria-label="표시된 자산 CSV 내려받기"/);
   const css = readFileSync(new URL('../dist/daily-data.css', import.meta.url), 'utf8');
   assert.match(css, /--asset-paper: var\(--bg\)/);
   assert.match(css, /--asset-ink: var\(--text\)/);
@@ -329,13 +351,13 @@ test('mobile comparison owns its return control without the global fallback or r
 test('asset identities expose consistent codes and open the same audited explanation', async () => {
   const {view,ui}=setup();await view.render();
   const table=ui.node('data-body').innerHTML;
-  assert.equal((table.match(/class="asset-identity"/g)||[]).length,18);
+  assert.equal((table.match(/class="asset-identity"/g)||[]).length,20);
   assert.match(table, /class="asset-name-symbol">BTC<\/span><span class="asset-name-label">비트코인/);
   assert.match(table,/aria-label="비트코인 \(BTC\) 수치와 판단 근거 보기"/);
   ui.click('',{assetReason:'BTC'});
   const content=ui.node('daily-method-content').innerHTML;
   assert.match(content,/class="asset-reason-metrics"/);
-  assert.match(content,/위험 자산 · Index ETF · USD/);
+  assert.match(content,/위험 자산 · 디지털 자산 · USD/);
   assert.equal((content.match(/<dt>/g)||[]).length,3);
   assert.match(content,/<details class="asset-general-method"><summary>계산법과 유의사항/);
   assert.doesNotMatch(content,/<details class="asset-general-method" open/);

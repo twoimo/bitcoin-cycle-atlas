@@ -14,7 +14,7 @@ test('center navigation retains all perimeter nodes, restores controls and bound
   mountCenterWorkbench();const plot=create('div');plot.className='atlas-plot';const svg=create('svg');plot.append(svg);document.body.append(plot);await new Promise(resolve=>setImmediate(resolve));
   const click=(selector:string)=>document.querySelector(selector)!.dispatchEvent(new dom.Event('click',{bubbles:true,cancelable:true}));
   click('[data-atlas-page=rsi]');const frame=document.querySelector('iframe')!;
-  assert.equal(frame.parentElement,plot);assert.match(frame.getAttribute('src')!,/rsi\/\?embedded=1&symbol=TQQQ/);
+  assert.equal(frame.parentElement,plot);assert.match(frame.getAttribute('src')!,/charts\/\?symbol=TQQQ&embedded=1/);
   assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,true);assert.equal(svg.getAttribute('aria-hidden'),'true');assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,true);
   click('[data-atlas-page=scenario]');assert.equal(document.querySelector('iframe'),frame);assert.equal(posts.length,1);
   (document.querySelector('#outside-zoom') as HTMLButtonElement).disabled=false;
@@ -24,22 +24,34 @@ test('center navigation retains all perimeter nodes, restores controls and bound
   const before=urls.length;listeners.get('message')!({source:(frame as any).contentWindow,origin:'http://evil.test',data:{kind:'atlas:center-state',page:'rsi',symbol:'SOXL'}});assert.equal(urls.length,before);
   listeners.get('message')!({source:{},origin:'http://localhost',data:{kind:'atlas:center-state',page:'rsi',symbol:'SOXL'}});assert.equal(urls.length,before);
   listeners.get('message')!({source:(frame as any).contentWindow,origin:'http://localhost',data:{kind:'atlas:center-state',page:'rsi',symbol:'SOXL'}});assert.equal(urls.length,before);assert.deepEqual(posts.at(-1),[{kind:'atlas:center-navigate',page:'scenario',symbol:'TQQQ',epoch:2},'http://localhost']);
+  const select=(data:Record<string,unknown>,origin='http://localhost')=>listeners.get('message')!({source:(frame as any).contentWindow,origin,data:{kind:'atlas:center-select',...data}});
+  select({page:'themes',symbol:'HYPE',epoch:2},'http://evil.test');assert.equal(urls.length,before);
+  select({page:'themes',symbol:'HYPE',epoch:1});assert.equal(urls.length,before,'stale user selections cannot replace a newer host selection');
+  select({page:'themes',symbol:'HYPE',epoch:2});assert.equal(document.body.dataset.centerTool,'themes');assert.equal(document.querySelector('iframe'),frame);
+  assert.match(urls.at(-1)!,/market-lab\/charts\/\?symbol=HYPE$/);
+  const afterTheme=urls.length;
+  select({page:'rsi',symbol:'HYPE',epoch:3});assert.equal(urls.length,afterTheme,'a symbol cannot be routed into an incompatible renderer');
+  select({page:'housing',symbol:'HOUSING-SEOUL',region:'busan',epoch:3});
+  assert.match(urls.at(-1)!,/symbol=HOUSING-SEOUL&region=seoul$/,'catalog identity owns the housing region');
+  assert.equal(document.body.dataset.centerTool,'housing');
   click('[data-atlas-page=outlook]');assert.equal((frame as HTMLIFrameElement).hidden,true);assert.equal(svg.hasAttribute('aria-hidden'),false);assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,false);assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,false);
 });
 
 test('static project navigation retains perimeter identity and rejects stale or foreign frames',async t=>{
   const {document,window:dom}=parseHTML('<html><head><meta name="atlas-root" content="/bitcoin-cycle-atlas/"><meta name="atlas-static-entry" content="market-lab/app/"></head><body><aside class="workbench-tools"><button id="measure">측정</button></aside><header class="atlas-canvas-heading"><button class="symbol-selector-trigger">BTCUSD</button><button id="type">캔들</button></header><aside class="workbench-rail"><nav><a data-atlas-page="rsi">RSI</a><a data-atlas-page="scenario">조건 실험</a><button data-atlas-page="outlook">가격 차트</button></nav></aside><div class="chart-navigation"><button id="outside-zoom" data-chart-navigation="in">확대</button></div><footer class="workbench-bottom-bar"><button id="range">전체</button></footer></body></html>');
   const original=new Map(['document','window','location','MutationObserver','CustomEvent'].map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));
+  document.documentElement.dataset.symbol='ETHUSD';
+  const selectedSymbols:string[]=[];document.addEventListener('atlas:active-symbol',(event:any)=>selectedSymbols.push(event.detail.symbol));
   const listeners=new Map<string,Function>(), posts:unknown[]=[],urls:string[]=[];
   const window={parent:null as unknown,addEventListener:(key:string,fn:Function)=>listeners.set(key,fn),history:{pushState:(_a:unknown,_b:unknown,url:string)=>urls.push(url),replaceState:(_a:unknown,_b:unknown,url:string)=>urls.push(url)}};window.parent=window;
-  for(const [key,value]of Object.entries({document,window,location:new URL('http://localhost/bitcoin-cycle-atlas/?page=outlook'),MutationObserver:dom.MutationObserver,CustomEvent:dom.CustomEvent}))Object.defineProperty(globalThis,key,{value,configurable:true});
+  for(const [key,value]of Object.entries({document,window,location:new URL('http://localhost/bitcoin-cycle-atlas/?page=outlook&symbol=ETHUSD'),MutationObserver:dom.MutationObserver,CustomEvent:dom.CustomEvent}))Object.defineProperty(globalThis,key,{value,configurable:true});
   t.after(()=>{for(const [key,value]of original){if(value)Object.defineProperty(globalThis,key,value);else Reflect.deleteProperty(globalThis,key);}});
   const create=document.createElement.bind(document);document.createElement=((tag:string)=>{const node=create(tag);if(tag==='iframe')Object.defineProperty(node,'contentWindow',{value:{postMessage:(...args:unknown[])=>posts.push(args)}});return node;}) as typeof document.createElement;
   const nodes=['.atlas-canvas-heading','.workbench-tools','.workbench-rail','.workbench-bottom-bar'].map(s=>document.querySelector(s));
   mountCenterWorkbench();const plot=create('div');plot.className='atlas-plot';const svg=create('svg');plot.append(svg);document.body.append(plot);await new Promise(resolve=>setImmediate(resolve));
   const click=(selector:string)=>document.querySelector(selector)!.dispatchEvent(new dom.Event('click',{bubbles:true,cancelable:true}));
   click('[data-atlas-page=rsi]');const frame=document.querySelector('iframe')!;
-  assert.equal(frame.parentElement,plot);assert.match(frame.getAttribute('src')!,/bitcoin-cycle-atlas\/market-lab\/app\/\?embedded=1&lab-tab=rsi&lab-region=us&epoch=1&symbol=TQQQ/);assert.equal(urls.at(-1),'/bitcoin-cycle-atlas/market-lab/rsi/?symbol=TQQQ');
+  assert.equal(frame.parentElement,plot);assert.match(frame.getAttribute('src')!,/bitcoin-cycle-atlas\/market-lab\/app\/\?embedded=1&lab-tab=rsi&lab-region=us&epoch=1&symbol=TQQQ/);assert.equal(urls.at(-1),'/bitcoin-cycle-atlas/market-lab/charts/?symbol=TQQQ');
   assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,true);assert.equal(svg.getAttribute('aria-hidden'),'true');assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,true);
   click('[data-atlas-page=scenario]');assert.equal(document.querySelector('iframe'),frame);assert.equal(posts.length,1);
   (document.querySelector('#outside-zoom') as HTMLButtonElement).disabled=false;
@@ -49,5 +61,9 @@ test('static project navigation retains perimeter identity and rejects stale or 
   const before=urls.length;listeners.get('message')!({source:(frame as any).contentWindow,origin:'http://evil.test',data:{kind:'atlas:center-state',page:'rsi',symbol:'SOXL'}});assert.equal(urls.length,before);
   listeners.get('message')!({source:{},origin:'http://localhost',data:{kind:'atlas:center-state',page:'rsi',symbol:'SOXL'}});assert.equal(urls.length,before);
   listeners.get('message')!({source:(frame as any).contentWindow,origin:'http://localhost',data:{kind:'atlas:center-state',page:'rsi',symbol:'SOXL'}});assert.equal(urls.length,before);assert.deepEqual(posts.at(-1),[{kind:'atlas:center-navigate',page:'scenario',symbol:'TQQQ',epoch:2},'http://localhost']);
+  const btcSelection=new dom.CustomEvent('atlas:symbol-select',{cancelable:true,detail:{symbol:'BTCUSD'}});
+  document.dispatchEvent(btcSelection);assert.equal(btcSelection.defaultPrevented,false,'explicit BTC selection must navigate to BTC instead of restoring background ETH');
   click('[data-atlas-page=outlook]');assert.equal((frame as HTMLIFrameElement).hidden,true);assert.equal(svg.hasAttribute('aria-hidden'),false);assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,false);assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,false);
+  assert.equal(selectedSymbols.at(-1),'ETHUSD','returning to the background chart restores its actual asset identity');
+  assert.equal(new URL(urls.at(-1)!).searchParams.get('symbol'),'ETHUSD');
 });
