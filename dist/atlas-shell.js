@@ -53,7 +53,8 @@ export function initAtlasShell() {
       const icon = item.querySelector('[data-icon],svg');
       if (icon) { const badge = document.createElement('span'); badge.className = 'atlas-nav-code'; badge.setAttribute('aria-hidden','true'); badge.textContent = page.badge; icon.replaceWith(badge); }
     }
-    const label = item.querySelector('span:last-child:not([data-icon])'); if (label) label.textContent = page.label;
+    const label = item.querySelector('span:last-child:not([data-icon])');
+    if (label) { label.classList.add('atlas-nav-label'); label.textContent = page.label; }
     originalNav.append(item);
   }
   let storage; try { storage = localStorage; } catch { /* Optional preference. */ }

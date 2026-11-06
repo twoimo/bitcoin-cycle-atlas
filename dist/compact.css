@@ -3,6 +3,34 @@
  */
 /* Hallmark · pre-emit critique: P4 H4 E3 S5 R4 V3 · weakest: E, uneven focus and small metadata; shared states and readable neutral ink are applied across the app. */
 /* Chart-first layout. The previous navigation, hero and KPI panels are removed. */
+/* Native disclosures: the summary owns its control boundary. Long research
+   content remains an open reading region, with a rule showing its hierarchy. */
+#compare-view :is(.lab-details,.timing-details){border:0;border-radius:0;background:transparent;overflow:visible}
+#compare-view :is(.lab-details,.timing-details)>summary{border:1px solid var(--border);border-radius:7px}
+#compare-view :is(.lab-details,.timing-details)[open]>summary{border-bottom:1px solid var(--border)}
+#compare-view :is(.lab-details-body,.research-detail-content,#timing-details-content){border-inline-start:1px solid var(--border)}
+#compare-view .lab-source-links{display:flex;flex-wrap:wrap;gap:8px 16px}
+#compare-view .lab-source-links a{display:inline-flex;align-items:center;min-height:44px;white-space:nowrap}
+#compare-view :is(.lab-table-scroll,.table-scroll,.lab-timeline-panel){min-width:0;overscroll-behavior-inline:contain}
+#compare-view :is(.lab-table-scroll,.table-scroll){container-type:inline-size}
+#compare-view :is(.lab-table-scroll,.table-scroll) :is(th,td):first-child{position:sticky;left:0;z-index:1;background:var(--surface);border-inline-end:1px solid var(--border)}
+#compare-view :is(.lab-table-scroll,.table-scroll) thead th:first-child{background:var(--surface-raised)}
+#compare-view :is(.lab-table-scroll,.table-scroll,.lab-timeline-panel):focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+#compare-view :is(.lab-details,.timing-details)>summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+/* Preserve every column on a phone. Its row name and any one value must fit
+   together in the scrollport, including the smaller nested method tables. */
+@media(max-width:600px){
+  #compare-view :is(.lab-table-scroll,.table-scroll) table{min-width:0;width:max-content}
+  #compare-view :is(.lab-table-scroll,.table-scroll) :is(th,td){max-width:60cqw;white-space:normal;overflow-wrap:anywhere}
+  #compare-view :is(.lab-table-scroll,.table-scroll) :is(th,td):first-child{max-width:40cqw}
+  #compare-view #legacy-comparison .chart-toolbar{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-inline:contain}
+  #compare-view #legacy-comparison .chart-toolbar>*{flex:none}
+  #compare-view #legacy-comparison .chart-toolbar .icon-button{min-width:44px}
+  #compare-view #cycle-legend{grid-template-columns:minmax(0,1fr)!important}
+  #compare-view #cycle-legend .legend-item{border-right:0!important}
+  #compare-view .timing-turns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 12px}
+  #compare-view .timing-turns>div{min-width:0;padding:0;border:0}
+}
 html{scroll-behavior:smooth}
 .workspace{margin-left:0;min-width:0}
 main{max-width:1440px;margin:0 auto;padding:24px 32px 0}
@@ -131,7 +159,7 @@ main{max-width:1440px;margin:0 auto;padding:24px 32px 0}
 .research-detail-content p+p{margin-top:12px}
 .research-detail-content ul{padding-left:20px}
 .research-detail-content a{color:var(--accent)}
-.research-detail-content .formula-block{border-left:2px solid var(--accent);padding:12px 16px;background:var(--bg);font-size:12px;line-height:2;margin:12px 0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.research-detail-content .formula-block{border-left:2px solid var(--accent);padding:12px 16px;background:var(--bg);color:var(--text);font-size:12px;line-height:2;margin:12px 0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
 .research-detail-content table{width:100%;border-collapse:collapse;white-space:nowrap;margin:12px 0}
 .research-detail-content th,.research-detail-content td{font-size:11px;line-height:1.8;padding:8px 12px;border-bottom:1px solid var(--border);text-align:right;color:var(--muted)}
 .research-detail-content th{font-size:11px;font-weight:500;background:var(--surface-raised)}

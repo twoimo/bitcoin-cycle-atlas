@@ -40,12 +40,14 @@ body[data-center-tool] .workspace-toast{display:none!important}
 .atlas-skeleton[data-atlas-skeleton=rsi] .atlas-skeleton-shape{padding:0;gap:0;min-height:0}
 .atlas-skeleton[data-atlas-skeleton=rsi] .atlas-skeleton-heading{min-height:44px;padding:4px 12px;box-sizing:border-box;border-bottom:1px solid var(--border-soft)}
 .atlas-skeleton-rsi-meta{display:flex;align-items:center;gap:12px;height:24px;padding:0 12px;overflow:hidden;flex:none}
-.atlas-skeleton-rsi-panels{flex:1;min-height:0;padding:18px 84px 28px 12px;display:grid;grid-template-rows:minmax(0,69fr) minmax(0,31fr);gap:24px}
-.atlas-skeleton-rsi-panels>.atlas-skeleton-plot,.atlas-skeleton-rsi-panels>.atlas-skeleton-oscillator{height:auto;min-height:0}
-@media(max-width:620px){.atlas-skeleton[data-atlas-skeleton=rsi] .atlas-skeleton-heading{height:48px}.atlas-skeleton-rsi-panels{padding-right:72px}}
+.atlas-skeleton-rsi-panels{flex:1;min-height:0;position:relative}
+.atlas-skeleton-rsi-panels>.atlas-skeleton-plot,.atlas-skeleton-rsi-panels>.atlas-skeleton-oscillator{position:absolute;left:var(--atlas-rsi-left);right:var(--atlas-rsi-right);height:auto;min-height:0}
+.atlas-skeleton-rsi-panels>.atlas-skeleton-plot{top:var(--atlas-rsi-top);height:calc(var(--atlas-rsi-price-bottom) - var(--atlas-rsi-top))}
+.atlas-skeleton-rsi-panels>.atlas-skeleton-oscillator{top:calc(var(--atlas-rsi-price-bottom) + var(--atlas-rsi-gap));bottom:var(--atlas-rsi-bottom)}
+@media(max-width:620px){.atlas-skeleton[data-atlas-skeleton=rsi] .atlas-skeleton-heading{height:48px}}
 
 .atlas-skeleton-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr));gap:4px;flex:1;min-height:180px}
-.atlas-skeleton-calendar>[skullet-block]{background:var(--skullet-base);opacity:.55;border-radius:3px}
+.atlas-skeleton-calendar>[skullet-block]{background:var(--skullet-base);color:transparent;opacity:.55;border-radius:3px}
 
 /* A nested page has a center only; the parent already owns all four tool rails. */
 body[data-embedded=true] #atlas-boot-shell{grid-template-columns:minmax(0,1fr)}

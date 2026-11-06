@@ -147,7 +147,13 @@ export function bindChartNavigation({
   const listen = (target, type, handler, options) => { target.addEventListener(type, handler, options);listeners.push([target, type, handler, options]); };
   // Event labels are chart surfaces for wheel navigation, while their click,
   // pointer and keyboard activation keeps the usual interactive boundary.
-  const interactive = (target, allowAnnotations = false) => Boolean(target?.closest?.(`button,input,select,textarea,summary,a,[contenteditable=true],.analysis-indicator-windows,#chart-indicator-manager,[role=button]${allowAnnotations ? ':not(.history-event-marker):not(.cycle-interval):not(.cycle-marker):not(.cycle-milestone-marker):not(.research-annotation)' : ''},[role=menu]${allowAnnotations ? '' : ',[data-next-turn]'}`));
+  const interactive = (target, allowAnnotations = false) => {
+    // A dialog mounted over this chart owns every cell and scroll gesture.
+    // A chart inside an outer dialog still owns its own plot interactions.
+    const dialog = target?.closest?.('dialog,[role=dialog]');
+    if (dialog && dialog !== element && element.contains(dialog)) return true;
+    return Boolean(target?.closest?.(`button,input,select,textarea,summary,a,[contenteditable=true],.analysis-indicator-windows,#chart-indicator-manager,[role=button]${allowAnnotations ? ':not(.history-event-marker):not(.cycle-interval):not(.cycle-marker):not(.cycle-milestone-marker):not(.research-annotation)' : ''},[role=menu]${allowAnnotations ? '' : ',[data-next-turn]'}`));
+  };
   const chartSvg = () => element.querySelector('svg[data-plot-left]:not([hidden])');
   const focusChart = () => chartSvg()?.focus?.({ preventScroll: true });
 

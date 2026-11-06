@@ -1,0 +1,28 @@
+{
+  "name": "skullet",
+  "version": "0.0.3",
+  "license": "MIT",
+  "repository": "https://github.com/lochie/skullet",
+  "upstream": [
+    {
+      "source": "dist/index.mjs",
+      "sha256": "159653b71266900bcff7df3403c1e04cf34d1822074431a131716eedda15e71c",
+      "targets": ["dist/vendor/skullet/skullet.js"]
+    },
+    {
+      "source": "dist/styles.css",
+      "sha256": "2d5fd47eb1956d1406cb5a6a6abcc8ecb90a7766015ea30425ffe6ce80491243",
+      "targets": ["tools/skullet/upstream/styles.css"]
+    },
+    {
+      "source": "LICENSE",
+      "sha256": "352ea4bc404c267caeac26864b5a3fafb9ce9502cb1e1db32ec301ee33b51dbf",
+      "targets": ["dist/vendor/skullet/LICENSE", "tools/skullet/upstream/LICENSE"]
+    }
+  ],
+  "adapter": {
+    "source": "tools/skullet/atlas-styles.css",
+    "target": "dist/vendor/skullet/styles.css",
+    "contract": "Atlas inert neutral-block Reveal and createSkeletonBox surfaces"
+  }
+}

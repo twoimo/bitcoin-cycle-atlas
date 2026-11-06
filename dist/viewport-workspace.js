@@ -197,7 +197,11 @@ export function initViewportWorkspace(icon) {
   let update={...DATA_UPDATE},selectedSources=[],displayedObservationDate=DATA_UPDATE.latestObservationDate,browserCheckedAt=null,opener=null,lastDialogTrigger=null;
   const expanded=()=>document.querySelectorAll('[data-reader]').forEach(button=>{button.setAttribute('aria-controls',reader.id);button.setAttribute('aria-expanded',String(!reader.hidden&&button.dataset.reader===reader.dataset.kind));});
   function rememberOpener(element){
-    const target=element?.nodeType===Node.ELEMENT_NODE?element:document.activeElement;
+    const requested=element?.nodeType===Node.ELEMENT_NODE?element:document.activeElement;
+    // A menu closes before its method reader opens. Its persistent trigger
+    // owns the return focus; the now-hidden menu item cannot receive it.
+    const menu=requested?.closest?.('[role=menu]');
+    const target=menu?.parentElement?.querySelector(':scope > [aria-haspopup="menu"]')||requested;
     if(target&&target!==document.body&&!reader.contains(target))opener={element:target,id:target.id,evidenceId:target.dataset?.evidenceDetail};
   }
   function restoreOpener(){

@@ -1,0 +1,83 @@
+✔ dashboard/chart shell moves the existing navigation without replacing handlers or owner controls (27.692143ms)
+✔ sidebar preference uses one versioned bounded key and remains optional (1.263617ms)
+✔ center navigation retains all perimeter nodes, restores controls and bounds frame messages (57.090335ms)
+✔ static project navigation retains perimeter identity and rejects stale or foreign frames (5.578244ms)
+✔ housing: official observed values, index base and declared reporting clocks (3.104798ms)
+✔ housing: prior-only mean, current spikes and future perturbations cannot change earlier states (14.422855ms)
+✔ housing: exact neutral boundaries, missing calendar months, zero and absent price are distinct (0.608369ms)
+✔ housing: malformed/duplicate/future observations and invalid analysis options reject (16.146665ms)
+✔ housing: lagged exact calendar outcomes, incomplete tails, denominators and non-overlap (36.401978ms)
+✔ housing: loader validates digest, saved fallback, failed data and cancellation (37.023588ms)
+✔ loading geometry contains no pretend data or active controls, and its status label is escaped (7.557159ms)
+✔ every supported pending view keeps the announcement separate from inert neutral paint (20.54259ms)
+✔ pending -> error -> retry -> ready preserves original nodes and releases only its own loading surface (6.478684ms)
+✔ a renderer replacing its body can clear a detached skeleton without erasing its error or retry action (6.885812ms)
+✔ React diagnosis us: values, controls and SVG coordinates match the previous renderer (494.998248ms)
+✔ React diagnosis kr: values, controls and SVG coordinates match the previous renderer (279.9318ms)
+✔ React diagnosis preserves selected market/date and source-error chart withholding (992.009262ms)
+✔ React RSI preserves both exact SVG series, reference tables, selected dates and manual values (3855.822278ms)
+✔ React RSI never substitutes missing, errored or future observations for a valid computed value (895.021567ms)
+✔ React source disclosure preserves all source clocks, links, caveats and withheld notes (566.493049ms)
+✔ React scenario matches the previous neutral, negative, weighted and sensitivity results (940.469602ms)
+✔ React scenario withholds the result for missing, zero, negative and out-of-range inputs (1110.243787ms)
+✔ React economics keeps the initial blank form and all original form constraints (171.863832ms)
+✔ React economics independently submits the same cash flows, terminal recovery and invalid inputs as the previous form (839.920749ms)
+✔ React app keeps calculation controls usable while loading and preserves results across tab switches (560.593434ms)
+✔ React app renders empty and error states distinctly and retries without discarding scenario input (35.825947ms)
+✔ React app aborts an unmounted load and ignores its late completion (51.459721ms)
+✔ React app retains a newer populated document when an older empty fallback arrives (1188.103101ms)
+✔ React retry retains accepted RSI revision while replacement is pending and after failure (1785.623489ms)
+✔ project paths retain a declared subpath and reject escaping resource paths (3.816961ms)
+✔ all React deep links recognize the same page at a project subpath (0.240325ms)
+✔ static delivery never probes an API and binds the validated saved snapshot revision (307.148819ms)
+✔ Pages retains three instrument histories with real bars matching every retained close (94.592028ms)
+✔ backtest fills only the next observed close and independently reconciles cash, fees and open valuation (1.890815ms)
+✔ period end never fills a pending signal or closes an open position; future rows cannot rewrite a prefix (1.709777ms)
+✔ invalid dates, inverted thresholds, missing warmup and unsupported symbols fail explicitly (1.286622ms)
+✔ zoom preserves its anchor, pan has a stable span, fit restores source dates and raw indicators never change (5.642719ms)
+✔ log/linear and inverted price axes round trip measured values; OHLC auto-fit uses only the visible period (2.39514ms)
+✔ weekly OHLC preserves actual first open, high/low extremes, final close and volume, including incomplete periods (3.163215ms)
+✔ OHLC enrichment rejects a wrong provider identity or exchange clock and omits mismatches and unfinished days (16.879628ms)
+✔ Buy/Sell markers use observed directional crossings, equality once, and no invented position state (1.505085ms)
+✔ sidebar tools have unique direct pages and old tab/region links select the same tool (0.262958ms)
+✔ history extension requests complete public histories and preserves all existing observations and macro clocks (265.989554ms)
+✔ wrong identity, wrong currency and a partial provider failure never produce a publishable candidate (254.86015ms)
+✔ perimeter commands belong to the acknowledged instrument and epoch, and BTC labels/listeners restore exactly (32.666889ms)
+✔ older saved response cannot split accepted snapshot, revision or populated phase (0.761906ms)
+✔ retry and failure retain the accepted revision until a replacement is accepted (0.189921ms)
+✔ initial saved, static hosting, empty and API replacements retain their actual delivery semantics (0.654487ms)
+✔ theme comparison: all 18 groups retain exact horizon, count, direction and return semantics (7.643276ms)
+✔ theme comparison: benchmark gaps, price gaps, missing entry and pending windows stay distinct (9.375626ms)
+✔ theme comparison: request-local indexes observe replacement bars and reject invalid judgments (7.132602ms)
+✔ themes: true spot identity, complete candles and conservative evidence clocks (6.33973ms)
+✔ themes: past decisions cannot use undated current docs or future releases (3.602334ms)
+✔ themes: next entire day close, no pre-entry low, missing benchmark and immature outcomes (9.183212ms)
+✔ themes: separate reconstructed/recorded groups and empty denominators (6.50913ms)
+✔ themes: malformed prices and source URLs, time-travel and repeated IDs reject (9.494181ms)
+React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+✔ themes: API calculation/integrity checks, saved fallback and no fallback after abort (63.303206ms)
+✔ themes: uncertain writes survive reload with the same request ID, storage failure sends nothing (3.703724ms)
+✔ themes: responsive chart renders factual bars and groups same-day sources without inventing prices (49.619894ms)
+✔ themes: recovery cannot silently substitute a newer snapshot for the pending revision (6.71237ms)
+✔ SPX product signs: all 27 sign/zero combinations, two negatives, clipped magnitudes; legacy average unchanged (6042.314578ms)
+✔ SPX unavailable, expired and future source cannot produce a direction (407.983823ms)
+✔ US diagnosis shows product direction, cadence and preserved average; Korean view stays independent (387.560704ms)
+✔ collection status decoder and loader reject malformed, duplicate and unsuccessful records (3.802239ms)
+✔ collection clocks cannot certify a displayed snapshot with different source bytes (54.627171ms)
+ℹ tests 65
+ℹ suites 0
+ℹ pass 65
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14795.583108

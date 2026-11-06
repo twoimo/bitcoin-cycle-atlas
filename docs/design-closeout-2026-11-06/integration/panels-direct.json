@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+    "--import",
+    "tsx",
+    "--test",
+    "tests/web/atlas-shell.test.tsx",
+    "tests/web/center-workbench.test.tsx",
+    "tests/web/housing.test.tsx",
+    "tests/web/loading-skeleton.test.tsx",
+    "tests/web/market-lab-panels.test.tsx",
+    "tests/web/pages-hosting.test.tsx",
+    "tests/web/rsi-backtest.test.tsx",
+    "tests/web/rsi-chart-model.test.tsx",
+    "tests/web/rsi-crossings.test.tsx",
+    "tests/web/rsi-history-import.test.tsx",
+    "tests/web/rsi-workbench-controls.test.tsx",
+    "tests/web/snapshot-state.test.tsx",
+    "tests/web/theme-comparison.test.tsx",
+    "tests/web/themes.test.tsx",
+    "tests/web/us-direction.test.tsx"
+  ],
+  "code": 0,
+  "seconds": 14.85,
+  "reason": "Run unchanged panel tests through Node tsx loader; CLI IPC is not available in this container."
+}

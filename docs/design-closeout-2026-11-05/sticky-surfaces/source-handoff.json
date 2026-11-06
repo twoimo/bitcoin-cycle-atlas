@@ -1,0 +1,196 @@
+{
+  "kind": "sticky-surface-source-handoff",
+  "baseline": "624888270fcb539ab08d505e5affab5f5d435776",
+  "generatedAt": "2026-11-05T12:41:47.117179+00:00",
+  "ownedFiles": {
+    "dist/styles.css": "b9f135be9afa23f599908c9ab9bc8253013d69df240b7982e7a8fc6644768cb2",
+    "dist/monthly-backtest.css": "1b3fdbc2dbac782837a9e3bf1574feed97a7534d843acaf5dce3e205182b47cd",
+    "dist/symbol-selector.css": "518e07096505c2be6a88a1412211caa53d61813d4ec045adfd8a10ab086c59cf",
+    "dist/atlas-shell.css": "1f087aadb72778f8050b0d3e2c45d9f465c33c5c93d476838ff0af9cbd70c18e",
+    "apps/web/src/housing.css": "3975eb4ff23a0f6dbd4956f1afeaf33d44aa87fa68f2c01b9868b59048048b03",
+    "dist/chart-navigation.js": "cb1b0999c3934178615dbf3760e414daa8fbc15bb2412fdc8314135fd0a3350d",
+    "tests/chart-navigation-dialog-owner.test.mjs": "fbd1cfc03e47bff509ea7a809c8d0e91b7db593d184479f78b8313fb060fc06e",
+    "docs/design-closeout-2026-11-05/sticky-surfaces/probe.mjs": "2d2f8ce22fbc09f79e835b27d5c77d29f17b7faf2847d178f2527de0f1a7068b"
+  },
+  "pinnedChecker": {
+    "file": "tools/hallmark/upstream/sloplint.mjs",
+    "sha256": "f8ada364c68a9db4b3dd5784bd416a7c412125e887aeae87d627e072d3848289"
+  },
+  "nativeReceipts": {
+    "workbench-before": {
+      "file": "docs/design-closeout-2026-11-05/sticky-surfaces/workbench-before/report.json",
+      "sha256": "412ecdfde5ea13d606dc06bb5e8bf1f5604cb1898b4953179f05f3a2886b353f",
+      "status": "issues",
+      "sourceReference": "624888270fcb539ab08d505e5affab5f5d435776",
+      "sourceIntegrity": {
+        "mode": "immutable Git blobs",
+        "changed": []
+      },
+      "cases": [
+        {
+          "width": 320,
+          "height": 900,
+          "status": "issues"
+        },
+        {
+          "width": 1440,
+          "height": 900,
+          "status": "issues"
+        },
+        {
+          "width": 900,
+          "height": 430,
+          "status": "passed"
+        }
+      ],
+      "servedAppAssets": {}
+    },
+    "pilot-apps": {
+      "file": "docs/design-closeout-2026-11-05/sticky-surfaces/pilot-apps/report.json",
+      "sha256": "861c562ba046f14a6a57a80386ed64678f6a53772eb104f6993fa8ce07f61abe",
+      "status": "passed",
+      "sourceReference": "624888270fcb539ab08d505e5affab5f5d435776",
+      "sourceIntegrity": {
+        "mode": "immutable Git blobs",
+        "changed": []
+      },
+      "cases": [
+        {
+          "width": 320,
+          "height": 900,
+          "status": "passed"
+        }
+      ],
+      "servedAppAssets": {
+        "dist/market-lab/app/index.html": "20801347d761797d713658d446f8feb70ae6e8cd705ab9364a54154b9d199ede",
+        "dist/market-lab/app/assets/index-DurH6u7_.js": "42b754d8c471c0302490be8d52fc76e32f817009e96ed7c1fce32004079b4dc0",
+        "dist/market-lab/app/assets/index-DnjoUSQA.css": "a866aaf16004c5753136c70e87e5ea88f32e54f61909c9c0cca4c3386e692372"
+      }
+    },
+    "contrast-owner-before": {
+      "file": "docs/design-closeout-2026-11-05/sticky-surfaces/contrast-owner-before/report.json",
+      "sha256": "11b094c673725b345964dffde0095d80092b4db4314a7e8f3a5aa2fa301d3ed4",
+      "status": "passed",
+      "sourceReference": "624888270fcb539ab08d505e5affab5f5d435776",
+      "sourceIntegrity": {
+        "mode": "immutable Git blobs",
+        "changed": []
+      },
+      "cases": [
+        {
+          "width": 320,
+          "height": 900,
+          "status": "passed"
+        }
+      ],
+      "servedAppAssets": {}
+    },
+    "legacy-reader-before": {
+      "file": "docs/design-closeout-2026-11-05/sticky-surfaces/legacy-reader-before/report.json",
+      "sha256": "a8e8fdffa6227097acfae658379c094fcdbbbda58de087c0244a70f9d11592a8",
+      "status": "failed",
+      "sourceReference": "624888270fcb539ab08d505e5affab5f5d435776",
+      "sourceIntegrity": {
+        "mode": "immutable Git blobs",
+        "changed": []
+      },
+      "cases": [
+        {
+          "width": 1440,
+          "height": 900,
+          "status": "failed"
+        }
+      ],
+      "servedAppAssets": {}
+    },
+    "after-workbench-320": {
+      "file": "docs/design-closeout-2026-11-05/sticky-surfaces/after-workbench-320/report.json",
+      "sha256": "041f1f48400dd6624535d2e83fb4097898071487c0d03d3c57b28e707d2d494c",
+      "status": "passed",
+      "sourceReference": "working-tree",
+      "sourceIntegrity": {
+        "mode": "cached working-tree bytes",
+        "changed": []
+      },
+      "cases": [
+        {
+          "width": 320,
+          "height": 900,
+          "status": "passed"
+        }
+      ],
+      "servedAppAssets": {}
+    },
+    "final-after": {
+      "file": "docs/design-closeout-2026-11-05/sticky-surfaces/final-after/report.json",
+      "sha256": "5ab43b79dc1328d940d33a84404d1fa5293a01bf4b26b117b5dccad37a06ce56",
+      "status": "failed",
+      "sourceReference": "working-tree",
+      "sourceIntegrity": {
+        "mode": "cached working-tree bytes",
+        "changed": []
+      },
+      "cases": [
+        {
+          "width": 320,
+          "height": 900,
+          "status": "passed"
+        },
+        {
+          "width": 1440,
+          "height": 900,
+          "status": "failed"
+        }
+      ],
+      "servedAppAssets": {
+        "dist/market-lab/app/index.html": "14a09d44df3108629ffea970c9eeb9adf4a4c4884665b3a064b726b0cd633f1a",
+        "dist/market-lab/app/assets/index-BYWO-BnS.css": "81cb08a20b164884399e7a1ea095f168786ccb3b4fe0492d98b84b5c6ead772c",
+        "dist/market-lab/app/assets/index-DblLUHgN.js": "628d3daa140deba7c8d09c2c67c5ae76ebe489c7185f0d8777bef956d279d7df"
+      }
+    },
+    "after-apps-desktop": {
+      "file": "docs/design-closeout-2026-11-05/sticky-surfaces/after-apps-desktop/report.json",
+      "sha256": "4529b404117fe8f9323c2d796594d756a713f788306985512150fc42e5cb1ce5",
+      "status": "passed",
+      "sourceReference": "working-tree",
+      "sourceIntegrity": {
+        "mode": "cached working-tree bytes",
+        "changed": []
+      },
+      "cases": [
+        {
+          "width": 1440,
+          "height": 900,
+          "status": "passed"
+        }
+      ],
+      "servedAppAssets": {
+        "dist/market-lab/app/index.html": "14a09d44df3108629ffea970c9eeb9adf4a4c4884665b3a064b726b0cd633f1a",
+        "dist/market-lab/app/assets/index-BYWO-BnS.css": "81cb08a20b164884399e7a1ea095f168786ccb3b4fe0492d98b84b5c6ead772c",
+        "dist/market-lab/app/assets/index-DblLUHgN.js": "628d3daa140deba7c8d09c2c67c5ae76ebe489c7185f0d8777bef956d279d7df"
+      }
+    },
+    "after-short": {
+      "file": "docs/design-closeout-2026-11-05/sticky-surfaces/after-short/report.json",
+      "sha256": "f904347254fdf4d2b1bb2dd75791433b2c942033a501472fb84bc28062e84f2c",
+      "status": "passed",
+      "sourceReference": "working-tree",
+      "sourceIntegrity": {
+        "mode": "cached working-tree bytes",
+        "changed": []
+      },
+      "cases": [
+        {
+          "width": 900,
+          "height": 430,
+          "status": "passed"
+        }
+      ],
+      "servedAppAssets": {}
+    }
+  },
+  "documentation": {
+    "docs/design-closeout-2026-11-05/sticky-surfaces/README.md": "622f4556fd40a7bb1ab39983c94c2449325678a25376929fca1ebefb1f28604e"
+  },
+  "handoffStatus": "Owned product scope passed focused checks; additional baseline legacy reader defect delegated to reader owner and remains explicitly failed until its after receipt."
+}

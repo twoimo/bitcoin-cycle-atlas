@@ -1,0 +1,133 @@
+{
+  "status": "PASS",
+  "baseline": "624888270fcb539ab08d505e5affab5f5d435776",
+  "ownedFiles": {
+    "dist/atlas-shell.js": "bdd3a52f98936a28a2a4be5172e4005b8a842bba02e6b001cbc0ea3ae22275a1"
+  },
+  "legacyFilesUnchanged": {
+    "dist/compact.css": true,
+    "dist/lab-view.js": true
+  },
+  "method": "Native Chromium pointer and keyboard, computed painting/DOM bounds/hit-testing and complete navigation contracts. No test CSS or DOM layout injected.",
+  "measuredAt": "2026-11-05T12:47:59.230Z",
+  "servedSources": 143,
+  "allServedSourcesStable": true,
+  "states": [
+    {
+      "label": "mobile-320-collapsed",
+      "viewport": 320,
+      "railWidth": 52,
+      "navigationItems": 11,
+      "paintedLabels": 0,
+      "badges": [
+        "US",
+        "KR"
+      ],
+      "keyboard": {
+        "usToKrTab": true,
+        "focus": {
+          "visible": true,
+          "outline": "solid",
+          "width": "2px",
+          "box": {
+            "x": 4,
+            "y": 192,
+            "width": 43,
+            "height": 44,
+            "top": 192,
+            "right": 47,
+            "bottom": 236,
+            "left": 4
+          }
+        }
+      },
+      "toggle": {
+        "visible": false,
+        "expanded": "true",
+        "focused": false,
+        "outline": "none",
+        "outlineWidth": "0px"
+      }
+    },
+    {
+      "label": "desktop-1440-expanded",
+      "viewport": 1440,
+      "railWidth": 224,
+      "navigationItems": 11,
+      "paintedLabels": 11,
+      "badges": [
+        "US",
+        "KR"
+      ],
+      "keyboard": {
+        "usToKrTab": true,
+        "focus": {
+          "visible": true,
+          "outline": "solid",
+          "width": "2px",
+          "box": {
+            "x": 12,
+            "y": 200,
+            "width": 199,
+            "height": 42,
+            "top": 200,
+            "right": 211,
+            "bottom": 242,
+            "left": 12
+          }
+        }
+      },
+      "toggle": {
+        "visible": true,
+        "expanded": "true",
+        "focused": false,
+        "outline": "none",
+        "outlineWidth": "0px"
+      }
+    },
+    {
+      "label": "desktop-1440-explicit-collapse",
+      "viewport": 1440,
+      "railWidth": 68,
+      "navigationItems": 11,
+      "paintedLabels": 0,
+      "badges": [
+        "US",
+        "KR"
+      ],
+      "keyboard": null,
+      "toggle": {
+        "visible": true,
+        "expanded": "false",
+        "focused": true,
+        "outline": "none",
+        "outlineWidth": "0px"
+      }
+    },
+    {
+      "label": "desktop-1440-keyboard-expand",
+      "viewport": 1440,
+      "railWidth": 224,
+      "navigationItems": 11,
+      "paintedLabels": 11,
+      "badges": [
+        "US",
+        "KR"
+      ],
+      "keyboard": null,
+      "toggle": {
+        "visible": true,
+        "expanded": "true",
+        "focused": true,
+        "outline": "solid",
+        "outlineWidth": "2px"
+      }
+    }
+  ],
+  "mobileKeyboardRoute": {
+    "pathname": "/bitcoin-cycle-atlas/market-lab/kr/",
+    "frame": "http://127.0.0.1:37445/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=diagnosis&lab-region=kr&epoch=1",
+    "active": "page"
+  },
+  "runtimeErrors": []
+}

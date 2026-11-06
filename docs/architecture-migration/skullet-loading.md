@@ -26,17 +26,23 @@
 
 - 공식 저장소: https://github.com/lochie/skullet, 조사 HEAD `770cba428e6954977fd97938f0f06a7cade2fc2d`.
 - `apps/web/package.json`과 lockfile에 `skullet: 0.0.3`을 고정했다. `npm install --ignore-scripts`로 설치했으며 package lifecycle script를 실행하지 않았다. npm 패키지와 저장소 HEAD의 빌드 바이트 동등성을 주장하지 않는다.
-- 런타임과 CSS·MIT LICENSE는 `dist/vendor/skullet`에 원본 그대로 보관한다. CDN 호출 없이 정적·오프라인에서도 사용한다. `npm run verify:skullet`은 설치본과 이 세 파일의 바이트를 대조한다.
+- 런타임과 MIT LICENSE는 `dist/vendor/skullet`에 원본 그대로 보관한다. 전체 upstream CSS 원본과 MIT LICENSE는 `tools/skullet/upstream`에 정확한 바이트로 보존한다. `tools/skullet/provenance.json`은 세 원본의 SHA-256을 고정한다. CDN 호출 없이 정적·오프라인에서도 사용한다.
+- 2026-11-05 공개 CSS 통합: `tools/skullet/atlas-styles.css`가 실제 사용 중인 inert 중립 블록의 Reveal/boot/inline 스타일을 소유한다. 보호된 부팅 문서의 참조 URL `dist/vendor/skullet/styles.css`로 복사한다. 미사용 custom element, 일반 입력·텍스트·미디어 샘플과 x-ray는 이 어댑터 계약에 포함하지 않는다. `npm run verify:skullet`은 설치본의 고정 원본 해시, 보존한 원본과 LICENSE, 어댑터 원문/배포본의 바이트를 모두 대조한다.
 - `dist/loading-surfaces.js`가 공통 Skullet `Reveal`/`createSkeletonBox`, 중립 형상, 수명 정리를 소유한다. React는 같은 엔진을 사용하는 `LoadingSkeleton`으로 연결한다. 기존 계산 컴포넌트를 가짜 데이터로 마운트하지 않는다.
 - 스켈레톤에는 클릭·입력·링크가 없다. `aria-busy`, 상태 레이블과 숨긴/inert 형상을 구분한다. `prefers-reduced-motion`을 적용한다. 부모 버튼·차트의 기존 DOM을 교체하지 않는다.
 - 닫기·숨김·화면 이탈·본문 교체 시 측정 observer와 애니메이션을 정리한다. 보유한 계산 자료는 계속 보이고 빈 결과·오류는 스켈레톤으로 바꾸지 않는다.
+- RSI는 `dist/rsi-chart-layout.js`의 좌표 함수를 실제 SVG와 로딩 형상이 함께 사용한다. 기존 SVG의 18px 상단, 600px 축 분기, 정수 가격판 분할과 24px 패널 간격을 보존한다. 기존 로딩 그리드는 가용 높이에 69%를 적용해 가격판 하단이 약 30px 위로 어긋났고, 600~620px에서 축 여백이 12px 부족했다. 로딩 형상의 실제 배정 크기를 관찰해 이 좌표를 맞추고 해제 시 관찰을 종료한다.
 
-## 검증과 한계
+## 도입 당시 검증 기록
 
-정확한 실행 수, 소스/화면 해시와 관측 시점은 `skullet-verification.json`에 있다. 전체 회귀 2,404개, UI 31개, 실제 PostgreSQL/API 및 실제 standalone 검사를 수행했다. ETH/주식의 유한 상태 검사와 제품 mutation 음성 대조도 원래 명령으로 실행했다. 이는 무한 상태 증명, 수치의 경제적 타당성·실기기 성능 인증이나 운영 배포 증거가 아니다.
+이 절은 2026-11-03 도입 당시 소스와 실행의 역사적 기록이다. 정확한 실행 수, 소스/화면 해시와 관측 시점은 `skullet-verification.json`에 있다. 당시 전체 회귀 2,404개, UI 31개, 실제 PostgreSQL/API 및 실제 standalone 검사를 수행했다. ETH/주식의 유한 상태 검사와 제품 mutation 음성 대조도 원래 명령으로 실행했다. 이 숫자는 2026-11-05 변경의 재검사 수가 아니다. 무한 상태 증명, 수치의 경제적 타당성·실기기 성능 인증이나 운영 배포 증거로도 해석하지 않는다.
 
-IAB에서 실제 응답을 지연시킨 최초 화면·중앙 표·달력·RSI·주식 재시도와 백테스트, API/저장본 동시 실패, 재연결 중 조건값 유지, ETH 재조회 중 실제 가격 유지, 390px·동작 감소를 확인했다. 검증용 프록시는 원래 로컬 서비스에만 전달하며 실제 API·DB 자료를 바꾸지 않았다. 종료 시 프록시와 탭의 임시 설정을 제거한다. 운영 API를 느리게 만들거나 테스트용 실패를 배포하지 않는다.
+당시 IAB에서 실제 응답을 지연시킨 최초 화면·중앙 표·달력·RSI·주식 재시도와 백테스트, API/저장본 동시 실패, 재연결 중 조건값 유지, ETH 재조회 중 실제 가격 유지, 390px·동작 감소를 확인했다. 검증용 프록시는 원래 로컬 서비스에만 전달했으며 실제 API·DB 자료를 바꾸지 않았다. 이 기록은 당시 프록시와 탭에서 관측한 결과이고 현재 브라우저 실행을 대신하지 않는다.
 
-Hallmark의 원본 finding은 수정/면제하지 않는다. 고정 vendor CSS의 stamp/focus/색상·미정의 Web Component 지적은 사용하지 않는 upstream/비상호작용 규칙까지 검사하는 결과로 분리했다. 앱의 기존 별도 스크롤 헤더 오탐과 실제 SVG 좌표 18px를 따르는 스켈레톤의 간격 지적도 원문 그대로 남긴다. 실제 결함이던 첫 페인트 토큰, 중복 도구 패널과 주식 재시도 높이는 수정했다.
+## 2026-11-05 통합 개선과 검증
 
-외부 교차 검토·키움·원격 CI·병합·배포 holds는 그대로다. 기존 계산·자료·이전 검증 영수증은 변경하지 않았다.
+Hallmark의 원본 finding은 수정/면제하지 않는다. 2026-11-05 통합 개선은 미사용 범용 CSS를 배포하던 결정을 실제 중립 블록 계약으로 바꾸고, RSI의 실제 배치 불일치를 수정했다. 원본 CSS는 출처 기록으로 보존하고 배포된 전체 CSS·HTML과 번들 복사본은 기존의 전체 `dist` 검사에 남는다. 게이트·중요도·검사 경로는 변경하지 않는다. 최신 소스와 원본 renderer 대조, 실제 Reveal 페인트·접근성·축소 동작·수명 정리는 `scripts/verify-loading-surfaces-browser.mjs`에서 별도로 검증한다. 과거 검증 영수증은 과거 소스의 결과로 그대로 남긴다.
+
+이번 집중 검증은 [loading 결과](../design-closeout-2026-11-05/evidence/loading/report.json)에 실제 소스 해시와 함께 기록했다. 기존 실제 renderer를 그대로 실행한 120개 조합, before/after 및 배정 영역 변경 18개 관측, 9가지 로딩 형상, 5가지 해제 경로와 native 접근성 트리·키보드·동작 감소·스크립트 비활성화 상태를 확인했다. 전체 앱 경로·원격 CI·배포 검증과는 별도의 범위이며, 전체 결과는 [현재 디자인 마무리 작업](../design-closeout-2026-11-05/PLAN.md)에서 통합한다.
+
+초기 도입 문서의 일반 CI·병합·배포 보류는 당시 작업 상태다. 이번 작업의 시작점은 PR61이 병합되고 Pages 배포가 확인된 `624888270fcb539ab08d505e5affab5f5d435776`이며, 이번 디자인 수정 자체의 통합·병합·배포 결과는 해당 변경의 최신 영수증으로 판단한다. 모델의 외부 교차 검토·키움·실증 자료·별도 release 조건은 [ETH 남은 조건](../ETH_REMAINING_CONDITIONS.md)의 독립된 사항이다. UI 코드 검증이나 병합이 그 모델 조건을 해제하지 않는다.

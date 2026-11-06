@@ -1,0 +1,10 @@
+{
+  "name": "panels",
+  "command": [
+    "npm",
+    "run",
+    "test:panels"
+  ],
+  "code": 1,
+  "seconds": 0.18
+}

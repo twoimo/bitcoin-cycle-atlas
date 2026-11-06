@@ -1,0 +1,144 @@
+{
+  "status": "PASS",
+  "baseline": "624888270fcb539ab08d505e5affab5f5d435776",
+  "headAtVerification": "624888270fcb539ab08d505e5affab5f5d435776",
+  "createdAt": "2026-11-05T12:58:48.267948+00:00",
+  "nativeReport": "final-width-after/report.json",
+  "nativeCases": [
+    {
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "widths": {
+        "document": 1440,
+        "body": 1440,
+        "bodyScroll": 1440,
+        "workspace": 1216,
+        "main": 1216
+      },
+      "scrollTop": 2273,
+      "pathCount": 24,
+      "pathHash": "dd551456a6471fd1ac931309917ff28cea05e9a0f5414a996d7646fc2cf9c864",
+      "closeActions": [
+        "close-button",
+        "Escape"
+      ],
+      "svgGeometryUnchanged": true
+    },
+    {
+      "width": 1440,
+      "height": 360,
+      "status": "passed",
+      "widths": {
+        "document": 1440,
+        "body": 1440,
+        "bodyScroll": 1440,
+        "workspace": 1216,
+        "main": 1216
+      },
+      "scrollTop": 2383,
+      "pathCount": 24,
+      "pathHash": "dd551456a6471fd1ac931309917ff28cea05e9a0f5414a996d7646fc2cf9c864",
+      "closeActions": [
+        "close-button",
+        "Escape"
+      ],
+      "svgGeometryUnchanged": true
+    },
+    {
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "widths": {
+        "document": 320,
+        "body": 320,
+        "bodyScroll": 320,
+        "workspace": 268,
+        "main": 268
+      },
+      "scrollTop": 2391,
+      "pathCount": 24,
+      "pathHash": "206023400f7dae863360bf68532c114098ef2a26968927ade3aa8e1fd11a13cb",
+      "closeActions": [
+        "close-button",
+        "Escape"
+      ],
+      "svgGeometryUnchanged": true
+    },
+    {
+      "width": 320,
+      "height": 360,
+      "status": "passed",
+      "widths": {
+        "document": 320,
+        "body": 320,
+        "bodyScroll": 320,
+        "workspace": 268,
+        "main": 268
+      },
+      "scrollTop": 2501,
+      "pathCount": 24,
+      "pathHash": "206023400f7dae863360bf68532c114098ef2a26968927ade3aa8e1fd11a13cb",
+      "closeActions": [
+        "close-button",
+        "Escape"
+      ],
+      "svgGeometryUnchanged": true
+    }
+  ],
+  "nativeRuntimeErrors": [],
+  "chartShell": {
+    "width": 1440,
+    "height": 360,
+    "restored": true
+  },
+  "nativeMeasuredSourcesUnchanged": {
+    "count": 10,
+    "mismatches": []
+  },
+  "originalLoadingFilesUnchanged": {
+    "count": 25,
+    "mismatches": []
+  },
+  "readerResizeUnit": {
+    "command": "node --test tests/reader-resize.test.mjs",
+    "chunk_id": "c7a4cf",
+    "wall_time_seconds": 0.147425851,
+    "exit_code": 0,
+    "original_token_count": 136,
+    "output": "✔ reader resize paints a move burst once and immediately includes the exact release coordinate (2.048248ms)\n✔ another finger cannot move, finish or replace the active reader resize (0.209109ms)\n✔ capture loss, cancellation, hidden documents, viewport changes and destroy retire pending reader work (0.766613ms)\n✔ keyboard and reset actions end a drag before changing width, and overlay mode cannot resize (0.353293ms)\nℹ tests 4\nℹ suites 0\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 162.121453\n"
+  },
+  "gitDiffCheck": {
+    "exitCode": 0,
+    "output": ""
+  },
+  "interimPublicStatic": {
+    "status": "ISSUES_PENDING_INTEGRATION_REBUILD",
+    "summary": {
+      "fails": 1,
+      "reflex": 0,
+      "warns": 30,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 44,
+      "render": "off"
+    },
+    "failures": [
+      {
+        "gate": "56",
+        "grade": "FAIL",
+        "tier": "floor",
+        "file": "dist/market-lab/app/assets/index-79EgkHss.css",
+        "line": 3,
+        "evidence": "two sticky top:0 elements: .indicator-library[open]>.indicator-library-heading…",
+        "fix": "Offset the second sticky by banner height"
+      }
+    ]
+  },
+  "scopeLimit": "Final rebuilt full 49-case and rendered Hallmark run are owned by the integration lane.",
+  "workspaceCaseInventoryUnchanged": true,
+  "protectedRootIndexUnchanged": true
+}

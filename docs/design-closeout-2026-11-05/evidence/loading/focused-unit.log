@@ -1,0 +1,16 @@
+✔ loading geometry contains no pretend data or active controls, and its status label is escaped (7.574497ms)
+✔ every supported pending view keeps the announcement separate from inert neutral paint (9.890893ms)
+✔ pending -> error -> retry -> ready preserves original nodes and releases only its own loading surface (4.257308ms)
+✔ a renderer replacing its body can clear a detached skeleton without erasing its error or retry action (0.79093ms)
+✔ zoom preserves its anchor, pan has a stable span, fit restores source dates and raw indicators never change (4.2585ms)
+✔ log/linear and inverted price axes round trip measured values; OHLC auto-fit uses only the visible period (1.95368ms)
+✔ weekly OHLC preserves actual first open, high/low extremes, final close and volume, including incomplete periods (0.768927ms)
+✔ OHLC enrichment rejects a wrong provider identity or exchange clock and omits mismatches and unfinished days (14.31621ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 332.658997

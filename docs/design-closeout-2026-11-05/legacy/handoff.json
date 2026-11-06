@@ -1,0 +1,153 @@
+{
+  "status": "PASS",
+  "baseline": "624888270fcb539ab08d505e5affab5f5d435776",
+  "ownedFiles": {
+    "dist/compact.css": "24ea81f5c6635f6b06628b91faaa4cad20c705c66e695b71ff045d228f3de372",
+    "dist/lab-view.js": "fdd49d2f795b71217cc1e1ac6b21a0c51c5f25d78398a4334bc11de62d65e7cb"
+  },
+  "measuredAt": "2026-11-05T12:39:35.004Z",
+  "checkerSha256": "3af79afa100a9804f248ade24d5128cea4fde1ef6d1a279f1dd935bfe6dc41cd",
+  "method": "Native Chromium/Playwright, unchanged pinned Hallmark observe + observeQuality functions and F25 two-viewport DOM inventory. No checker, viewport geometry, content-visibility or test-mode styles injected.",
+  "servedSources": 140,
+  "allServedSourcesStable": true,
+  "pinned49bAnd72": {
+    "widths": [
+      320,
+      375,
+      414,
+      768,
+      1024,
+      1280,
+      1920,
+      1440
+    ],
+    "findings": 0
+  },
+  "nativeCases": [
+    {
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "disclosures": 8,
+      "horizontalRegions": 21,
+      "focusAndSelection": {
+        "focused": true,
+        "focusConnected": true,
+        "cycleConnected": true,
+        "periodConnected": true,
+        "methodConnected": true,
+        "selectionPreserved": true,
+        "selectionLength": 128
+      },
+      "inputUpdates": {
+        "pagination": true,
+        "period": true,
+        "scope": true,
+        "threshold": 0.08,
+        "thresholdChangedPeriodReadout": true
+      }
+    },
+    {
+      "viewport": {
+        "width": 375,
+        "height": 800
+      },
+      "disclosures": 8,
+      "horizontalRegions": 20,
+      "focusAndSelection": {
+        "focused": true,
+        "focusConnected": true,
+        "cycleConnected": true,
+        "periodConnected": true,
+        "methodConnected": true,
+        "selectionPreserved": true,
+        "selectionLength": 128
+      },
+      "inputUpdates": {
+        "pagination": true,
+        "period": true,
+        "scope": true,
+        "threshold": 0.08,
+        "thresholdChangedPeriodReadout": true
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "disclosures": 8,
+      "horizontalRegions": 0,
+      "focusAndSelection": {
+        "focused": true,
+        "focusConnected": true,
+        "cycleConnected": true,
+        "periodConnected": true,
+        "methodConnected": true,
+        "selectionPreserved": true,
+        "selectionLength": 128
+      },
+      "inputUpdates": {
+        "pagination": true,
+        "period": true,
+        "scope": true,
+        "threshold": 0.08,
+        "thresholdChangedPeriodReadout": true
+      }
+    },
+    {
+      "viewport": {
+        "width": 900,
+        "height": 430
+      },
+      "disclosures": 8,
+      "horizontalRegions": 0,
+      "focusAndSelection": {
+        "focused": true,
+        "focusConnected": true,
+        "cycleConnected": true,
+        "periodConnected": true,
+        "methodConnected": true,
+        "selectionPreserved": true,
+        "selectionLength": 128
+      },
+      "inputUpdates": {
+        "pagination": true,
+        "period": true,
+        "scope": true,
+        "threshold": 0.08,
+        "thresholdChangedPeriodReadout": true
+      }
+    }
+  ],
+  "pageErrors": [],
+  "f25": {
+    "hiddenWordsBefore": 326,
+    "detachedNodesBefore": 20,
+    "hiddenWordsAfter": 0,
+    "offscreenColumnsBefore": 16,
+    "offscreenColumnsAfter": 12,
+    "insideClosedDisclosuresAfter": 8,
+    "treatment": "Raw warning retained; native keyboard/wheel access to all overflowing tables, timeline and toolbar verified without dropping columns."
+  },
+  "issuesResolved": [
+    "320px source link actually wrapped to two text lines; both source links now remain one-line 44px targets.",
+    "Native closed disclosure geometry was incorrectly represented by a single outer frame; summary/readout surfaces now own distinct visual boundaries.",
+    "Layout-only resize detached research data, focused links and selected text; document invalidation now follows analysis/filter/page identity.",
+    "Mobile tables lacked a stable visible row identity and some new method scroll areas had no explicit keyboard/accessibility metadata.",
+    "Overwide fixed first columns could cover final values; row/value widths now follow each actual scrollport.",
+    "Expanded legacy toolbar and legend exceeded phone width; controls scroll natively and all legend data reflows.",
+    "Three timing readouts exceeded a 320px body by20px; mobile readouts now use two columns.",
+    "The existing method formula background now explicitly owns its foreground token."
+  ],
+  "notClaimed": [
+    "Full app Hallmark pass, full49case integration, release/deployment and model evidence are coordinated separately."
+  ],
+  "evidence": [
+    "before.json",
+    "negative-control.json",
+    "receipt.json",
+    "verify.mjs"
+  ]
+}

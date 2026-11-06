@@ -1,0 +1,10 @@
+{
+  "name": "types",
+  "command": [
+    "npm",
+    "run",
+    "typecheck"
+  ],
+  "code": 0,
+  "seconds": 0.66
+}

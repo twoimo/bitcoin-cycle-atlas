@@ -12,7 +12,7 @@
 .chart-details-panel .reader-heading button{display:grid;place-items:center;flex:none;width:28px;height:28px;min-height:0;padding:4px;border:0;border-radius:4px;color:var(--chart-details-panel-ink-2);background:transparent}
 .chart-details-panel .reader-heading button:hover,.chart-detail-actions button:hover{background:var(--chart-details-panel-surface-2);color:var(--chart-details-panel-ink-3)}
 .chart-details-panel .reader-heading .icon,.chart-detail-actions .icon{width:16px;height:16px}
-.chart-details-panel :focus-visible{outline:1px solid var(--chart-details-panel-rule-2);outline-offset:2px}
+.chart-details-panel :focus-visible{outline:2px solid var(--focus,var(--chart-details-panel-rule-2));outline-offset:2px}
 .chart-detail-actions{display:flex;align-items:center;flex:none;gap:4px;height:32px;max-height:36px;min-width:0;margin:0;padding:0 0 4px;box-sizing:border-box;border-bottom:1px solid var(--chart-details-panel-rule-3)}
 .chart-detail-actions .atlas-date-input{display:block;margin:0 auto 0 0;min-width:0}
 .chart-detail-actions input{box-sizing:border-box;width:124px;max-width:124px;min-width:0;height:27px;padding:4px 2px;border:0;border-radius:3px;background:transparent;color:var(--chart-details-panel-ink-4);color-scheme:dark;font-family:var(--font);font-size:11px}
@@ -314,4 +314,20 @@ body:not([data-page=outlook]) .workbench-detail-tools>[data-reader=selection],bo
  .atlas-plot>.atlas-readout{inset:7px 8px auto;gap:4px;line-height:15px}
  .readout-main{gap:4px}.readout-detail{font-size:11px;line-height:13px;min-height:13px}
  .workbench-market-info{top:44px;font-size:11px;line-height:13px}
+}
+
+/* Dashboard documents scroll independently of the chart's bounded grid.
+   Their shared reader stays in the viewport below the actual shell header;
+   its existing body and pager keep the close action reachable at any scroll. */
+body[data-shell=dashboard] .workspace.atlas-details-layout[data-details-open]{
+ margin-top:var(--app-header-height);width:calc(100% - var(--app-sidebar-width));
+ height:calc(100dvh - var(--app-header-height));
+}
+@media(min-width:621px){
+ body[data-shell=dashboard] .workspace.atlas-details-layout>.chart-details-panel{
+  position:fixed;inset:calc(var(--app-header-height,64px) + 12px) 12px 12px auto;
+  width:min(var(--detail-width,320px),calc(100% - var(--app-sidebar-width,224px) - 24px));
+  height:auto;max-height:calc(100dvh - var(--app-header-height,64px) - 24px);
+  border:1px solid var(--chrome-border);border-radius:8px;z-index:44;
+ }
 }

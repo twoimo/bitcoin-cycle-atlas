@@ -1,0 +1,52 @@
+/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas locked system · redesign: repair · posture: restrained */
+/* Atlas's neutral-block adapter for Skullet 0.0.3 (MIT).
+   Original CSS and license: tools/skullet/upstream; exact digests: provenance.json.
+   Generated public copy: node scripts/sync-skullet.mjs. Keep this source owned.
+   Only aria-hidden/inert skeleton paint enters Reveal. Live controls, text,
+   media and custom elements keep their own paint and interaction contracts. */
+:root {
+  --skullet: 1;
+  --skullet-base: var(--surface-hover, #202a39);
+}
+
+.atlas-skeleton-paint[skullet-reveal] {
+  position: relative;
+}
+
+.atlas-skeleton-paint > [skullet-pane] {
+  display: block;
+}
+
+.atlas-skeleton-paint [skullet-loading] {
+  position: relative;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.atlas-skeleton-paint [skullet-inactive] {
+  display: none !important;
+}
+
+.atlas-skeleton-paint [skullet-layer] {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+/* Also used by the static boot shell and createSkeletonBox perimeter bars. */
+[skullet-bar] {
+  display: block;
+  background-color: var(--skullet-base);
+  background-repeat: no-repeat;
+}
+
+/* Hide source blocks only after Reveal has created its measured layer.
+   Before enhancement (including disabled scripting), the blocks stay visible.
+   The layer's shadow-root rectangles are painted by the pinned Skullet runtime. */
+@scope (.atlas-skeleton-paint [skullet-loading]) to ([skullet-own], [skullet-layer]) {
+  :scope [skullet-block],
+  :scope [skullet-covered] {
+    visibility: hidden !important;
+  }
+}

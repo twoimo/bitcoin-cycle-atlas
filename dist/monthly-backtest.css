@@ -22,7 +22,7 @@
 .monthly-backtest th small{display:block;margin-top:4px;font-size:10px;color:var(--muted);font-weight:400}
 .monthly-summary table{min-width:680px}.monthly-ledger table{min-width:760px}
 .monthly-summary{margin-bottom:12px;flex:none}.monthly-ledger{flex:1;min-height:96px;overflow:auto}.monthly-ledger td{padding:0}
-.monthly-ledger thead th{position:sticky;top:0;z-index:2}.monthly-ledger thead th:first-child{left:0;z-index:3}
+.monthly-ledger thead th{z-index:2}.monthly-ledger thead th:first-child{left:0;z-index:3}
 .monthly-ledger td button{display:block;width:100%;border:0;border-radius:0;background:transparent;text-align:left;padding:8px 12px;min-height:64px}
 .monthly-ledger td button strong{font-size:13px;font-weight:500}.monthly-ledger td button small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
 .monthly-error{padding:12px;display:block;color:var(--red)}
