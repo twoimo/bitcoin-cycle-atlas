@@ -9,7 +9,7 @@ const map=new Map(RESEARCH_ARTICLES.map(item=>[item.id,item]));
 const sourcesByUrl=new Map(RESEARCH_SOURCES.map(item=>[safe(item.sourceUrl),item]));
 export const getResearchArticle=id=>map.get(ARTICLE_ALIASES[id]||id)||null;
 const statusLabels={fact:'기록 확인',conditional:'조건부 주장',unverified:'검증 보류',contradicted:'반대 증거 확인'};
-let dialog=null,opener=null,current=null,currentView='summary',previousEntries=[];
+let dialog=null,opener=null,restoreOpener=null,restoreOnClose=true,current=null,currentView='summary',previousEntries=[];
 
 export function researchArticleMarkdown(articleOrId){
   const r=typeof articleOrId==='string'?getResearchArticle(articleOrId):articleOrId;
@@ -91,12 +91,17 @@ function mount(){
   });
   dialog.addEventListener('keydown',event=>event.stopPropagation());
   dialog.addEventListener('close',()=>{
+    if(dialog.open)return;
     const url=new URL(location.href);url.searchParams.delete('article');url.searchParams.delete('article-view');
     try{history.replaceState(null,'',url);}catch{}
-    if(!document.querySelector('dialog[open]')&&opener?.isConnected)opener.focus({preventScroll:true});
+    if(restoreOnClose&&!document.querySelector('dialog[open]')){
+      const target=restoreOpener?restoreOpener():opener;
+      if(target?.isConnected&&!target.closest('[hidden], [inert]'))target.focus({preventScroll:true});
+    }
+    opener=null;restoreOpener=null;
     previousEntries=[];currentView='summary';
   });
-  document.addEventListener('atlas:modal-open',event=>{if(event.detail?.id!==dialog.id&&dialog.open)dialog.close();});
+  document.addEventListener('atlas:modal-open',event=>{if(event.detail?.id!==dialog.id&&dialog.open){restoreOnClose=false;dialog.close();}});
 }
 
 function renderCurrent(view){
@@ -109,10 +114,10 @@ function renderCurrent(view){
   try{history.replaceState(null,'',url);}catch{}
 }
 
-export function openResearchArticle(id,{opener:requestedOpener,keepHistory=false,fromBack=false,view}={}){
+export function openResearchArticle(id,{opener:requestedOpener,restoreFocus,keepHistory=false,fromBack=false,view}={}){
   const record=getResearchArticle(id);if(!record)return false;
   mount();
-  if(!dialog.open){opener=requestedOpener||document.activeElement;previousEntries=[];}
+  if(!dialog.open){opener=requestedOpener||document.activeElement;restoreOpener=typeof restoreFocus==='function'?restoreFocus:null;restoreOnClose=true;previousEntries=[];}
   else if(keepHistory&&current)previousEntries.push({id:current.id,view:currentView});
   else if(!fromBack)previousEntries=[];
   const url=new URL(location.href);
