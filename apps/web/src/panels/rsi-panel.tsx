@@ -10,6 +10,7 @@ import { RsiHistory, type RsiHistoryState } from './rsi-history.js';
 import { rsiInstrument } from '../../../../dist/rsi-instruments.js';
 import { RsiWorkbench } from './rsi-workbench.js';
 import type { RsiChartCache } from '../rsi-chart-model.js';
+import { CompactToolbar } from '../components/compact-toolbar.js';
 
 export interface RsiState { rsiIndex: number | null; rsiOscIndex: number | null; rsiUnmatchedDate: string | null; manualRsi: string }
 export const initialRsi = (): RsiState => ({ rsiIndex: null, rsiOscIndex: null, rsiUnmatchedDate: null, manualRsi: '' });
@@ -87,15 +88,14 @@ export function RsiPanel({ snapshot, now, state, onChange, initialRangeDays = 0,
   if(onSymbol&&market&&gate.ok&&snapshot&&prices.length)return <RsiWorkbench symbol={symbol} market={market} snapshot={snapshot} now={now} rows={allRows} revision={revision} epoch={epoch} active={active} embedded={embedded} historyCache={historyCache} chartCache={chartCache} onDate={priceDate}
     references={<RsiReferences/>} comparison={<><label className="ml-field" htmlFor="ml-manual-rsi">키움 일봉 RSI 14 수기 입력 (0~100)<input id="ml-manual-rsi" data-control="manual-rsi" type="number" min="0" max="100" step="0.01" value={state.manualRsi} placeholder="미입력" onChange={e=>onChange({...state,manualRsi:e.currentTarget.value})}/></label><Thresholds state={state} rows={rows} gate={gate}/></>}/>;
   return <>
-    <div className="rsi-toolbar" data-presentation-control>
-      {onSymbol ? <SymbolPicker symbol={symbol} onSelect={onSymbol}/> : <strong>{symbol} <span>1D</span></strong>}
+    <CompactToolbar label={`${symbol} 참고 RSI 도구`}><div className="compact-toolbar-tabs" data-presentation-control>
+      {onSymbol && !embedded ? <SymbolPicker symbol={symbol} onSelect={onSymbol}/> : <strong>{symbol} <span>1D</span></strong>}
       <div role="group" aria-label="차트 표시 기간">{[[365,'1년'],[1095,'3년'],[0,'전체']].map(([days,label]) => <button key={days} type="button" aria-pressed={rangeDays === days} onClick={() => changeRange(Number(days))}>{label}</button>)}</div>
       <button type="button" aria-pressed={showCrossings} onClick={() => setShowCrossings(!showCrossings)}>Buy / Sell</button>
       <label>기준선 통과일 <select aria-label="기준선 통과일" value="" onChange={event => { const date = event.currentTarget.value, at = matchingIndex(prices, date); if (at != null) { if (date < cutoff) setRangeDays(0); priceDate(at); } }}>
         <option value="">날짜 선택</option>{[...crossings].reverse().map(marker => <option key={marker.date+marker.side} value={marker.date}>{marker.date} · {marker.side} {marker.level}</option>)}
       </select></label>
-    </div>
-    <p className="rsi-level-key" data-presentation-control><span>Buy 33.5 / 29.5</span><span>Sell 40 / 43</span><span>하향 Buy · 상향 Sell</span></p>
+    </div><span className="compact-toolbar-muted" data-presentation-control>Buy 33.5 / 29.5 · Sell 40 / 43 · 하향 Buy / 상향 Sell</span></CompactToolbar>
     <div className="rsi-workbench"><article className="ml-card rsi-chart-panel"><h3>{symbol} 관측 종가 + 참고 RSI</h3><p className="ml-source-line">{snapshot?.sources.find(source => source.id === market?.sourceId)?.lastObservation || '관측일 없음'} · {market?.unit || 'USD'}</p>
       {market ? <>{gate.ok ? <ObservedChart id="rsi-price" points={prices.slice(priceOffset)} unit={market.unit} label={`${symbol} 관측 종가`} selected={state.rsiIndex == null ? null : state.rsiIndex - priceOffset} onSelect={index => priceDate(index + priceOffset)} markers={visibleMarkers} plotHeight={heights.price} />
         : <div data-chart="rsi-price"><p className="ml-warning">{gate.reason} 가격 차트는 숨깁니다.</p></div>}

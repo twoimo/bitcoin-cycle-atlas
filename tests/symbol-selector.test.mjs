@@ -139,49 +139,67 @@ test('focus stays in the dialog and modal replacement/teardown release listeners
 
 test('keyboard activation reveals clipped rows only and preserves the combobox focus and option identity',t=>{
   const f=fixture(t);f.selector.open();
-  const dialog=f.selector.element;dialog.clientTop=1;dialog.clientHeight=174;
-  dialog.getBoundingClientRect=()=>({left:10,right:310,top:24,bottom:200});
-  const positions=new Map([['BTCUSD',{top:40,bottom:110}],['ETHUSD',{top:105,bottom:175}],['MSTR',{top:190,bottom:260}],['BMNR',{top:264,bottom:334}]]),calls=[];
-  for(const symbol of ['BTCUSD','ETHUSD','MSTR','BMNR']){
+  const dialog=f.selector.element,results=f.node('symbol-search-results');
+  dialog.clientTop=1;dialog.clientHeight=374;
+  results.clientTop=1;results.clientHeight=160;results.scrollTop=0;
+  results.getBoundingClientRect=()=>({left:10,right:310,top:99,bottom:261});
+  for(const [index,symbol] of ['BTCUSD','ETHUSD','MSTR','BMNR'].entries()){
     const row=f.node('symbol-option-'+symbol);
-    row.getBoundingClientRect=()=>positions.get(symbol);
-    row.scrollIntoView=options=>{calls.push({symbol,options});positions.set(symbol,{top:60,bottom:130});};
+    row.getBoundingClientRect=()=>({top:100+index*74-results.scrollTop,bottom:170+index*74-results.scrollTop});
+    row.scrollIntoView=()=>assert.fail('option navigation must not scroll the search dialog or its ancestors');
   }
   f.key('ArrowDown');
-  assert.equal(calls.length,0,'a fully visible ETH row must not move the scroll position');
+  assert.equal(results.scrollTop,0,'a fully visible ETH row must not move the scroll position');
   const identity=f.node('symbol-option-MSTR');
   f.key('ArrowDown');
-  assert.deepEqual(calls,[{symbol:'MSTR',options:{block:'nearest',inline:'nearest',behavior:'instant'}}]);
+  assert.equal(results.scrollTop,58,'MSTR is clipped by the list even though it is inside the outer dialog');
   assert.equal(f.doc.activeElement,f.input);
   assert.equal(f.input.getAttribute('aria-activedescendant'),identity.id);
   assert.equal(f.node('symbol-option-MSTR'),identity,'navigation keeps the existing option node');
   assert.equal(identity.getAttribute('aria-selected'),'true');
-  positions.set('ETHUSD',{top:-35,bottom:35});
-  f.key('ArrowUp');
-  assert.equal(calls.length,2,'an option clipped above the dialog must be revealed');
-  assert.equal(calls[1].symbol,'ETHUSD');
-  assert.equal(f.doc.activeElement,f.input);
   f.key('ArrowDown');
-  assert.equal(calls.length,2,'returning to the now-visible MSTR row must not scroll again');
+  assert.equal(results.scrollTop,132,'the last option is revealed at the list bottom');
+  f.key('ArrowUp');
+  assert.equal(results.scrollTop,132,'returning to an already visible option must not scroll');
+  f.key('ArrowUp');
+  assert.equal(results.scrollTop,74,'an option clipped above the list is revealed at its top');
+  f.key('ArrowUp');
+  assert.equal(results.scrollTop,0);
+  assert.equal(f.doc.activeElement,f.input);
+  assert.equal(dialog.scrollTop,0,'the heading and input stay in the unscrolled outer dialog');
 });
 
-test('opening on an offscreen current symbol reveals it after the dialog opens without stealing input focus',t=>{
-  const f=fixture(t,{symbol:'BMNR'}),dialog=f.selector.element,calls=[];
-  dialog.clientTop=1;dialog.clientHeight=174;
-  dialog.getBoundingClientRect=()=>({left:10,right:310,top:24,bottom:200});
-  const create=f.doc.createElement;let revealed=false;
+test('reopening a distant housing symbol reveals it in the list while preserving search focus and the unscrolled dialog',t=>{
+  const f=fixture(t,{symbol:'HOUSING-SEOUL',service:true}),dialog=f.selector.element,results=f.node('symbol-search-results'),scrolls=[];
+  dialog.clientTop=1;dialog.clientHeight=574;
+  results.clientTop=1;results.clientHeight=240;
+  results.getBoundingClientRect=()=>({left:10,right:310,top:199,bottom:441});
+  let listScrollTop=0;
+  Object.defineProperty(results,'scrollTop',{get:()=>listScrollTop,set:value=>{
+    assert.equal(dialog.getAttribute('open'),'','visibility is measured after showModal');
+    listScrollTop=value;scrolls.push(value);
+  }});
+  const create=f.doc.createElement;
   f.doc.createElement=tag=>{
     const node=create(tag);
-    node.getBoundingClientRect=()=>node.id==='symbol-option-BMNR'&&!revealed?{top:264,bottom:334}:{top:60,bottom:130};
-    node.scrollIntoView=options=>{
-      assert.equal(dialog.getAttribute('open'),'','visibility is measured after showModal');
-      calls.push({id:node.id,options});revealed=true;
-    };
+    node.getBoundingClientRect=()=>({top:200+results.children.indexOf(node)*74-listScrollTop,bottom:270+results.children.indexOf(node)*74-listScrollTop});
+    node.scrollIntoView=()=>assert.fail('opening must not scroll the search dialog or its ancestors');
     return node;
   };
   f.selector.open();
-  assert.deepEqual(calls,[{id:'symbol-option-BMNR',options:{block:'nearest',inline:'nearest',behavior:'instant'}}]);
-  assert.equal(f.input.getAttribute('aria-activedescendant'),'symbol-option-BMNR');
+  assert.equal(results.scrollTop,496);
+  assert.equal(f.node('symbol-option-HOUSING-SEOUL').getBoundingClientRect().bottom,440);
+  assert.equal(f.input.getAttribute('aria-activedescendant'),'symbol-option-HOUSING-SEOUL');
+  assert.equal(f.doc.activeElement,f.input);
+  f.input.value='HYPE';f.input.oninput();
+  assert.equal(results.scrollTop,0,'filtering reveals the remaining result without scrolling the input');
+  assert.equal(f.input.getAttribute('aria-activedescendant'),'symbol-option-HYPE');
+  f.selector.close();dialog.scrollTop=80;
+  f.selector.open();
+  assert.deepEqual(scrolls,[496,0,496]);
+  assert.equal(dialog.scrollTop,0,'reopening clears any previously retained outer scroll offset');
+  assert.equal(f.input.value,'');
+  assert.equal(f.input.getAttribute('aria-activedescendant'),'symbol-option-HOUSING-SEOUL');
   assert.equal(f.doc.activeElement,f.input);
   assert.equal(f.destinations.length,0,'revealing the current row does not navigate');
 });

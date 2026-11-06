@@ -1,0 +1,61 @@
+/* One shell-owned row; original controls stay with their legacy event owners. */
+:root { --legacy-toolbar-backdrop: rgba(0,0,0,.6); }
+.legacy-workspace-toolbar { display:flex; align-items:center; gap:4px; flex:1 0 auto; min-width:0; height:100%; white-space:nowrap; color:var(--text); font:12px/1.4 var(--font); }
+.legacy-toolbar-group { flex:none; gap:4px; }
+.legacy-toolbar-title { flex:none; color:var(--text); font-weight:600; padding-inline:4px; }
+.legacy-toolbar-field { position:relative; display:flex; align-items:center; flex:none; min-width:0; margin:0; }
+.legacy-toolbar-field-label { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+.legacy-toolbar-field :is(input,select) { box-sizing:border-box; width:112px; max-width:100%; min-width:0; min-height:32px; height:32px; padding:4px 8px; border:1px solid var(--border-strong); border-radius:4px; background:var(--bg); color:var(--text); font:12px/1.4 var(--font); }
+.legacy-toolbar-field input::placeholder { color:var(--muted); opacity:1; }
+.legacy-toolbar-search input { width:160px; }
+.legacy-toolbar-action { display:inline-flex; align-items:center; justify-content:center; flex:none; gap:4px; min-width:32px; min-height:32px; height:32px; padding:4px 8px; border:1px solid transparent; border-radius:4px; color:var(--muted); background:transparent; font:12px/1.4 var(--font); white-space:nowrap; cursor:pointer; }
+.legacy-toolbar-action:hover:not(:disabled) { color:var(--text); background:var(--surface-hover); }
+.legacy-toolbar-action[aria-pressed=true] { color:var(--accent); background:var(--accent-soft); }
+.legacy-toolbar-action:disabled { cursor:not-allowed; opacity:.45; }
+.legacy-toolbar-action svg { width:17px; height:17px; flex:none; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.legacy-toolbar-icon-action { width:32px; padding:4px; }
+.legacy-toolbar-icon-action > span:not(.daily-help-icon) { display:none; }
+.legacy-toolbar-icon-action .daily-help-icon { display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border:1px solid currentColor; border-radius:50%; font:600 11px/1 var(--font); }
+.legacy-toolbar-actions { margin-left:auto; }
+.legacy-toolbar-summary { display:inline-block; flex:none; max-width:180px; min-width:0; padding-inline:4px; overflow:hidden; text-overflow:ellipsis; color:var(--muted); font-size:11px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.legacy-toolbar-month { min-width:96px; text-align:center; color:var(--text); font-size:12px; }
+.legacy-toolbar-state { color:var(--accent); }
+.legacy-workspace-toolbar :is(button,input,select):focus-visible,
+.legacy-toolbar-dialog :is(button,input,select,a):focus-visible { outline:2px solid var(--focus,var(--accent)); outline-offset:-2px; }
+.legacy-toolbar-dialog { box-sizing:border-box; width:min(440px,calc(100% - 24px)); max-height:calc(100dvh - 24px); padding:0; border:1px solid var(--border-strong); border-radius:8px; background:var(--surface); color:var(--text); overflow:hidden; }
+.legacy-toolbar-dialog[open] { display:flex; flex-direction:column; }
+.legacy-toolbar-dialog::backdrop { background:var(--legacy-toolbar-backdrop); }
+.legacy-toolbar-dialog-heading { display:flex; flex:none; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; border-bottom:1px solid var(--border); background:var(--surface); }
+.legacy-toolbar-dialog-heading h2 { margin:0; font:600 15px/1.5 var(--font); }
+.legacy-toolbar-dialog-heading > button { min-width:44px; min-height:36px; padding:4px 8px; color:var(--text); font:12px/1.4 var(--font); border-radius:4px; }
+.legacy-toolbar-dialog-heading > button:hover { background:var(--surface-hover); }
+.legacy-toolbar-dialog-body { display:flex; flex-direction:column; flex:1 1 auto; min-height:0; gap:12px; padding:16px; overflow:auto; overscroll-behavior:contain; }
+.legacy-toolbar-dialog-body > * { flex-shrink:0; }
+.legacy-toolbar-detail-field { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); gap:12px; }
+.legacy-toolbar-detail-field .legacy-toolbar-field-label { position:static; width:auto; height:auto; clip-path:none; white-space:normal; font:12px/1.5 var(--font); color:var(--muted); }
+.legacy-toolbar-detail-field select { width:100%; }
+.legacy-toolbar-dialog-body > .legacy-toolbar-action { align-self:flex-start; border-color:var(--border-strong); }
+.legacy-toolbar-dialog-body > .legacy-toolbar-summary { max-width:none; padding:0; white-space:normal; }
+.legacy-toolbar-source { color:var(--muted); font:var(--copy-size,14px)/var(--copy-leading,1.8) var(--font); overflow-wrap:anywhere; }
+.legacy-toolbar-source p { margin:12px 0 0; }
+.legacy-toolbar-source a { color:var(--accent); text-decoration:underline; text-underline-offset:3px; }
+/* Hiding takes effect only after every replacement is mounted and synchronized. */
+body[data-center-toolbar-hosted=true] #data-view > :is(.daily-heading,.asset-filters,.asset-table-summary,.asset-context,.asset-mobile-nav),
+body[data-center-toolbar-hosted=true] #ipo-view > :is(.ipo-heading,.ipo-calendar-nav,.ipo-calendar-message),
+body[data-center-toolbar-hosted=true] #evidence-view > :is(.evidence-mobile-heading,.evidence-controls,.evidence-pagination) { display:none!important; }
+body[data-center-toolbar-hosted=true][data-embedded=true] #main { padding:0; }
+body[data-center-toolbar-hosted=true] #ipo-view,
+body[data-center-toolbar-hosted=true] #evidence-view { padding:0; gap:0; }
+body[data-center-toolbar-hosted=true] #evidence-view { grid-template-rows:minmax(0,1fr); }
+body[data-center-toolbar-hosted=true] #evidence-view .evidence-table-shell,
+body[data-center-toolbar-hosted=true] #ipo-view .ipo-table-shell { position:relative; border-radius:0; }
+body[data-center-toolbar-hosted=true] :is(.evidence-table,.ipo-table) > caption { position:absolute; width:1px; height:1px; padding:0; margin:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+@media(max-width:760px),(pointer:coarse) {
+  .legacy-toolbar-action,.legacy-toolbar-field :is(input,select) { min-height:44px; height:44px; }
+  .legacy-toolbar-icon-action { width:44px; min-width:44px; }
+  .legacy-toolbar-title { display:none; }
+  .legacy-toolbar-search input { width:136px; }
+  .legacy-toolbar-dialog-heading > button { min-height:44px; }
+  .legacy-toolbar-dialog-heading { padding:8px 12px; }
+  .legacy-toolbar-dialog-body { padding:12px; }
+}

@@ -1,6 +1,7 @@
 import { useMemo, type ReactNode } from 'react';
 import { BarChart, ChartCard, LineChart, ThemeProvider, type ChartEvent, type ChartTheme } from 'ztd-charts';
 import { axes, Empty, finite, fmt } from './common.js';
+import { CompactToolbar,CompactToolbarMenu } from './compact-toolbar.js';
 
 // ztd-charts 0.2.1 is a direct runtime dependency. Its MIT notice and reviewed
 // upstream identity are recorded in docs/design-system/ztd-charts.md.
@@ -49,9 +50,9 @@ export function observedChartModel(points: readonly Observation[]) {
   return { data, indexByDate, validCount, hasIsolatedObservation: [...runLengths.values()].some(count => count === 1) };
 }
 
-export function ObservedResearchChart({ id, points, unit, label, selected, onSelect }: {
+export function ObservedResearchChart({ id, points, unit, label, selected, onSelect, compactToolbar = false }: {
   id: string; points: readonly Observation[]; unit: string; label: string;
-  selected: number | null; onSelect: (sourceIndex: number) => void;
+  selected: number | null; onSelect: (sourceIndex: number) => void; compactToolbar?: boolean;
 }) {
   const model = useMemo(() => observedChartModel(points), [points]);
   if (!model.validCount) return <div data-chart={id}><Empty>{label}에 유효한 수치가 없습니다.</Empty></div>;
@@ -66,9 +67,13 @@ export function ObservedResearchChart({ id, points, unit, label, selected, onSel
     const sourceIndex = model.indexByDate.get(event.key);
     if (sourceIndex !== undefined && sourceIndex !== index) onSelect(sourceIndex);
   };
+  const dateControl = <label className={compactToolbar ? 'compact-toolbar-field' : 'ml-date-selector'}>관측일 선택 <input type="range" min="0" max={points.length - 1} step="1" value={index} data-date={id}
+    aria-label={`${label} 관측일`} aria-valuetext={`${date}, ${finite(value) ? `${fmt(value)} ${unit}` : '관측값 없음'}`}
+    disabled={points.length === 1} onChange={event => onSelect(Number(event.currentTarget.value))} /></label>;
   return <div data-chart={id} data-ztd-chart="observed" data-source-count={points.length}>
+    {compactToolbar && <CompactToolbar label="선택 관측" order={20}><span className="compact-toolbar-summary" data-selected-date={date} data-selected-index={index}>{readout}</span><CompactToolbarMenu name="market-date" label="관측일" title={`${label} 관측일 선택`}><p className="compact-toolbar-summary">{readout}</p>{dateControl}</CompactToolbarMenu></CompactToolbar>}
     <figure className="ml-chart">
-      <figcaption><strong>{label}</strong><span data-selected-date={date} data-selected-index={index}>{readout}</span></figcaption>
+      {compactToolbar ? <figcaption className="atlas-sr-only">{label} · {readout}</figcaption> : <figcaption><strong>{label}</strong><span data-selected-date={date} data-selected-index={index}>{readout}</span></figcaption>}
       <LineChart data={model.data} x="date" y="value" series="segment" xType="band"
         curve="linear" zero={false} endLabels={false} colorMode="highlight" highlight={allSeries} dots={model.hasIsolatedObservation ? true : 'auto'}
         height={290} animate={false} locale="ko-KR" format={observedNumber} unit={` ${unit}`} yLabel={unit}
@@ -80,9 +85,7 @@ export function ObservedResearchChart({ id, points, unit, label, selected, onSel
           const point = sourceIndex === undefined ? null : points[sourceIndex];
           return point ? <span>{point[0]} · {finite(point[1]) ? `${fmt(point[1])} ${unit}` : '관측값 없음'}</span> : null;
         }} />
-      <label className="ml-date-selector">관측일 선택 <input type="range" min="0" max={points.length - 1} step="1" value={index} data-date={id}
-        aria-label={`${label} 관측일`} aria-valuetext={`${date}, ${finite(value) ? `${fmt(value)} ${unit}` : '관측값 없음'}`}
-        disabled={points.length === 1} onChange={event => onSelect(Number(event.currentTarget.value))} /></label>
+      {!compactToolbar && dateControl}
     </figure>
   </div>;
 }

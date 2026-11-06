@@ -8,6 +8,7 @@ import { RsiChartCanvas,axisNumber,type Pick } from '../components/rsi-chart-can
 import { applyChartCommand,boundedDates,chartRange,day,nearestPoint,initialChartView,type Pane,type RsiChartView,type RsiChartCache } from '../rsi-chart-model.js';
 import { RsiHistory,type RsiHistoryState } from './rsi-history.js';
 import { rsiCrossings } from '../rsi-crossings.js';
+import {CompactToolbar,CompactToolbarMenu} from '../components/compact-toolbar.js';
 const History=memo(RsiHistory);
 type Props={symbol:string;market:Market;snapshot:MarketSnapshot;now:Date;rows:RsiRow[];revision?:string;epoch:number;active:boolean;embedded:boolean;historyCache?:Map<string,RsiHistoryState>;chartCache?:Map<string,RsiChartCache>;onDate:(index:number)=>void;comparison:React.ReactNode;references:React.ReactNode};
 const panes=['data','indicators','settings','method','help','export','date','search'];
@@ -121,11 +122,15 @@ export function RsiWorkbench(props:Props) {
   const [jump,setJump]=useState(view.selected),[from,setFrom]=useState(view.start),[to,setTo]=useState(view.end);
   const [menuPulse,setMenuPulse]=useState(0);
   return <section className="rsi-workbench" data-tab={tab} aria-label={`${symbol} 차트 작업 화면`}>
-    <header className="rsi-workbench-header"><div className="rsi-quote"><strong>{symbol}</strong><span>{view.frequency==='daily'?'1D':'1W'}</span><span>{market.unit}</span><span>{point?.[0]}</span><b>{point?axisNumber(point[1]):'—'}</b><span className={change!=null&&change>=0?'is-gain':'is-loss'}>{change==null?'':`${change>=0?'+':''}${change.toFixed(2)}%`}</span></div>
-      <div className="rsi-workbench-tabs" role="group" aria-label="삼플레 화면">{[['chart','차트'],['backtest','백테스트'],['records','기록']].map(([id,label])=><button key={id} type="button" aria-pressed={tab===id} onClick={()=>setTab(id as typeof tab)}>{label}</button>)}</div>
-    </header>
-    {bar&&tab==='chart'&&<div className="rsi-ohlc"><span>O {axisNumber(bar[1])}</span><span>H {axisNumber(bar[2])}</span><span>L {axisNumber(bar[3])}</span><span>C {axisNumber(bar[4])}</span>{bar[5]!==null&&<span>V {bar[5].toLocaleString()}</span>}</div>}
-    {!embedded&&<div className="rsi-toolbar">{[[365,'1년'],[1095,'3년'],[0,'전체']].map(([days,label])=><button key={days} type="button" aria-pressed={Number(days)===0&&view.start===prices[0][0]||Number(days)>0&&Math.abs(day(view.end)-day(view.start)-Number(days))<2} onClick={()=>command.current('span',days)}>{label}</button>)}<button type="button" onClick={()=>command.current('zoom',.7)}>확대</button><button type="button" onClick={()=>command.current('zoom',1.4)}>축소</button><button type="button" onClick={()=>command.current('pane','settings')}>설정</button></div>}
+    <CompactToolbar label={`${symbol} 조회·보기`}>
+      <CompactToolbarMenu name="rsi-observation" title={`${symbol} 선택 관측`} label={<span className="compact-toolbar-summary">선택 <span>{point?.[0]}</span><b>{point?axisNumber(point[1]):'—'}</b><span>{market.unit}</span><span className={change!=null&&change>=0?'gain':'loss'}>{change==null?'':`${change>=0?'+':''}${change.toFixed(2)}%`}</span></span>}>
+        <dl><dt>종목 · 주기</dt><dd>{symbol} · {view.frequency==='daily'?'1D':'1W'}</dd><dt>선택일 · 종가</dt><dd>{point?.[0]} · {point?axisNumber(point[1]):'—'} {market.unit}</dd><dt>이전 관측 대비</dt><dd>{change==null?'—':`${change>=0?'+':''}${change.toFixed(2)}%`}</dd></dl>
+        {bar&&<div className="compact-toolbar-summary"><span>O {axisNumber(bar[1])}</span><span>H {axisNumber(bar[2])}</span><span>L {axisNumber(bar[3])}</span><span>C {axisNumber(bar[4])}</span>{bar[5]!==null&&<span>V {bar[5].toLocaleString()}</span>}</div>}
+        <p className="compact-toolbar-muted">표시 구간 {view.start} ~ {view.end} · 가격 단위 {market.unit}</p>
+      </CompactToolbarMenu>
+      <div className="compact-toolbar-tabs rsi-workbench-tabs" role="group" aria-label="삼플레 화면">{[['chart','차트'],['backtest','백테스트'],['records','기록']].map(([id,label])=><button key={id} data-rsi-view={id} type="button" aria-pressed={tab===id} onClick={()=>setTab(id as typeof tab)}>{label}</button>)}</div>
+      {!embedded&&<div className="rsi-toolbar compact-toolbar-tabs">{[[365,'1년'],[1095,'3년'],[0,'전체']].map(([days,label])=><button className="compact-toolbar-action" key={days} type="button" aria-pressed={Number(days)===0&&view.start===prices[0][0]||Number(days)>0&&Math.abs(day(view.end)-day(view.start)-Number(days))<2} onClick={()=>command.current('span',days)}>{label}</button>)}<button className="compact-toolbar-action" type="button" onClick={()=>command.current('zoom',.7)}>확대</button><button className="compact-toolbar-action" type="button" onClick={()=>command.current('zoom',1.4)}>축소</button><button className="compact-toolbar-action" type="button" onClick={()=>command.current('pane','settings')}>설정</button></div>}
+    </CompactToolbar>
     {status&&<p className="rsi-workbench-status" role="status">{status}</p>}
     <div className="rsi-workbench-body">
       {tab==='chart'?<RsiChartCanvas menuPulse={menuPulse} symbol={symbol} unit={market.unit} prices={displayPrices} bars={bars} rows={rows} view={view} active={active} hover={hover} svgRef={svg}

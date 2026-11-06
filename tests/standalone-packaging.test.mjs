@@ -119,7 +119,7 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   assert.equal(verification.modules, Object.keys(bundle.imports).length);
   assert.equal(verification.snapshots, 9); // Existing eight plus the research snapshot.
   assert.ok(verification.forecastRecords>=5,'all five initial economic scenarios have actual preserved outputs');
-  assert.equal(verification.stylesheets, 31); // Existing 30 plus the monthly backtest workspace.
+  assert.equal(verification.stylesheets, 33); // Existing 31 plus the shared and legacy outer toolbars.
   const monthlyStyle = `<style>\n${await readFile(resolve(root, 'dist/monthly-backtest.css'), 'utf8')}\n</style>`;
   assert.equal(html.split(monthlyStyle).length - 1, 1, 'monthly backtest styles are preserved exactly once');
   assert.match(html,/\.forecast-journal\s*\{/,'the archived forecast workspace retains its offline styles');
@@ -127,7 +127,7 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   assert.equal(html.split(replayStyle).length - 1, 1, 'inline chart replay embeds its exact stylesheet once');
   const shellStyle = `<style>\n${await readFile(resolve(root, 'dist/atlas-shell.css'), 'utf8')}\n</style>`;
   assert.equal(html.split(shellStyle).length - 1, 1, 'the shared shell remains exact and offline');
-  for(const file of ['vendor/skullet/styles.css','loading-surfaces.css']){const style=`<style>\n${await readFile(resolve(root,'dist',file),'utf8')}\n</style>`;assert.equal(html.split(style).length-1,1,file+' is exact and offline');}
+  for(const file of ['vendor/skullet/styles.css','loading-surfaces.css','compact-toolbar.css','legacy-workspace-toolbar.css']){const style=`<style>\n${await readFile(resolve(root,'dist',file),'utf8')}\n</style>`;assert.equal(html.split(style).length-1,1,file+' is exact and offline');}
   await assert.rejects(verifyStandaloneArtifact(html.replace(replayStyle, '<style>.chart-replay-controls{display:none}</style>'), resolve(root, 'dist')), /Missing or changed stylesheet: chart-replay\.css/);
   const {stdout} = await run(process.execPath, ['--experimental-vm-modules', runtime, 'artifact', first]);
   assert.deepEqual(JSON.parse(stdout), {modules:verification.modules, parsed:true, linked:true});

@@ -4,10 +4,11 @@ on:
   pull_request:
     paths:
       - 'dist/**'
+      - 'apps/web/**'
       - 'tools/hallmark/**'
       - 'scripts/verify-hallmark-design.mjs'
       - 'scripts/hallmark-source-scope.mjs'
-      - 'tests/hallmark-source-scope.test.mjs'
+      - 'tests/hallmark-*.test.mjs'
       - '.github/workflows/hallmark-design.yml'
   workflow_dispatch:
 
@@ -20,8 +21,27 @@ concurrency:
 
 jobs:
   audit:
+    name: ${{ matrix.job_name }}
     runs-on: ubuntu-latest
     timeout-minutes: 16
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - suite: core
+            job_name: audit
+            baseline: 0c1ed40e1b9b6c76f5621d087737dc57f174b51e
+            baseline_dir: build/hallmark-baseline
+            out_dir: build/hallmark
+            artifact_prefix: hallmark-design
+            route_count: 8
+          - suite: workspaces
+            job_name: workspace audit
+            baseline: 3b6373906dbdd3ef321db31deaf8a8f785da61c3
+            baseline_dir: build/hallmark-workspace-baseline
+            out_dir: build/hallmark-workspaces
+            artifact_prefix: hallmark-workspaces
+            route_count: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -35,8 +55,8 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          ref: 0c1ed40e1b9b6c76f5621d087737dc57f174b51e
-          path: build/hallmark-baseline
+          ref: ${{ matrix.baseline }}
+          path: ${{ matrix.baseline_dir }}
       - name: Install isolated pinned browser tooling
         timeout-minutes: 2
         env:
@@ -45,7 +65,7 @@ jobs:
         run: |
           set -euo pipefail
           hallmark_node_dir="$RUNNER_TEMP/hallmark-node"
-          npm install --prefix "$hallmark_node_dir" --no-save --no-package-lock --ignore-scripts --no-audit --no-fund puppeteer-core@25.16.0
+          npm install --prefix "$hallmark_node_dir" --no-save --no-package-lock --ignore-scripts --no-audit --no-fund puppeteer-core@25.16.0 linkedom@0.18.15
           hallmark_chrome_path="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium)"
           test -n "$hallmark_chrome_path"
           echo "HALLMARK_PUPPETEER=$hallmark_node_dir" >> "$GITHUB_ENV"
@@ -71,20 +91,20 @@ jobs:
           fc-list ':lang=ko' file | grep -F -- "$hallmark_font_dir/NotoSansCJKkr-Regular.otf"
           echo "HALLMARK_FONT_FILE=$hallmark_font_dir/NotoSansCJKkr-Regular.otf" >> "$GITHUB_ENV"
           echo "HALLMARK_FONT_RECEIPT commit=f8d157532fbfaeda587e826d4cd5b21a49186f7c font_blob=$hallmark_font_blob license_blob=$hallmark_font_license_blob"
-      - name: Audit all static files and eight rendered routes before and after
+      - name: Audit all static files and ${{ matrix.route_count }} rendered routes before and after
         run: |
-          node --test tests/hallmark-source-scope.test.mjs
+          node --test tests/hallmark-*.test.mjs
           node --check scripts/verify-hallmark-design.mjs
-          node scripts/verify-hallmark-design.mjs --baseline build/hallmark-baseline --out build/hallmark
+          node scripts/verify-hallmark-design.mjs --suite "${{ matrix.suite }}" --baseline "${{ matrix.baseline_dir }}" --out "${{ matrix.out_dir }}"
       - name: Preserve findings, source receipts and before/after screenshots
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: hallmark-design-${{ github.event.pull_request.head.sha || github.sha }}
+          name: ${{ matrix.artifact_prefix }}-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
-            build/hallmark/receipt.json
-            build/hallmark/reports
-            build/hallmark/work/.hallmark
+            ${{ matrix.out_dir }}/receipt.json
+            ${{ matrix.out_dir }}/reports
+            ${{ matrix.out_dir }}/work/.hallmark
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 30

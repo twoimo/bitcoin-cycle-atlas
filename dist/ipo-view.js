@@ -1,5 +1,5 @@
 import { setLoadingSurface } from './loading-surfaces.js';
-import { mountIpoMonthCalendar } from './ipo-month-calendar.js?v=1.32.0';
+import { mountIpoMonthCalendar } from './ipo-month-calendar.js?v=1.32.1';
 // 공모주 청약·수요예측 캘린더. 38커뮤니케이션 집계 원자료를 표시만 하며,
 // 상태와 D-day는 열람 시점의 날짜로 다시 계산한다(저장된 상태 문자열을 신뢰하지 않는다).
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -7,6 +7,23 @@ const normalize = v => String(v ?? '').normalize('NFKC').toLocaleLowerCase();
 const DAY = 86400000;
 const utcDay = iso => { const [y, m, d] = String(iso).split('-').map(Number); return Date.UTC(y, (m || 1) - 1, d || 1); };
 const todayIso = now => new Date(now.getTime() + 9 * 3600000).toISOString().slice(0, 10);
+
+// Keep the collected source description and its exact HTTP(S) scheme. The
+// calendar's source owner renders this before the outer toolbar mirrors it.
+export function ipoSourceAttributionMarkup(doc) {
+  const description = typeof doc?.['출처'] === 'string' ? doc['출처'].trim() : '';
+  if (!description) return '원자료 출처 미확인';
+  let markup = '', offset = 0;
+  for (const match of description.matchAll(/https?:\/\/[^\s<>"')]+/gi)) {
+    let url;
+    try { url = new URL(match[0]); } catch { continue; }
+    if (!['http:', 'https:'].includes(url.protocol)) continue;
+    markup += esc(description.slice(offset, match.index));
+    markup += `<a href="${esc(url.href)}" target="_blank" rel="noopener noreferrer">${esc(match[0])}</a>`;
+    offset = match.index + match[0].length;
+  }
+  return '원자료 · ' + markup + esc(description.slice(offset));
+}
 
 export function ipoMilestone(item) {
   const forecast = item?.['수요예측']?.[0] ?? null, subscribe = item?.['청약']?.[0] ?? null;
@@ -119,6 +136,7 @@ export function initIpoView({ root, load = null, embeddedData = () => null, now 
       : list.length ? list.map(ipoRowMarkup).join('') : '<tr><td colspan="9">조건에 맞는 공모 일정이 없습니다.</td></tr>';
     el('.ipo-count').textContent = `${list.length} / ${state.rows.length}건`;
     el('.ipo-source').textContent = `원자료 수집 ${state.doc?.['수집일시_KST']?.slice(0, 10) ?? '미확인'} · 상태·D-day는 ${today} 기준 재계산`;
+    el('.ipo-source-attribution').innerHTML = ipoSourceAttributionMarkup(state.doc);
     calendar.render(list,state.rows,today);
     const message=el('.ipo-calendar-message');
     if(message){message.hidden=state.status!=='error';message.textContent=state.status==='error'?'일정 자료를 불러오지 못했습니다. 목록에서 오류 내용을 확인하세요.':'';}

@@ -1,5 +1,6 @@
 import { assetEconomics, type EconomicsResult } from '@atlas/domain/market-lab';
 import { Original, errorText, fmt } from '../components/common.js';
+import { CompactToolbar } from '../components/compact-toolbar.js';
 
 export const economicsFields = [
   ['costBasis', '취득원가', '0.01', '0.01'], ['residual', '잔존가치', '0', '0.01'], ['lifeYears', '내용연수 (년)', '1', '1'],
@@ -34,8 +35,8 @@ export function EconomicsPanel({ state, onChange }: { state: EconomicsState; onC
     onChange(calculateEconomics({ inputs: { costBasis: '100000', residual: '10000', lifeYears: '5', annualRevenue: '40000', annualOpex: '15000', discountRate: '8' }, result: null, error: '', hypothetical: true }));
   }
   return <>
-    <div className="ml-section-heading"><div><h2>현금흐름</h2></div><span className="ml-pill">가정 입력</span></div>
-    <div className="ml-two-col ml-ai-calc"><article className="ml-card"><div className="ml-card-head"><h3>자산 현금흐름 계산기</h3><button type="button" data-action="economics-example" onClick={example}>예시 채우기</button></div>
+    <CompactToolbar label="현금흐름 계산 도구"><span className="compact-toolbar-muted">가정 입력</span><button className="compact-toolbar-action" type="button" data-action="economics-example" onClick={example}>예시 채우기</button>{state.result&&<span className="compact-toolbar-summary">NPV <strong>{fmt(state.result.npv)}</strong><span className="compact-toolbar-muted">{state.hypothetical?'가상 예시':'사용자 가정'}</span></span>}</CompactToolbar>
+    <div className="ml-two-col ml-ai-calc"><article className="ml-card"><h3>자산 현금흐름 계산기</h3>
       <p className="ml-muted">금액은 같은 통화로 입력하세요.</p>
       <form id="ml-economics-form" onSubmit={event => { event.preventDefault(); onChange(calculateEconomics(state)); }}><div className="ml-input-grid">
         {economicsFields.map(([key, label, min, step]) => <label key={key} className="ml-field" htmlFor={`ml-econ-${key}`}>{label}<input id={`ml-econ-${key}`} name={key} data-econ={key} type="number" min={min} max={key === 'lifeYears' || key === 'discountRate' ? 100 : undefined} step={step} required value={state.inputs[key] ?? ''}

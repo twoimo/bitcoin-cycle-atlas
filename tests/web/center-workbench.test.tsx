@@ -14,9 +14,14 @@ test('center navigation retains all perimeter nodes, restores controls and bound
   mountCenterWorkbench();const plot=create('div');plot.className='atlas-plot';const svg=create('svg');plot.append(svg);document.body.append(plot);await new Promise(resolve=>setImmediate(resolve));
   const click=(selector:string)=>document.querySelector(selector)!.dispatchEvent(new dom.Event('click',{bubbles:true,cancelable:true}));
   click('[data-atlas-page=rsi]');const frame=document.querySelector('iframe')!;
+  const toolbar=document.getElementById(frame.dataset.toolbarId!);
+  assert.ok(toolbar&&toolbar.parentElement===document.querySelector('.atlas-canvas-heading'),'The active tool mounts inside the original outer toolbar');
+  assert.equal(toolbar.hidden,false);assert.equal(frame.dataset.centerEpoch,'1');
   assert.equal(frame.parentElement,plot);assert.match(frame.getAttribute('src')!,/charts\/\?symbol=TQQQ&embedded=1/);
   assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,true);assert.equal(svg.getAttribute('aria-hidden'),'true');assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,true);
   click('[data-atlas-page=scenario]');assert.equal(document.querySelector('iframe'),frame);assert.equal(posts.length,1);
+  assert.equal(document.getElementById(frame.dataset.toolbarId!),toolbar,'Changing a React view cannot detach its live portal target');
+  assert.equal(frame.dataset.centerEpoch,'2');
   (document.querySelector('#outside-zoom') as HTMLButtonElement).disabled=false;
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,true,'late hidden BTC updates cannot re-enable its zoom');
@@ -35,6 +40,16 @@ test('center navigation retains all perimeter nodes, restores controls and bound
   assert.match(urls.at(-1)!,/symbol=HOUSING-SEOUL&region=seoul$/,'catalog identity owns the housing region');
   assert.equal(document.body.dataset.centerTool,'housing');
   click('[data-atlas-page=outlook]');assert.equal((frame as HTMLIFrameElement).hidden,true);assert.equal(svg.hasAttribute('aria-hidden'),false);assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,false);assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,false);
+  assert.equal(toolbar.hidden,true,'Returning to the price chart cannot retain a previous tool header');
+  const retainedButton=create('button') as HTMLButtonElement,retainedSelect=create('select') as HTMLSelectElement;
+  retainedButton.textContent='Retained portal action';retainedSelect.innerHTML='<option>Retained region</option>';
+  toolbar.append(retainedButton,retainedSelect);
+  click('[data-atlas-page=rsi]');
+  assert.equal(document.getElementById(frame.dataset.toolbarId!),toolbar,'Reopening reuses the live portal owner');
+  assert.equal(toolbar.hidden,false);assert.notEqual(toolbar.inert,true,'A retained toolbar is not a background-chart control');
+  assert.equal(retainedButton.disabled,false,'Reopening does not disable retained portal buttons');
+  assert.equal(retainedSelect.disabled,false,'Reopening does not disable retained portal selects');
+  assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,true,'The background chart stays protected');
 });
 
 test('static project navigation retains perimeter identity and rejects stale or foreign frames',async t=>{

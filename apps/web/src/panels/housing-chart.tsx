@@ -1,5 +1,6 @@
 import { useEffect,useRef,useState } from 'react';
 import type { HousingRow } from '@atlas/domain/housing';
+import {CompactToolbar,CompactToolbarMenu} from '../components/compact-toolbar.js';
 export const stateName={above:'상회',neutral:'중립',below:'하회',warmup:'산정 전'};
 const number=(n:number|null,digits=0)=>n===null?'—':n.toLocaleString('ko-KR',{maximumFractionDigits:digits,minimumFractionDigits:digits});
 export function HousingChart({rows,start,end,selected,onRange,onSelect}:{rows:HousingRow[];start:number;end:number;selected:string;onRange:(start:number,end:number)=>void;onSelect:(month:string)=>void}){
@@ -14,7 +15,15 @@ export function HousingChart({rows,start,end,selected,onRange,onSelect}:{rows:Ho
   function zoom(factor:number,anchor=.5){const n=Math.min(rows.length,Math.max(12,Math.round((end-start+1)*factor))),center=start+(end-start+1)*anchor,a=Math.max(0,Math.min(rows.length-n,Math.round(center-n*anchor)));onRange(a,a+n-1);}
   useEffect(()=>{const node=host.current;if(!node)return;const wheel=(e:WheelEvent)=>{e.preventDefault();const b=node.getBoundingClientRect();zoom(e.deltaY>0?1.18:.85,Math.max(0,Math.min(1,(e.clientX-b.left-left)/plotWidth)));};node.addEventListener('wheel',wheel,{passive:false});return()=>node.removeEventListener('wheel',wheel);});
   return <div className="housing-chart" ref={host}>
-    <div className="housing-chart-readout" aria-live="off"><time>{selectedRow?.month}</time><span>실거래지수 <b>{number(selectedRow?.price??null,2)}</b></span><span>매매 <b>{number(selectedRow?.volume??null)}</b>건</span><span>평균 <b>{number(selectedRow?.average??null)}</b></span><strong className={`housing-state ${selectedRow?.state}`}>{selectedRow?stateName[selectedRow.state]:'—'}</strong></div>
+    <CompactToolbar label="부동산 관측·표시 구간" order={30}>
+      <CompactToolbarMenu name="housing-observation" title="부동산 선택월 관측" label={<span className="compact-toolbar-summary">선택 <time>{selectedRow?.month}</time> · 지수 <b>{number(selectedRow?.price??null,2)}</b></span>}>
+        <div className="housing-chart-readout compact-toolbar-summary" aria-live="off"><time>{selectedRow?.month}</time><span>실거래지수 <b>{number(selectedRow?.price??null,2)}</b></span><span>매매 <b>{number(selectedRow?.volume??null)}</b>건</span><span>평균 <b>{number(selectedRow?.average??null)}</b>건</span><strong className={`housing-state ${selectedRow?.state}`}>{selectedRow?stateName[selectedRow.state]:'—'}</strong></div>
+      </CompactToolbarMenu>
+      <CompactToolbarMenu name="housing-chart-range" label="표시 구간" title="부동산 차트 표시 구간">
+        <div className="compact-toolbar-group"><button className="compact-toolbar-action" type="button" onClick={()=>zoom(.75)} aria-label="부동산 차트 확대">＋</button><button className="compact-toolbar-action" type="button" onClick={()=>zoom(1.3)} aria-label="부동산 차트 축소">−</button><button className="compact-toolbar-action" type="button" onClick={()=>onRange(Math.max(0,rows.length-60),rows.length-1)}>5년</button><button className="compact-toolbar-action" type="button" onClick={()=>onRange(0,rows.length-1)}>전체</button></div>
+        <label className="compact-toolbar-field">{visible[0]?.month} ~ {visible.at(-1)?.month}<input type="range" aria-label="부동산 차트 과거 구간 이동" min={0} max={Math.max(0,rows.length-(end-start+1))} value={start} onChange={e=>{const n=end-start;onRange(Number(e.target.value),Number(e.target.value)+n);}}/></label>
+      </CompactToolbarMenu>
+    </CompactToolbar>
     <svg width={width} height={height} role="application" aria-label="아파트 실거래지수·거래량 차트. 휠 확대 축소, 드래그 이동, 방향키 월 선택, 더하기 빼기 확대 축소, Home 전체" tabIndex={0}
       onKeyDown={e=>{if(e.key==='+'||e.key==='='){e.preventDefault();zoom(.8);}if(e.key==='-'){e.preventDefault();zoom(1.25);}if(e.key==='Home'){e.preventDefault();onRange(0,rows.length-1);}if(['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();const i=Math.max(0,Math.min(rows.length-1,rows.findIndex(r=>r.month===selected)+(e.key==='ArrowLeft'?-1:1)));onSelect(rows[i].month);if(i<start)onRange(i,Math.min(rows.length-1,i+end-start));if(i>end)onRange(Math.max(0,i-(end-start)),i);}}}
       onPointerDown={e=>{drag.current={x:e.clientX,start,end};e.currentTarget.setPointerCapture(e.pointerId);}}
@@ -30,8 +39,7 @@ export function HousingChart({rows,start,end,selected,onRange,onSelect}:{rows:Ho
       {visible.filter((_,i)=>i%Math.max(1,Math.ceil(visible.length/Math.max(2,Math.floor(plotWidth/95))))===0).map(r=>{const i=visible.indexOf(r);return <text key={r.month} x={x(i)} y={376} textAnchor="middle">{r.month}</text>;})}
       {selectedRow&&<g><line className="housing-cursor" x1={x(cursorIndex)} x2={x(cursorIndex)} y1={20} y2={352}/>{selectedRow.price!==null&&<circle className="housing-price-dot" cx={x(cursorIndex)} cy={py(selectedRow.price)} r={4}/>}</g>}
     </svg>
-    <div className="housing-chart-controls"><div className="housing-legend"><span className="above">상회</span><span className="neutral">중립</span><span className="below">하회</span><span className="average">과거 평균</span></div><button type="button" onClick={()=>zoom(.75)} aria-label="부동산 차트 확대">＋</button><button type="button" onClick={()=>zoom(1.3)} aria-label="부동산 차트 축소">−</button><button type="button" onClick={()=>onRange(Math.max(0,rows.length-60),rows.length-1)}>5년</button><button type="button" onClick={()=>onRange(0,rows.length-1)}>전체</button></div>
-    <label className="housing-pan">{visible[0]?.month} ~ {visible.at(-1)?.month}<input type="range" aria-label="부동산 차트 과거 구간 이동" min={0} max={Math.max(0,rows.length-(end-start+1))} value={start} onChange={e=>{const n=end-start;onRange(Number(e.target.value),Number(e.target.value)+n);}}/></label>
+    <div className="housing-chart-controls"><div className="housing-legend"><span className="above">상회</span><span className="neutral">중립</span><span className="below">하회</span><span className="average">과거 평균</span></div></div>
   </div>;
 }
 export function HousingScatter({rows}:{rows:HousingRow[]}){

@@ -54,9 +54,10 @@ async function mount(content:React.ReactNode,href='https://example.test/market-l
   }
   try {await act(async()=>root!.render(content));} catch(error){await cleanup();throw error;}
   async function click(selector:string){const node=document.querySelector(selector);assert(node,selector);await act(async()=>node.dispatchEvent(new dom.Event('click',{bubbles:true,cancelable:true})));}
+  async function select(selector:string,value:string){const node=document.querySelector(selector);assert(node,selector);const options=[...node.querySelectorAll('option')],chosen=options.find(option=>option.getAttribute('value')===value);assert(chosen,value);await act(async()=>{for(const option of options)option.selected=false;chosen.selected=true;assert.equal((node as unknown as HTMLSelectElement).value,value);node.dispatchEvent(new dom.Event('change',{bubbles:true,cancelable:true}));});}
   async function key(selector:string,key:string,properties:{isComposing?:boolean;keyCode?:number}={}){const node=document.querySelector(selector);assert(node,selector);const event=new dom.Event('keydown',{bubbles:true,cancelable:true});Object.defineProperty(event,'key',{value:key});for(const [name,value] of Object.entries(properties))Object.defineProperty(event,name,{value});await act(async()=>node.dispatchEvent(event));}
   async function message(data:unknown,origin='https://example.test',source:unknown=parent){await act(async()=>{for(const listener of listeners.get('message')??[])listener({data,origin,source});});}
-  return {document,click,key,message,posts,cleanup};
+  return {document,click,select,key,message,posts,cleanup};
 }
 
 test('chart search exposes all retained chart types and supports keyboard selection and explicit close',async t=>{
@@ -65,6 +66,7 @@ test('chart search exposes all retained chart types and supports keyboard select
   const fixture=await mount(<Harness/>);t.after(fixture.cleanup);
   await fixture.click('[role=combobox]');
   assert.equal(fixture.document.querySelectorAll('[role=option]').length,8);
+  assert.equal(fixture.document.querySelector('.workspace-search-popover')!.parentElement,fixture.document.body,'standalone results escape the clipped toolbar through a body portal');
   await fixture.key('[role=combobox]','Enter',{isComposing:true});
   await fixture.key('[role=combobox]','Enter',{keyCode:229});
   assert.deepEqual(chosen,[],'IME confirmation never selects a result');
@@ -95,13 +97,13 @@ test('market workspace presents one labelled view selector with independently se
   assert.equal(fixture.document.querySelector('[role=tab][aria-selected=true]')!.getAttribute('data-workspace-page'),'cashflow');
 });
 
-test('embedded chart selection waits for the owning host and ignores old or foreign navigation',async t=>{
+test('embedded charts use host-owned search and reject old or foreign navigation',async t=>{
   const pending:typeof import('../../apps/web/src/load-snapshot.js').loadSnapshot = options => new Promise((_resolve,reject)=>options?.signal?.addEventListener('abort',()=>reject(options.signal?.reason),{once:true}));
   const fixture=await mount(<MarketLabApp load={pending} embedded clock={()=>new Date('2026-11-04T06:00:00Z')}/>, 'https://example.test/market-lab/app/?embedded=1&lab-tab=rsi&symbol=TQQQ&epoch=4');t.after(fixture.cleanup);
-  await fixture.click('[role=combobox]');await fixture.click('[data-workspace-symbol="HOUSING-SEOUL"]');
-  const selection=fixture.posts.findLast(post=>post.message.kind==='atlas:center-select');
-  assert.deepEqual(selection,{message:{kind:'atlas:center-select',page:'housing',symbol:'HOUSING-SEOUL',region:'seoul',epoch:4,intentSerial:1},origin:'https://example.test'});
-  assert.equal(fixture.document.querySelector('.housing-workbench'),null,'the iframe cannot replace the host selection on its own');
+  assert.equal(fixture.document.querySelector('[role=combobox][aria-label="종목·지역 검색"]'),null,'the embedded child does not duplicate the host instrument search');
+  assert.equal(fixture.posts.some(post=>post.message.kind==='atlas:center-select'),false,'mounting the embedded page cannot request another host selection');
+  assert.equal(fixture.posts.findLast(post=>post.message.kind==='atlas:center-state')!.message.symbol,'TQQQ');
+  assert.equal(fixture.document.querySelector('.housing-workbench'),null,'only an accepted host message can replace the selected view');
   const target={kind:'atlas:center-navigate',page:'housing',symbol:'HOUSING-SEOUL',region:'seoul',epoch:5};
   await fixture.message(target,'https://foreign.test');await fixture.message(target,'https://example.test',{});
   await fixture.message({...target,epoch:3});
@@ -145,21 +147,27 @@ test('rapid market tab choices ignore intermediate replies and yield to host-own
   assert.equal(selected(), 'market-kr');
 });
 
-test('rapid chart search choices keep the last housing region through delayed replies', async t => {
+test('rapid header region choices keep the last housing intent through delayed host replies', async t => {
   const pending:typeof import('../../apps/web/src/load-snapshot.js').loadSnapshot = options => new Promise((_resolve,reject)=>options?.signal?.addEventListener('abort',()=>reject(options.signal?.reason),{once:true}));
-  const fixture = await mount(<MarketLabApp load={pending} embedded />, 'https://example.test/market-lab/app/?embedded=1&lab-tab=rsi&symbol=TQQQ&epoch=20'); t.after(fixture.cleanup);
-  await fixture.click('[role=combobox]'); await fixture.click('[data-workspace-symbol="HOUSING-SEOUL"]');
-  await fixture.click('[role=combobox]'); await fixture.click('[data-workspace-symbol="HOUSING-BUSAN"]');
+  const fixture = await mount(<MarketLabApp load={pending} embedded />, 'https://example.test/market-lab/app/?embedded=1&lab-tab=housing&symbol=HOUSING-SEOUL&epoch=20'); t.after(fixture.cleanup);
+  const selected = () => fixture.document.querySelector('select[aria-label="부동산 지역"] option[selected]')!.getAttribute('value');
+  assert.equal(selected(),'seoul');
+  assert.equal(fixture.document.querySelector('[role=combobox][aria-label="종목·지역 검색"]'),null);
+  await fixture.select('select[aria-label="부동산 지역"]','gyeonggi');
+  await fixture.select('select[aria-label="부동산 지역"]','busan');
   const choices = fixture.posts.filter(post => post.message.kind === 'atlas:center-select').map(post => post.message);
   assert.deepEqual(choices.map(({ symbol, region, epoch, intentSerial }) => ({ symbol, region, epoch, intentSerial })), [
-    { symbol: 'HOUSING-SEOUL', region: 'seoul', epoch: 20, intentSerial: 1 }, { symbol: 'HOUSING-BUSAN', region: 'busan', epoch: 20, intentSerial: 2 },
+    { symbol: 'HOUSING-GYEONGGI', region: 'gyeonggi', epoch: 20, intentSerial: 1 }, { symbol: 'HOUSING-BUSAN', region: 'busan', epoch: 20, intentSerial: 2 },
   ]);
-  await fixture.message({ kind: 'atlas:center-navigate', page: 'housing', symbol: 'HOUSING-SEOUL', region: 'seoul', epoch: 21, intentSerial: 1 });
-  assert.equal(fixture.document.querySelector('.housing-workbench'), null);
+  assert.equal(selected(),'seoul','a child region control waits for the host acknowledgement');
+  await fixture.message({ kind: 'atlas:center-navigate', page: 'housing', symbol: 'HOUSING-GYEONGGI', region: 'gyeonggi', epoch: 21, intentSerial: 1 });
+  assert.equal(selected(),'seoul','the intermediate reply cannot replace the newer queued region');
   await fixture.message({ kind: 'atlas:center-navigate', page: 'housing', symbol: 'HOUSING-BUSAN', region: 'busan', epoch: 22, intentSerial: 2 });
-  assert.equal(fixture.document.querySelector('select[aria-label="부동산 지역"] option[selected]')!.getAttribute('value'), 'busan');
+  assert.equal(selected(), 'busan');
   const state = fixture.posts.findLast(post => post.message.kind === 'atlas:center-state')!.message;
   assert.equal(state.symbol, 'HOUSING-BUSAN'); assert.equal(state.epoch, 22);
+  await fixture.message({ kind: 'atlas:center-navigate', page: 'housing', symbol: 'HOUSING-GYEONGGI', region: 'gyeonggi', epoch: 21, intentSerial: 1 });
+  assert.equal(selected(),'busan','a late duplicate cannot undo the acknowledged final region');
 });
 
 test('independent charts and synchronous calculators defer the market snapshot until its first consumer',async t=>{

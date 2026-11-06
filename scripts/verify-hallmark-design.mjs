@@ -8,40 +8,31 @@ import {readFile,writeFile,mkdir,rm,cp,readdir,stat} from 'node:fs/promises';
 import {resolve,join,relative,sep,extname} from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {createRequire} from 'node:module';
-import {countHallmarkSources,verifyHallmarkSourceScope} from './hallmark-source-scope.mjs';
+import {countHallmarkSources,verifyHallmarkSourceScope,verifyHallmarkWorkspaceSourceScope,hallmarkAuditScope,hallmarkRequestPath,hallmarkWorkspaceReady,adaptHallmarkWorkspaceReadiness} from './hallmark-source-scope.mjs';
 
 const ROOT=resolve(fileURLToPath(new URL('..',import.meta.url)));
-const PIN='0c1ed40e1b9b6c76f5621d087737dc57f174b51e';
-const args=process.argv.slice(2),options={baseline:'build/hallmark-baseline',out:'build/hallmark'};
+const args=process.argv.slice(2),options={suite:'core',baseline:'build/hallmark-baseline',out:'build/hallmark'};
 for(let i=0;i<args.length;i++){
   const key=args[i];
-  if(!['--baseline','--out'].includes(key)||!args[i+1])throw new Error('Usage: node scripts/verify-hallmark-design.mjs [--baseline path] [--out build/path]');
+  if(!['--suite','--baseline','--out'].includes(key)||!args[i+1])throw new Error('Usage: node scripts/verify-hallmark-design.mjs [--suite core|workspaces] [--baseline path] [--out build/path]');
   options[key.slice(2)]=args[++i];
 }
+const SCOPE=hallmarkAuditScope(options.suite),PIN=SCOPE.baselineCommit;
 const BASELINE=resolve(ROOT,options.baseline),OUT=resolve(ROOT,options.out);
 assert.ok(OUT.startsWith(join(ROOT,'build')+sep),'Output must stay under build/');
 assert.ok(BASELINE!==OUT&&!BASELINE.startsWith(OUT+sep),'Baseline checkout must be outside output');
 const WORK=join(OUT,'work'),DIST=join(WORK,'dist'),REPORTS=join(OUT,'reports');
 const UPSTREAM=join(ROOT,'tools/hallmark/upstream'),PATCHED=join(OUT,'tool');
 const ORIGIN='http://127.0.0.1:4177',BASE='/bitcoin-cycle-atlas/';
-const ROUTES=[
-  {name:'btc',path:'?symbol=BTCUSD&granularity=daily&type=line'},
-  {name:'eth',path:'?symbol=ETHUSD&granularity=daily&type=line'},
-  {name:'bmnr',path:'?symbol=BMNR&granularity=daily&type=line'},
-  {name:'mstr',path:'?symbol=MSTR&granularity=daily&type=line'},
-  {name:'data',path:'?page=data'},
-  {name:'evidence',path:'?page=evidence'},
-  {name:'compare',path:'?page=compare&legacy=1'},
-  {name:'mobile-preview',path:'mobile-preview.html'}
-].map(route=>({...route,url:ORIGIN+BASE+route.path}));
+const ROUTES=SCOPE.routes.map(route=>({...route,url:ORIGIN+BASE+route.path}));
 const URLS=ROUTES.map(route=>route.url),started=Date.now(),deadline=started+600000;
-const receipt={schemaVersion:1,startedAt:new Date(started).toISOString(),baselineCommit:PIN,
+const receipt={schemaVersion:1,suite:SCOPE.name,startedAt:new Date(started).toISOString(),baselineCommit:PIN,
   upstreamCommit:'7ec868225c6caa040558c321ee0fefa0e73f83a8',scope:'app',genre:'modern-minimal',
   auditInputs:{static:['dist'],render:['dist/styles.css',...URLS],note:'The render pass also runs static gates on styles.css so upstream can read the explicit reworded stamp for kept checks. Its totals are not directly comparable with earlier URL-only passes.'},
   origin:ORIGIN,workPath:relative(ROOT,WORK),routes:ROUTES,phases:[],readiness:[],assetSnapshots:{},integrityErrors:[],
   designGate:{status:'not-run',fails:0,reflex:0},sourceReadOnly:null,
   limits:{totalMilliseconds:600000,staticMilliseconds:60000,renderMilliseconds:270000},
-  limitations:['Static Hallmark does not traverse JavaScript ES imports.','URL render checks initial route state, not every dialog or interactive state.','Existing model, data and interaction tests remain required.','Optional remote application fonts are not rewritten; upstream records fallback warnings.']};
+  limitations:['Static Hallmark does not traverse JavaScript ES imports.','URL render checks initial route state, not every dialog or interactive state.','Upstream DOM gates inspect the top-level document. Workspace readiness also inspects the real child and screenshots include it; child controls and state transitions still require the native interaction suite.','Existing model, data and interaction tests remain required.','Optional remote application fonts are not rewritten; upstream records fallback warnings.']};
 let server=null,activePhase='',activeChild=null,assetSymbols=[];
 const requestCounts=new Map();
 const blob=bytes=>createHash('sha1').update('blob '+bytes.length+'\0').update(bytes).digest('hex');
@@ -67,7 +58,8 @@ async function inventory(dir,prefix=''){
 }
 async function sourceProof(dir){
   const commit=git(dir,'rev-parse','HEAD');
-  const raw=execFileSync('git',['-C',dir,'ls-tree','-rz','HEAD','--','dist','research-data','tools/hallmark','scripts/verify-hallmark-design.mjs','scripts/hallmark-source-scope.mjs','.github/workflows/hallmark-design.yml'],{encoding:'utf8',timeout:30000,maxBuffer:16*1024*1024});
+  const inputs=['dist','apps/web','research-data','tools/hallmark','scripts/verify-hallmark-design.mjs','scripts/hallmark-source-scope.mjs','tests/hallmark-source-scope.test.mjs','tests/hallmark-workspace-readiness.test.mjs','.github/workflows/hallmark-design.yml'];
+  const raw=execFileSync('git',['-C',dir,'ls-tree','-rz','HEAD','--',...inputs],{encoding:'utf8',timeout:30000,maxBuffer:16*1024*1024});
   let files=0,bytes=0;const aggregate=createHash('sha256');
   for(const item of raw.split('\0').filter(Boolean)){
     const split=item.indexOf('\t'),[mode,type,expected]=item.slice(0,split).split(' '),path=item.slice(split+1);
@@ -76,7 +68,7 @@ async function sourceProof(dir){
     files++;bytes+=data.length;aggregate.update(path+'\0'+expected+'\n');
   }
   assert.ok(files>0,'No tracked source files');
-  assert.equal(git(dir,'diff','--name-only','HEAD','--','dist','research-data','tools/hallmark','scripts/verify-hallmark-design.mjs','scripts/hallmark-source-scope.mjs','.github/workflows/hallmark-design.yml'),'','Tracked inputs must be read-only');
+  assert.equal(git(dir,'diff','--name-only','HEAD','--',...inputs),'','Tracked inputs must be read-only');
   return {commit,files,bytes,manifestSha256:aggregate.digest('hex'),gitBlobsMatched:true};
 }
 async function runChild(name,cli,timeout){
@@ -85,7 +77,7 @@ async function runChild(name,cli,timeout){
   console.log('HALLMARK_PHASE_START '+JSON.stringify({name,at:new Date().toISOString(),args:cli}));
   return await new Promise(resolveRun=>{
     const child=spawn(process.execPath,[join(PATCHED,'sloplint.mjs'),...cli],{
-      cwd:WORK,env:{...process.env,HALLMARK_CI_CHROME_ARGS:'ephemeral-ci',HALLMARK_ATLAS_READY:'1',HALLMARK_ATLAS_ASSET_SYMBOLS:JSON.stringify(assetSymbols)},stdio:['ignore','pipe','pipe'],detached:process.platform!=='win32'});
+      cwd:WORK,env:{...process.env,HALLMARK_CI_CHROME_ARGS:'ephemeral-ci',HALLMARK_ATLAS_READY:'1',HALLMARK_ATLAS_SUITE:SCOPE.name,HALLMARK_ATLAS_VERSION:name.startsWith('baseline-')?'baseline':'current',HALLMARK_ATLAS_ROUTES:JSON.stringify(ROUTES),HALLMARK_ATLAS_ASSET_SYMBOLS:JSON.stringify(assetSymbols)},stdio:['ignore','pipe','pipe'],detached:process.platform!=='win32'});
     activeChild=child;let stdout='',stderr='',timedOut=false,outputExceeded=false;
     const stop=()=>{try{if(process.platform==='win32')child.kill('SIGKILL');else process.kill(-child.pid,'SIGKILL');}catch{}};
     const timer=setTimeout(()=>{timedOut=true;stop();},Math.min(timeout,remaining-500));
@@ -143,17 +135,18 @@ async function phase(version,kind,mode,expectedFiles){
     const path=join(WORK,'.hallmark/before.json'),before=JSON.parse(await readFile(path,'utf8'));await cp(path,join(REPORTS,'baseline-'+kind+'-before.json'));
     if(kind==='render'){
       const covered=Object.keys(before.pages||{});
-      integrity(covered.length===URLS.length&&URLS.every(url=>before.pages[url]),'Baseline render inventory must contain all eight exact URLs');detail.renderedUrls=covered;
-    }else integrity(Object.keys(before.files||{}).length===2,'Baseline static must inventory both HTML files');
+      integrity(covered.length===URLS.length&&URLS.every(url=>before.pages[url]),`Baseline render inventory must contain all ${ROUTES.length} exact ${SCOPE.name} URLs`);detail.renderedUrls=covered;
+    }else integrity(Object.keys(before.files||{}).length===SCOPE.baselineHtml,`Baseline static must inventory all ${SCOPE.baselineHtml} pinned HTML files`);
   }else integrity(typeof summary.kept==='string'&&!summary.kept.includes('nothing recorded'),activePhase+': no substantive kept comparison');
   if(kind==='render'){
     const actualReady=result.stderr.split(/\r?\n/).filter(line=>line.startsWith('HALLMARK_RENDER_READY ')).map(line=>JSON.parse(line.slice('HALLMARK_RENDER_READY '.length)));
     detail.actualRenderReady=actualReady;
     integrity(actualReady.length===ROUTES.length&&ROUTES.every(route=>actualReady.some(item=>item.url===route.url&&item.route===route.name)),
-      activePhase+': actual renderer readiness was not observed for all eight routes');
+      activePhase+`: actual renderer readiness was not observed for all ${ROUTES.length} ${SCOPE.name} routes`);
+    if(SCOPE.name==='workspaces')integrity(actualReady.every(item=>item.workspace?.center===ROUTES.find(route=>route.name===item.route)?.center&&item.workspace?.version===version&&item.workspace?.frameUrl&&item.workspace?.content&&(version==='baseline'||item.workspace?.toolbar?.controls>0)),activePhase+': a workspace renderer receipt lacks its actual child content / current outer-toolbar proof');
     detail.screenshots=await screenshotProof(version);
     detail.requestedUrls=URLS.filter(url=>(requestCounts.get(activePhase+'\n'+url)||0)>0);
-    integrity(detail.requestedUrls.length===8,activePhase+': not all eight URLs reached the server');
+    integrity(detail.requestedUrls.length===ROUTES.length,activePhase+`: not all ${ROUTES.length} URLs reached the server`);
   }
   receipt.phases.push(detail);
   const counts={};for(const f of findings){const key=f.grade+' '+f.gate;counts[key]=(counts[key]||0)+1;}
@@ -168,7 +161,7 @@ async function copyDist(from){
   assert.equal(new Set(assetSymbols).size,assetSymbols.length,'Audit snapshot contains duplicate asset identities');
   assert.equal(assetSymbols[0],'BTC','Audit snapshot must keep BTC first');
   const version=from===BASELINE?'baseline':'current';
-  if(version==='baseline')assert.equal(assetSymbols.length,18,'Pinned Hallmark baseline must retain all 18 assets');
+  if(version==='baseline')assert.equal(assetSymbols.length,SCOPE.baselineAssets,`Pinned ${SCOPE.name} Hallmark baseline must retain all ${SCOPE.baselineAssets} assets`);
   receipt.assetSnapshots[version]={count:assetSymbols.length,symbols:[...assetSymbols]};
 }
 
@@ -209,8 +202,13 @@ async function readiness(version){
       page.on('pageerror',error=>errors.push(errorText(error)));
       try{
         await page.setViewport({width:1440,height:900});
-        await page.goto(route.url,{waitUntil:'domcontentloaded',timeout:remainingBudget()});
-        await page.waitForFunction((name,expectedSymbols)=>{
+        const response=await page.goto(route.url,{waitUntil:'domcontentloaded',timeout:remainingBudget()});
+        assert.ok(response?.ok(),'Readiness route returned HTTP '+response?.status()+': '+route.url);
+        let workspace;
+        if(SCOPE.name==='workspaces'){
+          const ready=await page.waitForFunction(hallmarkWorkspaceReady,{timeout:remainingBudget()},route,assetSymbols,version);
+          workspace=await ready.jsonValue();await ready.dispose();
+        }else await page.waitForFunction((name,expectedSymbols)=>{
           const doc=name==='mobile-preview'?document.querySelector('#mobile-preview')?.contentDocument:document;
           if(!doc||doc.documentElement.dataset.boot!=='ready')return false;
           if((name==='btc'||name==='mobile-preview')&&(doc.querySelector('.atlas-plot[aria-busy="true"]')||doc.querySelector('.workspace-toast:not([hidden])')))return false;
@@ -225,7 +223,10 @@ async function readiness(version){
           return doc.querySelectorAll('#lab-chart path').length>0;
         },{timeout:remainingBudget()},route.name,assetSymbols);
         assert.equal(errors.length,0,'Runtime errors in '+version+' '+route.name+': '+errors.join('; '));
-        receipt.readiness.push({version,route:route.name,url:route.url,status:'ready',...(route.name==='data'?{expectedSymbols:[...assetSymbols]}:{})});
+        receipt.readiness.push({version,route:route.name,url:route.url,status:'ready',...(['data','embedded-data'].includes(route.name)?{expectedSymbols:[...assetSymbols]}:{}),...(workspace?{workspace}:{})});
+      }catch(error){
+        receipt.readiness.push({version,route:route.name,url:route.url,status:'failed',error:errorText(error),runtimeErrors:errors});
+        throw new Error('Hallmark readiness failed ('+version+'/'+route.name+'): '+route.url+': '+String(error?.message||error),{cause:error});
       }finally{await page.close();}
     }
   }finally{await browser.close();}
@@ -253,7 +254,14 @@ try{
       output=Buffer.from(adaptSnapshotAssetReadiness(output.toString('utf8')));
       receipt.assetReadinessPatch={file:source.name,sourceGitBlob:ready.patchedGitBlob,patchedGitBlob:blob(output),
         buildCopyPatchOrder:[...manifest.buildCopyPatchOrder,'snapshotAssetReadiness'],
-        reason:'Both readiness passes require every unique asset identity from the exact copied snapshot, with BTC first. The pinned baseline remains 18 assets; upstream design gates and severities are unchanged.'};
+        reason:`Both readiness passes require every unique asset identity from the exact copied snapshot, with BTC first. The pinned ${SCOPE.name} baseline remains ${SCOPE.baselineAssets} assets; upstream design gates and severities are unchanged.`};
+      if(SCOPE.name==='workspaces'){
+        const sourceGitBlob=blob(output);
+        output=Buffer.from(adaptHallmarkWorkspaceReadiness(output.toString('utf8')));
+        receipt.workspaceReadinessPatch={file:source.name,sourceGitBlob,patchedGitBlob:blob(output),
+          buildCopyPatchOrder:[...receipt.assetReadinessPatch.buildCopyPatchOrder,'workspaceReadiness'],
+          reason:'Add exact ten-route host/child readiness before the unchanged upstream probes and screenshots. A blank, wrong, missing or unready child fails; no gate, grade or finding is altered.'};
+      }
     }
     await writeFile(join(PATCHED,source.name),output);
   }
@@ -263,7 +271,7 @@ try{
   const count=countHallmarkSources;
   // Keep the pinned screens and styles by identity, while including every
   // added entrypoint in the explicit dist scan and its expected file count.
-  receipt.sourceInventory=verifyHallmarkSourceScope(baselineFiles,currentFiles);
+  receipt.sourceInventory=(SCOPE.name==='core'?verifyHallmarkSourceScope:verifyHallmarkWorkspaceSourceScope)(baselineFiles,currentFiles);
   const installed=JSON.parse(await readFile(join(process.env.HALLMARK_PUPPETEER||'','node_modules/puppeteer-core/package.json'),'utf8'));
   assert.equal(installed.version,'25.16.0','Unexpected browser tooling version');assert.ok(process.env.CHROME_PATH,'CHROME_PATH required');
   receipt.browser={puppeteerCore:installed.version,chrome:execFileSync(process.env.CHROME_PATH,['--version'],{encoding:'utf8',timeout:15000}).trim(),node:process.version};
@@ -274,14 +282,16 @@ try{
     try{
       const url=new URL(req.url,ORIGIN),key=activePhase+'\n'+url.href;requestCounts.set(key,(requestCounts.get(key)||0)+1);
       if(!url.pathname.startsWith(BASE)){res.writeHead(404);res.end();return;}
-      const path=decodeURIComponent(url.pathname.slice(BASE.length))||'index.html',file=resolve(DIST,path);
+      const path=hallmarkRequestPath(url.pathname,BASE);
+      if(path===null){res.writeHead(403);res.end();return;}
+      const file=resolve(DIST,path);
       if(!file.startsWith(DIST+sep)){res.writeHead(403);res.end();return;}
       const data=await readFile(file);res.writeHead(200,{'Content-Type':mime[extname(file)]||'application/octet-stream','Cache-Control':'no-store'});res.end(data);
     }catch{res.writeHead(404);res.end();}
   });
   await new Promise((accept,reject)=>{server.once('error',reject);server.listen(4177,'127.0.0.1',accept);});
   await copyDist(BASELINE);await readiness('baseline');
-  await phase('baseline','static','before',26);await phase('baseline','render','before',1);
+  await phase('baseline','static','before',SCOPE.baselineCss+SCOPE.baselineHtml);await phase('baseline','render','before',1);
   await copyDist(ROOT);await readiness('current');
   await phase('current','static','kept',count(currentFiles).css+count(currentFiles).html);await phase('current','render','kept',1);
   const afterCurrent=await sourceProof(ROOT),afterBaseline=await sourceProof(BASELINE);
@@ -298,7 +308,7 @@ finally{
   receipt.finishedAt=new Date().toISOString();receipt.durationMilliseconds=Date.now()-started;
   receipt.exitCode=receipt.integrityErrors.length?2:receipt.designGate.status==='pass'?0:1;
   await json(join(OUT,'receipt.json'),receipt);
-  console.log('HALLMARK_AUDIT_RECEIPT '+JSON.stringify({sourceCommit:receipt.sourceCommit,baselineCommit:PIN,
+  console.log('HALLMARK_AUDIT_RECEIPT '+JSON.stringify({suite:SCOPE.name,sourceCommit:receipt.sourceCommit,baselineCommit:PIN,
     phases:receipt.phases.map(p=>({name:p.name,...p.summary})),designGate:receipt.designGate,integrityGate:receipt.integrityGate,
     sourceReadOnly:receipt.sourceReadOnly,durationMilliseconds:receipt.durationMilliseconds,readiness:receipt.readiness,
     errors:receipt.integrityErrors.slice(0,8),exitCode:receipt.exitCode}));

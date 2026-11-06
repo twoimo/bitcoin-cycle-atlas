@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { readNativeInteractiveTarget } from './verify-workspace-browser.mjs';
 
 // Match scripts/build-pages.mjs and the public GitHub Pages project root.
 export const consolidatedPagesBase = '/bitcoin-cycle-atlas/';
-export const consolidatedWorkspaceCases = [390, 1440].map(width => ({
+export const consolidatedWorkspaceCases = [320, 390, 1440].map(width => ({
   page: 'workspace-consolidated', width, height: width === 390 ? 844 : 900,
-  touch: width === 390, route: `${consolidatedPagesBase}market-lab/us/`, consolidated: true,
+  touch: width <= 390, route: `${consolidatedPagesBase}market-lab/us/`, consolidated: true,
 }));
 
 // Real static sources, native keyboard/pointer input, and the actual parent and
@@ -49,8 +50,10 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     return { x: frame.box.left + point.x, y: frame.box.top + point.y };
   }
   async function reveal(context, selector) {
+    let lastTarget;
     for (let attempt = 0; attempt < 18; attempt++) {
       const target = await evaluate(context, readNativeInteractiveTarget, selector);
+      lastTarget=target;
       if (complete(target)) return target;
       assert.equal(target.disabled, false, 'Required action is disabled: ' + selector);
       const movement = await evaluate(context, selector => {
@@ -61,8 +64,13 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
           if (right - left < 4 || bottom - top < 4) continue;
           const horizontal = /auto|scroll/.test(style.overflowX) && owner.scrollWidth > owner.clientWidth + 1;
           const vertical = /auto|scroll/.test(style.overflowY) && owner.scrollHeight > owner.clientHeight + 1;
-          const dx = horizontal && (box.left < left || box.right > right) ? Math.sign((box.left + box.right - left - right) / 2) * Math.min(180, (right - left) * .6) : 0;
-          const dy = !dx && vertical && (box.top < top || box.bottom > bottom) ? Math.sign((box.top + box.bottom - top - bottom) / 2) * Math.min(260, (bottom - top) * .6) : 0;
+          // Move only the clipped edge into view. A fixed fraction of the
+          // viewport overshoots controls wider than half a narrow toolbar and
+          // alternates between clipping their left and right edges forever.
+          const distanceX=box.left<left?box.left-left-2:box.right>right?box.right-right+2:0;
+          const distanceY=box.top<top?box.top-top-2:box.bottom>bottom?box.bottom-bottom+2:0;
+          const dx=horizontal?Math.max(-180,Math.min(180,distanceX)):0;
+          const dy=!dx&&vertical?Math.max(-260,Math.min(260,distanceY)):0;
           if (dx || dy) return { x: (left + right) / 2, y: (top + bottom) / 2, deltaX: dx, deltaY: dy };
         }
         return null;
@@ -72,7 +80,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
       await cdp.send('Input.dispatchMouseEvent', { type: 'mouseWheel', ...point, deltaX: movement.deltaX, deltaY: movement.deltaY });
       await settled(context);
     }
-    throw new Error('Required action remains clipped: ' + selector);
+    throw new Error('Required action remains clipped: ' + selector + ': ' + JSON.stringify(lastTarget));
   }
   async function pointer(context, selector) {
     const target = await reveal(context, selector), point = await parentPoint(context, target);
@@ -99,22 +107,46 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   }
   async function state(label) {
     const result = await evaluate(cdp, () => {
-      const doc = document.querySelector('.atlas-center-frame:not([hidden])')?.contentDocument;
+      const frame=document.querySelector('.atlas-center-frame:not([hidden])'),doc = frame?.contentDocument;
+      const header=document.querySelector('.atlas-canvas-heading'),host=document.getElementById(frame.dataset.toolbarId);
+      const box=element=>{const b=element.getBoundingClientRect();return {top:b.top,bottom:b.bottom,height:b.height};};
+      const obsoleteRows={housing:['.housing-toolbar','.housing-period','.housing-quote','.housing-tabs','.chart-workspace-toolbar'],themes:['.theme-toolbar','.theme-summary','.theme-tabs','.chart-workspace-toolbar'],data:['.daily-heading','.asset-filters','.asset-table-summary'],ipo:['.ipo-heading','.ipo-calendar-nav'],evidence:['.evidence-controls','.evidence-pagination']}[document.body.dataset.centerTool]||['.workspace-toolbar'];
+      const scrollbars=[document,doc].flatMap(owner=>[...owner.querySelectorAll('*')].filter(node=>{
+        const style=owner.defaultView.getComputedStyle(node);
+        return node.checkVisibility()&&(/auto|scroll/.test(style.overflowX)&&node.scrollWidth>node.clientWidth+1||/auto|scroll/.test(style.overflowY)&&node.scrollHeight>node.clientHeight+1);
+      }).map(node=>({tag:node.id||node.className,bar:owner.defaultView.getComputedStyle(node).scrollbarWidth})));
       return { url: location.href, center: document.body.dataset.centerTool, width: innerWidth, documentWidth: document.documentElement.scrollWidth,
         childWidth: doc?.defaultView.innerWidth, childDocumentWidth: doc?.documentElement.scrollWidth,
-        tab: doc?.querySelector('[data-workspace-page][aria-selected=true]')?.dataset.workspacePage,
-        market: doc?.querySelector('[data-control="market"]')?.value, date: doc?.querySelector('[data-selected-date]')?.textContent,
-        instrument: doc?.querySelector('.workspace-current-instrument')?.textContent,
+        tab: host?.querySelector('[data-workspace-page][aria-selected=true]')?.dataset.workspacePage,
+        market: document.querySelector('[data-control="market"]')?.value, date: document.querySelector('[data-selected-date]')?.textContent||doc?.querySelector('[data-selected-date]')?.textContent,
+        instrument:document.querySelector('.symbol-selector-trigger')?.textContent,
+        header:box(header),host:box(host),frame:box(frame),visibleHosts:document.querySelectorAll('.center-workspace-toolbar:not([hidden])').length,scrollbars,
+        duplicateRows:obsoleteRows.filter(selector=>doc.querySelector(selector)?.checkVisibility()),
         symbols: [...doc?.querySelectorAll('#data-body tr[data-asset-symbol]') || []].map(row => row.dataset.assetSymbol) };
     });
     assert.ok(new URL(result.url).pathname.startsWith(consolidatedPagesBase), label + ': parent URL escaped the Pages project root');
     assert.ok(result.documentWidth <= result.width + 1, label + ': outer document overflows');
     assert.ok(result.childDocumentWidth <= result.childWidth + 1, label + ': inner document overflows');
+    assert.equal(result.visibleHosts,1,label+': exactly one active toolbar owner');
+    assert.deepEqual(result.duplicateRows,[],label+': redundant inner control rows remain visible');
+    assert.ok(result.header.height<=(receipt.width<=620?48:44)+1,label+': controls must occupy one outer row');
+    assert.ok(result.host.top>=result.header.top-1&&result.host.bottom<=result.header.bottom+1,label+': tool controls belong inside the outer header');
+    assert.ok(result.frame.top>=result.header.bottom-1,label+': toolbar cannot cover the data canvas');
+    assert.ok(result.scrollbars.every(owner=>owner.bar==='none'),label+': scrollbars remain visibly enabled: '+JSON.stringify(result.scrollbars));
     evidence.states.push({ label, ...result }); return result;
   }
   async function marketTab(page) {
-    await pointer(child, `[data-workspace-page="${page}"]`);
-    await until(() => evaluate(child, page => document.querySelector(`[data-workspace-page="${page}"]`)?.getAttribute('aria-selected') === 'true', page), page);
+    await pointer(cdp, `[data-workspace-page="${page}"]`);
+    await until(() => evaluate(cdp, page => document.querySelector(`[data-workspace-page="${page}"]`)?.getAttribute('aria-selected') === 'true', page), page);
+  }
+  async function action(selector){
+    const inHeader=await evaluate(cdp,selector=>Boolean(document.querySelector(selector)?.checkVisibility()),selector);
+    await pointer(inHeader?cdp:child,selector);
+  }
+  async function closeMenu(name){
+    await pointer(cdp,`[data-toolbar-close="${name}"]`);
+    await until(()=>evaluate(cdp,name=>!document.querySelector(`[data-toolbar-dialog="${name}"]`)?.open,name),'toolbar dialog closed '+name);
+    assert.equal(await evaluate(cdp,name=>document.activeElement===document.querySelector(`[data-toolbar-open="${name}"]`),name),true,'Dialog returns focus to its visible header trigger');
   }
   async function navigate(id) {
     if (receipt.width <= 620) await pointer(cdp, '#mobile-details-toggle');
@@ -131,11 +163,11 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   assert.equal(new URL(initial.url).pathname, `${consolidatedPagesBase}market-lab/`);
   assert.equal(initial.tab, 'market-us');
   evidence.diagnosisHeading = {
-    title: await reveal(child, '.ml-price-card > header h3'),
-    selector: await reveal(child, '[data-control="market"]'),
+    activeTab: await reveal(cdp, '[data-workspace-page="market-us"]'),
+    selector: await reveal(cdp, '[data-control="market"]'),
   };
-  assert.ok(evidence.diagnosisHeading.title.box.width > 0, 'Diagnosis title must retain visible width beside the market selector');
-  assert.match(evidence.diagnosisHeading.title.label, /미국 관측 차트/);
+  assert.match(evidence.diagnosisHeading.activeTab.label, /미국/,'The active market remains named in the single header');
+  assert.equal(await evaluate(child,()=>document.querySelector('.ml-price-card > header')?.checkVisibility()),false,'Market title and selection must not retain a second inner header');
   await reveal(child, '[data-ztd-chart="observed"]'); await snap('market-us');
   await pointer(child, '.ml-price-card .ztd-root'); await key('Home', 'Home', 36); await settled(child);
   evidence.diagnosisFocus = await evaluate(child, readNativeInteractiveTarget, '.ml-price-card .ztd-root', true);
@@ -143,70 +175,109 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   assert.ok(complete(evidence.diagnosisFocus) && evidence.diagnosisFocus.inside && evidence.diagnosisFocus.outline !== 'none' && evidence.diagnosisFocus.outlineWidth >= 2,
     'Diagnosis chart must retain a visible keyboard focus ring');
   assert.equal(evidence.diagnosisFocus.offset, '-2px', 'Diagnosis focus must remain inside the clipped mobile figure');
-  const alternative = await evaluate(child, () => {
+  const alternative = await evaluate(cdp, () => {
     const select = document.querySelector('[data-control="market"]');
     return [...select.options].find(option => option.value !== select.value)?.value;
   });
-  assert.ok(alternative); await select(child, '[data-control="market"]', alternative);
-  await pointer(child, 'input[data-date="price"]'); await key('ArrowLeft', 'ArrowLeft', 37); await settled(child);
+  assert.ok(alternative); await select(cdp, '[data-control="market"]', alternative);
+  await pointer(cdp,'[data-toolbar-open="market-date"]');
+  await pointer(cdp, 'input[data-date="price"]'); await key('ArrowLeft', 'ArrowLeft', 37); await settled(child);
+  await closeMenu('market-date');
   const selected = await state('us-selected');
+  assert.match(selected.date,/\d{4}-\d{2}-\d{2}/,'Selected observed date must stay visible in the outer toolbar');
   await marketTab('market-kr'); await state('kr'); await marketTab('market-us');
   const restored = await state('us-restored'); assert.equal(restored.market, selected.market); assert.equal(restored.date, selected.date);
   await marketTab('scenario'); await reveal(child, '[data-ztd-chart="contributions"]');
-  const before = await evaluate(child, () => document.querySelector('.ml-index strong').textContent);
-  await pointer(child, '[data-action="negative"]');
-  assert.notEqual(await evaluate(child, () => document.querySelector('.ml-index strong').textContent), before);
+  const before = await evaluate(cdp, () => document.querySelector('.ml-index strong').textContent);
+  await action('[data-action="negative"]');
+  assert.notEqual(await evaluate(cdp, () => document.querySelector('.ml-index strong').textContent), before);
   await reveal(child, '[data-ztd-chart="contributions"]'); await state('scenario'); await snap('scenario');
-  await marketTab('cashflow'); await pointer(child, '[data-action="economics-example"]');
+  await marketTab('cashflow'); await action('[data-action="economics-example"]');
   await until(() => evaluate(child, () => document.querySelectorAll('#ml-economics-output .ml-results > div').length === 5), 'calculated cashflow example');
   await reveal(child, '#ml-economics-output .ml-results');
   await state('cashflow'); await snap('cashflow');
 
-  // The common outer symbol search and the inline chart search share destinations.
+  // The actual common outer symbol search is the single instrument entry point.
   await pointer(cdp, '.atlas-canvas-heading .symbol-selector-trigger');
   await type(cdp, '#symbol-search-dialog input', 'TQQQ');
   await pointer(cdp, '#symbol-option-TQQQ');
   await until(() => evaluate(child, () => document.querySelector('.rsi-price-line')?.getAttribute('d')?.length > 20), 'TQQQ actual price path');
   assert.match((await state('tqqq')).instrument, /TQQQ/); await snap('tqqq');
   async function chartSearch(query, symbol, page) {
-    await type(child, '[aria-label="종목·지역 검색"]', query);
-    await pointer(child, `[data-workspace-symbol="${symbol}"]`);
+    await pointer(cdp,'.atlas-canvas-heading .symbol-selector-trigger');
+    await type(cdp, '#symbol-search-dialog input', query);
+    await pointer(cdp, `#symbol-option-${symbol}`);
     await until(() => evaluate(cdp, page => document.body.dataset.centerTool === page, page), 'chart ' + symbol);
-    await until(() => evaluate(child, () => !document.querySelector('.workspace-search-popover')), 'search closes after selection');
+    await until(() => evaluate(cdp, () => !document.querySelector('#symbol-search-dialog').open), 'search closes after selection');
+    assert.equal(await evaluate(child,()=>Boolean(document.querySelector('.chart-workspace-toolbar')?.checkVisibility())),false,'Embedded chart cannot duplicate the instrument search row');
   }
   await chartSearch('서울', 'HOUSING-SEOUL', 'housing');
   await until(() => evaluate(child, () => document.querySelector('.housing-price')?.getAttribute('d')?.length > 20), 'Seoul observed price chart');
-  assert.equal(await evaluate(child, () => document.querySelector('[aria-label="부동산 지역"]').value), 'seoul');
+  assert.equal(await evaluate(cdp, () => document.querySelector('[aria-label="부동산 지역"]').value), 'seoul');
   await state('housing-seoul'); await snap('housing');
+  await pointer(cdp,'[data-toolbar-open="housing-settings"]');
+  await select(cdp,'[aria-label="거래량 평균 기간"]','12');await closeMenu('housing-settings');
+  await pointer(cdp,'[data-toolbar-open="housing-summary"]');
+  assert.match(await evaluate(cdp,()=>document.querySelector('[data-toolbar-dialog="housing-summary"]').textContent),/상관/);
+  await closeMenu('housing-summary');
+  await pointer(cdp,'#housing-tab-history');
+  await until(()=>evaluate(child,()=>Boolean(document.querySelector('#housing-view-history table'))),'housing history remains reachable');
+  await state('housing-history');await pointer(cdp,'#housing-tab-chart');
   await chartSearch('하이퍼리퀴드', 'HYPE', 'themes');
-  await until(() => evaluate(child, () => Boolean(document.querySelector('.theme-chart-readout'))), 'HYPE actual chart');
-  assert.match(await evaluate(child, () => document.querySelector('.theme-identity').textContent), /HYPE\/USDC/);
+  await until(() => evaluate(child, () => document.querySelectorAll('.theme-price-chart .theme-volume').length>0), 'HYPE actual chart');
+  assert.equal(new URL((await state('hype-selected')).url).searchParams.get('symbol'),'HYPE');
+  await pointer(cdp,'[data-toolbar-open="theme-summary"]');
+  assert.match(await evaluate(cdp,()=>document.querySelector('[data-toolbar-dialog="theme-summary"] .theme-identity').textContent),/HYPE\/USDC/,'The selected asset retains its actual quote currency');
+  await closeMenu('theme-summary');
   await state('hype'); await snap('hype');
 
   await navigate('data');
   await until(() => evaluate(child, () => document.querySelectorAll('#data-body tr[data-asset-symbol]').length === 20), '20 committed asset rows');
-  await select(child, '#asset-sector-filter', '디지털 자산');
+  await select(cdp, '#center-asset-sector-filter', '디지털 자산');
   assert.deepEqual((await state('digital-assets')).symbols, ['BTC', 'ETH', 'HYPE']);
   await until(() => evaluate(cdp, () => document.querySelectorAll('.center-data-actions button:not(:disabled)').length === 4), 'all four hosted data actions enabled');
   assert.equal(await evaluate(child, () => document.querySelector('.daily-heading-actions').checkVisibility()), false);
   await snap('digital-assets');
-  await select(child, '#asset-columns', 'performance');
+  await pointer(cdp,'[data-toolbar-open="filters"]');
+  await select(cdp, '#center-asset-columns', 'performance');
   assert.equal(await evaluate(child, () => document.querySelector('.asset-comparison-table').dataset.columns), 'performance');
-  await pointer(child, '#asset-filter-reset');
+  await pointer(cdp, '#center-asset-filter-reset');
   assert.equal((await state('assets-reset')).symbols.length, 20);
+  await closeMenu('filters');
 
   await navigate('ipo');
   await until(() => evaluate(child, () => /년.*월/.test(document.querySelector('.ipo-page-label')?.textContent || '')), 'IPO actual month');
-  evidence.ipo = await evaluate(child, () => {
-    const rect = selector => { const b = document.querySelector(selector).getBoundingClientRect(); return { top: b.top, bottom: b.bottom, left: b.left, right: b.right }; };
-    return { month: document.querySelector('.ipo-page-label').textContent, controls: rect('.ipo-calendar-nav'), content: rect('.ipo-pages'), search: rect('.ipo-toolbar') };
+  evidence.ipo = await evaluate(cdp, () => {
+    const doc=document.querySelector('.atlas-center-frame:not([hidden])').contentDocument;
+    return { month: doc.querySelector('.ipo-page-label').textContent,
+      innerControlsVisible:['.ipo-heading','.ipo-calendar-nav'].some(selector=>doc.querySelector(selector)?.checkVisibility()),
+      toolbar:document.querySelector('.center-workspace-toolbar:not([hidden])').textContent };
   });
-  assert.ok(evidence.ipo.controls.bottom <= evidence.ipo.content.top + 1, 'Calendar navigation must not overlap calendar content');
-  assert.ok(evidence.ipo.search.bottom <= evidence.ipo.controls.top + 1, 'Search and month navigation must be separate flow rows');
+  assert.equal(evidence.ipo.innerControlsVisible,false,'Calendar controls must not retain stacked inner rows');
+  await state('ipo');
   await snap('ipo');
-  await pointer(child, '[data-ipo-page="list"]');
+  await pointer(cdp,'[data-toolbar-open="calendar"]');
+  await pointer(cdp, '#center-ipo-list');
   await until(() => evaluate(child, () => document.querySelector('.ipo-page-label').textContent === '전체 목록'), 'IPO list');
-  await pointer(child, '[data-ipo-page="today"]');
+  assert.equal(await evaluate(cdp,()=>document.activeElement===document.querySelector('[data-toolbar-open="calendar"]')),true,'Calendar selection returns focus to the outer toolbar');
+  await pointer(cdp,'[data-toolbar-open="calendar"]');
+  await pointer(cdp, '#center-ipo-today');
   await until(() => evaluate(child, month => document.querySelector('.ipo-page-label').textContent === month && document.querySelector('[data-ipo-page="today"]').getAttribute('aria-pressed') === 'true', evidence.ipo.month), 'IPO original month restored');
+  await pointer(cdp,'[data-toolbar-open="source"]');
+  const ipoSnapshot=JSON.parse(await readFile(new URL('../dist/data/ipo-calendar.json',import.meta.url),'utf8'));
+  const sourceDescription=ipoSnapshot['출처'];
+  assert.equal(typeof sourceDescription,'string','IPO snapshot retains its original source description');
+  const expectedSourceUrls=sourceDescription.split(/\s+/).filter(token=>/^https?:\/\//i.test(token)).map(token=>new URL(token).href);
+  assert.ok(expectedSourceUrls.length>0,'IPO snapshot declares at least one original source URL');
+  const source=await evaluate(cdp,()=>({text:document.querySelector('[data-toolbar-dialog="source"] .legacy-toolbar-source').textContent,links:[...document.querySelectorAll('[data-toolbar-dialog="source"] .legacy-toolbar-source a[href]')].map(link=>link.href)}));
+  assert.ok(source.text.includes(sourceDescription),'The complete collected IPO source description remains reachable from the compact header');
+  assert.ok(source.links.every(href=>['http:','https:'].includes(new URL(href).protocol)),'IPO source links retain a navigable web protocol');
+  assert.deepEqual(source.links,expectedSourceUrls,'IPO disclosure links must match the original snapshot URLs, including their schemes');
+  evidence.ipo.source=source;await closeMenu('source');
   await state('ipo-restored');
+  await navigate('evidence');
+  await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('#center-evidence-search'))),'research search hosted');
+  await type(cdp,'#center-evidence-search','no-matching-atlas-record-20261107');
+  await until(()=>evaluate(child,()=>/^0\s*\//.test(document.querySelector('#evidence-total')?.textContent||'')),'research empty search');
+  await state('research-empty');await snap('research-empty');
 }
