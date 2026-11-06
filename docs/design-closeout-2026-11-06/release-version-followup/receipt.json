@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "kind": "release-version-followup-failed-attempt",
+  "recordedAt": "2026-11-06T10:27:08.396058Z",
+  "status": "FAILED_ATTEMPT_PRESERVED_CORRECTION_PENDING",
+  "finalStatusLocation": "https://github.com/twoimo/bitcoin-cycle-atlas/pull/62",
+  "failedAttempt": {
+    "associatedPrHead": "ada2f3c645b3023f93b0f0799daf9b57481b57cc",
+    "sourceTree": "397cf7dd9bd2d78c4c8d9057107c5a9481938b02",
+    "distTree": "7832034a94a43d2186be6bdf7377499d1ac42edb",
+    "workflowRunId": 42202007133,
+    "jobId": 127839879462,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42202007133/job/127839879462",
+    "conclusion": "failure",
+    "runtime": "Node.js v24.22.2",
+    "firstFailureAt": "2026-11-06T10:22:57.3771315Z",
+    "step": "Test candidate equations, missing inputs, clocks and future-information boundaries",
+    "command": "npm run verify:chart-replay",
+    "testCounts": {
+      "tests": 155,
+      "pass": 125,
+      "fail": 30,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "failedWorkflowSteps": [
+      4,
+      36
+    ],
+    "skippedWorkflowSteps": 32,
+    "nativeBrowserExecuted": false,
+    "reviewPacketGenerated": false,
+    "artifactProduced": false
+  },
+  "rawLog": {
+    "file": "eth-ada2f3c-job-127839879462.log.gz",
+    "encoding": "gzip",
+    "compressionLevel": 9,
+    "gzipMtime": 0,
+    "rawBytes": 230322,
+    "rawSha256": "b133e9489461f14d6daa3f2a05f91e73313b3bc986868c85960b98457a153827",
+    "gzipBytes": 27127,
+    "gzipSha256": "9e2b5b8c9c82422772c2f63b0bef4a4318f30fb5c82e4dd31d6d7de8b1a43f73",
+    "decompressedExactComparisonPassed": true,
+    "scope": "Complete original decoded GitHub job log returned by the connector; no filtered excerpts or removed bytes."
+  },
+  "existingRelease": {
+    "tag": "v1.31.2",
+    "commit": "94a1b1dda9eb359de70747043808340da369d087",
+    "objectType": "commit",
+    "refUrl": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/ref/tags/v1.31.2",
+    "refObservedAt": "2026-11-06T10:26:12Z",
+    "unchanged": true,
+    "guard": ".github/workflows/release.yml rejects a release tag that names a different GITHUB_SHA and forbids replacing existing assets with different bytes."
+  },
+  "cause": {
+    "packageVersion": "1.31.3",
+    "retainedRuntimeImportVersion": "1.31.2",
+    "coordinatorAssertions": 27,
+    "coordinatorAnchor": "tests/chart-replay-ui.test.mjs:124",
+    "actualSpecifier": "./chart-replay-state.js?v=1.31.2",
+    "expectedSpecifier": "./chart-replay-state.js?v=1.31.3",
+    "secondaryCutoffCases": 3,
+    "secondaryCode": "ERR_VM_MODULE_NOT_MODULE",
+    "secondaryAnchor": "tests/replay-ui-fixture.mjs version-keyed import table",
+    "classification": "Package/runtime import version mismatch at VM fixture linking, before replay behavior or native execution."
+  },
+  "correction": {
+    "decision": "Keep the existing strict fixture contract and synchronize the required runtime asset query versions to release version1.31.3. Rebuild existing generated route wrappers and verify the corrected source.",
+    "implementationOwner": "Separate runtime follow-up; this directory preserves evidence only.",
+    "finalHead": null,
+    "finalCiStatus": "pending",
+    "finalNativeStatus": "pending",
+    "testsWeakened": false,
+    "oldReleaseRetagged": false,
+    "releaseClaimed": false
+  },
+  "previousRun": {
+    "head": "c259539677e42ad8bfcd9759ccc3eff3caa14873",
+    "runId": 42199221153,
+    "jobId": 127830499305,
+    "conclusion": "cancelled",
+    "failedSteps": 0,
+    "completedPriorSteps": 33,
+    "nativeStepCompleted": false,
+    "scope": "Historical workflow superseded by the version-only push; cancellation is not a native test failure or pass."
+  }
+}

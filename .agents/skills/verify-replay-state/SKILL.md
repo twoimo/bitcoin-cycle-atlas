@@ -14,7 +14,7 @@ Preserve this promise: **settings cannot choose an unconfirmed replay start, and
 - Execute actual JavaScript using `tests/chart-replay-state.test.mjs` and `tests/chart-replay-ui.test.mjs`; the latter substitutes deterministic DOM, source, forecast and renderer modules. Do not present those doubles as actual forecast or native browser checks.
 - Reviewed manual-date follow-up baseline: `aca73b74a5128a5466488a0c701e86f5e854af46`, on 2026-11-06. Retain the previous destruction baseline `4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc` and original audit baseline `94a1b1dda9eb359de70747043808340da369d087` as historical identities. The current baseline predates the date fix; identify the patched implementation by its hashes, not by the baseline alone.
 - Reviewed controller SHA-256: `063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908`.
-- Reviewed coordinator SHA-256: `4bd6c239ffe783cf5731bdb1dd229ee79956964f8449f3fc9ffc1aba2e461055`.
+- Reviewed coordinator SHA-256: `5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90`. The v1.31.3 release follow-up updates only its import query versions and reruns the same bounded verification; the manual-date behavior and fixtures are unchanged.
 - Keep the authoritative current file identities and results in `docs/replay-state/verification.json`. Read `docs/replay-state/README.md` and `statechart.mmd` for correspondence, bounds and known counterexamples.
 
 ## Run the verification
