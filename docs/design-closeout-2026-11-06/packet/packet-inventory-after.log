@@ -1,0 +1,39 @@
+✔ native module parser reads imports/re-exports without executing any source (59.706329ms)
+✔ dynamic import candidates retain literal paths and mark computed expressions (0.598915ms)
+✔ parts concatenate exactly and never split a multibyte UTF-8 code point (1.23115ms)
+✔ packet freezes HEAD blobs, static/literal dynamic closure and explicit inputs without running source (323.508335ms)
+✔ changed working source and untracked required sources cannot inherit HEAD identity (94.891228ms)
+✔ computed imports remain SOURCE_MISSING until exact declarations name supplied targets (283.641455ms)
+✔ external packages are visible as missing, while node builtins require no copied runtime (87.537466ms)
+✔ nonempty generated evidence is hashed separately and symlink evidence is rejected (148.953291ms)
+✔ a complete bound chain is only structurally valid and cannot authenticate a model or release (1.288304ms)
+✔ missing reports, source-book bytes, unresolved sources and historical source identities fail closed (1.226993ms)
+✔ empty, truncated, substituted or unbound report text is not accepted (2.337755ms)
+✔ wrong provider, reversed stages, prior-report mismatch and invalid chronology are rejected (3.274855ms)
+✔ joint manifest and report relabeling cannot change the commit bound inside the source book (0.427051ms)
+✔ joint source, entry and full report replacement cannot inherit an unchanged book (0.315706ms)
+✔ complete framing rejects unlisted trailing bytes, omitted entries and inconsistent Git blobs (0.719092ms)
+✔ part manifests bind complete bytes and cannot conceal unresolved imports (0.5277ms)
+✔ real builder payload framing preserves Korean, delimiter text and binary evidence (41.895027ms)
+✔ repository paths cannot inject source-book header lines (23.673948ms)
+✔ block and line comment separated dynamic imports are included in actual packet closure (137.991821ms)
+✔ comment separated computed imports stay SOURCE_MISSING and unicode line terminators are recognized (92.683711ms)
+✔ source-book capacity preserves complete UTF-8 bytes and enforces the exact finite bound (54.196341ms)
+✔ the default required-review disposition preserves the original pending header and exact under-limit book bytes (41.757303ms)
+✔ user-omitted external stages are consistently omitted in manifest, book, brief and contract without inventing thesis execution (30.412006ms)
+✔ omitted headers and stage labels cannot be relabeled as required, completed or released by editing manifest fields (29.080668ms)
+✔ an omitted policy cannot be counted as a completed external chain even with three synthetic report bodies (0.655839ms)
+✔ cumulative committed-source framing stops at the first overflow before visiting later missing sources (58.587756ms)
+✔ cumulative evidence accounting includes binary expansion and fails before later evidence is read or output is written (53.860249ms)
+✔ an independent committed-file bound rejects oversized blobs despite spare aggregate capacity (46.856257ms)
+✔ an independent evidence-file bound counts raw bytes and rejects before unused aggregate space can admit them (51.812178ms)
+✔ file limits reject nonfinite fractional and nonpositive values before reading any input (0.488843ms)
+✔ declared ETH review inventory includes every top-level browser source and root stylesheet (2.632911ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1752.858954

@@ -8,7 +8,7 @@ Finish the existing design closeout, verify its behavior and publish the exact t
 
 - The prior working tree was based on `624888270fcb539ab08d505e5affab5f5d435776` and contained 168 staged files from the unfinished November 5 closeout.
 - Current main is `59ec6f4f708e87d73dad6324d925a9e01383411c`. Its two newer commits refresh validated observations and their derived data.
-- An isolated worktree starts from current main. The complete prior binary diff applies without conflicts. The original working tree and all historical failed receipts remain intact.
+- An isolated worktree starts from current main. The complete prior binary diff applies without conflicts. The complete prior binary diff is preserved in the continued source, and all historical failed receipts remain intact.
 - The pinned Hallmark checker, gates, baseline, eight-route scope and preservation checks are unchanged. Existing source and render receipts are evidence for their recorded revisions only.
 
 ## Work phases
@@ -31,3 +31,7 @@ No historical reconstruction is promoted to a contemporaneously issued predictio
 ## Verification closeout
 
 The complete native gate passed 49/49 cases on `5ddc2175764b8cad383c04ad9ff2940bab1689e6`, after correcting a demonstrated 45-second test deadline that could not contain 16 real 3-second updates. The original local and CI failures remain preserved. Exact observation count, ordered dates and cadence bounds are unchanged, as is the complete product `dist` tree. Numerical, formal, service and design evidence is summarized in [README.md](README.md). The final publication phase is recorded after the final PR checks, merge and served identity verification complete.
+
+## Packet capacity closeout
+
+The exact failed CI artifact was replayed after measuring its complete evidence size. The caller retains all original bytes within a finite 128 MB total cap and unchanged 85 MB input cap. One inventory regression enforces the existing declared browser-source scope. The corrected committed replay passes with 872 entries; all 335 execution-evidence inputs, product files and 203 protected financial/research/IPO inputs remain unchanged. The sole protected-path metadata change is the additive review inventory. See [packet evidence](packet/README.md). Final exact-head workflows, merge and actual public publication verification are still required.

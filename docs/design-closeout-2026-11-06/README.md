@@ -6,9 +6,9 @@ This continuation completes the pending November 5 workspace and design repairs 
 
 The product source is local commit `027d84914a8fb0d1c4034eda70eec8a0c42dd22d` and remote commit `6cb6aa5d45bb2b66ef27d578785aa47571278137`. Both have Git tree `feddc55e0f7d44fc8cf23e4a9a8311608ba83147` and parent `59ec6f4f708e87d73dad6324d925a9e01383411c`. The remote commit was created through the authenticated GitHub connector; every uploaded blob and the resulting whole-tree identity were checked against the local commit. [PR #62](https://github.com/twoimo/bitcoin-cycle-atlas/pull/62) contains the change.
 
-Local commit `5ddc2175764b8cad383c04ad9ff2940bab1689e6` then corrects one browser verification deadline, as explained below. Its remote equivalent is [`0bad479675cacabc8ff099030a5962d37fa2d884`](https://github.com/twoimo/bitcoin-cycle-atlas/commit/0bad479675cacabc8ff099030a5962d37fa2d884); both have tree `1d83a6f825e70d7d5386135dc1f01c93a30358ff`. Its product `dist` tree remains exactly `7429c879d54c27ecbac9e2c1f4cdb8cd77ad2dc3`, identical to the product already covered by the model, numerical, service, rendering and focused interaction checks. Subsequent evidence files do not change the executable product or its input data.
+Local commit `5ddc2175764b8cad383c04ad9ff2940bab1689e6` then corrects one browser verification deadline, as explained below. Its remote equivalent is [`0bad479675cacabc8ff099030a5962d37fa2d884`](https://github.com/twoimo/bitcoin-cycle-atlas/commit/0bad479675cacabc8ff099030a5962d37fa2d884); both have tree `1d83a6f825e70d7d5386135dc1f01c93a30358ff`. Its product `dist` tree remains exactly `7429c879d54c27ecbac9e2c1f4cdb8cd77ad2dc3`, identical to the product already covered by the model, numerical, service, rendering and focused interaction checks. Subsequent evidence files do not change the executable product or its financial input data. The later packet repair expands one review-inventory metadata file as documented below.
 
-The original working tree and its failed intermediate receipts are retained. The integration includes the two automatic observation refreshes published after the original `6248882` work began.
+The complete prior binary diff is preserved in the continued product source, and its failed intermediate receipts are retained. The integration includes the two automatic observation refreshes published after the original `6248882` work began.
 
 ## Resulting behavior
 
@@ -38,6 +38,12 @@ The original working tree and its failed intermediate receipts are retained. The
 The canonical arithmetic/replay runtime is Node 24.22.2 Linux/x64. The panel CLI could not create its auxiliary Unix IPC listener locally; the unchanged tests passed through Node's `--import tsx` loader, and the original CLI failure is retained. Remote CI also ran the ordinary CLI successfully.
 
 The first general [CI run](https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42186238647) also passed all 2,481 tests and all subsequent verification steps. It checked GitHub's PR merge commit `c5284f5404ec249dcda5727b88847b6cf4896184`; that commit's tree is exactly `feddc55e0f7d44fc8cf23e4a9a8311608ba83147`, matching the reviewed product source. Its publication manifest was verified against all 788 emitted files. Final PR checks and deployment refer to their own recorded commit identities.
+
+## Evidence packet closeout
+
+The `aca73b7` PR head passed general CI, service and Hallmark; its ETH workflow also passed all 49 native cases, then failed while packaging evidence above the finite 100 MB aggregate limit. The exact artifact was restored and measured in full before correcting the caller capacity to 128 MB, with the separate 85 MB file limit and all validators unchanged. An additive source-inventory repair and one regression also include ten missing browser stylesheet/Worker payloads. The actual corrected packet replay succeeds at 105,806,852 bytes in 872 entries, preserving all 335 original execution-evidence files exactly. [Full failure, measurement, source mapping and repair evidence](packet/README.md).
+
+This later repair leaves 203 protected financial/research/IPO inputs, 45,414,161 bytes, unchanged; the explicitly expanded review inventory is the sole metadata exception to the historical 204-file receipt above. All 20 recorded workflow and verification-skill files and the complete product tree remain unchanged. Fresh checks for the final head remain required before merge.
 
 ## Browser deadline correction
 

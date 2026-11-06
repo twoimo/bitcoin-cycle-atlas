@@ -1,0 +1,16 @@
+{
+  "stage": "before-additive-scope-fix",
+  "status": "EXPECTED_FAILURE",
+  "observedAt": "2026-11-06T09:48:41.615212+00:00",
+  "command": [
+    "node",
+    "--test",
+    "--test-name-pattern=^declared ETH review inventory",
+    "tests/eth-review-packet.test.mjs"
+  ],
+  "exitCode": 1,
+  "seedCount": 483,
+  "log": "build/release-monitor/packet-inventory-before.log",
+  "logSha256": "a548a05c9cab47da1c8462a64c2101226a30ec1a438dd26c1cbc72ca3409c3a1",
+  "expectedAssertion": true
+}

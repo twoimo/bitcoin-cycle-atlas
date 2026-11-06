@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "37aeb26814b02d101ca57b1742b21540cfee8bb2",
+  "bundleSha256": "cde4ae5db75e6c0a54522a4e098cd8016075d0a0638c68e1248d28abc96cc04b",
+  "sourceAccess": "complete-for-declared-scope",
+  "externalReviewDisposition": "omitted-by-user",
+  "requiredStages": [],
+  "stageStatus": {
+    "chatgpt-thesis": "not-recorded",
+    "gemini-opposition": "omitted-by-user",
+    "chatgpt-reverse": "omitted-by-user"
+  },
+  "requiredReportFields": [
+    "stage",
+    "provider",
+    "model",
+    "reasoningLevel",
+    "researchMode",
+    "sourceCommit",
+    "bundleSha256",
+    "startedAt",
+    "completedAt",
+    "originalUrl",
+    "reportText",
+    "reportSha256",
+    "completeVisibleReport",
+    "sourceReadback",
+    "previousReportSha256",
+    "previousReportReadback"
+  ],
+  "warning": "Gemini opposition and follow-up reverse review were omitted by the user; no ChatGPT thesis execution is recorded. Omitted stages are not completed reports, model authentication or release permission.",
+  "releaseAuthorized": false
+}

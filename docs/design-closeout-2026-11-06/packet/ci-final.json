@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "observedAt": "2026-11-06T09:15:43.998Z",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "pullRequest": 62,
+  "scope": "Read-only GitHub connector inspection of the two existing Actions runs for the exact final head.",
+  "head": {
+    "sha": "aca73b74a5128a5466488a0c701e86f5e854af46",
+    "tree": "1f18486be46dbc8c852fcbadfe844bc78d948fb1"
+  },
+  "testedPrMerge": {
+    "sha": "d6ab5f4c90c4ed677505f888341ddfe528b0ef22",
+    "tree": "1f18486be46dbc8c852fcbadfe844bc78d948fb1",
+    "parents": [
+      "59ec6f4f708e87d73dad6324d925a9e01383411c",
+      "aca73b74a5128a5466488a0c701e86f5e854af46"
+    ],
+    "sameTreeAsHead": true,
+    "kind": "GitHub synthetic PR test merge; this receipt does not claim the PR has been merged."
+  },
+  "ci": {
+    "name": "CI",
+    "runId": 42191941647,
+    "jobId": 127805831233,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42191941647",
+    "jobUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42191941647/job/127805831233",
+    "attempt": 1,
+    "event": "pull_request",
+    "headSha": "aca73b74a5128a5466488a0c701e86f5e854af46",
+    "status": "completed",
+    "conclusion": "success",
+    "updatedAt": "2026-11-06T09:14:16Z",
+    "checkoutCommit": "d6ab5f4c90c4ed677505f888341ddfe528b0ef22",
+    "allRecordedStepsSucceeded": true,
+    "modelDataTests": {
+      "tests": 2481,
+      "suites": 0,
+      "pass": 2481,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 584238.968668
+    },
+    "preparedPublication": {
+      "status": "PASS",
+      "sourceCommit": "d6ab5f4c90c4ed677505f888341ddfe528b0ef22",
+      "files": 788,
+      "assets": 22,
+      "contentDigest": "429bfbfa2a0c8a9725c168f55d12e748207b2cb2f6ea8f4930d67e48a8d1de88",
+      "manifestSha256": "0fa5ac8e2300aeed1ff649cf52561c5ff0bd9b7ceb016be37bf3783354f5c763",
+      "checkedFiles": 788,
+      "artifactId": 13490981688
+    }
+  },
+  "marketLabService": {
+    "name": "Market lab service",
+    "runId": 42191941805,
+    "jobId": 127805831442,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42191941805",
+    "jobUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42191941805/job/127805831442",
+    "attempt": 1,
+    "event": "pull_request",
+    "headSha": "aca73b74a5128a5466488a0c701e86f5e854af46",
+    "status": "completed",
+    "conclusion": "success",
+    "updatedAt": "2026-11-06T09:03:13Z",
+    "checkoutCommit": "d6ab5f4c90c4ed677505f888341ddfe528b0ef22",
+    "allRecordedStepsSucceeded": true,
+    "tests": {
+      "panels": {
+        "tests": 65,
+        "suites": 0,
+        "pass": 65,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 21514.359783
+      },
+      "realPostgres": {
+        "tests": 28,
+        "suites": 0,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 10927.786692
+      },
+      "marketLab": {
+        "tests": 59,
+        "suites": 0,
+        "pass": 59,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 6210.225838
+      }
+    }
+  },
+  "evidence": {
+    "ciSummary": [
+      "# tests 2481",
+      "# pass 2481",
+      "# fail 0",
+      "# cancelled 0",
+      "# skipped 0"
+    ],
+    "serviceSummary": [
+      "2026-11-06T09:02:29.6528707Z ##[group]Run npm run test:panels",
+      "2026-11-06T09:02:51.3970022Z ℹ tests 65",
+      "2026-11-06T09:02:51.3970406Z ℹ suites 0",
+      "2026-11-06T09:02:51.3970815Z ℹ pass 65",
+      "2026-11-06T09:02:51.3971261Z ℹ fail 0",
+      "2026-11-06T09:02:51.3971575Z ℹ cancelled 0",
+      "2026-11-06T09:02:51.3971936Z ℹ skipped 0",
+      "2026-11-06T09:02:51.4113082Z ##[group]Run npm run test:service",
+      "2026-11-06T09:03:03.3987836Z ℹ tests 28",
+      "2026-11-06T09:03:03.3988051Z ℹ suites 0",
+      "2026-11-06T09:03:03.3988284Z ℹ pass 28",
+      "2026-11-06T09:03:03.3988502Z ℹ fail 0",
+      "2026-11-06T09:03:03.3988708Z ℹ cancelled 0",
+      "2026-11-06T09:03:03.3988945Z ℹ skipped 0",
+      "2026-11-06T09:03:03.4195847Z ##[group]Run node --test tests/market-lab*.test.mjs",
+      "2026-11-06T09:03:09.6729175Z ℹ tests 59",
+      "2026-11-06T09:03:09.6729664Z ℹ suites 0",
+      "2026-11-06T09:03:09.6730103Z ℹ pass 59",
+      "2026-11-06T09:03:09.6730497Z ℹ fail 0",
+      "2026-11-06T09:03:09.6730912Z ℹ cancelled 0",
+      "2026-11-06T09:03:09.6731364Z ℹ skipped 0"
+    ],
+    "commitApiUrls": [
+      "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/commits/aca73b74a5128a5466488a0c701e86f5e854af46",
+      "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/commits/d6ab5f4c90c4ed677505f888341ddfe528b0ef22"
+    ]
+  }
+}

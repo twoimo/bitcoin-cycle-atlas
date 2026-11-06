@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "path": "README.md",
+      "bytes": 6565,
+      "sha256": "beba6ae680f3dd771cf75a1af7dd25777bb9d8a2adb77407383156441145e15b"
+    },
+    {
+      "path": "artifact-restoration.json.gz",
+      "bytes": 25819,
+      "sha256": "4f6ffb868c6a838c7faa3a824e3433170ed0358f9f1de99dec911d802aadea86"
+    },
+    {
+      "path": "capacity-review.md",
+      "bytes": 3082,
+      "sha256": "f3ddd17218c2598cccff3838d86fa32a57764c60e86dedcc0c8f39f4accc062a"
+    },
+    {
+      "path": "ci-final.json",
+      "bytes": 4841,
+      "sha256": "29eba925f33e56a52d58fa912f5bf577fbb98ae530c05ad1c1b551a3c1f7c74f"
+    },
+    {
+      "path": "corrected-complete-manifest.json.gz",
+      "bytes": 121726,
+      "sha256": "be7fcee840fcb3825c1e8949f5527a66c9b496a0de2a09203e5532357774a3cf"
+    },
+    {
+      "path": "diagnostic-measurement-runner.mjs",
+      "bytes": 4956,
+      "sha256": "17d1ad1e22b9c4573881964fbb32f90e5909b178f9ea79f19489b66961929803"
+    },
+    {
+      "path": "eth-final-native-receipt.json.gz",
+      "bytes": 232893,
+      "sha256": "8a371ba98892225978b10524f0359366a2c5220e43e3b5f198481bf14dc731d2"
+    },
+    {
+      "path": "eth-final.json",
+      "bytes": 43884,
+      "sha256": "7be60e18ec97345380c1eac47a8d8d6033523aa2bffdcf06eb54e5396972dd51"
+    },
+    {
+      "path": "hallmark-final.json",
+      "bytes": 8433,
+      "sha256": "2109f69a58aca6093680c184cefdc344517b4ca52b3788029ea7dfc11cec1d69"
+    },
+    {
+      "path": "original-complete-manifest.json.gz",
+      "bytes": 120586,
+      "sha256": "9f87dc4a1c8340b1d0a81ff1b0ee937badb871079955389e452d6746898049c0"
+    },
+    {
+      "path": "packet-inventory-after.json",
+      "bytes": 771,
+      "sha256": "0178d5a395413266292011451e8f4ef36bc0e57ab8f387e0c0ef2bca0a7a54fd"
+    },
+    {
+      "path": "packet-inventory-after.log",
+      "bytes": 3489,
+      "sha256": "bcadbe9302d6cf0e5d8872e42ba80666f4e77f0676921fb907c4342259b7b8b6"
+    },
+    {
+      "path": "packet-inventory-before.json",
+      "bytes": 481,
+      "sha256": "4562bf91b234a6e0c51e0150a10ab895bf5a21771c12b0af1b64c39049ca5056"
+    },
+    {
+      "path": "packet-inventory-before.log",
+      "bytes": 4005,
+      "sha256": "a548a05c9cab47da1c8462a64c2101226a30ec1a438dd26c1cbc72ca3409c3a1"
+    },
+    {
+      "path": "protected-inputs.json",
+      "bytes": 46363,
+      "sha256": "b213f0ce49c4e0d65264959f878027d557a4aef77e387dc2c2264d19409169f1"
+    },
+    {
+      "path": "rebuild-receipt.json",
+      "bytes": 6282,
+      "sha256": "e9f3671eca16c6dfe346aaaa51995f3879694937541c15fac2d9b30d10aeb4fe"
+    },
+    {
+      "path": "review-brief.md",
+      "bytes": 2770,
+      "sha256": "bcaaf024225d7199e02375750a4fde23549d531ff3da599e7a265ad32cdd9aba"
+    },
+    {
+      "path": "review-contract.json",
+      "bytes": 1047,
+      "sha256": "ecd61d3b991c34a81947ee10ade23033682af41cb6c6b6648ca7d417fa415c50"
+    }
+  ]
+}
