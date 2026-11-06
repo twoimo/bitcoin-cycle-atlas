@@ -1,4 +1,5 @@
 /* One shell-owned row; original controls stay with their legacy event owners. */
+:root { --legacy-toolbar-backdrop: rgba(0,0,0,.6); }
 .legacy-workspace-toolbar { display:flex; align-items:center; gap:4px; flex:1 0 auto; min-width:0; height:100%; white-space:nowrap; color:var(--text); font:12px/1.4 var(--font); }
 .legacy-toolbar-group { flex:none; gap:4px; }
 .legacy-toolbar-title { flex:none; color:var(--text); font-weight:600; padding-inline:4px; }
@@ -21,13 +22,15 @@
 .legacy-toolbar-state { color:var(--accent); }
 .legacy-workspace-toolbar :is(button,input,select):focus-visible,
 .legacy-toolbar-dialog :is(button,input,select,a):focus-visible { outline:2px solid var(--focus,var(--accent)); outline-offset:-2px; }
-.legacy-toolbar-dialog { box-sizing:border-box; width:min(440px,calc(100% - 24px)); max-height:calc(100dvh - 24px); padding:0; border:1px solid var(--border-strong); border-radius:8px; background:var(--surface); color:var(--text); overflow:auto; overscroll-behavior:contain; }
-.legacy-toolbar-dialog::backdrop { background:var(--dialog-backdrop,rgba(0,0,0,.6)); }
-.legacy-toolbar-dialog-heading { position:sticky; top:0; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; border-bottom:1px solid var(--border); background:var(--surface); }
+.legacy-toolbar-dialog { box-sizing:border-box; width:min(440px,calc(100% - 24px)); max-height:calc(100dvh - 24px); padding:0; border:1px solid var(--border-strong); border-radius:8px; background:var(--surface); color:var(--text); overflow:hidden; }
+.legacy-toolbar-dialog[open] { display:flex; flex-direction:column; }
+.legacy-toolbar-dialog::backdrop { background:var(--legacy-toolbar-backdrop); }
+.legacy-toolbar-dialog-heading { display:flex; flex:none; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; border-bottom:1px solid var(--border); background:var(--surface); }
 .legacy-toolbar-dialog-heading h2 { margin:0; font:600 15px/1.5 var(--font); }
 .legacy-toolbar-dialog-heading > button { min-width:44px; min-height:36px; padding:4px 8px; color:var(--text); font:12px/1.4 var(--font); border-radius:4px; }
 .legacy-toolbar-dialog-heading > button:hover { background:var(--surface-hover); }
-.legacy-toolbar-dialog-body { display:flex; flex-direction:column; gap:12px; padding:16px; }
+.legacy-toolbar-dialog-body { display:flex; flex-direction:column; flex:1 1 auto; min-height:0; gap:12px; padding:16px; overflow:auto; overscroll-behavior:contain; }
+.legacy-toolbar-dialog-body > * { flex-shrink:0; }
 .legacy-toolbar-detail-field { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); gap:12px; }
 .legacy-toolbar-detail-field .legacy-toolbar-field-label { position:static; width:auto; height:auto; clip-path:none; white-space:normal; font:12px/1.5 var(--font); color:var(--muted); }
 .legacy-toolbar-detail-field select { width:100%; }

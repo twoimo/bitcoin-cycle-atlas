@@ -1,3 +1,4 @@
+/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas locked system · redesign: full · posture: restrained */
 /* Shared outer toolbar. Its content belongs to the active view, with native
    controls and dialogs keeping their original calculation/event owners. */
 .center-workspace-toolbar{display:flex;align-items:center;gap:8px;flex:1 1 auto;min-width:0;height:100%;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;white-space:nowrap;touch-action:pan-x pinch-zoom}
@@ -6,6 +7,7 @@
 body[data-center-tool] .atlas-canvas-heading{gap:4px;overflow:hidden}
 body[data-center-tool] .atlas-canvas-heading::after{display:none}
 body[data-center-tool]:not([data-center-tool=rsi]) .atlas-canvas-heading>:not(.center-workspace-toolbar):not(.symbol-selector-trigger):not(.mobile-workbench-button){display:none!important}
+body[data-center-tool]:not([data-center-tool=rsi]) #mobile-tools-toggle{display:none}
 body[data-center-tool] .atlas-canvas-heading>.symbol-selector-trigger{flex:none}
 body[data-center-tool=rsi] .atlas-canvas-heading{overflow-x:auto}
 body[data-center-tool=rsi] .center-workspace-toolbar{flex:0 0 auto;overflow:visible}
@@ -25,7 +27,7 @@ body[data-center-tool=rsi] .center-workspace-toolbar{flex:0 0 auto;overflow:visi
 .center-workspace-toolbar button,.compact-toolbar-action,.compact-toolbar-tabs>button{cursor:pointer;background:transparent;border-color:transparent;white-space:nowrap}
 .center-workspace-toolbar button:hover:not(:disabled),.compact-toolbar-action:hover:not(:disabled),.compact-toolbar-tabs>button:hover:not(:disabled){background:var(--surface-hover);border-color:var(--border)}
 .center-workspace-toolbar :is(button,select,input):focus-visible,.compact-toolbar-dialog :is(button,select,input,textarea,summary,a):focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
-.center-workspace-toolbar :disabled{opacity:1;color:var(--subtle);cursor:default}
+.center-workspace-toolbar :disabled{opacity:1;background:var(--surface);color:var(--subtle);cursor:not-allowed}
 .center-workspace-toolbar :is([aria-pressed=true],[aria-selected=true]),.compact-toolbar-tabs>[aria-selected=true],.compact-toolbar-tabs>[aria-pressed=true]{background:var(--surface-raised);border-color:var(--border);color:var(--text)}
 .compact-toolbar-tabs{display:inline-flex;align-items:center;gap:4px;flex:none;white-space:nowrap}
 .center-workspace-toolbar .workspace-view-tabs{overflow:visible;gap:4px}
@@ -41,8 +43,8 @@ body[data-center-tool=rsi] .center-workspace-toolbar{flex:0 0 auto;overflow:visi
 .compact-toolbar-dialog :is(.housing-state.neutral,.housing-state.warmup,.theme-state.hold,[data-direction=pending]){color:var(--muted)}
 .center-workspace-toolbar .center-data-actions{margin-left:auto;padding-left:8px}
 .center-workspace-toolbar .center-data-title{display:none}
-.compact-toolbar-dialog{box-sizing:border-box;position:fixed;inset:0;width:min(640px,calc(100vw - 24px));max-width:calc(100vw - 24px);height:auto;max-height:calc(100dvh - 32px);margin:auto;padding:0;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font:13px/1.6 var(--font);overflow:hidden;box-shadow:none}
-.compact-toolbar-dialog::backdrop{background:var(--overlay,rgba(0,0,0,.65))}
+.compact-toolbar-dialog{box-sizing:border-box;position:fixed;inset:0;width:min(640px,calc(100% - 24px));max-width:calc(100% - 24px);height:auto;max-height:calc(100dvh - 32px);margin:auto;padding:0;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font:13px/1.6 var(--font);overflow:hidden;box-shadow:none}
+.compact-toolbar-dialog::backdrop{background:var(--styles-surface-4)}
 .compact-toolbar-dialog[open]{display:flex;flex-direction:column}
 .compact-toolbar-dialog-header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex:none;padding:8px 16px;border-bottom:1px solid var(--border);background:var(--surface);min-height:48px}
 .compact-toolbar-dialog-header h2,.compact-toolbar-dialog-header h3{margin:0;font-size:15px;line-height:1.5;font-weight:600}
@@ -73,7 +75,10 @@ body[data-center-tool=rsi] .center-workspace-toolbar{flex:0 0 auto;overflow:visi
   .compact-toolbar-group{gap:4px;padding-inline:0}
   .center-workspace-toolbar :is(button,select,input),.compact-toolbar-action,.compact-toolbar-tabs>button,.center-workspace-toolbar .workspace-view-tabs button{min-height:44px;max-height:44px;min-width:44px}
   .center-workspace-toolbar input[type=search]{width:144px}
-  .compact-toolbar-dialog{width:calc(100vw - 16px);max-width:calc(100vw - 16px);max-height:calc(100dvh - 16px)}
+  .center-workspace-toolbar select{max-width:128px}
+  .center-workspace-toolbar [data-toolbar-open]{max-width:160px;overflow:hidden;text-overflow:ellipsis}
+  .center-workspace-toolbar .compact-toolbar-summary{gap:4px}
+  .compact-toolbar-dialog{width:calc(100% - 16px);max-width:calc(100% - 16px);max-height:calc(100dvh - 16px)}
   .compact-toolbar-dialog-header{padding:4px 12px}
   .compact-toolbar-dialog-body{padding:12px}
   .compact-toolbar-dialog :is(input,select,textarea,.compact-toolbar-action){min-height:44px}

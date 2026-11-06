@@ -108,8 +108,19 @@ export function hallmarkWorkspaceReady(route,expectedSymbols,version){
     if(!(observations>0)||!painted(chart.querySelector('svg')))return false;
     content={observations,region:route.region};
   }else if(route.probe==='scenario'){
-    if(!svg('[data-ztd-chart="contributions"] svg')||doc.querySelectorAll('#ml-scenario-output tbody tr').length!==3)return false;
-    content={contributions:3};
+    // ztd also renders three screen-reader rows inside this output. Read the
+    // original calculation table by its owner, not both tables' descendants.
+    // Neutral inputs legitimately have zero-length bars; the real SVG and
+    // three populated source rows must still be present and painted.
+    const table=doc.querySelector('#ml-scenario-output > .ml-table-wrap > table');
+    const rows=[...doc.querySelectorAll('#ml-scenario-output > .ml-table-wrap > table > tbody > tr')];
+    const axes=['α 성장','β 유동성','γ 심리'];
+    if(!svg('#ml-scenario-output [data-ztd-chart="contributions"] svg')||!painted(table)||rows.length!==axes.length)return false;
+    for(const [index,row] of rows.entries()){
+      const cells=[...row.children],values=cells.slice(1).map(cell=>cell.textContent.trim().replaceAll(',',''));
+      if(cells.length!==4||cells[0].textContent.trim()!==axes[index]||values.some(value=>value===''||!Number.isFinite(Number(value)))||Number(values[2])<=0)return false;
+    }
+    content={contributions:rows.length,axes};
   }else if(route.probe==='cashflow'){
     // The initial empty calculator is the real product state. Do not fill an
     // example to make a screenshot look populated or call missing data success.
@@ -156,7 +167,12 @@ export function adaptHallmarkWorkspaceReadiness(source){
           const atlasWorkspace = atlasRoutes.find(route => route.url === file);
           if (!atlasWorkspace) throw new Error('Unsupported Atlas workspace readiness route: ' + file);
           const atlasAssetSymbols = JSON.parse(process.env.HALLMARK_ATLAS_ASSET_SYMBOLS || 'null');
-          const atlasReady = await page.waitForFunction(${hallmarkWorkspaceReady.toString()}, { timeout: 30000 }, atlasWorkspace, atlasAssetSymbols, process.env.HALLMARK_ATLAS_VERSION);
+          let atlasReady;
+          try {
+            atlasReady = await page.waitForFunction(${hallmarkWorkspaceReady.toString()}, { timeout: 30000 }, atlasWorkspace, atlasAssetSymbols, process.env.HALLMARK_ATLAS_VERSION);
+          } catch (error) {
+            throw new Error('Atlas workspace readiness failed (' + process.env.HALLMARK_ATLAS_VERSION + '/' + atlasWorkspace.name + '): ' + file + ': ' + error.message, { cause: error });
+          }
           const workspace = await atlasReady.jsonValue();
           await atlasReady.dispose();
           console.error('HALLMARK_RENDER_READY ' + JSON.stringify({ url: file, route: atlasWorkspace.name, workspace }));

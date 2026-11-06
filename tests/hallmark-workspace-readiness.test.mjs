@@ -15,7 +15,10 @@ const scope=hallmarkAuditScope('workspaces'),symbols=['BTC','ETH','HYPE'];
 const pricePath='M0,1 L10,2 L20,3 L30,4 L40,5';
 const content={
   diagnosis:'<div data-ztd-chart="observed" data-source-count="12"><svg><path d="M0,1 L1,2"/></svg></div><span data-selected-date="2026-11-05">2026-11-05</span>',
-  scenario:'<div data-ztd-chart="contributions"><svg></svg></div><div id="ml-scenario-output"><div class="ml-index"><strong>100</strong></div><table><tbody><tr></tr><tr></tr><tr></tr></tbody></table></div>',
+  scenario:'<div id="ml-scenario-output"><div class="ml-index"><strong>100</strong></div>'+
+    '<div data-ztd-chart="contributions"><svg class="ztd-svg"><g class="ztd-mark"><path d=""/></g></svg>'+
+    '<div class="ztd-sr"><table><tbody>'+['α 성장','β 유동성','γ 심리'].map(axis=>`<tr><th>${axis}</th><td>0.000</td></tr>`).join('')+'</tbody></table></div></div>'+
+    '<div class="ml-table-wrap"><table><tbody>'+['α 성장','β 유동성','γ 심리'].map(axis=>`<tr><th>${axis}</th><td>0.0</td><td>0.000</td><td>1.0000</td></tr>`).join('')+'</tbody></table></div></div>',
   cashflow:'<form id="ml-economics-form">'+Array.from({length:6},(_,index)=>`<input data-econ="field-${index}">`).join('')+'</form><div id="ml-economics-output"><p class="ml-empty-copy">입력 후 계산하세요.</p></div>',
   rsi:`<svg><path class="rsi-price-line" d="${pricePath}"/></svg>`,
   housing:`<svg><path class="housing-price" d="${pricePath}"/></svg>`,
@@ -72,6 +75,33 @@ test('Moving summary/date controls to the host does not change the observed-cont
   withWorkspace(scope.routes.find(route=>route.probe==='scenario'),({child,ready})=>{child.querySelector('.ml-index').remove();assert.equal(ready().content.contributions,3);});
   withWorkspace(scope.routes[0],({child,ready})=>{child.querySelector('svg').getBoundingClientRect=()=>({width:0,height:0});assert.equal(ready(),false);});
   assert.throws(()=>hallmarkWorkspaceReady(scope.routes[0],symbols,'unknown'),/explicit baseline\/current/);
+});
+
+test('Scenario readiness distinguishes the original three-axis table from ztd accessibility rows',()=>{
+  const route=scope.routes.find(route=>route.probe==='scenario');
+  withWorkspace(route,({child,ready})=>{
+    assert.equal(child.querySelectorAll('#ml-scenario-output tbody tr').length,6,'The actual renderer owns two separate three-row tables');
+    assert.equal(child.querySelector('.ztd-mark path').getAttribute('d'),'','Neutral zero contributions need not paint nonzero bars');
+    for(const version of ['baseline','current'])assert.deepEqual(ready(version).content,{contributions:3,axes:['α 성장','β 유동성','γ 심리']});
+  });
+  const table='#ml-scenario-output > .ml-table-wrap > table';
+  const changes=[
+    child=>child.querySelector('.ml-table-wrap').remove(),
+    child=>child.querySelector(table+' > tbody > tr').remove(),
+    child=>child.querySelector(table+' > tbody').append(child.querySelector(table+' > tbody > tr').cloneNode(true)),
+    child=>child.querySelector(table+' th').textContent='β 유동성',
+    child=>child.querySelector(table+' td').remove(),
+    child=>child.querySelector(table+' td').textContent='',
+    child=>child.querySelector(table+' td').textContent='판단 유보',
+    child=>child.querySelector(table+' td').textContent='Infinity',
+    child=>child.querySelector(table+' tr').lastElementChild.textContent='0.0000',
+    child=>child.querySelector(table).getBoundingClientRect=()=>({width:0,height:0}),
+    child=>child.querySelector('[data-ztd-chart="contributions"] svg').remove(),
+  ];
+  for(const [index,change] of changes.entries())withWorkspace(route,({child,ready})=>{
+    change(child);
+    for(const version of ['baseline','current'])assert.equal(ready(version),false,version+': incomplete/misidentified source table or chart '+index);
+  });
 });
 
 test('A blank, loading, wrong or unpainted child cannot satisfy workspace readiness',()=>{

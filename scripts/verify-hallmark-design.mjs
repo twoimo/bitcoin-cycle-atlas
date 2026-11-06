@@ -224,6 +224,9 @@ async function readiness(version){
         },{timeout:remainingBudget()},route.name,assetSymbols);
         assert.equal(errors.length,0,'Runtime errors in '+version+' '+route.name+': '+errors.join('; '));
         receipt.readiness.push({version,route:route.name,url:route.url,status:'ready',...(['data','embedded-data'].includes(route.name)?{expectedSymbols:[...assetSymbols]}:{}),...(workspace?{workspace}:{})});
+      }catch(error){
+        receipt.readiness.push({version,route:route.name,url:route.url,status:'failed',error:errorText(error),runtimeErrors:errors});
+        throw new Error('Hallmark readiness failed ('+version+'/'+route.name+'): '+route.url+': '+String(error?.message||error),{cause:error});
       }finally{await page.close();}
     }
   }finally{await browser.close();}
