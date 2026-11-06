@@ -1,0 +1,27 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.31.2 verify:pages
+> npm run verify:domain && npm run verify:skullet && node scripts/build-pages.mjs --check
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.31.2 verify:domain
+> node scripts/sync-market-domain.mjs --check
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> bitcoin-cycle-atlas@1.31.2 verify:skullet
+> node scripts/sync-skullet.mjs --check
+
+{"version":"0.0.3","license":"MIT","hashes":{"dist/vendor/skullet/skullet.js":"159653b71266900bcff7df3403c1e04cf34d1822074431a131716eedda15e71c","tools/skullet/upstream/styles.css":"2d5fd47eb1956d1406cb5a6a6abcc8ecb90a7766015ea30425ffe6ce80491243","dist/vendor/skullet/LICENSE":"352ea4bc404c267caeac26864b5a3fafb9ce9502cb1e1db32ec301ee33b51dbf","tools/skullet/upstream/LICENSE":"352ea4bc404c267caeac26864b5a3fafb9ce9502cb1e1db32ec301ee33b51dbf","dist/vendor/skullet/styles.css":"7763e1565515ea28884d1c97ee88a51055859e1ab7f72d2ac68c98bee04febf1"},"checked":true}
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 72 modules transformed.
+rendering chunks...
+computing gzip size...
+build/pages-web/index.html                   2.38 kB │ gzip:   0.99 kB
+build/pages-web/assets/index-BYWO-BnS.css  144.37 kB │ gzip:  28.84 kB
+build/pages-web/assets/index-DblLUHgN.js   469.19 kB │ gzip: 151.78 kB
+
+✓ built in 275ms
+{"status":"verified","base":"/bitcoin-cycle-atlas/","files":11,"routes":8,"mode":"saved-data-static-frontend"}

@@ -1,0 +1,685 @@
+{
+  "prior": {
+    "sourceCommit": "143a92c62e5bca4cc5a21c24140825484dc0c221",
+    "designGate": {
+      "status": "fail",
+      "fails": 19,
+      "reflex": 5
+    },
+    "integrityGate": {
+      "status": "pass",
+      "errors": 0
+    },
+    "sourceBefore": {
+      "current": {
+        "commit": "143a92c62e5bca4cc5a21c24140825484dc0c221",
+        "files": 942,
+        "bytes": 54156264,
+        "manifestSha256": "e196301c43be300d3d9d6ee0a49307b81d9bd8ca18a7dc0216119af9391e91be",
+        "gitBlobsMatched": true
+      },
+      "baseline": {
+        "commit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+        "files": 721,
+        "bytes": 32087604,
+        "manifestSha256": "e699074e45fb90811a433199184c2ccdf5a5d0fdc38e5a316df130d167e37a1f",
+        "gitBlobsMatched": true
+      }
+    },
+    "phases": [
+      {
+        "name": "baseline-static",
+        "summary": {
+          "fails": 1214,
+          "reflex": 1347,
+          "warns": 37,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 26,
+          "render": "off",
+          "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+        },
+        "actualRenderReady": 0,
+        "screenshots": null
+      },
+      {
+        "name": "baseline-render",
+        "summary": {
+          "fails": 53,
+          "reflex": 211,
+          "warns": 13,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 1,
+          "render": "ran",
+          "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+        },
+        "actualRenderReady": 8,
+        "screenshots": {
+          "expected": 40,
+          "found": 40,
+          "viewportWidths": [
+            320,
+            375,
+            414,
+            768,
+            1024,
+            1280,
+            1440,
+            1920
+          ],
+          "screenshotTags": [
+            "1280x800",
+            "375",
+            "1440x900",
+            "1440-full",
+            "1920x1080"
+          ]
+        }
+      },
+      {
+        "name": "current-static",
+        "summary": {
+          "fails": 19,
+          "reflex": 3,
+          "warns": 42,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 43,
+          "render": "off",
+          "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 19 FAIL, 3 REFLEX"
+        },
+        "actualRenderReady": 0,
+        "screenshots": null
+      },
+      {
+        "name": "current-render",
+        "summary": {
+          "fails": 0,
+          "reflex": 2,
+          "warns": 11,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 1,
+          "render": "ran",
+          "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 146/208; before 53 FAIL, 211 REFLEX, now 0 FAIL, 2 REFLEX"
+        },
+        "actualRenderReady": 8,
+        "screenshots": {
+          "expected": 40,
+          "found": 40,
+          "viewportWidths": [
+            320,
+            375,
+            414,
+            768,
+            1024,
+            1280,
+            1440,
+            1920
+          ],
+          "screenshotTags": [
+            "1280x800",
+            "375",
+            "1440x900",
+            "1440-full",
+            "1920x1080"
+          ]
+        }
+      }
+    ]
+  },
+  "local": {
+    "sourceCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+    "designGate": {
+      "status": "fail",
+      "fails": 1,
+      "reflex": 0
+    },
+    "integrityGate": {
+      "status": "pass",
+      "errors": 0
+    },
+    "sourceBefore": {
+      "current": {
+        "commit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+        "files": 945,
+        "bytes": 54242758,
+        "manifestSha256": "09e27df3b6c1e183258f7c0a66ed0159a27a87d04d0e57f9be3121bde78f2215",
+        "gitBlobsMatched": true
+      },
+      "baseline": {
+        "commit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+        "files": 721,
+        "bytes": 32087604,
+        "manifestSha256": "e699074e45fb90811a433199184c2ccdf5a5d0fdc38e5a316df130d167e37a1f",
+        "gitBlobsMatched": true
+      }
+    },
+    "phases": [
+      {
+        "name": "baseline-static",
+        "summary": {
+          "fails": 1214,
+          "reflex": 1347,
+          "warns": 37,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 26,
+          "render": "off",
+          "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+        },
+        "actualRenderReady": 0,
+        "screenshots": null
+      },
+      {
+        "name": "baseline-render",
+        "summary": {
+          "fails": 53,
+          "reflex": 210,
+          "warns": 21,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 1,
+          "render": "ran",
+          "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+        },
+        "actualRenderReady": 8,
+        "screenshots": {
+          "expected": 40,
+          "found": 40,
+          "viewportWidths": [
+            320,
+            375,
+            414,
+            768,
+            1024,
+            1280,
+            1440,
+            1920
+          ],
+          "screenshotTags": [
+            "1280x800",
+            "375",
+            "1440x900",
+            "1440-full",
+            "1920x1080"
+          ]
+        }
+      },
+      {
+        "name": "current-static",
+        "summary": {
+          "fails": 0,
+          "reflex": 0,
+          "warns": 25,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 43,
+          "render": "off",
+          "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX"
+        },
+        "actualRenderReady": 0,
+        "screenshots": null
+      },
+      {
+        "name": "current-render",
+        "summary": {
+          "fails": 1,
+          "reflex": 0,
+          "warns": 18,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 1,
+          "render": "ran",
+          "kept": "kept: links 29/30, fields 72/72, headings 52/54 (1 dropped on record), figures 134/209; before 53 FAIL, 210 REFLEX, now 1 FAIL, 0 REFLEX"
+        },
+        "actualRenderReady": 8,
+        "screenshots": {
+          "expected": 40,
+          "found": 40,
+          "viewportWidths": [
+            320,
+            375,
+            414,
+            768,
+            1024,
+            1280,
+            1440,
+            1920
+          ],
+          "screenshotTags": [
+            "1280x800",
+            "375",
+            "1440x900",
+            "1440-full",
+            "1920x1080"
+          ]
+        }
+      }
+    ]
+  },
+  "ci": {
+    "sourceCommit": "6cb6aa5d45bb2b66ef27d578785aa47571278137",
+    "designGate": {
+      "status": "pass",
+      "fails": 0,
+      "reflex": 0
+    },
+    "integrityGate": {
+      "status": "pass",
+      "errors": 0
+    },
+    "sourceBefore": {
+      "current": {
+        "commit": "6cb6aa5d45bb2b66ef27d578785aa47571278137",
+        "files": 945,
+        "bytes": 54242758,
+        "manifestSha256": "09e27df3b6c1e183258f7c0a66ed0159a27a87d04d0e57f9be3121bde78f2215",
+        "gitBlobsMatched": true
+      },
+      "baseline": {
+        "commit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+        "files": 721,
+        "bytes": 32087604,
+        "manifestSha256": "e699074e45fb90811a433199184c2ccdf5a5d0fdc38e5a316df130d167e37a1f",
+        "gitBlobsMatched": true
+      }
+    },
+    "phases": [
+      {
+        "name": "baseline-static",
+        "summary": {
+          "fails": 1214,
+          "reflex": 1347,
+          "warns": 37,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 26,
+          "render": "off",
+          "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+        },
+        "actualRenderReady": 0,
+        "screenshots": null
+      },
+      {
+        "name": "baseline-render",
+        "summary": {
+          "fails": 53,
+          "reflex": 211,
+          "warns": 13,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 1,
+          "render": "ran",
+          "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+        },
+        "actualRenderReady": 8,
+        "screenshots": {
+          "expected": 40,
+          "found": 40,
+          "viewportWidths": [
+            320,
+            375,
+            414,
+            768,
+            1024,
+            1280,
+            1440,
+            1920
+          ],
+          "screenshotTags": [
+            "1280x800",
+            "375",
+            "1440x900",
+            "1440-full",
+            "1920x1080"
+          ]
+        }
+      },
+      {
+        "name": "current-static",
+        "summary": {
+          "fails": 0,
+          "reflex": 0,
+          "warns": 25,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 43,
+          "render": "off",
+          "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX"
+        },
+        "actualRenderReady": 0,
+        "screenshots": null
+      },
+      {
+        "name": "current-render",
+        "summary": {
+          "fails": 0,
+          "reflex": 0,
+          "warns": 10,
+          "waived": 0,
+          "rejected": 0,
+          "answered": 0,
+          "dismissed": 0,
+          "notes": 0,
+          "files": 1,
+          "render": "ran",
+          "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 145/207; before 53 FAIL, 211 REFLEX, now 0 FAIL, 0 REFLEX"
+        },
+        "actualRenderReady": 8,
+        "screenshots": {
+          "expected": 40,
+          "found": 40,
+          "viewportWidths": [
+            320,
+            375,
+            414,
+            768,
+            1024,
+            1280,
+            1440,
+            1920
+          ],
+          "screenshotTags": [
+            "1280x800",
+            "375",
+            "1440x900",
+            "1440-full",
+            "1920x1080"
+          ]
+        }
+      }
+    ]
+  },
+  "currentInputManifestMatches": true,
+  "baselineInputManifestMatches": true,
+  "baselineRenderedSourceLink": {
+    "local": [
+      "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-10-26&page_size=10000&paging_from=start"
+    ],
+    "ci": [
+      "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-06&page_size=10000&paging_from=start"
+    ]
+  },
+  "currentBundledSourceLink": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-06&page_size=10000&paging_from=start",
+  "ciRun": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42186238598",
+  "ciArtifactId": 13487642177,
+  "ciArtifactSha256": "ab7f24a996e31d503272d9a1445019c28d3c9ec0866ac7e9d152b09aa2d4fe7b",
+  "priorBlockingFindings": [
+    {
+      "phase": "current-static",
+      "gate": "20",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/market-lab/app/assets/index-DnjoUSQA.css",
+      "line": 1,
+      "evidence": "no Hallmark stamp on the first non-empty line of any CSS",
+      "fix": "The stamp comment is line 1 of the CSS; only @charset may precede it"
+    },
+    {
+      "phase": "current-static",
+      "gate": "20",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/vendor/skullet/styles.css",
+      "line": 1,
+      "evidence": "no Hallmark stamp on the first non-empty line of any CSS",
+      "fix": "The stamp comment is line 1 of the CSS; only @charset may precede it"
+    },
+    {
+      "phase": "current-static",
+      "gate": "26a",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/vendor/skullet/styles.css",
+      "line": 1,
+      "evidence": "no :focus-visible styling anywhere",
+      "fix": "A focus ring at 3:1 or better, instant"
+    },
+    {
+      "phase": "current-static",
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/market-lab/app/assets/index-DnjoUSQA.css",
+      "line": 1,
+      "evidence": "colour literal #80808033 outside tokens (background-color on [skullet-bar])",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "phase": "current-static",
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/market-lab/app/assets/index-DnjoUSQA.css",
+      "line": 1,
+      "evidence": "colour literal #80808033 outside tokens (-webkit-text-decoration on :scope,:scope *)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "phase": "current-static",
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/market-lab/app/assets/index-DnjoUSQA.css",
+      "line": 1,
+      "evidence": "colour literal #80808033 outside tokens (text-decoration on :scope,:scope *)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "phase": "current-static",
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/market-lab/app/assets/index-DnjoUSQA.css",
+      "line": 1,
+      "evidence": "colour literal #80808033 outside tokens (background on :scope :is(audio,canvas,embed…)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "phase": "current-static",
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/market-lab/app/assets/index-DnjoUSQA.css",
+      "line": 1,
+      "evidence": "colour literal #ff0050b3 outside tokens (color on [skullet-xray] [skullet-loadi…)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "phase": "current-static",
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/market-lab/app/assets/index-DnjoUSQA.css",
+      "line": 1,
+      "evidence": "colour literal #ff0050b3 outside tokens (-webkit-text-fill-color on [skullet-xray] [skullet-loadi…)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "phase": "current-static",
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/vendor/skullet/styles.css",
+      "line": 36,
+      "evidence": "colour literal rgb(128 128 128 / 0.2) outside tokens (background-color on [skullet-bar])",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "phase": "current-static",
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/vendor/skullet/styles.css",
+      "line": 72,
+      "evidence": "colour literal rgb(128 128 128 / 0.2) outside tokens (text-decoration on :scope, :scope *)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "phase": "current-static",
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/vendor/skullet/styles.css",
+      "line": 79,
+      "evidence": "colour literal rgb(128 128 128 / 0.2) outside tokens (background on :scope :is(audio, canvas, emb…)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "phase": "current-static",
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/vendor/skullet/styles.css",
+      "line": 108,
+      "evidence": "colour literal rgb(255 0 80 / 0.7) outside tokens (color on [skullet-xray] [skullet-loadi…)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "phase": "current-static",
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/vendor/skullet/styles.css",
+      "line": 109,
+      "evidence": "colour literal rgb(255 0 80 / 0.7) outside tokens (-webkit-text-fill-color on [skullet-xray] [skullet-loadi…)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "phase": "current-static",
+      "gate": "56",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/market-lab/app/assets/index-DnjoUSQA.css",
+      "line": 1,
+      "evidence": "two sticky top:0 elements: .indicator-library[open]>.indicator-library-heading…",
+      "fix": "Offset the second sticky by banner height"
+    },
+    {
+      "phase": "current-static",
+      "gate": "56",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/monthly-backtest.css",
+      "line": 25,
+      "evidence": "two sticky top:0 elements: .rsi-ledger-scroll thead th + .monthly-ledger thead…",
+      "fix": "Offset the second sticky by banner height"
+    },
+    {
+      "phase": "current-static",
+      "gate": "56",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/symbol-selector.css",
+      "line": 12,
+      "evidence": "two sticky top:0 elements: .indicator-library[open] > .indicator-library-headi…",
+      "fix": "Offset the second sticky by banner height"
+    },
+    {
+      "phase": "current-static",
+      "gate": "62",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/market-lab/app/assets/index-DnjoUSQA.css",
+      "line": 1,
+      "evidence": "skullet-reveal[loading]:not(:defined) is hidden at rest (visibility: hidden) and depends on a script to appear",
+      "fix": "Visible by default: scope the hidden state under a .js class the script adds, or animate from visible with @starting-style"
+    },
+    {
+      "phase": "current-static",
+      "gate": "62",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/vendor/skullet/styles.css",
+      "line": 10,
+      "evidence": "skullet-reveal[loading]:not(:defined) is hidden at rest (visibility: hidden) and depends on a script to appear",
+      "fix": "Visible by default: scope the hidden state under a .js class the script adds, or animate from visible with @starting-style"
+    },
+    {
+      "phase": "current-static",
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/loading-surfaces.css",
+      "line": 43,
+      "evidence": "padding: 18px 84px 28px 12px (off the 4px scale) on .atlas-skeleton-rsi-panels",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "phase": "current-static",
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/market-lab/app/assets/index-DnjoUSQA.css",
+      "line": 1,
+      "evidence": "padding: 18px 84px 28px 12px (off the 4px scale) on .atlas-skeleton-rsi-panels",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "phase": "current-static",
+      "gate": "26b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/vendor/skullet/styles.css",
+      "line": 1,
+      "evidence": "no :active styling anywhere",
+      "fix": "All eight states; guard: not a form control, no aria-disabled anywhere"
+    },
+    {
+      "phase": "current-render",
+      "gate": "49b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[320px] link \"8·12·20% 전체 계산값 ↗\" wraps to 2 lines (a)",
+      "fix": "Shorten the label or set nowrap"
+    },
+    {
+      "phase": "current-render",
+      "gate": "72",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1440px] text crowds the edge of its box: details.lab-details bottom -1080px; details.lab-details bottom -1140px; detai…",
+      "fix": "Pad the box: max(8px, 0.5em) at the sides, max(4px, 0.3em) above and below"
+    }
+  ],
+  "conclusion": "CI design and integrity PASS. Local integrity PASS; local design FAIL retained for the dated fallback source URL. All24 prior FAIL/REFLEX findings absent on current source in both browser runs. No waiver, gate, baseline, source-data or scope changes were made for this reconciliation."
+}

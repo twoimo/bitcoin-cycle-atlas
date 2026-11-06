@@ -18,7 +18,7 @@ body[data-rsi-workbench=true] .ml-scroll>.ml-sources{display:none}
 .rsi-price-badge{fill:var(--accent)}.rsi-price-text{fill:var(--on-accent);font:11px var(--font-mono)}.rsi-date-badge{fill:var(--surface-hover)}.rsi-date-text{fill:var(--text);font:11px var(--font-mono)}
 .rsi-trade-mark{font:10px var(--font-system,var(--font));pointer-events:none}.rsi-trade-mark.is-buy{fill:var(--green)}.rsi-trade-mark.is-sell{fill:var(--red)}
 .rsi-measurement rect{fill:var(--nav-active-bg);opacity:.6}.rsi-measurement line{stroke:var(--accent);stroke-width:1;stroke-dasharray:3 3}.rsi-measurement text{fill:var(--text);font:11px var(--font-mono);paint-order:stroke;stroke:var(--bg);stroke-width:3px}
-.rsi-workbench-panel{display:flex;flex-direction:column;flex:0 0 320px;width:320px;min-width:0;min-height:0;max-width:100%;border-left:1px solid var(--border);background:var(--bg)}
+.rsi-workbench-panel{color:var(--text);display:flex;flex-direction:column;flex:0 0 320px;width:320px;min-width:0;min-height:0;max-width:100%;border-left:1px solid var(--border);background:var(--bg)}
 .rsi-workbench-panel>header{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:40px;padding:4px 12px;border-bottom:1px solid var(--border);font-size:12px;flex:none}.rsi-workbench-panel>header button{font-size:22px;min-width:32px}
 .rsi-workbench-panel-scroll{overflow:auto;min-height:0;padding:12px;flex:1;font-size:12px;line-height:1.6}.rsi-workbench-panel-scroll>p{margin:0 0 12px}.rsi-workbench-panel-scroll>button{border-color:var(--border);margin:4px 8px 4px 0}
 .rsi-panel-check{display:flex;align-items:center;gap:12px;min-height:40px;border-bottom:1px solid var(--border-soft)}.rsi-panel-check input{accent-color:var(--accent)}

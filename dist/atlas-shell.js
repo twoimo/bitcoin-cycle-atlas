@@ -26,7 +26,7 @@ SOFTWARE.
 import {atlasSitePath} from './site-paths.js';
 import { atlasPages, labPageFromLocation } from './atlas-navigation.js';
 import { readShellPreference, writeShellPreference } from './atlas-shell-state.js';
-import { mountCenterWorkbench } from './center-workbench.js?v=1.31.2';
+import { mountCenterWorkbench } from './center-workbench.js?v=1.31.3';
 
 const pageNames = { outlook: '통합 차트', compare: '사이클 비교', evidence: '리서치 자료', data: '자산 비교표', ipo: '공모주 캘린더', market: '세 축 연구실' };
 export function initAtlasShell() {
@@ -53,7 +53,8 @@ export function initAtlasShell() {
       const icon = item.querySelector('[data-icon],svg');
       if (icon) { const badge = document.createElement('span'); badge.className = 'atlas-nav-code'; badge.setAttribute('aria-hidden','true'); badge.textContent = page.badge; icon.replaceWith(badge); }
     }
-    const label = item.querySelector('span:last-child:not([data-icon])'); if (label) label.textContent = page.label;
+    const label = item.querySelector('span:last-child:not([data-icon])');
+    if (label) { label.classList.add('atlas-nav-label'); label.textContent = page.label; }
     originalNav.append(item);
   }
   let storage; try { storage = localStorage; } catch { /* Optional preference. */ }

@@ -1,0 +1,326 @@
+{
+  "schemaVersion": 1,
+  "kind": "compact-native-evidence-manifest",
+  "createdAt": "2026-11-06T08:55:45.472Z",
+  "sourceCommit": "5ddc2175764b8cad383c04ad9ff2940bab1689e6",
+  "sourceTree": "1d83a6f825e70d7d5386135dc1f01c93a30358ff",
+  "status": "PASS",
+  "screenshotCount": 10,
+  "artifactCountExcludingManifest": 30,
+  "totalBytesExcludingManifest": 1925514,
+  "note": "Manifest excludes itself. Raw inputs and all omitted bulk outputs remain unchanged in their run directories. Gzip is lossless; raw and stored SHA-256 values are supplied.",
+  "files": [
+    {
+      "file": "README.md",
+      "bytes": 7697,
+      "sha256": "3db894019c78632f52ccb63dc474b73839e7f4dfedce73c4cd3eb5e16ebc89e4"
+    },
+    {
+      "file": "cadence-terminal-observation.json",
+      "bytes": 27208,
+      "sha256": "521a0c802d007544acaae169d10619b9555d1be4785962828da42467728c9515",
+      "source": "docs/design-closeout-2026-11-06/browser/cadence-terminal-observation/report.json",
+      "rawBytes": 27208,
+      "rawSha256": "521a0c802d007544acaae169d10619b9555d1be4785962828da42467728c9515",
+      "storedBytes": 27208,
+      "storedSha256": "521a0c802d007544acaae169d10619b9555d1be4785962828da42467728c9515",
+      "encoding": "raw"
+    },
+    {
+      "file": "receipt.json",
+      "bytes": 33265,
+      "sha256": "d0cf74eba3aa331409b4a8415c7e82d79e91a31507e3928c84af09b1a2e5233b"
+    },
+    {
+      "file": "reports/cadence-setup-1-failed.json",
+      "bytes": 18941,
+      "sha256": "18025b5effcab3d9198661d28d83b572df8d69df869315e6c68023e34a955dc5",
+      "source": "docs/design-closeout-2026-11-06/browser/cadence-diagnostic/report.json",
+      "rawBytes": 18941,
+      "rawSha256": "18025b5effcab3d9198661d28d83b572df8d69df869315e6c68023e34a955dc5",
+      "storedBytes": 18941,
+      "storedSha256": "18025b5effcab3d9198661d28d83b572df8d69df869315e6c68023e34a955dc5",
+      "encoding": "raw"
+    },
+    {
+      "file": "reports/cadence-setup-2-failed.json",
+      "bytes": 21677,
+      "sha256": "71495ff6a7d0ecb66a25c8b5065881c88b89c0763922c9e03bce3035c5011a19",
+      "source": "docs/design-closeout-2026-11-06/browser/cadence-diagnostic-complete/report.json",
+      "rawBytes": 21677,
+      "rawSha256": "71495ff6a7d0ecb66a25c8b5065881c88b89c0763922c9e03bce3035c5011a19",
+      "storedBytes": 21677,
+      "storedSha256": "71495ff6a7d0ecb66a25c8b5065881c88b89c0763922c9e03bce3035c5011a19",
+      "encoding": "raw"
+    },
+    {
+      "file": "reports/full-49-after-cadence-fix.json.gz",
+      "bytes": 421982,
+      "sha256": "0e1cab816e0a6eaac8b91a8bae60150507afef9c9f9d99af4a85270b6e31d038",
+      "source": "docs/design-closeout-2026-11-06/browser/full-49-corrected/report.json",
+      "rawBytes": 5523705,
+      "rawSha256": "f72a1828867141d293dd6ea844cde8a01b54a90aa4d4c6ee56ffa98c79aa43d8",
+      "storedBytes": 421982,
+      "storedSha256": "0e1cab816e0a6eaac8b91a8bae60150507afef9c9f9d99af4a85270b6e31d038",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reports/full-49-before-cadence-fix.json.gz",
+      "bytes": 396186,
+      "sha256": "80cef74ea6c4127ba496998fdf552a9d4f545648987074977bbb10e2e09f341e",
+      "source": "docs/design-closeout-2026-11-06/browser/full-49/report.json",
+      "rawBytes": 4528785,
+      "rawSha256": "38302870a82eb5f75f4abe7349f407fb07f8927d7583164f95e9064353ba7886",
+      "storedBytes": 396186,
+      "storedSha256": "80cef74ea6c4127ba496998fdf552a9d4f545648987074977bbb10e2e09f341e",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reports/loading.json.gz",
+      "bytes": 7970,
+      "sha256": "3d39a091486f8183fe52a0918a3b04d84182fd41f6535dd5180a706bf7dedc84",
+      "source": "docs/design-closeout-2026-11-06/browser/loading/report.json",
+      "rawBytes": 269489,
+      "rawSha256": "796fedaca313ccbdfa143fcc7970fc2d63ac42f9e8dfed08da21fc1af610e5b1",
+      "storedBytes": 7970,
+      "storedSha256": "3d39a091486f8183fe52a0918a3b04d84182fd41f6535dd5180a706bf7dedc84",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reports/rail.json.gz",
+      "bytes": 9790,
+      "sha256": "ab6723a8c7544079690f44aec1f784090b966eb947c616a569e13a3d69aa74b4",
+      "source": "docs/design-closeout-2026-11-06/browser/rail/receipt.json",
+      "rawBytes": 64738,
+      "rawSha256": "6d26f1b8062da2bb2a03f56281a6310999caff7fd7dbdd893e221c55bf968dff",
+      "storedBytes": 9790,
+      "storedSha256": "ab6723a8c7544079690f44aec1f784090b966eb947c616a569e13a3d69aa74b4",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reports/reader.json.gz",
+      "bytes": 16022,
+      "sha256": "de80fc478ff29d1a45b6f41ebc07c0c700870ce531a6f65e024abbe56768d996",
+      "source": "docs/design-closeout-2026-11-06/browser/reader/report.json",
+      "rawBytes": 233030,
+      "rawSha256": "62963f5af60af567150dc8f467fc7ab5671b20c129fb6d275db190f54f5e41a7",
+      "storedBytes": 16022,
+      "storedSha256": "de80fc478ff29d1a45b6f41ebc07c0c700870ce531a6f65e024abbe56768d996",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reports/sticky-request-events.json",
+      "bytes": 6730,
+      "sha256": "ef82fff264dd07b5230c18c763c7043023a78f12676128ab9369004ba853f6ed",
+      "source": "docs/design-closeout-2026-11-06/browser/sticky-abort-events.json",
+      "rawBytes": 6730,
+      "rawSha256": "ef82fff264dd07b5230c18c763c7043023a78f12676128ab9369004ba853f6ed",
+      "storedBytes": 6730,
+      "storedSha256": "ef82fff264dd07b5230c18c763c7043023a78f12676128ab9369004ba853f6ed",
+      "encoding": "raw"
+    },
+    {
+      "file": "reports/sticky-resource-diagnostic.json.gz",
+      "bytes": 13311,
+      "sha256": "7e24486abead478b0a7f90edfdd270f635b27307fad6137bf73136039b6a5e7e",
+      "source": "docs/design-closeout-2026-11-06/browser/sticky-abort-diagnostic/report.json",
+      "rawBytes": 60813,
+      "rawSha256": "95991a64af4446b06b733d1af54e172e4930c9fcd087091d4a1a597cb3542bb9",
+      "storedBytes": 13311,
+      "storedSha256": "7e24486abead478b0a7f90edfdd270f635b27307fad6137bf73136039b6a5e7e",
+      "encoding": "gzip"
+    },
+    {
+      "file": "reports/sticky.json.gz",
+      "bytes": 18160,
+      "sha256": "9bd474c29423378e57f863a8ec6a8796908373ea2b369804b221c93845d634ca",
+      "source": "docs/design-closeout-2026-11-06/browser/sticky/report.json",
+      "rawBytes": 116483,
+      "rawSha256": "85d2163ac4bb2c67f1b2cde4e827272c45a9adf9129c425bdb12b8d5726eda06",
+      "storedBytes": 18160,
+      "storedSha256": "9bd474c29423378e57f863a8ec6a8796908373ea2b369804b221c93845d634ca",
+      "encoding": "gzip"
+    },
+    {
+      "file": "runtime-ready.json",
+      "bytes": 1466,
+      "sha256": "2ab00431d3e2510f71f90d4e8592ec2155e0b1c4faa07d2b521afef958cda8a4",
+      "source": "docs/design-closeout-2026-11-06/browser/runtime-ready.json",
+      "rawBytes": 1466,
+      "rawSha256": "2ab00431d3e2510f71f90d4e8592ec2155e0b1c4faa07d2b521afef958cda8a4",
+      "storedBytes": 1466,
+      "storedSha256": "2ab00431d3e2510f71f90d4e8592ec2155e0b1c4faa07d2b521afef958cda8a4",
+      "encoding": "raw"
+    },
+    {
+      "file": "runtime-viability.json",
+      "bytes": 953,
+      "sha256": "4117dd88a42d3c705c589039af59f570484ffa3163f46989c69218cd130b32c3",
+      "source": "docs/design-closeout-2026-11-06/browser/runtime-viability.json",
+      "rawBytes": 953,
+      "rawSha256": "4117dd88a42d3c705c589039af59f570484ffa3163f46989c69218cd130b32c3",
+      "storedBytes": 953,
+      "storedSha256": "4117dd88a42d3c705c589039af59f570484ffa3163f46989c69218cd130b32c3",
+      "encoding": "raw"
+    },
+    {
+      "file": "screenshots/data-board-320.png",
+      "bytes": 49859,
+      "sha256": "911ba54b17b103d8ecb5e65e7875436f99b57adbe27556ef40bc7b4bb8ba114a",
+      "source": "docs/design-closeout-2026-11-06/browser/full-49-corrected/workspace-center-data-320x900-board.png",
+      "rawBytes": 49859,
+      "rawSha256": "911ba54b17b103d8ecb5e65e7875436f99b57adbe27556ef40bc7b4bb8ba114a",
+      "storedBytes": 49859,
+      "storedSha256": "911ba54b17b103d8ecb5e65e7875436f99b57adbe27556ef40bc7b4bb8ba114a",
+      "encoding": "raw"
+    },
+    {
+      "file": "screenshots/loading-rsi-390.png",
+      "bytes": 5489,
+      "sha256": "253042522cfda5cc42ceecc660c4ba279fa9e9cbd373290426ea6b89a3207a23",
+      "source": "docs/design-closeout-2026-11-06/browser/loading/loading-rsi-390.png",
+      "rawBytes": 5489,
+      "rawSha256": "253042522cfda5cc42ceecc660c4ba279fa9e9cbd373290426ea6b89a3207a23",
+      "storedBytes": 5489,
+      "storedSha256": "253042522cfda5cc42ceecc660c4ba279fa9e9cbd373290426ea6b89a3207a23",
+      "encoding": "raw"
+    },
+    {
+      "file": "screenshots/monthly-320.png",
+      "bytes": 70083,
+      "sha256": "b1bc508b6aa2450eb6c88e9ac0c9ac03f88a82b1d2d719d12d4187701d70aa9c",
+      "source": "docs/design-closeout-2026-11-06/browser/sticky/monthly-keyboard-320.png",
+      "rawBytes": 70083,
+      "rawSha256": "b1bc508b6aa2450eb6c88e9ac0c9ac03f88a82b1d2d719d12d4187701d70aa9c",
+      "storedBytes": 70083,
+      "storedSha256": "b1bc508b6aa2450eb6c88e9ac0c9ac03f88a82b1d2d719d12d4187701d70aa9c",
+      "encoding": "raw"
+    },
+    {
+      "file": "screenshots/rail-mobile-320.png",
+      "bytes": 55214,
+      "sha256": "30a5093f7debd7abad3f69fb17c96de9808c91a280114c1224e9e9d84c1a05ed",
+      "source": "docs/design-closeout-2026-11-06/browser/rail/mobile-320-collapsed.png",
+      "rawBytes": 55214,
+      "rawSha256": "30a5093f7debd7abad3f69fb17c96de9808c91a280114c1224e9e9d84c1a05ed",
+      "storedBytes": 55214,
+      "storedSha256": "30a5093f7debd7abad3f69fb17c96de9808c91a280114c1224e9e9d84c1a05ed",
+      "encoding": "raw"
+    },
+    {
+      "file": "screenshots/reader-1440x360.png",
+      "bytes": 52256,
+      "sha256": "9a541a44191a703b347be60160c380fa7dcbb5491e7e3f1e14b34169b31e3d2b",
+      "source": "docs/design-closeout-2026-11-06/browser/reader/workspace-legacy-1440x360-legacy-method-reader.png",
+      "rawBytes": 52256,
+      "rawSha256": "9a541a44191a703b347be60160c380fa7dcbb5491e7e3f1e14b34169b31e3d2b",
+      "storedBytes": 52256,
+      "storedSha256": "9a541a44191a703b347be60160c380fa7dcbb5491e7e3f1e14b34169b31e3d2b",
+      "encoding": "raw"
+    },
+    {
+      "file": "screenshots/reader-320x360.png",
+      "bytes": 29224,
+      "sha256": "bb55d6ce4db7a9fd3891b1df3f0a354670f15f9fc0f4e6f5352788d32b94b513",
+      "source": "docs/design-closeout-2026-11-06/browser/reader/workspace-legacy-320x360-legacy-method-reader.png",
+      "rawBytes": 29224,
+      "rawSha256": "bb55d6ce4db7a9fd3891b1df3f0a354670f15f9fc0f4e6f5352788d32b94b513",
+      "storedBytes": 29224,
+      "storedSha256": "bb55d6ce4db7a9fd3891b1df3f0a354670f15f9fc0f4e6f5352788d32b94b513",
+      "encoding": "raw"
+    },
+    {
+      "file": "screenshots/replay-btc-mobile-320.png",
+      "bytes": 35829,
+      "sha256": "a355c59535d76d95d610c13623c4804fe3c9a584085dcb89b34384ed65780cb9",
+      "source": "docs/design-closeout-2026-11-06/browser/full-49-corrected/chart-replay-btc-320x568-atlas-last-observed-bar.png",
+      "rawBytes": 35829,
+      "rawSha256": "a355c59535d76d95d610c13623c4804fe3c9a584085dcb89b34384ed65780cb9",
+      "storedBytes": 35829,
+      "storedSha256": "a355c59535d76d95d610c13623c4804fe3c9a584085dcb89b34384ed65780cb9",
+      "encoding": "raw"
+    },
+    {
+      "file": "screenshots/replay-native-terminal.png",
+      "bytes": 213651,
+      "sha256": "fb81fa3303a0d9ce810cdbd8e1d8fa9bf2803fd6d7c9ca1c6c55fb36b991f06f",
+      "source": "docs/design-closeout-2026-11-06/browser/cadence-terminal-observation/native-terminal-state.png",
+      "rawBytes": 213651,
+      "rawSha256": "fb81fa3303a0d9ce810cdbd8e1d8fa9bf2803fd6d7c9ca1c6c55fb36b991f06f",
+      "storedBytes": 213651,
+      "storedSha256": "fb81fa3303a0d9ce810cdbd8e1d8fa9bf2803fd6d7c9ca1c6c55fb36b991f06f",
+      "encoding": "raw"
+    },
+    {
+      "file": "screenshots/replay-original-failure.png",
+      "bytes": 212024,
+      "sha256": "490034429164b22c42dcb1fb3f2f0c959d9fae563eda7c07b9973783d302af0f",
+      "source": "docs/design-closeout-2026-11-06/browser/full-49/chart-replay-btc-1440-failure.png",
+      "rawBytes": 212024,
+      "rawSha256": "490034429164b22c42dcb1fb3f2f0c959d9fae563eda7c07b9973783d302af0f",
+      "storedBytes": 212024,
+      "storedSha256": "490034429164b22c42dcb1fb3f2f0c959d9fae563eda7c07b9973783d302af0f",
+      "encoding": "raw"
+    },
+    {
+      "file": "screenshots/symbols-900x430.png",
+      "bytes": 79815,
+      "sha256": "6dcf8c6589512ed39199cc8dd21379729e895f8e929648f7306185cfb2f8aa25",
+      "source": "docs/design-closeout-2026-11-06/browser/sticky/symbols-900x430.png",
+      "rawBytes": 79815,
+      "rawSha256": "6dcf8c6589512ed39199cc8dd21379729e895f8e929648f7306185cfb2f8aa25",
+      "storedBytes": 79815,
+      "storedSha256": "6dcf8c6589512ed39199cc8dd21379729e895f8e929648f7306185cfb2f8aa25",
+      "encoding": "raw"
+    },
+    {
+      "file": "source-integrity.json",
+      "bytes": 107270,
+      "sha256": "f2f8881ceff0ac05f7515ea34d690b881ff33c68c5d5a0868243ce54fe0dd3f8"
+    },
+    {
+      "file": "source-snapshots/cadence-setup-1.mjs.gz",
+      "bytes": 4047,
+      "sha256": "872a60e22be01c4db744ab5c45f79a48f9ad4a61370ded779ef1328c492619aa",
+      "source": "docs/design-closeout-2026-11-06/browser/diagnose-cadence-attempt1.mjs",
+      "rawBytes": 11085,
+      "rawSha256": "2eb26331646dcaa1726ac0c51864fad55f8bd74048ef617946e07fd3d47d3cca",
+      "storedBytes": 4047,
+      "storedSha256": "872a60e22be01c4db744ab5c45f79a48f9ad4a61370ded779ef1328c492619aa",
+      "encoding": "gzip"
+    },
+    {
+      "file": "source-snapshots/cadence-setup-2.mjs.gz",
+      "bytes": 4196,
+      "sha256": "c29e55690e78f516ed94863d907331ec7be9a15dd0c427288ff9e431da6a844e",
+      "source": "docs/design-closeout-2026-11-06/browser/diagnose-cadence-attempt2.mjs",
+      "rawBytes": 11733,
+      "rawSha256": "cc120cb7bc92846f9542df7a2f2e8fda8ecc074ed6bb769a6cb09dcf34659b52",
+      "storedBytes": 4196,
+      "storedSha256": "c29e55690e78f516ed94863d907331ec7be9a15dd0c427288ff9e431da6a844e",
+      "encoding": "gzip"
+    },
+    {
+      "file": "source-snapshots/cadence-terminal-observation.mjs.gz",
+      "bytes": 4187,
+      "sha256": "f5ba8ebb8d756908390e788022a91edc3bd6c3a07e600c28a2975da159ea749a",
+      "source": "docs/design-closeout-2026-11-06/browser/diagnose-cadence.mjs",
+      "rawBytes": 11703,
+      "rawSha256": "46e7973b3aab49e31ba84b36901a1e4245c4185f6c034561e669d26613aaab84",
+      "storedBytes": 4187,
+      "storedSha256": "f5ba8ebb8d756908390e788022a91edc3bd6c3a07e600c28a2975da159ea749a",
+      "encoding": "gzip"
+    },
+    {
+      "file": "source-snapshots/request-observer.mjs.gz",
+      "bytes": 1012,
+      "sha256": "64f1bb48f3f025c5d42f40d6a9fb7fa88bc69ef56c70a5d004fde10b09fde520",
+      "source": "docs/design-closeout-2026-11-06/browser/observe-playwright-requests.mjs",
+      "rawBytes": 2420,
+      "rawSha256": "fae85ccfda3300ceb3879f86e353d7a4a08fa6eb9d39fcd7859f95d20693482d",
+      "storedBytes": 1012,
+      "storedSha256": "64f1bb48f3f025c5d42f40d6a9fb7fa88bc69ef56c70a5d004fde10b09fde520",
+      "encoding": "gzip"
+    }
+  ]
+}

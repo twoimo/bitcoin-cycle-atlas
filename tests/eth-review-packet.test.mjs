@@ -402,3 +402,24 @@ test('file limits reject nonfinite fractional and nonpositive values before read
       maximumBundleBytes:10000,maximumFileBytes}),/File byte limit must be a positive finite safe integer/);
   }
 });
+
+test('declared ETH review inventory includes every top-level browser source and root stylesheet',async()=>{
+  const {readdir}=await import('node:fs/promises');
+  const scope=JSON.parse(await readFile(new URL('../research-data/eth-review-scope.json',import.meta.url),'utf8'));
+  const entries=await readdir(new URL('../dist/',import.meta.url),{withFileTypes:true});
+  const required=new Set(entries.filter(entry=>entry.isFile()&&/\.(?:js|css|html)$/i.test(entry.name)).map(entry=>'dist/'+entry.name));
+  const index=await readFile(new URL('../dist/index.html',import.meta.url),'utf8');
+  const origin=new URL('https://atlas-review.invalid/'),localStylesheets=[];
+  for(const [tag] of index.matchAll(/<link\b[^>]*>/gi)){
+    const attributes=new Map([...tag.matchAll(/\s(rel|href)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)]
+      .map(([,name,double,single,bare])=>[name.toLowerCase(),double??single??bare]));
+    if(!(attributes.get('rel')??'').toLowerCase().split(/\s+/).includes('stylesheet')||!attributes.has('href'))continue;
+    const url=new URL(attributes.get('href'),origin);
+    if(url.origin===origin.origin)localStylesheets.push('dist'+decodeURIComponent(url.pathname));
+  }
+  assert.ok(localStylesheets.length>0,'The root entry must expose a readable local stylesheet inventory');
+  for(const path of localStylesheets)required.add(path);
+  const seeded=new Set(scope.seedPaths);
+  assert.deepEqual([...required].filter(path=>!seeded.has(path)).sort(),[],
+    'Every top-level browser source and locally linked root stylesheet must be an explicit review seed');
+});

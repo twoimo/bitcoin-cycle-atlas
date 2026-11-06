@@ -423,6 +423,87 @@ export async function verifyChartReplaySurface(api) {
     await closeMenu(); await storedUnchanged(saved, label + '-date-close-keeps-saved-session');
     evidence.dateEditors.push({ label, originalStart: before.playbackStartDate, cursor: before.cursor, next, ...observed, canceledDraft: draft, reopened });
   }
+  async function typeDateSegment(value, leftFromYear = 0) {
+    await click(cdp, control('date'));
+    for (let segment = 0; segment < 5; segment++) await key('ArrowRight', 'ArrowRight', 39, 0, false);
+    for (let segment = 0; segment < leftFromYear; segment++) await key('ArrowLeft', 'ArrowLeft', 37, 0, false);
+    await key('Backspace', 'Backspace', 8, 0, false);
+    for (const digit of value) for (const type of ['keyDown', 'keyUp']) {
+      await cdp.send('Input.dispatchKeyEvent', { type, key: digit, code: 'Digit' + digit, windowsVirtualKeyCode: 48 + Number(digit), nativeVirtualKeyCode: 48 + Number(digit),
+        ...(type === 'keyDown' ? { text: digit, unmodifiedText: digit } : {}) });
+    }
+    await settled(cdp);
+  }
+  async function verifyManualDateInputs(before) {
+    const saved = await storedBytes(); assert.ok(saved); assert.ok(before.snapshotDigest);
+    const replayStatus = await evaluate(cdp, () => document.querySelector('.chart-replay-hud [role="status"]').textContent);
+    for (const submit of ['button', 'Enter']) for (const bound of ['lower', 'upper']) {
+      const label = 'native-invalid-date-' + bound + '-' + submit;
+      await openDate();
+      const original = await evaluate(cdp, selector => {
+        const input = document.querySelector(selector); return { value: input.value, min: input.min, max: input.max };
+      }, control('date'));
+      const year = Number((bound === 'lower' ? original.min : original.max).slice(0, 4)) + (bound === 'lower' ? -1 : 1);
+      const requested = String(year).padStart(4, '0') + original.value.slice(4);
+      await typeDateSegment(String(year).padStart(4, '0'));
+      const readValidity = () => evaluate(cdp, selector => {
+        const input = document.querySelector(selector); return { value: input.value, valid: input.validity.valid,
+          rangeUnderflow: input.validity.rangeUnderflow, rangeOverflow: input.validity.rangeOverflow, customError: input.validity.customError,
+          message: input.validationMessage, focused: document.activeElement === input,
+          replayStatus: document.querySelector('.chart-replay-hud [role="status"]').textContent };
+      }, control('date'));
+      const invalid = await readValidity();
+      assert.equal(invalid.value, requested, 'Native date keyboard input did not enter the requested year');
+      assert.equal(invalid.valid, false); assert.equal(invalid[bound === 'lower' ? 'rangeUnderflow' : 'rangeOverflow'], true);
+      assert.equal(invalid.customError, false, 'A previous validation error survived native editing');
+      if (submit === 'button') await click(cdp, control('start')); else await key('Enter', 'Enter', 13);
+      const rejected = await readValidity(), after = await snapshot(label);
+      assert.equal(rejected.value, requested, 'Invalid manual input was silently snapped to another date');
+      assert.equal(rejected.valid, false); assert.equal(rejected.customError, true); assert.equal(rejected.focused, true);
+      assert.equal(rejected.replayStatus, replayStatus, 'Date rejection must not replace the main replay status');
+      assert.ok(rejected.message.includes(original.min) && rejected.message.includes(original.max), 'Date rejection must disclose its available bounds');
+      assert.equal(after.menuHidden, false); assert.equal(after.menuView, 'date');
+      assertSameReplayFrame(after, before, label);
+      assert.equal(after.snapshotDigest, before.snapshotDigest, label + ' changed the immutable snapshot');
+      await storedUnchanged(saved, label);
+      const observation = { label, validated: true, submit, bound, requested, minimum: original.min, maximum: original.max,
+        invalid, rejected, cursor: after.cursor, origin: after.origin, playbackStartDate: after.playbackStartDate,
+        forecastValueSignature: after.forecastValueSignature, snapshotDigest: after.snapshotDigest, savedSha256: digest(saved) };
+      evidence.dateEditors.push(observation);
+      await screenshot(cdp, prefix + '-' + label + '.png', receipt);
+      await typeDateSegment(original.value.slice(0, 4));
+      const corrected = await readValidity();
+      assert.equal(corrected.value, original.value); assert.equal(corrected.valid, true); assert.equal(corrected.customError, false, 'Editing the same rejected date must clear its custom error');
+      assert.equal(corrected.replayStatus, replayStatus);
+      assertSameReplayFrame(await snapshot(label + '-corrected-draft'), before, label + ' corrected draft');
+      await storedUnchanged(saved, label + '-corrected-draft'); observation.corrected = corrected;
+      await closeMenu();
+      const canceled = await readValidity();
+      assert.equal(canceled.customError, false, 'Canceling invalid date entry must clear its custom error');
+      assert.equal(canceled.replayStatus, replayStatus, 'Canceling date entry must not leave a stale main replay status');
+    }
+    for (const [bound, submit] of [['min', 'button'], ['max', 'Enter']]) {
+      const label = 'native-valid-date-' + bound + '-' + submit;
+      await openDate();
+      const requested = await evaluate(cdp, ({ selector, bound }) => document.querySelector(selector)[bound], { selector: control('date'), bound });
+      // The existing Chromium date field orders its native spinbuttons month,
+      // day, year. Read back the completed value before exercising the app.
+      await typeDateSegment(requested.slice(5, 7), 2);
+      await typeDateSegment(requested.slice(8, 10), 1);
+      await typeDateSegment(requested.slice(0, 4));
+      const entered = await evaluate(cdp, selector => { const input = document.querySelector(selector); return { value: input.value, valid: input.validity.valid }; }, control('date'));
+      assert.equal(entered.value, requested, 'Native date spinbuttons did not enter the requested boundary'); assert.equal(entered.valid, true);
+      if (submit === 'button') await click(cdp, control('start')); else await key('Enter', 'Enter', 13);
+      await ready(); const selected = await snapshot(label);
+      assert.equal(selected.playbackStartDate, requested); assert.equal(selected.origin, dateAt(day(requested) - 1));
+      assert.equal(selected.cursor, selected.origin); assert.equal(selected.forecastValueSignature, before.forecastValueSignature);
+      await storedUnchanged(saved, label);
+      evidence.dateEditors.push({ label, validated: true, submit, requested, cursor: selected.cursor, playbackStartDate: selected.playbackStartDate, savedSha256: digest(saved) });
+      await exitReplay(label + '-discard', { save: false }); await reopenSaved(label + '-restore');
+      const restored = await snapshot(label + '-restored'); assertSameReplayFrame(restored, before, label + ' restore');
+      assert.equal(restored.snapshotDigest, before.snapshotDigest); await storedUnchanged(saved, label + '-restored');
+    }
+  }
   async function verifyRemovedBackwardInputs(before, label) {
     const saved = await storedBytes();
     assert.equal(before.previousPresent, false, 'The removed previous-bar button remains in the replay controls');
@@ -950,10 +1031,15 @@ export async function verifyChartReplaySurface(api) {
   }
   async function measureCadence() {
     const expected = [['10', 100], ['1', 1000], ['0.5', 2000], ['0.3', 3000]];
+    const allowedMeanRatio = [.85, 1.3], setupAllowanceMilliseconds = 5000;
     for (const [speed, milliseconds] of expected) {
       await click(cdp, control('scrub')); await key('Home', 'Home', 36); await select(control('speed'), speed);
       const initial = await snapshot('speed-' + speed + '-origin');
       assert.ok(initial.lastIndex >= 5, 'Cadence check needs at least five genuine source observations');
+      // The preserved cutoff stays fixed while new source bars arrive. Completion
+      // must allow their actual playback duration, with the same cadence bound
+      // checked below and a bounded allowance for initial paint and polling.
+      const completionTimeoutMilliseconds = Math.ceil(initial.lastIndex * milliseconds * allowedMeanRatio[1]) + setupAllowanceMilliseconds;
       // Instrument public DOM changes, not application timers or private state.
       await evaluate(cdp, selector => {
         const svg = document.querySelector(selector); let previous = svg.dataset.replayCursor;
@@ -967,7 +1053,7 @@ export async function verifyChartReplaySurface(api) {
         globalThis.__replayCadenceObserver.observe(svg, { attributes: true, attributeFilter: ['data-replay-cursor'] });
       }, chartSelector);
       await click(cdp, control('play'));
-      await until(() => evaluate(cdp, selector => document.querySelector(selector)?.dataset.state === 'ended', panel), 'real ' + speed + '× playback reaches the final available bar');
+      await until(() => evaluate(cdp, selector => document.querySelector(selector)?.dataset.state === 'ended', panel), 'real ' + speed + '× playback reaches the final available bar', completionTimeoutMilliseconds);
       const observations = await evaluate(cdp, () => { globalThis.__replayCadenceObserver.disconnect(); return globalThis.__replayCadenceObservations; });
       const intervals = observations.slice(1).map((row, index) => row.at - observations[index].at);
       assert.equal(observations.length, initial.lastIndex, 'Playback skipped or duplicated visible daily observations');
@@ -978,9 +1064,10 @@ export async function verifyChartReplaySurface(api) {
       // clock count as the requested 100/1000ms cadence. First-paint setup is
       // excluded, and the actual measured samples remain in the receipt.
       const measured = { speed: Number(speed), expectedMilliseconds: milliseconds, observations, intervals,
-        meanMilliseconds: mean, averageUpdatesPerSecond: 1000 / mean, allowedMeanRatio: [.85, 1.3] };
+        meanMilliseconds: mean, averageUpdatesPerSecond: 1000 / mean, allowedMeanRatio,
+        completionTimeoutMilliseconds, setupAllowanceMilliseconds };
       evidence.timing.push(measured);
-      assert.ok(mean >= milliseconds * .85 && mean <= milliseconds * 1.3,
+      assert.ok(mean >= milliseconds * allowedMeanRatio[0] && mean <= milliseconds * allowedMeanRatio[1],
         'Observed ' + speed + '× cadence does not match the requested update interval: ' + JSON.stringify(measured));
       await snapshot('speed-' + speed + '-ended');
     }
@@ -1524,6 +1611,7 @@ export async function verifyChartReplaySurface(api) {
     for (const field of ['cycleMarkerLayers', 'cycleMarkerCount', 'cycleIntervalLayers', 'cycleIntervalCount']) assert.equal(resumedAtlas[field], pausedAtlas[field], 'Continue changed the frozen visible ' + field);
     assert.notEqual(resumedAtlas.state, 'playing'); await delay(450); assert.equal((await snapshot('atlas-resume-stable')).index, resumedAtlas.index);
     await verifySavedDateEditor(resumedAtlas, 'saved-october24-current-date');
+    if (!touch) await verifyManualDateInputs(resumedAtlas);
     evidence.lifecycle.push({ label: 'direct-current-chart-project-replay', projectStart: '2026-10-21', initialObservationCutoff: direct.origin, forecastAsOf: currentAtlasModel.asOf,
       firstRevealedDate: firstAtlas.cursor, finalObservedDate: endAtlas.cursor, outputHash: direct.outputHash, annotationSha256: digest(direct.annotationSignature) });
     await verifyCurrentControls(direct, liveContext);

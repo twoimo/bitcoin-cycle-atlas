@@ -1,0 +1,9 @@
+HALLMARK_RENDER_READY {"url":"http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line","route":"btc"}
+HALLMARK_RENDER_READY {"url":"http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line","route":"eth"}
+HALLMARK_RENDER_READY {"url":"http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line","route":"bmnr"}
+HALLMARK_RENDER_READY {"url":"http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line","route":"mstr"}
+HALLMARK_RENDER_READY {"url":"http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data","route":"data"}
+HALLMARK_RENDER_READY {"url":"http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence","route":"evidence"}
+HALLMARK_RENDER_READY {"url":"http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1","route":"compare"}
+HALLMARK_RENDER_READY {"url":"http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html","route":"mobile-preview"}
+render tier: 40 screenshots in /workspace/scratch/5579aed69769/bitcoin-cycle-atlas/build/hallmark-20261106-local/work/.hallmark/shots (1280x800, 1440x900, 1920x1080 folds; 1440 and 375 full pages)

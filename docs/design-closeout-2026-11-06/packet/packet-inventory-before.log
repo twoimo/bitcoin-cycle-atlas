@@ -1,0 +1,94 @@
+✖ declared ETH review inventory includes every top-level browser source and root stylesheet (7.694613ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 87.61893
+
+✖ failing tests:
+
+test at tests/eth-review-packet.test.mjs:406:1
+✖ declared ETH review inventory includes every top-level browser source and root stylesheet (7.694613ms)
+  AssertionError [ERR_ASSERTION]: Every top-level browser source and locally linked root stylesheet must be an explicit review seed
+  + actual - expected
+  
+  + [
+  +   'dist/asset-forecast-loader.js',
+  +   'dist/atlas-navigation.js',
+  +   'dist/atlas-shell-state.js',
+  +   'dist/atlas-shell.css',
+  +   'dist/atlas-shell.js',
+  +   'dist/center-workbench.js',
+  +   'dist/chart-replay-atlas.js',
+  +   'dist/chart-replay-renderer.js',
+  +   'dist/chart-replay-snapshot.js',
+  +   'dist/chart-replay-sources.js',
+  +   'dist/chart-replay-state.js',
+  +   'dist/chart-replay.css',
+  +   'dist/chart-replay.js',
+  +   'dist/cycle-clock-backtest-view.js',
+  +   'dist/cycle-clock-backtest-worker.js',
+  +   'dist/cycle-clock-backtest.js',
+  +   'dist/cycle-period-comparison.js',
+  +   'dist/cycle-period-worker.js',
+  +   'dist/ipo-month-calendar.js',
+  +   'dist/ipo-view.css',
+  +   'dist/ipo-view.js',
+  +   'dist/loading-surfaces.css',
+  +   'dist/loading-surfaces.js',
+  +   'dist/market-lab-math.js',
+  +   'dist/market-lab-view.js',
+  +   'dist/market-lab.css',
+  +   'dist/monthly-backtest-source.js',
+  +   'dist/monthly-backtest-store.js',
+  +   'dist/monthly-backtest-view.js',
+  +   'dist/monthly-backtest-worker.js',
+  +   'dist/monthly-backtest.css',
+  +   'dist/monthly-backtest.js',
+  +   'dist/preserved-archive-download.js',
+  +   'dist/project-replay-baseline.js',
+  +   'dist/replay-cutoff-forecast.js',
+  +   'dist/replay-retrospective.js',
+  +   'dist/rsi-chart-layout.js',
+  +   'dist/rsi-instruments.js',
+  +   'dist/rsi-workbench-controls.js',
+  +   'dist/site-paths.js',
+  +   'dist/vendor/skullet/styles.css'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/tests/eth-review-packet.test.mjs:423:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [
+      'dist/asset-forecast-loader.js',       'dist/atlas-navigation.js',
+      'dist/atlas-shell-state.js',           'dist/atlas-shell.css',
+      'dist/atlas-shell.js',                 'dist/center-workbench.js',
+      'dist/chart-replay-atlas.js',          'dist/chart-replay-renderer.js',
+      'dist/chart-replay-snapshot.js',       'dist/chart-replay-sources.js',
+      'dist/chart-replay-state.js',          'dist/chart-replay.css',
+      'dist/chart-replay.js',                'dist/cycle-clock-backtest-view.js',
+      'dist/cycle-clock-backtest-worker.js', 'dist/cycle-clock-backtest.js',
+      'dist/cycle-period-comparison.js',     'dist/cycle-period-worker.js',
+      'dist/ipo-month-calendar.js',          'dist/ipo-view.css',
+      'dist/ipo-view.js',                    'dist/loading-surfaces.css',
+      'dist/loading-surfaces.js',            'dist/market-lab-math.js',
+      'dist/market-lab-view.js',             'dist/market-lab.css',
+      'dist/monthly-backtest-source.js',     'dist/monthly-backtest-store.js',
+      'dist/monthly-backtest-view.js',       'dist/monthly-backtest-worker.js',
+      'dist/monthly-backtest.css',           'dist/monthly-backtest.js',
+      'dist/preserved-archive-download.js',  'dist/project-replay-baseline.js',
+      'dist/replay-cutoff-forecast.js',      'dist/replay-retrospective.js',
+      'dist/rsi-chart-layout.js',            'dist/rsi-instruments.js',
+      'dist/rsi-workbench-controls.js',      'dist/site-paths.js',
+      'dist/vendor/skullet/styles.css'
+    ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

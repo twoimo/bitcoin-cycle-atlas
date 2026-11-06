@@ -11,6 +11,17 @@ test('loading geometry contains no pretend data or active controls, and its stat
   assert.equal(document.querySelectorAll('.atlas-skeleton-rsi-panels > [skullet-block]').length,2);
   assert.equal(document.querySelector('.atlas-loading-label')?.textContent,'<script>bad</script>');
 });
+test('every supported pending view keeps the announcement separate from inert neutral paint',()=>{
+  for(const kind of ['chart','rsi','diagnosis','scenario','cashflow','table','list','detail','calendar']){
+    const {document}=parseHTML('<html><body>'+skeletonMarkup(kind,'자료 로딩')+'</body></html>');
+    const root=document.querySelector('[role=status]')!,paint=root.querySelector('.atlas-skeleton-paint')!;
+    assert.equal(root.querySelector('.atlas-loading-label')?.textContent,'자료 로딩',kind);
+    assert.equal(paint.getAttribute('aria-hidden'),'true',kind);assert(paint.hasAttribute('inert'),kind);
+    assert.equal(paint.querySelectorAll('a,button,input,select,textarea,[tabindex],img,video,skullet-reveal').length,0,kind);
+    assert(paint.querySelectorAll('[skullet-block]').length>0,kind);
+    assert.equal(paint.textContent?.trim(),'',kind+' never supplies synthetic financial text');
+  }
+});
 test('pending -> error -> retry -> ready preserves original nodes and releases only its own loading surface',()=>{
   const {document,window}=parseHTML('<html><body><section id="target"><button>다시 조회</button><p>기존 결과</p></section></body></html>');
   const target=document.querySelector('#target')!,button=target.querySelector('button')!;let clicks=0;button.addEventListener('click',()=>clicks++);

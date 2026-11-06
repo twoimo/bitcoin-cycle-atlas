@@ -1,0 +1,86 @@
+{
+  "sourceCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "browserVersion": "HeadlessChrome/143.0.7499.0",
+  "notes": [
+    "Focused diagnostic only; does not replace Hallmark or native49.",
+    "Temporary fixtures use real shipped CSS under each active theme. No source/checker/font changes.",
+    "Background uses first opaque ancestor; sampled foregrounds are opaque.",
+    "Earlier diagnostic attempt waited for a BTC-only chart selector on comparison route and timed out; this probe correctly waits for shipped CSS. This was a probe error, not an app failure."
+  ],
+  "headings": [
+    "가격 차트",
+    "비트코인 통합 차트",
+    "차트 안 사이클 기간 9가지 관계",
+    "미래 가정의 주요 날짜",
+    "사이클 내부의 구조",
+    "같은 4년, 다른 내부 길이",
+    "기간별 낙폭과 가격 발견",
+    "비트코인 사이클 비트코인 / USD",
+    "고점과 저점, 다음 사이클",
+    "다음 고점과 저점의 조건부 시나리오",
+    "고점권 첫 진입과 최고값을 구분합니다",
+    "사이클은 얼마나 빨라졌나",
+    "경과일별 비교",
+    "공모주 캘린더",
+    "날짜별 일정",
+    "방법론과 출처",
+    ""
+  ],
+  "sourceLinks": [],
+  "samples": [
+    {
+      "theme": "dark",
+      "selector": "dialog code",
+      "color": "rgb(242, 168, 75)",
+      "background": "rgb(11, 14, 20)",
+      "contrastRatio": 9.63817326737223,
+      "fontSize": "11px",
+      "fixture": true
+    },
+    {
+      "theme": "dark",
+      "selector": "dialog .method-formula",
+      "color": "rgb(242, 168, 75)",
+      "background": "rgb(11, 14, 20)",
+      "contrastRatio": 9.63817326737223,
+      "fontSize": "11px",
+      "fixture": true
+    },
+    {
+      "theme": "dark",
+      "selector": ".lab-error",
+      "color": "rgb(236, 129, 144)",
+      "background": "rgb(53, 28, 35)",
+      "contrastRatio": 6.0439056274068275,
+      "fontSize": "12px",
+      "fixture": true
+    },
+    {
+      "theme": "light",
+      "selector": "dialog code",
+      "color": "rgb(146, 91, 21)",
+      "background": "rgb(246, 247, 249)",
+      "contrastRatio": 5.252979234167962,
+      "fontSize": "11px",
+      "fixture": true
+    },
+    {
+      "theme": "light",
+      "selector": "dialog .method-formula",
+      "color": "rgb(146, 91, 21)",
+      "background": "rgb(246, 247, 249)",
+      "contrastRatio": 5.252979234167962,
+      "fontSize": "11px",
+      "fixture": true
+    },
+    {
+      "theme": "light",
+      "selector": ".lab-error",
+      "color": "rgb(173, 62, 82)",
+      "background": "rgb(53, 28, 35)",
+      "contrastRatio": 2.673926712815015,
+      "fontSize": "12px",
+      "fixture": true
+    }
+  ]
+}

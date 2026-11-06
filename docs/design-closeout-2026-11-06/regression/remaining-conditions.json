@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "kind": "remaining-empirical-conditions-source-inspection",
+  "sourceCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "inspectedAt": "2026-11-06T08:08:24.500Z",
+  "scope": "Read-only inspection of committed policies and retained seed evidence. No collection, new forecast issuance, calibration freeze, release decision or live remote-archive inventory is performed.",
+  "localSeed": {
+    "records": 3,
+    "uniqueOrigins": 1,
+    "recordIds": [
+      "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+      "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+      "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1"
+    ],
+    "targets": [
+      {
+        "modelKey": "adaptive",
+        "horizonDays": 30,
+        "targetDate": "2026-11-25",
+        "observationEndsAt": "2026-11-26T00:00:00.000Z",
+        "matureByInspection": false
+      },
+      {
+        "modelKey": "adaptive",
+        "horizonDays": 90,
+        "targetDate": "2027-01-24",
+        "observationEndsAt": "2027-01-25T00:00:00.000Z",
+        "matureByInspection": false
+      },
+      {
+        "modelKey": "adaptive",
+        "horizonDays": 180,
+        "targetDate": "2027-04-24",
+        "observationEndsAt": "2027-04-25T00:00:00.000Z",
+        "matureByInspection": false
+      },
+      {
+        "modelKey": "warmStart",
+        "horizonDays": 30,
+        "targetDate": "2026-11-25",
+        "observationEndsAt": "2026-11-26T00:00:00.000Z",
+        "matureByInspection": false
+      },
+      {
+        "modelKey": "warmStart",
+        "horizonDays": 90,
+        "targetDate": "2027-01-24",
+        "observationEndsAt": "2027-01-25T00:00:00.000Z",
+        "matureByInspection": false
+      },
+      {
+        "modelKey": "warmStart",
+        "horizonDays": 180,
+        "targetDate": "2027-04-24",
+        "observationEndsAt": "2027-04-25T00:00:00.000Z",
+        "matureByInspection": false
+      },
+      {
+        "modelKey": "pooled",
+        "horizonDays": 30,
+        "targetDate": "2026-11-25",
+        "observationEndsAt": "2026-11-26T00:00:00.000Z",
+        "matureByInspection": false
+      },
+      {
+        "modelKey": "pooled",
+        "horizonDays": 90,
+        "targetDate": "2027-01-24",
+        "observationEndsAt": "2027-01-25T00:00:00.000Z",
+        "matureByInspection": false
+      },
+      {
+        "modelKey": "pooled",
+        "horizonDays": 180,
+        "targetDate": "2027-04-24",
+        "observationEndsAt": "2027-04-25T00:00:00.000Z",
+        "matureByInspection": false
+      }
+    ],
+    "flags": [
+      {
+        "id": "563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b",
+        "economicInputsUsed": false,
+        "calibrated": false,
+        "productionAdopted": false,
+        "prospectiveAccuracyProven": false,
+        "historicalVintagesProven": false
+      },
+      {
+        "id": "d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72",
+        "economicInputsUsed": false,
+        "calibrated": false,
+        "productionAdopted": false,
+        "prospectiveAccuracyProven": false,
+        "historicalVintagesProven": false
+      },
+      {
+        "id": "f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1",
+        "economicInputsUsed": false,
+        "calibrated": false,
+        "productionAdopted": false,
+        "prospectiveAccuracyProven": false,
+        "historicalVintagesProven": false
+      }
+    ]
+  },
+  "committedArchiveManifest": {
+    "id": "c65342e22b783fc387b6965afe5ce5d946713a883fe7838883daa2ce64744d51",
+    "sequence": 3,
+    "createdAt": "2026-10-28T03:22:57.768Z",
+    "counts": {
+      "acquisitions": 3,
+      "evaluations": 4,
+      "files": 36,
+      "indexes": 1,
+      "issuances": 3,
+      "objectBytes": 5662730,
+      "objects": 32,
+      "observations": 4,
+      "outcome-observations": 1,
+      "raw": 4,
+      "receipts": 11,
+      "records": 3,
+      "snapshots": 2
+    },
+    "qualification": "This checked-in seed manifest is not an assertion about the current remote archive branch."
+  },
+  "prospectiveCalibration": {
+    "version": "eth-prospective-calibration-gate-1",
+    "contractVersion": "eth-future-frozen-calibration-contract-1",
+    "minimumCalibrationCases": 12,
+    "fixedCalibrationCases": 12,
+    "alpha": 0.2,
+    "maximumRecords": 2000,
+    "maximumObservations": 500,
+    "originSelection": "Earliest actually issued record per exact-bound origin; tied revisions are incomplete",
+    "windowSelection": "First twelve chronological nonoverlapping matured forecast windows, before inspecting labels",
+    "outcomeSelection": "Latest verified actually collected outcome vintage at the fixed cutoff",
+    "missingSelectedSlotReplacement": false,
+    "retrospectiveErrorsAllowed": false,
+    "independentMarketSampleSize": null,
+    "coverageGuarantee": false,
+    "productionPromoted": false,
+    "remaining": "First 12 actual nonoverlapping mature windows within each exact source/model/options/horizon binding, validated collected outcomes, then an immutable freeze and later distinct issuance/evaluation."
+  },
+  "economics": {
+    "metricDefinitionVersion": "eth-economic-input-4",
+    "requiredMetricCount": 26,
+    "windowDays": 28,
+    "minimumTrainingLabels": 16,
+    "remaining": [
+      "Definition-matched complete 26-metric observations at exact 28 UTC-day boundaries, including non-fee execution destruction.",
+      "Actual availability and collection vintages at each historical origin.",
+      "Reconciled supply accounting; same-cohort staking rewards, penalties, costs and time-weighted principal; disjoint underlying collateral.",
+      "Enough same-horizon mature labels and distinct market conditions for separate future calibration evaluation."
+    ],
+    "historicalCoverage": {
+      "source": "research-data/eth-economic-captures/20261026T121240869Z-coinmetrics/coverage.json",
+      "asOf": "2026-10-25",
+      "collectedAt": "2026-10-26T12:12:40.869Z",
+      "requiredMetricCountAtThatTime": 25,
+      "fullModelSnapshotReady": false,
+      "eligibleModelSnapshotCount": 0,
+      "qualification": "Historical acquisition receipt only. Its old 25-metric count is not the current 26-metric schema or a new current-collection result."
+    }
+  },
+  "workflowStatus": {
+    "scheduledDefinitionPresentInCurrentSource": true,
+    "liveActivationAndRunsInspected": false,
+    "qualification": "Earlier documentation saying main has no daily workflow is historical; it cannot establish present remote activation or execution."
+  },
+  "externalReviews": {
+    "geminiOpposition": "omitted-by-user",
+    "followupReverseReview": "omitted-by-user",
+    "qualification": "Omission is neither a pass nor a currently required missing approval."
+  },
+  "limitations": [
+    "Finite numerical and lifecycle checks cannot establish forecasting superiority, calibrated probabilities or actual future market outcomes.",
+    "This UI closeout does not change the independent research-model activation flags.",
+    "Remote collection/publication status requires current remote run receipts, not this retained local inventory."
+  ],
+  "sourceHashes": {
+    "research-data/ethereum-prospective-ledger/index.json": "f124b65d177b3aae9fa851a2f6204a6e1073dc288d22bf36eecf0b0e650081c2",
+    "research-data/ethereum-prospective-ledger/records/563d087f19a5062981714ed6fee1f96dd5afe77a87a4c435979b000451189a9b.json": "f1a53ceda9039fc00d3c59b5ae8c887c7bf277ad4d4a866d9021a02d32e5efc8",
+    "research-data/ethereum-prospective-ledger/records/d2659722c147909a9cbeeea4980c63b52f36f9c23c315cd2ef1e10984b8d5f72.json": "747a8ba0b9223674647408ce1757482f3969b629911f8293d97ed7e774c35673",
+    "research-data/ethereum-prospective-ledger/records/f1f0bf98496c1d6e9339ae9410a51c904571524d3ade88fc935cf6f58df3fed1.json": "15a3156fc75faff35aca7a5f52e835570a4370b4e370ac0a5961fafc8a0363ce",
+    "research-data/ethereum-prospective-archive/manifest.json": "f6ac5579e8b9ea25921009c1f086df23287264f39fdfa2a7c9dc1cafb6325d06",
+    "research-data/eth-economic-captures/20261026T121240869Z-coinmetrics/coverage.json": "7f384b768ef7e7307afd03cd68aca9d191664b36f21f1e6731921f1eb2c2faae",
+    "dist/ethereum-economic-model.js": "fecb23afa3ea4efd2e8a8bbd3be67de1dd7c6fd133302d347a703487f78951d0",
+    "scripts/ethereum-prospective-calibration-core.mjs": "8e17ef1be784f0b8687812361f99d31e68b045aefb6cd33f669bbbdd249a87a2",
+    "scripts/build-ethereum-model-readiness.mjs": "c389ab591295ddc72ff98164094c50780f7ef96092099c59dd7e8bae19d12dc7",
+    ".github/workflows/eth-prospective-daily.yml": "0f2f24a770b8b9cb8a66ffbf86d63cc5efbe05d6142880c359930fc54d70e80f",
+    "docs/ETH_REMAINING_CONDITIONS.md": "56be4821ca19447e8c3a282fd4cb60f6c5b7836275fea258793c4c4e73b4c5d0"
+  }
+}

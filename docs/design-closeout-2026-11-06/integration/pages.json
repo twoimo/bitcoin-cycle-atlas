@@ -1,0 +1,10 @@
+{
+  "name": "pages",
+  "command": [
+    "npm",
+    "run",
+    "verify:pages"
+  ],
+  "code": 0,
+  "seconds": 1.1
+}

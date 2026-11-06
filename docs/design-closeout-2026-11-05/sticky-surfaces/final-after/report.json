@@ -1,0 +1,3048 @@
+{
+  "schemaVersion": 1,
+  "kind": "native-scroll-owner-closeout",
+  "phase": "after",
+  "baseline": "624888270fcb539ab08d505e5affab5f5d435776",
+  "sourceReference": "working-tree",
+  "startedAt": "2026-11-05T12:39:02.207Z",
+  "status": "failed",
+  "cases": [
+    {
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "inputs": [
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": ".workbench-symbol",
+            "x": 48,
+            "y": 76.5,
+            "left": 8,
+            "right": 88,
+            "top": 54.5,
+            "bottom": 98.5,
+            "width": 80,
+            "height": 44,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "종목 선택 · 비트코인 / USD · BTCUSD"
+          }
+        },
+        {
+          "kind": "keyboard",
+          "key": "ArrowDown"
+        },
+        {
+          "kind": "keyboard",
+          "key": "ArrowDown"
+        },
+        {
+          "kind": "keyboard",
+          "key": "ArrowDown"
+        },
+        {
+          "kind": "wheel",
+          "selector": ".symbol-search-dialog",
+          "x": 160,
+          "y": 276.5,
+          "dx": 0,
+          "dy": 1500,
+          "hit": [
+            "BUTTON.symbol-search-row",
+            "DIV.symbol-search-results",
+            "DIALOG.symbol-search-dialog",
+            "BODY.js",
+            "HTML."
+          ]
+        },
+        {
+          "kind": "keyboard",
+          "key": "Shift+Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Enter"
+        },
+        {
+          "kind": "wheel",
+          "selector": ".atlas-canvas-heading",
+          "x": 160,
+          "y": 77,
+          "dx": 180,
+          "dy": 0,
+          "hit": [
+            "BUTTON.workbench-icon",
+            "HEADER.atlas-canvas-heading",
+            "DIV.lab-chart-stage atlas-chart-stage has-chart-bottom-bar",
+            "SECTION.lab-panel atlas-workbench",
+            "SECTION.lab-page atlas-page",
+            "MAIN."
+          ]
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#workbench-monthly-backtest",
+            "x": 192,
+            "y": 76.5,
+            "left": 162,
+            "right": 222,
+            "top": 54.5,
+            "bottom": 98.5,
+            "width": 60,
+            "height": 44,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "백테스트"
+          }
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "[data-mb=\"common\"]",
+            "x": 238.328125,
+            "y": 180,
+            "left": 231.828125,
+            "right": 244.828125,
+            "top": 173.5,
+            "bottom": 186.5,
+            "width": 13,
+            "height": 13,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": ""
+          }
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "PageDown"
+        },
+        {
+          "kind": "wheel",
+          "selector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+          "x": 160,
+          "y": 648.65625,
+          "dx": 0,
+          "dy": 380,
+          "hit": [
+            "BUTTON.",
+            "TD.",
+            "TR.",
+            "TBODY.",
+            "TABLE.",
+            "DIV.monthly-ledger"
+          ]
+        },
+        {
+          "kind": "wheel",
+          "selector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+          "x": 160,
+          "y": 648.65625,
+          "dx": 320,
+          "dy": 0,
+          "hit": [
+            "BUTTON.",
+            "TD.",
+            "TR.",
+            "TBODY.",
+            "TABLE.",
+            "DIV.monthly-ledger"
+          ]
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": ".monthly-backtest:not([hidden]) .monthly-heading > button:last-child",
+            "x": 290,
+            "y": 127,
+            "left": 268,
+            "right": 312,
+            "top": 105,
+            "bottom": 149,
+            "width": 44,
+            "height": 44,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "월말 백테스트 닫기"
+          }
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#workbench-monthly-backtest",
+            "x": 192,
+            "y": 76.5,
+            "left": 162,
+            "right": 222,
+            "top": 54.5,
+            "bottom": 98.5,
+            "width": 60,
+            "height": 44,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "백테스트"
+          }
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "[data-mb=\"clock-mode\"]",
+            "x": 233.25,
+            "y": 127,
+            "left": 202.5,
+            "right": 264,
+            "top": 105,
+            "bottom": 149,
+            "width": 61.5,
+            "height": 44,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "거시 시계"
+          }
+        },
+        {
+          "kind": "wheel",
+          "selector": ".clock-backtest .clock-ledger",
+          "x": 160,
+          "y": 640.53125,
+          "dx": 0,
+          "dy": 380,
+          "hit": [
+            "TH.",
+            "TR.",
+            "TBODY.",
+            "TABLE.",
+            "DIV.monthly-ledger clock-ledger",
+            "DIV.monthly-content"
+          ]
+        },
+        {
+          "kind": "wheel",
+          "selector": ".clock-backtest .clock-ledger",
+          "x": 160,
+          "y": 640.53125,
+          "dx": 320,
+          "dy": 0,
+          "hit": [
+            "TH.",
+            "TR.",
+            "TBODY.",
+            "TABLE.",
+            "DIV.monthly-ledger clock-ledger",
+            "DIV.monthly-content"
+          ]
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": ".monthly-backtest:not([hidden]) .monthly-heading > button:last-child",
+            "x": 290,
+            "y": 127,
+            "left": 268,
+            "right": 312,
+            "top": 105,
+            "bottom": 149,
+            "width": 44,
+            "height": 44,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "거시 시계 검증 닫기"
+          }
+        },
+        {
+          "kind": "wheel",
+          "selector": "body",
+          "x": 160,
+          "y": 450,
+          "dx": 0,
+          "dy": 640,
+          "hit": [
+            "svg.[object SVGAnimatedString]",
+            "DIV.lab-chart-stage",
+            "SECTION.lab-panel",
+            "SECTION.lab-page",
+            "MAIN.",
+            "DIV.workspace atlas-details-layout"
+          ]
+        },
+        {
+          "kind": "wheel",
+          "selector": "body",
+          "x": 160,
+          "y": 450,
+          "dx": 0,
+          "dy": 640,
+          "hit": [
+            "svg.[object SVGAnimatedString]",
+            "DIV.lab-timeline-panel",
+            "SECTION.lab-page",
+            "MAIN.",
+            "DIV.workspace atlas-details-layout",
+            "BODY.js"
+          ]
+        },
+        {
+          "kind": "wheel",
+          "selector": "body",
+          "x": 160,
+          "y": 450,
+          "dx": 0,
+          "dy": 640,
+          "hit": [
+            "STRONG.",
+            "P.lab-inline-note",
+            "SECTION.lab-page",
+            "MAIN.",
+            "DIV.workspace atlas-details-layout",
+            "BODY.js"
+          ]
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#legacy-comparison > summary",
+            "x": 186,
+            "y": 698.8828125,
+            "left": 52,
+            "right": 320,
+            "top": 673.359375,
+            "bottom": 724.40625,
+            "width": 268,
+            "height": 51.046875,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "반감기와 고점권, 이전 기준점 비교"
+          }
+        },
+        {
+          "kind": "wheel",
+          "selector": "body",
+          "x": 160,
+          "y": 450,
+          "dx": 0,
+          "dy": 553.40625,
+          "hit": [
+            "SECTION.lab-page",
+            "MAIN.",
+            "DIV.workspace atlas-details-layout",
+            "BODY.js",
+            "HTML."
+          ]
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#export-button",
+            "x": 243.25,
+            "y": 222.40625,
+            "left": 187.5,
+            "right": 299,
+            "top": 200.40625,
+            "bottom": 244.40625,
+            "width": 111.5,
+            "height": 44,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "자료와 도구"
+          }
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#export-menu [data-method]",
+            "x": 198,
+            "y": 366.40625,
+            "left": 102,
+            "right": 294,
+            "top": 344.40625,
+            "bottom": 388.40625,
+            "width": 192,
+            "height": 44,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "방법론과 출처"
+          }
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#chart-reader [aria-label=\"다음 설명 페이지\"]",
+            "x": 278.984375,
+            "y": 861,
+            "left": 256.984375,
+            "right": 300.984375,
+            "top": 841,
+            "bottom": 881,
+            "width": 44,
+            "height": 40,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "다음 설명 페이지"
+          }
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#chart-reader [aria-label=\"다음 설명 페이지\"]",
+            "x": 278.984375,
+            "y": 861,
+            "left": 256.984375,
+            "right": 300.984375,
+            "top": 841,
+            "bottom": 881,
+            "width": 44,
+            "height": 40,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "다음 설명 페이지"
+          }
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#chart-reader [aria-label=\"다음 설명 페이지\"]",
+            "x": 278.984375,
+            "y": 861,
+            "left": 256.984375,
+            "right": 300.984375,
+            "top": 841,
+            "bottom": 881,
+            "width": 44,
+            "height": 40,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "다음 설명 페이지"
+          }
+        },
+        {
+          "kind": "keyboard",
+          "key": "Escape"
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": ".rsi-workbench-tabs button:nth-child(3)",
+            "x": 293,
+            "y": 72.59375,
+            "left": 274,
+            "right": 312,
+            "top": 56.59375,
+            "bottom": 88.59375,
+            "width": 38,
+            "height": 32,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "기록"
+          }
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "PageDown"
+        },
+        {
+          "kind": "wheel",
+          "selector": ".rsi-ledger-scroll",
+          "x": 160,
+          "y": 794.0625,
+          "dx": 0,
+          "dy": 220,
+          "hit": [
+            "TD.",
+            "TR.",
+            "TBODY.",
+            "TABLE.",
+            "DIV.ml-table-wrap rsi-ledger-scroll",
+            "SECTION.rsi-history"
+          ]
+        },
+        {
+          "kind": "wheel",
+          "selector": ".rsi-ledger-scroll",
+          "x": 160,
+          "y": 794.0625,
+          "dx": 240,
+          "dy": 0,
+          "hit": [
+            "TD.",
+            "TR.",
+            "TBODY.",
+            "TABLE.",
+            "DIV.ml-table-wrap rsi-ledger-scroll",
+            "SECTION.rsi-history"
+          ]
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#housing-tab-chart",
+            "x": 40,
+            "y": 532.421875,
+            "left": 20,
+            "right": 60,
+            "top": 510.421875,
+            "bottom": 554.421875,
+            "width": 40,
+            "height": 44,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "차트"
+          }
+        },
+        {
+          "kind": "keyboard",
+          "key": "End"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "PageDown"
+        },
+        {
+          "kind": "wheel",
+          "selector": "#housing-view-history .housing-ledger",
+          "x": 152.5,
+          "y": 630.2109375,
+          "dx": 0,
+          "dy": 220,
+          "hit": [
+            "TD.",
+            "TR.",
+            "TBODY.",
+            "TABLE.housing-table",
+            "DIV.housing-table-scroll housing-ledger",
+            "SECTION.housing-content"
+          ]
+        },
+        {
+          "kind": "wheel",
+          "selector": "#housing-view-history .housing-ledger",
+          "x": 152.5,
+          "y": 630.2109375,
+          "dx": 240,
+          "dy": 0,
+          "hit": [
+            "TD.",
+            "TR.",
+            "TBODY.",
+            "TABLE.housing-table",
+            "DIV.housing-table-scroll housing-ledger",
+            "SECTION.housing-content"
+          ]
+        }
+      ],
+      "ledgers": [
+        {
+          "label": "monthly",
+          "before": {
+            "ownerSelector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+            "owner": {
+              "left": 8,
+              "right": 312,
+              "top": 484,
+              "bottom": 813.3125,
+              "width": 304,
+              "height": 329.3125
+            },
+            "clientTop": 484,
+            "clientLeft": 8,
+            "scrollTop": 287,
+            "scrollLeft": 0,
+            "maxScrollTop": 581,
+            "maxScrollLeft": 456,
+            "rows": 13,
+            "head": {
+              "left": 8,
+              "right": 116.3125,
+              "top": 484,
+              "bottom": 517,
+              "width": 108.3125,
+              "height": 33
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 8,
+              "right": 116.3125,
+              "top": 262,
+              "bottom": 327,
+              "width": 108.3125,
+              "height": 65
+            },
+            "firstPosition": "sticky",
+            "firstText": "2026-10-31고정 · e7d0ac8d",
+            "row": {
+              "left": 8,
+              "right": 768,
+              "top": 262,
+              "bottom": 327,
+              "width": 760,
+              "height": 65
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "pricePathBefore": "6f13279055efb5cb1853306e179b6e36e7d1528e7e75b2a45887ebdb13f56559",
+          "vertical": {
+            "ownerSelector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+            "owner": {
+              "left": 8,
+              "right": 312,
+              "top": 484,
+              "bottom": 813.3125,
+              "width": 304,
+              "height": 329.3125
+            },
+            "clientTop": 484,
+            "clientLeft": 8,
+            "scrollTop": 581,
+            "scrollLeft": 0,
+            "maxScrollTop": 581,
+            "maxScrollLeft": 456,
+            "rows": 13,
+            "head": {
+              "left": 8,
+              "right": 116.3125,
+              "top": 484,
+              "bottom": 517,
+              "width": 108.3125,
+              "height": 33
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 8,
+              "right": 116.3125,
+              "top": -32,
+              "bottom": 33,
+              "width": 108.3125,
+              "height": 65
+            },
+            "firstPosition": "sticky",
+            "firstText": "2026-10-31고정 · e7d0ac8d",
+            "row": {
+              "left": 8,
+              "right": 768,
+              "top": -32,
+              "bottom": 33,
+              "width": 760,
+              "height": 65
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "pricePathAfterWheel": "6f13279055efb5cb1853306e179b6e36e7d1528e7e75b2a45887ebdb13f56559",
+          "bothAxes": {
+            "ownerSelector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+            "owner": {
+              "left": 8,
+              "right": 312,
+              "top": 484,
+              "bottom": 813.3125,
+              "width": 304,
+              "height": 329.3125
+            },
+            "clientTop": 484,
+            "clientLeft": 8,
+            "scrollTop": 581,
+            "scrollLeft": 320,
+            "maxScrollTop": 581,
+            "maxScrollLeft": 456,
+            "rows": 13,
+            "head": {
+              "left": 8,
+              "right": 116.3125,
+              "top": 484,
+              "bottom": 517,
+              "width": 108.3125,
+              "height": 33
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 8,
+              "right": 116.3125,
+              "top": -32,
+              "bottom": 33,
+              "width": 108.3125,
+              "height": 65
+            },
+            "firstPosition": "sticky",
+            "firstText": "2026-10-31고정 · e7d0ac8d",
+            "row": {
+              "left": -312,
+              "right": 448,
+              "top": -32,
+              "bottom": 33,
+              "width": 760,
+              "height": 65
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "negativeControl": {
+            "kind": "temporary in-memory removal of vertical sticky behavior",
+            "geometry": {
+              "ownerSelector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+              "owner": {
+                "left": 8,
+                "right": 312,
+                "top": 484,
+                "bottom": 813.3125,
+                "width": 304,
+                "height": 329.3125
+              },
+              "clientTop": 484,
+              "clientLeft": 8,
+              "scrollTop": 581,
+              "scrollLeft": 320,
+              "maxScrollTop": 581,
+              "maxScrollLeft": 456,
+              "rows": 13,
+              "head": {
+                "left": -312,
+                "right": -203.6875,
+                "top": -65,
+                "bottom": -32,
+                "width": 108.3125,
+                "height": 33
+              },
+              "headPosition": "static",
+              "headTop": "0px",
+              "first": {
+                "left": 8,
+                "right": 116.3125,
+                "top": -32,
+                "bottom": 33,
+                "width": 108.3125,
+                "height": 65
+              },
+              "firstPosition": "sticky",
+              "firstText": "2026-10-31고정 · e7d0ac8d",
+              "row": {
+                "left": -312,
+                "right": 448,
+                "top": -32,
+                "bottom": 33,
+                "width": 760,
+                "height": 65
+              },
+              "bodyScroll": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "detected": true
+          },
+          "closed": true
+        },
+        {
+          "label": "clock",
+          "before": {
+            "ownerSelector": ".clock-backtest .clock-ledger",
+            "owner": {
+              "left": 8,
+              "right": 312,
+              "top": 545.0625,
+              "bottom": 736,
+              "width": 304,
+              "height": 190.9375
+            },
+            "clientTop": 545.0625,
+            "clientLeft": 8,
+            "scrollTop": 0,
+            "scrollLeft": 0,
+            "maxScrollTop": 617,
+            "maxScrollLeft": 756,
+            "rows": 15,
+            "head": {
+              "left": 8,
+              "right": 180.125,
+              "top": 545.0625,
+              "bottom": 578.0625,
+              "width": 172.125,
+              "height": 33
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 8,
+              "right": 180.125,
+              "top": 578.0625,
+              "bottom": 630.65625,
+              "width": 172.125,
+              "height": 52.59375
+            },
+            "firstPosition": "sticky",
+            "firstText": "2016-09-30무보정만 · 입력 2016-09-30",
+            "row": {
+              "left": 8,
+              "right": 1068,
+              "top": 578.0625,
+              "bottom": 630.65625,
+              "width": 1060,
+              "height": 52.59375
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "pricePathBefore": "6f13279055efb5cb1853306e179b6e36e7d1528e7e75b2a45887ebdb13f56559",
+          "vertical": {
+            "ownerSelector": ".clock-backtest .clock-ledger",
+            "owner": {
+              "left": 8,
+              "right": 312,
+              "top": 545.0625,
+              "bottom": 736,
+              "width": 304,
+              "height": 190.9375
+            },
+            "clientTop": 545.0625,
+            "clientLeft": 8,
+            "scrollTop": 380,
+            "scrollLeft": 0,
+            "maxScrollTop": 617,
+            "maxScrollLeft": 756,
+            "rows": 15,
+            "head": {
+              "left": 8,
+              "right": 180.125,
+              "top": 545.0625,
+              "bottom": 578.0625,
+              "width": 172.125,
+              "height": 33
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 8,
+              "right": 180.125,
+              "top": 198.0625,
+              "bottom": 250.65625,
+              "width": 172.125,
+              "height": 52.59375
+            },
+            "firstPosition": "sticky",
+            "firstText": "2016-09-30무보정만 · 입력 2016-09-30",
+            "row": {
+              "left": 8,
+              "right": 1068,
+              "top": 198.0625,
+              "bottom": 250.65625,
+              "width": 1060,
+              "height": 52.59375
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "pricePathAfterWheel": "6f13279055efb5cb1853306e179b6e36e7d1528e7e75b2a45887ebdb13f56559",
+          "bothAxes": {
+            "ownerSelector": ".clock-backtest .clock-ledger",
+            "owner": {
+              "left": 8,
+              "right": 312,
+              "top": 545.0625,
+              "bottom": 736,
+              "width": 304,
+              "height": 190.9375
+            },
+            "clientTop": 545.0625,
+            "clientLeft": 8,
+            "scrollTop": 380,
+            "scrollLeft": 320,
+            "maxScrollTop": 617,
+            "maxScrollLeft": 756,
+            "rows": 15,
+            "head": {
+              "left": 8,
+              "right": 180.125,
+              "top": 545.0625,
+              "bottom": 578.0625,
+              "width": 172.125,
+              "height": 33
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 8,
+              "right": 180.125,
+              "top": 198.0625,
+              "bottom": 250.65625,
+              "width": 172.125,
+              "height": 52.59375
+            },
+            "firstPosition": "sticky",
+            "firstText": "2016-09-30무보정만 · 입력 2016-09-30",
+            "row": {
+              "left": -312,
+              "right": 748,
+              "top": 198.0625,
+              "bottom": 250.65625,
+              "width": 1060,
+              "height": 52.59375
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "closed": true
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "symbols-320x900.png",
+          "sha256": "3fd055fac42d56087d65f43953ac21e27d311d552950f764362fcea36fcf4b9d"
+        },
+        {
+          "file": "monthly-keyboard-320.png",
+          "sha256": "7bbff0abce7f6dbfd8fceab4be6e3e1ca198e98dd1ecdf5443bf31a742711228"
+        },
+        {
+          "file": "formula-contrast-320.png",
+          "sha256": "767121371d82b55ab122bdbd05eabb111b45e2ae31c327b50f7047bdb8926f40"
+        },
+        {
+          "file": "rsi-history-320.png",
+          "sha256": "80815c855cceca4e4bcfa9d602643dd4fa874f157290797e378551a09bfe6fd1"
+        },
+        {
+          "file": "housing-history-320.png",
+          "sha256": "aa29409c857839b7398263214cdae5c0e94c91a87d16974360fee49b2bbb60d6"
+        }
+      ],
+      "symbol": {
+        "before": {
+          "owner": {
+            "left": 16,
+            "right": 304,
+            "top": 24,
+            "bottom": 529,
+            "width": 288,
+            "height": 505
+          },
+          "head": {
+            "left": 17,
+            "right": 303,
+            "top": 25,
+            "bottom": 93,
+            "width": 286,
+            "height": 68
+          },
+          "close": {
+            "left": 247,
+            "right": 291,
+            "top": 37,
+            "bottom": 81,
+            "width": 44,
+            "height": 44
+          },
+          "scrollTop": 0,
+          "maxScroll": 0,
+          "headPosition": "sticky",
+          "clientTop": 25,
+          "selected": {
+            "symbol": "BTCUSD",
+            "left": 25,
+            "right": 295,
+            "top": 194.5,
+            "bottom": 264.5,
+            "width": 270,
+            "height": 70
+          },
+          "active": ""
+        },
+        "keyboard": {
+          "owner": {
+            "left": 16,
+            "right": 304,
+            "top": 24,
+            "bottom": 529,
+            "width": 288,
+            "height": 505
+          },
+          "head": {
+            "left": 17,
+            "right": 303,
+            "top": 25,
+            "bottom": 93,
+            "width": 286,
+            "height": 68
+          },
+          "close": {
+            "left": 247,
+            "right": 291,
+            "top": 37,
+            "bottom": 81,
+            "width": 44,
+            "height": 44
+          },
+          "scrollTop": 0,
+          "maxScroll": 0,
+          "headPosition": "sticky",
+          "clientTop": 25,
+          "selected": {
+            "symbol": "BMNR",
+            "left": 25,
+            "right": 295,
+            "top": 407.5,
+            "bottom": 477.5,
+            "width": 270,
+            "height": 70
+          },
+          "active": ""
+        },
+        "end": {
+          "owner": {
+            "left": 16,
+            "right": 304,
+            "top": 24,
+            "bottom": 529,
+            "width": 288,
+            "height": 505
+          },
+          "head": {
+            "left": 17,
+            "right": 303,
+            "top": 25,
+            "bottom": 93,
+            "width": 286,
+            "height": 68
+          },
+          "close": {
+            "left": 247,
+            "right": 291,
+            "top": 37,
+            "bottom": 81,
+            "width": 44,
+            "height": 44
+          },
+          "scrollTop": 0,
+          "maxScroll": 0,
+          "headPosition": "sticky",
+          "clientTop": 25,
+          "selected": {
+            "symbol": "BMNR",
+            "left": 25,
+            "right": 295,
+            "top": 407.5,
+            "bottom": 477.5,
+            "width": 270,
+            "height": 70
+          },
+          "active": ""
+        },
+        "focus": {
+          "selector": ".symbol-search-close",
+          "x": 269,
+          "y": 59,
+          "left": 247,
+          "right": 291,
+          "top": 37,
+          "bottom": 81,
+          "width": 44,
+          "height": 44,
+          "visible": true,
+          "topmost": true,
+          "disabled": false,
+          "viewportWidth": 320,
+          "viewportHeight": 900,
+          "outline": "solid",
+          "outlineWidth": 2,
+          "label": "종목 검색 닫기"
+        },
+        "closedByKeyboard": true
+      },
+      "keyboardLedger": {
+        "before": {
+          "ownerSelector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+          "owner": {
+            "left": 8,
+            "right": 312,
+            "top": 484,
+            "bottom": 813.3125,
+            "width": 304,
+            "height": 329.3125
+          },
+          "clientTop": 484,
+          "clientLeft": 8,
+          "scrollTop": 0,
+          "scrollLeft": 0,
+          "maxScrollTop": 581,
+          "maxScrollLeft": 456,
+          "rows": 13,
+          "head": {
+            "left": 8,
+            "right": 116.3125,
+            "top": 516,
+            "bottom": 549,
+            "width": 108.3125,
+            "height": 33
+          },
+          "headPosition": "sticky",
+          "headTop": "0px",
+          "first": {
+            "left": 8,
+            "right": 116.3125,
+            "top": 549,
+            "bottom": 614,
+            "width": 108.3125,
+            "height": 65
+          },
+          "firstPosition": "sticky",
+          "firstText": "2026-10-31고정 · e7d0ac8d",
+          "row": {
+            "left": 8,
+            "right": 768,
+            "top": 549,
+            "bottom": 614,
+            "width": 760,
+            "height": 65
+          },
+          "bodyScroll": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "after": {
+          "ownerSelector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+          "owner": {
+            "left": 8,
+            "right": 312,
+            "top": 484,
+            "bottom": 813.3125,
+            "width": 304,
+            "height": 329.3125
+          },
+          "clientTop": 484,
+          "clientLeft": 8,
+          "scrollTop": 285,
+          "scrollLeft": 0,
+          "maxScrollTop": 581,
+          "maxScrollLeft": 456,
+          "rows": 13,
+          "head": {
+            "left": 8,
+            "right": 116.3125,
+            "top": 484,
+            "bottom": 517,
+            "width": 108.3125,
+            "height": 33
+          },
+          "headPosition": "sticky",
+          "headTop": "0px",
+          "first": {
+            "left": 8,
+            "right": 116.3125,
+            "top": 264,
+            "bottom": 329,
+            "width": 108.3125,
+            "height": 65
+          },
+          "firstPosition": "sticky",
+          "firstText": "2026-10-31고정 · e7d0ac8d",
+          "row": {
+            "left": 8,
+            "right": 768,
+            "top": 264,
+            "bottom": 329,
+            "width": 760,
+            "height": 65
+          },
+          "bodyScroll": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "contrast": {
+        "theme": "dark",
+        "formula": [
+          {
+            "selector": "CODE.",
+            "foreground": "rgb(242, 168, 75)",
+            "background": "rgb(11, 14, 20)",
+            "effectiveBackground": "rgb(11, 14, 20)",
+            "ratio": 9.63817326737223,
+            "fontSize": "11px",
+            "rendered": false,
+            "text": "PriceUSD"
+          },
+          {
+            "selector": "DIV.method-formula",
+            "foreground": "rgb(242, 168, 75)",
+            "background": "rgb(11, 14, 20)",
+            "effectiveBackground": "rgb(11, 14, 20)",
+            "ratio": 9.63817326737223,
+            "fontSize": "11px",
+            "rendered": false,
+            "text": "환산 가격 = 실제 가격 ÷ 해당 사이클 시작 가격 × 현재 시작 가격100 기준 지수 = 실제 가격 ÷ 해당 사이클 시작 가격 × 100수익률 = (실제 가격 ÷ 시작 가격 − "
+          }
+        ],
+        "liveReader": [
+          {
+            "selector": "CODE.",
+            "foreground": "rgb(183, 200, 220)",
+            "background": "rgba(0, 0, 0, 0)",
+            "effectiveBackground": "rgb(20, 28, 40)",
+            "ratio": 10.035683280854672,
+            "fontSize": "13px",
+            "rendered": true,
+            "text": "PriceUSD"
+          }
+        ],
+        "surfaces": [
+          {
+            "selector": "SECTION.chart-card",
+            "foreground": "rgb(230, 235, 242)",
+            "background": "rgb(19, 25, 34)",
+            "effectiveBackground": "rgb(19, 25, 34)",
+            "ratio": 14.733146458413556,
+            "fontSize": "13px",
+            "rendered": true,
+            "text": "\n          비트코인 사이클 비트코인 / USD미래 고저점 보기 ↓자료와 도구자산 비교표데이터 갱신방법론과 출처비교 데이터 .csv차트 이미지 .png벡터 이미지 .svg전"
+          }
+        ],
+        "labErrorCssFixture": {
+          "method": "Temporary .lab-error node with the actual loaded CSS; not a reproduced app error state",
+          "selector": "DIV.lab-error",
+          "foreground": "rgb(236, 129, 144)",
+          "background": "rgb(53, 28, 35)",
+          "effectiveBackground": "rgb(53, 28, 35)",
+          "ratio": 6.0439056274068275,
+          "fontSize": "12px",
+          "rendered": true,
+          "text": "Isolated CSS contrast sample"
+        },
+        "livePages": [
+          [
+            {
+              "selector": "CODE.",
+              "foreground": "rgb(183, 200, 220)",
+              "background": "rgba(0, 0, 0, 0)",
+              "effectiveBackground": "rgb(20, 28, 40)",
+              "ratio": 10.035683280854672,
+              "fontSize": "13px",
+              "rendered": true,
+              "text": "PriceUSD"
+            }
+          ],
+          [],
+          [],
+          []
+        ]
+      },
+      "appLedgers": [
+        {
+          "label": "rsi-history",
+          "before": {
+            "ownerSelector": ".rsi-ledger-scroll",
+            "owner": {
+              "left": 12,
+              "right": 308,
+              "top": 688.125,
+              "bottom": 1048.125,
+              "width": 296,
+              "height": 360
+            },
+            "clientTop": 689.125,
+            "clientLeft": 13,
+            "scrollTop": 0,
+            "scrollLeft": 0,
+            "maxScrollTop": 222604,
+            "maxScrollLeft": 238,
+            "rows": 4206,
+            "head": {
+              "left": 13,
+              "right": 106.75,
+              "top": 689.125,
+              "bottom": 732.8125,
+              "width": 93.75,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 13,
+              "right": 106.75,
+              "top": 732.8125,
+              "bottom": 785.8125,
+              "width": 93.75,
+              "height": 53
+            },
+            "firstPosition": "sticky",
+            "firstText": "2010-02-11",
+            "row": {
+              "left": 13,
+              "right": 544.515625,
+              "top": 732.8125,
+              "bottom": 785.8125,
+              "width": 531.515625,
+              "height": 53
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "keyboard": {
+            "ownerSelector": ".rsi-ledger-scroll",
+            "owner": {
+              "left": 12,
+              "right": 308,
+              "top": 688.125,
+              "bottom": 1048.125,
+              "width": 296,
+              "height": 360
+            },
+            "clientTop": 689.125,
+            "clientLeft": 13,
+            "scrollTop": 311,
+            "scrollLeft": 0,
+            "maxScrollTop": 222604,
+            "maxScrollLeft": 238,
+            "rows": 4206,
+            "head": {
+              "left": 13,
+              "right": 106.75,
+              "top": 689.125,
+              "bottom": 732.8125,
+              "width": 93.75,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 13,
+              "right": 106.75,
+              "top": 421.8125,
+              "bottom": 474.8125,
+              "width": 93.75,
+              "height": 53
+            },
+            "firstPosition": "sticky",
+            "firstText": "2010-02-11",
+            "row": {
+              "left": 13,
+              "right": 544.515625,
+              "top": 421.8125,
+              "bottom": 474.8125,
+              "width": 531.515625,
+              "height": 53
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "wheel": {
+            "ownerSelector": ".rsi-ledger-scroll",
+            "owner": {
+              "left": 12,
+              "right": 308,
+              "top": 688.125,
+              "bottom": 1048.125,
+              "width": 296,
+              "height": 360
+            },
+            "clientTop": 689.125,
+            "clientLeft": 13,
+            "scrollTop": 533,
+            "scrollLeft": 0,
+            "maxScrollTop": 222604,
+            "maxScrollLeft": 238,
+            "rows": 4206,
+            "head": {
+              "left": 13,
+              "right": 106.75,
+              "top": 689.125,
+              "bottom": 732.8125,
+              "width": 93.75,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 13,
+              "right": 106.75,
+              "top": 199.8125,
+              "bottom": 252.8125,
+              "width": 93.75,
+              "height": 53
+            },
+            "firstPosition": "sticky",
+            "firstText": "2010-02-11",
+            "row": {
+              "left": 13,
+              "right": 544.515625,
+              "top": 199.8125,
+              "bottom": 252.8125,
+              "width": 531.515625,
+              "height": 53
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "bothAxes": {
+            "ownerSelector": ".rsi-ledger-scroll",
+            "owner": {
+              "left": 12,
+              "right": 308,
+              "top": 688.125,
+              "bottom": 1048.125,
+              "width": 296,
+              "height": 360
+            },
+            "clientTop": 689.125,
+            "clientLeft": 13,
+            "scrollTop": 533,
+            "scrollLeft": 238,
+            "maxScrollTop": 222604,
+            "maxScrollLeft": 238,
+            "rows": 4206,
+            "head": {
+              "left": 13,
+              "right": 106.75,
+              "top": 689.125,
+              "bottom": 732.8125,
+              "width": 93.75,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 13,
+              "right": 106.75,
+              "top": 199.8125,
+              "bottom": 252.8125,
+              "width": 93.75,
+              "height": 53
+            },
+            "firstPosition": "sticky",
+            "firstText": "2010-02-11",
+            "row": {
+              "left": -225,
+              "right": 306.515625,
+              "top": 199.8125,
+              "bottom": 252.8125,
+              "width": 531.515625,
+              "height": 53
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        },
+        {
+          "label": "housing-history",
+          "before": {
+            "ownerSelector": "#housing-view-history .housing-ledger",
+            "owner": {
+              "left": 8,
+              "right": 297,
+              "top": 360.421875,
+              "bottom": 900.421875,
+              "width": 289,
+              "height": 540
+            },
+            "clientTop": 360.421875,
+            "clientLeft": 8,
+            "scrollTop": 0,
+            "scrollLeft": 0,
+            "maxScrollTop": 10548,
+            "maxScrollLeft": 169,
+            "rows": 249,
+            "head": {
+              "left": 8,
+              "right": 74.140625,
+              "top": 402.015625,
+              "bottom": 445.703125,
+              "width": 66.140625,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 8,
+              "right": 74.140625,
+              "top": 445.703125,
+              "bottom": 489.890625,
+              "width": 66.140625,
+              "height": 44.1875
+            },
+            "firstPosition": "sticky",
+            "firstText": "2026-09",
+            "row": {
+              "left": 8,
+              "right": 465.984375,
+              "top": 445.703125,
+              "bottom": 489.890625,
+              "width": 457.984375,
+              "height": 44.1875
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "keyboard": {
+            "ownerSelector": "#housing-view-history .housing-ledger",
+            "owner": {
+              "left": 8,
+              "right": 297,
+              "top": 360.421875,
+              "bottom": 900.421875,
+              "width": 289,
+              "height": 540
+            },
+            "clientTop": 360.421875,
+            "clientLeft": 8,
+            "scrollTop": 468,
+            "scrollLeft": 0,
+            "maxScrollTop": 10548,
+            "maxScrollLeft": 169,
+            "rows": 249,
+            "head": {
+              "left": 8,
+              "right": 74.140625,
+              "top": 360.421875,
+              "bottom": 404.109375,
+              "width": 66.140625,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 8,
+              "right": 74.140625,
+              "top": -22.296875,
+              "bottom": 21.890625,
+              "width": 66.140625,
+              "height": 44.1875
+            },
+            "firstPosition": "sticky",
+            "firstText": "2026-09",
+            "row": {
+              "left": 8,
+              "right": 465.984375,
+              "top": -22.296875,
+              "bottom": 21.890625,
+              "width": 457.984375,
+              "height": 44.1875
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "wheel": {
+            "ownerSelector": "#housing-view-history .housing-ledger",
+            "owner": {
+              "left": 8,
+              "right": 297,
+              "top": 360.421875,
+              "bottom": 900.421875,
+              "width": 289,
+              "height": 540
+            },
+            "clientTop": 360.421875,
+            "clientLeft": 8,
+            "scrollTop": 692,
+            "scrollLeft": 0,
+            "maxScrollTop": 10548,
+            "maxScrollLeft": 169,
+            "rows": 249,
+            "head": {
+              "left": 8,
+              "right": 74.140625,
+              "top": 360.421875,
+              "bottom": 404.109375,
+              "width": 66.140625,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 8,
+              "right": 74.140625,
+              "top": -246.296875,
+              "bottom": -202.109375,
+              "width": 66.140625,
+              "height": 44.1875
+            },
+            "firstPosition": "sticky",
+            "firstText": "2026-09",
+            "row": {
+              "left": 8,
+              "right": 465.984375,
+              "top": -246.296875,
+              "bottom": -202.109375,
+              "width": 457.984375,
+              "height": 44.1875
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "bothAxes": {
+            "ownerSelector": "#housing-view-history .housing-ledger",
+            "owner": {
+              "left": 8,
+              "right": 297,
+              "top": 360.421875,
+              "bottom": 900.421875,
+              "width": 289,
+              "height": 540
+            },
+            "clientTop": 360.421875,
+            "clientLeft": 8,
+            "scrollTop": 692,
+            "scrollLeft": 169,
+            "maxScrollTop": 10548,
+            "maxScrollLeft": 169,
+            "rows": 249,
+            "head": {
+              "left": 8,
+              "right": 74.140625,
+              "top": 360.421875,
+              "bottom": 404.109375,
+              "width": 66.140625,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 8,
+              "right": 74.140625,
+              "top": -246.296875,
+              "bottom": -202.109375,
+              "width": 66.140625,
+              "height": 44.1875
+            },
+            "firstPosition": "sticky",
+            "firstText": "2026-09",
+            "row": {
+              "left": -161,
+              "right": 296.984375,
+              "top": -246.296875,
+              "bottom": -202.109375,
+              "width": 457.984375,
+              "height": 44.1875
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "status": "failed",
+      "inputs": [
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": ".workbench-symbol",
+            "x": 97.3203125,
+            "y": 66.5,
+            "left": 52,
+            "right": 142.640625,
+            "top": 50.5,
+            "bottom": 82.5,
+            "width": 90.640625,
+            "height": 32,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "종목 선택 · 비트코인 / USD · BTCUSD"
+          }
+        },
+        {
+          "kind": "keyboard",
+          "key": "ArrowDown"
+        },
+        {
+          "kind": "keyboard",
+          "key": "ArrowDown"
+        },
+        {
+          "kind": "keyboard",
+          "key": "ArrowDown"
+        },
+        {
+          "kind": "wheel",
+          "selector": ".symbol-search-dialog",
+          "x": 720,
+          "y": 368.5,
+          "dx": 0,
+          "dy": 1500,
+          "hit": [
+            "BUTTON.symbol-search-row",
+            "DIV.symbol-search-results",
+            "DIALOG.symbol-search-dialog",
+            "BODY.js",
+            "HTML."
+          ]
+        },
+        {
+          "kind": "keyboard",
+          "key": "Shift+Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Enter"
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#workbench-monthly-backtest",
+            "x": 741.578125,
+            "y": 66.4921875,
+            "left": 711.578125,
+            "right": 771.578125,
+            "top": 55.421875,
+            "bottom": 77.5625,
+            "width": 60,
+            "height": 22.140625,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "백테스트"
+          }
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "[data-mb=\"common\"]",
+            "x": 286.328125,
+            "y": 164,
+            "left": 279.828125,
+            "right": 292.828125,
+            "top": 157.5,
+            "bottom": 170.5,
+            "width": 13,
+            "height": 13,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": ""
+          }
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "PageDown"
+        },
+        {
+          "kind": "wheel",
+          "selector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+          "x": 723,
+          "y": 631.65625,
+          "dx": 0,
+          "dy": 380,
+          "hit": [
+            "SMALL.",
+            "BUTTON.",
+            "TD.",
+            "TR.",
+            "TBODY.",
+            "TABLE."
+          ]
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": ".monthly-backtest:not([hidden]) .monthly-heading > button:last-child",
+            "x": 1372,
+            "y": 114,
+            "left": 1354,
+            "right": 1390,
+            "top": 97,
+            "bottom": 131,
+            "width": 36,
+            "height": 34,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "월말 백테스트 닫기"
+          }
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#workbench-monthly-backtest",
+            "x": 741.578125,
+            "y": 66.4921875,
+            "left": 711.578125,
+            "right": 771.578125,
+            "top": 55.421875,
+            "bottom": 77.5625,
+            "width": 60,
+            "height": 22.140625,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "백테스트"
+          }
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "[data-mb=\"clock-mode\"]",
+            "x": 1313.0859375,
+            "y": 114,
+            "left": 1280.171875,
+            "right": 1346,
+            "top": 98,
+            "bottom": 130,
+            "width": 65.828125,
+            "height": 32,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "거시 시계"
+          }
+        },
+        {
+          "kind": "wheel",
+          "selector": ".clock-backtest .clock-ledger",
+          "x": 723,
+          "y": 617.65625,
+          "dx": 0,
+          "dy": 380,
+          "hit": [
+            "SMALL.clock-missing-reason",
+            "TD.",
+            "TR.",
+            "TBODY.",
+            "TABLE.",
+            "DIV.monthly-ledger clock-ledger"
+          ]
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": ".monthly-backtest:not([hidden]) .monthly-heading > button:last-child",
+            "x": 1372,
+            "y": 114,
+            "left": 1354,
+            "right": 1390,
+            "top": 97,
+            "bottom": 131,
+            "width": 36,
+            "height": 34,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "거시 시계 검증 닫기"
+          }
+        },
+        {
+          "kind": "wheel",
+          "selector": "body",
+          "x": 720,
+          "y": 450,
+          "dx": 0,
+          "dy": 640,
+          "hit": [
+            "svg.[object SVGAnimatedString]",
+            "DIV.lab-chart-stage",
+            "SECTION.lab-panel",
+            "SECTION.lab-page",
+            "MAIN.",
+            "DIV.workspace atlas-details-layout"
+          ]
+        },
+        {
+          "kind": "wheel",
+          "selector": "body",
+          "x": 720,
+          "y": 450,
+          "dx": 0,
+          "dy": 640,
+          "hit": [
+            "rect.[object SVGAnimatedString]",
+            "svg.[object SVGAnimatedString]",
+            "DIV.lab-timeline-panel",
+            "SECTION.lab-page",
+            "MAIN.",
+            "DIV.workspace atlas-details-layout"
+          ]
+        },
+        {
+          "kind": "wheel",
+          "selector": "body",
+          "x": 720,
+          "y": 450,
+          "dx": 0,
+          "dy": 640,
+          "hit": [
+            "TD.",
+            "TR.",
+            "TBODY.",
+            "TABLE.lab-table",
+            "DIV.lab-table-scroll",
+            "SECTION.lab-page"
+          ]
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#legacy-comparison > summary",
+            "x": 832,
+            "y": 764.90625,
+            "left": 224,
+            "right": 1440,
+            "top": 738.609375,
+            "bottom": 791.203125,
+            "width": 1216,
+            "height": 52.59375,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "반감기와 고점권, 이전 기준점 비교"
+          }
+        },
+        {
+          "kind": "wheel",
+          "selector": "body",
+          "x": 720,
+          "y": 450,
+          "dx": 0,
+          "dy": 632.203125,
+          "hit": [
+            "TD.",
+            "TR.",
+            "TBODY.",
+            "TABLE.lab-table",
+            "DIV.lab-table-scroll",
+            "SECTION.lab-page"
+          ]
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#export-button",
+            "x": 1333.25,
+            "y": 217.7265625,
+            "left": 1271.5,
+            "right": 1395,
+            "top": 200.203125,
+            "bottom": 235.25,
+            "width": 123.5,
+            "height": 35.046875,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "자료와 도구"
+          }
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#export-menu [data-method]",
+            "x": 1294,
+            "y": 353.734375,
+            "left": 1198,
+            "right": 1390,
+            "top": 332.4375,
+            "bottom": 375.03125,
+            "width": 192,
+            "height": 42.59375,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "방법론과 출처"
+          }
+        }
+      ],
+      "ledgers": [
+        {
+          "label": "monthly",
+          "before": {
+            "ownerSelector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+            "owner": {
+              "left": 56,
+              "right": 1390,
+              "top": 450,
+              "bottom": 813.3125,
+              "width": 1334,
+              "height": 363.3125
+            },
+            "clientTop": 450,
+            "clientLeft": 56,
+            "scrollTop": 317,
+            "scrollLeft": 0,
+            "maxScrollTop": 547,
+            "maxScrollLeft": 0,
+            "rows": 13,
+            "head": {
+              "left": 56,
+              "right": 246.125,
+              "top": 450,
+              "bottom": 483,
+              "width": 190.125,
+              "height": 33
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 56,
+              "right": 246.125,
+              "top": 198,
+              "bottom": 263,
+              "width": 190.125,
+              "height": 65
+            },
+            "firstPosition": "sticky",
+            "firstText": "2026-10-31고정 · e7d0ac8d",
+            "row": {
+              "left": 56,
+              "right": 1390,
+              "top": 198,
+              "bottom": 263,
+              "width": 1334,
+              "height": 65
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "pricePathBefore": "d93f2ecb3d538fce608b2b95caba6b2066bafcb7924d8c4e6f56d3cf121fd29e",
+          "vertical": {
+            "ownerSelector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+            "owner": {
+              "left": 56,
+              "right": 1390,
+              "top": 450,
+              "bottom": 813.3125,
+              "width": 1334,
+              "height": 363.3125
+            },
+            "clientTop": 450,
+            "clientLeft": 56,
+            "scrollTop": 547,
+            "scrollLeft": 0,
+            "maxScrollTop": 547,
+            "maxScrollLeft": 0,
+            "rows": 13,
+            "head": {
+              "left": 56,
+              "right": 246.125,
+              "top": 450,
+              "bottom": 483,
+              "width": 190.125,
+              "height": 33
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 56,
+              "right": 246.125,
+              "top": -32,
+              "bottom": 33,
+              "width": 190.125,
+              "height": 65
+            },
+            "firstPosition": "sticky",
+            "firstText": "2026-10-31고정 · e7d0ac8d",
+            "row": {
+              "left": 56,
+              "right": 1390,
+              "top": -32,
+              "bottom": 33,
+              "width": 1334,
+              "height": 65
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "pricePathAfterWheel": "d93f2ecb3d538fce608b2b95caba6b2066bafcb7924d8c4e6f56d3cf121fd29e",
+          "negativeControl": {
+            "kind": "temporary in-memory removal of vertical sticky behavior",
+            "geometry": {
+              "ownerSelector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+              "owner": {
+                "left": 56,
+                "right": 1390,
+                "top": 450,
+                "bottom": 813.3125,
+                "width": 1334,
+                "height": 363.3125
+              },
+              "clientTop": 450,
+              "clientLeft": 56,
+              "scrollTop": 547,
+              "scrollLeft": 0,
+              "maxScrollTop": 547,
+              "maxScrollLeft": 0,
+              "rows": 13,
+              "head": {
+                "left": 56,
+                "right": 246.125,
+                "top": -65,
+                "bottom": -32,
+                "width": 190.125,
+                "height": 33
+              },
+              "headPosition": "static",
+              "headTop": "0px",
+              "first": {
+                "left": 56,
+                "right": 246.125,
+                "top": -32,
+                "bottom": 33,
+                "width": 190.125,
+                "height": 65
+              },
+              "firstPosition": "sticky",
+              "firstText": "2026-10-31고정 · e7d0ac8d",
+              "row": {
+                "left": 56,
+                "right": 1390,
+                "top": -32,
+                "bottom": 33,
+                "width": 1334,
+                "height": 65
+              },
+              "bodyScroll": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "detected": true
+          },
+          "closed": true
+        },
+        {
+          "label": "clock",
+          "before": {
+            "ownerSelector": ".clock-backtest .clock-ledger",
+            "owner": {
+              "left": 56,
+              "right": 1390,
+              "top": 448.6875,
+              "bottom": 786.625,
+              "width": 1334,
+              "height": 337.9375
+            },
+            "clientTop": 448.6875,
+            "clientLeft": 56,
+            "scrollTop": 0,
+            "scrollLeft": 0,
+            "maxScrollTop": 470,
+            "maxScrollLeft": 0,
+            "rows": 15,
+            "head": {
+              "left": 56,
+              "right": 272.625,
+              "top": 448.6875,
+              "bottom": 481.6875,
+              "width": 216.625,
+              "height": 33
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 56,
+              "right": 272.625,
+              "top": 481.6875,
+              "bottom": 534.28125,
+              "width": 216.625,
+              "height": 52.59375
+            },
+            "firstPosition": "sticky",
+            "firstText": "2016-09-30무보정만 · 입력 2016-09-30",
+            "row": {
+              "left": 56,
+              "right": 1390,
+              "top": 481.6875,
+              "bottom": 534.28125,
+              "width": 1334,
+              "height": 52.59375
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "pricePathBefore": "d93f2ecb3d538fce608b2b95caba6b2066bafcb7924d8c4e6f56d3cf121fd29e",
+          "vertical": {
+            "ownerSelector": ".clock-backtest .clock-ledger",
+            "owner": {
+              "left": 56,
+              "right": 1390,
+              "top": 448.6875,
+              "bottom": 786.625,
+              "width": 1334,
+              "height": 337.9375
+            },
+            "clientTop": 448.6875,
+            "clientLeft": 56,
+            "scrollTop": 380,
+            "scrollLeft": 0,
+            "maxScrollTop": 470,
+            "maxScrollLeft": 0,
+            "rows": 15,
+            "head": {
+              "left": 56,
+              "right": 272.625,
+              "top": 448.6875,
+              "bottom": 481.6875,
+              "width": 216.625,
+              "height": 33
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 56,
+              "right": 272.625,
+              "top": 101.6875,
+              "bottom": 154.28125,
+              "width": 216.625,
+              "height": 52.59375
+            },
+            "firstPosition": "sticky",
+            "firstText": "2016-09-30무보정만 · 입력 2016-09-30",
+            "row": {
+              "left": 56,
+              "right": 1390,
+              "top": 101.6875,
+              "bottom": 154.28125,
+              "width": 1334,
+              "height": 52.59375
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "pricePathAfterWheel": "d93f2ecb3d538fce608b2b95caba6b2066bafcb7924d8c4e6f56d3cf121fd29e",
+          "closed": true
+        }
+      ],
+      "screenshots": [
+        {
+          "file": "symbols-1440x900.png",
+          "sha256": "15d17ec9d6fc867e08e579aa22160a9dfe28ae93f2e6e9269ff234d03627ac81"
+        },
+        {
+          "file": "monthly-keyboard-1440.png",
+          "sha256": "bf2f1ed3355e5121f94906266af88b0a25af9cf3e68fd5164341f52b26897b0a"
+        },
+        {
+          "file": "failure-1440x900.png",
+          "sha256": "c3e5d094dfddee68cfa13e6afb6be71d8e0773f6235402c6b05c3b6bf8ea1010"
+        }
+      ],
+      "symbol": {
+        "before": {
+          "owner": {
+            "left": 460,
+            "right": 980,
+            "top": 108,
+            "bottom": 629,
+            "width": 520,
+            "height": 521
+          },
+          "head": {
+            "left": 461,
+            "right": 979,
+            "top": 109,
+            "bottom": 173,
+            "width": 518,
+            "height": 64
+          },
+          "close": {
+            "left": 923,
+            "right": 959,
+            "top": 125,
+            "bottom": 161,
+            "width": 36,
+            "height": 36
+          },
+          "scrollTop": 0,
+          "maxScroll": 0,
+          "headPosition": "sticky",
+          "clientTop": 109,
+          "selected": {
+            "symbol": "BTCUSD",
+            "left": 469,
+            "right": 971,
+            "top": 286.5,
+            "bottom": 358.5,
+            "width": 502,
+            "height": 72
+          },
+          "active": ""
+        },
+        "keyboard": {
+          "owner": {
+            "left": 460,
+            "right": 980,
+            "top": 108,
+            "bottom": 629,
+            "width": 520,
+            "height": 521
+          },
+          "head": {
+            "left": 461,
+            "right": 979,
+            "top": 109,
+            "bottom": 173,
+            "width": 518,
+            "height": 64
+          },
+          "close": {
+            "left": 923,
+            "right": 959,
+            "top": 125,
+            "bottom": 161,
+            "width": 36,
+            "height": 36
+          },
+          "scrollTop": 0,
+          "maxScroll": 0,
+          "headPosition": "sticky",
+          "clientTop": 109,
+          "selected": {
+            "symbol": "BMNR",
+            "left": 469,
+            "right": 971,
+            "top": 505.5,
+            "bottom": 577.5,
+            "width": 502,
+            "height": 72
+          },
+          "active": ""
+        },
+        "end": {
+          "owner": {
+            "left": 460,
+            "right": 980,
+            "top": 108,
+            "bottom": 629,
+            "width": 520,
+            "height": 521
+          },
+          "head": {
+            "left": 461,
+            "right": 979,
+            "top": 109,
+            "bottom": 173,
+            "width": 518,
+            "height": 64
+          },
+          "close": {
+            "left": 923,
+            "right": 959,
+            "top": 125,
+            "bottom": 161,
+            "width": 36,
+            "height": 36
+          },
+          "scrollTop": 0,
+          "maxScroll": 0,
+          "headPosition": "sticky",
+          "clientTop": 109,
+          "selected": {
+            "symbol": "BMNR",
+            "left": 469,
+            "right": 971,
+            "top": 505.5,
+            "bottom": 577.5,
+            "width": 502,
+            "height": 72
+          },
+          "active": ""
+        },
+        "focus": {
+          "selector": ".symbol-search-close",
+          "x": 941,
+          "y": 143,
+          "left": 923,
+          "right": 959,
+          "top": 125,
+          "bottom": 161,
+          "width": 36,
+          "height": 36,
+          "visible": true,
+          "topmost": true,
+          "disabled": false,
+          "viewportWidth": 1440,
+          "viewportHeight": 900,
+          "outline": "solid",
+          "outlineWidth": 2,
+          "label": "종목 검색 닫기"
+        },
+        "closedByKeyboard": true
+      },
+      "keyboardLedger": {
+        "before": {
+          "ownerSelector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+          "owner": {
+            "left": 56,
+            "right": 1390,
+            "top": 450,
+            "bottom": 813.3125,
+            "width": 1334,
+            "height": 363.3125
+          },
+          "clientTop": 450,
+          "clientLeft": 56,
+          "scrollTop": 0,
+          "scrollLeft": 0,
+          "maxScrollTop": 547,
+          "maxScrollLeft": 0,
+          "rows": 13,
+          "head": {
+            "left": 56,
+            "right": 246.125,
+            "top": 482,
+            "bottom": 515,
+            "width": 190.125,
+            "height": 33
+          },
+          "headPosition": "sticky",
+          "headTop": "0px",
+          "first": {
+            "left": 56,
+            "right": 246.125,
+            "top": 515,
+            "bottom": 580,
+            "width": 190.125,
+            "height": 65
+          },
+          "firstPosition": "sticky",
+          "firstText": "2026-10-31고정 · e7d0ac8d",
+          "row": {
+            "left": 56,
+            "right": 1390,
+            "top": 515,
+            "bottom": 580,
+            "width": 1334,
+            "height": 65
+          },
+          "bodyScroll": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "after": {
+          "ownerSelector": ".monthly-backtest:not(.clock-backtest) .monthly-ledger",
+          "owner": {
+            "left": 56,
+            "right": 1390,
+            "top": 450,
+            "bottom": 813.3125,
+            "width": 1334,
+            "height": 363.3125
+          },
+          "clientTop": 450,
+          "clientLeft": 56,
+          "scrollTop": 315,
+          "scrollLeft": 0,
+          "maxScrollTop": 547,
+          "maxScrollLeft": 0,
+          "rows": 13,
+          "head": {
+            "left": 56,
+            "right": 246.125,
+            "top": 450,
+            "bottom": 483,
+            "width": 190.125,
+            "height": 33
+          },
+          "headPosition": "sticky",
+          "headTop": "0px",
+          "first": {
+            "left": 56,
+            "right": 246.125,
+            "top": 200,
+            "bottom": 265,
+            "width": 190.125,
+            "height": 65
+          },
+          "firstPosition": "sticky",
+          "firstText": "2026-10-31고정 · e7d0ac8d",
+          "row": {
+            "left": 56,
+            "right": 1390,
+            "top": 200,
+            "bottom": 265,
+            "width": 1334,
+            "height": 65
+          },
+          "bodyScroll": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      "contrast": {
+        "theme": "dark",
+        "formula": [
+          {
+            "selector": "CODE.",
+            "foreground": "rgb(242, 168, 75)",
+            "background": "rgb(11, 14, 20)",
+            "effectiveBackground": "rgb(11, 14, 20)",
+            "ratio": 9.63817326737223,
+            "fontSize": "11px",
+            "rendered": false,
+            "text": "PriceUSD"
+          },
+          {
+            "selector": "DIV.method-formula",
+            "foreground": "rgb(242, 168, 75)",
+            "background": "rgb(11, 14, 20)",
+            "effectiveBackground": "rgb(11, 14, 20)",
+            "ratio": 9.63817326737223,
+            "fontSize": "11px",
+            "rendered": false,
+            "text": "환산 가격 = 실제 가격 ÷ 해당 사이클 시작 가격 × 현재 시작 가격100 기준 지수 = 실제 가격 ÷ 해당 사이클 시작 가격 × 100수익률 = (실제 가격 ÷ 시작 가격 − "
+          }
+        ],
+        "liveReader": [
+          {
+            "selector": "CODE.",
+            "foreground": "rgb(183, 200, 220)",
+            "background": "rgba(0, 0, 0, 0)",
+            "effectiveBackground": "rgb(20, 28, 40)",
+            "ratio": 10.035683280854672,
+            "fontSize": "12px",
+            "rendered": true,
+            "text": "PriceUSD"
+          }
+        ],
+        "surfaces": [
+          {
+            "selector": "SECTION.chart-card",
+            "foreground": "rgb(230, 235, 242)",
+            "background": "rgb(19, 25, 34)",
+            "effectiveBackground": "rgb(19, 25, 34)",
+            "ratio": 14.733146458413556,
+            "fontSize": "13px",
+            "rendered": true,
+            "text": "\n          비트코인 사이클 비트코인 / USD미래 고저점 보기 ↓자료와 도구자산 비교표데이터 갱신방법론과 출처비교 데이터 .csv차트 이미지 .png벡터 이미지 .svg전"
+          }
+        ],
+        "labErrorCssFixture": {
+          "method": "Temporary .lab-error node with the actual loaded CSS; not a reproduced app error state",
+          "selector": "DIV.lab-error",
+          "foreground": "rgb(236, 129, 144)",
+          "background": "rgb(53, 28, 35)",
+          "effectiveBackground": "rgb(53, 28, 35)",
+          "ratio": 6.0439056274068275,
+          "fontSize": "12px",
+          "rendered": true,
+          "text": "Isolated CSS contrast sample"
+        },
+        "livePages": [
+          [
+            {
+              "selector": "CODE.",
+              "foreground": "rgb(183, 200, 220)",
+              "background": "rgba(0, 0, 0, 0)",
+              "effectiveBackground": "rgb(20, 28, 40)",
+              "ratio": 10.035683280854672,
+              "fontSize": "12px",
+              "rendered": true,
+              "text": "PriceUSD"
+            }
+          ]
+        ]
+      },
+      "error": "AssertionError [ERR_ASSERTION]: Native pointer target unreachable {\"selector\":\"#chart-reader [aria-label=\\\"다음 설명 페이지\\\"]\",\"x\":1411.984375,\"y\":-563,\"left\":1395.984375,\"right\":1427.984375,\"top\":-577,\"bottom\":-549,\"width\":32,\"height\":28,\"visible\":true,\"topmost\":false,\"disabled\":false,\"viewportWidth\":1440,\"viewportHeight\":900,\"outline\":\"none\",\"outlineWidth\":0,\"label\":\"다음 설명 페이지\"}\n    at click (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/docs/design-closeout-2026-11-05/sticky-surfaces/probe.mjs:51:88)\n    at async contrastCase (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/docs/design-closeout-2026-11-05/sticky-surfaces/probe.mjs:116:5)\n    at async file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/docs/design-closeout-2026-11-05/sticky-surfaces/probe.mjs:208:68"
+    }
+  ],
+  "runtimeErrors": [],
+  "resourceFailures": [
+    {
+      "size": {
+        "width": 320,
+        "height": 900
+      },
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "size": {
+        "width": 320,
+        "height": 900
+      },
+      "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-05&page_size=10000&paging_from=start",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "size": {
+        "width": 320,
+        "height": 900
+      },
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "size": {
+        "width": 320,
+        "height": 900
+      },
+      "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-05&page_size=10000&paging_from=start",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-05&page_size=10000&paging_from=start",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-11-05&page_size=10000&paging_from=start",
+      "error": "net::ERR_FAILED"
+    }
+  ],
+  "sourceHashes": {
+    "dist/styles.css": "b9f135be9afa23f599908c9ab9bc8253013d69df240b7982e7a8fc6644768cb2",
+    "dist/monthly-backtest.css": "1b3fdbc2dbac782837a9e3bf1574feed97a7534d843acaf5dce3e205182b47cd",
+    "dist/symbol-selector.css": "518e07096505c2be6a88a1412211caa53d61813d4ec045adfd8a10ab086c59cf",
+    "dist/atlas-shell.css": "1f087aadb72778f8050b0d3e2c45d9f465c33c5c93d476838ff0af9cbd70c18e",
+    "dist/monthly-backtest-view.js": "687b15d890cc4620cf0c520ee1c00633de71eb544d5493e7c9b8c41ffdfdb433",
+    "dist/cycle-clock-backtest-view.js": "b82d63bc36b708f383db37c192699569f3b012482c35192790df77f127d89449",
+    "dist/symbol-selector.js": "86a41a84b273d59bfd26a9bf3a093e7ca5d684175cddb3f977e166968a473f4a",
+    "dist/chart-navigation.js": "cb1b0999c3934178615dbf3760e414daa8fbc15bb2412fdc8314135fd0a3350d",
+    "apps/web/src/housing.css": "3975eb4ff23a0f6dbd4956f1afeaf33d44aa87fa68f2c01b9868b59048048b03",
+    "tools/hallmark/upstream/sloplint.mjs": "f8ada364c68a9db4b3dd5784bd416a7c412125e887aeae87d627e072d3848289"
+  },
+  "servedHashes": {
+    "dist/index.html": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+    "dist/styles.css": "b9f135be9afa23f599908c9ab9bc8253013d69df240b7982e7a8fc6644768cb2",
+    "dist/compact.css": "24ea81f5c6635f6b06628b91faaa4cad20c705c66e695b71ff045d228f3de372",
+    "dist/chart-details-panel.css": "614f3998b3d38b9347fb92a5bda6966ed1115889f071d44b689b60dd92072516",
+    "dist/outlook.css": "896e139d35497451bd11b9d117ec2c267544fe31fd01e979ab0d4dd280fda593",
+    "dist/lab.css": "517b84062e65c98b9c8171556edc25502a4fab079512f6b3a81ba245d37f30fc",
+    "dist/atlas.css": "a9a3abf1ef26eefb93d518a0af826387dc40939fa9354427b7496f9a24207485",
+    "dist/viewport.css": "36aecacae5e796bf5028a1e6963a217cc5eec5234f92184d134daa3ca312ec07",
+    "dist/analysis-dock.css": "43b46d05978a7499823ef54d598f936de3279fbe3dc59cf77a8d66811f5e3fa9",
+    "dist/workspace-tools.css": "33c8052eb528b1d6882aefd3bcef02c6785b1058fe3216d56d011b149000a701",
+    "dist/chart-workspace-controls.css": "708e87841f3d01e806be0ec7dfe1a69caa39780b658291aeee68661ae02073f9",
+    "dist/mobile-workspace.css": "90a375739f01826b0a71c57789f50a09be6a6f944020194f6b70882f88578d3f",
+    "dist/research-annotations.css": "d21629aadbb87bf1124f47a5dbe56a84cf5e725fcb4f300519720f4b169c650a",
+    "dist/chart-magnet.css": "5c7645a9f74619aaed469826bf599502dda56296a3aafcce548dfe30f4935b53",
+    "dist/symbol-selector.css": "518e07096505c2be6a88a1412211caa53d61813d4ec045adfd8a10ab086c59cf",
+    "dist/cycle-milestones.css": "22a9a9a21251a92a9310e2dc5d8cd0cfab809ee502db45991953a73905562712",
+    "dist/chart-export-workbench.css": "5cfffd7d47507a90252b2e2b5b29ce448f95d13e56951d00e600eb43fb3321d5",
+    "dist/chart-bottom-bar.css": "67ef233b70921763ef1a91cc394d333a1ef755fca28d5e0d21b1e7f7773bbe3a",
+    "dist/compact-chart-layout.css": "b429642986c9d73b930b49b48da7a710d8403965c4f50ee06263338c12c14f30",
+    "dist/eth-view.css": "1f09834a4460821c83496ea97fc70a6fb2371ad8ef2560ca1dd48395eeb42d05",
+    "dist/equity-view.css": "99026cd6229df757176a648fc0f2c2ed88d7916a4e5eb65bcd8f9957db1ff5ad",
+    "dist/monthly-backtest.css": "1b3fdbc2dbac782837a9e3bf1574feed97a7534d843acaf5dce3e205182b47cd",
+    "dist/research-reader.css": "fb41b38773dce8872ff0320951202346bc01c46bbb2f92a19a4d63a8ede3c4c8",
+    "dist/ethereum-history.css": "017cf5ea799495460353b389a8265ca87a5c0ecbe35268c08ca5c8ed5ca1e896",
+    "dist/daily-data.css": "f45a6226526795d926caf2fe8c8df386f22f24c7a4383e05986b1b3df5b3366a",
+    "dist/forecast-journal.css": "e8bb880c5a91a7729c3ff490aff6e21e86950faefb9b265bec36d000287a3683",
+    "dist/chart-replay.css": "211009c38aa3b7716e566ab8c1a94002ea15f2557d905e26d3a39107902d85bf",
+    "dist/ipo-view.css": "bd96c73094e8afbdd7f1da9d3809d8e00c58c8f36ba4b7c6a33343f3b8f7e5af",
+    "dist/atlas-shell.css": "1f087aadb72778f8050b0d3e2c45d9f465c33c5c93d476838ff0af9cbd70c18e",
+    "dist/market-lab.css": "68e9b99aeaa189540f919c464eb0bf5e7a307195c0544dad384b53580a9b1637",
+    "dist/vendor/skullet/styles.css": "7763e1565515ea28884d1c97ee88a51055859e1ab7f72d2ac68c98bee04febf1",
+    "dist/site-entry.js": "645d41c07ef1ef9f9cba2282e34c5a723b6c356f1dfbab7fba8f3fbb39fcaf0e",
+    "dist/loading-surfaces.css": "241d713af90f378d6f927b8c1d29a39d150d26374b8fe3315b05b8b50df041cf",
+    "dist/loading-surfaces.js": "f62d142df3ee3ae00ae10f63373d0421d785c253e7fc71acb8231714340e07cb",
+    "dist/atlas-shell.js": "b833182a77be1b97002c8cf06563da343f5f32da7e9063a34c9364d9d56a99bd",
+    "dist/journal-entry.js": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0",
+    "dist/performance-diagnostics.js": "30a2a0cadcfda3f6f782b86ced0b2e1a6833d344ffc53f948ac3150b617419ac",
+    "dist/vendor/skullet/skullet.js": "159653b71266900bcff7df3403c1e04cf34d1822074431a131716eedda15e71c",
+    "dist/rsi-chart-layout.js": "4ff96f411d896c51c19cbe8909143d856f79b515ac6537aba87ef5728047dffb",
+    "dist/site-paths.js": "98591cd5f4d2770a6b30abd5606ba68f4538bf82252db28bda13e88eb2cece86",
+    "dist/atlas-navigation.js": "eb520a9e90c6d340d1d9c10072e7cbcea102c12e99c6b0e2235517d92b630c9f",
+    "dist/atlas-shell-state.js": "9c420fcb99ce1a344adb4fb38313339fd5c1f16f1a987e92e6aad56a85c8aa12",
+    "dist/center-workbench.js": "9e8481440f1237f10e98ccd95e9b6a9770b23751dea55ec1313ceecab5a0d411",
+    "dist/rsi-instruments.js": "019ea9bac6ff5ad792cc9ed070bd37c55290dae3e2374f5ea38ef25dad4cb6a2",
+    "dist/rsi-workbench-controls.js": "4923890d7cb17a161751c6ca65ab321030e593df00b05046821e5f41481e92c9",
+    "dist/app.js": "ce9dbbdb6bf50a9b19208cfc8aa424f1395a95cd56d83afb7ab5370a87da4acd",
+    "dist/cycle-engine.js": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+    "dist/data-source.js": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b",
+    "dist/published-data.js": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010",
+    "dist/btc-refresh-status.js": "806ca5d59e4a9194bc9c2759c60821da154173a65944328a24010307808b2036",
+    "dist/cycle-timing.js": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+    "dist/timing-view.js": "e47f6f69db210f7cc3086ab7717c1f4231faaca8ec4506467a8ae019677dadba",
+    "dist/peak-zones.js": "20e17c4f54bf238b90657d3bf5f8c90bacd6b55a9929fed40bd88f1e1ca7fd99",
+    "dist/peak-view.js": "9e12550a63b65097ee612b73e5afee488f7e75059cd5d41aa4feedc34a4c798c",
+    "dist/forecast-engine.js": "e3b22730e99ca3a636b825fd84dff898cf20c784f546c483c0a77b6d30867d6f",
+    "dist/asset-comparison-source.js": "4ec4ac85a0ce67687e2d39f3fb22a67319b6d45da31c2b9daa282b4cab3b34f6",
+    "dist/forecast-view.js": "5cf9fc72e9e7f8a5f811aa434e27526e83b33e19d99621af8c120b3139a560d8",
+    "dist/daily-data-view.js": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+    "dist/ipo-view.js": "915da935a0c4e4414345abbdc6c9cf7a9cb79214a7aff6afd003dfda1e22b155",
+    "dist/market-lab-view.js": "52f995b70a52da0280c1a71766be7f7bdb2c9778ee09237dae699554bd3ad4a7",
+    "dist/asset-comparison.js": "765d85f67ffad760e75b1b8fe8600eeb274411adb154c079cc65e1ba3a9076c8",
+    "dist/asset-judgment-history-view.js": "cf639e88d6672be54f234c185cf535539d1154ad70d63fd1e36bb9ec72169b1e",
+    "dist/ipo-month-calendar.js": "6d154e74fec83af54bc67aacaaf8e70c46a3f2b5a5f32c8472434c79df86849c",
+    "dist/market-lab-math.js": "fbf92300b64e3e5e320386c7ddacc9d533cff5d7447620b3d6a365d66cdc2579",
+    "dist/asset-judgment-history.js": "986b299bb7dc2c8e28cb2668bb2b7b3b7b0e507ba2b2f8ecb9040771d89ead9a",
+    "dist/asset-judgment-records.js": "c715a00584d0de86239ffaf9ee5fa4e705bb734bbcde98ab29e07d02883b3991",
+    "dist/lab-view.js": "fdd49d2f795b71217cc1e1ac6b21a0c51c5f25d78398a4334bc11de62d65e7cb",
+    "dist/data/btc-daily.json": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf",
+    "dist/viewport-workspace.js": "88c8cba821e866a87a5bbbbbec5172d473c0e290b0366fe2a60a807337d2fb80",
+    "dist/compact-chart-layout.js": "fc8d1f136c1ae5d8f24c4a378b349892d14d97f9c1fa74aed6b9d72613b56984",
+    "dist/data-update.js": "1bf07aaf3bba56720e16a766e9c8362bc6e6953e7edfb877fe29c8b89132cb08",
+    "dist/workbench-chrome.js": "82717c08789e53ffee6d2667ff6b342e59ed3954d3d566ab3f8c3c9d7f6d63e4",
+    "dist/analysis-dock.js": "4133f7cd4eea1fcbc29ccfc8e700e388b88f3ad271730e3c0b875830291ac496",
+    "dist/research-workbench.js": "04411f6bf87c616e04ec04e6d3bc1b944b3790ba4825c599b90fcc1e7db7ae93",
+    "dist/indicator-workbench.js": "79dfbf2e43bfdea9e76278e1ec85d56df1f79a678da1df2edcc441876aa277ed",
+    "dist/inspection-policy.js": "fb5953349307dd3025382df412414ba96777d0cf07403d49c548a941d47b79e3",
+    "dist/mobile-workspace.js": "1a4e3231a784f2f6b56a76a5fb609222b08ec632fc1399345a936306693b5f9f",
+    "dist/cycle-period-comparison.js": "d44f90bb5d172064a67e62910b0d48c9866c71e55bc3199a65f962d9593c97b8",
+    "dist/forecast-computation.js": "8e4843c963a686027fb0b767c6f8969e38fcccd03abcc20c247740e90e006256",
+    "dist/chart-replay.js": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+    "dist/forecast-evidence.js": "1579b491f7fb1153197c5d28511eb5c75a85821b1b1cc19ae23c7176142b51f1",
+    "dist/research-reader.js": "c8869e264aba1125bd56a23138d581287912b3e6b27ea6d392c4652c3d991575",
+    "dist/price-legend.js": "01800705007feaaccc158e8e586914eaf6b566ae5834de0502db2bc2bc83c283",
+    "dist/cycle-selection.js": "cb93d394dd247fd3a18e0d3b04318a861c19536309c2f93f9a1dce6f55441c39",
+    "dist/cycle-milestones.js": "bed3032cd8efaec067f0aedfaf42e8c170e43d00ea7c979791eb7028cb6714da",
+    "dist/cycle-milestones-view.js": "632e1a6d93c17fa30dcb7ebbe51fbd2298d6257df06e5da468993bf58e4c9c9c",
+    "dist/atlas-price-chart.js": "e3726e135dcd552777021de5282d1616120c0493d7b10b56fd4f129f812995d8",
+    "dist/chart-navigation.js": "cb1b0999c3934178615dbf3760e414daa8fbc15bb2412fdc8314135fd0a3350d",
+    "dist/atlas-analysis.js": "c6369b4bf17315cb0858b95ed9570101569a4774ef29fc76d85be2f176009954",
+    "dist/cryptocon-audit.js": "7fdf0bf02f6d30c1766642fb127178abaf99c677882e597fe03ca4ca4896b2fe",
+    "dist/indicator-state.js": "dc0da197cf7274d5068682631921dc065ecfbb1e8630bca815b2eeb4ddf3617e",
+    "dist/price-view-data.js": "54548b35600e976a31c60d5f2dae6539fee841cf0bd5520f6bd253c90c871634",
+    "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+    "dist/long-horizon-view.js": "fb92cf0e36ddc0996b14ab0e65df63b4c94ea460be67f2d38d1b3fa62c8db5ea",
+    "dist/ohlc-data.js": "b2a5104c22b0fced11d747cae9fd7797a876b0c7de4e30492376acae791e7f5d",
+    "dist/intraday-chart.js": "1e44773709a57ee9d74567001555a7b3ffa1f90c0915e35355f580c96c676c3f",
+    "dist/market-data-controller.js": "978ad14a70fdb3011f0761ceb7c6f6ebc0d37bc0b25aa047ad2ef2014eff07d6",
+    "dist/volume-data.js": "a788b2ba5381cd9405f468dcac902fb14a23b56696b49153745e2500fe25c88a",
+    "dist/volume-forecast.js": "f742d858c1cdf10e4092fcdb923e70b1e40c75d098e03234e16396880cca5d60",
+    "dist/bitcoin-events.js": "871bc28763906dc15fe61c034388582914c0c018bd13f96af3162571d9295b22",
+    "dist/chart-overlays.js": "0808bc0b3175eb089394493a9bab2062cdeaf190940169c3b26093c1c3f3e04a",
+    "dist/market-structure.js": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+    "dist/chart-export.js": "02092ff68b0ec8dc25d510beb2cb7fd9609f55ab019d483d5e10b116df0c7f3c",
+    "dist/chart-presets.js": "0635174122f5de55ebf0adeff12ba00a79b8364a2a9f57e982615e4e3c6ee0aa",
+    "dist/workspace-state.js": "797a61ef67ae093cc817d4e6c7b428033821228398c2590b3669d1fc137b6851",
+    "dist/price-axis.js": "c8c8153450d688ec541a17f81e1bfefb9296fd7f34620d808a7c84495412c888",
+    "dist/chart-hover.js": "2babcf82e20c0a6aa3aafd8f660a9175b94b11192fe3e4670c645683b8093067",
+    "dist/chart-view-policy.js": "5e6c183ac95d55079a595eb0d564411b5c7d162f1c6b9ec403c7a0c01d1a2cd0",
+    "dist/price-display.js": "7558e6e6f56825f66c4268a6939808abe21b731bf0fbe3fa8c5766d1b8e87179",
+    "dist/chart-touch-tracking.js": "6e993c48356a7c3d2156d11007b892a1e930b7d2fb2880d9fcae134cd0d424c7",
+    "dist/workspace-history.js": "1e7f2c7a57c7d0d163e5b2ef482324f28732d4d37783f1aa7dd39429691a54c6",
+    "dist/chart-export-workbench.js": "ec9433c4f842e89ad70232ffdad62199146da0570d0df1a2dc9a70c41c4608dd",
+    "dist/research-annotations.js": "b8f2e825bada44959e13375fb8243df188aa4e72aa64a788f7f2f3e555139a49",
+    "dist/research-annotations-workbench.js": "296c51cce5f994df1f08dab65d263f2e82d94ab4e81280d8170b88b0ab4a0d5f",
+    "dist/chart-magnet.js": "e568efbd4da72482a9b825263d8d9da29e45cec47e39a83b2ff11e76b6dd4d9c",
+    "dist/chart-go-to.js": "4182e033ad0750bb612e162ff39732c1716589b23dde8f9bb59e5bae94f0b73d",
+    "dist/workspace-tools.js": "0e94b855cd8cd30c0a4a9c80c90a19a7774a133bdc587704774a13d23b3ad7c1",
+    "dist/chart-bottom-bar.js": "e7dcdfce8326d5d4cf83265d1bd3fb715d26490b489b43523bbd72befd273b06",
+    "dist/symbol-selector.js": "86a41a84b273d59bfd26a9bf3a093e7ca5d684175cddb3f977e166968a473f4a",
+    "dist/history-journal.js": "4b4647725203e08ed8e000fdedfb24e9626a1a7b06985cb1ce226eed73b321d0",
+    "dist/dialog-viewport.js": "36dceb75f26ab3c6fec9fa2c1d8ca8cf0a6ddbb19e2b4d7a5bc0f9d901bde28e",
+    "dist/indicator-readouts.js": "5143dc1474226dba24127f2dd667ea1e18986059c49fdff6be2ff178cbffbb48",
+    "dist/indicator-settings.js": "87c9ca6aa99a4d1627c44290bb1e9d234ab42156a953af9dff26bd045e242715",
+    "dist/indicator-settings-dialog.js": "a8125d8186ab6adaf952843e9e3fc1b7067252e3922f9d68d6fd2b71ebadb7d6",
+    "dist/indicator-preferences.js": "8d26161783236257a6901b3f644afddc7d3e8a7fb9e05b6078bfc1c82caf1b99",
+    "dist/chart-replay-snapshot.js": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
+    "dist/research-source-data.js": "eb0720b297fe8430cf954e05df782ef5a4edd186a6c3ab727d1cb0bd8b5086b6",
+    "dist/chart-replay-state.js": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
+    "dist/research-library-data.js": "20d17df4b01fed0f5a72fe47dba57c68abe294c34eb6fa6a47a90d3ed7b95215",
+    "dist/research-format.js": "8d4b225cb3ee9f3042c72b12a2f4d3040123473c65bff8549c74bb55a5c0c37a",
+    "dist/cycle-interval-overlay.js": "ea37009cb4c19df6df1111b297df3d9a4adbeeb7cd06724c3ce0b5dfc1a207d2",
+    "dist/chart-math.js": "93db753cfbe24a88d68216267b08304c4149315912e7e60b0548d8ffa975d09a",
+    "dist/empty-price-chart.js": "877aeb29ee669ff2e5de03912aa6bc8c32f6ea93fc68670cd98ba4cbb20ee1d2",
+    "dist/chart-window.js": "ff1527876a0185e8f8a52211170c696bde98f0120c6f0ddde58cea987daaf7cd",
+    "dist/cryptocon-audit-data.js": "8495fd0373bd81331c05d784c9ffbee2ab26ef5fc9267d6bc127f98332be0088",
+    "dist/detailed-forecast.js": "e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e",
+    "dist/long-horizon-evidence.js": "7b5f9fc162e0c621b6a7df9f0f3d77e76c274040e83b88b0a8301638cb29f2f8",
+    "dist/cycle-calibration.js": "f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780",
+    "dist/equity-forecast-chart.js": "a5601464a89dbfbda508d8de69a7d4a84b6858cc8981bef237eee0412676b75c",
+    "dist/intraday-history.js": "7bec4f8c3f31571d4494801cfe22286fe9a87f0434c031eca1fd27f1f9e556f2",
+    "dist/forecast-worker.js": "f874720791a430368708deb85cf58b6d50742a3953f466bdbb34c52346a076c0",
+    "dist/cycle-period-worker.js": "9ecaae94018aad35359b5534f11b43c3f6ea9aef2a899ad358030b3ea83761cc",
+    "dist/data/btc-volume.json": "09ac13fed80490c774b3c597f79882ae2b5ab3038cc968f182d163f49fa2a8b1",
+    "dist/monthly-backtest-view.js": "687b15d890cc4620cf0c520ee1c00633de71eb544d5493e7c9b8c41ffdfdb433",
+    "dist/replay-cutoff-forecast.js": "a276e470e0f8450f3b39e06411c57bb66526f3ca6290019f78356814c4b375da",
+    "dist/monthly-backtest-store.js": "33da0e2a147d0d6b99b391af90de61789c32b9a1db8736f6e28ae2c255bf0fb8",
+    "dist/monthly-backtest-source.js": "e037e2074dbe26073f8292b4938f2d05e68dc327f57595cf064def5dc2d91456",
+    "dist/monthly-backtest.js": "10fd7a2eb0d72ad126cdfd927d20bb80c84246fb3dc10d6a1b602dbf77c70284",
+    "dist/chart-replay-sources.js": "eda71aeffa8739bb233a9fb8413883ee0be3be357a271e761073873bacd63e3d",
+    "dist/forecast-records.js": "c79893f81c6bdff97685e2c384a3d1facc6eec10effdb09346c63749a36ca308",
+    "dist/forecast-replay.js": "a50725737d9deb6cdb851867dcc60bcc202b19818d6bbccc88e67b986d2f2b13",
+    "dist/replay-retrospective.js": "d70354b18a6b9eb211106a48b7f50cb4265d29100877a0f2abc286a8fe959081",
+    "dist/forecast-information-time.js": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23",
+    "dist/asset-forecast-records.js": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2",
+    "dist/forecast-replay-sources.js": "26d99528a81a49e8c738c542a2e2fbd911674efd874f02070c1ddd958e07cd52",
+    "dist/forecast-evaluation.js": "c48123c844c1fbfd454372d0b2ed56817d1fa9e87a6547abeef2d49c145b0ea5",
+    "dist/data-freshness.js": "10e2348ae352ef19a840002fadc1123f055712312490d958a8559b39e814a0f1",
+    "dist/project-replay-baseline.js": "b24462b0b8ac13b8640fc0717e98ed5cf198a779281cbd64bd3551a4529c6861",
+    "dist/asset-daily-observations.js": "645cdfc751ffe2a4e0ce66a10316fc493d637cd6f74a0d09ea17b4e126367c70",
+    "dist/equity-market-data.js": "7c93eaf2471f354511e3440606cb0ed46b46242803bb7d06e3f06955a2a4cb8d",
+    "dist/eth-market-data.js": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075",
+    "dist/monthly-backtest-worker.js": "f8e94b3d1c264bbc1d6f405170579113e7a86c72e433fc52164c7955a11345ac",
+    "dist/cycle-clock-backtest-view.js": "b82d63bc36b708f383db37c192699569f3b012482c35192790df77f127d89449",
+    "dist/cycle-clock-backtest.js": "a53bf4b3d32aaf79fc4f80d14bdab2432cf40f4d62b7f5db6d2bdc1073b8842c",
+    "dist/cycle-clock-backtest-worker.js": "09de6ef98aa2d476b2275211f6b6a3aafae81ad54cc8ef9223993b197cf53a26",
+    "dist/market-lab/app/index.html": "14a09d44df3108629ffea970c9eeb9adf4a4c4884665b3a064b726b0cd633f1a",
+    "dist/market-lab/app/assets/index-BYWO-BnS.css": "81cb08a20b164884399e7a1ea095f168786ccb3b4fe0492d98b84b5c6ead772c",
+    "dist/market-lab/app/assets/index-DblLUHgN.js": "628d3daa140deba7c8d09c2c67c5ae76ebe489c7185f0d8777bef956d279d7df",
+    "dist/data/market-lab.json": "3eeca3d402b1ce83e89ebf834309867cdd0ecc06f59de098ba96f80abf590107",
+    "dist/data/housing.json": "c39382261ca09e4ffe49accbce80d8eef20baab4c3cf38d4e2f04273e4923146"
+  },
+  "method": "Unmodified app served by one local HTTP server; real Chromium mouse, wheel and keyboard input. Read-only DOM geometry; no injected table data or scripted scrolling. Offline external requests are blocked and listed.",
+  "probeHash": "2d2f8ce22fbc09f79e835b27d5c77d29f17b7faf2847d178f2527de0f1a7068b",
+  "browserVersion": "143.0.7499.0",
+  "error": "AssertionError [ERR_ASSERTION]: Native pointer target unreachable {\"selector\":\"#chart-reader [aria-label=\\\"다음 설명 페이지\\\"]\",\"x\":1411.984375,\"y\":-563,\"left\":1395.984375,\"right\":1427.984375,\"top\":-577,\"bottom\":-549,\"width\":32,\"height\":28,\"visible\":true,\"topmost\":false,\"disabled\":false,\"viewportWidth\":1440,\"viewportHeight\":900,\"outline\":\"none\",\"outlineWidth\":0,\"label\":\"다음 설명 페이지\"}\n    at click (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/docs/design-closeout-2026-11-05/sticky-surfaces/probe.mjs:51:88)\n    at async contrastCase (file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/docs/design-closeout-2026-11-05/sticky-surfaces/probe.mjs:116:5)\n    at async file:///workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/docs/design-closeout-2026-11-05/sticky-surfaces/probe.mjs:208:68",
+  "finishedAt": "2026-11-05T12:39:40.294Z",
+  "sourceIntegrity": {
+    "mode": "cached working-tree bytes",
+    "changed": []
+  }
+}

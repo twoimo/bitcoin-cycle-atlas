@@ -49,7 +49,7 @@ body[data-shell=dashboard] .ml-scroll{padding:8px 24px 24px}
 body[data-shell=dashboard] .ml-score-row{gap:16px;margin:16px 0}
 body[data-shell=dashboard] .ml-score{border-radius:10px;min-height:144px;background:var(--surface);border-left-width:2px}
 body[data-shell=dashboard] .ml-score .ml-axis-value{font-size:36px}
-body[data-shell=dashboard] .ml-card{border-radius:10px;background:var(--surface)}
+body[data-shell=dashboard] .ml-card{border-radius:10px;background:var(--surface);color:var(--text)}
 body[data-shell=dashboard] .ml-sources,body[data-shell=dashboard] .ml-original{background:transparent;border-color:var(--border);border-radius:7px}
 body[data-sidebar=compact][data-shell=dashboard] .atlas-brand :is(div,strong),body[data-sidebar=compact][data-shell=dashboard] .atlas-sidebar-group,body[data-sidebar=compact][data-shell=dashboard] .atlas-nav .atlas-nav-label,body[data-sidebar=compact][data-shell=dashboard] .atlas-nav button>span:last-child:not([data-icon]){display:none!important}
 body[data-sidebar=compact][data-shell=dashboard] .atlas-sidebar :is(.atlas-brand,.atlas-nav a,.atlas-nav button){justify-content:center;padding-inline:0}
@@ -172,7 +172,7 @@ body[data-center-tool] #chart-reader{display:none!important}
 @media(min-width:621px){body[data-center-tool] .workspace.atlas-details-layout{grid-template-columns:minmax(0,1fr) 0 var(--rail-width,38px)}}
 .rsi-backtest-metrics{display:flex;flex-wrap:wrap;gap:24px;margin-block:24px}.rsi-backtest-metrics dt{font-size:11px;color:var(--muted)}.rsi-backtest-metrics dd{margin:4px 0 0;font:18px var(--font-mono)}
 .rsi-history-heading{display:flex;align-items:center;gap:16px;margin-block:24px 12px}.rsi-history-heading label{margin-left:auto;font-size:11px;color:var(--muted)}
-.rsi-ledger-scroll{max-height:360px;overflow:auto;border:1px solid var(--border);margin-top:12px}.rsi-ledger-scroll thead th{position:sticky;top:0;background:var(--surface);z-index:1}.rsi-ledger-scroll td{white-space:nowrap;font-variant-numeric:tabular-nums}.rsi-ledger-scroll td button{border:0;background:transparent;color:var(--muted);min-height:28px;padding:0}
+.rsi-ledger-scroll{max-height:360px;overflow:auto;border:1px solid var(--border);margin-top:12px}.rsi-ledger-scroll thead th{background:var(--surface);z-index:1}.rsi-ledger-scroll td{white-space:nowrap;font-variant-numeric:tabular-nums}.rsi-ledger-scroll td button{border:0;background:transparent;color:var(--muted);min-height:28px;padding:0}
 .rsi-trades summary{cursor:pointer;font-size:12px}
 .symbol-search-mark-tqqq,.symbol-search-mark-soxl,.symbol-search-mark-233740{font-size:14px;color:var(--muted)}
 @media(max-width:640px){.atlas-embedded-workspace .ml-scroll{padding:8px 8px 16px}.rsi-history h2 small{display:block;margin:8px 0 0}.rsi-backtest-form{gap:8px}.rsi-backtest-form label{flex:1 0 44%}.rsi-backtest-form input,.rsi-backtest-form input[type=date]{width:100%}.rsi-history-heading{flex-wrap:wrap;gap:8px}.rsi-backtest-metrics{gap:16px}}

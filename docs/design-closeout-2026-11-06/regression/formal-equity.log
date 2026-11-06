@@ -1,0 +1,157 @@
+current: pass
+original-boot-order: expected invariant violation
+unguarded-prices: expected invariant violation
+unguarded-projection: expected invariant violation
+unguarded-errors: expected invariant violation
+retained-old-projection: expected invariant violation
+hidden-ready: expected invariant violation
+overwritten-range: expected invariant violation
+✔ MSTR releases the usable observed chart before the coin response or projection (25.192944ms)
+✔ MSTR shows an actionable price failure and opens a requested source view once (4.991907ms)
+✔ MSTR cannot release or render a suspended document before restoration (2.721812ms)
+✔ MSTR does not reveal loaded prices after leaving before their first render (3.01082ms)
+✔ MSTR ignores revoked stock replies, success or failure=false (3.867957ms)
+✔ MSTR ignores revoked underlying replies, success or failure=false (2.932865ms)
+✔ MSTR ignores revoked stock replies, success or failure=true (2.594104ms)
+✔ MSTR ignores revoked underlying replies, success or failure=true (3.224785ms)
+✔ MSTR cancels projection after 0 paint yields (2.544351ms)
+✔ MSTR cancels projection after 1 paint yields (2.431263ms)
+✔ MSTR invalidates the previous projection when refreshed stock prices publish (3.641482ms)
+✔ MSTR preserves user interval, scenario and range while the projection is pending (2.684948ms)
+✔ MSTR keeps observed prices after coin failure and recovers on retry (2.877183ms)
+✔ MSTR keeps observed prices when projection rejects inputs and a retry can recover (3.408197ms)
+✔ BMNR releases the usable observed chart before the coin response or projection (2.423732ms)
+✔ BMNR shows an actionable price failure and opens a requested source view once (2.242394ms)
+✔ BMNR cannot release or render a suspended document before restoration (6.56321ms)
+✔ BMNR does not reveal loaded prices after leaving before their first render (4.212456ms)
+✔ BMNR ignores revoked stock replies, success or failure=false (4.907974ms)
+✔ BMNR ignores revoked underlying replies, success or failure=false (6.897304ms)
+✔ BMNR ignores revoked stock replies, success or failure=true (1.992345ms)
+✔ BMNR ignores revoked underlying replies, success or failure=true (2.126093ms)
+✔ BMNR cancels projection after 0 paint yields (2.662781ms)
+✔ BMNR cancels projection after 1 paint yields (3.183095ms)
+✔ BMNR invalidates the previous projection when refreshed stock prices publish (3.527653ms)
+✔ BMNR preserves user interval, scenario and range while the projection is pending (2.515788ms)
+✔ BMNR keeps observed prices after coin failure and recovers on retry (4.555152ms)
+✔ BMNR keeps observed prices when projection rejects inputs and a retry can recover (2.954917ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 125.213802
+{
+  "tool": {
+    "name": "TLC",
+    "release": "1.7.4",
+    "jarSha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+  },
+  "bounds": {
+    "requestGenerations": 3,
+    "intervals": [
+      "daily",
+      "weekly"
+    ],
+    "rangeChoices": [
+      "auto",
+      "custom"
+    ]
+  },
+  "model": {
+    "current": {
+      "status": "pass",
+      "invariant": null,
+      "exitStatus": 0,
+      "generated": 303261,
+      "distinct": 46252,
+      "remaining": 0
+    },
+    "original-boot-order": {
+      "status": "expected invariant violation",
+      "invariant": "UsableRenderReleasesBoot",
+      "exitStatus": 12,
+      "generated": 68,
+      "distinct": 38,
+      "remaining": 27
+    },
+    "unguarded-prices": {
+      "status": "expected invariant violation",
+      "invariant": "NoStalePublication",
+      "exitStatus": 12,
+      "generated": 40,
+      "distinct": 25,
+      "remaining": 17
+    },
+    "unguarded-projection": {
+      "status": "expected invariant violation",
+      "invariant": "NoStalePublication",
+      "exitStatus": 12,
+      "generated": 3383,
+      "distinct": 1147,
+      "remaining": 600
+    },
+    "unguarded-errors": {
+      "status": "expected invariant violation",
+      "invariant": "NoStalePublication",
+      "exitStatus": 12,
+      "generated": 41,
+      "distinct": 26,
+      "remaining": 18
+    },
+    "retained-old-projection": {
+      "status": "expected invariant violation",
+      "invariant": "ProjectionMatchesPrices",
+      "exitStatus": 12,
+      "generated": 7255,
+      "distinct": 2253,
+      "remaining": 1105
+    },
+    "hidden-ready": {
+      "status": "expected invariant violation",
+      "invariant": "NoHiddenReadiness",
+      "exitStatus": 12,
+      "generated": 265,
+      "distinct": 115,
+      "remaining": 74
+    },
+    "overwritten-range": {
+      "status": "expected invariant violation",
+      "invariant": "UserRangePreserved",
+      "exitStatus": 12,
+      "generated": 2317,
+      "distinct": 806,
+      "remaining": 429
+    }
+  },
+  "implementation": {
+    "tests": 28,
+    "original": "pass",
+    "restored": "pass",
+    "sourceSha256": "19716e251cbb3af657e66a1cad955aaf1324749dd20b281391c608e7e70d0168",
+    "mutations": {
+      "deferred-readiness": "expected assertion failure",
+      "unguarded-prices": "expected assertion failure",
+      "unguarded-projection": "expected assertion failure",
+      "unguarded-coin-error": "expected assertion failure",
+      "retained-old-projection": "expected assertion failure",
+      "hidden-ready": "expected assertion failure",
+      "overwritten-range": "expected assertion failure"
+    },
+    "mutationExitStatuses": {
+      "deferred-readiness": 1,
+      "unguarded-prices": 1,
+      "unguarded-projection": 1,
+      "unguarded-coin-error": 1,
+      "retained-old-projection": 1,
+      "hidden-ready": 1,
+      "overwritten-range": 1
+    }
+  },
+  "limitations": [
+    "Finite request-state model, not an unbounded proof",
+    "UI replay injects import, HTTP, animation-frame and DOM boundaries",
+    "No economic accuracy, visual pixels, browser timing or liveness proof"
+  ]
+}

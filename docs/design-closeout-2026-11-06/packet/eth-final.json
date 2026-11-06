@@ -1,0 +1,1310 @@
+{
+  "schemaVersion": 1,
+  "kind": "read-only-final-eth-actions-monitor",
+  "status": "failure",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "headSha": "aca73b74a5128a5466488a0c701e86f5e854af46",
+  "tree": "1f18486be46dbc8c852fcbadfe844bc78d948fb1",
+  "runId": 42191941832,
+  "runUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42191941832",
+  "runCreatedAt": "2026-11-06T09:01:54Z",
+  "jobId": 127805831888,
+  "jobName": "evaluate",
+  "lastPollAt": "2026-11-06T09:28:39.060Z",
+  "history": [
+    {
+      "at": "2026-11-06T09:03:30.206Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentSteps": [
+        {
+          "number": 4,
+          "name": "Test candidate equations, missing inputs, clocks and future-information boundaries"
+        }
+      ],
+      "completed": 3
+    },
+    {
+      "at": "2026-11-06T09:06:37.377Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 3,
+      "currentSteps": [
+        {
+          "number": 4,
+          "name": "Test candidate equations, missing inputs, clocks and future-information boundaries"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T09:09:25.388Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 23,
+      "currentSteps": [
+        {
+          "number": 24,
+          "name": "Restore and independently validate the selected prospective archive bytes"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T09:10:53.287Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 25,
+      "currentSteps": [
+        {
+          "number": 26,
+          "name": "Reexecute preserved prospective records independently of acquisition success"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T09:12:13.138Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 29,
+      "currentSteps": [
+        {
+          "number": 30,
+          "name": "Append current evidence and prove exact restoration of the previous archive"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T09:14:29.288Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T09:16:41.213Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T09:17:54.090Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T09:19:37.087Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T09:20:56.252Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T09:22:27.076Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T09:23:41.638Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T09:24:52.398Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T09:27:07.536Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T09:28:39.060Z",
+      "status": "completed",
+      "conclusion": "failure",
+      "completed": 39,
+      "currentSteps": [],
+      "failedSteps": [
+        {
+          "number": 35,
+          "name": "Bind exact committed sources inputs and execution evidence for external review",
+          "conclusion": "failure"
+        }
+      ]
+    }
+  ],
+  "nativeReceipt": {
+    "status": "passed",
+    "sourceCommit": "aca73b74a5128a5466488a0c701e86f5e854af46",
+    "startedAt": "2026-11-06T09:13:39.845Z",
+    "finishedAt": "2026-11-06T09:27:44.478Z",
+    "declaredCaseCount": 49,
+    "expectedCaseCount": 49,
+    "executedCaseCount": 49,
+    "passed": 49,
+    "failed": 0,
+    "failures": [],
+    "cases": [
+      {
+        "page": "data",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "zero-fixture",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 390,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 390,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 390,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 390,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 768,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 768,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 768,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 768,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 1024,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 1024,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 1024,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 1024,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 1620,
+        "height": 1008,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 1920,
+        "height": 1440,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-btc",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-evidence",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-legacy",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-preview",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-btc",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-evidence",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-legacy",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-preview",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-btc-short",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-legacy",
+        "width": 375,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-center-data",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-center-data",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-center-data",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "replay-btc",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "replay-btc",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "replay-eth",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "replay-eth",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-btc",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-btc",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-btc",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-eth",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-eth",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-mstr",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-bmnr",
+        "width": 390,
+        "height": 844,
+        "status": "passed"
+      }
+    ],
+    "browserVersion": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/156.0.8078.79",
+      "revision": "@a21ce95c24ce3964416f09ae1862f53f319eb4d0",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+      "jsVersion": "15.6.75.27"
+    },
+    "sourceIntegrity": {
+      "checkedFiles": 98,
+      "changedSources": [],
+      "unchangedDuringRun": true
+    },
+    "sourceHashes": {
+      "dist/index.html": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+      "dist/site-entry.js": "645d41c07ef1ef9f9cba2282e34c5a723b6c356f1dfbab7fba8f3fbb39fcaf0e",
+      "dist/asset-comparison.js": "765d85f67ffad760e75b1b8fe8600eeb274411adb154c079cc65e1ba3a9076c8",
+      "dist/asset-judgment-history.js": "986b299bb7dc2c8e28cb2668bb2b7b3b7b0e507ba2b2f8ecb9040771d89ead9a",
+      "dist/daily-data-view.js": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+      "dist/daily-data.css": "f45a6226526795d926caf2fe8c8df386f22f24c7a4383e05986b1b3df5b3366a",
+      "dist/eth-view.js": "ef6e99760567649f3ab8705ef49c52e47726cb28486225847bafa4ede5066519",
+      "dist/eth-view.css": "1f09834a4460821c83496ea97fc70a6fb2371ad8ef2560ca1dd48395eeb42d05",
+      "dist/ethereum-forecast.js": "b86e6e917c8d72c9db892dc4931694f915d6d73352dbab54798a64bd5ee3db4c",
+      "dist/ethereum-adaptive-model.js": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d",
+      "dist/ethereum-pooled-model.js": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467",
+      "dist/eth-view-state.js": "152003eacf02bd0e889b2ec8f89a867e702ab0d9db97a66e06ea7528a16021d1",
+      "dist/ethereum-adoption-scenarios.js": "f49532abd2479a2531bb7e23aaf7ff2b8505a3c2ce0a84436f3768a25c18dc86",
+      "dist/ethereum-research-panel.js": "f699155933c465057d8f1dc442c9b0de699e3a9d9eb1090a6566f46b724b93cc",
+      "dist/ethereum-research-catalog.js": "1c7638bec65dd4f948bc260434355f7e79c3ff9d572515d3fa5ec142dcf38e35",
+      "dist/eth-market-data.js": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075",
+      "dist/intraday-chart.js": "1e44773709a57ee9d74567001555a7b3ffa1f90c0915e35355f580c96c676c3f",
+      "dist/equity-forecast-chart.js": "a5601464a89dbfbda508d8de69a7d4a84b6858cc8981bef237eee0412676b75c",
+      "dist/equity-view.js": "19716e251cbb3af657e66a1cad955aaf1324749dd20b281391c608e7e70d0168",
+      "dist/treasury-projection.js": "9cf7e6660124880e5a9ad654f41c846d10deb309ace18cf59b96699963948fd1",
+      "dist/treasury-model.js": "4812b36b65912209201eabf46ba39868cec7d7ddb014421e556476412b8e1739",
+      "dist/forecast-information-time.js": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23",
+      "dist/data/bmnr-ohlc.json": "db97d837fd4b3dcb68a3d3fac31b72e55b956a3c866630d4ec9a45e64bbe35a6",
+      "dist/data/eth-ohlc.json": "73436a22ced40a0c1090f0ef926aed19d5381699089a6feee114f5dc9f312282",
+      "scripts/verify-eth-candidate-browser.mjs": "3590829a4a77d153468c4e98250feb4b269a501bce8601787c01f8ce76d29a29",
+      "scripts/btc-offline-refresh-policy.mjs": "2129f5274e0338c2d747d45af29eacc1d00c7ee5bbcea99925faf53d23f75740",
+      "tests/ethereum-offline-refresh-policy.test.mjs": "5697ad32f15a5f6a8a8d0a48dbd6546d5f72c6bdb64c645013e7ce836ac34c3d",
+      "dist/data/btc-daily.json": "fae8889632b524deef33d04363da714efcb74f7906b8a507025516668c8cd7a6",
+      "dist/app.js": "ce9dbbdb6bf50a9b19208cfc8aa424f1395a95cd56d83afb7ab5370a87da4acd",
+      "dist/btc-refresh-status.js": "806ca5d59e4a9194bc9c2759c60821da154173a65944328a24010307808b2036",
+      "tests/ethereum-btc-refresh-status.test.mjs": "a840171a6fa636993b9ae735cf1c8b3089ca76f9ef05d17bd98846da75372b73",
+      "dist/data-source.js": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b",
+      "dist/published-data.js": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010",
+      "dist/asset-forecast-journal.js": "95298b2a35ced2ee51e7b3953bec6e520006edd102f0ee15187edb505f62da9c",
+      "dist/asset-forecast-records.js": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2",
+      "dist/journal-entry.js": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0",
+      "dist/forecast-journal.css": "e8bb880c5a91a7729c3ff490aff6e21e86950faefb9b265bec36d000287a3683",
+      "dist/data/asset-forecast-ledger/index.json": "2620f75f54b9755f417296348a4e31e14d584c338bcd2b67b0ac15c2c59bbe62",
+      "dist/data/mstr-ohlc.json": "c8838d17661f0cb4d8462fb8fb649e6a189d8c7f6188c36e9e00fa0b35e149d9",
+      "dist/lab-view.js": "fdd49d2f795b71217cc1e1ac6b21a0c51c5f25d78398a4334bc11de62d65e7cb",
+      "dist/analysis-dock.css": "43b46d05978a7499823ef54d598f936de3279fbe3dc59cf77a8d66811f5e3fa9",
+      "dist/compact-chart-layout.css": "b429642986c9d73b930b49b48da7a710d8403965c4f50ee06263338c12c14f30",
+      "dist/mobile-workspace.css": "90a375739f01826b0a71c57789f50a09be6a6f944020194f6b70882f88578d3f",
+      "dist/mobile-preview.js": "9d1ad1cdaf3e316579e4a33054d81d300e002b0214635a1481140b1a133acc9c",
+      "scripts/verify-workspace-browser.mjs": "9ddda52e5cf8d71eccb772bd71a6dccaa0570424bf309a68d1aeea48ac0b6ec4",
+      "dist/atlas.css": "a9a3abf1ef26eefb93d518a0af826387dc40939fa9354427b7496f9a24207485",
+      "dist/atlas-shell.css": "1f087aadb72778f8050b0d3e2c45d9f465c33c5c93d476838ff0af9cbd70c18e",
+      "dist/atlas-shell.js": "bdd3a52f98936a28a2a4be5172e4005b8a842bba02e6b001cbc0ea3ae22275a1",
+      "dist/center-workbench.js": "9e8481440f1237f10e98ccd95e9b6a9770b23751dea55ec1313ceecab5a0d411",
+      "dist/market-lab.css": "68e9b99aeaa189540f919c464eb0bf5e7a307195c0544dad384b53580a9b1637",
+      "dist/loading-surfaces.css": "241d713af90f378d6f927b8c1d29a39d150d26374b8fe3315b05b8b50df041cf",
+      "dist/loading-surfaces.js": "f62d142df3ee3ae00ae10f63373d0421d785c253e7fc71acb8231714340e07cb",
+      "dist/chart-bottom-bar.css": "67ef233b70921763ef1a91cc394d333a1ef755fca28d5e0d21b1e7f7773bbe3a",
+      "dist/chart-details-panel.css": "16c64c7b3b6dd0dfb86b06bbb6c25edcdc37ce8ee4041032854ac1dc7fda3d37",
+      "dist/chart-export-workbench.css": "5cfffd7d47507a90252b2e2b5b29ce448f95d13e56951d00e600eb43fb3321d5",
+      "dist/chart-magnet.css": "5c7645a9f74619aaed469826bf599502dda56296a3aafcce548dfe30f4935b53",
+      "dist/chart-workspace-controls.css": "708e87841f3d01e806be0ec7dfe1a69caa39780b658291aeee68661ae02073f9",
+      "dist/compact.css": "24ea81f5c6635f6b06628b91faaa4cad20c705c66e695b71ff045d228f3de372",
+      "dist/cycle-milestones.css": "22a9a9a21251a92a9310e2dc5d8cd0cfab809ee502db45991953a73905562712",
+      "dist/equity-view.css": "99026cd6229df757176a648fc0f2c2ed88d7916a4e5eb65bcd8f9957db1ff5ad",
+      "dist/ethereum-history.css": "017cf5ea799495460353b389a8265ca87a5c0ecbe35268c08ca5c8ed5ca1e896",
+      "dist/lab.css": "517b84062e65c98b9c8171556edc25502a4fab079512f6b3a81ba245d37f30fc",
+      "dist/outlook.css": "896e139d35497451bd11b9d117ec2c267544fe31fd01e979ab0d4dd280fda593",
+      "dist/research-annotations.css": "d21629aadbb87bf1124f47a5dbe56a84cf5e725fcb4f300519720f4b169c650a",
+      "dist/research-reader.css": "fb41b38773dce8872ff0320951202346bc01c46bbb2f92a19a4d63a8ede3c4c8",
+      "dist/styles.css": "b9f135be9afa23f599908c9ab9bc8253013d69df240b7982e7a8fc6644768cb2",
+      "dist/symbol-selector.css": "518e07096505c2be6a88a1412211caa53d61813d4ec045adfd8a10ab086c59cf",
+      "dist/viewport.css": "36aecacae5e796bf5028a1e6963a217cc5eec5234f92184d134daa3ca312ec07",
+      "dist/workspace-tools.css": "33c8052eb528b1d6882aefd3bcef02c6785b1058fe3216d56d011b149000a701",
+      "dist/chart-bottom-bar.js": "e7dcdfce8326d5d4cf83265d1bd3fb715d26490b489b43523bbd72befd273b06",
+      "dist/preserved-archive-download.js": "fdc1ae671b866a2d3731d645b57998bdb23a53de6b3bfd0b61946faeda5434fd",
+      "dist/workspace-tools.js": "0e94b855cd8cd30c0a4a9c80c90a19a7774a133bdc587704774a13d23b3ad7c1",
+      "dist/research-annotations-workbench.js": "296c51cce5f994df1f08dab65d263f2e82d94ab4e81280d8170b88b0ab4a0d5f",
+      "dist/mobile-preview.html": "ef350dc53c4c61ca2bff5d4cf37d183ea13a5866cae9074f2522b7b7bd756379",
+      "dist/symbol-selector.js": "86a41a84b273d59bfd26a9bf3a093e7ca5d684175cddb3f977e166968a473f4a",
+      "dist/research-reader.js": "c8869e264aba1125bd56a23138d581287912b3e6b27ea6d392c4652c3d991575",
+      "dist/evidence-view.js": "fee4c064ed597fdba398a623846e00a96d590b2e85e1645976c787f55c3b6330",
+      "dist/viewport-workspace.js": "707d4ad42209fba6eb88c7e521de06b720bae9c07e42e76057a61382e20cb511",
+      "dist/workbench-chrome.js": "82717c08789e53ffee6d2667ff6b342e59ed3954d3d566ab3f8c3c9d7f6d63e4",
+      "dist/forecast-replay.js": "a50725737d9deb6cdb851867dcc60bcc202b19818d6bbccc88e67b986d2f2b13",
+      "dist/forecast-replay-sources.js": "26d99528a81a49e8c738c542a2e2fbd911674efd874f02070c1ddd958e07cd52",
+      "dist/forecast-replay-view.js": "ecd6ea1880d3e7b6d682860f35f9a4593267f8a5c560c475c23db901b4c2c93b",
+      "dist/data/replay-eth-ohlc.json": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37",
+      "scripts/verify-forecast-replay-browser.mjs": "d63cef852ce682cf8c63b9a0ab0c31ea76e2cec52330cc271c56af2ce77b195e",
+      "dist/chart-replay.js": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+      "dist/chart-replay-snapshot.js": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
+      "dist/chart-replay-state.js": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
+      "dist/chart-replay-renderer.js": "ba06b1369f92c596bd12abfd8256dd044be38097807718fc12550e81cc369d6b",
+      "dist/chart-replay-sources.js": "eda71aeffa8739bb233a9fb8413883ee0be3be357a271e761073873bacd63e3d",
+      "dist/chart-replay.css": "211009c38aa3b7716e566ab8c1a94002ea15f2557d905e26d3a39107902d85bf",
+      "dist/asset-forecast-loader.js": "2d373afa2f588f8d640b7432b1e226d64580fb1a96efc6631c6e2dcb7e1168cb",
+      "dist/data/btc-volume.json": "1333504eef05146976cc2763f3d3456240e67b23b290cb56b295cae110fa278d",
+      "scripts/verify-chart-replay-browser.mjs": "1efe9ae194009af1243df96df8c3d89ba6f9c6bdbccefa0a425cabff04d2e6bc",
+      "dist/chart-replay-atlas.js": "b647d085796353b9cf21edebed98890bba89fb10cb54de0568b0060fc6d3fcf3",
+      "dist/atlas-price-chart.js": "e3726e135dcd552777021de5282d1616120c0493d7b10b56fd4f129f812995d8",
+      "dist/project-replay-baseline.js": "b24462b0b8ac13b8640fc0717e98ed5cf198a779281cbd64bd3551a4529c6861",
+      "dist/data/project-origin-btc-2026-10-21.json": "571d0d3421d7ae40da4fb3020ab0290aa534822d5a439f9e98f55dc31d5f19ac",
+      "scripts/build-project-replay-baseline.mjs": "1ddf49e09ad015afd526996112c521d23fba5e539af73439c85628dec13aed83"
+    },
+    "btcCadence": [
+      {
+        "speed": 10,
+        "expectedMilliseconds": 100,
+        "observations": [
+          {
+            "cursor": "2026-10-21",
+            "at": 64822.90000000002
+          },
+          {
+            "cursor": "2026-10-22",
+            "at": 64922.40000000002
+          },
+          {
+            "cursor": "2026-10-23",
+            "at": 65034.49999999988
+          },
+          {
+            "cursor": "2026-10-24",
+            "at": 65127.99999999988
+          },
+          {
+            "cursor": "2026-10-25",
+            "at": 65224.40000000002
+          },
+          {
+            "cursor": "2026-10-26",
+            "at": 65315.79999999993
+          },
+          {
+            "cursor": "2026-10-27",
+            "at": 65417.09999999998
+          },
+          {
+            "cursor": "2026-10-28",
+            "at": 65519.49999999988
+          },
+          {
+            "cursor": "2026-10-29",
+            "at": 65621.40000000002
+          },
+          {
+            "cursor": "2026-10-30",
+            "at": 65716.09999999998
+          },
+          {
+            "cursor": "2026-10-31",
+            "at": 65818.09999999998
+          },
+          {
+            "cursor": "2026-11-01",
+            "at": 65921.40000000002
+          },
+          {
+            "cursor": "2026-11-02",
+            "at": 66020.99999999988
+          },
+          {
+            "cursor": "2026-11-03",
+            "at": 66115.20000000007
+          },
+          {
+            "cursor": "2026-11-04",
+            "at": 66216.09999999998
+          },
+          {
+            "cursor": "2026-11-05",
+            "at": 66320.79999999993
+          }
+        ],
+        "intervals": [
+          99.5,
+          112.0999999998603,
+          93.5,
+          96.4000000001397,
+          91.39999999990687,
+          101.30000000004657,
+          102.39999999990687,
+          101.9000000001397,
+          94.69999999995343,
+          102,
+          103.30000000004657,
+          99.5999999998603,
+          94.20000000018626,
+          100.89999999990687,
+          104.69999999995343
+        ],
+        "meanMilliseconds": 99.85999999999379,
+        "averageUpdatesPerSecond": 10.014019627479092,
+        "allowedMeanRatio": [
+          0.85,
+          1.3
+        ],
+        "completionTimeoutMilliseconds": 7080,
+        "setupAllowanceMilliseconds": 5000
+      },
+      {
+        "speed": 1,
+        "expectedMilliseconds": 1000,
+        "observations": [
+          {
+            "cursor": "2026-10-21",
+            "at": 69939.49999999988
+          },
+          {
+            "cursor": "2026-10-22",
+            "at": 70933.09999999998
+          },
+          {
+            "cursor": "2026-10-23",
+            "at": 71934.09999999998
+          },
+          {
+            "cursor": "2026-10-24",
+            "at": 72936.99999999988
+          },
+          {
+            "cursor": "2026-10-25",
+            "at": 73938.49999999988
+          },
+          {
+            "cursor": "2026-10-26",
+            "at": 74938.99999999988
+          },
+          {
+            "cursor": "2026-10-27",
+            "at": 75939.70000000007
+          },
+          {
+            "cursor": "2026-10-28",
+            "at": 76943.29999999993
+          },
+          {
+            "cursor": "2026-10-29",
+            "at": 77932.79999999993
+          },
+          {
+            "cursor": "2026-10-30",
+            "at": 78932.70000000007
+          },
+          {
+            "cursor": "2026-10-31",
+            "at": 79939.70000000007
+          },
+          {
+            "cursor": "2026-11-01",
+            "at": 80938.99999999988
+          },
+          {
+            "cursor": "2026-11-02",
+            "at": 81931.90000000002
+          },
+          {
+            "cursor": "2026-11-03",
+            "at": 82933.29999999993
+          },
+          {
+            "cursor": "2026-11-04",
+            "at": 83961.49999999988
+          },
+          {
+            "cursor": "2026-11-05",
+            "at": 84940.40000000002
+          }
+        ],
+        "intervals": [
+          993.6000000000931,
+          1001,
+          1002.8999999999069,
+          1001.5,
+          1000.5,
+          1000.7000000001863,
+          1003.5999999998603,
+          989.5,
+          999.9000000001397,
+          1007,
+          999.2999999998137,
+          992.9000000001397,
+          1001.3999999999069,
+          1028.1999999999534,
+          978.9000000001397
+        ],
+        "meanMilliseconds": 1000.0600000000093,
+        "averageUpdatesPerSecond": 0.9999400035997748,
+        "allowedMeanRatio": [
+          0.85,
+          1.3
+        ],
+        "completionTimeoutMilliseconds": 25800,
+        "setupAllowanceMilliseconds": 5000
+      },
+      {
+        "speed": 0.5,
+        "expectedMilliseconds": 2000,
+        "observations": [
+          {
+            "cursor": "2026-10-21",
+            "at": 89595.40000000002
+          },
+          {
+            "cursor": "2026-10-22",
+            "at": 91610.59999999998
+          },
+          {
+            "cursor": "2026-10-23",
+            "at": 93595.90000000002
+          },
+          {
+            "cursor": "2026-10-24",
+            "at": 95598.70000000007
+          },
+          {
+            "cursor": "2026-10-25",
+            "at": 97600.29999999993
+          },
+          {
+            "cursor": "2026-10-26",
+            "at": 99596.20000000007
+          },
+          {
+            "cursor": "2026-10-27",
+            "at": 101594.40000000002
+          },
+          {
+            "cursor": "2026-10-28",
+            "at": 103599.79999999993
+          },
+          {
+            "cursor": "2026-10-29",
+            "at": 105593.90000000002
+          },
+          {
+            "cursor": "2026-10-30",
+            "at": 107595.09999999998
+          },
+          {
+            "cursor": "2026-10-31",
+            "at": 109596.09999999998
+          },
+          {
+            "cursor": "2026-11-01",
+            "at": 111602.29999999993
+          },
+          {
+            "cursor": "2026-11-02",
+            "at": 113597.29999999993
+          },
+          {
+            "cursor": "2026-11-03",
+            "at": 115601.70000000007
+          },
+          {
+            "cursor": "2026-11-04",
+            "at": 117615.79999999993
+          },
+          {
+            "cursor": "2026-11-05",
+            "at": 119600.49999999988
+          }
+        ],
+        "intervals": [
+          2015.1999999999534,
+          1985.3000000000466,
+          2002.8000000000466,
+          2001.5999999998603,
+          1995.9000000001397,
+          1998.1999999999534,
+          2005.3999999999069,
+          1994.1000000000931,
+          2001.1999999999534,
+          2001,
+          2006.1999999999534,
+          1995,
+          2004.4000000001397,
+          2014.0999999998603,
+          1984.6999999999534
+        ],
+        "meanMilliseconds": 2000.3399999999906,
+        "averageUpdatesPerSecond": 0.49991501444754627,
+        "allowedMeanRatio": [
+          0.85,
+          1.3
+        ],
+        "completionTimeoutMilliseconds": 46600,
+        "setupAllowanceMilliseconds": 5000
+      },
+      {
+        "speed": 0.3,
+        "expectedMilliseconds": 3000,
+        "observations": [
+          {
+            "cursor": "2026-10-21",
+            "at": 125229.40000000002
+          },
+          {
+            "cursor": "2026-10-22",
+            "at": 128227.49999999988
+          },
+          {
+            "cursor": "2026-10-23",
+            "at": 131228.79999999993
+          },
+          {
+            "cursor": "2026-10-24",
+            "at": 134226.90000000002
+          },
+          {
+            "cursor": "2026-10-25",
+            "at": 137228.70000000007
+          },
+          {
+            "cursor": "2026-10-26",
+            "at": 140231.70000000007
+          },
+          {
+            "cursor": "2026-10-27",
+            "at": 143230.59999999998
+          },
+          {
+            "cursor": "2026-10-28",
+            "at": 146228.29999999993
+          },
+          {
+            "cursor": "2026-10-29",
+            "at": 149227.20000000007
+          },
+          {
+            "cursor": "2026-10-30",
+            "at": 152228.20000000007
+          },
+          {
+            "cursor": "2026-10-31",
+            "at": 155228.59999999998
+          },
+          {
+            "cursor": "2026-11-01",
+            "at": 158228.20000000007
+          },
+          {
+            "cursor": "2026-11-02",
+            "at": 161229.90000000002
+          },
+          {
+            "cursor": "2026-11-03",
+            "at": 164229.40000000002
+          },
+          {
+            "cursor": "2026-11-04",
+            "at": 167227.99999999988
+          },
+          {
+            "cursor": "2026-11-05",
+            "at": 170230.09999999998
+          }
+        ],
+        "intervals": [
+          2998.0999999998603,
+          3001.3000000000466,
+          2998.100000000093,
+          3001.8000000000466,
+          3003,
+          2998.899999999907,
+          2997.6999999999534,
+          2998.9000000001397,
+          3001,
+          3000.399999999907,
+          2999.600000000093,
+          3001.6999999999534,
+          2999.5,
+          2998.5999999998603,
+          3002.100000000093
+        ],
+        "meanMilliseconds": 3000.0466666666634,
+        "averageUpdatesPerSecond": 0.3333281482288057,
+        "allowedMeanRatio": [
+          0.85,
+          1.3
+        ],
+        "completionTimeoutMilliseconds": 67400,
+        "setupAllowanceMilliseconds": 5000
+      }
+    ]
+  },
+  "artifactMetadata": [
+    {
+      "id": 13491063335,
+      "name": "eth-candidate-evidence-aca73b74a5128a5466488a0c701e86f5e854af46",
+      "size_in_bytes": 70682418,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/13491063335",
+      "archive_download_url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/artifacts/13491063335/zip",
+      "expired": false,
+      "created_at": "2026-11-06T09:28:02Z",
+      "expires_at": "2026-12-06T09:27:58Z",
+      "updated_at": "2026-11-06T09:28:02Z",
+      "digest": "sha256:4b675cb8e9a73a46039929c2950d082cdba3a89829b9cc9d3859262025e3526f",
+      "workflow_run": {
+        "id": 42191941832,
+        "repository_id": 1428515198,
+        "head_repository_id": 1428515198,
+        "head_branch": "fix/design-closeout-20261106",
+        "head_sha": "aca73b74a5128a5466488a0c701e86f5e854af46"
+      }
+    }
+  ],
+  "scope": "Existing exact-head ETH workflow only. Native 49/49 PASS is distinct from overall workflow FAIL at the later evidence-bundle byte bound. No dispatch, retry, new tests or tracked-file edits.",
+  "workflowStatus": "completed",
+  "workflowConclusion": "failure",
+  "finishedAt": "2026-11-06T09:28:06Z",
+  "nativeStatus": "passed",
+  "bindingFailure": {
+    "stepNumber": 35,
+    "stepName": "Bind exact committed sources inputs and execution evidence for external review",
+    "script": "scripts/build-eth-review-packet.mjs:149",
+    "caller": "scripts/build-eth-review-evidence.mjs:66",
+    "code": "REVIEW_BUNDLE_TOO_LARGE",
+    "bundleBytes": 101070602,
+    "maximumBundleBytes": 100000000,
+    "entryCount": 835,
+    "retainedEntryCount": 834,
+    "budgetStage": "ingestion",
+    "firstExcessPath": "build/ethereum-prospective-ledger/observations/5fca9b9be01e8c0adabcc529de7e874b0c920da0bd9395c9ea2c4a966a45e801.json",
+    "measurementScope": "ingested-prefix-through-first-overflow",
+    "nodeVersion": "v24.22.2",
+    "errorExcerpt": "file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/build-eth-review-packet.mjs:149\n2026-11-06T09:27:58.1337997Z       const entryCount=records.size+1,error=new RangeError('Source book exceeds byte bound: '+nextBytes+' > '+maximumBundleBytes+' bytes ('+entryCount+' entries)');\n2026-11-06T09:27:58.1338400Z                                             ^\n2026-11-06T09:27:58.1338529Z \n2026-11-06T09:27:58.1338731Z RangeError: Source book exceeds byte bound: 101070602 > 100000000 bytes (835 entries)\n2026-11-06T09:27:58.1339474Z     at retain (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/build-eth-review-packet.mjs:149:45)\n2026-11-06T09:27:58.1340238Z     at buildEthReviewPacket (file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/build-eth-review-packet.mjs:197:5)\n2026-11-06T09:27:58.1341031Z     at async file:///home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/scripts/build-eth-review-evidence.mjs:66:16 {\n2026-11-06T09:27:58.1341378Z   code: 'REVIEW_BUNDLE_TOO_LARGE',\n2026-11-06T09:27:58.1341544Z   bundleBytes: 101070602,\n2026-11-06T09:27:58.1341707Z   maximumBundleBytes: 100000000,\n2026-11-06T09:27:58.1341864Z   entryCount: 835,\n2026-11-06T09:27:58.1342003Z   budgetStage: 'ingestion',\n2026-11-06T09:27:58.1342397Z   firstExcessPath: 'build/ethereum-prospective-ledger/observations/5fca9b9be01e8c0adabcc529de7e874b0c920da0bd9395c9ea2c4a966a45e801.json',\n2026-11-06T09:27:58.1342777Z   retainedEntryCount: 834,\n2026-11-06T09:27:58.1342990Z   measurementScope: 'ingested-prefix-through-first-overflow'\n2026-11-06T09:27:58.1343206Z }\n2026-11-06T09:27:58.1343266Z \n2026-11-06T09:27:58.1343322Z Node.js v24.22.2\n2026-11-06T09:27:58.1560325Z ##[error]Process completed with exit code 1."
+  },
+  "jobSteps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3
+    },
+    {
+      "name": "Test candidate equations, missing inputs, clocks and future-information boundaries",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4
+    },
+    {
+      "name": "Evaluate preserved asset forecasts without requiring a new forecast issue",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Collect pinned public economic source with actual acquisition receipts",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6
+    },
+    {
+      "name": "Diagnose preserved source completion clocks and exact partial economic aggregates",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7
+    },
+    {
+      "name": "Attempt a bounded public Ethereum throughput supplement and preserve actual failure receipts",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8
+    },
+    {
+      "name": "Attempt one protocol-defined PoW issuance observation without activating an economic snapshot",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9
+    },
+    {
+      "name": "Reconcile metric definitions raw-byte replays and actual economic source clocks",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 10
+    },
+    {
+      "name": "Preserve actual economic capture vintages and independently replay their raw inputs",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 11
+    },
+    {
+      "name": "Audit bounded public supply claims with exact non-fee destruction accounting",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 12
+    },
+    {
+      "name": "Reconcile actual supply sampling grids with exact UTC boundary stock requirements",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 13
+    },
+    {
+      "name": "Collect one pinned fixed-validator cohort state without activating economic inputs",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 14
+    },
+    {
+      "name": "Evaluate the exact committed candidates and current stored prices",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 15
+    },
+    {
+      "name": "Audit ETH periods, volatility, simulation and institutional arithmetic",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 16
+    },
+    {
+      "name": "Compare pooled returns, interval evidence and exact preservation of existing adaptive results",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 17
+    },
+    {
+      "name": "Compare intervals with simple fixed-volatility and original empirical controls",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 18
+    },
+    {
+      "name": "Evaluate causal state initialization as a separate research control",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 19
+    },
+    {
+      "name": "Measure fixed-seed numerical sensitivity without selecting a winning seed",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 20
+    },
+    {
+      "name": "Compare every price candidate on fixed common origins across the declared seed panel",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 21
+    },
+    {
+      "name": "Freeze earlier calibration errors and evaluate only later disjoint forecast windows",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 22
+    },
+    {
+      "name": "Read the fixed prospective evidence branch without publication permission",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 23
+    },
+    {
+      "name": "Restore and independently validate the selected prospective archive bytes",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 24
+    },
+    {
+      "name": "Acquire one bounded ETH tail and preserve adaptive pooled and opt-in warm-start records",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 25
+    },
+    {
+      "name": "Reexecute preserved prospective records independently of acquisition success",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 26
+    },
+    {
+      "name": "Validate retained prospective calibration evidence without requiring a new forecast issue",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 27
+    },
+    {
+      "name": "Diagnose prospective calendar and retained-input capacity without relaxing sample requirements",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 28
+    },
+    {
+      "name": "Rebuild the reviewed ETH base candidate without changing the operating base",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 29
+    },
+    {
+      "name": "Append current evidence and prove exact restoration of the previous archive",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 30
+    },
+    {
+      "name": "Reconcile existing models and remaining evidence conditions",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 31
+    },
+    {
+      "name": "Verify preserved ETH BMNR and MSTR records and issue only with current inputs",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 32
+    },
+    {
+      "name": "Install a pinned Korean font with bounded network and cache time",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 33
+    },
+    {
+      "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 34
+    },
+    {
+      "name": "Bind exact committed sources inputs and execution evidence for external review",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 35
+    },
+    {
+      "name": "Preserve complete source-identified candidate evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 36
+    },
+    {
+      "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 71
+    },
+    {
+      "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 72
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 73
+    }
+  ],
+  "sourceHashComparison": {
+    "localReceipt": "docs/design-closeout-2026-11-06/browser/final/reports/full-49-after-cadence-fix.json.gz",
+    "localSourceCommit": "5ddc2175764b8cad383c04ad9ff2940bab1689e6",
+    "remoteSourceCommit": "aca73b74a5128a5466488a0c701e86f5e854af46",
+    "comparedFiles": 98,
+    "matchedFiles": 98,
+    "mismatches": []
+  },
+  "artifactDownloaded": false,
+  "jobLogCharacterCount": 7514116,
+  "fullNativeReceipt": {
+    "origin": "Exact ETH_BROWSER_RECEIPT JSON payload extracted from completed GitHub job logs, with trailing newline; full precision and all fields retained.",
+    "rawPath": "build/release-monitor/eth-final-native-receipt.json",
+    "rawBytes": 2888808,
+    "rawSha256": "09ea39d2e14740cb9c81a1571357e4d9efb00d051a76aa160319d4e06b3b8429",
+    "gzipPath": "build/release-monitor/eth-final-native-receipt.json.gz",
+    "gzipBytes": 232893,
+    "gzipSha256": "8a371ba98892225978b10524f0359366a2c5220e43e3b5f198481bf14dc731d2"
+  }
+}

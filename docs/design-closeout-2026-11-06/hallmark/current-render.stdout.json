@@ -1,0 +1,188 @@
+{
+  "summary": {
+    "fails": 1,
+    "reflex": 0,
+    "warns": 18,
+    "waived": 0,
+    "rejected": 0,
+    "answered": 0,
+    "dismissed": 0,
+    "notes": 0,
+    "files": 1,
+    "render": "ran",
+    "kept": "kept: links 29/30, fields 72/72, headings 52/54 (1 dropped on record), figures 134/209; before 53 FAIL, 210 REFLEX, now 1 FAIL, 0 REFLEX"
+  },
+  "findings": [
+    {
+      "gate": "kept",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": ".hallmark/before.json",
+      "line": 1,
+      "evidence": "links the page had before and no longer has: https://community-api.coinmetrics.io/v4/timeser…",
+      "fix": "Restore each one, or record it in the stamp: /* Hallmark · dropped <item>, <item> · <the reason> */"
+    },
+    {
+      "gate": "F3",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "no text-wrap: balance on any display head (16 head rule(s), e.g. h1,h2,h3,p)",
+      "fix": "Add text-wrap: balance to h1/h2-level heads"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/styles.css",
+      "line": 883,
+      "evidence": "same container recipe on 10 selectors (dialog(.workspace-dialog, .chart-export-dialog,…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F19",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+      "line": 1,
+      "evidence": "[1440px] 4 font weights in running use (400, 500, 600, 700)",
+      "fix": "Three weights at most, display and body together, picked as extremes"
+    },
+    {
+      "gate": "F19",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1440px] 4 font weights in running use (400, 500, 600, 700)",
+      "fix": "Three weights at most, display and body together, picked as extremes"
+    },
+    {
+      "gate": "F25",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[375px] a table opens with 12 columns off-screen (from \"관측 상태\")",
+      "fix": "Keep the column that names the row and the one that acts on it in view: restack each row, or pin the first column"
+    },
+    {
+      "gate": "F25",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+      "line": 1,
+      "evidence": "[375px] a table opens with 4 columns off-screen (from \"연초 종가종목별 기준일\")",
+      "fix": "Keep the column that names the row and the one that acts on it in view: restack each row, or pin the first column"
+    },
+    {
+      "gate": "F25",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "line": 1,
+      "evidence": "[375px] 95 words shown at 1440 are hidden on a phone (first: \"MSTR 실제 가격 · 일별 OHLCMSTR\")",
+      "fix": "If it matters, make it work on a phone; if it does not, cut it everywhere"
+    },
+    {
+      "gate": "F25",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[375px] a table opens with 7 columns off-screen (from \"선택 경로\")",
+      "fix": "Keep the column that names the row and the one that acts on it in view: restack each row, or pin the first column"
+    },
+    {
+      "gate": "kept",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": ".hallmark/before.json",
+      "line": 1,
+      "evidence": "headings gone or reworded since the before record: 고점 · 저점 · 다음 사이클",
+      "fix": "Restore it, or record it in the stamp: /* Hallmark · reworded \"<old>\" to \"<new>\" · <the gate that named it> */ or dropped <item> · <the reason>"
+    },
+    {
+      "gate": "kept",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": ".hallmark/before.json",
+      "line": 1,
+      "evidence": "figures gone or reworded since the before record: $80,038.91, 0.8%, 10.25, 432024.10.25, 10.26, 15:48, $500, 042024-112025-062026-012026-082027-032027-09202… and 67 more",
+      "fix": "Restore it, or record it in the stamp: /* Hallmark · reworded \"<old>\" to \"<new>\" · <the gate that named it> */ or dropped <item> · <the reason>"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    }
+  ]
+}

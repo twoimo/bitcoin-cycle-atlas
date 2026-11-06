@@ -1,0 +1,2960 @@
+{
+  "schemaVersion": 1,
+  "baseline": "624888270fcb539ab08d505e5affab5f5d435776",
+  "startedAt": "2026-11-05T12:38:15.709Z",
+  "method": "Native Chromium/Playwright, unchanged pinned Hallmark observe + observeQuality functions and F25 two-viewport DOM inventory. No checker, viewport geometry, content-visibility or test-mode styles injected.",
+  "checkerSha256": "3af79afa100a9804f248ade24d5128cea4fde1ef6d1a279f1dd935bfe6dc41cd",
+  "status": "PASS",
+  "checkerCases": [
+    {
+      "width": 320,
+      "observe": [],
+      "quality": []
+    },
+    {
+      "width": 375,
+      "observe": [],
+      "quality": []
+    },
+    {
+      "width": 414,
+      "observe": [],
+      "quality": []
+    },
+    {
+      "width": 768,
+      "observe": [],
+      "quality": []
+    },
+    {
+      "width": 1024,
+      "observe": [],
+      "quality": []
+    },
+    {
+      "width": 1280,
+      "observe": [],
+      "quality": []
+    },
+    {
+      "width": 1920,
+      "observe": [],
+      "quality": []
+    },
+    {
+      "width": 1440,
+      "observe": [],
+      "quality": []
+    }
+  ],
+  "cases": [
+    {
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "disclosures": [
+        {
+          "title": "국면 길이 · 단축/연장 민감도",
+          "pointerOpen": true
+        },
+        {
+          "title": "피보나치 되돌림 · 대조 비율 검증",
+          "pointerOpen": true
+        },
+        {
+          "title": "정의와 수식, 데이터의 한계",
+          "pointerOpen": true
+        },
+        {
+          "title": "반감기와 고점권, 이전 기준점 비교",
+          "pointerOpen": true
+        },
+        {
+          "title": "미래 날짜 · 가격의 계산식과 과거 검증",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        },
+        {
+          "title": "경로 안의 모든 내부 고점·저점 후보 보기",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        },
+        {
+          "title": "90%와 95%의 차이, 횡보의 정의와 고점 확인 조건",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        },
+        {
+          "title": "계산식, 3~5개월 가설, 민감도 확인",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        }
+      ],
+      "scrollRegions": [
+        {
+          "key": "사이클별 국면 기간을 같은 4년 축에 정렬한 차트 · 가로 스크롤|timeline",
+          "keyboardMoved": true,
+          "scrollLeft": 434,
+          "max": 434,
+          "clientWidth": 266,
+          "scrollWidth": 700,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "box": {
+            "x": 52,
+            "y": 241.96875,
+            "width": 268,
+            "height": 317,
+            "top": 241.96875,
+            "right": 320,
+            "bottom": 558.96875,
+            "left": 52
+          },
+          "timelineWidth": 700
+        },
+        {
+          "key": "사이클 · 일말 기준 · 가로 스크롤|사이클 · 일말 기준저점 → 고점고점 → 다음 저점합계관측 상태2010-07-18 → 2011-06-082011-11-18325일163일488일",
+          "keyboardMoved": true,
+          "scrollLeft": 200,
+          "max": 200,
+          "clientWidth": 268,
+          "scrollWidth": 468,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 52,
+            "y": 230.5625,
+            "width": 107.1875,
+            "height": 76.140625,
+            "top": 230.5625,
+            "right": 159.1875,
+            "bottom": 306.703125,
+            "left": 52
+          },
+          "last": {
+            "x": 209.125,
+            "y": 230.5625,
+            "width": 111,
+            "height": 76.140625,
+            "top": 230.5625,
+            "right": 320.125,
+            "bottom": 306.703125,
+            "left": 209.125
+          },
+          "box": {
+            "x": 52,
+            "y": 170.96875,
+            "width": 268,
+            "height": 457.84375,
+            "top": 170.96875,
+            "right": 320,
+            "bottom": 628.8125,
+            "left": 52
+          }
+        },
+        {
+          "key": "기간 · UTC · 가로 스크롤|기간 · UTC수익률기간 내 MDD전고점 대비실현 변동성가격 발견 일수스윙 되돌림완료 여부2026-10−7.4%−10.9%−38.0%28.4%0",
+          "keyboardMoved": true,
+          "scrollLeft": 356,
+          "max": 356,
+          "clientWidth": 268,
+          "scrollWidth": 624,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 52,
+            "y": 252.34375,
+            "width": 76.796875,
+            "height": 42.046875,
+            "top": 252.34375,
+            "right": 128.796875,
+            "bottom": 294.390625,
+            "left": 52
+          },
+          "last": {
+            "x": 252.40625,
+            "y": 252.34375,
+            "width": 67.5,
+            "height": 42.046875,
+            "top": 252.34375,
+            "right": 319.90625,
+            "bottom": 294.390625,
+            "left": 252.40625
+          },
+          "box": {
+            "x": 52,
+            "y": 209.796875,
+            "width": 268,
+            "height": 379.421875,
+            "top": 209.796875,
+            "right": 320,
+            "bottom": 589.21875,
+            "left": 52
+          }
+        },
+        {
+          "key": "국면 · 가로 스크롤|국면20112013201720212025신고가 발견48일52일74일33일38일저점 형성 조건0일64일163일67일115일좁은 횡보0일0일9일0일",
+          "keyboardMoved": true,
+          "scrollLeft": 121,
+          "max": 121,
+          "clientWidth": 243,
+          "scrollWidth": 364,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 65,
+            "y": 239.390625,
+            "width": 91.5,
+            "height": 45.890625,
+            "top": 239.390625,
+            "right": 156.5,
+            "bottom": 285.28125,
+            "left": 65
+          },
+          "last": {
+            "x": 253,
+            "y": 239.390625,
+            "width": 55,
+            "height": 45.890625,
+            "top": 239.390625,
+            "right": 308,
+            "bottom": 285.28125,
+            "left": 253
+          },
+          "box": {
+            "x": 65,
+            "y": 193,
+            "width": 243,
+            "height": 414.015625,
+            "top": 193,
+            "right": 308,
+            "bottom": 607.015625,
+            "left": 65
+          }
+        },
+        {
+          "key": "간격 · 가로 스크롤|간격확인 임계값확인 전환점스윙 중앙 길이확인 지연 중앙값일봉8%4198일3일일봉12%24812일5일일봉20%12634일8일주봉8%15328일7일",
+          "keyboardMoved": true,
+          "scrollLeft": 149,
+          "max": 149,
+          "clientWidth": 243,
+          "scrollWidth": 392,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 65,
+            "y": 285.140625,
+            "width": 44.5,
+            "height": 45.890625,
+            "top": 285.140625,
+            "right": 109.5,
+            "bottom": 331.03125,
+            "left": 65
+          },
+          "last": {
+            "x": 207,
+            "y": 285.140625,
+            "width": 101,
+            "height": 45.890625,
+            "top": 285.140625,
+            "right": 308,
+            "bottom": 331.03125,
+            "left": 207
+          },
+          "box": {
+            "x": 65,
+            "y": 238.75,
+            "width": 243,
+            "height": 322.234375,
+            "top": 238.75,
+            "right": 308,
+            "bottom": 560.984375,
+            "left": 65
+          }
+        },
+        {
+          "key": "완료된 사이클 · 선형 가격 · 가로 스크롤|완료된 사이클 · 선형 가격되돌림 거부완전 추적 표본비율피보나치 계열63233+27.0%대조 비율53221+24.0%",
+          "keyboardMoved": true,
+          "scrollLeft": 91,
+          "max": 91,
+          "clientWidth": 243,
+          "scrollWidth": 334,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 65,
+            "y": 387.109375,
+            "width": 97.1875,
+            "height": 45.890625,
+            "top": 387.109375,
+            "right": 162.1875,
+            "bottom": 433,
+            "left": 65
+          },
+          "last": {
+            "x": 240.1875,
+            "y": 387.109375,
+            "width": 68.171875,
+            "height": 45.890625,
+            "top": 387.109375,
+            "right": 308.359375,
+            "bottom": 433,
+            "left": 240.1875
+          },
+          "box": {
+            "x": 65,
+            "y": 319.828125,
+            "width": 243,
+            "height": 159.5625,
+            "top": 319.828125,
+            "right": 308,
+            "bottom": 479.390625,
+            "left": 65
+          }
+        },
+        {
+          "key": "간격 · 가로 스크롤|간격반전 임계값가격 눈금사이클 평균 차이일봉8%선형+2.10%p일봉8%로그+0.09%p일봉12%선형+3.34%p일봉12%로그−1.40%p일봉20",
+          "keyboardMoved": true,
+          "scrollLeft": 48,
+          "max": 48,
+          "clientWidth": 243,
+          "scrollWidth": 291,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 65,
+            "y": 147.78125,
+            "width": 44.5,
+            "height": 45.890625,
+            "top": 147.78125,
+            "right": 109.5,
+            "bottom": 193.671875,
+            "left": 65
+          },
+          "last": {
+            "x": 207,
+            "y": 147.78125,
+            "width": 101,
+            "height": 45.890625,
+            "top": 147.78125,
+            "right": 308,
+            "bottom": 193.671875,
+            "left": 207
+          },
+          "box": {
+            "x": 65,
+            "y": 101.390625,
+            "width": 243,
+            "height": 597.578125,
+            "top": 101.390625,
+            "right": 308,
+            "bottom": 698.96875,
+            "left": 65
+          }
+        },
+        {
+          "key": "가격 표시와 차트 설정 · 가로 스크롤|timeline",
+          "keyboardMoved": true,
+          "scrollLeft": 124,
+          "max": 124,
+          "clientWidth": 250,
+          "scrollWidth": 374,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "box": {
+            "x": 61,
+            "y": 363.4375,
+            "width": 250,
+            "height": 74,
+            "top": 363.4375,
+            "right": 311,
+            "bottom": 437.4375,
+            "left": 61
+          },
+          "timelineWidth": 17
+        },
+        {
+          "key": "전환 사건 · 가로 스크롤|전환 사건조건부 날짜 · UTC가격 가정의 범위 · USD해석현재 저점 후보관측 사실 · 최종 저점 미확정2026.06.30$58,525후속 저",
+          "keyboardMoved": true,
+          "scrollLeft": 299,
+          "max": 299,
+          "clientWidth": 250,
+          "scrollWidth": 549,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 61,
+            "y": 175.25,
+            "width": 100,
+            "height": 86.390625,
+            "top": 175.25,
+            "right": 161,
+            "bottom": 261.640625,
+            "left": 61
+          },
+          "last": {
+            "x": 161.46875,
+            "y": 175.25,
+            "width": 150,
+            "height": 86.390625,
+            "top": 175.25,
+            "right": 311.46875,
+            "bottom": 261.640625,
+            "left": 161.46875
+          },
+          "box": {
+            "x": 60,
+            "y": 132.703125,
+            "width": 252,
+            "height": 534.390625,
+            "top": 132.703125,
+            "right": 312,
+            "bottom": 667.09375,
+            "left": 60
+          }
+        },
+        {
+          "key": "과거 저점 → 다음 고점 · 가로 스크롤|과거 저점 → 다음 고점기간관측 상태2015.01.14 → 2017.12.161,067일과거 완결 구간 · 사후 선택2018.12.15 → 20",
+          "keyboardMoved": true,
+          "scrollLeft": 66,
+          "max": 66,
+          "clientWidth": 217,
+          "scrollWidth": 283,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 283.234375,
+            "width": 86.796875,
+            "height": 96.1875,
+            "top": 283.234375,
+            "right": 164.796875,
+            "bottom": 379.421875,
+            "left": 78
+          },
+          "last": {
+            "x": 164.796875,
+            "y": 283.234375,
+            "width": 130.1875,
+            "height": 96.1875,
+            "top": 283.234375,
+            "right": 294.984375,
+            "bottom": 379.421875,
+            "left": 164.796875
+          },
+          "box": {
+            "x": 77,
+            "y": 214.140625,
+            "width": 219,
+            "height": 371.15625,
+            "top": 214.140625,
+            "right": 296,
+            "bottom": 585.296875,
+            "left": 77
+          }
+        },
+        {
+          "key": "로그 성장 유지율 · 가로 스크롤|로그 성장 유지율다음 고점 가격 가정성격50%$169,693미래 성장률의 가정75%$197,854미래 성장률의 표시용 대표 가정100%$230,",
+          "keyboardMoved": true,
+          "scrollLeft": 115,
+          "max": 115,
+          "clientWidth": 217,
+          "scrollWidth": 332,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 362.859375,
+            "width": 86.796875,
+            "height": 36.796875,
+            "top": 362.859375,
+            "right": 164.796875,
+            "bottom": 399.65625,
+            "left": 78
+          },
+          "last": {
+            "x": 164.796875,
+            "y": 362.859375,
+            "width": 130.1875,
+            "height": 36.796875,
+            "top": 362.859375,
+            "right": 294.984375,
+            "bottom": 399.65625,
+            "left": 164.796875
+          },
+          "box": {
+            "x": 77,
+            "y": 293.765625,
+            "width": 219,
+            "height": 212.78125,
+            "top": 293.765625,
+            "right": 296,
+            "bottom": 506.546875,
+            "left": 77
+          }
+        },
+        {
+          "key": "저점 잔존비율의 기준 · 가로 스크롤|저점 잔존비율의 기준α = 0.50α = 0.75α = 1.002012 사이클-84.5% 하락$26,261$30,619$35,7012016 사이",
+          "keyboardMoved": true,
+          "scrollLeft": 91,
+          "max": 91,
+          "clientWidth": 217,
+          "scrollWidth": 308,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 265.578125,
+            "width": 86.796875,
+            "height": 76.390625,
+            "top": 265.578125,
+            "right": 164.796875,
+            "bottom": 341.96875,
+            "left": 78
+          },
+          "last": {
+            "x": 218.203125,
+            "y": 265.578125,
+            "width": 76.5,
+            "height": 76.390625,
+            "top": 265.578125,
+            "right": 294.703125,
+            "bottom": 341.96875,
+            "left": 218.203125
+          },
+          "box": {
+            "x": 77,
+            "y": 196.484375,
+            "width": 219,
+            "height": 407.953125,
+            "top": 196.484375,
+            "right": 296,
+            "bottom": 604.4375,
+            "left": 77
+          }
+        },
+        {
+          "key": "반복 역사 · 가로 스크롤|반복 역사종류조건부 날짜현재 대비가정 경로의 반전 확인2015 저점 이후 경로고점2026.12.26+31.4%2027.02.012015 저점 이",
+          "keyboardMoved": true,
+          "scrollLeft": 211,
+          "max": 211,
+          "clientWidth": 217,
+          "scrollWidth": 428,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": -516.296875,
+            "width": 86.796875,
+            "height": 56.59375,
+            "top": -516.296875,
+            "right": 164.796875,
+            "bottom": -459.703125,
+            "left": 78
+          },
+          "last": {
+            "x": 170.9375,
+            "y": -516.296875,
+            "width": 124.5,
+            "height": 56.59375,
+            "top": -516.296875,
+            "right": 295.4375,
+            "bottom": -459.703125,
+            "left": 170.9375
+          },
+          "box": {
+            "x": 77,
+            "y": -565.59375,
+            "width": 219,
+            "height": 1930.390625,
+            "top": -565.59375,
+            "right": 296,
+            "bottom": 1364.796875,
+            "left": 77
+          }
+        },
+        {
+          "key": "평가 시차 · 가로 스크롤|평가 시차아날로그 평균 절대 % 오차현재가 유지 평균 절대 % 오차평균 절대 로그 오차아날로그 / 유지기준일 수90일44.4%36.1%0.567",
+          "keyboardMoved": true,
+          "scrollLeft": 293,
+          "max": 293,
+          "clientWidth": 217,
+          "scrollWidth": 510,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 372.578125,
+            "width": 68,
+            "height": 36.796875,
+            "top": 372.578125,
+            "right": 146,
+            "bottom": 409.375,
+            "left": 78
+          },
+          "last": {
+            "x": 227.875,
+            "y": 372.578125,
+            "width": 67.5,
+            "height": 36.796875,
+            "top": 372.578125,
+            "right": 295.375,
+            "bottom": 409.375,
+            "left": 227.875
+          },
+          "box": {
+            "x": 77,
+            "y": 303.484375,
+            "width": 219,
+            "height": 192.984375,
+            "top": 303.484375,
+            "right": 296,
+            "bottom": 496.46875,
+            "left": 77
+          }
+        },
+        {
+          "key": "사이클 · 가로 스크롤|사이클실제 관측일실제 가격환산 가격기준일 대비가격 배수2012 사이클 2015.06.10$228.59$1,203,181.09+1,753.67%1",
+          "keyboardMoved": true,
+          "scrollLeft": 329,
+          "max": 329,
+          "clientWidth": 250,
+          "scrollWidth": 579,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 61,
+            "y": 326.828125,
+            "width": 100,
+            "height": 59.09375,
+            "top": 326.828125,
+            "right": 161,
+            "bottom": 385.921875,
+            "left": 61
+          },
+          "last": {
+            "x": 235.609375,
+            "y": 326.828125,
+            "width": 75.5,
+            "height": 59.09375,
+            "top": 326.828125,
+            "right": 311.109375,
+            "bottom": 385.921875,
+            "left": 235.609375
+          },
+          "box": {
+            "x": 60,
+            "y": 284.28125,
+            "width": 252,
+            "height": 279.421875,
+            "top": 284.28125,
+            "right": 312,
+            "bottom": 563.703125,
+            "left": 60
+          }
+        },
+        {
+          "key": "고점 연도 · 가로 스크롤|고점 연도첫 고점권 진입 · UTC반감기 이후최고값까지7일 중 5일 유지 확인2013참고 구간2013.11.29D+3665일최고값 2013.12",
+          "keyboardMoved": true,
+          "scrollLeft": 317,
+          "max": 317,
+          "clientWidth": 250,
+          "scrollWidth": 567,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 61,
+            "y": 287.921875,
+            "width": 90.984375,
+            "height": 66.59375,
+            "top": 287.921875,
+            "right": 151.984375,
+            "bottom": 354.515625,
+            "left": 61
+          },
+          "last": {
+            "x": 180.765625,
+            "y": 287.921875,
+            "width": 129.984375,
+            "height": 66.59375,
+            "top": 287.921875,
+            "right": 310.75,
+            "bottom": 354.515625,
+            "left": 180.765625
+          },
+          "box": {
+            "x": 60,
+            "y": 245.375,
+            "width": 252,
+            "height": 309.421875,
+            "top": 245.375,
+            "right": 312,
+            "bottom": 554.796875,
+            "left": 60
+          }
+        },
+        {
+          "key": "고점권 기준 · 가로 스크롤|고점권 기준이번 첫 진입반감기 기준 앞당김직전 달력 4년 기준90%2025.07.1031일 늦음119일 늦음93%2025.07.1116일 늦음8",
+          "keyboardMoved": true,
+          "scrollLeft": 171,
+          "max": 171,
+          "clientWidth": 217,
+          "scrollWidth": 388,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 326,
+            "width": 78,
+            "height": 36.796875,
+            "top": 326,
+            "right": 156,
+            "bottom": 362.796875,
+            "left": 78
+          },
+          "last": {
+            "x": 183.484375,
+            "y": 326,
+            "width": 111.5,
+            "height": 36.796875,
+            "top": 326,
+            "right": 294.984375,
+            "bottom": 362.796875,
+            "left": 183.484375
+          },
+          "box": {
+            "x": 77,
+            "y": 276.703125,
+            "width": 219,
+            "height": 246.78125,
+            "top": 276.703125,
+            "right": 296,
+            "bottom": 523.484375,
+            "left": 77
+          }
+        },
+        {
+          "key": "비교 사건 · 가로 스크롤|비교 사건이번 날짜 · UTC이번 반감기 이후과거 중앙값앞당겨진 시간관측 고점현재 시장의 최종 고점은 미확정2025.10.06D+534D+535",
+          "keyboardMoved": true,
+          "scrollLeft": 259,
+          "max": 259,
+          "clientWidth": 250,
+          "scrollWidth": 509,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 61,
+            "y": 149.21875,
+            "width": 100,
+            "height": 105.1875,
+            "top": 149.21875,
+            "right": 161,
+            "bottom": 254.40625,
+            "left": 61
+          },
+          "last": {
+            "x": 215.296875,
+            "y": 149.21875,
+            "width": 95.5,
+            "height": 105.1875,
+            "top": 149.21875,
+            "right": 310.796875,
+            "bottom": 254.40625,
+            "left": 215.296875
+          },
+          "box": {
+            "x": 60,
+            "y": 106.671875,
+            "width": 252,
+            "height": 586.03125,
+            "top": 106.671875,
+            "right": 312,
+            "bottom": 692.703125,
+            "left": 60
+          }
+        },
+        {
+          "key": "반감기 · 가로 스크롤|반감기고점 · D+저점 · D+상승 확인 · D+20122013.12.04371일2015.01.14777일2015.07.12956일2016201",
+          "keyboardMoved": true,
+          "scrollLeft": 170,
+          "max": 170,
+          "clientWidth": 217,
+          "scrollWidth": 387,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 314.953125,
+            "width": 86.796875,
+            "height": 51.09375,
+            "top": 314.953125,
+            "right": 164.796875,
+            "bottom": 366.046875,
+            "left": 78
+          },
+          "last": {
+            "x": 199.765625,
+            "y": 314.953125,
+            "width": 95.6875,
+            "height": 51.09375,
+            "top": 314.953125,
+            "right": 295.453125,
+            "bottom": 366.046875,
+            "left": 199.765625
+          },
+          "box": {
+            "x": 77,
+            "y": 280.40625,
+            "width": 219,
+            "height": 239.421875,
+            "top": 280.40625,
+            "right": 296,
+            "bottom": 519.828125,
+            "left": 77
+          }
+        },
+        {
+          "key": "가정한 기준 · 가로 스크롤|가정한 기준앞당기기 전 계산일3~5개월 앞당긴 구간직전 저점의 달력 4주년2026.11.092026.06.09–2026.08.09직전 저점의 반",
+          "keyboardMoved": true,
+          "scrollLeft": 111,
+          "max": 111,
+          "clientWidth": 217,
+          "scrollWidth": 328,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 357.375,
+            "width": 86.796875,
+            "height": 51.09375,
+            "top": 357.375,
+            "right": 164.796875,
+            "bottom": 408.46875,
+            "left": 78
+          },
+          "last": {
+            "x": 165.296875,
+            "y": 357.375,
+            "width": 130.1875,
+            "height": 51.09375,
+            "top": 357.375,
+            "right": 295.484375,
+            "bottom": 408.46875,
+            "left": 165.296875
+          },
+          "box": {
+            "x": 77,
+            "y": 322.828125,
+            "width": 219,
+            "height": 154.28125,
+            "top": 322.828125,
+            "right": 296,
+            "bottom": 477.109375,
+            "left": 77
+          }
+        },
+        {
+          "key": "평균 방식 · 기간 · 가로 스크롤|평균 방식 · 기간지속 요건이번 확인일반감기 기준 앞당김기하평균 150일7일2026.08.25132.5일 빠름기하평균 150일14일2026.09",
+          "keyboardMoved": true,
+          "scrollLeft": 136,
+          "max": 136,
+          "clientWidth": 217,
+          "scrollWidth": 353,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 118.546875,
+            "width": 86.796875,
+            "height": 51.09375,
+            "top": 118.546875,
+            "right": 164.796875,
+            "bottom": 169.640625,
+            "left": 78
+          },
+          "last": {
+            "x": 183.78125,
+            "y": 118.546875,
+            "width": 111,
+            "height": 51.09375,
+            "top": 118.546875,
+            "right": 294.78125,
+            "bottom": 169.640625,
+            "left": 183.78125
+          },
+          "box": {
+            "x": 77,
+            "y": 66.953125,
+            "width": 219,
+            "height": 665.21875,
+            "top": 66.953125,
+            "right": 296,
+            "bottom": 732.171875,
+            "left": 77
+          }
+        }
+      ],
+      "screenshots": [
+        "closed-320x800.png",
+        "sources-320x800.png"
+      ],
+      "resize": {
+        "focused": true,
+        "focusConnected": true,
+        "cycleConnected": true,
+        "periodConnected": true,
+        "methodConnected": true,
+        "selectionPreserved": true,
+        "selectionLength": 128
+      },
+      "openGeometry": [
+        {
+          "bodyWidth": 320,
+          "bodyScrollWidth": 320,
+          "documentWidth": 320,
+          "viewport": 320
+        },
+        {
+          "bodyWidth": 320,
+          "bodyScrollWidth": 320,
+          "documentWidth": 320,
+          "viewport": 320
+        },
+        {
+          "bodyWidth": 320,
+          "bodyScrollWidth": 320,
+          "documentWidth": 320,
+          "viewport": 320
+        }
+      ],
+      "inputUpdates": {
+        "pagination": true,
+        "period": true,
+        "scope": true,
+        "threshold": 0.08,
+        "thresholdChangedPeriodReadout": true
+      },
+      "content": {
+        "links": 13,
+        "fields": 10,
+        "bodyHash": "5650ac3483cd337cfb504a93c643ae0e0a6620d80e0ffa4fc95f84e3859f9f36",
+        "stableLinks": true
+      },
+      "closedFindings": {
+        "observe": [],
+        "quality": []
+      },
+      "sourceGeometry": [
+        {
+          "text": "국면별 기간 · 민감도 검증 ↗",
+          "box": {
+            "x": 65,
+            "y": 351.984375,
+            "width": 142.953125,
+            "height": 44,
+            "top": 351.984375,
+            "right": 207.953125,
+            "bottom": 395.984375,
+            "left": 65
+          },
+          "wrap": "nowrap"
+        },
+        {
+          "text": "8·12·20% 전체 계산값 ↗",
+          "box": {
+            "x": 65,
+            "y": 403.984375,
+            "width": 133.703125,
+            "height": 44,
+            "top": 403.984375,
+            "right": 198.703125,
+            "bottom": 447.984375,
+            "left": 65
+          },
+          "wrap": "nowrap"
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 375,
+        "height": 800
+      },
+      "disclosures": [
+        {
+          "title": "국면 길이 · 단축/연장 민감도",
+          "pointerOpen": true
+        },
+        {
+          "title": "피보나치 되돌림 · 대조 비율 검증",
+          "pointerOpen": true
+        },
+        {
+          "title": "정의와 수식, 데이터의 한계",
+          "pointerOpen": true
+        },
+        {
+          "title": "반감기와 고점권, 이전 기준점 비교",
+          "pointerOpen": true
+        },
+        {
+          "title": "미래 날짜 · 가격의 계산식과 과거 검증",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        },
+        {
+          "title": "경로 안의 모든 내부 고점·저점 후보 보기",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        },
+        {
+          "title": "90%와 95%의 차이, 횡보의 정의와 고점 확인 조건",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        },
+        {
+          "title": "계산식, 3~5개월 가설, 민감도 확인",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        }
+      ],
+      "scrollRegions": [
+        {
+          "key": "사이클별 국면 기간을 같은 4년 축에 정렬한 차트 · 가로 스크롤|timeline",
+          "keyboardMoved": true,
+          "scrollLeft": 379,
+          "max": 379,
+          "clientWidth": 321,
+          "scrollWidth": 700,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "box": {
+            "x": 52,
+            "y": 241.140625,
+            "width": 323,
+            "height": 317,
+            "top": 241.140625,
+            "right": 375,
+            "bottom": 558.140625,
+            "left": 52
+          },
+          "timelineWidth": 700
+        },
+        {
+          "key": "사이클 · 일말 기준 · 가로 스크롤|사이클 · 일말 기준저점 → 고점고점 → 다음 저점합계관측 상태2010-07-18 → 2011-06-082011-11-18325일163일488일",
+          "keyboardMoved": true,
+          "scrollLeft": 167,
+          "max": 167,
+          "clientWidth": 323,
+          "scrollWidth": 490,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 52,
+            "y": 221.6875,
+            "width": 129.1875,
+            "height": 76.140625,
+            "top": 221.6875,
+            "right": 181.1875,
+            "bottom": 297.828125,
+            "left": 52
+          },
+          "last": {
+            "x": 264.125,
+            "y": 221.6875,
+            "width": 111,
+            "height": 76.140625,
+            "top": 221.6875,
+            "right": 375.125,
+            "bottom": 297.828125,
+            "left": 264.125
+          },
+          "box": {
+            "x": 52,
+            "y": 179.140625,
+            "width": 323,
+            "height": 440.796875,
+            "top": 179.140625,
+            "right": 375,
+            "bottom": 619.9375,
+            "left": 52
+          }
+        },
+        {
+          "key": "기간 · UTC · 가로 스크롤|기간 · UTC수익률기간 내 MDD전고점 대비실현 변동성가격 발견 일수스윙 되돌림완료 여부2026-10−7.4%−10.9%−38.0%28.4%0",
+          "keyboardMoved": true,
+          "scrollLeft": 301,
+          "max": 301,
+          "clientWidth": 323,
+          "scrollWidth": 624,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 52,
+            "y": 252.671875,
+            "width": 76.796875,
+            "height": 42.046875,
+            "top": 252.671875,
+            "right": 128.796875,
+            "bottom": 294.71875,
+            "left": 52
+          },
+          "last": {
+            "x": 307.40625,
+            "y": 252.671875,
+            "width": 67.5,
+            "height": 42.046875,
+            "top": 252.671875,
+            "right": 374.90625,
+            "bottom": 294.71875,
+            "left": 307.40625
+          },
+          "box": {
+            "x": 52,
+            "y": 210.125,
+            "width": 323,
+            "height": 379.421875,
+            "top": 210.125,
+            "right": 375,
+            "bottom": 589.546875,
+            "left": 52
+          }
+        },
+        {
+          "key": "국면 · 가로 스크롤|국면20112013201720212025신고가 발견48일52일74일33일38일저점 형성 조건0일64일163일67일115일좁은 횡보0일0일9일0일",
+          "keyboardMoved": true,
+          "scrollLeft": 66,
+          "max": 66,
+          "clientWidth": 298,
+          "scrollWidth": 364,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 65,
+            "y": 239.53125,
+            "width": 91.5,
+            "height": 45.890625,
+            "top": 239.53125,
+            "right": 156.5,
+            "bottom": 285.421875,
+            "left": 65
+          },
+          "last": {
+            "x": 308,
+            "y": 239.53125,
+            "width": 55,
+            "height": 45.890625,
+            "top": 239.53125,
+            "right": 363,
+            "bottom": 285.421875,
+            "left": 308
+          },
+          "box": {
+            "x": 65,
+            "y": 193.140625,
+            "width": 298,
+            "height": 414.015625,
+            "top": 193.140625,
+            "right": 363,
+            "bottom": 607.15625,
+            "left": 65
+          }
+        },
+        {
+          "key": "간격 · 가로 스크롤|간격확인 임계값확인 전환점스윙 중앙 길이확인 지연 중앙값일봉8%4198일3일일봉12%24812일5일일봉20%12634일8일주봉8%15328일7일",
+          "keyboardMoved": true,
+          "scrollLeft": 94,
+          "max": 94,
+          "clientWidth": 298,
+          "scrollWidth": 392,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 65,
+            "y": 285.28125,
+            "width": 44.5,
+            "height": 45.890625,
+            "top": 285.28125,
+            "right": 109.5,
+            "bottom": 331.171875,
+            "left": 65
+          },
+          "last": {
+            "x": 262,
+            "y": 285.28125,
+            "width": 101,
+            "height": 45.890625,
+            "top": 285.28125,
+            "right": 363,
+            "bottom": 331.171875,
+            "left": 262
+          },
+          "box": {
+            "x": 65,
+            "y": 238.890625,
+            "width": 298,
+            "height": 322.234375,
+            "top": 238.890625,
+            "right": 363,
+            "bottom": 561.125,
+            "left": 65
+          }
+        },
+        {
+          "key": "완료된 사이클 · 선형 가격 · 가로 스크롤|완료된 사이클 · 선형 가격되돌림 거부완전 추적 표본비율피보나치 계열63233+27.0%대조 비율53221+24.0%",
+          "keyboardMoved": true,
+          "scrollLeft": 58,
+          "max": 58,
+          "clientWidth": 298,
+          "scrollWidth": 356,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 65,
+            "y": 387.25,
+            "width": 119.1875,
+            "height": 45.890625,
+            "top": 387.25,
+            "right": 184.1875,
+            "bottom": 433.140625,
+            "left": 65
+          },
+          "last": {
+            "x": 295.1875,
+            "y": 387.25,
+            "width": 68.171875,
+            "height": 45.890625,
+            "top": 387.25,
+            "right": 363.359375,
+            "bottom": 433.140625,
+            "left": 295.1875
+          },
+          "box": {
+            "x": 65,
+            "y": 319.96875,
+            "width": 298,
+            "height": 159.5625,
+            "top": 319.96875,
+            "right": 363,
+            "bottom": 479.53125,
+            "left": 65
+          }
+        },
+        {
+          "key": "가격 표시와 차트 설정 · 가로 스크롤|timeline",
+          "keyboardMoved": true,
+          "scrollLeft": 69,
+          "max": 69,
+          "clientWidth": 305,
+          "scrollWidth": 374,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "box": {
+            "x": 61,
+            "y": 362.78125,
+            "width": 305,
+            "height": 74,
+            "top": 362.78125,
+            "right": 366,
+            "bottom": 436.78125,
+            "left": 61
+          },
+          "timelineWidth": 17
+        },
+        {
+          "key": "전환 사건 · 가로 스크롤|전환 사건조건부 날짜 · UTC가격 가정의 범위 · USD해석현재 저점 후보관측 사실 · 최종 저점 미확정2026.06.30$58,525후속 저",
+          "keyboardMoved": true,
+          "scrollLeft": 320,
+          "max": 320,
+          "clientWidth": 305,
+          "scrollWidth": 625,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 61,
+            "y": 194.875,
+            "width": 122,
+            "height": 86.390625,
+            "top": 194.875,
+            "right": 183,
+            "bottom": 281.265625,
+            "left": 61
+          },
+          "last": {
+            "x": 183.4375,
+            "y": 194.875,
+            "width": 183,
+            "height": 86.390625,
+            "top": 194.875,
+            "right": 366.4375,
+            "bottom": 281.265625,
+            "left": 183.4375
+          },
+          "box": {
+            "x": 60,
+            "y": 152.328125,
+            "width": 307,
+            "height": 494.796875,
+            "top": 152.328125,
+            "right": 367,
+            "bottom": 647.125,
+            "left": 60
+          }
+        },
+        {
+          "key": "과거 저점 → 다음 고점 · 가로 스크롤|과거 저점 → 다음 고점기간관측 상태2015.01.14 → 2017.12.161,067일과거 완결 구간 · 사후 선택2018.12.15 → 20",
+          "keyboardMoved": true,
+          "scrollLeft": 66,
+          "max": 66,
+          "clientWidth": 272,
+          "scrollWidth": 338,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 343.078125,
+            "width": 108.796875,
+            "height": 56.59375,
+            "top": 343.078125,
+            "right": 186.796875,
+            "bottom": 399.671875,
+            "left": 78
+          },
+          "last": {
+            "x": 186.796875,
+            "y": 343.078125,
+            "width": 163.1875,
+            "height": 56.59375,
+            "top": 343.078125,
+            "right": 349.984375,
+            "bottom": 399.671875,
+            "left": 186.796875
+          },
+          "box": {
+            "x": 77,
+            "y": 273.984375,
+            "width": 274,
+            "height": 252.375,
+            "top": 273.984375,
+            "right": 351,
+            "bottom": 526.359375,
+            "left": 77
+          }
+        },
+        {
+          "key": "로그 성장 유지율 · 가로 스크롤|로그 성장 유지율다음 고점 가격 가정성격50%$169,693미래 성장률의 가정75%$197,854미래 성장률의 표시용 대표 가정100%$230,",
+          "keyboardMoved": true,
+          "scrollLeft": 108,
+          "max": 108,
+          "clientWidth": 272,
+          "scrollWidth": 380,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 352.5,
+            "width": 101.5,
+            "height": 36.796875,
+            "top": 352.5,
+            "right": 179.5,
+            "bottom": 389.296875,
+            "left": 78
+          },
+          "last": {
+            "x": 186.5,
+            "y": 352.5,
+            "width": 163.1875,
+            "height": 36.796875,
+            "top": 352.5,
+            "right": 349.6875,
+            "bottom": 389.296875,
+            "left": 186.5
+          },
+          "box": {
+            "x": 77,
+            "y": 303.203125,
+            "width": 274,
+            "height": 192.984375,
+            "top": 303.203125,
+            "right": 351,
+            "bottom": 496.1875,
+            "left": 77
+          }
+        },
+        {
+          "key": "저점 잔존비율의 기준 · 가로 스크롤|저점 잔존비율의 기준α = 0.50α = 0.75α = 1.002012 사이클-84.5% 하락$26,261$30,619$35,7012016 사이",
+          "keyboardMoved": true,
+          "scrollLeft": 58,
+          "max": 58,
+          "clientWidth": 272,
+          "scrollWidth": 330,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 315.03125,
+            "width": 108.796875,
+            "height": 56.59375,
+            "top": 315.03125,
+            "right": 186.796875,
+            "bottom": 371.625,
+            "left": 78
+          },
+          "last": {
+            "x": 273.203125,
+            "y": 315.03125,
+            "width": 76.5,
+            "height": 56.59375,
+            "top": 315.03125,
+            "right": 349.703125,
+            "bottom": 371.625,
+            "left": 273.203125
+          },
+          "box": {
+            "x": 77,
+            "y": 245.9375,
+            "width": 274,
+            "height": 308.96875,
+            "top": 245.9375,
+            "right": 351,
+            "bottom": 554.90625,
+            "left": 77
+          }
+        },
+        {
+          "key": "반복 역사 · 가로 스크롤|반복 역사종류조건부 날짜현재 대비가정 경로의 반전 확인2015 저점 이후 경로고점2026.12.26+31.4%2027.02.012015 저점 이",
+          "keyboardMoved": true,
+          "scrollLeft": 178,
+          "max": 178,
+          "clientWidth": 272,
+          "scrollWidth": 450,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": -515.625,
+            "width": 108.796875,
+            "height": 56.59375,
+            "top": -515.625,
+            "right": 186.796875,
+            "bottom": -459.03125,
+            "left": 78
+          },
+          "last": {
+            "x": 225.9375,
+            "y": -515.625,
+            "width": 124.5,
+            "height": 56.59375,
+            "top": -515.625,
+            "right": 350.4375,
+            "bottom": -459.03125,
+            "left": 225.9375
+          },
+          "box": {
+            "x": 77,
+            "y": -564.921875,
+            "width": 274,
+            "height": 1930.390625,
+            "top": -564.921875,
+            "right": 351,
+            "bottom": 1365.46875,
+            "left": 77
+          }
+        },
+        {
+          "key": "평가 시차 · 가로 스크롤|평가 시차아날로그 평균 절대 % 오차현재가 유지 평균 절대 % 오차평균 절대 로그 오차아날로그 / 유지기준일 수90일44.4%36.1%0.567",
+          "keyboardMoved": true,
+          "scrollLeft": 289,
+          "max": 289,
+          "clientWidth": 272,
+          "scrollWidth": 561,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 372.375,
+            "width": 68,
+            "height": 36.796875,
+            "top": 372.375,
+            "right": 146,
+            "bottom": 409.171875,
+            "left": 78
+          },
+          "last": {
+            "x": 282.390625,
+            "y": 372.375,
+            "width": 67.5,
+            "height": 36.796875,
+            "top": 372.375,
+            "right": 349.890625,
+            "bottom": 409.171875,
+            "left": 282.390625
+          },
+          "box": {
+            "x": 77,
+            "y": 303.28125,
+            "width": 274,
+            "height": 192.984375,
+            "top": 303.28125,
+            "right": 351,
+            "bottom": 496.265625,
+            "left": 77
+          }
+        },
+        {
+          "key": "사이클 · 가로 스크롤|사이클실제 관측일실제 가격환산 가격기준일 대비가격 배수2012 사이클 2015.06.10$228.59$1,203,181.09+1,753.67%1",
+          "keyboardMoved": true,
+          "scrollLeft": 296,
+          "max": 296,
+          "clientWidth": 305,
+          "scrollWidth": 601,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 61,
+            "y": 377.3125,
+            "width": 122,
+            "height": 42.046875,
+            "top": 377.3125,
+            "right": 183,
+            "bottom": 419.359375,
+            "left": 61
+          },
+          "last": {
+            "x": 290.609375,
+            "y": 377.3125,
+            "width": 75.5,
+            "height": 42.046875,
+            "top": 377.3125,
+            "right": 366.109375,
+            "bottom": 419.359375,
+            "left": 290.609375
+          },
+          "box": {
+            "x": 60,
+            "y": 334.765625,
+            "width": 307,
+            "height": 228.28125,
+            "top": 334.765625,
+            "right": 367,
+            "bottom": 563.046875,
+            "left": 60
+          }
+        },
+        {
+          "key": "고점 연도 · 가로 스크롤|고점 연도첫 고점권 진입 · UTC반감기 이후최고값까지7일 중 5일 유지 확인2013참고 구간2013.11.29D+3665일최고값 2013.12",
+          "keyboardMoved": true,
+          "scrollLeft": 262,
+          "max": 262,
+          "clientWidth": 305,
+          "scrollWidth": 567,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 61,
+            "y": 287.96875,
+            "width": 90.984375,
+            "height": 66.59375,
+            "top": 287.96875,
+            "right": 151.984375,
+            "bottom": 354.5625,
+            "left": 61
+          },
+          "last": {
+            "x": 235.765625,
+            "y": 287.96875,
+            "width": 129.984375,
+            "height": 66.59375,
+            "top": 287.96875,
+            "right": 365.75,
+            "bottom": 354.5625,
+            "left": 235.765625
+          },
+          "box": {
+            "x": 60,
+            "y": 245.421875,
+            "width": 307,
+            "height": 309.421875,
+            "top": 245.421875,
+            "right": 367,
+            "bottom": 554.84375,
+            "left": 60
+          }
+        },
+        {
+          "key": "고점권 기준 · 가로 스크롤|고점권 기준이번 첫 진입반감기 기준 앞당김직전 달력 4년 기준90%2025.07.1031일 늦음119일 늦음93%2025.07.1116일 늦음8",
+          "keyboardMoved": true,
+          "scrollLeft": 116,
+          "max": 116,
+          "clientWidth": 272,
+          "scrollWidth": 388,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 325.625,
+            "width": 78,
+            "height": 36.796875,
+            "top": 325.625,
+            "right": 156,
+            "bottom": 362.421875,
+            "left": 78
+          },
+          "last": {
+            "x": 238.484375,
+            "y": 325.625,
+            "width": 111.5,
+            "height": 36.796875,
+            "top": 325.625,
+            "right": 349.984375,
+            "bottom": 362.421875,
+            "left": 238.484375
+          },
+          "box": {
+            "x": 77,
+            "y": 276.328125,
+            "width": 274,
+            "height": 246.78125,
+            "top": 276.328125,
+            "right": 351,
+            "bottom": 523.109375,
+            "left": 77
+          }
+        },
+        {
+          "key": "비교 사건 · 가로 스크롤|비교 사건이번 날짜 · UTC이번 반감기 이후과거 중앙값앞당겨진 시간관측 고점현재 시장의 최종 고점은 미확정2025.10.06D+534D+535",
+          "keyboardMoved": true,
+          "scrollLeft": 226,
+          "max": 226,
+          "clientWidth": 305,
+          "scrollWidth": 531,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 61,
+            "y": 191.890625,
+            "width": 122,
+            "height": 88.140625,
+            "top": 191.890625,
+            "right": 183,
+            "bottom": 280.03125,
+            "left": 61
+          },
+          "last": {
+            "x": 270.296875,
+            "y": 191.890625,
+            "width": 95.5,
+            "height": 88.140625,
+            "top": 191.890625,
+            "right": 365.796875,
+            "bottom": 280.03125,
+            "left": 270.296875
+          },
+          "box": {
+            "x": 60,
+            "y": 149.34375,
+            "width": 307,
+            "height": 500.796875,
+            "top": 149.34375,
+            "right": 367,
+            "bottom": 650.140625,
+            "left": 60
+          }
+        },
+        {
+          "key": "반감기 · 가로 스크롤|반감기고점 · D+저점 · D+상승 확인 · D+20122013.12.04371일2015.01.14777일2015.07.12956일2016201",
+          "keyboardMoved": true,
+          "scrollLeft": 125,
+          "max": 125,
+          "clientWidth": 272,
+          "scrollWidth": 397,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 314.53125,
+            "width": 96.484375,
+            "height": 51.09375,
+            "top": 314.53125,
+            "right": 174.484375,
+            "bottom": 365.625,
+            "left": 78
+          },
+          "last": {
+            "x": 254.453125,
+            "y": 314.53125,
+            "width": 95.6875,
+            "height": 51.09375,
+            "top": 314.53125,
+            "right": 350.140625,
+            "bottom": 365.625,
+            "left": 254.453125
+          },
+          "box": {
+            "x": 77,
+            "y": 279.984375,
+            "width": 274,
+            "height": 239.421875,
+            "top": 279.984375,
+            "right": 351,
+            "bottom": 519.40625,
+            "left": 77
+          }
+        },
+        {
+          "key": "가정한 기준 · 가로 스크롤|가정한 기준앞당기기 전 계산일3~5개월 앞당긴 구간직전 저점의 달력 4주년2026.11.092026.06.09–2026.08.09직전 저점의 반",
+          "keyboardMoved": true,
+          "scrollLeft": 104,
+          "max": 104,
+          "clientWidth": 272,
+          "scrollWidth": 376,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 366.015625,
+            "width": 108.796875,
+            "height": 51.09375,
+            "top": 366.015625,
+            "right": 186.796875,
+            "bottom": 417.109375,
+            "left": 78
+          },
+          "last": {
+            "x": 194.296875,
+            "y": 366.015625,
+            "width": 155.46875,
+            "height": 51.09375,
+            "top": 366.015625,
+            "right": 349.765625,
+            "bottom": 417.109375,
+            "left": 194.296875
+          },
+          "box": {
+            "x": 77,
+            "y": 331.46875,
+            "width": 274,
+            "height": 137.234375,
+            "top": 331.46875,
+            "right": 351,
+            "bottom": 468.703125,
+            "left": 77
+          }
+        },
+        {
+          "key": "평균 방식 · 기간 · 가로 스크롤|평균 방식 · 기간지속 요건이번 확인일반감기 기준 앞당김기하평균 150일7일2026.08.25132.5일 빠름기하평균 150일14일2026.09",
+          "keyboardMoved": true,
+          "scrollLeft": 93,
+          "max": 93,
+          "clientWidth": 272,
+          "scrollWidth": 365,
+          "role": "region",
+          "tabIndex": 0,
+          "focusVisible": true,
+          "outline": "solid",
+          "first": {
+            "x": 78,
+            "y": 212.5625,
+            "width": 99,
+            "height": 34.046875,
+            "top": 212.5625,
+            "right": 177,
+            "bottom": 246.609375,
+            "left": 78
+          },
+          "last": {
+            "x": 238.984375,
+            "y": 212.5625,
+            "width": 111,
+            "height": 34.046875,
+            "top": 212.5625,
+            "right": 349.984375,
+            "bottom": 246.609375,
+            "left": 238.984375
+          },
+          "box": {
+            "x": 77,
+            "y": 178.015625,
+            "width": 274,
+            "height": 443.609375,
+            "top": 178.015625,
+            "right": 351,
+            "bottom": 621.625,
+            "left": 77
+          }
+        }
+      ],
+      "screenshots": [
+        "closed-375x800.png",
+        "sources-375x800.png"
+      ],
+      "resize": {
+        "focused": true,
+        "focusConnected": true,
+        "cycleConnected": true,
+        "periodConnected": true,
+        "methodConnected": true,
+        "selectionPreserved": true,
+        "selectionLength": 128
+      },
+      "openGeometry": [
+        {
+          "bodyWidth": 375,
+          "bodyScrollWidth": 375,
+          "documentWidth": 375,
+          "viewport": 375
+        },
+        {
+          "bodyWidth": 375,
+          "bodyScrollWidth": 375,
+          "documentWidth": 375,
+          "viewport": 375
+        },
+        {
+          "bodyWidth": 375,
+          "bodyScrollWidth": 375,
+          "documentWidth": 375,
+          "viewport": 375
+        }
+      ],
+      "inputUpdates": {
+        "pagination": true,
+        "period": true,
+        "scope": true,
+        "threshold": 0.08,
+        "thresholdChangedPeriodReadout": true
+      },
+      "content": {
+        "links": 13,
+        "fields": 10,
+        "bodyHash": "5650ac3483cd337cfb504a93c643ae0e0a6620d80e0ffa4fc95f84e3859f9f36",
+        "stableLinks": true
+      },
+      "closedFindings": {
+        "observe": [],
+        "quality": []
+      },
+      "sourceGeometry": [
+        {
+          "text": "국면별 기간 · 민감도 검증 ↗",
+          "box": {
+            "x": 65,
+            "y": 378.125,
+            "width": 142.953125,
+            "height": 44,
+            "top": 378.125,
+            "right": 207.953125,
+            "bottom": 422.125,
+            "left": 65
+          },
+          "wrap": "nowrap"
+        },
+        {
+          "text": "8·12·20% 전체 계산값 ↗",
+          "box": {
+            "x": 223.953125,
+            "y": 378.125,
+            "width": 133.703125,
+            "height": 44,
+            "top": 378.125,
+            "right": 357.65625,
+            "bottom": 422.125,
+            "left": 223.953125
+          },
+          "wrap": "nowrap"
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "disclosures": [
+        {
+          "title": "국면 길이 · 단축/연장 민감도",
+          "pointerOpen": true
+        },
+        {
+          "title": "피보나치 되돌림 · 대조 비율 검증",
+          "pointerOpen": true
+        },
+        {
+          "title": "정의와 수식, 데이터의 한계",
+          "pointerOpen": true
+        },
+        {
+          "title": "반감기와 고점권, 이전 기준점 비교",
+          "pointerOpen": true
+        },
+        {
+          "title": "미래 날짜 · 가격의 계산식과 과거 검증",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        },
+        {
+          "title": "경로 안의 모든 내부 고점·저점 후보 보기",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        },
+        {
+          "title": "90%와 95%의 차이, 횡보의 정의와 고점 확인 조건",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        },
+        {
+          "title": "계산식, 3~5개월 가설, 민감도 확인",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        }
+      ],
+      "scrollRegions": [],
+      "screenshots": [
+        "closed-1440x900.png",
+        "sources-1440x900.png"
+      ],
+      "resize": {
+        "focused": true,
+        "focusConnected": true,
+        "cycleConnected": true,
+        "periodConnected": true,
+        "methodConnected": true,
+        "selectionPreserved": true,
+        "selectionLength": 128
+      },
+      "openGeometry": [
+        {
+          "bodyWidth": 1440,
+          "bodyScrollWidth": 1440,
+          "documentWidth": 1440,
+          "viewport": 1440
+        },
+        {
+          "bodyWidth": 1440,
+          "bodyScrollWidth": 1440,
+          "documentWidth": 1440,
+          "viewport": 1440
+        },
+        {
+          "bodyWidth": 1440,
+          "bodyScrollWidth": 1440,
+          "documentWidth": 1440,
+          "viewport": 1440
+        }
+      ],
+      "inputUpdates": {
+        "pagination": true,
+        "period": true,
+        "scope": true,
+        "threshold": 0.08,
+        "thresholdChangedPeriodReadout": true
+      },
+      "content": {
+        "links": 13,
+        "fields": 10,
+        "bodyHash": "e9f462d6188c757cbb4a3c14d6c5eaed16c2abc8974d56d2f9614dd43bf1d8ab",
+        "stableLinks": true
+      },
+      "closedFindings": {
+        "observe": [],
+        "quality": []
+      },
+      "sourceGeometry": [
+        {
+          "text": "국면별 기간 · 민감도 검증 ↗",
+          "box": {
+            "x": 245,
+            "y": 497.609375,
+            "width": 142.953125,
+            "height": 44,
+            "top": 497.609375,
+            "right": 387.953125,
+            "bottom": 541.609375,
+            "left": 245
+          },
+          "wrap": "nowrap"
+        },
+        {
+          "text": "8·12·20% 전체 계산값 ↗",
+          "box": {
+            "x": 403.953125,
+            "y": 497.609375,
+            "width": 133.703125,
+            "height": 44,
+            "top": 497.609375,
+            "right": 537.65625,
+            "bottom": 541.609375,
+            "left": 403.953125
+          },
+          "wrap": "nowrap"
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 900,
+        "height": 430
+      },
+      "disclosures": [
+        {
+          "title": "국면 길이 · 단축/연장 민감도",
+          "pointerOpen": true
+        },
+        {
+          "title": "피보나치 되돌림 · 대조 비율 검증",
+          "pointerOpen": true
+        },
+        {
+          "title": "정의와 수식, 데이터의 한계",
+          "pointerOpen": true
+        },
+        {
+          "title": "반감기와 고점권, 이전 기준점 비교",
+          "pointerOpen": true
+        },
+        {
+          "title": "미래 날짜 · 가격의 계산식과 과거 검증",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        },
+        {
+          "title": "경로 안의 모든 내부 고점·저점 후보 보기",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        },
+        {
+          "title": "90%와 95%의 차이, 횡보의 정의와 고점 확인 조건",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        },
+        {
+          "title": "계산식, 3~5개월 가설, 민감도 확인",
+          "keyboardSpaceOpen": true,
+          "keyboardEnterClose": true
+        }
+      ],
+      "scrollRegions": [],
+      "screenshots": [
+        "closed-900x430.png",
+        "sources-900x430.png"
+      ],
+      "resize": {
+        "focused": true,
+        "focusConnected": true,
+        "cycleConnected": true,
+        "periodConnected": true,
+        "methodConnected": true,
+        "selectionPreserved": true,
+        "selectionLength": 128
+      },
+      "openGeometry": [
+        {
+          "bodyWidth": 900,
+          "bodyScrollWidth": 900,
+          "documentWidth": 900,
+          "viewport": 900
+        },
+        {
+          "bodyWidth": 900,
+          "bodyScrollWidth": 900,
+          "documentWidth": 900,
+          "viewport": 900
+        },
+        {
+          "bodyWidth": 900,
+          "bodyScrollWidth": 900,
+          "documentWidth": 900,
+          "viewport": 900
+        }
+      ],
+      "inputUpdates": {
+        "pagination": true,
+        "period": true,
+        "scope": true,
+        "threshold": 0.08,
+        "thresholdChangedPeriodReadout": true
+      },
+      "content": {
+        "links": 13,
+        "fields": 10,
+        "bodyHash": "e9f462d6188c757cbb4a3c14d6c5eaed16c2abc8974d56d2f9614dd43bf1d8ab",
+        "stableLinks": true
+      },
+      "closedFindings": {
+        "observe": [],
+        "quality": []
+      },
+      "sourceGeometry": [
+        {
+          "text": "국면별 기간 · 민감도 검증 ↗",
+          "box": {
+            "x": 89,
+            "y": 192.59375,
+            "width": 142.953125,
+            "height": 44,
+            "top": 192.59375,
+            "right": 231.953125,
+            "bottom": 236.59375,
+            "left": 89
+          },
+          "wrap": "nowrap"
+        },
+        {
+          "text": "8·12·20% 전체 계산값 ↗",
+          "box": {
+            "x": 247.953125,
+            "y": 192.59375,
+            "width": 133.703125,
+            "height": 44,
+            "top": 192.59375,
+            "right": 381.65625,
+            "bottom": 236.59375,
+            "left": 247.953125
+          },
+          "wrap": "nowrap"
+        }
+      ]
+    }
+  ],
+  "failures": [],
+  "pageErrors": [],
+  "servedSourceHashes": {
+    "dist/index.html": {
+      "servedHash": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+      "finalHash": "fb8a2d4e0c0f0f05d63cd8a218a72884e4b079bc52feb3490c9e741f99c21526",
+      "stable": true
+    },
+    "dist/styles.css": {
+      "servedHash": "b9f135be9afa23f599908c9ab9bc8253013d69df240b7982e7a8fc6644768cb2",
+      "finalHash": "b9f135be9afa23f599908c9ab9bc8253013d69df240b7982e7a8fc6644768cb2",
+      "stable": true
+    },
+    "dist/compact.css": {
+      "servedHash": "24ea81f5c6635f6b06628b91faaa4cad20c705c66e695b71ff045d228f3de372",
+      "finalHash": "24ea81f5c6635f6b06628b91faaa4cad20c705c66e695b71ff045d228f3de372",
+      "stable": true
+    },
+    "dist/lab.css": {
+      "servedHash": "517b84062e65c98b9c8171556edc25502a4fab079512f6b3a81ba245d37f30fc",
+      "finalHash": "517b84062e65c98b9c8171556edc25502a4fab079512f6b3a81ba245d37f30fc",
+      "stable": true
+    },
+    "dist/outlook.css": {
+      "servedHash": "896e139d35497451bd11b9d117ec2c267544fe31fd01e979ab0d4dd280fda593",
+      "finalHash": "896e139d35497451bd11b9d117ec2c267544fe31fd01e979ab0d4dd280fda593",
+      "stable": true
+    },
+    "dist/atlas.css": {
+      "servedHash": "a9a3abf1ef26eefb93d518a0af826387dc40939fa9354427b7496f9a24207485",
+      "finalHash": "a9a3abf1ef26eefb93d518a0af826387dc40939fa9354427b7496f9a24207485",
+      "stable": true
+    },
+    "dist/viewport.css": {
+      "servedHash": "36aecacae5e796bf5028a1e6963a217cc5eec5234f92184d134daa3ca312ec07",
+      "finalHash": "36aecacae5e796bf5028a1e6963a217cc5eec5234f92184d134daa3ca312ec07",
+      "stable": true
+    },
+    "dist/chart-details-panel.css": {
+      "servedHash": "614f3998b3d38b9347fb92a5bda6966ed1115889f071d44b689b60dd92072516",
+      "finalHash": "614f3998b3d38b9347fb92a5bda6966ed1115889f071d44b689b60dd92072516",
+      "stable": true
+    },
+    "dist/analysis-dock.css": {
+      "servedHash": "43b46d05978a7499823ef54d598f936de3279fbe3dc59cf77a8d66811f5e3fa9",
+      "finalHash": "43b46d05978a7499823ef54d598f936de3279fbe3dc59cf77a8d66811f5e3fa9",
+      "stable": true
+    },
+    "dist/chart-magnet.css": {
+      "servedHash": "5c7645a9f74619aaed469826bf599502dda56296a3aafcce548dfe30f4935b53",
+      "finalHash": "5c7645a9f74619aaed469826bf599502dda56296a3aafcce548dfe30f4935b53",
+      "stable": true
+    },
+    "dist/workspace-tools.css": {
+      "servedHash": "33c8052eb528b1d6882aefd3bcef02c6785b1058fe3216d56d011b149000a701",
+      "finalHash": "33c8052eb528b1d6882aefd3bcef02c6785b1058fe3216d56d011b149000a701",
+      "stable": true
+    },
+    "dist/chart-workspace-controls.css": {
+      "servedHash": "708e87841f3d01e806be0ec7dfe1a69caa39780b658291aeee68661ae02073f9",
+      "finalHash": "708e87841f3d01e806be0ec7dfe1a69caa39780b658291aeee68661ae02073f9",
+      "stable": true
+    },
+    "dist/research-annotations.css": {
+      "servedHash": "d21629aadbb87bf1124f47a5dbe56a84cf5e725fcb4f300519720f4b169c650a",
+      "finalHash": "d21629aadbb87bf1124f47a5dbe56a84cf5e725fcb4f300519720f4b169c650a",
+      "stable": true
+    },
+    "dist/mobile-workspace.css": {
+      "servedHash": "90a375739f01826b0a71c57789f50a09be6a6f944020194f6b70882f88578d3f",
+      "finalHash": "90a375739f01826b0a71c57789f50a09be6a6f944020194f6b70882f88578d3f",
+      "stable": true
+    },
+    "dist/chart-export-workbench.css": {
+      "servedHash": "5cfffd7d47507a90252b2e2b5b29ce448f95d13e56951d00e600eb43fb3321d5",
+      "finalHash": "5cfffd7d47507a90252b2e2b5b29ce448f95d13e56951d00e600eb43fb3321d5",
+      "stable": true
+    },
+    "dist/compact-chart-layout.css": {
+      "servedHash": "b429642986c9d73b930b49b48da7a710d8403965c4f50ee06263338c12c14f30",
+      "finalHash": "b429642986c9d73b930b49b48da7a710d8403965c4f50ee06263338c12c14f30",
+      "stable": true
+    },
+    "dist/chart-bottom-bar.css": {
+      "servedHash": "67ef233b70921763ef1a91cc394d333a1ef755fca28d5e0d21b1e7f7773bbe3a",
+      "finalHash": "67ef233b70921763ef1a91cc394d333a1ef755fca28d5e0d21b1e7f7773bbe3a",
+      "stable": true
+    },
+    "dist/cycle-milestones.css": {
+      "servedHash": "22a9a9a21251a92a9310e2dc5d8cd0cfab809ee502db45991953a73905562712",
+      "finalHash": "22a9a9a21251a92a9310e2dc5d8cd0cfab809ee502db45991953a73905562712",
+      "stable": true
+    },
+    "dist/symbol-selector.css": {
+      "servedHash": "518e07096505c2be6a88a1412211caa53d61813d4ec045adfd8a10ab086c59cf",
+      "finalHash": "518e07096505c2be6a88a1412211caa53d61813d4ec045adfd8a10ab086c59cf",
+      "stable": true
+    },
+    "dist/eth-view.css": {
+      "servedHash": "1f09834a4460821c83496ea97fc70a6fb2371ad8ef2560ca1dd48395eeb42d05",
+      "finalHash": "1f09834a4460821c83496ea97fc70a6fb2371ad8ef2560ca1dd48395eeb42d05",
+      "stable": true
+    },
+    "dist/equity-view.css": {
+      "servedHash": "99026cd6229df757176a648fc0f2c2ed88d7916a4e5eb65bcd8f9957db1ff5ad",
+      "finalHash": "99026cd6229df757176a648fc0f2c2ed88d7916a4e5eb65bcd8f9957db1ff5ad",
+      "stable": true
+    },
+    "dist/research-reader.css": {
+      "servedHash": "fb41b38773dce8872ff0320951202346bc01c46bbb2f92a19a4d63a8ede3c4c8",
+      "finalHash": "fb41b38773dce8872ff0320951202346bc01c46bbb2f92a19a4d63a8ede3c4c8",
+      "stable": true
+    },
+    "dist/ethereum-history.css": {
+      "servedHash": "017cf5ea799495460353b389a8265ca87a5c0ecbe35268c08ca5c8ed5ca1e896",
+      "finalHash": "017cf5ea799495460353b389a8265ca87a5c0ecbe35268c08ca5c8ed5ca1e896",
+      "stable": true
+    },
+    "dist/daily-data.css": {
+      "servedHash": "f45a6226526795d926caf2fe8c8df386f22f24c7a4383e05986b1b3df5b3366a",
+      "finalHash": "f45a6226526795d926caf2fe8c8df386f22f24c7a4383e05986b1b3df5b3366a",
+      "stable": true
+    },
+    "dist/forecast-journal.css": {
+      "servedHash": "e8bb880c5a91a7729c3ff490aff6e21e86950faefb9b265bec36d000287a3683",
+      "finalHash": "e8bb880c5a91a7729c3ff490aff6e21e86950faefb9b265bec36d000287a3683",
+      "stable": true
+    },
+    "dist/chart-replay.css": {
+      "servedHash": "211009c38aa3b7716e566ab8c1a94002ea15f2557d905e26d3a39107902d85bf",
+      "finalHash": "211009c38aa3b7716e566ab8c1a94002ea15f2557d905e26d3a39107902d85bf",
+      "stable": true
+    },
+    "dist/ipo-view.css": {
+      "servedHash": "bd96c73094e8afbdd7f1da9d3809d8e00c58c8f36ba4b7c6a33343f3b8f7e5af",
+      "finalHash": "bd96c73094e8afbdd7f1da9d3809d8e00c58c8f36ba4b7c6a33343f3b8f7e5af",
+      "stable": true
+    },
+    "dist/market-lab.css": {
+      "servedHash": "68e9b99aeaa189540f919c464eb0bf5e7a307195c0544dad384b53580a9b1637",
+      "finalHash": "68e9b99aeaa189540f919c464eb0bf5e7a307195c0544dad384b53580a9b1637",
+      "stable": true
+    },
+    "dist/monthly-backtest.css": {
+      "servedHash": "1b3fdbc2dbac782837a9e3bf1574feed97a7534d843acaf5dce3e205182b47cd",
+      "finalHash": "1b3fdbc2dbac782837a9e3bf1574feed97a7534d843acaf5dce3e205182b47cd",
+      "stable": true
+    },
+    "dist/atlas-shell.css": {
+      "servedHash": "1f087aadb72778f8050b0d3e2c45d9f465c33c5c93d476838ff0af9cbd70c18e",
+      "finalHash": "1f087aadb72778f8050b0d3e2c45d9f465c33c5c93d476838ff0af9cbd70c18e",
+      "stable": true
+    },
+    "dist/vendor/skullet/styles.css": {
+      "servedHash": "7763e1565515ea28884d1c97ee88a51055859e1ab7f72d2ac68c98bee04febf1",
+      "finalHash": "7763e1565515ea28884d1c97ee88a51055859e1ab7f72d2ac68c98bee04febf1",
+      "stable": true
+    },
+    "dist/loading-surfaces.css": {
+      "servedHash": "241d713af90f378d6f927b8c1d29a39d150d26374b8fe3315b05b8b50df041cf",
+      "finalHash": "241d713af90f378d6f927b8c1d29a39d150d26374b8fe3315b05b8b50df041cf",
+      "stable": true
+    },
+    "dist/site-entry.js": {
+      "servedHash": "645d41c07ef1ef9f9cba2282e34c5a723b6c356f1dfbab7fba8f3fbb39fcaf0e",
+      "finalHash": "645d41c07ef1ef9f9cba2282e34c5a723b6c356f1dfbab7fba8f3fbb39fcaf0e",
+      "stable": true
+    },
+    "dist/loading-surfaces.js": {
+      "servedHash": "f62d142df3ee3ae00ae10f63373d0421d785c253e7fc71acb8231714340e07cb",
+      "finalHash": "f62d142df3ee3ae00ae10f63373d0421d785c253e7fc71acb8231714340e07cb",
+      "stable": true
+    },
+    "dist/atlas-shell.js": {
+      "servedHash": "b833182a77be1b97002c8cf06563da343f5f32da7e9063a34c9364d9d56a99bd",
+      "finalHash": "b833182a77be1b97002c8cf06563da343f5f32da7e9063a34c9364d9d56a99bd",
+      "stable": true
+    },
+    "dist/performance-diagnostics.js": {
+      "servedHash": "30a2a0cadcfda3f6f782b86ced0b2e1a6833d344ffc53f948ac3150b617419ac",
+      "finalHash": "30a2a0cadcfda3f6f782b86ced0b2e1a6833d344ffc53f948ac3150b617419ac",
+      "stable": true
+    },
+    "dist/journal-entry.js": {
+      "servedHash": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0",
+      "finalHash": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0",
+      "stable": true
+    },
+    "dist/vendor/skullet/skullet.js": {
+      "servedHash": "159653b71266900bcff7df3403c1e04cf34d1822074431a131716eedda15e71c",
+      "finalHash": "159653b71266900bcff7df3403c1e04cf34d1822074431a131716eedda15e71c",
+      "stable": true
+    },
+    "dist/rsi-chart-layout.js": {
+      "servedHash": "4ff96f411d896c51c19cbe8909143d856f79b515ac6537aba87ef5728047dffb",
+      "finalHash": "4ff96f411d896c51c19cbe8909143d856f79b515ac6537aba87ef5728047dffb",
+      "stable": true
+    },
+    "dist/site-paths.js": {
+      "servedHash": "98591cd5f4d2770a6b30abd5606ba68f4538bf82252db28bda13e88eb2cece86",
+      "finalHash": "98591cd5f4d2770a6b30abd5606ba68f4538bf82252db28bda13e88eb2cece86",
+      "stable": true
+    },
+    "dist/atlas-navigation.js": {
+      "servedHash": "eb520a9e90c6d340d1d9c10072e7cbcea102c12e99c6b0e2235517d92b630c9f",
+      "finalHash": "eb520a9e90c6d340d1d9c10072e7cbcea102c12e99c6b0e2235517d92b630c9f",
+      "stable": true
+    },
+    "dist/atlas-shell-state.js": {
+      "servedHash": "9c420fcb99ce1a344adb4fb38313339fd5c1f16f1a987e92e6aad56a85c8aa12",
+      "finalHash": "9c420fcb99ce1a344adb4fb38313339fd5c1f16f1a987e92e6aad56a85c8aa12",
+      "stable": true
+    },
+    "dist/center-workbench.js": {
+      "servedHash": "9e8481440f1237f10e98ccd95e9b6a9770b23751dea55ec1313ceecab5a0d411",
+      "finalHash": "9e8481440f1237f10e98ccd95e9b6a9770b23751dea55ec1313ceecab5a0d411",
+      "stable": true
+    },
+    "dist/rsi-instruments.js": {
+      "servedHash": "019ea9bac6ff5ad792cc9ed070bd37c55290dae3e2374f5ea38ef25dad4cb6a2",
+      "finalHash": "019ea9bac6ff5ad792cc9ed070bd37c55290dae3e2374f5ea38ef25dad4cb6a2",
+      "stable": true
+    },
+    "dist/rsi-workbench-controls.js": {
+      "servedHash": "4923890d7cb17a161751c6ca65ab321030e593df00b05046821e5f41481e92c9",
+      "finalHash": "4923890d7cb17a161751c6ca65ab321030e593df00b05046821e5f41481e92c9",
+      "stable": true
+    },
+    "dist/app.js": {
+      "servedHash": "ce9dbbdb6bf50a9b19208cfc8aa424f1395a95cd56d83afb7ab5370a87da4acd",
+      "finalHash": "ce9dbbdb6bf50a9b19208cfc8aa424f1395a95cd56d83afb7ab5370a87da4acd",
+      "stable": true
+    },
+    "dist/cycle-engine.js": {
+      "servedHash": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+      "finalHash": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+      "stable": true
+    },
+    "dist/data-source.js": {
+      "servedHash": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b",
+      "finalHash": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b",
+      "stable": true
+    },
+    "dist/published-data.js": {
+      "servedHash": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010",
+      "finalHash": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010",
+      "stable": true
+    },
+    "dist/cycle-timing.js": {
+      "servedHash": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+      "finalHash": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+      "stable": true
+    },
+    "dist/btc-refresh-status.js": {
+      "servedHash": "806ca5d59e4a9194bc9c2759c60821da154173a65944328a24010307808b2036",
+      "finalHash": "806ca5d59e4a9194bc9c2759c60821da154173a65944328a24010307808b2036",
+      "stable": true
+    },
+    "dist/timing-view.js": {
+      "servedHash": "e47f6f69db210f7cc3086ab7717c1f4231faaca8ec4506467a8ae019677dadba",
+      "finalHash": "e47f6f69db210f7cc3086ab7717c1f4231faaca8ec4506467a8ae019677dadba",
+      "stable": true
+    },
+    "dist/forecast-engine.js": {
+      "servedHash": "e3b22730e99ca3a636b825fd84dff898cf20c784f546c483c0a77b6d30867d6f",
+      "finalHash": "e3b22730e99ca3a636b825fd84dff898cf20c784f546c483c0a77b6d30867d6f",
+      "stable": true
+    },
+    "dist/peak-view.js": {
+      "servedHash": "9e12550a63b65097ee612b73e5afee488f7e75059cd5d41aa4feedc34a4c798c",
+      "finalHash": "9e12550a63b65097ee612b73e5afee488f7e75059cd5d41aa4feedc34a4c798c",
+      "stable": true
+    },
+    "dist/daily-data-view.js": {
+      "servedHash": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+      "finalHash": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+      "stable": true
+    },
+    "dist/forecast-view.js": {
+      "servedHash": "5cf9fc72e9e7f8a5f811aa434e27526e83b33e19d99621af8c120b3139a560d8",
+      "finalHash": "5cf9fc72e9e7f8a5f811aa434e27526e83b33e19d99621af8c120b3139a560d8",
+      "stable": true
+    },
+    "dist/peak-zones.js": {
+      "servedHash": "20e17c4f54bf238b90657d3bf5f8c90bacd6b55a9929fed40bd88f1e1ca7fd99",
+      "finalHash": "20e17c4f54bf238b90657d3bf5f8c90bacd6b55a9929fed40bd88f1e1ca7fd99",
+      "stable": true
+    },
+    "dist/asset-comparison-source.js": {
+      "servedHash": "4ec4ac85a0ce67687e2d39f3fb22a67319b6d45da31c2b9daa282b4cab3b34f6",
+      "finalHash": "4ec4ac85a0ce67687e2d39f3fb22a67319b6d45da31c2b9daa282b4cab3b34f6",
+      "stable": true
+    },
+    "dist/ipo-view.js": {
+      "servedHash": "915da935a0c4e4414345abbdc6c9cf7a9cb79214a7aff6afd003dfda1e22b155",
+      "finalHash": "915da935a0c4e4414345abbdc6c9cf7a9cb79214a7aff6afd003dfda1e22b155",
+      "stable": true
+    },
+    "dist/market-lab-view.js": {
+      "servedHash": "52f995b70a52da0280c1a71766be7f7bdb2c9778ee09237dae699554bd3ad4a7",
+      "finalHash": "52f995b70a52da0280c1a71766be7f7bdb2c9778ee09237dae699554bd3ad4a7",
+      "stable": true
+    },
+    "dist/asset-comparison.js": {
+      "servedHash": "765d85f67ffad760e75b1b8fe8600eeb274411adb154c079cc65e1ba3a9076c8",
+      "finalHash": "765d85f67ffad760e75b1b8fe8600eeb274411adb154c079cc65e1ba3a9076c8",
+      "stable": true
+    },
+    "dist/asset-judgment-history-view.js": {
+      "servedHash": "cf639e88d6672be54f234c185cf535539d1154ad70d63fd1e36bb9ec72169b1e",
+      "finalHash": "cf639e88d6672be54f234c185cf535539d1154ad70d63fd1e36bb9ec72169b1e",
+      "stable": true
+    },
+    "dist/ipo-month-calendar.js": {
+      "servedHash": "6d154e74fec83af54bc67aacaaf8e70c46a3f2b5a5f32c8472434c79df86849c",
+      "finalHash": "6d154e74fec83af54bc67aacaaf8e70c46a3f2b5a5f32c8472434c79df86849c",
+      "stable": true
+    },
+    "dist/market-lab-math.js": {
+      "servedHash": "fbf92300b64e3e5e320386c7ddacc9d533cff5d7447620b3d6a365d66cdc2579",
+      "finalHash": "fbf92300b64e3e5e320386c7ddacc9d533cff5d7447620b3d6a365d66cdc2579",
+      "stable": true
+    },
+    "dist/asset-judgment-records.js": {
+      "servedHash": "c715a00584d0de86239ffaf9ee5fa4e705bb734bbcde98ab29e07d02883b3991",
+      "finalHash": "c715a00584d0de86239ffaf9ee5fa4e705bb734bbcde98ab29e07d02883b3991",
+      "stable": true
+    },
+    "dist/asset-judgment-history.js": {
+      "servedHash": "986b299bb7dc2c8e28cb2668bb2b7b3b7b0e507ba2b2f8ecb9040771d89ead9a",
+      "finalHash": "986b299bb7dc2c8e28cb2668bb2b7b3b7b0e507ba2b2f8ecb9040771d89ead9a",
+      "stable": true
+    },
+    "dist/viewport-workspace.js": {
+      "servedHash": "88c8cba821e866a87a5bbbbbec5172d473c0e290b0366fe2a60a807337d2fb80",
+      "finalHash": "88c8cba821e866a87a5bbbbbec5172d473c0e290b0366fe2a60a807337d2fb80",
+      "stable": true
+    },
+    "dist/lab-view.js": {
+      "servedHash": "fdd49d2f795b71217cc1e1ac6b21a0c51c5f25d78398a4334bc11de62d65e7cb",
+      "finalHash": "fdd49d2f795b71217cc1e1ac6b21a0c51c5f25d78398a4334bc11de62d65e7cb",
+      "stable": true
+    },
+    "dist/data/btc-daily.json": {
+      "servedHash": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf",
+      "finalHash": "64d30d7771d7cd3fdff114a4db9342cc07845fd61ff2619dd5edcffdd7362abf",
+      "stable": true
+    },
+    "dist/compact-chart-layout.js": {
+      "servedHash": "fc8d1f136c1ae5d8f24c4a378b349892d14d97f9c1fa74aed6b9d72613b56984",
+      "finalHash": "fc8d1f136c1ae5d8f24c4a378b349892d14d97f9c1fa74aed6b9d72613b56984",
+      "stable": true
+    },
+    "dist/data-update.js": {
+      "servedHash": "1bf07aaf3bba56720e16a766e9c8362bc6e6953e7edfb877fe29c8b89132cb08",
+      "finalHash": "1bf07aaf3bba56720e16a766e9c8362bc6e6953e7edfb877fe29c8b89132cb08",
+      "stable": true
+    },
+    "dist/workbench-chrome.js": {
+      "servedHash": "82717c08789e53ffee6d2667ff6b342e59ed3954d3d566ab3f8c3c9d7f6d63e4",
+      "finalHash": "82717c08789e53ffee6d2667ff6b342e59ed3954d3d566ab3f8c3c9d7f6d63e4",
+      "stable": true
+    },
+    "dist/research-workbench.js": {
+      "servedHash": "04411f6bf87c616e04ec04e6d3bc1b944b3790ba4825c599b90fcc1e7db7ae93",
+      "finalHash": "04411f6bf87c616e04ec04e6d3bc1b944b3790ba4825c599b90fcc1e7db7ae93",
+      "stable": true
+    },
+    "dist/analysis-dock.js": {
+      "servedHash": "4133f7cd4eea1fcbc29ccfc8e700e388b88f3ad271730e3c0b875830291ac496",
+      "finalHash": "4133f7cd4eea1fcbc29ccfc8e700e388b88f3ad271730e3c0b875830291ac496",
+      "stable": true
+    },
+    "dist/indicator-workbench.js": {
+      "servedHash": "79dfbf2e43bfdea9e76278e1ec85d56df1f79a678da1df2edcc441876aa277ed",
+      "finalHash": "79dfbf2e43bfdea9e76278e1ec85d56df1f79a678da1df2edcc441876aa277ed",
+      "stable": true
+    },
+    "dist/mobile-workspace.js": {
+      "servedHash": "1a4e3231a784f2f6b56a76a5fb609222b08ec632fc1399345a936306693b5f9f",
+      "finalHash": "1a4e3231a784f2f6b56a76a5fb609222b08ec632fc1399345a936306693b5f9f",
+      "stable": true
+    },
+    "dist/inspection-policy.js": {
+      "servedHash": "fb5953349307dd3025382df412414ba96777d0cf07403d49c548a941d47b79e3",
+      "finalHash": "fb5953349307dd3025382df412414ba96777d0cf07403d49c548a941d47b79e3",
+      "stable": true
+    },
+    "dist/cycle-period-comparison.js": {
+      "servedHash": "d44f90bb5d172064a67e62910b0d48c9866c71e55bc3199a65f962d9593c97b8",
+      "finalHash": "d44f90bb5d172064a67e62910b0d48c9866c71e55bc3199a65f962d9593c97b8",
+      "stable": true
+    },
+    "dist/forecast-computation.js": {
+      "servedHash": "8e4843c963a686027fb0b767c6f8969e38fcccd03abcc20c247740e90e006256",
+      "finalHash": "8e4843c963a686027fb0b767c6f8969e38fcccd03abcc20c247740e90e006256",
+      "stable": true
+    },
+    "dist/chart-replay.js": {
+      "servedHash": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+      "finalHash": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+      "stable": true
+    },
+    "dist/forecast-evidence.js": {
+      "servedHash": "1579b491f7fb1153197c5d28511eb5c75a85821b1b1cc19ae23c7176142b51f1",
+      "finalHash": "1579b491f7fb1153197c5d28511eb5c75a85821b1b1cc19ae23c7176142b51f1",
+      "stable": true
+    },
+    "dist/research-reader.js": {
+      "servedHash": "c8869e264aba1125bd56a23138d581287912b3e6b27ea6d392c4652c3d991575",
+      "finalHash": "c8869e264aba1125bd56a23138d581287912b3e6b27ea6d392c4652c3d991575",
+      "stable": true
+    },
+    "dist/price-legend.js": {
+      "servedHash": "01800705007feaaccc158e8e586914eaf6b566ae5834de0502db2bc2bc83c283",
+      "finalHash": "01800705007feaaccc158e8e586914eaf6b566ae5834de0502db2bc2bc83c283",
+      "stable": true
+    },
+    "dist/cycle-milestones.js": {
+      "servedHash": "bed3032cd8efaec067f0aedfaf42e8c170e43d00ea7c979791eb7028cb6714da",
+      "finalHash": "bed3032cd8efaec067f0aedfaf42e8c170e43d00ea7c979791eb7028cb6714da",
+      "stable": true
+    },
+    "dist/cycle-milestones-view.js": {
+      "servedHash": "632e1a6d93c17fa30dcb7ebbe51fbd2298d6257df06e5da468993bf58e4c9c9c",
+      "finalHash": "632e1a6d93c17fa30dcb7ebbe51fbd2298d6257df06e5da468993bf58e4c9c9c",
+      "stable": true
+    },
+    "dist/cycle-selection.js": {
+      "servedHash": "cb93d394dd247fd3a18e0d3b04318a861c19536309c2f93f9a1dce6f55441c39",
+      "finalHash": "cb93d394dd247fd3a18e0d3b04318a861c19536309c2f93f9a1dce6f55441c39",
+      "stable": true
+    },
+    "dist/atlas-price-chart.js": {
+      "servedHash": "e3726e135dcd552777021de5282d1616120c0493d7b10b56fd4f129f812995d8",
+      "finalHash": "e3726e135dcd552777021de5282d1616120c0493d7b10b56fd4f129f812995d8",
+      "stable": true
+    },
+    "dist/cryptocon-audit.js": {
+      "servedHash": "7fdf0bf02f6d30c1766642fb127178abaf99c677882e597fe03ca4ca4896b2fe",
+      "finalHash": "7fdf0bf02f6d30c1766642fb127178abaf99c677882e597fe03ca4ca4896b2fe",
+      "stable": true
+    },
+    "dist/chart-navigation.js": {
+      "servedHash": "cb1b0999c3934178615dbf3760e414daa8fbc15bb2412fdc8314135fd0a3350d",
+      "finalHash": "cb1b0999c3934178615dbf3760e414daa8fbc15bb2412fdc8314135fd0a3350d",
+      "stable": true
+    },
+    "dist/atlas-analysis.js": {
+      "servedHash": "c6369b4bf17315cb0858b95ed9570101569a4774ef29fc76d85be2f176009954",
+      "finalHash": "c6369b4bf17315cb0858b95ed9570101569a4774ef29fc76d85be2f176009954",
+      "stable": true
+    },
+    "dist/price-view-data.js": {
+      "servedHash": "54548b35600e976a31c60d5f2dae6539fee841cf0bd5520f6bd253c90c871634",
+      "finalHash": "54548b35600e976a31c60d5f2dae6539fee841cf0bd5520f6bd253c90c871634",
+      "stable": true
+    },
+    "dist/indicator-state.js": {
+      "servedHash": "dc0da197cf7274d5068682631921dc065ecfbb1e8630bca815b2eeb4ddf3617e",
+      "finalHash": "dc0da197cf7274d5068682631921dc065ecfbb1e8630bca815b2eeb4ddf3617e",
+      "stable": true
+    },
+    "dist/long-horizon-forecast.js": {
+      "servedHash": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+      "finalHash": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+      "stable": true
+    },
+    "dist/long-horizon-view.js": {
+      "servedHash": "fb92cf0e36ddc0996b14ab0e65df63b4c94ea460be67f2d38d1b3fa62c8db5ea",
+      "finalHash": "fb92cf0e36ddc0996b14ab0e65df63b4c94ea460be67f2d38d1b3fa62c8db5ea",
+      "stable": true
+    },
+    "dist/market-data-controller.js": {
+      "servedHash": "978ad14a70fdb3011f0761ceb7c6f6ebc0d37bc0b25aa047ad2ef2014eff07d6",
+      "finalHash": "978ad14a70fdb3011f0761ceb7c6f6ebc0d37bc0b25aa047ad2ef2014eff07d6",
+      "stable": true
+    },
+    "dist/volume-data.js": {
+      "servedHash": "a788b2ba5381cd9405f468dcac902fb14a23b56696b49153745e2500fe25c88a",
+      "finalHash": "a788b2ba5381cd9405f468dcac902fb14a23b56696b49153745e2500fe25c88a",
+      "stable": true
+    },
+    "dist/ohlc-data.js": {
+      "servedHash": "b2a5104c22b0fced11d747cae9fd7797a876b0c7de4e30492376acae791e7f5d",
+      "finalHash": "b2a5104c22b0fced11d747cae9fd7797a876b0c7de4e30492376acae791e7f5d",
+      "stable": true
+    },
+    "dist/volume-forecast.js": {
+      "servedHash": "f742d858c1cdf10e4092fcdb923e70b1e40c75d098e03234e16396880cca5d60",
+      "finalHash": "f742d858c1cdf10e4092fcdb923e70b1e40c75d098e03234e16396880cca5d60",
+      "stable": true
+    },
+    "dist/intraday-chart.js": {
+      "servedHash": "1e44773709a57ee9d74567001555a7b3ffa1f90c0915e35355f580c96c676c3f",
+      "finalHash": "1e44773709a57ee9d74567001555a7b3ffa1f90c0915e35355f580c96c676c3f",
+      "stable": true
+    },
+    "dist/bitcoin-events.js": {
+      "servedHash": "871bc28763906dc15fe61c034388582914c0c018bd13f96af3162571d9295b22",
+      "finalHash": "871bc28763906dc15fe61c034388582914c0c018bd13f96af3162571d9295b22",
+      "stable": true
+    },
+    "dist/chart-overlays.js": {
+      "servedHash": "0808bc0b3175eb089394493a9bab2062cdeaf190940169c3b26093c1c3f3e04a",
+      "finalHash": "0808bc0b3175eb089394493a9bab2062cdeaf190940169c3b26093c1c3f3e04a",
+      "stable": true
+    },
+    "dist/market-structure.js": {
+      "servedHash": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+      "finalHash": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+      "stable": true
+    },
+    "dist/chart-presets.js": {
+      "servedHash": "0635174122f5de55ebf0adeff12ba00a79b8364a2a9f57e982615e4e3c6ee0aa",
+      "finalHash": "0635174122f5de55ebf0adeff12ba00a79b8364a2a9f57e982615e4e3c6ee0aa",
+      "stable": true
+    },
+    "dist/chart-export.js": {
+      "servedHash": "02092ff68b0ec8dc25d510beb2cb7fd9609f55ab019d483d5e10b116df0c7f3c",
+      "finalHash": "02092ff68b0ec8dc25d510beb2cb7fd9609f55ab019d483d5e10b116df0c7f3c",
+      "stable": true
+    },
+    "dist/workspace-state.js": {
+      "servedHash": "797a61ef67ae093cc817d4e6c7b428033821228398c2590b3669d1fc137b6851",
+      "finalHash": "797a61ef67ae093cc817d4e6c7b428033821228398c2590b3669d1fc137b6851",
+      "stable": true
+    },
+    "dist/price-axis.js": {
+      "servedHash": "c8c8153450d688ec541a17f81e1bfefb9296fd7f34620d808a7c84495412c888",
+      "finalHash": "c8c8153450d688ec541a17f81e1bfefb9296fd7f34620d808a7c84495412c888",
+      "stable": true
+    },
+    "dist/chart-hover.js": {
+      "servedHash": "2babcf82e20c0a6aa3aafd8f660a9175b94b11192fe3e4670c645683b8093067",
+      "finalHash": "2babcf82e20c0a6aa3aafd8f660a9175b94b11192fe3e4670c645683b8093067",
+      "stable": true
+    },
+    "dist/price-display.js": {
+      "servedHash": "7558e6e6f56825f66c4268a6939808abe21b731bf0fbe3fa8c5766d1b8e87179",
+      "finalHash": "7558e6e6f56825f66c4268a6939808abe21b731bf0fbe3fa8c5766d1b8e87179",
+      "stable": true
+    },
+    "dist/workspace-history.js": {
+      "servedHash": "1e7f2c7a57c7d0d163e5b2ef482324f28732d4d37783f1aa7dd39429691a54c6",
+      "finalHash": "1e7f2c7a57c7d0d163e5b2ef482324f28732d4d37783f1aa7dd39429691a54c6",
+      "stable": true
+    },
+    "dist/chart-view-policy.js": {
+      "servedHash": "5e6c183ac95d55079a595eb0d564411b5c7d162f1c6b9ec403c7a0c01d1a2cd0",
+      "finalHash": "5e6c183ac95d55079a595eb0d564411b5c7d162f1c6b9ec403c7a0c01d1a2cd0",
+      "stable": true
+    },
+    "dist/chart-touch-tracking.js": {
+      "servedHash": "6e993c48356a7c3d2156d11007b892a1e930b7d2fb2880d9fcae134cd0d424c7",
+      "finalHash": "6e993c48356a7c3d2156d11007b892a1e930b7d2fb2880d9fcae134cd0d424c7",
+      "stable": true
+    },
+    "dist/research-annotations.js": {
+      "servedHash": "b8f2e825bada44959e13375fb8243df188aa4e72aa64a788f7f2f3e555139a49",
+      "finalHash": "b8f2e825bada44959e13375fb8243df188aa4e72aa64a788f7f2f3e555139a49",
+      "stable": true
+    },
+    "dist/chart-export-workbench.js": {
+      "servedHash": "ec9433c4f842e89ad70232ffdad62199146da0570d0df1a2dc9a70c41c4608dd",
+      "finalHash": "ec9433c4f842e89ad70232ffdad62199146da0570d0df1a2dc9a70c41c4608dd",
+      "stable": true
+    },
+    "dist/research-annotations-workbench.js": {
+      "servedHash": "296c51cce5f994df1f08dab65d263f2e82d94ab4e81280d8170b88b0ab4a0d5f",
+      "finalHash": "296c51cce5f994df1f08dab65d263f2e82d94ab4e81280d8170b88b0ab4a0d5f",
+      "stable": true
+    },
+    "dist/dialog-viewport.js": {
+      "servedHash": "36dceb75f26ab3c6fec9fa2c1d8ca8cf0a6ddbb19e2b4d7a5bc0f9d901bde28e",
+      "finalHash": "36dceb75f26ab3c6fec9fa2c1d8ca8cf0a6ddbb19e2b4d7a5bc0f9d901bde28e",
+      "stable": true
+    },
+    "dist/indicator-readouts.js": {
+      "servedHash": "5143dc1474226dba24127f2dd667ea1e18986059c49fdff6be2ff178cbffbb48",
+      "finalHash": "5143dc1474226dba24127f2dd667ea1e18986059c49fdff6be2ff178cbffbb48",
+      "stable": true
+    },
+    "dist/indicator-settings.js": {
+      "servedHash": "87c9ca6aa99a4d1627c44290bb1e9d234ab42156a953af9dff26bd045e242715",
+      "finalHash": "87c9ca6aa99a4d1627c44290bb1e9d234ab42156a953af9dff26bd045e242715",
+      "stable": true
+    },
+    "dist/indicator-settings-dialog.js": {
+      "servedHash": "a8125d8186ab6adaf952843e9e3fc1b7067252e3922f9d68d6fd2b71ebadb7d6",
+      "finalHash": "a8125d8186ab6adaf952843e9e3fc1b7067252e3922f9d68d6fd2b71ebadb7d6",
+      "stable": true
+    },
+    "dist/indicator-preferences.js": {
+      "servedHash": "8d26161783236257a6901b3f644afddc7d3e8a7fb9e05b6078bfc1c82caf1b99",
+      "finalHash": "8d26161783236257a6901b3f644afddc7d3e8a7fb9e05b6078bfc1c82caf1b99",
+      "stable": true
+    },
+    "dist/chart-magnet.js": {
+      "servedHash": "e568efbd4da72482a9b825263d8d9da29e45cec47e39a83b2ff11e76b6dd4d9c",
+      "finalHash": "e568efbd4da72482a9b825263d8d9da29e45cec47e39a83b2ff11e76b6dd4d9c",
+      "stable": true
+    },
+    "dist/chart-go-to.js": {
+      "servedHash": "4182e033ad0750bb612e162ff39732c1716589b23dde8f9bb59e5bae94f0b73d",
+      "finalHash": "4182e033ad0750bb612e162ff39732c1716589b23dde8f9bb59e5bae94f0b73d",
+      "stable": true
+    },
+    "dist/chart-bottom-bar.js": {
+      "servedHash": "e7dcdfce8326d5d4cf83265d1bd3fb715d26490b489b43523bbd72befd273b06",
+      "finalHash": "e7dcdfce8326d5d4cf83265d1bd3fb715d26490b489b43523bbd72befd273b06",
+      "stable": true
+    },
+    "dist/workspace-tools.js": {
+      "servedHash": "0e94b855cd8cd30c0a4a9c80c90a19a7774a133bdc587704774a13d23b3ad7c1",
+      "finalHash": "0e94b855cd8cd30c0a4a9c80c90a19a7774a133bdc587704774a13d23b3ad7c1",
+      "stable": true
+    },
+    "dist/symbol-selector.js": {
+      "servedHash": "86a41a84b273d59bfd26a9bf3a093e7ca5d684175cddb3f977e166968a473f4a",
+      "finalHash": "86a41a84b273d59bfd26a9bf3a093e7ca5d684175cddb3f977e166968a473f4a",
+      "stable": true
+    },
+    "dist/history-journal.js": {
+      "servedHash": "4b4647725203e08ed8e000fdedfb24e9626a1a7b06985cb1ce226eed73b321d0",
+      "finalHash": "4b4647725203e08ed8e000fdedfb24e9626a1a7b06985cb1ce226eed73b321d0",
+      "stable": true
+    },
+    "dist/chart-replay-state.js": {
+      "servedHash": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
+      "finalHash": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
+      "stable": true
+    },
+    "dist/chart-replay-snapshot.js": {
+      "servedHash": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
+      "finalHash": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
+      "stable": true
+    },
+    "dist/research-source-data.js": {
+      "servedHash": "eb0720b297fe8430cf954e05df782ef5a4edd186a6c3ab727d1cb0bd8b5086b6",
+      "finalHash": "eb0720b297fe8430cf954e05df782ef5a4edd186a6c3ab727d1cb0bd8b5086b6",
+      "stable": true
+    },
+    "dist/research-library-data.js": {
+      "servedHash": "20d17df4b01fed0f5a72fe47dba57c68abe294c34eb6fa6a47a90d3ed7b95215",
+      "finalHash": "20d17df4b01fed0f5a72fe47dba57c68abe294c34eb6fa6a47a90d3ed7b95215",
+      "stable": true
+    },
+    "dist/research-format.js": {
+      "servedHash": "8d4b225cb3ee9f3042c72b12a2f4d3040123473c65bff8549c74bb55a5c0c37a",
+      "finalHash": "8d4b225cb3ee9f3042c72b12a2f4d3040123473c65bff8549c74bb55a5c0c37a",
+      "stable": true
+    },
+    "dist/cycle-interval-overlay.js": {
+      "servedHash": "ea37009cb4c19df6df1111b297df3d9a4adbeeb7cd06724c3ce0b5dfc1a207d2",
+      "finalHash": "ea37009cb4c19df6df1111b297df3d9a4adbeeb7cd06724c3ce0b5dfc1a207d2",
+      "stable": true
+    },
+    "dist/chart-math.js": {
+      "servedHash": "93db753cfbe24a88d68216267b08304c4149315912e7e60b0548d8ffa975d09a",
+      "finalHash": "93db753cfbe24a88d68216267b08304c4149315912e7e60b0548d8ffa975d09a",
+      "stable": true
+    },
+    "dist/empty-price-chart.js": {
+      "servedHash": "877aeb29ee669ff2e5de03912aa6bc8c32f6ea93fc68670cd98ba4cbb20ee1d2",
+      "finalHash": "877aeb29ee669ff2e5de03912aa6bc8c32f6ea93fc68670cd98ba4cbb20ee1d2",
+      "stable": true
+    },
+    "dist/chart-window.js": {
+      "servedHash": "ff1527876a0185e8f8a52211170c696bde98f0120c6f0ddde58cea987daaf7cd",
+      "finalHash": "ff1527876a0185e8f8a52211170c696bde98f0120c6f0ddde58cea987daaf7cd",
+      "stable": true
+    },
+    "dist/cryptocon-audit-data.js": {
+      "servedHash": "8495fd0373bd81331c05d784c9ffbee2ab26ef5fc9267d6bc127f98332be0088",
+      "finalHash": "8495fd0373bd81331c05d784c9ffbee2ab26ef5fc9267d6bc127f98332be0088",
+      "stable": true
+    },
+    "dist/detailed-forecast.js": {
+      "servedHash": "e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e",
+      "finalHash": "e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e",
+      "stable": true
+    },
+    "dist/long-horizon-evidence.js": {
+      "servedHash": "7b5f9fc162e0c621b6a7df9f0f3d77e76c274040e83b88b0a8301638cb29f2f8",
+      "finalHash": "7b5f9fc162e0c621b6a7df9f0f3d77e76c274040e83b88b0a8301638cb29f2f8",
+      "stable": true
+    },
+    "dist/cycle-calibration.js": {
+      "servedHash": "f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780",
+      "finalHash": "f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780",
+      "stable": true
+    },
+    "dist/intraday-history.js": {
+      "servedHash": "7bec4f8c3f31571d4494801cfe22286fe9a87f0434c031eca1fd27f1f9e556f2",
+      "finalHash": "7bec4f8c3f31571d4494801cfe22286fe9a87f0434c031eca1fd27f1f9e556f2",
+      "stable": true
+    },
+    "dist/equity-forecast-chart.js": {
+      "servedHash": "a5601464a89dbfbda508d8de69a7d4a84b6858cc8981bef237eee0412676b75c",
+      "finalHash": "a5601464a89dbfbda508d8de69a7d4a84b6858cc8981bef237eee0412676b75c",
+      "stable": true
+    }
+  },
+  "f25": {
+    "words": 0,
+    "gone": [],
+    "offscreenColumns": [
+      {
+        "text": "관측 상태",
+        "inClosedDisclosure": false
+      },
+      {
+        "text": "가격 발견 일수",
+        "inClosedDisclosure": false
+      },
+      {
+        "text": "스윙 되돌림",
+        "inClosedDisclosure": false
+      },
+      {
+        "text": "완료 여부",
+        "inClosedDisclosure": false
+      },
+      {
+        "text": "2025",
+        "inClosedDisclosure": true
+      },
+      {
+        "text": "해석",
+        "inClosedDisclosure": true
+      },
+      {
+        "text": "가정 경로의 반전 확인",
+        "inClosedDisclosure": true
+      },
+      {
+        "text": "평균 절대 로그 오차아날로그 / 유지",
+        "inClosedDisclosure": true
+      },
+      {
+        "text": "기준일 수",
+        "inClosedDisclosure": true
+      },
+      {
+        "text": "환산 가격",
+        "inClosedDisclosure": true
+      },
+      {
+        "text": "기준일 대비",
+        "inClosedDisclosure": true
+      },
+      {
+        "text": "가격 배수",
+        "inClosedDisclosure": true
+      }
+    ]
+  },
+  "ownedSourcesStable": true,
+  "completedAt": "2026-11-05T12:39:35.004Z"
+}

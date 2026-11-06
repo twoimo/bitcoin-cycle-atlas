@@ -1,0 +1,12 @@
+✔ Hallmark scope: added pages/styles remain in the full static scan without changing the pinned baseline (1.404957ms)
+✔ Hallmark scope: deleting either real baseline screen fails even with an unrelated same-count replacement (1.665782ms)
+✔ Hallmark scope: deleting a baseline stylesheet fails despite equal or greater aggregate coverage (0.576412ms)
+✔ Hallmark scope: the fixed baseline still requires exactly 24 CSS and two HTML inputs (1.025856ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 79.727765

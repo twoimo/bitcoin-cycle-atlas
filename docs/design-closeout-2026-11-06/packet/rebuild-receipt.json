@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "recordedAt": "2026-11-06T09:53:12.111651+00:00",
+  "scope": "Rebuild exact restored aca73b7 execution-evidence bytes with corrected committed source; this is not a fresh CI/browser/model execution.",
+  "runtime": "v24.22.1",
+  "source": {
+    "localCommit": "37aeb26814b02d101ca57b1742b21540cfee8bb2",
+    "remoteEquivalentCommit": "05416037845b9dec9b7efbc4068d4b6f676e486e",
+    "tree": "1df3a582b23f88f7907926f129e1c21d6e28877d",
+    "productTree": "7429c879d54c27ecbac9e2c1f4cdb8cd77ad2dc3"
+  },
+  "failedWorkflow": {
+    "head": "aca73b74a5128a5466488a0c701e86f5e854af46",
+    "runId": 42191941832,
+    "jobId": 127805831888,
+    "overall": "failure",
+    "native": "49/49 passed",
+    "reason": "Aggregate evidence byte cap exceeded; see eth-final.json bindingFailure."
+  },
+  "artifact": {
+    "id": 13491063335,
+    "zipBytes": 70682418,
+    "sha256": "4b675cb8e9a73a46039929c2950d082cdba3a89829b9cc9d3859262025e3526f",
+    "restorationInventory": "artifact-restoration.json.gz",
+    "pngScope": "Screenshots remain in original artifact; all non-PNG inputs restored. Native report binds screenshot paths and hashes."
+  },
+  "originalCompleteDiagnostic": {
+    "sourceCommit": "aca73b74a5128a5466488a0c701e86f5e854af46",
+    "sourceTree": "1f18486be46dbc8c852fcbadfe844bc78d948fb1",
+    "bundleBytes": 105721764,
+    "entries": 862,
+    "parts": 588,
+    "bundleSha256": "3047ea97de86fd08502cce870e68ebd7be172f4922c8c67d334c46e8eef7c29b",
+    "diagnosticOnlyLimitBytes": 200000000,
+    "fileLimitBytes": 85000000,
+    "sourceAccess": "complete-for-declared-scope"
+  },
+  "correctedActualRunner": {
+    "command": "node scripts/build-eth-review-evidence.mjs",
+    "exitCode": 0,
+    "bundleBytes": 105806852,
+    "entries": 872,
+    "parts": 588,
+    "bundleSha256": "cde4ae5db75e6c0a54522a4e098cd8016075d0a0638c68e1248d28abc96cc04b",
+    "bundleLimitBytes": 128000000,
+    "fileLimitBytes": 85000000,
+    "headroomBytes": 22193148,
+    "sourceAccess": "complete-for-declared-scope",
+    "unresolvedImports": [],
+    "allPartsReassembledToExactBook": true
+  },
+  "inventory": {
+    "oldSeeds": 483,
+    "newSeeds": 524,
+    "addedSeedPaths": [
+      "dist/asset-forecast-loader.js",
+      "dist/atlas-navigation.js",
+      "dist/atlas-shell-state.js",
+      "dist/atlas-shell.css",
+      "dist/atlas-shell.js",
+      "dist/center-workbench.js",
+      "dist/chart-replay-atlas.js",
+      "dist/chart-replay-renderer.js",
+      "dist/chart-replay-snapshot.js",
+      "dist/chart-replay-sources.js",
+      "dist/chart-replay-state.js",
+      "dist/chart-replay.css",
+      "dist/chart-replay.js",
+      "dist/cycle-clock-backtest-view.js",
+      "dist/cycle-clock-backtest-worker.js",
+      "dist/cycle-clock-backtest.js",
+      "dist/cycle-period-comparison.js",
+      "dist/cycle-period-worker.js",
+      "dist/ipo-month-calendar.js",
+      "dist/ipo-view.css",
+      "dist/ipo-view.js",
+      "dist/loading-surfaces.css",
+      "dist/loading-surfaces.js",
+      "dist/market-lab-math.js",
+      "dist/market-lab-view.js",
+      "dist/market-lab.css",
+      "dist/monthly-backtest-source.js",
+      "dist/monthly-backtest-store.js",
+      "dist/monthly-backtest-view.js",
+      "dist/monthly-backtest-worker.js",
+      "dist/monthly-backtest.css",
+      "dist/monthly-backtest.js",
+      "dist/preserved-archive-download.js",
+      "dist/project-replay-baseline.js",
+      "dist/replay-cutoff-forecast.js",
+      "dist/replay-retrospective.js",
+      "dist/rsi-chart-layout.js",
+      "dist/rsi-instruments.js",
+      "dist/rsi-workbench-controls.js",
+      "dist/site-paths.js",
+      "dist/vendor/skullet/styles.css"
+    ],
+    "removedSeedPaths": [],
+    "newPayloadPaths": [
+      "dist/atlas-shell.css",
+      "dist/chart-replay.css",
+      "dist/cycle-clock-backtest-worker.js",
+      "dist/cycle-period-worker.js",
+      "dist/ipo-view.css",
+      "dist/loading-surfaces.css",
+      "dist/market-lab.css",
+      "dist/monthly-backtest-worker.js",
+      "dist/monthly-backtest.css",
+      "dist/vendor/skullet/styles.css"
+    ],
+    "addedPayloadBytes": 79814,
+    "removedPayloadPaths": [],
+    "changedCommonSourcePaths": [
+      "research-data/eth-review-scope.json",
+      "scripts/build-eth-review-evidence.mjs",
+      "tests/eth-review-packet.test.mjs"
+    ],
+    "unchangedProvidedExecutionEvidenceFiles": 335,
+    "unchangedProvidedExecutionEvidenceBytes": 72561957,
+    "oldTestBytesPreservedAsPrefix": 33579,
+    "dynamicResolutionsUnchanged": true
+  },
+  "preservation": {
+    "protectedFiles": 203,
+    "protectedBytes": 45414161,
+    "changedProtectedFiles": [],
+    "explicitMetadataException": "research-data/eth-review-scope.json: additive review source inventory only; not a financial model/data change.",
+    "gateAndSkillFiles": 20,
+    "changedGateAndSkillFiles": [],
+    "packetBuilderAndValidatorUnchanged": true
+  },
+  "reviewDisposition": {
+    "status": "omitted-by-user",
+    "stageStatus": {
+      "chatgpt-thesis": "not-recorded",
+      "gemini-opposition": "omitted-by-user",
+      "chatgpt-reverse": "omitted-by-user"
+    },
+    "actualChatgptThesis": null,
+    "actualGeminiReport": null,
+    "actualChatgptReverse": null,
+    "actualModelExecutionAuthenticated": false,
+    "releaseAuthorized": false
+  },
+  "compressedEvidence": [
+    {
+      "file": "original-complete-manifest.json.gz",
+      "rawBytes": 667600,
+      "rawSha256": "2704b117ca5fedcab422cd9008fea26b45e7b6c78b840e8261762bf193cc479d",
+      "gzipBytes": 120586,
+      "gzipSha256": "9f87dc4a1c8340b1d0a81ff1b0ee937badb871079955389e452d6746898049c0"
+    },
+    {
+      "file": "corrected-complete-manifest.json.gz",
+      "rawBytes": 672756,
+      "rawSha256": "7706526579b7b0c01654ecb3f9c5095070702054dd5187c80bf4defc627fe862",
+      "gzipBytes": 121726,
+      "gzipSha256": "be7fcee840fcb3825c1e8949f5527a66c9b496a0de2a09203e5532357774a3cf"
+    },
+    {
+      "file": "artifact-restoration.json.gz",
+      "rawBytes": 106850,
+      "rawSha256": "88d2b8c1bbdf25e2fe15aac829ed99a3cde7b2c82db2f3e9c68d6b4ef5509d5c",
+      "gzipBytes": 25819,
+      "gzipSha256": "4f6ffb868c6a838c7faa3a824e3433170ed0358f9f1de99dec911d802aadea86"
+    }
+  ],
+  "freshExactHeadCi": "Pending; all four original workflows must pass before merge."
+}

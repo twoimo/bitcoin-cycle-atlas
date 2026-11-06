@@ -1,0 +1,27 @@
+{
+  "stage": "after-additive-scope-fix",
+  "status": "PASS",
+  "observedAt": "2026-11-06T09:49:24.892037+00:00",
+  "command": [
+    "node",
+    "--test",
+    "tests/eth-review-packet.test.mjs"
+  ],
+  "exitCode": 0,
+  "nodeVersion": "v24.22.1",
+  "seedCount": 524,
+  "counts": {
+    "tests": 31,
+    "pass": 31,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "log": "build/release-monitor/packet-inventory-after.log",
+  "logSha256": "bcadbe9302d6cf0e5d8872e42ba80666f4e77f0676921fb907c4342259b7b8b6",
+  "sourceSha256": {
+    "research-data/eth-review-scope.json": "2f7f9cf8b036d117a91edef9aa24b6f831b2e3fdfb1d266d9931c0fce3051b74",
+    "tests/eth-review-packet.test.mjs": "2a8bca1048a48b1ab84f5e205823afdec1bd0083a301108d915bda0ed67ff345"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-06T08:12:46.171402+00:00",
+  "sourceCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "selection": "Committed project verification skills and all GitHub workflow files. These artifacts were not modified by this task.",
+  "hashes": {
+    ".agents/skills/verify-cycle-decision/SKILL.md": "0013fc884513a9bb1a0163d7dd0e3dcd000b7ab79b521a0c306aaf21415f46b7",
+    ".agents/skills/verify-cycle-decision/agents/openai.yaml": "42cc2efb3d98a8129912af79634da7db3a2b19ef4b6496cf25836698f984db9e",
+    ".agents/skills/verify-equity-state/SKILL.md": "49014115933ff356d007ba1fa79407cfac9b0590f83b483709180eaea288bce5",
+    ".agents/skills/verify-equity-state/agents/openai.yaml": "47e697d00bf70315472ebe3f3a84b5d75789e397e60fc2509486797e7d42fe87",
+    ".agents/skills/verify-eth-state/SKILL.md": "b57db96f60f860f0a55504abc23f49a88cb78d7954a9c8d28d86c2b6e60ffed0",
+    ".agents/skills/verify-eth-state/agents/openai.yaml": "398d449a5add204083815344968ee7ab8159693a30b10b7526bd62244a7895f4",
+    ".agents/skills/verify-market-state/SKILL.md": "6ac1e90b9d2418e8a12876c3ccd8472910a3afbf656f98624e5d50ff6b183e5c",
+    ".agents/skills/verify-market-state/agents/openai.yaml": "51c63855bb4be323c28f71a1f4d68dbed8ac0d7defcb79bb2552b03a86a03230",
+    ".agents/skills/verify-publication-state/SKILL.md": "9a6e3deb22bab2e6f70c81364004c8f24c28d6e810ef0398cc5ad1f5d25e6fef",
+    ".agents/skills/verify-publication-state/agents/openai.yaml": "031a97c7f7197ccfda76b68b6c293e5ce97700f9c6eef78664a96c7748838d3c",
+    ".agents/skills/verify-replay-state/SKILL.md": "c7bbefa7899d1984924e767f466cbe549ebe18bb2a9b702c39e6d81c34b81aa4",
+    ".agents/skills/verify-replay-state/agents/openai.yaml": "a878d794b31bace5c1113732e1b9c86aa12c43c370d953ff9309aef1793e4779",
+    ".github/workflows/ci.yml": "90d5a7435f4bce79e753dba9da103b6a1a1b851d1e88aa8628d51dc71a5852a2",
+    ".github/workflows/eth-model-evaluation.yml": "e3f822af7795a501c1222daa87ac48328206e15a0ab3d013153ac46068a92941",
+    ".github/workflows/eth-prospective-daily.yml": "0f2f24a770b8b9cb8a66ffbf86d63cc5efbe05d6142880c359930fc54d70e80f",
+    ".github/workflows/hallmark-design.yml": "047d3855389f5f13adbe8ac4f65b7fb4231d19c16ff52f491bb09eb5eb380d11",
+    ".github/workflows/market-lab-service.yml": "d223924e4683d2c45ee8722dbb47d765fab8976b86751edc4d15b6e6978253aa",
+    ".github/workflows/pages.yml": "91dfd4e8fd7bf69933c5aadddf96d1849d242f65fefb5ffa41ebf5f7a1e1a5b2",
+    ".github/workflows/refresh-data.yml": "b9340a1434607e149f6fa5a172af33562734db20dbed355e93d00957eaa7d368",
+    ".github/workflows/release.yml": "7181db5f9c7ffa8b15572e5e416b984b26d12254d1613eb169a9d6218865b9a2"
+  }
+}

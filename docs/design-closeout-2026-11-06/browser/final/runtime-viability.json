@@ -1,0 +1,27 @@
+{
+  "recordedAt": "2026-11-06T08:14:34.772Z",
+  "sourceCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "status": "BROWSER_VIABLE_FONT_PENDING",
+  "node": "v24.22.1",
+  "playwrightModule": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+  "browserExecutable": "/workspace/scratch/82e52cfd9693/browser-native/chromium-audit-multiprocess",
+  "observed": {
+    "moduleExists": true,
+    "browserExists": true,
+    "localhostBind": {
+      "status": "PASS",
+      "host": "127.0.0.1",
+      "ephemeralPort": 33705
+    },
+    "playwrightImport": "PASS",
+    "nativeChromiumNavigationAndPointerClick": "PASS",
+    "pageTitle": "Browser viability",
+    "koreanFontInventory": {
+      "command": "fc-list :lang=ko family",
+      "exitCode": 0,
+      "output": "",
+      "status": "MISSING"
+    }
+  },
+  "scope": "Minimal local browser readiness probe only; no product gate case has run in this receipt."
+}

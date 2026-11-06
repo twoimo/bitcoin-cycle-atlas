@@ -278,6 +278,88 @@ export function assertIndicatorLegendSurface(state){
     'Expanded indicator labels are missing');
 }
 
+/** Long-document readers must retain native controls and the actual opener. */
+export async function verifyLegacyMethodReader(api){
+  const {cdp,receipt,evaluate,until,settled,screenshot}=api;
+  const record={inputs:[],states:[]};receipt.workspace.legacy.methodReader=record;
+  const complete=t=>t.painted&&!t.disabled&&t.topmost&&t.box.width>0&&t.box.height>0&&
+    t.box.left>=t.clip.left-1&&t.box.right<=t.clip.right+1&&t.box.top>=t.clip.top-1&&t.box.bottom<=t.clip.bottom+1;
+  const pointer=async selector=>{
+    const target=await evaluate(cdp,readNativeInteractiveTarget,selector);
+    assert.ok(complete(target),'Legacy reader native pointer is unavailable: '+JSON.stringify(target));
+    record.inputs.push({kind:'raw-native-pointer',selector,target});
+    const point={x:target.x,y:target.y};
+    for(const type of ['mouseMoved','mousePressed','mouseReleased'])await cdp.send('Input.dispatchMouseEvent',{type,...point,...(type==='mouseMoved'?{}:{button:'left',clickCount:1})});
+    await settled(cdp);
+  };
+  const key=async(key,code,number)=>{
+    record.inputs.push({kind:'native-keyboard',key});
+    for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key,code,windowsVirtualKeyCode:number,nativeVirtualKeyCode:number});
+    await settled(cdp);
+  };
+  const reveal=async(selector,{menuSpace=false}={})=>{
+    for(let attempt=0;attempt<40;attempt++){
+      const target=await evaluate(cdp,readNativeInteractiveTarget,selector);
+      const desiredTop=menuSpace?Math.min(200,target.viewport.height*.25):target.viewport.height*.3;
+      if(complete(target)&&(!menuSpace||target.box.top<=desiredTop+1))return;
+      const point=await evaluate(cdp,()=>{const main=document.querySelector('#main').getBoundingClientRect();return{x:(Math.max(0,main.left)+innerWidth)/2,y:innerHeight/2};});
+      const deltaY=Math.max(-640,Math.min(640,target.box.top-desiredTop));
+      record.inputs.push({kind:'native-body-wheel',selector,point,deltaY});
+      await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...point});
+      await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...point,deltaX:0,deltaY});await settled(cdp);
+    }
+    throw new Error('Native body wheel did not reveal '+selector);
+  };
+  const readState=async()=>{
+    const paths=[...document.querySelectorAll('#structure-chart path[d],#legacy-comparison svg path[d]')].map(el=>el.getAttribute('d')).join('\n');
+    const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(paths));
+    const svgs=[];
+    for(const svg of document.querySelectorAll('#structure-chart,#legacy-comparison svg')){
+      const p=[...svg.querySelectorAll('path[d]')].map(el=>el.getAttribute('d')).join('\n'),hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(p)),box=svg.getBoundingClientRect();
+      svgs.push({id:svg.id||svg.parentElement?.getAttribute('data-icon')||svg.getAttribute('class'),viewBox:svg.getAttribute('viewBox'),width:box.width,height:box.height,pathCount:svg.querySelectorAll('path[d]').length,hash:[...new Uint8Array(hash)].map(n=>n.toString(16).padStart(2,'0')).join('')});
+    }
+    return {scrollTop:document.body.scrollTop,scrollHeight:document.body.scrollHeight,clientHeight:document.body.clientHeight,
+      widths:{document:document.documentElement.scrollWidth,body:document.body.clientWidth,bodyScroll:document.body.scrollWidth,workspace:document.querySelector('.workspace').getBoundingClientRect().width,main:document.querySelector('#main').getBoundingClientRect().width},
+      pathHash:[...new Uint8Array(digest)].map(n=>n.toString(16).padStart(2,'0')).join(''),pathCount:document.querySelectorAll('#structure-chart path[d],#legacy-comparison svg path[d]').length,
+      focused:document.activeElement?.id||null,readerHidden:document.querySelector('#chart-reader').hidden,menuHidden:document.querySelector('#export-menu').hidden,
+      readerPosition:getComputedStyle(document.querySelector('#chart-reader')).position,svgs};
+  };
+  await reveal('#legacy-comparison > summary');
+  if(!await evaluate(cdp,()=>document.querySelector('#legacy-comparison').open))await pointer('#legacy-comparison > summary');
+  await reveal('#export-button',{menuSpace:true});
+  const before=await evaluate(cdp,readState);record.before=before;
+  assert.ok(before.scrollTop>0&&before.pathCount>0,'Reader must be opened from the actual scrolled legacy content');
+  for(const action of ['close-button','Escape']){
+    await pointer('#export-button');await pointer('#export-menu [data-method]');
+    await until(()=>evaluate(cdp,()=>!document.querySelector('#chart-reader').hidden&&document.querySelector('#chart-reader').dataset.kind==='method'),'legacy method reader opens');
+    const close=await evaluate(cdp,readNativeInteractiveTarget,'#chart-reader .reader-heading button');
+    const next=await evaluate(cdp,readNativeInteractiveTarget,'#chart-reader [aria-label="다음 설명 페이지"]');
+    assert.ok(complete(close)&&complete(next),'Scrolled reader close/pager is outside its viewport: '+JSON.stringify({close,next}));
+    const opened=await evaluate(cdp,readState);record.latestOpened=opened;assert.ok(Math.abs(opened.scrollTop-before.scrollTop)<=1,'Opening reader moved the long document');assert.deepEqual(opened.widths,before.widths,'Opening reader changed document or chart workspace width');assert.equal(opened.pathHash,before.pathHash,'Opening reader changed chart paths');
+    const initialPage=await evaluate(cdp,()=>document.querySelector('#chart-reader .reader-pagination span').textContent);
+    await pointer('#chart-reader [aria-label="다음 설명 페이지"]');
+    const nextPage=await evaluate(cdp,()=>document.querySelector('#chart-reader .reader-pagination span').textContent);assert.notEqual(nextPage,initialPage,'Real method pagination did not advance');
+    await pointer('#chart-reader [aria-label="이전 설명 페이지"]');
+    assert.equal(await evaluate(cdp,()=>document.querySelector('#chart-reader .reader-pagination span').textContent),initialPage,'Real method pagination did not return');
+    if(action==='close-button'){
+      // Shift-Tab from the previous-page control traverses the real reader.
+      for(let attempt=0;attempt<24&&!await evaluate(cdp,()=>document.activeElement===document.querySelector('#chart-reader .reader-heading button'));attempt++){
+        for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key:'Tab',code:'Tab',windowsVirtualKeyCode:9,nativeVirtualKeyCode:9,modifiers:8});await settled(cdp);
+      }
+      const focus=await evaluate(cdp,readNativeInteractiveTarget,'#chart-reader .reader-heading button',true);
+      assert.equal(await evaluate(cdp,()=>document.activeElement===document.querySelector('#chart-reader .reader-heading button')),true,'Native Tab did not reach reader close');
+      assert.ok(complete(focus)&&focus.outline!=='none'&&focus.outlineWidth>=2,'Reader close lacks a visible keyboard ring');
+      record.closeFocus=focus;await screenshot(cdp,`${receipt.page}-${receipt.width}x${receipt.height}-legacy-method-reader.png`,receipt);
+      await pointer('#chart-reader .reader-heading button');
+    }else await key('Escape','Escape',27);
+    await until(()=>evaluate(cdp,()=>document.querySelector('#chart-reader').hidden&&document.activeElement===document.querySelector('#export-button')),'legacy reader returns focus to its visible menu trigger');
+    const closed=await evaluate(cdp,readState),returned=await evaluate(cdp,readNativeInteractiveTarget,'#export-button');
+    assert.ok(complete(returned),'Reader returned focus to an unreachable trigger');
+    assert.ok(Math.abs(closed.scrollTop-before.scrollTop)<=1,'Closing reader moved the long document');assert.deepEqual(closed.widths,before.widths,'Closing reader changed document or chart workspace width');assert.equal(closed.pathHash,before.pathHash,'Reader pagination/close changed chart paths');
+    record.states.push({action,opened,initialPage,nextPage,close,next,closed,returned});
+  }
+}
+
 export async function verifyWorkspaceSurface(api) {
   const {cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership}=api;
   const {width,height,surface,page}=receipt;
@@ -462,6 +544,8 @@ export async function verifyWorkspaceSurface(api) {
       assert.equal(a.target,'_blank');assert.ok(a.rel.split(/\s+/).includes('noopener')&&a.rel.split(/\s+/).includes('noreferrer'));}
     receipt.workspace.legacy.sources=sources;
     await inspect('#forecast-method .forecast-sources','legacy-sources',{opaque:false});
+
+    await verifyLegacyMethodReader(api);
 
     await evaluate(cdp,()=>{document.body.scrollTop=document.body.scrollHeight;});await settled(cdp);
     const end=await evaluate(cdp,()=>({top:document.body.scrollTop,max:document.body.scrollHeight-document.body.clientHeight}));

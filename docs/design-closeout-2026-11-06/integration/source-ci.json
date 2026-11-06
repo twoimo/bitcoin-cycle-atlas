@@ -1,0 +1,159 @@
+{
+  "kind": "github-ci-source-verification",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "pullRequest": 62,
+  "runId": 42186238647,
+  "runUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42186238647",
+  "headCommit": "6cb6aa5d45bb2b66ef27d578785aa47571278137",
+  "testedMergeCommit": "c5284f5404ec249dcda5727b88847b6cf4896184",
+  "testedTree": "feddc55e0f7d44fc8cf23e4a9a8311608ba83147",
+  "treeMatchesReviewedLocalSource": true,
+  "modelTotals": [
+    "2026-11-06T08:24:04.3252859Z ATLAS_TEST_TOTAL {\"complete\":true,\"tests\":2481,\"pass\":2481,\"fail\":0,\"skipped\":0,\"batches\":1}"
+  ],
+  "jobs": [
+    {
+      "id": 127787143845,
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 42186238647,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Initialize containers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Install locked workspace dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Verify generated static React routes",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Run model and data tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Check service types, panels and isolated database behavior",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Verify preserved forecast identities and replay",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Verify treasury sources and persistent research summaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Verify reviewed Ethereum history matches the published catalog",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Independently reconcile daily treasury paths",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Independently check numerical identities and causal boundaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Verify bounded request ownership and negative controls",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Verify the observed daily clock and bounded chart work",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Verify static resources at the Pages base path",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Prepare the committed publication and standalone",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Preserve CI test log and publication identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 34
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 35
+        },
+        {
+          "name": "Stop containers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 36
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 37
+        }
+      ]
+    }
+  ],
+  "scope": "Completed original source CI. The later replay verification deadline change and final release checks are identified separately."
+}

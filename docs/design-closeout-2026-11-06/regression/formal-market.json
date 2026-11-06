@@ -1,0 +1,67 @@
+{
+  "tool": {
+    "name": "TLC",
+    "version": "1.7.4",
+    "sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+  },
+  "bounds": {
+    "requestGenerations": 3,
+    "intervals": [
+      "1m",
+      "5m"
+    ],
+    "property": "NoStaleDisplay"
+  },
+  "historyRetryScope": {
+    "intervals": 1,
+    "existingCandles": true,
+    "clock": "boolean cooldown only",
+    "property": "RefreshCanRetry"
+  },
+  "model": {
+    "MarketRequests": {
+      "outcome": "pass",
+      "exitStatus": 0,
+      "generatedStates": 5955,
+      "distinctStates": 2081,
+      "remainingStates": 0
+    },
+    "MarketRequestsBroken": {
+      "outcome": "expected invariant violation",
+      "exitStatus": 12,
+      "generatedStates": 151,
+      "distinctStates": 109,
+      "remainingStates": 79
+    },
+    "HistoryRetry": {
+      "outcome": "pass",
+      "exitStatus": 0,
+      "generatedStates": 37,
+      "distinctStates": 15,
+      "remainingStates": 0
+    },
+    "HistoryRetryBroken": {
+      "outcome": "expected invariant violation",
+      "exitStatus": 12,
+      "generatedStates": 26,
+      "distinctStates": 13,
+      "remainingStates": 2
+    }
+  },
+  "implementation": {
+    "tests": 32,
+    "regression": "pass",
+    "restored": "pass",
+    "mutation": "expected assertion failure",
+    "historyRetryMutation": "expected assertion failure",
+    "mutationExitStatus": 1,
+    "historyRetryMutationExitStatus": 1,
+    "sourceSha256": "978ad14a70fdb3011f0761ceb7c6f6ebc0d37bc0b25aa047ad2ef2014eff07d6",
+    "mutatedSourceSha256": "029dfcd42f66ae0f90b6178e584eddb20869b8472e6f51ebba8b82d830feca32",
+    "historyRetryMutatedSourceSha256": "808a7df0ab7c90e2186a03c0a9ed4993c10bc4e4e0631cb9385fe768cc003b4d"
+  },
+  "limitations": [
+    "Separate bounded abstract models, not a composed whole-program proof",
+    "No pricing, numerical, page-content, wall-clock or liveness proof"
+  ]
+}

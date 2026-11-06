@@ -1,14 +1,19 @@
 import { Reveal, createSkeletonBox } from './vendor/skullet/skullet.js';
+import { RSI_CHART_LAYOUT,rsiChartLayout } from './rsi-chart-layout.js';
 
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const kinds=new Set(['chart','rsi','diagnosis','scenario','cashflow','table','list','detail','calendar']);
 const bar=(width='72%',height='12px')=>`<span skullet-block skullet-bar style="width:${width};height:${height}"></span>`;
 const row=(widths=['36%','20%','18%','12%'])=>`<div class="atlas-skeleton-row">${widths.map(w=>bar(w)).join('')}</div>`;
+// Visible first-paint geometry also derives from the real chart's coordinate
+// contract. Enhancement resolves the split and axis width to measured pixels.
+const rsiLayout=RSI_CHART_LAYOUT;
+const rsiStyle=`--atlas-rsi-left:${rsiLayout.left}px;--atlas-rsi-top:${rsiLayout.top}px;--atlas-rsi-bottom:${rsiLayout.bottom}px;--atlas-rsi-right:${rsiLayout.right}px;--atlas-rsi-price-bottom:max(${rsiLayout.top+rsiLayout.minimumPriceHeight}px,${rsiLayout.priceShare*100}%);--atlas-rsi-gap:${rsiLayout.panelGap}px`;
 export function skeletonShape(kind='chart') {
   if(!kinds.has(kind))kind='detail';
   const heading=`<div class="atlas-skeleton-heading">${bar('76px','16px')}${bar('44px')}${bar('64px')}${bar('52px')}</div>`;
   if(kind==='calendar')return `${heading}<div class="atlas-skeleton-calendar">${Array.from({length:42},()=>'<div skullet-block></div>').join('')}</div>`;
-  if(kind==='rsi')return `${heading}<div class="atlas-skeleton-rsi-meta">${[0,1,2,3,4].map(()=>bar('52px','10px')).join('')}</div><div class="atlas-skeleton-rsi-panels"><div class="atlas-skeleton-plot" skullet-block></div><div class="atlas-skeleton-oscillator" skullet-block></div></div>`;
+  if(kind==='rsi')return `${heading}<div class="atlas-skeleton-rsi-meta">${[0,1,2,3,4].map(()=>bar('52px','10px')).join('')}</div><div class="atlas-skeleton-rsi-panels" style="${rsiStyle}"><div class="atlas-skeleton-plot" skullet-block></div><div class="atlas-skeleton-oscillator" skullet-block></div></div>`;
   if(kind==='table'||kind==='list')return `${heading}<div class="atlas-skeleton-rows">${Array.from({length:kind==='table'?9:6},(_,i)=>row(i%2?['28%','20%','16%','12%']:undefined)).join('')}</div>`;
   if(kind==='detail')return `${heading}<div class="atlas-skeleton-rows">${[0,1,2,3,4].map(()=>row(['32%','52%'])).join('')}</div>`;
   const fields=kind==='scenario'||kind==='cashflow'||kind==='diagnosis'?`<div class="atlas-skeleton-fields">${[0,1,2].map(()=>`<div>${bar('72px')}${bar('100%','36px')}</div>`).join('')}</div>`:'';
@@ -27,13 +32,29 @@ function watch(){
 }
 // Skullet measures only neutral geometry. No sample prices, forecasts, controls
 // with real handlers or financial outputs are rendered as pending data.
+function observeRsiLayout(root){
+  const panels=root.querySelector('.atlas-skeleton-rsi-panels');
+  if(!panels)return ()=>{};
+  let previous='';
+  const measure=()=>{
+    const width=panels.clientWidth,height=panels.clientHeight;
+    const size=`${width}:${height}`;if(size===previous)return;previous=size;
+    const geometry=rsiChartLayout(width,height);
+    panels.style.setProperty('--atlas-rsi-right',`${width-geometry.right}px`);
+    panels.style.setProperty('--atlas-rsi-price-bottom',`${geometry.priceBottom}px`);
+  };
+  measure();
+  const resize=typeof ResizeObserver==='undefined'?null:new ResizeObserver(measure);
+  resize?.observe(panels);
+  return ()=>resize?.disconnect();
+}
 export function enhanceSkeleton(root,onDispose=()=>{}) {
   if(!root||typeof getComputedStyle!=='function'||typeof requestAnimationFrame!=='function'||hidden(root))return ()=>{};
   const paint=root.querySelector('.atlas-skeleton-paint');if(!paint||paint.dataset.enhanced)return ()=>{};
-  const shape=paint.firstElementChild;let reveal;
+  const shape=paint.firstElementChild,stopLayout=observeRsiLayout(paint);let reveal;
   try {reveal=new Reveal(paint,{reveal:'together'});reveal.load(shape);paint.dataset.enhanced='true';}
-  catch {reveal?.destroy();paint.replaceChildren(shape);return ()=>{};}
-  const item={root,destroy(){if(!active.delete(item))return;reveal.destroy();onDispose();for(const el of root.querySelectorAll('*'))for(const animation of el.getAnimations?.()||[])animation.cancel();root.remove();if(!active.size){observer?.disconnect();observer=null;}}};
+  catch {reveal?.destroy();reveal=null;paint.replaceChildren(shape);}
+  const item={root,destroy(){if(!active.delete(item))return;stopLayout();reveal?.destroy();onDispose();for(const el of root.querySelectorAll('*'))for(const animation of el.getAnimations?.()||[])animation.cancel();root.remove();if(!active.size){observer?.disconnect();observer=null;}}};
   active.add(item);watch();return item.destroy;
 }
 export function clearLoadingSurface(host){const item=host&&mounted.get(host);if(!item)return;item.destroy();item.root.remove();host.classList.remove('atlas-has-skeleton');mounted.delete(host);}

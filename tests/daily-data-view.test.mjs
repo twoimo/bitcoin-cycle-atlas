@@ -360,8 +360,24 @@ test('sticky headings use a single bounded viewport and preserve the pinned iden
   const shared=css.split('@media')[0];
   assert.match(css,/asset-table-panel \{ display: flex; flex-direction: column; flex: 1; min-height: 0/);
   assert.match(css,/asset-table-scroll \{ flex: 1; min-height: 0; min-width: 0; overflow: auto/);
-  const common=readFileSync(new URL('../dist/styles.css',import.meta.url),'utf8');
-  assert.match(common,/#data-view:not\(\[hidden\]\) \.asset-comparison-table thead \{\s*position: sticky;\s*top: 0;/);
+  const common=readFileSync(new URL('../dist/styles.css',import.meta.url),'utf8').replace(/\/\*[\s\S]*?\*\//g,'');
+  const owner='#data-view:not([hidden]) .asset-comparison-table thead';
+  // The header can share its vertical-scroll contract with other owners.
+  // Check its exact selector membership and declarations, not its list position.
+  const assertHeadingContract=stylesheet=>{
+    const rules=[...stylesheet.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+      .filter(([,selectors])=>selectors.split(',').some(selector=>selector.trim()===owner));
+    assert.equal(rules.length,1,'the comparison heading must retain exactly one shared vertical owner');
+    assert.match(rules[0][2],/(?:^|;)\s*position\s*:\s*sticky\s*(?:;|$)/,'the heading group must remain sticky');
+    assert.match(rules[0][2],/(?:^|;)\s*top\s*:\s*0\s*(?:;|$)/,'the heading group must remain pinned at its scroll origin');
+    return rules[0][0];
+  };
+  const headingRule=assertHeadingContract(common);
+  for(const broken of [
+    headingRule.replace(owner,'.unrelated-heading'),
+    headingRule.replace(/position\s*:\s*sticky\s*;/,'position: static;'),
+    headingRule.replace(/top\s*:\s*0\s*;/,'top: 40px;'),
+  ])assert.throws(()=>assertHeadingContract(common.replace(headingRule,broken)),{code:'ERR_ASSERTION'},'broken header ownership, position or origin must fail');
   assert.match(css,/asset-comparison-table thead \{ z-index: 3;/);
   assert.doesNotMatch(css,/thead th \{ position: sticky; top: 0/,'vertical pinning belongs to the header group, not every cell');
   assert.match(shared,/asset-identity-header \{ display: none;/,'a merged three-column header cannot align with the pinned name column');

@@ -1,0 +1,47 @@
+{
+  "sourceCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "files": [
+    {
+      "path": "tools/hallmark/upstream/sloplint.mjs",
+      "bytes": 231622,
+      "gitBlob": "9916fa07286e58d319528ad7cfe4ad94318e5796",
+      "sha256": "f8ada364c68a9db4b3dd5784bd416a7c412125e887aeae87d627e072d3848289"
+    },
+    {
+      "path": "tools/hallmark/upstream/sloplint-render.mjs",
+      "bytes": 99164,
+      "gitBlob": "0ecc64bc79aa34db1fadc7178617bcc53c47e064",
+      "sha256": "3af79afa100a9804f248ade24d5128cea4fde1ef6d1a279f1dd935bfe6dc41cd"
+    },
+    {
+      "path": "tools/hallmark/upstream/LICENSE",
+      "bytes": 1078,
+      "gitBlob": "f4bfc53d8d773d3b10d95c2d58a5773dd4e2f3aa",
+      "sha256": "06088a8b94598626f27612dea42300154bf7be967c85d9d3eee4490cb056af7d"
+    },
+    {
+      "path": "tools/hallmark/provenance.json",
+      "bytes": 5830,
+      "gitBlob": "e668a03f992c1bc7b4cd3bff2f1639e450dbeb74",
+      "sha256": "ff856677a28c720eef2ad5ce80ba65ad8e9492188a43e413bc1f12a48e92da40"
+    },
+    {
+      "path": "scripts/verify-hallmark-design.mjs",
+      "bytes": 21328,
+      "gitBlob": "42753b95419ee9f8bd7246bb7b4693003ab8a9a7",
+      "sha256": "1b52595d1f238aaf910d02da837bf2a7ef36c0b8c5709bc5ea8f8d56a5c6edba"
+    },
+    {
+      "path": "scripts/hallmark-source-scope.mjs",
+      "bytes": 836,
+      "gitBlob": "90cd2b53339159b89959100b4127113caf5318c9",
+      "sha256": "805d505d4f4634743bb4825bc56f6030a975be2fd562a07e5fa5d8a820dd5e7b"
+    },
+    {
+      "path": ".github/workflows/hallmark-design.yml",
+      "bytes": 4703,
+      "gitBlob": "ee59e332d726d1e45249cac8857920f43e53d2f4",
+      "sha256": "047d3855389f5f13adbe8ac4f65b7fb4231d19c16ff52f491bb09eb5eb380d11"
+    }
+  ]
+}

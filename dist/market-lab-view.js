@@ -1,5 +1,5 @@
 import {replaceWithSkeleton} from './loading-surfaces.js';
-import {validateSnapshot,diagnoseRegion,positiveFactorScenario,calculateRsiSeries,thresholdPositions,assetEconomics,observationGate,matchingIndex,resolveRsiSelection} from './market-lab-math.js?v=1.31.2';
+import {validateSnapshot,diagnoseRegion,positiveFactorScenario,calculateRsiSeries,thresholdPositions,assetEconomics,observationGate,matchingIndex,resolveRsiSelection} from './market-lab-math.js?v=1.31.3';
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const finite=v=>typeof v==='number'&&Number.isFinite(v);

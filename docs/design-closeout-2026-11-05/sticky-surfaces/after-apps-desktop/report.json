@@ -1,0 +1,526 @@
+{
+  "schemaVersion": 1,
+  "kind": "native-scroll-owner-closeout",
+  "phase": "after",
+  "baseline": "624888270fcb539ab08d505e5affab5f5d435776",
+  "sourceReference": "working-tree",
+  "startedAt": "2026-11-05T12:40:18.422Z",
+  "status": "passed",
+  "cases": [
+    {
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "inputs": [
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": ".rsi-workbench-tabs button:nth-child(3)",
+            "x": 1408,
+            "y": 70.59375,
+            "left": 1388,
+            "right": 1428,
+            "top": 56.59375,
+            "bottom": 84.59375,
+            "width": 40,
+            "height": 28,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "기록"
+          }
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "PageDown"
+        },
+        {
+          "kind": "wheel",
+          "selector": ".rsi-ledger-scroll",
+          "x": 720,
+          "y": 619.765625,
+          "dx": 0,
+          "dy": 220,
+          "hit": [
+            "TD.",
+            "TR.",
+            "TBODY.",
+            "TABLE.",
+            "DIV.ml-table-wrap rsi-ledger-scroll",
+            "SECTION.rsi-history"
+          ]
+        },
+        {
+          "kind": "pointer",
+          "target": {
+            "selector": "#housing-tab-chart",
+            "x": 48,
+            "y": 259.765625,
+            "left": 28,
+            "right": 68,
+            "top": 243.765625,
+            "bottom": 275.765625,
+            "width": 40,
+            "height": 32,
+            "visible": true,
+            "topmost": true,
+            "disabled": false,
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "outline": "none",
+            "outlineWidth": 0,
+            "label": "차트"
+          }
+        },
+        {
+          "kind": "keyboard",
+          "key": "End"
+        },
+        {
+          "kind": "keyboard",
+          "key": "Tab"
+        },
+        {
+          "kind": "keyboard",
+          "key": "PageDown"
+        },
+        {
+          "kind": "wheel",
+          "selector": "#housing-view-history .housing-ledger",
+          "x": 712.5,
+          "y": 554.765625,
+          "dx": 0,
+          "dy": 220,
+          "hit": [
+            "TD.",
+            "TR.",
+            "TBODY.",
+            "TABLE.housing-table",
+            "DIV.housing-table-scroll housing-ledger",
+            "SECTION.housing-content"
+          ]
+        }
+      ],
+      "ledgers": [],
+      "screenshots": [
+        {
+          "file": "rsi-history-1440.png",
+          "sha256": "f96a8670acefef28217bdb64295119b65081d89b96c3b67bf14e71d3c509c4b1"
+        },
+        {
+          "file": "housing-history-1440.png",
+          "sha256": "d97e5a312d2de90b9946a2647c31c1b170aae98c919292e81cd575d449f3be41"
+        }
+      ],
+      "appLedgers": [
+        {
+          "label": "rsi-history",
+          "before": {
+            "ownerSelector": ".rsi-ledger-scroll",
+            "owner": {
+              "left": 16,
+              "right": 1424,
+              "top": 439.765625,
+              "bottom": 799.765625,
+              "width": 1408,
+              "height": 360
+            },
+            "clientTop": 440.765625,
+            "clientLeft": 17,
+            "scrollTop": 0,
+            "scrollLeft": 0,
+            "maxScrollTop": 222604,
+            "maxScrollLeft": 0,
+            "rows": 4206,
+            "head": {
+              "left": 17,
+              "right": 264.984375,
+              "top": 440.765625,
+              "bottom": 484.453125,
+              "width": 247.984375,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 17,
+              "right": 264.984375,
+              "top": 484.453125,
+              "bottom": 537.453125,
+              "width": 247.984375,
+              "height": 53
+            },
+            "firstPosition": "sticky",
+            "firstText": "2010-02-11",
+            "row": {
+              "left": 17,
+              "right": 1423,
+              "top": 484.453125,
+              "bottom": 537.453125,
+              "width": 1406,
+              "height": 53
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "keyboard": {
+            "ownerSelector": ".rsi-ledger-scroll",
+            "owner": {
+              "left": 16,
+              "right": 1424,
+              "top": 439.765625,
+              "bottom": 799.765625,
+              "width": 1408,
+              "height": 360
+            },
+            "clientTop": 440.765625,
+            "clientLeft": 17,
+            "scrollTop": 309,
+            "scrollLeft": 0,
+            "maxScrollTop": 222604,
+            "maxScrollLeft": 0,
+            "rows": 4206,
+            "head": {
+              "left": 17,
+              "right": 264.984375,
+              "top": 440.765625,
+              "bottom": 484.453125,
+              "width": 247.984375,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 17,
+              "right": 264.984375,
+              "top": 175.453125,
+              "bottom": 228.453125,
+              "width": 247.984375,
+              "height": 53
+            },
+            "firstPosition": "sticky",
+            "firstText": "2010-02-11",
+            "row": {
+              "left": 17,
+              "right": 1423,
+              "top": 175.453125,
+              "bottom": 228.453125,
+              "width": 1406,
+              "height": 53
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "wheel": {
+            "ownerSelector": ".rsi-ledger-scroll",
+            "owner": {
+              "left": 16,
+              "right": 1424,
+              "top": 439.765625,
+              "bottom": 799.765625,
+              "width": 1408,
+              "height": 360
+            },
+            "clientTop": 440.765625,
+            "clientLeft": 17,
+            "scrollTop": 533,
+            "scrollLeft": 0,
+            "maxScrollTop": 222604,
+            "maxScrollLeft": 0,
+            "rows": 4206,
+            "head": {
+              "left": 17,
+              "right": 264.984375,
+              "top": 440.765625,
+              "bottom": 484.453125,
+              "width": 247.984375,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 17,
+              "right": 264.984375,
+              "top": -48.546875,
+              "bottom": 4.453125,
+              "width": 247.984375,
+              "height": 53
+            },
+            "firstPosition": "sticky",
+            "firstText": "2010-02-11",
+            "row": {
+              "left": 17,
+              "right": 1423,
+              "top": -48.546875,
+              "bottom": 4.453125,
+              "width": 1406,
+              "height": 53
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        },
+        {
+          "label": "housing-history",
+          "before": {
+            "ownerSelector": "#housing-view-history .housing-ledger",
+            "owner": {
+              "left": 16,
+              "right": 1409,
+              "top": 284.765625,
+              "bottom": 824.765625,
+              "width": 1393,
+              "height": 540
+            },
+            "clientTop": 284.765625,
+            "clientLeft": 16,
+            "scrollTop": 0,
+            "scrollLeft": 0,
+            "maxScrollTop": 10548,
+            "maxScrollLeft": 0,
+            "rows": 249,
+            "head": {
+              "left": 16,
+              "right": 216.921875,
+              "top": 326.359375,
+              "bottom": 370.046875,
+              "width": 200.921875,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 16,
+              "right": 216.921875,
+              "top": 370.046875,
+              "bottom": 414.234375,
+              "width": 200.921875,
+              "height": 44.1875
+            },
+            "firstPosition": "sticky",
+            "firstText": "2026-09",
+            "row": {
+              "left": 16,
+              "right": 1409,
+              "top": 370.046875,
+              "bottom": 414.234375,
+              "width": 1393,
+              "height": 44.1875
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "keyboard": {
+            "ownerSelector": "#housing-view-history .housing-ledger",
+            "owner": {
+              "left": 16,
+              "right": 1409,
+              "top": 284.765625,
+              "bottom": 824.765625,
+              "width": 1393,
+              "height": 540
+            },
+            "clientTop": 284.765625,
+            "clientLeft": 16,
+            "scrollTop": 469,
+            "scrollLeft": 0,
+            "maxScrollTop": 10548,
+            "maxScrollLeft": 0,
+            "rows": 249,
+            "head": {
+              "left": 16,
+              "right": 216.921875,
+              "top": 284.765625,
+              "bottom": 328.453125,
+              "width": 200.921875,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 16,
+              "right": 216.921875,
+              "top": -98.953125,
+              "bottom": -54.765625,
+              "width": 200.921875,
+              "height": 44.1875
+            },
+            "firstPosition": "sticky",
+            "firstText": "2026-09",
+            "row": {
+              "left": 16,
+              "right": 1409,
+              "top": -98.953125,
+              "bottom": -54.765625,
+              "width": 1393,
+              "height": 44.1875
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          },
+          "wheel": {
+            "ownerSelector": "#housing-view-history .housing-ledger",
+            "owner": {
+              "left": 16,
+              "right": 1409,
+              "top": 284.765625,
+              "bottom": 824.765625,
+              "width": 1393,
+              "height": 540
+            },
+            "clientTop": 284.765625,
+            "clientLeft": 16,
+            "scrollTop": 692,
+            "scrollLeft": 0,
+            "maxScrollTop": 10548,
+            "maxScrollLeft": 0,
+            "rows": 249,
+            "head": {
+              "left": 16,
+              "right": 216.921875,
+              "top": 284.765625,
+              "bottom": 328.453125,
+              "width": 200.921875,
+              "height": 43.6875
+            },
+            "headPosition": "sticky",
+            "headTop": "0px",
+            "first": {
+              "left": 16,
+              "right": 216.921875,
+              "top": -321.953125,
+              "bottom": -277.765625,
+              "width": 200.921875,
+              "height": 44.1875
+            },
+            "firstPosition": "sticky",
+            "firstText": "2026-09",
+            "row": {
+              "left": 16,
+              "right": 1409,
+              "top": -321.953125,
+              "bottom": -277.765625,
+              "width": 1393,
+              "height": 44.1875
+            },
+            "bodyScroll": {
+              "x": 0,
+              "y": 0
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "runtimeErrors": [],
+  "resourceFailures": [],
+  "sourceHashes": {
+    "dist/styles.css": "b9f135be9afa23f599908c9ab9bc8253013d69df240b7982e7a8fc6644768cb2",
+    "dist/monthly-backtest.css": "1b3fdbc2dbac782837a9e3bf1574feed97a7534d843acaf5dce3e205182b47cd",
+    "dist/symbol-selector.css": "518e07096505c2be6a88a1412211caa53d61813d4ec045adfd8a10ab086c59cf",
+    "dist/atlas-shell.css": "1f087aadb72778f8050b0d3e2c45d9f465c33c5c93d476838ff0af9cbd70c18e",
+    "dist/monthly-backtest-view.js": "687b15d890cc4620cf0c520ee1c00633de71eb544d5493e7c9b8c41ffdfdb433",
+    "dist/cycle-clock-backtest-view.js": "b82d63bc36b708f383db37c192699569f3b012482c35192790df77f127d89449",
+    "dist/symbol-selector.js": "86a41a84b273d59bfd26a9bf3a093e7ca5d684175cddb3f977e166968a473f4a",
+    "dist/chart-navigation.js": "cb1b0999c3934178615dbf3760e414daa8fbc15bb2412fdc8314135fd0a3350d",
+    "apps/web/src/housing.css": "3975eb4ff23a0f6dbd4956f1afeaf33d44aa87fa68f2c01b9868b59048048b03",
+    "tools/hallmark/upstream/sloplint.mjs": "f8ada364c68a9db4b3dd5784bd416a7c412125e887aeae87d627e072d3848289"
+  },
+  "servedHashes": {
+    "dist/market-lab/app/index.html": "14a09d44df3108629ffea970c9eeb9adf4a4c4884665b3a064b726b0cd633f1a",
+    "dist/market-lab/app/assets/index-BYWO-BnS.css": "81cb08a20b164884399e7a1ea095f168786ccb3b4fe0492d98b84b5c6ead772c",
+    "dist/market-lab/app/assets/index-DblLUHgN.js": "628d3daa140deba7c8d09c2c67c5ae76ebe489c7185f0d8777bef956d279d7df",
+    "dist/data/market-lab.json": "3eeca3d402b1ce83e89ebf834309867cdd0ecc06f59de098ba96f80abf590107",
+    "dist/data/housing.json": "c39382261ca09e4ffe49accbce80d8eef20baab4c3cf38d4e2f04273e4923146"
+  },
+  "method": "Unmodified app served by one local HTTP server; real Chromium mouse, wheel and keyboard input. Read-only DOM geometry; no injected table data or scripted scrolling. Offline external requests are blocked and listed.",
+  "probeHash": "2d2f8ce22fbc09f79e835b27d5c77d29f17b7faf2847d178f2527de0f1a7068b",
+  "browserVersion": "143.0.7499.0",
+  "finishedAt": "2026-11-05T12:40:24.543Z",
+  "sourceIntegrity": {
+    "mode": "cached working-tree bytes",
+    "changed": []
+  }
+}

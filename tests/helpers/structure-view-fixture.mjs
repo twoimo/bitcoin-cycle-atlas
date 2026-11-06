@@ -60,7 +60,10 @@ export async function structureViewFixture({ root = fileURLToPath(new URL('../..
     __deps: deps, document, window, URLSearchParams, URL, Date, Intl, AbortSignal, location: { search: '' },
     console: { error: (...values) => errors.push(values.map(value => value?.stack || String(value)).join(' ')) },
     queueMicrotask, CustomEvent: class { constructor(type, options = {}) { this.type = type; Object.assign(this, options); } },
-    ResizeObserver: class { observe() {} }, requestAnimationFrame: fn => frames.push(fn),
+    // Layout observers are inert at this controller/math boundary; native
+    // browser cases verify their actual scrolling, focus and resize effects.
+    ResizeObserver: class { observe() {} }, MutationObserver: class { observe() {} disconnect() {} },
+    requestAnimationFrame: fn => frames.push(fn),
   });
   vm.runInContext(`${transformed}\nglobalThis.start=initLabView;`, context);
   const view = context.start(), node = id => document.querySelector(`#${id}`);

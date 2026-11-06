@@ -1,0 +1,139 @@
+{
+  "command": "node scripts/verify-cycle-table-integration.mjs",
+  "scope": "Chart-controller and historical cycle-model regression replay with inert DOM boundary; not current asset-comparison UI or browser visual verification.",
+  "node": "v24.22.2",
+  "asOf": "2026-11-05",
+  "checks": [
+    {
+      "name": "shared cached chart context",
+      "status": "PASS"
+    },
+    {
+      "name": "fresh base rows focus successfully",
+      "status": "PASS",
+      "rows": 94,
+      "rejectedFresh": []
+    },
+    {
+      "name": "cycle filters retain their chart closing low",
+      "status": "PASS",
+      "cycles": [
+        {
+          "cycleId": "peak-2011",
+          "chartStart": "2010-07-18",
+          "chartEnd": "2011-11-18",
+          "chartClosingLow": "2011-11-18",
+          "tableLastDate": "2011-11-18",
+          "includesClosingLow": true
+        },
+        {
+          "cycleId": "peak-2013",
+          "chartStart": "2011-11-18",
+          "chartEnd": "2015-01-14",
+          "chartClosingLow": "2015-01-14",
+          "tableLastDate": "2015-01-14",
+          "includesClosingLow": true
+        },
+        {
+          "cycleId": "peak-2017",
+          "chartStart": "2015-01-14",
+          "chartEnd": "2018-12-15",
+          "chartClosingLow": "2018-12-15",
+          "tableLastDate": "2018-12-15",
+          "includesClosingLow": true
+        },
+        {
+          "cycleId": "peak-2021",
+          "chartStart": "2018-12-15",
+          "chartEnd": "2022-11-09",
+          "chartClosingLow": "2022-11-09",
+          "tableLastDate": "2022-11-09",
+          "includesClosingLow": true
+        },
+        {
+          "cycleId": "peak-2025",
+          "chartStart": "2022-11-09",
+          "chartEnd": "2026-06-30",
+          "chartClosingLow": "2026-06-30",
+          "tableLastDate": "2026-06-30",
+          "includesClosingLow": true
+        }
+      ]
+    },
+    {
+      "name": "requested historical and conditional sideways periods exist",
+      "status": "PASS",
+      "historicalRows": 39,
+      "conditionalRows": 24,
+      "currentRows": 0
+    },
+    {
+      "name": "scenario changes preserve observed rows and accept valid new rows",
+      "status": "PASS",
+      "scenarios": [
+        {
+          "scenarioId": "accelerated",
+          "rows": 94,
+          "historicalStable": true,
+          "newRowsRejected": [],
+          "staleRowsAccepted": []
+        },
+        {
+          "scenarioId": "wait",
+          "rows": 98,
+          "historicalStable": true,
+          "newRowsRejected": [],
+          "staleRowsAccepted": []
+        },
+        {
+          "scenarioId": "late",
+          "rows": 96,
+          "historicalStable": true,
+          "newRowsRejected": [],
+          "staleRowsAccepted": []
+        },
+        {
+          "scenarioId": "stress",
+          "rows": 88,
+          "historicalStable": true,
+          "newRowsRejected": [],
+          "staleRowsAccepted": []
+        }
+      ]
+    },
+    {
+      "name": "public focus rejects previous-scenario rows",
+      "status": "PASS",
+      "limitation": "Controller-contract probe; no normal visible UI route to stale scenario rows was demonstrated."
+    },
+    {
+      "name": "source snapshot remained stable during probe",
+      "status": "PASS",
+      "initialHashes": {
+        "dist/app.js": "ce9dbbdb6bf50a9b19208cfc8aa424f1395a95cd56d83afb7ab5370a87da4acd",
+        "dist/lab-view.js": "fdd49d2f795b71217cc1e1ac6b21a0c51c5f25d78398a4334bc11de62d65e7cb",
+        "dist/cycle-decision.js": "2ca34a30c608631cccb9ad0b8b5c17bbaf4cafe6e58b35ff2a44d09a9b2aadea",
+        "dist/cycle-table-selection.js": "b2dab14d6aa891ddd7aeb8574d9cd09ac3c0940d79869cf3f5d66f6663e96d6e",
+        "dist/cycle-milestones.js": "bed3032cd8efaec067f0aedfaf42e8c170e43d00ea7c979791eb7028cb6714da",
+        "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+        "dist/data/btc-daily.json": "fae8889632b524deef33d04363da714efcb74f7906b8a507025516668c8cd7a6",
+        "scripts/verify-cycle-decision.mjs": "a03afe26952c7cc51a4cc3afe30c7d797bceaf931bde80cd6c3ecf43501a66d1",
+        "scripts/verify-cycle-table-integration.mjs": "9c8ae0e1aabb2f540ef49a7c66fc8841216904e46410a442b722600b08f83f87",
+        "tests/helpers/structure-view-fixture.mjs": "f2e33e69bd83ee0b34d5c5d337e27a977f540aae1c1f4481858eaa636db5b9ad"
+      }
+    }
+  ],
+  "hashes": {
+    "dist/app.js": "ce9dbbdb6bf50a9b19208cfc8aa424f1395a95cd56d83afb7ab5370a87da4acd",
+    "dist/lab-view.js": "fdd49d2f795b71217cc1e1ac6b21a0c51c5f25d78398a4334bc11de62d65e7cb",
+    "dist/cycle-decision.js": "2ca34a30c608631cccb9ad0b8b5c17bbaf4cafe6e58b35ff2a44d09a9b2aadea",
+    "dist/cycle-table-selection.js": "b2dab14d6aa891ddd7aeb8574d9cd09ac3c0940d79869cf3f5d66f6663e96d6e",
+    "dist/cycle-milestones.js": "bed3032cd8efaec067f0aedfaf42e8c170e43d00ea7c979791eb7028cb6714da",
+    "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+    "dist/data/btc-daily.json": "fae8889632b524deef33d04363da714efcb74f7906b8a507025516668c8cd7a6",
+    "scripts/verify-cycle-decision.mjs": "a03afe26952c7cc51a4cc3afe30c7d797bceaf931bde80cd6c3ecf43501a66d1",
+    "scripts/verify-cycle-table-integration.mjs": "9c8ae0e1aabb2f540ef49a7c66fc8841216904e46410a442b722600b08f83f87",
+    "tests/helpers/structure-view-fixture.mjs": "f2e33e69bd83ee0b34d5c5d337e27a977f540aae1c1f4481858eaa636db5b9ad"
+  },
+  "status": "PASS"
+}

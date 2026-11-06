@@ -1,0 +1,32 @@
+{
+  "recordedAt": "2026-11-06T08:17:58.312513+00:00",
+  "localSourceCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "tree": "feddc55e0f7d44fc8cf23e4a9a8311608ba83147",
+  "remoteSourceCommitReportedByRoot": "6cb6aa5d45bb2b66ef27d578785aa47571278137",
+  "remoteTreeReportedByRoot": "feddc55e0f7d44fc8cf23e4a9a8311608ba83147",
+  "font": {
+    "sourceRepository": "https://github.com/notofonts/noto-cjk.git",
+    "sourceCommit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
+    "transport": "official Git partial fetch; raw HTTPS timed out and contents API returned no large-file bytes",
+    "path": "/workspace/scratch/5579aed69769/hallmark-runtime/fonts/NotoSansCJKkr-Regular.otf",
+    "gitBlob": "dc4a7c65e6f450bf17c10a2405250b620eb78703",
+    "sha256": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+    "licenseGitBlob": "d952d62c065f3f35fb83a173496e90b21525aef3",
+    "licenseSha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+    "fontconfigFile": "/workspace/scratch/5579aed69769/hallmark-runtime/fontconfig.conf",
+    "fontconfig": "<?xml version=\"1.0\"?>\n<!DOCTYPE fontconfig SYSTEM \"fonts.dtd\">\n<fontconfig>\n  <include ignore_missing=\"yes\">/etc/fonts/fonts.conf</include>\n  <dir>/workspace/scratch/5579aed69769/hallmark-runtime/fonts</dir>\n  <cachedir>/workspace/scratch/5579aed69769/hallmark-runtime/font-cache</cachedir>\n</fontconfig>\n",
+    "fcMatch": "Noto Sans CJK KR: /workspace/scratch/5579aed69769/hallmark-runtime/fonts/NotoSansCJKkr-Regular.otf"
+  },
+  "browser": {
+    "path": "/workspace/scratch/82e52cfd9693/browser-native/chromium",
+    "version": "Chromium 143.0.7499.0",
+    "sha256": "52bfc7e573cc3d0f1647ef4c10e646c47ae7bf5f9a7e8c0f7832abd961fb5c0c",
+    "launcher": "/workspace/scratch/82e52cfd9693/browser-native/chromium-audit-multiprocess",
+    "launcherSha256": "dfc7024b1087f29eb32197a80230d7dd69eedf24078d0416d262a742686b6b27",
+    "launcherSource": "#!/bin/sh\nexec /workspace/scratch/82e52cfd9693/browser-native/chromium --no-zygote --disable-gpu \"$@\"\n",
+    "puppeteerCore": "25.16.0",
+    "node": "v24.22.1"
+  },
+  "command": "FONTCONFIG_FILE=/workspace/scratch/5579aed69769/hallmark-runtime/fontconfig.conf HALLMARK_FONT_FILE=/workspace/scratch/5579aed69769/hallmark-runtime/fonts/NotoSansCJKkr-Regular.otf HALLMARK_PUPPETEER=/workspace/scratch/82e52cfd9693/hallmark-runtime CHROME_PATH=/workspace/scratch/82e52cfd9693/browser-native/chromium-audit-multiprocess GITHUB_ACTIONS=true node scripts/verify-hallmark-design.mjs --baseline /workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/build/hallmark-baseline --out build/hallmark-20261106-local",
+  "comparabilityNote": "The prior official audit used Google Chrome156.0.8078.47; local native browser is Chromium143.0.7499.0. Checker, baseline, routes, Puppeteer and font are pinned and unchanged; browser version difference is retained explicitly."
+}

@@ -2,6 +2,7 @@ import type { Point } from '@atlas/contracts/market-lab';
 import type { RsiBar } from '@atlas/domain/rsi-bars';
 import type { RsiRow } from '@atlas/domain/market-lab';
 import { zoomRange,panRange, type ChartRange } from '../../../dist/chart-navigation.js';
+import { rsiChartLayout } from '../../../dist/rsi-chart-layout.js';
 export type Tool='crosshair'|'pan'|'measure';
 export type Pane='data'|'indicators'|'settings'|'method'|'help'|'export'|'date'|'search'|null;
 export interface Anchor {date:string;value:number;panel:'price'|'rsi'}
@@ -55,8 +56,7 @@ export function applyChartCommand(view:RsiChartView,prices:readonly Point[],acti
   return view;
 }
 export function chartGeometry(prices:readonly Point[],bars:readonly RsiBar[],rows:readonly RsiRow[],view:RsiChartView,width:number,height:number) {
-  const left=12,right=width-(width<600?72:84),top=18,bottom=height-28;
-  const priceBottom=view.showRsi?Math.max(top+100,Math.round(height*.69)):bottom,rsiTop=priceBottom+24;
+  const {left,right,top,bottom,priceBottom,rsiTop}=rsiChartLayout(width,height,view.showRsi);
   const visible=prices.filter(p=>p[0]>=view.start&&p[0]<=view.end),visibleBars=bars.filter(p=>p[0]>=view.start&&p[0]<=view.end);
   const values=visible.length?(view.chartType==='candles'&&visibleBars.length?visibleBars.flatMap(b=>[b[2],b[3]]):visible.map(p=>p[1])):prices.map(p=>p[1]);
   let min=values.length?Math.min(...values):1,max=values.length?Math.max(...values):2;

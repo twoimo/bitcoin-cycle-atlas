@@ -1,0 +1,49 @@
+{
+  "startedAt": "2026-11-05T12:34:52.220Z",
+  "commands": [
+    {
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "tools/hallmark/upstream/sloplint.mjs",
+        "dist/vendor/skullet/styles.css",
+        "dist/loading-surfaces.css",
+        "--scope",
+        "app",
+        "--genre",
+        "modern-minimal",
+        "--json"
+      ],
+      "exitCode": 0,
+      "output": "hallmark-owned-css.json"
+    },
+    {
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "scripts/sync-skullet.mjs",
+        "--check"
+      ],
+      "exitCode": 0,
+      "output": "skullet-source-check.json"
+    },
+    {
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "tests/web/loading-skeleton.test.tsx",
+        "tests/web/rsi-chart-model.test.tsx"
+      ],
+      "exitCode": 0,
+      "output": "focused-unit.log"
+    }
+  ],
+  "sourceHashes": {
+    "tests/web/loading-skeleton.test.tsx": "5f407613de9b2ebe36ca79d472256af0fd5c80d5315836f6e4364e77fba44e12",
+    "tests/web/rsi-chart-model.test.tsx": "b5b8b94c96a2b35c41da3e01482a49de469bafcce71ae1b74eb2ccd4ba8ba573",
+    "dist/loading-surfaces.css": "241d713af90f378d6f927b8c1d29a39d150d26374b8fe3315b05b8b50df041cf",
+    "dist/vendor/skullet/styles.css": "7763e1565515ea28884d1c97ee88a51055859e1ab7f72d2ac68c98bee04febf1",
+    "scripts/sync-skullet.mjs": "af2a2d6e4013b4d8c32cd712752882c48d4a01ad022ff2826920756b17b08673"
+  },
+  "finishedAt": "2026-11-05T12:34:52.784Z"
+}

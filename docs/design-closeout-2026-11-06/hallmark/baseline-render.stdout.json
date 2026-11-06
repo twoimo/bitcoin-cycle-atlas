@@ -1,0 +1,2573 @@
+{
+  "summary": {
+    "fails": 53,
+    "reflex": 210,
+    "warns": 21,
+    "waived": 0,
+    "rejected": 0,
+    "answered": 0,
+    "dismissed": 0,
+    "notes": 0,
+    "files": 1,
+    "render": "ran",
+    "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+  },
+  "findings": [
+    {
+      "gate": "26a",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1440px] nothing shows keyboard focus on g.history-event-marker \"2024-05-23 · 미국 현물\", g.history-event-marker \"2024-07-1…",
+      "fix": "Give every control a :focus-visible ring; never remove an outline without putting one back"
+    },
+    {
+      "gate": "26a",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+      "line": 1,
+      "evidence": "[1440px] nothing shows keyboard focus on iframe",
+      "fix": "Give every control a :focus-visible ring; never remove an outline without putting one back"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1280px] computed contrast 3.55:1 < 4.5:1 on span.small-label \"BTC / USD\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1280px] computed contrast 3.55:1 < 4.5:1 on span.tab-en \"Bottom\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1280px] computed contrast 3.76:1 < 4.5:1 on button \"시작 = 100\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1280px] computed contrast 3.55:1 < 4.5:1 on span \"환산 가격 (USD) · 로그\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1280px] computed contrast 3.55:1 < 4.5:1 on span.history-note \"오른쪽 영역: 이후 시점의 과거 기록\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1280px] computed contrast 3.55:1 < 4.5:1 on span.legend-sub \"2012.11.28 · 환산 ×5,263.5\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1280px] computed contrast 3.76:1 < 4.5:1 on span.analysis-asof \"관측 종료 2026.10.25 UTC\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1280px] computed contrast 3.28:1 < 4.5:1 on th \"전환 사건\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1280px] computed contrast 3.55:1 < 4.5:1 on small \"관측 사실 · 최종 저점 미확정\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1280px] computed contrast 3.76:1 < 4.5:1 on label \"비교 시점 D + 918\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1440px] a field's edge is under 3:1 against what surrounds it: select 1.29:1, select 1.29:1, select 1.35:1",
+      "fix": "Draw the field in --color-muted, or fill it a step off the surface it sits on"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "line": 1,
+      "evidence": "[1280px] contrast 3.76:1 against the pixels behind < 4.5:1 on span \"490 / 490개\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "line": 1,
+      "evidence": "[1280px] contrast 3.28:1 against the pixels behind < 4.5:1 on th \"자료 제목\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "line": 1,
+      "evidence": "[1280px] contrast 3.28:1 against the pixels behind < 4.5:1 on th.evidence-date \"발행일\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "line": 1,
+      "evidence": "[1280px] contrast 3.28:1 against the pixels behind < 4.5:1 on th.evidence-role \"읽는 목적\"",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "line": 1,
+      "evidence": "[1440px] a field's edge is under 3:1 against what surrounds it: input 1.91:1, select 1.35:1, select 1.35:1",
+      "fix": "Draw the field in --color-muted, or fill it a step off the surface it sits on"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1440px] a field's edge is under 3:1 against what surrounds it: select 1.42:1",
+      "fix": "Draw the field in --color-muted, or fill it a step off the surface it sits on"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1440px] a field's edge is under 3:1 against what surrounds it: select 2.09:1",
+      "fix": "Draw the field in --color-muted, or fill it a step off the surface it sits on"
+    },
+    {
+      "gate": "40",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1440px] a field's edge is under 3:1 against what surrounds it: select 1.42:1",
+      "fix": "Draw the field in --color-muted, or fill it a step off the surface it sits on"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 2,
+      "evidence": "colour literal #17130b outside tokens (color on .skip-link)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #141619 outside tokens (color on .brand-icon)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #30302d outside tokens (border on .mini-orbit)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #35332d outside tokens (border on .mini-orbit:before,.mini-orbi…)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #80745f outside tokens (color on .mini-orbit span)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #a2a8b2 outside tokens (color on .sidebar-note strong)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #66c3ab08 outside tokens (box-shadow on .source-dot)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #b88644 outside tokens (color on .anchor-tab.active .tab-en)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #0002 outside tokens (box-shadow on .segmented button.selected)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #929caf0c outside tokens (background on .history-note>span)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #727c9040 outside tokens (border on .history-note>span)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #111318 outside tokens (color on .legend-checkbox)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #f2a84b35 outside tokens (border on .current-tag)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #00000008 outside tokens (background on .chart-explainer)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #f2a84b07 outside tokens (background on .reading-card)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #05070bcc outside tokens (background on dialog::backdrop)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #18130d outside tokens (color on .primary-button)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #ffc374 outside tokens (background on .primary-button:hover)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "colour literal #18130d outside tokens (color on .primary-button:hover)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 4,
+      "evidence": "colour literal #77808d outside tokens (color on [data-theme=\"light\"] .sidebar…)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 4,
+      "evidence": "colour literal #f2a84b outside tokens (background on [data-theme=\"light\"] .brand-i…)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 4,
+      "evidence": "colour literal #b9792135 outside tokens (border-color on [data-theme=\"light\"] .current…)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 4,
+      "evidence": "colour literal #fff outside tokens (background on [data-theme=\"light\"] .chart-t…)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "48",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 4,
+      "evidence": "colour literal #27344a77 outside tokens (background on [data-theme=\"light\"] dialog::…)",
+      "fix": "Lift the value into the token block"
+    },
+    {
+      "gate": "56",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1280px] two sticky top:0 elements: header.analysis-window-heading + header.analysis-window-heading",
+      "fix": "Offset the second sticky by banner height"
+    },
+    {
+      "gate": "56",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+      "line": 1,
+      "evidence": "[1280px] two sticky top:0 elements: thead + th.asset-identity-header",
+      "fix": "Offset the second sticky by banner height"
+    },
+    {
+      "gate": "56",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "line": 1,
+      "evidence": "[1280px] two sticky top:0 elements: thead + th.asset-identity-header",
+      "fix": "Offset the second sticky by banner height"
+    },
+    {
+      "gate": "56",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1280px] two sticky top:0 elements: header.analysis-window-heading + header.analysis-window-heading",
+      "fix": "Offset the second sticky by banner height"
+    },
+    {
+      "gate": "67",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": ".nav-label: letter-spaced tracked 0.18888888888888888em at 9px in a label role",
+      "fix": "Labels, captions, table heads, nav links and meta are the body face (or the theme's label face), a step smaller, sentence case, untracked"
+    },
+    {
+      "gate": "67",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": ".daily-badge: letter-spaced tracked 0.15294117647058825em at 9px in a label role",
+      "fix": "Labels, captions, table heads, nav links and meta are the body face (or the theme's label face), a step smaller, sentence case, untracked"
+    },
+    {
+      "gate": "67",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": ".eyebrow: letter-spaced tracked 0.2125em at 8px in a label role",
+      "fix": "Labels, captions, table heads, nav links and meta are the body face (or the theme's label face), a step smaller, sentence case, untracked"
+    },
+    {
+      "gate": "67",
+      "grade": "FAIL",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": ".reading-card .eyebrow: letter-spaced tracked 0.19999999999999998em at 7px in a label role",
+      "fix": "Labels, captions, table heads, nav links and meta are the body face (or the theme's label face), a step smaller, sentence case, untracked"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 2,
+      "evidence": "padding: 10px 20px (off the 4px scale) on .skip-link",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 30px 19px 20px (off the 4px scale) on .sidebar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 11px (off the 4px scale) on .brand",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-top: 9px (off the 4px scale) on .brand-sub",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 48px 13px 13px (off the 4px scale) on .nav-label",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 13px 13px (off the 4px scale) on .nav-item",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-bottom: 6px (off the 4px scale) on .nav-item",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-bottom: 22px (off the 4px scale) on .mini-orbit",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 23px 9px 0 (off the 4px scale) on .sidebar-bottom",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 10px (off the 4px scale) on .sidebar-bottom",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 0 35px (off the 4px scale) on .topbar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 14px (off the 4px scale) on .breadcrumb",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 14px (off the 4px scale) on .topbar-actions",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 7px (off the 4px scale) on .daily-badge",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-right: 5px (off the 4px scale) on .daily-badge",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 8px 11px (off the 4px scale) on .subtle-button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 7px (off the 4px scale) on .subtle-button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 31px 35px 0 (off the 4px scale) on main",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-bottom: 25px (off the 4px scale) on .page-heading",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 7px 0 4px (off the 4px scale) on .page-heading h1",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-bottom: 3px (off the 4px scale) on .refresh-button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 14px (off the 4px scale) on .metrics-grid",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 16px 18px 14px (off the 4px scale) on .metric",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 7px (off the 4px scale) on .metric-label",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 8px 0 5px (off the 4px scale) on .metric-value",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-right: 5px (off the 4px scale) on .metric-value .value-unit",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 20px 23px 19px (off the 4px scale) on .chart-card-header",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 13px (off the 4px scale) on .chart-card-header h2",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding-left: 13px (off the 4px scale) on .small-label",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-top: 3px (off the 4px scale) on .chart-card-header p",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 5px (off the 4px scale) on .dropdown",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 9px (off the 4px scale) on .dropdown button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 10px (off the 4px scale) on .dropdown button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 0 23px (off the 4px scale) on .anchor-tabs",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 30px (off the 4px scale) on .anchor-tabs",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 7px (off the 4px scale) on .anchor-tab",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 15px 1px (off the 4px scale) on .anchor-tab",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-left: 3px (off the 4px scale) on .tab-en",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 18px 23px 16px (off the 4px scale) on .chart-toolbar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 3px (off the 4px scale) on .segmented",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 5px 10px (off the 4px scale) on .segmented button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 9px (off the 4px scale) on .chart-options",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 6px 9px (off the 4px scale) on select",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 0 25px 3px (off the 4px scale) on .chart-axis-title",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 0 18px 0 12px (off the 4px scale) on .chart-stage",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 12px 14px (off the 4px scale) on .chart-tooltip",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-bottom: 6px (off the 4px scale) on .tooltip-head",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 7px 0 (off the 4px scale) on .tooltip-row",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-top: 9px (off the 4px scale) on .tooltip-note",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 5px 26px 19px 64px (off the 4px scale) on .chart-x-caption",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 5px (off the 4px scale) on .history-note",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 0 23px (off the 4px scale) on .cycle-legend",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 0 15px (off the 4px scale) on .legend-item",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 5px 0 0 15px (off the 4px scale) on .legend-sub",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-left: 15px (off the 4px scale) on .legend-item:first-child .legend-sub",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 0 3px (off the 4px scale) on .current-tag",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 12px 23px (off the 4px scale) on .chart-explainer",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 0 0 0 10px (off the 4px scale) on .chart-explainer button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-top: 31px (off the 4px scale) on .comparison-section",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-top: 5px (off the 4px scale) on .section-title-row h2",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 14px (off the 4px scale) on .day-selector",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 19px 0 16px (off the 4px scale) on .day-selector",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 14px (off the 4px scale) on .day-selector label",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 5px 8px (off the 4px scale) on .day-selector input[type=\"number\"]",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 15px 20px (off the 4px scale) on .comparison-table td",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-right: 9px (off the 4px scale) on .comparison-table td .swatch",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-top: 10px (off the 4px scale) on .table-footnote",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-top: 33px (off the 4px scale) on .bottom-grid",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 25px (off the 4px scale) on .method-card,.reading-card",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 9px 0 10px (off the 4px scale) on .method-card h2,.reading-card h2",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "gap: 10px (off the 4px scale) on .formula",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 18px 0 20px (off the 4px scale) on .formula",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 13px 14px (off the 4px scale) on .formula",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 0 3px (off the 4px scale) on .formula-divide",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-top: 23px (off the 4px scale) on .reading-tag",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding-top: 13px (off the 4px scale) on .reading-tag",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 23px 0 28px (off the 4px scale) on .footer",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 0 7px (off the 4px scale) on .footer-dot",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 25px 32px 30px (off the 4px scale) on dialog",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 7px 0 (off the 4px scale) on dialog h2",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-bottom: 25px (off the 4px scale) on .dialog-lead",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 25px 0 10px (off the 4px scale) on dialog h3",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding-left: 18px (off the 4px scale) on dialog ul",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin: 10px 0 (off the 4px scale) on dialog ul",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 3px 5px (off the 4px scale) on dialog code",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 13px (off the 4px scale) on dialog .method-formula",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 7px 10px (off the 4px scale) on dialog td,dialog th",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 11px 19px (off the 4px scale) on .primary-button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-top: 23px (off the 4px scale) on .primary-button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 20px 23px (off the 4px scale) on .data-summary",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-bottom: 5px (off the 4px scale) on .data-summary label",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "margin-bottom: 17px (off the 4px scale) on .data-filter",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding-top: 18px (off the 4px scale) on .pagination",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 30px (off the 4px scale) on .error-copy",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "padding: 7px 14px (off the 4px scale) on .error-copy button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 6,
+      "evidence": "padding-left: 45px (off the 4px scale) on main",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 6,
+      "evidence": "padding-right: 45px (off the 4px scale) on main",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 6,
+      "evidence": "padding: 20px 22px (off the 4px scale) on .metric",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "padding-left: 15px (off the 4px scale) on .sidebar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "padding-right: 15px (off the 4px scale) on .sidebar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "margin-left: 190px (off the 4px scale) on .workspace",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "padding: 0 25px (off the 4px scale) on .topbar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "padding: 26px 25px 0 (off the 4px scale) on main",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "gap: 10px (off the 4px scale) on .metrics-grid",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "padding: 14px 13px (off the 4px scale) on .metric",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "gap: 5px (off the 4px scale) on .metric-foot",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "gap: 23px (off the 4px scale) on .anchor-tabs",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "padding: 18px 20px (off the 4px scale) on .chart-card-header",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "padding: 0 10px (off the 4px scale) on .legend-item",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "gap: 6px (off the 4px scale) on .legend-heading",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "gap: 15px (off the 4px scale) on .bottom-grid",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 7,
+      "evidence": "padding: 22px (off the 4px scale) on .method-card,.reading-card",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 8,
+      "evidence": "padding: 26px 12px 20px (off the 4px scale) on .sidebar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 8,
+      "evidence": "padding: 14px 0 (off the 4px scale) on .nav-item",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 8,
+      "evidence": "padding: 18px 0 0 (off the 4px scale) on .sidebar-bottom",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 8,
+      "evidence": "margin-left: 74px (off the 4px scale) on .workspace",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 8,
+      "evidence": "gap: 10px (off the 4px scale) on .anchor-tabs",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 0 19px (off the 4px scale) on .topbar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "gap: 9px (off the 4px scale) on .breadcrumb",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 6px 8px (off the 4px scale) on .topbar-actions .subtle-button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 24px 19px 0 (off the 4px scale) on main",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "gap: 10px (off the 4px scale) on .page-heading",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "margin-bottom: 21px (off the 4px scale) on .page-heading",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "margin-top: 6px (off the 4px scale) on .page-heading h1",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "gap: 10px (off the 4px scale) on .metrics-grid",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "margin-bottom: 19px (off the 4px scale) on .metrics-grid",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 15px 15px 13px (off the 4px scale) on .metric",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 17px 17px (off the 4px scale) on .chart-card-header",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding-left: 9px (off the 4px scale) on .small-label",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 6px 8px (off the 4px scale) on .chart-card-header .subtle-button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "gap: 10px (off the 4px scale) on .anchor-tabs",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "gap: 5px (off the 4px scale) on .anchor-tab",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 14px 0 (off the 4px scale) on .anchor-tab",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 15px 15px (off the 4px scale) on .chart-toolbar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "gap: 10px (off the 4px scale) on .chart-toolbar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 5px 7px (off the 4px scale) on .segmented button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "gap: 5px (off the 4px scale) on .chart-options",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 5px 6px (off the 4px scale) on select",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "margin-right: 6px (off the 4px scale) on .chart-stage",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding-left: 18px (off the 4px scale) on .chart-axis-title",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding-right: 17px (off the 4px scale) on .chart-axis-title",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 3px 18px 15px 42px (off the 4px scale) on .chart-x-caption",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "margin: 0 17px (off the 4px scale) on #cycle-legend",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 15px 0 (off the 4px scale) on #cycle-legend",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 0 13px (off the 4px scale) on .legend-item",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "margin-top: 25px (off the 4px scale) on .comparison-section",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 5px (off the 4px scale) on .day-selector input[type=\"number\"]",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 12px 14px (off the 4px scale) on .comparison-table td,.comparison-table th",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "gap: 14px (off the 4px scale) on .bottom-grid",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "gap: 14px (off the 4px scale) on .footer",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "margin-top: 26px (off the 4px scale) on .footer",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding-bottom: 25px (off the 4px scale) on .footer",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "gap: 15px (off the 4px scale) on .data-summary",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 18px (off the 4px scale) on .data-summary",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 14px (off the 4px scale) on .data-panel",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "padding: 20px 23px 24px (off the 4px scale) on dialog",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 0 17px (off the 4px scale) on .sidebar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "gap: 9px (off the 4px scale) on .brand",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "margin-top: 6px (off the 4px scale) on .brand-sub",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "gap: 6px (off the 4px scale) on .sidebar nav",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 0 17px (off the 4px scale) on .topbar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "gap: 7px (off the 4px scale) on .topbar-actions",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "gap: 5px (off the 4px scale) on .daily-badge",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 4px 6px (off the 4px scale) on .topbar .subtle-button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 22px 15px 0 (off the 4px scale) on main",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "margin-bottom: 19px (off the 4px scale) on .page-heading",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 13px 13px 11px (off the 4px scale) on .metric",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "gap: 5px (off the 4px scale) on .metric-foot",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 16px 14px (off the 4px scale) on .chart-card-header",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 0 13px (off the 4px scale) on .anchor-tabs",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 13px 12px (off the 4px scale) on .chart-toolbar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "gap: 5px (off the 4px scale) on .chart-toolbar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 5px 6px (off the 4px scale) on .segmented button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 3px 4px (off the 4px scale) on .chart-options select",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "margin-right: 3px (off the 4px scale) on .chart-stage",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding-left: 14px (off the 4px scale) on .chart-axis-title",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding-right: 14px (off the 4px scale) on .chart-axis-title",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding-left: 34px (off the 4px scale) on .chart-x-caption",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding-right: 13px (off the 4px scale) on .chart-x-caption",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "gap: 3px (off the 4px scale) on .history-note",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "margin: 0 14px (off the 4px scale) on .cycle-legend",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 11px 13px (off the 4px scale) on .chart-explainer",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "gap: 6px (off the 4px scale) on .chart-explainer",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "gap: 5px (off the 4px scale) on .day-selector label",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "gap: 6px (off the 4px scale) on .day-selector",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 21px (off the 4px scale) on .method-card,.reading-card",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 11px (off the 4px scale) on .formula",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "gap: 7px (off the 4px scale) on .formula",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "padding: 10px 12px (off the 4px scale) on .chart-tooltip",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 10,
+      "evidence": "gap: 6px (off the 4px scale) on .tooltip-row",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 14,
+      "evidence": "padding: 6px 7px (off the 4px scale) on .segmented button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 15,
+      "evidence": "gap: 6px (off the 4px scale) on .chart-toolbar",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 15,
+      "evidence": "padding: 7px 6px (off the 4px scale) on .segmented button",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "24b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 15,
+      "evidence": "padding-left: 41px (off the 4px scale) on .chart-x-caption",
+      "fix": "Use the 4px spacing scale"
+    },
+    {
+      "gate": "26b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 1,
+      "evidence": "no :active styling anywhere",
+      "fix": "All eight states; guard: not a form control, no aria-disabled anywhere"
+    },
+    {
+      "gate": "39b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1440px] control height outside 32 to 52px: button 27px, button 27px, button.lab-text-button 29px",
+      "fix": "Marketing controls stand 44 to 52px; app UI 32 to 40px with a 44px hit target"
+    },
+    {
+      "gate": "39b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "line": 1,
+      "evidence": "[1440px] control height outside 32 to 52px: button.research-open 17px, button.research-open 17px, button.research-open …",
+      "fix": "Marketing controls stand 44 to 52px; app UI 32 to 40px with a 44px hit target"
+    },
+    {
+      "gate": "39b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1440px] control height outside 32 to 52px: button 26px, button 26px, button 26px",
+      "fix": "Marketing controls stand 44 to 52px; app UI 32 to 40px with a 44px hit target"
+    },
+    {
+      "gate": "39b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1440px] control height outside 32 to 52px: button 26px, button 26px, button 26px",
+      "fix": "Marketing controls stand 44 to 52px; app UI 32 to 40px with a 44px hit target"
+    },
+    {
+      "gate": "39b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1440px] control height outside 32 to 52px: button 26px, button 26px, button 26px",
+      "fix": "Marketing controls stand 44 to 52px; app UI 32 to 40px with a 44px hit target"
+    },
+    {
+      "gate": "49b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[320px] link \"실제 사용한 공개 일별 원자료\" wraps to 2 lines (a)",
+      "fix": "Shorten the label or set nowrap"
+    },
+    {
+      "gate": "49b",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[320px] link \"Forecasting: Principles and Prac\" wraps to 2 lines (a)",
+      "fix": "Shorten the label or set nowrap"
+    },
+    {
+      "gate": "72",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[375px] text runs to the edge of the screen (p.lab-inline-note)",
+      "fix": "Give the page a gutter: 16px or more at each side on a phone"
+    },
+    {
+      "gate": "75",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[1440px] text that strains the eye: span.lab-eyebrow at 10px, small at 10px, span at 10px, span at 10px",
+      "fix": "Running text 12px or more (16px for body), functional text 11px or more, multi-line prose leaded 1.3 or more"
+    },
+    {
+      "gate": "75",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+      "line": 1,
+      "evidence": "[1440px] text that strains the eye: small at 9px, small at 9px, small at 10px, small at 10px",
+      "fix": "Running text 12px or more (16px for body), functional text 11px or more, multi-line prose leaded 1.3 or more"
+    },
+    {
+      "gate": "75",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "line": 1,
+      "evidence": "[1440px] text that strains the eye: span at 10px, span at 10px, th at 10px, th.evidence-date at 10px",
+      "fix": "Running text 12px or more (16px for body), functional text 11px or more, multi-line prose leaded 1.3 or more"
+    },
+    {
+      "gate": "75",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1440px] text that strains the eye: span.eth-rail-unit at 9px, span.eth-venue at 9px, time at 10px, span at 10px",
+      "fix": "Running text 12px or more (16px for body), functional text 11px or more, multi-line prose leaded 1.3 or more"
+    },
+    {
+      "gate": "75",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1440px] text that strains the eye: summary at 10px, small at 9px, button at 10px, button at 10px",
+      "fix": "Running text 12px or more (16px for body), functional text 11px or more, multi-line prose leaded 1.3 or more"
+    },
+    {
+      "gate": "75",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1440px] text that strains the eye: span.eth-rail-unit at 9px, span.eth-venue at 9px, time at 10px, span at 10px",
+      "fix": "Running text 12px or more (16px for body), functional text 11px or more, multi-line prose leaded 1.3 or more"
+    },
+    {
+      "gate": "75",
+      "grade": "REFLEX",
+      "tier": "reflex",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1440px] text that strains the eye: span.eth-rail-unit at 9px, span.eth-venue at 9px, time at 10px, span at 10px",
+      "fix": "Running text 12px or more (16px for body), functional text 11px or more, multi-line prose leaded 1.3 or more"
+    },
+    {
+      "gate": "29",
+      "grade": "WARN",
+      "tier": "reflex",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "glass panel: backdrop-filter blur over a translucent black on dialog::backdrop",
+      "fix": "Solid or grained surface; elevation by lightness"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "2.95:1 < 4.5:1 on .tiny-pill",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "2.95:1 < 4.5:1 on .comparison-table th",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "3.37:1 < 4.5:1 on dialog code",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "3.37:1 < 4.5:1 on dialog .method-formula",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "F3",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/styles.css",
+      "line": 2,
+      "evidence": "no text-wrap: balance on any display head (15 head rule(s), e.g. h1,h2,h3,p)",
+      "fix": "Add text-wrap: balance to h1/h2-level heads"
+    },
+    {
+      "gate": "F19",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+      "line": 1,
+      "evidence": "[1440px] 4 font weights in running use (400, 500, 600, 700)",
+      "fix": "Three weights at most, display and body together, picked as extremes"
+    },
+    {
+      "gate": "F19",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[1440px] 4 font weights in running use (400, 500, 600, 700)",
+      "fix": "Three weights at most, display and body together, picked as extremes"
+    },
+    {
+      "gate": "F24",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/styles.css",
+      "line": 3,
+      "evidence": "a hairline border under a wide soft shadow on .dropdown",
+      "fix": "Commit to one: a defined edge, or elevation by shadow"
+    },
+    {
+      "gate": "F25",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "[375px] a table opens with 7 columns off-screen (from \"스윙 되돌림\")",
+      "fix": "Keep the column that names the row and the one that acts on it in view: restack each row, or pin the first column"
+    },
+    {
+      "gate": "F25",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+      "line": 1,
+      "evidence": "[375px] a table opens with 3 columns off-screen (from \"최근 종가종목별 기준일\")",
+      "fix": "Keep the column that names the row and the one that acts on it in view: restack each row, or pin the first column"
+    },
+    {
+      "gate": "F25",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "line": 1,
+      "evidence": "[375px] 112 words shown at 1440 are hidden on a phone (first: \"MSTR 실제 가격 · 일별 OHLCMSTR\")",
+      "fix": "If it matters, make it work on a phone; if it does not, cut it everywhere"
+    },
+    {
+      "gate": "F25",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "[375px] a table opens with 4 columns off-screen (from \"2011–2013\")",
+      "fix": "Keep the column that names the row and the one that acts on it in view: restack each row, or pin the first column"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    },
+    {
+      "gate": "render",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+      "line": 1,
+      "evidence": "the shots show a fallback: fonts or stylesheets did not load (fonts.googleapis.com)",
+      "fix": "Recapture when the host answers or the path is right; never review or sign off a fallback face"
+    }
+  ]
+}

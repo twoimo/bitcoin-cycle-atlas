@@ -1,0 +1,212 @@
+TAP version 13
+# Subtest: percentage formatting distinguishes missing, zero, signed values and sub-cent rounding
+ok 1 - percentage formatting distinguishes missing, zero, signed values and sub-cent rounding
+  ---
+  duration_ms: 11.876825
+  type: 'test'
+  ...
+# Subtest: opening the view creates exactly one grouped comparison table with all 18 assets
+ok 2 - opening the view creates exactly one grouped comparison table with all 18 assets
+  ---
+  duration_ms: 5.454782
+  type: 'test'
+  ...
+# Subtest: the ready board removes the metadata strip without losing source and date disclosure
+ok 3 - the ready board removes the metadata strip without losing source and date disclosure
+  ---
+  duration_ms: 5.798311
+  type: 'test'
+  ...
+# Subtest: the board has no footer, reserved footer styles or dangling note description
+ok 4 - the board has no footer, reserved footer styles or dangling note description
+  ---
+  duration_ms: 2.82812
+  type: 'test'
+  ...
+# Subtest: each final cell uses an exact five-stage label and opens the relevant explanation
+ok 5 - each final cell uses an exact five-stage label and opens the relevant explanation
+  ---
+  duration_ms: 2.801171
+  type: 'test'
+  ...
+# Subtest: identity headers and scroll hint retain one comparison table across screen sizes
+ok 6 - identity headers and scroll hint retain one comparison table across screen sizes
+  ---
+  duration_ms: 0.283179
+  type: 'test'
+  ...
+# Subtest: mobile geometry fits the fixed name plus complete YTD and judgment without clipped previous values
+ok 7 - mobile geometry fits the fixed name plus complete YTD and judgment without clipped previous values
+  ---
+  duration_ms: 0.460831
+  type: 'test'
+  ...
+# Subtest: headers use actual observed trading dates and sample cells disclose partial first years
+ok 8 - headers use actual observed trading dates and sample cells disclose partial first years
+  ---
+  duration_ms: 2.453507
+  type: 'test'
+  ...
+# Subtest: unequal dates are labeled per asset instead of asserting a shared observation date
+ok 9 - unequal dates are labeled per asset instead of asserting a shared observation date
+  ---
+  duration_ms: 2.463501
+  type: 'test'
+  ...
+# Subtest: loading is lazy while hidden and repeated visible calls share the same pending request
+ok 10 - loading is lazy while hidden and repeated visible calls share the same pending request
+  ---
+  duration_ms: 8.759837
+  type: 'test'
+  ...
+# Subtest: failed fetch clears rows and export, does not retry on resize, and explicit retry recovers
+ok 11 - failed fetch clears rows and export, does not retry on resize, and explicit retry recovers
+  ---
+  duration_ms: 5.267556
+  type: 'test'
+  ...
+# Subtest: synchronous getter and model failures resolve after painting the error state
+ok 12 - synchronous getter and model failures resolve after painting the error state
+  ---
+  duration_ms: 0.424858
+  type: 'test'
+  ...
+# Subtest: the refresh button gets new data and immediately clears an old CSV and open judgment explanation
+ok 13 - the refresh button gets new data and immediately clears an old CSV and open judgment explanation
+  ---
+  duration_ms: 7.626473
+  type: 'test'
+  ...
+# Subtest: a partial or duplicate asset result fails closed rather than silently dropping assets
+ok 14 - a partial or duplicate asset result fails closed rather than silently dropping assets
+  ---
+  duration_ms: 0.522532
+  type: 'test'
+  ...
+# Subtest: unavailable samples never become neutral; individual observed prices remain readable
+ok 15 - unavailable samples never become neutral; individual observed prices remain readable
+  ---
+  duration_ms: 3.034786
+  type: 'test'
+  ...
+# Subtest: CSV contains the same 18 rows, unrounded metrics, provenance, boundaries and price dates
+ok 16 - CSV contains the same 18 rows, unrounded metrics, provenance, boundaries and price dates
+  ---
+  duration_ms: 4.056746
+  type: 'test'
+  ...
+# Subtest: method explains MDD distinction, operational boundaries, sample years and sources without another table
+ok 17 - method explains MDD distinction, operational boundaries, sample years and sources without another table
+  ---
+  duration_ms: 2.945634
+  type: 'test'
+  ...
+# Subtest: untrusted names and explanations are escaped and CSV spreadsheet formulas are neutralized
+ok 18 - untrusted names and explanations are escaped and CSV spreadsheet formulas are neutralized
+  ---
+  duration_ms: 5.078607
+  type: 'test'
+  ...
+# Subtest: a superseded request cannot replace newer data or surface its obsolete error
+ok 19 - a superseded request cannot replace newer data or surface its obsolete error
+  ---
+  duration_ms: 5.274136
+  type: 'test'
+  ...
+# Subtest: destroy cancels pending effects, removes actions and makes further renders inert
+ok 20 - destroy cancels pending effects, removes actions and makes further renders inert
+  ---
+  duration_ms: 0.499738
+  type: 'test'
+  ...
+# Subtest: invalid comparison dates fail visibly before any source request
+ok 21 - invalid comparison dates fail visibly before any source request
+  ---
+  duration_ms: 0.473359
+  type: 'test'
+  ...
+# Subtest: comparison uses the shared chart theme and keeps navigation and actions in one heading
+ok 22 - comparison uses the shared chart theme and keeps navigation and actions in one heading
+  ---
+  duration_ms: 0.526428
+  type: 'test'
+  ...
+# Subtest: mobile comparison owns its return control without the global fallback or reserved row
+ok 23 - mobile comparison owns its return control without the global fallback or reserved row
+  ---
+  duration_ms: 0.180787
+  type: 'test'
+  ...
+# Subtest: asset identities expose consistent codes and open the same audited explanation
+ok 24 - asset identities expose consistent codes and open the same audited explanation
+  ---
+  duration_ms: 2.554145
+  type: 'test'
+  ...
+# Subtest: mobile quick moves change only the horizontal table position without recomputing or hiding rows
+ok 25 - mobile quick moves change only the horizontal table position without recomputing or hiding rows
+  ---
+  duration_ms: 2.310545
+  type: 'test'
+  ...
+# Subtest: sticky headings use a single bounded viewport and preserve the pinned identity corner
+not ok 26 - sticky headings use a single bounded viewport and preserve the pinned identity corner
+  ---
+  duration_ms: 2.336724
+  type: 'test'
+  location: '/workspace/scratch/5579aed69769/bitcoin-cycle-atlas/tests/daily-data-view.test.mjs:358:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception: broken header ownership, position or origin must fail'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    code: 'ERR_ASSERTION'
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/tests/daily-data-view.test.mjs:380:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: rail identities use real asset groups, preserve labels and escape the new attribute boundary
+ok 27 - rail identities use real asset groups, preserve labels and escape the new attribute boundary
+  ---
+  duration_ms: 4.067301
+  type: 'test'
+  ...
+# Subtest: comparison keeps neutral asset symbols and reserves colors for returns and judgments
+ok 28 - comparison keeps neutral asset symbols and reserves colors for returns and judgments
+  ---
+  duration_ms: 0.375965
+  type: 'test'
+  ...
+# Subtest: narrow explanation metrics stack as full-width label/value rows instead of clipping long percentages
+ok 29 - narrow explanation metrics stack as full-width label/value rows instead of clipping long percentages
+  ---
+  duration_ms: 0.257611
+  type: 'test'
+  ...
+# Subtest: precise compact headings distinguish year count and year-start-to-extreme means
+ok 30 - precise compact headings distinguish year count and year-start-to-extreme means
+  ---
+  duration_ms: 0.151634
+  type: 'test'
+  ...
+# Subtest: asset explanation exposes its exact subject and restores generic help title
+ok 31 - asset explanation exposes its exact subject and restores generic help title
+  ---
+  duration_ms: 2.859786
+  type: 'test'
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 30
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 180.276189

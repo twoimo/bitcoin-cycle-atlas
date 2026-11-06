@@ -63,6 +63,12 @@ const savedEntryCases=[
 ];
 const destructionCase={index:2,name:'destroy during an explicit save releases replay once and ignores late completion',
   assertion:'destroy must release replay even while an explicit save is pending'};
+const manualDateCases=[
+  {index:3,name:'manual date button and Enter reject invalid dates without changing a resumed capture',
+    assertion:'manual invalid date cannot replace the current session'},
+  {index:4,name:'manual invalid dates leave an unconfirmed replay start unconfirmed',
+    assertion:'invalid manual input cannot confirm a start'},
+];
 function checkSavedEntry(cwd,item,{broken=false}={}){
   const run=spawnSync(process.execPath,['--experimental-vm-modules',coordinatorTestPath,'--replay-ui-extra',String(item.index)],
     {cwd,encoding:'utf8',timeout:30000,maxBuffer:4*1024*1024});
@@ -93,6 +99,7 @@ const results={original:check(root),mutations:{}};
 results.selection={original:checkSelection(root),mutations:{}};
 results.savedEntry={original:savedEntryCases.map(item=>checkSavedEntry(root,item)),mutations:{}};
 results.destruction={original:checkSavedEntry(root,destructionCase),mutations:{}};
+results.manualDates={original:manualDateCases.map(item=>checkSavedEntry(root,item)),mutations:{}};
 const scratch=await mkdtemp(path.join(tmpdir(),'atlas-replay-state-'));
 try{
   await mkdir(path.join(scratch,'dist'));await mkdir(path.join(scratch,'tests'));
@@ -154,16 +161,29 @@ try{
   }
   await writeFile(path.join(scratch,coordinatorPath),coordinator);
   results.destruction.restored=checkSavedEntry(scratch,destructionCase);
+  const manualDateMutation={name:'manual-date-validation-bypassed',
+    before:"q('start').onclick=()=>void chooseEnteredDate();q('date').onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();void chooseEnteredDate();}};",
+    after:"q('start').onclick=()=>void chooseStart(q('date').value);q('date').onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();void chooseStart(q('date').value);}};"};
+  assert.equal(coordinator.split(manualDateMutation.before).length,2,'Manual-date mutation selector drifted');
+  const unguarded=coordinator.replace(manualDateMutation.before,manualDateMutation.after);
+  await writeFile(path.join(scratch,coordinatorPath),unguarded);
+  results.manualDates.mutations[manualDateMutation.name]={...checkSavedEntry(scratch,manualDateCases[0],{broken:true}),sourceSha256:hash(unguarded)};
+  await writeFile(path.join(scratch,coordinatorPath),coordinator);
+  results.manualDates.restored=manualDateCases.map(item=>checkSavedEntry(scratch,item));
 }finally{await rm(scratch,{recursive:true,force:true});}
 const receipt={kind:'atlas-replay-state-verification',schemaVersion:1,
-  baselineCommit:'4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc',
+  baselineCommit:'aca73b74a5128a5466488a0c701e86f5e854af46',
+  previousFollowupBaselineCommit:'4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc',
   originalAuditBaselineCommit:'94a1b1dda9eb359de70747043808340da369d087',
   node:process.version,sourcePath,sourceSha256:hash(source),testPath,testSha256:hash(tests),
-  method:'Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, destroy-during-save cases and isolated real-source negative controls',
+  method:'Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, manual-date rejection, destroy-during-save cases and isolated real-source negative controls',
   coordinatorPath,coordinatorSha256:hash(coordinator),coordinatorTestPath,coordinatorTestSha256:hash(coordinatorTests),
   snapshotPath,snapshotSha256:hash(snapshotSource),
   bounds:{playback:results.original.enumeration,asyncLoads:2,selectionCommands:6,selectionMaxTraceLength:3,selectionTraces:259,
-    destruction:{pendingExplicitSaves:1,completionSchedules:['deferred callback resumes','deferred callback rejects'],destroyCallsPerSchedule:2}},
+    destruction:{pendingExplicitSaves:1,completionSchedules:['deferred callback resumes','deferred callback rejects'],destroyCallsPerSchedule:2},
+    manualDates:{submissionMethods:['button','Enter'],entryStates:['resumed capture','unconfirmed selection'],
+      invalidKinds:['above maximum','below minimum','empty','malformed','impossible day','impossible month','zero year','native invalidity'],
+      finiteSelectionAlphabetUnchanged:true}},
   formalProof:false,modelCheckerRun:false,
   excluded:['Unlimited trace lengths','Native browser DOM, rendering and events','Real forecast generation and scoring in coordinator doubles','Exhaustive network completion schedules','Exhaustive persistence and concurrent-tab schedules','Wall-clock scheduling accuracy','Cutoff-model loading in the coordinator fixture'],
   ...results};

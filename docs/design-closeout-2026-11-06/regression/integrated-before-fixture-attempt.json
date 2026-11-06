@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "kind": "integrated-before-fixture-interrupted-test-attempt",
+  "recordedAt": "2026-11-06T08:04:34.957777+00:00",
+  "head": "59ec6f4f708e87d73dad6324d925a9e01383411c",
+  "command": "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node scripts/test.mjs --test-concurrency=2",
+  "runtime": "v24.22.2 linux/x64",
+  "exitCode": 130,
+  "complete": false,
+  "status": "INTERRUPTED_FOR_BROWSER_BOUNDARY_FIX",
+  "reason": "Separate numerical gate reproduced missing MutationObserver in the inert VM fixture. Coordinator authorized fixture-only support and a complete restart.",
+  "lastReportedTopLevelPass": 1206,
+  "failures": [],
+  "aggregateReceiptPresent": false,
+  "log": "integrated-before-fixture-model-tests.interrupted.log",
+  "logSha256": "af6ec81fe0e777c16fc1abf415c6c3344569ec6af4d606b037191f8055db8e29",
+  "qualification": "Partial reported cases are not a full-suite pass; complete final-source run required."
+}
