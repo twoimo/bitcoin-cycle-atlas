@@ -10,7 +10,7 @@
   --asset-sign: var(--accent);
   --asset-route: var(--accent);
   --asset-muted: var(--muted);
-  display: flex; flex-direction: column; gap: 0; min-width: 0;
+  display: flex; flex-direction: column; gap: 0; grid-column: 1; width: 100%; min-width: 0; max-width: 100%;
   overflow: hidden; padding: 0; scrollbar-width: thin; font-variant-numeric: tabular-nums;
   color: var(--asset-ink); color-scheme: dark;
 }
@@ -31,16 +31,17 @@ body[data-embedded=true] #data-view .daily-heading { position: relative; inset: 
 #data-view .daily-action:hover:not(:disabled) { color: var(--asset-ink); background: var(--surface-hover); }
 #data-view .daily-help-icon { display: inline-flex; width: 16px; height: 16px; align-items: center; justify-content: center; border: 1px solid currentColor; border-radius: 50%; font: 600 11px/1 var(--font); }
 #data-view .daily-action:disabled { opacity: .4; cursor:not-allowed; }
-#data-view .asset-filters { display:flex; flex:none; align-items:center; gap:8px; padding:8px; overflow-x:auto; background:var(--surface); scrollbar-width:thin; }
+/* Keep intrinsic control widths inside this scroll owner, including grid parents. */
+#data-view .asset-filters { display:flex; flex:none; align-items:center; gap:8px; width:100%; min-width:0; max-width:100%; padding:8px; overflow-x:auto; background:var(--surface); scrollbar-width:thin; }
 #data-view .asset-filters label { flex:none; min-width:0; }
 #data-view .asset-filters .asset-search { flex:1; min-width:160px; }
-#data-view .asset-filters input, #data-view .asset-filters select { width:100%; min-height:32px; padding:4px 8px; border:1px solid var(--border); border-radius:4px; background:var(--bg); color:var(--text); font:12px/1.5 var(--font); }
+#data-view .asset-filters input, #data-view .asset-filters select { width:100%; min-height:32px; padding:4px 8px; border:1px solid var(--border-strong); border-radius:4px; background:var(--bg); color:var(--text); font:12px/1.5 var(--font); }
 #data-view .asset-filters input::placeholder { color:var(--muted); }
 #data-view .asset-filters input:focus-visible, #data-view .asset-filters select:focus-visible { outline:2px solid var(--focus,var(--accent)); outline-offset:-2px; }
 #data-view .asset-filter-reset { flex:none; min-height:32px; padding:4px 8px; border:1px solid transparent; border-radius:4px; background:transparent; color:var(--muted); font-size:12px; cursor:pointer; }
 #data-view .asset-filter-reset:hover { background:var(--surface-hover); color:var(--text); }
 #data-view .asset-table-summary { display:flex; flex:none; justify-content:space-between; gap:12px; padding:4px 12px 8px; color:var(--muted); background:var(--surface); font:11px/1.5 var(--font); border-bottom:1px solid var(--border-soft); }
-#data-view .asset-quote { display:inline-block; margin-left:4px; color:var(--muted); font:10px/1.4 var(--font-mono); }
+#data-view .asset-quote { display:inline-block; margin-left:4px; color:var(--muted); font:11px/1.4 var(--font-mono); }
 #data-view .asset-context { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 20px; flex: none; color: var(--asset-muted); font-size: 11px; line-height: 1.7; }
 #data-view .asset-context[hidden] { display: none; }
 #data-view .asset-scroll-hint, #data-view .asset-mobile-nav { display: none; }

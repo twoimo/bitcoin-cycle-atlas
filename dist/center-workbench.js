@@ -26,7 +26,8 @@ export function mountCenterWorkbench() {
   let loadingLayer=null;
   let dataHeaderActions=null;
   function clearCenterLoading(){if(loadingLayer){clearLoadingSurface(loadingLayer);loadingLayer.remove();loadingLayer=null;}}
-  let epoch=0;
+  let epoch=0,selectionEpochFloor=0,activeIntentSerial=0;
+  let lastSelection={epoch:-1,serial:0};
   let originalReader=null;
   const controls=createRsiWorkbenchControls({send:message=>frame?.contentWindow.postMessage(message,location.origin),isActive:()=>activePage?.id==='rsi'});
   const saved = new Map();
@@ -42,7 +43,8 @@ export function mountCenterWorkbench() {
   const navigationObserver=new MutationObserver(protectNavigation);
   navigationObserver.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['disabled']});
   const closeTray=()=>document.querySelector('.mobile-workbench-button[aria-expanded="true"]')?.click();
-  const navigateMessage=()=>({kind:'atlas:center-navigate',page:activePage.id,symbol:activeSymbol,epoch,...(activeRegion?{region:activeRegion}:{})});
+  const navigateMessage=()=>({kind:'atlas:center-navigate',page:activePage.id,symbol:activeSymbol,epoch,...(activeRegion?{region:activeRegion}:{}),...(activeIntentSerial?{intentSerial:activeIntentSerial}:{})});
+  const centerHref=(page,symbol,region)=>page.tab?atlasSitePath(atlasPageHref(page,{symbol,region})):`${home}?page=outlook&center=${page.id}`;
   function context(page,symbol,region) {
     activePage=page;
     if(atlasNavigationId(page)==='rsi') {
@@ -75,9 +77,22 @@ export function mountCenterWorkbench() {
     if (originalTitle) document.title=originalTitle;
     for (const item of document.querySelectorAll('[data-atlas-page]')) { const selected=item.dataset.atlasPage==='outlook';item.classList.toggle('active',selected);if(selected)item.setAttribute('aria-current','page');else item.removeAttribute('aria-current'); }
   }
-  function open(page,symbol,{history=true,region}={}) {
-    if (!plot) {waiting={page,symbol,history,region};return;}
+  function open(page,symbol,{history=true,region,intentSerial=0}={}) {
+    // Direct dashboard entries do not initialize the chart host. A previously
+    // mounted plot can also belong to a hidden outlook view. Navigate to the
+    // shared shell instead of waiting for, or opening inside, an unavailable host.
+    const outerView=document.body.dataset.page||new URLSearchParams(location.search).get('page');
+    if(['compare','evidence','data','ipo','market'].includes(outerView)) {
+      const url=centerHref(page,symbol,region);
+      if(history)location.assign(url);else location.replace(url);
+      return;
+    }
+    if (!plot) {waiting={page,symbol,history,region,intentSerial};return;}
     clearCenterLoading();closeTray();controls.restore();dataHeaderActions?.destroy();dataHeaderActions=null;epoch++;
+    activeIntentSerial=intentSerial;
+    // Consecutive child choices can share an epoch until the host reply arrives.
+    // A menu, search or history action in the host starts a new ownership floor.
+    if(!intentSerial){selectionEpochFloor=epoch;lastSelection={epoch:-1,serial:0};}
     if (!activePage) {
       const reader=document.querySelector('#chart-reader');originalReader=reader&&!reader.hidden?reader.dataset.kind:null;
       document.dispatchEvent(new CustomEvent('atlas:close-detail'));
@@ -112,7 +127,7 @@ export function mountCenterWorkbench() {
       const owned=frame;
       dataHeaderActions=mountDataHeaderActions({frame:owned,heading:document.querySelector('.atlas-canvas-heading'),isActive:()=>frame===owned&&activePage?.id==='data'});
     }
-    const url=page.tab?atlasSitePath(atlasPageHref(page,{symbol:activeSymbol,region:activeRegion})):`${home}?page=outlook&center=${page.id}`;
+    const url=centerHref(page,activeSymbol,activeRegion);
     if(history)window.history.pushState(null,'',url);
     else if(page.tab)window.history.replaceState(null,'',url);
   }
@@ -135,11 +150,19 @@ export function mountCenterWorkbench() {
     if(!frame||!activePage?.tab||event.source!==frame.contentWindow||event.origin!==location.origin)return;
     if(event.data?.kind==='atlas:rsi-state'){controls.update(event.data);return;}
     if(event.data?.kind==='atlas:center-select') {
-      if(event.data.epoch!==epoch)return;
       const next=atlasPages.find(page=>page.id===event.data.page);if(!next?.tab)return;
       const instrument=workspaceInstrument(event.data.symbol);
       if(atlasNavigationId(next)==='rsi'&&(!instrument||instrument.page!==next.id))return;
-      open(next,instrument?.symbol||activeSymbol,{region:instrument?.page==='housing'?instrument.region:undefined});return;
+      const baseEpoch=event.data.epoch,serial=event.data.intentSerial;
+      if(serial===undefined){
+        // Preserve the original protocol for an already loaded older child.
+        if(baseEpoch!==epoch)return;
+        open(next,instrument?.symbol||activeSymbol,{region:instrument?.page==='housing'?instrument.region:undefined});return;
+      }
+      if(!Number.isSafeInteger(serial)||serial<=0||!Number.isSafeInteger(baseEpoch)||baseEpoch<selectionEpochFloor||baseEpoch>epoch)return;
+      if(baseEpoch<lastSelection.epoch||(baseEpoch===lastSelection.epoch&&serial<=lastSelection.serial))return;
+      lastSelection={epoch:baseEpoch,serial};
+      open(next,instrument?.symbol||activeSymbol,{region:instrument?.page==='housing'?instrument.region:undefined,intentSerial:serial});return;
     }
     if(event.data?.kind!=='atlas:center-state')return;
     const page=atlasPages.find(page=>page.id===event.data.page);if(!page?.tab)return;
@@ -156,7 +179,7 @@ export function mountCenterWorkbench() {
   });
   const observer=new MutationObserver(()=>{
     plot=document.querySelector('.atlas-plot');if(!plot)return;observer.disconnect();
-    if(waiting){const target=waiting;waiting=null;open(target.page,target.symbol,{history:target.history,region:target.region});}
+    if(waiting){const target=waiting;waiting=null;open(target.page,target.symbol,{history:target.history,region:target.region,intentSerial:target.intentSerial});}
     else {
       const center=new URLSearchParams(location.search).get('center'),initial=location.pathname.includes('/market-lab/')?labPageFromLocation(location):atlasPages.find(page=>page.id===center);
       if(initial?.id&&initial.id!=='outlook')open(initial,new URLSearchParams(location.search).get('symbol'),{history:false,region:new URLSearchParams(location.search).get('region')});

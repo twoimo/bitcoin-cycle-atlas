@@ -42,6 +42,10 @@ function initialNavigation(): Navigation {
 
 export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedded = false }: { load?: typeof loadSnapshot; clock?: () => Date; embedded?:boolean }) {
   const [navigation, setNavigation] = useState(initialNavigation);
+  const navigationRef=useRef(navigation);
+  navigationRef.current=navigation;
+  const intentSerial=useRef(0);
+  const pendingIntent=useRef<{serial:number;navigation:Navigation;symbol:string}|null>(null);
   const needsSnapshot = navigation.tab === 'diagnosis' || navigation.tab === 'rsi';
   const [snapshotRequested,setSnapshotRequested] = useState(needsSnapshot);
   const [attempt, setAttempt] = useState(0);
@@ -118,23 +122,34 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
   useEffect(() => {
     const back = () => {
       const instrument = selectedWorkspaceInstrument();
-      setNavigation(initialNavigation()); setWorkspaceSymbol(instrument.symbol);
+      pendingIntent.current=null;
+      navigationRef.current=initialNavigation();
+      setNavigation(navigationRef.current); setWorkspaceSymbol(instrument.symbol);
       if (instrument.page === 'rsi') setRsiSymbol(instrument.symbol);
       if (instrument.page === 'housing') setHousingRegion(instrument.region);
     };
     globalThis.addEventListener?.('popstate', back);
     return () => globalThis.removeEventListener?.('popstate', back);
   }, []);
+  const requestEmbeddedSelection=useCallback((pageId:string,symbol:string)=>{
+    const next=atlasPages.find(page=>page.id===pageId);if(!next?.tab)return;
+    const previous=pendingIntent.current?.navigation||navigationRef.current;
+    const nextNavigation:Navigation={tab:next.tab as Tab,region:next.region==='kr'?'kr':next.region==='us'?'us':previous.region};
+    const serial=++intentSerial.current,instrument=workspaceInstrument(symbol);
+    pendingIntent.current={serial,navigation:nextNavigation,symbol};
+    window.parent.postMessage({kind:'atlas:center-select',page:next.id,symbol,region:next.id==='housing'&&instrument?.page==='housing'?instrument.region:undefined,epoch:centerEpochRef.current,intentSerial:serial},location.origin);
+  },[]);
   function navigatePage(id: string) {
     const next = atlasPages.find(page => page.id === id);
     if (!next?.tab) return;
-    const symbol = next.id === 'rsi' ? rsiSymbol : next.id === 'themes' ? 'HYPE' : next.id === 'housing' ? `HOUSING-${housingRegion.toUpperCase()}` : workspaceSymbol;
+    const symbol = next.id === 'rsi' ? rsiSymbol : next.id === 'themes' ? 'HYPE' : next.id === 'housing' ? `HOUSING-${housingRegion.toUpperCase()}` : pendingIntent.current?.symbol||workspaceSymbol;
     if (embedded) {
-      window.parent.postMessage({kind:'atlas:center-select',page:next.id,symbol,region:next.id === 'housing' ? housingRegion : undefined,epoch:centerEpochRef.current},location.origin);
+      requestEmbeddedSelection(next.id,symbol);
       return;
     }
-    const region: Region = next.region === 'kr' ? 'kr' : next.region === 'us' ? 'us' : navigation.region;
-    setNavigation({ tab: next.tab as Tab, region });
+    const region: Region = next.region === 'kr' ? 'kr' : next.region === 'us' ? 'us' : navigationRef.current.region;
+    navigationRef.current={tab:next.tab as Tab,region};
+    setNavigation(navigationRef.current);
     setWorkspaceSymbol(symbol);
     try { globalThis.history.pushState(globalThis.history.state, '', atlasSitePath(atlasPageHref(next,{symbol,region:housingRegion}))); } catch { /* Embedded preview. */ }
   }
@@ -142,15 +157,16 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
     const accepted = workspaceInstrument(instrument.symbol), next = atlasPages.find(page => page.id === accepted?.page);
     if (!accepted || !next?.tab) return;
     if (embedded) {
-      window.parent.postMessage({kind:'atlas:center-select',page:next.id,symbol:accepted.symbol,region:accepted.page === 'housing' ? accepted.region : undefined,epoch:centerEpochRef.current},location.origin);
+      requestEmbeddedSelection(next.id,accepted.symbol);
       return;
     }
     setWorkspaceSymbol(accepted.symbol);
     if (accepted.page === 'rsi') setRsiSymbol(accepted.symbol);
     if (accepted.page === 'housing') setHousingRegion(accepted.region);
-    setNavigation(previous => ({ ...previous, tab:next.tab as Tab }));
+    navigationRef.current={...navigationRef.current,tab:next.tab as Tab};
+    setNavigation(navigationRef.current);
     try { globalThis.history.pushState(globalThis.history.state,'',atlasSitePath(atlasPageHref(next,{symbol:accepted.symbol,region:accepted.region}))); } catch { /* Embedded preview. */ }
-  },[embedded]);
+  },[embedded,requestEmbeddedSelection]);
   const selectRsi = useCallback((symbol:string) => {
     const instrument = workspaceInstrument(symbol); if (instrument?.page === 'rsi') selectInstrument(instrument);
   },[selectInstrument]);
@@ -164,8 +180,17 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
       const next=atlasPages.find(item=>item.id===event.data.page);
       if (!next?.tab) return;
       if(!Number.isSafeInteger(event.data.epoch)||event.data.epoch<centerEpochRef.current)return;
-      centerEpochRef.current=event.data.epoch;setCenterEpoch(event.data.epoch);
-      setNavigation(previous => ({tab:next.tab as Tab,region:next.region === 'kr' ? 'kr' : next.region === 'us' ? 'us' : previous.region}));
+      const serial=event.data.intentSerial,pending=pendingIntent.current;
+      if(serial!==undefined&&(!Number.isSafeInteger(serial)||serial<=0))return;
+      centerEpochRef.current=event.data.epoch;
+      // Earlier acknowledgements cannot paint over a newer queued choice. A
+      // host-owned search/menu/history navigation has no serial and wins.
+      if(pending&&serial!==undefined&&serial<pending.serial)return;
+      const previous=pending&&serial===pending.serial?pending.navigation:navigationRef.current;
+      pendingIntent.current=null;
+      setCenterEpoch(event.data.epoch);
+      navigationRef.current={tab:next.tab as Tab,region:next.region==='kr'?'kr':next.region==='us'?'us':previous.region};
+      setNavigation(navigationRef.current);
       setCenterActive(true);
       const instrument=workspaceInstrument(event.data.symbol);
       if (instrument) {

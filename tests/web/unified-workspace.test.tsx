@@ -100,7 +100,7 @@ test('embedded chart selection waits for the owning host and ignores old or fore
   const fixture=await mount(<MarketLabApp load={pending} embedded clock={()=>new Date('2026-11-04T06:00:00Z')}/>, 'https://example.test/market-lab/app/?embedded=1&lab-tab=rsi&symbol=TQQQ&epoch=4');t.after(fixture.cleanup);
   await fixture.click('[role=combobox]');await fixture.click('[data-workspace-symbol="HOUSING-SEOUL"]');
   const selection=fixture.posts.findLast(post=>post.message.kind==='atlas:center-select');
-  assert.deepEqual(selection,{message:{kind:'atlas:center-select',page:'housing',symbol:'HOUSING-SEOUL',region:'seoul',epoch:4},origin:'https://example.test'});
+  assert.deepEqual(selection,{message:{kind:'atlas:center-select',page:'housing',symbol:'HOUSING-SEOUL',region:'seoul',epoch:4,intentSerial:1},origin:'https://example.test'});
   assert.equal(fixture.document.querySelector('.housing-workbench'),null,'the iframe cannot replace the host selection on its own');
   const target={kind:'atlas:center-navigate',page:'housing',symbol:'HOUSING-SEOUL',region:'seoul',epoch:5};
   await fixture.message(target,'https://foreign.test');await fixture.message(target,'https://example.test',{});
@@ -115,6 +115,51 @@ test('embedded chart selection waits for the owning host and ignores old or fore
   await fixture.message({kind:'atlas:center-navigate',page:'scenario',symbol:'HOUSING-SEOUL',epoch:6});
   assert(fixture.document.querySelector('[data-workspace-page="scenario"][aria-selected=true]'));
   assert.equal(fixture.posts.findLast(post=>post.message.kind==='atlas:center-state')!.message.symbol,'HOUSING-SEOUL','market views preserve the host selected instrument identity');
+});
+
+test('rapid market tab choices ignore intermediate replies and yield to host-owned navigation', async t => {
+  const pending:typeof import('../../apps/web/src/load-snapshot.js').loadSnapshot = options => new Promise((_resolve,reject)=>options?.signal?.addEventListener('abort',()=>reject(options.signal?.reason),{once:true}));
+  const fixture = await mount(<MarketLabApp load={pending} embedded />, 'https://example.test/market-lab/app/?embedded=1&lab-tab=scenario&epoch=10'); t.after(fixture.cleanup);
+  const selected = () => fixture.document.querySelector('[data-workspace-page][aria-selected=true]')?.getAttribute('data-workspace-page');
+  const choices = () => fixture.posts.filter(post => post.message.kind === 'atlas:center-select').map(post => post.message);
+  await fixture.click('[data-workspace-page="market-kr"]');
+  await fixture.click('[data-workspace-page="cashflow"]');
+  await fixture.click('[data-workspace-page="scenario"]');
+  assert.deepEqual(choices().map(({ page, epoch, intentSerial }) => ({ page, epoch, intentSerial })), [
+    { page: 'market-kr', epoch: 10, intentSerial: 1 }, { page: 'cashflow', epoch: 10, intentSerial: 2 }, { page: 'scenario', epoch: 10, intentSerial: 3 },
+  ]);
+  await fixture.message({ kind: 'atlas:center-navigate', page: 'market-kr', symbol: 'TQQQ', epoch: 11, intentSerial: 1 });
+  await fixture.message({ kind: 'atlas:center-navigate', page: 'cashflow', symbol: 'TQQQ', epoch: 12, intentSerial: 2 });
+  assert.equal(selected(), 'scenario', 'intermediate replies do not briefly replace the final choice');
+  await fixture.message({ kind: 'atlas:center-navigate', page: 'scenario', symbol: 'TQQQ', epoch: 13, intentSerial: 3 });
+  assert.equal(fixture.posts.findLast(post => post.message.kind === 'atlas:center-state')!.message.epoch, 13);
+  await fixture.click('[data-workspace-page="cashflow"]');
+  assert.equal(choices().at(-1).epoch, 13);
+  await fixture.message({ kind: 'atlas:center-navigate', page: 'market-us', symbol: 'TQQQ', epoch: 15 });
+  assert.equal(selected(), 'market-us', 'host search/menu/history navigation cancels a pending child choice');
+  await fixture.message({ kind: 'atlas:center-navigate', page: 'cashflow', symbol: 'TQQQ', epoch: 14, intentSerial: 4 });
+  assert.equal(selected(), 'market-us');
+  await fixture.click('[data-workspace-page="market-kr"]');
+  assert.deepEqual(choices().at(-1), { kind: 'atlas:center-select', page: 'market-kr', symbol: 'TQQQ', region: undefined, epoch: 15, intentSerial: 5 });
+  await fixture.message({ kind: 'atlas:center-navigate', page: 'market-kr', symbol: 'TQQQ', epoch: 16, intentSerial: 5 });
+  assert.equal(selected(), 'market-kr');
+});
+
+test('rapid chart search choices keep the last housing region through delayed replies', async t => {
+  const pending:typeof import('../../apps/web/src/load-snapshot.js').loadSnapshot = options => new Promise((_resolve,reject)=>options?.signal?.addEventListener('abort',()=>reject(options.signal?.reason),{once:true}));
+  const fixture = await mount(<MarketLabApp load={pending} embedded />, 'https://example.test/market-lab/app/?embedded=1&lab-tab=rsi&symbol=TQQQ&epoch=20'); t.after(fixture.cleanup);
+  await fixture.click('[role=combobox]'); await fixture.click('[data-workspace-symbol="HOUSING-SEOUL"]');
+  await fixture.click('[role=combobox]'); await fixture.click('[data-workspace-symbol="HOUSING-BUSAN"]');
+  const choices = fixture.posts.filter(post => post.message.kind === 'atlas:center-select').map(post => post.message);
+  assert.deepEqual(choices.map(({ symbol, region, epoch, intentSerial }) => ({ symbol, region, epoch, intentSerial })), [
+    { symbol: 'HOUSING-SEOUL', region: 'seoul', epoch: 20, intentSerial: 1 }, { symbol: 'HOUSING-BUSAN', region: 'busan', epoch: 20, intentSerial: 2 },
+  ]);
+  await fixture.message({ kind: 'atlas:center-navigate', page: 'housing', symbol: 'HOUSING-SEOUL', region: 'seoul', epoch: 21, intentSerial: 1 });
+  assert.equal(fixture.document.querySelector('.housing-workbench'), null);
+  await fixture.message({ kind: 'atlas:center-navigate', page: 'housing', symbol: 'HOUSING-BUSAN', region: 'busan', epoch: 22, intentSerial: 2 });
+  assert.equal(fixture.document.querySelector('select[aria-label="부동산 지역"] option[selected]')!.getAttribute('value'), 'busan');
+  const state = fixture.posts.findLast(post => post.message.kind === 'atlas:center-state')!.message;
+  assert.equal(state.symbol, 'HOUSING-BUSAN'); assert.equal(state.epoch, 22);
 });
 
 test('independent charts and synchronous calculators defer the market snapshot until its first consumer',async t=>{

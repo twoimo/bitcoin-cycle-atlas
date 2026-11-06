@@ -69,6 +69,7 @@ on:
       - 'scripts/capture-ethereum-pow-zero.mjs'
       - 'scripts/verify-eth-candidate-browser.mjs'
       - 'scripts/verify-workspace-browser.mjs'
+      - 'scripts/verify-consolidated-workspace-browser.mjs'
       - 'scripts/verify-forecast-replay-browser.mjs'
       - 'scripts/verify-chart-replay-browser.mjs'
       - 'scripts/build-project-replay-baseline.mjs'
