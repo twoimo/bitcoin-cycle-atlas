@@ -49,8 +49,10 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     return { x: frame.box.left + point.x, y: frame.box.top + point.y };
   }
   async function reveal(context, selector) {
+    let lastTarget;
     for (let attempt = 0; attempt < 18; attempt++) {
       const target = await evaluate(context, readNativeInteractiveTarget, selector);
+      lastTarget=target;
       if (complete(target)) return target;
       assert.equal(target.disabled, false, 'Required action is disabled: ' + selector);
       const movement = await evaluate(context, selector => {
@@ -61,8 +63,13 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
           if (right - left < 4 || bottom - top < 4) continue;
           const horizontal = /auto|scroll/.test(style.overflowX) && owner.scrollWidth > owner.clientWidth + 1;
           const vertical = /auto|scroll/.test(style.overflowY) && owner.scrollHeight > owner.clientHeight + 1;
-          const dx = horizontal && (box.left < left || box.right > right) ? Math.sign((box.left + box.right - left - right) / 2) * Math.min(180, (right - left) * .6) : 0;
-          const dy = !dx && vertical && (box.top < top || box.bottom > bottom) ? Math.sign((box.top + box.bottom - top - bottom) / 2) * Math.min(260, (bottom - top) * .6) : 0;
+          // Move only the clipped edge into view. A fixed fraction of the
+          // viewport overshoots controls wider than half a narrow toolbar and
+          // alternates between clipping their left and right edges forever.
+          const distanceX=box.left<left?box.left-left-2:box.right>right?box.right-right+2:0;
+          const distanceY=box.top<top?box.top-top-2:box.bottom>bottom?box.bottom-bottom+2:0;
+          const dx=horizontal?Math.max(-180,Math.min(180,distanceX)):0;
+          const dy=!dx&&vertical?Math.max(-260,Math.min(260,distanceY)):0;
           if (dx || dy) return { x: (left + right) / 2, y: (top + bottom) / 2, deltaX: dx, deltaY: dy };
         }
         return null;
@@ -72,7 +79,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
       await cdp.send('Input.dispatchMouseEvent', { type: 'mouseWheel', ...point, deltaX: movement.deltaX, deltaY: movement.deltaY });
       await settled(context);
     }
-    throw new Error('Required action remains clipped: ' + selector);
+    throw new Error('Required action remains clipped: ' + selector + ': ' + JSON.stringify(lastTarget));
   }
   async function pointer(context, selector) {
     const target = await reveal(context, selector), point = await parentPoint(context, target);
@@ -249,11 +256,11 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   await state('ipo');
   await snap('ipo');
   await pointer(cdp,'[data-toolbar-open="calendar"]');
-  await pointer(cdp, '[data-ipo-page="list"]');
+  await pointer(cdp, '#center-ipo-list');
   await until(() => evaluate(child, () => document.querySelector('.ipo-page-label').textContent === '전체 목록'), 'IPO list');
   assert.equal(await evaluate(cdp,()=>document.activeElement===document.querySelector('[data-toolbar-open="calendar"]')),true,'Calendar selection returns focus to the outer toolbar');
   await pointer(cdp,'[data-toolbar-open="calendar"]');
-  await pointer(cdp, '[data-ipo-page="today"]');
+  await pointer(cdp, '#center-ipo-today');
   await until(() => evaluate(child, month => document.querySelector('.ipo-page-label').textContent === month && document.querySelector('[data-ipo-page="today"]').getAttribute('aria-pressed') === 'true', evidence.ipo.month), 'IPO original month restored');
   await pointer(cdp,'[data-toolbar-open="source"]');
   const source=await evaluate(cdp,()=>({text:document.querySelector('[data-toolbar-dialog="source"] .legacy-toolbar-source').textContent,links:[...document.querySelectorAll('[data-toolbar-dialog="source"] .legacy-toolbar-source a[href]')].map(link=>link.href)}));
