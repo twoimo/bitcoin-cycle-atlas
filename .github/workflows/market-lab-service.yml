@@ -52,12 +52,16 @@ jobs:
       - run: npm run test:service
       - run: node --test tests/market-lab*.test.mjs
   consolidated-browser:
-    name: Consolidated workspace browser
+    name: Consolidated workspace browser (${{ matrix.scope }})
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        scope: [workspace-consolidated, data]
     env:
-      ATLAS_BROWSER_CASE_SCOPE: workspace-consolidated
-      ATLAS_BROWSER_OUT: build/consolidated-browser
+      ATLAS_BROWSER_CASE_SCOPE: ${{ matrix.scope }}
+      ATLAS_BROWSER_OUT: build/consolidated-browser/${{ matrix.scope }}
       ETH_BROWSER_IMAGE_LOG_MODE: failures-only
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -105,7 +109,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: consolidated-browser-${{ github.event.pull_request.head.sha || github.sha }}
-          path: build/consolidated-browser
+          name: consolidated-browser-${{ matrix.scope }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ env.ATLAS_BROWSER_OUT }}
           if-no-files-found: error
           retention-days: 30

@@ -95,7 +95,7 @@ async function screenshot(cdp,name,receipt){
   const bytes=Buffer.from(result.data,'base64');
   await writeFile(resolve(out,name),bytes);
   receipt.screenshots.push({file:name,bytes:bytes.length,sha256:hash(bytes)});
-  if((imageLogMode==='representative'&&["workspace-btc-320x900-refresh-retry-failed.png","workspace-btc-1440x900-refresh-retry-failed.png","workspace-btc-short-900x430-refresh-retry-failed.png","workspace-btc-short-900x430-indicators-scroll-end.png","data-corner-320x568.png","data-corner-900x430.png","workspace-legacy-375x900-legacy-sources.png","eth-320-pooled-chart.png","eth-1440-pooled-chart.png","eth-320-pooled-model.png","eth-1440-pooled-model.png","data-fill-1620x1008.png","data-fill-1920x1440.png","ethusd-journal-320-base.png","bmnr-journal-320-stress.png","workspace-btc-320x900-annotations-empty.png","workspace-btc-320x900-go-to.png","workspace-btc-320x900-export-preview.png","workspace-btc-short-900x430-btc-journal.png","workspace-btc-short-900x430-bottom-menu.png","workspace-legacy-320x900-legacy-scroll-owner.png","workspace-legacy-1440x900-legacy-scroll-owner.png","workspace-evidence-320x900-research-reader.png","workspace-evidence-320x900-research-empty.png","workspace-preview-320x900-preview-scroll-end.png","workspace-preview-1440x900-preview-scroll-end.png","workspace-preview-320x900-preview-loading.png","workspace-preview-320x900-preview-error.png"].includes(name))||(imageLogMode==='representative'&&/^workspace-consolidated-(390|1440)-(market-us|scenario|digital-assets|ipo)\.png$/.test(name))||(imageLogMode==='representative'&&['chart-replay-btc-1440x900-fixed-origin.png','chart-replay-btc-320x568-next-bar.png','chart-replay-eth-320x568-next-bar.png'].includes(name))||name.endsWith('-failure.png')){
+  if((imageLogMode==='representative'&&["workspace-btc-320x900-refresh-retry-failed.png","workspace-btc-1440x900-refresh-retry-failed.png","workspace-btc-short-900x430-refresh-retry-failed.png","workspace-btc-short-900x430-indicators-scroll-end.png","data-corner-320x568.png","data-corner-900x430.png","workspace-legacy-375x900-legacy-sources.png","eth-320-pooled-chart.png","eth-1440-pooled-chart.png","eth-320-pooled-model.png","eth-1440-pooled-model.png","data-fill-1620x1008.png","data-fill-1620x1100.png","data-fill-1920x1440.png","ethusd-journal-320-base.png","bmnr-journal-320-stress.png","workspace-btc-320x900-annotations-empty.png","workspace-btc-320x900-go-to.png","workspace-btc-320x900-export-preview.png","workspace-btc-short-900x430-btc-journal.png","workspace-btc-short-900x430-bottom-menu.png","workspace-legacy-320x900-legacy-scroll-owner.png","workspace-legacy-1440x900-legacy-scroll-owner.png","workspace-evidence-320x900-research-reader.png","workspace-evidence-320x900-research-empty.png","workspace-preview-320x900-preview-scroll-end.png","workspace-preview-1440x900-preview-scroll-end.png","workspace-preview-320x900-preview-loading.png","workspace-preview-320x900-preview-error.png"].includes(name))||(imageLogMode==='representative'&&/^workspace-consolidated-(390|1440)-(market-us|scenario|digital-assets|ipo)\.png$/.test(name))||(imageLogMode==='representative'&&['chart-replay-btc-1440x900-fixed-origin.png','chart-replay-btc-320x568-next-bar.png','chart-replay-eth-320x568-next-bar.png'].includes(name))||name.endsWith('-failure.png')){
     const size=30000,total=Math.ceil(result.data.length/size);
     for(let index=0;index<total;index++)console.log('ETH_BROWSER_IMAGE_CHUNK '+JSON.stringify({name,index,total,data:result.data.slice(index*size,(index+1)*size)}));
   }
@@ -327,7 +327,7 @@ function assertDataGeometry(g,{width,height,fill}){
     assert.ok(Math.abs(group.cell.bottom-group.lastRow.bottom)<=1,'Rowspan ends outside its group');
   }
   if(fill){
-    assert.ok(Math.abs(g.rows.at(-1).bottom-g.clientBottom)<=2,'Unused space below final asset');
+    assert.ok(Math.abs(g.rows.at(-1).bottom-g.clientBottom)<=2,'Final asset does not align with the table viewport bottom');
     assert.ok(g.scrollHeight<=g.clientHeight+2,'Tall viewport has unnecessary vertical scrolling');
   }else assert.ok(g.scrollHeight>g.clientHeight+1,'Short viewport must retain internal scrolling');
 }
@@ -363,16 +363,20 @@ async function responsiveDataCase(cdp,receipt){
       };
       return {x:panel.scrollLeft,maxX:panel.scrollWidth-panel.clientWidth,y:panel.scrollTop,maxY:panel.scrollHeight-panel.clientHeight,clip,head:rect(table.tHead),headPosition:getComputedStyle(table.tHead).position,lastSymbol:last.dataset.assetSymbol,cells:Object.fromEntries(Object.entries(cells).map(([key,el])=>[key,read(el)]))};
     });
-    assert.ok(corner.maxX>0&&corner.maxY>0,'Both table axes must actually scroll');
+    const horizontalScroll=receipt.horizontalScroll!==false;
+    assert.ok(corner.maxY>0,'The table must actually scroll vertically');
+    if(horizontalScroll)assert.ok(corner.maxX>0,'The narrow table must actually scroll horizontally');
+    else assert.equal(corner.maxX,0,'The wide table must fit without horizontal scrolling');
     assert.ok(Math.abs(corner.x-corner.maxX)<=2&&Math.abs(corner.y-corner.maxY)<=2,'Both table ends must be reachable');
     assert.equal(corner.headPosition,'sticky');assert.ok(Math.abs(corner.head.top-corner.clip.top)<=1,'thead lost vertical pinning');
     for(const key of ['nameHead','judgmentHead'])assert.ok(Math.abs(corner.cells[key].top-corner.clip.top)<=1,'Header is not at the scrollport edge');
     assert.equal(corner.cells.nameHead.position,'sticky');assert.equal(corner.cells.nameHead.topInset,'auto');
-    assert.ok(Math.abs(corner.cells.nameHead.left-corner.cells.name.left)<=1&&Math.abs(corner.cells.nameHead.left-corner.clip.left)<=1,'Pinned name column drifts');
+    const expectedNameLeft=horizontalScroll?corner.clip.left:receipt.geometry.pinnedHead.left;
+    assert.ok(Math.abs(corner.cells.nameHead.left-corner.cells.name.left)<=1&&Math.abs(corner.cells.nameHead.left-expectedNameLeft)<=1,'Pinned name column drifts');
     assert.ok(Math.abs(corner.cells.nameHead.width-corner.cells.name.width)<=1);
     assert.ok(corner.cells.judgment.left>=corner.cells.name.right-1&&corner.cells.judgment.right<=corner.clip.right+1&&corner.cells.judgment.bottom<=corner.clip.bottom+1,'Final judgment is clipped or covered');
     assert.ok(Object.values(corner.cells).every(cell=>cell.topmost),'Sticky corner or final row is occluded');
-    receipt.geometry.dualAxis=corner;
+    receipt.geometry[horizontalScroll?'dualAxis':'verticalOnly']=corner;
     await screenshot(cdp,'data-corner-'+receipt.width+'x'+receipt.height+'.png',receipt);
 
   }
@@ -384,7 +388,7 @@ async function responsiveDataCase(cdp,receipt){
       table,head:table.tHead,body,rows:[...body.querySelectorAll('tr[data-asset-symbol]')],bodyMarkup:body.innerHTML,timeOrigin:performance.timeOrigin};
   });
   const resourcesBefore=structuredClone(receipt.dataResourceRequests);receipt.resize=[];
-  for(const target of [{width:900,height:430,fill:false},{width:1620,height:1008,fill:true}]){
+  for(const target of [{width:900,height:430,fill:false},{width:1620,height:1008,fill:false},{width:receipt.width,height:receipt.height,fill:receipt.fill}]){
     await cdp.send('Emulation.setDeviceMetricsOverride',{width:target.width,height:target.height,deviceScaleFactor:1,mobile:false});
     await settled(cdp);await resetDataScroll(cdp);
     const geometry=await evaluate(cdp,readDataGeometry);assertDataGeometry(geometry,target);
@@ -813,7 +817,10 @@ async function main(){
   report.syntheticFixture={file:'zero-fixture.json',bytes:fixtureBytes.length,sha256:hash(fixtureBytes),recordId:syntheticZeroRecord.id,snapshotId:snapshot.id};
   const caseSpecs=widths.flatMap(width=>(width===320?['data','eth','bmnr','mstr','zero-fixture']:['data','eth','bmnr','mstr']).map(page=>({page,width,height:900,touch:width<=390})));
   caseSpecs.push(
-    {page:'data',width:1620,height:1008,touch:false,responsive:true,fill:true,resize:true},
+    // Twenty 40px rows plus the 54px header exceed the 817px scrollport at this height.
+    // Retain this viewport as a vertical-scroll case and cover fill/resize above that threshold.
+    {page:'data',width:1620,height:1008,touch:false,responsive:true,fill:false,horizontalScroll:false},
+    {page:'data',width:1620,height:1100,touch:false,responsive:true,fill:true,resize:true},
     {page:'data',width:1920,height:1440,touch:false,responsive:true,fill:true},
     {page:'data',width:900,height:430,touch:true,responsive:true,fill:false},
     {page:'data',width:320,height:568,touch:true,responsive:true,fill:false});
