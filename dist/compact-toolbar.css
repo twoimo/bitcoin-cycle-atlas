@@ -6,7 +6,7 @@
 .center-workspace-toolbar.compact-toolbar-inline{height:44px;min-height:44px;max-height:44px;flex:0 0 44px}
 body[data-center-tool] .atlas-canvas-heading{gap:4px;overflow:hidden}
 body[data-center-tool] .atlas-canvas-heading::after{display:none}
-body[data-center-tool] .atlas-center-frame:focus,body[data-center-tool] .atlas-center-frame:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+body[data-center-tool] .atlas-center-frame:focus,body[data-center-tool] .atlas-center-frame:focus-visible,body[data-center-tool] .atlas-center-frame[data-center-focus]{outline:2px solid var(--focus);outline-offset:-2px}
 body[data-center-tool]:not([data-center-tool=rsi]) .atlas-canvas-heading>:not(.center-workspace-toolbar):not(.symbol-selector-trigger):not(.mobile-workbench-button){display:none!important}
 body[data-center-tool]:not([data-center-tool=rsi]) #mobile-tools-toggle{display:none}
 body[data-center-tool] .atlas-canvas-heading>.symbol-selector-trigger{flex:none}

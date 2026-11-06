@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
-import { ipoCalendarRows, ipoDaysLeft, ipoMilestone, ipoRowMarkup, ipoStatus, initIpoView } from '../dist/ipo-view.js';
+import { parseHTML } from 'linkedom';
+import { ipoCalendarRows, ipoDaysLeft, ipoMilestone, ipoRowMarkup, ipoSourceAttributionMarkup, ipoStatus, initIpoView } from '../dist/ipo-view.js';
 
 const TODAY = '2026-11-01';
 const doc = { '항목': [
@@ -50,6 +51,27 @@ test('row markup escapes injected names and renders missing values as dashes', (
   assert.ok(evil.includes('&lt;img'), 'escaped name expected');
   assert.ok(evil.includes('일정 미확인'));
   assert.equal((evil.match(/—/g) || []).length >= 5, true);
+});
+
+test('source attribution preserves the collected description and exact source URL scheme', () => {
+  const shipped = JSON.parse(readFileSync(new URL('../dist/data/ipo-calendar.json', import.meta.url), 'utf8'));
+  const { document } = parseHTML('<html><body><p>' + ipoSourceAttributionMarkup(shipped) + '</p></body></html>');
+  const panel = document.querySelector('p'), link = panel.querySelector('a');
+  assert.equal(panel.textContent, '원자료 · ' + shipped['출처']);
+  assert.equal(link.getAttribute('href'), 'http://www.38.co.kr/html/fund/index.htm');
+  assert.equal(link.textContent, link.getAttribute('href'));
+  assert.equal(link.getAttribute('target'), '_blank');
+  assert.equal(link.getAttribute('rel'), 'noopener noreferrer');
+});
+
+test('source attribution escapes markup and never turns non-web protocols into links', () => {
+  const input = '<img src=x onerror=alert(1)> javascript:alert(1) https://example.test/ipo?a=1&b=2';
+  const { document } = parseHTML('<html><body>' + ipoSourceAttributionMarkup({ '출처': input }) + '</body></html>');
+  assert.equal(document.body.textContent, '원자료 · ' + input);
+  assert.equal(document.querySelector('img'), null);
+  assert.deepEqual([...document.querySelectorAll('a')].map(link => link.getAttribute('href')), ['https://example.test/ipo?a=1&b=2']);
+  assert.equal(ipoSourceAttributionMarkup({}), '원자료 출처 미확인');
+  assert.equal(ipoSourceAttributionMarkup({ '출처': '수집 기관 확인 중' }), '원자료 · 수집 기관 확인 중');
 });
 
 // DOM boundary: only the selectors the controller touches.

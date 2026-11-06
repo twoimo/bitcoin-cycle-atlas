@@ -14,7 +14,7 @@ The project's design checks are pinned to [Hallmark v2.0.0 at 7ec8682](https://g
 
 ## Verification
 
-The Hallmark design workflow runs the pinned upstream checker against the complete `dist` surface and the eight declared page routes, with preserved before/after inputs. The explicit `dist` argument matters: the upstream directory walker skips a nested build directory.
+The Hallmark design workflow runs the pinned upstream checker against the complete `dist` surface and the eight original page routes, plus ten consolidated workspace routes in a separate job, with preserved before/after inputs. The workspace job requires the actual outer toolbar and active child chart or table to be ready before capture. The explicit `dist` argument matters: the upstream directory walker skips a nested build directory.
 
 The ETH/model evidence workflow also runs `scripts/verify-eth-candidate-browser.mjs`, including the additional shared-workspace cases from `scripts/verify-workspace-browser.mjs`. The native-browser checks cover interaction states that a URL-only screenshot cannot reach.
 

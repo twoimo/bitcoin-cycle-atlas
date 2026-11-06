@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { readNativeInteractiveTarget } from './verify-workspace-browser.mjs';
 
 // Match scripts/build-pages.mjs and the public GitHub Pages project root.
@@ -263,8 +264,15 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   await pointer(cdp, '#center-ipo-today');
   await until(() => evaluate(child, month => document.querySelector('.ipo-page-label').textContent === month && document.querySelector('[data-ipo-page="today"]').getAttribute('aria-pressed') === 'true', evidence.ipo.month), 'IPO original month restored');
   await pointer(cdp,'[data-toolbar-open="source"]');
+  const ipoSnapshot=JSON.parse(await readFile(new URL('../dist/data/ipo-calendar.json',import.meta.url),'utf8'));
+  const sourceDescription=ipoSnapshot['출처'];
+  assert.equal(typeof sourceDescription,'string','IPO snapshot retains its original source description');
+  const expectedSourceUrls=sourceDescription.split(/\s+/).filter(token=>/^https?:\/\//i.test(token)).map(token=>new URL(token).href);
+  assert.ok(expectedSourceUrls.length>0,'IPO snapshot declares at least one original source URL');
   const source=await evaluate(cdp,()=>({text:document.querySelector('[data-toolbar-dialog="source"] .legacy-toolbar-source').textContent,links:[...document.querySelectorAll('[data-toolbar-dialog="source"] .legacy-toolbar-source a[href]')].map(link=>link.href)}));
-  assert.ok(source.text.trim().length>20&&source.links.some(href=>/^https:\/\//.test(href)),'Original IPO provenance remains reachable from the compact header');
+  assert.ok(source.text.includes(sourceDescription),'The complete collected IPO source description remains reachable from the compact header');
+  assert.ok(source.links.every(href=>['http:','https:'].includes(new URL(href).protocol)),'IPO source links retain a navigable web protocol');
+  assert.deepEqual(source.links,expectedSourceUrls,'IPO disclosure links must match the original snapshot URLs, including their schemes');
   evidence.ipo.source=source;await closeMenu('source');
   await state('ipo-restored');
   await navigate('evidence');

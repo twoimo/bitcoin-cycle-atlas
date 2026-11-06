@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { parseHTML } from 'linkedom';
 import { mountLegacyWorkspaceToolbar } from '../dist/legacy-workspace-toolbar.js';
+import { initIpoView } from '../dist/ipo-view.js';
 
 const settle = () => new Promise(resolve => setImmediate(resolve));
 const dataMarkup = '<header class="daily-heading"><button id="asset-refresh" aria-label="가격 자료 갱신"><svg></svg><span>갱신</span></button><button id="asset-history-open" disabled>판단 이력</button><button id="daily-method-open">읽는 법</button><button id="export-raw" disabled>CSV</button></header>'
@@ -13,12 +15,9 @@ const dataMarkup = '<header class="daily-heading"><button id="asset-refresh" ari
   + '<div class="asset-table-summary"><span id="asset-visible-count">표시 20 / 전체 20개</span><span>가격 USD · HYPE USDC</span></div>'
   + '<div id="asset-context" hidden></div><nav class="asset-mobile-nav"><button id="asset-scroll-start">표본·평균</button><button id="asset-scroll-end">가격·판단</button></nav>'
   + '<div id="asset-table-scroll" aria-busy="false"></div><dialog id="daily-method-dialog"><button>닫기</button></dialog><dialog id="asset-history-dialog"></dialog>';
-const ipoMarkup = '<header class="ipo-heading"><input class="ipo-search" type="search" placeholder="종목·주간사 검색">'
-  + '<button data-ipo-filter="upcoming" aria-pressed="true">예정</button><button data-ipo-filter="closed" aria-pressed="false">마감</button><button data-ipo-filter="all" aria-pressed="false">전체</button>'
-  + '<details class="ipo-source-disclosure"><summary>출처</summary><div class="ipo-source-panel"><div id="ipo-source">원자료 수집 2026-11-07</div><p>일정 출처 <a href="./source">원문</a></p></div></details></header>'
-  + '<nav class="ipo-calendar-nav"><button data-ipo-page="previous" aria-label="이전 장" disabled>이전</button><span class="ipo-page-label">2026년 11월</span><button data-ipo-page="next" aria-label="다음 장">다음</button>'
-  + '<button data-ipo-page="today" aria-pressed="true">이번 달</button><button data-ipo-page="list" aria-pressed="false">전체 목록</button><span class="ipo-month-summary">청약 4종목 · 수요예측 2종목</span></nav>'
-  + '<p class="ipo-calendar-message" hidden></p><div class="ipo-pages"><span class="ipo-count">6 / 20건</span></div>';
+const shippedDocument = parseHTML(readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8')).document;
+const ipoMarkup = shippedDocument.querySelector('#ipo-view').innerHTML;
+const ipoSnapshot = JSON.parse(readFileSync(new URL('../dist/data/ipo-calendar.json', import.meta.url), 'utf8'));
 const evidenceMarkup = '<div class="evidence-controls"><input id="evidence-search" type="search"><select id="evidence-asset"><option value="all">전체 종목</option><option value="ETHUSD">ETHUSD</option></select>'
   + '<select id="evidence-filter"><option value="all">전체 분류</option><option value="paper">논문</option></select><button id="evidence-clear" disabled>초기화</button></div>'
   + '<div class="evidence-table-shell"><span id="evidence-total">30 / 60개</span></div><nav class="evidence-pagination"><button id="evidence-prev" disabled>이전</button><span id="evidence-progress">1–10 / 30</span><button id="evidence-more">다음</button></nav>';
@@ -172,6 +171,12 @@ test('child and outer dialogs restore visible triggers only for the current fram
 test('IPO calendar actions and live source disclosure retain their original owners', async t => {
   const f = fixture('ipo', ipoMarkup); t.after(() => f.toolbar.destroy());
   const owner = f.child.getElementById('ipo-view'), clicked = [], searched = [];
+  assert.equal(owner.querySelector('.ipo-source-panel a'), null, 'the shipped source panel starts without a fixture-only link');
+  let snapshot = ipoSnapshot;
+  const view = initIpoView({ root: owner, load: async () => snapshot, now: () => new Date('2026-11-07T00:00:00Z') });
+  await view.render();
+  owner.querySelector('[data-ipo-page="previous"]').disabled = true;
+  await settle();
   owner.addEventListener('input', event => searched.push([event.target, event.target.value]));
   owner.addEventListener('click', event => {
     const button = event.target.closest('button'); if (!button) return;
@@ -196,12 +201,18 @@ test('IPO calendar actions and live source disclosure retain their original owne
   assert.deepEqual(searched, [[owner.querySelector('.ipo-search'), '증권']]);
   f.document.querySelector('[data-toolbar-open="source"]').click();
   const disclosure = f.document.querySelector('.legacy-toolbar-source');
-  assert.match(disclosure.textContent, /원자료 수집 2026-11-07/);
-  assert.equal(disclosure.querySelector('a').getAttribute('href'), 'https://atlas.test/bitcoin-cycle-atlas/source');
+  assert.ok(disclosure.textContent.includes('원자료 수집 ' + snapshot['수집일시_KST'].slice(0, 10)));
+  assert.ok(disclosure.textContent.includes(snapshot['출처']));
+  const expectedUrl = snapshot['출처'].split(/\s+/).find(token => /^https?:\/\//.test(token));
+  assert.equal(disclosure.querySelector('a').getAttribute('href'), expectedUrl);
+  assert.equal(owner.querySelector('.ipo-source-panel a').getAttribute('href'), expectedUrl);
+  assert.equal(disclosure.querySelector('a').getAttribute('rel'), 'noopener noreferrer');
   assert.equal(disclosure.querySelector('#ipo-source'), null);
   assert.equal(owner.querySelector('#ipo-source').parentElement.className, 'ipo-source-panel');
-  owner.querySelector('#ipo-source').textContent = '원자료 수집 2026-11-08'; await settle();
+  snapshot = { ...snapshot, '수집일시_KST': '2026-11-08T09:00:00+09:00' };
+  await view.refresh(); await settle();
   assert.match(disclosure.textContent, /원자료 수집 2026-11-08/);
+  assert.equal(disclosure.querySelector('a').getAttribute('href'), expectedUrl, 'source refresh preserves the original URL and scheme');
   assert.equal(owner.querySelector('details').hasAttribute('open'), false, 'disclosure rendering does not move or toggle the hidden source owner');
 });
 

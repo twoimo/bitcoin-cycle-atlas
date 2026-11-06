@@ -95,10 +95,13 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
     const row = rows[activeIndex];
     input.setAttribute('aria-activedescendant',row.id);
     if (focus) row.focus({preventScroll:true});
-    if (opened && dialog.clientHeight > 0) {
-      const bounds = row.getBoundingClientRect(), frame = dialog.getBoundingClientRect();
-      const top = frame.top + dialog.clientTop, bottom = top + dialog.clientHeight;
-      if (bounds.top < top || bounds.bottom > bottom) row.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});
+    // Only the option list scrolls: revealing a current/keyboard option must
+    // never move the search input underneath the dialog's fixed heading.
+    if (opened && results.clientHeight > 0) {
+      const bounds = row.getBoundingClientRect(), frame = results.getBoundingClientRect();
+      const top = frame.top + results.clientTop, bottom = top + results.clientHeight;
+      if (bounds.top < top) results.scrollTop -= top - bounds.top;
+      else if (bounds.bottom > bottom) results.scrollTop += bounds.bottom - bottom;
     }
   }
   function renderResults() {
@@ -146,6 +149,7 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
     const ModalEvent = win?.CustomEvent || globalThis.CustomEvent;
     if (ModalEvent) document.dispatchEvent(new ModalEvent('atlas:modal-open',{detail:{id:dialog.id}}));
     if (typeof dialog.showModal === 'function') dialog.showModal(); else { dialog.setAttribute('open',''); dialog.setAttribute('aria-modal','true'); }
+    dialog.scrollTop = 0;
     activate(activeIndex);
     input.focus({preventScroll:true});
   }

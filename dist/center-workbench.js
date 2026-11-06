@@ -5,6 +5,58 @@ import { mountLegacyWorkspaceToolbar } from './legacy-workspace-toolbar.js';
 import { createRsiWorkbenchControls } from './rsi-workbench-controls.js';
 import { setLoadingSurface,clearLoadingSurface } from './loading-surfaces.js';
 
+// Chromium retargets activeElement to an iframe when a child control owns
+// focus, without matching :focus or :focus-within on that iframe. Reflect the
+// real document focus so the outer workspace boundary remains visible too.
+export function mountCenterFrameFocus({frame,epoch,isActive}) {
+  const document=frame.ownerDocument,view=document.defaultView,token=String(epoch);
+  let destroyed=false,child=null,queued=false,animation=null;
+  const outerCleanup=[],childCleanup=[];
+  const listen=(target,type,listener,cleanup)=>{
+    if(!target?.addEventListener)return;
+    target.addEventListener(type,listener,true);
+    cleanup.push(()=>target.removeEventListener(type,listener,true));
+  };
+  const clear=()=>{if(frame.dataset.centerFocus===token)delete frame.dataset.centerFocus;};
+  const sync=()=>{
+    if(destroyed)return;
+    let focused=false;
+    try{
+      focused=!!(isActive()&&frame.isConnected&&!frame.hidden&&frame.dataset.centerEpoch===token
+        &&child&&child===frame.contentDocument&&document.visibilityState!=='hidden'
+        &&document.hasFocus?.()&&document.activeElement===frame);
+    }catch{/* An inaccessible/replaced child cannot own the current boundary. */}
+    if(focused)frame.dataset.centerFocus=token;else clear();
+  };
+  const schedule=()=>{
+    if(destroyed)return;
+    sync();
+    // focusout/Window blur can precede activeElement being retargeted. Check
+    // again after native focus dispatch, and once at the next painted frame.
+    if(!queued){queued=true;queueMicrotask(()=>{queued=false;sync();});}
+    if(animation===null&&view?.requestAnimationFrame)animation=view.requestAnimationFrame(()=>{animation=null;sync();});
+  };
+  const bindChild=()=>{
+    for(const remove of childCleanup.splice(0))remove();
+    child=null;
+    try{child=frame.contentDocument;}catch{/* Same-origin access is required. */}
+    for(const type of ['focusin','focusout'])listen(child,type,schedule,childCleanup);
+    for(const type of ['focus','blur'])listen(child?.defaultView,type,schedule,childCleanup);
+    schedule();
+  };
+  for(const type of ['focusin','focusout','visibilitychange'])listen(document,type,schedule,outerCleanup);
+  for(const type of ['focus','blur','pageshow'])listen(view,type,schedule,outerCleanup);
+  listen(frame,'load',bindChild,outerCleanup);
+  bindChild();
+  return {destroy(){
+    if(destroyed)return;
+    destroyed=true;
+    for(const remove of [...outerCleanup,...childCleanup])remove();
+    if(animation!==null)view.cancelAnimationFrame(animation);
+    child=null;clear();
+  }};
+}
+
 // The original chart owns all four perimeter regions. Only its center is
 // replaced; the same-origin frame keeps React's DOM and styles independently owned.
 export function mountCenterWorkbench() {
@@ -28,6 +80,7 @@ export function mountCenterWorkbench() {
   const toolbarHosts=new Map();
   let loadingLayer=null;
   let legacyToolbar=null;
+  let frameFocus=null;
   // Each same-origin frame retains its own toolbar mount. React portals keep
   // their actual state/event owner; switching pages hides, never replaces, a
   // mounted target while the previous frame may still be completing work.
@@ -84,6 +137,7 @@ export function mountCenterWorkbench() {
   }
   function restore() {
     if (!frame || !activePage) return;
+    frameFocus?.destroy();frameFocus=null;
     clearCenterLoading();closeTray();controls.restore();legacyToolbar?.destroy();legacyToolbar=null;frame.contentWindow.postMessage({kind:'atlas:center-visibility',visible:false},location.origin);
     for(const host of toolbarHosts.values())host.hidden=true;
     document.dispatchEvent(new CustomEvent('atlas:close-detail'));
@@ -107,6 +161,7 @@ export function mountCenterWorkbench() {
       return;
     }
     if (!plot) {waiting={page,symbol,history,region,intentSerial};return;}
+    frameFocus?.destroy();frameFocus=null;
     clearCenterLoading();closeTray();controls.restore();legacyToolbar?.destroy();legacyToolbar=null;epoch++;
     activeIntentSerial=intentSerial;
     // Consecutive child choices can share an epoch until the host reply arrives.
@@ -136,6 +191,8 @@ export function mountCenterWorkbench() {
     if(page.id==='rsi')controls.begin(activeSymbol,epoch);
     if(!frame) {frame=document.createElement('iframe');frame.className='atlas-center-frame';frame.title=page.title;frames.set(key,frame);plot.append(frame);const owned=frame;frame.addEventListener('load',()=>{owned.dataset.centerLoaded='true';if(frame===owned)clearCenterLoading();});}
     frame.dataset.toolbarId=toolbar.id;frame.dataset.centerEpoch=String(epoch);frame.hidden=false;frame.title=page.title;
+    const focusOwner=frame,focusEpoch=epoch;
+    frameFocus=mountCenterFrameFocus({frame:focusOwner,epoch:focusEpoch,isActive:()=>frame===focusOwner&&!!activePage&&epoch===focusEpoch});
     if(frame.dataset.centerLoaded!=='true'){loadingLayer=document.createElement('div');loadingLayer.className='atlas-center-loading';plot.append(loadingLayer);setLoadingSurface(loadingLayer,true,{kind:page.id==='rsi'?'rsi':page.tab==='diagnosis'?'diagnosis':page.id==='data'?'table':'chart',label:`${page.title} 로딩`});}
     if(existing && page.tab) frame.contentWindow.postMessage(navigateMessage(),location.origin);
     else if(!existing) {
