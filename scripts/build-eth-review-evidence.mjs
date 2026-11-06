@@ -68,12 +68,13 @@ const manifest=await buildEthReviewPacket({
   baselineCommit:scope.baselineCommit,seedPaths:scope.seedPaths,
   dynamicResolutions:scope.dynamicResolutions,evidencePaths,
   externalReviewDisposition:'omitted-by-user',
-  // The complete 04f0ec5 CI evidence retained 94,684,113 bytes in 754 entries.
+  // The complete aca73b7 CI evidence requires 105,721,764 bytes in 862 entries,
+  // before adding the missing browser stylesheet and Worker source inventory.
   // Keep every declared source, immutable archive object and browser receipt
-  // inside a finite 100 MB aggregate budget. The separate per-file ceiling
+  // inside a finite 128 MB aggregate budget. The separate per-file ceiling
   // remains 85 MB; increasing aggregate capacity cannot admit a larger input.
   // This byte budget does not change model, sample-size or release conditions.
-  maximumBundleBytes:100000000,maximumFileBytes:85000000,
+  maximumBundleBytes:128000000,maximumFileBytes:85000000,
 });
 await writeFile(resolve(root,'build/eth-review-packet/scope-notes.txt'),scope.scope+'\nScreenshots remain in the separately preserved browser artifact; report.json binds their filenames and hashes. Parsed duplicate economic rows are omitted because the exact CSV and acquisition/coverage receipts are present.\n');
 console.log('ETH_REVIEW_MANIFEST '+JSON.stringify(manifest));
