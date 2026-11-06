@@ -681,6 +681,45 @@ export async function verifyWorkspaceSurface(api) {
     assert.ok(Math.abs(readerScroll.top-readerScroll.max)<=2,'Research reader did not reach scroll end');receipt.workspace.readerScroll=readerScroll;
     await click(cdp,'[data-reader-action="close"]');
     assert.equal(await evaluate(cdp,()=>document.querySelector('#research-reader').open),false);
+    assert.equal(await evaluate(cdp,()=>document.activeElement===document.querySelector('#evidence-body [data-evidence-detail]')),true,'Closing a research article must return to its source action');
+
+    // A short viewport removes the last source row while its article is open.
+    // Exercise native resize/Escape, then require the same article AND action
+    // to be restored. A focus call on the old detached node cannot pass this.
+    const resizeReturns=[];
+    for(const action of ['title','grade']){
+      const selector=`#evidence-body tr:last-child .evidence-${action} [data-evidence-detail]`;
+      const before=await evaluate(cdp,selector=>({
+        id:document.querySelector(selector).dataset.evidenceDetail,
+        filter:{query:document.querySelector('#evidence-search').value,asset:document.querySelector('#evidence-asset').value,category:document.querySelector('#evidence-filter').value},
+        rows:document.querySelectorAll('#evidence-body tr').length,
+      }),selector);
+      await click(cdp,selector);
+      await cdp.send('Emulation.setDeviceMetricsOverride',{width:320,height:430,deviceScaleFactor:1,mobile:receipt.touch});
+      await settled(cdp);
+      await until(()=>evaluate(cdp,id=>document.querySelector('#research-reader').open&&
+        ![...document.querySelectorAll('#evidence-body [data-evidence-detail]')].some(node=>node.dataset.evidenceDetail===id),before.id),'resize actually removes the invoking research row');
+      await key('Escape','Escape',27);
+      await until(()=>evaluate(cdp,(id,action)=>!document.querySelector('#research-reader').open&&
+        document.activeElement?.dataset.evidenceDetail===id&&Boolean(document.activeElement.closest('.evidence-'+action)),before.id,action),'research close restores the current equivalent action');
+      const returned=await evaluate(cdp,()=>({
+        id:document.activeElement.dataset.evidenceDetail,
+        filter:{query:document.querySelector('#evidence-search').value,asset:document.querySelector('#evidence-asset').value,category:document.querySelector('#evidence-filter').value},
+        progress:document.querySelector('#evidence-progress').textContent,
+        rowIds:[...document.querySelectorAll('#evidence-body tr')].map(node=>node.dataset.evidenceId),
+      }));
+      assert.deepEqual(returned.filter,before.filter,'Returning to an article must not reset research filters');
+      assert.ok(returned.rowIds.includes(before.id),'The restored source article must be in the visible page');
+      await focused('#evidence-body');
+      await screenshot(cdp,`${page}-${width}x${height}-research-resize-${action}.png`,receipt);
+      await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:receipt.touch});
+      await settled(cdp);
+      await until(()=>evaluate(cdp,(id,action,shortRows)=>document.querySelectorAll('#evidence-body tr').length>shortRows&&
+        document.activeElement?.dataset.evidenceDetail===id&&Boolean(document.activeElement.closest('.evidence-'+action)),before.id,action,returned.rowIds.length),'a subsequent list render retains the restored keyboard focus');
+      await focused('#evidence-body');
+      resizeReturns.push({action,before,returned,restoredViewport:{width,height}});
+    }
+    receipt.workspace.researchResizeReturns=resizeReturns;
     if(width<=620){
       const returnSelector=await evaluate(cdp,()=>document.body.dataset.shell==='dashboard'?'.atlas-sidebar .atlas-brand[data-view="outlook"]':'#evidence-back');
       await click(cdp,returnSelector);
