@@ -1,6 +1,6 @@
 import { setLoadingSurface } from './loading-surfaces.js';
-import { buildAssetComparison } from './asset-comparison.js?v=1.32.0';
-import { initAssetJudgmentHistoryView } from './asset-judgment-history-view.js?v=1.32.0';
+import { buildAssetComparison } from './asset-comparison.js?v=1.32.1';
+import { initAssetJudgmentHistoryView } from './asset-judgment-history-view.js?v=1.32.1';
 
 const SYMBOLS = ['BTC', 'ETH', 'HYPE', 'SPY', 'QQQ', 'NVDA', 'AAPL', 'GOOG', 'MSFT', 'AMZN', 'META', 'AVGO', 'PLTR', 'TSLA', 'HOOD', 'TLT', 'IEF', 'GLD', 'SLV', 'PDBC'];
 const SECTORS = Object.freeze({BTC:'디지털 자산',ETH:'디지털 자산',HYPE:'디지털 자산',SPY:'주가지수',QQQ:'주가지수',NVDA:'반도체',AVGO:'반도체',AAPL:'전자기기',MSFT:'소프트웨어',PLTR:'소프트웨어',GOOG:'인터넷·플랫폼',AMZN:'인터넷·플랫폼',META:'인터넷·플랫폼',TSLA:'전기차',HOOD:'핀테크',TLT:'채권',IEF:'채권',GLD:'귀금속',SLV:'귀금속',PDBC:'원자재'});

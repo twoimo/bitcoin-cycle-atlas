@@ -1,7 +1,7 @@
 import {atlasSitePath,atlasRootPath} from './site-paths.js';
-import { atlasPages,atlasNavigationId,atlasPageHref,labPageFromLocation } from './atlas-navigation.js?v=1.32.0';
+import { atlasPages,atlasNavigationId,atlasPageHref,labPageFromLocation } from './atlas-navigation.js?v=1.32.1';
 import { workspaceInstrument } from './workspace-instruments.js';
-import { mountDataHeaderActions } from './data-header-actions.js';
+import { mountLegacyWorkspaceToolbar } from './legacy-workspace-toolbar.js';
 import { createRsiWorkbenchControls } from './rsi-workbench-controls.js';
 import { setLoadingSurface,clearLoadingSurface } from './loading-surfaces.js';
 
@@ -14,6 +14,8 @@ export function mountCenterWorkbench() {
   // Freeze document-relative icons before history changes the route depth.
   if(staticEntry)for(const icon of document.querySelectorAll('link[rel~="icon"][href]'))icon.href=new URL(icon.getAttribute('href'),document.baseURI).href;
   const home=atlasSitePath('/');
+  const entryVersion=new URL(import.meta.url).searchParams.get('v');
+  const versionedFrame=target=>{if(entryVersion)target.searchParams.set('v',entryVersion);return target.href;};
   if(staticEntry&&new URLSearchParams(location.search).get('page')==='market'){
     const page=labPageFromLocation(location),query=new URLSearchParams(location.search);
     const url=new URL(atlasSitePath(atlasPageHref(page,{symbol:query.get('symbol'),region:query.get('region')})),location.origin);
@@ -23,8 +25,24 @@ export function mountCenterWorkbench() {
   let frame, plot, activePage=null, activeSymbol='TQQQ', activeRegion, originalSymbol='BTCUSD', originalUrl=null, originalTitle=null, waiting=null;
   let lastChart={page:atlasPages.find(page=>page.id==='rsi'),symbol:'TQQQ'},lastMarket=atlasPages.find(page=>page.id==='market-us');
   const frames=new Map();
+  const toolbarHosts=new Map();
   let loadingLayer=null;
-  let dataHeaderActions=null;
+  let legacyToolbar=null;
+  // Each same-origin frame retains its own toolbar mount. React portals keep
+  // their actual state/event owner; switching pages hides, never replaces, a
+  // mounted target while the previous frame may still be completing work.
+  function toolbarFor(key,page) {
+    let host=toolbarHosts.get(key);
+    if(!host){
+      host=document.createElement('div');host.id=`atlas-center-toolbar-${key}`;
+      host.className='center-workspace-toolbar';host.dataset.toolbarOwner=key;
+      host.setAttribute('role','toolbar');host.tabIndex=-1;
+      document.querySelector('.atlas-canvas-heading')?.append(host);toolbarHosts.set(key,host);
+    }
+    for(const candidate of toolbarHosts.values())candidate.hidden=candidate!==host;
+    host.setAttribute('aria-label',`${page.title} 도구`);host.dataset.page=page.id;
+    return host;
+  }
   function clearCenterLoading(){if(loadingLayer){clearLoadingSurface(loadingLayer);loadingLayer.remove();loadingLayer=null;}}
   let epoch=0,selectionEpochFloor=0,activeIntentSerial=0;
   let lastSelection={epoch:-1,serial:0};
@@ -66,7 +84,8 @@ export function mountCenterWorkbench() {
   }
   function restore() {
     if (!frame || !activePage) return;
-    clearCenterLoading();closeTray();controls.restore();dataHeaderActions?.destroy();dataHeaderActions=null;frame.contentWindow.postMessage({kind:'atlas:center-visibility',visible:false},location.origin);
+    clearCenterLoading();closeTray();controls.restore();legacyToolbar?.destroy();legacyToolbar=null;frame.contentWindow.postMessage({kind:'atlas:center-visibility',visible:false},location.origin);
+    for(const host of toolbarHosts.values())host.hidden=true;
     document.dispatchEvent(new CustomEvent('atlas:close-detail'));
     frame.hidden=true;delete document.body.dataset.centerTool;activePage=null;
     for (const [node,state] of saved) { node.inert=state.inert; if(state.aria==null)node.removeAttribute('aria-hidden');else node.setAttribute('aria-hidden',state.aria);if('disabled' in node)node.disabled=state.disabled; }
@@ -88,7 +107,7 @@ export function mountCenterWorkbench() {
       return;
     }
     if (!plot) {waiting={page,symbol,history,region,intentSerial};return;}
-    clearCenterLoading();closeTray();controls.restore();dataHeaderActions?.destroy();dataHeaderActions=null;epoch++;
+    clearCenterLoading();closeTray();controls.restore();legacyToolbar?.destroy();legacyToolbar=null;epoch++;
     activeIntentSerial=intentSerial;
     // Consecutive child choices can share an epoch until the host reply arrives.
     // A menu, search or history action in the host starts a new ownership floor.
@@ -104,28 +123,29 @@ export function mountCenterWorkbench() {
       if(workspaceInstrument(chartUrl.searchParams.get('symbol')))chartUrl.searchParams.delete('symbol');
       if(chartUrl.searchParams.get('page')==='market')chartUrl.searchParams.delete('page');
       originalUrl=chartUrl.href;originalTitle=document.title;
-      const headingChildren=[...document.querySelector('.atlas-canvas-heading')?.children || []].filter(node=>!node.matches('.symbol-selector-trigger,.mobile-workbench-button'));
+      const headingChildren=[...document.querySelector('.atlas-canvas-heading')?.children || []].filter(node=>!node.matches('.symbol-selector-trigger,.mobile-workbench-button,.center-workspace-toolbar'));
       for(const node of new Set([...plot.children,...headingChildren,...document.querySelectorAll('.atlas-canvas-heading button:not(.symbol-selector-trigger):not(.mobile-workbench-button),.atlas-canvas-heading select,#atlas-cycle-panel,.workbench-tools,.workbench-tools button,.chart-navigation button,.workbench-detail-tools,.workbench-detail-tools button,.workbench-help,.mobile-extra-actions,.mobile-extra-actions button,.workbench-bottom-bar,.workbench-bottom-bar button,.workbench-bottom-bar select')])) {
-        if(node.classList.contains('atlas-center-frame'))continue;saved.set(node,{inert:node.inert,aria:node.getAttribute('aria-hidden'),disabled:node.disabled});
+        if(node.classList.contains('atlas-center-frame')||node.closest('.center-workspace-toolbar'))continue;saved.set(node,{inert:node.inert,aria:node.getAttribute('aria-hidden'),disabled:node.disabled});
         if(node.parentElement===plot) {node.inert=true;node.setAttribute('aria-hidden','true');} else if('disabled' in node)node.disabled=true;else node.inert=true;
       }
     }
     const key=page.tab?'lab':page.id,existing=frames.get(key);
+    const toolbar=toolbarFor(key,page);
     if(frame && frame!==existing){frame.contentWindow.postMessage({kind:'atlas:center-visibility',visible:false},location.origin);frame.hidden=true;}
     frame=existing;context(page,symbol,region);
     if(page.id==='rsi')controls.begin(activeSymbol,epoch);
     if(!frame) {frame=document.createElement('iframe');frame.className='atlas-center-frame';frame.title=page.title;frames.set(key,frame);plot.append(frame);const owned=frame;frame.addEventListener('load',()=>{owned.dataset.centerLoaded='true';if(frame===owned)clearCenterLoading();});}
-    frame.hidden=false;frame.title=page.title;
+    frame.dataset.toolbarId=toolbar.id;frame.dataset.centerEpoch=String(epoch);frame.hidden=false;frame.title=page.title;
     if(frame.dataset.centerLoaded!=='true'){loadingLayer=document.createElement('div');loadingLayer.className='atlas-center-loading';plot.append(loadingLayer);setLoadingSurface(loadingLayer,true,{kind:page.id==='rsi'?'rsi':page.tab==='diagnosis'?'diagnosis':page.id==='data'?'table':'chart',label:`${page.title} 로딩`});}
     if(existing && page.tab) frame.contentWindow.postMessage(navigateMessage(),location.origin);
     else if(!existing) {
-      if(page.tab&&staticEntry){const target=new URL(staticEntry,new URL(home,location.origin));if(target.origin!==location.origin||!target.pathname.startsWith(atlasRootPath()))throw new Error('Static frame escaped Atlas root');target.search=new URLSearchParams({embedded:'1','lab-tab':page.tab,'lab-region':page.region||'us',epoch:String(epoch),...(atlasNavigationId(page)==='rsi'?{symbol:activeSymbol}:{}),...(activeRegion?{region:activeRegion}:{})}).toString();frame.src=target.href;}
-      else if(page.tab){const target=new URL(atlasSitePath(atlasPageHref(page,{symbol:activeSymbol,region:activeRegion})),location.origin);target.searchParams.set('embedded','1');target.searchParams.set('epoch',String(epoch));frame.src=target.href;}
-      else frame.src=`${home}?page=${page.view}&embedded=1`;
+      if(page.tab&&staticEntry){const target=new URL(staticEntry,new URL(home,location.origin));if(target.origin!==location.origin||!target.pathname.startsWith(atlasRootPath()))throw new Error('Static frame escaped Atlas root');target.search=new URLSearchParams({embedded:'1','lab-tab':page.tab,'lab-region':page.region||'us',epoch:String(epoch),...(atlasNavigationId(page)==='rsi'?{symbol:activeSymbol}:{}),...(activeRegion?{region:activeRegion}:{})}).toString();frame.src=versionedFrame(target);}
+      else if(page.tab){const target=new URL(atlasSitePath(atlasPageHref(page,{symbol:activeSymbol,region:activeRegion})),location.origin);target.searchParams.set('embedded','1');target.searchParams.set('epoch',String(epoch));frame.src=versionedFrame(target);}
+      else frame.src=versionedFrame(new URL(`${home}?page=${page.view}&embedded=1`,location.origin));
     }
-    if(page.id==='data') {
+    if(!page.tab) {
       const owned=frame;
-      dataHeaderActions=mountDataHeaderActions({frame:owned,heading:document.querySelector('.atlas-canvas-heading'),isActive:()=>frame===owned&&activePage?.id==='data'});
+      legacyToolbar=mountLegacyWorkspaceToolbar({frame:owned,heading:document.querySelector('.atlas-canvas-heading'),host:toolbar,page:page.id,isActive:()=>frame===owned&&activePage?.id===page.id});
     }
     const url=centerHref(page,activeSymbol,activeRegion);
     if(history)window.history.pushState(null,'',url);

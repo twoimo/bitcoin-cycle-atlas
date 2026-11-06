@@ -6,6 +6,7 @@ import { ObservedResearchChart, ResearchChartCard } from '../components/ztd-rese
 import type {UsCollectionStatus} from '@atlas/contracts/us-collection';
 import {UsDirection,collectionTime} from '../components/us-direction.js';
 import {collectionMatchesSnapshot} from '../us-collection.js';
+import {CompactToolbar,CompactToolbarMenu} from '../components/compact-toolbar.js';
 
 interface Props {
   snapshot: MarketSnapshot | null;
@@ -29,8 +30,13 @@ export function DiagnosisPanel({ snapshot, region, now, marketId, priceIndex, on
   const label = region === 'us' ? '미국' : '국내';
   const gate = marketGate(snapshot, market, now);
   return <>
+    <CompactToolbar label={`${label} 시장 진단 도구`}>
+      <label className="compact-toolbar-field">지수 <select data-control="market" aria-label="관측 지수 선택" value={market?.id || ''} onChange={event => onMarket(event.currentTarget.value)}>
+        {markets.length ? markets.map(market => <option key={market.id} value={market.id}>{market.name} · {market.symbol}</option>) : <option value="">지역 관측 없음</option>}
+      </select></label>
+      <CompactToolbarMenu name="market-summary" label="진단 요약" title={`${label} 시장 진단 요약`}>
     {region==='us'&&<UsDirection snapshot={snapshot} now={now} collection={collection} error={collectionError} saved={saved} onRefresh={onRefresh}/>}
-    <div className="ml-score-row">{axes.map(([key, symbol, name]) => {
+    <div className="ml-score-row compact-toolbar-fields">{axes.map(([key, symbol, name]) => {
       const axis = result?.axes.find(axis => axis.key === key);
       const rawUnit = axis?.source?.unit || '';
       const unit = key === 'gamma' ? rawUnit.includes('pt') ? 'pt' : rawUnit.includes('%') ? '%' : '' : key === 'alpha' ? '전기비 %' : '연율 %';
@@ -42,11 +48,10 @@ export function DiagnosisPanel({ snapshot, region, now, marketId, priceIndex, on
       </article>;
     })}</div>
     {region==='us'?<details className="ml-legacy-score"><summary>기존 평균 점수 <strong>{result?.status==='ready'?fmt(result.score):'판단 유보'}</strong></summary><p className="ml-score-total">{result?.scoreLabel || '연구용 종합 점수'} <strong>{result?.status==='ready'?fmt(result.score):'판단 유보'}</strong></p><p>기존 (α+β+γ)/3 계산은 유지하며, 위 곱의 부호와 구분합니다.</p></details>:<p className="ml-score-total">{result?.scoreLabel || '연구용 종합 점수'} <strong>{result?.status === 'ready' ? fmt(result.score) : '판단 유보'}</strong></p>}
-    <ResearchChartCard className="ml-price-card" title={`${label} 관측 차트`} actions={
-      <label className="ml-inline" style={{ minWidth: 0 }}>지수 <select style={{ maxWidth: 'min(46vw, 240px)', minHeight: 44 }} data-control="market" aria-label="관측 지수 선택" value={market?.id || ''} onChange={event => onMarket(event.currentTarget.value)}>
-        {markets.length ? markets.map(market => <option key={market.id} value={market.id}>{market.name} · {market.symbol}</option>) : <option value="">지역 관측 없음</option>}
-      </select></label>}>
-      {market ? gate.ok ? <ObservedResearchChart key={market.id} id="price" points={market.prices} unit={market.unit} label={`${market.name} 관측 종가`} selected={priceIndex} onSelect={onDate} />
+      </CompactToolbarMenu>
+    </CompactToolbar>
+    <ResearchChartCard className="ml-price-card ml-compact-price-card" title={`${label} 관측 차트`}>
+      {market ? gate.ok ? <ObservedResearchChart compactToolbar key={market.id} id="price" points={market.prices} unit={market.unit} label={`${market.name} 관측 종가`} selected={priceIndex} onSelect={onDate} />
         : <div data-chart="price"><p className="ml-warning">{gate.reason} 가격 차트는 숨깁니다.</p></div>
         : <Empty>{label} 지수 가격이 없습니다. 미국 자료를 국내 관측으로 대체하지 않습니다.</Empty>}
     </ResearchChartCard>

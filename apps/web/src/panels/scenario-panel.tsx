@@ -2,6 +2,7 @@ import { positiveFactorScenario, type ScenarioResult } from '@atlas/domain/marke
 import type { Axis } from '@atlas/contracts/market-lab';
 import { axes, errorText, finite, fmt } from '../components/common.js';
 import { ScenarioContributionChart } from '../components/ztd-research-charts.js';
+import { CompactToolbar,CompactToolbarMenu } from '../components/compact-toolbar.js';
 
 export interface ScenarioState {
   alpha: number; beta: number; gamma: number; weights: string[]; sensitivity: string;
@@ -20,7 +21,14 @@ export function ScenarioPanel({ state, onChange }: { state: ScenarioState; onCha
   } catch (caught) { error = errorText(caught); }
   const shock = (axis: Axis, value: string) => onChange({ ...state, [axis]: Number(value) });
   return <>
-    <div className="ml-section-heading"><div><h2>조건 실험</h2></div><span className="ml-pill">가정 입력</span></div>
+    <CompactToolbar label="조건 실험 도구">
+      <span className="compact-toolbar-muted">가정 입력</span>
+      <button className="compact-toolbar-action" type="button" data-action="negative" onClick={() => onChange({ ...initialScenario(), alpha: -2, beta: -2 })}>하락 예시</button>
+      <button className="compact-toolbar-action" type="button" data-action="reset-scenario" onClick={() => onChange(initialScenario())}>초기화</button>
+      {result && <CompactToolbarMenu name="scenario-summary" title="조건 실험 계산 요약" label={<span className="compact-toolbar-summary ml-index"><strong>{fmt(result.index)}</strong><span>가정 · 기준 100</span></span>}>
+        <p>무차원 가상 지수 / 기준 100</p><p className="ml-formula">I = 100 × exp(λ × 압력)</p><p>부호 있는 압력 <b>{fmt(result.pressure, 3)}</b> · λ {fmt(result.sensitivity, 2)}</p>
+      </CompactToolbarMenu>}
+    </CompactToolbar>
     <div className="ml-two-col"><article className="ml-card"><h3>축별 값</h3>
       <p className="ml-muted">범위 −3 ~ +3 · 중립 0</p>
       {axes.map(([key, symbol, name], index) => <div className="ml-shock-row" key={key}>
@@ -32,12 +40,8 @@ export function ScenarioPanel({ state, onChange }: { state: ScenarioState; onCha
       <p id="ml-shock-help" className="ml-muted">가중치 합계는 1로 정규화합니다.</p>
       <label className="ml-field">민감도 λ <input data-control="sensitivity" type="number" min="0" max="1" step="0.01" value={state.sensitivity}
         onChange={event => onChange({ ...state, sensitivity: event.currentTarget.value })} /></label>
-      <div className="ml-actions"><button type="button" data-action="negative" onClick={() => onChange({ ...initialScenario(), alpha: -2, beta: -2 })}>하락 예시</button>
-        <button type="button" data-action="reset-scenario" onClick={() => onChange(initialScenario())}>초기화</button></div>
-    </article><article className="ml-card"><h3>가정 지수 · 기준 100</h3>
+    </article><article className="ml-card"><h3>축별 기여와 인자</h3>
       <div id="ml-scenario-output" aria-live="polite">{result ? <>
-        <div className="ml-index"><strong>{fmt(result.index)}</strong><span>무차원 가상 지수 / 기준 100</span></div>
-        <p className="ml-formula">I = 100 × exp(λ × 압력)</p><p>부호 있는 압력 <b>{fmt(result.pressure, 3)}</b> · λ {fmt(result.sensitivity, 2)}</p>
         <ScenarioContributionChart contributions={result.contributions} />
         <div className="ml-table-wrap"><table><caption>축별 정규화 기여와 양수 인자</caption><thead><tr><th>축</th><th>충격</th><th>정규화 기여</th><th>양수 인자</th></tr></thead>
           <tbody>{axes.map(([key, symbol, name], index) => <tr key={key}><th>{symbol} {name}</th><td>{fmt(state[key], 1)}</td><td>{fmt(result.contributions[index], 3)}</td><td>{fmt(result.factors[index], 4)}</td></tr>)}</tbody></table></div>

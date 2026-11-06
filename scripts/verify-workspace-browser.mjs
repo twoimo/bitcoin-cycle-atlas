@@ -83,12 +83,16 @@ export async function verifyEmbeddedDataSurface(api){
     await settled(context);
   };
   const revealHeadingControl=async(selector)=>{
-      for(let attempt=0;attempt<5;attempt++){
+      for(let attempt=0;attempt<18;attempt++){
         const target=await evaluate(cdp,readNativeInteractiveTarget,selector);
         if(complete(target))return target;
         assert.ok(target.painted&&!target.disabled,'Header action is hidden or disabled: '+selector);
-        const heading=await bounds(cdp,'.atlas-canvas-heading');visibleBounds(heading,width,height);
-        const before=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading').scrollLeft);
+        const owner=await evaluate(cdp,selector=>{
+          const node=document.querySelector(selector),host=node?.closest('.center-workspace-toolbar');
+          return host&&host.scrollWidth>host.clientWidth+1?'#'+host.id:'.atlas-canvas-heading';
+        },selector);
+        const heading=await bounds(cdp,owner);visibleBounds(heading,width,height);
+        const before=await evaluate(cdp,owner=>document.querySelector(owner).scrollLeft,owner);
         const direction=target.box.left<heading.left?1:-1,distance=Math.min(144,heading.width/2),x=direction<0?heading.right-24:heading.left+24,y=(heading.top+heading.bottom)/2;
         if(receipt.touch){
           await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});
@@ -100,10 +104,10 @@ export async function verifyEmbeddedDataSurface(api){
         }else{
           await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',x,y,deltaX:-direction*distance,deltaY:0});
         }
-        await until(()=>evaluate(cdp,value=>Math.abs(document.querySelector('.atlas-canvas-heading').scrollLeft-value)>1,before),'native heading pan',5000);
+        await until(()=>evaluate(cdp,(owner,value)=>Math.abs(document.querySelector(owner).scrollLeft-value)>1,owner,before),'native heading pan',5000);
         let previous=null,stable=0;
-        await until(async()=>{const left=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading').scrollLeft);stable=previous!==null&&Math.abs(left-previous)<.1?stable+1:0;previous=left;return stable>=3;},'native heading pan end',5000);
-        evidence.inputs.push({kind:receipt.touch?'native-heading-swipe':'native-heading-wheel',selector,before,after:previous,x,y,distance,direction,parentAfter:await evaluate(cdp,readParent)});
+        await until(async()=>{const left=await evaluate(cdp,owner=>document.querySelector(owner).scrollLeft,owner);stable=previous!==null&&Math.abs(left-previous)<.1?stable+1:0;previous=left;return stable>=3;},'native heading pan end',5000);
+        evidence.inputs.push({kind:receipt.touch?'native-heading-swipe':'native-heading-wheel',selector,owner,before,after:previous,x,y,distance,direction,parentAfter:await evaluate(cdp,readParent)});
       }
       const target=await evaluate(cdp,readNativeInteractiveTarget,selector);
       assert.ok(complete(target),'Native heading pan never exposed '+selector+': '+JSON.stringify(target));return target;
@@ -177,7 +181,7 @@ export async function verifyEmbeddedDataSurface(api){
     const rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
     return {embedded:document.body.dataset.embedded,coarse:matchMedia('(pointer:coarse)').matches,width:innerWidth,height:innerHeight,documentWidth:document.documentElement.scrollWidth,
       root:rect(root),toolbar:rect(heading),symbols:rows.map(row=>row.dataset.assetSymbol),btcName:rows[0]?.querySelector('.asset-name-label').textContent,
-      hosted:document.body.dataset.dataActionsHosted,ownerActionsVisible:actions.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),
+      hosted:document.body.dataset.centerToolbarHosted,ownerActionsVisible:actions.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),
       ownerActionIds:[...heading.querySelectorAll('.daily-action')].map(button=>button.id)};
   });
   assert.equal(evidence.board.embedded,'true');assert.equal(evidence.board.symbols.length,expectedSymbols.length);assert.equal(new Set(evidence.board.symbols).size,expectedSymbols.length);

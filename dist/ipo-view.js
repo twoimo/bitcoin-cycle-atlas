@@ -1,5 +1,5 @@
 import { setLoadingSurface } from './loading-surfaces.js';
-import { mountIpoMonthCalendar } from './ipo-month-calendar.js?v=1.32.0';
+import { mountIpoMonthCalendar } from './ipo-month-calendar.js?v=1.32.1';
 // 공모주 청약·수요예측 캘린더. 38커뮤니케이션 집계 원자료를 표시만 하며,
 // 상태와 D-day는 열람 시점의 날짜로 다시 계산한다(저장된 상태 문자열을 신뢰하지 않는다).
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

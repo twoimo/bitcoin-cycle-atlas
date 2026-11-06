@@ -22,6 +22,7 @@ import {useUsCollection} from './components/us-direction.js';
 import {collectionMatchesSnapshot} from './us-collection.js';
 import { WORKSPACE_INSTRUMENTS, workspaceInstrument } from '../../../dist/workspace-instruments.js';
 import { ChartWorkspaceToolbar, MarketWorkspaceToolbar, type WorkspaceInstrument } from './components/workspace-toolbar.js';
+import { CompactToolbar, CompactToolbarHost, CompactToolbarProvider } from './components/compact-toolbar.js';
 
 const tabs = [['diagnosis', '시장 진단'], ['scenario', '조건 실험'], ['ai', '현금흐름'], ['rsi', '삼플레·RSI'],['housing','부동산'],['themes','테마·재료']] as const;
 type Tab = typeof tabs[number][0];
@@ -211,17 +212,18 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
   },[embedded,page.id,chartWorkspace,currentInstrument.symbol,workspaceSymbol,housingRegion,centerEpoch]);
   const independent=navigation.tab==='housing'||navigation.tab==='themes';
   const snapshotLoading=(snapshotRequested||needsSnapshot)&&data.phase==='loading';
-  return <>
+  return <CompactToolbarProvider embedded={embedded} active={centerActive} epoch={centerEpoch}>
     {!embedded && <DashboardChrome title={workspaceTitle} currentPage={page.id} onNavigate={navigatePage} />}
     <main data-workspace={chartWorkspace ? 'charts' : 'market'} data-loading-kind={snapshotLoading&&!data.doc&&!independent?navigation.tab:undefined} className={embedded?'atlas-embedded-workspace':'workspace atlas-service-workspace'}><h1 className="atlas-sr-only">{workspaceTitle}</h1>
-      {chartWorkspace ? <ChartWorkspaceToolbar instrument={currentInstrument} onSelect={selectInstrument}/> : <MarketWorkspaceToolbar page={page.id} onNavigate={navigatePage}/>}
-      {!independent&&notice && <div className="ml-delivery" role="status"><span>{notice.text}</span><button type="button" onClick={retry}>{notice.retry}</button></div>}
+      <CompactToolbarHost />
+      {chartWorkspace ? !embedded && <CompactToolbar label="종목 선택" order={0}><ChartWorkspaceToolbar instrument={currentInstrument} onSelect={selectInstrument}/></CompactToolbar> : <MarketWorkspaceToolbar page={page.id} onNavigate={navigatePage}/>}
+      {!independent&&notice && <CompactToolbar label="자료 상태" order={90}><span className="compact-toolbar-muted ml-delivery" style={{display:'inline',padding:0,background:'transparent',fontSize:11}} role="status">{notice.text}</span><button className="compact-toolbar-action" data-action="market-refresh" type="button" onClick={retry}>{notice.retry}</button></CompactToolbar>}
       <section id="market-view" className="market-lab" aria-label={page.title} aria-busy={!independent&&snapshotLoading}>
         <div className="ml-scroll">
           {!independent&&snapshotLoading && <div className="atlas-inline-loading" role="status"><span className="atlas-loading-label">자료를 읽고 있습니다.</span><i skullet-bar="" /></div>}
           {!independent&&data.phase === 'error' && <div className="ml-status" aria-live="polite">자료 오류 · {data.error} <button type="button" data-action="retry" onClick={retry}>데이터 다시 읽기</button></div>}
           {!independent&&data.phase === 'empty' && <div className="ml-status" aria-live="polite">스냅샷은 읽었지만 관측 자료가 없습니다. 없는 지표는 판단을 유보합니다.</div>}
-          <section id="ml-panel" role={chartWorkspace ? 'region' : 'tabpanel'} aria-label={chartWorkspace ? page.title : undefined} aria-labelledby={chartWorkspace ? undefined : `workspace-tab-${page.id}`} tabIndex={0}>
+          <section id="ml-panel" role={chartWorkspace ? 'region' : 'tabpanel'} aria-label={chartWorkspace || embedded ? page.title : undefined} aria-labelledby={chartWorkspace || embedded ? undefined : `workspace-tab-${page.id}`} tabIndex={0}>
             {navigation.tab === 'diagnosis' && (data.phase==='loading'&&!data.doc?<LoadingSkeleton kind="diagnosis" label="시장 자료 로딩"/>:<DiagnosisPanel snapshot={data.doc} region={navigation.region} now={now} marketId={marketId} priceIndex={priceIndex} collection={collection.data} collectionError={collection.error} saved={data.phase==='error'||delivery?.kind==='saved'||data.retainedPrevious} onRefresh={retry}
               onMarket={market => setMarketSelections(previous=>({...previous,[navigation.region]:{marketId:market,priceIndex:null}}))}
               onDate={index => setMarketSelections(previous=>({...previous,[navigation.region]:{...previous[navigation.region],priceIndex:index}}))} />)}
@@ -235,5 +237,5 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
         </div>
       </section>
     </main>
-  </>;
+  </CompactToolbarProvider>;
 }

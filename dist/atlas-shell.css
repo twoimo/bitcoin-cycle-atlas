@@ -183,7 +183,7 @@ body[data-center-tool] #chart-reader{display:none!important}
 .center-data-action svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .center-data-action:hover:not(:disabled){background:var(--surface-hover)}
 .center-data-action:focus-visible{outline:2px solid var(--focus,var(--accent));outline-offset:-2px}
-body[data-center-tool=data] .atlas-canvas-heading:has(.center-data-actions)>:not(.center-data-actions):not(.symbol-selector-trigger):not(.mobile-workbench-button){display:none!important}
+body[data-center-tool=data] .atlas-canvas-heading:has(.center-data-actions)>:not(.center-data-actions):not(.center-workspace-toolbar):not(.symbol-selector-trigger):not(.mobile-workbench-button){display:none!important}
 body[data-center-tool=data] .atlas-canvas-heading:has(.center-data-actions)::after{display:none}
 body[data-data-actions-hosted=true] #data-view .daily-heading{display:none!important}
 @media(pointer:coarse){.center-data-action{min-width:44px;min-height:44px}}
@@ -194,3 +194,8 @@ body[data-data-actions-hosted=true] #data-view .daily-heading{display:none!impor
   .center-data-actions{gap:0}
 }
 @media(max-width:640px){.atlas-embedded-workspace .ml-scroll{padding:8px 8px 16px}.rsi-history h2 small{display:block;margin:8px 0 0}.rsi-backtest-form{gap:8px}.rsi-backtest-form label{flex:1 0 44%}.rsi-backtest-form input,.rsi-backtest-form input[type=date]{width:100%}.rsi-history-heading{flex-wrap:wrap;gap:8px}.rsi-backtest-metrics{gap:16px}}
+
+/* The user's workbench preference hides scroll chrome, never scroll behavior.
+   Native wheel/touch/keyboard movement, sticky headers and dialog owners stay. */
+*,*::before,*::after{scrollbar-width:none!important;scrollbar-gutter:auto!important;-ms-overflow-style:none}
+*::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}

@@ -12,5 +12,7 @@ import './housing.css';
 import './themes.css';
 import './us-direction.css';
 import './workspace.css';
+import '../../../dist/compact-toolbar.css';
+import '../../../dist/legacy-workspace-toolbar.css';
 
 createRoot(document.getElementById('root')!).render(<MarketLabApp embedded={new URLSearchParams(location.search).get('embedded')==='1'} />);

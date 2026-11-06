@@ -1,6 +1,7 @@
 import {Fragment,useEffect,useLayoutEffect,useRef,useState} from 'react';
 import { bindChartNavigation } from '../../../../dist/chart-navigation.js';
 import { evidenceAvailableAt,type ThemeBar,type ThemeEvidence,type ThemeJudgment } from '@atlas/domain/themes';
+import {CompactToolbar,CompactToolbarMenu} from './compact-toolbar.js';
 export type ThemeChartView={start:string;end:string;selected:string;style:'line'|'candles'};
 const day=(s:string)=>Date.parse(s.slice(0,10)+'T00:00:00Z')/86400000;
 export const themeDate=(n:number)=>new Date(n*86400000).toISOString().slice(0,10);
@@ -19,7 +20,13 @@ export function ThemeChart(props:{bars:ThemeBar[];evidence:ThemeEvidence[];judgm
   const laneEnds:number[]=[];
   const marks=[...groups.entries()].sort(([,a],[,b])=>a[0].date.localeCompare(b[0].date)).map(([key,items])=>{const first=items[0],px=x(first.date);let lane=laneEnds.findIndex(end=>end+28<px);if(lane<0)lane=laneEnds.length;laneEnds[lane]=px;return {key,items,first,px,cy:10+lane*18};});
   return <div className="theme-price-chart" ref={host}>
-    <div className="theme-chart-readout"><time>{selected?.[0]??'—'}</time><span>O {selected?.[1].toFixed(3)??'—'}</span><span>H {selected?.[2].toFixed(3)??'—'}</span><span>L {selected?.[3].toFixed(3)??'—'}</span><span>C {selected?.[4].toFixed(3)??'—'}</span></div>
+    <CompactToolbar label="선택 HYPE 일봉" order={30}>
+      <CompactToolbarMenu name="theme-candle" title="선택 HYPE 일봉" label={<span className="compact-toolbar-summary">선택 <time>{selected?.[0]??'—'}</time><b>{selected?.[4].toFixed(3)??'—'}</b> USDC</span>}>
+        <div className="theme-chart-readout compact-toolbar-summary"><time>{selected?.[0]??'—'} UTC</time><span>O {selected?.[1].toFixed(3)??'—'}</span><span>H {selected?.[2].toFixed(3)??'—'}</span><span>L {selected?.[3].toFixed(3)??'—'}</span><span>C {selected?.[4].toFixed(3)??'—'}</span><span>USDC</span></div>
+        <p>HYPE 현물 · 거래량 HYPE · E 근거 / J 판정</p><p className="compact-toolbar-muted">표시 구간 {view.start} ~ {view.end}</p>
+      </CompactToolbarMenu>
+      <button className="compact-toolbar-action" type="button" onClick={()=>props.onView({...view,start:themeDate(day(bars.at(-1)![0])-180),end:themeDate(day(bars.at(-1)![0])+4)})}>6개월</button><button className="compact-toolbar-action" type="button" onClick={()=>props.onView({...view,start:bars[0][0],end:themeDate(day(bars.at(-1)![0])+4)})}>전체</button><button className="compact-toolbar-action" type="button" aria-pressed={view.style==='candles'} onClick={()=>props.onView({...view,style:view.style==='candles'?'line':'candles'})}>{view.style==='candles'?'캔들':'선'}</button>
+    </CompactToolbar>
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" tabIndex={0} aria-label="HYPE 현물 가격과 근거·판정 표식. 휠 확대 축소, 드래그 과거 이동" data-plot-left={left} data-plot-right={right} data-plot-top={top} data-plot-bottom={376} data-time-axis-top={376} data-start={view.start} data-end={view.end}
       onPointerMove={e=>{if(e.buttons)return;const b=e.currentTarget.getBoundingClientRect(),target=themeDate(day(view.start)+(e.clientX-b.left-left)/(right-left)*span),nearest=visible.reduce<ThemeBar|undefined>((best,b)=>!best||Math.abs(day(b[0])-day(target))<Math.abs(day(best[0])-day(target))?b:best,undefined);if(nearest&&nearest[0]!==view.selected)props.onView({...view,selected:nearest[0]});}}>
       {[0,.25,.5,.75,1].map(t=><g key={t}><line className="theme-grid" x1={left} x2={right} y1={top+t*(bottom-top)} y2={top+t*(bottom-top)}/><text x={right+8} y={top+t*(bottom-top)+4}>{visible.length?(hi-t*(hi-lo)).toFixed(2):'—'}</text></g>)}
@@ -31,6 +38,6 @@ export function ThemeChart(props:{bars:ThemeBar[];evidence:ThemeEvidence[];judgm
       {Array.from({length:tickCount},(_,i)=>themeDate(day(view.start)+Math.round(span*i/(tickCount-1)))).map(d=><text key={d} x={x(d)} y={402} textAnchor="middle">{d.slice(0,span<90?10:7)}</text>)}
       {marks.map(({key,items,first:e,px,cy})=>{const selectedId=e.type==='judgment'?props.selectedJudgment:props.selectedEvidence,selected=items.some(i=>i.id===selectedId),target=items.find(i=>i.id===selectedId)??items.at(-1)!;const choose=()=>e.type==='judgment'?props.onJudgment(target.id):props.onEvidence(target.id);return <Fragment key={key}><line className={`theme-event-guide ${e.type}`} x1={px} x2={px} y1={cy+8} y2={bottom}/><g className={`theme-event-mark ${e.type} ${selected?'selected':''}`} role="button" tabIndex={0} aria-label={`${e.type==='judgment'?'판정':'근거'} ${items.length>1?`${items.length}건`:e.title} ${e.date}`} onClick={choose} onKeyDown={event=>{if(['Enter',' '].includes(event.key)){event.preventDefault();choose();}}}><title>{items.map(i=>i.title).join(' / ')} / {e.date}</title><rect x={px-12} y={cy-7} width={24} height={16} rx={2}/><text x={px} y={cy+5} textAnchor="middle">{e.type==='judgment'?'J':'E'}{items.length>1?items.length:''}</text></g></Fragment>;})}
     </svg>
-    <div className="theme-chart-tools"><span>E 근거 / J 판정</span><button type="button" onClick={()=>props.onView({...view,start:themeDate(day(bars.at(-1)![0])-180),end:themeDate(day(bars.at(-1)![0])+4)})}>6개월</button><button type="button" onClick={()=>props.onView({...view,start:bars[0][0],end:themeDate(day(bars.at(-1)![0])+4)})}>전체</button><button type="button" aria-pressed={view.style==='candles'} onClick={()=>props.onView({...view,style:view.style==='candles'?'line':'candles'})}>{view.style==='candles'?'캔들':'선'}</button></div>
+    <div className="theme-chart-tools"><span>E 근거 / J 판정</span></div>
   </div>;
 }
