@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "kind": "pre-deployment-public-ui-observation",
+  "observedAt": "2026-11-06T10:10:25.233250+00:00",
+  "site": "https://twoimo.github.io/bitcoin-cycle-atlas/",
+  "uiRoute": "https://twoimo.github.io/bitcoin-cycle-atlas/?page=outlook&center=data",
+  "visibleSourcePrefix": "59ec6f4f708e",
+  "visiblePublicationTime": "26. 11. 6. 오후 3:53 KST",
+  "steps": [
+    "Clicked 자산 비교 in the chart rail.",
+    "Opened 자산 비교표 읽는 법.",
+    "Clicked 자료 상태·공통 기준시각 and observed the actual forecast journal data tab.",
+    "Read 기준 코드59ec6f4f708e from the public visible UI.",
+    "Closed the journal and returned to the price chart."
+  ],
+  "downloadAttempt": {
+    "control": "자료 명세 JSON",
+    "outcome": "The parent-tab download event listener timed out after10seconds while clicking a button inside the embedded asset frame. No file path was returned.",
+    "claim": "This is a browser automation export observation, not a diagnosed product download failure or completed download."
+  },
+  "scope": "Pre-deployment route preparation only. The new integrated source was not yet merged or deployed. Final public UI verification remains required after Pages succeeds."
+}

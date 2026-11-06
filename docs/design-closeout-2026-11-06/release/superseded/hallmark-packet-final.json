@@ -1,0 +1,451 @@
+{
+  "kind": "final-pr-packet-hallmark-verification",
+  "runId": 42198684766,
+  "jobId": 127828267896,
+  "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42198684766",
+  "status": "success",
+  "workflowStatus": "completed",
+  "expectedHead": "1bba1a4baa616ca7849134c0b925143cde96bb18",
+  "expectedTree": "62824a8db50b79a2d6456d88c26491e183d1c028",
+  "observedHead": "1bba1a4baa616ca7849134c0b925143cde96bb18",
+  "observedTree": "62824a8db50b79a2d6456d88c26491e183d1c028",
+  "runStartedAt": "2026-11-06T09:55:29Z",
+  "jobCompletedAt": "2026-11-06T09:58:09Z",
+  "sourceIdentity": {
+    "headMatches": true,
+    "receiptMatches": true,
+    "treeMatches": true,
+    "localEquivalentCommit": "3c9725ca4792f9c6716d1192cd23b4790e63b59c",
+    "localEquivalentTree": "62824a8db50b79a2d6456d88c26491e183d1c028",
+    "productDistTree": "7429c879d54c27ecbac9e2c1f4cdb8cd77ad2dc3",
+    "comparisonCommit": "aca73b74a5128a5466488a0c701e86f5e854af46",
+    "readOnlyGitDiffChangedPaths": [],
+    "readOnlyGitDiffScope": [
+      "dist",
+      "tools/hallmark",
+      "scripts/verify-hallmark-design.mjs",
+      "scripts/hallmark-source-scope.mjs",
+      ".github/workflows"
+    ]
+  },
+  "summary": {
+    "designGate": {
+      "status": "pass",
+      "fails": 0,
+      "reflex": 0
+    },
+    "integrityGate": {
+      "status": "pass",
+      "errors": 0
+    },
+    "sourceReadOnly": {
+      "current": true,
+      "baseline": true,
+      "gitBlobsMatched": true
+    },
+    "exitCode": 0,
+    "currentFails": 0,
+    "currentReflex": 0,
+    "currentWarns": 35,
+    "currentStatic": {
+      "name": "current-static",
+      "code": 0,
+      "fails": 0,
+      "reflex": 0,
+      "warns": 25,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 43,
+      "render": "off",
+      "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX",
+      "counts": {
+        "WARN 40": 5,
+        "WARN F7": 20
+      }
+    },
+    "currentRender": {
+      "name": "current-render",
+      "code": 0,
+      "fails": 0,
+      "reflex": 0,
+      "warns": 10,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 1,
+      "render": "ran",
+      "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 145/207; before 53 FAIL, 211 REFLEX, now 0 FAIL, 0 REFLEX",
+      "counts": {
+        "WARN F3": 1,
+        "WARN F7": 1,
+        "WARN F19": 2,
+        "WARN F25": 4,
+        "WARN kept": 2
+      },
+      "screenshots": 40,
+      "requestedUrls": 8
+    },
+    "renderCoverage": [
+      {
+        "phase": "baseline-render",
+        "render": "ran",
+        "screenshots": 40,
+        "requestedUrls": 8
+      },
+      {
+        "phase": "current-render",
+        "render": "ran",
+        "screenshots": 40,
+        "requestedUrls": 8
+      }
+    ],
+    "screenshotsTotal": 80,
+    "readinessByVersion": [
+      {
+        "version": "baseline",
+        "readyRoutes": [
+          "btc",
+          "eth",
+          "bmnr",
+          "mstr",
+          "data",
+          "evidence",
+          "compare",
+          "mobile-preview"
+        ]
+      },
+      {
+        "version": "current",
+        "readyRoutes": [
+          "btc",
+          "eth",
+          "bmnr",
+          "mstr",
+          "data",
+          "evidence",
+          "compare",
+          "mobile-preview"
+        ]
+      }
+    ]
+  },
+  "receipt": {
+    "sourceCommit": "1bba1a4baa616ca7849134c0b925143cde96bb18",
+    "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+    "phases": [
+      {
+        "name": "baseline-static",
+        "fails": 1214,
+        "reflex": 1347,
+        "warns": 37,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 26,
+        "render": "off",
+        "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      {
+        "name": "baseline-render",
+        "fails": 53,
+        "reflex": 211,
+        "warns": 13,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      {
+        "name": "current-static",
+        "fails": 0,
+        "reflex": 0,
+        "warns": 25,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 43,
+        "render": "off",
+        "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX"
+      },
+      {
+        "name": "current-render",
+        "fails": 0,
+        "reflex": 0,
+        "warns": 10,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 145/207; before 53 FAIL, 211 REFLEX, now 0 FAIL, 0 REFLEX"
+      }
+    ],
+    "designGate": {
+      "status": "pass",
+      "fails": 0,
+      "reflex": 0
+    },
+    "integrityGate": {
+      "status": "pass",
+      "errors": 0
+    },
+    "sourceReadOnly": {
+      "current": true,
+      "baseline": true,
+      "gitBlobsMatched": true
+    },
+    "durationMilliseconds": 129705,
+    "readiness": [
+      {
+        "version": "baseline",
+        "route": "btc",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "eth",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "bmnr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "mstr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "data",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "evidence",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "compare",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "mobile-preview",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "btc",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "eth",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "bmnr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "mstr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "data",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "evidence",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "compare",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "mobile-preview",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+        "status": "ready"
+      }
+    ],
+    "errors": [],
+    "exitCode": 0
+  },
+  "phases": [
+    {
+      "name": "baseline-static",
+      "code": 0,
+      "fails": 1214,
+      "reflex": 1347,
+      "warns": 37,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 26,
+      "render": "off",
+      "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it",
+      "counts": {
+        "FAIL 19": 1,
+        "FAIL 26a": 1,
+        "FAIL 34": 25,
+        "FAIL 39a": 20,
+        "FAIL 47a": 1,
+        "FAIL 48": 1127,
+        "FAIL 56": 1,
+        "FAIL 63": 17,
+        "FAIL 67": 21,
+        "REFLEX 24b": 1341,
+        "REFLEX 26b": 2,
+        "REFLEX 38iii": 4,
+        "WARN 3": 3,
+        "WARN 29": 9,
+        "WARN 40": 10,
+        "WARN 41": 6,
+        "WARN F3": 1,
+        "WARN F7": 5,
+        "WARN F23": 1,
+        "WARN F24": 2
+      }
+    },
+    {
+      "name": "baseline-render",
+      "code": 0,
+      "fails": 53,
+      "reflex": 211,
+      "warns": 13,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 1,
+      "render": "ran",
+      "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it",
+      "counts": {
+        "FAIL 26a": 2,
+        "FAIL 40": 19,
+        "FAIL 48": 24,
+        "FAIL 56": 4,
+        "FAIL 67": 4,
+        "REFLEX 24b": 194,
+        "REFLEX 26b": 1,
+        "REFLEX 39b": 5,
+        "REFLEX 49b": 2,
+        "REFLEX 72": 2,
+        "REFLEX 75": 7,
+        "WARN 29": 1,
+        "WARN 40": 4,
+        "WARN F3": 1,
+        "WARN F19": 2,
+        "WARN F24": 1,
+        "WARN F25": 4
+      },
+      "screenshots": 40,
+      "requestedUrls": 8
+    },
+    {
+      "name": "current-static",
+      "code": 0,
+      "fails": 0,
+      "reflex": 0,
+      "warns": 25,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 43,
+      "render": "off",
+      "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX",
+      "counts": {
+        "WARN 40": 5,
+        "WARN F7": 20
+      }
+    },
+    {
+      "name": "current-render",
+      "code": 0,
+      "fails": 0,
+      "reflex": 0,
+      "warns": 10,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 1,
+      "render": "ran",
+      "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 145/207; before 53 FAIL, 211 REFLEX, now 0 FAIL, 0 REFLEX",
+      "counts": {
+        "WARN F3": 1,
+        "WARN F7": 1,
+        "WARN F19": 2,
+        "WARN F25": 4,
+        "WARN kept": 2
+      },
+      "screenshots": 40,
+      "requestedUrls": 8
+    }
+  ],
+  "artifact": [
+    {
+      "id": 13492977272,
+      "name": "hallmark-design-1bba1a4baa616ca7849134c0b925143cde96bb18",
+      "sizeBytes": 10838887,
+      "digestReportedByGithub": "sha256:4aadb8e54c1b36bb379a4f77356db661054421d755938fb6fe9da1c6a9a8ec83",
+      "expired": false
+    }
+  ],
+  "fontReceipt": "commit=f8d157532fbfaeda587e826d4cd5b21a49186f7c font_blob=dc4a7c65e6f450bf17c10a2405250b620eb78703 license_blob=d952d62c065f3f35fb83a173496e90b21525aef3",
+  "evidenceBasis": {
+    "jobLogCharacters": 4848805,
+    "receiptMarkerCount": 1,
+    "phaseMarkerCount": 4,
+    "source": "Fresh GitHub Actions completed job log via connector; artifact digest is API-reported, no new ZIP downloaded.",
+    "localTestsRerun": false,
+    "sourceEdited": false,
+    "priorReceiptPreserved": "build/release-monitor/hallmark-final.json"
+  }
+}

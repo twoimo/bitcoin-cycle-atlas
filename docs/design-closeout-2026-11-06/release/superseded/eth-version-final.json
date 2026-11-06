@@ -1,0 +1,352 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-06T10:24:35.201Z",
+  "repo": "twoimo/bitcoin-cycle-atlas",
+  "sourceCommit": "ada2f3c645b3023f93b0f0799daf9b57481b57cc",
+  "sourceTree": "397cf7dd9bd2d78c4c8d9057107c5a9481938b02",
+  "productDistTree": "7832034a94a43d2186be6bdf7377499d1ac42edb",
+  "run": {
+    "id": 42202007133,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42202007133",
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-06T10:21:11Z",
+    "updatedAt": "2026-11-06T10:23:01Z"
+  },
+  "jobs": [
+    {
+      "id": 127839879462,
+      "name": "evaluate",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 42202007133,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Test candidate equations, missing inputs, clocks and future-information boundaries",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 4
+        },
+        {
+          "name": "Evaluate preserved asset forecasts without requiring a new forecast issue",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 5
+        },
+        {
+          "name": "Collect pinned public economic source with actual acquisition receipts",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Diagnose preserved source completion clocks and exact partial economic aggregates",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Attempt a bounded public Ethereum throughput supplement and preserve actual failure receipts",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Attempt one protocol-defined PoW issuance observation without activating an economic snapshot",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Reconcile metric definitions raw-byte replays and actual economic source clocks",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Preserve actual economic capture vintages and independently replay their raw inputs",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Audit bounded public supply claims with exact non-fee destruction accounting",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Reconcile actual supply sampling grids with exact UTC boundary stock requirements",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Collect one pinned fixed-validator cohort state without activating economic inputs",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Evaluate the exact committed candidates and current stored prices",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Audit ETH periods, volatility, simulation and institutional arithmetic",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "Compare pooled returns, interval evidence and exact preservation of existing adaptive results",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17
+        },
+        {
+          "name": "Compare intervals with simple fixed-volatility and original empirical controls",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Evaluate causal state initialization as a separate research control",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19
+        },
+        {
+          "name": "Measure fixed-seed numerical sensitivity without selecting a winning seed",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20
+        },
+        {
+          "name": "Compare every price candidate on fixed common origins across the declared seed panel",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Freeze earlier calibration errors and evaluate only later disjoint forecast windows",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Read the fixed prospective evidence branch without publication permission",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 23
+        },
+        {
+          "name": "Restore and independently validate the selected prospective archive bytes",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 24
+        },
+        {
+          "name": "Acquire one bounded ETH tail and preserve adaptive pooled and opt-in warm-start records",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Reexecute preserved prospective records independently of acquisition success",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 26
+        },
+        {
+          "name": "Validate retained prospective calibration evidence without requiring a new forecast issue",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 27
+        },
+        {
+          "name": "Diagnose prospective calendar and retained-input capacity without relaxing sample requirements",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 28
+        },
+        {
+          "name": "Rebuild the reviewed ETH base candidate without changing the operating base",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 29
+        },
+        {
+          "name": "Append current evidence and prove exact restoration of the previous archive",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 30
+        },
+        {
+          "name": "Reconcile existing models and remaining evidence conditions",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 31
+        },
+        {
+          "name": "Verify preserved ETH BMNR and MSTR records and issue only with current inputs",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 32
+        },
+        {
+          "name": "Install a pinned Korean font with bounded network and cache time",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 33
+        },
+        {
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 34
+        },
+        {
+          "name": "Bind exact committed sources inputs and execution evidence for external review",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 35
+        },
+        {
+          "name": "Preserve complete source-identified candidate evidence",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 36
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 71
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 72
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 73
+        }
+      ]
+    }
+  ],
+  "caseCountsFromLog": [
+    "2026-11-06T10:22:57.3353506Z ✖ main replay coordinator guards source identity, exact resume, input boundaries and explicit model comparison (69.92502ms)",
+    "2026-11-06T10:22:57.3355670Z ✖ default cutoff entry preserves current-chart save and Continue across mode changes (71.054087ms)",
+    "2026-11-06T10:22:57.3357181Z ✖ saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories (67.419725ms)",
+    "2026-11-06T10:22:57.3358867Z ✖ destroy during an explicit save releases replay once and ignores late completion (91.239888ms)",
+    "2026-11-06T10:22:57.3360423Z ✖ manual date button and Enter reject invalid dates without changing a resumed capture (78.091969ms)",
+    "2026-11-06T10:22:57.3361726Z ✖ manual invalid dates leave an unconfirmed replay start unconfirmed (84.583495ms)",
+    "2026-11-06T10:22:57.3362920Z ✖ forecast settings cannot confirm an unselected replay start (78.052946ms)",
+    "2026-11-06T10:22:57.3364495Z ✖ first weekly replay entry waits for an explicit start while keeping the project default date (79.907034ms)",
+    "2026-11-06T10:22:57.3366477Z ✖ saved replay entry requires Continue or Start new and restores the original origin separately from its selected date (88.877708ms)",
+    "2026-11-06T10:22:57.3368580Z ✖ Start new, scissors hover, selection cancellation and unconfirmed exit preserve saved bytes without a fake cutoff (85.028938ms)",
+    "2026-11-06T10:22:57.3370464Z ✖ weekly start preview blocks Play, Forward and Jump to real-time until a clicked bar is confirmed (88.432217ms)",
+    "2026-11-06T10:22:57.3372212Z ✖ only checked confirmed exit persists a draft and a saved line chart resumes with its actual archive (116.57826ms)",
+    "2026-11-06T10:22:57.3374412Z ✖ reselecting during playback previews independently and pointer confirmation cuts actual data before the selected bar (79.019073ms)",
+    "2026-11-06T10:22:57.3376527Z ✖ Select date, Random bar and First available day use the real capability range including an empty first cutoff (81.954629ms)",
+    "2026-11-06T10:22:57.3378663Z ✖ Select bar opens only starting actions, keeps forecast settings separate and selects a chart bar without mutating saved state (80.019276ms)",
+    "2026-11-06T10:22:57.3380940Z ✖ the date selection editor follows the restored visible cursor and discards unapplied drafts without changing the session start (72.703116ms)",
+    "2026-11-06T10:22:57.3383012Z ✖ date editing preserves the default first candle and reports empty cutoffs and actual gaps truthfully (102.31762ms)",
+    "2026-11-06T10:22:57.3385051Z ✖ compact transport returns to its original start and opens the explicit save choice before jumping to the live chart (112.887162ms)",
+    "2026-11-06T10:22:57.3386707Z ✖ Select bar retains native form keys and closes through Escape, its close action and an outside pointer (80.803007ms)",
+    "2026-11-06T10:22:57.3388614Z ✖ weekly replay and all existing viewport periods route without rebuilding or changing the current orange forecast (85.87693ms)",
+    "2026-11-06T10:22:57.3390531Z ✖ unsupported intraday entry stays on the selected interval and displays the missing-source reason (79.511844ms)",
+    "2026-11-06T10:22:57.3392588Z ✖ Shift replay shortcuts retain native input behavior and never persist on blur or page hide (76.238193ms)",
+    "2026-11-06T10:22:57.3394691Z ✖ baseline close-only scoring dates and separate weekly candles retain distinct source and evaluation clocks (80.022665ms)",
+    "2026-11-06T10:22:57.3396528Z ✖ a changed forecast hash rejects Continue while preserving the exact previous saved session (83.522025ms)",
+    "2026-11-06T10:22:57.3398065Z ✖ entry and exit choices stop pointer, click, wheel and keyboard propagation to the chart behind the modal (89.289998ms)",
+    "2026-11-06T10:22:57.3399942Z ✖ a close-only recorded visit cannot overwrite the saved line display when Continue reloads genuine candles (82.476471ms)",
+    "2026-11-06T10:22:57.3401672Z ✖ generic BTC Continue synchronizes a live weekly header with the actual daily renderer and recorded line fallback (108.013769ms)",
+    "2026-11-06T10:22:57.3458246Z ✖ cutoff selection, result reveal and save resume retain the exact forecast and old storage (638.835276ms)",
+    "2026-11-06T10:22:57.3460079Z ✖ a different horizon retains the selected start, while an invalid saved forecast fails without regeneration (663.216539ms)",
+    "2026-11-06T10:22:57.3461882Z ✖ unavailable source stays an error, and retry accepts a supported date without saving preview (527.637874ms)",
+    "2026-11-06T10:22:57.3476900Z ℹ tests 155",
+    "2026-11-06T10:22:57.3477299Z ℹ suites 0",
+    "2026-11-06T10:22:57.3477700Z ℹ pass 125",
+    "2026-11-06T10:22:57.3478092Z ℹ fail 30",
+    "2026-11-06T10:22:57.3478481Z ℹ cancelled 0",
+    "2026-11-06T10:22:57.3478811Z ℹ skipped 0",
+    "2026-11-06T10:22:57.3479128Z ℹ todo 0",
+    "2026-11-06T10:22:57.3479520Z ℹ duration_ms 15298.206028",
+    "2026-11-06T10:22:57.3768073Z ✖ main replay coordinator guards source identity, exact resume, input boundaries and explicit model comparison (69.92502ms)",
+    "2026-11-06T10:22:57.3809658Z ✖ default cutoff entry preserves current-chart save and Continue across mode changes (71.054087ms)",
+    "2026-11-06T10:22:57.3847641Z ✖ saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories (67.419725ms)",
+    "2026-11-06T10:22:57.3887508Z ✖ destroy during an explicit save releases replay once and ignores late completion (91.239888ms)",
+    "2026-11-06T10:22:57.3936430Z ✖ manual date button and Enter reject invalid dates without changing a resumed capture (78.091969ms)",
+    "2026-11-06T10:22:57.3971749Z ✖ manual invalid dates leave an unconfirmed replay start unconfirmed (84.583495ms)",
+    "2026-11-06T10:22:57.4007248Z ✖ forecast settings cannot confirm an unselected replay start (78.052946ms)",
+    "2026-11-06T10:22:57.4042156Z ✖ first weekly replay entry waits for an explicit start while keeping the project default date (79.907034ms)",
+    "2026-11-06T10:22:57.4077320Z ✖ saved replay entry requires Continue or Start new and restores the original origin separately from its selected date (88.877708ms)",
+    "2026-11-06T10:22:57.4112248Z ✖ Start new, scissors hover, selection cancellation and unconfirmed exit preserve saved bytes without a fake cutoff (85.028938ms)",
+    "2026-11-06T10:22:57.4146824Z ✖ weekly start preview blocks Play, Forward and Jump to real-time until a clicked bar is confirmed (88.432217ms)",
+    "2026-11-06T10:22:57.4181343Z ✖ only checked confirmed exit persists a draft and a saved line chart resumes with its actual archive (116.57826ms)",
+    "2026-11-06T10:22:57.4216016Z ✖ reselecting during playback previews independently and pointer confirmation cuts actual data before the selected bar (79.019073ms)",
+    "2026-11-06T10:22:57.4250487Z ✖ Select date, Random bar and First available day use the real capability range including an empty first cutoff (81.954629ms)",
+    "2026-11-06T10:22:57.4286061Z ✖ Select bar opens only starting actions, keeps forecast settings separate and selects a chart bar without mutating saved state (80.019276ms)",
+    "2026-11-06T10:22:57.4344667Z ✖ the date selection editor follows the restored visible cursor and discards unapplied drafts without changing the session start (72.703116ms)",
+    "2026-11-06T10:22:57.4379764Z ✖ date editing preserves the default first candle and reports empty cutoffs and actual gaps truthfully (102.31762ms)",
+    "2026-11-06T10:22:57.4414583Z ✖ compact transport returns to its original start and opens the explicit save choice before jumping to the live chart (112.887162ms)",
+    "2026-11-06T10:22:57.4449183Z ✖ Select bar retains native form keys and closes through Escape, its close action and an outside pointer (80.803007ms)",
+    "2026-11-06T10:22:57.4483781Z ✖ weekly replay and all existing viewport periods route without rebuilding or changing the current orange forecast (85.87693ms)",
+    "2026-11-06T10:22:57.4518780Z ✖ unsupported intraday entry stays on the selected interval and displays the missing-source reason (79.511844ms)",
+    "2026-11-06T10:22:57.4553603Z ✖ Shift replay shortcuts retain native input behavior and never persist on blur or page hide (76.238193ms)",
+    "2026-11-06T10:22:57.4588523Z ✖ baseline close-only scoring dates and separate weekly candles retain distinct source and evaluation clocks (80.022665ms)",
+    "2026-11-06T10:22:57.4608312Z ✖ a changed forecast hash rejects Continue while preserving the exact previous saved session (83.522025ms)",
+    "2026-11-06T10:22:57.4625368Z ✖ entry and exit choices stop pointer, click, wheel and keyboard propagation to the chart behind the modal (89.289998ms)",
+    "2026-11-06T10:22:57.4642360Z ✖ a close-only recorded visit cannot overwrite the saved line display when Continue reloads genuine candles (82.476471ms)",
+    "2026-11-06T10:22:57.4659419Z ✖ generic BTC Continue synchronizes a live weekly header with the actual daily renderer and recorded line fallback (108.013769ms)",
+    "2026-11-06T10:22:57.4676462Z ✖ cutoff selection, result reveal and save resume retain the exact forecast and old storage (638.835276ms)",
+    "2026-11-06T10:22:57.4683209Z ✖ a different horizon retains the selected start, while an invalid saved forecast fails without regeneration (663.216539ms)",
+    "2026-11-06T10:22:57.4690063Z ✖ unavailable source stays an error, and retry accepts a supported date without saving preview (527.637874ms)"
+  ],
+  "nativeReceiptAvailable": false,
+  "packetManifestAvailable": false,
+  "artifacts": [],
+  "primaryFailure": {
+    "stage": 4,
+    "test": "tests/chart-replay-ui.test.mjs:124",
+    "actual": "./chart-replay-state.js?v=1.31.2",
+    "expected": "./chart-replay-state.js?v=1.31.3",
+    "relatedFailureCode": "ERR_VM_MODULE_NOT_MODULE",
+    "productDistUnchangedFromParent": true
+  },
+  "verdict": "FAIL before native browser execution. Package v1.31.3 and unchanged dist query versions disagree with formal VM harness expectations. No native or packet approval.",
+  "jobLog": {
+    "rawPath": "build/release-monitor/eth-version-final-job.log",
+    "rawBytes": 230322,
+    "rawSha256": "b133e9489461f14d6daa3f2a05f91e73313b3bc986868c85960b98457a153827",
+    "gzipPath": "build/release-monitor/eth-version-final-job.log.gz",
+    "gzipBytes": 27062,
+    "gzipSha256": "8b03b76d9ce2f1ae7ed882f0be3a7609c2bc08df6b759b1d792234af2e2228c9"
+  }
+}

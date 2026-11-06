@@ -1,0 +1,1528 @@
+{
+  "verifiedAt": "2026-11-06T11:07:24.410Z",
+  "sourceCommit": "601119796df94dc77b213b73838a9d4a840afe14",
+  "sourceTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+  "productDistTree": "33532c2d59d03a5b6f8f582e528edb855badec4f",
+  "checkedNativeSourceFiles": 98,
+  "matchedCommittedPacketGitBlobs": 537,
+  "nativeSourceHashMismatches": [],
+  "committedPacketBlobMismatches": [],
+  "sourceFiles": [
+    {
+      "path": "dist/index.html",
+      "sha256": "a16b8a493e1a0eb69f66a84bc0af92ad9bd92dbd8fc853a68ac6b97647013d2d"
+    },
+    {
+      "path": "dist/site-entry.js",
+      "sha256": "f5efee9500e951624360a3bbbb18c26e4208e8e5ec71eb345810f0e9791344cb"
+    },
+    {
+      "path": "dist/asset-comparison.js",
+      "sha256": "765d85f67ffad760e75b1b8fe8600eeb274411adb154c079cc65e1ba3a9076c8"
+    },
+    {
+      "path": "dist/asset-judgment-history.js",
+      "sha256": "986b299bb7dc2c8e28cb2668bb2b7b3b7b0e507ba2b2f8ecb9040771d89ead9a"
+    },
+    {
+      "path": "dist/daily-data-view.js",
+      "sha256": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa"
+    },
+    {
+      "path": "dist/daily-data.css",
+      "sha256": "f45a6226526795d926caf2fe8c8df386f22f24c7a4383e05986b1b3df5b3366a"
+    },
+    {
+      "path": "dist/eth-view.js",
+      "sha256": "ef6e99760567649f3ab8705ef49c52e47726cb28486225847bafa4ede5066519"
+    },
+    {
+      "path": "dist/eth-view.css",
+      "sha256": "1f09834a4460821c83496ea97fc70a6fb2371ad8ef2560ca1dd48395eeb42d05"
+    },
+    {
+      "path": "dist/ethereum-forecast.js",
+      "sha256": "b86e6e917c8d72c9db892dc4931694f915d6d73352dbab54798a64bd5ee3db4c"
+    },
+    {
+      "path": "dist/ethereum-adaptive-model.js",
+      "sha256": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d"
+    },
+    {
+      "path": "dist/ethereum-pooled-model.js",
+      "sha256": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467"
+    },
+    {
+      "path": "dist/eth-view-state.js",
+      "sha256": "152003eacf02bd0e889b2ec8f89a867e702ab0d9db97a66e06ea7528a16021d1"
+    },
+    {
+      "path": "dist/ethereum-adoption-scenarios.js",
+      "sha256": "f49532abd2479a2531bb7e23aaf7ff2b8505a3c2ce0a84436f3768a25c18dc86"
+    },
+    {
+      "path": "dist/ethereum-research-panel.js",
+      "sha256": "f699155933c465057d8f1dc442c9b0de699e3a9d9eb1090a6566f46b724b93cc"
+    },
+    {
+      "path": "dist/ethereum-research-catalog.js",
+      "sha256": "1c7638bec65dd4f948bc260434355f7e79c3ff9d572515d3fa5ec142dcf38e35"
+    },
+    {
+      "path": "dist/eth-market-data.js",
+      "sha256": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075"
+    },
+    {
+      "path": "dist/intraday-chart.js",
+      "sha256": "1e44773709a57ee9d74567001555a7b3ffa1f90c0915e35355f580c96c676c3f"
+    },
+    {
+      "path": "dist/equity-forecast-chart.js",
+      "sha256": "a5601464a89dbfbda508d8de69a7d4a84b6858cc8981bef237eee0412676b75c"
+    },
+    {
+      "path": "dist/equity-view.js",
+      "sha256": "19716e251cbb3af657e66a1cad955aaf1324749dd20b281391c608e7e70d0168"
+    },
+    {
+      "path": "dist/treasury-projection.js",
+      "sha256": "9cf7e6660124880e5a9ad654f41c846d10deb309ace18cf59b96699963948fd1"
+    },
+    {
+      "path": "dist/treasury-model.js",
+      "sha256": "4812b36b65912209201eabf46ba39868cec7d7ddb014421e556476412b8e1739"
+    },
+    {
+      "path": "dist/forecast-information-time.js",
+      "sha256": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23"
+    },
+    {
+      "path": "dist/data/bmnr-ohlc.json",
+      "sha256": "db97d837fd4b3dcb68a3d3fac31b72e55b956a3c866630d4ec9a45e64bbe35a6"
+    },
+    {
+      "path": "dist/data/eth-ohlc.json",
+      "sha256": "73436a22ced40a0c1090f0ef926aed19d5381699089a6feee114f5dc9f312282"
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "sha256": "3590829a4a77d153468c4e98250feb4b269a501bce8601787c01f8ce76d29a29"
+    },
+    {
+      "path": "scripts/btc-offline-refresh-policy.mjs",
+      "sha256": "2129f5274e0338c2d747d45af29eacc1d00c7ee5bbcea99925faf53d23f75740"
+    },
+    {
+      "path": "tests/ethereum-offline-refresh-policy.test.mjs",
+      "sha256": "5697ad32f15a5f6a8a8d0a48dbd6546d5f72c6bdb64c645013e7ce836ac34c3d"
+    },
+    {
+      "path": "dist/data/btc-daily.json",
+      "sha256": "fae8889632b524deef33d04363da714efcb74f7906b8a507025516668c8cd7a6"
+    },
+    {
+      "path": "dist/app.js",
+      "sha256": "76b81d963981a4274f7fbc310da89ea6ba9f4bf4e22adf626fd7667bce479405"
+    },
+    {
+      "path": "dist/btc-refresh-status.js",
+      "sha256": "806ca5d59e4a9194bc9c2759c60821da154173a65944328a24010307808b2036"
+    },
+    {
+      "path": "tests/ethereum-btc-refresh-status.test.mjs",
+      "sha256": "a840171a6fa636993b9ae735cf1c8b3089ca76f9ef05d17bd98846da75372b73"
+    },
+    {
+      "path": "dist/data-source.js",
+      "sha256": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b"
+    },
+    {
+      "path": "dist/published-data.js",
+      "sha256": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010"
+    },
+    {
+      "path": "dist/asset-forecast-journal.js",
+      "sha256": "95298b2a35ced2ee51e7b3953bec6e520006edd102f0ee15187edb505f62da9c"
+    },
+    {
+      "path": "dist/asset-forecast-records.js",
+      "sha256": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2"
+    },
+    {
+      "path": "dist/journal-entry.js",
+      "sha256": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0"
+    },
+    {
+      "path": "dist/forecast-journal.css",
+      "sha256": "e8bb880c5a91a7729c3ff490aff6e21e86950faefb9b265bec36d000287a3683"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/index.json",
+      "sha256": "2620f75f54b9755f417296348a4e31e14d584c338bcd2b67b0ac15c2c59bbe62"
+    },
+    {
+      "path": "dist/data/mstr-ohlc.json",
+      "sha256": "c8838d17661f0cb4d8462fb8fb649e6a189d8c7f6188c36e9e00fa0b35e149d9"
+    },
+    {
+      "path": "dist/lab-view.js",
+      "sha256": "ca4fb2f10a9aec3e106e0ed064dc79a445dcae2c5b041a9852ebc906e169b48f"
+    },
+    {
+      "path": "dist/analysis-dock.css",
+      "sha256": "43b46d05978a7499823ef54d598f936de3279fbe3dc59cf77a8d66811f5e3fa9"
+    },
+    {
+      "path": "dist/compact-chart-layout.css",
+      "sha256": "b429642986c9d73b930b49b48da7a710d8403965c4f50ee06263338c12c14f30"
+    },
+    {
+      "path": "dist/mobile-workspace.css",
+      "sha256": "90a375739f01826b0a71c57789f50a09be6a6f944020194f6b70882f88578d3f"
+    },
+    {
+      "path": "dist/mobile-preview.js",
+      "sha256": "9d1ad1cdaf3e316579e4a33054d81d300e002b0214635a1481140b1a133acc9c"
+    },
+    {
+      "path": "scripts/verify-workspace-browser.mjs",
+      "sha256": "9ddda52e5cf8d71eccb772bd71a6dccaa0570424bf309a68d1aeea48ac0b6ec4"
+    },
+    {
+      "path": "dist/atlas.css",
+      "sha256": "a9a3abf1ef26eefb93d518a0af826387dc40939fa9354427b7496f9a24207485"
+    },
+    {
+      "path": "dist/atlas-shell.css",
+      "sha256": "1f087aadb72778f8050b0d3e2c45d9f465c33c5c93d476838ff0af9cbd70c18e"
+    },
+    {
+      "path": "dist/atlas-shell.js",
+      "sha256": "1f6f3c34dd031058c6851bd437df1f137d38f498045c5639b93d81a29ffed77b"
+    },
+    {
+      "path": "dist/center-workbench.js",
+      "sha256": "9e8481440f1237f10e98ccd95e9b6a9770b23751dea55ec1313ceecab5a0d411"
+    },
+    {
+      "path": "dist/market-lab.css",
+      "sha256": "68e9b99aeaa189540f919c464eb0bf5e7a307195c0544dad384b53580a9b1637"
+    },
+    {
+      "path": "dist/loading-surfaces.css",
+      "sha256": "241d713af90f378d6f927b8c1d29a39d150d26374b8fe3315b05b8b50df041cf"
+    },
+    {
+      "path": "dist/loading-surfaces.js",
+      "sha256": "f62d142df3ee3ae00ae10f63373d0421d785c253e7fc71acb8231714340e07cb"
+    },
+    {
+      "path": "dist/chart-bottom-bar.css",
+      "sha256": "67ef233b70921763ef1a91cc394d333a1ef755fca28d5e0d21b1e7f7773bbe3a"
+    },
+    {
+      "path": "dist/chart-details-panel.css",
+      "sha256": "16c64c7b3b6dd0dfb86b06bbb6c25edcdc37ce8ee4041032854ac1dc7fda3d37"
+    },
+    {
+      "path": "dist/chart-export-workbench.css",
+      "sha256": "5cfffd7d47507a90252b2e2b5b29ce448f95d13e56951d00e600eb43fb3321d5"
+    },
+    {
+      "path": "dist/chart-magnet.css",
+      "sha256": "5c7645a9f74619aaed469826bf599502dda56296a3aafcce548dfe30f4935b53"
+    },
+    {
+      "path": "dist/chart-workspace-controls.css",
+      "sha256": "708e87841f3d01e806be0ec7dfe1a69caa39780b658291aeee68661ae02073f9"
+    },
+    {
+      "path": "dist/compact.css",
+      "sha256": "24ea81f5c6635f6b06628b91faaa4cad20c705c66e695b71ff045d228f3de372"
+    },
+    {
+      "path": "dist/cycle-milestones.css",
+      "sha256": "22a9a9a21251a92a9310e2dc5d8cd0cfab809ee502db45991953a73905562712"
+    },
+    {
+      "path": "dist/equity-view.css",
+      "sha256": "99026cd6229df757176a648fc0f2c2ed88d7916a4e5eb65bcd8f9957db1ff5ad"
+    },
+    {
+      "path": "dist/ethereum-history.css",
+      "sha256": "017cf5ea799495460353b389a8265ca87a5c0ecbe35268c08ca5c8ed5ca1e896"
+    },
+    {
+      "path": "dist/lab.css",
+      "sha256": "517b84062e65c98b9c8171556edc25502a4fab079512f6b3a81ba245d37f30fc"
+    },
+    {
+      "path": "dist/outlook.css",
+      "sha256": "896e139d35497451bd11b9d117ec2c267544fe31fd01e979ab0d4dd280fda593"
+    },
+    {
+      "path": "dist/research-annotations.css",
+      "sha256": "d21629aadbb87bf1124f47a5dbe56a84cf5e725fcb4f300519720f4b169c650a"
+    },
+    {
+      "path": "dist/research-reader.css",
+      "sha256": "fb41b38773dce8872ff0320951202346bc01c46bbb2f92a19a4d63a8ede3c4c8"
+    },
+    {
+      "path": "dist/styles.css",
+      "sha256": "b9f135be9afa23f599908c9ab9bc8253013d69df240b7982e7a8fc6644768cb2"
+    },
+    {
+      "path": "dist/symbol-selector.css",
+      "sha256": "518e07096505c2be6a88a1412211caa53d61813d4ec045adfd8a10ab086c59cf"
+    },
+    {
+      "path": "dist/viewport.css",
+      "sha256": "36aecacae5e796bf5028a1e6963a217cc5eec5234f92184d134daa3ca312ec07"
+    },
+    {
+      "path": "dist/workspace-tools.css",
+      "sha256": "33c8052eb528b1d6882aefd3bcef02c6785b1058fe3216d56d011b149000a701"
+    },
+    {
+      "path": "dist/chart-bottom-bar.js",
+      "sha256": "e7dcdfce8326d5d4cf83265d1bd3fb715d26490b489b43523bbd72befd273b06"
+    },
+    {
+      "path": "dist/preserved-archive-download.js",
+      "sha256": "fdc1ae671b866a2d3731d645b57998bdb23a53de6b3bfd0b61946faeda5434fd"
+    },
+    {
+      "path": "dist/workspace-tools.js",
+      "sha256": "0e94b855cd8cd30c0a4a9c80c90a19a7774a133bdc587704774a13d23b3ad7c1"
+    },
+    {
+      "path": "dist/research-annotations-workbench.js",
+      "sha256": "296c51cce5f994df1f08dab65d263f2e82d94ab4e81280d8170b88b0ab4a0d5f"
+    },
+    {
+      "path": "dist/mobile-preview.html",
+      "sha256": "ef350dc53c4c61ca2bff5d4cf37d183ea13a5866cae9074f2522b7b7bd756379"
+    },
+    {
+      "path": "dist/symbol-selector.js",
+      "sha256": "86a41a84b273d59bfd26a9bf3a093e7ca5d684175cddb3f977e166968a473f4a"
+    },
+    {
+      "path": "dist/research-reader.js",
+      "sha256": "c8869e264aba1125bd56a23138d581287912b3e6b27ea6d392c4652c3d991575"
+    },
+    {
+      "path": "dist/evidence-view.js",
+      "sha256": "fee4c064ed597fdba398a623846e00a96d590b2e85e1645976c787f55c3b6330"
+    },
+    {
+      "path": "dist/viewport-workspace.js",
+      "sha256": "555581aabb40e439bc106c8dcb3b6c424123db7bc8a70b74bdfc5b5b2e3a1ad9"
+    },
+    {
+      "path": "dist/workbench-chrome.js",
+      "sha256": "82717c08789e53ffee6d2667ff6b342e59ed3954d3d566ab3f8c3c9d7f6d63e4"
+    },
+    {
+      "path": "dist/forecast-replay.js",
+      "sha256": "a50725737d9deb6cdb851867dcc60bcc202b19818d6bbccc88e67b986d2f2b13"
+    },
+    {
+      "path": "dist/forecast-replay-sources.js",
+      "sha256": "26d99528a81a49e8c738c542a2e2fbd911674efd874f02070c1ddd958e07cd52"
+    },
+    {
+      "path": "dist/forecast-replay-view.js",
+      "sha256": "ecd6ea1880d3e7b6d682860f35f9a4593267f8a5c560c475c23db901b4c2c93b"
+    },
+    {
+      "path": "dist/data/replay-eth-ohlc.json",
+      "sha256": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37"
+    },
+    {
+      "path": "scripts/verify-forecast-replay-browser.mjs",
+      "sha256": "d63cef852ce682cf8c63b9a0ab0c31ea76e2cec52330cc271c56af2ce77b195e"
+    },
+    {
+      "path": "dist/chart-replay.js",
+      "sha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90"
+    },
+    {
+      "path": "dist/chart-replay-snapshot.js",
+      "sha256": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6"
+    },
+    {
+      "path": "dist/chart-replay-state.js",
+      "sha256": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908"
+    },
+    {
+      "path": "dist/chart-replay-renderer.js",
+      "sha256": "ba06b1369f92c596bd12abfd8256dd044be38097807718fc12550e81cc369d6b"
+    },
+    {
+      "path": "dist/chart-replay-sources.js",
+      "sha256": "eda71aeffa8739bb233a9fb8413883ee0be3be357a271e761073873bacd63e3d"
+    },
+    {
+      "path": "dist/chart-replay.css",
+      "sha256": "211009c38aa3b7716e566ab8c1a94002ea15f2557d905e26d3a39107902d85bf"
+    },
+    {
+      "path": "dist/asset-forecast-loader.js",
+      "sha256": "2d373afa2f588f8d640b7432b1e226d64580fb1a96efc6631c6e2dcb7e1168cb"
+    },
+    {
+      "path": "dist/data/btc-volume.json",
+      "sha256": "1333504eef05146976cc2763f3d3456240e67b23b290cb56b295cae110fa278d"
+    },
+    {
+      "path": "scripts/verify-chart-replay-browser.mjs",
+      "sha256": "04e419ba8e1858153385d134e9e765b8458a0b763a158f935e7ccd0a4656fcad"
+    },
+    {
+      "path": "dist/chart-replay-atlas.js",
+      "sha256": "a19db4c72ffa6c7e6aeeaf547b5a74a404e1678a1f7233201a1108dfd7518b63"
+    },
+    {
+      "path": "dist/atlas-price-chart.js",
+      "sha256": "4c84b2b63c81baa396a411845f0c6c3731e60a62c5f3b5ec1bc1c216c70626bf"
+    },
+    {
+      "path": "dist/project-replay-baseline.js",
+      "sha256": "b24462b0b8ac13b8640fc0717e98ed5cf198a779281cbd64bd3551a4529c6861"
+    },
+    {
+      "path": "dist/data/project-origin-btc-2026-10-21.json",
+      "sha256": "571d0d3421d7ae40da4fb3020ab0290aa534822d5a439f9e98f55dc31d5f19ac"
+    },
+    {
+      "path": "scripts/build-project-replay-baseline.mjs",
+      "sha256": "1ddf49e09ad015afd526996112c521d23fba5e539af73439c85628dec13aed83"
+    }
+  ],
+  "caseDigestMethod": "SHA256 of UTF-8 JSON.stringify(case) after parsing exact artifact eth-browser/report.json; one digest per recorded case",
+  "cases": [
+    {
+      "index": 1,
+      "page": "data",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "6824f0e51d3a7742b54f30c11361efdf95aa398448c8eb027740070abd4cfbf2",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 2,
+      "page": "eth",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "9b88f1c004afe7d0b3946a355a109bc821699ebcebf08cdef6e0a0ebb883d144",
+      "screenshots": 7,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 3,
+      "page": "bmnr",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "714a31ce1aa02a9a96fb6fca7f333f584683870ac4dff72f1653cd10d1b1a627",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 4,
+      "page": "mstr",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "f56f975e4ad10688814d08e19220ea5f35b744386c62c1759e14b8b12d68911d",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 5,
+      "page": "zero-fixture",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "5ec91f00643b7f6f732cd66bf028d46537aa1835978761c005f121d5bb2aa5e7",
+      "screenshots": 1,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 6,
+      "page": "data",
+      "width": 390,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "8cb33547a4d82547fa86afea630bda377824ba6b9a35d5deea17c33cffd07bd2",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 7,
+      "page": "eth",
+      "width": 390,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "ad20bbc64cb449db36b6b7ee4359d7512521afb6d025038f31dba35b23512a42",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 8,
+      "page": "bmnr",
+      "width": 390,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "5bd15bdbb827ace2c252e6a1b7765b5276f30c24ecc0e5fadc0de0ac0b027d11",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 9,
+      "page": "mstr",
+      "width": 390,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "b05a57957a1bb6c3111a7c4678255e89066b70c05bebaf6e06321bac331ed530",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 10,
+      "page": "data",
+      "width": 768,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "9ad0c22570e6ce27b03bcc179f43b8eef60cce747a16152a1a2a7843ab94adee",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 11,
+      "page": "eth",
+      "width": 768,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "4851df7d9558649c04a915a723a82c9a06b83840341e27916b5020e7f3825d68",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 12,
+      "page": "bmnr",
+      "width": 768,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "8912e0ae0d383d8350c6fd6e28b213c56e63d41da8271d764256bb7f585dc6fd",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 13,
+      "page": "mstr",
+      "width": 768,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "21770702b9095b9a1e1475373d98da521c3251622911096febda73a5bb3287ee",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 14,
+      "page": "data",
+      "width": 1024,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "4f4816145760cf2bbf753d7afd627198b84c0ae16444d58d42288d5c6c57cab4",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 15,
+      "page": "eth",
+      "width": 1024,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "7e27afba64f0decdcb4c8d3fe18078039378623320a0b2808ed7db2f9e12f72e",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 16,
+      "page": "bmnr",
+      "width": 1024,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "c7b4aebbb16a3d745592dfe330227d3577db57d853e39ff27d744acdcabb7492",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 17,
+      "page": "mstr",
+      "width": 1024,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "5b675b58aadd5bc5ec9ab77516b2b1119a5e0ea9867c71e321eb5d4d384ce23b",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 18,
+      "page": "data",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "d91a4d7767d8382ffc2f8f346a3059fb17c26907008348d4a3f8b3176cafb781",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 19,
+      "page": "eth",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "71fb544348fcb9c2bc3b8dd7134444653d50b1731c2fad709c2d5624941e0b6c",
+      "screenshots": 7,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 20,
+      "page": "bmnr",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "b5903f5e5e48baca3ce17a8f7f188013aa00de8822fc185fec4bf750e650a143",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 21,
+      "page": "mstr",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "266388cf022844c7dee7e20c86b8c2d21e49e4849a3061a25f02258e6f8ae52f",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 22,
+      "page": "data",
+      "width": 1620,
+      "height": 1008,
+      "status": "passed",
+      "jsonStringifySha256": "74779ceaf938514445a40e8a69d3305d81969f6386a5f7a47ddf4455175d42ee",
+      "screenshots": 7,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 23,
+      "page": "data",
+      "width": 1920,
+      "height": 1440,
+      "status": "passed",
+      "jsonStringifySha256": "26032870168136532127b0ca02b0a4109042d39fbbfebfeaca5660f6e0464828",
+      "screenshots": 5,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 24,
+      "page": "data",
+      "width": 900,
+      "height": 430,
+      "status": "passed",
+      "jsonStringifySha256": "69b76580d07505846ab25a9cdc89b2c9a3169388ba8cf6ea3731917bbc3782a9",
+      "screenshots": 7,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 25,
+      "page": "data",
+      "width": 320,
+      "height": 568,
+      "status": "passed",
+      "jsonStringifySha256": "d1992cbf806d61abb558d4a5cc778172c6c7f46f5142827ed3a3fb1144bffb9f",
+      "screenshots": 7,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 26,
+      "page": "workspace-btc",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "d8aff890ee25989629eadbca9096fcd60ebb08180fa480f531e5da376d4d0e99",
+      "screenshots": 11,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 27,
+      "page": "workspace-evidence",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "5428a794b0a6647854a37a332791e31cfe26dd3db0332d8ff75e861b2d6663c1",
+      "screenshots": 3,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 28,
+      "page": "workspace-legacy",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "e302425ae4060eb7f08424f2a2e489b79a4ed775f932d87391eef3700e90b683",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 29,
+      "page": "workspace-preview",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "3c8aa1073191f9f1520aac85d141f3f297459da3b25a3ccdb62f2605feb8294c",
+      "screenshots": 8,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 30,
+      "page": "workspace-btc",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "9ba151ae27608ea0d74c988252b954986c728b04829ab5b5490f9b5488018dcb",
+      "screenshots": 11,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 31,
+      "page": "workspace-evidence",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "2d3b7b5a5e5aaf26fcae7f9911842f01c74c80ae277d5e55db4a977fa6aefc62",
+      "screenshots": 3,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 32,
+      "page": "workspace-legacy",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "6ec079b824dc5726ffd4776e12f8eaffb3ac29f59fdc548dbe1237de55a0a4bf",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 33,
+      "page": "workspace-preview",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "6d1fa555fa4a659b81480b925faad0697974382110f362f4696458e134ae62f8",
+      "screenshots": 8,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 34,
+      "page": "workspace-btc-short",
+      "width": 900,
+      "height": 430,
+      "status": "passed",
+      "jsonStringifySha256": "a6b740f153e2f003c9109eadbea0695b8a90cb42db603826322f448f12b75eec",
+      "screenshots": 12,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 35,
+      "page": "workspace-legacy",
+      "width": 375,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "90f9d95d14dbad4b0db94bd31da143be6240f94d31c974495f5431d18183f663",
+      "screenshots": 4,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 36,
+      "page": "workspace-center-data",
+      "width": 320,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "e5bed1fb902b5bd16d48db9f90d1ca9c8c1e67944489e6270f4aecbf34694de9",
+      "screenshots": 3,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 37,
+      "page": "workspace-center-data",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "781b1339f99697e2fb5b4b0a9849a85b013e275e7d6f696f7cfd23d8cc7cf37e",
+      "screenshots": 3,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 38,
+      "page": "workspace-center-data",
+      "width": 900,
+      "height": 430,
+      "status": "passed",
+      "jsonStringifySha256": "06bab06da688e4af17dde9fd01a70a2f0fdc777b1090be938529e2fea4242d2d",
+      "screenshots": 3,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 39,
+      "page": "replay-btc",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "72b4e432b33f0b7a427b9d3a8442dffc7bceda6d44c7269836b862e477d6d774",
+      "screenshots": 5,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 40,
+      "page": "replay-btc",
+      "width": 900,
+      "height": 430,
+      "status": "passed",
+      "jsonStringifySha256": "f0a09da15bbf4284367430eedf141ef9793e1281b0942571a0987f9f6440c416",
+      "screenshots": 5,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 41,
+      "page": "replay-eth",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "3953c38278c2cf950c35e11521cf797fc26fc826ab8fe5a3e1188cb7409cb71f",
+      "screenshots": 7,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 42,
+      "page": "replay-eth",
+      "width": 320,
+      "height": 568,
+      "status": "passed",
+      "jsonStringifySha256": "2f9c6bebca707cbb909b860baabeb133495f9ca60c3c9edde056476b9e240c6c",
+      "screenshots": 7,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 43,
+      "page": "chart-replay-btc",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "777e041257673a7e7e84a84429cf0f963f6af2e3b79b4192d1ed301f97781a91",
+      "screenshots": 39,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 44,
+      "page": "chart-replay-btc",
+      "width": 320,
+      "height": 568,
+      "status": "passed",
+      "jsonStringifySha256": "bd052ed34f50f9847e5a7edeba3b87217b5adfa88958c3ef361d282f7d38919f",
+      "screenshots": 23,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 45,
+      "page": "chart-replay-btc",
+      "width": 900,
+      "height": 430,
+      "status": "passed",
+      "jsonStringifySha256": "bfdffb927e4798b6675b51344bb0fbfa7e740c5de459e09d2925ff8d822932cd",
+      "screenshots": 22,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 46,
+      "page": "chart-replay-eth",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "1949548aa9ba89e33f166c527ab85ac6412ff01247f00c490b2a3f93ffc0c189",
+      "screenshots": 10,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 47,
+      "page": "chart-replay-eth",
+      "width": 320,
+      "height": 568,
+      "status": "passed",
+      "jsonStringifySha256": "3a5dfb5304388e3c0f46860ff7c18ed1ccbce6b3bd63558bc0a858d349b6abef",
+      "screenshots": 10,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 48,
+      "page": "chart-replay-mstr",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "jsonStringifySha256": "8982bb639966ad95eb360b62f10726f064dc3d3c163b9d7206a164e6cedb95d4",
+      "screenshots": 6,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    },
+    {
+      "index": 49,
+      "page": "chart-replay-bmnr",
+      "width": 390,
+      "height": 844,
+      "status": "passed",
+      "jsonStringifySha256": "e4dcb4a805841acdb38d132a11987a6df8be9e2b3057ba72990dfbebc0abfdfe",
+      "screenshots": 8,
+      "runtimeErrorCount": 0,
+      "unexpectedResourceErrorCount": 0
+    }
+  ],
+  "nativeDateChecks": [
+    {
+      "label": "native-invalid-date-lower-button",
+      "validated": true,
+      "submit": "button",
+      "bound": "lower",
+      "requested": "2010-10-24",
+      "minimum": "2011-08-18",
+      "maximum": "2026-11-05",
+      "invalid": {
+        "value": "2010-10-24",
+        "valid": false,
+        "rangeUnderflow": true,
+        "rangeOverflow": false,
+        "customError": false,
+        "message": "Value must be 08/18/2011 or later.",
+        "focused": true,
+        "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+      },
+      "rejected": {
+        "value": "2010-10-24",
+        "valid": false,
+        "rangeUnderflow": true,
+        "rangeOverflow": false,
+        "customError": true,
+        "message": "선택 가능한 날짜는 2011-08-18부터 2026-11-05까지입니다.",
+        "focused": true,
+        "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+      },
+      "cursor": "2026-10-24",
+      "origin": "2026-10-20",
+      "playbackStartDate": "2026-10-21",
+      "forecastValueSignature": "a98817f7232c3a4d",
+      "snapshotDigest": "5ea1e5493f531272fa8d4bcb94aea6c2a1e7bdff2fc88f234442f85d76d5c63d",
+      "savedSha256": "39c761b3900a4f0365f9021f9cd1afd29263c14acec5eac5cf439a65886b60b7",
+      "corrected": {
+        "value": "2026-10-24",
+        "valid": true,
+        "rangeUnderflow": false,
+        "rangeOverflow": false,
+        "customError": false,
+        "message": "",
+        "focused": true,
+        "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+      }
+    },
+    {
+      "label": "native-invalid-date-upper-button",
+      "validated": true,
+      "submit": "button",
+      "bound": "upper",
+      "requested": "2027-10-24",
+      "minimum": "2011-08-18",
+      "maximum": "2026-11-05",
+      "invalid": {
+        "value": "2027-10-24",
+        "valid": false,
+        "rangeUnderflow": false,
+        "rangeOverflow": true,
+        "customError": false,
+        "message": "Value must be 11/05/2026 or earlier.",
+        "focused": true,
+        "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+      },
+      "rejected": {
+        "value": "2027-10-24",
+        "valid": false,
+        "rangeUnderflow": false,
+        "rangeOverflow": true,
+        "customError": true,
+        "message": "선택 가능한 날짜는 2011-08-18부터 2026-11-05까지입니다.",
+        "focused": true,
+        "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+      },
+      "cursor": "2026-10-24",
+      "origin": "2026-10-20",
+      "playbackStartDate": "2026-10-21",
+      "forecastValueSignature": "a98817f7232c3a4d",
+      "snapshotDigest": "5ea1e5493f531272fa8d4bcb94aea6c2a1e7bdff2fc88f234442f85d76d5c63d",
+      "savedSha256": "39c761b3900a4f0365f9021f9cd1afd29263c14acec5eac5cf439a65886b60b7",
+      "corrected": {
+        "value": "2026-10-24",
+        "valid": true,
+        "rangeUnderflow": false,
+        "rangeOverflow": false,
+        "customError": false,
+        "message": "",
+        "focused": true,
+        "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+      }
+    },
+    {
+      "label": "native-invalid-date-lower-Enter",
+      "validated": true,
+      "submit": "Enter",
+      "bound": "lower",
+      "requested": "2010-10-24",
+      "minimum": "2011-08-18",
+      "maximum": "2026-11-05",
+      "invalid": {
+        "value": "2010-10-24",
+        "valid": false,
+        "rangeUnderflow": true,
+        "rangeOverflow": false,
+        "customError": false,
+        "message": "Value must be 08/18/2011 or later.",
+        "focused": true,
+        "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+      },
+      "rejected": {
+        "value": "2010-10-24",
+        "valid": false,
+        "rangeUnderflow": true,
+        "rangeOverflow": false,
+        "customError": true,
+        "message": "선택 가능한 날짜는 2011-08-18부터 2026-11-05까지입니다.",
+        "focused": true,
+        "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+      },
+      "cursor": "2026-10-24",
+      "origin": "2026-10-20",
+      "playbackStartDate": "2026-10-21",
+      "forecastValueSignature": "a98817f7232c3a4d",
+      "snapshotDigest": "5ea1e5493f531272fa8d4bcb94aea6c2a1e7bdff2fc88f234442f85d76d5c63d",
+      "savedSha256": "39c761b3900a4f0365f9021f9cd1afd29263c14acec5eac5cf439a65886b60b7",
+      "corrected": {
+        "value": "2026-10-24",
+        "valid": true,
+        "rangeUnderflow": false,
+        "rangeOverflow": false,
+        "customError": false,
+        "message": "",
+        "focused": true,
+        "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+      }
+    },
+    {
+      "label": "native-invalid-date-upper-Enter",
+      "validated": true,
+      "submit": "Enter",
+      "bound": "upper",
+      "requested": "2027-10-24",
+      "minimum": "2011-08-18",
+      "maximum": "2026-11-05",
+      "invalid": {
+        "value": "2027-10-24",
+        "valid": false,
+        "rangeUnderflow": false,
+        "rangeOverflow": true,
+        "customError": false,
+        "message": "Value must be 11/05/2026 or earlier.",
+        "focused": true,
+        "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+      },
+      "rejected": {
+        "value": "2027-10-24",
+        "valid": false,
+        "rangeUnderflow": false,
+        "rangeOverflow": true,
+        "customError": true,
+        "message": "선택 가능한 날짜는 2011-08-18부터 2026-11-05까지입니다.",
+        "focused": true,
+        "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+      },
+      "cursor": "2026-10-24",
+      "origin": "2026-10-20",
+      "playbackStartDate": "2026-10-21",
+      "forecastValueSignature": "a98817f7232c3a4d",
+      "snapshotDigest": "5ea1e5493f531272fa8d4bcb94aea6c2a1e7bdff2fc88f234442f85d76d5c63d",
+      "savedSha256": "39c761b3900a4f0365f9021f9cd1afd29263c14acec5eac5cf439a65886b60b7",
+      "corrected": {
+        "value": "2026-10-24",
+        "valid": true,
+        "rangeUnderflow": false,
+        "rangeOverflow": false,
+        "customError": false,
+        "message": "",
+        "focused": true,
+        "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+      }
+    },
+    {
+      "label": "native-valid-date-min-button",
+      "validated": true,
+      "submit": "button",
+      "requested": "2011-08-18",
+      "cursor": "2011-08-17",
+      "playbackStartDate": "2011-08-18",
+      "savedSha256": "39c761b3900a4f0365f9021f9cd1afd29263c14acec5eac5cf439a65886b60b7"
+    },
+    {
+      "label": "native-valid-date-max-Enter",
+      "validated": true,
+      "submit": "Enter",
+      "requested": "2026-11-05",
+      "cursor": "2026-11-04",
+      "playbackStartDate": "2026-11-05",
+      "savedSha256": "39c761b3900a4f0365f9021f9cd1afd29263c14acec5eac5cf439a65886b60b7"
+    }
+  ],
+  "cadence": [
+    {
+      "speed": 10,
+      "expectedMilliseconds": 100,
+      "observations": [
+        {
+          "cursor": "2026-10-21",
+          "at": 93295.5
+        },
+        {
+          "cursor": "2026-10-22",
+          "at": 93397.29999999981
+        },
+        {
+          "cursor": "2026-10-23",
+          "at": 93507.09999999986
+        },
+        {
+          "cursor": "2026-10-24",
+          "at": 93602.8999999999
+        },
+        {
+          "cursor": "2026-10-25",
+          "at": 93703.79999999981
+        },
+        {
+          "cursor": "2026-10-26",
+          "at": 93802
+        },
+        {
+          "cursor": "2026-10-27",
+          "at": 93897.8999999999
+        },
+        {
+          "cursor": "2026-10-28",
+          "at": 94002.79999999981
+        },
+        {
+          "cursor": "2026-10-29",
+          "at": 94101.8999999999
+        },
+        {
+          "cursor": "2026-10-30",
+          "at": 94195.69999999995
+        },
+        {
+          "cursor": "2026-10-31",
+          "at": 94295.8999999999
+        },
+        {
+          "cursor": "2026-11-01",
+          "at": 94397
+        },
+        {
+          "cursor": "2026-11-02",
+          "at": 94499
+        },
+        {
+          "cursor": "2026-11-03",
+          "at": 94594.09999999986
+        },
+        {
+          "cursor": "2026-11-04",
+          "at": 94695.79999999981
+        },
+        {
+          "cursor": "2026-11-05",
+          "at": 94797.8999999999
+        }
+      ],
+      "intervals": [
+        101.79999999981374,
+        109.80000000004657,
+        95.80000000004657,
+        100.89999999990687,
+        98.20000000018626,
+        95.89999999990687,
+        104.89999999990687,
+        99.10000000009313,
+        93.80000000004657,
+        100.19999999995343,
+        101.10000000009313,
+        102,
+        95.0999999998603,
+        101.69999999995343,
+        102.10000000009313
+      ],
+      "meanMilliseconds": 100.15999999999379,
+      "averageUpdatesPerSecond": 9.984025559106051,
+      "allowedMeanRatio": [
+        0.85,
+        1.3
+      ],
+      "completionTimeoutMilliseconds": 7080,
+      "setupAllowanceMilliseconds": 5000
+    },
+    {
+      "speed": 1,
+      "expectedMilliseconds": 1000,
+      "observations": [
+        {
+          "cursor": "2026-10-21",
+          "at": 98465.8999999999
+        },
+        {
+          "cursor": "2026-10-22",
+          "at": 99457.59999999986
+        },
+        {
+          "cursor": "2026-10-23",
+          "at": 100459.79999999981
+        },
+        {
+          "cursor": "2026-10-24",
+          "at": 101461.79999999981
+        },
+        {
+          "cursor": "2026-10-25",
+          "at": 102463.8999999999
+        },
+        {
+          "cursor": "2026-10-26",
+          "at": 103465.79999999981
+        },
+        {
+          "cursor": "2026-10-27",
+          "at": 104461.5
+        },
+        {
+          "cursor": "2026-10-28",
+          "at": 105465.5
+        },
+        {
+          "cursor": "2026-10-29",
+          "at": 106460.5
+        },
+        {
+          "cursor": "2026-10-30",
+          "at": 107456.59999999986
+        },
+        {
+          "cursor": "2026-10-31",
+          "at": 108460.5
+        },
+        {
+          "cursor": "2026-11-01",
+          "at": 109463.5
+        },
+        {
+          "cursor": "2026-11-02",
+          "at": 110458.59999999986
+        },
+        {
+          "cursor": "2026-11-03",
+          "at": 111457.5
+        },
+        {
+          "cursor": "2026-11-04",
+          "at": 112461.29999999981
+        },
+        {
+          "cursor": "2026-11-05",
+          "at": 113465.59999999986
+        }
+      ],
+      "intervals": [
+        991.6999999999534,
+        1002.1999999999534,
+        1002,
+        1002.1000000000931,
+        1001.8999999999069,
+        995.7000000001863,
+        1004,
+        995,
+        996.0999999998603,
+        1003.9000000001397,
+        1003,
+        995.0999999998603,
+        998.9000000001397,
+        1003.7999999998137,
+        1004.3000000000466
+      ],
+      "meanMilliseconds": 999.979999999997,
+      "averageUpdatesPerSecond": 1.000020000400011,
+      "allowedMeanRatio": [
+        0.85,
+        1.3
+      ],
+      "completionTimeoutMilliseconds": 25800,
+      "setupAllowanceMilliseconds": 5000
+    },
+    {
+      "speed": 0.5,
+      "expectedMilliseconds": 2000,
+      "observations": [
+        {
+          "cursor": "2026-10-21",
+          "at": 118126.3999999999
+        },
+        {
+          "cursor": "2026-10-22",
+          "at": 120124.29999999981
+        },
+        {
+          "cursor": "2026-10-23",
+          "at": 122172.69999999995
+        },
+        {
+          "cursor": "2026-10-24",
+          "at": 124131.19999999995
+        },
+        {
+          "cursor": "2026-10-25",
+          "at": 126132.59999999986
+        },
+        {
+          "cursor": "2026-10-26",
+          "at": 128134.69999999995
+        },
+        {
+          "cursor": "2026-10-27",
+          "at": 130136
+        },
+        {
+          "cursor": "2026-10-28",
+          "at": 132130.59999999986
+        },
+        {
+          "cursor": "2026-10-29",
+          "at": 134132.69999999995
+        },
+        {
+          "cursor": "2026-10-30",
+          "at": 136124.59999999986
+        },
+        {
+          "cursor": "2026-10-31",
+          "at": 138132.5
+        },
+        {
+          "cursor": "2026-11-01",
+          "at": 140135.2999999998
+        },
+        {
+          "cursor": "2026-11-02",
+          "at": 142135.2999999998
+        },
+        {
+          "cursor": "2026-11-03",
+          "at": 144134.7999999998
+        },
+        {
+          "cursor": "2026-11-04",
+          "at": 146137.09999999986
+        },
+        {
+          "cursor": "2026-11-05",
+          "at": 148131.3999999999
+        }
+      ],
+      "intervals": [
+        1997.8999999999069,
+        2048.4000000001397,
+        1958.5,
+        2001.3999999999069,
+        2002.1000000000931,
+        2001.3000000000466,
+        1994.5999999998603,
+        2002.1000000000931,
+        1991.8999999999069,
+        2007.9000000001397,
+        2002.7999999998137,
+        2000,
+        1999.5,
+        2002.3000000000466,
+        1994.3000000000466
+      ],
+      "meanMilliseconds": 2000.3333333333333,
+      "averageUpdatesPerSecond": 0.4999166805532411,
+      "allowedMeanRatio": [
+        0.85,
+        1.3
+      ],
+      "completionTimeoutMilliseconds": 46600,
+      "setupAllowanceMilliseconds": 5000
+    },
+    {
+      "speed": 0.3,
+      "expectedMilliseconds": 3000,
+      "observations": [
+        {
+          "cursor": "2026-10-21",
+          "at": 153772.8999999999
+        },
+        {
+          "cursor": "2026-10-22",
+          "at": 156781.09999999986
+        },
+        {
+          "cursor": "2026-10-23",
+          "at": 159787.59999999986
+        },
+        {
+          "cursor": "2026-10-24",
+          "at": 162777.59999999986
+        },
+        {
+          "cursor": "2026-10-25",
+          "at": 165794
+        },
+        {
+          "cursor": "2026-10-26",
+          "at": 168795.09999999986
+        },
+        {
+          "cursor": "2026-10-27",
+          "at": 171783.2999999998
+        },
+        {
+          "cursor": "2026-10-28",
+          "at": 174797.3999999999
+        },
+        {
+          "cursor": "2026-10-29",
+          "at": 177789.09999999986
+        },
+        {
+          "cursor": "2026-10-30",
+          "at": 180782.7999999998
+        },
+        {
+          "cursor": "2026-10-31",
+          "at": 183781.7999999998
+        },
+        {
+          "cursor": "2026-11-01",
+          "at": 186778.59999999986
+        },
+        {
+          "cursor": "2026-11-02",
+          "at": 189781.7999999998
+        },
+        {
+          "cursor": "2026-11-03",
+          "at": 192786.5
+        },
+        {
+          "cursor": "2026-11-04",
+          "at": 195790.59999999986
+        },
+        {
+          "cursor": "2026-11-05",
+          "at": 198786.19999999995
+        }
+      ],
+      "intervals": [
+        3008.1999999999534,
+        3006.5,
+        2990,
+        3016.4000000001397,
+        3001.0999999998603,
+        2988.1999999999534,
+        3014.100000000093,
+        2991.6999999999534,
+        2993.6999999999534,
+        2999,
+        2996.8000000000466,
+        3003.1999999999534,
+        3004.7000000001863,
+        3004.0999999998603,
+        2995.600000000093
+      ],
+      "meanMilliseconds": 3000.88666666667,
+      "averageUpdatesPerSecond": 0.33323484392390657,
+      "allowedMeanRatio": [
+        0.85,
+        1.3
+      ],
+      "completionTimeoutMilliseconds": 67400,
+      "setupAllowanceMilliseconds": 5000
+    }
+  ]
+}

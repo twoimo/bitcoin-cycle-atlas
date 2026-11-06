@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "kind": "merged-main-ci-verification",
+  "status": "PASS",
+  "observedAt": "2026-11-06T11:21:44.193Z",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "source": {
+    "commit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "tree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "distTree": "33532c2d59d03a5b6f8f582e528edb855badec4f",
+    "parents": [
+      "59ec6f4f708e87d73dad6324d925a9e01383411c",
+      "601119796df94dc77b213b73838a9d4a840afe14"
+    ],
+    "expectedCommit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "expectedTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "expectedDistTree": "33532c2d59d03a5b6f8f582e528edb855badec4f",
+    "identityMatches": true,
+    "kind": "Actual main-push checkout after PR62 merge; not a synthetic PR test merge."
+  },
+  "currentMainCheck": {
+    "sha": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "matchesExpected": true,
+    "observedAt": "2026-11-06T11:21:44.188Z",
+    "source": "GitHub git/ref/heads/main"
+  },
+  "workflow": {
+    "name": "CI",
+    "runId": 42207805105,
+    "jobId": 127858702167,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42207805105",
+    "jobUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42207805105/job/127858702167",
+    "event": "push",
+    "branch": "main",
+    "attempt": 1,
+    "headSha": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "checkoutCommit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "status": "completed",
+    "conclusion": "success",
+    "completedAt": "2026-11-06T11:19:07Z",
+    "allRecordedStepsSucceeded": true,
+    "steps": [
+      {
+        "number": 1,
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 2,
+        "name": "Initialize containers",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 3,
+        "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 4,
+        "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 5,
+        "name": "Install locked workspace dependencies",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 6,
+        "name": "Verify generated static React routes",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 7,
+        "name": "Run model and data tests",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 8,
+        "name": "Check service types, panels and isolated database behavior",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 9,
+        "name": "Verify preserved forecast identities and replay",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 10,
+        "name": "Verify treasury sources and persistent research summaries",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 11,
+        "name": "Verify reviewed Ethereum history matches the published catalog",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 12,
+        "name": "Independently reconcile daily treasury paths",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 13,
+        "name": "Independently check numerical identities and causal boundaries",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 14,
+        "name": "Verify bounded request ownership and negative controls",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 15,
+        "name": "Verify the observed daily clock and bounded chart work",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 16,
+        "name": "Verify static resources at the Pages base path",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 17,
+        "name": "Prepare the committed publication and standalone",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 18,
+        "name": "Preserve CI test log and publication identity",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 34,
+        "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 35,
+        "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 36,
+        "name": "Stop containers",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "number": 37,
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "tests": {
+    "modelData": {
+      "command": "mkdir -p build",
+      "tests": 2484,
+      "suites": 0,
+      "pass": 2484,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 572855.045907
+    },
+    "additionalSummariesInWorkflowOrder": [
+      {
+        "command": "npm run typecheck",
+        "tests": 65,
+        "suites": 0,
+        "pass": 65,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 19536.858878
+      },
+      {
+        "command": "npm run typecheck",
+        "tests": 28,
+        "suites": 0,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 10607.131342
+      },
+      {
+        "command": "npm run verify:formal",
+        "tests": 32,
+        "suites": 0,
+        "pass": 32,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 258.07997
+      },
+      {
+        "command": "npm run verify:formal",
+        "tests": 28,
+        "suites": 0,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 124.983385
+      },
+      {
+        "command": "npm run verify:formal",
+        "tests": 17,
+        "suites": 0,
+        "pass": 17,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 126.551076
+      }
+    ],
+    "zeroFailuresCancellationsSkips": true,
+    "note": "Counts are per invocation. Multi-command Actions step headers show their first line; summaries are retained in workflow order. No claim of unique-test totals across CI, Pages and service."
+  },
+  "preparedPublication": {
+    "status": "PASS",
+    "sourceCommit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "files": 788,
+    "assets": 22,
+    "contentDigest": "4424db3c9999635295f32c53a216b6a1cd2a5bbcd1c0302d5ed41c714bd4b691",
+    "manifestSha256": "93862560231073a978dcd96cc16a97de99baaf631e54349ff9122dd3523e1b4f",
+    "checkedFiles": 788,
+    "preMergeContentDigest": "4424db3c9999635295f32c53a216b6a1cd2a5bbcd1c0302d5ed41c714bd4b691",
+    "contentDigestPreserved": true,
+    "buildAndVerificationMatch": true,
+    "sourceMatchesActualCheckout": true,
+    "scope": "CI preparation and local inventory verification; actual public confirmation is separately recorded in pages-final.json."
+  },
+  "pagesReconciliation": {
+    "receipt": "build/release-monitor/pages-final.json",
+    "servedSource": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "servedManifestSha256": "e3df5384bc148cbac7f2443c3fd1013b8028c3c4878d2e5f4e7b662abed5b331",
+    "ciPreparedManifestSha256": "93862560231073a978dcd96cc16a97de99baaf631e54349ff9122dd3523e1b4f",
+    "servedContentDigest": "4424db3c9999635295f32c53a216b6a1cd2a5bbcd1c0302d5ed41c714bd4b691",
+    "sameContentDigest": true,
+    "note": "CI and Pages are separate preparations with different publication metadata hashes. Both identify the same exact main source and content digest; the served manifest matches the Pages preparation."
+  },
+  "staticValidation": [
+    {
+      "status": "ok",
+      "files": 789,
+      "checkedReferences": 804,
+      "basePath": "/bitcoin-cycle-atlas/",
+      "standalone": null
+    },
+    {
+      "status": "ok",
+      "files": 789,
+      "checkedReferences": 804,
+      "basePath": "/bitcoin-cycle-atlas/",
+      "standalone": "build/Bitcoin_Cycles_Comparison.html"
+    }
+  ],
+  "artifact": [
+    {
+      "id": 13498606362,
+      "name": "ci-verification-f7e97e918270539397f8ff76e7f931deb8f320d7-1",
+      "sizeBytes": 166453,
+      "digestReportedByGithub": "sha256:d12d3235f974eee314edb6fd9f736c07ba983acd9ff921ecd002032b8429d689",
+      "expired": false
+    }
+  ],
+  "log": {
+    "path": "build/release-monitor/ci-main-final-job.log",
+    "bytes": 1276341,
+    "sha256": "887c9a8fc0c5e292878b067e8436d1e3f8f99ce37286bdbcc47dad49ca7aaa5d"
+  },
+  "evidence": {
+    "source": "Fresh completed Actions log, commit/root-tree/current-main API reads.",
+    "localTestsRerun": false,
+    "trackedEdits": false,
+    "pushes": false,
+    "oldRecordsPreserved": true,
+    "publicationLines": [
+      {
+        "status": "ok",
+        "files": 789,
+        "checkedReferences": 804,
+        "basePath": "/bitcoin-cycle-atlas/",
+        "standalone": null
+      },
+      {
+        "status": "PASS",
+        "sourceCommit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+        "files": 788,
+        "assets": 22,
+        "contentDigest": "4424db3c9999635295f32c53a216b6a1cd2a5bbcd1c0302d5ed41c714bd4b691",
+        "manifestSha256": "93862560231073a978dcd96cc16a97de99baaf631e54349ff9122dd3523e1b4f"
+      },
+      {
+        "status": "PASS",
+        "sourceCommit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+        "checkedFiles": 788,
+        "contentDigest": "4424db3c9999635295f32c53a216b6a1cd2a5bbcd1c0302d5ed41c714bd4b691"
+      },
+      {
+        "status": "ok",
+        "files": 789,
+        "checkedReferences": 804,
+        "basePath": "/bitcoin-cycle-atlas/",
+        "standalone": "build/Bitcoin_Cycles_Comparison.html"
+      }
+    ]
+  }
+}

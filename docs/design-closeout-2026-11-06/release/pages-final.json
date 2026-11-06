@@ -1,0 +1,429 @@
+{
+  "schemaVersion": 1,
+  "kind": "merged-main-pages-deployment-verification",
+  "status": "PASS",
+  "observedAt": "2026-11-06T11:20:35.379Z",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "source": {
+    "commit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "tree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "distTree": "33532c2d59d03a5b6f8f582e528edb855badec4f",
+    "parents": [
+      "59ec6f4f708e87d73dad6324d925a9e01383411c",
+      "601119796df94dc77b213b73838a9d4a840afe14"
+    ],
+    "expectedCommit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "expectedTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "expectedDistTree": "33532c2d59d03a5b6f8f582e528edb855badec4f",
+    "identityMatches": true
+  },
+  "currentMainCheck": {
+    "sha": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "matchesExpected": true,
+    "observedAt": "2026-11-06T11:20:35.374Z",
+    "source": "GitHub git/ref/heads/main"
+  },
+  "workflow": {
+    "name": "Deploy Pages",
+    "runId": 42207805241,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42207805241",
+    "event": "push",
+    "branch": "main",
+    "headSha": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 127858703635,
+        "name": "build",
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42207805241/job/127858703635",
+        "status": "completed",
+        "conclusion": "success",
+        "completedAt": "2026-11-06T11:15:53Z",
+        "allRecordedStepsSucceeded": true,
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:07:06Z",
+            "completedAt": "2026-11-06T11:07:08Z"
+          },
+          {
+            "number": 2,
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:07:08Z",
+            "completedAt": "2026-11-06T11:07:15Z"
+          },
+          {
+            "number": 3,
+            "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:07:15Z",
+            "completedAt": "2026-11-06T11:07:15Z"
+          },
+          {
+            "number": 4,
+            "name": "Install locked workspace dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:07:15Z",
+            "completedAt": "2026-11-06T11:07:18Z"
+          },
+          {
+            "number": 5,
+            "name": "Verify generated static React routes",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:07:18Z",
+            "completedAt": "2026-11-06T11:07:19Z"
+          },
+          {
+            "number": 6,
+            "name": "Test before deployment",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:07:19Z",
+            "completedAt": "2026-11-06T11:14:32Z"
+          },
+          {
+            "number": 7,
+            "name": "Verify preserved forecast identities and replay",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:14:32Z",
+            "completedAt": "2026-11-06T11:14:36Z"
+          },
+          {
+            "number": 8,
+            "name": "Verify treasury sources and persistent research summaries",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:14:36Z",
+            "completedAt": "2026-11-06T11:14:36Z"
+          },
+          {
+            "number": 9,
+            "name": "Verify reviewed Ethereum history matches the published catalog",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:14:36Z",
+            "completedAt": "2026-11-06T11:14:36Z"
+          },
+          {
+            "number": 10,
+            "name": "Independently reconcile daily treasury paths",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:14:36Z",
+            "completedAt": "2026-11-06T11:14:40Z"
+          },
+          {
+            "number": 11,
+            "name": "Independently check numerical identities and causal boundaries",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:14:40Z",
+            "completedAt": "2026-11-06T11:14:46Z"
+          },
+          {
+            "number": 12,
+            "name": "Verify bounded request ownership and negative controls",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:14:46Z",
+            "completedAt": "2026-11-06T11:15:29Z"
+          },
+          {
+            "number": 13,
+            "name": "Verify the published calibration and chart performance gate",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:15:29Z",
+            "completedAt": "2026-11-06T11:15:30Z"
+          },
+          {
+            "number": 14,
+            "name": "Verify static paths",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:15:30Z",
+            "completedAt": "2026-11-06T11:15:35Z"
+          },
+          {
+            "number": 15,
+            "name": "Prepare the committed publication and standalone",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:15:35Z",
+            "completedAt": "2026-11-06T11:15:45Z"
+          },
+          {
+            "number": 16,
+            "name": "Reject a superseded source before upload",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:15:45Z",
+            "completedAt": "2026-11-06T11:15:46Z"
+          },
+          {
+            "number": 17,
+            "name": "Upload only public site files",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:15:46Z",
+            "completedAt": "2026-11-06T11:15:50Z"
+          },
+          {
+            "number": 33,
+            "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:15:50Z",
+            "completedAt": "2026-11-06T11:15:50Z"
+          },
+          {
+            "number": 34,
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:15:50Z",
+            "completedAt": "2026-11-06T11:15:50Z"
+          },
+          {
+            "number": 35,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:15:50Z",
+            "completedAt": "2026-11-06T11:15:50Z"
+          }
+        ]
+      },
+      {
+        "id": 127862506956,
+        "name": "deploy",
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42207805241/job/127862506956",
+        "status": "completed",
+        "conclusion": "success",
+        "completedAt": "2026-11-06T11:18:29Z",
+        "allRecordedStepsSucceeded": true,
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:15:58Z",
+            "completedAt": "2026-11-06T11:15:59Z"
+          },
+          {
+            "number": 2,
+            "name": "Check out the exact prepared source",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:15:59Z",
+            "completedAt": "2026-11-06T11:16:05Z"
+          },
+          {
+            "number": 3,
+            "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:16:05Z",
+            "completedAt": "2026-11-06T11:16:06Z"
+          },
+          {
+            "number": 4,
+            "name": "Reject a superseded source before deployment",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:16:06Z",
+            "completedAt": "2026-11-06T11:16:06Z"
+          },
+          {
+            "number": 5,
+            "name": "Deploy validated artifact",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:16:06Z",
+            "completedAt": "2026-11-06T11:18:27Z"
+          },
+          {
+            "number": 6,
+            "name": "Confirm the served publication identity",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:18:27Z",
+            "completedAt": "2026-11-06T11:18:27Z"
+          },
+          {
+            "number": 11,
+            "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:18:27Z",
+            "completedAt": "2026-11-06T11:18:27Z"
+          },
+          {
+            "number": 12,
+            "name": "Post Check out the exact prepared source",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:18:27Z",
+            "completedAt": "2026-11-06T11:18:28Z"
+          },
+          {
+            "number": 13,
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-06T11:18:28Z",
+            "completedAt": "2026-11-06T11:18:28Z"
+          }
+        ]
+      }
+    ]
+  },
+  "tests": {
+    "modelData": {
+      "command": "npm test",
+      "tests": 2484,
+      "suites": 0,
+      "pass": 2484,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 432520.038764
+    },
+    "additionalFormalSummaries": [
+      {
+        "command": "npm run verify:formal",
+        "tests": 32,
+        "suites": 0,
+        "pass": 32,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 197.922916
+      },
+      {
+        "command": "npm run verify:formal",
+        "tests": 28,
+        "suites": 0,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 101.259969
+      },
+      {
+        "command": "npm run verify:formal",
+        "tests": 17,
+        "suites": 0,
+        "pass": 17,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 100.179046
+      }
+    ],
+    "zeroFailuresCancellationsSkips": true
+  },
+  "preparedPublication": {
+    "status": "PASS",
+    "sourceCommit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "files": 788,
+    "assets": 22,
+    "contentDigest": "4424db3c9999635295f32c53a216b6a1cd2a5bbcd1c0302d5ed41c714bd4b691",
+    "manifestSha256": "e3df5384bc148cbac7f2443c3fd1013b8028c3c4878d2e5f4e7b662abed5b331",
+    "checkedFiles": 788,
+    "preMergeContentDigest": "4424db3c9999635295f32c53a216b6a1cd2a5bbcd1c0302d5ed41c714bd4b691",
+    "contentDigestPreserved": true,
+    "buildCheckAndServedDigestMatch": true
+  },
+  "publicSite": {
+    "url": "https://twoimo.github.io/bitcoin-cycle-atlas/",
+    "verification": {
+      "status": "PASS",
+      "scope": "Public manifest identity and four critical HTTP file bodies; other remote files are not fetched",
+      "sourceCommit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+      "manifestSha256": "e3df5384bc148cbac7f2443c3fd1013b8028c3c4878d2e5f4e7b662abed5b331",
+      "verified": [
+        "index.html",
+        "site-entry.js",
+        "data/btc-daily.json",
+        "data/forecast-ledger/index.json"
+      ],
+      "state": {
+        "phase": "confirmed",
+        "sourceCommit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+        "digest": "4424db3c9999635295f32c53a216b6a1cd2a5bbcd1c0302d5ed41c714bd4b691",
+        "validatedDigest": "4424db3c9999635295f32c53a216b6a1cd2a5bbcd1c0302d5ed41c714bd4b691",
+        "servedDigest": "4424db3c9999635295f32c53a216b6a1cd2a5bbcd1c0302d5ed41c714bd4b691",
+        "servedCommit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+        "reason": null
+      },
+      "localFilesChecked": null
+    },
+    "exactManifestMatchesPrepared": true,
+    "criticalHttpBodiesMatch": true,
+    "remoteBodyFetchCount": 4,
+    "localInventoryFilesChecked": 788,
+    "scope": "Public manifest identity and four critical HTTP file bodies were verified by the completed deployment workflow. Other remote file bodies were not fetched; 788 refers to the prepared and locally verified inventory."
+  },
+  "staticValidation": [
+    {
+      "status": "ok",
+      "files": 789,
+      "checkedReferences": 804,
+      "basePath": "/bitcoin-cycle-atlas/",
+      "standalone": null
+    },
+    {
+      "status": "ok",
+      "files": 789,
+      "checkedReferences": 804,
+      "basePath": "/bitcoin-cycle-atlas/",
+      "standalone": "build/Bitcoin_Cycles_Comparison.html"
+    }
+  ],
+  "artifact": [
+    {
+      "id": 13497762005,
+      "name": "github-pages",
+      "sizeBytes": 10126274,
+      "digestReportedByGithub": "sha256:9629a0cb20e85a8b2f67adeb3f5c0ab0de014309abbc32a812187f16756b18ab",
+      "expired": false
+    }
+  ],
+  "logs": [
+    {
+      "path": "build/release-monitor/pages-final-build-job.log",
+      "bytes": 1276781,
+      "sha256": "9bdfc61d2c09c93cd7fe6cc2fc5c2e0a5c83b4753521d4748d51c9522c980c8d"
+    },
+    {
+      "path": "build/release-monitor/pages-final-deploy-job.log",
+      "bytes": 22522,
+      "sha256": "21f01646b66c2790e5e401ca7089ee081534d8b8536b79f2e4f2923b3c547481"
+    }
+  ],
+  "evidence": {
+    "source": "Fresh completed GitHub Actions build/deploy logs plus exact commit/root-tree/current-main API reads.",
+    "buildCheckout": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "deployCheckout": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "localTestsRerun": false,
+    "trackedEdits": false,
+    "pushes": false,
+    "oldRecordsPreserved": true
+  }
+}

@@ -16,7 +16,7 @@ Finish the existing design closeout, verify its behavior and publish the exact t
 - [x] Frame. Recover the previous work, check current main and preserve both source histories.
 - [x] Fan out. Separate complete Hallmark verification, numerical/formal regression and the complete native browser gate. Each worker owns its new evidence directory.
 - [x] Aggregate. Review current failures, resolve proven defects and identify the exact tested source.
-- [ ] Report. Record PR, CI, public publication identity and any unsatisfied empirical conditions.
+- [x] Report. Record PR, CI, public publication identity and any unsatisfied empirical conditions in [RELEASE.md](RELEASE.md).
 
 The pstack `swarm`, `principle-fix-root-causes`, `principle-test-behavior-not-implementation` and `principle-exhaust-the-design-space` instructions were read at `cursor/plugins` commit `2776ddd2355d6d6c8747d3964600f28daf62f049`, along with the referenced Subagents guidance. The prior attempt had already rejected the unavailable default worker family. These workers inherit the supported parent model. This is partitioned coverage, not independent multi-model certification. The same commit's `cursor-team-kit/skills/deslop` provides the focused pre-commit style review.
 
@@ -39,3 +39,11 @@ The exact failed CI artifact was replayed after measuring its complete evidence 
 ## Final integration
 
 The concurrent packet continuation at `1bba1a4baa616ca7849134c0b925143cde96bb18` is retained together with the manual-date follow-up. The actual `aca73b7` CI evidence book exceeded its aggregate packaging capacity, and open issue #50 still allowed invalid manual dates to select another replay origin. Their original failures, corrections and verification scope are preserved in [capacity follow-up](release-followup-ci.md) and [manual-date follow-up](replay-date-followup.md). The integration adds the date guard after the packet-only receipts; those historical receipts do not claim to cover this product delta. The completed release receipt is maintained in [PR #62](https://github.com/twoimo/bitcoin-cycle-atlas/pull/62), with actual final CI, merged source and served identity.
+
+## Completed publication
+
+The four exact-candidate PR gates passed on `601119796df94dc77b213b73838a9d4a840afe14`. PR #62 merged as `f7e97e918270539397f8ff76e7f931deb8f320d7`; both source trees and the synthetic test merge are identical. Main CI, Pages and Release then passed on the actual merge. Tag `v1.31.3` names that merge, and the public manifest plus four critical HTTP bodies matched the prepared publication.
+
+Public browser checks confirmed the merged source label, rejected an out-of-range native-keyboard date through both Enter and the button without changing the observed chart, and restored workspace-menu focus after closing the model reader. Issue #50 was already closed as completed when refreshed. [Final report](RELEASE.md) retains exact receipts, screenshots, prior failed runs, Hallmark warnings and the blocked direct release-payload download scope.
+
+These completion records are published on an evidence branch based on the actual merge. They do not modify main or trigger a new product release. Earlier paragraphs are the original phase history and retain their then-current source and pending states.

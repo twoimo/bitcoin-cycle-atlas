@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "browserSharedName": "browser-atlas-publication-1793964096341.jpg",
+      "savedPath": "public-screenshots/publication-identity.jpg",
+      "bytes": 113482,
+      "sha256": "120ba311d087f4270eb7f521d934bb6081f357cb02cf1514aee0e9fd44ec2e31",
+      "identical": true
+    },
+    {
+      "browserSharedName": "browser-atlas-invalid-date-1793964389411.jpg",
+      "savedPath": "public-screenshots/invalid-date.jpg",
+      "bytes": 82996,
+      "sha256": "ef9874aa08f3decb3931398756e42fd1b05bed7460ad1f85a826e5e93afb174a",
+      "identical": true
+    },
+    {
+      "browserSharedName": "browser-atlas-reader-1793964443399.jpg",
+      "savedPath": "public-screenshots/model-reader.jpg",
+      "bytes": 177410,
+      "sha256": "12e539b2893b3595827fce509f30f0cf59f45325122cf566161e304476df4e1d",
+      "identical": true
+    },
+    {
+      "browserSharedName": "browser-atlas-public-final-1793964482950.jpg",
+      "savedPath": "public-screenshots/public-final.jpg",
+      "bytes": 133913,
+      "sha256": "ff6b4e81d9f8a09f400a59ef2ab4e4bd32b656e8c86044944158259f228ce901",
+      "identical": true
+    },
+    {
+      "browserSharedName": "browser-atlas-public-ui-1793964482996.json",
+      "savedPath": "public-ui.json",
+      "bytes": 3466,
+      "sha256": "423346226b81f63746a93589962d5cc0c8dc22f93d609a10d839693f173d0d56",
+      "identical": true
+    }
+  ],
+  "scope": "Same browser-produced bytes copied from the documented shared-file mirror; no screenshot recapture, transformation or JSON rewrite."
+}

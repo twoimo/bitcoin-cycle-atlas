@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "kind": "read-only-final-eth-packet-actions-monitor",
+  "status": "superseded-by-new-head",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "headSha": "1bba1a4baa616ca7849134c0b925143cde96bb18",
+  "tree": "62824a8db50b79a2d6456d88c26491e183d1c028",
+  "productDistTree": "7429c879d54c27ecbac9e2c1f4cdb8cd77ad2dc3",
+  "productDistMatchesNativeBaseline": true,
+  "runId": 42198684691,
+  "runUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42198684691",
+  "runCreatedAt": "2026-11-06T09:55:28Z",
+  "jobId": 127828268041,
+  "jobName": "evaluate",
+  "lastPollAt": "2026-11-06T10:01:20.374Z",
+  "history": [
+    {
+      "at": "2026-11-06T09:56:40.419Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 3,
+      "currentSteps": [
+        {
+          "number": 4,
+          "name": "Test candidate equations, missing inputs, clocks and future-information boundaries"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:01:20.374Z",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "completed": 39,
+      "currentSteps": [],
+      "failedSteps": [
+        {
+          "number": 4,
+          "name": "Test candidate equations, missing inputs, clocks and future-information boundaries",
+          "conclusion": "cancelled"
+        },
+        {
+          "number": 36,
+          "name": "Preserve complete source-identified candidate evidence",
+          "conclusion": "failure"
+        }
+      ]
+    }
+  ],
+  "nativeReceipt": null,
+  "packetManifest": null,
+  "artifactMetadata": [],
+  "scope": "Existing exact-head ETH workflow only. Original eth-final receipts are preserved. No dispatch, retry, new test runs or tracked-file edits.",
+  "workflowLastObservedStatus": "completed",
+  "workflowLastObservedConclusion": "cancelled",
+  "supersededByHead": "c259539677e42ad8bfcd9759ccc3eff3caa14873",
+  "monitorStoppedAt": "2026-11-06T10:01:20.374Z",
+  "note": "This source was superseded by a proper merge. Its status is preserved and is not counted as final-head approval."
+}

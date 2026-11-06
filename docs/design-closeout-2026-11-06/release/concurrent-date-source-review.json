@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS_WITH_NATIVE_CI_PENDING",
+  "reviewedAt": "2026-11-06T10:03:38.555474+00:00",
+  "sourceCommit": "c259539677e42ad8bfcd9759ccc3eff3caa14873",
+  "sourceTree": "005cb609221d1c94611e6b14c49a31ba0367ac12",
+  "productTree": "7832034a94a43d2186be6bdf7377499d1ac42edb",
+  "firstParent": "1bba1a4baa616ca7849134c0b925143cde96bb18",
+  "concurrentParent": "d49af144165cbb51ed5601e3a3a841aaa284d562",
+  "reviewScope": "Read the coordinator, new actual-source tests, native keyboard checks, bounded verifier, source-bound receipts and precise three-way integration. No additional tests were executed by this review.",
+  "financialInputPreservation": {
+    "baseCommit": "59ec6f4f708e87d73dad6324d925a9e01383411c",
+    "files": 203,
+    "bytes": 45414161,
+    "changedOrMissing": [],
+    "metadataException": "research-data/eth-review-scope.json: additive review source inventory only; not a financial model/data change."
+  },
+  "historicalPolicyInventory": {
+    "files": 20,
+    "changedPaths": [
+      ".agents/skills/verify-replay-state/SKILL.md"
+    ],
+    "scope": "The replay verification skill now requires the date checks and 11 real-source mutations. All workflows and Hallmark configuration remain unchanged."
+  },
+  "followupReceiptHashes": {
+    "checkedFiles": 12,
+    "mismatches": [],
+    "sourceBinding": "The original local receipt identifies patched bytes over aca73b7. All of those exact source hashes now match this committed integrated head."
+  },
+  "findings": [
+    "Button and Enter share validation before the existing nearest-observed-bar path. Empty, malformed, impossible, zero-year and out-of-range values are rejected, with native validity also required.",
+    "Invalid manual drafts remain visible with custom validity; input and cancel clear the error. The rejection path does not invoke chooseStart or mutate replay state or saved data.",
+    "Pointer snapping, Random and First remain on the existing paths. The controller and frozen forecast implementation are unchanged.",
+    "The two appended coordinator cases check resumed and unconfirmed states, both submissions, immutable session/save bytes, valid boundaries and native-only invalidity.",
+    "The added real-source mutation reconnects the previous unguarded button and Enter handlers and is required to fail the intended state-preservation assertion. Existing bounded alphabets and ten earlier mutations remain.",
+    "Native browser coverage types actual date spinbuttons, reads back requested values, tests both bounds with both submission methods, checks visible frame/snapshot/saved bytes, and separately exercises valid min/max. Acceptance depends on actual final-head execution.",
+    "The complete packet inventory regression and 524 explicit seeds from the first parent are preserved. The capacity caller comment changes; executable 128 MB/85 MB limits, validator and omission semantics remain intact."
+  ],
+  "claimLimits": [
+    "Earlier 49/49 native receipts belong to their recorded older source.",
+    "Source review and fixture passes do not establish native behavior; the new exact-head ETH/native CI remains required.",
+    "This is partitioned source coverage, not independent multimodel certification."
+  ]
+}

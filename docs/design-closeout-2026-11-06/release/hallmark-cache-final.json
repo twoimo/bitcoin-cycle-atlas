@@ -1,0 +1,530 @@
+{
+  "schemaVersion": 1,
+  "kind": "final-pr-cache-hallmark-verification",
+  "status": "PASS",
+  "runId": 42203377595,
+  "jobId": 127843896261,
+  "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42203377595",
+  "workflowStatus": "completed",
+  "conclusion": "success",
+  "expectedHead": "601119796df94dc77b213b73838a9d4a840afe14",
+  "expectedTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+  "observedHead": "601119796df94dc77b213b73838a9d4a840afe14",
+  "observedTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+  "jobCompletedAt": "2026-11-06T10:34:46Z",
+  "summary": {
+    "designGate": {
+      "status": "pass",
+      "fails": 0,
+      "reflex": 0
+    },
+    "integrityGate": {
+      "status": "pass",
+      "errors": 0
+    },
+    "sourceReadOnly": {
+      "current": true,
+      "baseline": true,
+      "gitBlobsMatched": true
+    },
+    "exitCode": 0,
+    "currentFails": 0,
+    "currentReflex": 0,
+    "currentWarns": 35,
+    "currentStatic": {
+      "name": "current-static",
+      "code": 0,
+      "fails": 0,
+      "reflex": 0,
+      "warns": 25,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 43,
+      "render": "off",
+      "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX",
+      "counts": {
+        "WARN 40": 5,
+        "WARN F7": 20
+      }
+    },
+    "currentRender": {
+      "name": "current-render",
+      "code": 0,
+      "fails": 0,
+      "reflex": 0,
+      "warns": 10,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 1,
+      "render": "ran",
+      "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 145/207; before 53 FAIL, 211 REFLEX, now 0 FAIL, 0 REFLEX",
+      "counts": {
+        "WARN F3": 1,
+        "WARN F7": 1,
+        "WARN F19": 2,
+        "WARN F25": 4,
+        "WARN kept": 2
+      },
+      "screenshots": 40,
+      "requestedUrls": 8
+    },
+    "renderCoverage": [
+      {
+        "phase": "baseline-render",
+        "screenshots": 40,
+        "requestedUrls": 8,
+        "render": "ran"
+      },
+      {
+        "phase": "current-render",
+        "screenshots": 40,
+        "requestedUrls": 8,
+        "render": "ran"
+      }
+    ],
+    "screenshotsTotal": 80,
+    "readinessByVersion": [
+      {
+        "version": "baseline",
+        "readyRoutes": [
+          "btc",
+          "eth",
+          "bmnr",
+          "mstr",
+          "data",
+          "evidence",
+          "compare",
+          "mobile-preview"
+        ]
+      },
+      {
+        "version": "current",
+        "readyRoutes": [
+          "btc",
+          "eth",
+          "bmnr",
+          "mstr",
+          "data",
+          "evidence",
+          "compare",
+          "mobile-preview"
+        ]
+      }
+    ]
+  },
+  "receipt": {
+    "sourceCommit": "601119796df94dc77b213b73838a9d4a840afe14",
+    "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+    "phases": [
+      {
+        "name": "baseline-static",
+        "fails": 1214,
+        "reflex": 1347,
+        "warns": 37,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 26,
+        "render": "off",
+        "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      {
+        "name": "baseline-render",
+        "fails": 53,
+        "reflex": 211,
+        "warns": 13,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      {
+        "name": "current-static",
+        "fails": 0,
+        "reflex": 0,
+        "warns": 25,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 43,
+        "render": "off",
+        "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX"
+      },
+      {
+        "name": "current-render",
+        "fails": 0,
+        "reflex": 0,
+        "warns": 10,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 145/207; before 53 FAIL, 211 REFLEX, now 0 FAIL, 0 REFLEX"
+      }
+    ],
+    "designGate": {
+      "status": "pass",
+      "fails": 0,
+      "reflex": 0
+    },
+    "integrityGate": {
+      "status": "pass",
+      "errors": 0
+    },
+    "sourceReadOnly": {
+      "current": true,
+      "baseline": true,
+      "gitBlobsMatched": true
+    },
+    "durationMilliseconds": 134371,
+    "readiness": [
+      {
+        "version": "baseline",
+        "route": "btc",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "eth",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "bmnr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "mstr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "data",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "evidence",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "compare",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "status": "ready"
+      },
+      {
+        "version": "baseline",
+        "route": "mobile-preview",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "btc",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "eth",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "bmnr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "mstr",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "data",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "evidence",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "compare",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "status": "ready"
+      },
+      {
+        "version": "current",
+        "route": "mobile-preview",
+        "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+        "status": "ready"
+      }
+    ],
+    "errors": [],
+    "exitCode": 0
+  },
+  "phases": [
+    {
+      "name": "baseline-static",
+      "code": 0,
+      "fails": 1214,
+      "reflex": 1347,
+      "warns": 37,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 26,
+      "render": "off",
+      "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it",
+      "counts": {
+        "FAIL 19": 1,
+        "FAIL 26a": 1,
+        "FAIL 34": 25,
+        "FAIL 39a": 20,
+        "FAIL 47a": 1,
+        "FAIL 48": 1127,
+        "FAIL 56": 1,
+        "FAIL 63": 17,
+        "FAIL 67": 21,
+        "REFLEX 24b": 1341,
+        "REFLEX 26b": 2,
+        "REFLEX 38iii": 4,
+        "WARN 3": 3,
+        "WARN 29": 9,
+        "WARN 40": 10,
+        "WARN 41": 6,
+        "WARN F3": 1,
+        "WARN F7": 5,
+        "WARN F23": 1,
+        "WARN F24": 2
+      }
+    },
+    {
+      "name": "baseline-render",
+      "code": 0,
+      "fails": 53,
+      "reflex": 211,
+      "warns": 13,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 1,
+      "render": "ran",
+      "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it",
+      "counts": {
+        "FAIL 26a": 2,
+        "FAIL 40": 19,
+        "FAIL 48": 24,
+        "FAIL 56": 4,
+        "FAIL 67": 4,
+        "REFLEX 24b": 194,
+        "REFLEX 26b": 1,
+        "REFLEX 39b": 5,
+        "REFLEX 49b": 2,
+        "REFLEX 72": 2,
+        "REFLEX 75": 7,
+        "WARN 29": 1,
+        "WARN 40": 4,
+        "WARN F3": 1,
+        "WARN F19": 2,
+        "WARN F24": 1,
+        "WARN F25": 4
+      },
+      "screenshots": 40,
+      "requestedUrls": 8
+    },
+    {
+      "name": "current-static",
+      "code": 0,
+      "fails": 0,
+      "reflex": 0,
+      "warns": 25,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 43,
+      "render": "off",
+      "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX",
+      "counts": {
+        "WARN 40": 5,
+        "WARN F7": 20
+      }
+    },
+    {
+      "name": "current-render",
+      "code": 0,
+      "fails": 0,
+      "reflex": 0,
+      "warns": 10,
+      "waived": 0,
+      "rejected": 0,
+      "answered": 0,
+      "dismissed": 0,
+      "notes": 0,
+      "files": 1,
+      "render": "ran",
+      "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 145/207; before 53 FAIL, 211 REFLEX, now 0 FAIL, 0 REFLEX",
+      "counts": {
+        "WARN F3": 1,
+        "WARN F7": 1,
+        "WARN F19": 2,
+        "WARN F25": 4,
+        "WARN kept": 2
+      },
+      "screenshots": 40,
+      "requestedUrls": 8
+    }
+  ],
+  "phaseCommands": [
+    {
+      "name": "baseline-static",
+      "at": "2026-11-06T10:32:58.312Z",
+      "args": [
+        "dist",
+        "--scope",
+        "app",
+        "--genre",
+        "modern-minimal",
+        "--json",
+        "--before"
+      ]
+    },
+    {
+      "name": "baseline-render",
+      "at": "2026-11-06T10:32:58.849Z",
+      "args": [
+        "dist/styles.css",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+        "--scope",
+        "app",
+        "--genre",
+        "modern-minimal",
+        "--json",
+        "--before"
+      ]
+    },
+    {
+      "name": "current-static",
+      "at": "2026-11-06T10:33:56.860Z",
+      "args": [
+        "dist",
+        "--scope",
+        "app",
+        "--genre",
+        "modern-minimal",
+        "--json",
+        "--kept"
+      ]
+    },
+    {
+      "name": "current-render",
+      "at": "2026-11-06T10:33:58.831Z",
+      "args": [
+        "dist/styles.css",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=ETHUSD&granularity=daily&type=line",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=BMNR&granularity=daily&type=line",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?symbol=MSTR&granularity=daily&type=line",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=compare&legacy=1",
+        "--url",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/mobile-preview.html",
+        "--scope",
+        "app",
+        "--genre",
+        "modern-minimal",
+        "--json",
+        "--kept"
+      ]
+    }
+  ],
+  "artifact": [
+    {
+      "id": 13494719691,
+      "name": "hallmark-design-601119796df94dc77b213b73838a9d4a840afe14",
+      "sizeBytes": 10830952,
+      "digestReportedByGithub": "sha256:9f1386ca7f9d3dc3714a5ac07a641921359569b6d23e11276dd245da565484f2",
+      "expired": false
+    }
+  ],
+  "checkerComparison": {
+    "comparedFrom": "c259539677e42ad8bfcd9759ccc3eff3caa14873",
+    "comparedTo": "601119796df94dc77b213b73838a9d4a840afe14",
+    "scope": ["tools/hallmark", "scripts/verify-hallmark-design.mjs", "scripts/hallmark-source-scope.mjs", ".github/workflows/hallmark-design.yml"],
+    "changedPaths": [],
+    "method": "Read-only git diff --name-only between exact commits; no local test rerun."
+  },
+  "evidenceBasis": {
+    "jobLogCharacters": 4849370,
+    "receiptMarkerCount": 1,
+    "phaseMarkerCount": 4,
+    "source": "Fresh completed GitHub Actions job log; source commit and tree independently match expected values; artifact digest is API-reported.",
+    "localTestsRerun": false,
+    "trackedEdits": false,
+    "pushes": false,
+    "priorRecordsPreserved": true,
+    "priorDateReceipt": "build/release-monitor/hallmark-date-final.json",
+    "prHeadLastObserved": "601119796df94dc77b213b73838a9d4a840afe14"
+  }
+}

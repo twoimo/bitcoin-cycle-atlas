@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "observedAt": "2026-11-06T10:16:01.698Z",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "pullRequest": 62,
+  "scope": "Read-only source-bound observation of the existing general CI and Market lab service runs for the current manual-date-validation PR head.",
+  "head": {
+    "sha": "c259539677e42ad8bfcd9759ccc3eff3caa14873",
+    "tree": "005cb609221d1c94611e6b14c49a31ba0367ac12",
+    "parents": [
+      "1bba1a4baa616ca7849134c0b925143cde96bb18",
+      "d49af144165cbb51ed5601e3a3a841aaa284d562"
+    ]
+  },
+  "testedPrMerge": {
+    "sha": "05c6916e595c6fb6f6b6d0e4e14ba922e4e74598",
+    "tree": "005cb609221d1c94611e6b14c49a31ba0367ac12",
+    "parents": [
+      "59ec6f4f708e87d73dad6324d925a9e01383411c",
+      "c259539677e42ad8bfcd9759ccc3eff3caa14873"
+    ],
+    "sameTreeAsHead": true,
+    "kind": "GitHub synthetic PR test merge"
+  },
+  "prAtCompletion": {
+    "head": "c259539677e42ad8bfcd9759ccc3eff3caa14873",
+    "base": "59ec6f4f708e87d73dad6324d925a9e01383411c",
+    "mergeCommit": "05c6916e595c6fb6f6b6d0e4e14ba922e4e74598",
+    "merged": false,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/pull/62"
+  },
+  "ci": {
+    "name": "CI",
+    "runId": 42199221145,
+    "jobId": 127830478877,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42199221145",
+    "jobUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42199221145/job/127830478877",
+    "attempt": 1,
+    "event": "pull_request",
+    "headSha": "c259539677e42ad8bfcd9759ccc3eff3caa14873",
+    "status": "completed",
+    "conclusion": "success",
+    "updatedAt": "2026-11-06T10:13:03Z",
+    "checkoutCommit": "05c6916e595c6fb6f6b6d0e4e14ba922e4e74598",
+    "allRecordedStepsSucceeded": true,
+    "modelDataTests": {
+      "tests": 2484,
+      "suites": 0,
+      "pass": 2484,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 581496.651068
+    },
+    "postModelSteps": [
+      {
+        "name": "Check service types, panels and isolated database behavior",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8
+      },
+      {
+        "name": "Verify preserved forecast identities and replay",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 9
+      },
+      {
+        "name": "Verify treasury sources and persistent research summaries",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 10
+      },
+      {
+        "name": "Verify reviewed Ethereum history matches the published catalog",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 11
+      },
+      {
+        "name": "Independently reconcile daily treasury paths",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 12
+      },
+      {
+        "name": "Independently check numerical identities and causal boundaries",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 13
+      },
+      {
+        "name": "Verify bounded request ownership and negative controls",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 14
+      },
+      {
+        "name": "Verify the observed daily clock and bounded chart work",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 15
+      },
+      {
+        "name": "Verify static resources at the Pages base path",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 16
+      },
+      {
+        "name": "Prepare the committed publication and standalone",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 17
+      },
+      {
+        "name": "Preserve CI test log and publication identity",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 18
+      }
+    ],
+    "additionalTestGroups": [
+      {
+        "tests": 65,
+        "suites": 0,
+        "pass": 65,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 20515.071854
+      },
+      {
+        "tests": 28,
+        "suites": 0,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 10903.150397
+      },
+      {
+        "tests": 32,
+        "suites": 0,
+        "pass": 32,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 268.393902
+      },
+      {
+        "tests": 28,
+        "suites": 0,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 126.592654
+      },
+      {
+        "tests": 17,
+        "suites": 0,
+        "pass": 17,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 149.793178
+      }
+    ],
+    "preparedPublication": {
+      "status": "PASS",
+      "sourceCommit": "05c6916e595c6fb6f6b6d0e4e14ba922e4e74598",
+      "files": 788,
+      "assets": 22,
+      "contentDigest": "a673a048c65668fe8f6cb1656c06a340ee3fc383355bb2af8051ff68e714b61f",
+      "manifestSha256": "777562da7c43e0899d0303e74a2e6c3b41db49c86bc79f85e89e1b5b29e23bf5",
+      "checkedFiles": 788,
+      "artifactId": 13493423521
+    }
+  },
+  "marketLabService": {
+    "name": "Market lab service",
+    "runId": 42199221118,
+    "jobId": 127830089965,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42199221118",
+    "jobUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42199221118/job/127830089965",
+    "attempt": 1,
+    "event": "pull_request",
+    "headSha": "c259539677e42ad8bfcd9759ccc3eff3caa14873",
+    "status": "completed",
+    "conclusion": "success",
+    "updatedAt": "2026-11-06T10:01:07Z",
+    "checkoutCommit": "05c6916e595c6fb6f6b6d0e4e14ba922e4e74598",
+    "allRecordedStepsSucceeded": true,
+    "tests": {
+      "panels": {
+        "tests": 65,
+        "suites": 0,
+        "pass": 65,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 20982.621235
+      },
+      "realPostgres": {
+        "tests": 28,
+        "suites": 0,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 10813.204043
+      },
+      "marketLab": {
+        "tests": 59,
+        "suites": 0,
+        "pass": 59,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 6184.522946
+      }
+    }
+  },
+  "evidence": {
+    "modelSummary": [
+      "# tests 2484",
+      "# pass 2484",
+      "# fail 0",
+      "# cancelled 0",
+      "# skipped 0"
+    ],
+    "serviceSummary": [
+      "ℹ tests 65",
+      "ℹ pass 65",
+      "ℹ fail 0",
+      "ℹ cancelled 0",
+      "ℹ skipped 0",
+      "ℹ tests 28",
+      "ℹ pass 28",
+      "ℹ fail 0",
+      "ℹ cancelled 0",
+      "ℹ skipped 0",
+      "ℹ tests 59",
+      "ℹ pass 59",
+      "ℹ fail 0",
+      "ℹ cancelled 0",
+      "ℹ skipped 0"
+    ],
+    "commitApiUrls": [
+      "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/commits/c259539677e42ad8bfcd9759ccc3eff3caa14873",
+      "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/commits/05c6916e595c6fb6f6b6d0e4e14ba922e4e74598"
+    ]
+  },
+  "historicalReceipt": {
+    "path": "ci-packet-final.json",
+    "headSha": "1bba1a4baa616ca7849134c0b925143cde96bb18",
+    "status": "SUPERSEDED",
+    "ciConclusion": "cancelled",
+    "serviceConclusion": "success"
+  },
+  "notes": [
+    "The actual model count was read from the completed current-head log.",
+    "Earlier ci-final.json and ci-packet-final.json remain separate historical receipts.",
+    "This receipt records CI/service evidence and does not claim the PR has been merged or deployed."
+  ]
+}

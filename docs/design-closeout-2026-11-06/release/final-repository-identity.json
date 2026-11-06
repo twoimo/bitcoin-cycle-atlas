@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "reviewedHead": "601119796df94dc77b213b73838a9d4a840afe14",
+  "syntheticTestMerge": "407be6a3be44df91f5cace87a2948ae46548e26d",
+  "actualMerge": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+  "sourceTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+  "distTree": "33532c2d59d03a5b6f8f582e528edb855badec4f",
+  "sourceIdentityEvidence": {
+    "syntheticCommitApi": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/commits/407be6a3be44df91f5cace87a2948ae46548e26d",
+    "syntheticTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "actualMergeTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "reviewedHeadTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "scope": "Synthetic commit read from GitHub API; candidate and actual merge trees checked from local Git and prior API receipt. All three trees match."
+  },
+  "pullRequest": {
+    "number": 62,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/pull/62",
+    "merged": true,
+    "mergedAt": "2026-11-06T11:06:59Z",
+    "updatedAt": "2026-11-06T11:27:34Z"
+  },
+  "issue50": {
+    "number": 50,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/issues/50",
+    "state": "closed",
+    "stateReason": "completed",
+    "closedAt": "2026-11-06T11:26:23Z",
+    "scope": "Fresh GitHub API observation: already closed by a concurrent actor; no duplicate close performed."
+  },
+  "release": {
+    "version": "v1.31.3",
+    "tagCommit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/tag/v1.31.3"
+  },
+  "publicUiReceipt": "public-ui.json"
+}

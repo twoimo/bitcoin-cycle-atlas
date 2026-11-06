@@ -1,0 +1,2227 @@
+[
+  {
+    "command": "npm test",
+    "objects": [],
+    "summaries": [
+      "> bitcoin-cycle-atlas@1.31.3 test",
+      "> node scripts/test.mjs",
+      "# PASS Public labels and operational thresholds are explicit and stable",
+      "# PASS Average fall is year-start-to-low, separately from ordered MDD",
+      "# PASS A trough before a later high cannot become a peak-to-trough drawdown",
+      "# PASS Historical means weight each observed year equally regardless of session count",
+      "# PASS Current-year observations never enter prior-year means or sample counts",
+      "# PASS Year-start return uses the actual first current-year session, not December 31",
+      "# PASS Listing-year partial history counts once and is explicitly disclosed",
+      "# PASS Unavailable years are never manufactured to inflate the sample",
+      "# PASS Every exact threshold has one stage and nearby unrounded values retain their side",
+      "# PASS Five-stage partition is exhaustive and ordered over a finite positive-price sweep",
+      "# PASS Fewer than five annual samples and degenerate bands are unavailable, never fake neutral",
+      "# PASS As-of projection excludes all future prices, years and known future missing dates",
+      "# PASS Known stale data are rejected after seven calendar days, including year rollover",
+      "# PASS Known missing observations, large internal gaps and a late current baseline fail closed",
+      "# PASS Known gaps outside the available historical prefix do not contaminate an as-of result",
+      "# PASS Assets with no observations yet remain visible with unavailable metrics",
+      "# PASS Default as-of derives deterministically from a zoned retrieval timestamp",
+      "# PASS Malformed prices, dates, order and impossible arithmetic cannot produce finite-looking judgments",
+      "# PASS Malformed or inconsistent asset contracts fail before rendering a misleading table",
+      "# PASS Equivalent positive unit changes preserve the calculated ranges and stages",
+      "# PASS Input prices and provenance remain unmodified",
+      "# PASS A fresh year-end close on New Year’s Day is correctly unavailable before the first session",
+      "# PASS Published all-asset history preserves the reviewed 2026-10-23 sample years and first-session baselines after refresh",
+      "# PASS BTC uses complete UTC calendar days, includes leap days, and never borrows exchange-session rules",
+      "# PASS UTC dates survive leap day and daylight-saving boundaries",
+      "# PASS Invalid prices, duplicate dates, and reversed dates are rejected",
+      "# PASS UTC day conversion stays inside the four-digit calendar-label domain",
+      "# PASS Extreme but individually finite input prices cannot silently overflow the chart",
+      "# PASS Missing days stay missing and do not masquerade as a one-day change",
+      "# PASS Observed windows are never extrapolated and exact anchors are required",
+      "# PASS Drawdown measures the loss from an earlier observed peak",
+      "# PASS Every real-data mode rebases all starting points to a common value",
+      "# PASS Historical anchors follow the declared annual-high and bounded-low rules",
+      "# PASS Same-day comparison and actual source returns agree independently of zoom",
+      "# PASS CSV contains exactly the observed plotted values and no synthetic rows",
+      "# PASS A constant price cannot manufacture moving-average trend confirmations",
+      "# PASS Numerical equality does not suppress a small sustained price trend",
+      "# PASS Calendar scenarios use calendar months including month-end and leap rules",
+      "# PASS Every confirmation is prefix-causal and cannot appear before its persistence period",
+      "# PASS Missing UTC days cannot count as continuous persistence or moving-average observations",
+      "# PASS Current candidate and timing identity reproduce the verified daily observations",
+      "# PASS Online confirmation dates differ from the initial qualifying dates",
+      "# PASS Earlier rebound failures remain visible instead of silently selecting the successful signal",
+      "# PASS asOf truncates before extrema; newly observed peaks and lows revise the candidate honestly",
+      "# PASS A new ATH has no observed trough, zero-duration bear claim, or stale recovery pairing",
+      "# PASS A later equal high is not a trough; a strictly later lower price becomes an observed candidate",
+      "# PASS All baselines and sensitivity variants expose their small shared sample",
+      "# PASS Incomplete UTC today and future observations are excluded, never shifted",
+      "# PASS Asset, timestamp, calendar date and decimal metric schemas are checked",
+      "# PASS Duplicate and descending timestamps fail within and across pages",
+      "# PASS Pagination preserves origin, path and requested BTC daily series",
+      "# PASS A partial series or a missing historical halving anchor cannot replace the snapshot",
+      "# PASS Any missing UTC day fails at the source boundary before a daily model or cache receives it",
+      "# PASS Fetch follows supported pagination and retains exact observed values and provenance",
+      "# PASS Network failure propagates without constructing fallback or synthetic prices",
+      "# PASS A successful HTTP response with an omitted ordinary day cannot become a manual-refresh dataset",
+      "# PASS Cross-origin pagination fails before any request to the new host",
+      "# PASS Pagination is bounded at ten pages and never follows a repeated URL",
+      "# PASS An already aborted refresh makes no network request",
+      "# ETH_HISTORICAL_GAS_RECEIPT {\"status\":\"PASS\",\"source\":\"CADLabs/ethereum-economic-model\",\"commit\":\"a70e21f1c7eeb7eb2491d897d001bcd7432d7610\",\"bytes\":86230,\"sourceSha256\":\"59a68739e9c6b49a2a6e14312d6a0541af5ba9965e1be2ee4c371efa4df24ca8\",\"collectedAt\":\"2026-10-26T13:43:06Z\",\"rows\":2182,\"firstDate\":\"2015-07-30\",\"lastDate\":\"2021-07-19\",\"partialMetric\":{\"metric\":\"l1GasUsed\",\"unit\":\"gas / 28 UTC days\",\"observedFrom\":\"2021-06-22\",\"observedThrough\":\"2021-07-19\",\"windowDays\":28,\"value\":2583387772249,\"mappingBasis\":\"The retained source README attributes this daily Historical Ethereum Gas Used export to Etherscan. Sum its 28 Value integers; do not convert it into transaction counts, fees or L2 activity.\"},\"fullModelSnapshotReady\":false}",
+      "# PASS Near-peak first crossings reproduce the independently calculated daily evidence",
+      "# PASS A 100% zone selects the actual observed maximum with consistent price and date",
+      "# PASS The 2021 double top causes a disclosed 93-to-94 percent discontinuity",
+      "# PASS Calendar and halving clocks are independently calculated rather than conflated",
+      "# PASS A brief crossing is not silently treated as sustained residence",
+      "# PASS Plateau statistics agree with independent Python calculations and proper denominators",
+      "# PASS Peak-to-low duration is distinguished from underwater time and the rebound",
+      "# PASS As-of analysis excludes later peaks and recomputes the retrospective denominator",
+      "# PASS Missing days interrupt sustained windows and are disclosed in occupancy statistics",
+      "# PASS Invalid thresholds and baselines fail explicitly rather than changing the calculation",
+      "# tests 2484",
+      "# pass 2484",
+      "# fail 0",
+      "# cancelled 0",
+      "# skipped 0",
+      "# todo 0",
+      "ATLAS_TEST_TOTAL {\"complete\":true,\"tests\":2484,\"pass\":2484,\"fail\":0,\"skipped\":0,\"batches\":1}"
+    ]
+  },
+  {
+    "command": "npm run verify:forecast",
+    "objects": [
+      {
+        "status": "PASS",
+        "records": 5,
+        "snapshots": 1,
+        "pendingTargets": 15,
+        "scoredTargets": 0,
+        "observationThrough": "2026-11-05",
+        "refresh": {
+          "expectedAsOf": "2026-11-05",
+          "lastPreservedAsOf": "2026-10-25",
+          "nextEligibleAsOf": "2026-11-24",
+          "nextEligibleAsOfIsEarliest": true,
+          "observationDaysSinceLast": 11,
+          "observationThrough": "2026-11-05",
+          "outcome": "retained-not-due",
+          "publicationDue": false,
+          "publicationPolicy": {
+            "basis": "completed-observation-rows",
+            "capturesInteractiveCalculations": false,
+            "intervalObservationDays": 30,
+            "scope": "scheduled-public-preservation",
+            "version": "preserved-forecast-cadence-1"
+          },
+          "publicationReasons": [
+            "interval-not-reached"
+          ],
+          "reason": "The unchanged model and settings are preserved every 30 completed observation rows. Earlier records remain immutable; observations, evaluation and active experiments continue to refresh daily."
+        }
+      }
+    ],
+    "summaries": [
+      "> bitcoin-cycle-atlas@1.31.3 verify:forecast",
+      "> node scripts/build-forecast-ledger.mjs --check",
+      "\"status\": \"PASS\","
+    ]
+  },
+  {
+    "command": "npm run verify:research",
+    "objects": [
+      {
+        "status": "ok",
+        "check": true,
+        "sources": 2,
+        "originalBytes": 43901,
+        "licenseBytes": 7048
+      },
+      {
+        "status": "ok",
+        "check": true,
+        "sources": 55,
+        "historicalEvents": 43
+      },
+      {
+        "status": "ok",
+        "check": true,
+        "articles": 490,
+        "aliases": 494,
+        "markdownBytes": 902107
+      }
+    ],
+    "summaries": [
+      "> bitcoin-cycle-atlas@1.31.3 verify:research",
+      "> node scripts/build-research-sources.mjs --check && node scripts/build-treasury-research.mjs --check && node scripts/build-research-library.mjs --check"
+    ]
+  },
+  {
+    "command": "npm run verify:treasury-paths",
+    "objects": [
+      {
+        "status": "PASS",
+        "node": "v24.22.2",
+        "asOf": "2026-10-23",
+        "endYear": 2050,
+        "seed": 20261022,
+        "scope": "Independent daily financial identities and input-boundary verification. This does not establish predictive accuracy, calibrated probabilities or feasible financing.",
+        "sourceHashes": {
+          "scripts/verify-treasury-paths.mjs": "49f1828cc90afcff1357ed79acfacbc6653aaa4e5252561335bad9b6c242953a",
+          "dist/treasury-asset-paths.js": "67d98d830ad95d54312b8cd73d5e6e48c76aec757a7ae55b09ec43b2e8918d5d",
+          "dist/asset-daily-observations.js": "645cdfc751ffe2a4e0ce66a10316fc493d637cd6f74a0d09ea17b4e126367c70",
+          "dist/ethereum-forecast.js": "b86e6e917c8d72c9db892dc4931694f915d6d73352dbab54798a64bd5ee3db4c",
+          "dist/treasury-instruments.js": "784b98684b5ffe6c8bb747b1bb6eac6cd658221a3cfa29e5c64c11b6711b102f",
+          "dist/treasury-liquidity.js": "b989adb0205ad969f3c87ccfdf71134d5448a38ebe47ed49ac1a63d5119cbd5d",
+          "dist/treasury-model.js": "4812b36b65912209201eabf46ba39868cec7d7ddb014421e556476412b8e1739",
+          "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+          "dist/long-horizon-evidence.js": "7b5f9fc162e0c621b6a7df9f0f3d77e76c274040e83b88b0a8301638cb29f2f8",
+          "dist/detailed-forecast.js": "e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e",
+          "dist/cycle-calibration.js": "f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780",
+          "dist/cycle-engine.js": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+          "dist/cycle-timing.js": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+          "dist/market-structure.js": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+          "dist/treasury-research.js": "c5a3166884c3a9db81f1cafc7223ba1a7c1c5498689ec33ea78a2d6522275fbb",
+          "dist/treasury-catalog.js": "b8601e01bc4114bd56a84dd8fcc32b127bdda6a8188f2b5f3208fe45bb54ada5"
+        },
+        "inputHashes": {
+          "dist/data/btc-daily.json": "fae8889632b524deef33d04363da714efcb74f7906b8a507025516668c8cd7a6",
+          "dist/data/eth-ohlc.json": "73436a22ced40a0c1090f0ef926aed19d5381699089a6feee114f5dc9f312282",
+          "dist/data/mstr-ohlc.json": "c8838d17661f0cb4d8462fb8fb649e6a189d8c7f6188c36e9e00fa0b35e149d9",
+          "dist/data/bmnr-ohlc.json": "db97d837fd4b3dcb68a3d3fac31b72e55b956a3c866630d4ec9a45e64bbe35a6",
+          "research-data/treasury-mstr.json": "cac107e363aba4ceb95db085ac351911a3771ba1c1c7818c8adebbfaa7414de1",
+          "research-data/treasury-bmnr.json": "08724dc7eee6b00c303445ef9da9aff266c1f5bb0c0ec863e87846a282041105"
+        },
+        "tolerance": "Financial and baseline identities: 1e-7 + 64 * Number.EPSILON * arithmetic scale, including cumulative quantities used in differences. ETH log residual: 512 * Number.EPSILON * (1 + absolute residual and innovation terms).",
+        "checks": [
+          "six actual-input financial paths conserve holdings, four ETH liquidity pools, cash, senior claims, issuance, arrears and daily calendar events; known coupons cease after principal settlement",
+          "every ETH baseline and residual is independently reconciled to the explicit target, actual dated post-Merge source return and declared 90-day scale/730-day persistence",
+          "MSTR asset dates and prices equal the original BTC engine for all three mapped scenarios",
+          "same seed and cutoff reproduce every path after extreme future observations are appended",
+          "same terminal asset price produces independently computed different holdings and share prices after different interim cash-outflow prices",
+          "liquidation is absorbing within its own financial path and does not propagate from another condition through the displayed envelope",
+          "wrong asset, bundle cutoff, future training, missing day, duplicate day, mismatched initial price and non-finite price are rejected",
+          "an older coin anchor is rejected even when its numeric price equals the new exact-date path anchor",
+          "raw ETH archives cannot omit their asset identity or contradict the nested Coinbase source identity"
+        ],
+        "counts": {
+          "activeSteps": 44994,
+          "absorbedSteps": 8016,
+          "financingSteps": 10840,
+          "rewardSaleSteps": 14639,
+          "debtRepayments": 15
+        },
+        "ethResidualChecks": 26505,
+        "rejectedBoundaryCases": 10,
+        "maxAbsoluteErrors": {
+          "grossAssetsUsd": 0,
+          "seniorClaimsUsd": 0,
+          "residualUsd": 0,
+          "premium": 0,
+          "sharePriceUsd": 0,
+          "coinUnits": 3.725290298461914e-9,
+          "rewardUnits": 1.1874362826347351e-8,
+          "rewardCashUsd": 0.000010170042514801025,
+          "otherAssetsUsd": 0,
+          "financingCarryUsd": 0.0000033210963010787964,
+          "principalUsd": 0,
+          "cashUsd": 0.0009765625,
+          "issuedShares": 0.0000011530391986888975,
+          "issuanceUsd": 0.0019474029541015625,
+          "liquidityUnits": 4.656612873077393e-10,
+          "stakingRewards": 8.412825991399586e-11,
+          "ethBaselineUsd": 2.9103830456733704e-11,
+          "ethResidualLog": 4.440892098500626e-16,
+          "fixtureCoinUnits": 6.461050361394882e-9,
+          "fixtureShares": 2.153683453798294e-8
+        },
+        "scenarios": [
+          {
+            "symbol": "MSTR",
+            "scenario": "stress",
+            "asOf": "2026-10-23",
+            "endDate": "2050-12-31",
+            "points": 8836,
+            "upwardAssetDays": 4199,
+            "downwardAssetDays": 4636,
+            "insolventAt": "2040-10-23",
+            "capacityReachedAt": null,
+            "lastPrice": 0,
+            "lastCoinUnits": 331179.1623502826,
+            "liquidityShortfallAt": null,
+            "knownAnnualCarryAtEnd": 0,
+            "settlements": 6
+          },
+          {
+            "symbol": "MSTR",
+            "scenario": "base",
+            "asOf": "2026-10-23",
+            "endDate": "2050-12-31",
+            "points": 8836,
+            "upwardAssetDays": 4360,
+            "downwardAssetDays": 4475,
+            "insolventAt": null,
+            "capacityReachedAt": null,
+            "lastPrice": 1301.4002510400278,
+            "lastCoinUnits": 879772.149699483,
+            "liquidityShortfallAt": null,
+            "knownAnnualCarryAtEnd": 0,
+            "settlements": 6
+          },
+          {
+            "symbol": "MSTR",
+            "scenario": "bull",
+            "asOf": "2026-10-23",
+            "endDate": "2050-12-31",
+            "points": 8836,
+            "upwardAssetDays": 4410,
+            "downwardAssetDays": 4425,
+            "insolventAt": null,
+            "capacityReachedAt": "2047-10-10",
+            "lastPrice": 14116.936676160158,
+            "lastCoinUnits": 21000000,
+            "liquidityShortfallAt": null,
+            "knownAnnualCarryAtEnd": 0,
+            "settlements": 6
+          },
+          {
+            "symbol": "BMNR",
+            "scenario": "stress",
+            "asOf": "2026-10-23",
+            "endDate": "2050-12-31",
+            "points": 8836,
+            "upwardAssetDays": 4424,
+            "downwardAssetDays": 4411,
+            "insolventAt": "2039-03-29",
+            "capacityReachedAt": null,
+            "lastPrice": 0,
+            "lastCoinUnits": 2649733.975791876,
+            "liquidityShortfallAt": "2036-06-05",
+            "knownAnnualCarryAtEnd": 33250000,
+            "settlements": 0
+          },
+          {
+            "symbol": "BMNR",
+            "scenario": "base",
+            "asOf": "2026-10-23",
+            "endDate": "2050-12-31",
+            "points": 8836,
+            "upwardAssetDays": 4469,
+            "downwardAssetDays": 4366,
+            "insolventAt": null,
+            "capacityReachedAt": "2033-10-31",
+            "lastPrice": 33.87933421309753,
+            "lastCoinUnits": 6104999.999999989,
+            "liquidityShortfallAt": null,
+            "knownAnnualCarryAtEnd": 33250000,
+            "settlements": 0
+          },
+          {
+            "symbol": "BMNR",
+            "scenario": "bull",
+            "asOf": "2026-10-23",
+            "endDate": "2050-12-31",
+            "points": 8836,
+            "upwardAssetDays": 4516,
+            "downwardAssetDays": 4319,
+            "insolventAt": null,
+            "capacityReachedAt": "2028-02-03",
+            "lastPrice": 450.70863549926025,
+            "lastCoinUnits": 6104999.999999989,
+            "liquidityShortfallAt": null,
+            "knownAnnualCarryAtEnd": 33250000,
+            "settlements": 0
+          }
+        ],
+        "syntheticPathDependence": [
+          {
+            "intermediatePrice": 50,
+            "finalCoinPrice": 100,
+            "expectedCoinUnits": 104351.32541558263,
+            "actualCoinUnits": 104351.32541558455,
+            "finalSharePrice": 9.349352380284982
+          },
+          {
+            "intermediatePrice": 150,
+            "finalCoinPrice": 100,
+            "expectedCoinUnits": 502417.4030086563,
+            "actualCoinUnits": 502417.4030086498,
+            "finalSharePrice": 45.014064977213934
+          }
+        ]
+      }
+    ],
+    "summaries": [
+      "> bitcoin-cycle-atlas@1.31.3 verify:treasury-paths",
+      "> node scripts/verify-treasury-paths.mjs",
+      "\"status\": \"PASS\","
+    ]
+  },
+  {
+    "command": "npm run verify:numerics",
+    "objects": [
+      {
+        "status": "PASS",
+        "auditBaselineCommit": "64c8207cb044d8990289c5a7d39972e21b74c240",
+        "node": "v24.22.2",
+        "scope": "Independent arithmetic/coverage/causality oracles on actual product modules, fixed archives and bounded generated inputs; not a universal floating-point proof or predictive-validation certificate.",
+        "regressionSuite": "tests/system-numerical-regressions.test.mjs (run separately by npm test)",
+        "auditedFixes": [
+          {
+            "id": "NUM-01",
+            "module": "dist/daily-analytics.js",
+            "boundary": "An inferred daily gap crossing a year/month end must mark the prior observed period; explicit missingDates cannot double-count it. Exchange sessions require declared missing dates."
+          },
+          {
+            "id": "NUM-02",
+            "module": "dist/cycle-timing.js",
+            "boundary": "Calendar-month shifts preserve years 0000–0099 and reject results outside the accepted 0000–9999 date domain."
+          },
+          {
+            "id": "NUM-03",
+            "module": "dist/market-structure.js",
+            "boundary": "Stable median/slope/log-return/geometric-mean arithmetic retains representable answers; genuinely unrepresentable output metrics fail explicitly."
+          }
+        ],
+        "proofClassification": {
+          "algebra": [
+            "ordered peak-before-trough drawdown",
+            "expense, issuance, principal/conversion and four-pool accounting identities",
+            "peak advance plus bear shortening equals trough advance"
+          ],
+          "boundedExecution": [
+            "fixed archive comparisons",
+            "generated numeric cases",
+            "three MSTR capital policies and BMNR target-interpolation paths",
+            "day-by-day independent reward sweep and instrument active-day sums",
+            "four deliberately corrupted treasury outputs rejected",
+            "five causal clock prefixes",
+            "one seeded detailed ensemble and one long-horizon illustrative path"
+          ],
+          "unproved": [
+            "universal floating-point correctness",
+            "forecast accuracy or probability calibration",
+            "signal profitability",
+            "financing availability and market liquidity"
+          ]
+        },
+        "sourceHashes": {
+          "dist/daily-analytics.js": "81b4a1fca0769e33778af2ba356115250a47017c26f054293e3d08d821c8164c",
+          "dist/cycle-timing.js": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+          "dist/cycle-calibration.js": "f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780",
+          "dist/market-structure.js": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+          "dist/treasury-model.js": "4812b36b65912209201eabf46ba39868cec7d7ddb014421e556476412b8e1739",
+          "dist/treasury-instruments.js": "784b98684b5ffe6c8bb747b1bb6eac6cd658221a3cfa29e5c64c11b6711b102f",
+          "dist/treasury-liquidity.js": "b989adb0205ad969f3c87ccfdf71134d5448a38ebe47ed49ac1a63d5119cbd5d",
+          "dist/treasury-research.js": "c5a3166884c3a9db81f1cafc7223ba1a7c1c5498689ec33ea78a2d6522275fbb",
+          "dist/detailed-forecast.js": "e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e",
+          "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089"
+        },
+        "dataHashes": {
+          "dist/data/btc-daily.json": "fae8889632b524deef33d04363da714efcb74f7906b8a507025516668c8cd7a6",
+          "dist/data/eth-ohlc.json": "73436a22ced40a0c1090f0ef926aed19d5381699089a6feee114f5dc9f312282",
+          "dist/data/mstr-ohlc.json": "c8838d17661f0cb4d8462fb8fb649e6a189d8c7f6188c36e9e00fa0b35e149d9",
+          "dist/data/bmnr-ohlc.json": "db97d837fd4b3dcb68a3d3fac31b72e55b956a3c866630d4ec9a45e64bbe35a6"
+        },
+        "assertions": 317745,
+        "maxAbsoluteErrors": {
+          "mdd": 1.4210854715202004e-14,
+          "returns": 3.637978807091713e-12,
+          "cagr": 1.4210854715202004e-14,
+          "accounting": 9.313225746154785e-10,
+          "instruments": 9.387731552124023e-7,
+          "paths": 0.0000457763671875,
+          "liquidity": 0.000001519918441772461,
+          "ensemble": 5.820766091346741e-11,
+          "forecast": 3.552713678800501e-15,
+          "long": 5.820766091346741e-11
+        },
+        "realArchiveChecks": [
+          {
+            "symbol": "BTC",
+            "count": 5955,
+            "firstDate": "2010-07-18",
+            "asOf": "2026-11-05",
+            "mddPct": -92.74863345469116,
+            "peakDate": "2011-06-08",
+            "troughDate": "2011-11-18",
+            "cumulativeReturnPct": 88307364.24373323,
+            "cagrPct": 131.6069507961894,
+            "annualPeriods": 17,
+            "monthlyPeriods": 197,
+            "identicalRiskOutputsToBaseline": null
+          },
+          {
+            "symbol": "ETH",
+            "count": 3822,
+            "firstDate": "2016-05-18",
+            "asOf": "2026-11-05",
+            "mddPct": -94.01163042380341,
+            "peakDate": "2018-01-13",
+            "troughDate": "2018-12-14",
+            "cumulativeReturnPct": 16854.55235204856,
+            "cagrPct": 63.298419171627785,
+            "annualPeriods": 11,
+            "monthlyPeriods": 127,
+            "identicalRiskOutputsToBaseline": null
+          },
+          {
+            "symbol": "MSTR",
+            "count": 7146,
+            "firstDate": "1998-06-11",
+            "asOf": "2026-11-05",
+            "mddPct": -99.85623003575749,
+            "peakDate": "2000-03-10",
+            "troughDate": "2002-07-26",
+            "cumulativeReturnPct": 1124.142040726701,
+            "cagrPct": 9.219410350029172,
+            "annualPeriods": 29,
+            "monthlyPeriods": 342,
+            "identicalRiskOutputsToBaseline": null
+          },
+          {
+            "symbol": "BMNR",
+            "count": 358,
+            "firstDate": "2025-06-05",
+            "asOf": "2026-11-05",
+            "mddPct": -90.14074042991356,
+            "peakDate": "2025-07-03",
+            "troughDate": "2026-06-30",
+            "cumulativeReturnPct": 145.16129032258064,
+            "cagrPct": 88.19282426075861,
+            "annualPeriods": 2,
+            "monthlyPeriods": 18,
+            "identicalRiskOutputsToBaseline": null
+          }
+        ],
+        "generated": {
+          "exhaustivePairMddSeries": 300,
+          "calendarComparisons": 200,
+          "treasuryOperations": 1200,
+          "bitcoinIssuanceHeights": 195
+        },
+        "legacyTreasuryPaths": [
+          {
+            "symbol": "MSTR",
+            "scenario": "stress",
+            "capitalPolicy": "cash-at-put",
+            "pathMode": "target-interpolation",
+            "steps": 99,
+            "absorbedSteps": 37,
+            "rewardSweeps": 0,
+            "instrumentEvents": 6,
+            "conversions": 0,
+            "points": 137,
+            "financialAsOf": "2026-06-30",
+            "asOf": "2026-11-05",
+            "insolvency": "2033-03-03",
+            "cap": 21000000
+          },
+          {
+            "symbol": "MSTR",
+            "scenario": "base",
+            "capitalPolicy": "cash-at-put",
+            "pathMode": "target-interpolation",
+            "steps": 136,
+            "absorbedSteps": 0,
+            "rewardSweeps": 0,
+            "instrumentEvents": 6,
+            "conversions": 0,
+            "points": 137,
+            "financialAsOf": "2026-06-30",
+            "asOf": "2026-11-05",
+            "insolvency": null,
+            "cap": 21000000
+          },
+          {
+            "symbol": "MSTR",
+            "scenario": "bull",
+            "capitalPolicy": "cash-at-put",
+            "pathMode": "target-interpolation",
+            "steps": 136,
+            "absorbedSteps": 0,
+            "rewardSweeps": 0,
+            "instrumentEvents": 6,
+            "conversions": 0,
+            "points": 137,
+            "financialAsOf": "2026-06-30",
+            "asOf": "2026-11-05",
+            "insolvency": null,
+            "cap": 21000000
+          },
+          {
+            "symbol": "MSTR",
+            "scenario": "stress",
+            "capitalPolicy": "hold-to-maturity",
+            "pathMode": "target-interpolation",
+            "steps": 93,
+            "absorbedSteps": 43,
+            "rewardSweeps": 0,
+            "instrumentEvents": 6,
+            "conversions": 0,
+            "points": 137,
+            "financialAsOf": "2026-06-30",
+            "asOf": "2026-11-05",
+            "insolvency": "2032-10-04",
+            "cap": 21000000
+          },
+          {
+            "symbol": "MSTR",
+            "scenario": "base",
+            "capitalPolicy": "hold-to-maturity",
+            "pathMode": "target-interpolation",
+            "steps": 136,
+            "absorbedSteps": 0,
+            "rewardSweeps": 0,
+            "instrumentEvents": 6,
+            "conversions": 0,
+            "points": 137,
+            "financialAsOf": "2026-06-30",
+            "asOf": "2026-11-05",
+            "insolvency": null,
+            "cap": 21000000
+          },
+          {
+            "symbol": "MSTR",
+            "scenario": "bull",
+            "capitalPolicy": "hold-to-maturity",
+            "pathMode": "target-interpolation",
+            "steps": 136,
+            "absorbedSteps": 0,
+            "rewardSweeps": 0,
+            "instrumentEvents": 6,
+            "conversions": 0,
+            "points": 137,
+            "financialAsOf": "2026-06-30",
+            "asOf": "2026-11-05",
+            "insolvency": null,
+            "cap": 21000000
+          },
+          {
+            "symbol": "MSTR",
+            "scenario": "stress",
+            "capitalPolicy": "convert-at-window",
+            "pathMode": "target-interpolation",
+            "steps": 93,
+            "absorbedSteps": 43,
+            "rewardSweeps": 0,
+            "instrumentEvents": 6,
+            "conversions": 0,
+            "points": 137,
+            "financialAsOf": "2026-06-30",
+            "asOf": "2026-11-05",
+            "insolvency": "2032-10-04",
+            "cap": 21000000
+          },
+          {
+            "symbol": "MSTR",
+            "scenario": "base",
+            "capitalPolicy": "convert-at-window",
+            "pathMode": "target-interpolation",
+            "steps": 136,
+            "absorbedSteps": 0,
+            "rewardSweeps": 0,
+            "instrumentEvents": 6,
+            "conversions": 4,
+            "points": 137,
+            "financialAsOf": "2026-06-30",
+            "asOf": "2026-11-05",
+            "insolvency": null,
+            "cap": 21000000
+          },
+          {
+            "symbol": "MSTR",
+            "scenario": "bull",
+            "capitalPolicy": "convert-at-window",
+            "pathMode": "target-interpolation",
+            "steps": 136,
+            "absorbedSteps": 0,
+            "rewardSweeps": 0,
+            "instrumentEvents": 6,
+            "conversions": 5,
+            "points": 137,
+            "financialAsOf": "2026-06-30",
+            "asOf": "2026-11-05",
+            "insolvency": null,
+            "cap": 21000000
+          },
+          {
+            "symbol": "BMNR",
+            "scenario": "stress",
+            "capitalPolicy": "cash-at-put",
+            "pathMode": "target-interpolation",
+            "steps": 121,
+            "absorbedSteps": 0,
+            "rewardSweeps": 0,
+            "instrumentEvents": 0,
+            "conversions": 0,
+            "points": 122,
+            "financialAsOf": "2026-05-31",
+            "asOf": "2026-11-05",
+            "insolvency": null,
+            "cap": 6105000
+          },
+          {
+            "symbol": "BMNR",
+            "scenario": "base",
+            "capitalPolicy": "cash-at-put",
+            "pathMode": "target-interpolation",
+            "steps": 121,
+            "absorbedSteps": 0,
+            "rewardSweeps": 477,
+            "instrumentEvents": 0,
+            "conversions": 0,
+            "points": 122,
+            "financialAsOf": "2026-05-31",
+            "asOf": "2026-11-05",
+            "insolvency": null,
+            "cap": 6105000
+          },
+          {
+            "symbol": "BMNR",
+            "scenario": "bull",
+            "capitalPolicy": "cash-at-put",
+            "pathMode": "target-interpolation",
+            "steps": 121,
+            "absorbedSteps": 0,
+            "rewardSweeps": 477,
+            "instrumentEvents": 0,
+            "conversions": 0,
+            "points": 122,
+            "financialAsOf": "2026-05-31",
+            "asOf": "2026-11-05",
+            "insolvency": null,
+            "cap": 6105000
+          }
+        ],
+        "treasuryOracleNegativeControls": [
+          {
+            "name": "cash creation",
+            "result": "expected assertion failure"
+          },
+          {
+            "name": "continued settled coupon",
+            "result": "expected assertion failure"
+          },
+          {
+            "name": "conversion without claim removal",
+            "result": "expected assertion failure"
+          },
+          {
+            "name": "fabricated staking reward",
+            "result": "expected assertion failure"
+          }
+        ],
+        "treasuryOracleInputs": {
+          "contractFixturePath": "tests/fixtures/treasury-contract-oracle-2026-10-26.json",
+          "reviewedAt": "2026-10-26",
+          "hashes": {
+            "tests/fixtures/treasury-contract-oracle-2026-10-26.json": "74eaabac1afc3c3906ec58c18eb52ed5e5bcb4e4bb0b061e789c23aec1f6fa13",
+            "scripts/verify-system-numerics.mjs": "3d1febef383f870d7661a10d944179564fbc56ff24dd0194a63d508323b8c70f"
+          },
+          "method": "Independent reviewed terms, settlement-event allocation, active-day coupon integration, separate cash/principal/conversion sums, explicit daily reward sweeps and withdrawal queues. No production instrument or liquidity transition is used as an expected-value oracle.",
+          "toleranceChanged": false
+        },
+        "treasuryDailyUiPathVerification": "Separate scripts/verify-treasury-paths.mjs; this checker does not claim to rerun its daily asset-path integration coverage.",
+        "causalClockCutoffs": [
+          "2016-07-09",
+          "2020-05-11",
+          "2024-04-20",
+          "2025-10-06",
+          "2026-06-30"
+        ],
+        "calendarIdentity": {
+          "previousPeakDate": "2021-11-08",
+          "previousTroughDate": "2022-11-09",
+          "projectedPeakDate": "2025-11-08",
+          "projectedTroughDate": "2026-11-09",
+          "peakAdvanceDays": 33,
+          "previousPeakShiftDays": 33,
+          "previousBearDurationDays": 366,
+          "projectedBearDurationDays": 366,
+          "currentBearDurationDays": 267,
+          "bearDurationShorteningDays": 99,
+          "troughAdvanceDays": 132,
+          "identityCheck": true,
+          "identity": "trough advance = peak advance + shortening of the projected peak-to-trough interval"
+        },
+        "marketStructureNormalFixtureIdenticalToBaseline": null,
+        "detailedForecast": {
+          "asOf": "2026-11-05",
+          "days": 90,
+          "sampleCount": 16,
+          "appendedFutureCannotChangeCutoff": true,
+          "independentlyCheckedEnvelopeQuantiles": [
+            0.1,
+            0.5,
+            0.9
+          ],
+          "representativeMddPct": 8.254145192558981,
+          "probability": null
+        },
+        "longHorizon": {
+          "asOf": "2026-11-05",
+          "endDate": "2050-12-31",
+          "points": 8823,
+          "valuationAnchors": 2,
+          "probabilitiesCalibrated": false,
+          "isHistoricalVintageBacktest": false
+        },
+        "limitations": [
+          "Generated cases and deterministic fixtures cover finite domains, not all possible inputs.",
+          "Accounting conservation holds for reviewed model terms and assumed settlement/withdrawal policies; it does not establish actual exercise, network exit times, legal remedies, taxes or future financing access.",
+          "The bridge terminal price and external valuation curve are imposed conditions; numerical correctness does not prove market accuracy.",
+          "Daily close MDD excludes unobserved and intraday lows; stock outputs are split-adjusted price returns, not dividend-inclusive total returns.",
+          "Calendar identities are algebraic decompositions, not evidence that four-year cycles cause future prices."
+        ]
+      },
+      {
+        "status": "PASS",
+        "baselineCommit": "64c8207cb044d8990289c5a7d39972e21b74c240",
+        "executedAt": "2026-11-06T11:12:47.580Z",
+        "node": "v24.22.2",
+        "sourceHashes": {
+          "dist/daily-analytics.js": "81b4a1fca0769e33778af2ba356115250a47017c26f054293e3d08d821c8164c",
+          "dist/cycle-timing.js": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+          "dist/market-structure.js": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+          "dist/daily-data-view.js": "0384391cc8ee7a7cfd242e65650bdcb050b0116bccdf5bebecaaba4bc97c42aa",
+          "dist/lab-view.js": "ca4fb2f10a9aec3e106e0ed064dc79a445dcae2c5b041a9852ebc906e169b48f"
+        },
+        "calendarCases": 34356,
+        "missingDateInvariantCases": 80,
+        "periodComparisons": 1451,
+        "prefixComparisons": 325,
+        "rollingPrefixComparisons": 10,
+        "subnormalBoundaries": {
+          "volatility": 1007167.300709229,
+          "expectedVolatility": 1007167.3007092287,
+          "midpoint": 2.722312378772685e-162,
+          "expectedMidpoint": 2.722312378772685e-162,
+          "retracement": 0.9994556386687565,
+          "expectedRetracement": 0.9994556386687565
+        },
+        "finiteBoundaryOracle": "Exact binary64 rational arithmetic with BigInt. Each slope is <= MAX and strictly above the midpoint between MAX and its predecessor.",
+        "finiteBoundaryCases": [
+          {
+            "left": -1.771930152577346e+308,
+            "right": 1.744446372530627e+308,
+            "distance": 1.9560493706715358,
+            "slope": 1.7976931348623157e+308
+          },
+          {
+            "left": -1.257633137051149e+308,
+            "right": 1.7567346219575627e+308,
+            "distance": 1.6767977251243051,
+            "slope": 1.7976931348623157e+308
+          },
+          {
+            "left": -1.7269369229518715e+308,
+            "right": 1.5697870851178163e+308,
+            "distance": 1.8338636022672368,
+            "slope": 1.7976931348623157e+308
+          }
+        ],
+        "genuinelyUnrepresentableSlopeRejected": true,
+        "normalDifferentials": [],
+        "scope": "Public module calls, explicit missing-date enumeration, native calendar oracle, prefix invariance, exact-binary-rational boundary fixtures, baseline normal-output comparison. No browser or benchmark measurement."
+      },
+      {
+        "status": "PASS",
+        "method": "Exhaustive finite real-JavaScript inputs, independent ordered-pair risk and calendar-grid episode oracles, public-entry mutation controls",
+        "baseCommit": "3a1be8370a9fd9a71861be3f929493370f08a5ef",
+        "sourceSha256": "2ca34a30c608631cccb9ad0b8b5c17bbaf4cafe6e58b35ff2a44d09a9b2aadea",
+        "node": "v24.22.2",
+        "counts": {
+          "exhaustivePricePaths": 1089,
+          "scopedIntervals": 81,
+          "currentWindows": 36,
+          "causalPrefixes": 33,
+          "provenanceCases": 12,
+          "strongGuards": 4,
+          "rejectedMismatches": 6,
+          "observedEpisodeCases": 53,
+          "observedEpisodeGaps": 66,
+          "episodeCausalPrefixes": 17,
+          "futureEpisodeCases": 48,
+          "futureEpisodeBounds": 17,
+          "futureEpisodeGaps": 8,
+          "sharedCycleMemberships": 5
+        },
+        "negativeControls": [
+          {
+            "mutation": "unordered-MDD",
+            "detected": true,
+            "failure": "ordered MDD: -50 != 0"
+          },
+          {
+            "mutation": "scope-leaks-prior-history",
+            "detected": true,
+            "failure": "window MDD excludes prices before and after it: -99.5 != 0"
+          },
+          {
+            "mutation": "missing-days-as-sideways",
+            "detected": true,
+            "failure": "current window must satisfy both stated conditions"
+          },
+          {
+            "mutation": "future-observations-in-asof",
+            "detected": true,
+            "failure": "Chart milestones must match the observed cutoff"
+          },
+          {
+            "mutation": "scenario-promoted-to-history",
+            "detected": true,
+            "failure": "observed prices do not make a scenario-selected role historical"
+          },
+          {
+            "mutation": "fictional-realized-zero",
+            "detected": true,
+            "failure": "conditional rows cannot invent realized return"
+          },
+          {
+            "mutation": "unconditional-strong-review",
+            "detected": true,
+            "failure": "partial conditional windows cannot strengthen review"
+          },
+          {
+            "mutation": "changed-observed-price-accepted",
+            "detected": true,
+            "failure": "Missing expected exception: mismatched prices, scenario or cutoff must fail closed"
+          },
+          {
+            "mutation": "changed-scenario-price-accepted",
+            "detected": true,
+            "failure": "Missing expected exception: mismatched prices, scenario or cutoff must fail closed"
+          },
+          {
+            "mutation": "episode-start-backdated",
+            "detected": true,
+            "failure": "episode start is the first qualifying END date, not the lookback start"
+          },
+          {
+            "mutation": "episode-minimum-bypassed",
+            "detected": true,
+            "failure": "observed episodes must match the independent qualifying-end oracle"
+          },
+          {
+            "mutation": "episode-gap-ignored",
+            "detected": true,
+            "failure": "episode start is the first qualifying END date, not the lookback start"
+          },
+          {
+            "mutation": "episode-return-threshold-removed",
+            "detected": true,
+            "failure": "observed episodes must match the independent qualifying-end oracle"
+          },
+          {
+            "mutation": "episode-width-threshold-removed",
+            "detected": true,
+            "failure": "observed episodes must match the independent qualifying-end oracle"
+          },
+          {
+            "mutation": "episode-known-before-seven",
+            "detected": true,
+            "failure": "episode minimum run becomes known only on its seventh qualifying date"
+          },
+          {
+            "mutation": "episode-risk-includes-lookback",
+            "detected": true,
+            "failure": "observed episode MDD excludes lookback prices: -10.71428571428571 != 0"
+          },
+          {
+            "mutation": "episode-end-falsely-complete",
+            "detected": true,
+            "failure": "episode censoring distinguishes a known nonqualifying close from a missing boundary"
+          },
+          {
+            "mutation": "future-episode-realized-zero",
+            "detected": true,
+            "failure": "future episodes cannot invent realized return"
+          },
+          {
+            "mutation": "future-episode-promoted-to-actual",
+            "detected": true,
+            "failure": "arbitrary future paths cannot create or rewrite actual results"
+          },
+          {
+            "mutation": "episode-cutoff-split-removed",
+            "detected": true,
+            "failure": "future episodes start strictly after the observed cutoff"
+          },
+          {
+            "mutation": "future-episode-horizon-removed",
+            "detected": true,
+            "failure": "future episodes stay inside the selected chart horizon"
+          },
+          {
+            "mutation": "future-episode-bound-invented",
+            "detected": true,
+            "failure": "a forecast without chart bounds cannot create future episodes"
+          },
+          {
+            "mutation": "future-episode-availability-ignored",
+            "detected": true,
+            "failure": "an unavailable chart horizon cannot create future episodes"
+          },
+          {
+            "mutation": "shared-bottom-membership-overwritten",
+            "detected": true,
+            "failure": "a shared bottom retains BOTH source cycle memberships"
+          },
+          {
+            "mutation": "overlapping-period-membership-collapsed",
+            "detected": true,
+            "failure": "an observed period preserves every overlapping cycle membership"
+          },
+          {
+            "mutation": "future-episode-scenario-id-lost",
+            "detected": true,
+            "failure": "future episodes preserve the selected scenario identity"
+          },
+          {
+            "mutation": "checkpoint-scenario-id-lost",
+            "detected": true,
+            "failure": "scenario-selected checkpoints preserve the selected scenario identity"
+          }
+        ],
+        "bounds": "Every length-2..6 path over prices 50, 100 and 200; all 81 length-4 scoped intervals; 36 current-window cases; 33 as-of prefixes; 4 conditional-window combinations; 4 provisional extrema combinations; 6 rejected mismatches; 53 bounded observed-episode inputs; 66 missing-date positions; 17 episode cutoff prefixes; 48 bounded future-episode inputs; 17 explicit, absent or unavailable chart-horizon cases; 8 future/warm-up gaps; 5 shared-cycle membership cases. Episode cases are bounded fixtures, not exhaustive long price paths.",
+        "excludes": "Unbounded mathematical proof, market forecasting, trading profitability, model calibration, browser rendering, transaction costs and intraday losses."
+      },
+      {
+        "command": "node scripts/verify-cycle-table-integration.mjs",
+        "scope": "Chart-controller and historical cycle-model regression replay with inert DOM boundary; not current asset-comparison UI or browser visual verification.",
+        "node": "v24.22.2",
+        "asOf": "2026-11-05",
+        "checks": [
+          {
+            "name": "shared cached chart context",
+            "status": "PASS"
+          },
+          {
+            "name": "fresh base rows focus successfully",
+            "status": "PASS",
+            "rows": 94,
+            "rejectedFresh": []
+          },
+          {
+            "name": "cycle filters retain their chart closing low",
+            "status": "PASS",
+            "cycles": [
+              {
+                "cycleId": "peak-2011",
+                "chartStart": "2010-07-18",
+                "chartEnd": "2011-11-18",
+                "chartClosingLow": "2011-11-18",
+                "tableLastDate": "2011-11-18",
+                "includesClosingLow": true
+              },
+              {
+                "cycleId": "peak-2013",
+                "chartStart": "2011-11-18",
+                "chartEnd": "2015-01-14",
+                "chartClosingLow": "2015-01-14",
+                "tableLastDate": "2015-01-14",
+                "includesClosingLow": true
+              },
+              {
+                "cycleId": "peak-2017",
+                "chartStart": "2015-01-14",
+                "chartEnd": "2018-12-15",
+                "chartClosingLow": "2018-12-15",
+                "tableLastDate": "2018-12-15",
+                "includesClosingLow": true
+              },
+              {
+                "cycleId": "peak-2021",
+                "chartStart": "2018-12-15",
+                "chartEnd": "2022-11-09",
+                "chartClosingLow": "2022-11-09",
+                "tableLastDate": "2022-11-09",
+                "includesClosingLow": true
+              },
+              {
+                "cycleId": "peak-2025",
+                "chartStart": "2022-11-09",
+                "chartEnd": "2026-06-30",
+                "chartClosingLow": "2026-06-30",
+                "tableLastDate": "2026-06-30",
+                "includesClosingLow": true
+              }
+            ]
+          },
+          {
+            "name": "requested historical and conditional sideways periods exist",
+            "status": "PASS",
+            "historicalRows": 39,
+            "conditionalRows": 24,
+            "currentRows": 0
+          },
+          {
+            "name": "scenario changes preserve observed rows and accept valid new rows",
+            "status": "PASS",
+            "scenarios": [
+              {
+                "scenarioId": "accelerated",
+                "rows": 94,
+                "historicalStable": true,
+                "newRowsRejected": [],
+                "staleRowsAccepted": []
+              },
+              {
+                "scenarioId": "wait",
+                "rows": 98,
+                "historicalStable": true,
+                "newRowsRejected": [],
+                "staleRowsAccepted": []
+              },
+              {
+                "scenarioId": "late",
+                "rows": 96,
+                "historicalStable": true,
+                "newRowsRejected": [],
+                "staleRowsAccepted": []
+              },
+              {
+                "scenarioId": "stress",
+                "rows": 88,
+                "historicalStable": true,
+                "newRowsRejected": [],
+                "staleRowsAccepted": []
+              }
+            ]
+          },
+          {
+            "name": "public focus rejects previous-scenario rows",
+            "status": "PASS",
+            "limitation": "Controller-contract probe; no normal visible UI route to stale scenario rows was demonstrated."
+          },
+          {
+            "name": "source snapshot remained stable during probe",
+            "status": "PASS",
+            "initialHashes": {
+              "dist/app.js": "76b81d963981a4274f7fbc310da89ea6ba9f4bf4e22adf626fd7667bce479405",
+              "dist/lab-view.js": "ca4fb2f10a9aec3e106e0ed064dc79a445dcae2c5b041a9852ebc906e169b48f",
+              "dist/cycle-decision.js": "2ca34a30c608631cccb9ad0b8b5c17bbaf4cafe6e58b35ff2a44d09a9b2aadea",
+              "dist/cycle-table-selection.js": "b2dab14d6aa891ddd7aeb8574d9cd09ac3c0940d79869cf3f5d66f6663e96d6e",
+              "dist/cycle-milestones.js": "bed3032cd8efaec067f0aedfaf42e8c170e43d00ea7c979791eb7028cb6714da",
+              "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+              "dist/data/btc-daily.json": "fae8889632b524deef33d04363da714efcb74f7906b8a507025516668c8cd7a6",
+              "scripts/verify-cycle-decision.mjs": "a03afe26952c7cc51a4cc3afe30c7d797bceaf931bde80cd6c3ecf43501a66d1",
+              "scripts/verify-cycle-table-integration.mjs": "9c8ae0e1aabb2f540ef49a7c66fc8841216904e46410a442b722600b08f83f87",
+              "tests/helpers/structure-view-fixture.mjs": "f2e33e69bd83ee0b34d5c5d337e27a977f540aae1c1f4481858eaa636db5b9ad"
+            }
+          }
+        ],
+        "hashes": {
+          "dist/app.js": "76b81d963981a4274f7fbc310da89ea6ba9f4bf4e22adf626fd7667bce479405",
+          "dist/lab-view.js": "ca4fb2f10a9aec3e106e0ed064dc79a445dcae2c5b041a9852ebc906e169b48f",
+          "dist/cycle-decision.js": "2ca34a30c608631cccb9ad0b8b5c17bbaf4cafe6e58b35ff2a44d09a9b2aadea",
+          "dist/cycle-table-selection.js": "b2dab14d6aa891ddd7aeb8574d9cd09ac3c0940d79869cf3f5d66f6663e96d6e",
+          "dist/cycle-milestones.js": "bed3032cd8efaec067f0aedfaf42e8c170e43d00ea7c979791eb7028cb6714da",
+          "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+          "dist/data/btc-daily.json": "fae8889632b524deef33d04363da714efcb74f7906b8a507025516668c8cd7a6",
+          "scripts/verify-cycle-decision.mjs": "a03afe26952c7cc51a4cc3afe30c7d797bceaf931bde80cd6c3ecf43501a66d1",
+          "scripts/verify-cycle-table-integration.mjs": "9c8ae0e1aabb2f540ef49a7c66fc8841216904e46410a442b722600b08f83f87",
+          "tests/helpers/structure-view-fixture.mjs": "f2e33e69bd83ee0b34d5c5d337e27a977f540aae1c1f4481858eaa636db5b9ad"
+        },
+        "status": "PASS"
+      },
+      {
+        "status": "PASS",
+        "retrievedAt": "2026-11-06T06:46:25.170Z",
+        "assets": [
+          {
+            "symbol": "BTC",
+            "firstDate": "2010-07-18",
+            "lastDate": "2026-11-05",
+            "observations": 5955,
+            "completedCalendarLabels": 16,
+            "firstYearSessions": 167,
+            "maxGapDays": 1,
+            "unavailableSessions": 0,
+            "calendar": "calendar-days",
+            "peerMatchedSessions": 0,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "SPY",
+            "firstDate": "1993-01-29",
+            "lastDate": "2026-11-05",
+            "observations": 8501,
+            "completedCalendarLabels": 33,
+            "firstYearSessions": 234,
+            "maxGapDays": 7,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 8501,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "QQQ",
+            "firstDate": "1999-03-10",
+            "lastDate": "2026-11-05",
+            "observations": 6959,
+            "completedCalendarLabels": 27,
+            "firstYearSessions": 207,
+            "maxGapDays": 7,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 6959,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "NVDA",
+            "firstDate": "1999-01-22",
+            "lastDate": "2026-11-05",
+            "observations": 6991,
+            "completedCalendarLabels": 27,
+            "firstYearSessions": 239,
+            "maxGapDays": 7,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 6991,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "AAPL",
+            "firstDate": "1980-12-12",
+            "lastDate": "2026-11-05",
+            "observations": 11568,
+            "completedCalendarLabels": 46,
+            "firstYearSessions": 13,
+            "maxGapDays": 7,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 10242,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 1326
+          },
+          {
+            "symbol": "GOOG",
+            "firstDate": "2004-08-19",
+            "lastDate": "2026-11-05",
+            "observations": 5590,
+            "completedCalendarLabels": 22,
+            "firstYearSessions": 94,
+            "maxGapDays": 5,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 5590,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "MSFT",
+            "firstDate": "1986-03-13",
+            "lastDate": "2026-11-05",
+            "observations": 10242,
+            "completedCalendarLabels": 40,
+            "firstYearSessions": 204,
+            "maxGapDays": 7,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 10242,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "AMZN",
+            "firstDate": "1997-05-15",
+            "lastDate": "2026-11-05",
+            "observations": 7416,
+            "completedCalendarLabels": 29,
+            "firstYearSessions": 160,
+            "maxGapDays": 7,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 7416,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "META",
+            "firstDate": "2012-05-18",
+            "lastDate": "2026-11-05",
+            "observations": 3638,
+            "completedCalendarLabels": 14,
+            "firstYearSessions": 155,
+            "maxGapDays": 5,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 3638,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "AVGO",
+            "firstDate": "2009-08-06",
+            "lastDate": "2026-11-05",
+            "observations": 4340,
+            "completedCalendarLabels": 17,
+            "firstYearSessions": 103,
+            "maxGapDays": 5,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 4340,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "PLTR",
+            "firstDate": "2020-09-30",
+            "lastDate": "2026-11-05",
+            "observations": 1533,
+            "completedCalendarLabels": 6,
+            "firstYearSessions": 65,
+            "maxGapDays": 4,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 1533,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "TSLA",
+            "firstDate": "2010-06-29",
+            "lastDate": "2026-11-05",
+            "observations": 4115,
+            "completedCalendarLabels": 16,
+            "firstYearSessions": 130,
+            "maxGapDays": 5,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 4115,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "HOOD",
+            "firstDate": "2021-07-29",
+            "lastDate": "2026-11-05",
+            "observations": 1325,
+            "completedCalendarLabels": 5,
+            "firstYearSessions": 109,
+            "maxGapDays": 4,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 1325,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "TLT",
+            "firstDate": "2002-07-30",
+            "lastDate": "2026-11-05",
+            "observations": 6108,
+            "completedCalendarLabels": 24,
+            "firstYearSessions": 108,
+            "maxGapDays": 5,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 6108,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "IEF",
+            "firstDate": "2002-07-30",
+            "lastDate": "2026-11-05",
+            "observations": 6108,
+            "completedCalendarLabels": 24,
+            "firstYearSessions": 108,
+            "maxGapDays": 5,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 6108,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "GLD",
+            "firstDate": "2004-11-18",
+            "lastDate": "2026-11-05",
+            "observations": 5526,
+            "completedCalendarLabels": 22,
+            "firstYearSessions": 30,
+            "maxGapDays": 5,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 5526,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "SLV",
+            "firstDate": "2006-04-28",
+            "lastDate": "2026-11-05",
+            "observations": 5164,
+            "completedCalendarLabels": 20,
+            "firstYearSessions": 171,
+            "maxGapDays": 5,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 5164,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          },
+          {
+            "symbol": "PDBC",
+            "firstDate": "2014-11-07",
+            "lastDate": "2026-11-05",
+            "observations": 3016,
+            "completedCalendarLabels": 12,
+            "firstYearSessions": 37,
+            "maxGapDays": 4,
+            "unavailableSessions": 0,
+            "peerMatchedSessions": 3016,
+            "peerMissingSessions": 0,
+            "unpairedSessions": 0
+          }
+        ]
+      }
+    ],
+    "summaries": [
+      "> bitcoin-cycle-atlas@1.31.3 verify:numerics",
+      "> node scripts/verify-system-numerics.mjs && node scripts/verify-system-independent-review.mjs && node scripts/verify-cycle-decision.mjs && node scripts/verify-cycle-table-integration.mjs && node scripts/refresh-asset-comparison.mjs --check && node scripts/verify-asset-comparison.mjs",
+      "\"status\": \"PASS\",",
+      "\"status\": \"PASS\",",
+      "\"status\": \"PASS\",",
+      "\"status\": \"PASS\"",
+      "\"status\": \"PASS\",",
+      "\"status\": \"PASS\",",
+      "\"status\": \"PASS\",",
+      "\"status\": \"PASS\",",
+      "\"status\": \"PASS\",",
+      "\"status\": \"PASS\",",
+      "\"status\": \"PASS\"",
+      "PASS independent reference: 18 assets, 104,095 closes, 400 annual samples",
+      "PASS bounded domains: 360 price paths, 262 threshold cases",
+      "PASS negative controls: 16/16 targeted mutants rejected at their intended assertions",
+      "PASS production rerun: 18.0 ms pure build; 431.8 ms entire verifier"
+    ]
+  },
+  {
+    "command": "npm run verify:formal",
+    "objects": [
+      {
+        "tool": {
+          "name": "TLC",
+          "version": "1.7.4",
+          "sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+        },
+        "bounds": {
+          "requestGenerations": 3,
+          "intervals": [
+            "1m",
+            "5m"
+          ],
+          "property": "NoStaleDisplay"
+        },
+        "historyRetryScope": {
+          "intervals": 1,
+          "existingCandles": true,
+          "clock": "boolean cooldown only",
+          "property": "RefreshCanRetry"
+        },
+        "model": {
+          "MarketRequests": {
+            "outcome": "pass",
+            "exitStatus": 0,
+            "generatedStates": 5955,
+            "distinctStates": 2081,
+            "remainingStates": 0
+          },
+          "MarketRequestsBroken": {
+            "outcome": "expected invariant violation",
+            "exitStatus": 12,
+            "generatedStates": 151,
+            "distinctStates": 109,
+            "remainingStates": 79
+          },
+          "HistoryRetry": {
+            "outcome": "pass",
+            "exitStatus": 0,
+            "generatedStates": 37,
+            "distinctStates": 15,
+            "remainingStates": 0
+          },
+          "HistoryRetryBroken": {
+            "outcome": "expected invariant violation",
+            "exitStatus": 12,
+            "generatedStates": 26,
+            "distinctStates": 13,
+            "remainingStates": 2
+          }
+        },
+        "implementation": {
+          "tests": 32,
+          "regression": "pass",
+          "restored": "pass",
+          "mutation": "expected assertion failure",
+          "historyRetryMutation": "expected assertion failure",
+          "mutationExitStatus": 1,
+          "historyRetryMutationExitStatus": 1,
+          "sourceSha256": "978ad14a70fdb3011f0761ceb7c6f6ebc0d37bc0b25aa047ad2ef2014eff07d6",
+          "mutatedSourceSha256": "029dfcd42f66ae0f90b6178e584eddb20869b8472e6f51ebba8b82d830feca32",
+          "historyRetryMutatedSourceSha256": "808a7df0ab7c90e2186a03c0a9ed4993c10bc4e4e0631cb9385fe768cc003b4d"
+        },
+        "limitations": [
+          "Separate bounded abstract models, not a composed whole-program proof",
+          "No pricing, numerical, page-content, wall-clock or liveness proof"
+        ]
+      },
+      {
+        "tool": {
+          "name": "TLC",
+          "release": "1.7.4",
+          "jarSha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+        },
+        "bounds": {
+          "requestGenerations": 3,
+          "intervals": [
+            "daily",
+            "weekly"
+          ],
+          "rangeChoices": [
+            "auto",
+            "custom"
+          ]
+        },
+        "model": {
+          "current": {
+            "status": "pass",
+            "invariant": null,
+            "exitStatus": 0,
+            "generated": 303261,
+            "distinct": 46252,
+            "remaining": 0
+          },
+          "original-boot-order": {
+            "status": "expected invariant violation",
+            "invariant": "UsableRenderReleasesBoot",
+            "exitStatus": 12,
+            "generated": 68,
+            "distinct": 38,
+            "remaining": 27
+          },
+          "unguarded-prices": {
+            "status": "expected invariant violation",
+            "invariant": "NoStalePublication",
+            "exitStatus": 12,
+            "generated": 40,
+            "distinct": 25,
+            "remaining": 17
+          },
+          "unguarded-projection": {
+            "status": "expected invariant violation",
+            "invariant": "NoStalePublication",
+            "exitStatus": 12,
+            "generated": 3383,
+            "distinct": 1147,
+            "remaining": 600
+          },
+          "unguarded-errors": {
+            "status": "expected invariant violation",
+            "invariant": "NoStalePublication",
+            "exitStatus": 12,
+            "generated": 41,
+            "distinct": 26,
+            "remaining": 18
+          },
+          "retained-old-projection": {
+            "status": "expected invariant violation",
+            "invariant": "ProjectionMatchesPrices",
+            "exitStatus": 12,
+            "generated": 7255,
+            "distinct": 2253,
+            "remaining": 1105
+          },
+          "hidden-ready": {
+            "status": "expected invariant violation",
+            "invariant": "NoHiddenReadiness",
+            "exitStatus": 12,
+            "generated": 265,
+            "distinct": 115,
+            "remaining": 74
+          },
+          "overwritten-range": {
+            "status": "expected invariant violation",
+            "invariant": "UserRangePreserved",
+            "exitStatus": 12,
+            "generated": 2317,
+            "distinct": 806,
+            "remaining": 429
+          }
+        },
+        "implementation": {
+          "tests": 28,
+          "original": "pass",
+          "restored": "pass",
+          "sourceSha256": "19716e251cbb3af657e66a1cad955aaf1324749dd20b281391c608e7e70d0168",
+          "mutations": {
+            "deferred-readiness": "expected assertion failure",
+            "unguarded-prices": "expected assertion failure",
+            "unguarded-projection": "expected assertion failure",
+            "unguarded-coin-error": "expected assertion failure",
+            "retained-old-projection": "expected assertion failure",
+            "hidden-ready": "expected assertion failure",
+            "overwritten-range": "expected assertion failure"
+          },
+          "mutationExitStatuses": {
+            "deferred-readiness": 1,
+            "unguarded-prices": 1,
+            "unguarded-projection": 1,
+            "unguarded-coin-error": 1,
+            "retained-old-projection": 1,
+            "hidden-ready": 1,
+            "overwritten-range": 1
+          }
+        },
+        "limitations": [
+          "Finite request-state model, not an unbounded proof",
+          "UI replay injects import, HTTP, animation-frame and DOM boundaries",
+          "No economic accuracy, visual pixels, browser timing or liveness proof"
+        ]
+      },
+      {
+        "baselineCommit": "64c8207cb044d8990289c5a7d39972e21b74c240",
+        "tool": {
+          "name": "TLC",
+          "release": "1.7.4",
+          "jarSha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+        },
+        "bounds": {
+          "requestGenerations": 3,
+          "intervals": [
+            "daily",
+            "weekly"
+          ],
+          "rangeChoices": [
+            "auto",
+            "custom"
+          ]
+        },
+        "model": {
+          "current": {
+            "status": "pass",
+            "invariant": null,
+            "exitStatus": 0,
+            "generated": 11109,
+            "distinct": 2243,
+            "remaining": 0
+          },
+          "baseline/TypeOK": {
+            "status": "pass",
+            "invariant": "TypeOK",
+            "exitStatus": 0,
+            "generated": 14969,
+            "distinct": 3503,
+            "remaining": 0
+          },
+          "baseline/ReadyHasUsableView": {
+            "status": "expected invariant violation",
+            "invariant": "ReadyHasUsableView",
+            "exitStatus": 12,
+            "generated": 36,
+            "distinct": 23,
+            "remaining": 13
+          },
+          "baseline/NoHiddenPublication": {
+            "status": "expected invariant violation",
+            "invariant": "NoHiddenPublication",
+            "exitStatus": 12,
+            "generated": 31,
+            "distinct": 21,
+            "remaining": 12
+          },
+          "baseline/NoStalePublication": {
+            "status": "pass",
+            "invariant": "NoStalePublication",
+            "exitStatus": 0,
+            "generated": 14969,
+            "distinct": 3503,
+            "remaining": 0
+          },
+          "baseline/NavigationSurvivesRefresh": {
+            "status": "expected invariant violation",
+            "invariant": "NavigationSurvivesRefresh",
+            "exitStatus": 12,
+            "generated": 268,
+            "distinct": 145,
+            "remaining": 87
+          },
+          "baseline/ReadinessOnce": {
+            "status": "pass",
+            "invariant": "ReadinessOnce",
+            "exitStatus": 0,
+            "generated": 14969,
+            "distinct": 3503,
+            "remaining": 0
+          },
+          "unguarded-response/NoStalePublication": {
+            "status": "expected invariant violation",
+            "invariant": "NoStalePublication",
+            "exitStatus": 12,
+            "generated": 14,
+            "distinct": 8,
+            "remaining": 3
+          },
+          "unguarded-error/NoStalePublication": {
+            "status": "expected invariant violation",
+            "invariant": "NoStalePublication",
+            "exitStatus": 12,
+            "generated": 15,
+            "distinct": 9,
+            "remaining": 4
+          },
+          "hidden-render/NoHiddenPublication": {
+            "status": "expected invariant violation",
+            "invariant": "NoHiddenPublication",
+            "exitStatus": 12,
+            "generated": 31,
+            "distinct": 21,
+            "remaining": 12
+          },
+          "lost-navigation/NavigationSurvivesRefresh": {
+            "status": "expected invariant violation",
+            "invariant": "NavigationSurvivesRefresh",
+            "exitStatus": 12,
+            "generated": 289,
+            "distinct": 160,
+            "remaining": 103
+          }
+        },
+        "implementation": {
+          "tests": 17,
+          "original": "pass",
+          "restored": "pass",
+          "originalCounts": {
+            "tests": 17,
+            "pass": 17,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "restoredCounts": {
+            "tests": 17,
+            "pass": 17,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "sourceSha256": "ef6e99760567649f3ab8705ef49c52e47726cb28486225847bafa4ede5066519",
+          "mutations": {
+            "premature-ready": "expected assertion failure",
+            "hidden-render": "expected assertion failure",
+            "unguarded-archive": "expected assertion failure",
+            "unguarded-error": "expected assertion failure",
+            "lost-daily-navigation": "expected assertion failure",
+            "lost-intraday-navigation": "expected assertion failure",
+            "untracked-navigation": "expected assertion failure",
+            "repeated-ready": "expected assertion failure",
+            "missing-escaper": "expected assertion failure"
+          },
+          "mutationExitStatuses": {
+            "premature-ready": 1,
+            "hidden-render": 1,
+            "unguarded-archive": 1,
+            "unguarded-error": 1,
+            "lost-daily-navigation": 1,
+            "lost-intraday-navigation": 1,
+            "untracked-navigation": 1,
+            "repeated-ready": 1,
+            "missing-escaper": 1
+          }
+        },
+        "limitations": [
+          "Finite reachable-state check, not an unbounded or whole-program proof",
+          "HTTP abort can complete late; callbacks while suspended are a deliberate scheduler over-approximation",
+          "Initializer replay injects import, HTTP, animation-frame, timer and DOM boundaries",
+          "Intraday controller publication is covered by verify-market-state; ETH integration is replay-tested",
+          "No price accuracy, causal event effect, pixel layout, browser scheduling or liveness proof"
+        ]
+      },
+      {
+        "status": "PASS",
+        "tool": {
+          "name": "TLC",
+          "version": "1.7.4",
+          "sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+        },
+        "modelSources": {
+          "Publication.tla": "fbe13fb35f7a7f78e0d075930999b463bdbff7ccf1afbc274c328aaf9e1fc031",
+          "Publication.cfg": "d5d3f5e116276bd7270d037742ec2712fdd78ed35461ae347a46b00917f8118a",
+          "stale-source.cfg": "76e6d43ee6fae636b40c8952249cf6dd885c72c24e0511de0f71a9b589039a28",
+          "changed-files.cfg": "e949f78dbe6fcb188dd94b9ebd73eac81d646c3165d0adf49eefc2a5f7a6bf45",
+          "served-mismatch.cfg": "114f1abf61e830974584df4ab7f44a52a828b66c6b893fc856f5ff44e193339e",
+          "Publication.map.mjs": "2dba2022069d29c3791f3b58b6bf8ed10419c76822716a62686b95e1932f0873"
+        },
+        "model": [
+          {
+            "config": "Publication",
+            "invariant": null,
+            "status": "pass",
+            "exitStatus": 0,
+            "generatedStates": 25,
+            "distinctStates": 20,
+            "remaining": 0
+          },
+          {
+            "config": "stale-source",
+            "invariant": "PreparedRevisionMatches",
+            "status": "expected invariant violation",
+            "exitStatus": 12,
+            "generatedStates": 18,
+            "distinctStates": 14,
+            "remaining": 6
+          },
+          {
+            "config": "changed-files",
+            "invariant": "PreparedContentMatches",
+            "status": "expected invariant violation",
+            "exitStatus": 12,
+            "generatedStates": 20,
+            "distinctStates": 15,
+            "remaining": 4
+          },
+          {
+            "config": "served-mismatch",
+            "invariant": "ConfirmedIdentityMatches",
+            "status": "expected invariant violation",
+            "exitStatus": 12,
+            "generatedStates": 22,
+            "distinctStates": 17,
+            "remaining": 5
+          }
+        ],
+        "implementation": {
+          "tests": 5,
+          "sourceSha256": "faa94f8819b6c51bdf7716e2b650f8acf80ee410b6d21e96f3b792dd2ff10cc6",
+          "mutations": [
+            {
+              "guard": "source change supersedes",
+              "sha256": "3b6ecdd94f44b4a6480d76df60a58b4b549717d591354dd67d8ce715c00b44e8",
+              "outcome": "expected assertion failure",
+              "exitStatus": 1
+            },
+            {
+              "guard": "changed files cannot pass",
+              "sha256": "efae3799176946b68476b659f28cbe100faf52b02782f6a0fea19f49d883f01a",
+              "outcome": "expected assertion failure",
+              "exitStatus": 1
+            },
+            {
+              "guard": "a successful deploy API result",
+              "sha256": "b9cb0633f42dbe25d46f0e31eeab70e69319ba215c9b1a08b7413b8d3c423cc7",
+              "outcome": "expected assertion failure",
+              "exitStatus": 1
+            }
+          ],
+          "restored": "pass"
+        },
+        "scope": "One candidate; two source/file identities; deterministic preparation and served-response guards. No claim about GitHub scheduling, remote recovery, file-system transactions, cryptographic authenticity, or forecast accuracy."
+      },
+      {
+        "kind": "atlas-replay-state-verification",
+        "schemaVersion": 1,
+        "baselineCommit": "aca73b74a5128a5466488a0c701e86f5e854af46",
+        "previousFollowupBaselineCommit": "4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc",
+        "originalAuditBaselineCommit": "94a1b1dda9eb359de70747043808340da369d087",
+        "node": "v24.22.2",
+        "sourcePath": "dist/chart-replay-state.js",
+        "sourceSha256": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908",
+        "testPath": "tests/chart-replay-state.test.mjs",
+        "testSha256": "1ae620d55fd750fbc951b0980f8eed58a2a64cf4eb2a83dc9b74626601badabc",
+        "method": "Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, manual-date rejection, destroy-during-save cases and isolated real-source negative controls",
+        "coordinatorPath": "dist/chart-replay.js",
+        "coordinatorSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+        "coordinatorTestPath": "tests/chart-replay-ui.test.mjs",
+        "coordinatorTestSha256": "61870821827d6a928a568e716ca343ef08f1302abed9c79f45af0795104d6f01",
+        "snapshotPath": "dist/chart-replay-snapshot.js",
+        "snapshotSha256": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6",
+        "bounds": {
+          "playback": {
+            "commands": 10,
+            "maxTraceLength": 4,
+            "traces": 10000,
+            "prefixes": 11111,
+            "transitions": 40000,
+            "observableStates": 52,
+            "observableEdges": 380,
+            "playbackBars": 3
+          },
+          "asyncLoads": 2,
+          "selectionCommands": 6,
+          "selectionMaxTraceLength": 3,
+          "selectionTraces": 259,
+          "destruction": {
+            "pendingExplicitSaves": 1,
+            "completionSchedules": [
+              "deferred callback resumes",
+              "deferred callback rejects"
+            ],
+            "destroyCallsPerSchedule": 2
+          },
+          "manualDates": {
+            "submissionMethods": [
+              "button",
+              "Enter"
+            ],
+            "entryStates": [
+              "resumed capture",
+              "unconfirmed selection"
+            ],
+            "invalidKinds": [
+              "above maximum",
+              "below minimum",
+              "empty",
+              "malformed",
+              "impossible day",
+              "impossible month",
+              "zero year",
+              "native invalidity"
+            ],
+            "finiteSelectionAlphabetUnchanged": true
+          }
+        },
+        "formalProof": false,
+        "modelCheckerRun": false,
+        "excluded": [
+          "Unlimited trace lengths",
+          "Native browser DOM, rendering and events",
+          "Real forecast generation and scoring in coordinator doubles",
+          "Exhaustive network completion schedules",
+          "Exhaustive persistence and concurrent-tab schedules",
+          "Wall-clock scheduling accuracy",
+          "Cutoff-model loading in the coordinator fixture"
+        ],
+        "original": {
+          "status": "pass",
+          "tests": 16,
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0,
+          "exitStatus": 0,
+          "enumeration": {
+            "commands": 10,
+            "maxTraceLength": 4,
+            "traces": 10000,
+            "prefixes": 11111,
+            "transitions": 40000,
+            "observableStates": 52,
+            "observableEdges": 380,
+            "playbackBars": 3
+          }
+        },
+        "mutations": {
+          "unguarded-session-completion": {
+            "status": "expected behavioral failure",
+            "tests": 16,
+            "passed": 13,
+            "failed": 3,
+            "skipped": 0,
+            "exitStatus": 1,
+            "enumeration": {
+              "commands": 10,
+              "maxTraceLength": 4,
+              "traces": 10000,
+              "prefixes": 11111,
+              "transitions": 40000,
+              "observableStates": 52,
+              "observableEdges": 380,
+              "playbackBars": 3
+            },
+            "sourceSha256": "348148c6695a199177d96df3d21a128732f8b5c4b8874e89e5b29888a4705033"
+          },
+          "unguarded-timer-generation": {
+            "status": "expected behavioral failure",
+            "tests": 16,
+            "passed": 12,
+            "failed": 4,
+            "skipped": 0,
+            "exitStatus": 1,
+            "sourceSha256": "4b4f3ff7fba8c67aec5c703c378b6f33a0e5d3f29353de100abbea9080ec666f"
+          },
+          "mutable-session-output": {
+            "status": "expected behavioral failure",
+            "tests": 16,
+            "passed": 15,
+            "failed": 1,
+            "skipped": 0,
+            "exitStatus": 1,
+            "enumeration": {
+              "commands": 10,
+              "maxTraceLength": 4,
+              "traces": 10000,
+              "prefixes": 11111,
+              "transitions": 40000,
+              "observableStates": 52,
+              "observableEdges": 380,
+              "playbackBars": 3
+            },
+            "sourceSha256": "e34df04a83296d59bb4422159b8cc580c080867dc94725214a6e7775e1e3119e"
+          },
+          "implicit-rewind-at-archive-end": {
+            "status": "expected behavioral failure",
+            "tests": 16,
+            "passed": 12,
+            "failed": 4,
+            "skipped": 0,
+            "exitStatus": 1,
+            "sourceSha256": "464d1bf9f32f230405b54914963b0f9a16029068f8e9abcb392738b2e99c2418"
+          }
+        },
+        "selection": {
+          "original": {
+            "status": "pass",
+            "commands": [
+              "mode:atlas-chart",
+              "mode:project-baseline",
+              "horizon:90",
+              "horizon:365",
+              "confirm",
+              "pick"
+            ],
+            "maxTraceLength": 3,
+            "traces": 259,
+            "transitions": 726,
+            "observableStates": 24,
+            "observableEdges": 78,
+            "sourceSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+            "scope": "Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging"
+          },
+          "mutations": {
+            "mode-model-settings-confirm-start": {
+              "status": "fail",
+              "invariant": "settings-preserve-unconfirmed-start",
+              "code": "ERR_ASSERTION",
+              "shortestCounterexample": [
+                "open selection",
+                "mode:atlas-chart"
+              ],
+              "traces": 2,
+              "transitions": 0,
+              "observableStates": 1,
+              "observableEdges": 0,
+              "sourceSha256": "086e0f6e541e5586b06b9740f8a4640a5cf4460bd216075658822e92dfd35ff2"
+            },
+            "horizon-settings-confirm-start": {
+              "status": "fail",
+              "invariant": "settings-preserve-unconfirmed-start",
+              "code": "ERR_ASSERTION",
+              "shortestCounterexample": [
+                "open selection",
+                "horizon:90"
+              ],
+              "traces": 4,
+              "transitions": 2,
+              "observableStates": 2,
+              "observableEdges": 2,
+              "sourceSha256": "46483e30e113720c79428ab3f22341bac222438927dbd56bc4cf6a832b890224"
+            }
+          },
+          "restored": {
+            "status": "pass",
+            "commands": [
+              "mode:atlas-chart",
+              "mode:project-baseline",
+              "horizon:90",
+              "horizon:365",
+              "confirm",
+              "pick"
+            ],
+            "maxTraceLength": 3,
+            "traces": 259,
+            "transitions": 726,
+            "observableStates": 24,
+            "observableEdges": 78,
+            "sourceSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+            "scope": "Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging"
+          }
+        },
+        "savedEntry": {
+          "original": [
+            {
+              "status": "pass",
+              "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
+              "sourceSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+              "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+            },
+            {
+              "status": "pass",
+              "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
+              "sourceSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+              "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+            }
+          ],
+          "mutations": {
+            "entry-resets-selected-storage-mode": {
+              "status": "expected behavioral failure",
+              "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
+              "assertion": "the last selected current-chart mode must find its own saved slot",
+              "exitStatus": 1,
+              "sourceSha256": "235c111e2278bfbc0ae23a332ed1035d4b9c4307abcccf97988f90a6c3486959"
+            },
+            "entry-accepts-cross-mode-storage": {
+              "status": "expected behavioral failure",
+              "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
+              "assertion": "invalid or cross-mode records must not borrow another slot",
+              "exitStatus": 1,
+              "sourceSha256": "56cc5f4c222f5ebc3c44adcf0e2054c3aacb672147183fda8ebc5bd99dc80267"
+            }
+          },
+          "restored": [
+            {
+              "status": "pass",
+              "name": "default cutoff entry preserves current-chart save and Continue across mode changes",
+              "sourceSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+              "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+            },
+            {
+              "status": "pass",
+              "name": "saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories",
+              "sourceSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+              "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+            }
+          ]
+        },
+        "destruction": {
+          "original": {
+            "status": "pass",
+            "name": "destroy during an explicit save releases replay once and ignores late completion",
+            "sourceSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+            "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+          },
+          "mutations": {
+            "destroy-defers-to-interactive-save-guard": {
+              "status": "expected behavioral failure",
+              "name": "destroy during an explicit save releases replay once and ignores late completion",
+              "assertion": "destroy must release replay even while an explicit save is pending",
+              "exitStatus": 1,
+              "sourceSha256": "917114c64e111ee9129855851065908f3187523c6f15e5191b44ba522d62d47d"
+            },
+            "late-exit-completion-updates-destroyed-controls": {
+              "status": "expected behavioral failure",
+              "name": "destroy during an explicit save releases replay once and ignores late completion",
+              "assertion": "destroyed save completion cannot update detached controls",
+              "exitStatus": 1,
+              "sourceSha256": "0b5e09e3ce34681206e3cee7578a05278bb11a37a9ac16109e8e94482472017a"
+            }
+          },
+          "restored": {
+            "status": "pass",
+            "name": "destroy during an explicit save releases replay once and ignores late completion",
+            "sourceSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+            "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+          }
+        },
+        "manualDates": {
+          "original": [
+            {
+              "status": "pass",
+              "name": "manual date button and Enter reject invalid dates without changing a resumed capture",
+              "sourceSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+              "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+            },
+            {
+              "status": "pass",
+              "name": "manual invalid dates leave an unconfirmed replay start unconfirmed",
+              "sourceSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+              "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+            }
+          ],
+          "mutations": {
+            "manual-date-validation-bypassed": {
+              "status": "expected behavioral failure",
+              "name": "manual date button and Enter reject invalid dates without changing a resumed capture",
+              "assertion": "manual invalid date cannot replace the current session",
+              "exitStatus": 1,
+              "sourceSha256": "321c677af890db7cd65f396e39efac43c50363209bccdebb555120d7f0279e53"
+            }
+          },
+          "restored": [
+            {
+              "status": "pass",
+              "name": "manual date button and Enter reject invalid dates without changing a resumed capture",
+              "sourceSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+              "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+            },
+            {
+              "status": "pass",
+              "name": "manual invalid dates leave an unconfirmed replay start unconfirmed",
+              "sourceSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+              "scope": "Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately"
+            }
+          ]
+        },
+        "restored": {
+          "status": "pass",
+          "tests": 16,
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0,
+          "exitStatus": 0,
+          "enumeration": {
+            "commands": 10,
+            "maxTraceLength": 4,
+            "traces": 10000,
+            "prefixes": 11111,
+            "transitions": 40000,
+            "observableStates": 52,
+            "observableEdges": 380,
+            "playbackBars": 3
+          }
+        }
+      }
+    ],
+    "summaries": [
+      "> bitcoin-cycle-atlas@1.31.3 verify:formal",
+      "> node scripts/verify-market-state.mjs && node scripts/verify-equity-state.mjs && node scripts/verify-eth-state.mjs && node scripts/verify-publication-state.mjs && node verification/replay-state/verify.mjs build/replay-state.json",
+      "# tests 32",
+      "# pass 32",
+      "# fail 0",
+      "# cancelled 0",
+      "# skipped 0",
+      "# todo 0",
+      "# tests 17",
+      "# pass 17",
+      "# fail 0",
+      "# cancelled 0",
+      "# skipped 0",
+      "# todo 0",
+      "\"status\": \"PASS\","
+    ]
+  },
+  {
+    "command": "node scripts/verify-static.mjs",
+    "objects": [
+      {
+        "status": "ok",
+        "files": 789,
+        "checkedReferences": 804,
+        "basePath": "/bitcoin-cycle-atlas/",
+        "standalone": null
+      },
+      {
+        "tag": "v1.31.3",
+        "commit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+        "output": "/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/release",
+        "assets": [
+          "PUBLICATION_MANIFEST.json",
+          "Bitcoin_Cycles_Comparison.html",
+          "Bitcoin_Detailed_Outlook.png",
+          "DETAILED_FORECAST_RESULTS.json",
+          "MARKET_STRUCTURE_RESULTS.json",
+          "Bitcoin_Cycle_Structure_Research.md",
+          "Treasury_Research_and_Models.md",
+          "TREASURY_SCENARIO_RESULTS.json",
+          "Research_Library.zip",
+          "Forecast_Ledger.zip",
+          "bitcoin-cycle-atlas-v1.31.3-source.zip",
+          "RELEASE_METADATA.json",
+          "SHA256SUMS.txt"
+        ]
+      }
+    ],
+    "summaries": [
+      "Bitcoin_Cycle_Structure_Research.md: OK",
+      "Bitcoin_Cycles_Comparison.html: OK",
+      "Bitcoin_Detailed_Outlook.png: OK",
+      "DETAILED_FORECAST_RESULTS.json: OK",
+      "Forecast_Ledger.zip: OK",
+      "MARKET_STRUCTURE_RESULTS.json: OK",
+      "PUBLICATION_MANIFEST.json: OK",
+      "RELEASE_METADATA.json: OK",
+      "Research_Library.zip: OK",
+      "TREASURY_SCENARIO_RESULTS.json: OK",
+      "Treasury_Research_and_Models.md: OK",
+      "bitcoin-cycle-atlas-v1.31.3-source.zip: OK"
+    ]
+  }
+]

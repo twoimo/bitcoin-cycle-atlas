@@ -1,0 +1,232 @@
+{
+  "schemaVersion": 1,
+  "status": "SUPERSEDED",
+  "observedAt": "2026-11-06T10:03:30.898Z",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "pullRequest": 62,
+  "scope": "Historical observations for the prior PR head. CI was cancelled after a newer PR head arrived; this receipt is not a final-head CI pass.",
+  "head": {
+    "sha": "1bba1a4baa616ca7849134c0b925143cde96bb18",
+    "tree": "62824a8db50b79a2d6456d88c26491e183d1c028"
+  },
+  "supersededBy": {
+    "sha": "c259539677e42ad8bfcd9759ccc3eff3caa14873",
+    "tree": "005cb609221d1c94611e6b14c49a31ba0367ac12"
+  },
+  "testedPrMerge": {
+    "sha": "8614a9ffc8f32403bc2d78e9f6a75295755bc285",
+    "tree": "62824a8db50b79a2d6456d88c26491e183d1c028",
+    "parents": [
+      "59ec6f4f708e87d73dad6324d925a9e01383411c",
+      "1bba1a4baa616ca7849134c0b925143cde96bb18"
+    ],
+    "sameTreeAsHead": true
+  },
+  "ci": {
+    "name": "CI",
+    "runId": 42198684685,
+    "jobId": 127828267964,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42198684685",
+    "jobUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42198684685/job/127828267964",
+    "attempt": 1,
+    "event": "pull_request",
+    "headSha": "1bba1a4baa616ca7849134c0b925143cde96bb18",
+    "status": "completed",
+    "conclusion": "cancelled",
+    "updatedAt": "2026-11-06T10:00:49Z",
+    "checkoutCommit": "8614a9ffc8f32403bc2d78e9f6a75295755bc285",
+    "modelDataTests": {
+      "completed": false,
+      "terminalSummary": null
+    },
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Initialize containers",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      },
+      {
+        "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4
+      },
+      {
+        "name": "Install locked workspace dependencies",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5
+      },
+      {
+        "name": "Verify generated static React routes",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6
+      },
+      {
+        "name": "Run model and data tests",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "number": 7
+      },
+      {
+        "name": "Check service types, panels and isolated database behavior",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 8
+      },
+      {
+        "name": "Verify preserved forecast identities and replay",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 9
+      },
+      {
+        "name": "Verify treasury sources and persistent research summaries",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 10
+      },
+      {
+        "name": "Verify reviewed Ethereum history matches the published catalog",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 11
+      },
+      {
+        "name": "Independently reconcile daily treasury paths",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 12
+      },
+      {
+        "name": "Independently check numerical identities and causal boundaries",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 13
+      },
+      {
+        "name": "Verify bounded request ownership and negative controls",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 14
+      },
+      {
+        "name": "Verify the observed daily clock and bounded chart work",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 15
+      },
+      {
+        "name": "Verify static resources at the Pages base path",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 16
+      },
+      {
+        "name": "Prepare the committed publication and standalone",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 17
+      },
+      {
+        "name": "Preserve CI test log and publication identity",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 18
+      },
+      {
+        "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 34
+      },
+      {
+        "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 35
+      },
+      {
+        "name": "Stop containers",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 36
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 37
+      }
+    ],
+    "terminalLogEvidence": [
+      "HEAD is now at 8614a9f Merge 1bba1a4baa616ca7849134c0b925143cde96bb18 into 59ec6f4f708e87d73dad6324d925a9e01383411c",
+      "##[error]The operation was canceled."
+    ]
+  },
+  "marketLabService": {
+    "name": "Market lab service",
+    "runId": 42198684686,
+    "jobId": 127828267865,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42198684686",
+    "jobUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42198684686/job/127828267865",
+    "attempt": 1,
+    "event": "pull_request",
+    "headSha": "1bba1a4baa616ca7849134c0b925143cde96bb18",
+    "status": "completed",
+    "conclusion": "success",
+    "updatedAt": "2026-11-06T09:56:33Z",
+    "checkoutCommit": "8614a9ffc8f32403bc2d78e9f6a75295755bc285",
+    "tests": {
+      "panels": {
+        "tests": 65,
+        "suites": 0,
+        "pass": 65,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 15950.349505
+      },
+      "realPostgres": {
+        "tests": 28,
+        "suites": 0,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 9803.586442
+      },
+      "marketLab": {
+        "tests": 59,
+        "suites": 0,
+        "pass": 59,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 4199.645091
+      }
+    },
+    "allRecordedStepsSucceeded": true
+  },
+  "notes": [
+    "The cancellation is preserved as cancellation; no complete 2,482-test result is claimed.",
+    "The earlier ci-final.json receipt was not edited."
+  ]
+}

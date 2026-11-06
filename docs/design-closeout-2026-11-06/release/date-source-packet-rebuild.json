@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "observedAt": "2026-11-06T10:06:18.284108+00:00",
+  "sourceCommit": "c259539677e42ad8bfcd9759ccc3eff3caa14873",
+  "sourceTree": "005cb609221d1c94611e6b14c49a31ba0367ac12",
+  "command": "node scripts/build-eth-review-evidence.mjs",
+  "exitCode": 0,
+  "bundleBytes": 105814603,
+  "bundleSha256": "b3123175db4be6309ff1f1fd510ea5c5b287e1b474ab627e0edbf61e5b9b3212",
+  "entries": 872,
+  "parts": 588,
+  "bundleLimitBytes": 128000000,
+  "fileLimitBytes": 85000000,
+  "sourceAccess": "complete-for-declared-scope",
+  "unresolvedImports": [],
+  "oldEvidenceFilesUnchanged": 335,
+  "removedPaths": [],
+  "changedSourcePaths": [
+    "dist/chart-replay.js",
+    "scripts/build-eth-review-evidence.mjs",
+    "scripts/verify-chart-replay-browser.mjs"
+  ],
+  "scope": "Source-closure/capacity check after concurrent manual-date integration using the same original aca73b7 CI artifact inputs. Earlier browser evidence remains bound to its original source. This is not final-head browser/model approval; the new existing CI run is required."
+}

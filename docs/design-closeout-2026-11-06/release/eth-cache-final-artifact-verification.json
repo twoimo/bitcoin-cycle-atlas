@@ -1,0 +1,63 @@
+{
+  "sourceCommit": "601119796df94dc77b213b73838a9d4a840afe14",
+  "sourceTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+  "artifactZipSha256": "9847d8cb5a94169cd87a21c5c8a7b8b753022ad678ab656595fa7c123cd9c313",
+  "bundleBytes": 105945068,
+  "bundleSha256": "0fcd1ffd6b705a9469e50f63e96d2b690155ed2f5303966844a5a3d2e3b1ecd2",
+  "orderedParts": 589,
+  "orderedPartBytes": 105945068,
+  "orderedPartsSha256": "0fcd1ffd6b705a9469e50f63e96d2b690155ed2f5303966844a5a3d2e3b1ecd2",
+  "allPartHashesVerified": true,
+  "entryPayloadValidation": {
+    "sourceCommit": "601119796df94dc77b213b73838a9d4a840afe14",
+    "sourceTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "validatedSources": 871
+  },
+  "providedExecutionFilesVerified": 334,
+  "allDeclaredExecutionPathsPreserved": true,
+  "currentPowRawFilesVerified": 53,
+  "sourceAccess": "complete-for-declared-scope",
+  "unresolvedImports": [],
+  "bundleLimitBytes": 128000000,
+  "fileLimitBytes": 85000000,
+  "largestEntry": {
+    "path": "build/ethereum-model-comparison.json",
+    "kind": "provided-execution-evidence",
+    "gitBlob": null,
+    "bytes": 10287828,
+    "sha256": "daede8c942826af2a0013d7b1675852818f466c439f288fa03b34c320ef13306",
+    "encoding": "utf8",
+    "payloadBytes": 10287828
+  },
+  "externalReviewDisposition": "omitted-by-user",
+  "externalReview": {
+    "status": "omitted-by-user",
+    "stageStatus": {
+      "chatgpt-thesis": "not-recorded",
+      "gemini-opposition": "omitted-by-user",
+      "chatgpt-reverse": "omitted-by-user"
+    },
+    "actualChatgptThesis": null,
+    "actualGeminiReport": null,
+    "actualChatgptReverse": null,
+    "actualModelExecutionAuthenticated": false,
+    "releaseAuthorized": false
+  },
+  "representativeScreenshots": [
+    {
+      "zipPath": "eth-browser/chart-replay-btc-1440x900-native-invalid-date-upper-Enter.png",
+      "path": "build/release-monitor/date-screenshots/chart-replay-btc-1440x900-native-invalid-date-upper-Enter.png",
+      "bytes": 232147,
+      "sha256": "c70627631d5bb516ef51e2f63926b19934ad901bbd43937c80803e2eace74abc",
+      "matchesNativeReceipt": true
+    },
+    {
+      "zipPath": "eth-browser/chart-replay-btc-1440x900-native-invalid-date-lower-button.png",
+      "path": "build/release-monitor/date-screenshots/chart-replay-btc-1440x900-native-invalid-date-lower-button.png",
+      "bytes": 232002,
+      "sha256": "c3ddab033dea5a03bf08f940fa6af08631eefd6595da3f9a2c8bb181761e5069",
+      "matchesNativeReceipt": true
+    }
+  ],
+  "failures": []
+}

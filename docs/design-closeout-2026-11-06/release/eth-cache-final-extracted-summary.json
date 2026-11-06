@@ -1,0 +1,660 @@
+{
+  "native-receipt": {
+    "zipPath": "eth-browser/report.json",
+    "path": "build/release-monitor/eth-cache-final-native-receipt.json",
+    "bytes": 5618387,
+    "sha256": "4bcd5fa17177404b075df6d27ec2be8e9dde1eb69e399ce6ebfcdf0953852f22",
+    "gzipBytes": 424848,
+    "gzipSha256": "8ffd4ddf628032d957f8f33fafbffb5743d56dde9f67514e87efe4554499a91e"
+  },
+  "native": {
+    "status": "passed",
+    "sourceCommit": "601119796df94dc77b213b73838a9d4a840afe14",
+    "declaredCaseCount": 49,
+    "expectedCaseCount": 49,
+    "caseCount": 49,
+    "counts": {
+      "passed": 49,
+      "failed": 0,
+      "skipped": 0
+    },
+    "failures": [],
+    "browserVersion": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/156.0.8078.79",
+      "revision": "@a21ce95c24ce3964416f09ae1862f53f319eb4d0",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+      "jsVersion": "15.6.75.27"
+    },
+    "sourceIntegrity": {
+      "checkedFiles": 98,
+      "changedSources": [],
+      "unchangedDuringRun": true
+    },
+    "startedAt": "2026-11-06T10:47:10.903Z",
+    "finishedAt": "2026-11-06T11:01:52.607Z"
+  },
+  "manualDateCases": [
+    {
+      "page": "chart-replay-btc",
+      "width": 1440,
+      "cases": [
+        {
+          "label": "native-invalid-date-lower-button",
+          "validated": true,
+          "submit": "button",
+          "bound": "lower",
+          "requested": "2010-10-24",
+          "minimum": "2011-08-18",
+          "maximum": "2026-11-05",
+          "invalid": {
+            "value": "2010-10-24",
+            "valid": false,
+            "rangeUnderflow": true,
+            "rangeOverflow": false,
+            "customError": false,
+            "message": "Value must be 08/18/2011 or later.",
+            "focused": true,
+            "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+          },
+          "rejected": {
+            "value": "2010-10-24",
+            "valid": false,
+            "rangeUnderflow": true,
+            "rangeOverflow": false,
+            "customError": true,
+            "message": "선택 가능한 날짜는 2011-08-18부터 2026-11-05까지입니다.",
+            "focused": true,
+            "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+          },
+          "cursor": "2026-10-24",
+          "origin": "2026-10-20",
+          "playbackStartDate": "2026-10-21",
+          "forecastValueSignature": "a98817f7232c3a4d",
+          "snapshotDigest": "5ea1e5493f531272fa8d4bcb94aea6c2a1e7bdff2fc88f234442f85d76d5c63d",
+          "savedSha256": "39c761b3900a4f0365f9021f9cd1afd29263c14acec5eac5cf439a65886b60b7",
+          "corrected": {
+            "value": "2026-10-24",
+            "valid": true,
+            "rangeUnderflow": false,
+            "rangeOverflow": false,
+            "customError": false,
+            "message": "",
+            "focused": true,
+            "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+          }
+        },
+        {
+          "label": "native-invalid-date-upper-button",
+          "validated": true,
+          "submit": "button",
+          "bound": "upper",
+          "requested": "2027-10-24",
+          "minimum": "2011-08-18",
+          "maximum": "2026-11-05",
+          "invalid": {
+            "value": "2027-10-24",
+            "valid": false,
+            "rangeUnderflow": false,
+            "rangeOverflow": true,
+            "customError": false,
+            "message": "Value must be 11/05/2026 or earlier.",
+            "focused": true,
+            "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+          },
+          "rejected": {
+            "value": "2027-10-24",
+            "valid": false,
+            "rangeUnderflow": false,
+            "rangeOverflow": true,
+            "customError": true,
+            "message": "선택 가능한 날짜는 2011-08-18부터 2026-11-05까지입니다.",
+            "focused": true,
+            "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+          },
+          "cursor": "2026-10-24",
+          "origin": "2026-10-20",
+          "playbackStartDate": "2026-10-21",
+          "forecastValueSignature": "a98817f7232c3a4d",
+          "snapshotDigest": "5ea1e5493f531272fa8d4bcb94aea6c2a1e7bdff2fc88f234442f85d76d5c63d",
+          "savedSha256": "39c761b3900a4f0365f9021f9cd1afd29263c14acec5eac5cf439a65886b60b7",
+          "corrected": {
+            "value": "2026-10-24",
+            "valid": true,
+            "rangeUnderflow": false,
+            "rangeOverflow": false,
+            "customError": false,
+            "message": "",
+            "focused": true,
+            "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+          }
+        },
+        {
+          "label": "native-invalid-date-lower-Enter",
+          "validated": true,
+          "submit": "Enter",
+          "bound": "lower",
+          "requested": "2010-10-24",
+          "minimum": "2011-08-18",
+          "maximum": "2026-11-05",
+          "invalid": {
+            "value": "2010-10-24",
+            "valid": false,
+            "rangeUnderflow": true,
+            "rangeOverflow": false,
+            "customError": false,
+            "message": "Value must be 08/18/2011 or later.",
+            "focused": true,
+            "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+          },
+          "rejected": {
+            "value": "2010-10-24",
+            "valid": false,
+            "rangeUnderflow": true,
+            "rangeOverflow": false,
+            "customError": true,
+            "message": "선택 가능한 날짜는 2011-08-18부터 2026-11-05까지입니다.",
+            "focused": true,
+            "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+          },
+          "cursor": "2026-10-24",
+          "origin": "2026-10-20",
+          "playbackStartDate": "2026-10-21",
+          "forecastValueSignature": "a98817f7232c3a4d",
+          "snapshotDigest": "5ea1e5493f531272fa8d4bcb94aea6c2a1e7bdff2fc88f234442f85d76d5c63d",
+          "savedSha256": "39c761b3900a4f0365f9021f9cd1afd29263c14acec5eac5cf439a65886b60b7",
+          "corrected": {
+            "value": "2026-10-24",
+            "valid": true,
+            "rangeUnderflow": false,
+            "rangeOverflow": false,
+            "customError": false,
+            "message": "",
+            "focused": true,
+            "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+          }
+        },
+        {
+          "label": "native-invalid-date-upper-Enter",
+          "validated": true,
+          "submit": "Enter",
+          "bound": "upper",
+          "requested": "2027-10-24",
+          "minimum": "2011-08-18",
+          "maximum": "2026-11-05",
+          "invalid": {
+            "value": "2027-10-24",
+            "valid": false,
+            "rangeUnderflow": false,
+            "rangeOverflow": true,
+            "customError": false,
+            "message": "Value must be 11/05/2026 or earlier.",
+            "focused": true,
+            "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+          },
+          "rejected": {
+            "value": "2027-10-24",
+            "valid": false,
+            "rangeUnderflow": false,
+            "rangeOverflow": true,
+            "customError": true,
+            "message": "선택 가능한 날짜는 2011-08-18부터 2026-11-05까지입니다.",
+            "focused": true,
+            "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+          },
+          "cursor": "2026-10-24",
+          "origin": "2026-10-20",
+          "playbackStartDate": "2026-10-21",
+          "forecastValueSignature": "a98817f7232c3a4d",
+          "snapshotDigest": "5ea1e5493f531272fa8d4bcb94aea6c2a1e7bdff2fc88f234442f85d76d5c63d",
+          "savedSha256": "39c761b3900a4f0365f9021f9cd1afd29263c14acec5eac5cf439a65886b60b7",
+          "corrected": {
+            "value": "2026-10-24",
+            "valid": true,
+            "rangeUnderflow": false,
+            "rangeOverflow": false,
+            "customError": false,
+            "message": "",
+            "focused": true,
+            "replayStatus": "저장한 기준과 공개 날짜를 복원했습니다. 일시정지 상태입니다."
+          }
+        },
+        {
+          "label": "native-valid-date-min-button",
+          "validated": true,
+          "submit": "button",
+          "requested": "2011-08-18",
+          "cursor": "2011-08-17",
+          "playbackStartDate": "2011-08-18",
+          "savedSha256": "39c761b3900a4f0365f9021f9cd1afd29263c14acec5eac5cf439a65886b60b7"
+        },
+        {
+          "label": "native-valid-date-max-Enter",
+          "validated": true,
+          "submit": "Enter",
+          "requested": "2026-11-05",
+          "cursor": "2026-11-04",
+          "playbackStartDate": "2026-11-05",
+          "savedSha256": "39c761b3900a4f0365f9021f9cd1afd29263c14acec5eac5cf439a65886b60b7"
+        }
+      ]
+    }
+  ],
+  "cadence": [
+    {
+      "speed": 10,
+      "expectedMilliseconds": 100,
+      "observations": [
+        {
+          "cursor": "2026-10-21",
+          "at": 93295.5
+        },
+        {
+          "cursor": "2026-10-22",
+          "at": 93397.29999999981
+        },
+        {
+          "cursor": "2026-10-23",
+          "at": 93507.09999999986
+        },
+        {
+          "cursor": "2026-10-24",
+          "at": 93602.8999999999
+        },
+        {
+          "cursor": "2026-10-25",
+          "at": 93703.79999999981
+        },
+        {
+          "cursor": "2026-10-26",
+          "at": 93802
+        },
+        {
+          "cursor": "2026-10-27",
+          "at": 93897.8999999999
+        },
+        {
+          "cursor": "2026-10-28",
+          "at": 94002.79999999981
+        },
+        {
+          "cursor": "2026-10-29",
+          "at": 94101.8999999999
+        },
+        {
+          "cursor": "2026-10-30",
+          "at": 94195.69999999995
+        },
+        {
+          "cursor": "2026-10-31",
+          "at": 94295.8999999999
+        },
+        {
+          "cursor": "2026-11-01",
+          "at": 94397
+        },
+        {
+          "cursor": "2026-11-02",
+          "at": 94499
+        },
+        {
+          "cursor": "2026-11-03",
+          "at": 94594.09999999986
+        },
+        {
+          "cursor": "2026-11-04",
+          "at": 94695.79999999981
+        },
+        {
+          "cursor": "2026-11-05",
+          "at": 94797.8999999999
+        }
+      ],
+      "intervals": [
+        101.79999999981374,
+        109.80000000004657,
+        95.80000000004657,
+        100.89999999990687,
+        98.20000000018626,
+        95.89999999990687,
+        104.89999999990687,
+        99.10000000009313,
+        93.80000000004657,
+        100.19999999995343,
+        101.10000000009313,
+        102,
+        95.0999999998603,
+        101.69999999995343,
+        102.10000000009313
+      ],
+      "meanMilliseconds": 100.15999999999379,
+      "averageUpdatesPerSecond": 9.984025559106051,
+      "allowedMeanRatio": [
+        0.85,
+        1.3
+      ],
+      "completionTimeoutMilliseconds": 7080,
+      "setupAllowanceMilliseconds": 5000
+    },
+    {
+      "speed": 1,
+      "expectedMilliseconds": 1000,
+      "observations": [
+        {
+          "cursor": "2026-10-21",
+          "at": 98465.8999999999
+        },
+        {
+          "cursor": "2026-10-22",
+          "at": 99457.59999999986
+        },
+        {
+          "cursor": "2026-10-23",
+          "at": 100459.79999999981
+        },
+        {
+          "cursor": "2026-10-24",
+          "at": 101461.79999999981
+        },
+        {
+          "cursor": "2026-10-25",
+          "at": 102463.8999999999
+        },
+        {
+          "cursor": "2026-10-26",
+          "at": 103465.79999999981
+        },
+        {
+          "cursor": "2026-10-27",
+          "at": 104461.5
+        },
+        {
+          "cursor": "2026-10-28",
+          "at": 105465.5
+        },
+        {
+          "cursor": "2026-10-29",
+          "at": 106460.5
+        },
+        {
+          "cursor": "2026-10-30",
+          "at": 107456.59999999986
+        },
+        {
+          "cursor": "2026-10-31",
+          "at": 108460.5
+        },
+        {
+          "cursor": "2026-11-01",
+          "at": 109463.5
+        },
+        {
+          "cursor": "2026-11-02",
+          "at": 110458.59999999986
+        },
+        {
+          "cursor": "2026-11-03",
+          "at": 111457.5
+        },
+        {
+          "cursor": "2026-11-04",
+          "at": 112461.29999999981
+        },
+        {
+          "cursor": "2026-11-05",
+          "at": 113465.59999999986
+        }
+      ],
+      "intervals": [
+        991.6999999999534,
+        1002.1999999999534,
+        1002,
+        1002.1000000000931,
+        1001.8999999999069,
+        995.7000000001863,
+        1004,
+        995,
+        996.0999999998603,
+        1003.9000000001397,
+        1003,
+        995.0999999998603,
+        998.9000000001397,
+        1003.7999999998137,
+        1004.3000000000466
+      ],
+      "meanMilliseconds": 999.979999999997,
+      "averageUpdatesPerSecond": 1.000020000400011,
+      "allowedMeanRatio": [
+        0.85,
+        1.3
+      ],
+      "completionTimeoutMilliseconds": 25800,
+      "setupAllowanceMilliseconds": 5000
+    },
+    {
+      "speed": 0.5,
+      "expectedMilliseconds": 2000,
+      "observations": [
+        {
+          "cursor": "2026-10-21",
+          "at": 118126.3999999999
+        },
+        {
+          "cursor": "2026-10-22",
+          "at": 120124.29999999981
+        },
+        {
+          "cursor": "2026-10-23",
+          "at": 122172.69999999995
+        },
+        {
+          "cursor": "2026-10-24",
+          "at": 124131.19999999995
+        },
+        {
+          "cursor": "2026-10-25",
+          "at": 126132.59999999986
+        },
+        {
+          "cursor": "2026-10-26",
+          "at": 128134.69999999995
+        },
+        {
+          "cursor": "2026-10-27",
+          "at": 130136
+        },
+        {
+          "cursor": "2026-10-28",
+          "at": 132130.59999999986
+        },
+        {
+          "cursor": "2026-10-29",
+          "at": 134132.69999999995
+        },
+        {
+          "cursor": "2026-10-30",
+          "at": 136124.59999999986
+        },
+        {
+          "cursor": "2026-10-31",
+          "at": 138132.5
+        },
+        {
+          "cursor": "2026-11-01",
+          "at": 140135.2999999998
+        },
+        {
+          "cursor": "2026-11-02",
+          "at": 142135.2999999998
+        },
+        {
+          "cursor": "2026-11-03",
+          "at": 144134.7999999998
+        },
+        {
+          "cursor": "2026-11-04",
+          "at": 146137.09999999986
+        },
+        {
+          "cursor": "2026-11-05",
+          "at": 148131.3999999999
+        }
+      ],
+      "intervals": [
+        1997.8999999999069,
+        2048.4000000001397,
+        1958.5,
+        2001.3999999999069,
+        2002.1000000000931,
+        2001.3000000000466,
+        1994.5999999998603,
+        2002.1000000000931,
+        1991.8999999999069,
+        2007.9000000001397,
+        2002.7999999998137,
+        2000,
+        1999.5,
+        2002.3000000000466,
+        1994.3000000000466
+      ],
+      "meanMilliseconds": 2000.3333333333333,
+      "averageUpdatesPerSecond": 0.4999166805532411,
+      "allowedMeanRatio": [
+        0.85,
+        1.3
+      ],
+      "completionTimeoutMilliseconds": 46600,
+      "setupAllowanceMilliseconds": 5000
+    },
+    {
+      "speed": 0.3,
+      "expectedMilliseconds": 3000,
+      "observations": [
+        {
+          "cursor": "2026-10-21",
+          "at": 153772.8999999999
+        },
+        {
+          "cursor": "2026-10-22",
+          "at": 156781.09999999986
+        },
+        {
+          "cursor": "2026-10-23",
+          "at": 159787.59999999986
+        },
+        {
+          "cursor": "2026-10-24",
+          "at": 162777.59999999986
+        },
+        {
+          "cursor": "2026-10-25",
+          "at": 165794
+        },
+        {
+          "cursor": "2026-10-26",
+          "at": 168795.09999999986
+        },
+        {
+          "cursor": "2026-10-27",
+          "at": 171783.2999999998
+        },
+        {
+          "cursor": "2026-10-28",
+          "at": 174797.3999999999
+        },
+        {
+          "cursor": "2026-10-29",
+          "at": 177789.09999999986
+        },
+        {
+          "cursor": "2026-10-30",
+          "at": 180782.7999999998
+        },
+        {
+          "cursor": "2026-10-31",
+          "at": 183781.7999999998
+        },
+        {
+          "cursor": "2026-11-01",
+          "at": 186778.59999999986
+        },
+        {
+          "cursor": "2026-11-02",
+          "at": 189781.7999999998
+        },
+        {
+          "cursor": "2026-11-03",
+          "at": 192786.5
+        },
+        {
+          "cursor": "2026-11-04",
+          "at": 195790.59999999986
+        },
+        {
+          "cursor": "2026-11-05",
+          "at": 198786.19999999995
+        }
+      ],
+      "intervals": [
+        3008.1999999999534,
+        3006.5,
+        2990,
+        3016.4000000001397,
+        3001.0999999998603,
+        2988.1999999999534,
+        3014.100000000093,
+        2991.6999999999534,
+        2993.6999999999534,
+        2999,
+        2996.8000000000466,
+        3003.1999999999534,
+        3004.7000000001863,
+        3004.0999999998603,
+        2995.600000000093
+      ],
+      "meanMilliseconds": 3000.88666666667,
+      "averageUpdatesPerSecond": 0.33323484392390657,
+      "allowedMeanRatio": [
+        0.85,
+        1.3
+      ],
+      "completionTimeoutMilliseconds": 67400,
+      "setupAllowanceMilliseconds": 5000
+    }
+  ],
+  "source-manifest": {
+    "zipPath": "eth-review-packet/source-manifest.json",
+    "path": "build/release-monitor/eth-cache-final-source-manifest.json",
+    "bytes": 672567,
+    "sha256": "8fa62027f7153a4eafe609228dc5c5249a173737cbd122970cd98e67c6e73785",
+    "gzipBytes": 121756,
+    "gzipSha256": "545e17432a68ecaa9e52ecfc744ba1171b8920d01bda8263f03c16d13a925595"
+  },
+  "packet": {
+    "sourceCommit": "601119796df94dc77b213b73838a9d4a840afe14",
+    "sourceTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "sourceAccess": "complete-for-declared-scope",
+    "bundleBytes": 105945068,
+    "bundleSha256": "0fcd1ffd6b705a9469e50f63e96d2b690155ed2f5303966844a5a3d2e3b1ecd2",
+    "bundleLimitBytes": 128000000,
+    "fileLimitBytes": 85000000,
+    "externalReviewDisposition": "omitted-by-user",
+    "externalReview": {
+      "status": "omitted-by-user",
+      "stageStatus": {
+        "chatgpt-thesis": "not-recorded",
+        "gemini-opposition": "omitted-by-user",
+        "chatgpt-reverse": "omitted-by-user"
+      },
+      "actualChatgptThesis": null,
+      "actualGeminiReport": null,
+      "actualChatgptReverse": null,
+      "actualModelExecutionAuthenticated": false,
+      "releaseAuthorized": false
+    },
+    "entries": 871,
+    "parts": 589,
+    "unresolvedImports": [],
+    "executionEntries": 334
+  }
+}

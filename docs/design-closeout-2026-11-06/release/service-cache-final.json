@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "kind": "final-pr-cache-service-verification",
+  "status": "PASS",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "pullRequest": 62,
+  "expectedHead": "601119796df94dc77b213b73838a9d4a840afe14",
+  "head": {
+    "sha": "601119796df94dc77b213b73838a9d4a840afe14",
+    "tree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "parents": [
+      "ada2f3c645b3023f93b0f0799daf9b57481b57cc"
+    ]
+  },
+  "testedPrMerge": {
+    "sha": "407be6a3be44df91f5cace87a2948ae46548e26d",
+    "tree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "parents": [
+      "59ec6f4f708e87d73dad6324d925a9e01383411c",
+      "601119796df94dc77b213b73838a9d4a840afe14"
+    ],
+    "sameTreeAsHead": true,
+    "kind": "GitHub synthetic PR test merge; not a claim that the PR was merged."
+  },
+  "workflow": {
+    "name": "Market lab service",
+    "runId": 42203377694,
+    "jobId": 127843896225,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42203377694",
+    "jobUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42203377694/job/127843896225",
+    "attempt": 1,
+    "event": "pull_request",
+    "headSha": "601119796df94dc77b213b73838a9d4a840afe14",
+    "status": "completed",
+    "conclusion": "success",
+    "completedAt": "2026-11-06T10:33:04Z",
+    "checkoutCommit": "407be6a3be44df91f5cace87a2948ae46548e26d",
+    "allRecordedStepsSucceeded": true,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Initialize containers",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      },
+      {
+        "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4
+      },
+      {
+        "name": "Run npm ci --ignore-scripts",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5
+      },
+      {
+        "name": "Run npm run typecheck",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6
+      },
+      {
+        "name": "Run npm run test:panels",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7
+      },
+      {
+        "name": "Run npm run test:service",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8
+      },
+      {
+        "name": "Run node --test tests/market-lab*.test.mjs",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 9
+      },
+      {
+        "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 16
+      },
+      {
+        "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 17
+      },
+      {
+        "name": "Stop containers",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 18
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 19
+      }
+    ]
+  },
+  "tests": {
+    "panels": {
+      "command": "npm run test:panels",
+      "tests": 65,
+      "suites": 0,
+      "pass": 65,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 15401.761792
+    },
+    "realPostgres": {
+      "command": "npm run test:service",
+      "tests": 28,
+      "suites": 0,
+      "pass": 28,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 9598.247164
+    },
+    "marketLab": {
+      "command": "node --test tests/market-lab*.test.mjs",
+      "tests": 59,
+      "suites": 0,
+      "pass": 59,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 4229.809649
+    },
+    "totalTests": 152,
+    "totalPass": 152,
+    "totalFail": 0,
+    "totalCancelled": 0,
+    "totalSkipped": 0
+  },
+  "evidence": {
+    "jobLogCharacters": 66642,
+    "source": "Fresh completed Actions job log and GitHub Git commit metadata.",
+    "summaryLines": [
+      "[command]/usr/bin/git log -1 --format=%H",
+      "407be6a3be44df91f5cace87a2948ae46548e26d",
+      "##[group]Run npm run test:panels",
+      "ℹ tests 65",
+      "ℹ suites 0",
+      "ℹ pass 65",
+      "ℹ fail 0",
+      "ℹ cancelled 0",
+      "ℹ skipped 0",
+      "ℹ todo 0",
+      "ℹ duration_ms 15401.761792",
+      "##[group]Run npm run test:service",
+      "ℹ tests 28",
+      "ℹ suites 0",
+      "ℹ pass 28",
+      "ℹ fail 0",
+      "ℹ cancelled 0",
+      "ℹ skipped 0",
+      "ℹ todo 0",
+      "ℹ duration_ms 9598.247164",
+      "##[group]Run node --test tests/market-lab*.test.mjs",
+      "ℹ tests 59",
+      "ℹ suites 0",
+      "ℹ pass 59",
+      "ℹ fail 0",
+      "ℹ cancelled 0",
+      "ℹ skipped 0",
+      "ℹ todo 0",
+      "ℹ duration_ms 4229.809649"
+    ],
+    "localTestsRerun": false,
+    "trackedEdits": false,
+    "pushes": false,
+    "priorRecordsPreserved": true,
+    "prHeadAtInitialMonitor": "601119796df94dc77b213b73838a9d4a840afe14"
+  }
+}

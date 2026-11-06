@@ -1,5 +1,11 @@
 # Design closeout verification, 2026-11-06
 
+## Completed release
+
+**v1.31.3 is merged, released and publicly deployed.** [Final release report](RELEASE.md) records candidate `6011197`, actual merge `f7e97e9`, all four final PR gates, successful main CI/Pages/Release workflows, the served publication identity and completed public-browser checks. The public date rejection and workspace-menu focus restoration passed; issue #50 is closed as completed. The report preserves the release-payload download limitation and remaining Hallmark warnings.
+
+This evidence branch adds completion records to the actual merge without changing the deployed product. The sections below retain the earlier phase's original source identities, test counts, failures and then-pending decisions. Use [RELEASE.md](RELEASE.md) for the final status.
+
 ## Scope and source
 
 This continuation completes the pending November 5 workspace and design repairs on the latest validated observations. It preserves the chart perimeter, data/forecast meanings, source disclosures and existing controls.

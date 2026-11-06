@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "601119796df94dc77b213b73838a9d4a840afe14",
+  "description": "Compact final evidence selection. Raw JSON and the full ZIP remain in ignored build storage; the 105 MB source book was verified directly from ZIP bytes without being copied into the repository. Earlier failed/cancelled receipts remain separate. This manifest excludes itself.",
+  "fileCount": 10,
+  "totalBytes": 1131619,
+  "files": [
+    {
+      "path": "build/release-monitor/eth-cache-final.json",
+      "bytes": 19199,
+      "sha256": "ddb1cb9c3dfcec5181a7366281820511eee6d13fa710d24e0ea9b60b8ba0c21b"
+    },
+    {
+      "path": "build/release-monitor/eth-cache-final-native-receipt.json.gz",
+      "bytes": 424848,
+      "sha256": "8ffd4ddf628032d957f8f33fafbffb5743d56dde9f67514e87efe4554499a91e"
+    },
+    {
+      "path": "build/release-monitor/eth-cache-final-source-manifest.json.gz",
+      "bytes": 121756,
+      "sha256": "545e17432a68ecaa9e52ecfc744ba1171b8920d01bda8263f03c16d13a925595"
+    },
+    {
+      "path": "build/release-monitor/eth-cache-final-source-verification.json",
+      "bytes": 45869,
+      "sha256": "1a92cbad8012e8f98c9c7a56a488ac6ca79f1e79de113ffb27f1afd2ca1bd0b6"
+    },
+    {
+      "path": "build/release-monitor/eth-cache-final-artifact-verification.json",
+      "bytes": 2497,
+      "sha256": "230605bea8954bdcf583bf7895f158e518bb78656c4ddd4745de2721960b3365"
+    },
+    {
+      "path": "build/release-monitor/eth-cache-final-execution-delta.json",
+      "bytes": 16732,
+      "sha256": "88ff1eac94e0e6ec5eb26da8a5d483a151babac9c44a6ce12e3ff490ae5581e8"
+    },
+    {
+      "path": "build/release-monitor/eth-cache-final-actions.json",
+      "bytes": 17184,
+      "sha256": "9a2f6f0de8aef2d3bebe7a9d075da7efc704ebcbff2d4686b63573472f8af44f"
+    },
+    {
+      "path": "build/release-monitor/eth-cache-final-extracted-summary.json",
+      "bytes": 19385,
+      "sha256": "22b44992eb67fcbc0f73313b3f08383ef171913edb448fde7abb21e28627ef78"
+    },
+    {
+      "path": "build/release-monitor/date-screenshots/chart-replay-btc-1440x900-native-invalid-date-upper-Enter.png",
+      "bytes": 232147,
+      "sha256": "c70627631d5bb516ef51e2f63926b19934ad901bbd43937c80803e2eace74abc"
+    },
+    {
+      "path": "build/release-monitor/date-screenshots/chart-replay-btc-1440x900-native-invalid-date-lower-button.png",
+      "bytes": 232002,
+      "sha256": "c3ddab033dea5a03bf08f940fa6af08631eefd6595da3f9a2c8bb181761e5069"
+    }
+  ]
+}

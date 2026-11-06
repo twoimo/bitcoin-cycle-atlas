@@ -1,0 +1,593 @@
+{
+  "schemaVersion": 1,
+  "scope": "Read-only monitoring of the existing ETH candidate evidence workflow for exact PR #62 head 601119796df94dc77b213b73838a9d4a840afe14. No tests or workflow mutations initiated.",
+  "sourceCommit": "601119796df94dc77b213b73838a9d4a840afe14",
+  "sourceTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+  "productDistTree": "33532c2d59d03a5b6f8f582e528edb855badec4f",
+  "runId": 42203377621,
+  "runUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42203377621",
+  "jobId": 127843896206,
+  "status": "completed",
+  "createdAt": "2026-11-06T10:31:55Z",
+  "lastPollAt": "2026-11-06T11:03:26.881Z",
+  "history": [
+    {
+      "at": "2026-11-06T10:32:47.624Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "completed": 3,
+      "currentSteps": [
+        {
+          "number": 4,
+          "name": "Test candidate equations, missing inputs, clocks and future-information boundaries"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:34:11.087Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 3,
+      "currentSteps": [
+        {
+          "number": 4,
+          "name": "Test candidate equations, missing inputs, clocks and future-information boundaries"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:35:28.821Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 3,
+      "currentSteps": [
+        {
+          "number": 4,
+          "name": "Test candidate equations, missing inputs, clocks and future-information boundaries"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:36:49.649Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 3,
+      "currentSteps": [
+        {
+          "number": 4,
+          "name": "Test candidate equations, missing inputs, clocks and future-information boundaries"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:37:56.837Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 3,
+      "currentSteps": [
+        {
+          "number": 4,
+          "name": "Test candidate equations, missing inputs, clocks and future-information boundaries"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:39:03.037Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 3,
+      "currentSteps": [
+        {
+          "number": 4,
+          "name": "Test candidate equations, missing inputs, clocks and future-information boundaries"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:40:13.481Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 8,
+      "currentSteps": [
+        {
+          "number": 9,
+          "name": "Attempt one protocol-defined PoW issuance observation without activating an economic snapshot"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:41:47.057Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 23,
+      "currentSteps": [
+        {
+          "number": 24,
+          "name": "Restore and independently validate the selected prospective archive bytes"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:42:56.258Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 24,
+      "currentSteps": [
+        {
+          "number": 25,
+          "name": "Acquire one bounded ETH tail and preserve adaptive pooled and opt-in warm-start records"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:44:13.647Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 26,
+      "currentSteps": [
+        {
+          "number": 27,
+          "name": "Validate retained prospective calibration evidence without requiring a new forecast issue"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:45:24.557Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 29,
+      "currentSteps": [
+        {
+          "number": 30,
+          "name": "Append current evidence and prove exact restoration of the previous archive"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:46:35.295Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 31,
+      "currentSteps": [
+        {
+          "number": 32,
+          "name": "Verify preserved ETH BMNR and MSTR records and issue only with current inputs"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:47:44.511Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:49:12.100Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:50:36.519Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:51:46.476Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:52:55.135Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:54:02.589Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:55:11.034Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:57:35.638Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:58:43.250Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T10:59:55.489Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T11:01:06.097Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 33,
+      "currentSteps": [
+        {
+          "number": 34,
+          "name": "Render comparison ETH BMNR MSTR and saved-record screens across mobile, tablet and desktop"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T11:02:14.663Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 35,
+      "currentSteps": [
+        {
+          "number": 36,
+          "name": "Preserve complete source-identified candidate evidence"
+        }
+      ],
+      "failedSteps": []
+    },
+    {
+      "at": "2026-11-06T11:03:26.881Z",
+      "status": "completed",
+      "conclusion": "success",
+      "currentPrHead": "601119796df94dc77b213b73838a9d4a840afe14",
+      "headMoved": false,
+      "completed": 39,
+      "currentSteps": [],
+      "failedSteps": []
+    }
+  ],
+  "previousReceipts": [
+    "eth-final.json",
+    "eth-packet-final.json",
+    "eth-date-final.json",
+    "eth-version-final.json"
+  ],
+  "conclusion": "success",
+  "verifiedAt": "2026-11-06T11:09:28.057886+00:00",
+  "verdict": "PASS: exact-head ETH workflow; all 49 native cases; 98 source hashes matched Git; full packet/book/parts/execution evidence independently verified from the digest-verified ZIP.",
+  "workflow": {
+    "id": 42203377621,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42203377621",
+    "headSha": "601119796df94dc77b213b73838a9d4a840afe14",
+    "conclusion": "success",
+    "updatedAt": "2026-11-06T11:02:21Z"
+  },
+  "artifact": {
+    "id": 13496493793,
+    "name": "eth-candidate-evidence-601119796df94dc77b213b73838a9d4a840afe14",
+    "zipPath": "build/release-monitor/eth-cache-final-6011197.zip",
+    "bytes": 112995880,
+    "sha256": "9847d8cb5a94169cd87a21c5c8a7b8b753022ad678ab656595fa7c123cd9c313",
+    "matchesGitHubDigest": true
+  },
+  "native": {
+    "status": "passed",
+    "sourceCommit": "601119796df94dc77b213b73838a9d4a840afe14",
+    "declaredCaseCount": 49,
+    "expectedCaseCount": 49,
+    "caseCount": 49,
+    "counts": {
+      "passed": 49,
+      "failed": 0,
+      "skipped": 0
+    },
+    "failures": [],
+    "browserVersion": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/156.0.8078.79",
+      "revision": "@a21ce95c24ce3964416f09ae1862f53f319eb4d0",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+      "jsVersion": "15.6.75.27"
+    },
+    "sourceIntegrity": {
+      "checkedFiles": 98,
+      "changedSources": [],
+      "unchangedDuringRun": true
+    },
+    "startedAt": "2026-11-06T10:47:10.903Z",
+    "finishedAt": "2026-11-06T11:01:52.607Z",
+    "durationMilliseconds": 881704,
+    "sourceHashesMatchedExactGit": 98,
+    "perCaseDigestReceipt": "eth-cache-final-source-verification.json",
+    "runtimeErrorCount": 0,
+    "unexpectedResourceErrorCount": 0,
+    "manualDateChecks": {
+      "case": "chart-replay-btc 1440x900",
+      "invalid": 4,
+      "validBoundaries": 2,
+      "total": 6,
+      "receipt": "eth-cache-final-source-verification.json"
+    },
+    "cadence": [
+      {
+        "speed": 10,
+        "expectedMilliseconds": 100,
+        "meanMilliseconds": 100.15999999999379,
+        "completionTimeoutMilliseconds": 7080,
+        "allowedMeanRatio": [
+          0.85,
+          1.3
+        ],
+        "observationCount": 16
+      },
+      {
+        "speed": 1,
+        "expectedMilliseconds": 1000,
+        "meanMilliseconds": 999.979999999997,
+        "completionTimeoutMilliseconds": 25800,
+        "allowedMeanRatio": [
+          0.85,
+          1.3
+        ],
+        "observationCount": 16
+      },
+      {
+        "speed": 0.5,
+        "expectedMilliseconds": 2000,
+        "meanMilliseconds": 2000.3333333333333,
+        "completionTimeoutMilliseconds": 46600,
+        "allowedMeanRatio": [
+          0.85,
+          1.3
+        ],
+        "observationCount": 16
+      },
+      {
+        "speed": 0.3,
+        "expectedMilliseconds": 3000,
+        "meanMilliseconds": 3000.88666666667,
+        "completionTimeoutMilliseconds": 67400,
+        "allowedMeanRatio": [
+          0.85,
+          1.3
+        ],
+        "observationCount": 16
+      }
+    ]
+  },
+  "packet": {
+    "sourceCommit": "601119796df94dc77b213b73838a9d4a840afe14",
+    "sourceTree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "sourceAccess": "complete-for-declared-scope",
+    "bundleBytes": 105945068,
+    "bundleSha256": "0fcd1ffd6b705a9469e50f63e96d2b690155ed2f5303966844a5a3d2e3b1ecd2",
+    "bundleLimitBytes": 128000000,
+    "fileLimitBytes": 85000000,
+    "externalReviewDisposition": "omitted-by-user",
+    "externalReview": {
+      "status": "omitted-by-user",
+      "stageStatus": {
+        "chatgpt-thesis": "not-recorded",
+        "gemini-opposition": "omitted-by-user",
+        "chatgpt-reverse": "omitted-by-user"
+      },
+      "actualChatgptThesis": null,
+      "actualGeminiReport": null,
+      "actualChatgptReverse": null,
+      "actualModelExecutionAuthenticated": false,
+      "releaseAuthorized": false
+    },
+    "entries": 871,
+    "parts": 589,
+    "unresolvedImports": [],
+    "executionEntries": 334,
+    "committedGitBlobsMatched": 537,
+    "payloadEntriesValidated": 871,
+    "orderedPartsVerified": 589,
+    "orderedPartBytes": 105945068,
+    "orderedPartsSha256": "0fcd1ffd6b705a9469e50f63e96d2b690155ed2f5303966844a5a3d2e3b1ecd2",
+    "executionArtifactFilesVerified": 334,
+    "allDeclaredExecutionPathsPreserved": true,
+    "currentPowRawFilesVerified": 53,
+    "verificationReceipt": "eth-cache-final-artifact-verification.json"
+  },
+  "executionInventoryDifference": {
+    "historicalCount": 335,
+    "currentFreshCount": 334,
+    "normalizedCountChanges": [
+      {
+        "pathPattern": "build/ethereum-pow-zero/rpc/051.raw.json",
+        "previous": 1,
+        "current": 0
+      }
+    ],
+    "reason": "Current complete bounded acquisition required 50 RPC reads and 40 search cache misses; earlier acquisition required 51 and 41. The current receipt has no rpc/051.raw.json request. Content-addressed records and capture names also change between executions; normalizing only those path names leaves this one-file count difference.",
+    "historicalRpcRequests": 51,
+    "currentRpcRequests": 50,
+    "receipt": "eth-cache-final-execution-delta.json",
+    "olderExecutionBytesPreservedInPriorZip": true
+  },
+  "representativeScreenshots": [
+    {
+      "zipPath": "eth-browser/chart-replay-btc-1440x900-native-invalid-date-upper-Enter.png",
+      "path": "build/release-monitor/date-screenshots/chart-replay-btc-1440x900-native-invalid-date-upper-Enter.png",
+      "bytes": 232147,
+      "sha256": "c70627631d5bb516ef51e2f63926b19934ad901bbd43937c80803e2eace74abc",
+      "matchesNativeReceipt": true
+    },
+    {
+      "zipPath": "eth-browser/chart-replay-btc-1440x900-native-invalid-date-lower-button.png",
+      "path": "build/release-monitor/date-screenshots/chart-replay-btc-1440x900-native-invalid-date-lower-button.png",
+      "bytes": 232002,
+      "sha256": "c3ddab033dea5a03bf08f940fa6af08631eefd6595da3f9a2c8bb181761e5069",
+      "matchesNativeReceipt": true
+    }
+  ],
+  "visualInspection": {
+    "reviewedScreenshots": 2,
+    "observation": "Both native validation bubbles display bounds 2011-08-18 through 2026-11-05. Upper Enter retains 2027-10-24; lower button retains 2010-10-24. The saved replay remains at 2026-10-24 while the date editor stays open."
+  },
+  "completedLogFetch": {
+    "status": "transport-unavailable",
+    "attempts": 2,
+    "reason": "GitHub connector returned Transport closed for completed job log",
+    "evidenceSource": "Native receipt and complete packet manifest extracted from independently SHA256-verified final artifact ZIP"
+  },
+  "evidenceFiles": {
+    "nativeRaw": {
+      "zipPath": "eth-browser/report.json",
+      "path": "build/release-monitor/eth-cache-final-native-receipt.json",
+      "bytes": 5618387,
+      "sha256": "4bcd5fa17177404b075df6d27ec2be8e9dde1eb69e399ce6ebfcdf0953852f22",
+      "gzipBytes": 424848,
+      "gzipSha256": "8ffd4ddf628032d957f8f33fafbffb5743d56dde9f67514e87efe4554499a91e"
+    },
+    "manifestRaw": {
+      "zipPath": "eth-review-packet/source-manifest.json",
+      "path": "build/release-monitor/eth-cache-final-source-manifest.json",
+      "bytes": 672567,
+      "sha256": "8fa62027f7153a4eafe609228dc5c5249a173737cbd122970cd98e67c6e73785",
+      "gzipBytes": 121756,
+      "gzipSha256": "545e17432a68ecaa9e52ecfc744ba1171b8920d01bda8263f03c16d13a925595"
+    },
+    "sourceVerification": "eth-cache-final-source-verification.json",
+    "artifactVerification": "eth-cache-final-artifact-verification.json",
+    "executionDelta": "eth-cache-final-execution-delta.json",
+    "actionsMetadata": "eth-cache-final-actions.json",
+    "compactChecksums": "eth-cache-final-checksums.json"
+  }
+}

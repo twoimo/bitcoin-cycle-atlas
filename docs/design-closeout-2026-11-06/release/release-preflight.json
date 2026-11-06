@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 1,
+  "kind": "immutable-release-read-only-preflight",
+  "status": "CAPTURED_AWAITING_MERGED_SOURCE",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "recordedAt": "2026-11-06 10:36:02 UTC",
+  "scope": "Read-only GitHub connector metadata and committed workflow/package source inspection. No tags, releases, assets or workflows were created, modified, dispatched or published. Asset payloads were not independently downloaded or byte-verified.",
+  "sourceCandidate": {
+    "commit": "601119796df94dc77b213b73838a9d4a840afe14",
+    "tree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "distTree": "33532c2d59d03a5b6f8f582e528edb855badec4f",
+    "packageVersion": "1.31.3"
+  },
+  "existingRelease": {
+    "tag": {
+      "name": "v1.31.2",
+      "ref": "refs/tags/v1.31.2",
+      "refObjectType": "commit",
+      "refObjectSha": "94a1b1dda9eb359de70747043808340da369d087",
+      "peeledCommit": "94a1b1dda9eb359de70747043808340da369d087",
+      "peelingNote": "Lightweight tag directly names a commit; no annotated-tag object traversal was required.",
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/refs/tags/v1.31.2"
+    },
+    "release": {
+      "id": 433574234,
+      "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/433574234",
+      "htmlUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/tag/v1.31.2",
+      "tagName": "v1.31.2",
+      "targetCommitish": "main",
+      "name": "v1.31.2",
+      "draft": false,
+      "prerelease": false,
+      "githubImmutableFlag": false,
+      "createdAt": "2026-11-04T06:04:07Z",
+      "updatedAt": "2026-11-04T06:16:18Z",
+      "publishedAt": "2026-11-04T06:15:48Z",
+      "bodySourceCommit": "94a1b1dda9eb359de70747043808340da369d087"
+    },
+    "assetCount": 13,
+    "totalAssetBytes": 191439121,
+    "allProviderDigestsPresent": true,
+    "digestEvidence": "GitHub release asset API metadata; not independently recomputed from downloaded asset payloads.",
+    "assets": [
+      {
+        "id": 708459592,
+        "name": "Bitcoin_Cycle_Structure_Research.md",
+        "size": 319556,
+        "digest": "sha256:12a126b06cd4e9f5642d1ee585bcd9292ba712ba4e3adf936ae1e4f5773a5b61",
+        "state": "uploaded",
+        "content_type": "text/markdown; charset=utf-8",
+        "created_at": "2026-11-04T06:16:00Z",
+        "updated_at": "2026-11-04T06:16:00Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/708459592",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.2/Bitcoin_Cycle_Structure_Research.md"
+      },
+      {
+        "id": 708459186,
+        "name": "Bitcoin_Cycles_Comparison.html",
+        "size": 33551045,
+        "digest": "sha256:3e348ac0c8063af691238dd2508dc0856e3e496f818bb9adadf906ebb4fa6fab",
+        "state": "uploaded",
+        "content_type": "text/html; charset=utf-8",
+        "created_at": "2026-11-04T06:15:51Z",
+        "updated_at": "2026-11-04T06:15:53Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/708459186",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.2/Bitcoin_Cycles_Comparison.html"
+      },
+      {
+        "id": 708459325,
+        "name": "Bitcoin_Detailed_Outlook.png",
+        "size": 365178,
+        "digest": "sha256:9d757454267d8e8653510a5956ad9202cc29949784418cd57f8224f6d5bffb9a",
+        "state": "uploaded",
+        "content_type": "image/png",
+        "created_at": "2026-11-04T06:15:54Z",
+        "updated_at": "2026-11-04T06:15:55Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/708459325",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.2/Bitcoin_Detailed_Outlook.png"
+      },
+      {
+        "id": 708459999,
+        "name": "bitcoin-cycle-atlas-v1.31.2-source.zip",
+        "size": 104351073,
+        "digest": "sha256:349429c14380e6d674d444395320be00513c0df81675a795fe06a1a6c731f61f",
+        "state": "uploaded",
+        "content_type": "application/zip",
+        "created_at": "2026-11-04T06:16:10Z",
+        "updated_at": "2026-11-04T06:16:14Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/708459999",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.2/bitcoin-cycle-atlas-v1.31.2-source.zip"
+      },
+      {
+        "id": 708459399,
+        "name": "DETAILED_FORECAST_RESULTS.json",
+        "size": 4091941,
+        "digest": "sha256:6d757466b6e9021bc8caf9bc3ef3b81878f1e0af54a25d60d98a2b15d3b2ea2d",
+        "state": "uploaded",
+        "content_type": "application/json",
+        "created_at": "2026-11-04T06:15:56Z",
+        "updated_at": "2026-11-04T06:15:57Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/708459399",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.2/DETAILED_FORECAST_RESULTS.json"
+      },
+      {
+        "id": 708459921,
+        "name": "Forecast_Ledger.zip",
+        "size": 2248674,
+        "digest": "sha256:4e57a6c1b8aeea516ea5ccc8adc80b57b60e24db3c6a541d70f7c324a1e875d0",
+        "state": "uploaded",
+        "content_type": "application/zip",
+        "created_at": "2026-11-04T06:16:08Z",
+        "updated_at": "2026-11-04T06:16:09Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/708459921",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.2/Forecast_Ledger.zip"
+      },
+      {
+        "id": 708459514,
+        "name": "MARKET_STRUCTURE_RESULTS.json",
+        "size": 7552190,
+        "digest": "sha256:8db88670f3a32d825a6f9a4888ade5ba0c3ef86e695c0695745b8813d3485425",
+        "state": "uploaded",
+        "content_type": "application/json",
+        "created_at": "2026-11-04T06:15:58Z",
+        "updated_at": "2026-11-04T06:15:59Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/708459514",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.2/MARKET_STRUCTURE_RESULTS.json"
+      },
+      {
+        "id": 708459143,
+        "name": "PUBLICATION_MANIFEST.json",
+        "size": 127932,
+        "digest": "sha256:ab95e55e1c378746035061f1acbfdc197266289cb08ef8abf07cdccb91688b43",
+        "state": "uploaded",
+        "content_type": "application/json",
+        "created_at": "2026-11-04T06:15:50Z",
+        "updated_at": "2026-11-04T06:15:50Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/708459143",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.2/PUBLICATION_MANIFEST.json"
+      },
+      {
+        "id": 708460198,
+        "name": "RELEASE_METADATA.json",
+        "size": 4706,
+        "digest": "sha256:4623392cc32f564220a9678fe5ec7c5cb070c7ce61e145fbe242cd9cef1c9c0f",
+        "state": "uploaded",
+        "content_type": "application/json",
+        "created_at": "2026-11-04T06:16:16Z",
+        "updated_at": "2026-11-04T06:16:16Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/708460198",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.2/RELEASE_METADATA.json"
+      },
+      {
+        "id": 708459843,
+        "name": "Research_Library.zip",
+        "size": 825736,
+        "digest": "sha256:597b16afe5e77cdd01b41e5383cf6a7b5ca5cd5136cce1e5e702538dd5a4312d",
+        "state": "uploaded",
+        "content_type": "application/zip",
+        "created_at": "2026-11-04T06:16:07Z",
+        "updated_at": "2026-11-04T06:16:07Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/708459843",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.2/Research_Library.zip"
+      },
+      {
+        "id": 708460264,
+        "name": "SHA256SUMS.txt",
+        "size": 1140,
+        "digest": "sha256:856e37ec91c6efb99d076430ab77ead6605c7246d2a0cd9abad1f282abd9508c",
+        "state": "uploaded",
+        "content_type": "text/plain; charset=utf-8",
+        "created_at": "2026-11-04T06:16:17Z",
+        "updated_at": "2026-11-04T06:16:18Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/708460264",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.2/SHA256SUMS.txt"
+      },
+      {
+        "id": 708459670,
+        "name": "Treasury_Research_and_Models.md",
+        "size": 326083,
+        "digest": "sha256:5f896a8644ca30a7ba78e4515eec27a25aedeb665b2bdbc6bb04a2c4bf3fed14",
+        "state": "uploaded",
+        "content_type": "text/markdown; charset=utf-8",
+        "created_at": "2026-11-04T06:16:02Z",
+        "updated_at": "2026-11-04T06:16:02Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/708459670",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.2/Treasury_Research_and_Models.md"
+      },
+      {
+        "id": 708459716,
+        "name": "TREASURY_SCENARIO_RESULTS.json",
+        "size": 37673867,
+        "digest": "sha256:596b50bdc906dc5609a9b2daf1fbd58aebaac9db8f844154a2ac21fefff9e0eb",
+        "state": "uploaded",
+        "content_type": "application/json",
+        "created_at": "2026-11-04T06:16:03Z",
+        "updated_at": "2026-11-04T06:16:05Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/708459716",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.2/TREASURY_SCENARIO_RESULTS.json"
+      }
+    ],
+    "publicationIdentity": {
+      "manifestAssetId": 708459143,
+      "manifestAssetBytes": 127932,
+      "manifestSha256ReportedByGithub": "ab95e55e1c378746035061f1acbfdc197266289cb08ef8abf07cdccb91688b43",
+      "metadataAssetId": 708460198,
+      "metadataAssetSha256ReportedByGithub": "4623392cc32f564220a9678fe5ec7c5cb070c7ce61e145fbe242cd9cef1c9c0f",
+      "checksumsAssetId": 708460264,
+      "checksumsAssetSha256ReportedByGithub": "856e37ec91c6efb99d076430ab77ead6605c7246d2a0cd9abad1f282abd9508c",
+      "parsedManifestSourceCommit": null,
+      "parsedManifestContentDigest": null,
+      "payloadAccess": "Small textual asset retrieval through the connector release-download URLs returned HTTP 404; assets themselves are present in the successful release metadata response. No absence of those existing assets is inferred.",
+      "attemptedTextAssets": [
+        "RELEASE_METADATA.json",
+        "PUBLICATION_MANIFEST.json",
+        "SHA256SUMS.txt"
+      ]
+    },
+    "immutabilityScope": "The existing release API reports immutable=false. Preservation here is enforced by the repository workflow's exact-source and existing-asset byte guards; this receipt does not claim GitHub immutable-release locking."
+  },
+  "newVersionPreflight": {
+    "tag": "v1.31.3",
+    "observations": [
+      {
+        "kind": "tag",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/git/ref/tags/v1.31.3",
+        "httpStatus": 404,
+        "errorCode": "NOT_FOUND",
+        "exists": false
+      },
+      {
+        "kind": "release",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/tags/v1.31.3",
+        "httpStatus": 404,
+        "errorCode": "NOT_FOUND",
+        "exists": false
+      }
+    ],
+    "note": "Both exact API endpoints returned 404 in the accessible repository during this preflight. This is a time-bound observation and must be rechecked after merge/publication."
+  },
+  "workflowGuards": {
+    "sourceCommit": "601119796df94dc77b213b73838a9d4a840afe14",
+    "path": ".github/workflows/release.yml",
+    "sha256": "7181db5f9c7ffa8b15572e5e416b984b26d12254d1613eb169a9d6218865b9a2",
+    "gitBlob": "cb6f331c882c31c309a258c143bda94f8ab04725",
+    "unchangedFromVersionOnlyHead": true,
+    "unchangedFromIntegratedMain59ec6f4": true,
+    "checks": {
+      "tagVersionMustMatchPackage": true,
+      "existingAnnotatedTagPeeled": true,
+      "existingDifferentTagCommitRejected": true,
+      "tagCreatedOnlyIfAbsent": true,
+      "verifyTagOnReleaseCreation": true,
+      "existingManifestRecovered": true,
+      "existingAssetsWithoutManifestRejected": true,
+      "existingAssetBytesCompared": true,
+      "noClobberFlag": true,
+      "serialManifestFirstUpload": true,
+      "sha256SumsChecked": true,
+      "preservedManifestExactSource": true,
+      "preservedManifestCleanTree": true,
+      "preservedManifestFilesVerified": true,
+      "releasePackageTagMustMatch": true,
+      "packagingRequiresCleanGitTree": true
+    },
+    "packageReleaseSha256": "f904083d1450c605d61e5de04f3d6bd4cd3e84f0e28925bdb99024f18f77ea61"
+  },
+  "postMergePlan": {
+    "waitingForMergedCommit": true,
+    "mergedCommit": null,
+    "preMergeRequirement": "Root verifies all four required PR gates before merging.",
+    "monitor": "After root supplies the actual merge SHA, observe the existing Release run for that exact source, then verify its tag/asset metadata.",
+    "oldReleasePreservationComparison": [
+      "peeled tag commit",
+      "release ID",
+      "asset count",
+      "each asset ID/name/size/digest"
+    ],
+    "newReleaseIdentityRequirements": [
+      "tag peels to actual tested merge commit",
+      "release metadata names that commit",
+      "release publication manifest identifies that commit and its own checksum",
+      "each asset digest agrees with the release's own checksum evidence when retrievable"
+    ],
+    "pagesAndReleaseManifestRule": "Pages and Release can prepare distinct manifests because generatedAt and workflow fields differ. Verify each manifest against its own checksum and source; require the intended source/product contentDigest agreement, not equal manifestSha256 values."
+  },
+  "limitations": [
+    "No final CI/native/release success is asserted by this preflight.",
+    "No large release assets were downloaded.",
+    "Publication source/contentDigest inside the existing release's text assets could not be parsed through the connector route; API asset digests, tag identity and release-body source identity are preserved."
+  ]
+}

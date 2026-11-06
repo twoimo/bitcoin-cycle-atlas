@@ -1,0 +1,10 @@
+{
+  "file": "build/release-monitor/release-final.log.gz",
+  "rawBytes": 1221410,
+  "rawSha256": "6b5effb7ff4d4fb1dc9f597093256b45cf46db541bc9f0c476c728e0190f53b8",
+  "gzipBytes": 236339,
+  "gzipSha256": "d8d1a067193ab0e0c8c32c3dc0ca8652e8cf9f60b180f67c8a512c3b659fb39b",
+  "gzipMtime": 0,
+  "decompressedExactComparisonPassed": true,
+  "scope": "Complete decoded GitHub job log as returned by the connector; no excerpts removed."
+}

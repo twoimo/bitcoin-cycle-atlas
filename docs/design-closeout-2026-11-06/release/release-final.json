@@ -1,0 +1,1168 @@
+{
+  "schemaVersion": 1,
+  "kind": "release-final-source-bound-verification",
+  "status": "PASS",
+  "recordedAt": "2026-11-06T11:19:46.745689+00:00",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "source": {
+    "mergeCommit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "tree": "aa7ed92e075b897bf5f1c73f58a3d8fceab7449f",
+    "distTree": "33532c2d59d03a5b6f8f582e528edb855badec4f",
+    "parents": [
+      "59ec6f4f708e87d73dad6324d925a9e01383411c",
+      "601119796df94dc77b213b73838a9d4a840afe14"
+    ],
+    "matchesReviewedHead6011197Tree": true,
+    "expectedProductContentDigest": "4424db3c9999635295f32c53a216b6a1cd2a5bbcd1c0302d5ed41c714bd4b691"
+  },
+  "workflow": {
+    "runId": 42207805286,
+    "jobId": 127858703136,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42207805286",
+    "event": "push",
+    "headSha": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-06T11:07:02Z",
+    "updatedAt": "2026-11-06T11:14:20Z",
+    "runtime": "Node.js v24.22.2",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      },
+      {
+        "name": "Install locked workspace dependencies",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4
+      },
+      {
+        "name": "Resolve the release version from this exact source",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5
+      },
+      {
+        "name": "Verify generated static React routes",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6
+      },
+      {
+        "name": "Test release source",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7
+      },
+      {
+        "name": "Verify preserved forecast identities and replay",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8
+      },
+      {
+        "name": "Verify research catalog and preserved Markdown",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 9
+      },
+      {
+        "name": "Independently reconcile daily treasury paths",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 10
+      },
+      {
+        "name": "Independently check numerical identities and causal boundaries",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 11
+      },
+      {
+        "name": "Verify bounded request ownership and negative controls",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 12
+      },
+      {
+        "name": "Recover a previously preserved release publication",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 13
+      },
+      {
+        "name": "Verify and package release assets",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 14
+      },
+      {
+        "name": "Publish or resume this release",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 15
+      },
+      {
+        "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 29
+      },
+      {
+        "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 30
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 31
+      }
+    ]
+  },
+  "tests": {
+    "aggregate": {
+      "complete": true,
+      "tests": 2484,
+      "pass": 2484,
+      "fail": 0,
+      "skipped": 0,
+      "batches": 1
+    },
+    "tap": {
+      "tests": 2484,
+      "pass": 2484,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "scope": "Complete canonical npm test on the actual release merge commit, not a sum of focused subset runs."
+  },
+  "postTestChecks": {
+    "forecast": [
+      {
+        "status": "PASS",
+        "records": 5,
+        "snapshots": 1,
+        "pendingTargets": 15,
+        "scoredTargets": 0,
+        "observationThrough": "2026-11-05",
+        "refresh": {
+          "expectedAsOf": "2026-11-05",
+          "lastPreservedAsOf": "2026-10-25",
+          "nextEligibleAsOf": "2026-11-24",
+          "nextEligibleAsOfIsEarliest": true,
+          "observationDaysSinceLast": 11,
+          "observationThrough": "2026-11-05",
+          "outcome": "retained-not-due",
+          "publicationDue": false,
+          "publicationPolicy": {
+            "basis": "completed-observation-rows",
+            "capturesInteractiveCalculations": false,
+            "intervalObservationDays": 30,
+            "scope": "scheduled-public-preservation",
+            "version": "preserved-forecast-cadence-1"
+          },
+          "publicationReasons": [
+            "interval-not-reached"
+          ],
+          "reason": "The unchanged model and settings are preserved every 30 completed observation rows. Earlier records remain immutable; observations, evaluation and active experiments continue to refresh daily."
+        }
+      }
+    ],
+    "research": [
+      {
+        "status": "ok",
+        "check": true,
+        "sources": 2,
+        "originalBytes": 43901,
+        "licenseBytes": 7048
+      },
+      {
+        "status": "ok",
+        "check": true,
+        "sources": 55,
+        "historicalEvents": 43
+      },
+      {
+        "status": "ok",
+        "check": true,
+        "articles": 490,
+        "aliases": 494,
+        "markdownBytes": 902107
+      }
+    ],
+    "treasuryPaths": [
+      {
+        "status": "PASS",
+        "node": "v24.22.2",
+        "asOf": "2026-10-23",
+        "endYear": 2050,
+        "seed": 20261022,
+        "scope": "Independent daily financial identities and input-boundary verification. This does not establish predictive accuracy, calibrated probabilities or feasible financing.",
+        "sourceHashes": {
+          "scripts/verify-treasury-paths.mjs": "49f1828cc90afcff1357ed79acfacbc6653aaa4e5252561335bad9b6c242953a",
+          "dist/treasury-asset-paths.js": "67d98d830ad95d54312b8cd73d5e6e48c76aec757a7ae55b09ec43b2e8918d5d",
+          "dist/asset-daily-observations.js": "645cdfc751ffe2a4e0ce66a10316fc493d637cd6f74a0d09ea17b4e126367c70",
+          "dist/ethereum-forecast.js": "b86e6e917c8d72c9db892dc4931694f915d6d73352dbab54798a64bd5ee3db4c",
+          "dist/treasury-instruments.js": "784b98684b5ffe6c8bb747b1bb6eac6cd658221a3cfa29e5c64c11b6711b102f",
+          "dist/treasury-liquidity.js": "b989adb0205ad969f3c87ccfdf71134d5448a38ebe47ed49ac1a63d5119cbd5d",
+          "dist/treasury-model.js": "4812b36b65912209201eabf46ba39868cec7d7ddb014421e556476412b8e1739",
+          "dist/long-horizon-forecast.js": "60c4cd09cdb582ec6080c1ba32f33ec9b62b085f67e055388095dab3e767f089",
+          "dist/long-horizon-evidence.js": "7b5f9fc162e0c621b6a7df9f0f3d77e76c274040e83b88b0a8301638cb29f2f8",
+          "dist/detailed-forecast.js": "e81e46f4062d085510185752a6b95ca1aaa1ac857eb3de5991d06616890cb70e",
+          "dist/cycle-calibration.js": "f1193814419c589801b839d64607dd80b89f5c6978d863418cb88b22db62c780",
+          "dist/cycle-engine.js": "f6b88a839f22b96c72306e87bd4760337d259a3190830325b570520472c84346",
+          "dist/cycle-timing.js": "fc5d26727e4f4dec162340aceca89274d42739f1c00889acbf7c8c8e0281d518",
+          "dist/market-structure.js": "6cae886f34169913c0a9fa8623071dc2ecf4a8c5c0df3cfbe37e5a1d006bf0f7",
+          "dist/treasury-research.js": "c5a3166884c3a9db81f1cafc7223ba1a7c1c5498689ec33ea78a2d6522275fbb",
+          "dist/treasury-catalog.js": "b8601e01bc4114bd56a84dd8fcc32b127bdda6a8188f2b5f3208fe45bb54ada5"
+        },
+        "inputHashes": {
+          "dist/data/btc-daily.json": "fae8889632b524deef33d04363da714efcb74f7906b8a507025516668c8cd7a6",
+          "dist/data/eth-ohlc.json": "73436a22ced40a0c1090f0ef926aed19d5381699089a6feee114f5dc9f312282",
+          "dist/data/mstr-ohlc.json": "c8838d17661f0cb4d8462fb8fb649e6a189d8c7f6188c36e9e00fa0b35e149d9",
+          "dist/data/bmnr-ohlc.json": "db97d837fd4b3dcb68a3d3fac31b72e55b956a3c866630d4ec9a45e64bbe35a6",
+          "research-data/treasury-mstr.json": "cac107e363aba4ceb95db085ac351911a3771ba1c1c7818c8adebbfaa7414de1",
+          "research-data/treasury-bmnr.json": "08724dc7eee6b00c303445ef9da9aff266c1f5bb0c0ec863e87846a282041105"
+        },
+        "tolerance": "Financial and baseline identities: 1e-7 + 64 * Number.EPSILON * arithmetic scale, including cumulative quantities used in differences. ETH log residual: 512 * Number.EPSILON * (1 + absolute residual and innovation terms).",
+        "checks": [
+          "six actual-input financial paths conserve holdings, four ETH liquidity pools, cash, senior claims, issuance, arrears and daily calendar events; known coupons cease after principal settlement",
+          "every ETH baseline and residual is independently reconciled to the explicit target, actual dated post-Merge source return and declared 90-day scale/730-day persistence",
+          "MSTR asset dates and prices equal the original BTC engine for all three mapped scenarios",
+          "same seed and cutoff reproduce every path after extreme future observations are appended",
+          "same terminal asset price produces independently computed different holdings and share prices after different interim cash-outflow prices",
+          "liquidation is absorbing within its own financial path and does not propagate from another condition through the displayed envelope",
+          "wrong asset, bundle cutoff, future training, missing day, duplicate day, mismatched initial price and non-finite price are rejected",
+          "an older coin anchor is rejected even when its numeric price equals the new exact-date path anchor",
+          "raw ETH archives cannot omit their asset identity or contradict the nested Coinbase source identity"
+        ],
+        "counts": {
+          "activeSteps": 44994,
+          "absorbedSteps": 8016,
+          "financingSteps": 10840,
+          "rewardSaleSteps": 14639,
+          "debtRepayments": 15
+        },
+        "ethResidualChecks": 26505,
+        "rejectedBoundaryCases": 10,
+        "maxAbsoluteErrors": {
+          "grossAssetsUsd": 0,
+          "seniorClaimsUsd": 0,
+          "residualUsd": 0,
+          "premium": 0,
+          "sharePriceUsd": 0,
+          "coinUnits": 3.725290298461914e-09,
+          "rewardUnits": 1.1874362826347351e-08,
+          "rewardCashUsd": 1.0170042514801025e-05,
+          "otherAssetsUsd": 0,
+          "financingCarryUsd": 3.3210963010787964e-06,
+          "principalUsd": 0,
+          "cashUsd": 0.0009765625,
+          "issuedShares": 1.1530391986888975e-06,
+          "issuanceUsd": 0.0019474029541015625,
+          "liquidityUnits": 4.656612873077393e-10,
+          "stakingRewards": 8.412825991399586e-11,
+          "ethBaselineUsd": 2.9103830456733704e-11,
+          "ethResidualLog": 4.440892098500626e-16,
+          "fixtureCoinUnits": 6.461050361394882e-09,
+          "fixtureShares": 2.153683453798294e-08
+        },
+        "scenarios": [
+          {
+            "symbol": "MSTR",
+            "scenario": "stress",
+            "asOf": "2026-10-23",
+            "endDate": "2050-12-31",
+            "points": 8836,
+            "upwardAssetDays": 4199,
+            "downwardAssetDays": 4636,
+            "insolventAt": "2040-10-23",
+            "capacityReachedAt": null,
+            "lastPrice": 0,
+            "lastCoinUnits": 331179.1623502826,
+            "liquidityShortfallAt": null,
+            "knownAnnualCarryAtEnd": 0,
+            "settlements": 6
+          },
+          {
+            "symbol": "MSTR",
+            "scenario": "base",
+            "asOf": "2026-10-23",
+            "endDate": "2050-12-31",
+            "points": 8836,
+            "upwardAssetDays": 4360,
+            "downwardAssetDays": 4475,
+            "insolventAt": null,
+            "capacityReachedAt": null,
+            "lastPrice": 1301.4002510400278,
+            "lastCoinUnits": 879772.149699483,
+            "liquidityShortfallAt": null,
+            "knownAnnualCarryAtEnd": 0,
+            "settlements": 6
+          },
+          {
+            "symbol": "MSTR",
+            "scenario": "bull",
+            "asOf": "2026-10-23",
+            "endDate": "2050-12-31",
+            "points": 8836,
+            "upwardAssetDays": 4410,
+            "downwardAssetDays": 4425,
+            "insolventAt": null,
+            "capacityReachedAt": "2047-10-10",
+            "lastPrice": 14116.936676160158,
+            "lastCoinUnits": 21000000,
+            "liquidityShortfallAt": null,
+            "knownAnnualCarryAtEnd": 0,
+            "settlements": 6
+          },
+          {
+            "symbol": "BMNR",
+            "scenario": "stress",
+            "asOf": "2026-10-23",
+            "endDate": "2050-12-31",
+            "points": 8836,
+            "upwardAssetDays": 4424,
+            "downwardAssetDays": 4411,
+            "insolventAt": "2039-03-29",
+            "capacityReachedAt": null,
+            "lastPrice": 0,
+            "lastCoinUnits": 2649733.975791876,
+            "liquidityShortfallAt": "2036-06-05",
+            "knownAnnualCarryAtEnd": 33250000,
+            "settlements": 0
+          },
+          {
+            "symbol": "BMNR",
+            "scenario": "base",
+            "asOf": "2026-10-23",
+            "endDate": "2050-12-31",
+            "points": 8836,
+            "upwardAssetDays": 4469,
+            "downwardAssetDays": 4366,
+            "insolventAt": null,
+            "capacityReachedAt": "2033-10-31",
+            "lastPrice": 33.87933421309753,
+            "lastCoinUnits": 6104999.999999989,
+            "liquidityShortfallAt": null,
+            "knownAnnualCarryAtEnd": 33250000,
+            "settlements": 0
+          },
+          {
+            "symbol": "BMNR",
+            "scenario": "bull",
+            "asOf": "2026-10-23",
+            "endDate": "2050-12-31",
+            "points": 8836,
+            "upwardAssetDays": 4516,
+            "downwardAssetDays": 4319,
+            "insolventAt": null,
+            "capacityReachedAt": "2028-02-03",
+            "lastPrice": 450.70863549926025,
+            "lastCoinUnits": 6104999.999999989,
+            "liquidityShortfallAt": null,
+            "knownAnnualCarryAtEnd": 33250000,
+            "settlements": 0
+          }
+        ],
+        "syntheticPathDependence": [
+          {
+            "intermediatePrice": 50,
+            "finalCoinPrice": 100,
+            "expectedCoinUnits": 104351.32541558263,
+            "actualCoinUnits": 104351.32541558455,
+            "finalSharePrice": 9.349352380284982
+          },
+          {
+            "intermediatePrice": 150,
+            "finalCoinPrice": 100,
+            "expectedCoinUnits": 502417.4030086563,
+            "actualCoinUnits": 502417.4030086498,
+            "finalSharePrice": 45.014064977213934
+          }
+        ]
+      }
+    ],
+    "numerics": {
+      "status": "PASS",
+      "assertions": 317745,
+      "completeParsedResultsFile": "release-final-check-results.json",
+      "assetComparisonSummaries": [
+        "PASS independent reference: 18 assets, 104,095 closes, 400 annual samples",
+        "PASS bounded domains: 360 price paths, 262 threshold cases",
+        "PASS negative controls: 16/16 targeted mutants rejected at their intended assertions",
+        "PASS production rerun: 18.0 ms pure build; 431.8 ms entire verifier"
+      ]
+    },
+    "formal": {
+      "status": "PASS",
+      "marketImplementationTests": 32,
+      "equityImplementationTests": 28,
+      "ethImplementationTests": 17,
+      "publicationImplementationTests": 5,
+      "replayOriginal": {
+        "status": "pass",
+        "tests": 16,
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0,
+        "exitStatus": 0,
+        "enumeration": {
+          "commands": 10,
+          "maxTraceLength": 4,
+          "traces": 10000,
+          "prefixes": 11111,
+          "transitions": 40000,
+          "observableStates": 52,
+          "observableEdges": 380,
+          "playbackBars": 3
+        }
+      },
+      "replayRestored": {
+        "status": "pass",
+        "tests": 16,
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0,
+        "exitStatus": 0,
+        "enumeration": {
+          "commands": 10,
+          "maxTraceLength": 4,
+          "traces": 10000,
+          "prefixes": 11111,
+          "transitions": 40000,
+          "observableStates": 52,
+          "observableEdges": 380,
+          "playbackBars": 3
+        }
+      },
+      "replaySelection": {
+        "status": "pass",
+        "commands": [
+          "mode:atlas-chart",
+          "mode:project-baseline",
+          "horizon:90",
+          "horizon:365",
+          "confirm",
+          "pick"
+        ],
+        "maxTraceLength": 3,
+        "traces": 259,
+        "transitions": 726,
+        "observableStates": 24,
+        "observableEdges": 78,
+        "sourceSha256": "5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90",
+        "scope": "Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging"
+      },
+      "replayMutants": [
+        {
+          "family": "controller",
+          "name": "unguarded-session-completion",
+          "status": "expected behavioral failure",
+          "exitStatus": 1,
+          "assertionCode": null,
+          "expectedFailureDetected": true
+        },
+        {
+          "family": "controller",
+          "name": "unguarded-timer-generation",
+          "status": "expected behavioral failure",
+          "exitStatus": 1,
+          "assertionCode": null,
+          "expectedFailureDetected": true
+        },
+        {
+          "family": "controller",
+          "name": "mutable-session-output",
+          "status": "expected behavioral failure",
+          "exitStatus": 1,
+          "assertionCode": null,
+          "expectedFailureDetected": true
+        },
+        {
+          "family": "controller",
+          "name": "implicit-rewind-at-archive-end",
+          "status": "expected behavioral failure",
+          "exitStatus": 1,
+          "assertionCode": null,
+          "expectedFailureDetected": true
+        },
+        {
+          "family": "selection",
+          "name": "mode-model-settings-confirm-start",
+          "status": "fail",
+          "exitStatus": null,
+          "assertionCode": "ERR_ASSERTION",
+          "expectedFailureDetected": true
+        },
+        {
+          "family": "selection",
+          "name": "horizon-settings-confirm-start",
+          "status": "fail",
+          "exitStatus": null,
+          "assertionCode": "ERR_ASSERTION",
+          "expectedFailureDetected": true
+        },
+        {
+          "family": "savedEntry",
+          "name": "entry-resets-selected-storage-mode",
+          "status": "expected behavioral failure",
+          "exitStatus": 1,
+          "assertionCode": null,
+          "expectedFailureDetected": true
+        },
+        {
+          "family": "savedEntry",
+          "name": "entry-accepts-cross-mode-storage",
+          "status": "expected behavioral failure",
+          "exitStatus": 1,
+          "assertionCode": null,
+          "expectedFailureDetected": true
+        },
+        {
+          "family": "destruction",
+          "name": "destroy-defers-to-interactive-save-guard",
+          "status": "expected behavioral failure",
+          "exitStatus": 1,
+          "assertionCode": null,
+          "expectedFailureDetected": true
+        },
+        {
+          "family": "destruction",
+          "name": "late-exit-completion-updates-destroyed-controls",
+          "status": "expected behavioral failure",
+          "exitStatus": 1,
+          "assertionCode": null,
+          "expectedFailureDetected": true
+        },
+        {
+          "family": "manualDates",
+          "name": "manual-date-validation-bypassed",
+          "status": "expected behavioral failure",
+          "exitStatus": 1,
+          "assertionCode": null,
+          "expectedFailureDetected": true
+        }
+      ],
+      "completeParsedResultsFile": "release-final-check-results.json",
+      "scope": "Bounded state and real-source negative-control checks; not an unbounded formal proof or native browser run."
+    }
+  },
+  "packaging": {
+    "staticResult": {
+      "status": "ok",
+      "files": 789,
+      "checkedReferences": 804,
+      "basePath": "/bitcoin-cycle-atlas/",
+      "standalone": null
+    },
+    "sourceBoundPackageOutput": {
+      "tag": "v1.31.3",
+      "commit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+      "output": "/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/release",
+      "assets": [
+        "PUBLICATION_MANIFEST.json",
+        "Bitcoin_Cycles_Comparison.html",
+        "Bitcoin_Detailed_Outlook.png",
+        "DETAILED_FORECAST_RESULTS.json",
+        "MARKET_STRUCTURE_RESULTS.json",
+        "Bitcoin_Cycle_Structure_Research.md",
+        "Treasury_Research_and_Models.md",
+        "TREASURY_SCENARIO_RESULTS.json",
+        "Research_Library.zip",
+        "Forecast_Ledger.zip",
+        "bitcoin-cycle-atlas-v1.31.3-source.zip",
+        "RELEASE_METADATA.json",
+        "SHA256SUMS.txt"
+      ]
+    },
+    "sha256SumsExecution": {
+      "status": "PASS",
+      "command": "sha256sum --check SHA256SUMS.txt",
+      "checkedPayloadCount": 12,
+      "payloadsReportedOK": [
+        "Bitcoin_Cycle_Structure_Research.md",
+        "Bitcoin_Cycles_Comparison.html",
+        "Bitcoin_Detailed_Outlook.png",
+        "DETAILED_FORECAST_RESULTS.json",
+        "Forecast_Ledger.zip",
+        "MARKET_STRUCTURE_RESULTS.json",
+        "PUBLICATION_MANIFEST.json",
+        "RELEASE_METADATA.json",
+        "Research_Library.zip",
+        "TREASURY_SCENARIO_RESULTS.json",
+        "Treasury_Research_and_Models.md",
+        "bitcoin-cycle-atlas-v1.31.3-source.zip"
+      ],
+      "allTwelvePayloadsCovered": true,
+      "checksumFileSelfExcluded": true,
+      "scope": "Actual Release workflow log. Independent comparison of uploaded payload bytes remains limited to any text assets subsequently downloaded."
+    }
+  },
+  "release": {
+    "id": 436408670,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/tag/v1.31.3",
+    "tag": "v1.31.3",
+    "tagObjectType": "commit",
+    "peeledCommit": "f7e97e918270539397f8ff76e7f931deb8f320d7",
+    "sourceMatchesMerge": true,
+    "draft": false,
+    "prerelease": false,
+    "githubImmutableFlag": false,
+    "publishedAt": "2026-11-06T11:13:53Z",
+    "assetCount": 13,
+    "totalAssetBytes": 207157440,
+    "assets": [
+      {
+        "id": 716898676,
+        "name": "Bitcoin_Cycle_Structure_Research.md",
+        "size": 319556,
+        "digest": "sha256:a10d47b2bc12d4e55530946b23a524e684f462dc59ad883f9ea70eae8e3e51b4",
+        "state": "uploaded",
+        "content_type": "text/markdown; charset=utf-8",
+        "created_at": "2026-11-06T11:14:03Z",
+        "updated_at": "2026-11-06T11:14:03Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/716898676",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.3/Bitcoin_Cycle_Structure_Research.md"
+      },
+      {
+        "id": 716898349,
+        "name": "Bitcoin_Cycles_Comparison.html",
+        "size": 33651136,
+        "digest": "sha256:a9c19480e02123b7b40ba20cf7d783b3241c0177aac94e565457688c7f0c866e",
+        "state": "uploaded",
+        "content_type": "text/html; charset=utf-8",
+        "created_at": "2026-11-06T11:13:55Z",
+        "updated_at": "2026-11-06T11:13:57Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/716898349",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.3/Bitcoin_Cycles_Comparison.html"
+      },
+      {
+        "id": 716898425,
+        "name": "Bitcoin_Detailed_Outlook.png",
+        "size": 365178,
+        "digest": "sha256:9d757454267d8e8653510a5956ad9202cc29949784418cd57f8224f6d5bffb9a",
+        "state": "uploaded",
+        "content_type": "image/png",
+        "created_at": "2026-11-06T11:13:58Z",
+        "updated_at": "2026-11-06T11:13:58Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/716898425",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.3/Bitcoin_Detailed_Outlook.png"
+      },
+      {
+        "id": 716898508,
+        "name": "DETAILED_FORECAST_RESULTS.json",
+        "size": 4091941,
+        "digest": "sha256:6d757466b6e9021bc8caf9bc3ef3b81878f1e0af54a25d60d98a2b15d3b2ea2d",
+        "state": "uploaded",
+        "content_type": "application/json",
+        "created_at": "2026-11-06T11:13:59Z",
+        "updated_at": "2026-11-06T11:14:00Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/716898508",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.3/DETAILED_FORECAST_RESULTS.json"
+      },
+      {
+        "id": 716898957,
+        "name": "Forecast_Ledger.zip",
+        "size": 2248840,
+        "digest": "sha256:b0c1c0fcbee506fa8be3cf5546fd1d209db03149a66be14193a76d5abaa8caa6",
+        "state": "uploaded",
+        "content_type": "application/zip",
+        "created_at": "2026-11-06T11:14:09Z",
+        "updated_at": "2026-11-06T11:14:10Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/716898957",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.3/Forecast_Ledger.zip"
+      },
+      {
+        "id": 716898615,
+        "name": "MARKET_STRUCTURE_RESULTS.json",
+        "size": 7552190,
+        "digest": "sha256:8db88670f3a32d825a6f9a4888ade5ba0c3ef86e695c0695745b8813d3485425",
+        "state": "uploaded",
+        "content_type": "application/json",
+        "created_at": "2026-11-06T11:14:01Z",
+        "updated_at": "2026-11-06T11:14:02Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/716898615",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.3/MARKET_STRUCTURE_RESULTS.json"
+      },
+      {
+        "id": 716898280,
+        "name": "PUBLICATION_MANIFEST.json",
+        "size": 128124,
+        "digest": "sha256:35012ef60de2c8028187e1c3e4dc9a96bd617466d4a91515e69c6dac90a4894e",
+        "state": "uploaded",
+        "content_type": "application/json",
+        "created_at": "2026-11-06T11:13:54Z",
+        "updated_at": "2026-11-06T11:13:54Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/716898280",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.3/PUBLICATION_MANIFEST.json"
+      },
+      {
+        "id": 716899332,
+        "name": "RELEASE_METADATA.json",
+        "size": 4706,
+        "digest": "sha256:a309ac3128b309d25afdb8cf27b59e06dd2624a5b077da9f5d1feee4c68c3848",
+        "state": "uploaded",
+        "content_type": "application/json",
+        "created_at": "2026-11-06T11:14:15Z",
+        "updated_at": "2026-11-06T11:14:16Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/716899332",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.3/RELEASE_METADATA.json"
+      },
+      {
+        "id": 716898913,
+        "name": "Research_Library.zip",
+        "size": 826244,
+        "digest": "sha256:21b00935293b2fa4aa5ab179122c4b166f897e13da59afc12863ddf763989c5b",
+        "state": "uploaded",
+        "content_type": "application/zip",
+        "created_at": "2026-11-06T11:14:08Z",
+        "updated_at": "2026-11-06T11:14:08Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/716898913",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.3/Research_Library.zip"
+      },
+      {
+        "id": 716899376,
+        "name": "SHA256SUMS.txt",
+        "size": 1140,
+        "digest": "sha256:9b7e242ffc4562c70a0e7492f79497b021df2fffabbb642dce85fdfa488b65c8",
+        "state": "uploaded",
+        "content_type": "text/plain; charset=utf-8",
+        "created_at": "2026-11-06T11:14:17Z",
+        "updated_at": "2026-11-06T11:14:17Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/716899376",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.3/SHA256SUMS.txt"
+      },
+      {
+        "id": 716898764,
+        "name": "TREASURY_SCENARIO_RESULTS.json",
+        "size": 37664080,
+        "digest": "sha256:71ebe8a5e10c87c08cf0c586e16b084d756c18d4afcb0b2ea4f79f53ec42894d",
+        "state": "uploaded",
+        "content_type": "application/json",
+        "created_at": "2026-11-06T11:14:05Z",
+        "updated_at": "2026-11-06T11:14:07Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/716898764",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.3/TREASURY_SCENARIO_RESULTS.json"
+      },
+      {
+        "id": 716898717,
+        "name": "Treasury_Research_and_Models.md",
+        "size": 327712,
+        "digest": "sha256:cd6b97e409feb45f9f5bd722a4e1600cb02d3549c1eaa397ee4b5de42837a4d4",
+        "state": "uploaded",
+        "content_type": "text/markdown; charset=utf-8",
+        "created_at": "2026-11-06T11:14:04Z",
+        "updated_at": "2026-11-06T11:14:04Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/716898717",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.3/Treasury_Research_and_Models.md"
+      },
+      {
+        "id": 716898998,
+        "name": "bitcoin-cycle-atlas-v1.31.3-source.zip",
+        "size": 119976593,
+        "digest": "sha256:1ffc2e84c797f0a5d3cf8e830926ef95b3910fd559d3e0871805627cde256c45",
+        "state": "uploaded",
+        "content_type": "application/zip",
+        "created_at": "2026-11-06T11:14:11Z",
+        "updated_at": "2026-11-06T11:14:14Z",
+        "url": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/releases/assets/716898998",
+        "browser_download_url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.31.3/bitcoin-cycle-atlas-v1.31.3-source.zip"
+      }
+    ],
+    "digestScope": "GitHub-reported SHA-256 digests. Large release assets were not independently downloaded."
+  },
+  "publication": {
+    "status": "DIRECT_PAYLOAD_VERIFICATION_BLOCKED",
+    "manifestAssetId": 716898280,
+    "manifestFileSha256ReportedByGithub": "35012ef60de2c8028187e1c3e4dc9a96bd617466d4a91515e69c6dac90a4894e",
+    "canonicalManifestSha256": null,
+    "parsedSourceCommit": null,
+    "parsedContentDigest": null,
+    "metadataAssetId": 716899332,
+    "checksumAssetId": 716899376,
+    "rule": "Pages and Release manifests are separate: generatedAt/workflow fields can change canonical manifest hashes. Validate each own checksum/source and compare intended product contentDigest."
+  },
+  "previousReleasePreservation": {
+    "status": "PASS",
+    "baselineFile": "release-preflight.json",
+    "tag": "v1.31.2",
+    "peeledCommitBefore": "94a1b1dda9eb359de70747043808340da369d087",
+    "peeledCommitAfter": "94a1b1dda9eb359de70747043808340da369d087",
+    "releaseIdBefore": 433574234,
+    "releaseIdAfter": 433574234,
+    "assetCountBefore": 13,
+    "assetCountAfter": 13,
+    "allThirteenAssetIdsNamesSizesDigestsUnchanged": true,
+    "assets": [
+      {
+        "name": "Bitcoin_Cycle_Structure_Research.md",
+        "fieldsCompared": [
+          "id",
+          "name",
+          "size",
+          "digest"
+        ],
+        "unchanged": true,
+        "before": {
+          "id": 708459592,
+          "name": "Bitcoin_Cycle_Structure_Research.md",
+          "size": 319556,
+          "digest": "sha256:12a126b06cd4e9f5642d1ee585bcd9292ba712ba4e3adf936ae1e4f5773a5b61"
+        },
+        "after": {
+          "id": 708459592,
+          "name": "Bitcoin_Cycle_Structure_Research.md",
+          "size": 319556,
+          "digest": "sha256:12a126b06cd4e9f5642d1ee585bcd9292ba712ba4e3adf936ae1e4f5773a5b61"
+        }
+      },
+      {
+        "name": "Bitcoin_Cycles_Comparison.html",
+        "fieldsCompared": [
+          "id",
+          "name",
+          "size",
+          "digest"
+        ],
+        "unchanged": true,
+        "before": {
+          "id": 708459186,
+          "name": "Bitcoin_Cycles_Comparison.html",
+          "size": 33551045,
+          "digest": "sha256:3e348ac0c8063af691238dd2508dc0856e3e496f818bb9adadf906ebb4fa6fab"
+        },
+        "after": {
+          "id": 708459186,
+          "name": "Bitcoin_Cycles_Comparison.html",
+          "size": 33551045,
+          "digest": "sha256:3e348ac0c8063af691238dd2508dc0856e3e496f818bb9adadf906ebb4fa6fab"
+        }
+      },
+      {
+        "name": "Bitcoin_Detailed_Outlook.png",
+        "fieldsCompared": [
+          "id",
+          "name",
+          "size",
+          "digest"
+        ],
+        "unchanged": true,
+        "before": {
+          "id": 708459325,
+          "name": "Bitcoin_Detailed_Outlook.png",
+          "size": 365178,
+          "digest": "sha256:9d757454267d8e8653510a5956ad9202cc29949784418cd57f8224f6d5bffb9a"
+        },
+        "after": {
+          "id": 708459325,
+          "name": "Bitcoin_Detailed_Outlook.png",
+          "size": 365178,
+          "digest": "sha256:9d757454267d8e8653510a5956ad9202cc29949784418cd57f8224f6d5bffb9a"
+        }
+      },
+      {
+        "name": "bitcoin-cycle-atlas-v1.31.2-source.zip",
+        "fieldsCompared": [
+          "id",
+          "name",
+          "size",
+          "digest"
+        ],
+        "unchanged": true,
+        "before": {
+          "id": 708459999,
+          "name": "bitcoin-cycle-atlas-v1.31.2-source.zip",
+          "size": 104351073,
+          "digest": "sha256:349429c14380e6d674d444395320be00513c0df81675a795fe06a1a6c731f61f"
+        },
+        "after": {
+          "id": 708459999,
+          "name": "bitcoin-cycle-atlas-v1.31.2-source.zip",
+          "size": 104351073,
+          "digest": "sha256:349429c14380e6d674d444395320be00513c0df81675a795fe06a1a6c731f61f"
+        }
+      },
+      {
+        "name": "DETAILED_FORECAST_RESULTS.json",
+        "fieldsCompared": [
+          "id",
+          "name",
+          "size",
+          "digest"
+        ],
+        "unchanged": true,
+        "before": {
+          "id": 708459399,
+          "name": "DETAILED_FORECAST_RESULTS.json",
+          "size": 4091941,
+          "digest": "sha256:6d757466b6e9021bc8caf9bc3ef3b81878f1e0af54a25d60d98a2b15d3b2ea2d"
+        },
+        "after": {
+          "id": 708459399,
+          "name": "DETAILED_FORECAST_RESULTS.json",
+          "size": 4091941,
+          "digest": "sha256:6d757466b6e9021bc8caf9bc3ef3b81878f1e0af54a25d60d98a2b15d3b2ea2d"
+        }
+      },
+      {
+        "name": "Forecast_Ledger.zip",
+        "fieldsCompared": [
+          "id",
+          "name",
+          "size",
+          "digest"
+        ],
+        "unchanged": true,
+        "before": {
+          "id": 708459921,
+          "name": "Forecast_Ledger.zip",
+          "size": 2248674,
+          "digest": "sha256:4e57a6c1b8aeea516ea5ccc8adc80b57b60e24db3c6a541d70f7c324a1e875d0"
+        },
+        "after": {
+          "id": 708459921,
+          "name": "Forecast_Ledger.zip",
+          "size": 2248674,
+          "digest": "sha256:4e57a6c1b8aeea516ea5ccc8adc80b57b60e24db3c6a541d70f7c324a1e875d0"
+        }
+      },
+      {
+        "name": "MARKET_STRUCTURE_RESULTS.json",
+        "fieldsCompared": [
+          "id",
+          "name",
+          "size",
+          "digest"
+        ],
+        "unchanged": true,
+        "before": {
+          "id": 708459514,
+          "name": "MARKET_STRUCTURE_RESULTS.json",
+          "size": 7552190,
+          "digest": "sha256:8db88670f3a32d825a6f9a4888ade5ba0c3ef86e695c0695745b8813d3485425"
+        },
+        "after": {
+          "id": 708459514,
+          "name": "MARKET_STRUCTURE_RESULTS.json",
+          "size": 7552190,
+          "digest": "sha256:8db88670f3a32d825a6f9a4888ade5ba0c3ef86e695c0695745b8813d3485425"
+        }
+      },
+      {
+        "name": "PUBLICATION_MANIFEST.json",
+        "fieldsCompared": [
+          "id",
+          "name",
+          "size",
+          "digest"
+        ],
+        "unchanged": true,
+        "before": {
+          "id": 708459143,
+          "name": "PUBLICATION_MANIFEST.json",
+          "size": 127932,
+          "digest": "sha256:ab95e55e1c378746035061f1acbfdc197266289cb08ef8abf07cdccb91688b43"
+        },
+        "after": {
+          "id": 708459143,
+          "name": "PUBLICATION_MANIFEST.json",
+          "size": 127932,
+          "digest": "sha256:ab95e55e1c378746035061f1acbfdc197266289cb08ef8abf07cdccb91688b43"
+        }
+      },
+      {
+        "name": "RELEASE_METADATA.json",
+        "fieldsCompared": [
+          "id",
+          "name",
+          "size",
+          "digest"
+        ],
+        "unchanged": true,
+        "before": {
+          "id": 708460198,
+          "name": "RELEASE_METADATA.json",
+          "size": 4706,
+          "digest": "sha256:4623392cc32f564220a9678fe5ec7c5cb070c7ce61e145fbe242cd9cef1c9c0f"
+        },
+        "after": {
+          "id": 708460198,
+          "name": "RELEASE_METADATA.json",
+          "size": 4706,
+          "digest": "sha256:4623392cc32f564220a9678fe5ec7c5cb070c7ce61e145fbe242cd9cef1c9c0f"
+        }
+      },
+      {
+        "name": "Research_Library.zip",
+        "fieldsCompared": [
+          "id",
+          "name",
+          "size",
+          "digest"
+        ],
+        "unchanged": true,
+        "before": {
+          "id": 708459843,
+          "name": "Research_Library.zip",
+          "size": 825736,
+          "digest": "sha256:597b16afe5e77cdd01b41e5383cf6a7b5ca5cd5136cce1e5e702538dd5a4312d"
+        },
+        "after": {
+          "id": 708459843,
+          "name": "Research_Library.zip",
+          "size": 825736,
+          "digest": "sha256:597b16afe5e77cdd01b41e5383cf6a7b5ca5cd5136cce1e5e702538dd5a4312d"
+        }
+      },
+      {
+        "name": "SHA256SUMS.txt",
+        "fieldsCompared": [
+          "id",
+          "name",
+          "size",
+          "digest"
+        ],
+        "unchanged": true,
+        "before": {
+          "id": 708460264,
+          "name": "SHA256SUMS.txt",
+          "size": 1140,
+          "digest": "sha256:856e37ec91c6efb99d076430ab77ead6605c7246d2a0cd9abad1f282abd9508c"
+        },
+        "after": {
+          "id": 708460264,
+          "name": "SHA256SUMS.txt",
+          "size": 1140,
+          "digest": "sha256:856e37ec91c6efb99d076430ab77ead6605c7246d2a0cd9abad1f282abd9508c"
+        }
+      },
+      {
+        "name": "Treasury_Research_and_Models.md",
+        "fieldsCompared": [
+          "id",
+          "name",
+          "size",
+          "digest"
+        ],
+        "unchanged": true,
+        "before": {
+          "id": 708459670,
+          "name": "Treasury_Research_and_Models.md",
+          "size": 326083,
+          "digest": "sha256:5f896a8644ca30a7ba78e4515eec27a25aedeb665b2bdbc6bb04a2c4bf3fed14"
+        },
+        "after": {
+          "id": 708459670,
+          "name": "Treasury_Research_and_Models.md",
+          "size": 326083,
+          "digest": "sha256:5f896a8644ca30a7ba78e4515eec27a25aedeb665b2bdbc6bb04a2c4bf3fed14"
+        }
+      },
+      {
+        "name": "TREASURY_SCENARIO_RESULTS.json",
+        "fieldsCompared": [
+          "id",
+          "name",
+          "size",
+          "digest"
+        ],
+        "unchanged": true,
+        "before": {
+          "id": 708459716,
+          "name": "TREASURY_SCENARIO_RESULTS.json",
+          "size": 37673867,
+          "digest": "sha256:596b50bdc906dc5609a9b2daf1fbd58aebaac9db8f844154a2ac21fefff9e0eb"
+        },
+        "after": {
+          "id": 708459716,
+          "name": "TREASURY_SCENARIO_RESULTS.json",
+          "size": 37673867,
+          "digest": "sha256:596b50bdc906dc5609a9b2daf1fbd58aebaac9db8f844154a2ac21fefff9e0eb"
+        }
+      }
+    ]
+  },
+  "completeLog": {
+    "file": "build/release-monitor/release-final.log.gz",
+    "rawBytes": 1221410,
+    "rawSha256": "6b5effb7ff4d4fb1dc9f597093256b45cf46db541bc9f0c476c728e0190f53b8",
+    "gzipBytes": 236339,
+    "gzipSha256": "d8d1a067193ab0e0c8c32c3dc0ca8652e8cf9f60b180f67c8a512c3b659fb39b",
+    "gzipMtime": 0,
+    "decompressedExactComparisonPassed": true,
+    "scope": "Complete decoded GitHub job log as returned by the connector; no excerpts removed."
+  },
+  "supportingFiles": [
+    "release-final-github-metadata.json",
+    "release-final-check-results.json",
+    "release-final-log-metadata.json"
+  ],
+  "mutationsPerformed": [],
+  "limitations": [
+    "No tags, releases, assets or workflows were mutated by this monitor.",
+    "No large release payloads were downloaded.",
+    "Direct text payload verification was blocked after a 45-second download timeout and an explicit browser URL security-policy denial. No workaround or further download attempt was made.",
+    "Actual SHA256SUMS contents and publication/RELEASE_METADATA payloads were not parsed. The 12 OK checksum outcomes come from the successful Release workflow; asset SHA-256 digests come from GitHub API metadata.",
+    "Release canonical manifest hash, parsed manifest sourceCommit and contentDigest remain unobserved. The known expected product contentDigest is retained separately and is not mislabeled as a parsed release-manifest result.",
+    "Pages and Release manifests are separate identities; equality of their manifest hashes is neither required nor asserted."
+  ],
+  "verificationScope": "PASS for the actual Release workflow, exact merge/tag identity, GitHub-reported asset metadata, workflow-executed checksum checks, and preservation of the previous release. Independent downloaded-payload verification is BLOCKED and is not included in this pass.",
+  "directPayloadVerification": {
+    "status": "BLOCKED",
+    "attemptOwner": "root",
+    "browserUrl": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/tag/v1.31.3",
+    "requestedSmallTextAssets": [
+      "PUBLICATION_MANIFEST.json",
+      "RELEASE_METADATA.json",
+      "SHA256SUMS.txt"
+    ],
+    "firstAttempt": {
+      "asset": "PUBLICATION_MANIFEST.json",
+      "operation": "downloadMedia",
+      "outcome": "Timed out after 45 seconds; no file or local path returned."
+    },
+    "followingObservation": {
+      "outcome": "DENIED by browser URL security policy",
+      "reportedReason": "Unallowed protocol; current target authority not granted. The policy forbids workarounds.",
+      "evidenceOrigin": "Root agent report of the actual tool result."
+    },
+    "rootInstruction": "Stop all release-byte download attempts; do not try raw/network alternatives.",
+    "furtherAttemptsPerformed": false,
+    "returnedFiles": [],
+    "independentAssetBytesVerified": false,
+    "publishedChecksumFileParsed": false,
+    "publicationOrReleaseMetadataPayloadParsed": false,
+    "scope": "No claim that the three small text payloads or any large uploaded payload were independently downloaded and hashed."
+  },
+  "rootBrowserObservation": {
+    "evidenceOrigin": "Root agent browser observation, not a payload download by this monitor.",
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/tag/v1.31.3",
+    "displayedCommit": "f7e97e9",
+    "uploadedAssets": 13,
+    "githubAutomaticSourceArchives": 2,
+    "uiAssetsCount": 15,
+    "threeVisibleSmallTextAssetHashesMatchApi": true,
+    "note": "The two automatically supplied GitHub source archives are additional UI links, not part of the 13 uploaded release assets."
+  }
+}

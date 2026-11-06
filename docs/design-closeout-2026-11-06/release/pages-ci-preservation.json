@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "scope": "Preservation of three completed Actions logs and two exact final source-bound receipts. No tests, tracked edits or remote writes.",
+  "compression": "gzip level 9, mtime=0, no original filename header",
+  "files": [
+    {
+      "source": "build/release-monitor/pages-final-build-job.log",
+      "sourceBytes": 1276781,
+      "sourceSha256": "9bdfc61d2c09c93cd7fe6cc2fc5c2e0a5c83b4753521d4748d51c9522c980c8d",
+      "destination": "build/release-assembly/release/pages-final-build-job.log.gz",
+      "destinationBytes": 250400,
+      "destinationSha256": "dfc5e5fdf32e1fe70f69aaaadb67931976d51be39d3a07578397cd7b4e7246c9",
+      "mode": "gzip (level 9, mtime 0, no embedded filename)",
+      "restoredSha256": "9bdfc61d2c09c93cd7fe6cc2fc5c2e0a5c83b4753521d4748d51c9522c980c8d",
+      "restoredBytesMatchSource": true,
+      "sourceUnchanged": true
+    },
+    {
+      "source": "build/release-monitor/pages-final-deploy-job.log",
+      "sourceBytes": 22522,
+      "sourceSha256": "21f01646b66c2790e5e401ca7089ee081534d8b8536b79f2e4f2923b3c547481",
+      "destination": "build/release-assembly/release/pages-final-deploy-job.log.gz",
+      "destinationBytes": 5498,
+      "destinationSha256": "6304b4a9eff71c031eb743b86d69148ec44db18ac788b363e60936a9d3e5605f",
+      "mode": "gzip (level 9, mtime 0, no embedded filename)",
+      "restoredSha256": "21f01646b66c2790e5e401ca7089ee081534d8b8536b79f2e4f2923b3c547481",
+      "restoredBytesMatchSource": true,
+      "sourceUnchanged": true
+    },
+    {
+      "source": "build/release-monitor/ci-main-final-job.log",
+      "sourceBytes": 1276341,
+      "sourceSha256": "887c9a8fc0c5e292878b067e8436d1e3f8f99ce37286bdbcc47dad49ca7aaa5d",
+      "destination": "build/release-assembly/release/ci-main-final-job.log.gz",
+      "destinationBytes": 251848,
+      "destinationSha256": "a565e745f6ded78e54d39250d67ad87c41f99f607c1c63e0d309d2f5c6780da6",
+      "mode": "gzip (level 9, mtime 0, no embedded filename)",
+      "restoredSha256": "887c9a8fc0c5e292878b067e8436d1e3f8f99ce37286bdbcc47dad49ca7aaa5d",
+      "restoredBytesMatchSource": true,
+      "sourceUnchanged": true
+    },
+    {
+      "source": "build/release-monitor/pages-final.json",
+      "sourceBytes": 14762,
+      "sourceSha256": "72fe90023bb99e72daad07d0e319fc472a39a2cd8ef27a509dc04a3a570712da",
+      "destination": "build/release-assembly/release/pages-final.json",
+      "destinationBytes": 14762,
+      "destinationSha256": "72fe90023bb99e72daad07d0e319fc472a39a2cd8ef27a509dc04a3a570712da",
+      "mode": "byte-for-byte copy",
+      "restoredSha256": "72fe90023bb99e72daad07d0e319fc472a39a2cd8ef27a509dc04a3a570712da",
+      "restoredBytesMatchSource": true,
+      "sourceUnchanged": true
+    },
+    {
+      "source": "build/release-monitor/ci-main-final.json",
+      "sourceBytes": 10472,
+      "sourceSha256": "2e8bccdf1537e284bc25a64b15faf7b29d5ea32c2bc7786c2a6fe155ce0fa213",
+      "destination": "build/release-assembly/release/ci-main-final.json",
+      "destinationBytes": 10472,
+      "destinationSha256": "2e8bccdf1537e284bc25a64b15faf7b29d5ea32c2bc7786c2a6fe155ce0fa213",
+      "mode": "byte-for-byte copy",
+      "restoredSha256": "2e8bccdf1537e284bc25a64b15faf7b29d5ea32c2bc7786c2a6fe155ce0fa213",
+      "restoredBytesMatchSource": true,
+      "sourceUnchanged": true
+    }
+  ],
+  "allCopiesAndDecompressedLogsMatchSources": true
+}

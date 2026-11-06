@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-06T11:28:02.994Z",
+  "result": "PASS",
+  "sourcePrefix": "f7e97e918270",
+  "url": "https://twoimo.github.io/bitcoin-cycle-atlas/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+  "sourceUi": "Forecast journal in asset comparison: displayed publication source identity",
+  "manualDate": {
+    "inputMethod": "Native key events, month/day retained and year typed as 2027",
+    "before": {
+      "ariaLabel": "새 시작점 날짜",
+      "id": "",
+      "max": "2026-11-05",
+      "min": "2025-10-16",
+      "required": true,
+      "valid": true,
+      "value": "2026-10-21"
+    },
+    "invalidEnter": {
+      "chartText": "BTCUSD · 봉 리플레이 시작점 선택현재 차트의 봉을 선택해 리플레이를 시작합니다. 실제 OHLC가 없는 구간은 관측 종가선으로 표시합니다.$53,446$62,493$73,071$85,439$99,901$116,811$136,5832024-112025-062025-122026-072027-022027-092028-042028-11",
+      "dateValue": "2026-11-05",
+      "focused": true,
+      "max": "2026-11-05",
+      "min": "2025-10-16",
+      "rangeOverflow": true,
+      "selectionHelp": [
+        "시작점 미확정 · 날짜를 선택해 적용하세요."
+      ],
+      "valid": false,
+      "validationMessage": "선택 가능한 날짜는 2025-10-16부터 2026-11-05까지입니다.",
+      "value": "2027-10-21"
+    },
+    "invalidButton": {
+      "chartText": "BTCUSD · 봉 리플레이 시작점 선택현재 차트의 봉을 선택해 리플레이를 시작합니다. 실제 OHLC가 없는 구간은 관측 종가선으로 표시합니다.$53,446$62,493$73,071$85,439$99,901$116,811$136,5832024-112025-062025-122026-072027-022027-092028-042028-11",
+      "dateValue": "2026-11-05",
+      "focused": true,
+      "valid": false,
+      "validationMessage": "선택 가능한 날짜는 2025-10-16부터 2026-11-05까지입니다.",
+      "value": "2027-10-21"
+    },
+    "chartTextUnchanged": true,
+    "exit": "Save current session checkbox disabled and unchecked; confirmed exit; replay checkbox returned to zero",
+    "scope": "Observed DOM, accessibility and rendered UI only; no storage internals were read"
+  },
+  "reader": {
+    "openedFrom": "Workspace command menu → Models and validation",
+    "initialFocus": {
+      "id": "chart-reader-title",
+      "label": null,
+      "tag": "H2",
+      "text": "모델과 검증"
+    },
+    "bounds": {
+      "chart": {
+        "height": 848,
+        "width": 961,
+        "x": 44,
+        "y": 44
+      },
+      "heading": "모델과 검증",
+      "reader": {
+        "bottom": 936,
+        "height": 936,
+        "right": 1325,
+        "width": 320,
+        "x": 1005,
+        "y": 0
+      },
+      "viewport": {
+        "height": 936,
+        "width": 1363
+      }
+    },
+    "escapeRestored": {
+      "id": "workbench-workspace",
+      "label": "작업 화면·명령 검색 · Ctrl/⌘ K",
+      "readerVisible": false,
+      "tag": "BUTTON"
+    }
+  },
+  "screenshots": {
+    "identity": "browser-atlas-publication-1793964096341.jpg",
+    "invalidDate": "browser-atlas-invalid-date-1793964389411.jpg",
+    "reader": "browser-atlas-reader-1793964443399.jpg",
+    "final": "browser-atlas-public-final-1793964482950.jpg"
+  },
+  "limitations": [
+    "This public smoke check does not replace the 49-case source-bound native test suite.",
+    "No release-asset payload or publication JSON export was downloaded in this browser verification."
+  ]
+}
