@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "lane": "contracts",
+  "startedAt": "2026-11-06T08:06:01.085278+00:00",
+  "sourceCommitAtStart": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "runtime": "v24.22.2",
+  "steps": [
+    {
+      "name": "formal-equity",
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "scripts/verify-equity-state.mjs",
+        "/workspace/scratch/5579aed69769/bitcoin-cycle-atlas/docs/design-closeout-2026-11-06/regression/formal-equity.json"
+      ],
+      "startedAt": "2026-11-06T08:06:01.091923+00:00",
+      "log": "formal-equity.log",
+      "exitCode": 0,
+      "elapsedSeconds": 14.15,
+      "finishedAt": "2026-11-06T08:06:15.242113+00:00",
+      "logSha256": "37ca12b15958b2b50333df209ec70a3af57b7a420ac56f79f8fc9ad20353e310"
+    },
+    {
+      "name": "formal-eth",
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "scripts/verify-eth-state.mjs",
+        "/workspace/scratch/5579aed69769/bitcoin-cycle-atlas/docs/design-closeout-2026-11-06/regression/formal-eth.json"
+      ],
+      "startedAt": "2026-11-06T08:06:15.242566+00:00",
+      "log": "formal-eth.log",
+      "exitCode": 0,
+      "elapsedSeconds": 12.648,
+      "finishedAt": "2026-11-06T08:06:27.890557+00:00",
+      "logSha256": "36341fc59504613349c5512a0f1c106a2a466a61f1da928f0d8aad0fd5de7f61"
+    },
+    {
+      "name": "formal-publication",
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "scripts/verify-publication-state.mjs",
+        "/workspace/scratch/5579aed69769/bitcoin-cycle-atlas/docs/design-closeout-2026-11-06/regression/formal-publication.json"
+      ],
+      "startedAt": "2026-11-06T08:06:27.890968+00:00",
+      "log": "formal-publication.log",
+      "exitCode": 0,
+      "elapsedSeconds": 3.765,
+      "finishedAt": "2026-11-06T08:06:31.656036+00:00",
+      "logSha256": "349c4fd59ccc8c4d4d75476ecf3198e3065a5f595538162db3a35151f92922a9"
+    },
+    {
+      "name": "formal-replay",
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "verification/replay-state/verify.mjs",
+        "/workspace/scratch/5579aed69769/bitcoin-cycle-atlas/docs/design-closeout-2026-11-06/regression/formal-replay.json"
+      ],
+      "startedAt": "2026-11-06T08:06:31.656445+00:00",
+      "log": "formal-replay.log",
+      "exitCode": 0,
+      "elapsedSeconds": 8.19,
+      "finishedAt": "2026-11-06T08:06:39.846468+00:00",
+      "logSha256": "6f0d2b5ef19d08d27e6ad10e494e3401dfd9d1fc62b5f9f5ce15b039089f7d45"
+    },
+    {
+      "name": "forecast",
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "scripts/build-forecast-ledger.mjs",
+        "--check"
+      ],
+      "startedAt": "2026-11-06T08:06:39.846897+00:00",
+      "log": "forecast.log",
+      "exitCode": 0,
+      "elapsedSeconds": 4.772,
+      "finishedAt": "2026-11-06T08:06:44.619580+00:00",
+      "logSha256": "5b36d742d9078ee4becd36f9a6eb83f9f9dbf975433bbca5a9899c34533230bc"
+    },
+    {
+      "name": "research",
+      "command": [
+        "npm",
+        "run",
+        "verify:research"
+      ],
+      "startedAt": "2026-11-06T08:06:44.626794+00:00",
+      "log": "research.log",
+      "exitCode": 0,
+      "elapsedSeconds": 0.472,
+      "finishedAt": "2026-11-06T08:06:45.099124+00:00",
+      "logSha256": "72c540db2780a7a83d679db6766a44ab71af8d1fbcc213aa5c89c8036aacb117"
+    },
+    {
+      "name": "eth-events",
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "scripts/build-ethereum-events.mjs",
+        "--check"
+      ],
+      "startedAt": "2026-11-06T08:06:45.099562+00:00",
+      "log": "eth-events.log",
+      "exitCode": 0,
+      "elapsedSeconds": 0.07,
+      "finishedAt": "2026-11-06T08:06:45.169575+00:00",
+      "logSha256": "f3629eee21f158eef58cad7a98e534d81d29f29c65fb1bdb47ce2964c9e0bcda"
+    },
+    {
+      "name": "treasury-paths",
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "scripts/verify-treasury-paths.mjs"
+      ],
+      "startedAt": "2026-11-06T08:06:45.169981+00:00",
+      "log": "treasury-paths.log",
+      "exitCode": 0,
+      "elapsedSeconds": 3.174,
+      "finishedAt": "2026-11-06T08:06:48.343783+00:00",
+      "logSha256": "f200c44a094a7c1d1929866757fe299dd7396578fc8e2bcef9f55d4e6194c1a2"
+    },
+    {
+      "name": "cycle",
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "scripts/refresh-cycle-calibration.mjs",
+        "--check"
+      ],
+      "startedAt": "2026-11-06T08:06:48.344238+00:00",
+      "log": "cycle.log",
+      "exitCode": 0,
+      "elapsedSeconds": 0.383,
+      "finishedAt": "2026-11-06T08:06:48.726933+00:00",
+      "logSha256": "10ae983b03554962a6a4660423f29f815f6e6e338e20065cbb34b0483ae2f8ec"
+    },
+    {
+      "name": "performance",
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "scripts/verify-chart-performance.mjs",
+        "--output",
+        "/workspace/scratch/5579aed69769/bitcoin-cycle-atlas/docs/design-closeout-2026-11-06/regression/performance.json"
+      ],
+      "startedAt": "2026-11-06T08:06:48.727394+00:00",
+      "log": "performance.log",
+      "exitCode": 0,
+      "elapsedSeconds": 0.218,
+      "finishedAt": "2026-11-06T08:06:48.945860+00:00",
+      "logSha256": "a250ac3942df4bdf54b947cc814c22a139c4fa78e46858acfab63546f21c3386"
+    },
+    {
+      "name": "static",
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "scripts/verify-static.mjs"
+      ],
+      "startedAt": "2026-11-06T08:06:48.946325+00:00",
+      "log": "static.log",
+      "exitCode": 0,
+      "elapsedSeconds": 10.893,
+      "finishedAt": "2026-11-06T08:06:59.839123+00:00",
+      "logSha256": "9dc369ae98530778caf6d3da7c3ff869a8717abbbf602de536c1cee8864dcd34"
+    }
+  ],
+  "complete": true,
+  "finishedAt": "2026-11-06T08:06:59.839576+00:00",
+  "status": "PASS"
+}

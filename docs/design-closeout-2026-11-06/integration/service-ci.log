@@ -1,0 +1,629 @@
+﻿2026-11-06T08:14:23.1646115Z Current runner version: '2.338.2'
+2026-11-06T08:14:23.1671790Z ##[group]Runner Image Provisioner
+2026-11-06T08:14:23.1672860Z Hosted Compute Agent
+2026-11-06T08:14:23.1673575Z Version: 20261028.624
+2026-11-06T08:14:23.1674006Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-06T08:14:23.1674766Z Build Date: 2026-10-28T21:51:42Z
+2026-11-06T08:14:23.1675300Z Worker ID: {3eff9164-2022-4301-a532-543f3f3a793f}
+2026-11-06T08:14:23.1675855Z Region: westus3
+2026-11-06T08:14:23.1676456Z Cloud: Azure
+2026-11-06T08:14:23.1676831Z ##[endgroup]
+2026-11-06T08:14:23.1678134Z ##[group]Operating System
+2026-11-06T08:14:23.1678553Z Ubuntu
+2026-11-06T08:14:23.1679119Z 26.04.1
+2026-11-06T08:14:23.1679591Z LTS
+2026-11-06T08:14:23.1680005Z ##[endgroup]
+2026-11-06T08:14:23.1680787Z ##[group]Runner Image
+2026-11-06T08:14:23.1681297Z Image: ubuntu-26.04
+2026-11-06T08:14:23.1681866Z Version: 20261101.186.1
+2026-11-06T08:14:23.1683559Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-06T08:14:23.1684837Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+2026-11-06T08:14:23.1685723Z ##[endgroup]
+2026-11-06T08:14:23.1686792Z ##[group]GITHUB_TOKEN Permissions
+2026-11-06T08:14:23.1688584Z Contents: read
+2026-11-06T08:14:23.1688903Z Metadata: read
+2026-11-06T08:14:23.1689345Z ##[endgroup]
+2026-11-06T08:14:23.1691342Z Secret source: Actions
+2026-11-06T08:14:23.1692388Z Cache mode: write
+2026-11-06T08:14:23.1693024Z Prepare workflow directory
+2026-11-06T08:14:23.2033420Z Prepare all required actions
+2026-11-06T08:14:23.2067436Z Getting action download info
+2026-11-06T08:14:23.4900491Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-11-06T08:14:23.5924628Z Download action repository 'actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1' (SHA:949feb2413d6458794dcd2491c4babbbce0c15c1)
+2026-11-06T08:14:23.7722626Z Complete job name: verify
+2026-11-06T08:14:23.8122052Z ##[group]Checking docker version
+2026-11-06T08:14:23.8130066Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+2026-11-06T08:14:23.8948322Z '1.54'
+2026-11-06T08:14:23.8960927Z Docker daemon API version: '1.54'
+2026-11-06T08:14:23.8961360Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+2026-11-06T08:14:23.9105671Z '1.54'
+2026-11-06T08:14:23.9121196Z Docker client API version: '1.54'
+2026-11-06T08:14:23.9126873Z ##[endgroup]
+2026-11-06T08:14:23.9128153Z ##[group]Clean up resources from previous jobs
+2026-11-06T08:14:23.9131860Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=206d12"
+2026-11-06T08:14:23.9259134Z ##[command]/usr/bin/docker network prune --force --filter "label=206d12"
+2026-11-06T08:14:23.9376703Z ##[endgroup]
+2026-11-06T08:14:23.9377013Z ##[group]Create local container network
+2026-11-06T08:14:23.9383787Z ##[command]/usr/bin/docker network create --label 206d12 github_network_2b09011564fe490eb2f67ec8401faafd
+2026-11-06T08:14:23.9719886Z fa2080ae97d4acedaf95c4f02d8f36c75213ac9313e1e9ba9cf88dbd2271fb12
+2026-11-06T08:14:23.9736850Z ##[endgroup]
+2026-11-06T08:14:23.9755143Z ##[group]Starting postgres service container
+2026-11-06T08:14:23.9768958Z ##[command]/usr/bin/docker pull postgres:17.11@sha256:3b0cda93be7c8dba2ed484d19393d93845dc3dafb88973e248ba8e6d99d784e1
+2026-11-06T08:14:24.7370921Z docker.io/library/postgres@sha256:3b0cda93be7c8dba2ed484d19393d93845dc3dafb88973e248ba8e6d99d784e1: Pulling from library/postgres
+2026-11-06T08:14:24.9447977Z 6fc242d221a6: Pulling fs layer
+2026-11-06T08:14:24.9449062Z 7f0980702fb2: Pulling fs layer
+2026-11-06T08:14:24.9449832Z db07174d12aa: Pulling fs layer
+2026-11-06T08:14:24.9450608Z 03f2ecc50d4c: Pulling fs layer
+2026-11-06T08:14:24.9451419Z ff7cbe54dfda: Pulling fs layer
+2026-11-06T08:14:24.9452422Z 0a26f79bdef8: Pulling fs layer
+2026-11-06T08:14:24.9453260Z 55f036305357: Pulling fs layer
+2026-11-06T08:14:24.9453898Z e6095e4c4fdd: Pulling fs layer
+2026-11-06T08:14:24.9456012Z 1f1fbc5e4aa5: Pulling fs layer
+2026-11-06T08:14:24.9456677Z 7f824adc2669: Pulling fs layer
+2026-11-06T08:14:24.9457358Z bad9dce990ef: Pulling fs layer
+2026-11-06T08:14:24.9458079Z 3cecd013db3b: Pulling fs layer
+2026-11-06T08:14:24.9458740Z 455e5ed72fb1: Pulling fs layer
+2026-11-06T08:14:24.9459435Z 904defe665c0: Pulling fs layer
+2026-11-06T08:14:25.0896843Z 904defe665c0: Download complete
+2026-11-06T08:14:25.1907087Z db07174d12aa: Download complete
+2026-11-06T08:14:25.1916380Z 03f2ecc50d4c: Download complete
+2026-11-06T08:14:25.1917345Z e6095e4c4fdd: Download complete
+2026-11-06T08:14:25.1925208Z 1f1fbc5e4aa5: Download complete
+2026-11-06T08:14:25.1925606Z 7f824adc2669: Download complete
+2026-11-06T08:14:25.1934869Z 3cecd013db3b: Download complete
+2026-11-06T08:14:25.1944810Z 7f0980702fb2: Download complete
+2026-11-06T08:14:25.1951591Z 0a26f79bdef8: Download complete
+2026-11-06T08:14:25.1962753Z 55f036305357: Download complete
+2026-11-06T08:14:25.2903866Z bad9dce990ef: Download complete
+2026-11-06T08:14:25.2904394Z 455e5ed72fb1: Download complete
+2026-11-06T08:14:25.4896940Z 0d9e2ab8f401: Download complete
+2026-11-06T08:14:25.4898198Z b822753d2803: Download complete
+2026-11-06T08:14:25.4899675Z 6fc242d221a6: Download complete
+2026-11-06T08:14:26.0963462Z 6fc242d221a6: Pull complete
+2026-11-06T08:14:26.1896266Z ff7cbe54dfda: Download complete
+2026-11-06T08:14:26.1928319Z e6095e4c4fdd: Pull complete
+2026-11-06T08:14:26.2904993Z 904defe665c0: Pull complete
+2026-11-06T08:14:26.2986153Z bad9dce990ef: Pull complete
+2026-11-06T08:14:26.3903746Z db07174d12aa: Pull complete
+2026-11-06T08:14:26.3914214Z 03f2ecc50d4c: Pull complete
+2026-11-06T08:14:26.3979404Z 55f036305357: Pull complete
+2026-11-06T08:14:27.6496619Z 455e5ed72fb1: Pull complete
+2026-11-06T08:14:27.6497020Z 1f1fbc5e4aa5: Pull complete
+2026-11-06T08:14:27.6509464Z 7f824adc2669: Pull complete
+2026-11-06T08:14:27.6523890Z 3cecd013db3b: Pull complete
+2026-11-06T08:14:27.6532879Z 7f0980702fb2: Pull complete
+2026-11-06T08:14:27.6552142Z 0a26f79bdef8: Pull complete
+2026-11-06T08:14:27.6580620Z ff7cbe54dfda: Pull complete
+2026-11-06T08:14:27.6597167Z Digest: sha256:3b0cda93be7c8dba2ed484d19393d93845dc3dafb88973e248ba8e6d99d784e1
+2026-11-06T08:14:27.6609994Z Status: Downloaded newer image for postgres@sha256:3b0cda93be7c8dba2ed484d19393d93845dc3dafb88973e248ba8e6d99d784e1
+2026-11-06T08:14:27.6611108Z docker.io/library/postgres:17.11@sha256:3b0cda93be7c8dba2ed484d19393d93845dc3dafb88973e248ba8e6d99d784e1
+2026-11-06T08:14:27.6655804Z ##[command]/usr/bin/docker create --name 22590e43969145e39fc5695bfa8f2935_postgres1711sha2563b0cda93be7c8dba2ed484d19393d93845dc3dafb88973e248ba8e6d99d784e1_aff559 --label 206d12 --network github_network_2b09011564fe490eb2f67ec8401faafd --network-alias postgres -p 5432:5432 --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10 -e "POSTGRES_USER=atlas" -e "POSTGRES_PASSWORD=isolated-ci-only" -e "POSTGRES_DB=atlas_market_lab" -e GITHUB_ACTIONS=true -e CI=true postgres:17.11@sha256:3b0cda93be7c8dba2ed484d19393d93845dc3dafb88973e248ba8e6d99d784e1
+2026-11-06T08:14:31.6306791Z 69cc577dbb1025b966ef615f00b2b7b96dfd1206fa8a0f23e20487e309ea96d6
+2026-11-06T08:14:31.6330478Z ##[command]/usr/bin/docker start 69cc577dbb1025b966ef615f00b2b7b96dfd1206fa8a0f23e20487e309ea96d6
+2026-11-06T08:14:31.9079392Z 69cc577dbb1025b966ef615f00b2b7b96dfd1206fa8a0f23e20487e309ea96d6
+2026-11-06T08:14:31.9108118Z ##[command]/usr/bin/docker ps --all --filter id=69cc577dbb1025b966ef615f00b2b7b96dfd1206fa8a0f23e20487e309ea96d6 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-11-06T08:14:31.9348708Z 69cc577dbb1025b966ef615f00b2b7b96dfd1206fa8a0f23e20487e309ea96d6 Up Less than a second (health: starting)
+2026-11-06T08:14:31.9372863Z ##[command]/usr/bin/docker port 69cc577dbb1025b966ef615f00b2b7b96dfd1206fa8a0f23e20487e309ea96d6
+2026-11-06T08:14:31.9486819Z 5432/tcp -> 0.0.0.0:5432
+2026-11-06T08:14:31.9487402Z 5432/tcp -> [::]:5432
+2026-11-06T08:14:31.9534328Z ##[endgroup]
+2026-11-06T08:14:31.9541868Z ##[group]Waiting for all services to be ready
+2026-11-06T08:14:31.9554448Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 69cc577dbb1025b966ef615f00b2b7b96dfd1206fa8a0f23e20487e309ea96d6
+2026-11-06T08:14:31.9670885Z starting
+2026-11-06T08:14:31.9698493Z postgres service is starting, waiting 2 seconds before checking again.
+2026-11-06T08:14:33.9696634Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 69cc577dbb1025b966ef615f00b2b7b96dfd1206fa8a0f23e20487e309ea96d6
+2026-11-06T08:14:33.9800609Z starting
+2026-11-06T08:14:33.9814970Z postgres service is starting, waiting 4 seconds before checking again.
+2026-11-06T08:14:38.0174210Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 69cc577dbb1025b966ef615f00b2b7b96dfd1206fa8a0f23e20487e309ea96d6
+2026-11-06T08:14:38.0285728Z healthy
+2026-11-06T08:14:38.0304503Z postgres service is healthy.
+2026-11-06T08:14:38.0305149Z ##[endgroup]
+2026-11-06T08:14:38.0555720Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-11-06T08:14:38.0556030Z with:
+2026-11-06T08:14:38.0556159Z   persist-credentials: false
+2026-11-06T08:14:38.0556316Z   repository: twoimo/bitcoin-cycle-atlas
+2026-11-06T08:14:38.0557764Z   token: ***
+2026-11-06T08:14:38.0557886Z   ssh-strict: true
+2026-11-06T08:14:38.0558005Z   ssh-user: git
+2026-11-06T08:14:38.0558115Z   clean: true
+2026-11-06T08:14:38.0558242Z   sparse-checkout-cone-mode: true
+2026-11-06T08:14:38.0558389Z   fetch-depth: 1
+2026-11-06T08:14:38.0558504Z   fetch-tags: false
+2026-11-06T08:14:38.0558623Z   show-progress: true
+2026-11-06T08:14:38.0558742Z   lfs: false
+2026-11-06T08:14:38.0558852Z   submodules: false
+2026-11-06T08:14:38.0558972Z   set-safe-directory: true
+2026-11-06T08:14:38.0559112Z   allow-unsafe-pr-checkout: false
+2026-11-06T08:14:38.0559318Z env:
+2026-11-06T08:14:38.0559604Z   TEST_DATABASE_URL: ***localhost:5432/atlas_market_lab
+2026-11-06T08:14:38.0559798Z ##[endgroup]
+2026-11-06T08:14:38.2446544Z Syncing repository: twoimo/bitcoin-cycle-atlas
+2026-11-06T08:14:38.2447640Z ##[group]Getting Git version info
+2026-11-06T08:14:38.2448019Z Working directory is '/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas'
+2026-11-06T08:14:38.2448455Z [command]/usr/bin/git version
+2026-11-06T08:14:38.2448615Z git version 2.56.0
+2026-11-06T08:14:38.2458077Z ##[endgroup]
+2026-11-06T08:14:38.2468477Z Temporarily overriding HOME='/home/runner/work/_temp/45434e53-d6c9-4849-8e93-da29cd4b8235' before making global git config changes
+2026-11-06T08:14:38.2469153Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-06T08:14:38.2473423Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas
+2026-11-06T08:14:38.2529840Z Deleting the contents of '/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas'
+2026-11-06T08:14:38.2532379Z ##[group]Determining repository object format
+2026-11-06T08:14:38.2533734Z ##[endgroup]
+2026-11-06T08:14:38.2534077Z ##[group]Initializing the repository
+2026-11-06T08:14:38.2537865Z [command]/usr/bin/git init /home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas
+2026-11-06T08:14:38.2627626Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-06T08:14:38.2628183Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-06T08:14:38.2628528Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-06T08:14:38.2628805Z hint: call:
+2026-11-06T08:14:38.2628950Z hint:
+2026-11-06T08:14:38.2629204Z hint: 	git config --global init.defaultBranch <name>
+2026-11-06T08:14:38.2629408Z hint:
+2026-11-06T08:14:38.2629581Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-06T08:14:38.2629858Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-06T08:14:38.2630069Z hint:
+2026-11-06T08:14:38.2630402Z hint: 	git branch -m <name>
+2026-11-06T08:14:38.2630546Z hint:
+2026-11-06T08:14:38.2630727Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-06T08:14:38.2643139Z Initialized empty Git repository in /home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git/
+2026-11-06T08:14:38.2651080Z [command]/usr/bin/git remote add origin https://github.com/twoimo/bitcoin-cycle-atlas
+2026-11-06T08:14:38.2701530Z ##[endgroup]
+2026-11-06T08:14:38.2701884Z ##[group]Disabling automatic garbage collection
+2026-11-06T08:14:38.2705365Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-06T08:14:38.2762530Z ##[endgroup]
+2026-11-06T08:14:38.2763115Z ##[group]Setting up auth
+2026-11-06T08:14:38.2763675Z Removing SSH command configuration
+2026-11-06T08:14:38.2768835Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-06T08:14:38.2801435Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-06T08:14:38.3155771Z Removing HTTP extra header
+2026-11-06T08:14:38.3160384Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-06T08:14:38.3189820Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-06T08:14:38.3406445Z Removing includeIf entries pointing to credentials config files
+2026-11-06T08:14:38.3410770Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-06T08:14:38.3439873Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-06T08:14:38.3665695Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-0a6310ed-093e-435e-95f5-6cc4f1e77ec2.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-06T08:14:38.3699142Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git.path /home/runner/work/_temp/git-credentials-0a6310ed-093e-435e-95f5-6cc4f1e77ec2.config
+2026-11-06T08:14:38.3728650Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-0a6310ed-093e-435e-95f5-6cc4f1e77ec2.config
+2026-11-06T08:14:38.3758814Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-0a6310ed-093e-435e-95f5-6cc4f1e77ec2.config
+2026-11-06T08:14:38.3785586Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-0a6310ed-093e-435e-95f5-6cc4f1e77ec2.config
+2026-11-06T08:14:38.3810742Z ##[endgroup]
+2026-11-06T08:14:38.3810961Z ##[group]Fetching the repository
+2026-11-06T08:14:38.3815999Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +c5284f5404ec249dcda5727b88847b6cf4896184:refs/remotes/pull/62/merge
+2026-11-06T08:14:42.5344583Z From https://github.com/twoimo/bitcoin-cycle-atlas
+2026-11-06T08:14:42.5345064Z  * [new ref]         c5284f5404ec249dcda5727b88847b6cf4896184 -> pull/62/merge
+2026-11-06T08:14:42.5349928Z ##[endgroup]
+2026-11-06T08:14:42.5350263Z ##[group]Determining the checkout info
+2026-11-06T08:14:42.5350695Z ##[endgroup]
+2026-11-06T08:14:42.5355638Z [command]/usr/bin/git sparse-checkout disable
+2026-11-06T08:14:42.5403927Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-06T08:14:42.5434100Z ##[group]Checking out the ref
+2026-11-06T08:14:42.5438339Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/62/merge
+2026-11-06T08:14:43.1277812Z Note: switching to 'refs/remotes/pull/62/merge'.
+2026-11-06T08:14:43.1278136Z 
+2026-11-06T08:14:43.1278832Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-06T08:14:43.1279421Z changes and commit them, and you can discard any commits you make in this
+2026-11-06T08:14:43.1279799Z state without impacting any branches by switching back to a branch.
+2026-11-06T08:14:43.1280022Z 
+2026-11-06T08:14:43.1280256Z If you want to create a new branch to retain commits you create, you may
+2026-11-06T08:14:43.1280592Z do so (now or later) by using -c with the switch command. Example:
+2026-11-06T08:14:43.1280787Z 
+2026-11-06T08:14:43.1280879Z   git switch -c <new-branch-name>
+2026-11-06T08:14:43.1281012Z 
+2026-11-06T08:14:43.1281100Z Or undo this operation with:
+2026-11-06T08:14:43.1281223Z 
+2026-11-06T08:14:43.1281295Z   git switch -
+2026-11-06T08:14:43.1281395Z 
+2026-11-06T08:14:43.1281561Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-06T08:14:43.1281793Z 
+2026-11-06T08:14:43.1282422Z HEAD is now at c5284f5 Merge 6cb6aa5d45bb2b66ef27d578785aa47571278137 into 59ec6f4f708e87d73dad6324d925a9e01383411c
+2026-11-06T08:14:43.1322609Z ##[endgroup]
+2026-11-06T08:14:43.1365855Z [command]/usr/bin/git log -1 --format=%H
+2026-11-06T08:14:43.1391029Z c5284f5404ec249dcda5727b88847b6cf4896184
+2026-11-06T08:14:43.1398407Z ##[group]Removing auth
+2026-11-06T08:14:43.1398725Z Removing SSH command configuration
+2026-11-06T08:14:43.1401113Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-06T08:14:43.1428507Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-06T08:14:43.1645909Z Removing HTTP extra header
+2026-11-06T08:14:43.1649208Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-06T08:14:43.1677306Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-06T08:14:43.1896290Z Removing includeIf entries pointing to credentials config files
+2026-11-06T08:14:43.1896629Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-06T08:14:43.1921910Z includeif.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git.path
+2026-11-06T08:14:43.1922891Z includeif.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git/worktrees/*.path
+2026-11-06T08:14:43.1923531Z includeif.gitdir:/github/workspace/.git.path
+2026-11-06T08:14:43.1923961Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-06T08:14:43.1930644Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git.path
+2026-11-06T08:14:43.1952780Z /home/runner/work/_temp/git-credentials-0a6310ed-093e-435e-95f5-6cc4f1e77ec2.config
+2026-11-06T08:14:43.1965487Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-0a6310ed\-093e\-435e\-95f5\-6cc4f1e77ec2\.config
+2026-11-06T08:14:43.2005876Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git/worktrees/*.path
+2026-11-06T08:14:43.2027330Z /home/runner/work/_temp/git-credentials-0a6310ed-093e-435e-95f5-6cc4f1e77ec2.config
+2026-11-06T08:14:43.2034424Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-0a6310ed\-093e\-435e\-95f5\-6cc4f1e77ec2\.config
+2026-11-06T08:14:43.2065816Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-11-06T08:14:43.2085405Z /github/runner_temp/git-credentials-0a6310ed-093e-435e-95f5-6cc4f1e77ec2.config
+2026-11-06T08:14:43.2091281Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-0a6310ed\-093e\-435e\-95f5\-6cc4f1e77ec2\.config
+2026-11-06T08:14:43.2123986Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-11-06T08:14:43.2144776Z /github/runner_temp/git-credentials-0a6310ed-093e-435e-95f5-6cc4f1e77ec2.config
+2026-11-06T08:14:43.2150411Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-0a6310ed\-093e\-435e\-95f5\-6cc4f1e77ec2\.config
+2026-11-06T08:14:43.2179194Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-06T08:14:43.2403166Z Removing credentials config '/home/runner/work/_temp/git-credentials-0a6310ed-093e-435e-95f5-6cc4f1e77ec2.config'
+2026-11-06T08:14:43.2403822Z ##[endgroup]
+2026-11-06T08:14:43.2587607Z ##[group]Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+2026-11-06T08:14:43.2587839Z with:
+2026-11-06T08:14:43.2587955Z   node-version: 24
+2026-11-06T08:14:43.2588066Z   cache: npm
+2026-11-06T08:14:43.2588176Z   check-latest: false
+2026-11-06T08:14:43.2589518Z   token: ***
+2026-11-06T08:14:43.2589642Z   package-manager-cache: true
+2026-11-06T08:14:43.2589778Z env:
+2026-11-06T08:14:43.2590029Z   TEST_DATABASE_URL: ***localhost:5432/atlas_market_lab
+2026-11-06T08:14:43.2590193Z ##[endgroup]
+2026-11-06T08:14:43.3586572Z Found in cache @ /opt/hostedtoolcache/node/24.22.2/x64
+2026-11-06T08:14:44.6678383Z ##[group]Environment details
+2026-11-06T08:14:46.6748897Z node: v24.22.2
+2026-11-06T08:14:46.6749150Z npm: 11.19.1
+2026-11-06T08:14:46.6749313Z yarn: 1.22.22
+2026-11-06T08:14:46.6750524Z ##[endgroup]
+2026-11-06T08:14:46.6760776Z [command]/opt/hostedtoolcache/node/24.22.2/x64/bin/npm config get cache
+2026-11-06T08:14:46.9834860Z /home/runner/.npm
+2026-11-06T08:14:47.1998049Z npm cache is not found
+2026-11-06T08:14:47.2130332Z ##[group]Run npm ci --ignore-scripts
+2026-11-06T08:14:47.2130563Z [36;1mnpm ci --ignore-scripts[0m
+2026-11-06T08:14:47.2222141Z shell: /usr/bin/bash -e {0}
+2026-11-06T08:14:47.2222492Z env:
+2026-11-06T08:14:47.2222899Z   TEST_DATABASE_URL: ***localhost:5432/atlas_market_lab
+2026-11-06T08:14:47.2223071Z ##[endgroup]
+2026-11-06T08:14:50.0141549Z 
+2026-11-06T08:14:50.0146965Z added 138 packages, and audited 144 packages in 3s
+2026-11-06T08:14:50.0147212Z 
+2026-11-06T08:14:50.0147353Z 52 packages are looking for funding
+2026-11-06T08:14:50.0147542Z   run `npm fund` for details
+2026-11-06T08:14:50.0148317Z 
+2026-11-06T08:14:50.0148426Z found 0 vulnerabilities
+2026-11-06T08:14:50.0659860Z ##[group]Run npm run typecheck
+2026-11-06T08:14:50.0660046Z [36;1mnpm run typecheck[0m
+2026-11-06T08:14:50.0710979Z shell: /usr/bin/bash -e {0}
+2026-11-06T08:14:50.0711135Z env:
+2026-11-06T08:14:50.0711493Z   TEST_DATABASE_URL: ***localhost:5432/atlas_market_lab
+2026-11-06T08:14:50.0711666Z ##[endgroup]
+2026-11-06T08:14:50.1407090Z 
+2026-11-06T08:14:50.1407745Z > bitcoin-cycle-atlas@1.31.2 typecheck
+2026-11-06T08:14:50.1408119Z > tsc --noEmit
+2026-11-06T08:14:50.1408236Z 
+2026-11-06T08:14:50.7865937Z ##[group]Run npm run test:panels
+2026-11-06T08:14:50.7866124Z [36;1mnpm run test:panels[0m
+2026-11-06T08:14:50.7908163Z shell: /usr/bin/bash -e {0}
+2026-11-06T08:14:50.7908321Z env:
+2026-11-06T08:14:50.7908714Z   TEST_DATABASE_URL: ***localhost:5432/atlas_market_lab
+2026-11-06T08:14:50.7908891Z ##[endgroup]
+2026-11-06T08:14:50.8649614Z 
+2026-11-06T08:14:50.8650868Z > bitcoin-cycle-atlas@1.31.2 test:panels
+2026-11-06T08:14:50.8655053Z > tsx --test tests/web/*.test.tsx
+2026-11-06T08:14:50.8655201Z 
+2026-11-06T08:14:51.8844407Z ✔ dashboard/chart shell moves the existing navigation without replacing handlers or owner controls (20.261656ms)
+2026-11-06T08:14:51.8858576Z ✔ sidebar preference uses one versioned bounded key and remains optional (1.151087ms)
+2026-11-06T08:14:51.9087072Z ✔ center navigation retains all perimeter nodes, restores controls and bounds frame messages (34.430344ms)
+2026-11-06T08:14:51.9124083Z ✔ static project navigation retains perimeter identity and rejects stale or foreign frames (8.851063ms)
+2026-11-06T08:14:51.9234574Z ✔ housing: official observed values, index base and declared reporting clocks (2.325851ms)
+2026-11-06T08:14:51.9235490Z ✔ housing: prior-only mean, current spikes and future perturbations cannot change earlier states (11.764946ms)
+2026-11-06T08:14:51.9236368Z ✔ housing: exact neutral boundaries, missing calendar months, zero and absent price are distinct (0.732614ms)
+2026-11-06T08:14:51.9237152Z ✔ housing: malformed/duplicate/future observations and invalid analysis options reject (7.832969ms)
+2026-11-06T08:14:51.9237949Z ✔ housing: lagged exact calendar outcomes, incomplete tails, denominators and non-overlap (19.391778ms)
+2026-11-06T08:14:51.9238647Z ✔ housing: loader validates digest, saved fallback, failed data and cancellation (111.414661ms)
+2026-11-06T08:14:51.9239394Z ✔ loading geometry contains no pretend data or active controls, and its status label is escaped (5.414109ms)
+2026-11-06T08:14:51.9240334Z ✔ every supported pending view keeps the announcement separate from inert neutral paint (11.407002ms)
+2026-11-06T08:14:51.9241208Z ✔ pending -> error -> retry -> ready preserves original nodes and releases only its own loading surface (8.341638ms)
+2026-11-06T08:14:51.9242113Z ✔ a renderer replacing its body can clear a detached skeleton without erasing its error or retry action (1.098519ms)
+2026-11-06T08:14:59.8727978Z ✔ React diagnosis us: values, controls and SVG coordinates match the previous renderer (462.608232ms)
+2026-11-06T08:14:59.8728750Z ✔ React diagnosis kr: values, controls and SVG coordinates match the previous renderer (311.166846ms)
+2026-11-06T08:14:59.8729735Z ✔ React diagnosis preserves selected market/date and source-error chart withholding (986.203931ms)
+2026-11-06T08:14:59.8730866Z ✔ React RSI preserves both exact SVG series, reference tables, selected dates and manual values (2585.70315ms)
+2026-11-06T08:14:59.8734252Z ✔ React RSI never substitutes missing, errored or future observations for a valid computed value (558.776545ms)
+2026-11-06T08:14:59.8735203Z ✔ React source disclosure preserves all source clocks, links, caveats and withheld notes (337.932048ms)
+2026-11-06T08:14:59.8738626Z ✔ React scenario matches the previous neutral, negative, weighted and sensitivity results (603.898794ms)
+2026-11-06T08:14:59.8741034Z ✔ React scenario withholds the result for missing, zero, negative and out-of-range inputs (641.237271ms)
+2026-11-06T08:14:59.8741783Z ✔ React economics keeps the initial blank form and all original form constraints (109.129509ms)
+2026-11-06T08:14:59.8742782Z ✔ React economics independently submits the same cash flows, terminal recovery and invalid inputs as the previous form (539.49685ms)
+2026-11-06T08:15:00.1810287Z ✔ React app keeps calculation controls usable while loading and preserves results across tab switches (426.320285ms)
+2026-11-06T08:15:00.1975317Z ✔ React app renders empty and error states distinctly and retries without discarding scenario input (26.142403ms)
+2026-11-06T08:15:00.2580326Z ✔ React app aborts an unmounted load and ignores its late completion (27.559668ms)
+2026-11-06T08:15:01.1723079Z ✔ React app retains a newer populated document when an older empty fallback arrives (886.275537ms)
+2026-11-06T08:15:02.4014111Z ✔ React retry retains accepted RSI revision while replacement is pending and after failure (1292.851926ms)
+2026-11-06T08:15:02.4545443Z ✔ project paths retain a declared subpath and reject escaping resource paths (3.67146ms)
+2026-11-06T08:15:02.4546207Z ✔ all React deep links recognize the same page at a project subpath (0.300879ms)
+2026-11-06T08:15:02.4546921Z ✔ static delivery never probes an API and binds the validated saved snapshot revision (326.813749ms)
+2026-11-06T08:15:02.4547661Z ✔ Pages retains three instrument histories with real bars matching every retained close (109.982323ms)
+2026-11-06T08:15:02.4548649Z ✔ backtest fills only the next observed close and independently reconciles cash, fees and open valuation (2.976662ms)
+2026-11-06T08:15:02.4550020Z ✔ period end never fills a pending signal or closes an open position; future rows cannot rewrite a prefix (2.446892ms)
+2026-11-06T08:15:02.4550796Z ✔ invalid dates, inverted thresholds, missing warmup and unsupported symbols fail explicitly (1.39372ms)
+2026-11-06T08:15:02.4551574Z ✔ zoom preserves its anchor, pan has a stable span, fit restores source dates and raw indicators never change (5.379448ms)
+2026-11-06T08:15:02.4552510Z ✔ log/linear and inverted price axes round trip measured values; OHLC auto-fit uses only the visible period (2.454593ms)
+2026-11-06T08:15:02.4553299Z ✔ weekly OHLC preserves actual first open, high/low extremes, final close and volume, including incomplete periods (0.64322ms)
+2026-11-06T08:15:02.4554130Z ✔ OHLC enrichment rejects a wrong provider identity or exchange clock and omits mismatches and unfinished days (158.870061ms)
+2026-11-06T08:15:02.4554938Z ✔ Buy/Sell markers use observed directional crossings, equality once, and no invented position state (1.667449ms)
+2026-11-06T08:15:02.4555697Z ✔ sidebar tools have unique direct pages and old tab/region links select the same tool (0.318134ms)
+2026-11-06T08:15:02.4556512Z ✔ history extension requests complete public histories and preserves all existing observations and macro clocks (251.651435ms)
+2026-11-06T08:15:02.4557559Z ✔ wrong identity, wrong currency and a partial provider failure never produce a publishable candidate (201.886366ms)
+2026-11-06T08:15:02.4558390Z ✔ perimeter commands belong to the acknowledged instrument and epoch, and BTC labels/listeners restore exactly (17.239597ms)
+2026-11-06T08:15:02.4559103Z ✔ older saved response cannot split accepted snapshot, revision or populated phase (0.840535ms)
+2026-11-06T08:15:02.4559729Z ✔ retry and failure retain the accepted revision until a replacement is accepted (0.263263ms)
+2026-11-06T08:15:02.4560431Z ✔ initial saved, static hosting, empty and API replacements retain their actual delivery semantics (0.977919ms)
+2026-11-06T08:15:02.4561211Z ✔ theme comparison: all 18 groups retain exact horizon, count, direction and return semantics (5.665525ms)
+2026-11-06T08:15:02.4561962Z ✔ theme comparison: benchmark gaps, price gaps, missing entry and pending windows stay distinct (8.323056ms)
+2026-11-06T08:15:02.4564952Z ✔ theme comparison: request-local indexes observe replacement bars and reject invalid judgments (5.941146ms)
+2026-11-06T08:15:02.4565638Z ✔ themes: true spot identity, complete candles and conservative evidence clocks (6.859406ms)
+2026-11-06T08:15:02.4566248Z ✔ themes: past decisions cannot use undated current docs or future releases (4.986872ms)
+2026-11-06T08:15:02.4566923Z ✔ themes: next entire day close, no pre-entry low, missing benchmark and immature outcomes (9.957739ms)
+2026-11-06T08:15:02.4567580Z ✔ themes: separate reconstructed/recorded groups and empty denominators (8.607164ms)
+2026-11-06T08:15:02.4568261Z ✔ themes: malformed prices and source URLs, time-travel and repeated IDs reject (12.119405ms)
+2026-11-06T08:15:02.4571484Z React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+2026-11-06T08:15:02.4576746Z React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+2026-11-06T08:15:02.4581200Z React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+2026-11-06T08:15:02.4586069Z React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+2026-11-06T08:15:02.4590505Z React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+2026-11-06T08:15:02.4595225Z React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+2026-11-06T08:15:02.4599518Z React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+2026-11-06T08:15:02.4603940Z React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+2026-11-06T08:15:02.4608194Z React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+2026-11-06T08:15:02.4612534Z React expects the `children` prop of <title> tags to be a string, number, bigint, or object with a novel `toString` method but found an Array with length 3 instead. Browsers treat all child Nodes of <title> tags as Text content and React expects to be able to convert `children` of <title> tags to a single string value which is why Arrays of length greater than 1 are not supported. When using JSX it can be common to combine text nodes and value nodes. For example: <title>hello {nameOfUser}</title>. While not immediately apparent, `children` in this case is an Array with length 2. If your `children` prop is using this form try rewriting it using a template string: <title>{`hello ${nameOfUser}`}</title>.
+2026-11-06T08:15:02.4614881Z ✔ themes: API calculation/integrity checks, saved fallback and no fallback after abort (93.356175ms)
+2026-11-06T08:15:02.4615617Z ✔ themes: uncertain writes survive reload with the same request ID, storage failure sends nothing (6.190969ms)
+2026-11-06T08:15:02.4616384Z ✔ themes: responsive chart renders factual bars and groups same-day sources without inventing prices (48.724973ms)
+2026-11-06T08:15:02.4617095Z ✔ themes: recovery cannot silently substitute a newer snapshot for the pending revision (7.516086ms)
+2026-11-06T08:15:02.4617879Z ✔ SPX product signs: all 27 sign/zero combinations, two negatives, clipped magnitudes; legacy average unchanged (3803.441637ms)
+2026-11-06T08:15:02.4618570Z ✔ SPX unavailable, expired and future source cannot produce a direction (219.986447ms)
+2026-11-06T08:15:02.4619450Z ✔ US diagnosis shows product direction, cadence and preserved average; Korean view stays independent (256.528147ms)
+2026-11-06T08:15:02.4620186Z ✔ collection status decoder and loader reject malformed, duplicate and unsuccessful records (14.488152ms)
+2026-11-06T08:15:02.4620868Z ✔ collection clocks cannot certify a displayed snapshot with different source bytes (44.016081ms)
+2026-11-06T08:15:02.4621258Z ℹ tests 65
+2026-11-06T08:15:02.4621436Z ℹ suites 0
+2026-11-06T08:15:02.4621611Z ℹ pass 65
+2026-11-06T08:15:02.4621791Z ℹ fail 0
+2026-11-06T08:15:02.4621966Z ℹ cancelled 0
+2026-11-06T08:15:02.4622147Z ℹ skipped 0
+2026-11-06T08:15:02.4622450Z ℹ todo 0
+2026-11-06T08:15:02.4622655Z ℹ duration_ms 11488.465115
+2026-11-06T08:15:02.4764273Z ##[group]Run npm run test:service
+2026-11-06T08:15:02.4764477Z [36;1mnpm run test:service[0m
+2026-11-06T08:15:02.4806167Z shell: /usr/bin/bash -e {0}
+2026-11-06T08:15:02.4806468Z env:
+2026-11-06T08:15:02.4806827Z   TEST_DATABASE_URL: ***localhost:5432/atlas_market_lab
+2026-11-06T08:15:02.4806998Z ##[endgroup]
+2026-11-06T08:15:02.5472526Z 
+2026-11-06T08:15:02.5473180Z > bitcoin-cycle-atlas@1.31.2 test:service
+2026-11-06T08:15:02.5473645Z > npm run build:web && tsx --test tests/service/*.test.ts
+2026-11-06T08:15:02.5473861Z 
+2026-11-06T08:15:02.6122669Z 
+2026-11-06T08:15:02.6123312Z > bitcoin-cycle-atlas@1.31.2 build:web
+2026-11-06T08:15:02.6123882Z > npm run verify:domain && npm run verify:skullet && vite build --config apps/web/vite.config.ts
+2026-11-06T08:15:02.6124085Z 
+2026-11-06T08:15:02.6810538Z 
+2026-11-06T08:15:02.6811218Z > bitcoin-cycle-atlas@1.31.2 verify:domain
+2026-11-06T08:15:02.6811682Z > node scripts/sync-market-domain.mjs --check
+2026-11-06T08:15:02.6811885Z 
+2026-11-06T08:15:02.7749313Z 
+2026-11-06T08:15:02.7749922Z > bitcoin-cycle-atlas@1.31.2 verify:skullet
+2026-11-06T08:15:02.7750246Z > node scripts/sync-skullet.mjs --check
+2026-11-06T08:15:02.7750372Z 
+2026-11-06T08:15:02.8046003Z {"version":"0.0.3","license":"MIT","hashes":{"dist/vendor/skullet/skullet.js":"159653b71266900bcff7df3403c1e04cf34d1822074431a131716eedda15e71c","tools/skullet/upstream/styles.css":"2d5fd47eb1956d1406cb5a6a6abcc8ecb90a7766015ea30425ffe6ce80491243","dist/vendor/skullet/LICENSE":"352ea4bc404c267caeac26864b5a3fafb9ce9502cb1e1db32ec301ee33b51dbf","tools/skullet/upstream/LICENSE":"352ea4bc404c267caeac26864b5a3fafb9ce9502cb1e1db32ec301ee33b51dbf","dist/vendor/skullet/styles.css":"7763e1565515ea28884d1c97ee88a51055859e1ab7f72d2ac68c98bee04febf1"},"checked":true}
+2026-11-06T08:15:02.9698035Z [36mvite v8.3.5 [32mbuilding client environment for production...[36m[39m
+2026-11-06T08:15:02.9765097Z transforming...
+2026-11-06T08:15:03.0408128Z ✓ 72 modules transformed.
+2026-11-06T08:15:03.0703410Z rendering chunks...
+2026-11-06T08:15:03.1146010Z computing gzip size...
+2026-11-06T08:15:03.1196726Z build/web/index.html                   2.40 kB │ gzip:   1.00 kB
+2026-11-06T08:15:03.1197247Z build/web/assets/index-BYWO-BnS.css  144.37 kB │ gzip:  28.84 kB
+2026-11-06T08:15:03.1197547Z build/web/assets/index-DblLUHgN.js   469.19 kB │ gzip: 151.78 kB
+2026-11-06T08:15:03.1197692Z 
+2026-11-06T08:15:03.1199826Z [32m✓ built in 149ms[39m
+2026-11-06T08:15:03.8806462Z ✔ housing PostgreSQL: immutable revision, idempotent migration/import, old revision, API/422/503 and route (311.874483ms)
+2026-11-06T08:15:03.9610250Z ✔ canonical domain preserves original formulas with reviewed instrument and RSI boundary guards (18.361031ms)
+2026-11-06T08:15:04.1784776Z ✔ React loader verifies API content, marks saved fallback, and rejects unavailable data (517.528705ms)
+2026-11-06T08:15:04.4088453Z ✔ DB-only collector failure writes no legacy files and preserves its input (226.429535ms)
+2026-11-06T08:15:04.6675675Z ▶ real PostgreSQL publication, API and calculation parity
+2026-11-06T08:15:04.6688742Z   ✔ empty DB, malformed/extra queries, and writes fail explicitly (78.291597ms)
+2026-11-06T08:15:06.6513080Z   ✔ lossless import, normalized counts, duplicate idempotency and parity (2042.7284ms)
+2026-11-06T08:15:07.7433943Z   ✔ backtest binds its snapshot and instrument and rejects invalid, unavailable and extra inputs (1096.439557ms)
+2026-11-06T08:15:08.5744305Z   ✔ real constraint failure rolls back data and publication together (701.854557ms)
+2026-11-06T08:15:10.1779524Z   ✔ concurrent new/older imports do not roll back the public clock; old revision remains readable (1731.961151ms)
+2026-11-06T08:15:10.1949104Z   ✔ DB outage is unavailable, with no forged successful snapshot (17.773142ms)
+2026-11-06T08:15:10.2006022Z atlas: idle database connection lost 57P01
+2026-11-06T08:15:10.3706506Z   ✔ lost idle DB connection is observed and the next request reconnects (173.395081ms)
+2026-11-06T08:15:10.4117176Z   ✔ built React route, legacy URLs and static containment remain usable (42.697558ms)
+2026-11-06T08:15:10.4237008Z ✔ real PostgreSQL publication, API and calculation parity (6024.167495ms)
+2026-11-06T08:15:10.4645005Z ✔ themes DB/API: append-only decisions, concurrent idempotency, rejected future evidence, readback and route (344.381911ms)
+2026-11-06T08:15:10.4645813Z ✔ collector cancellation at snapshot-read preserves the last accepted snapshot (149.689138ms)
+2026-11-06T08:15:10.4646249Z ✔ collector cancellation at publication-lock preserves the last accepted snapshot (278.838252ms)
+2026-11-06T08:15:10.4646674Z ✔ collector cancellation at acceptance-receipt preserves the last accepted snapshot (161.534665ms)
+2026-11-06T08:15:10.4647096Z ✔ the same acquisition without cancellation reaches publication and its receipt (154.372626ms)
+2026-11-06T08:15:10.4647497Z ✔ cancellation queued by the acceptance callback is checked at the commit owner (72.491171ms)
+2026-11-06T08:15:10.4648128Z ▶ US collector PostgreSQL: complete acquisition, exclusion, no-op, partial failure, atomic receipt, restart and API
+2026-11-06T08:15:10.4648842Z   ✔ one owner collects; all three sources and immutable blobs commit with one new revision (961.331502ms)
+2026-11-06T08:15:10.4649486Z   ✔ unchanged source bytes update check receipt without duplicating snapshots or blobs; not due means no network (236.790484ms)
+2026-11-06T08:15:10.4649933Z   ✔ partial error preserves the complete last good revision and original source clocks (110.767464ms)
+2026-11-06T08:15:10.4650407Z   ✔ malformed and truncated histories cannot become a successful refresh (195.103929ms)
+2026-11-06T08:15:10.4650816Z   ✔ publication compare-and-set and receipt rollback prevent lost updates or half acceptance (745.63299ms)
+2026-11-06T08:15:10.4651244Z   ✔ cancellation during database work rolls back publication and its success receipt together (1807.076622ms)
+2026-11-06T08:15:10.4651734Z   ✔ API exposes the same product and explicit collector state; disabled scheduler never announces active collection (234.761422ms)
+2026-11-06T08:15:10.4652421Z ✔ US collector PostgreSQL: complete acquisition, exclusion, no-op, partial failure, atomic receipt, restart and API (5120.66159ms)
+2026-11-06T08:15:10.4652968Z ✔ cancelled collection never starts transport after a delayed database acquisition and releases its connection (0.674359ms)
+2026-11-06T08:15:10.4653283Z ℹ tests 28
+2026-11-06T08:15:10.4653411Z ℹ suites 0
+2026-11-06T08:15:10.4653526Z ℹ pass 28
+2026-11-06T08:15:10.4653639Z ℹ fail 0
+2026-11-06T08:15:10.4653756Z ℹ cancelled 0
+2026-11-06T08:15:10.4653875Z ℹ skipped 0
+2026-11-06T08:15:10.4653988Z ℹ todo 0
+2026-11-06T08:15:10.4654123Z ℹ duration_ms 7253.140353
+2026-11-06T08:15:10.4829751Z ##[group]Run node --test tests/market-lab*.test.mjs
+2026-11-06T08:15:10.4829992Z [36;1mnode --test tests/market-lab*.test.mjs[0m
+2026-11-06T08:15:10.4870405Z shell: /usr/bin/bash -e {0}
+2026-11-06T08:15:10.4870552Z env:
+2026-11-06T08:15:10.4871119Z   TEST_DATABASE_URL: ***localhost:5432/atlas_market_lab
+2026-11-06T08:15:10.4871295Z ##[endgroup]
+2026-11-06T08:15:10.5663925Z ✔ GDP SAAR level ratios are nonannual q/q, invariant to constant units, never annualized-rate inversion (1.490911ms)
+2026-11-06T08:15:10.5665732Z ✔ FRED monthly percent stays percent and incomplete/future periods are excluded (0.160981ms)
+2026-11-06T08:15:10.5666766Z ✔ FRED rejects wrong columns, unit series, order, quarter and nonfinite; missing quarter is not bridged (0.365337ms)
+2026-11-06T08:15:10.5768258Z ✔ BOK GDP is the already-published nonannual quarterly percent, with quarter-end and no future period (1.779353ms)
+2026-11-06T08:15:10.5780472Z ✔ BOK rejects export/yearly header, blank/duplicate/bad quarter and precision not in the official one-decimal source (0.295572ms)
+2026-11-06T08:15:10.5781631Z ✔ Korean FRED/OECD monthly rate remains percentage, never policy-rate replacement or GDP transformation (0.415562ms)
+2026-11-06T08:15:10.7384551Z ✔ source display precision and descriptive link labels are validated before formatting untrusted data (162.756162ms)
+2026-11-06T08:15:10.8704116Z {"output":"/tmp/atlas-kr-import-1OR905/snapshot.json","koreanGdpRows":67,"koreanRateRows":201,"latestGdp":["2026-09-30",1],"latestRate":["2026-09-30",3.17]}
+2026-11-06T08:15:10.9393300Z ✔ actual BOK workbook+derived CSV and FRED/OECD rate are source-bound and deliver independent Korean axes (202.117116ms)
+2026-11-06T08:15:10.9937725Z ✔ changed source bytes cannot overwrite the accepted snapshot (54.116746ms)
+2026-11-06T08:15:11.0879714Z ✔ wrong source unit or raw-workbook path is rejected without losing previous output (94.307005ms)
+2026-11-06T08:15:11.1767308Z {"output":"/tmp/atlas-kr-import-ztxhrj/snapshot.json","koreanGdpRows":67,"koreanRateRows":201,"latestGdp":["2026-09-30",1],"latestRate":["2026-09-30",3.17]}
+2026-11-06T08:15:11.2438190Z ✔ assembly clock can be reproduced without forging source clocks or weakening future rejection (156.014806ms)
+2026-11-06T08:15:11.2643824Z ✔ neutral conditional index100 and normalized weights (1.37647ms)
+2026-11-06T08:15:11.2644603Z ✔ two negative conceptual factors do not mechanically become a bullish forecast (0.387971ms)
+2026-11-06T08:15:11.2645226Z ✔ equal and opposite changes offset under declared equal weights (0.209624ms)
+2026-11-06T08:15:11.2646081Z ✔ scenario rejects invalid weights/nonfinite/out-of-range rather than silently using defaults (0.268953ms)
+2026-11-06T08:15:11.2651937Z ✔ current value is excluded from robust calibration; zero scale is unavailable (1.179245ms)
+2026-11-06T08:15:11.2652644Z ✔ RSI requires fourteen changes; signal requires nine actual RSI samples (1.764261ms)
+2026-11-06T08:15:11.2653020Z ✔ RSI up/down/flat conventions are explicit and do not mutate source (0.511556ms)
+2026-11-06T08:15:11.2653556Z ✔ Wilder seed and recursion match independent manual gain/loss arithmetic (0.184496ms)
+2026-11-06T08:15:11.2654073Z ✔ historical RSI is prefix-invariant with no future leakage (1.286786ms)
+2026-11-06T08:15:11.2654615Z ✔ RSI rejects duplicate, invalid-calendar, zero and unordered source rows (0.274931ms)
+2026-11-06T08:15:11.2655111Z ✔ original four thresholds are distances, not executable order decisions (0.202883ms)
+2026-11-06T08:15:11.2655477Z ✔ depreciation is not cash expense; NPV includes initial cost and residual (0.190766ms)
+2026-11-06T08:15:11.2655874Z ✔ unit economics handles negative cash and tiny discount rates stably (0.078598ms)
+2026-11-06T08:15:11.2656207Z ✔ snapshot rejects malformed dimensions and unsafe source URLs (1.33685ms)
+2026-11-06T08:15:11.2656565Z ✔ missing/stale/error/future axes withhold composite without reweighting (20.571141ms)
+2026-11-06T08:15:11.2656899Z ✔ small same-sign score is not labelled as cancellation (0.910343ms)
+2026-11-06T08:15:11.2657678Z ✔ nonconstant zero MAD is unavailable without claiming no variability (0.125618ms)
+2026-11-06T08:15:11.2658027Z ✔ payback distinguishes life, operating cash and terminal residual (0.090976ms)
+2026-11-06T08:15:11.2658365Z ✔ recent flat prices do not force RSI 50 after a rising history (0.28746ms)
+2026-11-06T08:15:11.2658671Z ✔ tiny rising prices do not underflow to a flat RSI 50 (0.116865ms)
+2026-11-06T08:15:11.2659022Z ✔ relative scale keeps a real pattern that an absolute 1e-12 cutoff would hide (0.133761ms)
+2026-11-06T08:15:11.2659393Z ✔ terminal recovery uses relative tolerance and bounded year text (0.154291ms)
+2026-11-06T08:15:11.2659747Z ✔ clip sign reversal withholds the composite instead of flipping its label (0.6951ms)
+2026-11-06T08:15:11.2660115Z ✔ calendar dates use an explicit zone and timestamp skew stays five minutes (0.557454ms)
+2026-11-06T08:15:11.2660465Z ✔ price date without RSI does not keep the previous RSI selection (0.095843ms)
+2026-11-06T08:15:11.2660849Z ✔ tiny RSI scale is anchored to the first price so later prices do not rewrite history (0.20687ms)
+2026-11-06T08:15:11.2661196Z ✔ RSI returns an empty series for valid empty observations (0.092348ms)
+2026-11-06T08:15:11.2661541Z ✔ subnormal flat and mixed RSI prices retain scale-invariant finite values (2.823916ms)
+2026-11-06T08:15:11.2661949Z ✔ finite RSI scaling survives an extreme later observation without rewriting its prefix (0.461321ms)
+2026-11-06T08:15:11.2662489Z ✔ negative overflow and unprintable payback are rejected (0.124036ms)
+2026-11-06T08:15:11.2663085Z ✔ missing snapshot timezone uses the symbol exchange default and does not overwrite an observed zone (0.423604ms)
+2026-11-06T08:15:11.2663495Z ✔ kiwoom equivalence and GDP vintage stay deferred without source files (0.092889ms)
+2026-11-06T08:15:12.3359900Z ✔ CSV quoted commas, double quotes, CRLF, final empty columns (2.446171ms)
+2026-11-06T08:15:12.3361003Z ✔ GDP percent is not divided by100 or confused with annualized growth (10.069032ms)
+2026-11-06T08:15:12.3361756Z ✔ GDP rejects multiplier, version, unit, duplicate date and country changes (1.414998ms)
+2026-11-06T08:15:12.3362498Z ✔ rate CSV maps header names rather than reusing GDP offsets (0.754299ms)
+2026-11-06T08:15:12.3363208Z ✔ Yahoo uses quote closes not dividend adjusted closes and rejects wrong interval (9.322694ms)
+2026-11-06T08:15:12.3363881Z ✔ entire exchange-local current day excluded even when provider says regular.end passed (2.329096ms)
+2026-11-06T08:15:12.3364448Z ✔ exchange date follows timezone rather than UTC day (0.316514ms)
+2026-11-06T08:15:12.3364957Z ✔ provider error/symbol mismatch/duplicate sessions rejected (1.874465ms)
+2026-11-06T08:15:12.3365583Z ✔ realized volatility is demeaned, prefix-stable, and separate from sentiment (0.592577ms)
+2026-11-06T08:15:12.3366230Z ✔ unit economics rejects magnitudes that would overflow meaningful financial output (0.350054ms)
+2026-11-06T08:15:12.3366852Z ✔ failed refresh never erases previous snapshot or forges new source clocks (233.667063ms)
+2026-11-06T08:15:12.3367409Z ✔ successful OECD refresh does not replace an R3 macro snapshot (110.407403ms)
+2026-11-06T08:15:12.3367989Z ✔ R3 price refresh keeps macro definitions and writes raw files only after commit (1348.125086ms)
+2026-11-06T08:15:13.4574533Z ✔ R3 price refresh accepts a newer completed trading day by advancing generatedAt (1121.515015ms)
+2026-11-06T08:15:13.4706024Z ✔ failed raw publish restores the previous snapshot and raw file (13.323642ms)
+2026-11-06T08:15:13.5592429Z {"outputPath":"/tmp/atlas-market-standalone-BAH9Sv/first.html","bytes":2235351,"modelStatus":"research-unreviewed","embeddedPrices":true,"externalRuntimeDependencies":0}
+2026-11-06T08:15:13.5593678Z {"outputPath":"/tmp/atlas-market-standalone-BAH9Sv/second.html","bytes":2235351,"modelStatus":"research-unreviewed","embeddedPrices":true,"externalRuntimeDependencies":0}
+2026-11-06T08:15:13.5594687Z ✔ dedicated research standalone is deterministic and embeds exact math, view, styles and market snapshot (230.422068ms)
+2026-11-06T08:15:13.5595586Z ℹ tests 59
+2026-11-06T08:15:13.5595712Z ℹ suites 0
+2026-11-06T08:15:13.5595830Z ℹ pass 59
+2026-11-06T08:15:13.5595943Z ℹ fail 0
+2026-11-06T08:15:13.5596065Z ℹ cancelled 0
+2026-11-06T08:15:13.5596188Z ℹ skipped 0
+2026-11-06T08:15:13.5596302Z ℹ todo 0
+2026-11-06T08:15:13.5596442Z ℹ duration_ms 3043.661084
+2026-11-06T08:15:13.5900450Z Post job cleanup.
+2026-11-06T08:15:13.6815818Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas --files-from manifest.txt --use-compress-program zstdmt
+2026-11-06T08:15:14.9433754Z Sent 35601630 of 35601630 (100.0%), 33.9 MBs/sec
+2026-11-06T08:15:15.2968276Z Cache saved with the key: node-cache-Linux-x64-npm-5e8412f10de475a2b797a1f0da4243e0be00ffcc85441fd100a508186fd26f58
+2026-11-06T08:15:15.3157773Z Post job cleanup.
+2026-11-06T08:15:15.3762480Z [command]/usr/bin/git version
+2026-11-06T08:15:15.3796320Z git version 2.56.0
+2026-11-06T08:15:15.3821190Z Temporarily overriding HOME='/home/runner/work/_temp/d7160d2c-ca60-48c2-a881-48187bbe65d9' before making global git config changes
+2026-11-06T08:15:15.3822482Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-06T08:15:15.3823761Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bitcoin-cycle-atlas/bitcoin-cycle-atlas
+2026-11-06T08:15:15.3859468Z Removing SSH command configuration
+2026-11-06T08:15:15.3865185Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-06T08:15:15.3903871Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-06T08:15:15.4188756Z Removing HTTP extra header
+2026-11-06T08:15:15.4189926Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-06T08:15:15.4223546Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-06T08:15:15.4470119Z Removing includeIf entries pointing to credentials config files
+2026-11-06T08:15:15.4475633Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-06T08:15:15.4504203Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-06T08:15:15.4841511Z Print service container logs: 22590e43969145e39fc5695bfa8f2935_postgres1711sha2563b0cda93be7c8dba2ed484d19393d93845dc3dafb88973e248ba8e6d99d784e1_aff559
+2026-11-06T08:15:15.4844781Z ##[command]/usr/bin/docker logs --details 69cc577dbb1025b966ef615f00b2b7b96dfd1206fa8a0f23e20487e309ea96d6
+2026-11-06T08:15:15.4957613Z  The files belonging to this database system will be owned by user "postgres".
+2026-11-06T08:15:15.4959905Z  initdb: warning: enabling "trust" authentication for local connections
+2026-11-06T08:15:15.4960221Z  This user must also own the server process.
+2026-11-06T08:15:15.4960928Z  initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+2026-11-06T08:15:15.4961345Z  
+2026-11-06T08:15:15.4961953Z  2026-11-06 08:14:32.947 UTC [1] LOG:  starting PostgreSQL 17.11 (Debian 17.11-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+2026-11-06T08:15:15.4962745Z  The database cluster will be initialized with locale "en_US.utf8".
+2026-11-06T08:15:15.4963297Z  2026-11-06 08:14:32.947 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2026-11-06T08:15:15.4963831Z  2026-11-06 08:14:32.947 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+2026-11-06T08:15:15.4964362Z  2026-11-06 08:14:32.948 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-11-06T08:15:15.4964897Z  2026-11-06 08:14:32.950 UTC [64] LOG:  database system was shut down at 2026-11-06 08:14:32 UTC
+2026-11-06T08:15:15.4965443Z  2026-11-06 08:14:32.954 UTC [1] LOG:  database system is ready to accept connections
+2026-11-06T08:15:15.4965871Z  2026-11-06 08:14:36.949 UTC [75] FATAL:  role "root" does not exist
+2026-11-06T08:15:15.4966177Z  2026-11-06 08:14:42.010 UTC [83] FATAL:  role "root" does not exist
+2026-11-06T08:15:15.4966505Z  2026-11-06 08:14:47.054 UTC [91] FATAL:  role "root" does not exist
+2026-11-06T08:15:15.4966779Z  2026-11-06 08:14:52.129 UTC [99] FATAL:  role "root" does not exist
+2026-11-06T08:15:15.4967080Z  2026-11-06 08:14:57.188 UTC [106] FATAL:  role "root" does not exist
+2026-11-06T08:15:15.4967420Z  2026-11-06 08:15:02.236 UTC [114] FATAL:  role "root" does not exist
+2026-11-06T08:15:15.4967683Z  2026-11-06 08:15:07.288 UTC [133] FATAL:  role "root" does not exist
+2026-11-06T08:15:15.4968103Z  2026-11-06 08:15:08.386 UTC [123] ERROR:  new row for relation "market_lab_observations" violates check constraint "injected_failure"
+2026-11-06T08:15:15.4968747Z  2026-11-06 08:15:08.386 UTC [123] DETAIL:  Failing row contains (dae012c9a65fc2aa850f583368c779c8aa3c58df8158df03f54c9fac3114fa4a, market:tqqq, market-tqqq, 2010-02-11, 0.21627600491046906).
+2026-11-06T08:15:15.4969456Z  2026-11-06 08:15:08.386 UTC [123] STATEMENT:  INSERT INTO market_lab_observations (revision,series_key,source_id,observation_date,value)
+2026-11-06T08:15:15.4970058Z  	        SELECT $1, x.series,x.source,x.date::date,x.value FROM jsonb_to_recordset($2::jsonb) AS x(series text,source text,date text,value double precision)
+2026-11-06T08:15:15.4970785Z  2026-11-06 08:15:10.199 UTC [135] FATAL:  terminating connection due to administrator command
+2026-11-06T08:15:15.4971112Z  2026-11-06 08:15:12.335 UTC [144] FATAL:  role "root" does not exist
+2026-11-06T08:15:15.4971418Z  The default database encoding has accordingly been set to "UTF8".
+2026-11-06T08:15:15.4971783Z  The default text search configuration will be set to "english".
+2026-11-06T08:15:15.4972022Z  
+2026-11-06T08:15:15.4972421Z  Data page checksums are disabled.
+2026-11-06T08:15:15.4972630Z  
+2026-11-06T08:15:15.4972933Z  fixing permissions on existing directory /var/lib/postgresql/data ... ok
+2026-11-06T08:15:15.4973454Z  creating subdirectories ... ok
+2026-11-06T08:15:15.4973750Z  selecting dynamic shared memory implementation ... posix
+2026-11-06T08:15:15.4974090Z  selecting default "max_connections" ... 100
+2026-11-06T08:15:15.4974389Z  selecting default "shared_buffers" ... 128MB
+2026-11-06T08:15:15.4974829Z  selecting default time zone ... Etc/UTC
+2026-11-06T08:15:15.4975046Z  creating configuration files ... ok
+2026-11-06T08:15:15.4975300Z  running bootstrap script ... ok
+2026-11-06T08:15:15.4975549Z  performing post-bootstrap initialization ... ok
+2026-11-06T08:15:15.4975812Z  syncing data to disk ... ok
+2026-11-06T08:15:15.4976032Z  
+2026-11-06T08:15:15.4976234Z  
+2026-11-06T08:15:15.4976438Z  Success. You can now start the database server using:
+2026-11-06T08:15:15.4976661Z  
+2026-11-06T08:15:15.4976942Z      pg_ctl -D /var/lib/postgresql/data -l logfile start
+2026-11-06T08:15:15.4977168Z  
+2026-11-06T08:15:15.4977581Z  waiting for server to start....2026-11-06 08:14:32.649 UTC [48] LOG:  starting PostgreSQL 17.11 (Debian 17.11-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+2026-11-06T08:15:15.4978131Z  2026-11-06 08:14:32.650 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-11-06T08:15:15.4978483Z  2026-11-06 08:14:32.652 UTC [51] LOG:  database system was shut down at 2026-11-06 08:14:32 UTC
+2026-11-06T08:15:15.4978887Z  2026-11-06 08:14:32.656 UTC [48] LOG:  database system is ready to accept connections
+2026-11-06T08:15:15.4979170Z   done
+2026-11-06T08:15:15.4979366Z  server started
+2026-11-06T08:15:15.4979542Z  CREATE DATABASE
+2026-11-06T08:15:15.4979756Z  
+2026-11-06T08:15:15.4979952Z  
+2026-11-06T08:15:15.4980187Z  /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+2026-11-06T08:15:15.4980562Z  
+2026-11-06T08:15:15.4980843Z  waiting for server to shut down...2026-11-06 08:14:32.830 UTC [48] LOG:  received fast shutdown request
+2026-11-06T08:15:15.4981204Z  .2026-11-06 08:14:32.831 UTC [48] LOG:  aborting any active transactions
+2026-11-06T08:15:15.4981637Z  2026-11-06 08:14:32.832 UTC [48] LOG:  background worker "logical replication launcher" (PID 54) exited with exit code 1
+2026-11-06T08:15:15.4981972Z  2026-11-06 08:14:32.832 UTC [49] LOG:  shutting down
+2026-11-06T08:15:15.4982439Z  2026-11-06 08:14:32.833 UTC [49] LOG:  checkpoint starting: shutdown immediate
+2026-11-06T08:15:15.4983098Z  2026-11-06 08:14:32.909 UTC [49] LOG:  checkpoint complete: wrote 925 buffers (5.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.069 s, sync=0.006 s, total=0.077 s; sync files=301, longest=0.005 s, average=0.001 s; distance=4256 kB, estimate=4256 kB; lsn=0/19179B0, redo lsn=0/19179B0
+2026-11-06T08:15:15.4983684Z  2026-11-06 08:14:32.916 UTC [48] LOG:  database system is shut down
+2026-11-06T08:15:15.4983863Z   done
+2026-11-06T08:15:15.4984103Z  server stopped
+2026-11-06T08:15:15.4984217Z  
+2026-11-06T08:15:15.4984355Z  PostgreSQL init process complete; ready for start up.
+2026-11-06T08:15:15.4984517Z  
+2026-11-06T08:15:15.4988570Z Stop and remove container: 22590e43969145e39fc5695bfa8f2935_postgres1711sha2563b0cda93be7c8dba2ed484d19393d93845dc3dafb88973e248ba8e6d99d784e1_aff559
+2026-11-06T08:15:15.4993597Z ##[command]/usr/bin/docker rm --force 69cc577dbb1025b966ef615f00b2b7b96dfd1206fa8a0f23e20487e309ea96d6
+2026-11-06T08:15:15.7749821Z 69cc577dbb1025b966ef615f00b2b7b96dfd1206fa8a0f23e20487e309ea96d6
+2026-11-06T08:15:15.7779751Z Remove container network: github_network_2b09011564fe490eb2f67ec8401faafd
+2026-11-06T08:15:15.7782413Z ##[command]/usr/bin/docker network rm github_network_2b09011564fe490eb2f67ec8401faafd
+2026-11-06T08:15:15.8344406Z github_network_2b09011564fe490eb2f67ec8401faafd
+2026-11-06T08:15:15.8403399Z Cleaning up orphan processes

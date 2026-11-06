@@ -1,0 +1,24 @@
+{
+  "observedAt": "2026-11-06",
+  "sourceCommit": "6cb6aa5d45bb2b66ef27d578785aa47571278137",
+  "sourceTree": "feddc55e0f7d44fc8cf23e4a9a8311608ba83147",
+  "localEquivalentCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "workflow": "Market lab service",
+  "runId": 42186238499,
+  "jobId": 127787143146,
+  "status": "completed",
+  "conclusion": "success",
+  "panels": {
+    "tests": 65,
+    "passed": 65
+  },
+  "postgresService": {
+    "tests": 28,
+    "passed": 28
+  },
+  "marketLab": {
+    "tests": 59,
+    "passed": 59
+  },
+  "log": "service-ci.log"
+}

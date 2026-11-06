@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "kind": "design-closeout-regression-summary",
+  "recordedAt": "2026-11-06T08:17:03.839676+00:00",
+  "status": "PASS",
+  "sourceCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "sourceTree": "feddc55e0f7d44fc8cf23e4a9a8311608ba83147",
+  "integrationBaseCommit": "59ec6f4f708e87d73dad6324d925a9e01383411c",
+  "runtime": "v24.22.2 linux/x64",
+  "coordinatorPublication": {
+    "remoteCommit": "6cb6aa5d45bb2b66ef27d578785aa47571278137",
+    "remoteTree": "feddc55e0f7d44fc8cf23e4a9a8311608ba83147",
+    "pr": "https://github.com/twoimo/bitcoin-cycle-atlas/pull/62",
+    "provenance": "Remote identity supplied by coordinator after its GitHub verification; this lane independently reads the local tree and compares the supplied tree value.",
+    "localTreeMatchesReportedRemote": true
+  },
+  "fullModelTests": {
+    "complete": true,
+    "tests": 2481,
+    "pass": 2481,
+    "fail": 0,
+    "skipped": 0,
+    "batches": 1,
+    "cancelled": 0,
+    "todo": 0,
+    "elapsedSeconds": 476.248
+  },
+  "numerics": {
+    "command": "npm run verify:numerics",
+    "allSixScriptsPassed": true,
+    "arithmeticAssertions": 317745,
+    "calendarCases": 34356,
+    "missingDateCases": 80,
+    "prefixComparisons": 325,
+    "rollingPrefixComparisons": 10,
+    "cycleDecisionCounts": {
+      "exhaustivePricePaths": 1089,
+      "scopedIntervals": 81,
+      "currentWindows": 36,
+      "causalPrefixes": 33,
+      "provenanceCases": 12,
+      "strongGuards": 4,
+      "rejectedMismatches": 6,
+      "observedEpisodeCases": 53,
+      "observedEpisodeGaps": 66,
+      "episodeCausalPrefixes": 17,
+      "futureEpisodeCases": 48,
+      "futureEpisodeBounds": 17,
+      "futureEpisodeGaps": 8,
+      "sharedCycleMemberships": 5
+    },
+    "cycleDecisionMutations": {
+      "detected": 27,
+      "expected": 27
+    },
+    "cycleTableChecks": 7,
+    "assetReference": {
+      "assets": 18,
+      "closes": 104095,
+      "annualSamples": 400,
+      "boundedPricePaths": 360,
+      "thresholdCases": 262,
+      "mutantsDetected": 16,
+      "mutantsExpected": 16
+    },
+    "scope": "Independent arithmetic/coverage/causality oracles on actual product modules, fixed archives and bounded generated inputs; not a universal floating-point proof or predictive-validation certificate.",
+    "baselineDifferentialNotRun": true
+  },
+  "formal": {
+    "market": {
+      "currentModelDistinctStates": {
+        "MarketRequests": 2081,
+        "HistoryRetry": 15
+      },
+      "actualSourceTests": 32,
+      "intendedActualSourceMutationFailures": 2,
+      "ranBeforeFinalCommit": true,
+      "binding": "Covered controller SHA-256 is 978ad14a70fdb3011f0761ceb7c6f6ebc0d37bc0b25aa047ad2ef2014eff07d6; its sources, model/configurations and 32-case tests are unchanged by the final commit. Source receipt and after-verification hashes bind the run."
+    },
+    "equity": {
+      "currentModelDistinctStates": 46252,
+      "actualSourceTests": 28,
+      "intendedActualSourceMutationFailures": 7
+    },
+    "eth": {
+      "currentModelDistinctStates": 2243,
+      "actualSourceTests": 17,
+      "intendedActualSourceMutationFailures": 9
+    },
+    "publication": {
+      "currentModelDistinctStates": 20,
+      "actualSourceTests": 5,
+      "intendedActualSourceMutationFailures": 3
+    },
+    "replay": {
+      "method": "Execute actual JavaScript controller and coordinator; exhaustive finite command traces plus targeted async ownership, saved-entry, destroy-during-save cases and isolated real-source negative controls",
+      "playback": {
+        "commands": 10,
+        "maxTraceLength": 4,
+        "traces": 10000,
+        "prefixes": 11111,
+        "transitions": 40000,
+        "observableStates": 52,
+        "observableEdges": 380,
+        "playbackBars": 3
+      },
+      "selection": {
+        "status": "pass",
+        "commands": [
+          "mode:atlas-chart",
+          "mode:project-baseline",
+          "horizon:90",
+          "horizon:365",
+          "confirm",
+          "pick"
+        ],
+        "maxTraceLength": 3,
+        "traces": 259,
+        "transitions": 726,
+        "observableStates": 24,
+        "observableEdges": 78,
+        "sourceSha256": "96826f3251cc804d3cbca1bf75d0c7b5b51700859af49545144b164743c223c5",
+        "scope": "Actual coordinator and controller with deterministic DOM, source, forecast and renderer doubles; exhaustive bounded traces without state merging"
+      },
+      "intendedActualSourceMutationFailures": 10,
+      "unboundedFormalProof": false,
+      "tlcRun": false
+    }
+  },
+  "forecastLedger": {
+    "status": "PASS",
+    "records": 5,
+    "snapshots": 1,
+    "pendingTargets": 15,
+    "scoredTargets": 0,
+    "observationThrough": "2026-11-05",
+    "refresh": {
+      "expectedAsOf": "2026-11-05",
+      "lastPreservedAsOf": "2026-10-25",
+      "nextEligibleAsOf": "2026-11-24",
+      "nextEligibleAsOfIsEarliest": true,
+      "observationDaysSinceLast": 11,
+      "observationThrough": "2026-11-05",
+      "outcome": "retained-not-due",
+      "publicationDue": false,
+      "publicationPolicy": {
+        "basis": "completed-observation-rows",
+        "capturesInteractiveCalculations": false,
+        "intervalObservationDays": 30,
+        "scope": "scheduled-public-preservation",
+        "version": "preserved-forecast-cadence-1"
+      },
+      "publicationReasons": [
+        "interval-not-reached"
+      ],
+      "reason": "The unchanged model and settings are preserved every 30 completed observation rows. Earlier records remain immutable; observations, evaluation and active experiments continue to refresh daily."
+    }
+  },
+  "performance": {
+    "status": "PASS",
+    "asOf": "2026-11-05",
+    "scope": "Deterministic renderer/search/selection checks; Node SVG boundary, not browser paint or input-latency measurement.",
+    "observedPriceRows": 5955,
+    "observedCandleRows": 5559,
+    "observedVolumeShapes": 5559,
+    "svgElements": 100,
+    "svgElementBudget": 120,
+    "sourceSelectionDates": [
+      "2011-08-18",
+      "2019-03-28",
+      "2026-11-05"
+    ],
+    "complexity": [
+      {
+        "sourceRows": 1024,
+        "visibleRows": 9,
+        "sourceReads": 29,
+        "maxReads": 33,
+        "displayPoints": 1024,
+        "maxDisplayPoints": 4004
+      },
+      {
+        "sourceRows": 16384,
+        "visibleRows": 9,
+        "sourceReads": 37,
+        "maxReads": 41,
+        "displayPoints": 2296,
+        "maxDisplayPoints": 4004
+      },
+      {
+        "sourceRows": 131072,
+        "visibleRows": 9,
+        "sourceReads": 43,
+        "maxReads": 47,
+        "displayPoints": 3978,
+        "maxDisplayPoints": 4004
+      }
+    ],
+    "moduleHashes": {
+      "atlas-price-chart.js": "e3726e135dcd552777021de5282d1616120c0493d7b10b56fd4f129f812995d8",
+      "chart-overlays.js": "0808bc0b3175eb089394493a9bab2062cdeaf190940169c3b26093c1c3f3e04a",
+      "chart-window.js": "ff1527876a0185e8f8a52211170c696bde98f0120c6f0ddde58cea987daaf7cd",
+      "chart-navigation.js": "cb1b0999c3934178615dbf3760e414daa8fbc15bb2412fdc8314135fd0a3350d"
+    }
+  },
+  "static": {
+    "status": "ok",
+    "files": 788,
+    "checkedReferences": 804,
+    "basePath": "/bitcoin-cycle-atlas/",
+    "standalone": null
+  },
+  "completedExecutionReceipts": [
+    "core-execution.json",
+    "contracts-execution.json",
+    "formal-market.json"
+  ],
+  "sourceAfterVerification": {
+    "schemaVersion": 1,
+    "recordedAt": "2026-11-06T08:17:03.827623+00:00",
+    "sourceCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+    "sourceTree": "feddc55e0f7d44fc8cf23e4a9a8311608ba83147",
+    "testedFiles": 1323,
+    "changedTestedFiles": [],
+    "protectedFiles": 204,
+    "protectedBytes": 45453948,
+    "changedProtectedFiles": [],
+    "workflowAndSkillFiles": 20,
+    "changedWorkflowAndSkillFiles": [],
+    "status": "PASS",
+    "scope": "Exact working-file SHA-256 equality after both final regression lanes. Protected input bytes also matched the integrated main baseline before execution."
+  },
+  "fixtureRepairs": [
+    {
+      "path": "tests/daily-data-view.test.mjs",
+      "initialFailure": "A literal regex required the comparison-header selector to be last in the shared sticky selector list.",
+      "correction": "Parse exact membership in a flat selector list; preserve position:sticky, top:0, independent viewport and pinned identity assertions.",
+      "negativeControls": [
+        "removed exact owner",
+        "position:static",
+        "top:40px"
+      ],
+      "focusedBefore": {
+        "tests": 31,
+        "pass": 30,
+        "fail": 1
+      },
+      "focusedAfter": {
+        "tests": 31,
+        "pass": 31,
+        "fail": 0
+      },
+      "qualification": "Source contract check; browser layout is independently verified by native browser lane."
+    },
+    {
+      "path": "tests/helpers/structure-view-fixture.mjs",
+      "initialFailure": "Production lab-view initialization references MutationObserver, absent in the intentionally inert VM browser boundary.",
+      "correction": "Provide inert observe/disconnect alongside existing inert ResizeObserver; retain exact production controller and numerical assertion bodies.",
+      "after": "Complete actual-controller cycle-table integration and full numerical aggregate passed.",
+      "qualification": "No claim that inert observers verify real mutation, focus or scroll behavior."
+    }
+  ],
+  "preservedAttempts": [
+    "pre-integration-attempt.json",
+    "integrated-before-fixture-attempt.json",
+    "daily-data-before.log",
+    "daily-data-mutant-control-initial.log",
+    "numerics-before-fixture.log"
+  ],
+  "limits": [
+    "Finite arithmetic, lifecycle and source-identity checks do not prove market predictability, calibrated forecast probabilities or profitability.",
+    "Performance receipt is deterministic work/DOM/selection verification, not measured native paint or input latency.",
+    "This lane does not replace native layout/browser, PostgreSQL service, remote CI or served publication verification.",
+    "The old partial unit attempts are intentionally interrupted, never counted as passes.",
+    "Existing ETH empirical conditions are recorded separately in remaining-conditions.json; neither historical receipt counts nor old Draft/schedule statements are treated as live remote status."
+  ]
+}

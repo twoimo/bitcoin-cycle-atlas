@@ -1,0 +1,26 @@
+{
+  "kind": "replay-cadence-fixture-correction",
+  "beforeLocalCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "afterLocalCommit": "5ddc2175764b8cad383c04ad9ff2940bab1689e6",
+  "changedPaths": [
+    "scripts/verify-chart-replay-browser.mjs"
+  ],
+  "distTreeBefore": "7429c879d54c27ecbac9e2c1f4cdb8cd77ad2dc3",
+  "distTreeAfter": "7429c879d54c27ecbac9e2c1f4cdb8cd77ad2dc3",
+  "productTreeUnchanged": true,
+  "originalTimeoutMilliseconds": 45000,
+  "requiredSourceTransitions": 16,
+  "slowCadenceMilliseconds": 3000,
+  "necessaryDurationMilliseconds": 48000,
+  "newBudgetRule": "ceil(actual lastIndex * expected interval * existing upper cadence ratio 1.3) + 5000ms startup/poll allowance",
+  "newSlowBudgetMilliseconds": 67400,
+  "unchangedChecks": [
+    "Every actual source observation is visited exactly once",
+    "Observed date sequence equals the committed source suffix",
+    "At least four post-paint intervals are measured",
+    "Mean interval stays within the existing 0.85\u20131.3 ratio",
+    "Playback reaches the actual final available bar"
+  ],
+  "diagnostic": "../browser/final/cadence-terminal-observation.json",
+  "note": "Only the browser verification deadline and its receipt fields change. No product timer, replay state, prices or charts change."
+}

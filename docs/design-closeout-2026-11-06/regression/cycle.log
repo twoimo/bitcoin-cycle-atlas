@@ -1,0 +1,1 @@
+{"status":"verified","asOf":"2026-11-05","version":"causal-cycle-clock-v1","observationCount":5955,"state":"shortened","shiftDays":-56,"referenceCount":3,"futureApplied":true,"futureAppliedShiftDays":-56,"futureReason":"causal-daily-clock-applied","sourcePricesSha256":"dc58c0492738ad407cefadf9bc891992cc3632e825fd3eff04651927a2fd1bef","output":"dist/data/cycle-calibration.json"}

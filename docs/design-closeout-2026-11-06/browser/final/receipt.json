@@ -1,0 +1,1143 @@
+{
+  "schemaVersion": 1,
+  "kind": "bitcoin-cycle-atlas-native-browser-closeout",
+  "status": "PASS",
+  "recordedAt": "2026-11-06T08:55:45.418Z",
+  "sourceCommit": "5ddc2175764b8cad383c04ad9ff2940bab1689e6",
+  "sourceTree": "1d83a6f825e70d7d5386135dc1f01c93a30358ff",
+  "productDistTree": "7429c879d54c27ecbac9e2c1f4cdb8cd77ad2dc3",
+  "finalGate": {
+    "status": "passed",
+    "startedAt": "2026-11-06T08:35:14.106Z",
+    "finishedAt": "2026-11-06T08:49:45.173Z",
+    "cases": [
+      {
+        "page": "data",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "zero-fixture",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 390,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 390,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 390,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 390,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 768,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 768,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 768,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 768,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 1024,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 1024,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 1024,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 1024,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 1620,
+        "height": 1008,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 1920,
+        "height": 1440,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-btc",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-evidence",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-legacy",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-preview",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-btc",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-evidence",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-legacy",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-preview",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-btc-short",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-legacy",
+        "width": 375,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-center-data",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-center-data",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-center-data",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "replay-btc",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "replay-btc",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "replay-eth",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "replay-eth",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-btc",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-btc",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-btc",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-eth",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-eth",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-mstr",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-bmnr",
+        "width": 390,
+        "height": 844,
+        "status": "passed"
+      }
+    ],
+    "failures": [],
+    "declaredCaseCount": 49,
+    "expectedCaseCount": 49,
+    "executedCaseCount": 49,
+    "passed": 49,
+    "failed": 0,
+    "skipped": 0,
+    "caseScope": "all",
+    "caseCounts": {
+      "data": 9,
+      "eth": 5,
+      "bmnr": 5,
+      "mstr": 5,
+      "zero-fixture": 1,
+      "workspace-btc": 2,
+      "workspace-evidence": 2,
+      "workspace-legacy": 3,
+      "workspace-preview": 2,
+      "workspace-btc-short": 1,
+      "workspace-center-data": 3,
+      "replay-btc": 2,
+      "replay-eth": 2,
+      "chart-replay-btc": 3,
+      "chart-replay-eth": 2,
+      "chart-replay-mstr": 1,
+      "chart-replay-bmnr": 1
+    },
+    "capturedScreenshots": 328,
+    "runtimeErrors": 0,
+    "unexpectedResourceErrors": 0,
+    "sourceIntegrity": {
+      "checkedFiles": 98,
+      "changedSources": [],
+      "unchangedDuringRun": true
+    },
+    "report": "reports/full-49-after-cadence-fix.json.gz"
+  },
+  "preservedOriginalGate": {
+    "status": "failed",
+    "startedAt": "2026-11-06T08:16:58.701Z",
+    "finishedAt": "2026-11-06T08:29:42.092Z",
+    "cases": [
+      {
+        "page": "data",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "zero-fixture",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 390,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 390,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 390,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 390,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 768,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 768,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 768,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 768,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 1024,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 1024,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 1024,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 1024,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "eth",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "bmnr",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "mstr",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 1620,
+        "height": 1008,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 1920,
+        "height": 1440,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "data",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-btc",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-evidence",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-legacy",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-preview",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-btc",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-evidence",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-legacy",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-preview",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-btc-short",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-legacy",
+        "width": 375,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-center-data",
+        "width": 320,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-center-data",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "workspace-center-data",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "replay-btc",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "replay-btc",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "replay-eth",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "replay-eth",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-btc",
+        "width": 1440,
+        "height": 900,
+        "status": "failed"
+      },
+      {
+        "page": "chart-replay-btc",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-btc",
+        "width": 900,
+        "height": 430,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-eth",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-eth",
+        "width": 320,
+        "height": 568,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-mstr",
+        "width": 1440,
+        "height": 900,
+        "status": "passed"
+      },
+      {
+        "page": "chart-replay-bmnr",
+        "width": 390,
+        "height": 844,
+        "status": "passed"
+      }
+    ],
+    "failures": [
+      {
+        "page": "chart-replay-btc",
+        "width": 1440,
+        "error": "Error: Timed out: real 0.3× playback reaches the final available bar\n    at until (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:38:9)\n    at async measureCadence (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/scripts/verify-chart-replay-browser.mjs:970:7)\n    at async verifyCurrentControls (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/scripts/verify-chart-replay-browser.mjs:1242:5)\n    at async verifyChartReplaySurface (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/scripts/verify-chart-replay-browser.mjs:1529:5)\n    at async main (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:907:27)\n    at async file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:932:5"
+      }
+    ],
+    "sourceCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+    "passed": 48,
+    "failed": 1,
+    "report": "reports/full-49-before-cadence-fix.json.gz",
+    "failure": {
+      "page": "chart-replay-btc",
+      "width": 1440,
+      "height": 900,
+      "error": "Error: Timed out: real 0.3× playback reaches the final available bar\n    at until (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:38:9)\n    at async measureCadence (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/scripts/verify-chart-replay-browser.mjs:970:7)\n    at async verifyCurrentControls (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/scripts/verify-chart-replay-browser.mjs:1242:5)\n    at async verifyChartReplaySurface (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/scripts/verify-chart-replay-browser.mjs:1529:5)\n    at async main (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:907:27)\n    at async file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/scripts/verify-eth-candidate-browser.mjs:932:5"
+    }
+  },
+  "cadence": {
+    "diagnosis": "Fixed 45000ms wait was shorter than the 48000ms required for 16 real source updates at 3000ms each.",
+    "originalBudgetMs": 45000,
+    "minimumExpectedDurationMs": 48000,
+    "sourceDates": [
+      "2026-10-21",
+      "2026-10-22",
+      "2026-10-23",
+      "2026-10-24",
+      "2026-10-25",
+      "2026-10-26",
+      "2026-10-27",
+      "2026-10-28",
+      "2026-10-29",
+      "2026-10-30",
+      "2026-10-31",
+      "2026-11-01",
+      "2026-11-02",
+      "2026-11-03",
+      "2026-11-04",
+      "2026-11-05"
+    ],
+    "nativeProof": {
+      "report": "cadence-terminal-observation.json",
+      "status": "diagnosed",
+      "atOriginalDeadline": {
+        "state": "playing",
+        "index": 15,
+        "cursor": "2026-11-04",
+        "elapsedMs": 45078.699999999255
+      },
+      "terminal": {
+        "state": "ended",
+        "index": 16,
+        "cursor": "2026-11-05",
+        "elapsedMsAfterClickSettling": 47891.59999999963
+      },
+      "meanIntervalMs": 3000.080000000012,
+      "sourceChanges": []
+    },
+    "correctedFullGateTiming": [
+      {
+        "speed": 10,
+        "expectedMilliseconds": 100,
+        "observations": 16,
+        "meanMilliseconds": 99.30666666670392,
+        "completionTimeoutMilliseconds": 7080,
+        "setupAllowanceMilliseconds": 5000,
+        "allowedMeanRatio": [
+          0.85,
+          1.3
+        ]
+      },
+      {
+        "speed": 1,
+        "expectedMilliseconds": 1000,
+        "observations": 16,
+        "meanMilliseconds": 999.7133333333458,
+        "completionTimeoutMilliseconds": 25800,
+        "setupAllowanceMilliseconds": 5000,
+        "allowedMeanRatio": [
+          0.85,
+          1.3
+        ]
+      },
+      {
+        "speed": 0.5,
+        "expectedMilliseconds": 2000,
+        "observations": 16,
+        "meanMilliseconds": 1998.2400000000373,
+        "completionTimeoutMilliseconds": 46600,
+        "setupAllowanceMilliseconds": 5000,
+        "allowedMeanRatio": [
+          0.85,
+          1.3
+        ]
+      },
+      {
+        "speed": 0.3,
+        "expectedMilliseconds": 3000,
+        "observations": 16,
+        "meanMilliseconds": 2999.5333333333333,
+        "completionTimeoutMilliseconds": 67400,
+        "setupAllowanceMilliseconds": 5000,
+        "allowedMeanRatio": [
+          0.85,
+          1.3
+        ]
+      }
+    ],
+    "assertionsRetained": [
+      "Exact observation count",
+      "Exact source-date sequence",
+      "At least four post-paint intervals",
+      "Original 0.85–1.3 mean-cadence bounds",
+      "Actual terminal state"
+    ],
+    "fixtureChangedOnly": "scripts/verify-chart-replay-browser.mjs"
+  },
+  "focused": {
+    "loading": {
+      "status": "PASS",
+      "rendererOracle": 120,
+      "geometry": 18,
+      "kinds": 9,
+      "lifecycle": 5,
+      "accessibility": {
+        "statusCount": 1,
+        "loadingLabelExposed": true,
+        "paintInert": true,
+        "keyboardSkippedPaint": true
+      },
+      "reducedMotion": {
+        "visibleBones": 10,
+        "runningAnimations": 0
+      },
+      "disabledScripting": {
+        "visibleCalendarCells": 42,
+        "status": "status"
+      },
+      "failures": []
+    },
+    "reader": {
+      "status": "passed",
+      "startedAt": "2026-11-06T08:17:43.232Z",
+      "finishedAt": "2026-11-06T08:18:05.552Z",
+      "cases": [
+        {
+          "page": "workspace-legacy",
+          "width": 1440,
+          "height": 900,
+          "status": "passed"
+        },
+        {
+          "page": "workspace-legacy",
+          "width": 1440,
+          "height": 360,
+          "status": "passed"
+        },
+        {
+          "page": "workspace-legacy",
+          "width": 320,
+          "height": 900,
+          "status": "passed"
+        },
+        {
+          "page": "workspace-legacy",
+          "width": 320,
+          "height": 360,
+          "status": "passed"
+        }
+      ],
+      "failures": []
+    },
+    "sticky": {
+      "status": "passed",
+      "startedAt": "2026-11-06T08:17:43.262Z",
+      "finishedAt": "2026-11-06T08:18:26.720Z",
+      "cases": [
+        {
+          "width": 320,
+          "height": 900,
+          "status": "passed"
+        },
+        {
+          "width": 1440,
+          "height": 900,
+          "status": "passed"
+        },
+        {
+          "width": 900,
+          "height": 430,
+          "status": "passed"
+        }
+      ],
+      "failures": []
+    },
+    "rail": {
+      "status": "PASS",
+      "states": 4,
+      "errors": [],
+      "failures": []
+    }
+  },
+  "diagnosticSetups": {
+    "excludedFromGateCounts": true,
+    "attempts": [
+      {
+        "status": "diagnostic-failed",
+        "error": "AssertionError [ERR_ASSERTION]: {\"selector\":\".chart-replay-controls [data-cr=\\\"mode\\\"]\",\"hit\":{\"x\":0,\"y\":0,\"left\":0,\"right\":0,\"top\":0,\"bottom\":0,\"width\":0,\"height\":0,\"viewportWidth\":1440,\"viewportHeight\":900,\"visible\":false,\"topmost\":false,\"disabled\":false}}\n    at click (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/docs/design-closeout-2026-11-06/browser/diagnose-cadence.mjs:40:10)\n    at async select (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/docs/design-closeout-2026-11-06/browser/diagnose-cadence.mjs:46:58)\n    at async file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/docs/design-closeout-2026-11-06/browser/diagnose-cadence.mjs:78:26",
+        "report": "reports/cadence-setup-1-failed.json"
+      },
+      {
+        "status": "diagnostic-failed",
+        "error": "AssertionError [ERR_ASSERTION]: {\"selector\":\".chart-replay-controls [data-cr=\\\"first\\\"]\",\"hit\":{\"x\":534,\"y\":714,\"left\":518,\"right\":550,\"top\":698,\"bottom\":730,\"width\":32,\"height\":32,\"viewportWidth\":1440,\"viewportHeight\":900,\"visible\":true,\"topmost\":true,\"disabled\":true}}\n    at click (file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/docs/design-closeout-2026-11-06/browser/diagnose-cadence.mjs:41:10)\n    at async file:///workspace/scratch/5579aed69769/bitcoin-cycle-atlas/docs/design-closeout-2026-11-06/browser/diagnose-cadence.mjs:85:40",
+        "report": "reports/cadence-setup-2-failed.json"
+      }
+    ]
+  },
+  "resourceNotes": {
+    "reader": [
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "error": "net::ERR_FAILED"
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 360
+        },
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "error": "net::ERR_FAILED"
+      },
+      {
+        "size": {
+          "width": 320,
+          "height": 900
+        },
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "error": "net::ERR_FAILED"
+      },
+      {
+        "size": {
+          "width": 320,
+          "height": 360
+        },
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "error": "net::ERR_FAILED"
+      }
+    ],
+    "sticky": [
+      {
+        "size": {
+          "width": 320,
+          "height": 900
+        },
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "error": "net::ERR_FAILED"
+      },
+      {
+        "size": {
+          "width": 320,
+          "height": 900
+        },
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "error": "net::ERR_FAILED"
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "error": "net::ERR_FAILED"
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "url": "http://127.0.0.1:44729/bitcoin-cycle-atlas/project-replay-baseline.js",
+        "error": "net::ERR_ABORTED"
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "error": "net::ERR_FAILED"
+      },
+      {
+        "size": {
+          "width": 900,
+          "height": 430
+        },
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "error": "net::ERR_FAILED"
+      }
+    ],
+    "stickyFollowup": [
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "error": "net::ERR_FAILED"
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+        "error": "net::ERR_FAILED"
+      }
+    ],
+    "stickyFollowupStatus": "passed",
+    "description": "Original controlled external-font failures and one non-reproduced local-module ERR_ABORTED remain in raw receipts. The observation-only follow-up preserved probe assertions and did not reproduce the local abort."
+  },
+  "runtime": {
+    "node": "v24.22.1",
+    "playwright": {
+      "modulePath": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+      "version": "1.62.1"
+    },
+    "browser": {
+      "executablePath": "/workspace/scratch/82e52cfd9693/browser-native/chromium-audit-multiprocess",
+      "wrapperSha256": "dfc7024b1087f29eb32197a80230d7dd69eedf24078d0416d262a742686b6b27",
+      "version": "Chromium 143.0.7499.0"
+    },
+    "font": {
+      "file": "/workspace/scratch/5579aed69769/hallmark-runtime/fonts/NotoSansCJKkr-Regular.otf",
+      "bytes": 16433112,
+      "sha256": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+      "verifiedGitBlob": "dc4a7c65e6f450bf17c10a2405250b620eb78703",
+      "fontConfigFile": "/workspace/scratch/5579aed69769/hallmark-runtime/fontconfig.conf",
+      "fontConfigSha256": "4be293eb2db302457d2f8518ab15bbe0f83ceca4ce2e5c26603fecab60087dca",
+      "inventory": "Noto Sans CJK KR",
+      "match": "Noto Sans CJK KR\n/workspace/scratch/5579aed69769/hallmark-runtime/fonts/NotoSansCJKkr-Regular.otf"
+    }
+  },
+  "commands": {
+    "originalFull": {
+      "environment": {
+        "FONTCONFIG_FILE": "/workspace/scratch/5579aed69769/hallmark-runtime/fontconfig.conf",
+        "ATLAS_BROWSER_PATH": "/workspace/scratch/82e52cfd9693/browser-native/chromium-audit-multiprocess",
+        "ATLAS_BROWSER_OUT": "docs/design-closeout-2026-11-06/browser/full-49",
+        "ETH_BROWSER_IMAGE_LOG_MODE": "failures-only"
+      },
+      "argv": [
+        "node",
+        "scripts/verify-eth-candidate-browser.mjs"
+      ],
+      "exitCode": 1
+    },
+    "correctedFull": {
+      "environment": {
+        "FONTCONFIG_FILE": "/workspace/scratch/5579aed69769/hallmark-runtime/fontconfig.conf",
+        "ATLAS_BROWSER_PATH": "/workspace/scratch/82e52cfd9693/browser-native/chromium-audit-multiprocess",
+        "ATLAS_BROWSER_OUT": "docs/design-closeout-2026-11-06/browser/full-49-corrected",
+        "ETH_BROWSER_IMAGE_LOG_MODE": "failures-only"
+      },
+      "argv": [
+        "node",
+        "scripts/verify-eth-candidate-browser.mjs"
+      ],
+      "exitCode": 0
+    },
+    "loading": {
+      "environment": {
+        "FONTCONFIG_FILE": "/workspace/scratch/5579aed69769/hallmark-runtime/fontconfig.conf",
+        "CHROME_PATH": "/workspace/scratch/82e52cfd9693/browser-native/chromium-audit-multiprocess",
+        "PLAYWRIGHT_MODULE": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs"
+      },
+      "argv": [
+        "node",
+        "scripts/verify-loading-surfaces-browser.mjs",
+        "--out",
+        "docs/design-closeout-2026-11-06/browser/loading"
+      ],
+      "exitCode": 0
+    },
+    "rail": {
+      "environment": {
+        "FONTCONFIG_FILE": "/workspace/scratch/5579aed69769/hallmark-runtime/fontconfig.conf",
+        "RAIL_EVIDENCE_DIR": "docs/design-closeout-2026-11-06/browser/rail"
+      },
+      "argv": [
+        "node",
+        "docs/design-closeout-2026-11-05/rail/verify.mjs"
+      ],
+      "exitCode": 0
+    },
+    "reader": {
+      "environment": {
+        "FONTCONFIG_FILE": "/workspace/scratch/5579aed69769/hallmark-runtime/fontconfig.conf"
+      },
+      "argv": [
+        "node",
+        "docs/design-closeout-2026-11-05/reader-viewport/probe.mjs",
+        "--out=docs/design-closeout-2026-11-06/browser/reader"
+      ],
+      "exitCode": 0
+    },
+    "sticky": {
+      "environment": {
+        "FONTCONFIG_FILE": "/workspace/scratch/5579aed69769/hallmark-runtime/fontconfig.conf"
+      },
+      "argv": [
+        "node",
+        "docs/design-closeout-2026-11-05/sticky-surfaces/probe.mjs",
+        "--phase=after",
+        "--out=docs/design-closeout-2026-11-06/browser/sticky"
+      ],
+      "exitCode": 0
+    },
+    "cadenceDiagnostic": {
+      "environment": {
+        "FONTCONFIG_FILE": "/workspace/scratch/5579aed69769/hallmark-runtime/fontconfig.conf",
+        "ATLAS_CADENCE_OUT": "docs/design-closeout-2026-11-06/browser/cadence-terminal-observation"
+      },
+      "argv": [
+        "node",
+        "docs/design-closeout-2026-11-06/browser/diagnose-cadence.mjs"
+      ],
+      "exitCode": 0,
+      "scope": "Diagnostic observation only; does not relabel the failed original gate."
+    }
+  },
+  "representativeScreenshots": [
+    {
+      "file": "screenshots/loading-rsi-390.png",
+      "source": "docs/design-closeout-2026-11-06/browser/loading/loading-rsi-390.png",
+      "sha256": "253042522cfda5cc42ceecc660c4ba279fa9e9cbd373290426ea6b89a3207a23",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "screenshots/rail-mobile-320.png",
+      "source": "docs/design-closeout-2026-11-06/browser/rail/mobile-320-collapsed.png",
+      "sha256": "30a5093f7debd7abad3f69fb17c96de9808c91a280114c1224e9e9d84c1a05ed",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "screenshots/reader-320x360.png",
+      "source": "docs/design-closeout-2026-11-06/browser/reader/workspace-legacy-320x360-legacy-method-reader.png",
+      "sha256": "bb55d6ce4db7a9fd3891b1df3f0a354670f15f9fc0f4e6f5352788d32b94b513",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "screenshots/reader-1440x360.png",
+      "source": "docs/design-closeout-2026-11-06/browser/reader/workspace-legacy-1440x360-legacy-method-reader.png",
+      "sha256": "9a541a44191a703b347be60160c380fa7dcbb5491e7e3f1e14b34169b31e3d2b",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "screenshots/monthly-320.png",
+      "source": "docs/design-closeout-2026-11-06/browser/sticky/monthly-keyboard-320.png",
+      "sha256": "b1bc508b6aa2450eb6c88e9ac0c9ac03f88a82b1d2d719d12d4187701d70aa9c",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "screenshots/symbols-900x430.png",
+      "source": "docs/design-closeout-2026-11-06/browser/sticky/symbols-900x430.png",
+      "sha256": "6dcf8c6589512ed39199cc8dd21379729e895f8e929648f7306185cfb2f8aa25",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "screenshots/replay-original-failure.png",
+      "source": "docs/design-closeout-2026-11-06/browser/full-49/chart-replay-btc-1440-failure.png",
+      "sha256": "490034429164b22c42dcb1fb3f2f0c959d9fae563eda7c07b9973783d302af0f",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "screenshots/replay-native-terminal.png",
+      "source": "docs/design-closeout-2026-11-06/browser/cadence-terminal-observation/native-terminal-state.png",
+      "sha256": "fb81fa3303a0d9ce810cdbd8e1d8fa9bf2803fd6d7c9ca1c6c55fb36b991f06f",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "screenshots/data-board-320.png",
+      "source": "docs/design-closeout-2026-11-06/browser/full-49-corrected/workspace-center-data-320x900-board.png",
+      "sha256": "911ba54b17b103d8ecb5e65e7875436f99b57adbe27556ef40bc7b4bb8ba114a",
+      "visuallyReviewed": true
+    },
+    {
+      "file": "screenshots/replay-btc-mobile-320.png",
+      "source": "docs/design-closeout-2026-11-06/browser/full-49-corrected/chart-replay-btc-320x568-atlas-last-observed-bar.png",
+      "sha256": "a355c59535d76d95d610c13623c4804fe3c9a584085dcb89b34384ed65780cb9",
+      "visuallyReviewed": true
+    }
+  ],
+  "scope": "Local native Chromium/CDP and Playwright on the actual integrated static app. No skipped renders counted as passes. No Safari, physical-device, screen-reader or production-deployment certification. The pinned local font renders Korean; the decorative Bitcoin currency glyph appears as a missing glyph in this one-font runtime.",
+  "rawOutputPolicy": "Original run directories, logs, downloads and complete screenshots were not deleted or overwritten. This package retains lossless raw reports plus ten representative screenshots; other bulk run artifacts stay outside the staged package."
+}

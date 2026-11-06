@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "lane": "core",
+  "startedAt": "2026-11-06T08:06:01.090845+00:00",
+  "sourceCommitAtStart": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "runtime": "v24.22.2",
+  "steps": [
+    {
+      "name": "full-model-tests",
+      "command": [
+        "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node",
+        "scripts/test.mjs",
+        "--test-concurrency=2"
+      ],
+      "startedAt": "2026-11-06T08:06:01.096445+00:00",
+      "log": "full-model-tests.log",
+      "exitCode": 0,
+      "elapsedSeconds": 476.248,
+      "finishedAt": "2026-11-06T08:13:57.344141+00:00",
+      "logSha256": "fb67983d1790a2725be6a7a52bb745d714c810e5c3eed3ee19fe664dc7c5b3a1"
+    },
+    {
+      "name": "numerics",
+      "command": [
+        "npm",
+        "run",
+        "verify:numerics"
+      ],
+      "startedAt": "2026-11-06T08:13:57.345398+00:00",
+      "log": "numerics.log",
+      "exitCode": 0,
+      "elapsedSeconds": 6.453,
+      "finishedAt": "2026-11-06T08:14:03.798055+00:00",
+      "logSha256": "5509285b4329013bbc18cc090d71e6c090a8b2c679565ed61aaaa5559993563c"
+    }
+  ],
+  "complete": true,
+  "finishedAt": "2026-11-06T08:14:03.798396+00:00",
+  "status": "PASS"
+}

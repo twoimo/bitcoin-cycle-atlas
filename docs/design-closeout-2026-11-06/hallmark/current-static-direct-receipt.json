@@ -1,0 +1,24 @@
+{
+  "ranAt": "2026-11-06T08:14:19.702Z",
+  "command": "node tools/hallmark/upstream/sloplint.mjs dist --scope app --genre modern-minimal --json",
+  "cwd": "/workspace/scratch/5579aed69769/bitcoin-cycle-atlas",
+  "sourceCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "checkerGitBlob": "9916fa07286e58d319528ad7cfe4ad94318e5796",
+  "checkerSha256": "f8ada364c68a9db4b3dd5784bd416a7c412125e887aeae87d627e072d3848289",
+  "exitCode": 0,
+  "summary": {
+    "fails": 0,
+    "reflex": 0,
+    "warns": 25,
+    "waived": 0,
+    "rejected": 0,
+    "answered": 0,
+    "dismissed": 0,
+    "notes": 0,
+    "files": 43,
+    "render": "off"
+  },
+  "limitations": [
+    "Direct static check only; no rendered result or kept comparison claimed."
+  ]
+}

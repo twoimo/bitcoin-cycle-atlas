@@ -1,0 +1,27 @@
+{
+  "recordedAt": "2026-11-06T08:21:36.000Z",
+  "status": "READY",
+  "sourceCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "sourceTree": "feddc55e0f7d44fc8cf23e4a9a8311608ba83147",
+  "node": "v24.22.1",
+  "playwright": {
+    "modulePath": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs",
+    "version": "1.62.1"
+  },
+  "browser": {
+    "executablePath": "/workspace/scratch/82e52cfd9693/browser-native/chromium-audit-multiprocess",
+    "wrapperSha256": "dfc7024b1087f29eb32197a80230d7dd69eedf24078d0416d262a742686b6b27",
+    "version": "Chromium 143.0.7499.0"
+  },
+  "font": {
+    "file": "/workspace/scratch/5579aed69769/hallmark-runtime/fonts/NotoSansCJKkr-Regular.otf",
+    "bytes": 16433112,
+    "sha256": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+    "verifiedGitBlob": "dc4a7c65e6f450bf17c10a2405250b620eb78703",
+    "fontConfigFile": "/workspace/scratch/5579aed69769/hallmark-runtime/fontconfig.conf",
+    "fontConfigSha256": "4be293eb2db302457d2f8518ab15bbe0f83ceca4ce2e5c26603fecab60087dca",
+    "inventory": "Noto Sans CJK KR",
+    "match": "Noto Sans CJK KR\n/workspace/scratch/5579aed69769/hallmark-runtime/fonts/NotoSansCJKkr-Regular.otf"
+  },
+  "scope": "Local native Chromium. Retains prior runtime-viability.json as the font-missing observation before the pinned font was installed. No physical-device, Safari, production deployment or screen-reader certification."
+}

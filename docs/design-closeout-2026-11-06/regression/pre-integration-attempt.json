@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "kind": "pre-integration-interrupted-test-attempt",
+  "recordedAt": "2026-11-06T08:00:06.231126+00:00",
+  "repository": "/workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas",
+  "head": "624888270fcb539ab08d505e5affab5f5d435776",
+  "command": "/workspace/scratch/82e52cfd9693/audit-runtime/node_modules/node-linux-x64/bin/node scripts/test.mjs --test-concurrency=2",
+  "runtime": "v24.22.2 linux/x64",
+  "exitCode": 130,
+  "complete": false,
+  "status": "INTERRUPTED_FOR_LATEST_DATA_INTEGRATION",
+  "reason": "Coordinator found remote main advanced to 59ec6f4f708e87d73dad6324d925a9e01383411c in two data-only refreshes, requested stopping this older-data run and testing integrated source.",
+  "lastReportedTopLevelPass": 1186,
+  "reportedAssertionFailures": 1,
+  "aggregateReceiptPresent": false,
+  "log": "pre-integration-model-tests.interrupted.log",
+  "logSha256": "2d842dec9576d37750afc31bbfc9a9c6a43f97bccd83c98f40767f7bf6b5cc79",
+  "qualification": "Partial reported cases are not a full-suite pass; complete integrated run required."
+}

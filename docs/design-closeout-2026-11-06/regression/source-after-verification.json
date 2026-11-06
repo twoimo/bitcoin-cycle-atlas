@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-06T08:17:03.827623+00:00",
+  "sourceCommit": "027d84914a8fb0d1c4034eda70eec8a0c42dd22d",
+  "sourceTree": "feddc55e0f7d44fc8cf23e4a9a8311608ba83147",
+  "testedFiles": 1323,
+  "changedTestedFiles": [],
+  "protectedFiles": 204,
+  "protectedBytes": 45453948,
+  "changedProtectedFiles": [],
+  "workflowAndSkillFiles": 20,
+  "changedWorkflowAndSkillFiles": [],
+  "status": "PASS",
+  "scope": "Exact working-file SHA-256 equality after both final regression lanes. Protected input bytes also matched the integrated main baseline before execution."
+}

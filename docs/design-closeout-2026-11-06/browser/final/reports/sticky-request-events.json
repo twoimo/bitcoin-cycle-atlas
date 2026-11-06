@@ -1,0 +1,166 @@
+{
+  "method": "Observation-only wrapper: unchanged browser launch options, original probe assertions and product bytes; records native request and navigation events.",
+  "events": [
+    {
+      "at": "2026-11-06T08:21:07.486Z",
+      "event": "goto-start",
+      "pageId": 1,
+      "from": "about:blank",
+      "to": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line"
+    },
+    {
+      "at": "2026-11-06T08:21:07.501Z",
+      "event": "main-frame-navigation",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line"
+    },
+    {
+      "at": "2026-11-06T08:21:07.525Z",
+      "event": "requestfailed",
+      "pageId": 1,
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+      "pageUrl": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "resourceType": "stylesheet",
+      "currentPageUrl": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "at": "2026-11-06T08:21:07.703Z",
+      "event": "goto-finished",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line"
+    },
+    {
+      "at": "2026-11-06T08:21:07.794Z",
+      "event": "main-frame-navigation",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?symbol=BTCUSD&granularity=daily&type=line"
+    },
+    {
+      "at": "2026-11-06T08:21:08.440Z",
+      "event": "main-frame-navigation",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+    },
+    {
+      "at": "2026-11-06T08:21:08.533Z",
+      "event": "main-frame-navigation",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+    },
+    {
+      "at": "2026-11-06T08:21:09.915Z",
+      "event": "main-frame-navigation",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D"
+    },
+    {
+      "at": "2026-11-06T08:21:09.971Z",
+      "event": "replay-module-request",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/project-replay-baseline.js",
+      "pageUrl": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+      "resourceType": "script"
+    },
+    {
+      "at": "2026-11-06T08:21:10.086Z",
+      "event": "replay-module-request",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/project-replay-baseline.js",
+      "pageUrl": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+      "resourceType": "fetch"
+    },
+    {
+      "at": "2026-11-06T08:21:16.709Z",
+      "event": "replay-module-request",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/project-replay-baseline.js",
+      "pageUrl": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+      "resourceType": "fetch"
+    },
+    {
+      "at": "2026-11-06T08:21:17.809Z",
+      "event": "goto-start",
+      "pageId": 1,
+      "from": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?symbol=BTCUSD&indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+      "to": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?page=compare&legacy=1"
+    },
+    {
+      "at": "2026-11-06T08:21:17.823Z",
+      "event": "main-frame-navigation",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?page=compare&legacy=1"
+    },
+    {
+      "at": "2026-11-06T08:21:17.847Z",
+      "event": "requestfailed",
+      "pageId": 1,
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Noto+Sans+KR:wght@400;450;500;550;600;650;700;750&display=swap",
+      "pageUrl": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "resourceType": "stylesheet",
+      "currentPageUrl": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?page=compare&legacy=1",
+      "error": "net::ERR_FAILED"
+    },
+    {
+      "at": "2026-11-06T08:21:17.937Z",
+      "event": "goto-finished",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?page=compare&legacy=1"
+    },
+    {
+      "at": "2026-11-06T08:21:18.120Z",
+      "event": "main-frame-navigation",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?page=compare&legacy=1&compare-unit=rebased"
+    },
+    {
+      "at": "2026-11-06T08:21:18.227Z",
+      "event": "main-frame-navigation",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?page=compare&legacy=1&compare-unit=rebased"
+    },
+    {
+      "at": "2026-11-06T08:21:21.026Z",
+      "event": "goto-start",
+      "pageId": 1,
+      "from": "http://127.0.0.1:41973/bitcoin-cycle-atlas/?page=compare&legacy=1&compare-unit=rebased",
+      "to": "http://127.0.0.1:41973/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=rsi&symbol=TQQQ"
+    },
+    {
+      "at": "2026-11-06T08:21:21.037Z",
+      "event": "main-frame-navigation",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=rsi&symbol=TQQQ"
+    },
+    {
+      "at": "2026-11-06T08:21:21.062Z",
+      "event": "goto-finished",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=rsi&symbol=TQQQ"
+    },
+    {
+      "at": "2026-11-06T08:21:25.343Z",
+      "event": "goto-start",
+      "pageId": 1,
+      "from": "http://127.0.0.1:41973/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=rsi&symbol=TQQQ",
+      "to": "http://127.0.0.1:41973/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=housing"
+    },
+    {
+      "at": "2026-11-06T08:21:25.362Z",
+      "event": "main-frame-navigation",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=housing"
+    },
+    {
+      "at": "2026-11-06T08:21:25.408Z",
+      "event": "goto-finished",
+      "pageId": 1,
+      "url": "http://127.0.0.1:41973/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=housing"
+    },
+    {
+      "at": "2026-11-06T08:21:26.688Z",
+      "event": "page-closed",
+      "pageId": 1
+    }
+  ]
+}
