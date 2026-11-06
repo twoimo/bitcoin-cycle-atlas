@@ -950,10 +950,15 @@ export async function verifyChartReplaySurface(api) {
   }
   async function measureCadence() {
     const expected = [['10', 100], ['1', 1000], ['0.5', 2000], ['0.3', 3000]];
+    const allowedMeanRatio = [.85, 1.3], setupAllowanceMilliseconds = 5000;
     for (const [speed, milliseconds] of expected) {
       await click(cdp, control('scrub')); await key('Home', 'Home', 36); await select(control('speed'), speed);
       const initial = await snapshot('speed-' + speed + '-origin');
       assert.ok(initial.lastIndex >= 5, 'Cadence check needs at least five genuine source observations');
+      // The preserved cutoff stays fixed while new source bars arrive. Completion
+      // must allow their actual playback duration, with the same cadence bound
+      // checked below and a bounded allowance for initial paint and polling.
+      const completionTimeoutMilliseconds = Math.ceil(initial.lastIndex * milliseconds * allowedMeanRatio[1]) + setupAllowanceMilliseconds;
       // Instrument public DOM changes, not application timers or private state.
       await evaluate(cdp, selector => {
         const svg = document.querySelector(selector); let previous = svg.dataset.replayCursor;
@@ -967,7 +972,7 @@ export async function verifyChartReplaySurface(api) {
         globalThis.__replayCadenceObserver.observe(svg, { attributes: true, attributeFilter: ['data-replay-cursor'] });
       }, chartSelector);
       await click(cdp, control('play'));
-      await until(() => evaluate(cdp, selector => document.querySelector(selector)?.dataset.state === 'ended', panel), 'real ' + speed + '× playback reaches the final available bar');
+      await until(() => evaluate(cdp, selector => document.querySelector(selector)?.dataset.state === 'ended', panel), 'real ' + speed + '× playback reaches the final available bar', completionTimeoutMilliseconds);
       const observations = await evaluate(cdp, () => { globalThis.__replayCadenceObserver.disconnect(); return globalThis.__replayCadenceObservations; });
       const intervals = observations.slice(1).map((row, index) => row.at - observations[index].at);
       assert.equal(observations.length, initial.lastIndex, 'Playback skipped or duplicated visible daily observations');
@@ -978,9 +983,10 @@ export async function verifyChartReplaySurface(api) {
       // clock count as the requested 100/1000ms cadence. First-paint setup is
       // excluded, and the actual measured samples remain in the receipt.
       const measured = { speed: Number(speed), expectedMilliseconds: milliseconds, observations, intervals,
-        meanMilliseconds: mean, averageUpdatesPerSecond: 1000 / mean, allowedMeanRatio: [.85, 1.3] };
+        meanMilliseconds: mean, averageUpdatesPerSecond: 1000 / mean, allowedMeanRatio,
+        completionTimeoutMilliseconds, setupAllowanceMilliseconds };
       evidence.timing.push(measured);
-      assert.ok(mean >= milliseconds * .85 && mean <= milliseconds * 1.3,
+      assert.ok(mean >= milliseconds * allowedMeanRatio[0] && mean <= milliseconds * allowedMeanRatio[1],
         'Observed ' + speed + '× cadence does not match the requested update interval: ' + JSON.stringify(measured));
       await snapshot('speed-' + speed + '-ended');
     }
