@@ -2,7 +2,7 @@ import { atlasResourcePath } from './site-paths.js';
 import {browserCyclePeriodWorkerFactory,buildCyclePeriodComparison,calculateCyclePeriodSensitivity,cyclePeriodComparisonMarkup,cycleComparisonFields,macroClockInspection} from './cycle-period-comparison.js';
 import { setChartLoading } from './loading-surfaces.js';
 import { beginAction, finishAction, measureSync } from './performance-diagnostics.js?v=1.29.0';
-import {mountChartReplay} from './chart-replay.js?v=1.31.3';
+import {mountChartReplay} from './chart-replay.js?v=1.32.0';
 import { createForecastComputation, browserForecastWorkerFactory } from './forecast-computation.js?v=1.29.0';
 import {bitcoinForecastEvidence} from './forecast-evidence.js?v=1.29.0';
 import {openResearchArticle} from './research-reader.js?v=1.29.0';

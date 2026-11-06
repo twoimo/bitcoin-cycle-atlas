@@ -18,6 +18,16 @@ import {forecastHash} from '../dist/forecast-records.js';
 
 const root=resolve(fileURLToPath(new URL('..',import.meta.url)));
 const dist=resolve(root,'dist'),out=resolve(root,process.env.ATLAS_BROWSER_OUT??'build/eth-browser');
+const comparisonAssets=JSON.parse(await readFile(resolve(dist,'data/asset-comparison.json'),'utf8')).assets;
+const expectedAssetSymbols=comparisonAssets.map(asset=>asset.symbol);
+assert.equal(expectedAssetSymbols.length,20,'The current comparison archive must include all 20 assets');
+assert.ok(['BTC','ETH','HYPE'].every(symbol=>expectedAssetSymbols.includes(symbol)),'All requested digital assets must be preserved');
+const expectedAssetGroups=comparisonAssets.reduce((groups,asset,index)=>{
+  const last=groups.at(-1);
+  if(last?.name===asset.group)last.span++;
+  else groups.push({name:asset.group,first:index,span:1});
+  return groups;
+},[]);
 const widths=[320,390,768,1024,1440],height=900;
 const imageLogMode=process.env.ETH_BROWSER_IMAGE_LOG_MODE??'representative';
 if(!['representative','failures-only'].includes(imageLogMode))throw new Error('Unknown screenshot log transport mode');
@@ -144,7 +154,7 @@ async function verifyHeaderOwnership(cdp){
 }
 async function dataCase(cdp,width,receipt){
   const imagePrefix=receipt.height===900?'data-'+width:'data-'+width+'x'+receipt.height;
-  await until(()=>evaluate(cdp,()=>document.querySelectorAll('#data-body tr[data-asset-symbol]').length===18),'18 asset rows');
+  await until(()=>evaluate(cdp,expected=>document.querySelectorAll('#data-body tr[data-asset-symbol]').length===expected,expectedAssetSymbols.length),'all comparison asset rows');
   await settled(cdp);
   receipt.layout=await evaluate(cdp,()=>{
     const rows=[...document.querySelectorAll('#data-body tr[data-asset-symbol]')];
@@ -175,7 +185,7 @@ async function dataCase(cdp,width,receipt){
   assert.equal(await evaluate(cdp,()=>document.querySelector('#btc-refresh-notice')?.hidden),true,'BTC source notice must not be shown on the independent asset board');
   const layout=receipt.layout;
   assert.equal(layout.width,width);assert.ok(layout.scrollWidth<=width+1,'Page horizontal overflow');
-  assert.equal(layout.symbols.length,18);assert.equal(new Set(layout.symbols).size,18);assert.equal(layout.symbols[0],'BTC');assert.equal(layout.btcName,'비트코인');
+  assert.deepEqual(layout.symbols,expectedAssetSymbols);assert.equal(new Set(layout.symbols).size,expectedAssetSymbols.length);assert.equal(layout.symbols[0],'BTC');assert.equal(layout.btcName,'비트코인');
   assert.ok(layout.judgments.every(j=>['적극 매수','분할 매수','중립','분할 매도','적극 매도','판단 보류'].includes(j)),'Unknown or missing comparison judgment');
   assert.deepEqual(layout.controls.map(control=>control.id),['asset-refresh','asset-history-open','daily-method-open','export-raw'],'Expected all four actual board actions');
   const navigation=layout.navigation;
@@ -301,7 +311,7 @@ function readDataGeometry(){
 function assertDataGeometry(g,{width,height,fill}){
   assert.equal(g.width,width);assert.equal(g.height,height);
   assert.ok(Math.max(g.documentWidth,g.bodyWidth)<=width+1,'Body horizontal overflow');
-  assert.equal(g.symbols.length,18);assert.equal(new Set(g.symbols).size,18);assert.equal(g.symbols[0],'BTC');assert.equal(g.btcName,'비트코인');
+  assert.deepEqual(g.symbols,expectedAssetSymbols);assert.equal(new Set(g.symbols).size,expectedAssetSymbols.length);assert.equal(g.symbols[0],'BTC');assert.equal(g.btcName,'비트코인');
   assert.ok(Math.abs(g.header.height-54)<=1,'Header expanded instead of body rows');
   assert.ok(Math.abs(g.root.bottom-height)<=2,'Data view no longer fills the viewport');
   // The inner client area may be shorter by its horizontal scrollbar; the panel itself reaches the bottom.
@@ -310,7 +320,7 @@ function assertDataGeometry(g,{width,height,fill}){
   const buttonMin=g.coarse||width<=760?44:30;
   assert.ok(g.buttons.every(b=>b.height>=buttonMin-1),'Reading or touch target compressed');
   assert.ok(Math.abs(g.pinnedHead.left-g.pinnedBody.left)<=1,'Pinned column misalignment');
-  assert.deepEqual(g.groups.map(x=>x.span),[13,4,1]);assert.deepEqual(g.groups.map(x=>x.first),[0,13,17]);
+  assert.deepEqual(g.groups.map(x=>x.span),expectedAssetGroups.map(x=>x.span));assert.deepEqual(g.groups.map(x=>x.first),expectedAssetGroups.map(x=>x.first));
   for(const group of g.groups.filter(x=>x.visible)){
     assert.ok(Math.abs(group.cell.top-group.firstRow.top)<=1,'Rowspan starts outside its group');
     assert.ok(Math.abs(group.cell.bottom-group.lastRow.bottom)<=1,'Rowspan ends outside its group');
@@ -613,7 +623,7 @@ async function verifyInfoDataLinks(cdp,symbol){
     if(!dialog?.open)throw new Error('Data information did not open');
     const links=[...dialog.querySelectorAll('a')];
     const saved=links.find(a=>a.textContent.trim()==='보존한 일별 원자료(JSON) ↗');
-    const comparison=links.find(a=>a.textContent.trim()==='18개 자산 비교표 ↗');
+    const comparison=links.find(a=>a.textContent.trim()==='20개 자산 비교표 ↗');
     if(!saved||!comparison)throw new Error('Truthful data destinations are missing');
     const raw=new URL(saved.href),table=new URL(comparison.href);
     if(raw.origin!==location.origin)throw new Error('Archive link left the current origin');

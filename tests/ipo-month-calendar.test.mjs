@@ -89,12 +89,12 @@ function monthSurface(reduced=false) {
 }
 
 test('calendar opens this month and makes only that page interactive',()=>{
-  const ui=monthSurface();assert.equal(ui.pages.scrollTop,100);assert.equal(ui.label.textContent,'2/4');
+  const ui=monthSurface();assert.equal(ui.pages.scrollTop,100);assert.equal(ui.label.textContent,'2026년 11월');
   assert.deepEqual(ui.sections.map(x=>x.inert),[true,false,true,true]);
 });
 test('hidden route resize preserves the selected month instead of snapping back to October',()=>{
   const ui=monthSurface();ui.pages.clientHeight=0;ui.pages.scrollTop=0;ui.resize();
-  ui.pages.clientHeight=100;ui.resize();assert.equal(ui.pages.scrollTop,100);assert.equal(ui.label.textContent,'2/4');
+  ui.pages.clientHeight=100;ui.resize();assert.equal(ui.pages.scrollTop,100);assert.equal(ui.label.textContent,'2026년 11월');
 });
 test('keyboard page navigation is bounded and reduced-motion uses instant scrolling',()=>{
   const ui=monthSurface(true);let prevented=0;
@@ -105,10 +105,10 @@ test('keyboard page navigation is bounded and reduced-motion uses instant scroll
 });
 test('native scroll state uses actual page offsets, including taller short-viewport pages',()=>{
   const ui=monthSurface();ui.sections.forEach((x,i)=>{x.offsetTop=i*160;});ui.pages.scrollTop=320;ui.listeners.scroll();
-  assert.equal(ui.label.textContent,'3/4');
+  assert.equal(ui.label.textContent,'2026년 12월');
 });
 test('filter rerender retains the list page while updating month events',()=>{
   const ui=monthSurface();ui.listeners.keydown({target:ui.pages,key:'End',preventDefault(){}});
   ui.calendar.render([], [{종목:'기간',청약:['2026-10-30','2026-12-02'],수요예측:[]}], '2026-11-01');
-  assert.equal(ui.pages.scrollTop,300);assert.equal(ui.label.textContent,'목록');
+  assert.equal(ui.pages.scrollTop,300);assert.equal(ui.label.textContent,'전체 목록');
 });

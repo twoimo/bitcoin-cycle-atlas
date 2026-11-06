@@ -130,3 +130,49 @@
   .ipo-day-events{gap:0;flex:none}
   .ipo-cal-event,.ipo-day-more{flex:none;line-height:16px}
 }
+
+/* The embedded calendar owns its header flow. Older chart styles position
+   toolbars at the viewport corner; that would cover month navigation here. */
+body #ipo-view .ipo-heading {
+  position:relative; inset:auto; display:flex; flex:none; align-items:center;
+  width:100%; max-width:none; height:auto; min-height:44px; gap:12px;
+  margin:0; padding:0 0 8px; overflow:visible; white-space:normal;
+  border-bottom:1px solid var(--border); background:var(--bg); z-index:3;
+}
+body #ipo-view .ipo-heading-title { display:flex!important; min-width:0; }
+body #ipo-view .ipo-heading h1 { font-size:17px; white-space:nowrap; }
+body #ipo-view .ipo-toolbar { display:flex; justify-content:flex-end; flex:1; min-width:0; gap:8px; }
+body #ipo-view .ipo-search { min-width:0; width:100%; max-width:240px; min-height:36px; }
+body #ipo-view .ipo-source-disclosure summary { padding:0 8px; border:1px solid var(--border); border-radius:4px; min-height:36px; line-height:34px; }
+body #ipo-view .ipo-source-disclosure[open] summary { color:var(--text); background:var(--surface-hover); }
+body #ipo-view .ipo-calendar-nav { flex:none; gap:12px; min-height:40px; }
+body #ipo-view .ipo-month-controls { gap:8px; }
+body #ipo-view .ipo-month-controls button { width:36px; padding:0; font-size:24px; line-height:1; }
+body #ipo-view .ipo-page-label { min-width:148px; color:var(--text); font-size:18px; font-weight:600; }
+body #ipo-view .ipo-month-summary { margin-right:8px; color:var(--muted); font-size:11px; white-space:nowrap; }
+body #ipo-view .ipo-calendar-jumps button[aria-pressed=true] { color:var(--accent); border-color:var(--accent); }
+body #ipo-view .ipo-month-page { grid-template-rows:24px minmax(0,1fr); gap:4px; padding:0; }
+body #ipo-view .ipo-month-heading { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+body #ipo-view .ipo-source-panel { width:min(440px,100%); }
+@media(max-width:900px) {
+  body #ipo-view .ipo-heading { gap:8px; }
+  body #ipo-view .ipo-heading-title { display:none!important; }
+  body #ipo-view .ipo-toolbar { justify-content:flex-start; }
+  body #ipo-view .ipo-search { max-width:none; }
+  body #ipo-view .ipo-month-summary { display:none; }
+}
+@media(max-width:620px) {
+  body #ipo-view { padding:8px; gap:8px; }
+  body #ipo-view .ipo-heading { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; }
+  body #ipo-view .ipo-toolbar { grid-column:1; grid-row:1; gap:4px; flex-wrap:wrap; }
+  body #ipo-view .ipo-search { flex:1 1 100px; min-height:44px; }
+  body #ipo-view .ipo-segmented button { min-height:44px; padding:4px 8px; }
+  body #ipo-view .ipo-source-disclosure { grid-column:2; grid-row:1; align-self:start; }
+  body #ipo-view .ipo-source-disclosure summary { min-height:44px; line-height:42px; }
+  body #ipo-view .ipo-calendar-nav { display:flex; flex-wrap:wrap; justify-content:space-between; gap:4px 8px; }
+  body #ipo-view .ipo-month-controls { flex:1 1 200px; justify-content:space-between; gap:4px; }
+  body #ipo-view .ipo-month-controls button { width:44px; min-height:44px; }
+  body #ipo-view .ipo-page-label { min-width:112px; font-size:16px; }
+  body #ipo-view .ipo-calendar-jumps { flex:1 1 124px; justify-content:flex-end; }
+  body #ipo-view .ipo-calendar-jumps button { min-height:44px; }
+}

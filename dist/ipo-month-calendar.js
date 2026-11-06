@@ -64,8 +64,14 @@ export function mountIpoMonthCalendar(root) {
     if(!pages.clientHeight)return;
     const visible=sections();
     if(visible.length)active=visible.reduce((best,section,index)=>Math.abs(section.offsetTop-(pages.scrollTop??0))<Math.abs(visible[best].offsetTop-(pages.scrollTop??0))?index:best,0);
-    const text=active<months.length?`${active+1}/${months.length+1}`:'목록';
+    const text=active<months.length?monthName(months[active]):'전체 목록';
     if(label())label().textContent=text;
+    const summary=root.querySelector('.ipo-month-summary');
+    if(summary)summary.textContent=active<months.length?visible[active]?.querySelector('.ipo-month-heading p')?.textContent||'':`${rows.length}종목`;
+    for(const kind of ['today','list']) {
+      const button=root.querySelector(`[data-ipo-page="${kind}"]`);
+      button?.setAttribute('aria-pressed',String(kind==='list'?active===months.length:months[active]===today.slice(0,7)));
+    }
     sections().forEach((section,index)=>{section.inert=index!==active;});
     const prev=root.querySelector('[data-ipo-page="previous"]'),next=root.querySelector('[data-ipo-page="next"]');
     if(prev)prev.disabled=active===0;

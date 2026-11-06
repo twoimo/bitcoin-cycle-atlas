@@ -11,9 +11,9 @@ import { renderPeakView } from './peak-view.js?v=1.29.0';
 import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29.0';
 // Changed release modules use a versioned URL so a cached v1.5 module cannot
 // leave a new long-horizon page running the old three-year workbench.
-import { initDailyDataView } from './daily-data-view.js?v=1.29.0';
-import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.29.0';
-import { initIpoView } from './ipo-view.js?v=1.30.1-ipo-compact.1';
+import { initDailyDataView } from './daily-data-view.js?v=1.32.0';
+import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.0';
+import { initIpoView } from './ipo-view.js?v=1.32.0';
 import { initMarketLabView } from './market-lab-view.js?v=1.31.3';
 
 const $ = (selector) => document.querySelector(selector);
@@ -112,7 +112,7 @@ document.addEventListener('atlas:page-ready', onInitialPageReady);
 let outlookController = null, workspacePromise = null, evidencePromise = null, evidenceModule = null;
 function ensureWorkspace() {
   if (!workspacePromise) workspacePromise = Promise.all([
-    import('./viewport-workspace.js?v=1.31.3'), import('./lab-view.js?v=1.31.3'),
+    import('./viewport-workspace.js?v=1.32.0'), import('./lab-view.js?v=1.32.0'),
   ]).then(([workspace, lab]) => {
     workspace.initViewportWorkspace(icon);
     outlookController = lab.initLabView();

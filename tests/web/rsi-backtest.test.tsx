@@ -34,6 +34,6 @@ test('invalid dates, inverted thresholds, missing warmup and unsupported symbols
   assert.throws(()=>backtestRsi(prices.slice(0,10),options));
   assert.deepEqual(searchSymbols('삼플레').map(s=>s.symbol),['TQQQ','SOXL','233740']);
   assert.equal(searchSymbols('속쓸')[0].symbol,'SOXL');assert.equal(searchSymbols('코스닥150')[0].symbol,'233740');
-  assert.equal(new URL(createSymbolUrl('https://example.com/?page=outlook&axis=log','SOXL')).searchParams.get('lab-tab'),'rsi');
+  assert.equal(new URL(createSymbolUrl('https://example.com/?page=outlook&axis=log','SOXL')).pathname,'/market-lab/charts/');
   assert.equal(createSymbolUrl('https://example.com/market-lab/rsi/?symbol=TQQQ','BTCUSD'),'https://example.com/');
 });

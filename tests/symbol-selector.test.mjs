@@ -2,12 +2,12 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { SYMBOLS, normalizeSymbol, searchSymbols, createSymbolUrl, mountSymbolSelector } from '../dist/symbol-selector.js';
 
-test('only supported true USD symbols resolve and symbol search includes both names and venue',()=>{
-  assert.deepEqual(SYMBOLS.map(item=>item.product),['BTC-USD','ETH-USD','MSTR','BMNR','TQQQ','SOXL','233740.KS']);
+test('supported products retain their exact quote currency and searchable identity',()=>{
+  assert.deepEqual(SYMBOLS.map(item=>item.product),['BTC-USD','ETH-USD','MSTR','BMNR','TQQQ','SOXL','233740.KS','HYPE/USDC','부산 아파트','서울 아파트','경기 아파트','전국 아파트']);
   for(const value of ['ETHUSD','ethusd','ETH-USD',' ETH/USD '])assert.equal(normalizeSymbol(value),'ETHUSD');
   for(const value of ['ETHUSDT','ETHBTC','javascript:ETHUSD',null,undefined])assert.equal(normalizeSymbol(value),'BTCUSD');
   for(const query of ['ethereum','이더리움','ETH/USD','eth usd','ETH Coinbase'])assert.deepEqual(searchSymbols(query).map(item=>item.symbol),['ETHUSD']);
-  assert.equal(searchSymbols('USDT').length,0);assert.equal(searchSymbols('btc').length,1);assert.equal(searchSymbols('').length,7);
+  assert.equal(searchSymbols('USDT').length,0);assert.equal(searchSymbols('btc').length,1);assert.equal(searchSymbols('').length,12);
 });
 
 test('switching preserves supported chart choices and removes cross-asset models, bounds and layers',()=>{
@@ -85,10 +85,21 @@ test('search keyboard selects ETH, cleans asset state and restores trigger focus
   assert.equal(f.destinations[0],'https://example.com/chart?symbol=ETHUSD&granularity=1h&type=candles');
 });
 
-test('standalone preserves its four supported charts while the service exposes ETF destinations',t=>{
+test('standalone preserves its four supported charts while the service exposes the unified chart catalog',t=>{
   const offline=fixture(t);offline.selector.open();assert.equal(offline.node('symbol-search-results').children.length,4);assert.equal(offline.node('symbol-option-SOXL'),null);
-  const service=fixture(t,{service:true});service.selector.open();assert.equal(service.node('symbol-search-results').children.length,7);
-  service.node('symbol-option-SOXL').click();assert.equal(service.destinations[0],'https://example.com/market-lab/rsi/?symbol=SOXL');
+  const service=fixture(t,{service:true});service.selector.open();assert.equal(service.node('symbol-search-results').children.length,12);
+  service.node('symbol-option-SOXL').click();assert.equal(service.destinations[0],'https://example.com/market-lab/charts/?symbol=SOXL');
+});
+
+test('theme and housing selections use the same chart route without borrowing price-chart state',()=>{
+  const current='https://twoimo.github.io/bitcoin-cycle-atlas/market-lab/rsi/?symbol=TQQQ&axis=log&granularity=1m';
+  assert.equal(normalizeSymbol('HOUSING-SEOUL'),'HOUSING-SEOUL');
+  assert.equal(normalizeSymbol('HYPE/USDC'),'HYPE');
+  const hype=searchSymbols('하이퍼리퀴드')[0];
+  assert.equal(hype.product,'HYPE/USDC');assert.equal(hype.currency,'USDC');
+  assert.equal(createSymbolUrl(current,'HYPE'),'https://twoimo.github.io/bitcoin-cycle-atlas/market-lab/charts/?symbol=HYPE');
+  assert.equal(createSymbolUrl(current,'HOUSING-SEOUL'),'https://twoimo.github.io/bitcoin-cycle-atlas/market-lab/charts/?symbol=HOUSING-SEOUL&region=seoul');
+  assert.deepEqual(searchSymbols('서울 아파트').map(item=>item.symbol),['HOUSING-SEOUL']);
 });
 
 test('search input filters safely; IME confirmation and empty results cannot navigate',t=>{
@@ -104,6 +115,16 @@ test('the current symbol closes without reload and optional selection callbacks 
   const selected=[],f=fixture(t,{symbol:'ETHUSD',onSelect:(...args)=>selected.push(args)});f.selector.open();
   f.node('symbol-option-ETHUSD').click();assert.equal(selected.length,0);assert.equal(f.selector.isOpen(),false);
   f.selector.open();f.node('symbol-option-BTCUSD').click();assert.deepEqual(selected,[['BTCUSD','https://example.com/chart?granularity=1h&type=candles']]);assert.equal(f.destinations.length,0);
+});
+
+test('selecting the current background asset from a workspace dispatches the return to its price chart',t=>{
+  for(const symbol of ['BTCUSD','ETHUSD','MSTR','BMNR']) {
+    const selected=[],f=fixture(t,{symbol,onSelect:(...args)=>selected.push(args)});
+    f.doc.body.dataset.centerTool='data';f.selector.open();
+    f.node('symbol-option-'+symbol).click();
+    assert.equal(selected.length,1,`${symbol} must reach the host's original-asset restore handler`);
+    assert.equal(selected[0][0],symbol);assert.equal(f.selector.isOpen(),false);
+  }
 });
 
 test('focus stays in the dialog and modal replacement/teardown release listeners',t=>{

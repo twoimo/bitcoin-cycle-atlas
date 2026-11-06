@@ -102,7 +102,7 @@ export async function buildServer({ pool, clock = () => new Date(), serveWeb = f
     const web = fileURLToPath(new URL('../../../build/web/', import.meta.url));
     await app.register(staticFiles, { root: dist, prefix: '/', index: false });
     await app.register(staticFiles, { root: web, prefix: '/market-lab/', decorateReply: false });
-    for (const page of [{href:'/market-lab/',title:'시장 분석'},...atlasPages.filter(page => page.tab)]) app.get(page.href, async (request, reply) => {
+    for (const page of [{href:'/market-lab/',title:'시장 분석'},{href:'/market-lab/charts/',title:'종목 차트'},...atlasPages.filter(page => page.tab)]) app.get(page.href, async (request, reply) => {
       const embedded=new URL(request.url,'http://localhost').searchParams.get('embedded')==='1';
       const html=await readFile(`${embedded?web:dist}/index.html`,'utf8');
       return reply.type('text/html').send(html.replace('<head>',embedded?'<head>':'<head><base href="/"><meta name="atlas-service-base" content="/market-lab/">').replace(/<title>[^<]*<\/title>/,`<title>${page.title} · Cycle Atlas</title>`));
@@ -111,7 +111,7 @@ export async function buildServer({ pool, clock = () => new Date(), serveWeb = f
       const query = new URL(request.url, 'http://localhost').searchParams;
       const center=atlasPages.find(page=>page.view===query.get('page') && !page.tab && page.id!=='outlook');
       if(center && query.get('embedded')!=='1') {query.set('page','outlook');query.set('center',center.id);return reply.redirect(`/?${query}`);}
-      if (rsiInstrument(query.get('symbol')) && query.get('embedded')!=='1') return reply.redirect(`/market-lab/rsi/?symbol=${rsiInstrument(query.get('symbol'))!.symbol}`);
+      if (rsiInstrument(query.get('symbol')) && query.get('embedded')!=='1') return reply.redirect(`/market-lab/charts/?symbol=${rsiInstrument(query.get('symbol'))!.symbol}`);
       if (query.get('page') === 'market') return reply.redirect(`/market-lab/?${query.toString()}`);
       const html = await readFile(`${dist}/index.html`, 'utf8');
       return reply.type('text/html').send(html.replace('<head>', '<head><meta name="atlas-service-base" content="/market-lab/">'));

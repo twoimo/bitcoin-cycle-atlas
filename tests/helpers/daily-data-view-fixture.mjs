@@ -40,6 +40,8 @@ export function dailyViewSurface({ hidden = false } = {}) {
   const node = id => root.querySelector(`#${id}`);
   return {
     root, node,
+    input: (id,value) => { const target=node(id); target.value=value; listeners.get('input')?.({target}); },
+    change: (id,value) => { const target=node(id); target.value=value; listeners.get('change')?.({target}); },
     click: (id, values = {}) => listeners.get('click')?.({ target: new NodeBoundary(id, values, work) }),
     settle: () => new Promise(resolve => setImmediate(resolve)),
     resetWork: () => work.clear(),
@@ -48,8 +50,8 @@ export function dailyViewSurface({ hidden = false } = {}) {
   };
 }
 
-export const COMPARISON_SYMBOLS = ['BTC', 'SPY', 'QQQ', 'NVDA', 'AAPL', 'GOOG', 'MSFT', 'AMZN', 'META', 'AVGO', 'PLTR', 'TSLA', 'HOOD', 'TLT', 'IEF', 'GLD', 'SLV', 'PDBC'];
-const NAMES = ['비트코인', 'S&P500', 'NASDAQ100', '엔비디아', '애플', '구글', '마이크로소프트', '아마존', '메타', '브로드컴', '팔란티어', '테슬라', '로빈후드', '미국장기채권', '미국중기채권', '금', '은', '원자재'];
+export const COMPARISON_SYMBOLS = ['BTC', 'ETH', 'HYPE', 'SPY', 'QQQ', 'NVDA', 'AAPL', 'GOOG', 'MSFT', 'AMZN', 'META', 'AVGO', 'PLTR', 'TSLA', 'HOOD', 'TLT', 'IEF', 'GLD', 'SLV', 'PDBC'];
+const NAMES = ['비트코인', '이더리움', '하이퍼리퀴드', 'S&P500', 'NASDAQ100', '엔비디아', '애플', '구글', '마이크로소프트', '아마존', '메타', '브로드컴', '팔란티어', '테슬라', '로빈후드', '미국장기채권', '미국중기채권', '금', '은', '원자재'];
 const DECISIONS = [['strong-buy', '적극 매수', -15], ['buy', '분할 매수', -7], ['neutral', '중립', 0], ['sell', '분할 매도', 15], ['strong-sell', '적극 매도', 25]];
 
 /** Synthetic engine output for view behavior only; numerical semantics have independent engine tests. */
@@ -58,16 +60,16 @@ export function comparisonViewModel({ asOf = '2026-10-25', offset = 0 } = {}) {
   return {
     version: 1, asOf, year, methodology: {},
     rows: COMPARISON_SYMBOLS.map((symbol, position) => {
-      const index = position - 1;
+      const index = position - 3;
       const [id, label, ytdPct] = DECISIONS[index < 0 ? 2 : index % DECISIONS.length];
       return {
-        symbol, name: NAMES[position], group: index < 12 ? '위험 자산' : index < 16 ? '안전 자산' : '대체자산', category: index < 2 ? 'Index ETF' : index < 9 ? '대형 기술주' : index < 12 ? '개별주' : index < 14 ? '채권' : index === 14 ? '금' : index === 15 ? '은' : '원자재', currency: 'USD',
+        symbol, name: NAMES[position], group: index < 12 ? '위험 자산' : index < 16 ? '안전 자산' : '대체자산', category: index < 0 ? '디지털 자산' : index < 2 ? 'Index ETF' : index < 9 ? '대형 기술주' : index < 12 ? '개별주' : index < 14 ? '채권' : index === 14 ? '금' : index === 15 ? '은' : '원자재', currency: symbol==='HYPE'?'USDC':'USD',
         sampleYears: 10, sampleStartYear: year - 10, sampleEndYear: year - 1, samplePartialFirstYear: index % 2 === 0, firstPartialStartDate: index % 2 === 0 ? `${year - 10}-03-02` : null,
         meanRisePct: 20, meanFallPct: -10, meanMddPct: -25,
         yearStartDate: `${year}-01-02`, yearStartPrice: 100 + offset,
         latestDate: `${year}-10-23`, latestPrice: (100 + offset) * (1 + ytdPct / 100), ytdPct,
         judgment: { id, label, available: true, reason: `${symbol}의 올해 등락률과 과거 평균을 비교합니다.`, thresholds: { strongBuyPct: -10, buyPct: -5, sellPct: 10, strongSellPct: 20 } },
-        source: { name: 'Example price source', url: `https://example.test/prices/${symbol}`, priceDefinition: 'split-adjusted close excluding cash distributions', currency: 'USD', retrievedAt: `${year}-10-25T08:00:00Z`, firstDate: `${year - 10}-03-02`, lastDate: `${year}-10-23`, count: 2500, responseSha256: 'test-only' },
+        source: { name: 'Example price source', url: `https://example.test/prices/${symbol}`, priceDefinition: 'split-adjusted close excluding cash distributions', currency: symbol==='HYPE'?'USDC':'USD', retrievedAt: `${year}-10-25T08:00:00Z`, firstDate: `${year - 10}-03-02`, lastDate: `${year}-10-23`, count: 2500, responseSha256: 'test-only' },
         coverage: { status: 'observed', complete: true, issues: [], missingYears: [], missingDates: [], gapCount: 0 },
       };
     }),

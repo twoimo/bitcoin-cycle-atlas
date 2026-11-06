@@ -175,4 +175,22 @@ body[data-center-tool] #chart-reader{display:none!important}
 .rsi-ledger-scroll{max-height:360px;overflow:auto;border:1px solid var(--border);margin-top:12px}.rsi-ledger-scroll thead th{background:var(--surface);z-index:1}.rsi-ledger-scroll td{white-space:nowrap;font-variant-numeric:tabular-nums}.rsi-ledger-scroll td button{border:0;background:transparent;color:var(--muted);min-height:28px;padding:0}
 .rsi-trades summary{cursor:pointer;font-size:12px}
 .symbol-search-mark-tqqq,.symbol-search-mark-soxl,.symbol-search-mark-233740{font-size:14px;color:var(--muted)}
+
+/* The asset board exposes its actual actions in the chart shell header. */
+.center-data-actions{display:flex;align-items:center;justify-content:flex-end;gap:4px;margin-left:auto;flex:none;min-width:0}
+.center-data-title{margin-right:12px;color:var(--text);font-size:13px;font-weight:600;white-space:nowrap}
+.center-data-action{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-height:36px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;color:var(--text);background:var(--surface);white-space:nowrap;font-size:12px}
+.center-data-action svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.center-data-action:hover:not(:disabled){background:var(--surface-hover)}
+.center-data-action:focus-visible{outline:2px solid var(--focus,var(--accent));outline-offset:-2px}
+body[data-center-tool=data] .atlas-canvas-heading:has(.center-data-actions)>:not(.center-data-actions):not(.symbol-selector-trigger):not(.mobile-workbench-button){display:none!important}
+body[data-center-tool=data] .atlas-canvas-heading:has(.center-data-actions)::after{display:none}
+body[data-data-actions-hosted=true] #data-view .daily-heading{display:none!important}
+@media(pointer:coarse){.center-data-action{min-width:44px;min-height:44px}}
+@media(max-width:620px){
+  .center-data-title{display:none}
+  .center-data-action{min-width:44px;min-height:44px;padding:4px}
+  .center-data-action>span:not(.daily-help-icon){display:none}
+  .center-data-actions{gap:0}
+}
 @media(max-width:640px){.atlas-embedded-workspace .ml-scroll{padding:8px 8px 16px}.rsi-history h2 small{display:block;margin:8px 0 0}.rsi-backtest-form{gap:8px}.rsi-backtest-form label{flex:1 0 44%}.rsi-backtest-form input,.rsi-backtest-form input[type=date]{width:100%}.rsi-history-heading{flex-wrap:wrap;gap:8px}.rsi-backtest-metrics{gap:16px}}

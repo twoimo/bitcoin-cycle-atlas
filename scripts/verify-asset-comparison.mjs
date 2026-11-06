@@ -310,7 +310,7 @@ for (const control of negativeControls) {
 
 const requestedAsOf = process.argv.find(argument => argument.startsWith('--as-of='))?.slice('--as-of='.length);
 const asOf = requestedAsOf ?? new Date(published.retrievedAt).toISOString().slice(0, 10);
-const order = ['BTC', 'SPY', 'QQQ', 'NVDA', 'AAPL', 'GOOG', 'MSFT', 'AMZN', 'META', 'AVGO', 'PLTR', 'TSLA', 'HOOD', 'TLT', 'IEF', 'GLD', 'SLV', 'PDBC'];
+const order = ['BTC', 'ETH', 'HYPE', 'SPY', 'QQQ', 'NVDA', 'AAPL', 'GOOG', 'MSFT', 'AMZN', 'META', 'AVGO', 'PLTR', 'TSLA', 'HOOD', 'TLT', 'IEF', 'GLD', 'SLV', 'PDBC'];
 const model = compareReference(published, asOf);
 assert.deepEqual(model.rows.map(asset => asset.symbol), order);
 for (const asset of model.rows) {
@@ -319,7 +319,7 @@ for (const asset of model.rows) {
   assert.equal(asset.samplePartialFirstYear, firstYearPartial);
   assert.equal(asset.firstPartialStartDate, firstYearPartial ? asset.firstDate : null);
 }
-if (model.year === 2026) assert.deepEqual(model.rows.map(asset => asset.sampleYears), [16, 33, 27, 27, 46, 22, 40, 29, 14, 17, 6, 16, 5, 24, 24, 22, 20, 12]);
+if (model.year === 2026) assert.deepEqual(model.rows.map(asset => asset.sampleYears), [16, 10, 2, 33, 27, 27, 46, 22, 40, 29, 14, 17, 6, 16, 5, 24, 24, 22, 20, 12]);
 
 // A second successful production run follows every negative control. Measure
 // only the pure build, excluding JSON parsing, oracle work and rendering.

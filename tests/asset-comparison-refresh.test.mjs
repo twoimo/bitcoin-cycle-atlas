@@ -6,7 +6,7 @@ import {tmpdir} from 'node:os';
 import {createHash} from 'node:crypto';
 import {
   assetComparisonSourceUrl,parseYahooComparisonAsset,validateAssetComparisonBundle,
-  attachPeerSessionMetadata,refreshAssetComparisonFile,
+  attachPeerSessionMetadata,refreshAssetComparisonFile,parseDigitalComparisonArchives,assetComparisonAcquisitionManifest,
 } from '../scripts/refresh-asset-comparison.mjs';
 
 // One real archive supplies realistic full-year coverage. These tests do not
@@ -18,7 +18,23 @@ const DAY=86400000;
 const timestamp=date=>Date.parse(`${date}T16:00:00Z`)/1000;
 const latestDate=archived.assets.map(asset=>asset.prices.at(-1)[0]).sort().at(-1);
 const fixtureDate=new Date(Date.parse(`${latestDate}T00:00:00Z`)+DAY).toISOString().slice(0,10);
-const fixtureTime=`${fixtureDate}T06:00:00.000Z`;
+const fixtureTime=`${fixtureDate}T08:00:00.000Z`;
+
+test('ETH and HYPE reuse exact completed spot closes, original source clocks and separate quote currencies',async()=>{
+  const [eth,themes]=await Promise.all(['eth-ohlc.json','themes.json'].map(file=>readFile(new URL('../dist/data/'+file,import.meta.url),'utf8').then(JSON.parse)));
+  const [ethereum,hyperliquid]=parseDigitalComparisonArchives(eth,themes);
+  assert.deepEqual(ethereum.prices,eth.dailyHistory.candles.map(c=>[c.date.slice(0,10),c.close]));
+  assert.deepEqual(hyperliquid.prices,themes.asset.bars.map(bar=>[bar[0],bar[4]]));
+  assert.equal(ethereum.meta.retrievedAt,eth.dailyHistory.retrievedAt);
+  assert.equal(hyperliquid.meta.retrievedAt,themes.priceSources.find(source=>source.id==='hype-spot').retrievedAt);
+  assert.equal(ethereum.currency,'USD');assert.equal(hyperliquid.currency,'USDC');assert.equal(hyperliquid.meta.product,'@107');
+  assert.equal(hyperliquid.meta.refreshMode,'retained-theme-archive');
+  const manifest=assetComparisonAcquisitionManifest(archived),hypeProvenance=manifest.assets.find(asset=>asset.symbol==='HYPE');
+  assert.equal(hypeProvenance.currency,'USDC');assert.equal(hypeProvenance.sourceName,'Hyperliquid');assert.equal(hypeProvenance.sourceRetrievedAt,hyperliquid.meta.retrievedAt);assert.equal(hypeProvenance.calendar,'calendar-days');assert.match(manifest.priceDefinition,/HYPE spot in USDC/);
+  const changed=structuredClone(themes);changed.asset.quote='USD';assert.throws(()=>parseDigitalComparisonArchives(eth,changed),/spot USDC/);
+  const wrong=structuredClone(archived);wrong.assets.find(asset=>asset.symbol==='HYPE').currency='USD';assert.throws(()=>validateAssetComparisonBundle(wrong),/identity/);
+  const future=structuredClone(archived);future.assets.find(asset=>asset.symbol==='HYPE').meta.retrievedAt='2099-01-01T00:00:00Z';assert.throws(()=>validateAssetComparisonBundle(future),/timestamp/);
+});
 
 function payloadFor(asset){
   return {chart:{error:null,result:[{
@@ -37,7 +53,7 @@ function parseOptions(asset,retrievedAt,payload){
 function fixtureArchive(){
   const bundle=structuredClone(archived);bundle.retrievedAt=fixtureTime;
   for(const asset of bundle.assets){
-    if(asset.symbol==='BTC')continue;
+    if(asset.meta.calendar==='calendar-days')continue;
     asset.meta.retrievedAt=fixtureTime;
     asset.meta.sourceUrl=assetComparisonSourceUrl(asset.symbol,Date.parse(fixtureTime));
     asset.meta.responseSha256=hash(JSON.stringify(payloadFor(asset)));
@@ -59,14 +75,14 @@ function removableInteriorIndex(asset){
 }
 
 test('daily explicit-period request rejects a provider silently returning monthly bars',()=>{
-  const asset=archived.assets.find(item=>item.symbol!=='BTC'),payload=payloadFor(asset),url=new URL(assetComparisonSourceUrl(asset.symbol,Date.parse(fixtureTime)));
+  const asset=archived.assets.find(item=>item.meta.calendar==='sessions'),payload=payloadFor(asset),url=new URL(assetComparisonSourceUrl(asset.symbol,Date.parse(fixtureTime)));
   assert.equal(url.searchParams.get('period1'),'0');assert.equal(url.searchParams.get('interval'),'1d');assert.equal(url.searchParams.has('range'),false);
   payload.chart.result[0].meta.dataGranularity='1mo';
   assert.throws(()=>parseYahooComparisonAsset(payload,parseOptions(asset,fixtureTime,payload)),/granularity mismatch/);
 });
 
 test('same-day provider quote is excluded during a session and accepted after UTC midnight',()=>{
-  const asset=archived.assets.find(item=>item.symbol!=='BTC'),payload=payloadFor(asset),last=asset.prices.at(-1)[0];
+  const asset=archived.assets.find(item=>item.meta.calendar==='sessions'),payload=payloadFor(asset),last=asset.prices.at(-1)[0];
   const intraday=parseYahooComparisonAsset(payload,parseOptions(asset,`${last}T18:00:00.000Z`,payload));
   assert.equal(intraday.meta.lastDate,asset.prices.at(-2)[0]);assert.equal(intraday.meta.excludedIncomplete,1);
   assert.equal(intraday.prices.length,asset.prices.length-1);
@@ -76,34 +92,34 @@ test('same-day provider quote is excluded during a session and accepted after UT
 });
 
 test('price, coverage metadata, and response-hash corruption fail validation',()=>{
-  const alteredPrice=structuredClone(archived);alteredPrice.assets[1].prices[3][1]*=1.01;
+  const alteredPrice=structuredClone(archived);alteredPrice.assets.find(a=>a.symbol==='SPY').prices[3][1]*=1.01;
   assert.throws(()=>validateAssetComparisonBundle(alteredPrice),/hash mismatch/);
-  const alteredCount=structuredClone(archived);alteredCount.assets[1].meta.count--;
+  const alteredCount=structuredClone(archived);alteredCount.assets.find(a=>a.symbol==='SPY').meta.count--;
   assert.throws(()=>validateAssetComparisonBundle(alteredCount),/coverage or hash mismatch/);
-  const alteredHash=structuredClone(archived);alteredHash.assets[1].meta.responseSha256='z'.repeat(64);
+  const alteredHash=structuredClone(archived);alteredHash.assets.find(a=>a.symbol==='SPY').meta.responseSha256='z'.repeat(64);
   assert.throws(()=>validateAssetComparisonBundle(alteredHash),/provenance/);
-  const contradictoryMissing=structuredClone(archived);contradictoryMissing.assets[1].meta.missingDates=[contradictoryMissing.assets[1].prices[3][0]];
+  const contradictoryMissing=structuredClone(archived);contradictoryMissing.assets.find(a=>a.symbol==='SPY').meta.missingDates=[contradictoryMissing.assets.find(a=>a.symbol==='SPY').prices[3][0]];
   assert.throws(()=>validateAssetComparisonBundle(contradictoryMissing),/unavailable-session metadata/);
 });
 
 test('peer comparison detects an isolated omitted session even after count/hash are recomputed',()=>{
-  const bundle=structuredClone(archived),asset=bundle.assets[1],index=removableInteriorIndex(asset);
+  const bundle=structuredClone(archived),asset=bundle.assets.find(a=>a.symbol==='SPY'),index=removableInteriorIndex(asset);
   const [missingDate]=asset.prices.splice(index,1)[0];
   asset.meta.count=asset.prices.length;asset.meta.pricesSha256=hash(JSON.stringify(asset.prices));
   assert.throws(()=>validateAssetComparisonBundle(bundle),/cross-asset session metadata mismatch/);
   attachPeerSessionMetadata(bundle);
   assert.ok(asset.meta.peerSessionCheck.missingDates.includes(missingDate));
   assert.ok(asset.meta.missingDates.includes(missingDate));
-  assert.equal(validateAssetComparisonBundle(bundle)[1].peerMissingSessions,archived.assets[1].meta.peerSessionCheck.missingDates.length+1);
+  assert.equal(validateAssetComparisonBundle(bundle).find(a=>a.symbol==='SPY').peerMissingSessions,archived.assets.find(a=>a.symbol==='SPY').meta.peerSessionCheck.missingDates.length+1);
   assert.ok(!asset.prices.some(([date])=>date===missingDate),'the omitted price must remain absent');
 });
 
 test('refresh rejects a truncated provider history without changing the existing bundle',async()=>{
   const previous=fixtureArchive(),directory=await mkdtemp(join(tmpdir(),'asset-comparison-refresh-')),output=join(directory,'bundle.json');
   const before=JSON.stringify(previous)+'\n';
-  const rawBySymbol=new Map(previous.assets.filter(asset=>asset.symbol!=='BTC').map(asset=>{
+  const rawBySymbol=new Map(previous.assets.filter(asset=>asset.meta.calendar==='sessions').map(asset=>{
     const payload=payloadFor(asset);
-    if(asset.symbol===previous.assets.find(item=>item.symbol!=='BTC').symbol){
+    if(asset.symbol===previous.assets.find(item=>item.meta.calendar==='sessions').symbol){
       const index=removableInteriorIndex(asset),result=payload.chart.result[0];
       result.timestamp.splice(index,1);result.indicators.quote[0].close.splice(index,1);
     }
@@ -120,8 +136,8 @@ test('refresh rejects a truncated provider history without changing the existing
 
 test('unchanged completed prices still receive the actual new retrieval timestamp',async()=>{
   const previous=fixtureArchive(),directory=await mkdtemp(join(tmpdir(),'asset-comparison-refresh-')),output=join(directory,'bundle.json');
-  const rawBySymbol=new Map(previous.assets.filter(asset=>asset.symbol!=='BTC').map(asset=>[asset.symbol,JSON.stringify(payloadFor(asset))]));
-  const nextTime=`${fixtureDate}T07:00:00.000Z`;
+  const rawBySymbol=new Map(previous.assets.filter(asset=>asset.meta.calendar==='sessions').map(asset=>[asset.symbol,JSON.stringify(payloadFor(asset))]));
+  const nextTime=`${fixtureDate}T09:00:00.000Z`;
   try{
     await writeFile(output,JSON.stringify(previous));
     const next=await refreshAssetComparisonFile(output,{
@@ -129,7 +145,7 @@ test('unchanged completed prices still receive the actual new retrieval timestam
     });
     assert.equal(next.retrievedAt,nextTime);assert.notEqual(next.retrievedAt,previous.retrievedAt);
     assert.deepEqual(next.assets.map(asset=>asset.prices),previous.assets.map(asset=>asset.prices));
-    assert.ok(next.assets.filter(asset=>asset.symbol!=='BTC').every(asset=>asset.meta.retrievedAt===nextTime));
+    assert.ok(next.assets.filter(asset=>asset.meta.calendar==='sessions').every(asset=>asset.meta.retrievedAt===nextTime));
     assert.deepEqual(next.assets[0].prices,previous.assets[0].prices,'BTC archive is reused without changing its original observations');
     assert.equal(JSON.parse(await readFile(output,'utf8')).retrievedAt,nextTime);
   }finally{await rm(directory,{recursive:true,force:true});}

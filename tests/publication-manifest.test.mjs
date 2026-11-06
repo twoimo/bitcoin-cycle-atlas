@@ -67,6 +67,14 @@ test('asset publication preserves its own collection time and distinguishes hist
   const unknown=publicationAsset({prices:input.prices},config,'2026-10-26T08:00:00Z');assert.equal(unknown.freshness.observedAt,null);
 });
 
+test('digital comparison publication retains the USDC quote and original source URL',()=>{
+  const input={symbol:'HYPE',currency:'USDC',prices:[['2026-11-02',84.007]],meta:{sourceName:'Hyperliquid',sourceUrl:'https://api.hyperliquid.xyz/info',retrievedAt:'2026-11-03T13:30:44.625585+00:00',priceDefinition:'HYPE/USDC completed UTC daily spot close'}};
+  const asset=publicationAsset(input,{symbol:'HYPE',role:'comparison',market:'crypto',sourcePath:'data/asset-comparison.json'},'2026-11-06T08:00:00Z');
+  assert.equal(asset.currency,'USDC');assert.equal(asset.latestPrice,84.007);
+  assert.equal(asset.sourceUrl,input.meta.sourceUrl);assert.equal(asset.priceDefinition,input.meta.priceDefinition);
+  assert.equal(asset.freshness.observedAt,input.meta.retrievedAt);
+});
+
 test('public confirmation matches the expected build and rejects a stale or substituted served file',async()=>{
   const files=['index.html','site-entry.js','data/btc-daily.json','data/forecast-ledger/index.json'].map(path=>({path,bytes:1,sha256:hash('x')}));
   const {manifestSha256,...body}=manifest(files);const record=seal({...body,sourceTree:{status:'clean'}});

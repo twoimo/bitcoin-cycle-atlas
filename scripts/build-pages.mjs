@@ -21,7 +21,7 @@ await collect(web);
 const app='market-lab/app/index.html';
 expected.set(app,Buffer.from(expected.get(app).toString().replace('<head>',`<head><meta name="atlas-root" content="${base}"><meta name="atlas-static" content="1">`)));
 const index=await readFile(path.join(dist,'index.html'),'utf8');
-const routes=['market-lab/',...atlasPages.filter(p=>p.tab).map(p=>p.href.slice(1))];
+const routes=['market-lab/','market-lab/charts/',...atlasPages.filter(p=>p.tab).map(p=>p.href.slice(1))];
 for(const route of routes){
   const depth=route.split('/').filter(Boolean).length,prefix='../'.repeat(depth);
   const html=index.replace(/\b(src|href)=(['"])([^'"]*)\2/g,(all,key,quote,value)=>{

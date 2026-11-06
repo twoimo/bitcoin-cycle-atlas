@@ -101,7 +101,7 @@ jobs:
         run: |
           echo "attempted_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
           npm run refresh:equities
-      - name: Refresh the full 18-asset comparison history
+      - name: Refresh the 20-asset comparison history
         id: asset_comparison_refresh
         # Atomic validation keeps the previous complete bundle on provider failure.
         continue-on-error: true

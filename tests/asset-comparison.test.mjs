@@ -272,10 +272,18 @@ check('Input prices and provenance remain unmodified', () => {
 });
 
 const published = JSON.parse(await readFile(new URL('../dist/data/asset-comparison.json', import.meta.url), 'utf8'));
+check('Digital additions preserve source units and withhold judgments for gaps and insufficient years',()=>{
+  const result=buildAssetComparison(published),eth=result.rows.find(row=>row.symbol==='ETH'),hype=result.rows.find(row=>row.symbol==='HYPE');
+  assert.equal(result.rows.length,20);assert.equal(eth.currency,'USD');assert.equal(hype.currency,'USDC');
+  assert.equal(eth.coverage.complete,false);assert.equal(eth.coverage.missingDates.length,2);assert.equal(eth.judgment.available,false);
+  assert.equal(hype.sampleYears,2);assert.equal(hype.coverage.complete,true);assert.equal(hype.judgment.available,false);assert.match(hype.judgment.reason,/최소 5개 연도/);
+  assert.equal(hype.latestPrice,published.assets.find(asset=>asset.symbol==='HYPE').prices.at(-1)[1]);
+});
 check('A fresh year-end close on New Year’s Day is correctly unavailable before the first session', () => {
   const result = buildAssetComparison(published, { asOfDate: '2026-01-01' });
-  assert.equal(result.rows.length, 18);
+  assert.equal(result.rows.length, 20);
   for (const asset of result.rows) {
+    if (['ETH','HYPE'].includes(asset.symbol)) { assert.equal(asset.latestDate, '2026-01-01'); assert.equal(asset.yearStartDate, '2026-01-01'); assert.equal(asset.judgment.available,false); continue; }
     if (asset.symbol === 'BTC') { assert.equal(asset.latestDate, '2026-01-01'); assert.equal(asset.yearStartDate, '2026-01-01'); continue; }
     assert.equal(asset.latestDate, '2025-12-31');
     assert.equal(asset.coverage.complete, true);
@@ -289,7 +297,7 @@ check('A fresh year-end close on New Year’s Day is correctly unavailable befor
 check('Published all-asset history preserves the reviewed 2026-10-23 sample years and first-session baselines after refresh', () => {
   // This is a historical witness, so freeze the cutoff as well as its expected
   // values. The published archive continues growing with the refresh workflow.
-  const result = buildAssetComparison(published, { asOfDate: '2026-10-23' });
+  const result = buildAssetComparison({...published,assets:published.assets.filter(asset=>!['ETH','HYPE'].includes(asset.symbol))}, { asOfDate: '2026-10-23' });
   assert.deepEqual(result.rows.map(asset => asset.symbol), ['BTC', 'SPY', 'QQQ', 'NVDA', 'AAPL', 'GOOG', 'MSFT', 'AMZN', 'META', 'AVGO', 'PLTR', 'TSLA', 'HOOD', 'TLT', 'IEF', 'GLD', 'SLV', 'PDBC']);
   assert.deepEqual(result.rows.map(asset => asset.sampleYears), [16, 33, 27, 27, 46, 22, 40, 29, 14, 17, 6, 16, 5, 24, 24, 22, 20, 12]);
   assert.ok(result.rows.reduce((count, asset) => count + asset.observationCount, 0) > 97000);
