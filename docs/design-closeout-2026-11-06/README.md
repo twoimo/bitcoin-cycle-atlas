@@ -61,6 +61,12 @@ Computed contrast is 9.638:1 in dark mode and 5.253:1 in a forced light mode for
 
 Historical raw TAP output retains its original whitespace. It is not reformatted to manufacture a clean whitespace-check receipt.
 
+## Final-head follow-up
+
+The exact `aca73b74a5128a5466488a0c701e86f5e854af46` PR head passed its complete 49-case native gate, but its evidence-packaging step then exceeded the 100,000,000-byte aggregate budget. Reconstructing the actual failed artifact produced the same overflow and measured the complete required book at 105,721,764 bytes across 862 entries. The [capacity follow-up](release-followup-ci.md) retains that failure, the complete byte reconciliation and the narrowly increased 128,000,000-byte aggregate capacity. The independent 85,000,000-byte per-file ceiling, source inventory, framing and model conditions stay intact.
+
+The separate open [issue #50](https://github.com/twoimo/bitcoin-cycle-atlas/issues/50) was still reproducible in the source: manual dates outside the input bounds reached the nearest-bar snapping path. The [manual-date follow-up](replay-date-followup.md) adds one shared validation boundary for the button and Enter, state-preservation regressions, native keyboard cases and a real-source negative control. Pointer selection, Random and First retain their existing paths. This is a new product delta after the recorded design closeout; its complete CI and public release identities are recorded in the [PR #62 release summary](https://github.com/twoimo/bitcoin-cycle-atlas/pull/62).
+
 ## Claims and limits
 
 These checks establish the recorded finite arithmetic, lifecycle, preservation and interaction properties. They do not establish universal mathematical correctness, calibrated forecast probabilities, superior market predictions or investment performance. The deterministic performance receipt checks work bounds and SVG size, not native paint latency.

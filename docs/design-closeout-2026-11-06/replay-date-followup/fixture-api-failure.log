@@ -1,0 +1,227 @@
+✔ a captured current forecast keeps its distinct input date and immutable path, while historical labels use only the replay origin (320.336055ms)
+✔ the same primary SVG retains Atlas cycle and interval layers and the exact orange forecast before and after revealing actual bars (135.471744ms)
+✔ unrevealed closes and candles cannot change the actual line, axis, inspection or frozen forecast (82.880805ms)
+✔ real venue candles are revealed by their actual date without replacing Coin Metrics comparison values (25.410036ms)
+✔ mismatched forecast values and origins fail instead of scoring a different orange path (64.413001ms)
+✔ the original publication path remains a separately supported context with its original origin (20.089222ms)
+✔ a forecast-only viewport never exposes a nearest actual and preserves correct scaled coordinates (71.182075ms)
+✔ old replay disposal cannot detach the newer native Atlas chart handlers (56.862762ms)
+✔ an empty replay viewport does not inherit unrevealed live prices and still identifies the frozen orange path (41.923932ms)
+✔ one daily step grows the same weekly candle and volume at their fixed week coordinate (158.633917ms)
+✔ unrevealed weekly OHLC and volume cannot expand the replay scale or enter a forming bar (173.803944ms)
+✔ a first-available replay can have an empty earlier prefix while retaining only the frozen assumptions (249.42702ms)
+✔ an intraday interval cannot silently reuse daily data as shorter candles (0.862124ms)
+✔ unconfirmed start selection keeps the Atlas chart and coordinates without confirmed replay boundaries (84.779213ms)
+✔ weekly start selection follows actual opening coordinates without selecting or changing a forming candle (15.738493ms)
+✔ capture owns the painted path, range and presentation before a live mutation (24.726194ms)
+✔ saved curve restores despite a different current live model (776.816091ms)
+✔ a legacy snapshot supplement changes only its missing retrospective and digest (426.490839ms)
+✔ a later actual observation can be revealed without changing the old curve or capture time (352.879647ms)
+✔ changed saved price fails closed without replacing prior bytes (239.009119ms)
+✔ changed saved lower fails closed without replacing prior bytes (249.189158ms)
+✔ changed saved upper fails closed without replacing prior bytes (189.815438ms)
+✔ changed saved cycle annotations fail integrity verification (182.81493ms)
+✔ snapshot cannot be substituted for a different saved session (160.209046ms)
+✔ capture and verification do not persist; only explicit save writes (214.141991ms)
+✔ quota failure keeps the previous saved session byte-for-byte (167.119736ms)
+✔ current-chart save cannot silently degrade into a hash-only save (177.905343ms)
+✔ other replay modes keep their existing small session format (0.283339ms)
+✔ weekly D updates retain the open and all frozen forecast rows (239.759386ms)
+✔ unrevealed actual extremes cannot change the disclosed replay data (302.515906ms)
+✔ compressed capture round-trips every value without inflating local storage (264.407222ms)
+✔ full operating long-horizon capture uses a database reference and restores all rows (3120.163069ms)
+✔ guarded save compares the whole prior pointer and refuses stale or deleted generations (1.025195ms)
+✔ unsupported lock and revoked save ownership fail before changing any saved bytes (0.20277ms)
+✔ main replay loads a fixed branded object and keeps it through forward, reverse and explicit restart (1.931455ms)
+✔ play resumes the current daily cursor at the selected speed without replacing its forecast (0.557835ms)
+✔ play at the last available observation never rewinds or schedules another callback (0.94097ms)
+✔ superseded origin success and failure cannot replace the current chart (1.297027ms)
+✔ exit, start selection and destroy revoke pending work even when its loader ignores abort (0.877376ms)
+✔ load errors clear stale session output and a retry can recover (0.33166ms)
+✔ invalid sessions cannot enter a playable state (1.700783ms)
+✔ one bar is terminal and seeks clamp to available bars without fabricating more (0.535371ms)
+✔ play is idempotent and all speeds own exactly one correctly timed callback (0.528591ms)
+✔ a timer callback can never be replayed twice or after pause, exit or a new origin (0.333232ms)
+✔ reentrant chart callbacks cannot resurrect playback or schedule competing timers (0.340123ms)
+✔ a loading notification can revoke the request before the loader starts (0.139586ms)
+✔ a rejected ready frame cannot report an accepted session to its awaiting caller (0.285241ms)
+✔ origin snapshots cannot be changed by the caller while a request waits (0.247146ms)
+✔ display failure revokes loaders and timers; destroy remains terminal without notifications (0.219394ms)
+✔ all 10000 four-command playback traces preserve cursor, identity and timer ownership (296.21283ms)
+ℹ BOUNDED_REPLAY {"commands":10,"maxTraceLength":4,"traces":10000,"prefixes":11111,"transitions":40000,"observableStates":52,"observableEdges":380,"playbackBars":3}
+✔ main replay coordinator guards source identity, exact resume, input boundaries and explicit model comparison (300.489968ms)
+ℹ late archive completion
+ℹ late record completion
+ℹ settings identity and exit during load
+ℹ resume by calendar date after outcome revision
+ℹ keyboard controls and visibility pause
+ℹ unsupported ETH adaptive origin requires explicit pooled comparison at the same date
+ℹ current-chart entry, changed start date, playback and resume retain the original forecast and distinguish unknown actuals
+ℹ asynchronous mode changes keep the prior cutoff until the newly selected source is ready
+ℹ an obsolete candle-request failure cannot invalidate the resumed line display
+✔ default cutoff entry preserves current-chart save and Continue across mode changes (184.630088ms)
+✔ saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories (202.411735ms)
+✔ destroy during an explicit save releases replay once and ignores late completion (199.285585ms)
+✔ manual date button and Enter reject invalid dates without changing a resumed capture (160.911423ms)
+✔ manual invalid dates leave an unconfirmed replay start unconfirmed (96.558261ms)
+✔ forecast settings cannot confirm an unselected replay start (185.328902ms)
+✔ first weekly replay entry waits for an explicit start while keeping the project default date (125.117681ms)
+✔ saved replay entry requires Continue or Start new and restores the original origin separately from its selected date (116.976549ms)
+✔ Start new, scissors hover, selection cancellation and unconfirmed exit preserve saved bytes without a fake cutoff (93.671935ms)
+✔ weekly start preview blocks Play, Forward and Jump to real-time until a clicked bar is confirmed (109.82522ms)
+✔ only checked confirmed exit persists a draft and a saved line chart resumes with its actual archive (147.584666ms)
+✔ reselecting during playback previews independently and pointer confirmation cuts actual data before the selected bar (131.044679ms)
+✔ Select date, Random bar and First available day use the real capability range including an empty first cutoff (129.272268ms)
+✔ Select bar opens only starting actions, keeps forecast settings separate and selects a chart bar without mutating saved state (113.261673ms)
+✔ the date selection editor follows the restored visible cursor and discards unapplied drafts without changing the session start (125.487283ms)
+✔ date editing preserves the default first candle and reports empty cutoffs and actual gaps truthfully (106.574359ms)
+✔ compact transport returns to its original start and opens the explicit save choice before jumping to the live chart (111.154699ms)
+✔ Select bar retains native form keys and closes through Escape, its close action and an outside pointer (94.263431ms)
+✔ weekly replay and all existing viewport periods route without rebuilding or changing the current orange forecast (99.887309ms)
+✔ unsupported intraday entry stays on the selected interval and displays the missing-source reason (105.963496ms)
+✔ Shift replay shortcuts retain native input behavior and never persist on blur or page hide (103.377864ms)
+✔ baseline close-only scoring dates and separate weekly candles retain distinct source and evaluation clocks (97.133865ms)
+✔ a changed forecast hash rejects Continue while preserving the exact previous saved session (76.231834ms)
+✔ entry and exit choices stop pointer, click, wheel and keyboard propagation to the chart behind the modal (103.852441ms)
+✔ a close-only recorded visit cannot overwrite the saved line display when Continue reloads genuine candles (113.806192ms)
+✔ generic BTC Continue synchronizes a live weekly header with the actual daily renderer and recorded line fallback (95.961677ms)
+✔ fixed cutoff uses only completed Bitstamp closes and eligible dated evidence, with no current forecast (9.591616ms)
+✔ changing or removing all post-cutoff prices cannot change the generated forecast (437.846276ms)
+✔ reveal, seek and weekly aggregation keep the frozen path while withholding later OHLC (160.678459ms)
+✔ 114 revealed daily comparisons match an independent Python calculation and flat baseline (22.776494ms)
+✔ save restore uses exact stored bytes, accepts a changed future suffix, rejects revised prefix and tampering (83.839332ms)
+✔ insufficient, gapped, unsupported research and premature completion inputs fail explicitly (33.276392ms)
+✔ new backtest context carries no current cycle or forecast annotations (12.452655ms)
+✖ cutoff selection, result reveal and save resume retain the exact forecast and old storage (612.913472ms)
+✖ a different horizon retains the selected start, while an invalid saved forecast fails without regeneration (454.835095ms)
+✖ unavailable source stays an error, and retry accepts a supported date without saving preview (482.118464ms)
+ℹ tests 87
+ℹ suites 0
+ℹ pass 84
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7393.126077
+
+✖ failing tests:
+
+test at tests/replay-cutoff-ui.test.mjs:56:48
+✖ cutoff selection, result reveal and save resume retain the exact forecast and old storage (612.913472ms)
+  Error: Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node --experimental-vm-modules /workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs --cutoff-ui-case 0
+  (node:116) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+  (Use `node --trace-warnings ...` to show where the warning was created)
+  chart-replay-view:160
+    function discardDateDraft(){q('date').setCustomValidity('');if(dateDraftBase!==null){q('date').value=dateDraftBase;dateDraftBase=null;}}
+                                          ^
+  
+  TypeError: q(...).setCustomValidity is not a function
+      at discardDateDraft (chart-replay-view:160:41)
+      at menuView (chart-replay-view:162:22)
+      at closeMenu (chart-replay-view:184:61)
+      at open (chart-replay-view:280:36)
+      at q.onclick (chart-replay-view:730:162)
+      at Element.click (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:28:261)
+      at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:20:31)
+      at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:55:93
+  
+  Node.js v24.22.1
+  
+      at genericNodeError (node:internal/errors:986:15)
+      at wrappedFn (node:internal/errors:540:14)
+      at checkExecSyncError (node:child_process:943:11)
+      at execFileSync (node:child_process:979:15)
+      at TestContext.<anonymous> (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:58:27)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    status: 1,
+    signal: null,
+    output: [ null, '', "(node:116) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nchart-replay-view:160\n  function discardDateDraft(){q('date').setCustomValidity('');if(dateDraftBase!==null){q('date').value=dateDraftBase;dateDraftBase=null;}}\n                                        ^\n\nTypeError: q(...).setCustomValidity is not a function\n    at discardDateDraft (chart-replay-view:160:41)\n    at menuView (chart-replay-view:162:22)\n    at closeMenu (chart-replay-view:184:61)\n    at open (chart-replay-view:280:36)\n    at q.onclick (chart-replay-view:730:162)\n    at Element.click (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:28:261)\n    at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:20:31)\n    at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:55:93\n\nNode.js v24.22.1\n" ],
+    pid: 116,
+    stdout: '',
+    stderr: "(node:116) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nchart-replay-view:160\n  function discardDateDraft(){q('date').setCustomValidity('');if(dateDraftBase!==null){q('date').value=dateDraftBase;dateDraftBase=null;}}\n                                        ^\n\nTypeError: q(...).setCustomValidity is not a function\n    at discardDateDraft (chart-replay-view:160:41)\n    at menuView (chart-replay-view:162:22)\n    at closeMenu (chart-replay-view:184:61)\n    at open (chart-replay-view:280:36)\n    at q.onclick (chart-replay-view:730:162)\n    at Element.click (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:28:261)\n    at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:20:31)\n    at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:55:93\n\nNode.js v24.22.1\n"
+  }
+
+test at tests/replay-cutoff-ui.test.mjs:56:48
+✖ a different horizon retains the selected start, while an invalid saved forecast fails without regeneration (454.835095ms)
+  Error: Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node --experimental-vm-modules /workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs --cutoff-ui-case 1
+  (node:171) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+  (Use `node --trace-warnings ...` to show where the warning was created)
+  chart-replay-view:160
+    function discardDateDraft(){q('date').setCustomValidity('');if(dateDraftBase!==null){q('date').value=dateDraftBase;dateDraftBase=null;}}
+                                          ^
+  
+  TypeError: q(...).setCustomValidity is not a function
+      at discardDateDraft (chart-replay-view:160:41)
+      at menuView (chart-replay-view:162:22)
+      at closeMenu (chart-replay-view:184:61)
+      at open (chart-replay-view:280:36)
+      at requestEntry (chart-replay-view:230:12)
+      at trigger.onclick (chart-replay-view:694:58)
+      at Element.click (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:28:261)
+      at Object.open (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:55:26)
+      at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:39:35)
+      at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:55:93
+  
+  Node.js v24.22.1
+  
+      at genericNodeError (node:internal/errors:986:15)
+      at wrappedFn (node:internal/errors:540:14)
+      at checkExecSyncError (node:child_process:943:11)
+      at execFileSync (node:child_process:979:15)
+      at TestContext.<anonymous> (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:58:27)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12) {
+    status: 1,
+    signal: null,
+    output: [ null, '', "(node:171) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nchart-replay-view:160\n  function discardDateDraft(){q('date').setCustomValidity('');if(dateDraftBase!==null){q('date').value=dateDraftBase;dateDraftBase=null;}}\n                                        ^\n\nTypeError: q(...).setCustomValidity is not a function\n    at discardDateDraft (chart-replay-view:160:41)\n    at menuView (chart-replay-view:162:22)\n    at closeMenu (chart-replay-view:184:61)\n    at open (chart-replay-view:280:36)\n    at requestEntry (chart-replay-view:230:12)\n    at trigger.onclick (chart-replay-view:694:58)\n    at Element.click (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:28:261)\n    at Object.open (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:55:26)\n    at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:39:35)\n    at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:55:93\n\nNode.js v24.22.1\n" ],
+    pid: 171,
+    stdout: '',
+    stderr: "(node:171) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nchart-replay-view:160\n  function discardDateDraft(){q('date').setCustomValidity('');if(dateDraftBase!==null){q('date').value=dateDraftBase;dateDraftBase=null;}}\n                                        ^\n\nTypeError: q(...).setCustomValidity is not a function\n    at discardDateDraft (chart-replay-view:160:41)\n    at menuView (chart-replay-view:162:22)\n    at closeMenu (chart-replay-view:184:61)\n    at open (chart-replay-view:280:36)\n    at requestEntry (chart-replay-view:230:12)\n    at trigger.onclick (chart-replay-view:694:58)\n    at Element.click (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:28:261)\n    at Object.open (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:55:26)\n    at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:39:35)\n    at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:55:93\n\nNode.js v24.22.1\n"
+  }
+
+test at tests/replay-cutoff-ui.test.mjs:56:48
+✖ unavailable source stays an error, and retry accepts a supported date without saving preview (482.118464ms)
+  Error: Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node --experimental-vm-modules /workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs --cutoff-ui-case 2
+  (node:224) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+  (Use `node --trace-warnings ...` to show where the warning was created)
+  chart-replay-view:160
+    function discardDateDraft(){q('date').setCustomValidity('');if(dateDraftBase!==null){q('date').value=dateDraftBase;dateDraftBase=null;}}
+                                          ^
+  
+  TypeError: q(...).setCustomValidity is not a function
+      at discardDateDraft (chart-replay-view:160:41)
+      at menuView (chart-replay-view:162:22)
+      at closeMenu (chart-replay-view:184:61)
+      at open (chart-replay-view:280:36)
+      at requestEntry (chart-replay-view:230:12)
+      at trigger.onclick (chart-replay-view:694:58)
+      at Element.click (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:28:261)
+      at Object.open (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:55:26)
+      at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:50:11)
+      at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:55:93
+  
+  Node.js v24.22.1
+  
+      at genericNodeError (node:internal/errors:986:15)
+      at wrappedFn (node:internal/errors:540:14)
+      at checkExecSyncError (node:child_process:943:11)
+      at execFileSync (node:child_process:979:15)
+      at TestContext.<anonymous> (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:58:27)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12) {
+    status: 1,
+    signal: null,
+    output: [ null, '', "(node:224) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nchart-replay-view:160\n  function discardDateDraft(){q('date').setCustomValidity('');if(dateDraftBase!==null){q('date').value=dateDraftBase;dateDraftBase=null;}}\n                                        ^\n\nTypeError: q(...).setCustomValidity is not a function\n    at discardDateDraft (chart-replay-view:160:41)\n    at menuView (chart-replay-view:162:22)\n    at closeMenu (chart-replay-view:184:61)\n    at open (chart-replay-view:280:36)\n    at requestEntry (chart-replay-view:230:12)\n    at trigger.onclick (chart-replay-view:694:58)\n    at Element.click (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:28:261)\n    at Object.open (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:55:26)\n    at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:50:11)\n    at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:55:93\n\nNode.js v24.22.1\n" ],
+    pid: 224,
+    stdout: '',
+    stderr: "(node:224) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nchart-replay-view:160\n  function discardDateDraft(){q('date').setCustomValidity('');if(dateDraftBase!==null){q('date').value=dateDraftBase;dateDraftBase=null;}}\n                                        ^\n\nTypeError: q(...).setCustomValidity is not a function\n    at discardDateDraft (chart-replay-view:160:41)\n    at menuView (chart-replay-view:162:22)\n    at closeMenu (chart-replay-view:184:61)\n    at open (chart-replay-view:280:36)\n    at requestEntry (chart-replay-view:230:12)\n    at trigger.onclick (chart-replay-view:694:58)\n    at Element.click (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:28:261)\n    at Object.open (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-ui-fixture.mjs:55:26)\n    at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:50:11)\n    at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/replay-cutoff-ui.test.mjs:55:93\n\nNode.js v24.22.1\n"
+  }

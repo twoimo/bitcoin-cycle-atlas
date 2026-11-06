@@ -1,0 +1,102 @@
+✖ manual date button and Enter reject invalid dates without changing a resumed capture (101.433573ms)
+✖ manual invalid dates leave an unconfirmed replay start unconfirmed (83.972164ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 268.936439
+
+✖ failing tests:
+
+test at tests/chart-replay-ui.test.mjs:929:55
+✖ manual date button and Enter reject invalid dates without changing a resumed capture (101.433573ms)
+  Error: Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node --experimental-vm-modules /workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs --replay-ui-extra 3
+  (node:25) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+  (Use `node --trace-warnings ...` to show where the warning was created)
+  node:internal/modules/run_main:107
+      triggerUncaughtException(
+      ^
+  
+  AssertionError [ERR_ASSERTION]: manual invalid date must report native validity
+  
+  undefined !== 1
+  
+      at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:263:16)
+      at async verifyInteractionCase (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:712:49)
+      at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:922:79 {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+  
+  Node.js v24.22.1
+  
+      at genericNodeError (node:internal/errors:986:15)
+      at wrappedFn (node:internal/errors:540:14)
+      at checkExecSyncError (node:child_process:943:11)
+      at execFileSync (node:child_process:979:15)
+      at verifyInteractionCase (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:710:64)
+      at TestContext.<anonymous> (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:930:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    status: 1,
+    signal: null,
+    output: [ null, '', "(node:25) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nnode:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: manual invalid date must report native validity\n\nundefined !== 1\n\n    at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:263:16)\n    at async verifyInteractionCase (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:712:49)\n    at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:922:79 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: undefined,\n  expected: 1,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.22.1\n" ],
+    pid: 25,
+    stdout: '',
+    stderr: "(node:25) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nnode:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: manual invalid date must report native validity\n\nundefined !== 1\n\n    at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:263:16)\n    at async verifyInteractionCase (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:712:49)\n    at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:922:79 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: undefined,\n  expected: 1,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.22.1\n"
+  }
+
+test at tests/chart-replay-ui.test.mjs:929:55
+✖ manual invalid dates leave an unconfirmed replay start unconfirmed (83.972164ms)
+  Error: Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node --experimental-vm-modules /workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs --replay-ui-extra 4
+  (node:37) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+  (Use `node --trace-warnings ...` to show where the warning was created)
+  node:internal/modules/run_main:107
+      triggerUncaughtException(
+      ^
+  
+  AssertionError [ERR_ASSERTION]: invalid manual input cannot confirm a start
+  + actual - expected
+  
+  + 'paused'
+  - 'selecting'
+  
+      at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:294:30)
+      at async verifyInteractionCase (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:712:49)
+      at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:922:79 {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'paused',
+    expected: 'selecting',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+  
+  Node.js v24.22.1
+  
+      at genericNodeError (node:internal/errors:986:15)
+      at wrappedFn (node:internal/errors:540:14)
+      at checkExecSyncError (node:child_process:943:11)
+      at execFileSync (node:child_process:979:15)
+      at verifyInteractionCase (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:710:64)
+      at TestContext.<anonymous> (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:930:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    status: 1,
+    signal: null,
+    output: [ null, '', "(node:37) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nnode:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: invalid manual input cannot confirm a start\n+ actual - expected\n\n+ 'paused'\n- 'selecting'\n\n    at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:294:30)\n    at async verifyInteractionCase (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:712:49)\n    at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:922:79 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 'paused',\n  expected: 'selecting',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.22.1\n" ],
+    pid: 37,
+    stdout: '',
+    stderr: "(node:37) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nnode:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: invalid manual input cannot confirm a start\n+ actual - expected\n\n+ 'paused'\n- 'selecting'\n\n    at Object.run (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:294:30)\n    at async verifyInteractionCase (file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:712:49)\n    at async file:///workspace/scratch/67f16cc3b970/bitcoin-cycle-atlas/tests/chart-replay-ui.test.mjs:922:79 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 'paused',\n  expected: 'selecting',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.22.1\n"
+  }
