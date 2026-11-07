@@ -56,21 +56,21 @@ function checkSelection(cwd,{broken=false}={}){
 }
 
 const savedEntryCases=[
-  {index:0,name:'default cutoff entry preserves current-chart save and Continue across mode changes',
+  {name:'default cutoff entry preserves current-chart save and Continue across mode changes',
     assertion:'the last selected current-chart mode must find its own saved slot'},
-  {index:1,name:'saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories',
+  {name:'saved replay entry isolates cutoff and generic slots and preserves malformed or mismatched histories',
     assertion:'invalid or cross-mode records must not borrow another slot'},
 ];
-const destructionCase={index:2,name:'destroy during an explicit save releases replay once and ignores late completion',
+const destructionCase={name:'destroy during an explicit save releases replay once and ignores late completion',
   assertion:'destroy must release replay even while an explicit save is pending'};
 const manualDateCases=[
-  {index:3,name:'manual date button and Enter reject invalid dates without changing a resumed capture',
+  {name:'manual date button and Enter reject invalid dates without changing a resumed capture',
     assertion:'manual invalid date cannot replace the current session'},
-  {index:4,name:'manual invalid dates leave an unconfirmed replay start unconfirmed',
+  {name:'manual invalid dates leave an unconfirmed replay start unconfirmed',
     assertion:'invalid manual input cannot confirm a start'},
 ];
 function checkSavedEntry(cwd,item,{broken=false}={}){
-  const run=spawnSync(process.execPath,['--experimental-vm-modules',coordinatorTestPath,'--replay-ui-extra',String(item.index)],
+  const run=spawnSync(process.execPath,['--experimental-vm-modules',coordinatorTestPath,'--replay-ui-extra-name',item.name],
     {cwd,encoding:'utf8',timeout:30000,maxBuffer:4*1024*1024});
   assert.equal(run.error,undefined);assert.equal(run.signal,null);assert.equal(run.status,broken?1:0,run.stdout+'\n'+run.stderr);
   if(broken){

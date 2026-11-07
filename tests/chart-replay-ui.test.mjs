@@ -869,6 +869,12 @@ async function verifyInteractionCase(index){
     scope:'Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately'};
 }
 
+async function verifyNamedInteractionCase(name){
+  const matches=interactionCases.filter(item=>item.name===name);
+  assert.equal(matches.length,1,'Exactly one named UI interaction case is required');
+  return verifyInteractionCase(interactionCases.indexOf(matches[0]));
+}
+
 export async function verifyChartReplayUi(){
   if(typeof vm.SourceTextModule!=='function')return JSON.parse(execFileSync(process.execPath,
     ['--experimental-vm-modules',fileURLToPath(import.meta.url),'--replay-ui-child'],{encoding:'utf8',timeout:30000,stdio:['ignore','pipe','pipe']}));
@@ -1074,6 +1080,7 @@ async function exploreSelectionBoundary(){
 if(process.argv.includes('--replay-ui-explore')){
   const result=await exploreSelectionBoundary();console.log(JSON.stringify(result));if(result.status!=='pass')process.exitCode=1;
 }
+else if(process.argv.includes('--replay-ui-extra-name'))console.log(JSON.stringify(await verifyNamedInteractionCase(process.argv[process.argv.indexOf('--replay-ui-extra-name')+1])));
 else if(process.argv.includes('--replay-ui-extra'))console.log(JSON.stringify(await verifyInteractionCase(Number(process.argv[process.argv.indexOf('--replay-ui-extra')+1]))));
 else if(process.argv.includes('--replay-ui-child'))console.log(JSON.stringify(await verifyChartReplayUi()));
 else{
