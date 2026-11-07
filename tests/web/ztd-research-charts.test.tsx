@@ -114,3 +114,68 @@ test('ztd diagnosis source gating and exact selected observation survive the ren
   assert.equal(empty.querySelector('.ztd-svg'), null);
   assert.match(empty.body.textContent!, /관측 자료 없음/);
 });
+
+test('compact observation charts resize without changing the selected source and release their viewport observer', async t => {
+  const { document, window } = parseHTML('<html><head></head><body><div id="root"></div></body></html>');
+  let allocatedHeight = 620;
+  const observers: ViewportObserver[] = [];
+  class ViewportObserver {
+    target: Element | null = null;
+    disconnected = false;
+    constructor(private callback: ResizeObserverCallback) { observers.push(this); }
+    observe(target: Element) { this.target = target; }
+    disconnect() { this.disconnected = true; }
+    fire() { this.callback([], this as unknown as ResizeObserver); }
+  }
+  const prototype = window.HTMLElement.prototype;
+  const previousBounds = Object.getOwnPropertyDescriptor(prototype, 'getBoundingClientRect');
+  Object.defineProperty(prototype, 'getBoundingClientRect', {
+    configurable: true,
+    value(this: HTMLElement) {
+      const height = this.tagName === 'FIGURE' ? allocatedHeight : 0;
+      return { x: 0, y: 0, top: 0, left: 0, right: 640, bottom: height, width: 640, height };
+    },
+  });
+  const globals = { document, window, ResizeObserver: ViewportObserver, IS_REACT_ACT_ENVIRONMENT: true };
+  const previous = new Map(Object.keys(globals).map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
+  for (const [key, value] of Object.entries(globals)) Object.defineProperty(globalThis, key, { value, configurable: true });
+  const { createRoot } = await import('react-dom/client');
+  const root = createRoot(document.getElementById('root')!);
+  let mounted = true;
+  t.after(async () => {
+    if (mounted) await act(async () => root.unmount());
+    if (previousBounds) Object.defineProperty(prototype, 'getBoundingClientRect', previousBounds);
+    else Reflect.deleteProperty(prototype, 'getBoundingClientRect');
+    for (const [key, descriptor] of previous) if (descriptor) Object.defineProperty(globalThis, key, descriptor); else Reflect.deleteProperty(globalThis, key);
+  });
+  const chosen: number[] = [];
+  const render = async (series: typeof points) => {
+    await act(async () => root.render(<ObservedResearchChart compactToolbar id="price" points={series}
+      unit="USD" label="관측 종가" selected={3} onSelect={index => chosen.push(index)} />));
+  };
+  const height = () => Number(document.querySelector('.ztd-svg')!.getAttribute('viewBox')!.split(' ').at(-1));
+  await render([]);
+  assert.equal(document.querySelector('.ml-viewport-chart'), null);
+  await render(points);
+  assert.equal(height(), 620, 'a populated chart uses its allocated height instead of scaling a fixed SVG');
+  const observer = observers.find(item => item.target?.classList.contains('ml-viewport-chart'))!;
+  assert(observer);
+  for (const [allocated, expected] of [[420, 420], [0, 420], [170, 290]]) {
+    allocatedHeight = allocated;
+    await act(async () => observer.fire());
+    assert.equal(height(), expected, 'shrinking and a hidden frame retain a readable drawing size');
+    assert.equal(document.querySelector('[data-selected-date]')!.getAttribute('data-selected-date'), '2026-01-04');
+    assert.equal(document.querySelector('[data-selected-index]')!.getAttribute('data-selected-index'), '3');
+    assert.equal(document.querySelectorAll('.ztd-svg path[fill="none"]').length, 3, 'resizing does not join missing observations');
+  }
+  assert.deepEqual(chosen, [], 'layout changes cannot select a different observation');
+  await render([]);
+  assert.equal(observer.disconnected, true, 'an empty replacement releases the old drawing observer');
+  allocatedHeight = 350;
+  await render(points);
+  const remounted = observers.findLast(item => item.target?.classList.contains('ml-viewport-chart'))!;
+  assert.equal(height(), 350);
+  await act(async () => root.unmount());
+  mounted = false;
+  assert.equal(remounted.disconnected, true, 'unmount cannot retain a viewport observer');
+});

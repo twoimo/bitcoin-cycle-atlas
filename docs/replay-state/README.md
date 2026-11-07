@@ -10,7 +10,7 @@ This verification executes the actual JavaScript controller and coordinator. It 
 
 ## Reproduce
 
-Use Node 24 or newer from the repository root. The current local follow-up used **Node v24.22.1**; earlier run receipts retain their original runtime versions.
+Use Node 24 or newer from the repository root. The current local follow-up used **Node v24.22.2**; earlier run receipts retain their original runtime versions.
 
 ```sh
 node verification/replay-state/verify.mjs docs/replay-state/verification.json
@@ -143,10 +143,12 @@ The runner restores the exact original files in its temporary copy and requires 
 
 ## Source synchronization and limits
 
-The 2026-11-06 manual-date follow-up starts from `aca73b74a5128a5466488a0c701e86f5e854af46`. The previous destruction baseline is `4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc`; the original audit began at `94a1b1dda9eb359de70747043808340da369d087`. The current receipt identifies patched working sources by SHA-256, not as code already present at those baselines. Covered controller SHA-256: `063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908`. Covered coordinator SHA-256: `5cc422c910491e4553c72032c3a482547c6733ba0339fe8941cfebf9fcc31d90`. Historical receipts remain in `docs/deep-audit-2026-11-05/replay-state-verification.json` and `docs/design-closeout-2026-11-06/regression/formal-replay.json`.
+The 2026-11-06 manual-date follow-up starts from `aca73b74a5128a5466488a0c701e86f5e854af46`. The previous destruction baseline is `4dc877ad0fdeabf7f01057e7f64ac11f9a8cbedc`; the original audit began at `94a1b1dda9eb359de70747043808340da369d087`. The current receipt identifies patched working sources by SHA-256, not as code already present at those baselines. Covered controller SHA-256: `063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908`. Covered coordinator SHA-256: `99a2675fd0c1018ef853da76980760705907a77f3fbdba8a908de473b21a81b8`. Historical receipts remain in `docs/deep-audit-2026-11-05/replay-state-verification.json` and `docs/design-closeout-2026-11-06/regression/formal-replay.json`.
 
 The [v1.31.3 release follow-up](../design-closeout-2026-11-06/cache-version-sync.md) changes only the coordinator's three import query versions. The current receipt reruns the same controller, selection, saved-entry, destruction and manual-date checks at the new source hash. Fixtures, behavior, finite alphabets and the explanatory statechart are unchanged; earlier dated receipts retain their original hashes.
 
 Review correspondence whenever a listed function, callback boundary, session shape, supported control or fixture changes. Rerun the command and review all eleven controls before advancing a synchronization record. Keep the skill, verifier, tests, diagram and receipt in the same Git change. A later source hash mismatch means the old receipt is stale, not that the changed code passed. Use pstack `maintain-formal-verification-skill` for drift review. If this becomes a TLA+ model, interpret it with pstack `statechart` and retain actual TLC evidence.
 
 The bounded checks do not prove forecasting mathematics, market predictability, provider availability, wall-clock scheduling, native DOM behavior, pixels, every persistence/concurrent-tab interleaving, arbitrary event schedules or every cutoff-model load path. The coordinator doubles do not recompute a real forecast. Existing actual-engine, source-provenance, snapshot and native browser suites remain necessary. No replay forecast is published or reclassified as the 2026-10-21 initial-commit preserved baseline by these checks; that baseline's publication time remains unproven.
+
+The 2026-11-07 v1.33.0 visual release changes only the coordinator import cache queries from 1.32.2 to 1.33.0. The original bounded verifier was rerun without changing its source, fixtures, assertions or negative controls. The current receipt above records that exact coordinator; the replay controller and numeric behavior are unchanged.

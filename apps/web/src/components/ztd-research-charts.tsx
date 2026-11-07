@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { BarChart, ChartCard, LineChart, ThemeProvider, type ChartEvent, type ChartTheme } from 'ztd-charts';
 import { axes, Empty, finite, fmt } from './common.js';
 import { CompactToolbar,CompactToolbarMenu } from './compact-toolbar.js';
@@ -13,7 +13,7 @@ const atlasChartTheme: Partial<ChartTheme> = {
   neutralStrong: 'var(--text)', onNeutralStrong: 'var(--bg)',
   neutralSoft: 'var(--surface-raised)', lift: 'var(--surface-hover)',
   tint: 'var(--accent-soft)', fontFamily: 'var(--font)', monoFamily: 'var(--font-mono)',
-  radius: 8, radiusCode: 4, radiusMark: 2,
+  radius: 2, radiusCode: 3, radiusMark: 2,
 };
 const chartTitleStyle = { fontSize: 14, fontWeight: 600, letterSpacing: 0 } as const;
 const allSeries = () => true;
@@ -25,7 +25,7 @@ export function ResearchChartCard({ title, actions, children, className = '' }: 
 }) {
   return <ThemeProvider theme={atlasChartTheme} locale="ko-KR">
     <ChartCard title={<span style={chartTitleStyle}>{title}</span>} actions={actions}
-      className={`ml-ztd-card ${className}`} style={{ padding: 16, gap: 12 }}>
+      className={`ml-ztd-card ${className}`} style={{ padding: 12, gap: 12, background: 'var(--bg)', border: 0 }}>
       {children}
     </ChartCard>
   </ThemeProvider>;
@@ -55,6 +55,30 @@ export function ObservedResearchChart({ id, points, unit, label, selected, onSel
   selected: number | null; onSelect: (sourceIndex: number) => void; compactToolbar?: boolean;
 }) {
   const model = useMemo(() => observedChartModel(points), [points]);
+  const figure = useRef<HTMLElement>(null);
+  const [plotHeight, setPlotHeight] = useState(290);
+  useEffect(() => {
+    const node = figure.current;
+    if (!compactToolbar || !node) return;
+    const view = node.ownerDocument.defaultView;
+    // ztd measures width itself; pass the allocated height as real SVG pixels
+    // so axis type and pointer coordinates stay 1:1 instead of stretching it.
+    const measure = () => {
+      const allocated = node.getBoundingClientRect().height;
+      if (allocated > 0) {
+        const next = Math.max(290, Math.round(allocated));
+        setPlotHeight(previous => previous === next ? previous : next);
+      }
+    };
+    measure();
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver(measure);
+      observer.observe(node);
+      return () => observer.disconnect();
+    }
+    view?.addEventListener('resize', measure);
+    return () => view?.removeEventListener('resize', measure);
+  }, [compactToolbar, model.validCount]);
   if (!model.validCount) return <div data-chart={id}><Empty>{label}에 유효한 수치가 없습니다.</Empty></div>;
   const index = selected == null || !Number.isFinite(selected) ? points.length - 1
     : Math.max(0, Math.min(points.length - 1, Math.trunc(selected)));
@@ -72,11 +96,11 @@ export function ObservedResearchChart({ id, points, unit, label, selected, onSel
     disabled={points.length === 1} onChange={event => onSelect(Number(event.currentTarget.value))} /></label>;
   return <div data-chart={id} data-ztd-chart="observed" data-source-count={points.length}>
     {compactToolbar && <CompactToolbar label="선택 관측" order={20}><span className="compact-toolbar-summary" data-selected-date={date} data-selected-index={index}>{readout}</span><CompactToolbarMenu name="market-date" label="관측일" title={`${label} 관측일 선택`}><p className="compact-toolbar-summary">{readout}</p>{dateControl}</CompactToolbarMenu></CompactToolbar>}
-    <figure className="ml-chart">
+    <figure ref={figure} className={`ml-chart${compactToolbar ? ' ml-viewport-chart' : ''}`}>
       {compactToolbar ? <figcaption className="atlas-sr-only">{label} · {readout}</figcaption> : <figcaption><strong>{label}</strong><span data-selected-date={date} data-selected-index={index}>{readout}</span></figcaption>}
       <LineChart data={model.data} x="date" y="value" series="segment" xType="band"
         curve="linear" zero={false} endLabels={false} colorMode="highlight" highlight={allSeries} dots={model.hasIsolatedObservation ? true : 'auto'}
-        height={290} animate={false} locale="ko-KR" format={observedNumber} unit={` ${unit}`} yLabel={unit}
+        height={compactToolbar ? plotHeight : 290} animate={false} locale="ko-KR" format={observedNumber} unit={` ${unit}`} yLabel={unit}
         ariaLabel={`${label} · ${model.validCount}개 관측`}
         description={`${points[0][0]}부터 ${points.at(-1)![0]}. 선택일 ${readout}. 관측 순서대로 표시하며 누락된 관측값은 연결하지 않습니다.`}
         onHover={selectEvent} onClick={selectEvent}
@@ -96,7 +120,7 @@ export function ScenarioContributionChart({ contributions }: { contributions: re
   return <div data-presentation-chart="scenario-contributions" data-ztd-chart="contributions" style={{ marginBlock: 16 }}>
     <ThemeProvider theme={atlasChartTheme} locale="ko-KR">
       <ChartCard as="h4" title={<span style={chartTitleStyle}>축별 기여도</span>} subtitle="기준 0 · 무차원"
-        className="ml-ztd-contributions" style={{ padding: 12, gap: 8, background: 'var(--bg)' }}>
+        className="ml-ztd-contributions" style={{ padding: 0, gap: 12, background: 'var(--bg)', border: 0 }}>
         <BarChart data={data} x="axis" y="value" layout="grouped" orientation="horizontal" sort={false}
           height={184} animate={false} highlight={allSeries} format={contributionNumber}
           ariaLabel="축별 정규화 기여도"
