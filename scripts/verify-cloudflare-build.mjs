@@ -6,8 +6,8 @@ import {fileURLToPath} from 'node:url';
 import {createHash,randomUUID} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {bootstrapCloudflareBuild,inspectCloudflareRuntime,startIsolatedPostgres} from './bootstrap-cloudflare-build.mjs';
-import {cloudflareBuildGates,cloudflareParallelGroups,cloudflareBrowserCaseCount,cloudflarePlanSha256,assertCloudflareVerificationReceipt,assertModelPriorityReceipt} from './cloudflare-build-contract.mjs';
-import {createEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
+import {cloudflareBuildGates,cloudflareParallelGroups,cloudflarePlanSha256,assertCloudflareVerificationReceipt,assertModelPriorityReceipt,assertCompleteNativeBrowserReport} from './cloudflare-build-contract.mjs';
+export {assertCompleteNativeBrowserReport} from './cloudflare-build-contract.mjs';
 import {executeLoggedGate,runVerificationCommand,runVerificationGroup,installVerificationSignalHandlers,drainVerificationOutput,completeLineWriter} from './cloudflare-gate-runner.mjs';
 import {commandPriorityPrefix} from './cloudflare-priority-command.mjs';
 import {readBrowserSourceIdentity} from './browser-source-identity.mjs';
@@ -26,20 +26,6 @@ function assertCleanSource(expected){
 async function persist(receipt){
   await mkdir(resolve(root,'build'),{recursive:true});
   const temporary=receiptPath+'.tmp';await writeFile(temporary,JSON.stringify(receipt,null,2)+'\n');await rename(temporary,receiptPath);
-}
-export function assertCompleteNativeBrowserReport(report,sourceCommit){
-  assert.equal(report.status,'passed','Native browser failures cannot become a deployment pass');
-  assert.equal(report.caseScope,'all','A partial scope cannot satisfy the complete browser gate');
-  assert.equal(report.sourceCommit,sourceCommit,'Browser evidence belongs to another revision');
-  assert.equal(report.declaredCaseCount,cloudflareBrowserCaseCount);
-  assert.equal(report.expectedCaseCount,cloudflareBrowserCaseCount);
-  assert.equal(report.cases?.length,cloudflareBrowserCaseCount);
-  assert.deepEqual(report.cases.map(item=>item.caseSpec),createEthBrowserCaseSpecs(),'Browser cases must match the complete ordered source inventory');
-  assert.deepEqual(report.failures,[]);
-  assert.equal(report.sourceIntegrity?.unchangedDuringRun,true);
-  assert.ok(report.sourceIntegrity.checkedFiles>0,'Browser source hashes are required');
-  assert.deepEqual(report.sourceIntegrity.changedSources,[]);
-  for(const item of report.cases){assert.equal(item.status,'passed');assert.ok(item.screenshots?.length>0,'Every browser case requires actual rendered evidence');}
 }
 export async function verifyCloudflareBuild(){
   const identity=source(),startedAt=new Date().toISOString(),deadline=Date.now()+19*60*1000;
@@ -209,11 +195,15 @@ export async function verifyCloudflareBuild(){
 
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   try{
-    const args=process.argv.slice(2);if(args.length&&!(args.length===1&&args[0]==='--inspect'))throw new Error('Use no arguments for complete verification, or --inspect for runtime capabilities only');
+    const args=process.argv.slice(2);
     if(args[0]==='--inspect'){
+      assert.equal(args.length,1,'Runtime inspection takes no additional arguments');
       // An inspect request explicitly invalidates a stale success receipt.
       await persist({schemaVersion:1,kind:'atlas-cloudflare-verification',status:'INSPECTED_ONLY',...source(),gates:[]});
       console.log('ATLAS_CLOUDFLARE_PREFLIGHT '+JSON.stringify(await inspectCloudflareRuntime()));
+    }else if(args.length){
+      const {parseCloudflareStageArguments,verifyCloudflareStage}=await import('./verify-cloudflare-stage.mjs');
+      await verifyCloudflareStage(parseCloudflareStageArguments(args));
     }else await verifyCloudflareBuild();
   }catch(error){console.error(error.stack??error);process.exitCode=1;}
   finally{try{await drainVerificationOutput();}catch(error){console.error(error.stack??error);process.exitCode=1;}}

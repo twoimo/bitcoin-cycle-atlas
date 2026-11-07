@@ -21,7 +21,7 @@
       "path": "ops/github-actions-archive/pages.yml",
       "sha256": "91dfd4e8fd7bf69933c5aadddf96d1849d242f65fefb5ffa41ebf5f7a1e1a5b2",
       "role": "deployment",
-      "replacement": "npm run verify:cloudflare && npm run build:cloudflare; npm run deploy:cloudflare"
+      "replacement": "Exact-source model component Build, then full browser/publication Build and npm run deploy:cloudflare; all 23 required gates remain mandatory"
     },
     {
       "name": "market-lab-service",
@@ -68,6 +68,10 @@
     "command": "npm run verify:cloudflare",
     "runner": "scripts/verify-cloudflare-build.mjs",
     "contract": "scripts/cloudflare-build-contract.mjs",
+    "stagedRunner": "scripts/verify-cloudflare-stage.mjs",
+    "stagedContract": "scripts/cloudflare-staged-contract.mjs",
+    "productionStages": ["model", "browser"],
+    "completeStageJoinRequired": true,
     "completeNativeBrowserScope": "all",
     "canonicalNode": "24.22.2",
     "dockerRequired": false
@@ -83,8 +87,8 @@
         "coordinator": "ops/cloudflare-scheduler/worker.js",
         "runner": "scripts/cloudflare-market-refresh.mjs",
         "receipt": "scripts/cloudflare-market-refresh-receipt.mjs",
-        "publication": "A separate normal main-triggered full verification and deployment at the newly committed data SHA",
-        "maximumMonthlyBuildsFromSchedule31Days": 248,
+        "publication": "A main-triggered model Build followed by the complete browser/publication Build, joined at the newly committed data SHA",
+        "maximumMonthlyBuildsFromSchedule31Days": 372,
         "credentialGate": "Explicit repository-scoped ATLAS_DATA_GITHUB_TOKEN; clone credentials are not used"
       },
       "required": [

@@ -79,6 +79,21 @@ export function assertModelPriorityReceipt(receipt){
   return receipt;
 }
 
+export function assertCompleteNativeBrowserReport(report,sourceCommit){
+  assert.equal(report.status,'passed','Native browser failures cannot become a deployment pass');
+  assert.equal(report.caseScope,'all','A partial scope cannot satisfy the complete browser gate');
+  assert.equal(report.sourceCommit,sourceCommit,'Browser evidence belongs to another revision');
+  assert.equal(report.declaredCaseCount,cloudflareBrowserCaseCount);
+  assert.equal(report.expectedCaseCount,cloudflareBrowserCaseCount);
+  assert.equal(report.cases?.length,cloudflareBrowserCaseCount);
+  assert.deepEqual(report.cases.map(item=>item.caseSpec),createEthBrowserCaseSpecs(),'Browser cases must match the complete ordered source inventory');
+  assert.deepEqual(report.failures,[]);
+  assert.equal(report.sourceIntegrity?.unchangedDuringRun,true);
+  assert.ok(report.sourceIntegrity.checkedFiles>0,'Browser source hashes are required');
+  assert.deepEqual(report.sourceIntegrity.changedSources,[]);
+  for(const item of report.cases){assert.equal(item.status,'passed');assert.ok(item.screenshots?.length>0,'Every browser case requires actual rendered evidence');}
+}
+
 export function assertCloudflareVerificationReceipt(receipt,{sourceCommit,sourceTree}={}){
   assert.equal(receipt?.schemaVersion,1,'Expected the current Cloudflare verification receipt schema');
   assert.equal(receipt?.kind,'atlas-cloudflare-verification');

@@ -3,6 +3,7 @@ import { readdir, readFile, stat } from 'node:fs/promises';
 import { resolve, relative, sep } from 'node:path';
 import { checkPublication } from './build-publication.mjs';
 import { assertCloudflareVerificationReceipt } from './cloudflare-build-contract.mjs';
+import { assertStagedVerification } from './cloudflare-staged-contract.mjs';
 
 export const cloudflareAssetsPath = '.cloudflare/output/v0/workers/default/assets';
 export const cloudflareWorkerConfigPath = '.cloudflare/output/v0/workers/default/worker.config.json';
@@ -81,5 +82,8 @@ export async function verifyCloudflareArtifact({ directory, sourceDirectory, ori
 }
 
 export function verifyGateReceipt(receipt, sourceCommit, sourceTree) {
+  if (receipt?.kind === 'atlas-cloudflare-staged-verification') return assertStagedVerification(receipt, { sourceCommit, sourceTree });
+  // A successful component is deliberately not a product deployment receipt.
+  // The legacy path still requires all23 gates in one actual complete run.
   return assertCloudflareVerificationReceipt(receipt, { sourceCommit, sourceTree });
 }

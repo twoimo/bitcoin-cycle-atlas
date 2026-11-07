@@ -51,6 +51,8 @@
     "verify:pages": "npm run verify:domain && npm run verify:skullet && node scripts/build-pages.mjs --check",
     "verify:cloudflare": "node scripts/verify-cloudflare-build.mjs",
     "build:cloudflare": "node scripts/build-cloudflare.mjs",
+    "build:cloudflare:models": "node scripts/build-cloudflare-model-component.mjs",
+    "deploy:cloudflare:models": "node scripts/deploy-cloudflare-model-component.mjs",
     "deploy:cloudflare": "node scripts/deploy-cloudflare.mjs"
   },
   "workspaces": [

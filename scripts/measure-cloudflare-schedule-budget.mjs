@@ -5,7 +5,7 @@ import { createCloudflareBuildReader } from './cloudflare-archive-build-api.mjs'
 import { CLOUDFLARE_BUILD_UUID } from './ethereum-archive-provider-identity.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const roles = ['production', 'refresh', 'archivePrepare', 'archivePublish'];
+const roles = ['productionModels', 'production', 'refresh', 'archivePrepare', 'archivePublish'];
 const number = (value, name) => {
   if (!Number.isSafeInteger(value) || value < 0) throw new Error(`${name} must be an explicit nonnegative integer`);
   return value;
@@ -19,7 +19,7 @@ export function measuredCloudflareBuild({ role, reference, build, contract }) {
       `${meta.provider_account_name}/${meta.repo_name}`.toLowerCase() !== contract.repository ||
       !/^[a-f0-9]{40}$/.test(meta.commit_hash) || build.pull_request ||
       meta.build_command !== job.buildCommand || meta.deploy_command !== job.deployCommand ||
-      !['deploy_hook', 'manual', 'api', ...(role === 'production' ? ['push', 'push_event'] : [])].includes(meta.build_trigger_source)) {
+      !['deploy_hook', 'manual', 'api', ...(role === 'productionModels' ? ['push', 'push_event'] : [])].includes(meta.build_trigger_source)) {
     throw new Error('Budget measurement requires an actual successful intended build with the complete production/job commands');
   }
   const start = Date.parse(build.initializing_on || build.running_on), stop = Date.parse(build.stopped_on);
@@ -41,12 +41,13 @@ export function calculateCloudflareScheduleBudget({ month, additionalProductionB
         value.budgetMinutes !== Math.ceil(value.durationMs / 60_000)) throw new Error('Invalid or duplicate actual build measurement');
     seen.add(value.buildId); maximum[value.role] = Math.max(maximum[value.role] ?? 0, value.budgetMinutes);
   }
-  if (roles.some(role => !maximum[role])) throw new Error('Measure a successful production, refresh, archive preparation and archive publication build before activation');
+  if (roles.some(role => !maximum[role])) throw new Error('Measure successful production model, production browser/publication, refresh, archive preparation and archive publication builds before activation');
   const [year, calendarMonth] = month.split('-').map(Number), days = new Date(Date.UTC(year, calendarMonth, 0)).getUTCDate();
-  const counts = { refresh: 4 * days, production: 4 * days + additionalProductionBuilds, archivePrepare: days, archivePublish: days };
+  const publications = 4 * days + additionalProductionBuilds;
+  const counts = { refresh: 4 * days, productionModels: publications, production: publications, archivePrepare: days, archivePublish: days };
   const rows = roles.map(role => ({ role, builds: counts[role], maximumObservedMinutes: maximum[role], projectedMinutes: counts[role] * maximum[role] }));
   const total = rows.reduce((sum, row) => sum + row.projectedMinutes, 0) + otherBuildMinutes + reserveMinutes;
-  return { schemaVersion: 1, kind: 'atlas-cloudflare-schedule-budget', status: total <= 3000 ? 'WITHIN_MEASURED_BUDGET' : 'EXCEEDS_FREE_BUDGET',
+  return { schemaVersion: 2, kind: 'atlas-cloudflare-schedule-budget', status: total <= 3000 ? 'WITHIN_MEASURED_BUDGET' : 'EXCEEDS_FREE_BUDGET',
     month, days, freeMinutes: 3000, rows, otherBuildMinutes, reserveMinutes, projectedMinutes: total, remainingMinutes: 3000 - total,
     measurements, activationVerified: false,
     scope: 'Conservative complete-month projection from authenticated successful execution clocks. No paid resources are enabled by this check. Actual resource configuration, credentials, real Cron triggers and publication readback remain separate requirements; account-wide billing plan is not inferred.' };
@@ -58,7 +59,7 @@ async function main() {
   const bytes = await readFile(resolve(path));
   if (bytes.length > 32 * 1024) throw new Error('Schedule measurement input exceeds its bound');
   const input = JSON.parse(bytes.toString('utf8'));
-  if (input.schemaVersion !== 1 || input.kind !== 'atlas-cloudflare-schedule-samples' || Object.keys(input.samples ?? {}).sort().join(',') !== [...roles].sort().join(',')) throw new Error('Every scheduled build role must have actual samples');
+  if (input.schemaVersion !== 2 || input.kind !== 'atlas-cloudflare-schedule-samples' || Object.keys(input.samples ?? {}).sort().join(',') !== [...roles].sort().join(',')) throw new Error('Every scheduled build role, including both production stages, must have actual samples');
   const contract = JSON.parse(await readFile(resolve(root, 'ops/cloudflare-scheduled-builds.json'), 'utf8'));
   const reader = createCloudflareBuildReader({ accountId: process.env.CLOUDFLARE_ACCOUNT_ID, token: process.env.ATLAS_BUILDS_READ_TOKEN });
   const measurements = [];

@@ -12,12 +12,26 @@
     "CF_SEND_TELEMETRY": "false"
   },
   "jobs": {
-    "production": {
-      "workerName": "bitcoin-cycle-atlas",
-      "buildCommand": "npm run verify:cloudflare && npm run build:cloudflare",
-      "deployCommand": "npm run deploy:cloudflare",
+    "productionModels": {
+      "workerName": "bitcoin-cycle-atlas-models",
+      "buildCommand": "npm run verify:cloudflare -- --stage=model --mode=production && npm run build:cloudflare:models -- --mode=production",
+      "deployCommand": "npm run deploy:cloudflare:models -- --mode=production",
       "trigger": "main push",
       "previewsEnabled": false,
+      "requiredSettings": ["CLOUDFLARE_ACCOUNT_ID"],
+      "deploymentAuthentication": "Use the existing provider-managed Workers Builds deployment token, supplied to the deploy command as CLOUDFLARE_API_TOKEN; never export or copy its value",
+      "requiredSecrets": ["ATLAS_PUBLICATION_DEPLOY_HOOK"],
+      "repositoryWriteCredential": false,
+      "result": "Complete model and numerical/formal component at the exact source SHA; bounded static receipt and private browser/publication hook"
+    },
+    "production": {
+      "workerName": "bitcoin-cycle-atlas",
+      "buildCommand": "npm run verify:cloudflare -- --stage=browser --mode=production && npm run build:cloudflare",
+      "deployCommand": "npm run deploy:cloudflare",
+      "trigger": "private main Deploy Hook after model component publication",
+      "previewsEnabled": false,
+      "pathIncludes": ["*"],
+      "pathExcludes": ["*"],
       "environment": { "ATLAS_PUBLIC_ORIGIN": "https://bitcoin-cycle-atlas.twoimo.workers.dev" },
       "repositoryWriteCredential": false
     },
@@ -32,7 +46,7 @@
       "requiredSettings": ["CLOUDFLARE_ACCOUNT_ID", "ATLAS_REFRESH_TRIGGER_UUID"],
       "requiredSecrets": ["ATLAS_BUILDS_READ_TOKEN", "ATLAS_DATA_GITHUB_TOKEN"],
       "publishesWorkerCode": false,
-      "result": "Allowlisted nonforce source commit; the separate production trigger verifies and deploys that new exact SHA"
+      "result": "Allowlisted nonforce source commit; separate model and browser/publication Builds verify and deploy that new exact SHA"
     },
     "archivePrepare": {
       "suggestedWorkerName": "bitcoin-cycle-atlas-eth-prepare",
@@ -85,9 +99,9 @@
   "activationRequirements": [
     "This migration enables no new paid subscriptions or bindings and remains within the documented Free allowances; unrelated pre-existing account resources are not classified",
     "Actual main trigger IDs, commands, excluded push paths, disabled previews and secret scopes are read back",
-    "Actual complete verification and deployment for each refresh source commit are observed",
+    "Both exact-source production stages complete, and the model component is joined to the full browser/publication result before deployment",
     "Actual archive preparation, separate publication and immutable readback complete",
-    "Read-only schedule-budget measurement includes all four collection and all four production builds per day, both daily archive builds, other account usage and retry reserve",
+    "Read-only schedule-budget measurement includes all four collection, four production model and four production browser/publication builds per day, both daily archive builds, other account usage and retry reserve",
     "Scheduled commands reject authenticated push and pull-request metadata even when watch-path filtering is bypassed",
     "Cron submission receipts and real Build identities are observed before activationVerified becomes true"
   ]

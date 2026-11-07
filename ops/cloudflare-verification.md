@@ -7,19 +7,90 @@ The original shell, immutable archive and publication negative controls still
 execute as tests against these preserved contracts. New tests separately check
 the actual Cloudflare runner and receipt rejection behavior.
 
-## Required deployment build
+## Required deployment stages
 
 Set `NODE_VERSION=24.22.2` and `SKIP_DEPENDENCY_INSTALL=1` in Workers Builds.
-The repository's locked install is part of the verification runner. Use:
+The repository's locked install is part of each verification stage. Production
+uses two source-bound Workers Builds. This separates the full model calculation
+from Chrome while preserving every required gate and the canonical test command.
 
-```sh
-npm run verify:cloudflare && npm run build:cloudflare
-```
+| Stage | Build command | Deploy command |
+| --- | --- | --- |
+| Model and numerical/formal verification | `npm run verify:cloudflare -- --stage=model --mode=production && npm run build:cloudflare:models -- --mode=production` | `npm run deploy:cloudflare:models -- --mode=production` |
+| Browser and publication | `npm run verify:cloudflare -- --stage=browser --mode=production && npm run build:cloudflare` | `npm run deploy:cloudflare` |
 
-The deployment command is `npm run deploy:cloudflare`. Deployment requires the
-successful source-bound receipt created by the complete verification command.
-An inspect-only run, partial browser scope, failed step or old source cannot
-produce a valid deployment receipt. A local preview is not a verified release.
+The model Worker watches main. After publishing and reading back its bounded
+component receipt, it invokes the browser/publication Worker's private Deploy
+Hook. The consumer excludes automatic push paths and independently verifies
+the model component's actual completed-success provider check before launching
+Chrome. Do not rely on an account-wide concurrency or billing-plan assumption
+for this ordering.
+
+The model stage runs 13 gates: its own runtime and locked install, the unchanged
+complete `npm test -- --test-concurrency=2`, and the ten numerical/research/formal/
+replay gates. The browser stage runs 12 gates: its own seven preparation and
+service gates, all 53 native browser cases, and the four publication/standalone
+gates. The aggregate contains all 23 original required gate identities, with
+the two stages' original Build UUIDs and duplicated preparation recorded
+separately. A component alone is never a product deployment receipt.
+
+Review uses `--mode=review`, the `bitcoin-cycle-atlas-models-verify` producer and
+the existing verification-only consumer. Its consumer deploy command remains
+`node --version`; it does not publish the product. Production uses
+`bitcoin-cycle-atlas-models` and `bitcoin-cycle-atlas`.
+
+Deployment requires a complete exact-source receipt. An inspect-only run,
+partial browser scope, failed component, stale source or modified preview
+cannot qualify. The strict single-Build command remains available as
+`npm run verify:cloudflare`; it still executes every gate and cannot be used to
+turn either staged component into a complete result.
+
+### Component identity and provider evidence
+
+The producer publishes only its bounded machine-readable component and a
+per-source index as static assets on its dedicated `workers.dev` host. A receipt
+has a source/run-specific path, `/receipts/<commit>/<Build UUID>.json`; the index
+is `/sources/<commit>.json`. The product's `dist` and Cloudflare output are not
+used for this small receipt site. There is no database, runtime binding or
+repository write credential in this handoff.
+
+The consumer resolves the per-source index once, freezes that snapshot and
+fetches only the named receipt. Exact bytes, SHA-256, source commit/tree, current
+plan, expected Worker, runtime and complete gate identities must agree. Missing,
+changed, truncated, redirected or stale objects fail closed; the reader cannot
+silently change to a newer index or accept a partial result. Reuse is limited to
+the exact source and plan within six hours. It does not claim that a particular
+consumer Build was uniquely dispatched by that producer.
+
+The official Cloudflare GitHub App's public check supplies independent terminal
+Build status. Acceptance binds the repository and source SHA, Cloudflare App and
+owner IDs, Worker check name, exact account/Worker/Build details URL and external
+Build UUID. Pending duplicate rows do not constitute success; conflicting
+terminal outcomes are rejected. The check's timestamps are provider reporting
+metadata, not a substitute for the original Build's execution clocks. Provider
+visibility is polled within a bound before the browser's isolated cadence phase.
+
+This design explicitly trusts the project's Cloudflare-controlled static
+publisher, which is managed under the same deployment authority as the product.
+The receipt hash detects byte corruption and mixups; it is not a Cloudflare
+signature over arbitrary JSON. The public provider check, trusted publisher,
+exact source/plan and original component evidence are all required. It does not
+export connector authentication or infer permission to read private Build logs.
+The original complete model logs and browser report/PNG evidence remain in the
+authenticated Build logs for review.
+
+The producer's `ATLAS_PUBLICATION_DEPLOY_HOOK` is stored as a Build secret and is
+used only after successful receipt publication and exact HTTP readback. Its
+bearer URL and UUID must not appear in logs, source files or reports. A hook
+selects the current branch, so both stages reject a changed branch head instead
+of attaching old evidence to a new commit.
+
+The producer explicitly configures the reviewed `CLOUDFLARE_ACCOUNT_ID` as a
+nonsecret Build setting and uses the existing provider-managed deployment token.
+Actual deployment requires that token in `CLOUDFLARE_API_TOKEN`; no token value
+is exported, copied into repository files or printed. This is the existing
+Build deployment credential, separate from the user-supplied Builds-read
+credential required by the still-inactive scheduled data jobs.
 
 `node scripts/verify-cloudflare-build.mjs --inspect` reports the actual build
 image without installing tools. It invalidates any previous PASS receipt.
@@ -44,7 +115,13 @@ remain logged and every PNG remains in `build/eth-browser`. The runner checks
 every PNG's byte length/hash before accepting the browser receipt. Build logs
 are not a replacement for long-term research evidence storage.
 
-### Bounded execution inside one Build
+### Retained complete single-Build mode
+
+The behavior below describes the retained one-Build runner. The staged browser
+runner keeps the same isolated cadence and complete two-lane inventory, but no
+model command runs alongside Chrome. Its aggregate records that the separate
+model component was provider-verified before native-browser launch; it does not
+reuse the one-Build claim that model launch followed the cadence phase.
 
 After the PostgreSQL service gate, the replay browser first measures the existing
 BTC1440 fast-cadence fixture in isolation: weekly candles in the four-year view,
@@ -135,7 +212,7 @@ versions, paths and execution duration without exposing environment secrets.
 
 The free plan provides3,000 build minutes/month, one concurrent build,
 2vCPU/8GB memory/20GB disk and a20-minute hard timeout. The runner fails after
-19 minutes rather than omitting a slow gate. This limit includes installation
+19 minutes for each stage rather than omitting a slow gate. This limit includes installation
 and verification; final packaging/deployment also needs time. Measure the real
 target build before claiming it fits. If it does not, split producers into
 separate builds and verify same-source, complete, immutable receipts before
@@ -177,14 +254,15 @@ aborts publication instead of being overwritten.
 The bounded committed `dist/data/refresh-attempts.json` preserves actual
 provider outcomes, clocks, source identity, output hashes and gate identities
 for the next Build. It does not change the publication source SHA. The normal
-production main trigger checks and deploys that new commit independently, with
-the complete verification plan and exact public readback. `SOURCE_COMMITTED`
+main model trigger verifies that new commit, then the browser/publication
+stage joins the complete verification plan and performs exact public readback. `SOURCE_COMMITTED`
 means a source commit was published; it is not a deployment success receipt.
 
 | Build | Build command | Deploy command |
 | --- | --- | --- |
 | Market collection | `npm ci --ignore-scripts && node scripts/cloudflare-market-refresh.mjs` | `node scripts/cloudflare-market-refresh.mjs --confirm-commit` |
-| Production at the new SHA | `npm run verify:cloudflare && npm run build:cloudflare` | `npm run deploy:cloudflare` |
+| Models at the new SHA | `npm run verify:cloudflare -- --stage=model --mode=production && npm run build:cloudflare:models -- --mode=production` | `npm run deploy:cloudflare:models -- --mode=production` |
+| Browser/publication at the same SHA | `npm run verify:cloudflare -- --stage=browser --mode=production && npm run build:cloudflare` | `npm run deploy:cloudflare` |
 | ETH preparation | `npm ci --ignore-scripts && node scripts/verify-cloudflare-archive.mjs` | `node scripts/cloudflare-ethereum-archive.mjs prepare` |
 | ETH publisher | `npm ci --ignore-scripts && node scripts/verify-cloudflare-archive.mjs` | `node scripts/cloudflare-ethereum-archive.mjs publish` |
 
@@ -240,6 +318,8 @@ repository is not evidence of a domain owned by this project.
 
 | Job | Required nonsecret settings | Required secrets |
 | --- | --- | --- |
+| Production model component | Canonical runtime and explicit production stage/mode | `ATLAS_PUBLICATION_DEPLOY_HOOK`; ordinary provider-managed Build deployment credential |
+| Production browser/publication | Production origin and explicit browser stage/mode | Ordinary provider-managed Build deployment credential; no new Builds Read or repository write token for the public component join |
 | Cron coordinator | The two defined UTC Cron schedules | `MARKET_REFRESH_DEPLOY_HOOK`, `ETH_ARCHIVE_DEPLOY_HOOK` |
 | Market collection | `CLOUDFLARE_ACCOUNT_ID`, `ATLAS_REFRESH_TRIGGER_UUID` | `ATLAS_BUILDS_READ_TOKEN`, `ATLAS_DATA_GITHUB_TOKEN` |
 | ETH preparation | Account ID, `ATLAS_ARCHIVE_KV_NAMESPACE_ID`, `ATLAS_ARCHIVE_PREPARE_TRIGGER_UUID`, `ATLAS_ARCHIVE_STAGE=prepare` | Builds read token, `ATLAS_ARCHIVE_KV_WRITE_TOKEN`, `ATLAS_ARCHIVE_PUBLISH_DEPLOY_HOOK` |
@@ -266,11 +346,19 @@ database or remote browser service is required by this migration.
 
 ### Measured monthly admission
 
-For a31-day month the schedule can create124 collection Builds,124 complete
-production Builds,31 archive preparations and31 publishers. The mandatory
+For a31-day month the schedule can create124 collection Builds,124 model
+Builds,124 browser/publication Builds,31 archive preparations and31 publishers. The mandatory
 projection is:
 
-`124 × (collection_minutes + production_minutes) + 31 × (prepare_minutes + publish_minutes) + additional_production_builds × production_minutes + other_build_minutes + retry_reserve`.
+`124 × (collection_minutes + model_minutes + browser_publication_minutes) + 31 × (prepare_minutes + publish_minutes) + additional_publications × (model_minutes + browser_publication_minutes) + other_build_minutes + retry_reserve`.
+
+Splitting verification cannot make either stage disappear from this projection.
+The budget rejects an inventory that lacks a model-stage measurement. The
+existing `additionalProductionBuilds` input counts complete additional
+publications, so it adds both stages for every entry. The configured four daily
+collection opportunities remain inactive unless the full measured projection,
+including archive work and reserves, fits; two individually valid20-minute
+stages do not imply the monthly schedule is affordable.
 
 `scripts/measure-cloudflare-schedule-budget.mjs` fetches actual successful
 Builds using a read-only token. It verifies the intended trigger/repository,
@@ -287,10 +375,10 @@ documented Free allowances as its admission ceiling regardless of that missing
 account-wide billing read permission.
 
 Run it with `--samples build/cloudflare-schedule-samples.json`. The bounded
-input has `schemaVersion:1`, `kind:atlas-cloudflare-schedule-samples`, a concrete
+input has `schemaVersion:2`, `kind:atlas-cloudflare-schedule-samples`, a concrete
 `month` such as `2026-11`, explicit `additionalProductionBuilds`,
 `otherBuildMinutes`, `reserveMinutes`, and `samples` with one to four actual
-`{buildId,triggerId}` pairs for each of `production`, `refresh`,
+`{buildId,triggerId}` pairs for each of `productionModels`, `production`, `refresh`,
 `archivePrepare`, `archivePublish`. No credential belongs in that file. The
 result is written to `build/cloudflare-schedule-budget.json`. Until complete
 real samples fit the free budget, keep both Cron schedules inactive.
@@ -323,6 +411,7 @@ local Cron definition does not prove a live scheduled issuer.
 - [PostgreSQL Ubuntu packages and signing key](https://www.postgresql.org/download/linux/ubuntu/)
 - [PostgreSQL17.11 Noble package index](https://apt.postgresql.org/pub/repos/apt/dists/noble-pgdg/main/binary-amd64/Packages.gz)
 - [Workers Builds Deploy Hooks](https://developers.cloudflare.com/workers/ci-cd/builds/deploy-hooks/)
+- [GitHub public check-run reads and provider identity](https://docs.github.com/en/rest/checks/runs#list-check-runs-for-a-git-reference)
 - [Workers Builds watch-path evaluation and exceptions](https://developers.cloudflare.com/workers/ci-cd/builds/build-watch-paths/)
 - [Workers KV free allowances](https://developers.cloudflare.com/kv/platform/pricing/)
 - [GitHub reference-write permission and nonforce updates](https://docs.github.com/en/rest/git/refs)
