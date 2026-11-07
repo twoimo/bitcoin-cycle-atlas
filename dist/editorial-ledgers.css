@@ -664,6 +664,7 @@ body #ipo-view .ipo-table-shell {
 }
 #ipo-view .ipo-month-day {
   display: grid;
+  grid-template-columns: minmax(0,1fr);
   grid-template-rows: 28px auto auto;
   align-content: start;
   gap: 4px;
@@ -695,6 +696,7 @@ body #ipo-view .ipo-table-shell {
   color: var(--on-accent);
   text-align: center;
 }
+#ipo-view .ipo-day-events { min-width: 0; }
 #ipo-view .ipo-cal-event {
   display: grid;
   grid-template-columns: 28px minmax(0,1fr);

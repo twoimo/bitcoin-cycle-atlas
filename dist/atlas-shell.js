@@ -92,7 +92,8 @@ export function initAtlasShell() {
       } else if (navigation.parentElement !== rail) rail.append(navigation);
     }
     if (navigation && !chart && navigation.parentElement !== sidebar) sidebar.append(navigation);
-    const activePage = atlasNavigationId(page === 'market' ? labPageFromLocation(globalThis.location).id : atlasPages.find(item => item.view === page)?.id);
+    const currentWorkspace = chart && document.body.dataset.centerTool;
+    const activePage = atlasNavigationId(currentWorkspace || (page === 'market' ? labPageFromLocation(globalThis.location).id : atlasPages.find(item => item.view === page)?.id));
     for (const item of navigation?.querySelectorAll('[data-atlas-page]') || []) {
       const active = item.dataset.atlasPage === activePage;
       item.classList.toggle('active', active);
@@ -101,7 +102,7 @@ export function initAtlasShell() {
     preference();
   }
   const pageObserver = new MutationObserver(sync), workspaceObserver = new MutationObserver(sync);
-  pageObserver.observe(document.body, { attributes: true, attributeFilter: ['data-page'] });
+  pageObserver.observe(document.body, { attributes: true, attributeFilter: ['data-page', 'data-center-tool'] });
   workspaceObserver.observe(workspace, { childList: true });
   sync();
   return () => { pageObserver.disconnect(); workspaceObserver.disconnect(); document.removeEventListener('click', routeToService, true); };
