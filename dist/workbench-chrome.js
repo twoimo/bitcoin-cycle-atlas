@@ -4,7 +4,7 @@ import { mountChartGoTo } from './chart-go-to.js?v=1.29.0';
 import { isStartPriceUnit } from './price-display.js?v=1.29.0';
 import { mountWorkspaceTools } from './workspace-tools.js?v=1.29.1';
 import { mountChartBottomBar } from './chart-bottom-bar.js?v=1.29.0';
-import { mountSymbolSelector } from './symbol-selector.js?v=1.32.1';
+import { mountSymbolSelector } from './symbol-selector.js?v=1.34.0';
 const $ = selector => document.querySelector(selector);
 
 const paths = {

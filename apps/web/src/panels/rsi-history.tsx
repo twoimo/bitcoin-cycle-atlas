@@ -50,6 +50,7 @@ export function RsiHistory({symbol,unit,prices,rows,revision,onDate,cache}:{symb
       <CompactToolbarMenu name="rsi-history-summary" label={`${history.length.toLocaleString()}일 · 가정`} title={`${symbol} 과거 기록·계산 가정`}><p>{prices[0]?.[0]} ~ {prices.at(-1)?.[0]} · {prices.length.toLocaleString()}일</p><p>가정 실험 · 다음 관측일 종가 체결 · 전액 매수/전량 매도 · {options.feeBps}bp = {fmt(options.feeBps/100)}%</p></CompactToolbarMenu>
       <label className="compact-toolbar-field"><input type="checkbox" checked={signalsOnly} onChange={e=>setSignalsOnly(e.currentTarget.checked)}/>신호·체결일만</label><button className="compact-toolbar-action" type="button" onClick={csv} disabled={!history.length}>CSV</button>
     </CompactToolbar>
+    <div className="rsi-experiment-layout"><div className="rsi-experiment-input">
     <h2>백테스트 <small>{symbol}</small></h2>
     <form onSubmit={run} className="rsi-backtest-form">
       <label>시작<input aria-label="백테스트 시작일" type="date" required min={prices[0]?.[0]} max={prices.at(-1)?.[0]} value={options.start} onChange={e=>update('start',e.currentTarget.value)}/></label>
@@ -60,15 +61,18 @@ export function RsiHistory({symbol,unit,prices,rows,revision,onDate,cache}:{symb
       <label>편도 비용 · bp<input aria-label="백테스트 편도 비용 bp" type="number" required min="0" max="1000" step="1" value={options.feeBps} onChange={e=>update('feeBps',e.currentTarget.value)}/></label>
       <button type="submit" disabled={busy || !revision}>{busy?'계산 중…':'실행'}</button>
     </form>
+    </div><div className="rsi-experiment-result"><h3>계산 결과</h3>
     {!revision && <p role="status">DB 연결 후 백테스트를 실행할 수 있습니다. 저장 자료의 기록은 아래에서 확인할 수 있습니다.</p>}
     {busy && <LoadingSkeleton kind="chart" label={`${symbol} 백테스트 계산 중`}/>}
     {error && <p role="alert" className="ml-error">{error}</p>}
+    {!result && !busy && !error && revision && <p className="ml-empty-copy">조건을 입력하고 실행하세요.</p>}
     {result && <>
-      <dl className="rsi-backtest-metrics"><div><dt>수익률</dt><dd>{fmt(result.returnPct)}%</dd></div><div><dt>매수 후 보유</dt><dd>{fmt(result.buyHoldReturnPct)}%</dd></div><div><dt>최대 낙폭</dt><dd>{fmt(result.maxDrawdownPct)}%</dd></div><div><dt>최종 평가액 · {unit}</dt><dd>{fmt(result.finalEquity)}</dd></div><div><dt>청산 거래</dt><dd>{result.closedTrades}</dd></div><div><dt>승률</dt><dd>{result.winRatePct == null ? '—' : `${fmt(result.winRatePct)}%`}</dd></div></dl>
+      <dl className="rsi-backtest-metrics"><div className="rsi-metric-primary"><dt>수익률</dt><dd>{fmt(result.returnPct)}%</dd></div><div><dt>매수 후 보유</dt><dd>{fmt(result.buyHoldReturnPct)}%</dd></div><div><dt>최대 낙폭</dt><dd>{fmt(result.maxDrawdownPct)}%</dd></div><div><dt>최종 평가액 · {unit}</dt><dd>{fmt(result.finalEquity)}</dd></div><div><dt>청산 거래</dt><dd>{result.closedTrades}</dd></div><div><dt>승률</dt><dd>{result.winRatePct == null ? '—' : `${fmt(result.winRatePct)}%`}</dd></div></dl>
       <ObservedChart id="rsi-equity" points={result.equity} label="백테스트 평가액" unit={unit} plotHeight={180} selected={equityIndex} onSelect={setEquityIndex}/>
       <div className="ml-source-line rsi-history-meta"><span>{result.start} ~ {result.end}</span><span>{result.sessions.toLocaleString()}일</span><span>잔여 {fmt(result.quantity,6)}주</span>{result.pending && <span>{result.pending.date} {result.pending.side} 체결 대기</span>}</div>
-      <details open className="rsi-trades"><summary>체결 기록 · {result.trades.length}건</summary><div className="ml-table-wrap rsi-ledger-scroll"><table><thead><tr><th>체결일</th><th>신호일</th><th>구분</th><th>체결가 · {unit}</th><th>수량</th><th>비용</th><th>청산 손익</th></tr></thead><tbody>{result.trades.map(trade=><tr key={trade.date}><td>{trade.date}</td><td>{trade.signalDate}</td><td>{trade.side}</td><td>{fmt(trade.price,4)}</td><td>{fmt(trade.quantity,6)}</td><td>{fmt(trade.fee)}</td><td>{trade.pnl == null?'—':fmt(trade.pnl)}</td></tr>)}</tbody></table></div></details>
     </>}
+    </div></div>
+    {result && <details open className="rsi-trades"><summary>체결 기록 · {result.trades.length}건</summary><div className="ml-table-wrap rsi-ledger-scroll"><table><thead><tr><th>체결일</th><th>신호일</th><th>구분</th><th>체결가 · {unit}</th><th>수량</th><th>비용</th><th>청산 손익</th></tr></thead><tbody>{result.trades.map(trade=><tr key={trade.date}><td>{trade.date}</td><td>{trade.signalDate}</td><td>{trade.side}</td><td>{fmt(trade.price,4)}</td><td>{fmt(trade.quantity,6)}</td><td>{fmt(trade.fee)}</td><td>{trade.pnl == null?'—':fmt(trade.pnl)}</td></tr>)}</tbody></table></div></details>}
     <details className="ml-original"><summary>체결·자료 가정</summary><p>강연 원문을 복원한 전략이 아닌 단일 RSI 기준 실험입니다. 완료 종가로 신호를 확인한 뒤 다음 관측 거래일 종가에 체결합니다. 소수점 수량을 허용하고 보유 중 추가 매수·공매도는 하지 않습니다. 종료일 미체결 신호는 대기, 보유분은 평가만 하며 강제 청산하지 않습니다. 매수 후 보유도 동일한 초기 자금과 매수 비용을 적용하고 종료일 평가합니다. 비용은 수수료·슬리피지를 합한 편도 가정이며 세금·배당·환율은 제외합니다. 공급자 종가는 현재의 분할 조정 관행을 따르며 당시 데이터 판본을 재현하지 않습니다. 종목별 원문 규칙과 키움 RSI 동등성은 미검증입니다.</p></details>
     <h2>과거 기록 <small>{history.length.toLocaleString()}일</small></h2>
     {csvText != null && <section className="rsi-csv" aria-label="CSV 기록"><div className="rsi-history-heading"><strong>{symbol} CSV</strong><button type="button" onClick={()=>setCsvText(null)}>닫기</button></div><textarea aria-label="CSV 기록" readOnly value={csvText} onFocus={event=>event.currentTarget.select()}/></section>}

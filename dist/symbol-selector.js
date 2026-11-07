@@ -64,7 +64,10 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
     if (text !== undefined) node.textContent = text; parent.append(node); return node;
   };
   button.type = 'button'; button.classList.add('symbol-selector-trigger');
-  button.replaceChildren(); add(button,'span','symbol-selector-label',current.symbol);
+  button.replaceChildren();
+  const instrumentName = add(button,'span','symbol-selector-name',current.assetClass==='housing'?'':current.koreanName);
+  instrumentName.setAttribute('aria-hidden','true');
+  add(button,'span','symbol-selector-label',current.assetClass==='housing'?current.koreanName:current.symbol);
   add(button,'span','symbol-selector-chevron').innerHTML = chevronIcon;
   button.title = `종목 선택 · ${current.koreanName} / ${current.currency || 'USD'}`;
   button.setAttribute('aria-label',`${button.title} · ${current.symbol}`);
@@ -180,6 +183,7 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
   document.addEventListener('atlas:modal-open',onOtherModal);
   const activeSymbol = event => {
     const instrument=SYMBOLS.find(item=>item.symbol===event.detail?.symbol);if(!instrument)return;currentSymbol=instrument.symbol;
+    instrumentName.textContent=instrument.assetClass==='housing'?'':instrument.koreanName;
     button.querySelector?.('.symbol-selector-label')?.replaceChildren(document.createTextNode(instrument.assetClass==='housing'?instrument.koreanName:instrument.symbol));
     button.title=`종목 선택 · ${instrument.koreanName} / ${instrument.currency || 'USD'}`;button.setAttribute('aria-label',`${button.title} · ${instrument.symbol}`);
   };
