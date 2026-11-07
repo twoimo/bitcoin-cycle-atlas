@@ -53,6 +53,18 @@ both process groups and drains their logs before recording failure. Publication
 packaging fixtures run in isolated copies and cannot change the browser's
 served `dist` files.
 
+The disposable PostgreSQL server stops inside the service-test gate, while that
+gate's log remains open, before the browser/model group starts. Early failures
+use a separate cleanup log. Shutdown never writes to the sealed runtime-startup
+log, and public report output is drained before final cleanup or process exit.
+
+Only the model-test command runs at Linux nice 10. Its wrapper lowers priority
+before spawning the unchanged `npm test -- --test-concurrency=2` command and
+verifies the actual child's inherited value. The outer runner and native-browser
+command retain nice 0. The receipt binds the observed values and process IDs to
+the managed command and its raw log; inability to apply or verify priority fails
+the gate. Replay cadence tolerances and the complete test inventory are unchanged.
+
 The complete browser suite uses two independent Chrome processes and profiles.
 The46 non-chart-replay cases retain their original order and shared context in
 one lane. The7 chart-replay cases retain their original order and isolated

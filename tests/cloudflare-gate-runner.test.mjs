@@ -1,13 +1,15 @@
 import test,{after} from 'node:test';
 import assert from 'node:assert/strict';
-import {createHash} from 'node:crypto';
-import {mkdtemp,readFile,rm} from 'node:fs/promises';
+import {createHash,randomBytes} from 'node:crypto';
+import {mkdtemp,readFile,writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {resolve} from 'node:path';
 import {spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {Writable} from 'node:stream';
 import {completeLineWriter,executeLoggedGate,runVerificationCommand,runVerificationGroup,readVerificationResources,
-  measureVerificationResources,installVerificationSignalHandlers} from '../scripts/cloudflare-gate-runner.mjs';
+  measureVerificationResources,installVerificationSignalHandlers,drainVerificationOutput} from '../scripts/cloudflare-gate-runner.mjs';
+import {decodeCompressedBrowserReport} from '../scripts/browser-evidence-transport.mjs';
 import {packagingFixtureEnvironment} from './helpers/isolated-packaging-fixture.mjs';
 
 const cancellation=new AbortController(),removeSignals=installVerificationSignalHandlers(cancellation);
@@ -52,9 +54,62 @@ test('out-of-order completion preserves declared result order and exact independ
   assert.deepEqual(result.measurement.gateIds,['native-browser','model-tests']);assert.ok(result.measurement.durationMs>=150);
 });
 
+test('a failed browser report survives joined failure and slow public output with every compressed chunk',async t=>{
+  const root=await temporary(t),delivered=[],ready=resolve(root,'model-finished'),reportPath=resolve(root,'report.json');
+  const report=Buffer.from(JSON.stringify({status:'failed',declaredCaseCount:53,failures:['expected fixture failure'],observation:randomBytes(600*1024).toString('base64')}));
+  await writeFile(reportPath,report);
+  const transport=fileURLToPath(new URL('../scripts/browser-evidence-transport.mjs',import.meta.url));
+  const publicOutput=new Writable({highWaterMark:1024,write(bytes,_encoding,callback){setTimeout(()=>{delivered.push(Buffer.from(bytes));callback();},4);}});
+  t.after(()=>publicOutput.destroy());
+  const codes={
+    'native-browser':`import {existsSync,readFileSync} from 'node:fs';import {emitCompressedBrowserReport} from ${JSON.stringify(transport)};
+      while(!existsSync(${JSON.stringify(ready)}))await new Promise(done=>setTimeout(done,5));
+      emitCompressedBrowserReport(readFileSync(${JSON.stringify(reportPath)}));process.exitCode=1;`,
+    'model-tests':`import {writeFileSync} from 'node:fs';console.log('ATLAS_TEST_TOTAL {"complete":true,"fail":0}');writeFileSync(${JSON.stringify(ready)},'finished');`,
+  };
+  const result=await group([{id:'native-browser'},{id:'model-tests'}],execute(root,codes,{publicWrite:line=>publicOutput.write(line)}));
+  assert.deepEqual(result.settled.map(item=>item.status),['rejected','fulfilled']);
+  const failed=result.settled[0].reason.gateResult,raw=await readFile(resolve(root,'native-browser.log'));
+  assert.equal(failed.status,'FAIL');assert.equal(failed.logSha256,sha(raw));
+  const chunks=bytes=>bytes.toString('utf8').trimEnd().split('\n').filter(line=>line.startsWith('ETH_BROWSER_REPORT_CHUNK ')).map(line=>JSON.parse(line.slice('ETH_BROWSER_REPORT_CHUNK '.length)));
+  const diskChunks=chunks(raw);assert.ok(diskChunks.length>174,'Exercise a report larger than the interrupted Cloudflare transport');
+  assert.deepEqual(decodeCompressedBrowserReport(diskChunks,{expectedBytes:report.length,expectedSha256:sha(report)}),report);
+  assert.ok(publicOutput.writableLength>0,'The fixture must leave real queued public writes after the child closes');
+  await drainVerificationOutput([publicOutput]);
+  const publicBytes=Buffer.concat(delivered),publicChunks=chunks(publicBytes);
+  assert.equal(publicOutput.writableLength,0);assert.equal(publicChunks.length,diskChunks.length);
+  assert.deepEqual(decodeCompressedBrowserReport(publicChunks,{expectedBytes:report.length,expectedSha256:sha(report)}),report);
+  assert.ok(publicBytes.includes('ATLAS_TEST_TOTAL {"complete":true,"fail":0}\n'));
+});
+
+test('public output drain rejects a write failure without an unhandled later stream error',async()=>{
+  const expected=new Error('fixture output unavailable');
+  const output=new Writable({write(_bytes,_encoding,callback){callback(expected);}});
+  await assert.rejects(drainVerificationOutput([output]),error=>error===expected);
+  await new Promise(done=>setImmediate(done));
+  assert.equal(output.destroyed,true);assert.equal(output.listenerCount('error'),0);
+});
+
+test('a failed public stream cannot interrupt the other stream before queued evidence drains',async()=>{
+  const expected=new Error('fixture stderr unavailable'),delivered=[];
+  const stdout=new Writable({write(bytes,_encoding,callback){setTimeout(()=>{delivered.push(bytes.toString());callback();},20);}});
+  const stderr=new Writable({write(_bytes,_encoding,callback){callback(expected);}});
+  stdout.write('last report chunk\n');
+  await assert.rejects(drainVerificationOutput([stdout,stderr]),error=>error===expected);
+  assert.equal(delivered.join(''),'last report chunk\n');assert.equal(stdout.writableLength,0);stdout.destroy();
+});
+
+test('public output drain has a failure bound and releases listeners when a late write completes',async()=>{
+  let complete;
+  const output=new Writable({write(_bytes,_encoding,callback){complete=callback;}});
+  await assert.rejects(drainVerificationOutput([output],{timeoutMs:20}),/did not drain within its bound/);
+  complete();await new Promise(done=>setImmediate(done));
+  assert.equal(output.listenerCount('error'),0);assert.equal(output.listenerCount('close'),0);output.destroy();
+});
+
 test('a failed gate cancels its sibling process group and waits for descendant output closure',{skip:process.platform!=='linux'},async t=>{
   const root=await temporary(t),ready=resolve(root,'grandchild.pid');
-  const grandchild=`import {writeFileSync} from 'node:fs';writeFileSync(${JSON.stringify(ready)},String(process.pid));setInterval(()=>process.stdout.write('tick\\n'),20);`;
+  const grandchild=`import {writeFileSync,readFileSync} from 'node:fs';writeFileSync(${JSON.stringify(ready)},readFileSync('/proc/self/stat','utf8').split(' ')[0]);setInterval(()=>process.stdout.write('tick\\n'),20);`;
   const codes={
     'native-browser':`import {existsSync} from 'node:fs';const timer=setInterval(()=>{if(existsSync(${JSON.stringify(ready)})){clearInterval(timer);process.stderr.write('browser failed\\n');process.exitCode=1;}},10);`,
     'model-tests':`import {spawn} from 'node:child_process';spawn(process.execPath,['--input-type=module','-e',${JSON.stringify(grandchild)}],{stdio:'inherit'});setInterval(()=>{},1000);`,

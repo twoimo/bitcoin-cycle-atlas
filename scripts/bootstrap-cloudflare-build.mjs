@@ -16,16 +16,25 @@ const executable=async path=>access(path,constants.X_OK).then(()=>true,()=>false
 
 export async function runRuntimeCommand(command,args,{cwd=repositoryRoot,env=process.env,timeout=180000,log=()=>{},allowFailure=false}={}){
   return new Promise((accept,reject)=>{
-    let output='',settled=false;
+    let output='',problem=null,spawnError=null,killTimer;
     const child=spawn(command,args,{cwd,env,stdio:['ignore','pipe','pipe']});
-    const finish=(error,result)=>{if(settled)return;settled=true;clearTimeout(timer);error?reject(error):accept(result);};
-    const timer=setTimeout(()=>{child.kill('SIGKILL');finish(new Error(command+' exceeded the runtime bootstrap bound'));},timeout);
-    for(const stream of [child.stdout,child.stderr])stream.on('data',chunk=>{const text=chunk.toString();output=(output+text).slice(-4*1024*1024);log(text);});
-    child.on('error',error=>allowFailure?finish(null,{code:127,output:error.message}):finish(error));
+    const stop=error=>{
+      problem??=error;if(killTimer)return;
+      child.kill('SIGTERM');killTimer=setTimeout(()=>child.kill('SIGKILL'),500);
+    };
+    const timer=setTimeout(()=>stop(new Error(command+' exceeded the runtime bootstrap bound')),timeout);
+    for(const stream of [child.stdout,child.stderr])stream.on('data',chunk=>{
+      const text=chunk.toString();output=(output+text).slice(-4*1024*1024);
+      if(!problem)try{log(text);}catch(error){stop(error);}
+    });
+    child.on('error',error=>{spawnError=error;});
     child.on('close',(code,signal)=>{
+      clearTimeout(timer);clearTimeout(killTimer);
+      if(problem){reject(problem);return;}
+      if(spawnError){allowFailure?accept({code:127,output:spawnError.message}):reject(spawnError);return;}
       const result={code:code??1,signal,output};
-      if(result.code&&!allowFailure)finish(new Error(command+' failed ('+result.code+'): '+output.slice(-4000)));
-      else finish(null,result);
+      if(result.code&&!allowFailure)reject(new Error(command+' failed ('+result.code+'): '+output.slice(-4000)));
+      else accept(result);
     });
   });
 }
@@ -209,25 +218,31 @@ export async function bootstrapCloudflareBuild(options={}){
       postgres:{path:postgresPath,version:postgresVersion,packages:postgresPackages,databaseVerified:false},durationMs:Date.now()-started}};
 }
 
-export async function startIsolatedPostgres({log=()=>{},binaryDirectory='/usr/lib/postgresql/17/bin',shareDirectory=null,environment=process.env}={}){
+const allocatePostgresPort=()=>new Promise((accept,reject)=>{const server=createServer();server.once('error',reject);server.listen(0,'127.0.0.1',()=>{const port=server.address().port;server.close(error=>error?reject(error):accept(port));});});
+
+export async function startIsolatedPostgres({log=()=>{},binaryDirectory='/usr/lib/postgresql/17/bin',shareDirectory=null,environment=process.env,runCommand=runRuntimeCommand,allocatePort=allocatePostgresPort}={}){
   const directory=await mkdtemp(join(tmpdir(),'atlas-cloudflare-pg-'));
   const isRoot=process.getuid?.()===0;
-  const run=(binary,args)=>runRuntimeCommand(isRoot?'runuser':join(binaryDirectory,binary),isRoot?['-u','postgres','--',join(binaryDirectory,binary),...args]:args,{env:environment,log,timeout:60000});
+  const run=(binary,args,{log:commandLog=log}={})=>runCommand(isRoot?'runuser':join(binaryDirectory,binary),isRoot?['-u','postgres','--',join(binaryDirectory,binary),...args]:args,{env:environment,log:commandLog,timeout:60000});
   let running=false;
-  const cleanup=async()=>{
-    if(running){await run('pg_ctl',['-D',join(directory,'data'),'-m','fast','-w','stop']);running=false;}
+  const cleanup=async({log:cleanupLog=log}={})=>{
+    if(running){await run('pg_ctl',['-D',join(directory,'data'),'-m','fast','-w','stop'],{log:cleanupLog});running=false;}
     await rm(directory,{recursive:true,force:true});
   };
   try{
-    if(isRoot)await runRuntimeCommand('chown',['postgres:postgres',directory],{log});
+    if(isRoot)await runCommand('chown',['postgres:postgres',directory],{log});
     await run('initdb',['-D',join(directory,'data'),...(shareDirectory?['-L',shareDirectory]:[]),'-U','atlas','--auth-local=trust','--auth-host=trust','--encoding=UTF8','--no-locale']);
-    const port=await new Promise((accept,reject)=>{const server=createServer();server.once('error',reject);server.listen(0,'127.0.0.1',()=>{const port=server.address().port;server.close(error=>error?reject(error):accept(port));});});
+    const port=await allocatePort();
+    if(!Number.isInteger(port)||port<1||port>65535)throw new Error('The isolated PostgreSQL port is invalid');
     await run('pg_ctl',['-D',join(directory,'data'),'-l',join(directory,'server.log'),'-o','-h 127.0.0.1 -p '+port+' -k '+directory,'-w','start']);running=true;
     await run('createdb',['-h','127.0.0.1','-p',String(port),'-U','atlas','atlas_market_lab']);
     const result=await run('psql',['-h','127.0.0.1','-p',String(port),'-U','atlas','-d','atlas_market_lab','-A','-t','-c','SHOW server_version_num']);
     if(result.output.trim()!=='170011')throw new Error('The live PostgreSQL server differs from pinned17.11');
     return {url:'postgresql://atlas@127.0.0.1:'+port+'/atlas_market_lab',port,serverVersion:'17.11',cleanup};
-  }catch(error){await cleanup().catch(()=>{});throw error;}
+  }catch(error){
+    try{await cleanup();}catch(cleanupError){throw new AggregateError([error,cleanupError],'PostgreSQL startup and cleanup failed',{cause:error});}
+    throw error;
+  }
 }
 
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){

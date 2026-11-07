@@ -8,6 +8,7 @@ import {verifyChartReplaySurface} from './verify-chart-replay-browser.mjs';
 import {consolidatedPagesBase,verifyConsolidatedWorkspaceSurface} from './verify-consolidated-workspace-browser.mjs';
 import {createEthBrowserCaseSpecs,ethBrowserCaseScopes,selectEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
 import {readBrowserSourceIdentity} from './browser-source-identity.mjs';
+import {classifyProjectBrowserResource,verifyProjectGeneratedImages} from './browser-project-resource-policy.mjs';
 import {verifyNativeChartWorkbench} from './verify-native-chart-workbench-browser.mjs';
 import {verifyChartZoomBrowser} from './verify-chart-zoom-browser.mjs';
 import {emitBrowserEvidenceChunks} from './browser-evidence-transport.mjs';
@@ -849,7 +850,7 @@ async function main(){
   report.declaredCaseCount=caseSpecs.length;report.expectedCaseCount=selectedCases.length;
   for(const spec of selectedCases){
     const {page,width,height,touch}=spec;
-    const receipt={...spec,caseSpec:{...spec},status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[],dataResourceRequests:[],unscopedLocalRequests:[],expectedOfflineRefresh:[],unexpectedResourceErrors:[]};
+    const receipt={...spec,caseSpec:{...spec},status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[],dataResourceRequests:[],unscopedLocalRequests:[],generatedImageRequests:[],expectedOfflineRefresh:[],unexpectedResourceErrors:[]};
     report.cases.push(receipt);let cdp,targetId,browserContextId;
     try{
       // A saved replay belongs to one user's browser. Each replay scenario
@@ -867,8 +868,12 @@ async function main(){
         urls.set(event.requestId,event.request.url);
         requestDetails.set(event.requestId,{requestId:event.requestId,frameId:event.frameId,loaderId:event.loaderId,method:event.request.method,resourceType:event.type,requestWallTime:event.wallTime,documentUrl:event.documentURL});
         const url=new URL(event.request.url);
-        if(spec.consolidated&&url.origin===base&&!url.pathname.startsWith(consolidatedPagesBase))
-          receipt.unscopedLocalRequests.push({requestId:event.requestId,url:event.request.url,resourceType:event.type});
+        if(spec.consolidated){
+          const request={...requestDetails.get(event.requestId),url:event.request.url,origin:url.origin,documentUrl:event.documentURL,initiator:event.initiator};
+          const classification=classifyProjectBrowserResource(request,{origin:base,projectRoot:consolidatedPagesBase});
+          if(classification==='outside-project')receipt.unscopedLocalRequests.push(request);
+          else if(classification==='generated-image-candidate')receipt.generatedImageRequests.push(request);
+        }
         if(url.origin===base&&/\/(?:daily-data-view\.js|daily-data\.css|asset-comparison\.js|data\/asset-comparison\.json)$/.test(url.pathname))
           receipt.dataResourceRequests.push({requestId:event.requestId,url:event.request.url});
       });
@@ -959,6 +964,7 @@ async function main(){
       }else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth'){await ethCase(cdp,width,receipt,expected,archive);await verifyNativeChartWorkbench({cdp,receipt,evaluate,until,settled,click,bounds,screenshot});}else{await equityCase(cdp,width,receipt,page.toUpperCase(),archive);await verifyNativeChartWorkbench({cdp,receipt,evaluate,until,settled,click,bounds,screenshot});}
       assert.equal(receipt.runtimeErrors.length,0,'Browser runtime errors: '+JSON.stringify(receipt.runtimeErrors));
       assert.equal(receipt.unscopedLocalRequests.length,0,'Consolidated workspace requested resources outside the Pages project root: '+JSON.stringify(receipt.unscopedLocalRequests));
+      if(spec.consolidated)receipt.verifiedGeneratedImageRequests=verifyProjectGeneratedImages(receipt.generatedImageRequests,receipt.consolidated.generatedImages,{origin:base,projectRoot:consolidatedPagesBase});
       const verifiedReplayCancellations=new Set(receipt.replay?.expectedCanceledRequests.map(row=>row.requestId)??[]);
       receipt.unexpectedResourceErrors=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId)&&!verifiedReplayCancellations.has(error.requestId));
       assert.equal(receipt.unexpectedResourceErrors.length,0,'Unexpected browser resource failures: '+JSON.stringify(receipt.unexpectedResourceErrors));

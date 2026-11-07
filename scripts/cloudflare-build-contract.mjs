@@ -13,7 +13,7 @@ export const cloudflareBuildGates=Object.freeze([
   {id:'service-build',command:'npm',args:['run','build:web']},
   {id:'postgres-service-tests',kind:'node-tests',directory:'tests/service',extension:'.test.ts'},
   {id:'native-browser',command:'node',args:['scripts/verify-native-browser-suite.mjs']},
-  {id:'model-tests',command:'npm',args:['test','--','--test-concurrency=2']},
+  {id:'model-tests',command:'npm',args:['test','--','--test-concurrency=2'],nice:10},
   ...['forecast','research','eth-events','treasury-paths','numerics','formal','cycle','performance','static','chart-replay'].map(id=>({id,command:'npm',args:['run','verify:'+id]})),
   {id:'publication',command:'npm',args:['run','build:publication']},
   {id:'publication-check',command:'npm',args:['run','verify:publication']},
@@ -66,6 +66,18 @@ export const cloudflarePlanSha256=createHash('sha256').update(JSON.stringify({
   runtime:cloudflareRuntime,browserCases:createEthBrowserCaseSpecs(),
 })).digest('hex');
 
+export function assertModelPriorityReceipt(receipt){
+  const gate=cloudflareBuildGates.find(gate=>gate.id==='model-tests');
+  assert.equal(receipt?.schemaVersion,1);assert.equal(receipt?.kind,'atlas-cloudflare-command-priority');assert.equal(receipt?.status,'APPLIED');
+  assert.equal(receipt.gateId,gate.id);assert.equal(receipt.requestedNice,gate.nice);assert.equal(receipt.actualNice,gate.nice);assert.equal(receipt.commandNice,gate.nice);
+  assert.equal(receipt.parentNice,0,'The outer runner and browser sibling must retain normal priority');
+  assert.equal(receipt.beforeNice,0,'The model wrapper must start from the unchanged outer runner priority');
+  assert.equal(receipt.command,gate.command);assert.deepEqual(receipt.args,gate.args,'CPU priority cannot replace or reduce the canonical model command');
+  for(const key of ['wrapperPid','parentPid','commandPid'])assert.ok(Number.isSafeInteger(receipt[key])&&receipt[key]>0,'Actual priority process IDs are required');
+  assert.notEqual(receipt.wrapperPid,receipt.commandPid);assert.notEqual(receipt.wrapperPid,receipt.parentPid);
+  return receipt;
+}
+
 export function assertCloudflareVerificationReceipt(receipt,{sourceCommit,sourceTree}={}){
   assert.equal(receipt?.schemaVersion,1,'Expected the current Cloudflare verification receipt schema');
   assert.equal(receipt?.kind,'atlas-cloudflare-verification');
@@ -91,6 +103,8 @@ export function assertCloudflareVerificationReceipt(receipt,{sourceCommit,source
   assert.equal(receipt.browser?.sourceCommit,sourceCommit);
   assert.equal(receipt.browser?.sourceIntegrity,true);
   assert.match(receipt.browser?.reportSha256??'',/^[a-f0-9]{64}$/);
+  assert.equal(receipt.browser?.processPriority?.nice,0,'Native browser must retain normal CPU priority');
+  assertModelPriorityReceipt(receipt.modelPriority);
   assert.equal(receipt.runtime?.node,cloudflareRuntime.node);
   assert.equal(receipt.runtime?.platform,cloudflareRuntime.platform);
   assert.equal(receipt.runtime?.arch,cloudflareRuntime.arch);

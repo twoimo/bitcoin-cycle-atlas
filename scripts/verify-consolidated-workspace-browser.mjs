@@ -14,7 +14,7 @@ export const consolidatedWorkspaceCases = [320, 390, 1440].map(width => ({
 // iframe documents. No substitute model, synthetic price, or dispatched DOM event.
 export async function verifyConsolidatedWorkspaceSurface(api) {
   const { cdp, receipt, evaluate, until, settled, screenshot, verifyOfflineRefresh } = api;
-  const evidence = { inputs: [], states: [], frames: [] };
+  const evidence = { inputs: [], states: [], frames: [], generatedImages: [] };
   const zoomVerifiedSymbols=new Set();
   receipt.consolidated = evidence;
   let child, childId;
@@ -271,6 +271,12 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     await command('차트 내보내기');await pointer(child,panel+' .rsi-workbench-panel-scroll > button');
     await until(()=>evaluate(child,()=>Boolean(document.querySelector('.rsi-workbench-panel a[download$=".svg"]')&&document.querySelector('.rsi-workbench-panel a[download$=".png"]'))),'source chart SVG and PNG '+symbol);
     assert.match(await evaluate(child,()=>document.querySelector('.rsi-workbench-panel a[download$=".svg"]').download),new RegExp('^'+symbol+'-'));
+    const generated=await evaluate(child,()=>{
+      const panel=document.querySelector('.rsi-workbench-panel'),preview=panel.querySelector('.rsi-export-preview');
+      return {documentUrl:document.URL,svgUrl:panel.querySelector('a[download$=".svg"]').href,pngUrl:panel.querySelector('a[download$=".png"]').href,
+        previewSrc:preview.currentSrc||preview.src,previewComplete:preview.complete,previewWidth:preview.naturalWidth,previewHeight:preview.naturalHeight};
+    });
+    evidence.generatedImages.push({symbol,frameId:childId,...generated});
     await snap(symbol.toLowerCase()+'-export');await pointer(child,panel+' header button');
     await chartContract(symbol,monthly?'지수':'USDC',monthly?['monthly']:['daily','weekly']);
   }

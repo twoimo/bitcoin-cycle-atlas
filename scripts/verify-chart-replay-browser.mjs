@@ -108,6 +108,70 @@ export function assertChartReplayPricePaneAccess(geometry) {
   assert.equal(geometry.pointerReachesChart, true);
 }
 
+// Read native scrolling to completion before a reversal or an edge assertion.
+// Two rendered samples after scrollend, or a quiet sequence of unchanged
+// positions, also cover gestures that finish at an edge without scrollend.
+// This observer never sets scrollLeft or changes the page's scroll behavior.
+export function waitForChartReplayToolbarScroll({ selector = '.chart-replay-actions', timeoutMs = 4000, quietMs = 140 } = {}) {
+  const node = document.querySelector(selector);
+  if (!node || !node.getClientRects().length) throw new Error('The native replay scroll owner is not visible');
+  const read = () => ({ left: node.scrollLeft, maximum: node.scrollWidth - node.clientWidth, width: node.clientWidth });
+  return new Promise((resolve, reject) => {
+    const started = performance.now();
+    let current = read(), lastChange = started, stableFrames = 0, scrollEvents = 0, endEvents = 0, ended = false, frame;
+    const onScroll = () => { scrollEvents++; lastChange = performance.now(); stableFrames = 0; ended = false; };
+    const onEnd = () => { endEvents++; ended = true; stableFrames = 0; };
+    const cleanup = () => {
+      clearTimeout(timer); cancelAnimationFrame(frame);
+      node.removeEventListener('scroll', onScroll); node.removeEventListener('scrollend', onEnd);
+    };
+    const evidence = settledBy => ({ ...current, settledBy, elapsedMs: performance.now() - started, stableFrames, scrollEvents, endEvents });
+    const timer = setTimeout(() => { current = read(); const state = evidence('timeout'); cleanup(); reject(new Error('Native replay toolbar scrolling did not settle: ' + JSON.stringify(state))); }, timeoutMs);
+    node.addEventListener('scroll', onScroll, { passive: true }); node.addEventListener('scrollend', onEnd, { passive: true });
+    const sample = () => {
+      const next = read(), now = performance.now();
+      if (Object.keys(next).some(key => next[key] !== current[key])) { lastChange = now; stableFrames = 0; }
+      else stableFrames++;
+      current = next;
+      if ((stableFrames >= 2 && ended) || (stableFrames >= 3 && now - lastChange >= quietMs)) {
+        const state = evidence(ended ? 'scrollend' : 'position-stable'); cleanup(); resolve(state); return;
+      }
+      frame = requestAnimationFrame(sample);
+    };
+    frame = requestAnimationFrame(sample);
+  });
+}
+
+export async function swipeChartReplayToolbarToEdge({ cdp, evaluate, bounds, pause = delay }, direction) {
+  assert.ok(direction === -1 || direction === 1, 'A native toolbar swipe needs a horizontal direction');
+  const selector = '.chart-replay-actions', before = await evaluate(cdp, waitForChartReplayToolbarScroll);
+  const box = await bounds(cdp, selector), distance = Math.min(150, box.width * .65);
+  assert.ok(distance > 0 && before.maximum >= 0, 'The native replay toolbar has invalid scroll geometry');
+  // A touch gesture spends some travel crossing native touch slop. Budget for
+  // half of its measured travel; never require an inertial fling to reach an
+  // edge in an arbitrary four gestures on a narrow toolbar.
+  const maximumSwipes = Math.ceil(before.maximum / Math.max(1, distance / 2)) + 1;
+  const reached = state => direction < 0 ? state.left >= state.maximum - 1 : state.left <= 1;
+  const swipes = [];
+  let after = before;
+  while (!reached(after) && swipes.length < maximumSwipes) {
+    const b = await bounds(cdp, selector), travel = Math.min(150, b.width * .65);
+    const x = direction < 0 ? b.right - 12 : b.left + 12, y = b.top + b.height / 2;
+    const previous = after;
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y, id: 0, radiusX: 1, radiusY: 1, force: 1 }] });
+    for (const fraction of [.2, .45, .7, 1]) {
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x + direction * travel * fraction, y, id: 0, radiusX: 1, radiusY: 1, force: 1 }] });
+      await pause(30);
+    }
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    after = await evaluate(cdp, waitForChartReplayToolbarScroll);
+    swipes.push({ from: previous.left, to: after.left, maximum: after.maximum, distance: travel, settledBy: after.settledBy, elapsedMs: after.elapsedMs });
+  }
+  assert.ok(reached(after), (direction < 0 ? 'Native touch did not expose the right end of the replay bar' : 'Native toolbar swipe could not return to Select bar') +
+    ': ' + JSON.stringify({ before, after, maximumSwipes, swipes }));
+  return { before, after, maximumSwipes, swipes };
+}
+
 export async function verifyChartReplaySurface(api) {
   const { cdp, browser, browserContextId, receipt, root, outputDirectory, evaluate, until, settled, click: nativeClick, bounds, visibleBounds, screenshot, verifyOfflineRefresh } = api;
   const { symbol, width, height, touch } = receipt;
@@ -285,20 +349,8 @@ export async function verifyChartReplaySurface(api) {
     await screenshot(cdp, prefix + '-floating-bar.png', receipt);
     if (touch && width <= 620) {
       assert.ok(geometry.actions.scrollWidth > geometry.actions.clientWidth + 20, 'The narrow toolbar does not provide an owned horizontal scroll area');
-      const scroll = () => evaluate(cdp, () => { const node = document.querySelector('.chart-replay-actions'); return { left: node.scrollLeft, maximum: node.scrollWidth - node.clientWidth }; });
-      const swipe = async direction => {
-        const b = await bounds(cdp, '.chart-replay-actions'), distance = Math.min(150, b.width * .65);
-        const x = direction < 0 ? b.right - 12 : b.left + 12, y = b.top + b.height / 2;
-        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y, id: 0, radiusX: 1, radiusY: 1, force: 1 }] });
-        for (const fraction of [.2, .45, .7, 1]) {
-          await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x + direction * distance * fraction, y, id: 0, radiusX: 1, radiusY: 1, force: 1 }] });
-          await delay(30);
-        }
-        await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await settled(cdp);
-      };
-      const before = await scroll();
-      for (let i = 0; i < 4 && (await scroll()).left < before.maximum - 1; i++) await swipe(-1);
-      const after = await scroll(); assert.ok(after.left > before.left + 20 && after.left >= after.maximum - 1, 'Native touch did not expose the right end of the replay bar');
+      const outward = await swipeChartReplayToolbarToEdge({ cdp, evaluate, bounds }, -1), { before, after } = outward;
+      assert.ok(after.left > before.left + 20 && after.left >= after.maximum - 1, 'Native touch did not expose the right end of the replay bar');
       const live = await bounds(cdp, control('live'));
       assert.ok(live.left >= geometry.actions.left - 1 && live.right <= geometry.actions.right + 1, 'The Live action cannot be reached by native toolbar scrolling');
       await screenshot(cdp, prefix + '-floating-bar-native-scroll.png', receipt);
@@ -306,9 +358,11 @@ export async function verifyChartReplaySurface(api) {
         viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null, scrollX, scrollY, pageWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) }; }, chartSelector);
       for (const name of ['cursor', 'hash', 'viewStart', 'viewEnd', 'scrollX', 'scrollY']) assert.equal(unchanged[name], geometry[name], 'Toolbar scrolling changed the chart or document ' + name);
       assert.ok(unchanged.pageWidth <= width + 1);
-      for (let i = 0; i < 4 && (await scroll()).left > 1; i++) await swipe(1);
-      assert.ok((await scroll()).left <= 1, 'Native toolbar swipe could not return to Select bar');
-      evidence.floatingBar.push({ label: 'native-horizontal-toolbar-scroll-without-chart-or-page-scroll', before, after, unchanged });
+      const returning = await swipeChartReplayToolbarToEdge({ cdp, evaluate, bounds }, 1);
+      assert.ok(returning.after.left <= 1, 'Native toolbar swipe could not return to Select bar');
+      const select = await bounds(cdp, control('select-menu'));
+      assert.ok(select.left >= geometry.actions.left - 1 && select.right <= geometry.actions.right + 1, 'Select bar is not fully reachable after native toolbar scrolling');
+      evidence.floatingBar.push({ label: 'native-horizontal-toolbar-scroll-without-chart-or-page-scroll', before, after, unchanged, outward, returning });
     }
   }
   async function verifyLandingMenu(label, capture = false) {

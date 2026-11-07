@@ -6,9 +6,10 @@ import {fileURLToPath} from 'node:url';
 import {createHash,randomUUID} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {bootstrapCloudflareBuild,inspectCloudflareRuntime,startIsolatedPostgres} from './bootstrap-cloudflare-build.mjs';
-import {cloudflareBuildGates,cloudflareParallelGroups,cloudflareBrowserCaseCount,cloudflarePlanSha256,assertCloudflareVerificationReceipt} from './cloudflare-build-contract.mjs';
+import {cloudflareBuildGates,cloudflareParallelGroups,cloudflareBrowserCaseCount,cloudflarePlanSha256,assertCloudflareVerificationReceipt,assertModelPriorityReceipt} from './cloudflare-build-contract.mjs';
 import {createEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
-import {executeLoggedGate,runVerificationCommand,runVerificationGroup,installVerificationSignalHandlers} from './cloudflare-gate-runner.mjs';
+import {executeLoggedGate,runVerificationCommand,runVerificationGroup,installVerificationSignalHandlers,drainVerificationOutput} from './cloudflare-gate-runner.mjs';
+import {commandPriorityPrefix} from './cloudflare-priority-command.mjs';
 
 const root=fileURLToPath(new URL('..',import.meta.url)),out=resolve(root,'build/cloudflare-verification');
 const receiptPath=resolve(root,'build/cloudflare-verification.json');
@@ -52,7 +53,7 @@ export async function verifyCloudflareBuild(){
   // the same command into a weaker deployment gate.
   delete environment.TEST_DATABASE_URL;
   const cancellation=new AbortController();
-  let removeSignalHandlers;
+  let removeSignalHandlers,verificationError;
   async function execute(gate,{signal=cancellation.signal}={}){
     const gateEnvironment={...environment};
     console.log('ATLAS_CLOUDFLARE_GATE '+JSON.stringify({id:gate.id,status:'RUNNING'}));
@@ -72,11 +73,26 @@ export async function verifyCloudflareBuild(){
           args=['--import','tsx','--test','--test-concurrency=2',...files.map(file=>gate.directory+'/'+file)];
         }
         const remaining=deadline-Date.now();assert.ok(remaining>1000,'The free20-minute build bound requires another complete attempt; gates cannot be skipped');
-        await runVerificationCommand(command,args,{id:gate.id,cwd:root,environment:gateEnvironment,deadline,signal,log});
+        if(gate.nice!==undefined){assert.equal(gate.id,'model-tests');assert.equal(gate.nice,10);}
+        let commandError;
+        try{return await runVerificationCommand(command,args,{id:gate.id,cwd:root,environment:gateEnvironment,deadline,signal,log,nice:gate.nice});}
+        catch(error){commandError=error;throw error;}
+        finally{
+          if(gate.id==='postgres-service-tests'&&database){
+            try{
+              await database.cleanup({log});database=null;delete environment.TEST_DATABASE_URL;
+              receipt.database={...receipt.database,cleanedUpAt:new Date().toISOString(),cleanupGate:gate.id};
+            }catch(error){
+              if(commandError)throw new AggregateError([commandError,error],'PostgreSQL service verification and cleanup failed',{cause:commandError});
+              throw error;
+            }
+          }
+        }
       }
-    },validate:async({logBytes})=>{
+    },validate:async({value,logBytes})=>{
     const details={};
     if(gate.id==='native-browser'){
+      assert.equal(value.initialNice,0,'Native browser must execute at unchanged normal CPU priority');
       const bytes=await readFile(resolve(root,'build/eth-browser/report.json')),report=JSON.parse(bytes.toString('utf8'));
       assertCompleteNativeBrowserReport(report,identity.sourceCommit);
       for(const [path,digest] of Object.entries(report.sourceHashes))assert.equal(sha(await readFile(resolve(root,path))),digest,'Browser-bound source changed: '+path);
@@ -86,10 +102,14 @@ export async function verifyCloudflareBuild(){
         const bytes=await readFile(location);assert.equal(bytes.length,screenshot.bytes);assert.equal(sha(bytes),screenshot.sha256,'Browser screenshot changed');
       }
       details.browser={caseCount:report.cases.length,scope:report.caseScope,sourceCommit:report.sourceCommit,sourceIntegrity:true,
-        report:'build/eth-browser/report.json',reportSha256:sha(bytes),browserVersion:report.browserVersion};
+        report:'build/eth-browser/report.json',reportSha256:sha(bytes),browserVersion:report.browserVersion,processPriority:{pid:value.pid,nice:value.initialNice}};
     }
     if(gate.id==='model-tests'){
       const log=logBytes.toString('utf8');
+      const priorities=log.split('\n').filter(line=>line.startsWith(commandPriorityPrefix));
+      assert.equal(priorities.length,1,'One actual model-command priority observation is required');
+      details.modelPriority=assertModelPriorityReceipt(JSON.parse(priorities[0].slice(commandPriorityPrefix.length)));
+      assert.equal(details.modelPriority.wrapperPid,value.pid,'Priority evidence belongs to another managed command');
       const total=log.match(/^ATLAS_TEST_TOTAL (.+)$/m);assert.ok(total,'Complete numerical/model test receipt is missing');
       const result=JSON.parse(total[1]);assert.equal(result.complete,true);assert.equal(result.fail,0);assert.ok(result.pass>0);assert.equal(result.batches,1,'The canonical runtime must not fall back to Docker');
       details.modelTests=result;
@@ -133,7 +153,7 @@ export async function verifyCloudflareBuild(){
     const manifest=JSON.parse(await readFile(resolve(root,'dist/publication.json'),'utf8'));
     assert.equal(manifest.sourceCommit,identity.sourceCommit);assert.equal(manifest.sourceTree?.status,'clean');
     receipt.publication={sourceCommit:manifest.sourceCommit,manifestSha256:manifest.manifestSha256};
-    await database?.cleanup();database=null;
+    assert.equal(database,null,'PostgreSQL must finish cleanup before the browser/model group');
     cancellation.signal.throwIfAborted();
     receipt.completedAt=new Date().toISOString();receipt.status='PASS';
     assertCloudflareVerificationReceipt(receipt,identity);await persist(receipt);
@@ -141,10 +161,24 @@ export async function verifyCloudflareBuild(){
     console.log('ATLAS_CLOUDFLARE_VERIFICATION '+JSON.stringify(receipt));
     return receipt;
   }catch(error){
-    receipt.status='FAIL';receipt.completedAt=new Date().toISOString();receipt.error=error.stack??String(error);await persist(receipt);throw error;
+    verificationError=error;receipt.status='FAIL';receipt.completedAt=new Date().toISOString();receipt.error=error.stack??String(error);await persist(receipt);throw error;
   }finally{
+    const errors=[];
+    // Flush complete browser failure evidence before any cleanup command runs.
+    try{await drainVerificationOutput();}catch(error){errors.push(error);}
+    if(database){
+      try{
+        const result=await executeLoggedGate({id:'database-cleanup',root,directory:out,
+          run:({log})=>database.cleanup({log})});
+        receipt.databaseCleanup=result.gate;database=null;delete environment.TEST_DATABASE_URL;
+      }catch(error){receipt.databaseCleanup=error.gateResult;errors.push(error);}
+      await persist(receipt);
+    }
     removeSignalHandlers?.();
-    await database?.cleanup();
+    if(errors.length){
+      const error=new AggregateError([...(verificationError?[verificationError]:[]),...errors],'Verification output or database cleanup failed');
+      receipt.status='FAIL';receipt.completedAt=new Date().toISOString();receipt.error=error.stack;await persist(receipt);throw error;
+    }
   }
 }
 
@@ -157,4 +191,5 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
       console.log('ATLAS_CLOUDFLARE_PREFLIGHT '+JSON.stringify(await inspectCloudflareRuntime()));
     }else await verifyCloudflareBuild();
   }catch(error){console.error(error.stack??error);process.exitCode=1;}
+  finally{try{await drainVerificationOutput();}catch(error){console.error(error.stack??error);process.exitCode=1;}}
 }

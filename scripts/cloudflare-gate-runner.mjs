@@ -6,6 +6,10 @@ import {readFile,mkdir} from 'node:fs/promises';
 import {resolve,relative} from 'node:path';
 import {finished} from 'node:stream/promises';
 import {StringDecoder} from 'node:string_decoder';
+import {getPriority} from 'node:os';
+import {fileURLToPath} from 'node:url';
+
+const priorityCommand=fileURLToPath(new URL('./cloudflare-priority-command.mjs',import.meta.url));
 
 const failure=value=>value instanceof Error?value:new Error(String(value??'Verification cancelled'));
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -15,6 +19,29 @@ export function installVerificationSignalHandlers(controller){
   const onInterrupt=()=>controller.abort(new Error('Verification cancelled by SIGINT'));
   process.on('SIGTERM',onTerm);process.on('SIGINT',onInterrupt);
   return ()=>{process.removeListener('SIGTERM',onTerm);process.removeListener('SIGINT',onInterrupt);};
+}
+
+// A completed child can leave public output queued in this parent. Wait for
+// the writable callbacks before cleanup or CLI exit can interrupt delivery.
+export async function drainVerificationOutput(streams=[process.stdout,process.stderr],{timeoutMs=10000}={}){
+  const results=await Promise.allSettled(streams.map(stream=>new Promise((accept,reject)=>{
+    let settled=false;
+    const dispose=()=>{stream.removeListener('error',onError);stream.removeListener('close',onClose);};
+    const finish=error=>{if(settled)return;settled=true;clearTimeout(timer);error?reject(error):accept();};
+    const onError=error=>{finish(error);dispose();};
+    const onClose=()=>{finish(new Error('Verification public output closed before its writes drained'));dispose();};
+    const timer=setTimeout(()=>finish(new Error('Verification public output did not drain within its bound')),timeoutMs);
+    stream.once('error',onError);stream.once('close',onClose);
+    try{stream.write('',error=>{
+      finish(error);
+      // A failed write invokes its callback before emitting error. Keep the
+      // listener until that event; otherwise a failed drain could crash the CLI.
+      if(!error)dispose();
+    });}catch(error){finish(error);dispose();}
+  })));
+  const errors=results.filter(result=>result.status==='rejected').map(result=>result.reason);
+  if(errors.length===1)throw errors[0];
+  if(errors.length>1)throw new AggregateError(errors,'Verification public output failed to drain');
 }
 
 // Each pipe owns its decoder. Only complete lines enter the shared public
@@ -37,12 +64,13 @@ export function completeLineWriter(write,{maximumBytes=16*1024*1024}={}){
 
 // Linux detached children own their process group. Resolve/reject only after
 // close (including inherited output pipes), never immediately after kill().
-export async function runVerificationCommand(command,args,{id,cwd,environment,deadline,signal,log,terminationGraceMs=500}={}){
+export async function runVerificationCommand(command,args,{id,cwd,environment,deadline,signal,log,terminationGraceMs=500,nice}={}){
   signal?.throwIfAborted();
   assert.ok(deadline-Date.now()>0,'Verification execution budget expired before '+id);
   return new Promise((accept,reject)=>{
-    let problem=null,closed=false,killTimer;
-    const child=spawn(command,args,{cwd,env:environment,stdio:['ignore','pipe','pipe'],detached:process.platform==='linux'});
+    let problem=null,closed=false,killTimer,initialNice;
+    const invocation=nice===undefined?{command,args}:{command:process.execPath,args:[priorityCommand,'--gate',id,'--nice',String(nice),'--',command,...args]};
+    const child=spawn(invocation.command,invocation.args,{cwd,env:environment,stdio:['ignore','pipe','pipe'],detached:process.platform==='linux'});
     const stop=(terminationSignal='SIGKILL')=>{
       if(!child.pid)return;
       try{if(process.platform==='linux')process.kill(-child.pid,terminationSignal);else child.kill(terminationSignal);}
@@ -58,6 +86,7 @@ export async function runVerificationCommand(command,args,{id,cwd,environment,de
     for(const [name,stream] of [['stdout',child.stdout],['stderr',child.stderr]])stream.on('data',bytes=>{
       try{log(bytes,name);}catch(error){cancel(error);}
     });
+    child.on('spawn',()=>{try{initialNice=getPriority(child.pid);}catch(error){cancel(error);}});
     child.on('error',error=>cancel(error));
     child.on('exit',(code,exitSignal)=>{
       if(code!==0)cancel(new Error(id+' failed with '+(exitSignal??'exit '+code)));
@@ -65,7 +94,7 @@ export async function runVerificationCommand(command,args,{id,cwd,environment,de
     child.on('close',(code,exitSignal)=>{
       if(closed)return;closed=true;clearTimeout(timer);clearTimeout(killTimer);signal?.removeEventListener('abort',abort);
       if(problem||code!==0){stop();reject(problem??new Error(id+' failed with '+(exitSignal??'exit '+code)));}
-      else accept({code,signal:exitSignal});
+      else accept({code,signal:exitSignal,pid:child.pid,initialNice});
     });
   });
 }
