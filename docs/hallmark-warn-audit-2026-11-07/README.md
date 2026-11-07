@@ -1,5 +1,7 @@
 # v1.32.2 · Hallmark WARN 점검과 리서치 초점 복귀
 
+> 기록 보관 · 2026-11-07(Asia/Seoul): Hallmark는 사용자의 최신 지시로 종료됐다. 아래 계획·검증 범위·판정은 해당 과거 소스의 기록이며 현재 실행 지시나 릴리스 조건이 아니다. 현재 디자인 기준은 저장소의 `AGENTS.md`, `design.md`와 디자인 마스터를 따른다. 원본 결과와 수치는 당시 사실로 보존한다.
+
 ## 출발점과 보존 범위
 
 작업 시작 시 아래 인계 문서, 저장소 `AGENTS.md`, `design.md`를 읽고 원격 main·릴리스·기존 작업트리를 확인했다. 기존 작업트리를 수정하지 않고 최신 main에서 별도 작업 브랜치를 만들었다. 병합 전에는 main을 다시 확인하여 다른 세션·자동 갱신의 변경을 보존한다.
@@ -29,7 +31,7 @@ v1.32.1 / PR #64의 병합·릴리스·배포는 완료된 상태였다. 이전 
 
 render의 F3·F7은 CSS 입력에서 나온 동일 성격의 지적이므로 위 단계별 숫자를 고유 결함 수로 해석하지 않는다. 예전 문서의 38 WARN은 이전 `04d98bfa…` 실행 기록이다. 이번 기준의 32/10/2와 섞지 않는다.
 
-원본 Hallmark v2.0.0 / `7ec868225c6caa040558c321ee0fefa0e73f83a8`, core baseline `0c1ed40e1b9b6c76f5621d087737dc57f174b51e`, workspace baseline `3b6373906dbdd3ef321db31deaf8a8f785da61c3`를 유지한다. checker·severity·stamp·waiver·검사 범위·검사 대상 자료를 바꾸어 경고를 없애지 않는다.
+당시 원본 Hallmark v2.0.0 / `7ec868225c6caa040558c321ee0fefa0e73f83a8`, core baseline `0c1ed40e1b9b6c76f5621d087737dc57f174b51e`, workspace baseline `3b6373906dbdd3ef321db31deaf8a8f785da61c3`를 유지했다. checker·severity·stamp·waiver·검사 범위·검사 대상 자료를 바꾸어 경고를 없애지 않았다.
 
 기준 receipt의 `stdoutSha256`:
 
@@ -94,6 +96,6 @@ DOM 회귀 검사는 노드 교체, 짧은 화면에서 자료가 빠진 경우,
 - 필터 값, 표시 페이지, 가시 영역, 키보드 초점 테두리를 확인한다.
 - 원래 viewport로 복귀하여 행 수가 늘어난 재렌더를 기다린 뒤 초점이 유지되는지 확인한다.
 
-기존 53개 Chrome case inventory와 두 Hallmark suite는 유지한다. 로컬에는 Chrome 실행 파일이 없으므로 로컬 렌더 검사를 통과했다고 기록하지 않는다. 실제 렌더·네이티브 입력의 판정은 이 변경의 PR head에 대한 새 CI 실행과 공개 배포 뒤 실화면 확인을 따른다. 이전 버전의 통과를 새 패치의 통과로 재사용하지 않는다.
+당시 검증 범위는 기존 53개 Chrome case inventory와 두 Hallmark suite였다. 로컬에는 Chrome 실행 파일이 없으므로 로컬 렌더 검사를 통과했다고 기록하지 않는다. 실제 렌더·네이티브 입력의 판정은 이 변경의 PR head에 대한 새 CI 실행과 공개 배포 뒤 실화면 확인을 따른다. 이전 버전의 통과를 새 패치의 통과로 재사용하지 않는다.
 
 최종 병합·Release·Pages는 각각 실제 커밋과 manifest를 대조하며, 인계 문서 커밋이나 PR 후보를 운영 배포 커밋으로 기록하지 않는다. 현재 소스의 최종 결과와 실행 링크는 해당 PR 및 릴리스 기록을 따른다.

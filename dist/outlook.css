@@ -1,7 +1,3 @@
-/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas locked system · redesign: full · posture: restrained
- * Scope: observed charts, comparison ledger, research and existing tool states. Verification is recorded by commit in CI.
- */
-/* Hallmark · pre-emit critique: P4 H4 E3 S5 R4 V3 · weakest: E, uneven focus and small metadata; shared states and readable neutral ink are applied across the app. */
 :root{--outlook-green:#6cc4a8;--outlook-purple:#aa9bd7;--outlook-blue:#75a9d8}
 .atlas-sidebar{position:fixed;inset:0 auto 0 0;width:192px;border-right:1px solid var(--border);background:var(--bg);padding:28px 16px;display:flex;flex-direction:column;z-index:35}
 .atlas-brand{display:flex;align-items:center;gap:12px;color:var(--text);text-decoration:none;font-size:15px;font-weight:650;letter-spacing:-.5px;padding:0 12px}

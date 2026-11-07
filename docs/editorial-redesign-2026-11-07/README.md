@@ -1,5 +1,7 @@
 # v1.33.0 visual redesign record
 
+> 기록 보관 · 2026-11-07(Asia/Seoul): Hallmark는 사용자의 최신 지시로 종료됐다. 아래 계획·검증 범위·판정은 해당 과거 소스의 기록이며 현재 실행 지시나 릴리스 조건이 아니다. 현재 디자인 기준은 저장소의 `AGENTS.md`, `design.md`와 디자인 마스터를 따른다. 원본 결과와 수치는 당시 사실로 보존한다.
+
 ## Request and baseline
 
 On 2026-11-07 (Asia/Seoul), the user requested a full redesign with
@@ -72,18 +74,19 @@ not passed. The original harness, flags, inventory and permissions were not
 altered to turn that result into success. Actual browser/render verification is
 performed by the repository's existing PR workflows before merge.
 
-## Required PR review evidence
+## Historical PR review scope
 
-Use the workflow receipts attached to this PR's exact head for the full test
-run, all 53 original Chrome cases and Hallmark's core 8 plus integrated 10 routes.
-Inspect desktop and narrow screenshots, the market chart/source allocation,
-single toolbar, summary columns, sticky ledgers, IPO date hierarchy and reader
-focus/close states. Verify the actual source hashes and screenshot receipts.
+This release's review scope used the workflow receipts attached to its exact
+head: the full test run, all 53 original Chrome cases and the then-active
+Hallmark core 8 plus integrated 10 routes. The recorded review covered desktop
+and narrow screenshots, market chart/source allocation, the single toolbar,
+summary columns, sticky ledgers, IPO dates and reader focus/close states, with
+source identities and screenshot receipts. This is the scope of that release.
 
 The inherited Hallmark counts are **static 32, core render 10, integrated render
 2**; the shared static set is counted once. They are prior results, not results
-of this redesign. Keep new findings with their source/run identity. Do not
-change Hallmark rules, baselines, ratings, warning data or route inventories.
+of this redesign. That pass retained source/run identities and the original
+Hallmark rules, baselines, ratings, warning data and route inventories.
 
 The PR body records completed CI findings and screenshot review. The merge,
 release and Pages workflows then establish their own source identities. Public

@@ -1,7 +1,3 @@
-/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas locked system · redesign: full · posture: restrained
- * Scope: observed charts, comparison ledger, research and existing tool states. Verification is recorded by commit in CI.
- */
-/* Hallmark · pre-emit critique: P4 H4 E3 S5 R4 V3 · weakest: E, uneven focus and small metadata; shared states and readable neutral ink are applied across the app. */
 .chart-export-dialog {width:min(920px,calc(100% - 24px));max-height:calc(var(--dialog-viewport-height,100dvh) - 28px);padding:0;border:1px solid var(--chart-export-workbench-rule);border-radius:12px;background:var(--chart-export-workbench-surface);color:var(--chart-export-workbench-ink);box-shadow:none;font:13px/1.6 var(--font-system-basic);box-sizing:border-box;overflow:hidden}
 .chart-export-dialog[open]{display:flex;flex-direction:column}
 .chart-export-body{padding:0 20px;overflow:auto;min-height:0;overscroll-behavior:contain}

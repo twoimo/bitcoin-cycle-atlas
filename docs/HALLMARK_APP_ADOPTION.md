@@ -1,5 +1,7 @@
 # Hallmark 전체 앱 적용 결과
 
+> 기록 보관 · 2026-11-07(Asia/Seoul): Hallmark는 사용자의 최신 지시로 종료됐다. 아래 계획·검증 범위·판정은 해당 과거 소스의 기록이며 현재 실행 지시나 릴리스 조건이 아니다. 현재 디자인 기준은 저장소의 `AGENTS.md`, `design.md`와 디자인 마스터를 따른다. 원본 결과와 수치는 당시 사실로 보존한다.
+
 > **2026-10-27 최신 결과:** 실제 소스 **39d380d5a05295f5180088ccfe0190ebc3b21e0d**에서 고정 Hallmark app 검사 **0 FAIL / 0 REFLEX**, integrity errors0을 확인했다. static36/render17 WARN은 그대로 남는다. [최신 결과·해결 방식·남는 경고](ETH_UI_PROTOCOL_FOLLOWUP_20261027.md)와 [원본 진단](eth-candidate-evidence/20261027-ui-protocol/hallmark-records.json)을 참조한다. 아래 df0bc76의 6/3과 당시 소스·화면 평가는 보존된 이전 실행 기록이다. 현재 Gemini 반대 검토·후속 역검토는 사용자 지시에 따라 omitted-by-user이며 통과로 간주하지 않는다.
 
 
@@ -26,7 +28,7 @@
 | 실제 동작 | 기존 자산·저장본 검사와 표 높이/동일 문서 리사이즈, 모바일 터치, 메뉴·모달·빈 결과·오류·포커스를 포함한 34 사례 |
 | 제품 디자인 | 기존 Atlas의 어두운 금융 작업 화면, 전체 높이 차트·표, 한 줄 기본 도구막대 |
 
-원본 `sloplint.mjs`, `sloplint-render.mjs`, MIT LICENSE는 고정 upstream의 Git blob과 바이트를 일치시켰다. 실행 시 생성 복사본에만 CI Chrome 인수와 실제 관측 화면 준비 대기의 두 패치를 적용한다. 원본·중간·최종 blob, 정확한 치환 문자열은 [provenance](../tools/hallmark/provenance.json)에 있다. 실행 의존성은 CI에만 있으며 제품 런타임에는 추가되지 않는다. 정의되지 않은 화면·부족한 캡처·내부 오류·보존 비교 누락은 불완전 상태로 실패한다.
+원본 `sloplint.mjs`, `sloplint-render.mjs`, MIT LICENSE는 고정 upstream의 Git blob과 바이트를 일치시켰다. 당시 실행의 생성 복사본에만 CI Chrome 인수와 실제 관측 화면 준비 대기의 두 패치를 적용했다. 원본·중간·최종 blob, 정확한 치환 문자열은 [당시 provenance](https://github.com/twoimo/bitcoin-cycle-atlas/blob/71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e/tools/hallmark/provenance.json)에 보존돼 있다. 당시 실행 의존성은 CI 전용이었으며 제품 런타임에는 추가되지 않았다. 정의되지 않은 화면·부족한 캡처·내부 오류·보존 비교 누락은 불완전 상태로 실패하는 계약이었다.
 
 정적 검사는 JavaScript 모듈 그래프를 따라가지 않고, URL 검사는 모든 상호작용을 자동으로 열지 않는다. 그 부분은 기존 일반·모델 검사와 실제 브라우저 상태 검사로 검증했다. 화면 검사를 모델 정확도나 투자 성과로 해석하지 않는다.
 
@@ -63,7 +65,7 @@
 
 원본 links **7/7**, script hooks **11/11**을 보존했다. 실제 화면의 links **30/30**, fields **72/72**, figures **209/209**를 보존했으며 heading 비교는 **52/54, 별도 기록된 변경 1개**다. 나머지 heading WARN의 정확한 원문 쌍은 아래에 설명한다. baseline/current 입력 blob은 실행 전후 일치했고 **integrity errors 0**이다. [전체 raw 진단](hallmark-evidence/20261026/hallmark-findings.json)을 그대로 저장했다.
 
-원본 검사를 완화하거나 결과를 통과로 바꾸지 않았다. Floor를 면제한 항목은 없다. 적용 후의 raw FAIL 또는 REFLEX가 하나라도 있으면 디자인 workflow는 계속 exit 1이다.
+원본 검사를 완화하거나 결과를 통과로 바꾸지 않았다. Floor를 면제한 항목은 없다. 당시 디자인 workflow는 적용 후 raw FAIL 또는 REFLEX가 하나라도 있으면 exit 1을 반환하는 계약이었다.
 
 | 원본 진단 | 실제 맥락과 처리 |
 | --- | --- |

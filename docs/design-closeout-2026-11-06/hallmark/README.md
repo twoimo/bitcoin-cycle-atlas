@@ -1,5 +1,7 @@
 # Pinned Hallmark closeout — 2026-11-06
 
+> 기록 보관 · 2026-11-07(Asia/Seoul): Hallmark는 사용자의 최신 지시로 종료됐다. 아래 계획·검증 범위·판정은 해당 과거 소스의 기록이며 현재 실행 지시나 릴리스 조건이 아니다. 현재 디자인 기준은 저장소의 `AGENTS.md`, `design.md`와 디자인 마스터를 따른다. 원본 결과와 수치는 당시 사실로 보존한다.
+
 ## Result and scope
 
 The unchanged full Hallmark workflow **passes in CI on `6cb6aa5d45bb2b66ef27d578785aa47571278137`**. Its source tree is exactly the local reviewed tree `feddc55e0f7d44fc8cf23e4a9a8311608ba83147` committed as `027d84914a8fb0d1c4034eda70eec8a0c42dd22d`. Both runs check every public CSS/HTML source and all eight exact routes; neither skips rendering. The earlier 19 FAIL / 5 REFLEX findings are absent in both current runs.
@@ -25,18 +27,7 @@ The direct static run also passes with 43 files, 0 FAIL / 0 REFLEX / 25 WARN. Th
 - Puppeteer Core 25.16.0 in both runs. Local Chromium 143.0.7499.0 / Node v24.22.1; CI Google Chrome 156.0.8078.79 / Node v24.22.2. Browser differences are retained, not treated as an identical runtime.
 - Korean font: official Noto CJK commit `f8d157532fbfaeda587e826d4cd5b21a49186f7c`, font Git blob `dc4a7c65e6f450bf17c10a2405250b620eb78703`, license Git blob `d952d62c065f3f35fb83a173496e90b21525aef3`. Raw HTTPS timed out; an official Git partial fetch obtained the exact bytes. No substitute font was used. The shared font/config stayed unchanged during the native browser suite.
 
-Local command, run from the repository root:
-
-```sh
-FONTCONFIG_FILE=/workspace/scratch/5579aed69769/hallmark-runtime/fontconfig.conf \
-HALLMARK_FONT_FILE=/workspace/scratch/5579aed69769/hallmark-runtime/fonts/NotoSansCJKkr-Regular.otf \
-HALLMARK_PUPPETEER=/workspace/scratch/82e52cfd9693/hallmark-runtime \
-CHROME_PATH=/workspace/scratch/82e52cfd9693/browser-native/chromium-audit-multiprocess \
-GITHUB_ACTIONS=true \
-node scripts/verify-hallmark-design.mjs \
-  --baseline /workspace/scratch/82e52cfd9693/bitcoin-cycle-atlas/build/hallmark-baseline \
-  --out build/hallmark-20261106-local
-```
+The exact historical command is retained in the [pre-retirement report](https://github.com/twoimo/bitcoin-cycle-atlas/blob/71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e/docs/design-closeout-2026-11-06/hallmark/README.md). It is an execution record for the local run above, not a current command.
 
 The existing local launcher adds `--no-zygote --disable-gpu`; its complete source and SHA-256, browser binary hash, font hashes and fontconfig are in `runtime-receipt.json`. The checker files were not changed.
 

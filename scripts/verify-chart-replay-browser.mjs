@@ -524,13 +524,14 @@ export async function verifyChartReplaySurface(api) {
       ...(type === 'keyDown' && value === 'Enter' && !modifiers ? { text: '\r', unmodifiedText: '\r' } : {}) });
     if (wait) await settled(cdp);
   }
-  async function select(selector, value) {
+  async function select(selector, value, expectedValue = value) {
     const choices = await evaluate(cdp, selector => [...document.querySelector(selector).options].filter(option => !option.disabled).map(option => option.value), selector);
     const index = choices.indexOf(value); assert.ok(index >= 0, 'Unavailable native option: ' + value);
     await click(cdp, selector); await key('Home', 'Home', 36, 0, false);
     for (let i = 0; i < index; i++) await key('ArrowDown', 'ArrowDown', 40, 0, false);
     await key('Enter', 'Enter', 13);
-    await until(() => evaluate(cdp, ({ selector, value }) => document.querySelector(selector)?.value === value, { selector, value }), 'native replay selection ' + value);
+    await until(() => evaluate(cdp, ({ selector, expectedValue }) => document.querySelector(selector)?.value === expectedValue, { selector, expectedValue }),
+      'native replay selection ' + value + (expectedValue === value ? '' : ' returns to ' + expectedValue));
   }
   async function ready(selecting = false) {
     await until(async () => {
@@ -644,6 +645,7 @@ export async function verifyChartReplaySurface(api) {
       const spans = [...document.querySelectorAll('[data-chart-span]')];
       return { frequency, selected: buttons.find(node => node.getAttribute('aria-pressed') === 'true')?.dataset.labFrequency,
         intervalOptions: [...document.querySelector('#workbench-interval-select').options].map(node => node.value),
+        enabledIntervalOptions: [...document.querySelector('#workbench-interval-select').options].filter(node => !node.disabled).map(node => node.value),
         accessibleIntervals: buttons.filter(usable).map(node => node.dataset.labFrequency), intervalSelect: usable(document.querySelector('#workbench-interval-select')),
         accessibleSpans: spans.filter(usable).map(node => node.dataset.chartSpan), spanSelect: usable(document.querySelector('#workbench-range-select')),
         range: document.querySelector('#workbench-range-label').textContent,
@@ -655,7 +657,8 @@ export async function verifyChartReplaySurface(api) {
     assert.ok(observed.accessibleIntervals.includes(frequency) || observed.intervalSelect, 'The original timeframe control disappeared during replay');
     assert.ok(observed.accessibleSpans.length === 4 || observed.spanSelect, 'The original period control disappeared during replay');
     if (width >= 1200) {
-      assert.deepEqual(observed.accessibleIntervals, observed.intervalOptions, 'Desktop replay hid the original 1m–1W buttons');
+      assert.equal(observed.intervalSelect, true, 'Desktop replay lost its visible enabled timeframe select');
+      assert.deepEqual(observed.enabledIntervalOptions, observed.intervalOptions, 'Desktop replay changed the original 1m–1W native choices');
       assert.deepEqual(observed.accessibleSpans, ['focus', 'near', 'all', 'history'], 'Desktop replay hid the original period buttons');
     }
     evidence.lifecycle.push({ label, ...observed });
@@ -1393,7 +1396,7 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(firstDayExport.frame.actual.length, 1); assert.equal(firstDayExport.frame.actual[0].date, btcCandles[0].date);
 
     const beforeUnavailable = await snapshot('daily-before-unavailable-interval');
-    await click(cdp, '#workbench-interval-1m');
+    await select('#workbench-interval-select', '1m', 'daily');
     const unavailable = await until(async () => {
       const value = await evaluate(cdp, ({ selector, panel }) => {
         const svg = document.querySelector(selector), controls = document.querySelector(panel);
