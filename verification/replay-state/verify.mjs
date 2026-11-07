@@ -45,6 +45,7 @@ function checkSelection(cwd,{broken=false}={}){
     {cwd,encoding:'utf8',timeout:30000,maxBuffer:4*1024*1024});
   assert.equal(run.error,undefined,'A process failure is not a rejected coordinator mutation');
   assert.equal(run.signal,null);assert.equal(run.status,broken?1:0,run.stdout+'\n'+run.stderr);
+  assert.ok(run.stdout.trim(),'The coordinator must emit its structured result; an import or startup failure is not a behavioral rejection.\nstdout:\n'+run.stdout+'\nstderr:\n'+run.stderr);
   const result=JSON.parse(run.stdout.trim());assert.equal(result.status,broken?'fail':'pass');
   if(broken){
     assert.equal(result.code,'ERR_ASSERTION');assert.equal(result.invariant,'settings-preserve-unconfirmed-start');
@@ -115,6 +116,9 @@ try{
   results.restored=check(scratch);
   await writeFile(path.join(scratch,coordinatorTestPath),coordinatorTests);
   await writeFile(path.join(scratch,snapshotPath),snapshotSource);
+  for(const dependencyPath of [
+    'dist/chart-navigation.js','dist/chart-view-policy.js','dist/cycle-engine.js','dist/ohlc-data.js','dist/price-axis.js',
+  ])await writeFile(path.join(scratch,dependencyPath),await readFile(path.join(root,dependencyPath)));
   const settingsMutations=[
     {name:'mode-model-settings-confirm-start',
       before:"for(const key of ['mode','model'])if(q(key))q(key).onchange=()=>{if(!externalBacktest)void open({selectOnly:picking||!getState().session});};",
