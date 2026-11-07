@@ -59,7 +59,7 @@ export async function verifyCloudflareBuild(){
       if(gate.kind==='runtime'){
         const runtime=await bootstrapCloudflareBuild({root,log,timeoutMs:Math.min(8*60*1000,deadline-Date.now())});
         environment={...environment,...runtime.environment};receipt.runtime=runtime.receipt;
-        database=await startIsolatedPostgres({log});environment.TEST_DATABASE_URL=database.url;
+        database=await startIsolatedPostgres({log,...runtime.postgres,environment});environment.TEST_DATABASE_URL=database.url;
         receipt.database={serverVersion:database.serverVersion,host:'127.0.0.1',isolated:true};
         log(JSON.stringify(runtime.receipt)+'\n');
       }else{

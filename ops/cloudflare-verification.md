@@ -48,15 +48,34 @@ are not a replacement for long-term research evidence storage.
 
 The documented Workers Builds image is Ubuntu24.04 x86_64. The preinstalled
 tool list does not promise Chrome, fontconfig, Java, PostgreSQL, Docker or
-passwordless sudo. The bootstrap probes the actual environment first. Missing
-system libraries require root or passwordless sudo; if neither is available,
-the build fails before any verification is marked successful.
+passwordless sudo. The actual verification-only Build on2026-11-07 confirmed
+Ubuntu24.04.2, UID2500, canonical Node,2CPU/8GB, no Java/PostgreSQL and no sudo.
+The bootstrap therefore writes only to its own `build/cloudflare-tools` tree.
+It never installs system packages, edits system package sources or needs root.
 
-The bootstrap uses signed Ubuntu/PGDG packages and verifies the PGDG signing
-key fingerprint. PostgreSQL server and client are pinned to
-`17.11-1.pgdg24.04+2`, matching the previous17.11 service contract. Each test run
-starts its own loopback-only disposable database and cleans it up afterward.
-It never uses a supplied production database URL.
+Temurin JRE21.0.13+9 is downloaded from the official Adoptium release with its
+committed SHA-256. PostgreSQL server and client executables are pinned to
+`17.11-1.pgdg24.04+2`, matching the previous17.11 service contract. The portable
+protocol library is separately pinned to libpq18.6. All three exact DEBs are
+verified against committed SHA-256 values and extracted without running package
+maintainer scripts. Those pins were checked against PGDG's signed Noble
+InRelease and authenticated package index on2026-11-07, using fingerprint
+`B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8`.
+
+After extraction, `ldd` checks Chrome, PostgreSQL tools and its LLVM JIT module.
+Only missing libraries are requested through a private APT cache using Ubuntu
+archive signatures and package hashes. APT runs in download-only mode; the
+verified DEBs are extracted into the same user-owned tree. No Docker is used.
+Each full test run starts its own loopback-only disposable database and cleans
+it up afterward. It never uses a supplied production database URL.
+
+`node scripts/bootstrap-cloudflare-build.mjs --verify-runtime` performs the
+bounded actual-host smoke check: pinned tools, initdb, server start, SQL check
+of exact server version170011, shutdown and cleanup. Its `RUNTIME_VERIFIED`
+preflight receipt does not qualify as a full verification or deployment PASS.
+Scheduled refresh producers can call `bootstrapCloudflareFormal` to obtain the
+same canonical Node/Java/TLC tools without downloading Chrome or PostgreSQL;
+that receipt is explicitly `FORMAL_TOOLS_READY` and cannot replace UI gates.
 
 Full Chrome for Testing157.0.8103.38 is pinned by the SHA-256 of the actual
 official Linux archive. `--headless=new` preserves the full Chrome renderer.
@@ -124,3 +143,7 @@ build slot.
 
 Runtime inventory and limits were checked on2026-11-07. Actual Build receipts,
 not this document, determine which environment and gates completed.
+
+- [Pinned Temurin21.0.13+9 release](https://github.com/adoptium/temurin21-binaries/releases/tag/jdk-21.0.13%2B9)
+
+- [PGDG signed Noble release metadata](https://apt.postgresql.org/pub/repos/apt/dists/noble-pgdg/InRelease)

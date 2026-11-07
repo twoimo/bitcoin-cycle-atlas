@@ -3,10 +3,17 @@ import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
 import {cloudflareBuildGates,cloudflareRuntime,requiredCloudflareGateIds,cloudflareBrowserCaseCount,cloudflarePlanSha256,assertCloudflareVerificationReceipt} from '../scripts/cloudflare-build-contract.mjs';
 import {assertCompleteNativeBrowserReport} from '../scripts/verify-cloudflare-build.mjs';
+import {missingRuntimePackages} from '../scripts/bootstrap-cloudflare-build.mjs';
 import {createEthBrowserCaseSpecs} from '../scripts/eth-browser-case-specs.mjs';
 import {readArchivedWorkflow} from './support/archived-workflow.mjs';
 
 const root=new URL('../',import.meta.url),sourceCommit='a'.repeat(40),sourceTree='b'.repeat(40);
+test('rootless runtime dependency resolution only requests observed missing libraries and refuses unreviewed binaries',()=>{
+  const output='linux-vdso.so.1 (0x0000)\n\tlibnss3.so => not found\n\tlibnssutil3.so => not found\n\tlibLLVM.so.19.1 => not found\n\tlibicuuc.so.74 => /lib/x86_64-linux-gnu/libicuuc.so.74 (0x1234)\n';
+  assert.deepEqual(missingRuntimePackages(output),['libllvm19','libnss3']);
+  assert.deepEqual(missingRuntimePackages('libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x1234)\n'),[]);
+  assert.throws(()=>missingRuntimePackages('libunreviewed.so.9 => not found\n'),/Unmapped missing runtime libraries.*libunreviewed/);
+});
 const receipt=()=>({schemaVersion:1,kind:'atlas-cloudflare-verification',status:'PASS',sourceCommit,sourceTree,planSha256:cloudflarePlanSha256,
   startedAt:'2026-11-07T00:00:00.000Z',completedAt:'2026-11-07T00:10:00.000Z',
   runtime:{node:cloudflareRuntime.node,platform:'linux',arch:'x64'},
