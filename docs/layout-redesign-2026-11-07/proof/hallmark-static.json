@@ -1,0 +1,575 @@
+{
+  "summary": {
+    "fails": 0,
+    "reflex": 0,
+    "warns": 62,
+    "waived": 0,
+    "rejected": 0,
+    "answered": 0,
+    "dismissed": 0,
+    "notes": 0,
+    "files": 49,
+    "render": "off",
+    "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX"
+  },
+  "findings": [
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/atlas-shell.css",
+      "line": 32,
+      "evidence": "2.55:1 < 4.5:1 on body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(.active,[aria-current=page])",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/atlas-shell.css",
+      "line": 109,
+      "evidence": "2.55:1 < 4.5:1 on .rsi-toolbar button[aria-pressed=true]",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/atlas-shell.css",
+      "line": 130,
+      "evidence": "2.55:1 < 4.5:1 on body[data-shell=chart] .workbench-rail .atlas-nav .active",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/chart-bottom-bar.css",
+      "line": 26,
+      "evidence": "2.57:1 < 4.5:1 on .workbench-bottom-bar button[aria-pressed=true]",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/chart-details-panel.css",
+      "line": 74,
+      "evidence": "2.27:1 < 4.5:1 on .workbench-icon[aria-expanded=true],.workbench-icon[aria-pressed=true],.workbench-rail .atlas-nav but…",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/chart-details-panel.css",
+      "line": 82,
+      "evidence": "2.27:1 < 4.5:1 on #workbench-frequency button[aria-pressed=true]",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/chart-details-panel.css",
+      "line": 112,
+      "evidence": "2.57:1 < 4.5:1 on .workbench-ranges button[aria-pressed=true]",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/chart-details-panel.css",
+      "line": 118,
+      "evidence": "2.57:1 < 4.5:1 on .workbench-axis .workbench-auto[aria-pressed=true]",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/editorial-system.css",
+      "line": 193,
+      "evidence": "2.55:1 < 4.5:1 on .workbench-rail .atlas-nav :is(a, button):is(.active, [aria-current=page])",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/editorial-system.css",
+      "line": 415,
+      "evidence": "2.55:1 < 4.5:1 on .indicator-categories button[aria-pressed=true], .indicator-library-views button[aria-pressed=true]",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/editorial-system.css",
+      "line": 468,
+      "evidence": "2.55:1 < 4.5:1 on body[data-shell=chart] .workbench-rail .atlas-nav :is(.active, [aria-current=page])",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "40",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/lab.css",
+      "line": 6,
+      "evidence": "2.96:1 < 4.5:1 on .lab-error",
+      "fix": "Raise the contrast to threshold"
+    },
+    {
+      "gate": "41",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/editorial-ledgers.css",
+      "line": 753,
+      "evidence": "dark surface (L 26%) on #ipo-view .ipo-source-panel sets no text colour",
+      "fix": "Swap text to paper in the same rule"
+    },
+    {
+      "gate": "41",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/editorial-panels.css",
+      "line": 329,
+      "evidence": "dark surface (L 22%) on .rsi-workbench-panel sets no text colour",
+      "fix": "Swap text to paper in the same rule"
+    },
+    {
+      "gate": "41",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/editorial-panels.css",
+      "line": 334,
+      "evidence": "dark surface (L 26%) on .rsi-workbench-panel > header sets no text colour",
+      "fix": "Swap text to paper in the same rule"
+    },
+    {
+      "gate": "41",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/editorial-system.css",
+      "line": 420,
+      "evidence": "dark surface (L 22%) on .chart-export-dialog > :is(header, footer), .chart-export-facts sets no text colour",
+      "fix": "Swap text to paper in the same rule"
+    },
+    {
+      "gate": "41",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/market-lab/app/assets/index-c-8igcn4.css",
+      "line": 3,
+      "evidence": "dark surface (L 26%) on .rsi-workbench-panel>header sets no text colour",
+      "fix": "Swap text to paper in the same rule"
+    },
+    {
+      "gate": "41",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": "dist/market-lab/app/assets/index-c-8igcn4.css",
+      "line": 3,
+      "evidence": "dark surface (L 22%) on .chart-export-dialog>:is(header,footer),.chart-export-facts sets no text colour",
+      "fix": "Swap text to paper in the same rule"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/analysis-dock.css",
+      "line": 8,
+      "evidence": "same container recipe on 18 selectors (.chart-indicator-manager button, .analysis-wind…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/analysis-dock.css",
+      "line": 62,
+      "evidence": "same container recipe on 9 selectors (.indicator-library-eye, .indicator-library-favo…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/analysis-dock.css",
+      "line": 62,
+      "evidence": "same container recipe on 6 selectors (.indicator-library-eye, .indicator-library-favo…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/atlas-shell.css",
+      "line": 108,
+      "evidence": "same container recipe on 16 selectors (.rsi-toolbar button, .workbench-bottom-bar .wor…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/atlas-shell.css",
+      "line": 159,
+      "evidence": "same container recipe on 11 selectors (.rsi-history button, .rsi-csv textarea, .center…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/atlas.css",
+      "line": 29,
+      "evidence": "same container recipe on 6 selectors (.evidence-table tfoot button, .ipo-day-dialog b…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/chart-details-panel.css",
+      "line": 12,
+      "evidence": "same container recipe on 16 selectors (.chart-details-panel .reader-heading button, .a…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/chart-details-panel.css",
+      "line": 26,
+      "evidence": "same container recipe on 20 selectors (.chart-details-panel .reader-body .evidence-sou…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/chart-details-panel.css",
+      "line": 67,
+      "evidence": "same container recipe on 6 selectors (.atlas-page .atlas-workbench, .research-reader,…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/chart-details-panel.css",
+      "line": 143,
+      "evidence": "same container recipe on 6 selectors (.workbench-scenarios>button, #data-view .daily-…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/chart-export-workbench.css",
+      "line": 13,
+      "evidence": "same container recipe on 6 selectors (.chart-export-dialog button, .chart-export-dial…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/compact-chart-layout.css",
+      "line": 25,
+      "evidence": "same container recipe on 6 selectors (.atlas-plot[data-compact-layout] .chart-indicat…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/compact-toolbar.css",
+      "line": 25,
+      "evidence": "same container recipe on 8 selectors (.compact-toolbar-action, .compact-toolbar-tabs>…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/compact.css",
+      "line": 8,
+      "evidence": "same container recipe on 25 selectors (#compare-view (.lab-details, .timing-details), …...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/compact.css",
+      "line": 119,
+      "evidence": "same container recipe on 10 selectors (.data-summary, .research-chart-shell, .ipo-sear…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/daily-data.css",
+      "line": 213,
+      "evidence": "same container recipe on 8 selectors (#data-view .asset-history-mode button, #data-vi…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/editorial-system.css",
+      "line": 273,
+      "evidence": "same container recipe on 10 selectors (body (.workspace-dialog, .symbol-search-dialog,…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/editorial-system.css",
+      "line": 300,
+      "evidence": "same container recipe on 8 selectors (body (.chart-export-dialog, .research-annotatio…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/app/assets/index-c-8igcn4.css",
+      "line": 3,
+      "evidence": "same container recipe on 15 selectors (.day-selector input[type=number], .btc-refresh-…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/app/assets/index-c-8igcn4.css",
+      "line": 3,
+      "evidence": "same container recipe on 6 selectors (.table-scroll, .data-summary, .ml-region, .ml-c…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/app/assets/index-c-8igcn4.css",
+      "line": 3,
+      "evidence": "same container recipe on 10 selectors (dialog(.workspace-dialog, .chart-export-dialog,…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/app/assets/index-c-8igcn4.css",
+      "line": 3,
+      "evidence": "same container recipe on 13 selectors (.market-lab .ml-tabs button, .symbol-search-fil…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/app/assets/index-c-8igcn4.css",
+      "line": 3,
+      "evidence": "same container recipe on 6 selectors (.rsi-workbench button, .rsi-workbench-panel a, …...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/app/assets/index-c-8igcn4.css",
+      "line": 3,
+      "evidence": "same container recipe on 9 selectors (.workspace-instrument-search input, .compact-to…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/app/assets/index-c-8igcn4.css",
+      "line": 3,
+      "evidence": "same container recipe on 10 selectors (body (.workspace-dialog, .symbol-search-dialog,…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/app/assets/index-c-8igcn4.css",
+      "line": 3,
+      "evidence": "same container recipe on 8 selectors (body (.chart-export-dialog, .research-annotatio…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/app/index.html",
+      "line": 8,
+      "evidence": "same container recipe on 6 selectors (#root>.atlas-skeleton [skullet-bar], #root>.atl…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/cashflow/index.html",
+      "line": 83,
+      "evidence": "same container recipe on 6 selectors (.atlas-boot-noscript, .market-lab button, .mark…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/charts/index.html",
+      "line": 83,
+      "evidence": "same container recipe on 6 selectors (.atlas-boot-noscript, .market-lab button, .mark…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/housing/index.html",
+      "line": 83,
+      "evidence": "same container recipe on 6 selectors (.atlas-boot-noscript, .market-lab button, .mark…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/index.html",
+      "line": 83,
+      "evidence": "same container recipe on 6 selectors (.atlas-boot-noscript, .market-lab button, .mark…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/kr/index.html",
+      "line": 83,
+      "evidence": "same container recipe on 6 selectors (.atlas-boot-noscript, .market-lab button, .mark…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/rsi/index.html",
+      "line": 83,
+      "evidence": "same container recipe on 6 selectors (.atlas-boot-noscript, .market-lab button, .mark…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/scenario/index.html",
+      "line": 83,
+      "evidence": "same container recipe on 6 selectors (.atlas-boot-noscript, .market-lab button, .mark…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/themes/index.html",
+      "line": 83,
+      "evidence": "same container recipe on 6 selectors (.atlas-boot-noscript, .market-lab button, .mark…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/us/index.html",
+      "line": 83,
+      "evidence": "same container recipe on 6 selectors (.atlas-boot-noscript, .market-lab button, .mark…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/outlook.css",
+      "line": 11,
+      "evidence": "same container recipe on 7 selectors (.evidence-table tfoot button, .lab-pagination b…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/research-annotations.css",
+      "line": 12,
+      "evidence": "same container recipe on 6 selectors (.research-annotations-dialog button, .research-…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "same container recipe on 11 selectors (.day-selector input[type=\"number\"], .btc-refres…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/styles.css",
+      "line": 9,
+      "evidence": "same container recipe on 10 selectors (.table-scroll, .data-summary, .research-chart-s…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/styles.css",
+      "line": 884,
+      "evidence": "same container recipe on 10 selectors (dialog(.workspace-dialog, .chart-export-dialog,…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/viewport.css",
+      "line": 194,
+      "evidence": "same container recipe on 18 selectors (.chart-navigation button, .atlas-chart-commands…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/workspace-tools.css",
+      "line": 13,
+      "evidence": "same container recipe on 9 selectors (.workspace-saved-row button, #data-view .asset-…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "F24",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/market-lab/app/assets/index-c-8igcn4.css",
+      "line": 3,
+      "evidence": "a hairline border under a wide soft shadow on .workspace-search-popover",
+      "fix": "Commit to one: a defined edge, or elevation by shadow"
+    }
+  ]
+}

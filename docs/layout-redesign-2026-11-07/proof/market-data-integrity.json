@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-independent-native-receipt-audit",
+  "status": "PASS",
+  "expectedSourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "expectedSourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+  "reportedSourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "reportSha256": "5956d970bbbca45edcf6d0028de90f6604eaf240b1b8ff08dfef46f21bcb1f49",
+  "originalStatus": "passed",
+  "caseScope": "data",
+  "declaredCases": 53,
+  "expectedCases": 10,
+  "actualCases": 10,
+  "passedCases": 10,
+  "originalFailureCount": 0,
+  "orderedCaseInventoryMatched": true,
+  "startedAt": "2026-11-07T10:20:37.520Z",
+  "finishedAt": "2026-11-07T10:21:10.664Z",
+  "durationSeconds": 33.144,
+  "browserProduct": "Chrome/156.0.8078.79",
+  "errorCounts": {
+    "runtimeErrors": 0,
+    "unexpectedResourceErrors": 0,
+    "unscopedLocalRequests": 0,
+    "resourceErrors": 0,
+    "expectedOfflineRefresh": 0,
+    "blockedOptionalFonts": 10
+  },
+  "sourceHashes": {
+    "expectedCount": 113,
+    "reportedCount": 113,
+    "matchedGitBlobs": 113,
+    "bytes": 11613474,
+    "sourceNamesMatched": true,
+    "inventorySha256": "03c237cf185532f2fc503bd66922e50c8db470da84c8b61a97440a2e927d613f",
+    "originalIntegrity": {
+      "checkedFiles": 113,
+      "changedSources": [],
+      "unchangedDuringRun": true
+    }
+  },
+  "screenshots": {
+    "references": 54,
+    "uniqueFiles": 54,
+    "verified": 54,
+    "bytes": 7922280,
+    "pngFilesOnDisk": 54,
+    "dimensions": {
+      "320x900": 4,
+      "390x900": 4,
+      "768x900": 4,
+      "1024x900": 4,
+      "1440x900": 4,
+      "1620x1008": 8,
+      "1620x1100": 6,
+      "900x430": 8,
+      "1920x1440": 5,
+      "320x568": 7
+    },
+    "inventorySha256": "cd1598bac5a3924d54a4ac044755a0cf9bff08e79c65103ef7da73a34a324018"
+  },
+  "syntheticFixtureVerified": true,
+  "cases": [
+    {
+      "index": 0,
+      "spec": {
+        "page": "data",
+        "width": 320,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 1,
+      "spec": {
+        "page": "data",
+        "width": 390,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 2,
+      "spec": {
+        "page": "data",
+        "width": 768,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 3,
+      "spec": {
+        "page": "data",
+        "width": 1024,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 4,
+      "spec": {
+        "page": "data",
+        "width": 1440,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 5,
+      "spec": {
+        "page": "data",
+        "width": 1620,
+        "height": 1008,
+        "touch": false,
+        "responsive": true,
+        "fill": false,
+        "horizontalScroll": false
+      },
+      "status": "passed",
+      "screenshots": 7,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 6,
+      "spec": {
+        "page": "data",
+        "width": 1620,
+        "height": 1100,
+        "touch": false,
+        "responsive": true,
+        "fill": true,
+        "resize": true
+      },
+      "status": "passed",
+      "screenshots": 8,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 7,
+      "spec": {
+        "page": "data",
+        "width": 1920,
+        "height": 1440,
+        "touch": false,
+        "responsive": true,
+        "fill": true
+      },
+      "status": "passed",
+      "screenshots": 5,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 8,
+      "spec": {
+        "page": "data",
+        "width": 900,
+        "height": 430,
+        "touch": true,
+        "responsive": true,
+        "fill": false
+      },
+      "status": "passed",
+      "screenshots": 7,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 9,
+      "spec": {
+        "page": "data",
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "responsive": true,
+        "fill": false
+      },
+      "status": "passed",
+      "screenshots": 7,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    }
+  ],
+  "errors": [],
+  "limits": [
+    "Audits the original source manifest; the three editorial CSS source files require the separate Hallmark/Git proof.",
+    "Does not rerun Chrome or judge visual quality, production deployment, or model accuracy.",
+    "GitHub run/ZIP provenance is a separate check; this validates the extracted receipt and files."
+  ]
+}

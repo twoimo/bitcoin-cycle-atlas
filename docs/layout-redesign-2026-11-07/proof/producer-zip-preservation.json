@@ -1,0 +1,41 @@
+{
+  "sourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "sourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+  "workflow": {
+    "id": 42363532477,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "head": "7e9def739937d84a9031f0c26d66093f706dfc10",
+    "updatedAt": "2026-11-07T10:41:12Z"
+  },
+  "artifacts": [
+    {
+      "id": 13571326583,
+      "name": "eth-model-evidence-7e9def739937d84a9031f0c26d66093f706dfc10-42363532477-attempt-1",
+      "bytes": 14444584,
+      "sha256": "d3c3afd907e3a0b02dd7613d003bcae7ae730eaba8ff585bc098370cd78283c1",
+      "createdAt": "2026-11-07T10:40:24Z",
+      "sourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+      "runId": 42363532477
+    },
+    {
+      "id": 13571317786,
+      "name": "eth-candidate-evidence-7e9def739937d84a9031f0c26d66093f706dfc10",
+      "bytes": 118375706,
+      "sha256": "fe8e424e48f6c853a1fe45b7bc2daa1f8589cac0b14447fd30cccdfff7b68a07",
+      "createdAt": "2026-11-07T10:41:09Z",
+      "sourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+      "runId": 42363532477
+    },
+    {
+      "id": 13571152881,
+      "name": "eth-browser-evidence-7e9def739937d84a9031f0c26d66093f706dfc10-42363532477-attempt-1",
+      "bytes": 61704723,
+      "sha256": "079d9842d6067fb0e594212d8df3d2fdd859476f4ab4bbac0fc8db39ab241a5d",
+      "createdAt": "2026-11-07T10:37:29Z",
+      "sourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+      "runId": 42363532477
+    }
+  ]
+}

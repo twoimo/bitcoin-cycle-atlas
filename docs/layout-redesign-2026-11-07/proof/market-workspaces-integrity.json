@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-independent-native-receipt-audit",
+  "status": "PASS",
+  "expectedSourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "expectedSourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+  "reportedSourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "reportSha256": "04f8ecb7b4ecc9ad91794b5476e5f32d26f5477e6ea49822f8c9c76644ce8465",
+  "originalStatus": "passed",
+  "caseScope": "workspace-consolidated",
+  "declaredCases": 53,
+  "expectedCases": 3,
+  "actualCases": 3,
+  "passedCases": 3,
+  "originalFailureCount": 0,
+  "orderedCaseInventoryMatched": true,
+  "startedAt": "2026-11-07T10:20:37.048Z",
+  "finishedAt": "2026-11-07T10:21:33.928Z",
+  "durationSeconds": 56.88,
+  "browserProduct": "Chrome/156.0.8078.79",
+  "errorCounts": {
+    "runtimeErrors": 0,
+    "unexpectedResourceErrors": 0,
+    "unscopedLocalRequests": 0,
+    "resourceErrors": 0,
+    "expectedOfflineRefresh": 0,
+    "blockedOptionalFonts": 12
+  },
+  "sourceHashes": {
+    "expectedCount": 113,
+    "reportedCount": 113,
+    "matchedGitBlobs": 113,
+    "bytes": 11613474,
+    "sourceNamesMatched": true,
+    "inventorySha256": "03c237cf185532f2fc503bd66922e50c8db470da84c8b61a97440a2e927d613f",
+    "originalIntegrity": {
+      "checkedFiles": 113,
+      "changedSources": [],
+      "unchangedDuringRun": true
+    }
+  },
+  "screenshots": {
+    "references": 27,
+    "uniqueFiles": 27,
+    "verified": 27,
+    "bytes": 1746684,
+    "pngFilesOnDisk": 27,
+    "dimensions": {
+      "320x900": 9,
+      "390x844": 9,
+      "1440x900": 9
+    },
+    "inventorySha256": "c19477dc7fc0490075926bf0acd80ebfecca5527d05c9a6ffd2a9edde1aeae9d"
+  },
+  "syntheticFixtureVerified": true,
+  "cases": [
+    {
+      "index": 0,
+      "spec": {
+        "page": "workspace-consolidated",
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "route": "/bitcoin-cycle-atlas/market-lab/us/",
+        "consolidated": true
+      },
+      "status": "passed",
+      "screenshots": 9,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 4
+    },
+    {
+      "index": 1,
+      "spec": {
+        "page": "workspace-consolidated",
+        "width": 390,
+        "height": 844,
+        "touch": true,
+        "route": "/bitcoin-cycle-atlas/market-lab/us/",
+        "consolidated": true
+      },
+      "status": "passed",
+      "screenshots": 9,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 4
+    },
+    {
+      "index": 2,
+      "spec": {
+        "page": "workspace-consolidated",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "route": "/bitcoin-cycle-atlas/market-lab/us/",
+        "consolidated": true
+      },
+      "status": "passed",
+      "screenshots": 9,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 4
+    }
+  ],
+  "errors": [],
+  "limits": [
+    "Audits the original source manifest; the three editorial CSS source files require the separate Hallmark/Git proof.",
+    "Does not rerun Chrome or judge visual quality, production deployment, or model accuracy.",
+    "GitHub run/ZIP provenance is a separate check; this validates the extracted receipt and files."
+  ]
+}

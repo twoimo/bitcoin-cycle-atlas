@@ -1,0 +1,1063 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-independent-native-receipt-audit",
+  "status": "PASS",
+  "expectedSourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "expectedSourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+  "reportedSourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "reportSha256": "c3d57fc05a797d072ccbc5dc20e7378fc8b53303898840d9846f74b14867517b",
+  "originalStatus": "passed",
+  "caseScope": "all",
+  "declaredCases": 53,
+  "expectedCases": 53,
+  "actualCases": 53,
+  "passedCases": 53,
+  "originalFailureCount": 0,
+  "orderedCaseInventoryMatched": true,
+  "startedAt": "2026-11-07T10:20:40.173Z",
+  "finishedAt": "2026-11-07T10:37:22.953Z",
+  "durationSeconds": 1002.78,
+  "browserProduct": "Chrome/156.0.8078.79",
+  "errorCounts": {
+    "runtimeErrors": 0,
+    "unexpectedResourceErrors": 0,
+    "unscopedLocalRequests": 0,
+    "resourceErrors": 1,
+    "expectedOfflineRefresh": 0,
+    "blockedOptionalFonts": 71
+  },
+  "sourceHashes": {
+    "expectedCount": 113,
+    "reportedCount": 113,
+    "matchedGitBlobs": 113,
+    "bytes": 11613474,
+    "sourceNamesMatched": true,
+    "inventorySha256": "03c237cf185532f2fc503bd66922e50c8db470da84c8b61a97440a2e927d613f",
+    "originalIntegrity": {
+      "checkedFiles": 113,
+      "changedSources": [],
+      "unchangedDuringRun": true
+    }
+  },
+  "screenshots": {
+    "references": 371,
+    "uniqueFiles": 371,
+    "verified": 371,
+    "bytes": 41590443,
+    "pngFilesOnDisk": 371,
+    "dimensions": {
+      "320x900": 58,
+      "390x900": 16,
+      "768x900": 16,
+      "1024x900": 16,
+      "1440x900": 124,
+      "1620x1008": 8,
+      "1620x1100": 6,
+      "900x430": 50,
+      "1920x1440": 5,
+      "320x568": 47,
+      "320x430": 4,
+      "375x900": 4,
+      "390x844": 17
+    },
+    "inventorySha256": "7efc8fa8e66bb7d91d4eb9a8e8b2c98b16ec76d64fdaa19e7de9f23490a03372"
+  },
+  "syntheticFixtureVerified": true,
+  "cases": [
+    {
+      "index": 0,
+      "spec": {
+        "page": "data",
+        "width": 320,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 1,
+      "spec": {
+        "page": "eth",
+        "width": 320,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed",
+      "screenshots": 7,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 2,
+      "spec": {
+        "page": "bmnr",
+        "width": 320,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 3,
+      "spec": {
+        "page": "mstr",
+        "width": 320,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 4,
+      "spec": {
+        "page": "zero-fixture",
+        "width": 320,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed",
+      "screenshots": 1,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 5,
+      "spec": {
+        "page": "data",
+        "width": 390,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 6,
+      "spec": {
+        "page": "eth",
+        "width": 390,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 7,
+      "spec": {
+        "page": "bmnr",
+        "width": 390,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 8,
+      "spec": {
+        "page": "mstr",
+        "width": 390,
+        "height": 900,
+        "touch": true
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 9,
+      "spec": {
+        "page": "data",
+        "width": 768,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 10,
+      "spec": {
+        "page": "eth",
+        "width": 768,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 11,
+      "spec": {
+        "page": "bmnr",
+        "width": 768,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 12,
+      "spec": {
+        "page": "mstr",
+        "width": 768,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 13,
+      "spec": {
+        "page": "data",
+        "width": 1024,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 14,
+      "spec": {
+        "page": "eth",
+        "width": 1024,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 15,
+      "spec": {
+        "page": "bmnr",
+        "width": 1024,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 16,
+      "spec": {
+        "page": "mstr",
+        "width": 1024,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 17,
+      "spec": {
+        "page": "data",
+        "width": 1440,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 18,
+      "spec": {
+        "page": "eth",
+        "width": 1440,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 7,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 19,
+      "spec": {
+        "page": "bmnr",
+        "width": 1440,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 20,
+      "spec": {
+        "page": "mstr",
+        "width": 1440,
+        "height": 900,
+        "touch": false
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 21,
+      "spec": {
+        "page": "data",
+        "width": 1620,
+        "height": 1008,
+        "touch": false,
+        "responsive": true,
+        "fill": false,
+        "horizontalScroll": false
+      },
+      "status": "passed",
+      "screenshots": 7,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 22,
+      "spec": {
+        "page": "data",
+        "width": 1620,
+        "height": 1100,
+        "touch": false,
+        "responsive": true,
+        "fill": true,
+        "resize": true
+      },
+      "status": "passed",
+      "screenshots": 8,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 23,
+      "spec": {
+        "page": "data",
+        "width": 1920,
+        "height": 1440,
+        "touch": false,
+        "responsive": true,
+        "fill": true
+      },
+      "status": "passed",
+      "screenshots": 5,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 24,
+      "spec": {
+        "page": "data",
+        "width": 900,
+        "height": 430,
+        "touch": true,
+        "responsive": true,
+        "fill": false
+      },
+      "status": "passed",
+      "screenshots": 7,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 25,
+      "spec": {
+        "page": "data",
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "responsive": true,
+        "fill": false
+      },
+      "status": "passed",
+      "screenshots": 7,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 26,
+      "spec": {
+        "page": "workspace-btc",
+        "surface": "btc",
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 11,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 27,
+      "spec": {
+        "page": "workspace-evidence",
+        "surface": "evidence",
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "route": "/?page=evidence"
+      },
+      "status": "passed",
+      "screenshots": 5,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 28,
+      "spec": {
+        "page": "workspace-legacy",
+        "surface": "legacy",
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "route": "/?page=compare&legacy=1"
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 29,
+      "spec": {
+        "page": "workspace-preview",
+        "surface": "preview",
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "route": "/mobile-preview.html"
+      },
+      "status": "passed",
+      "screenshots": 8,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 4
+    },
+    {
+      "index": 30,
+      "spec": {
+        "page": "workspace-btc",
+        "surface": "btc",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 11,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 31,
+      "spec": {
+        "page": "workspace-evidence",
+        "surface": "evidence",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "route": "/?page=evidence"
+      },
+      "status": "passed",
+      "screenshots": 5,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 32,
+      "spec": {
+        "page": "workspace-legacy",
+        "surface": "legacy",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "route": "/?page=compare&legacy=1"
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 33,
+      "spec": {
+        "page": "workspace-preview",
+        "surface": "preview",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "route": "/mobile-preview.html"
+      },
+      "status": "passed",
+      "screenshots": 8,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 4
+    },
+    {
+      "index": 34,
+      "spec": {
+        "page": "workspace-btc-short",
+        "surface": "btc",
+        "width": 900,
+        "height": 430,
+        "touch": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 12,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 35,
+      "spec": {
+        "page": "workspace-legacy",
+        "surface": "legacy",
+        "width": 375,
+        "height": 900,
+        "touch": true,
+        "route": "/?page=compare&legacy=1"
+      },
+      "status": "passed",
+      "screenshots": 4,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 36,
+      "spec": {
+        "page": "workspace-center-data",
+        "surface": "center-data",
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 3,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 2
+    },
+    {
+      "index": 37,
+      "spec": {
+        "page": "workspace-center-data",
+        "surface": "center-data",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 3,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 2
+    },
+    {
+      "index": 38,
+      "spec": {
+        "page": "workspace-center-data",
+        "surface": "center-data",
+        "width": 900,
+        "height": 430,
+        "touch": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 3,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 2
+    },
+    {
+      "index": 39,
+      "spec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "replay-btc",
+        "replay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 5,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 40,
+      "spec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 900,
+        "height": 430,
+        "touch": true,
+        "page": "replay-btc",
+        "replay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 5,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 41,
+      "spec": {
+        "symbol": "ETHUSD",
+        "surface": "eth",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "replay-eth",
+        "replay": true,
+        "route": "/?symbol=ETHUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 7,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 1,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 42,
+      "spec": {
+        "symbol": "ETHUSD",
+        "surface": "eth",
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "page": "replay-eth",
+        "replay": true,
+        "route": "/?symbol=ETHUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 7,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 43,
+      "spec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "chart-replay-btc",
+        "chartReplay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 39,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 44,
+      "spec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "page": "chart-replay-btc",
+        "chartReplay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 23,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 45,
+      "spec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 900,
+        "height": 430,
+        "touch": true,
+        "page": "chart-replay-btc",
+        "chartReplay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 22,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 46,
+      "spec": {
+        "symbol": "ETHUSD",
+        "surface": "eth",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "chart-replay-eth",
+        "chartReplay": true,
+        "route": "/?symbol=ETHUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 10,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 47,
+      "spec": {
+        "symbol": "ETHUSD",
+        "surface": "eth",
+        "width": 320,
+        "height": 568,
+        "touch": true,
+        "page": "chart-replay-eth",
+        "chartReplay": true,
+        "route": "/?symbol=ETHUSD&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 10,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 48,
+      "spec": {
+        "symbol": "MSTR",
+        "surface": "mstr",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "chart-replay-mstr",
+        "chartReplay": true,
+        "route": "/?symbol=MSTR&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 6,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 49,
+      "spec": {
+        "symbol": "BMNR",
+        "surface": "bmnr",
+        "width": 390,
+        "height": 844,
+        "touch": true,
+        "page": "chart-replay-bmnr",
+        "chartReplay": true,
+        "route": "/?symbol=BMNR&granularity=daily&type=line"
+      },
+      "status": "passed",
+      "screenshots": 8,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 1
+    },
+    {
+      "index": 50,
+      "spec": {
+        "page": "workspace-consolidated",
+        "width": 320,
+        "height": 900,
+        "touch": true,
+        "route": "/bitcoin-cycle-atlas/market-lab/us/",
+        "consolidated": true
+      },
+      "status": "passed",
+      "screenshots": 9,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 4
+    },
+    {
+      "index": 51,
+      "spec": {
+        "page": "workspace-consolidated",
+        "width": 390,
+        "height": 844,
+        "touch": true,
+        "route": "/bitcoin-cycle-atlas/market-lab/us/",
+        "consolidated": true
+      },
+      "status": "passed",
+      "screenshots": 9,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 4
+    },
+    {
+      "index": 52,
+      "spec": {
+        "page": "workspace-consolidated",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "route": "/bitcoin-cycle-atlas/market-lab/us/",
+        "consolidated": true
+      },
+      "status": "passed",
+      "screenshots": 9,
+      "runtimeErrors": 0,
+      "unexpectedResourceErrors": 0,
+      "unscopedLocalRequests": 0,
+      "resourceErrors": 0,
+      "expectedOfflineRefresh": 0,
+      "blockedOptionalFonts": 4
+    }
+  ],
+  "errors": [],
+  "limits": [
+    "Audits the original source manifest; the three editorial CSS source files require the separate Hallmark/Git proof.",
+    "Does not rerun Chrome or judge visual quality, production deployment, or model accuracy.",
+    "GitHub run/ZIP provenance is a separate check; this validates the extracted receipt and files."
+  ]
+}

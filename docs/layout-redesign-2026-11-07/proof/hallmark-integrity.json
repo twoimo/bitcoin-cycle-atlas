@@ -1,0 +1,185 @@
+{
+  "status": "PASS",
+  "sourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "sourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+  "currentSource": {
+    "commit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+    "files": 1000,
+    "bytes": 55037450,
+    "manifestSha256": "b031ef213c0cf81ecb64ded476155eaf4edd48de2077d509d48cd85f6cc957da",
+    "gitBlobsMatched": true
+  },
+  "suites": [
+    {
+      "name": "core",
+      "routes": 8,
+      "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+      "receiptSha256": "15e30e6762cf1a2775055b6af797490ad45f5d086c54cc97d38b2c2f50448773",
+      "designGate": {
+        "status": "pass",
+        "fails": 0,
+        "reflex": 0
+      },
+      "phases": [
+        {
+          "name": "baseline-static",
+          "summary": {
+            "fails": 1214,
+            "reflex": 1347,
+            "warns": 37,
+            "waived": 0,
+            "rejected": 0,
+            "answered": 0,
+            "dismissed": 0,
+            "notes": 0,
+            "files": 26,
+            "render": "off",
+            "before": "before: recorded 7 links, 0 fields, 0 handlers, 0 test hooks, 11 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+          },
+          "reportSha256": "b793f8f2d0c4cccc50f0abb7ab6ad3622bcdb6468325042596d103fd6a77db04"
+        },
+        {
+          "name": "baseline-render",
+          "summary": {
+            "fails": 53,
+            "reflex": 211,
+            "warns": 13,
+            "waived": 0,
+            "rejected": 0,
+            "answered": 0,
+            "dismissed": 0,
+            "notes": 0,
+            "files": 1,
+            "render": "ran",
+            "before": "before: recorded 30 links, 72 fields, 0 handlers, 0 test hooks, 0 script hooks and 8 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+          },
+          "reportSha256": "35b146bcd44f2a293173d0abaea9c7921bfe67d1fb501e8c5555cac4f39769c2",
+          "screenshots": 40,
+          "upstreamReviewImageHashesVerified": 16
+        },
+        {
+          "name": "current-static",
+          "summary": {
+            "fails": 0,
+            "reflex": 0,
+            "warns": 62,
+            "waived": 0,
+            "rejected": 0,
+            "answered": 0,
+            "dismissed": 0,
+            "notes": 0,
+            "files": 49,
+            "render": "off",
+            "kept": "kept: links 7/7, script hooks 11/11; before 1214 FAIL, 1347 REFLEX, now 0 FAIL, 0 REFLEX"
+          },
+          "reportSha256": "17fa19eea949c8b65efba7da0d2386d6995b710f8b35deba9e8b190752322803"
+        },
+        {
+          "name": "current-render",
+          "summary": {
+            "fails": 0,
+            "reflex": 0,
+            "warns": 10,
+            "waived": 0,
+            "rejected": 0,
+            "answered": 0,
+            "dismissed": 0,
+            "notes": 0,
+            "files": 1,
+            "render": "ran",
+            "kept": "kept: links 30/30, fields 72/72, headings 52/54 (1 dropped on record), figures 145/207; before 53 FAIL, 211 REFLEX, now 0 FAIL, 0 REFLEX"
+          },
+          "reportSha256": "95554e2527858de1953c830e9b4d58cde2cf481c251570dd93f76faf5cd212eb",
+          "screenshots": 40,
+          "upstreamReviewImageHashesVerified": 16
+        }
+      ]
+    },
+    {
+      "name": "workspaces",
+      "routes": 10,
+      "baselineCommit": "3b6373906dbdd3ef321db31deaf8a8f785da61c3",
+      "receiptSha256": "50358c50f5cd48faf701376d09021cb43f89d238239a7da172a3f6226a78f0b0",
+      "designGate": {
+        "status": "pass",
+        "fails": 0,
+        "reflex": 0
+      },
+      "phases": [
+        {
+          "name": "baseline-static",
+          "summary": {
+            "fails": 0,
+            "reflex": 0,
+            "warns": 28,
+            "waived": 0,
+            "rejected": 0,
+            "answered": 0,
+            "dismissed": 0,
+            "notes": 0,
+            "files": 44,
+            "render": "off",
+            "before": "before: recorded 9 links, 0 fields, 0 handlers, 0 test hooks, 13 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+          },
+          "reportSha256": "486021f078a0d05af078aec168561807d873a79b31988fff9d81ba4ab00d66c2"
+        },
+        {
+          "name": "baseline-render",
+          "summary": {
+            "fails": 9,
+            "reflex": 0,
+            "warns": 2,
+            "waived": 0,
+            "rejected": 0,
+            "answered": 0,
+            "dismissed": 0,
+            "notes": 0,
+            "files": 1,
+            "render": "ran",
+            "before": "before: recorded 18 links, 73 fields, 0 handlers, 0 test hooks, 0 script hooks and 10 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+          },
+          "reportSha256": "7f12db3ee2c869923f18c4c2f537fedf257dd6f81596fce1c8b37873a90daafa",
+          "screenshots": 50,
+          "upstreamReviewImageHashesVerified": 20
+        },
+        {
+          "name": "current-static",
+          "summary": {
+            "fails": 0,
+            "reflex": 0,
+            "warns": 62,
+            "waived": 0,
+            "rejected": 0,
+            "answered": 0,
+            "dismissed": 0,
+            "notes": 0,
+            "files": 49,
+            "render": "off",
+            "kept": "kept: links 9/9, script hooks 76/76; before 0 FAIL, 0 REFLEX, now 0 FAIL, 0 REFLEX"
+          },
+          "reportSha256": "94f7b48b3f063621333345a1ead9c8e3b56af757a4ec703a1a7ad56ceefa4dcb"
+        },
+        {
+          "name": "current-render",
+          "summary": {
+            "fails": 0,
+            "reflex": 0,
+            "warns": 3,
+            "waived": 0,
+            "rejected": 0,
+            "answered": 0,
+            "dismissed": 0,
+            "notes": 0,
+            "files": 1,
+            "render": "ran",
+            "kept": "kept: links 18/18, fields 73/73, headings 37/37, figures 3/4; before 9 FAIL, 0 REFLEX, now 0 FAIL, 0 REFLEX"
+          },
+          "reportSha256": "830d4022293b7f740a50cffa764180dd189a049b9a57aeacd1bd48fc589052c2",
+          "screenshots": 50,
+          "upstreamReviewImageHashesVerified": 20
+        }
+      ]
+    }
+  ],
+  "scope": "Original Hallmark receipts, full current committed source proof, report bodies, complete screenshot path inventory and upstream review-image byte hashes; visual review is recorded separately."
+}

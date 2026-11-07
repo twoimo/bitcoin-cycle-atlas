@@ -1,0 +1,462 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-merged-main-ci-review",
+  "status": "PASS",
+  "reviewedAt": "2026-11-07T11:02:13.843Z",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+  "sourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+  "gitIdentity": {
+    "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+    "sourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+    "parents": [
+      "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+      "7e9def739937d84a9031f0c26d66093f706dfc10"
+    ],
+    "workflowPath": ".github/workflows/ci.yml",
+    "workflowSha256": "90d5a7435f4bce79e753dba9da103b6a1a1b851d1e88aa8628d51dc71a5852a2",
+    "workflowBytes": 4028
+  },
+  "prCandidateSource": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "candidateTreeMatchesMergedTree": true,
+  "run": {
+    "id": 42365377496,
+    "attempt": 1,
+    "name": "CI",
+    "event": "push",
+    "branch": "main",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42365377496",
+    "createdAt": "2026-11-07T10:46:43Z",
+    "startedAt": "2026-11-07T10:46:43Z",
+    "updatedAt": "2026-11-07T10:59:05Z",
+    "completionObservedAt": "2026-11-07T10:59:16.880Z"
+  },
+  "job": {
+    "id": 128382218050,
+    "name": "verify",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42365377496/job/128382218050",
+    "completedSteps": 22,
+    "allOriginalStepsSucceeded": true,
+    "firstLogTimestamp": "2026-11-07T10:46:46.8837818Z",
+    "lastLogTimestamp": "2026-11-07T10:59:03.3451120Z",
+    "timestampScope": "GitHub run updated_at and observation time are recorded separately; job log first/last timestamps are not claimed as API job started_at/completed_at."
+  },
+  "tests": {
+    "modelAndData": {
+      "complete": true,
+      "tests": 2579,
+      "pass": 2579,
+      "fail": 0,
+      "skipped": 0,
+      "batches": 1,
+      "scope": "Original npm test aggregate",
+      "logLine": "2026-11-07T10:56:57.1557698Z ATLAS_TEST_TOTAL {\"complete\":true,\"tests\":2579,\"pass\":2579,\"fail\":0,\"skipped\":0,\"batches\":1}"
+    },
+    "reactPanels": {
+      "tests": 93,
+      "line": 16043,
+      "timestamp": "2026-11-07T10:57:20.9854847Z",
+      "stepCommand": "npm run typecheck",
+      "suiteCommand": "npm run test:panels",
+      "raw": [
+        "2026-11-07T10:57:20.9854847Z ℹ tests 93",
+        "2026-11-07T10:57:20.9855181Z ℹ suites 0",
+        "2026-11-07T10:57:20.9855510Z ℹ pass 93",
+        "2026-11-07T10:57:20.9855840Z ℹ fail 0",
+        "2026-11-07T10:57:20.9856422Z ℹ cancelled 0",
+        "2026-11-07T10:57:20.9856791Z ℹ skipped 0",
+        "2026-11-07T10:57:20.9857125Z ℹ todo 0",
+        "2026-11-07T10:57:20.9857512Z ℹ duration_ms 22545.993474"
+      ],
+      "suites": 0,
+      "pass": 93,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 22545.993474
+    },
+    "serviceDatabase": {
+      "tests": 28,
+      "line": 16134,
+      "timestamp": "2026-11-07T10:57:33.0599514Z",
+      "stepCommand": "npm run typecheck",
+      "suiteCommand": "npm run test:service",
+      "raw": [
+        "2026-11-07T10:57:33.0599514Z ℹ tests 28",
+        "2026-11-07T10:57:33.0599720Z ℹ suites 0",
+        "2026-11-07T10:57:33.0599917Z ℹ pass 28",
+        "2026-11-07T10:57:33.0600106Z ℹ fail 0",
+        "2026-11-07T10:57:33.0600309Z ℹ cancelled 0",
+        "2026-11-07T10:57:33.0600540Z ℹ skipped 0",
+        "2026-11-07T10:57:33.0600754Z ℹ todo 0",
+        "2026-11-07T10:57:33.0600989Z ℹ duration_ms 11014.239796"
+      ],
+      "suites": 0,
+      "pass": 28,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 11014.239796,
+      "invocationEvidence": [
+        "2026-11-07T10:57:21.0924705Z > bitcoin-cycle-atlas@1.34.0 test:service",
+        "2026-11-07T10:57:21.0925279Z > npm run build:web && tsx --test tests/service/*.test.ts"
+      ]
+    },
+    "formalRechecks": [
+      {
+        "tests": 32,
+        "line": 17414,
+        "timestamp": "2026-11-07T10:57:58.6405911Z",
+        "stepCommand": "npm run verify:formal",
+        "suiteCommand": "> bitcoin-cycle-atlas@1.34.0 verify:formal",
+        "raw": [
+          "2026-11-07T10:57:58.6405911Z # tests 32",
+          "2026-11-07T10:57:58.6406108Z # suites 0",
+          "2026-11-07T10:57:58.6406289Z # pass 32",
+          "2026-11-07T10:57:58.6406479Z # fail 0",
+          "2026-11-07T10:57:58.6406657Z # cancelled 0",
+          "2026-11-07T10:57:58.6407065Z # skipped 0",
+          "2026-11-07T10:57:58.6407449Z # todo 0",
+          "2026-11-07T10:57:58.6407896Z # duration_ms 280.745754"
+        ],
+        "suites": 0,
+        "pass": 32,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 280.745754
+      },
+      {
+        "tests": 28,
+        "line": 17525,
+        "timestamp": "2026-11-07T10:58:08.9832824Z",
+        "stepCommand": "npm run verify:formal",
+        "suiteCommand": "> bitcoin-cycle-atlas@1.34.0 verify:formal",
+        "raw": [
+          "2026-11-07T10:58:08.9832824Z ℹ tests 28",
+          "2026-11-07T10:58:08.9833059Z ℹ suites 0",
+          "2026-11-07T10:58:08.9833255Z ℹ pass 28",
+          "2026-11-07T10:58:08.9833454Z ℹ fail 0",
+          "2026-11-07T10:58:08.9833651Z ℹ cancelled 0",
+          "2026-11-07T10:58:08.9834084Z ℹ skipped 0",
+          "2026-11-07T10:58:08.9834440Z ℹ todo 0",
+          "2026-11-07T10:58:08.9834833Z ℹ duration_ms 128.945824"
+        ],
+        "suites": 0,
+        "pass": 28,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 128.945824
+      },
+      {
+        "tests": 17,
+        "line": 17761,
+        "timestamp": "2026-11-07T10:58:26.1780899Z",
+        "stepCommand": "npm run verify:formal",
+        "suiteCommand": "> bitcoin-cycle-atlas@1.34.0 verify:formal",
+        "raw": [
+          "2026-11-07T10:58:26.1780899Z # tests 17",
+          "2026-11-07T10:58:26.1781094Z # suites 0",
+          "2026-11-07T10:58:26.1781278Z # pass 17",
+          "2026-11-07T10:58:26.1781455Z # fail 0",
+          "2026-11-07T10:58:26.1781653Z # cancelled 0",
+          "2026-11-07T10:58:26.1781840Z # skipped 0",
+          "2026-11-07T10:58:26.1782020Z # todo 0",
+          "2026-11-07T10:58:26.1782240Z # duration_ms 131.182994"
+        ],
+        "suites": 0,
+        "pass": 17,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 131.182994
+      }
+    ],
+    "everyObservedTestSummaryHasZeroFailCancelSkipTodo": true
+  },
+  "originalGates": [
+    {
+      "name": "Install locked workspace dependencies",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Verify generated static React routes",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6
+    },
+    {
+      "name": "Run model and data tests",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7
+    },
+    {
+      "name": "Check service types, panels and isolated database behavior",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8
+    },
+    {
+      "name": "Verify preserved forecast identities and replay",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9
+    },
+    {
+      "name": "Verify treasury sources and persistent research summaries",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 10
+    },
+    {
+      "name": "Verify reviewed Ethereum history matches the published catalog",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 11
+    },
+    {
+      "name": "Independently reconcile daily treasury paths",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 12
+    },
+    {
+      "name": "Independently check numerical identities and causal boundaries",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 13
+    },
+    {
+      "name": "Verify bounded request ownership and negative controls",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 14
+    },
+    {
+      "name": "Verify the observed daily clock and bounded chart work",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 15
+    },
+    {
+      "name": "Verify static resources at the Pages base path",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 16
+    },
+    {
+      "name": "Prepare the committed publication and standalone",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 17
+    },
+    {
+      "name": "Preserve CI test log and publication identity",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 18
+    }
+  ],
+  "publication": {
+    "build": {
+      "status": "PASS",
+      "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+      "files": 799,
+      "assets": 24,
+      "contentDigest": "1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0",
+      "manifestSha256": "efc9cc8c60f71f6bb8128c859ec7a15c94fd7f0f5a8b6118ef7ebec22fe62b28"
+    },
+    "verify": {
+      "status": "PASS",
+      "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+      "checkedFiles": 799,
+      "contentDigest": "1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0"
+    },
+    "originalCleanCommittedSourceGuardPassed": true,
+    "logEvidence": [
+      "2026-11-07T10:58:49.8611659Z {\"status\":\"PASS\",\"sourceCommit\":\"71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e\",\"files\":799,\"assets\":24,\"contentDigest\":\"1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0\",\"manifestSha256\":\"efc9cc8c60f71f6bb8128c859ec7a15c94fd7f0f5a8b6118ef7ebec22fe62b28\"}",
+      "2026-11-07T10:58:50.4071592Z {\"status\":\"PASS\",\"sourceCommit\":\"71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e\",\"checkedFiles\":799,\"contentDigest\":\"1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0\"}"
+    ],
+    "scope": "CI publication preparation/verification; does not itself establish Pages deployment or public HTTP."
+  },
+  "ciArtifact": {
+    "id": "13571746994",
+    "name": "ci-verification-71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e-1",
+    "bytes": 171431,
+    "zipSha256FromUploadLog": "556174e96636562655fc6842885f17d73fef3ab2c1168a429e351546a7114489",
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42365377496/artifacts/13571746994",
+    "downloadedByThisReview": false
+  },
+  "evidence": {
+    "jobLogsTool": "github_fetch_workflow_job_logs",
+    "decodedLogCharacters": 1320882,
+    "decodedLogLines": 18675,
+    "excerptsPath": "main-ci-log-excerpts.txt",
+    "apiRunUrl": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/runs/42365377496",
+    "apiRunJobsUrl": "https://api.github.com/repos/twoimo/bitcoin-cycle-atlas/actions/runs/42365377496/jobs",
+    "excerptsSha256": "50bed93806c033339960ceb32b321ab4f58ebed36632c57c1cfe92ccb6c01aa0",
+    "excerptsBytes": 4806
+  },
+  "monitoring": {
+    "runIdsPolled": [
+      42365377496
+    ],
+    "polls": [
+      {
+        "observedAt": "2026-11-07T10:48:49.364Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "job": 128382218050,
+        "activeSteps": [
+          "Run model and data tests"
+        ]
+      },
+      {
+        "observedAt": "2026-11-07T10:49:17.016Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "job": 128382218050,
+        "activeSteps": [
+          "Run model and data tests"
+        ],
+        "completed": 6
+      },
+      {
+        "observedAt": "2026-11-07T10:50:02.895Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "job": 128382218050,
+        "activeSteps": [
+          "Run model and data tests"
+        ],
+        "completed": 6
+      },
+      {
+        "observedAt": "2026-11-07T10:50:48.665Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "job": 128382218050,
+        "activeSteps": [
+          "Run model and data tests"
+        ],
+        "completed": 6
+      },
+      {
+        "observedAt": "2026-11-07T10:51:35.536Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "job": 128382218050,
+        "activeSteps": [
+          "Run model and data tests"
+        ],
+        "completed": 6
+      },
+      {
+        "observedAt": "2026-11-07T10:52:21.341Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "job": 128382218050,
+        "activeSteps": [
+          "Run model and data tests"
+        ],
+        "completed": 6
+      },
+      {
+        "observedAt": "2026-11-07T10:53:07.059Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "job": 128382218050,
+        "activeSteps": [
+          "Run model and data tests"
+        ],
+        "completed": 6
+      },
+      {
+        "observedAt": "2026-11-07T10:53:52.779Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "job": 128382218050,
+        "activeSteps": [
+          "Run model and data tests"
+        ],
+        "completed": 6
+      },
+      {
+        "observedAt": "2026-11-07T10:55:58.331Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "job": 128382218050,
+        "activeSteps": [
+          "Run model and data tests"
+        ],
+        "completed": 6
+      },
+      {
+        "observedAt": "2026-11-07T10:56:44.118Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "job": 128382218050,
+        "activeSteps": [
+          "Run model and data tests"
+        ],
+        "completed": 6
+      },
+      {
+        "observedAt": "2026-11-07T10:57:37.506Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "job": 128382218050,
+        "activeSteps": [
+          "Verify preserved forecast identities and replay"
+        ],
+        "completed": 8
+      },
+      {
+        "observedAt": "2026-11-07T10:58:23.196Z",
+        "status": "in_progress",
+        "conclusion": null,
+        "job": 128382218050,
+        "activeSteps": [
+          "Verify bounded request ownership and negative controls"
+        ],
+        "completed": 13
+      },
+      {
+        "observedAt": "2026-11-07T10:59:16.880Z",
+        "status": "completed",
+        "conclusion": "success",
+        "job": 128382218050,
+        "activeSteps": [],
+        "completed": 22
+      }
+    ],
+    "notes": [
+      {
+        "observedAt": "2026-11-07T10:55:12.642Z",
+        "type": "unsupported-metadata-route",
+        "detail": "Generic fetch of actions/jobs/{id} is unsupported; return to the purpose-built run-jobs connector. This is not a CI execution failure."
+      }
+    ],
+    "reruns": 0,
+    "productMutations": 0
+  },
+  "limits": [
+    "Merged main CI is a distinct mandatory gate; it does not replace the separate PR original Chrome 53-case receipt.",
+    "No old workflow was polled or re-run, and no product/checker/test source was modified.",
+    "Original job logs were read to verify counts and publication identity; only selected original log lines are preserved in the companion excerpt file.",
+    "The single upload-artifact Node.js action-runtime deprecation warning did not change the job conclusion; no failure or skipped original gate is hidden."
+  ]
+}

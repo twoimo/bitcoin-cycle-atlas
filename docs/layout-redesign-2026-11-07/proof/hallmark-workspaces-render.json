@@ -1,0 +1,44 @@
+{
+  "summary": {
+    "fails": 0,
+    "reflex": 0,
+    "warns": 3,
+    "waived": 0,
+    "rejected": 0,
+    "answered": 0,
+    "dismissed": 0,
+    "notes": 0,
+    "files": 1,
+    "render": "ran",
+    "kept": "kept: links 18/18, fields 73/73, headings 37/37, figures 3/4; before 9 FAIL, 0 REFLEX, now 0 FAIL, 0 REFLEX"
+  },
+  "findings": [
+    {
+      "gate": "F3",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/styles.css",
+      "line": 8,
+      "evidence": "no text-wrap: balance on any display head (16 head rule(s), e.g. h1,h2,h3,p)",
+      "fix": "Add text-wrap: balance to h1/h2-level heads"
+    },
+    {
+      "gate": "F7",
+      "grade": "WARN",
+      "tier": "finish",
+      "file": "dist/styles.css",
+      "line": 884,
+      "evidence": "same container recipe on 10 selectors (dialog(.workspace-dialog, .chart-export-dialog,…...)",
+      "fix": "Vary weight, radius, or fill by role; not every box is the same box"
+    },
+    {
+      "gate": "kept",
+      "grade": "WARN",
+      "tier": "floor",
+      "file": ".hallmark/before.json",
+      "line": 1,
+      "evidence": "figures gone or reworded since the before record: 11.06",
+      "fix": "Restore it, or record it in the stamp: /* Hallmark · reworded \"<old>\" to \"<new>\" · <the gate that named it> */ or dropped <item> · <the reason>"
+    }
+  ]
+}

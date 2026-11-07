@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "pr": 67,
+  "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+  "sourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+  "parents": [
+    "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+    "7e9def739937d84a9031f0c26d66093f706dfc10"
+  ],
+  "mergedAt": "2026-11-07T19:46:40+09:00",
+  "prSource": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "prSourceTreeMatched": true,
+  "previousMain": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+  "latestMainPreserved": true,
+  "tagV134BeforeMerge": "absent by successful git ls-remote --tags exact ref; no output",
+  "note": "Merge source identity; public deployment is verified separately."
+}

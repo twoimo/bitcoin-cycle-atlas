@@ -1,0 +1,152 @@
+{
+  "kind": "independent-real-dom-selector-regression-review",
+  "status": "passed",
+  "sourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "sourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+  "finishedAt": "2026-11-07T10:22:36.112Z",
+  "runtime": "v24.22.2",
+  "dom": "linkedom 0.18.15 actual Element/Text/querySelector/CustomEvent/dispatchEvent",
+  "sourceSha256": {
+    "dist/symbol-selector.js": "a96f215bdce12657280e856ac20b8e1d7256927f8ed2aca6b6ac45f6dcd13b1c",
+    "dist/workbench-chrome.js": "2812bb28666a01e5cfebf5d966bae65cf3889755c034aa7d9e2b3ca4d71f3da9",
+    "dist/equity-view.js": "8dc1546d6ad32eadaeae50a28b2609fde0b20495be1ef939d698712be9073778",
+    "dist/eth-view.js": "1b5c8f6d3ae5822f7e945c33534e839e44670084972b2cd189a69a358593620a",
+    "dist/editorial-system.css": "328a5b0f36f89b009490b77b84558575dac37889f58ef0891ab58d5a752d44ed",
+    "scripts/verify-eth-candidate-browser.mjs": "1a518ab54bb664afcce92196b8d9edcf6c53475153bd470c2df47da5a5b5b8c3"
+  },
+  "states": [
+    {
+      "caseId": "default-BMNR-mount",
+      "symbol": "BMNR",
+      "textContent": "BMNR",
+      "label": "BMNR",
+      "nameSpan": null,
+      "title": "종목 선택 · 비트마인 / USD",
+      "ariaLabel": "종목 선택 · 비트마인 / USD · BMNR",
+      "showName": false
+    },
+    {
+      "caseId": "default-BMNR-active-MSTR",
+      "symbol": "MSTR",
+      "textContent": "MSTR",
+      "label": "MSTR",
+      "nameSpan": null,
+      "title": "종목 선택 · 스트래티지 / USD",
+      "ariaLabel": "종목 선택 · 스트래티지 / USD · MSTR",
+      "showName": false
+    },
+    {
+      "caseId": "default-MSTR-mount",
+      "symbol": "MSTR",
+      "textContent": "MSTR",
+      "label": "MSTR",
+      "nameSpan": null,
+      "title": "종목 선택 · 스트래티지 / USD",
+      "ariaLabel": "종목 선택 · 스트래티지 / USD · MSTR",
+      "showName": false
+    },
+    {
+      "caseId": "default-MSTR-active-BMNR",
+      "symbol": "BMNR",
+      "textContent": "BMNR",
+      "label": "BMNR",
+      "nameSpan": null,
+      "title": "종목 선택 · 비트마인 / USD",
+      "ariaLabel": "종목 선택 · 비트마인 / USD · BMNR",
+      "showName": false
+    },
+    {
+      "caseId": "shared-mount-BTCUSD",
+      "symbol": "BTCUSD",
+      "textContent": "비트코인BTCUSD",
+      "label": "BTCUSD",
+      "nameSpan": "비트코인",
+      "title": "종목 선택 · 비트코인 / USD",
+      "ariaLabel": "종목 선택 · 비트코인 / USD · BTCUSD",
+      "showName": true
+    },
+    {
+      "caseId": "shared-active-BMNR-5",
+      "symbol": "BMNR",
+      "textContent": "비트마인BMNR",
+      "label": "BMNR",
+      "nameSpan": "비트마인",
+      "title": "종목 선택 · 비트마인 / USD",
+      "ariaLabel": "종목 선택 · 비트마인 / USD · BMNR",
+      "showName": true
+    },
+    {
+      "caseId": "shared-active-MSTR-6",
+      "symbol": "MSTR",
+      "textContent": "스트래티지MSTR",
+      "label": "MSTR",
+      "nameSpan": "스트래티지",
+      "title": "종목 선택 · 스트래티지 / USD",
+      "ariaLabel": "종목 선택 · 스트래티지 / USD · MSTR",
+      "showName": true
+    },
+    {
+      "caseId": "shared-active-HOUSING-SEOUL-7",
+      "symbol": "HOUSING-SEOUL",
+      "textContent": "서울 아파트",
+      "label": "서울 아파트",
+      "nameSpan": "",
+      "title": "종목 선택 · 서울 아파트 / 지수 · 건",
+      "ariaLabel": "종목 선택 · 서울 아파트 / 지수 · 건 · HOUSING-SEOUL",
+      "showName": true
+    },
+    {
+      "caseId": "shared-active-MSTR-8",
+      "symbol": "MSTR",
+      "textContent": "스트래티지MSTR",
+      "label": "MSTR",
+      "nameSpan": "스트래티지",
+      "title": "종목 선택 · 스트래티지 / USD",
+      "ariaLabel": "종목 선택 · 스트래티지 / USD · MSTR",
+      "showName": true
+    },
+    {
+      "caseId": "shared-housing-direct-mount",
+      "symbol": "HOUSING-SEOUL",
+      "textContent": "서울 아파트",
+      "label": "서울 아파트",
+      "nameSpan": "",
+      "title": "종목 선택 · 서울 아파트 / 지수 · 건",
+      "ariaLabel": "종목 선택 · 서울 아파트 / 지수 · 건 · HOUSING-SEOUL",
+      "showName": true
+    },
+    {
+      "caseId": "default-housing-direct-mount",
+      "symbol": "HOUSING-SEOUL",
+      "textContent": "서울 아파트",
+      "label": "서울 아파트",
+      "nameSpan": null,
+      "title": "종목 선택 · 서울 아파트 / 지수 · 건",
+      "ariaLabel": "종목 선택 · 서울 아파트 / 지수 · 건 · HOUSING-SEOUL",
+      "showName": false
+    }
+  ],
+  "checks": [
+    "Default BMNR and MSTR exact aggregate button.textContent equals canonical ticker",
+    "Original descriptive title and aria-label include Korean name, quote currency, and symbol",
+    "showName opt-in adds separate name span with aria-hidden=true",
+    "Active-symbol events update compact and opted-in content/aria through real DOM querySelector",
+    "Housing label has one Korean region name, no duplicated name, canonical symbol retained in aria",
+    "Returning from housing restores equity name/ticker",
+    "Unsupported symbol ignored",
+    "Destroy removes dialog and active-symbol listener"
+  ],
+  "sourceCallsiteReview": {
+    "sharedWorkbench": "dist/workbench-chrome.js mounts showName:true",
+    "compactEquity": "dist/equity-view.js omits showName and retains default",
+    "compactETH": "dist/eth-view.js omits showName and retains default",
+    "nativeRegression": "Original equityCase reads #equity-symbol.textContent and assert.equal(symbol); this audit uses the same real DOM aggregate accessor without changing that checker."
+  },
+  "limitations": [
+    "No browser launched or screenshot captured",
+    "linkedom does not establish rendered CSS visibility or geometry",
+    "Full workbench chrome not mounted by this temporary selector audit; caller option reviewed in actual source",
+    "Original final53 receipt remains authoritative for end-to-end Chrome pass status",
+    "No repository test/checker/product mutation or claimed new original test count"
+  ]
+}

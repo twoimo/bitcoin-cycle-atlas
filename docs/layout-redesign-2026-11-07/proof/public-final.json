@@ -1,0 +1,182 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-07T10:54:54.594Z",
+  "base": "https://twoimo.github.io/bitcoin-cycle-atlas/",
+  "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+  "manifestSha256": "079b9fadfaf172ca6c5738d527072417b9879674333b2165a9ed6fd638d6c103",
+  "originalVerifier": {
+    "status": "PASS",
+    "scope": "Public manifest identity and four critical HTTP file bodies; other remote files are not fetched",
+    "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+    "manifestSha256": "079b9fadfaf172ca6c5738d527072417b9879674333b2165a9ed6fd638d6c103",
+    "verified": [
+      "index.html",
+      "site-entry.js",
+      "data/btc-daily.json",
+      "data/forecast-ledger/index.json"
+    ],
+    "state": {
+      "phase": "confirmed",
+      "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+      "digest": "1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0",
+      "validatedDigest": "1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0",
+      "servedDigest": "1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0",
+      "servedCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+      "reason": null
+    }
+  },
+  "additionalVerified": [
+    {
+      "path": "editorial-system.css",
+      "bytes": 20701,
+      "sha256": "328a5b0f36f89b009490b77b84558575dac37889f58ef0891ab58d5a752d44ed",
+      "commitMatched": true
+    },
+    {
+      "path": "editorial-panels.css",
+      "bytes": 31886,
+      "sha256": "1e039670c00b8fc5063ec3f48c4139bf6b3a9e920897bfc4439cdba47aba0853",
+      "commitMatched": true
+    },
+    {
+      "path": "editorial-ledgers.css",
+      "bytes": 22383,
+      "sha256": "c762ebcb209d1143e863a91b0cda0bfbb508bcd9b62463ca62197b291eb6383a",
+      "commitMatched": true
+    },
+    {
+      "path": "evidence-view.js",
+      "bytes": 9544,
+      "sha256": "68dbd6cc1a01119c3f2a31a5e5a4e426759c85136e558d3fe6b367c5a5a98e4f",
+      "commitMatched": true
+    },
+    {
+      "path": "atlas-shell.js",
+      "bytes": 7627,
+      "sha256": "045d13c6d1625b7e8bd191af9bd08c698819113a1fd80366792b3256c21630c0",
+      "commitMatched": true
+    },
+    {
+      "path": "symbol-selector.js",
+      "bytes": 16405,
+      "sha256": "a96f215bdce12657280e856ac20b8e1d7256927f8ed2aca6b6ac45f6dcd13b1c",
+      "commitMatched": true
+    },
+    {
+      "path": "viewport-workspace.js",
+      "bytes": 30367,
+      "sha256": "46fa0f43774c5b08a1a79b1cdf8a8529458dc6185b0a1960fda43afd87b40803",
+      "commitMatched": true
+    },
+    {
+      "path": "workbench-chrome.js",
+      "bytes": 29583,
+      "sha256": "2812bb28666a01e5cfebf5d966bae65cf3889755c034aa7d9e2b3ca4d71f3da9",
+      "commitMatched": true
+    },
+    {
+      "path": "app.js",
+      "bytes": 50198,
+      "sha256": "197bc625bf3af89b1e2e903277b2b5dec096e3dc2351219e4b3e9194bc86b5c6",
+      "commitMatched": true
+    },
+    {
+      "path": "equity-view.js",
+      "bytes": 45231,
+      "sha256": "8dc1546d6ad32eadaeae50a28b2609fde0b20495be1ef939d698712be9073778",
+      "commitMatched": true
+    },
+    {
+      "path": "eth-view.js",
+      "bytes": 36330,
+      "sha256": "1b5c8f6d3ae5822f7e945c33534e839e44670084972b2cd189a69a358593620a",
+      "commitMatched": true
+    },
+    {
+      "path": "lab-view.js",
+      "bytes": 126808,
+      "sha256": "961f3732b5d02132d7d89fd893f4602edac4789db27cc4a601463739963f785e",
+      "commitMatched": true
+    },
+    {
+      "path": "chart-replay.js",
+      "bytes": 86897,
+      "sha256": "725fde30034d24b81ce4b446bf9f93a7fba8306b40df012a45f04ac1ea24639b",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/app/index.html",
+      "bytes": 2476,
+      "sha256": "62462a3e5bb68d74b85be2c9ae809d2641a2fbf3db51da0e15b83c487590ae83",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/app/assets/index-Cr5zU6tT.js",
+      "bytes": 566842,
+      "sha256": "b15f6bbdcf9a8cdeb55b7feef9bf5ea6f07fd98c05835b99b16dff8731006dc0",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/app/assets/index-c-8igcn4.css",
+      "bytes": 210475,
+      "sha256": "eecb15a1ca3901ef3973675f7f7e7469d459d1e9f6096c952bd606d3581ff46c",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/index.html",
+      "bytes": 54435,
+      "sha256": "11701df809079162a0da19193323dec6092fec82864e0aab65099b06a3a66865",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/charts/index.html",
+      "bytes": 54552,
+      "sha256": "5e214117b17bf19e902d5131c982625ddc72e02c0caf5b603b8dd923ea7e41fb",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/us/index.html",
+      "bytes": 54552,
+      "sha256": "5e214117b17bf19e902d5131c982625ddc72e02c0caf5b603b8dd923ea7e41fb",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/kr/index.html",
+      "bytes": 54552,
+      "sha256": "5e214117b17bf19e902d5131c982625ddc72e02c0caf5b603b8dd923ea7e41fb",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/scenario/index.html",
+      "bytes": 54552,
+      "sha256": "5e214117b17bf19e902d5131c982625ddc72e02c0caf5b603b8dd923ea7e41fb",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/cashflow/index.html",
+      "bytes": 54552,
+      "sha256": "5e214117b17bf19e902d5131c982625ddc72e02c0caf5b603b8dd923ea7e41fb",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/rsi/index.html",
+      "bytes": 54552,
+      "sha256": "5e214117b17bf19e902d5131c982625ddc72e02c0caf5b603b8dd923ea7e41fb",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/housing/index.html",
+      "bytes": 54552,
+      "sha256": "5e214117b17bf19e902d5131c982625ddc72e02c0caf5b603b8dd923ea7e41fb",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/themes/index.html",
+      "bytes": 54552,
+      "sha256": "5e214117b17bf19e902d5131c982625ddc72e02c0caf5b603b8dd923ea7e41fb",
+      "commitMatched": true
+    }
+  ],
+  "totalDistinctHttpFiles": 29,
+  "scope": "Original public publication check plus all changed styles and JavaScript cache ancestors, generated React entry/assets and nine route wrappers; other files are not individually downloaded."
+}

@@ -1,0 +1,76 @@
+2026-11-07T10:46:59.3869835Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-11-07T10:47:04.4879812Z ##[group]Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+2026-11-07T10:47:05.0654068Z ##[group]Run npm ci --ignore-scripts
+2026-11-07T10:47:08.1615773Z ##[group]Run npm run verify:pages
+2026-11-07T10:47:09.2077157Z ##[group]Run mkdir -p build
+2026-11-07T10:56:57.1556743Z # tests 2579
+2026-11-07T10:56:57.1556826Z # suites 0
+2026-11-07T10:56:57.1556912Z # pass 2579
+2026-11-07T10:56:57.1556988Z # fail 0
+2026-11-07T10:56:57.1557079Z # cancelled 0
+2026-11-07T10:56:57.1557157Z # skipped 0
+2026-11-07T10:56:57.1557236Z # todo 0
+2026-11-07T10:56:57.1557346Z # duration_ms 587704.342271
+2026-11-07T10:56:57.1557698Z ATLAS_TEST_TOTAL {"complete":true,"tests":2579,"pass":2579,"fail":0,"skipped":0,"batches":1}
+2026-11-07T10:56:57.1588408Z ##[group]Run npm run typecheck
+2026-11-07T10:56:57.1588905Z [36;1mnpm run test:panels[0m
+2026-11-07T10:56:57.1589001Z [36;1mnpm run test:service[0m
+2026-11-07T10:56:58.3211145Z > bitcoin-cycle-atlas@1.34.0 test:panels
+2026-11-07T10:57:20.9854847Z ℹ tests 93
+2026-11-07T10:57:20.9855181Z ℹ suites 0
+2026-11-07T10:57:20.9855510Z ℹ pass 93
+2026-11-07T10:57:20.9855840Z ℹ fail 0
+2026-11-07T10:57:20.9856422Z ℹ cancelled 0
+2026-11-07T10:57:20.9856791Z ℹ skipped 0
+2026-11-07T10:57:20.9857125Z ℹ todo 0
+2026-11-07T10:57:20.9857512Z ℹ duration_ms 22545.993474
+2026-11-07T10:57:21.0924705Z > bitcoin-cycle-atlas@1.34.0 test:service
+2026-11-07T10:57:21.0925279Z > npm run build:web && tsx --test tests/service/*.test.ts
+2026-11-07T10:57:33.0599514Z ℹ tests 28
+2026-11-07T10:57:33.0599720Z ℹ suites 0
+2026-11-07T10:57:33.0599917Z ℹ pass 28
+2026-11-07T10:57:33.0600106Z ℹ fail 0
+2026-11-07T10:57:33.0600309Z ℹ cancelled 0
+2026-11-07T10:57:33.0600540Z ℹ skipped 0
+2026-11-07T10:57:33.0600754Z ℹ todo 0
+2026-11-07T10:57:33.0600989Z ℹ duration_ms 11014.239796
+2026-11-07T10:57:33.0808097Z ##[group]Run npm run verify:forecast
+2026-11-07T10:57:38.6270398Z ##[group]Run npm run verify:research
+2026-11-07T10:57:39.0352901Z ##[group]Run npm run verify:eth-events
+2026-11-07T10:57:39.2196803Z ##[group]Run npm run verify:treasury-paths
+2026-11-07T10:57:43.3003537Z ##[group]Run npm run verify:numerics
+2026-11-07T10:57:51.5490336Z ##[group]Run npm run verify:formal
+2026-11-07T10:57:58.6405911Z # tests 32
+2026-11-07T10:57:58.6406108Z # suites 0
+2026-11-07T10:57:58.6406289Z # pass 32
+2026-11-07T10:57:58.6406479Z # fail 0
+2026-11-07T10:57:58.6406657Z # cancelled 0
+2026-11-07T10:57:58.6407065Z # skipped 0
+2026-11-07T10:57:58.6407449Z # todo 0
+2026-11-07T10:57:58.6407896Z # duration_ms 280.745754
+2026-11-07T10:58:08.9832824Z ℹ tests 28
+2026-11-07T10:58:08.9833059Z ℹ suites 0
+2026-11-07T10:58:08.9833255Z ℹ pass 28
+2026-11-07T10:58:08.9833454Z ℹ fail 0
+2026-11-07T10:58:08.9833651Z ℹ cancelled 0
+2026-11-07T10:58:08.9834084Z ℹ skipped 0
+2026-11-07T10:58:08.9834440Z ℹ todo 0
+2026-11-07T10:58:08.9834833Z ℹ duration_ms 128.945824
+2026-11-07T10:58:26.1780899Z # tests 17
+2026-11-07T10:58:26.1781094Z # suites 0
+2026-11-07T10:58:26.1781278Z # pass 17
+2026-11-07T10:58:26.1781455Z # fail 0
+2026-11-07T10:58:26.1781653Z # cancelled 0
+2026-11-07T10:58:26.1781840Z # skipped 0
+2026-11-07T10:58:26.1782020Z # todo 0
+2026-11-07T10:58:26.1782240Z # duration_ms 131.182994
+2026-11-07T10:58:41.7543096Z ##[group]Run npm run verify:cycle
+2026-11-07T10:58:42.6316746Z ##[group]Run node scripts/verify-static.mjs
+2026-11-07T10:58:48.5025995Z ##[group]Run npm run build:publication
+2026-11-07T10:58:49.8611659Z {"status":"PASS","sourceCommit":"71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e","files":799,"assets":24,"contentDigest":"1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0","manifestSha256":"efc9cc8c60f71f6bb8128c859ec7a15c94fd7f0f5a8b6118ef7ebec22fe62b28"}
+2026-11-07T10:58:50.4071592Z {"status":"PASS","sourceCommit":"71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e","checkedFiles":799,"contentDigest":"1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0"}
+2026-11-07T10:59:01.7802810Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-07T10:59:02.2941382Z SHA256 digest of uploaded artifact zip is 556174e96636562655fc6842885f17d73fef3ab2c1168a429e351546a7114489
+2026-11-07T10:59:02.6317243Z Artifact ci-verification-71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e-1.zip successfully finalized. Artifact ID 13571746994
+2026-11-07T10:59:02.6320063Z Artifact ci-verification-71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e-1 has been successfully uploaded! Final size is 171431 bytes. Artifact ID is 13571746994
+2026-11-07T10:59:02.6325127Z Artifact download URL: https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42365377496/artifacts/13571746994

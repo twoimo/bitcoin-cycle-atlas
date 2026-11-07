@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+  "sourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+  "workflow": {
+    "id": 42365377470,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "head": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+    "updatedAt": "2026-11-07T10:53:29Z"
+  },
+  "jobs": {
+    "build": 128382217802,
+    "deploy": 128383520786
+  },
+  "tests": {
+    "tests": 2579,
+    "pass": 2579,
+    "fail": 0,
+    "skipped": 0
+  },
+  "manifestSha256": "079b9fadfaf172ca6c5738d527072417b9879674333b2165a9ed6fd638d6c103",
+  "contentDigest": "1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0",
+  "preparedFiles": 799,
+  "originalPublicHttpFiles": [
+    "index.html",
+    "site-entry.js",
+    "data/btc-daily.json",
+    "data/forecast-ledger/index.json"
+  ],
+  "publicConfirmedAt": "2026-11-07T10:53:26.3300686Z",
+  "note": "Pages publication identity is separate from Release and PR-CI publication metadata. Additional served-file audit is recorded separately."
+}

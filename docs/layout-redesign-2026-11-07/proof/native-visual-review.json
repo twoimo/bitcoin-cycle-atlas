@@ -1,0 +1,24 @@
+{
+  "sourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "reviewed": [
+    {
+      "file": "bmnr-320-loaded.png",
+      "bytes": 68908,
+      "sha256": "d7687c52d29717b788185206d8017781423f4b2ec8ab4083d326bf43ba12a917",
+      "observation": "Canonical BMNR ticker, one-row controls and chart/axis layout visible without a new defect."
+    },
+    {
+      "file": "mstr-1440-loaded.png",
+      "bytes": 155447,
+      "sha256": "8b098486ea0e113a10d4924207bd9546e15bda52b2ca49e77c16af3dd1dbaf5c",
+      "observation": "Canonical MSTR ticker, scenario/replay/chart/bottom range controls visible without a new defect."
+    },
+    {
+      "file": "workspace-consolidated-1440-market-us.png",
+      "bytes": 99028,
+      "sha256": "83fceb57b1c48f8cdc9253623bcd2e4cfa44d4fbc0bdc6d936346fcc37f308c0",
+      "observation": "Market analysis is the active right-hand navigation and US is the active top tab."
+    }
+  ],
+  "scope": "Direct visual review of these three final native screenshots; full native assertion/source/PNG integrity is recorded separately."
+}

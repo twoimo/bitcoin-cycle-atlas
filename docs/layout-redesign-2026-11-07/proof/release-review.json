@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+  "completedChecks": [
+    "exact-git-source-version-tag-and-successful-release-workflow",
+    "published-release-and-exact-13-asset-metadata-inventory",
+    "exactly-three-small-body-byte-and-sha256-checks",
+    "twelve-checksum-entries-versus-all-listed-github-digests",
+    "release-metadata-source-version-linkage-and-original-publication-metadata-verifier"
+  ],
+  "failures": [],
+  "inputSha256": "7c56482b3e32a7be84a59fdddb5fffcac5a106cf31b5c8f93b3e759937672094",
+  "sourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+  "version": "1.34.0",
+  "tag": {
+    "name": "v1.34.0",
+    "ref": "refs/tags/v1.34.0",
+    "type": "commit",
+    "commit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+    "annotatedTagObjects": []
+  },
+  "workflow": {
+    "id": 42365377454,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42365377454",
+    "status": "completed",
+    "conclusion": "success",
+    "attempt": 1,
+    "headSha": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+    "headTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+    "startedAt": "2026-11-07T10:46:43Z",
+    "updatedAt": "2026-11-07T10:59:13Z"
+  },
+  "release": {
+    "id": 437517011,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/tag/v1.34.0",
+    "publishedAt": "2026-11-07T10:58:41Z",
+    "draft": false,
+    "prerelease": false,
+    "githubImmutableSetting": false,
+    "assetCount": 13,
+    "assets": [
+      {
+        "id": 720438570,
+        "name": "PUBLICATION_MANIFEST.json",
+        "bytes": 134244,
+        "state": "uploaded",
+        "sha256": "c8c306b22e7a224123aa4f4bd6a3af88c1d514726c410d5c2e6b2feaa3b72198",
+        "checksumListMatch": true
+      },
+      {
+        "id": 720438632,
+        "name": "Bitcoin_Cycles_Comparison.html",
+        "bytes": 33937637,
+        "state": "uploaded",
+        "sha256": "e28f835b591cc44b72630315a4f518267cc56d10be87db796a35ac273856511c",
+        "checksumListMatch": true
+      },
+      {
+        "id": 720438727,
+        "name": "Bitcoin_Detailed_Outlook.png",
+        "bytes": 365178,
+        "state": "uploaded",
+        "sha256": "9d757454267d8e8653510a5956ad9202cc29949784418cd57f8224f6d5bffb9a",
+        "checksumListMatch": true
+      },
+      {
+        "id": 720438785,
+        "name": "DETAILED_FORECAST_RESULTS.json",
+        "bytes": 4091941,
+        "state": "uploaded",
+        "sha256": "6d757466b6e9021bc8caf9bc3ef3b81878f1e0af54a25d60d98a2b15d3b2ea2d",
+        "checksumListMatch": true
+      },
+      {
+        "id": 720438836,
+        "name": "MARKET_STRUCTURE_RESULTS.json",
+        "bytes": 7552190,
+        "state": "uploaded",
+        "sha256": "8db88670f3a32d825a6f9a4888ade5ba0c3ef86e695c0695745b8813d3485425",
+        "checksumListMatch": true
+      },
+      {
+        "id": 720438906,
+        "name": "Bitcoin_Cycle_Structure_Research.md",
+        "bytes": 319556,
+        "state": "uploaded",
+        "sha256": "5701963ce1594ac45ae7a095ef8be28ba200c716e3d43acc4370c6b47831f980",
+        "checksumListMatch": true
+      },
+      {
+        "id": 720438951,
+        "name": "Treasury_Research_and_Models.md",
+        "bytes": 322894,
+        "state": "uploaded",
+        "sha256": "ed60d52ee6e8a4a81e6d2cb377b8bd1044b3f4c083ec65ff3ac24ecfe11fd5aa",
+        "checksumListMatch": true
+      },
+      {
+        "id": 720439007,
+        "name": "TREASURY_SCENARIO_RESULTS.json",
+        "bytes": 37582908,
+        "state": "uploaded",
+        "sha256": "50160f505734d3296e3f441d7ff609f14fcbf62869895febf815dd1b003b2949",
+        "checksumListMatch": true
+      },
+      {
+        "id": 720439121,
+        "name": "Research_Library.zip",
+        "bytes": 824491,
+        "state": "uploaded",
+        "sha256": "43e427f9d6d81329ea1e9698143f20a128c1d379da17295c4aeb1700184f37df",
+        "checksumListMatch": true
+      },
+      {
+        "id": 720439181,
+        "name": "Forecast_Ledger.zip",
+        "bytes": 2248842,
+        "state": "uploaded",
+        "sha256": "78242104def1baa23ab81664bf0fe3113b914d214a49a0dc1600511831daa495",
+        "checksumListMatch": true
+      },
+      {
+        "id": 720439257,
+        "name": "bitcoin-cycle-atlas-v1.34.0-source.zip",
+        "bytes": 120237910,
+        "state": "uploaded",
+        "sha256": "166bf5ab5c207d1123da355aa4df26ee6cbc0eeeb99ce889f410065d2c960c86",
+        "checksumListMatch": true
+      },
+      {
+        "id": 720439423,
+        "name": "RELEASE_METADATA.json",
+        "bytes": 4706,
+        "state": "uploaded",
+        "sha256": "15cc4687b481335a7dff76376af75835d0423efd48fae78a87990bae22a37e44",
+        "checksumListMatch": true
+      },
+      {
+        "id": 720439453,
+        "name": "SHA256SUMS.txt",
+        "bytes": 1140,
+        "state": "uploaded",
+        "sha256": "9174bc7c6e557abfb78f3b166761901586a55630bd8121b2d75d33d3509df6eb",
+        "checksumListMatch": "not-self-listed"
+      }
+    ]
+  },
+  "bodyChecks": [
+    {
+      "name": "SHA256SUMS.txt",
+      "path": "release-assets/SHA256SUMS.txt",
+      "acquisition": "https-download",
+      "bytes": 1140,
+      "sha256": "9174bc7c6e557abfb78f3b166761901586a55630bd8121b2d75d33d3509df6eb",
+      "githubBytesMatch": true,
+      "githubDigestMatch": true
+    },
+    {
+      "name": "RELEASE_METADATA.json",
+      "path": "release-assets/RELEASE_METADATA.json",
+      "acquisition": "https-download",
+      "bytes": 4706,
+      "sha256": "15cc4687b481335a7dff76376af75835d0423efd48fae78a87990bae22a37e44",
+      "githubBytesMatch": true,
+      "githubDigestMatch": true
+    },
+    {
+      "name": "PUBLICATION_MANIFEST.json",
+      "path": "release-assets/PUBLICATION_MANIFEST.json",
+      "acquisition": "https-download",
+      "bytes": 134244,
+      "sha256": "c8c306b22e7a224123aa4f4bd6a3af88c1d514726c410d5c2e6b2feaa3b72198",
+      "githubBytesMatch": true,
+      "githubDigestMatch": true
+    }
+  ],
+  "checksumList": {
+    "path": "release-assets/SHA256SUMS.txt",
+    "entries": 12,
+    "allListedAssetDigestsMatch": true
+  },
+  "releasePublication": {
+    "manifestSha256": "a76212e8bc19bc46e1b2922756bee31544bb0d5f34d08e98870fca51e78d2b23",
+    "rawFileSha256": "c8c306b22e7a224123aa4f4bd6a3af88c1d514726c410d5c2e6b2feaa3b72198",
+    "contentDigest": "1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0",
+    "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+    "sourceTree": {
+      "status": "clean",
+      "scope": "dist, scripts and package.json"
+    },
+    "generatedAt": "2026-11-07T10:58:16.842Z",
+    "workflow": {
+      "runId": "42365377454",
+      "attempt": "1"
+    },
+    "reusedFromEarlierReleaseProducer": false,
+    "producer": {
+      "id": 42365377454,
+      "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42365377454",
+      "status": "completed",
+      "conclusion": "success",
+      "attempt": 1,
+      "headSha": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+      "headTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+      "startedAt": "2026-11-07T10:46:43Z",
+      "updatedAt": "2026-11-07T10:59:13Z"
+    },
+    "state": {
+      "phase": "ready",
+      "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+      "digest": "1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0",
+      "validatedDigest": "1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0",
+      "servedDigest": null,
+      "servedCommit": null,
+      "reason": null
+    },
+    "inventoryFiles": 799,
+    "metadataSelfChecksumVerified": true,
+    "inventoryChecksumVerified": true,
+    "metadataLinkageVerified": true,
+    "originalVerifier": {
+      "status": "PASS",
+      "function": "checkPublicationMetadata",
+      "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+      "files": [
+        {
+          "path": "scripts/build-publication.mjs",
+          "sha256": "4648e6c50a65622e163fb4341fa935f06ee2053307b79afcb0771653485a0de3"
+        },
+        {
+          "path": "dist/data-freshness.js",
+          "sha256": "10e2348ae352ef19a840002fadc1123f055712312490d958a8559b39e814a0f1"
+        },
+        {
+          "path": "dist/publication-contract.js",
+          "sha256": "faa94f8819b6c51bdf7716e2b650f8acf80ee410b6d21e96f3b792dd2ff10cc6"
+        }
+      ],
+      "inventoryFiles": 799,
+      "scope": "Original metadata self checksum, inventory checksum, safe unique paths and ready publication state; physical dist file bodies are not checked here"
+    }
+  },
+  "scope": {
+    "githubAssetMetadataIdentities": 13,
+    "checksumEntriesComparedToGithubDigests": 12,
+    "independentBodyChecks": 3,
+    "httpsBodiesFetched": 3,
+    "localBodiesSupplied": 0,
+    "remainingReleaseAssetBodiesNotFetched": 10,
+    "limits": "No GitHub API requests or polling by this helper. No archive extraction, standalone semantics, full dist body verification or browser testing. Input API authenticity relies on the recorded retrieval performed by the caller."
+  },
+  "pagesPublication": "Not inspected. This is the Release publication manifest; its generation time and canonical/raw checksums are kept separate from the Pages publication."
+}

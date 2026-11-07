@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "sourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "baselineCommit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+  "unchanged": [
+    {
+      "path": "dist/data",
+      "tree": "c4a37a1a82976fb26c22a60294bd75a46e61683a",
+      "matched": true
+    },
+    {
+      "path": "research-data",
+      "tree": "b0a1b51b1b29f0e681c8eaddf6d931b547a49a26",
+      "matched": true
+    },
+    {
+      "path": "packages",
+      "tree": "f22d369722d73904f69a5a29f56b69271fee7795",
+      "matched": true
+    },
+    {
+      "path": "scripts",
+      "tree": "1ea24a339e4a8c324b7783b8a149f0b7b6ddeb5e",
+      "matched": true
+    },
+    {
+      "path": "verification",
+      "tree": "7fbd8434cff43392969d0afc92653ed84805eb2f",
+      "matched": true
+    },
+    {
+      "path": "tools/hallmark",
+      "tree": "f011fd6f7e89f7fc1e2fcffda6524d10efb940eb",
+      "matched": true
+    },
+    {
+      "path": ".github",
+      "tree": "8bb4fc14e9337a40e186c23f2618d683fab3d826",
+      "matched": true
+    },
+    {
+      "path": "dist/vendor",
+      "tree": "8b0736b32ecb85f5577d1a0088cec856ad46811b",
+      "matched": true
+    }
+  ],
+  "note": "Package lock changes are the root version entries; original model math, source data, ledgers, replay state, chart vendor, original scripts/workflows/checkers remain unchanged."
+}

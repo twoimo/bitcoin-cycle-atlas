@@ -1,0 +1,155 @@
+{
+  "sourceCommit": "71e1e86e49c9b14a4cbe0d1d0c0a83317965b02e",
+  "startedAt": "2026-11-07T10:55:57.045Z",
+  "observations": [
+    {
+      "name": "initial-market",
+      "activeBackground": "rgb(45, 42, 33)",
+      "activeColor": "rgb(216, 181, 109)",
+      "activeNavigation": "시장 분석",
+      "childScripts": [],
+      "childStyles": [],
+      "documentWidth": 1363,
+      "frameTop": 44,
+      "headerHeight": 44,
+      "styles": [
+        "../editorial-system.css?v=1.34.0",
+        "../editorial-panels.css?v=1.34.0",
+        "../editorial-ledgers.css?v=1.34.0"
+      ],
+      "url": "https://twoimo.github.io/bitcoin-cycle-atlas/market-lab/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D",
+      "viewport": {
+        "height": 936,
+        "width": 1363
+      },
+      "childAssetProbeScope": "Initial child script/style query used the wrong scope and returned empty arrays. Asset version evidence is the separate successful public-final.json HTTP verification, not these arrays."
+    },
+    {
+      "name": "diagnosis-summary",
+      "at": "2026-11-07T10:59:46.583Z",
+      "result": "Visible modal separates standardized scores from observations/dates/frequency; screenshot recorded.",
+      "focusAfterClose": "미국 시장 진단 요약"
+    },
+    {
+      "name": "scenario-edit",
+      "at": "2026-11-07T11:00:05.521Z",
+      "baselineIndex": "100.00",
+      "downExampleIndex": "87.52",
+      "downExamplePressure": "-1.333",
+      "lambdaChangedFrom": "0.1",
+      "lambdaChangedTo": "0.2",
+      "editedIndex": "76.59"
+    },
+    {
+      "name": "cashflow-edit",
+      "at": "2026-11-07T11:00:54.407Z",
+      "example": {
+        "revenue": 40000,
+        "npv": "6,623.58",
+        "context": "가상 예시 결과 · 실제 기업 관측 아님"
+      },
+      "edited": {
+        "revenue": 45000,
+        "npv": "26,587.13",
+        "operatingCash": "30,000.00",
+        "context": "사용자 입력 가정 결과"
+      },
+      "result": "Inputs and results stay in separate columns; outer toolbar mirrors recalculated NPV."
+    },
+    {
+      "name": "rsi-backtest",
+      "at": "2026-11-07T11:02:27.307Z",
+      "symbol": "TQQQ",
+      "period": "2010-02-11–2026-10-30",
+      "initialCapital": 10000,
+      "buyRsi": 33.5,
+      "sellRsi": 43,
+      "oneWayCostBp": 10,
+      "finalValue": "91,440.31 USD",
+      "closedTrades": 47,
+      "fillRows": 94,
+      "historyDays": 4206,
+      "result": "Default historical simulation produces result, valuation chart, and separate fill/history tables."
+    },
+    {
+      "name": "housing-relation",
+      "at": "2026-11-07T11:03:11.575Z",
+      "region": "seoul",
+      "correlations": [
+        "-0.244",
+        "+0.319",
+        "+0.358"
+      ],
+      "sampleMonths": [
+        248,
+        247,
+        212
+      ],
+      "lagRows": 13,
+      "sourceClocks": [
+        "거래량 2026-09",
+        "가격지수 2026-08"
+      ],
+      "context": "거래량은 신고월, 가격지수는 계약월 기준. 상관은 비례식·인과관계를 입증하지 않습니다.",
+      "result": "Three correlation summaries, scatter, lag table, and source clock/caveat observed."
+    },
+    {
+      "name": "hype-evidence",
+      "at": "2026-11-07T11:03:43.372Z",
+      "selectedEvidence": "HIP-3 빌더 배포 무기한 시장",
+      "evidenceTime": "2026. 11. 03. 22:33 확보",
+      "judgmentAxes": [
+        "연속성 충족",
+        "기대감 판단 보류",
+        "신선함 판단 보류"
+      ],
+      "result": "Evidence timeline selection opens chart and separates linked source facts from existing judgment; no judgment record created."
+    },
+    {
+      "name": "research-reader",
+      "at": "2026-11-07T11:04:44.620Z",
+      "article": "mstr-model-method",
+      "title": "MSTR 미래 경로는 어떤 식으로 계산하는가",
+      "listTotal": 490,
+      "desktopColumns": "120px 688px",
+      "readerScroll": {
+        "clientHeight": 742,
+        "scrollHeight": 2480,
+        "verifiedBottomScrollTop": 1738
+      },
+      "focusAfterClose": "MSTR 미래 경로는 어떤 식으로 계산하는가 연구 본문 읽기",
+      "result": "Reader title focused on open; section labels/body/source retained; native scroll reaches final source links; close returns to title button."
+    },
+    {
+      "name": "ipo-menu",
+      "at": "2026-11-07T11:05:07.180Z",
+      "month": "2026년 11월",
+      "subscriptions": 13,
+      "demandForecasts": 18,
+      "menuItems": [
+        "이번 달",
+        "전체 목록"
+      ],
+      "result": "Original schedule displays and outer calendar-tools modal opens/closes."
+    }
+  ],
+  "liveActiveContrast": 7.3393737643042725,
+  "completedAt": "2026-11-07T11:05:34.157Z",
+  "result": "PASS",
+  "viewport": {
+    "width": 1363,
+    "height": 936
+  },
+  "finalUrl": "https://twoimo.github.io/bitcoin-cycle-atlas/market-lab/?view=cashflow",
+  "screenshots": [
+    "public-diagnosis-v134.jpg",
+    "public-cashflow-v134.jpg",
+    "public-housing-v134.jpg",
+    "public-research-v134.jpg"
+  ],
+  "scope": "Public desktop Chrome UI smoke review after deployment. Separate original native workflows provide responsive automated evidence; this session is not a physical mobile or software-keyboard test. No production data or immutable record was edited.",
+  "toolNotes": [
+    "One incorrect checkbox locator matched no DOM element; corrected using observed DOM button role.",
+    "One screenshot capture timed out during RSI transition; subsequent AX, execution result, and screenshot succeeded without reload or source changes."
+  ]
+}

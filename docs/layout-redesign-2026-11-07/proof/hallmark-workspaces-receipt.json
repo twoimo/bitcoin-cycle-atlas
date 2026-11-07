@@ -1,0 +1,1626 @@
+{
+  "schemaVersion": 1,
+  "suite": "workspaces",
+  "startedAt": "2026-11-07T10:20:48.376Z",
+  "baselineCommit": "3b6373906dbdd3ef321db31deaf8a8f785da61c3",
+  "upstreamCommit": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+  "scope": "app",
+  "genre": "modern-minimal",
+  "auditInputs": {
+    "static": [
+      "dist"
+    ],
+    "render": [
+      "dist/styles.css",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?region=kr",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=scenario",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=cashflow",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=TQQQ",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HOUSING-SEOUL&region=seoul",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HYPE",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=ipo",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=data",
+      "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=evidence"
+    ],
+    "note": "The render pass also runs static gates on styles.css so upstream can read the explicit reworded stamp for kept checks. Its totals are not directly comparable with earlier URL-only passes."
+  },
+  "origin": "http://127.0.0.1:4177",
+  "workPath": "build/hallmark-workspaces/work",
+  "routes": [
+    {
+      "name": "market-us",
+      "path": "market-lab/",
+      "center": "market-us",
+      "probe": "diagnosis",
+      "region": "us",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/"
+    },
+    {
+      "name": "market-kr",
+      "path": "market-lab/?region=kr",
+      "center": "market-kr",
+      "probe": "diagnosis",
+      "region": "kr",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?region=kr"
+    },
+    {
+      "name": "scenario",
+      "path": "market-lab/?view=scenario",
+      "center": "scenario",
+      "probe": "scenario",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=scenario"
+    },
+    {
+      "name": "cashflow",
+      "path": "market-lab/?view=cashflow",
+      "center": "cashflow",
+      "probe": "cashflow",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=cashflow"
+    },
+    {
+      "name": "rsi",
+      "path": "market-lab/charts/?symbol=TQQQ",
+      "center": "rsi",
+      "probe": "rsi",
+      "symbol": "TQQQ",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=TQQQ"
+    },
+    {
+      "name": "housing",
+      "path": "market-lab/charts/?symbol=HOUSING-SEOUL&region=seoul",
+      "center": "housing",
+      "probe": "housing",
+      "symbol": "HOUSING-SEOUL",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HOUSING-SEOUL&region=seoul"
+    },
+    {
+      "name": "themes",
+      "path": "market-lab/charts/?symbol=HYPE",
+      "center": "themes",
+      "probe": "themes",
+      "symbol": "HYPE",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HYPE"
+    },
+    {
+      "name": "ipo",
+      "path": "?page=outlook&center=ipo",
+      "center": "ipo",
+      "probe": "ipo",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=ipo"
+    },
+    {
+      "name": "embedded-data",
+      "path": "?page=outlook&center=data",
+      "center": "data",
+      "probe": "data",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=data"
+    },
+    {
+      "name": "research",
+      "path": "?page=outlook&center=evidence",
+      "center": "evidence",
+      "probe": "evidence",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=evidence"
+    }
+  ],
+  "phases": [
+    {
+      "name": "baseline-static",
+      "code": 0,
+      "summary": {
+        "fails": 0,
+        "reflex": 0,
+        "warns": 28,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 44,
+        "render": "off",
+        "before": "before: recorded 9 links, 0 fields, 0 handlers, 0 test hooks, 13 script hooks in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      "stdoutSha256": "486021f078a0d05af078aec168561807d873a79b31988fff9d81ba4ab00d66c2",
+      "findingsPath": "reports/baseline-static.stdout.json"
+    },
+    {
+      "name": "baseline-render",
+      "code": 0,
+      "summary": {
+        "fails": 9,
+        "reflex": 0,
+        "warns": 2,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "before": "before: recorded 18 links, 73 fields, 0 handlers, 0 test hooks, 0 script hooks and 10 rendered page(s) in .hallmark/before.json; --kept checks a redesign against it"
+      },
+      "stdoutSha256": "7f12db3ee2c869923f18c4c2f537fedf257dd6f81596fce1c8b37873a90daafa",
+      "findingsPath": "reports/baseline-render.stdout.json",
+      "renderedUrls": [
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?region=kr",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=scenario",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=cashflow",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=TQQQ",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HOUSING-SEOUL&region=seoul",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HYPE",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=ipo",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=data",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=evidence"
+      ],
+      "actualRenderReady": [
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/",
+          "route": "market-us",
+          "workspace": {
+            "center": "market-us",
+            "version": "baseline",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=diagnosis&lab-region=us&epoch=1",
+            "frameWidth": 718,
+            "frameHeight": 512,
+            "toolbar": null,
+            "content": {
+              "observations": 4233,
+              "region": "us"
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?region=kr",
+          "route": "market-kr",
+          "workspace": {
+            "center": "market-kr",
+            "version": "baseline",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=diagnosis&lab-region=kr&epoch=1",
+            "frameWidth": 718,
+            "frameHeight": 512,
+            "toolbar": null,
+            "content": {
+              "observations": 4136,
+              "region": "kr"
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=scenario",
+          "route": "scenario",
+          "workspace": {
+            "center": "scenario",
+            "version": "baseline",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=scenario&lab-region=us&epoch=1",
+            "frameWidth": 718,
+            "frameHeight": 512,
+            "toolbar": null,
+            "content": {
+              "contributions": 3,
+              "axes": [
+                "α 성장",
+                "β 유동성",
+                "γ 심리"
+              ]
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=cashflow",
+          "route": "cashflow",
+          "workspace": {
+            "center": "cashflow",
+            "version": "baseline",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=ai&lab-region=us&epoch=1",
+            "frameWidth": 718,
+            "frameHeight": 512,
+            "toolbar": null,
+            "content": {
+              "state": "empty-input",
+              "fields": 6
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=TQQQ",
+          "route": "rsi",
+          "workspace": {
+            "center": "rsi",
+            "version": "baseline",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=rsi&lab-region=us&epoch=1&symbol=TQQQ",
+            "frameWidth": 718,
+            "frameHeight": 512,
+            "toolbar": null,
+            "content": {
+              "symbol": "TQQQ",
+              "observedPricePath": true
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HOUSING-SEOUL&region=seoul",
+          "route": "housing",
+          "workspace": {
+            "center": "housing",
+            "version": "baseline",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=housing&lab-region=us&epoch=1&symbol=HOUSING-SEOUL&region=seoul",
+            "frameWidth": 718,
+            "frameHeight": 512,
+            "toolbar": null,
+            "content": {
+              "symbol": "HOUSING-SEOUL",
+              "observedPricePath": true
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HYPE",
+          "route": "themes",
+          "workspace": {
+            "center": "themes",
+            "version": "baseline",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=themes&lab-region=us&epoch=1&symbol=HYPE",
+            "frameWidth": 718,
+            "frameHeight": 512,
+            "toolbar": null,
+            "content": {
+              "symbol": "HYPE",
+              "candles": 366,
+              "observedPricePath": false
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=ipo",
+          "route": "ipo",
+          "workspace": {
+            "center": "ipo",
+            "version": "baseline",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=ipo&embedded=1",
+            "frameWidth": 718,
+            "frameHeight": 512,
+            "toolbar": null,
+            "content": {
+              "months": [
+                "2026-10",
+                "2026-11",
+                "2026-12"
+              ]
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=data",
+          "route": "embedded-data",
+          "workspace": {
+            "center": "data",
+            "version": "baseline",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data&embedded=1",
+            "frameWidth": 718,
+            "frameHeight": 512,
+            "toolbar": null,
+            "content": {
+              "symbols": [
+                "BTC",
+                "ETH",
+                "HYPE",
+                "SPY",
+                "QQQ",
+                "NVDA",
+                "AAPL",
+                "GOOG",
+                "MSFT",
+                "AMZN",
+                "META",
+                "AVGO",
+                "PLTR",
+                "TSLA",
+                "HOOD",
+                "TLT",
+                "IEF",
+                "GLD",
+                "SLV",
+                "PDBC"
+              ]
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=evidence",
+          "route": "research",
+          "workspace": {
+            "center": "evidence",
+            "version": "baseline",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence&embedded=1",
+            "frameWidth": 718,
+            "frameHeight": 512,
+            "toolbar": null,
+            "content": {
+              "records": 2
+            }
+          }
+        }
+      ],
+      "screenshots": {
+        "expected": 50,
+        "found": 50,
+        "viewportWidths": [
+          320,
+          375,
+          414,
+          768,
+          1024,
+          1280,
+          1440,
+          1920
+        ],
+        "screenshotTags": [
+          "1280x800",
+          "375",
+          "1440x900",
+          "1440-full",
+          "1920x1080"
+        ],
+        "folder": "work/.hallmark/before",
+        "reviewImages": [
+          {
+            "name": "baseline/market-us-1440x900.png",
+            "bytes": 91643,
+            "sha256": "00adf647527fd49f9ecadf6664f563bfdf7063eae28a167f011279e24dc5e826"
+          },
+          {
+            "name": "baseline/market-us-375.png",
+            "bytes": 41087,
+            "sha256": "ecdd5ef99e0cf610009ac3c430615b4aeaceabddd0817c21957ed1f6cfd6a1ce"
+          },
+          {
+            "name": "baseline/market-kr-1440x900.png",
+            "bytes": 101053,
+            "sha256": "3f46b22517dbd6941fd955af9c26cfdbcb19bb2549799af8288bb3889d2b2697"
+          },
+          {
+            "name": "baseline/market-kr-375.png",
+            "bytes": 36502,
+            "sha256": "38604a4aa592976d05c5f5616b10689be6efbc93bc96e19bfc89d99000b875bf"
+          },
+          {
+            "name": "baseline/scenario-1440x900.png",
+            "bytes": 88805,
+            "sha256": "d304fa3b2e8d318746a0069baf4a580cf02a240c417b3953fd29d49d8404a5d8"
+          },
+          {
+            "name": "baseline/scenario-375.png",
+            "bytes": 33865,
+            "sha256": "47c69db82b0d9ac89d3c6f7b43ec1c12eb8316965f8d4b31f5ee70723a1444a9"
+          },
+          {
+            "name": "baseline/cashflow-1440x900.png",
+            "bytes": 74299,
+            "sha256": "1bc6d24caca114534896cdf28e99e9a1ca053d8caac821fae32ca9cb9ed69ed7"
+          },
+          {
+            "name": "baseline/cashflow-375.png",
+            "bytes": 35266,
+            "sha256": "3ba058cf74d4b7cc01020d937dbe2b573c246a885775bf9ec47d3e62f9a45075"
+          },
+          {
+            "name": "baseline/rsi-1440x900.png",
+            "bytes": 210189,
+            "sha256": "0b12e80d4488f23e6e281bd9506ebfb5b6dae4792706262d83e605f86b68ba6a"
+          },
+          {
+            "name": "baseline/rsi-375.png",
+            "bytes": 80191,
+            "sha256": "127342aef94c45a25dbbb145e3d9f1f2473f858f20b07ffd4cf374a96ab6c805"
+          },
+          {
+            "name": "baseline/housing-1440x900.png",
+            "bytes": 114668,
+            "sha256": "e8dc3fbb0bda6c55a4ab55f5a0c5e00ce5b9c8a54644383fe4d14f86efa619c4"
+          },
+          {
+            "name": "baseline/housing-375.png",
+            "bytes": 51956,
+            "sha256": "ceec5e044af01d04f6c49972bdaade147414969a4ded3f3bd88cc73939b2a016"
+          },
+          {
+            "name": "baseline/themes-1440x900.png",
+            "bytes": 144533,
+            "sha256": "210887b344034a0cd8d39eed54574990a833ee7352c03ef00b84b18da7d381bd"
+          },
+          {
+            "name": "baseline/themes-375.png",
+            "bytes": 46800,
+            "sha256": "5717504e82354f435b97dd962e11931aa993fc3890602bea98b248c52a7022e1"
+          },
+          {
+            "name": "baseline/ipo-1440x900.png",
+            "bytes": 153604,
+            "sha256": "6d1e52c0e9e88785c891ff79cbc17e6bf13e6e4ed2ca0921aa7e9219da1d3543"
+          },
+          {
+            "name": "baseline/ipo-375.png",
+            "bytes": 62164,
+            "sha256": "3a0e200d69b9df65f19ab5b29c7d7a40a016a8ed9db1e1cd04a135d3e33cc934"
+          },
+          {
+            "name": "baseline/embedded-data-1440x900.png",
+            "bytes": 222279,
+            "sha256": "851f0fcaae548b0312e6ff47d2ef9b664cb547ba862e43283370197854a8394a"
+          },
+          {
+            "name": "baseline/embedded-data-375.png",
+            "bytes": 57230,
+            "sha256": "3f4ffcf7bea7d3bca3c682dea9e0eed598fdb8afdc469f831e2a2b56b7332528"
+          },
+          {
+            "name": "baseline/research-1440x900.png",
+            "bytes": 52720,
+            "sha256": "e80c693ef9aaecfa3e469d05d5b9bb81b3752b3d8a586954a9ffd719453a98ff"
+          },
+          {
+            "name": "baseline/research-375.png",
+            "bytes": 19213,
+            "sha256": "1e84a66ef4f20de746131abf11abd6e05670315ddac5a84af4ec102a10d32260"
+          }
+        ]
+      },
+      "requestedUrls": [
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?region=kr",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=scenario",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=cashflow",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=TQQQ",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HOUSING-SEOUL&region=seoul",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HYPE",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=ipo",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=data",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=evidence"
+      ]
+    },
+    {
+      "name": "current-static",
+      "code": 0,
+      "summary": {
+        "fails": 0,
+        "reflex": 0,
+        "warns": 62,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 49,
+        "render": "off",
+        "kept": "kept: links 9/9, script hooks 76/76; before 0 FAIL, 0 REFLEX, now 0 FAIL, 0 REFLEX"
+      },
+      "stdoutSha256": "94f7b48b3f063621333345a1ead9c8e3b56af757a4ec703a1a7ad56ceefa4dcb",
+      "findingsPath": "reports/current-static.stdout.json"
+    },
+    {
+      "name": "current-render",
+      "code": 0,
+      "summary": {
+        "fails": 0,
+        "reflex": 0,
+        "warns": 3,
+        "waived": 0,
+        "rejected": 0,
+        "answered": 0,
+        "dismissed": 0,
+        "notes": 0,
+        "files": 1,
+        "render": "ran",
+        "kept": "kept: links 18/18, fields 73/73, headings 37/37, figures 3/4; before 9 FAIL, 0 REFLEX, now 0 FAIL, 0 REFLEX"
+      },
+      "stdoutSha256": "830d4022293b7f740a50cffa764180dd189a049b9a57aeacd1bd48fc589052c2",
+      "findingsPath": "reports/current-render.stdout.json",
+      "actualRenderReady": [
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/",
+          "route": "market-us",
+          "workspace": {
+            "center": "market-us",
+            "version": "current",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=diagnosis&lab-region=us&epoch=1&v=1.32.1",
+            "frameWidth": 692,
+            "frameHeight": 512,
+            "toolbar": {
+              "id": "atlas-center-toolbar-lab",
+              "controls": 8
+            },
+            "content": {
+              "observations": 4233,
+              "region": "us"
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?region=kr",
+          "route": "market-kr",
+          "workspace": {
+            "center": "market-kr",
+            "version": "current",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=diagnosis&lab-region=kr&epoch=1&v=1.32.1",
+            "frameWidth": 692,
+            "frameHeight": 512,
+            "toolbar": {
+              "id": "atlas-center-toolbar-lab",
+              "controls": 8
+            },
+            "content": {
+              "observations": 4136,
+              "region": "kr"
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=scenario",
+          "route": "scenario",
+          "workspace": {
+            "center": "scenario",
+            "version": "current",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=scenario&lab-region=us&epoch=1&v=1.32.1",
+            "frameWidth": 692,
+            "frameHeight": 512,
+            "toolbar": {
+              "id": "atlas-center-toolbar-lab",
+              "controls": 7
+            },
+            "content": {
+              "contributions": 3,
+              "axes": [
+                "α 성장",
+                "β 유동성",
+                "γ 심리"
+              ]
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=cashflow",
+          "route": "cashflow",
+          "workspace": {
+            "center": "cashflow",
+            "version": "current",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=ai&lab-region=us&epoch=1&v=1.32.1",
+            "frameWidth": 692,
+            "frameHeight": 512,
+            "toolbar": {
+              "id": "atlas-center-toolbar-lab",
+              "controls": 5
+            },
+            "content": {
+              "state": "empty-input",
+              "fields": 6
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=TQQQ",
+          "route": "rsi",
+          "workspace": {
+            "center": "rsi",
+            "version": "current",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=rsi&lab-region=us&epoch=1&symbol=TQQQ&v=1.32.1",
+            "frameWidth": 692,
+            "frameHeight": 512,
+            "toolbar": {
+              "id": "atlas-center-toolbar-lab",
+              "controls": 5
+            },
+            "content": {
+              "symbol": "TQQQ",
+              "observedPricePath": true
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HOUSING-SEOUL&region=seoul",
+          "route": "housing",
+          "workspace": {
+            "center": "housing",
+            "version": "current",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=housing&lab-region=us&epoch=1&symbol=HOUSING-SEOUL&region=seoul&v=1.32.1",
+            "frameWidth": 692,
+            "frameHeight": 512,
+            "toolbar": {
+              "id": "atlas-center-toolbar-lab",
+              "controls": 12
+            },
+            "content": {
+              "symbol": "HOUSING-SEOUL",
+              "observedPricePath": true
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HYPE",
+          "route": "themes",
+          "workspace": {
+            "center": "themes",
+            "version": "current",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=themes&lab-region=us&epoch=1&symbol=HYPE&v=1.32.1",
+            "frameWidth": 692,
+            "frameHeight": 512,
+            "toolbar": {
+              "id": "atlas-center-toolbar-lab",
+              "controls": 12
+            },
+            "content": {
+              "symbol": "HYPE",
+              "candles": 366,
+              "observedPricePath": false
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=ipo",
+          "route": "ipo",
+          "workspace": {
+            "center": "ipo",
+            "version": "current",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=ipo&embedded=1&v=1.32.1",
+            "frameWidth": 692,
+            "frameHeight": 512,
+            "toolbar": {
+              "id": "atlas-center-toolbar-ipo",
+              "controls": 8
+            },
+            "content": {
+              "months": [
+                "2026-10",
+                "2026-11",
+                "2026-12"
+              ]
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=data",
+          "route": "embedded-data",
+          "workspace": {
+            "center": "data",
+            "version": "current",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data&embedded=1&v=1.32.1",
+            "frameWidth": 692,
+            "frameHeight": 512,
+            "toolbar": {
+              "id": "atlas-center-toolbar-data",
+              "controls": 7
+            },
+            "content": {
+              "symbols": [
+                "BTC",
+                "ETH",
+                "HYPE",
+                "SPY",
+                "QQQ",
+                "NVDA",
+                "AAPL",
+                "GOOG",
+                "MSFT",
+                "AMZN",
+                "META",
+                "AVGO",
+                "PLTR",
+                "TSLA",
+                "HOOD",
+                "TLT",
+                "IEF",
+                "GLD",
+                "SLV",
+                "PDBC"
+              ]
+            }
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=evidence",
+          "route": "research",
+          "workspace": {
+            "center": "evidence",
+            "version": "current",
+            "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence&embedded=1&v=1.32.1",
+            "frameWidth": 692,
+            "frameHeight": 512,
+            "toolbar": {
+              "id": "atlas-center-toolbar-evidence",
+              "controls": 5
+            },
+            "content": {
+              "records": 16
+            }
+          }
+        }
+      ],
+      "screenshots": {
+        "expected": 50,
+        "found": 50,
+        "viewportWidths": [
+          320,
+          375,
+          414,
+          768,
+          1024,
+          1280,
+          1440,
+          1920
+        ],
+        "screenshotTags": [
+          "1280x800",
+          "375",
+          "1440x900",
+          "1440-full",
+          "1920x1080"
+        ],
+        "folder": "work/.hallmark/shots",
+        "reviewImages": [
+          {
+            "name": "current/market-us-1440x900.png",
+            "bytes": 100409,
+            "sha256": "173291c38ac8e92df2c3ef706c78402fb679214d1676e46fe88a188f3cd36bdd"
+          },
+          {
+            "name": "current/market-us-375.png",
+            "bytes": 34715,
+            "sha256": "ca0b17090287026308529463f3a4f65443098b21d792444369bebb936b0930f1"
+          },
+          {
+            "name": "current/market-kr-1440x900.png",
+            "bytes": 93203,
+            "sha256": "e09045d739d7c392157a367be0fdd2f1be23aae62c0565a0330c410eeafd20df"
+          },
+          {
+            "name": "current/market-kr-375.png",
+            "bytes": 33768,
+            "sha256": "46a8354162a0aa7db68add9b0eae2019cd4cb5d7b8c89797951556bc5cdf8c8e"
+          },
+          {
+            "name": "current/scenario-1440x900.png",
+            "bytes": 88833,
+            "sha256": "c0c75af0412eaf8fcc4a58e0887e2b3e3bc322f97527981771e9c47d7adfd4ef"
+          },
+          {
+            "name": "current/scenario-375.png",
+            "bytes": 28243,
+            "sha256": "27f3252698348eda919c330ee4063f1558e3867eb5d8ed5b8364b298a4df097d"
+          },
+          {
+            "name": "current/cashflow-1440x900.png",
+            "bytes": 65283,
+            "sha256": "00d00f3df5aaf12b6902584ecb96e33ebcfc69e88c1c06b392b93f6af5c3220e"
+          },
+          {
+            "name": "current/cashflow-375.png",
+            "bytes": 30414,
+            "sha256": "135b3f169ac147c438075e177c90ee1bcab42b1014774f92cb25752a862220ab"
+          },
+          {
+            "name": "current/rsi-1440x900.png",
+            "bytes": 231653,
+            "sha256": "863915454f8f992887bb5dbd16a682ecaa76063808386ac8d2817abc8b197a9c"
+          },
+          {
+            "name": "current/rsi-375.png",
+            "bytes": 81545,
+            "sha256": "04dba7a6da2907c021c3d204bb334e63582f3f26fdddb88af098645394995c8a"
+          },
+          {
+            "name": "current/housing-1440x900.png",
+            "bytes": 84126,
+            "sha256": "f87d621560a2557bfaa155a13d32492b0d01aa5768e1fb0d2e8776a94a00b375"
+          },
+          {
+            "name": "current/housing-375.png",
+            "bytes": 38616,
+            "sha256": "6af3915569adb2e1d6b4a5dd8b3b67e20e0a5e89b2d643d47be3b6d98921dffb"
+          },
+          {
+            "name": "current/themes-1440x900.png",
+            "bytes": 135556,
+            "sha256": "8fd7e0ff4088f0b9e29ab117cbd48a5cca754f705fc76d7af259b8997ad1a7ff"
+          },
+          {
+            "name": "current/themes-375.png",
+            "bytes": 47362,
+            "sha256": "21eadd4dc2f7fb08aa2b17387322fddce459935d72c00369ff78e63da4c5a099"
+          },
+          {
+            "name": "current/ipo-1440x900.png",
+            "bytes": 150351,
+            "sha256": "bfc4685d6954e92bd3b1078ee63bab9e2fee2dcec912475080f8994cb9bab8ba"
+          },
+          {
+            "name": "current/ipo-375.png",
+            "bytes": 70179,
+            "sha256": "2c2f50d28f06da2129ff04f7d366f9eb9b842224c63895db20f6e0e02741afd5"
+          },
+          {
+            "name": "current/embedded-data-1440x900.png",
+            "bytes": 244561,
+            "sha256": "d7cf309c626e17c5f6b6ef339d12d017d8ff701dc093cd64875b8da7a4dfe0b4"
+          },
+          {
+            "name": "current/embedded-data-375.png",
+            "bytes": 56786,
+            "sha256": "3bae25e1ebeb67409ac000b78dd8118ed56952ad1bbb024b82000d7e3ee5d6f0"
+          },
+          {
+            "name": "current/research-1440x900.png",
+            "bytes": 155408,
+            "sha256": "40107fec31c85b11a54155d4ca67f8081f086aad0d888857faa94579849c5a08"
+          },
+          {
+            "name": "current/research-375.png",
+            "bytes": 85407,
+            "sha256": "8ab2d12f3be1afaf94fa315bb06067bd85936fd0fe2f733b1f87b8adde04ddf8"
+          }
+        ]
+      },
+      "requestedUrls": [
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?region=kr",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=scenario",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=cashflow",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=TQQQ",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HOUSING-SEOUL&region=seoul",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HYPE",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=ipo",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=data",
+        "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=evidence"
+      ]
+    }
+  ],
+  "readiness": [
+    {
+      "version": "baseline",
+      "route": "market-us",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/",
+      "status": "ready",
+      "workspace": {
+        "center": "market-us",
+        "version": "baseline",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=diagnosis&lab-region=us&epoch=1",
+        "frameWidth": 1358,
+        "frameHeight": 812,
+        "toolbar": null,
+        "content": {
+          "observations": 4233,
+          "region": "us"
+        }
+      }
+    },
+    {
+      "version": "baseline",
+      "route": "market-kr",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?region=kr",
+      "status": "ready",
+      "workspace": {
+        "center": "market-kr",
+        "version": "baseline",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=diagnosis&lab-region=kr&epoch=1",
+        "frameWidth": 1358,
+        "frameHeight": 812,
+        "toolbar": null,
+        "content": {
+          "observations": 4136,
+          "region": "kr"
+        }
+      }
+    },
+    {
+      "version": "baseline",
+      "route": "scenario",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=scenario",
+      "status": "ready",
+      "workspace": {
+        "center": "scenario",
+        "version": "baseline",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=scenario&lab-region=us&epoch=1",
+        "frameWidth": 1358,
+        "frameHeight": 812,
+        "toolbar": null,
+        "content": {
+          "contributions": 3,
+          "axes": [
+            "α 성장",
+            "β 유동성",
+            "γ 심리"
+          ]
+        }
+      }
+    },
+    {
+      "version": "baseline",
+      "route": "cashflow",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=cashflow",
+      "status": "ready",
+      "workspace": {
+        "center": "cashflow",
+        "version": "baseline",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=ai&lab-region=us&epoch=1",
+        "frameWidth": 1358,
+        "frameHeight": 812,
+        "toolbar": null,
+        "content": {
+          "state": "empty-input",
+          "fields": 6
+        }
+      }
+    },
+    {
+      "version": "baseline",
+      "route": "rsi",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=TQQQ",
+      "status": "ready",
+      "workspace": {
+        "center": "rsi",
+        "version": "baseline",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=rsi&lab-region=us&epoch=1&symbol=TQQQ",
+        "frameWidth": 1358,
+        "frameHeight": 812,
+        "toolbar": null,
+        "content": {
+          "symbol": "TQQQ",
+          "observedPricePath": true
+        }
+      }
+    },
+    {
+      "version": "baseline",
+      "route": "housing",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HOUSING-SEOUL&region=seoul",
+      "status": "ready",
+      "workspace": {
+        "center": "housing",
+        "version": "baseline",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=housing&lab-region=us&epoch=1&symbol=HOUSING-SEOUL&region=seoul",
+        "frameWidth": 1358,
+        "frameHeight": 812,
+        "toolbar": null,
+        "content": {
+          "symbol": "HOUSING-SEOUL",
+          "observedPricePath": true
+        }
+      }
+    },
+    {
+      "version": "baseline",
+      "route": "themes",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HYPE",
+      "status": "ready",
+      "workspace": {
+        "center": "themes",
+        "version": "baseline",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=themes&lab-region=us&epoch=1&symbol=HYPE",
+        "frameWidth": 1358,
+        "frameHeight": 812,
+        "toolbar": null,
+        "content": {
+          "symbol": "HYPE",
+          "candles": 366,
+          "observedPricePath": false
+        }
+      }
+    },
+    {
+      "version": "baseline",
+      "route": "ipo",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=ipo",
+      "status": "ready",
+      "workspace": {
+        "center": "ipo",
+        "version": "baseline",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=ipo&embedded=1",
+        "frameWidth": 1358,
+        "frameHeight": 812,
+        "toolbar": null,
+        "content": {
+          "months": [
+            "2026-10",
+            "2026-11",
+            "2026-12"
+          ]
+        }
+      }
+    },
+    {
+      "version": "baseline",
+      "route": "embedded-data",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=data",
+      "status": "ready",
+      "expectedSymbols": [
+        "BTC",
+        "ETH",
+        "HYPE",
+        "SPY",
+        "QQQ",
+        "NVDA",
+        "AAPL",
+        "GOOG",
+        "MSFT",
+        "AMZN",
+        "META",
+        "AVGO",
+        "PLTR",
+        "TSLA",
+        "HOOD",
+        "TLT",
+        "IEF",
+        "GLD",
+        "SLV",
+        "PDBC"
+      ],
+      "workspace": {
+        "center": "data",
+        "version": "baseline",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data&embedded=1",
+        "frameWidth": 1358,
+        "frameHeight": 812,
+        "toolbar": null,
+        "content": {
+          "symbols": [
+            "BTC",
+            "ETH",
+            "HYPE",
+            "SPY",
+            "QQQ",
+            "NVDA",
+            "AAPL",
+            "GOOG",
+            "MSFT",
+            "AMZN",
+            "META",
+            "AVGO",
+            "PLTR",
+            "TSLA",
+            "HOOD",
+            "TLT",
+            "IEF",
+            "GLD",
+            "SLV",
+            "PDBC"
+          ]
+        }
+      }
+    },
+    {
+      "version": "baseline",
+      "route": "research",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=evidence",
+      "status": "ready",
+      "workspace": {
+        "center": "evidence",
+        "version": "baseline",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence&embedded=1",
+        "frameWidth": 1358,
+        "frameHeight": 812,
+        "toolbar": null,
+        "content": {
+          "records": 2
+        }
+      }
+    },
+    {
+      "version": "current",
+      "route": "market-us",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/",
+      "status": "ready",
+      "workspace": {
+        "center": "market-us",
+        "version": "current",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=diagnosis&lab-region=us&epoch=1&v=1.32.1",
+        "frameWidth": 1332,
+        "frameHeight": 812,
+        "toolbar": {
+          "id": "atlas-center-toolbar-lab",
+          "controls": 8
+        },
+        "content": {
+          "observations": 4233,
+          "region": "us"
+        }
+      }
+    },
+    {
+      "version": "current",
+      "route": "market-kr",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?region=kr",
+      "status": "ready",
+      "workspace": {
+        "center": "market-kr",
+        "version": "current",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=diagnosis&lab-region=kr&epoch=1&v=1.32.1",
+        "frameWidth": 1332,
+        "frameHeight": 812,
+        "toolbar": {
+          "id": "atlas-center-toolbar-lab",
+          "controls": 8
+        },
+        "content": {
+          "observations": 4136,
+          "region": "kr"
+        }
+      }
+    },
+    {
+      "version": "current",
+      "route": "scenario",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=scenario",
+      "status": "ready",
+      "workspace": {
+        "center": "scenario",
+        "version": "current",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=scenario&lab-region=us&epoch=1&v=1.32.1",
+        "frameWidth": 1332,
+        "frameHeight": 812,
+        "toolbar": {
+          "id": "atlas-center-toolbar-lab",
+          "controls": 7
+        },
+        "content": {
+          "contributions": 3,
+          "axes": [
+            "α 성장",
+            "β 유동성",
+            "γ 심리"
+          ]
+        }
+      }
+    },
+    {
+      "version": "current",
+      "route": "cashflow",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/?view=cashflow",
+      "status": "ready",
+      "workspace": {
+        "center": "cashflow",
+        "version": "current",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=ai&lab-region=us&epoch=1&v=1.32.1",
+        "frameWidth": 1332,
+        "frameHeight": 812,
+        "toolbar": {
+          "id": "atlas-center-toolbar-lab",
+          "controls": 5
+        },
+        "content": {
+          "state": "empty-input",
+          "fields": 6
+        }
+      }
+    },
+    {
+      "version": "current",
+      "route": "rsi",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=TQQQ",
+      "status": "ready",
+      "workspace": {
+        "center": "rsi",
+        "version": "current",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=rsi&lab-region=us&epoch=1&symbol=TQQQ&v=1.32.1",
+        "frameWidth": 1332,
+        "frameHeight": 812,
+        "toolbar": {
+          "id": "atlas-center-toolbar-lab",
+          "controls": 5
+        },
+        "content": {
+          "symbol": "TQQQ",
+          "observedPricePath": true
+        }
+      }
+    },
+    {
+      "version": "current",
+      "route": "housing",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HOUSING-SEOUL&region=seoul",
+      "status": "ready",
+      "workspace": {
+        "center": "housing",
+        "version": "current",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=housing&lab-region=us&epoch=1&symbol=HOUSING-SEOUL&region=seoul&v=1.32.1",
+        "frameWidth": 1332,
+        "frameHeight": 812,
+        "toolbar": {
+          "id": "atlas-center-toolbar-lab",
+          "controls": 12
+        },
+        "content": {
+          "symbol": "HOUSING-SEOUL",
+          "observedPricePath": true
+        }
+      }
+    },
+    {
+      "version": "current",
+      "route": "themes",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/charts/?symbol=HYPE",
+      "status": "ready",
+      "workspace": {
+        "center": "themes",
+        "version": "current",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/market-lab/app/?embedded=1&lab-tab=themes&lab-region=us&epoch=1&symbol=HYPE&v=1.32.1",
+        "frameWidth": 1332,
+        "frameHeight": 812,
+        "toolbar": {
+          "id": "atlas-center-toolbar-lab",
+          "controls": 12
+        },
+        "content": {
+          "symbol": "HYPE",
+          "candles": 366,
+          "observedPricePath": false
+        }
+      }
+    },
+    {
+      "version": "current",
+      "route": "ipo",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=ipo",
+      "status": "ready",
+      "workspace": {
+        "center": "ipo",
+        "version": "current",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=ipo&embedded=1&v=1.32.1",
+        "frameWidth": 1332,
+        "frameHeight": 812,
+        "toolbar": {
+          "id": "atlas-center-toolbar-ipo",
+          "controls": 8
+        },
+        "content": {
+          "months": [
+            "2026-10",
+            "2026-11",
+            "2026-12"
+          ]
+        }
+      }
+    },
+    {
+      "version": "current",
+      "route": "embedded-data",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=data",
+      "status": "ready",
+      "expectedSymbols": [
+        "BTC",
+        "ETH",
+        "HYPE",
+        "SPY",
+        "QQQ",
+        "NVDA",
+        "AAPL",
+        "GOOG",
+        "MSFT",
+        "AMZN",
+        "META",
+        "AVGO",
+        "PLTR",
+        "TSLA",
+        "HOOD",
+        "TLT",
+        "IEF",
+        "GLD",
+        "SLV",
+        "PDBC"
+      ],
+      "workspace": {
+        "center": "data",
+        "version": "current",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=data&embedded=1&v=1.32.1",
+        "frameWidth": 1332,
+        "frameHeight": 812,
+        "toolbar": {
+          "id": "atlas-center-toolbar-data",
+          "controls": 7
+        },
+        "content": {
+          "symbols": [
+            "BTC",
+            "ETH",
+            "HYPE",
+            "SPY",
+            "QQQ",
+            "NVDA",
+            "AAPL",
+            "GOOG",
+            "MSFT",
+            "AMZN",
+            "META",
+            "AVGO",
+            "PLTR",
+            "TSLA",
+            "HOOD",
+            "TLT",
+            "IEF",
+            "GLD",
+            "SLV",
+            "PDBC"
+          ]
+        }
+      }
+    },
+    {
+      "version": "current",
+      "route": "research",
+      "url": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=outlook&center=evidence",
+      "status": "ready",
+      "workspace": {
+        "center": "evidence",
+        "version": "current",
+        "frameUrl": "http://127.0.0.1:4177/bitcoin-cycle-atlas/?page=evidence&embedded=1&v=1.32.1",
+        "frameWidth": 1332,
+        "frameHeight": 812,
+        "toolbar": {
+          "id": "atlas-center-toolbar-evidence",
+          "controls": 5
+        },
+        "content": {
+          "records": 26
+        }
+      }
+    }
+  ],
+  "assetSnapshots": {
+    "baseline": {
+      "count": 20,
+      "symbols": [
+        "BTC",
+        "ETH",
+        "HYPE",
+        "SPY",
+        "QQQ",
+        "NVDA",
+        "AAPL",
+        "GOOG",
+        "MSFT",
+        "AMZN",
+        "META",
+        "AVGO",
+        "PLTR",
+        "TSLA",
+        "HOOD",
+        "TLT",
+        "IEF",
+        "GLD",
+        "SLV",
+        "PDBC"
+      ]
+    },
+    "current": {
+      "count": 20,
+      "symbols": [
+        "BTC",
+        "ETH",
+        "HYPE",
+        "SPY",
+        "QQQ",
+        "NVDA",
+        "AAPL",
+        "GOOG",
+        "MSFT",
+        "AMZN",
+        "META",
+        "AVGO",
+        "PLTR",
+        "TSLA",
+        "HOOD",
+        "TLT",
+        "IEF",
+        "GLD",
+        "SLV",
+        "PDBC"
+      ]
+    }
+  },
+  "integrityErrors": [],
+  "designGate": {
+    "status": "pass",
+    "fails": 0,
+    "reflex": 0
+  },
+  "sourceReadOnly": {
+    "current": true,
+    "baseline": true,
+    "gitBlobsMatched": true
+  },
+  "limits": {
+    "totalMilliseconds": 600000,
+    "staticMilliseconds": 60000,
+    "renderMilliseconds": 270000
+  },
+  "limitations": [
+    "Static Hallmark does not traverse JavaScript ES imports.",
+    "URL render checks initial route state, not every dialog or interactive state.",
+    "Upstream DOM gates inspect the top-level document. Workspace readiness also inspects the real child and screenshots include it; child controls and state transitions still require the native interaction suite.",
+    "Existing model, data and interaction tests remain required.",
+    "Optional remote application fonts are not rewritten; upstream records fallback warnings."
+  ],
+  "toolProvenance": {
+    "schemaVersion": 1,
+    "repository": "https://github.com/Nutlope/hallmark",
+    "commit": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+    "tree": "9c337ca827537705f4c898ca6dc79cd0e9208d75",
+    "version": "2.0.0",
+    "license": "MIT",
+    "sources": [
+      {
+        "name": "sloplint.mjs",
+        "path": "skills/hallmark/scripts/sloplint.mjs",
+        "gitBlob": "9916fa07286e58d319528ad7cfe4ad94318e5796",
+        "bytes": 231622
+      },
+      {
+        "name": "sloplint-render.mjs",
+        "path": "skills/hallmark/scripts/sloplint-render.mjs",
+        "gitBlob": "0ecc64bc79aa34db1fadc7178617bcc53c47e064",
+        "bytes": 99164
+      },
+      {
+        "name": "LICENSE",
+        "path": "LICENSE",
+        "gitBlob": "f4bfc53d8d773d3b10d95c2d58a5773dd4e2f3aa",
+        "bytes": 1078
+      }
+    ],
+    "compatibilityPatch": {
+      "file": "sloplint-render.mjs",
+      "sourceGitBlob": "0ecc64bc79aa34db1fadc7178617bcc53c47e064",
+      "patchedGitBlob": "5ee4ffd59142007f586ef33429410623ba434a47",
+      "before": "  const browser = await puppeteer.launch({ executablePath: chrome, headless: true });",
+      "after": "  // Atlas CI compatibility: ephemeral GitHub runner only; all Hallmark gates stay intact.\n  const atlasCiArgs = process.env.GITHUB_ACTIONS === 'true' && process.env.HALLMARK_CI_CHROME_ARGS === 'ephemeral-ci'\n    ? ['--no-sandbox', '--disable-dev-shm-usage', '--disable-background-networking', '--no-first-run'] : [];\n  const browser = await puppeteer.launch({ executablePath: chrome, headless: true, args: atlasCiArgs });",
+      "reason": "First add Chrome launch flags only for the ephemeral GitHub runner, then apply readinessPatch. patchedGitBlob identifies both ordered build-copy patches; the source remains byte exact and all upstream gates stay intact.",
+      "launchOnlyGitBlob": "142a5516f2506987c2795e320d78893cf1d919d4"
+    },
+    "decisions": {
+      "staticTarget": "Explicit dist directory, every CSS and both HTML files",
+      "renderTarget": "Committed dist/styles.css plus eight HTTP URLs; no HTML/file:// fallback",
+      "moduleQueryPatch": "Not applied: HTTP URL rendering avoids the upstream shell-detection limitation",
+      "baselineCommit": "0c1ed40e1b9b6c76f5621d087737dc57f174b51e",
+      "runtimeDependency": false,
+      "ciDependency": {
+        "name": "puppeteer-core",
+        "version": "25.16.0",
+        "source": "https://github.com/puppeteer/puppeteer/releases/tag/puppeteer-core-v25.16.0",
+        "installScripts": false
+      }
+    },
+    "gates": "All upstream gates are retained. Current FAIL or REFLEX makes CI exit 1. Incomplete coverage, internal errors, missing render or incomplete kept comparison makes CI exit 2.",
+    "readinessPatch": {
+      "file": "sloplint-render.mjs",
+      "sourceGitBlob": "142a5516f2506987c2795e320d78893cf1d919d4",
+      "patchedGitBlob": "5ee4ffd59142007f586ef33429410623ba434a47",
+      "before": "        if (nav.r && isUrl(file) && !nav.r.ok() && nav.r.status() !== 304) throw new Error(`HTTP ${nav.r.status()} from ${file}`);",
+      "after": "        if (nav.r && isUrl(file) && !nav.r.ok() && nav.r.status() !== 304) throw new Error(`HTTP ${nav.r.status()} from ${file}`);\n        if (process.env.HALLMARK_ATLAS_READY === '1') {\n          if (!isUrl(file)) throw new Error('Atlas readiness requires an HTTP URL');\n          const atlasUrl = new URL(file);\n          const atlasPage = atlasUrl.searchParams.get('page');\n          const atlasSymbol = (atlasUrl.searchParams.get('symbol') || 'BTCUSD').toUpperCase();\n          const atlasRoute = atlasUrl.pathname.endsWith('/mobile-preview.html') ? 'mobile-preview'\n            : atlasPage === 'data' ? 'data'\n            : atlasPage === 'evidence' ? 'evidence'\n            : atlasPage === 'compare' && atlasUrl.searchParams.get('legacy') === '1' ? 'compare'\n            : !atlasPage ? ({ BTCUSD: 'btc', ETHUSD: 'eth', BMNR: 'bmnr', MSTR: 'mstr' })[atlasSymbol] : null;\n          if (!atlasRoute) throw new Error('Unsupported Atlas readiness route: ' + file);\n          await page.waitForFunction((name) => {\n            const doc = name === 'mobile-preview' ? document.querySelector('#mobile-preview')?.contentDocument : document;\n            if (!doc || doc.documentElement.dataset.boot !== 'ready') return false;\n            if ((name === 'btc' || name === 'mobile-preview') && (doc.querySelector('.atlas-plot[aria-busy=\"true\"]') || doc.querySelector('.workspace-toast:not([hidden])'))) return false;\n            if (name === 'data') return doc.querySelectorAll('#data-body tr[data-asset-symbol]').length === 18;\n            if (name === 'evidence') return doc.querySelectorAll('#evidence-body [data-evidence-detail]').length > 0;\n            if (name === 'compare') return doc.querySelectorAll('#structure-chart path').length > 0 && doc.querySelectorAll('#structure-cycles tr').length > 0;\n            if (name === 'eth') return Number(doc.querySelector('#eth-chart')?.dataset.observedCandleCount) > 0;\n            if (name === 'bmnr' || name === 'mstr') return Number(doc.querySelector('#equity-chart')?.dataset.observedCandleCount) > 0;\n            return doc.querySelectorAll('#lab-chart path').length > 0;\n          }, { timeout: 30000 }, atlasRoute);\n          console.error('HALLMARK_RENDER_READY ' + JSON.stringify({ url: file, route: atlasRoute }));\n        }",
+      "environmentFlag": "HALLMARK_ATLAS_READY=1",
+      "reason": "On the same page instance used by Hallmark, require the committed Atlas route's boot state and observed content before any probe or screenshot. A timeout/unsupported route propagates through the original render failure handling. No upstream gate or severity is changed. BTC and its embedded preview must also finish the current forecast calculation and allow transient action feedback to settle before capture."
+    },
+    "buildCopyPatchOrder": [
+      "compatibilityPatch",
+      "readinessPatch"
+    ]
+  },
+  "assetReadinessPatch": {
+    "file": "sloplint-render.mjs",
+    "sourceGitBlob": "5ee4ffd59142007f586ef33429410623ba434a47",
+    "patchedGitBlob": "a9714311a0000301854936a0de6d922866d72f6f",
+    "buildCopyPatchOrder": [
+      "compatibilityPatch",
+      "readinessPatch",
+      "snapshotAssetReadiness"
+    ],
+    "reason": "Both readiness passes require every unique asset identity from the exact copied snapshot, with BTC first. The pinned workspaces baseline remains 20 assets; upstream design gates and severities are unchanged."
+  },
+  "workspaceReadinessPatch": {
+    "file": "sloplint-render.mjs",
+    "sourceGitBlob": "a9714311a0000301854936a0de6d922866d72f6f",
+    "patchedGitBlob": "09f86d13ac42889e5255f9fa1a366d311af0262b",
+    "buildCopyPatchOrder": [
+      "compatibilityPatch",
+      "readinessPatch",
+      "snapshotAssetReadiness",
+      "workspaceReadiness"
+    ],
+    "reason": "Add exact ten-route host/child readiness before the unchanged upstream probes and screenshots. A blank, wrong, missing or unready child fails; no gate, grade or finding is altered."
+  },
+  "sourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "sourceBefore": {
+    "current": {
+      "commit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+      "files": 1000,
+      "bytes": 55037450,
+      "manifestSha256": "b031ef213c0cf81ecb64ded476155eaf4edd48de2077d509d48cd85f6cc957da",
+      "gitBlobsMatched": true
+    },
+    "baseline": {
+      "commit": "3b6373906dbdd3ef321db31deaf8a8f785da61c3",
+      "files": 991,
+      "bytes": 54775079,
+      "manifestSha256": "94bcde29d97e6e23861d7b7f6863737a4799bd8e68ea9fd46c16d314f53ea567",
+      "gitBlobsMatched": true
+    }
+  },
+  "sourceInventory": {
+    "baseline": {
+      "css": 32,
+      "html": 12
+    },
+    "current": {
+      "css": 37,
+      "html": 12
+    },
+    "preservedBaselinePaths": [
+      "analysis-dock.css",
+      "atlas-shell.css",
+      "atlas.css",
+      "chart-bottom-bar.css",
+      "chart-details-panel.css",
+      "chart-export-workbench.css",
+      "chart-magnet.css",
+      "chart-replay.css",
+      "chart-workspace-controls.css",
+      "compact-chart-layout.css",
+      "compact.css",
+      "cycle-milestones.css",
+      "daily-data.css",
+      "equity-view.css",
+      "eth-view.css",
+      "ethereum-history.css",
+      "forecast-journal.css",
+      "index.html",
+      "ipo-view.css",
+      "lab.css",
+      "loading-surfaces.css",
+      "market-lab.css",
+      "market-lab/app/index.html",
+      "market-lab/cashflow/index.html",
+      "market-lab/charts/index.html",
+      "market-lab/housing/index.html",
+      "market-lab/index.html",
+      "market-lab/kr/index.html",
+      "market-lab/rsi/index.html",
+      "market-lab/scenario/index.html",
+      "market-lab/themes/index.html",
+      "market-lab/us/index.html",
+      "mobile-preview.html",
+      "mobile-workspace.css",
+      "monthly-backtest.css",
+      "outlook.css",
+      "research-annotations.css",
+      "research-reader.css",
+      "styles.css",
+      "symbol-selector.css",
+      "vendor/skullet/styles.css",
+      "viewport.css",
+      "workspace-tools.css"
+    ],
+    "generatedStylesheets": {
+      "baseline": [
+        "market-lab/app/assets/index-Cz8BfvAY.css"
+      ],
+      "current": [
+        "market-lab/app/assets/index-c-8igcn4.css"
+      ]
+    }
+  },
+  "browser": {
+    "puppeteerCore": "25.16.0",
+    "chrome": "Google Chrome 156.0.8078.79",
+    "node": "v24.22.2"
+  },
+  "font": {
+    "commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
+    "gitBlob": "dc4a7c65e6f450bf17c10a2405250b620eb78703",
+    "family": "Noto Sans CJK KR"
+  },
+  "integrityGate": {
+    "status": "pass",
+    "errors": 0
+  },
+  "finishedAt": "2026-11-07T10:23:22.738Z",
+  "durationMilliseconds": 154362,
+  "exitCode": 0
+}

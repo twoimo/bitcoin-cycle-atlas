@@ -1,0 +1,83 @@
+{
+  "kind": "atlas-read-only-model-joined-artifact-audit",
+  "status": "PASS",
+  "auditedAt": "2026-11-07T10:45:13.536Z",
+  "sourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "sourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+  "runId": "42363532477",
+  "runAttempt": "1",
+  "verifierSources": {
+    "scripts/eth-evidence-handoff.mjs": "afc611430d56536d1f9e8c2e435aa88848b975bdd5fa393d83bad831b914da20",
+    "scripts/build-eth-review-packet.mjs": "9e60830aeda0d3f9833f9d1f4bf8e39543a51973c60669c32d936c49cc2b0ae1",
+    "scripts/eth-browser-case-specs.mjs": "3d6ef657efeb209e564d32c68af137b22e15b6541183aacf24ee9869217951a5",
+    "scripts/verify-workspace-browser.mjs": "5d8b9106b7078ec0c44a11c24f534e4f6fcf2afa0eb8e7ee363d7609d2ca86e6",
+    "scripts/verify-forecast-replay-browser.mjs": "d63cef852ce682cf8c63b9a0ab0c31ea76e2cec52330cc271c56af2ce77b195e",
+    "scripts/verify-chart-replay-browser.mjs": "04e419ba8e1858153385d134e9e765b8458a0b763a158f935e7ccd0a4656fcad",
+    "scripts/verify-consolidated-workspace-browser.mjs": "d461d7ddbea75b298b3e4292b0922f88d308a034aa0db58357ebf669872e6c71"
+  },
+  "zips": {
+    "model": {
+      "artifactId": "13571326583",
+      "runAttempt": "1",
+      "sha256": "d3c3afd907e3a0b02dd7613d003bcae7ae730eaba8ff585bc098370cd78283c1",
+      "bytes": 14444584
+    },
+    "browser": {
+      "artifactId": "13571152881",
+      "runAttempt": "1",
+      "sha256": "079d9842d6067fb0e594212d8df3d2fdd859476f4ab4bbac0fc8db39ab241a5d",
+      "bytes": 61704723
+    },
+    "joined": {
+      "artifactId": "13571317786",
+      "runAttempt": "1",
+      "sha256": "fe8e424e48f6c853a1fe45b7bc2daa1f8589cac0b14447fd30cccdfff7b68a07",
+      "bytes": 118375706
+    }
+  },
+  "model": {
+    "verifiedFiles": 397,
+    "declaredDirectories": 33,
+    "transportOmittedEmptyDirectories": [],
+    "allFilesAccountedFor": true,
+    "handoffSha256": "f798f4dcae9fd1fd05ec4539563bb3d3d38ea230229dad341f6317e126eb211b",
+    "handoffBytes": 93888
+  },
+  "browser": {
+    "caseCount": 53,
+    "sourceGitBlobs": 113,
+    "screenshotFiles": 371,
+    "nativeAuditSha256": "5b0377d0e7904ee3fe2fdfa9866be84491c898ca0cba536389917376de6ac6f4",
+    "nativeAuditReportSha256": "c3d57fc05a797d072ccbc5dc20e7378fc8b53303898840d9846f74b14867517b",
+    "joinedCopyFiles": 448,
+    "producerCopyBytesExact": true
+  },
+  "joined": {
+    "artifactId": "13571317786",
+    "receiptSha256": "56a6e60db7eb5a213da36a5aa8a0a281983c85d0e78d1b4a5b075ea66557866a",
+    "receiptBytes": 1193,
+    "producerReceiptsExact": true
+  },
+  "sourcePacket": {
+    "sourceAccess": "complete-for-declared-scope",
+    "unresolvedImports": [],
+    "entries": 903,
+    "committedFilesVerifiedAgainstExactGitCommit": 551,
+    "executionEvidenceFilesVerifiedAgainstCandidate": 352,
+    "partsVerified": 602,
+    "bundleBytes": 108331043,
+    "bundleSha256": "bc4b134c5b80d389a6a836bdddc0b1881243c5c6f257adbc93cddbee5f602539",
+    "externalReviewDisposition": "omitted-by-user",
+    "actualModelExecutionAuthenticated": false
+  },
+  "researchDisposition": {
+    "releaseAuthorized": false,
+    "productionPromoted": false
+  },
+  "limits": [
+    "Artifact IDs, producer attempts, GitHub job success, and expected ZIP digests must be independently obtained from the exact GitHub run; no network lookup is performed.",
+    "Native 53/113/371 verification is reused only when the prior audit report SHA matches this exact browser producer report; all candidate browser copies are byte-compared.",
+    "No original receipt or extracted directory is rewritten; missing empty upload directories are reported without recreation.",
+    "Original source-book validator checks framing/bytes; no numerical model, Chrome run, external review, research release authorization, or production model promotion is performed."
+  ]
+}

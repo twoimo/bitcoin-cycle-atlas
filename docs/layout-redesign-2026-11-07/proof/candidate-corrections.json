@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-layout-candidate-corrections",
+  "sourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "sourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+  "candidates": [
+    {
+      "sourceCommit": "a8adfd87a9917b56976f288e3fd20e3e57ec44cd",
+      "status": "superseded",
+      "findings": [
+        "Initial US market view highlighted price-chart navigation instead of the active market workspace.",
+        "320px IPO cells did not allow long company labels to shrink inside the grid."
+      ]
+    },
+    {
+      "sourceCommit": "ae4ddf33dbc66bc3858ddc07f235bd3e10911d2f",
+      "status": "superseded",
+      "nativeRun": 42361912487,
+      "nativeJob": 128372055323,
+      "nativeConclusion": "failure",
+      "failureCount": 10,
+      "affectedSymbols": [
+        "BMNR",
+        "MSTR"
+      ],
+      "affectedWidths": [
+        320,
+        390,
+        768,
+        1024,
+        1440
+      ],
+      "originalSelector": "#equity-symbol",
+      "assertion": "button.textContent equals the canonical ticker",
+      "reason": "A name span hidden by CSS still contributed its Korean text to the button textContent.",
+      "artifact": {
+        "id": 13570378261,
+        "sha256": "5bb81a56f1a6aaa070debc0234eb41c0f65da8b221d37e86940b972ddc58cafc"
+      },
+      "notes": "This failure is retained. Passing CI/Hallmark and partial workspace evidence for this source do not replace final-source native verification."
+    },
+    {
+      "sourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+      "status": "current",
+      "change": "Name text is opt-in for the shared outer heading. Compact equity and ETH selectors retain the canonical ticker and original descriptive accessible name.",
+      "nativeRun": 42363532477,
+      "nativeStatus": "passed",
+      "nativeResult": {
+        "cases": 53,
+        "passed": 53,
+        "failed": 0,
+        "PNG": 371,
+        "sourceFiles": 113
+      },
+      "originalWorkflowConclusion": "success"
+    }
+  ],
+  "preserved": [
+    "Original native assertions, all 53 declared cases, Hallmark source and baselines, numerical models, data, ledgers and replay state."
+  ],
+  "identicalRenderedEvidence": {
+    "comparedWith": "ae4ddf33dbc66bc3858ddc07f235bd3e10911d2f",
+    "currentSource": "7e9def739937d84a9031f0c26d66093f706dfc10",
+    "marketWorkspacePNG": 27,
+    "marketDataPNG": 54,
+    "comparison": "All 81 PNG file bodies are byte-identical; inventories and exact-source integrity were checked separately."
+  }
+}

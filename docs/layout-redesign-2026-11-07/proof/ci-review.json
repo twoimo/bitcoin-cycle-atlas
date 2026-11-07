@@ -1,0 +1,80 @@
+{
+  "status": "PASS",
+  "sourceCommit": "7e9def739937d84a9031f0c26d66093f706dfc10",
+  "sourceTree": "c5e85ffb7fec9fc480d5cb7c8ffcedd3e86b08d9",
+  "ciSyntheticMerge": "f208ce90e5ec61ae0199fb68684c9c91e1cc4c55",
+  "sameTree": true,
+  "workflowRun": 42363532610,
+  "job": 128376663061,
+  "modelDataTests": {
+    "complete": true,
+    "tests": 2579,
+    "pass": 2579,
+    "fail": 0,
+    "skipped": 0,
+    "batches": 1
+  },
+  "reactTests": {
+    "tests": 93,
+    "pass": 93,
+    "fail": 0,
+    "skipped": 0,
+    "evidence": "Completed job log"
+  },
+  "serviceDatabaseTests": {
+    "tests": 28,
+    "pass": 28,
+    "fail": 0,
+    "skipped": 0,
+    "evidence": "Completed job log"
+  },
+  "publication": {
+    "sourceCommit": "f208ce90e5ec61ae0199fb68684c9c91e1cc4c55",
+    "workflow": {
+      "runId": "42363532610",
+      "attempt": "1"
+    },
+    "sourceTree": {
+      "status": "clean",
+      "scope": "dist, scripts and package.json"
+    },
+    "contentDigest": "1910281eb8c65e9c01ec9f45d050bdb8f269c75292e68d348c68c263e877fce0",
+    "manifestSha256": "4b7bb2d1653e4368cd0b0b5769442843d56b76ed94e9c37fca5f59c77796e22c"
+  },
+  "files": 799,
+  "replayReceiptSha256": "f6c6b474fa85f9b62f0c8c9e82ce7511900c4f6f8ec1a1288bb849f647f622c1",
+  "replayReceiptKeys": [
+    "kind",
+    "schemaVersion",
+    "baselineCommit",
+    "previousFollowupBaselineCommit",
+    "originalAuditBaselineCommit",
+    "node",
+    "sourcePath",
+    "sourceSha256",
+    "testPath",
+    "testSha256",
+    "method",
+    "coordinatorPath",
+    "coordinatorSha256",
+    "coordinatorTestPath",
+    "coordinatorTestSha256",
+    "snapshotPath",
+    "snapshotSha256",
+    "bounds",
+    "formalProof",
+    "modelCheckerRun",
+    "excluded",
+    "original",
+    "mutations",
+    "selection",
+    "savedEntry",
+    "destruction",
+    "manualDates",
+    "restored"
+  ],
+  "artifact": {
+    "id": 13570499757,
+    "zipSha256": "a3eb6075f8596655d4b1796026983cccfe8ea200fda3d353285df0c64acdee92"
+  }
+}
