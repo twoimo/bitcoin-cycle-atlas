@@ -1,0 +1,686 @@
+/* Atlas v1.33 — research panels, shared by React and its host document.
+   The host also paints portaled summaries. All calculations and chart owners
+   remain in their original components; these rules only arrange their output. */
+
+/* Let the single observed chart use the working viewport. The SVG receives
+   this figure's measured height through the vendor's public height prop. */
+#market-view .ml-scroll:has(> #ml-panel .ml-compact-price-card) {
+  display: flex;
+  flex-direction: column;
+}
+#market-view #ml-panel:has(.ml-compact-price-card) {
+  display: flex;
+  flex: 1 0 320px;
+  min-height: 320px;
+}
+#market-view .ml-compact-price-card {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+#market-view .ml-compact-price-card [data-ztd-chart="observed"] {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+#market-view .ml-viewport-chart {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 290px;
+  margin: 0;
+}
+#market-view .ml-viewport-chart > .ztd-root {
+  position: absolute;
+  inset: 0;
+}
+#market-view .ml-scroll > .ml-sources {
+  flex: none;
+}
+
+/* Forms and results read as paired sections, without nested card shells. */
+#market-view .ml-two-col {
+  gap: 0;
+  margin-top: 0;
+}
+#market-view .ml-two-col > .ml-card {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 24px 0;
+}
+#market-view .ml-card > h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+#market-view .ml-card > .ml-muted {
+  max-width: 64ch;
+  line-height: 1.7;
+}
+#market-view .ml-shock-row {
+  margin: 0;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border-soft);
+  column-gap: 24px;
+}
+#market-view .ml-shock-row > label:first-child {
+  align-items: baseline;
+  font-size: 13px;
+}
+#market-view .ml-shock-row output {
+  font-size: 24px;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+#market-view .ml-shock-row + .ml-muted {
+  margin-top: 16px;
+}
+#market-view .ml-field {
+  gap: 8px;
+  margin: 16px 0;
+  font-size: 12px;
+}
+#market-view .ml-input-grid {
+  gap: 0 24px;
+}
+#market-view :is(.ml-field, .ml-weight) input {
+  border-radius: 3px;
+  background: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.4;
+}
+#market-view .ml-primary {
+  min-height: 44px;
+  margin-top: 16px;
+  border-color: var(--accent);
+  border-radius: 3px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+}
+#market-view .ml-primary:hover:not(:disabled) {
+  background: var(--focus);
+  border-color: var(--focus);
+}
+#market-view .ml-results {
+  margin: 20px 0;
+}
+#market-view .ml-results > div {
+  align-items: baseline;
+  padding: 16px 0;
+  border-color: var(--border-soft);
+}
+#market-view .ml-results dt {
+  font-size: 13px;
+}
+#market-view .ml-results dd {
+  min-width: 0;
+  font-size: 22px;
+  line-height: 1.3;
+  text-align: right;
+}
+#market-view .ml-results dd:has(details) {
+  font-family: var(--font);
+  font-size: 13px;
+}
+#market-view .ml-results dd summary {
+  padding: 8px 0;
+  min-height: 36px;
+  text-align: right;
+}
+#market-view .ml-results dd p {
+  max-width: 48ch;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+#market-view :is(.ml-pill, .ml-tag) {
+  border: 0;
+  border-left: 2px solid var(--border);
+  border-radius: 0;
+  padding: 4px 0 4px 12px;
+  background: transparent;
+  line-height: 1.6;
+  white-space: normal;
+}
+#market-view .ml-warn {
+  border-left-color: var(--accent);
+}
+#market-view .ml-empty-copy {
+  padding: 24px 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+#market-view .ml-error {
+  border-width: 0 0 0 2px;
+  border-radius: 0;
+  padding: 12px 16px;
+  background: var(--surface);
+  line-height: 1.7;
+}
+#market-view .ml-empty {
+  border: 0;
+  border-block: 1px solid var(--border-soft);
+  border-radius: 0;
+}
+
+/* Source prose and original definitions use the same document rhythm. */
+#market-view :is(.ml-original, .ml-sources),
+.rsi-workbench-panel .ml-sources {
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+}
+#market-view :is(.ml-original, .ml-sources) > summary {
+  padding: 12px 0;
+  color: var(--muted);
+}
+#market-view :is(.ml-original, .ml-sources)[open] > summary {
+  color: var(--text);
+}
+#market-view .ml-original > p {
+  max-width: 72ch;
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+#market-view .ml-source-body {
+  padding: 8px 0 20px;
+  font-size: 13px;
+  line-height: 1.75;
+}
+#market-view .ml-source-body > p {
+  max-width: 76ch;
+}
+#market-view .ml-source-body article {
+  padding: 16px 0 0;
+  margin-top: 16px;
+  border-color: var(--border-soft);
+}
+#market-view .ml-source-body article p {
+  max-width: 90ch;
+  font-size: 12px;
+  line-height: 1.7;
+}
+#market-view .ml-theme-grid {
+  gap: 0;
+}
+#market-view .ml-theme-grid .ml-card {
+  padding: 16px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+#market-view .ml-theme-grid .ml-card p {
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+/* Ledger styling leaves sticky ownership and both native scroll axes intact. */
+#market-view .ml-table-wrap {
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+}
+#market-view :is(.ml-table-wrap, .housing-table, .theme-table) caption {
+  padding: 12px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+#market-view :is(.ml-table-wrap, .housing-table, .theme-table) thead th {
+  background: var(--surface-raised);
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+#market-view :is(.ml-table-wrap, .housing-table, .theme-table) :is(td, th) {
+  padding: 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-bottom-color: var(--border-soft);
+}
+#market-view :is(.ml-table-wrap, .housing-table, .theme-table) tbody tr:hover > :is(th, td) {
+  background: var(--surface-hover);
+}
+#market-view :is(.ml-table-wrap, .housing-table, .theme-table) tr > :first-child {
+  background: var(--surface);
+}
+#market-view :is(.ml-table-wrap, .housing-table, .theme-table) thead tr > :first-child {
+  background: var(--surface-raised);
+}
+
+/* The three axes are a single aligned readout, including portaled summaries. */
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score-row {
+  gap: 0;
+  margin: 16px 0;
+  border-block: 1px solid var(--border);
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score {
+  min-height: 0;
+  padding: 20px 16px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score + .ml-score {
+  border-left: 1px solid var(--border-soft);
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score h3 {
+  margin: 0;
+  font-size: 13px;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score h3 span {
+  font-size: 18px;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-value {
+  margin: 16px 0;
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -.02em;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-stats {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-collection {
+  margin-top: 12px;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-main {
+  padding: 4px 0 16px;
+  gap: 16px;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-value {
+  font-size: 30px;
+  line-height: 1.2;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-formula strong {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 500;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] :is(.ml-direction-method, .ml-legacy-score) summary {
+  padding: 12px 0;
+  color: var(--muted);
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] :is(.ml-direction-method, .ml-legacy-score) p {
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+/* RSI keeps its price/oscillator allocation. The records and side pane share
+   the same rule-based hierarchy as market, housing and theme research. */
+.rsi-workbench-panel {
+  background: var(--surface);
+}
+.rsi-workbench-panel > header {
+  min-height: 48px;
+  padding: 4px 16px;
+  background: var(--surface-raised);
+}
+.rsi-workbench-panel > header button {
+  min-width: 44px;
+  min-height: 44px;
+}
+.rsi-workbench-panel-scroll {
+  padding: 16px;
+  line-height: 1.75;
+}
+.rsi-workbench-panel-scroll > p {
+  font-size: 13px;
+}
+.rsi-workbench-panel-scroll > form + form {
+  padding-top: 20px;
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.rsi-panel-field {
+  margin-bottom: 20px;
+}
+.rsi-data-list {
+  grid-template-columns: minmax(76px, .8fr) minmax(0, 1.4fr);
+  gap: 0 16px;
+}
+.rsi-data-list :is(dt, dd) {
+  margin: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+.rsi-history-page {
+  padding: 20px;
+}
+.rsi-history h2 {
+  padding-top: 8px;
+  font-size: 15px;
+}
+.rsi-backtest-form {
+  align-items: end;
+  gap: 16px;
+  margin: 20px 0;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.rsi-backtest-form input {
+  min-height: 36px;
+  background: var(--bg);
+  border-radius: 3px;
+}
+.rsi-backtest-form > button {
+  min-height: 36px;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.rsi-backtest-metrics {
+  gap: 20px 32px;
+  margin: 20px 0;
+}
+.rsi-backtest-metrics > div {
+  padding-right: 24px;
+  border-right: 1px solid var(--border-soft);
+}
+.rsi-backtest-metrics > div:last-child {
+  padding-right: 0;
+  border-right: 0;
+}
+.rsi-backtest-metrics dd {
+  margin-top: 8px;
+  font-size: 22px;
+}
+
+/* Housing views: compact measurement strip and a plain research ledger. */
+.housing-relation-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  padding: 20px 0;
+}
+.housing-relation-stats > div {
+  gap: 8px;
+  padding: 0 20px;
+}
+.housing-relation-stats > div + div {
+  border-left: 1px solid var(--border-soft);
+}
+.housing-relation-stats strong {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+.housing-relation-layout {
+  gap: 32px;
+  padding: 20px 12px;
+}
+.housing-relation-layout h2 {
+  margin-bottom: 16px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.housing-details summary, .theme-method summary {
+  padding-block: 16px;
+  color: var(--muted);
+}
+.housing-details p, .theme-method p {
+  font-size: 14px;
+  line-height: 1.8;
+}
+.housing-caveat, .theme-caveat {
+  max-width: 76ch;
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+/* Theme evidence is a document index beside the chart, not a card grid. */
+.theme-inspector {
+  padding: 20px;
+  background: var(--surface);
+}
+.theme-inspector h2 {
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: 0;
+  text-wrap: pretty;
+}
+.theme-inspector p {
+  margin: 12px 0 16px;
+  font-size: 13px;
+  line-height: 1.75;
+}
+.theme-inspector .theme-availability {
+  margin-top: 12px;
+  padding-left: 12px;
+  border-left: 2px solid var(--accent);
+}
+.theme-criterion-readout {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-color: var(--border-soft);
+}
+.theme-criterion-readout b {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.theme-criterion-readout b span {
+  margin-left: 0;
+  font-size: 12px;
+  font-weight: 400;
+}
+.theme-verdict {
+  border: 0;
+  border-left: 1px solid var(--border);
+  border-radius: 0;
+  padding: 4px 16px;
+  gap: 8px;
+  background: transparent;
+}
+.theme-verdict-strip {
+  gap: 0;
+}
+.theme-timeline > li {
+  grid-template-columns: 152px minmax(0, 1fr);
+  gap: 24px;
+  padding: 24px 12px;
+  border-color: var(--border-soft);
+}
+.theme-timeline .theme-evidence-title {
+  white-space: normal;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.theme-timeline p {
+  max-width: 72ch;
+  margin: 12px 0;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.theme-source-actions {
+  gap: 16px;
+}
+.theme-section-heading {
+  padding-block: 16px;
+  background: transparent;
+}
+.theme-section-heading h2 {
+  font-size: 14px;
+}
+.theme-editor {
+  padding: 20px 12px;
+  background: transparent;
+}
+.theme-editor h2 {
+  font-size: 15px;
+}
+.theme-criteria-editor {
+  gap: 24px;
+}
+.theme-criteria-editor fieldset {
+  margin: 0;
+  padding: 16px 0 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+.theme-criteria-editor legend {
+  padding: 0 8px 0 0;
+  font-weight: 600;
+}
+.theme-criteria-editor textarea {
+  background: var(--bg);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.theme-evidence-check {
+  align-items: flex-start;
+  padding-block: 8px;
+  line-height: 1.65;
+}
+.theme-evidence-check input {
+  margin-top: 2px;
+}
+
+@media (min-width: 1001px) {
+  #market-view .ml-two-col > .ml-card:first-child {
+    padding-right: 32px;
+    border-right: 1px solid var(--border);
+  }
+  #market-view .ml-two-col > .ml-card:last-child {
+    padding-left: 32px;
+  }
+  #market-view .ml-theme-grid .ml-card + .ml-card {
+    border-left: 1px solid var(--border-soft);
+  }
+}
+
+@media (max-width: 1000px) {
+  #market-view .ml-two-col > .ml-card + .ml-card {
+    border-top: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 640px) {
+  #market-view .ml-two-col > .ml-card {
+    padding: 20px 4px;
+  }
+  #market-view .ml-input-grid {
+    gap: 0 16px;
+  }
+  #market-view .ml-shock-row {
+    padding-block: 16px;
+    column-gap: 16px;
+  }
+  #market-view .ml-results > div {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  #market-view .ml-results dd {
+    margin-left: auto;
+    font-size: 20px;
+  }
+  #market-view .ml-theme-grid .ml-card {
+    padding: 16px 4px;
+  }
+  #market-view .ml-theme-grid .ml-card + .ml-card {
+    border-top: 1px solid var(--border-soft);
+  }
+  #market-view :is(.ml-table-wrap, .housing-table, .theme-table) :is(td, th) {
+    padding: 12px 8px;
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score {
+    padding: 16px 8px;
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-value {
+    font-size: 28px;
+  }
+  .rsi-history-page {
+    padding: 16px 12px;
+  }
+  .rsi-backtest-form {
+    gap: 12px;
+  }
+  .rsi-backtest-form :is(input, button) {
+    min-height: 44px;
+  }
+  .rsi-backtest-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .rsi-backtest-metrics > div {
+    min-width: 0;
+    padding: 0 0 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .rsi-backtest-metrics dd {
+    font-size: 18px;
+    overflow-wrap: anywhere;
+  }
+  .housing-relation-stats {
+    grid-template-columns: 1fr;
+    padding: 0 12px;
+  }
+  .housing-relation-stats > div {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    padding: 16px 0;
+  }
+  .housing-relation-stats > div + div {
+    border-left: 0;
+    border-top: 1px solid var(--border-soft);
+  }
+  .housing-relation-stats small {
+    grid-column: 1 / -1;
+  }
+  .housing-relation-layout {
+    gap: 24px;
+    padding: 20px 12px;
+  }
+  .theme-inspector {
+    padding: 20px 12px;
+  }
+  .theme-timeline > li {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 20px 12px;
+  }
+  .theme-verdict {
+    padding-inline: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score + .ml-score {
+    border-left: 0;
+    border-top: 1px solid var(--border-soft);
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    column-gap: 12px;
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-value {
+    margin: 0 0 8px;
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] :is(.ml-axis-stats, .ml-axis-collection, .ml-warning) {
+    grid-column: 1 / -1;
+  }
+}

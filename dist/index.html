@@ -4,7 +4,7 @@
   <meta name="atlas-static-entry" content="market-lab/app/">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0c0f14">
+  <meta name="theme-color" content="#111210">
   <meta name="description" content="비트코인 반감기, 저점, 고점, 이전 최고가 돌파 사이클과 방향 전환 시점을 실제 일별 데이터로 비교하세요. 관측일과 확인일, 사이클 속도, 계산 근거를 함께 제공합니다.">
   <title>비트코인 사이클 | 통합 차트</title>
   <link rel="canonical" href="https://twoimo.github.io/bitcoin-cycle-atlas/">
@@ -31,26 +31,26 @@
 /* Hallmark · pre-emit critique: P4 H4 E3 S5 R4 V3 · weakest: E, uneven focus and small metadata; shared states and readable neutral ink are applied across the app. */
 
     :root {
-      --boot-surface: #10151c;
-      --boot-ink: #c4d0df;
-      --boot-surface-2: #11161f;
-      --boot-rule: #2a3240;
-      --boot-ink-2: #c4a16d;
-      --boot-surface-3: #263140;
-      --boot-surface-4: #1b243080;
-      --boot-ink-3: #a9bbce;
-      --boot-surface-5: #10151ce8;
-      --boot-surface-6: #141d29;
-      --boot-rule-2: #35465e;
+      --boot-surface: #111210;
+      --boot-ink: #edece5;
+      --boot-surface-2: #151613;
+      --boot-rule: #3a3e34;
+      --boot-ink-2: #d8b56d;
+      --boot-surface-3: #2b2f27;
+      --boot-surface-4: #2a2e2680;
+      --boot-ink-3: #b9bdb0;
+      --boot-surface-5: #111210e8;
+      --boot-surface-6: #191b17;
+      --boot-rule-2: #3a3e34;
       --boot-shadow: #0003;
-      --boot-ink-4: #e0e8f3;
-      --boot-ink-5: #afbed1;
-      --boot-rule-3: #54739b;
-      --boot-surface-7: #243953;
-      --boot-ink-6: #eef4fc;
-      --boot-surface-8: #304b6c;
-      --boot-rule-4: #96c4ff;
-      --boot-ink-7: #dce5f0;
+      --boot-ink-4: #edece5;
+      --boot-ink-5: #b9bdb0;
+      --boot-rule-3: #6d7562;
+      --boot-surface-7: #22251f;
+      --boot-ink-6: #edece5;
+      --boot-surface-8: #2b2f27;
+      --boot-rule-4: #e8c990;
+      --boot-ink-7: #edece5;
       --boot-font: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
 html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface);overflow:clip}
@@ -148,6 +148,9 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
   <link rel="stylesheet" href="./legacy-workspace-toolbar.css?v=1.32.1">
   <link rel="stylesheet" href="./vendor/skullet/styles.css?v=0.0.3">
   <link rel="stylesheet" href="./loading-surfaces.css?v=20261103">
+  <link rel="stylesheet" href="./editorial-system.css?v=1.33.0">
+  <link rel="stylesheet" href="./editorial-panels.css?v=1.33.0">
+  <link rel="stylesheet" href="./editorial-ledgers.css?v=1.33.0">
 </head>
 <body>
   <div id="atlas-boot-shell">
@@ -385,6 +388,6 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
   <dialog id="method-dialog" aria-labelledby="method-title"><div class="dialog-top"><span class="eyebrow">자료와 방법론</span><button id="close-method" class="icon-button" aria-label="방법론 닫기"><span data-icon="close"></span></button></div><h2 id="method-title">방법론과 출처</h2><p class="dialog-lead">차트의 출발점부터 가격의 정의까지, 비교에 사용한 기준입니다.</p><div id="method-content"></div><button id="method-done" class="primary-button">확인했습니다</button></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <dialog id="evidence-dialog" aria-labelledby="evidence-detail-title"><div class="dialog-top"><span class="eyebrow">근거와 한계</span><button id="evidence-close" class="icon-button" aria-label="자료 상세 닫기"><span data-icon="close"></span></button></div><h2 id="evidence-detail-title"></h2><div id="evidence-detail-body"></div></dialog>
-  <script type="module" src="./site-entry.js?v=1.32.2"></script>
+  <script type="module" src="./site-entry.js?v=1.33.0"></script>
 </body>
 </html>

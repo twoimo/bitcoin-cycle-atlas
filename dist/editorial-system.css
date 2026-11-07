@@ -1,0 +1,364 @@
+/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas editorial workbench · redesign: full · posture: restrained
+ * Visual roles only. Financial series, data, toolbar ownership and scroll geometry remain with their original components.
+ * Direction and skill provenance: design-system/bitcoin-cycle-atlas/MASTER.md.
+ */
+:root {
+  --bg: #111210;
+  --sidebar: #151613;
+  --surface: #191b17;
+  --surface-raised: #22251f;
+  --surface-hover: #2b2f27;
+  --border: #3a3e34;
+  --border-soft: #2a2e26;
+  --border-strong: #6d7562;
+  --text: #edece5;
+  --muted: #b9bdb0;
+  --subtle: #989f8e;
+  --accent: #d8b56d;
+  --accent-soft: #d8b56d12;
+  --on-accent: #191b17;
+  --focus: #e8c990;
+  --grid: #2a2e26;
+  --ui-primary: var(--accent);
+  --nav-active-bg: #2d2a21;
+  --nav-active-text: var(--accent);
+  --chrome: var(--sidebar);
+  --chrome-bg: var(--sidebar);
+  --chrome-border: var(--border);
+  --chrome-active: var(--accent);
+  --control-radius: 3px;
+  --panel-radius: 6px;
+  --copy-size: 15px;
+  --copy-leading: 1.75;
+  --shadow: 0 12px 36px #0005;
+  --skullet-highlight: #989f8e33;
+
+  /* Existing chart chrome consumes these owner-specific roles. Series and
+     signal colors are deliberately owned by the original chart modules. */
+  --chart-bottom-bar-ink: var(--muted);
+  --chart-bottom-bar-ink-2: var(--text);
+  --chart-bottom-bar-ink-3: var(--text);
+  --chart-bottom-bar-ink-4: var(--accent);
+  --chart-bottom-bar-ink-5: var(--text);
+  --chart-bottom-bar-ink-6: var(--muted);
+  --chart-bottom-bar-ink-7: var(--text);
+  --chart-bottom-bar-ink-8: var(--text);
+  --chart-bottom-bar-ink-9: var(--text);
+  --chart-bottom-bar-ink-10: var(--muted);
+  --chart-bottom-bar-ink-11: var(--muted);
+  --chart-bottom-bar-ink-12: var(--accent);
+  --chart-bottom-bar-ink-13: var(--text);
+  --chart-bottom-bar-ink-14: var(--muted);
+  --chart-bottom-bar-ink-15: var(--text);
+  --chart-bottom-bar-surface: var(--surface-hover);
+  --chart-bottom-bar-surface-2: var(--nav-active-bg);
+  --chart-bottom-bar-surface-3: var(--surface-raised);
+  --chart-bottom-bar-surface-4: var(--surface-hover);
+  --chart-bottom-bar-surface-5: var(--surface-hover);
+  --chart-bottom-bar-surface-6: var(--surface);
+  --chart-bottom-bar-rule: var(--border);
+  --chart-bottom-bar-rule-2: var(--focus);
+  --chart-bottom-bar-rule-3: var(--border);
+  --chart-bottom-bar-rule-4: var(--focus);
+  --chart-bottom-bar-rule-5: var(--border-soft);
+
+  --symbol-selector-ink: var(--text);
+  --symbol-selector-ink-2: var(--subtle);
+  --symbol-selector-ink-3: var(--text);
+  --symbol-selector-ink-4: var(--muted);
+  --symbol-selector-ink-5: var(--muted);
+  --symbol-selector-ink-6: var(--text);
+  --symbol-selector-ink-7: var(--subtle);
+  --symbol-selector-ink-8: var(--accent);
+  --symbol-selector-ink-9: var(--muted);
+  --symbol-selector-ink-12: var(--muted);
+  --symbol-selector-ink-13: var(--text);
+  --symbol-selector-ink-14: var(--subtle);
+  --symbol-selector-ink-15: var(--muted);
+  --symbol-selector-ink-16: var(--muted);
+  --symbol-selector-ink-17: var(--subtle);
+  --symbol-selector-surface: var(--surface-hover);
+  --symbol-selector-surface-2: var(--surface);
+  --symbol-selector-surface-3: #080906b3;
+  --symbol-selector-surface-4: var(--surface-hover);
+  --symbol-selector-surface-5: var(--surface-raised);
+  --symbol-selector-surface-8: var(--accent-soft);
+  --symbol-selector-rule: var(--focus);
+  --symbol-selector-rule-2: var(--border-strong);
+  --symbol-selector-rule-3: var(--border);
+  --symbol-selector-rule-4: var(--border);
+  --symbol-selector-rule-5: var(--border-soft);
+  --symbol-selector-rule-6: var(--border);
+
+  --workspace-tools-surface: var(--surface);
+  --workspace-tools-surface-2: var(--surface-raised);
+  --workspace-tools-surface-3: #080906b3;
+  --workspace-tools-surface-4: var(--surface-hover);
+  --workspace-tools-surface-5: var(--nav-active-bg);
+  --workspace-tools-surface-6: var(--surface-raised);
+  --workspace-tools-ink: var(--text);
+  --workspace-tools-ink-2: var(--text);
+  --workspace-tools-ink-3: var(--muted);
+  --workspace-tools-ink-4: var(--text);
+  --workspace-tools-ink-5: var(--text);
+  --workspace-tools-ink-6: var(--muted);
+  --workspace-tools-ink-7: var(--subtle);
+  --workspace-tools-ink-8: var(--muted);
+  --workspace-tools-ink-9: var(--muted);
+  --workspace-tools-ink-10: var(--muted);
+  --workspace-tools-ink-11: var(--accent);
+  --workspace-tools-ink-12: var(--text);
+  --workspace-tools-ink-13: var(--muted);
+  --workspace-tools-rule: var(--border-strong);
+  --workspace-tools-rule-2: var(--border);
+  --workspace-tools-rule-3: var(--focus);
+  --workspace-tools-rule-4: var(--border);
+  --workspace-tools-rule-5: var(--border);
+  --workspace-tools-rule-6: var(--border-strong);
+  --workspace-tools-rule-7: var(--border);
+  --workspace-tools-rule-8: var(--border-strong);
+  --workspace-tools-rule-9: var(--border-soft);
+  --workspace-tools-rule-10: var(--border);
+
+  --chart-details-panel-surface: var(--surface);
+  --chart-details-panel-surface-2: var(--surface-hover);
+  --chart-details-panel-surface-3: var(--surface-raised);
+  --chart-details-panel-surface-4: var(--nav-active-bg);
+  --chart-details-panel-surface-5: var(--surface-hover);
+  --chart-details-panel-surface-6: var(--surface-hover);
+  --chart-details-panel-surface-7: var(--nav-active-bg);
+  --chart-details-panel-surface-8: var(--surface-raised);
+  --chart-details-panel-surface-12: var(--surface);
+  --chart-details-panel-ink: var(--text);
+  --chart-details-panel-ink-2: var(--muted);
+  --chart-details-panel-ink-3: var(--text);
+  --chart-details-panel-ink-4: var(--text);
+  --chart-details-panel-ink-5: var(--muted);
+  --chart-details-panel-ink-6: var(--text);
+  --chart-details-panel-ink-7: var(--accent);
+  --chart-details-panel-ink-8: var(--text);
+  --chart-details-panel-ink-9: var(--subtle);
+  --chart-details-panel-ink-10: var(--accent);
+  --chart-details-panel-ink-11: var(--muted);
+  --chart-details-panel-ink-12: var(--accent);
+  --chart-details-panel-ink-13: var(--text);
+  --chart-details-panel-ink-14: var(--text);
+  --chart-details-panel-ink-15: var(--text);
+  --chart-details-panel-ink-16: var(--muted);
+  --chart-details-panel-ink-17: var(--muted);
+  --chart-details-panel-ink-18: var(--muted);
+  --chart-details-panel-ink-20: var(--subtle);
+  --chart-details-panel-rule: var(--border);
+  --chart-details-panel-rule-2: var(--focus);
+  --chart-details-panel-rule-3: var(--border-soft);
+}
+
+body { font-variant-numeric: tabular-nums; }
+::selection { background: var(--accent); color: var(--on-accent); }
+body :is(button, a, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline-color: var(--focus);
+}
+body :is(input, select, textarea) { accent-color: var(--accent); }
+
+/* One perimeter, with active location expressed as a small rule. These styles
+   never change the toolbar height, portaled control owners or scroll owners. */
+body[data-shell=chart] :is(.atlas-sidebar, .workbench-rail, .atlas-canvas-heading),
+.workbench-bottom.workbench-bottom-bar { background: var(--sidebar); }
+.atlas-page .atlas-workbench, .atlas-plot { background: var(--bg); }
+.atlas-sidebar .atlas-brand { color: var(--accent); border-radius: 0; }
+.atlas-sidebar .atlas-brand > span { font-weight: 500; }
+.atlas-sidebar .workbench-icon,
+.workbench-rail .atlas-nav :is(a, button),
+.workbench-detail-tools .workbench-icon { border-radius: 2px; }
+.workbench-rail .atlas-nav :is(a, button):is(.active, [aria-current=page]) {
+  color: var(--accent);
+  background: var(--nav-active-bg);
+  box-shadow: inset 2px 0 var(--accent);
+}
+.atlas-canvas-heading :is(button, select, input),
+.workbench-bottom-bar button,
+.legacy-toolbar-action { border-radius: 3px; }
+.atlas-canvas-heading button.symbol-selector-trigger {
+  font-weight: 600;
+  color: var(--text);
+  border-color: var(--border);
+  letter-spacing: .02em;
+}
+.center-workspace-toolbar :is(button, select, input),
+.legacy-toolbar-field :is(input, select) { font-size: 12px; }
+.center-workspace-toolbar :is(select, input),
+.legacy-toolbar-field :is(input, select) {
+  background: var(--surface);
+  border-color: var(--border-strong);
+}
+.center-workspace-toolbar .compact-toolbar-tabs > button,
+.center-workspace-toolbar .workspace-view-tabs button {
+  border-radius: 0;
+  border-color: transparent;
+}
+.center-workspace-toolbar :is(.compact-toolbar-tabs, .workspace-view-tabs) > :is([aria-selected=true], [aria-pressed=true]),
+#workbench-frequency button[aria-pressed=true] {
+  color: var(--accent);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: inset 0 -2px var(--accent);
+}
+.compact-toolbar-group { border-color: var(--border); }
+.compact-toolbar-summary { letter-spacing: 0; }
+.center-workspace-toolbar .workspace-region-code { color: var(--subtle); }
+.legacy-toolbar-state { color: var(--accent); }
+.workbench-bottom-bar button[aria-pressed=true] {
+  background: transparent;
+  color: var(--accent);
+  box-shadow: inset 0 -2px var(--accent);
+}
+.workbench-bottom-bar .journal-count {
+  border-radius: 2px;
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+/* Shared floating surfaces: solid, quiet and clearly separated from the plot. */
+body :is(.workspace-dialog, .symbol-search-dialog, .chart-export-dialog,
+  .research-annotations-dialog, .chart-go-to-dialog, .indicator-library,
+  .indicator-settings-dialog, .compact-toolbar-dialog, .legacy-toolbar-dialog,
+  .monthly-backtest) {
+  border-color: var(--border-strong);
+  border-radius: var(--panel-radius);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font);
+  box-shadow: var(--shadow);
+}
+body :is(.workspace-dialog, .symbol-search-dialog, .chart-export-dialog,
+  .research-annotations-dialog, .chart-go-to-dialog, .indicator-library,
+  .indicator-settings-dialog, .compact-toolbar-dialog, .legacy-toolbar-dialog,
+  .monthly-backtest)::backdrop { background: #080906b3; }
+:is(.workspace-dialog-header, .symbol-search-heading, .indicator-library-heading,
+  .compact-toolbar-dialog-header, .legacy-toolbar-dialog-heading) {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+:is(.workspace-dialog-header, .symbol-search-heading, .indicator-library-heading,
+  .compact-toolbar-dialog-header, .legacy-toolbar-dialog-heading) :is(h2, h3) {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--text);
+}
+body :is(.chart-export-dialog, .research-annotations-dialog, .chart-go-to-dialog,
+  .indicator-settings-dialog, .indicator-library, .monthly-backtest)
+  :is(input, select, textarea) {
+  border-color: var(--border-strong);
+  border-radius: 3px;
+  background: var(--bg);
+  color: var(--text);
+}
+:is(.compact-toolbar-dialog-header, .legacy-toolbar-dialog-heading) > button {
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+}
+:is(.compact-toolbar-dialog-header, .legacy-toolbar-dialog-heading) > button:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+.compact-toolbar-dialog-body { line-height: 1.7; }
+.compact-toolbar-dialog-body :is(h3, h4) { color: var(--text); }
+.compact-toolbar-dialog :is(th, td) { border-color: var(--border-soft); }
+.compact-toolbar-dialog th { color: var(--muted); font-weight: 500; }
+
+/* Search is a compact instrument index, with stable names and source columns. */
+.symbol-search-heading { padding-block: 12px; }
+.symbol-search-filters { padding-block: 12px 4px; }
+.symbol-search-filters span {
+  padding: 0 12px 0 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 12px;
+}
+.symbol-search-filters span + span { border-left: 1px solid var(--border); padding-left: 12px; }
+.symbol-search-row { border-radius: 0; border-bottom-color: var(--border-soft); }
+.symbol-search-row:hover, .symbol-search-row[aria-selected=true] {
+  border-color: transparent;
+  border-bottom-color: var(--border);
+  background: var(--surface-hover);
+  box-shadow: inset 2px 0 var(--accent);
+}
+.symbol-search-symbol strong { font-size: 14px; font-weight: 600; }
+.symbol-search-name { font-size: 12px; }
+.symbol-search-current { border-radius: 0; background: transparent; color: var(--accent); }
+.symbol-search-close:hover { background: var(--surface-hover); color: var(--text); }
+.workspace-dialog-tabs button { border-radius: 0; }
+.workspace-dialog-tabs button[aria-pressed=true] {
+  background: transparent;
+  border-color: transparent;
+  color: var(--accent);
+  box-shadow: inset 0 -2px var(--accent);
+}
+.workspace-command { border-radius: 0; border-bottom: 1px solid var(--border-soft); }
+.workspace-command strong { font-weight: 550; }
+.workspace-command-search, .workspace-dialog input { background: var(--bg); }
+
+/* Plot-side reading and configuration panels share the same text hierarchy. */
+.chart-details-panel .reader-heading { border-color: var(--border); }
+.chart-details-panel .reader-heading h2 { color: var(--text); font-weight: 600; }
+.chart-details-panel .reader-body :is(p, li) { color: var(--muted); }
+.chart-details-panel .reader-body :is(h2, h3, h4) { color: var(--text); }
+.chart-details-panel .reader-body a { color: var(--accent); }
+.chart-details-panel .reader-pagination { border-color: var(--border); }
+body :is(.chart-context-menu, .chart-bottom-popover, .cycle-chart-menu,
+  .price-axis-options > div, .price-axis-options > fieldset) {
+  background: var(--surface-raised);
+  color: var(--text);
+  border-color: var(--border-strong);
+  border-radius: 4px;
+}
+body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+.atlas-plot > .lab-chart-foot {
+  border-color: var(--border);
+  border-radius: 3px;
+  background: var(--surface);
+  color: var(--muted);
+}
+.chart-indicator-manager .indicator-label { color: var(--muted); }
+.atlas-plot[data-compact-layout] .indicator-row :is(.indicator-label, .indicator-value) {
+  background: #111210e6;
+}
+.analysis-window-heading, .analysis-indicator-window {
+  background: var(--surface);
+  border-color: var(--border);
+}
+.indicator-library-row { border-color: var(--border-soft); border-radius: 0; }
+.indicator-library-item { color: var(--text); }
+.indicator-library-item:hover { background: var(--surface-hover); }
+.indicator-categories button[aria-pressed=true],
+.indicator-library-views button[aria-pressed=true] {
+  background: var(--nav-active-bg);
+  color: var(--accent);
+  border-color: var(--border);
+}
+.indicator-settings-content fieldset { border-color: var(--border); border-radius: 3px; }
+.chart-export-dialog > :is(header, footer), .chart-export-facts {
+  background: var(--surface);
+  border-color: var(--border);
+}
+.research-annotation-row { border-color: var(--border-soft); border-radius: 0; }
+.research-annotation-row.is-selected { background: var(--nav-active-bg); border-color: var(--border); }
+
+@media (max-width: 620px), (pointer: coarse) {
+  .symbol-search-heading h2 { font-size: 16px; }
+  .symbol-search-close { width: 44px; height: 44px; }
+  .symbol-search-row { min-height: 72px; }
+  .symbol-search-name { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .atlas-canvas-heading :is(button, select, input),
+  .workbench-rail .atlas-nav :is(a, button),
+  .symbol-search-row, .workspace-command { transition: none; }
+}

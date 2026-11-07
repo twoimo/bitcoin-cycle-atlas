@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 import {parseHTML} from 'linkedom';
 
+const {version}=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
 let fixtureId=0;
 async function fixture(t){
  const {document,window}=parseHTML('<html><body><button id="outside">다른 작업</button><section id="evidence-view"><div class="evidence-table-shell"><table><caption><span id="evidence-total"></span></caption><thead><tr><th>자료</th></tr></thead><tbody id="evidence-body"></tbody><tfoot><tr><td><button id="evidence-more">다음</button><span id="evidence-progress"></span><span id="evidence-end"></span></td></tr></tfoot></table></div></section></body></html>');
@@ -40,7 +42,7 @@ async function fixture(t){
   for(const [key,descriptor]of originals)if(descriptor)Object.defineProperty(globalThis,key,descriptor);else delete globalThis[key];
  });
  const evidence=await import(`../dist/evidence-view.js?focus-test=${++fixtureId}`);
- const reader=await import('../dist/research-reader.js?v=1.32.2');
+ const reader=await import(`../dist/research-reader.js?v=${version}`);
  const flush=()=>{let turns=0;while(frames.size){assert.ok(++turns<10,'resize scheduling settles');const pending=[...frames.values()];frames.clear();for(const callback of pending)callback();}};
  const flushClose=()=>{for(const callback of closeEvents.splice(0))callback();};
  evidence.initEvidenceView();evidence.showEvidenceView(true);flush();
