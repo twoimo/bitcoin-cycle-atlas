@@ -52,8 +52,8 @@ const searchIcon = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stro
 const chevronIcon = '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m4 6 4 4 4-4"/></svg>';
 const ethIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 6 10-6 3-6-3Z" fill="currentColor"/><path d="m6 14 6 8 6-8-6 3Z" fill="currentColor" opacity=".75"/><path d="M12 2v13l6-3Z" fill="#fff" opacity=".2"/></svg>';
 
-/** @param {{button?:HTMLButtonElement|null,symbol?:string,document?:Document,onSelect?:((symbol:string,url:string)=>void)|null,navigate?:((url:string)=>void)|null,getUrl?:(()=>string)|null}} options */
-export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.ownerDocument || globalThis.document, onSelect=null, navigate=null, getUrl=null } = {}) {
+/** @param {{button?:HTMLButtonElement|null,symbol?:string,showName?:boolean,document?:Document,onSelect?:((symbol:string,url:string)=>void)|null,navigate?:((url:string)=>void)|null,getUrl?:(()=>string)|null}} options */
+export function mountSymbolSelector({ button, symbol='BTCUSD', showName=false, document=button?.ownerDocument || globalThis.document, onSelect=null, navigate=null, getUrl=null } = {}) {
   if (!button || !document) throw new TypeError('A symbol button and document are required');
   let currentSymbol = normalizeSymbol(symbol);
   const current = SYMBOLS.find(item => item.symbol === currentSymbol);
@@ -65,8 +65,10 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
   };
   button.type = 'button'; button.classList.add('symbol-selector-trigger');
   button.replaceChildren();
-  const instrumentName = add(button,'span','symbol-selector-name',current.assetClass==='housing'?'':current.koreanName);
-  instrumentName.setAttribute('aria-hidden','true');
+  // The shared outer heading has room for a separate name. Compact chart
+  // headers retain their canonical instrument value and descriptive aria-label.
+  const instrumentName = showName ? add(button,'span','symbol-selector-name',current.assetClass==='housing'?'':current.koreanName) : null;
+  instrumentName?.setAttribute('aria-hidden','true');
   add(button,'span','symbol-selector-label',current.assetClass==='housing'?current.koreanName:current.symbol);
   add(button,'span','symbol-selector-chevron').innerHTML = chevronIcon;
   button.title = `종목 선택 · ${current.koreanName} / ${current.currency || 'USD'}`;
@@ -183,7 +185,7 @@ export function mountSymbolSelector({ button, symbol='BTCUSD', document=button?.
   document.addEventListener('atlas:modal-open',onOtherModal);
   const activeSymbol = event => {
     const instrument=SYMBOLS.find(item=>item.symbol===event.detail?.symbol);if(!instrument)return;currentSymbol=instrument.symbol;
-    instrumentName.textContent=instrument.assetClass==='housing'?'':instrument.koreanName;
+    if(instrumentName)instrumentName.textContent=instrument.assetClass==='housing'?'':instrument.koreanName;
     button.querySelector?.('.symbol-selector-label')?.replaceChildren(document.createTextNode(instrument.assetClass==='housing'?instrument.koreanName:instrument.symbol));
     button.title=`종목 선택 · ${instrument.koreanName} / ${instrument.currency || 'USD'}`;button.setAttribute('aria-label',`${button.title} · ${instrument.symbol}`);
   };

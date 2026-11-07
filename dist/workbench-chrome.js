@@ -85,7 +85,7 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
   controlStore.append(settingsBody,modeTabs,layers,scenarios);
   const heading=document.createElement('header');heading.className='atlas-canvas-heading';heading.setAttribute('aria-label','차트 상단 도구');
   const symbol=document.createElement('button');symbol.className='workbench-symbol';
-  const symbolSelector=mountSymbolSelector({button:symbol,symbol:'BTCUSD'});
+  const symbolSelector=mountSymbolSelector({button:symbol,symbol:'BTCUSD',showName:true});
   const menu=button('chart','인디케이터 추가·삭제',{'aria-controls':'indicator-library','aria-haspopup':'dialog','aria-expanded':'false'});menu.id='atlas-mode-menu';
   menu.onclick=()=>document.dispatchEvent(new CustomEvent('atlas:indicator-library',{detail:{opener:menu}}));
   const modeName=document.createElement('span');modeName.id='atlas-mode-name';modeName.textContent='인디케이터';menu.append(modeName);menu.classList.add('workbench-mode');
