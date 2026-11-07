@@ -142,6 +142,36 @@ test('a forecast-only viewport never exposes a nearest actual and preserves corr
   }
 });
 
+test('replay uses the current rendered viewport without rereading layout after SVG replacement, including empty views and resize',()=>{
+  for(const empty of [false,true]){
+    const {svg}=fixture(),markup=Object.getOwnPropertyDescriptor(Node.prototype,'innerHTML');
+    let dimensions={width:1440,height:700},painted=false,rectReads=0,box={left:0,top:0,width:1440,height:700};
+    Object.defineProperties(svg,{
+      clientWidth:{get(){assert.equal(painted,false,'Replay must reuse rendered width after replacing the SVG');return dimensions.width;}},
+      clientHeight:{get(){assert.equal(painted,false,'Replay must reuse rendered height after replacing the SVG');return dimensions.height;}},
+      innerHTML:{get(){return markup.get.call(this);},set(value){markup.set.call(this,value);painted=true;}},
+    });
+    svg.getBoundingClientRect=()=>{rectReads++;return {...box};};
+    const range=empty?{start:'2100-01-01',end:'2100-12-31'}:{start:'2024-10-20',end:'2028-10-20'};
+    const selected=empty?'2100-06-30':originDate;
+    for(const next of [{width:1440,height:700},{width:320,height:480}]){
+      dimensions=next;painted=false;box={left:0,top:0,...next};
+      const chart=draw(svg,range);
+      assert.equal(svg.getAttribute('viewBox'),`0 0 ${next.width} ${next.height}`);
+      assert.equal(Boolean(svg.querySelector('.chart-empty-message')),empty);
+      assert.equal(svg.dataset.forecastValueSignature,forecastValueSignature(context.forecast));
+      // The drawing's coordinate space stays fixed until the next redraw,
+      // while native hit testing must use the element's current screen box.
+      box={left:87,top:34,width:next.width*.65,height:next.height*.5};
+      const before=rectReads,clientX=box.left+chart.x(selected)/next.width*box.width;
+      assert.equal(chart.dateAt(clientX),selected);
+      assert.equal(rectReads,before+1,'Pointer mapping must still read the event-time bounding rectangle');
+      if(empty)assert.equal(chart.barDateAt(clientX),null);
+      else assert.ok(chart.getSelection().actual>0);
+    }
+  }
+});
+
 test('old replay disposal cannot detach the newer native Atlas chart handlers',()=>{
   const harness=fixture(),old=draw(harness.svg),next=draw(harness.svg,{data:data(dateFromDay(utcDay(originDate)+1))});
   const pointer=harness.svg.onpointermove;old.destroy();assert.equal(harness.svg.onpointermove,pointer);

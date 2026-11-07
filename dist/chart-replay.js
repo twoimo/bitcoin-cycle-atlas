@@ -16,6 +16,9 @@ const speedMeaning=value=>value===.3?'3초마다 1업데이트':value===.5?'2초
 const replayIcon=path=>'<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="'+path+'"/></svg>';
 const playIcon=()=>replayIcon('M8 5l11 7-11 7Z');
 const pauseIcon=()=>replayIcon('M8 5v14M16 5v14');
+// Repeated bar paints keep native controls and their unchanged DOM intact.
+const setReplayProperty=(target,key,value)=>{if(target[key]!==value)target[key]=value;};
+const setReplayAttribute=(node,key,value)=>{const text=String(value);if(node.getAttribute(key)!==text)node.setAttribute(key,text);};
 
 /** Convert the renderer's real viewBox axes into client pixels. Replay owns
  * its gesture guards, but uses the same plot/axis regions as live charts. */
@@ -88,6 +91,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   const inspect=doc.createElement('p');inspect.className='chart-replay-inspect';const seriesKey=doc.createElement('p');seriesKey.className='chart-replay-series-key';const compactScore=doc.createElement('p');compactScore.className='chart-replay-compact-score';compactScore.hidden=true;hud.append(status,inspect,compactScore,seriesKey);
   const notice=doc.createElement('p');notice.className='chart-replay-notice';notice.hidden=true;notice.setAttribute('role','status');notice.setAttribute('aria-live','polite');plot.append(hud,panel,notice);
   const q=key=>panel.querySelector('[data-cr="'+key+'"]');
+  let playIconPlaying=false;
   const transport=panel.querySelector('.chart-replay-actions'),bar=panel.querySelector('.chart-replay-bar');
   const scrollHint=doc.createElement('span');scrollHint.className='chart-replay-scroll-hint';scrollHint.id='replay-scroll-hint-'+symbol;
   scrollHint.textContent='좌우로 밀어 더 보기';scrollHint.hidden=true;bar?.append(scrollHint);
@@ -95,9 +99,9 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   function transportHints(){
     if(!transport||!bar)return;
     const overflow=transport.scrollWidth>transport.clientWidth+1;
-    bar.dataset.scrollLeft=String(overflow&&transport.scrollLeft>1);
-    bar.dataset.scrollRight=String(overflow&&transport.scrollLeft+transport.clientWidth<transport.scrollWidth-1);
-    scrollHint.hidden=!overflow||!q('select-panel').hidden||!q('entry-dialog').hidden||!q('exit-dialog').hidden;
+    setReplayProperty(bar.dataset,'scrollLeft',String(overflow&&transport.scrollLeft>1));
+    setReplayProperty(bar.dataset,'scrollRight',String(overflow&&transport.scrollLeft+transport.clientWidth<transport.scrollWidth-1));
+    setReplayProperty(scrollHint,'hidden',!overflow||!q('select-panel').hidden||!q('entry-dialog').hidden||!q('exit-dialog').hidden);
   }
   function revealControl(event){
     if(!transport||!event.target?.getBoundingClientRect)return;
@@ -219,7 +223,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   function focusMenuTrigger(){q(externalBacktest?'mode-badge':'select-menu').focus({preventScroll:true});}
   function updateDateContext(state=getState()){
     const date=state.session?.timeline[state.cursorIndex],visible=date?archive?.observations.findLast(row=>row.date<=date)?.date:null,next=state.session?.timeline[state.cursorIndex+1];
-    q('date-context').textContent=state.session?'현재 공개: '+(visible??'없음')+' · 다음 봉: '+(next??'확보한 자료 끝'):'시작점 미확정 · 날짜를 선택해 적용하세요.';
+    setReplayProperty(q('date-context'),'textContent',state.session?'현재 공개: '+(visible??'없음')+' · 다음 봉: '+(next??'확보한 자료 끝'):'시작점 미확정 · 날짜를 선택해 적용하세요.');
   }
   function openDateView(){
     if(hasChoice())return;
@@ -562,35 +566,36 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   function paint(state){
     if(!active||destroyed)return;
     transportHints();
-    panel.dataset.state=state.status;svg.dataset.replayStatus=state.status;
+    setReplayProperty(panel.dataset,'state',state.status);setReplayProperty(svg.dataset,'replayStatus',state.status);
     const ready=Boolean(state.session),playing=state.status==='playing',backtest=q('mode').value==='cutoff-backtest';
-    compactScore.hidden=!backtest||!ready;
-    seriesKey.textContent=backtest?'파랑 · 기준시점 고정 예측 / '+(q('display').value==='candles'?'캔들':'실선')+' · 실제 가격':q('mode').value==='atlas-chart'?'주황 · 현재 예측선 / 파랑 · 회고선 (채점 제외)':'';
-    q('mode-badge').textContent=externalBacktest?'월말 고정본':backtest?'기준시점 백테스트':q('mode').value==='atlas-chart'?'현재선 비교':'예측 비교';
-    q('mode-badge').disabled=hasChoice();q('result').hidden=!backtest;q('result').disabled=!ready||hasChoice()||picking||state.status==='selecting';
+    setReplayProperty(compactScore,'hidden',!backtest||!ready);
+    setReplayProperty(seriesKey,'textContent',backtest?'파랑 · 기준시점 고정 예측 / '+(q('display').value==='candles'?'캔들':'실선')+' · 실제 가격':q('mode').value==='atlas-chart'?'주황 · 현재 예측선 / 파랑 · 회고선 (채점 제외)':'');
+    setReplayProperty(q('mode-badge'),'textContent',externalBacktest?'월말 고정본':backtest?'기준시점 백테스트':q('mode').value==='atlas-chart'?'현재선 비교':'예측 비교');
+    setReplayProperty(q('mode-badge'),'disabled',hasChoice());setReplayProperty(q('result'),'hidden',!backtest);setReplayProperty(q('result'),'disabled',!ready||hasChoice()||picking||state.status==='selecting');
     setChartLoading(svg.parentElement,!ready&&state.status==='loading'&&!pendingAtlas,'리플레이 자료 로딩');
     const blocked=hasChoice()||picking||state.status==='selecting';
     updateDateContext(state);
     q('export').disabled=true;
     if(!ready){
-      inspect.textContent='';q('metric').textContent='';q('detail-metric').textContent='';
-      q('model-label').textContent=state.status==='error'?'예측을 생성하지 않았습니다.':'선택한 기준의 예측을 준비합니다.';
+      setReplayProperty(inspect,'textContent','');setReplayProperty(q('metric'),'textContent','');setReplayProperty(q('detail-metric'),'textContent','');
+      setReplayProperty(q('model-label'),'textContent',state.status==='error'?'예측을 생성하지 않았습니다.':'선택한 기준의 예측을 준비합니다.');
       for(const key of Object.keys(svg.dataset))if(key.startsWith('replay')&&key!=='replayStatus')delete svg.dataset[key];
     }
-    q('play').disabled=!playing&&(blocked||!ready||state.cursorIndex>=state.length-1);q('first').disabled=blocked||!ready||state.cursorIndex===0;q('next').disabled=blocked||!ready||state.cursorIndex>=state.length-1;q('scrub').disabled=blocked||!ready;
-    q('speed').value=String(state.speed);q('speed').title=speedMeaning(state.speed)+' · 실제 일봉 한 개씩 공개';q('speed').disabled=hasChoice();
-    q('speed-meaning').textContent='속도 '+state.speed+'× · '+speedMeaning(state.speed);q('live').disabled=blocked||!ready;
-    q('pick').setAttribute('aria-pressed',String(picking));q('pick-cancel').hidden=!picking;
-    if(picking)svg.dataset.replaySelecting='true';else delete svg.dataset.replaySelecting;
-    q('play').innerHTML=playing?pauseIcon():playIcon();q('play').setAttribute('aria-label',playing?'리플레이 일시정지':'리플레이 재생');q('play').title=(playing?'일시정지':'재생')+' · Shift + ↓';q('play').setAttribute('aria-pressed',String(playing));
-    q('scrub').max=String(Math.max(0,state.length-1));q('scrub').value=String(state.cursorIndex);
-    q('start').disabled=hasChoice()||!archive||state.status==='loading';
-    q('pick').disabled=hasChoice()||!archive||state.status==='loading'||q('mode').value==='recorded';q('select-menu').disabled=hasChoice();
-    for(const name of ['select-chart','select-date','select-random','select-first'])q(name).disabled=q('pick').disabled;
-    for(const name of ['mode','display','horizon','model','record','date'])if(q(name))q(name).disabled=hasChoice()||(name==='date'&&q('mode').value==='recorded');
-    if(externalBacktest)for(const name of ['select-menu','pick','start','mode','horizon','model','record','date','select-chart','select-date','select-random','select-first'])if(q(name))q(name).disabled=true;
+    setReplayProperty(q('play'),'disabled',!playing&&(blocked||!ready||state.cursorIndex>=state.length-1));setReplayProperty(q('first'),'disabled',blocked||!ready||state.cursorIndex===0);setReplayProperty(q('next'),'disabled',blocked||!ready||state.cursorIndex>=state.length-1);setReplayProperty(q('scrub'),'disabled',blocked||!ready);
+    setReplayProperty(q('speed'),'value',String(state.speed));setReplayProperty(q('speed'),'title',speedMeaning(state.speed)+' · 실제 일봉 한 개씩 공개');setReplayProperty(q('speed'),'disabled',hasChoice());
+    setReplayProperty(q('speed-meaning'),'textContent','속도 '+state.speed+'× · '+speedMeaning(state.speed));setReplayProperty(q('live'),'disabled',blocked||!ready);
+    setReplayAttribute(q('pick'),'aria-pressed',picking);setReplayProperty(q('pick-cancel'),'hidden',!picking);
+    if(picking)setReplayProperty(svg.dataset,'replaySelecting','true');else delete svg.dataset.replaySelecting;
+    if(playIconPlaying!==playing){q('play').innerHTML=playing?pauseIcon():playIcon();playIconPlaying=playing;}
+    setReplayAttribute(q('play'),'aria-label',playing?'리플레이 일시정지':'리플레이 재생');setReplayProperty(q('play'),'title',(playing?'일시정지':'재생')+' · Shift + ↓');setReplayAttribute(q('play'),'aria-pressed',playing);
+    setReplayProperty(q('scrub'),'max',String(Math.max(0,state.length-1)));setReplayProperty(q('scrub'),'value',String(state.cursorIndex));
+    setReplayProperty(q('start'),'disabled',hasChoice()||!archive||state.status==='loading');
+    setReplayProperty(q('pick'),'disabled',hasChoice()||!archive||state.status==='loading'||q('mode').value==='recorded');setReplayProperty(q('select-menu'),'disabled',hasChoice());
+    for(const name of ['select-chart','select-date','select-random','select-first'])setReplayProperty(q(name),'disabled',q('pick').disabled);
+    for(const name of ['mode','display','horizon','model','record','date'])if(q(name))setReplayProperty(q(name),'disabled',hasChoice()||(name==='date'&&q('mode').value==='recorded'));
+    if(externalBacktest)for(const name of ['select-menu','pick','start','mode','horizon','model','record','date','select-chart','select-date','select-random','select-first'])if(q(name))setReplayProperty(q(name),'disabled',true);
     const adaptiveUnavailable=state.status==='error'&&symbol==='ETHUSD'&&q('mode').value==='historical-reconstruction'&&q('model')?.value==='adaptive'&&state.error==='ETH adaptive model needs at least 30 causally classified returns in each state';
-    q('pooled-retry').hidden=!adaptiveUnavailable;
+    setReplayProperty(q('pooled-retry'),'hidden',!adaptiveUnavailable);
     if(state.status==='error'){
       disposeDrawing();frame=null;inspect.textContent='';q('cursor').textContent=adaptiveUnavailable?'예측 준비 조건 미충족':'리플레이 오류';q('metric').textContent='';q('detail-metric').textContent='';
       for(const key of Object.keys(svg.dataset))if(key.startsWith('replay')&&key!=='replayStatus')delete svg.dataset[key];

@@ -759,7 +759,7 @@ export function initLabView() {
       const first=captured.dataset.prices[0];
       return chartPresetRange({asOf:captured.forecast.asOf,referenceDate:captured.forecast.referenceDate??captured.forecast.asOf,firstDate:Array.isArray(first)?first[0]:first.date,lastDate:captured.forecast.path.at(-1).date,span});
     },
-    loadAtlasRenderer:()=>import('./chart-replay-atlas.js?v=1.31.3'),
+    loadAtlasRenderer:()=>import('./chart-replay-atlas.js?v=1.36.0'),
     loadRetrospectiveModel:()=>import('./replay-retrospective.js'),
     loadCutoffModel:()=>import('./replay-cutoff-forecast.js'),
     onAtlasFrame:({session,data,start,end,chartType,context,frequency=data.frequency??'daily',window=state.chartReplaySnapshot?.window??DEFAULT_CHART_SPAN,customRange=false,axis})=>{
