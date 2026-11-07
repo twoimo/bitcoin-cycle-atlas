@@ -32,6 +32,12 @@ selected direction and interface contracts are recorded in
   mapping, interpolation and signed contribution baseline are unchanged.
 - Package/version queries move to 1.33.0, and `build:pages` regenerates the
   content-hashed assets and route wrappers. Generated files are not hand edited.
+- The standalone HTML builder inlines all three new styles in the same order as
+  the web entry. Its existing unresolved-resource rejection remains intact.
+- The existing review-source inventory includes the three new CSS files. The
+  packaging test's explicit stylesheet inventory grows from 33 to 36, checks
+  each new stylesheet exactly once, and verifies rejection of a removed new
+  stylesheet. The original verifier and its byte-equality rules are unchanged.
 - The research focus test now resolves the current package version for the
   reader module instead of a fixed 1.32.2 import. Its behavioral assertions are
   unchanged; this keeps the fixture on the same module instance as the view.
@@ -46,6 +52,8 @@ selected direction and interface contracts are recorded in
 | TypeScript | Pass |
 | React market/panel + ztd tests | 20 passed, 0 failed, 0 skipped |
 | Legacy toolbar + release notes + research focus | 15 passed, 0 failed, 0 skipped |
+| Original offline replay/standalone tests | 5 passed, 0 failed, 0 skipped after including the new styles in the downloadable HTML |
+| Review-source inventory and standalone packaging tests | 37 passed, 0 failed, 0 skipped after extending coverage to the new styles |
 | CSS parsing for the three new stylesheets | 0 warnings |
 | Pages build and byte-equality verification | Pass, 9 generated routes |
 | Static reference verification | Pass, 799 files / 891 references |
@@ -81,3 +89,57 @@ The PR body records completed CI findings and screenshot review. The merge,
 release and Pages workflows then establish their own source identities. Public
 verification must check served publication metadata and actual response bytes;
 a successful build or tag alone does not establish the deployed source.
+
+## First candidate review and corrections
+
+Candidate `75e4a3c0ea55608bac0d28327fb60843d6a783cf` was inspected with the
+unchanged CI workflows. The market service's three native integrated cases
+(320/390/1440px) passed, including single outer toolbar, original input owners,
+source/frame state and native scrolling. All 27 captured PNG hashes matched
+their receipt. The candidate's 14 React workspace desktop/mobile Hallmark
+images and asset/research/IPO desktop/mobile images were read directly.
+
+The first candidate is **not** the final passing result. Its standalone builder
+omitted the three new stylesheets, causing the original unresolved-resource
+check to reject packaging. Adding the styles to the existing inlining list
+restores self-contained HTML; all five original offline replay tests then pass.
+
+The original full native run completed 53 cases: 50 passed and three BTC replay
+cases failed because the blue start-point preview inherited the new brass
+keyboard-focus color. Its actual stroke was `rgb(232, 201, 144)` at 1440×900,
+320×568 and 900×430. A separate replay-picker role restores the original
+`#8db2ff` for the guide and date label without changing focus, input handling,
+replay data or the original blue-color assertion. All 300 candidate PNGs and
+113 reported source hashes matched their artifact and commit; a fresh full run
+is required because the failed assertion stopped those cases early.
+
+Original Hallmark on that candidate recorded static **6 FAIL / 3 REFLEX / 64
+WARN**, core render **0 FAIL / 0 REFLEX / 10 WARN**, and integrated render
+**0 FAIL / 0 REFLEX / 3 WARN**. Source integrity, all declared route readiness,
+and before/current screenshots were complete; these were real design findings,
+not a tool timeout. Corrections in the following source revision are:
+
+- Promote the two repeated overlay/indicator-label paint values into shared
+  semantic tokens, preserving the exact paint.
+- Remove tracking from small metadata labels and align three new paddings with
+  the declared 4px rhythm while retaining mobile 44px controls.
+- Give source prose a consistent 72ch reading width.
+- Match the direct research search input's remaining blue-gray paint to the
+  shared surface/text roles, preserving its geometry and behavior.
+- Match the archived comparison route's select and selected timeframe control
+  to the shared surface/text roles, retaining its labelled chart-series colors.
+- Preserve a readable title-column width in narrow empty research results.
+  The existing six-column empty cell previously left the title header squeezed
+  when three metadata columns were hidden. A scoped empty-state column width
+  retains the existing rank/action widths, data and populated-table behavior.
+
+No checker, rating, warning input, immutable baseline or numerical data changed.
+Contrast warnings based on unresolved/inherited token combinations and repeated
+control recipes require actual rendered review; the count itself is not a
+target. The additional integrated `kept` warning concerns the baseline first
+route's `11.06` parent-body token, which is absent from that baseline's visible
+market screenshot. The current market observation date/value remains explicit.
+No date or hidden content was added merely to satisfy that warning.
+
+Final acceptance uses the follow-up head's own full CI and render receipts,
+recorded on the PR rather than treating these candidate results as final.

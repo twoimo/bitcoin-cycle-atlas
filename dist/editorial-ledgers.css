@@ -90,7 +90,7 @@
 #data-view .asset-history-heading p {
   color: var(--subtle);
   font-weight: 500;
-  letter-spacing: .04em;
+  letter-spacing: normal;
 }
 #data-view .daily-method-dialog h3 {
   margin-top: 24px;
@@ -194,6 +194,14 @@
 }
 
 /* Research index: title first, with its instruments on a quiet second line. */
+#evidence-view .evidence-controls input {
+  color: var(--text);
+  background: var(--bg);
+  border-color: var(--border-strong);
+}
+#evidence-view .evidence-controls input::placeholder {
+  color: var(--muted);
+}
 body #evidence-view .evidence-table-shell {
   border: 0;
   border-radius: 0;
@@ -309,7 +317,7 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
 .research-reader-nav > div:first-child > span:last-child {
   color: var(--muted);
   font-weight: 500;
-  letter-spacing: .04em;
+  letter-spacing: normal;
 }
 .research-reader-actions button {
   min-height: 36px;
@@ -427,7 +435,7 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   font-size: 13px;
 }
 .research-source-grid > div {
-  padding-block: 10px;
+  padding-block: 12px;
   border-bottom: 1px solid var(--border-soft);
 }
 .research-source-grid dt {
@@ -492,7 +500,7 @@ body #ipo-view .ipo-table-shell {
   font-weight: 500;
 }
 #ipo-view .ipo-table th {
-  padding-block: 10px;
+  padding-block: 12px;
   background: var(--surface);
   color: var(--muted);
   font-weight: 500;
@@ -705,7 +713,7 @@ body #ipo-view .ipo-table-shell {
   }
   .research-reader-actions button {
     min-height: 44px;
-    padding-inline: 10px;
+    padding-inline: 8px;
   }
   .research-article {
     padding: 24px 20px 40px;
@@ -759,6 +767,14 @@ body #ipo-view .ipo-table-shell {
   }
   #ipo-view :is(.ipo-cal-event,.ipo-day-more) {
     line-height: 16px;
+  }
+}
+/* The empty row still spans all six source columns. Reserve the title's share
+   after the mobile rank (40px) and action (60px), so those extra tracks cannot
+   squeeze its header when the three metadata columns are hidden. */
+@media (max-width: 600px) {
+  #evidence-view .evidence-table:has(.evidence-empty) col:nth-child(2) {
+    width: calc(100% - 100px);
   }
 }
 @media (pointer: coarse) {

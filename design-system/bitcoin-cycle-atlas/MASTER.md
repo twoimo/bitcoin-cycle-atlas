@@ -52,6 +52,7 @@ decorative cards, pill collections, gradients, glass effects and visual filler.
 | Subtle `--subtle` | `#989f8e` | Secondary metadata, never hidden facts |
 | Accent `--accent` | `#d8b56d` | Active location and primary emphasis |
 | Focus `--focus` | `#e8c990` | A visible, inset keyboard focus ring |
+| Replay picker `--replay-picker` | `#8db2ff` | The existing blue start-point preview and its date label |
 
 Preserve existing green/red and chart-series semantic mappings. Do not
 recalculate, recolor or reclassify a financial signal to fit the palette.

@@ -197,7 +197,7 @@
   line-height: 1.75;
 }
 #market-view .ml-source-body > p {
-  max-width: 76ch;
+  max-width: 72ch;
 }
 #market-view .ml-source-body article {
   padding: 16px 0 0;
@@ -205,7 +205,7 @@
   border-color: var(--border-soft);
 }
 #market-view .ml-source-body article p {
-  max-width: 90ch;
+  max-width: 72ch;
   font-size: 12px;
   line-height: 1.7;
 }
@@ -440,7 +440,7 @@
   line-height: 1.8;
 }
 .housing-caveat, .theme-caveat {
-  max-width: 76ch;
+  max-width: 72ch;
   font-size: 12px;
   line-height: 1.75;
 }
