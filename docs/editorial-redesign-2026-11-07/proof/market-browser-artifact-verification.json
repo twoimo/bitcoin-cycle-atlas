@@ -1,0 +1,16 @@
+{
+  "sourceCommit": "78f4673be1754400742afa3190a5cb3ad47f706e",
+  "status": "passed",
+  "expectedCases": 3,
+  "executedCases": 3,
+  "caseScope": "workspace-consolidated",
+  "passed": 3,
+  "pngHashesMatched": 27,
+  "sourceHashesMatched": 113,
+  "sourceIntegrity": {
+    "checkedFiles": 113,
+    "changedSources": [],
+    "unchangedDuringRun": true
+  },
+  "zipSha256": "918397eb80c6c216ef9cb204c0fa3c1678167a7375944ad4b8bf822c457dc860"
+}

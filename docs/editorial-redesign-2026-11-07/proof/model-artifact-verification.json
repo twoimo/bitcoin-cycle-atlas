@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "sourceCommit": "78f4673be1754400742afa3190a5cb3ad47f706e",
+  "sourceTree": "83a695e31f64b118122f2e671175a7013eca7e9e",
+  "runId": "42356303579",
+  "runAttempt": "1",
+  "artifactId": 13567439854,
+  "zipSha256": "f6c5057a066d78ad6ab7f5882c32e2a4fce49494c1f8cac8141913cf3ee86534",
+  "verifiedFiles": 396,
+  "declaredDirectories": 33,
+  "allExtractedFilesAccountedFor": true,
+  "handoffSha256": "b6a7415277805655bdc0a3841be7077be160e102ff9d8478d82e738ffa992298",
+  "handoffBytes": 93714
+}

@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "sourceCommit": "78f4673be1754400742afa3190a5cb3ad47f706e",
+  "caseScope": "all",
+  "cases": 53,
+  "passed": 53,
+  "failed": 0,
+  "pngFilesVerified": 371,
+  "pngReferencesVerified": 371,
+  "sourceHashesVerified": 113,
+  "sourceIntegrity": {
+    "checkedFiles": 113,
+    "changedSources": [],
+    "unchangedDuringRun": true
+  }
+}

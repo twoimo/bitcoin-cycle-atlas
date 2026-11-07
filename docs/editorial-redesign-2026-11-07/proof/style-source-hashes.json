@@ -1,0 +1,33 @@
+{
+  "sourceCommit": "78f4673be1754400742afa3190a5cb3ad47f706e",
+  "files": {
+    "dist/editorial-system.css": {
+      "bytes": 15958,
+      "sha256": "bc85810b8994474662c9811a1f3e29b553756a6cab8c732e39467b02dd443826"
+    },
+    "dist/editorial-panels.css": {
+      "bytes": 15909,
+      "sha256": "4475be7edae2b3520cf4b9caca1105e99adcc3a9dd2f4ad9ba720ab78c90e1ef"
+    },
+    "dist/editorial-ledgers.css": {
+      "bytes": 18138,
+      "sha256": "b91652d661d253c8efc227d6ab7acafbd22b8f55b6caea0cd01a09424b46faa2"
+    },
+    "dist/evidence-view.js": {
+      "bytes": 9394,
+      "sha256": "30ee25d5d8e44349d00d84a4d77457c4d55fe41eddc100e165df6f0b97b7fb64"
+    },
+    "dist/market-lab/app/index.html": {
+      "bytes": 2476,
+      "sha256": "327d359137e699de7500bb9af4581d3a9f82b8f45cf74e868e83d0cbc8bbc88e"
+    },
+    "dist/market-lab/app/assets/index-DtytQ06P.js": {
+      "bytes": 564233,
+      "sha256": "53fa94b2572409b29060a6d1867549f12c76abdce8120ff5f4ebd9cda54b80ae"
+    },
+    "dist/market-lab/app/assets/index-tqwTanFe.css": {
+      "bytes": 193666,
+      "sha256": "ae855791b3c7514f5d8992a531536b45ea69e46f7525838bf1c8599094bb73b7"
+    }
+  }
+}

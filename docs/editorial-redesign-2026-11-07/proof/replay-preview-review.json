@@ -1,0 +1,36 @@
+{
+  "sourceCommit": "78f4673be1754400742afa3190a5cb3ad47f706e",
+  "scope": "Unmodified original native assertions and recorded preview strokes",
+  "cases": [
+    {
+      "page": "chart-replay-btc",
+      "width": 1440,
+      "height": 900,
+      "status": "passed",
+      "pickerSamples": 9,
+      "previewStrokeColors": [
+        "rgb(141, 178, 255)"
+      ]
+    },
+    {
+      "page": "chart-replay-btc",
+      "width": 320,
+      "height": 568,
+      "status": "passed",
+      "pickerSamples": 2,
+      "previewStrokeColors": [
+        "rgb(141, 178, 255)"
+      ]
+    },
+    {
+      "page": "chart-replay-btc",
+      "width": 900,
+      "height": 430,
+      "status": "passed",
+      "pickerSamples": 2,
+      "previewStrokeColors": [
+        "rgb(141, 178, 255)"
+      ]
+    }
+  ]
+}

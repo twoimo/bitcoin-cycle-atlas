@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "productionSource": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+  "sourceTree": "83a695e31f64b118122f2e671175a7013eca7e9e",
+  "mainCI": {
+    "run": 42357801078,
+    "job": 128359630100,
+    "conclusion": "success",
+    "totals": {
+      "complete": true,
+      "tests": 2579,
+      "pass": 2579,
+      "fail": 0,
+      "skipped": 0,
+      "batches": 1
+    }
+  },
+  "pages": {
+    "run": 42357800987,
+    "buildJob": 128359629624,
+    "deployJob": 128362163663,
+    "conclusion": "success",
+    "build": {
+      "status": "PASS",
+      "sourceCommit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+      "files": 799,
+      "assets": 24,
+      "contentDigest": "23e5dbb90404ef5cd6dc1a2ff773a6f57f131e937baa6fb53b179b705327245c",
+      "manifestSha256": "e7fd6150374f9c6f74dc2bea742d5aa44be386b1f1c5274450eb91515b017b2f"
+    },
+    "servedOriginal": {
+      "status": "PASS",
+      "scope": "Public manifest identity and four critical HTTP file bodies; other remote files are not fetched",
+      "sourceCommit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+      "manifestSha256": "e7fd6150374f9c6f74dc2bea742d5aa44be386b1f1c5274450eb91515b017b2f",
+      "verified": [
+        "index.html",
+        "site-entry.js",
+        "data/btc-daily.json",
+        "data/forecast-ledger/index.json"
+      ],
+      "state": {
+        "phase": "confirmed",
+        "sourceCommit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+        "digest": "23e5dbb90404ef5cd6dc1a2ff773a6f57f131e937baa6fb53b179b705327245c",
+        "validatedDigest": "23e5dbb90404ef5cd6dc1a2ff773a6f57f131e937baa6fb53b179b705327245c",
+        "servedDigest": "23e5dbb90404ef5cd6dc1a2ff773a6f57f131e937baa6fb53b179b705327245c",
+        "servedCommit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+        "reason": null
+      },
+      "localFilesChecked": null
+    }
+  },
+  "release": {
+    "run": 42357801009,
+    "tag": "v1.33.0",
+    "conclusion": "success",
+    "details": "release-review.json"
+  }
+}

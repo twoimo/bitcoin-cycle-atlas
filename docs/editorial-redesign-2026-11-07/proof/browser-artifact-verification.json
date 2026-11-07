@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "auditedAt": "2026-11-07T08:59:40.151975+00:00",
+  "sourceCommit": "78f4673be1754400742afa3190a5cb3ad47f706e",
+  "sourceTree": "83a695e31f64b118122f2e671175a7013eca7e9e",
+  "runId": "42356303579",
+  "runAttempt": "1",
+  "artifactId": 13567899406,
+  "artifactSha256": "89ff45f105119c32ecb022041e475cca11717f9c89952a80eed5c6300c3deeb8",
+  "caseCount": 53,
+  "passed": 53,
+  "failed": 0,
+  "orderedCaseInventory": "matches original createEthBrowserCaseSpecs exactly",
+  "sourceFileCount": 113,
+  "sourceIntegrity": {
+    "checkedFiles": 113,
+    "changedSources": [],
+    "unchangedDuringRun": true
+  },
+  "screenshotFileCount": 371,
+  "allScreenshotBytesAndHashesMatch": true,
+  "noExtraOrMissingScreenshots": true,
+  "syntheticFixture": {
+    "file": "zero-fixture.json",
+    "bytes": 35829,
+    "sha256": "eaa0cacef400f4bec3aae4c54bfc572ac73a9e19675a4465d2dbe388a26f89a6",
+    "recordId": "e5475cc0165e45f68c0f490827bc256c161f0be6d3854eca27dcc30ddec733e2",
+    "snapshotId": "924ce95aa5a5e9cda7de95fd5f4061ae7f2517b4856bf7ef5e0f91ca3445d6c5"
+  },
+  "additionalEditorialCssHashes": {
+    "dist/editorial-ledgers.css": "b91652d661d253c8efc227d6ab7acafbd22b8f55b6caea0cd01a09424b46faa2",
+    "dist/editorial-panels.css": "4475be7edae2b3520cf4b9caca1105e99adcc3a9dd2f4ad9ba720ab78c90e1ef",
+    "dist/editorial-system.css": "bc85810b8994474662c9811a1f3e29b553756a6cab8c732e39467b02dd443826"
+  },
+  "reportReceipt": {
+    "file": "report.json",
+    "bytes": 5904731,
+    "sha256": "8c4550753c2e190f2f39bc96290f5864f90ed64231af5d7533c8e10832f9f464"
+  }
+}

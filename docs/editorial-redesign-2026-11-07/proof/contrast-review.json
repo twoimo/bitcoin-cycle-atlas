@@ -1,0 +1,903 @@
+{
+  "schemaVersion": 1,
+  "kind": "source-contrast-review",
+  "createdAt": "2026-11-07T09:00:20.101Z",
+  "sourceCommit": "78f4673be1754400742afa3190a5cb3ad47f706e",
+  "sourceTree": "83a695e31f64b118122f2e671175a7013eca7e9e",
+  "scope": {
+    "originalStaticWarnings": 60,
+    "originalF40Warnings": 11,
+    "sourceModified": false,
+    "checkerModified": false,
+    "warningsRemovedOrRegraded": false,
+    "fullSiteWCAGConformanceClaim": false,
+    "publicDOMMeasuredInThisReview": false,
+    "publicDOMFollowUpOwner": "root",
+    "measurementType": "WCAG 2.2 numerical calculation on specified opaque sRGB source pairs, plus read-only upstream resolver analysis"
+  },
+  "officialMethod": {
+    "standard": "WCAG 2.2",
+    "references": [
+      "https://www.w3.org/TR/WCAG22/#dfn-relative-luminance",
+      "https://www.w3.org/TR/WCAG22/#dfn-contrast-ratio",
+      "https://www.w3.org/TR/WCAG22/#contrast-minimum"
+    ],
+    "channelLinearization": "c = channel8bit/255; if c <= 0.04045, c/12.92; otherwise ((c+0.055)/1.055)^2.4",
+    "luminance": "0.2126*Rlinear + 0.7152*Glinear + 0.0722*Blinear",
+    "contrast": "(max(Lfg,Lbg)+0.05)/(min(Lfg,Lbg)+0.05)",
+    "normalTextMinimum": 4.5,
+    "thresholdComparedBeforeRounding": true,
+    "assumptions": [
+      "Both colors are opaque sRGB",
+      "No opacity, alpha, overlay, filter, image, gradient, or blending is represented by these pairs"
+    ]
+  },
+  "checker": {
+    "upstreamCommit": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
+    "file": "tools/hallmark/upstream/sloplint.mjs",
+    "gitBlob": "9916fa07286e58d319528ad7cfe4ad94318e5796",
+    "sourceReferences": [
+      {
+        "lines": [
+          737,
+          743
+        ],
+        "role": "Same relative-luminance contrast formula"
+      },
+      {
+        "lines": [
+          746,
+          760
+        ],
+        "role": "TOKEN_SEL/isTokenRule accepts both :root and theme selectors; buildTokens overwrites one flat dictionary without testing selector/media activation"
+      },
+      {
+        "lines": [
+          763,
+          773
+        ],
+        "role": "resolveVars resolves a rule-local custom property first, then the flat context tokens"
+      },
+      {
+        "lines": [
+          1032,
+          1043
+        ],
+        "role": "Same selector/media declarations are appended; no DOM matching or CSS specificity model"
+      },
+      {
+        "lines": [
+          1890,
+          1915
+        ],
+        "role": "F40 uses first color/background declaration found and opaque pairs; no computed-style sampling; original report tolerance is threshold minus 0.05"
+      },
+      {
+        "lines": [
+          4058,
+          4089
+        ],
+        "role": "Context reads its supplied CSS file list before attached HTML links"
+      },
+      {
+        "lines": [
+          4110,
+          4127
+        ],
+        "role": "A page with same-directory CSS uses the collected CSS list; generated wrappers with no own CSS get attached link order"
+      }
+    ],
+    "analysisProbe": "Evaluated unchanged pure helper definitions read from the pinned source against main same-directory CSS order and one generated wrapper attached-link order. This does not rerun or replace the official checker receipt.",
+    "limits": [
+      "Theme selectors and media activation are flattened for token resolution",
+      "Static CSS collection order can differ from actual HTML stylesheet cascade order",
+      "F40 reads first matching declarations in the merged selector entry, whereas CSS normally chooses by origin/layer/importance/specificity/order",
+      "Inherited/composited colors and all interactive states require actual computed-style/render review"
+    ]
+  },
+  "originalReport": {
+    "path": "build/ci-78f4/hallmark-workspaces/reports/current-static.stdout.json",
+    "sha256": "d8034977ee9cd95bc8c929a5a34d557ec6012999735990ec54d4a8d679700f38",
+    "findingsRetained": [
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/atlas-shell.css",
+        "line": 32,
+        "evidence": "2.55:1 < 4.5:1 on body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(.active,[aria-current=page])",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/atlas-shell.css",
+        "line": 109,
+        "evidence": "2.55:1 < 4.5:1 on .rsi-toolbar button[aria-pressed=true]",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/atlas-shell.css",
+        "line": 130,
+        "evidence": "2.55:1 < 4.5:1 on body[data-shell=chart] .workbench-rail .atlas-nav .active",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/chart-bottom-bar.css",
+        "line": 26,
+        "evidence": "2.57:1 < 4.5:1 on .workbench-bottom-bar button[aria-pressed=true]",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/chart-details-panel.css",
+        "line": 74,
+        "evidence": "2.27:1 < 4.5:1 on .workbench-icon[aria-expanded=true],.workbench-icon[aria-pressed=true],.workbench-rail .atlas-nav but…",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/chart-details-panel.css",
+        "line": 82,
+        "evidence": "2.27:1 < 4.5:1 on #workbench-frequency button[aria-pressed=true]",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/chart-details-panel.css",
+        "line": 112,
+        "evidence": "2.57:1 < 4.5:1 on .workbench-ranges button[aria-pressed=true]",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/chart-details-panel.css",
+        "line": 118,
+        "evidence": "2.57:1 < 4.5:1 on .workbench-axis .workbench-auto[aria-pressed=true]",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/editorial-system.css",
+        "line": 193,
+        "evidence": "2.55:1 < 4.5:1 on .workbench-rail .atlas-nav :is(a, button):is(.active, [aria-current=page])",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/editorial-system.css",
+        "line": 362,
+        "evidence": "2.55:1 < 4.5:1 on .indicator-categories button[aria-pressed=true], .indicator-library-views button[aria-pressed=true]",
+        "fix": "Raise the contrast to threshold"
+      },
+      {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/lab.css",
+        "line": 6,
+        "evidence": "2.96:1 < 4.5:1 on .lab-error",
+        "fix": "Raise the contrast to threshold"
+      }
+    ]
+  },
+  "resolverProbes": [
+    {
+      "name": "main-own-css-file-collection",
+      "cssFileOrder": [
+        "dist/analysis-dock.css",
+        "dist/atlas-shell.css",
+        "dist/atlas.css",
+        "dist/chart-bottom-bar.css",
+        "dist/chart-details-panel.css",
+        "dist/chart-export-workbench.css",
+        "dist/chart-magnet.css",
+        "dist/chart-replay.css",
+        "dist/chart-workspace-controls.css",
+        "dist/compact-chart-layout.css",
+        "dist/compact-toolbar.css",
+        "dist/compact.css",
+        "dist/cycle-milestones.css",
+        "dist/daily-data.css",
+        "dist/editorial-ledgers.css",
+        "dist/editorial-panels.css",
+        "dist/editorial-system.css",
+        "dist/equity-view.css",
+        "dist/eth-view.css",
+        "dist/ethereum-history.css",
+        "dist/forecast-journal.css",
+        "dist/ipo-view.css",
+        "dist/lab.css",
+        "dist/legacy-workspace-toolbar.css",
+        "dist/loading-surfaces.css",
+        "dist/market-lab.css",
+        "dist/mobile-workspace.css",
+        "dist/monthly-backtest.css",
+        "dist/outlook.css",
+        "dist/research-annotations.css",
+        "dist/research-reader.css",
+        "dist/styles.css",
+        "dist/symbol-selector.css",
+        "dist/viewport.css",
+        "dist/workspace-tools.css"
+      ],
+      "selectedResolvedTokens": {
+        "--accent": {
+          "raw": "#925b15",
+          "resolved": "#925b15"
+        },
+        "--red": {
+          "raw": "#ad3e52",
+          "resolved": "#ad3e52"
+        },
+        "--surface": {
+          "raw": "#fff",
+          "resolved": "#fff"
+        },
+        "--nav-active-bg": {
+          "raw": "#2d2a21",
+          "resolved": "#2d2a21"
+        },
+        "--nav-active-text": {
+          "raw": "var(--accent)",
+          "resolved": "#925b15"
+        },
+        "--chrome-active": {
+          "raw": "var(--accent)",
+          "resolved": "#925b15"
+        },
+        "--chart-bottom-bar-surface-2": {
+          "raw": "#1c2a3e",
+          "resolved": "#1c2a3e"
+        },
+        "--chart-details-panel-surface-7": {
+          "raw": "#22334a",
+          "resolved": "#22334a"
+        }
+      }
+    },
+    {
+      "name": "generated-wrapper-attached-link-order",
+      "cssFileOrder": [
+        "dist/styles.css",
+        "dist/compact.css",
+        "dist/outlook.css",
+        "dist/lab.css",
+        "dist/atlas.css",
+        "dist/viewport.css",
+        "dist/chart-details-panel.css",
+        "dist/analysis-dock.css",
+        "dist/chart-magnet.css",
+        "dist/mobile-workspace.css",
+        "dist/workspace-tools.css",
+        "dist/chart-workspace-controls.css",
+        "dist/research-annotations.css",
+        "dist/chart-export-workbench.css",
+        "dist/cycle-milestones.css",
+        "dist/compact-chart-layout.css",
+        "dist/chart-bottom-bar.css",
+        "dist/symbol-selector.css",
+        "dist/eth-view.css",
+        "dist/equity-view.css",
+        "dist/research-reader.css",
+        "dist/ethereum-history.css",
+        "dist/daily-data.css",
+        "dist/forecast-journal.css",
+        "dist/chart-replay.css",
+        "dist/monthly-backtest.css",
+        "dist/ipo-view.css",
+        "dist/market-lab.css",
+        "dist/atlas-shell.css",
+        "dist/compact-toolbar.css",
+        "dist/legacy-workspace-toolbar.css",
+        "dist/vendor/skullet/styles.css",
+        "dist/loading-surfaces.css",
+        "dist/editorial-system.css",
+        "dist/editorial-panels.css",
+        "dist/editorial-ledgers.css"
+      ],
+      "selectedResolvedTokens": {
+        "--accent": {
+          "raw": "#d8b56d",
+          "resolved": "#d8b56d"
+        },
+        "--red": {
+          "raw": "#ad3e52",
+          "resolved": "#ad3e52"
+        },
+        "--surface": {
+          "raw": "#191b17",
+          "resolved": "#191b17"
+        },
+        "--nav-active-bg": {
+          "raw": "#2d2a21",
+          "resolved": "#2d2a21"
+        },
+        "--nav-active-text": {
+          "raw": "var(--accent)",
+          "resolved": "#d8b56d"
+        },
+        "--chrome-active": {
+          "raw": "var(--accent)",
+          "resolved": "#d8b56d"
+        },
+        "--chart-bottom-bar-surface-2": {
+          "raw": "var(--nav-active-bg)",
+          "resolved": "#2d2a21"
+        },
+        "--chart-details-panel-surface-7": {
+          "raw": "var(--nav-active-bg)",
+          "resolved": "#2d2a21"
+        }
+      }
+    }
+  ],
+  "activeNavigation": {
+    "reportedStaticPair": {
+      "foreground": "#925b15",
+      "background": "#2d2a21",
+      "foregroundLuminance": 0.1364730616362213,
+      "backgroundLuminance": 0.023236226006763953,
+      "ratio": 2.5461861131265695,
+      "ratioRounded": 2.55,
+      "normalTextAA": false
+    },
+    "sourceDerivedDarkPair": {
+      "foreground": "#d8b56d",
+      "background": "#2d2a21",
+      "foregroundLuminance": 0.4875080357507016,
+      "backgroundLuminance": 0.023236226006763953,
+      "ratio": 7.3393737643042725,
+      "ratioRounded": 7.34,
+      "normalTextAA": true
+    },
+    "interpretation": "The reported 2.55:1 is exactly reproduced by inactive legacy light-theme accent #925b15 and new dark nav background #2d2a21. The intended dark-role pair is 7.339374:1. This is a source-derived comparison; the current public DOM is checked separately."
+  },
+  "warningAnalysis": [
+    {
+      "originalFinding": {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/atlas-shell.css",
+        "line": 32,
+        "evidence": "2.55:1 < 4.5:1 on body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(.active,[aria-current=page])",
+        "fix": "Raise the contrast to threshold"
+      },
+      "reproducedByReadOnlyHelpers": [
+        {
+          "context": "main-own-css-file-collection",
+          "selector": "body[data-shell=dashboard] .atlas-sidebar .atlas-nav :is(.active,[aria-current=page])",
+          "foregroundDeclaration": "var(--nav-active-text)",
+          "backgroundDeclaration": "var(--nav-active-bg)",
+          "foreground": "#925b15",
+          "background": "#2d2a21",
+          "foregroundLuminance": 0.1364730616362213,
+          "backgroundLuminance": 0.023236226006763953,
+          "ratio": 2.5461861131265695,
+          "ratioRounded": 2.55,
+          "normalTextAA": false
+        }
+      ],
+      "classification": "static-token/cascade mismatch reproduced; warning retained; not a full rendered-state false-positive ruling"
+    },
+    {
+      "originalFinding": {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/atlas-shell.css",
+        "line": 109,
+        "evidence": "2.55:1 < 4.5:1 on .rsi-toolbar button[aria-pressed=true]",
+        "fix": "Raise the contrast to threshold"
+      },
+      "reproducedByReadOnlyHelpers": [
+        {
+          "context": "main-own-css-file-collection",
+          "selector": ".rsi-toolbar button[aria-pressed=true]",
+          "foregroundDeclaration": "var(--nav-active-text)",
+          "backgroundDeclaration": "var(--nav-active-bg)",
+          "foreground": "#925b15",
+          "background": "#2d2a21",
+          "foregroundLuminance": 0.1364730616362213,
+          "backgroundLuminance": 0.023236226006763953,
+          "ratio": 2.5461861131265695,
+          "ratioRounded": 2.55,
+          "normalTextAA": false
+        }
+      ],
+      "classification": "static-token/cascade mismatch reproduced; warning retained; not a full rendered-state false-positive ruling"
+    },
+    {
+      "originalFinding": {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/atlas-shell.css",
+        "line": 130,
+        "evidence": "2.55:1 < 4.5:1 on body[data-shell=chart] .workbench-rail .atlas-nav .active",
+        "fix": "Raise the contrast to threshold"
+      },
+      "reproducedByReadOnlyHelpers": [
+        {
+          "context": "main-own-css-file-collection",
+          "selector": "body[data-shell=chart] .workbench-rail .atlas-nav .active",
+          "foregroundDeclaration": "var(--nav-active-text)",
+          "backgroundDeclaration": "var(--nav-active-bg)",
+          "foreground": "#925b15",
+          "background": "#2d2a21",
+          "foregroundLuminance": 0.1364730616362213,
+          "backgroundLuminance": 0.023236226006763953,
+          "ratio": 2.5461861131265695,
+          "ratioRounded": 2.55,
+          "normalTextAA": false
+        }
+      ],
+      "classification": "static-token/cascade mismatch reproduced; warning retained; not a full rendered-state false-positive ruling"
+    },
+    {
+      "originalFinding": {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/chart-bottom-bar.css",
+        "line": 26,
+        "evidence": "2.57:1 < 4.5:1 on .workbench-bottom-bar button[aria-pressed=true]",
+        "fix": "Raise the contrast to threshold"
+      },
+      "reproducedByReadOnlyHelpers": [
+        {
+          "context": "main-own-css-file-collection",
+          "selector": ".workbench-bottom-bar button[aria-pressed=true]",
+          "foregroundDeclaration": "var(--chrome-active,var(--chart-bottom-bar-ink-4))",
+          "backgroundDeclaration": "var(--chart-bottom-bar-surface-2)",
+          "foreground": "#925b15",
+          "background": "#1c2a3e",
+          "foregroundLuminance": 0.1364730616362213,
+          "backgroundLuminance": 0.02250605652497953,
+          "ratio": 2.5718273834404197,
+          "ratioRounded": 2.57,
+          "normalTextAA": false
+        }
+      ],
+      "classification": "static-token/cascade mismatch reproduced; warning retained; not a full rendered-state false-positive ruling"
+    },
+    {
+      "originalFinding": {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/chart-details-panel.css",
+        "line": 74,
+        "evidence": "2.27:1 < 4.5:1 on .workbench-icon[aria-expanded=true],.workbench-icon[aria-pressed=true],.workbench-rail .atlas-nav but…",
+        "fix": "Raise the contrast to threshold"
+      },
+      "reproducedByReadOnlyHelpers": [
+        {
+          "context": "main-own-css-file-collection",
+          "selector": ".workbench-icon[aria-expanded=true],.workbench-icon[aria-pressed=true],.workbench-rail .atlas-nav button.active",
+          "foregroundDeclaration": "var(--chrome-active)",
+          "backgroundDeclaration": "var(--chart-details-panel-surface-7)",
+          "foreground": "#925b15",
+          "background": "#22334a",
+          "foregroundLuminance": 0.1364730616362213,
+          "backgroundLuminance": 0.03202146488377003,
+          "ratio": 2.2734666090207756,
+          "ratioRounded": 2.27,
+          "normalTextAA": false
+        }
+      ],
+      "classification": "static-token/cascade mismatch reproduced; warning retained; not a full rendered-state false-positive ruling"
+    },
+    {
+      "originalFinding": {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/chart-details-panel.css",
+        "line": 82,
+        "evidence": "2.27:1 < 4.5:1 on #workbench-frequency button[aria-pressed=true]",
+        "fix": "Raise the contrast to threshold"
+      },
+      "reproducedByReadOnlyHelpers": [
+        {
+          "context": "main-own-css-file-collection",
+          "selector": "#workbench-frequency button[aria-pressed=true]",
+          "foregroundDeclaration": "var(--chrome-active)",
+          "backgroundDeclaration": "var(--chart-details-panel-surface-7)",
+          "foreground": "#925b15",
+          "background": "#22334a",
+          "foregroundLuminance": 0.1364730616362213,
+          "backgroundLuminance": 0.03202146488377003,
+          "ratio": 2.2734666090207756,
+          "ratioRounded": 2.27,
+          "normalTextAA": false
+        }
+      ],
+      "classification": "static-token/cascade mismatch reproduced; warning retained; not a full rendered-state false-positive ruling"
+    },
+    {
+      "originalFinding": {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/chart-details-panel.css",
+        "line": 112,
+        "evidence": "2.57:1 < 4.5:1 on .workbench-ranges button[aria-pressed=true]",
+        "fix": "Raise the contrast to threshold"
+      },
+      "reproducedByReadOnlyHelpers": [
+        {
+          "context": "main-own-css-file-collection",
+          "selector": ".workbench-ranges button[aria-pressed=true]",
+          "foregroundDeclaration": "var(--chrome-active)",
+          "backgroundDeclaration": "var(--chart-bottom-bar-surface-2)",
+          "foreground": "#925b15",
+          "background": "#1c2a3e",
+          "foregroundLuminance": 0.1364730616362213,
+          "backgroundLuminance": 0.02250605652497953,
+          "ratio": 2.5718273834404197,
+          "ratioRounded": 2.57,
+          "normalTextAA": false
+        }
+      ],
+      "classification": "static-token/cascade mismatch reproduced; warning retained; not a full rendered-state false-positive ruling"
+    },
+    {
+      "originalFinding": {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/chart-details-panel.css",
+        "line": 118,
+        "evidence": "2.57:1 < 4.5:1 on .workbench-axis .workbench-auto[aria-pressed=true]",
+        "fix": "Raise the contrast to threshold"
+      },
+      "reproducedByReadOnlyHelpers": [
+        {
+          "context": "main-own-css-file-collection",
+          "selector": ".workbench-axis .workbench-auto[aria-pressed=true]",
+          "foregroundDeclaration": "var(--chrome-active)",
+          "backgroundDeclaration": "var(--chart-bottom-bar-surface-2)",
+          "foreground": "#925b15",
+          "background": "#1c2a3e",
+          "foregroundLuminance": 0.1364730616362213,
+          "backgroundLuminance": 0.02250605652497953,
+          "ratio": 2.5718273834404197,
+          "ratioRounded": 2.57,
+          "normalTextAA": false
+        }
+      ],
+      "classification": "static-token/cascade mismatch reproduced; warning retained; not a full rendered-state false-positive ruling"
+    },
+    {
+      "originalFinding": {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/editorial-system.css",
+        "line": 193,
+        "evidence": "2.55:1 < 4.5:1 on .workbench-rail .atlas-nav :is(a, button):is(.active, [aria-current=page])",
+        "fix": "Raise the contrast to threshold"
+      },
+      "reproducedByReadOnlyHelpers": [
+        {
+          "context": "main-own-css-file-collection",
+          "selector": ".workbench-rail .atlas-nav :is(a, button):is(.active, [aria-current=page])",
+          "foregroundDeclaration": "var(--accent)",
+          "backgroundDeclaration": "var(--nav-active-bg)",
+          "foreground": "#925b15",
+          "background": "#2d2a21",
+          "foregroundLuminance": 0.1364730616362213,
+          "backgroundLuminance": 0.023236226006763953,
+          "ratio": 2.5461861131265695,
+          "ratioRounded": 2.55,
+          "normalTextAA": false
+        }
+      ],
+      "classification": "static-token/cascade mismatch reproduced; warning retained; not a full rendered-state false-positive ruling"
+    },
+    {
+      "originalFinding": {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/editorial-system.css",
+        "line": 362,
+        "evidence": "2.55:1 < 4.5:1 on .indicator-categories button[aria-pressed=true], .indicator-library-views button[aria-pressed=true]",
+        "fix": "Raise the contrast to threshold"
+      },
+      "reproducedByReadOnlyHelpers": [
+        {
+          "context": "main-own-css-file-collection",
+          "selector": ".indicator-categories button[aria-pressed=true], .indicator-library-views button[aria-pressed=true]",
+          "foregroundDeclaration": "var(--accent)",
+          "backgroundDeclaration": "var(--nav-active-bg)",
+          "foreground": "#925b15",
+          "background": "#2d2a21",
+          "foregroundLuminance": 0.1364730616362213,
+          "backgroundLuminance": 0.023236226006763953,
+          "ratio": 2.5461861131265695,
+          "ratioRounded": 2.55,
+          "normalTextAA": false
+        }
+      ],
+      "classification": "static-token/cascade mismatch reproduced; warning retained; not a full rendered-state false-positive ruling"
+    },
+    {
+      "originalFinding": {
+        "gate": "40",
+        "grade": "WARN",
+        "tier": "floor",
+        "file": "dist/lab.css",
+        "line": 6,
+        "evidence": "2.96:1 < 4.5:1 on .lab-error",
+        "fix": "Raise the contrast to threshold"
+      },
+      "reproducedByReadOnlyHelpers": [
+        {
+          "context": "generated-wrapper-attached-link-order",
+          "selector": ".lab-error",
+          "foregroundDeclaration": "var(--red)",
+          "backgroundDeclaration": "var(--surface)",
+          "foreground": "#ad3e52",
+          "background": "#191b17",
+          "foregroundLuminance": 0.12938681722287287,
+          "backgroundLuminance": 0.010524008705347563,
+          "ratio": 2.9638951725123133,
+          "ratioRounded": 2.96,
+          "normalTextAA": false
+        }
+      ],
+      "classification": "static-token/cascade mismatch reproduced; warning retained; not a full rendered-state false-positive ruling"
+    }
+  ],
+  "sourceDerivedDarkPalette": {
+    "bg": "#111210",
+    "surface": "#191b17",
+    "surfaceRaised": "#22251f",
+    "surfaceHover": "#2b2f27",
+    "navActiveBackground": "#2d2a21",
+    "text": "#edece5",
+    "muted": "#b9bdb0",
+    "subtle": "#989f8e",
+    "accent": "#d8b56d",
+    "red": "#ec8190"
+  },
+  "sourceDerivedDarkTextContrastMatrix": [
+    {
+      "foregroundRole": "text",
+      "backgroundRole": "bg",
+      "foreground": "#edece5",
+      "background": "#111210",
+      "foregroundLuminance": 0.8365257307641641,
+      "backgroundLuminance": 0.005891937143161695,
+      "ratio": 15.861424314090522,
+      "ratioRounded": 15.86,
+      "normalTextAA": true
+    },
+    {
+      "foregroundRole": "text",
+      "backgroundRole": "surface",
+      "foreground": "#edece5",
+      "background": "#191b17",
+      "foregroundLuminance": 0.8365257307641641,
+      "backgroundLuminance": 0.010524008705347563,
+      "ratio": 14.647505175674786,
+      "ratioRounded": 14.65,
+      "normalTextAA": true
+    },
+    {
+      "foregroundRole": "text",
+      "backgroundRole": "surfaceRaised",
+      "foreground": "#edece5",
+      "background": "#22251f",
+      "foregroundLuminance": 0.8365257307641641,
+      "backgroundLuminance": 0.01762145980133882,
+      "ratio": 13.110124113981522,
+      "ratioRounded": 13.11,
+      "normalTextAA": true
+    },
+    {
+      "foregroundRole": "text",
+      "backgroundRole": "surfaceHover",
+      "foreground": "#edece5",
+      "background": "#2b2f27",
+      "foregroundLuminance": 0.8365257307641641,
+      "backgroundLuminance": 0.026931050364804168,
+      "ratio": 11.523640019995726,
+      "ratioRounded": 11.52,
+      "normalTextAA": true
+    },
+    {
+      "foregroundRole": "muted",
+      "backgroundRole": "bg",
+      "foreground": "#b9bdb0",
+      "background": "#111210",
+      "foregroundLuminance": 0.49844069046318606,
+      "backgroundLuminance": 0.005891937143161695,
+      "ratio": 9.812518915893168,
+      "ratioRounded": 9.81,
+      "normalTextAA": true
+    },
+    {
+      "foregroundRole": "muted",
+      "backgroundRole": "surface",
+      "foreground": "#b9bdb0",
+      "background": "#191b17",
+      "foregroundLuminance": 0.49844069046318606,
+      "backgroundLuminance": 0.010524008705347563,
+      "ratio": 9.061539415427534,
+      "ratioRounded": 9.06,
+      "normalTextAA": true
+    },
+    {
+      "foregroundRole": "muted",
+      "backgroundRole": "surfaceRaised",
+      "foreground": "#b9bdb0",
+      "background": "#22251f",
+      "foregroundLuminance": 0.49844069046318606,
+      "backgroundLuminance": 0.01762145980133882,
+      "ratio": 8.110453280281412,
+      "ratioRounded": 8.11,
+      "normalTextAA": true
+    },
+    {
+      "foregroundRole": "muted",
+      "backgroundRole": "surfaceHover",
+      "foreground": "#b9bdb0",
+      "background": "#2b2f27",
+      "foregroundLuminance": 0.49844069046318606,
+      "backgroundLuminance": 0.026931050364804168,
+      "ratio": 7.128990022396689,
+      "ratioRounded": 7.13,
+      "normalTextAA": true
+    },
+    {
+      "foregroundRole": "subtle",
+      "backgroundRole": "bg",
+      "foreground": "#989f8e",
+      "background": "#111210",
+      "foregroundLuminance": 0.3342466820799381,
+      "backgroundLuminance": 0.005891937143161695,
+      "ratio": 6.874814181081754,
+      "ratioRounded": 6.87,
+      "normalTextAA": true
+    },
+    {
+      "foregroundRole": "subtle",
+      "backgroundRole": "surface",
+      "foreground": "#989f8e",
+      "background": "#191b17",
+      "foregroundLuminance": 0.3342466820799381,
+      "backgroundLuminance": 0.010524008705347563,
+      "ratio": 6.3486654354074235,
+      "ratioRounded": 6.35,
+      "normalTextAA": true
+    },
+    {
+      "foregroundRole": "subtle",
+      "backgroundRole": "surfaceRaised",
+      "foreground": "#989f8e",
+      "background": "#22251f",
+      "foregroundLuminance": 0.3342466820799381,
+      "backgroundLuminance": 0.01762145980133882,
+      "ratio": 5.68231864867742,
+      "ratioRounded": 5.68,
+      "normalTextAA": true
+    },
+    {
+      "foregroundRole": "subtle",
+      "backgroundRole": "surfaceHover",
+      "foreground": "#989f8e",
+      "background": "#2b2f27",
+      "foregroundLuminance": 0.3342466820799381,
+      "backgroundLuminance": 0.026931050364804168,
+      "ratio": 4.994689143822352,
+      "ratioRounded": 4.99,
+      "normalTextAA": true
+    }
+  ],
+  "labError": {
+    "reportedStaticPair": {
+      "foreground": "#ad3e52",
+      "background": "#191b17",
+      "foregroundLuminance": 0.12938681722287287,
+      "backgroundLuminance": 0.010524008705347563,
+      "ratio": 2.9638951725123133,
+      "ratioRounded": 2.96,
+      "normalTextAA": false
+    },
+    "sourceDerivedDarkOnSurface": {
+      "foreground": "#ec8190",
+      "background": "#191b17",
+      "foregroundLuminance": 0.3554699737654804,
+      "backgroundLuminance": 0.010524008705347563,
+      "ratio": 6.699324490211028,
+      "ratioRounded": 6.7,
+      "normalTextAA": true
+    },
+    "sourceDerivedDarkWithLaterViewportBackground": {
+      "foreground": "#ec8190",
+      "background": "#351c23",
+      "foregroundLuminance": 0.3554699737654804,
+      "backgroundLuminance": 0.01708740982434062,
+      "ratio": 6.0439056274068275,
+      "ratioRounded": 6.04,
+      "normalTextAA": true
+    },
+    "explanation": "In generated-wrapper link order, buildTokens retains --red from inactive [data-theme=light] because editorial-system does not redefine the semantic red, while --surface is the new dark surface. F40 selects the first .lab-error background from lab.css. Real CSS also has a later .lab-error background in viewport.css (var(--viewport-surface-2), #351c23 from styles.css). Without a matching light-theme ancestor, --red comes from the dark :root (#ec8190). Error-state computed style is still a separate browser check."
+  },
+  "sourceCascade": {
+    "host": "dist/index.html links styles.css and atlas-shell.css before editorial-system.css; panels/ledgers follow system. Thus matching later :root roles win in the expected dark source state.",
+    "react": "apps/web/src/main.tsx imports editorial-system.css then editorial-panels.css after the original styles.",
+    "darkStateCondition": "No matching data-theme=light ancestor and no later, more-specific, inline, or state override affecting the element.",
+    "styleConditionNotPublicMeasurement": true
+  },
+  "conclusion": {
+    "sourceFinding": "All 11 original F40 numeric warning values can be reproduced by the upstream static token/declaration resolver using mixed theme/file-order contexts. The requested opaque dark palette pairs meet 4.5:1; the lowest text/muted/subtle versus surface/hover pair is reported in the matrix.",
+    "remainingLimit": "Do not delete/regrade the 11 warnings or call all of them false positives. Actual public element/frame computed styles, opacity, disabled states, and the error state are not measured here; root handles public DOM confirmation.",
+    "actionTaken": "Analysis artifact only; application, data, original checker, baselines and warning reports remain unchanged."
+  },
+  "sourceFileHashes": {
+    "dist/styles.css": {
+      "gitBlob": "503f783eac99554d8bbc9c405be46f43ea214d0b",
+      "sha256": "77c4e4dbc16ecbdd29f5472b50e0a69f34e000aef7a79f9833f26e6548e42373"
+    },
+    "dist/editorial-system.css": {
+      "gitBlob": "2319293a3ad38c1d92f37dd66e25ad2013510ccc",
+      "sha256": "bc85810b8994474662c9811a1f3e29b553756a6cab8c732e39467b02dd443826"
+    },
+    "dist/atlas-shell.css": {
+      "gitBlob": "8f6776fdc5719994178f445bac2c712fd7efb660",
+      "sha256": "2b6c028f237060c938c8be044b8e56b312289813ff91c8d277d1012cd9b5537f"
+    },
+    "dist/chart-bottom-bar.css": {
+      "gitBlob": "faf6fb48a112257bd1400509313f80562d2814ab",
+      "sha256": "67ef233b70921763ef1a91cc394d333a1ef755fca28d5e0d21b1e7f7773bbe3a"
+    },
+    "dist/chart-details-panel.css": {
+      "gitBlob": "5de666db2f20db9bf60cf6f7d51e7e87cdd3c0e3",
+      "sha256": "16c64c7b3b6dd0dfb86b06bbb6c25edcdc37ce8ee4041032854ac1dc7fda3d37"
+    },
+    "dist/lab.css": {
+      "gitBlob": "2b2c4d0335e1d66371a33c6ae430b26fbcb74033",
+      "sha256": "517b84062e65c98b9c8171556edc25502a4fab079512f6b3a81ba245d37f30fc"
+    },
+    "dist/viewport.css": {
+      "gitBlob": "d66a998ead5703be4b0f77a8f11c3a9a249784e5",
+      "sha256": "36aecacae5e796bf5028a1e6963a217cc5eec5234f92184d134daa3ca312ec07"
+    },
+    "dist/index.html": {
+      "gitBlob": "cdc1814a199ad58c26a0fed30dde3a645e7d3b30",
+      "sha256": "ffc97d168bfe24a535c02110ea051fc37d91846231824eaf88ba545ea070e373"
+    },
+    "dist/market-lab/index.html": {
+      "gitBlob": "e35fe8ef99334818e66c268808dd2e177b20abbd",
+      "sha256": "fb52395e507ef8e7aca630644c415312f7b24da3733525c2b06b9e33176859cb"
+    },
+    "apps/web/src/main.tsx": {
+      "gitBlob": "dc0835020a3dc898ead1c69ad6df5a5b771b26ca",
+      "sha256": "b74858597946848b8235b0dbcc0732be2b5730b210c1a5fe38fee7ed04089800"
+    }
+  }
+}

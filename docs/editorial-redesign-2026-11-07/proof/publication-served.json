@@ -1,0 +1,128 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-07T09:13:23.126Z",
+  "base": "https://twoimo.github.io/bitcoin-cycle-atlas/",
+  "sourceCommit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+  "manifestSha256": "e7fd6150374f9c6f74dc2bea742d5aa44be386b1f1c5274450eb91515b017b2f",
+  "originalVerifier": {
+    "status": "PASS",
+    "scope": "Public manifest identity and four critical HTTP file bodies; other remote files are not fetched",
+    "sourceCommit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+    "manifestSha256": "e7fd6150374f9c6f74dc2bea742d5aa44be386b1f1c5274450eb91515b017b2f",
+    "verified": [
+      "index.html",
+      "site-entry.js",
+      "data/btc-daily.json",
+      "data/forecast-ledger/index.json"
+    ],
+    "state": {
+      "phase": "confirmed",
+      "sourceCommit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+      "digest": "23e5dbb90404ef5cd6dc1a2ff773a6f57f131e937baa6fb53b179b705327245c",
+      "validatedDigest": "23e5dbb90404ef5cd6dc1a2ff773a6f57f131e937baa6fb53b179b705327245c",
+      "servedDigest": "23e5dbb90404ef5cd6dc1a2ff773a6f57f131e937baa6fb53b179b705327245c",
+      "servedCommit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+      "reason": null
+    }
+  },
+  "additionalVerified": [
+    {
+      "path": "editorial-system.css",
+      "bytes": 15958,
+      "sha256": "bc85810b8994474662c9811a1f3e29b553756a6cab8c732e39467b02dd443826",
+      "commitMatched": true
+    },
+    {
+      "path": "editorial-panels.css",
+      "bytes": 15909,
+      "sha256": "4475be7edae2b3520cf4b9caca1105e99adcc3a9dd2f4ad9ba720ab78c90e1ef",
+      "commitMatched": true
+    },
+    {
+      "path": "editorial-ledgers.css",
+      "bytes": 18138,
+      "sha256": "b91652d661d253c8efc227d6ab7acafbd22b8f55b6caea0cd01a09424b46faa2",
+      "commitMatched": true
+    },
+    {
+      "path": "evidence-view.js",
+      "bytes": 9394,
+      "sha256": "30ee25d5d8e44349d00d84a4d77457c4d55fe41eddc100e165df6f0b97b7fb64",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/app/index.html",
+      "bytes": 2476,
+      "sha256": "327d359137e699de7500bb9af4581d3a9f82b8f45cf74e868e83d0cbc8bbc88e",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/app/assets/index-DtytQ06P.js",
+      "bytes": 564233,
+      "sha256": "53fa94b2572409b29060a6d1867549f12c76abdce8120ff5f4ebd9cda54b80ae",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/app/assets/index-tqwTanFe.css",
+      "bytes": 193666,
+      "sha256": "ae855791b3c7514f5d8992a531536b45ea69e46f7525838bf1c8599094bb73b7",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/index.html",
+      "bytes": 54435,
+      "sha256": "fb52395e507ef8e7aca630644c415312f7b24da3733525c2b06b9e33176859cb",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/charts/index.html",
+      "bytes": 54552,
+      "sha256": "8c13d0b3e302889e7cfb9c3d54c37d09e1f7e1cf5dd5ee94d65b827ffc45c51f",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/us/index.html",
+      "bytes": 54552,
+      "sha256": "8c13d0b3e302889e7cfb9c3d54c37d09e1f7e1cf5dd5ee94d65b827ffc45c51f",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/kr/index.html",
+      "bytes": 54552,
+      "sha256": "8c13d0b3e302889e7cfb9c3d54c37d09e1f7e1cf5dd5ee94d65b827ffc45c51f",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/scenario/index.html",
+      "bytes": 54552,
+      "sha256": "8c13d0b3e302889e7cfb9c3d54c37d09e1f7e1cf5dd5ee94d65b827ffc45c51f",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/cashflow/index.html",
+      "bytes": 54552,
+      "sha256": "8c13d0b3e302889e7cfb9c3d54c37d09e1f7e1cf5dd5ee94d65b827ffc45c51f",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/rsi/index.html",
+      "bytes": 54552,
+      "sha256": "8c13d0b3e302889e7cfb9c3d54c37d09e1f7e1cf5dd5ee94d65b827ffc45c51f",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/housing/index.html",
+      "bytes": 54552,
+      "sha256": "8c13d0b3e302889e7cfb9c3d54c37d09e1f7e1cf5dd5ee94d65b827ffc45c51f",
+      "commitMatched": true
+    },
+    {
+      "path": "market-lab/themes/index.html",
+      "bytes": 54552,
+      "sha256": "8c13d0b3e302889e7cfb9c3d54c37d09e1f7e1cf5dd5ee94d65b827ffc45c51f",
+      "commitMatched": true
+    }
+  ],
+  "totalDistinctHttpFiles": 20,
+  "scope": "Original public publication check plus all new styles, research empty-state source, generated React entry/assets and nine route wrappers; other files are not individually downloaded."
+}

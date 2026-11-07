@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "auditedAt": "2026-11-07T09:02:36.466653+00:00",
+  "candidateZipFileCount": 1453,
+  "browserProducerZipFilesVerified": 448,
+  "modelProducerZipFilesVerified": 397,
+  "allProducerArchiveBytesPreserved": true,
+  "noExtraOrMissingBrowserArchiveFiles": true,
+  "inventoryAuthority": "ZIP central directories; checks cover every producer archive file"
+}

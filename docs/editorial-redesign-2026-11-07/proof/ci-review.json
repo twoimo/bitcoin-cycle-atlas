@@ -1,0 +1,25 @@
+{
+  "kind": "atlas-redesign-ci-review",
+  "runId": 42356303612,
+  "jobId": 128355087184,
+  "conclusion": "success",
+  "runHead": "78f4673be1754400742afa3190a5cb3ad47f706e",
+  "checkout": {
+    "commit": "2152b170221dae2419c78041acdfb03d40a30e59",
+    "tree": "83a695e31f64b118122f2e671175a7013eca7e9e",
+    "parents": [
+      "5704a96e787e27f53e1ae44288673ee9f1c451eb",
+      "78f4673be1754400742afa3190a5cb3ad47f706e"
+    ]
+  },
+  "testTotal": {
+    "complete": true,
+    "tests": 2579,
+    "pass": 2579,
+    "fail": 0,
+    "skipped": 0,
+    "batches": 1
+  },
+  "scope": "Original entire test suite plus unchanged CI numerical, archive, formal, performance and packaging gates. Counts from overlapping focused gates are not added to the entire-suite total.",
+  "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42356303612"
+}

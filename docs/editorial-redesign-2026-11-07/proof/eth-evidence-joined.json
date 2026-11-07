@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "kind": "eth-evidence-joined",
+  "status": "passed",
+  "sourceCommit": "78f4673be1754400742afa3190a5cb3ad47f706e",
+  "sourceTree": "83a695e31f64b118122f2e671175a7013eca7e9e",
+  "runId": "42356303579",
+  "runAttempt": "1",
+  "model": {
+    "sourceCommit": "78f4673be1754400742afa3190a5cb3ad47f706e",
+    "sourceTree": "83a695e31f64b118122f2e671175a7013eca7e9e",
+    "runId": "42356303579",
+    "runAttempt": "1",
+    "artifactId": "13567439854",
+    "receipt": {
+      "path": "build/eth-model-handoff.json",
+      "sha256": "b6a7415277805655bdc0a3841be7077be160e102ff9d8478d82e738ffa992298",
+      "bytes": 93714
+    },
+    "fileCount": 396,
+    "directoryCount": 33
+  },
+  "browser": {
+    "sourceCommit": "78f4673be1754400742afa3190a5cb3ad47f706e",
+    "sourceTree": "83a695e31f64b118122f2e671175a7013eca7e9e",
+    "runId": "42356303579",
+    "runAttempt": "1",
+    "artifactId": "13567899406",
+    "reportReceipt": {
+      "path": "build/eth-browser/report.json",
+      "sha256": "8c4550753c2e190f2f39bc96290f5864f90ed64231af5d7533c8e10832f9f464",
+      "bytes": 5904731
+    },
+    "caseCount": 53,
+    "sourceFileCount": 113,
+    "screenshotFileCount": 371
+  }
+}

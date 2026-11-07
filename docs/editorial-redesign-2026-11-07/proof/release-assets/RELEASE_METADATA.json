@@ -1,0 +1,108 @@
+{
+  "tag": "v1.33.0",
+  "commit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "publication": {
+    "manifest": "PUBLICATION_MANIFEST.json",
+    "sourceCommit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+    "manifestSha256": "653d0f56745cf7ef14e4449511d3bdbfedd24b015fb40a82526b2e9b9f8ebad0",
+    "contentDigest": "23e5dbb90404ef5cd6dc1a2ff773a6f57f131e937baa6fb53b179b705327245c",
+    "sourceTree": "clean"
+  },
+  "forecastArchive": {
+    "archive": "Forecast_Ledger.zip",
+    "index": "dist/data/forecast-ledger/index.json",
+    "records": 5,
+    "evaluationPath": "evaluation.json",
+    "experimentsPath": "experiments.json",
+    "scope": "immutable preserved forecasts with delayed evaluation; not historical issuance of reconstructed experiments"
+  },
+  "supportedNodeMajor": 24,
+  "symbols": [
+    "BTCUSD",
+    "ETHUSD",
+    "MSTR",
+    "BMNR"
+  ],
+  "workspaceGuideSource": "docs/GRAPH_WORKSPACE_GUIDE.md",
+  "workspaceModes": [
+    "price-and-outlook",
+    "four-year-comparison",
+    "duration-and-internal-phases",
+    "peak-zone-arrival",
+    "monthly-and-quarterly-changes",
+    "cryptocon-audit"
+  ],
+  "modelSource": "docs/DETAILED_FORECAST_METHOD.md",
+  "modelScopeSource": "docs/MODEL_SCOPE.md",
+  "chartDetails": "BTC and post-Merge ETH conditional paths with preserved observed OHLC; MSTR/BMNR daily financial paths with separate instrument and ETH liquidity states; future stock path bars are simulated valuation ranges",
+  "workspaceResearchSource": "docs/TRADINGVIEW_WORKSPACE_RESEARCH.md",
+  "workspaceVerificationSource": "docs/FIVE_REGION_VERIFICATION.md",
+  "chartInteractions": [
+    "daily-weekly-observations",
+    "crosshair",
+    "pan",
+    "two-point-date-price-measurement",
+    "log-linear-price-scale",
+    "historical-and-future-evidence-markers"
+  ],
+  "marketStructureSource": "docs/MARKET_STRUCTURE_METHOD.md",
+  "crossValidationSource": "docs/STRUCTURE_CROSS_VALIDATION.md",
+  "evidenceSource": "docs/RESEARCH_PRIORITY.md",
+  "chartSource": "docs/figures/Bitcoin_Detailed_Outlook.png",
+  "legacyBitcoinResearchSnapshot": {
+    "observationsThrough": "2026-10-20",
+    "observationTimezone": "UTC",
+    "referenceDate": "2026-10-22",
+    "referenceTimezone": "Asia/Seoul"
+  },
+  "treasuryResearch": {
+    "reviewedAt": "2026-10-26",
+    "instrumentModelSource": "docs/TREASURY_INSTRUMENT_LIQUIDITY.md",
+    "modelSource": "docs/TREASURY_PATH_MODEL.md",
+    "assetPathSource": "docs/TREASURY_ASSET_PATHS.md",
+    "legacyComparisonSource": "docs/TREASURY_MODEL.md",
+    "verificationSource": "docs/data/treasury-path-verification-2026-10-26.json",
+    "pathMode": "asset-linked-daily",
+    "scenarioResults": "TREASURY_SCENARIO_RESULTS.json",
+    "endYear": 2035,
+    "seed": 20261022,
+    "financialDates": {
+      "MSTR": "2026-06-30",
+      "BMNR": "2026-05-31"
+    },
+    "marketAnchors": {
+      "MSTR": "2026-11-06",
+      "BMNR": "2026-11-06"
+    },
+    "simulatedBars": {
+      "source": "dist/equity-forecast-chart.js",
+      "note": "일별 모의 평가값을 모은 경로봉입니다. 주중 표시 사이의 주말 변화를 포함하며, 거래소 휴장일·장중 시가·고가·저가·체결량을 예측한 OHLC가 아닙니다.",
+      "definition": "For each weekday display bar, open is the preceding display valuation; close is that weekday valuation; high/low span those endpoint and intervening daily values, including weekends. Weekly bars aggregate those display bars.",
+      "calendar": "weekdays-not-exchange-calendar",
+      "intradayOhlc": false,
+      "volumeForecast": false,
+      "storedInThisFile": false
+    },
+    "currentNavClaim": false,
+    "probabilities": null,
+    "predictiveValidation": "not-established"
+  },
+  "researchLibrary": {
+    "manifest": "dist/research/manifest.json",
+    "articleCount": 490,
+    "archive": "Research_Library.zip",
+    "scope": "original summaries, cross-checks, metadata and external media URLs, plus explicitly licensed CC0 Markdown sources",
+    "permittedSources": {
+      "manifest": "dist/research-sources/manifest.json",
+      "count": 2,
+      "license": "CC0-1.0",
+      "selectionNote": "Selected and verified during this recovery. The identity of the two texts in the failed prior session could not be recovered."
+    }
+  },
+  "dataRefreshWorkflow": ".github/workflows/refresh-data.yml",
+  "dataRefreshScheduleUtc": "20 0,6,12,18 * * *",
+  "cryptoconAuditSource": "docs/CRYPTOCON_AUDIT.md",
+  "browserData": "GitHub Actions refreshes completed daily observations and current anchors; published research tables and PNG retain their own vintage.",
+  "uncertainty": "conditional assumptions; not confidence or prediction intervals"
+}

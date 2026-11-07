@@ -1,0 +1,37 @@
+{
+  "status": "passed",
+  "auditedAt": "2026-11-07T09:02:38.695Z",
+  "sourceCommit": "78f4673be1754400742afa3190a5cb3ad47f706e",
+  "sourceTree": "83a695e31f64b118122f2e671175a7013eca7e9e",
+  "runId": "42356303579",
+  "runAttempt": "1",
+  "candidateArtifactId": 13568241734,
+  "candidateZipSha256": "d0c3da8b37b6c0492c91ade86e5793d16f7f0789db774f3c170ced313a85c9bf",
+  "producerArtifactIds": {
+    "model": "13567439854",
+    "browser": "13567899406"
+  },
+  "modelFilesVerified": 396,
+  "modelDirectoriesVerified": 33,
+  "browserCases": 53,
+  "browserScreenshotFiles": 371,
+  "browserSourceFiles": 113,
+  "producerReceiptsExact": true,
+  "sourcePacket": {
+    "sourceAccess": "complete-for-declared-scope",
+    "unresolvedImports": [],
+    "entries": 902,
+    "committedFilesVerifiedAgainstExactGitCommit": 551,
+    "executionEvidenceFilesVerifiedAgainstCandidate": 351,
+    "partsVerified": 602,
+    "bundleBytes": 108324090,
+    "bundleSha256": "8414e1e976c0b248e87551a9acf8971800cd6c08068b58e0157d6da1418dadcf",
+    "externalReviewDisposition": "omitted-by-user",
+    "actualModelExecutionAuthenticated": false
+  },
+  "joinedReceipt": {
+    "path": "candidate/eth-evidence-joined.json",
+    "bytes": 1193,
+    "sha256": "26edda13dcfe818526ffef5daec90c47f8403b8de6dfa51827697cfee578ede1"
+  }
+}

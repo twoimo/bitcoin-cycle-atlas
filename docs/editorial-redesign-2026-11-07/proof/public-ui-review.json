@@ -1,0 +1,137 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-07T09:17:33.657Z",
+  "productionSource": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+  "sourceBinding": "publication-served.json records the exact publication and actual HTTP file bodies; browser measurements are the independently observed public UI.",
+  "scope": "Public desktop Chrome viewport 1363×936; mobile checks are separate CI native evidence, not physical-mobile or public-mobile verification.",
+  "market": {
+    "loadedEditorialStyles": [
+      "https://twoimo.github.io/bitcoin-cycle-atlas/editorial-system.css?v=1.33.0",
+      "https://twoimo.github.io/bitcoin-cycle-atlas/editorial-panels.css?v=1.33.0",
+      "https://twoimo.github.io/bitcoin-cycle-atlas/editorial-ledgers.css?v=1.33.0"
+    ],
+    "selected": [
+      {
+        "background": "rgb(45, 42, 33)",
+        "color": "rgb(216, 181, 109)",
+        "text": "시장 분석"
+      }
+    ],
+    "theme": "dark",
+    "url": "https://twoimo.github.io/bitcoin-cycle-atlas/market-lab/",
+    "viewport": {
+      "height": 936,
+      "width": 1363
+    },
+    "visibleOuterToolbars": [
+      {
+        "height": 43,
+        "name": "미국 시장 진단 도구",
+        "top": 0
+      }
+    ]
+  },
+  "chart": {
+    "scripts": [
+      "https://twoimo.github.io/bitcoin-cycle-atlas/market-lab/app/assets/index-DtytQ06P.js"
+    ],
+    "svgs": [
+      {
+        "height": 727,
+        "viewBox": "0 0 1225 727",
+        "width": 1225
+      }
+    ]
+  },
+  "selectedResearchNavigation": [
+    {
+      "background": "rgb(45, 42, 33)",
+      "color": "rgb(216, 181, 109)",
+      "outline": "rgb(216, 181, 109)",
+      "text": "리서치"
+    }
+  ],
+  "selectedNavigationContrast": 7.3393737643042725,
+  "researchEmpty": {
+    "caption": "자료 목록 0 / 490개",
+    "emptyCell": [
+      {
+        "colSpan": 6,
+        "text": "일치하는 자료가 없습니다. 검색어와 분류를 확인해 주세요.",
+        "width": 1281
+      },
+      {
+        "colSpan": 6,
+        "text": "",
+        "width": 0
+      }
+    ],
+    "tableWidth": 1281,
+    "visibleHeaders": [
+      {
+        "height": 33.546875,
+        "text": "순서",
+        "width": 52
+      },
+      {
+        "height": 33.546875,
+        "text": "자료 제목",
+        "width": 788
+      },
+      {
+        "height": 33.546875,
+        "text": "출처",
+        "width": 140
+      },
+      {
+        "height": 33.546875,
+        "text": "발행일",
+        "width": 108
+      },
+      {
+        "height": 33.546875,
+        "text": "읽는 목적",
+        "width": 125
+      },
+      {
+        "height": 33.546875,
+        "text": "근거",
+        "width": 68
+      }
+    ]
+  },
+  "flows": [
+    {
+      "name": "US diagnosis summary",
+      "result": "Opened with direction and alpha/beta/gamma data; closed normally."
+    },
+    {
+      "name": "Common symbol search",
+      "result": "TQQQ query returned one result; Enter opened /market-lab/charts/?symbol=TQQQ, 4206 observations."
+    },
+    {
+      "name": "Asset comparison sector filter",
+      "result": "Digital assets displayed 3 of 20: BTC, ETH, HYPE."
+    },
+    {
+      "name": "IPO calendar tools",
+      "result": "Menu opened with this-month/all-list controls; close returned to page."
+    },
+    {
+      "name": "Research reader",
+      "result": "MSTR OHLC article opened; close restored focus to its source row button."
+    },
+    {
+      "name": "Research empty search",
+      "result": "No-match message spanned all 6 visible desktop columns; empty cell width 1281 equals table width1281; cleared query before leaving."
+    }
+  ],
+  "screenshots": [
+    "../public-market-c1da5ea.jpg",
+    "../public-research-c1da5ea.jpg"
+  ],
+  "limitations": [
+    "Only selected visible controls and selected navigation contrast were measured; Hallmark warning inventory is preserved unchanged.",
+    "The full source-bound 53 native cases and mobile routes are recorded separately."
+  ]
+}

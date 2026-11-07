@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS",
+  "checkedAt": "2026-11-07T09:10:20.540Z",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "sourceCommit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+  "sourceTree": "83a695e31f64b118122f2e671175a7013eca7e9e",
+  "tag": {
+    "name": "v1.33.0",
+    "ref": "refs/tags/v1.33.0",
+    "type": "commit",
+    "commit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f"
+  },
+  "workflow": {
+    "id": 42357801009,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/actions/runs/42357801009",
+    "status": "completed",
+    "conclusion": "success",
+    "attempt": 1,
+    "headSha": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+    "headTree": "83a695e31f64b118122f2e671175a7013eca7e9e",
+    "finishedAt": "2026-11-07T09:07:18Z"
+  },
+  "release": {
+    "id": 437458830,
+    "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/tag/v1.33.0",
+    "publishedAt": "2026-11-07T09:06:51Z",
+    "draft": false,
+    "prerelease": false,
+    "githubImmutableSetting": false,
+    "assetCount": 13,
+    "assets": [
+      {
+        "id": 720184089,
+        "name": "bitcoin-cycle-atlas-v1.33.0-source.zip",
+        "bytes": 120225507,
+        "state": "uploaded",
+        "sha256": "c0a6eadb44e42cf2f802e878a3c55f57e4416ebf4d37e13587c1c3e286401f30",
+        "checksumListMatch": true,
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.33.0/bitcoin-cycle-atlas-v1.33.0-source.zip"
+      },
+      {
+        "id": 720183505,
+        "name": "Bitcoin_Cycles_Comparison.html",
+        "bytes": 33911076,
+        "state": "uploaded",
+        "sha256": "4df48d1093eedfeb4dd3c741a7d8cc67579dbcf088c466f2f744837414e379db",
+        "checksumListMatch": true,
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.33.0/Bitcoin_Cycles_Comparison.html"
+      },
+      {
+        "id": 720183828,
+        "name": "Bitcoin_Cycle_Structure_Research.md",
+        "bytes": 319556,
+        "state": "uploaded",
+        "sha256": "ecfeebb121aec673e1955caf09269a61e85c84a74da4681ec21fe9e39a16f31d",
+        "checksumListMatch": true,
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.33.0/Bitcoin_Cycle_Structure_Research.md"
+      },
+      {
+        "id": 720183638,
+        "name": "Bitcoin_Detailed_Outlook.png",
+        "bytes": 365178,
+        "state": "uploaded",
+        "sha256": "9d757454267d8e8653510a5956ad9202cc29949784418cd57f8224f6d5bffb9a",
+        "checksumListMatch": true,
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.33.0/Bitcoin_Detailed_Outlook.png"
+      },
+      {
+        "id": 720183694,
+        "name": "DETAILED_FORECAST_RESULTS.json",
+        "bytes": 4091941,
+        "state": "uploaded",
+        "sha256": "6d757466b6e9021bc8caf9bc3ef3b81878f1e0af54a25d60d98a2b15d3b2ea2d",
+        "checksumListMatch": true,
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.33.0/DETAILED_FORECAST_RESULTS.json"
+      },
+      {
+        "id": 720184039,
+        "name": "Forecast_Ledger.zip",
+        "bytes": 2248842,
+        "state": "uploaded",
+        "sha256": "582f4bc795ced4911e4f639ee260749a1fcbb26ba8126232ad214c585b22a216",
+        "checksumListMatch": true,
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.33.0/Forecast_Ledger.zip"
+      },
+      {
+        "id": 720183749,
+        "name": "MARKET_STRUCTURE_RESULTS.json",
+        "bytes": 7552190,
+        "state": "uploaded",
+        "sha256": "8db88670f3a32d825a6f9a4888ade5ba0c3ef86e695c0695745b8813d3485425",
+        "checksumListMatch": true,
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.33.0/MARKET_STRUCTURE_RESULTS.json"
+      },
+      {
+        "id": 720183429,
+        "name": "PUBLICATION_MANIFEST.json",
+        "bytes": 134244,
+        "state": "uploaded",
+        "sha256": "4d432292f0f00ae8d224340a676b4840087df60dcd8310d58d6dc28d612ef548",
+        "checksumListMatch": true,
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.33.0/PUBLICATION_MANIFEST.json"
+      },
+      {
+        "id": 720184240,
+        "name": "RELEASE_METADATA.json",
+        "bytes": 4706,
+        "state": "uploaded",
+        "sha256": "746679451fc00cf7b8c8df12ccf4588ebac8be4ed5e53fc366905a489dca1a2d",
+        "checksumListMatch": true,
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.33.0/RELEASE_METADATA.json"
+      },
+      {
+        "id": 720183985,
+        "name": "Research_Library.zip",
+        "bytes": 824846,
+        "state": "uploaded",
+        "sha256": "3ac6c94e97c80f657d78915f14a04c4e1f4a16cb92f136bffba8285a4633adb6",
+        "checksumListMatch": true,
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.33.0/Research_Library.zip"
+      },
+      {
+        "id": 720184306,
+        "name": "SHA256SUMS.txt",
+        "bytes": 1140,
+        "state": "uploaded",
+        "sha256": "937cb1649709bf942561c640135a59adf25410ea4217be07fbb62c66a245efe0",
+        "checksumListMatch": "not-self-listed",
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.33.0/SHA256SUMS.txt"
+      },
+      {
+        "id": 720183868,
+        "name": "Treasury_Research_and_Models.md",
+        "bytes": 323597,
+        "state": "uploaded",
+        "sha256": "0a8c1648cf3396b1c66d4e2f0f0ac48a307ea4b73618767fc634aa511aad01f5",
+        "checksumListMatch": true,
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.33.0/Treasury_Research_and_Models.md"
+      },
+      {
+        "id": 720183902,
+        "name": "TREASURY_SCENARIO_RESULTS.json",
+        "bytes": 37582908,
+        "state": "uploaded",
+        "sha256": "df254a547d6d803abe23dace0f6c8a23508b4e8803d852564847f1dff4c4ee85",
+        "checksumListMatch": true,
+        "url": "https://github.com/twoimo/bitcoin-cycle-atlas/releases/download/v1.33.0/TREASURY_SCENARIO_RESULTS.json"
+      }
+    ]
+  },
+  "checksumList": {
+    "path": "/tmp/atlas-redesign-proof/release-assets/SHA256SUMS.txt",
+    "entries": 12,
+    "allListedAssetDigestsMatch": true
+  },
+  "downloadedFiles": [
+    {
+      "name": "SHA256SUMS.txt",
+      "path": "/tmp/atlas-redesign-proof/release-assets/SHA256SUMS.txt",
+      "bytes": 1140,
+      "sha256": "937cb1649709bf942561c640135a59adf25410ea4217be07fbb62c66a245efe0",
+      "githubDigestMatch": true
+    },
+    {
+      "name": "RELEASE_METADATA.json",
+      "path": "/tmp/atlas-redesign-proof/release-assets/RELEASE_METADATA.json",
+      "bytes": 4706,
+      "sha256": "746679451fc00cf7b8c8df12ccf4588ebac8be4ed5e53fc366905a489dca1a2d",
+      "githubDigestMatch": true
+    },
+    {
+      "name": "PUBLICATION_MANIFEST.json",
+      "path": "/tmp/atlas-redesign-proof/release-assets/PUBLICATION_MANIFEST.json",
+      "bytes": 134244,
+      "sha256": "4d432292f0f00ae8d224340a676b4840087df60dcd8310d58d6dc28d612ef548",
+      "githubDigestMatch": true
+    }
+  ],
+  "releasePublication": {
+    "manifestSha256": "653d0f56745cf7ef14e4449511d3bdbfedd24b015fb40a82526b2e9b9f8ebad0",
+    "rawFileSha256": "4d432292f0f00ae8d224340a676b4840087df60dcd8310d58d6dc28d612ef548",
+    "contentDigest": "23e5dbb90404ef5cd6dc1a2ff773a6f57f131e937baa6fb53b179b705327245c",
+    "sourceCommit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+    "sourceTree": {
+      "status": "clean",
+      "scope": "dist, scripts and package.json"
+    },
+    "generatedAt": "2026-11-07T09:06:34.820Z",
+    "workflow": {
+      "runId": "42357801009",
+      "attempt": "1"
+    },
+    "state": {
+      "phase": "ready",
+      "sourceCommit": "c1da5ea5f5109315f8dd65ea8229e47948ba4b2f",
+      "digest": "23e5dbb90404ef5cd6dc1a2ff773a6f57f131e937baa6fb53b179b705327245c",
+      "validatedDigest": "23e5dbb90404ef5cd6dc1a2ff773a6f57f131e937baa6fb53b179b705327245c",
+      "servedDigest": null,
+      "servedCommit": null,
+      "reason": null
+    },
+    "inventoryFiles": 799,
+    "metadataSelfChecksumVerified": true,
+    "inventoryChecksumVerified": true,
+    "metadataLinkageVerified": true
+  },
+  "scope": "Read-only GitHub release, tag and workflow verification. All 13 expected assets are uploaded; the 12 checksum-listed assets match GitHub asset digests. Three small files were downloaded and byte-verified. Large binary/text release assets were not independently downloaded.",
+  "pagesPublication": "Not inspected in this release review. Release publication generatedAt and manifest hash are recorded separately from the Pages publication.",
+  "apiEvidence": "/tmp/atlas-redesign-proof/release-api-evidence.json"
+}
