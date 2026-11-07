@@ -78,9 +78,9 @@ async function implementation(work) {
   assert.match(original.output, /tests 28/);
   console.log(original.output.trim());
   const copy = path.join(work, 'implementation');
-  // The initializer fixture imports the actual capital-policy catalog, whose
-  // date helpers are a static dependency. Keep that closure in the scratch copy.
-  const files = ['dist/equity-view.js', 'dist/equity-market-data.js', 'dist/treasury-instruments.js', 'dist/cycle-engine.js', 'dist/index.html', 'tests/equity-load-ownership.test.mjs', 'tests/helpers/equity-view-fixture.mjs'];
+  // The initializer fixture uses the actual capital/date and shared chart
+  // helpers. Keep their OHLC and price-axis dependencies in the scratch copy.
+  const files = ['dist/equity-view.js', 'dist/equity-market-data.js', 'dist/treasury-instruments.js', 'dist/cycle-engine.js', 'dist/chart-view-policy.js', 'dist/ohlc-data.js', 'dist/price-axis.js', 'dist/index.html', 'tests/equity-load-ownership.test.mjs', 'tests/helpers/equity-view-fixture.mjs'];
   for (const file of files) {
     await mkdir(path.dirname(path.join(copy, file)), { recursive: true });
     await copyFile(path.join(root, file), path.join(copy, file));
