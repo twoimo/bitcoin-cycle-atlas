@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createServer} from 'node:http';
+import {once} from 'node:events';
+import {gzipSync,brotliCompressSync} from 'node:zlib';
 import {
   cloudflareModelProviderPolicy as policy,modelStagePublicationProfile,createModelComponentIndex,
   assertModelComponentIndex,serializeModelComponent,serializeModelComponentIndex,modelProviderCanonicalBytes,
@@ -229,6 +232,133 @@ test('response boundaries enforce streaming size, media type, redirect and valid
       const f=fixture({response});await assert.rejects(f.read());assert.equal(f.requests.length,1);
     });
   }
+});
+
+test('identity lengths stay exact and malformed lengths are rejected for encoded bodies too',async t=>{
+  for(const encoding of [undefined,'identity']){
+    await t.test(encoding??'absent encoding',async()=>{
+      const response=async({response})=>{
+        const bytes=Buffer.from(await response.arrayBuffer());
+        return jsonResponse(null,{bytes,headers:{'content-length':String(bytes.length),
+          ...(encoding?{'content-encoding':encoding}:{})}});
+      };
+      const f=fixture({response});await f.read();assert.equal(f.requests.length,3);
+      for(const delta of [-1,1]){
+        const broken=fixture({response:async input=>{
+          const result=await response(input);
+          result.headers.set('content-length',String(Number(result.headers.get('content-length'))+delta));
+          return result;
+        }});
+        await assert.rejects(broken.read(),/was truncated/);assert.equal(broken.requests.length,1);
+      }
+    });
+  }
+  for(const encoding of ['identity','gzip']){
+    for(const length of ['-1','1.5','1, 1','NaN']){
+      const f=fixture({response:()=>jsonResponse({},{
+        headers:{'content-encoding':encoding,'content-length':length}})});
+      await assert.rejects(f.read(),/invalid Content-Length/);assert.equal(f.requests.length,1);
+    }
+  }
+});
+
+test('decoded gzip and brotli bodies retain exact index, receipt and provider evidence',async t=>{
+  for(const [encoding,compress]of [['gzip',gzipSync],['br',brotliCompressSync]]){
+    await t.test(encoding,async()=>{
+      let decodedResponses=0;
+      const f=fixture({response:async({response})=>{
+        const bytes=Buffer.from(await response.arrayBuffer()),encoded=compress(bytes);
+        assert.notEqual(encoded.length,bytes.length);decodedResponses++;
+        return jsonResponse(null,{bytes,headers:{'content-encoding':encoding,'content-length':String(encoded.length)}});
+      }});
+      const result=await f.read();assert.equal(decodedResponses,3);
+      assert.deepEqual(result.component,f.component);
+      assert.equal(result.attestation.publication.indexSha256,modelProviderSha256(serializeModelComponentIndex(f.index)));
+      assert.equal(result.attestation.publication.receiptBytes,f.receipt.length);
+      assert.equal(result.attestation.publication.receiptSha256,modelProviderSha256(f.receipt));
+      assert.deepEqual(result.attestation.authority.checks,
+        modelAttestationFixture({model:f.component,browser:f.browser}).authority.checks);
+    });
+  }
+});
+
+test('native Fetch decodes real gzip bytes without discarding integrity failures',{timeout:20000},async t=>{
+  const payloads=new Map(),observations=[];
+  const server=createServer((request,response)=>{
+    const body=payloads.get(request.url);
+    if(!body){response.writeHead(404);response.end();return;}
+    response.writeHead(200,{'content-type':'application/json','content-encoding':'gzip',
+      'content-length':String(body.length),'connection':'close'});
+    response.end(body);
+  });
+  server.listen(0,'127.0.0.1');await once(server,'listening');
+  t.after(()=>new Promise((resolve,reject)=>{
+    server.close(error=>error?reject(error):resolve());server.closeAllConnections();
+  }));
+  const origin='http://127.0.0.1:'+server.address().port;
+  const route=corruptReceipt=>async({url,request,response})=>{
+    const bytes=Buffer.from(await response.arrayBuffer()),encoded=gzipSync(bytes);
+    assert.notEqual(encoded.length,bytes.length);
+    if(corruptReceipt&&url.includes('/receipts/'))encoded[encoded.length-8]^=1;
+    const path='/evidence/'+(payloads.size+1);payloads.set(path,encoded);
+    const actual=await fetch(origin+path,request);
+    assert.equal(actual.status,200);assert.equal(actual.headers.get('content-encoding'),'gzip');
+    assert.equal(actual.headers.get('content-length'),String(encoded.length));
+    observations.push({encoded:encoded.length,decoded:bytes.length});
+    // The test transport routes approved fixture URLs through loopback; the body
+    // remains the actual Fetch-decoded stream with its original response headers.
+    return new Response(actual.body,{status:actual.status,headers:actual.headers});
+  };
+  const f=fixture({response:route(false)}),result=await f.read();
+  assert.equal(observations.length,3);
+  assert.ok(observations.every(item=>item.encoded!==item.decoded));
+  assert.deepEqual(result.component,f.component);
+  assert.equal(result.attestation.publication.receiptSha256,modelProviderSha256(f.receipt));
+  const corrupt=fixture({response:route(true)});
+  await assert.rejects(corrupt.read(),error=>{assert.equal(error.cause?.code,'Z_DATA_ERROR');return true;});
+  assert.equal(corrupt.requests.length,2);
+});
+
+test('compressed responses cannot bypass decoded limits, receipt hashes or stream errors',async t=>{
+  await t.test('decoded byte budget',async()=>{
+    const bytes=Buffer.alloc(policy.maximumIndexBytes+1,32);
+    const f=fixture({response:()=>jsonResponse(null,{bytes,
+      headers:{'content-encoding':'gzip','content-length':String(gzipSync(bytes).length)}})});
+    await assert.rejects(f.read(),/byte budget/);assert.equal(f.requests.length,1);
+  });
+  await t.test('decoded receipt digest',async()=>{
+    const f=fixture({response:async({url,response})=>{
+      if(!url.includes('/receipts/'))return response;
+      const bytes=Buffer.from((await response.text()).replace('"status":"PASS"','"status":"FAIL"'));
+      return jsonResponse(null,{bytes,headers:{'content-encoding':'gzip','content-length':String(gzipSync(bytes).length)}});
+    }});
+    await assert.rejects(f.read(),/receipt digest differs/);assert.equal(f.requests.length,2);
+  });
+  await t.test('decoded stream failure',async()=>{
+    const failure=new Error('decoded stream stopped');
+    const f=fixture({response:()=>new Response(new ReadableStream({
+      start(controller){controller.enqueue(Buffer.from('{"'));},
+      pull(controller){controller.error(failure);},
+    }),{headers:{'content-type':'application/json','content-encoding':'gzip','content-length':'20'}})});
+    await assert.rejects(f.read(),error=>error===failure);assert.equal(f.requests.length,1);
+  });
+});
+
+test('cumulative provider budget counts decoded rather than compressed response bytes',async()=>{
+  const seed=fixture(),pending=modelAttestationFixture({model:seed.component,browser:seed.browser}).authority.checks[0];
+  const records=[pending,...Array.from({length:100},(_,i)=>({...copy(pending),id:100+i,
+    external_id:'33333333-3333-4333-8333-333333333333'}))];
+  const f=fixture({snapshots:[records],response:async({url,response})=>{
+    if(!url.startsWith('https://api.github.com/'))return response;
+    const body=await response.json();body.padding='';
+    const overhead=Buffer.byteLength(JSON.stringify(body));
+    body.padding='x'.repeat(policy.maximumProviderResponseBytes-overhead);
+    const bytes=Buffer.from(JSON.stringify(body));assert.equal(bytes.length,policy.maximumProviderResponseBytes);
+    return jsonResponse(null,{bytes,headers:{'content-encoding':'gzip','content-length':String(gzipSync(bytes).length)}});
+  }});
+  await assert.rejects(f.read(),/Public provider byte budget exhausted/);
+  assert.equal(f.requests.filter(item=>item.url.startsWith('https://api.github.com/')).length,
+    Math.floor(policy.maximumProviderBytes/policy.maximumProviderResponseBytes)+1);
 });
 
 test('HTTP authorization, rate-limit and server failures remain failures without credential fallback',async t=>{

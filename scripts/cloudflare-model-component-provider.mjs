@@ -38,7 +38,10 @@ async function responseBytes(response,maximumBytes,label){
     reader.releaseLock();
   }
   assert.ok(total>0,label+' is empty');
-  if(length!==null)assert.equal(total,Number(length),label+' was truncated');
+  // Fetch decodes content codings but retains the encoded representation headers.
+  // Only an identity Content-Length describes the bytes streamed above.
+  const identity=(response.headers.get('content-encoding')??'identity').trim().toLowerCase()==='identity';
+  if(length!==null&&identity)assert.equal(total,Number(length),label+' was truncated');
   return Buffer.concat(chunks,total);
 }
 

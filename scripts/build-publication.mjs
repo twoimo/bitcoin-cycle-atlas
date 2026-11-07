@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { describeFreshness, alignObservations, observationTiming } from '../dist/data-freshness.js';
 import { createPublication, validatePublication, preparePublication, confirmPublication } from '../dist/publication-contract.js';
 import { readCommittedMarketRefreshOutcomes } from './cloudflare-market-refresh-receipt.mjs';
+import {assertWorkersBuildSource,publicationSourceProvenance} from './cloudflare-browser-source.mjs';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const dist=resolve(root,'dist');
@@ -139,7 +140,9 @@ async function main() {
     console.log(JSON.stringify({...result,localFilesChecked}));return;
   }
   const sourceCommit=gitHead(), now=new Date().toISOString();
-  if (process.env.WORKERS_CI_COMMIT_SHA && process.env.WORKERS_CI_COMMIT_SHA!==sourceCommit) throw new Error('Workers Builds source does not match the checked-out commit');
+  const sourceTree=execFileSync('git',['rev-parse','HEAD^{tree}'],{cwd:root,encoding:'utf8'}).trim();
+  const providerSource=await assertWorkersBuildSource({root,source:{sourceCommit,sourceTree}});
+  const provenance=publicationSourceProvenance(process.env,providerSource);
   const sourcePaths=['dist','scripts','apps','packages','verification','package.json','package-lock.json','cloudflare.config.ts','vite.config.ts','.node-version'];
   const dirty=execFileSync('git',['status','--porcelain','--untracked-files=all','--',...sourcePaths],{cwd:root,encoding:'utf8'}).trim();
   if (dirty && !process.argv.includes('--preview')) throw new Error('Commit publishable sources before preparing a release, or use --preview for local checks');
@@ -152,9 +155,9 @@ async function main() {
   state=validatePublication(state,{checkedDigest:sha(stable(await inventory(directory))),valid:true});
   state=preparePublication(state,{currentCommit:gitHead(),currentDigest:sha(stable(await inventory(directory)))});
   if (state.phase!=='ready') throw new Error(`Publication is ${state.phase}: ${state.reason}`);
-  const body={schemaVersion:1,kind:'atlas-publication',sourceCommit,sourceTree:{status:dirty?'modified-preview':'clean',scope:sourcePaths.join(', ')},eventCommit:process.env.WORKERS_CI_COMMIT_SHA || process.env.GITHUB_SHA || null,
+  const body={schemaVersion:1,kind:'atlas-publication',sourceCommit,sourceTree:{status:dirty?'modified-preview':'clean',scope:sourcePaths.join(', ')},eventCommit:provenance.eventCommit,
     checkedOutCommit:process.env.ATLAS_CHECKOUT_SHA || sourceCommit,generatedAt:now,
-    workflow:{runId:process.env.WORKERS_CI_BUILD_UUID || process.env.GITHUB_RUN_ID || null,attempt:process.env.GITHUB_RUN_ATTEMPT || null,...(process.env.WORKERS_CI?{provider:'cloudflare-workers-builds',branch:process.env.WORKERS_CI_BRANCH || null}:{})},refreshAttempts:outcomes,refreshProvenance:refresh.provenance,
+    workflow:{runId:process.env.WORKERS_CI_BUILD_UUID || process.env.GITHUB_RUN_ID || null,attempt:process.env.GITHUB_RUN_ATTEMPT || null,...(process.env.WORKERS_CI?{provider:'cloudflare-workers-builds',branch:process.env.WORKERS_CI_BRANCH || null}:{}),...(providerSource?{providerSource}:{})},refreshAttempts:outcomes,refreshProvenance:refresh.provenance,
     contentDigest,files,...data,state,scope:'Prepared artifact identities; generatedAt is not a provider publication or successful deployment timestamp'};
   const manifest={...body,manifestSha256:sha(stable(body))};
   await checkPublication(manifest,{directory});

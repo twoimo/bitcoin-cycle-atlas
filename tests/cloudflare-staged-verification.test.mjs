@@ -61,6 +61,7 @@ test('browser component retains full source-bound native coverage, isolated10x a
     value=>value.database.cleanedUpAt=value.completedAt,value=>value.database.serverVersion='17.10',value=>value.database.isolated=false,
     value=>value.runtime.chrome.archiveSha256='0'.repeat(64),value=>value.runtime.postgres.packageSha256s=[],
     value=>value.nativeBrowserLaunchedAt=value.startedAt,value=>value.publication.sourceCommit='0'.repeat(40),
+    value=>delete value.providerSource,value=>value.providerSource.rawRef='0'.repeat(40),value=>value.providerSource.buildUuid=value.runId.replace('2','3'),
   ]){const value=browserComponentFixture();mutate(value);assert.throws(()=>assertBrowserComponent(value,{now}));}
 });
 
@@ -68,7 +69,8 @@ test('staged entrypoints require actual provider source, branch and UUID, with s
   const component=modelComponentFixture(),source={sourceCommit:component.sourceCommit,sourceTree:component.sourceTree};
   const environment={WORKERS_CI:'1',WORKERS_CI_BUILD_UUID:component.runId,WORKERS_CI_COMMIT_SHA:component.sourceCommit,WORKERS_CI_BRANCH:component.branch};
   assert.equal(stageIdentityFromEnvironment({stage:'model',mode:'review',source,environment}).workerName,component.workerName);
-  assert.equal(stageIdentityFromEnvironment({stage:'browser',mode:'production',source,environment:{...environment,WORKERS_CI_BRANCH:'main'}}).workerName,'bitcoin-cycle-atlas');
+  const browser=browserComponentFixture({mode:'production',runId:component.runId});
+  assert.equal(stageIdentityFromEnvironment({stage:'browser',mode:'production',source,environment:{...environment,WORKERS_CI_BRANCH:'main'},providerSource:browser.providerSource}).workerName,'bitcoin-cycle-atlas');
   for(const patch of [{WORKERS_CI:'0'},{WORKERS_CI_BUILD_UUID:undefined},{WORKERS_CI_COMMIT_SHA:undefined},{WORKERS_CI_COMMIT_SHA:'0'.repeat(40)},
     {WORKERS_CI_BRANCH:'main'},{WORKERS_CI_BRANCH:'bad..ref'},{WORKERS_CI_BRANCH:'bad.lock'},{WORKERS_CI_BRANCH:undefined}])
     assert.throws(()=>stageIdentityFromEnvironment({stage:'model',mode:'review',source,environment:{...environment,...patch}}));

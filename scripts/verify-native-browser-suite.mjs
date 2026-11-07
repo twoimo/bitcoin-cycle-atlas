@@ -9,6 +9,7 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 import {finished} from 'node:stream/promises';
 import {createEthBrowserCaseSpecs,selectEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
 import {readBrowserSourceIdentity} from './browser-source-identity.mjs';
+import {assertWorkersBuildSource} from './cloudflare-browser-source.mjs';
 import {cloudflareBrowserExecution} from './cloudflare-build-contract.mjs';
 import {completeLineWriter} from './cloudflare-gate-runner.mjs';
 import {emitCompressedBrowserReport} from './browser-evidence-transport.mjs';
@@ -196,7 +197,7 @@ export async function verifyNativeBrowserSuite({root=defaultRoot,environment=pro
   try{
     assert.equal(environment.ATLAS_BROWSER_CASE_SCOPE??'all','all','The suite always verifies the complete browser inventory');
     source=await readBrowserSourceIdentity(root);
-    if(environment.WORKERS_CI_COMMIT_SHA)assert.equal(source.sourceCommit,environment.WORKERS_CI_COMMIT_SHA);
+    await assertWorkersBuildSource({root,environment,source:{sourceCommit:source.sourceCommit,sourceTree:source.sourceTree}});
     for(const lane of nativeBrowserLanes)await rm(resolve(out,'lanes',lane.name),{recursive:true,force:true});
     phase=await runPhasedNativeBrowserLanes({root,out,source,suiteRunId,environment,write});processes=phase.processes;
     lanes=await readNativeBrowserLaneReports(out,processes);

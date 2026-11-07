@@ -85,6 +85,43 @@ bearer URL and UUID must not appear in logs, source files or reports. A hook
 selects the current branch, so both stages reject a changed branch head instead
 of attaching old evidence to a new commit.
 
+### Source values from Deploy Hooks
+
+On 2026-11-07 the actual Deploy Hook Build supplied its branch name in
+`WORKERS_CI_COMMIT_SHA`, while its Git checkout contained the correct full SHA.
+The public Hook endpoint documents no commit-pin parameter. The staged browser
+path therefore preserves the provider's raw value and distinguishes a commit
+from an exact branch reference. A mismatching 40-character SHA never becomes a
+branch fallback, and no `WORKERS_CI_*` value is rewritten.
+
+The browser component binds that provenance to its actual Build UUID, CI branch,
+clean checkout SHA/tree and the fixed repository's exact remote branch head.
+Before Chrome starts, the same source/tree/plan must also have a complete model
+component with observed terminal provider success. Native verification,
+publication, packaging and deployment revalidate the current Build's evidence.
+A different Build, a changed branch head, a modified checkout or missing
+acceptance cannot authorize the branch-reference path.
+
+The packaged publication keeps the raw reference in
+`workflow.providerSource.rawRef`. For a branch reference, `eventCommit` is null;
+`sourceCommit` and `checkedOutCommit` remain the actual full Git SHA. Packaging
+and deployment load the current Build's persisted component, model acceptance
+and complete aggregate directly, so separate shell processes need no rewritten
+provider variables or inherited verifier-only stage hint.
+
+The model producer, retained single-Build runner, manual origin diagnostic and
+scheduled data jobs keep their strict SHA guards. The browser-specific handling
+does not authorize a scheduled refresh or archive job. Before any schedule is
+enabled, its real hook's authenticated source metadata must satisfy that job's
+own contract in addition to the credential and monthly-budget requirements.
+
+Public JSON reads measure the decoded Fetch stream. A compressed response's
+`Content-Length` describes its encoded representation, so exact stream-length
+comparison applies only to identity encoding. Both declared and decoded size
+limits remain enforced; component/index bytes, canonical JSON and SHA-256 still
+must match exactly. An actual Node Fetch gzip response and a corrupted gzip
+stream are covered by the provider-reader regression tests.
+
 The producer explicitly configures the reviewed `CLOUDFLARE_ACCOUNT_ID` as a
 nonsecret Build setting and uses the existing provider-managed deployment token.
 Actual deployment requires that token in `CLOUDFLARE_API_TOKEN`; no token value
@@ -411,6 +448,8 @@ local Cron definition does not prove a live scheduled issuer.
 - [PostgreSQL Ubuntu packages and signing key](https://www.postgresql.org/download/linux/ubuntu/)
 - [PostgreSQL17.11 Noble package index](https://apt.postgresql.org/pub/repos/apt/dists/noble-pgdg/main/binary-amd64/Packages.gz)
 - [Workers Builds Deploy Hooks](https://developers.cloudflare.com/workers/ci-cd/builds/deploy-hooks/)
+- [Workers Builds default environment variables](https://developers.cloudflare.com/workers/ci-cd/builds/configuration/#default-variables)
+- [Node Fetch compressed-response headers and decoded bodies](https://github.com/nodejs/undici/issues/2514)
 - [GitHub public check-run reads and provider identity](https://docs.github.com/en/rest/checks/runs#list-check-runs-for-a-git-reference)
 - [Workers Builds watch-path evaluation and exceptions](https://developers.cloudflare.com/workers/ci-cd/builds/build-watch-paths/)
 - [Workers KV free allowances](https://developers.cloudflare.com/kv/platform/pricing/)

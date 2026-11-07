@@ -45,6 +45,9 @@ export function modelComponentFixture(options={}){
 }
 export function browserComponentFixture(options={}){
   const value=header('browser',options);value.gates=gates('browser',value.startedAt);value.completedAt=at(value.gates.at(-1).completedAt,1);
+  const rawRef=options.providerRef??value.sourceCommit,refKind=/^[a-f0-9]{40}$/.test(rawRef)?'commit':'branch';
+  value.providerSource={schemaVersion:1,kind:'atlas-cloudflare-browser-source',sourceCommit:value.sourceCommit,sourceTree:value.sourceTree,
+    rawRef,refKind,branch:value.branch,mode:value.mode,buildUuid:value.runId,remoteHead:refKind==='branch'?value.sourceCommit:null};
   value.runtime=runtime('browser',value.startedAt);
   value.database={serverVersion:'17.11',host:'127.0.0.1',isolated:true,
     cleanedUpAt:at(value.gates.find(gate=>gate.id==='postgres-service-tests').completedAt,-1),cleanupGate:'postgres-service-tests'};

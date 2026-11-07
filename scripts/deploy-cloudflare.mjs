@@ -1,3 +1,4 @@
+import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
@@ -6,6 +7,8 @@ import { setTimeout } from 'node:timers/promises';
 import { verifyServedPublication } from './build-publication.mjs';
 import { cloudflareAssetsPath, cloudflareRootConfigPath, cloudflareWorkerConfigPath, publicOrigin, sha256, verifyCloudflareArtifact, verifyGateReceipt } from './cloudflare-artifact.mjs';
 
+import {assertWorkersBuildSource} from './cloudflare-browser-source.mjs';
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
 if (args.length && !(args.length === 1 && ['--check', '--dry-run'].includes(args[0]))) throw new Error('Use --check or --dry-run for non-deploying validation; no other deploy arguments are supported');
@@ -13,7 +16,6 @@ const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', tim
 const sourceCommit = git(['rev-parse', 'HEAD']);
 const sourceTree = git(['rev-parse', 'HEAD^{tree}']);
 if (git(['status', '--porcelain', '--untracked-files=all'])) throw new Error('Deploy only a clean committed checkout');
-if (process.env.WORKERS_CI_COMMIT_SHA && process.env.WORKERS_CI_COMMIT_SHA !== sourceCommit) throw new Error('The build event and checked-out commit differ');
 
 const artifact = JSON.parse(await readFile(resolve(root, 'build/cloudflare-artifact.json'), 'utf8'));
 if (artifact.schemaVersion !== 1 || artifact.status !== 'PASS') throw new Error('Preview or incomplete artifacts cannot be deployed');
@@ -22,7 +24,10 @@ if (artifact.outputDirectory !== cloudflareAssetsPath) throw new Error('Unexpect
 const origin = publicOrigin(process.env.ATLAS_PUBLIC_ORIGIN);
 if (artifact.origin !== origin) throw new Error('The deployment origin differs from the reviewed artifact');
 const gateBytes = await readFile(resolve(root, 'build/cloudflare-verification.json'));
-verifyGateReceipt(JSON.parse(gateBytes), sourceCommit, sourceTree);
+const verification=JSON.parse(gateBytes);
+verifyGateReceipt(verification, sourceCommit, sourceTree);
+const providerSource=await assertWorkersBuildSource({root,source:{sourceCommit,sourceTree},verification});
+assert.deepEqual(artifact.providerSource??null,providerSource,'Packaged and current browser source provenance differ');
 if (sha256(gateBytes) !== artifact.gateReceiptSha256) throw new Error('Verification receipt changed after packaging');
 for (const [path, hash] of [[cloudflareWorkerConfigPath, artifact.workerConfigSha256], [cloudflareRootConfigPath, artifact.rootConfigSha256]]) {
   if (sha256(await readFile(resolve(root, path))) !== hash) throw new Error('Cloudflare configuration changed after packaging');

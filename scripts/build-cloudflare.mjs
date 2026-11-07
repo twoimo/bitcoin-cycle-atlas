@@ -1,8 +1,11 @@
+import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { artifactFiles, cloudflareAssetsPath, cloudflareRootConfigPath, cloudflareWorkerConfigPath, deploymentHtml, headers, isCopiedAsset, publicOrigin, redirects, sha256, verifyCloudflareArtifact, verifyGateReceipt } from './cloudflare-artifact.mjs';
+
+import {assertWorkersBuildSource} from './cloudflare-browser-source.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -14,10 +17,12 @@ if (domain && new URL(origin).hostname !== domain.toLowerCase()) throw new Error
 const sourceCommit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
 const sourceTree = execFileSync('git', ['rev-parse', 'HEAD^{tree}'], { cwd: root, encoding: 'utf8' }).trim();
 const gatePath = resolve(root, 'build/cloudflare-verification.json');
-let gateBytes = null;
+let gateBytes = null, verification = null, providerSource = null;
 if (!preview) {
   gateBytes = await readFile(gatePath);
-  verifyGateReceipt(JSON.parse(gateBytes), sourceCommit, sourceTree);
+  verification=JSON.parse(gateBytes);
+  verifyGateReceipt(verification, sourceCommit, sourceTree);
+  providerSource=await assertWorkersBuildSource({root,source:{sourceCommit,sourceTree},verification});
 }
 const staged = resolve(root, 'build/cloudflare-assets');
 await rm(staged, { recursive: true, force: true });
@@ -33,19 +38,23 @@ for (const name of sourceFiles.filter(isCopiedAsset)) {
 }
 await writeFile(resolve(staged, '_headers'), headers);
 await writeFile(resolve(staged, '_redirects'), redirects);
-const env = { ...process.env, CF_SEND_TELEMETRY: 'false' };
+const env = { ...process.env, CF_SEND_TELEMETRY: 'false', ...(providerSource?{ATLAS_VERIFICATION_STAGE:'browser',ATLAS_VERIFICATION_MODE:providerSource.mode}:{}) };
 // cf build's framework detector rejects npm workspace roots. Invoking the
 // official Vite build directly produces the same cf prebuilt output contract.
 execFileSync(process.execPath, [resolve(root, 'node_modules/vite/bin/vite.js'), 'build', '--config', 'vite.config.ts', '--mode', 'production'], { cwd: root, env, stdio: 'inherit' });
 const directory = resolve(root, cloudflareAssetsPath);
 execFileSync(process.execPath, ['scripts/build-publication.mjs', '--directory', directory, ...(preview ? ['--preview'] : [])], { cwd: root, env, stdio: 'inherit' });
 const identity = await verifyCloudflareArtifact({ directory, sourceDirectory, origin, allowPreview: preview });
+if(providerSource){
+  const manifest=JSON.parse(await readFile(resolve(directory,'publication.json'),'utf8'));
+  assert.deepEqual(manifest.workflow?.providerSource,providerSource,'Packaged publication source provenance differs');
+}
 const workerConfigBytes = await readFile(resolve(root, cloudflareWorkerConfigPath));
 const workerConfig = JSON.parse(workerConfigBytes);
 if (workerConfig.manifest || workerConfig.entrypoint || workerConfig.bindings || workerConfig.assets?.runWorkerFirst) throw new Error('Cloudflare publication must remain an assets-only Worker without runtime bindings');
 const receipt = {
   schemaVersion: 1, status: preview ? 'PREVIEW' : 'PASS', preparedAt: new Date().toISOString(), origin,
-  ...identity, sourceTree,
+  ...identity, sourceTree, providerSource,
   outputDirectory: cloudflareAssetsPath,
   gateReceiptSha256: gateBytes ? sha256(gateBytes) : null,
   workerConfigSha256: sha256(workerConfigBytes),

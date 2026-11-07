@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
+import {assertBrowserBuildSource} from './cloudflare-browser-source.mjs';
 
 const sha40=/^[a-f0-9]{40}$/,sha64=/^[a-f0-9]{64}$/;
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
@@ -83,12 +84,13 @@ export function assertModelProviderPolicy(policy=cloudflareModelProviderPolicy){
 }
 
 export function assertModelBrowserBuild(browserBuild,{now=Date.now()}={}){
-  keys(browserBuild,['buildUuid','startedAt','workerName','accountId','repository','mode','branch'],'Consumer Build identity');
+  keys(browserBuild,['buildUuid','startedAt','workerName','accountId','repository','mode','branch','providerSource'],'Consumer Build identity');
   const profile=modelStagePublicationProfile(browserBuild.workerName);
   assert.match(browserBuild.buildUuid??'',uuid,'Actual consumer Build UUID is required');
   assert.equal(browserBuild.accountId,profile.accountId);
   assert.equal(browserBuild.repository,profile.repository);
   assert.equal(browserBuild.mode,profile.mode);
+  assertBrowserBuildSource(browserBuild.providerSource,{mode:browserBuild.mode,branch:browserBuild.branch,runId:browserBuild.buildUuid});
   assert.ok(typeof browserBuild.branch==='string'&&/^[A-Za-z0-9][A-Za-z0-9._/-]{0,199}$/.test(browserBuild.branch));
   assert.ok(!browserBuild.branch.includes('..')&&!browserBuild.branch.includes('//')&&!browserBuild.branch.endsWith('/')&&
     !browserBuild.branch.endsWith('.')&&!browserBuild.branch.split('/').some(part=>part.startsWith('.')||part.endsWith('.lock')));
@@ -136,6 +138,7 @@ export function modelCheckRunsEndpoint(sourceCommit,producerWorkerName){
 export function assertModelProviderContext({component,source,planSha256,browserBuild,now=Date.now()}){
   const p=cloudflareModelProviderPolicy,profile=assertModelBrowserBuild(browserBuild,{now});
   keys(source,['sourceCommit','sourceTree'],'Source identity');
+  assertBrowserBuildSource(browserBuild.providerSource,{source,mode:browserBuild.mode,branch:browserBuild.branch,runId:browserBuild.buildUuid});
   assert.match(source.sourceCommit??'',sha40);assert.match(source.sourceTree??'',sha40);assert.match(planSha256??'',sha64);
   assert.equal(component?.schemaVersion,1);assert.equal(component?.kind,'atlas-cloudflare-model-component');
   assert.equal(component.status,'PASS');assert.equal(component.qualifiesFullVerification,false);assert.equal(component.stage,'model');

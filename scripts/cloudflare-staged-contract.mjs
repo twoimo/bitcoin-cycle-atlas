@@ -5,6 +5,7 @@ import {
   cloudflareBrowserExecution,cloudflareRuntime,cloudflarePlanSha256,assertModelPriorityReceipt,
 } from './cloudflare-build-contract.mjs';
 import {assertFastCadenceRelease} from './browser-fast-cadence-contract.mjs';
+import {cloudflareBrowserSourcePolicy,assertBrowserBuildSource} from './cloudflare-browser-source.mjs';
 import {cloudflareModelProviderPolicy,assertVerifiedModelAttestation} from './cloudflare-model-provider-policy.mjs';
 
 const sha40=/^[a-f0-9]{40}$/,sha64=/^[a-f0-9]{64}$/,uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
@@ -26,7 +27,7 @@ export const cloudflareStagedPolicy=Object.freeze({
   chronology:'accept-terminal-model-success-before-native-browser-launch',
   reuse:'same-source-tree-plan-and-mode; not a producer-to-consumer dispatch assertion',
   maximumComponentAgeMs:6*60*60*1000,maximumClockSkewMs:30_000,
-  stages:cloudflareStageGateIds,provider:cloudflareModelProviderPolicy,
+  stages:cloudflareStageGateIds,provider:cloudflareModelProviderPolicy,browserSource:cloudflareBrowserSourcePolicy,
 });
 export const cloudflareStagedPlanSha256=hash(JSON.stringify({
   legacyCompletePlanSha256:cloudflarePlanSha256,staged:cloudflareStagedPolicy,
@@ -45,7 +46,7 @@ function exactKeys(value,keys,label){
 const commonKeys=['schemaVersion','kind','status','qualifiesFullVerification','stage','provider','runId','accountId','repository','workerName',
   'mode','branch','sourceCommit','sourceTree','planSha256','startedAt','completedAt','runtime','gates'];
 const modelKeys=[...commonKeys,'modelPriority','modelManagedPid','modelLaunchedAt','modelTests'];
-const browserKeys=[...commonKeys,'database','nativeBrowserLaunchedAt','browser','fastCadence','publication'];
+const browserKeys=[...commonKeys,'providerSource','database','nativeBrowserLaunchedAt','browser','fastCadence','publication'];
 const gateKeys=['id','status','startedAt','completedAt','durationMs','log','logSha256'];
 
 export function assertStageIdentity(value,{stage,sourceCommit,sourceTree,mode,branch}={}){
@@ -70,15 +71,16 @@ export function assertStageIdentity(value,{stage,sourceCommit,sourceTree,mode,br
   return value;
 }
 
-export function stageIdentityFromEnvironment({stage,mode,source,environment=process.env}){
+export function stageIdentityFromEnvironment({stage,mode,source,environment=process.env,providerSource}){
   assert.equal(environment.WORKERS_CI,'1','Staged verification requires an actual Workers Build');
-  assert.equal(environment.WORKERS_CI_COMMIT_SHA,source.sourceCommit,'Workers Build and checkout commits differ');
   assert.ok(['model','browser'].includes(stage));assert.ok(['production','review'].includes(mode));
+  if(stage==='browser')assertBrowserBuildSource(providerSource,{source,environment,mode,branch:environment.WORKERS_CI_BRANCH,runId:environment.WORKERS_CI_BUILD_UUID});
+  else assert.equal(environment.WORKERS_CI_COMMIT_SHA,source.sourceCommit,'Workers Build and checkout commits differ');
   const expected=cloudflareModelProviderPolicy.modes[mode];
   return assertStageIdentity({schemaVersion:1,stage,provider:'cloudflare-workers-builds',runId:environment.WORKERS_CI_BUILD_UUID,
     accountId:cloudflareModelProviderPolicy.accountId,repository:cloudflareModelProviderPolicy.repository,
     workerName:stage==='model'?expected.modelWorker:expected.browserWorker,mode,branch:environment.WORKERS_CI_BRANCH,
-    ...source,planSha256:cloudflareStagedPlanSha256},{stage,...source,mode});
+    ...source,...(stage==='browser'?{providerSource}:{}),planSha256:cloudflareStagedPlanSha256},{stage,...source,mode});
 }
 
 function assertClocks(value,now){
@@ -148,6 +150,7 @@ export function assertBrowserComponent(component,{sourceCommit,sourceTree,mode,b
   exactKeys(component,browserKeys,'Browser component');
   assert.equal(component.kind,'atlas-cloudflare-browser-component');assert.equal(component.status,'PASS');assert.equal(component.qualifiesFullVerification,false);
   assertStageIdentity(component,{stage:'browser',sourceCommit,sourceTree,mode,branch});assertClocks(component,now);
+  assertBrowserBuildSource(component.providerSource,{source:component,mode:component.mode,branch:component.branch,runId:component.runId});
   assertGates(component,'browser');assertRuntime(component.runtime,'browser');
   exactKeys(component.database,['serverVersion','host','isolated','cleanedUpAt','cleanupGate'],'Database evidence');
   assert.equal(component.database.serverVersion,cloudflareRuntime.postgres.version);assert.equal(component.database.host,'127.0.0.1');
@@ -174,7 +177,7 @@ export function assertBrowserComponent(component,{sourceCommit,sourceTree,mode,b
 
 export function browserBuildIdentity(component){
   return {buildUuid:component.runId,startedAt:component.startedAt,workerName:component.workerName,
-    accountId:component.accountId,repository:component.repository,mode:component.mode,branch:component.branch};
+    accountId:component.accountId,repository:component.repository,mode:component.mode,branch:component.branch,providerSource:component.providerSource};
 }
 
 export function assertAcceptedModelStage({component,attestation},{browserBuild,source,now=Date.now()}={}){

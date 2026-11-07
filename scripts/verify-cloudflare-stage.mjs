@@ -14,6 +14,7 @@ import {cloudflareModelProviderPolicy,serializeModelComponent} from './cloudflar
 import {executeLoggedGate,runVerificationCommand,installVerificationSignalHandlers,drainVerificationOutput,completeLineWriter} from './cloudflare-gate-runner.mjs';
 import {commandPriorityPrefix} from './cloudflare-priority-command.mjs';
 import {readBrowserSourceIdentity} from './browser-source-identity.mjs';
+import {readBrowserBuildSource,assertBrowserBuildSource} from './cloudflare-browser-source.mjs';
 import {readFastCadenceContext,createFastCadenceReleaseWaiter,assertFastCadenceCaseEvidence} from './browser-fast-cadence-contract.mjs';
 
 const repositoryRoot=fileURLToPath(new URL('..',import.meta.url));
@@ -75,14 +76,17 @@ export async function verifyCloudflareStage({stage,mode,root=repositoryRoot}={})
   let receipt={schemaVersion:1,kind:`atlas-cloudflare-${stage}-component`,stage,status:'RUNNING',qualifiesFullVerification:false,
     ...sourceIdentity,startedAt,gates:[]};
   await persist(componentPath,receipt);
-  let environment={...process.env,ATLAS_VERIFICATION_MODE:mode,ATLAS_BROWSER_CASE_SCOPE:'all',ATLAS_BROWSER_OUT:'build/eth-browser',ETH_BROWSER_IMAGE_LOG_MODE:'representative'};
+  let environment={...process.env,ATLAS_VERIFICATION_MODE:mode,ATLAS_VERIFICATION_STAGE:stage,ATLAS_BROWSER_CASE_SCOPE:'all',ATLAS_BROWSER_OUT:'build/eth-browser',ETH_BROWSER_IMAGE_LOG_MODE:'representative'};
   delete environment.TEST_DATABASE_URL;
   const cancellation=new AbortController();
   let removeSignalHandlers,verificationError,database,acceptedModel,fastCadenceContext,fastCadenceWaiter;
-  function assertCleanSource(){
+  function assertCleanSource({remote=false}={}){
     assert.deepEqual(source(),sourceIdentity,'Source revision changed during staged verification');
     assert.equal(git('status','--porcelain','--untracked-files=normal'),'','Verification requires committed unchanged source, including new files');
-    assert.equal(environment.WORKERS_CI_COMMIT_SHA,sourceIdentity.sourceCommit,'Checkout differs from the actual Workers Build source');
+    if(stage==='browser'){
+      assertBrowserBuildSource(receipt.providerSource,{source:sourceIdentity,environment,mode,branch:receipt.branch,runId:receipt.runId});
+      if(remote)assert.deepEqual(readBrowserBuildSource({root,environment,mode,source:sourceIdentity}),receipt.providerSource,'The frozen browser source changed');
+    }else assert.equal(environment.WORKERS_CI_COMMIT_SHA,sourceIdentity.sourceCommit,'Checkout differs from the actual Workers Build source');
   }
   async function execute(gate){
     console.log('ATLAS_CLOUDFLARE_GATE '+JSON.stringify({stage,id:gate.id,status:'RUNNING'}));
@@ -158,7 +162,7 @@ export async function verifyCloudflareStage({stage,mode,root=repositoryRoot}={})
     if(errors.length)throw new AggregateError(errors,'Required staged verification failed: '+errors.map(error=>error.message).join('; '));
   }
   async function beforeNative(){
-    assert.equal(database,null,'PostgreSQL must finish cleanup before native browser execution');assertCleanSource();
+    assert.equal(database,null,'PostgreSQL must finish cleanup before native browser execution');assertCleanSource({remote:true});
     const {readVerifiedCloudflareModelStage}=await import('./cloudflare-model-component-provider.mjs');
     const browserBuild=browserBuildIdentity(receipt);
     const remaining=deadline-Date.now();assert.ok(remaining>1000,'The execution budget expired before trusted model acceptance');
@@ -168,6 +172,7 @@ export async function verifyCloudflareStage({stage,mode,root=repositoryRoot}={})
     await persist(resolve(root,'build/cloudflare-model-acceptance.json'),acceptedModel);
     console.log('ATLAS_CLOUDFLARE_MODEL_ACCEPTED '+JSON.stringify({producerBuildUuid:acceptedModel.component.runId,
       consumerBuildUuid:receipt.runId,acceptedAt:acceptedModel.attestation.acceptedAt,sourceCommit:receipt.sourceCommit,planSha256:receipt.planSha256}));
+    assertCleanSource({remote:true});
     environment.ATLAS_BROWSER_SUITE_RUN_ID=randomUUID();
     const browserSource=await readBrowserSourceIdentity(root);
     assert.equal(browserSource.sourceCommit,sourceIdentity.sourceCommit);assert.equal(browserSource.sourceTree,sourceIdentity.sourceTree);
@@ -175,7 +180,8 @@ export async function verifyCloudflareStage({stage,mode,root=repositoryRoot}={})
     fastCadenceWaiter=createFastCadenceReleaseWaiter({context:fastCadenceContext});
   }
   try{
-    Object.assign(receipt,stageIdentityFromEnvironment({stage,mode,source:sourceIdentity,environment}));
+    const providerSource=stage==='browser'?readBrowserBuildSource({root,environment,mode,source:sourceIdentity}):undefined;
+    Object.assign(receipt,stageIdentityFromEnvironment({stage,mode,source:sourceIdentity,environment,providerSource}));
     assertCleanSource();git('check-ref-format','--branch',receipt.branch);
     await executeCloudflareStagePlan({stage,execute,record,beforeNative,signal:cancellation.signal,afterGate:async gate=>{
       if(gate.kind==='runtime')removeSignalHandlers=installVerificationSignalHandlers(cancellation);
@@ -184,9 +190,11 @@ export async function verifyCloudflareStage({stage,mode,root=repositoryRoot}={})
     if(stage==='browser'){
       const manifest=JSON.parse(await readFile(resolve(root,'dist/publication.json'),'utf8'));
       assert.equal(manifest.sourceCommit,sourceIdentity.sourceCommit);assert.equal(manifest.sourceTree?.status,'clean');
+      assert.deepEqual(manifest.workflow?.providerSource,receipt.providerSource,'Publication lost the current browser source provenance');
+      assert.equal(manifest.eventCommit,receipt.providerSource.refKind==='branch'?null:receipt.providerSource.rawRef);
       receipt.publication={sourceCommit:manifest.sourceCommit,manifestSha256:manifest.manifestSha256};
     }
-    cancellation.signal.throwIfAborted();assertCleanSource();
+    cancellation.signal.throwIfAborted();assertCleanSource({remote:true});
     receipt.completedAt=new Date().toISOString();receipt.status='PASS';
     if(stage==='model'){
       assertModelComponent(receipt,{...sourceIdentity,mode,branch:receipt.branch});
