@@ -186,7 +186,13 @@ async function runCase(spec,debugBase){
     await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:spec.width<=620,maxTouchPoints:1});
     await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'dark'},{name:'prefers-reduced-motion',value:'reduce'}]});
     const navigation=await cdp.send('Page.navigate',{url:spec.url});assert.equal(navigation.errorText,undefined,'HTTPS navigation failed');
-    await until(()=>evaluate(cdp,()=>{if(document.documentElement.dataset.boot==='error')throw new Error('Published app entered boot error');return document.documentElement.dataset.boot==='ready'&&Boolean(document.querySelector('svg#lab-chart,svg#eth-chart'));}),'actual published chart boot');
+    // Navigation can resolve before Chrome creates the new document element.
+    await until(()=>evaluate(cdp,()=>{
+      const root=document.documentElement;
+      if(!root)return false;
+      if(root.dataset.boot==='error')throw new Error('Published app entered boot error');
+      return root.dataset.boot==='ready'&&Boolean(document.querySelector('svg#lab-chart,svg#eth-chart'));
+    }),'actual published chart boot');
     await settled(cdp);receipt.initial=await evaluate(cdp,inspectPage);validatePage(receipt.initial,spec);
     const tree=await cdp.send('Page.getFrameTree'),frameId=tree.frameTree.frame.id;
     receipt.document=receipt.responses.findLast(item=>item.frameId===frameId);
