@@ -41,8 +41,9 @@ export function DiagnosisPanel({ snapshot, region, now, marketId, priceIndex, on
       const rawUnit = axis?.source?.unit || '';
       const unit = key === 'gamma' ? rawUnit.includes('pt') ? 'pt' : rawUnit.includes('%') ? '%' : '' : key === 'alpha' ? '전기비 %' : '연율 %';
       return <article key={key} className={`ml-axis ml-score ml-axis-${key}`}>
-        <h3><span>{symbol}</span> {name}</h3><strong className="ml-axis-value">{fmt(axis?.z)}</strong>
-        <p className="ml-axis-stats"><span>{axis?.status === 'ready' ? fmt(axis.latest, axis.source?.displayDecimals ?? 2) : '유보'} {unit}</span><span>{axis?.date || '관측일 없음'}</span></p>
+        <h3><span>{symbol}</span> {name}</h3>
+        <span className="ml-axis-measure">표준화 점수</span><strong className="ml-axis-value">{fmt(axis?.z)}</strong>
+        <dl className="ml-axis-observations"><dt>관측값 · 관측일</dt><dd className="ml-axis-stats"><span>{axis?.status === 'ready' ? fmt(axis.latest, axis.source?.displayDecimals ?? 2) : '유보'} {unit}</span><span>{axis?.date || '관측일 없음'}</span></dd></dl>
         {region==='us'&&<p className="ml-axis-collection"><span>{key==='alpha'?'분기 발표':key==='beta'?'월간 발표':'일별 종가'}</span>{collectionMatchesSnapshot(snapshot,collection)&&<time>확인 {collectionTime(collection!.lastSuccess!.sources.find(source=>source.axis===key)!.checkedAt)} KST</time>}</p>}
         {axis?.reason && <p className="ml-warning">{axis.reason}</p>}
       </article>;

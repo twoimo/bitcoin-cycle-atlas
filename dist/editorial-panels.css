@@ -1,4 +1,4 @@
-/* Atlas v1.33 — research panels, shared by React and its host document.
+/* Atlas v1.34 — research panels, shared by React and its host document.
    The host also paints portaled summaries. All calculations and chart owners
    remain in their original components; these rules only arrange their output. */
 
@@ -8,6 +8,7 @@
   display: flex;
   flex-direction: column;
 }
+
 #market-view #ml-panel:has(.ml-compact-price-card) {
   display: flex;
   flex: 1 0 320px;
@@ -682,5 +683,619 @@
   }
   .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] :is(.ml-axis-stats, .ml-axis-collection, .ml-warning) {
     grid-column: 1 / -1;
+  }
+}
+
+/* An analysis desk gives assumptions a narrow column and the original result
+   the larger reading area. Controls still belong to the outer toolbar. */
+#market-view .ml-analysis-layout {
+  align-items: start;
+}
+#market-view .ml-analysis-layout > .ml-card {
+  min-width: 0;
+}
+#market-view .ml-analysis-layout > .ml-card > h3 {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+#market-view .ml-scenario-layout .ml-shock-row {
+  grid-template-columns: minmax(0, 1fr) 76px;
+  gap: 16px;
+  padding-block: 24px;
+}
+#market-view .ml-scenario-layout .ml-shock-row > label:first-child {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  grid-column: 1 / -1;
+  gap: 8px;
+  align-items: baseline;
+}
+#market-view .ml-scenario-layout .ml-axis-symbol {
+  color: var(--muted);
+  font-size: 20px;
+}
+#market-view .ml-scenario-layout .ml-shock-row output {
+  font-size: 28px;
+}
+#market-view .ml-scenario-layout .ml-weight {
+  display: grid;
+  gap: 4px;
+  align-items: start;
+  font-size: 11px;
+}
+#market-view .ml-scenario-layout .ml-weight input {
+  width: 100%;
+  min-width: 0;
+}
+#market-view .ml-scenario-layout .ml-shock-row > input[type="range"] {
+  align-self: end;
+  min-height: 44px;
+}
+#market-view .ml-sensitivity-field,
+#market-view .ml-input-group .ml-field-inline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(80px, 120px);
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 16px;
+}
+#market-view .ml-scenario-reading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(144px, .6fr);
+  align-items: end;
+  gap: 24px;
+  padding: 16px 0 24px;
+  border-bottom: 1px solid var(--border);
+}
+#market-view :is(.ml-principal-reading, .ml-result-context) {
+  margin: 0;
+}
+#market-view :is(.ml-principal-reading, .ml-result-context) dt {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+#market-view .ml-principal-reading dd {
+  margin: 12px 0 0;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 40px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+#market-view .ml-result-context {
+  display: grid;
+  gap: 12px;
+}
+#market-view .ml-result-context > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+#market-view .ml-result-context dd {
+  margin: 0;
+  font: 16px/1.5 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+#market-view .ml-reading-heading {
+  margin: 24px 0 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+#market-view .ml-input-group {
+  min-width: 0;
+  margin: 24px 0 0;
+  padding: 8px 0 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+#market-view .ml-input-group legend {
+  padding: 0 12px 0 0;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 500;
+}
+#market-view .ml-input-group .ml-input-grid {
+  gap: 0 16px;
+}
+#market-view .ml-input-group .ml-field {
+  min-width: 0;
+  margin: 12px 0;
+}
+#market-view .ml-input-group input {
+  min-width: 0;
+  width: 100%;
+}
+#market-view .ml-economics-results {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin: 24px 0;
+}
+#market-view .ml-economics-results > div {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-width: 0;
+  padding: 24px 16px 24px 0;
+}
+#market-view .ml-economics-results dd {
+  font-size: 20px;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+#market-view .ml-economics-results > .ml-principal-result {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  gap: 12px;
+  padding: 8px 0 32px;
+  border-bottom-color: var(--border);
+}
+#market-view .ml-economics-results > .ml-principal-result dd {
+  font-size: 40px;
+  line-height: 1.2;
+}
+#market-view .ml-economics-results > .ml-payback-result {
+  grid-column: 1 / -1;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  padding-right: 0;
+}
+#market-view .ml-economics-results > .ml-payback-result dd {
+  justify-self: end;
+  font-size: 13px;
+}
+
+/* The diagnosis dialog separates standardized readings from the underlying
+   observation and its clock. The stored direction and all values are intact. */
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(160px, .8fr);
+  align-items: end;
+  gap: 24px;
+  padding: 8px 0 24px;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-main > div:first-child {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 16px;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-label {
+  font-size: 16px;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-kind {
+  grid-column: 1;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-value {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-size: 36px;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-formula {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+  text-align: right;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-formula strong {
+  font-size: 28px;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-measure {
+  display: block;
+  margin-top: 20px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score .ml-axis-value {
+  display: block;
+  margin: 4px 0 20px;
+  font-size: 36px;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-observations {
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-soft);
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-stats {
+  display: grid;
+  gap: 4px;
+  margin: 8px 0 0;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-observations dt {
+  color: var(--muted);
+  font-size: 11px;
+}
+.compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-stats > span:first-child {
+  font-size: 14px;
+}
+
+/* Backtest assumptions form one column; the result, equity curve and records
+   remain separate reading surfaces, with their existing scroll owners. */
+.rsi-experiment-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+.rsi-experiment-input,
+.rsi-experiment-result {
+  min-width: 0;
+  padding: 8px 0 24px;
+}
+.rsi-experiment-result {
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.rsi-experiment-result > h3 {
+  margin: 8px 0 20px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.rsi-experiment-input .rsi-backtest-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 20px 16px;
+  margin: 24px 0 0;
+  padding: 0;
+  border: 0;
+}
+.rsi-experiment-input .rsi-backtest-form > label {
+  min-width: 0;
+  gap: 8px;
+}
+.rsi-experiment-input .rsi-backtest-form input {
+  min-width: 0;
+  width: 100%;
+  min-height: 44px;
+}
+.rsi-experiment-input .rsi-backtest-form > button {
+  grid-column: 1 / -1;
+  min-height: 44px;
+}
+.rsi-experiment-result .rsi-backtest-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 24px;
+  margin: 0 0 24px;
+}
+.rsi-experiment-result .rsi-backtest-metrics > div {
+  min-width: 0;
+  padding: 16px 0;
+  border-right: 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+.rsi-experiment-result .rsi-backtest-metrics dd {
+  font-size: 22px;
+  overflow-wrap: anywhere;
+}
+.rsi-experiment-result .rsi-backtest-metrics > .rsi-metric-primary {
+  grid-column: 1 / -1;
+  padding-top: 4px;
+  padding-bottom: 24px;
+  border-bottom-color: var(--border);
+}
+.rsi-experiment-result .rsi-metric-primary dd {
+  font-size: 36px;
+}
+.rsi-experiment-result > p:not(.ml-error) {
+  max-width: 64ch;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.75;
+}
+.rsi-experiment-result > .ml-loading-skeleton {
+  height: 280px;
+  min-height: 280px;
+}
+
+/* Housing analysis places the three distinct correlations beside the scatter
+   and lag ledger. A price chart's height and coordinate mapping are untouched. */
+.housing-relation-workspace {
+  display: grid;
+  grid-template-columns: minmax(200px, .65fr) minmax(0, 2fr);
+}
+.housing-relation-workspace .housing-relation-stats {
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  padding: 0;
+  border-right: 1px solid var(--border);
+}
+.housing-relation-workspace .housing-relation-stats > div {
+  padding: 24px;
+  gap: 12px;
+  border-left: 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+.housing-relation-workspace .housing-relation-stats strong {
+  font-size: 32px;
+}
+.housing-relation-workspace .housing-relation-layout {
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  padding: 24px 0 24px 32px;
+}
+.housing-relation-workspace .housing-relation-layout > div {
+  min-width: 0;
+}
+.housing-summary-readings {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 24px;
+  margin: 0;
+}
+.housing-summary-readings > div {
+  min-width: 0;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+.housing-summary-readings dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+.housing-summary-readings dd {
+  margin: 12px 0 0;
+  font-size: 20px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+.housing-summary-readings > :is(.housing-summary-context, .housing-summary-principal, .housing-summary-correlation) {
+  grid-column: 1 / -1;
+}
+.housing-summary-readings > .housing-summary-context {
+  padding-top: 0;
+}
+.housing-summary-readings :is(.housing-summary-context, .housing-summary-correlation) dd {
+  font-size: 14px;
+}
+.housing-summary-readings .housing-summary-principal dd {
+  font-size: 36px;
+}
+
+/* A selected theme source reads as a short document with a separate judgment
+   ledger. Both sources and recorded judgments keep their original actions. */
+.theme-chart-layout {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 28%);
+}
+.theme-inspector {
+  padding: 24px;
+}
+.theme-evidence-reading {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.theme-evidence-reading h2 {
+  font-size: 18px;
+  line-height: 1.5;
+}
+.theme-evidence-reading > time {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+.theme-evidence-reading .theme-availability {
+  display: block;
+  margin-block: 16px;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.theme-evidence-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+.theme-evidence-actions :is(a, button) {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.theme-judgment-reading {
+  padding-top: 24px;
+}
+.theme-judgment-reading > h2 {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.theme-judgment-reading .theme-criterion-readout {
+  display: block;
+  width: auto;
+  margin: 0;
+  padding: 20px 0;
+  border-top: 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+.theme-judgment-reading .theme-criterion-readout:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.theme-judgment-reading .theme-criterion-readout p {
+  margin-bottom: 0;
+}
+.housing-method ul,
+.theme-method ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  list-style: none;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--border);
+}
+.housing-method li,
+.theme-method li {
+  min-width: 0;
+  margin: 0;
+}
+
+@media (min-width: 1001px) {
+  #market-view .ml-analysis-layout,
+  .rsi-experiment-layout {
+    grid-template-columns: minmax(280px, .7fr) minmax(0, 1.3fr);
+  }
+  .rsi-experiment-input {
+    padding-right: 32px;
+  }
+  .rsi-experiment-result {
+    padding: 8px 0 24px 32px;
+    border-top: 0;
+    border-left: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 1000px) {
+  .housing-relation-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .housing-relation-workspace .housing-relation-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-right: 0;
+  }
+  .housing-relation-workspace .housing-relation-stats > div {
+    padding: 20px 16px;
+  }
+  .housing-relation-workspace .housing-relation-layout {
+    padding: 24px 12px;
+  }
+}
+
+@media (max-width: 900px) {
+  .theme-chart-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .theme-inspector {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+    gap: 32px;
+  }
+  .theme-evidence-reading {
+    padding: 0 32px 0 0;
+    border-bottom: 0;
+    border-right: 1px solid var(--border);
+  }
+  .theme-judgment-reading {
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  #market-view .ml-scenario-reading {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  #market-view .ml-result-context {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  #market-view .ml-result-context > div {
+    display: grid;
+    gap: 4px;
+  }
+  #market-view .ml-economics-results {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #market-view .ml-economics-results > div:not(.ml-principal-result) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 16px;
+    padding: 16px 0;
+  }
+  #market-view .ml-economics-results > .ml-payback-result dd {
+    margin-left: auto;
+  }
+  #market-view .ml-input-group input,
+  .rsi-experiment-input .rsi-backtest-form input {
+    font-size: 16px;
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-main {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-formula {
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    justify-items: start;
+    text-align: left;
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-formula > span:nth-of-type(n+2) {
+    grid-column: 1 / -1;
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 4px 16px;
+    padding: 20px 0;
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score + .ml-score {
+    border-left: 0;
+    border-top: 1px solid var(--border-soft);
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-measure {
+    grid-column: 1;
+    grid-row: 2;
+    margin: 0;
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score .ml-axis-value {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin: 0;
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-observations {
+    grid-column: 1 / -1;
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: baseline;
+  }
+  .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] :is(.ml-axis-collection, .ml-warning) {
+    grid-column: 1 / -1;
+  }
+  .housing-relation-workspace .housing-relation-stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .housing-relation-workspace .housing-relation-stats > div {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 20px 0;
+  }
+  .housing-relation-workspace .housing-relation-layout {
+    grid-template-columns: minmax(0, 1fr);
+    padding-inline: 0;
+  }
+  .housing-summary-readings {
+    gap: 0 16px;
+  }
+  .housing-summary-readings dd {
+    font-size: 18px;
+    overflow-wrap: anywhere;
+  }
+  .theme-inspector {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding: 24px 12px;
+  }
+  .theme-evidence-reading {
+    padding: 0 0 24px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .housing-method ul,
+  .theme-method ul {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

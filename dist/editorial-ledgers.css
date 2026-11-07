@@ -1,4 +1,4 @@
-/* Atlas v1.33 · Ledgers and reading surfaces.
+/* Atlas · Ledgers and reading surfaces.
  * Presentation only: keep the original scroll owners, sticky cells, row
  * measurements, dialog lifecycle and shell-hosted toolbar visibility.
  * Visual decisions: design-system/bitcoin-cycle-atlas/MASTER.md.
@@ -44,6 +44,23 @@
   line-height: 1.8;
 }
 #data-view .asset-category {
+  color: var(--subtle);
+}
+#data-view .asset-comparison-table :is(#asset-start-header,#asset-latest-header,.asset-ytd-header) {
+  padding-inline: 12px;
+  text-align: right;
+}
+#data-view .asset-comparison-table .asset-stat-header {
+  padding-inline: 4px 12px;
+  text-align: right;
+}
+#data-view .asset-comparison-table :is(#asset-start-header,.asset-start,.asset-ytd-header,.asset-ytd,.asset-judgment-header,.asset-judgment-cell) {
+  border-left: 1px solid var(--border);
+}
+#data-view .asset-comparison-table #asset-latest-header {
+  color: var(--text);
+}
+#data-view .asset-cell-date {
   color: var(--subtle);
 }
 #data-view .asset-comparison-table .asset-group-start:not(:first-child) > :is(th,td) {
@@ -253,13 +270,33 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   max-width: 100%;
   white-space: normal;
   -webkit-line-clamp: 1;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 550;
   line-height: 1.45;
 }
 #evidence-view .research-row-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
   color: var(--subtle);
   font: 11px/1.4 var(--font-mono);
+}
+#evidence-view .research-row-symbols {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#evidence-view .research-row-record {
+  display: none;
+}
+#evidence-view :is(.evidence-publisher,.evidence-role) {
+  color: var(--muted);
+  line-height: 1.5;
+}
+#evidence-view .evidence-grade {
+  border-left: 1px solid var(--border-soft);
 }
 #evidence-view .evidence-title button.research-open:hover {
   color: var(--accent);
@@ -300,7 +337,7 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
 /* The reader is a document, with one fixed action band and one scroll owner. */
 .research-reader {
   border-color: var(--border-strong);
-  border-radius: 6px;
+  border-radius: 0;
   background: var(--bg);
   --reader-surface: var(--bg);
 }
@@ -335,6 +372,16 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   font-size: 15px;
   line-height: 1.8;
   letter-spacing: normal;
+}
+.research-article-heading {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: 0 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.research-article-heading > :is(.research-tags,h1,.research-deck) {
+  grid-column: 1 / -1;
 }
 .research-tags {
   gap: 8px 12px;
@@ -372,10 +419,18 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   display: none;
 }
 .research-meta {
-  gap: 8px 16px;
-  margin-bottom: 24px;
-  padding-block: 16px;
-  border-bottom-color: var(--border);
+  display: grid;
+  grid-template-columns: auto auto;
+  align-self: center;
+  justify-items: end;
+  gap: 4px 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.research-meta a {
+  grid-column: 1 / -1;
+  margin-left: 0;
 }
 .research-article .research-provenance {
   margin: 20px 0 28px;
@@ -390,6 +445,16 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -.015em;
+}
+.research-article > section {
+  padding-block: 24px;
+  border-top: 1px solid var(--border-soft);
+}
+.research-article > section > h2 {
+  margin: 0 0 16px;
+}
+.research-article > section > :last-child {
+  margin-bottom: 0;
 }
 .research-article h3 {
   margin: 12px 0 8px;
@@ -407,6 +472,13 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
 .research-claim {
   padding: 20px 0;
   border-bottom-color: var(--border-soft);
+}
+.research-claim:first-of-type {
+  padding-top: 0;
+}
+.research-claim:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 .research-article .research-verdict {
   display: inline-block;
@@ -485,6 +557,42 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   color: var(--muted);
 }
 
+/* A margin for section names gives long records a stable document outline.
+ * The text column keeps the previous 688px reading measure. */
+@media (min-width: 960px) {
+  .research-article {
+    max-width: 896px;
+  }
+  .research-article > :is(.research-article-heading,.research-content-switch,.research-provenance,.research-article-footer) {
+    max-width: 688px;
+    margin-left: auto;
+  }
+  .research-article > section {
+    display: grid;
+    grid-template-columns: 120px minmax(0,1fr);
+    align-items: start;
+    gap: 12px 24px;
+  }
+  .research-article > section > h2 {
+    grid-column: 1;
+    grid-row: 1;
+    padding-top: 4px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.65;
+    letter-spacing: normal;
+  }
+  .research-article > section > :not(h2) {
+    grid-column: 2;
+    min-width: 0;
+    margin-block: 0;
+  }
+  .research-article > .research-source-original > .research-provenance {
+    margin: 0;
+  }
+}
+
 /* IPO dates and issues share the ledger's quiet structure. */
 body #ipo-view .ipo-table-shell {
   border-color: var(--border-soft);
@@ -511,8 +619,13 @@ body #ipo-view .ipo-table-shell {
 }
 #ipo-view .ipo-table .ipo-name {
   background: var(--surface);
-  font-weight: 500;
+  font-weight: 600;
   box-shadow: 1px 0 var(--border);
+}
+#ipo-view .ipo-table :is(th,td):nth-child(4),
+#ipo-view .ipo-table :is(th,td):nth-child(6),
+#ipo-view .ipo-table :is(th,td):nth-child(9) {
+  border-left: 1px solid var(--border);
 }
 #ipo-view .ipo-table tbody tr:is(:hover,:focus-within),
 #ipo-view .ipo-table tbody tr:is(:hover,:focus-within) > .ipo-name {
@@ -550,6 +663,11 @@ body #ipo-view .ipo-table-shell {
   border-color: var(--border-soft);
 }
 #ipo-view .ipo-month-day {
+  display: grid;
+  grid-template-columns: minmax(0,1fr);
+  grid-template-rows: 28px auto auto;
+  align-content: start;
+  gap: 4px;
   padding: 8px 12px;
   border-color: var(--border-soft);
   background: var(--bg);
@@ -564,10 +682,11 @@ body #ipo-view .ipo-table-shell {
   color: var(--subtle);
 }
 #ipo-view .ipo-day-number {
-  min-width: 24px;
-  min-height: 24px;
+  justify-self: start;
+  min-width: 28px;
+  min-height: 28px;
   color: var(--text);
-  font: 500 14px/24px var(--font-mono);
+  font: 500 20px/28px var(--font-mono);
   text-align: left;
 }
 #ipo-view .ipo-month-day.is-today .ipo-day-number {
@@ -577,13 +696,25 @@ body #ipo-view .ipo-table-shell {
   color: var(--on-accent);
   text-align: center;
 }
+#ipo-view .ipo-day-events { min-width: 0; }
 #ipo-view .ipo-cal-event {
-  gap: 4px;
+  display: grid;
+  grid-template-columns: 28px minmax(0,1fr);
+  align-items: baseline;
+  gap: 8px;
   font-size: 12px;
   line-height: 1.5;
 }
 #ipo-view .ipo-cal-event > span {
   font-size: 11px;
+  font-weight: 500;
+}
+#ipo-view .ipo-cal-event strong {
+  color: var(--text);
+  font-weight: 500;
+}
+#ipo-view .ipo-month-day.is-outside .ipo-cal-event strong {
+  color: var(--muted);
 }
 #ipo-view .ipo-day-more {
   font-size: 11px;
@@ -675,17 +806,25 @@ body #ipo-view .ipo-table-shell {
     padding-left: 4px;
   }
   #ipo-view .ipo-month-day {
+    grid-template-rows: 24px auto auto;
+    gap: 4px;
     padding: 4px;
   }
   #ipo-view .ipo-day-number {
-    min-height: 20px;
-    font-size: 12px;
-    line-height: 20px;
+    min-width: 24px;
+    min-height: 24px;
+    font-size: 16px;
+    line-height: 24px;
   }
   #ipo-view .ipo-cal-event {
+    display: block;
     gap: 0;
     font-size: 11px;
     line-height: 1.45;
+  }
+  #ipo-view .ipo-cal-event strong {
+    display: block;
+    color: inherit;
   }
   #ipo-view .ipo-day-more {
     font-size: 11px;
@@ -697,7 +836,7 @@ body #ipo-view .ipo-table-shell {
   }
   body #evidence-view .evidence-title button.research-open > .evidence-title-text {
     -webkit-line-clamp: 2;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.4;
   }
   #evidence-view .research-row-meta {
@@ -718,6 +857,18 @@ body #ipo-view .ipo-table-shell {
   .research-article {
     padding: 24px 20px 40px;
     font-size: 15px;
+  }
+  .research-article-heading {
+    display: block;
+    padding-bottom: 20px;
+  }
+  .research-meta {
+    display: flex;
+    margin-top: 12px;
+    gap: 8px 12px;
+  }
+  .research-meta a {
+    margin-left: auto;
   }
   .research-article h1 {
     font-size: 25px;
@@ -741,6 +892,26 @@ body #ipo-view .ipo-table-shell {
     min-height: 44px;
   }
 }
+@media (max-width: 600px) {
+  #evidence-view .research-row-meta {
+    width: 100%;
+  }
+  #evidence-view .research-row-symbols {
+    flex: none;
+    max-width: 44%;
+  }
+  #evidence-view .research-row-record {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    padding-left: 8px;
+    border-left: 1px solid var(--border);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--font);
+  }
+}
 @media (max-width: 620px) {
   #data-view .asset-selected-reason {
     padding-left: 12px;
@@ -758,14 +929,18 @@ body #ipo-view .ipo-table-shell {
 }
 @media (max-height: 800px) {
   #ipo-view .ipo-month-day {
+    display: flex;
     padding-block: 4px;
     gap: 0;
   }
   #ipo-view .ipo-day-number {
-    min-height: 18px;
-    line-height: 18px;
+    min-width: 24px;
+    min-height: 20px;
+    font-size: 16px;
+    line-height: 20px;
   }
   #ipo-view :is(.ipo-cal-event,.ipo-day-more) {
+    font-size: 11px;
     line-height: 16px;
   }
 }

@@ -2,7 +2,9 @@
 
 ## Scope and source
 
-This is the v1.33.0 visual system requested on 2026-11-07 (Asia/Seoul).
+This is the v1.34.0 interface composition requested on 2026-11-07 (Asia/Seoul).
+It develops the v1.33.0 palette into a clearer navigation, form/result and
+document layout. The completed v1.33.0 source remains in Git history.
 It applies to the chart shell, unified market and instrument workspaces,
 asset comparison, IPO, research and their readers. It does not change the
 financial model, published observations, ledgers, replay or chart vendors.
@@ -78,14 +80,14 @@ Status still has text, shape or signed values in addition to color.
 
 | Area | Treatment | Preserved contract |
 | --- | --- | --- |
-| Chart perimeter | Flat ink tools, slim active markers, consistent controls | Existing top/left/right/bottom regions and viewport dimensions |
+| Chart perimeter | Visible Korean destination labels and SVGs in a 64px desktop rail, separate from chart tools | Existing top/left/right/bottom regions and measured viewport ownership |
 | Outer toolbar | Controls grouped by thin separators; understated selected state | One actual outer row, 44px desktop / 48px mobile; original portaled controls |
 | Market US/KR | Three aligned reading columns; values dominate; section rules | Three independent axes, source clocks, observed/forecast/pending meaning |
-| Conditions and cash flow | Legible form groups and aligned result columns | Every input, assumption, calculator, scenario and output |
+| Conditions and cash flow | Narrower grouped inputs, wider results, existing index/NPV as the first principal reading | Every input, assumption, calculator, scenario and output |
 | RSI/housing/themes | Chart-first, flat supporting readings and consistent search | Shared symbol state, lookup placement, native controls and ztd charts |
-| Asset comparison | Calm ledger grid, strong identifier column, aligned numerals | All assets, sectors, exact values, sorting, sticky header/first column |
-| IPO | Calendar/table with clear date hierarchy and restrained status marks | One toolbar, every filter and view, native scrolling and details |
-| Research | A compact index and comfortable document reader | Filters, evidence/source access, full text, reader focus restoration |
+| Asset comparison | Distinct historical/current/judgment column groups, strong identifiers and aligned numerals | All assets, sectors, exact values, sorting, sticky header/first column |
+| IPO | Date anchors and separate event-type/company columns inside the actual calendar | One toolbar, every filter and view, native scrolling and details |
+| Research | Title-led index and a section-label/content reading grid, one column on mobile | Filters, evidence/source access, full text, reader focus restoration |
 | Dialogs/menus | Solid surfaces, clear title/action bands, coherent focus | Escape, close, focus return, resize behavior and scroll containment |
 
 ## Responsive and interaction rules
@@ -110,12 +112,61 @@ input data or screen inventories. Review actual full shell and standalone pages,
 desktop and narrow viewports, charts, tables, readers and menus. Inspect real
 screenshots for hierarchy, clipping, focus visibility and control placement.
 
-The inherited warning baseline is static 32, original render 10 and integrated
-render 2. The shared static set is counted once. These are inspection findings,
-not a target to optimize by weakening a checker. A new result must be described
-using its actual run and evidence, not copied from the old release.
+The v1.34.0 starting source is v1.33.0, whose final warning inventory is static
+60, original render 10 and integrated render 3, with FAIL 0 / REFLEX 0. The
+earlier 32/10/2 inventory belongs to the pre-v1.33 release. The shared static
+set is counted once. These are inspection findings, not a target to optimize
+by weakening a checker. Each new result is tied to its actual source and run.
 
 Preserve the 2026-11-07 main data refresh at
 `5704a96e787e27f53e1ae44288673ee9f1c451eb`. Release metadata, generated
 bundles and cache keys may change through the ordinary build. All numeric
 sources, immutable ledgers, replay logic and ztd-charts adoption remain intact.
+
+## v1.34.0 structure review and skill use
+
+The user repeated the full-redesign instruction after the v1.33.0 release.
+The follow-up therefore addresses actual remaining structural issues, with
+the same financial workbench and functional contracts as its starting point.
+
+Read the same pinned SKILL.md and both references before this pass. The
+design-system query `financial research terminal editorial` (density 9,
+variance 4) returned Swiss Modernism 2.0, but also a Portfolio Grid marketing
+layout and Latin serif pairing. The one narrower retry `investment analytics
+dashboard` returned an applicable dark analytical style, but an unrelated
+Enterprise Gateway sales layout. Neither marketing layout, glow effect nor
+new external font recommendation is used. Swiss modular hierarchy and the
+existing accessible dark roles fit the actual chart/ledger product.
+
+The navigation query `navigation icon text labels` returned general form and
+sticky-navigation entries; the one retry `nav label icon --domain web` returned
+native accessibility entries. Neither is presented as a matching web layout
+recipe. Visible labels and separation of primary destinations use the read
+quick-reference's `nav-label-icon`, `nav-hierarchy`, `visual-hierarchy` and
+`navigation-consistency` guidance, adapted to the existing web rail. The
+React query `conditional rendering accessibility` was empty; its one retry
+`accessible` returned accessible-role queries, used for interaction review.
+
+The original market, scenario, cashflow, asset, IPO and reader screenshots
+were inspected. Specific findings drive the changes:
+
+- Six primary destinations were visually indistinguishable from chart-tool
+  icons. Expose their existing Korean label spans; preserve the same nodes,
+  actions, URLs and selected state. Give the desktop rail 64px and put the
+  destination group before the separate chart-tool group. Narrow screens keep
+  their established native menu and 44px controls.
+- Global instrument identity, view choice, current values and supporting
+  actions competed in the same toolbar. Use distinct spacing and type weight
+  inside that one row. Show the actual Korean instrument name beside its
+  ticker on wide screens without changing the selector's accessible identity.
+- Scenario and cashflow used equal-width input/result panels while their main
+  numeric result had weak emphasis. Give the result more space and elevate
+  the same computed index/NPV within existing body data. This is not a new
+  model score, extra calculator, duplicated toolbar or invented KPI.
+- Asset statistics, current prices and judgments need distinct column groups.
+  Calendar dates, event kinds and company names need distinct positions. The
+  research reader benefits from section names aligned with their body text;
+  preserve its readable title size and prose measure.
+
+Do not call the previous successful release unfinished. The final PR and
+handoff must report only the new source's actual verification and publication.

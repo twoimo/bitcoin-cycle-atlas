@@ -179,8 +179,8 @@ body :is(input, select, textarea) { accent-color: var(--accent); }
   color: var(--accent);
 }
 
-/* One perimeter, with active location expressed as a small rule. These styles
-   never change the toolbar height, portaled control owners or scroll owners. */
+/* One perimeter. Primary destinations use their existing labels; chart tools
+   remain in their own group. The toolbar and original scroll owners persist. */
 body[data-shell=chart] :is(.atlas-sidebar, .workbench-rail, .atlas-canvas-heading),
 .workbench-bottom.workbench-bottom-bar { background: var(--sidebar); }
 .atlas-page .atlas-workbench, .atlas-plot { background: var(--bg); }
@@ -201,8 +201,11 @@ body[data-shell=chart] :is(.atlas-sidebar, .workbench-rail, .atlas-canvas-headin
   font-weight: 600;
   color: var(--text);
   border-color: var(--border);
-  letter-spacing: .02em;
+  letter-spacing: normal;
 }
+.symbol-selector-name { display: none; }
+.atlas-canvas-heading .symbol-selector-name:empty { display: none; }
+.symbol-selector-label { font-variant-numeric: tabular-nums; }
 .center-workspace-toolbar :is(button, select, input),
 .legacy-toolbar-field :is(input, select) { font-size: 12px; }
 .center-workspace-toolbar :is(select, input),
@@ -226,6 +229,32 @@ body[data-shell=chart] :is(.atlas-sidebar, .workbench-rail, .atlas-canvas-headin
 .compact-toolbar-summary { letter-spacing: 0; }
 .center-workspace-toolbar .workspace-region-code { color: var(--subtle); }
 .legacy-toolbar-state { color: var(--accent); }
+.center-workspace-toolbar .workspace-view-tabs button {
+  gap: 8px;
+  font-weight: 500;
+}
+.center-workspace-toolbar .workspace-view-tabs button[aria-selected=true] {
+  color: var(--text);
+  font-weight: 650;
+}
+.center-workspace-toolbar .compact-toolbar-group {
+  padding-inline: 8px;
+  gap: 8px;
+}
+.center-workspace-toolbar .compact-toolbar-summary {
+  font-size: 12px;
+  font-weight: 500;
+}
+.center-workspace-toolbar :is(.compact-toolbar-summary strong, .compact-toolbar-summary b) {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+}
+.center-workspace-toolbar .workspace-region-code {
+  font: 10px/1 var(--font-mono);
+  padding-right: 4px;
+  border-right: 1px solid var(--border);
+}
 .workbench-bottom-bar button[aria-pressed=true] {
   background: transparent;
   color: var(--accent);
@@ -264,6 +293,7 @@ body :is(.workspace-dialog, .symbol-search-dialog, .chart-export-dialog,
   font-weight: 600;
   letter-spacing: 0;
   color: var(--text);
+  text-wrap: balance;
 }
 body :is(.chart-export-dialog, .research-annotations-dialog, .chart-go-to-dialog,
   .indicator-settings-dialog, .indicator-library, .monthly-backtest)
@@ -287,9 +317,14 @@ body :is(.chart-export-dialog, .research-annotations-dialog, .chart-go-to-dialog
 .compact-toolbar-dialog :is(th, td) { border-color: var(--border-soft); }
 .compact-toolbar-dialog th { color: var(--muted); font-weight: 500; }
 
-/* Search is a compact instrument index, with stable names and source columns. */
-.symbol-search-heading { padding-block: 12px; }
-.symbol-search-filters { padding-block: 12px 4px; }
+/* The search is a ruled instrument directory with distinct identity and
+   exchange columns. Its fixed search/header and original list scroll remain. */
+.symbol-search-dialog { width: min(640px, calc(100% - 24px)); }
+.symbol-search-heading { padding: 16px 24px; }
+.symbol-search-heading h2 { font-size: 20px; font-weight: 650; }
+.symbol-search-input { padding: 12px 24px; background: var(--bg); }
+.symbol-search-input input { height: 40px; font-size: 18px; }
+.symbol-search-filters { padding: 12px 24px; gap: 8px; }
 .symbol-search-filters span {
   padding: 0 12px 0 0;
   border: 0;
@@ -299,15 +334,33 @@ body :is(.chart-export-dialog, .research-annotations-dialog, .chart-go-to-dialog
   font-size: 12px;
 }
 .symbol-search-filters span + span { border-left: 1px solid var(--border); padding-left: 12px; }
-.symbol-search-row { border-radius: 0; border-bottom-color: var(--border-soft); }
+.symbol-search-results { padding: 0; }
+.symbol-search-row {
+  grid-template-columns: 32px minmax(0, 1fr) 120px;
+  gap: 16px;
+  padding: 12px 24px;
+  margin: 0;
+  min-height: 72px;
+  border-radius: 0;
+  border-bottom-color: var(--border-soft);
+}
+.symbol-search-row .symbol-search-mark {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 500;
+}
+.symbol-search-source { max-width: none; padding-left: 16px; border-left: 1px solid var(--border-soft); }
 .symbol-search-row:hover, .symbol-search-row[aria-selected=true] {
   border-color: transparent;
   border-bottom-color: var(--border);
   background: var(--surface-hover);
   box-shadow: inset 2px 0 var(--accent);
 }
-.symbol-search-symbol strong { font-size: 14px; font-weight: 600; }
-.symbol-search-name { font-size: 12px; }
+.symbol-search-symbol strong { font-family: var(--font-mono); font-size: 14px; font-weight: 600; letter-spacing: normal; }
+.symbol-search-name { font-size: 13px; color: var(--text); }
+.symbol-search-footer { padding-inline: 24px; }
 .symbol-search-current { border-radius: 0; background: transparent; color: var(--accent); }
 .symbol-search-close:hover { background: var(--surface-hover); color: var(--text); }
 .workspace-dialog-tabs button { border-radius: 0; }
@@ -370,11 +423,98 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
 .research-annotation-row { border-color: var(--border-soft); border-radius: 0; }
 .research-annotation-row.is-selected { background: var(--nav-active-bg); border-color: var(--border); }
 
+@media (min-width: 621px) {
+  body[data-shell=chart] { --rail-width: 64px; }
+  body[data-shell=chart] .workbench-rail { width: var(--rail-width); }
+  body[data-shell=chart] .workbench-rail .atlas-nav {
+    gap: 4px;
+    margin: 0 0 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  body[data-shell=chart] .workbench-rail .atlas-nav :is(a, button) {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 56px;
+    height: 48px;
+    min-height: 48px;
+    padding: 4px;
+    border: 0;
+    border-radius: 0;
+    color: var(--muted);
+    line-height: 1.2;
+  }
+  body[data-shell=chart] .workbench-rail .atlas-nav :is(a, button) > .atlas-nav-label:last-child:not([data-icon]) {
+    display: block;
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    clip-path: none;
+    overflow: visible;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  body[data-shell=chart] .workbench-rail .atlas-nav :is(a, button):hover {
+    color: var(--text);
+    background: var(--surface-hover);
+  }
+  body[data-shell=chart] .workbench-rail .atlas-nav :is(.active, [aria-current=page]) {
+    color: var(--accent);
+    background: var(--nav-active-bg);
+  }
+  body[data-shell=chart] .workbench-detail-tools {
+    align-items: center;
+    gap: 4px;
+    padding-block: 4px;
+  }
+  body[data-shell=chart] .atlas-canvas-heading button.symbol-selector-trigger {
+    height: 36px;
+    padding-inline: 8px 12px;
+    margin-right: 4px;
+  }
+  body[data-shell=chart] .center-workspace-toolbar .workspace-view-tabs button { padding-inline: 12px; }
+}
+@media (min-width: 621px) and (pointer: fine) {
+  body[data-shell=chart] .center-workspace-toolbar .workspace-view-tabs button { min-height: 36px; }
+}
+@media (min-width: 1101px) {
+  .atlas-canvas-heading button.symbol-selector-trigger {
+    gap: 8px;
+    min-width: 128px;
+    max-width: 224px;
+  }
+  .atlas-canvas-heading .symbol-selector-name {
+    display: inline;
+    min-width: 0;
+    max-width: 144px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+  }
+  .atlas-canvas-heading .symbol-selector-name:not(:empty) + .symbol-selector-label {
+    color: var(--muted);
+    font: 11px/1.3 var(--font);
+  }
+}
 @media (max-width: 620px), (pointer: coarse) {
+  .center-workspace-toolbar .compact-toolbar-group { padding-inline: 4px; gap: 4px; }
+  .center-workspace-toolbar .workspace-view-tabs button { gap: 4px; }
+  .center-workspace-toolbar :is(.compact-toolbar-summary strong, .compact-toolbar-summary b) { font-size: 12px; }
   .symbol-search-heading h2 { font-size: 16px; }
+  .symbol-search-heading, .symbol-search-input { padding: 12px 16px; }
+  .symbol-search-filters { flex-wrap: wrap; padding: 12px 16px; }
   .symbol-search-close { width: 44px; height: 44px; }
-  .symbol-search-row { min-height: 72px; }
-  .symbol-search-name { font-size: 11px; }
+  .symbol-search-row { grid-template-columns: 24px minmax(0, 1fr) 84px; gap: 8px; padding: 12px 16px; min-height: 80px; }
+  .symbol-search-mark { width: 24px; }
+  .symbol-search-source { padding-left: 8px; }
+  .symbol-search-name { font-size: 12px; white-space: normal; overflow-wrap: anywhere; }
+  .symbol-search-footer { padding-inline: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .atlas-canvas-heading :is(button, select, input),
