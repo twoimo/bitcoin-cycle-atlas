@@ -12,6 +12,7 @@ import {readBrowserSourceIdentity} from './browser-source-identity.mjs';
 import {cloudflareBrowserExecution} from './cloudflare-build-contract.mjs';
 import {completeLineWriter} from './cloudflare-gate-runner.mjs';
 import {emitCompressedBrowserReport} from './browser-evidence-transport.mjs';
+import {readFastCadenceContext,createFastCadenceBarrier,fastCadenceReleasePrefix,assertFastCadenceCaseEvidence} from './browser-fast-cadence-contract.mjs';
 
 const defaultRoot=fileURLToPath(new URL('..',import.meta.url));
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -136,7 +137,7 @@ export async function combineNativeBrowserLanes({root,out,source,suiteRunId,lane
 }
 
 export async function runNativeBrowserLane({root,out,lane,suiteRunId,environment=process.env,write=line=>process.stdout.write(line),
-  command=process.execPath,args=['scripts/verify-eth-candidate-browser.mjs']}){
+  command=process.execPath,args=['scripts/verify-eth-candidate-browser.mjs'],onLine=()=>{}}){
   const directory=resolve(out,'lanes',lane.name);await mkdir(directory,{recursive:true});
   const startedAt=new Date().toISOString(),began=Date.now();
   const child=spawn(command,args,{cwd:root,env:{...environment,ATLAS_BROWSER_CASE_SCOPE:lane.scope,ATLAS_BROWSER_LANE:lane.name,
@@ -145,7 +146,7 @@ export async function runNativeBrowserLane({root,out,lane,suiteRunId,environment
   // Inherit the suite's process group. The outer gate kills that group on
   // timeout/abort, covering both Node lanes and their Chrome descendants.
   for(const [pipe,input] of [['stdout',child.stdout],['stderr',child.stderr]]){
-    const output=createWriteStream(resolve(directory,pipe+'.log'),{flags:'w'}),writer=completeLineWriter(write);
+    const output=createWriteStream(resolve(directory,pipe+'.log'),{flags:'w'}),writer=completeLineWriter(line=>{write(line);if(pipe==='stdout')onLine(line);});
     streams.push(output);writers.push(writer);
     output.on('error',error=>{problem??=error;child.kill('SIGTERM');});
     input.on('data',bytes=>{
@@ -167,26 +168,47 @@ export async function runNativeBrowserLane({root,out,lane,suiteRunId,environment
     ...(problem?{error:errorText(problem)}:{})};
 }
 
+export async function runPhasedNativeBrowserLanes({root,out,source,suiteRunId,environment,write,runLane=runNativeBrowserLane,context,timeoutMs}){
+  context??=await readFastCadenceContext({root,source,suiteRunId});
+  const barrier=createFastCadenceBarrier({context,timeoutMs,onRelease:release=>write(fastCadenceReleasePrefix+JSON.stringify(release)+'\n')});
+  const replay=nativeBrowserLanes.find(lane=>lane.name==='chart-replay'),other=nativeBrowserLanes.find(lane=>lane.name==='non-chart-replay');
+  const replayRun=Promise.resolve().then(()=>runLane({root,out,lane:replay,suiteRunId,environment,write,onLine:line=>barrier.observeLine(line)}))
+    .then(value=>{barrier.close(value);return value;},error=>{barrier.close({error:errorText(error)});throw error;});
+  replayRun.catch(()=>{});
+  try{
+    const release=await barrier.released;
+    // A failed phase permits remaining diagnostics, never a successful suite.
+    const otherRun=Promise.resolve().then(()=>runLane({root,out,lane:other,suiteRunId,environment,write}));
+    const results=await Promise.allSettled([otherRun,replayRun]);
+    const processes=results.map((result,index)=>result.status==='fulfilled'?result.value:{name:nativeBrowserLanes[index].name,code:null,signal:null,error:errorText(result.reason)});
+    if(processes[0].startedAt)assert.ok(Date.parse(processes[0].startedAt)>=Date.parse(release.releasedAt),'The non-replay browser started before cadence release');
+    return {processes,context,release,error:barrier.error?errorText(barrier.error):null};
+  }finally{barrier.dispose();}
+}
+
 export async function verifyNativeBrowserSuite({root=defaultRoot,environment=process.env,write=line=>process.stdout.write(line)}={}){
   root=resolve(root);const out=resolve(root,environment.ATLAS_BROWSER_OUT??'build/eth-browser');
   assert.ok(relative(root,out).startsWith('build/'),'Native suite output must be inside its build directory');
-  const suiteRunId=randomUUID(),startedAt=new Date().toISOString();
-  let source={},lanes=[],processes=[],report;
+  const suiteRunId=environment.ATLAS_BROWSER_SUITE_RUN_ID??randomUUID(),startedAt=new Date().toISOString();
+  assert.match(suiteRunId,/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/,'The parent browser run nonce is invalid');
+  let source={},lanes=[],processes=[],report,phase;
   await mkdir(out,{recursive:true});await rm(resolve(out,'report.json'),{force:true});
   try{
     assert.equal(environment.ATLAS_BROWSER_CASE_SCOPE??'all','all','The suite always verifies the complete browser inventory');
     source=await readBrowserSourceIdentity(root);
     if(environment.WORKERS_CI_COMMIT_SHA)assert.equal(source.sourceCommit,environment.WORKERS_CI_COMMIT_SHA);
     for(const lane of nativeBrowserLanes)await rm(resolve(out,'lanes',lane.name),{recursive:true,force:true});
-    processes=await Promise.all(nativeBrowserLanes.map(lane=>runNativeBrowserLane({root,out,lane,suiteRunId,environment,write})));
+    phase=await runPhasedNativeBrowserLanes({root,out,source,suiteRunId,environment,write});processes=phase.processes;
     lanes=await readNativeBrowserLaneReports(out,processes);
     report=await combineNativeBrowserLanes({root,out,source,suiteRunId,lanes,startedAt,finishedAt:new Date().toISOString()});
+    if(phase.error)throw new Error(phase.error);
+    report.fastCadence=assertFastCadenceCaseEvidence(report,phase.release,phase.context);
     assert.deepEqual(await readBrowserSourceIdentity(root),source,'Source revision/inventory changed during the suite');
   }catch(error){
     if(!lanes.length)lanes=await readNativeBrowserLaneReports(out,processes);
     report={schemaVersion:1,kind:'eth-candidate-real-browser',status:'failed',caseScope:'all',suiteRunId,startedAt,
       ...source,declaredCaseCount:createEthBrowserCaseSpecs().length,expectedCaseCount:createEthBrowserCaseSpecs().length,
-      cases:[],failures:[{error:errorText(error)}],error:errorText(error),laneReports:lanes,
+      cases:[],failures:[{error:errorText(error)}],error:errorText(error),laneReports:lanes,fastCadence:phase?.release??null,
       scope:'Suite verification failed. Complete available child observations are retained in laneReports; no joined pass is asserted.'};
   }
   report.finishedAt=new Date().toISOString();

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {createEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
+import {fastCadencePolicy,assertFastCadenceRelease} from './browser-fast-cadence-contract.mjs';
 
 // These are execution gates, not names of old GitHub jobs. Every gate runs
 // against one clean source checkout before the Cloudflare artifact is built.
@@ -27,7 +28,7 @@ export const cloudflareParallelGroups=Object.freeze([
   Object.freeze(['native-browser','model-tests']),
 ]);
 export const cloudflareBrowserExecution=Object.freeze({
-  maximumProcesses:2,perLaneConcurrency:1,
+  maximumProcesses:2,perLaneConcurrency:1,isolatedFastCadence:fastCadencePolicy,
   lanes:Object.freeze([
     Object.freeze({scope:'non-chart-replay',caseCount:createEthBrowserCaseSpecs().filter(spec=>!spec.chartReplay).length}),
     Object.freeze({scope:'chart-replay',caseCount:createEthBrowserCaseSpecs().filter(spec=>spec.chartReplay).length}),
@@ -104,6 +105,11 @@ export function assertCloudflareVerificationReceipt(receipt,{sourceCommit,source
   assert.equal(receipt.browser?.sourceIntegrity,true);
   assert.match(receipt.browser?.reportSha256??'',/^[a-f0-9]{64}$/);
   assert.equal(receipt.browser?.processPriority?.nice,0,'Native browser must retain normal CPU priority');
+  assert.equal(receipt.fastCadence?.status,'passed','The isolated fast cadence phase must pass before verification qualifies');
+  assertFastCadenceRelease(receipt.fastCadence,{sourceCommit,sourceTree:receipt.sourceTree,
+    suiteRunId:receipt.browser.suiteRunId,sourceInventorySha256:receipt.browser.sourceInventorySha256,
+    expectedObservationDates:receipt.fastCadence.expectedObservationDates});
+  assert.ok(clockAtOrAfter(receipt.modelLaunchedAt,receipt.fastCadence.releasedAt),'The canonical model command must start after fast cadence release');
   assertModelPriorityReceipt(receipt.modelPriority);
   assert.equal(receipt.runtime?.node,cloudflareRuntime.node);
   assert.equal(receipt.runtime?.platform,cloudflareRuntime.platform);
@@ -111,3 +117,5 @@ export function assertCloudflareVerificationReceipt(receipt,{sourceCommit,source
   assert.ok(Number.isFinite(Date.parse(receipt.completedAt))&&Date.parse(receipt.completedAt)>=Date.parse(receipt.startedAt),'Actual completed execution clock is required');
   return receipt;
 }
+
+const clockAtOrAfter=(value,baseline)=>Number.isFinite(Date.parse(value))&&Date.parse(value)>=Date.parse(baseline);

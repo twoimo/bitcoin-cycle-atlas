@@ -68,7 +68,7 @@ export async function runVerificationCommand(command,args,{id,cwd,environment,de
   signal?.throwIfAborted();
   assert.ok(deadline-Date.now()>0,'Verification execution budget expired before '+id);
   return new Promise((accept,reject)=>{
-    let problem=null,closed=false,killTimer,initialNice;
+    let problem=null,closed=false,killTimer,initialNice,launchedAt;
     const invocation=nice===undefined?{command,args}:{command:process.execPath,args:[priorityCommand,'--gate',id,'--nice',String(nice),'--',command,...args]};
     const child=spawn(invocation.command,invocation.args,{cwd,env:environment,stdio:['ignore','pipe','pipe'],detached:process.platform==='linux'});
     const stop=(terminationSignal='SIGKILL')=>{
@@ -86,7 +86,7 @@ export async function runVerificationCommand(command,args,{id,cwd,environment,de
     for(const [name,stream] of [['stdout',child.stdout],['stderr',child.stderr]])stream.on('data',bytes=>{
       try{log(bytes,name);}catch(error){cancel(error);}
     });
-    child.on('spawn',()=>{try{initialNice=getPriority(child.pid);}catch(error){cancel(error);}});
+    child.on('spawn',()=>{launchedAt=new Date().toISOString();try{initialNice=getPriority(child.pid);}catch(error){cancel(error);}});
     child.on('error',error=>cancel(error));
     child.on('exit',(code,exitSignal)=>{
       if(code!==0)cancel(new Error(id+' failed with '+(exitSignal??'exit '+code)));
@@ -94,7 +94,7 @@ export async function runVerificationCommand(command,args,{id,cwd,environment,de
     child.on('close',(code,exitSignal)=>{
       if(closed)return;closed=true;clearTimeout(timer);clearTimeout(killTimer);signal?.removeEventListener('abort',abort);
       if(problem||code!==0){stop();reject(problem??new Error(id+' failed with '+(exitSignal??'exit '+code)));}
-      else accept({code,signal:exitSignal,pid:child.pid,initialNice});
+      else accept({code,signal:exitSignal,pid:child.pid,initialNice,launchedAt});
     });
   });
 }

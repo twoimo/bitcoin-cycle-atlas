@@ -172,8 +172,66 @@ export async function swipeChartReplayToolbarToEdge({ cdp, evaluate, bounds, pau
   return { before, after, maximumSwipes, swipes };
 }
 
+export function isEarlyChartReplayCadenceCase(spec) {
+  return spec.page === 'chart-replay-btc' && spec.symbol === 'BTCUSD' && spec.width === 1440 && spec.height === 900 && spec.touch === false;
+}
+
+// The fastest existing cadence sample runs as soon as this same real replay
+// fixture is ready. Only its place in the verifier changes: weekly display,
+// four-year range, actual volume/candles, and daily source observations remain.
+export async function verifyEarlyChartReplayCadence({ readFrame, readPersistence, selectFrequency, measure, rewind,
+  selectSpeed, closeMenu, assertRestored, expectedDates, originalView, referenceForecastSignature,
+  getMeasurement = () => null, onMilestone = () => {} }) {
+  const startedAt = new Date().toISOString();
+  let fixture = null, measurement = null, result, failure;
+  try {
+    const before = await readFrame('early-10x-original-daily-baseline'), persistent = await readPersistence();
+    assert.equal(before.mode, 'atlas-chart'); assert.equal(before.renderer, 'atlas'); assert.equal(before.state, 'paused');
+    assert.equal(before.frequency, 'daily'); assert.equal(before.chartType, 'candles'); assert.equal(before.speed, '1');
+    assert.equal(before.origin, '2026-10-20'); assert.equal(before.playbackStartDate, '2026-10-21');
+    assert.equal(before.cursor, before.origin); assert.equal(before.index, 0); assert.equal(before.actualCount, 0);
+    assert.equal(before.lastIndex, expectedDates.length); assert.ok(expectedDates.length >= 5);
+    assert.deepEqual([before.viewStart, before.viewEnd], originalView);
+    assert.equal(before.forecastValueSignature, referenceForecastSignature);
+    assert.ok(before.observedCandleCount > 0 && before.volumeCount > 0, 'The original actual candles and volume must remain enabled');
+    await selectFrequency('weekly');
+    const weekly = await readFrame('early-10x-weekly-display-daily-observations');
+    assert.equal(weekly.frequency, 'weekly'); assert.equal(weekly.updateInterval, 'daily');
+    assert.equal(weekly.chartType, 'candles'); assert.ok(weekly.volumeCount > 0 && weekly.observedCandleCount > 0);
+    for (const field of ['origin', 'cursor', 'playbackStartDate', 'index', 'lastIndex', 'mode', 'renderer', 'outputHash',
+      'snapshotDigest', 'forecastValueSignature', 'forecastCount', 'annotationSignature', 'cycleMarkerCount', 'cycleIntervalCount',
+      'cycleMarkerLayers', 'cycleIntervalLayers', 'viewStart', 'viewEnd', 'scale', 'unit'])
+      assert.equal(weekly[field], before[field], 'Early cadence setup changed the original replay ' + field);
+    fixture = { origin: weekly.origin, displayFrequency: weekly.frequency, updateInterval: weekly.updateInterval,
+      viewStart: weekly.viewStart, viewEnd: weekly.viewEnd };
+    const measured = await measure([['10', 100]]);
+    assert.equal(measured.length, 1); measurement = measured[0];
+    assert.equal(measurement.speed, 10); assert.equal(measurement.expectedMilliseconds, 100);
+    assert.deepEqual(measurement.observations.map(row => row.cursor), expectedDates);
+    await rewind(); await selectSpeed(before.speed); await selectFrequency(before.frequency); await closeMenu();
+    const restored = await readFrame('early-10x-original-daily-baseline-restored'), persistentAfter = await readPersistence();
+    assertRestored(restored, before, 'Early cadence native restoration');
+    for (const field of ['speed', 'mode', 'renderer', 'snapshotDigest', 'dateInput', 'dateMinimum', 'dateMaximum', 'scale', 'unit', 'chartType'])
+      assert.equal(restored[field], before[field], 'Early cadence did not restore ' + field);
+    assert.deepEqual(persistentAfter, persistent, 'Early cadence changed persisted workspace/replay data, URL or native history controls');
+    result = { status: 'passed', startedAt, completedAt: new Date().toISOString(), fixture, measurement,
+      restoration: { frequency: restored.frequency, cursor: restored.cursor, outputHash: restored.outputHash,
+        viewStart: restored.viewStart, viewEnd: restored.viewEnd, persistedStateSha256: digest(JSON.stringify(persistent)), unchanged: true } };
+  } catch (error) {
+    failure = error;
+    result = { status: 'failed', startedAt, completedAt: new Date().toISOString(), fixture,
+      measurement: measurement ?? getMeasurement(), error: error instanceof Error ? (error.stack || error.message) : String(error) };
+  }
+  // A terminal failure releases only diagnostic work. It never supplies a
+  // qualifying cadence pass, and callback errors cannot turn it into success.
+  try { await onMilestone(result); }
+  catch (error) { if (failure) throw new AggregateError([failure, error], 'Early cadence and its milestone failed'); throw error; }
+  if (failure) throw failure;
+  return result;
+}
+
 export async function verifyChartReplaySurface(api) {
-  const { cdp, browser, browserContextId, receipt, root, outputDirectory, evaluate, until, settled, click: nativeClick, bounds, visibleBounds, screenshot, verifyOfflineRefresh } = api;
+  const { cdp, browser, browserContextId, receipt, root, outputDirectory, evaluate, until, settled, click: nativeClick, bounds, visibleBounds, screenshot, verifyOfflineRefresh, onFastCadenceMilestone } = api;
   const { symbol, width, height, touch } = receipt;
   const crypto = ['BTCUSD', 'ETHUSD'].includes(symbol), btc = symbol === 'BTCUSD';
   const chartSelector = btc ? '#lab-chart' : symbol === 'ETHUSD' ? '#eth-chart' : '#equity-chart';
@@ -1098,12 +1156,15 @@ export async function verifyChartReplaySurface(api) {
     await storedUnchanged(saved, label + '-hover-does-not-save');
     return { before, left, center, centerPoint };
   }
-  async function measureCadence() {
-    const expected = [['10', 100], ['1', 1000], ['0.5', 2000], ['0.3', 3000]];
+  async function measureCadence(expected) {
     const allowedMeanRatio = [.85, 1.3], setupAllowanceMilliseconds = 5000;
+    const measurements = [];
     for (const [speed, milliseconds] of expected) {
+      assert.equal(evidence.timing.some(row => row.speed === Number(speed)), false, 'A cadence speed must be measured exactly once');
       await click(cdp, control('scrub')); await key('Home', 'Home', 36); await select(control('speed'), speed);
       const initial = await snapshot('speed-' + speed + '-origin');
+      assert.equal(initial.frequency, 'weekly', 'Cadence keeps the original weekly display fixture');
+      assert.equal(initial.updateInterval, 'daily');
       assert.ok(initial.lastIndex >= 5, 'Cadence check needs at least five genuine source observations');
       // The preserved cutoff stays fixed while new source bars arrive. Completion
       // must allow their actual playback duration, with the same cadence bound
@@ -1139,8 +1200,10 @@ export async function verifyChartReplaySurface(api) {
       assert.ok(mean >= milliseconds * allowedMeanRatio[0] && mean <= milliseconds * allowedMeanRatio[1],
         'Observed ' + speed + '× cadence does not match the requested update interval: ' + JSON.stringify(measured));
       await snapshot('speed-' + speed + '-ended');
+      measurements.push(measured);
     }
     await select(control('speed'), '1');
+    return measurements;
   }
   async function verifyWeeklyTransportResume() {
     const savedBefore = await storedBytes(), initial = await snapshot('weekly-current-position-before-play');
@@ -1394,8 +1457,13 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(new Set(ranges.map(value => value.start + '/' + value.end)).size, 4, 'The four original period controls did not change the active replay viewport');
     assert.deepEqual([ranges.at(-1).start, ranges.at(-1).end], [direct.viewStart, direct.viewEnd]);
     evidence.lifecycle.push({ label: 'original-four-period-buttons-control-active-replay', ranges });
-    await snapshot('weekly-four-year-restored');
-    await measureCadence();
+    const weeklyRestored = await snapshot('weekly-four-year-restored');
+    assert.deepEqual(evidence.earlyCadence.fixture, { origin: weeklyRestored.origin,
+      displayFrequency: weeklyRestored.frequency, updateInterval: weeklyRestored.updateInterval,
+      viewStart: weeklyRestored.viewStart, viewEnd: weeklyRestored.viewEnd },
+    'The early 10× sample must use the same fixture as the original weekly four-year cadence checks');
+    await measureCadence([['1', 1000], ['0.5', 2000], ['0.3', 3000]]);
+    assert.deepEqual(evidence.timing.map(row => row.speed), [10, 1, .5, .3], 'All four original cadence speeds must be observed exactly once');
 
     // Reselecting during playback pauses immediately; hovering is a preview,
     // not a new cutoff or a persistence operation.
@@ -1581,6 +1649,23 @@ export async function verifyChartReplaySurface(api) {
     await openDate();
     assert.equal(await evaluate(cdp, selector => document.querySelector(selector).value, control('date')), '2026-10-21');
     await click(cdp, control('start')); await ready();
+    if (isEarlyChartReplayCadenceCase(receipt.caseSpec ?? receipt)) {
+      await verifyEarlyChartReplayCadence({
+        readFrame: snapshot,
+        readPersistence: () => evaluate(cdp, () => ({ url: location.href, historyLength: history.length,
+          local: Object.keys(localStorage).sort().map(key => [key, localStorage.getItem(key)]),
+          session: Object.keys(sessionStorage).sort().map(key => [key, sessionStorage.getItem(key)]),
+          historyControls: ['undo', 'redo'].map(action => { const node = document.querySelector('#workbench-' + action);
+            return { action, present: Boolean(node), disabled: node?.disabled, title: node?.title, label: node?.getAttribute('aria-label') }; }) })),
+        selectFrequency: async value => { await interval(value); await ready(); }, measure: measureCadence,
+        rewind: async () => { await click(cdp, control('scrub')); await key('Home', 'Home', 36); },
+        selectSpeed: value => select(control('speed'), value), closeMenu, assertRestored: assertSameReplayFrame,
+        expectedDates: btcCandles.filter(row => row.date > '2026-10-20').map(row => row.date),
+        originalView: originalAtlasViewport, referenceForecastSignature: liveContext.forecastValueSignature,
+        getMeasurement: () => evidence.timing.find(row => row.speed === 10) ?? null,
+        onMilestone: async value => { evidence.earlyCadence = value; await onFastCadenceMilestone?.(value); },
+      });
+    }
     await verifyPopoverLifecycle();
   }
   else { await verifyLandingMenu('select-bar-only-four-start-actions', true); await closeMenu(); }

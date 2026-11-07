@@ -46,10 +46,20 @@ are not a replacement for long-term research evidence storage.
 
 ### Bounded execution inside one Build
 
-The native-browser and canonical model-test gates run together after the
-PostgreSQL service gate. Each owns a separate raw log; one coordinator writes
+After the PostgreSQL service gate, the replay browser first measures the existing
+BTC1440 fast-cadence fixture in isolation: weekly candles in the four-year view,
+with volume and every genuine daily source observation. The unchanged native
+inputs, DOM observations and 85–130ms mean bound establish actual 10× playback.
+The original chart state is then restored through native controls. A terminal
+phase record bound to this source, suite run and exact case releases the second
+browser lane and the canonical model command. The remaining 1×, 0.5× and 0.3×
+measurements and every original case still execute. A failed or missing phase
+cannot qualify the build, even when other work continues for diagnostics.
+
+The browser and model gates each own a separate raw log; one coordinator writes
 both validated results in the declared gate order. A failure or timeout stops
-both process groups and drains their logs before recording failure. Publication
+both process groups and drains their logs before recording failure. Running
+model tests are never suspended mid-test to reserve a timing window. Publication
 packaging fixtures run in isolated copies and cannot change the browser's
 served `dist` files.
 

@@ -8,8 +8,10 @@ import {execFileSync} from 'node:child_process';
 import {bootstrapCloudflareBuild,inspectCloudflareRuntime,startIsolatedPostgres} from './bootstrap-cloudflare-build.mjs';
 import {cloudflareBuildGates,cloudflareParallelGroups,cloudflareBrowserCaseCount,cloudflarePlanSha256,assertCloudflareVerificationReceipt,assertModelPriorityReceipt} from './cloudflare-build-contract.mjs';
 import {createEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
-import {executeLoggedGate,runVerificationCommand,runVerificationGroup,installVerificationSignalHandlers,drainVerificationOutput} from './cloudflare-gate-runner.mjs';
+import {executeLoggedGate,runVerificationCommand,runVerificationGroup,installVerificationSignalHandlers,drainVerificationOutput,completeLineWriter} from './cloudflare-gate-runner.mjs';
 import {commandPriorityPrefix} from './cloudflare-priority-command.mjs';
+import {readBrowserSourceIdentity} from './browser-source-identity.mjs';
+import {readFastCadenceContext,createFastCadenceReleaseWaiter,assertFastCadenceCaseEvidence} from './browser-fast-cadence-contract.mjs';
 
 const root=fileURLToPath(new URL('..',import.meta.url)),out=resolve(root,'build/cloudflare-verification');
 const receiptPath=resolve(root,'build/cloudflare-verification.json');
@@ -53,10 +55,10 @@ export async function verifyCloudflareBuild(){
   // the same command into a weaker deployment gate.
   delete environment.TEST_DATABASE_URL;
   const cancellation=new AbortController();
-  let removeSignalHandlers,verificationError;
+  let removeSignalHandlers,verificationError,fastCadenceContext,fastCadenceWaiter;
   async function execute(gate,{signal=cancellation.signal}={}){
     const gateEnvironment={...environment};
-    console.log('ATLAS_CLOUDFLARE_GATE '+JSON.stringify({id:gate.id,status:'RUNNING'}));
+    console.log('ATLAS_CLOUDFLARE_GATE '+JSON.stringify({id:gate.id,status:gate.id==='model-tests'?'WAITING_FAST_CADENCE':'RUNNING'}));
     return executeLoggedGate({id:gate.id,root,directory:out,signal,run:async({log,signal})=>{
       if(gate.kind==='runtime'){
         const runtime=await bootstrapCloudflareBuild({root,log,timeoutMs:Math.min(8*60*1000,deadline-Date.now())});
@@ -75,9 +77,21 @@ export async function verifyCloudflareBuild(){
         const remaining=deadline-Date.now();assert.ok(remaining>1000,'The free20-minute build bound requires another complete attempt; gates cannot be skipped');
         if(gate.nice!==undefined){assert.equal(gate.id,'model-tests');assert.equal(gate.nice,10);}
         let commandError;
-        try{return await runVerificationCommand(command,args,{id:gate.id,cwd:root,environment:gateEnvironment,deadline,signal,log,nice:gate.nice});}
-        catch(error){commandError=error;throw error;}
+        const phaseLines=gate.id==='native-browser'?completeLineWriter(line=>fastCadenceWaiter.observeLine(line)):null;
+        try{
+          if(gate.id==='model-tests'){
+            receipt.fastCadence=await fastCadenceWaiter.wait(signal);signal.throwIfAborted();
+            log('ATLAS_CLOUDFLARE_MODEL_RELEASE '+JSON.stringify({suiteRunId:receipt.fastCadence.suiteRunId,status:receipt.fastCadence.status,releasedAt:receipt.fastCadence.releasedAt})+'\n');
+            console.log('ATLAS_CLOUDFLARE_GATE '+JSON.stringify({id:gate.id,status:'RUNNING'}));
+          }
+          return await runVerificationCommand(command,args,{id:gate.id,cwd:root,environment:gateEnvironment,deadline,signal,
+            log:(bytes,pipe)=>{log(bytes,pipe);if(pipe==='stdout')phaseLines?.write(bytes);},nice:gate.nice});
+        }
+        catch(error){commandError=error;if(gate.id==='native-browser')fastCadenceWaiter?.fail(error);throw error;}
         finally{
+          if(phaseLines){
+            try{phaseLines.end();}finally{if(!fastCadenceWaiter.release)fastCadenceWaiter.fail(new Error('Native browser ended before a validated fast cadence release'));}
+          }
           if(gate.id==='postgres-service-tests'&&database){
             try{
               await database.cleanup({log});database=null;delete environment.TEST_DATABASE_URL;
@@ -95,6 +109,8 @@ export async function verifyCloudflareBuild(){
       assert.equal(value.initialNice,0,'Native browser must execute at unchanged normal CPU priority');
       const bytes=await readFile(resolve(root,'build/eth-browser/report.json')),report=JSON.parse(bytes.toString('utf8'));
       assertCompleteNativeBrowserReport(report,identity.sourceCommit);
+      const release=fastCadenceWaiter.assertPassed();assert.deepEqual(report.fastCadence,release,'Final browser evidence changed its early phase release');
+      details.fastCadence=assertFastCadenceCaseEvidence(report,release,fastCadenceContext);
       for(const [path,digest] of Object.entries(report.sourceHashes))assert.equal(sha(await readFile(resolve(root,path))),digest,'Browser-bound source changed: '+path);
       for(const item of report.cases)for(const screenshot of item.screenshots){
         const location=resolve(root,'build/eth-browser',screenshot.file);
@@ -102,7 +118,8 @@ export async function verifyCloudflareBuild(){
         const bytes=await readFile(location);assert.equal(bytes.length,screenshot.bytes);assert.equal(sha(bytes),screenshot.sha256,'Browser screenshot changed');
       }
       details.browser={caseCount:report.cases.length,scope:report.caseScope,sourceCommit:report.sourceCommit,sourceIntegrity:true,
-        report:'build/eth-browser/report.json',reportSha256:sha(bytes),browserVersion:report.browserVersion,processPriority:{pid:value.pid,nice:value.initialNice}};
+        report:'build/eth-browser/report.json',reportSha256:sha(bytes),browserVersion:report.browserVersion,processPriority:{pid:value.pid,nice:value.initialNice},
+        suiteRunId:report.suiteRunId,sourceInventorySha256:release.sourceInventorySha256};
     }
     if(gate.id==='model-tests'){
       const log=logBytes.toString('utf8');
@@ -110,6 +127,8 @@ export async function verifyCloudflareBuild(){
       assert.equal(priorities.length,1,'One actual model-command priority observation is required');
       details.modelPriority=assertModelPriorityReceipt(JSON.parse(priorities[0].slice(commandPriorityPrefix.length)));
       assert.equal(details.modelPriority.wrapperPid,value.pid,'Priority evidence belongs to another managed command');
+      assert.ok(Date.parse(value.launchedAt)>=Date.parse(fastCadenceWaiter.release.releasedAt),'The model command started before fast cadence release');
+      details.modelLaunchedAt=value.launchedAt;
       const total=log.match(/^ATLAS_TEST_TOTAL (.+)$/m);assert.ok(total,'Complete numerical/model test receipt is missing');
       const result=JSON.parse(total[1]);assert.equal(result.complete,true);assert.equal(result.fail,0);assert.ok(result.pass>0);assert.equal(result.batches,1,'The canonical runtime must not fall back to Docker');
       details.modelTests=result;
@@ -135,6 +154,11 @@ export async function verifyCloudflareBuild(){
         const gates=cloudflareBuildGates.slice(index,index+group.length);
         assert.deepEqual(gates.map(item=>item.id),group,'Parallel gates must remain adjacent in the complete plan');
         assertCleanSource(identity);
+        environment.ATLAS_BROWSER_SUITE_RUN_ID=randomUUID();
+        const browserSource=await readBrowserSourceIdentity(root);
+        assert.equal(browserSource.sourceCommit,identity.sourceCommit);assert.equal(browserSource.sourceTree,identity.sourceTree);
+        fastCadenceContext=await readFastCadenceContext({root,source:browserSource,suiteRunId:environment.ATLAS_BROWSER_SUITE_RUN_ID});
+        fastCadenceWaiter=createFastCadenceReleaseWaiter({context:fastCadenceContext});
         const result=await runVerificationGroup(gates,execute,{signal:cancellation.signal});
         receipt.executionGroups.push(result.measurement);
         console.log('ATLAS_CLOUDFLARE_EXECUTION_GROUP '+JSON.stringify(result.measurement));
@@ -163,6 +187,7 @@ export async function verifyCloudflareBuild(){
   }catch(error){
     verificationError=error;receipt.status='FAIL';receipt.completedAt=new Date().toISOString();receipt.error=error.stack??String(error);await persist(receipt);throw error;
   }finally{
+    fastCadenceWaiter?.dispose();
     const errors=[];
     // Flush complete browser failure evidence before any cleanup command runs.
     try{await drainVerificationOutput();}catch(error){errors.push(error);}

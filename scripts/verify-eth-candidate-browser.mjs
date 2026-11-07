@@ -4,7 +4,7 @@ import {isExpectedOfflineBtcRefresh} from './btc-offline-refresh-policy.mjs';
 import assert from 'node:assert/strict';
 import {verifyWorkspaceSurface,readNativeInteractiveTarget} from './verify-workspace-browser.mjs';
 import {verifyForecastReplaySurface} from './verify-forecast-replay-browser.mjs';
-import {verifyChartReplaySurface} from './verify-chart-replay-browser.mjs';
+import {verifyChartReplaySurface,isEarlyChartReplayCadenceCase} from './verify-chart-replay-browser.mjs';
 import {consolidatedPagesBase,verifyConsolidatedWorkspaceSurface} from './verify-consolidated-workspace-browser.mjs';
 import {createEthBrowserCaseSpecs,ethBrowserCaseScopes,selectEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
 import {readBrowserSourceIdentity} from './browser-source-identity.mjs';
@@ -12,6 +12,7 @@ import {classifyProjectBrowserResource,verifyProjectGeneratedImages} from './bro
 import {verifyNativeChartWorkbench} from './verify-native-chart-workbench-browser.mjs';
 import {verifyChartZoomBrowser} from './verify-chart-zoom-browser.mjs';
 import {emitBrowserEvidenceChunks} from './browser-evidence-transport.mjs';
+import {fastCadencePolicy,fastCadenceMilestonePrefix,browserSourceInventorySha256} from './browser-fast-cadence-contract.mjs';
 import {createServer} from 'node:http';
 import {readFile,writeFile,mkdir,mkdtemp,rm,stat} from 'node:fs/promises';
 import {resolve,relative,sep,extname} from 'node:path';
@@ -850,8 +851,25 @@ async function main(){
   report.declaredCaseCount=caseSpecs.length;report.expectedCaseCount=selectedCases.length;
   for(const spec of selectedCases){
     const {page,width,height,touch}=spec;
+    const caseStartedAt=new Date().toISOString();
     const receipt={...spec,caseSpec:{...spec},status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[],dataResourceRequests:[],unscopedLocalRequests:[],generatedImageRequests:[],expectedOfflineRefresh:[],unexpectedResourceErrors:[]};
     report.cases.push(receipt);let cdp,targetId,browserContextId;
+    const onFastCadenceMilestone=async result=>{
+      // Standalone harness runs never wait for a suite acknowledgement. The
+      // explicit replay lane alone emits the one source/run/case-bound signal.
+      if(lane!=='chart-replay'||!isEarlyChartReplayCadenceCase(spec))return;
+      assert.equal(receipt.fastCadence,undefined,'The fast cadence phase may emit only one terminal milestone');
+      assert.deepEqual(spec,fastCadencePolicy.caseSpec);
+      assert.ok(['passed','failed'].includes(result.status));
+      if(result.status==='passed')assert.equal(result.restoration?.unchanged,true,'Cadence cannot release before its original baseline is restored');
+      const milestone={schemaVersion:1,kind:'atlas-browser-fast-cadence',phase:fastCadencePolicy.phase,status:result.status,
+        sourceCommit:report.sourceCommit,sourceTree:report.sourceTree,sourceInventorySha256:browserSourceInventorySha256(report.sourceHashes),
+        suiteRunId,lane,caseSpec:{...spec},startedAt:result.startedAt,completedAt:result.completedAt,
+        fixture:result.fixture??null,measurement:result.measurement??null,restored:result.status==='passed',
+        ...(result.error?{error:String(result.error).slice(0,900)}:{})};
+      receipt.fastCadence=milestone;report.fastCadence=milestone;
+      console.log(fastCadenceMilestonePrefix+JSON.stringify(milestone));
+    };
     try{
       // A saved replay belongs to one user's browser. Each replay scenario
       // gets its own context so an earlier viewport's explicit save cannot
@@ -953,7 +971,7 @@ async function main(){
       receipt.url=spec.route?base+spec.route:base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
       if(spec.consolidated)await verifyConsolidatedWorkspaceSurface({cdp,receipt,evaluate,until,settled,screenshot,verifyOfflineRefresh});
-      else if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,browserContextId,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
+      else if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,browserContextId,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh,onFastCadenceMilestone});
       else if(spec.replay)await verifyForecastReplaySurface({cdp,browser,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
       else if(spec.surface){
         await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership:()=>verifyHeaderOwnership(cdp)});
@@ -973,6 +991,12 @@ async function main(){
       receipt.status='failed';receipt.error=errorText(error);report.failures.push({page,width,error:receipt.error});
       if(cdp)try{await screenshot(cdp,page+'-'+width+'-failure.png',receipt);}catch(captureError){receipt.screenshotFailure=errorText(captureError);}
     }finally{
+      if(lane==='chart-replay'&&isEarlyChartReplayCadenceCase(spec)&&!receipt.fastCadence){
+        const message='The required early cadence phase did not complete'+(receipt.error?': '+receipt.error:'');
+        if(receipt.status!=='failed'){receipt.status='failed';receipt.error=message;report.failures.push({page,width,error:message});}
+        await onFastCadenceMilestone({status:'failed',startedAt:caseStartedAt,completedAt:new Date().toISOString(),
+          fixture:null,measurement:receipt.chartReplay?.timing?.find(row=>row.speed===10)??null,error:message});
+      }
       console.log('ETH_BROWSER_CASE '+JSON.stringify({page,width,height,status:receipt.status,error:receipt.error}));
       if(cdp)cdp.close();
       if(targetId)try{await browser.send('Target.closeTarget',{targetId});}catch(error){report.failures.push({page,width,cleanupError:errorText(error)});}

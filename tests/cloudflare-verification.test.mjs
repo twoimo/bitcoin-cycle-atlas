@@ -6,6 +6,7 @@ import {assertCompleteNativeBrowserReport} from '../scripts/verify-cloudflare-bu
 import {missingRuntimePackages} from '../scripts/bootstrap-cloudflare-build.mjs';
 import {createEthBrowserCaseSpecs} from '../scripts/eth-browser-case-specs.mjs';
 import {readArchivedWorkflow} from './support/archived-workflow.mjs';
+import {fastCadenceFixture} from './helpers/fast-cadence-fixture.mjs';
 
 const root=new URL('../',import.meta.url),sourceCommit='a'.repeat(40),sourceTree='b'.repeat(40);
 test('rootless runtime dependency resolution only requests observed missing libraries and refuses unreviewed binaries',()=>{
@@ -21,7 +22,9 @@ const receipt=()=>({schemaVersion:1,kind:'atlas-cloudflare-verification',status:
   executionGroups:cloudflareParallelGroups.map(gateIds=>({gateIds,durationMs:1,startedAt:'2026-11-07T00:00:01.000Z',completedAt:'2026-11-07T00:00:01.001Z',resources:{available:false}})),
   modelPriority:{schemaVersion:1,kind:'atlas-cloudflare-command-priority',status:'APPLIED',gateId:'model-tests',requestedNice:10,beforeNice:0,actualNice:10,
     wrapperPid:102,parentPid:101,parentNice:0,commandPid:103,commandNice:10,command:'npm',args:['test','--','--test-concurrency=2']},
-  browser:{caseCount:cloudflareBrowserCaseCount,scope:'all',sourceCommit,sourceIntegrity:true,reportSha256:'d'.repeat(64),processPriority:{pid:104,nice:0}}});
+  fastCadence:fastCadenceFixture({sourceCommit,sourceTree}).release,modelLaunchedAt:'2026-11-07T00:00:04.000Z',
+  browser:{caseCount:cloudflareBrowserCaseCount,scope:'all',sourceCommit,sourceIntegrity:true,reportSha256:'d'.repeat(64),processPriority:{pid:104,nice:0},
+    suiteRunId:fastCadenceFixture().context.suiteRunId,sourceInventorySha256:fastCadenceFixture().context.sourceInventorySha256}});
 const browser=()=>({status:'passed',caseScope:'all',sourceCommit,declaredCaseCount:cloudflareBrowserCaseCount,expectedCaseCount:cloudflareBrowserCaseCount,
   cases:createEthBrowserCaseSpecs().map(caseSpec=>({caseSpec,status:'passed',screenshots:[{file:'synthetic-unit-fixture.png'}]})),
   failures:[],sourceIntegrity:{unchangedDuringRun:true,changedSources:[],checkedFiles:1}});
@@ -38,6 +41,8 @@ test('Cloudflare deployment receipt rejects partial, stale, failed and inspect-o
     value=>value.executionGroups=[],value=>value.executionGroups[0].gateIds=['native-browser'],value=>value.executionGroups[0].resources={},
     value=>value.modelPriority=null,value=>value.modelPriority.actualNice=0,value=>value.modelPriority.commandNice=0,value=>value.modelPriority.parentNice=10,
     value=>value.modelPriority.args=['test','--','--test-concurrency=1'],value=>value.browser.processPriority.nice=10,
+    value=>value.fastCadence.status='failed',value=>value.fastCadence=null,value=>value.modelLaunchedAt='2026-11-07T00:00:02.000Z',
+    value=>value.browser.suiteRunId='22222222-2222-4222-8222-222222222222',
   ]){const value=receipt();change(value);assert.throws(()=>assertCloudflareVerificationReceipt(value,{sourceCommit,sourceTree}));}
 });
 
