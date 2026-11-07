@@ -29,7 +29,7 @@
   --workbench-gutter: #222;
   --workbench-top: 38px;
   --workbench-gap: 4px;
-  --font: -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, 'Noto Sans KR', 'Noto Sans CJK KR', sans-serif;
+  --font: system-ui, -apple-system, BlinkMacSystemFont, 'Trebuchet MS', Roboto, Ubuntu, 'Noto Sans KR', 'Noto Sans CJK KR', sans-serif;
   --chrome: var(--sidebar);
   --chrome-bg: var(--sidebar);
   --chrome-border: var(--border);
