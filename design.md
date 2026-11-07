@@ -2,6 +2,13 @@
 
 ## Current direction — 2026-11-07 (Asia/Seoul)
 
+The approved follow-up also covers the chart's zoom behavior. Use the observed
+rules in [the interaction reference](docs/TRADINGVIEW_ZOOM_REFERENCE_2026_11_07.md):
+keep the outer frame pixel-sized while changing candle spacing, date ticks and
+the visible automatic price range. Default time zoom retains the right edge;
+price-axis operations own Y only. Every supported source uses the shared
+navigation and spacing policy, with genuine source intervals and units.
+
 The latest follow-up unifies 가격 차트 and 종목 차트 as 가격 차트. All twelve
 supported instruments use the BTC workbench's four perimeter regions and one
 outer toolbar, with their own real data, units, intervals and source clocks.

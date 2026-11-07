@@ -10,9 +10,9 @@ import {priceLegendMarkup,priceReadoutKind,observedPriceSourceLabel} from './pri
 import { buildCycleMilestones, INTERVAL_RELATIONS, MILESTONE_TYPES } from "./cycle-milestones.js?v=1.29.0";
 import { cycleLegendMarkup, cycleMilestoneInspection, cycleIntervalInspection, cycleDurationLabel } from "./cycle-milestones-view.js?v=1.29.0";
 import { resolveCycleSelection, cycleSelectionViewport, cycleOverviewViewport } from './cycle-selection.js?v=1.29.0';
-import { drawAtlasPriceChart as drawChart, priceChartOverlayObstacles } from "./atlas-price-chart.js?v=1.31.3";
+import { drawAtlasPriceChart as drawChart, priceChartOverlayObstacles } from "./atlas-price-chart.js?v=1.36.0";
 import { renderCryptoConAudit } from './cryptocon-audit.js?v=1.29.0';
-import { bindChartNavigation, panRange } from './chart-navigation.js?v=1.29.0';
+import { bindChartNavigation, panRange } from './chart-navigation.js?v=1.36.0';
 import { renderAtlasAnalysis } from "./atlas-analysis.js?v=1.29.0";
 import { ANALYSIS_MODES, analysisCalendarDate, shouldPublishInspection, analysisSelectionSummary } from "./analysis-dock.js?v=1.29.0";
 import { INDICATORS, readIndicatorState, writeIndicatorState, changeIndicatorState, applyIndicatorLayout, isIndicatorVisible, visibleAnalysisIds, indicatorSettings, applyIndicatorPresentation } from './indicator-state.js?v=1.29.0';
@@ -21,7 +21,7 @@ import { chartSelectionHandler } from './inspection-policy.js?v=1.29.0';
 import { buildLongHorizonForecast, LONG_HORIZON_SCENARIOS } from "./long-horizon-forecast.js?v=1.29.0";
 import { longHorizonMethodMarkup } from './long-horizon-view.js?v=1.29.0';
 import { CHART_INTERVALS, chartInterval, isIntradayInterval } from './ohlc-data.js?v=1.29.0';
-import { drawIntradayChart } from "./intraday-chart.js?v=1.29.0";
+import { drawIntradayChart } from "./intraday-chart.js?v=1.36.0";
 import { createMarketDataController, marketStatusText } from "./market-data-controller.js?v=1.29.0";
 import { parseVolumeSnapshot, aggregateWeeklyVolume } from './volume-data.js?v=1.29.0';
 import { fitVolumeForecastModel, projectVolumeForecast } from './volume-forecast.js?v=1.29.0';
@@ -37,7 +37,7 @@ import { readWorkspaceViewport, readWorkspacePriceDomain, readWorkspaceAxisOptio
 import { normalizePriceDomain } from './price-axis.js?v=1.29.0';
 import { clearChartHover } from './chart-hover.js?v=1.29.0';
 import { PRICE_UNITS, isStartPriceUnit, formatDisplayPrice } from './price-display.js?v=1.29.0';
-import { transitionViewport } from './chart-view-policy.js?v=1.29.0';
+import { transitionViewport, withChartSpacing } from './chart-view-policy.js?v=1.36.0';
 import { createWorkspaceHistory, captureHistoryCommand, historyShortcut } from './workspace-history.js?v=1.29.0';
 import { mountChartTouchTracking } from "./chart-touch-tracking.js?v=1.29.0";
 import { mountChartExportWorkbench } from './chart-export-workbench.js?v=1.29.0';
@@ -188,7 +188,7 @@ export function initLabView() {
   const selectedAnalysisSvg=()=>analysisCharts.get(state.analysisMode);
   function resetChartRange({cancelGesture=true}={}){touchTracking.cancel();if(cancelGesture)chartNavigation.cancelGesture();marketData.cancel();state.priceRange=null;state.marketRange=null;state.priceDomain=null;state.window=DEFAULT_CHART_SPAN;state.selectedEvent=null;state.selectedHistoryEvent=null;document.dispatchEvent(new CustomEvent('atlas:close-detail'));schedule();}
   let gestureAction=null;
-  const chartNavigation=bindChartNavigation({element:plot,getTool:()=>state.tool,getRange:()=>state.visible&&state.atlasMode==='price'&&$('#lab-chart').dataset.chartReplayActive!=='true'?state.chartRange:null,
+  const chartNavigation=bindChartNavigation({element:plot,getTool:()=>state.tool,getRange:()=>state.visible&&state.atlasMode==='price'&&$('#lab-chart').dataset.chartReplayActive!=='true'?withChartSpacing(state.chartRange,{frequency:state.frequency,plotWidth:Number($('#lab-chart').dataset.plotRight)-Number($('#lab-chart').dataset.plotLeft)}):null,
     onMenuOpen:()=>touchTracking.cancel(),
     onGestureStart:label=>{if(gestureAction!==null)finishAction(gestureAction,{status:'superseded'});gestureAction=beginAction('chart-gesture',{frequency:state.frequency});touchTracking.cancelPending();workspaceHistory.begin(label||'차트 이동·확대');},onGestureEnd:()=>{workspaceHistory.commit();const token=gestureAction;gestureAction=null;if(token!==null)requestAnimationFrame(()=>requestAnimationFrame(()=>finishAction(token,{status:'frame-ready'})));},
     getPriceAxis:()=>state.priceController?.getPriceScale?.(),
@@ -196,7 +196,7 @@ export function initLabView() {
     onPriceReset:()=>{state.priceDomain=null;schedule();},
     getContext:context=>state.priceController?.getSelection?.(context)||{label:'선택한 실제 자료 또는 가정',copyText:null},
     onAnnounce:text=>{if($('#workbench-announcement'))$('#workbench-announcement').textContent=text;},
-    onRangeChange:range=>{if(range.unit==='seconds'){state.marketRange={start:range.start,end:range.end};void marketData.ensureRange(state.frequency,state.marketRange);}else state.priceRange={start:range.start,end:range.end};state.chartRange={...state.chartRange,...range};state.selectedEvent=null;state.selectedHistoryEvent=null;schedule();},onReset:()=>resetChartRange({cancelGesture:false})});
+    onRangeChange:range=>{const viewport={start:range.start,end:range.end,...(range.spacingBounds?{spacingBounds:range.spacingBounds}:{})};if(range.unit==='seconds'){state.marketRange=viewport;void marketData.ensureRange(state.frequency,state.marketRange);}else state.priceRange=viewport;state.chartRange={...state.chartRange,...range};state.selectedEvent=null;state.selectedHistoryEvent=null;schedule();},onReset:()=>resetChartRange({cancelGesture:false})});
   $('#workbench-navigation').append(chartNavigation.toolbar);
   document.addEventListener('atlas:modal-open',()=>{touchTracking.cancel();chartNavigation.cancelGesture();});
   document.addEventListener('atlas:chart-replay-open',()=>{touchTracking.cancel();chartNavigation.cancelGesture();document.dispatchEvent(new CustomEvent('atlas:close-detail'));});
@@ -525,8 +525,8 @@ export function initLabView() {
           // Navigation has a real historical domain independent of the cached
           // snapshot. Expanding or panning requests the newly visible windows.
           const previousRange=state.marketRange;
-          state.chartRange=panRange({...marketData.range(state.frequency,previousRange),allowEmpty:true},0);
-          if(previousRange)state.marketRange={start:state.chartRange.start,end:state.chartRange.end};
+          state.chartRange=panRange({...marketData.range(state.frequency,previousRange),...(previousRange?.spacingBounds?{spacingBounds:previousRange.spacingBounds}:{}),allowEmpty:true},0);
+          if(previousRange)state.marketRange={start:state.chartRange.start,end:state.chartRange.end,...(state.chartRange.spacingBounds?{spacingBounds:state.chartRange.spacingBounds}:{})};
           if(previousRange&&state.restoreMarketRange){
             state.restoreMarketRange=false;void marketData.ensureRange(state.frequency,state.marketRange);market=marketData.get(state.frequency);
           }
@@ -554,9 +554,9 @@ export function initLabView() {
         const preset=chartPresetRange({asOf:m.asOf,referenceDate:ref,firstDate:b.rows[0].date,lastDate:end,span:state.window});
         let start=preset.start,chartEnd=preset.end;
         if(state.priceRange){start=state.priceRange.start;chartEnd=state.priceRange.end;}
-        state.chartRange=panRange({start,end:chartEnd,min:b.rows[0].date,max:end,allowEmpty:true,contextKey:`daily:${state.frequency}:${state.scenario}:${state.chartType}:${m.asOf}`},0);
+        state.chartRange=panRange({start,end:chartEnd,min:b.rows[0].date,max:end,...(state.priceRange?.spacingBounds?{spacingBounds:state.priceRange.spacingBounds}:{}),allowEmpty:true,contextKey:`daily:${state.frequency}:${state.scenario}:${state.chartType}:${m.asOf}`},0);
         start=state.chartRange.start;chartEnd=state.chartRange.end;
-        if(state.priceRange)state.priceRange={start,end:chartEnd};
+        if(state.priceRange)state.priceRange={start,end:chartEnd,...(state.chartRange.spacingBounds?{spacingBounds:state.chartRange.spacingBounds}:{})};
         if($('#atlas-states').checked&&!state.futureStates.has(state.scenario))state.futureStates.set(state.scenario,computeRollingStates({prices:[...state.dataset.prices,...future.map(p=>[p.date,p.price])]}).points);
                 if(state.selectedEvent?.startsWith('macro-')&&!m.events[Number(state.selectedEvent.split('-')[1])]?.inHorizon)state.selectedEvent=null;
         const activeMarker=['low','high'].includes(state.selectedEvent)?turnInfo(m,state.selectedEvent):next;

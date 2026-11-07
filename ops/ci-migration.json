@@ -3,6 +3,8 @@
   "kind": "atlas-ci-migration",
   "provider": "cloudflare-workers-builds",
   "automaticGithubActions": false,
+  "scheduledBuildContract": "ops/cloudflare-scheduled-builds.json",
+  "scheduleBudgetCommand": "node scripts/measure-cloudflare-schedule-budget.mjs --samples build/cloudflare-schedule-samples.json",
   "archiveSourceCommit": "731babc",
   "archives": [
     {
@@ -77,6 +79,14 @@
       "timezone": "UTC",
       "runsPerDay": 4,
       "activationVerified": false,
+      "implementation": {
+        "coordinator": "ops/cloudflare-scheduler/worker.js",
+        "runner": "scripts/cloudflare-market-refresh.mjs",
+        "receipt": "scripts/cloudflare-market-refresh-receipt.mjs",
+        "publication": "A separate normal main-triggered full verification and deployment at the newly committed data SHA",
+        "maximumMonthlyBuildsFromSchedule31Days": 248,
+        "credentialGate": "Explicit repository-scoped ATLAS_DATA_GITHUB_TOKEN; clone credentials are not used"
+      },
       "required": [
         "actual provider attempt outcomes",
         "completed observation validation",
@@ -94,6 +104,15 @@
       "timezone": "UTC",
       "runsPerDay": 1,
       "activationVerified": false,
+      "implementation": {
+        "coordinator": "ops/cloudflare-scheduler/worker.js",
+        "runner": "scripts/cloudflare-ethereum-archive.mjs",
+        "verification": "scripts/verify-cloudflare-archive.mjs",
+        "providerIdentity": "scripts/ethereum-archive-provider-identity.mjs",
+        "transport": "scripts/cloudflare-archive-transport.mjs",
+        "maximumMonthlyBuildsFromSchedule31Days": 62,
+        "credentialGate": "Explicit repository-scoped ETH_ARCHIVE_GITHUB_TOKEN in the separate publisher only; account Builds read and dedicated handoff KV tokens remain required"
+      },
       "required": [
         "exact verified prior archive",
         "current capture without backdating",
@@ -114,5 +133,5 @@
     "memoryGiB": 8,
     "diskGiB": 20
   },
-  "activationNote": "Workflow files are retained as historical contracts only. A configured cron or successful deployment does not prove either replacement data schedule executed. Require actual Cloudflare trigger, execution and publication readback evidence before marking activationVerified true."
+  "activationNote": "Workflow files are historical contracts only. Replacement Cron, runners, immutable handoff and free-budget measurement exist locally, but remain inactive until configured secrets, actual trigger readback, real complete executions, exact publication readback and a measured total at or below 3000 free minutes/month are verified. A configured Cron, inspection-only build or successful UI deployment is not schedule activation evidence."
 }

@@ -46,7 +46,9 @@ export async function verifyCloudflareBuild(){
     runId:process.env.WORKERS_CI_BUILD_UUID??randomUUID(),planSha256:cloudflarePlanSha256,gates:[],browser:null,
     heavyResearchQualification:'separate-evidence-obligation',scheduledRefreshActivation:'not-inferred-from-build-success'};
   await mkdir(out,{recursive:true});await persist(receipt);
-  let environment={...process.env,ATLAS_BROWSER_CASE_SCOPE:'all',ATLAS_BROWSER_OUT:'build/eth-browser',ETH_BROWSER_IMAGE_LOG_MODE:'failures-only'},database;
+  // Keep the existing bounded representative PNG transport in the authenticated
+  // build log so successful renders can be inspected after the runner exits.
+  let environment={...process.env,ATLAS_BROWSER_CASE_SCOPE:'all',ATLAS_BROWSER_OUT:'build/eth-browser',ETH_BROWSER_IMAGE_LOG_MODE:'representative'},database;
   // Never reuse a caller-supplied database or let an optional browser scope turn
   // the same command into a weaker deployment gate.
   delete environment.TEST_DATABASE_URL;

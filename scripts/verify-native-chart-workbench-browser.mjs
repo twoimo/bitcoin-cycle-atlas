@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {verifyChartZoomBrowser} from './verify-chart-zoom-browser.mjs';
 
 /** The checked-out native controllers run in the candidate browser. All state
  * changes below use real pointer/keyboard input; evaluation only reads DOM or
@@ -77,7 +78,9 @@ export async function verifyNativeChartWorkbench(api) {
       assert.equal(await evaluate(cdp,s=>document.querySelector(s).hasAttribute('data-mobile-open'),selector),false);
     }
   }
-  record.initial=await state();assert.equal(record.initial.product,product);await shot('layout');
+  record.initial=await state();assert.equal(record.initial.product,product);
+  await verifyChartZoomBrowser({...api,svgSelector:svg,allocationSelector:'.atlas-plot',label:symbol});
+  await shot('layout');
 
   // A six-month window keeps each real volume bar individually inspectable.
   await choose('#workbench-interval-select','daily');

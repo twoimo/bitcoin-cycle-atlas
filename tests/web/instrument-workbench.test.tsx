@@ -21,6 +21,14 @@ const monthlyRows: HousingRow[] = Array.from({ length: 9 }, (_, index) => ({
   volume: index === 5 ? null : index * 10, average: index < 2 ? null : 40, deviation: null, state: 'neutral', priceChange: null, volumeChange: null,
 }));
 
+test('instrument toolbar preserves full-history spacing allowance across a narrow zoom round trip',()=>{
+  const series:InstrumentSeries={frequency:'daily',prices:[['2020-01-01',100],['2026-11-07',200]],bars:[],timeline:['2020-01-01','2026-11-07'],volumes:[]};
+  const initial=initialInstrumentView(series),inward=applyInstrumentCommand(initial,series,'zoom',Math.exp(-.24),250);
+  const outward=applyInstrumentCommand(inward,series,'zoom',Math.exp(.4),250);
+  assert(day(inward.end)-day(inward.start)<day(initial.end)-day(initial.start));
+  assert.equal(outward.start,initial.start);assert.equal(outward.end,initial.end);
+});
+
 test('all four housing chart calendars retain original values, volume-only tail months and monthly capabilities', () => {
   const source = structuredClone(housing);
   for (const region of housing.regions) {
@@ -136,7 +144,9 @@ test('instrument cache restores each housing region range, settings and undo his
   const series = housingChartSeries(monthlyRows), seoul: InstrumentChartCache = {}, busan: InstrumentChartCache = {};
   const content = (symbol: string, cache: InstrumentChartCache, epoch: number, active = true) => <InstrumentWorkbench key={symbol} symbol={symbol} unit="지수" timezone="Asia/Seoul" series={series} volumeUnit="건" description="월별 가격" cache={cache} embedded epoch={epoch} active={active}/>;
   const fixture = await mount(content('HOUSING-SEOUL', seoul, 1)); t.after(fixture.cleanup);
-  await fixture.message({ kind: 'atlas:center-command', epoch: 1, symbol: 'HOUSING-SEOUL', action: 'zoom', value: .5 });
+  // The short monthly fixture is already beyond the maximum candle spacing.
+  // Pan creates a distinct cached viewport without bypassing that UI limit.
+  await fixture.message({ kind: 'atlas:center-command', epoch: 1, symbol: 'HOUSING-SEOUL', action: 'pan', value: .25 });
   await fixture.message({ kind: 'atlas:center-command', epoch: 1, symbol: 'HOUSING-SEOUL', action: 'scale' });
   const saved = structuredClone(seoul.view), savedUndo = structuredClone(seoul.undo);
   await fixture.render(content('HOUSING-BUSAN', busan, 2)); assert.equal(busan.view?.scale, 'linear'); assert.notEqual(busan.view?.start, seoul.view?.start);

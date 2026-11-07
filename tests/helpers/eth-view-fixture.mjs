@@ -1,5 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
+import { withChartSpacing,retargetChartRange } from '../../dist/chart-view-policy.js';
+import { normalizePriceDomain } from '../../dist/price-axis.js';
 import * as ohlc from '../../dist/ohlc-data.js';
 import * as ethData from '../../dist/eth-market-data.js';
 import * as ethState from '../../dist/eth-view-state.js';
@@ -97,6 +99,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     const pending = deferred(); requests.push({ url, options, ...pending }); return pending.promise;
   };
   const deps = {
+    withChartSpacing,retargetChartRange,normalizePriceDomain,
     mountNativeChartApp: app => document.body.append(app),
     // The real shell adapter is exercised separately with a parsed DOM. This
     // fixture owns network/loader races and keeps its DOM boundary explicit.

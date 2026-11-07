@@ -1,6 +1,7 @@
 import type { Point } from '@atlas/contracts/market-lab';
 import { weeklyRsiBars, weeklyRsiPrices, type RsiBar } from '@atlas/domain/rsi-bars';
 import { panRange, zoomRange, type ChartRange } from '../../../dist/chart-navigation.js';
+import { withChartSpacing } from '../../../dist/chart-view-policy.js';
 import { applyChartCommand, date, day, initialChartView, type RsiChartView } from './rsi-chart-model.js';
 
 export interface InstrumentVolume {
@@ -48,7 +49,7 @@ export function instrumentRange(view: RsiChartView, series: InstrumentSeries): C
   if (!series.timeline.length) return null;
   const min = series.timeline[0], max = series.timeline.at(-1)!;
   return { start: view.start, end: view.end, min, max, minSpan: series.frequency === 'monthly' ? 60 : 10,
-    allowEmpty: true, maxSpan: Math.max(series.frequency === 'monthly' ? 60 : 10, day(max) - day(min) + 1) };
+    allowEmpty: true, maxSpan: Math.max(series.frequency === 'monthly' ? 60 : 10, day(max) - day(min) + 1), ...(view.spacingBounds?{spacingBounds:view.spacingBounds}:{}) };
 }
 
 export function displayInstrumentSeries(series: InstrumentSeries, frequency: RsiChartView['frequency']): InstrumentSeries {
@@ -68,13 +69,14 @@ export function boundedInstrumentDates(series: InstrumentSeries, start: string, 
   return { start: date(first), end: date(first + span) };
 }
 
-export function applyInstrumentCommand(view: RsiChartView, series: InstrumentSeries, action: string, value?: unknown): RsiChartView {
-  const range = instrumentRange(view, series);
-  if (!range) return view;
+export function applyInstrumentCommand(view: RsiChartView, series: InstrumentSeries, action: string, value?: unknown, plotWidth=800): RsiChartView {
+  const sourceRange = instrumentRange(view, series);
+  if (!sourceRange) return view;
+  const range=withChartSpacing(sourceRange,{frequency:view.frequency,plotWidth});
   if (action === 'zoom' || action === 'pan') {
     const amount = Number(value); if (!Number.isFinite(amount) || action === 'zoom' && amount <= 0) return view;
-    const next = action === 'zoom' ? zoomRange(range, amount) : panRange(range, amount);
-    return { ...view, start: next.start, end: next.end };
+    const next = action === 'zoom' ? zoomRange(range, amount, 1) : panRange(range, amount);
+    return { ...view, start: next.start, end: next.end, spacingBounds: next.spacingBounds };
   }
   if (action === 'fit') return { ...view, start: range.min, end: range.max, autoScale: true, domain: null };
   if (action === 'span') {
@@ -83,7 +85,7 @@ export function applyInstrumentCommand(view: RsiChartView, series: InstrumentSer
   }
   if (action === 'frequency') {
     const allowed = series.frequency === 'monthly' ? ['monthly'] : ['daily', 'weekly'];
-    return allowed.includes(String(value)) ? { ...view, frequency: value as RsiChartView['frequency'], autoScale: true, domain: null, measurement: [] } : view;
+    return allowed.includes(String(value)) ? { ...view, frequency: value as RsiChartView['frequency'], measurement: [] } : view;
   }
   if (action === 'type' && !series.bars.length) return view;
   if (action === 'date' && typeof value === 'string') {
@@ -93,7 +95,7 @@ export function applyInstrumentCommand(view: RsiChartView, series: InstrumentSer
     return { ...view, selected, ...(selected < view.start || selected > view.end
       ? boundedInstrumentDates(series, date(day(selected) - span / 2), date(day(selected) + span / 2)) : {}) };
   }
-  return applyChartCommand(view, series.prices, action, value);
+  return applyChartCommand(view, series.prices, action, value, plotWidth);
 }
 
 /** Return separate paths across unpublished/missing observations. */

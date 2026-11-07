@@ -37,7 +37,8 @@ export function ethHistoryRange(series, span = '4y', previous = null, forecastEn
     ? Math.min(max, ceil(last + (span === '4y' ? 548 : Math.max(10, Math.round((days[span] || 1461) * .25))) * 86400)) : max;
   const end = previous?.end ?? defaultEnd;
   const start = previous?.start ?? Math.max(min, end - count * step);
-  return {unit:'seconds', start, end, min, max, step, minSpan:Math.min(12, Math.round((max-min)/step)+1), contextKey:`ETH-USD:${series.interval}:${series.retrievedAt}`};
+  return {unit:'seconds', start, end, min, max, step, minSpan:Math.min(12, Math.round((max-min)/step)+1), contextKey:`ETH-USD:${series.interval}:${series.retrievedAt}`,
+    ...(previous?.allowEmpty?{allowEmpty:true,maxSpan:Math.max(previous.maxSpan??Math.round((max-min)/step)+1,Math.round((end-start)/step)+1)}:{})};
 }
 
 export function ethRangeLabel(frequency, span) {

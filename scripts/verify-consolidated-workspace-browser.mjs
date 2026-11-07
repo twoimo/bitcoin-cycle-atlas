@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { readNativeInteractiveTarget } from './verify-workspace-browser.mjs';
+import { verifyChartZoomBrowser } from './verify-chart-zoom-browser.mjs';
 
 // Match scripts/build-pages.mjs and the public GitHub Pages project root.
 export const consolidatedPagesBase = '/bitcoin-cycle-atlas/';
@@ -14,6 +15,7 @@ export const consolidatedWorkspaceCases = [320, 390, 1440].map(width => ({
 export async function verifyConsolidatedWorkspaceSurface(api) {
   const { cdp, receipt, evaluate, until, settled, screenshot, verifyOfflineRefresh } = api;
   const evidence = { inputs: [], states: [], frames: [] };
+  const zoomVerifiedSymbols=new Set();
   receipt.consolidated = evidence;
   let child, childId;
   const frameSelector = '.atlas-center-frame:not([hidden])';
@@ -231,6 +233,11 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     if(receipt.width>760)assert.equal(result.rightRail,45,symbol+': same narrow rail');
     if(frequencies[0]==='monthly'){assert.equal(result.candles,false);assert.match(result.sourceClock,/가격지수 \d{4}-\d{2} · 거래량 \d{4}-\d{2}/);}
     evidence.states.push({label:'common-chart-'+symbol,...result});
+    if(!zoomVerifiedSymbols.has(symbol)){
+      await verifyChartZoomBrowser({...api,context:child,parentPoint:point=>parentPoint(child,point),
+        svgSelector:'.rsi-chart-canvas svg',allocationSelector:'.rsi-chart-canvas',label:symbol});
+      zoomVerifiedSymbols.add(symbol);
+    }
     return result;
   }
   async function commonChartActions(symbol,monthly){

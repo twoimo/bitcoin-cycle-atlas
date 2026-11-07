@@ -3,6 +3,8 @@ import type { Point } from '@atlas/contracts/market-lab';
 import type { RsiRow } from '@atlas/domain/market-lab';
 import type { RsiBar } from '@atlas/domain/rsi-bars';
 import { bindChartNavigation } from '../../../../dist/chart-navigation.js';
+import { withChartSpacing,candleBodyWidth } from '../../../../dist/chart-view-policy.js';
+import { createPriceAxisLayout,createPriceAxisFormatter } from '../../../../dist/price-axis.js';
 import { chartGeometry,chartRange,date,day,nearestPoint,type Anchor,type RsiChartView } from '../rsi-chart-model.js';
 import { rsiCrossings } from '../rsi-crossings.js';
 import { instrumentRange,nearestObservation,observedPricePath,type InstrumentSeries } from '../instrument-chart-model.js';
@@ -11,25 +13,32 @@ export interface Pick {date:string;value:number;panel:'price'|'rsi'}
 export interface InstrumentMarker {id:string;date:string;label:string;title:string;kind:'evidence'|'judgment';selected:boolean;onSelect:()=>void}
 interface Props {menuPulse:number;symbol:string;unit:string;prices:Point[];bars:RsiBar[];rows:RsiRow[];view:RsiChartView;active:boolean;
   onView:(view:RsiChartView)=>void;onStart:()=>void;onEnd:()=>void;onPick:(pick:Pick)=>void;onHover:(pick:Pick|null)=>void;hover:Pick|null;svgRef:React.RefObject<SVGSVGElement|null>;
-  series?:InstrumentSeries;markers?:InstrumentMarker[];onMarker?:()=>void;volumeUnit?:string;description?:string;className?:string}
+  series?:InstrumentSeries;markers?:InstrumentMarker[];onMarker?:()=>void;volumeUnit?:string;description?:string;className?:string;revision?:string}
 export function RsiChartCanvas(props:Props) {
   const {symbol,unit,prices,bars,rows,view,active,onPick,onHover,hover,svgRef}=props,root=useRef<HTMLDivElement>(null);
-  const [size,setSize]=useState({width:900,height:520}),live=useRef(props),navigation=useRef<ReturnType<typeof bindChartNavigation>|null>(null);
+  const [size,setSize]=useState(()=>({width:900,height:520,axis:createPriceAxisLayout({svg:null,width:900,left:12,minRight:82})})),live=useRef(props),navigation=useRef<ReturnType<typeof bindChartNavigation>|null>(null);
+  const source=useRef({prices,bars,version:0});
+  if(source.current.prices!==prices||source.current.bars!==bars)source.current={prices,bars,version:source.current.version+1};
   const clipId=useId().replaceAll(':',''),priceClip=`${clipId}-price`,oscClip=`${clipId}-osc`;
-  const geometry=useMemo(()=>chartGeometry(prices,bars,rows,view,size.width,size.height),[prices,bars,rows,view,size]);
+  const geometry=useMemo(()=>chartGeometry(prices,bars,rows,view,size.width,size.height,size.axis.right),[prices,bars,rows,view,size]);
   const geom=useRef(geometry);live.current=props;geom.current=geometry;
   useLayoutEffect(()=>{
-    const measure=()=>{if(root.current)setSize({width:Math.max(120,root.current.clientWidth||900),height:Math.max(280,root.current.clientHeight||520)});};
-    measure();const observer=typeof ResizeObserver==='undefined'?null:new ResizeObserver(measure);if(root.current)observer?.observe(root.current);return()=>observer?.disconnect();
+    let disposed=false;
+    const measure=()=>{if(disposed||!root.current)return;const width=root.current.clientWidth,height=root.current.clientHeight;if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)return;
+      const axis=createPriceAxisLayout({svg:svgRef.current,width,left:Math.min(12,width*.05),minRight:width<600?66:82});
+      setSize(previous=>previous.width===width&&previous.height===height&&previous.axis.right===axis.right?previous:{width,height,axis});};
+    measure();const observer=typeof ResizeObserver==='undefined'?null:new ResizeObserver(measure);if(root.current)observer?.observe(root.current);
+    void root.current?.ownerDocument.fonts?.ready.then(measure);
+    return()=>{disposed=true;observer?.disconnect();};
   },[]);
   useEffect(()=>{
     if(!root.current)return;
     // A native gesture flushes price and time changes in the same frame.
     // Compose them immediately, before React publishes the next render.
     const change=(update:(view:RsiChartView)=>RsiChartView)=>{const next=update(live.current.view);live.current={...live.current,view:next};live.current.onView(next);};
-    const currentRange=()=>live.current.series?instrumentRange(live.current.view,live.current.series):chartRange(live.current.view,live.current.prices);
+    const currentRange=()=>{const p=live.current,range=p.series?instrumentRange(p.view,p.series):chartRange(p.view,p.prices);return range?withChartSpacing({...range,contextKey:`${p.symbol}:${p.view.frequency}:${p.revision||''}:${source.current.version}`},{frequency:p.view.frequency,plotWidth:geom.current.right-geom.current.left}):null;};
     const controller=bindChartNavigation({element:root.current,getRange:()=>live.current.active?currentRange():null,
-      getTool:()=>live.current.view.tool,onRangeChange:range=>change(view=>({...view,start:range.start,end:range.end})),onReset:()=>{const range=currentRange();if(range)change(view=>({...view,start:range.min,end:range.max,autoScale:true,domain:null}));},
+      getTool:()=>live.current.view.tool,onRangeChange:range=>change(view=>({...view,start:range.start,end:range.end,spacingBounds:range.spacingBounds})),onReset:()=>{const range=currentRange();if(range)change(view=>({...view,start:range.min,end:range.max,autoScale:true,domain:null}));},
       getPriceAxis:()=>live.current.active?{min:geom.current.min,max:geom.current.max,scale:live.current.view.scale,top:geom.current.top,bottom:geom.current.priceBottom,right:geom.current.right,inverted:live.current.view.inverted}:null,
       onPriceRangeChange:domain=>change(view=>({...view,autoScale:false,domain})),onPriceReset:()=>change(view=>({...view,autoScale:true,domain:null})),
       onGestureStart:()=>live.current.onStart(),onGestureEnd:()=>live.current.onEnd(),getContext:()=>{const p=live.current.hover?.date||live.current.view.selected,at=nearestPoint(live.current.prices,p),value=live.current.prices[at],stamp=live.current.series?.frequency==='monthly'?p.slice(0,7):p;return {label:`${live.current.symbol} ${stamp}`,copyText:`${live.current.symbol}\n${stamp}\nC ${value?.[0]===p?value[1]:'미공표'} ${live.current.unit}`};}});
@@ -38,12 +47,14 @@ export function RsiChartCanvas(props:Props) {
     const store=document.createElement('div');store.hidden=true;root.current.append(store);store.append(controller.toolbar);navigation.current=controller;
     return()=>{controller.destroy();store.remove();navigation.current=null;};
   },[]);
-  useLayoutEffect(()=>navigation.current?.update(),[view,active,size]);
+  useLayoutEffect(()=>navigation.current?.update(),[view,active,size,prices,bars,props.revision,symbol]);
   useEffect(()=>{if(props.menuPulse&&root.current){const r=root.current.getBoundingClientRect();navigation.current?.openMenu({clientX:r.left+r.width*.5,clientY:r.top+r.height*.4});}},[props.menuPulse]);
   const rowByDate=useMemo(()=>new Map(rows.map(row=>[row.date,row])),[rows]);
   const barByDate=useMemo(()=>new Map(bars.map(bar=>[bar[0],bar])),[bars]);
   const timeline=props.series?.timeline||prices.map(point=>point[0]);
   const g=geometry,picked=hover?.date||view.selected,at=props.series?nearestObservation(timeline,picked):nearestPoint(prices,picked),selectedDate=props.series?timeline[at]:prices[at]?.[0],selected=props.series?prices.find(point=>point[0]===selectedDate):prices[at],selectedRsi=rowByDate.get(selected?.[0]||'');
+  const labels=createPriceAxisFormatter({axis:g.axis,layout:size.axis,display:{factor:1,offset:0,unit:unit==='USD'?'usd':'native'}});
+  const axisText=(label:string,badge=false)=>({textLength:Math.min(size.axis.labelWidth,Math.max(.01,size.axis.measure(label,badge?size.axis.badgeFontSize:size.axis.fontSize))),lengthAdjust:'spacingAndGlyphs' as const,style:{fontSize:badge?size.axis.badgeFontSize:size.axis.fontSize},'data-price-axis-label':badge?'badge':'tick'});
   const crossing=useMemo(()=>view.showCrossings?rsiCrossings(rows).filter(m=>m.date>=view.start&&m.date<=view.end):[],[view.showCrossings,rows,view.start,view.end]);
   const markerLabels=new Set<number>(),lastLabel={Buy:-Infinity,Sell:-Infinity};
   crossing.forEach((marker,index)=>{const x=g.x(marker.date);if(x-lastLabel[marker.side]>56){markerLabels.add(index);lastLabel[marker.side]=x;}});
@@ -53,8 +64,10 @@ export function RsiChartCanvas(props:Props) {
   const rsiPath=(field:'rsi'|'signal')=>g.visibleRows.map((row,i,a)=>row[field]==null?'':`${i&&a[i-1][field]!=null?'L':'M'}${g.x(row.date).toFixed(2)},${g.rsiY(row[field]!).toFixed(2)}`).join(' ');
   const visibleVolumes=props.series?.volumes.filter(point=>point.date>=view.start&&point.date<=view.end);
   const maxVolume=Math.max(1,...(visibleVolumes?visibleVolumes.flatMap(point=>[point.value??0,point.average??0]):g.visibleBars.map(b=>b[5]||0)));
-  const barWidth=Math.max(1,Math.min(18,(g.right-g.left)/Math.max(1,visibleVolumes?.length??g.visibleBars.length)*.65));
-  const volumeHeight=props.series?Math.min(96,Math.max(40,(g.priceBottom-g.top)*.17)):48;
+  const intervalDays=view.frequency==='monthly'?365.2425/12:view.frequency==='weekly'?7:1;
+  const barWidth=candleBodyWidth(g.right-g.left,Math.max(1,day(view.end)-day(view.start)),intervalDays);
+  const volumeHeight=Math.min(g.priceBottom-g.top,props.series?Math.min(96,Math.max(24,(g.priceBottom-g.top)*.17)):48);
+  const timeTickCount=Math.max(2,Math.min(16,Math.floor((g.right-g.left)/92)+1));
   const volumeY=(value:number)=>g.priceBottom-value/maxVolume*volumeHeight;
   const averagePath=visibleVolumes?.map((point,index)=>point.average==null?'':`${index&&visibleVolumes[index-1].average!=null?'L':'M'}${g.x(point.date).toFixed(2)},${volumeY(point.average).toFixed(2)}`).join(' ');
   const markerGroups=new Map<string,InstrumentMarker[]>();
@@ -78,13 +91,13 @@ export function RsiChartCanvas(props:Props) {
   const measurement=view.measurement.length===1&&hover?.panel===view.measurement[0].panel?[...view.measurement,hover]:view.measurement;
   return <div className={`rsi-chart-canvas ${props.className||''}`} ref={root} data-tool={view.tool} data-chart={props.series?'instrument-price':'rsi-price'}>
     <svg ref={svgRef} width={size.width} height={size.height} viewBox={`0 0 ${size.width} ${size.height}`} role="img" tabIndex={0} aria-label={`${props.description||`${symbol} 가격·RSI 차트`}, 휠 확대·축소, 드래그 이동, C 십자선, H 이동, M 측정`}
-      data-plot-left={g.left} data-plot-right={g.right} data-plot-top={g.top} data-plot-bottom={g.bottom} data-time-axis-top={g.bottom} data-start={view.start} data-end={view.end} data-price-min={g.min} data-price-max={g.max}
+      data-plot-left={g.left} data-plot-right={g.right} data-plot-top={g.top} data-plot-bottom={g.bottom} data-price-bottom={g.priceBottom} data-time-axis-top={g.bottom} data-start={view.start} data-end={view.end} data-price-min={g.min} data-price-max={g.max} data-price-mode={view.autoScale?'auto':'manual'}
       onPointerMove={event=>{if(active&&!event.buttons)onHover(pointer(event));}} onPointerLeave={()=>onHover(null)} onClick={event=>{if(!active||event.defaultPrevented)return;const p=pointer(event);if(p)onPick(p);}}>
       <title>{`${symbol} ${({daily:'1D',weekly:'1W',monthly:'1M'})[view.frequency]} 관측 차트`}</title><desc>{`${view.start}부터 ${view.end}, ${g.visible.length}개 가격 관측.${props.series?' 미공표 가격과 거래량은 생성하지 않습니다.':' 가격과 RSI는 같은 날짜 축을 사용합니다.'}`}</desc>
       <defs><clipPath id={priceClip}><rect x={g.left} y={g.top} width={g.right-g.left} height={g.priceBottom-g.top}/></clipPath><clipPath id={oscClip}><rect x={g.left} y={g.rsiTop} width={g.right-g.left} height={Math.max(0,g.bottom-g.rsiTop)}/></clipPath></defs>
       {!g.visible.length&&<text className="rsi-axis" x={(g.left+g.right)/2} y={(g.top+g.priceBottom)/2} textAnchor="middle">표시 구간에 관측 자료 없음</text>}
-      {g.ticks.map(value=><g key={value}><line className="rsi-grid" x1={g.left} x2={g.right} y1={g.y(value)} y2={g.y(value)}/><text className="rsi-axis" x={g.right+8} y={g.y(value)+4}>{axisNumber(value)}</text></g>)}
-      {Array.from({length:size.width<600?3:6},(_,i)=>{const value=date(day(view.start)+(day(view.end)-day(view.start))*i/((size.width<600?3:6)-1)),x=g.x(value);return <g key={i}><line className="rsi-grid" x1={x} x2={x} y1={g.top} y2={g.bottom}/><text className="rsi-axis" x={x} y={size.height-8} textAnchor={i===0?'start':i===(size.width<600?3:6)-1?'end':'middle'}>{view.frequency==='monthly'||day(view.end)-day(view.start)>730?value.slice(0,7):value.slice(5)}</text></g>;})}
+      {g.ticks.map(value=><g key={value}><line className="rsi-grid" x1={g.left} x2={g.right} y1={g.y(value)} y2={g.y(value)}/><text className="rsi-axis" x={g.right+size.axis.inset} y={g.y(value)+4} {...axisText(labels.tick(value))}>{labels.tick(value)}</text></g>)}
+      {Array.from({length:timeTickCount},(_,i)=>{const value=date(day(view.start)+(day(view.end)-day(view.start))*i/(timeTickCount-1)),x=g.x(value);return <g key={i}><line className="rsi-grid" x1={x} x2={x} y1={g.top} y2={g.bottom}/><text className="rsi-axis" x={x} y={size.height-8} textAnchor={i===0?'start':i===timeTickCount-1?'end':'middle'}>{view.frequency==='monthly'||day(view.end)-day(view.start)>730?value.slice(0,7):value.slice(5)}</text></g>;})}
       <g clipPath={`url(#${priceClip})`}>
         {view.showVolume&&(visibleVolumes?visibleVolumes.filter(point=>point.value!==null).map(point=><rect className={`instrument-volume theme-volume ${point.state?`housing-bar ${point.state}`:''}`} data-volume={point.date} key={point.date} x={g.x(point.date)-barWidth/2} y={volumeY(point.value!)} width={barWidth} height={g.priceBottom-volumeY(point.value!)} fill={point.state==='above'?'var(--green)':point.state==='below'?'var(--red)':barByDate.has(point.date)?color(barByDate.get(point.date)!):'var(--muted)'} opacity=".3"><title>{`${point.date} 거래량 ${axisNumber(point.value!)} ${props.volumeUnit||''}`}</title></rect>):g.visibleBars.filter(b=>b[5]!==null).map(b=><rect key={b[0]} x={g.x(b[0])-barWidth/2} y={volumeY(b[5]!)} width={barWidth} height={g.priceBottom-volumeY(b[5]!)} fill={color(b)} opacity=".2"/>))}
         {view.showVolume&&averagePath&&<path className="housing-average" data-volume-average="true" d={averagePath}/>}
@@ -99,10 +112,12 @@ export function RsiChartCanvas(props:Props) {
         {[0,25,50,75,100].map(v=><g key={v}><line className="rsi-grid" x1={g.left} x2={g.right} y1={g.rsiY(v)} y2={g.rsiY(v)}/><text className="rsi-axis" x={g.right+8} y={g.rsiY(v)+4}>{v}</text></g>)}
         <g clipPath={`url(#${oscClip})`}>{view.showLevels&&[29.5,33.5,40,43].map(v=><line key={v} className="rsi-reference" x1={g.left} x2={g.right} y1={g.rsiY(v)} y2={g.rsiY(v)}/>)}<path className="rsi-osc-line" d={rsiPath('rsi')}/>{view.showSignal&&<path className="rsi-signal-line" d={rsiPath('signal')}/>}</g>
       </g>}
-      {selectedDate&&g.x(selectedDate)>=g.left&&g.x(selectedDate)<=g.right&&<g><line className="rsi-crosshair" x1={g.x(selectedDate)} x2={g.x(selectedDate)} y1={g.top} y2={g.bottom}/><rect className="rsi-date-badge" x={Math.max(g.left,Math.min(g.right-94,g.x(selectedDate)-47))} y={g.bottom+2} width="94" height="22"/><text className="rsi-date-text" x={Math.max(g.left+47,Math.min(g.right-47,g.x(selectedDate)))} y={g.bottom+17} textAnchor="middle">{view.frequency==='monthly'?selectedDate.slice(0,7):selectedDate}</text>{selected&&<><rect className="rsi-price-badge" x={g.right+1} y={Math.max(g.top,Math.min(g.priceBottom-18,g.y(selected[1])-9))} width={size.width-g.right-2} height="18"/><text className="rsi-price-text" x={g.right+7} y={Math.max(g.top+13,Math.min(g.priceBottom-5,g.y(selected[1])+4))}>{axisNumber(selected[1])}</text></>}</g>}
+      {selectedDate&&g.x(selectedDate)>=g.left&&g.x(selectedDate)<=g.right&&<g><line className="rsi-crosshair" x1={g.x(selectedDate)} x2={g.x(selectedDate)} y1={g.top} y2={g.bottom}/><rect className="rsi-date-badge" x={Math.max(g.left,Math.min(g.right-94,g.x(selectedDate)-47))} y={g.bottom+2} width="94" height="22"/><text className="rsi-date-text" x={Math.max(g.left+47,Math.min(g.right-47,g.x(selectedDate)))} y={g.bottom+17} textAnchor="middle">{view.frequency==='monthly'?selectedDate.slice(0,7):selectedDate}</text>{selected&&<><rect className="rsi-price-badge" x={g.right+1} y={Math.max(g.top,Math.min(g.priceBottom-18,g.y(selected[1])-9))} width={size.width-g.right-2} height="18"/><text className="rsi-price-text" x={g.right+size.axis.inset} y={Math.max(g.top+13,Math.min(g.priceBottom-5,g.y(selected[1])+4))} {...axisText(labels.price(selected[1]),true)}>{labels.price(selected[1])}</text></>}</g>}
       {hover&&<line className="rsi-crosshair" x1={g.left} x2={g.right} y1={hover.panel==='rsi'?g.rsiY(hover.value):g.y(hover.value)} y2={hover.panel==='rsi'?g.rsiY(hover.value):g.y(hover.value)}/>}
       {measurement.length===2&&<g className="rsi-measurement"><rect x={Math.min(g.x(measurement[0].date),g.x(measurement[1].date))} y={Math.min(anchorY(measurement[0]),anchorY(measurement[1]))} width={Math.max(1,Math.abs(g.x(measurement[0].date)-g.x(measurement[1].date)))} height={Math.max(1,Math.abs(anchorY(measurement[0])-anchorY(measurement[1])))}/><line x1={g.x(measurement[0].date)} x2={g.x(measurement[1].date)} y1={anchorY(measurement[0])} y2={anchorY(measurement[1])}/><text x={Math.max(g.left,Math.min(g.right-190,g.x(measurement[1].date)))} y={Math.max(g.top+16,Math.min(g.bottom-8,anchorY(measurement[1])-10))}>{`${axisNumber(measurement[1].value-measurement[0].value)} ${measurement[0].panel==='rsi'?'RSI pt':unit} (${measurement[0].value===0?'비율 미산출':((measurement[1].value/measurement[0].value-1)*100).toFixed(2)+'%'}) / ${Math.abs(day(measurement[1].date)-day(measurement[0].date))}일`}</text></g>}
       {marks.map(({key,items,marker,x,y})=><Fragment key={key}><line className={`theme-event-guide ${marker.kind}`} x1={x} x2={x} y1={y+8} y2={g.priceBottom}/><g className={`theme-event-mark ${marker.kind} ${items.some(item=>item.selected)?'selected':''}`} role="button" tabIndex={active?0:-1} aria-label={`${marker.kind==='judgment'?'판정':'근거'} ${items.length>1?`${items.length}건`:marker.title} ${marker.date}`} onClick={event=>{event.stopPropagation();if(active){marker.onSelect();props.onMarker?.();}}} onKeyDown={event=>{if(active&&['Enter',' '].includes(event.key)){event.preventDefault();event.stopPropagation();marker.onSelect();props.onMarker?.();}}}><title>{`${items.map(item=>item.title).join(' / ')} / ${marker.date}`}</title><rect x={x-12} y={y-8} width={24} height={16} rx={2}/><text x={x} y={y+4} textAnchor="middle">{marker.label}{items.length>1?items.length:''}</text></g></Fragment>)}
+      <g data-price-axis="true"><title>가격축 · 드래그·휠로 확대·축소 · 두 번 눌러 자동 맞춤</title><rect x={g.right} y={g.top} width={Math.max(1,size.width-g.right)} height={Math.max(1,g.priceBottom-g.top)} fill="transparent" pointerEvents="all" style={{cursor:'ns-resize',touchAction:'none'}}/></g>
+      <g data-time-axis="true"><title>시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 전체 범위</title><rect x={g.left} y={g.bottom} width={g.right-g.left} height={Math.max(1,size.height-g.bottom)} fill="transparent" pointerEvents="all" style={{cursor:'ew-resize',touchAction:'none'}}/></g>
     </svg>
   </div>;
 }

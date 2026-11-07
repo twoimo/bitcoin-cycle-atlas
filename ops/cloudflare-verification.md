@@ -99,36 +99,169 @@ assume arbitrary Chrome, PostgreSQL or JDK caches survive another build.
 
 ## Data schedules and research evidence
 
-Archiving a schedule disables it. A successful UI deployment does not prove
-that either data schedule was replaced. Both remain explicit activation
-obligations until the actual Cloudflare trigger, run and published bytes are
-observed. Preserve the existing clocks and do not backfill missed prospective
-issuance dates.
+The replacement implementations are concrete, but their schedules remain
+**inactive until real execution and cost evidence is available**. The command,
+environment and credential inventory is
+`ops/cloudflare-scheduled-builds.json`; activation remains false in
+`ops/ci-migration.json`. A successful UI deployment does not prove either data
+schedule ran. Preserve the existing observation clocks and never backfill
+missed prospective issuance dates.
 
-| Former job | Cloudflare replacement requirement |
-| --- | --- |
-| Completed market data, UTC00:20/06:20/12:20/18:20 | A short Cron Worker enqueues a dedicated refresh Build. Reuse the seven provider collectors and actual attempt outcomes; optional failure keeps the previous snapshot/clock. Capture a comparison judgment only after a successful comparison refresh. Run model/formal/static gates, stage only the existing allowlist, reject newer main, use an ordinary non-force commit and verify the exact deployed publication. |
-| ETH prospective archive, UTC01:17 | A dedicated preparation Build verifies/restores the exact archive, captures only the current tail, replays/readies/checks capacity/appends/verifies and seals the exact source/run/bytes. A separate publisher obtains only that immutable handoff and a scoped repository write credential, checks live archive head, publishes and reads back. A failed acquisition remains a failed daily observation even if its failure evidence was archived. |
-| ETH candidate qualification | Separate model acquisition/evaluation producers and full native browser producer, followed by a same-source/run/artifact join. Existing35-minute research job caps exceed the free20-minute per-build limit; bounded sharding and durable artifact transport must be designed and measured. The ordinary verification command does not claim this optional research qualification completed. |
-| Release | Keep exact tag/source/version binding, immutable existing assets, manifest-first serial upload and no retagging or overwrite. A production static deployment does not automatically publish a release. |
+The scheduled-only Worker in `ops/cloudflare-scheduler` has two Cron triggers:
+market refresh at UTC00:20/06:20/12:20/18:20 and ETH archive at UTC01:17. It makes
+one bounded POST per invocation to a secret Deploy Hook, with no public HTTP
+trigger, retry loop, database or queue. Its sanitized submission receipt binds
+the scheduled time and returned Build UUID; only the authenticated Builds API
+can establish the actual branch, source and completed result.
 
-The current prospective CLI's publication context still explicitly validates
-its original event/run identity and handoff. A replacement must add a reviewed
-Cloudflare context with equivalent validation; do not spoof GitHub environment
-variables to bypass that boundary. A Cloudflare trigger needs a scoped source
-write credential and provider-independent artifact identity before activation.
-The capacity report intentionally counts only active `.github/workflows`
-definitions; archived cron text is never reported as a live scheduled issuer.
+### Completed data: collection Build, then production Build
 
-Budget scheduled jobs separately from UI builds. For a30-day month, use
-`120 × refresh_minutes + 30 × prospective_minutes + deploy_count × verified_build_minutes`
-plus research/retry minutes, and keep the measured total at or below3,000.
-For example,8-minute refresh jobs,8-minute prospective jobs and60 complete
-20-minute verification builds would consume2,400 minutes, leaving600 for
-research/retries. These are capacity assumptions, not measured runtimes or a
-promise that the20-minute build completes. A queue and same-source deduplication
-avoid overlapping scheduled refresh and stale deployments on the single free
-build slot.
+`scripts/cloudflare-market-refresh.mjs` authenticates its own Cloudflare Build
+UUID, configured trigger, main branch and exact checked-out SHA before running
+the original seven collectors. BTC and cycle recalculation are required;
+optional failures retain previous bytes and observation clocks. Comparison
+judgments are captured only after successful comparison acquisition. The
+original model, forecast, research, formal, performance and static checks must
+pass before an allowlisted ordinary commit and nonforce push. Changed main
+aborts publication instead of being overwritten.
+
+The bounded committed `dist/data/refresh-attempts.json` preserves actual
+provider outcomes, clocks, source identity, output hashes and gate identities
+for the next Build. It does not change the publication source SHA. The normal
+production main trigger checks and deploys that new commit independently, with
+the complete verification plan and exact public readback. `SOURCE_COMMITTED`
+means a source commit was published; it is not a deployment success receipt.
+
+| Build | Build command | Deploy command |
+| --- | --- | --- |
+| Market collection | `npm ci --ignore-scripts && node scripts/cloudflare-market-refresh.mjs` | `node scripts/cloudflare-market-refresh.mjs --confirm-commit` |
+| Production at the new SHA | `npm run verify:cloudflare && npm run build:cloudflare` | `npm run deploy:cloudflare` |
+| ETH preparation | `npm ci --ignore-scripts && node scripts/verify-cloudflare-archive.mjs` | `node scripts/cloudflare-ethereum-archive.mjs prepare` |
+| ETH publisher | `npm ci --ignore-scripts && node scripts/verify-cloudflare-archive.mjs` | `node scripts/cloudflare-ethereum-archive.mjs publish` |
+
+The three job Workers are dedicated Builds identities; their commands do not
+upload placeholder Worker code. Use the main branch, disable previews and
+exclude `*` from push watch paths for these job triggers. Path filtering is a
+cost optimization, not authorization: Cloudflare documents exceptions for
+empty and very large pushes. Both job runners independently reject actual
+push and pull-request metadata. A hook must be exercised and its real trigger
+configuration read back before scheduling it.
+
+### ETH: explicit provider identity and separate publisher
+
+The new context records `provider: cloudflare-workers-builds` and the original
+raw Build UUID. It does not convert that UUID into a GitHub run number or spoof
+GitHub environment variables. Historical GitHub archive objects, hashes and
+identity fields retain their original representation. Each job executes the
+complete archive test inventory, writes a log-hashed receipt for its exact
+source/tree/Build UUID and fails on missing, skipped or failed tests.
+
+Preparation restores the verified original archive or the explicitly proven
+absent-branch seed, captures the current tail, replays, checks readiness and
+capacity, appends, verifies and seals the original handoff. It receives no
+repository write credential. Only the new immutable delta crosses a dedicated
+Free KV namespace: at most192 unique objects,64MiB total,8MiB per object and a
+48-hour TTL. The full retained archive stays in GitHub and is not pruned or
+flattened to fit KV.
+
+Preparation then calls a secret publisher Deploy Hook and binds its returned
+Build UUID in a canonical dispatch. A duplicated pending hook is rejected
+instead of replacing another publisher's handoff. The publisher uses a
+read-only KV token, authenticates the completed preparation Build and exact
+dispatch from Cloudflare logs, reconstructs every original byte and rechecks
+the live archive head before passing the repository write token to the existing
+nonforce publisher. Exact immutable readback remains mandatory. A capture
+failure can preserve failure evidence but still ends the publisher with a
+failure status; it never becomes a successful observation.
+
+A Deploy Hook selects a branch, not a pinned commit. If main advances between
+preparation and publisher checkout, the source mismatch is rejected. Queued
+or superseded jobs do not justify accepting a different source, replacing an
+existing dispatch or backdating evidence. Each archive job is bounded by its
+actual initialization/execution clock and the19-minute application deadline;
+queue waiting time is excluded.
+
+### Required settings and credentials
+
+All Builds use `NODE_VERSION=24.22.2`, `SKIP_DEPENDENCY_INSTALL=1` and
+`CF_SEND_TELEMETRY=false`. Production uses only
+`ATLAS_PUBLIC_ORIGIN=https://bitcoin-cycle-atlas.twoimo.workers.dev`;
+`ATLAS_CUSTOM_DOMAIN` stays unset. The original reference site mentioned in the
+repository is not evidence of a domain owned by this project.
+
+| Job | Required nonsecret settings | Required secrets |
+| --- | --- | --- |
+| Cron coordinator | The two defined UTC Cron schedules | `MARKET_REFRESH_DEPLOY_HOOK`, `ETH_ARCHIVE_DEPLOY_HOOK` |
+| Market collection | `CLOUDFLARE_ACCOUNT_ID`, `ATLAS_REFRESH_TRIGGER_UUID` | `ATLAS_BUILDS_READ_TOKEN`, `ATLAS_DATA_GITHUB_TOKEN` |
+| ETH preparation | Account ID, `ATLAS_ARCHIVE_KV_NAMESPACE_ID`, `ATLAS_ARCHIVE_PREPARE_TRIGGER_UUID`, `ATLAS_ARCHIVE_STAGE=prepare` | Builds read token, `ATLAS_ARCHIVE_KV_WRITE_TOKEN`, `ATLAS_ARCHIVE_PUBLISH_DEPLOY_HOOK` |
+| ETH publisher | Account/KV IDs, both archive trigger UUIDs, `ATLAS_ARCHIVE_STAGE=publish` | Builds read token, `ATLAS_ARCHIVE_KV_READ_TOKEN`, `ETH_ARCHIVE_GITHUB_TOKEN` |
+
+`ETH_ARCHIVE_READ_TOKEN` is optional for public repository reads. Both GitHub
+write tokens must be explicitly provisioned for this repository with Contents
+write permission, using a suitable GitHub App installation token or a fine
+grained token. Workers Builds Git integration does not document an exported
+repository write token usable by these scripts; clone authentication is never
+reused as an inferred write permission. The producer and publisher must have
+separate secret sets. Preparation explicitly rejects either repository write
+secret. Cloudflare tokens need only Builds read and the indicated KV read or
+edit permission; the fixed namespace and key grammar are checked in code.
+Read back actual token/account resource scope instead of assuming KV permission
+is limited to a single namespace.
+
+The normal daily delta uses at most194 KV writes including its index and
+dispatch. Two days of maximum deltas are under129MiB. These bounds fit the
+documented Free1,000 writes/day and1GB storage allowances for the intended
+single daily preparation; unrestricted manual retries or unrelated account
+usage are not included. No paid subscription, paid binding, persistent
+database or remote browser service is required by this migration.
+
+### Measured monthly admission
+
+For a31-day month the schedule can create124 collection Builds,124 complete
+production Builds,31 archive preparations and31 publishers. The mandatory
+projection is:
+
+`124 × (collection_minutes + production_minutes) + 31 × (prepare_minutes + publish_minutes) + additional_production_builds × production_minutes + other_build_minutes + retry_reserve`.
+
+`scripts/measure-cloudflare-schedule-budget.mjs` fetches actual successful
+Builds using a read-only token. It verifies the intended trigger/repository,
+full commands and execution clocks; an inspection-only run cannot be a timing
+sample. It uses the slowest observed sample per role, rounds each up to a whole
+minute, includes the full calendar month and requires at least300 minutes of
+retry reserve. It refuses an incomplete inventory and returns failure above
+3,000 minutes. A budget result still does not prove configured resource scopes,
+credentials, Cron activation or publication readback. The connected credential
+received HTTP403 from the billing subscriptions API, so the account-wide plan
+has not been verified and unrelated existing resources are not classified.
+This migration enables no new paid subscriptions or bindings and uses the
+documented Free allowances as its admission ceiling regardless of that missing
+account-wide billing read permission.
+
+Run it with `--samples build/cloudflare-schedule-samples.json`. The bounded
+input has `schemaVersion:1`, `kind:atlas-cloudflare-schedule-samples`, a concrete
+`month` such as `2026-11`, explicit `additionalProductionBuilds`,
+`otherBuildMinutes`, `reserveMinutes`, and `samples` with one to four actual
+`{buildId,triggerId}` pairs for each of `production`, `refresh`,
+`archivePrepare`, `archivePublish`. No credential belongs in that file. The
+result is written to `build/cloudflare-schedule-budget.json`. Until complete
+real samples fit the free budget, keep both Cron schedules inactive.
+
+### Remaining operational boundaries
+
+The former market-lab service workflow verified an isolated PostgreSQL/API
+instance; it did not operate a persistent production database. The static site
+continues using its reviewed snapshots. A live database-backed collector would
+require a separately identified persistent free service, its credentials and
+its own actual refresh evidence; disposable test PostgreSQL is not that
+service.
+
+ETH candidate research qualification remains a distinct acquisition/evaluation
+and full-browser evidence join. Its former35-minute producer limits exceed
+the free per-Build cap, so ordinary deployment does not claim qualification
+completed. Releases retain exact tag/source/version binding and immutable
+assets, with no automatic release publication inferred from a static deploy.
+The capacity report continues to treat archived workflow text as inactive; a
+local Cron definition does not prove a live scheduled issuer.
 
 ## Primary runtime sources
 
@@ -140,10 +273,12 @@ build slot.
 - [Chrome for Testing release inventory](https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json)
 - [PostgreSQL Ubuntu packages and signing key](https://www.postgresql.org/download/linux/ubuntu/)
 - [PostgreSQL17.11 Noble package index](https://apt.postgresql.org/pub/repos/apt/dists/noble-pgdg/main/binary-amd64/Packages.gz)
+- [Workers Builds Deploy Hooks](https://developers.cloudflare.com/workers/ci-cd/builds/deploy-hooks/)
+- [Workers Builds watch-path evaluation and exceptions](https://developers.cloudflare.com/workers/ci-cd/builds/build-watch-paths/)
+- [Workers KV free allowances](https://developers.cloudflare.com/kv/platform/pricing/)
+- [GitHub reference-write permission and nonforce updates](https://docs.github.com/en/rest/git/refs)
+- [Pinned Temurin21.0.13+9 release](https://github.com/adoptium/temurin21-binaries/releases/tag/jdk-21.0.13%2B9)
+- [PGDG signed Noble release metadata](https://apt.postgresql.org/pub/repos/apt/dists/noble-pgdg/InRelease)
 
 Runtime inventory and limits were checked on2026-11-07. Actual Build receipts,
 not this document, determine which environment and gates completed.
-
-- [Pinned Temurin21.0.13+9 release](https://github.com/adoptium/temurin21-binaries/releases/tag/jdk-21.0.13%2B9)
-
-- [PGDG signed Noble release metadata](https://apt.postgresql.org/pub/repos/apt/dists/noble-pgdg/InRelease)

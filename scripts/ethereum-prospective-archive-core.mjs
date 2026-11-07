@@ -4,6 +4,7 @@ import {normalizeForecastTimestamp} from '../dist/forecast-information-time.js';
 import {verifyEthereumProspectiveRecord,ethereumProspectiveIndexEntry} from '../dist/ethereum-prospective-dispatch.js';
 import {verifyEthereumResearchSnapshot} from '../dist/ethereum-prospective-prices.js';
 import {verifyAssetOutcomeSnapshot,assetOutcomeSnapshotEntry,validateAssetOutcomeIndex} from '../dist/asset-outcome-records.js';
+import {normalizeEthereumArchiveSource} from './ethereum-archive-provider-identity.mjs';
 
 /** An offline byte archive, not a calibration cache or provider attestation.
  * Each new manifest preserves every ancestor, page and original immutable file.
@@ -36,11 +37,7 @@ function timestamp(value,label){
   return value;
 }
 function sourceIdentity(source){
-  keys(source,['sourceCommit','sourceTree','runId'],'archive source');
-  if(!COMMIT.test(source.sourceCommit)||!COMMIT.test(source.sourceTree)||
-    source.runId!==null&&(typeof source.runId!=='string'||!/^\d{1,24}$/.test(source.runId)))
-    throw new TypeError('Exact committed archive source identity required');
-  return JSON.parse(json(source));
+  return normalizeEthereumArchiveSource(source);
 }
 function safePath(path){
   if(typeof path!=='string'||path.length>200||!path||path.includes('\\')||path.startsWith('/')||

@@ -1,5 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
+import { withChartSpacing,retargetChartRange } from '../../dist/chart-view-policy.js';
+import { normalizePriceDomain } from '../../dist/price-axis.js';
 import {CAPITAL_POLICIES} from '../../dist/treasury-instruments.js';
 import * as equityData from '../../dist/equity-market-data.js';
 
@@ -78,6 +80,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
   let frameId = 0, navigation;
   const mount = () => ({ cancel() {}, cancelPending() {}, destroy() {} });
   const deps = {
+    withChartSpacing,retargetChartRange,normalizePriceDomain,
     mountNativeChartApp: app => document.body.append(app),
     // Native shell/command behavior has a separate parsed-DOM integration test.
     mountNativeChartWorkbench: () => ({update(){},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
@@ -149,8 +152,10 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     show: () => window.dispatchEvent({ type: 'pageshow', persisted: true }),
     reload: () => click('action', 'reload'),
     interval: value => click('interval', value),
+    span: value => click('span', value), action: value => click('action', value),
     scenario: value => app.querySelector('#equity-scenario').onchange({ target: { value } }),
     pan: range => navigation.onRangeChange(range),
+    priceRange: range => navigation.onPriceRangeChange(range),
     latest: () => draws.at(-1),
     status: () => app.querySelector('#equity-status').textContent,
     info: () => { click('action', 'info'); return document.body.nodes.get('equity-detail-dialog'); },

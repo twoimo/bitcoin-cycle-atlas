@@ -1,7 +1,8 @@
 import {createPriceScale,barPriceChange} from './chart-math.js?v=1.29.0';
+import {candleBodyWidth} from './chart-view-policy.js?v=1.36.0';
 import { priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxisFormatter } from './price-axis.js?v=1.29.0';
 import { createPriceDisplay, formatDisplayPrice } from './price-display.js?v=1.29.0';
-import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.29.0';
+import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.36.0';
 import { researchAnnotationsMarkup } from './research-annotations.js?v=1.29.0';
 import {chartInterval} from './ohlc-data.js?v=1.29.0';
 import {chartPaneLayout,volumePaneMarkup,historicalMarkersMarkup} from './chart-overlays.js?v=1.36.0';
@@ -42,7 +43,7 @@ export function drawIntradayChart({svg,series,chartType='candles',scale='log',pr
   const forecastLogGaps=scale==='log'?equityForecastLogGaps(futureRows,forecastAnchor,minTime,maxTime):[];
   const x=time=>L+(time-minTime)/Math.max(1,maxTime-minTime)*(W-L-R);
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  Object.assign(svg.dataset,{plotLeft:String(L),plotRight:String(W-R),plotTop:String(T),plotBottom:String(bottom),priceBottom:String(B),scale,chartType,interval:series.interval,product,historyLabelCount:'0',historyEventCount:'0',historyHiddenLabelCount:'0',historyLabelMode:'off'});
+  Object.assign(svg.dataset,{start:String(minTime),end:String(maxTime),plotLeft:String(L),plotRight:String(W-R),plotTop:String(T),plotBottom:String(bottom),priceBottom:String(B),scale,chartType,interval:series.interval,product,historyLabelCount:'0',historyEventCount:'0',historyHiddenLabelCount:'0',historyLabelMode:'off'});
   svg.parentElement?.style.setProperty('--plot-bottom-gap',`${H-bottom+6}px`);svg.parentElement?.style.setProperty('--plot-right-gap',`${R+7}px`);
   Object.assign(svg.dataset,{visiblePointCount:String(rows.length),observedCandleCount:String(rows.length),candleRendering:'none',forecastPointCount:'0',forecastCandleCount:String(futureCandles.length),forecastBarDefinition:futureCandles.length?'simulated-daily-valuation-range':'none',forecastInterpolationCount:'0',forecastEvidenceCount:'0',forecastLogGapCount:String(forecastLogGaps.length)});
   if(!scaleRows.length)return renderEmptyPriceViewport({svg,layout,axisText,width:W,height:H,start:minTime,end:maxTime,seconds:true,scale,priceDomain,unit,denominator:allRows.at(-1)?.close,denominatorDate:allRows.at(-1)?.date,fallbackPrice:allRows.at(-1)?.close,invertScale,tool,message:forecastLogGaps.length?'0 경계 · 로그 연결 불가 · 선형축에서 확인':historyStatus==='loading'?'이 구간의 과거 봉을 불러오고 있습니다.':historyStatus==='error'?'과거 자료 조회에 실패했습니다.':'이 구간에는 완료된 거래 봉이 없습니다.',onHover:detail=>onHover({...detail,product,volumeUnit:baseAsset}),source:series.source,frequency:series.interval,researchAnnotations,activeResearchAnnotationId:selectedAnnotation,onResearchAnnotation:activateAnnotation,scenarioId});
@@ -53,10 +54,12 @@ export function drawIntradayChart({svg,series,chartType='candles',scale='log',pr
   const valuesForAxis=[...observedPrices,...scenarioPrices,...baselinePrices];if(!valuesForAxis.some(value=>value>0))valuesForAxis.push(allRows.at(-1).close);
   const zeroDomain=effectiveScale==='linear'&&visibleFuture.some(row=>row.low===0)?{min:0,max:Math.max(...valuesForAxis)*1.12}:null;
   const axis=createPriceScale(valuesForAxis,{scale:effectiveScale,top:T,bottom:B,tickCount:Math.max(2,Math.min(7,Math.floor((B-T)/45))),factor,offset,inverted:invertScale,paddingRatio:.12,domain:priceDomain||zeroDomain});
+  // A derived zero boundary is still Auto; only a user viewport is Manual.
+  axis.mode=priceDomain?'manual':'auto';
   const y=axis.y,price=value=>formatDisplayPrice(value,display,unit==='usd'&&Math.abs(value)<1?6:2);
   const axisLabels=createPriceAxisFormatter({axis,display,layout:axisText});
   retainPriceViewport(svg,axis);Object.assign(svg.dataset,{scale:effectiveScale,unit,invertScale:String(Boolean(invertScale)),timeAxisTop:String(bottom+8)});
-  const clip=`${svg.id}-market-clip`,axisClip=`${svg.id}-price-axis-clip`,width=Math.max(.7,Math.min(14,(W-L-R)*interval.seconds/(maxTime-minTime)*.68));
+  const clip=`${svg.id}-market-clip`,axisClip=`${svg.id}-price-axis-clip`,width=candleBodyWidth(W-L-R,maxTime-minTime,interval.seconds);
   let s=`<title>${esc(series.source)} ${esc(product)} · ${interval.label} · ${chartType==='candles'?'캔들':'종가 선'}</title><desc>${esc(product)} ${equity?'분할 조정된 주식 관측':'거래소 완료'} 봉의 시가·고가·저가·종가${showVolume?`와 ${esc(baseAsset)} 거래량`:''}입니다. ${equity?'날짜는 뉴욕 거래 세션일이며, 점선·빈 경로봉·음영은 일별 모의 평가의 조건부 미래 가정이며 실제 장중 OHLC가 아닙니다.':'빈 구간은 채우지 않습니다. 시간은 UTC입니다.'}</desc><defs><clipPath id="${clip}"><rect x="${L}" y="${T}" width="${W-L-R}" height="${B-T}"/></clipPath><clipPath id="${axisClip}"><rect x="${W-R}" y="${T}" width="${R}" height="${B-T}"/></clipPath></defs>`;
   for(const tick of axis.ticks){const yy=y(tick),label=axisLabels.tick(tick);s+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="#26323e"/><text x="${W-R+axisText.inset}" y="${yy+4}" ${axisText.attributes(label)} fill="#acbacb" font-size="${axisText.fontSize}">${esc(label)}</text>`;}
   // Daily observations are much denser than monthly scenario knots. Time

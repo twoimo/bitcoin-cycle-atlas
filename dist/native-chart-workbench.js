@@ -2,7 +2,8 @@ import { atlasNavigationPages } from './atlas-navigation.js?v=1.36.0';
 import { mountChartBottomBar } from './chart-bottom-bar.js';
 import { mountMobileWorkspace } from './mobile-workspace.js';
 import { createWorkspaceHistory } from './workspace-history.js';
-import { parseGoToRequest } from './chart-view-policy.js';
+import { parseGoToRequest } from './chart-view-policy.js?v=1.36.0';
+import { normalizePriceDomain } from './price-axis.js';
 import { createChartSvgExport, createChartPngFromSvg } from './chart-export.js';
 import { isIntradayInterval } from './ohlc-data.js';
 
@@ -131,7 +132,7 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
       const commands=[['기본 범위','fit'],['1년','span','1y'],['전체 기간','span','history'],['선 / 캔들','chart-type'],['가격축 전환','scale'],['지표','reader','layers'],['날짜·기간 이동','date'],['선택 데이터','reader','selection'],['차트 내보내기','export'],['실행 취소','undo'],['다시 실행','redo']];
       const paint=()=>{list.replaceChildren();for(const [name,action,value]of commands.filter(([name])=>name.includes(input.value))){const node=make('button','native-reader-action',name);node.type='button';node.onclick=()=>{closeReader({restoreFocus:false});command(action,value);};list.append(node);}};input.oninput=paint;paint();
     }else{
-      const table=make('dl','native-chart-data');for(const [key,value]of [['휠 / 두 손가락','가리킨 날짜에서 확대·축소'],['드래그','날짜 이동'],['가격축 드래그 / 휠','가격 눈금 조절'],['시간축 드래그','표시 기간 조절'],['C / H / M','십자선 / 이동 / 두 점 측정'],['Alt+M / Alt+G','자석 / 날짜 이동'],['Ctrl/⌘ Z / Shift Z','실행 취소 / 다시 실행'],['0 / 두 번 클릭','기본 범위로']])table.append(make('dt','',key),make('dd','',value));body.append(table);
+      const table=make('dl','native-chart-data');for(const [key,value]of [['휠 / 시간축 드래그','오른쪽 끝을 유지하며 확대·축소'],['Ctrl + 휠 / 두 손가락','가리킨 위치에서 확대·축소'],['드래그','날짜·가격 위치 이동'],['가격축 드래그 / 휠','가격 눈금 조절'],['가격축 두 번 클릭','가격 자동 맞춤'],['C / H / M','십자선 / 이동 / 두 점 측정'],['Alt+M / Alt+G','자석 / 날짜 이동'],['Ctrl/⌘ Z / Shift Z','실행 취소 / 다시 실행'],['0 / 두 번 클릭','기본 범위로']])table.append(make('dt','',key),make('dd','',value));body.append(table);
     }
   }
   function openReader(kind,opener=doc.activeElement){
@@ -188,8 +189,8 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
       if(action==='frequency'){if(intervals.some(i=>i.id===value))actions.frequency(value);return;}
       if(action==='span'){actions.span(spanMap[value]||value);return;}if(action==='fit'){actions.fit();return;}
       if(action==='tool'&&['crosshair','pan','measure'].includes(value))state.tool=value;
-      if(action==='chart-type'){state.chartType=state.chartType==='line'?'candles':'line';state.priceDomain=null;}
-      if(action==='scale'){state.scale=state.scale==='log'?'linear':'log';state.priceDomain=null;}
+      if(action==='chart-type')state.chartType=state.chartType==='line'?'candles':'line';
+      if(action==='scale'){state.scale=state.scale==='log'?'linear':'log';state.priceDomain=normalizePriceDomain(state.priceDomain,{scale:state.scale});}
       if(action==='auto-scale'){const domain=state.controller?.getPriceScale?.();state.priceDomain=state.priceDomain?null:domain&&{min:domain.min,max:domain.max};}
       if(action==='magnet')state.magnet=['off','weak','strong'].includes(value)?value:({off:'weak',weak:'strong',strong:'off'})[state.magnet||'off'];
       if(action==='clear-measurement')state.measurement=null;

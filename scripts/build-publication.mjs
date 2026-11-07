@@ -5,6 +5,7 @@ import { resolve, dirname, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describeFreshness, alignObservations, observationTiming } from '../dist/data-freshness.js';
 import { createPublication, validatePublication, preparePublication, confirmPublication } from '../dist/publication-contract.js';
+import { readCommittedMarketRefreshOutcomes } from './cloudflare-market-refresh-receipt.mjs';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const dist=resolve(root,'dist');
@@ -43,6 +44,10 @@ export function publicationAsset(input,{symbol,role,sourcePath,market,outcome=nu
     source:meta.sourceName || input.source || null,sourceUrl:meta.sourceUrl || meta.source || null,priceDefinition:meta.priceDefinition || null,
     currency:input.currency || input.quoteCurrency || input.dailyHistory?.quoteCurrency || meta.quoteCurrency || 'USD',
     freshness:describeFreshness({latestDate:latest[0],market,observedAt,gaps,lastOutcome:outcome?.outcome || null,lastAttemptAt:outcome?.attemptedAt || null},now)};
+}
+export function publicationRefreshAttempts(committed,explicitOutcomes=null) {
+  if (committed.provenance && explicitOutcomes!==null && stable(explicitOutcomes)!==stable(committed.outcomes)) throw new Error('Refresh environment outcomes conflict with the source-bound committed receipt');
+  return {outcomes:explicitOutcomes??committed.outcomes,provenance:committed.provenance};
 }
 async function assetInventory(now,outcomes,directory=dist) {
   const assets=[],series=[];
@@ -138,7 +143,9 @@ async function main() {
   const sourcePaths=['dist','scripts','apps','packages','verification','package.json','package-lock.json','cloudflare.config.ts','vite.config.ts','.node-version'];
   const dirty=execFileSync('git',['status','--porcelain','--untracked-files=all','--',...sourcePaths],{cwd:root,encoding:'utf8'}).trim();
   if (dirty && !process.argv.includes('--preview')) throw new Error('Commit publishable sources before preparing a release, or use --preview for local checks');
-  const outcomes=process.env.ATLAS_REFRESH_OUTCOMES ? JSON.parse(process.env.ATLAS_REFRESH_OUTCOMES) : {};
+  const committedRefresh=await readCommittedMarketRefreshOutcomes({root,sourceCommit});
+  const refresh=publicationRefreshAttempts(committedRefresh,process.env.ATLAS_REFRESH_OUTCOMES ? JSON.parse(process.env.ATLAS_REFRESH_OUTCOMES) : null);
+  const outcomes=refresh.outcomes;
   const files=await inventory(directory), contentDigest=sha(stable(files));
   let state=createPublication({sourceCommit,digest:contentDigest});
   const data=await assetInventory(now,outcomes,directory);
@@ -147,7 +154,7 @@ async function main() {
   if (state.phase!=='ready') throw new Error(`Publication is ${state.phase}: ${state.reason}`);
   const body={schemaVersion:1,kind:'atlas-publication',sourceCommit,sourceTree:{status:dirty?'modified-preview':'clean',scope:sourcePaths.join(', ')},eventCommit:process.env.WORKERS_CI_COMMIT_SHA || process.env.GITHUB_SHA || null,
     checkedOutCommit:process.env.ATLAS_CHECKOUT_SHA || sourceCommit,generatedAt:now,
-    workflow:{runId:process.env.WORKERS_CI_BUILD_UUID || process.env.GITHUB_RUN_ID || null,attempt:process.env.GITHUB_RUN_ATTEMPT || null,...(process.env.WORKERS_CI?{provider:'cloudflare-workers-builds',branch:process.env.WORKERS_CI_BRANCH || null}:{})},refreshAttempts:outcomes,
+    workflow:{runId:process.env.WORKERS_CI_BUILD_UUID || process.env.GITHUB_RUN_ID || null,attempt:process.env.GITHUB_RUN_ATTEMPT || null,...(process.env.WORKERS_CI?{provider:'cloudflare-workers-builds',branch:process.env.WORKERS_CI_BRANCH || null}:{})},refreshAttempts:outcomes,refreshProvenance:refresh.provenance,
     contentDigest,files,...data,state,scope:'Prepared artifact identities; generatedAt is not a provider publication or successful deployment timestamp'};
   const manifest={...body,manifestSha256:sha(stable(body))};
   await checkPublication(manifest,{directory});

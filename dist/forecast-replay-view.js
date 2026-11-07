@@ -1,5 +1,5 @@
 import { setLoadingSurface } from './loading-surfaces.js';
-import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.29.0';
+import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.36.0';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const price=value=>Number.isFinite(value)?'$'+value.toLocaleString('en-US',{maximumFractionDigits:2}):'미공개';

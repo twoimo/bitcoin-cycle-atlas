@@ -7,9 +7,10 @@ import { shiftCalendarMonths } from './cycle-timing.js?v=1.29.0';
 import { STATE_LABELS } from "./market-structure.js?v=1.29.0";
 import { chartPaneLayout, historicalMarkersMarkup, volumePaneMarkup, cycleTimingMarkup, formatBtcVolume } from './chart-overlays.js?v=1.29.0';
 import { createPriceScale, barPriceChange, nearestDailyIndex as nearest } from './chart-math.js?v=1.29.0';
+import { candleBodyWidth } from './chart-view-policy.js?v=1.36.0';
 import { priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxisFormatter } from './price-axis.js?v=1.29.0';
 import { createPriceDisplay, formatDisplayPrice } from './price-display.js?v=1.29.0';
-import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.29.0';
+import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.36.0';
 import { researchAnnotationsMarkup } from './research-annotations.js?v=1.29.0';
 
 import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.29.0';
@@ -92,6 +93,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   const candleCoordinate=c=>c.periodStartDate??c.endDate??c.date;
   const pointCoordinate=p=>p.candle?candleCoordinate(p.candle):p.date;
   const minDay=dayOf(start),maxDay=dayOf(end),span=Math.max(1,maxDay-minDay),xday=d=>L+(d-minDay)/span*(W-L-R),x=p=>xday(dayOf(pointCoordinate(p)));
+  Object.assign(svg.dataset,{start,end,interval:frequency});
   svg.dataset.forecastEvidenceCount='0';svg.dataset.cycleIntervalCount='0';svg.dataset.cycleIntervalLabelCount='0';svg.dataset.cycleMarkerCount='0';svg.dataset.cycleMarkerLabelCount='0';svg.dataset.historyLabelCount='0';svg.dataset.historyEventCount='0';svg.dataset.historyLabelMode='off';svg.dataset.historyHiddenLabelCount='0';
   delete svg.dataset.cycleIntervalBandTop;delete svg.dataset.cycleIntervalBandBottom;
   svg.dataset.observedLineCount='0';svg.dataset.observedCandleCount='0';
@@ -193,7 +195,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
     s+=`<path class="observed-close-line" d="${trace.path}" fill="none" stroke="#e2eaf3" stroke-width="1.8"/>`;
     for(const p of trace.isolated)s+=`<circle class="observed-close-point" cx="${x(p).toFixed(2)}" cy="${y(p.price).toFixed(2)}" r="1.8" fill="#e2eaf3"/>`;
   }
-  const candleWidth=Math.max(.7,Math.min(12,(W-L-R)*candleDays/span*.68));
+  const candleWidth=candleBodyWidth(W-L-R,span,candleDays);
   const denseCandles=candleRows.length>256&&candleWidth<2;
   if(denseCandles){
     const wicks=['',''],bodies=['',''];
@@ -242,7 +244,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   if(showTurns)for(const p of visibleTurns){const actual=!isAssumption(p),color=p.type==='high'?'#e7bb73':'#85bfdc';s+=`<circle data-date="${p.date}" clip-path="url(#${priceClip})" data-indicator-line cx="${xday(dayOf(p.date))}" cy="${y(p.price)}" r="${fullHistory?2.5:4}" fill="${actual?color:'#10151c'}" stroke="${color}" stroke-width="1.4"><title>${esc(`${actual?'관측':'예시 경로'} ${p.type==='high'?'고점':'저점'} ${date(p.date)} · ${money(p.price)}`)}</title></circle>`;}
   if(showTurns&&visibleTurns.length)s+='</g>';s+='</g>';
   if(showCycleTiming)s+=cycleTimingMarkup({points:visibleTiming,x,left:L,right:W-R,top:cycleTop,bottom:cycleBottom,titleY:layout.cycleTitleY,titleFontSize:layout.cycleTitleFontSize,dayWidth:(W-L-R)/span,split}).markup;
-  if(showVolume)s+=volumePaneMarkup({bars:visibleVolume,x:bar=>xday(dayOf(bar.periodStartDate??bar.date)),left:L,right:W-R,top:volumeTop,bottom:volumeBottom,titleY:layout.volumeTitleY,titleFontSize:layout.volumeTitleFontSize,separatorY:layout.volumeSeparatorY,barWidth:Math.max(.6,Math.min(12,(W-L-R)*candleDays/span*.72)),source:volumeSource,projectionLabel:volumeProjection?.summary?.centralMethod==='persistence'?'중앙 · 최근 90일 활동 유지':'점선 · 조건부 평균 거래량',projection:projectedVolume,clipId:`${svg.id}-volume-clip`,futureX:split&&dayOf(split)>=minDay&&dayOf(split)<maxDay?xday(dayOf(split)):null}).markup;
+  if(showVolume)s+=volumePaneMarkup({bars:visibleVolume,x:bar=>xday(dayOf(bar.periodStartDate??bar.date)),left:L,right:W-R,top:volumeTop,bottom:volumeBottom,titleY:layout.volumeTitleY,titleFontSize:layout.volumeTitleFontSize,separatorY:layout.volumeSeparatorY,barWidth:candleBodyWidth(W-L-R,span,candleDays),source:volumeSource,projectionLabel:volumeProjection?.summary?.centralMethod==='persistence'?'중앙 · 최근 90일 활동 유지':'점선 · 조건부 평균 거래량',projection:projectedVolume,clipId:`${svg.id}-volume-clip`,futureX:split&&dayOf(split)>=minDay&&dayOf(split)<maxDay?xday(dayOf(split)):null}).markup;
   if(showHistoricalEvents){
     const actual=originalVisible.filter(point=>!isAssumption(point));
     const anchors=historicalEvents.filter(event=>event.date>=start&&event.date<=end&&actual.length&&event.date>=actual[0].date&&(!split||event.date<=split)).map(event=>{const point=actual[nearest(actual,dayOf(event.date))];return {event,x:xday(dayOf(event.date)),y:y(point.price)};});

@@ -115,6 +115,29 @@ test('close-only observations stay a line when candles are requested', () => {
   assert.doesNotMatch(svg.innerHTML, /class="observed-candle"/);
 });
 
+test('an explicit replay view domain controls only the visible axis and autoscale still ignores hidden actuals',()=>{
+  const {svg}=fixture(),data=frameData(),preserved=structuredClone(data),priceDomain={min:60,max:500};
+  const manual=draw(svg,data,{priceDomain,start:date(2),end:date(5)});
+  assert.equal(manual.axis.min,60);assert.equal(manual.axis.max,500);assert.equal(manual.axis.mode,'manual');
+  assert.equal(svg.dataset.priceMin,'60');assert.equal(svg.dataset.priceMax,'500');assert.equal(svg.dataset.priceMode,'manual');
+  assert.equal(svg.dataset.start,date(2));assert.equal(svg.dataset.end,date(5));assert.deepEqual(data,preserved);
+  assert.doesNotMatch(svg.innerHTML,/99999999|data-date="2024-01-0[4-6]"/);
+  const automatic=draw(svg,data,{priceDomain:null,start:date(2),end:date(5)});
+  assert.equal(automatic.axis.mode,'auto');assert.ok(automatic.axis.min>80&&automatic.axis.max<150);
+  assert.equal(svg.dataset.priceMode,'auto');assert.deepEqual(data,preserved);
+});
+
+test('zoomed replay candle bodies expand with shared spacing without changing OHLC or plot geometry',()=>{
+  const {svg}=fixture(),data=frameData(),preserved=structuredClone(data);
+  draw(svg,data,{start:date(1),end:date(3)});
+  const width=Number(svg.innerHTML.match(/<g class="observed-candle"[^>]*>[\s\S]*?<rect[^>]* width="([^"]+)"/)?.[1]);
+  assert.ok(width>12&&width<=64*.68,'close-up bodies must use the shared spacing cap instead of the former12px replay cap');
+  const geometry=[svg.dataset.plotLeft,svg.dataset.plotRight,svg.dataset.plotTop,svg.dataset.plotBottom];
+  draw(svg,data,{start:date(1),end:date(8)});
+  assert.deepEqual([svg.dataset.plotLeft,svg.dataset.plotRight,svg.dataset.plotTop,svg.dataset.plotBottom],geometry);
+  assert.equal(svg.dataset.observedCandleCount,'3');assert.deepEqual(data,preserved);
+});
+
 test('forecast-only viewport keeps its permitted price axis and never reports a nearest hidden actual', () => {
   const { svg } = fixture(), data = frameData(); let inspected;
   const chart = draw(svg, data, { start: date(5), end: date(8), onInspect: value => { inspected = value; } });
@@ -156,13 +179,14 @@ test('preserved equity forecasts keep zero to positive to zero segments on a lin
 
 test('a strict information-time frame hides prices and does not retain the preceding live-like price scale', () => {
   const { svg } = fixture(), data = frameData();
-  draw(svg, data);
+  draw(svg, data,{priceDomain:{min:1,max:1e6}});
   const hidden = { ...data, observedRows: [], observedCandles: [], frame: { ...data.frame, inputVisible: false, forecastVisible: false, forecast: [] } };
   const chart = draw(svg, hidden);
   assert.equal(svg.dataset.replayPriceHidden, 'true');
   assert.equal(svg.dataset.replayForecastPoints, '0');
   assert.equal(chart.axis.scale, 'none');
   assert.equal(chart.axis.min, null); assert.equal(chart.axis.max, null);
+  assert.equal(svg.dataset.priceMin,'');assert.equal(svg.dataset.priceMax,'');assert.equal(svg.dataset.priceMode,'none');
   assert.equal(chart.getSelection().actual, null); assert.equal(chart.getSelection().predicted, null);
   assert.equal(svg.querySelectorAll('[data-replay-forecast-path]').length, 0);
   assert.doesNotMatch(svg.innerHTML, /observed-candle|observed-close-line|\$10/);

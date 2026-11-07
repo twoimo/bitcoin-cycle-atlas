@@ -39,7 +39,7 @@ for(const symbol of ['ETHUSD','MSTR','BMNR'])test(`${symbol} retains the real sh
   assert.equal(document.querySelectorAll('.atlas-nav [data-atlas-page]').length,5);assert.equal(document.querySelector('#old-btc'),null);assert.equal(document.querySelector('#btc-only'),null);assert.ok(document.querySelector('#retained-prices'));
   assert.equal(document.body.dataset.page,'outlook');assert.equal(document.body.dataset.shell,'chart');
   adapter.command('tool','measure');adapter.command('magnet');adapter.command('toggle','showVolume');adapter.command('auto-scale');adapter.command('chart-type');
-  assert.equal(state.tool,'measure');assert.equal(state.magnet,'weak');assert.equal(state.showVolume,true);assert.equal(state.chartType,'candles');assert.equal(state.priceDomain,null);
+  assert.equal(state.tool,'measure');assert.equal(state.magnet,'weak');assert.equal(state.showVolume,true);assert.equal(state.chartType,'candles');assert.deepEqual(state.priceDomain,{min:100,max:150},'chart type retains the chosen manual price viewport');
   adapter.command('undo');assert.equal(state.chartType,'line');assert.deepEqual(state.priceDomain,{min:100,max:150});adapter.command('redo');assert.equal(state.chartType,'candles');
   adapter.command('frequency','1m');assert.equal(state.frequency,'daily','equity/instrument capability allowlist rejects unsupported intervals');
   adapter.command('frequency','weekly');assert.equal(state.frequency,'weekly');adapter.command('undo');assert.equal(state.frequency,'daily');assert.ok(f.restores()>0);

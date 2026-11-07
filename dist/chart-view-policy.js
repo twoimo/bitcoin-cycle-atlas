@@ -9,6 +9,57 @@ const iso = seconds => new Date(seconds * 1000).toISOString();
 const positiveInteger = value => Number.isSafeInteger(value) && value > 0;
 const selectedSeconds = value => typeof value === 'number' ? value : typeof value === 'string' ? Date.parse(value.length === 10 ? `${value}T00:00:00Z` : value) / 1000 : NaN;
 
+// Atlas rendering guardrails, not measurements claimed from a reference UI.
+// A weekly interval is seven days even when its navigation range uses days.
+export const CHART_SPACING = Object.freeze({ minBarSpacing:.5, maxBarSpacing:64, maxBars:6000 });
+/** One candle body policy for every source; zoom changes spacing, never data. */
+export function candleBodyWidth(plotWidth,span,interval=1) {
+  if(![plotWidth,span,interval].every(value=>Number.isFinite(value)&&value>0))return .7;
+  return Math.max(.7,Math.min(CHART_SPACING.maxBarSpacing,plotWidth*interval/span)*.68);
+}
+export function withChartSpacing(range,{frequency='daily',plotWidth,minBarSpacing=CHART_SPACING.minBarSpacing,maxBarSpacing=CHART_SPACING.maxBarSpacing,maxBars=CHART_SPACING.maxBars}={}) {
+  if (!range) return range;
+  if (![minBarSpacing,maxBarSpacing].every(value=>Number.isFinite(value)&&value>0) || maxBarSpacing<minBarSpacing || !positiveInteger(maxBars) || maxBars<2) throw new RangeError('Invalid chart spacing budget');
+  if (!Number.isFinite(plotWidth)||plotWidth<=0) return range;
+  const seconds=range.unit==='seconds',step=seconds?range.step:DAY;
+  if (!positiveInteger(step)) throw new RangeError('Invalid viewport interval');
+  // Monthly observations retain their real dates. This nominal duration only
+  // limits screen density; it never produces monthly observations or candles.
+  const interval=frequency==='monthly'?DAY*365.2425/12:chartInterval(frequency).seconds;
+  const unitsPerBar=Math.max(1,interval/step),read=value=>seconds?value:selectedSeconds(value);
+  const start=read(range.start),end=read(range.end),min=read(range.min),max=read(range.max);
+  if (![start,end,min,max].every(Number.isFinite)||end<start||max<min) throw new RangeError('Invalid viewport bounds');
+  const count=Math.round((end-start)/step)+1,available=Math.round((max-min)/step)+1;
+  const minBars=Math.max(2,Math.ceil(plotWidth/maxBarSpacing)+1),visibleBudget=Math.max(minBars,Math.min(maxBars,Math.floor(plotWidth/minBarSpacing)+1));
+  const minimum=Math.ceil((minBars-1)*unitsPerBar)+1,maximum=Math.floor((visibleBudget-1)*unitsPerBar)+1;
+  const scope=JSON.stringify([seconds?'seconds':'days',step,frequency,min,max,range.allowEmpty===true,minBarSpacing,maxBarSpacing,maxBars]);
+  const previous=range.spacingBounds;
+  const retained=previous?.scope===scope&&[previous.minSpan,previous.maxSpan,previous.sourceLimit].every(positiveInteger)&&previous.maxSpan>=previous.minSpan;
+  const sourceLimit=retained?previous.sourceLimit:range.allowEmpty===true?(range.maxSpan??Math.max(available,count)):Math.min(range.maxSpan??available,available);
+  // Explicit Fit/date windows may exceed the usual density bounds. Retain
+  // those exceptions with the viewport, so a zoom-in followed by zoom-out can
+  // return to the fitted range. Recomputing from only the latest count would
+  // ratchet the limit inward on every gesture. This is UI state, never data.
+  const spacingBounds={scope,minSpan:Math.min(retained?previous.minSpan:count,count),maxSpan:Math.max(retained?previous.maxSpan:count,count),sourceLimit};
+  const minSpan=Math.max(1,Math.min(minimum,spacingBounds.minSpan,sourceLimit));
+  const maxSpan=Math.max(minSpan,Math.min(sourceLimit,Math.max(maximum,spacingBounds.maxSpan)));
+  return {...range,minSpan,maxSpan,spacingBounds};
+}
+
+/** Preserve the UTC center/duration when a native chart changes candle grid. */
+export function retargetChartRange(range,target,{maxBars=CHART_SPACING.maxBars,minBars=2}={}) {
+  if (!range||!target) return target;
+  if (range.unit!=='seconds'||target.unit!=='seconds'||![range.step,target.step,maxBars,minBars].every(positiveInteger)||maxBars<minBars) throw new RangeError('Invalid native viewport grid');
+  if (![range.start,range.end,target.min,target.max].every(Number.isSafeInteger)||range.end<range.start||target.max<target.min) throw new RangeError('Invalid native viewport bounds');
+  const duration=range.end-range.start+range.step,center=range.start+duration/2,step=target.step;
+  const count=Math.max(minBars,Math.min(maxBars,Math.ceil(duration/step)));
+  const first=target.min+Math.round((center-count*step/2-target.min)/step)*step;
+  const earliest=target.min+Math.ceil((FIRST-target.min)/step)*step,latest=target.min+Math.floor((AFTER-count*step-target.min)/step)*step;
+  const start=Math.max(earliest,Math.min(latest,first)),end=start+(count-1)*step;
+  const allowEmpty=range.allowEmpty===true||start<target.min||end>target.max;
+  return {...target,start,end,allowEmpty,minSpan:Math.min(target.minSpan??minBars,count),maxSpan:Math.max(target.maxSpan??Math.round((target.max-target.min)/step)+1,count)};
+}
+
 /** Preserve UTC center, duration and raw USD Y. Only the target grid/budget changes. */
 export function transitionViewport({ fromFrequency, toFrequency, range, selectedDate = null, selectedTime = null, priceDomain = null, scale = 'log', maxBars = 6000, minBars = 12, minDays = 30 } = {}) {
   const from = chartInterval(fromFrequency), to = chartInterval(toFrequency), intraday = isIntradayInterval(toFrequency);
