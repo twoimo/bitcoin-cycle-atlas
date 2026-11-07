@@ -769,14 +769,6 @@ body #ipo-view .ipo-table-shell {
     line-height: 16px;
   }
 }
-/* The empty row still spans all six source columns. Reserve the title's share
-   after the mobile rank (40px) and action (60px), so those extra tracks cannot
-   squeeze its header when the three metadata columns are hidden. */
-@media (max-width: 600px) {
-  #evidence-view .evidence-table:has(.evidence-empty) col:nth-child(2) {
-    width: calc(100% - 100px);
-  }
-}
 @media (pointer: coarse) {
   .research-reader-actions button,
   .research-content-switch button,

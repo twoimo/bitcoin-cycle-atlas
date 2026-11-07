@@ -19,6 +19,9 @@ function render({anchor=null}={}){
  const room=shell.clientHeight,head=(table.caption?.getBoundingClientRect().height||0)+(table.tHead?.getBoundingClientRect().height||0),rowHeight=parseFloat(getComputedStyle(view).getPropertyValue('--evidence-row-height'))||(shell.clientWidth<680?64:56);
  shown=Math.min(Math.max(1,Math.floor((room-head-4)/rowHeight)||6),list.length-start);
  body.innerHTML=shown?list.slice(start,start+shown).map(rowMarkup).join(''):'<tr class="evidence-empty"><td colspan="6">일치하는 자료가 없습니다. 검색어와 분류를 확인해 주세요.</td></tr>';
+ // Hidden responsive columns do not participate in the rendered header. Match
+ // its actual column count so an empty row cannot create extra table tracks.
+ if(!shown){const headers=[...(table.tHead?.rows?.[0]?.cells||[])];body.firstElementChild.firstElementChild.colSpan=headers.filter(cell=>getComputedStyle(cell).display!=='none').length||6;}
  while(visible&&room>0&&shown>1&&table.getBoundingClientRect().height>room+1){body.lastElementChild.remove();shown--;}
  // Resize can replace the opener or move it beyond the smaller page. Keep the
  // current filter and return to the same article and action, with a way back.

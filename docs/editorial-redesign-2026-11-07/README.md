@@ -130,8 +130,11 @@ not a tool timeout. Corrections in the following source revision are:
   to the shared surface/text roles, retaining its labelled chart-series colors.
 - Preserve a readable title-column width in narrow empty research results.
   The existing six-column empty cell previously left the title header squeezed
-  when three metadata columns were hidden. A scoped empty-state column width
-  retains the existing rank/action widths, data and populated-table behavior.
+  when three metadata columns were hidden. The first CSS-only correction in
+  `b29fc732` still left extra table tracks in its real 320px screenshot. The
+  final correction matches only the empty cell's `colSpan` to the actual visible
+  header count during the existing render/resize lifecycle. It introduces no
+  duplicate breakpoint policy and retains data and populated-table behavior.
 
 No checker, rating, warning input, immutable baseline or numerical data changed.
 Contrast warnings based on unresolved/inherited token combinations and repeated
