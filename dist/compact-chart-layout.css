@@ -1,7 +1,3 @@
-/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas locked system · redesign: full · posture: restrained
- * Scope: observed charts, comparison ledger, research and existing tool states. Verification is recorded by commit in CI.
- */
-/* Hallmark · pre-emit critique: P4 H4 E3 S5 R4 V3 · weakest: E, uneven focus and small metadata; shared states and readable neutral ink are applied across the app. */
 /* One measured budget for mobile/narrow overlays. This never changes the price
    SVG height or any persisted indicator fold, visibility or pane size. */
 .compact-indicator-controls,.analysis-pane-access{display:none}

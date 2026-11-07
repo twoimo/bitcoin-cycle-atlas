@@ -1,4 +1,4 @@
-/* Atlas v1.34 — research panels, shared by React and its host document.
+/* Atlas analytical panels, shared by React and its host document.
    The host also paints portaled summaries. All calculations and chart owners
    remain in their original components; these rules only arrange their output. */
 
@@ -40,7 +40,10 @@
   flex: none;
 }
 
-/* Forms and results read as paired sections, without nested card shells. */
+/* Compact data panes use the same neutral chrome as the chart workbench. */
+body:not([data-rsi-workbench=true]) main:not([data-loading-kind=rsi]) #market-view .ml-scroll {
+  padding: 8px 12px 12px;
+}
 #market-view .ml-two-col {
   gap: 0;
   margin-top: 0;
@@ -49,70 +52,74 @@
   border: 0;
   border-radius: 0;
   background: transparent;
-  padding: 24px 0;
+  padding: 12px 0;
 }
 #market-view .ml-card > h3 {
   margin: 0 0 8px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0;
 }
 #market-view .ml-card > .ml-muted {
   max-width: 64ch;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 #market-view .ml-shock-row {
   margin: 0;
-  padding: 20px 0;
+  padding: 12px 0;
   border-bottom: 1px solid var(--border-soft);
-  column-gap: 24px;
+  column-gap: 12px;
 }
 #market-view .ml-shock-row > label:first-child {
   align-items: baseline;
   font-size: 13px;
 }
 #market-view .ml-shock-row output {
-  font-size: 24px;
+  font-family: var(--font);
+  font-size: 20px;
   line-height: 1.25;
   font-variant-numeric: tabular-nums;
 }
 #market-view .ml-shock-row + .ml-muted {
-  margin-top: 16px;
+  margin-top: 12px;
 }
 #market-view .ml-field {
-  gap: 8px;
-  margin: 16px 0;
+  gap: 4px;
+  margin: 12px 0;
   font-size: 12px;
 }
 #market-view .ml-input-grid {
-  gap: 0 24px;
+  gap: 0 12px;
 }
 #market-view :is(.ml-field, .ml-weight) input {
   border-radius: 3px;
-  background: var(--bg);
-  font-family: var(--font-mono);
-  font-size: 14px;
+  min-height: 32px;
+  padding: 4px 8px;
+  background: var(--surface);
+  font-family: var(--font);
+  font-size: 13px;
   line-height: 1.4;
+  font-variant-numeric: tabular-nums;
 }
 #market-view .ml-primary {
-  min-height: 44px;
-  margin-top: 16px;
-  border-color: var(--accent);
+  min-height: 36px;
+  margin-top: 12px;
+  border-color: var(--ui-primary);
   border-radius: 3px;
-  background: var(--accent);
-  color: var(--on-accent);
-  font-weight: 600;
+  background: var(--ui-primary);
+  color: var(--on-ui-primary, #fff);
+  font-weight: 500;
 }
 #market-view .ml-primary:hover:not(:disabled) {
-  background: var(--focus);
-  border-color: var(--focus);
+  background: var(--ui-primary-hover, var(--ui-primary));
+  border-color: var(--ui-primary-hover, var(--ui-primary));
 }
 #market-view .ml-results {
-  margin: 20px 0;
+  margin: 12px 0;
 }
 #market-view .ml-results > div {
   align-items: baseline;
-  padding: 16px 0;
+  padding: 8px 0;
   border-color: var(--border-soft);
 }
 #market-view .ml-results dt {
@@ -120,7 +127,8 @@
 }
 #market-view .ml-results dd {
   min-width: 0;
-  font-size: 22px;
+  font-family: var(--font);
+  font-size: 18px;
   line-height: 1.3;
   text-align: right;
 }
@@ -129,15 +137,15 @@
   font-size: 13px;
 }
 #market-view .ml-results dd summary {
-  padding: 8px 0;
-  min-height: 36px;
+  padding: 4px 0;
+  min-height: 32px;
   text-align: right;
 }
 #market-view .ml-results dd p {
   max-width: 48ch;
   color: var(--muted);
   font-size: 13px;
-  line-height: 1.7;
+  line-height: 1.6;
   text-align: left;
   overflow-wrap: anywhere;
 }
@@ -145,7 +153,7 @@
   border: 0;
   border-left: 2px solid var(--border);
   border-radius: 0;
-  padding: 4px 0 4px 12px;
+  padding: 4px 0 4px 8px;
   background: transparent;
   line-height: 1.6;
   white-space: normal;
@@ -154,16 +162,16 @@
   border-left-color: var(--accent);
 }
 #market-view .ml-empty-copy {
-  padding: 24px 0;
-  font-size: 14px;
-  line-height: 1.7;
+  padding: 16px 0;
+  font-size: 13px;
+  line-height: 1.6;
 }
 #market-view .ml-error {
   border-width: 0 0 0 2px;
   border-radius: 0;
-  padding: 12px 16px;
+  padding: 8px 12px;
   background: var(--surface);
-  line-height: 1.7;
+  line-height: 1.6;
 }
 #market-view .ml-empty {
   border: 0;
@@ -171,7 +179,7 @@
   border-radius: 0;
 }
 
-/* Source prose and original definitions use the same document rhythm. */
+/* Source details retain readable text inside compact disclosures. */
 #market-view :is(.ml-original, .ml-sources),
 .rsi-workbench-panel .ml-sources {
   border: 0;
@@ -180,7 +188,8 @@
   background: transparent;
 }
 #market-view :is(.ml-original, .ml-sources) > summary {
-  padding: 12px 0;
+  min-height: 32px;
+  padding: 8px 0;
   color: var(--muted);
 }
 #market-view :is(.ml-original, .ml-sources)[open] > summary {
@@ -188,40 +197,40 @@
 }
 #market-view .ml-original > p {
   max-width: 72ch;
-  margin: 0 0 16px;
-  font-size: 14px;
-  line-height: 1.8;
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.65;
 }
 #market-view .ml-source-body {
-  padding: 8px 0 20px;
+  padding: 4px 0 12px;
   font-size: 13px;
-  line-height: 1.75;
+  line-height: 1.65;
 }
 #market-view .ml-source-body > p {
   max-width: 72ch;
 }
 #market-view .ml-source-body article {
-  padding: 16px 0 0;
-  margin-top: 16px;
+  padding: 12px 0 0;
+  margin-top: 12px;
   border-color: var(--border-soft);
 }
 #market-view .ml-source-body article p {
   max-width: 72ch;
   font-size: 12px;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 #market-view .ml-theme-grid {
   gap: 0;
 }
 #market-view .ml-theme-grid .ml-card {
-  padding: 16px;
+  padding: 12px;
   border: 0;
   border-radius: 0;
   background: transparent;
 }
 #market-view .ml-theme-grid .ml-card p {
   font-size: 13px;
-  line-height: 1.75;
+  line-height: 1.6;
 }
 
 /* Ledger styling leaves sticky ownership and both native scroll axes intact. */
@@ -229,21 +238,23 @@
   border: 0;
   border-top: 1px solid var(--border);
   border-radius: 0;
+  margin: 8px 0;
 }
 #market-view :is(.ml-table-wrap, .housing-table, .theme-table) caption {
-  padding: 12px;
+  padding: 8px 12px;
   background: transparent;
   color: var(--muted);
   font-size: 12px;
   font-weight: 400;
 }
 #market-view :is(.ml-table-wrap, .housing-table, .theme-table) thead th {
-  background: var(--surface-raised);
+  background: var(--surface);
   color: var(--muted);
   border-bottom: 1px solid var(--border);
 }
 #market-view :is(.ml-table-wrap, .housing-table, .theme-table) :is(td, th) {
-  padding: 12px;
+  padding: 6px 12px;
+  font-family: var(--font);
   font-size: 12px;
   line-height: 1.5;
   border-bottom-color: var(--border-soft);
@@ -255,18 +266,18 @@
   background: var(--surface);
 }
 #market-view :is(.ml-table-wrap, .housing-table, .theme-table) thead tr > :first-child {
-  background: var(--surface-raised);
+  background: var(--surface);
 }
 
 /* The three axes are a single aligned readout, including portaled summaries. */
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score-row {
   gap: 0;
-  margin: 16px 0;
+  margin: 12px 0;
   border-block: 1px solid var(--border);
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score {
   min-height: 0;
-  padding: 20px 16px;
+  padding: 12px;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -279,14 +290,15 @@
   font-size: 13px;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score h3 span {
-  font-size: 18px;
+  font-size: 16px;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-value {
-  margin: 16px 0;
-  font-size: 34px;
+  margin: 8px 0;
+  font-family: var(--font);
+  font-size: 24px;
   font-weight: 500;
   line-height: 1.2;
-  letter-spacing: -.02em;
+  letter-spacing: 0;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-stats {
   display: grid;
@@ -296,30 +308,30 @@
   line-height: 1.5;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-collection {
-  margin-top: 12px;
+  margin-top: 8px;
   font-size: 11px;
   line-height: 1.6;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-main {
-  padding: 4px 0 16px;
-  gap: 16px;
+  padding: 4px 0 12px;
+  gap: 12px;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-value {
-  font-size: 30px;
+  font-size: 24px;
   line-height: 1.2;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-formula strong {
-  font-family: var(--font-mono);
-  font-size: 20px;
+  font-family: var(--font);
+  font-size: 18px;
   font-weight: 500;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] :is(.ml-direction-method, .ml-legacy-score) summary {
-  padding: 12px 0;
+  padding: 8px 0;
   color: var(--muted);
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] :is(.ml-direction-method, .ml-legacy-score) p {
   font-size: 13px;
-  line-height: 1.75;
+  line-height: 1.65;
   color: var(--muted);
 }
 
@@ -329,68 +341,74 @@
   background: var(--surface);
 }
 .rsi-workbench-panel > header {
-  min-height: 48px;
-  padding: 4px 16px;
-  background: var(--surface-raised);
+  min-height: 38px;
+  padding: 0 8px 0 12px;
+  background: var(--surface);
+  font-size: 13px;
 }
 .rsi-workbench-panel > header button {
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 32px;
+  min-height: 32px;
 }
 .rsi-workbench-panel-scroll {
-  padding: 16px;
-  line-height: 1.75;
+  padding: 12px;
+  line-height: 1.6;
 }
 .rsi-workbench-panel-scroll > p {
   font-size: 13px;
 }
 .rsi-workbench-panel-scroll > form + form {
-  padding-top: 20px;
-  margin-top: 20px;
+  padding-top: 12px;
+  margin-top: 12px;
   border-top: 1px solid var(--border);
 }
 .rsi-panel-field {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 .rsi-data-list {
   grid-template-columns: minmax(76px, .8fr) minmax(0, 1.4fr);
-  gap: 0 16px;
+  gap: 0 12px;
 }
 .rsi-data-list :is(dt, dd) {
   margin: 0;
-  padding: 12px 0;
+  padding: 8px 0;
   border-bottom: 1px solid var(--border-soft);
 }
 .rsi-history-page {
-  padding: 20px;
+  padding: 12px;
 }
 .rsi-history h2 {
-  padding-top: 8px;
-  font-size: 15px;
+  padding-top: 4px;
+  font-size: 14px;
 }
 .rsi-backtest-form {
   align-items: end;
-  gap: 16px;
-  margin: 20px 0;
-  padding-bottom: 20px;
+  gap: 12px;
+  margin: 12px 0;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--border);
 }
 .rsi-backtest-form input {
-  min-height: 36px;
-  background: var(--bg);
+  min-height: 32px;
+  background: var(--surface);
   border-radius: 3px;
 }
 .rsi-backtest-form > button {
   min-height: 36px;
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: var(--ui-primary);
+  background: var(--ui-primary);
+  color: var(--on-ui-primary, #fff);
+}
+.rsi-backtest-form > button:hover:not(:disabled) {
+  border-color: var(--ui-primary-hover, var(--ui-primary));
+  background: var(--ui-primary-hover, var(--ui-primary));
 }
 .rsi-backtest-metrics {
-  gap: 20px 32px;
-  margin: 20px 0;
+  gap: 12px 16px;
+  margin: 12px 0;
 }
 .rsi-backtest-metrics > div {
-  padding-right: 24px;
+  padding-right: 16px;
   border-right: 1px solid var(--border-soft);
 }
 .rsi-backtest-metrics > div:last-child {
@@ -398,8 +416,10 @@
   border-right: 0;
 }
 .rsi-backtest-metrics dd {
-  margin-top: 8px;
-  font-size: 22px;
+  margin-top: 4px;
+  font-family: var(--font);
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Housing views: compact measurement strip and a plain research ledger. */
@@ -407,48 +427,48 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
-  padding: 20px 0;
+  padding: 12px 0;
 }
 .housing-relation-stats > div {
-  gap: 8px;
-  padding: 0 20px;
+  gap: 4px;
+  padding: 0 12px;
 }
 .housing-relation-stats > div + div {
   border-left: 1px solid var(--border-soft);
 }
 .housing-relation-stats strong {
-  font-family: var(--font-mono);
-  font-size: 28px;
+  font-family: var(--font);
+  font-size: 24px;
   font-weight: 500;
   line-height: 1.25;
 }
 .housing-relation-layout {
-  gap: 32px;
-  padding: 20px 12px;
+  gap: 16px;
+  padding: 12px;
 }
 .housing-relation-layout h2 {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   color: var(--text);
   font-size: 13px;
   font-weight: 600;
 }
 .housing-details summary, .theme-method summary {
-  padding-block: 16px;
+  padding-block: 8px;
   color: var(--muted);
 }
 .housing-details p, .theme-method p {
-  font-size: 14px;
-  line-height: 1.8;
+  font-size: 13px;
+  line-height: 1.65;
 }
 .housing-caveat, .theme-caveat {
   max-width: 72ch;
   font-size: 12px;
-  line-height: 1.75;
+  line-height: 1.65;
 }
 
 /* Theme evidence is a document index beside the chart, not a card grid. */
 .theme-inspector {
-  padding: 20px;
+  padding: 12px;
   background: var(--surface);
 }
 .theme-inspector h2 {
@@ -458,18 +478,18 @@
   text-wrap: pretty;
 }
 .theme-inspector p {
-  margin: 12px 0 16px;
+  margin: 8px 0 12px;
   font-size: 13px;
-  line-height: 1.75;
+  line-height: 1.6;
 }
 .theme-inspector .theme-availability {
-  margin-top: 12px;
-  padding-left: 12px;
+  margin-top: 8px;
+  padding-left: 8px;
   border-left: 2px solid var(--accent);
 }
 .theme-criterion-readout {
-  margin-top: 16px;
-  padding-top: 16px;
+  margin-top: 12px;
+  padding-top: 12px;
   border-color: var(--border-soft);
 }
 .theme-criterion-readout b {
@@ -489,53 +509,53 @@
   border: 0;
   border-left: 1px solid var(--border);
   border-radius: 0;
-  padding: 4px 16px;
-  gap: 8px;
+  padding: 4px 12px;
+  gap: 4px;
   background: transparent;
 }
 .theme-verdict-strip {
   gap: 0;
 }
 .theme-timeline > li {
-  grid-template-columns: 152px minmax(0, 1fr);
-  gap: 24px;
-  padding: 24px 12px;
+  grid-template-columns: 136px minmax(0, 1fr);
+  gap: 16px;
+  padding: 12px;
   border-color: var(--border-soft);
 }
 .theme-timeline .theme-evidence-title {
   white-space: normal;
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.5;
 }
 .theme-timeline p {
   max-width: 72ch;
-  margin: 12px 0;
-  font-size: 14px;
-  line-height: 1.8;
+  margin: 8px 0;
+  font-size: 13px;
+  line-height: 1.65;
 }
 .theme-source-actions {
-  gap: 16px;
+  gap: 12px;
 }
 .theme-section-heading {
-  padding-block: 16px;
+  padding-block: 8px;
   background: transparent;
 }
 .theme-section-heading h2 {
   font-size: 14px;
 }
 .theme-editor {
-  padding: 20px 12px;
+  padding: 12px;
   background: transparent;
 }
 .theme-editor h2 {
-  font-size: 15px;
+  font-size: 14px;
 }
 .theme-criteria-editor {
-  gap: 24px;
+  gap: 16px;
 }
 .theme-criteria-editor fieldset {
   margin: 0;
-  padding: 16px 0 0;
+  padding: 12px 0 0;
   border: 0;
   border-top: 1px solid var(--border);
 }
@@ -544,9 +564,9 @@
   font-weight: 600;
 }
 .theme-criteria-editor textarea {
-  background: var(--bg);
+  background: var(--surface);
   font-size: 13px;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 .theme-evidence-check {
   align-items: flex-start;
@@ -559,11 +579,11 @@
 
 @media (min-width: 1001px) {
   #market-view .ml-two-col > .ml-card:first-child {
-    padding-right: 32px;
+    padding-right: 16px;
     border-right: 1px solid var(--border);
   }
   #market-view .ml-two-col > .ml-card:last-child {
-    padding-left: 32px;
+    padding-left: 16px;
   }
   #market-view .ml-theme-grid .ml-card + .ml-card {
     border-left: 1px solid var(--border-soft);
@@ -577,15 +597,18 @@
 }
 
 @media (max-width: 640px) {
+  body:not([data-rsi-workbench=true]) main:not([data-loading-kind=rsi]) #market-view .ml-scroll {
+    padding: 4px 8px 12px;
+  }
   #market-view .ml-two-col > .ml-card {
-    padding: 20px 4px;
+    padding: 12px 0;
   }
   #market-view .ml-input-grid {
     gap: 0 16px;
   }
   #market-view .ml-shock-row {
-    padding-block: 16px;
-    column-gap: 16px;
+    padding-block: 12px;
+    column-gap: 12px;
   }
   #market-view .ml-results > div {
     gap: 12px;
@@ -593,25 +616,41 @@
   }
   #market-view .ml-results dd {
     margin-left: auto;
-    font-size: 20px;
+    font-size: 18px;
   }
   #market-view .ml-theme-grid .ml-card {
-    padding: 16px 4px;
+    padding: 12px 0;
   }
   #market-view .ml-theme-grid .ml-card + .ml-card {
     border-top: 1px solid var(--border-soft);
   }
   #market-view :is(.ml-table-wrap, .housing-table, .theme-table) :is(td, th) {
-    padding: 12px 8px;
+    padding: 8px;
+  }
+  #market-view :is(.ml-field, .ml-weight) input,
+  #market-view .ml-primary,
+  #market-view :is(.ml-original, .ml-sources) > summary,
+  #market-view .ml-results dd summary {
+    min-height: 44px;
+  }
+  #market-view :is(.ml-field, .ml-weight) input {
+    font-size: 16px;
+  }
+  .rsi-workbench-panel > header {
+    min-height: 48px;
+  }
+  .rsi-workbench-panel > header button {
+    min-width: 44px;
+    min-height: 44px;
   }
   .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score {
-    padding: 16px 8px;
+    padding: 12px 8px;
   }
   .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-value {
-    font-size: 28px;
+    font-size: 24px;
   }
   .rsi-history-page {
-    padding: 16px 12px;
+    padding: 12px 8px;
   }
   .rsi-backtest-form {
     gap: 12px;
@@ -622,7 +661,7 @@
   .rsi-backtest-metrics {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    gap: 12px;
   }
   .rsi-backtest-metrics > div {
     min-width: 0;
@@ -641,7 +680,7 @@
   .housing-relation-stats > div {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: baseline;
-    padding: 16px 0;
+    padding: 12px 0;
   }
   .housing-relation-stats > div + div {
     border-left: 0;
@@ -651,16 +690,16 @@
     grid-column: 1 / -1;
   }
   .housing-relation-layout {
-    gap: 24px;
-    padding: 20px 12px;
+    gap: 16px;
+    padding: 12px 8px;
   }
   .theme-inspector {
-    padding: 20px 12px;
+    padding: 12px;
   }
   .theme-timeline > li {
     grid-template-columns: 1fr;
     gap: 8px;
-    padding: 20px 12px;
+    padding: 12px;
   }
   .theme-verdict {
     padding-inline: 12px;
@@ -686,8 +725,7 @@
   }
 }
 
-/* An analysis desk gives assumptions a narrow column and the original result
-   the larger reading area. Controls still belong to the outer toolbar. */
+/* Assumptions occupy a compact column beside the unchanged calculated output. */
 #market-view .ml-analysis-layout {
   align-items: start;
 }
@@ -695,28 +733,28 @@
   min-width: 0;
 }
 #market-view .ml-analysis-layout > .ml-card > h3 {
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.5;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 #market-view .ml-scenario-layout .ml-shock-row {
   grid-template-columns: minmax(0, 1fr) 76px;
-  gap: 16px;
-  padding-block: 24px;
+  gap: 8px 12px;
+  padding-block: 12px;
 }
 #market-view .ml-scenario-layout .ml-shock-row > label:first-child {
   display: grid;
-  grid-template-columns: 24px minmax(0, 1fr) auto;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
   grid-column: 1 / -1;
   gap: 8px;
   align-items: baseline;
 }
 #market-view .ml-scenario-layout .ml-axis-symbol {
   color: var(--muted);
-  font-size: 20px;
+  font-size: 16px;
 }
 #market-view .ml-scenario-layout .ml-shock-row output {
-  font-size: 28px;
+  font-size: 20px;
 }
 #market-view .ml-scenario-layout .ml-weight {
   display: grid;
@@ -730,7 +768,8 @@
 }
 #market-view .ml-scenario-layout .ml-shock-row > input[type="range"] {
   align-self: end;
-  min-height: 44px;
+  min-height: 32px;
+  accent-color: var(--ui-primary);
 }
 #market-view .ml-sensitivity-field,
 #market-view .ml-input-group .ml-field-inline {
@@ -738,14 +777,14 @@
   grid-template-columns: minmax(0, 1fr) minmax(80px, 120px);
   grid-column: 1 / -1;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 #market-view .ml-scenario-reading {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(144px, .6fr);
   align-items: end;
-  gap: 24px;
-  padding: 16px 0 24px;
+  gap: 16px;
+  padding: 8px 0 16px;
   border-bottom: 1px solid var(--border);
 }
 #market-view :is(.ml-principal-reading, .ml-result-context) {
@@ -757,17 +796,17 @@
   line-height: 1.6;
 }
 #market-view .ml-principal-reading dd {
-  margin: 12px 0 0;
+  margin: 4px 0 0;
   color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 40px;
+  font-family: var(--font);
+  font-size: 24px;
   line-height: 1.2;
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
 #market-view .ml-result-context {
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 #market-view .ml-result-context > div {
   display: flex;
@@ -778,17 +817,17 @@
 }
 #market-view .ml-result-context dd {
   margin: 0;
-  font: 16px/1.5 var(--font-mono);
+  font: 14px/1.5 var(--font);
   font-variant-numeric: tabular-nums;
 }
 #market-view .ml-reading-heading {
-  margin: 24px 0 0;
+  margin: 12px 0 0;
   font-size: 13px;
   font-weight: 500;
 }
 #market-view .ml-input-group {
   min-width: 0;
-  margin: 24px 0 0;
+  margin: 16px 0 0;
   padding: 8px 0 0;
   border: 0;
   border-top: 1px solid var(--border);
@@ -800,11 +839,11 @@
   font-weight: 500;
 }
 #market-view .ml-input-group .ml-input-grid {
-  gap: 0 16px;
+  gap: 0 12px;
 }
 #market-view .ml-input-group .ml-field {
   min-width: 0;
-  margin: 12px 0;
+  margin: 8px 0;
 }
 #market-view .ml-input-group input {
   min-width: 0;
@@ -814,29 +853,29 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
-  margin: 24px 0;
+  margin: 12px 0;
 }
 #market-view .ml-economics-results > div {
   display: grid;
   align-content: start;
-  gap: 12px;
+  gap: 4px;
   min-width: 0;
-  padding: 24px 16px 24px 0;
+  padding: 12px 12px 12px 0;
 }
 #market-view .ml-economics-results dd {
-  font-size: 20px;
+  font-size: 18px;
   text-align: left;
   overflow-wrap: anywhere;
 }
 #market-view .ml-economics-results > .ml-principal-result {
   grid-column: 1 / -1;
   grid-row: 1;
-  gap: 12px;
-  padding: 8px 0 32px;
+  gap: 4px;
+  padding: 4px 0 16px;
   border-bottom-color: var(--border);
 }
 #market-view .ml-economics-results > .ml-principal-result dd {
-  font-size: 40px;
+  font-size: 24px;
   line-height: 1.2;
 }
 #market-view .ml-economics-results > .ml-payback-result {
@@ -856,8 +895,8 @@
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(160px, .8fr);
   align-items: end;
-  gap: 24px;
-  padding: 8px 0 24px;
+  gap: 16px;
+  padding: 4px 0 16px;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-main > div:first-child {
   display: grid;
@@ -865,7 +904,7 @@
   gap: 4px 16px;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-label {
-  font-size: 16px;
+  font-size: 14px;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-kind {
   grid-column: 1;
@@ -874,7 +913,7 @@
   grid-column: 2;
   grid-row: 1 / span 2;
   align-self: center;
-  font-size: 36px;
+  font-size: 24px;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-formula {
   display: grid;
@@ -883,22 +922,22 @@
   text-align: right;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-formula strong {
-  font-size: 28px;
+  font-size: 20px;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-measure {
   display: block;
-  margin-top: 20px;
+  margin-top: 12px;
   color: var(--muted);
   font-size: 11px;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score .ml-axis-value {
   display: block;
-  margin: 4px 0 20px;
-  font-size: 36px;
+  margin: 4px 0 12px;
+  font-size: 24px;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-observations {
   margin: 0;
-  padding-top: 16px;
+  padding-top: 8px;
   border-top: 1px solid var(--border-soft);
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-stats {
@@ -913,7 +952,7 @@
   font-size: 11px;
 }
 .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-axis-stats > span:first-child {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 /* Backtest assumptions form one column; the result, equity curve and records
@@ -922,74 +961,74 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   border-bottom: 1px solid var(--border);
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 .rsi-experiment-input,
 .rsi-experiment-result {
   min-width: 0;
-  padding: 8px 0 24px;
+  padding: 4px 0 16px;
 }
 .rsi-experiment-result {
-  padding-top: 24px;
+  padding-top: 16px;
   border-top: 1px solid var(--border);
 }
 .rsi-experiment-result > h3 {
-  margin: 8px 0 20px;
-  font-size: 15px;
+  margin: 4px 0 12px;
+  font-size: 14px;
   font-weight: 500;
 }
 .rsi-experiment-input .rsi-backtest-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: end;
-  gap: 20px 16px;
-  margin: 24px 0 0;
+  gap: 12px;
+  margin: 12px 0 0;
   padding: 0;
   border: 0;
 }
 .rsi-experiment-input .rsi-backtest-form > label {
   min-width: 0;
-  gap: 8px;
+  gap: 4px;
 }
 .rsi-experiment-input .rsi-backtest-form input {
   min-width: 0;
   width: 100%;
-  min-height: 44px;
+  min-height: 32px;
 }
 .rsi-experiment-input .rsi-backtest-form > button {
   grid-column: 1 / -1;
-  min-height: 44px;
+  min-height: 36px;
 }
 .rsi-experiment-result .rsi-backtest-metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 24px;
-  margin: 0 0 24px;
+  gap: 0 16px;
+  margin: 0 0 16px;
 }
 .rsi-experiment-result .rsi-backtest-metrics > div {
   min-width: 0;
-  padding: 16px 0;
+  padding: 8px 0;
   border-right: 0;
   border-bottom: 1px solid var(--border-soft);
 }
 .rsi-experiment-result .rsi-backtest-metrics dd {
-  font-size: 22px;
+  font-size: 18px;
   overflow-wrap: anywhere;
 }
 .rsi-experiment-result .rsi-backtest-metrics > .rsi-metric-primary {
   grid-column: 1 / -1;
   padding-top: 4px;
-  padding-bottom: 24px;
+  padding-bottom: 12px;
   border-bottom-color: var(--border);
 }
 .rsi-experiment-result .rsi-metric-primary dd {
-  font-size: 36px;
+  font-size: 24px;
 }
 .rsi-experiment-result > p:not(.ml-error) {
   max-width: 64ch;
   color: var(--muted);
   font-size: 13px;
-  line-height: 1.75;
+  line-height: 1.65;
 }
 .rsi-experiment-result > .ml-loading-skeleton {
   height: 280px;
@@ -1000,7 +1039,7 @@
    and lag ledger. A price chart's height and coordinate mapping are untouched. */
 .housing-relation-workspace {
   display: grid;
-  grid-template-columns: minmax(200px, .65fr) minmax(0, 2fr);
+  grid-template-columns: minmax(180px, 224px) minmax(0, 1fr);
 }
 .housing-relation-workspace .housing-relation-stats {
   grid-template-columns: minmax(0, 1fr);
@@ -1009,19 +1048,19 @@
   border-right: 1px solid var(--border);
 }
 .housing-relation-workspace .housing-relation-stats > div {
-  padding: 24px;
-  gap: 12px;
+  padding: 16px 12px;
+  gap: 4px;
   border-left: 0;
   border-bottom: 1px solid var(--border-soft);
 }
 .housing-relation-workspace .housing-relation-stats strong {
-  font-size: 32px;
+  font-size: 24px;
 }
 .housing-relation-workspace .housing-relation-layout {
   min-width: 0;
   grid-template-columns: minmax(0, 1fr);
-  gap: 24px;
-  padding: 24px 0 24px 32px;
+  gap: 16px;
+  padding: 12px 0 12px 16px;
 }
 .housing-relation-workspace .housing-relation-layout > div {
   min-width: 0;
@@ -1029,12 +1068,12 @@
 .housing-summary-readings {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 24px;
+  gap: 0 16px;
   margin: 0;
 }
 .housing-summary-readings > div {
   min-width: 0;
-  padding: 20px 0;
+  padding: 12px 0;
   border-bottom: 1px solid var(--border-soft);
 }
 .housing-summary-readings dt {
@@ -1042,8 +1081,8 @@
   font-size: 12px;
 }
 .housing-summary-readings dd {
-  margin: 12px 0 0;
-  font-size: 20px;
+  margin: 4px 0 0;
+  font-size: 18px;
   line-height: 1.4;
   font-variant-numeric: tabular-nums;
 }
@@ -1057,23 +1096,23 @@
   font-size: 14px;
 }
 .housing-summary-readings .housing-summary-principal dd {
-  font-size: 36px;
+  font-size: 24px;
 }
 
 /* A selected theme source reads as a short document with a separate judgment
    ledger. Both sources and recorded judgments keep their original actions. */
 .theme-chart-layout {
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 28%);
+  grid-template-columns: minmax(0, 1fr) 264px;
 }
 .theme-inspector {
-  padding: 24px;
+  padding: 12px;
 }
 .theme-evidence-reading {
-  padding-bottom: 24px;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--border);
 }
 .theme-evidence-reading h2 {
-  font-size: 18px;
+  font-size: 14px;
   line-height: 1.5;
 }
 .theme-evidence-reading > time {
@@ -1083,7 +1122,7 @@
 }
 .theme-evidence-reading .theme-availability {
   display: block;
-  margin-block: 16px;
+  margin-block: 8px;
   font-size: 12px;
   line-height: 1.65;
 }
@@ -1091,15 +1130,15 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px 20px;
+  gap: 8px 12px;
 }
 .theme-evidence-actions :is(a, button) {
-  min-height: 44px;
+  min-height: 32px;
   display: inline-flex;
   align-items: center;
 }
 .theme-judgment-reading {
-  padding-top: 24px;
+  padding-top: 12px;
 }
 .theme-judgment-reading > h2 {
   margin: 0;
@@ -1110,7 +1149,7 @@
   display: block;
   width: auto;
   margin: 0;
-  padding: 20px 0;
+  padding: 12px 0;
   border-top: 0;
   border-bottom: 1px solid var(--border-soft);
 }
@@ -1125,9 +1164,9 @@
 .theme-method ul {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
+  gap: 16px;
   list-style: none;
-  padding: 24px 0 0;
+  padding: 12px 0 0;
   border-top: 1px solid var(--border);
 }
 .housing-method li,
@@ -1139,13 +1178,13 @@
 @media (min-width: 1001px) {
   #market-view .ml-analysis-layout,
   .rsi-experiment-layout {
-    grid-template-columns: minmax(280px, .7fr) minmax(0, 1.3fr);
+    grid-template-columns: minmax(264px, 320px) minmax(0, 1fr);
   }
   .rsi-experiment-input {
-    padding-right: 32px;
+    padding-right: 16px;
   }
   .rsi-experiment-result {
-    padding: 8px 0 24px 32px;
+    padding: 4px 0 16px 16px;
     border-top: 0;
     border-left: 1px solid var(--border);
   }
@@ -1160,10 +1199,10 @@
     border-right: 0;
   }
   .housing-relation-workspace .housing-relation-stats > div {
-    padding: 20px 16px;
+    padding: 12px;
   }
   .housing-relation-workspace .housing-relation-layout {
-    padding: 24px 12px;
+    padding: 12px;
   }
 }
 
@@ -1174,10 +1213,10 @@
   .theme-inspector {
     display: grid;
     grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
-    gap: 32px;
+    gap: 16px;
   }
   .theme-evidence-reading {
-    padding: 0 32px 0 0;
+    padding: 0 16px 0 0;
     border-bottom: 0;
     border-right: 1px solid var(--border);
   }
@@ -1189,11 +1228,16 @@
 @media (max-width: 640px) {
   #market-view .ml-scenario-reading {
     grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
+    gap: 12px;
+  }
+  #market-view .ml-scenario-layout .ml-shock-row > input[type="range"],
+  .rsi-experiment-input .rsi-backtest-form :is(input, button),
+  .theme-evidence-actions :is(a, button) {
+    min-height: 44px;
   }
   #market-view .ml-result-context {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    gap: 12px;
   }
   #market-view .ml-result-context > div {
     display: grid;
@@ -1208,7 +1252,7 @@
     align-items: baseline;
     justify-content: space-between;
     gap: 8px 16px;
-    padding: 16px 0;
+    padding: 12px 0;
   }
   #market-view .ml-economics-results > .ml-payback-result dd {
     margin-left: auto;
@@ -1219,7 +1263,7 @@
   }
   .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-main {
     grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
+    gap: 12px;
   }
   .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-direction-formula {
     grid-template-columns: 1fr auto;
@@ -1238,7 +1282,7 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: baseline;
     gap: 4px 16px;
-    padding: 20px 0;
+    padding: 12px 0;
   }
   .compact-toolbar-dialog[data-toolbar-dialog="market-summary"] .ml-score + .ml-score {
     border-left: 0;
@@ -1271,7 +1315,7 @@
   }
   .housing-relation-workspace .housing-relation-stats > div {
     grid-template-columns: minmax(0, 1fr) auto;
-    padding: 20px 0;
+    padding: 12px 0;
   }
   .housing-relation-workspace .housing-relation-layout {
     grid-template-columns: minmax(0, 1fr);
@@ -1286,11 +1330,11 @@
   }
   .theme-inspector {
     grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
-    padding: 24px 12px;
+    gap: 12px;
+    padding: 12px;
   }
   .theme-evidence-reading {
-    padding: 0 0 24px;
+    padding: 0 0 12px;
     border-right: 0;
     border-bottom: 1px solid var(--border);
   }

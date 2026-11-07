@@ -11,7 +11,7 @@ import { drawIntradayChart } from "./intraday-chart.js?v=1.29.0";
 import { bindChartNavigation } from './chart-navigation.js?v=1.29.0';
 import { mountChartTouchTracking } from "./chart-touch-tracking.js?v=1.29.0";
 import { clearChartHover } from './chart-hover.js?v=1.29.0';
-import { mountSymbolSelector } from './symbol-selector.js?v=1.34.0';
+import { mountSymbolSelector } from './symbol-selector.js?v=1.35.0';
 import { readEthView, ethViewQuery, ethHistoryRange } from './eth-view-state.js?v=1.29.0';
 import { ETHEREUM_EVENTS, ETHEREUM_EVENT_COLORS, getEthereumEvents } from './ethereum-events.js?v=1.29.0';
 import { mountEthereumHistory, readEthereumEventSettings, ethereumEventQuery, ethereumEventRange } from './ethereum-history.js?v=1.29.0';
@@ -34,7 +34,7 @@ const stamp = value => value ? value.replace('T',' ').slice(0,16) + ' UTC' : 'â€
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const actionButton = (action,label,glyph) => `<button type="button" class="eth-icon" data-eth-action="${action}" aria-label="${label}" title="${label}">${icon(glyph)}</button>`;
 
-import {mountChartReplay} from './chart-replay.js?v=1.34.0';
+import {mountChartReplay} from './chart-replay.js?v=1.35.0';
 
 export async function initEthView() {
   // Keep the boot controller and embedded JSON; remove BTC-only controls from

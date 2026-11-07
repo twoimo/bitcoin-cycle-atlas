@@ -1,4 +1,3 @@
-/* Hallmark app: existing Atlas financial-workbench tokens and scroll owners. */
 .monthly-backtest{position:absolute;inset:0;z-index:24;display:flex;flex-direction:column;min-height:0;background:var(--bg);color:var(--text);font:12px var(--font)}
 .monthly-backtest[hidden],.monthly-backtest [hidden]{display:none!important}
 .monthly-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);flex:none}

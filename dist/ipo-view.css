@@ -1,4 +1,3 @@
-/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas locked system · scope: IPO ledger; shares global financial-workbench tokens. */
 #ipo-view { padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 12px; height: 100%; min-height: 0; overflow: visible; }
 .ipo-heading { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: nowrap; }
 .ipo-heading-title { display: flex; flex: none; align-items: center; gap: 8px; }

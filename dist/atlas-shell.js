@@ -29,6 +29,61 @@ import { readShellPreference, writeShellPreference } from './atlas-shell-state.j
 import { mountCenterWorkbench } from './center-workbench.js?v=1.32.1';
 
 const pageNames = { outlook: '통합 차트', compare: '사이클 비교', evidence: '리서치 자료', data: '자산 비교표', ipo: '공모주 캘린더', market: '세 축 연구실' };
+
+// The compact rails keep their Korean names visible for pointer and keyboard
+// users. A body-level tooltip avoids clipping inside the scrolling rail.
+export function mountRailTooltip(document) {
+  const view = document.defaultView || globalThis.window;
+  const tooltip = document.createElement('div');
+  tooltip.className = 'atlas-rail-tooltip';
+  tooltip.setAttribute('role', 'tooltip');
+  tooltip.hidden = true;
+  document.body.append(tooltip);
+  let current = null;
+  const trigger = target => target?.closest?.('.workbench-rail button, .workbench-rail a, .atlas-sidebar .workbench-icon');
+  const hide = () => { tooltip.hidden = true; current = null; };
+  const show = node => {
+    if (!node || node.disabled || document.body.dataset.shell !== 'chart' || view?.matchMedia?.('(max-width: 620px)').matches) { hide(); return; }
+    const label = node.getAttribute('aria-label') || node.getAttribute('title');
+    if (!label) { hide(); return; }
+    current = node;
+    tooltip.textContent = label;
+    tooltip.hidden = false;
+    const bounds = node.getBoundingClientRect();
+    const tip = tooltip.getBoundingClientRect();
+    const width = view?.innerWidth || document.documentElement.clientWidth;
+    const height = view?.innerHeight || document.documentElement.clientHeight;
+    const left = node.closest('.workbench-rail') ? bounds.left - tip.width - 8 : bounds.right + 8;
+    tooltip.style.left = `${Math.max(8, Math.min(left, width - tip.width - 8))}px`;
+    tooltip.style.top = `${Math.max(8, Math.min(bounds.top + (bounds.height - tip.height) / 2, height - tip.height - 8))}px`;
+  };
+  const over = event => { const node = trigger(event.target); if (node && node !== trigger(event.relatedTarget)) show(node); };
+  const out = event => { if (current && trigger(event.relatedTarget) !== current && document.activeElement !== current) hide(); };
+  const focus = event => show(trigger(event.target));
+  const blur = event => { if (trigger(event.target) === current) hide(); };
+  const key = event => { if (event.key === 'Escape') hide(); };
+  const scroll = () => { if (current && document.activeElement === current) show(current); else hide(); };
+  document.addEventListener('pointerover', over);
+  document.addEventListener('pointerout', out);
+  document.addEventListener('focusin', focus);
+  document.addEventListener('focusout', blur);
+  document.addEventListener('keydown', key);
+  document.addEventListener('pointerdown', hide);
+  document.addEventListener('scroll', scroll, true);
+  view?.addEventListener('resize', hide);
+  return () => {
+    document.removeEventListener('pointerover', over);
+    document.removeEventListener('pointerout', out);
+    document.removeEventListener('focusin', focus);
+    document.removeEventListener('focusout', blur);
+    document.removeEventListener('keydown', key);
+    document.removeEventListener('pointerdown', hide);
+    document.removeEventListener('scroll', scroll, true);
+    view?.removeEventListener('resize', hide);
+    tooltip.remove();
+  };
+}
+
 export function initAtlasShell() {
   if (globalThis.window && window.parent !== window && new URLSearchParams(location.search).get('embedded')==='1') {document.body.dataset.embedded='true';return;}
   const sidebar = document.querySelector('.atlas-sidebar'), workspace = document.querySelector('.workspace');
@@ -105,5 +160,6 @@ export function initAtlasShell() {
   pageObserver.observe(document.body, { attributes: true, attributeFilter: ['data-page', 'data-center-tool'] });
   workspaceObserver.observe(workspace, { childList: true });
   sync();
-  return () => { pageObserver.disconnect(); workspaceObserver.disconnect(); document.removeEventListener('click', routeToService, true); };
+  const removeRailTooltip = mountRailTooltip(document);
+  return () => { removeRailTooltip(); pageObserver.disconnect(); workspaceObserver.disconnect(); document.removeEventListener('click', routeToService, true); };
 }

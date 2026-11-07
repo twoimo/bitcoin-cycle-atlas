@@ -1,6 +1,6 @@
 import { enhanceBootSkeleton } from './loading-surfaces.js';
 enhanceBootSkeleton();
-import { initAtlasShell } from './atlas-shell.js?v=1.34.0';
+import { initAtlasShell } from './atlas-shell.js?v=1.35.0';
 initAtlasShell();
 import { mountJournalEntry } from './journal-entry.js?v=1.29.0';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
@@ -14,13 +14,13 @@ const bootSymbol = document.querySelector('.atlas-boot-symbol');
 if (bootSymbol) bootSymbol.textContent = symbol;
 try {
   if (symbol === 'ETHUSD') {
-    const { initEthView } = await import("./eth-view.js?v=1.34.0");
+    const { initEthView } = await import("./eth-view.js?v=1.35.0");
     await initEthView();
   } else if (symbol === 'MSTR' || symbol === 'BMNR') {
-    const { initEquityView } = await import("./equity-view.js?v=1.34.0");
+    const { initEquityView } = await import("./equity-view.js?v=1.35.0");
     await initEquityView({symbol});
   } else {
-    await import("./app.js?v=1.34.0");
+    await import("./app.js?v=1.35.0");
   }
 } catch (error) {
   console.error('Chart initialization failed', error);

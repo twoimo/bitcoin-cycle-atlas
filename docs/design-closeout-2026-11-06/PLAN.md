@@ -1,5 +1,7 @@
 # Design closeout continuation, 2026-11-06
 
+> 기록 보관 · 2026-11-07(Asia/Seoul): Hallmark는 사용자의 최신 지시로 종료됐다. 아래 계획·검증 범위·판정은 해당 과거 소스의 기록이며 현재 실행 지시나 릴리스 조건이 아니다. 현재 디자인 기준은 저장소의 `AGENTS.md`, `design.md`와 디자인 마스터를 따른다. 원본 결과와 수치는 당시 사실로 보존한다.
+
 ## Goal
 
 Finish the existing design closeout, verify its behavior and publish the exact tested source. Preserve the Korean financial workbench, observed prices, frozen forecasts, existing controls and the independently recorded model limitations.

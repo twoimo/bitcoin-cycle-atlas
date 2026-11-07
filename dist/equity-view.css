@@ -1,7 +1,3 @@
-/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas locked system · redesign: full · posture: restrained
- * Scope: observed charts, comparison ledger, research and existing tool states. Verification is recorded by commit in CI.
- */
-/* Hallmark · pre-emit critique: P4 H4 E3 S5 R4 V3 · weakest: E, uneven focus and small metadata; shared states and readable neutral ink are applied across the app. */
 body[data-market="MSTR"],body[data-market="BMNR"]{margin:0;display:block;background:var(--atlas-surface);overflow:clip;height:100dvh;min-height:0;color:var(--equity-view-ink)}
 .equity-brand{display:grid;place-items:center;width:29px;height:29px;margin:1px 0 16px;border-radius:8px;background:var(--equity-view-surface);color:var(--equity-view-ink-2);font-size:16px;font-weight:700}body[data-market="BMNR"] .equity-brand{background:var(--equity-view-surface-2);color:var(--equity-view-ink-3)}
 .equity-intervals{display:flex;align-items:center;gap:2px}.equity-app #equity-scenario{background:var(--equity-view-surface-3);color:var(--equity-view-ink-4);max-width:110px;font-size:11px;padding:4px 8px}

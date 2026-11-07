@@ -6,12 +6,12 @@ import {drawIntradayChart} from "./intraday-chart.js?v=1.29.0";
 import {bindChartNavigation} from './chart-navigation.js?v=1.29.0';
 import {mountChartTouchTracking} from "./chart-touch-tracking.js?v=1.29.0";
 import {clearChartHover} from './chart-hover.js?v=1.29.0';
-import {mountSymbolSelector} from './symbol-selector.js?v=1.34.0';
+import {mountSymbolSelector} from './symbol-selector.js?v=1.35.0';
 import {mountDialogViewport} from './dialog-viewport.js?v=1.29.0';
 import {buildTreasuryProjection} from "./treasury-projection.js?v=1.29.0";
 import {EQUITY_FORECAST_BAR_NOTE} from "./equity-forecast-chart.js?v=1.29.0";
 import {TREASURY_EVENTS,TREASURY_SOURCES,treasuryEventMarkup} from './treasury-research.js?v=1.29.0';
-import {openResearchArticle,getResearchArticle,RESEARCH_CATEGORIES} from './research-reader.js?v=1.34.0';
+import {openResearchArticle,getResearchArticle,RESEARCH_CATEGORIES} from './research-reader.js?v=1.35.0';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const nf=new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -22,7 +22,7 @@ const icon=name=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 const button=(action,label,glyph)=>`<button type="button" class="eth-icon" data-equity-action="${action}" aria-label="${label}" title="${label}">${icon(glyph)}</button>`;
 const COLORS={financing:'#9eaff5',governance:'#b5a5df',treasury:'#e6b66d',capital:'#9eaff5',corporate:'#9eaff5',policy:'#ce94c7',market:'#d8909e',protocol:'#7dcbbb',earnings:'#7dcbbb',claims:'#c4b2ed'};
 
-import {mountChartReplay} from './chart-replay.js?v=1.34.0';
+import {mountChartReplay} from './chart-replay.js?v=1.35.0';
 
 export async function initEquityView({symbol}={}){
   const instrument=EQUITIES[symbol];if(!instrument)throw new RangeError('Unsupported equity view');

@@ -1,4 +1,3 @@
-/* Hallmark · v2.0.0 · shape: app screen · genre: modern-minimal · theme: Atlas locked system · redesign: full · posture: restrained */
 html, body, #root { margin: 0; width: 100%; height: 100%; }
 #root { display: flex; flex-direction: column; min-height: 0; }
 html, body { overflow-x: clip; }
@@ -10,8 +9,8 @@ body #root > .atlas-sidebar { flex: none; overflow-x: auto; }
 body .atlas-nav a { padding: 8px; color: var(--muted); font-size: 12px; text-decoration: none; white-space: nowrap; }
 body .atlas-nav a:hover { color: var(--text); background: var(--surface-hover); }
 body a.atlas-brand { display: grid; place-items: center; color: var(--accent); text-decoration: none; }
-.ml-delivery { display: flex; align-items: center; gap: 12px; padding: 8px 16px; font-size: 12px; background: var(--surface); color: var(--muted); }
-.ml-delivery button { flex: none; color: var(--text); background: var(--surface-raised); border: 1px solid var(--border); border-radius: 4px; padding: 8px; cursor: pointer; }
+.ml-delivery { display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 12px; background: var(--surface); color: var(--muted); }
+.ml-delivery button { flex: none; min-height: 32px; color: var(--text); background: var(--surface-raised); border: 1px solid var(--border); border-radius: 3px; padding: 4px 8px; cursor: pointer; }
 #root :is(a, button):focus-visible { outline: 2px solid var(--focus, var(--accent)); outline-offset: -2px; }
 body[data-page="market"] #root .atlas-nav { flex: none; overflow: visible; }
 body[data-page="market"] #root #market-header-slot { flex: none; overflow: visible; }
@@ -20,6 +19,7 @@ body[data-page="market"] #root #market-header-slot .ml-tabs { overflow: visible;
   body #root > .atlas-sidebar { height: 48px; }
   body #root .atlas-nav a, body #root #market-header-slot button { min-height: 44px; display: inline-flex; align-items: center; }
   .ml-delivery { align-items: flex-start; }
+  .ml-delivery button { min-height: 44px; }
 }
 
 #root :is(button,a):active{filter:brightness(.92)}

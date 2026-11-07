@@ -1,20 +1,24 @@
-/* Atlas · Ledgers and reading surfaces.
- * Presentation only: keep the original scroll owners, sticky cells, row
- * measurements, dialog lifecycle and shell-hosted toolbar visibility.
+/* Atlas · Financial tables, calendars and research reading surfaces.
+ * Presentation only: keep the original scroll owners, sticky cells, measured
+ * row allocation, dialog lifecycle and shell-hosted toolbar visibility.
  * Visual decisions: design-system/bitcoin-cycle-atlas/MASTER.md.
+ * Atlas records have no direct TradingView counterpart. Apply the observed
+ * neutral surfaces, compact type and rules without replacing their data model.
  */
 
-/* Asset comparison: a ruled ledger with a stable identifying column. */
+/* Asset comparison retains its two-line observations and measured fill rows. */
 #data-view.daily-workspace {
   --asset-paper: var(--bg);
   --asset-grid: var(--border-soft);
   --asset-muted: var(--muted);
+  --asset-route: var(--ui-primary);
 }
 #data-view .asset-table-panel {
   border-inline: 0;
   border-bottom: 0;
 }
 #data-view .asset-comparison-table thead th {
+  padding-block: 4px;
   background: var(--surface);
   color: var(--muted);
   font-weight: 500;
@@ -41,7 +45,7 @@
   background: var(--surface);
   color: var(--muted);
   font-weight: 500;
-  line-height: 1.8;
+  line-height: 1.5;
 }
 #data-view .asset-category {
   color: var(--subtle);
@@ -72,7 +76,7 @@
 }
 #data-view .asset-comparison-table .asset-judgment-header {
   text-align: left;
-  padding-left: 20px;
+  padding-left: 16px;
 }
 #data-view .asset-judgment {
   font-weight: 500;
@@ -88,10 +92,10 @@
   box-shadow: inset 2px 0 var(--focus), 1px 0 var(--border);
 }
 
-/* Reading an asset's reasoning uses the same document rhythm as research. */
+/* Dialog titles, tab strips and record lists share the terminal's UI scale. */
 #data-view :is(.daily-method-dialog,.asset-history-dialog) {
   border-color: var(--border-strong);
-  border-radius: 6px;
+  border-radius: var(--panel-radius);
   background: var(--surface);
 }
 #data-view :is(.daily-method-heading,.asset-history-heading) {
@@ -99,7 +103,7 @@
   background: var(--surface);
 }
 #data-view :is(.daily-method-heading,.asset-history-heading) h2 {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.45;
   font-weight: 600;
   letter-spacing: normal;
@@ -110,25 +114,25 @@
   letter-spacing: normal;
 }
 #data-view .daily-method-dialog h3 {
-  margin-top: 24px;
-  font-size: 15px;
-  line-height: 1.6;
+  margin-top: 20px;
+  font-size: 14px;
+  line-height: 1.5;
 }
 #data-view .daily-method-dialog :is(p,li) {
   font-size: 14px;
-  line-height: 1.8;
+  line-height: 1.65;
 }
 #data-view .asset-selected-reason {
-  padding: 0 0 8px 16px;
+  padding: 0 0 8px 12px;
   border-left-color: var(--accent);
   background: transparent;
 }
 #data-view .asset-reason-metrics {
-  gap: 16px;
-  margin-block: 20px;
+  gap: 12px;
+  margin-block: 16px;
 }
 #data-view .asset-reason-metrics > div {
-  padding: 12px 0;
+  padding: 8px 0;
   border: 0;
   border-block: 1px solid var(--border-soft);
   background: transparent;
@@ -142,6 +146,7 @@
 }
 #data-view .asset-history-mode {
   gap: 16px;
+  margin-block: 12px;
   border-bottom: 1px solid var(--border);
 }
 #data-view .asset-history-mode button {
@@ -151,9 +156,12 @@
   background: transparent;
 }
 #data-view .asset-history-mode button[aria-pressed=true] {
-  color: var(--accent);
+  color: var(--ui-link);
   background: transparent;
-  box-shadow: inset 0 -2px var(--accent);
+  box-shadow: inset 0 -2px var(--ui-primary);
+}
+#data-view .asset-history-inline {
+  color: var(--ui-link);
 }
 #data-view .asset-history-groups button {
   border-color: transparent;
@@ -161,14 +169,14 @@
 }
 #data-view .asset-history-groups button[aria-pressed=true] {
   border-color: var(--border);
-  background: var(--surface-raised);
+  background: var(--surface-hover);
 }
 #data-view :is(.asset-history-disclosure,.asset-history-reason,.asset-history-method p) {
   font-size: 13px;
-  line-height: 1.8;
+  line-height: 1.6;
 }
 #data-view .asset-history-family h3 {
-  padding-block: 8px;
+  padding-block: 4px;
   margin-bottom: 0;
   border-bottom: 1px solid var(--border);
   font-size: 13px;
@@ -176,10 +184,13 @@
 }
 #data-view .asset-history-asset[data-selected=true] {
   background: var(--surface-raised);
-  box-shadow: inset 2px 0 var(--accent);
+  box-shadow: inset 2px 0 var(--ui-primary);
 }
 #data-view .asset-history-metrics {
-  gap: 16px;
+  gap: 12px;
+}
+#data-view .asset-history-detail-heading h3 {
+  font-size: 16px;
 }
 #data-view .asset-history-metrics dd {
   font-size: 20px;
@@ -194,8 +205,9 @@
   display: grid;
   grid-template-columns: minmax(0,1fr) auto;
   align-items: center;
-  gap: 4px 16px;
-  padding: 12px 8px;
+  gap: 4px 12px;
+  min-height: 44px;
+  padding: 8px;
   border: 0;
   border-bottom: 1px solid var(--border-soft);
   border-radius: 0;
@@ -203,14 +215,17 @@
 }
 #data-view .asset-history-record-list button[aria-pressed=true] {
   background: var(--surface-raised);
-  box-shadow: inset 2px 0 var(--accent);
+  box-shadow: inset 2px 0 var(--ui-primary);
 }
 #data-view .asset-history-record-list strong {
   font-size: 12px;
   font-weight: 500;
 }
 
-/* Research index: title first, with its instruments on a quiet second line. */
+/* Research rows keep the title and the actual instrument/source metadata. */
+#evidence-view {
+  --evidence-row-height: 48px;
+}
 #evidence-view .evidence-controls input {
   color: var(--text);
   background: var(--bg);
@@ -225,6 +240,7 @@ body #evidence-view .evidence-table-shell {
   background: var(--bg);
 }
 #evidence-view .evidence-table caption {
+  padding: 8px 12px;
   border-bottom: 1px solid var(--border);
   color: var(--text);
   background: var(--surface);
@@ -236,14 +252,16 @@ body #evidence-view .evidence-table-shell {
   background: var(--surface);
 }
 #evidence-view .evidence-table th {
-  padding-inline: 12px;
+  height: 32px;
+  padding: 4px 12px;
   border-bottom-color: var(--border);
   color: var(--muted);
   font-weight: 500;
 }
 #evidence-view .evidence-table td {
-  padding-inline: 12px;
+  padding: 4px 12px;
   border-bottom-color: var(--border-soft);
+  font-size: 13px;
 }
 #evidence-view .evidence-table tbody tr:is(:hover,:focus-within) {
   background: var(--surface-hover);
@@ -271,8 +289,8 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   white-space: normal;
   -webkit-line-clamp: 1;
   font-size: 14px;
-  font-weight: 550;
-  line-height: 1.45;
+  font-weight: 500;
+  line-height: 1.4;
 }
 #evidence-view .research-row-meta {
   display: flex;
@@ -281,7 +299,7 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   min-width: 0;
   max-width: 100%;
   color: var(--subtle);
-  font: 11px/1.4 var(--font-mono);
+  font: 12px/1.4 var(--font);
 }
 #evidence-view .research-row-symbols {
   overflow: hidden;
@@ -299,7 +317,7 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   border-left: 1px solid var(--border-soft);
 }
 #evidence-view .evidence-title button.research-open:hover {
-  color: var(--accent);
+  color: var(--ui-link);
 }
 #evidence-view .evidence-grade button {
   justify-content: center;
@@ -312,11 +330,9 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: var(--accent);
+  color: var(--ui-link);
   font-weight: 500;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  text-decoration-color: var(--border-strong);
+  text-decoration: none;
 }
 #evidence-view .evidence-pagination {
   border-top: 1px solid var(--border);
@@ -325,31 +341,32 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
 }
 #evidence-view .evidence-pagination button {
   border-color: transparent;
-  border-radius: 3px;
+  border-radius: var(--control-radius);
 }
 #evidence-view .evidence-empty td {
   color: var(--muted);
   font-size: 13px;
-  line-height: 1.8;
+  line-height: 1.6;
   white-space: normal;
 }
 
-/* The reader is a document, with one fixed action band and one scroll owner. */
+/* A single reading column stays within the fixed action band and scroll owner. */
 .research-reader {
+  width: min(840px,calc(100% - 48px));
   border-color: var(--border-strong);
-  border-radius: 0;
-  background: var(--bg);
-  --reader-surface: var(--bg);
+  border-radius: var(--panel-radius);
+  background: var(--surface);
+  --reader-surface: var(--surface);
 }
 .research-reader-nav {
-  height: 56px;
-  padding-inline: 24px;
+  height: 48px;
+  padding-inline: 16px;
   background: var(--surface);
 }
 .research-wordmark {
   font-size: 14px;
-  font-weight: 650;
-  letter-spacing: .06em;
+  font-weight: 600;
+  letter-spacing: normal;
 }
 .research-reader-nav > div:first-child > span:last-child {
   color: var(--muted);
@@ -357,27 +374,29 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   letter-spacing: normal;
 }
 .research-reader-actions button {
-  min-height: 36px;
-  border-color: var(--border);
-  border-radius: 3px;
+  min-height: 32px;
+  padding: 4px 8px;
+  border-color: transparent;
+  border-radius: var(--control-radius);
   background: transparent;
+  font-size: 13px;
 }
 .research-reader-actions [data-reader-action=close] {
-  background: var(--surface-raised);
-  border-color: var(--border-strong);
+  background: transparent;
+  border-color: transparent;
 }
 .research-article {
-  max-width: 752px;
-  padding: 32px 32px 56px;
-  font-size: 15px;
-  line-height: 1.8;
+  max-width: 720px;
+  padding: 24px 24px 40px;
+  font-size: 14px;
+  line-height: 1.7;
   letter-spacing: normal;
 }
 .research-article-heading {
   display: grid;
   grid-template-columns: minmax(0,1fr) auto;
-  gap: 0 24px;
-  padding-bottom: 24px;
+  gap: 0 16px;
+  padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
 }
 .research-article-heading > :is(.research-tags,h1,.research-deck) {
@@ -385,7 +404,7 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
 }
 .research-tags {
   gap: 8px 12px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 .research-tags span {
   padding: 0 12px 0 0;
@@ -393,6 +412,7 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   border-radius: 0;
   background: transparent;
   color: var(--muted);
+  font-size: 12px;
   font-weight: 500;
 }
 .research-tags span:last-child {
@@ -401,13 +421,13 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
 }
 .research-article h1 {
   margin-bottom: 12px;
-  font-size: 30px;
+  font-size: 24px;
   line-height: 1.4;
-  font-weight: 650;
-  letter-spacing: -.025em;
+  font-weight: 600;
+  letter-spacing: normal;
 }
 .research-article p.research-deck {
-  margin: 0 0 20px;
+  margin: 0 0 16px;
   color: var(--muted);
   font-size: 14px;
   line-height: 1.65;
@@ -423,54 +443,59 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   grid-template-columns: auto auto;
   align-self: center;
   justify-items: end;
-  gap: 4px 12px;
+  gap: 4px 8px;
   margin: 0;
   padding: 0;
   border: 0;
+  font-size: 12px;
 }
 .research-meta a {
   grid-column: 1 / -1;
   margin-left: 0;
 }
+.research-article a {
+  color: var(--ui-link);
+}
 .research-article .research-provenance {
-  margin: 20px 0 28px;
-  padding: 4px 0 4px 12px;
+  margin: 16px 0 20px;
+  padding: 8px 12px;
+  border-left-color: var(--border-strong);
   border-radius: 0;
-  background: transparent;
-  font-size: 12px;
-  line-height: 1.8;
+  background: var(--surface-raised);
+  font-size: 13px;
+  line-height: 1.65;
 }
 .research-article h2 {
-  margin: 32px 0 12px;
-  font-size: 20px;
+  margin: 24px 0 12px;
+  font-size: 16px;
   font-weight: 600;
-  letter-spacing: -.015em;
+  letter-spacing: normal;
 }
 .research-article > section {
-  padding-block: 24px;
+  padding-block: 16px;
   border-top: 1px solid var(--border-soft);
 }
 .research-article > section > h2 {
-  margin: 0 0 16px;
+  margin: 0 0 12px;
 }
 .research-article > section > :last-child {
   margin-bottom: 0;
 }
 .research-article h3 {
   margin: 12px 0 8px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  line-height: 1.65;
+  line-height: 1.6;
 }
 .research-article p.research-lead {
-  font-size: 17px;
-  line-height: 1.8;
+  font-size: 15px;
+  line-height: 1.7;
 }
 .research-article p {
   margin-block: 12px;
 }
 .research-claim {
-  padding: 20px 0;
+  padding: 16px 0;
   border-bottom-color: var(--border-soft);
 }
 .research-claim:first-of-type {
@@ -491,7 +516,7 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   letter-spacing: normal;
 }
 .research-related {
-  padding: 12px 0;
+  padding: 8px;
   border-bottom: 1px solid var(--border-soft);
   border-radius: 0;
   background: transparent;
@@ -499,15 +524,15 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
   font-size: 13px;
 }
 .research-related:hover {
-  color: var(--accent);
-  background: var(--surface);
+  color: var(--text);
+  background: var(--surface-hover);
 }
 .research-source-grid {
   gap: 0;
   font-size: 13px;
 }
 .research-source-grid > div {
-  padding-block: 12px;
+  padding-block: 8px;
   border-bottom: 1px solid var(--border-soft);
 }
 .research-source-grid dt {
@@ -522,7 +547,7 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
 .research-content-switch {
   gap: 16px;
   padding: 0;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   border: 0;
   border-bottom: 1px solid var(--border);
   border-radius: 0;
@@ -530,70 +555,39 @@ body #evidence-view .evidence-title button.research-open > .evidence-title-text 
 }
 .research-content-switch button {
   flex: none;
+  min-height: 36px;
   padding-inline: 0;
   border-radius: 0;
   font-weight: 500;
 }
 .research-content-switch button[aria-pressed=true] {
+  color: var(--ui-link);
   background: transparent;
-  box-shadow: inset 0 -2px var(--accent);
+  box-shadow: inset 0 -2px var(--ui-primary);
 }
 .research-source-text {
-  padding: 20px;
+  padding: 16px;
   border-color: var(--border-soft);
-  border-radius: 2px;
-  background: var(--surface);
+  border-radius: var(--control-radius);
+  background: var(--bg);
   font-size: 13px;
-  line-height: 1.8;
+  line-height: 1.7;
 }
 .research-article-footer {
-  margin-top: 32px;
-  padding-top: 20px;
+  margin-top: 24px;
+  padding-top: 16px;
 }
 .research-reading-progress {
   height: 2px;
+}
+.research-reading-progress span {
+  background: var(--ui-primary);
 }
 .research-caveat {
   color: var(--muted);
 }
 
-/* A margin for section names gives long records a stable document outline.
- * The text column keeps the previous 688px reading measure. */
-@media (min-width: 960px) {
-  .research-article {
-    max-width: 896px;
-  }
-  .research-article > :is(.research-article-heading,.research-content-switch,.research-provenance,.research-article-footer) {
-    max-width: 688px;
-    margin-left: auto;
-  }
-  .research-article > section {
-    display: grid;
-    grid-template-columns: 120px minmax(0,1fr);
-    align-items: start;
-    gap: 12px 24px;
-  }
-  .research-article > section > h2 {
-    grid-column: 1;
-    grid-row: 1;
-    padding-top: 4px;
-    margin: 0;
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.65;
-    letter-spacing: normal;
-  }
-  .research-article > section > :not(h2) {
-    grid-column: 2;
-    min-width: 0;
-    margin-block: 0;
-  }
-  .research-article > .research-source-original > .research-provenance {
-    margin: 0;
-  }
-}
-
-/* IPO dates and issues share the ledger's quiet structure. */
+/* IPO schedules use compact calendar labels and the existing complete ledger. */
 body #ipo-view .ipo-table-shell {
   border-color: var(--border-soft);
   border-radius: 0;
@@ -603,23 +597,26 @@ body #ipo-view .ipo-table-shell {
   font-size: 13px;
 }
 #ipo-view .ipo-table caption {
+  padding: 8px 12px;
   border-bottom-color: var(--border);
   background: var(--surface);
   font-weight: 500;
 }
 #ipo-view .ipo-table th {
-  padding-block: 12px;
+  padding-block: 6px;
   background: var(--surface);
   color: var(--muted);
+  font-size: 12px;
   font-weight: 500;
 }
 #ipo-view .ipo-table td {
+  padding-block: 6px;
   border-bottom-color: var(--border-soft);
   vertical-align: middle;
 }
 #ipo-view .ipo-table .ipo-name {
   background: var(--surface);
-  font-weight: 600;
+  font-weight: 500;
   box-shadow: 1px 0 var(--border);
 }
 #ipo-view .ipo-table :is(th,td):nth-child(4),
@@ -634,7 +631,7 @@ body #ipo-view .ipo-table-shell {
 #ipo-view :is(.ipo-num,.ipo-dday) {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  font-size: 12px;
+  font-size: 13px;
 }
 #ipo-view .ipo-badge {
   padding: 0 0 0 8px;
@@ -654,10 +651,10 @@ body #ipo-view .ipo-table-shell {
   background: var(--surface);
   color: var(--muted);
   text-align: left;
-  font-size: 11px;
+  font-size: 12px;
 }
 #ipo-view .ipo-month-weekdays > span {
-  padding-left: 12px;
+  padding-left: 8px;
 }
 #ipo-view .ipo-month-grid {
   border-color: var(--border-soft);
@@ -665,10 +662,10 @@ body #ipo-view .ipo-table-shell {
 #ipo-view .ipo-month-day {
   display: grid;
   grid-template-columns: minmax(0,1fr);
-  grid-template-rows: 28px auto auto;
+  grid-template-rows: 24px auto auto;
   align-content: start;
   gap: 4px;
-  padding: 8px 12px;
+  padding: 8px;
   border-color: var(--border-soft);
   background: var(--bg);
 }
@@ -683,17 +680,18 @@ body #ipo-view .ipo-table-shell {
 }
 #ipo-view .ipo-day-number {
   justify-self: start;
-  min-width: 28px;
-  min-height: 28px;
+  min-width: 24px;
+  min-height: 24px;
   color: var(--text);
-  font: 500 20px/28px var(--font-mono);
+  font: 500 14px/24px var(--font);
+  font-variant-numeric: tabular-nums;
   text-align: left;
 }
 #ipo-view .ipo-month-day.is-today .ipo-day-number {
-  outline: 0;
-  border-radius: 2px;
-  background: var(--accent);
-  color: var(--on-accent);
+  outline: 1px solid var(--ui-primary);
+  border-radius: var(--control-radius);
+  background: var(--surface-hover);
+  color: var(--text);
   text-align: center;
 }
 #ipo-view .ipo-day-events { min-width: 0; }
@@ -701,7 +699,7 @@ body #ipo-view .ipo-table-shell {
   display: grid;
   grid-template-columns: 28px minmax(0,1fr);
   align-items: baseline;
-  gap: 8px;
+  gap: 4px;
   font-size: 12px;
   line-height: 1.5;
 }
@@ -722,7 +720,7 @@ body #ipo-view .ipo-table-shell {
 }
 #ipo-view .ipo-day-dialog {
   border-color: var(--border-strong);
-  border-radius: 6px;
+  border-radius: var(--panel-radius);
   background: var(--surface);
 }
 #ipo-view .ipo-day-dialog > header {
@@ -730,31 +728,31 @@ body #ipo-view .ipo-table-shell {
   border-bottom: 1px solid var(--border);
 }
 #ipo-view .ipo-day-dialog h2 {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.5;
   letter-spacing: normal;
 }
 #ipo-view .ipo-date-event {
-  padding-block: 16px;
+  padding-block: 12px;
   border-bottom-color: var(--border-soft);
 }
 #ipo-view .ipo-date-event h3 {
-  font-size: 17px;
+  font-size: 14px;
   line-height: 1.5;
   margin-block: 8px;
 }
 #ipo-view .ipo-date-event p,
 #ipo-view .ipo-day-dialog > p {
   font-size: 13px;
-  line-height: 1.75;
+  line-height: 1.6;
 }
 #ipo-view .ipo-source-panel {
-  border-radius: 4px;
+  border-radius: var(--panel-radius);
   background: var(--surface-raised);
 }
 #ipo-view .ipo-source-panel p {
   font-size: 13px;
-  line-height: 1.75;
+  line-height: 1.6;
 }
 
 /* Existing methodology disclosures keep their contents and source links. */
@@ -762,12 +760,12 @@ body #ipo-view .ipo-table-shell {
 #method-dialog :is(p,li) {
   color: var(--muted);
   font-size: 14px;
-  line-height: 1.8;
+  line-height: 1.65;
 }
 .research-detail-content h3,
 #method-dialog h3 {
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.5;
   letter-spacing: normal;
 }
 .research-detail-content .formula-block,
@@ -778,7 +776,7 @@ body #ipo-view .ipo-table-shell {
   background: var(--bg);
   color: var(--text);
   font-size: 13px;
-  line-height: 1.8;
+  line-height: 1.65;
 }
 .research-detail-content :is(th,td) {
   font-size: 12px;
@@ -797,7 +795,7 @@ body #ipo-view .ipo-table-shell {
     padding-left: 12px;
   }
   #data-view .asset-history-metrics dd {
-    font-size: 17px;
+    font-size: 20px;
   }
   #data-view .asset-history-record-list button {
     grid-template-columns: minmax(0,1fr);
@@ -813,7 +811,7 @@ body #ipo-view .ipo-table-shell {
   #ipo-view .ipo-day-number {
     min-width: 24px;
     min-height: 24px;
-    font-size: 16px;
+    font-size: 13px;
     line-height: 24px;
   }
   #ipo-view .ipo-cal-event {
@@ -831,6 +829,9 @@ body #ipo-view .ipo-table-shell {
   }
 }
 @media (max-width: 640px) {
+  #evidence-view {
+    --evidence-row-height: 64px;
+  }
   #evidence-view .evidence-table :is(th,td) {
     padding-inline: 8px;
   }
@@ -843,6 +844,7 @@ body #ipo-view .ipo-table-shell {
     font-size: 11px;
   }
   .research-reader {
+    width: 100%;
     border: 0;
     border-radius: 0;
   }
@@ -855,12 +857,12 @@ body #ipo-view .ipo-table-shell {
     padding-inline: 8px;
   }
   .research-article {
-    padding: 24px 20px 40px;
+    padding: 20px 16px 32px;
     font-size: 15px;
   }
   .research-article-heading {
     display: block;
-    padding-bottom: 20px;
+    padding-bottom: 16px;
   }
   .research-meta {
     display: flex;
@@ -871,14 +873,14 @@ body #ipo-view .ipo-table-shell {
     margin-left: auto;
   }
   .research-article h1 {
-    font-size: 25px;
-    letter-spacing: -.02em;
+    font-size: 22px;
+    letter-spacing: normal;
   }
   .research-article h2 {
-    font-size: 18px;
+    font-size: 16px;
   }
   .research-article p.research-lead {
-    font-size: 16px;
+    font-size: 15px;
   }
   .research-source-grid > div {
     grid-template-columns: 88px minmax(0,1fr);
@@ -924,7 +926,7 @@ body #ipo-view .ipo-table-shell {
     border-top: 0;
   }
   #data-view .asset-reason-metrics dd {
-    font-size: 18px;
+    font-size: 20px;
   }
 }
 @media (max-height: 800px) {
@@ -936,7 +938,7 @@ body #ipo-view .ipo-table-shell {
   #ipo-view .ipo-day-number {
     min-width: 24px;
     min-height: 20px;
-    font-size: 16px;
+    font-size: 13px;
     line-height: 20px;
   }
   #ipo-view :is(.ipo-cal-event,.ipo-day-more) {
@@ -944,10 +946,20 @@ body #ipo-view .ipo-table-shell {
     line-height: 16px;
   }
 }
-@media (pointer: coarse) {
+@media (max-width: 760px), (pointer: coarse) {
+  #data-view .asset-history-dialog button,
+  #data-view .daily-method-heading button,
+  #data-view #asset-history-close,
+  #data-view #history-date,
+  #data-view #history-slider,
   .research-reader-actions button,
   .research-content-switch button,
   .research-related {
     min-height: 44px;
+  }
+  #data-view .daily-method-heading button,
+  #data-view #asset-history-close,
+  .research-reader-actions button {
+    min-width: 44px;
   }
 }
