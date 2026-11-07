@@ -89,9 +89,10 @@ Use the system font and tabular figures for financial values; retain
 monospace for source identifiers and code. Do not add a font request. Keep
 gain/loss and named series colors, numeric definitions and source clocks.
 
-Desktop controls have compact real hit areas. Phone and coarse-pointer
-viewports retain 44px primary controls with a 48px outer row, including wide
-landscape tablets. The 38px measured desktop density cannot clip touch targets.
+Desktop controls have compact real hit areas; hosted asset actions retain
+at least 32 × 32px. Windows up to 760px and coarse-pointer viewports retain
+44px primary controls with a 48px outer row, including wide landscape tablets.
+The 38px measured desktop density cannot clip those controls.
 Only dialogs use larger rounding; the plot, tables and sections use rules.
 
 ## Source-to-Atlas map and ownership

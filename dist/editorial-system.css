@@ -535,6 +535,11 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
     max-height: 32px;
     font-size: 13px;
   }
+  body[data-shell=chart] .center-workspace-toolbar button:where(.center-data-action) {
+    min-width: 32px;
+    min-height: 32px;
+    height: 32px;
+  }
   body[data-shell=chart] .center-workspace-toolbar .workspace-view-tabs button {
     min-height: 32px;
     height: 32px;
@@ -542,6 +547,7 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
     border-radius: 4px;
   }
   body[data-shell=chart] .compact-toolbar-group { height: 28px; }
+  body[data-shell=chart] .compact-toolbar-group:where(.center-data-actions) { height: 32px; }
   body[data-shell=chart] .compact-toolbar-group :is([aria-selected=true], [aria-pressed=true]) {
     background: var(--surface-hover);
     color: var(--text);
@@ -669,9 +675,9 @@ body :is(.chart-context-menu, .cycle-chart-menu) button:hover {
   .symbol-search-name { font-size: 12px; white-space: normal; overflow-wrap: anywhere; }
   .symbol-search-footer { padding-inline: 16px; }
 }
-/* A wide touch viewport still needs the existing 44px controls. The measured
-   desktop density must not clip tablets in landscape orientation. */
-@media (min-width: 621px) and (pointer: coarse) {
+/* Touch hardware and compact windows keep the original 44px interaction
+   contract without clipping controls inside the measured desktop header. */
+@media (min-width: 621px) and (pointer: coarse), (min-width: 621px) and (max-width: 760px) {
   body[data-shell=chart] .workspace.atlas-details-layout > #main { padding-top: 52px; }
   body[data-shell=chart] .atlas-canvas-heading { height: 48px; min-height: 48px; max-height: 48px; }
   body[data-shell=chart] .atlas-sidebar .atlas-brand { height: 48px; min-height: 48px; }
