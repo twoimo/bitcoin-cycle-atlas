@@ -39,6 +39,75 @@ function disclosedBitcoinWeeks(rows, cursor) {
   });
 }
 
+/** Read the actual renderer's price pane for every instrument. SVG boxes also
+ * include the time/price axes; those are not unobstructed price input probes. */
+export function readChartReplayFloatingGeometry({ chartSelector, panel }) {
+  const svg = document.querySelector(chartSelector), plot = svg.closest('.atlas-plot'), root = document.querySelector(panel);
+  const bar = root.querySelector('.chart-replay-bar'), actions = root.querySelector('.chart-replay-actions'), exit = root.querySelector('[data-cr="exit"]');
+  const rect = node => { const b = node.getBoundingClientRect(); return { left: b.left, right: b.right, top: b.top, bottom: b.bottom, width: b.width, height: b.height }; };
+  const visible = node => {
+    if (!node || node.hidden || node.closest('[hidden]') || !node.getClientRects().length) return false;
+    const style = getComputedStyle(node), box = rect(node);
+    return style.display !== 'none' && style.visibility === 'visible' && Number(style.opacity) > 0 && box.width > 0 && box.height > 0;
+  };
+  const box = rect(svg), originalPoint = { x: box.left + box.width * .5, y: box.top + box.height * .35 };
+  const priceCoordinates = { left: Number(svg.dataset.plotLeft), right: Number(svg.dataset.plotRight), top: Number(svg.dataset.plotTop), bottom: Number(svg.dataset.priceBottom) };
+  const matrix = svg.getScreenCTM();
+  let pricePane = null;
+  if (matrix && Object.values(priceCoordinates).every(Number.isFinite) && priceCoordinates.right > priceCoordinates.left && priceCoordinates.bottom > priceCoordinates.top) {
+    const corners = [[priceCoordinates.left, priceCoordinates.top], [priceCoordinates.right, priceCoordinates.top],
+      [priceCoordinates.left, priceCoordinates.bottom], [priceCoordinates.right, priceCoordinates.bottom]].map(([x, y]) => {
+      const point = svg.createSVGPoint(); point.x = x; point.y = y; return point.matrixTransform(matrix);
+    });
+    pricePane = { left: Math.min(...corners.map(point => point.x)), right: Math.max(...corners.map(point => point.x)),
+      top: Math.min(...corners.map(point => point.y)), bottom: Math.max(...corners.map(point => point.y)) };
+    pricePane.width = pricePane.right - pricePane.left; pricePane.height = pricePane.bottom - pricePane.top;
+  }
+  const legendNode = plot.querySelector('.lab-chart-foot'), legend = visible(legendNode) ? { ...rect(legendNode),
+    flexWrap: getComputedStyle(legendNode).flexWrap, scrollWidth: legendNode.scrollWidth, clientWidth: legendNode.clientWidth,
+    groups: [...legendNode.querySelectorAll('.lab-legend,.price-legend,.cycle-legend')].filter(visible).map(node => ({ className: node.className, flexWrap: getComputedStyle(node).flexWrap })),
+    items: [...legendNode.querySelectorAll('.price-legend-item,.cycle-legend-item')].filter(visible).map(node => ({ text: node.textContent.replace(/\s+/g, ' ').trim(), ...rect(node) })) } : null;
+  // Choose probes from measured geometry before looking at hit ownership.
+  // Only these visible controls may exclude points; never the full root,
+  // arbitrary blockers, or a point that merely failed its SVG hit test.
+  const excludedRects = [['bar', bar], ['exit', exit], ['pick-cancel', root.querySelector('[data-cr="pick-cancel"]')], ['legend', legendNode]]
+    .filter(([, node]) => visible(node)).map(([name, node]) => ({ name, ...rect(node) }));
+  const probePane = pricePane;
+  const candidates = probePane ? [.18, .38, .58, .78].flatMap(yFraction => [.16, .5, .84].map(xFraction => {
+    const point = { x: probePane.left + probePane.width * xFraction, y: probePane.top + probePane.height * yFraction, xFraction, yFraction };
+    return { ...point, excludedBy: excludedRects.filter(area => point.x >= area.left && point.x <= area.right && point.y >= area.top && point.y <= area.bottom).map(area => area.name) };
+  })) : [];
+  const freeProbes = candidates.filter(point => point.excludedBy.length === 0);
+  const hit = point => {
+    const node = document.elementFromPoint(point.x, point.y), control = node?.closest('[data-cr]');
+    return { ...point, reachesChart: svg.contains(node), owner: node ? { tag: node.tagName, id: node.id || null, className: node.getAttribute('class'), control: control?.dataset.cr ?? null } : null };
+  };
+  const probes = freeProbes.map(hit), originalProbe = hit(originalPoint);
+  return { chart: box, plot: { ...rect(plot), clientHeight: plot.clientHeight }, root: { ...rect(root), pointerEvents: getComputedStyle(root).pointerEvents, background: getComputedStyle(root).backgroundColor },
+    bar: rect(bar), actions: { ...rect(actions), scrollLeft: actions.scrollLeft, scrollWidth: actions.scrollWidth, clientWidth: actions.clientWidth, flexWrap: getComputedStyle(actions).flexWrap },
+    controls: [...actions.children].filter(visible).map(node => ({ name: node.dataset.cr, ...rect(node) })), exit: { ...rect(exit), separate: !bar.contains(exit) },
+    atlas: plot.classList.contains('chart-replay-atlas'), priceCoordinates, pricePane, legend,
+    priceMatrix: matrix ? Object.fromEntries(['a', 'b', 'c', 'd', 'e', 'f'].map(key => [key, matrix[key]])) : null,
+    priceAxis: pricePane ? { left: pricePane.right, right: box.right, top: pricePane.top, bottom: pricePane.bottom } : null,
+    originalProbe, excludedRects, probeCandidates: candidates, probes, requiredProbeCount: !probePane || probePane.width >= 160 && probePane.height >= 100 ? 3 : 1,
+    menuHidden: root.querySelector('[data-cr="select-panel"]').hidden, pointerReachesChart: probes.length > 0 && probes.every(point => point.reachesChart),
+    settingsInPopover: ['date', 'start', 'display', 'mode', 'record', 'horizon', 'details', 'pooled-retry', 'scrub', 'export'].every(name => root.querySelector('[data-cr="select-panel"]').contains(root.querySelector('[data-cr="' + name + '"]'))),
+    removedControls: ['previous', 'random', 'resume'].flatMap(name => [...root.querySelectorAll('[data-cr="' + name + '"]')].map(() => name)),
+    pageWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth), scrollX, scrollY,
+    cursor: svg.dataset.replayCursor ?? null, hash: svg.dataset.replayOutputHash ?? null, viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null };
+}
+
+export function assertChartReplayPricePaneAccess(geometry) {
+  assert.ok(geometry.pricePane && geometry.pricePane.width > 0 && geometry.pricePane.height > 0,
+    'Replay did not expose transformable price-pane bounds: ' + JSON.stringify({ chart: geometry.chart, priceCoordinates: geometry.priceCoordinates, priceMatrix: geometry.priceMatrix }));
+  assert.ok(geometry.probes.length >= geometry.requiredProbeCount, 'Visible replay controls leave too few independently chosen chart probes');
+  for (const point of geometry.probes) assert.equal(point.reachesChart, true,
+    'An unobstructed price-pane probe cannot reach the SVG: ' + JSON.stringify({ ...point,
+      geometry: { chart: geometry.chart, plot: geometry.plot, pricePane: geometry.pricePane, priceCoordinates: geometry.priceCoordinates,
+        bar: geometry.bar, exit: geometry.exit, excludedRects: geometry.excludedRects, requiredProbeCount: geometry.requiredProbeCount } }));
+  assert.equal(geometry.pointerReachesChart, true);
+}
+
 export async function verifyChartReplaySurface(api) {
   const { cdp, browser, browserContextId, receipt, root, outputDirectory, evaluate, until, settled, click: nativeClick, bounds, visibleBounds, screenshot, verifyOfflineRefresh } = api;
   const { symbol, width, height, touch } = receipt;
@@ -156,69 +225,13 @@ export async function verifyChartReplaySurface(api) {
     await nativeClick(connection, selector);
   }
   async function verifyFloatingBar() {
-    const geometry = await evaluate(cdp, ({ chartSelector, panel, btc }) => {
-      const svg = document.querySelector(chartSelector), plot = svg.closest('.atlas-plot'), root = document.querySelector(panel);
-      const bar = root.querySelector('.chart-replay-bar'), actions = root.querySelector('.chart-replay-actions'), exit = root.querySelector('[data-cr="exit"]');
-      const rect = node => { const b = node.getBoundingClientRect(); return { left: b.left, right: b.right, top: b.top, bottom: b.bottom, width: b.width, height: b.height }; };
-      const visible = node => {
-        if (!node || node.hidden || node.closest('[hidden]') || !node.getClientRects().length) return false;
-        const style = getComputedStyle(node), box = rect(node);
-        return style.display !== 'none' && style.visibility === 'visible' && Number(style.opacity) > 0 && box.width > 0 && box.height > 0;
-      };
-      const box = rect(svg), originalPoint = { x: box.left + box.width * .5, y: box.top + box.height * .35 };
-      const priceCoordinates = btc ? { left: Number(svg.dataset.plotLeft), right: Number(svg.dataset.plotRight), top: Number(svg.dataset.plotTop), bottom: Number(svg.dataset.priceBottom) } : null;
-      const matrix = btc ? svg.getScreenCTM() : null;
-      let pricePane = null;
-      if (matrix && Object.values(priceCoordinates).every(Number.isFinite) && priceCoordinates.right > priceCoordinates.left && priceCoordinates.bottom > priceCoordinates.top) {
-        const corners = [[priceCoordinates.left, priceCoordinates.top], [priceCoordinates.right, priceCoordinates.top],
-          [priceCoordinates.left, priceCoordinates.bottom], [priceCoordinates.right, priceCoordinates.bottom]].map(([x, y]) => {
-          const point = svg.createSVGPoint(); point.x = x; point.y = y; return point.matrixTransform(matrix);
-        });
-        pricePane = { left: Math.min(...corners.map(point => point.x)), right: Math.max(...corners.map(point => point.x)),
-          top: Math.min(...corners.map(point => point.y)), bottom: Math.max(...corners.map(point => point.y)) };
-        pricePane.width = pricePane.right - pricePane.left; pricePane.height = pricePane.bottom - pricePane.top;
-      }
-      const legendNode = plot.querySelector('.lab-chart-foot'), legend = visible(legendNode) ? { ...rect(legendNode),
-        flexWrap: getComputedStyle(legendNode).flexWrap, scrollWidth: legendNode.scrollWidth, clientWidth: legendNode.clientWidth,
-        groups: [...legendNode.querySelectorAll('.lab-legend,.price-legend,.cycle-legend')].filter(visible).map(node => ({ className: node.className, flexWrap: getComputedStyle(node).flexWrap })),
-        items: [...legendNode.querySelectorAll('.price-legend-item,.cycle-legend-item')].filter(visible).map(node => ({ text: node.textContent.replace(/\s+/g, ' ').trim(), ...rect(node) })) } : null;
-      // Choose probes from measured geometry before looking at hit ownership.
-      // Only these visible controls may exclude points; never the full root,
-      // arbitrary blockers, or a point that merely failed its SVG hit test.
-      const excludedRects = [['bar', bar], ['exit', exit], ['pick-cancel', root.querySelector('[data-cr="pick-cancel"]')], ['legend', legendNode]]
-        .filter(([, node]) => visible(node)).map(([name, node]) => ({ name, ...rect(node) }));
-      const probePane = pricePane ?? box;
-      const candidates = [.18, .38, .58, .78].flatMap(yFraction => [.16, .5, .84].map(xFraction => {
-        const point = { x: probePane.left + probePane.width * xFraction, y: probePane.top + probePane.height * yFraction, xFraction, yFraction };
-        return { ...point, excludedBy: excludedRects.filter(area => point.x >= area.left && point.x <= area.right && point.y >= area.top && point.y <= area.bottom).map(area => area.name) };
-      }));
-      const freeProbes = candidates.filter(point => point.excludedBy.length === 0);
-      const hit = point => {
-        const node = document.elementFromPoint(point.x, point.y), control = node?.closest('[data-cr]');
-        return { ...point, reachesChart: svg.contains(node), owner: node ? { tag: node.tagName, id: node.id || null, className: node.getAttribute('class'), control: control?.dataset.cr ?? null } : null };
-      };
-      const probes = freeProbes.map(hit), originalProbe = hit(originalPoint);
-      return { chart: box, plot: { ...rect(plot), clientHeight: plot.clientHeight }, root: { ...rect(root), pointerEvents: getComputedStyle(root).pointerEvents, background: getComputedStyle(root).backgroundColor },
-        bar: rect(bar), actions: { ...rect(actions), scrollLeft: actions.scrollLeft, scrollWidth: actions.scrollWidth, clientWidth: actions.clientWidth, flexWrap: getComputedStyle(actions).flexWrap },
-        controls: [...actions.children].filter(visible).map(node => ({ name: node.dataset.cr, ...rect(node) })), exit: { ...rect(exit), separate: !bar.contains(exit) },
-        atlas: plot.classList.contains('chart-replay-atlas'), priceCoordinates, pricePane, legend,
-        priceMatrix: matrix ? Object.fromEntries(['a', 'b', 'c', 'd', 'e', 'f'].map(key => [key, matrix[key]])) : null,
-        priceAxis: pricePane ? { left: pricePane.right, right: box.right, top: pricePane.top, bottom: pricePane.bottom } : null,
-        originalProbe, excludedRects, probeCandidates: candidates, probes, requiredProbeCount: probePane.width >= 160 && probePane.height >= 100 ? 3 : 1,
-        menuHidden: root.querySelector('[data-cr="select-panel"]').hidden, pointerReachesChart: probes.length > 0 && probes.every(point => point.reachesChart),
-        settingsInPopover: ['date', 'start', 'display', 'mode', 'record', 'horizon', 'details', 'pooled-retry', 'scrub', 'export'].every(name => root.querySelector('[data-cr="select-panel"]').contains(root.querySelector('[data-cr="' + name + '"]'))),
-        removedControls: ['previous', 'random', 'resume'].flatMap(name => [...root.querySelectorAll('[data-cr="' + name + '"]')].map(() => name)),
-        pageWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth), scrollX, scrollY,
-        cursor: svg.dataset.replayCursor ?? null, hash: svg.dataset.replayOutputHash ?? null, viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null };
-    }, { chartSelector, panel, btc });
+    const geometry = await evaluate(cdp, readChartReplayFloatingGeometry, { chartSelector, panel });
     const observedGeometry = { label: 'floating-controls-observed-geometry', validated: false, ...geometry, originalChart: originalChartBox };
     evidence.floatingBar.push(observedGeometry);
     assert.equal(geometry.root.pointerEvents, 'none', 'The positioning overlay blocks the chart');
     assert.match(geometry.root.background, /rgba\(0, 0, 0, 0\)|transparent/, 'A full-width replay surface still covers the plot');
     assert.equal(geometry.menuHidden, true); assert.equal(geometry.settingsInPopover, true);
-    assert.ok(geometry.probes.length >= geometry.requiredProbeCount, 'Visible replay controls leave too few independently chosen chart probes');
-    for (const point of geometry.probes) assert.equal(point.reachesChart, true, 'An unobstructed price-pane probe cannot reach the SVG: ' + JSON.stringify(point));
-    assert.equal(geometry.pointerReachesChart, true);
+    assertChartReplayPricePaneAccess(geometry);
     assert.deepEqual(geometry.removedControls, [], 'Removed previous/duplicate random/menu-resume controls remain in the DOM');
     assert.deepEqual(geometry.controls.map(node => node.name), ['first', 'select-menu', 'mode-badge', 'pick', 'play', 'next', 'speed', 'update-interval', 'live']);
     assert.equal(geometry.actions.flexWrap, 'nowrap');
@@ -227,7 +240,6 @@ export async function verifyChartReplaySurface(api) {
     assert.ok(geometry.bar.height <= (touch || width <= 620 ? 57 : 45), 'The floating replay bar is no longer compact');
     if (btc) {
       assert.equal(geometry.atlas, true, 'BTC replay must use the existing Atlas price plot');
-      assert.ok(geometry.pricePane && geometry.pricePane.width > 0 && geometry.pricePane.height > 0, 'BTC replay did not expose transformable price-pane bounds');
     }
     const controlArea = btc ? geometry.pricePane : geometry.plot;
     assert.ok(geometry.bar.top > controlArea.top + controlArea.height / 2, 'Replay controls returned to a large upper panel');

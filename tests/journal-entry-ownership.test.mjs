@@ -95,6 +95,16 @@ test('delayed asset import cannot open for a detached opener',async()=>{
   assert.deepEqual(h.opened,[]);
   assertNoFeedback(h);
 });
+test('a cached journal import rejects the hidden mobile toolbar hook and accepts the visible mobile owner',async()=>{
+  const h=harness(),first=trigger('asset','MSTR'),hidden=trigger('asset','BMNR'),mobile=trigger('asset','BMNR');
+  h.request('asset','MSTR',first);await flush();h.asset.resolve(h.assetModule);await flush();
+  assert.deepEqual(h.opened,[{kind:'asset',value:'MSTR',opener:first}]);
+  hidden.rects=[];h.request('asset','BMNR',hidden);await flush();
+  assert.equal(h.opened.length,1,'a hidden desktop hook is not a valid mobile request owner');
+  h.request('asset','BMNR',mobile);await flush();
+  assert.deepEqual(h.opened,[{kind:'asset',value:'MSTR',opener:first},{kind:'asset',value:'BMNR',opener:mobile}]);
+  assert.equal(h.calls.asset,1,'the valid reopen must use the already cached import');assertNoFeedback(h);
+});
 for(const eventType of ['atlas:modal-open','pagehide']){
   test(eventType+' revokes the pending asset import owner',async()=>{
     const h=harness(),opener=trigger('asset','ETHUSD');

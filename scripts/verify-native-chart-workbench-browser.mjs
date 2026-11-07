@@ -116,11 +116,27 @@ export async function verifyNativeChartWorkbench(api) {
   assert.equal(await evaluate(cdp,()=>document.querySelector('.workbench-magnet-badge').textContent),'강');
   const points=await evaluate(cdp,s=>{
     const chart=document.querySelector(s),b=chart.getBoundingClientRect(),v=chart.viewBox.baseVal,rows=[...chart.querySelectorAll('.volume-bar')];
-    return [.2,.75].map((fraction,index)=>{const row=rows[Math.floor((rows.length-1)*fraction)],r=row.getBoundingClientRect(),x=r.left+r.width/2;
-      const top=b.top+Number(chart.dataset.plotTop)/v.height*b.height,bottom=b.top+Number(chart.dataset.priceBottom)/v.height*b.height;
-      const ys=[.35,.65,.5].map(f=>top+(bottom-top)*f),y=ys.find(y=>!document.elementFromPoint(x,y)?.closest('[data-history-event],[data-forecast-evidence],[data-research-annotation]'));
-      return {x,y,index,time:Number(row.dataset.time),date:row.dataset.date};});
+    const left=b.left+Number(chart.dataset.plotLeft)/v.width*b.width,right=b.left+Number(chart.dataset.plotRight)/v.width*b.width;
+    const top=b.top+Number(chart.dataset.plotTop)/v.height*b.height,bottom=b.top+Number(chart.dataset.priceBottom)/v.height*b.height;
+    const bars=rows.map(row=>{const r=row.getBoundingClientRect();return {time:Number(row.dataset.time),date:row.dataset.date,center:r.left+r.width/2};});
+    return [.2,.75].map((fraction,index)=>{
+      const desired=Math.floor((bars.length-1)*fraction),order=bars.map((_,i)=>i).sort((a,c)=>Math.abs(a-desired)-Math.abs(c-desired));
+      for(const i of order){
+        const bar=bars[i],cellLeft=i?(bars[i-1].center+bar.center)/2:left,cellRight=i+1<bars.length?(bar.center+bars[i+1].center)/2:right;
+        // A real mouse click may quantize fractional CSS coordinates. Choose
+        // an integer pixel strictly inside this actual bar's nearest-date cell
+        // instead of assuming every subpixel rectangle center is addressable.
+        const first=Math.ceil(cellLeft+.02),last=Math.floor(cellRight-.02);if(first>last)continue;
+        const x=Math.max(first,Math.min(last,Math.round(bar.center)));
+        const ys=[.35,.65,.5].map(f=>Math.round(top+(bottom-top)*f)),y=ys.find(y=>{
+          const hit=document.elementFromPoint(x,y);return hit&&(hit===chart||chart.contains(hit))&&!hit.closest('[data-history-event],[data-forecast-evidence],[data-research-annotation],button,[role="button"]');
+        });
+        if(y!==undefined)return {x,y,index,time:bar.time,date:bar.date,barCenter:bar.center,selectionCell:{left:cellLeft,right:cellRight}};
+      }
+      throw new Error('No unobscured integer mouse pixel selects a visible source bar');
+    });
   },svg);
+  record.measurementInputs=points;
   for(const point of points){assert.ok(Number.isFinite(point.x)&&Number.isFinite(point.y));for(const type of ['mouseMoved','mousePressed','mouseReleased'])await cdp.send('Input.dispatchMouseEvent',{type,x:point.x,y:point.y,...(type==='mouseMoved'?{}:{button:'left',clickCount:1})});await settled(cdp);}
   const measured=await state();assert.equal(measured.measurement?.pending,'false');
   for(const [index,side]of ['start','end'].entries())assert.equal(Date.parse(measured.measurement[side].measureDate)/1000,points[index].time,'Measurement must retain the selected actual source date');

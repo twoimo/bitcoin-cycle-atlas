@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import {readFile} from 'node:fs/promises';
+import {accumulateWheelRange,zoomRange} from '../dist/chart-navigation.js';
 import { ethPayload,ethViewFixture } from './helpers/eth-view-fixture.mjs';
 import { equityPayload,equityViewFixture } from './helpers/equity-view-fixture.mjs';
 
@@ -28,4 +30,27 @@ for(const symbol of ['MSTR','BMNR'])test(`${symbol} weekly switch and scale mode
   f.interval('daily');await f.settle();preserved(weekly,f.latest(),domain);assert.deepEqual(f.latest().series.candles,original);
   f.action('scale');await f.frame();assert.equal(f.latest().scale,'linear');assert.deepEqual(f.latest().priceDomain,domain);
   f.priceRange({min:-20,max:130});await f.frame();f.action('scale');await f.frame();assert.equal(f.latest().scale,'log');assert.equal(f.latest().priceDomain,null,'log mode cannot retain a nonpositive domain');
+});
+
+for(const [symbol,slug]of [['ETHUSD','eth'],['MSTR','mstr'],['BMNR','bmnr']])test(`${symbol} real-source initializer keeps the right endpoint when zoom expands before its first observation`,async()=>{
+  const payload=JSON.parse(await readFile(new URL(`../dist/data/${slug}-ohlc.json`,import.meta.url),'utf8'));
+  const f=symbol==='ETHUSD'?await ethViewFixture({query:'&forecast=off'}):await equityViewFixture(symbol);
+  f.reply(0,payload);
+  if(symbol!=='ETHUSD'){await f.microtasks();f.reply(1,{revision:1});}
+  await f.settle();await f.initialization;
+  const original=structuredClone(f.latest().series.candles);
+  // BMNR's default4y view already reaches its first observation; long-history
+  // sources use a real early window to exercise the same source boundary.
+  if(symbol!=='BMNR'){const range=f.latest().range;f.pan({...range,start:range.min,end:range.min+120*DAY});await f.frame();}
+  Object.assign(f.latest().svg.dataset,{plotLeft:'12',plotRight:'566'});
+  const initial=f.navigationRange();
+  f.pan(accumulateWheelRange(initial,null,{factor:Math.exp(-.24),anchor:1}).range);await f.frame();
+  const inward=f.navigationRange();assert.ok(inward.start>initial.start);assert.equal(inward.end,initial.end);
+  f.pan(zoomRange(inward,Math.exp(.4),1));await f.frame();
+  const expanded=f.latest().range;
+  assert.equal(expanded.end,initial.end,'Source-boundary clamping cannot move the right-anchored date');
+  assert.ok(expanded.start<initial.min,'The same BTC navigation permits genuine empty space before the source begins');
+  assert.equal(expanded.allowEmpty,true);assert.ok(expanded.maxSpan<=expanded.spacingBounds.sourceLimit);
+  assert.ok(Number.isInteger((expanded.start-expanded.min)/expanded.step));assert.ok(Number.isInteger((expanded.end-expanded.min)/expanded.step));
+  assert.deepEqual(f.latest().series.candles,original,'Viewport freedom must not create or modify source candles');
 });

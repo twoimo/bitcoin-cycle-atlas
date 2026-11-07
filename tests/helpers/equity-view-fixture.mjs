@@ -155,6 +155,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     span: value => click('span', value), action: value => click('action', value),
     scenario: value => app.querySelector('#equity-scenario').onchange({ target: { value } }),
     pan: range => navigation.onRangeChange(range),
+    navigationRange: () => navigation.getRange(),
     priceRange: range => navigation.onPriceRangeChange(range),
     latest: () => draws.at(-1),
     status: () => app.querySelector('#equity-status').textContent,

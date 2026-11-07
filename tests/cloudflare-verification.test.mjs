@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
-import {cloudflareBuildGates,cloudflareRuntime,requiredCloudflareGateIds,cloudflareBrowserCaseCount,cloudflarePlanSha256,assertCloudflareVerificationReceipt} from '../scripts/cloudflare-build-contract.mjs';
+import {cloudflareBuildGates,cloudflareParallelGroups,cloudflareBrowserExecution,cloudflareRuntime,requiredCloudflareGateIds,cloudflareBrowserCaseCount,cloudflarePlanSha256,assertCloudflareVerificationReceipt} from '../scripts/cloudflare-build-contract.mjs';
 import {assertCompleteNativeBrowserReport} from '../scripts/verify-cloudflare-build.mjs';
 import {missingRuntimePackages} from '../scripts/bootstrap-cloudflare-build.mjs';
 import {createEthBrowserCaseSpecs} from '../scripts/eth-browser-case-specs.mjs';
@@ -18,6 +18,7 @@ const receipt=()=>({schemaVersion:1,kind:'atlas-cloudflare-verification',status:
   startedAt:'2026-11-07T00:00:00.000Z',completedAt:'2026-11-07T00:10:00.000Z',
   runtime:{node:cloudflareRuntime.node,platform:'linux',arch:'x64'},
   gates:requiredCloudflareGateIds.map(id=>({id,status:'PASS',durationMs:1,logSha256:'c'.repeat(64)})),
+  executionGroups:cloudflareParallelGroups.map(gateIds=>({gateIds,durationMs:1,startedAt:'2026-11-07T00:00:01.000Z',completedAt:'2026-11-07T00:00:01.001Z',resources:{available:false}})),
   browser:{caseCount:cloudflareBrowserCaseCount,scope:'all',sourceCommit,sourceIntegrity:true,reportSha256:'d'.repeat(64)}});
 const browser=()=>({status:'passed',caseScope:'all',sourceCommit,declaredCaseCount:cloudflareBrowserCaseCount,expectedCaseCount:cloudflareBrowserCaseCount,
   cases:createEthBrowserCaseSpecs().map(caseSpec=>({caseSpec,status:'passed',screenshots:[{file:'synthetic-unit-fixture.png'}]})),
@@ -32,6 +33,7 @@ test('Cloudflare deployment receipt rejects partial, stale, failed and inspect-o
     value=>value.gates[0].logSha256=null,value=>value.browser.caseCount--,value=>value.browser.scope='workspace-consolidated',
     value=>value.browser.sourceCommit='f'.repeat(40),value=>value.browser.sourceIntegrity=false,
     value=>value.runtime.node='v24.22.1',value=>value.completedAt='2026-11-06T00:00:00.000Z',
+    value=>value.executionGroups=[],value=>value.executionGroups[0].gateIds=['native-browser'],value=>value.executionGroups[0].resources={},
   ]){const value=receipt();change(value);assert.throws(()=>assertCloudflareVerificationReceipt(value,{sourceCommit,sourceTree}));}
 });
 
@@ -49,6 +51,11 @@ test('the migrated build retains ordinary model, numerical, formal, PostgreSQL a
   for(const name of ['pages','forecast','research','eth-events','treasury-paths','numerics','formal','cycle','performance','static','chart-replay','publication'])
     assert.ok(commands.has('run verify:'+name),'Missing actual verification command '+name);
   assert.ok(commands.has('test -- --test-concurrency=2'));
+  assert.deepEqual(cloudflareParallelGroups,[['native-browser','model-tests']]);
+  assert.equal(cloudflareBrowserExecution.maximumProcesses,2);assert.equal(cloudflareBrowserExecution.perLaneConcurrency,1);
+  assert.deepEqual(cloudflareBrowserExecution.lanes.map(lane=>lane.scope),['non-chart-replay','chart-replay']);
+  assert.equal(cloudflareBrowserExecution.lanes.reduce((count,lane)=>count+lane.caseCount,0),cloudflareBrowserCaseCount);
+  assert.deepEqual(cloudflareBuildGates.find(gate=>gate.id==='native-browser').args,['scripts/verify-native-browser-suite.mjs']);
   assert.ok(commands.has('run typecheck'));assert.ok(commands.has('run build:web'));
   for(const id of ['panel-tests','postgres-service-tests','native-browser','standalone','standalone-check'])assert.ok(requiredCloudflareGateIds.includes(id));
   assert.equal(cloudflareBrowserCaseCount,createEthBrowserCaseSpecs().length);

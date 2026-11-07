@@ -44,6 +44,31 @@ remain logged and every PNG remains in `build/eth-browser`. The runner checks
 every PNG's byte length/hash before accepting the browser receipt. Build logs
 are not a replacement for long-term research evidence storage.
 
+### Bounded execution inside one Build
+
+The native-browser and canonical model-test gates run together after the
+PostgreSQL service gate. Each owns a separate raw log; one coordinator writes
+both validated results in the declared gate order. A failure or timeout stops
+both process groups and drains their logs before recording failure. Publication
+packaging fixtures run in isolated copies and cannot change the browser's
+served `dist` files.
+
+The complete browser suite uses two independent Chrome processes and profiles.
+The46 non-chart-replay cases retain their original order and shared context in
+one lane. The7 chart-replay cases retain their original order and isolated
+contexts in the other lane. Separate Chrome processes preserve actual focus,
+visibility and playback behavior; focus emulation is not substituted. The final
+report requires every original case exactly once, ordered as the original53-case
+inventory, with matching source hashes, browser identity and verified PNG bytes.
+No partial lane report qualifies as the native-browser gate.
+
+Representative screenshots and exact report bytes are transported through
+4096-character base64 chunks in authenticated Build logs. Each chunk repeats
+its artifact name, index, total, original byte count and SHA-256. Reconstruction
+rejects incomplete, duplicated, mixed or corrupt chunks. The execution-plan
+hash includes the overlap and browser-lane strategy; actual Build timing and
+container resource measurements determine whether it fits the free limit.
+
 ## Actual build prerequisites
 
 The documented Workers Builds image is Ubuntu24.04 x86_64. The preinstalled

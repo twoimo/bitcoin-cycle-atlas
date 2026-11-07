@@ -12,7 +12,7 @@ export const cloudflareBuildGates=Object.freeze([
   {id:'panel-tests',kind:'node-tests',directory:'tests/web',extension:'.test.tsx'},
   {id:'service-build',command:'npm',args:['run','build:web']},
   {id:'postgres-service-tests',kind:'node-tests',directory:'tests/service',extension:'.test.ts'},
-  {id:'native-browser',command:'node',args:['scripts/verify-eth-candidate-browser.mjs']},
+  {id:'native-browser',command:'node',args:['scripts/verify-native-browser-suite.mjs']},
   {id:'model-tests',command:'npm',args:['test','--','--test-concurrency=2']},
   ...['forecast','research','eth-events','treasury-paths','numerics','formal','cycle','performance','static','chart-replay'].map(id=>({id,command:'npm',args:['run','verify:'+id]})),
   {id:'publication',command:'npm',args:['run','build:publication']},
@@ -20,6 +20,19 @@ export const cloudflareBuildGates=Object.freeze([
   {id:'standalone',command:'node',args:['scripts/build-standalone.mjs','build/Bitcoin_Cycles_Comparison.html']},
   {id:'standalone-check',command:'node',args:['scripts/verify-static.mjs','--standalone','build/Bitcoin_Cycles_Comparison.html']},
 ].map(gate=>Object.freeze(gate)));
+
+// Only these adjacent, separately logged gates overlap. All preparation and
+// artifact-writing gates remain sequential; receipt order stays declarative.
+export const cloudflareParallelGroups=Object.freeze([
+  Object.freeze(['native-browser','model-tests']),
+]);
+export const cloudflareBrowserExecution=Object.freeze({
+  maximumProcesses:2,perLaneConcurrency:1,
+  lanes:Object.freeze([
+    Object.freeze({scope:'non-chart-replay',caseCount:createEthBrowserCaseSpecs().filter(spec=>!spec.chartReplay).length}),
+    Object.freeze({scope:'chart-replay',caseCount:createEthBrowserCaseSpecs().filter(spec=>spec.chartReplay).length}),
+  ]),
+});
 
 export const cloudflareRuntime=Object.freeze({
   node:'v24.22.2',platform:'linux',arch:'x64',ubuntu:'24.04',
@@ -49,7 +62,8 @@ export const cloudflareRuntime=Object.freeze({
 export const requiredCloudflareGateIds=Object.freeze(cloudflareBuildGates.map(gate=>gate.id));
 export const cloudflareBrowserCaseCount=createEthBrowserCaseSpecs().length;
 export const cloudflarePlanSha256=createHash('sha256').update(JSON.stringify({
-  gates:cloudflareBuildGates,runtime:cloudflareRuntime,browserCases:createEthBrowserCaseSpecs(),
+  gates:cloudflareBuildGates,parallelGroups:cloudflareParallelGroups,browserExecution:cloudflareBrowserExecution,
+  runtime:cloudflareRuntime,browserCases:createEthBrowserCaseSpecs(),
 })).digest('hex');
 
 export function assertCloudflareVerificationReceipt(receipt,{sourceCommit,sourceTree}={}){
@@ -60,11 +74,17 @@ export function assertCloudflareVerificationReceipt(receipt,{sourceCommit,source
   assert.equal(receipt.sourceCommit,sourceCommit,'Verification belongs to another source commit');
   if(sourceTree)assert.equal(receipt.sourceTree,sourceTree,'Verification belongs to another source tree');
   assert.equal(receipt.planSha256,cloudflarePlanSha256,'Verification used a different gate/runtime plan');
-  assert.deepEqual(receipt.gates?.map(gate=>gate.id),requiredCloudflareGateIds,'Every required gate must execute exactly once in order');
+  assert.deepEqual(receipt.gates?.map(gate=>gate.id),requiredCloudflareGateIds,'Every required gate must execute exactly once in declared receipt order');
   for(const gate of receipt.gates){
     assert.equal(gate.status,'PASS','Incomplete or failed gate: '+gate.id);
     assert.ok(Number.isFinite(gate.durationMs)&&gate.durationMs>=0,'Actual gate duration is required');
     assert.match(gate.logSha256??'',/^[a-f0-9]{64}$/,'Actual gate log hash is required');
+  }
+  assert.deepEqual(receipt.executionGroups?.map(group=>group.gateIds),cloudflareParallelGroups,'The observed execution groups must match the verified plan');
+  for(const group of receipt.executionGroups){
+    assert.ok(Number.isFinite(group.durationMs)&&group.durationMs>=0,'Actual execution group duration is required');
+    assert.ok(Number.isFinite(Date.parse(group.startedAt))&&Date.parse(group.completedAt)>=Date.parse(group.startedAt),'Actual execution group clocks are required');
+    assert.equal(typeof group.resources?.available,'boolean','Resource observation availability must be explicit');
   }
   assert.equal(receipt.browser?.caseCount,cloudflareBrowserCaseCount,'Complete native browser inventory is required');
   assert.equal(receipt.browser?.scope,'all');

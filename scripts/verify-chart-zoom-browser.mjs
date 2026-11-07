@@ -50,8 +50,8 @@ export async function verifyChartZoomBrowser({cdp,context=cdp,receipt,evaluate,u
   let baseline,perimeter;
   function assertGeometry(state,chrome,stage) {
     assert.ok(valid(state),label+': rendered chart metadata is invalid during '+stage+': '+JSON.stringify(state));
-    assert.ok(near(state.box.height,state.allocation.height),label+': SVG must fill its allocated height during '+stage);
-    assert.ok(near(state.box.width,state.allocation.width),label+': SVG must fill its allocated width during '+stage);
+    assert.ok(near(state.box.height,state.allocation.height),label+': SVG must fill its allocated height during '+stage+': '+JSON.stringify({svg:state.box,allocation:state.allocation}));
+    assert.ok(near(state.box.width,state.allocation.width),label+': SVG must fill its allocated width during '+stage+': '+JSON.stringify({svg:state.box,allocation:state.allocation}));
     assert.ok(near(state.view.height,state.box.height)&&near(state.view.width,state.box.width),label+': SVG coordinates must remain pixel-sized during '+stage);
     assert.ok(state.documentWidth<=state.viewport.width+1,label+': chart introduced horizontal page overflow during '+stage);
     for(const [name,box]of Object.entries(chrome)){
@@ -63,7 +63,7 @@ export async function verifyChartZoomBrowser({cdp,context=cdp,receipt,evaluate,u
   }
   async function capture(stage) {
     const state=await read(),chrome=await evaluate(cdp,readPerimeter);
-    assertGeometry(state,chrome,stage);record.states.push({stage,...state,perimeter:chrome});return state;
+    record.states.push({stage,...state,perimeter:chrome});assertGeometry(state,chrome,stage);return state;
   }
   async function pointFor(state,kind) {
     const local=state.points[kind];assert.ok(local,label+': '+kind+' axis/plot has no unobscured native target');
@@ -85,7 +85,7 @@ export async function verifyChartZoomBrowser({cdp,context=cdp,receipt,evaluate,u
     await until(async()=>valid(await read()),label+' rendered zoom metadata',10000);
     await settled(context);
     baseline=await read();perimeter=await evaluate(cdp,readPerimeter);
-    assertGeometry(baseline,perimeter,'initial');record.states.push({stage:'initial',...baseline,perimeter});
+    record.states.push({stage:'initial',...baseline,perimeter});assertGeometry(baseline,perimeter,'initial');
 
     await wheel(baseline,'plot');
     await until(async()=>{const next=await read();return valid(next)&&span(next)<span(baseline);},label+' native plot-wheel zoom',5000);
@@ -121,5 +121,12 @@ export async function verifyChartZoomBrowser({cdp,context=cdp,receipt,evaluate,u
     assert.ok(span(expanded)>span(automatic),label+': dragging the time axis right must expand the visible time span');
     assert.equal(expanded.end,automatic.end,label+': time-axis drag must retain the right endpoint');
     record.status='passed';return record;
-  }catch(error){record.status='failed';record.error=error instanceof Error?error.message:String(error);throw error;}
+  }catch(error){
+    record.status='failed';record.error=error instanceof Error?error.message:String(error);
+    // Keep the actual coordinates/domains readable in bounded CI log pages;
+    // the complete case receipt can be larger than a provider's log line cap.
+    console.error('ATLAS_CHART_ZOOM_FAILURE '+JSON.stringify({label,width:receipt.width,height:receipt.height,error:record.error,inputs:record.inputs,
+      states:record.states.map(({stage,start,end,priceMin,priceMax,priceMode,box,allocation,plot})=>({stage,start,end,priceMin,priceMax,priceMode,box,allocation,plot}))}));
+    throw error;
+  }
 }

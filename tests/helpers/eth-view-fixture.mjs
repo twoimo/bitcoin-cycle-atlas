@@ -166,7 +166,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     show: () => window.dispatchEvent({ type: 'pageshow', persisted: true }),
     resize: () => resize(), refresh: () => click('action', 'refresh'),
     interval: value => click('interval', value), span: value => click('span', value),
-    pan: range => navigation.onRangeChange(range), priceRange: range => navigation.onPriceRangeChange(range),
+    pan: range => navigation.onRangeChange(range), priceRange: range => navigation.onPriceRangeChange(range), navigationRange: () => navigation.getRange(),
     focusEvent: id => historyOptions.onFocusEvent(id), latest: () => draws.at(-1),
     status: () => app.querySelector('#eth-status').textContent,
     info: () => { click('action', 'info'); return document.body.nodes.get('eth-data-dialog'); },
