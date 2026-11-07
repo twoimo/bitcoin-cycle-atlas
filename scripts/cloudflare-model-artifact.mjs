@@ -31,7 +31,15 @@ export function reportModelArtifactFailure(error,write=line=>process.stderr.writ
   // Provider errors can contain the secret URL. Never print arbitrary messages,
   // causes, response bodies, command objects or stacks from external code.
   const code=error instanceof ModelArtifactError&&/^MODEL_COMPONENT_[A-Z_]+$/.test(error.code)?error.code:'MODEL_COMPONENT_UNEXPECTED';
-  write(JSON.stringify({status:'FAIL',code})+'\n');
+  const result={status:'FAIL',code},detail=error instanceof ModelArtifactError?error.readback:null;
+  if(code==='MODEL_COMPONENT_READBACK'&&detail&&
+    ['transport','http','redirect','integrity','size','cancelled','deadline'].includes(detail.category)&&
+    ['component','index'].includes(detail.asset)&&Number.isSafeInteger(detail.attempt)&&detail.attempt>=0&&detail.attempt<=16&&
+    (detail.status===null||(Number.isInteger(detail.status)&&detail.status>=100&&detail.status<=599))&&
+    Number.isSafeInteger(detail.elapsedMs)&&detail.elapsedMs>=0){
+    result.readback={category:detail.category,asset:detail.asset,status:detail.status,attempt:detail.attempt,elapsedMs:detail.elapsedMs};
+  }
+  write(JSON.stringify(result)+'\n');
 }
 export function modelArtifactProfile(mode) {
   if(!['production','review'].includes(mode))fail('MODEL_COMPONENT_MODE','An explicit production or review mode is required');
@@ -120,7 +128,7 @@ async function assertBuildTools(root) {
   }
 }
 function expectedWorkerConfig(profile) {
-  return {name:profile.producerWorkerName,compatibilityDate:'2026-11-07',assets:{htmlHandling:'none',notFoundHandling:'none'},workersDev:true};
+  return {name:profile.producerWorkerName,compatibilityDate:'2026-11-07',assets:{htmlHandling:'none',notFoundHandling:'none'},workersDev:true,previewUrls:false};
 }
 function generatedProjectFiles(profile){
   return new Map([

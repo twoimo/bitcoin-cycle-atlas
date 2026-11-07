@@ -12,6 +12,7 @@ export default defineConfig({
     name: 'bitcoin-cycle-atlas',
     compatibilityDate: '2026-11-07',
     workersDev: true,
+    previewUrls: false,
     assets: {
       htmlHandling: 'auto-trailing-slash',
       notFoundHandling: '404-page',

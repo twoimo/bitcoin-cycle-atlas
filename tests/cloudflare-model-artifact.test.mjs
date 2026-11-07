@@ -7,7 +7,7 @@ import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {modelComponentFixture} from './helpers/cloudflare-staged-fixture.mjs';
 import {serializeModelComponent} from '../scripts/cloudflare-model-provider-policy.mjs';
-import {assertModelBuildIdentity,buildModelComponentArtifact,modelArtifactPaths,modelArtifactProfile,modelCommandEnvironment,
+import {ModelArtifactError,assertModelBuildIdentity,buildModelComponentArtifact,modelArtifactPaths,modelArtifactProfile,modelCommandEnvironment,
   parseModelArtifactArgs,readModelBuildIdentity,reportModelArtifactFailure,verifyModelComponentArtifact} from '../scripts/cloudflare-model-artifact.mjs';
 import {assertPublicationHook,deployModelComponent,triggerPublicationHook,verifyPublishedModelBytes} from '../scripts/deploy-cloudflare-model-component.mjs';
 
@@ -42,7 +42,7 @@ async function fixture(t,{mode='review',realBuild=false}={}){
     const workspace=resolve(root,modelArtifactPaths.workspace),profile=modelArtifactProfile(mode);
     await mkdir(resolve(workspace,'.cloudflare/output/v0/workers/default'),{recursive:true});
     await cp(resolve(workspace,'public'),resolve(workspace,modelArtifactPaths.assets),{recursive:true});
-    await writeFile(resolve(workspace,modelArtifactPaths.workerConfig),JSON.stringify({name:profile.producerWorkerName,compatibilityDate:'2026-11-07',assets:{htmlHandling:'none',notFoundHandling:'none'},workersDev:true}));
+    await writeFile(resolve(workspace,modelArtifactPaths.workerConfig),JSON.stringify({name:profile.producerWorkerName,compatibilityDate:'2026-11-07',assets:{htmlHandling:'none',notFoundHandling:'none'},workersDev:true,previewUrls:false}));
     await writeFile(resolve(workspace,modelArtifactPaths.rootConfig),JSON.stringify({buildContext:{isPreview:false,mode}}));
   };
   const options={root,mode,env,now,readIdentity,...(realBuild?{}:{run})};
@@ -117,6 +117,7 @@ test('pinned Vite creates an actual assets-only prebuilt artifact and cf validat
   const result=await deployModelComponent({root:value.root,mode:value.mode,env:value.env,now:()=>now,dryRun:true,readIdentity:value.readIdentity,
     fetchImpl:()=>{throw new Error('A dry run must never issue a request');}});
   assert.equal(result.status,'MODEL_COMPONENT_DRY_RUN');
+  assert.equal(JSON.parse(await readFile(resolve(value.root,modelArtifactPaths.workspace,modelArtifactPaths.workerConfig),'utf8')).previewUrls,false);
   assert.equal(result.qualifiesFullVerification,false);
   assert.equal(await readFile(resolve(value.root,'dist/sentinel.txt'),'utf8'),'product output must remain unchanged');
   assert.equal(await readFile(resolve(value.root,'.cloudflare/sentinel.txt'),'utf8'),'product prebuilt output must remain unchanged');
@@ -147,7 +148,7 @@ test('changed public bytes, source component and packaging receipt are independe
 
 test('runtime entrypoints, bindings, alternate workers, preview modes and edited config scripts fail closed',async t=>{
   for(const change of [{entrypoint:'worker.js'},{bindings:{SECRET:{type:'secret'}}},{name:'bitcoin-cycle-atlas'},
-    {assets:{htmlHandling:'none',notFoundHandling:'none',runWorkerFirst:true}}]){
+    {assets:{htmlHandling:'none',notFoundHandling:'none',runWorkerFirst:true}},{previewUrls:true},{previewUrls:undefined}]){
     const value=await fixture(t),path=resolve(value.root,modelArtifactPaths.workspace,modelArtifactPaths.workerConfig);
     const config=JSON.parse(await readFile(path));await writeFile(path,JSON.stringify({...config,...change}));
     await assert.rejects(()=>verifyModelComponentArtifact(value.options),error=>error.code==='MODEL_COMPONENT_CONFIG');
@@ -245,4 +246,155 @@ test('public readback requires both original byte sequences with no redirect or 
     async()=>new Response(value.componentBytes,{headers:{'content-length':'999999999'}})]){
     await assert.rejects(()=>verifyPublishedModelBytes({...value,fetchImpl}));
   }
+});
+
+function readbackClock(){
+  let elapsed=0;
+  return {clock:()=>elapsed,advance:ms=>{elapsed+=ms;},get elapsed(){return elapsed;},
+    delay:async(ms,{signal})=>{signal.throwIfAborted();elapsed+=ms;signal.throwIfAborted();}};
+}
+
+test('transient readback availability retries within one budget and retains safe recovery evidence',async t=>{
+  const value=await verifiedFixture(t);
+  for(const transient of [404,408,425,429,500,502,503,504,'transport']){
+    const time=readbackClock(),calls=[];
+    const result=await verifyPublishedModelBytes({...value,clock:time.clock,delay:time.delay,
+      fetchImpl:async(url,options)=>{
+        calls.push(url);assert.equal(options.redirect,'manual');assert.equal(options.credentials,'omit');assert.equal(options.cache,'no-store');
+        assert.ok(options.signal instanceof AbortSignal);
+        if(calls.length===1){if(transient==='transport')throw new Error(hook);return new Response('unavailable',{status:transient});}
+        return readbackFetch(value)(url,options);
+      }});
+    assert.equal(result.status,'EXACT_BYTES_CONFIRMED');assert.equal(result.attempts,2);assert.equal(result.elapsedMs,2000);
+    assert.deepEqual(calls,[value.profile.origin+value.index.receipt.path,value.profile.origin+value.index.receipt.path,value.profile.origin+value.artifact.index.path]);
+    assert.deepEqual(result.responses,[{asset:'component',status:200,bytes:value.componentBytes.length},{asset:'index',status:200,bytes:value.indexBytes.length}]);
+    assert.equal(result.retries.length,1);assert.equal(result.retries[0].category,transient==='transport'?'transport':'http');
+    assert.equal(result.retries[0].status,transient==='transport'?null:transient);
+    assert.equal(JSON.stringify(result).includes(hookId),false);
+  }
+});
+
+test('a transient second-file failure rereads both exact files before the private hook',async t=>{
+  const value=await verifiedFixture(t),time=readbackClock(),events=[];let indexReads=0;
+  const result=await deployModelComponent({root:value.root,mode:value.mode,env:value.env,now:()=>now,readIdentity:value.readIdentity,
+    readbackClock:time.clock,readbackDelay:time.delay,run:async()=>{},
+    fetchImpl:async(url,options)=>{
+      events.push(options.method==='POST'?'hook':url.endsWith(value.artifact.index.path)?'index':'component');
+      if(options.method==='GET'&&url.endsWith(value.artifact.index.path)&&++indexReads===1)return new Response('propagating',{status:404});
+      return readbackFetch(value)(url,options);
+    }});
+  assert.deepEqual(events,['component','index','component','index','hook']);
+  assert.equal(result.readback.attempts,2);assert.equal(result.readback.retries[0].asset,'index');
+  assert.equal(result.publication.buildUuid,consumerBuild);assert.equal(result.qualifiesFullVerification,false);
+});
+
+test('receipt bytes from a previous retry cannot mask a later integrity failure or dispatch a hook',async t=>{
+  const value=await verifiedFixture(t),time=readbackClock(),events=[];let componentReads=0;
+  const wrong=Buffer.from(value.componentBytes);wrong[0]^=1;
+  await assert.rejects(()=>deployModelComponent({root:value.root,mode:value.mode,env:value.env,now:()=>now,readIdentity:value.readIdentity,
+    readbackClock:time.clock,readbackDelay:time.delay,run:async()=>{},
+    fetchImpl:async(url,options)=>{
+      events.push(options.method==='POST'?'hook':url.endsWith(value.artifact.index.path)?'index':'component');
+      if(options.method==='POST')return acknowledgement();
+      if(url.endsWith(value.artifact.index.path))return new Response('propagating',{status:503});
+      return new Response(++componentReads===1?value.componentBytes:wrong);
+    }}),error=>error.code==='MODEL_COMPONENT_READBACK'&&error.readback.category==='integrity'&&error.readback.attempt===2);
+  assert.deepEqual(events,['component','index','component']);
+});
+
+test('authentication, redirects, permanent HTTP errors, sizes and equal-length corruption never retry',async t=>{
+  const value=await verifiedFixture(t),wrong=Buffer.from(value.componentBytes);wrong[0]^=1;
+  for(const [response,category,status] of [
+    [()=>new Response('denied',{status:401}),'http',401],[()=>new Response('denied',{status:403}),'http',403],
+    [()=>new Response('invalid',{status:400}),'http',400],[()=>new Response('gone',{status:410}),'http',410],
+    [()=>new Response('unsupported',{status:501}),'http',501],
+    [()=>new Response('redirect',{status:302,headers:{Location:hook}}),'redirect',302],
+    [()=>new Response(wrong),'integrity',200],
+    [()=>new Response(value.componentBytes,{headers:{'content-length':'999999999'}}),'size',200],
+  ]){
+    let requests=0,delays=0;
+    await assert.rejects(()=>verifyPublishedModelBytes({...value,clock:()=>0,delay:async()=>{delays++;},
+      fetchImpl:async()=>{requests++;return response();}}),error=>error.code==='MODEL_COMPONENT_READBACK'&&
+        error.readback.category===category&&error.readback.status===status&&error.readback.attempt===1);
+    assert.equal(requests,1);assert.equal(delays,0);
+  }
+});
+
+test('the shared thirty-second deadline includes retries and blocks the hook on exhaustion',async t=>{
+  const value=await verifiedFixture(t),time=readbackClock();let requests=0,posts=0;
+  await assert.rejects(()=>deployModelComponent({root:value.root,mode:value.mode,env:value.env,now:()=>now,readIdentity:value.readIdentity,
+    readbackClock:time.clock,readbackDelay:time.delay,run:async()=>{},fetchImpl:async(url,options)=>{
+      if(options.method==='POST')posts++;requests++;return new Response('propagating',{status:503});
+    }}),error=>error.code==='MODEL_COMPONENT_READBACK'&&error.readback.category==='deadline'&&
+      error.readback.status===503&&error.readback.elapsedMs===30_000);
+  assert.equal(time.elapsed,30_000);assert.equal(requests,15);assert.equal(posts,0);
+});
+
+test('fetch and body elapsed time share the same deadline rather than receiving fresh per-file budgets',async t=>{
+  const value=await verifiedFixture(t);
+  for(const phase of ['fetch','body']){
+    const time=readbackClock();let requests=0;
+    await assert.rejects(()=>verifyPublishedModelBytes({...value,clock:time.clock,delay:time.delay,
+      fetchImpl:async()=>{
+        requests++;
+        if(phase==='fetch'){time.advance(30_001);return new Response(value.componentBytes);}
+        return new Response(new ReadableStream({pull(controller){time.advance(30_001);controller.enqueue(value.componentBytes);controller.close();}},{highWaterMark:0}));
+      }}),error=>error.readback?.category==='deadline');
+    assert.equal(requests,1);
+  }
+});
+
+test('cancellation stops an already-aborted call, stalled fetch/body and an in-progress retry wait', {timeout:5000},async t=>{
+  const value=await verifiedFixture(t);
+  for(const phase of ['before','fetch','body','wait']){
+    const controller=new AbortController(),time=readbackClock();let requests=0,delays=0;
+    if(phase==='before')controller.abort(new Error(hook));
+    await assert.rejects(()=>verifyPublishedModelBytes({...value,signal:controller.signal,clock:time.clock,
+      delay:async()=>{
+        delays++;queueMicrotask(()=>controller.abort(new Error(hook)));return new Promise(()=>{});
+      },
+      fetchImpl:async()=>{
+        requests++;
+        if(phase==='fetch'){queueMicrotask(()=>controller.abort(new Error(hook)));return new Promise(()=>{});}
+        if(phase==='body')return new Response(new ReadableStream({pull(){queueMicrotask(()=>controller.abort(new Error(hook)));return new Promise(()=>{});},cancel(){return new Promise(()=>{});}},{highWaterMark:0}));
+        return new Response('propagating',{status:503});
+      }}),error=>error.readback?.category==='cancelled'&&!error.message.includes(hookId));
+    assert.equal(requests,phase==='before'?0:1);assert.equal(delays,phase==='wait'?1:0);
+  }
+});
+
+test('cancellation after byte readback but before the fresh source check completes cannot dispatch a hook',async t=>{
+  const value=await verifiedFixture(t),controller=new AbortController();let identityReads=0,posts=0;
+  await assert.rejects(()=>deployModelComponent({root:value.root,mode:value.mode,env:value.env,now:()=>now,signal:controller.signal,
+    readIdentity:()=>{if(++identityReads===2)controller.abort(new Error(hook));return clone(value.identity);},run:async()=>{},
+    fetchImpl:async(url,options)=>{if(options.method==='POST')posts++;return readbackFetch(value)(url,options);}}),
+    error=>error.code==='MODEL_COMPONENT_CANCELLED');
+  assert.equal(posts,0);assert.equal(identityReads,2);
+});
+
+test('readback diagnostics expose only allowlisted categories and numeric status without provider text',()=>{
+  const detail={category:'http',asset:'index',status:503,attempt:2,elapsedMs:2000};
+  const error=new ModelArtifactError('MODEL_COMPONENT_READBACK',hook);error.readback={...detail,url:hook,body:hook};error.cause=new Error(hook);
+  const lines=[];reportModelArtifactFailure(error,line=>lines.push(line));
+  assert.deepEqual(JSON.parse(lines[0]),{status:'FAIL',code:'MODEL_COMPONENT_READBACK',readback:detail});
+  for(const field of ['category','asset','status','attempt','elapsedMs']){
+    error.readback={...detail,[field]:hook};reportModelArtifactFailure(error,line=>lines.push(line));
+    assert.equal(JSON.parse(lines.at(-1)).readback,undefined);
+  }
+  assert.equal(lines.join('').includes(hookId),false);
+});
+
+test('observed streamed oversize remains fatal even when stream cancellation never settles', {timeout:5000},async t=>{
+  const value=await verifiedFixture(t),time=readbackClock();let requests=0,posts=0,cancellations=0;
+  const tooLarge=Buffer.concat([value.componentBytes,Buffer.from('!')]),signals=[];
+  await assert.rejects(()=>deployModelComponent({root:value.root,mode:value.mode,env:value.env,now:()=>now,readIdentity:value.readIdentity,
+    readbackClock:time.clock,readbackDelay:time.delay,run:async()=>{},
+    fetchImpl:async(url,options)=>{
+      if(options.method==='POST')posts++;
+      requests++;signals.push(options.signal);
+      if(requests===1)return new Response(new ReadableStream({start(stream){stream.enqueue(tooLarge);},cancel(){cancellations++;return new Promise(()=>{});}}));
+      return readbackFetch(value)(url,options);
+    }}),error=>error.code==='MODEL_COMPONENT_READBACK'&&error.readback.category==='size'&&error.readback.attempt===1);
+  assert.equal(requests,1);assert.equal(posts,0);assert.equal(cancellations,1);
+  assert.equal(signals[0].aborted,true);assert.equal(time.elapsed,0);
 });
