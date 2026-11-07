@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-ci-migration",
+  "provider": "cloudflare-workers-builds",
+  "automaticGithubActions": false,
+  "archiveSourceCommit": "731babc",
+  "archives": [
+    {
+      "name": "ci",
+      "previousPath": ".github/workflows/ci.yml",
+      "path": "ops/github-actions-archive/ci.yml",
+      "sha256": "90d5a7435f4bce79e753dba9da103b6a1a1b851d1e88aa8628d51dc71a5852a2",
+      "role": "correctness",
+      "replacement": "npm run verify:cloudflare"
+    },
+    {
+      "name": "pages",
+      "previousPath": ".github/workflows/pages.yml",
+      "path": "ops/github-actions-archive/pages.yml",
+      "sha256": "91dfd4e8fd7bf69933c5aadddf96d1849d242f65fefb5ffa41ebf5f7a1e1a5b2",
+      "role": "deployment",
+      "replacement": "npm run verify:cloudflare && npm run build:cloudflare; npm run deploy:cloudflare"
+    },
+    {
+      "name": "market-lab-service",
+      "previousPath": ".github/workflows/market-lab-service.yml",
+      "path": "ops/github-actions-archive/market-lab-service.yml",
+      "sha256": "58f5ba594555e3064bc5f9ec5763887f4275ffd706b2c204d78320b87ad3420f",
+      "role": "service-and-native-browser",
+      "replacement": "npm run verify:cloudflare"
+    },
+    {
+      "name": "eth-model-evaluation",
+      "previousPath": ".github/workflows/eth-model-evaluation.yml",
+      "path": "ops/github-actions-archive/eth-model-evaluation.yml",
+      "sha256": "d5b18457ee4f4a0d44c08db493b23523d37742921aab1608b43ad752e267625e",
+      "role": "research-qualification",
+      "replacement": "Separate exact-source model acquisition/evaluation and full native browser evidence; no completed qualification is inferred from deployment"
+    },
+    {
+      "name": "refresh-data",
+      "previousPath": ".github/workflows/refresh-data.yml",
+      "path": "ops/github-actions-archive/refresh-data.yml",
+      "sha256": "b13e4b1bb83a1ff9f57c445192785da0e9d064e2744cb270820ddf5a6ea2092f",
+      "role": "scheduled-source-refresh",
+      "replacement": "Cloudflare Cron20 0,6,12,18 * * * -> dedicated refresh build; activation requires validated source write and publication readback"
+    },
+    {
+      "name": "eth-prospective-daily",
+      "previousPath": ".github/workflows/eth-prospective-daily.yml",
+      "path": "ops/github-actions-archive/eth-prospective-daily.yml",
+      "sha256": "0f2f24a770b8b9cb8a66ffbf86d63cc5efbe05d6142880c359930fc54d70e80f",
+      "role": "scheduled-immutable-archive",
+      "replacement": "Cloudflare Cron17 1 * * * -> dedicated preparation/publication builds; exact handoff and archive readback required"
+    },
+    {
+      "name": "release",
+      "previousPath": ".github/workflows/release.yml",
+      "path": "ops/github-actions-archive/release.yml",
+      "sha256": "7181db5f9c7ffa8b15572e5e416b984b26d12254d1613eb169a9d6218865b9a2",
+      "role": "immutable-release",
+      "replacement": "Explicit release packaging/publication preserving existing tag and asset identities"
+    }
+  ],
+  "verification": {
+    "command": "npm run verify:cloudflare",
+    "runner": "scripts/verify-cloudflare-build.mjs",
+    "contract": "scripts/cloudflare-build-contract.mjs",
+    "completeNativeBrowserScope": "all",
+    "canonicalNode": "24.22.2",
+    "dockerRequired": false
+  },
+  "schedules": [
+    {
+      "id": "completed-market-data",
+      "cron": "20 0,6,12,18 * * *",
+      "timezone": "UTC",
+      "runsPerDay": 4,
+      "activationVerified": false,
+      "required": [
+        "actual provider attempt outcomes",
+        "completed observation validation",
+        "optional-source failure preserves prior timestamp",
+        "comparison capture only after successful refresh",
+        "numerical/formal/static gates",
+        "allowlisted non-force source commit",
+        "reject superseded main",
+        "exact publication readback"
+      ]
+    },
+    {
+      "id": "eth-prospective-archive",
+      "cron": "17 1 * * *",
+      "timezone": "UTC",
+      "runsPerDay": 1,
+      "activationVerified": false,
+      "required": [
+        "exact verified prior archive",
+        "current capture without backdating",
+        "replay/readiness/capacity/append/verify",
+        "acquisition failure remains failure",
+        "source/run-bound byte-checked handoff",
+        "separate scoped write credential after validation",
+        "reject changed archive head",
+        "immutable archive readback"
+      ]
+    }
+  ],
+  "limits": {
+    "freeBuildMinutesPerMonth": 3000,
+    "maximumBuildMinutes": 20,
+    "maximumConcurrentBuilds": 1,
+    "cpu": 2,
+    "memoryGiB": 8,
+    "diskGiB": 20
+  },
+  "activationNote": "Workflow files are retained as historical contracts only. A configured cron or successful deployment does not prove either replacement data schedule executed. Require actual Cloudflare trigger, execution and publication readback evidence before marking activationVerified true."
+}

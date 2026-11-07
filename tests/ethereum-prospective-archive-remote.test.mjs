@@ -1,3 +1,4 @@
+import {readArchivedWorkflow} from './support/archived-workflow.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
@@ -237,7 +238,7 @@ test('a different committed seed denies initial branch creation',async()=>{
   }});await assert.rejects(async()=>publishEthereumProspectiveArchiveRemote(await args(server)),/exact committed seed/);assert.equal(writes(server).length,0);
 });
 test('daily workflow has no PR privilege bridge and keeps acquisition failure visible',async()=>{
-  const workflow=await readFile(new URL('../.github/workflows/eth-prospective-daily.yml',import.meta.url),'utf8');
+  const workflow=readArchivedWorkflow('eth-prospective-daily');
   assert.match(workflow,/schedule:\n\s+- cron: '17 1 \* \* \*'/);assert.match(workflow,/workflow_dispatch:/);
   assert.doesNotMatch(workflow,/\n\s+(pull_request_target|pull_request|workflow_run):/);
   assert.match(workflow,/cancel-in-progress: false/);assert.match(workflow,/persist-credentials: false/);
@@ -249,7 +250,7 @@ test('daily workflow has no PR privilege bridge and keeps acquisition failure vi
   assert.match(workflow,/needs\.prepare\.outputs\.acquisition_outcome == 'failure'/);assert.match(workflow,/exit 1/);
 });
 test('candidate workflow authenticates only its archive read and cannot publish repository content',async()=>{
-  const workflow=await readFile(new URL('../.github/workflows/eth-model-evaluation.yml',import.meta.url),'utf8');
+  const workflow=readArchivedWorkflow('eth-model-evaluation');
   assert.match(workflow,/\npermissions:\n  contents: read\n/);
   assert.doesNotMatch(workflow,/\n\s+contents: write\b|pull_request_target:|ethereum-prospective-archive-remote\.mjs publish/);
   assert.equal((workflow.match(/ETH_ARCHIVE_GITHUB_TOKEN:/g)||[]).length,1);

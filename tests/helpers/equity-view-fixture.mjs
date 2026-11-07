@@ -78,6 +78,9 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
   let frameId = 0, navigation;
   const mount = () => ({ cancel() {}, cancelPending() {}, destroy() {} });
   const deps = {
+    mountNativeChartApp: app => document.body.append(app),
+    // Native shell/command behavior has a separate parsed-DOM integration test.
+    mountNativeChartWorkbench: () => ({update(){},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
     setLoadingSurface:(element,busy)=>element?.setAttribute('data-skeleton',String(busy)),
     ...equityData,CAPITAL_POLICIES,
     drawIntradayChart: options => { draws.push(options); return {}; },

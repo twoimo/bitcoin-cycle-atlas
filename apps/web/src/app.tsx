@@ -116,7 +116,7 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
   const page = atlasPages.find(page => page.tab === navigation.tab && (navigation.tab !== 'diagnosis' || page.region === navigation.region))!;
   const chartWorkspace = ['rsi','housing','themes'].includes(navigation.tab);
   const currentInstrument = workspaceInstrument(navigation.tab === 'themes' ? 'HYPE' : navigation.tab === 'housing' ? `HOUSING-${housingRegion.toUpperCase()}` : rsiSymbol)!;
-  const workspaceTitle = chartWorkspace ? '종목 차트' : '시장 분석';
+  const workspaceTitle = chartWorkspace ? '가격 차트' : '시장 분석';
   useEffect(() => {
     document.title = `${chartWorkspace ? currentInstrument.koreanName : page.title} · ${workspaceTitle} · Cycle Atlas`;
   }, [page.title,chartWorkspace,currentInstrument.koreanName,workspaceTitle]);
@@ -213,7 +213,7 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
   const independent=navigation.tab==='housing'||navigation.tab==='themes';
   const snapshotLoading=(snapshotRequested||needsSnapshot)&&data.phase==='loading';
   return <CompactToolbarProvider embedded={embedded} active={centerActive} epoch={centerEpoch}>
-    {!embedded && <DashboardChrome title={workspaceTitle} currentPage={page.id} onNavigate={navigatePage} />}
+    {!embedded && <DashboardChrome title={workspaceTitle} currentPage={page.id} chartSymbol={chartWorkspace?currentInstrument.symbol:workspaceSymbol} onNavigate={navigatePage} />}
     <main data-workspace={chartWorkspace ? 'charts' : 'market'} data-loading-kind={snapshotLoading&&!data.doc&&!independent?navigation.tab:undefined} className={embedded?'atlas-embedded-workspace':'workspace atlas-service-workspace'}><h1 className="atlas-sr-only">{workspaceTitle}</h1>
       <CompactToolbarHost />
       {chartWorkspace ? !embedded && <CompactToolbar label="종목 선택" order={0}><ChartWorkspaceToolbar instrument={currentInstrument} onSelect={selectInstrument}/></CompactToolbar> : <MarketWorkspaceToolbar page={page.id} onNavigate={navigatePage}/>}
@@ -230,8 +230,8 @@ export function MarketLabApp({ load = loadSnapshot, clock = systemClock, embedde
             {navigation.tab === 'scenario' && <ScenarioPanel state={scenario} onChange={setScenario} />}
             {navigation.tab === 'ai' && <EconomicsPanel state={economics} onChange={setEconomics} />}
             {navigation.tab === 'rsi' && (data.phase==='loading'&&!data.doc?<LoadingSkeleton kind="rsi" label={`${rsiSymbol} 가격·RSI 로딩`}/>:<RsiPanel key={rsiSymbol} embedded={embedded} active={centerActive} epoch={centerEpoch} chartCache={rsiChartCache.current} historyCache={rsiHistoryCache.current} symbol={rsiSymbol} onSymbol={selectRsi} revision={delivery?.revision} snapshot={data.doc} now={now} state={rsi} onChange={value => setRsiStates(previous => ({...previous,[rsiSymbol]:value}))} />)}
-            {navigation.tab === 'housing'&&<HousingPanel cache={housingCache.current} selectedRegion={housingRegion} onRegion={region => { const instrument=WORKSPACE_INSTRUMENTS.find(item => item.page === 'housing' && item.region === region); if(instrument)selectInstrument(instrument); }}/>}
-            {navigation.tab === 'themes'&&<ThemePanel cache={themeCache.current} active={centerActive}/>}
+            {navigation.tab === 'housing'&&<HousingPanel cache={housingCache.current} selectedRegion={housingRegion} embedded={embedded} active={centerActive} epoch={centerEpoch} onRegion={region => { const instrument=WORKSPACE_INSTRUMENTS.find(item => item.page === 'housing' && item.region === region); if(instrument)selectInstrument(instrument); }}/>}
+            {navigation.tab === 'themes'&&<ThemePanel cache={themeCache.current} embedded={embedded} active={centerActive} epoch={centerEpoch}/>}
           </section>
           {!independent&&<SourceDisclosure key={`${navigation.tab}:${navigation.region}`} snapshot={data.doc} region={navigation.region} now={now} onOpen={()=>setSnapshotRequested(true)}/>}
         </div>

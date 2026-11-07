@@ -16,5 +16,6 @@ import '../../../dist/compact-toolbar.css';
 import '../../../dist/legacy-workspace-toolbar.css';
 import '../../../dist/editorial-system.css';
 import '../../../dist/editorial-panels.css';
+import './instrument-workbench.css';
 
 createRoot(document.getElementById('root')!).render(<MarketLabApp embedded={new URLSearchParams(location.search).get('embedded')==='1'} />);

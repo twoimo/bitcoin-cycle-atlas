@@ -169,8 +169,8 @@ export function cycleTimingMarkup({points=[],x,left,right,top,bottom,titleY=top-
   markup+='</g>';return {markup,count:valid.length,segments};
 }
 
-/** Observed bars and conditional volume paths share BTC units, with distinct marks. */
-export function volumePaneMarkup({bars,x,left,right,top,bottom,barWidth=3,source='거래소',clipId='volume-clip',futureX=null,projection=[],projectionLabel='점선 · 조건부 평균 거래량',volumeScale='auto',titleY=top-6,titleFontSize=10,separatorY=top-20}){
+/** Observed bars retain their source volume units and market clock. */
+export function volumePaneMarkup({bars,x,left,right,top,bottom,barWidth=3,source='거래소',unit='BTC',clock='UTC',dateLabel=value=>value,clipId='volume-clip',futureX=null,projection=[],projectionLabel='점선 · 조건부 평균 거래량',volumeScale='auto',titleY=top-6,titleFontSize=10,separatorY=top-20}){
   const usable=[],projected=[],positions=new Map();let high=0,positiveLow=Infinity;
   for(const bar of bars){const xx=x(bar);if(!Number.isFinite(bar.volume)||bar.volume<0||!Number.isFinite(xx)||xx<left||xx>right)continue;usable.push(bar);positions.set(bar,xx);high=Math.max(high,bar.volume);if(bar.volume>0)positiveLow=Math.min(positiveLow,bar.volume);}
   for(const point of projection){const xx=x(point);if(point.kind!=='scenario'||!Number.isFinite(point.volume)||point.volume<=0||!Number.isFinite(point.lower)||point.lower<=0||!Number.isFinite(point.upper)||point.lower>point.volume||point.upper<point.volume||!Number.isFinite(xx)||xx<left||xx>right||(Number.isFinite(futureX)&&xx<=futureX))continue;projected.push(point);positions.set(point,xx);high=Math.max(high,point.upper);positiveLow=Math.min(positiveLow,point.lower);}
@@ -182,19 +182,19 @@ export function volumePaneMarkup({bars,x,left,right,top,bottom,barWidth=3,source
   const axisFontSize=Math.min(10,Math.max(1,(bottom-top)*.45)),messageY=top+(bottom-top)/2+axisFontSize*.3;
   let ticks=[0,max];
   if(scale==='log'&&bottom-top>=55){const candidates=[0];for(let power=1;10**power<max;power++)candidates.push(10**power);candidates.push(max);const count=Math.min(4,Math.max(2,Math.floor((bottom-top)/24)));ticks=[...new Set(Array.from({length:count},(_,i)=>candidates[Math.round(i*(candidates.length-1)/(count-1))]))];}
-  let markup=`<defs><clipPath id="${esc(clipId)}"><rect x="${left}" y="${top}" width="${right-left}" height="${Math.max(0,bottom-top)}"/></clipPath><pattern id="${esc(clipId)}-scenario" width="7" height="7" patternUnits="userSpaceOnUse"><path d="M0 7L7 0" stroke="#dfb06d" stroke-width=".65" opacity=".22"/></pattern></defs><g class="volume-pane" data-indicator-layer="volume" data-volume-scale="${scale}" data-volume-observed-count="${usable.length}" data-volume-rendering="${dense?'batched':'individual'}" data-volume-projection-count="${projected.length}"><line x1="${left}" x2="${right}" y1="${separatorY}" y2="${separatorY}" stroke="#2c3949"/><text x="${left}" y="${titleY}" class="volume-pane-title" fill="#9fb2c7" font-size="${titleFontSize}">거래량 · BTC · ${esc(source)}${scale==='log'?' · 로그':''}<title>${scale==='log'?'실제 BTC 수량을 log(1 + 거래량) 축에 표시합니다. 0도 보존합니다.':'선형 BTC 수량 축입니다.'} 막대는 실제 거래량, 점선과 음영은 조건부 시나리오입니다.</title></text>`;
+  let markup=`<defs><clipPath id="${esc(clipId)}"><rect x="${left}" y="${top}" width="${right-left}" height="${Math.max(0,bottom-top)}"/></clipPath><pattern id="${esc(clipId)}-scenario" width="7" height="7" patternUnits="userSpaceOnUse"><path d="M0 7L7 0" stroke="#dfb06d" stroke-width=".65" opacity=".22"/></pattern></defs><g class="volume-pane" data-indicator-layer="volume" data-volume-unit="${esc(unit)}" data-volume-clock="${esc(clock)}" data-volume-scale="${scale}" data-volume-observed-count="${usable.length}" data-volume-rendering="${dense?'batched':'individual'}" data-volume-projection-count="${projected.length}"><line x1="${left}" x2="${right}" y1="${separatorY}" y2="${separatorY}" stroke="#2c3949"/><text x="${left}" y="${titleY}" class="volume-pane-title" fill="#9fb2c7" font-size="${titleFontSize}">거래량 · ${esc(unit)} · ${esc(source)}${scale==='log'?' · 로그':''}<title>${scale==='log'?`실제 ${esc(unit)} 수량을 log(1 + 거래량) 축에 표시합니다. 0도 보존합니다.`:`선형 ${esc(unit)} 수량 축입니다.`} 막대는 실제 거래량${projected.length?', 점선과 음영은 조건부 시나리오':''}입니다.</title></text>`;
   for(const tick of ticks)markup+=`<text data-indicator-axis-label x="${right+7}" y="${Math.max(top+axisFontSize*.5,Math.min(bottom+axisFontSize*.3,y(tick)+axisFontSize*.3))}" fill="#91a5bc" font-size="${axisFontSize}">${high?formatBtcVolume(tick):tick===0?'0':'—'}</text>`;
   markup+=`<line x1="${left}" x2="${right}" y1="${bottom}" y2="${bottom}" stroke="#2a3645"/><g class="volume-bars" clip-path="url(#${esc(clipId)})">`;
   if(dense){
     // Every original rectangle is preserved as a path subshape. This reduces
-    // thousands of DOM nodes to two paths without summing or averaging BTC.
+    // thousands of DOM nodes to two paths without summing or averaging volume.
     const paths=['',''];
     for(const bar of usable){const xx=positions.get(bar)-barWidth/2,yy=y(bar.volume),height=Math.max(0,bottom-yy),side=bar.close>=bar.open?0:1;paths[side]+=`M${xx.toFixed(2)},${yy.toFixed(2)}h${barWidth.toFixed(2)}v${height.toFixed(2)}h${(-barWidth).toFixed(2)}Z`;}
     for(let side=0;side<2;side++)if(paths[side])markup+=`<path class="volume-bars-batch" d="${paths[side]}" data-indicator-fill fill="${side?'#ab6374':'#498f80'}" opacity=".78"/>`;
-    markup+=`<title>${usable.length}개 실제 거래량 막대 · 화면의 같은 가격 날짜에서 정확한 BTC 수량을 확인할 수 있습니다.</title>`;
+    markup+=`<title>${usable.length}개 실제 거래량 막대 · 화면의 같은 가격 날짜에서 정확한 ${esc(unit)} 수량을 확인할 수 있습니다.</title>`;
   }else for(const bar of usable){
     const xx=positions.get(bar),yy=y(bar.volume),color=bar.close>=bar.open?'#498f80':'#ab6374';
-    markup+=`<rect class="volume-bar" data-indicator-fill data-volume="${bar.volume}" data-time="${bar.time}" data-date="${esc(bar.date)}" x="${xx-barWidth/2}" y="${yy}" width="${barWidth}" height="${Math.max(0,bottom-yy)}" fill="${color}" opacity=".78"><title>${esc(`${bar.startDate||bar.date}${bar.endDate?'–'+bar.endDate:''} UTC · ${source} · ${number(bar.volume,8)} BTC`)}</title></rect>`;
+    markup+=`<rect class="volume-bar" data-indicator-fill data-volume="${bar.volume}" data-time="${bar.time}" data-date="${esc(bar.date)}" x="${xx-barWidth/2}" y="${yy}" width="${barWidth}" height="${Math.max(0,bottom-yy)}" fill="${color}" opacity=".78"><title>${esc(`${dateLabel(bar.startDate||bar.date)}${bar.endDate?'–'+dateLabel(bar.endDate):''} ${clock} · ${source} · ${number(bar.volume,8)} ${unit}`)}</title></rect>`;
   }
   markup+='</g>';
   if(projected.length){

@@ -6,16 +6,18 @@ import { useLayoutEffect, useState } from 'react';
 import { readShellPreference, writeShellPreference } from '../../../../dist/atlas-shell-state.js';
 
 import { atlasNavigationPages, atlasNavigationId, atlasPageHref } from '../../../../dist/atlas-navigation.js';
+import { workspaceInstrument } from '../../../../dist/workspace-instruments.js';
 
 function storage() { try { return globalThis.localStorage; } catch { return undefined; } }
-export function DashboardChrome({ title, currentPage, onNavigate }: { title: string; currentPage: string; onNavigate: (id: string) => void }) {
+export function DashboardChrome({ title, currentPage, chartSymbol, onNavigate }: { title: string; currentPage: string; chartSymbol?: string; onNavigate: (id: string) => void }) {
   const [compact, setCompact] = useState(() => readShellPreference(storage()));
+  const chartPage = workspaceInstrument(chartSymbol)?.page;
   useLayoutEffect(() => { document.body.dataset.shell = 'dashboard'; document.body.dataset.sidebar = compact ? 'compact' : 'full'; }, [compact]);
   return <>
     <aside className="atlas-sidebar atlas-dashboard-sidebar" aria-label="주요 페이지">
       <a className="atlas-brand" href={atlasSitePath('/?page=outlook')} aria-label="비트코인 사이클 통합 차트"><span aria-hidden="true">₿</span><strong>Cycle Atlas</strong></a>
-      <nav className="atlas-nav" aria-label="주요 페이지">{atlasNavigationPages.map(page => <a key={page.id} href={atlasSitePath(atlasPageHref(page))} data-atlas-page={page.id}
-        aria-label={page.label} title={page.title} aria-current={page.id === atlasNavigationId(currentPage) ? 'page' : undefined} onClick={page.tab ? event => { if(event.button>0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return; event.preventDefault(); onNavigate(page.id); } : undefined}>
+      <nav className="atlas-nav" aria-label="주요 페이지">{atlasNavigationPages.map(page => <a key={page.id} href={atlasSitePath(atlasPageHref(page, page.id === 'outlook' ? { symbol: chartSymbol } : undefined))} data-atlas-page={page.id}
+        aria-label={page.label} title={page.title} aria-current={page.id === atlasNavigationId(currentPage) ? 'page' : undefined} onClick={page.tab || (page.id === 'outlook' && chartPage) ? event => { if(event.button>0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return; event.preventDefault(); onNavigate(page.id === 'outlook' ? chartPage! : page.id); } : undefined}>
         {page.badge ? <span className="atlas-nav-code" aria-hidden="true">{page.badge}</span> : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={page.icon} /></svg>}
         <span className="atlas-nav-label">{page.label}</span>
       </a>)}</nav>

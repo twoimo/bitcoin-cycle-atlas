@@ -58,7 +58,7 @@ try{
   assert.equal(await page.locator('.ml-axis-value').first().textContent(),value);
   assert.equal(await page.getByText('스냅샷은 읽었지만 관측 자료가 없습니다.',{exact:false}).count(),0);
   report.checks.push('older empty fallback retains populated API observations and accurate notice');
-  await page.locator('[data-atlas-page="rsi"]').click();
+  await page.locator('[data-atlas-page="outlook"]').click();
   await page.locator('.rsi-workbench-tabs button').nth(1).click();
   const submit=page.locator('.rsi-backtest-form button[type="submit"]');
   assert.equal(await submit.isEnabled(),true);await submit.click();

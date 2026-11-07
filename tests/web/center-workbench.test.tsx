@@ -39,8 +39,14 @@ test('center navigation retains all perimeter nodes, restores controls and bound
   select({page:'housing',symbol:'HOUSING-SEOUL',region:'busan',epoch:3});
   assert.match(urls.at(-1)!,/symbol=HOUSING-SEOUL&region=seoul$/,'catalog identity owns the housing region');
   assert.equal(document.body.dataset.centerTool,'housing');
-  click('[data-atlas-page=outlook]');assert.equal((frame as HTMLIFrameElement).hidden,true);assert.equal(svg.hasAttribute('aria-hidden'),false);assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,false);assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,false);
-  assert.equal(toolbar.hidden,true,'Returning to the price chart cannot retain a previous tool header');
+  const onHousing=urls.length;
+  click('[data-atlas-page=outlook]');assert.equal(urls.length,onHousing,'the one price destination is already active for housing');assert.equal((frame as HTMLIFrameElement).hidden,false);
+  click('[data-atlas-page=scenario]');click('[data-atlas-page=outlook]');
+  assert.equal(document.body.dataset.centerTool,'housing','returning to price retains the most recent chart');
+  assert.match(urls.at(-1)!,/symbol=HOUSING-SEOUL&region=seoul$/);
+  document.dispatchEvent(new dom.CustomEvent('atlas:symbol-select',{cancelable:true,detail:{symbol:'BTCUSD'}}));
+  assert.equal((frame as HTMLIFrameElement).hidden,true);assert.equal(svg.hasAttribute('aria-hidden'),false);assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,false);assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,false);
+  assert.equal(toolbar.hidden,true,'explicit BTC selection restores the original chart and its tool header');
   const retainedButton=create('button') as HTMLButtonElement,retainedSelect=create('select') as HTMLSelectElement;
   retainedButton.textContent='Retained portal action';retainedSelect.innerHTML='<option>Retained region</option>';
   toolbar.append(retainedButton,retainedSelect);
@@ -78,7 +84,10 @@ test('static project navigation retains perimeter identity and rejects stale or 
   listeners.get('message')!({source:(frame as any).contentWindow,origin:'http://localhost',data:{kind:'atlas:center-state',page:'rsi',symbol:'SOXL'}});assert.equal(urls.length,before);assert.deepEqual(posts.at(-1),[{kind:'atlas:center-navigate',page:'scenario',symbol:'TQQQ',epoch:2},'http://localhost']);
   const btcSelection=new dom.CustomEvent('atlas:symbol-select',{cancelable:true,detail:{symbol:'BTCUSD'}});
   document.dispatchEvent(btcSelection);assert.equal(btcSelection.defaultPrevented,false,'explicit BTC selection must navigate to BTC instead of restoring background ETH');
-  click('[data-atlas-page=outlook]');assert.equal((frame as HTMLIFrameElement).hidden,true);assert.equal(svg.hasAttribute('aria-hidden'),false);assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,false);assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,false);
+  click('[data-atlas-page=outlook]');assert.equal((frame as HTMLIFrameElement).hidden,false);assert.equal(document.body.dataset.centerTool,'rsi');
+  assert.equal(selectedSymbols.at(-1),'TQQQ','price navigation returns to the last selected ETF');
+  document.dispatchEvent(new dom.CustomEvent('atlas:symbol-select',{cancelable:true,detail:{symbol:'ETHUSD'}}));
+  assert.equal((frame as HTMLIFrameElement).hidden,true);assert.equal(svg.hasAttribute('aria-hidden'),false);assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,false);assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,false);
   assert.equal(selectedSymbols.at(-1),'ETHUSD','returning to the background chart restores its actual asset identity');
   assert.equal(new URL(urls.at(-1)!).searchParams.get('symbol'),'ETHUSD');
 });

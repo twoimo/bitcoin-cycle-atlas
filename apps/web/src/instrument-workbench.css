@@ -1,0 +1,91 @@
+/* Every observed instrument uses the same allocated, pixel-sized plot. */
+body[data-instrument-workbench=true] main[data-workspace=charts] #market-view .ml-scroll {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  scrollbar-gutter: auto;
+}
+body[data-instrument-workbench=true] #ml-panel {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  outline: 0;
+  overflow: hidden;
+}
+.housing-workbench, .theme-workbench {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+.housing-content, .theme-content {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+.housing-workbench[data-view=chart] .housing-content,
+.theme-workbench[data-view=chart] .theme-content {
+  display: flex;
+  overflow: hidden;
+}
+.instrument-workbench[hidden] { display: none; }
+.instrument-workbench:not([hidden]) { min-height: 0; }
+.instrument-workbench .rsi-chart-canvas {
+  min-height: 0;
+  height: 100%;
+  width: auto;
+  touch-action: pan-y pinch-zoom;
+}
+.instrument-workbench .rsi-chart-canvas > svg {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  cursor: inherit;
+  touch-action: inherit;
+}
+.instrument-workbench .rsi-price-text { fill: var(--on-accent); }
+.instrument-workbench .rsi-date-text { fill: var(--text); }
+.instrument-volume-label {
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 3px;
+  pointer-events: none;
+}
+.instrument-workbench .theme-inspector {
+  display: block;
+  border: 0;
+  padding: 0;
+}
+.instrument-workbench .theme-evidence-reading {
+  padding: 0 0 12px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+}
+.instrument-workbench .theme-criterion-readout {
+  display: block;
+  width: auto;
+  margin-right: 0;
+}
+.instrument-workbench .theme-event-mark > text { fill: var(--text); }
+.instrument-workbench .rsi-workbench-panel { flex-basis: 288px; width: 288px; }
+.instrument-workbench .rsi-workbench-panel-scroll { overscroll-behavior: contain; }
+.instrument-method p { margin: 0 0 12px; line-height: 1.65; color: var(--muted); }
+.instrument-method ul { padding-left: 20px; }
+.instrument-method li { margin-bottom: 12px; }
+.instrument-method code, .instrument-revision { overflow-wrap: anywhere; font: 11px var(--font-mono); }
+.theme-workbench > .theme-editor { flex: none; max-height: 70%; overflow: auto; }
+.theme-workbench > .theme-write-status, .theme-workbench > .theme-error, .housing-workbench > .housing-error { flex: none; }
+@media (max-width: 640px) {
+  .instrument-workbench .rsi-workbench-panel { flex-basis: auto; width: min(340px, 100%); }
+  .instrument-workbench .rsi-workbench-panel > header { min-height: 48px; }
+  .instrument-workbench .rsi-workbench-panel > header button { min-width: 44px; min-height: 44px; }
+}

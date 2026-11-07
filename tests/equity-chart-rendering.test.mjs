@@ -22,6 +22,25 @@ test('observed equity candles and conditional lines share a scale without synthe
   }
 });
 
+test('equity volume keeps actual share quantities and New York session dates without future volume',()=>{
+  for(const symbol of ['MSTR','BMNR']){
+    const actual={...series,symbol,product:symbol},original=structuredClone(actual.candles),svg=svgFixture(390);
+    drawIntradayChart({svg,series:actual,showVolume:true,forecast,range:{start:time('2026-10-01'),end:time('2027-01-01')}});
+    assert.match(svg.innerHTML,/data-volume-unit="주" data-volume-clock="뉴욕 세션"/);
+    assert.match(svg.innerHTML,/거래량 · 주 · Yahoo Finance/);
+    assert.match(svg.innerHTML,/data-volume-observed-count="6"/);
+    assert.match(svg.innerHTML,/data-volume-projection-count="0"/);
+    assert.doesNotMatch(svg.innerHTML,/BTC|class="volume-projection"|00:00 UTC/);
+    assert.match(svg.innerHTML,/마지막 완료 봉 · 2026-10-23 뉴욕 세션/);
+    assert.match(svg.innerHTML,/2026-10-16 뉴욕 세션 · O \$99/);
+    for(const row of original){
+      assert.ok(svg.innerHTML.includes(`data-volume="${row.volume}" data-time="${row.time}" data-date="${row.date}"`));
+      assert.ok(svg.innerHTML.includes(`${row.date.slice(0,10)} 뉴욕 세션 · Yahoo Finance · 1,000 주`));
+    }
+    assert.deepEqual(actual.candles,original);
+  }
+});
+
 test('a future-only viewport renders and selects model values with no historical candle substitution',()=>{
   const svg=svgFixture(390);let hovered;
   const controller=drawIntradayChart({svg,series,chartType:'candles',showVolume:false,forecast,range:{start:time('2026-11-01'),end:time('2027-01-01')},onHover:value=>{hovered=value;}});

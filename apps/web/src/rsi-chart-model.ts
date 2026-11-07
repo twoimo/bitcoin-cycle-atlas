@@ -7,7 +7,7 @@ export type Tool='crosshair'|'pan'|'measure';
 export type Pane='data'|'indicators'|'settings'|'method'|'help'|'export'|'date'|'search'|null;
 export interface Anchor {date:string;value:number;panel:'price'|'rsi'}
 export interface RsiChartView {
-  start:string;end:string;selected:string;frequency:'daily'|'weekly';scale:'log'|'linear';chartType:'line'|'candles';tool:Tool;
+  start:string;end:string;selected:string;frequency:'daily'|'weekly'|'monthly';scale:'log'|'linear';chartType:'line'|'candles';tool:Tool;
   autoScale:boolean;domain:{min:number;max:number}|null;inverted:boolean;magnet:'off'|'weak'|'strong';
   showRsi:boolean;showSignal:boolean;showLevels:boolean;showCrossings:boolean;showVolume:boolean;measurement:Anchor[];
 }

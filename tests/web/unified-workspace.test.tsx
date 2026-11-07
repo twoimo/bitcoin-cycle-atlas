@@ -5,6 +5,7 @@ import { readFile } from 'node:fs/promises';
 import { parseHTML } from 'linkedom';
 import type { Root } from 'react-dom/client';
 import { WORKSPACE_INSTRUMENTS, workspaceInstrument, searchWorkspaceInstruments } from '../../dist/workspace-instruments.js';
+import { atlasPageHref } from '../../dist/atlas-navigation.js';
 import { ChartWorkspaceToolbar, MarketWorkspaceToolbar, type WorkspaceInstrument } from '../../apps/web/src/components/workspace-toolbar.js';
 import { MarketLabApp } from '../../apps/web/src/app.js';
 
@@ -95,6 +96,31 @@ test('market workspace presents one labelled view selector with independently se
   assert.equal(fixture.document.querySelector('[role=tab][aria-selected=true]')!.getAttribute('data-workspace-page'),'market-kr');
   await fixture.key('[data-workspace-page="market-kr"]','End');
   assert.equal(fixture.document.querySelector('[role=tab][aria-selected=true]')!.getAttribute('data-workspace-page'),'cashflow');
+});
+
+test('one standalone price-chart destination retains every selected source and region across market analysis',async t=>{
+  const pending:typeof import('../../apps/web/src/load-snapshot.js').loadSnapshot = options => new Promise((_resolve,reject)=>options?.signal?.addEventListener('abort',()=>reject(options.signal?.reason),{once:true}));
+  const fixture=await mount(<MarketLabApp load={pending} clock={()=>new Date('2026-11-04T06:00:00Z')}/>);t.after(fixture.cleanup);
+  const priceLink=()=>fixture.document.querySelector('[data-atlas-page="outlook"]')!;
+  const selectedPage=()=>fixture.document.querySelector('.atlas-nav [aria-current="page"]')?.getAttribute('data-atlas-page');
+  assert.equal(fixture.document.querySelectorAll('.atlas-nav [data-atlas-page]').length,5);
+  assert.equal(fixture.document.querySelector('[data-atlas-page="rsi"]'),null);
+  for(const instrument of WORKSPACE_INSTRUMENTS) {
+    await fixture.click('[role=combobox]');
+    await fixture.click(`[data-workspace-symbol="${instrument.symbol}"]`);
+    const href=atlasPageHref('outlook',{symbol:instrument.symbol});
+    assert.equal(priceLink().getAttribute('href'),href,instrument.symbol);
+    assert.equal(selectedPage(),'outlook',instrument.symbol);
+    await fixture.click('[data-atlas-page="market-us"]');
+    await fixture.click('[data-workspace-page="scenario"]');
+    assert.equal(selectedPage(),'market-us',instrument.symbol);
+    assert.equal(priceLink().getAttribute('href'),href,'analysis preserves the exact instrument link');
+    await fixture.click('[data-atlas-page="outlook"]');
+    assert.equal(selectedPage(),'outlook',instrument.symbol);
+    assert.equal(fixture.document.querySelector('[data-workspace]')?.getAttribute('data-workspace'),'charts');
+    assert.equal(fixture.document.querySelector('.workspace-current-instrument strong')?.textContent,instrument.assetClass==='housing'?instrument.koreanName:instrument.product);
+    assert.equal(priceLink().getAttribute('href'),href,'returning preserves the exact source and region');
+  }
 });
 
 test('embedded charts use host-owned search and reject old or foreign navigation',async t=>{

@@ -1,24 +1,27 @@
 import {atlasSitePath} from '../../../../dist/site-paths.js';
-import { useEffect,useMemo,useState } from 'react';
+import { useEffect,useMemo,useRef,useState } from 'react';
 import { analyzeHousing,type HousingOptions } from '@atlas/domain/housing';
 import { loadHousing,type HousingDelivery } from '../housing-loader.js';
 import { LoadingSkeleton } from '../components/loading-skeleton.js';
 import { HousingChart,HousingScatter,stateName } from './housing-chart.js';
 import { CompactToolbar,CompactToolbarMenu,useCompactToolbar } from '../components/compact-toolbar.js';
+import type { InstrumentChartCache } from '../instrument-chart-model.js';
 
-export type HousingCache={options?:HousingOptions;range?:[number,number];view?:string;selected?:string};
+export type HousingCache={options?:HousingOptions;range?:[number,number];view?:string;selected?:string;charts?:Record<string,InstrumentChartCache>};
 const n=(v:number|null,d=1)=>v===null?'—':v.toLocaleString('ko-KR',{minimumFractionDigits:d,maximumFractionDigits:d});
 const signed=(v:number|null,d=1)=>v===null?'—':`${v>0?'+':''}${n(v,d)}`;
 const direction=(r:number|null)=>r===null?'산정 불가':r>=.2?'양의 상관':r<=-.2?'음의 상관':'뚜렷하지 않음';
-export function HousingPanel({cache,selectedRegion,onRegion}:{cache:HousingCache;selectedRegion?:string;onRegion?:(region:string)=>void}){
+export function HousingPanel({cache,selectedRegion,onRegion,embedded=false,epoch=0,active=true}:{cache:HousingCache;selectedRegion?:string;onRegion?:(region:string)=>void;embedded?:boolean;epoch?:number;active?:boolean}){
   const {hosted}=useCompactToolbar();
+  const legacyChart=useRef({region:cache.options?.region??'busan',range:cache.range??[129,248],selected:cache.selected??'2026-09'});
+  useEffect(()=>{document.body.dataset.instrumentWorkbench='true';return()=>{delete document.body.dataset.instrumentWorkbench;};},[]);
   const [delivery,setDelivery]=useState<HousingDelivery|null>(null),[error,setError]=useState(''),[attempt,setAttempt]=useState(0),[loading,setLoading]=useState(true);
   const [options,setOptions]=useState<HousingOptions>(()=>({...cache.options??{region:'busan',window:36,band:10,lag:2,start:'2006-01',end:'2026-09'},...(selectedRegion?{region:selectedRegion}:{})}));
   useEffect(()=>{if(selectedRegion&&['busan','seoul','gyeonggi','national'].includes(selectedRegion))setOptions(previous=>previous.region===selectedRegion?previous:{...previous,region:selectedRegion});},[selectedRegion]);
-  const [range,setRange]=useState<[number,number]>(cache.range??[129,248]),[selected,setSelected]=useState(cache.selected??'2026-09'),[view,setView]=useState(cache.view??'chart'),[confirmation,setConfirmation]=useState('');
+  const [view,setView]=useState(cache.view??'chart'),[confirmation,setConfirmation]=useState('');
   useEffect(()=>{const abort=new AbortController();setLoading(true);setError('');loadHousing(abort.signal).then(d=>{setDelivery(d);setOptions(o=>({...o,end:o.end>d.snapshot.regions[0].volume.at(-1)![0]?d.snapshot.regions[0].volume.at(-1)![0]:o.end}));},e=>{if(!abort.signal.aborted)setError(e instanceof Error?e.message:'자료 오류');}).finally(()=>{if(!abort.signal.aborted)setLoading(false);});return()=>abort.abort();},[attempt]);
   const analysis=useMemo(()=>{if(!delivery)return null;try{return analyzeHousing(delivery.snapshot,options);}catch{return null;}},[delivery,options]);
-  useEffect(()=>{cache.options=options;cache.range=range;cache.selected=selected;cache.view=view;},[cache,options,range,selected,view]);
+  useEffect(()=>{cache.options=options;cache.view=view;},[cache,options,view]);
   useEffect(()=>{
     if(!delivery||!analysis)return;const abort=new AbortController();setConfirmation(delivery.kind==='saved'?'저장본 계산':'계산 확인 중');
     if(delivery.kind==='api')void (async()=>{try{const r=await fetch(atlasSitePath('/api/v1/housing/analysis'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...options,revision:delivery.revision}),signal:AbortSignal.any([abort.signal,AbortSignal.timeout(6000)])});if(!r.ok)throw new Error('API 계산 실패');const body=await r.json();if(body.revision!==delivery.revision||JSON.stringify(body.result)!==JSON.stringify(analysis))throw new Error('계산 판본 불일치');if(!abort.signal.aborted)setConfirmation('계산 완료');}catch(e){if(!abort.signal.aborted)setConfirmation(e instanceof Error&&e.message==='계산 판본 불일치'?'계산 불일치 · 로컬 결과':'저장본 계산 · 연결 실패');}})();
@@ -32,7 +35,17 @@ export function HousingPanel({cache,selectedRegion,onRegion}:{cache:HousingCache
   const region=delivery?.snapshot.regions.find(r=>r.id===options.region),latest=analysis?.rows.at(-1),r=analysis?.relations.levels;
   const selectedRows=analysis?.rows.filter(r=>r.month>=options.start&&r.month<=options.end)??[];
   const inRange=(v:number)=>Math.max(0,Math.min((analysis?.rows.length??1)-1,v));
-  return <div className="housing-workbench" aria-label="부동산 거래량·실거래가격" aria-busy={loading}>
+  const charts=cache.charts??(cache.charts={}),chartCache=charts[options.region]??(charts[options.region]={});
+  const method=<div className="instrument-method">
+        <p>거래량: 아파트 매매만 포함한 신고월 통계. 증여·분양권·전체 주택 거래량과 구분합니다. 실거래가격지수: 아파트 매매 계약월, 비계절조정. 두 시계열의 같은 월이 같은 계약 집단을 뜻하지 않습니다.</p>
+        <p>평균은 해당 월을 제외한 직전 {options.window}개월의 산술평균입니다. 편차가 +{options.band}% 초과면 상회, −{options.band}% 미만이면 하회, 경계 포함 나머지는 중립입니다. 과거 월이 부족하거나 끊기면 산정을 유보합니다. 평균 기간·중립 폭은 앱의 분석 설정이며 강연에서 확정된 기준이 아닙니다.</p>
+        <p>가설 1은 수준 상관, 전월비 상관, 평균 편차와 가격 전월비 상관을 나누어 봅니다. |r| 0.2 미만은 화면에서 ‘뚜렷하지 않음’으로 부릅니다. 유의성 검정 기준은 아닙니다. 시차 양수는 거래량 신호 이후 가격 전월비입니다. 계절성·금리·정책 등은 통제하지 않았습니다.</p>
+        <p>가설 2·3: 신호월 t의 거래량 상태로 분류하고 I[t+시차+h]/I[t+시차]−1을 계산합니다. 가격이 동일하면 보합으로 남깁니다. 평가 종료월이 분석 종료월을 넘거나 중간 지수가 없으면 제외합니다. 기본 시차 2개월은 공표 지연을 살펴보기 위한 가정입니다. 당시 공표 시각·과거 판본을 복원하지 못했으므로 실시간 매매 가능성을 검증한 결과가 아닙니다.</p>
+        <p>2021년 이후 값은 고정한 최근 구간의 결과이며 사전 등록된 외부 검증이 아닙니다. 비중첩 값은 첫 평가 가능 월을 기준으로 h개월 간격의 고정 표본만 사용합니다. 지역·평균·중립·시차를 여러 번 고르면 사후 선택 편향이 생길 수 있습니다.</p>
+        <p>2026-10-31 ‘플스포 컨퍼런스 2026 (1)’: 40:44 촬영 하이라이트, 41:02 직접 메모에 거래량·실거래지수의 비례 관계가 기록되어 있습니다. 44:50 직접 메모에는 부산 중장기 평균 약 3,100건이 등장합니다. 현재 연결된 자료는 하이라이트·사용자 메모이며 음성 원전사는 제공되지 않았습니다. 강연의 정확한 평균 기간과 음성 발언은 별도 확인이 필요합니다.</p>
+        <ul>{delivery?.snapshot.sources.map(s=><li key={s.id}><a href={s.url} target="_blank" rel="noreferrer">한국부동산원: {s.title}</a><p>{s.clockBasis} ({s.unit})</p><p>확보 {s.retrievedAt.slice(0,10)}</p><code>SHA-256 {s.sha256}</code></li>)}</ul><p>최신 확보 판본 {delivery?.revision} · {confirmation}</p>
+      </div>;
+  return <div className="housing-workbench" data-view={view} aria-label="부동산 거래량·실거래가격" aria-busy={loading}>
     <CompactToolbar label="부동산 차트 도구">
       <label className="compact-toolbar-field">지역<select aria-label="부동산 지역" value={options.region} onChange={e=>onRegion?onRegion(e.target.value):change('region',e.target.value)}><option value="busan">부산</option><option value="seoul">서울</option><option value="gyeonggi">경기</option><option value="national">전국</option></select></label>
       <CompactToolbarMenu name="housing-summary" title="부동산 관측 요약" disabled={!analysis} label={<span className="compact-toolbar-summary"><span>최근</span><b>{n(latest?.volume??null,0)}건</b><span className={latest?.state==='above'?'gain':latest?.state==='below'?'loss':''}>{signed(latest?.deviation??null)}% · {latest?stateName[latest.state]:'산정 대기'}</span></span>}>
@@ -57,23 +70,14 @@ export function HousingPanel({cache,selectedRegion,onRegion}:{cache:HousingCache
     {error&&<div role="alert" className="housing-error">자료 연결 실패: {error} <button type="button" onClick={()=>setAttempt(a=>a+1)}>다시 읽기</button>{delivery&&<span>이전 자료 유지</span>}</div>}
     {loading&&!delivery?<LoadingSkeleton kind="chart" label="부동산 월별 자료 로딩"/>:delivery&&!analysis?<p role="alert" className="housing-error">분석 기간을 확인하세요.</p>:analysis&&<>
       <section className="housing-content" role="tabpanel" id={`housing-view-${view}`} aria-label={hosted?`부동산 ${view==='chart'?'차트':view==='relation'?'관계 분석':view==='backtest'?'가설 2·3 백테스트':'월별 기록'}`:undefined} aria-labelledby={hosted?undefined:`housing-tab-${view}`}>
-        {view==='chart'&&<HousingChart rows={analysis.rows} start={inRange(range[0])} end={inRange(Math.max(range[0],range[1]))} selected={selected} onSelect={setSelected} onRange={(a,b)=>setRange([a,b])}/>}
+        <HousingChart key={options.region} rows={analysis.rows} start={inRange(legacyChart.current.region===options.region?legacyChart.current.range[0]:analysis.rows.length-120)} end={inRange(legacyChart.current.region===options.region?legacyChart.current.range[1]:analysis.rows.length-1)} selected={legacyChart.current.region===options.region?legacyChart.current.selected:analysis.rows.at(-1)!.month} onSelect={month=>{cache.selected=month;}} onRange={(a,b)=>{cache.range=[a,b];}} symbol={`HOUSING-${options.region.toUpperCase()}`} cache={chartCache} embedded={embedded} epoch={epoch} active={active} visible={view==='chart'} currentTab={view} onShowChart={()=>setView('chart')} onRecords={()=>setView('history')} method={method} revision={delivery?.revision}/>
         {view==='relation'&&<><div className="housing-relation-workspace"><div className="housing-relation-stats">{[['수준 ↔ 수준',analysis.relations.levels],['전월비 ↔ 전월비',analysis.relations.changes],['평균 편차 ↔ 가격 전월비',analysis.relations.deviation]].map(([title,c])=>{const stat=c as typeof analysis.relations.levels;return <div key={String(title)}><span>{String(title)}</span><strong>{signed(stat.r,3)}</strong><small>Pearson r · {stat.n}개월</small></div>;})}</div><div className="housing-relation-layout"><div><h2>거래량 평균 편차 / 가격 전월비</h2><HousingScatter rows={selectedRows}/></div><div><h2>거래량 이후 가격 전월비</h2><table className="housing-table"><thead><tr><th>시차</th><th>r</th><th>개월</th></tr></thead><tbody>{analysis.relations.lags.map(c=><tr key={c.lag}><th>{c.lag>0?`+${c.lag}개월 뒤`:c.lag<0?`${Math.abs(c.lag)}개월 전`:'같은 달'}</th><td>{signed(c.r,3)}</td><td>{c.n}</td></tr>)}</tbody></table></div></div></div><p className="housing-caveat">거래량은 신고월, 가격지수는 계약월 기준. 상관은 비례식·인과관계를 입증하지 않습니다.</p></>}
         {view==='backtest'&&<><p className="housing-caveat">신호월 + {options.lag}개월 지수부터 평가 · 최신 수정자료로 계산한 회고 분석</p><div className="housing-table-scroll" role="region" aria-label="부동산 평가 표" tabIndex={0}><table className="housing-table housing-backtest"><caption>2. 상회 → 상승 / 3. 하회 → 조정</caption><thead><tr><th>평가</th><th>거래량</th><th>방향 일치</th><th>기본 빈도</th><th>차이</th><th>평균 가격 변화</th><th>중앙값</th><th>상승/하락/보합</th></tr></thead><tbody>{analysis.backtests.flatMap(b=>b.groups.map(g=><tr key={`${b.horizon}-${g.state}`}><th>{b.horizon}개월 뒤</th><th><span className={`housing-state ${g.state}`}>{stateName[g.state as 'above'|'below'|'neutral']}</span><small>{g.state==='below'?'하락 기준':'상승 기준'}</small></th><td><b>{n(g.rate)}%</b><small>{g.hit}/{g.n}개월</small></td><td>{n(g.baseline.rate)}%<small>{g.baseline.hit}/{g.baseline.n}개월</small></td><td>{signed(g.lift)}%p</td><td>{signed(g.mean,2)}%</td><td>{signed(g.median,2)}%</td><td>{g.up}/{g.down}/{g.flat}</td></tr>))}</tbody></table></div>
           <details className="housing-details"><summary>2021년 이후 / 비중첩 표본 / 제외 건수</summary><div className="housing-table-scroll" role="region" aria-label="부동산 평가 표" tabIndex={0}><table className="housing-table"><thead><tr><th>평가</th><th>거래량</th><th>2021년 이후 일치율</th><th>동일 기간 기본 빈도</th><th>비중첩 일치율</th><th>미완료·결측 제외</th></tr></thead><tbody>{analysis.backtests.flatMap(b=>b.groups.filter(g=>g.state!=='neutral').map(g=>{const hold=b.holdout.find(h=>h.state===g.state)!;return <tr key={`${b.horizon}-${g.state}`}><th>{b.horizon}개월</th><th>{stateName[g.state as 'above'|'below']}</th><td>{n(hold.rate)}% · {hold.hit}/{hold.n}</td><td>{n(hold.baseline.rate)}%</td><td>{n(g.nonOverlapping.rate)}% · {g.nonOverlapping.hit}/{g.nonOverlapping.n}</td><td>{b.excluded}/{b.eligible}</td></tr>;}))}</tbody></table></div></details>
           <details className="housing-details"><summary>월별 평가 내역</summary><div className="housing-table-scroll housing-ledger" role="region" aria-label="부동산 월별 기록 표" tabIndex={0}><table className="housing-table"><thead><tr><th>신호월</th><th>거래량</th><th>평가 시작</th><th>종료</th><th>3개월 변화</th></tr></thead><tbody>{analysis.backtests.find(b=>b.horizon===3)!.outcomes.slice().reverse().map(o=><tr key={o.month}><th>{o.month}</th><td>{stateName[o.state]}</td><td>{o.entry}</td><td>{o.exit}</td><td>{signed(o.change,2)}%</td></tr>)}</tbody></table></div></details><p className="housing-caveat">기본 빈도는 같은 평가 가능 월 전체의 방향 빈도입니다. 중립은 상승 기준 참고값. 월별 표본은 중첩되며, 거래비용·세금·실제 매매 수익률은 포함하지 않습니다.</p></>}
         {view==='history'&&<div className="housing-table-scroll housing-ledger" role="region" aria-label="부동산 월별 기록 표" tabIndex={0}><table className="housing-table"><caption>{region?.label} · {selectedRows.length}개월</caption><thead><tr><th>월</th><th>매매 거래량</th><th>과거 평균</th><th>편차</th><th>상태</th><th>실거래지수</th><th>전월비</th></tr></thead><tbody>{selectedRows.slice().reverse().map(row=><tr key={row.month}><th>{row.month}</th><td>{n(row.volume,0)}</td><td>{n(row.average,0)}</td><td>{signed(row.deviation)}%</td><td className={`housing-state ${row.state}`}>{stateName[row.state]}</td><td>{n(row.price,2)}</td><td>{signed(row.priceChange,2)}%</td></tr>)}</tbody></table></div>}
       </section>
-      <div className="housing-source-line">거래량 {region?.volume.at(-1)?.[0]} · 가격지수 {region?.price.at(-1)?.[0]} · {delivery?.snapshot.indexBase}</div>
-      <details className="housing-details housing-method"><summary>출처·계산 기준·컨퍼런스 기록</summary><div>
-        <p>거래량: 아파트 매매만 포함한 신고월 통계. 증여·분양권·전체 주택 거래량과 구분합니다. 실거래가격지수: 아파트 매매 계약월, 비계절조정. 두 시계열의 같은 월이 같은 계약 집단을 뜻하지 않습니다.</p>
-        <p>평균은 해당 월을 제외한 직전 {options.window}개월의 산술평균입니다. 편차가 +{options.band}% 초과면 상회, −{options.band}% 미만이면 하회, 경계 포함 나머지는 중립입니다. 과거 월이 부족하거나 끊기면 산정을 유보합니다. 평균 기간·중립 폭은 앱의 분석 설정이며 강연에서 확정된 기준이 아닙니다.</p>
-        <p>가설 1은 수준 상관, 전월비 상관, 평균 편차와 가격 전월비 상관을 나누어 봅니다. |r| 0.2 미만은 화면에서 ‘뚜렷하지 않음’으로 부릅니다. 유의성 검정 기준은 아닙니다. 시차 양수는 거래량 신호 이후 가격 전월비입니다. 계절성·금리·정책 등은 통제하지 않았습니다.</p>
-        <p>가설 2·3: 신호월 t의 거래량 상태로 분류하고 I[t+시차+h]/I[t+시차]−1을 계산합니다. 가격이 동일하면 보합으로 남깁니다. 평가 종료월이 분석 종료월을 넘거나 중간 지수가 없으면 제외합니다. 기본 시차 2개월은 공표 지연을 살펴보기 위한 가정입니다. 당시 공표 시각·과거 판본을 복원하지 못했으므로 실시간 매매 가능성을 검증한 결과가 아닙니다.</p>
-        <p>2021년 이후 값은 고정한 최근 구간의 결과이며 사전 등록된 외부 검증이 아닙니다. 비중첩 값은 첫 평가 가능 월을 기준으로 h개월 간격의 고정 표본만 사용합니다. 지역·평균·중립·시차를 여러 번 고르면 사후 선택 편향이 생길 수 있습니다.</p>
-        <p>2026-10-31 ‘플스포 컨퍼런스 2026 (1)’: 40:44 촬영 하이라이트, 41:02 직접 메모에 거래량·실거래지수의 비례 관계가 기록되어 있습니다. 44:50 직접 메모에는 부산 중장기 평균 약 3,100건이 등장합니다. 현재 연결된 자료는 하이라이트·사용자 메모이며 음성 원전사는 제공되지 않았습니다. 강연의 정확한 평균 기간과 음성 발언은 별도 확인이 필요합니다.</p>
-        <ul>{delivery?.snapshot.sources.map(s=><li key={s.id}><a href={s.url} target="_blank" rel="noreferrer">한국부동산원: {s.title}</a><p>{s.clockBasis} ({s.unit})</p><p>확보 {s.retrievedAt.slice(0,10)}</p><code>SHA-256 {s.sha256}</code></li>)}</ul><p>최신 확보 판본 {delivery?.revision} · {confirmation}</p>
-      </div></details>
+
     </>}
   </div>;
 }

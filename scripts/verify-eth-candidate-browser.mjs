@@ -7,6 +7,7 @@ import {verifyForecastReplaySurface} from './verify-forecast-replay-browser.mjs'
 import {verifyChartReplaySurface} from './verify-chart-replay-browser.mjs';
 import {consolidatedPagesBase,verifyConsolidatedWorkspaceSurface} from './verify-consolidated-workspace-browser.mjs';
 import {createEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
+import {verifyNativeChartWorkbench} from './verify-native-chart-workbench-browser.mjs';
 import {createServer} from 'node:http';
 import {readFile,writeFile,mkdir,mkdtemp,rm,stat} from 'node:fs/promises';
 import {resolve,relative,sep,extname} from 'node:path';
@@ -115,6 +116,11 @@ async function click(cdp,selector){
   await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});
   await settled(cdp);
+}
+async function nativeForecast(cdp,selector){
+  const visible=await evaluate(cdp,s=>Boolean(document.querySelector(s)?.checkVisibility()),selector);
+  if(visible)await click(cdp,selector);
+  else{await click(cdp,'#mobile-details-toggle');await click(cdp,'[data-mobile-target="#workbench-scenario"]');}
 }
 async function bounds(cdp,selector){
   return evaluate(cdp,s=>{
@@ -547,7 +553,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
   dark(chart.background,'ETH plot');
   await screenshot(cdp,'eth-'+width+'-loaded.png',receipt);
   if(width===320)receipt.infoDataLinks=await verifyInfoDataLinks(cdp,'ETHUSD');
-  await click(cdp,'[data-eth-action="forecast"]');
+  await nativeForecast(cdp,'[data-eth-action="forecast"]');
   receipt.dialog=await bounds(cdp,'#eth-data-dialog');
   assert.equal(receipt.dialog.open,true);visibleBounds(receipt.dialog,width);dark(receipt.dialog.background,'ETH evidence dialog');
   assert.ok(receipt.dialog.text.includes(expected.date),'Dialog must identify real cutoff');
@@ -581,7 +587,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
     await screenshot(cdp,'eth-'+width+'-pooled-model.png',receipt);
     await click(cdp,'#eth-data-dialog header button');await settled(cdp);
     await screenshot(cdp,'eth-'+width+'-pooled-chart.png',receipt);
-    await click(cdp,'[data-eth-action="forecast"]');
+    await nativeForecast(cdp,'[data-eth-action="forecast"]');
     await evaluate(cdp,()=>{document.querySelector('#eth-model').scrollIntoView({block:'center'});document.querySelector('#eth-model').focus();});
     await nativeKey('Home','Home',36);await nativeKey('Enter','Enter',13);await settled(cdp);
     assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-model').value),'adaptive');
@@ -663,7 +669,7 @@ async function equityCase(cdp,width,receipt,symbol,archive){
     const chart=document.querySelector('#equity-chart');
     const path=chart.querySelector('.equity-forecast-line');
     return {width:innerWidth,scrollWidth:document.documentElement.scrollWidth,dataset:{...chart.dataset},
-      symbol:document.querySelector('#equity-symbol').textContent,price:document.querySelector('#equity-price').textContent,
+      symbol:document.querySelector('#equity-symbol .symbol-selector-label').textContent,price:document.querySelector('#equity-price').textContent,
       date:document.querySelector('#equity-bar-time').textContent,pathLength:path?.getTotalLength()??0,
       pathData:path?.getAttribute('d')??'',background:getComputedStyle(document.querySelector('.equity-plot')).backgroundColor};
   });
@@ -672,7 +678,7 @@ async function equityCase(cdp,width,receipt,symbol,archive){
   dark(receipt.chart.background,symbol+' plot');
   await screenshot(cdp,label+'-'+width+'-loaded.png',receipt);
   if(width===320)receipt.infoDataLinks=await verifyInfoDataLinks(cdp,symbol);
-  await click(cdp,'[data-equity-action="forecast"]');
+  await nativeForecast(cdp,'[data-equity-action="forecast"]');
   receipt.dialog=await bounds(cdp,'#equity-detail-dialog');
   assert.equal(receipt.dialog.open,true);visibleBounds(receipt.dialog,width);dark(receipt.dialog.background,symbol+' evidence dialog');
   receipt.clockLabels=await evaluate(cdp,()=>{
@@ -695,7 +701,7 @@ async function syntheticZeroCase(cdp,width,receipt){
   receipt.synthetic=true;
   receipt.scope='Synthetic zero-valued output with a real preserved input snapshot, explicitly reconstructed and excluded from issued forecasts or measured predictive performance.';
   await until(()=>evaluate(cdp,()=>Number(document.querySelector('#equity-chart')?.dataset.observedCandleCount)>0),'fixture stock chart');
-  await settled(cdp);await click(cdp,'[data-equity-action="forecast"]');
+  await settled(cdp);await nativeForecast(cdp,'[data-equity-action="forecast"]');
   await evaluate(cdp,()=>document.querySelector('[data-open-asset-forecast-journal="BMNR"]').scrollIntoView({block:'center'}));
   await settled(cdp);await click(cdp,'[data-open-asset-forecast-journal="BMNR"]');
   await until(()=>evaluate(cdp,()=>document.querySelector('#asset-forecast-journal')?.dataset.state==='ready'),'verified synthetic zero journal');
@@ -738,7 +744,7 @@ async function main(){
   for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/ethereum-adaptive-model.js','dist/ethereum-pooled-model.js','dist/eth-view-state.js','dist/ethereum-adoption-scenarios.js','dist/ethereum-research-panel.js','dist/ethereum-research-catalog.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','scripts/btc-offline-refresh-policy.mjs','tests/ethereum-offline-refresh-policy.test.mjs','dist/data/btc-daily.json','dist/app.js','dist/btc-refresh-status.js','tests/ethereum-btc-refresh-status.test.mjs','dist/data-source.js','dist/published-data.js','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json','dist/lab-view.js','dist/analysis-dock.css','dist/compact-chart-layout.css','dist/mobile-workspace.css','dist/mobile-preview.js','scripts/verify-workspace-browser.mjs']){
     report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   }
-  for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/atlas-shell.css','dist/atlas-shell.js','dist/center-workbench.js','dist/market-lab.css','dist/loading-surfaces.css','dist/loading-surfaces.js','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/preserved-archive-download.js','dist/workspace-tools.js','dist/research-annotations-workbench.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
+  for(const path of ['dist/native-chart-workbench.js','dist/rsi-workbench-controls.js','dist/atlas-navigation.js','scripts/verify-native-chart-workbench-browser.mjs','dist/analysis-dock.css','dist/atlas.css','dist/atlas-shell.css','dist/atlas-shell.js','dist/center-workbench.js','dist/market-lab.css','dist/loading-surfaces.css','dist/loading-surfaces.js','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/preserved-archive-download.js','dist/workspace-tools.js','dist/research-annotations-workbench.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   for(const path of ['dist/forecast-replay.js','dist/forecast-replay-sources.js','dist/forecast-replay-view.js','dist/data/replay-eth-ohlc.json','scripts/verify-forecast-replay-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   for(const path of ['dist/chart-replay.js','dist/chart-replay-snapshot.js','dist/chart-replay-state.js','dist/chart-replay-renderer.js','dist/chart-replay-sources.js','dist/chart-replay.css','dist/asset-forecast-loader.js','dist/data/btc-volume.json','scripts/verify-chart-replay-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
   for(const path of ['dist/chart-replay-atlas.js','dist/atlas-price-chart.js','dist/project-replay-baseline.js','dist/data/project-origin-btc-2026-10-21.json','scripts/build-project-replay-baseline.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
@@ -925,7 +931,7 @@ async function main(){
       if(spec.consolidated)await verifyConsolidatedWorkspaceSurface({cdp,receipt,evaluate,until,settled,screenshot,verifyOfflineRefresh});
       else if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,browserContextId,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
       else if(spec.replay)await verifyForecastReplaySurface({cdp,browser,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
-      else if(spec.surface)await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership:()=>verifyHeaderOwnership(cdp)});else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
+      else if(spec.surface)await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership:()=>verifyHeaderOwnership(cdp)});else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth'){await ethCase(cdp,width,receipt,expected,archive);await verifyNativeChartWorkbench({cdp,receipt,evaluate,until,settled,click,bounds,screenshot});}else{await equityCase(cdp,width,receipt,page.toUpperCase(),archive);await verifyNativeChartWorkbench({cdp,receipt,evaluate,until,settled,click,bounds,screenshot});}
       assert.equal(receipt.runtimeErrors.length,0,'Browser runtime errors: '+JSON.stringify(receipt.runtimeErrors));
       assert.equal(receipt.unscopedLocalRequests.length,0,'Consolidated workspace requested resources outside the Pages project root: '+JSON.stringify(receipt.unscopedLocalRequests));
       const verifiedReplayCancellations=new Set(receipt.replay?.expectedCanceledRequests.map(row=>row.requestId)??[]);
@@ -957,5 +963,5 @@ finally{
   if(server)await new Promise(resolve=>server.close(resolve));
   if(profile)try{await rm(profile,{recursive:true,force:true});}catch(error){report.cleanupError=errorText(error);}
   await mkdir(out,{recursive:true});await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,caseScope:report.caseScope,declaredCaseCount:report.declaredCaseCount,expectedCaseCount:report.expectedCaseCount,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,sourceIntegrity:report.sourceIntegrity,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({caseSpec:c.caseSpec,page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,consolidated:c.consolidated,replay:c.replay,chartReplay:c.chartReplay,infoDataLinks:c.infoDataLinks,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:relative(root,resolve(out,'report.json'))}));
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,caseScope:report.caseScope,declaredCaseCount:report.declaredCaseCount,expectedCaseCount:report.expectedCaseCount,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,sourceIntegrity:report.sourceIntegrity,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({caseSpec:c.caseSpec,page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,consolidated:c.consolidated,replay:c.replay,chartReplay:c.chartReplay,infoDataLinks:c.infoDataLinks,nativeWorkbench:c.nativeWorkbench,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:relative(root,resolve(out,'report.json'))}));
 }

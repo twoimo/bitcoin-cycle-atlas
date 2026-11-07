@@ -209,10 +209,71 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     await pointer(cdp, `#symbol-option-${symbol}`);
     await until(() => evaluate(cdp, page => document.body.dataset.centerTool === page, page), 'chart ' + symbol);
     await until(() => evaluate(cdp, () => !document.querySelector('#symbol-search-dialog').open), 'search closes after selection');
+    await until(() => evaluate(cdp, symbol => document.body.dataset.chartControls==='ready'&&document.querySelector('#workbench-range-label')?.title.startsWith(symbol+' /'),symbol),'acknowledged controls for '+symbol);
     assert.equal(await evaluate(child,()=>Boolean(document.querySelector('.chart-workspace-toolbar')?.checkVisibility())),false,'Embedded chart cannot duplicate the instrument search row');
   }
+  async function chartContract(symbol,unit,frequencies){
+    await until(()=>evaluate(cdp,symbol=>document.body.dataset.chartControls==='ready'&&document.querySelector('#workbench-range-label')?.title.startsWith(symbol+' /'),symbol),'current price perimeter '+symbol);
+    const result=await evaluate(cdp,()=>{
+      const doc=document.querySelector('.atlas-center-frame:not([hidden])').contentDocument,svg=doc.querySelector('.rsi-chart-canvas svg'),b=svg.getBoundingClientRect();
+      const interval=document.querySelector('#workbench-interval-select');
+      return {nav:[...document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(n=>n.dataset.atlasPage),active:[...document.querySelectorAll('.atlas-nav [aria-current=page]')].map(n=>n.dataset.atlasPage),
+        range:document.querySelector('#workbench-range-label').title,frequencies:[...interval.options].filter(o=>!o.disabled&&!o.hidden).map(o=>o.value),frequency:interval.value,
+        rightRail:document.querySelector('.workbench-rail').getBoundingClientRect().width,svg:{width:b.width,height:b.height,viewWidth:svg.viewBox.baseVal.width,viewHeight:svg.viewBox.baseVal.height,start:svg.dataset.start,end:svg.dataset.end,visible:svg.checkVisibility()},
+        childHeight:doc.defaultView.innerHeight,sourceClock:document.querySelector('#atlas-update-status').getAttribute('aria-label'),candles:!document.querySelector('#workbench-chart-type').disabled};
+    });
+    assert.deepEqual(result.nav,['outlook','market-us','evidence','data','ipo'],symbol+': one price destination');
+    assert.deepEqual(result.active,['outlook'],symbol+': price destination owns all charts');
+    assert.ok(result.range.includes(symbol+' / '+unit+' /'),symbol+': original price unit');
+    assert.deepEqual(result.frequencies,frequencies,symbol+': only observed source frequencies');
+    assert.ok(result.svg.visible&&result.svg.height>=result.childHeight*.75,symbol+': chart fills its allocated work area');
+    assert.ok(Math.abs(result.svg.width-result.svg.viewWidth)<=1&&Math.abs(result.svg.height-result.svg.viewHeight)<=1,symbol+': pixel-sized chart labels');
+    if(receipt.width>760)assert.equal(result.rightRail,45,symbol+': same narrow rail');
+    if(frequencies[0]==='monthly'){assert.equal(result.candles,false);assert.match(result.sourceClock,/가격지수 \d{4}-\d{2} · 거래량 \d{4}-\d{2}/);}
+    evidence.states.push({label:'common-chart-'+symbol,...result});
+    return result;
+  }
+  async function commonChartActions(symbol,monthly){
+    const canvas='.rsi-chart-canvas svg',panel='.rsi-workbench-panel';
+    if(receipt.width<=620){
+      await pointer(cdp,'#mobile-tools-toggle');await key('k','KeyK',75,2);await settled(child);
+      await until(()=>evaluate(child,()=>document.querySelector('.rsi-workbench-panel')?.getAttribute('aria-label')?.endsWith('명령 검색')),'keyboard command pane from mobile tray '+symbol);
+      assert.equal(await evaluate(cdp,()=>Boolean(document.querySelector('.mobile-workbench-button[aria-expanded=true]'))),false,'mobile tray cannot obscure the selected chart command pane');
+      await pointer(child,panel+' header button');
+    }
+    await pointer(child,canvas);
+    await key('m','KeyM',77);await settled(child);
+    assert.equal(await evaluate(child,()=>document.querySelector('.rsi-chart-canvas').dataset.tool),'measure');
+    await key('c','KeyC',67);await settled(child);
+    const original=await evaluate(child,()=>{const s=document.querySelector('.rsi-chart-canvas svg');return [s.dataset.start,s.dataset.end];});
+    await key('+','Equal',187);await settled(child);
+    await until(()=>evaluate(child,before=>{const s=document.querySelector('.rsi-chart-canvas svg');return s.dataset.start!==before[0]||s.dataset.end!==before[1];},original),'zoom '+symbol);
+    await key('z','KeyZ',90,2);await settled(child);
+    assert.deepEqual(await evaluate(child,()=>{const s=document.querySelector('.rsi-chart-canvas svg');return [s.dataset.start,s.dataset.end];}),original,symbol+': undo restores exact observed range');
+    await key('g','KeyG',71,1);await settled(child);
+    await until(()=>evaluate(child,()=>document.querySelector('.rsi-workbench-panel')?.getAttribute('aria-label')?.endsWith('날짜·기간')),'date pane '+symbol);
+    assert.equal(await evaluate(child,()=>document.querySelector('.rsi-workbench-panel input').type),monthly?'month':'date');
+    await pointer(child,panel+' header button');
+    async function command(label){
+      await pointer(child,canvas);await key('k','KeyK',75,2);await settled(child);
+      await type(child,panel+' input[type=search]',label);await pointer(child,panel+' .rsi-command-option');
+    }
+    await command('차트 설정');
+    assert.equal(await evaluate(child,()=>document.querySelector('.rsi-workbench-panel').getAttribute('aria-label')),symbol+' 차트 설정');
+    await pointer(child,panel+' header button');
+    await command('차트 내보내기');await pointer(child,panel+' .rsi-workbench-panel-scroll > button');
+    await until(()=>evaluate(child,()=>Boolean(document.querySelector('.rsi-workbench-panel a[download$=".svg"]')&&document.querySelector('.rsi-workbench-panel a[download$=".png"]'))),'source chart SVG and PNG '+symbol);
+    assert.match(await evaluate(child,()=>document.querySelector('.rsi-workbench-panel a[download$=".svg"]').download),new RegExp('^'+symbol+'-'));
+    await snap(symbol.toLowerCase()+'-export');await pointer(child,panel+' header button');
+    await chartContract(symbol,monthly?'지수':'USDC',monthly?['monthly']:['daily','weekly']);
+  }
+  await chartContract('TQQQ','USD',['daily','weekly']);
+  for(const [symbol,unit]of [['SOXL','USD'],['233740','KRW']]){
+    await chartSearch(symbol,symbol,'rsi');await chartContract(symbol,unit,['daily','weekly']);await snap(symbol.toLowerCase());
+  }
   await chartSearch('서울', 'HOUSING-SEOUL', 'housing');
-  await until(() => evaluate(child, () => document.querySelector('.housing-price')?.getAttribute('d')?.length > 20), 'Seoul observed price chart');
+  await until(() => evaluate(child, () => document.querySelector('.housing-chart .rsi-price-line')?.getAttribute('d')?.length > 20), 'Seoul observed price chart');
+  await chartContract('HOUSING-SEOUL','지수',['monthly']);
   assert.equal(await evaluate(cdp, () => document.querySelector('[aria-label="부동산 지역"]').value), 'seoul');
   await state('housing-seoul'); await snap('housing');
   await pointer(cdp,'[data-toolbar-open="housing-settings"]');
@@ -223,12 +284,17 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   await pointer(cdp,'#housing-tab-history');
   await until(()=>evaluate(child,()=>Boolean(document.querySelector('#housing-view-history table'))),'housing history remains reachable');
   await state('housing-history');await pointer(cdp,'#housing-tab-chart');
+  for(const [query,symbol]of [['부산','HOUSING-BUSAN'],['경기','HOUSING-GYEONGGI'],['전국','HOUSING-NATIONAL']]){
+    await chartSearch(query,symbol,'housing');await chartContract(symbol,'지수',['monthly']);await snap(symbol.toLowerCase());
+  }
+  await commonChartActions('HOUSING-NATIONAL',true);
   await chartSearch('하이퍼리퀴드', 'HYPE', 'themes');
   await until(() => evaluate(child, () => document.querySelectorAll('.theme-price-chart .theme-volume').length>0), 'HYPE actual chart');
   assert.equal(new URL((await state('hype-selected')).url).searchParams.get('symbol'),'HYPE');
   await pointer(cdp,'[data-toolbar-open="theme-summary"]');
   assert.match(await evaluate(cdp,()=>document.querySelector('[data-toolbar-dialog="theme-summary"] .theme-identity').textContent),/HYPE\/USDC/,'The selected asset retains its actual quote currency');
   await closeMenu('theme-summary');
+  await chartContract('HYPE','USDC',['daily','weekly']);await commonChartActions('HYPE',false);
   await state('hype'); await snap('hype');
 
   await navigate('data');
@@ -280,4 +346,9 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   await type(cdp,'#center-evidence-search','no-matching-atlas-record-20261107');
   await until(()=>evaluate(child,()=>/^0\s*\//.test(document.querySelector('#evidence-total')?.textContent||'')),'research empty search');
   await state('research-empty');await snap('research-empty');
+  if(receipt.width<=620)await pointer(cdp,'#mobile-details-toggle');
+  await pointer(cdp,'.atlas-nav [data-atlas-page="outlook"]');
+  await until(()=>evaluate(cdp,()=>document.body.dataset.centerTool==='themes'),'price destination retains HYPE after other pages');
+  await bindChild();await chartContract('HYPE','USDC',['daily','weekly']);
+  assert.equal(new URL((await state('price-return')).url).searchParams.get('symbol'),'HYPE');
 }

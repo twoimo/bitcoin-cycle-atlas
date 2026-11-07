@@ -1,3 +1,4 @@
+import {readArchivedWorkflow} from './support/archived-workflow.mjs';
 import {mkdtemp} from './helpers/physical-temp-directory.mjs';
 import {frozenMarketText} from './helpers/frozen-market-fixture.mjs';
 import test,{before,after} from 'node:test';
@@ -163,10 +164,10 @@ test('workflow inspection recognizes the new issue command and does not mistake 
     const value=inspectEthereumProspectiveWorkflow({...dailyWorkflow,text:dailyWorkflow.text.replace(/\.mjs issue\n/,'.mjs '+command+'\n')});
     assert.equal(value.directIssuance,false,command);assert.equal(value.scheduledDirectIssuance,false,command);
   }
-  const path='.github/workflows/eth-prospective-daily.yml',actual=inspectEthereumProspectiveWorkflow({path,text:await readFile(resolve(repositoryRoot,path),'utf8')});
+  const path='.github/workflows/eth-prospective-daily.yml',actual=inspectEthereumProspectiveWorkflow({path,text:readArchivedWorkflow('eth-prospective-daily')});
   assert.equal(actual.directIssuance,true);assert.deepEqual(actual.events,['schedule','workflow_dispatch']);
   const inspected=capacity.workflowInspection.sources.find(value=>value.path===path);
-  assert.deepEqual(inspected,actual);assert.equal(capacity.workflowInspection.knownScheduledDirectIssuer,true);
+  assert.equal(inspected,undefined,'Archived schedule must not be reported as an active workflow');assert.equal(capacity.workflowInspection.knownScheduledDirectIssuer,false);
   assert.equal(capacity.workflowInspection.triggerActivationVerified,false);assert.equal(capacity.triggerActivationVerified,false);
 });
 
