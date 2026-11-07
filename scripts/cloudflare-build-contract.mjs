@@ -14,7 +14,7 @@ export const cloudflareBuildGates=Object.freeze([
   {id:'service-build',command:'npm',args:['run','build:web']},
   {id:'postgres-service-tests',kind:'node-tests',directory:'tests/service',extension:'.test.ts'},
   {id:'native-browser',command:'node',args:['scripts/verify-native-browser-suite.mjs']},
-  {id:'model-tests',command:'npm',args:['test','--','--test-concurrency=2'],nice:10},
+  {id:'model-tests',command:'npm',args:['test','--','--test-concurrency=2'],nice:0},
   ...['forecast','research','eth-events','treasury-paths','numerics','formal','cycle','performance','static','chart-replay'].map(id=>({id,command:'npm',args:['run','verify:'+id]})),
   {id:'publication',command:'npm',args:['run','build:publication']},
   {id:'publication-check',command:'npm',args:['run','verify:publication']},

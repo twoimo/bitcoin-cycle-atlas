@@ -75,7 +75,7 @@ export async function verifyCloudflareBuild(){
           args=['--import','tsx','--test','--test-concurrency=2',...files.map(file=>gate.directory+'/'+file)];
         }
         const remaining=deadline-Date.now();assert.ok(remaining>1000,'The free20-minute build bound requires another complete attempt; gates cannot be skipped');
-        if(gate.nice!==undefined){assert.equal(gate.id,'model-tests');assert.equal(gate.nice,10);}
+        if(gate.nice!==undefined){assert.equal(gate.id,'model-tests');assert.equal(gate.nice,0);}
         let commandError;
         const phaseLines=gate.id==='native-browser'?completeLineWriter(line=>fastCadenceWaiter.observeLine(line)):null;
         try{

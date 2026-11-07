@@ -68,12 +68,14 @@ gate's log remains open, before the browser/model group starts. Early failures
 use a separate cleanup log. Shutdown never writes to the sealed runtime-startup
 log, and public report output is drained before final cleanup or process exit.
 
-Only the model-test command runs at Linux nice 10. Its wrapper lowers priority
-before spawning the unchanged `npm test -- --test-concurrency=2` command and
-verifies the actual child's inherited value. The outer runner and native-browser
-command retain nice 0. The receipt binds the observed values and process IDs to
-the managed command and its raw log; inability to apply or verify priority fails
-the gate. Replay cadence tolerances and the complete test inventory are unchanged.
+After the isolated fast-cadence phase, the model-test command runs at normal
+Linux nice 0 alongside the outer runner and native-browser command. Its wrapper
+verifies the inherited value before and after spawning the unchanged
+`npm test -- --test-concurrency=2` command. The receipt binds the observed values
+and process IDs to the managed command and its raw log; inability to apply or
+verify priority fails the gate. A qualifying receipt requires the unchanged
+100ms cadence to have passed before model launch. Replay tolerances and the
+complete test inventory are unchanged.
 
 The complete browser suite uses two independent Chrome processes and profiles.
 The46 non-chart-replay cases retain their original order and shared context in
