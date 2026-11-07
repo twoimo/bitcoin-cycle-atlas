@@ -84,7 +84,7 @@ for(const pointerType of ['touch','mouse'])test(`${pointerType} price and time a
       }else{
         h.dispatch('pointerdown',{...point(500,470),pointerType});h.dispatch('pointermove',{...point(480,470),pointerType});h.settle();
         h.dispatch('pointerup',{...point(400,470),pointerType,buttons:0});h.settle();
-        assert.deepEqual(h.range,zoomRange(daily,Math.exp(-100/870*2),440/870));assert.equal(h.priceChanges.length,0);
+        assert.deepEqual(h.range,zoomRange(daily,Math.exp(-100/870*2),1));assert.equal(h.priceChanges.length,0);
       }
       assert.deepEqual(h.transactions.map(item=>item[0]),['start','end']);assert.equal(h.captures.size,0);
     }finally{h.destroy();}

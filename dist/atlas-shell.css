@@ -162,7 +162,7 @@ body[data-embedded=true] #main{box-sizing:border-box;width:100%;max-width:none;m
 .rsi-csv .rsi-history-heading{margin-block:12px}.rsi-csv .rsi-history-heading button{margin-left:auto}
 @media(max-width:620px){body[data-center-tool] .atlas-canvas-heading :is(#workbench-chart-type,#atlas-mode-menu,#atlas-cycle-panel){display:none}body[data-center-tool] .atlas-canvas-heading .workbench-symbol{flex:0 0 80px;min-width:80px;max-width:none}}
 body[data-rsi-controls] :is(#workbench-scenario,#atlas-cycle-panel,#workbench-replay,.workbench-rail [data-mobile-target=focus],.mobile-gesture-hint,.mobile-gesture-help){display:none!important}
-body[data-rsi-controls] #workbench-frequency [data-lab-frequency]:not([data-lab-frequency=daily]):not([data-lab-frequency=weekly]){display:none}
+body[data-chart-controls] #workbench-frequency [data-lab-frequency][hidden]{display:none}
 body[data-rsi-controls=ready] :is(#workbench-range-label,.workbench-status){visibility:visible!important}
 body[data-rsi-controls] .mobile-extra-actions :is([data-mobile-target="#workbench-scenario"],[data-mobile-target="#workbench-replay"],[data-mobile-target=focus]){display:none!important}
 body[data-rsi-controls=ready] :is(.atlas-canvas-heading,.workbench-tools,.workbench-detail-tools,.workbench-bottom-bar,.mobile-extra-actions) :disabled{color:var(--subtle);background:var(--surface);cursor:default}

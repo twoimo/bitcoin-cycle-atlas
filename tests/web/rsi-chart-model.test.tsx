@@ -4,12 +4,13 @@ import { calculateRsiSeries } from '@atlas/domain/market-lab';
 import { yahooRsiBars,validateRsiBars,weeklyRsiBars,weeklyRsiPrices,type RsiBar } from '@atlas/domain/rsi-bars';
 import { initialChartView,applyChartCommand,chartGeometry,day,boundedDates,nearestPoint } from '../../apps/web/src/rsi-chart-model.js';
 import type { Point } from '@atlas/contracts/market-lab';
+import { createPriceScale } from '../../dist/chart-math.js';
 const prices:Point[]=Array.from({length:180},(_,i)=>[new Date(Date.UTC(2025,0,i+1)).toISOString().slice(0,10),10+i/10+Math.sin(i/4)]);
 const bars:RsiBar[]=prices.map(([date,close])=>[date,close*.99,close*1.02,close*.98,close,100]);
 test('zoom preserves its anchor, pan has a stable span, fit restores source dates and raw indicators never change',()=>{
   const before=structuredClone(prices),rsi=calculateRsiSeries(prices),initial=initialChartView(prices),zoomed=applyChartCommand(initial,prices,'zoom',.5);
   assert(day(zoomed.end)-day(zoomed.start)<day(initial.end)-day(initial.start));
-  const center=(day(initial.start)+day(initial.end))/2;assert(Math.abs((day(zoomed.start)+day(zoomed.end))/2-center)<=1);
+  assert.equal(zoomed.end,initial.end,'default zoom keeps the right edge fixed');
   const past=applyChartCommand(zoomed,prices,'pan',-.25);assert(past.start<zoomed.start);assert.equal(day(past.end)-day(past.start),day(zoomed.end)-day(zoomed.start));
   const restored=applyChartCommand(past,prices,'fit');assert.equal(restored.start,initial.start);assert.equal(restored.end,initial.end);
   assert.deepEqual(prices,before);assert.deepEqual(calculateRsiSeries(prices),rsi);
@@ -35,6 +36,36 @@ test('weekly OHLC preserves actual first open, high/low extremes, final close an
   for(const index of [1,2,3,4]){const bad=structuredClone(input);bad[0][index]=-1;assert.throws(()=>validateRsiBars(bad,quotes));}
   const mismatch=structuredClone(input);mismatch[0][4]=10.00001;assert.throws(()=>validateRsiBars(mismatch,quotes));
   const missing=structuredClone(input);missing[0][5]=null;assert.equal(weeklyRsiBars(missing)[0][5],null,'a missing volume is never a fabricated zero');
+});
+
+test('short workspaces keep both panes inside their pixel canvas and use the common price scale',()=>{
+  const rows=calculateRsiSeries(prices),view={...initialChartView(prices),chartType:'candles' as const};
+  for(const height of [100,180,279,520])for(const width of [230,900]){
+    const g=chartGeometry(prices,bars,rows,view,width,height);
+    assert(g.top<g.priceBottom&&g.priceBottom<g.rsiTop&&g.rsiTop<g.bottom&&g.bottom<height);
+    const axis=createPriceScale(bars.flatMap(bar=>[bar[2],bar[3]]),{scale:view.scale,top:g.top,bottom:g.priceBottom,
+      tickCount:Math.max(2,Math.min(width<600?5:7,Math.floor((g.priceBottom-g.top)/38)+1))});
+    assert.equal(g.min,axis.min);assert.equal(g.max,axis.max);assert.deepEqual(g.ticks,axis.ticks);
+  }
+});
+
+test('switching daily and weekly preserves the manual price domain and UTC window',()=>{
+  const initial={...initialChartView(prices),autoScale:false,domain:{min:15,max:25}};
+  const weekly=applyChartCommand(initial,prices,'frequency','weekly');
+  assert.deepEqual(weekly.domain,initial.domain);assert.equal(weekly.autoScale,false);
+  assert.equal(weekly.start,initial.start);assert.equal(weekly.end,initial.end);
+  const zoomed=applyChartCommand(weekly,prices,'zoom',.01,800);
+  assert.equal(zoomed.end,weekly.end);assert(day(zoomed.end)-day(zoomed.start)>=12*7,'weekly candles use the same pixel spacing budget');
+});
+
+test('narrow full-history zoom is reversible through reconstructed React viewport state',()=>{
+  const history:Point[]=[['2020-01-01',100],['2026-11-07',200]],initial=initialChartView(history);
+  const inward=applyChartCommand(initial,history,'zoom',Math.exp(-.24),250);
+  const outward=applyChartCommand(inward,history,'zoom',Math.exp(.4),250);
+  assert(day(inward.end)-day(inward.start)<day(initial.end)-day(initial.start));
+  assert.equal(outward.start,initial.start);assert.equal(outward.end,initial.end);
+  assert.equal(outward.spacingBounds?.maxSpan,2503);
+  assert.deepEqual(history,[['2020-01-01',100],['2026-11-07',200]]);
 });
 
 test('OHLC enrichment rejects a wrong provider identity or exchange clock and omits mismatches and unfinished days',()=>{

@@ -1,5 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
+import { withChartSpacing,retargetChartRange } from '../../dist/chart-view-policy.js';
+import { normalizePriceDomain } from '../../dist/price-axis.js';
 import * as ohlc from '../../dist/ohlc-data.js';
 import * as ethData from '../../dist/eth-market-data.js';
 import * as ethState from '../../dist/eth-view-state.js';
@@ -97,6 +99,11 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     const pending = deferred(); requests.push({ url, options, ...pending }); return pending.promise;
   };
   const deps = {
+    withChartSpacing,retargetChartRange,normalizePriceDomain,
+    mountNativeChartApp: app => document.body.append(app),
+    // The real shell adapter is exercised separately with a parsed DOM. This
+    // fixture owns network/loader races and keeps its DOM boundary explicit.
+    mountNativeChartWorkbench: () => ({update(){},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
     setLoadingSurface:(element,busy)=>element?.setAttribute('data-skeleton',String(busy)),
     ...ohlc, ...ethData, ...ethState, ...events, ...eventHistory, marketStatusText,buildEthereumForecasts,buildEthereumAdaptiveForecast,buildEthereumPooledForecast,ethereumResearchPanel,
     createMarketDataController: options => createMarketDataController({ ...options, fetchImpl }),
@@ -159,7 +166,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     show: () => window.dispatchEvent({ type: 'pageshow', persisted: true }),
     resize: () => resize(), refresh: () => click('action', 'refresh'),
     interval: value => click('interval', value), span: value => click('span', value),
-    pan: range => navigation.onRangeChange(range), priceRange: range => navigation.onPriceRangeChange(range),
+    pan: range => navigation.onRangeChange(range), priceRange: range => navigation.onPriceRangeChange(range), navigationRange: () => navigation.getRange(),
     focusEvent: id => historyOptions.onFocusEvent(id), latest: () => draws.at(-1),
     status: () => app.querySelector('#eth-status').textContent,
     info: () => { click('action', 'info'); return document.body.nodes.get('eth-data-dialog'); },

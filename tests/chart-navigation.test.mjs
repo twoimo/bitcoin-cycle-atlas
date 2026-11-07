@@ -47,8 +47,8 @@ test('pan rounds half-day offsets symmetrically and preserves unclamped round tr
   const original={start:'2026-03-17',end:'2029-05-29',min:'2010-07-18',max:'2032-12-31'};
   assert.equal(length(original),1170);
   const earlier=panRange(original,-.25),later=panRange(original,.25);
-  assert.equal(utcDay(earlier.start)-utcDay(original.start),-293);
-  assert.equal(utcDay(later.start)-utcDay(original.start),293);
+  assert.equal(utcDay(earlier.start)-utcDay(original.start),-292);
+  assert.equal(utcDay(later.start)-utcDay(original.start),292);
   for(const fraction of [.25,-.25,.5,-.5]){
     let current=original;
     for(let i=0;i<12;i++){
@@ -198,14 +198,13 @@ function navigationHarness(initial=range,extra={}){
   return {window,document,element,svg,controller,changes,copies,announcements,get range(){return live;},set range(value){live=value;},set tool(value){tool=value;},get resets(){return resets;},frames,flush(){for(const [id,fn]of [...frames]){frames.delete(id);fn();}},fire(type,props={}){return element.emit(type,{target:svg,...props});},pointer(type,props={}){return window.emit(type,{target:svg,...props});},menuButton(action){return controller.menu.children.find(child=>child.dataset?.chartContext===action);}};
 }
 
-test('wheel zoom uses the actual plot and cursor; axes, controls and browser zoom stay untouched',()=>{
+test('wheel zoom keeps the right endpoint; controls and browser zoom outside the plot stay untouched',()=>{
   const h=navigationHarness();
-  const ignored=[{clientX:960,deltaY:-100},{clientY:20,deltaY:-100},{ctrlKey:true,deltaY:-100},{metaKey:true,deltaY:-100},{target:h.controller.toolbar.children[0],deltaY:-100}];
+  const ignored=[{clientX:960,deltaY:-100},{clientY:20,deltaY:-100},{clientX:960,ctrlKey:true,deltaY:-100},{metaKey:true,deltaY:-100},{target:h.controller.toolbar.children[0],deltaY:-100}];
   for(const props of ignored)assert.equal(h.fire('wheel',props).defaultPrevented,false);
   assert.equal(h.frames.size,0);
   const event=h.fire('wheel',{clientX:234,deltaY:-200});assert.equal(event.defaultPrevented,true);h.flush();
-  const anchor=(234-60)/(930-60),before=utcDay(range.start)+anchor*(length(range)-1),after=utcDay(h.range.start)+anchor*(length(h.range)-1);
-  assert.ok(Math.abs(before-after)<=.5);assert.ok(length(h.range)<100);
+  assert.equal(h.range.end,range.end);assert.ok(length(h.range)<100);
   h.controller.destroy();
 });
 
@@ -215,13 +214,15 @@ test('historical event label children allow wheel zoom and pan but retain activa
   marker.setAttribute('class','history-event-marker has-label');marker.setAttribute('role','button');marker.dataset.historyEvent='ftx-bankruptcy';
   marker.append(label,text);h.svg.append(marker);
   assert.equal(h.fire('wheel',{target:label,clientX:234,deltaY:-200}).defaultPrevented,true);h.flush();
-  assert.deepEqual(h.range,zoomRange(range,Math.exp(-200*.0015),(234-60)/(930-60)));
+  assert.deepEqual(h.range,zoomRange(range,Math.exp(-200*.0015),1));
   const zoomed=h.range;
   assert.equal(h.fire('wheel',{target:text,shiftKey:true,deltaY:174}).defaultPrevented,true);h.flush();
   assert.deepEqual(h.range,panRange(zoomed,.2));assert.equal(length(h.range),length(zoomed));
   const shifted=h.range;
   assert.equal(h.fire('wheel',{target:label,deltaX:-87,deltaY:2}).defaultPrevented,true);h.flush();
-  assert.deepEqual(h.range,panRange(shifted,-.1));
+  const preciseCount=100*Math.exp(-200*.0015);
+  assert.equal(utcDay(h.range.start)-utcDay(range.start),Math.round(100-preciseCount+(preciseCount-1)*.1),'one burst retains the fractional displacement between wheel events');
+  assert.equal(length(h.range),length(shifted));
   const changed=h.changes.length;
   for(const type of ['click','pointerdown','dblclick','contextmenu'])assert.equal(h.fire(type,{target:label}).defaultPrevented,false);
   for(const key of ['Enter',' ','+'])assert.equal(h.fire('keydown',{target:text,key}).defaultPrevented,false);
@@ -232,7 +233,7 @@ test('historical event label children allow wheel zoom and pan but retain activa
   for(const target of [button,input,otherRole,h.controller.toolbar.children[0],h.controller.menu,h.menuButton('in')]){
     assert.equal(h.fire('wheel',{target,deltaY:-100}).defaultPrevented,false);
   }
-  assert.equal(h.fire('wheel',{target:label,ctrlKey:true,deltaY:-100}).defaultPrevented,false);
+  assert.equal(h.fire('wheel',{target:label,clientX:960,ctrlKey:true,deltaY:-100}).defaultPrevented,false);
   assert.equal(h.fire('wheel',{target:label,metaKey:true,deltaY:-100}).defaultPrevented,false);
   assert.equal(h.fire('wheel',{target:label,clientY:20,deltaY:-100}).defaultPrevented,false);
   h.controller.menu.append(marker);
@@ -247,10 +248,11 @@ test('period arrows and labels share price-chart wheel navigation while activati
   period.dataset.cycleInterval='bottom-to-top';period.append(line,label);h.svg.append(period);
   const event=h.fire('wheel',{target:line,clientX:321,deltaY:-180});
   assert.equal(event.defaultPrevented,true);h.flush();
-  assert.deepEqual(h.range,zoomRange(range,Math.exp(-180*.0015),(321-60)/(930-60)));
+  assert.deepEqual(h.range,zoomRange(range,Math.exp(-180*.0015),1));
   const zoomed=h.range;
   assert.equal(h.fire('wheel',{target:label,shiftKey:true,deltaY:87}).defaultPrevented,true);h.flush();
-  assert.deepEqual(h.range,panRange(zoomed,.1));
+  const preciseCount=100*Math.exp(-180*.0015);
+  assert.equal(utcDay(h.range.start)-utcDay(range.start),Math.round(100-preciseCount+(preciseCount-1)*.1));assert.equal(length(h.range),length(zoomed));
   const changed=h.changes.length;
   for(const type of ['click','pointerdown','dblclick','contextmenu'])assert.equal(h.fire(type,{target:line}).defaultPrevented,false);
   for(const key of ['Enter',' ','+'])assert.equal(h.fire('keydown',{target:label,key}).defaultPrevented,false);
@@ -261,7 +263,7 @@ test('period arrows and labels share price-chart wheel navigation while activati
   for(const target of [button,otherRole,h.controller.toolbar.children[0],h.controller.menu]){
     assert.equal(h.fire('wheel',{target,deltaY:-100}).defaultPrevented,false);
   }
-  for(const props of [{ctrlKey:true},{metaKey:true},{clientX:960},{clientY:20}]){
+  for(const props of [{ctrlKey:true,clientX:960},{metaKey:true},{clientX:960},{clientY:20}]){
     assert.equal(h.fire('wheel',{target:label,deltaY:-100,...props}).defaultPrevented,false);
   }
   h.flush();assert.equal(h.changes.length,changed);h.controller.destroy();
@@ -416,7 +418,7 @@ test('cycle marker circles and label children allow wheel navigation without ste
   assert.equal(h.fire('wheel',{target:label,shiftKey:true,deltaY:90}).defaultPrevented,true);h.flush();assert.equal(h.changes.length,2);
   assert.equal(h.fire('pointerdown',{target:circle}).defaultPrevented,false);
   assert.equal(h.fire('keydown',{target:label,key:'Home'}).defaultPrevented,false);
-  assert.equal(h.fire('wheel',{target:circle,ctrlKey:true,deltaY:-100}).defaultPrevented,false);
+  assert.equal(h.fire('wheel',{target:circle,ctrlKey:true,deltaY:-100}).defaultPrevented,true);h.flush();h.controller.destroy();
 });
 
 test('price-axis drag changes only the USD domain and its double click restores only price Auto',()=>{

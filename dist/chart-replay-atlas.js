@@ -1,10 +1,10 @@
-import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.31.3';
+import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.36.0';
 import {buildCycleMilestones} from './cycle-milestones.js?v=1.29.0';
 import {validateDataset,utcDay,dateFromDay} from './cycle-engine.js?v=1.29.0';
 import {detectDirectionalChanges,computeRollingStates} from './market-structure.js?v=1.29.0';
 import {BITCOIN_EVENTS} from './bitcoin-events.js?v=1.29.0';
 import {clearChartHover} from './chart-hover.js?v=1.29.0';
-import {retainPriceViewport} from './empty-price-chart.js?v=1.29.0';
+import {retainPriceViewport} from './empty-price-chart.js?v=1.36.0';
 
 const renderers=new WeakMap();
 const positive=value=>Number.isFinite(value)&&value>0;
@@ -150,7 +150,11 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
     // retaining that crosshair would look like an already committed cutoff.
     svg.querySelector('[id$="-cross"]')?.setAttribute('display','none');
   }
-  const axis=chart.getPriceScale(),width=Math.max(1,Math.round(svg.clientWidth||svg.parentElement?.clientWidth||1100));
+  // Both populated and empty Atlas renders just wrote this frame's measured
+  // W/H into the viewBox. Reading clientWidth after replacing the SVG would
+  // force another style/layout flush; coordinate math needs that same W.
+  const axis=chart.getPriceScale(),width=Number(svg.getAttribute('viewBox')?.trim().split(/\s+/)[2]);
+  if(!Number.isFinite(width)||width<=0)throw new RangeError('The Atlas renderer must provide a positive viewport width');
   const span=Math.max(1,lastDay-firstDay),x=date=>axis.left+(utcDay(typeof date==='string'?date:date.date)-firstDay)/span*(axis.right-axis.left);
   const dayAt=clientX=>{const rect=svg.getBoundingClientRect();if(!(rect.width>0)||!Number.isFinite(clientX))return null;const local=(clientX-rect.left)/rect.width*width;return firstDay+Math.max(0,Math.min(1,(local-axis.left)/Math.max(1,axis.right-axis.left)))*(lastDay-firstDay);};
   const dateAt=clientX=>{const value=dayAt(clientX);return value===null?null:dateFromDay(Math.round(value));};

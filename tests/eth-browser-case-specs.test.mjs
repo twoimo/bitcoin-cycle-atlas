@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {relative,resolve} from 'node:path';
 import test from 'node:test';
 import vm from 'node:vm';
-import {createEthBrowserCaseSpecs} from '../scripts/eth-browser-case-specs.mjs';
+import {createEthBrowserCaseSpecs,ethBrowserCaseScopes,selectEthBrowserCaseSpecs} from '../scripts/eth-browser-case-specs.mjs';
 
 test('the extracted inventory preserves all 53 original cases, their order and every option',()=>{
   const specs=createEthBrowserCaseSpecs();
@@ -21,6 +21,19 @@ test('evidence consumers cannot mutate another caller\'s case inventory',()=>{
   for(const spec of consumer){spec.page='changed';spec.route='/changed';}
   consumer.pop();
   assert.deepEqual(createEthBrowserCaseSpecs(),original);
+});
+
+test('two process lanes form a disjoint complete partition without changing any existing scope',()=>{
+  const all=createEthBrowserCaseSpecs(),standard=selectEthBrowserCaseSpecs('non-chart-replay'),replay=selectEthBrowserCaseSpecs('chart-replay');
+  assert.equal(standard.length,46);assert.equal(replay.length,7);
+  assert.deepEqual(standard,all.filter(spec=>!spec.chartReplay));assert.deepEqual(replay,all.filter(spec=>spec.chartReplay));
+  assert.deepEqual(all.filter(spec=>[...standard,...replay].some(row=>JSON.stringify(row)===JSON.stringify(spec))),all);
+  for(const scope of ethBrowserCaseScopes.filter(scope=>scope!=='non-chart-replay')){
+    const previous=all.filter(spec=>scope==='all'||scope==='replay'&&spec.replay||scope==='chart-replay'&&spec.chartReplay||scope==='center-data'&&spec.surface==='center-data'
+      ||scope==='data'&&spec.page==='data'||scope.startsWith('workspace')&&(spec.page===scope||spec.page.startsWith(scope+'-')));
+    assert.deepEqual(selectEthBrowserCaseSpecs(scope),previous,scope+' changed its prior case inventory/order');
+  }
+  assert.throws(()=>selectEthBrowserCaseSpecs('partial-fast-pass'),/Unknown browser case scope/);
 });
 
 test('the actual runner preserves and emits each case specification after result fields replace its flags',()=>{

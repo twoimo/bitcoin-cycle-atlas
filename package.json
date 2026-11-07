@@ -1,6 +1,6 @@
 {
   "name": "bitcoin-cycle-atlas",
-  "version": "1.35.0",
+  "version": "1.36.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -48,17 +48,24 @@
     "test:panels": "tsx --test tests/web/*.test.tsx",
     "verify:skullet": "node scripts/sync-skullet.mjs --check",
     "build:pages": "npm run verify:domain && npm run verify:skullet && node scripts/build-pages.mjs",
-    "verify:pages": "npm run verify:domain && npm run verify:skullet && node scripts/build-pages.mjs --check"
+    "verify:pages": "npm run verify:domain && npm run verify:skullet && node scripts/build-pages.mjs --check",
+    "verify:cloudflare": "node scripts/verify-cloudflare-build.mjs",
+    "build:cloudflare": "node scripts/build-cloudflare.mjs",
+    "build:cloudflare:models": "node scripts/build-cloudflare-model-component.mjs",
+    "deploy:cloudflare:models": "node scripts/deploy-cloudflare-model-component.mjs",
+    "deploy:cloudflare": "node scripts/deploy-cloudflare.mjs"
   },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "devDependencies": {
+    "@cloudflare/vite-plugin": "2.0.0-beta.v.12",
     "@types/node": "26.6.6",
     "@types/pg": "8.23.1",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
+    "cf": "1.0.0-beta.28",
     "esbuild": "0.28.2",
     "linkedom": "0.18.15",
     "tsx": "4.23.15",

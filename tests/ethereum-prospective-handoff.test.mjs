@@ -1,3 +1,4 @@
+import {readArchivedWorkflow} from './support/archived-workflow.mjs';
 import {mkdtemp} from './helpers/physical-temp-directory.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -146,7 +147,7 @@ test('both prepared outcomes reach the unchanged publisher only after complete h
     assert.ok([...verified.logicalFiles.values()].some(value=>value.toString().includes('test-acquisition-checkpoint')&&value.toString().includes('"status":"'+outcome+'"')));
     assert.ok(server.calls.some(call=>call.method==='PATCH'));assert.equal(publication.releaseAuthorized,false);
     if(outcome==='failure'){
-      const workflow=await readFile(resolve(root,'.github/workflows/eth-prospective-daily.yml'),'utf8');
+      const workflow=readArchivedWorkflow('eth-prospective-daily');
       const finalStep=workflow.match(/- name: Report a failed acquisition[^\n]*\n\s+if: always\(\) && needs\.prepare\.outputs\.acquisition_outcome == 'failure'\n\s+run: \|\n((?:          [^\n]*\n?)+)/);
       assert.ok(finalStep,'the final failure command must remain conditional on the original acquisition outcome');
       const command=finalStep[1].split('\n').map(line=>line.slice(10)).join('\n');
@@ -239,7 +240,7 @@ test('combined payload byte and file limits fail before any large buffer copies 
 });
 
 test('daily jobs isolate credentials and use an exact current-run handoff before the sole publisher',async()=>{
-  const workflow=await readFile(resolve(root,'.github/workflows/eth-prospective-daily.yml'),'utf8');
+  const workflow=readArchivedWorkflow('eth-prospective-daily');
   const split=workflow.indexOf('\n  publish:\n');assert.ok(split>0);
   const prepare=workflow.slice(workflow.indexOf('\n  prepare:\n'),split),publish=workflow.slice(split);
   assert.match(prepare,/permissions:\n\s+contents: read/);assert.doesNotMatch(prepare,/contents: write|archive-remote\.mjs publish/);

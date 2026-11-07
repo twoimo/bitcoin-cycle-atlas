@@ -63,7 +63,7 @@ export function ChartWorkspaceToolbar({ instrument, onSelect }: { instrument:Wor
     onSelect(item); input.current?.focus(); setOpen(false); setQuery(''); setGroup('all'); setActive(0);
   }
   const searchResults = open && <section ref={popup} className="workspace-search-popover" style={{position:'fixed',...placement,right:'auto'}} aria-label="종목·지역 검색 결과">
-      <div className="workspace-search-heading"><strong>종목 차트</strong><button type="button" aria-label="검색 결과 닫기" onClick={() => { input.current?.focus(); setOpen(false); }}>닫기</button></div>
+      <div className="workspace-search-heading"><strong>가격 차트</strong><button type="button" aria-label="검색 결과 닫기" onClick={() => { input.current?.focus(); setOpen(false); }}>닫기</button></div>
       <div className="workspace-search-groups" role="group" aria-label="종목 유형">
         {['all','ETF','디지털 자산','부동산'].map(value => <button key={value} type="button" aria-pressed={value === group} onClick={() => { setGroup(value); setActive(0); input.current?.focus(); }}>{value === 'all' ? '전체' : value}</button>)}
       </div>

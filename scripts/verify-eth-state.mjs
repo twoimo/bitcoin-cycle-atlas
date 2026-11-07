@@ -125,8 +125,8 @@ async function implementation(work) {
       failure: /a canceled initializer must not mark an empty restored chart ready/,
     },
     {
-      // Remove only suspension ownership; keep inline replay ownership intact.
-      id: 'hidden-render', from: "state.frame=null;if(suspended||svg.dataset.chartReplayActive==='true')return;", to: "state.frame=null;if(svg.dataset.chartReplayActive==='true')return;",
+      // Remove only suspension ownership; keep replay and center ownership intact.
+      id: 'hidden-render', from: "state.frame=null;if(suspended||svg.dataset.chartReplayActive==='true'||document.body.dataset.centerTool)return;", to: "state.frame=null;if(svg.dataset.chartReplayActive==='true'||document.body.dataset.centerTool)return;",
       failure: /a suspended initialization callback must not release the boot shell/,
     },
     {

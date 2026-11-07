@@ -1,7 +1,7 @@
 import { workspaceInstrument } from './workspace-instruments.js';
 
-// Route identities remain stable for saved links; the visible navigation groups
-// the former seven tools into two workspaces.
+// Route identities remain stable for saved links. All instruments share the
+// price-chart destination while source-specific workspaces keep their routes.
 export const atlasPages = Object.freeze([
   {id:'outlook', label:'가격 차트', title:'가격 차트', view:'outlook', href:'/?page=outlook', icon:'M3 17l5-6 4 3 8-10M15 4h5v5'},
   {id:'market-us', badge:'US', label:'미국 시장', title:'미국 시장 진단', view:'market', tab:'diagnosis', region:'us', href:'/market-lab/us/', icon:'M4 20V10m8 10V4m8 16v-7'},
@@ -15,27 +15,37 @@ export const atlasPages = Object.freeze([
   {id:'data', label:'자산 비교', title:'자산 비교', view:'data', href:'/?page=data', icon:'M3 4h18v16H3zM3 10h18M3 15h18M9 4v16'},
   {id:'ipo', label:'공모주', title:'공모주', view:'ipo', href:'/?page=ipo', icon:'M3 6h18v15H3zM3 11h18M8 3v5M16 3v5'},
 ]);
+export function isWorkspaceChart(page) {
+  const id=typeof page==='string'?page:page?.id;
+  return ['rsi','housing','themes'].includes(id);
+}
 export function atlasNavigationId(page) {
   const id=typeof page==='string'?page:page?.id;
   return ['market-us','market-kr','scenario','cashflow'].includes(id)?'market-us'
-    : ['rsi','housing','themes'].includes(id)?'rsi':id;
+    : isWorkspaceChart(id)?'outlook':id;
 }
 export const atlasNavigationPages=Object.freeze(atlasPages
   .filter(page=>atlasNavigationId(page)===page.id)
   .map(page=>Object.freeze(page.id==='market-us'
     ? {...page,badge:null,label:'시장 분석',title:'시장 분석',href:'/market-lab/'}
-    :page.id==='rsi'?{...page,label:'종목 차트',title:'종목 차트',href:'/market-lab/charts/'}:page)));
+    :page)));
 
 export function atlasPageHref(page,{symbol,region}={}) {
   const item=typeof page==='string'?atlasPages.find(item=>item.id===page):page;
   if(!item)return '/?page=outlook';
+  if(item.id==='outlook') {
+    const instrument=workspaceInstrument(symbol);
+    if(instrument)return atlasPageHref(instrument.page,{symbol:instrument.symbol,region:instrument.region});
+    const native=String(symbol||'').normalize('NFKC').trim().toUpperCase();
+    return ['ETHUSD','MSTR','BMNR'].includes(native)?'/?page=outlook&symbol='+native:item.href;
+  }
   if(atlasNavigationId(item)==='market-us') {
     const query=new URLSearchParams();
     if(item.id==='market-kr')query.set('region','kr');
     if(item.id==='scenario'||item.id==='cashflow')query.set('view',item.id);
     return '/market-lab/'+(query.size?'?'+query:'');
   }
-  if(atlasNavigationId(item)==='rsi') {
+  if(isWorkspaceChart(item)) {
     const candidate=workspaceInstrument(symbol);
     const fallback=item.id==='themes'?'HYPE':item.id==='housing'?`HOUSING-${String(region||'busan').toUpperCase()}`:'TQQQ';
     const selected=candidate?.page===item.id?candidate:workspaceInstrument(fallback)||workspaceInstrument('HOUSING-BUSAN');

@@ -7,7 +7,7 @@ import { utcDay } from './cycle-engine.js?v=1.29.0';
 
 const previousAxes = new WeakMap();
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-export function retainPriceViewport(svg,axis){previousAxes.set(svg,{min:axis.min,max:axis.max});}
+export function retainPriceViewport(svg,axis){previousAxes.set(svg,{min:axis.min,max:axis.max});Object.assign(svg.dataset,{priceMin:String(axis.min),priceMax:String(axis.max),priceMode:axis.mode});}
 
 /** An empty viewport still has real axes and drag surfaces, but no price rows. */
 export function renderEmptyPriceViewport({svg,layout,axisText=null,width:W,height:H,start,end,seconds=false,scale='log',priceDomain=null,unit='usd',denominator=null,denominatorDate=null,fallbackPrice=null,invertScale=false,tool='crosshair',message='이 기간에는 표시할 가격 자료가 없습니다.',onHover=()=>{},source='',frequency='daily',researchAnnotations=[],activeResearchAnnotationId=null,onResearchAnnotation=()=>{},scenarioId=null}){

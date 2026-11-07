@@ -1,4 +1,5 @@
 import { setLoadingSurface } from './loading-surfaces.js';
+import { mountNativeChartApp, mountNativeChartWorkbench } from './native-chart-workbench.js?v=1.36.0';
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
 import {buildEthereumForecasts} from './ethereum-forecast.js';
 import {buildEthereumAdaptiveForecast} from './ethereum-adaptive-model.js';
@@ -7,12 +8,14 @@ import {ethereumResearchPanel} from './ethereum-research-panel.js';
 import { CHART_INTERVALS, chartInterval, isIntradayInterval, fetchMarketCandles } from './ohlc-data.js?v=1.29.0';
 import { parseEthArchive, mergeEthArchive } from './eth-market-data.js?v=1.29.0';
 import { createMarketDataController, marketStatusText } from "./market-data-controller.js?v=1.29.0";
-import { drawIntradayChart } from "./intraday-chart.js?v=1.29.0";
-import { bindChartNavigation } from './chart-navigation.js?v=1.29.0';
+import { drawIntradayChart } from "./intraday-chart.js?v=1.36.0";
+import { bindChartNavigation } from './chart-navigation.js?v=1.36.0';
+import { withChartSpacing, retargetChartRange } from './chart-view-policy.js?v=1.36.0';
+import { normalizePriceDomain } from './price-axis.js?v=1.29.0';
 import { mountChartTouchTracking } from "./chart-touch-tracking.js?v=1.29.0";
 import { clearChartHover } from './chart-hover.js?v=1.29.0';
 import { mountSymbolSelector } from './symbol-selector.js?v=1.35.0';
-import { readEthView, ethViewQuery, ethHistoryRange } from './eth-view-state.js?v=1.29.0';
+import { readEthView, ethViewQuery, ethHistoryRange } from './eth-view-state.js?v=1.36.0';
 import { ETHEREUM_EVENTS, ETHEREUM_EVENT_COLORS, getEthereumEvents } from './ethereum-events.js?v=1.29.0';
 import { mountEthereumHistory, readEthereumEventSettings, ethereumEventQuery, ethereumEventRange } from './ethereum-history.js?v=1.29.0';
 
@@ -34,16 +37,15 @@ const stamp = value => value ? value.replace('T',' ').slice(0,16) + ' UTC' : '�
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const actionButton = (action,label,glyph) => `<button type="button" class="eth-icon" data-eth-action="${action}" aria-label="${label}" title="${label}">${icon(glyph)}</button>`;
 
-import {mountChartReplay} from './chart-replay.js?v=1.35.0';
+import {mountChartReplay} from './chart-replay.js?v=1.36.0';
 
 export async function initEthView() {
-  // Keep the boot controller and embedded JSON; remove BTC-only controls from
-  // the document as well as the accessibility tree before opening this view.
-  for (const node of document.querySelectorAll('body > :not(#atlas-boot-shell):not(script)')) node.remove();
+  // The shared shell stays mounted; only this instrument owns its price data.
   document.body.dataset.market = 'ETHUSD';
   document.title = 'ETHUSD · Ethereum — Bitcoin Cycle Atlas';
   const params = new URLSearchParams(location.search);
-  const state = {...readEthView(params),ethModel:['pooled','valuation'].includes(params.get('eth-model'))?params.get('eth-model'):(!params.has('eth-model')&&params.has('eth-scenario'))?'valuation':'adaptive',forecastVisible:params.get('forecast')!=='off',ethScenario:['stress','base','bull'].includes(params.get('eth-scenario'))?params.get('eth-scenario'):'base',eventSettings:readEthereumEventSettings(params),selectedHistoryEvent:null,tool:'crosshair',range:null,priceDomain:null,controller:null,selectedTime:null,frame:null,loading:false,error:null,refreshError:null};
+  const state = {...readEthView(params),ethModel:['pooled','valuation'].includes(params.get('eth-model'))?params.get('eth-model'):(!params.has('eth-model')&&params.has('eth-scenario'))?'valuation':'adaptive',forecastVisible:params.get('forecast')!=='off',ethScenario:['stress','base','bull'].includes(params.get('eth-scenario'))?params.get('eth-scenario'):'base',eventSettings:readEthereumEventSettings(params),selectedHistoryEvent:null,tool:'crosshair',range:null,rangeTouched:false,priceDomain:null,controller:null,selectedTime:null,measurement:null,magnet:'off',showVolume:false,invertScale:false,frame:null,loading:false,error:null,refreshError:null};
+  let workbench=null,intervalViewport=null;
   let forecastBundle=null,forecastError=null,adaptiveForecast=null,adaptiveError=null,pooledForecast=null,pooledError=null,infoMode='data';
   let payload = null, daily = null, weekly = null, archiveRequest = null, generation = 0, navigationRevision = 0, ready = false, suspended = false;
   const app = document.createElement('main');
@@ -80,7 +82,7 @@ export async function initEthView() {
       <button type="button" data-eth-action="scale" title="로그 / 선형 가격축 전환">로그</button><button type="button" data-eth-action="auto" title="가격축 자동 맞춤">Auto</button>
     </footer>
     <span id="eth-announcement" class="lab-visually-hidden" role="status" aria-live="polite"></span>`;
-  document.body.append(app);
+  mountNativeChartApp(app);
   const $ = selector => app.querySelector(selector), $$ = selector => [...app.querySelectorAll(selector)];
   const svg = $('#eth-chart'), plot = $('.eth-plot'), readout = $('.eth-readout');
   const info = document.createElement('dialog');info.id='eth-data-dialog';info.className='eth-data-dialog';info.setAttribute('aria-labelledby','eth-data-title');
@@ -88,7 +90,7 @@ export async function initEthView() {
   document.body.append(info);
   info.querySelector('button').onclick=()=>info.close();
   info.addEventListener('click',event=>{if(event.target===info){const b=info.getBoundingClientRect();if(event.clientX<b.left||event.clientX>b.right||event.clientY<b.top||event.clientY>b.bottom)info.close();}});
-  mountSymbolSelector({button:$('#eth-symbol'),symbol:'ETHUSD'});
+  const symbolSelector=mountSymbolSelector({button:$('#eth-symbol'),symbol:'ETHUSD',showName:true});
 
   const market = createMarketDataController({product:'ETH-USD',snapshotUrl:'./data/eth-ohlc.json',preferSnapshot:true,readEmbedded:()=>payload?JSON.stringify(payload):null,onChange:(frequency)=>{if(state.frequency===frequency&&isIntradayInterval(frequency))schedule();}});
   const currentSeries = () => isIntradayInterval(state.frequency) ? market.get(state.frequency).series : state.frequency==='weekly'?weekly:daily;
@@ -99,8 +101,8 @@ export async function initEthView() {
     return Boolean(state.controller)&&x>=Number(svg.dataset.plotLeft)&&x<=Number(svg.dataset.plotRight)&&y>=Number(svg.dataset.plotTop)&&y<=Number(svg.dataset.priceBottom);
   },preview:point=>state.controller?.previewPointer?.(point),clear:()=>state.controller?.clearPreview?.(),cancelNavigation:()=>navigation.cancelGesture(),resumeNavigation:points=>navigation.resumeTouchGesture(points),onChange:active=>{$('#eth-touch-hint').hidden=!active;}});
   $('#eth-touch-hint').onclick=()=>touch.cancel();
-  const navigation = bindChartNavigation({element:plot,getRange:()=>svg.dataset.chartReplayActive==='true'?null:state.range,getTool:()=>state.tool,getPriceAxis:()=>state.controller?.getPriceScale?.(),getContext:context=>state.controller?.getSelection?.(context),
-    onGestureStart:()=>touch.cancelPending(),onMenuOpen:()=>touch.cancel(),onRangeChange:range=>{++navigationRevision;state.range=range;if(isIntradayInterval(state.frequency))void market.ensureRange(state.frequency,range);schedule();},
+  const navigation = bindChartNavigation({element:plot,getRange:()=>svg.dataset.chartReplayActive==='true'||document.body.dataset.centerTool?null:withChartSpacing(state.range?{...state.range,allowEmpty:true}:null,{frequency:state.frequency,plotWidth:Number(svg.dataset.plotRight)-Number(svg.dataset.plotLeft)}),getTool:()=>state.tool,getPriceAxis:()=>state.controller?.getPriceScale?.(),getContext:context=>state.controller?.getSelection?.(context),
+    onGestureStart:()=>{touch.cancelPending();workbench?.beginGesture();},onGestureEnd:()=>workbench?.endGesture(),onMenuOpen:()=>touch.cancel(),onRangeChange:range=>{++navigationRevision;state.range=range;state.rangeTouched=true;if(isIntradayInterval(state.frequency))void market.ensureRange(state.frequency,range);schedule();},
     onPriceRangeChange:domain=>{++navigationRevision;state.priceDomain=domain;schedule();},onPriceReset:()=>{++navigationRevision;state.priceDomain=null;schedule();},onReset:()=>resetRange(false),onAnnounce:announce});
   document.addEventListener('atlas:modal-open',event=>{touch.cancel();navigation.cancelGesture();if(event.detail?.id!==info.id&&info.open)info.close();});
   document.addEventListener('atlas:chart-replay-open',()=>{touch.cancel();navigation.cancelGesture();});
@@ -109,7 +111,7 @@ export async function initEthView() {
 
   function persist(){try{history.replaceState(null,'',`${location.pathname}?${ethereumEventQuery(ethViewQuery(state),state.eventSettings)}`);}catch{}}
   function cancelInteraction(){touch.cancel();navigation.cancelGesture();clearChartHover(svg);state.selectedTime=null;}
-  function resetRange(cancel=true){if(cancel)cancelInteraction();++navigationRevision;state.range=null;state.priceDomain=null;state.span='4y';persist();schedule();}
+  function resetRange(cancel=true){if(cancel)cancelInteraction();++navigationRevision;intervalViewport=null;state.range=null;state.rangeTouched=false;state.priceDomain=null;state.span='4y';persist();schedule();}
   async function focusHistoricalEvent(id){
     const event=ETHEREUM_EVENTS.find(item=>item.id===id);if(!event)return false;
     cancelInteraction();
@@ -117,7 +119,7 @@ export async function initEthView() {
     else if(!daily)await load();
     const range=ethereumEventRange(event,daily);
     if(!range){announce('이 사건 날짜에는 표시할 일봉 가격 자료가 없습니다.');return false;}
-    ++navigationRevision;state.selectedHistoryEvent=id;state.range=range;state.priceDomain=null;state.eventSettings.visible=true;
+    ++navigationRevision;intervalViewport=null;state.selectedHistoryEvent=id;state.range=range;state.priceDomain=null;state.eventSettings.visible=true;
     if(state.eventSettings.category!=='all'&&state.eventSettings.category!==event.category)state.eventSettings.category='all';
     historyWorkbench.setSettings(state.eventSettings);persist();schedule();announce(`${event.date} ${event.title} 구간을 표시합니다.`);return true;
   }
@@ -199,7 +201,7 @@ export async function initEthView() {
   }
   function revealReady(){if(ready)return;ready=true;document.dispatchEvent(new CustomEvent('atlas:ready'));}
   function render(){
-    state.frame=null;if(suspended||svg.dataset.chartReplayActive==='true')return;
+    state.frame=null;if(suspended||svg.dataset.chartReplayActive==='true'||document.body.dataset.centerTool)return;
     const series=currentSeries(),intraday=isIntradayInterval(state.frequency),entry=intraday?market.get(state.frequency):null;
     $('#eth-interval').value=state.frequency;
     $('#eth-readout-interval').textContent=`· ${chartInterval(state.frequency).label}`;
@@ -221,7 +223,7 @@ export async function initEthView() {
       const error=state.error||entry?.error;
       $('#eth-empty-message').textContent=error?'ETH-USD 가격 자료를 불러오지 못했습니다. 연결을 확인하고 다시 조회해 주세요.':'ETH-USD 가격 자료를 불러오고 있습니다.';
       $('#eth-empty button').hidden=!error;$('#eth-status').textContent=error?'조회 실패':'불러오는 중';
-      navigation.update();if(error)revealReady();return;
+      navigation.update();workbench?.update();if(error)revealReady();return;
     }
     const forecast=visibleForecast();
     $('#eth-forecast-note').hidden=!forecast;
@@ -233,18 +235,27 @@ export async function initEthView() {
     svg.dataset.forecastModel=forecast?state.ethModel:'none';
     svg.setAttribute('aria-label',adaptive?'ETH-USD 실제 관측, 파란 점선은 모형 중앙값, 금색 점선은 모의 예시 1개, 음영은 모의 10–90% 분위수이며 실제 적중률 보장이 아닙니다. 드래그·휠·방향키로 탐색하세요.':'ETH-USD 실제 관측, 파란 점선은 외부 조건 기준선, 금색 점선은 무작위 예시 1개, 음영은 세 조건 범위이며 확률이 아닙니다. 드래그·휠·방향키로 탐색하세요.');
     $('[data-eth-action="forecast"]').setAttribute('aria-pressed',String(Boolean(forecast)));
-    if(!state.range)state.range=intraday?market.range(state.frequency):ethHistoryRange(series,state.span,null,forecast?.displayEnd);
+    if(!state.range){
+      const target=intraday?market.range(state.frequency):ethHistoryRange(series,state.span,null,forecast?.displayEnd);
+      state.range=intervalViewport?retargetChartRange(intervalViewport.range,target):target;
+      if(intervalViewport&&state.range){
+        const selected=intervalViewport.selectedTime;
+        if(Number.isSafeInteger(selected))state.selectedTime=state.range.min+Math.round((selected-state.range.min)/state.range.step)*state.range.step;
+        intervalViewport=null;
+        if(intraday)void market.ensureRange(state.frequency,state.range);
+      }
+    }
     // Keep readable semantic keys outside the price clip at every font/viewport size.
     const forecastNote=$('#eth-forecast-note'),noteBottom=forecastNote.offsetTop+forecastNote.offsetHeight;
     const headerInset=Math.max(plot.clientHeight<300?(forecast?70:54):(forecast?100:76),
       forecast&&Number.isFinite(noteBottom)?Math.ceil(noteBottom+8):0);
-    state.controller=drawIntradayChart({svg,series,range:state.range,chartType:state.chartType,scale:state.scale,priceDomain:state.priceDomain,showVolume:false,tool:state.tool,selectedTime:state.selectedTime,headerInset,forecast,onForecastEvidence:()=>openInfo('forecast'),historyStatus:entry?.historyStatus||'ready',onHover:showReadout,
+    state.controller=drawIntradayChart({svg,series,range:state.range,chartType:state.chartType,scale:state.scale,priceDomain:state.priceDomain,invertScale:state.invertScale,showVolume:state.showVolume,tool:state.tool,magnet:state.magnet,measurement:state.measurement,onMeasurement:value=>workbench?.measure(value),onInspect:detail=>workbench?.inspect(detail),selectedTime:state.selectedTime,headerInset,forecast,onForecastEvidence:()=>openInfo('forecast'),historyStatus:entry?.historyStatus||'ready',onHover:showReadout,
       historicalEvents:getEthereumEvents({category:state.eventSettings.category}),showHistoricalEvents:state.eventSettings.visible,activeHistoricalEventId:state.selectedHistoryEvent,historicalEventColors:ETHEREUM_EVENT_COLORS,onHistoricalEvent:openHistoricalEvent});
     updateHistoryContext();
     const status=intraday?marketStatusText(entry):`Coinbase ETH-USD · ${busy?'갱신 중':state.refreshError?'연결 실패 · 저장 자료':series.snapshot?'저장 자료':'완료 봉'} · ${stamp(series.lastDate)}${series.gapCount?` · 빈 봉 ${series.gapCount}개`:''}`;
     $('#eth-status').textContent=entry?.historyStatus==='loading'?'과거 봉 조회 중':state.refreshError||entry?.error?'연결 실패 · 저장 자료':`${series.snapshot?'저장 자료':'완료 봉'} · ${series.lastDate.slice(0,10)}`;
     $('#eth-status').title=status;$('#eth-status').setAttribute('aria-label',status);
-    plot.dataset.tool=state.tool;navigation.update();if(info.open){if(infoMode==='forecast')renderForecastInfo();else renderInfo();}revealReady();
+    plot.dataset.tool=state.tool;navigation.update();workbench?.update();if(info.open){if(infoMode==='forecast')renderForecastInfo();else renderInfo();}revealReady();
   }
   function schedule(){if(!suspended&&state.frame===null)state.frame=requestAnimationFrame(render);}
   function setPayload(value){const nextDaily=parseEthArchive(value),nextWeekly=parseEthArchive(value,'weekly');payload=value;daily=nextDaily;weekly=nextWeekly;forecastBundle=null;forecastError=null;adaptiveForecast=null;adaptiveError=null;pooledForecast=null;pooledError=null;}
@@ -286,9 +297,10 @@ export async function initEthView() {
   }
   async function changeInterval(value){
     if(value===state.frequency||!CHART_INTERVALS.some(item=>item.id===value))return;
-    cancelInteraction();++navigationRevision;state.frequency=value;state.range=null;state.priceDomain=null;state.error=null;persist();await load();
+    const prior=state.range?{range:state.range,selectedTime:state.selectedTime}:intervalViewport;
+    cancelInteraction();++navigationRevision;intervalViewport=prior;state.frequency=value;state.range=null;state.rangeTouched=Boolean(prior);state.priceDomain=normalizePriceDomain(state.priceDomain,{scale:state.scale});state.measurement=null;state.error=null;persist();await load();
   }
-  function changeSpan(value){if(!['1m','6m','1y','4y','all'].includes(value))return;cancelInteraction();++navigationRevision;state.span=value;state.range=null;state.priceDomain=null;persist();schedule();}
+  function changeSpan(value){if(!['1m','6m','1y','4y','all'].includes(value))return;cancelInteraction();++navigationRevision;intervalViewport=null;state.span=value;state.range=null;state.rangeTouched=false;persist();schedule();}
   app.addEventListener('click',event=>{
     const interval=event.target.closest('[data-eth-interval]');if(interval){void changeInterval(interval.dataset.ethInterval);return;}
     const span=event.target.closest('[data-eth-span]');if(span){changeSpan(span.dataset.ethSpan);return;}
@@ -300,9 +312,9 @@ export async function initEthView() {
     if(action==='reset'){resetRange();return;}
     cancelInteraction();
     if(['line','candles','scale','auto'].includes(action))++navigationRevision;
-    if(['line','candles'].includes(action)){state.chartType=action;state.priceDomain=null;}
+    if(['line','candles'].includes(action))state.chartType=action;
     if(['crosshair','pan'].includes(action))state.tool=action;
-    if(action==='scale'){state.scale=state.scale==='log'?'linear':'log';state.priceDomain=null;}
+    if(action==='scale'){state.scale=state.scale==='log'?'linear':'log';state.priceDomain=normalizePriceDomain(state.priceDomain,{scale:state.scale});}
     if(action==='auto')state.priceDomain=null;
     persist();schedule();
   });
@@ -313,7 +325,9 @@ export async function initEthView() {
     const buttons=$$('[data-eth-interval]'),i=buttons.indexOf(event.target),n=event.key==='Home'?0:event.key==='End'?buttons.length-1:(i+(event.key==='ArrowRight'?1:-1)+buttons.length)%buttons.length;
     buttons[n].click();buttons[n].focus();
   });
-  document.addEventListener('keydown',event=>{if(svg.dataset.chartReplayActive==='true'||event.ctrlKey||event.metaKey||event.altKey||event.isComposing||event.target.closest('input,select,textarea,dialog,[contenteditable="true"]'))return;const action={c:'crosshair',h:'pan'}[event.key.toLowerCase()];if(action){event.preventDefault();$(`[data-eth-action="${action}"]`).click();}});
+  workbench=mountNativeChartWorkbench({app,svg,plot,symbol:'ETHUSD',intervals:CHART_INTERVALS,state,getSeries:currentSeries,navigation,cancelInteraction,
+    actions:{frequency:value=>void changeInterval(value),span:changeSpan,fit:resetRange,source:()=>openInfo(),forecast:()=>openInfo('forecast'),history:()=>historyWorkbench.open(),range:range=>{++navigationRevision;if(isIntradayInterval(state.frequency))void market.ensureRange(state.frequency,range);}},
+    onChange:()=>{++navigationRevision;persist();schedule();},onRestore:({frequencyChanged})=>{intervalViewport=null;if(frequencyChanged&&!currentSeries())void load();}});
   mountChartReplay({svg,plot,toolbar:$('.eth-topbar'),symbol:'ETHUSD',restore:schedule});
   const observer=new ResizeObserver(()=>schedule());observer.observe(plot);
   document.fonts?.ready.then(()=>schedule());
@@ -323,7 +337,7 @@ export async function initEthView() {
     cancelInteraction();
     // A Back/Forward cache restoration keeps the same document and listeners.
     // Destroy them only when the browser discards this document entirely.
-    if(!event.persisted){touch.destroy();navigation.destroy();observer.disconnect();historyWorkbench.destroy();}
+    if(!event.persisted){touch.destroy();navigation.destroy();observer.disconnect();historyWorkbench.destroy();symbolSelector.destroy();workbench.destroy();}
   });
   window.addEventListener('pageshow',event=>{
     if(!event.persisted)return;

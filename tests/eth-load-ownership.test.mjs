@@ -129,10 +129,11 @@ test('ETH data information opens with its escaped original-data link', async () 
 test('ETH intraday force refresh preserves later date and price navigation through the real controller', async () => {
   const f = await loaded(); f.interval('1h'); await f.settle();
   assert.equal(f.latest().series.interval, '1h'); f.refresh(); await f.microtasks();
+  const refreshRequest=f.requests.length-1; // The preserved interval viewport may first request older history.
   const custom = { ...f.latest().range, start: f.latest().range.start + 3600 * 8 };
   const priceDomain = { min: 80, max: 130 };
   f.pan(custom); f.priceRange(priceDomain); await f.frame();
-  f.replyCandles(1); await f.settle();
+  f.replyCandles(refreshRequest); await f.settle();
   assert.equal(f.latest().range.start, custom.start, 'intraday refresh must preserve newer date navigation');
   assert.equal(f.latest().priceDomain, priceDomain, 'intraday refresh must preserve newer price navigation');
   assert.equal(f.latest().series.interval, '1h'); assert.equal(f.latest().series.candles.at(-1).close, 103);
@@ -140,8 +141,9 @@ test('ETH intraday force refresh preserves later date and price navigation throu
 
 test('ETH switching interval revokes the real intraday force refresh without resetting its new range', async () => {
   const f = await loaded(); f.interval('1h'); await f.settle(); f.refresh(); await f.microtasks();
+  const refreshRequest=f.requests.length-1;
   f.interval('weekly'); await f.settle();
-  const before = f.latest(); f.replyCandles(1); await f.settle();
+  const before = f.latest(); f.replyCandles(refreshRequest); await f.settle();
   assert.equal(f.latest().series.interval, 'weekly');
   assert.equal(f.latest().range, before.range, 'a superseded intraday refresh must not reset the weekly range');
   assert.equal(f.latest().priceDomain, before.priceDomain);

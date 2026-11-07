@@ -3,13 +3,16 @@ import type { RsiBar } from '@atlas/domain/rsi-bars';
 import type { RsiRow } from '@atlas/domain/market-lab';
 import { zoomRange,panRange, type ChartRange } from '../../../dist/chart-navigation.js';
 import { rsiChartLayout } from '../../../dist/rsi-chart-layout.js';
+import { createPriceScale } from '../../../dist/chart-math.js';
+import { withChartSpacing,type ChartSpacingBounds } from '../../../dist/chart-view-policy.js';
 export type Tool='crosshair'|'pan'|'measure';
 export type Pane='data'|'indicators'|'settings'|'method'|'help'|'export'|'date'|'search'|null;
 export interface Anchor {date:string;value:number;panel:'price'|'rsi'}
 export interface RsiChartView {
-  start:string;end:string;selected:string;frequency:'daily'|'weekly';scale:'log'|'linear';chartType:'line'|'candles';tool:Tool;
+  start:string;end:string;selected:string;frequency:'daily'|'weekly'|'monthly';scale:'log'|'linear';chartType:'line'|'candles';tool:Tool;
   autoScale:boolean;domain:{min:number;max:number}|null;inverted:boolean;magnet:'off'|'weak'|'strong';
   showRsi:boolean;showSignal:boolean;showLevels:boolean;showCrossings:boolean;showVolume:boolean;measurement:Anchor[];
+  spacingBounds?:ChartSpacingBounds;
 }
 export interface RsiChartCache {view:RsiChartView;undo:RsiChartView[];redo:RsiChartView[]}
 export const day=(date:string)=>Date.parse(date+'T00:00:00Z')/86400000;
@@ -19,7 +22,7 @@ export function initialChartView(prices:readonly Point[]):RsiChartView {
 }
 export function chartRange(view:RsiChartView,prices:readonly Point[]):ChartRange|null {
   if(!prices.length)return null;
-  return {start:view.start||prices[0][0],end:view.end||prices.at(-1)![0],min:prices[0][0],max:prices.at(-1)![0],minSpan:10,allowEmpty:true,maxSpan:Math.max(10,day(prices.at(-1)![0])-day(prices[0][0])+1)};
+  return {start:view.start||prices[0][0],end:view.end||prices.at(-1)![0],min:prices[0][0],max:prices.at(-1)![0],minSpan:10,allowEmpty:true,maxSpan:Math.max(10,day(prices.at(-1)![0])-day(prices[0][0])+1),...(view.spacingBounds?{spacingBounds:view.spacingBounds}:{})};
 }
 export function boundedDates(prices:readonly Point[],start:string,end:string) {
   if(!prices.length)return {start:'',end:''};
@@ -34,10 +37,11 @@ export function nearestPoint(prices:readonly Point[],target:string):number {
   if(left>0&&Math.abs(day(prices[left-1][0])-day(target))<Math.abs(day(prices[left][0])-day(target)))return left-1;
   return left;
 }
-export function applyChartCommand(view:RsiChartView,prices:readonly Point[],action:string,value?:unknown):RsiChartView {
-  const range=chartRange(view,prices);if(!range)return view;
-  if(action==='zoom'){const next=zoomRange(range,Number(value));return {...view,start:next.start,end:next.end};}
-  if(action==='pan'){const next=panRange(range,Number(value));return {...view,start:next.start,end:next.end};}
+export function applyChartCommand(view:RsiChartView,prices:readonly Point[],action:string,value?:unknown,plotWidth=800):RsiChartView {
+  const sourceRange=chartRange(view,prices);if(!sourceRange)return view;
+  const range=withChartSpacing(sourceRange,{frequency:view.frequency,plotWidth});
+  if(action==='zoom'){const next=zoomRange(range,Number(value),1);return {...view,start:next.start,end:next.end,spacingBounds:next.spacingBounds};}
+  if(action==='pan'){const next=panRange(range,Number(value));return {...view,start:next.start,end:next.end,spacingBounds:next.spacingBounds};}
   if(action==='fit')return {...view,start:range.min,end:range.max,domain:null,autoScale:true};
   if(action==='span'){const days=Number(value);return {...view,...boundedDates(prices,days?date(day(range.max)-days):range.min,range.max),domain:null,autoScale:true};}
   if(action==='tool'&&['crosshair','pan','measure'].includes(String(value)))return {...view,tool:value as Tool};
@@ -45,7 +49,7 @@ export function applyChartCommand(view:RsiChartView,prices:readonly Point[],acti
   if(action==='auto-scale')return {...view,autoScale:true,domain:null};
   if(action==='invert-scale')return {...view,inverted:!view.inverted};
   if(action==='type')return {...view,chartType:view.chartType==='line'?'candles':'line'};
-  if(action==='frequency'&&(value==='daily'||value==='weekly'))return {...view,frequency:value,autoScale:true,domain:null,measurement:[]};
+  if(action==='frequency'&&(value==='daily'||value==='weekly'))return {...view,frequency:value,measurement:[]};
   if(action==='magnet')return {...view,magnet:value==='off'||value==='weak'||value==='strong'?value:view.magnet==='off'?'weak':view.magnet==='weak'?'strong':'off'};
   if(action==='clear-measurement')return {...view,measurement:[]};
   if(action==='toggle'&&typeof value==='string'&&['showRsi','showSignal','showLevels','showCrossings','showVolume'].includes(value))return {...view,[value]:!view[value as keyof RsiChartView]};
@@ -55,19 +59,14 @@ export function applyChartCommand(view:RsiChartView,prices:readonly Point[],acti
   }
   return view;
 }
-export function chartGeometry(prices:readonly Point[],bars:readonly RsiBar[],rows:readonly RsiRow[],view:RsiChartView,width:number,height:number) {
-  const {left,right,top,bottom,priceBottom,rsiTop}=rsiChartLayout(width,height,view.showRsi);
+export function chartGeometry(prices:readonly Point[],bars:readonly RsiBar[],rows:readonly RsiRow[],view:RsiChartView,width:number,height:number,axisGutter?:number) {
+  const {left,right,top,bottom,priceBottom,rsiTop}=rsiChartLayout(width,height,view.showRsi,axisGutter);
   const visible=prices.filter(p=>p[0]>=view.start&&p[0]<=view.end),visibleBars=bars.filter(p=>p[0]>=view.start&&p[0]<=view.end);
   const values=visible.length?(view.chartType==='candles'&&visibleBars.length?visibleBars.flatMap(b=>[b[2],b[3]]):visible.map(p=>p[1])):prices.map(p=>p[1]);
-  let min=values.length?Math.min(...values):1,max=values.length?Math.max(...values):2;
-  if(view.domain&&!view.autoScale){min=view.domain.min;max=view.domain.max;}
-  else if(view.scale==='log'){const padding=Math.max(.02,(Math.log(max)-Math.log(min))*.08);min=Math.exp(Math.log(min)-padding);max=Math.exp(Math.log(max)+padding);}
-  else {const padding=Math.max((max-min)*.08,max*.01);min=Math.max(.00000001,min-padding);max+=padding;}
-  const low=view.scale==='log'?Math.log(min):min,high=view.scale==='log'?Math.log(max):max,span=Math.max(1,day(view.end)-day(view.start));
+  const axis=createPriceScale(values.length?values:[1,2],{scale:view.scale,top,bottom:priceBottom,inverted:view.inverted,
+    tickCount:Math.max(2,Math.min(width<600?5:7,Math.floor((priceBottom-top)/38)+1)),domain:view.autoScale?null:view.domain});
+  const {min,max,y,invert:fromY,ticks}=axis,span=Math.max(1,day(view.end)-day(view.start));
   const x=(d:string)=>left+(day(d)-day(view.start))/span*(right-left);
-  const y=(v:number)=>{const k=((view.scale==='log'?Math.log(v):v)-low)/(high-low);return top+(view.inverted?k:1-k)*(priceBottom-top);};
-  const fromY=(py:number)=>{let k=(py-top)/(priceBottom-top);if(!view.inverted)k=1-k;const value=low+k*(high-low);return view.scale==='log'?Math.exp(value):value;};
   const rsiY=(v:number)=>bottom-v/100*(bottom-rsiTop);
-  const ticks=Array.from({length:6},(_,i)=>{const v=low+(high-low)*i/5;return view.scale==='log'?Math.exp(v):v;});
-  return {left,right,top,bottom,priceBottom,rsiTop,x,y,fromY,rsiY,ticks,min,max,visible,visibleBars,visibleRows:rows.filter(r=>r.date>=view.start&&r.date<=view.end)};
+  return {left,right,top,bottom,priceBottom,rsiTop,x,y,fromY,rsiY,ticks,min,max,axis,visible,visibleBars,visibleRows:rows.filter(r=>r.date>=view.start&&r.date<=view.end)};
 }

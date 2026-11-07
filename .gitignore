@@ -1,6 +1,7 @@
 node_modules/
 release-assets/
 build/
+.cloudflare/
 release/
 __pycache__/
 *.pyc

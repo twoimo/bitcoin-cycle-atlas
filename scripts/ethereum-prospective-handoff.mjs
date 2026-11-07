@@ -7,6 +7,7 @@ import {canonicalForecastJson} from '../dist/forecast-records.js';
 import {verifyEthereumProspectiveArchive} from './ethereum-prospective-archive-core.mjs';
 import {ETH_PROSPECTIVE_ARCHIVE_REMOTE_POLICY,validateEthereumArchiveRemoteReadReceipt} from './ethereum-prospective-archive-remote.mjs';
 import {ETH_ARCHIVE_IO_PATHS,readEthereumArchiveDirectory,writeEthereumArchiveDirectory} from './manage-ethereum-prospective-archive.mjs';
+import {normalizeEthereumArchiveHandoffContext,ethereumArchiveSourceFromContext} from './ethereum-archive-provider-identity.mjs';
 
 export const ETH_PROSPECTIVE_HANDOFF_POLICY=Object.freeze({
   version:'eth-prospective-publication-handoff-1',repository:ETH_PROSPECTIVE_ARCHIVE_REMOTE_POLICY.repository,
@@ -23,14 +24,7 @@ function exactKeys(value,keys,label){
   if(!value||Object.getPrototypeOf(value)!==Object.prototype||Object.keys(value).sort().join(',')!==keys.sort().join(','))fail('Unexpected '+label+' fields');
 }
 function contextIdentity(value){
-  exactKeys(value,['repository','eventName','ref','defaultBranch','sourceCommit','sourceTree','runId','runAttempt','acquisitionOutcome'],'handoff context');
-  if(value.repository!==P.repository||!['schedule','workflow_dispatch'].includes(value.eventName)||
-    typeof value.defaultBranch!=='string'||!value.defaultBranch||value.ref!=='refs/heads/'+value.defaultBranch||
-    value.defaultBranch===ETH_PROSPECTIVE_ARCHIVE_REMOTE_POLICY.branch||/[\x00-\x20~^:?*\[\\]/.test(value.defaultBranch)||value.defaultBranch.includes('..')||
-    !COMMIT.test(value.sourceCommit)||!COMMIT.test(value.sourceTree)||!/^\d{1,24}$/.test(value.runId)||typeof value.runId!=='string'||
-    !/^[1-9]\d{0,9}$/.test(value.runAttempt)||typeof value.runAttempt!=='string'||!['success','failure'].includes(value.acquisitionOutcome))
-    fail('Handoff requires the exact daily default-branch run, attempt, source and acquisition outcome');
-  return JSON.parse(json(value));
+  return normalizeEthereumArchiveHandoffContext(value);
 }
 function parse(bytes,label,maximum=P.maximumMetadataBytes){
   if(!Buffer.isBuffer(bytes)||bytes.length>maximum)fail('Missing or oversized '+label);
@@ -75,7 +69,7 @@ async function pair(expectedPreviousFiles,files,readReceiptBytes,context){
   if(expectedPreviousFiles&&!sameFiles(expectedPreviousFiles,previousFiles))fail('Handoff must contain exactly one complete append without changing or removing previously retained archive bytes');
   validateEthereumArchiveRemoteReadReceipt({receipt:readReceipt,files:readReceipt.status==='restored'?previousFiles:new Map()});
   const previous=await verifyEthereumProspectiveArchive({files:previousFiles});
-  const source={sourceCommit:context.sourceCommit,sourceTree:context.sourceTree,runId:context.runId};
+  const source=ethereumArchiveSourceFromContext(context);
   if(next.manifest.previousManifestId!==previous.manifest.id||next.manifest.sequence!==previous.manifest.sequence+1||json(next.manifest.source)!==json(source))
     fail('Handoff must contain exactly one complete append from the selected source and run');
   return {readReceipt,previous,next,previousFiles};

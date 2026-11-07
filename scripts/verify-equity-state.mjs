@@ -78,9 +78,9 @@ async function implementation(work) {
   assert.match(original.output, /tests 28/);
   console.log(original.output.trim());
   const copy = path.join(work, 'implementation');
-  // The initializer fixture imports the actual capital-policy catalog, whose
-  // date helpers are a static dependency. Keep that closure in the scratch copy.
-  const files = ['dist/equity-view.js', 'dist/equity-market-data.js', 'dist/treasury-instruments.js', 'dist/cycle-engine.js', 'dist/index.html', 'tests/equity-load-ownership.test.mjs', 'tests/helpers/equity-view-fixture.mjs'];
+  // The initializer fixture uses the actual capital/date and shared chart
+  // helpers. Keep their OHLC and price-axis dependencies in the scratch copy.
+  const files = ['dist/equity-view.js', 'dist/equity-market-data.js', 'dist/treasury-instruments.js', 'dist/cycle-engine.js', 'dist/chart-view-policy.js', 'dist/ohlc-data.js', 'dist/price-axis.js', 'dist/index.html', 'tests/equity-load-ownership.test.mjs', 'tests/helpers/equity-view-fixture.mjs'];
   for (const file of files) {
     await mkdir(path.dirname(path.join(copy, file)), { recursive: true });
     await copyFile(path.join(root, file), path.join(copy, file));
@@ -89,7 +89,7 @@ async function implementation(work) {
   const viewFile = path.join(copy, 'dist/equity-view.js'), source = await readFile(viewFile, 'utf8');
   const changes = [
     {
-      id: 'deferred-readiness', from: 'navigation.update();revealReady();}', to: 'navigation.update();}',
+      id: 'deferred-readiness', from: 'navigation.update();workbench?.update();revealReady();}', to: 'navigation.update();workbench?.update();}',
       failure: /a completed observed render must release the boot shell/,
     },
     {
@@ -109,8 +109,8 @@ async function implementation(work) {
       failure: /new prices must never be displayed with the previous projection/,
     },
     {
-      // Remove only suspension ownership; keep inline replay ownership intact.
-      id: 'hidden-ready', from: "state.frame=null;if(suspended||svg.dataset.chartReplayActive==='true')return;const series=current();", to: "state.frame=null;if(svg.dataset.chartReplayActive==='true')return;const series=current();",
+      // Remove only suspension ownership; keep replay and center ownership intact.
+      id: 'hidden-ready', from: "state.frame=null;if(suspended||svg.dataset.chartReplayActive==='true'||document.body.dataset.centerTool)return;const series=current();", to: "state.frame=null;if(svg.dataset.chartReplayActive==='true'||document.body.dataset.centerTool)return;const series=current();",
       failure: /a hidden initialization callback must not release the boot shell/,
     },
     {

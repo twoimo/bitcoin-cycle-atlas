@@ -210,10 +210,11 @@ test('React app keeps calculation controls usable while loading and preserves re
   assert.equal(fixture.document.querySelector('.ml-axis-value')!.textContent, '0.52');
   await fixture.click('[data-workspace-page="cashflow"]');
   assert.match(fixture.document.querySelector('#ml-economics-output')!.textContent!, /6,623\.58/);
-  await fixture.click('[data-atlas-page="rsi"]');
+  await fixture.click('[data-atlas-page="outlook"]');
   const selectedRange = [...fixture.document.querySelectorAll('.rsi-toolbar button[aria-pressed="true"]')].map(node => node.textContent);
   assert(selectedRange.includes('전체'), 'all retained history is initially visible');
-  assert.equal(fixture.document.querySelectorAll('.atlas-nav [data-atlas-page="scenario"],.atlas-nav [data-atlas-page="cashflow"],.atlas-nav [data-atlas-page="housing"],.atlas-nav [data-atlas-page="themes"]').length, 0, 'the unified workspaces own the former sidebar tools');
+  assert.equal(fixture.document.querySelectorAll('.atlas-nav [data-atlas-page="rsi"],.atlas-nav [data-atlas-page="scenario"],.atlas-nav [data-atlas-page="cashflow"],.atlas-nav [data-atlas-page="housing"],.atlas-nav [data-atlas-page="themes"]').length, 0, 'the single price-chart destination owns every instrument');
+  assert.equal(fixture.document.querySelector('.atlas-nav [aria-current="page"]')?.getAttribute('data-atlas-page'), 'outlook');
   assert(fixture.document.querySelector('[role=combobox][aria-label="종목·지역 검색"]'), 'chart selection is available in the same workspace');
   assert.match(fixture.document.querySelector('[data-chart="rsi"] .rsi-axis')!.textContent!, /33\.95/);
 });
@@ -252,7 +253,7 @@ test('React app retains a newer populated document when an older empty fallback 
   assert.doesNotMatch(fixture.document.body.textContent!,/스냅샷은 읽었지만 관측 자료가 없습니다/);
   assert.match(fixture.document.querySelector('.ml-delivery')!.textContent!,/연결 실패 · 직전 자료 유지/);
   assert.doesNotMatch(fixture.document.querySelector('.ml-delivery')!.textContent!,/저장본 표시/);
-  await fixture.click('[data-atlas-page="rsi"]');
+  await fixture.click('[data-atlas-page="outlook"]');
   await fixture.click('.rsi-workbench-tabs button:nth-child(2)');
   assert.equal(fixture.document.querySelector('.rsi-backtest-form button[type=submit]')!.hasAttribute('disabled'),false,'retained API revision still owns the retained observations');
 });
@@ -266,7 +267,7 @@ test('React retry retains accepted RSI revision while replacement is pending and
   });t.after(fixture.cleanup);
   await fixture.click('.ml-collection-line button');
   assert(fixture.document.querySelector('.atlas-inline-loading'));
-  await fixture.click('[data-atlas-page="rsi"]');
+  await fixture.click('[data-atlas-page="outlook"]');
   await fixture.click('.rsi-workbench-tabs button:nth-child(2)');
   const enabled=()=>assert.equal(fixture.document.querySelector('.rsi-backtest-form button[type=submit]')!.hasAttribute('disabled'),false);
   enabled();

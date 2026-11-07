@@ -78,6 +78,48 @@ body[data-market="ETHUSD"]{margin:0;display:block;background:var(--atlas-surface
 .eth-forecast-note{position:absolute;left:13px;right:12px;top:71px;display:flex;flex-wrap:wrap;gap:4px 12px;line-height:1.25;font-size:11px;color:var(--equity-view-ink-8);pointer-events:none;white-space:nowrap;overflow:hidden}.eth-forecast-note .eth-sample-key,.eth-forecast-note .eth-envelope-key,#eth-kind{color:var(--equity-view-ink-9)}.eth-forecast-note .eth-baseline-key{color:var(--eth-view-ink-28)}.eth-forecast-note .eth-sample-key{flex-basis:100%}#eth-kind{font-size:11px}.eth-forecast-controls{display:grid;gap:12px;font-size:12px}.eth-forecast-controls select{min-width:0;width:100%;padding:8px;background:var(--equity-view-surface-6);color:var(--equity-view-ink-18);border:1px solid var(--equity-view-rule-2);border-radius:5px;font:inherit}.eth-data-dialog [data-open-forecast-journal]{font:inherit;font-size:12px;padding:8px;border:1px solid var(--equity-view-rule-2);background:var(--equity-view-surface-5);color:var(--equity-view-ink-12);border-radius:5px;cursor:pointer}.eth-data-dialog select:focus-visible,.eth-data-dialog [data-open-forecast-journal]:focus-visible{outline:2px solid var(--equity-view-rule-3);outline-offset:2px}.eth-plot .equity-forecast-evidence{cursor:pointer}.eth-plot .equity-forecast-evidence:focus-visible circle{stroke:var(--chart-details-panel-rule-8);stroke-width:3}
 @media(max-width:620px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:29px;padding:8px}.eth-forecast-note{top:69px;left:10px;gap:4px 12px;font-size:11px}#eth-kind{font-size:11px}}
 @media(max-width:360px){body[data-market="ETHUSD"] .eth-topbar .eth-icon{width:25px;padding:4px}body[data-market="ETHUSD"] .eth-divider{display:none}body[data-market="ETHUSD"] .eth-topbar{gap:2px}}
+
+/* ETH and equities occupy the same shell as BTC. Asset-specific chart/model
+   code owns the center; common controls keep one perimeter at every width. */
+body[data-shell=chart] .workspace.native-chart-workspace>#main.native-chart-workbench{
+  display:flex!important;flex-direction:column;box-sizing:border-box;width:100%;height:100%;min-width:0;min-height:0;max-width:none;margin:0!important;overflow:hidden;
+}
+body[data-shell=chart] .native-chart-workbench>.eth-plot{position:relative;flex:1;min-height:0;width:100%;overflow:hidden}
+body[data-shell=chart] .native-chart-workbench .native-legacy-controls{display:none!important}
+body[data-shell=chart] .native-chart-workbench .atlas-canvas-heading{flex:none;flex-wrap:nowrap}
+body[data-shell=chart] .native-chart-workbench .native-frequency{display:flex;align-items:center;flex:none;gap:0;margin:0;border:0}
+body[data-shell=chart] .native-chart-workbench .native-frequency>.lab-segmented{display:none}
+body[data-shell=chart] .native-chart-workbench #workbench-interval-select{display:block}
+body[data-shell=chart] .native-chart-workbench .atlas-canvas-heading>.workbench-icon{flex:none}
+body[data-shell=chart] .native-chart-workbench .atlas-canvas-heading .eth-divider{display:none}
+body[data-shell=chart] .native-chart-workbench .workbench-bottom-bar{background:var(--sidebar);color:var(--muted)}
+body[data-shell=chart] .native-chart-workbench .workbench-update :is(#eth-status,#equity-status){padding:0;color:inherit;font:inherit}
+.native-chart-reader #chart-reader-body{overflow:auto;overscroll-behavior:contain}
+.native-chart-data{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:8px 12px;margin:0 0 16px;font-size:12px;line-height:1.65}
+.native-chart-data dt{color:var(--muted)}.native-chart-data dd{margin:0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.native-chart-setting{display:flex;align-items:center;gap:8px;min-height:36px;font-size:12px;color:var(--text)}
+.native-reader-action{display:block;box-sizing:border-box;width:100%;min-height:36px;margin:4px 0;padding:8px 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font:12px var(--font);text-align:left;text-decoration:none;cursor:pointer}
+.native-reader-action:hover{background:var(--surface-hover)}
+.native-command-search,.native-date-form>label{display:flex;flex-direction:column;gap:8px;margin:8px 0;font-size:12px;color:var(--muted)}
+.native-command-search input,.native-date-form :is(input,select){box-sizing:border-box;min-width:0;width:100%;min-height:36px;padding:8px;border:1px solid var(--border-strong);border-radius:4px;color:var(--text);background:var(--surface);font:12px var(--font);color-scheme:dark}
+.native-chart-dialog{display:none;overflow:hidden;padding:16px;box-sizing:border-box;width:min(640px,calc(100% - 24px));max-height:calc(100dvh - 24px);background:var(--surface);color:var(--text)}
+.native-chart-dialog[open]{display:flex;flex-direction:column;gap:12px}
+.native-chart-dialog>header{flex:none;margin:0}.native-chart-dialog>.native-dialog-body{min-height:0;overflow:auto;overscroll-behavior:contain}
+.native-chart-dialog header button{flex:none;min-width:36px;min-height:36px;border:0;background:transparent;color:var(--text)}
+.native-chart-dialog header button svg{width:20px;height:20px}
+.native-export-preview{display:block;width:100%;height:auto;max-height:58dvh;object-fit:contain;margin:8px 0}
+.native-chart-error{color:var(--red);min-height:18px}
+@media(min-width:621px){body[data-shell=chart] .workspace.native-chart-workspace>#main.native-chart-workbench{padding:42px 4px 0 0!important}}
+@media(min-width:621px) and (pointer:coarse){body[data-shell=chart] .workspace.native-chart-workspace>#main.native-chart-workbench{padding-top:52px!important}}
+@media(max-width:620px){
+  body[data-shell=chart] .workspace.native-chart-workspace>#main.native-chart-workbench{padding:0!important}
+  body[data-shell=chart] .native-chart-workbench .atlas-canvas-heading :is(button,select){min-height:44px;min-width:44px;flex-shrink:0}
+  body[data-shell=chart] .native-chart-workbench .atlas-canvas-heading>.eth-icon{width:44px;height:44px;padding:10px}
+  body[data-shell=chart] .native-chart-workbench .atlas-canvas-heading .workspace-history-controls{display:none}
+  .native-reader-action,.native-chart-setting,.native-chart-dialog header button{min-height:44px}
+  .native-chart-dialog header button{min-width:44px}
+  .native-command-search input,.native-date-form :is(input,select){min-height:44px}
+}
 @media(max-height:420px){.eth-forecast-note{top:42px}}
 
 .eth-data-dialog p { font-size: var(--copy-size); line-height: var(--copy-leading); }

@@ -29,6 +29,7 @@
     "dist/bitcoin-events.js",
     "dist/btc-refresh-status.js",
     "dist/center-workbench.js",
+    "dist/native-chart-workbench.js",
     "dist/compact-toolbar.css",
     "dist/legacy-workspace-toolbar.css",
     "dist/legacy-workspace-toolbar.js",

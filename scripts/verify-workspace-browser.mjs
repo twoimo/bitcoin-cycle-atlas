@@ -136,10 +136,10 @@ export async function verifyEmbeddedDataSurface(api){
   const initialPage=await evaluate(cdp,readParent);
   assert.equal(initialPage.page,'outlook');assert.equal(initialPage.center,null);
   evidence.navigation=await evaluate(cdp,()=>[...document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(item=>({id:item.dataset.atlasPage,label:item.getAttribute('aria-label'),href:item.getAttribute('href')})));
-  assert.deepEqual(evidence.navigation.map(item=>item.id),['outlook','market-us','rsi','evidence','data','ipo'],'The sidebar must expose the two consolidated workspaces');
+  assert.deepEqual(evidence.navigation.map(item=>item.id),['outlook','market-us','evidence','data','ipo'],'The sidebar must expose one price-chart destination');
   assert.equal(evidence.navigation.find(item=>item.id==='market-us').label,'시장 분석');
-  assert.equal(evidence.navigation.find(item=>item.id==='rsi').label,'종목 차트');
-  for(const [id,path] of [['market-us','/market-lab/'],['rsi','/market-lab/charts/']]){
+  assert.equal(evidence.navigation.find(item=>item.id==='outlook').label,'가격 차트');
+  for(const [id,path] of [['market-us','/market-lab/']]){
     const entry=evidence.navigation.find(item=>item.id===id);
     if(entry.href)assert.ok(new URL(entry.href,'http://atlas.test').pathname.endsWith(path),'Workspace link must use its canonical route: '+id);
   }

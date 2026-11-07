@@ -53,6 +53,21 @@ test('ETH line and candle views identify the same observed OHLC across every sup
   }
 });
 
+test('ETH volume retains exchange quantities and ETH units in individual and dense rendering',()=>{
+  for(const count of [4,400]){
+    const rows=Array.from({length:count},(_,i)=>candle(i)),original=structuredClone(rows),svg=svgFixture(390);
+    drawIntradayChart({svg,series:series(rows),showVolume:true});
+    assert.match(svg.innerHTML,/data-volume-unit="ETH" data-volume-clock="UTC"/);
+    assert.match(svg.innerHTML,new RegExp(`data-volume-observed-count="${count}"`));
+    assert.match(svg.innerHTML,/data-volume-projection-count="0"/);
+    assert.match(svg.innerHTML,/거래량 · ETH · Coinbase Exchange/);
+    assert.doesNotMatch(svg.innerHTML,/BTC|class="volume-projection"|조건부 시나리오/);
+    if(count===4)for(const row of rows)assert.ok(svg.innerHTML.includes(`data-volume="${row.volume}" data-time="${row.time}" data-date="${row.date}"`));
+    else assert.match(svg.innerHTML,/정확한 ETH 수량/);
+    assert.deepEqual(rows,original);
+  }
+});
+
 test('current ETH conditional paths preserve real OHLC and render future prices as lines at desktop and mobile widths',async()=>{
   const archive=JSON.parse(await readFile(new URL('../dist/data/eth-ohlc.json',import.meta.url),'utf8'));
   const daily=parseEthArchive(archive),asOf=daily.lastDate.slice(0,10);

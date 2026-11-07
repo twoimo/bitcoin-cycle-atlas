@@ -4,9 +4,15 @@ import {isExpectedOfflineBtcRefresh} from './btc-offline-refresh-policy.mjs';
 import assert from 'node:assert/strict';
 import {verifyWorkspaceSurface,readNativeInteractiveTarget} from './verify-workspace-browser.mjs';
 import {verifyForecastReplaySurface} from './verify-forecast-replay-browser.mjs';
-import {verifyChartReplaySurface} from './verify-chart-replay-browser.mjs';
+import {verifyChartReplaySurface,isEarlyChartReplayCadenceCase} from './verify-chart-replay-browser.mjs';
 import {consolidatedPagesBase,verifyConsolidatedWorkspaceSurface} from './verify-consolidated-workspace-browser.mjs';
-import {createEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
+import {createEthBrowserCaseSpecs,ethBrowserCaseScopes,selectEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
+import {readBrowserSourceIdentity} from './browser-source-identity.mjs';
+import {classifyProjectBrowserResource,verifyProjectGeneratedImages} from './browser-project-resource-policy.mjs';
+import {verifyNativeChartWorkbench} from './verify-native-chart-workbench-browser.mjs';
+import {verifyChartZoomBrowser} from './verify-chart-zoom-browser.mjs';
+import {emitBrowserEvidenceChunks} from './browser-evidence-transport.mjs';
+import {fastCadencePolicy,fastCadenceMilestonePrefix,browserSourceInventorySha256} from './browser-fast-cadence-contract.mjs';
 import {createServer} from 'node:http';
 import {readFile,writeFile,mkdir,mkdtemp,rm,stat} from 'node:fs/promises';
 import {resolve,relative,sep,extname} from 'node:path';
@@ -34,8 +40,13 @@ const height=900;
 const imageLogMode=process.env.ETH_BROWSER_IMAGE_LOG_MODE??'representative';
 if(!['representative','failures-only'].includes(imageLogMode))throw new Error('Unknown screenshot log transport mode');
 const caseScope=process.env.ATLAS_BROWSER_CASE_SCOPE??'all';
-if(!['all','replay','chart-replay','data','center-data','workspace','workspace-consolidated','workspace-btc','workspace-evidence','workspace-preview','workspace-legacy'].includes(caseScope))throw new Error('Unknown browser case scope');
+if(!ethBrowserCaseScopes.includes(caseScope))throw new Error('Unknown browser case scope');
+const lane=process.env.ATLAS_BROWSER_LANE??'',suiteRunId=process.env.ATLAS_BROWSER_SUITE_RUN_ID??'';
+if(lane){assert.ok(['non-chart-replay','chart-replay'].includes(lane),'Unknown browser lane');assert.equal(caseScope,lane);assert.match(suiteRunId,/^[a-f0-9-]{36}$/);}
+else assert.equal(suiteRunId,'','A suite run requires its explicit lane');
+const artifactName=name=>lane?'lanes/'+lane+'/'+name:name;
 const report={schemaVersion:1,kind:'eth-candidate-real-browser',startedAt:new Date().toISOString(),status:'running',imageLogMode,caseScope,cases:[],failures:[],
+  ...(lane?{lane,suiteRunId}:{}),
   scope:'Actual checked-out static site in headless Chromium through native CDP; no production deployment, Safari or physical-device claim.'};
 let server,chrome,browser,profile,base;
 let chromeStderr='';
@@ -96,9 +107,15 @@ async function screenshot(cdp,name,receipt){
   const bytes=Buffer.from(result.data,'base64');
   await writeFile(resolve(out,name),bytes);
   receipt.screenshots.push({file:name,bytes:bytes.length,sha256:hash(bytes)});
+  const zoomEvidence=imageLogMode==='representative'&&[
+    'workspace-btc-320x900-chart-zoom.png','workspace-btc-1440x900-chart-zoom.png',
+    'native-ethusd-1440x900-layout.png','native-bmnr-768x900-layout.png','native-mstr-320x900-layout.png',
+    'workspace-consolidated-1440-soxl.png','workspace-consolidated-1440-housing.png','workspace-consolidated-390-hype.png',
+  ].includes(name);
   if((imageLogMode==='representative'&&["workspace-btc-320x900-refresh-retry-failed.png","workspace-btc-1440x900-refresh-retry-failed.png","workspace-btc-short-900x430-refresh-retry-failed.png","workspace-btc-short-900x430-indicators-scroll-end.png","data-corner-320x568.png","data-corner-900x430.png","workspace-legacy-375x900-legacy-sources.png","eth-320-pooled-chart.png","eth-1440-pooled-chart.png","eth-320-pooled-model.png","eth-1440-pooled-model.png","data-fill-1620x1008.png","data-fill-1620x1100.png","data-fill-1920x1440.png","ethusd-journal-320-base.png","bmnr-journal-320-stress.png","workspace-btc-320x900-annotations-empty.png","workspace-btc-320x900-go-to.png","workspace-btc-320x900-export-preview.png","workspace-btc-short-900x430-btc-journal.png","workspace-btc-short-900x430-bottom-menu.png","workspace-legacy-320x900-legacy-scroll-owner.png","workspace-legacy-1440x900-legacy-scroll-owner.png","workspace-evidence-320x900-research-reader.png","workspace-evidence-320x900-research-empty.png","workspace-preview-320x900-preview-scroll-end.png","workspace-preview-1440x900-preview-scroll-end.png","workspace-preview-320x900-preview-loading.png","workspace-preview-320x900-preview-error.png"].includes(name))||(imageLogMode==='representative'&&/^workspace-consolidated-(390|1440)-(market-us|scenario|digital-assets|ipo)\.png$/.test(name))||(imageLogMode==='representative'&&['chart-replay-btc-1440x900-fixed-origin.png','chart-replay-btc-320x568-next-bar.png','chart-replay-eth-320x568-next-bar.png'].includes(name))||name.endsWith('-failure.png')){
-    const size=30000,total=Math.ceil(result.data.length/size);
-    for(let index=0;index<total;index++)console.log('ETH_BROWSER_IMAGE_CHUNK '+JSON.stringify({name,index,total,data:result.data.slice(index*size,(index+1)*size)}));
+    emitBrowserEvidenceChunks('ETH_BROWSER_IMAGE_CHUNK',bytes,{name:artifactName(name)});
+  }else if(zoomEvidence){
+    emitBrowserEvidenceChunks('ETH_BROWSER_IMAGE_CHUNK',bytes,{name:artifactName(name)});
   }
 }
 async function click(cdp,selector){
@@ -115,6 +132,11 @@ async function click(cdp,selector){
   await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});
   await settled(cdp);
+}
+async function nativeForecast(cdp,selector){
+  const visible=await evaluate(cdp,s=>Boolean(document.querySelector(s)?.checkVisibility()),selector);
+  if(visible)await click(cdp,selector);
+  else{await click(cdp,'#mobile-details-toggle');await click(cdp,'[data-mobile-target="#workbench-scenario"]');}
 }
 async function bounds(cdp,selector){
   return evaluate(cdp,s=>{
@@ -492,10 +514,21 @@ async function journalCase(cdp,width,receipt,symbol,archive){
   await screenshot(cdp,symbol.toLowerCase()+'-journal-'+width+'-stress.png',receipt);
   if(width===320&&symbol==='MSTR'){
     // Native dialog close is queued; a cached import can reopen first.
-    await evaluate(cdp,()=>{
-      const opener=document.querySelector('[data-equity-action="forecast"]');
-      document.querySelector('#asset-forecast-journal').close();
+    receipt.journal.closeReopenRequest=await evaluate(cdp,()=>{
+      const dialog=document.querySelector('#asset-forecast-journal');
+      const probe={oldCloseEvents:0,reopenedAtOldClose:null,symbolAtOldClose:null};dialog.__atlasJournalReopenProbe=probe;
+      dialog.addEventListener('close',()=>{probe.oldCloseEvents++;probe.reopenedAtOldClose=dialog.open;probe.symbolAtOldClose=dialog.dataset.symbol;},{once:true});
+      dialog.close();
+      // At mobile widths the forecast toolbar hook is intentionally hidden.
+      // A real request needs a visible owner; retain the queued-close race while
+      // using the same live mobile menu owner as native forecast access.
+      const painted=node=>Boolean(node?.isConnected&&node.getClientRects().length&&!node.closest('[hidden],[inert],[aria-hidden="true"]')&&getComputedStyle(node).visibility!=='hidden');
+      const original=document.querySelector('[data-equity-action="forecast"]');
+      const opener=[original,document.querySelector('#mobile-details-toggle')].find(painted);
+      if(!opener)throw new Error('No visible journal reopen owner after native close');
+      const request={openerId:opener.id,originalForecastVisible:painted(original),closedBeforeRequest:!dialog.open};
       document.dispatchEvent(new CustomEvent('atlas:asset-forecast-journal',{detail:{symbol:'BMNR',opener}}));
+      return request;
     });
     await until(()=>evaluate(cdp,()=>{
       const dialog=document.querySelector('#asset-forecast-journal');
@@ -503,8 +536,12 @@ async function journalCase(cdp,width,receipt,symbol,archive){
     }),'reopened BMNR survives the older native close task');
     await settled(cdp);
     receipt.journal.closeReopen=await evaluate(cdp,()=>{
-      const dialog=document.querySelector('#asset-forecast-journal');return {open:dialog.open,...dialog.dataset};
+      const dialog=document.querySelector('#asset-forecast-journal');return {open:dialog.open,...dialog.dataset,...dialog.__atlasJournalReopenProbe};
     });
+    assert.equal(receipt.journal.closeReopenRequest.closedBeforeRequest,true);
+    assert.equal(receipt.journal.closeReopen.oldCloseEvents,1,'The earlier native close task must actually be delivered');
+    assert.equal(receipt.journal.closeReopen.reopenedAtOldClose,true,'The cached import must reopen before the earlier native close task');
+    assert.equal(receipt.journal.closeReopen.symbolAtOldClose,'BMNR');
     assert.equal(receipt.journal.closeReopen.recordId,archive.find(item=>item.entry.symbol==='BMNR'&&item.entry.scenario==='base').record.id);
     assert.equal(receipt.journal.closeReopen.state,'ready');
   }
@@ -547,7 +584,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
   dark(chart.background,'ETH plot');
   await screenshot(cdp,'eth-'+width+'-loaded.png',receipt);
   if(width===320)receipt.infoDataLinks=await verifyInfoDataLinks(cdp,'ETHUSD');
-  await click(cdp,'[data-eth-action="forecast"]');
+  await nativeForecast(cdp,'[data-eth-action="forecast"]');
   receipt.dialog=await bounds(cdp,'#eth-data-dialog');
   assert.equal(receipt.dialog.open,true);visibleBounds(receipt.dialog,width);dark(receipt.dialog.background,'ETH evidence dialog');
   assert.ok(receipt.dialog.text.includes(expected.date),'Dialog must identify real cutoff');
@@ -581,7 +618,7 @@ async function ethCase(cdp,width,receipt,expected,archive){
     await screenshot(cdp,'eth-'+width+'-pooled-model.png',receipt);
     await click(cdp,'#eth-data-dialog header button');await settled(cdp);
     await screenshot(cdp,'eth-'+width+'-pooled-chart.png',receipt);
-    await click(cdp,'[data-eth-action="forecast"]');
+    await nativeForecast(cdp,'[data-eth-action="forecast"]');
     await evaluate(cdp,()=>{document.querySelector('#eth-model').scrollIntoView({block:'center'});document.querySelector('#eth-model').focus();});
     await nativeKey('Home','Home',36);await nativeKey('Enter','Enter',13);await settled(cdp);
     assert.equal(await evaluate(cdp,()=>document.querySelector('#eth-model').value),'adaptive');
@@ -663,7 +700,7 @@ async function equityCase(cdp,width,receipt,symbol,archive){
     const chart=document.querySelector('#equity-chart');
     const path=chart.querySelector('.equity-forecast-line');
     return {width:innerWidth,scrollWidth:document.documentElement.scrollWidth,dataset:{...chart.dataset},
-      symbol:document.querySelector('#equity-symbol').textContent,price:document.querySelector('#equity-price').textContent,
+      symbol:document.querySelector('#equity-symbol .symbol-selector-label').textContent,price:document.querySelector('#equity-price').textContent,
       date:document.querySelector('#equity-bar-time').textContent,pathLength:path?.getTotalLength()??0,
       pathData:path?.getAttribute('d')??'',background:getComputedStyle(document.querySelector('.equity-plot')).backgroundColor};
   });
@@ -672,7 +709,7 @@ async function equityCase(cdp,width,receipt,symbol,archive){
   dark(receipt.chart.background,symbol+' plot');
   await screenshot(cdp,label+'-'+width+'-loaded.png',receipt);
   if(width===320)receipt.infoDataLinks=await verifyInfoDataLinks(cdp,symbol);
-  await click(cdp,'[data-equity-action="forecast"]');
+  await nativeForecast(cdp,'[data-equity-action="forecast"]');
   receipt.dialog=await bounds(cdp,'#equity-detail-dialog');
   assert.equal(receipt.dialog.open,true);visibleBounds(receipt.dialog,width);dark(receipt.dialog.background,symbol+' evidence dialog');
   receipt.clockLabels=await evaluate(cdp,()=>{
@@ -695,7 +732,7 @@ async function syntheticZeroCase(cdp,width,receipt){
   receipt.synthetic=true;
   receipt.scope='Synthetic zero-valued output with a real preserved input snapshot, explicitly reconstructed and excluded from issued forecasts or measured predictive performance.';
   await until(()=>evaluate(cdp,()=>Number(document.querySelector('#equity-chart')?.dataset.observedCandleCount)>0),'fixture stock chart');
-  await settled(cdp);await click(cdp,'[data-equity-action="forecast"]');
+  await settled(cdp);await nativeForecast(cdp,'[data-equity-action="forecast"]');
   await evaluate(cdp,()=>document.querySelector('[data-open-asset-forecast-journal="BMNR"]').scrollIntoView({block:'center'}));
   await settled(cdp);await click(cdp,'[data-open-asset-forecast-journal="BMNR"]');
   await until(()=>evaluate(cdp,()=>document.querySelector('#asset-forecast-journal')?.dataset.state==='ready'),'verified synthetic zero journal');
@@ -732,17 +769,7 @@ async function main(){
   await mkdir(out,{recursive:true});
   assert.ok(Number(process.versions.node.split('.')[0])>=24,'Node 24 or newer is required');
   assert.equal(typeof WebSocket,'function','Native WebSocket is required');
-  report.sourceCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
-  report.sourceHashes={};
-  report.sourceHashes['scripts/eth-browser-case-specs.mjs']=hash(await readFile(resolve(root,'scripts/eth-browser-case-specs.mjs')));
-  for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/ethereum-adaptive-model.js','dist/ethereum-pooled-model.js','dist/eth-view-state.js','dist/ethereum-adoption-scenarios.js','dist/ethereum-research-panel.js','dist/ethereum-research-catalog.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','scripts/btc-offline-refresh-policy.mjs','tests/ethereum-offline-refresh-policy.test.mjs','dist/data/btc-daily.json','dist/app.js','dist/btc-refresh-status.js','tests/ethereum-btc-refresh-status.test.mjs','dist/data-source.js','dist/published-data.js','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json','dist/lab-view.js','dist/analysis-dock.css','dist/compact-chart-layout.css','dist/mobile-workspace.css','dist/mobile-preview.js','scripts/verify-workspace-browser.mjs']){
-    report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
-  }
-  for(const path of ['dist/analysis-dock.css','dist/atlas.css','dist/atlas-shell.css','dist/atlas-shell.js','dist/center-workbench.js','dist/market-lab.css','dist/loading-surfaces.css','dist/loading-surfaces.js','dist/chart-bottom-bar.css','dist/chart-details-panel.css','dist/chart-export-workbench.css','dist/chart-magnet.css','dist/chart-workspace-controls.css','dist/compact-chart-layout.css','dist/compact.css','dist/cycle-milestones.css','dist/daily-data.css','dist/equity-view.css','dist/eth-view.css','dist/ethereum-history.css','dist/forecast-journal.css','dist/lab.css','dist/mobile-workspace.css','dist/outlook.css','dist/research-annotations.css','dist/research-reader.css','dist/styles.css','dist/symbol-selector.css','dist/viewport.css','dist/workspace-tools.css','dist/chart-bottom-bar.js','dist/preserved-archive-download.js','dist/workspace-tools.js','dist/research-annotations-workbench.js','dist/mobile-preview.html','dist/mobile-preview.js','dist/symbol-selector.js','dist/research-reader.js','dist/evidence-view.js','dist/viewport-workspace.js','dist/workbench-chrome.js','scripts/verify-workspace-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
-  for(const path of ['dist/forecast-replay.js','dist/forecast-replay-sources.js','dist/forecast-replay-view.js','dist/data/replay-eth-ohlc.json','scripts/verify-forecast-replay-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
-  for(const path of ['dist/chart-replay.js','dist/chart-replay-snapshot.js','dist/chart-replay-state.js','dist/chart-replay-renderer.js','dist/chart-replay-sources.js','dist/chart-replay.css','dist/asset-forecast-loader.js','dist/data/btc-volume.json','scripts/verify-chart-replay-browser.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
-  for(const path of ['dist/chart-replay-atlas.js','dist/atlas-price-chart.js','dist/project-replay-baseline.js','dist/data/project-origin-btc-2026-10-21.json','scripts/build-project-replay-baseline.mjs'])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
-  for(const path of ['scripts/verify-consolidated-workspace-browser.mjs','dist/atlas-navigation.js','dist/workspace-instruments.js','dist/data-header-actions.js','dist/compact-toolbar.css','dist/legacy-workspace-toolbar.js','dist/legacy-workspace-toolbar.css','dist/data/asset-comparison.json','dist/ipo-view.js','dist/ipo-view.css','dist/ipo-month-calendar.js',...execFileSync('git',['ls-files','dist/market-lab/app'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean)])report.sourceHashes[path]=hash(await readFile(resolve(root,path)));
+  Object.assign(report,await readBrowserSourceIdentity(root));
   const fonts=execFileSync('fc-list',[':lang=ko'],{encoding:'utf8'}).trim();
   assert.ok(fonts.length,'Korean fonts are required; install fonts-noto-cjk in this PR runner');
   report.koreanFonts=fonts.split('\n').slice(0,10);
@@ -772,8 +799,9 @@ async function main(){
   });
   await new Promise((accept,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',accept);});
   base='http://127.0.0.1:'+server.address().port;
-  profile=await mkdtemp(resolve(tmpdir(),'atlas-eth-browser-'));
+  profile=await mkdtemp(resolve(tmpdir(),'atlas-eth-browser-'+(lane?lane+'-':'')));
   chrome=spawn(binary,['--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-background-networking','--disable-component-update','--disable-sync','--no-first-run','--no-default-browser-check','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{stdio:['ignore','ignore','pipe']});
+  report.browserProcess={pid:chrome.pid,profile};
   let spawnError=null;chrome.once('error',error=>{spawnError=error;});
   chrome.stderr.on('data',chunk=>{chromeStderr=(chromeStderr+chunk.toString()).slice(-16000);});
   const active=await until(async()=>{
@@ -818,14 +846,30 @@ async function main(){
   await writeFile(resolve(out,'zero-fixture.json'),fixtureBytes);
   report.syntheticFixture={file:'zero-fixture.json',bytes:fixtureBytes.length,sha256:hash(fixtureBytes),recordId:syntheticZeroRecord.id,snapshotId:snapshot.id};
   const caseSpecs=createEthBrowserCaseSpecs();
-  const selectedCases=caseSpecs.filter(spec=>caseScope==='all'||caseScope==='replay'&&spec.replay||caseScope==='chart-replay'&&spec.chartReplay||caseScope==='center-data'&&spec.surface==='center-data'
-    ||caseScope==='data'&&spec.page==='data'||caseScope.startsWith('workspace')&&(spec.page===caseScope||spec.page.startsWith(caseScope+'-')));
+  const selectedCases=selectEthBrowserCaseSpecs(caseScope);
   assert.ok(selectedCases.length,'The selected browser scope must execute at least one declared case');
   report.declaredCaseCount=caseSpecs.length;report.expectedCaseCount=selectedCases.length;
   for(const spec of selectedCases){
     const {page,width,height,touch}=spec;
-    const receipt={...spec,caseSpec:{...spec},status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[],dataResourceRequests:[],unscopedLocalRequests:[],expectedOfflineRefresh:[],unexpectedResourceErrors:[]};
+    const caseStartedAt=new Date().toISOString();
+    const receipt={...spec,caseSpec:{...spec},status:'running',screenshots:[],runtimeErrors:[],resourceErrors:[],blockedOptionalFonts:[],dataResourceRequests:[],unscopedLocalRequests:[],generatedImageRequests:[],expectedOfflineRefresh:[],unexpectedResourceErrors:[]};
     report.cases.push(receipt);let cdp,targetId,browserContextId;
+    const onFastCadenceMilestone=async result=>{
+      // Standalone harness runs never wait for a suite acknowledgement. The
+      // explicit replay lane alone emits the one source/run/case-bound signal.
+      if(lane!=='chart-replay'||!isEarlyChartReplayCadenceCase(spec))return;
+      assert.equal(receipt.fastCadence,undefined,'The fast cadence phase may emit only one terminal milestone');
+      assert.deepEqual(spec,fastCadencePolicy.caseSpec);
+      assert.ok(['passed','failed'].includes(result.status));
+      if(result.status==='passed')assert.equal(result.restoration?.unchanged,true,'Cadence cannot release before its original baseline is restored');
+      const milestone={schemaVersion:1,kind:'atlas-browser-fast-cadence',phase:fastCadencePolicy.phase,status:result.status,
+        sourceCommit:report.sourceCommit,sourceTree:report.sourceTree,sourceInventorySha256:browserSourceInventorySha256(report.sourceHashes),
+        suiteRunId,lane,caseSpec:{...spec},startedAt:result.startedAt,completedAt:result.completedAt,
+        fixture:result.fixture??null,measurement:result.measurement??null,restored:result.status==='passed',
+        ...(result.error?{error:String(result.error).slice(0,900)}:{})};
+      receipt.fastCadence=milestone;report.fastCadence=milestone;
+      console.log(fastCadenceMilestonePrefix+JSON.stringify(milestone));
+    };
     try{
       // A saved replay belongs to one user's browser. Each replay scenario
       // gets its own context so an earlier viewport's explicit save cannot
@@ -842,8 +886,12 @@ async function main(){
         urls.set(event.requestId,event.request.url);
         requestDetails.set(event.requestId,{requestId:event.requestId,frameId:event.frameId,loaderId:event.loaderId,method:event.request.method,resourceType:event.type,requestWallTime:event.wallTime,documentUrl:event.documentURL});
         const url=new URL(event.request.url);
-        if(spec.consolidated&&url.origin===base&&!url.pathname.startsWith(consolidatedPagesBase))
-          receipt.unscopedLocalRequests.push({requestId:event.requestId,url:event.request.url,resourceType:event.type});
+        if(spec.consolidated){
+          const request={...requestDetails.get(event.requestId),url:event.request.url,origin:url.origin,documentUrl:event.documentURL,initiator:event.initiator};
+          const classification=classifyProjectBrowserResource(request,{origin:base,projectRoot:consolidatedPagesBase});
+          if(classification==='outside-project')receipt.unscopedLocalRequests.push(request);
+          else if(classification==='generated-image-candidate')receipt.generatedImageRequests.push(request);
+        }
         if(url.origin===base&&/\/(?:daily-data-view\.js|daily-data\.css|asset-comparison\.js|data\/asset-comparison\.json)$/.test(url.pathname))
           receipt.dataResourceRequests.push({requestId:event.requestId,url:event.request.url});
       });
@@ -923,11 +971,18 @@ async function main(){
       receipt.url=spec.route?base+spec.route:base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
       if(spec.consolidated)await verifyConsolidatedWorkspaceSurface({cdp,receipt,evaluate,until,settled,screenshot,verifyOfflineRefresh});
-      else if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,browserContextId,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
+      else if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,browserContextId,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh,onFastCadenceMilestone});
       else if(spec.replay)await verifyForecastReplaySurface({cdp,browser,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
-      else if(spec.surface)await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership:()=>verifyHeaderOwnership(cdp)});else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth')await ethCase(cdp,width,receipt,expected,archive);else await equityCase(cdp,width,receipt,page.toUpperCase(),archive);
+      else if(spec.surface){
+        await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership:()=>verifyHeaderOwnership(cdp)});
+        if(spec.surface==='btc'){
+          await verifyChartZoomBrowser({cdp,receipt,evaluate,until,settled,svgSelector:'#lab-chart',allocationSelector:'#lab-chart-stage > .atlas-plot',label:'BTCUSD'});
+          await screenshot(cdp,page+'-'+width+'x'+height+'-chart-zoom.png',receipt);
+        }
+      }else if(page==='zero-fixture')await syntheticZeroCase(cdp,width,receipt);else if(page==='data')await dataCase(cdp,width,receipt);else if(page==='eth'){await ethCase(cdp,width,receipt,expected,archive);await verifyNativeChartWorkbench({cdp,receipt,evaluate,until,settled,click,bounds,screenshot});}else{await equityCase(cdp,width,receipt,page.toUpperCase(),archive);await verifyNativeChartWorkbench({cdp,receipt,evaluate,until,settled,click,bounds,screenshot});}
       assert.equal(receipt.runtimeErrors.length,0,'Browser runtime errors: '+JSON.stringify(receipt.runtimeErrors));
       assert.equal(receipt.unscopedLocalRequests.length,0,'Consolidated workspace requested resources outside the Pages project root: '+JSON.stringify(receipt.unscopedLocalRequests));
+      if(spec.consolidated)receipt.verifiedGeneratedImageRequests=verifyProjectGeneratedImages(receipt.generatedImageRequests,receipt.consolidated.generatedImages,{origin:base,projectRoot:consolidatedPagesBase});
       const verifiedReplayCancellations=new Set(receipt.replay?.expectedCanceledRequests.map(row=>row.requestId)??[]);
       receipt.unexpectedResourceErrors=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId)&&!verifiedReplayCancellations.has(error.requestId));
       assert.equal(receipt.unexpectedResourceErrors.length,0,'Unexpected browser resource failures: '+JSON.stringify(receipt.unexpectedResourceErrors));
@@ -936,6 +991,12 @@ async function main(){
       receipt.status='failed';receipt.error=errorText(error);report.failures.push({page,width,error:receipt.error});
       if(cdp)try{await screenshot(cdp,page+'-'+width+'-failure.png',receipt);}catch(captureError){receipt.screenshotFailure=errorText(captureError);}
     }finally{
+      if(lane==='chart-replay'&&isEarlyChartReplayCadenceCase(spec)&&!receipt.fastCadence){
+        const message='The required early cadence phase did not complete'+(receipt.error?': '+receipt.error:'');
+        if(receipt.status!=='failed'){receipt.status='failed';receipt.error=message;report.failures.push({page,width,error:message});}
+        await onFastCadenceMilestone({status:'failed',startedAt:caseStartedAt,completedAt:new Date().toISOString(),
+          fixture:null,measurement:receipt.chartReplay?.timing?.find(row=>row.speed===10)??null,error:message});
+      }
       console.log('ETH_BROWSER_CASE '+JSON.stringify({page,width,height,status:receipt.status,error:receipt.error}));
       if(cdp)cdp.close();
       if(targetId)try{await browser.send('Target.closeTarget',{targetId});}catch(error){report.failures.push({page,width,cleanupError:errorText(error)});}
@@ -957,5 +1018,13 @@ finally{
   if(server)await new Promise(resolve=>server.close(resolve));
   if(profile)try{await rm(profile,{recursive:true,force:true});}catch(error){report.cleanupError=errorText(error);}
   await mkdir(out,{recursive:true});await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,caseScope:report.caseScope,declaredCaseCount:report.declaredCaseCount,expectedCaseCount:report.expectedCaseCount,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,sourceIntegrity:report.sourceIntegrity,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({caseSpec:c.caseSpec,page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,consolidated:c.consolidated,replay:c.replay,chartReplay:c.chartReplay,infoDataLinks:c.infoDataLinks,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:relative(root,resolve(out,'report.json'))}));
+  if(lane){
+    const bytes=await readFile(resolve(out,'report.json'));
+    console.log('ETH_BROWSER_LANE_RECEIPT '+JSON.stringify({status:report.status,lane,suiteRunId,sourceCommit:report.sourceCommit,
+      caseScope,expectedCaseCount:report.expectedCaseCount,completedCaseCount:report.cases.length,
+      report:{file:artifactName('report.json'),bytes:bytes.length,sha256:hash(bytes)}}));
+  }else{
+  emitBrowserEvidenceChunks('ETH_BROWSER_REPORT_CHUNK',await readFile(resolve(out,'report.json')),{name:'report.json'});
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,caseScope:report.caseScope,declaredCaseCount:report.declaredCaseCount,expectedCaseCount:report.expectedCaseCount,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,sourceIntegrity:report.sourceIntegrity,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({caseSpec:c.caseSpec,page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,consolidated:c.consolidated,replay:c.replay,chartReplay:c.chartReplay,infoDataLinks:c.infoDataLinks,nativeWorkbench:c.nativeWorkbench,chartZoom:c.chartZoom,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:relative(root,resolve(out,'report.json'))}));
+  }
 }

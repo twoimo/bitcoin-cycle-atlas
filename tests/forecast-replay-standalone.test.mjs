@@ -1,7 +1,6 @@
 import test, {before, after} from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp, cp, copyFile, readFile, rm, realpath} from 'node:fs/promises';
-import {tmpdir} from 'node:os';
+import {readFile,rm} from 'node:fs/promises';
 import {resolve, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {execFile} from 'node:child_process';
@@ -11,6 +10,7 @@ import * as vm from 'node:vm';
 import {verifyStandaloneArtifact} from '../scripts/standalone-verification.mjs';
 import {REPLAY_ARCHIVE_PATHS, parseReplayPriceArchive, loadReplayPriceArchive} from '../dist/forecast-replay-sources.js';
 import {createAssetJournalLoader} from '../dist/asset-forecast-journal.js';
+import {isolatedPackagingFixture} from './helpers/isolated-packaging-fixture.mjs';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const run=promisify(execFile),sha=value=>createHash('sha256').update(value).digest('hex');
@@ -70,20 +70,13 @@ if(process.argv[2]==='--packaged-runtime'){
 }else{
   let directory,html,archive,assetArchive,runtime;
   before(async()=>{
-    // Node resolves import.meta.url to /private/var on macOS. Use the same
-    // physical fixture path for the CLI entry check so --preview really runs.
-    directory=await realpath(await mkdtemp(resolve(tmpdir(),'atlas-replay-standalone-')));
-    // Isolate the publication manifest from other packaging tests and the checkout.
-    await Promise.all([
-      cp(resolve(root,'dist'),resolve(directory,'dist'),{recursive:true}),
-      cp(resolve(root,'scripts'),resolve(directory,'scripts'),{recursive:true}),
-      copyFile(resolve(root,'package.json'),resolve(directory,'package.json')),
-    ]);
-    await run('git',['init','--quiet'],{cwd:directory});
-    await run('git',['-c','user.name=Atlas Replay Test','-c','user.email=replay-test@example.invalid','-c','core.hooksPath=/dev/null','commit','--allow-empty','--no-gpg-sign','--quiet','-m','Isolated packaging fixture'],{cwd:directory});
-    await run(process.execPath,[resolve(directory,'scripts/build-publication.mjs'),'--preview']);
+    const isolated=await isolatedPackagingFixture(root,{prefix:'atlas-replay-standalone-',
+      environment:{...process.env,WORKERS_CI:'1',WORKERS_CI_COMMIT_SHA:'0'.repeat(40)}});
+    directory=isolated.directory;
+    const options={cwd:directory,env:isolated.environment};
+    await run(process.execPath,[resolve(directory,'scripts/build-publication.mjs'),'--preview'],options);
     const file=resolve(directory,'offline.html');
-    await run(process.execPath,[resolve(directory,'scripts/build-standalone.mjs'),file]);
+    await run(process.execPath,[resolve(directory,'scripts/build-standalone.mjs'),file],options);
     html=await readFile(file,'utf8');
     archive=JSON.parse(embedded(html,'atlas-replay-price-archives'));
     assetArchive=JSON.parse(embedded(html,'atlas-asset-forecast-ledger'));

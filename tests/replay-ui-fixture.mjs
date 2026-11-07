@@ -5,6 +5,9 @@ import * as realEngine from '../dist/forecast-replay.js';
 import * as cutoffModel from '../dist/replay-cutoff-forecast.js';
 import * as retrospectiveModel from '../dist/replay-retrospective.js';
 import * as snapshotHelpers from '../dist/chart-replay-snapshot.js';
+import * as navigationHelpers from '../dist/chart-navigation.js';
+import * as viewPolicyHelpers from '../dist/chart-view-policy.js';
+import * as priceAxisHelpers from '../dist/price-axis.js';
 import {PROJECT_REPLAY_ORIGIN} from '../dist/project-replay-baseline.js';
 import {SvgNode} from './replay-svg-fixture.mjs';
 import {createAtlasReplayContext,drawAtlasChartReplay} from '../dist/chart-replay-atlas.js';
@@ -40,6 +43,9 @@ export async function uiFixture({captured,archive,initialMode='atlas-chart',stor
   async function mod(exports){const m=new vm.SyntheticModule(Object.keys(exports),function(){for(const [k,v]of Object.entries(exports))this.setExport(k,v);},{context});await m.link(()=>{throw new Error('Unexpected fixture import');});await m.evaluate();return m;}
   const atlas=await mod({createAtlasReplayContext,drawAtlasChartReplay:render});
   const imports={
+    ['./chart-navigation.js?v='+releaseVersion]:await mod(navigationHelpers),
+    ['./chart-view-policy.js?v='+releaseVersion]:await mod(viewPolicyHelpers),
+    ['./price-axis.js?v='+releaseVersion]:await mod(priceAxisHelpers),
     './loading-surfaces.js':await mod({setChartLoading(plot,busy){if(plot?.dataset)plot.dataset.skeleton=String(busy);}}),
     ['./chart-replay-snapshot.js?v='+releaseVersion]:await mod(snapshotHelpers),
     ['./chart-replay-state.js?v='+releaseVersion]:await mod({...stateModule,createChartReplayController:options=>{const c=stateModule.createChartReplayController({...options,setTimer:()=>1,clearTimer:()=>{}});controllers.push(c);return c;}}),
@@ -48,7 +54,7 @@ export async function uiFixture({captured,archive,initialMode='atlas-chart',stor
     './chart-replay-sources.js':await mod({loadChartReplayArchive:loadArchive}),
     './project-replay-baseline.js':await mod({PROJECT_REPLAY_ORIGIN,loadProjectReplayBaseline:()=>{calls.baseline++;return loadBaseline();}}),
   };
-  const view=new vm.SourceTextModule(source,{context,identifier:'chart-replay-view',importModuleDynamically:s=>{if(!imports[s])throw new Error('Unexpected dynamic import '+s);return imports[s];}});await view.link(s=>imports[s]);await view.evaluate();
+  const view=new vm.SourceTextModule(source,{context,identifier:'chart-replay-view',importModuleDynamically:s=>{if(!imports[s])throw new Error('Unexpected dynamic import '+s);return imports[s];}});await view.link(s=>{if(!imports[s])throw new Error('Unexpected static import '+s);return imports[s];});await view.evaluate();
   const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol:'BTCUSD',initialMode,getAtlasContext,getChartState:()=>({frequency:'weekly',chartType:'candles',window:'focus'}),getChartRenderer:()=>({getPriceScale:()=>axis}),loadAtlasRenderer:()=>atlas.namespace,loadCutoffModel:()=>cutoffModel,loadRetrospectiveModel:()=>{calls.retrospectiveLoads++;return loadRetrospectiveModel();},onAtlasFrame:f=>frames.push(f)});
   const trigger=toolbar.children.find(n=>n.id==='workbench-replay');const panel=plot.children.find(n=>n.className==='chart-replay-controls');for(const m of panel.innerHTML.matchAll(/data-cr="([^"]+)"/g))panel.querySelector('[data-cr="'+m[1]+'"]');
   const ready=()=>until(()=>controllers[0].getState().status==='error'||controllers[0].getState().status==='selecting'&&(initialMode==='cutoff-backtest'?Boolean(controls.get('date')?.min)&&svg.dataset.replaySelecting==='true':Boolean(draws.at(-1)?.session?.identity?.outputHash)),'fully drawn replay selection');

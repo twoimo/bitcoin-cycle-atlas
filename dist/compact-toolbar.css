@@ -6,11 +6,11 @@
 body[data-center-tool] .atlas-canvas-heading{gap:4px;overflow:hidden}
 body[data-center-tool] .atlas-canvas-heading::after{display:none}
 body[data-center-tool] .atlas-center-frame:focus,body[data-center-tool] .atlas-center-frame:focus-visible,body[data-center-tool] .atlas-center-frame[data-center-focus]{outline:2px solid var(--focus);outline-offset:-2px}
-body[data-center-tool]:not([data-center-tool=rsi]) .atlas-canvas-heading>:not(.center-workspace-toolbar):not(.symbol-selector-trigger):not(.mobile-workbench-button){display:none!important}
-body[data-center-tool]:not([data-center-tool=rsi]) #mobile-tools-toggle{display:none}
+body[data-center-tool]:not([data-chart-controls]) .atlas-canvas-heading>:not(.center-workspace-toolbar):not(.symbol-selector-trigger):not(.mobile-workbench-button){display:none!important}
+body[data-center-tool]:not([data-chart-controls]) #mobile-tools-toggle{display:none}
 body[data-center-tool] .atlas-canvas-heading>.symbol-selector-trigger{flex:none}
-body[data-center-tool=rsi] .atlas-canvas-heading{overflow-x:auto}
-body[data-center-tool=rsi] .center-workspace-toolbar{flex:0 0 auto;overflow:visible}
+body[data-chart-controls] .atlas-canvas-heading{overflow-x:auto}
+body[data-chart-controls] .center-workspace-toolbar{flex:0 0 auto;overflow:visible}
 .compact-toolbar-group{display:inline-flex;align-items:center;gap:4px;flex:none;min-width:0;height:100%;padding:0 4px;border-right:1px solid var(--border-soft);white-space:nowrap}
 .compact-toolbar-group:last-child{border-right:0}
 .compact-toolbar-group:empty{display:none}

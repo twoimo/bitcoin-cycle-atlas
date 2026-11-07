@@ -14,6 +14,20 @@ const digest=value=>createHash('sha256').update(value).digest('hex');
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const nextDate=date=>new Date(Date.parse(date+'T00:00:00Z')+86400000).toISOString().slice(0,10);
 
+/** Enter through the same painted controls a user can reach. The phone shell
+ * deliberately moves the forecast action into its information/settings tray. */
+export async function openEthForecastReplayJournal({cdp,evaluate,until,click}){
+  const forecast='[data-eth-action="forecast"]';
+  await until(()=>evaluate(cdp,s=>Boolean(document.querySelector(s)),forecast),'ETH forecast action');
+  const desktop=await evaluate(cdp,s=>Boolean(document.querySelector(s)?.checkVisibility()),forecast);
+  const controls=desktop?[forecast]:['#mobile-details-toggle','[data-mobile-target="#workbench-scenario"]'];
+  for(const selector of controls)await click(cdp,selector);
+  await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('#eth-data-dialog[open]'))),'ETH forecast research dialog');
+  const journal='#eth-data-dialog[open] [data-open-asset-forecast-journal="ETHUSD"]';
+  await click(cdp,journal);
+  return {route:desktop?'toolbar':'mobile-details',controls:[...controls,journal]};
+}
+
 export async function verifyForecastReplaySurface(api){
   const {cdp,browser,receipt,root,outputDirectory,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh}=api;
   const {symbol,width,height}=receipt,btc=symbol==='BTCUSD';
@@ -23,7 +37,7 @@ export async function verifyForecastReplaySurface(api){
   const close=dialog+(btc?' [data-journal-close]':' [data-asset-journal-close]');
   const panel=dialog+' [data-forecast-replay]',control=name=>panel+' [data-replay-'+name+']';
   const prefix=receipt.page+'-'+width+'x'+height;
-  const evidence=receipt.replay={symbol,nativeInput:true,states:[],exports:[],lifecycle:[],archiveRequests:[],expectedCanceledRequests:[],
+  const evidence=receipt.replay={symbol,nativeInput:true,entries:[],states:[],exports:[],lifecycle:[],archiveRequests:[],expectedCanceledRequests:[],
     scope:'Checked-out real page, native CDP pointer/keyboard input and real JSON downloads. Historical reconstruction is not evidence of prospective accuracy.'};
   const ledger=resolve(root,'dist/data',btc?'forecast-ledger':'asset-forecast-ledger');
   const index=JSON.parse(await readFile(resolve(ledger,'index.json'),'utf8'));
@@ -73,11 +87,7 @@ export async function verifyForecastReplaySurface(api){
       await click(cdp,'.workspace-command-search');await key('a','KeyA',65,2,{wait:false});
       await cdp.send('Input.insertText',{text:'예측 기록'});await settled(cdp);
       await click(cdp,'.workspace-command:not(:disabled)');
-    }else{
-      await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('[data-eth-action="forecast"]'))),'ETH forecast action');
-      await click(cdp,'[data-eth-action="forecast"]');
-      await click(cdp,'#eth-data-dialog[open] [data-open-asset-forecast-journal="ETHUSD"]');
-    }
+    }else evidence.entries.push(await openEthForecastReplayJournal({cdp,evaluate,until,click}));
     await until(()=>evaluate(cdp,s=>Boolean(document.querySelector(s)),dialog),'saved journal open');
     if(await evaluate(cdp,s=>document.querySelector(s)?.getAttribute('aria-pressed')!=='true',tab))await click(cdp,tab);
     if(wait)await ready();

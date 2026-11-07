@@ -28,7 +28,9 @@ test('current navigation follows the open workspace through first chart construc
   assert.deepEqual([...rail.children], [heading, extras, nav, tools]);
   assert.deepEqual(selected(), ['market-us'], 'mounting the background price chart cannot select its destination');
 
-  for (const [workspace, destination] of [['housing', 'rsi'], ['themes', 'rsi'], ['scenario', 'market-us'], ['cashflow', 'market-us'], ['data', 'data'], ['ipo', 'ipo'], ['evidence', 'evidence']]) {
+  assert.equal(nav.querySelectorAll('[data-atlas-page="outlook"]').length, 1);
+  assert.equal(nav.querySelector('[data-atlas-page="rsi"]'), null);
+  for (const [workspace, destination] of [['rsi', 'outlook'], ['housing', 'outlook'], ['themes', 'outlook'], ['scenario', 'market-us'], ['cashflow', 'market-us'], ['data', 'data'], ['ipo', 'ipo'], ['evidence', 'evidence']]) {
     document.body.dataset.centerTool = workspace;
     await settle();
     assert.deepEqual(selected(), [destination], workspace);

@@ -65,10 +65,22 @@ export function panRange(range, fraction) {
   if (!Number.isFinite(fraction)) throw new RangeError('이동 비율은 유한한 값이어야 합니다.');
   const units = rangeUnits(range);
   const normal = boundedRange(range, units.start, units.end - units.start + 1), current = rangeUnits(normal);
-  const delta = (current.end - current.start + 1) * fraction;
+  // Renderers map the two endpoint dates to the two plot edges. Use that
+  // distance, not the inclusive observation count, for a pixel displacement.
+  const delta = (current.end - current.start) * fraction;
   // Symmetric rounding prevents repeated left/right navigation from drifting.
   const offset = Math.sign(delta) * Math.round(Math.abs(delta));
   return boundedRange(normal, current.start + offset, current.end - current.start + 1);
+}
+
+/** A wheel burst keeps fractional motion; only its public UTC/grid range is rounded. */
+export function accumulateWheelRange(range,previous=null,{factor=1,pan=0,anchor=1}={}) {
+  if(!Number.isFinite(factor)||factor<=0||!Number.isFinite(pan)||!Number.isFinite(anchor))throw new RangeError('Invalid wheel movement');
+  const units=rangeUnits(range),prior=previous&&sameWindow(previous.range,range)?previous:{start:units.start,length:units.end-units.start+1};
+  const fraction=clamp(anchor,0,1),oldLength=prior.length,length=clamp(oldLength*factor,units.minimum,units.maximum);
+  const pivot=prior.start+fraction*(oldLength-1),min=units.free?units.hardMin:0,max=units.free?units.hardMax:units.max;
+  const start=clamp(pivot-fraction*(length-1)+(length-1)*pan,min,max-length+1);
+  return {range:boundedRange(range,start,length),start,length};
 }
 
 const sameScope = (a, b) => Boolean(a && b &&
@@ -86,8 +98,9 @@ const icons = {
 export function bindChartNavigation({
   element, getRange, getTool = () => 'crosshair', onRangeChange, onReset,
   getPriceAxis = () => null, onPriceRangeChange = null, onPriceReset = null,
-  getContext = () => null, onAnnounce, onGestureStart = null, onGestureEnd = null, onMenuOpen = null, signal,
+  getContext = () => null, onAnnounce, onGestureStart = null, onGestureEnd = null, onMenuOpen = null, zoomAnchor = 'right', signal,
 }) {
+  if (!['right','pointer','center'].includes(zoomAnchor)) throw new RangeError('지원하지 않는 확대 기준입니다.');
   const document = element.ownerDocument, window = document.defaultView;
   const toolbar = document.createElement('div');
   toolbar.className = 'chart-navigation';
@@ -131,13 +144,13 @@ export function bindChartNavigation({
   const previousTouchAction = element.style.touchAction;
   element.style.touchAction = 'pan-y pinch-zoom';
   let frame = null, pending = null, pendingPanPrice = null, priceFrame = null, pendingPrice = null, drag = null, pinch = null, suppressClickUntil = 0;
-  let transaction = null, wheelTimer = null, finishOnFlush = false;
+  let transaction = null, wheelTimer = null, finishOnFlush = false, wheelViewport = null;
   const delay = typeof window.setTimeout === 'function' ? window.setTimeout.bind(window) : globalThis.setTimeout;
   const cancelDelay = typeof window.clearTimeout === 'function' ? window.clearTimeout.bind(window) : globalThis.clearTimeout;
   function beginTransaction(label){if(transaction)return;transaction=label;onGestureStart?.(label);}
-  function finishTransaction(){if(wheelTimer!==null)cancelDelay(wheelTimer);wheelTimer=null;finishOnFlush=false;if(transaction){transaction=null;onGestureEnd?.();}}
-  function wheelTransaction(){beginTransaction('차트 확대·이동');if(onGestureStart||onGestureEnd){if(wheelTimer!==null)cancelDelay(wheelTimer);wheelTimer=delay(()=>{wheelTimer=null;flush();finishTransaction();},220);}}
-  function discrete(next,label='차트 범위 변경'){flush();finishTransaction();if(sameWindow(next,getRange()))return;beginTransaction(label);finishOnFlush=true;enqueue(next);}
+  function finishTransaction(){if(wheelTimer!==null)cancelDelay(wheelTimer);wheelTimer=null;wheelViewport=null;finishOnFlush=false;if(transaction){transaction=null;onGestureEnd?.();}}
+  function wheelTransaction(label='차트 확대·이동'){beginTransaction(label);if(wheelTimer!==null)cancelDelay(wheelTimer);wheelTimer=delay(()=>{wheelTimer=null;flush();flushPrice();finishTransaction();},220);}
+  function discrete(next,label='차트 범위 변경'){flush();flushPrice();finishTransaction();if(sameWindow(next,getRange()))return;beginTransaction(label);finishOnFlush=true;enqueue(next);}
   const touches = new Map();
   // Retire the entire touch cohort after a pinch or cancellation. A finger
   // still down (or added before all fingers lift) cannot become a new pan.
@@ -260,17 +273,50 @@ export function bindChartNavigation({
   }
   const inside = (event, rect) => Boolean(rect && rect.width > 0 && rect.height > 0 && event.clientX >= rect.left && event.clientX <= rect.left + rect.width && event.clientY >= rect.top && event.clientY <= rect.top + rect.height);
 
+  function zoomAt(event,rect=plotBounds()) {
+    if (event?.ctrlKey || zoomAnchor === 'pointer') {
+      const pointer=Number.isFinite(event?.clientX)?event:lastPointer;
+      return pointer ? clamp((pointer.clientX-rect.left)/rect.width,0,1) : .5;
+    }
+    return zoomAnchor === 'right' ? 1 : .5;
+  }
+
+  function wheelRange(range,rect,{factor=1,pan=0,anchor=1}) {
+    // Keep sub-interval motion within one wheel burst. Only the published
+    // viewport is rounded to real UTC-day / source-candle grid boundaries.
+    // Reset on an external range, source, tool or geometry change.
+    if (!wheelViewport || !sameWindow(wheelViewport.range,range) || wheelViewport.tool!==getTool() || wheelViewport.left!==rect.left || wheelViewport.width!==rect.width) {
+      wheelViewport=null;
+    }
+    wheelViewport={...accumulateWheelRange(range,wheelViewport,{factor,pan,anchor}),tool:getTool(),left:rect.left,width:rect.width};
+    return wheelViewport.range;
+  }
+
   function wheel(event) {
     const range = current(), rect = plotBounds();
-    if (!range || event.ctrlKey || event.metaKey || interactive(event.target, true) || !inside(event, rect)) return;
+    if (!range || event.metaKey || interactive(event.target, true)) return;
+    const priceRect=priceAxisBounds(),onPlot=inside(event,rect),onAxis=inside(event,priceRect);
+    // Ctrl changes the chart anchor only over its plot. Browser zoom outside
+    // that surface, and Meta/browser shortcuts everywhere, keep ownership.
+    if (event.ctrlKey&&!onPlot) return;
+    if (onAxis && typeof onPriceRangeChange==='function' && event.deltaY) {
+      const unit=event.deltaMode===1?16:event.deltaMode===2?priceRect.height:1;
+      event.preventDefault();if(drag)cancelGesture();closeMenu();flush();wheelViewport=null;
+      const axis=getPriceAxis(),base=validPriceScope(pendingPrice)?{...axis,...pendingPrice.domain}:axis;
+      const y=clamp((event.clientY-priceRect.top)/priceRect.height,0,1),anchor=axis.inverted?y:1-y;
+      wheelTransaction('가격축 확대·축소');
+      enqueuePrice(scalePriceDomain(base,Math.exp(clamp(event.deltaY*unit,-600,600)*.0015),anchor),{range:getRange(),axis:{...axis},tool:getTool()});
+      return;
+    }
+    if (!onPlot || onAxis) return;
     const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? rect.height : 1;
     if (!event.deltaX && !event.deltaY) return;
-    event.preventDefault();if(drag)cancelGesture();closeMenu();wheelTransaction();
+    event.preventDefault();if(drag)cancelGesture();closeMenu();flushPrice();wheelTransaction();
     if (event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
-      enqueue(panRange(range, clamp((event.deltaX || event.deltaY) * unit, -rect.width, rect.width) / rect.width));
+      enqueue(wheelRange(range,rect,{pan:clamp((event.deltaX || event.deltaY) * unit,-rect.width,rect.width)/rect.width}));
     } else {
       const factor = Math.exp(clamp(event.deltaY * unit, -600, 600) * .0015);
-      enqueue(zoomRange(range, factor, (event.clientX - rect.left) / rect.width));
+      enqueue(wheelRange(range,rect,{factor,anchor:zoomAt(event,rect)}));
     }
   }
   function pointerDown(event) {
@@ -278,7 +324,7 @@ export function bindChartNavigation({
     touchContextUntil=touch?Date.now()+800:0;
     // Pan -> pinch belongs to one gesture/history transaction. Extra fingers
     // must not commit that transaction simply by touching the same surface.
-    if(!joinsTouch){flush();finishTransaction();suppressClickUntil=0;}
+    if(!joinsTouch){flush();flushPrice();finishTransaction();suppressClickUntil=0;}
     if(!touch&&(touches.size||pinch||drag?.pointerType==='touch'))cancelGesture();
     if(!touch)completedPinchTouches.delete(event.pointerId);
     if(touch&&!joinsTouch){if(drag||pinch||touches.size)cancelGesture();completedPinchTouches.clear();}
@@ -296,7 +342,7 @@ export function bindChartNavigation({
     }
     if(range&&event.button===0&&event.isPrimary!==false&&!interactive(event.target)&&inside(event,timeAxisBounds())){
       cancelGesture();closeMenu();suppressClickUntil=0;
-      const bounds=timeAxisBounds();drag={kind:'time-scale',id:event.pointerId,x:event.clientX,y:event.clientY,lastX:event.clientX,lastY:event.clientY,pointerType:event.pointerType,width:bounds.width,range,tool:getTool(),anchor:(event.clientX-bounds.left)/bounds.width,active:false};
+      const bounds=timeAxisBounds();drag={kind:'time-scale',id:event.pointerId,x:event.clientX,y:event.clientY,lastX:event.clientX,lastY:event.clientY,pointerType:event.pointerType,width:bounds.width,range,tool:getTool(),anchor:zoomAt(event,bounds),active:false};
       event.preventDefault();event.stopImmediatePropagation();return;
     }
     if (!range || getTool() === 'measure' || event.button !== 0 || (event.isPrimary === false&&event.pointerType!=='touch') || interactive(event.target, true) || !inside(event, rect)) return;
@@ -315,7 +361,7 @@ export function bindChartNavigation({
       }
     }
     closeMenu();suppressClickUntil = 0;
-    const axis=getPriceAxis(),axisBounds=priceAxisBounds(),canPanY=range.allowEmpty===true&&typeof onPriceRangeChange==='function'&&normalizePriceDomain(axis,{scale:axis?.scale})&&axisBounds&&event.clientY>=axisBounds.top&&event.clientY<=axisBounds.top+axisBounds.height;
+    const axis=getPriceAxis(),axisBounds=priceAxisBounds(),canPanY=typeof onPriceRangeChange==='function'&&normalizePriceDomain(axis,{scale:axis?.scale})&&axisBounds&&event.clientY>=axisBounds.top&&event.clientY<=axisBounds.top+axisBounds.height;
     drag = { kind:'time',id: event.pointerId, x: event.clientX, y: event.clientY,lastX:event.clientX,lastY:event.clientY, width: rect.width, range, tool:getTool(), pointerType:event.pointerType, axis:canPanY?{...axis}:null,priceHeight:axisBounds?.height,active: false };
   }
   function pointerMove(event,ending=false) {
@@ -492,13 +538,13 @@ export function bindChartNavigation({
     if (action === 'menu') openMenu();
     else if (action === 'reset') reset();
     else if (action === 'left' || action === 'right') discrete(panRange(range, action === 'left' ? -.25 : .25));
-    else discrete(zoomRange(range, action === 'in' ? .8 : 1.25));
+    else discrete(zoomRange(range, action === 'in' ? .8 : 1.25, zoomAt(event)));
   }
-  for (const [action, button] of buttons) button.onclick = () => {
+  for (const [action, button] of buttons) button.onclick = event => {
     const range = current();if (!range) return;
     if (action === 'reset') reset();
     else if (action === 'left' || action === 'right') discrete(panRange(range, action === 'left' ? -.25 : .25));
-    else discrete(zoomRange(range, action === 'in' ? .8 : 1.25));
+    else discrete(zoomRange(range, action === 'in' ? .8 : 1.25, zoomAt(event)));
     focusChart();
   };
   for (const [action, button] of menuButtons) button.onclick = () => {

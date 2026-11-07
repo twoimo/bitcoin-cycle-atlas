@@ -1,10 +1,11 @@
+import {readArchivedWorkflow} from './support/archived-workflow.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 
-const workflow=readFileSync(new URL('../.github/workflows/eth-model-evaluation.yml',import.meta.url),'utf8');
+const workflow=readArchivedWorkflow('eth-model-evaluation');
 const hash=text=>createHash('sha256').update(text).digest('hex');
 const checkout='actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1';
 const upload='actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02';

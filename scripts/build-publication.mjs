@@ -5,6 +5,8 @@ import { resolve, dirname, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describeFreshness, alignObservations, observationTiming } from '../dist/data-freshness.js';
 import { createPublication, validatePublication, preparePublication, confirmPublication } from '../dist/publication-contract.js';
+import { readCommittedMarketRefreshOutcomes } from './cloudflare-market-refresh-receipt.mjs';
+import {assertWorkersBuildSource,publicationSourceProvenance} from './cloudflare-browser-source.mjs';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const dist=resolve(root,'dist');
@@ -29,7 +31,7 @@ async function inventory(directory=dist,base=directory) {
   }
   return files;
 }
-async function readJson(path) {return JSON.parse(await readFile(resolve(dist,path),'utf8'));}
+async function readJson(path,directory=dist) {return JSON.parse(await readFile(resolve(directory,path),'utf8'));}
 function observedSeries(input) {
   const rows=input.prices || input.dailyHistory?.candles || input.candles || [];
   return rows.map(row=>Array.isArray(row)?row:[row.date.slice(0,10),row.close]);
@@ -44,17 +46,21 @@ export function publicationAsset(input,{symbol,role,sourcePath,market,outcome=nu
     currency:input.currency || input.quoteCurrency || input.dailyHistory?.quoteCurrency || meta.quoteCurrency || 'USD',
     freshness:describeFreshness({latestDate:latest[0],market,observedAt,gaps,lastOutcome:outcome?.outcome || null,lastAttemptAt:outcome?.attemptedAt || null},now)};
 }
-async function assetInventory(now,outcomes) {
+export function publicationRefreshAttempts(committed,explicitOutcomes=null) {
+  if (committed.provenance && explicitOutcomes!==null && stable(explicitOutcomes)!==stable(committed.outcomes)) throw new Error('Refresh environment outcomes conflict with the source-bound committed receipt');
+  return {outcomes:explicitOutcomes??committed.outcomes,provenance:committed.provenance};
+}
+async function assetInventory(now,outcomes,directory=dist) {
   const assets=[],series=[];
   for (const [symbol,file,market,step] of [
     ['BTCUSD','data/btc-daily.json','crypto','btc'],['ETHUSD','data/eth-ohlc.json','crypto','eth'],
     ['MSTR','data/mstr-ohlc.json','equity','equities'],['BMNR','data/bmnr-ohlc.json','equity','equities'],
   ]) {
-    const input=await readJson(file),prices=observedSeries(input);
+    const input=await readJson(file,directory),prices=observedSeries(input);
     const asset=publicationAsset(input,{symbol,role:'chart',sourcePath:file,market,outcome:outcomes[step]},now);
     assets.push(asset);series.push({symbol,market,prices,observedAt:asset.freshness.observedAt});
   }
-  const comparison=await readJson('data/asset-comparison.json');
+  const comparison=await readJson('data/asset-comparison.json',directory);
   for (const asset of comparison.assets) {
     // The enclosing bundle assembly time is not a provider collection time.
     assets.push(publicationAsset(asset,{symbol:asset.symbol,role:'comparison',sourcePath:'data/asset-comparison.json',market:['BTC','ETH','HYPE'].includes(asset.symbol)?'crypto':'equity',outcome:outcomes.comparison},now));
@@ -116,41 +122,48 @@ export async function verifyServedPublication({baseUrl,expectedManifest,expected
   return {status:'PASS',scope:'Public manifest identity and four critical HTTP file bodies; other remote files are not fetched',sourceCommit:remote.sourceCommit,manifestSha256:remote.manifestSha256,verified,state:confirmed};
 }
 async function main() {
+  const option=name=>{const index=process.argv.indexOf(name);if(index<0)return null;const value=process.argv[index+1];if(!value || value.startsWith('--'))throw new Error(`Missing value for ${name}`);return value;};
+  const directory=resolve(root,option('--directory') || 'dist');
   if (process.argv.includes('--check')) {
-    const manifest=await readJson('publication.json');
-    const checkedFiles=await checkPublication(manifest);
+    const manifest=await readJson('publication.json',directory);
+    const checkedFiles=await checkPublication(manifest,{directory});
     console.log(JSON.stringify({status:'PASS',sourceCommit:manifest.sourceCommit,checkedFiles,contentDigest:manifest.contentDigest}));return;
   }
   const verifyIndex=process.argv.indexOf('--verify-url');
   if (verifyIndex>=0) {
-    const option=name=>{const index=process.argv.indexOf(name);return index>=0?process.argv[index+1]:null;};
     let expectedManifest=option('--expected-manifest'),expectedSource=option('--expected-source'),localFilesChecked=null;
     if (!expectedManifest && !expectedSource) {
-      const local=await readJson('publication.json');localFilesChecked=await checkPublication(local);
+      const local=await readJson('publication.json',directory);localFilesChecked=await checkPublication(local,{directory});
       expectedManifest=local.manifestSha256;expectedSource=local.sourceCommit;
     }
     const result=await verifyServedPublication({baseUrl:process.argv[verifyIndex+1],expectedManifest,expectedSource});
     console.log(JSON.stringify({...result,localFilesChecked}));return;
   }
   const sourceCommit=gitHead(), now=new Date().toISOString();
-  const dirty=execFileSync('git',['status','--porcelain','--untracked-files=all','--','dist','scripts','package.json'],{cwd:root,encoding:'utf8'}).trim();
+  const sourceTree=execFileSync('git',['rev-parse','HEAD^{tree}'],{cwd:root,encoding:'utf8'}).trim();
+  const providerSource=await assertWorkersBuildSource({root,source:{sourceCommit,sourceTree}});
+  const provenance=publicationSourceProvenance(process.env,providerSource);
+  const sourcePaths=['dist','scripts','apps','packages','verification','package.json','package-lock.json','cloudflare.config.ts','vite.config.ts','.node-version'];
+  const dirty=execFileSync('git',['status','--porcelain','--untracked-files=all','--',...sourcePaths],{cwd:root,encoding:'utf8'}).trim();
   if (dirty && !process.argv.includes('--preview')) throw new Error('Commit publishable sources before preparing a release, or use --preview for local checks');
-  const outcomes=process.env.ATLAS_REFRESH_OUTCOMES ? JSON.parse(process.env.ATLAS_REFRESH_OUTCOMES) : {};
-  const files=await inventory(), contentDigest=sha(stable(files));
+  const committedRefresh=await readCommittedMarketRefreshOutcomes({root,sourceCommit});
+  const refresh=publicationRefreshAttempts(committedRefresh,process.env.ATLAS_REFRESH_OUTCOMES ? JSON.parse(process.env.ATLAS_REFRESH_OUTCOMES) : null);
+  const outcomes=refresh.outcomes;
+  const files=await inventory(directory), contentDigest=sha(stable(files));
   let state=createPublication({sourceCommit,digest:contentDigest});
-  const data=await assetInventory(now,outcomes);
-  state=validatePublication(state,{checkedDigest:sha(stable(await inventory())),valid:true});
-  state=preparePublication(state,{currentCommit:gitHead(),currentDigest:sha(stable(await inventory()))});
+  const data=await assetInventory(now,outcomes,directory);
+  state=validatePublication(state,{checkedDigest:sha(stable(await inventory(directory))),valid:true});
+  state=preparePublication(state,{currentCommit:gitHead(),currentDigest:sha(stable(await inventory(directory)))});
   if (state.phase!=='ready') throw new Error(`Publication is ${state.phase}: ${state.reason}`);
-  const body={schemaVersion:1,kind:'atlas-publication',sourceCommit,sourceTree:{status:dirty?'modified-preview':'clean',scope:'dist, scripts and package.json'},eventCommit:process.env.GITHUB_SHA || null,
+  const body={schemaVersion:1,kind:'atlas-publication',sourceCommit,sourceTree:{status:dirty?'modified-preview':'clean',scope:sourcePaths.join(', ')},eventCommit:provenance.eventCommit,
     checkedOutCommit:process.env.ATLAS_CHECKOUT_SHA || sourceCommit,generatedAt:now,
-    workflow:{runId:process.env.GITHUB_RUN_ID || null,attempt:process.env.GITHUB_RUN_ATTEMPT || null},refreshAttempts:outcomes,
+    workflow:{runId:process.env.WORKERS_CI_BUILD_UUID || process.env.GITHUB_RUN_ID || null,attempt:process.env.GITHUB_RUN_ATTEMPT || null,...(process.env.WORKERS_CI?{provider:'cloudflare-workers-builds',branch:process.env.WORKERS_CI_BRANCH || null}:{}),...(providerSource?{providerSource}:{})},refreshAttempts:outcomes,refreshProvenance:refresh.provenance,
     contentDigest,files,...data,state,scope:'Prepared artifact identities; generatedAt is not a provider publication or successful deployment timestamp'};
   const manifest={...body,manifestSha256:sha(stable(body))};
-  await checkPublication(manifest);
-  await mkdir(dist,{recursive:true});
-  await writeFile(resolve(dist,'publication.json.tmp'),JSON.stringify(manifest)+'\n');
-  await rename(resolve(dist,'publication.json.tmp'),resolve(dist,'publication.json'));
+  await checkPublication(manifest,{directory});
+  await mkdir(directory,{recursive:true});
+  await writeFile(resolve(directory,'publication.json.tmp'),JSON.stringify(manifest)+'\n');
+  await rename(resolve(directory,'publication.json.tmp'),resolve(directory,'publication.json'));
   console.log(JSON.stringify({status:'PASS',sourceCommit,files:files.length,assets:data.assets.length,contentDigest,manifestSha256:manifest.manifestSha256}));
 }
 if (process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) await main();

@@ -102,7 +102,7 @@ export async function buildServer({ pool, clock = () => new Date(), serveWeb = f
     const web = fileURLToPath(new URL('../../../build/web/', import.meta.url));
     await app.register(staticFiles, { root: dist, prefix: '/', index: false });
     await app.register(staticFiles, { root: web, prefix: '/market-lab/', decorateReply: false });
-    for (const page of [{href:'/market-lab/',title:'시장 분석'},{href:'/market-lab/charts/',title:'종목 차트'},...atlasPages.filter(page => page.tab)]) app.get(page.href, async (request, reply) => {
+    for (const page of [{href:'/market-lab/',title:'시장 분석'},{href:'/market-lab/charts/',title:'가격 차트'},...atlasPages.filter(page => page.tab)]) app.get(page.href, async (request, reply) => {
       const embedded=new URL(request.url,'http://localhost').searchParams.get('embedded')==='1';
       const html=await readFile(`${embedded?web:dist}/index.html`,'utf8');
       return reply.type('text/html').send(html.replace('<head>',embedded?'<head>':'<head><base href="/"><meta name="atlas-service-base" content="/market-lab/">').replace(/<title>[^<]*<\/title>/,`<title>${page.title} · Cycle Atlas</title>`));

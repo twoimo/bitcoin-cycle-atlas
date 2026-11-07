@@ -1,9 +1,10 @@
 import { createPriceScale } from './chart-math.js?v=1.29.0';
 import { clearChartHover, coalescedChartHover } from './chart-hover.js?v=1.29.0';
 import { chartPaneLayout } from './chart-overlays.js?v=1.29.0';
-import { createPriceAxisLayout, createPriceAxisFormatter } from './price-axis.js?v=1.29.0';
+import { createPriceAxisLayout, createPriceAxisFormatter, normalizePriceDomain } from './price-axis.js?v=1.29.0';
 import { pixelExtrema } from './chart-window.js?v=1.29.0';
 import { utcDay } from './cycle-engine.js?v=1.29.0';
+import { candleBodyWidth } from './chart-view-policy.js?v=1.36.0';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const renderers = new WeakMap();
@@ -87,14 +88,14 @@ function sourceLabel(value) {
 
 /** An asset-neutral base painter. It never imports live workspaces, cycle
  * analysis or a model renderer; callers supply already revealed observations. */
-function drawObservedViewport({svg,rows,candles,start,end,frequency,scale,domain,width,height,symbol,source}) {
+function drawObservedViewport({svg,rows,candles,start,end,frequency,scale,domain,priceMode,width,height,symbol,source}) {
   const layout = chartPaneLayout({width,height,volume:false,drawdown:false,states:false,top:18});
   const axisText = createPriceAxisLayout({svg,width,left:layout.left,minRight:layout.right});
   const left=layout.left,right=width-axisText.right,top=layout.top,bottom=layout.priceBottom;
   const first=utcDay(start),span=Math.max(1,utcDay(end)-first);
   const x=value=>left+(utcDay(typeof value==='string'?value:value.date)-first)/span*(right-left);
   const axis={...createPriceScale([domain.min,domain.max],{scale,domain,top,bottom,
-    tickCount:Math.max(2,Math.min(7,Math.floor((bottom-top)/45)))}),left,right,mode:'auto'};
+    tickCount:Math.max(2,Math.min(7,Math.floor((bottom-top)/45)))}),left,right,mode:priceMode};
   const labels=createPriceAxisFormatter({axis,display:{unit:'usd'},layout:axisText});
   const visible=rows.filter(row=>row.date>=start&&row.date<=end);
   const visibleCandles=candles.filter(row=>row.endDate>=start&&row.endDate<=end);
@@ -119,7 +120,7 @@ function drawObservedViewport({svg,rows,candles,start,end,frequency,scale,domain
   const path=runs.map(run=>run.map((row,index)=>`${index?'L':'M'}${x(row).toFixed(2)},${axis.y(row.price).toFixed(2)}`).join(' ')).join(' ');
   markup+=`<path class="observed-close-line" d="${path}" fill="none" stroke="var(--text)" stroke-width="1.8"/>`;
   for(const run of runs)if(run.length===1)markup+=`<circle class="observed-close-point" cx="${x(run[0]).toFixed(2)}" cy="${axis.y(run[0].price).toFixed(2)}" r="1.8" fill="var(--text)"/>`;
-  const candleWidth=Math.max(.7,Math.min(12,(right-left)*(frequency==='weekly'?7:1)/span*.68));
+  const candleWidth=candleBodyWidth(right-left,span,frequency==='weekly'?7:1);
   const dense=visibleCandles.length>256&&candleWidth<2;
   if(dense){
     const wicks=['',''],bodies=['',''];
@@ -144,7 +145,7 @@ function drawObservedViewport({svg,rows,candles,start,end,frequency,scale,domain
   if(!visible.length&&!visibleCandles.length)markup+=`<text class="chart-empty-message" x="${(left+right)/2}" y="${(top+bottom)/2}" text-anchor="middle" fill="var(--muted)" font-size="12">이 구간에는 공개된 관측 가격이 없습니다.</text>`;
   svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.innerHTML=markup;
   Object.assign(svg.dataset,{plotLeft:String(left),plotRight:String(right),plotTop:String(top),plotBottom:String(bottom),priceBottom:String(bottom),timeAxisTop:String(bottom+8),
-    observedLineCount:String(lineRows.length),observedCandleCount:String(visibleCandles.length),visiblePointCount:String(visible.length),scale,unit:'usd',interval:frequency,
+    observedLineCount:String(lineRows.length),observedCandleCount:String(visibleCandles.length),visiblePointCount:String(visible.length),scale,unit:'usd',interval:frequency,priceMin:String(axis.min),priceMax:String(axis.max),priceMode,
     candleRendering:visibleCandles.length?(dense?'batched':'individual'):'none',forecastEvidenceCount:'0',cycleIntervalCount:'0',cycleIntervalLabelCount:'0',cycleMarkerCount:'0',cycleMarkerLabelCount:'0',historyLabelCount:'0',historyEventCount:'0',historyLabelMode:'off',historyHiddenLabelCount:'0'});
   delete svg.dataset.cycleIntervalBandTop;delete svg.dataset.cycleIntervalBandBottom;
   svg.parentElement?.style.setProperty('--plot-bottom-gap',`${height-bottom+6}px`);svg.parentElement?.style.setProperty('--plot-right-gap',`${axisText.right+7}px`);
@@ -152,7 +153,7 @@ function drawObservedViewport({svg,rows,candles,start,end,frequency,scale,domain
 }
 
 /** View only: receives the already gated replay frame, never a session archive. */
-function render({ svg, rows, candles, forecast, start, end, chartType, frequency, scale, originDate = null,
+function render({ svg, rows, candles, forecast, start, end, chartType, frequency, scale, priceDomain = null, originDate = null,
   cursorDate = null, selecting = false, symbol = '', source = '관측 자료', hidden = false, onInspect }) {
   if (!svg) throw new TypeError('A main chart SVG is required');
   const firstDay = utcDay(start), lastDay = utcDay(end);
@@ -161,6 +162,7 @@ function render({ svg, rows, candles, forecast, start, end, chartType, frequency
   detachNativeHandlers(svg);
   const width = Math.max(1, Math.round(svg.clientWidth || svg.parentElement?.clientWidth || 1100));
   const height = Math.max(1, Math.round(svg.clientHeight || svg.parentElement?.clientHeight || 500));
+  Object.assign(svg.dataset,{start,end});
   const visibleForecast = forecast.filter(row => row.date >= start && row.date <= end);
   const displayedCandles = chartType === 'candles' ? candles : [];
   let axis;
@@ -172,10 +174,13 @@ function render({ svg, rows, candles, forecast, start, end, chartType, frequency
     svg.replaceChildren(node(svg, 'title', {}, '입력 자료 수집 이전'),
       node(svg, 'desc', {}, '이 시각에 확보하지 않은 가격과 예측을 표시하지 않습니다.'),
       node(svg, 'text', { x: width / 2, y: height / 2, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 13 }, '아직 확보하지 않은 입력 자료입니다'));
-    Object.assign(svg.dataset, { plotLeft: String(axis.left), plotRight: String(axis.right), plotTop: String(axis.top), plotBottom: String(axis.bottom), priceBottom: String(axis.bottom), observedCandleCount: '0', observedLineCount: '0', visiblePointCount: '0' });
+    Object.assign(svg.dataset, { plotLeft: String(axis.left), plotRight: String(axis.right), plotTop: String(axis.top), plotBottom: String(axis.bottom), priceBottom: String(axis.bottom), timeAxisTop:String(axis.bottom+8), priceMin:'',priceMax:'',priceMode:'none', observedCandleCount: '0', observedLineCount: '0', visiblePointCount: '0' });
   } else {
-    const domain = viewportDomain(rows, displayedCandles, visibleForecast, start, end, scale);
-    axis = drawObservedViewport({svg,rows,candles:displayedCandles,start,end,frequency,scale,domain,width,height,symbol,source});
+    // A manual display domain is an explicit view argument. The frame's own
+    // all-history domain remains ignored, so unrevealed actuals cannot set Y.
+    const manual=normalizePriceDomain(priceDomain,{scale});
+    const domain = manual??viewportDomain(rows, displayedCandles, visibleForecast, start, end, scale);
+    axis = drawObservedViewport({svg,rows,candles:displayedCandles,start,end,frequency,scale,domain,priceMode:manual?'manual':'auto',width,height,symbol,source});
     if (visibleForecast.length) svg.querySelector('.chart-empty-message')?.remove();
     const title = svg.querySelector('title'), description = svg.querySelector('desc');
     if (title) title.textContent = `${symbol ? symbol + ' · ' : ''}${selecting ? '봉 리플레이 시작점 선택' : '고정 예측과 공개된 실제 가격'}`;
@@ -268,7 +273,7 @@ function render({ svg, rows, candles, forecast, start, end, chartType, frequency
 }
 
 /** Paint the existing main SVG, with no second chart or access to unrevealed OHLC. */
-export function drawChartReplay({ svg, data, session, start, end, chartType = 'candles', selecting = false, onInspect = () => {} }) {
+export function drawChartReplay({ svg, data, session, start, end, chartType = 'candles', selecting = false, priceDomain = null, onInspect = () => {} }) {
   if (!data?.frame) throw new TypeError('A gated replay chart frame is required');
   const frame = data.frame, cursorDate = calendarDate(frame.cursorDate);
   if (!cursorDate) throw new RangeError('A replay cursor date is required');
@@ -278,17 +283,17 @@ export function drawChartReplay({ svg, data, session, start, end, chartType = 'c
   const forecast = frame.forecastVisible === false ? [] : priceRows(frame.forecast, true).filter(row => !originDate || row.date >= originDate);
   const scale = data.scale === 'linear' || forecast.some(row => row.price === 0 || row.lower === 0 || row.upper === 0) ? 'linear' : 'log';
   return render({ svg, rows, candles, forecast, start, end, chartType, selecting,
-    originDate, cursorDate, frequency: data.frequency ?? 'daily', scale,
+    originDate, cursorDate, frequency: data.frequency ?? 'daily', scale, priceDomain,
     symbol: data.symbol ?? session?.identity?.symbol ?? '', source: sourceLabel(data.candleSource ?? data.source ?? session?.source),
     hidden: frame.inputVisible === false && !rows.length && !forecast.length, onInspect });
 }
 
 /** Full observed history is shown only while the user is choosing a new origin. */
-export function drawReplaySelection({ svg, observations = [], start, end, chartType = 'candles', frequency = 'daily', scale = 'log', symbol = '', source = '관측 자료', onInspect = () => {} }) {
+export function drawReplaySelection({ svg, observations = [], start, end, chartType = 'candles', frequency = 'daily', scale = 'log', priceDomain = null, symbol = '', source = '관측 자료', onInspect = () => {} }) {
   const rows = priceRows(observations);
   // Daily observations are never converted into invented OHLC. Selection in a
   // weekly viewport stays a close line unless completed weekly OHLC is supplied.
   const candles = frequency === 'daily' ? genuineCandles(observations) : [];
-  return render({ svg, rows, candles, forecast: [], start, end, chartType, frequency, scale,
+  return render({ svg, rows, candles, forecast: [], start, end, chartType, frequency, scale, priceDomain,
     selecting: true, symbol, source: sourceLabel(source), onInspect });
 }

@@ -2,6 +2,20 @@
 
 ## Current direction — 2026-11-07 (Asia/Seoul)
 
+The approved follow-up also covers the chart's zoom behavior. Use the observed
+rules in [the interaction reference](docs/TRADINGVIEW_ZOOM_REFERENCE_2026_11_07.md):
+keep the outer frame pixel-sized while changing candle spacing, date ticks and
+the visible automatic price range. Default time zoom retains the right edge;
+price-axis operations own Y only. Every supported source uses the shared
+navigation and spacing policy, with genuine source intervals and units.
+
+The latest follow-up unifies 가격 차트 and 종목 차트 as 가격 차트. All twelve
+supported instruments use the BTC workbench's four perimeter regions and one
+outer toolbar, with their own real data, units, intervals and source clocks.
+The price destination returns to the most recently selected instrument after
+other workspaces. Keep the five visible destinations and all legacy URLs.
+This supersedes the earlier separate chart destinations recorded below.
+
 The latest user direction replaces the previous editorial styling and 64px labelled right rail with a faithful TradingView reference study and a narrow icon rail. Use only the requested UI/UX Pro Max and `clone-website` skills for visual design. Read the actual reference, measure geometry and computed styles, and compare source and implementation at matching viewport and interaction states. Keep Korean accessible names, visible focus, real actions, the four perimeter regions and the single outer toolbar. The current decisions and selected skill revisions live in `design-system/bitcoin-cycle-atlas/MASTER.md`; earlier dated visual directions below are historical where they conflict with this section. Price observations, model calculations, immutable records, replay and ztd-charts remain authoritative.
 
 2026-11-03 부동산 추가: `/market-lab/housing/`는 같은 실제 차트 외곽 안의 중앙 React 페이지다. 과거 월별 지수선과0기준 거래량 막대, 평균선, 상회/중립/하회와 미공표값을 구분한다. 지역·평균기간·중립범위·평가시차는 실제 분석 입력이다. 긴 통계 방법과 컨퍼런스 출처는 접힌 계산 기준에 두고, 기본 화면은 값·시각·선택·상태를 중심으로 유지한다.

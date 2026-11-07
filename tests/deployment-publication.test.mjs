@@ -1,3 +1,4 @@
+import {readArchivedWorkflow} from './support/archived-workflow.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,mkdtemp,mkdir,writeFile,rm} from 'node:fs/promises';
@@ -7,7 +8,7 @@ import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 
 const run=promisify(execFile),root=new URL('../',import.meta.url);
-const workflow=async name=>readFile(new URL(`.github/workflows/${name}.yml`,root),'utf8');
+const workflow=async name=>readArchivedWorkflow(name);
 function step(source,name){
   const label=`      - name: ${name}\n`,start=source.indexOf(label);assert.ok(start>=0,`missing ${name}`);
   const tail=source.slice(start+label.length),end=tail.search(/\n(?:      - |  [a-z][\w-]*:)/);

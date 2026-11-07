@@ -6,6 +6,7 @@ import {execFileSync,execFile,spawn} from 'node:child_process';
 import {promisify} from 'node:util';
 import {canonicalForecastJson} from '../dist/forecast-records.js';
 import {verifyEthereumProspectiveArchive} from './ethereum-prospective-archive-core.mjs';
+import {normalizeEthereumArchiveSource,validateEthereumArchivePublicationContext} from './ethereum-archive-provider-identity.mjs';
 
 /** Git storage is an append-only transport for already validated evidence.
  * It does not authorize release, authenticate provider observations or prune
@@ -262,14 +263,10 @@ export async function readEthereumProspectiveArchiveRemote(options={}){
   return {files,receipt};
 }
 function checkSource(source){
-  if(!source||Object.keys(source).sort().join(',')!=='runId,sourceCommit,sourceTree'||!HEX.test(source.sourceCommit)||!HEX.test(source.sourceTree)||
-    typeof source.runId!=='string'||!/^\d{1,24}$/.test(source.runId))throw new TypeError('Exact scheduled archive source and run identity required');
+  normalizeEthereumArchiveSource(source,{allowLocal:false});
 }
 function checkContext(context){
-  if(!context||context.repository!==P.repository||!['schedule','workflow_dispatch'].includes(context.eventName)||
-    typeof context.defaultBranch!=='string'||!context.defaultBranch||context.ref!=='refs/heads/'+context.defaultBranch||
-    context.defaultBranch===P.branch||/[\x00-\x20~^:?*\[\\]/.test(context.defaultBranch)||context.defaultBranch.includes('..'))
-    fail('Archive publication requires the intended repository and a scheduled/manual default-branch context');
+  validateEthereumArchivePublicationContext(context);
 }
 async function checkCommittedSeed(client,files,source){
   const commit=await client.request('GET',apiPrefix+'/git/commits/'+source.sourceCommit);
@@ -288,7 +285,7 @@ async function checkCommittedSeed(client,files,source){
 }
 
 export async function publishEthereumProspectiveArchiveRemote({files,previousFiles,readReceipt,source,context,fetchImpl,token,now}={}){
-  checkContext(context);checkSource(source);if(typeof token!=='string'||!token)fail('Archive publication token required');
+  checkContext(context);checkSource(source);validateEthereumArchivePublicationContext(context,source);if(typeof token!=='string'||!token)fail('Archive publication token required');
   source=JSON.parse(json(source));context=JSON.parse(json(context));readReceipt=JSON.parse(json(readReceipt));
   const nextFiles=snapshotFiles(files),priorFiles=snapshotFiles(previousFiles),read=readBody(readReceipt);
   validateEthereumArchiveRemoteReadReceipt({receipt:readReceipt,files:read.status==='restored'?priorFiles:new Map()});
@@ -337,7 +334,7 @@ export async function publishEthereumProspectiveArchiveRemote({files,previousFil
  * The API tree has already bounded the object inventory before this fetch.
  * Git's wire byte count is not exposed; decoded object sizes and total time
  * remain checked, and every returned blob/tree is independently rehashed. */
-async function readGitArchiveObjects({root,head,expectedTree,entries}){
+export async function readGitArchiveObjects({root,head,expectedTree,entries}){
   if(!HEX.test(head)||!HEX.test(expectedTree)||!Array.isArray(entries))fail('Pinned bounded archive Git identity required');
   const build=await checkedDirectory(root,'build',{create:true}),temporary=resolve(build,'eth-archive-git-'+randomUUID());
   const startedAt=new Date().toISOString(),started=Date.now(),env=Object.fromEntries(Object.entries(process.env).filter(([key])=>!key.startsWith('GIT_')));
@@ -429,7 +426,7 @@ async function readDirectory(root,path){
   }
   await walk(directory,'');return snapshotFiles(files);
 }
-async function saveRemote(root,result){
+export async function saveRemote(root,result){
   const build=await checkedDirectory(root,'build',{create:true}),stage=resolve(build,'eth-archive-remote-stage-'+randomUUID()),destination=resolve(root,remoteDirectory);
   try{await lstat(destination);fail('Remote restore destination already exists');}catch(error){if(error.code!=='ENOENT')throw error;}
   if(result.receipt.status==='absent'){

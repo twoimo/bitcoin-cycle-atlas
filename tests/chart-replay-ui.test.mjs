@@ -7,6 +7,9 @@ import {fileURLToPath} from 'node:url';
 import * as vm from 'node:vm';
 import * as snapshotHelpers from '../dist/chart-replay-snapshot.js';
 import {createChartReplayController,CHART_REPLAY_SPEEDS} from '../dist/chart-replay-state.js';
+import {panRange,zoomRange,accumulateWheelRange} from '../dist/chart-navigation.js';
+import {withChartSpacing} from '../dist/chart-view-policy.js';
+import {normalizePriceDomain,scalePriceDomain,panPriceDomain} from '../dist/price-axis.js';
 
 const FIXED_OUTPUT='c'.repeat(64);
 const sourceUrl=new URL('../dist/chart-replay.js',import.meta.url);
@@ -27,11 +30,11 @@ const archive=(name,{missing=[],length=185}={})=>({observations:Array.from({leng
 
 async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('current'),loadRecord,stored=null,storedText=null,buildSession,
   getAtlasContext=null,getChartState=null,resolveAtlasRange=null,loadBaseline,random=()=>.5,storageFailure=false,rendererAxis=null,rendererBarDateAt=null,
-  initialMode='atlas-chart',additionalStored={}}={}){
+  initialMode='atlas-chart',additionalStored={},transportGeometry=null}={}){
   const storageKey='atlas-chart-replay-v1:'+symbol;
   const controls=new Map(),saved=new Map([...Object.entries(additionalStored),...(storedText!==null?[[storageKey,storedText]]:stored?[[storageKey,JSON.stringify(stored)]]:[])]),timers=new Map(),frames=new Map();
-  const builds=[],factories=[],draws=[],controllers=[],atlasContexts=[],chartCalls=[],displayCalls=[],frameEvents=[],writes=[],capabilityCalls=[];
-  let doc,timerId=0,rafId=0,restores=0,clock=0,pointerDate=dateAt(180);
+  const builds=[],factories=[],draws=[],controllers=[],atlasContexts=[],chartCalls=[],displayCalls=[],frameEvents=[],writes=[],capabilityCalls=[],resizeCallbacks=[];
+  let doc,transportNode,barNode,timerId=0,rafId=0,restores=0,clock=0,pointerDate=dateAt(180);
   class Element{
     constructor(tag='div'){this.tag=tag;this.ownerDocument=doc;this.dataset={};this.attributes={};this.children=[];this.listeners=new Map();this.hidden=false;this.value='';this.inert=false;this.textContent='';this.style={setProperty(){},removeProperty(){}};this.classList={add(){},remove(){}};this.disabled=false;this.checked=false;}
     setAttribute(key,value){this.attributes[key]=String(value);}getAttribute(key){return this.attributes[key]??null;}
@@ -39,6 +42,8 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     insertBefore(node){this.append(node);}replaceChildren(...nodes){this.children=[];this.append(...nodes);}
     contains(node){return this===node||this.children.some(child=>child.contains(node));}
     querySelector(selector){
+      if(transportGeometry&&selector==='.chart-replay-actions')return transportNode??=Object.assign(new Element('div'),transportGeometry);
+      if(transportGeometry&&selector==='.chart-replay-bar')return barNode??=new Element('div');
       const key=selector.match(/^\[data-cr="([^"]+)"\]$/)?.[1];
       if(key){if(key==='model'&&symbol!=='ETHUSD')return null;if(!controls.has(key)){
         const item=new Element(['date','scrub','exit-save'].includes(key)?'input':['mode','model','horizon','record','speed','display','update-interval'].includes(key)?'select':'button');
@@ -102,17 +107,22 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
         evaluationAt:dateAfter(cursorDate,1)+'T00:00:00.000Z',selected:{actual:actual.at(-1)?.price??null,predicted:session.forecast.find(row=>row.date===cursorDate)?.price??null},
         metrics:{matchedCount:1,meanAbsolutePercentageError:.01,pendingTargetCount:0,missingTargetCount:0}}};}};
   const axis=rendererAxis??{top:0,bottom:400,left:0,right:800};
-  const renderer=kind=>options=>{draws.push({...options,renderer:kind});return {axis,
+  const renderer=kind=>options=>{draws.push({...options,renderer:kind});
+    const manual=normalizePriceDomain(options.priceDomain??options.context?.presentation?.priceDomain,{scale:axis.scale}),renderedAxis=manual?{...axis,...manual,mode:'manual'}:axis;
+    return {axis:renderedAxis,
     x:date=>axis.left+(Date.parse(date)-Date.parse(options.start))/Math.max(1,Date.parse(options.end)-Date.parse(options.start))*(axis.right-axis.left),
-    dateAt:()=>pointerDate,...(rendererBarDateAt?{barDateAt:()=>rendererBarDateAt(pointerDate)}:{}),getPriceScale:()=>axis,destroy(){}};};
+    dateAt:()=>pointerDate,...(rendererBarDateAt?{barDateAt:()=>rendererBarDateAt(pointerDate)}:{}),getPriceScale:()=>renderedAxis,destroy(){}};};
   const math=Object.create(Math);math.random=random;
-  const context=vm.createContext({Date,Math:math,structuredClone,AbortController,URL,Blob,console,ResizeObserver:class{observe(){}disconnect(){}}});
+  const context=vm.createContext({Date,Math:math,structuredClone,AbortController,URL,Blob,console,ResizeObserver:class{constructor(callback){resizeCallbacks.push(callback);}observe(){}disconnect(){}}});
   async function module(exports){const result=new vm.SyntheticModule(Object.keys(exports),function(){for(const [key,value]of Object.entries(exports))this.setExport(key,value);},{context});await result.link(()=>{throw new Error('Unexpected test-module import');});await result.evaluate();return result;}
   const state=await module({CHART_REPLAY_SPEEDS,createChartReplayController:options=>{
     const result=createChartReplayController({...options,now:()=>clock,setTimer:(callback,delay)=>{timers.set(++timerId,{callback,delay,due:clock+delay});return timerId;},clearTimer:id=>timers.delete(id)});controllers.push(result);return result;
   }});
   const snapshotModule=await module({...snapshotHelpers,sealReplaySnapshot:trackSnapshot(snapshotHelpers.sealReplaySnapshot),restoreReplaySnapshot:trackSnapshot(snapshotHelpers.restoreReplaySnapshot)});
   const imports={
+    ['./chart-navigation.js?v='+releaseVersion]:await module({panRange,zoomRange,accumulateWheelRange}),
+    ['./chart-view-policy.js?v='+releaseVersion]:await module({withChartSpacing}),
+    ['./price-axis.js?v='+releaseVersion]:await module({normalizePriceDomain,scalePriceDomain,panPriceDomain}),
     './loading-surfaces.js':await module({setChartLoading(plot,busy){if(plot?.dataset)plot.dataset.skeleton=String(busy);}}),
     ['./forecast-replay.js?v='+releaseVersion]:await module(engine),
     './chart-replay-renderer.js':await module({drawReplaySelection:renderer('selection'),drawChartReplay:renderer('replay')}),
@@ -121,7 +131,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     './chart-replay-atlas.js':await module({createAtlasReplayContext:options=>{atlasContexts.push(options);return {...options,forecast:options.forecast.path,forecastOrigin:options.forecast.asOf};},drawAtlasChartReplay:renderer('atlas')}),
   };
   const view=new vm.SourceTextModule(source,{context,identifier:sourceUrl.href,importModuleDynamically:specifier=>{assert.ok(imports[specifier],specifier);return imports[specifier];}});
-  await view.link(specifier=>{if(specifier==='./loading-surfaces.js')return imports[specifier];if(specifier==='./chart-replay-snapshot.js?v='+releaseVersion)return snapshotModule;assert.equal(specifier,'./chart-replay-state.js?v='+releaseVersion);return state;});await view.evaluate();
+  await view.link(specifier=>{if(imports[specifier])return imports[specifier];if(specifier==='./chart-replay-snapshot.js?v='+releaseVersion)return snapshotModule;assert.equal(specifier,'./chart-replay-state.js?v='+releaseVersion);return state;});await view.evaluate();
   const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol,initialMode,getAtlasContext,getChartState,resolveAtlasRange,
     getChartRenderer:()=>({getPriceScale:()=>axis}),onAtlasFrame:detail=>frameEvents.push(detail),
     loadAtlasRenderer:()=>imports['./chart-replay-atlas.js'].namespace,
@@ -132,7 +142,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
   const panel=plot.children.find(node=>node.className==='chart-replay-controls');
   for(const match of panel.innerHTML.matchAll(/data-cr="([^"]+)"/g))panel.querySelector('[data-cr="'+match[1]+'"]');
   return {mounted,svg,plot,toolbar,doc,win,controls,builds,factories,draws,timers,controllers,atlasContexts,chartCalls,displayCalls,frameEvents,writes,capabilityCalls,
-    trigger,frequencyControl,typeControl,liveControl,axis,
+    trigger,panel,transport:transportNode,bar:barNode,frequencyControl,typeControl,liveControl,axis,navigationGeometry:view.namespace.replayNavigationGeometry,
     saved:()=>JSON.parse(saved.get(storageKey)??'null'),restores:()=>restores,
     savedText:()=>saved.get(storageKey)??null,
     notice:()=>plot.children.find(node=>node.className==='chart-replay-notice'),
@@ -141,6 +151,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     tick(){const item=[...timers][0];if(!item)return;timers.delete(item[0]);clock=Math.max(clock,item[1].due);item[1].callback();},
     pointer(type,date=pointerDate){pointerDate=date;const event={type,target:svg,button:0,pointerId:1,clientX:100,clientY:100,preventDefault(){},stopImmediatePropagation(){}};plot.dispatchEvent(event);},
     repaint(){for(const [id,callback]of [...frames]){frames.delete(id);callback();}},
+    resize(){for(const callback of resizeCallbacks)callback();},
     async start(date=dateAt(180)){controls.get('date').value=date;controls.get('start').onclick();await flush();},
   };
 }
@@ -159,8 +170,148 @@ function savedFixture(extra={}){
     speed:.5,frequency:'weekly',chartType:'candles',window:'near',customRange:true,range:{start:dateAt(80),end:dateAt(400)},...extra};
 }
 const keyEvent=(h,key,extra={})=>{const event={type:'keydown',key,target:h.svg,preventDefault(){this.prevented=true;},stopImmediatePropagation(){this.stopped=true;this.immediatePropagationStopped=true;},...extra};h.doc.dispatchEvent(event);return event;};
+const replayGesture=(h,type,extra={})=>{const event={type,target:h.svg,button:0,buttons:1,pointerId:1,clientX:200,clientY:100,deltaX:0,deltaY:0,deltaMode:0,
+  preventDefault(){this.prevented=true;},stopImmediatePropagation(){this.immediatePropagationStopped=true;},...extra};h.plot.dispatchEvent(event);return event;};
+const replayRange=h=>({start:h.draws.at(-1).start,end:h.draws.at(-1).end});
+const replaySpan=range=>(Date.parse(range.end)-Date.parse(range.start))/86400000;
+const navigationAxis={top:20,bottom:340,left:50,right:730,min:80,max:400,scale:'log',mode:'auto'};
+
+function observePropertyWrites(target,keys){
+  const writes=[];
+  for(const key of keys){
+    let value=target[key];
+    Object.defineProperty(target,key,{configurable:true,enumerable:true,get:()=>value,set(next){writes.push({key,previous:value,value:next});value=next;}});
+  }
+  return writes;
+}
+function observeAttributeWrites(node){
+  const writes=[],setAttribute=node.setAttribute;
+  node.setAttribute=function(key,value){writes.push({key,value:String(value)});return setAttribute.call(this,key,value);};
+  return writes;
+}
 
 const interactionCases=[
+  {name:'replay keeps unchanged controls intact while cursor, announcements and actual state transitions update',async run(source){
+    const h=await harness(source,atlasFixture().options);await h.mounted.open();
+    const controller=h.controllers[0],play=h.controls.get('play'),handler=play.onclick,session=controller.getState().session;
+    const stable=[];
+    for(const [name,keys] of [['mode-badge',['textContent','disabled']],['result',['hidden','disabled']],['play',['disabled','innerHTML','title']],['first',['disabled']],['next',['disabled']],['scrub',['disabled','max','value']],['speed',['value','title','disabled']],['speed-meaning',['textContent']],['live',['disabled']],['pick',['disabled']],['pick-cancel',['hidden']],['start',['disabled']],['select-menu',['disabled']],['select-chart',['disabled']],['select-date',['disabled']],['select-random',['disabled']],['select-first',['disabled']],['mode',['disabled']],['display',['disabled']],['horizon',['disabled']],['record',['disabled']],['date',['disabled']],['pooled-retry',['hidden']],['date-context',['textContent']]])stable.push({name,writes:observePropertyWrites(h.controls.get(name),keys)});
+    const hud=h.plot.children.find(node=>node.className==='chart-replay-hud');
+    stable.push({name:'compact score',writes:observePropertyWrites(hud.children[2],['hidden'])},{name:'series key',writes:observePropertyWrites(hud.children[3],['textContent'])},
+      {name:'panel state',writes:observePropertyWrites(h.panel.dataset,['state'])},{name:'SVG state',writes:observePropertyWrites(h.svg.dataset,['replayStatus'])},
+      {name:'play accessibility',writes:observeAttributeWrites(play)},{name:'pick accessibility',writes:observeAttributeWrites(h.controls.get('pick'))});
+    const exportWrites=observePropertyWrites(h.controls.get('export'),['disabled']),announcements=observePropertyWrites(hud.children[0],['textContent']);
+    const clear=()=>{for(const item of stable)item.writes.length=0;exportWrites.length=0;announcements.length=0;};
+    play.focus();controller.speed(controller.getState().speed);
+    for(const item of stable)assert.deepEqual(item.writes,[],item.name+' must not mutate an unchanged DOM value');
+    assert.deepEqual(exportWrites.map(write=>write.value),[true,false],'export stays disabled until a successful draw finishes');
+    assert.equal(announcements.length,1,'the live announcement remains an explicit paint action');
+    assert.equal(h.doc.activeElement,play);assert.equal(play.onclick,handler);
+    clear();play.click();assert.equal(controller.getState().status,'playing');assert.match(play.innerHTML,/M8 5v14M16 5v14/);
+    assert.equal(stable.find(item=>item.name==='play').writes.filter(write=>write.key==='innerHTML').length,1);
+    assert.equal(play.getAttribute('aria-pressed'),'true');assert.equal(play.getAttribute('aria-label'),'리플레이 일시정지');
+    const playingIcon=play.innerHTML;h.tick();clear();const previousCursor=h.svg.dataset.replayCursor;h.tick();
+    assert.notEqual(h.svg.dataset.replayCursor,previousCursor);assert.equal(h.controls.get('scrub').value,'2');
+    assert.equal(h.controls.get('scrub').getAttribute('aria-valuetext'),h.svg.dataset.replayCursor);
+    assert.match(h.controls.get('date-context').textContent,new RegExp(h.svg.dataset.replayCursor));
+    assert.equal(stable.find(item=>item.name==='play').writes.length,0);assert.equal(play.innerHTML,playingIcon);
+    assert.equal(announcements.length,1);assert.equal(h.doc.activeElement,play);assert.equal(h.controls.get('play'),play);assert.equal(play.onclick,handler);
+    clear();play.click();assert.equal(controller.getState().status,'paused');assert.match(play.innerHTML,/M8 5l11 7-11 7Z/);
+    assert.equal(play.getAttribute('aria-pressed'),'false');assert.equal(play.getAttribute('aria-label'),'리플레이 재생');
+    assert.equal(stable.find(item=>item.name==='play').writes.filter(write=>write.key==='innerHTML').length,1);
+    // Equality is checked against the current DOM, not a remembered last value.
+    h.controls.get('mode-badge').textContent='stale';h.controls.get('speed').disabled=true;play.title='stale';h.panel.dataset.state='stale';
+    controller.speed(10);assert.equal(h.controls.get('mode-badge').textContent,'현재선 비교');assert.equal(h.controls.get('speed').disabled,false);
+    assert.equal(h.controls.get('speed').value,'10');assert.match(h.controls.get('speed-meaning').textContent,/10×.*초당 10업데이트/);
+    assert.equal(play.title,'재생 · Shift + ↓');assert.equal(h.panel.dataset.state,'paused');
+    play.click();h.tick();clear();h.tick();assert.equal(controller.getState().status,'ended');assert.equal(play.disabled,true);
+    assert.equal(play.getAttribute('aria-pressed'),'false');assert.match(play.innerHTML,/M8 5l11 7-11 7Z/);
+    assert.equal(stable.find(item=>item.name==='play').writes.filter(write=>write.key==='innerHTML').length,1,'ending replaces the pause icon once');
+    assert.equal(controller.getState().session,session);assert.equal(h.writes.length,0);h.mounted.destroy();
+  }},
+  {name:'replay transport hints skip unchanged writes and still follow real scrolling, resizing and menus',async run(source){
+    const h=await harness(source,{...atlasFixture().options,transportGeometry:{scrollWidth:600,clientWidth:300,scrollLeft:0}});await h.mounted.open();
+    const hint=h.bar.children.find(node=>node.className==='chart-replay-scroll-hint');
+    assert.equal(h.bar.dataset.scrollLeft,'false');assert.equal(h.bar.dataset.scrollRight,'true');assert.equal(hint.hidden,false);
+    const positions=observePropertyWrites(h.bar.dataset,['scrollLeft','scrollRight']),visibility=observePropertyWrites(hint,['hidden']);
+    h.controllers[0].speed(1);assert.deepEqual(positions,[]);assert.deepEqual(visibility,[]);
+    h.transport.scrollLeft=150;h.transport.dispatchEvent({type:'scroll'});
+    assert.deepEqual(positions.map(write=>[write.key,write.value]),[['scrollLeft','true']]);assert.deepEqual(visibility,[]);
+    positions.length=0;h.transport.scrollLeft=300;h.transport.dispatchEvent({type:'scroll'});
+    assert.deepEqual(positions.map(write=>[write.key,write.value]),[['scrollRight','false']]);
+    positions.length=0;h.transport.scrollLeft=0;h.transport.scrollWidth=300;h.resize();
+    assert.equal(h.bar.dataset.scrollLeft,'false');assert.equal(h.bar.dataset.scrollRight,'false');assert.equal(hint.hidden,true);
+    h.transport.scrollWidth=600;h.resize();assert.equal(hint.hidden,false);
+    h.controls.get('select-menu').click();assert.equal(h.controls.get('select-panel').hidden,false);assert.equal(hint.hidden,true);
+    h.controls.get('select-close').click();assert.equal(h.controls.get('select-panel').hidden,true);assert.equal(hint.hidden,false);
+    assert.equal(h.doc.activeElement,h.controls.get('select-menu'));h.mounted.destroy();
+  }},
+  {name:'replay preserves an explicit dense viewport through reversible zoom and excludes spacing bounds from saved session bytes',async run(source){
+    const fixture=atlasFixture();fixture.captured.start=dateAt(0);fixture.captured.end=dateAt(8000);
+    const h=await harness(source,{...fixture.options,rendererAxis:navigationAxis});await h.mounted.open();await h.start();
+    const before=replayRange(h),session=h.controllers[0].getState().session,frozen=JSON.stringify(session);
+    keyEvent(h,'+');h.repaint();const zoomed=replayRange(h);assert.ok(replaySpan(zoomed)<replaySpan(before));
+    assert.ok(h.draws.at(-1).spacingBounds,'a reversible view must retain its original outlier limits');
+    keyEvent(h,'-');h.repaint();const restored=replayRange(h);assert.equal(restored.end,before.end);assert.ok(Math.abs(replaySpan(restored)-replaySpan(before))<=1);
+    assert.equal(h.controllers[0].getState().session,session);assert.equal(JSON.stringify(session),frozen);
+    await h.mounted.exit({saveSession:true});const saved=h.saved();assert.deepEqual(Object.keys(saved.range).sort(),['end','start']);assert.doesNotMatch(h.savedText(),/spacingBounds/);h.mounted.destroy();
+  }},
+  {name:'replay wheel and keyboard zoom preserve the right date while Ctrl wheel anchors the pointer without changing the fixed session',async run(source){
+    const h=await harness(source,{rendererAxis:navigationAxis});await h.mounted.open();await h.start();
+    const before=replayRange(h),state=h.controllers[0].getState(),snapshot=JSON.stringify(state.session),builds=h.builds.length;
+    const wheel=replayGesture(h,'wheel',{deltaY:-120});h.repaint();
+    const zoomed=replayRange(h);assert.equal(wheel.prevented,true);assert.equal(zoomed.end,before.end);assert.ok(replaySpan(zoomed)<replaySpan(before));
+    replayGesture(h,'wheel',{deltaY:-120,ctrlKey:true,clientX:navigationAxis.left});h.repaint();
+    const pointerZoom=replayRange(h);assert.equal(pointerZoom.start,zoomed.start);assert.ok(pointerZoom.end<zoomed.end);
+    keyEvent(h,'+');h.repaint();const keyZoom=replayRange(h);assert.equal(keyZoom.end,pointerZoom.end);assert.ok(replaySpan(keyZoom)<replaySpan(pointerZoom));
+    keyEvent(h,'-');h.repaint();assert.equal(replayRange(h).end,keyZoom.end);assert.ok(replaySpan(replayRange(h))>replaySpan(keyZoom));
+    assert.equal(h.controllers[0].getState().session,state.session);assert.equal(h.controllers[0].getState().cursorIndex,state.cursorIndex);
+    assert.equal(JSON.stringify(state.session),snapshot);assert.equal(h.builds.length,builds);assert.equal(h.writes.length,0);h.mounted.destroy();
+  }},
+  {name:'replay wheel keeps browser shortcuts and outside regions unowned and accumulates fine motion without limit overscroll debt',async run(source){
+    const h=await harness(source,{rendererAxis:navigationAxis});await h.mounted.open();await h.start();const before=replayRange(h);
+    for(const extra of [{metaKey:true},{ctrlKey:true,clientX:760},{clientX:10},{clientY:380}]){
+      const event=replayGesture(h,'wheel',{deltaY:-120,...extra});h.repaint();assert.equal(event.prevented,undefined);assert.equal(event.immediatePropagationStopped,undefined);assert.deepEqual(replayRange(h),before);
+    }
+    for(let i=0;i<40;i++){replayGesture(h,'wheel',{deltaY:-1});h.repaint();}
+    assert.ok(replayRange(h).start>before.start,'sub-day wheel changes must accumulate instead of disappearing in calendar rounding');assert.equal(replayRange(h).end,before.end);
+    for(let i=0;i<10;i++){replayGesture(h,'wheel',{deltaY:600});h.repaint();}
+    const limit=replayRange(h);replayGesture(h,'wheel',{deltaY:600});h.repaint();assert.deepEqual(replayRange(h),limit);
+    replayGesture(h,'wheel',{deltaY:-10});h.repaint();assert.ok(replaySpan(replayRange(h))<replaySpan(limit),'reversing at a density limit must respond immediately');h.mounted.destroy();
+    const a=await harness(source,{rendererAxis:navigationAxis}),b=await harness(source,{rendererAxis:navigationAxis});
+    for(const item of [a,b]){await item.mounted.open();await item.start();}
+    replayGesture(a,'wheel',{deltaY:-1,deltaMode:1});replayGesture(b,'wheel',{deltaY:-16});a.repaint();b.repaint();assert.deepEqual(replayRange(a),replayRange(b));a.mounted.destroy();b.mounted.destroy();
+  }},
+  {name:'replay price-axis wheel and drag change only the view domain and double-click restores autoscale',async run(source){
+    const fixture=atlasFixture(),frozen=JSON.stringify(fixture.captured),h=await harness(source,{...fixture.options,rendererAxis:navigationAxis});
+    await h.mounted.open();await h.start();const before=replayRange(h),session=h.controllers[0].getState().session;
+    const event=replayGesture(h,'wheel',{clientX:760,clientY:60,deltaY:-120});h.repaint();
+    const manual=h.draws.at(-1).context.presentation.priceDomain;assert.equal(event.prevented,true);assert.deepEqual(replayRange(h),before);assert.ok(manual.max/manual.min<navigationAxis.max/navigationAxis.min);
+    const anchor=1-(60-navigationAxis.top)/(navigationAxis.bottom-navigationAxis.top),pivot=domain=>Math.log(domain.min)+(Math.log(domain.max)-Math.log(domain.min))*anchor;
+    assert.ok(Math.abs(pivot(manual)-pivot(navigationAxis))<1e-12,'the price under the axis pointer must stay fixed');
+    replayGesture(h,'pointerdown',{clientX:760,clientY:100});replayGesture(h,'pointermove',{clientX:760,clientY:160});replayGesture(h,'pointerup',{clientX:760,clientY:160});h.repaint();
+    assert.deepEqual(replayRange(h),before);assert.ok(h.draws.at(-1).context.presentation.priceDomain.max/h.draws.at(-1).context.presentation.priceDomain.min>manual.max/manual.min);
+    replayGesture(h,'dblclick',{clientX:760});h.repaint();assert.equal(h.draws.at(-1).context.presentation.priceDomain,null);
+    assert.equal(h.controllers[0].getState().session,session);assert.equal(JSON.stringify(fixture.captured),frozen);assert.equal(h.writes.length,0);h.mounted.destroy();
+  }},
+  {name:'replay time-axis and plot drags use actual plot width and axis clicks cannot confirm a start bar',async run(source){
+    const h=await harness(source,{rendererAxis:navigationAxis});await h.mounted.open();
+    for(const point of [{clientX:760,clientY:100},{clientX:400,clientY:380}]){replayGesture(h,'pointerdown',point);replayGesture(h,'pointerup',point);await flush();}
+    assert.equal(h.controllers[0].getState().status,'selecting');assert.equal(h.builds.length,0);
+    await h.start();const before=replayRange(h);
+    replayGesture(h,'pointerdown',{clientX:500,clientY:380});replayGesture(h,'pointermove',{clientX:432,clientY:380});replayGesture(h,'pointerup',{clientX:432,clientY:380});h.repaint();
+    const narrowed=replayRange(h);assert.equal(narrowed.end,before.end);assert.ok(Math.abs(replaySpan(narrowed)/replaySpan(before)-Math.exp(-.2))<.02);
+    replayGesture(h,'pointerdown',{clientX:200});replayGesture(h,'pointermove',{clientX:268});replayGesture(h,'pointerup',{clientX:268});h.repaint();
+    const panned=replayRange(h);assert.equal(replaySpan(panned),replaySpan(narrowed));
+    assert.ok(Math.abs((Date.parse(panned.start)-Date.parse(narrowed.start))/86400000+replaySpan(narrowed)*.1)<=1,'68px is ten percent of the680px plot, independent of the80px gutters');
+    assert.equal(h.builds.length,1);assert.equal(h.writes.length,0);h.mounted.destroy();
+  }},
+  {name:'replay geometry translates actual SVG axes through CSS scaling and separates plot, price and date hit regions',async run(source){
+    const h=await harness(source,{rendererAxis:navigationAxis});h.svg.viewBox={baseVal:{x:0,y:0,width:800,height:400}};h.svg.getBoundingClientRect=()=>({left:10,top:30,width:400,height:200});
+    const geometry=h.navigationGeometry(h.svg,navigationAxis);
+    assert.deepEqual(JSON.parse(JSON.stringify(geometry)),{plot:{left:35,top:40,width:340,height:160},price:{left:375,top:40,width:35,height:160},time:{left:35,top:204,width:340,height:26}});
+    assert.equal(h.navigationGeometry(h.svg,{left:0,right:0,top:0,bottom:0}),null);h.mounted.destroy();
+  }},
   {name:'default cutoff entry preserves current-chart save and Continue across mode changes',async run(source){
     const h=await harness(source,{...atlasFixture().options,initialMode:'cutoff-backtest'});
     h.trigger.click();await flush();assert.equal(h.controls.get('mode').value,'cutoff-backtest');
@@ -718,6 +869,12 @@ async function verifyInteractionCase(index){
     scope:'Actual coordinator and lifecycle controller with deterministic DOM, source, capability and renderer doubles; weekly aggregation and native browser behavior are verified separately'};
 }
 
+async function verifyNamedInteractionCase(name){
+  const matches=interactionCases.filter(item=>item.name===name);
+  assert.equal(matches.length,1,'Exactly one named UI interaction case is required');
+  return verifyInteractionCase(interactionCases.indexOf(matches[0]));
+}
+
 export async function verifyChartReplayUi(){
   if(typeof vm.SourceTextModule!=='function')return JSON.parse(execFileSync(process.execPath,
     ['--experimental-vm-modules',fileURLToPath(import.meta.url),'--replay-ui-child'],{encoding:'utf8',timeout:30000,stdio:['ignore','pipe','pipe']}));
@@ -923,6 +1080,7 @@ async function exploreSelectionBoundary(){
 if(process.argv.includes('--replay-ui-explore')){
   const result=await exploreSelectionBoundary();console.log(JSON.stringify(result));if(result.status!=='pass')process.exitCode=1;
 }
+else if(process.argv.includes('--replay-ui-extra-name'))console.log(JSON.stringify(await verifyNamedInteractionCase(process.argv[process.argv.indexOf('--replay-ui-extra-name')+1])));
 else if(process.argv.includes('--replay-ui-extra'))console.log(JSON.stringify(await verifyInteractionCase(Number(process.argv[process.argv.indexOf('--replay-ui-extra')+1]))));
 else if(process.argv.includes('--replay-ui-child'))console.log(JSON.stringify(await verifyChartReplayUi()));
 else{

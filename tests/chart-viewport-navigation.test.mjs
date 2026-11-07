@@ -19,7 +19,7 @@ test('full-width zoom preserves its width while panning beyond either real-data 
   assert.equal(count(zoomRange(full,100)),100);
   const left=panRange(full,-1),right=panRange(full,1);
   assert.equal(count(left),100);assert.equal(count(right),100);
-  assert.ok(left.end<full.min);assert.ok(right.start>full.max);
+  assert.equal(left.end,full.min);assert.equal(right.start,full.max);
   assert.equal(left.min,full.min);assert.equal(right.max,full.max);
   assert.deepEqual(fitRange(left),full);
   assert.deepEqual(panRange({...full,allowEmpty:false},1),{...full,allowEmpty:false});

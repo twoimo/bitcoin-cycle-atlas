@@ -39,8 +39,199 @@ function disclosedBitcoinWeeks(rows, cursor) {
   });
 }
 
+/** Read the actual renderer's price pane for every instrument. SVG boxes also
+ * include the time/price axes; those are not unobstructed price input probes. */
+export function readChartReplayFloatingGeometry({ chartSelector, panel }) {
+  const svg = document.querySelector(chartSelector), plot = svg.closest('.atlas-plot'), root = document.querySelector(panel);
+  const bar = root.querySelector('.chart-replay-bar'), actions = root.querySelector('.chart-replay-actions'), exit = root.querySelector('[data-cr="exit"]');
+  const rect = node => { const b = node.getBoundingClientRect(); return { left: b.left, right: b.right, top: b.top, bottom: b.bottom, width: b.width, height: b.height }; };
+  const visible = node => {
+    if (!node || node.hidden || node.closest('[hidden]') || !node.getClientRects().length) return false;
+    const style = getComputedStyle(node), box = rect(node);
+    return style.display !== 'none' && style.visibility === 'visible' && Number(style.opacity) > 0 && box.width > 0 && box.height > 0;
+  };
+  const box = rect(svg), originalPoint = { x: box.left + box.width * .5, y: box.top + box.height * .35 };
+  const priceCoordinates = { left: Number(svg.dataset.plotLeft), right: Number(svg.dataset.plotRight), top: Number(svg.dataset.plotTop), bottom: Number(svg.dataset.priceBottom) };
+  const matrix = svg.getScreenCTM();
+  let pricePane = null;
+  if (matrix && Object.values(priceCoordinates).every(Number.isFinite) && priceCoordinates.right > priceCoordinates.left && priceCoordinates.bottom > priceCoordinates.top) {
+    const corners = [[priceCoordinates.left, priceCoordinates.top], [priceCoordinates.right, priceCoordinates.top],
+      [priceCoordinates.left, priceCoordinates.bottom], [priceCoordinates.right, priceCoordinates.bottom]].map(([x, y]) => {
+      const point = svg.createSVGPoint(); point.x = x; point.y = y; return point.matrixTransform(matrix);
+    });
+    pricePane = { left: Math.min(...corners.map(point => point.x)), right: Math.max(...corners.map(point => point.x)),
+      top: Math.min(...corners.map(point => point.y)), bottom: Math.max(...corners.map(point => point.y)) };
+    pricePane.width = pricePane.right - pricePane.left; pricePane.height = pricePane.bottom - pricePane.top;
+  }
+  const legendNode = plot.querySelector('.lab-chart-foot'), legend = visible(legendNode) ? { ...rect(legendNode),
+    flexWrap: getComputedStyle(legendNode).flexWrap, scrollWidth: legendNode.scrollWidth, clientWidth: legendNode.clientWidth,
+    groups: [...legendNode.querySelectorAll('.lab-legend,.price-legend,.cycle-legend')].filter(visible).map(node => ({ className: node.className, flexWrap: getComputedStyle(node).flexWrap })),
+    items: [...legendNode.querySelectorAll('.price-legend-item,.cycle-legend-item')].filter(visible).map(node => ({ text: node.textContent.replace(/\s+/g, ' ').trim(), ...rect(node) })) } : null;
+  // Choose probes from measured geometry before looking at hit ownership.
+  // Only these visible controls may exclude points; never the full root,
+  // arbitrary blockers, or a point that merely failed its SVG hit test.
+  const excludedRects = [['bar', bar], ['exit', exit], ['pick-cancel', root.querySelector('[data-cr="pick-cancel"]')], ['legend', legendNode]]
+    .filter(([, node]) => visible(node)).map(([name, node]) => ({ name, ...rect(node) }));
+  const probePane = pricePane;
+  const candidates = probePane ? [.18, .38, .58, .78].flatMap(yFraction => [.16, .5, .84].map(xFraction => {
+    const point = { x: probePane.left + probePane.width * xFraction, y: probePane.top + probePane.height * yFraction, xFraction, yFraction };
+    return { ...point, excludedBy: excludedRects.filter(area => point.x >= area.left && point.x <= area.right && point.y >= area.top && point.y <= area.bottom).map(area => area.name) };
+  })) : [];
+  const freeProbes = candidates.filter(point => point.excludedBy.length === 0);
+  const hit = point => {
+    const node = document.elementFromPoint(point.x, point.y), control = node?.closest('[data-cr]');
+    return { ...point, reachesChart: svg.contains(node), owner: node ? { tag: node.tagName, id: node.id || null, className: node.getAttribute('class'), control: control?.dataset.cr ?? null } : null };
+  };
+  const probes = freeProbes.map(hit), originalProbe = hit(originalPoint);
+  return { chart: box, plot: { ...rect(plot), clientHeight: plot.clientHeight }, root: { ...rect(root), pointerEvents: getComputedStyle(root).pointerEvents, background: getComputedStyle(root).backgroundColor },
+    bar: rect(bar), actions: { ...rect(actions), scrollLeft: actions.scrollLeft, scrollWidth: actions.scrollWidth, clientWidth: actions.clientWidth, flexWrap: getComputedStyle(actions).flexWrap },
+    controls: [...actions.children].filter(visible).map(node => ({ name: node.dataset.cr, ...rect(node) })), exit: { ...rect(exit), separate: !bar.contains(exit) },
+    atlas: plot.classList.contains('chart-replay-atlas'), priceCoordinates, pricePane, legend,
+    priceMatrix: matrix ? Object.fromEntries(['a', 'b', 'c', 'd', 'e', 'f'].map(key => [key, matrix[key]])) : null,
+    priceAxis: pricePane ? { left: pricePane.right, right: box.right, top: pricePane.top, bottom: pricePane.bottom } : null,
+    originalProbe, excludedRects, probeCandidates: candidates, probes, requiredProbeCount: !probePane || probePane.width >= 160 && probePane.height >= 100 ? 3 : 1,
+    menuHidden: root.querySelector('[data-cr="select-panel"]').hidden, pointerReachesChart: probes.length > 0 && probes.every(point => point.reachesChart),
+    settingsInPopover: ['date', 'start', 'display', 'mode', 'record', 'horizon', 'details', 'pooled-retry', 'scrub', 'export'].every(name => root.querySelector('[data-cr="select-panel"]').contains(root.querySelector('[data-cr="' + name + '"]'))),
+    removedControls: ['previous', 'random', 'resume'].flatMap(name => [...root.querySelectorAll('[data-cr="' + name + '"]')].map(() => name)),
+    pageWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth), scrollX, scrollY,
+    cursor: svg.dataset.replayCursor ?? null, hash: svg.dataset.replayOutputHash ?? null, viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null };
+}
+
+export function assertChartReplayPricePaneAccess(geometry) {
+  assert.ok(geometry.pricePane && geometry.pricePane.width > 0 && geometry.pricePane.height > 0,
+    'Replay did not expose transformable price-pane bounds: ' + JSON.stringify({ chart: geometry.chart, priceCoordinates: geometry.priceCoordinates, priceMatrix: geometry.priceMatrix }));
+  assert.ok(geometry.probes.length >= geometry.requiredProbeCount, 'Visible replay controls leave too few independently chosen chart probes');
+  for (const point of geometry.probes) assert.equal(point.reachesChart, true,
+    'An unobstructed price-pane probe cannot reach the SVG: ' + JSON.stringify({ ...point,
+      geometry: { chart: geometry.chart, plot: geometry.plot, pricePane: geometry.pricePane, priceCoordinates: geometry.priceCoordinates,
+        bar: geometry.bar, exit: geometry.exit, excludedRects: geometry.excludedRects, requiredProbeCount: geometry.requiredProbeCount } }));
+  assert.equal(geometry.pointerReachesChart, true);
+}
+
+// Read native scrolling to completion before a reversal or an edge assertion.
+// Two rendered samples after scrollend, or a quiet sequence of unchanged
+// positions, also cover gestures that finish at an edge without scrollend.
+// This observer never sets scrollLeft or changes the page's scroll behavior.
+export function waitForChartReplayToolbarScroll({ selector = '.chart-replay-actions', timeoutMs = 4000, quietMs = 140 } = {}) {
+  const node = document.querySelector(selector);
+  if (!node || !node.getClientRects().length) throw new Error('The native replay scroll owner is not visible');
+  const read = () => ({ left: node.scrollLeft, maximum: node.scrollWidth - node.clientWidth, width: node.clientWidth });
+  return new Promise((resolve, reject) => {
+    const started = performance.now();
+    let current = read(), lastChange = started, stableFrames = 0, scrollEvents = 0, endEvents = 0, ended = false, frame;
+    const onScroll = () => { scrollEvents++; lastChange = performance.now(); stableFrames = 0; ended = false; };
+    const onEnd = () => { endEvents++; ended = true; stableFrames = 0; };
+    const cleanup = () => {
+      clearTimeout(timer); cancelAnimationFrame(frame);
+      node.removeEventListener('scroll', onScroll); node.removeEventListener('scrollend', onEnd);
+    };
+    const evidence = settledBy => ({ ...current, settledBy, elapsedMs: performance.now() - started, stableFrames, scrollEvents, endEvents });
+    const timer = setTimeout(() => { current = read(); const state = evidence('timeout'); cleanup(); reject(new Error('Native replay toolbar scrolling did not settle: ' + JSON.stringify(state))); }, timeoutMs);
+    node.addEventListener('scroll', onScroll, { passive: true }); node.addEventListener('scrollend', onEnd, { passive: true });
+    const sample = () => {
+      const next = read(), now = performance.now();
+      if (Object.keys(next).some(key => next[key] !== current[key])) { lastChange = now; stableFrames = 0; }
+      else stableFrames++;
+      current = next;
+      if ((stableFrames >= 2 && ended) || (stableFrames >= 3 && now - lastChange >= quietMs)) {
+        const state = evidence(ended ? 'scrollend' : 'position-stable'); cleanup(); resolve(state); return;
+      }
+      frame = requestAnimationFrame(sample);
+    };
+    frame = requestAnimationFrame(sample);
+  });
+}
+
+export async function swipeChartReplayToolbarToEdge({ cdp, evaluate, bounds, pause = delay }, direction) {
+  assert.ok(direction === -1 || direction === 1, 'A native toolbar swipe needs a horizontal direction');
+  const selector = '.chart-replay-actions', before = await evaluate(cdp, waitForChartReplayToolbarScroll);
+  const box = await bounds(cdp, selector), distance = Math.min(150, box.width * .65);
+  assert.ok(distance > 0 && before.maximum >= 0, 'The native replay toolbar has invalid scroll geometry');
+  // A touch gesture spends some travel crossing native touch slop. Budget for
+  // half of its measured travel; never require an inertial fling to reach an
+  // edge in an arbitrary four gestures on a narrow toolbar.
+  const maximumSwipes = Math.ceil(before.maximum / Math.max(1, distance / 2)) + 1;
+  const reached = state => direction < 0 ? state.left >= state.maximum - 1 : state.left <= 1;
+  const swipes = [];
+  let after = before;
+  while (!reached(after) && swipes.length < maximumSwipes) {
+    const b = await bounds(cdp, selector), travel = Math.min(150, b.width * .65);
+    const x = direction < 0 ? b.right - 12 : b.left + 12, y = b.top + b.height / 2;
+    const previous = after;
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y, id: 0, radiusX: 1, radiusY: 1, force: 1 }] });
+    for (const fraction of [.2, .45, .7, 1]) {
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x + direction * travel * fraction, y, id: 0, radiusX: 1, radiusY: 1, force: 1 }] });
+      await pause(30);
+    }
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    after = await evaluate(cdp, waitForChartReplayToolbarScroll);
+    swipes.push({ from: previous.left, to: after.left, maximum: after.maximum, distance: travel, settledBy: after.settledBy, elapsedMs: after.elapsedMs });
+  }
+  assert.ok(reached(after), (direction < 0 ? 'Native touch did not expose the right end of the replay bar' : 'Native toolbar swipe could not return to Select bar') +
+    ': ' + JSON.stringify({ before, after, maximumSwipes, swipes }));
+  return { before, after, maximumSwipes, swipes };
+}
+
+export function isEarlyChartReplayCadenceCase(spec) {
+  return spec.page === 'chart-replay-btc' && spec.symbol === 'BTCUSD' && spec.width === 1440 && spec.height === 900 && spec.touch === false;
+}
+
+// The fastest existing cadence sample runs as soon as this same real replay
+// fixture is ready. Only its place in the verifier changes: weekly display,
+// four-year range, actual volume/candles, and daily source observations remain.
+export async function verifyEarlyChartReplayCadence({ readFrame, readPersistence, selectFrequency, measure, rewind,
+  selectSpeed, closeMenu, assertRestored, expectedDates, originalView, referenceForecastSignature,
+  getMeasurement = () => null, onMilestone = () => {} }) {
+  const startedAt = new Date().toISOString();
+  let fixture = null, measurement = null, result, failure;
+  try {
+    const before = await readFrame('early-10x-original-daily-baseline'), persistent = await readPersistence();
+    assert.equal(before.mode, 'atlas-chart'); assert.equal(before.renderer, 'atlas'); assert.equal(before.state, 'paused');
+    assert.equal(before.frequency, 'daily'); assert.equal(before.chartType, 'candles'); assert.equal(before.speed, '1');
+    assert.equal(before.origin, '2026-10-20'); assert.equal(before.playbackStartDate, '2026-10-21');
+    assert.equal(before.cursor, before.origin); assert.equal(before.index, 0); assert.equal(before.actualCount, 0);
+    assert.equal(before.lastIndex, expectedDates.length); assert.ok(expectedDates.length >= 5);
+    assert.deepEqual([before.viewStart, before.viewEnd], originalView);
+    assert.equal(before.forecastValueSignature, referenceForecastSignature);
+    assert.ok(before.observedCandleCount > 0 && before.volumeCount > 0, 'The original actual candles and volume must remain enabled');
+    await selectFrequency('weekly');
+    const weekly = await readFrame('early-10x-weekly-display-daily-observations');
+    assert.equal(weekly.frequency, 'weekly'); assert.equal(weekly.updateInterval, 'daily');
+    assert.equal(weekly.chartType, 'candles'); assert.ok(weekly.volumeCount > 0 && weekly.observedCandleCount > 0);
+    for (const field of ['origin', 'cursor', 'playbackStartDate', 'index', 'lastIndex', 'mode', 'renderer', 'outputHash',
+      'snapshotDigest', 'forecastValueSignature', 'forecastCount', 'annotationSignature', 'cycleMarkerCount', 'cycleIntervalCount',
+      'cycleMarkerLayers', 'cycleIntervalLayers', 'viewStart', 'viewEnd', 'scale', 'unit'])
+      assert.equal(weekly[field], before[field], 'Early cadence setup changed the original replay ' + field);
+    fixture = { origin: weekly.origin, displayFrequency: weekly.frequency, updateInterval: weekly.updateInterval,
+      viewStart: weekly.viewStart, viewEnd: weekly.viewEnd };
+    const measured = await measure([['10', 100]]);
+    assert.equal(measured.length, 1); measurement = measured[0];
+    assert.equal(measurement.speed, 10); assert.equal(measurement.expectedMilliseconds, 100);
+    assert.deepEqual(measurement.observations.map(row => row.cursor), expectedDates);
+    await rewind(); await selectSpeed(before.speed); await selectFrequency(before.frequency); await closeMenu();
+    const restored = await readFrame('early-10x-original-daily-baseline-restored'), persistentAfter = await readPersistence();
+    assertRestored(restored, before, 'Early cadence native restoration');
+    for (const field of ['speed', 'mode', 'renderer', 'snapshotDigest', 'dateInput', 'dateMinimum', 'dateMaximum', 'scale', 'unit', 'chartType'])
+      assert.equal(restored[field], before[field], 'Early cadence did not restore ' + field);
+    assert.deepEqual(persistentAfter, persistent, 'Early cadence changed persisted workspace/replay data, URL or native history controls');
+    result = { status: 'passed', startedAt, completedAt: new Date().toISOString(), fixture, measurement,
+      restoration: { frequency: restored.frequency, cursor: restored.cursor, outputHash: restored.outputHash,
+        viewStart: restored.viewStart, viewEnd: restored.viewEnd, persistedStateSha256: digest(JSON.stringify(persistent)), unchanged: true } };
+  } catch (error) {
+    failure = error;
+    result = { status: 'failed', startedAt, completedAt: new Date().toISOString(), fixture,
+      measurement: measurement ?? getMeasurement(), error: error instanceof Error ? (error.stack || error.message) : String(error) };
+  }
+  // A terminal failure releases only diagnostic work. It never supplies a
+  // qualifying cadence pass, and callback errors cannot turn it into success.
+  try { await onMilestone(result); }
+  catch (error) { if (failure) throw new AggregateError([failure, error], 'Early cadence and its milestone failed'); throw error; }
+  if (failure) throw failure;
+  return result;
+}
+
 export async function verifyChartReplaySurface(api) {
-  const { cdp, browser, browserContextId, receipt, root, outputDirectory, evaluate, until, settled, click: nativeClick, bounds, visibleBounds, screenshot, verifyOfflineRefresh } = api;
+  const { cdp, browser, browserContextId, receipt, root, outputDirectory, evaluate, until, settled, click: nativeClick, bounds, visibleBounds, screenshot, verifyOfflineRefresh, onFastCadenceMilestone } = api;
   const { symbol, width, height, touch } = receipt;
   const crypto = ['BTCUSD', 'ETHUSD'].includes(symbol), btc = symbol === 'BTCUSD';
   const chartSelector = btc ? '#lab-chart' : symbol === 'ETHUSD' ? '#eth-chart' : '#equity-chart';
@@ -156,69 +347,13 @@ export async function verifyChartReplaySurface(api) {
     await nativeClick(connection, selector);
   }
   async function verifyFloatingBar() {
-    const geometry = await evaluate(cdp, ({ chartSelector, panel, btc }) => {
-      const svg = document.querySelector(chartSelector), plot = svg.closest('.atlas-plot'), root = document.querySelector(panel);
-      const bar = root.querySelector('.chart-replay-bar'), actions = root.querySelector('.chart-replay-actions'), exit = root.querySelector('[data-cr="exit"]');
-      const rect = node => { const b = node.getBoundingClientRect(); return { left: b.left, right: b.right, top: b.top, bottom: b.bottom, width: b.width, height: b.height }; };
-      const visible = node => {
-        if (!node || node.hidden || node.closest('[hidden]') || !node.getClientRects().length) return false;
-        const style = getComputedStyle(node), box = rect(node);
-        return style.display !== 'none' && style.visibility === 'visible' && Number(style.opacity) > 0 && box.width > 0 && box.height > 0;
-      };
-      const box = rect(svg), originalPoint = { x: box.left + box.width * .5, y: box.top + box.height * .35 };
-      const priceCoordinates = btc ? { left: Number(svg.dataset.plotLeft), right: Number(svg.dataset.plotRight), top: Number(svg.dataset.plotTop), bottom: Number(svg.dataset.priceBottom) } : null;
-      const matrix = btc ? svg.getScreenCTM() : null;
-      let pricePane = null;
-      if (matrix && Object.values(priceCoordinates).every(Number.isFinite) && priceCoordinates.right > priceCoordinates.left && priceCoordinates.bottom > priceCoordinates.top) {
-        const corners = [[priceCoordinates.left, priceCoordinates.top], [priceCoordinates.right, priceCoordinates.top],
-          [priceCoordinates.left, priceCoordinates.bottom], [priceCoordinates.right, priceCoordinates.bottom]].map(([x, y]) => {
-          const point = svg.createSVGPoint(); point.x = x; point.y = y; return point.matrixTransform(matrix);
-        });
-        pricePane = { left: Math.min(...corners.map(point => point.x)), right: Math.max(...corners.map(point => point.x)),
-          top: Math.min(...corners.map(point => point.y)), bottom: Math.max(...corners.map(point => point.y)) };
-        pricePane.width = pricePane.right - pricePane.left; pricePane.height = pricePane.bottom - pricePane.top;
-      }
-      const legendNode = plot.querySelector('.lab-chart-foot'), legend = visible(legendNode) ? { ...rect(legendNode),
-        flexWrap: getComputedStyle(legendNode).flexWrap, scrollWidth: legendNode.scrollWidth, clientWidth: legendNode.clientWidth,
-        groups: [...legendNode.querySelectorAll('.lab-legend,.price-legend,.cycle-legend')].filter(visible).map(node => ({ className: node.className, flexWrap: getComputedStyle(node).flexWrap })),
-        items: [...legendNode.querySelectorAll('.price-legend-item,.cycle-legend-item')].filter(visible).map(node => ({ text: node.textContent.replace(/\s+/g, ' ').trim(), ...rect(node) })) } : null;
-      // Choose probes from measured geometry before looking at hit ownership.
-      // Only these visible controls may exclude points; never the full root,
-      // arbitrary blockers, or a point that merely failed its SVG hit test.
-      const excludedRects = [['bar', bar], ['exit', exit], ['pick-cancel', root.querySelector('[data-cr="pick-cancel"]')], ['legend', legendNode]]
-        .filter(([, node]) => visible(node)).map(([name, node]) => ({ name, ...rect(node) }));
-      const probePane = pricePane ?? box;
-      const candidates = [.18, .38, .58, .78].flatMap(yFraction => [.16, .5, .84].map(xFraction => {
-        const point = { x: probePane.left + probePane.width * xFraction, y: probePane.top + probePane.height * yFraction, xFraction, yFraction };
-        return { ...point, excludedBy: excludedRects.filter(area => point.x >= area.left && point.x <= area.right && point.y >= area.top && point.y <= area.bottom).map(area => area.name) };
-      }));
-      const freeProbes = candidates.filter(point => point.excludedBy.length === 0);
-      const hit = point => {
-        const node = document.elementFromPoint(point.x, point.y), control = node?.closest('[data-cr]');
-        return { ...point, reachesChart: svg.contains(node), owner: node ? { tag: node.tagName, id: node.id || null, className: node.getAttribute('class'), control: control?.dataset.cr ?? null } : null };
-      };
-      const probes = freeProbes.map(hit), originalProbe = hit(originalPoint);
-      return { chart: box, plot: { ...rect(plot), clientHeight: plot.clientHeight }, root: { ...rect(root), pointerEvents: getComputedStyle(root).pointerEvents, background: getComputedStyle(root).backgroundColor },
-        bar: rect(bar), actions: { ...rect(actions), scrollLeft: actions.scrollLeft, scrollWidth: actions.scrollWidth, clientWidth: actions.clientWidth, flexWrap: getComputedStyle(actions).flexWrap },
-        controls: [...actions.children].filter(visible).map(node => ({ name: node.dataset.cr, ...rect(node) })), exit: { ...rect(exit), separate: !bar.contains(exit) },
-        atlas: plot.classList.contains('chart-replay-atlas'), priceCoordinates, pricePane, legend,
-        priceMatrix: matrix ? Object.fromEntries(['a', 'b', 'c', 'd', 'e', 'f'].map(key => [key, matrix[key]])) : null,
-        priceAxis: pricePane ? { left: pricePane.right, right: box.right, top: pricePane.top, bottom: pricePane.bottom } : null,
-        originalProbe, excludedRects, probeCandidates: candidates, probes, requiredProbeCount: probePane.width >= 160 && probePane.height >= 100 ? 3 : 1,
-        menuHidden: root.querySelector('[data-cr="select-panel"]').hidden, pointerReachesChart: probes.length > 0 && probes.every(point => point.reachesChart),
-        settingsInPopover: ['date', 'start', 'display', 'mode', 'record', 'horizon', 'details', 'pooled-retry', 'scrub', 'export'].every(name => root.querySelector('[data-cr="select-panel"]').contains(root.querySelector('[data-cr="' + name + '"]'))),
-        removedControls: ['previous', 'random', 'resume'].flatMap(name => [...root.querySelectorAll('[data-cr="' + name + '"]')].map(() => name)),
-        pageWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth), scrollX, scrollY,
-        cursor: svg.dataset.replayCursor ?? null, hash: svg.dataset.replayOutputHash ?? null, viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null };
-    }, { chartSelector, panel, btc });
+    const geometry = await evaluate(cdp, readChartReplayFloatingGeometry, { chartSelector, panel });
     const observedGeometry = { label: 'floating-controls-observed-geometry', validated: false, ...geometry, originalChart: originalChartBox };
     evidence.floatingBar.push(observedGeometry);
     assert.equal(geometry.root.pointerEvents, 'none', 'The positioning overlay blocks the chart');
     assert.match(geometry.root.background, /rgba\(0, 0, 0, 0\)|transparent/, 'A full-width replay surface still covers the plot');
     assert.equal(geometry.menuHidden, true); assert.equal(geometry.settingsInPopover, true);
-    assert.ok(geometry.probes.length >= geometry.requiredProbeCount, 'Visible replay controls leave too few independently chosen chart probes');
-    for (const point of geometry.probes) assert.equal(point.reachesChart, true, 'An unobstructed price-pane probe cannot reach the SVG: ' + JSON.stringify(point));
-    assert.equal(geometry.pointerReachesChart, true);
+    assertChartReplayPricePaneAccess(geometry);
     assert.deepEqual(geometry.removedControls, [], 'Removed previous/duplicate random/menu-resume controls remain in the DOM');
     assert.deepEqual(geometry.controls.map(node => node.name), ['first', 'select-menu', 'mode-badge', 'pick', 'play', 'next', 'speed', 'update-interval', 'live']);
     assert.equal(geometry.actions.flexWrap, 'nowrap');
@@ -227,7 +362,6 @@ export async function verifyChartReplaySurface(api) {
     assert.ok(geometry.bar.height <= (touch || width <= 620 ? 57 : 45), 'The floating replay bar is no longer compact');
     if (btc) {
       assert.equal(geometry.atlas, true, 'BTC replay must use the existing Atlas price plot');
-      assert.ok(geometry.pricePane && geometry.pricePane.width > 0 && geometry.pricePane.height > 0, 'BTC replay did not expose transformable price-pane bounds');
     }
     const controlArea = btc ? geometry.pricePane : geometry.plot;
     assert.ok(geometry.bar.top > controlArea.top + controlArea.height / 2, 'Replay controls returned to a large upper panel');
@@ -273,20 +407,8 @@ export async function verifyChartReplaySurface(api) {
     await screenshot(cdp, prefix + '-floating-bar.png', receipt);
     if (touch && width <= 620) {
       assert.ok(geometry.actions.scrollWidth > geometry.actions.clientWidth + 20, 'The narrow toolbar does not provide an owned horizontal scroll area');
-      const scroll = () => evaluate(cdp, () => { const node = document.querySelector('.chart-replay-actions'); return { left: node.scrollLeft, maximum: node.scrollWidth - node.clientWidth }; });
-      const swipe = async direction => {
-        const b = await bounds(cdp, '.chart-replay-actions'), distance = Math.min(150, b.width * .65);
-        const x = direction < 0 ? b.right - 12 : b.left + 12, y = b.top + b.height / 2;
-        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y, id: 0, radiusX: 1, radiusY: 1, force: 1 }] });
-        for (const fraction of [.2, .45, .7, 1]) {
-          await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x + direction * distance * fraction, y, id: 0, radiusX: 1, radiusY: 1, force: 1 }] });
-          await delay(30);
-        }
-        await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await settled(cdp);
-      };
-      const before = await scroll();
-      for (let i = 0; i < 4 && (await scroll()).left < before.maximum - 1; i++) await swipe(-1);
-      const after = await scroll(); assert.ok(after.left > before.left + 20 && after.left >= after.maximum - 1, 'Native touch did not expose the right end of the replay bar');
+      const outward = await swipeChartReplayToolbarToEdge({ cdp, evaluate, bounds }, -1), { before, after } = outward;
+      assert.ok(after.left > before.left + 20 && after.left >= after.maximum - 1, 'Native touch did not expose the right end of the replay bar');
       const live = await bounds(cdp, control('live'));
       assert.ok(live.left >= geometry.actions.left - 1 && live.right <= geometry.actions.right + 1, 'The Live action cannot be reached by native toolbar scrolling');
       await screenshot(cdp, prefix + '-floating-bar-native-scroll.png', receipt);
@@ -294,9 +416,11 @@ export async function verifyChartReplaySurface(api) {
         viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null, scrollX, scrollY, pageWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) }; }, chartSelector);
       for (const name of ['cursor', 'hash', 'viewStart', 'viewEnd', 'scrollX', 'scrollY']) assert.equal(unchanged[name], geometry[name], 'Toolbar scrolling changed the chart or document ' + name);
       assert.ok(unchanged.pageWidth <= width + 1);
-      for (let i = 0; i < 4 && (await scroll()).left > 1; i++) await swipe(1);
-      assert.ok((await scroll()).left <= 1, 'Native toolbar swipe could not return to Select bar');
-      evidence.floatingBar.push({ label: 'native-horizontal-toolbar-scroll-without-chart-or-page-scroll', before, after, unchanged });
+      const returning = await swipeChartReplayToolbarToEdge({ cdp, evaluate, bounds }, 1);
+      assert.ok(returning.after.left <= 1, 'Native toolbar swipe could not return to Select bar');
+      const select = await bounds(cdp, control('select-menu'));
+      assert.ok(select.left >= geometry.actions.left - 1 && select.right <= geometry.actions.right + 1, 'Select bar is not fully reachable after native toolbar scrolling');
+      evidence.floatingBar.push({ label: 'native-horizontal-toolbar-scroll-without-chart-or-page-scroll', before, after, unchanged, outward, returning });
     }
   }
   async function verifyLandingMenu(label, capture = false) {
@@ -1032,12 +1156,15 @@ export async function verifyChartReplaySurface(api) {
     await storedUnchanged(saved, label + '-hover-does-not-save');
     return { before, left, center, centerPoint };
   }
-  async function measureCadence() {
-    const expected = [['10', 100], ['1', 1000], ['0.5', 2000], ['0.3', 3000]];
+  async function measureCadence(expected) {
     const allowedMeanRatio = [.85, 1.3], setupAllowanceMilliseconds = 5000;
+    const measurements = [];
     for (const [speed, milliseconds] of expected) {
+      assert.equal(evidence.timing.some(row => row.speed === Number(speed)), false, 'A cadence speed must be measured exactly once');
       await click(cdp, control('scrub')); await key('Home', 'Home', 36); await select(control('speed'), speed);
       const initial = await snapshot('speed-' + speed + '-origin');
+      assert.equal(initial.frequency, 'weekly', 'Cadence keeps the original weekly display fixture');
+      assert.equal(initial.updateInterval, 'daily');
       assert.ok(initial.lastIndex >= 5, 'Cadence check needs at least five genuine source observations');
       // The preserved cutoff stays fixed while new source bars arrive. Completion
       // must allow their actual playback duration, with the same cadence bound
@@ -1073,8 +1200,10 @@ export async function verifyChartReplaySurface(api) {
       assert.ok(mean >= milliseconds * allowedMeanRatio[0] && mean <= milliseconds * allowedMeanRatio[1],
         'Observed ' + speed + '× cadence does not match the requested update interval: ' + JSON.stringify(measured));
       await snapshot('speed-' + speed + '-ended');
+      measurements.push(measured);
     }
     await select(control('speed'), '1');
+    return measurements;
   }
   async function verifyWeeklyTransportResume() {
     const savedBefore = await storedBytes(), initial = await snapshot('weekly-current-position-before-play');
@@ -1328,8 +1457,13 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(new Set(ranges.map(value => value.start + '/' + value.end)).size, 4, 'The four original period controls did not change the active replay viewport');
     assert.deepEqual([ranges.at(-1).start, ranges.at(-1).end], [direct.viewStart, direct.viewEnd]);
     evidence.lifecycle.push({ label: 'original-four-period-buttons-control-active-replay', ranges });
-    await snapshot('weekly-four-year-restored');
-    await measureCadence();
+    const weeklyRestored = await snapshot('weekly-four-year-restored');
+    assert.deepEqual(evidence.earlyCadence.fixture, { origin: weeklyRestored.origin,
+      displayFrequency: weeklyRestored.frequency, updateInterval: weeklyRestored.updateInterval,
+      viewStart: weeklyRestored.viewStart, viewEnd: weeklyRestored.viewEnd },
+    'The early 10× sample must use the same fixture as the original weekly four-year cadence checks');
+    await measureCadence([['1', 1000], ['0.5', 2000], ['0.3', 3000]]);
+    assert.deepEqual(evidence.timing.map(row => row.speed), [10, 1, .5, .3], 'All four original cadence speeds must be observed exactly once');
 
     // Reselecting during playback pauses immediately; hovering is a preview,
     // not a new cutoff or a persistence operation.
@@ -1515,6 +1649,23 @@ export async function verifyChartReplaySurface(api) {
     await openDate();
     assert.equal(await evaluate(cdp, selector => document.querySelector(selector).value, control('date')), '2026-10-21');
     await click(cdp, control('start')); await ready();
+    if (isEarlyChartReplayCadenceCase(receipt.caseSpec ?? receipt)) {
+      await verifyEarlyChartReplayCadence({
+        readFrame: snapshot,
+        readPersistence: () => evaluate(cdp, () => ({ url: location.href, historyLength: history.length,
+          local: Object.keys(localStorage).sort().map(key => [key, localStorage.getItem(key)]),
+          session: Object.keys(sessionStorage).sort().map(key => [key, sessionStorage.getItem(key)]),
+          historyControls: ['undo', 'redo'].map(action => { const node = document.querySelector('#workbench-' + action);
+            return { action, present: Boolean(node), disabled: node?.disabled, title: node?.title, label: node?.getAttribute('aria-label') }; }) })),
+        selectFrequency: async value => { await interval(value); await ready(); }, measure: measureCadence,
+        rewind: async () => { await click(cdp, control('scrub')); await key('Home', 'Home', 36); },
+        selectSpeed: value => select(control('speed'), value), closeMenu, assertRestored: assertSameReplayFrame,
+        expectedDates: btcCandles.filter(row => row.date > '2026-10-20').map(row => row.date),
+        originalView: originalAtlasViewport, referenceForecastSignature: liveContext.forecastValueSignature,
+        getMeasurement: () => evidence.timing.find(row => row.speed === 10) ?? null,
+        onMilestone: async value => { evidence.earlyCadence = value; await onFastCadenceMilestone?.(value); },
+      });
+    }
     await verifyPopoverLifecycle();
   }
   else { await verifyLandingMenu('select-bar-only-four-start-actions', true); await closeMenu(); }

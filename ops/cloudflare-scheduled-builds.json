@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-cloudflare-scheduled-build-contract",
+  "repository": "twoimo/bitcoin-cycle-atlas",
+  "branch": "main",
+  "activationVerified": false,
+  "billingPlanReadback": "Unavailable with the connected credential (HTTP403); no account-wide plan claim is made",
+  "productionOrigin": "https://bitcoin-cycle-atlas.twoimo.workers.dev",
+  "commonEnvironment": {
+    "NODE_VERSION": "24.22.2",
+    "SKIP_DEPENDENCY_INSTALL": "1",
+    "CF_SEND_TELEMETRY": "false"
+  },
+  "jobs": {
+    "productionModels": {
+      "workerName": "bitcoin-cycle-atlas-models",
+      "buildCommand": "npm run verify:cloudflare -- --stage=model --mode=production && npm run build:cloudflare:models -- --mode=production",
+      "deployCommand": "npm run deploy:cloudflare:models -- --mode=production",
+      "trigger": "main push",
+      "previewsEnabled": false,
+      "requiredSettings": ["CLOUDFLARE_ACCOUNT_ID"],
+      "deploymentAuthentication": "Use the existing provider-managed Workers Builds deployment token, supplied to the deploy command as CLOUDFLARE_API_TOKEN; never export or copy its value",
+      "requiredSecrets": ["ATLAS_PUBLICATION_DEPLOY_HOOK"],
+      "repositoryWriteCredential": false,
+      "result": "Complete model and numerical/formal component at the exact source SHA; bounded static receipt and private browser/publication hook"
+    },
+    "production": {
+      "workerName": "bitcoin-cycle-atlas",
+      "buildCommand": "npm run verify:cloudflare -- --stage=browser --mode=production && npm run build:cloudflare",
+      "deployCommand": "npm run deploy:cloudflare",
+      "trigger": "private main Deploy Hook after model component publication",
+      "previewsEnabled": false,
+      "pathIncludes": ["*"],
+      "pathExcludes": ["*"],
+      "environment": { "ATLAS_PUBLIC_ORIGIN": "https://bitcoin-cycle-atlas.twoimo.workers.dev" },
+      "repositoryWriteCredential": false
+    },
+    "refresh": {
+      "suggestedWorkerName": "bitcoin-cycle-atlas-refresh",
+      "buildCommand": "npm ci --ignore-scripts && node scripts/cloudflare-market-refresh.mjs",
+      "deployCommand": "node scripts/cloudflare-market-refresh.mjs --confirm-commit",
+      "trigger": "dedicated main Deploy Hook",
+      "previewsEnabled": false,
+      "pathIncludes": ["*"],
+      "pathExcludes": ["*"],
+      "requiredSettings": ["CLOUDFLARE_ACCOUNT_ID", "ATLAS_REFRESH_TRIGGER_UUID"],
+      "requiredSecrets": ["ATLAS_BUILDS_READ_TOKEN", "ATLAS_DATA_GITHUB_TOKEN"],
+      "publishesWorkerCode": false,
+      "result": "Allowlisted nonforce source commit; separate model and browser/publication Builds verify and deploy that new exact SHA"
+    },
+    "archivePrepare": {
+      "suggestedWorkerName": "bitcoin-cycle-atlas-eth-prepare",
+      "buildCommand": "npm ci --ignore-scripts && node scripts/verify-cloudflare-archive.mjs",
+      "deployCommand": "node scripts/cloudflare-ethereum-archive.mjs prepare",
+      "trigger": "dedicated main Deploy Hook",
+      "previewsEnabled": false,
+      "pathIncludes": ["*"],
+      "pathExcludes": ["*"],
+      "environment": { "ATLAS_ARCHIVE_STAGE": "prepare" },
+      "requiredSettings": ["CLOUDFLARE_ACCOUNT_ID", "ATLAS_ARCHIVE_KV_NAMESPACE_ID", "ATLAS_ARCHIVE_PREPARE_TRIGGER_UUID"],
+      "requiredSecrets": ["ATLAS_BUILDS_READ_TOKEN", "ATLAS_ARCHIVE_KV_WRITE_TOKEN", "ATLAS_ARCHIVE_PUBLISH_DEPLOY_HOOK"],
+      "optionalReadSecret": "ETH_ARCHIVE_READ_TOKEN",
+      "forbiddenSecrets": ["ETH_ARCHIVE_GITHUB_TOKEN", "ATLAS_DATA_GITHUB_TOKEN"],
+      "publishesWorkerCode": false,
+      "result": "Verified immutable delta plus exact source/build-bound dispatch in authenticated build logs"
+    },
+    "archivePublish": {
+      "suggestedWorkerName": "bitcoin-cycle-atlas-eth-publish",
+      "buildCommand": "npm ci --ignore-scripts && node scripts/verify-cloudflare-archive.mjs",
+      "deployCommand": "node scripts/cloudflare-ethereum-archive.mjs publish",
+      "trigger": "private Deploy Hook invoked only by validated preparation",
+      "previewsEnabled": false,
+      "pathIncludes": ["*"],
+      "pathExcludes": ["*"],
+      "environment": { "ATLAS_ARCHIVE_STAGE": "publish" },
+      "requiredSettings": ["CLOUDFLARE_ACCOUNT_ID", "ATLAS_ARCHIVE_KV_NAMESPACE_ID", "ATLAS_ARCHIVE_PREPARE_TRIGGER_UUID", "ATLAS_ARCHIVE_PUBLISH_TRIGGER_UUID"],
+      "requiredSecrets": ["ATLAS_BUILDS_READ_TOKEN", "ATLAS_ARCHIVE_KV_READ_TOKEN", "ETH_ARCHIVE_GITHUB_TOKEN"],
+      "optionalReadSecret": "ETH_ARCHIVE_READ_TOKEN",
+      "publishesWorkerCode": false,
+      "result": "Original immutable Git archive nonforce publication and exact readback; failed acquisition remains failed"
+    }
+  },
+  "coordinator": {
+    "config": "ops/cloudflare-scheduler/cloudflare.config.ts",
+    "workerName": "bitcoin-cycle-atlas-scheduler",
+    "secrets": ["MARKET_REFRESH_DEPLOY_HOOK", "ETH_ARCHIVE_DEPLOY_HOOK"],
+    "cron": ["20 0,6,12,18 * * *", "17 1 * * *"],
+    "maximumRequestsPerDay": 5,
+    "publicHttpHandler": false
+  },
+  "handoffTransport": {
+    "kind": "dedicated Workers KV namespace on Free",
+    "stores": "temporary new immutable delta only; full retained archive remains on GitHub",
+    "maximumNewObjectsPerRun": 192,
+    "maximumNewBytesPerRun": 67108864,
+    "expirationTtlSeconds": 172800,
+    "deployed": false
+  },
+  "activationRequirements": [
+    "This migration enables no new paid subscriptions or bindings and remains within the documented Free allowances; unrelated pre-existing account resources are not classified",
+    "Actual main trigger IDs, commands, excluded push paths, disabled previews and secret scopes are read back",
+    "Both exact-source production stages complete, and the model component is joined to the full browser/publication result before deployment",
+    "Actual archive preparation, separate publication and immutable readback complete",
+    "Read-only schedule-budget measurement includes all four collection, four production model and four production browser/publication builds per day, both daily archive builds, other account usage and retry reserve",
+    "Scheduled commands reject authenticated push and pull-request metadata even when watch-path filtering is bypassed",
+    "Cron submission receipts and real Build identities are observed before activationVerified becomes true"
+  ]
+}
