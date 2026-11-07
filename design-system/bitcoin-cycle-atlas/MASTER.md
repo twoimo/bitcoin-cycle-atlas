@@ -45,7 +45,7 @@ DOM rectangles and computed styles, alongside actual screenshots.
 | Bottom range row | 38px, plus 1px chart separator | 38px; original periods, clock and scale actions |
 | Symbol trigger | 128 × 28px, 14px radius | Existing real search trigger, same compact shape |
 | Symbol search | 840 × 680px maximum, 20px radius, 16px input | Existing native dialog/list, same desktop bounds |
-| Toolbar font | system / Trebuchet MS / Roboto / Ubuntu, 14px | Same system stack with Noto Sans KR fallback |
+| Toolbar font | system / Trebuchet MS / Roboto / Ubuntu, 14px | Same system stack with Noto Sans KR / Noto Sans CJK KR fallback |
 | Chrome | #000000 | #000000 |
 | Gutters | #222222 | #222222 |
 | Ordinary UI text | #b8b8b8 | #b8b8b8 supporting text, #dbdbdb main text |
@@ -79,7 +79,10 @@ Existing real Chrome mobile/tablet cases cover Atlas responsive behavior.
 | Existing financial accent | #d8b56d, preserved independently of UI action blue |
 
 Use 12–14px controls and data, 14–16px panel titles, and 20–24px principal
-readings. Use the system font and tabular figures for financial values; retain
+readings. The locally installed Noto Sans CJK KR family is an explicit fallback:
+the first native Chrome screenshots exposed serif Latin fallback when optional
+web fonts were unavailable. This uses an existing font, without a new request.
+Use the system font and tabular figures for financial values; retain
 monospace for source identifiers and code. Do not add a font request. Keep
 gain/loss and named series colors, numeric definitions and source clocks.
 
