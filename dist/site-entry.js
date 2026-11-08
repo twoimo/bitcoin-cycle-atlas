@@ -1,28 +1,36 @@
 import { enhanceBootSkeleton } from './loading-surfaces.js';
-enhanceBootSkeleton();
 import { initAtlasShell } from './atlas-shell.js?v=1.36.1';
-initAtlasShell();
+import { canonicalNativeChartEntry } from './atlas-navigation.js?v=1.36.1';
 import { mountJournalEntry } from './journal-entry.js?v=1.29.0';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
-initPerformanceDiagnostics();
-mountJournalEntry();
-// Route before loading any asset-owned datasets or model state.
-const requested = new URLSearchParams(location.search).get('symbol')?.toUpperCase();
-const symbol = ['ETHUSD','MSTR','BMNR'].includes(requested) ? requested : 'BTCUSD';
-document.documentElement.dataset.symbol = symbol;
-const bootSymbol = document.querySelector('.atlas-boot-symbol');
-if (bootSymbol) bootSymbol.textContent = symbol;
-try {
-  if (symbol === 'ETHUSD') {
-    const { initEthView } = await import("./eth-view.js?v=1.36.1");
-    await initEthView();
-  } else if (symbol === 'MSTR' || symbol === 'BMNR') {
-    const { initEquityView } = await import("./equity-view.js?v=1.36.1");
-    await initEquityView({symbol});
-  } else {
-    await import("./app.js?v=1.37.1");
+
+const nativeEntry = canonicalNativeChartEntry(location);
+if (nativeEntry) {
+  // Redirect before the center host can reinterpret a native symbol as TQQQ,
+  // or any asset-owned controller starts fetching/rendering another chart.
+  location.replace(nativeEntry);
+} else {
+  enhanceBootSkeleton();
+  initAtlasShell();
+  initPerformanceDiagnostics();
+  mountJournalEntry();
+  const requested = new URLSearchParams(location.search).get('symbol')?.toUpperCase();
+  const symbol = ['ETHUSD','MSTR','BMNR'].includes(requested) ? requested : 'BTCUSD';
+  document.documentElement.dataset.symbol = symbol;
+  const bootSymbol = document.querySelector('.atlas-boot-symbol');
+  if (bootSymbol) bootSymbol.textContent = symbol;
+  try {
+    if (symbol === 'ETHUSD') {
+      const { initEthView } = await import("./eth-view.js?v=1.36.1");
+      await initEthView();
+    } else if (symbol === 'MSTR' || symbol === 'BMNR') {
+      const { initEquityView } = await import("./equity-view.js?v=1.36.1");
+      await initEquityView({symbol});
+    } else {
+      await import("./app.js?v=1.37.1");
+    }
+  } catch (error) {
+    console.error('Chart initialization failed', error);
+    document.dispatchEvent(new CustomEvent('atlas:boot-error'));
   }
-} catch (error) {
-  console.error('Chart initialization failed', error);
-  document.dispatchEvent(new CustomEvent('atlas:boot-error'));
 }

@@ -4,6 +4,8 @@ import { withChartSpacing,retargetChartRange } from '../../dist/chart-view-polic
 import { normalizePriceDomain } from '../../dist/price-axis.js';
 import {CAPITAL_POLICIES} from '../../dist/treasury-instruments.js';
 import * as equityData from '../../dist/equity-market-data.js';
+import { readChartUrlState, writeChartUrlState } from '../../dist/ui/chart-url-state.js';
+import { nativeDateRange } from '../../dist/native-chart-workbench.js';
 
 export function deferred() {
   let resolve, reject;
@@ -66,6 +68,9 @@ export function equityPayload(symbol, revision) {
 export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname = '/', project } = {}) {
   const requests = [], frames = new Map(), draws = [], calculations = [], errors = [], events = [], articles = [];
   const window = new Surface(), document = new Surface();
+  const bootTimers = new Map(); let bootTimerId = 0;
+  window.setTimeout = callback => { bootTimers.set(++bootTimerId, callback); return bootTimerId; };
+  window.clearTimeout = id => bootTimers.delete(id);
   document.body = new Node(); document.activeElement = new Node();
   const boot = new Map(['atlas-boot-shell', 'atlas-boot-status', 'atlas-boot-error', 'atlas-boot-retry'].map(id => [id, new Node()]));
   document.documentElement = new Node(); document.documentElement.dataset.boot = 'loading';
@@ -80,7 +85,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
   let frameId = 0, navigation;
   const mount = () => ({ cancel() {}, cancelPending() {}, destroy() {} });
   const deps = {
-    withChartSpacing,retargetChartRange,normalizePriceDomain,
+    withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,writeChartUrlState,nativeDateRange,
     mountNativeChartApp: app => document.body.append(app),
     // Native shell/command behavior has a separate parsed-DOM integration test.
     mountNativeChartWorkbench: () => ({update(){},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
@@ -115,9 +120,10 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
   const source = await readFile(new URL('../../dist/equity-view.js', import.meta.url), 'utf8');
   const transformed = source.replace(/^import\s*\{([^}]+)\}\s*from\s*['"][^'"]+['"];?\s*$/gm, (_, names) => `const {${names}} = __deps;`)
     .replace('export async function initEquityView', 'async function initEquityView');
+  const location = { search: `?symbol=${symbol}${query}`, pathname }, urlWrites = [];
   const context = vm.createContext({
     __deps: deps, document, window, URLSearchParams, AbortController, AbortSignal, Date, Intl,
-    location: { search: `?symbol=${symbol}${query}`, pathname }, history: { replaceState() {} },
+    location, history: { replaceState(_state, _title, path) { urlWrites.push(String(path)); const next = new URL(path, 'https://atlas.test'); location.pathname = next.pathname; location.search = next.search; } },
     console: { error: (...args) => errors.push(args) },
     CustomEvent: class { constructor(type, options = {}) { this.type = type; Object.assign(this, options); } },
     ResizeObserver: class { observe() {} disconnect() {} },
@@ -144,7 +150,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     app.dispatchEvent({ type: 'click', target });
   };
   return {
-    requests, frames, draws, calculations, errors, events, articles, initialization, document, app,
+    requests, frames, draws, calculations, errors, events, articles, initialization, document, app, location, urlWrites,
     microtasks, frame, settle,
     reply: (index, value) => requests[index].resolve({ ok: true, json: async () => value }),
     reject: (index, message = 'Archive failed') => requests[index].reject(new Error(message)),

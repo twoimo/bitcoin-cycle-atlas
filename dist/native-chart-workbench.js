@@ -236,7 +236,7 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
   const mobile=mountMobileWorkspace({workspace,stage:app,plot,reader,closeReader});
   update();
   return {update,command,inspect(detail){inspection=detail;if(active()&&!reader.hidden&&readerKind==='selection')renderReader();},
-    beginGesture(){if(active())uiHistory.begin('차트 이동');},endGesture(){uiHistory.commit();},
+    beginGesture(){if(active())uiHistory.begin('차트 이동');},endGesture(){return uiHistory.commit();},
     measure(value){uiHistory.run('두 지점 측정',()=>{state.measurement=value;});update();},
     destroy(){if(destroyed)return;destroyed=true;for(const cleanup of owned)cleanup();mobile.destroy();bottom.destroy();releaseExport();dateDialog.node.remove();exportDialog.node.remove();reader.remove();left.remove();rail.remove();}};
 }

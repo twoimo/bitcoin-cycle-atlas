@@ -4,6 +4,7 @@ import { RsiChartCanvas, axisNumber, type InstrumentMarker, type Pick } from './
 import { type Pane, type RsiChartView } from '../rsi-chart-model.js';
 import { applyInstrumentCommand, boundedInstrumentDates, displayInstrumentSeries, initialInstrumentView, nearestObservation,
   type ExternalInstrumentView, type InstrumentChartCache, type InstrumentSeries } from '../instrument-chart-model.js';
+import { initialChartUrlView, chartUrlView, persistStandaloneChartUrl } from '../chart-url-state.js';
 
 interface Props {
   symbol: string;
@@ -58,12 +59,13 @@ export function serializeInstrumentSvg(svg: SVGSVGElement, symbol: string, unit:
 export function InstrumentWorkbench(props: Props) {
   const { symbol, unit, timezone, series, revision, cache, embedded = false, epoch = 0, active = true,
     visible = true, currentTab = 'chart', externalView, volumeUnit } = props;
-  const [view, setView] = useState<RsiChartView>(() => cache?.view || { ...initialInstrumentView(series), ...props.initialView, ...externalView });
+  const [view, setView] = useState<RsiChartView>(() => initialChartUrlView(symbol, cache?.view || { ...initialInstrumentView(series), ...props.initialView, ...externalView }, { frequencies: series.frequency === 'monthly' ? ['monthly'] : ['daily', 'weekly'], candles: series.bars.length > 0, embedded }));
   const [pane, setPane] = useState<Pane>(null), [hover, setHover] = useState<Pick | null>(null), [status, setStatus] = useState('');
   const [menuPulse, setMenuPulse] = useState(0), [search, setSearch] = useState('');
   const [jump, setJump] = useState(view.selected), [from, setFrom] = useState(view.start), [to, setTo] = useState(view.end);
   const [exportText, setExportText] = useState(''), [exportUrl, setExportUrl] = useState(''), [pngUrl, setPngUrl] = useState('');
   const undo = useRef<RsiChartView[]>(cache?.undo || []), redo = useRef<RsiChartView[]>(cache?.redo || []), gesture = useRef<RsiChartView | null>(null);
+  const userViewRevision = useRef(0), initialExternalView = useRef(true);
   const svg = useRef<SVGSVGElement>(null), closeButton = useRef<HTMLButtonElement>(null), focusReturn = useRef<HTMLElement | null>(null);
   const live = useRef({ props, view, pane }); live.current = { props, view, pane };
   const display = useMemo(() => displayInstrumentSeries(series, view.frequency), [series, view.frequency]);
@@ -84,6 +86,7 @@ export function InstrumentWorkbench(props: Props) {
     const previous = live.current.view;
     if (JSON.stringify(previous) === JSON.stringify(next)) return;
     if (record) { undo.current = [...undo.current, previous].slice(-40); redo.current = []; }
+    if (!gesture.current) { userViewRevision.current++; persistStandaloneChartUrl(symbol, next, embedded); }
     live.current.view = next; saveCache(next); setView(next); setExportText(''); props.onView?.(next);
   }
   function openPane(next: Exclude<Pane, null>) {
@@ -131,6 +134,13 @@ export function InstrumentWorkbench(props: Props) {
   useEffect(() => {
     if (!externalView) return;
     const current = live.current.view;
+    if (initialExternalView.current) {
+      initialExternalView.current = false;
+      // Keep a parent's cached selection aligned with restored URL state.
+      // This is initialization, so it creates no edit, journal or URL write.
+      if (Object.entries(externalView).some(([key, value]) => current[key as keyof ExternalInstrumentView] !== value)) props.onView?.(current);
+      return;
+    }
     if (Object.entries(externalView).some(([key, value]) => current[key as keyof ExternalInstrumentView] !== value)) persist({ ...current, ...externalView }, false);
   }, [externalView?.start, externalView?.end, externalView?.selected, externalView?.chartType]);
   useLayoutEffect(() => { if (pane && visible) closeButton.current?.focus(); }, [pane, visible]);
@@ -151,7 +161,7 @@ export function InstrumentWorkbench(props: Props) {
       tool: view.tool, magnet: view.magnet, scale: view.scale, autoScale: view.autoScale, chartType: view.chartType,
       frequency: view.frequency, frequencies, candles: hasCandles, volume: hasVolume, canUndo: undo.current.length > 0,
       canRedo: redo.current.length > 0, measurement: view.measurement.length > 0, pane: visible ? pane : null, tab: currentTab,
-      records: Boolean(props.onRecords), recordsLabel: props.recordsLabel || '기록', nextSignal: false,
+      records: Boolean(props.onRecords), recordsLabel: props.recordsLabel || '기록', nextSignal: false, userViewRevision: userViewRevision.current, urlView: chartUrlView(view),
     }, location.origin);
   }, [embedded, active, epoch, symbol, unit, timezone, revision, view, pane, visible, currentTab, selectedDate, selected?.[1], series, hasCandles, hasVolume, props.onRecords, props.recordsLabel]);
   useEffect(() => {
@@ -196,7 +206,8 @@ export function InstrumentWorkbench(props: Props) {
   }
   function endGesture() {
     if (gesture.current && JSON.stringify(gesture.current) !== JSON.stringify(live.current.view)) {
-      undo.current = [...undo.current, gesture.current].slice(-40); redo.current = []; saveCache(live.current.view); setView({ ...live.current.view });
+      undo.current = [...undo.current, gesture.current].slice(-40); redo.current = []; userViewRevision.current++;
+      persistStandaloneChartUrl(symbol, live.current.view, embedded); saveCache(live.current.view); setView({ ...live.current.view });
     }
     gesture.current = null;
   }

@@ -52,3 +52,17 @@ test('disabled controls and mobile trays do not leave a floating desktop label',
   f.emit(f.control, 'focusin');
   assert.equal(f.tip.hidden, true);
 });
+
+test('a disabled rail command exposes its reason without enabling the command', t => {
+  const f = fixture(); t.after(f.cleanup);
+  const control = f.document.querySelector<HTMLButtonElement>('button[disabled]')!;
+  control.setAttribute('data-disabled-reason', '완료한 측정이 없습니다.');
+  control.setAttribute('aria-description', '완료한 측정이 없습니다.');
+  control.getBoundingClientRect = f.control.getBoundingClientRect;
+  f.emit(control, 'pointerover');
+  assert.equal(f.tip.hidden, false);
+  assert.equal(f.tip.textContent, '선택 데이터 · 완료한 측정이 없습니다.');
+  assert.equal(control.disabled, true);
+  f.emit(control, 'pointerout');
+  assert.equal(f.tip.hidden, true);
+});

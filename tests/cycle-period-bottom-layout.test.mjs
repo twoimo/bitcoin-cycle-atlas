@@ -6,6 +6,7 @@ import { buildCycleMilestones, INTERVAL_RELATIONS, MILESTONE_TYPES } from '../di
 import { resolveCycleSelection } from '../dist/cycle-selection.js';
 import { createChartSvgExport } from '../dist/chart-export.js';
 import { utcDay, dateFromDay } from '../dist/cycle-engine.js';
+import {overlayBoxesIntersect} from '../dist/ui/chart-legend-layout.js';
 
 // Minimal SVG tree boundary harness. It checks rendered SVG coordinates,
 // activation and export cloning; browser font layout is verified separately.
@@ -344,4 +345,24 @@ test('period text yields to a fixed model-evidence dot without moving its date, 
   assert.notEqual(label()&&serialize(label()),original,'The exact colliding text must move or use the existing collapsed-label policy');
   after.controller.updateCycleOverlayObstacles([]);
   assert.notEqual(label()&&serialize(label()),original,'HUD repacking must retain the evidence obstacle');
+});
+
+test('the upper-right reservation moves model and macro label boxes while retaining model prices, guide dates and axes',()=>{
+  const data={...baseline,start:dateFromDay(utcDay(baseline.split)-730),end:dateFromDay(utcDay(baseline.split)+730)};
+  const options={width:1440,height:900,scale:'linear',priceDomain:{min:1,max:1000000},showCycleMarkers:false};
+  const before=render(options,data),left=Number(before.svg.dataset.plotLeft),right=Number(before.svg.dataset.plotRight),top=Number(before.svg.dataset.plotTop);
+  const corner={x:right-510,y:top+12,width:498,height:64};
+  const day=utcDay(data.start)+Math.round((corner.x+240-left)/(right-left)*(utcDay(data.end)-utcDay(data.start))),date=dateFromDay(day),yy=top+42;
+  const evidence={id:'legend-evidence-anchor',date,price:before.controller.getPriceScale().invert(yy),title:'모델 근거',description:'Fixed price and date.'};
+  const clock={id:'legend-clock',date,earliest:dateFromDay(day-15),latest:dateFromDay(day+15),label:'거시 시계'};
+  const after=render({...options,forecastEvidence:[evidence],cycleClockAnchors:[clock],cycleOverlayObstacles:[corner]},data);
+  const control=after.svg.querySelector('[data-forecast-evidence="legend-evidence-anchor"]'),dot=control.querySelector('circle'),label=control.querySelector('.forecast-evidence-label');
+  assert.ok(label);near(number(dot,'cy'),yy,'the evidence price does not move');near(number(dot,'cx'),left+(day-utcDay(data.start))/(utcDay(data.end)-utcDay(data.start))*(right-left),'the evidence date does not move');
+  const box=node=>({x:number(node,'x'),y:number(node,'y'),width:number(node,'width'),height:number(node,'height')});
+  assert.equal(overlayBoxesIntersect(box(label),corner),false);
+  const macro=after.svg.querySelector('[data-cycle-clock="legend-clock"]');assert.ok(macro);assert.equal(macro.dataset.date,date);
+  assert.equal(overlayBoxesIntersect(box(macro.querySelector('.cycle-macro-clock-label')),corner),false);
+  for(const key of ['plotLeft','plotRight','plotTop','plotBottom','priceBottom'])assert.equal(after.svg.dataset[key],before.svg.dataset[key],key);
+  assert.equal(after.svg.getAttribute('viewBox'),before.svg.getAttribute('viewBox'));
+  assert.equal(JSON.stringify(baseline),original,'display placement cannot rewrite observations or forecasts');
 });

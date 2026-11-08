@@ -84,15 +84,18 @@ test('HYPE weekly display aggregates its actual USDC candles and keeps the under
   assert.equal(view.frequency, 'weekly'); assert.equal(applyInstrumentCommand(view, series, 'frequency', 'monthly'), view);
 });
 
-async function mount(content: React.ReactNode, fetchSource?: typeof fetch, chartSize?: { width: number; height: number }) {
+async function mount(content: React.ReactNode, fetchSource?: typeof fetch, publicUrl = 'https://example.test/market-lab/charts/', chartSize?: { width: number; height: number }) {
   const { document, window: dom } = parseHTML('<html><body><div id="root"></div></body></html>');
   Object.defineProperty(document, 'oninput', { value: null, configurable: true });
-  const listeners = new Map<string, Set<(event: any) => void>>(), posts: any[] = [];
-  const parent = { document, postMessage: (message: unknown) => posts.push(message) };
-  const window = { document, parent, HTMLIFrameElement: dom.HTMLIFrameElement,
+  const listeners = new Map<string, Set<(event: any) => void>>(), posts: any[] = [], urlWrites: string[] = [], storageWrites: string[] = [];
+  const location = new URL(publicUrl);
+  const parent = { document, location, postMessage: (message: unknown) => posts.push(message) };
+  const window = { document, location, parent, HTMLIFrameElement: dom.HTMLIFrameElement,
     addEventListener: (kind: string, listener: (event: any) => void) => { if (!listeners.has(kind)) listeners.set(kind, new Set()); listeners.get(kind)!.add(listener); },
     removeEventListener: (kind: string, listener: (event: any) => void) => listeners.get(kind)?.delete(listener) };
-  const globals = { document, window, location: new URL('https://example.test/market-lab/charts/'), Element: dom.Element, IS_REACT_ACT_ENVIRONMENT: true,
+  const globals = { document, window, location, Element: dom.Element, IS_REACT_ACT_ENVIRONMENT: true,
+    history: { state: null, replaceState(_state: unknown, _title: string, url: string) { urlWrites.push(url); location.href = new URL(url, location.href).href; } },
+    sessionStorage: { getItem: () => null, setItem(key: string) { storageWrites.push(key); }, removeItem(key: string) { storageWrites.push(key); } },
     ...(fetchSource ? { fetch: fetchSource } : {}) };
   const previous = new Map(Object.keys(globals).map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
   for (const [key, value] of Object.entries(globals)) Object.defineProperty(globalThis, key, { value, configurable: true });
@@ -109,7 +112,7 @@ async function mount(content: React.ReactNode, fetchSource?: typeof fetch, chart
     for (const [key, descriptor] of previous) if (descriptor) Object.defineProperty(globalThis, key, descriptor); else Reflect.deleteProperty(globalThis, key);
   };
   try { await act(async () => root.render(content)); } catch (error) { await cleanup(); throw error; }
-  return { document, posts, parent, cleanup,
+  return { document, posts, parent, cleanup, urlWrites, storageWrites,
     ready: async (selector: string) => { const deadline=Date.now()+5000; while(!document.querySelector(selector)&&Date.now()<deadline) await act(async()=>new Promise(resolve=>setImmediate(resolve))); assert(document.querySelector(selector),`${selector}: ${document.body.textContent}`); },
     render: (content: React.ReactNode) => act(async () => root.render(content)),
     message: (message: unknown, origin = 'https://example.test', source: unknown = parent) => act(async () => { for (const listener of listeners.get('message') || []) listener({ data: message, origin, source }); }),
@@ -129,7 +132,7 @@ test('edge evidence groups stay inside the price plot while their guides and sel
       marker('right-other','2025-12-31','evidence'),marker('right-judgment','2025-12-31','judgment')];
     const fixture=await mount(<RsiChartCanvas symbol="HYPE" unit="USDC" series={series} prices={series.prices} bars={[]} rows={[]}
       view={initialInstrumentView(series)} active menuPulse={0} hover={null} svgRef={{current:null}} markers={markers}
-      onView={()=>{}} onStart={()=>{}} onEnd={()=>{}} onHover={()=>{}} onPick={pick=>picked.push(pick.date)} onMarker={()=>opened.push('details')}/>,undefined,{width,height});
+      onView={()=>{}} onStart={()=>{}} onEnd={()=>{}} onHover={()=>{}} onPick={pick=>picked.push(pick.date)} onMarker={()=>opened.push('details')}/>,undefined,undefined,{width,height});
     try{
       const svg=fixture.document.querySelector('.rsi-chart-canvas > svg')!,left=Number(svg.getAttribute('data-plot-left')),right=Number(svg.getAttribute('data-plot-right'));
       assert.equal(svg.getAttribute('viewBox'),`0 0 ${width} ${height}`);
@@ -225,6 +228,36 @@ test('instrument cache restores each housing region range, settings and undo his
 });
 
 const savedSource: typeof fetch = async url => new Response(JSON.stringify(String(url).endsWith('/data/housing.json') ? housing : String(url).endsWith('/data/themes.json') ? themes : {}), { status: String(url).includes('/api/') ? 503 : 200 });
+
+test('HYPE restores a common URL through its real parent without initial edits or journal writes', async t => {
+  const cache: ThemeCache = {}, publicUrl='https://example.test/market-lab/charts/?symbol=HYPE&granularity=weekly&type=line&axis=linear&view-start=2025-01-01&view-end=2026-01-01&price-min=0&price-max=120&axis-inverted=1&magnet=weak';
+  const fixture=await mount(<ThemePanel cache={cache} embedded epoch={9}/>,savedSource,publicUrl);t.after(fixture.cleanup);
+  await fixture.ready('.theme-price-chart');
+  const states=()=>fixture.posts.filter(post=>post.kind==='atlas:chart-state');
+  const restored=states().at(-1);
+  assert.equal(restored.frequency,'weekly');assert.equal(restored.chartType,'line');assert.equal(restored.scale,'linear');
+  assert.equal(restored.start,'2025-01-01');assert.equal(restored.end,'2026-01-01');assert.deepEqual(restored.urlView.domain,{min:0,max:120});
+  assert.equal(restored.urlView.inverted,true);assert.equal(restored.magnet,'weak');assert.equal(restored.canUndo,false);
+  assert(states().every(state=>state.userViewRevision===0),'parent synchronization is initialization, not a user edit');
+  assert.equal(cache.view?.start,cache.chart?.view?.start,'legacy event navigation receives the restored chart range');
+  assert.equal(cache.view?.style,'line');assert.equal(fixture.urlWrites.length,0);assert.equal(fixture.storageWrites.length,0);
+  assert.equal(location.href,publicUrl);
+  await fixture.message({kind:'atlas:center-command',symbol:'HYPE',epoch:9,action:'magnet'});
+  assert.equal(states().at(-1).userViewRevision,1);assert.equal(states().at(-1).magnet,'strong');assert.equal(states().at(-1).canUndo,true);
+  assert.equal(fixture.urlWrites.length,0,'the embedded child publishes its edit for its scoped host to serialize');
+  assert.equal(fixture.storageWrites.length,0,'view edits do not create a research judgment');
+});
+
+test('monthly housing restores shared keys and keeps first-entry controls and history source-faithful', async t => {
+  const cache: HousingCache = {}, publicUrl='https://example.test/market-lab/charts/?symbol=HOUSING-SEOUL&granularity=weekly&type=candles&axis=log&view-start=2020-01-01&view-end=2026-09-01&magnet=strong';
+  const fixture=await mount(<HousingPanel cache={cache} selectedRegion="seoul" embedded epoch={3}/>,savedSource,publicUrl);t.after(fixture.cleanup);
+  await fixture.ready('.housing-chart');
+  const states=fixture.posts.filter(post=>post.kind==='atlas:chart-state'),restored=states.at(-1);
+  assert.equal(restored.frequency,'monthly');assert.equal(restored.chartType,'line');assert.equal(restored.candles,false);
+  assert.equal(restored.start,'2020-01-01');assert.equal(restored.end,'2026-09-01');assert.equal(restored.scale,'log');assert.equal(restored.magnet,'strong');
+  assert.equal(restored.canUndo,false);assert(states.every(state=>state.userViewRevision===0));
+  assert.equal(fixture.urlWrites.length,0);assert.equal(fixture.storageWrites.length,0);assert.equal(location.href,publicUrl);
+});
 
 test('housing parent initializes each newly selected region independently and restores its own chart after other analyses', async t => {
   const cache: HousingCache = {}, fixture = await mount(<HousingPanel cache={cache} selectedRegion="busan" embedded epoch={1}/>, savedSource); t.after(fixture.cleanup);

@@ -147,6 +147,7 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
   <link rel="stylesheet" href="../../editorial-panels.css?v=1.35.0">
   <link rel="stylesheet" href="../../editorial-ledgers.css?v=1.35.0">
   <link rel="stylesheet" href="../../relay-room.css?v=1.37.1">
+  <link rel="stylesheet" href="../../ui/chart-legend.css?v=1.36.1">
 </head>
 <body>
   <div id="atlas-boot-shell">
@@ -172,7 +173,10 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
       const shell = document.getElementById('atlas-boot-shell');
       const status = document.getElementById('atlas-boot-status');
       const error = document.getElementById('atlas-boot-error');
+      let timeout = window.setTimeout(fail, 20000);
       function detach() {
+        window.clearTimeout(timeout);
+        timeout = null;
         document.removeEventListener('atlas:ready', ready);
         document.removeEventListener('atlas:boot-error', fail);
         window.removeEventListener('error', onError, true);

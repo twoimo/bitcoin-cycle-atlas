@@ -57,9 +57,9 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   trigger.setAttribute('aria-pressed','false');toolbar.insertBefore(trigger,toolbar.querySelector('.workbench-spacer,.eth-top-spacer'));
   const panel=doc.createElement('section');panel.className='chart-replay-controls';panel.hidden=true;
   panel.setAttribute('aria-label','봉 리플레이 제어');
-  panel.innerHTML='<div class="chart-replay-bar" role="toolbar" aria-label="봉 리플레이 재생 막대"><div class="chart-replay-actions">'+
+  panel.innerHTML='<div class="chart-replay-bar" role="toolbar" aria-label="봉 리플레이 재생 막대"><button type="button" data-cr="scroll-back" class="chart-replay-scroll-arrow" aria-label="이전 리플레이 조작 보기" hidden>‹</button><div class="chart-replay-actions">'+
     '<button type="button" data-cr="first" aria-label="리플레이 처음으로" title="리플레이 처음으로 · Home">'+replayIcon('M5 5v14M18 5l-10 7 10 7Z')+'</button>'+
-    '<button type="button" data-cr="select-menu" aria-label="시작 봉 선택 메뉴 · Select bar" aria-haspopup="dialog" aria-expanded="false">Select bar <span aria-hidden="true">▾</span></button>'+
+    '<button type="button" data-cr="select-menu" aria-label="시작 봉 선택 메뉴 · Select bar" aria-haspopup="dialog" aria-expanded="false">시작 봉 <span aria-hidden="true">▾</span></button>'+
     '<button type="button" data-cr="mode-badge" aria-label="리플레이 모드 설정">백테스트</button>'+
     '<button type="button" data-cr="result" hidden>결과 보기</button>'+
     '<button type="button" data-cr="pick" aria-label="시작점 선택 · Select starting point" title="시작점 선택 · Select starting point" aria-pressed="false">'+replayIcon('M5 3v15l4-4 3 6 3-1-3-6 6-1Z')+'</button>'+
@@ -67,8 +67,11 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     '<button type="button" data-cr="next" aria-label="다음 봉" title="실제 일봉 한 개 전진 · Shift + →">'+replayIcon('M19 5v14M6 5l10 7-10 7Z')+'</button>'+
     '<select data-cr="speed" aria-label="재생 속도" title="초당 1업데이트">'+CHART_REPLAY_SPEEDS.map(speed=>'<option value="'+speed+'" title="'+speedMeaning(speed)+'"'+(speed===1?' selected':'')+'>'+speed+'×</option>').join('')+'</select>'+
     '<select data-cr="update-interval" aria-label="리플레이 업데이트 간격 · D · Auto 1일" title="D · Auto 1일. 확보한 실제 일봉을 하루씩 공개하며 주봉은 같은 주의 OHLC를 갱신합니다." disabled><option value="daily">D</option></select>'+
-    '<button type="button" data-cr="live" aria-label="최신 차트로 이동 · Jump to real-time chart" title="최신 차트로 이동 · 세션 저장 선택 후 복귀">'+replayIcon('M4 5l7 7-7 7M12 5l7 7-7 7M21 5v14')+'</button></div></div>'+
-    '<button type="button" data-cr="exit" class="chart-replay-exit" aria-label="봉 리플레이 종료" title="봉 리플레이 종료">'+replayIcon('m6 6 12 12M18 6 6 18')+'</button>'+
+    '<button type="button" data-cr="live" aria-label="최신 차트로 이동 · Jump to real-time chart" title="최신 차트로 이동 · 세션 저장 선택 후 복귀">'+replayIcon('M4 5l7 7-7 7M12 5l7 7-7 7M21 5v14')+'<span class="chart-replay-live-label">최신 차트로 이동</span></button></div>'+
+    '<button type="button" data-cr="scroll-forward" class="chart-replay-scroll-arrow" aria-label="다음 리플레이 조작 보기" hidden>›</button>'+
+    '<button type="button" data-cr="transport-more" aria-label="리플레이 추가 조작 · 속도·업데이트 간격·최신 이동" aria-haspopup="dialog" aria-expanded="false" hidden>⋯</button>'+
+    '<button type="button" data-cr="exit" class="chart-replay-exit" aria-label="봉 리플레이 종료" title="봉 리플레이 종료">'+replayIcon('m6 6 12 12M18 6 6 18')+'</button></div>'+
+    '<section class="chart-replay-transport-menu" data-cr="transport-panel" role="dialog" aria-label="리플레이 추가 조작" hidden><div class="chart-replay-menu-heading"><strong>리플레이 추가 조작</strong><button type="button" data-cr="transport-close" aria-label="리플레이 추가 조작 닫기">'+replayIcon('m6 6 12 12M18 6 6 18')+'</button></div><label data-cr="speed-slot">재생 속도</label><label data-cr="update-interval-slot">업데이트 간격 · 실제 일봉</label><div data-cr="live-slot"></div><p>D · Auto 1일. 주봉은 같은 주의 실제 OHLC를 하루씩 갱신합니다.</p></section>'+
     '<button type="button" data-cr="pick-cancel" class="chart-replay-pick-cancel" hidden>선택 취소 · Esc</button>'+
     '<section class="chart-replay-select-menu" data-cr="select-panel" data-menu-view="start" role="dialog" aria-label="Select bar · 시작 봉 선택" hidden>'+
     '<div class="chart-replay-menu-heading"><button type="button" data-cr="menu-back" aria-label="시작 봉 선택으로 돌아가기" hidden>'+replayIcon('m14 6-6 6 6 6')+'</button><strong data-cr="menu-title">Select bar</strong><button type="button" data-cr="menu-settings" aria-label="예측·평가 설정 열기" title="예측·평가 · 별도 설정" aria-expanded="false">'+replayIcon('M4 6h16M4 12h16M4 18h16M8 3v6M16 9v6M10 15v6')+'</button><button type="button" data-cr="select-close" aria-label="시작 봉 메뉴 닫기">'+replayIcon('m6 6 12 12M18 6 6 18')+'</button></div>'+
@@ -93,15 +96,55 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   const q=key=>panel.querySelector('[data-cr="'+key+'"]');
   let playIconPlaying=false;
   const transport=panel.querySelector('.chart-replay-actions'),bar=panel.querySelector('.chart-replay-bar');
+  const secondaryControls=['speed','update-interval','live'].map(q);
+  const transportMenu=q('transport-panel'),transportMore=q('transport-more');
+  transportMenu.id='replay-transport-menu-'+symbol;transportMore.setAttribute('aria-controls',transportMenu.id);
+  let transportLayoutKey='';
   const scrollHint=doc.createElement('span');scrollHint.className='chart-replay-scroll-hint';scrollHint.id='replay-scroll-hint-'+symbol;
   scrollHint.textContent='좌우로 밀어 더 보기';scrollHint.hidden=true;bar?.append(scrollHint);
   transport?.setAttribute('aria-describedby',scrollHint.id);
   function transportHints(){
     if(!transport||!bar)return;
-    const overflow=transport.scrollWidth>transport.clientWidth+1;
+    const overflow=transport.scrollWidth>transport.clientWidth;
+    setReplayProperty(bar.dataset,'overflow',String(overflow));
     setReplayProperty(bar.dataset,'scrollLeft',String(overflow&&transport.scrollLeft>1));
     setReplayProperty(bar.dataset,'scrollRight',String(overflow&&transport.scrollLeft+transport.clientWidth<transport.scrollWidth-1));
-    setReplayProperty(scrollHint,'hidden',!overflow||!q('select-panel').hidden||!q('entry-dialog').hidden||!q('exit-dialog').hidden);
+    setReplayProperty(scrollHint,'hidden',!overflow);
+    for(const name of ['scroll-back','scroll-forward'])setReplayProperty(q(name),'hidden',!overflow);
+    setReplayProperty(q('scroll-back'),'disabled',transport.scrollLeft<=1);
+    setReplayProperty(q('scroll-forward'),'disabled',transport.scrollLeft+transport.clientWidth>=transport.scrollWidth-1);
+  }
+  function layoutTransport(){
+    if(panel.hidden)return;
+    if(!bar?.clientWidth){transportHints();return;}
+    const key=bar.clientWidth+':'+win.getComputedStyle(panel).getPropertyValue('--replay-control-size')+':'+q('mode-badge').textContent+':'+q('result').hidden;
+    if(key===transportLayoutKey){transportHints();return;}
+    transportLayoutKey=key;
+    const focused=doc.activeElement;
+    // Measure the actual controls in their bar styling. Move the same nodes,
+    // preserving their state, listeners and accessible names in either owner.
+    secondaryControls.forEach(node=>transport.append(node));transportMore.hidden=true;
+    q('scroll-back').hidden=true;q('scroll-forward').hidden=true;
+    const folded=transport.scrollWidth>transport.clientWidth;
+    if(folded){secondaryControls.forEach(node=>q(node.dataset.cr+'-slot').append(node));transportMore.hidden=false;}
+    else if(overlay==='transport')setOverlay(null);
+    bar.dataset.secondaryOverflow=String(folded);
+    if(focused===transportMore&&!folded)q('speed').focus({preventScroll:true});
+    else if(secondaryControls.includes(focused)&&folded&&transportMenu.hidden)transportMore.focus({preventScroll:true});
+    else if(focused?.isConnected&&doc.activeElement!==focused)focused.focus({preventScroll:true});
+    transportHints();
+  }
+  function reserveTransportLane(){
+    // Keep all chart information, including time labels and secondary panes,
+    // above a fixed footer. The SVG itself retains its full allocated height.
+    const barHeight=Number.parseFloat(win.getComputedStyle?.(panel).getPropertyValue('--replay-bar-height'))||44;
+    setReplayProperty(svg.dataset,'replayTransportInset',String(barHeight+40));
+  }
+  function scrollTransport(direction){
+    const area=transport.getBoundingClientRect(),nodes=[...transport.children].filter(node=>!node.hidden).map(node=>node.getBoundingClientRect());
+    const next=direction>0?nodes.find(box=>box.right>area.right+1):nodes.reverse().find(box=>box.left<area.left-1);
+    const left=next?(direction>0?next.right-area.right:next.left-area.left):direction*transport.clientWidth;
+    transport.scrollBy({left,behavior:win.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
   }
   function revealControl(event){
     if(!transport||!event.target?.getBoundingClientRect)return;
@@ -216,10 +259,11 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   function setOverlay(next){
     releaseGesture();overlay=next;
     q('select-panel').hidden=next!=='menu';q('entry-dialog').hidden=next!=='entry';q('exit-dialog').hidden=next!=='exit';
+    transportMenu.hidden=next!=='transport';transportMore.setAttribute('aria-expanded',String(next==='transport'));
     q('select-menu').setAttribute('aria-expanded',String(next==='menu'));
     panel.dataset.overlay=next??'none';transportHints();
   }
-  function closeMenu(){if(overlay==='menu')setOverlay(null);menuView('start',{focus:false});}
+  function closeMenu(){if(overlay==='menu'||overlay==='transport')setOverlay(null);menuView('start',{focus:false});}
   function focusMenuTrigger(){q(externalBacktest?'mode-badge':'select-menu').focus({preventScroll:true});}
   function updateDateContext(state=getState()){
     const date=state.session?.timeline[state.cursorIndex],visible=date?archive?.observations.findLast(row=>row.date<=date)?.date:null,next=state.session?.timeline[state.cursorIndex+1];
@@ -275,6 +319,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   }
   function activate(){
     if(active)return;
+    transportLayoutKey='';reserveTransportLane();
     active=true;plot.classList.add('chart-replay-active');svg.dataset.chartReplayActive='true';
     doc.documentElement.dataset.chartReplayActive='true';trigger.setAttribute('aria-pressed','true');
     panel.hidden=false;hud.hidden=false;blockSurrounding(true);
@@ -300,7 +345,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(!active)return;
     epoch++;request?.abort();request=null;active=false;saving=false;externalBacktest=false;controller.exit();
     if(paintFrame!==null){win.cancelAnimationFrame(paintFrame);paintFrame=null;}
-    releaseGesture();picking=false;pickerDate=null;closeChoice();closeMenu();clearPicker();disposeDrawing();plot.classList.remove('chart-replay-active');plot.style.removeProperty('--chart-replay-controls-height');
+    releaseGesture();picking=false;pickerDate=null;closeChoice();closeMenu();clearPicker();disposeDrawing();plot.classList.remove('chart-replay-active');plot.style.removeProperty('--chart-replay-controls-height');plot.style.removeProperty('--chart-replay-bottom');
     delete svg.dataset.chartReplayActive;delete doc.documentElement.dataset.chartReplayActive;delete doc.documentElement.dataset.chartReplayMode;
     delete plot.dataset.chartReplayMode;plot.classList.remove('chart-replay-atlas');
     for(const key of Object.keys(svg.dataset))if(key.startsWith('replay'))delete svg.dataset[key];
@@ -565,13 +610,14 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   }
   function paint(state){
     if(!active||destroyed)return;
-    transportHints();
     setReplayProperty(panel.dataset,'state',state.status);setReplayProperty(svg.dataset,'replayStatus',state.status);
     const ready=Boolean(state.session),playing=state.status==='playing',backtest=q('mode').value==='cutoff-backtest';
     setReplayProperty(compactScore,'hidden',!backtest||!ready);
     setReplayProperty(seriesKey,'textContent',backtest?'파랑 · 기준시점 고정 예측 / '+(q('display').value==='candles'?'캔들':'실선')+' · 실제 가격':q('mode').value==='atlas-chart'?'주황 · 현재 예측선 / 파랑 · 회고선 (채점 제외)':'');
     setReplayProperty(q('mode-badge'),'textContent',externalBacktest?'월말 고정본':backtest?'기준시점 백테스트':q('mode').value==='atlas-chart'?'현재선 비교':'예측 비교');
+    setReplayAttribute(q('mode-badge'),'aria-label','리플레이 모드 설정 · '+q('mode-badge').textContent);
     setReplayProperty(q('mode-badge'),'disabled',hasChoice());setReplayProperty(q('result'),'hidden',!backtest);setReplayProperty(q('result'),'disabled',!ready||hasChoice()||picking||state.status==='selecting');
+    layoutTransport();
     setChartLoading(svg.parentElement,!ready&&state.status==='loading'&&!pendingAtlas,'리플레이 자료 로딩');
     const blocked=hasChoice()||picking||state.status==='selecting';
     updateDateContext(state);
@@ -579,7 +625,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(!ready){
       setReplayProperty(inspect,'textContent','');setReplayProperty(q('metric'),'textContent','');setReplayProperty(q('detail-metric'),'textContent','');
       setReplayProperty(q('model-label'),'textContent',state.status==='error'?'예측을 생성하지 않았습니다.':'선택한 기준의 예측을 준비합니다.');
-      for(const key of Object.keys(svg.dataset))if(key.startsWith('replay')&&key!=='replayStatus')delete svg.dataset[key];
+      for(const key of Object.keys(svg.dataset))if(key.startsWith('replay')&&!['replayStatus','replayTransportInset'].includes(key))delete svg.dataset[key];
     }
     setReplayProperty(q('play'),'disabled',!playing&&(blocked||!ready||state.cursorIndex>=state.length-1));setReplayProperty(q('first'),'disabled',blocked||!ready||state.cursorIndex===0);setReplayProperty(q('next'),'disabled',blocked||!ready||state.cursorIndex>=state.length-1);setReplayProperty(q('scrub'),'disabled',blocked||!ready);
     setReplayProperty(q('speed'),'value',String(state.speed));setReplayProperty(q('speed'),'title',speedMeaning(state.speed)+' · 실제 일봉 한 개씩 공개');setReplayProperty(q('speed'),'disabled',hasChoice());
@@ -598,7 +644,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     setReplayProperty(q('pooled-retry'),'hidden',!adaptiveUnavailable);
     if(state.status==='error'){
       disposeDrawing();frame=null;inspect.textContent='';q('cursor').textContent=adaptiveUnavailable?'예측 준비 조건 미충족':'리플레이 오류';q('metric').textContent='';q('detail-metric').textContent='';
-      for(const key of Object.keys(svg.dataset))if(key.startsWith('replay')&&key!=='replayStatus')delete svg.dataset[key];
+      for(const key of Object.keys(svg.dataset))if(key.startsWith('replay')&&!['replayStatus','replayTransportInset'].includes(key))delete svg.dataset[key];
       let retained=false;try{retained=drawAtlasPending();if(!retained)svg.replaceChildren();}catch{svg.replaceChildren();}
       if(retained)q('model-label').textContent='현재 예측선 보존 · 실제 리플레이 준비 실패';
       const reason=adaptiveUnavailable?'선택 기준일까지 확정된 상승·하락 수익률 표본이 각 30개 이상 필요합니다. 날짜를 바꾸거나 통합 변동성 모형으로 같은 날짜를 비교해 주세요.':state.error+' · 시작점 또는 예측 종류를 다시 선택해 주세요.';
@@ -674,7 +720,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     }catch(error){controller.fail(error);}finally{painting=false;}
   }
   function schedulePaint(){if(!active||paintFrame!==null)return;paintFrame=win.requestAnimationFrame(()=>{paintFrame=null;paint(getState());});}
-  function resize(){if(active){transportHints();schedulePaint();}}
+  function resize(){if(active){reserveTransportLane();layoutTransport();schedulePaint();}}
   function toggle(){
     // Pause must remain reachable from every open menu and focused editor.
     if(getState().status==='playing'){controller.pause();return;}
@@ -748,6 +794,9 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     }
     paint(getState());
   };
+  transportMore.onclick=()=>{if(hasChoice())return;const show=overlay!=='transport';closeMenu();if(show){setOverlay('transport');q('speed').focus({preventScroll:true});}};
+  q('transport-close').onclick=()=>{closeMenu();transportMore.focus({preventScroll:true});};
+  q('scroll-back').onclick=()=>scrollTransport(-1);q('scroll-forward').onclick=()=>scrollTransport(1);
   q('pooled-retry').onclick=()=>{const state=getState();if(q('pooled-retry').hidden||state.status!=='error'||!state.origin)return;q('model').value='pooled';void start(state.origin);};
   q('scrub').oninput=()=>controller.seek(Number(q('scrub').value));
   // A settings change reloads the preview; only a start action may confirm it.
@@ -765,7 +814,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(event.shiftKey||event.ctrlKey||event.metaKey||event.altKey||!['ArrowUp','ArrowDown','Home','End'].includes(event.key))return;
     const nodes=['select-chart','select-date','select-random','select-first'].map(q).filter(node=>!node.disabled),index=nodes.indexOf(doc.activeElement);
     if(index<0)return;event.preventDefault();event.stopPropagation();const next=event.key==='Home'?0:event.key==='End'?nodes.length-1:(index+(event.key==='ArrowUp'?-1:1)+nodes.length)%nodes.length;nodes[next].focus();});
-  const dismissMenu=event=>{if(active&&!q('select-panel').hidden&&!panel.contains(event.target))closeMenu();};
+  const dismissMenu=event=>{if(active&&(overlay==='menu'||overlay==='transport')&&!panel.contains(event.target))closeMenu();};
   doc.addEventListener('pointerdown',dismissMenu,true);
   q('entry-continue').onclick=()=>{readStored();savedSummary();if(!stored||storageReadError)return;saveBaseText=storedText;const saved={...stored};closeChoice();void open({resume:saved});};
   q('entry-new').onclick=()=>{readStored();saveBaseText=storageReadError?undefined:storedText;closeChoice();if(atlasAvailable)q('mode').value=preferredMode;void open({selectOnly:true});};
@@ -868,6 +917,13 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       else if(event.key==='Tab'){event.preventDefault();event.stopImmediatePropagation();const nodes=(overlay==='entry'?['entry-continue','entry-new','entry-cancel']:['exit-save','exit-confirm','exit-cancel']).map(q).filter(node=>!node.disabled),index=nodes.indexOf(doc.activeElement);nodes[(index+(event.shiftKey?-1:1)+nodes.length)%nodes.length]?.focus();}
       else event.stopImmediatePropagation();
       return;
+    }
+    if(overlay==='transport'){
+      if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();closeMenu();transportMore.focus({preventScroll:true});return;}
+      if(event.key==='Tab'){
+        const nodes=[q('transport-close'),q('speed'),q('live')].filter(node=>!node.disabled),index=nodes.indexOf(doc.activeElement);
+        event.preventDefault();event.stopImmediatePropagation();nodes[(index+(event.shiftKey?-1:1)+nodes.length)%nodes.length]?.focus({preventScroll:true});return;
+      }
     }
     if(event.ctrlKey||event.metaKey||event.altKey)return;
     if(event.target.closest?.('input,select,textarea,[contenteditable=true],dialog'))return;

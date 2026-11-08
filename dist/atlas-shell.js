@@ -27,6 +27,7 @@ import {atlasSitePath} from './site-paths.js';
 import { atlasPages, atlasNavigationPages, atlasNavigationId, labPageFromLocation } from './atlas-navigation.js?v=1.36.1';
 import { readShellPreference, writeShellPreference } from './atlas-shell-state.js';
 import { mountCenterWorkbench } from './center-workbench.js?v=1.36.1';
+import { mountShellSlots } from './ui/shell-slots.js';
 
 const pageNames = { outlook: '통합 차트', compare: '사이클 비교', evidence: '리서치 자료', data: '자산 비교표', ipo: '공모주 캘린더', market: '세 축 연구실' };
 
@@ -43,11 +44,12 @@ export function mountRailTooltip(document) {
   const trigger = target => target?.closest?.('.workbench-rail button, .workbench-rail a, .atlas-sidebar .workbench-icon');
   const hide = () => { tooltip.hidden = true; current = null; };
   const show = node => {
-    if (!node || node.disabled || document.body.dataset.shell !== 'chart' || view?.matchMedia?.('(max-width: 620px)').matches) { hide(); return; }
+    const reason = node?.getAttribute('data-disabled-reason') || node?.getAttribute('aria-description');
+    if (!node || node.disabled && !reason || document.body.dataset.shell !== 'chart' || view?.matchMedia?.('(max-width: 620px)').matches) { hide(); return; }
     const label = node.getAttribute('aria-label') || node.getAttribute('title');
     if (!label) { hide(); return; }
     current = node;
-    tooltip.textContent = label;
+    tooltip.textContent = node.disabled && reason ? `${label} · ${reason}` : label;
     tooltip.hidden = false;
     const bounds = node.getBoundingClientRect();
     const tip = tooltip.getBoundingClientRect();
@@ -161,5 +163,6 @@ export function initAtlasShell() {
   workspaceObserver.observe(workspace, { childList: true });
   sync();
   const removeRailTooltip = mountRailTooltip(document);
-  return () => { removeRailTooltip(); pageObserver.disconnect(); workspaceObserver.disconnect(); document.removeEventListener('click', routeToService, true); };
+  const shellSlots = mountShellSlots(document);
+  return () => { shellSlots.destroy(); removeRailTooltip(); pageObserver.disconnect(); workspaceObserver.disconnect(); document.removeEventListener('click', routeToService, true); };
 }

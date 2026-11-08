@@ -1,11 +1,41 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {isExpectedOfflineBtcRefresh,offlineBtcRefreshSurface} from '../scripts/btc-offline-refresh-policy.mjs';
+import {isExpectedOfflineBtcRefresh,offlineBtcRefreshSurface,ownsOfflineBtcPriceReadout} from '../scripts/btc-offline-refresh-policy.mjs';
 import {consolidatedWorkspaceCases} from '../scripts/verify-consolidated-workspace-browser.mjs';
 const policy={surface:'btc',archiveAsOf:'2026-10-25'};
 const error={url:'https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-10-27&page_size=10000&paging_from=start',
   networkEvent:'Network.loadingFailed',requestId:'1.2',frameId:'frame',loaderId:'document',method:'GET',resourceType:'Fetch',blockedReason:'inspector',errorText:'',
   requestWallTime:Date.parse('2026-10-27T04:00:00Z')/1000};
+test('the active BTC outlook requires its quote even when that quote is missing or incorrect',()=>{
+  for(const center of [undefined,null,''])for(const price of [undefined,'','$1.00','$75,826.53'])
+    assert.equal(ownsOfflineBtcPriceReadout({page:'outlook',nativeSymbol:'BTCUSD',center,price}),true,
+      'Missing or incorrect BTC content must reach the browser price assertions, not disable them');
+});
+test('hosted centers do not borrow the background BTC parent price readout',()=>{
+  for(const center of ['rsi','themes','housing','evidence','market-us','data']){
+    const observed={page:'outlook',nativeSymbol:'BTCUSD',center};
+    assert.equal(ownsOfflineBtcPriceReadout(observed),false,center);
+    assert.equal(ownsOfflineBtcPriceReadout({...observed,price:'$75,826.53'}),false,
+      'A retained background quote cannot establish current chart ownership');
+  }
+});
+test('other native pages keep their existing no-current-price contract',()=>{
+  for(const page of ['evidence','data','relay','market',undefined])
+    assert.equal(ownsOfflineBtcPriceReadout({page,nativeSymbol:'BTCUSD'}),false);
+});
+test('the observed housing-owner regression keeps all offline request eligibility checks',()=>{
+  // Build 45074d86 observed this native BTC document underneath the active
+  // Gyeonggi housing center. Its failed notice and blocked request still need
+  // their normal frame/loader/cutoff verification; only the price owner differs.
+  const observed={page:'outlook',nativeSymbol:'BTCUSD',center:'housing',price:undefined};
+  assert.equal(ownsOfflineBtcPriceReadout(observed),false);
+  const surface=offlineBtcRefreshSurface({surface:'btc'},observed);
+  assert.equal(surface,'btc');
+  assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface}),true);
+  for(const change of [{frameId:''},{loaderId:''},{requestId:''},{blockedReason:'other'},
+    {url:error.url.replace('assets=btc','assets=eth')},{httpStatus:503}])
+    assert.equal(isExpectedOfflineBtcRefresh({...error,...change},{...policy,surface}),false);
+});
 test('only the exact stale BTC archive request is eligible for a separately verified offline failure',()=>{
   for(const surface of ['btc','evidence','legacy','preview'])assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface}),true);
   for(const surface of ['eth','data',undefined])assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface}),false);

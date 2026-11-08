@@ -1,4 +1,7 @@
 import {workspaceInstrument} from './workspace-instruments.js';
+import {refreshShellSlots} from './ui/shell-slots.js';
+import {chartUrlRange,writeChartUrlState} from './ui/chart-url-state.js';
+import {normalizePriceDomain} from './price-axis.js';
 
 // These actions retain native ETH/equity data and handlers. Shared chart
 // acknowledgements must never grant them ownership of a different instrument.
@@ -7,7 +10,7 @@ export const nativeChartControlSelector='#eth-history-trigger,[data-eth-action],
 // All observed instruments use the existing perimeter. The underlying native
 // chart retains its state; only an acknowledged current frame owns controls.
 export function createChartWorkbenchControls({send,isActive}) {
-  let scope=null,state=null;const saved=new Map(),added=new Set();
+  let scope=null,state=null,urlRevision=null;const saved=new Map(),added=new Set();
   // Background BTC paints may finish after the iframe acknowledgement. Keep
   // only the owned perimeter contextual while active; never observe the chart.
   const observer=typeof MutationObserver==='undefined'?null:new MutationObserver(()=>{if(state&&isActive())update(state);});
@@ -23,10 +26,28 @@ export function createChartWorkbenchControls({send,isActive}) {
     observer?.disconnect();
     for(const node of added)node.remove();added.clear();
     for(const [node,old]of saved){for(const attribute of [...node.attributes])node.removeAttribute(attribute.name);for(const [key,value]of old.attributes)node.setAttribute(key,value);node.inert=old.inert;if('disabled'in node)node.disabled=old.disabled;if(old.text!==null)node.replaceChildren(...old.text);if(old.value!==undefined)node.value=old.value;}
-    saved.clear();state=null;scope=null;delete document.body.dataset.rsiControls;delete document.body.dataset.chartControls;
+    saved.clear();state=null;scope=null;urlRevision=null;delete document.body.dataset.rsiControls;delete document.body.dataset.chartControls;
   }
   function begin(symbol,epoch){restore();scope={symbol,epoch};document.body.dataset.rsiControls='loading';document.body.dataset.chartControls='loading';text($('#history-journal-toggle'),'기록');attr($('#history-journal-toggle'),'aria-label',`${symbol} 기록 준비`);text($('#workbench-range-label'),'');text($('#atlas-update-status'),'—');attr($('#atlas-update-status'),'aria-label',`${symbol} 자료 로딩`);}
   function matches(message){return scope&&isActive()&&message?.symbol===scope.symbol&&message?.epoch===scope.epoch;}
+  function syncUserUrl(message){
+    const revision=message.userViewRevision;
+    if(!Number.isSafeInteger(revision)||revision<0)return;
+    // A restored cached frame may already have edits. Its first acknowledgement
+    // establishes ownership and a baseline; opening it never writes history.
+    if(urlRevision===null){urlRevision=revision;return;}
+    if(revision<=urlRevision)return;
+    const view=message.urlView;
+    if(!view||['frequency','chartType','scale','start','end','autoScale','magnet'].some(key=>view[key]!==message[key])||typeof view.inverted!=='boolean'||!chartUrlRange(view,view.frequency))return;
+    if(view.domain!=null&&!normalizePriceDomain(view.domain,{scale:view.scale}))return;
+    urlRevision=revision;
+    try{
+      const query=new URLSearchParams(location.search);
+      if(query.get('symbol')?.toUpperCase()!==scope.symbol)return;
+      const next=writeChartUrlState(query,view,{explicit:true});
+      if(next.toString()!==query.toString())history.replaceState(history.state,'',`${location.pathname}?${next}${location.hash||''}`);
+    }catch{/* A readonly/isolated preview keeps its current chart state. */}
+  }
   function command(action,value){
     if(!state||!isActive())return;
     if(action==='frequency'&&!state.frequencies.includes(value)){update(state);return;}
@@ -94,6 +115,7 @@ export function createChartWorkbenchControls({send,isActive}) {
     if(!['atlas:rsi-state','atlas:chart-state'].includes(message.kind)||message.ready!==true||message.unit!==expectedUnit||!Array.isArray(frequencies)||!frequencies.length||frequencies.some(value=>!allowed.includes(value))||!frequencies.includes(message.frequency)||!['log','linear'].includes(message.scale)||!['line','candles'].includes(message.chartType)||!['crosshair','pan','measure'].includes(message.tool)||!['off','weak','strong'].includes(message.magnet)||!['start','end','first','last','selected'].every(key=>validDay(message[key]))||message.start>message.end||message.first>message.last||message.selected<message.first||message.selected>message.last||!['candles','canUndo','canRedo','measurement','autoScale'].every(key=>typeof message[key]==='boolean')||!closeValid||monthly&&(message.candles||message.chartType!=='line')||['priceLast','volumeLast'].some(key=>message[key]!=null&&!validDay(message[key])))return false;
     observer?.disconnect();
     state={...message,frequencies,records:message.records??legacy,nextSignal:message.nextSignal??legacy};message=state;
+    syncUserUrl(message);
     document.body.dataset.rsiControls='ready';document.body.dataset.chartControls='ready';
     for(const selector of ['.atlas-canvas-heading','.workbench-tools','.workbench-detail-tools','.workbench-bottom-bar','.mobile-extra-actions','#workbench-frequency','#workbench-navigation','.workbench-ranges','.workbench-axis','.workspace-history-controls']){const node=$(selector);enable(node);if(node)attr(node,'inert',null);}
     for(const child of $('.atlas-canvas-heading')?.children||[])if(!child.matches(`${nativeChartControlSelector},#workbench-scenario,#atlas-cycle-panel,#workbench-replay`)){enable(child);attr(child,'inert',null);}
@@ -127,13 +149,30 @@ export function createChartWorkbenchControls({send,isActive}) {
     }
     attr($('#lab-svg'),'aria-label',`${scope.symbol} 차트 내보내기 · PNG/SVG`);attr($('#lab-svg'),'title',`${scope.symbol} 차트 내보내기 · PNG/SVG`);attr($('#workbench-workspace'),'aria-label',`${scope.symbol} 차트 명령 검색 · Ctrl/⌘ K`);
     text($('#history-journal-toggle'),'기록');enable($('#workbench-annotations'));attr($('#workbench-annotations'),'aria-label',`${scope.symbol} 측정·선택 데이터`);
-    // RSI already exposes its chart/backtest/records tabs in the shared header.
-    // Other instruments still use the bottom record action.
-    attr($('#history-journal-toggle'),'hidden',instrument?.page==='rsi'?'':null);
+    // Keep the same footer record slot even when the current instrument also
+    // exposes records in its own toolbar.
+    attr($('#history-journal-toggle'),'hidden',null);
     attr($('[data-reader=events]'),'aria-label',`${scope.symbol} ${recordLabel}`);attr($('[data-reader=volume]'),'aria-label',`${scope.symbol} 거래량 표시 설정`);
     for(const node of document.querySelectorAll('[data-reader]')){const pane=route(node)?.[1],label=node.getAttribute('aria-label')||node.textContent;attr(node,'aria-expanded',message.pane===pane);attr(node,'title',label.startsWith(scope.symbol)?label:`${scope.symbol} ${label}`);}
     for(const id of ['atlas-mode-menu','atlas-display-options','workbench-workspace','workbench-go-date'])attr($('#'+id),'aria-expanded',message.pane===ids[id][1]);
     for(const node of document.querySelectorAll('[data-mobile-target]')){const target=route(node);if(target){enable(node,target[0]==='undo'?message.canUndo:target[0]==='redo'?message.canRedo:true);if(node.dataset.mobileTarget==='#workbench-workspace'){text(node.querySelector('span')||node,'명령 검색');attr(node,'aria-label',`${scope.symbol} 차트 명령 검색`);}}else{enable(node,false);attr(node,'hidden','');}}
+    const disabledReasons={
+      'workbench-chart-type':message.candles?null:'OHLC 자료가 없어 관측 가격선만 지원합니다.',
+      'workbench-undo':message.canUndo?null:'취소할 차트 변경이 없습니다.',
+      'workbench-redo':message.canRedo?null:'다시 실행할 차트 변경이 없습니다.',
+      'workbench-clear':message.measurement?null:'완료한 측정이 없습니다.',
+      'workbench-next-turn':message.nextSignal?null:'이 종목은 기준선 신호 이동을 지원하지 않습니다.',
+      'history-journal-toggle':message.records?null:'이 종목에는 공개된 판정 기록이 없습니다.',
+    };
+    for(const [id,reason]of Object.entries(disabledReasons)){
+      const node=$('#'+id);attr(node,'data-disabled-reason',reason);attr(node,'aria-description',reason);
+    }
+    for(const node of document.querySelectorAll('.workbench-tools [data-chart-tool],.workbench-tools [data-chart-navigation],.workbench-detail-tools [data-reader],.workbench-help')){
+      const label=node.getAttribute('aria-label')||node.title||node.textContent;
+      attr(node,'aria-label',`${scope.symbol} ${label.replace(/^(?:BTCUSD|BTC|ETHUSD|ETH|MSTR|BMNR|TQQQ|SOXL|233740|HYPE|HOUSING-[A-Z]+)\s+/,'')}`);
+      if(node.disabled){const reason=node.dataset.reader==='events'?'이 종목에는 공개된 판정 기록이 없습니다.':'현재 상태에서는 이 조작을 사용할 수 없습니다.';attr(node,'data-disabled-reason',reason);attr(node,'aria-description',reason);}else{attr(node,'data-disabled-reason',null);attr(node,'aria-description',null);}
+    }
+    refreshShellSlots(document,{symbol:scope.symbol});
     for(const selector of ['.atlas-canvas-heading','.workbench-bottom-bar','.workbench-tools','.workbench-detail-tools']){const node=$(selector);if(node)observer?.observe(node,{subtree:true,attributes:true,childList:true,characterData:true});}
     return true;
   }

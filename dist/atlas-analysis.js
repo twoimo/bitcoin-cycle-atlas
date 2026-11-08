@@ -274,15 +274,15 @@ function renderPeaks({svg,dataset,onInspect,presentation}) {
   const series=analysis.cycles.map((c,i)=>({...c,color:i===analysis.cycles.length-1?GOLD:COLORS[i],points:rows.filter(p=>p.date>=c.halvingDate&&p.date<=c.peak.date).map(p=>({...p,elapsed:p.day-D(c.halvingDate),value:p.price/c.peak.price*100}))}));
   let selected=clamp(saved?.key===key?saved.index:series.length-1,0,series.length-1);
   const maxDay=Math.ceil(Math.max(...series.map(s=>s.peak.dayAfterHalving))/100)*100;
-  const x=day=>g.L+day/maxDay*(g.W-g.L-g.R),y=value=>g.B-(value/110)*(g.B-g.T),title='고점 부근에 언제 먼저 도착했나',caption='각 사이클의 관측 최고값 = 100% · 반감기 이후 경과일';
+  const x=day=>g.L+day/maxDay*(g.W-g.L-g.R),y=value=>g.B-(value/110)*(g.B-g.T),title='고점 부근에 언제 먼저 도착했나',caption='각 사이클의 관측 최고값 = 100% · 고점권 95%는 사후 정의';
   const note='최고값의 95%에 처음 도착한 날과 최종 관측 최고값 날짜를 구분합니다. 최고값을 나중에 알아야 계산할 수 있는 사후 비교입니다.';
   let initialInspection;
-  function inspect(){const s=series[selected];return {label:`${s.peakYear}년 고점 · 95% 구간`,date:s.firstEntry.date,kind:'observed',fields:[{label:'고점 부근 첫 도착',value:dateText(s.firstEntry.date)},{label:'최고값까지 남았던 시간',value:`${format(s.firstEntry.daysBeforePeak)}일`},{label:'최고 일말 가격 날짜',value:dateText(s.peak.date)},{label:'최고 일말 가격',value:money(s.peak.price)},{label:'첫 도착 이후 최대 하락',value:percent(s.zoneStats.maxDrawdownPct)}],note:`반감기 후 ${format(s.firstEntry.dayAfterHalving)}일에 95% 구간 첫 진입. ${s.current?'최신 사이클 최고값은 현재까지 관측한 비교 기준입니다. ':''}그 뒤 내내 횡보하거나 95% 이상을 유지했다는 뜻은 아닙니다.`};}
+  function inspect(){const s=series[selected];return {label:`${s.peakYear}년 고점 · 95% 구간`,date:s.firstEntry.date,kind:'observed',fields:[{label:'고점 부근 첫 도착',value:dateText(s.firstEntry.date)},{label:'최고값까지 남았던 시간',value:`${format(s.firstEntry.daysBeforePeak)}일`},{label:'최고 일말 가격 날짜',value:dateText(s.peak.date)},{label:'최고 일말 가격',value:money(s.peak.price)},{label:'첫 도착 이후 최대 하락',value:percent(s.zoneStats.maxDrawdownPct)}],note:`95% 고점권은 나중에 확인한 최고값으로 계산하는 사후 정의입니다. 당시 알 수 있던 신호가 아닙니다. 반감기 후 ${format(s.firstEntry.dayAfterHalving)}일에 95% 구간 첫 진입. ${s.current?'최신 사이클 최고값은 현재까지 관측한 비교 기준입니다. ':''}그 뒤 내내 횡보하거나 95% 이상을 유지했다는 뜻은 아닙니다.`};}
   function draw({user=false,origin='render'}={}){
     let out=frame(svg,g,title,note);
     out+=`<rect x="${g.L}" y="${y(100)}" width="${g.W-g.L-g.R}" height="${y(95)-y(100)}" fill="#f2b15a" opacity=".13"/>`;
     for(const v of (g.ticks<4?[0,50,100]:[0,25,50,75,100])){const yy=y(v);out+=`<line x1="${g.L}" x2="${g.W-g.R}" y1="${yy}" y2="${yy}" stroke="${GRID}"/><text data-indicator-axis-label x="${g.L-9}" y="${yy+4}" text-anchor="end" fill="${MUTED}" font-size="12">${v}%</text>`;}
-    out+=`<line x1="${g.L}" x2="${g.W-g.R}" y1="${y(95)}" y2="${y(95)}" stroke="${GOLD}" stroke-dasharray="4 4" opacity=".65"/><text x="${g.L}" y="${g.short?16:20}" fill="${MUTED}" font-size="12">원: 95% 첫 진입 · 사각: 최고값</text>`;
+    out+=`<line x1="${g.L}" x2="${g.W-g.R}" y1="${y(95)}" y2="${y(95)}" stroke="${GOLD}" stroke-dasharray="4 4" opacity=".65"/><text x="${g.L}" y="${g.short?16:20}" fill="${MUTED}" font-size="12">원: 95% 첫 진입(사후) · 사각: 최고값</text>`;
     const step=g.small?200:100;
     for(let day=0;day<=maxDay;day+=step){const xx=x(day);out+=`<line x1="${xx}" x2="${xx}" y1="${g.T}" y2="${g.B}" stroke="${GRID}"/><text data-indicator-axis-label x="${xx}" y="${g.axisY}" fill="${MUTED}" text-anchor="${xx>g.W-28?'end':'middle'}" font-size="12">${day}일</text>`;}
     series.forEach((s,i)=>{out+=`<path data-indicator-line d="${line(s.points,p=>x(p.elapsed),y)}" fill="none" stroke="${s.color}" stroke-width="${i===selected?2.4:1.4}" opacity="${i===selected?1:.55}"/>`;

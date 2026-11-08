@@ -1,5 +1,5 @@
 import { setLoadingSurface } from './loading-surfaces.js';
-import { mountNativeChartApp, mountNativeChartWorkbench } from './native-chart-workbench.js?v=1.36.1';
+import { mountNativeChartApp, mountNativeChartWorkbench, nativeDateRange } from './native-chart-workbench.js?v=1.36.1';
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
 import {buildEthereumForecasts} from './ethereum-forecast.js';
 import {buildEthereumAdaptiveForecast} from './ethereum-adaptive-model.js';
@@ -16,6 +16,7 @@ import { mountChartTouchTracking } from "./chart-touch-tracking.js?v=1.29.0";
 import { clearChartHover } from './chart-hover.js?v=1.29.0';
 import { mountSymbolSelector } from './symbol-selector.js?v=1.35.0';
 import { readEthView, ethViewQuery, ethHistoryRange } from './eth-view-state.js?v=1.36.1';
+import { readChartUrlState } from './ui/chart-url-state.js';
 import { ETHEREUM_EVENTS, ETHEREUM_EVENT_COLORS, getEthereumEvents } from './ethereum-events.js?v=1.29.0';
 import { mountEthereumHistory, readEthereumEventSettings, ethereumEventQuery, ethereumEventRange } from './ethereum-history.js?v=1.29.0';
 
@@ -45,6 +46,9 @@ export async function initEthView() {
   document.title = 'ETHUSD · Ethereum — Bitcoin Cycle Atlas';
   const params = new URLSearchParams(location.search);
   const state = {...readEthView(params),ethModel:['pooled','valuation'].includes(params.get('eth-model'))?params.get('eth-model'):(!params.has('eth-model')&&params.has('eth-scenario'))?'valuation':'adaptive',forecastVisible:params.get('forecast')!=='off',ethScenario:['stress','base','bull'].includes(params.get('eth-scenario'))?params.get('eth-scenario'):'base',eventSettings:readEthereumEventSettings(params),selectedHistoryEvent:null,tool:'crosshair',range:null,rangeTouched:false,priceDomain:null,controller:null,selectedTime:null,measurement:null,magnet:'off',showVolume:false,invertScale:false,frame:null,loading:false,error:null,refreshError:null};
+  const urlView=readChartUrlState(params,{frequencies:[state.frequency]});
+  Object.assign(state,{priceDomain:urlView.priceDomain,magnet:urlView.magnet,invertScale:urlView.invertScale});
+  let pendingUrlRange=urlView.range;
   let workbench=null,intervalViewport=null;
   let forecastBundle=null,forecastError=null,adaptiveForecast=null,adaptiveError=null,pooledForecast=null,pooledError=null,infoMode='data';
   let payload = null, daily = null, weekly = null, archiveRequest = null, generation = 0, navigationRevision = 0, ready = false, suspended = false;
@@ -102,14 +106,20 @@ export async function initEthView() {
   },preview:point=>state.controller?.previewPointer?.(point),clear:()=>state.controller?.clearPreview?.(),cancelNavigation:()=>navigation.cancelGesture(),resumeNavigation:points=>navigation.resumeTouchGesture(points),onChange:active=>{$('#eth-touch-hint').hidden=!active;}});
   $('#eth-touch-hint').onclick=()=>touch.cancel();
   const navigation = bindChartNavigation({element:plot,getRange:()=>svg.dataset.chartReplayActive==='true'||document.body.dataset.centerTool?null:withChartSpacing(state.range?{...state.range,allowEmpty:true}:null,{frequency:state.frequency,plotWidth:Number(svg.dataset.plotRight)-Number(svg.dataset.plotLeft)}),getTool:()=>state.tool,getPriceAxis:()=>state.controller?.getPriceScale?.(),getContext:context=>state.controller?.getSelection?.(context),
-    onGestureStart:()=>{touch.cancelPending();workbench?.beginGesture();},onGestureEnd:()=>workbench?.endGesture(),onMenuOpen:()=>touch.cancel(),onRangeChange:range=>{++navigationRevision;state.range=range;state.rangeTouched=true;if(isIntradayInterval(state.frequency))void market.ensureRange(state.frequency,range);schedule();},
+    onGestureStart:()=>{touch.cancelPending();workbench?.beginGesture();},onGestureEnd:()=>{if(workbench?.endGesture())persist();},onMenuOpen:()=>touch.cancel(),onRangeChange:range=>{++navigationRevision;state.range=range;state.rangeTouched=true;if(isIntradayInterval(state.frequency))void market.ensureRange(state.frequency,range);schedule();},
     onPriceRangeChange:domain=>{++navigationRevision;state.priceDomain=domain;schedule();},onPriceReset:()=>{++navigationRevision;state.priceDomain=null;schedule();},onReset:()=>resetRange(false),onAnnounce:announce});
   document.addEventListener('atlas:modal-open',event=>{touch.cancel();navigation.cancelGesture();if(event.detail?.id!==info.id&&info.open)info.close();});
   document.addEventListener('atlas:chart-replay-open',()=>{touch.cancel();navigation.cancelGesture();});
   const historyWorkbench = mountEthereumHistory({button:$('#eth-history-trigger'),initialSettings:state.eventSettings,
     onSettingsChange:settings=>{cancelInteraction();state.eventSettings=settings;persist();schedule();},onFocusEvent:focusHistoricalEvent});
 
-  function persist(){try{history.replaceState(null,'',`${location.pathname}?${ethereumEventQuery(ethViewQuery(state),state.eventSettings)}`);}catch{}}
+  function persist(){
+    // Frequency changes retain the visible dates before their next paint. Use
+    // the same target grid as render(), so the share URL describes that view.
+    let range=state.range;
+    if(!range&&intervalViewport){const series=currentSeries(),target=isIntradayInterval(state.frequency)?market.range(state.frequency):series?ethHistoryRange(series,state.span,null,visibleForecast()?.displayEnd):null;if(target)range=retargetChartRange(intervalViewport.range,target);}
+    try{history.replaceState(null,'',`${location.pathname}?${ethereumEventQuery(ethViewQuery({...state,range}),state.eventSettings)}`);}catch{}
+  }
   function cancelInteraction(){touch.cancel();navigation.cancelGesture();clearChartHover(svg);state.selectedTime=null;}
   function resetRange(cancel=true){if(cancel)cancelInteraction();++navigationRevision;intervalViewport=null;state.range=null;state.rangeTouched=false;state.priceDomain=null;state.span='4y';persist();schedule();}
   async function focusHistoricalEvent(id){
@@ -238,6 +248,7 @@ export async function initEthView() {
     if(!state.range){
       const target=intraday?market.range(state.frequency):ethHistoryRange(series,state.span,null,forecast?.displayEnd);
       state.range=intervalViewport?retargetChartRange(intervalViewport.range,target):target;
+      if(pendingUrlRange&&state.range){state.range=nativeDateRange(state.range,{ok:true,range:pendingUrlRange})||state.range;state.rangeTouched=true;pendingUrlRange=null;if(intraday)void market.ensureRange(state.frequency,state.range);}
       if(intervalViewport&&state.range){
         const selected=intervalViewport.selectedTime;
         if(Number.isSafeInteger(selected))state.selectedTime=state.range.min+Math.round((selected-state.range.min)/state.range.step)*state.range.step;
@@ -344,6 +355,8 @@ export async function initEthView() {
     suspended=false;
     if(!currentSeries())void load();else schedule();
   });
-  persist();await load();
+  // Opening a chart must retain the supplied URL. Explicit controls still
+  // serialize their state through persist(), after the user changes the view.
+  await load();
   await new Promise(resolve=>requestAnimationFrame(()=>{render();resolve();}));
 }

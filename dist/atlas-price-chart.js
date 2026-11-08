@@ -12,6 +12,8 @@ import { priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxis
 import { createPriceDisplay, formatDisplayPrice } from './price-display.js?v=1.29.0';
 import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.36.1';
 import { researchAnnotationsMarkup } from './research-annotations.js?v=1.29.0';
+import { refreshChartLegendGeometry } from './ui/chart-legend.js?v=1.36.1';
+import { chartLegendSlot, placePlotLabel } from './ui/chart-legend-layout.js';
 
 import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.29.0';
 
@@ -79,7 +81,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   // Match the allocated viewport instead of shrinking a fixed-height drawing.
   // An explicitly enabled secondary band stays present even in a short chart.
   const W=Math.max(1,Math.round(svg.clientWidth||svg.parentElement?.clientWidth||1100)),H=Math.max(1,Math.round(svg.clientHeight||svg.parentElement?.clientHeight||500)),small=W<600,compactHeight=H<320;
-  const layout=chartPaneLayout({width:W,height:H,volume:showVolume,drawdown:showDrawdown,states:showStates,cycleTiming:showCycleTiming,top:Number.isFinite(headerInset)?Math.max(8,headerInset):compactHeight?62:70});
+  const layout=chartPaneLayout({width:W,height:H,volume:showVolume,drawdown:showDrawdown,states:showStates,cycleTiming:showCycleTiming,top:Number.isFinite(headerInset)?Math.max(8,headerInset):compactHeight?62:70,bottomInset:Number(svg.dataset.replayTransportInset)||0});
   const axisText=createPriceAxisLayout({svg,width:W,left:layout.left,minRight:layout.right});layout.right=axisText.right;
   const {left:L,right:R,top:T,axisY,dateBadgeTop,priceBottom,ddTop,ddBottom,stateTop,stateBottom,volumeTop,volumeBottom,cycleTop,cycleBottom}=layout,stateHeight=stateBottom-stateTop,ddHeight=ddBottom-ddTop;
   // Position HTML annotations from the same measured price plot. This does not
@@ -248,17 +250,23 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   // Evidence controls stay on their original model date and price. Reserve
   // their painted dot and title before placing surrounding period labels.
   const evidenceMarkers=forecastEvidence.filter(item=>item.date>split&&item.date>=start&&item.date<=end&&Number.isFinite(item.price)&&item.price>0);
+  const protectedAnchors=evidenceMarkers.map(item=>({x:x(item)-10,y:y(item.price)-10,width:20,height:20})).filter(box=>box.y+box.height>=T&&box.y<=priceBottom);
+  const legendNode=svg.parentElement?.querySelector?.('.chart-legend-dock');
+  const legendGeometry={width:W,height:H,left:L,right:W-R,top:T,bottom:priceBottom,protectedAnchors};
+  const legendSlot=legendNode&&!legendNode.hidden&&svg.parentElement?.dataset?.chartFocus!=='true'?(refreshChartLegendGeometry(svg.parentElement,legendGeometry)||chartLegendSlot({...legendGeometry,viewportWidth:svg.ownerDocument?.defaultView?.innerWidth||W})):null;
+  const upperOverlayObstacles=[...cycleOverlayObstacles,...priceChartOverlayObstacles(svg),...(legendSlot?[{x:legendSlot.x-4,y:legendSlot.y-4,width:legendSlot.width+8,height:legendSlot.height+8}]:[])];
   const evidenceLayout=[];let lastEvidenceX=-Infinity;
   for(const item of evidenceMarkers){
     const xx=x(item),yy=y(item.price);if(xx-lastEvidenceX<60||yy<T||yy>priceBottom)continue;
-    lastEvidenceX=xx;const labelX=Math.max(L+36,Math.min(W-R-36,xx)),labelY=yy<T+35?yy+28:yy-15;
-    evidenceLayout.push({item,xx,yy,labelX,labelY});
+    lastEvidenceX=xx;const preferredX=Math.max(L+36,Math.min(W-R-36,xx)),preferredY=yy<T+35?yy+28:yy-15;
+    const labelBox=placePlotLabel({x:preferredX-33,y:preferredY-11,width:66,height:17,left:L+2,right:W-R-2,top:T+2,bottom:priceBottom-2,obstacles:[...upperOverlayObstacles,...protectedAnchors,...evidenceLayout.flatMap(item=>item.labelBox?[item.labelBox]:[])]});
+    evidenceLayout.push({item,xx,yy,labelBox,labelX:labelBox?labelBox.x+33:preferredX,labelY:labelBox?labelBox.y+11:preferredY});
   }
-  const evidenceObstacles=evidenceLayout.flatMap(({xx,yy,labelX,labelY})=>[
+  const evidenceObstacles=evidenceLayout.flatMap(({xx,yy,labelBox})=>[
     {x:xx-10,y:yy-10,width:20,height:20},
-    {x:labelX-33,y:labelY-11,width:66,height:17},
+    ...(labelBox?[labelBox]:[]),
   ]);
-  const historicalObstacles=[...cycleOverlayObstacles,...priceChartOverlayObstacles(svg),...evidenceObstacles];
+  const historicalObstacles=[...upperOverlayObstacles,...evidenceObstacles];
   // Historical names and period arrows share one plot. Reserve the period
   // band before placing names; dots retain their true date/price positions.
   if(showHistoricalEvents&&showCycleIntervals){
@@ -273,9 +281,21 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
     historyLabelObstacles.push(...labels.markers.filter(marker=>marker.box).map(marker=>marker.box));
     s+=`<g class="history-events-layer" data-indicator-layer="history">${labels.markup}</g>`;svg.dataset.historyLabelCount=String(labels.labelCount);svg.dataset.historyEventCount=String(labels.totalCount);svg.dataset.historyLabelMode=labels.labelMode;svg.dataset.historyHiddenLabelCount=String(labels.hiddenLabelCount);
   }else{svg.dataset.historyLabelCount='0';svg.dataset.historyEventCount='0';svg.dataset.historyLabelMode='off';svg.dataset.historyHiddenLabelCount='0';}
-  if(nextTurn&&nextTurn.date>=start&&nextTurn.date<=end){const xx=xday(dayOf(nextTurn.date)),headerFixed=small||fullHistory,anchor=headerFixed||xx>W-190?'end':'start',tx=headerFixed?W-R:anchor==='end'?xx-7:xx+7,label=`${nextTurn.type==='high'?'조정':'반등'} 후보 · D-${nf(nextTurn.days)}`,width=132,left=anchor==='end'?tx-width:tx-5,badgeY=Math.max(2,T-29);s+=`<line x1="${xx}" x2="${xx}" y1="${T}" y2="${bottom}" stroke="#9bc8e8" stroke-dasharray="4 5" opacity=".8"/>`;if(showNextTurnLabel)s+=`<g data-next-turn="${nextTurn.type}" role="button" tabindex="0" aria-label="${esc(label)} · 날짜와 범위 보기" style="cursor:pointer"><title>가정 · ${date(nextTurn.date)} · ${date(nextTurn.lowerDate)}–${date(nextTurn.upperDate)}</title><rect x="${left}" y="${badgeY}" width="${width+5}" height="23" rx="3" fill="#172737"/><text x="${tx}" y="${badgeY+15}" text-anchor="${anchor}" fill="#badcf2" font-size="11">${esc(label)}</text></g>`;}
-  if(!fullHistory&&!small){let lastX=-999;for(const event of events.filter(p=>p.date>=start&&p.date<=end)){const xx=xday(dayOf(event.date)),yy=xx-lastX<140?T+30:T+16;lastX=xx;s+=`<line x1="${xx}" x2="${xx}" y1="${yy+8}" y2="${priceBottom}" stroke="#bca176" stroke-dasharray="2 6" opacity=".45"/><text x="${Math.min(W-R-5,xx)}" y="${yy}" text-anchor="${xx>W-180?'end':'start'}" fill="#c6ad88" font-size="11">${esc(event.shortLabel||event.label)}</text>`;}}
-  if(showCycleMarkers||showCycleIntervals)s+=macroClockMarkup({anchors:cycleClockAnchors,start,end,x,left:L,right:W-R,top:T,bottom:priceBottom});
+  if(nextTurn&&nextTurn.date>=start&&nextTurn.date<=end){
+    const xx=xday(dayOf(nextTurn.date)),headerFixed=small||fullHistory,anchor=headerFixed||xx>W-190?'end':'start',tx=headerFixed?W-R:anchor==='end'?xx-7:xx+7,label=`${nextTurn.type==='high'?'조정':'반등'} 후보 · D-${nf(nextTurn.days)}`,width=137;
+    const box=placePlotLabel({x:anchor==='end'?tx-132:tx-5,y:Math.max(2,T-29),width,height:23,left:L,right:W-R,top:2,bottom:priceBottom,obstacles:[...upperOverlayObstacles,...evidenceObstacles,...historyLabelObstacles]});
+    s+=`<line x1="${xx}" x2="${xx}" y1="${T}" y2="${bottom}" stroke="#9bc8e8" stroke-dasharray="4 5" opacity=".8"/>`;
+    if(showNextTurnLabel&&box)s+=`<g data-next-turn="${nextTurn.type}" role="button" tabindex="0" aria-label="${esc(label)} · 날짜와 범위 보기" style="cursor:pointer"><title>가정 · ${date(nextTurn.date)} · ${date(nextTurn.lowerDate)}–${date(nextTurn.upperDate)}</title><rect x="${box.x}" y="${box.y}" width="${width}" height="23" rx="3" fill="#172737"/><text x="${box.x+width/2}" y="${box.y+15}" text-anchor="middle" fill="#badcf2" font-size="11">${esc(label)}</text></g>`;
+  }
+  if(!fullHistory&&!small){
+    let lastX=-999;const placed=[];
+    for(const event of events.filter(p=>p.date>=start&&p.date<=end)){
+      const xx=xday(dayOf(event.date)),yy=xx-lastX<140?T+30:T+16,label=event.shortLabel||event.label,width=Math.min(W-L-R,Array.from(label).reduce((sum,char)=>sum+(char.charCodeAt(0)>255?11:6.5),0));lastX=xx;
+      const box=placePlotLabel({x:xx>W-180?xx-width:xx,y:yy-12,width,height:16,left:L,right:W-R,top:T,bottom:priceBottom,obstacles:[...upperOverlayObstacles,...evidenceObstacles,...historyLabelObstacles,...placed]});if(box)placed.push(box);
+      s+=`<g class="forecast-event-guide"><title>${esc(event.label)} · ${esc(event.date)}</title><line x1="${xx}" x2="${xx}" y1="${box?box.y+20:yy+8}" y2="${priceBottom}" stroke="#bca176" stroke-dasharray="2 6" opacity=".45"/>${box?`<text class="forecast-event-label" x="${box.x}" y="${box.y+12}" text-anchor="start" fill="#c6ad88" font-size="11">${esc(label)}</text>`:''}</g>`;
+    }
+  }
+  if(showCycleMarkers||showCycleIntervals)s+=macroClockMarkup({anchors:cycleClockAnchors,start,end,x,left:L,right:W-R,top:T,bottom:priceBottom,obstacles:[...upperOverlayObstacles,...evidenceObstacles,...historyLabelObstacles]});
   const milestoneLayer=showCycleMarkers?milestoneMarkersMarkup({markers:cycleMarkers,start,end,x,y,left:L,right:W-R,top:T,bottom:priceBottom,clipId:`${svg.id}-milestone-clip`,activeMarkerId:activeCycleMarkerId,activeMarkerIds:activeCycleMarkerIds,activeInterval:activeCycleInterval}):null;
   let updateCycleOverlayObstacles=()=>null;
   if(showCycleIntervals){
@@ -313,7 +333,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   const annotations=researchAnnotationsMarkup({annotations:researchAnnotations,start,end,x:({date:value})=>xday(typeof value==='number'?value/86400:value.length>10?Date.parse(value)/86400000:dayOf(value)),y,left:L,right:W-R,top:T,bottom:priceBottom,clipId:priceClip,activeId:selectedAnnotation,scenarioId});
   s+=annotations.markup;svg.dataset.researchAnnotationCount=String(annotations.visibleCount);
   s+='<g class="forecast-evidence-layer" clip-path="url(#'+priceClip+')">';
-  for(const {item,xx,yy,labelX,labelY} of evidenceLayout)s+=`<g data-forecast-evidence="${esc(item.id)}" role="button" tabindex="0" aria-label="${esc(item.title)}: ${esc(item.description)}"><circle class="forecast-evidence-dot" cx="${xx}" cy="${yy}" r="9" fill="#151f2c" stroke="#a8c695" stroke-width="1.5"/><text x="${xx}" y="${yy+3.2}" text-anchor="middle" fill="#d5e5c7" font-size="10">i</text><rect class="forecast-evidence-label" x="${labelX-33}" y="${labelY-11}" width="66" height="17" rx="4" fill="#192a23"/><text x="${labelX}" y="${labelY+1}" text-anchor="middle" fill="#c1d8ad" font-size="9">${esc(item.title)}</text><title>${esc(item.description)}</title></g>`;
+  for(const {item,xx,yy,labelX,labelY,labelBox} of evidenceLayout)s+=`<g data-forecast-evidence="${esc(item.id)}" role="button" tabindex="0" aria-label="${esc(item.title)}: ${esc(item.description)}"><circle class="forecast-evidence-dot" cx="${xx}" cy="${yy}" r="9" fill="#151f2c" stroke="#a8c695" stroke-width="1.5"/><text x="${xx}" y="${yy+3.2}" text-anchor="middle" fill="#d5e5c7" font-size="10">i</text>${labelBox?`<rect class="forecast-evidence-label" x="${labelX-33}" y="${labelY-11}" width="66" height="17" rx="4" fill="#192a23"/><text x="${labelX}" y="${labelY+1}" text-anchor="middle" fill="#c1d8ad" font-size="9">${esc(item.title)}</text>`:''}<title>${esc(item.description)}</title></g>`;
   s+='</g>';svg.dataset.forecastEvidenceCount=String(evidenceLayout.length);
 
   s+=`<g id="${svg.id}-cross" pointer-events="none"><line class="cross-time" y1="${T}" y2="${bottom}" stroke="#afc4dd" stroke-dasharray="3 3" opacity=".6"/><line class="cross-price" clip-path="url(#${priceClip})" x1="${L}" x2="${W-R}" stroke="#afc4dd" stroke-dasharray="3 3" opacity=".6"/><circle clip-path="url(#${priceClip})" r="4" fill="#10151c" stroke="#f4dcac" stroke-width="1.5"/><g class="cross-price-tag" clip-path="url(#${axisClip})"><rect x="${W-R}" width="${R-3}" height="18" rx="2" fill="#465366"/><text x="${W-R+axisText.inset}" fill="#edf2f9" font-size="${axisText.badgeFontSize}"></text></g><g class="cross-date-tag"><rect width="80" height="18" rx="2" fill="#39485b"/><text fill="#edf2f9" font-size="10" text-anchor="middle"></text></g></g>`;

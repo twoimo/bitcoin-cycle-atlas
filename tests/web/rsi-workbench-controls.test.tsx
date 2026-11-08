@@ -2,6 +2,38 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { parseHTML } from 'linkedom';
 import { createChartWorkbenchControls, createRsiWorkbenchControls } from '../../dist/rsi-workbench-controls.js';
+
+test('only a scoped user view revision writes common URL state; initialization and cached acknowledgements never write',t=>{
+  const {document,window}=parseHTML('<html><body><header class="atlas-canvas-heading"></header><aside class="workbench-tools"></aside><nav class="workbench-detail-tools"></nav><footer class="workbench-bottom-bar"></footer></body></html>');
+  const previous=new Map(['document','MutationObserver','location','history'].map(key=>[key,Object.getOwnPropertyDescriptor(globalThis,key)]));
+  const location={pathname:'/market-lab/charts/',search:'?symbol=TQQQ&region=seoul',hash:'#price'};
+  const writes:string[]=[];
+  Object.defineProperty(globalThis,'document',{value:document,configurable:true});
+  Object.defineProperty(globalThis,'MutationObserver',{value:window.MutationObserver,configurable:true});
+  Object.defineProperty(globalThis,'location',{value:location,configurable:true});
+  Object.defineProperty(globalThis,'history',{value:{state:{existing:true},replaceState(state:unknown,_title:string,url:string){assert.deepEqual(state,{existing:true});writes.push(url);location.search=new URL(url,'https://atlas.test').search;}},configurable:true});
+  const adapter=createChartWorkbenchControls({send:()=>{},isActive:()=>true});
+  t.after(()=>{adapter.destroy();for(const [key,value]of previous){if(value)Object.defineProperty(globalThis,key,value);else Reflect.deleteProperty(globalThis,key);}});
+  const ready={kind:'atlas:rsi-state',symbol:'TQQQ',epoch:9,ready:true,unit:'USD',timezone:'America/New_York',start:'2025-01-01',end:'2026-01-01',first:'2010-02-11',last:'2026-01-01',selected:'2026-01-01',close:62.01,frequency:'daily',scale:'log',chartType:'line',tool:'crosshair',magnet:'off',autoScale:true,candles:true,canUndo:false,canRedo:false,measurement:false,pane:null};
+  const message=(base:typeof ready,revision:number)=>({...base,userViewRevision:revision,urlView:{frequency:base.frequency,chartType:base.chartType,scale:base.scale,start:base.start,end:base.end,autoScale:base.autoScale,domain:null,inverted:false,magnet:base.magnet}});
+  adapter.begin('TQQQ',9);
+  assert.equal(adapter.update(message(ready,0)),true);assert.equal(writes.length,0,'initial ready message cannot create URL state');
+  assert.equal(adapter.update({...message(ready,0),pane:'method'}),true);assert.equal(writes.length,0,'inspection is not a chart edit');
+  const edited={...ready,scale:'linear',start:'2025-07-01'};
+  assert.equal(adapter.update(message(edited,1)),true);assert.equal(writes.length,1);
+  const query=new URLSearchParams(location.search);
+  assert.equal(query.get('symbol'),'TQQQ');assert.equal(query.get('axis'),'linear');assert.equal(query.get('view-start'),'2025-07-01');assert.equal(query.get('granularity'),'daily');assert.equal(query.get('type'),'line');assert.equal(query.get('region'),'seoul');assert.ok(writes[0].endsWith('#price'));
+  assert.equal(adapter.update(message(edited,1)),true);assert.equal(writes.length,1,'re-rendering an acknowledged edit cannot write again');
+  assert.equal(adapter.update({...message(ready,2),epoch:8}),false);assert.equal(adapter.update({...message(ready,2),symbol:'SOXL'}),false);assert.equal(writes.length,1,'stale frames cannot change the active URL');
+  assert.equal(adapter.update({...message(edited,2),urlView:{...message(edited,2).urlView,start:'2020-01-01'}}),true);assert.equal(writes.length,1,'URL payload must match the validated visible chart');
+  const invalidDomain={...message(ready,2),urlView:{...message(ready,2).urlView,domain:{min:0,max:100}}};
+  assert.equal(adapter.update(invalidDomain),true);assert.equal(writes.length,1,'invalid log price bounds are not serialized');
+  adapter.begin('TQQQ',10);
+  const cached={...ready,epoch:10};
+  assert.equal(adapter.update(message(cached,5)),true);assert.equal(writes.length,1,'cached initial acknowledgement establishes its revision without writing');
+  assert.equal(adapter.update(message({...cached,scale:'linear',start:'2024-07-01'},6)),true);assert.equal(writes.length,2);
+});
+
 test('perimeter commands belong to the acknowledged instrument and epoch, and BTC labels/listeners restore exactly',async t=>{
   const {document,window}=parseHTML('<html><body><header class="atlas-canvas-heading"><button id="workbench-chart-type" aria-label="BTC candles">line</button><fieldset id="workbench-frequency"><button data-lab-frequency="daily">1D</button><button data-lab-frequency="weekly">1W</button></fieldset></header><aside class="workbench-tools"><button data-chart-tool="pan">H</button></aside><nav class="workbench-detail-tools"><button data-reader="selection">data</button></nav><footer class="workbench-bottom-bar"><button data-chart-span="focus">4년</button><span id="workbench-range-label">BTC range</span><button id="workbench-scale">로그</button><button id="atlas-update-status" aria-label="BTC update">BTC clock</button><button id="atlas-display-options" data-reader="settings">settings</button><button id="workbench-go-date" aria-label="UTC date">date</button></footer></body></html>');
   const previous=Object.getOwnPropertyDescriptor(globalThis,'document');Object.defineProperty(globalThis,'document',{value:document,configurable:true});
@@ -59,6 +91,7 @@ test('shared chart perimeter respects HYPE units and monthly housing capabilitie
   assert.equal(adapter.update(housing),true,'a volume-only month keeps its missing price');
   assert.equal(interval.value,'monthly');assert.equal(interval.querySelector('[value=monthly]')!.textContent,'1M');
   assert.equal((document.querySelector('#workbench-chart-type') as HTMLButtonElement).disabled,true);
+  assert.match(document.querySelector('#workbench-chart-type')!.getAttribute('aria-description')||'',/OHLC 자료가 없어/,'the retained unsupported slot explains its disabled state');
   assert.equal(document.querySelector('#atlas-update-status')!.getAttribute('aria-label'),'HOUSING-SEOUL 가격지수 2026-08 · 거래량 2026-09 · 자료 출처');
   assert.equal(document.querySelector('#workbench-range-label')!.textContent,'2025-01 ~ 2026-09');
   assert.equal(adapter.update({...housing,symbol:'HOUSING-BUSAN'}),false,'another region cannot acquire this perimeter');
