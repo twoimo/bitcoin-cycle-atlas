@@ -65,6 +65,7 @@ export async function readVerifiedCloudflareModelStage({
   const profile=assertModelBrowserBuild(browserBuild,{now:clock()});
   assert.match(source?.sourceCommit??'',/^[a-f0-9]{40}$/);assert.match(source?.sourceTree??'',/^[a-f0-9]{40}$/);
   let providerRequests=0,providerBytes=0;
+  const transientProviderFailures=new WeakSet();
   async function get(url,maximumBytes,label,{provider=false}={}){
     signal?.throwIfAborted();
     const parsed=new URL(url);
@@ -79,17 +80,25 @@ export async function readVerifiedCloudflareModelStage({
         {'Accept':'application/json'},
     });
     try{
-      assert.equal(response.status,200,label+' HTTP '+response.status);
+      requestSignal.throwIfAborted();
       assert.notEqual(response.redirected,true,label+' redirected away from its approved URL');
       if(response.url)assert.equal(new URL(response.url).href,parsed.href,label+' response URL differs');
+      if(provider&&[502,503,504].includes(response.status)){
+        // Only this observed provider response may consume another existing poll.
+        // A transport error or an untrusted error message cannot enter this set.
+        const error=new Error(label+' HTTP '+response.status);
+        transientProviderFailures.add(error);throw error;
+      }
+      assert.equal(response.status,200,label+' HTTP '+response.status);
       const bytes=await responseBytes(response,maximumBytes,label);
       if(provider){providerBytes+=bytes.length;assert.ok(providerBytes<=policy.maximumProviderBytes,'Public provider byte budget exhausted');}
-      signal?.throwIfAborted();
+      requestSignal.throwIfAborted();
       return bytes;
     }catch(error){
       // Header/status rejection occurs before acquiring a body reader. Close
       // that response too, so a rejected large response does not keep streaming.
       if(response.body&&!response.body.locked)await response.body.cancel().catch(()=>{});
+      requestSignal.throwIfAborted();
       throw error;
     }
   }
@@ -138,11 +147,17 @@ export async function readVerifiedCloudflareModelStage({
 
   let authority;
   for(let attempt=0;attempt<policy.maximumPollAttempts;attempt++){
-    const checks=await snapshot(),observedAt=new Date(clock()).toISOString();
-    const terminalCheckIds=selectSuccessfulModelChecks(checks,{component,now:Date.parse(observedAt)});
-    if(terminalCheckIds){
-      authority={endpoint,observedAt,checks,checksSha256:modelProviderSha256(modelProviderCanonicalBytes(checks)),terminalCheckIds};
-      break;
+    try{
+      const checks=await snapshot(),observedAt=new Date(clock()).toISOString();
+      const terminalCheckIds=selectSuccessfulModelChecks(checks,{component,now:Date.parse(observedAt)});
+      if(terminalCheckIds){
+        authority={endpoint,observedAt,checks,checksSha256:modelProviderSha256(modelProviderCanonicalBytes(checks)),terminalCheckIds};
+        break;
+      }
+    }catch(error){
+      signal?.throwIfAborted();
+      if(!transientProviderFailures.has(error)||attempt+1===policy.maximumPollAttempts)throw error;
+      // snapshot() owns its pages; discard every partial row before the next poll.
     }
     if(attempt+1<policy.maximumPollAttempts){
       signal?.throwIfAborted();await delay(policy.pollIntervalMs,{signal});signal?.throwIfAborted();

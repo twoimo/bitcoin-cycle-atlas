@@ -133,10 +133,13 @@ export function mountCenterWorkbench() {
     }else{activeRegion=undefined;if(atlasNavigationId(page)==='market-us')lastMarket=page;}
     document.body.dataset.centerTool=page.id;
     const headingNode=document.getElementById('outlook-heading'),graph=document.querySelector('.atlas-workbench');
-    if(!originalIdentity)originalIdentity={heading:headingNode?.textContent,graphLabel:graph?.getAttribute('aria-label')};
+    if(!originalIdentity)originalIdentity={heading:headingNode?.textContent,graphLabel:graph?.getAttribute('aria-label'),plot,plotLabel:plot?.getAttribute('aria-label')};
     const instrument=isWorkspaceChart(page)?workspaceInstrument(activeSymbol):null;
     if(headingNode)headingNode.textContent=instrument?`${instrument.koreanName} (${instrument.symbol}) 가격 차트`:page.title;
-    if(graph)graph.setAttribute('aria-label',instrument?`${instrument.koreanName} · ${instrument.symbol} · ${instrument.currency} 관측 가격 그래프`:page.title);
+    const graphLabel=instrument?`${instrument.koreanName} · ${instrument.symbol} · ${instrument.currency} 관측 가격 그래프`:page.title;
+    // Native ETH/equity plots are named sections and remain the iframe's
+    // visible container. Their accessible name belongs to the active center.
+    for(const region of [graph,plot])region?.setAttribute('aria-label',graphLabel);
     protectNavigation();
     for (const item of document.querySelectorAll('[data-atlas-page]')) {
       const selected=item.dataset.atlasPage===atlasNavigationId(page);item.classList.toggle('active',selected);
@@ -161,6 +164,8 @@ export function mountCenterWorkbench() {
       const headingNode=document.getElementById('outlook-heading'),graph=document.querySelector('.atlas-workbench');
       if(headingNode&&originalIdentity.heading!=null)headingNode.textContent=originalIdentity.heading;
       if(graph){if(originalIdentity.graphLabel==null)graph.removeAttribute('aria-label');else graph.setAttribute('aria-label',originalIdentity.graphLabel);}
+      const nativePlot=originalIdentity.plot;
+      if(nativePlot){if(originalIdentity.plotLabel==null)nativePlot.removeAttribute('aria-label');else nativePlot.setAttribute('aria-label',originalIdentity.plotLabel);}
       originalIdentity=null;
     }
     document.dispatchEvent(new CustomEvent('atlas:active-symbol',{detail:{symbol:originalSymbol}}));

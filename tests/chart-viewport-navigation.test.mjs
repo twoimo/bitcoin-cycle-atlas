@@ -11,7 +11,7 @@ const close=(a,b)=>assert.ok(Math.abs(a-b)<1e-8,`${a} ≈ ${b}`);
 function priceHarness(options={}){
   let axis={min:100,max:200,scale:'linear',inverted:false,top:50,bottom:400,left:60,right:930,mode:'auto',...options.axis};
   const yChanges=[],history=[];let resets=0;
-  const h=navigationHarness(full,{getPriceAxis:()=>axis,onPriceRangeChange:domain=>{axis={...axis,...domain,mode:'manual'};yChanges.push(domain);},onPriceReset:()=>{resets++;axis={...axis,min:100,max:200,mode:'auto'};},onGestureStart:label=>history.push(['start',label]),onGestureEnd:()=>history.push(['end'])});
+  const h=navigationHarness(full,{getPriceAxis:()=>axis,onPriceRangeChange:domain=>{axis={...axis,...domain,mode:'manual'};yChanges.push(domain);},onPriceReset:()=>{resets++;axis={...axis,min:100,max:200,mode:'auto'};},onGestureStart:label=>history.push(['start',label]),onGestureEnd:()=>history.push(['end'])},options.surfaceTouch);
   return {...h,get range(){return h.range;},set range(value){h.range=value;},set tool(value){h.tool=value;},get resets(){return h.resets;},get axis(){return axis;},set axis(value){axis=value;},yChanges,history,get yResets(){return resets;}};
 }
 
@@ -99,9 +99,28 @@ test('long-press tracking hands two existing fingers to a live pinch without req
 });
 
 test('explicit pan consumes mobile vertical movement, while crosshair navigation waits for horizontal intent',()=>{
-  const h=priceHarness();h.controller.update();assert.equal(h.element.style.touchAction,'pan-y pinch-zoom');
-  h.fire('pointerdown',{pointerType:'touch',clientX:500,clientY:200});assert.equal(h.pointer('pointermove',{pointerType:'touch',clientX:501,clientY:280}).defaultPrevented,false);h.controller.cancelGesture();
-  h.tool='pan';h.controller.update();assert.equal(h.element.style.touchAction,'none');
-  h.fire('pointerdown',{pointerType:'touch',clientX:500,clientY:200});assert.equal(h.pointer('pointermove',{pointerType:'touch',clientX:501,clientY:280}).defaultPrevented,true);h.flush();assert.ok(h.axis.min>100);
-  h.controller.destroy();assert.equal(h.element.style.touchAction,'original');
+  for(const [css,crosshairPolicy]of [['auto','pan-y pinch-zoom'],['none','none']]){
+    const h=priceHarness({surfaceTouch:{css}});
+    try{
+      h.controller.update();assert.equal(h.element.style.touchAction,'auto','sibling legend and replay controls retain native scrolling');
+      assert.equal(h.svg.style.touchAction,crosshairPolicy,'only the actual SVG owns the chart touch policy');
+      h.fire('pointerdown',{pointerType:'touch',clientX:500,clientY:200});
+      assert.equal(h.pointer('pointermove',{pointerType:'touch',clientX:501,clientY:280}).defaultPrevented,false);h.flush();
+      assert.deepEqual(h.range,full);assert.deepEqual(h.yChanges,[]);assert.deepEqual(h.history,[]);assert.equal(h.element.capture.size,0);
+      h.controller.cancelGesture();
+      h.fire('pointerdown',{pointerType:'touch',clientX:500,clientY:200});
+      assert.equal(h.pointer('pointermove',{pointerType:'touch',clientX:650,clientY:202}).defaultPrevented,true);h.flush();
+      assert.deepEqual(h.range,panRange(full,-150/870));assert.deepEqual(h.yChanges,[]);assert.equal(h.axis.mode,'auto');
+      h.pointer('pointerup',{pointerType:'touch',clientX:650,clientY:202});
+      const time={...h.range},axis={...h.axis};
+      h.tool='pan';h.controller.update();assert.equal(h.element.style.touchAction,'auto');assert.equal(h.svg.style.touchAction,'none');
+      h.fire('pointerdown',{pointerType:'touch',clientX:500,clientY:200});
+      assert.equal(h.pointer('pointermove',{pointerType:'touch',clientX:501,clientY:280}).defaultPrevented,true);h.flush();
+      assert.deepEqual(h.range,time);assert.deepEqual(h.yChanges.at(-1),panPriceDomain(axis,80/350));assert.equal(h.axis.mode,'manual');
+      h.pointer('pointerup',{pointerType:'touch',clientX:501,clientY:280});
+      assert.deepEqual(h.history.map(item=>item[0]),['start','end','start','end']);assert.equal(h.element.capture.size,0);
+      h.tool='crosshair';h.controller.update();assert.equal(h.element.style.touchAction,'auto');assert.equal(h.svg.style.touchAction,crosshairPolicy);
+    }finally{h.controller.destroy();}
+    assert.equal(h.element.style.touchAction,'original');assert.equal(h.svg.style.touchAction,'');
+  }
 });

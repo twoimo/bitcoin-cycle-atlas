@@ -48,13 +48,15 @@ export class TestElement extends EventSurface {
   releasePointerCapture(id){this.capture.delete(id);this.emit('lostpointercapture',{pointerId:id});}
   click(){if(!this.disabled&&!this.hidden)this.onclick?.({target:this});}
 }
-export function navigationHarness(initial,extra={}){
+export function navigationHarness(initial,extra={},surfaceTouch={}){
   const window=new EventSurface(),document=new EventSurface();document.defaultView=window;document.hidden=false;
   window.navigator={clipboard:{writeText:text=>{copies.push(text);return Promise.resolve();}}};
   let timerId=0;const timers=new Map();window.setTimeout=fn=>{timers.set(++timerId,fn);return timerId;};window.clearTimeout=id=>timers.delete(id);
   let nextFrame=0;const frames=new Map();window.requestAnimationFrame=fn=>{frames.set(++nextFrame,fn);return nextFrame;};window.cancelAnimationFrame=id=>frames.delete(id);
   document.createElement=tag=>new TestElement(tag,document);
   const element=document.createElement('div'),svg=document.createElement('svg');
+  svg.style.touchAction=surfaceTouch.inline??'';svg.cssTouchAction=surfaceTouch.css??'auto';
+  window.getComputedStyle=node=>({touchAction:node.style.touchAction||node.cssTouchAction||'auto'});
   svg.dataset={plotLeft:'60',plotRight:'930',plotTop:'50',plotBottom:'440'};svg.viewBox={baseVal:{x:0,y:0,width:1000,height:500}};element.append(svg);document.activeElement=svg;
   let live={...initial},tool='crosshair',resets=0;const changes=[],copies=[],announcements=[];
   const controller=bindChartNavigation({element,getRange:()=>live,getTool:()=>tool,onRangeChange:value=>{live=value;changes.push(value);},onReset:()=>resets++,onAnnounce:value=>announcements.push(value),getContext:()=>({label:'2026-10-22 00:00 UTC · 실제 봉',copyText:'Coinbase BTC-USD\n2026-10-22 00:00 UTC\nC 100'}),...extra});

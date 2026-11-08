@@ -135,11 +135,33 @@ test('zero exit with invalid required evidence fails before PASS and aborts the 
 });
 
 test('budget cancellation captures final output and cannot treat a cancelled zero exit as PASS',async t=>{
-  const root=await temporary(t),codes={bounded:"process.on('SIGTERM',()=>{process.stdout.write('cancelled final output\\n');process.exitCode=0;clearInterval(timer);});const timer=setInterval(()=>{},1000);console.log('ready');"};
-  const result=await group([{id:'bounded'}],execute(root,codes,{deadline:Date.now()+2000}));
-  assert.equal(result.settled[0].status,'rejected');assert.match(result.settled[0].reason.message,/execution budget/);
-  const entry=result.settled[0].reason.gateResult,bytes=await readFile(resolve(root,entry.log));
-  assert.ok(bytes.includes('cancelled final output'));assert.equal(entry.logSha256,sha(bytes));assert.equal(entry.status,'FAIL');
+  const root=await temporary(t),exitPath=resolve(root,'bounded.exit'),controller=new AbortController();
+  const codes={bounded:`import {writeFileSync} from 'node:fs';process.on('exit',code=>writeFileSync(${JSON.stringify(exitPath)},String(code)));
+    process.on('SIGTERM',()=>{process.stdout.write('cancelled final output\\n');process.exitCode=0;clearInterval(timer);});const timer=setInterval(()=>{},1000);console.log('ready');`};
+  const realSetTimeout=globalThis.setTimeout,realClearTimeout=globalThis.clearTimeout;
+  // Exercise the same budget callback after handler readiness, without asking a
+  // real child to win a 50 ms scheduling race against forced termination.
+  t.mock.timers.enable({apis:['Date','setTimeout'],now:Date.now()});
+  let readyCount=0,watchdogTimer;
+  const watchdog=new Promise((_,reject)=>{
+    watchdogTimer=realSetTimeout(()=>{
+      const error=new Error('Budget fixture did not reach READY and child closure within its real-time bound');
+      controller.abort(error);t.mock.timers.tick(50);reject(error);
+    },5000);
+  });
+  try{
+    const result=await Promise.race([
+      group([{id:'bounded'}],execute(root,codes,{deadline:Date.now()+2000,publicWrite:line=>{
+        if(line==='ready\n'){readyCount++;t.mock.timers.tick(2000);}
+      }}),{signal:AbortSignal.any([cancellation.signal,controller.signal])}),watchdog,
+    ]);
+    assert.equal(readyCount,1);assert.equal(await readFile(exitPath,'utf8'),'0','The cancelled child must actually exit zero');
+    assert.equal(result.settled[0].status,'rejected');assert.match(result.settled[0].reason.message,/execution budget/);
+    const entry=result.settled[0].reason.gateResult,bytes=await readFile(resolve(root,entry.log));
+    assert.ok(bytes.includes('cancelled final output'));assert.equal(entry.logSha256,sha(bytes));assert.equal(entry.status,'FAIL');
+  }finally{
+    realClearTimeout(watchdogTimer);controller.abort(new Error('Budget fixture cleanup'));t.mock.timers.tick(50);
+  }
 });
 
 test('a child ignoring graceful cancellation is killed and joined before failure returns',async t=>{

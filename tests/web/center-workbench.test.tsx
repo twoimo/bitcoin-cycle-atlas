@@ -18,6 +18,7 @@ test('center navigation retains all perimeter nodes, restores controls and bound
   assert.ok(toolbar&&toolbar.parentElement===document.querySelector('.atlas-canvas-heading'),'The active tool mounts inside the original outer toolbar');
   assert.equal(toolbar.hidden,false);assert.equal(frame.dataset.centerEpoch,'1');
   assert.equal(frame.parentElement,plot);assert.match(frame.getAttribute('src')!,/charts\/\?symbol=TQQQ&embedded=1/);
+  assert.match(plot.getAttribute('aria-label')!,/TQQQ · USD 관측 가격 그래프/);
   assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,true);assert.equal(svg.getAttribute('aria-hidden'),'true');assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,true);
   click('[data-atlas-page=scenario]');assert.equal(document.querySelector('iframe'),frame);assert.equal(posts.length,1);
   assert.equal(document.getElementById(frame.dataset.toolbarId!),toolbar,'Changing a React view cannot detach its live portal target');
@@ -47,6 +48,7 @@ test('center navigation retains all perimeter nodes, restores controls and bound
   document.dispatchEvent(new dom.CustomEvent('atlas:symbol-select',{cancelable:true,detail:{symbol:'BTCUSD'}}));
   assert.equal((frame as HTMLIFrameElement).hidden,true);assert.equal(svg.hasAttribute('aria-hidden'),false);assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,false);assert.equal((document.querySelector('#outside-zoom') as HTMLButtonElement).disabled,false);
   assert.equal(toolbar.hidden,true,'explicit BTC selection restores the original chart and its tool header');
+  assert.equal(plot.hasAttribute('aria-label'),false,'returning restores the originally unnamed native plot');
   const retainedButton=create('button') as HTMLButtonElement,retainedSelect=create('select') as HTMLSelectElement;
   retainedButton.textContent='Retained portal action';retainedSelect.innerHTML='<option>Retained region</option>';
   toolbar.append(retainedButton,retainedSelect);
@@ -93,10 +95,11 @@ test('static project navigation retains perimeter identity and rejects stale or 
 });
 
 for(const symbol of ['ETHUSD','MSTR','BMNR'])test(`${symbol} source actions stay concealed across acknowledged child charts and restore on return`,async t=>{
+  const nativePlotLabel=symbol==='ETHUSD'?'이더리움 실제 가격과 조건부 미래 경로':`${symbol} 실제 가격과 조건부 미래 전망`;
   const nativeActions=symbol==='ETHUSD'
     ? '<button id="eth-history-trigger" aria-label="이더리움 역사 사건">history</button><button data-eth-action="refresh" aria-label="ETH 가격 새로고침">refresh</button><button data-eth-action="info" aria-label="ETH 데이터 출처와 조회 상태">source</button><button id="workbench-scenario" data-eth-action="forecast" hidden disabled>forecast</button>'
     : '<button data-equity-action="history">history</button><button data-equity-action="research">research</button><button data-equity-action="info">source</button><select id="equity-scenario"><option value="base">기준 가정</option></select><button id="workbench-scenario" data-equity-action="forecast" hidden disabled>forecast</button>';
-  const {document,window:dom}=parseHTML(`<html data-symbol="${symbol}"><head><meta name="atlas-service-base" content="/market-lab/"></head><body><header class="atlas-canvas-heading"><button class="symbol-selector-trigger">${symbol}</button>${nativeActions}<button id="workbench-monthly-backtest">백테스트</button><button id="workbench-chart-type">line</button></header><h1 id="outlook-heading">원래 가격 차트</h1><section class="atlas-workbench" aria-label="원래 그래프"><section class="atlas-plot"><svg></svg></section></section></body></html>`);
+  const {document,window:dom}=parseHTML(`<html data-symbol="${symbol}"><head><meta name="atlas-service-base" content="/market-lab/"></head><body><header class="atlas-canvas-heading"><button class="symbol-selector-trigger">${symbol}</button>${nativeActions}<button id="workbench-monthly-backtest">백테스트</button><button id="workbench-chart-type">line</button></header><h1 id="outlook-heading">원래 가격 차트</h1><section class="atlas-workbench" aria-label="원래 그래프"><section class="atlas-plot" aria-label="${nativePlotLabel}"><svg></svg></section></section></body></html>`);
   const original=new Map(['document','window','location','MutationObserver','CustomEvent'].map(key=>[key,Object.getOwnPropertyDescriptor(globalThis,key)]));
   const listeners=new Map<string,Function>(),urls:string[]=[];
   const window={parent:null as unknown,addEventListener:(key:string,fn:Function)=>listeners.set(key,fn),history:{pushState:(_a:unknown,_b:unknown,url:string)=>urls.push(url),replaceState:(_a:unknown,_b:unknown,url:string)=>urls.push(url)}};window.parent=window;
@@ -106,6 +109,7 @@ for(const symbol of ['ETHUSD','MSTR','BMNR'])test(`${symbol} source actions stay
   const sourceControls=[...document.querySelectorAll<HTMLButtonElement | HTMLSelectElement>('#eth-history-trigger,[data-eth-action],[data-equity-action],#equity-scenario,#workbench-monthly-backtest')];
   const sourceState=sourceControls.map(node=>({node,hidden:node.hidden,disabled:node.disabled,aria:node.getAttribute('aria-label')}));
   const source=sourceControls.find(node=>node.getAttribute('data-eth-action')==='info'||node.getAttribute('data-equity-action')==='info')!;
+  const nativePlot=document.querySelector('.atlas-plot')!;
   let sourceClicks=0;source.addEventListener('click',()=>sourceClicks++);
   mountCenterWorkbench();
   const select=(next:string)=>document.dispatchEvent(new dom.CustomEvent('atlas:symbol-select',{cancelable:true,detail:{symbol:next}}));
@@ -117,15 +121,21 @@ for(const symbol of ['ETHUSD','MSTR','BMNR'])test(`${symbol} source actions stay
     assert.ok(document.querySelector('.atlas-workbench')!.getAttribute('aria-label')!.includes(next));
     assert.ok(document.querySelector('.atlas-workbench')!.getAttribute('aria-label')!.includes(unit));
     const frame=document.querySelector('iframe')!;
+    assert.equal(frame.parentElement,nativePlot,'the named plot is the actual visible child-frame container');
+    const childPlotLabel=nativePlot.getAttribute('aria-label')!;
+    assert.ok(childPlotLabel.includes(`${next} · ${unit} 관측 가격 그래프`),'the visible plot identifies the selected instrument and quote unit');
+    assert.notEqual(childPlotLabel,nativePlotLabel,'the background native instrument cannot name the visible child plot');
     listeners.get('message')!({source:(frame as any).contentWindow,origin:'http://localhost',data:{...ready,symbol:next,unit,epoch:Number(frame.dataset.centerEpoch)}});
     await new Promise(resolve=>setImmediate(resolve));
     assert.equal(document.body.dataset.chartControls,'ready');assertConcealed();
+    assert.equal(nativePlot.getAttribute('aria-label'),childPlotLabel,'the plot identity survives the child-ready acknowledgement');
     assert.equal((document.querySelector('#workbench-chart-type') as HTMLButtonElement).disabled,false,'the active child still owns shared chart controls');
     assert.equal((document.querySelector('.symbol-selector-trigger') as HTMLButtonElement).hidden,false,'symbol selection remains available');
   }
   select(symbol);
   assert.equal(document.querySelector('#outlook-heading')!.textContent,'원래 가격 차트');
   assert.equal(document.querySelector('.atlas-workbench')!.getAttribute('aria-label'),'원래 그래프');
+  assert.equal(nativePlot.getAttribute('aria-label'),nativePlotLabel,'returning restores the original native plot description');
   assert.equal(document.body.dataset.centerTool,undefined);
   for(const {node,hidden,disabled,aria} of sourceState){assert.equal(node.isConnected,true);assert.equal(node.hidden,hidden);assert.equal(node.disabled,disabled);assert.equal(node.getAttribute('aria-label'),aria);}
   source.click();assert.equal(sourceClicks,1,'returning preserves the original source action and its listener');

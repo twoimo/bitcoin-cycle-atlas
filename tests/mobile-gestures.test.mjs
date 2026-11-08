@@ -9,6 +9,24 @@ const first=Date.parse('2026-10-01T00:00:00Z')/1000;
 const hourly={start:first,end:first+99*3600,min:first-1000*3600,max:first+99*3600,unit:'seconds',step:3600,minSpan:12,maxSpan:6000,allowEmpty:true,contextKey:'market:1h:revision'};
 const point=(x,y=200,pointerId=1)=>({clientX:x,clientY:y,pointerId});
 
+test('native horizontal legend gestures and holds do not pan, track or record chart history',()=>{
+  for(const tool of ['crosshair','pan'])for(const hold of [0,550]){
+    const h=mobileGestureHarness({range:daily,tool}),axis={...h.axis};
+    try{
+      const legend=h.document.createElement('div'),item=h.document.createElement('span'),swatch=h.document.createElement('svg'),line=h.document.createElement('path');
+      legend.setAttribute('class','lab-chart-foot');swatch.append(line);item.append(swatch);legend.append(item);h.element.append(legend);
+      const target=line;
+      assert.equal(h.dispatch('pointerdown',{...point(650),target}).defaultPrevented,false);h.advance(hold);
+      assert.equal(h.tracking.active,false,'a hold on the legend must not start chart value tracking');
+      assert.equal(h.dispatch('pointermove',{...point(450),target}).defaultPrevented,false);h.settle();
+      assert.equal(h.dispatch('pointerup',{...point(350),target}).defaultPrevented,false);h.settle();
+      assert.deepEqual(h.range,daily);assert.deepEqual(h.axis,axis);
+      assert.deepEqual(h.changes,[]);assert.deepEqual(h.priceChanges,[]);assert.deepEqual(h.previews,[]);
+      assert.deepEqual(h.transactions,[]);assert.equal(h.captures.size,0);
+    }finally{h.destroy();}
+  }
+});
+
 test('active touch tracking paints only the latest move in each frame and commits the exact release',()=>{
   const h=mobileGestureHarness({range:daily});try{
     h.dispatch('pointerdown',point(350));h.advance(500);assert.equal(h.previews.length,1);

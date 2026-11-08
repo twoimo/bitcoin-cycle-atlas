@@ -30,6 +30,7 @@
 .atlas-plot>.lab-chart-foot .price-legend-item{display:inline-flex;align-items:center;flex:none;gap:4px;font-size:11px;line-height:14px;white-space:nowrap}
 .atlas-plot>.lab-chart-foot .price-legend-item>span{font-size:inherit;line-height:inherit}
 .atlas-chart-stage .lab-chart-foot svg.price-legend-swatch{display:block;position:static;width:18px;height:12px;min-width:18px;max-width:18px;max-height:12px;flex:0 0 18px;overflow:visible;touch-action:auto}
+.atlas-chart-stage .lab-chart-foot svg{touch-action:auto}
 .atlas-plot>.lab-chart-foot .cycle-legend{display:flex;flex-wrap:nowrap;flex:none;align-items:center;justify-content:flex-start;gap:8px;min-width:0;max-width:none;margin:0;padding:0 0 0 8px;border-left:1px solid var(--cycle-milestones-rule-3);border-top:0;box-sizing:border-box}
 .atlas-plot>.lab-chart-foot .cycle-legend span{display:flex;align-items:center;gap:4px;font-size:11px;line-height:12px;white-space:nowrap}
 .atlas-chart-stage .cycle-legend-item>svg{width:11px;height:11px;min-width:11px;flex:none}
