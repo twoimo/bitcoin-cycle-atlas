@@ -77,7 +77,7 @@ export function transitionViewport({ fromFrequency, toFrequency, range, selected
   const selection = selectedSeconds(sourceIntraday ? selectedTime : selectedDate);
   const alignedSelection = Number.isFinite(selection) ? Math.floor(selection/step)*step : null;
   const limited = count !== requested || start !== centeredStart;
-  const notice = limited ? `간격을 바꾸며 ${start===centeredStart?'UTC 중심은 유지하고 ':''}표시 기간을 ${count.toLocaleString('en-US')}${intraday?'봉':'일'}로 조정했습니다.${start!==centeredStart?' 지원 날짜는 1800–2400년입니다.':''} 수동 가격 범위는 유지됩니다.` : '';
+  const notice = limited ? `간격을 바꾸며 ${start===centeredStart?'UTC 중심은 유지하고 ':''}표시 기간을 ${count.toLocaleString('en-US')}${intraday?'봉으로':'일로'} 조정했습니다.${start!==centeredStart?' 지원 날짜는 1800–2400년입니다.':''} 수동 가격 범위는 유지됩니다.` : '';
   return { frequency: toFrequency, unit: intraday ? 'seconds' : 'days',
     range: intraday ? {start,end} : {start:dateFromDay(start/DAY),end:dateFromDay(end/DAY)},
     selectedDate: alignedSelection === null ? null : dateFromDay(Math.floor(alignedSelection/DAY)),

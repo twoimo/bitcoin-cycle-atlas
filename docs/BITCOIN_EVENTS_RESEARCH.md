@@ -1,14 +1,14 @@
 # 비트코인 역사 사건: 차트 표시용 조사 기록
 
-검토 기준일: **2026-10-22**. 구현: `dist/bitcoin-events.js`. 검증: `tests/bitcoin-events.test.mjs`. 작업 시작 기준 커밋: `f48c0d79a7922c7f460057629ae58e8a8b12c004`. 관세 사건 보강의 기준 커밋: `c35bdeb309a186c08393ef92a89eb97e08d0ed3b`.
+검토 기준일: **2026-11-08**. 구현: `dist/bitcoin-events.js`. 검증: `tests/bitcoin-events.test.mjs`. 작업 시작 기준 커밋: `f48c0d79a7922c7f460057629ae58e8a8b12c004`. 관세 사건 보강의 기준 커밋: `c35bdeb309a186c08393ef92a89eb97e08d0ed3b`.
 
-2009년 제네시스부터 2025년 10월의 미국 대중국 추가 관세 예고까지 **43개 사건**을 선정했다. 총 98개 출처 참조, 고유 URL 89개를 연결했다. 같은 문서의 반복 참조를 독립된 검증으로 세지 않는다. 2026년 10월 22일까지 확인한 자료를 사용하며, 검토 기준일 뒤의 사건이나 예정된 반감기·전망·가격 목표는 역사 사건 목록에 넣지 않는다. 이 목록은 완전한 연대기나 최신 뉴스 피드가 아니다.
+2009년 제네시스부터 2025년 11월의 텍사스 BTC 준비기금 첫 투자까지 **50개 사건**을 선정했다. 총 116개 출처 참조, 고유 URL 107개를 연결했다. 같은 문서의 반복 참조를 독립된 검증으로 세지 않는다. 2026년 11월 8일까지 확인한 자료를 사용하며, 검토 기준일 뒤의 사건이나 예정된 반감기·전망·가격 목표는 역사 사건 목록에 넣지 않는다. 이 목록은 완전한 연대기나 최신 뉴스 피드가 아니다.
 
 ## 선정과 해석 원칙
 
 세계적인 관심을 받았던 프로토콜 변화, 금융상품 진입, 규제·정책, 국가·기업 채택, 거래소·수탁 위험, 거시경제 맥락을 균형 있게 보여 주기 위한 편집 목록이다. 검색량·언론 보도량·국가별 관심도를 계량한 인기순위가 아니다. 영어권과 미국의 공시·법원 자료 접근성이 높아 미국 제도권 사건 비중이 크다. 특정 연도가 비어 있다고 그해 중요한 사건이 없었다는 뜻은 아니다.
 
-분류는 사건의 성격을 나타내며 호재·악재 점수가 아니다. 중요도 3은 넓은 차트에서 먼저 보여 줄 편집상 우선순위, 2는 확대 시 보완할 맥락, 1은 세부 이정표다. 중요도 3 사건은 22개다. 사건 뒤 가격이 움직였다는 시간적 인접성만으로 인과를 주장하지 않는다. 이 데이터에는 기대수익률, 매매 신호, 가격 충격 점수, 확률이 없다.
+분류는 사건의 성격을 나타내며 호재·악재 점수가 아니다. 중요도 3은 넓은 차트에서 먼저 보여 줄 편집상 우선순위, 2는 확대 시 보완할 맥락, 1은 세부 이정표다. 중요도 3 사건은 23개다. 사건 뒤 가격이 움직였다는 시간적 인접성만으로 인과를 주장하지 않는다. 이 데이터에는 기대수익률, 매매 신호, 가격 충격 점수, 확률이 없다.
 
 기업 발표는 회사가 무엇을 공시했는지 확인하는 1차 자료다. 회사의 전망이나 해명까지 독립적으로 입증하는 것은 아니다. 거래소 장애·수탁자 손실은 비트코인 합의 규칙의 실패와 구분한다. 입법·법원 판단·규제 승인을 현재의 모든 법적 의무를 설명하는 자료로 일반화하지 않는다.
 
@@ -55,7 +55,7 @@ Bitcoin Core v29.0의 메인넷 파라미터에서 세그윗 높이 481,824, 탭
 
 CME의 2025년 회고 연대표에는 3차 반감기를 2018년으로 쓰는 등 다른 사건에 오류가 있어, 이를 전체 연대기의 근거로 복사하지 않았다. CME 선물은 당시 출시 공지와 실제 개장 보도를 사용했고, 반감기 날짜는 원장을 직접 조회했다. 주요 사건 중 일부가 나중에 작성된 자료로 확인된 경우도 사건일과 출처 게시일을 분리했다. 테라의 2022년 붕괴 대표일을 뒷받침하는 SEC 배상계획은 2026년 8월 자료이지만, 사건 자체를 2026년 사건으로 넣지 않았다.
 
-`publishedAt: null`은 게시일이 없는 원장 조회 화면 또는 게시일을 확인하지 못한 지속 갱신 사건 관리 페이지다. 검토일을 발표일로 채우지 않는다. 모든 출처의 `accessedAt`은 2026-10-22다. 원문은 수정·이전·차단될 수 있고 링크가 영구히 유지된다는 보장은 없다.
+`publishedAt: null`은 게시일이 없는 원장 조회 화면 또는 게시일을 확인하지 못한 지속 갱신 사건 관리 페이지다. 검토일을 발표일로 채우지 않는다. 기존 43개 사건의 출처 `accessedAt`은 실제 종전 검토일 2026-10-22를 유지하고, 이번에 추가로 확인한 출처만 2026-11-08로 기록한다. 목록의 검토 기준일을 갱신했다고 모든 과거 링크를 다시 열었다는 뜻은 아니다. 원문은 수정·이전·차단될 수 있고 링크가 영구히 유지된다는 보장은 없다.
 
 ## 2025년 관세 사건 보강: 발표·시행·시장 관측의 구분
 
@@ -75,6 +75,22 @@ CME의 2025년 회고 연대표에는 3차 반감기를 2018년으로 쓰는 등
 10월 10일은 특히 날짜를 재확인했다. [UCSB의 원문 전재](https://www.presidency.ucsb.edu/documents/truth-social-posts-october-10-2025)는 시각을 Pacific time으로 명시하고 구체적인 추가 100% 발언을 13:50에 기록한다. 해당 날짜의 일광절약시간을 적용하면 **13:50 PDT = 16:50 EDT = 20:50 UTC, 모두 2025-10-10**이다. 이 환산은 원문의 시간대와 IANA `America/Los_Angeles`·`America/New_York`를 이용한 계산이며, 별도의 뉴스 피드 수신 시각을 측정한 것이 아니다. 이 항목도 `source-calendar-day`로 유지해 블록 헤더 전용 `timestampUtc` 계약과 혼동하지 않는다.
 
 [원래 Truth Social 주소](https://truthsocial.com/@realDonaldTrump/posts/115351840469973590)는 직접 자동 조회에서 JavaScript 안내만 반환했다. 원문 본문·게시 시각은 UCSB 전재로 확인하고 발표 내용·날짜는 Reuters 보도로 대조했다. UCSB 출처의 `publishedAt`은 원래 발언의 문서 날짜이며 UCSB의 아카이브 입수일을 뜻하지 않는다. Bloomberg News는 공개된 기사 앞부분의 수치·날짜만 사용했으며 로그인 뒤 본문을 읽었다고 주장하지 않는다. Reuters의 4월 9일 자료는 시장 논평이므로 틱 데이터나 학술적인 인과 검증으로 취급하지 않는다.
+
+## 2025년 주 준비자산법·은행 발표 보강
+
+뉴햄프셔의 투자 한도는 최종 통과 법문과 RSA 6:8-d III에 명시된 **5%**로 고정한다. 초안·일부 보도의 10%를 사용하지 않는다. 5월 6일 서명과 7월 5일 효력을 구분한다. 애리조나 HB 2749는 미청구재산 체계의 암호자산 준비금으로, 공적자금의 신규 BTC 매입 권한으로 설명하지 않는다. 텍사스 SB 21의 6월 20일 서명·발효는 기금의 설립이며 실제 매입일은 별개다.
+
+7월 30일 JPMorganChase–Coinbase 사건은 카드로 Coinbase 계좌에 자금을 넣고 은행계좌·포인트를 연결하는 **제휴 발표**다. 발표가 제시한 가을·2026년 일정과 실제 기능 출시를 구분한다. 10월 24일 담보 대출 사건은 Bloomberg의 **계획 보도**다. 공식 출시 자료를 확인하지 못했으므로, 기존의 1차 자료 우선 원칙에 대한 명시적 예외로 이 항목에만 취재 보도 2건을 연결한다. 보도를 은행의 공식 확인이나 실행 완료로 바꾸지 않으며, Reuters가 전한 7월 22일 FT의 검토 보도와도 구분한다.
+
+“2026년 초 미국 전체 ETF 유입 순위 10위권”은 주식·채권 ETF까지 포함한 순위 원자료가 확인되지 않아 이번 목록에서 제외한다. 암호자산 ETF 내부 순위를 전체 ETF 순위로 확대하지 않는다.
+
+## IBIT 기록과 텍사스 집행의 출처 차이
+
+IBIT의 700억 달러 기록은 BlackRock의 2026 Thematic Outlook 3쪽 각주 4에서 자사 GBI 집계로 341거래일을 확인했다. PDF는 2026년 회고 자료이므로 사건 날짜의 근거로 쓰지 않는다. 당시 The Block의 6월 9일 보도를 대표 날짜로 채택하고, CryptoSlate가 실제 돌파일을 6월 6일로 적은 차이는 그대로 공개한다. etf.com 원문의 게시일은 6월 11일이다. AUM은 순유입액과 다르며, GLD 비교와 여러 기사들이 같은 Bloomberg 분석가 자료에 의존한다는 한계를 남긴다.
+
+텍사스 첫 투자일은 11월 20일, Texas Tribune 보도일은 12월 8일, Bond Buyer 보도일은 **12월 9일**이다. Tribune은 Bitcoin이라는 일반 표현과 500만 달러 집행을 확인하며 거래 수단을 특정하지 않는다. 반면 Bond Buyer는 회계감사관실 대변인 확인으로 같은 거래의 수단을 **IBIT 주식**, 주당 가격을 51.8694달러로 특정한다. BTC 기준 시세 91,336.32달러와 ETF 주당 매입가는 서로 다른 값이다. 따라서 “현물 BTC 직접 매입이며 IBIT는 아니다”라는 주장은 이 근거로 뒷받침되지 않는다. 차트에는 준비기금의 첫 투자를 표시하고, 거래 수단의 구체적 근거는 설명의 제한사항에서 공개한다.
+
+[공식 조달 공고 RFP 908-26-1778WS](https://www.txsmartbuy.gov/esbd/908-26-1778WS)는 자동 조회에서 문서 본문을 제공하지 않아, 아래에 연결한 GovTribe의 **원문 텍스트 전재 중 1.2 Background**를 읽었다. 페이지 상단의 AI 요약을 원문으로 취급하지 않았다. 2026년 5월 7일 발행된 문서가 언급한 IBIT 1,000만 달러는 그 시점의 전체 배정액 집행 상태다. 이를 2025년 11월 20일 첫 500만 달러와 합쳐 같은 날의 집행으로 쓰지 않는다. 실제 직접 수탁 전환 여부도 이 문서만으로 완료됐다고 기록하지 않는다.
 
 ## 차트 연동 계약
 
@@ -128,7 +144,14 @@ CME의 2025년 회고 연대표에는 3차 반감기를 2018년으로 쓰는 등
 | 2025-03-06 | 미국 BTC 준비자산 | 규제·제도 | 3 |
 | 2025-04-02 | 美 상호관세 발표 | 거시경제 | 3 |
 | 2025-04-09 | 상호관세 90일 유예 | 거시경제 | 3 |
+| 2025-05-06 | 뉴햄프셔 준비자산법 | 규제·제도 | 2 |
+| 2025-05-07 | 애리조나 암호자산 준비금 | 규제·제도 | 2 |
+| 2025-06-09 | IBIT 700억 달러 최단 기록 | 기업·금융상품 | 2 |
+| 2025-06-20 | 텍사스 BTC 준비기금법 | 규제·제도 | 2 |
+| 2025-07-30 | 체이스·코인베이스 제휴 | 기업·금융상품 | 2 |
 | 2025-10-10 | 대중 추가관세 예고 | 거시경제 | 3 |
+| 2025-10-24 | JP모건 암호자산 담보 계획 | 기업·금융상품 | 1 |
+| 2025-11-20 | 텍사스 BTC 준비금 첫 투자 | 결제·국가 채택 | 3 |
 
 ## 사건별 원문·발표일·근거 한계
 
@@ -779,6 +802,84 @@ ID: `trump-tariff-pause-2025` · 분류: 거시경제 · 편집 표시 우선순
 | Bloomberg News | 2025-04-09 | 독립 보도·후속 분석 | [Bitcoin Surges After Trump Hits Pause on Some Tariff Measures](https://news.bloomberglaw.com/capital-markets/bitcoin-rebounds-as-investors-seek-refuge-from-tariff-onslaught) |
 | Reuters | 2025-04-09 | 시장 논평·당시 보도 | [Trading Day: Boom! Trump tariff pause sparks monster rally](https://www.reuters.com/markets/global-markets-trading-day-graphics-2025-04-09/) |
 
+### 2025-05-06 · 뉴햄프셔 HB 302 서명
+
+ID: `new-hampshire-reserve-law-2025` · 분류: 규제·제도 · 편집 표시 우선순위: 2
+
+Kelly Ayotte 주지사가 HB 302에 서명해 뉴햄프셔가 미국 주 가운데 처음으로 전략적 비트코인 준비자산 법률을 제정했다. 최종 법은 주 재무관이 귀금속과 직전 역년 평균 시가총액 5,000억 달러 초과 디지털 자산에 투자할 수 있게 하며, 해당 투자의 합계 한도는 공적자금 총액의 5%다.
+
+**날짜 기준:** 서명일 2025년 5월 6일이다. 법의 효력 발생일 7월 5일과 구분한다.
+
+**근거 한계:** 최종 통과 법문 RSA 6:8-d III의 5%를 사용한다. 초안의 10%나 일부 보도의 수치로 대체하지 않는다. 법률 제정은 실제 BTC 매입이나 의무적인 자금 배정을 뜻하지 않는다. 법은 적격 자산의 직접 보관·수탁·상장상품을 구분해 허용한다.
+
+| 발행자 | 발표·게시일 | 자료 성격 | 확인 자료 |
+|---|---|---|---|
+| New Hampshire General Court | 게시일 없음 / 확인 불가 | 1차 기록·공식 자료 | [HB 302 as passed by both chambers](https://gc.nh.gov/bill_status/legacy/bs2016/billText.aspx?id=707&sy=2025&v=SP) |
+| New Hampshire General Court | 게시일 없음 / 확인 불가 | 1차 기록·공식 자료 | [RSA 6:8-d — Investment in Precious Metals and Digital Assets](https://www.gc.nh.gov/rsa/html/I/6/6-mrg.htm) |
+| Bloomberg Government | 2025-05-06 | 취재 보도·후속 분석 | [New Hampshire Law Creates First State Strategic Bitcoin Reserve](https://news.bgov.com/bloomberg-government-news/new-hampshire-law-creates-first-state-strategic-bitcoin-reserve) |
+
+### 2025-05-07 · 애리조나 HB 2749 미청구 암호자산 준비금법 서명
+
+ID: `arizona-unclaimed-crypto-reserve-2025` · 분류: 규제·제도 · 편집 표시 우선순위: 2
+
+Katie Hobbs 주지사가 HB 2749에 서명했다. 법은 미청구재산 체계 안에서 암호자산을 보관하고, 에어드롭·스테이킹 보상 등 법이 정한 자산을 Bitcoin and Digital Assets Reserve Fund로 이전할 수 있는 체계를 마련했다.
+
+**날짜 기준:** 애리조나 하원의 당일 공식 발표가 확인한 2025년 5월 7일 서명일이다.
+
+**근거 한계:** 미청구재산의 관리와 파생 자산을 다루는 제도다. 공적자금으로 BTC를 신규 매입하도록 허용하거나 실제 매입을 완료한 사건으로 표현하지 않는다. 별도로 거부권이 행사된 다른 애리조나 비트코인 투자 법안과 구분한다.
+
+| 발행자 | 발표·게시일 | 자료 성격 | 확인 자료 |
+|---|---|---|---|
+| Arizona Legislature | 게시일 없음 / 확인 불가 | 1차 기록·공식 자료 | [HB 2749 — Chapter 150](https://www.azleg.gov/legtext/57leg/1r/laws/0150.htm) |
+| Arizona House of Representatives | 2025-05-07 | 1차 기록·공식 자료 | [HB 2749 signed into law](https://www.azleg.gov/press/house/57LEG/1R/250507WENINGERHB2749.pdf) |
+
+### 2025-06-09 · IBIT의 운용자산 700억 달러 최단 도달 기록
+
+ID: `ibit-70-billion-record-2025` · 분류: 기업·금융상품 · 편집 표시 우선순위: 2
+
+IBIT가 341거래일 만에 운용자산 700억 달러에 도달한 최단 ETF 기록이 보도됐다. 당시 비교 대상인 금 ETF GLD의 1,691거래일보다 약 5배 빠른 속도다. BlackRock의 2026년 전망 문서도 자사 집계 기준으로 IBIT의 341거래일 기록을 확인한다.
+
+**날짜 기준:** The Block의 2025년 6월 9일 기록 보도일을 차트 날짜로 사용한다. etf.com은 6월 11일 후속 보도했고, BlackRock의 2026년 회고 자료는 거래일 수와 기록을 확인하지만 정확한 돌파 날짜는 명시하지 않는다.
+
+**근거 한계:** CryptoSlate의 6월 9일 기사(6월 10일 수정)는 실제 돌파일을 6월 6일로 적는다. 출처 사이 날짜 불일치가 있어 6월 9일을 정확한 최초 돌파 시각으로 단정하지 않는다. 700억 달러는 운용자산(AUM)이며 누적 순유입액이 아니다. 자금 유입과 보유 BTC의 가격 변동이 함께 영향을 준다. 최단 기록은 당시 보도와 발행사 집계의 비교 범위에 따른다. 여러 매체가 같은 Bloomberg 분석가 자료를 인용하므로 독립된 재계산으로 세지 않는다.
+
+| 발행자 | 발표·게시일 | 자료 성격 | 확인 자료 |
+|---|---|---|---|
+| BlackRock / iShares | 게시일 없음 / 확인 불가 | 1차 기록·공식 자료 | [2026 Thematic Outlook — page 3, footnote 4](https://www.blackrock.com/us/financial-professionals/literature/presentation/2026-thematic-outlook-stamped.pdf) |
+| The Block | 2025-06-09 | 취재 보도·후속 분석 | [BlackRock’s spot Bitcoin ETF becomes fastest to hit $70 billion, crushing gold’s previous record](https://www.theblock.co/news/markets/2025-06-09-blackrocks-spot-bitcoin-etf-becomes-fastest-to-hit-70-billion-crushing-golds-previous-record-357465) |
+| etf.com | 2025-06-11 | 취재 보도·후속 분석 | [IBIT Hits $70B in Assets. What’s Next for the Crypto Beast?](https://www.etf.com/sections/features/ibit-hits-70b-assets-whats-next-crypto-beast) |
+| CryptoSlate | 2025-06-09 | 취재 보도·후속 분석 | [BlackRock’s IBIT rockets to $70B in 341 days, 5x faster than previous record](https://cryptoslate.com/blackrocks-ibit-rockets-to-70b-in-341-days-5x-faster-than-previous-record/) |
+
+### 2025-06-20 · 텍사스 전략적 비트코인 준비기금법 SB 21 서명·발효
+
+ID: `texas-bitcoin-reserve-law-2025` · 분류: 규제·제도 · 편집 표시 우선순위: 2
+
+Greg Abbott 주지사가 Texas Strategic Bitcoin Reserve and Investment Act인 SB 21에 서명했다. 주 재무부 밖의 특별기금을 회계감사관이 관리하도록 하고, 직전 24개월 평균 시가총액이 5,000억 달러 이상인 암호자산만 매입할 수 있도록 정했다.
+
+**날짜 기준:** 2025년 6월 20일 서명일이며 즉시 발효 조항에 따른 효력 발생일도 같은 날이다.
+
+**근거 한계:** 기금의 설립·투자 권한과 실제 자금 배정·매입은 별개다. 이 날짜를 첫 BTC 매입일로 사용하지 않는다. 시가총액 조건은 법문에 따른 자산 적격 요건이며 모든 암호자산의 무제한 매입 허가가 아니다.
+
+| 발행자 | 발표·게시일 | 자료 성격 | 확인 자료 |
+|---|---|---|---|
+| Texas Legislature | 게시일 없음 / 확인 불가 | 1차 기록·공식 자료 | [SB 21 enrolled text](https://capitol.texas.gov/tlodocs/89R/billtext/html/SB00021F.htm) |
+| Texas Legislature | 게시일 없음 / 확인 불가 | 1차 기록·공식 자료 | [Government Code Chapter 403 — Texas Strategic Bitcoin Reserve](https://statutes.capitol.texas.gov/Docs/GV/htm/GV.403.htm) |
+
+### 2025-07-30 · JPMorganChase·Coinbase의 계좌 자금 연결 제휴 발표
+
+ID: `jpmorgan-coinbase-partnership-2025` · 분류: 기업·금융상품 · 편집 표시 우선순위: 2
+
+JPMorganChase와 Coinbase가 제휴를 발표했다. 체이스 신용카드로 Coinbase 계좌에 자금을 넣는 기능은 2025년 가을, Ultimate Rewards 포인트의 Coinbase 이전과 체이스 은행계좌의 직접 연결은 2026년에 제공할 계획이라고 밝혔다.
+
+**날짜 기준:** 양사가 보도자료와 블로그를 공개한 2025년 7월 30일 발표일이다.
+
+**근거 한계:** 체이스 결제·계좌와 Coinbase를 연결하는 구조다. JPMorgan이 은행 안에서 비트코인 직접 거래를 제공하기 시작했다는 뜻이 아니다. 예정된 기능과 출시 시점은 당시 발표 내용이다. 이 사건만으로 각 기능의 실제 출시·이용 가능 여부가 확인된 것은 아니다.
+
+| 발행자 | 발표·게시일 | 자료 성격 | 확인 자료 |
+|---|---|---|---|
+| JPMorganChase | 2025-07-30 | 1차 기록·공식 자료 | [JPMorganChase and Coinbase Launch Strategic Partnership to Make Buying Crypto Easier than Ever](https://www.jpmorganchase.com/newsroom/press-releases/2025/jpmc-coinbase-partnership) |
+| Coinbase | 2025-07-30 | 1차 기록·공식 자료 | [Coinbase and JPMorgan Chase join forces to make it even easier to access crypto](https://www.coinbase.com/blog/coinbase-and-jpmorgan-chase-join-forces-to-make-it-even-easier-to-access-crypto) |
+
 ### 2025-10-10 · 트럼프의 대중국 추가 100% 관세 예고
 
 ID: `trump-china-tariff-threat-2025` · 분류: 거시경제 · 편집 표시 우선순위: 3
@@ -797,8 +898,39 @@ ID: `trump-china-tariff-threat-2025` · 분류: 거시경제 · 편집 표시 �
 | Reuters | 2025-10-10 | 독립 보도·후속 분석 | [US will impose additional 100% tariff on Chinese imports from November, Trump says](https://www.reuters.com/world/china/us-will-impose-additional-100-tariff-chinese-imports-november-trump-says-2025-10-10/) |
 | Reuters | 2025-10-10 | 독립 보도·후속 분석 | [Bitcoin extends decline to $104,782 as Trump escalates US-China trade war](https://www.reuters.com/business/bitcoin-down-55-114505-2025-10-10/) |
 
+### 2025-10-24 · JP모건의 기관 BTC·ETH 담보 대출 계획 보도
+
+ID: `jpmorgan-crypto-collateral-plan-2025` · 분류: 기업·금융상품 · 편집 표시 우선순위: 1
+
+Bloomberg는 JP모건이 기관 고객의 BTC·ETH를 담보로 한 대출을 2025년 말까지 허용할 계획이라고 보도했다. Reuters가 7월 22일 전한 FT의 검토 단계 보도에 이은 계획 관련 보도다.
+
+**날짜 기준:** 구체적인 연말 도입 계획을 전한 Bloomberg의 2025년 10월 24일 보도일이다. 앞선 7월 22일 검토 보도와 실제 시행일을 구분한다.
+
+**근거 한계:** 계획 단계의 보도이며 실행 완료나 모든 개인 고객의 이용 가능성을 뜻하지 않는다. 공식 출시 발표를 확인하지 못했다. 이 항목은 Bloomberg의 취재 보도와 Reuters가 전한 FT 보도를 근거로 하며 은행의 공식 확인으로 표시하지 않는다. BTC·ETH 자체를 담보로 삼는 계획과 비트코인 ETF 주식을 담보로 하는 별도 업무를 구분한다.
+
+| 발행자 | 발표·게시일 | 자료 성격 | 확인 자료 |
+|---|---|---|---|
+| Bloomberg News | 2025-10-24 | 취재 보도·후속 분석 | [JPMorgan to Allow Bitcoin, Ether as Collateral in Crypto Push](https://news.bloomberglaw.com/banking-law/jpmorgan-to-allow-bitcoin-ether-as-collateral-in-crypto-push) |
+| Reuters | 2025-07-22 | 취재 보도·후속 분석 | [JPMorgan considers offering loans backed by clients cryptocurrency holdings, FT reports](https://www.reuters.com/business/finance/jpmorgan-considers-offering-loans-backed-by-clients-cryptocurrency-holdings-ft-2025-07-22/) |
+
+### 2025-11-20 · 텍사스 비트코인 준비기금의 첫 500만 달러 투자
+
+ID: `texas-bitcoin-reserve-first-investment-2025` · 분류: 결제·국가 채택 · 편집 표시 우선순위: 3
+
+텍사스가 비트코인 준비기금 배정액 1,000만 달러 중 첫 500만 달러를 투자했다. Texas Tribune은 회계감사관실 확인을 근거로 11월 20일 아침 BTC 기준가격 약 91,336달러 때 집행됐으며, 암호자산 수탁 계약 전의 임시 투자였다고 보도했다.
+
+**날짜 기준:** 실제 투자일 2025년 11월 20일이다. Texas Tribune 보도일 12월 8일 및 Bond Buyer 보도일 12월 9일과 구분한다.
+
+**근거 한계:** Texas Tribune은 일반적으로 Bitcoin 투자라고 쓰며 매입 수단을 명시하지 않는다. Bond Buyer는 회계감사관 대변인을 인용해 같은 11월 20일 투자 대상이 IBIT 주식이고 매입가는 주당 51.8694달러였다고 구체적으로 보도했다. 따라서 현물 BTC 직접 매입으로 단정하거나 IBIT를 배제하지 않는다. 2026년 5월 7일 공식 RFP의 원문 전재본은 당시 배정액 1,000만 달러가 IBIT에 임시 투자됐다고 명시한다. 이는 후속 합계 상태이며 2025년 11월 20일 하루에 1,000만 달러를 집행했다는 뜻이 아니다. 조달 원문은 GovTribe의 문서 본문 전재로 확인했다. 약 91,336달러는 당시 BTC의 기준 시세이며 ETF 주식 매입가와 다르다. Texas Tribune이 애리조나·뉴햄프셔의 미매입을 언급한 기준은 2025년 12월 8일 보도 시점이다.
+
+| 발행자 | 발표·게시일 | 자료 성격 | 확인 자료 |
+|---|---|---|---|
+| Texas Tribune | 2025-12-08 | 취재 보도·후속 분석 | [Texas launches cryptocurrency reserve with $5 million investment](https://www.texastribune.org/2025/12/08/texas-crypto-currency-investment/) |
+| The Bond Buyer | 2025-12-09 | 취재 보도·후속 분석 | [Texas makes first purchase for state’s bitcoin reserve](https://www.bondbuyer.com/news/texas-makes-first-purchase-for-states-bitcoin-reserve) |
+| Texas Comptroller / GovTribe 원문 전재 | 2026-05-07 | 1차 기록·공식 자료 | [RFP 908-26-1778WS — Texas Strategic Bitcoin Reserve Custody and Liquidity Services, section 1.2](https://govtribe.com/file/government-file/esbd-513147-1778176486492-908-26-1778ws-texas-strategic-bitcoin-reserve-dot-pdf) |
+
 ## 실행 검증
 
-`node --test --test-isolation=none --test-reporter=tap tests/bitcoin-events.test.mjs`로 관세 보강 뒤 10개 테스트를 실제 실행했다. 출처·날짜·중복 ID·검토일 상한·7개 블록 타임스탬프, 네 관세 사건의 발표일·유예 시행일·검색 별칭·PDT/EDT/UTC 날짜 일치, 공시와 거래 개시의 날짜 구분, 양끝 포함 필터, 미래 예측 영역에서 역사 사건이 생성되지 않는 조건, 분류와 중요도 조합, 표시 수 제한 후 순서, 잘못된 입력, 중첩 객체의 불변성을 검증한다.
+`node --test --test-isolation=none --test-reporter=tap tests/bitcoin-events.test.mjs`로 주 준비자산법·은행 발표·IBIT 기록·텍사스 첫 투자 보강 뒤 14개 테스트를 실제 실행했다. 출처·날짜·중복 ID·검토일 상한·7개 블록 타임스탬프, 네 관세 사건의 발표일·유예 시행일·검색 별칭·PDT/EDT/UTC 날짜 일치, 공시와 거래 개시의 날짜 구분, 양끝 포함 필터, 미래 예측 영역에서 역사 사건이 생성되지 않는 조건, 분류와 중요도 조합, 표시 수 제한 후 순서, 잘못된 입력, 중첩 객체의 불변성을 검증한다.
 
-이 검증은 데이터 계약과 회귀 방지에 대한 것이다. 43개 사건의 정치적·경제적 의미에 대한 완전한 학술 검증이나 모든 링크의 영구 가용성을 보증하지 않는다. 이벤트의 화면 배치·클릭·모바일 겹침은 별도의 렌더러 통합 검증 대상이다.
+이 검증은 데이터 계약과 회귀 방지에 대한 것이다. 50개 사건의 정치적·경제적 의미에 대한 완전한 학술 검증이나 모든 링크의 영구 가용성을 보증하지 않는다. 이벤트의 화면 배치·클릭·모바일 겹침은 별도의 렌더러 통합 검증 대상이다.

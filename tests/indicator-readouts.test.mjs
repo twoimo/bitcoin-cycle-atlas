@@ -38,6 +38,20 @@ test('daily-only values never leak a stale daily forecast into an intraday selec
   assert.equal(value.value,'Vol 0.868811 BTC');
 });
 
+test('missing selected-day volume explains coverage without replacing the missing value',()=>{
+  const selection={...observed,date:'2026-11-07',source:'Coin Metrics',volume:null};
+  const workbench={volumeMeta:{source:'Bitstamp',firstDate:'2011-08-18',lastDate:'2026-11-06'}};
+  const result=read('volume',{selection,workbench});
+  assert.equal(result.value,'Vol 선택일 없음');
+  assert.match(result.title,/2026\.11\.07 UTC/);
+  assert.match(result.title,/Bitstamp BTC\/USD.*2011\.08\.18–2026\.11\.06 UTC/);
+  assert.match(result.title,/0이나 이전 거래량으로 채우지 않습니다/);
+  assert.equal(read('volume',{selection:{...selection,volume:0},workbench}).value,'Vol 0 BTC');
+  assert.equal(read('volume',{selection,workbench:{...workbench,marketLoading:true}}).value,'Vol 불러오는 중');
+  assert.equal(read('volume',{selection,workbench:{...workbench,intraday:true}}).value,'Vol 자료 없음');
+  assert.equal(read('volume',{selection:{...selection,kind:'simulated'},workbench}).value,'Vol 자료 없음');
+});
+
 test('historical clock with insufficient evidence cannot borrow current calibration',()=>{
   const cycle={causal:true,state:'shortened',label:'단축',appliedShiftDays:-52,cycleLengthDays:1409};
   assert.equal(read('cycle-timing',{selection:{...observed,cycleTiming:null},cycle}).value,'관측 근거 대기');

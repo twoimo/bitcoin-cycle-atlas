@@ -9,7 +9,7 @@ import { mountMobileWorkspace } from './mobile-workspace.js?v=1.29.0';
 
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const kst = value => value ? new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(value)) : '첫 갱신 대기';
+const kst = value => value ? new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(value)) : '확인 기록 없음';
 const compactKst = value => {
   const parts=Object.fromEntries(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Seoul',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(value)).map(part=>[part.type,part.value]));
   return `${parts.month}.${parts.day} ${parts.hour}:${parts.minute}`;
@@ -164,7 +164,7 @@ export function initViewportWorkspace(icon) {
   plot.prepend($('#lab-metrics'));plot.append($('.lab-chart-foot'));
   stage.append($('.lab-chart-meta'),$('.atlas-inspector'),$('#atlas-event-rail'));
   const tools=document.createElement('div');tools.className='atlas-canvas-tools';
-  tools.innerHTML='<button data-reader="selection">값·근거</button><button data-reader="guide">읽는 법</button><button data-reader="math">계산식</button><button data-reader="update" id="atlas-update-status" title="자동 갱신 상태"></button>';
+  tools.innerHTML='<button data-reader="selection">값·근거</button><button data-reader="guide">읽는 법</button><button data-reader="math">계산식</button><button data-reader="update" id="atlas-update-status" title="마지막 자료 확인"></button>';
   stage.append(tools);
   const workspace=$('.workspace');workspace.classList.add('atlas-details-layout');workspace.dataset.detailsOpen='false';
   const reader=document.createElement('aside');reader.id='chart-reader';reader.className='chart-details-panel';reader.hidden=true;reader.setAttribute('aria-labelledby','chart-reader-title');
@@ -248,10 +248,10 @@ export function initViewportWorkspace(icon) {
   }
   const status=()=>{
     const pending=!update.checkedAt;
-    $('#atlas-update-status').textContent=pending?'갱신 대기':`${compactKst(update.checkedAt)} KST`;
-    $('#atlas-update-status').setAttribute('aria-label',pending?'자동 자료 갱신 첫 실행 대기 · 상세 보기':`자동 자료 갱신 확인 ${kst(update.checkedAt)} KST · 상세 보기`);
+    $('#atlas-update-status').textContent=pending?'기록 없음':`${compactKst(update.checkedAt)} KST`;
+    $('#atlas-update-status').setAttribute('aria-label',pending?'자료 확인 기록 없음 · 상세 보기':`마지막 자료 확인 ${kst(update.checkedAt)} KST · 상세 보기`);
     $('#atlas-update-status').dataset.status=update.status;
-    $('#atlas-update-status').title=`차트 ${displayedObservationDate||'—'} UTC · 자동 배포 ${update.latestObservationDate||'—'} UTC · ${pending?'첫 실행 대기':kst(update.checkedAt)+' KST 확인'} · 6시간마다`;
+    $('#atlas-update-status').title=`차트 ${displayedObservationDate||'—'} UTC · 배포 자료 ${update.latestObservationDate||'—'} UTC · ${pending?'확인 기록 없음':'마지막 자료 확인 '+kst(update.checkedAt)+' KST'}`;
   };
   status();
   document.addEventListener('atlas:dataset',event=>{displayedObservationDate=event.detail.latestObservationDate;status();if(!reader.hidden&&reader.dataset.kind==='update')openReader('update',{preservePage:true});});
@@ -275,15 +275,15 @@ export function initViewportWorkspace(icon) {
     }else if(kind==='guide'){
       source.append($('.atlas-guide>div').cloneNode(true));
       source.insertAdjacentHTML('beforeend','<p>가격과 미래에서는 그래프를 눌러 날짜를 선택합니다. 오른쪽은 가격, 아래는 날짜입니다. ← → 키로 하루씩, 선택 상세의 이전·다음 버튼으로 고저점을 이동합니다.</p><p>휠로 확대·축소하고 드래그해 날짜와 가격 범위를 상하좌우로 이동합니다. 최대로 축소해도 빈 공간까지 이동할 수 있습니다. 가격축 Auto로 세로 범위를 다시 맞추고, 0 또는 Alt+R로 기본 범위로 돌아갑니다. 아래 날짜축을 끌어 확대·축소할 수도 있습니다. 왼쪽 −·+·초기화 아이콘도 같은 기능입니다. 이동 도구는 차트를 옮기고, 자 모양 도구는 두 날짜를 눌러 기간·가격 차이·변화율을 잽니다. 미래가 포함되면 가정 포함으로 표시합니다. 차트에 초점을 둔 상태에서 +·−·0 키를 사용할 수 있습니다. M 측정은 분·시간·일·주 간격 모두 지원합니다. 모바일에서는 길게 눌러 값을 추적하고, 한 번 탭해 추적을 끝냅니다. 두 손가락은 확대·축소로 전환됩니다.</p><p>Ctrl/⌘ Z는 실행 취소, Ctrl/⌘ Shift Z는 다시 실행입니다. 한 번의 이동·휠 동작을 한 단계로 기록하며 가격 조회나 마우스 따라보기는 기록하지 않습니다. 기록은 현재 탭에만 남습니다. 저장한 연구 측정은 별도 목록에서 좌표·메모를 편집하고 잠금·숨김·삭제할 수 있습니다.</p><p>상단 1m·5m·15m·30m·1h·4h·1D·1W는 표시 간격입니다. 선·캔들 버튼으로 표시 방식을 바꿉니다. 분·시간봉은 Coinbase의 완료된 실제 거래 봉이고, 1D·1W에서는 장기 전망이 이어집니다. 일·주봉 캔들과 거래량은 Bitstamp 현물 자료이며, 캔들이 없는 옛 기간은 Coin Metrics 일말 가격선을 유지합니다. 하단 기간 버튼은 화면에 보이는 범위입니다. USD·최근 관측=100·표시 시작 대비 %·표시 시작=100을 고를 수 있습니다. 시작 기준은 현재 보이는 첫 유효 가격이며 날짜와 원 USD 기준가를 함께 표시합니다. %와 시작=100은 선형입니다. 축 반전과 가격 자료만 Auto도 지원하며 원자료 가격은 바꾸지 않습니다. Alt+G의 UTC 날짜·시각 또는 기간 입력은 모든 간격에서 동작합니다. 상단 인디케이터 창에서 4년 비교·구간 길이·고점권 도달·월·분기·CryptoCon 검증을 추가하거나 삭제합니다. 분석은 가격 차트 내부의 창에 별도의 축으로 표시되며, 좌측 위 목록에서 개별 숨김·표시·삭제를 조작합니다. 각 지표의 설정에서는 실제 계산 입력, 선·음영 표현, 값·축 숫자, 표시할 간격을 따로 고릅니다. 분석 창은 제목의 버튼으로 최대화·순서 이동하고 하단 경계나 키보드로 높이를 조절합니다. 가격 차트의 높이를 늘리지 않고 기존 화면 안에 배치됩니다. 4년 비교의 가로축은 출발 후 경과일이며 달력 날짜가 아닙니다. 분석 항목을 눌러도 가격 날짜는 바뀌지 않으며, 날짜가 있는 항목만 ‘가격 차트에서 보기’로 연결합니다. 차트의 일반 클릭과 키보드 선택은 날짜·값만 고정하며 상세 패널의 열림 상태를 바꾸지 않습니다. 오른쪽 데이터 아이콘에서 고정한 날짜와 출처를 엽니다. 리서치와 원자료도 오른쪽 아이콘으로 엽니다. 고점권 도달과 실제 최고가 날짜는 서로 다를 수 있습니다.</p><p>내보내기는 창을 연 순간의 화면과 자료를 고정합니다. 가격 화면 또는 펼친 연구 창까지 PNG·SVG로 저장할 수 있습니다. CSV는 Coin Metrics 일별 가격, Bitstamp 일·주봉, Coinbase 분·시간봉, 조건부 가격 가정과 분석 지표를 각각 분리하며 출처·범위·원 단위·행 수를 먼저 보여 줍니다. 빈 구간을 가격으로 채우지 않습니다.</p>');
-      source.insertAdjacentHTML('beforeend','<h3>확대·이동과 빠른 조작</h3><p>포인터가 있는 곳을 중심으로 휠 확대·축소합니다. Shift+휠 또는 가로 휠은 이동합니다. 좌클릭 후 드래그하면 이동하고, 한 번 클릭하면 값을 고정합니다. 우클릭 또는 Shift+F10은 확대·전체 범위·선택 데이터 복사 메뉴를 엽니다. +·−는 확대·축소, Shift+←·→는 이동, 0·Alt+R·배경 더블클릭은 기본 범위 복원입니다. C는 십자선, H는 이동, M은 모든 표시 간격의 두 점 측정입니다.</p><h3>사건과 거래량</h3><p>사건 라벨의 색은 분류를 나타냅니다. 확대 수준에 따라 읽을 수 있는 라벨 수를 조절하며, 생략된 이름도 점과 전체 목록에서 찾을 수 있습니다. 클릭하면 원문과 사건 날짜의 해석을 확인합니다. 하단 주요 사건을 펼치면 표시 기간의 타임라인을 봅니다.</p><p>거래량 막대는 가격과 같은 날짜축을 사용하고 BTC 수량을 표시합니다. 일·주봉은 Bitstamp, 분·시간봉은 Coinbase BTC/USD 현물입니다. 실제 막대는 가격 상승·하락 봉과 같은 색을 씁니다. 장기 미래 거래량은 금색 점선과 가정 범위로 구별합니다. 모두 단일 거래소 BTC/USD를 기준으로 하며 세계 전체 물량이 아닙니다. 긴 범위에서 BTC 로그 축을 쓰면 제목에 표시하고, 0을 보존하는 log(1+수량) 눈금을 사용합니다. 우측 거래량 패널에서 출처·원문 교차 검증·모형 수식과 과거 예측 검증을 확인합니다.</p>');
+      source.insertAdjacentHTML('beforeend','<h3>확대·이동과 빠른 조작</h3><p>차트 안의 휠 확대·축소는 포인터가 가리키는 시각을 기준으로 합니다. Ctrl+휠도 같은 포인터 기준을 사용합니다. 가격축 위의 휠은 세로 가격 범위만 바꿉니다. Shift+휠 또는 가로 휠은 이동합니다. 좌클릭 후 드래그하면 이동하고, 한 번 클릭하면 값을 고정합니다. 우클릭 또는 Shift+F10은 확대·전체 범위·선택 데이터 복사 메뉴를 엽니다. +·−는 확대·축소, Shift+←·→는 이동, 0·Alt+R·배경 더블클릭은 기본 범위 복원입니다. C는 십자선, H는 이동, M은 모든 표시 간격의 두 점 측정입니다.</p><h3>사건과 거래량</h3><p>사건 라벨의 색은 분류를 나타냅니다. 확대 수준에 따라 읽을 수 있는 라벨 수를 조절하며, 생략된 이름도 점과 전체 목록에서 찾을 수 있습니다. 클릭하면 원문과 사건 날짜의 해석을 확인합니다. 하단 주요 사건을 펼치면 표시 기간의 타임라인을 봅니다.</p><p>거래량 막대는 가격과 같은 날짜축을 사용하고 BTC 수량을 표시합니다. 일·주봉은 Bitstamp, 분·시간봉은 Coinbase BTC/USD 현물입니다. 실제 막대는 가격 상승·하락 봉과 같은 색을 씁니다. 장기 미래 거래량은 금색 점선과 가정 범위로 구별합니다. 모두 단일 거래소 BTC/USD를 기준으로 하며 세계 전체 물량이 아닙니다. 긴 범위에서 BTC 로그 축을 쓰면 제목에 표시하고, 0을 보존하는 log(1+수량) 눈금을 사용합니다. 우측 거래량 패널에서 출처·원문 교차 검증·모형 수식과 과거 예측 검증을 확인합니다.</p>');
     }else if(kind==='math'){
       const modelInfo=$('#atlas-model-info');if(modelInfo){const copy=modelInfo.cloneNode(true);copy.hidden=false;source.append(copy);}
       source.append($('#atlas-exact-details .lab-details-body').cloneNode(true));
     }
     else{
-      source.innerHTML=`<p><b>현재 차트의 관측일</b><br>${esc(displayedObservationDate||'—')} UTC</p><p><b>자동 배포 자료의 관측일</b><br>${esc(update.latestObservationDate||'—')} UTC</p><p><b>자동 확인</b><br>${esc(kst(update.checkedAt))}${update.checkedAt?' KST':''}</p><p><b>가격 자료 변경</b><br>${esc(kst(update.dataUpdatedAt))} KST</p><p><b>상태</b><br>${esc({pending:'아직 자동 갱신을 실행하지 않았습니다.',validated:'검증을 통과한 새 일별 자료를 반영했습니다.','no-change':'확인 결과 새 완료 일봉이 없어 기존 자료를 유지했습니다.'}[update.status]||update.status)}</p><p>매일 03:20 · 09:20 · 15:20 · 21:20 KST에 확인합니다. GitHub 실행 대기나 데이터 제공 지연으로 시각이 달라질 수 있습니다. 당일 진행 중인 값은 제외합니다.</p><p>날짜 순서, 연속성, 양수 가격, 기존 기록 보존을 검증합니다. 실패하면 기존 공개 자료를 유지합니다. 차트는 갱신된 자료로 다시 계산하고, 과거 연구 보고서의 고정 표본은 유지합니다.</p><p><a href="https://github.com/twoimo/bitcoin-cycle-atlas/actions/workflows/refresh-data.yml" target="_blank" rel="noopener noreferrer">자동 갱신 실행 기록 ↗</a></p><p>Data © Coin Metrics · CC BY-NC 4.0 · 비상업 연구용 · UTC 일말 기준.</p>`;
+      source.innerHTML=`<p><b>현재 차트의 관측일</b><br>${esc(displayedObservationDate||'—')} UTC</p><p><b>배포 자료의 관측일</b><br>${esc(update.latestObservationDate||'—')} UTC</p><p><b>마지막 자료 확인</b><br>${esc(kst(update.checkedAt))}${update.checkedAt?' KST':''}</p><p><b>가격 자료 변경</b><br>${esc(kst(update.dataUpdatedAt))}${update.dataUpdatedAt?' KST':''}</p><p><b>상태</b><br>${esc({pending:'자료 확인 시각이 아직 기록되지 않았습니다.',validated:'검증을 통과한 새 일별 자료를 반영했습니다.','no-change':'확인 결과 새 완료 일봉이 없어 기존 자료를 유지했습니다.'}[update.status]||update.status)}</p><p>기록된 마지막 확인 시각과 완료된 UTC 일봉의 관측일을 표시합니다. 당일 진행 중인 값은 제외합니다.</p><p>날짜 순서, 연속성, 양수 가격, 기존 기록 보존을 검증합니다. 실패하면 기존 공개 자료를 유지합니다. 차트는 갱신된 자료로 다시 계산하고, 과거 연구 보고서의 고정 표본은 유지합니다.</p><p>Data © Coin Metrics · CC BY-NC 4.0 · 비상업 연구용 · UTC 일말 기준.</p>`;
       if(browserCheckedAt)source.insertAdjacentHTML('beforeend',`<p>이 브라우저에서 별도 확인한 시각 · ${esc(kst(browserCheckedAt))} KST</p>`);
-      if(displayedObservationDate!==update.latestObservationDate)source.insertAdjacentHTML('beforeend','<p>이 기기에 저장됐거나 별도로 가져온 자료가 자동 배포 번들보다 최신입니다. 차트는 현재 차트의 관측일까지 표시합니다.</p>');
+      if(displayedObservationDate!==update.latestObservationDate)source.insertAdjacentHTML('beforeend','<p>이 기기에 저장됐거나 별도로 가져온 자료의 관측일이 배포 자료와 다릅니다. 차트는 현재 차트의 관측일까지 표시합니다.</p>');
       if(update.runUrl)source.insertAdjacentHTML('beforeend',`<p><a href="${esc(update.runUrl)}" target="_blank" rel="noopener noreferrer">이 자료를 만든 실행 ↗</a></p>`);
     }
     showReader(kind,titles[kind],source,options);

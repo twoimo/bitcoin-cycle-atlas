@@ -128,24 +128,25 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
   <link rel="stylesheet" href="../../compact-chart-layout.css?v=1.29.0">
   <link rel="stylesheet" href="../../chart-bottom-bar.css?v=1.29.0">
   <link rel="stylesheet" href="../../symbol-selector.css?v=1.32.1">
-  <link rel="stylesheet" href="../../eth-view.css?v=1.36.0">
+  <link rel="stylesheet" href="../../eth-view.css?v=1.36.1">
   <link rel="stylesheet" href="../../equity-view.css?v=1.29.0">
   <link rel="stylesheet" href="../../research-reader.css?v=1.29.0">
   <link rel="stylesheet" href="../../ethereum-history.css?v=1.29.0">
   <link rel="stylesheet" href="../../daily-data.css?v=1.32.1">
   <link rel="stylesheet" href="../../forecast-journal.css?v=1.29.0">
-  <link rel="stylesheet" href="../../chart-replay.css?v=1.31.3">
+  <link rel="stylesheet" href="../../chart-replay.css?v=1.36.1">
   <link rel="stylesheet" href="../../monthly-backtest.css">
   <link rel="stylesheet" href="../../ipo-view.css?v=1.32.1">
   <link rel="stylesheet" href="../../market-lab.css?v=1.31.3">
-  <link rel="stylesheet" href="../../atlas-shell.css?v=1.36.0">
-  <link rel="stylesheet" href="../../compact-toolbar.css?v=1.36.0">
+  <link rel="stylesheet" href="../../atlas-shell.css?v=1.36.1">
+  <link rel="stylesheet" href="../../compact-toolbar.css?v=1.36.1">
   <link rel="stylesheet" href="../../legacy-workspace-toolbar.css?v=1.32.1">
   <link rel="stylesheet" href="../../vendor/skullet/styles.css?v=0.0.3">
   <link rel="stylesheet" href="../../loading-surfaces.css?v=20261103">
   <link rel="stylesheet" href="../../editorial-system.css?v=1.35.0">
   <link rel="stylesheet" href="../../editorial-panels.css?v=1.35.0">
   <link rel="stylesheet" href="../../editorial-ledgers.css?v=1.35.0">
+  <link rel="stylesheet" href="../../relay-room.css?v=1.36.0">
 </head>
 <body>
   <div id="atlas-boot-shell">
@@ -220,6 +221,7 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
       <button data-view="data" title="자산 비교표"><span data-icon="table"></span><span>자산 비교표</span></button>
       <button data-view="ipo" title="공모주 캘린더"><span data-icon="calendar"></span><span>공모주 캘린더</span></button>
       <button data-view="market" title="세 축 연구실 · 엑박·삼플레·RSI"><span data-icon="chart"></span><span>세 축 연구실</span></button>
+      <button data-view="relay" title="릴레이 콘텐츠 · 텔레그램·인생의 방·모바일한경"><span data-icon="relay"></span><span>릴레이 콘텐츠</span></button>
     </nav>
     <div id="market-header-slot" hidden></div>
     <div class="atlas-side-foot"><strong>실제 가격과 미래 예시</strong><br><span id="sidebar-asof">관측: 2026.10.20 UTC</span><br><span id="sidebar-reference">계산 기준: 2026.10.22</span></div>
@@ -358,6 +360,7 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
       </section>
       <section id="data-view" hidden aria-label="자산 비교표"><p role="status">자산 비교표를 준비하고 있습니다.</p></section>
       <section id="market-view" class="market-lab" aria-label="세 축 연구실" hidden><p role="status">연구 자료를 준비하고 있습니다.</p></section>
+      <section id="relay-view" class="relay-room" aria-label="릴레이 콘텐츠" hidden></section>
       <section id="ipo-view" aria-label="공모주 캘린더" hidden>
         <header class="ipo-heading">
           <div class="ipo-heading-title"><button class="ipo-back" type="button" data-view="outlook" aria-label="통합 차트로 돌아가기">←</button><h1>공모주 캘린더</h1></div>
@@ -383,6 +386,6 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
   <dialog id="method-dialog" aria-labelledby="method-title"><div class="dialog-top"><span class="eyebrow">자료와 방법론</span><button id="close-method" class="icon-button" aria-label="방법론 닫기"><span data-icon="close"></span></button></div><h2 id="method-title">방법론과 출처</h2><p class="dialog-lead">차트의 출발점부터 가격의 정의까지, 비교에 사용한 기준입니다.</p><div id="method-content"></div><button id="method-done" class="primary-button">확인했습니다</button></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <dialog id="evidence-dialog" aria-labelledby="evidence-detail-title"><div class="dialog-top"><span class="eyebrow">근거와 한계</span><button id="evidence-close" class="icon-button" aria-label="자료 상세 닫기"><span data-icon="close"></span></button></div><h2 id="evidence-detail-title"></h2><div id="evidence-detail-body"></div></dialog>
-  <script type="module" src="../../site-entry.js?v=1.36.0"></script>
+  <script type="module" src="../../site-entry.js?v=1.36.1"></script>
 </body>
 </html>

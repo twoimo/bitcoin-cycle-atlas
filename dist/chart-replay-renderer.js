@@ -4,7 +4,7 @@ import { chartPaneLayout } from './chart-overlays.js?v=1.29.0';
 import { createPriceAxisLayout, createPriceAxisFormatter, normalizePriceDomain } from './price-axis.js?v=1.29.0';
 import { pixelExtrema } from './chart-window.js?v=1.29.0';
 import { utcDay } from './cycle-engine.js?v=1.29.0';
-import { candleBodyWidth } from './chart-view-policy.js?v=1.36.0';
+import { candleBodyWidth } from './chart-view-policy.js?v=1.36.1';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const renderers = new WeakMap();

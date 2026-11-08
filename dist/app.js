@@ -114,7 +114,7 @@ document.addEventListener('atlas:page-ready', onInitialPageReady);
 let outlookController = null, workspacePromise = null, evidencePromise = null, evidenceModule = null;
 function ensureWorkspace() {
   if (!workspacePromise) workspacePromise = Promise.all([
-    import('./viewport-workspace.js?v=1.35.0'), import('./lab-view.js?v=1.36.0'),
+    import('./viewport-workspace.js?v=1.36.1'), import('./lab-view.js?v=1.36.1'),
   ]).then(([workspace, lab]) => {
     workspace.initViewportWorkspace(icon);
     outlookController = lab.initLabView();
@@ -127,7 +127,7 @@ function ensureWorkspace() {
   return workspacePromise;
 }
 function ensureEvidence() {
-  if (!evidencePromise) evidencePromise = import('./evidence-view.js?v=1.36.0').then(module => {
+  if (!evidencePromise) evidencePromise = import('./evidence-view.js?v=1.36.1').then(module => {
     module.initEvidenceView(); evidenceModule = module; module.showEvidenceView(state.view === 'evidence');
   }).catch(error => { evidencePromise = null; console.error('Evidence initialization failed', error); if (state.view === 'evidence') document.dispatchEvent(new CustomEvent('atlas:boot-error')); });
   return evidencePromise;
@@ -147,6 +147,7 @@ const relayController = initRelayRoomView({
   root: $('#relay-view'),
   onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'relay' } })),
   embeddedData: () => document.getElementById('embedded-relay-data')?.textContent ?? null,
+  embeddedAssets: () => document.getElementById('embedded-relay-assets')?.textContent ?? null,
 });
 $('#market-view').addEventListener('click', event => {
   if (state.view !== 'market' || !event.target.closest('[data-view="outlook"]')) return;

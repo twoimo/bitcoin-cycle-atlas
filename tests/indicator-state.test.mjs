@@ -12,6 +12,18 @@ test('fresh chart shows the indicator legend without unsolicited research analys
   assert.ok(state.added.includes('volume'));assert.ok(state.hidden.includes('volume'));assert.equal(isIndicatorVisible(state,'volume'),false);
 });
 
+test('first render keeps untouched BTC and direct instrument URLs free of default indicator parameters',()=>{
+  for(const mobile of [false,true])for(const search of ['', 'symbol=BTCUSD', 'symbol=TQQQ', 'symbol=HYPE', 'symbol=ETHUSD&granularity=1h']){
+    const params=new URLSearchParams(search),before=params.toString();
+    writeIndicatorState(params,readIndicatorState(params,{mobile}),{mobile});
+    assert.equal(params.toString(),before,`${search} mobile=${mobile}`);
+    const visible=changeIndicatorState(readIndicatorState(params,{mobile}),{action:'visibility',id:'volume'});
+    writeIndicatorState(params,visible,{mobile});
+    assert.equal(params.get('indicator-hide'),'');
+    assert.equal(isIndicatorVisible(readIndicatorState(params,{mobile}),'volume'),true);
+  }
+});
+
 test('fresh and reset charts keep volume added but hidden, and an explicit visible choice survives sharing on either device',()=>{
   for(const mobile of [false,true]){
     const fresh=readIndicatorState('',{mobile});assert.ok(fresh.added.includes('volume'));assert.equal(isIndicatorVisible(fresh,'volume'),false);

@@ -12,7 +12,10 @@ export function formatBtcVolume(value){
 
 export function chartPaneLayout({width,height,volume=true,drawdown=false,states=false,cycleTiming=false,top=66}){
   const small=width<600,short=height<360,left=Math.min(small?8:12,width*.05),right=Math.min(small?66:82,width*.25);
-  const axisY=height-Math.min(small?29:22,height*.15),bottom=axisY-Math.min(24,height*.12);
+  // Normal tick text and the selected date occupy separate vertical lanes.
+  // On wider charts the added date lane uses seven pixels from the former
+  // 24px plot-to-tick gap, preserving the price pane and its replay controls.
+  const axisY=height-Math.min(29,height*.15),dateBadgeTop=height-21,bottom=axisY-Math.min(small?24:17,height*.12);
   // Explicitly requested secondary panes stay present. Reduce their heights and
   // title gaps together when the viewport cannot hold their preferred sizes.
   top=Math.min(top,bottom*.55);
@@ -29,7 +32,7 @@ export function chartPaneLayout({width,height,volume=true,drawdown=false,states=
   const cycleBottom=cursor,cycleTop=cursor-cycleHeight*paneScale;if(cycleTiming)cursor=cycleTop-cycleGap;
   const ddBottom=cursor,ddTop=cursor-ddHeight*paneScale;if(drawdown)cursor=ddTop-ddGap;
   const priceBottom=cursor;
-  return {left,right,top,axisY,bottom,priceBottom,volumeTop,volumeBottom,ddTop,ddBottom,stateTop,stateBottom,cycleTop,cycleBottom,paneScale,
+  return {left,right,top,axisY,dateBadgeTop,bottom,priceBottom,volumeTop,volumeBottom,ddTop,ddBottom,stateTop,stateBottom,cycleTop,cycleBottom,paneScale,
     cycleTitleY:cycleTop-cycleGap*.25,cycleTitleFontSize:Math.min(10,cycleGap*.45),
     stateTitleY:stateTop-stateGap*.2,stateTitleFontSize:Math.min(10,stateGap*.65),
     ddTitleY:ddTop-ddGap*.28,ddTitleFontSize:Math.min(height<320?11:12,ddGap*.52),
@@ -38,6 +41,21 @@ export function chartPaneLayout({width,height,volume=true,drawdown=false,states=
 
 const overlaps=(a,b,padding=5)=>a.x<b.x+b.width+padding&&a.x+a.width+padding>b.x&&a.y<b.y+b.height+padding&&a.y+a.height+padding>b.y;
 const labelWidth=label=>[...label].reduce((width,char)=>width+(char.charCodeAt(0)>255?10:6),0);
+
+/** Keep tick text inside its own horizontal lane even when loaded dates cover
+ * only a narrow part of the viewport. Tick dates themselves never move. */
+export function layoutTimeTickLabels(ticks,{left,right,fontSize=10,gap=10}={}){
+  const placed=[];let after=left-gap;
+  for(const tick of ticks){
+    if(!Number.isFinite(tick.x)||tick.x<left||tick.x>right)continue;
+    const width=[...String(tick.label)].reduce((sum,char)=>sum+(char.charCodeAt(0)>255?1:/[ .:-]/.test(char)?.4:.68)*fontSize,0);
+    if(width>right-left)continue;
+    const textX=Math.max(left,Math.min(right-width,tick.x-width/2));
+    if(textX<after+gap)continue;
+    placed.push({...tick,textX,width});after=textX+width;
+  }
+  return placed;
+}
 function fitLabel(label,width){
   if(labelWidth(label)<=width)return label;
   let fitted='',used=0;
@@ -94,9 +112,8 @@ function historicalPreview(anchor,bounds){
   const {left,right,top,bottom}=bounds,availableWidth=Math.max(0,right-left-4),height=22;
   if(availableWidth<58||bottom-top<height+5)return null;
   const fullLabel=String(anchor.event.label||anchor.event.title),width=Math.min(190,Math.max(58,labelWidth(fullLabel)+18),availableWidth);
-  const above=anchor.y-10-height,below=anchor.y+10,preferred=anchor.y>(top+bottom)/2?above:below;
-  const y=clamp(preferred,top+2,bottom-height-3),x=clamp(anchor.x-width/2,left+2,right-width-2);
-  return {box:{x,y,width,height},label:fitLabel(fullLabel,width-18)};
+  const box=findHistoricalLabelBox(anchor,width,bounds,{offsets:[10,26,42,58,74,90],maxLeader:Infinity,mode:'preview'},bounds.obstacles||[],[]);
+  return box?{box,label:fitLabel(fullLabel,width-18)}:null;
 }
 
 function historicalMarkerLayout(anchors,bounds={}){
@@ -115,7 +132,7 @@ function historicalMarkerLayout(anchors,bounds={}){
     const anchor=pending[cursor++],fullLabel=String(anchor.event.label||anchor.event.title),width=Math.min(Math.max(58,labelWidth(fullLabel)+18),policy.maxWidth,availableWidth);
     let box=null;
     const crowded=selected.some(other=>Math.abs(anchor.x-other.x)<policy.minGap&&Math.abs(anchor.y-other.y)<policy.verticalGap);
-    if(boxes.length<policy.budget&&availableWidth>=58&&!crowded)box=findHistoricalLabelBox(anchor,width,bounds,policy,boxes,valid);
+    if(boxes.length<policy.budget&&availableWidth>=58&&!crowded)box=findHistoricalLabelBox(anchor,width,bounds,policy,[...boxes,...(bounds.obstacles||[])],valid);
     if(box){boxes.push(box);selected.push(anchor);needsSort=true;}
     placed.set(anchor.event.id,{...anchor,label:fitLabel(fullLabel,Math.max(0,width-18)),box,active:anchor.event.id===activeEventId,preview:box?null:historicalPreview(anchor,bounds)});
   }

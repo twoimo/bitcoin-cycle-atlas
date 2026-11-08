@@ -2,6 +2,33 @@
  * No production URL, freshness rule, price value or error is changed here.
  * A true result is only eligibility; the caller must verify the actual document's
  * failed-refresh UI and preserved archive cutoff before accepting its request ID. */
+export function offlineBtcRefreshSurface(spec,document={}){
+  if(spec?.consolidated!==true)return spec?.surface;
+  if(spec.page!=='workspace-consolidated'||spec.surface!==undefined||document.preview===true)return undefined;
+  // The evidence child boots its own BTC archive and refresh. Admit only that
+  // explicitly observed active document; its failed UI, cutoff and request's
+  // frame/loader identity still require separate browser verification.
+  if(document.consolidatedEvidence===true){
+    const owner=document.frameOwner;
+    if(document.nativeSymbol!=='BTCUSD'||document.page!=='evidence'||document.embedded!==true||
+      !owner||owner.parentCenter!=='evidence'||owner.count!==1||owner.source!==document.url||
+      owner.visible!==true||owner.topmost!==true||typeof document.url!=='string'||typeof owner.parentUrl!=='string')return undefined;
+    try{
+      const child=new URL(document.url),parent=new URL(owner.parentUrl),root='/bitcoin-cycle-atlas/';
+      if(!['http:','https:'].includes(child.protocol)||child.origin!==parent.origin||
+        child.username||child.password||parent.username||parent.password||
+        child.pathname!==root||!parent.pathname.startsWith(root)||
+        child.searchParams.getAll('page').length!==1||child.searchParams.get('page')!=='evidence'||
+        child.searchParams.getAll('embedded').length!==1||child.searchParams.get('embedded')!=='1')return undefined;
+      return 'evidence';
+    }catch{return undefined;}
+  }
+  // Initial consolidation leaves the native BTC parent in charge of its own
+  // refresh. Unknown child surfaces cannot borrow that parent's ownership.
+  if(document.nativeSymbol!=='BTCUSD'||document.page!=='outlook'||document.center!=='market-us')return undefined;
+  return 'btc';
+}
+
 export function isExpectedOfflineBtcRefresh(error,{surface,archiveAsOf}={}){
   if(!['btc','evidence','legacy','preview','center-data'].includes(surface)||!error||
     error.networkEvent!=='Network.loadingFailed'||typeof error.errorText!=='string'||error.blockedReason!=='inspector'||error.method!=='GET'||error.resourceType!=='Fetch'||

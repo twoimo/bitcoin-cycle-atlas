@@ -19,8 +19,8 @@ function isDay(value) {
 }
 
 test('historical catalog stays sourced, unique, chronological and within its review cutoff', () => {
-  assert.ok(BITCOIN_EVENTS.length >= 30 && BITCOIN_EVENTS.length <= 45);
-  assert.equal(BITCOIN_EVENTS_REVIEW_DATE, '2026-10-22');
+  assert.equal(BITCOIN_EVENTS.length, 50);
+  assert.equal(BITCOIN_EVENTS_REVIEW_DATE, '2026-11-08');
   assert.equal(new Set(BITCOIN_EVENTS.map(event => event.id)).size, BITCOIN_EVENTS.length);
   let previous = '';
   for (const event of BITCOIN_EVENTS) {
@@ -34,13 +34,14 @@ test('historical catalog stays sourced, unique, chronological and within its rev
     assert.ok(event.label.length <= 24, `${event.id}: compact chart label`);
     assert.ok(event.title && event.description && event.dateBasis);
     assert.ok(event.limitations.length > 0);
-    assert.ok(event.sources.some(source => source.type === 'primary'), `${event.id}: no primary evidence`);
+    const reportedPlan = event.id === 'jpmorgan-crypto-collateral-plan-2025';
+    assert.ok(reportedPlan || event.sources.some(source => source.type === 'primary'), `${event.id}: no primary evidence`);
     assert.ok(!Object.hasOwn(event, 'sentiment') && !Object.hasOwn(event, 'priceImpact'), 'historical context has no invented price-direction score');
     for (const source of event.sources) {
       assert.equal(new URL(source.url).protocol, 'https:');
       assert.ok(source.publisher && source.title);
       assert.ok(['primary', 'secondary'].includes(source.type));
-      assert.equal(source.accessedAt, BITCOIN_EVENTS_REVIEW_DATE);
+      assert.ok(isDay(source.accessedAt) && source.accessedAt <= BITCOIN_EVENTS_REVIEW_DATE);
       if (source.publishedAt !== null) {
         assert.ok(isDay(source.publishedAt));
         assert.ok(source.publishedAt <= BITCOIN_EVENTS_REVIEW_DATE);
@@ -85,6 +86,72 @@ test('offer, disclosure, approval, trading and completion dates remain distinct'
   assert.equal(byId('saxony-sale-2024').date, '2024-07-12');
   assert.equal(byId('saxony-sale-2024').sources[0].publishedAt, '2024-07-16');
   assert.equal(byId('sab-122-2025').date, '2025-01-23', 'announcement, not January 30 effective date');
+});
+
+test('state reserve laws distinguish signing, legal powers and executed purchases', () => {
+  const nh = byId('new-hampshire-reserve-law-2025');
+  assert.equal(nh.date, '2025-05-06');
+  assert.match(nh.description, /5%/);
+  assert.doesNotMatch(nh.description, /10%/);
+  assert.match(nh.dateBasis, /7월 5일/);
+  assert.match(nh.limitations.join(' '), /실제 BTC 매입/);
+  assert.ok(nh.sources.some(source => new URL(source.url).hostname.endsWith('nh.gov')));
+  const az = byId('arizona-unclaimed-crypto-reserve-2025');
+  assert.equal(az.date, '2025-05-07');
+  assert.match(az.description, /미청구재산/);
+  assert.match(az.limitations.join(' '), /공적자금.*매입.*표현하지 않는다/);
+  const tx = byId('texas-bitcoin-reserve-law-2025');
+  assert.equal(tx.date, '2025-06-20');
+  assert.match(tx.description, /주 재무부 밖.*회계감사관/);
+  assert.match(tx.description, /24개월.*5,000억 달러 이상/);
+  assert.match(tx.limitations.join(' '), /첫 BTC 매입일로 사용하지 않는다/);
+});
+
+test('bank partnership and collateral reporting preserve announcement and plan status', () => {
+  const partnership = byId('jpmorgan-coinbase-partnership-2025');
+  assert.equal(partnership.date, '2025-07-30');
+  assert.equal(partnership.importance, 2);
+  assert.match(partnership.description, /신용카드로 Coinbase 계좌에 자금을 넣는/);
+  assert.match(partnership.description, /2025년 가을.*2026년/);
+  assert.match(partnership.limitations.join(' '), /직접 거래.*뜻이 아니다/);
+  const plan = byId('jpmorgan-crypto-collateral-plan-2025');
+  assert.equal(plan.date, '2025-10-24');
+  assert.equal(plan.importance, 1);
+  assert.match(plan.title, /계획 보도/);
+  assert.match(plan.description, /기관 고객.*BTC·ETH/);
+  assert.match(plan.limitations.join(' '), /공식 출시 발표를 확인하지 못했다/);
+  assert.ok(plan.sources.every(source => source.type === 'secondary'));
+  assert.deepEqual(plan.sources.map(source => source.publishedAt), ['2025-10-24', '2025-07-22']);
+  for (const id of ['new-hampshire-reserve-law-2025', 'arizona-unclaimed-crypto-reserve-2025', 'texas-bitcoin-reserve-law-2025', partnership.id, plan.id]) {
+    assert.ok(byId(id).sources.every(source => source.accessedAt === '2026-11-08'));
+  }
+  assert.equal(byId('genesis-2009').sources[0].accessedAt, '2026-10-22', 'new research must not imply old sources were all re-read');
+});
+
+test('IBIT asset milestone preserves reporting-day uncertainty and AUM definition', () => {
+  const event = byId('ibit-70-billion-record-2025');
+  assert.equal(event.date, '2025-06-09');
+  assert.equal(event.importance, 2);
+  assert.match(event.description, /341거래일.*700억 달러/);
+  assert.match(event.description, /GLD.*1,691거래일/);
+  assert.match(event.limitations.join(' '), /6월 6일/);
+  assert.match(event.limitations.join(' '), /누적 순유입액이 아니다/);
+  assert.ok(event.sources.some(source => source.type === 'primary' && new URL(source.url).hostname === 'www.blackrock.com'));
+  assert.equal(event.sources.find(source => source.publisher === 'etf.com').publishedAt, '2025-06-11');
+});
+
+test('Texas first investment separates trade, reporting, instrument and later aggregate funding', () => {
+  const event = byId('texas-bitcoin-reserve-first-investment-2025');
+  assert.equal(event.date, '2025-11-20');
+  assert.equal(event.importance, 3);
+  assert.match(event.description, /1,000만 달러 중 첫 500만 달러/);
+  assert.match(event.dateBasis, /12월 8일.*12월 9일/);
+  assert.match(event.limitations.join(' '), /IBIT 주식.*51\.8694/);
+  assert.match(event.limitations.join(' '), /현물 BTC 직접 매입으로 단정하거나 IBIT를 배제하지 않는다/);
+  assert.match(event.limitations.join(' '), /후속 합계 상태/);
+  assert.deepEqual(event.sources.map(source => source.publishedAt), ['2025-12-08', '2025-12-09', '2026-05-07']);
+  assert.ok(event.sources.every(source => source.accessedAt === '2026-11-08'));
+  assert.ok(!BITCOIN_EVENTS.some(item => /2026.*ETF.*10위/.test(item.title)), 'unverified all-ETF ranking must not become a historical fact');
 });
 
 test('tariff events preserve announcement dates, policy qualifications and searchable common aliases', () => {

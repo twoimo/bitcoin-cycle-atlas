@@ -61,6 +61,48 @@ export async function inspectCloudflareRuntime(){
     targetRuntimeVerified:false,gateStatus:'INSPECTED_ONLY',dockerRequired:false};
 }
 
+// Alternate official endpoints for these exact reviewed release bytes only.
+// A changed pin must not silently reuse an asset from an earlier release.
+const runtimeAssetFallbacks=[
+  {url:'https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.13%2B9/OpenJDK21U-jre_x64_linux_hotspot_21.0.13_9.tar.gz',
+    sha256:'a535a1df9c6284d9618872984e026ae0352d1f7e9e0605425c0e6114f47351dd',
+    api:'https://api.github.com/repos/adoptium/temurin21-binaries/releases/assets/665758876'},
+  {url:'https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar',
+    sha256:'936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88',
+    api:'https://api.github.com/repos/tlaplus/tlaplus/releases/assets/184694200'},
+];
+
+// Keep every transport inside the caller's existing remaining-budget runner.
+export function createRuntimeDownloader(run,log=()=>{}){
+  return async function download(url,destination,expected,hashFn=sha){
+    try{const bytes=await readFile(destination);if(hashFn(bytes)===expected)return;}catch(error){if(error.code!=='ENOENT')throw error;}
+    await mkdir(dirname(destination),{recursive:true});
+    const temporary=destination+'.download';
+    try{
+      log('ATLAS_RUNTIME_DOWNLOAD '+JSON.stringify({url,integrity:expected})+'\n');
+      const args=['--fail','--location','--silent','--show-error','--retry','2','--connect-timeout','20','--max-time','180','--output',temporary];
+      const fallback=runtimeAssetFallbacks.find(asset=>asset.url===url&&asset.sha256===expected);
+      if(!fallback)await run('curl',[...args,url]);
+      else{
+        const result=await run('curl',[...args,'--write-out','\nATLAS_RUNTIME_HTTP_STATUS:%{http_code}\n',url],{allowFailure:true});
+        if(result.code!==0){
+          // curl --write-out describes the final transfer, unlike stderr which
+          // may also contain an earlier retry's status. Timeouts/TLS/logging
+          // failures, 4xx responses and missing/ambiguous status fail closed.
+          const statuses=[...result.output.matchAll(/^ATLAS_RUNTIME_HTTP_STATUS:(\d{3})\r?$/gm)];
+          const status=statuses.length===1?Number(statuses[0][1]):0;
+          if(result.code!==22||status<500||status>599)throw new Error('curl failed ('+result.code+'): '+result.output.slice(-4000));
+          await rm(temporary,{force:true});
+          log('ATLAS_RUNTIME_DOWNLOAD '+JSON.stringify({url:fallback.api,integrity:expected,originalUrl:url,afterHttpStatus:status})+'\n');
+          await run('curl',[...args,'--header','Accept: application/octet-stream',fallback.api]);
+        }
+      }
+      const bytes=await readFile(temporary);if(hashFn(bytes)!==expected)throw new Error('Downloaded runtime bytes do not match the committed integrity pin: '+url);
+      await writeFile(destination,bytes);
+    }finally{await rm(temporary,{force:true});}
+  };
+}
+
 async function runtimeContext({root=repositoryRoot,log=()=>{},timeoutMs=480000}={}){
   const started=Date.now(),inspected=await inspectCloudflareRuntime();
   if(process.version!==pinned.node||process.platform!==pinned.platform||process.arch!==pinned.arch)
@@ -69,16 +111,7 @@ async function runtimeContext({root=repositoryRoot,log=()=>{},timeoutMs=480000}=
   const toolsDirectory=resolve(root,'build/cloudflare-tools');await mkdir(toolsDirectory,{recursive:true});
   const remaining=()=>{const value=timeoutMs-(Date.now()-started);if(value<1000)throw new Error('Cloudflare runtime installation exceeded its bound');return value;};
   const run=(command,args,options={})=>runRuntimeCommand(command,args,{cwd:root,log,timeout:Math.min(remaining(),180000),...options});
-  async function download(url,destination,expected,hashFn=sha){
-    try{const bytes=await readFile(destination);if(hashFn(bytes)===expected)return;}catch(error){if(error.code!=='ENOENT')throw error;}
-    await mkdir(dirname(destination),{recursive:true});
-    const temporary=destination+'.download';
-    try{
-      await run('curl',['--fail','--location','--silent','--show-error','--retry','2','--connect-timeout','20','--max-time','180','--output',temporary,url]);
-      const bytes=await readFile(temporary);if(hashFn(bytes)!==expected)throw new Error('Downloaded runtime bytes do not match the committed integrity pin: '+url);
-      await writeFile(destination,bytes);
-    }finally{await rm(temporary,{force:true});}
-  }
+  const download=createRuntimeDownloader(run,log);
   return {root,started,inspected,toolsDirectory,run,download};
 }
 

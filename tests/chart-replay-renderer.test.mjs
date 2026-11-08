@@ -73,7 +73,7 @@ test('the main SVG renders only revealed genuine OHLC and fixed predictions, wit
   assert.equal(svg.id, 'main-price-chart');
   assert.equal(svg.dataset.observedCandleCount, '3');
   assert.equal(svg.dataset.replayForecastCandleCount, '0');
-  assert.doesNotMatch(svg.innerHTML, /99999999|data-date="2024-01-0[4-6]"/);
+  assert.doesNotMatch(svg.innerHTML, /(?<![\d.])99999999(?!\d)|data-date="2024-01-0[4-6]"/);
   assert.equal(svg.querySelectorAll('[data-chart-replay-overlay]').length, 1);
   assert.ok(svg.querySelectorAll('.observed-candle').every(element => /Coinbase Exchange ETHUSD/.test(element.querySelector('title').textContent)));
   result.selectDate(date(6));

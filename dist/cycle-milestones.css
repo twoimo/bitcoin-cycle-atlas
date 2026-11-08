@@ -74,7 +74,7 @@
 /* Studies stay below the upper readout. The bottom legend uses horizontal
    scrolling on narrow plots and consumes no space in this upper HUD stack. */
 @container price-plot (max-width:850px){
- .atlas-plot:has(>.lab-chart-foot:not([hidden]))>:is(#lab-metrics,.workbench-market-info){max-width:calc(100% - 20px)}
+ .atlas-plot:has(>.lab-chart-foot:not([hidden]))>:is(#lab-metrics,.workbench-market-info){max-width:calc(100% - var(--plot-right-gap,80px) - 10px)}
  .atlas-plot>.chart-indicator-manager,.atlas-plot:has(>.lab-chart-foot:not([hidden]))>.chart-indicator-manager{top:calc(var(--indicator-top,75px) + var(--chart-hud-legend-height) + var(--chart-hud-gap));max-width:calc(100% - var(--plot-right-gap,80px) - 20px)}
  .atlas-plot .chart-indicator-list{max-height:min(180px,25dvh,max(32px,calc(var(--plot-height,600px) - var(--indicator-top,75px) - var(--chart-hud-countdown-height) - var(--chart-hud-legend-height) - 150px)))}
  .atlas-plot>.analysis-indicator-windows,.atlas-plot[data-countdown-visible=true]>.analysis-indicator-windows{--analysis-stack-top:calc(var(--indicator-top,75px) + var(--chart-hud-legend-height) + var(--indicator-manager-height,0px) + var(--chart-hud-gap) + 8px)}

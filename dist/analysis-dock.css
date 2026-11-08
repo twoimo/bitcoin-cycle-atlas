@@ -1,12 +1,12 @@
 /* Indicator controls stay inside the chart; there is no lower analysis dock. */
-.chart-indicator-manager{position:absolute;top:var(--indicator-top,75px);left:10px;z-index:9;width:max-content;max-width:min(620px,calc(100% - 95px));color:var(--muted);font-size:11px;line-height:1.4;background:transparent;border:0;border-radius:0;box-shadow:none;text-shadow:none}
+.chart-indicator-manager{display:flex;flex-direction:column;align-items:stretch;position:absolute;top:var(--indicator-top,75px);left:10px;z-index:9;width:max-content;max-width:min(620px,calc(100% - 95px));color:var(--muted);font-size:11px;line-height:1.4;background:transparent;border:0;border-radius:0;box-shadow:none;text-shadow:none}
 .chart-indicator-manager:has(:focus-visible){z-index:13;background:transparent;box-shadow:none}
 .chart-indicator-manager button,.analysis-window-heading button{display:grid;place-items:center;width:24px;height:24px;min-height:0;flex:none;margin:0;padding:4px;border:0;border-radius:3px;color:var(--analysis-dock-ink-2);background:transparent;cursor:pointer}
 .chart-indicator-manager button:hover,.analysis-window-heading button:hover{background:var(--analysis-dock-surface-2);color:var(--analysis-dock-ink-3)}
 .chart-indicator-manager svg,.analysis-window-heading button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 /* Even the shortest plot keeps a usable row and access to the remaining values. */
-.chart-indicator-list{min-height:32px;max-height:min(220px,28dvh,max(0px,calc(var(--plot-height,700px) - var(--indicator-top,75px) - 150px)));overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--analysis-dock-ink-4) transparent;padding:0 4px 0 0}
-.chart-indicator-manager .indicator-legend-toggle{display:grid;place-items:center;width:29px;min-width:29px;height:21px;min-height:21px;padding:2px 8px;margin-top:2px;color:var(--analysis-dock-ink-5);background:var(--analysis-dock-surface-3);border:1px solid var(--analysis-dock-rule);border-radius:3px;text-shadow:none}
+.chart-indicator-list{flex:0 1 auto;box-sizing:border-box;margin-bottom:4px;scroll-padding-bottom:4px;min-height:32px;max-height:min(220px,28dvh,max(0px,calc(var(--plot-height,700px) - var(--indicator-top,75px) - 150px)));overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--analysis-dock-ink-4) transparent;padding:0 4px 0 0}
+.chart-indicator-manager .indicator-legend-toggle{flex:none;align-self:flex-start;display:grid;place-items:center;width:29px;min-width:29px;height:21px;min-height:21px;padding:2px 8px;margin-top:2px;color:var(--analysis-dock-ink-5);background:var(--analysis-dock-surface-3);border:1px solid var(--analysis-dock-rule);border-radius:3px;text-shadow:none}
 .chart-indicator-manager .indicator-legend-toggle:hover{background:var(--analysis-dock-surface-4);color:var(--analysis-dock-ink-3)}
 .chart-indicator-manager[data-collapsed=true] .indicator-legend-toggle{margin-top:0}
 .indicator-row[hidden],.indicator-legend-toggle[hidden]{display:none!important}

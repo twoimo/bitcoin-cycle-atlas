@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
-import { chartPaneLayout, formatBtcVolume, historicalMarkersMarkup, layoutHistoricalMarkers, volumePaneMarkup } from '../dist/chart-overlays.js';
+import { chartPaneLayout, formatBtcVolume, historicalMarkersMarkup, layoutHistoricalMarkers, layoutTimeTickLabels, volumePaneMarkup } from '../dist/chart-overlays.js';
 import { drawAtlasPriceChart } from '../dist/atlas-price-chart.js';
 import { drawIntradayChart } from '../dist/intraday-chart.js';
 import { aggregateWeeklyVolume } from '../dist/volume-data.js';
@@ -45,6 +45,28 @@ test('BTC volume formatting preserves the base unit and distinguishes missing da
   assert.equal(formatBtcVolume(1250), '1.25k');
   assert.equal(formatBtcVolume(2500000), '2.5M');
   for (const value of [-1, NaN, Infinity, undefined]) assert.equal(formatBtcVolume(value), '—');
+});
+
+test('time tick labels stay separated and contained when long dates cluster in a short loaded window',()=>{
+  for(const width of [210,280,1150]){
+    const candidates=Array.from({length:8},(_,index)=>({x:12+index*width/14,label:`2026-08-${String(index+1).padStart(2,'0')} 12:00`}));
+    const ticks=layoutTimeTickLabels(candidates,{left:12,right:width+12});
+    assert.ok(ticks.length>0&&ticks.length<candidates.length);
+    for(const [index,tick]of ticks.entries()){
+      assert.ok(tick.textX>=12&&tick.textX+tick.width<=width+12);
+      if(index)assert.ok(tick.textX>=ticks[index-1].textX+ticks[index-1].width+10);
+      assert.equal(tick.x,candidates.find(candidate=>candidate.label===tick.label).x,'source tick position stays unchanged');
+    }
+  }
+});
+
+test('selected date badges occupy a separate lane below normal date ticks',()=>{
+  for(const [width,height]of [[390,844],[320,740],[390,430],[795,285],[1280,720]]){
+    const layout=chartPaneLayout({width,height});
+    assert.ok(layout.dateBadgeTop>=layout.axisY+4);
+    assert.ok(layout.dateBadgeTop+18<=height);
+    assert.ok(layout.axisY-12>=layout.bottom+4,'normal date text retains clear space above its own lane');
+  }
 });
 
 test('volume bars use reported BTC amounts and preserve missing timestamps rather than inserting bars', () => {
@@ -167,6 +189,16 @@ test('the market-state ribbon exports its own title without changing selected va
 });
 
 const event = (id, date, importance = 1, label = id) => ({ id, date, importance, label, title: label, category: 'market' });
+
+test('historical names and focus previews avoid reserved HUD and period-arrow regions on narrow charts',()=>{
+  const bounds={left:8,right:230,top:20,bottom:260,visibleSpanDays:90,obstacles:[{x:8,y:150,width:222,height:90},{x:8,y:20,width:100,height:35}]};
+  const anchors=Array.from({length:8},(_,index)=>({event:event(`reserved-${index}`,`2026-08-${String(index+1).padStart(2,'0')}`,3,'역사 사건'),x:20+index*28,y:110+index*12}));
+  const markers=layoutHistoricalMarkers(anchors,bounds);
+  assert.equal(markers.length,anchors.length);assert.ok(markers.some(marker=>marker.box));
+  for(const marker of markers)for(const box of [marker.box,marker.preview?.box].filter(Boolean))for(const obstacle of bounds.obstacles){
+    assert.ok(box.x+box.width<=obstacle.x||box.x>=obstacle.x+obstacle.width||box.y+box.height<=obstacle.y||box.y>=obstacle.y+obstacle.height);
+  }
+});
 const dayNumber = date => Date.parse(`${date}T00:00:00Z`) / 86400000;
 const displayedIds = result => result.markers.filter(marker => marker.box).map(marker => marker.event.id);
 const insideBox = (box, bounds) => {

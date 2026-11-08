@@ -2,17 +2,17 @@ import { atlasResourcePath } from './site-paths.js';
 import {browserCyclePeriodWorkerFactory,buildCyclePeriodComparison,calculateCyclePeriodSensitivity,cyclePeriodComparisonMarkup,cycleComparisonFields,macroClockInspection} from './cycle-period-comparison.js';
 import { setChartLoading } from './loading-surfaces.js';
 import { beginAction, finishAction, measureSync } from './performance-diagnostics.js?v=1.29.0';
-import {mountChartReplay} from './chart-replay.js?v=1.36.0';
+import {mountChartReplay} from './chart-replay.js?v=1.36.1';
 import { createForecastComputation, browserForecastWorkerFactory } from './forecast-computation.js?v=1.29.0';
 import {bitcoinForecastEvidence} from './forecast-evidence.js?v=1.29.0';
-import {openResearchArticle} from './research-reader.js?v=1.36.0';
+import {openResearchArticle} from './research-reader.js?v=1.36.1';
 import {priceLegendMarkup,priceReadoutKind,observedPriceSourceLabel} from './price-legend.js?v=1.31.3';
 import { buildCycleMilestones, INTERVAL_RELATIONS, MILESTONE_TYPES } from "./cycle-milestones.js?v=1.29.0";
 import { cycleLegendMarkup, cycleMilestoneInspection, cycleIntervalInspection, cycleDurationLabel } from "./cycle-milestones-view.js?v=1.29.0";
 import { resolveCycleSelection, cycleSelectionViewport, cycleOverviewViewport } from './cycle-selection.js?v=1.29.0';
-import { drawAtlasPriceChart as drawChart, priceChartOverlayObstacles } from "./atlas-price-chart.js?v=1.36.0";
+import { drawAtlasPriceChart as drawChart, priceChartOverlayObstacles } from "./atlas-price-chart.js?v=1.36.1";
 import { renderCryptoConAudit } from './cryptocon-audit.js?v=1.29.0';
-import { bindChartNavigation, panRange } from './chart-navigation.js?v=1.36.0';
+import { bindChartNavigation, panRange } from './chart-navigation.js?v=1.36.1';
 import { renderAtlasAnalysis } from "./atlas-analysis.js?v=1.29.0";
 import { ANALYSIS_MODES, analysisCalendarDate, shouldPublishInspection, analysisSelectionSummary } from "./analysis-dock.js?v=1.29.0";
 import { INDICATORS, readIndicatorState, writeIndicatorState, changeIndicatorState, applyIndicatorLayout, isIndicatorVisible, visibleAnalysisIds, indicatorSettings, applyIndicatorPresentation } from './indicator-state.js?v=1.29.0';
@@ -21,7 +21,7 @@ import { chartSelectionHandler } from './inspection-policy.js?v=1.29.0';
 import { buildLongHorizonForecast, LONG_HORIZON_SCENARIOS } from "./long-horizon-forecast.js?v=1.29.0";
 import { longHorizonMethodMarkup } from './long-horizon-view.js?v=1.29.0';
 import { CHART_INTERVALS, chartInterval, isIntradayInterval } from './ohlc-data.js?v=1.29.0';
-import { drawIntradayChart } from "./intraday-chart.js?v=1.36.0";
+import { drawIntradayChart } from "./intraday-chart.js?v=1.36.1";
 import { createMarketDataController, marketStatusText } from "./market-data-controller.js?v=1.29.0";
 import { parseVolumeSnapshot, aggregateWeeklyVolume } from './volume-data.js?v=1.29.0';
 import { fitVolumeForecastModel, projectVolumeForecast } from './volume-forecast.js?v=1.29.0';
@@ -37,7 +37,7 @@ import { readWorkspaceViewport, readWorkspacePriceDomain, readWorkspaceAxisOptio
 import { normalizePriceDomain } from './price-axis.js?v=1.29.0';
 import { clearChartHover } from './chart-hover.js?v=1.29.0';
 import { PRICE_UNITS, isStartPriceUnit, formatDisplayPrice } from './price-display.js?v=1.29.0';
-import { transitionViewport, withChartSpacing } from './chart-view-policy.js?v=1.36.0';
+import { transitionViewport, withChartSpacing } from './chart-view-policy.js?v=1.36.1';
 import { createWorkspaceHistory, captureHistoryCommand, historyShortcut } from './workspace-history.js?v=1.29.0';
 import { mountChartTouchTracking } from "./chart-touch-tracking.js?v=1.29.0";
 import { mountChartExportWorkbench } from './chart-export-workbench.js?v=1.29.0';
@@ -368,6 +368,9 @@ export function initLabView() {
     return [.236,.382,.5,.618,.786].map(ratio=>({ratio,price:b.type==='high'?high-ratio*(high-low):low+ratio*(high-low),startDate:b.confirmationDate}));
   }
   function syncAtlasUrl(){
+    // A late native render may complete beneath an embedded workspace. The
+    // selected center owns navigation until the original BTC chart returns.
+    if(document.body.dataset.centerTool)return;
     const p=new URLSearchParams(location.search);
     writeIndicatorState(p,state.indicators);
     for(const [key,value,defaultValue] of [['span',state.window,DEFAULT_CHART_SPAN],['magnet',state.magnet,'off'],['assumption',state.scenario,'base'],['granularity',state.frequency,'daily'],['axis',state.scale,'log'],['align',state.atlasAlignment,'trough'],['interval',state.atlasPeriod,'monthly'],['measure',state.atlasMetric,'returnPct'],['scope',state.atlasScope,'recent'],['phase',state.atlasPhase,'macro'],['audit',state.cryptoView,'timing']])value===defaultValue?p.delete(key):p.set(key,value);
@@ -759,7 +762,7 @@ export function initLabView() {
       const first=captured.dataset.prices[0];
       return chartPresetRange({asOf:captured.forecast.asOf,referenceDate:captured.forecast.referenceDate??captured.forecast.asOf,firstDate:Array.isArray(first)?first[0]:first.date,lastDate:captured.forecast.path.at(-1).date,span});
     },
-    loadAtlasRenderer:()=>import('./chart-replay-atlas.js?v=1.36.0'),
+    loadAtlasRenderer:()=>import('./chart-replay-atlas.js?v=1.36.1'),
     loadRetrospectiveModel:()=>import('./replay-retrospective.js'),
     loadCutoffModel:()=>import('./replay-cutoff-forecast.js'),
     onAtlasFrame:({session,data,start,end,chartType,context,frequency=data.frequency??'daily',window=state.chartReplaySnapshot?.window??DEFAULT_CHART_SPAN,customRange=false,axis})=>{

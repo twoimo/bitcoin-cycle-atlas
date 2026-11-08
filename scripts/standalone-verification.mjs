@@ -4,6 +4,7 @@ import { resolve, dirname, relative, sep } from 'node:path';
 import { javascriptModuleReferences, javascriptModuleSpecifiers } from './module-references.mjs';
 import { readForecastArchive } from './build-forecast-ledger.mjs';
 import { checkPublication } from './build-publication.mjs';
+import {readRelayStandaloneAssets} from './relay-standalone-assets.mjs';
 import { PROJECT_REPLAY_ORIGIN,parseProjectReplayBaseline } from '../dist/project-replay-baseline.js';
 
 export async function verifyStandaloneArtifact(html, dist) {
@@ -67,16 +68,24 @@ export async function verifyStandaloneArtifact(html, dist) {
     'asset-comparison':'asset-comparison.json',
     'ipo-calendar':'ipo-calendar.json',
     'market-lab':'market-lab.json',
+    relay:'relay/index.json',
   };
   for (const [id, file] of Object.entries(snapshots)) {
     const scripts = [...html.matchAll(new RegExp(`<script\\b[^>]*id=["']embedded-${id}-data["'][^>]*>([\\s\\S]*?)<\\/script>`, 'gi'))];
     assert.equal(scripts.length, 1, `Missing or repeated snapshot: ${id}`);
-    assert.deepEqual(JSON.parse(scripts[0][1]), JSON.parse(await readFile(resolve(directory, 'data', file), 'utf8')), `Changed embedded snapshot: ${id}`);
+    const original=await readFile(resolve(directory,'data',file),'utf8');
+    assert.deepEqual(JSON.parse(scripts[0][1]),JSON.parse(original),`Changed embedded snapshot: ${id}`);
+    if(id==='relay')assert.ok(scripts[0][1]===original.replaceAll('<','\\u003c'),'Changed embedded relay source bytes');
   }
   const embeddedJson=id=>{
     const values=[...html.matchAll(new RegExp(`<script\\b[^>]*id=["']${id}["'][^>]*>([\\s\\S]*?)<\\/script>`,'gi'))];
     assert.equal(values.length,1,`Missing or repeated archive: ${id}`);return JSON.parse(values[0][1]);
   };
+  const relaySource=JSON.parse(await readFile(resolve(directory,'data/relay/index.json'),'utf8'));
+  const expectedRelayAssets=await readRelayStandaloneAssets(directory,relaySource),relayAssets=embeddedJson('embedded-relay-assets');
+  assert.ok(relayAssets&&typeof relayAssets==='object'&&!Array.isArray(relayAssets),'Invalid embedded relay image map');
+  assert.deepEqual(Object.keys(relayAssets).sort(),Object.keys(expectedRelayAssets.images),'Changed embedded relay image inventory');
+  for(const [path,expected]of Object.entries(expectedRelayAssets.images))assert.ok(relayAssets[path]===expected,'Changed embedded relay image bytes: '+path);
   const archive=await readForecastArchive(resolve(directory,'data/forecast-ledger'));
   const evaluation=JSON.parse(await readFile(resolve(directory,'data/forecast-ledger/evaluation.json'),'utf8'));
   const experiments=archive.index.experimentsPath?JSON.parse(await readFile(resolve(directory,'data/forecast-ledger',archive.index.experimentsPath),'utf8')):null;
@@ -95,5 +104,5 @@ export async function verifyStandaloneArtifact(html, dist) {
   }
   const favicon = (await readFile(resolve(directory, 'favicon.svg'))).toString('base64');
   assert(html.includes(`href="data:image/svg+xml;base64,${favicon}"`), 'Changed embedded favicon');
-  return {modules:graph.size, edges:[...graph.values()].reduce((count, targets) => count + targets.length, 0), sourceBytes, rewrittenBytes, snapshots:Object.keys(snapshots).length, forecastRecords:archive.records.length, stylesheets:stylesheets.length};
+  return {modules:graph.size, edges:[...graph.values()].reduce((count, targets) => count + targets.length, 0), sourceBytes, rewrittenBytes, snapshots:Object.keys(snapshots).length, forecastRecords:archive.records.length, stylesheets:stylesheets.length,relayImages:Object.keys(relayAssets).length,relayImageBytes:expectedRelayAssets.bytes};
 }

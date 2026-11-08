@@ -82,9 +82,20 @@ for(const pointerType of ['touch','mouse'])test(`${pointerType} price and time a
         h.dispatch('pointerup',{...point(965,270),pointerType,buttons:0});h.settle();
         assert.deepEqual(h.priceChanges.at(-1),scalePriceDomain(axis,Math.exp(70/350*2)));assert.deepEqual(h.range,daily);
       }else{
-        h.dispatch('pointerdown',{...point(500,470),pointerType});h.dispatch('pointermove',{...point(480,470),pointerType});h.settle();
-        h.dispatch('pointerup',{...point(400,470),pointerType,buttons:0});h.settle();
-        assert.deepEqual(h.range,zoomRange(daily,Math.exp(-100/870*2),1));assert.equal(h.priceChanges.length,0);
+        const startX=500,moveX=480,releaseX=400,view=h.svg.viewBox.baseVal,bounds=h.svg.getBoundingClientRect();
+        const left=bounds.left+(Number(h.svg.dataset.plotLeft)-view.x)/view.width*bounds.width;
+        const width=(Number(h.svg.dataset.plotRight)-Number(h.svg.dataset.plotLeft))/view.width*bounds.width;
+        const anchor=(startX-left)/width,day=value=>Date.parse(value)/86400000;
+        const count=range=>day(range.end)-day(range.start)+1,pivot=range=>day(range.start)+anchor*(count(range)-1);
+        h.dispatch('pointerdown',{...point(startX,470),pointerType});h.dispatch('pointermove',{...point(moveX,470),pointerType});h.settle();
+        const moved={...h.range};
+        h.dispatch('pointerup',{...point(releaseX,470),pointerType,buttons:0});h.settle();
+        const releaseFactor=Math.exp((releaseX-startX)/width*2);
+        assert.deepEqual(h.range,zoomRange(daily,releaseFactor,anchor));
+        assert.equal(count(h.range),Math.round(count(daily)*releaseFactor),'the final release supplies the full drag distance');
+        assert.notDeepEqual(h.range,moved,'the final release cannot retain the earlier move viewport');
+        assert.ok(Math.abs(pivot(h.range)-pivot(daily))<=.5,'the drag-start pointer date remains anchored within one half-day of grid rounding');
+        assert.equal(h.priceChanges.length,0);assert.deepEqual(h.axis,axis,'time-axis drag preserves the complete price-axis state');
       }
       assert.deepEqual(h.transactions.map(item=>item[0]),['start','end']);assert.equal(h.captures.size,0);
     }finally{h.destroy();}

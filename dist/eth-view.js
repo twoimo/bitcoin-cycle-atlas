@@ -1,5 +1,5 @@
 import { setLoadingSurface } from './loading-surfaces.js';
-import { mountNativeChartApp, mountNativeChartWorkbench } from './native-chart-workbench.js?v=1.36.0';
+import { mountNativeChartApp, mountNativeChartWorkbench } from './native-chart-workbench.js?v=1.36.1';
 import {bindPreservedArchiveDownload} from './preserved-archive-download.js?v=1.29.0';
 import {buildEthereumForecasts} from './ethereum-forecast.js';
 import {buildEthereumAdaptiveForecast} from './ethereum-adaptive-model.js';
@@ -8,14 +8,14 @@ import {ethereumResearchPanel} from './ethereum-research-panel.js';
 import { CHART_INTERVALS, chartInterval, isIntradayInterval, fetchMarketCandles } from './ohlc-data.js?v=1.29.0';
 import { parseEthArchive, mergeEthArchive } from './eth-market-data.js?v=1.29.0';
 import { createMarketDataController, marketStatusText } from "./market-data-controller.js?v=1.29.0";
-import { drawIntradayChart } from "./intraday-chart.js?v=1.36.0";
-import { bindChartNavigation } from './chart-navigation.js?v=1.36.0';
-import { withChartSpacing, retargetChartRange } from './chart-view-policy.js?v=1.36.0';
+import { drawIntradayChart } from "./intraday-chart.js?v=1.36.1";
+import { bindChartNavigation } from './chart-navigation.js?v=1.36.1';
+import { withChartSpacing, retargetChartRange } from './chart-view-policy.js?v=1.36.1';
 import { normalizePriceDomain } from './price-axis.js?v=1.29.0';
 import { mountChartTouchTracking } from "./chart-touch-tracking.js?v=1.29.0";
 import { clearChartHover } from './chart-hover.js?v=1.29.0';
 import { mountSymbolSelector } from './symbol-selector.js?v=1.35.0';
-import { readEthView, ethViewQuery, ethHistoryRange } from './eth-view-state.js?v=1.36.0';
+import { readEthView, ethViewQuery, ethHistoryRange } from './eth-view-state.js?v=1.36.1';
 import { ETHEREUM_EVENTS, ETHEREUM_EVENT_COLORS, getEthereumEvents } from './ethereum-events.js?v=1.29.0';
 import { mountEthereumHistory, readEthereumEventSettings, ethereumEventQuery, ethereumEventRange } from './ethereum-history.js?v=1.29.0';
 
@@ -37,7 +37,7 @@ const stamp = value => value ? value.replace('T',' ').slice(0,16) + ' UTC' : 'â€
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const actionButton = (action,label,glyph) => `<button type="button" class="eth-icon" data-eth-action="${action}" aria-label="${label}" title="${label}">${icon(glyph)}</button>`;
 
-import {mountChartReplay} from './chart-replay.js?v=1.36.0';
+import {mountChartReplay} from './chart-replay.js?v=1.36.1';
 
 export async function initEthView() {
   // The shared shell stays mounted; only this instrument owns its price data.

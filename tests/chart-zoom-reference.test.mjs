@@ -23,13 +23,14 @@ function priceHarness(axisOptions={},rangeOptions={}) {
   return {...h,get range(){return h.range;},set range(value){h.range=value;},get axis(){return axis;},set axis(value){axis=value;},prices,transactions};
 }
 
-test('reference wheel, floating buttons and time-axis drag preserve the right time endpoint',()=>{
+test('reference wheel, floating buttons and time-axis drag preserve their actual anchor dates',()=>{
   const h=priceHarness();h.svg.dataset.timeAxisTop='450';
   h.fire('wheel',{clientX:147,deltaY:-100});h.flush();
-  assert.equal(h.range.end,range.end);assert.ok(count(h.range)<100);h.expire();
-  h.controller.toolbar.children.find(button=>button.dataset.chartNavigation==='in').click();h.flush();assert.equal(h.range.end,range.end);
-  const before=count(h.range);h.fire('pointerdown',{clientX:300,clientY:470});h.pointer('pointermove',{clientX:500,clientY:470});h.pointer('pointerup');h.flush();
-  assert.equal(h.range.end,range.end);assert.ok(count(h.range)>before);assert.equal(h.prices.length,0);h.controller.destroy();
+  near(utcDay(h.range.start)+.1*(count(h.range)-1),utcDay(range.start)+.1*99,.5);assert.ok(count(h.range)<100);h.expire();
+  const center=utcDay(h.range.start)+(count(h.range)-1)/2;
+  h.controller.toolbar.children.find(button=>button.dataset.chartNavigation==='in').click();h.flush();near(utcDay(h.range.start)+(count(h.range)-1)/2,center,.5);
+  const before=count(h.range),anchor=(300-60)/870,pivot=utcDay(h.range.start)+anchor*(before-1);h.fire('pointerdown',{clientX:300,clientY:470});h.pointer('pointermove',{clientX:500,clientY:470});h.pointer('pointerup');h.flush();
+  near(utcDay(h.range.start)+anchor*(count(h.range)-1),pivot,.5);assert.ok(count(h.range)>before);assert.equal(h.prices.length,0);h.controller.destroy();
 });
 
 test('Ctrl anchors plot zoom to its actual pointer while Meta and outside surfaces remain browser-owned',()=>{
@@ -42,9 +43,9 @@ test('Ctrl anchors plot zoom to its actual pointer while Meta and outside surfac
   }
 });
 
-test('explicit center and pointer policies remain available without changing the default',()=>{
-  for(const policy of ['center','pointer']){
-    const h=navigationHarness(range,{zoomAnchor:policy});const pointer=.1,anchor=policy==='center'?.5:pointer;
+test('explicit center, pointer and right policies remain available',()=>{
+  for(const policy of ['center','pointer','right']){
+    const h=navigationHarness(range,{zoomAnchor:policy});const pointer=.1,anchor=policy==='center'?.5:policy==='right'?1:pointer;
     h.fire('wheel',{clientX:60+870*pointer,deltaY:-100});h.flush();
     near(utcDay(h.range.start)+anchor*(count(h.range)-1),utcDay(range.start)+anchor*99,.5);h.controller.destroy();
   }
@@ -72,7 +73,7 @@ test('coalesced axis wheel and gesture completion retain every delta in one undo
 test('fine trackpad zoom and pan accumulate below a single interval without inventing fractional dates',()=>{
   const short={...range,end:'2024-01-12'},h=navigationHarness(short);
   for(let i=0;i<100;i++){h.fire('wheel',{deltaY:-1});h.flush();}
-  assert.ok(count(h.range)<12);assert.equal(h.range.end,short.end);assert.equal(Number.isInteger(utcDay(h.range.start)),true);h.expire();
+  assert.ok(count(h.range)<12);near(utcDay(h.range.start)+(500-60)/870*(count(h.range)-1),utcDay(short.start)+(500-60)/870*11,.5);assert.equal(Number.isInteger(utcDay(h.range.start)),true);h.expire();
   const initial=utcDay(h.range.start);for(let i=0;i<100;i++){h.fire('wheel',{deltaX:1});h.flush();}
   assert.ok(utcDay(h.range.start)>initial);assert.equal(count(h.range),10);h.controller.destroy();
 });
