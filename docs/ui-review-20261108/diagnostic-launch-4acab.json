@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "record": "diagnostic launch and transport configuration",
+  "recordedAt": "2026-11-08T16:54:19.655Z",
+  "buildId": "4acab602-49a5-470e-9935-20005e98e5a3",
+  "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+  "productionCandidate": "dbd3b70e567c3047524e6a0e3b5d01b1dc9d910d",
+  "applicationDistTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+  "changedPathsFromProductionCandidate": [
+    "scripts/ui-review-log-filter.cjs"
+  ],
+  "statusAtLaunch": "queued",
+  "diagnosticOnly": true,
+  "qualifiesForPublication": false,
+  "originalWrapper": "node scripts/verify-ui-cloudflare.mjs",
+  "buildCommand": "bash -o pipefail -c 'node scripts/verify-ui-cloudflare.mjs | node scripts/ui-review-log-filter.cjs'",
+  "filterSha256": "60aebd8f6227a119da44ca019986e1d4ec850aa9fb64391dcb452cb2f53b3559",
+  "keptPngs": 8,
+  "omittedPngs": 11,
+  "unchanged": {
+    "cases": 27,
+    "phases": {
+      "before": 6,
+      "after": 21
+    },
+    "assertions": true,
+    "reportBytes": true,
+    "pngBytes": true,
+    "canonicalProductionGates": true,
+    "deployCommand": "node --version",
+    "pathIncludes": [
+      "*"
+    ],
+    "pathExcludes": [
+      "*"
+    ],
+    "buildCachingEnabled": false
+  },
+  "transportFixture": {
+    "inputBytes": 4674057,
+    "outputBytes": 2208147,
+    "nonPngBytesUnchanged": true,
+    "keptPngBytesUnchanged": true,
+    "sourceFailureExitCode": 7,
+    "malformedChunkExitCode": 1,
+    "truncatedPngExitCode": 1
+  },
+  "notes": [
+    "This launch receipt does not assert that the build or any native case has passed.",
+    "Original image SHA-256 and byte counts remain bound to each new native report. Omitted images can only be recovered from preserved bytes when both exactly match the new report."
+  ]
+}
