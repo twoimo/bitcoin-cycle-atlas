@@ -1,0 +1,58 @@
+{
+  "sourceCommit": "7d066d5643d00b40674dffadbf1b6e4345afe286",
+  "baselineCommit": "bd5b70a96e1fab466ee6648c2c07db882b02681f",
+  "protectedCommits": [
+    {
+      "commit": "1080ced9e062ded1311c62d0f4339475ad5271bc",
+      "ancestorOfCandidate": true
+    },
+    {
+      "commit": "4a31b68e2fe669173a03c57ea9bd01c4b6c1b137",
+      "ancestorOfCandidate": true
+    },
+    {
+      "commit": "2084530a25c29d3740f00311f328440d38d66a4a",
+      "ancestorOfCandidate": true
+    },
+    {
+      "commit": "4d2df007ffac30b6b0e34f944aaf4802502cdde3",
+      "ancestorOfCandidate": true
+    },
+    {
+      "commit": "3170544f38bf863e5cd0a9a84a2397ff5732656a",
+      "ancestorOfCandidate": true
+    },
+    {
+      "commit": "267e7ac4f90349a556271f42898f23aac5a31082",
+      "ancestorOfCandidate": true
+    }
+  ],
+  "forecastModules": [
+    {
+      "path": "dist/forecast/forecast-sufficiency.js",
+      "byteIdenticalToBaseline": true,
+      "sha256": "664b51f5c4170d47f6b264424191ebe8134f07277a9a31a21202c41b290540fb"
+    },
+    {
+      "path": "dist/forecast/forecast-calibration.js",
+      "byteIdenticalToBaseline": true,
+      "sha256": "5431c85eebef415b24def510f65591627520b0309cff9acc66da0d4decdf692d"
+    },
+    {
+      "path": "dist/forecast/forecast-models.js",
+      "byteIdenticalToBaseline": true,
+      "sha256": "61733f863d51d2b31a7f92534ec08f99e5e61dcc76c86390a2b5db4636a4ee5f"
+    }
+  ],
+  "newTopLevelDistJavaScriptOrCss": [],
+  "newNestedJavaScriptOrCss": [
+    "dist/market-lab/app/assets/index-CGchHyXZ.css",
+    "dist/market-lab/app/assets/index-CLRGWOHq.js",
+    "dist/ui/center-loading.js",
+    "dist/ui/chart-legend-layout.js",
+    "dist/ui/chart-legend.css",
+    "dist/ui/chart-legend.js",
+    "dist/ui/chart-url-state.js",
+    "dist/ui/shell-slots.js"
+  ]
+}
