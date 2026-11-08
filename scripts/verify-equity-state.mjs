@@ -3,14 +3,42 @@ import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
+import { isBuiltin } from 'node:module';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { verificationProcessResult } from './verification-process.mjs';
+import { javascriptModuleSpecifiers } from './module-references.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const jarSha256 = '936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88';
 const jar = process.env.TLA2TOOLS || path.join(root, 'build/formal-tools/tla2tools-1.7.4.jar');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+
+const implementationEntries = ['dist/equity-view.js', 'dist/equity-market-data.js', 'dist/treasury-instruments.js', 'dist/cycle-engine.js', 'dist/chart-view-policy.js', 'dist/ohlc-data.js', 'dist/price-axis.js', 'dist/index.html', 'tests/equity-load-ownership.test.mjs', 'tests/helpers/equity-view-fixture.mjs'];
+
+export async function copyEquityFixtureDependencies(copy, { sourceRoot = root, entries = implementationEntries } = {}) {
+  const files = new Set();
+  async function visit(file) {
+    const full = path.resolve(sourceRoot, file), relative = path.relative(sourceRoot, full);
+    assert.ok(relative && relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative), `Fixture dependency leaves the source root: ${file}`);
+    if (files.has(relative)) return;
+    const source = await readFile(full, 'utf8');
+    files.add(relative);
+    await mkdir(path.dirname(path.join(copy, relative)), { recursive: true });
+    await copyFile(full, path.join(copy, relative));
+    if (!/\.(?:mjs|js)$/.test(relative)) return;
+    for (const specifier of javascriptModuleSpecifiers(source)) {
+      if (isBuiltin(specifier)) continue;
+      assert.ok(specifier.startsWith('./') || specifier.startsWith('../'), `Unsupported fixture module ${specifier} in ${relative}`);
+      const dependency = new URL(specifier, pathToFileURL(full));
+      dependency.search = ''; dependency.hash = '';
+      await visit(path.relative(sourceRoot, fileURLToPath(dependency)));
+    }
+  }
+  for (const file of entries) await visit(file);
+  await writeFile(path.join(copy, 'package.json'), '{"type":"module"}\n');
+  return [...files].sort();
+}
 
 async function prepareTool() {
   let bytes;
@@ -78,14 +106,12 @@ async function implementation(work) {
   assert.match(original.output, /tests 28/);
   console.log(original.output.trim());
   const copy = path.join(work, 'implementation');
-  // The initializer fixture uses the actual capital/date and shared chart
-  // helpers. Keep their OHLC and price-axis dependencies in the scratch copy.
-  const files = ['dist/equity-view.js', 'dist/equity-market-data.js', 'dist/treasury-instruments.js', 'dist/cycle-engine.js', 'dist/chart-view-policy.js', 'dist/ohlc-data.js', 'dist/price-axis.js', 'dist/index.html', 'tests/equity-load-ownership.test.mjs', 'tests/helpers/equity-view-fixture.mjs'];
-  for (const file of files) {
-    await mkdir(path.dirname(path.join(copy, file)), { recursive: true });
-    await copyFile(path.join(root, file), path.join(copy, file));
-  }
-  await writeFile(path.join(copy, 'package.json'), '{"type":"module"}\n');
+  // Follow real module dependencies, including shared UI helpers added to the
+  // initializer fixture. A pristine isolated run must pass before mutations.
+  const fixtureModules = await copyEquityFixtureDependencies(copy);
+  const pristine = run(process.execPath, ['tests/equity-load-ownership.test.mjs'], copy);
+  assert.equal(pristine.status, 0, pristine.output);
+  assert.match(pristine.output, /tests 28/);
   const viewFile = path.join(copy, 'dist/equity-view.js'), source = await readFile(viewFile, 'utf8');
   const changes = [
     {
@@ -131,9 +157,10 @@ async function implementation(work) {
   await writeFile(viewFile, source);
   const restored = run(process.execPath, ['tests/equity-load-ownership.test.mjs'], copy);
   assert.equal(restored.status, 0, restored.output);
-  return { tests: 28, original: 'pass', restored: 'pass', sourceSha256: hash(source), mutations, mutationExitStatuses };
+  return { tests: 28, original: 'pass', isolated: 'pass', restored: 'pass', fixtureModules, sourceSha256: hash(source), mutations, mutationExitStatuses };
 }
 
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
 await prepareTool();
 const work = await mkdtemp(path.join(tmpdir(), 'atlas-equity-proof-'));
 try {
@@ -147,3 +174,4 @@ try {
   if (process.argv[2]) await writeFile(path.resolve(process.argv[2]), JSON.stringify(report, null, 2) + '\n');
   console.log(JSON.stringify(report, null, 2));
 } finally { await rm(work, { recursive: true, force: true }); }
+}

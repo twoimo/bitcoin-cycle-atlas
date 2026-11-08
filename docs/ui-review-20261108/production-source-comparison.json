@@ -1,0 +1,667 @@
+{
+  "uiSource": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+  "uiDistTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+  "mergeCommit": "b92c6d79ccf2fb9a82a344a6b58e3f29dc533bf0",
+  "productionCandidate": "5df078d1a7e66f09e8c35241efbfc4f8d8fd4001",
+  "productionDistTree": "d7c343e57c42555c47a2eacb85b4266349b7286a",
+  "checkedSources": 145,
+  "changedBoundSources": [],
+  "sourceChecks": [
+    {
+      "path": "scripts/eth-browser-case-specs.mjs",
+      "sha256": "590e752fe606b15815f284d68101370099d68525b49e44eb5b6e9cdc8d67e737"
+    },
+    {
+      "path": "scripts/browser-evidence-transport.mjs",
+      "sha256": "f4d812fd85e3aeb4a02c5e424eb2ca4d54245e486dfa723c34a39d637ed36155"
+    },
+    {
+      "path": "scripts/browser-project-resource-policy.mjs",
+      "sha256": "47b265327879deaab7c8ac8ccee9322a05b03116bf22336d59a826fc74d1d8b6"
+    },
+    {
+      "path": "scripts/verify-chart-zoom-browser.mjs",
+      "sha256": "d4e2f97681c10d79c6ef0c026a504f0331fde564894e0c91f39b5945e450d8e9"
+    },
+    {
+      "path": "dist/chart-navigation.js",
+      "sha256": "f6a987a9fc14e72f8de01fe0e21d0d142b872939188f8328cf153b7b8f7a03c0"
+    },
+    {
+      "path": "dist/chart-view-policy.js",
+      "sha256": "7f4a1f7f13000797997dd60546ce50d2f286cd508c32b94b15141b8477264136"
+    },
+    {
+      "path": "dist/price-axis.js",
+      "sha256": "ab2164fcab4a6fb11375710f6482be6ef2c6951aaf0e5eb4217bd443e0d565d9"
+    },
+    {
+      "path": "dist/empty-price-chart.js",
+      "sha256": "85e852331c0f7559919a6bd4fd2efc54892007d572b8ed44c2ff8875d04cedae"
+    },
+    {
+      "path": "dist/relay-room.js",
+      "sha256": "daebe298a0757f44ca6ed350d7d50cdb4eb058cb5625fdbc91862e43e08cca90"
+    },
+    {
+      "path": "dist/relay-room.css",
+      "sha256": "1a22f3adedb8f5f55652788e4835990d49dd57d87c72e10cd325887fca4f67fe"
+    },
+    {
+      "path": "dist/index.html",
+      "sha256": "027384578492e7c2cf2ca63065ac7b0bcfb2f96842ec591b07d2489ae6ef57f1"
+    },
+    {
+      "path": "dist/site-entry.js",
+      "sha256": "07e79911a2329e1ffa3a6532f573811ec7e48b06464a16170105bab3fba9028a"
+    },
+    {
+      "path": "dist/asset-comparison.js",
+      "sha256": "d0112fae4ff80de80dd3acce787f83159ddc3c1834ac8f3663e6427060b30c85"
+    },
+    {
+      "path": "dist/asset-judgment-history.js",
+      "sha256": "190be9550616f51ad0ea64c449d6fa68fd7ce4804a39cb799e199927392745cf"
+    },
+    {
+      "path": "dist/daily-data-view.js",
+      "sha256": "f804d9f2dc5bc984aa94bb614abe6a98a8386a799b6967e4c282304b78eefd1e"
+    },
+    {
+      "path": "dist/daily-data.css",
+      "sha256": "374470e24542702d4f053ea3dbff3b88d80bf4c9a72d0e4d5a655b6c2ed3d00c"
+    },
+    {
+      "path": "dist/eth-view.js",
+      "sha256": "f77eecd9cc2d2aa5b41f6ec0415bee4777904c69c3a6f0f16852b82da895f2cb"
+    },
+    {
+      "path": "dist/eth-view.css",
+      "sha256": "a8511905204336191d9023486990fed1072ff8eac33dff292f59d22c72c8628d"
+    },
+    {
+      "path": "dist/ethereum-forecast.js",
+      "sha256": "b86e6e917c8d72c9db892dc4931694f915d6d73352dbab54798a64bd5ee3db4c"
+    },
+    {
+      "path": "dist/ethereum-adaptive-model.js",
+      "sha256": "87c06d4301f720e4bf9ec43956847789022de73dccaba5b7bce73bb1f2da0e7d"
+    },
+    {
+      "path": "dist/ethereum-pooled-model.js",
+      "sha256": "36be841d383693f8c7b86155550920850e3c14b9ef0b1e99eb8d760a2d7ae467"
+    },
+    {
+      "path": "dist/eth-view-state.js",
+      "sha256": "33d89ecc0e1714dde6c0b11820c55212b99123dc2d148fdbd542bfe0c74df27c"
+    },
+    {
+      "path": "dist/ethereum-adoption-scenarios.js",
+      "sha256": "f49532abd2479a2531bb7e23aaf7ff2b8505a3c2ce0a84436f3768a25c18dc86"
+    },
+    {
+      "path": "dist/ethereum-research-panel.js",
+      "sha256": "f699155933c465057d8f1dc442c9b0de699e3a9d9eb1090a6566f46b724b93cc"
+    },
+    {
+      "path": "dist/ethereum-research-catalog.js",
+      "sha256": "1c7638bec65dd4f948bc260434355f7e79c3ff9d572515d3fa5ec142dcf38e35"
+    },
+    {
+      "path": "dist/eth-market-data.js",
+      "sha256": "95d4858708d5ffcc3146884a105c1ae82f984b21de3a5a29ec4ca9b3fc8dd075"
+    },
+    {
+      "path": "dist/intraday-chart.js",
+      "sha256": "93a917906163075493e55121eaeced9b48b6e925d29df12860d8b76cf7c2f9ac"
+    },
+    {
+      "path": "dist/equity-forecast-chart.js",
+      "sha256": "a5601464a89dbfbda508d8de69a7d4a84b6858cc8981bef237eee0412676b75c"
+    },
+    {
+      "path": "dist/equity-view.js",
+      "sha256": "2e2dfb2cb07c988b0efae363fab2872ce1d47d3d6e15e4e5b1b34d2c3535671e"
+    },
+    {
+      "path": "dist/treasury-projection.js",
+      "sha256": "9cf7e6660124880e5a9ad654f41c846d10deb309ace18cf59b96699963948fd1"
+    },
+    {
+      "path": "dist/treasury-model.js",
+      "sha256": "4812b36b65912209201eabf46ba39868cec7d7ddb014421e556476412b8e1739"
+    },
+    {
+      "path": "dist/forecast-information-time.js",
+      "sha256": "2b1872e0e9d644a77cc71ff0746dfa6ad8f32f8866ee393a6afa9737af66ae23"
+    },
+    {
+      "path": "dist/data/bmnr-ohlc.json",
+      "sha256": "64f8734f5cfdd99b1d5c7066874d171e46926054f15c8e2e4bb0e338ed7d3690"
+    },
+    {
+      "path": "dist/data/eth-ohlc.json",
+      "sha256": "a6bfab88a2a5ba982bb68ecf78932bf3438713cad54b2a075894ebbad0b445a5"
+    },
+    {
+      "path": "scripts/verify-eth-candidate-browser.mjs",
+      "sha256": "f2e798c4bc42fab4d88bedbfe3816f22a1dc485491acb58031edeaec58c610c1"
+    },
+    {
+      "path": "scripts/btc-offline-refresh-policy.mjs",
+      "sha256": "da9810a7faad88565c6238bda313b943d0b99a08b6bc47c1f361e727e46aca27"
+    },
+    {
+      "path": "tests/ethereum-offline-refresh-policy.test.mjs",
+      "sha256": "843f099c30be79a7d3674ac77fe2f4515dcc371a96eafd83d8dacf6a6959ca6d"
+    },
+    {
+      "path": "dist/data/btc-daily.json",
+      "sha256": "d04c7443eb4ccd17d93ddc2d61b75e844d86b6cf5f5d456aa986def86e97aca9"
+    },
+    {
+      "path": "dist/app.js",
+      "sha256": "ff4af948d37c087f28a9dd3819aa18d4cee4967ec01f532e71aa50a996950e7c"
+    },
+    {
+      "path": "dist/btc-refresh-status.js",
+      "sha256": "806ca5d59e4a9194bc9c2759c60821da154173a65944328a24010307808b2036"
+    },
+    {
+      "path": "tests/ethereum-btc-refresh-status.test.mjs",
+      "sha256": "a840171a6fa636993b9ae735cf1c8b3089ca76f9ef05d17bd98846da75372b73"
+    },
+    {
+      "path": "dist/data-source.js",
+      "sha256": "1cde9df18712feb1373d1cd77362437e7fc59e2dfee9165d461170f55953e60b"
+    },
+    {
+      "path": "dist/published-data.js",
+      "sha256": "48fb43d2b39b31ac755b41dffa2907620f1c622a0c7ca4cd3adf90ed15747010"
+    },
+    {
+      "path": "dist/asset-forecast-journal.js",
+      "sha256": "73a696d1da568e0f6702228592fded2cd5517df1e95aa5b3f44bfb4d45885179"
+    },
+    {
+      "path": "dist/asset-forecast-records.js",
+      "sha256": "fefdd5345bd9e0f4a8532b0480e384b0bb7f1b344cc18262dfc72dbad3f224c2"
+    },
+    {
+      "path": "dist/journal-entry.js",
+      "sha256": "a758cf9b43c704f68d372664e54a49168aa13a33c9a8566a30781b1268fddbf0"
+    },
+    {
+      "path": "dist/forecast-journal.css",
+      "sha256": "e1022cf360430f2d730a46686cb1fb3a86739973f36d95aefb4476f49ecf07c1"
+    },
+    {
+      "path": "dist/data/asset-forecast-ledger/index.json",
+      "sha256": "2620f75f54b9755f417296348a4e31e14d584c338bcd2b67b0ac15c2c59bbe62"
+    },
+    {
+      "path": "dist/data/mstr-ohlc.json",
+      "sha256": "acea405cfa7b40d5a8ee815f5d7f749bab63e8fc59323cea8a6a9f589b2f8f74"
+    },
+    {
+      "path": "dist/lab-view.js",
+      "sha256": "1dd459ad669e4102086b4e432906c0182ad6a942227d7c3f68f9bc228c827679"
+    },
+    {
+      "path": "dist/analysis-dock.css",
+      "sha256": "f3f6c67d2cf3bb6b8b424a562939691c2fb6cd21af5cb384a86a5a9c8618bc96"
+    },
+    {
+      "path": "dist/compact-chart-layout.css",
+      "sha256": "f39461eeed0c4aa9c1997d98205480897b373f47ac16a1b5340cb4ac3500cb43"
+    },
+    {
+      "path": "dist/mobile-workspace.css",
+      "sha256": "6ab01d2a86e0673276a86d166a1b31c8ffa7469ec65551541462aa3c67dd9016"
+    },
+    {
+      "path": "dist/mobile-preview.js",
+      "sha256": "9d1ad1cdaf3e316579e4a33054d81d300e002b0214635a1481140b1a133acc9c"
+    },
+    {
+      "path": "scripts/verify-workspace-browser.mjs",
+      "sha256": "918a87ad60107ed31b6676fc4cb9d9bdf4f72b359e99f151997fa6ca0a1301db"
+    },
+    {
+      "path": "dist/native-chart-workbench.js",
+      "sha256": "f24d7a99ac581a1c0ca0b1e223e8bf412248c810103f285eeecc020517076132"
+    },
+    {
+      "path": "dist/rsi-workbench-controls.js",
+      "sha256": "842601c302585b125b0e7bd2a485eed0bc1feb2cfd8e1f6365937c585cbcec8d"
+    },
+    {
+      "path": "dist/atlas-navigation.js",
+      "sha256": "f7a23657f54ff74145811136602db27636f3fe94f51012c02470e5964df42564"
+    },
+    {
+      "path": "scripts/verify-native-chart-workbench-browser.mjs",
+      "sha256": "9634c7f65c1b4587c2819f9da4b66800e09c692986676fe0d5f9032c00321957"
+    },
+    {
+      "path": "dist/atlas.css",
+      "sha256": "48b590d347ac4120971927ed3e7dd6117949b50cf80f91b153fe18e7c32e36b6"
+    },
+    {
+      "path": "dist/atlas-shell.css",
+      "sha256": "c36bd843bed1478839182ef5fc6035376ee28fc9653f59a22079bfc2df1bc352"
+    },
+    {
+      "path": "dist/atlas-shell.js",
+      "sha256": "39605bc8cb26782f3c5866b2d0f35c5eafe2c0d4202fee11496a4fe7f4ba53f8"
+    },
+    {
+      "path": "dist/center-workbench.js",
+      "sha256": "4736d5917af03b9c663661977bc6ee0ae3d7d591b820eb8bd9a39906546b1e41"
+    },
+    {
+      "path": "dist/market-lab.css",
+      "sha256": "68e9b99aeaa189540f919c464eb0bf5e7a307195c0544dad384b53580a9b1637"
+    },
+    {
+      "path": "dist/loading-surfaces.css",
+      "sha256": "033d3256e4fe171c10daf16f355e31dbbb6641f8641f89b9b8e64bdc5acf5a3b"
+    },
+    {
+      "path": "dist/loading-surfaces.js",
+      "sha256": "f62d142df3ee3ae00ae10f63373d0421d785c253e7fc71acb8231714340e07cb"
+    },
+    {
+      "path": "dist/chart-bottom-bar.css",
+      "sha256": "774ae4f0d72bc6ae8c5e3c7d6e8b4cff54a119557bd5d6a360ad860b801498e2"
+    },
+    {
+      "path": "dist/chart-details-panel.css",
+      "sha256": "aa092f0153ba5df07ef48e6df7b966b1b9e497ad4fdfa60d867d7fb6a1f245ee"
+    },
+    {
+      "path": "dist/chart-export-workbench.css",
+      "sha256": "cc75c4bee60dd01bddd75b177061123dce8b25e0afef70d527eaac6d0295f636"
+    },
+    {
+      "path": "dist/chart-magnet.css",
+      "sha256": "e2e1194702545645f04d48e305548bfd0aa426b744a0c6e6c6f5dee2d32c3021"
+    },
+    {
+      "path": "dist/chart-workspace-controls.css",
+      "sha256": "5f295a4fa2439c9cbf4dbca060a7494b4b2ec2e96a6ada196dff77f5541537c4"
+    },
+    {
+      "path": "dist/compact.css",
+      "sha256": "b053d7db784d53b9143465994396460153e1efcda59e4fafe1a45a65918a5d5e"
+    },
+    {
+      "path": "dist/cycle-milestones.css",
+      "sha256": "9b0ab20a9ee8970a4d843acad296bea977f7aa3f52466595bed4e71d796f36ca"
+    },
+    {
+      "path": "dist/equity-view.css",
+      "sha256": "09e2e3b1d59e25450ce2c000dc3c0ec8eec144d8d7aec91edcd642260298aeb1"
+    },
+    {
+      "path": "dist/ethereum-history.css",
+      "sha256": "6201f4f255571ea22c4d968367fef7a9ca4d9e3437bcca43b7b5a24c818f03d1"
+    },
+    {
+      "path": "dist/lab.css",
+      "sha256": "0048af46f7cedfeeffc1405e46299028f75c14803570fb4f6b8559ecf12ea2c1"
+    },
+    {
+      "path": "dist/outlook.css",
+      "sha256": "4597e59bf9ab28f8db2457c89658f3e95c5559faaa45c59d49398730a4c39be7"
+    },
+    {
+      "path": "dist/research-annotations.css",
+      "sha256": "18319d5fd93cbc25d249de0570accabffb244d002934ed6705ae624dfb48ffdd"
+    },
+    {
+      "path": "dist/research-reader.css",
+      "sha256": "38ac37728d7f717c2320e79e9e8a8a85bc3876f5094a1ad638c3ee098db40a72"
+    },
+    {
+      "path": "dist/styles.css",
+      "sha256": "ef140219f3bc9c4454170bdbc7caee951df09dddb9f655171fc8a87fa9ffca19"
+    },
+    {
+      "path": "dist/symbol-selector.css",
+      "sha256": "fd8dd668f238c57840b8759b0f77bc4be44e322ee14eb18bd31145a6a67f6cc3"
+    },
+    {
+      "path": "dist/viewport.css",
+      "sha256": "3d7073ed61bbe380dae52e8d998d8ab6f24208f734a22c17017ca0b010a09c83"
+    },
+    {
+      "path": "dist/workspace-tools.css",
+      "sha256": "f7529cbd0c64b1d695033706b44395e21b97322e951d697c5885632717b708b1"
+    },
+    {
+      "path": "dist/chart-bottom-bar.js",
+      "sha256": "e7dcdfce8326d5d4cf83265d1bd3fb715d26490b489b43523bbd72befd273b06"
+    },
+    {
+      "path": "dist/preserved-archive-download.js",
+      "sha256": "fdc1ae671b866a2d3731d645b57998bdb23a53de6b3bfd0b61946faeda5434fd"
+    },
+    {
+      "path": "dist/workspace-tools.js",
+      "sha256": "0e94b855cd8cd30c0a4a9c80c90a19a7774a133bdc587704774a13d23b3ad7c1"
+    },
+    {
+      "path": "dist/research-annotations-workbench.js",
+      "sha256": "296c51cce5f994df1f08dab65d263f2e82d94ab4e81280d8170b88b0ab4a0d5f"
+    },
+    {
+      "path": "dist/mobile-preview.html",
+      "sha256": "97e25757b0770f2064ec0f520b09874bfa0644f4371f516c0b8622ee72c0e31d"
+    },
+    {
+      "path": "dist/symbol-selector.js",
+      "sha256": "a96f215bdce12657280e856ac20b8e1d7256927f8ed2aca6b6ac45f6dcd13b1c"
+    },
+    {
+      "path": "dist/research-reader.js",
+      "sha256": "ed196aaa3aa6cea3646fc5c85940e62ef03625a0f8d2422b399505d47ac90694"
+    },
+    {
+      "path": "dist/evidence-view.js",
+      "sha256": "607f1b7fe3aee231d4ba3078a3cb3e9f09aeae7fbc8a17c640a1c408bfc1633e"
+    },
+    {
+      "path": "dist/viewport-workspace.js",
+      "sha256": "b36a0480eac124beaafe9a3fa70e62a3edea24c1656aa95edf890b0abc21b318"
+    },
+    {
+      "path": "dist/workbench-chrome.js",
+      "sha256": "d4f2581d44e9d17dc410c9ffd3501922cffec47ed2d8328b22d0829cd7bea4f2"
+    },
+    {
+      "path": "dist/forecast-replay.js",
+      "sha256": "a50725737d9deb6cdb851867dcc60bcc202b19818d6bbccc88e67b986d2f2b13"
+    },
+    {
+      "path": "dist/forecast-replay-sources.js",
+      "sha256": "26d99528a81a49e8c738c542a2e2fbd911674efd874f02070c1ddd958e07cd52"
+    },
+    {
+      "path": "dist/forecast-replay-view.js",
+      "sha256": "54a400c2787554f2edca88f91629824a53c88a51e91228ed530142ddbdd8cb77"
+    },
+    {
+      "path": "dist/data/replay-eth-ohlc.json",
+      "sha256": "de260401f6fd7f34991afe41ab02eba703f740e8ec40318833edea2e09fdea37"
+    },
+    {
+      "path": "scripts/verify-forecast-replay-browser.mjs",
+      "sha256": "fa259bf923fa5fed38a4f758d14c239341b7869871711c2957598f0302847502"
+    },
+    {
+      "path": "dist/chart-replay.js",
+      "sha256": "5bf1a1f0d962591d3fb881232073b4b62691bab180015aeb8faf9feae026d3e4"
+    },
+    {
+      "path": "dist/chart-replay-snapshot.js",
+      "sha256": "fcf0e12ad9edab78d9e4f51e6d8c95be1f01cdc2f2a2e0264146e3d1c68932a6"
+    },
+    {
+      "path": "dist/chart-replay-state.js",
+      "sha256": "063e5574b5d442765ad976b7aade4f0039c0c418c414afeaeb1427dd977f3908"
+    },
+    {
+      "path": "dist/chart-replay-renderer.js",
+      "sha256": "499af8c8d6c1d767d35c88ca86c6da875da47160d9c6c9055bca46ff0342d315"
+    },
+    {
+      "path": "dist/chart-replay-sources.js",
+      "sha256": "eda71aeffa8739bb233a9fb8413883ee0be3be357a271e761073873bacd63e3d"
+    },
+    {
+      "path": "dist/chart-replay.css",
+      "sha256": "57eb26920567a337101f8866849aca2030cba1b3aa93bf43fb610f21f02405f0"
+    },
+    {
+      "path": "dist/asset-forecast-loader.js",
+      "sha256": "2d373afa2f588f8d640b7432b1e226d64580fb1a96efc6631c6e2dcb7e1168cb"
+    },
+    {
+      "path": "dist/data/btc-volume.json",
+      "sha256": "a602ba904b78284138684377ea559598173063ee435350ce281de430150a9993"
+    },
+    {
+      "path": "scripts/verify-chart-replay-browser.mjs",
+      "sha256": "ae6515ec2e9a8c73e51e4bf9a082a03a6cf7357e7448ff5c4be4d7906feb6951"
+    },
+    {
+      "path": "dist/chart-replay-atlas.js",
+      "sha256": "2c5fc25baadeb7961271be680e807e125f5447bf6de2776c074b84834b4b8940"
+    },
+    {
+      "path": "dist/atlas-price-chart.js",
+      "sha256": "e1e986a59692468fef10cbc8c094e98fb6de447216eda1363528c43f6a417d97"
+    },
+    {
+      "path": "dist/project-replay-baseline.js",
+      "sha256": "b24462b0b8ac13b8640fc0717e98ed5cf198a779281cbd64bd3551a4529c6861"
+    },
+    {
+      "path": "dist/data/project-origin-btc-2026-10-21.json",
+      "sha256": "571d0d3421d7ae40da4fb3020ab0290aa534822d5a439f9e98f55dc31d5f19ac"
+    },
+    {
+      "path": "scripts/build-project-replay-baseline.mjs",
+      "sha256": "1ddf49e09ad015afd526996112c521d23fba5e539af73439c85628dec13aed83"
+    },
+    {
+      "path": "scripts/verify-consolidated-workspace-browser.mjs",
+      "sha256": "6e08a650472d84b2310302805f4e9297f677e8c343bc172d9ec8259761588985"
+    },
+    {
+      "path": "dist/workspace-instruments.js",
+      "sha256": "e0c63c6e4c0cc308c8aacf93220a3c4b5fc0d558fccdfdc79fa2d8e39fcddf2b"
+    },
+    {
+      "path": "dist/data-header-actions.js",
+      "sha256": "27bb8eba8f4621e4342c42a6aded57a148287ff6606f5bbcde9e0626bcbb39c1"
+    },
+    {
+      "path": "dist/compact-toolbar.css",
+      "sha256": "31924b197a6fa87b9cdaa2afbca050c3e406bcc5eaa13b12ce0739dcab804906"
+    },
+    {
+      "path": "dist/legacy-workspace-toolbar.js",
+      "sha256": "8ee5c721cef1714c3749e22e73486db710101ab28d4c7206e126fe6b3769a204"
+    },
+    {
+      "path": "dist/legacy-workspace-toolbar.css",
+      "sha256": "735cbefcee14b838229b2af6608a0366e5f34525f59f728f2a3b2548febc5f9f"
+    },
+    {
+      "path": "dist/data/asset-comparison.json",
+      "sha256": "d8d4a867a1b84c28d0a86c9f744a775a2335a359f3948102c2e59c03a9e3782e"
+    },
+    {
+      "path": "dist/ipo-view.js",
+      "sha256": "4f6c0041ddc7b767648cca030068badeccec1dc349603505ff46f23835ec6508"
+    },
+    {
+      "path": "dist/ipo-view.css",
+      "sha256": "0f1d3706fa8384c30dea3d712e20561ffd1a8ef8463c640184df400c71030cc1"
+    },
+    {
+      "path": "dist/ipo-month-calendar.js",
+      "sha256": "b660ac3f549d0d37c6d21e0658227a9c90d04aeb641b35c3089b9a06acab50f7"
+    },
+    {
+      "path": "dist/market-lab/app/assets/index-CGchHyXZ.css",
+      "sha256": "1563015942260c4b679e04bced460607f5b3606799d864f4776c7acd56380fab"
+    },
+    {
+      "path": "dist/market-lab/app/assets/index-CLRGWOHq.js",
+      "sha256": "41181201d50b990f4f709cf92f0fb729244bd5b6192f95f0c43416e09aeb59d1"
+    },
+    {
+      "path": "dist/market-lab/app/index.html",
+      "sha256": "a4b319465be7ede855dcf3233287c04b3df56b8ce494f343ec6bf0a6fd6be665"
+    },
+    {
+      "path": "scripts/browser-source-identity.mjs",
+      "sha256": "493bd0f291827d0d5e6f7102907e24845a8753f16dca376189df16ee8bf72cf0"
+    },
+    {
+      "path": "scripts/browser-fast-cadence-contract.mjs",
+      "sha256": "b01e94760384d5f5b57cae7eaa117b603d9b034e2102d93eef9995cab3b6cff4"
+    },
+    {
+      "path": "scripts/verify-native-browser-suite.mjs",
+      "sha256": "a351972fedf8c4dc187440582e88c06713a3558fa88461f99f1d536c69ef2796"
+    },
+    {
+      "path": "scripts/cloudflare-gate-runner.mjs",
+      "sha256": "673d2dc42aff2b444d4b67ef889727a035ba48393332dbd0646b7f46521c8866"
+    },
+    {
+      "path": "scripts/cloudflare-priority-command.mjs",
+      "sha256": "146dd2468364d40260a2b8ec598fd61257e5a1287c97a215f4cfdb50d5b9035a"
+    },
+    {
+      "path": "scripts/cloudflare-build-contract.mjs",
+      "sha256": "fb0235b3c707c1b8946a3a18db61decfa30ad703d61383be971b40cf86057314"
+    },
+    {
+      "path": "scripts/cloudflare-browser-source.mjs",
+      "sha256": "fbfee575c225b99191d31c171c87bc97877d1e1f2072eb38d1063be4993e96a0"
+    },
+    {
+      "path": "scripts/cloudflare-staged-contract.mjs",
+      "sha256": "15a0733ad305878e69582649051b29052e7cd2542644ecaebd5d9a7a79ac1b56"
+    },
+    {
+      "path": "scripts/cloudflare-model-provider-policy.mjs",
+      "sha256": "88bba405797f3577717c7439474cf914c65b0b58c2cf2f75bfb04bf72cce220e"
+    },
+    {
+      "path": "dist/cycle-period-comparison.js",
+      "sha256": "5039d937694a18798a01c7e7c3d3778d8d7e596c20218c21a5f0853b88df7a7c"
+    },
+    {
+      "path": "dist/cycle-interval-overlay.js",
+      "sha256": "e6654c5b2072b23ea2a31ac688b517a130cbf5a632f99411b91734e5468baabb"
+    },
+    {
+      "path": "dist/cycle-milestones-view.js",
+      "sha256": "71382f5d7eda033edfbcc9b9b321195644122eecb6f67e3e53ebd01280ab5301"
+    },
+    {
+      "path": "dist/atlas-analysis.js",
+      "sha256": "515a9aaf23f2e9b5025e3f63f8cee673140047f935ca124caa80e2284769201d"
+    },
+    {
+      "path": "dist/ui/center-loading.js",
+      "sha256": "2c6ae05d85ae27c1665da154d94640acce1e650eaad5e41d136dccf7a00abe54"
+    },
+    {
+      "path": "dist/ui/chart-legend-layout.js",
+      "sha256": "c1917f1bceac6dbc3e44e63faef8cabaa1f83e1cf80051f1d2ee7a8a8a08fe48"
+    },
+    {
+      "path": "dist/ui/chart-legend.css",
+      "sha256": "343117964e9370be8b3e16f446e8d9e8d26196e8c0ddff0b7ea5e4dac6e7f87b"
+    },
+    {
+      "path": "dist/ui/chart-legend.js",
+      "sha256": "5e34aa32530edad8d296bafc42c2ec753411e379f5c9733c8c323d2917afbde2"
+    },
+    {
+      "path": "dist/ui/chart-url-state.js",
+      "sha256": "9446c9ebe6ec9f1acd7cc33a0ed7f1306019d72d54f00f2bb857cc4b59cfeabf"
+    },
+    {
+      "path": "dist/ui/shell-slots.js",
+      "sha256": "f4c1687eed7b6746dfa1f355e31d8087619eda9068e7d19bb050ef35cfce506d"
+    },
+    {
+      "path": "scripts/verify-ui-contract-browser.mjs",
+      "sha256": "dfd940b4e6f2434df93d6826271a17fb019039c9ee8ac4d38752b9e22af42ab9"
+    }
+  ],
+  "changesAfterMerge": [
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-01.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-02.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-03.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-04.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-05.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-06.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-07.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-08.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-09.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-10.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-11.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-12.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-13.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-14.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-15.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-16.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-17.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-18.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-19.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-20.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-21.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-22.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-23.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-24.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-25.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-26.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-27.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-28.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-29.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-31.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-32.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-33.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-34.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-35.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-36.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-06-v5-37.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-01.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-02.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-03.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-04.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-05.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-06.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-07.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-08.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-09.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-10.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-11.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-12.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-13.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-14.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-15.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-16.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-17.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-18.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-19.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-20.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-21.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-22.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-23.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-24.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-25.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-26.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-27.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-28.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-29.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-30.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-31.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-32.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-33.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-34.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-35.jpg",
+    "dist/data/relay/assets/hankyung-2026-11-09-v3-36.jpg",
+    "dist/data/relay/index.json"
+  ],
+  "note": "Only relay data changed after the UI merge. This equivalence check is separate from final production verification and public deployment."
+}
