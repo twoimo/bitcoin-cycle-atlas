@@ -41,6 +41,24 @@ test('all 12 symbols retain the same ordered slots and original command nodes', 
   assert.equal(document.querySelector('#workbench-clear').disabled, true, 'slot normalization cannot grant a disabled action');
 });
 
+test('native disabled commands explain the unavailable state and clear only shell-owned hints', () => {
+  const {document} = fixture();
+  const clear = document.querySelector('#workbench-clear');
+  refreshShellSlots(document, {symbol:'MSTR'});
+  assert.equal(clear.getAttribute('aria-description'), '완료한 측정이 없습니다.');
+  assert.equal(clear.dataset.disabledReason, '완료한 측정이 없습니다.');
+  assert.equal(clear.disabled, true);
+  clear.disabled = false;
+  refreshShellSlots(document);
+  assert.equal(clear.hasAttribute('aria-description'), false);
+  assert.equal(clear.hasAttribute('data-disabled-reason'), false);
+  clear.disabled = true;
+  clear.setAttribute('data-disabled-reason', '자료 제공자가 이 기능을 지원하지 않습니다.');
+  clear.setAttribute('aria-description', '자료 제공자가 이 기능을 지원하지 않습니다.');
+  refreshShellSlots(document);
+  assert.equal(clear.dataset.disabledReason, '자료 제공자가 이 기능을 지원하지 않습니다.', 'source-specific capability reasons remain authoritative');
+});
+
 test('late native identity, history and replay mounts settle without duplicate slots or URL writes', async t => {
   const {document, window} = fixture();
   let writes = 0;

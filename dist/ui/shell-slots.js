@@ -8,6 +8,7 @@ export const SHELL_SLOT_KEYS = Object.freeze({
 });
 
 const instances = new WeakMap();
+const disabledHints = new WeakMap();
 const set = (node, key, value) => { if (node && node.getAttribute(key) !== String(value)) node.setAttribute(key, String(value)); };
 function slot(node, region, index) {
   if (!node) return;
@@ -22,6 +23,33 @@ function ordered(parent, nodes) {
   const current = [...parent.children].filter(node => present.includes(node));
   if (present.every((node, index) => current[index] === node && node.parentElement === parent)) return;
   for (const node of present) parent.append(node);
+}
+
+// Source controllers decide whether a command is available. The shell only
+// explains that decision; it never enables an unsupported chart operation.
+function explainDisabled(node) {
+  if (!node) return;
+  const previous = disabledHints.get(node);
+  if (!node.disabled && node.getAttribute('aria-disabled') !== 'true') {
+    if (previous) {
+      for (const key of ['data-disabled-reason', 'aria-description']) if (node.getAttribute(key) === previous) node.removeAttribute(key);
+      disabledHints.delete(node);
+    }
+    return;
+  }
+  const existing = node.getAttribute('data-disabled-reason') || node.getAttribute('aria-description');
+  if (existing && existing !== previous) return;
+  const reason = ({
+    'workbench-clear': '완료한 측정이 없습니다.',
+    'workbench-undo': '취소할 차트 변경이 없습니다.',
+    'workbench-redo': '다시 실행할 차트 변경이 없습니다.',
+    'workbench-go-date': '가격 자료가 준비되면 날짜를 선택할 수 있습니다.',
+    'lab-svg': '가격 자료가 준비되면 차트를 내보낼 수 있습니다.',
+    'workbench-chart-type': '현재 자료에서 차트 유형을 바꿀 수 없습니다.',
+  })[node.id] || '현재 상태에서는 이 조작을 사용할 수 없습니다.';
+  set(node, 'data-disabled-reason', reason);
+  set(node, 'aria-description', reason);
+  disabledHints.set(node, reason);
 }
 
 export function refreshShellSlots(document, {symbol} = {}) {
@@ -100,6 +128,7 @@ export function refreshShellSlots(document, {symbol} = {}) {
   if (workbench) set(workbench, 'aria-label', `${currentSymbol} 가격 차트`);
   const plot = $('.atlas-plot');
   if (plot) set(plot, 'data-chart-symbol', currentSymbol);
+  for (const node of document.querySelectorAll('[data-shell-region] button,[data-shell-region] select')) explainDisabled(node);
 }
 
 /** One observer covers asynchronous shell mounts, not chart paints. It never

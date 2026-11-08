@@ -44,11 +44,12 @@ export function mountRailTooltip(document) {
   const trigger = target => target?.closest?.('.workbench-rail button, .workbench-rail a, .atlas-sidebar .workbench-icon');
   const hide = () => { tooltip.hidden = true; current = null; };
   const show = node => {
-    if (!node || node.disabled || document.body.dataset.shell !== 'chart' || view?.matchMedia?.('(max-width: 620px)').matches) { hide(); return; }
+    const reason = node?.getAttribute('data-disabled-reason') || node?.getAttribute('aria-description');
+    if (!node || node.disabled && !reason || document.body.dataset.shell !== 'chart' || view?.matchMedia?.('(max-width: 620px)').matches) { hide(); return; }
     const label = node.getAttribute('aria-label') || node.getAttribute('title');
     if (!label) { hide(); return; }
     current = node;
-    tooltip.textContent = label;
+    tooltip.textContent = node.disabled && reason ? `${label} · ${reason}` : label;
     tooltip.hidden = false;
     const bounds = node.getBoundingClientRect();
     const tip = tooltip.getBoundingClientRect();
