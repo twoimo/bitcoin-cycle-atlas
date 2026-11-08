@@ -251,6 +251,7 @@ const interactionCases=[
   }},
   {name:'measured replay overflow moves the same native controls, shares the overlay owner and restores keyboard focus',async run(source){
     const h=await harness(source,{...atlasFixture().options,transportGeometry:{scrollWidth:600,clientWidth:300,scrollLeft:0},barWidth:320});await h.mounted.open();
+    assert.equal(h.svg.dataset.replayTransportInset,'84','Loading and drawing must retain the reserved transport lane');
     const q=name=>h.controls.get(name),secondary=['speed','update-interval','live'].map(q),handlers=secondary.map(node=>node.onchange??node.onclick);
     const session=h.controllers[0].getState().session;
     assert.equal(h.bar.dataset.secondaryOverflow,'true');assert.equal(q('transport-more').hidden,false);
@@ -264,7 +265,10 @@ const interactionCases=[
     q('select-close').click();q('transport-more').focus();h.transport.scrollWidth=300;h.bar.clientWidth=560;h.resize();
     assert.equal(h.bar.dataset.secondaryOverflow,'false');assert.equal(q('transport-more').hidden,true);assert.equal(h.doc.activeElement,q('speed'));
     for(let index=0;index<secondary.length;index++){const node=secondary[index];assert.equal(node.parentElement,h.transport);assert.equal(node.onchange??node.onclick,handlers[index]);}
-    assert.equal(h.svg.dataset.replayTransportInset,'84');assert.equal(h.writes.length,0);h.mounted.destroy();
+    await h.mounted.open({selectOnly:true});assert.equal(h.panel.dataset.state,'selecting');
+    assert.equal(h.svg.dataset.replayTransportInset,'84','An unconfirmed selection must keep the same lane');
+    keyEvent(h,'Escape');assert.equal(h.mounted.isActive(),false);assert.equal(h.svg.dataset.replayTransportInset,undefined,'Returning live releases the replay-only allocation');
+    assert.equal(h.writes.length,0);h.mounted.destroy();
   }},
   {name:'replay preserves an explicit dense viewport through reversible zoom and excludes spacing bounds from saved session bytes',async run(source){
     const fixture=atlasFixture();fixture.captured.start=dateAt(0);fixture.captured.end=dateAt(8000);

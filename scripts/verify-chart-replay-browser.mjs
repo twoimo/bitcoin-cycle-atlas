@@ -78,7 +78,7 @@ export function readChartReplayFloatingGeometry({ chartSelector, panel }) {
     pricePane.width = pricePane.right - pricePane.left; pricePane.height = pricePane.bottom - pricePane.top;
   }
   const legendNode = plot.querySelector('.lab-chart-foot'), legend = visible(legendNode) ? { ...rect(legendNode),
-    mode: legendNode.dataset.legendMode, scrollWidth: legendNode.scrollWidth, clientWidth: legendNode.clientWidth,
+    mode: legendNode.dataset.legendMode, compactReason: legendNode.dataset.legendCompactReason, scrollWidth: legendNode.scrollWidth, clientWidth: legendNode.clientWidth,
     rows: [...legendNode.querySelectorAll('.chart-legend-row')].filter(visible).map(node => ({ id: node.dataset.legendGroup, ...rect(node),
       scrollWidth: node.scrollWidth, clientWidth: node.clientWidth, total: node.querySelectorAll('.chart-legend-entry').length,
       visibleCount: Number(node.dataset.visibleCount), hiddenCount: Number(node.dataset.hiddenCount),
@@ -438,7 +438,9 @@ export async function verifyChartReplaySurface(api) {
       const expectedStatus = ['실선 · 관측 사후 기준', '점선 · 잠정·가정', '◇ 거시 시계 · ○ 예시 경로'];
       assert.deepEqual(geometry.legend.allItems, expectedItems, 'Compact legend lost an original semantic entry');
       assert.deepEqual(geometry.legend.statusItems, expectedStatus, 'Compact legend lost its provisional/retrospective meanings');
-      assert.equal(geometry.legend.mode, width <= 430 ? 'chip' : 'rows');
+      if (width <= 430) assert.equal(geometry.legend.mode, 'chip');
+      else if (geometry.legend.mode === 'chip') assert.ok(['height','protected-anchors'].includes(geometry.legend.compactReason), 'A wide plot needs a measured height/anchor reason to use the compact legend');
+      else assert.equal(geometry.legend.mode, 'rows');
       if (geometry.legend.mode === 'chip') {
         assert.equal(geometry.legend.rows.length, 0, 'Mobile legend must show one chip');
         assert.equal(geometry.legend.trigger?.text, '범례');

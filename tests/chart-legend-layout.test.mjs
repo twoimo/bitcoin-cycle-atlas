@@ -32,6 +32,19 @@ test('legend yields below immutable model anchors while retaining its right inse
   assert.equal(overlayBoxesIntersect(after,anchor,4),false);assert.equal(JSON.stringify(anchor),snapshot);
 });
 
+test('short replay price panes use the full-list chip before a reserved cycle or footer lane',()=>{
+  const input={width:795,height:285,left:12,right:713,top:18,bottom:110,viewportWidth:900};
+  const rows=chartLegendSlot(input),anchor={x:rows.x+30,y:rows.y+8,width:20,height:20};
+  const snapshot=JSON.stringify(input),slot=chartLegendSlot({...input,protectedAnchors:[anchor]});
+  assert.equal(slot.compact,true);assert.equal(slot.compactReason,'protected-anchors');
+  assert.equal(slot.height,44);assert.equal(slot.y,input.top+12);
+  assert.equal(slot.x+slot.width,input.right-12);assert.ok(slot.y+slot.height<=input.bottom-12);
+  assert.equal(overlayBoxesIntersect(slot,anchor,4),false);assert.equal(JSON.stringify(input),snapshot);
+  const shorter=chartLegendSlot({...input,bottom:100});
+  assert.equal(shorter.compact,true);assert.equal(shorter.compactReason,'height');assert.equal(shorter.height,44);
+  assert.ok(shorter.y+shorter.height<=100-12);
+});
+
 test('model, macro and event label boxes avoid the same reserved corner without altering their supplied anchors',()=>{
   const corner={x:730,y:30,width:510,height:64},args={x:1000,y:45,width:196,height:18,left:8,right:1260,top:18,bottom:760,obstacles:[corner]};
   const snapshot=JSON.stringify(args),placed=placePlotLabel(args);

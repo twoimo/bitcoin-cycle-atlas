@@ -59,6 +59,7 @@ test('shared chart perimeter respects HYPE units and monthly housing capabilitie
   assert.equal(adapter.update(housing),true,'a volume-only month keeps its missing price');
   assert.equal(interval.value,'monthly');assert.equal(interval.querySelector('[value=monthly]')!.textContent,'1M');
   assert.equal((document.querySelector('#workbench-chart-type') as HTMLButtonElement).disabled,true);
+  assert.match(document.querySelector('#workbench-chart-type')!.getAttribute('aria-description')||'',/OHLC 자료가 없어/,'the retained unsupported slot explains its disabled state');
   assert.equal(document.querySelector('#atlas-update-status')!.getAttribute('aria-label'),'HOUSING-SEOUL 가격지수 2026-08 · 거래량 2026-09 · 자료 출처');
   assert.equal(document.querySelector('#workbench-range-label')!.textContent,'2025-01 ~ 2026-09');
   assert.equal(adapter.update({...housing,symbol:'HOUSING-BUSAN'}),false,'another region cannot acquire this perimeter');

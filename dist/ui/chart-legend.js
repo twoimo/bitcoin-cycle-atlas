@@ -87,12 +87,12 @@ export function mountChartLegend({plot}={}){
     if(destroyed)return null;if(nextGeometry)geometry=nextGeometry;
     const box=plot.getBoundingClientRect();if(!box.width||!box.height)return null;
     const width=plot.clientWidth||box.width,height=plot.clientHeight||box.height;
-    const input=geometry&&geometry.width===width&&geometry.height===height?geometry:{width,height,left:Number(svg?.dataset.plotLeft)||0,right:Number(svg?.dataset.plotRight)||width-80,top:Number(svg?.dataset.plotTop)||18};
+    const input=geometry&&geometry.width===width&&geometry.height===height?geometry:{width,height,left:Number(svg?.dataset.plotLeft)||0,right:Number(svg?.dataset.plotRight)||width-80,top:Number(svg?.dataset.plotTop)||18,bottom:Number(svg?.dataset.priceBottom)||height};
     const slot=chartLegendSlot({...input,width,height,viewportWidth:win.innerWidth||width});
     setStyle(foot,'--chart-legend-top',slot.y);setStyle(foot,'--chart-legend-right',width-slot.x-slot.width);setStyle(foot,'--chart-legend-width',slot.width);setStyle(foot,'--chart-legend-height',slot.height);
     setStyle(plot,'--chart-legend-hud-max-width',slot.hudMaxWidth);
     plot.dataset.legendVisible=String(!foot.hidden&&plot.dataset.chartFocus!=='true');
-    foot.dataset.legendMode=slot.compact?'chip':'rows';dialog.dataset.fullscreen=String(slot.compact);
+    foot.dataset.legendMode=slot.compact?'chip':'rows';foot.dataset.legendCompactReason=slot.compactReason||'';dialog.dataset.fullscreen=String(slot.compact);
     chip.hidden=!slot.compact;source.hidden=slot.compact;
     if(!slot.compact)fitRows();
     const layoutKey=JSON.stringify([slot.x,slot.y,slot.width,slot.height,slot.compact,foot.hidden]);

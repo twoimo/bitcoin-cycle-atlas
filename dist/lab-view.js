@@ -346,7 +346,7 @@ export function initLabView() {
       $('#atlas-cycle-focus').hidden=!selection.interval;
     }
     state.cycleVisibleIntervals=Number($('#lab-chart').dataset.cycleIntervalCount||0);
-    const note=`기간선은 가격 그래프 안에서 범례와 재생 막대 위에 관계별로 표시됩니다. 날짜축에 맞춰 가로 길이가 바뀌며, 라벨은 남는 가로 공간을 사용합니다. 좁은 구간의 전체 이름·날짜는 선택해서 확인할 수 있습니다. 기간은 종료 UTC 날짜 − 시작 UTC 날짜이며, 화면 밖으로 이어지는 구간도 전체 기간을 표시합니다. 색 원·기간선의 실선은 사후 기준, 점선은 잠정 또는 가정입니다. ${data.futureStatus?.reason||''}`;
+    const note=`기간선은 가격 그래프 안에서 범례와 재생 막대를 피해 관계별로 표시됩니다. 날짜축에 맞춰 가로 길이가 바뀌며, 라벨은 남는 가로 공간을 사용합니다. 좁은 구간의 전체 이름·날짜는 선택해서 확인할 수 있습니다. 기간은 종료 UTC 날짜 − 시작 UTC 날짜이며, 화면 밖으로 이어지는 구간도 전체 기간을 표시합니다. 색 원·기간선의 실선은 사후 기준, 점선은 잠정 또는 가정입니다. ${data.futureStatus?.reason||''}`;
     $('#atlas-cycle-note').textContent=note;
     const ref=data.sourceReference;
     $('#atlas-cycle-reference').innerHTML=`<p><strong>${esc(ref.title)}</strong> · ${esc(ref.author)} · 2024.08.06 · ${esc(ref.instrument)}</p><p>${esc(ref.note)} 아래는 원본에 적힌 주 수이며, 위 차트의 계산값과 구분합니다.</p><div class="cycle-reference-table"><table><thead><tr><th scope="col">원본 관계 · 주</th>${ref.cycles.map(label=>`<th scope="col">${esc(label)}</th>`).join('')}</tr></thead><tbody>${INTERVAL_RELATIONS.map(item=>`<tr><th scope="row">${esc(item.label)}</th>${ref.periodClaims[item.id].map(value=>`<td>${esc(value)}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p><strong>선정 기준</strong><br>${Object.entries(data.methodology).filter(([key])=>!['general','duration','future'].includes(key)).map(([key,value])=>`${esc(key.toUpperCase())}: ${esc(value)}`).join('<br>')}</p><p>모형에 기준점이 없는 장기 구간에는 날짜나 고점을 만들어 넣지 않습니다. 구간 막대나 원을 선택하면 정확한 날짜와 기준을 확인할 수 있습니다.</p>`;

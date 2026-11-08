@@ -2,18 +2,26 @@ const finite=(value,fallback=0)=>Number.isFinite(Number(value))?Number(value):fa
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
 
 /** The axis gutter is outside this rectangle. A legend never owns another pane. */
-export function chartLegendSlot({width=0,height=0,left=0,right=width,top=0,viewportWidth=width,protectedAnchors=[]}={}){
+export function chartLegendSlot({width=0,height=0,left=0,right=width,top=0,bottom=height,viewportWidth=width,protectedAnchors=[]}={}){
   width=Math.max(0,finite(width));height=Math.max(0,finite(height));
   left=clamp(finite(left),0,width);right=clamp(finite(right,width),left,width);
+  bottom=clamp(finite(bottom,height),0,height);top=clamp(finite(top),0,bottom);
   const plotWidth=right-left,inset=Math.min(12,plotWidth/2),maxWidth=Math.max(0,Math.min(plotWidth*.42,plotWidth-inset*2));
-  const compact=finite(viewportWidth,width)<=430||maxWidth<116;
-  const legendWidth=compact?Math.min(68,maxWidth):maxWidth,legendHeight=Math.min(compact?44:64,Math.max(0,height-24));
-  const x=Math.max(left,right-inset-legendWidth),minimumY=clamp(finite(top)+12,0,Math.max(0,height-legendHeight-12));
+  const availableHeight=Math.max(0,bottom-top-24);
+  let compactReason=finite(viewportWidth,width)<=430?'viewport':maxWidth<116?'width':availableHeight<64?'height':null;
   // A model evidence dot is a date/price fact. If it reaches the corner, the
-  // legend yields downward; the dot, chart frame and price scale stay fixed.
-  const maxY=Math.max(minimumY,height-legendHeight-12),candidates=[minimumY,...protectedAnchors.map(box=>box.y+box.height+4)].filter(y=>Number.isFinite(y)&&y>=minimumY&&y<=maxY).sort((a,b)=>a-b);
-  const y=candidates.find(y=>!protectedAnchors.some(anchor=>overlayBoxesIntersect({x,y,width:legendWidth,height:legendHeight},anchor,4)))??minimumY;
-  return {x,y,width:legendWidth,height:legendHeight,compact,inset,maxWidth,hudMaxWidth:Math.max(0,x-20)};
+  // legend yields within the price pane. A short pane can use the same full-
+  // list chip as mobile instead of spilling into cycle, volume or footer lanes.
+  function placement(compact){
+    const legendWidth=compact?Math.min(68,maxWidth):maxWidth,legendHeight=Math.min(compact?44:64,availableHeight);
+    const x=Math.max(left,right-inset-legendWidth),minimumY=Math.min(top+12,Math.max(top,bottom-legendHeight));
+    const maxY=Math.max(minimumY,bottom-legendHeight-12),candidates=[minimumY,...protectedAnchors.map(box=>box.y+box.height+4)].filter(y=>Number.isFinite(y)&&y>=minimumY&&y<=maxY).sort((a,b)=>a-b);
+    const clearY=candidates.find(y=>!protectedAnchors.some(anchor=>overlayBoxesIntersect({x,y,width:legendWidth,height:legendHeight},anchor,4)));
+    return {x,y:clearY??minimumY,width:legendWidth,height:legendHeight,clear:clearY!==undefined};
+  }
+  let placed=placement(Boolean(compactReason));
+  if(!compactReason&&!placed.clear){compactReason='protected-anchors';placed=placement(true);}
+  return {...placed,compact:Boolean(compactReason),compactReason,inset,maxWidth,hudMaxWidth:Math.max(0,placed.x-20)};
 }
 
 /** Fit whole entries. Overflow remains available from a real, focusable +N control. */

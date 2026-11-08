@@ -610,7 +610,6 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
   }
   function paint(state){
     if(!active||destroyed)return;
-    layoutTransport();
     setReplayProperty(panel.dataset,'state',state.status);setReplayProperty(svg.dataset,'replayStatus',state.status);
     const ready=Boolean(state.session),playing=state.status==='playing',backtest=q('mode').value==='cutoff-backtest';
     setReplayProperty(compactScore,'hidden',!backtest||!ready);
@@ -618,6 +617,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     setReplayProperty(q('mode-badge'),'textContent',externalBacktest?'월말 고정본':backtest?'기준시점 백테스트':q('mode').value==='atlas-chart'?'현재선 비교':'예측 비교');
     setReplayAttribute(q('mode-badge'),'aria-label','리플레이 모드 설정 · '+q('mode-badge').textContent);
     setReplayProperty(q('mode-badge'),'disabled',hasChoice());setReplayProperty(q('result'),'hidden',!backtest);setReplayProperty(q('result'),'disabled',!ready||hasChoice()||picking||state.status==='selecting');
+    layoutTransport();
     setChartLoading(svg.parentElement,!ready&&state.status==='loading'&&!pendingAtlas,'리플레이 자료 로딩');
     const blocked=hasChoice()||picking||state.status==='selecting';
     updateDateContext(state);
@@ -625,7 +625,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     if(!ready){
       setReplayProperty(inspect,'textContent','');setReplayProperty(q('metric'),'textContent','');setReplayProperty(q('detail-metric'),'textContent','');
       setReplayProperty(q('model-label'),'textContent',state.status==='error'?'예측을 생성하지 않았습니다.':'선택한 기준의 예측을 준비합니다.');
-      for(const key of Object.keys(svg.dataset))if(key.startsWith('replay')&&key!=='replayStatus')delete svg.dataset[key];
+      for(const key of Object.keys(svg.dataset))if(key.startsWith('replay')&&!['replayStatus','replayTransportInset'].includes(key))delete svg.dataset[key];
     }
     setReplayProperty(q('play'),'disabled',!playing&&(blocked||!ready||state.cursorIndex>=state.length-1));setReplayProperty(q('first'),'disabled',blocked||!ready||state.cursorIndex===0);setReplayProperty(q('next'),'disabled',blocked||!ready||state.cursorIndex>=state.length-1);setReplayProperty(q('scrub'),'disabled',blocked||!ready);
     setReplayProperty(q('speed'),'value',String(state.speed));setReplayProperty(q('speed'),'title',speedMeaning(state.speed)+' · 실제 일봉 한 개씩 공개');setReplayProperty(q('speed'),'disabled',hasChoice());
@@ -644,7 +644,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     setReplayProperty(q('pooled-retry'),'hidden',!adaptiveUnavailable);
     if(state.status==='error'){
       disposeDrawing();frame=null;inspect.textContent='';q('cursor').textContent=adaptiveUnavailable?'예측 준비 조건 미충족':'리플레이 오류';q('metric').textContent='';q('detail-metric').textContent='';
-      for(const key of Object.keys(svg.dataset))if(key.startsWith('replay')&&key!=='replayStatus')delete svg.dataset[key];
+      for(const key of Object.keys(svg.dataset))if(key.startsWith('replay')&&!['replayStatus','replayTransportInset'].includes(key))delete svg.dataset[key];
       let retained=false;try{retained=drawAtlasPending();if(!retained)svg.replaceChildren();}catch{svg.replaceChildren();}
       if(retained)q('model-label').textContent='현재 예측선 보존 · 실제 리플레이 준비 실패';
       const reason=adaptiveUnavailable?'선택 기준일까지 확정된 상승·하락 수익률 표본이 각 30개 이상 필요합니다. 날짜를 바꾸거나 통합 변동성 모형으로 같은 날짜를 비교해 주세요.':state.error+' · 시작점 또는 예측 종류를 다시 선택해 주세요.';

@@ -9,7 +9,7 @@ import {consolidatedPagesBase,verifyConsolidatedWorkspaceSurface} from './verify
 import {createEthBrowserCaseSpecs,ethBrowserCaseScopes,selectEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
 import {readBrowserSourceIdentity} from './browser-source-identity.mjs';
 import {classifyProjectBrowserResource,verifyProjectGeneratedImages} from './browser-project-resource-policy.mjs';
-import {uiContractBrowserCases,verifyUiContractSurface} from './verify-ui-contract-browser.mjs';
+import {uiContractBrowserCases,verifyUiContractSurface,verifyUiShellSurface} from './verify-ui-contract-browser.mjs';
 import {verifyNativeChartWorkbench} from './verify-native-chart-workbench-browser.mjs';
 import {verifyChartZoomBrowser} from './verify-chart-zoom-browser.mjs';
 import {emitBrowserEvidenceChunks} from './browser-evidence-transport.mjs';
@@ -878,7 +878,7 @@ async function main(){
       // gets its own context so an earlier viewport's explicit save cannot
       // pre-populate the next scenario's Continue / Start new decision.
       // Existing shared-workspace/model cases retain their context and guards.
-      if(spec.chartReplay||spec.uiContract)({browserContextId}=await browser.send('Target.createBrowserContext',{}));
+      if(spec.chartReplay||spec.uiContract||spec.uiShell)({browserContextId}=await browser.send('Target.createBrowserContext',{}));
       ({targetId}=await browser.send('Target.createTarget',{url:'about:blank',...(browserContextId?{browserContextId}:{})}));
       const target=await until(async()=>{const list=await (await fetch(debugBase+'/json/list')).json();return list.find(t=>t.id===targetId&&t.webSocketDebuggerUrl);},'page CDP target');
       cdp=await Cdp.connect(target.webSocketDebuggerUrl);
@@ -992,6 +992,7 @@ async function main(){
       receipt.url=spec.route?base+spec.route:base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
       if(spec.uiContract)await verifyUiContractSurface({cdp,receipt,evaluate,until,settled,click,screenshot,verifyOfflineRefresh});
+      else if(spec.uiShell)await verifyUiShellSurface({cdp,receipt,evaluate,until,settled,click,screenshot,verifyOfflineRefresh});
       else if(spec.consolidated)await verifyConsolidatedWorkspaceSurface({cdp,receipt,evaluate,until,settled,screenshot,verifyOfflineRefresh});
       else if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,browserContextId,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh,onFastCadenceMilestone});
       else if(spec.replay)await verifyForecastReplaySurface({cdp,browser,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});

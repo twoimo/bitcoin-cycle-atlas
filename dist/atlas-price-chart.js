@@ -252,7 +252,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   const evidenceMarkers=forecastEvidence.filter(item=>item.date>split&&item.date>=start&&item.date<=end&&Number.isFinite(item.price)&&item.price>0);
   const protectedAnchors=evidenceMarkers.map(item=>({x:x(item)-10,y:y(item.price)-10,width:20,height:20})).filter(box=>box.y+box.height>=T&&box.y<=priceBottom);
   const legendNode=svg.parentElement?.querySelector?.('.chart-legend-dock');
-  const legendGeometry={width:W,height:H,left:L,right:W-R,top:T,protectedAnchors};
+  const legendGeometry={width:W,height:H,left:L,right:W-R,top:T,bottom:priceBottom,protectedAnchors};
   const legendSlot=legendNode&&!legendNode.hidden&&svg.parentElement?.dataset?.chartFocus!=='true'?(refreshChartLegendGeometry(svg.parentElement,legendGeometry)||chartLegendSlot({...legendGeometry,viewportWidth:svg.ownerDocument?.defaultView?.innerWidth||W})):null;
   const upperOverlayObstacles=[...cycleOverlayObstacles,...priceChartOverlayObstacles(svg),...(legendSlot?[{x:legendSlot.x-4,y:legendSlot.y-4,width:legendSlot.width+8,height:legendSlot.height+8}]:[])];
   const evidenceLayout=[];let lastEvidenceX=-Infinity;

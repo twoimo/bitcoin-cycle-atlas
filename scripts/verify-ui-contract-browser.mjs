@@ -2,9 +2,67 @@ import assert from 'node:assert/strict';
 
 // A focused UI review uses the existing native browser runner. It does not
 // replace, shorten, or qualify the canonical 53-case publication inventory.
-export const uiContractBrowserCases = [
+const viewportCases = [
   [320,740,true],[390,844,true],[768,1024,true],[1024,768,false],[1440,900,false],[1920,1080,false],
 ].map(([width,height,touch])=>({page:'ui-contract-btc',uiContract:true,surface:'btc',symbol:'BTCUSD',width,height,touch,route:'/'}));
+const instrumentCases = ['ETHUSD','MSTR','BMNR','TQQQ','SOXL','233740','HYPE','HOUSING-BUSAN','HOUSING-SEOUL','HOUSING-GYEONGGI','HOUSING-NATIONAL'].map(symbol=>{
+  const native=['ETHUSD','MSTR','BMNR'].includes(symbol),query=new URLSearchParams(native?{page:'outlook',symbol}:{symbol});
+  if(symbol.startsWith('HOUSING-'))query.set('region',symbol.slice(8).toLowerCase());
+  return {page:'ui-shell-'+symbol.toLowerCase(),uiShell:true,...(!native?{surface:'btc'}:{}),symbol,width:1440,height:900,touch:false,route:(native?'/':'/market-lab/charts/')+'?'+query};
+});
+export const uiContractBrowserCases = process.env.ATLAS_UI_REVIEW_PHASE==='before'?viewportCases:[...viewportCases,...instrumentCases];
+const shellKeys={
+  top:['symbol','interval','chart-type','indicators','instrument','history','workspace','chart-menu','export','settings'],
+  bottom:['range','date','events','readout','scale','auto-scale','fit','status'],
+  left:['crosshair','pan','measure','magnet','clear','zoom-in','zoom-out','pan-left','pan-right','reset','annotations'],
+  right:['outlook','market-us','evidence','data','ipo','relay','selection','layers','method','records','help'],
+};
+
+export function readShellContract(){
+  const painted=node=>Boolean(node&&!node.hidden&&!node.closest('[hidden]')&&node.getClientRects().length&&getComputedStyle(node).visibility!=='hidden');
+  const regions=Object.fromEntries(Object.keys({top:1,bottom:1,left:1,right:1}).map(region=>{
+    const owner=document.querySelector('[data-shell-region="'+region+'"]'),box=owner?.getBoundingClientRect();
+    return [region,{width:box?.width,painted:painted(owner),label:owner?.getAttribute('aria-label'),slots:owner?[...owner.querySelectorAll('[data-shell-owner="'+region+'"]')].map(node=>({
+      slot:node.dataset.shellSlot,key:node.dataset.shellKey,painted:painted(node),label:node.getAttribute('aria-label')||node.title||node.textContent.trim(),
+      disabled:node.matches(':disabled,[aria-disabled="true"]'),reason:node.dataset.disabledReason||node.getAttribute('aria-description')||node.title||'',
+    })):[]}];
+  }));
+  return {symbol:document.querySelector('.atlas-plot')?.dataset.chartSymbol,graphName:document.querySelector('.atlas-workbench,.native-chart-workbench')?.getAttribute('aria-label'),regions,
+    url:location.pathname+location.search,rootWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,
+    undoDisabled:document.querySelector('#workbench-undo')?.disabled,historyLength:history.length,
+    storage:Object.keys(localStorage).filter(key=>/history|journal|replay/.test(key)).map(key=>({key,bytes:localStorage.getItem(key)?.length||0})),
+    frame:[...document.querySelectorAll('.atlas-center-frame:not([hidden])')].map(frame=>({source:frame.src,loaded:frame.dataset.centerLoaded,ready:frame.contentDocument?.readyState,heading:frame.title})),
+  };
+}
+async function verifyShellSnapshot(api){
+  const {cdp,receipt,evaluate,until,settled}=api;
+  await until(()=>evaluate(cdp,()=>document.querySelector('[data-shell-region="top"] [data-shell-key="settings"]')),'initialized common shell');
+  await settled(cdp);
+  const shell=await evaluate(cdp,readShellContract);
+  for(const [region,keys]of Object.entries(shellKeys)){
+    assert.deepEqual(shell.regions[region].slots.map(slot=>slot.key),keys,receipt.symbol+' '+region+' slots/order');
+    assert.deepEqual(shell.regions[region].slots.map(slot=>Number(slot.slot)),keys.map((_,index)=>index+1));
+    for(const slot of shell.regions[region].slots)if(slot.disabled)assert.ok(slot.reason.trim(),receipt.symbol+' '+region+'/'+slot.key+' has no disabled explanation');
+  }
+  assert.equal(shell.symbol,receipt.symbol);assert.equal(shell.graphName,receipt.symbol+' 가격 차트');
+  assert.equal(shell.url,receipt.route,'First entry writes extra URL state');
+  assert.equal(shell.undoDisabled,true,'First entry records an undoable edit');
+  assert.ok(Math.max(shell.rootWidth,shell.bodyWidth)<=receipt.width+1,'Common shell overflows page');
+  if(receipt.width>=1024){assert.ok(Math.abs(shell.regions.right.width-45)<=1,'Right rail width differs');assert.ok(shell.regions.left.width>0&&shell.regions.left.width<=52,'Left controls escape their 52px rail');}
+  receipt.shellContract=shell;return shell;
+}
+
+export async function verifyUiShellSurface(api){
+  const {cdp,receipt,evaluate,until,settled,screenshot,verifyOfflineRefresh}=api;
+  if(receipt.surface==='btc'){
+    await until(()=>evaluate(cdp,()=>document.querySelector('.atlas-center-frame:not([hidden])')?.dataset.centerLoaded==='true'&&document.body.dataset.chartControls==='ready'),'loaded and acknowledged instrument workspace');
+    await verifyOfflineRefresh();
+  }else{
+    await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('#eth-chart path,#equity-chart path'))),'native instrument chart');
+  }
+  await settled(cdp);await verifyShellSnapshot(api);
+  await screenshot(cdp,'wp7-'+receipt.symbol.toLowerCase()+'-'+receipt.width+'x'+receipt.height+'.png',receipt);
+}
 
 export function readUiContractGeometry(){
   const painted=e=>Boolean(e&&!e.hidden&&!e.closest('[hidden]')&&e.getClientRects().length&&getComputedStyle(e).display!=='none'&&getComputedStyle(e).visibility!=='hidden');
@@ -18,8 +76,8 @@ export function readUiContractGeometry(){
   const labels=[...document.querySelectorAll('.market-last-price,.cycle-macro-clock-label,[data-forecast-evidence] text,[data-history-event] text,.chart-replay-hud')].filter(painted);
   return {viewport:{width:innerWidth,height:innerHeight},url:location.pathname+location.search,rootWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,
     plot:rect(plot),pricePane:{left:Number(svg?.dataset.plotLeft),right:Number(svg?.dataset.plotRight),top:Number(svg?.dataset.plotTop),bottom:Number(svg?.dataset.priceBottom)},
-    legend:l&&{...l,mode:legend.dataset.legendMode||'legacy',groups:[...legend.querySelectorAll('[data-legend-group]')].map(e=>({id:e.dataset.legendGroup,visibleCount:e.dataset.visibleCount,hiddenCount:e.dataset.hiddenCount,...rect(e)})),more:[...legend.querySelectorAll('.chart-legend-more')].filter(painted).map(e=>({text:e.textContent,...rect(e)})),collisions:labels.filter(e=>overlap(l,rect(e))).map(e=>({tag:e.tagName,className:e.getAttribute('class'),text:e.textContent,...rect(e)}))},
-    replay:painted(bar)?{bar:rect(bar),actions:view,clipped,controls,hint:[...document.querySelectorAll('.chart-replay-scroll-hint')].map(e=>({visible:painted(e),text:e.textContent,...rect(e)})),state:document.querySelector('.chart-replay-controls')?.dataset.state,selecting:svg?.dataset.replaySelecting==='true',cursor:svg?.dataset.replayCursor,strip:[...document.querySelectorAll('.cycle-phase-strip,.chart-cycle-strip,[data-cycle-strip]')].filter(painted).map(rect)}:null,
+    legend:l&&{...l,mode:legend.dataset.legendMode||'legacy',compactReason:legend.dataset.legendCompactReason||null,groups:[...legend.querySelectorAll('[data-legend-group]')].map(e=>({id:e.dataset.legendGroup,visibleCount:e.dataset.visibleCount,hiddenCount:e.dataset.hiddenCount,...rect(e)})),more:[...legend.querySelectorAll('.chart-legend-more')].filter(painted).map(e=>({text:e.textContent,...rect(e)})),collisions:labels.filter(e=>overlap(l,rect(e))).map(e=>({tag:e.tagName,className:e.getAttribute('class'),text:e.textContent,...rect(e)}))},
+    replay:painted(bar)?{bar:rect(bar),actions:view,clipped,controls,hint:[...document.querySelectorAll('.chart-replay-scroll-hint')].map(e=>({visible:painted(e),text:e.textContent,...rect(e)})),arrows:[...bar.querySelectorAll('.chart-replay-scroll-arrow')].map(e=>({visible:painted(e),disabled:e.disabled,...rect(e)})),state:document.querySelector('.chart-replay-controls')?.dataset.state,selecting:svg?.dataset.replaySelecting==='true',cursor:svg?.dataset.replayCursor,strip:[...document.querySelectorAll('.cycle-timing-ribbon,.cycle-interval-overlay-layer')].filter(painted).map(rect),coveredLabels:[...document.querySelectorAll('.cycle-timing-ribbon,.market-last-price')].filter(e=>painted(e)&&overlap(rect(bar),rect(e))).map(e=>({label:e.getAttribute('aria-label')||e.textContent,...rect(e)}))}:null,
     undoDisabled:document.querySelector('#workbench-undo')?.disabled,
     firstEntryStorage:Object.keys(localStorage).filter(k=>/replay|history/.test(k)).map(k=>({key:k,bytes:localStorage.getItem(k)?.length||0})),
   };
@@ -36,6 +94,19 @@ export async function verifyUiContractSurface(api){
     if(wait)await settled(cdp);
   }
   const control=name=>'.chart-replay-controls [data-cr="'+name+'"]';
+  async function pointer(selector,touch=false){
+    const target=await evaluate(cdp,selector=>{const node=document.querySelector(selector),r=node.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,hit=document.elementFromPoint(x,y);return {x,y,topmost:hit===node||node.contains(hit)};},selector);
+    assert.equal(target.topmost,true,'Native input target is obscured: '+selector);
+    if(touch){await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:target.x,y:target.y,radiusX:2,radiusY:2,force:1}]});await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await settled(cdp);}
+    else await click(cdp,selector);
+  }
+  async function tabTo(selector){
+    for(let index=0;index<120;index++){
+      if(await evaluate(cdp,selector=>document.activeElement?.matches(selector),selector))return;
+      await key('Tab','Tab',9);
+    }
+    throw new Error('Keyboard cannot reach '+selector);
+  }
   function within(box,label){assert.ok(box&&box.width>0&&box.height>0,label+' not painted');assert.ok(box.left>=-.5&&box.right<=receipt.width+.5&&box.top>=-.5&&box.bottom<=receipt.height+.5,label+' outside viewport '+JSON.stringify(box));}
   function checkLegend(value){
     const {legend:l,pricePane:p,plot}=value;within(l,'legend');
@@ -43,17 +114,20 @@ export async function verifyUiContractSurface(api){
     assert.ok(Math.abs(l.right-(plot.left+p.right-12))<1.5,'Legend must retain 12px right inset');
     assert.ok(l.top>=plot.top+p.top+12-1.5,'Legend must retain at least the 12px top inset');
     assert.ok(l.scrollWidth<=l.clientWidth+1,'Legend content overflows');
-    assert.equal(l.mode,receipt.width<=390?'chip':'rows');
+    if(receipt.width<=390)assert.equal(l.mode,'chip');
+    else if(l.mode==='chip')assert.ok(['width','height','protected-anchors'].includes(l.compactReason),'Unexpected wide-chart chip');
+    else assert.equal(l.mode,'rows');
     if(l.mode==='rows')assert.deepEqual(l.groups.map(g=>g.id),['price','cycle']);
     assert.equal(l.collisions.length,0,'Legend overlaps reserved labels: '+JSON.stringify(l.collisions));
     assert.ok(Math.max(value.rootWidth,value.bodyWidth)<=receipt.width+1,'Page has horizontal overflow');
   }
   await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('#lab-chart path')&&Number(document.querySelector('#lab-chart')?.dataset.plotRight)>0)),'BTC chart with real observations');
   await verifyOfflineRefresh();
-  const initial=await state('initial');await screenshot(cdp,prefix+'-chart.png',receipt);
+    const initial=await state('initial');await screenshot(cdp,prefix+'-chart.png',receipt);
   if(phase==='after'){
+    await verifyShellSnapshot(api);
     checkLegend(initial);assert.equal(initial.url,'/','First render must retain the clean URL');assert.equal(initial.undoDisabled,true,'First render must not create an undo record');
-    const trigger=receipt.width<=390?'.chart-legend-open':'.chart-legend-more:not([hidden])';
+    const trigger=initial.legend.mode==='chip'?'.chart-legend-open':'.chart-legend-more:not([hidden])';
     if(await evaluate(cdp,s=>Boolean(document.querySelector(s)),trigger)){
       await click(cdp,trigger);await until(()=>evaluate(cdp,()=>document.querySelector('#chart-legend-dialog')?.open),'legend dialog');
       const modal=await evaluate(cdp,()=>{const d=document.querySelector('#chart-legend-dialog'),r=d.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height,items:d.querySelectorAll('li').length,close:d.querySelector('button')?.textContent};});
@@ -65,7 +139,9 @@ export async function verifyUiContractSurface(api){
       assert.equal(result.legendFocusReturned,true);
     }
   }
-  await click(cdp,'#workbench-replay');
+  const replayTriggerPainted=await evaluate(cdp,()=>Boolean(document.querySelector('#workbench-replay')?.checkVisibility()));
+  if(replayTriggerPainted)await click(cdp,'#workbench-replay');
+  else{await click(cdp,'#mobile-details-toggle');await click(cdp,'[data-mobile-target="#workbench-replay"]');}
   await until(()=>evaluate(cdp,()=>document.querySelector('.chart-replay-controls')?.dataset.state==='selecting'),'replay start selection');
   const entry=await state('replay-entry');await screenshot(cdp,prefix+'-replay-entry.png',receipt);
   await click(cdp,control('select-menu'));await click(cdp,control('select-date'));
@@ -84,10 +160,35 @@ export async function verifyUiContractSurface(api){
   result.selectionY={entry:entry.replay.bar.y,paused:ready.replay.bar.y,picking:picking.replay.bar.y,canceled:canceled.replay.bar.y};
   if(phase==='after'){
     for(const value of [entry,ready,picking,canceled]){
-      checkLegend(value);within(value.replay.bar,'replay bar');assert.equal(value.replay.clipped.length,0,'Replay controls clipped: '+JSON.stringify(value.replay.clipped));
+      checkLegend(value);within(value.replay.bar,'replay bar');
+      assert.equal(value.replay.coveredLabels.length,0,'Replay covers chart information: '+JSON.stringify(value.replay.coveredLabels));
+      const overflow=value.replay.actions.scrollWidth>value.replay.actions.clientWidth;
+      assert.equal(value.replay.hint.some(hint=>hint.visible),overflow,'Hint must follow measured overflow at every viewport');
+      if(receipt.width>=1024)assert.equal(value.replay.clipped.length,0,'Desktop replay controls clipped: '+JSON.stringify(value.replay.clipped));
+      if(overflow)assert.ok(value.replay.arrows.some(arrow=>arrow.visible&&!arrow.disabled),'Overflow has no usable pointer/touch scroll arrow');
     }
     assert.ok(Math.max(...Object.values(result.selectionY))-Math.min(...Object.values(result.selectionY))<1,'Selecting moves replay controls');
     if(receipt.width===1440)assert.ok(Math.abs(ready.replay.bar.width-560)<1.5,'Desktop transport must expand to 560px');
+    const hasMenu=await evaluate(cdp,s=>{const node=document.querySelector(s);return node&&!node.hidden&&node.getClientRects().length>0;},control('transport-more'));
+    if(hasMenu){
+      await tabTo(control('transport-more'));await key('Enter','Enter',13);
+      assert.equal(await evaluate(cdp,s=>document.querySelector(s).hidden,control('transport-panel')),false,'Keyboard did not open overflow menu');
+      const secondary=await evaluate(cdp,s=>[...document.querySelector(s).querySelectorAll('[data-cr]')].map(node=>node.dataset.cr),control('transport-panel'));
+      for(const name of ['speed','update-interval','live'])assert.ok(secondary.includes(name),'Overflow loses '+name);
+      await tabTo(control('speed'));const priorSpeed=await evaluate(cdp,s=>document.querySelector(s).value,control('speed'));
+      await key(' ','Space',32);await key('Home','Home',36);await key('ArrowDown','ArrowDown',40);await key('Enter','Enter',13);
+      const keyboardSpeed=await evaluate(cdp,s=>document.querySelector(s).value,control('speed'));assert.notEqual(keyboardSpeed,priorSpeed,'Keyboard cannot change replay speed');
+      await key('Escape','Escape',27);assert.equal(await evaluate(cdp,s=>document.querySelector(s).hidden,control('transport-panel')),true);
+      assert.equal(await evaluate(cdp,s=>document.activeElement===document.querySelector(s),control('transport-more')),true,'Overflow loses keyboard focus');
+      await pointer(control('transport-more'),receipt.touch);await pointer(control('transport-close'),receipt.touch);
+      result.overflowAccess={keyboard:true,pointer:!receipt.touch,touch:receipt.touch,secondary,keyboardSpeed};
+    }
+    if(canceled.replay.actions.scrollWidth>canceled.replay.actions.clientWidth){
+      await pointer(control('scroll-forward'),receipt.touch);await tabTo(control('next'));
+      const revealed=await state('primary-scroll-and-keyboard');
+      assert.ok(!revealed.replay.clipped.some(item=>item.control==='next'),'Keyboard focus remains clipped after scroll');
+      result.primaryScrollAccess={keyboard:true,pointer:!receipt.touch,touch:receipt.touch};
+    }
   }
   result.status=phase==='before'?'baseline-recorded':'passed';
 }
