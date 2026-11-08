@@ -7,8 +7,8 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { applyCalibration, estimateFactors, scoreHoldout, splitResiduals, withinTolerance } from '../dist/forecast-calibration.js';
-import { classifySufficiency, horizonUnit } from '../dist/forecast-sufficiency.js';
+import { applyCalibration, estimateFactors, scoreHoldout, splitResiduals, withinTolerance } from '../dist/forecast/forecast-calibration.js';
+import { classifySufficiency, horizonUnit } from '../dist/forecast/forecast-sufficiency.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT_DIR = resolve(root, 'dist/data/forecast-calibration');

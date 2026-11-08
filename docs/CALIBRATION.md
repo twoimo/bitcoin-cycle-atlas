@@ -1,6 +1,6 @@
 # 예측 구간 캘리브레이션 (WP2)
 
-구현: `dist/forecast-calibration.js` · 스크립트: `scripts/estimate-calibration.mjs` · 산출: `dist/data/forecast-calibration/factors.json`
+구현: `dist/forecast/forecast-calibration.js` · 스크립트: `scripts/estimate-calibration.mjs` · 산출: `dist/data/forecast-calibration/factors.json`
 
 ## 절차
 1. 자산·지평별 표준화잔차 `z`(무작위보행 중앙값 0, 직전 창 변동성)를 워크포워드로 수집한다.

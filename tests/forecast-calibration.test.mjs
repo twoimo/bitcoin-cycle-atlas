@@ -8,7 +8,7 @@ import {
   splitResiduals,
   summarizeResiduals,
   withinTolerance,
-} from '../dist/forecast-calibration.js';
+} from '../dist/forecast/forecast-calibration.js';
 
 const synthetic = (n, drift, scale, seed = 1) => {
   let x = seed;

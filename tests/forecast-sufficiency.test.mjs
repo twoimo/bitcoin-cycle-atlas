@@ -6,7 +6,7 @@ import {
   assertForecastAllowed,
   classifySufficiency,
   horizonUnit,
-} from '../dist/forecast-sufficiency.js';
+} from '../dist/forecast/forecast-sufficiency.js';
 
 test('충분한 이력은 T1로 분류한다', () => {
   const r = classifySufficiency({ observations: 5956, years: 16.3, evalSamples: 5686 });

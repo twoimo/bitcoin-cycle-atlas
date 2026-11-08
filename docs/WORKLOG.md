@@ -32,3 +32,8 @@
 - `be941d0` push 후 models 빌드가 `failure`로 끝나 운영 배포가 `456af53`에 머묾(publication.json sourceCommit 확인).
 - 로컬 재현 결과: `verify:static`·`verify:research`·`verify:cycle`·`verify:performance`·`verify:domain`·`verify:skullet` 모두 통과, `verify:formal`은 이 Mac에 **Java 런타임이 없어** 실행 불가(코드 문제 아님), `verify:forecast`는 clean main에서도 실패(기존 이슈, `docs/VERIFY_FORECAST_ISSUE.md`).
 - 조치: 빌드 재시도 커밋을 올려 재현 여부를 확인 중.
+
+## 2026-11-08 · 배포 실패 원인 수정
+- 빌드 로그에서 `model-tests` FAIL 확인: `tests/eth-review-packet.test.mjs`가 "최상위 dist 브라우저 소스는 모두 ETH 리뷰 시드여야 한다"를 검사하는데, 새로 추가한 `dist/forecast-sufficiency.js`·`dist/forecast-calibration.js`가 목록에 없었음
+- 수정: 두 모듈을 `dist/forecast/` 하위로 이동(브라우저 소스가 아니라 스크립트·테스트 전용 모듈임을 경로로 구분), 모든 import·문서 경로 갱신
+- 검증: `node --test tests/eth-review-packet.test.mjs` 31개 통과, 자체 테스트 13개 통과, 두 스크립트 재실행 정상, `verify:static` ok(887 files)

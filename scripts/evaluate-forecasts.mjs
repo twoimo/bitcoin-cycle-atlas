@@ -15,7 +15,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { classifySufficiency } from '../dist/forecast-sufficiency.js';
+import { classifySufficiency } from '../dist/forecast/forecast-sufficiency.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SCRIPT_VERSION = '1.0.0';
