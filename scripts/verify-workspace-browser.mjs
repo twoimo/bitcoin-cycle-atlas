@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {waitForChartReplayToolbarScroll} from './verify-chart-replay-browser.mjs';
 
 export async function readComparisonAssetSymbols(source=new URL('../dist/data/asset-comparison.json',import.meta.url)){
   const snapshot=JSON.parse(await readFile(source,'utf8')),symbols=snapshot.assets?.map(asset=>asset.symbol);
@@ -374,77 +373,145 @@ export function assertIndicatorLegendSurface(state){
 export function readPriceLegendScrollSurface(){
   const svg=document.querySelector('#lab-chart'),plot=svg.closest('.atlas-plot'),legend=plot.querySelector(':scope > .lab-chart-foot');
   const box=node=>{const b=node.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};};
-  const area=box(legend),scrollport={left:area.left+legend.clientLeft,right:area.left+legend.clientLeft+legend.clientWidth,top:area.top+legend.clientTop,bottom:area.top+legend.clientTop+legend.clientHeight};
-  const items=[...legend.querySelectorAll('.price-legend-item,.cycle-legend-item')].map(node=>({...box(node),name:node.textContent.replace(/\s+/g,' ').trim(),painted:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})}));
+  const painted=node=>Boolean(node&&node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})&&node.getClientRects().length);
+  const named=node=>({...box(node),name:node.textContent.replace(/\s+/g,' ').trim(),painted:painted(node)});
+  const itemSelector='.price-legend-item,.cycle-legend-item',statusSelector='.cycle-style-sample,.cycle-reference-key';
+  const area=box(legend),items=[...legend.querySelectorAll(itemSelector)].map(named),statusItems=[...legend.querySelectorAll(statusSelector)].map(named);
+  const trigger=[...legend.querySelectorAll('.chart-legend-open,.chart-legend-more')].find(painted);
+  const chart=box(svg),view=svg.viewBox.baseVal,pricePane={left:chart.left+(Number(svg.dataset.plotLeft)-view.x)/view.width*chart.width,
+    right:chart.left+(Number(svg.dataset.plotRight)-view.x)/view.width*chart.width,top:chart.top+(Number(svg.dataset.plotTop)-view.y)/view.height*chart.height,
+    bottom:chart.top+(Number(svg.dataset.priceBottom)-view.y)/view.height*chart.height};
+  const dialog=document.querySelector('#chart-legend-dialog'),content=dialog?.querySelector('.chart-legend-dialog-content');
+  let sheet=null;
+  if(dialog?.open&&content){
+    const bounds=box(content),scrollport={left:bounds.left+content.clientLeft,right:bounds.left+content.clientLeft+content.clientWidth,
+      top:bounds.top+content.clientTop,bottom:bounds.top+content.clientTop+content.clientHeight};
+    const entries=[...content.querySelectorAll(itemSelector+','+statusSelector)].map(named);
+    sheet={...box(dialog),scrollport,scrollTop:content.scrollTop,maximum:content.scrollHeight-content.clientHeight,clientHeight:content.clientHeight,
+      horizontalOverflow:content.scrollWidth-content.clientWidth,overflowY:getComputedStyle(content).overflowY,items:entries,
+      visibleNames:entries.filter(item=>item.painted&&item.width>0&&item.height>0&&item.left>=scrollport.left-1&&item.right<=scrollport.right+1&&item.top>=scrollport.top-1&&item.bottom<=scrollport.bottom+1).map(item=>item.name)};
+  }
   return {width:innerWidth,height:innerHeight,scrollX,scrollY,pageWidth:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth),
+    url:location.pathname+location.search,pricePane,sheet,
     range:{start:svg.dataset.start,end:svg.dataset.end,interval:svg.dataset.interval},
     observed:{line:Number(svg.dataset.observedLineCount),candles:Number(svg.dataset.observedCandleCount)},
     price:{min:Number(svg.dataset.priceMin),max:Number(svg.dataset.priceMax),mode:svg.dataset.priceMode,scale:svg.dataset.scale,unit:svg.dataset.unit,inverted:svg.dataset.invertScale},
     touchAction:{plot:getComputedStyle(plot).touchAction,svg:getComputedStyle(svg).touchAction,legend:getComputedStyle(legend).touchAction},
-    legend:{...area,scrollport,scrollLeft:legend.scrollLeft,clientWidth:legend.clientWidth,maximum:legend.scrollWidth-legend.clientWidth,overflowX:getComputedStyle(legend).overflowX,items,
-      visibleNames:items.filter(item=>item.painted&&item.width>0&&item.height>0&&item.left>=scrollport.left-1&&item.right<=scrollport.right+1&&item.top>=scrollport.top-1&&item.bottom<=scrollport.bottom+1).map(item=>item.name)}};
+    legend:{...area,mode:legend.dataset.legendMode,clientWidth:legend.clientWidth,maximum:legend.scrollWidth-legend.clientWidth,items,statusItems,trigger:trigger?named(trigger):null}};
 }
 
 export function assertPriceLegendScrollSurface(state,baseline=state){
   assert.deepEqual(state.range,baseline.range,'A native legend gesture changed the chart time range');
   assert.deepEqual(state.observed,baseline.observed,'A native legend gesture changed the observed price inventory');
   assert.deepEqual(state.price,baseline.price,'A native legend gesture changed the price axis');
+  assert.equal(state.url,baseline.url,'A native legend gesture changed URL state');
   assert.deepEqual([state.scrollX,state.scrollY],[baseline.scrollX,baseline.scrollY],'Legend scrolling moved the document');
   assert.ok(state.pageWidth<=state.width+1,'Legend scrolling introduced document overflow');
   assert.ok(state.observed.line+state.observed.candles>0&&Number.isFinite(state.price.min)&&state.price.max>state.price.min,'The legend check requires actual observed prices and a valid axis');
   assert.deepEqual(state.legend.items.map(item=>item.name),['실제 가격','미래 가정','가정 범위','고점·저점','CYCLE TOP','PIT STOP','FIRST TOP','ATH','MID-TOP','BOTTOM'],'The price/cycle legend lost actual items');
-  assert.ok(state.legend.items.every(item=>item.painted&&item.width>0&&item.height>0),'A price/cycle legend item is hidden');
-  assert.ok(state.legend.clientWidth>0&&state.legend.maximum>0,'This regression must exercise an overflowing legend');
-  assert.match(state.legend.overflowX,/^(auto|scroll)$/,'The legend must own horizontal scrolling');
+  const statusNames=['실선 · 관측 사후 기준','점선 · 잠정·가정','◇ 거시 시계 · ○ 예시 경로'];
+  assert.deepEqual(state.legend.statusItems.map(item=>item.name),statusNames,'The legend lost provisional/retrospective meanings');
+  assert.ok(state.legend.clientWidth>0&&state.legend.maximum<=1,'The responsive legend must not overflow horizontally');
+  assert.ok(state.legend.width<=(state.pricePane.right-state.pricePane.left)*.42+1,'Legend exceeds its measured 42% price-pane budget');
+  assert.ok(Math.abs(state.pricePane.right-state.legend.right-12)<=1,'Legend lost its 12px right inset');
+  assert.ok(state.legend.top>=state.pricePane.top+11&&state.legend.bottom<=state.pricePane.bottom+1,'Legend escaped its price-pane safe area');
+  assert.ok(state.legend.trigger?.painted&&state.legend.trigger.width>0&&state.legend.trigger.height>0,'Overflow entries lack a visible full-list trigger');
+  if(state.width<=430){assert.equal(state.legend.mode,'chip');assert.equal(state.legend.trigger.name,'범례');assert.ok(state.legend.trigger.height>=44);}
+  if(state.sheet){
+    assert.deepEqual(state.sheet.items.map(item=>item.name),[...state.legend.items.map(item=>item.name),...statusNames],'The full legend did not expose every original meaning');
+    assert.ok(state.sheet.items.every(item=>item.painted&&item.width>0&&item.height>0),'A full-sheet legend entry is hidden');
+    assert.ok(state.sheet.left>=-1&&state.sheet.right<=state.width+1&&state.sheet.top>=-1&&state.sheet.bottom<=state.height+1,'The full legend escaped the viewport');
+    assert.ok(state.sheet.horizontalOverflow<=1,'The full legend has horizontal overflow');
+    assert.ok(state.sheet.clientHeight>0&&state.sheet.maximum>0,'This regression must exercise the actual vertically overflowing full legend');
+    assert.match(state.sheet.overflowY,/^(auto|scroll)$/,'The full legend must own its native vertical scrolling');
+    if(state.legend.mode==='chip'){assert.ok(Math.abs(state.sheet.width-state.width)<=1);assert.ok(Math.abs(state.sheet.height-state.height)<=1);}
+  }
+}
+
+// Observe the full-list owner's vertical scroll to completion; never assign
+// scrollTop or move the document to manufacture an exposed legend item.
+export function waitForPriceLegendSheetScroll({selector='#chart-legend-dialog .chart-legend-dialog-content',timeoutMs=4000,quietMs=140}={}){
+  const node=document.querySelector(selector);if(!node?.getClientRects().length)throw new Error('The native full-legend scroll owner is not visible');
+  const read=()=>({top:node.scrollTop,maximum:node.scrollHeight-node.clientHeight,height:node.clientHeight});
+  return new Promise((resolve,reject)=>{
+    const started=performance.now();let current=read(),lastChange=started,stableFrames=0,scrollEvents=0,endEvents=0,ended=false,frame;
+    const onScroll=()=>{scrollEvents++;lastChange=performance.now();stableFrames=0;ended=false;};
+    const onEnd=()=>{endEvents++;ended=true;stableFrames=0;};
+    const cleanup=()=>{clearTimeout(timer);cancelAnimationFrame(frame);node.removeEventListener('scroll',onScroll);node.removeEventListener('scrollend',onEnd);};
+    const evidence=settledBy=>({...current,settledBy,elapsedMs:performance.now()-started,stableFrames,scrollEvents,endEvents});
+    const timer=setTimeout(()=>{current=read();const state=evidence('timeout');cleanup();reject(new Error('Native full-legend scrolling did not settle: '+JSON.stringify(state)));},timeoutMs);
+    node.addEventListener('scroll',onScroll,{passive:true});node.addEventListener('scrollend',onEnd,{passive:true});
+    const sample=()=>{const next=read(),now=performance.now();if(Object.keys(next).some(key=>next[key]!==current[key])){lastChange=now;stableFrames=0;}else stableFrames++;current=next;
+      if(stableFrames>=2&&(ended||now-lastChange>=quietMs)){const state=evidence(ended?'scrollend':'quiet');cleanup();resolve(state);return;}frame=requestAnimationFrame(sample);};
+    frame=requestAnimationFrame(sample);
+  });
 }
 
 async function verifyPriceLegendScrollOwnership(api,{touch,label}){
-  const {cdp,receipt,evaluate,settled,screenshot}=api,selector='.atlas-plot > .lab-chart-foot';
-  const record={input:touch?'native-touch':'native-horizontal-wheel',states:[],gestures:[]};
+  const {cdp,receipt,evaluate,until,settled,screenshot,click}=api,selector='#chart-legend-dialog .chart-legend-dialog-content';
+  const record={input:touch?'native-touch':'native-wheel',contract:'upper-right compact legend and native full-list sheet',states:[],gestures:[]};
   (receipt.workspace.priceLegendScroll??=[]).push(record);
   const read=async()=>{const state=await evaluate(cdp,readPriceLegendScrollSurface);record.states.push(state);assertPriceLegendScrollSurface(state,record.states[0]);return state;};
   let state=await read();
-  const names=state.legend.items.map(item=>item.name);
+  const trigger=state.legend.mode==='chip'?'.chart-legend-open':'.chart-legend-more:not([hidden])';
+  async function activate(selector){
+    if(!touch){await click(cdp,selector);return;}
+    const target=await evaluate(cdp,selector=>{const node=document.querySelector(selector),b=node.getBoundingClientRect(),x=b.left+b.width/2,y=b.top+b.height/2,hit=document.elementFromPoint(x,y);return {x,y,ownsHit:Boolean(hit&&(hit===node||node.contains(hit)))};},selector);
+    assert.equal(target.ownsHit,true,'Native legend tap target is obscured');
+    await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:target.x,y:target.y,id:1}]});
+    await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await settled(cdp);
+  }
+  if(!touch){
+    const target=state.legend.trigger;
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',x:(target.left+target.right)/2,y:(target.top+target.bottom)/2,deltaX:120,deltaY:0});
+    await settled(cdp);state=await read();record.gestures.push({owner:'compact-legend',axis:'x',delta:120,chartUnchanged:true});
+  }
+  await activate(trigger);await until(()=>evaluate(cdp,()=>document.querySelector('#chart-legend-dialog')?.open),'native complete legend opens');
+  state=await read();const names=state.sheet.items.map(item=>item.name);
   for(const [index,edge]of ['start','end','start'].entries()){
-    const distance=Math.min(96,state.legend.clientWidth*.4),maximumSteps=Math.ceil(state.legend.maximum/Math.max(8,distance*.5))+4;
-    const reached=()=>edge==='start'?state.legend.scrollLeft<=1:state.legend.scrollLeft>=state.legend.maximum-1;
+    const distance=Math.min(96,state.sheet.clientHeight*.4),maximumSteps=Math.ceil(state.sheet.maximum/Math.max(8,distance*.5))+4;
+    const reached=()=>edge==='start'?state.sheet.scrollTop<=1:state.sheet.scrollTop>=state.sheet.maximum-1;
     let steps=0;
     while(!reached()&&steps++<maximumSteps){
-      const direction=edge==='end'?-1:1,before=state.legend.scrollLeft;
+      const direction=edge==='end'?-1:1,before=state.sheet.scrollTop;
       const target=await evaluate(cdp,({selector,direction,distance,preferGlyph})=>{
         const node=document.querySelector(selector),b=node.getBoundingClientRect();
         const glyph=preferGlyph?[...node.querySelectorAll('.cycle-legend-item > svg')].find(svg=>{
-          const r=svg.getBoundingClientRect(),x=r.left+r.width/2;
-          return r.left>=b.left+2&&r.right<=b.right-2&&r.top>=b.top&&r.bottom<=b.bottom&&(direction<0?x-distance>=b.left+2:x+distance<=b.right-2);
+          const r=svg.getBoundingClientRect(),y=r.top+r.height/2;
+          return r.left>=b.left+2&&r.right<=b.right-2&&r.top>=b.top&&r.bottom<=b.bottom&&(direction<0?y-distance>=b.top+2:y+distance<=b.bottom-2);
         }):null;
-        const g=glyph?.getBoundingClientRect(),x=g?g.left+g.width/2:direction<0?b.right-12:b.left+12,y=g?g.top+g.height/2:b.top+b.height/2,hit=document.elementFromPoint(x,y);
+        const g=glyph?.getBoundingClientRect(),x=g?g.left+g.width/2:b.left+b.width/2,y=g?g.top+g.height/2:direction<0?b.bottom-12:b.top+12,hit=document.elementFromPoint(x,y);
         return {x,y,distance,ownsHit:Boolean(hit&&(hit===node||node.contains(hit))),cycleGlyph:Boolean(glyph&&hit&&(hit===glyph||glyph.contains(hit))),glyphTouchAction:glyph?getComputedStyle(glyph).touchAction:null};
       },{selector,direction,distance,preferGlyph:touch&&!record.gestures.some(item=>item.cycleGlyph)});
       assert.equal(target.ownsHit,true,'The native legend input point is obscured');
       if(touch){
         await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:target.x,y:target.y,id:1}]});
         for(let step=1;step<=6;step++){
-          await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:target.x+direction*distance*step/6,y:target.y,id:1}]});
+          await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:target.x,y:target.y+direction*distance*step/6,id:1}]});
           await new Promise(resolve=>setTimeout(resolve,50));
           state=await read();
         }
         await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-      }else await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',x:target.x,y:target.y,deltaX:-direction*distance,deltaY:0});
-      const settledScroll=await evaluate(cdp,waitForChartReplayToolbarScroll,{selector});await settled(cdp);
-      state=await read();record.gestures.push({edge,before,after:state.legend.scrollLeft,...target,settledScroll});
-      assert.ok(edge==='end'?state.legend.scrollLeft>before:state.legend.scrollLeft<before,'Native legend input failed to move its own scrollport');
+      }else await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',x:target.x,y:target.y,deltaX:0,deltaY:-direction*distance});
+      const settledScroll=await evaluate(cdp,waitForPriceLegendSheetScroll,{selector});await settled(cdp);
+      state=await read();record.gestures.push({edge,owner:'full-legend',axis:'y',before,after:state.sheet.scrollTop,...target,settledScroll});
+      assert.ok(edge==='end'?state.sheet.scrollTop>before:state.sheet.scrollTop<before,'Native legend input failed to move its own scrollport');
     }
     assert.ok(reached(),'Native legend input did not reach '+edge);
     state=await read();
     await screenshot(cdp,`workspace-btc-legend-${label}-${index}-${edge}.png`,receipt);
   }
-  assert.ok(record.gestures.length>0,'Native legend gestures were never exercised');
+  assert.ok(record.gestures.some(item=>item.owner==='full-legend'),'Native full-legend gestures were never exercised');
   if(touch)assert.ok(record.gestures.some(item=>item.cycleGlyph),'Native legend scrolling must also start on an actual cycle glyph');
-  assert.ok(record.states.some(value=>value.legend.scrollLeft<=1&&value.legend.visibleNames.includes(names[0])),'Native legend scrolling never exposed its first item');
-  assert.ok(record.states.some(value=>value.legend.scrollLeft>=value.legend.maximum-1&&value.legend.visibleNames.includes(names.at(-1))),'Native legend scrolling never exposed its last item');
-  const exposed=new Set(record.states.flatMap(value=>value.legend.visibleNames));
+  assert.ok(record.states.some(value=>value.sheet?.scrollTop<=1&&value.sheet.visibleNames.includes(names[0])),'Native legend scrolling never exposed its first item');
+  assert.ok(record.states.some(value=>value.sheet&&value.sheet.scrollTop>=value.sheet.maximum-1&&value.sheet.visibleNames.includes(names.at(-1))),'Native legend scrolling never exposed its last item');
+  const exposed=new Set(record.states.flatMap(value=>value.sheet?.visibleNames??[]));
   assert.deepEqual(names.filter(name=>!exposed.has(name)),[],'Some legend items were never fully visible during native input');
-  assert.ok(state.legend.scrollLeft<=1,'Native legend scrolling did not return to its start');
+  assert.ok(state.sheet.scrollTop<=1,'Native legend scrolling did not return to its start');
+  await activate('#chart-legend-dialog > header > button');await until(()=>evaluate(cdp,()=>!document.querySelector('#chart-legend-dialog')?.open),'native full legend closes');
+  state=await read();assert.equal(state.sheet,null);
+  assert.equal(await evaluate(cdp,()=>document.activeElement.matches('.chart-legend-open,.chart-legend-more')),true,'Native legend close did not return focus');
+  record.completed=true;
 }
 
 /** Long-document readers must retain native controls and the actual opener. */

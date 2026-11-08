@@ -8,6 +8,7 @@ const cases=[];
 const test=(name,run)=>cases.push({name,run});
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+import {parseHTML} from 'linkedom';
 import {uiFixture,flush,deferred,until} from './replay-ui-fixture.mjs';
 import {parseBitcoinReplayCandles} from '../dist/chart-replay-sources.js';
 import {buildLongHorizonForecast} from '../dist/long-horizon-forecast.js';
@@ -25,7 +26,23 @@ test('loading a selected start preserves the forecast and removes every actual a
 test('failed session preparation retains the safe fixed layer without stale metrics or export',async()=>{let calls=0;const h=await fixtures({buildCurrent:options=>++calls===1?createCurrentChartReplaySession(options):Promise.reject(new Error('fixture hash failure'))});await h.open();const signature=h.svg.dataset.forecastValueSignature;await h.start('2026-08-17');assert.equal(h.state().status,'error');assert.ok(h.svg.children.length>0,'the error must not delete the fixed path');assert.equal(h.svg.dataset.forecastValueSignature,signature);assert.ok(h.lastDraw().data.observedRows.every(r=>r.date<='2026-08-16'));assert.equal(h.controls.get('detail-metric').textContent,'');assert.equal(h.controls.get('export').disabled,true);assert.equal(h.state().session,null);h.mounted.destroy();});
 test('source fetch failure keeps only the captured assumption and does not invent candles',async()=>{const h=await fixtures({loadArchive:async()=>{throw new Error('OHLC archive offline');}});await h.open();assert.equal(h.state().status,'error');assert.ok(h.svg.children.length>0);assert.equal(h.lastDraw().data.observedRows.length,0);assert.equal(h.lastDraw().data.observedCandles.length,0);assert.equal(h.controls.get('export').disabled,true);h.mounted.destroy();});
 test('live mutation during the archive wait cannot modify the captured path or band',async()=>{const captured=capture(),before=forecastValueSignature(captured.forecast.path),hold=deferred();const h=await fixtures({captured,loadArchive:()=>hold.promise});h.trigger.click();captured.forecast.path[10].price*=1.1;captured.forecast.path[10].upper*=1.2;hold.resolve(archive);await h.ready();assert.equal(h.state().status,'selecting');assert.equal(h.svg.dataset.forecastValueSignature,before);h.mounted.destroy();});
-test('backtest controls retain the original transport order and four-action first menu',async()=>{const h=await fixtures();await h.open();const row=h.panel.innerHTML.slice(h.panel.innerHTML.indexOf('class="chart-replay-actions"'),h.panel.innerHTML.indexOf('data-cr="exit"'));assert.deepEqual([...row.matchAll(/data-cr="([^"]+)"/g)].map(m=>m[1]),['first','select-menu','mode-badge','result','pick','play','next','speed','update-interval','live']);h.controls.get('select-menu').click();assert.equal(h.controls.get('select-panel').dataset.menuView,'start');assert.equal(h.controls.get('date-view').hidden,true);assert.equal(h.controls.get('forecast-view').hidden,true);assert.equal(h.controls.has('previous'),false);h.mounted.destroy();});
+test('backtest controls retain the original transport order and four-action first menu',async()=>{
+  const h=await fixtures();await h.open();
+  // Parse actual element ownership: fixed arrow/more/exit siblings must not
+  // become part of the scroll owner merely because Exit moved into the bar.
+  const {document}=parseHTML('<main>'+h.panel.innerHTML+'</main>');
+  const bar=document.querySelector('.chart-replay-bar'),actions=bar.querySelector('.chart-replay-actions');
+  assert.deepEqual([...actions.children].map(node=>node.dataset.cr),
+    ['first','select-menu','mode-badge','result','pick','play','next','speed','update-interval','live']);
+  const fixed=[...bar.children].filter(node=>node.localName==='button');
+  assert.deepEqual(fixed.map(node=>node.dataset.cr),['scroll-back','scroll-forward','transport-more','exit']);
+  for(const node of fixed){assert.equal(actions.contains(node),false);assert.equal(node.parentElement,bar);}
+  assert.deepEqual([...document.querySelectorAll('[data-cr="start-view"] .chart-replay-select-actions > button')].map(node=>node.dataset.cr),
+    ['select-chart','select-date','select-random','select-first']);
+  h.controls.get('select-menu').click();assert.equal(h.controls.get('select-panel').dataset.menuView,'start');
+  assert.equal(h.controls.get('date-view').hidden,true);assert.equal(h.controls.get('forecast-view').hidden,true);
+  assert.equal(h.controls.has('previous'),false);h.mounted.destroy();
+});
 test('weekly replay still advances one genuine day on Shift+Right and never rewinds on Shift+Left',async()=>{const h=await fixtures();await h.open();await h.start('2026-08-17');assert.equal(h.state().status,'paused');const signature=h.svg.dataset.forecastValueSignature;h.key('ArrowRight');const a=h.lastDraw().data.observedCandles.at(-1);h.key('ArrowRight');const b=h.lastDraw().data.observedCandles.at(-1);assert.equal(a.open,b.open);assert.equal(a.periodStartDate,b.periodStartDate);assert.equal(a.close,64484.76);assert.equal(b.close,64686.09);assert.equal(h.svg.dataset.forecastValueSignature,signature);const cursor=h.state().cursorIndex;h.key('ArrowLeft');assert.equal(h.state().cursorIndex,cursor);assert.equal(h.controls.get('update-interval').value,'daily');h.mounted.destroy();});
 test('reselection keeps the forecast while rebuilding actuals only up to the earlier cutoff',async()=>{let calls=0;const hold=deferred();const h=await fixtures({buildCurrent:options=>++calls<=2?createCurrentChartReplaySession(options):hold.promise});await h.open();await h.start('2026-10-21');h.key('ArrowRight');h.key('ArrowRight');assert.equal(h.lastDraw().data.frame.cursorDate,'2026-10-22');await h.start('2026-08-17',{pending:true});assert.equal(h.state().status,'loading');assert.ok(h.svg.children.length>0,'fixed layer is retained on reselection');assert.ok(h.lastDraw().data.observedRows.every(r=>r.date<='2026-08-16'));assert.ok(h.lastDraw().data.observedCandles.every(r=>r.endDate<='2026-08-16'));assert.equal(h.writes.length,0);h.mounted.destroy();hold.resolve(null);await flush();});
 

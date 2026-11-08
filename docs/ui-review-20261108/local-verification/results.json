@@ -1,0 +1,42 @@
+{
+  "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+  "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+  "node": "v24.22.2",
+  "npmTest": {
+    "exitCode": 0,
+    "complete": true,
+    "tests": 3062,
+    "pass": 3062,
+    "fail": 0,
+    "skipped": 0,
+    "batches": 1,
+    "durationMs": 228814.099319
+  },
+  "verifyStatic": {
+    "exitCode": 0,
+    "status": "ok",
+    "files": 931,
+    "checkedReferences": 954
+  },
+  "verifyPages": {
+    "exitCode": 0,
+    "status": "verified",
+    "files": 12,
+    "routes": 9
+  },
+  "logs": {
+    "npm-test.log": {
+      "bytes": 736668,
+      "sha256": "e899e98d047dc3490732913c6026583559579599c18ffc00d2c5b1865a780e2f"
+    },
+    "verify-static.log": {
+      "bytes": 282,
+      "sha256": "ff15b094f10623dec9d1add28de7111fc11ea9c38110733396410ad2b0ba9116"
+    },
+    "verify-pages.log": {
+      "bytes": 3413,
+      "sha256": "8fe5221185ee8c35d25138d4636ac904c07453cd945f7cb391f1d1db375f1dc6"
+    }
+  },
+  "note": "Local test evidence. Deployment qualification requires the separate source-bound production gates."
+}

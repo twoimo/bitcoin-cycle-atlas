@@ -5,6 +5,8 @@ import { normalizePriceDomain } from '../../dist/price-axis.js';
 import * as ohlc from '../../dist/ohlc-data.js';
 import * as ethData from '../../dist/eth-market-data.js';
 import * as ethState from '../../dist/eth-view-state.js';
+import { readChartUrlState } from '../../dist/ui/chart-url-state.js';
+import { nativeDateRange } from '../../dist/native-chart-workbench.js';
 import {buildEthereumForecasts} from '../../dist/ethereum-forecast.js';
 import {buildEthereumAdaptiveForecast} from '../../dist/ethereum-adaptive-model.js';
 import {buildEthereumPooledForecast} from '../../dist/ethereum-pooled-model.js';
@@ -85,6 +87,9 @@ export function ethPayload(revision = 1) {
 export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
   const requests = [], liveRequests = [], frames = new Map(), timers = new Map(), draws = [], emitted = [];
   const window = new Surface(), document = new Surface();
+  const bootTimers = new Map(); let bootTimerId = 0;
+  window.setTimeout = callback => { bootTimers.set(++bootTimerId, callback); return bootTimerId; };
+  window.clearTimeout = id => bootTimers.delete(id);
   document.body = new Node(); document.activeElement = new Node(); document.documentElement = new Node();
   document.documentElement.dataset.boot = 'loading';
   const boot = new Map(['atlas-boot-shell', 'atlas-boot-status', 'atlas-boot-error', 'atlas-boot-retry'].map(id => [id, new Node()]));
@@ -99,7 +104,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     const pending = deferred(); requests.push({ url, options, ...pending }); return pending.promise;
   };
   const deps = {
-    withChartSpacing,retargetChartRange,normalizePriceDomain,
+    withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,nativeDateRange,
     mountNativeChartApp: app => document.body.append(app),
     // The real shell adapter is exercised separately with a parsed DOM. This
     // fixture owns network/loader races and keeps its DOM boundary explicit.
@@ -121,9 +126,10 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
   const source = await readFile(process.env.ETH_VIEW_SOURCE || new URL('../../dist/eth-view.js', import.meta.url), 'utf8');
   const transformed = source.replace(/^import\s*\{([^}]+)\}\s*from\s*['"][^'"]+['"];?\s*$/gm, (_, names) => `const {${names}} = __deps;`)
     .replace('export async function initEthView', 'async function initEthView');
+  const location = { search: `?symbol=ETHUSD${query}`, pathname }, urlWrites = [];
   const context = vm.createContext({
     __deps: deps, document, window, URLSearchParams, AbortController, AbortSignal, Date, Intl,
-    location: { search: `?symbol=ETHUSD${query}`, pathname }, history: { replaceState() {} },
+    location, history: { replaceState(_state, _title, path) { urlWrites.push(String(path)); const next = new URL(path, 'https://atlas.test'); location.pathname = next.pathname; location.search = next.search; } },
     CustomEvent: class { constructor(type, options = {}) { this.type = type; Object.assign(this, options); } },
     ResizeObserver: class { constructor(callback) { resize = callback; } observe() {} disconnect() {} },
     requestAnimationFrame: callback => { frames.set(++frameId, callback); return frameId; },
@@ -150,7 +156,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     app.dispatchEvent({ type: 'click', target });
   };
   return {
-    requests, liveRequests, frames, timers, draws, events: emitted, initialization, document, app,
+    requests, liveRequests, frames, timers, draws, events: emitted, initialization, document, app, location, urlWrites,
     microtasks, frame, settle,
     reply: (index, payload) => requests[index].resolve({ ok: true, json: async () => payload }),
     reject: (index, message = 'Archive failed') => requests[index].reject(new Error(message)),

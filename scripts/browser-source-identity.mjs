@@ -5,6 +5,15 @@ import {execFileSync} from 'node:child_process';
 
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 
+// The before/after diagnostic may copy these verifier modules only. Keep its
+// dependency inventory shared with the wrapper that creates the baseline.
+export const uiReviewVerifierFiles=Object.freeze([
+  'scripts/verify-eth-candidate-browser.mjs',
+  'scripts/verify-ui-contract-browser.mjs',
+  'scripts/browser-source-identity.mjs',
+  'scripts/btc-offline-refresh-policy.mjs',
+]);
+
 // One source inventory binds both Chrome lanes and their combining process.
 export async function readBrowserSourceIdentity(root){
   const sourceCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
@@ -24,5 +33,10 @@ export async function readBrowserSourceIdentity(root){
   for(const path of ['dist/chart-replay-atlas.js','dist/atlas-price-chart.js','dist/project-replay-baseline.js','dist/data/project-origin-btc-2026-10-21.json','scripts/build-project-replay-baseline.mjs'])sourceHashes[path]=digest(await readFile(resolve(root,path)));
   for(const path of ['scripts/verify-consolidated-workspace-browser.mjs','dist/atlas-navigation.js','dist/workspace-instruments.js','dist/data-header-actions.js','dist/compact-toolbar.css','dist/legacy-workspace-toolbar.js','dist/legacy-workspace-toolbar.css','dist/data/asset-comparison.json','dist/ipo-view.js','dist/ipo-view.css','dist/ipo-month-calendar.js',...execFileSync('git',['ls-files','dist/market-lab/app'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean)])sourceHashes[path]=digest(await readFile(resolve(root,path)));
   for(const path of ['scripts/browser-source-identity.mjs','scripts/browser-fast-cadence-contract.mjs','scripts/verify-native-browser-suite.mjs','scripts/cloudflare-gate-runner.mjs','scripts/cloudflare-priority-command.mjs','scripts/cloudflare-build-contract.mjs','scripts/cloudflare-browser-source.mjs','scripts/cloudflare-staged-contract.mjs','scripts/cloudflare-model-provider-policy.mjs'])sourceHashes[path]=digest(await readFile(resolve(root,path)));
+  // Include the UI review's actual inputs without inventing files in its
+  // detached 1635f87 baseline. The copied diagnostic harness is separately
+  // identified by the review wrapper; the application tree remains unchanged.
+  for(const path of ['dist/cycle-period-comparison.js','dist/cycle-interval-overlay.js','dist/cycle-milestones-view.js','dist/atlas-analysis.js',...execFileSync('git',['ls-files','dist/ui'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean)])sourceHashes[path]=digest(await readFile(resolve(root,path)));
+  if(process.env.ATLAS_UI_REVIEW==='wp4-wp7')for(const path of uiReviewVerifierFiles)sourceHashes[path]=digest(await readFile(resolve(root,path)));
   return {sourceCommit,sourceTree,sourceHashes};
 }

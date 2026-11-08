@@ -56,10 +56,25 @@ export function atlasPageHref(page,{symbol,region}={}) {
   }
   return item.href;
 }
+// Saved/shared chart URLs must reach the renderer that owns the instrument.
+// Native charts do not belong to the embedded ETF/housing/theme catalog.
+// Preserve chart settings while removing only the embedded-route selectors.
+export function canonicalNativeChartEntry(location) {
+  const root=(location?.pathname||'').match(/^(.*\/)market-lab\/charts\/?$/)?.[1];
+  if(!root||!/^\/(?:[A-Za-z0-9._~-]+\/)*$/.test(root)||root.includes('/../')||root.includes('/./'))return null;
+  const query=new URLSearchParams(location?.search||'');
+  const symbol=String(query.get('symbol')||'').normalize('NFKC').trim().toUpperCase();
+  if(!['BTCUSD','ETHUSD','MSTR','BMNR'].includes(symbol))return null;
+  query.set('symbol',symbol);
+  for(const key of ['center','lab-tab','lab-region','view','region','embedded'])query.delete(key);
+  if(query.get('page')==='market')query.delete('page');
+  return `${root}?${query}${location?.hash||''}`;
+}
 export function labPageFromLocation(location) {
   const pathname=location?.pathname||'';
   const query=new URLSearchParams(location?.search||'');
   if(/\/market-lab\/charts\/?$/.test(pathname)) {
+    if(canonicalNativeChartEntry(location))return atlasPages[0];
     const selected=workspaceInstrument(query.get('symbol'));
     return atlasPages.find(page=>page.id===(selected?.page||'rsi'))||atlasPages[5];
   }

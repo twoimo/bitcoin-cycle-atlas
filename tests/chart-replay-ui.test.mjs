@@ -30,7 +30,7 @@ const archive=(name,{missing=[],length=185}={})=>({observations:Array.from({leng
 
 async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('current'),loadRecord,stored=null,storedText=null,buildSession,
   getAtlasContext=null,getChartState=null,resolveAtlasRange=null,loadBaseline,random=()=>.5,storageFailure=false,rendererAxis=null,rendererBarDateAt=null,
-  initialMode='atlas-chart',additionalStored={},transportGeometry=null}={}){
+  initialMode='atlas-chart',additionalStored={},transportGeometry=null,barWidth=null}={}){
   const storageKey='atlas-chart-replay-v1:'+symbol;
   const controls=new Map(),saved=new Map([...Object.entries(additionalStored),...(storedText!==null?[[storageKey,storedText]]:stored?[[storageKey,JSON.stringify(stored)]]:[])]),timers=new Map(),frames=new Map();
   const builds=[],factories=[],draws=[],controllers=[],atlasContexts=[],chartCalls=[],displayCalls=[],frameEvents=[],writes=[],capabilityCalls=[],resizeCallbacks=[];
@@ -38,17 +38,18 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
   class Element{
     constructor(tag='div'){this.tag=tag;this.ownerDocument=doc;this.dataset={};this.attributes={};this.children=[];this.listeners=new Map();this.hidden=false;this.value='';this.inert=false;this.textContent='';this.style={setProperty(){},removeProperty(){}};this.classList={add(){},remove(){}};this.disabled=false;this.checked=false;}
     setAttribute(key,value){this.attributes[key]=String(value);}getAttribute(key){return this.attributes[key]??null;}
-    append(...nodes){this.children.push(...nodes);for(const node of nodes)node.parentElement=this;}
+    append(...nodes){for(const node of nodes){if(node.parentElement)node.parentElement.children=node.parentElement.children.filter(child=>child!==node);this.children.push(node);node.parentElement=this;}}
     insertBefore(node){this.append(node);}replaceChildren(...nodes){this.children=[];this.append(...nodes);}
     contains(node){return this===node||this.children.some(child=>child.contains(node));}
     querySelector(selector){
       if(transportGeometry&&selector==='.chart-replay-actions')return transportNode??=Object.assign(new Element('div'),transportGeometry);
-      if(transportGeometry&&selector==='.chart-replay-bar')return barNode??=new Element('div');
+      if(transportGeometry&&selector==='.chart-replay-bar')return barNode??=Object.assign(new Element('div'),barWidth===null?{}:{clientWidth:barWidth});
       const key=selector.match(/^\[data-cr="([^"]+)"\]$/)?.[1];
       if(key){if(key==='model'&&symbol!=='ETHUSD')return null;if(!controls.has(key)){
         const item=new Element(['date','scrub','exit-save'].includes(key)?'input':['mode','model','horizon','record','speed','display','update-interval'].includes(key)?'select':'button');
         item.value=({mode:'historical-reconstruction',model:'adaptive',horizon:'180',speed:'1',display:'candles',scrub:'0','update-interval':'daily'})[key]??'';
-        item.hidden=['pooled-retry','pick-cancel','record','detail-panel','select-panel','date-view','forecast-view','menu-back','entry-dialog','exit-dialog'].includes(key);
+        item.dataset.cr=key;
+        item.hidden=['pooled-retry','pick-cancel','record','detail-panel','select-panel','date-view','forecast-view','menu-back','entry-dialog','exit-dialog','transport-panel','transport-more','scroll-back','scroll-forward'].includes(key);
         item.disabled=key==='update-interval';item.checked=key==='exit-save';controls.set(key,item);
       }return controls.get(key);}
       if(selector==='[value="candles"]'){this.candleOption??=new Element('option');return this.candleOption;}
@@ -72,6 +73,8 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
     if(storageFailure)throw new Error('Storage quota denied');writes.push({key,value});saved.set(key,value);
   }};
   win.requestAnimationFrame=callback=>{frames.set(++rafId,callback);return rafId;};win.cancelAnimationFrame=id=>frames.delete(id);
+  win.getComputedStyle=()=>({getPropertyValue:name=>name==='--replay-bar-height'?'44px':name==='--replay-control-size'?'32px':''});
+  win.matchMedia=()=>({matches:true});
   win.CustomEvent=class{constructor(type,{detail}={}){this.type=type;this.detail=detail;}};win.setTimeout=()=>0;
   const svg=new Element('svg'),plot=new Element('div'),toolbar=new Element('nav');plot.append(svg);
   const frequencyControl=new Element('fieldset'),typeControl=new Element('fieldset'),liveControl=new Element('button');
@@ -242,9 +245,30 @@ const interactionCases=[
     positions.length=0;h.transport.scrollLeft=0;h.transport.scrollWidth=300;h.resize();
     assert.equal(h.bar.dataset.scrollLeft,'false');assert.equal(h.bar.dataset.scrollRight,'false');assert.equal(hint.hidden,true);
     h.transport.scrollWidth=600;h.resize();assert.equal(hint.hidden,false);
-    h.controls.get('select-menu').click();assert.equal(h.controls.get('select-panel').hidden,false);assert.equal(hint.hidden,true);
+    h.controls.get('select-menu').click();assert.equal(h.controls.get('select-panel').hidden,false);assert.equal(hint.hidden,false,'Only actual overflow determines the hint, including while a menu is open');
     h.controls.get('select-close').click();assert.equal(h.controls.get('select-panel').hidden,true);assert.equal(hint.hidden,false);
     assert.equal(h.doc.activeElement,h.controls.get('select-menu'));h.mounted.destroy();
+  }},
+  {name:'measured replay overflow moves the same native controls, shares the overlay owner and restores keyboard focus',async run(source){
+    const h=await harness(source,{...atlasFixture().options,transportGeometry:{scrollWidth:600,clientWidth:300,scrollLeft:0},barWidth:320});await h.mounted.open();
+    assert.equal(h.svg.dataset.replayTransportInset,'84','Loading and drawing must retain the reserved transport lane');
+    const q=name=>h.controls.get(name),secondary=['speed','update-interval','live'].map(q),handlers=secondary.map(node=>node.onchange??node.onclick);
+    const session=h.controllers[0].getState().session;
+    assert.equal(h.bar.dataset.secondaryOverflow,'true');assert.equal(q('transport-more').hidden,false);
+    for(const node of secondary)assert.equal(node.parentElement,q(node.dataset.cr+'-slot'));
+    assert.equal(q('update-interval').disabled,true);assert.equal(q('update-interval').value,'daily');
+    q('transport-more').click();assert.equal(q('transport-panel').hidden,false);assert.equal(q('transport-more').getAttribute('aria-expanded'),'true');assert.equal(h.doc.activeElement,q('speed'));
+    q('speed').value='2';q('speed').onchange();assert.equal(h.controllers[0].getState().speed,2);assert.equal(h.controllers[0].getState().session,session);
+    keyEvent(h,'Tab',{target:q('speed')});assert.equal(h.doc.activeElement,q('live'));
+    keyEvent(h,'Escape',{target:q('live')});assert.equal(q('transport-panel').hidden,true);assert.equal(h.doc.activeElement,q('transport-more'));
+    q('transport-more').click();q('select-menu').click();assert.equal(q('select-panel').hidden,false);assert.equal(q('transport-panel').hidden,true,'The two popovers cannot remain open together');
+    q('select-close').click();q('transport-more').focus();h.transport.scrollWidth=300;h.bar.clientWidth=560;h.resize();
+    assert.equal(h.bar.dataset.secondaryOverflow,'false');assert.equal(q('transport-more').hidden,true);assert.equal(h.doc.activeElement,q('speed'));
+    for(let index=0;index<secondary.length;index++){const node=secondary[index];assert.equal(node.parentElement,h.transport);assert.equal(node.onchange??node.onclick,handlers[index]);}
+    await h.mounted.open({selectOnly:true});assert.equal(h.panel.dataset.state,'selecting');
+    assert.equal(h.svg.dataset.replayTransportInset,'84','An unconfirmed selection must keep the same lane');
+    keyEvent(h,'Escape');assert.equal(h.mounted.isActive(),false);assert.equal(h.svg.dataset.replayTransportInset,undefined,'Returning live releases the replay-only allocation');
+    assert.equal(h.writes.length,0);h.mounted.destroy();
   }},
   {name:'replay preserves an explicit dense viewport through reversible zoom and excludes spacing bounds from saved session bytes',async run(source){
     const fixture=atlasFixture();fixture.captured.start=dateAt(0);fixture.captured.end=dateAt(8000);

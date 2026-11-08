@@ -10,7 +10,7 @@
 
 /* Only the floating controls own pointer input. The chart keeps its full plot
    height, and the transparent positioning surface never covers its gestures. */
-.chart-replay-controls{--replay-bottom:48px;--replay-bar-height:44px;--replay-control-size:32px;position:absolute;inset:0;z-index:20;pointer-events:none;background:transparent;border:0;color:var(--text);font:12px var(--font,sans-serif)}
+.chart-replay-controls{--replay-bottom:12px;--replay-bar-height:44px;--replay-control-size:32px;position:absolute;inset:0;z-index:20;pointer-events:none;background:transparent;border:0;color:var(--text);font:12px var(--font,sans-serif)}
 .chart-replay-controls[hidden],.chart-replay-hud[hidden],.chart-replay-notice[hidden],.chart-replay-controls [hidden]{display:none!important}
 .chart-replay-controls button,.chart-replay-controls select,.chart-replay-controls input[type=date]{height:var(--replay-control-size);box-sizing:border-box;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);color:var(--text);font:inherit;padding:4px 8px;white-space:nowrap;color-scheme:inherit}
 .chart-replay-controls button{display:inline-flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;min-width:var(--replay-control-size)}
@@ -21,24 +21,35 @@
 .chart-replay-controls input[type=date]{width:140px;max-width:100%;min-width:0}
 .chart-replay-controls select[data-cr=record]{max-width:100%}
 
-.chart-replay-bar{position:absolute;left:50%;bottom:var(--replay-bottom);transform:translateX(-50%);display:flex;align-items:center;box-sizing:border-box;width:max-content;max-width:min(420px,calc(100% - 136px));height:var(--replay-bar-height);padding:4px;border:1px solid var(--border);border-radius:6px;background:var(--surface);box-shadow:none;pointer-events:auto}
-.chart-replay-actions{display:flex;align-items:center;gap:4px;min-width:0;max-width:100%;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x;scrollbar-width:none}
+.chart-replay-bar{position:absolute;left:50%;bottom:var(--replay-bottom);transform:translateX(-50%);display:flex;align-items:center;gap:4px;box-sizing:border-box;width:min(560px,calc(100% - 24px));max-width:calc(100% - 24px);height:var(--replay-bar-height);padding:4px;border:1px solid var(--border);border-radius:6px;background:var(--surface);box-shadow:none;pointer-events:auto}
+.chart-replay-actions{display:flex;flex:1;align-items:center;gap:4px;min-width:0;max-width:100%;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x;scrollbar-width:none}
 .chart-replay-actions::-webkit-scrollbar{display:none}
 .chart-replay-actions>*{flex:none}
 .chart-replay-actions button,.chart-replay-actions select{background:transparent;border-color:transparent;padding:4px}
 .chart-replay-actions :focus-visible{outline-offset:-2px}
 .chart-replay-actions [data-cr=select-menu]{padding-inline:8px}
+.chart-replay-actions [data-cr=mode-badge]{display:block;max-width:calc(100% - 4px);overflow:hidden;text-overflow:ellipsis}
 .chart-replay-actions [data-cr=select-menu][aria-expanded=true],.chart-replay-actions [data-cr=pick][aria-pressed=true]{background:var(--surface-hover);color:var(--focus)}
 .chart-replay-actions [data-cr=play]{color:var(--accent);min-width:max(36px,var(--replay-control-size));font-weight:700}
 .chart-replay-actions [data-cr=speed]{width:60px;font-variant-numeric:tabular-nums}
 .chart-replay-actions [data-cr=update-interval]{width:32px;appearance:none;text-align:center;opacity:1;color:var(--muted);cursor:not-allowed}
+.chart-replay-actions .chart-replay-live-label{display:none}
+.chart-replay-bar>[data-cr=transport-more],.chart-replay-bar>.chart-replay-scroll-arrow,.chart-replay-bar>.chart-replay-exit{flex:none;width:var(--replay-control-size);padding:0;background:transparent;border-color:transparent}
+.chart-replay-bar>[data-cr=transport-more]{font-size:22px;border-left-color:var(--border)}
+.chart-replay-bar>[data-cr=transport-more][aria-expanded=true]{background:var(--surface-hover);color:var(--focus)}
+.chart-replay-bar>.chart-replay-scroll-arrow{font-size:22px}
 .chart-replay-origin,.chart-replay-update{display:flex;align-items:center;gap:4px;white-space:nowrap}
 .chart-replay-update{color:var(--muted)}
-.chart-replay-controls>.chart-replay-exit{position:absolute;right:8px;bottom:var(--replay-bottom);width:44px;height:44px;padding:0;display:grid;place-items:center;background:var(--surface);box-shadow:var(--shadow);font-size:20px;line-height:1;pointer-events:auto}
+.chart-replay-bar>.chart-replay-exit{width:var(--replay-control-size);font-size:20px;line-height:1;pointer-events:auto}
 .chart-replay-controls>[data-cr=pick-cancel]{position:absolute;bottom:calc(var(--replay-bottom) + var(--replay-bar-height) + 8px);left:50%;transform:translateX(-50%);max-width:calc(100% - 16px);height:auto;min-height:var(--replay-control-size);padding:8px 12px;white-space:normal;background:var(--surface-raised);box-shadow:var(--shadow);pointer-events:auto}
 
 /* Menus scroll inside the chart; their heading and close action stay visible. */
-.chart-replay-select-menu,.chart-replay-choice{position:absolute;bottom:calc(var(--replay-bottom) + var(--replay-bar-height) + 8px);left:50%;transform:translateX(-50%);z-index:22;box-sizing:border-box;width:420px;max-width:calc(100% - 16px);max-height:min(540px,calc(100% - var(--replay-bottom) - var(--replay-bar-height) - 16px));overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;background:var(--surface-raised);border:1px solid var(--border);border-radius:6px;padding:12px;box-shadow:none;line-height:1.6;pointer-events:auto}
+.chart-replay-select-menu,.chart-replay-choice,.chart-replay-transport-menu{position:absolute;bottom:calc(var(--replay-bottom) + var(--replay-bar-height) + 8px);left:50%;transform:translateX(-50%);z-index:22;box-sizing:border-box;width:420px;max-width:calc(100% - 24px);max-height:min(540px,calc(100% - var(--replay-bottom) - var(--replay-bar-height) - 16px));overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;background:var(--surface-raised);border:1px solid var(--border);border-radius:6px;padding:12px;box-shadow:none;line-height:1.6;pointer-events:auto}
+.chart-replay-transport-menu{width:300px}
+.chart-replay-transport-menu>label{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0;min-width:0}
+.chart-replay-transport-menu select{flex:none;width:80px;max-width:45%}
+.chart-replay-transport-menu [data-cr=live]{width:100%;min-height:var(--replay-control-size);justify-content:flex-start}
+.chart-replay-transport-menu>p{margin:8px 0 0;color:var(--muted);font-size:11px;white-space:normal}
 .chart-replay-select-menu{width:280px}
 .chart-replay-select-menu[data-menu-view=forecast]{width:420px}
 .chart-replay-menu-heading{position:sticky;top:-12px;z-index:1;display:flex;align-items:center;gap:4px;margin:-12px -12px 12px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--surface-raised)}
@@ -78,12 +89,8 @@
 .chart-replay-picker{stroke:var(--focus);stroke-width:2;stroke-dasharray:5 4;pointer-events:none}
 .chart-replay-picker-label{fill:var(--focus);stroke:var(--bg);stroke-width:4;paint-order:stroke;stroke-linejoin:round;font:600 12px var(--font,sans-serif);pointer-events:none}
 .chart-replay-notice{position:absolute;left:12px;right:84px;top:88px;z-index:23;width:fit-content;max-width:calc(100% - 96px);box-sizing:border-box;margin:0;padding:8px 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);color:var(--text);font:12px/1.6 var(--font,sans-serif);box-shadow:none}
-.chart-replay-active.chart-replay-atlas.atlas-plot:not([data-chart-focus=true])>.lab-chart-foot:not([hidden]){display:flex!important;top:auto;bottom:var(--plot-legend-bottom,var(--plot-bottom-gap,52px))}
-/* Keep the accepted transport width/order. Its lower edge clears the single
-   legend row, and the exit button stays out of the price-axis gutter. */
-.chart-replay-active.chart-replay-atlas.atlas-plot>.chart-replay-controls{--replay-bottom:calc(var(--plot-legend-bottom,var(--plot-bottom-gap,52px)) + 34px)}
-.chart-replay-active.chart-replay-atlas.atlas-plot .chart-replay-bar{max-width:min(420px,calc(100% - var(--plot-right-gap,80px) - var(--plot-right-gap,80px) - 104px))}
-.chart-replay-active.chart-replay-atlas.atlas-plot .chart-replay-exit{right:var(--plot-right-gap,80px)}
+/* The renderer reserves a footer below the time axis and cycle strip.
+   Selecting a starting point never changes this vertical transport slot. */
 .chart-replay-atlas>.chart-replay-hud{left:8px}
 .chart-replay-atlas .chart-replay-inspect{max-width:100%;background:var(--surface);width:max-content;padding:0 4px}
 /* The perimeter is not a scroll owner. Focus/scrollIntoView must only move
@@ -100,7 +107,6 @@ html[data-chart-replay-active=true] .eth-interval-buttons,html[data-chart-replay
   .chart-replay-actions button{min-width:44px}
   .chart-replay-actions [data-cr=speed]{width:68px}
   .chart-replay-actions [data-cr=update-interval]{width:44px}
-  .chart-replay-controls>.chart-replay-exit{bottom:calc(var(--replay-bottom) + 5px)}
   .chart-replay-progress input{min-height:44px}
 }
 @media(pointer:coarse) and (min-width:621px){
@@ -108,9 +114,7 @@ html[data-chart-replay-active=true] .eth-interval-buttons,html[data-chart-replay
 }
 @media(max-width:620px){
   .atlas-canvas-heading,.eth-topbar{min-width:0;max-width:100%;box-sizing:border-box;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scrollbar-width:none}
-  .chart-replay-bar{left:8px;right:60px;transform:none;width:auto;max-width:none}
-  .chart-replay-active.chart-replay-atlas.atlas-plot .chart-replay-bar{right:calc(var(--plot-right-gap,80px) + 52px);max-width:none}
-  .chart-replay-select-menu,.chart-replay-select-menu[data-menu-view=forecast],.chart-replay-choice{left:8px;right:8px;transform:none;width:auto;max-width:none}
+  .chart-replay-select-menu,.chart-replay-select-menu[data-menu-view=forecast],.chart-replay-choice,.chart-replay-transport-menu{left:12px;right:12px;transform:none;width:auto;max-width:none}
   .chart-replay-menu-fields{grid-template-columns:minmax(0,1fr)}
   .chart-replay-hud{left:8px;right:76px;font-size:11px}
   .chart-replay-notice{left:8px;right:8px;max-width:calc(100% - 16px)}
@@ -119,14 +123,14 @@ html[data-chart-replay-active=true] .eth-interval-buttons,html[data-chart-replay
   .chart-replay-hud{top:4px}.chart-replay-hud .chart-replay-inspect{display:none}
   /* Above-transport placement leaves less than one 44px row below the sticky
      heading in landscape. Let the open menu use the chart's full height. */
-  .chart-replay-select-menu{bottom:8px;max-height:calc(100% - 16px)}
+  .chart-replay-select-menu,.chart-replay-transport-menu{bottom:8px;max-height:calc(100% - 16px)}
 }
 @media(prefers-reduced-motion:reduce){.chart-replay-controls *{scroll-behavior:auto}}
 
-/* Overflow affordances never widen the accepted transport or intercept taps. */
-.chart-replay-bar::before,.chart-replay-bar::after{position:absolute;z-index:2;top:5px;bottom:5px;width:12px;display:none;align-items:center;color:var(--muted);font-size:18px;pointer-events:none}
-.chart-replay-bar[data-scroll-left=true]::before{content:'‹';display:flex;left:0;background:linear-gradient(to right,var(--surface),transparent)}
-.chart-replay-bar[data-scroll-right=true]::after{content:'›';display:flex;right:0;justify-content:flex-end;background:linear-gradient(to left,var(--surface),transparent)}
+/* Actual overflow owns every affordance, for mouse, keyboard and touch alike. */
+.chart-replay-bar[data-scroll-left=true] .chart-replay-actions{mask-image:linear-gradient(to right,transparent,#000 12px)}
+.chart-replay-bar[data-scroll-right=true] .chart-replay-actions{mask-image:linear-gradient(to left,transparent,#000 12px)}
+.chart-replay-bar[data-scroll-left=true][data-scroll-right=true] .chart-replay-actions{mask-image:linear-gradient(to right,transparent,#000 12px,#000 calc(100% - 12px),transparent)}
 .chart-replay-scroll-hint{position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);max-width:100%;padding:0 4px;background:var(--surface);color:var(--muted);font:11px/1.5 var(--font,sans-serif);white-space:nowrap;pointer-events:none}
 
 :root{--replay-cutoff-ink:#74a7ee;--replay-retrospective-ink:#74a7ee}
@@ -134,8 +138,6 @@ html[data-chart-replay-active=true] .eth-interval-buttons,html[data-chart-replay
 svg[data-replay-comparison-mode="cutoff-backtest"] [data-replay-forecast-path]{stroke:var(--replay-cutoff-ink)}
 svg[data-replay-comparison-mode="cutoff-backtest"] [data-replay-forecast-band]{fill:var(--replay-cutoff-ink)}
 .chart-replay-series-key{color:var(--muted);font-size:11px}
-
-.chart-replay-active.chart-replay-atlas.atlas-plot[data-chart-replay-mode="cutoff-backtest"]>.lab-chart-foot:not([hidden]){display:none!important}
 
 svg [data-replay-retrospective-band]{fill:var(--replay-retrospective-ink)}
 svg [data-replay-retrospective-origin-label] :is(path,circle,text){--accent:var(--replay-retrospective-ink)}

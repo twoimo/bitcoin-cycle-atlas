@@ -146,7 +146,11 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
   const layerButton=panelButton(button('layers','차트 레이어'),'layers');
   const math=tools.querySelector('[data-reader=math]');math.className='workbench-icon';math.innerHTML=glyph('math');math.title='모델과 검증';math.setAttribute('aria-label',math.title);panelButton(math,'math');
   const next=button('target','다음 방향 후보로 이동',{'id':'workbench-next-turn'});next.onclick=()=>command('next-turn');
-  detailTools.append(selection,layerButton,math,next);right.append(detailTools,$('.atlas-nav'));
+  const events=panelButton(button('calendar','역사 사건과 자료 기록',{'id':'workbench-events'}),'events');
+  // The right rail keeps the same four actions for every instrument. The BTC
+  // direction shortcut remains available with the asset-specific controls.
+  heading.insertBefore(next,spacer);
+  detailTools.append(selection,layerButton,math,events);right.append(detailTools,$('.atlas-nav'));
   const help=tools.querySelector('[data-reader=guide]');help.className='workbench-icon workbench-help';help.innerHTML=icon('info');help.title='차트 사용법';help.setAttribute('aria-label',help.title);panelButton(help,'guide');right.append(help);workspace.append(right);
   const ranges=document.createElement('div');ranges.className='workbench-ranges';ranges.setAttribute('role','group');ranges.setAttribute('aria-label','차트 표시 기간');
   for(const [value,label,title] of [['focus','4년','최근 2년 + 앞으로 2년 · 기본 보기'],['near','6개월','가까운 6개월 · 최근 45일 포함'],['all','장기 전망','검증한 자료의 마지막 목표 연도까지'],['history','전체','2010년부터 장기 전망까지']]){

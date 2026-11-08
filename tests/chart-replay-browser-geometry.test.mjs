@@ -114,7 +114,14 @@ test('the pre-replay focus click uses the SVG gutter even when its center opens 
   assert.equal(read().reachesChart,false,'an overlay blocker cannot be bypassed by programmatic focus');
 });
 
-test('touch replay transport keeps 44px controls and stays below the midpoint of the observed short price pane',async()=>{
+test('replay keeps the live pane allocation unchanged unless its footer inset is explicitly requested',()=>{
+  const options={width:795,height:285,top:18,volume:false,cycleTiming:true},live=chartPaneLayout(options);
+  assert.deepEqual(Object.fromEntries(['axisY','dateBadgeTop','bottom','priceBottom','cycleTop','cycleBottom'].map(key=>[key,live[key]])),
+    {axisY:256,dateBadgeTop:264,bottom:239,priceBottom:206,cycleTop:230,cycleBottom:239});
+  for(const bottomInset of [0,-10,NaN,Infinity])assert.deepEqual(chartPaneLayout({...options,bottomInset}),live);
+});
+
+test('touch replay transport keeps 44px controls in its own lane below time labels and every requested pane',async()=>{
   const css=await readFile(new URL('../dist/chart-replay.css',import.meta.url),'utf8');
   const {document}=parseHTML(`<html><head><style>${css}</style></head></html>`);
   const coarse=Array.from(document.querySelector('style').sheet.cssRules).find(rule=>rule.media?.mediaText==='(max-width:620px), (pointer:coarse)');
@@ -123,12 +130,15 @@ test('touch replay transport keeps 44px controls and stays below the midpoint of
   const targetHeight=Number.parseFloat(controls.getPropertyValue('--replay-control-size'));
   assert.ok(targetHeight>=44,'compact presentation must preserve touch targets');
   assert.ok(barHeight>=targetHeight+10,'controls retain their padding and border');
-  // Actual failed 900×430 receipt: the persistent refresh notice leaves a
-  // 795×285 chart with its selected cycle pane. This uses the real allocator;
-  // native CSS/hit geometry remains verified in the unchanged browser gate.
-  const pane=chartPaneLayout({width:795,height:285,top:18,volume:false,cycleTiming:true});
-  const legendHeight=26,legendInset=4,legendGap=8;
-  const barTop=pane.priceBottom-legendInset-legendHeight-legendGap-barHeight;
-  assert.ok(barTop>pane.top+(pane.priceBottom-pane.top)/2,'the touch transport must leave the upper half of the price pane unobstructed');
-  assert.ok(pane.cycleBottom>pane.cycleTop,'the selected cycle pane remains present');
+  // Includes the observed short 900×430 surface, where the plot is795×285.
+  // Verify the actual allocator; native CSS/hit geometry remains a browser gate.
+  for(const [width,height] of [[320,476],[390,752],[795,285],[1024,660],[1440,760]]){
+    const bottomInset=barHeight+40,barTop=height-12-barHeight;
+    const pane=chartPaneLayout({width,height,top:18,volume:true,drawdown:true,states:true,cycleTiming:true,bottomInset});
+    assert.ok(pane.priceBottom>pane.top,'reserving transport must leave a usable price pane');
+    for(const name of ['volume','dd','state','cycle'])assert.ok(pane[name+'Bottom']>pane[name+'Top'],'requested '+name+' pane remains present at '+width+'×'+height);
+    assert.ok(pane.priceBottom<pane.cycleTop);assert.ok(pane.volumeBottom<pane.axisY);
+    assert.ok(pane.dateBadgeTop+21<=height-bottomInset,'date labels stay above the reserved lane');
+    assert.ok(pane.dateBadgeTop+21<barTop-16,'transport and its overflow hint do not cover time labels');
+  }
 });

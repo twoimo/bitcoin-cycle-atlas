@@ -78,9 +78,17 @@ export function readChartReplayFloatingGeometry({ chartSelector, panel }) {
     pricePane.width = pricePane.right - pricePane.left; pricePane.height = pricePane.bottom - pricePane.top;
   }
   const legendNode = plot.querySelector('.lab-chart-foot'), legend = visible(legendNode) ? { ...rect(legendNode),
-    flexWrap: getComputedStyle(legendNode).flexWrap, scrollWidth: legendNode.scrollWidth, clientWidth: legendNode.clientWidth,
-    groups: [...legendNode.querySelectorAll('.lab-legend,.price-legend,.cycle-legend')].filter(visible).map(node => ({ className: node.className, flexWrap: getComputedStyle(node).flexWrap })),
-    items: [...legendNode.querySelectorAll('.price-legend-item,.cycle-legend-item')].filter(visible).map(node => ({ text: node.textContent.replace(/\s+/g, ' ').trim(), ...rect(node) })) } : null;
+    mode: legendNode.dataset.legendMode, compactReason: legendNode.dataset.legendCompactReason, scrollWidth: legendNode.scrollWidth, clientWidth: legendNode.clientWidth,
+    rows: [...legendNode.querySelectorAll('.chart-legend-row')].filter(visible).map(node => ({ id: node.dataset.legendGroup, ...rect(node),
+      scrollWidth: node.scrollWidth, clientWidth: node.clientWidth, total: node.querySelectorAll('.chart-legend-entry').length,
+      visibleCount: Number(node.dataset.visibleCount), hiddenCount: Number(node.dataset.hiddenCount),
+      items: [...node.querySelectorAll('.chart-legend-entry')].filter(visible).map(item => ({ text: item.textContent.replace(/\s+/g, ' ').trim(), ...rect(item) })),
+      more: visible(node.querySelector('.chart-legend-more')) ? { text: node.querySelector('.chart-legend-more').textContent, ...rect(node.querySelector('.chart-legend-more')) } : null })),
+    trigger: visible(legendNode.querySelector('.chart-legend-open')) ? { text: legendNode.querySelector('.chart-legend-open').textContent, ...rect(legendNode.querySelector('.chart-legend-open')) } : null,
+    allItems: [...legendNode.querySelectorAll('.price-legend-item,.cycle-legend-item')].map(node => node.textContent.replace(/\s+/g, ' ').trim()),
+    statusItems: [...legendNode.querySelectorAll('.cycle-style-sample,.cycle-reference-key')].map(node => node.textContent.replace(/\s+/g, ' ').trim()),
+    reservedLabels: [...plot.querySelectorAll('.chart-latest-price-tag>rect,.forecast-evidence-layer [data-forecast-evidence]>circle,.forecast-evidence-layer [data-forecast-evidence]>rect,.forecast-evidence-layer [data-forecast-evidence]>text,[data-cycle-clock]>rect,[data-cycle-clock]>text,.history-event-marker.has-label>rect,.history-event-marker.has-label>text,.chart-replay-hud')]
+      .filter(visible).map(node => ({ className: node.getAttribute('class'), text: node.textContent.trim().slice(0,120), ...rect(node) })) } : null;
   // Choose probes from measured geometry before looking at hit ownership.
   // Only these visible controls may exclude points; never the full root,
   // arbitrary blockers, or a point that merely failed its SVG hit test.
@@ -98,8 +106,13 @@ export function readChartReplayFloatingGeometry({ chartSelector, panel }) {
   };
   const probes = freeProbes.map(hit), originalProbe = hit(originalPoint);
   return { chart: box, plot: { ...rect(plot), clientHeight: plot.clientHeight }, root: { ...rect(root), pointerEvents: getComputedStyle(root).pointerEvents, background: getComputedStyle(root).backgroundColor },
-    bar: rect(bar), actions: { ...rect(actions), scrollLeft: actions.scrollLeft, scrollWidth: actions.scrollWidth, clientWidth: actions.clientWidth, flexWrap: getComputedStyle(actions).flexWrap },
-    controls: [...actions.children].filter(visible).map(node => ({ name: node.dataset.cr, ...rect(node) })), exit: { ...rect(exit), separate: !bar.contains(exit) },
+    bar: { ...rect(bar), secondaryOverflow: bar.dataset.secondaryOverflow === 'true', overflow: bar.dataset.overflow === 'true', hintVisible: visible(bar.querySelector('.chart-replay-scroll-hint')) },
+    actions: { ...rect(actions), scrollLeft: actions.scrollLeft, scrollWidth: actions.scrollWidth, clientWidth: actions.clientWidth, flexWrap: getComputedStyle(actions).flexWrap },
+    controls: [...actions.children].filter(visible).map(node => ({ name: node.dataset.cr, ...rect(node) })), exit: { ...rect(exit), separate: !actions.contains(exit), inBar: bar.contains(exit) },
+    overflowControls: [...(root.querySelector('[data-cr="transport-panel"]')?.querySelectorAll('select[data-cr],button[data-cr="live"]') ?? [])].map(node => node.dataset.cr),
+    overflowMenuHidden: root.querySelector('[data-cr="transport-panel"]')?.hidden ?? true,
+    fixedControls: [...bar.querySelectorAll(':scope > button')].filter(visible).map(node => ({ name: node.dataset.cr, disabled: node.disabled, ...rect(node) })),
+    transportInset: Number(svg.dataset.replayTransportInset) || 0,
     atlas: plot.classList.contains('chart-replay-atlas'), priceCoordinates, pricePane, legend,
     priceMatrix: matrix ? Object.fromEntries(['a', 'b', 'c', 'd', 'e', 'f'].map(key => [key, matrix[key]])) : null,
     priceAxis: pricePane ? { left: pricePane.right, right: box.right, top: pricePane.top, bottom: pricePane.bottom } : null,
@@ -269,7 +282,7 @@ export async function verifyChartReplaySurface(api) {
 
   const menuIsOpen = () => evaluate(cdp, selector => Boolean(document.querySelector(selector)?.getClientRects().length), control('select-panel'));
   async function openMenu(view = 'start') {
-    if (!await menuIsOpen()) await nativeClick(cdp, control('select-menu'));
+    if (!await menuIsOpen()) { await revealOwnedControl(control('select-menu')); await nativeClick(cdp, control('select-menu')); }
     await until(menuIsOpen, 'native Select bar popover opens');
     if (view === null) return;
     const currentView = () => evaluate(cdp, selector => document.querySelector(selector).dataset.menuView, control('select-panel'));
@@ -289,15 +302,35 @@ export async function verifyChartReplaySurface(api) {
   const openForecast = () => openMenu('forecast');
   async function closeMenu() {
     if (await menuIsOpen()) await nativeClick(cdp, control('select-close'));
+    if (await evaluate(cdp, selector => Boolean(document.querySelector(selector)?.getClientRects().length), control('transport-panel'))) await nativeClick(cdp, control('transport-close'));
     assert.equal(await menuIsOpen(), false, 'The Select bar close action did not dismiss its popover');
   }
   async function revealOwnedControl(selector) {
+    if (await evaluate(cdp, selector => Boolean(document.querySelector(selector)?.closest('[data-cr="transport-panel"]')?.hidden), selector)) {
+      await nativeClick(cdp, control('transport-more'));
+      await until(() => evaluate(cdp, selector => Boolean(document.querySelector(selector)?.getClientRects().length), control('transport-panel')), 'native additional replay controls open');
+    }
+    // Primary controls keep one scroll owner. Use its visible arrow buttons,
+    // so pointer and touch callers do not bypass a partially clipped target.
+    for (let attempt = 0; attempt < 12; attempt++) {
+      const clipped = await evaluate(cdp, selector => {
+        const node = document.querySelector(selector), owner = node?.closest('.chart-replay-actions');
+        if (!owner || !node.getClientRects().length) return null;
+        const box = node.getBoundingClientRect(), area = owner.getBoundingClientRect();
+        return { direction: box.left < area.left - 1 ? -1 : box.right > area.right + 1 ? 1 : 0, width: box.width, available: owner.clientWidth };
+      }, selector);
+      if (!clipped || !clipped.direction) break;
+      assert.ok(clipped.width <= clipped.available + 1, 'A replay control is wider than its scroll owner: ' + selector);
+      await nativeClick(cdp, control(clipped.direction < 0 ? 'scroll-back' : 'scroll-forward'));
+      await evaluate(cdp, waitForChartReplayToolbarScroll);
+      if (attempt === 11) throw new Error('Native replay arrows could not reveal ' + selector);
+    }
     // The expanded menu owns vertical scrolling. Wheel real UI content into
     // its visible region, including the area below its sticky close header.
     // Never expose a hidden control by rewriting its style or invoking it.
     for (let attempt = 0; attempt < 10; attempt++) {
       const target = await evaluate(cdp, selector => {
-        const node = document.querySelector(selector), owner = node?.closest('[data-cr="select-panel"],.chart-replay-choice');
+        const node = document.querySelector(selector), owner = node?.closest('[data-cr="select-panel"],[data-cr="transport-panel"],.chart-replay-choice');
         if (!owner || !node.getClientRects().length) return null;
         const box = node.getBoundingClientRect(), area = owner.getBoundingClientRect();
         const heading = owner.querySelector('.chart-replay-menu-heading'), footer = owner.querySelector(':scope > div:last-child');
@@ -310,7 +343,7 @@ export async function verifyChartReplaySurface(api) {
       if (!target || Math.abs(target.delta) < 1) return;
       await cdp.send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: target.x, y: target.y, deltaX: 0, deltaY: target.delta });
       await settled(cdp);
-      const current = await evaluate(cdp, selector => document.querySelector(selector).closest('[data-cr="select-panel"],.chart-replay-choice').scrollTop, selector);
+      const current = await evaluate(cdp, selector => document.querySelector(selector).closest('[data-cr="select-panel"],[data-cr="transport-panel"],.chart-replay-choice').scrollTop, selector);
       assert.notEqual(current, target.scrollTop, 'The owned replay popover cannot reveal its control: ' + selector + ' ' + JSON.stringify(target));
     }
     throw new Error('Replay popover scrolling did not expose ' + selector);
@@ -358,7 +391,11 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(geometry.menuHidden, true); assert.equal(geometry.settingsInPopover, true);
     assertChartReplayPricePaneAccess(geometry);
     assert.deepEqual(geometry.removedControls, [], 'Removed previous/duplicate random/menu-resume controls remain in the DOM');
-    assert.deepEqual(geometry.controls.map(node => node.name), ['first', 'select-menu', 'mode-badge', 'pick', 'play', 'next', 'speed', 'update-interval', 'live']);
+    const secondary = ['speed', 'update-interval', 'live'];
+    assert.deepEqual(geometry.controls.map(node => node.name), ['first', 'select-menu', 'mode-badge', 'pick', 'play', 'next', ...(geometry.bar.secondaryOverflow ? [] : secondary)]);
+    assert.deepEqual(geometry.overflowControls, geometry.bar.secondaryOverflow ? secondary : [], 'Secondary controls must have exactly one responsive owner');
+    assert.equal(geometry.overflowMenuHidden, true);
+    assert.equal(geometry.bar.hintVisible, geometry.actions.scrollWidth > geometry.actions.clientWidth, 'Overflow hints must follow the measured scroll owner at every viewport');
     assert.equal(geometry.actions.flexWrap, 'nowrap');
     const centerY = geometry.bar.top + geometry.bar.height / 2;
     for (const node of geometry.controls) assert.ok(Math.abs(node.top + node.height / 2 - centerY) <= 1, 'Replay controls wrapped into a second row');
@@ -372,48 +409,94 @@ export async function verifyChartReplaySurface(api) {
     assert.ok(geometry.chart.height >= originalChartBox.height - 1, 'Entering replay reduced the existing chart height');
     assert.ok(geometry.chart.height >= geometry.plot.clientHeight - 2, 'The chart does not own its full allocated plot height');
     assert.ok(geometry.pageWidth <= width + 1); assert.equal(geometry.scrollX, 0);
-    assert.equal(geometry.exit.separate, true); assert.ok(Math.abs(geometry.exit.width - 44) <= 1 && Math.abs(geometry.exit.height - 44) <= 1);
+    assert.equal(geometry.exit.separate, true); assert.equal(geometry.exit.inBar, true);
+    assert.ok(geometry.exit.width >= (touch || width <= 620 ? 43 : 31) && geometry.exit.height >= (touch || width <= 620 ? 43 : 31));
+    assert.ok(geometry.transportInset >= geometry.bar.height + 39, 'Replay did not reserve the transport and hint lane');
+    assert.ok(geometry.bar.top >= geometry.chart.bottom - geometry.transportInset, 'Replay toolbar escaped its reserved footer');
+    assert.ok(Math.abs(geometry.plot.bottom - geometry.bar.bottom - 12) <= 1, 'Replay footer no longer has a stable 12px bottom anchor');
     if (btc) {
       const inside = (item, area) => item.left >= area.left - 1 && item.right <= area.right + 1 && item.top >= area.top - 1 && item.bottom <= area.bottom + 1;
       const overlaps = (a, b) => Math.min(a.right, b.right) - Math.max(a.left, b.left) > 1 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 1;
-      assert.ok(geometry.bar.left >= geometry.plot.left - 1 && geometry.bar.right <= geometry.plot.right + 1 &&
-        geometry.bar.top >= geometry.pricePane.top - 1 && geometry.bar.bottom <= geometry.pricePane.bottom + 1 && geometry.bar.right <= geometry.pricePane.right + 1,
-      'BTC replay toolbar escaped the chart or covered the price-axis boundary');
-      assert.ok(inside(geometry.exit, geometry.pricePane), 'BTC exit X escaped the price pane');
-      assert.ok(Math.abs(geometry.pricePane.right - geometry.exit.right - 7) <= 1, 'BTC exit X must be inset 7px from the measured price-axis boundary');
+      assert.ok(inside(geometry.bar, geometry.plot), 'BTC replay toolbar escaped the chart');
+      assert.ok(inside(geometry.exit, geometry.bar), 'BTC exit X escaped its fixed toolbar slot');
+      assert.ok(geometry.bar.top > geometry.pricePane.bottom, 'BTC replay transport covers its price pane');
       assert.equal(overlaps(geometry.bar, geometry.priceAxis), false, 'BTC replay toolbar covers the price axis');
       assert.equal(overlaps(geometry.exit, geometry.priceAxis), false, 'BTC exit X covers the price axis');
-      assert.equal(overlaps(geometry.bar, geometry.exit), false, 'BTC replay toolbar overlaps its separate exit X');
+      assert.equal(overlaps(geometry.actions, geometry.exit), false, 'BTC replay scroll owner overlaps its fixed exit X');
       assert.ok(geometry.legend, 'BTC replay is missing its visible in-plot legend');
       assert.ok(inside(geometry.legend, geometry.pricePane), 'BTC legend escaped the price pane');
       assert.equal(overlaps(geometry.legend, geometry.priceAxis), false, 'BTC legend covers the price axis');
-      assert.ok(Math.abs(geometry.legend.height - 26) <= 1, 'BTC legend must retain its compact 26px row');
-      assert.ok(Math.abs(geometry.legend.top - geometry.bar.bottom - 8) <= 1, 'BTC replay toolbar must end 8px above the legend');
-      assert.equal(geometry.legend.flexWrap, 'nowrap');
-      for (const group of geometry.legend.groups) assert.equal(group.flexWrap, 'nowrap', 'BTC legend group wrapped: ' + group.className);
-      assert.deepEqual(geometry.legend.items.map(item => item.text), ['실제 가격', '미래 가정', '가정 범위', '고점·저점', 'CYCLE TOP', 'PIT STOP', 'FIRST TOP', 'ATH', 'MID-TOP', 'BOTTOM']);
-      const legendCenter = geometry.legend.items[0].top + geometry.legend.items[0].height / 2;
-      for (const item of geometry.legend.items) {
-        assert.ok(item.top >= geometry.legend.top - 1 && item.bottom <= geometry.legend.bottom + 1, 'BTC legend item is clipped vertically: ' + item.text);
-        assert.ok(Math.abs(item.top + item.height / 2 - legendCenter) <= 1, 'BTC legend item moved onto another row: ' + item.text);
+      assert.ok(geometry.legend.width <= geometry.pricePane.width * .42 + 1, 'BTC legend exceeds 42% of the price pane');
+      assert.ok(Math.abs(geometry.pricePane.right - geometry.legend.right - 12) <= 1, 'BTC legend lost its 12px upper-right inset');
+      assert.ok(geometry.legend.top >= geometry.pricePane.top + 11, 'BTC legend escaped its upper-right safe area');
+      assert.equal(overlaps(geometry.legend, geometry.bar), false, 'BTC legend covers the replay bar');
+      assert.equal(overlaps(geometry.legend, geometry.exit), false, 'BTC legend covers the separate replay exit');
+      assert.ok(geometry.legend.scrollWidth <= geometry.legend.clientWidth + 1, 'BTC legend content overflows its measured width');
+      for (const label of geometry.legend.reservedLabels) assert.equal(overlaps(geometry.legend, label), false,
+        'BTC legend covers a current-price, evidence, clock, event or replay label: ' + JSON.stringify(label));
+      const expectedItems = ['실제 가격', '미래 가정', '가정 범위', '고점·저점', 'CYCLE TOP', 'PIT STOP', 'FIRST TOP', 'ATH', 'MID-TOP', 'BOTTOM'];
+      const expectedStatus = ['실선 · 관측 사후 기준', '점선 · 잠정·가정', '◇ 거시 시계 · ○ 예시 경로'];
+      assert.deepEqual(geometry.legend.allItems, expectedItems, 'Compact legend lost an original semantic entry');
+      assert.deepEqual(geometry.legend.statusItems, expectedStatus, 'Compact legend lost its provisional/retrospective meanings');
+      if (width <= 430) assert.equal(geometry.legend.mode, 'chip');
+      else if (geometry.legend.mode === 'chip') assert.ok(['height','protected-anchors'].includes(geometry.legend.compactReason), 'A wide plot needs a measured height/anchor reason to use the compact legend');
+      else assert.equal(geometry.legend.mode, 'rows');
+      if (geometry.legend.mode === 'chip') {
+        assert.equal(geometry.legend.rows.length, 0, 'Mobile legend must show one chip');
+        assert.equal(geometry.legend.trigger?.text, '범례');
+        assert.ok(inside(geometry.legend.trigger, geometry.legend), 'Mobile legend chip is clipped');
+        assert.ok(geometry.legend.trigger.height >= 44, 'Mobile legend lost its 44px touch target');
+      } else {
+        assert.deepEqual(geometry.legend.rows.map(row => row.id), ['price', 'cycle'], 'BTC legend must keep separate price/cycle rows');
+        assert.ok(geometry.legend.rows[1].top >= geometry.legend.rows[0].bottom, 'BTC legend rows overlap');
+        for (const row of geometry.legend.rows) {
+          assert.ok(inside(row, geometry.legend) && row.scrollWidth <= row.clientWidth + 1, 'BTC legend row is clipped');
+          assert.equal(row.items.length, row.visibleCount);assert.equal(row.visibleCount + row.hiddenCount, row.total);
+          assert.equal(Boolean(row.more), row.hiddenCount > 0, 'Hidden legend entries require a visible +N control');
+          if (row.more) { assert.equal(row.more.text, '+' + row.hiddenCount);assert.ok(inside(row.more, row), 'The +N chip is clipped'); }
+          for (const item of row.items) assert.ok(inside(item, row), 'A visible legend entry is clipped: ' + item.text);
+        }
       }
-    } else assert.ok(Math.abs(geometry.plot.right - geometry.exit.right - 8) <= 1, 'The exit X is not at the right of the chart');
+      if (geometry.legend.trigger || geometry.legend.rows.some(row => row.more)) {
+        const trigger = geometry.legend.mode === 'chip' ? '.chart-legend-open' : '.chart-legend-more:not([hidden])';
+        const saved = await storedBytes();await click(cdp, trigger);
+        await until(() => evaluate(cdp, () => document.querySelector('#chart-legend-dialog')?.open), 'native full legend dialog');
+        const dialog = await evaluate(cdp, () => {
+          const node = document.querySelector('#chart-legend-dialog'),box = node.getBoundingClientRect();
+          return { left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width, height: box.height,
+            items: [...node.querySelectorAll('.price-legend-item,.cycle-legend-item')].map(item => item.textContent.replace(/\s+/g, ' ').trim()),
+            statusItems: [...node.querySelectorAll('.cycle-style-sample,.cycle-reference-key')].map(item => item.textContent.replace(/\s+/g, ' ').trim()),
+            horizontalOverflow: node.scrollWidth > node.clientWidth + 1 };
+        });
+        visibleBounds(dialog, width, height);assert.deepEqual(dialog.items, expectedItems);assert.deepEqual(dialog.statusItems, expectedStatus);
+        assert.equal(dialog.horizontalOverflow, false, 'Full legend sheet has horizontal overflow');
+        if (geometry.legend.mode === 'chip') { assert.ok(Math.abs(dialog.width - width) <= 1);assert.ok(Math.abs(dialog.height - height) <= 1); }
+        await click(cdp, '#chart-legend-dialog > header > button');
+        await until(() => evaluate(cdp, () => !document.querySelector('#chart-legend-dialog')?.open), 'native full legend closes');
+        assert.equal(await evaluate(cdp, () => document.activeElement.matches('.chart-legend-open,.chart-legend-more')), true, 'Full legend failed to return focus to its visible trigger');
+        assert.equal(await storedBytes(), saved, 'Opening a legend created or changed a saved replay');
+        const restored = await evaluate(cdp, readChartReplayFloatingGeometry, { chartSelector, panel });
+        for (const name of ['cursor','hash','viewStart','viewEnd']) assert.equal(restored[name], geometry[name], 'Full legend changed replay ' + name);
+        evidence.floatingBar.push({ label: 'native-full-legend-retains-all-semantics-and-replay', validated: true, dialog });
+      }
+    } else assert.ok(geometry.bar.top > geometry.pricePane.bottom, 'Replay transport covers the asset price pane');
     assert.ok(Math.abs(geometry.exit.top + geometry.exit.height / 2 - centerY) <= 1, 'Exit X does not align with the floating controls');
-    if (width > 620) {
-      assert.ok(geometry.bar.width <= 421, 'Desktop replay expanded into a full-width toolbar');
-      assert.ok(Math.abs((geometry.bar.left + geometry.bar.right - geometry.plot.left - geometry.plot.right) / 2) <= 1, 'Desktop replay is not centered on the current chart');
-    } else {
-      assert.ok(geometry.bar.left >= geometry.plot.left + 7 && geometry.bar.right <= geometry.exit.left - 7, 'Mobile replay controls overlap the separate exit X');
+    assert.ok(Math.abs(geometry.bar.width - Math.min(560, geometry.plot.width - 24)) <= 1, 'Replay toolbar does not use the requested bounded width');
+    assert.ok(Math.abs((geometry.bar.left + geometry.bar.right - geometry.plot.left - geometry.plot.right) / 2) <= 1, 'Replay is not centered on the current chart');
+    assert.ok(geometry.fixedControls.every(node => node.left >= geometry.bar.left && node.right <= geometry.bar.right), 'A fixed replay action is clipped');
+    if (width >= 1440) assert.equal(geometry.actions.scrollWidth, geometry.actions.clientWidth, 'Desktop replay controls still clip');
+    if (touch || width <= 620) {
       for (const node of geometry.controls) assert.ok(node.width >= 43 && node.height >= 43, 'Mobile replay lost its 44px control target: ' + node.name);
+      for (const node of geometry.fixedControls) assert.ok(node.width >= 43 && node.height >= 43, 'Mobile replay lost its fixed 44px control target: ' + node.name);
     }
     observedGeometry.validated = true;
     await screenshot(cdp, prefix + '-floating-bar.png', receipt);
-    if (touch && width <= 620) {
-      assert.ok(geometry.actions.scrollWidth > geometry.actions.clientWidth + 20, 'The narrow toolbar does not provide an owned horizontal scroll area');
+    if (touch && width <= 620 && geometry.actions.scrollWidth > geometry.actions.clientWidth) {
+      assert.ok(geometry.fixedControls.some(node => node.name === 'scroll-forward') && geometry.fixedControls.some(node => node.name === 'scroll-back'), 'Overflow must expose pointer/touch arrow controls');
       const outward = await swipeChartReplayToolbarToEdge({ cdp, evaluate, bounds }, -1), { before, after } = outward;
       assert.ok(after.left > before.left + 20 && after.left >= after.maximum - 1, 'Native touch did not expose the right end of the replay bar');
-      const live = await bounds(cdp, control('live'));
-      assert.ok(live.left >= geometry.actions.left - 1 && live.right <= geometry.actions.right + 1, 'The Live action cannot be reached by native toolbar scrolling');
+      const lastControl = geometry.bar.secondaryOverflow ? 'next' : 'live', last = await bounds(cdp, control(lastControl));
+      assert.ok(last.left >= geometry.actions.left - 1 && last.right <= geometry.actions.right + 1, 'The last primary action cannot be reached by native toolbar scrolling');
       await screenshot(cdp, prefix + '-floating-bar-native-scroll.png', receipt);
       const unchanged = await evaluate(cdp, selector => { const svg = document.querySelector(selector); return { cursor: svg.dataset.replayCursor ?? null, hash: svg.dataset.replayOutputHash ?? null,
         viewStart: svg.dataset.replayViewStart ?? null, viewEnd: svg.dataset.replayViewEnd ?? null, scrollX, scrollY, pageWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) }; }, chartSelector);
@@ -421,9 +504,33 @@ export async function verifyChartReplaySurface(api) {
       assert.ok(unchanged.pageWidth <= width + 1);
       const returning = await swipeChartReplayToolbarToEdge({ cdp, evaluate, bounds }, 1);
       assert.ok(returning.after.left <= 1, 'Native toolbar swipe could not return to Select bar');
+      await revealOwnedControl(control('select-menu'));
       const select = await bounds(cdp, control('select-menu'));
       assert.ok(select.left >= geometry.actions.left - 1 && select.right <= geometry.actions.right + 1, 'Select bar is not fully reachable after native toolbar scrolling');
       evidence.floatingBar.push({ label: 'native-horizontal-toolbar-scroll-without-chart-or-page-scroll', before, after, unchanged, outward, returning });
+    }
+    if (geometry.bar.secondaryOverflow) {
+      await nativeClick(cdp, control('transport-more'));
+      const menu = await evaluate(cdp, selector => {
+        const panel = document.querySelector(selector), box = panel.getBoundingClientRect();
+        return { role: panel.getAttribute('role'), expanded: document.querySelector('[data-cr="transport-more"]').getAttribute('aria-expanded'),
+          left: box.left, right: box.right, top: box.top, bottom: box.bottom,
+          controls: [...panel.querySelectorAll('select[data-cr],button[data-cr="live"]')].map(node => ({ name: node.dataset.cr, visible: Boolean(node.getClientRects().length), value: node.value, disabled: node.disabled })),
+          focused: document.activeElement?.dataset.cr };
+      }, control('transport-panel'));
+      assert.equal(menu.role, 'dialog'); assert.equal(menu.expanded, 'true'); assert.equal(menu.focused, 'speed');
+      assert.deepEqual(menu.controls.map(node => node.name), secondary); assert.ok(menu.controls.every(node => node.visible));
+      assert.equal(menu.controls[1].value, 'daily'); assert.equal(menu.controls[1].disabled, true);
+      assert.ok(menu.left >= 0 && menu.right <= width && menu.top >= 0 && menu.bottom <= height, 'Additional replay controls escaped the viewport');
+      for (const name of secondary) await revealOwnedControl(control(name));
+      await screenshot(cdp, prefix + '-transport-overflow.png', receipt);
+      await key('Escape', 'Escape', 27);
+      assert.equal(await evaluate(cdp, selector => document.querySelector(selector).hidden, control('transport-panel')), true, 'Escape did not close additional replay controls');
+      assert.equal(await evaluate(cdp, () => document.activeElement?.dataset.cr), 'transport-more', 'Overflow close did not restore keyboard focus');
+      await key('Enter', 'Enter', 13);
+      assert.equal(await evaluate(cdp, selector => document.querySelector(selector).hidden, control('transport-panel')), false, 'The overflow trigger is not keyboard accessible');
+      await closeMenu();
+      evidence.floatingBar.push({ label: 'additional-replay-controls-native-pointer-and-keyboard', ...menu, keyboardReopened: true, focusRestored: true });
     }
   }
   async function verifyLandingMenu(label, capture = false) {

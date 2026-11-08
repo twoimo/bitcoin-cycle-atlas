@@ -268,7 +268,7 @@ export function cycleMilestoneInspection(marker, { asOf } = {}) {
   if (marker.confirmationDate) fields.push({ label: '조건 확인일 · UTC', value: marker.confirmationDate });
   if (asOf) fields.push({ label: '관측 기준일 · UTC', value: asOf });
   if (sourceText(marker.source)) fields.push({ label: '자료·모형', value: sourceText(marker.source) });
-  const note = marker.kind === 'scenario' ? '선택한 미래 가격 경로와 명시된 규칙에서 정한 가정 기준점입니다. 확정된 미래 고점·저점이나 확률 예측이 아닙니다.' : marker.selectionKind === 'scenario' ? '가격과 날짜는 실제 관측값이지만, 이 기준점의 선택은 현재 미래 가정에 속합니다. 관측된 가격이라고 해서 사이클 역할이 확정된 것은 아닙니다.' : marker.provisional ? '가격은 실제 관측입니다. 현재 자료에서 고른 잠정 기준점이며 최종 시장 사이클 고점·저점으로 확정하지 않습니다.' : '실제 관측에 명시된 선택 규칙을 적용한 사후 기준점입니다. 당시 미리 알 수 있었던 매매 신호를 뜻하지 않습니다.';
+  const note = marker.kind === 'scenario' ? '선택한 미래 가격 경로와 명시된 규칙에서 정한 가정 기준점입니다. 확정된 미래 고점·저점이나 확률 예측이 아닙니다.' : marker.selectionKind === 'scenario' ? '가격과 날짜는 실제 관측값이지만, 이 기준점의 선택은 현재 미래 가정에 속합니다. 관측된 가격이라고 해서 사이클 역할이 확정된 것은 아닙니다.' : marker.provisional ? '가격은 실제 관측입니다. 현재 자료에서 고른 잠정(provisional) 기준점이며 최종 시장 사이클 고점·저점으로 확정하지 않습니다.' : '실제 관측에 명시된 선택 규칙을 적용한 사후 기준점입니다. 당시 미리 알 수 있었던 매매 신호를 뜻하지 않습니다.';
   return { label: type.label, date: marker.date, kind: scenarioSelected(marker) ? 'assumption' : 'observed', fields,
     note: `${note}${marker.selectionWindowComplete === false ? ' 요청한 선택 구간이 완성되지 않아 현재 제공된 부분 경로 안에서 고른 후보입니다.' : ''}` };
 }

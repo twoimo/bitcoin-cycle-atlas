@@ -6,6 +6,7 @@ import { mountAnalysisIndicators } from "./analysis-dock.js?v=1.29.0";
 import { mountIndicatorWorkbench } from './indicator-workbench.js?v=1.29.0';
 import { inspectionPanelAction } from './inspection-policy.js?v=1.29.0';
 import { mountMobileWorkspace } from './mobile-workspace.js?v=1.29.0';
+import { mountChartLegend } from './ui/chart-legend.js?v=1.36.1';
 
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -294,6 +295,7 @@ export function initViewportWorkspace(icon) {
   mountIndicatorWorkbench({plot,stage});
   mountMobileWorkspace({workspace,stage,plot,reader,closeReader});
   mountCompactChartLayout({plot});
+  mountChartLegend({plot});
   document.addEventListener('click',event=>{if(event.target.closest('[data-view]'))closeReader({restoreFocus:false});});
   document.addEventListener('atlas:close-detail',()=>closeReader({restoreFocus:false}));
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!reader.hidden){event.preventDefault();closeReader();}});

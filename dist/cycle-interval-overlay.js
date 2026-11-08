@@ -1,4 +1,4 @@
-import {cycleComparisonSummary} from './cycle-period-comparison.js';
+import {cycleComparisonSummary,cycleSensitivityDefinition} from './cycle-period-comparison.js';
 import { utcDay } from './cycle-engine.js?v=1.29.0';
 import { INTERVAL_RELATIONS } from "./cycle-milestones.js?v=1.29.0";
 
@@ -137,7 +137,7 @@ function spanMarkup(item) {
   const { interval, relation, x1, x2, y, active, related, clippedStart, clippedEnd, labelBox, previewBox } = item;
   const color = relation.color, weight = active ? 2.6 : related ? 2 : 1.6;
   const dash = isDashed(interval) ? ' stroke-dasharray="5 3"' : '';
-  const title = `${item.comparison?'경로 ':''}${relation.label} · ${interval.startDate} → ${interval.endDate} UTC\n${item.duration} · ${item.days}일 · ${status(interval)}${item.comparison?'\n'+cycleComparisonSummary(item.comparison):''}${clippedStart || clippedEnd ? '\n현재 화면에는 일부만 표시됩니다. 기간은 전체 양 끝 날짜의 차이입니다.' : ''}`;
+  const title = `${item.comparison?'경로 ':''}${relation.label} · ${interval.startDate} → ${interval.endDate} UTC\n${item.duration} · ${item.days}일 · ${status(interval)}${item.comparison?'\n'+cycleComparisonSummary(item.comparison)+'\n'+cycleSensitivityDefinition(item.comparison):''}${clippedStart || clippedEnd ? '\n현재 화면에는 일부만 표시됩니다. 기간은 전체 양 끝 날짜의 차이입니다.' : ''}`;
   const edge = Math.min(3, item.capHeight), head = Math.min(4, (x2 - x1) / 3);
   const obstacles = item.strokeObstacles || [], line = { x1, y1: y, x2, y2: y };
   const path = (segments, original) => {

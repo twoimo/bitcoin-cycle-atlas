@@ -60,6 +60,19 @@ test('an embedded instrument owns the perimeter until native state is restored',
   adapter.command('export');const exportDialog=document.querySelector('#chart-export-dialog');assert.ok(exportDialog.hasAttribute('open'));assert.match(exportDialog.textContent,/ETHUSD · USD · UTC/);assert.match(exportDialog.querySelector('a[download]').download,/^ETHUSD-/);
 });
 
+test('native initialization and unchanged gestures create no history; completed user movement commits once',t=>{
+  const f=fixture(t),{adapter,document,state}=f;
+  assert.equal(f.changes(),0);assert.equal(document.querySelector('#workbench-undo').disabled,true);
+  adapter.update();adapter.update();assert.equal(adapter.endGesture(),false);assert.equal(f.changes(),0);
+  adapter.beginGesture();assert.equal(adapter.endGesture(),false,'a click without movement is not a change');
+  assert.equal(document.querySelector('#workbench-undo').disabled,true);
+  adapter.beginGesture();state.range={...state.range,start:state.range.start+86400,end:state.range.end+86400};
+  assert.equal(adapter.endGesture(),true,'the URL owner is notified only for a real committed gesture');
+  assert.equal(adapter.endGesture(),false,'a second completion cannot persist the same movement');
+  assert.equal(document.querySelector('#workbench-undo').disabled,false);
+  adapter.command('undo');assert.equal(document.querySelector('#workbench-undo').disabled,true);
+});
+
 test('native date selection preserves the weekly grid and source bounds without inventing candles',()=>{
   const range={unit:'seconds',start:seconds('2026-01-05'),end:seconds('2026-10-19'),min:seconds('2020-01-06'),max:seconds('2035-12-31'),step:604800,minSpan:12};
   const request=parseGoToRequest({frequency:'weekly',mode:'range',start:'2025-01-01',end:'2025-08-19'}),next=nativeDateRange(range,request);

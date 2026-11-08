@@ -89,7 +89,7 @@ function sourceLabel(value) {
 /** An asset-neutral base painter. It never imports live workspaces, cycle
  * analysis or a model renderer; callers supply already revealed observations. */
 function drawObservedViewport({svg,rows,candles,start,end,frequency,scale,domain,priceMode,width,height,symbol,source}) {
-  const layout = chartPaneLayout({width,height,volume:false,drawdown:false,states:false,top:18});
+  const layout = chartPaneLayout({width,height,volume:false,drawdown:false,states:false,top:18,bottomInset:Number(svg.dataset.replayTransportInset)||0});
   const axisText = createPriceAxisLayout({svg,width,left:layout.left,minRight:layout.right});
   const left=layout.left,right=width-axisText.right,top=layout.top,bottom=layout.priceBottom;
   const first=utcDay(start),span=Math.max(1,utcDay(end)-first);
@@ -167,7 +167,7 @@ function render({ svg, rows, candles, forecast, start, end, chartType, frequency
   const displayedCandles = chartType === 'candles' ? candles : [];
   let axis;
   if (hidden) {
-    const layout = chartPaneLayout({ width, height, volume: false, drawdown: false, states: false, top: 18 });
+    const layout = chartPaneLayout({ width, height, volume: false, drawdown: false, states: false, top: 18, bottomInset:Number(svg.dataset.replayTransportInset)||0 });
     const axisText = createPriceAxisLayout({ svg, width, left: layout.left, minRight: layout.right });
     axis = { left: layout.left, right: width - axisText.right, top: layout.top, bottom: layout.priceBottom, scale: 'none', min: null, max: null, mode: 'auto' };
     svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
