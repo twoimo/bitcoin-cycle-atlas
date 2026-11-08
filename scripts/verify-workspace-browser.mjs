@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+import {waitForChartReplayToolbarScroll} from './verify-chart-replay-browser.mjs';
 
 export async function readComparisonAssetSymbols(source=new URL('../dist/data/asset-comparison.json',import.meta.url)){
   const snapshot=JSON.parse(await readFile(source,'utf8')),symbols=snapshot.assets?.map(asset=>asset.symbol);
@@ -368,6 +369,82 @@ export function assertIndicatorLegendSurface(state){
   if(!state.collapsed)assert.ok(state.visibleLabels.length>0&&state.visibleLabels.every(label=>label.text&&computedColorAlpha(label.color)>0),
     'Expanded indicator labels are missing');
   if(!state.collapsed)assert.equal(state.foldOverlap,0,'The fold control covers the indicator list scrollport');
+}
+
+export function readPriceLegendScrollSurface(){
+  const svg=document.querySelector('#lab-chart'),plot=svg.closest('.atlas-plot'),legend=plot.querySelector(':scope > .lab-chart-foot');
+  const box=node=>{const b=node.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};};
+  const area=box(legend),scrollport={left:area.left+legend.clientLeft,right:area.left+legend.clientLeft+legend.clientWidth,top:area.top+legend.clientTop,bottom:area.top+legend.clientTop+legend.clientHeight};
+  const items=[...legend.querySelectorAll('.price-legend-item,.cycle-legend-item')].map(node=>({...box(node),name:node.textContent.replace(/\s+/g,' ').trim(),painted:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})}));
+  return {width:innerWidth,height:innerHeight,scrollX,scrollY,pageWidth:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth),
+    range:{start:svg.dataset.start,end:svg.dataset.end,interval:svg.dataset.interval},
+    observed:{line:Number(svg.dataset.observedLineCount),candles:Number(svg.dataset.observedCandleCount)},
+    price:{min:Number(svg.dataset.priceMin),max:Number(svg.dataset.priceMax),mode:svg.dataset.priceMode,scale:svg.dataset.scale,unit:svg.dataset.unit,inverted:svg.dataset.invertScale},
+    touchAction:{plot:getComputedStyle(plot).touchAction,svg:getComputedStyle(svg).touchAction,legend:getComputedStyle(legend).touchAction},
+    legend:{...area,scrollport,scrollLeft:legend.scrollLeft,clientWidth:legend.clientWidth,maximum:legend.scrollWidth-legend.clientWidth,overflowX:getComputedStyle(legend).overflowX,items,
+      visibleNames:items.filter(item=>item.painted&&item.width>0&&item.height>0&&item.left>=scrollport.left-1&&item.right<=scrollport.right+1&&item.top>=scrollport.top-1&&item.bottom<=scrollport.bottom+1).map(item=>item.name)}};
+}
+
+export function assertPriceLegendScrollSurface(state,baseline=state){
+  assert.deepEqual(state.range,baseline.range,'A native legend gesture changed the chart time range');
+  assert.deepEqual(state.observed,baseline.observed,'A native legend gesture changed the observed price inventory');
+  assert.deepEqual(state.price,baseline.price,'A native legend gesture changed the price axis');
+  assert.deepEqual([state.scrollX,state.scrollY],[baseline.scrollX,baseline.scrollY],'Legend scrolling moved the document');
+  assert.ok(state.pageWidth<=state.width+1,'Legend scrolling introduced document overflow');
+  assert.ok(state.observed.line+state.observed.candles>0&&Number.isFinite(state.price.min)&&state.price.max>state.price.min,'The legend check requires actual observed prices and a valid axis');
+  assert.deepEqual(state.legend.items.map(item=>item.name),['실제 가격','미래 가정','가정 범위','고점·저점','CYCLE TOP','PIT STOP','FIRST TOP','ATH','MID-TOP','BOTTOM'],'The price/cycle legend lost actual items');
+  assert.ok(state.legend.items.every(item=>item.painted&&item.width>0&&item.height>0),'A price/cycle legend item is hidden');
+  assert.ok(state.legend.clientWidth>0&&state.legend.maximum>0,'This regression must exercise an overflowing legend');
+  assert.match(state.legend.overflowX,/^(auto|scroll)$/,'The legend must own horizontal scrolling');
+}
+
+async function verifyPriceLegendScrollOwnership(api,{touch,label}){
+  const {cdp,receipt,evaluate,settled,screenshot}=api,selector='.atlas-plot > .lab-chart-foot';
+  const record={input:touch?'native-touch':'native-horizontal-wheel',states:[],gestures:[]};
+  (receipt.workspace.priceLegendScroll??=[]).push(record);
+  const read=async()=>{const state=await evaluate(cdp,readPriceLegendScrollSurface);record.states.push(state);assertPriceLegendScrollSurface(state,record.states[0]);return state;};
+  let state=await read();
+  const names=state.legend.items.map(item=>item.name);
+  for(const [index,edge]of ['start','end','start'].entries()){
+    const distance=Math.min(96,state.legend.clientWidth*.4),maximumSteps=Math.ceil(state.legend.maximum/Math.max(8,distance*.5))+4;
+    const reached=()=>edge==='start'?state.legend.scrollLeft<=1:state.legend.scrollLeft>=state.legend.maximum-1;
+    let steps=0;
+    while(!reached()&&steps++<maximumSteps){
+      const direction=edge==='end'?-1:1,before=state.legend.scrollLeft;
+      const target=await evaluate(cdp,({selector,direction,distance,preferGlyph})=>{
+        const node=document.querySelector(selector),b=node.getBoundingClientRect();
+        const glyph=preferGlyph?[...node.querySelectorAll('.cycle-legend-item > svg')].find(svg=>{
+          const r=svg.getBoundingClientRect(),x=r.left+r.width/2;
+          return r.left>=b.left+2&&r.right<=b.right-2&&r.top>=b.top&&r.bottom<=b.bottom&&(direction<0?x-distance>=b.left+2:x+distance<=b.right-2);
+        }):null;
+        const g=glyph?.getBoundingClientRect(),x=g?g.left+g.width/2:direction<0?b.right-12:b.left+12,y=g?g.top+g.height/2:b.top+b.height/2,hit=document.elementFromPoint(x,y);
+        return {x,y,distance,ownsHit:Boolean(hit&&(hit===node||node.contains(hit))),cycleGlyph:Boolean(glyph&&hit&&(hit===glyph||glyph.contains(hit))),glyphTouchAction:glyph?getComputedStyle(glyph).touchAction:null};
+      },{selector,direction,distance,preferGlyph:touch&&!record.gestures.some(item=>item.cycleGlyph)});
+      assert.equal(target.ownsHit,true,'The native legend input point is obscured');
+      if(touch){
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:target.x,y:target.y,id:1}]});
+        for(let step=1;step<=6;step++){
+          await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:target.x+direction*distance*step/6,y:target.y,id:1}]});
+          await new Promise(resolve=>setTimeout(resolve,50));
+          state=await read();
+        }
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      }else await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',x:target.x,y:target.y,deltaX:-direction*distance,deltaY:0});
+      const settledScroll=await evaluate(cdp,waitForChartReplayToolbarScroll,{selector});await settled(cdp);
+      state=await read();record.gestures.push({edge,before,after:state.legend.scrollLeft,...target,settledScroll});
+      assert.ok(edge==='end'?state.legend.scrollLeft>before:state.legend.scrollLeft<before,'Native legend input failed to move its own scrollport');
+    }
+    assert.ok(reached(),'Native legend input did not reach '+edge);
+    state=await read();
+    await screenshot(cdp,`workspace-btc-legend-${label}-${index}-${edge}.png`,receipt);
+  }
+  assert.ok(record.gestures.length>0,'Native legend gestures were never exercised');
+  if(touch)assert.ok(record.gestures.some(item=>item.cycleGlyph),'Native legend scrolling must also start on an actual cycle glyph');
+  assert.ok(record.states.some(value=>value.legend.scrollLeft<=1&&value.legend.visibleNames.includes(names[0])),'Native legend scrolling never exposed its first item');
+  assert.ok(record.states.some(value=>value.legend.scrollLeft>=value.legend.maximum-1&&value.legend.visibleNames.includes(names.at(-1))),'Native legend scrolling never exposed its last item');
+  const exposed=new Set(record.states.flatMap(value=>value.legend.visibleNames));
+  assert.deepEqual(names.filter(name=>!exposed.has(name)),[],'Some legend items were never fully visible during native input');
+  assert.ok(state.legend.scrollLeft<=1,'Native legend scrolling did not return to its start');
 }
 
 /** Long-document readers must retain native controls and the actual opener. */
@@ -865,6 +942,7 @@ export async function verifyWorkspaceSurface(api) {
   await key('End','End',35);await focused('#workbench-bottom-menu');
   await key('Escape','Escape',27);
   assert.equal(await evaluate(cdp,()=>document.querySelector('#workbench-bottom-menu').hidden),true);
+  if(page==='workspace-btc'&&width===320&&receipt.touch)await verifyPriceLegendScrollOwnership(api,{touch:true,label:'touch-320x900'});
   if(page==='workspace-btc'&&width===1440){
     receipt.workspace.reportedQaViewports=[];
     try{
@@ -930,6 +1008,7 @@ export async function verifyWorkspaceSurface(api) {
         for(const date of qa.dates)for(const tick of qa.timeTicks)assert.ok(!overlaps(date,tick),'Selected date badge covers a normal time tick');
         receipt.workspace.reportedQaViewports.push(qa);
         await screenshot(cdp,`workspace-btc-qa-${qaWidth}x${qaHeight}.png`,receipt);
+        if(qaWidth===390&&qaHeight===844)await verifyPriceLegendScrollOwnership(api,{touch:false,label:'wheel-390x844'});
       }
     }finally{
       await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:receipt.touch});

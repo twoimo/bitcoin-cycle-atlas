@@ -361,13 +361,200 @@ test('cumulative provider budget counts decoded rather than compressed response 
     Math.floor(policy.maximumProviderBytes/policy.maximumProviderResponseBytes)+1);
 });
 
-test('HTTP authorization, rate-limit and server failures remain failures without credential fallback',async t=>{
-  for(const status of [401,403,404,429,500,503]){
+test('HTTP authorization, rate-limit and other server failures remain immediate failures without credential fallback',async t=>{
+  for(const status of [401,403,404,429,500,501,505]){
     await t.test(String(status),async()=>{
       const f=fixture({response:({url,response})=>url.startsWith('https://api.github.com/')?jsonResponse({message:'unavailable'},{status}):response});
       await assert.rejects(f.read(),new RegExp('HTTP '+status));assert.equal(f.requests.length,3);
     });
   }
+});
+
+test('only provider 502, 503 and 504 may consume an existing poll before exact success',async t=>{
+  for(const status of [502,503,504]){
+    await t.test(String(status),async()=>{
+      let cancelled=0;
+      const f=fixture({response:({url,response,poll})=>{
+        if(!url.startsWith('https://api.github.com/')||poll!==0)return response;
+        return new Response(new ReadableStream({
+          start(controller){controller.enqueue(Buffer.from('untrusted error body'));},
+          cancel(){cancelled++;},
+        }),{status,headers:{'content-type':'text/plain'}});
+      }});
+      const result=await f.read(),requests=f.requests.filter(item=>item.url.startsWith('https://api.github.com/'));
+      assert.equal(requests.length,2);assert.equal(new Set(requests.map(item=>item.url)).size,1);
+      assert.equal(f.requests.filter(item=>item.url.includes('/sources/')).length,1);
+      assert.equal(f.requests.filter(item=>item.url.includes('/receipts/')).length,1);
+      assert.deepEqual(f.delays,[policy.pollIntervalMs]);assert.equal(cancelled,1);
+      assert.deepEqual(result.attestation.authority.terminalCheckIds,[2]);
+      assertVerifiedModelAttestation(result.attestation,{component:result.component,...f.parameters,now:f.now()});
+    });
+  }
+});
+
+test('transient provider failures exhaust the original six polls without accepting any error response',async t=>{
+  for(const status of [502,503,504]){
+    await t.test(String(status),async()=>{
+      const f=fixture({response:({url,response})=>url.startsWith('https://api.github.com/')?jsonResponse({},{status}):response});
+      await assert.rejects(f.read(),new RegExp('HTTP '+status));
+      assert.equal(f.requests.length,2+policy.maximumPollAttempts);
+      assert.deepEqual(f.delays,Array(policy.maximumPollAttempts-1).fill(policy.pollIntervalMs));
+    });
+  }
+});
+
+test('pending snapshots and transient responses share the same poll budget',async()=>{
+  const seed=fixture(),pending=modelAttestationFixture({model:seed.component,browser:seed.browser}).authority.checks[0];
+  const f=fixture({snapshots:[[pending]],response:({url,response,poll})=>
+    url.startsWith('https://api.github.com/')&&poll%2===1?jsonResponse({},{status:504}):response});
+  await assert.rejects(f.read(),/HTTP 504/);
+  assert.equal(f.requests.length,2+policy.maximumPollAttempts);
+  assert.deepEqual(f.delays,Array(policy.maximumPollAttempts-1).fill(policy.pollIntervalMs));
+});
+
+test('a failed later page discards an earlier green row and restarts the complete snapshot at page one',async()=>{
+  const seed=fixture(),checks=modelAttestationFixture({model:seed.component,browser:seed.browser}).authority.checks;
+  const unrelated=Array.from({length:99},(_,i)=>({...copy(checks[0]),id:100+i,
+    external_id:'33333333-3333-4333-8333-333333333333'}));
+  const fresh=[checks[0],{...copy(checks[1]),id:3,url:'https://api.github.com/repos/'+policy.repository+'/check-runs/3'}];
+  const f=fixture({snapshots:[[...unrelated,checks[1],checks[0]],fresh],response:({url,response,poll})=>
+    url.startsWith('https://api.github.com/')&&poll===0&&new URL(url).searchParams.get('page')==='2'?
+      jsonResponse({},{status:503}):response});
+  const result=await f.read();
+  assert.deepEqual(f.requests.filter(item=>item.url.startsWith('https://api.github.com/'))
+    .map(item=>Number(new URL(item.url).searchParams.get('page'))),[1,2,1]);
+  assert.deepEqual(result.attestation.authority.checks,fresh);
+  assert.deepEqual(result.attestation.authority.terminalCheckIds,[3]);
+  assert.deepEqual(f.delays,[policy.pollIntervalMs]);
+});
+
+test('a transient response cannot relax the next snapshot authority or JSON checks',async t=>{
+  const mutations={
+    app:checks=>{checks[1].app.id++;},
+    source:checks=>{checks[1].head_sha='f'.repeat(40);},
+    terminalFailure:checks=>{checks[1].conclusion='failure';},
+    conflictingFailure:checks=>{checks.push({...copy(checks[1]),id:3,
+      url:'https://api.github.com/repos/'+policy.repository+'/check-runs/3',conclusion:'failure'});},
+    invalidJson:null,
+  };
+  for(const [name,change]of Object.entries(mutations)){
+    await t.test(name,async()=>{
+      const seed=fixture(),checks=modelAttestationFixture({model:seed.component,browser:seed.browser}).authority.checks;
+      change?.(checks);
+      const f=fixture({snapshots:[checks],response:({url,response,poll})=>{
+        if(!url.startsWith('https://api.github.com/'))return response;
+        if(poll===0)return jsonResponse({},{status:502});
+        return name==='invalidJson'?jsonResponse(null,{bytes:Buffer.from('{')}):response;
+      }});
+      await assert.rejects(f.read());assert.equal(f.requests.length,4);
+      assert.deepEqual(f.delays,[policy.pollIntervalMs]);
+    });
+  }
+  await t.test('another producer remains unqualified after a transient response',async()=>{
+    const seed=fixture(),checks=modelAttestationFixture({model:seed.component,browser:seed.browser}).authority.checks;
+    for(const check of checks)check.external_id='33333333-3333-4333-8333-333333333333';
+    const f=fixture({snapshots:[checks],response:({url,response,poll})=>
+      url.startsWith('https://api.github.com/')&&poll===0?jsonResponse({},{status:503}):response});
+    await assert.rejects(f.read(),/no observed terminal provider success/);
+    assert.equal(f.requests.length,2+policy.maximumPollAttempts);
+  });
+});
+
+test('index and receipt 502, 503 and 504 are never retried or re-resolved',async t=>{
+  for(const path of ['/sources/','/receipts/'])for(const status of [502,503,504]){
+    await t.test(path+status,async()=>{
+      const f=fixture({response:({url,response})=>url.includes(path)?jsonResponse({},{status}):response});
+      await assert.rejects(f.read(),new RegExp('HTTP '+status));
+      assert.equal(f.requests.length,path==='/sources/'?1:2);assert.deepEqual(f.delays,[]);
+    });
+  }
+});
+
+test('transport errors and errors from another consumer cannot masquerade as retryable responses',async t=>{
+  for(const failure of [new TypeError('Public provider check runs HTTP 503'),
+    new DOMException('request expired','TimeoutError'),Object.assign(new Error('unavailable'),{status:504,code:'HTTP_504'})]){
+    await t.test(failure.name+': '+failure.message,async()=>{
+      const f=fixture({response:({url,response})=>{if(url.startsWith('https://api.github.com/'))throw failure;return response;}});
+      await assert.rejects(f.read(),error=>error===failure);assert.equal(f.requests.length,3);assert.deepEqual(f.delays,[]);
+    });
+  }
+  await t.test('a previously observed error is private to its consumer invocation',async()=>{
+    let previous;
+    const first=fixture({response:({url,response})=>url.startsWith('https://api.github.com/')?jsonResponse({},{status:503}):response});
+    await assert.rejects(first.read(),error=>{previous=error;return /HTTP 503/.test(error.message);});
+    const next=fixture({response:({url,response})=>{if(url.startsWith('https://api.github.com/'))throw previous;return response;}});
+    await assert.rejects(next.read(),error=>error===previous);assert.equal(next.requests.length,3);assert.deepEqual(next.delays,[]);
+  });
+});
+
+test('redirected or substituted provider URLs never become transient failures',async t=>{
+  for(const kind of ['redirected','wrong URL']){
+    await t.test(kind,async()=>{
+      const f=fixture({response:({url,response})=>{
+        if(!url.startsWith('https://api.github.com/'))return response;
+        const failed=jsonResponse({},{status:503,redirected:kind==='redirected'});
+        if(kind==='wrong URL')Object.defineProperty(failed,'url',{value:'https://api.github.com/other'});
+        return failed;
+      }});
+      await assert.rejects(f.read(),kind==='redirected'?/redirected away/:/response URL differs/);
+      assert.equal(f.requests.length,3);assert.deepEqual(f.delays,[]);
+    });
+  }
+});
+
+test('abort during a transient response, its cleanup or its wait prevents another request',async t=>{
+  for(const phase of ['response','cleanup','wait']){
+    await t.test(phase,async()=>{
+      const controller=new AbortController(),failure=new Error('consumer stopped during '+phase);
+      const f=fixture({response:({url,response})=>{
+        if(!url.startsWith('https://api.github.com/'))return response;
+        if(phase==='response')controller.abort(failure);
+        return new Response(new ReadableStream({cancel(){if(phase==='cleanup')controller.abort(failure);}}),{status:504});
+      }});
+      await assert.rejects(f.read({signal:controller.signal,delay:async(ms,{signal})=>{
+        assert.equal(phase,'wait');assert.equal(ms,policy.pollIntervalMs);
+        controller.abort(failure);signal.throwIfAborted();
+      }}),error=>error===failure);
+      assert.equal(f.requests.length,3);
+    });
+  }
+  await t.test('the existing request timeout takes precedence over a late 503',async t=>{
+    const timeouts=[],failure=new DOMException('request expired','TimeoutError');
+    t.mock.method(AbortSignal,'timeout',ms=>{
+      assert.equal(ms,policy.requestTimeoutMs);const controller=new AbortController();timeouts.push(controller);return controller.signal;
+    });
+    const f=fixture({response:({url,response})=>{
+      if(!url.startsWith('https://api.github.com/'))return response;
+      timeouts.at(-1).abort(failure);return jsonResponse({},{status:503});
+    }});
+    await assert.rejects(f.read(),error=>error===failure);assert.equal(f.requests.length,3);assert.deepEqual(f.delays,[]);
+  });
+});
+
+test('partial snapshots still consume the original provider request budget',async()=>{
+  const seed=fixture(),pending=modelAttestationFixture({model:seed.component,browser:seed.browser}).authority.checks[0];
+  const records=Array.from({length:1000},(_,i)=>({...copy(pending),id:i+1,external_id:'33333333-3333-4333-8333-333333333333'}));
+  const f=fixture({snapshots:[records],response:({url,response})=>
+    url.startsWith('https://api.github.com/')&&new URL(url).searchParams.get('page')==='10'?jsonResponse({},{status:503}):response});
+  await assert.rejects(f.read(),/Public provider request budget exhausted/);
+  assert.equal(f.requests.length,2+policy.maximumProviderRequests);
+  assert.deepEqual(f.delays,[policy.pollIntervalMs,policy.pollIntervalMs]);
+});
+
+test('decoded bytes from partial snapshots still consume the original cumulative byte budget',async()=>{
+  const seed=fixture(),pending=modelAttestationFixture({model:seed.component,browser:seed.browser}).authority.checks[0];
+  const records=Array.from({length:201},(_,i)=>({...copy(pending),id:i+1,external_id:'33333333-3333-4333-8333-333333333333'}));
+  const f=fixture({snapshots:[records],response:async({url,response})=>{
+    if(!url.startsWith('https://api.github.com/'))return response;
+    if(new URL(url).searchParams.get('page')==='3')return jsonResponse({},{status:504});
+    const body=await response.json();body.padding='';
+    body.padding='x'.repeat(policy.maximumProviderResponseBytes-Buffer.byteLength(JSON.stringify(body)));
+    const bytes=Buffer.from(JSON.stringify(body));assert.equal(bytes.length,policy.maximumProviderResponseBytes);
+    return jsonResponse(null,{bytes,headers:{'content-encoding':'gzip','content-length':String(gzipSync(bytes).length)}});
+  }});
+  await assert.rejects(f.read(),/Public provider byte budget exhausted/);
+  assert.equal(f.requests.filter(item=>item.url.startsWith('https://api.github.com/')).length,13);
+  assert.deepEqual(f.delays,Array(4).fill(policy.pollIntervalMs));
 });
 
 test('header rejection cancels the unread body instead of leaving a response streaming',async()=>{
