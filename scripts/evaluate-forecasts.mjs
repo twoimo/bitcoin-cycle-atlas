@@ -15,6 +15,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { classifySufficiency } from '../dist/forecast-sufficiency.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SCRIPT_VERSION = '1.0.0';
@@ -63,10 +64,10 @@ const stdev = (a) => { const m = mean(a); return Math.sqrt(a.reduce((s, v) => s 
 const pinball = (actual, pred, q) => (actual - pred) * (q - (actual < pred ? 1 : 0));
 const quantile = (a, p) => { const b = [...a].sort((x, y) => x - y); return b[Math.floor(p * (b.length - 1))]; };
 
+const TIER_LABELS = { T1: 'T1-eligible', T2: 'T2-limited', T3: 'T3-insufficient' };
 function tierOf(observations, years, evalSamples) {
-  if (years < 3 || evalSamples < 100) return 'T3-insufficient';
-  if (years < 10 || evalSamples < 500) return 'T2-limited';
-  return 'T1-eligible';
+  const { tier } = classifySufficiency({ observations, years, evalSamples });
+  return TIER_LABELS[tier];
 }
 
 const rows = [];

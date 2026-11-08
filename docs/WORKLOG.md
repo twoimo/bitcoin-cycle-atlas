@@ -22,3 +22,8 @@
 - 검증: `node --test tests/forecast-calibration.test.mjs` 6개 통과, `node scripts/estimate-calibration.mjs` 재실행 → `factors.json` 재생성
 - 결과 요지: BTC 180일 커버리지 67.8→84.5, SPX 180일 65.1→82.7, NASDAQ 365일 53.9→84.2 통과. BTC 90일·ETH 365일은 과보정, KOSPI 90일은 무효. 부동산은 적합 표본 156~163 < 200으로 보정 차단
 - 남음: 통과 조합만 경로·밴드에 연결, 화면 문구는 WP4
+
+## 2026-11-08 · WP5·WP2·WP1 main 병합
+- 병합 커밋: `2c36d7f`(WP5) → `33997e5`(WP2) → `0d27550`(WP1), 이후 평가 스크립트를 WP5 모듈로 통일
+- 검증: `node --test tests/forecast-sufficiency.test.mjs tests/forecast-calibration.test.mjs` 13개 통과, 두 스크립트 재실행 시 산출 JSON 바이트 동일
+- 남음: 화면 표기(WP4), 셸 일관성(WP7), 삼플레 UI(WP6)
