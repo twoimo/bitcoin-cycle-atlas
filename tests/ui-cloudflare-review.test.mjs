@@ -1,11 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,readFile,rm,writeFile} from 'node:fs/promises';
+import {copyFile,mkdir,mkdtemp,readFile,rm,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
-import {resolve} from 'node:path';
+import {dirname,resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
-import {createUiReviewLogFilter,emitUiReviewArtifacts,planUiReviewScreenshots,readUiReviewScreenshot,screenshotLogBytes,selectUiReviewScreenshots,uiReviewScreenshotBudgets} from '../scripts/verify-ui-cloudflare.mjs';
+import {createUiReviewLogFilter,emitUiReviewArtifacts,planUiReviewScreenshots,readUiReviewScreenshot,screenshotLogBytes,selectUiReviewScreenshots,uiReviewHarnessFiles,uiReviewScreenshotBudgets} from '../scripts/verify-ui-cloudflare.mjs';
 import {decodeCompressedBrowserReport,emitBrowserEvidenceChunks} from '../scripts/browser-evidence-transport.mjs';
+import {uiReviewVerifierFiles} from '../scripts/browser-source-identity.mjs';
 
 const sizes=['320x740','390x844','768x1024','1024x768','1440x900','1920x1080'];
 const chartFiles=phase=>sizes.map(size=>`wp4-${phase}-${size}-chart.png`);
@@ -13,6 +15,31 @@ const nativeFiles=['ui-entry-mstr-root-1440x900.png','ui-entry-bmnr-root-1440x90
 const legendFiles=['320x740','390x844','1440x900'].map(size=>`wp4-after-${size}-legend.png`);
 const replayFiles=['1440x900','1920x1080'].map(size=>`wp4-after-${size}-replay.png`);
 const reportFor=(files,bytes=100)=>({status:'passed',cases:[{status:'passed',screenshots:files.map(file=>({file,bytes,sha256:'a'.repeat(64)}))}]});
+
+test('the isolated baseline copies only the declared verifier modules and links the native runner policy imports',async()=>{
+  assert.equal(uiReviewHarnessFiles,uiReviewVerifierFiles,'baseline copying and source hashing must share one dependency inventory');
+  assert.deepEqual(uiReviewHarnessFiles,[
+    'scripts/verify-eth-candidate-browser.mjs','scripts/verify-ui-contract-browser.mjs',
+    'scripts/browser-source-identity.mjs','scripts/btc-offline-refresh-policy.mjs',
+  ]);
+  assert.ok(uiReviewHarnessFiles.every(file=>file.startsWith('scripts/')&&file.endsWith('.mjs')),'application and market data cannot be copied into the baseline');
+  const directory=await mkdtemp(resolve(tmpdir(),'atlas-ui-verifier-link-'));
+  try{
+    for(const file of uiReviewHarnessFiles){
+      const target=resolve(directory,file);await mkdir(dirname(target),{recursive:true});
+      await copyFile(new URL('../'+file,import.meta.url),target);
+    }
+    const runner=await readFile(resolve(directory,'scripts/verify-eth-candidate-browser.mjs'),'utf8');
+    const declaration=runner.match(/import\s*\{[^}]+\}\s*from\s*(['"])\.\/btc-offline-refresh-policy\.mjs\1\s*;/)?.[0];
+    assert.ok(declaration,'the actual native runner must declare its offline-policy imports');
+    const shim=resolve(directory,'scripts/verifier-policy-link.mjs');
+    await writeFile(shim,declaration+'\nexport * from "./btc-offline-refresh-policy.mjs";\n');
+    const linked=await import(pathToFileURL(shim).href);
+    for(const name of ['ownsOfflineBtcPriceReadout','offlineBtcRefreshSurface','isExpectedOfflineBtcRefresh'])assert.equal(typeof linked[name],'function');
+    assert.equal(linked.ownsOfflineBtcPriceReadout({page:'outlook',center:'housing'}),false);
+    assert.equal(linked.ownsOfflineBtcPriceReadout({page:'outlook'}),true);
+  }finally{await rm(directory,{recursive:true,force:true});}
+});
 
 test('phase transport removes split raw evidence lines without losing native case failures',()=>{
   const lines=[],filter=createUiReviewLogFilter(line=>lines.push(line));

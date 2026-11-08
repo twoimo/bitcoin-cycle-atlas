@@ -10,14 +10,11 @@ import {fileURLToPath} from 'node:url';
 import {bootstrapCloudflareBuild,runRuntimeCommand} from './bootstrap-cloudflare-build.mjs';
 import {cloudflareRuntime} from './cloudflare-build-contract.mjs';
 import {browserEvidenceChunkSize,emitBrowserEvidenceChunks,emitCompressedBrowserReport} from './browser-evidence-transport.mjs';
+import {uiReviewVerifierFiles} from './browser-source-identity.mjs';
 
 const root=fileURLToPath(new URL('..',import.meta.url));
 export const uiReviewBaseline='1635f87a10962b7ff5eecd094b6e0625e09771f4';
-export const uiReviewHarnessFiles=Object.freeze([
-  'scripts/verify-eth-candidate-browser.mjs',
-  'scripts/verify-ui-contract-browser.mjs',
-  'scripts/browser-source-identity.mjs',
-]);
+export const uiReviewHarnessFiles=uiReviewVerifierFiles;
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const errorText=error=>error instanceof Error?(error.stack||error.message):String(error);
 const log=(event,value)=>console.log('ATLAS_UI_REVIEW_'+event+' '+JSON.stringify(value));

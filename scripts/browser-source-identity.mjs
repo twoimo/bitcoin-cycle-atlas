@@ -5,6 +5,15 @@ import {execFileSync} from 'node:child_process';
 
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 
+// The before/after diagnostic may copy these verifier modules only. Keep its
+// dependency inventory shared with the wrapper that creates the baseline.
+export const uiReviewVerifierFiles=Object.freeze([
+  'scripts/verify-eth-candidate-browser.mjs',
+  'scripts/verify-ui-contract-browser.mjs',
+  'scripts/browser-source-identity.mjs',
+  'scripts/btc-offline-refresh-policy.mjs',
+]);
+
 // One source inventory binds both Chrome lanes and their combining process.
 export async function readBrowserSourceIdentity(root){
   const sourceCommit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
@@ -28,6 +37,6 @@ export async function readBrowserSourceIdentity(root){
   // detached 1635f87 baseline. The copied diagnostic harness is separately
   // identified by the review wrapper; the application tree remains unchanged.
   for(const path of ['dist/cycle-period-comparison.js','dist/cycle-interval-overlay.js','dist/cycle-milestones-view.js','dist/atlas-analysis.js',...execFileSync('git',['ls-files','dist/ui'],{cwd:root,encoding:'utf8'}).trim().split('\n').filter(Boolean)])sourceHashes[path]=digest(await readFile(resolve(root,path)));
-  if(process.env.ATLAS_UI_REVIEW==='wp4-wp7')sourceHashes['scripts/verify-ui-contract-browser.mjs']=digest(await readFile(resolve(root,'scripts/verify-ui-contract-browser.mjs')));
+  if(process.env.ATLAS_UI_REVIEW==='wp4-wp7')for(const path of uiReviewVerifierFiles)sourceHashes[path]=digest(await readFile(resolve(root,path)));
   return {sourceCommit,sourceTree,sourceHashes};
 }
