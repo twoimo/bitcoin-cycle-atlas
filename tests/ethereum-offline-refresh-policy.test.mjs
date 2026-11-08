@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {isExpectedOfflineBtcRefresh} from '../scripts/btc-offline-refresh-policy.mjs';
+import {isExpectedOfflineBtcRefresh,offlineBtcRefreshSurface} from '../scripts/btc-offline-refresh-policy.mjs';
+import {consolidatedWorkspaceCases} from '../scripts/verify-consolidated-workspace-browser.mjs';
 const policy={surface:'btc',archiveAsOf:'2026-10-25'};
 const error={url:'https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-10-27&page_size=10000&paging_from=start',
   networkEvent:'Network.loadingFailed',requestId:'1.2',frameId:'frame',loaderId:'document',method:'GET',resourceType:'Fetch',blockedReason:'inspector',errorText:'',
@@ -21,6 +22,22 @@ test('center-data cannot excuse ETH, missing document identity or other network 
     {blockedReason:'other'},{frameId:''},{loaderId:''},{requestId:''},{requestWallTime:NaN}])
     assert.equal(isExpectedOfflineBtcRefresh({...error,...change},centerPolicy),false);
   assert.equal(isExpectedOfflineBtcRefresh(error,{...centerPolicy,archiveAsOf:'2026-10-27'}),false);
+});
+test('every consolidated viewport identifies its BTC host without excusing unrelated failures',()=>{
+  assert.deepEqual(consolidatedWorkspaceCases.map(spec=>spec.width),[320,390,1440]);
+  for(const spec of consolidatedWorkspaceCases){
+    assert.equal(offlineBtcRefreshSurface(spec),'consolidated');
+    const hostPolicy={...policy,surface:offlineBtcRefreshSurface(spec)};
+    assert.equal(isExpectedOfflineBtcRefresh(error,hostPolicy),true);
+    for(const change of [{url:error.url.replace('assets=btc','assets=eth')},
+      {networkEvent:'Network.responseReceived',httpStatus:503},{blockedReason:null},
+      {method:'POST'},{frameId:''},{loaderId:''},{requestId:''},{requestWallTime:NaN}])
+      assert.equal(isExpectedOfflineBtcRefresh({...error,...change},hostPolicy),false);
+    assert.equal(isExpectedOfflineBtcRefresh(error,{...hostPolicy,archiveAsOf:'2026-10-27'}),false);
+  }
+  for(const spec of [{},{page:'workspace-consolidated'},{page:'other',consolidated:true}])
+    assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface:offlineBtcRefreshSurface(spec)}),false);
+  assert.equal(offlineBtcRefreshSurface({surface:'btc'}),'btc');
 });
 test('different hosts, metrics, query keys, credentials and request methods stay failures',()=>{
   for(const url of [error.url.replace('coinmetrics.io','coinmetrics.io.evil.example'),error.url.replace('assets=btc','assets=eth'),

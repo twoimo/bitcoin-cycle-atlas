@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {isExpectedOfflineBtcRefresh} from './btc-offline-refresh-policy.mjs';
+import {isExpectedOfflineBtcRefresh,offlineBtcRefreshSurface} from './btc-offline-refresh-policy.mjs';
 // PR-only verification of checked-out dist files. Does not deploy or alter UI.
 import assert from 'node:assert/strict';
 import {verifyWorkspaceSurface,readNativeInteractiveTarget} from './verify-workspace-browser.mjs';
@@ -952,7 +952,7 @@ async function main(){
         assert.equal(matching.length,1,'Offline failure must bind to one current app document');
         const frame=matching[0];
         const candidates=await until(async()=>{const matches=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId)&&error.frameId===frame.id&&error.loaderId===frame.loaderId&&
-          isExpectedOfflineBtcRefresh(error,{surface:spec.surface,archiveAsOf:expectedBtc.asOf}));return matches.length?matches:null;},'identified blocked refresh request');
+          isExpectedOfflineBtcRefresh(error,{surface:offlineBtcRefreshSurface(spec),archiveAsOf:expectedBtc.asOf}));return matches.length?matches:null;},'identified blocked refresh request');
         assert.equal(candidates.length,1,'Each verified refresh attempt must bind to exactly one new blocked request');
         for(const error of candidates)validatedOfflineRequestIds.add(error.requestId);
         receipt.expectedOfflineRefresh.push({phase,frameId:frame.id,loaderId:frame.loaderId,observed,
