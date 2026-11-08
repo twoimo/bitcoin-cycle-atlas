@@ -74,6 +74,7 @@ async function runtimeContext({root=repositoryRoot,log=()=>{},timeoutMs=480000}=
     await mkdir(dirname(destination),{recursive:true});
     const temporary=destination+'.download';
     try{
+      log('ATLAS_RUNTIME_DOWNLOAD '+JSON.stringify({url,integrity:expected})+'\n');
       await run('curl',['--fail','--location','--silent','--show-error','--retry','2','--connect-timeout','20','--max-time','180','--output',temporary,url]);
       const bytes=await readFile(temporary);if(hashFn(bytes)!==expected)throw new Error('Downloaded runtime bytes do not match the committed integrity pin: '+url);
       await writeFile(destination,bytes);
