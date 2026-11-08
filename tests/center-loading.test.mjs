@@ -47,7 +47,8 @@ async function fixture(t) {
     autoScale: true, candles: true, canUndo: false, canRedo: false, measurement: false, ...overrides,
   });
   const advance = milliseconds => { now += milliseconds; for (const [id, timer] of [...timers]) if (timer.due <= now) { timers.delete(id); timer.callback(); } };
-  return { document, dom, plot, selectedFrame, click, select, receive, ready, advance, posts, histories, timers };
+  const lifecycle = (type, persisted) => listeners.get(type)?.({ persisted });
+  return { document, dom, plot, selectedFrame, click, select, receive, ready, advance, lifecycle, location, posts, histories, timers };
 }
 
 test('a frame load or route acknowledgement cannot expose a previous instrument as the requested chart', async t => {
@@ -114,7 +115,7 @@ test('silent frame failure ends with retry and rejects late readiness from the f
   assert.equal(nextFrame.dataset.centerEpoch, '2');
   assert.equal(nextFrame.dataset.centerStatus, 'loading');
   assert.equal(f.document.querySelectorAll('.center-workspace-toolbar').length, 1, 'old portals are discarded with their failed document');
-  assert.equal(f.histories.length, historyCount + 1, 'retry may replace the current URL but never pushes a new entry');
+  assert.equal(f.histories.length, historyCount, 'retry does not rewrite chart settings or create a history entry');
   f.receive(f.ready('HYPE', 2), { source: oldFrame.contentWindow });
   oldFrame.dispatchEvent(new f.dom.Event('load'));
   retry.click();
@@ -159,5 +160,92 @@ test('non-chart workspaces acknowledge their actual page while legacy documents 
   legacy.contentDocument.documentElement.dataset.boot = 'error';
   legacy.contentDocument.dispatchEvent(new f.dom.Event('atlas:boot-error'));
   assert.equal(legacy.dataset.centerStatus, 'ready', 'the child error and its retry must remain reachable');
+  assert.equal(f.plot.querySelector('.atlas-center-loading'), null);
+});
+
+for (const phase of ['loading', 'error', 'ready']) test(`BFCache restoration rebinds a ${phase} chart without accepting stale readiness or writing URL state`, async t => {
+  const f = await fixture(t);
+  assert.equal(f.histories.length, 0, 'initial setup does not write URL state');
+  f.lifecycle('pageshow', false);
+  assert.equal(f.histories.length, 0, 'ordinary initial pageshow is not a chart edit');
+  f.select('TQQQ');
+  const frame = f.selectedFrame();
+  if (phase === 'error') f.advance(CENTER_LOADING_TIMEOUT_MS);
+  if (phase === 'ready') f.receive(f.ready('TQQQ', 1));
+  assert.equal(frame.dataset.centerStatus, phase);
+  // The browser restores this exact entry, including user-owned chart keys.
+  f.location.href = 'https://atlas.example/market-lab/charts/?symbol=TQQQ&granularity=weekly&axis=linear&view-start=2023-01-01&view-end=2026-01-01';
+  const restoredUrl = f.location.href, writes = f.histories.length;
+  f.lifecycle('pagehide', true);
+  assert.equal(f.timers.size, 0);
+  assert.equal(f.plot.querySelector('.atlas-center-loading'), null);
+  f.receive(f.ready('TQQQ', 1));
+  assert.equal(frame.dataset.centerStatus, phase, 'messages queued during suspension do not change the retired owner');
+  f.lifecycle('pageshow', true);
+  assert.equal(f.selectedFrame(), frame, 'BFCache keeps the actual child and its cached view');
+  assert.equal(frame.dataset.centerEpoch, '2');
+  assert.equal(frame.dataset.centerStatus, 'loading');
+  assert.equal(frame.inert, true);
+  assert.equal(f.timers.size, 1, 'the restored owner has a fresh finite deadline');
+  assert.ok(f.plot.querySelector('.atlas-skeleton'));
+  assert.deepEqual(f.posts.at(-1), { kind: 'atlas:center-navigate', page: 'rsi', symbol: 'TQQQ', epoch: 2 });
+  f.receive(f.ready('TQQQ', 1));
+  assert.equal(frame.dataset.centerStatus, 'loading', 'pre-cache acknowledgements cannot release the restored gate');
+  f.receive(f.ready('TQQQ', 2));
+  assert.equal(frame.dataset.centerStatus, 'ready');
+  assert.equal(frame.inert, false);
+  assert.equal(f.plot.querySelector('.atlas-center-loading'), null);
+  assert.equal(f.histories.length, writes);
+  assert.equal(f.location.href, restoredUrl);
+  f.lifecycle('pageshow', true);
+  assert.equal(frame.dataset.centerEpoch, '2', 'a repeated pageshow cannot restart an already restored owner');
+  assert.equal(f.histories.length, writes);
+});
+
+test('a BFCache-restored silent failure still exposes retry and retires its previous epoch', async t => {
+  const f = await fixture(t);
+  f.select('HYPE'); const retained = f.selectedFrame();
+  f.advance(CENTER_LOADING_TIMEOUT_MS);
+  const oldRetry = f.plot.querySelector('.atlas-center-error button');
+  const writes = f.histories.length;
+  f.lifecycle('pagehide', true);
+  f.lifecycle('pageshow', true);
+  oldRetry.click();
+  assert.equal(f.selectedFrame(), retained, 'the removed error action cannot revive the pre-cache request');
+  f.advance(CENTER_LOADING_TIMEOUT_MS);
+  assert.equal(retained.dataset.centerStatus, 'error');
+  const retry = f.plot.querySelector('.atlas-center-error button');
+  assert.ok(retry);
+  retry.click(); const current = f.selectedFrame();
+  assert.notEqual(current, retained);
+  assert.equal(current.dataset.centerEpoch, '3');
+  f.receive(f.ready('HYPE', 3), { source: retained.contentWindow });
+  assert.equal(current.dataset.centerStatus, 'loading');
+  f.receive(f.ready('HYPE', 3));
+  assert.equal(current.dataset.centerStatus, 'ready');
+  assert.equal(f.histories.length, writes, 'automatic recovery and explicit retry preserve the current URL entry');
+});
+
+test('BFCache restoration cannot replace a newer chart selection or restart a native chart', async t => {
+  const f = await fixture(t);
+  f.lifecycle('pageshow', true);
+  assert.equal(f.selectedFrame(), undefined);
+  assert.equal(f.histories.length, 0);
+  f.select('TQQQ');
+  f.lifecycle('pagehide', true);
+  f.select('SOXL');
+  const frame = f.selectedFrame(), writes = f.histories.length;
+  f.lifecycle('pageshow', true);
+  assert.equal(frame.dataset.centerEpoch, '2');
+  assert.equal(frame.title, 'SOXL 가격 차트');
+  assert.equal(f.histories.length, writes);
+  f.receive(f.ready('SOXL', 2));
+  assert.equal(frame.dataset.centerStatus, 'ready');
+  f.lifecycle('pagehide', true);
+  f.select('BTCUSD');
+  f.lifecycle('pageshow', true);
+  assert.equal(f.document.body.dataset.centerTool, undefined);
+  assert.equal(frame.hidden, true);
+  assert.equal(f.timers.size, 0);
   assert.equal(f.plot.querySelector('.atlas-center-loading'), null);
 });

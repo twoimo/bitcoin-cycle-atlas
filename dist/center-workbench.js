@@ -102,8 +102,21 @@ export function mountCenterWorkbench() {
     return host;
   }
   function clearCenterLoading(){loading?.destroy();loading=null;}
-  window.addEventListener('pagehide',clearCenterLoading);
   let epoch=0,selectionEpochFloor=0,activeIntentSerial=0;
+  let suspended=false,resumeCenter=null;
+  window.addEventListener('pagehide',event=>{
+    suspended=true;
+    resumeCenter=event?.persisted&&activePage&&frame?{page:activePage,symbol:activeSymbol,region:activeRegion,frame,epoch}:null;
+    clearCenterLoading();
+  });
+  window.addEventListener('pageshow',event=>{
+    suspended=false;
+    const pending=resumeCenter;resumeCenter=null;
+    if(!event.persisted||!pending||frame!==pending.frame||activePage!==pending.page||epoch!==pending.epoch)return;
+    // BFCache retains the child document, but pagehide retired its readiness
+    // owner. Rebind a fresh epoch without rewriting the restored chart URL.
+    open(pending.page,pending.symbol,{history:false,region:pending.region,preserveUrl:true});
+  });
   let lastSelection={epoch:-1,serial:0};
   let originalReader=null;
   let originalIdentity=null;
@@ -178,7 +191,7 @@ export function mountCenterWorkbench() {
     if (originalTitle) document.title=originalTitle;
     for (const item of document.querySelectorAll('[data-atlas-page]')) { const selected=item.dataset.atlasPage==='outlook';item.classList.toggle('active',selected);if(selected)item.setAttribute('aria-current','page');else item.removeAttribute('aria-current'); }
   }
-  function open(page,symbol,{history=true,region,intentSerial=0}={}) {
+  function open(page,symbol,{history=true,region,intentSerial=0,preserveUrl=false}={}) {
     // Direct dashboard entries do not initialize the chart host. A previously
     // mounted plot can also belong to a hidden outlook view. Navigate to the
     // shared shell instead of waiting for, or opening inside, an unavailable host.
@@ -191,7 +204,7 @@ export function mountCenterWorkbench() {
     // Native asset controllers retain the outer shell but replace their plot
     // during boot. Resolve the live owner instead of keeping a detached plot.
     plot=document.querySelector('.atlas-plot');
-    if (!plot) {waiting={page,symbol,history,region,intentSerial};return;}
+    if (!plot) {waiting={page,symbol,history,region,intentSerial,preserveUrl};return;}
     frameFocus?.destroy();frameFocus=null;
     clearCenterLoading();closeTray();controls.restore();legacyToolbar?.destroy();legacyToolbar=null;epoch++;
     activeIntentSerial=intentSerial;
@@ -242,7 +255,7 @@ export function mountCenterWorkbench() {
         frameFocus?.destroy();frameFocus=null;legacyToolbar?.destroy();legacyToolbar=null;
         focusOwner.hidden=true;focusOwner.remove();frames.delete(key);frame=null;
         toolbar.remove();toolbarHosts.delete(key);
-        open(retryPage,retrySymbol,{history:false,region:retryRegion});
+        open(retryPage,retrySymbol,{history:false,region:retryRegion,preserveUrl:true});
       },
     });
     if(existing && page.tab) frame.contentWindow.postMessage(navigateMessage(),location.origin);
@@ -256,8 +269,10 @@ export function mountCenterWorkbench() {
       legacyToolbar=mountLegacyWorkspaceToolbar({frame:owned,heading:document.querySelector('.atlas-canvas-heading'),host:toolbar,page:page.id,isActive:()=>frame===owned&&activePage?.id===page.id});
     }
     const url=centerHref(page,activeSymbol,activeRegion);
-    if(history)window.history.pushState(null,'',url);
-    else if(page.tab)window.history.replaceState(null,'',url);
+    if(!preserveUrl){
+      if(history)window.history.pushState(null,'',url);
+      else if(page.tab)window.history.replaceState(null,'',url);
+    }
   }
   function click(event) {
     if(event.button>0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
@@ -282,7 +297,7 @@ export function mountCenterWorkbench() {
     if(!instrument)return;event.preventDefault();open(atlasPages.find(page=>page.id===instrument.page),instrument.symbol,{region:instrument.page==='housing'?instrument.region:undefined});
   });
   window.addEventListener('message',event=>{
-    if(!frame||!activePage?.tab||event.source!==frame.contentWindow||event.origin!==location.origin)return;
+    if(suspended||!frame||!activePage?.tab||event.source!==frame.contentWindow||event.origin!==location.origin)return;
     if(loading?.status==='error')return;
     if(['atlas:rsi-state','atlas:chart-state'].includes(event.data?.kind)){
       if(controls.update(event.data)&&loading?.accept())frame.dataset.centerLoaded='true';
@@ -322,7 +337,7 @@ export function mountCenterWorkbench() {
   });
   const observer=new MutationObserver(()=>{
     plot=document.querySelector('.atlas-plot');if(!plot)return;observer.disconnect();
-    if(waiting){const target=waiting;waiting=null;open(target.page,target.symbol,{history:target.history,region:target.region,intentSerial:target.intentSerial});}
+    if(waiting){const target=waiting;waiting=null;open(target.page,target.symbol,{history:target.history,region:target.region,intentSerial:target.intentSerial,preserveUrl:target.preserveUrl});}
     else {
       const center=new URLSearchParams(location.search).get('center'),initial=location.pathname.includes('/market-lab/')?labPageFromLocation(location):atlasPages.find(page=>page.id===center);
       if(initial?.id&&initial.id!=='outlook')open(initial,new URLSearchParams(location.search).get('symbol'),{history:false,region:new URLSearchParams(location.search).get('region')});
