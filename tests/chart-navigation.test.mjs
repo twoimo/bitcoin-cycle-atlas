@@ -193,7 +193,9 @@ function navigationHarness(initial=range,extra={},surfaceTouch={}){
   let nextFrame=0;const frames=new Map();window.requestAnimationFrame=fn=>{frames.set(++nextFrame,fn);return nextFrame;};window.cancelAnimationFrame=id=>frames.delete(id);
   document.createElement=tag=>new TestElement(tag,document);
   const element=document.createElement('div'),svg=document.createElement('svg');
-  svg.style.touchAction=surfaceTouch.inline??'';svg.cssTouchAction=surfaceTouch.css??'auto';
+  if(surfaceTouch.style)svg.style=surfaceTouch.style;
+  else svg.style.touchAction=surfaceTouch.inline??'';
+  svg.cssTouchAction=surfaceTouch.css??'auto';
   window.getComputedStyle=node=>({touchAction:node.style.touchAction||node.cssTouchAction||'auto'});
   svg.dataset={plotLeft:'60',plotRight:'930',plotTop:'50',plotBottom:'440'};svg.viewBox={baseVal:{x:0,y:0,width:1000,height:500}};element.append(svg);document.activeElement=svg;
   let live={...initial},tool='crosshair',resets=0;const changes=[],copies=[],announcements=[];
@@ -234,6 +236,41 @@ test('chart touch policies leave sibling scroll owners unrestricted and restore 
   }
   const h=navigationHarness(range,{}, {inline:'pan-y',css:'none'});
   h.tool='pan';h.controller.update();h.controller.destroy();assert.equal(h.svg.style.touchAction,'pan-y','an authored inline policy is restored');
+});
+
+test('chart touch policies tolerate absent and non-callable optional priority readers',()=>{
+  for(const reader of [undefined,'']){
+    const restored=[],style={touchAction:'pan-y',
+      setProperty(name,value,priority){assert.equal(name,'touch-action');this.touchAction=value;restored.push({value,priority});}};
+    if(reader!==undefined)style.getPropertyPriority=reader;
+    const h=navigationHarness(range,{}, {style});
+    try{
+      assert.equal(h.svg.style.touchAction,'pan-y');assert.equal(h.element.style.touchAction,'auto');
+      h.tool='pan';h.controller.update();assert.equal(h.svg.style.touchAction,'none');
+      h.range=null;h.controller.update();assert.equal(h.svg.style.touchAction,'pan-y');
+      h.range={...range};h.controller.update();assert.equal(h.svg.style.touchAction,'none');
+    }finally{h.controller.destroy();}
+    assert.equal(h.svg.style.touchAction,'pan-y');assert.equal(h.element.style.touchAction,'original');
+    assert.ok(restored.length>0);assert.ok(restored.every(item=>item.value==='pan-y'&&item.priority===''));
+  }
+});
+
+test('chart touch policies preserve a callable CSS priority through inactivity and destruction',()=>{
+  let value='pan-y',priority='important',reads=0;
+  const restored=[],style={
+    get touchAction(){return value;},set touchAction(next){value=next;priority='';},
+    getPropertyPriority(name){assert.equal(this,style);assert.equal(name,'touch-action');reads++;return priority;},
+    setProperty(name,next,nextPriority){assert.equal(this,style);assert.equal(name,'touch-action');value=next;priority=nextPriority;restored.push({value,priority});},
+  };
+  const h=navigationHarness(range,{}, {style});
+  try{
+    assert.equal(reads,1);assert.equal(value,'pan-y');assert.equal(priority,'');
+    h.tool='pan';h.controller.update();assert.equal(value,'none');assert.equal(h.element.style.touchAction,'auto');
+    h.range=null;h.controller.update();assert.equal(value,'pan-y');assert.equal(priority,'important');
+    h.range={...range};h.controller.update();assert.equal(value,'none');assert.equal(priority,'');
+  }finally{h.controller.destroy();}
+  assert.equal(value,'pan-y');assert.equal(priority,'important');assert.equal(reads,1);
+  assert.ok(restored.length>0);assert.ok(restored.every(item=>item.value==='pan-y'&&item.priority==='important'));
 });
 
 test('wheel zoom anchors to the pointer; controls and browser zoom outside the plot stay untouched',()=>{

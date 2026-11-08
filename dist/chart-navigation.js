@@ -182,7 +182,7 @@ export function bindChartNavigation({
     // their shared parent also disables their native horizontal gestures.
     element.style.touchAction='auto';restoreSurfaceTouchActions();
     const svg=range&&chartSvg();if(!svg)return;
-    if(!surfaceTouchActions.has(svg))surfaceTouchActions.set(svg,{value:svg.style.touchAction??'',priority:svg.style.getPropertyPriority?.('touch-action')||''});
+    if(!surfaceTouchActions.has(svg))surfaceTouchActions.set(svg,{value:svg.style.touchAction??'',priority:typeof svg.style.getPropertyPriority==='function'?(svg.style.getPropertyPriority('touch-action')||''):''});
     const policy=window.getComputedStyle?.(svg)?.touchAction||svg.style.touchAction||'auto';
     // Preserve the old SVG/CSS intersection with pan-y pinch-zoom, including
     // BTC/ETH's existing none policy. Re-read CSS after resize/replay changes.
