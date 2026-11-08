@@ -2,6 +2,13 @@
  * No production URL, freshness rule, price value or error is changed here.
  * A true result is only eligibility; the caller must verify the actual document's
  * failed-refresh UI and preserved archive cutoff before accepting its request ID. */
+export function ownsOfflineBtcPriceReadout(document={}){
+  // A hosted center can retain the native parent's outlook/BTC identity while
+  // replacing its price readout. Ownership comes from the active workspace,
+  // never from whether a quote happens to exist or match the expected value.
+  return document.page==='outlook'&&(document.center==null||document.center==='');
+}
+
 export function offlineBtcRefreshSurface(spec,document={}){
   if(spec?.consolidated!==true)return spec?.surface;
   if(spec.page!=='workspace-consolidated'||spec.surface!==undefined||document.preview===true)return undefined;

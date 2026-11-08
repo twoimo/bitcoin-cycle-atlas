@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {isExpectedOfflineBtcRefresh,offlineBtcRefreshSurface} from './btc-offline-refresh-policy.mjs';
+import {isExpectedOfflineBtcRefresh,offlineBtcRefreshSurface,ownsOfflineBtcPriceReadout} from './btc-offline-refresh-policy.mjs';
 // PR-only verification of checked-out dist files. Does not deploy or alter UI.
 import assert from 'node:assert/strict';
 import {verifyWorkspaceSurface,readNativeInteractiveTarget} from './verify-workspace-browser.mjs';
@@ -947,7 +947,10 @@ async function main(){
         const observed=await until(async()=>{const value=await read();return value?.title==='갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.'&&value.disabled===false&&!value.busy?value:null;},'explicit failed offline refresh state');
         assert.equal(observed.cutoff,'관측 · '+expectedBtc.asOf.replaceAll('-','.')+' UTC');
         const notice=observed.notice;
-        receipt.lastRefreshObservation={phase,observed};
+        const priceDisplayed=ownsOfflineBtcPriceReadout(observed);
+        const priceReadoutOwner={page:observed.page??null,nativeSymbol:observed.nativeSymbol??null,
+          activeCenter:observed.center??null,btcPriceExpected:priceDisplayed};
+        receipt.lastRefreshObservation={phase,observed,priceReadoutOwner};
         assert.equal(notice.visible,true,'The refresh failure must be visibly disclosed');
         assert.equal(notice.state,'failed');assert.equal(notice.summary,'비트코인 일별 갱신 실패');
         assert.equal(notice.detail,expectedBtc.asOf.replaceAll('-','.')+' UTC 자료 유지');
@@ -958,8 +961,8 @@ async function main(){
         if(notice.viewportWidth<=620)assert.ok(notice.retryBox.width>=44&&notice.retryBox.height>=44,'Refresh retry must remain touch-sized');
         assert.equal(notice.liveRole,'status');assert.equal(notice.livePoliteness,'polite');assert.equal(notice.liveAtomic,'true');
         assert.equal(notice.duplicateAnnouncements,1,'BTC refresh results must have one live announcement owner');
-        const priceDisplayed=observed.page==='outlook';
         if(priceDisplayed){
+          assert.equal(observed.nativeSymbol,'BTCUSD','The active BTC price readout must retain BTC ownership');
           assert.equal(observed.price,expectedBtc.formattedPrice);
           assert.equal(observed.priceDate,expectedBtc.asOf.replaceAll('-','.')+' UTC');
           assert.equal(observed.priceKind,'observed');
@@ -976,7 +979,7 @@ async function main(){
           isExpectedOfflineBtcRefresh(error,{surface,archiveAsOf:expectedBtc.asOf}));return matches.length?matches:null;},'identified blocked refresh request');
         assert.equal(candidates.length,1,'Each verified refresh attempt must bind to exactly one new blocked request');
         for(const error of candidates)validatedOfflineRequestIds.add(error.requestId);
-        receipt.expectedOfflineRefresh.push({phase,surface,frameId:frame.id,loaderId:frame.loaderId,observed,
+        receipt.expectedOfflineRefresh.push({phase,surface,frameId:frame.id,loaderId:frame.loaderId,observed,priceReadoutOwner,
           requestIds:candidates.map(error=>error.requestId),archiveSha256:expectedBtc.archiveSha256,
           archiveAsOf:expectedBtc.asOf,displayedPriceVerified:priceDisplayed,displayedPricePrecision:'USD rounded to 2 decimals',
           failureTitleVerified:true,persistentVisibleErrorVerified:true,noticeVisibilityScope:consolidatedEvidence?'active evidence child and actual parent viewport':preview?'child-document viewport; parent reachability checked separately':'actual viewport',
