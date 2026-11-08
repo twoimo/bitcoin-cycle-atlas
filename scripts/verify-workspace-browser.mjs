@@ -755,6 +755,10 @@ export async function verifyWorkspaceSurface(api) {
   receipt.workspace.symbolSelection=option;
   await key('Tab','Tab',9);await focused('.symbol-search-dialog');await escape('.symbol-search-dialog');
   await command('__atlas_no_matching_command__',{empty:true});
+  const candleSettingsCheck=page==='workspace-btc'&&width===1440;
+  const originalChartType=candleSettingsCheck?await evaluate(cdp,()=>document.querySelector('#lab-chart').dataset.chartType):null;
+  if(candleSettingsCheck&&originalChartType!=='candles')await click(cdp,'#workbench-chart-type');
+  if(candleSettingsCheck)await until(()=>evaluate(cdp,()=>document.querySelector('#lab-chart').dataset.chartType==='candles'&&Number(document.querySelector('#lab-chart').dataset.observedCandleCount)>0),'BTC observed candles before opening settings');
   await command('차트 설정');
   await inspect('#chart-reader','settings');
   assert.equal(await evaluate(cdp,()=>document.querySelector('#chart-reader').dataset.kind),'settings');
@@ -766,8 +770,38 @@ export async function verifyWorkspaceSurface(api) {
   });
   if(panelBoundary.railVisible)assert.equal(panelBoundary.overlap,0,'Settings panel and right rail must occupy separate areas');
   receipt.workspace.settingsPanelBoundary=panelBoundary;
+  if(candleSettingsCheck){
+    await until(()=>evaluate(cdp,()=>{const svg=document.querySelector('#lab-chart'),b=svg.getBoundingClientRect(),v=svg.viewBox.baseVal;return Math.abs(b.width-v.width)<=1&&Math.abs(b.height-v.height)<=1;}),'open-settings candle SVG resize');
+    const candleSettings=await evaluate(cdp,()=>{
+      const svg=document.querySelector('#lab-chart'),b=svg.getBoundingClientRect(),v=svg.viewBox.baseVal;
+      const box=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom};};
+      const ticks=[...svg.querySelectorAll('[data-price-axis-label="tick"]')].filter(el=>el.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})).map(el=>({...box(el),text:el.textContent}));
+      const candles=[...svg.querySelectorAll('.observed-candle,.observed-candles-batched')];
+      const clips=[...new Set(candles.map(el=>el.closest('[clip-path]')?.getAttribute('clip-path')).filter(Boolean))].map(value=>{
+        const id=value.match(/^url\(#(.+)\)$/)?.[1],rect=id&&svg.querySelector(`[id="${id}"] rect`);
+        if(!rect)return null;
+        const x=Number(rect.getAttribute('x')),y=Number(rect.getAttribute('y')),width=Number(rect.getAttribute('width')),height=Number(rect.getAttribute('height'));
+        if(!(width>0&&height>0))return null;
+        return {left:b.left+(x-v.x)/v.width*b.width,right:b.left+(x+width-v.x)/v.width*b.width,
+          top:b.top+(y-v.y)/v.height*b.height,bottom:b.top+(y+height-v.y)/v.height*b.height};
+      });
+      return {type:svg.dataset.chartType,count:Number(svg.dataset.observedCandleCount),chart:box(svg),
+        plotRight:b.left+(Number(svg.dataset.plotRight)-v.x)/v.width*b.width,ticks,candleNodes:candles.length,clips,
+        panel:box(document.querySelector('#chart-reader')),rail:box(document.querySelector('.workbench-rail'))};
+    });
+    assert.equal(candleSettings.type,'candles');assert.ok(candleSettings.count>0&&candleSettings.candleNodes>0&&candleSettings.ticks.length>0,'Open settings must exercise actual candles and painted price ticks');
+    assert.ok(candleSettings.panel.right<=candleSettings.rail.left+1,'The rail overlaps the open candle settings panel');
+    assert.ok(candleSettings.clips.length>0&&candleSettings.clips.every(clip=>clip&&clip.right<=candleSettings.plotRight+1),'Candle paint must stop at the measured plot edge while settings is open');
+    for(const tick of candleSettings.ticks)assert.ok(tick.left>=candleSettings.plotRight-1&&tick.right<=candleSettings.chart.right+1,'Open candle settings moved price ticks over candles: '+JSON.stringify({tick,plotRight:candleSettings.plotRight,chart:candleSettings.chart}));
+    receipt.workspace.candleSettingsBoundary=candleSettings;
+    await screenshot(cdp,'workspace-btc-candles-settings-open.png',receipt);
+  }
   await key('Escape','Escape',27);
   assert.equal(await evaluate(cdp,()=>document.querySelector('#chart-reader').hidden),true);
+  if(candleSettingsCheck&&originalChartType!=='candles'){
+    await click(cdp,'#workbench-chart-type');
+    await until(()=>evaluate(cdp,type=>document.querySelector('#lab-chart').dataset.chartType===type,originalChartType),'restore BTC chart type after open-settings check');
+  }
   await click(cdp,'#atlas-mode-menu');
   await inspect('#indicator-library','indicators',{dialog:true});
 
@@ -852,13 +886,31 @@ export async function verifyWorkspaceSurface(api) {
               top:Math.max(plot.top,r.top-stroke*b.height/v.height),bottom:Math.min(plot.bottom,r.bottom+stroke*b.height/v.height)};
             return clipped.right>clipped.left&&clipped.bottom>clipped.top?[clipped]:[];
           });
+          const cycleTags=boxes('.cycle-marker-label-bg'),historyTags=boxes('.history-event-marker.has-label > rect');
+          const headers=boxes('#lab-metrics,.workbench-market-info',svg.parentElement),badges=boxes('.chart-latest-price-tag > rect,.cross-price-tag > rect');
+          const obstacles=[...cycleTags,...historyTags,...evidence,...headers,...badges],periodPaint=[],strokeCollisions=[];
+          for(const el of svg.querySelectorAll('.cycle-interval-line,.cycle-interval-cap,.cycle-interval-continuation,.cycle-interval-end-arrow')){
+            if(strokeCollisions.length>20)break;
+            if(!el.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}))continue;
+            const length=el.getTotalLength();if(!(length>0))continue;
+            const matrix=el.getScreenCTM(),style=getComputedStyle(el),radius=(parseFloat(style.strokeWidth)||0)/2*Math.max(Math.hypot(matrix.a,matrix.b),Math.hypot(matrix.c,matrix.d));
+            const count=Math.max(1,Math.ceil(length*2)),interval=el.closest('[data-cycle-interval]').dataset.cycleInterval;
+            periodPaint.push({interval,class:el.getAttribute('class'),bounds:rect(el),samples:count+1});
+            for(let index=0;index<=count;index++){
+              const point=el.getPointAtLength(length*index/count).matrixTransform(matrix);
+              const sample={left:Math.max(plot.left,point.x-radius),right:Math.min(plot.right,point.x+radius),top:Math.max(plot.top,point.y-radius),bottom:Math.min(plot.bottom,point.y+radius)};
+              for(const obstacle of obstacles)if(Math.min(sample.right,obstacle.right)-Math.max(sample.left,obstacle.left)>.1&&Math.min(sample.bottom,obstacle.bottom)-Math.max(sample.top,obstacle.top)>.1){
+                strokeCollisions.push({interval,class:el.getAttribute('class'),point:{x:point.x,y:point.y},sample,obstacle});break;
+              }
+              if(strokeCollisions.length>20)break;
+            }
+          }
           return {width:innerWidth,height:innerHeight,pageWidth:document.documentElement.scrollWidth,
             chart:{left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height,viewWidth:v.width,viewHeight:v.height},
             plotRight:b.left+(Number(svg.dataset.plotRight)-v.x)/v.width*b.width,
             events:boxes('.history-event-marker.has-label > text'),periods:boxes('.cycle-interval-label'),
-            evidence,
-            headers:boxes('#lab-metrics,.workbench-market-info',svg.parentElement),
-            ticks:boxes('[data-price-axis-label="tick"]'),badges:boxes('.chart-latest-price-tag > rect,.cross-price-tag > rect'),
+            evidence,cycleTags,historyTags,periodPaint,strokeCollisions,headers,
+            ticks:boxes('[data-price-axis-label="tick"]'),badges,
             dates:boxes('.cross-date-tag > rect'),timeTicks:boxes('.price-time-label,.market-time-label')};
         });
         const overlaps=(a,b)=>Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1;
@@ -867,6 +919,8 @@ export async function verifyWorkspaceSurface(api) {
         for(const event of qa.events)for(const period of qa.periods)assert.ok(!overlaps(event,period),'Historical label covers period comparison: '+JSON.stringify({qaWidth,qaHeight,event,period}));
         assert.ok(qa.headers.length===2&&qa.ticks.length>0,'Source/quote headers and actual price ticks must be present');
         assert.ok(qa.evidence.length>=4&&qa.periods.length>0,'Model evidence and visible period labels must be present for the collision check');
+        assert.ok(qa.cycleTags.length>0&&qa.periodPaint.length>0,'Cycle tags and visible period strokes must be present for the collision check');
+        assert.deepEqual(qa.strokeCollisions,[],'A period line or arrow crosses a cycle/history/evidence tag, HUD or price badge: '+JSON.stringify({qaWidth,qaHeight,collisions:qa.strokeCollisions}));
         for(const evidence of qa.evidence)for(const period of qa.periods)assert.ok(!overlaps(evidence,period),'Model evidence control covers period text: '+JSON.stringify({qaWidth,qaHeight,evidence,period}));
         for(const tick of qa.ticks){
           assert.ok(tick.left>=qa.plotRight-1&&tick.right<=qa.chart.right+1,'Price tick escapes its reserved axis gutter: '+JSON.stringify({qaWidth,qaHeight,tick,plotRight:qa.plotRight}));

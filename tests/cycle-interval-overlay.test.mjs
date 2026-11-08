@@ -132,6 +132,47 @@ test('ordinary HUDs use horizontal label gaps and bottom-docked controls keep co
   assert.ok(docked.items[0].labelBox && !overlap(docked.items[0].labelBox, transport));
 });
 
+test('fixed tags clear the painted period and arrow strokes without changing UTC endpoints, rows or duration', () => {
+  for (const extra of [{}, { kind: 'scenario', provisional: true }]) {
+    const source = Object.freeze(interval('fixed-period', 'cycle-top-bottom', '2020-01-01', '2025-01-01', extra));
+    const config = options({ intervals: [source], activeIntervalId: source.id }), before = cycleIntervalsOverlayMarkup(config), original = before.items[0];
+    const obstacles = [
+      { x: (original.x1 + original.x2) / 2 - 32, y: original.y - 9, width: 64, height: 18 },
+      { x: original.x1 - 1, y: original.y - 6, width: 3, height: 4 },
+      { x: original.x2 - 1, y: original.y + .8, width: 3, height: 5 },
+    ];
+    const after = cycleIntervalsOverlayMarkup({ ...config, obstacles }), item = after.items[0];
+    assert.deepEqual([item.x1, item.x2, item.rawX1, item.rawX2, item.y, item.days, item.duration],
+      [original.x1, original.x2, original.rawX1, original.rawX2, original.y, original.days, original.duration]);
+    assert.equal(after.visibleCount, before.visibleCount);
+    assert.equal(groups(after.markup)[0]['aria-label'], groups(before.markup)[0]['aria-label']);
+    assert.ok(tags(after.markup, 'cycle-interval-line').length >= 2, 'paint on both sides of the fixed tag remains visible');
+    const shapes = [...after.markup.matchAll(/<(?:line|path) class="cycle-interval-(?:line|hit|cap|continuation|end-arrow)[^"]*"[^>]*>/g)].map(match => attrs(match[0]));
+    let sampled = 0;
+    for (const shape of shapes) {
+      const segments = [];
+      if ('x1' in shape) segments.push([Number(shape.x1), Number(shape.y1), Number(shape.x2), Number(shape.y2)]);
+      else {
+        let point;
+        for (const [, command, a, b] of (shape.d || '').matchAll(/([MLV])(-?[\d.]+)(?:,(-?[\d.]+))?/g)) {
+          const next = command === 'V' ? [point[0], Number(a)] : [Number(a), Number(b)];
+          if (command !== 'M') segments.push([...point, ...next]);
+          point = next;
+        }
+      }
+      const radius = Number(shape['stroke-width']) / 2;
+      for (const [x1, y1, x2, y2] of segments) for (let step = 0; step <= 40; step++) {
+        const x = x1 + (x2 - x1) * step / 40, y = y1 + (y2 - y1) * step / 40;
+        for (const box of obstacles) assert.ok(x + radius + 1 <= box.x || x - radius - 1 >= box.x + box.width ||
+          y + radius + 1 <= box.y || y - radius - 1 >= box.y + box.height, 'paint and its hit stroke leave a readable gap around fixed tags');
+        sampled++;
+      }
+    }
+    assert.ok(sampled > 160, 'the regression checks surviving lines and partial arrow/cap strokes');
+    assert.equal(cycleIntervalsOverlayMarkup(config).markup, before.markup, 'removing an obstacle restores the exact original period');
+  }
+});
+
 test('price segments can shift labels horizontally but can never move a duration row upward', () => {
   const config = options({ intervals: [interval('main', 'bottom-bottom', '2020-01-01', '2025-01-01')] });
   const clear = cycleIntervalsOverlayMarkup(config), normalY = clear.items[0].y;
