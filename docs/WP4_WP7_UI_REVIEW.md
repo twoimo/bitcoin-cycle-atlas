@@ -1,22 +1,22 @@
 # WP4 표기·리플레이 UI / WP7 셸 검토 보고서
 
-**통합 차트 UI의 새 네이티브 비교는 27/27 통과했고, 원본 JSON 3개와 PNG 19개를 모두 확보했다. MSTR·BMNR의 두 진입 경로, BTC 여섯 뷰포트의 범례·리플레이, 12종목 셸을 확인했다. 진단 소스는 `03dcd1b`이며 애플리케이션은 PR #78 병합 `dbd3b70`과 같다. 최신 운영 대상 `5393cfa`의 정식 모델은 13/13 게이트·3074/3074 테스트를 통과했다. 후속 퍼블리케이션 검증·공개 배포 반영·운영 화면 확인은 아직 대기다.**
+**현재 운영 배포 판정은 실패다. main `5393cfa`의 정식 모델은 13/13 게이트·3074/3074 테스트를 통과했지만, 후속 consumer `e0d7b526…`의 네이티브 53개 사례에서 44개 통과·9개 실패가 확인되어 배포할 수 없다. 리플레이 범례 설명 3건과 모바일 상단 그룹 접근 6건에 대한 수정 `bf89e78`·`c11234d`를 푸시했으며 PR #81 병합과 브라우저 재검증은 아직 대기다. 공개 서비스는 마지막 관찰 기준 `bd5b70a`다.**
 
 | 현재 확인 단계 | 결과 | 근거 |
 |---|---|---|
-| 관련 구현 반영 | PR #75·#76·#78 병합 완료 | 진입·BTC 범례·리플레이·셸 및 후속 geometry·formal 검증기 수정. 적용·검증 범위는 2절에 명시 |
-| 최신 네이티브 UI 비교 | **27/27 통과**, `03dcd1b` | [4acab 총괄 영수증](ui-review-20261108/native-4acab/ui-review/diagnostic.json). before 6/6, after 21/21 |
-| MSTR·BMNR × 두 경로 | **4/4 통과** | 올바른 종목의 실제 차트 표시, 최종 스켈레톤 0개 |
-| BTC 범례·리플레이 | 범례 화면 초과 **6크기 모두 0px**, 1440 리플레이 잘림 **0개** | 3절의 새 원본 측정. 모바일 스크롤 영역 밖 항목도 별도 공개 |
-| 12종목 셸 | **모두 통과** | 상단 10 / 하단 8 기능 그룹, 좌 11 / 우 11 슬롯, 현재 종목의 접근성 이름 |
-| 브라우저 이미지·원본 | **PNG 19/19 + JSON 3/3 확보** | [manifest](ui-review-20261108/native-4acab/manifest.json), [22파일 독립 대조](ui-review-20261108/native-4acab/independent-file-check.json). 직접 수신 8개 + 동일 SHA 보완 11개 |
-| 최신 정식 모델 단계 | `5393cfa` **13/13 게이트·3074/3074 테스트 통과** | [모델 영수증](ui-review-20261108/production-5393/model-gates-selected.json), [성공 종료 상태](ui-review-20261108/production-5393/model-final-status.json) |
-| 최신 운영 대상 | main **`5393cfafe18ac89bb85c319e622b43e5db0cc7e0`** | PR #79 relay 변경. [진단 소스와의 정확한 차이](ui-review-20261108/production-source-comparison-5393.json) |
-| 최신 대상의 영향 범위·정적 검사 | **19/19 테스트**, **930개 파일·954개 참조 통과** | [테스트](ui-review-20261108/local-verification/5393-relay-entry-tests.log), [정적 검사](ui-review-20261108/local-verification/verify-static-5393.log) |
-| 모델 영수증 게시 / 후속 실행 | **게시·정확한 바이트 재확인 완료 / consumer 대기** | [게시 영수증](ui-review-20261108/production-5393/model-publication.json). consumer `e0d7b526…` 요청 확인 |
-| 운영 전체 CI / 공개 반영·화면 | **확인 대기** | 정식 consumer 결과 대기. 마지막 공개 관찰 `sourceCommit`은 `bd5b70a` |
+| 정식 consumer, `5393cfa` | **실패 — 53개 관찰 중 44 PASS / 9 FAIL** | [실패 원본 선택 영수증](ui-review-20261108/production-5393/consumer-failure-selected.json). 선행 7개 게이트 통과 후 native-browser 실패 |
+| 실패 수정 | **`bf89e78`·`c11234d` 푸시, PR #81 병합 전** | 리플레이 설명 보존·모바일 단일 스크롤 소유자 복구. 정식 브라우저 재검증 대기 |
+| 수정의 로컬 검증 | **관련 65/65·22/22, static 930개 파일·954개 참조 통과** | 4절. 이 결과를 수정 후 브라우저 통과로 표시하지 않음 |
+| 이전 소스의 보조 UI 비교 | **27/27 통과**, `03dcd1b` | [4acab 총괄 영수증](ui-review-20261108/native-4acab/ui-review/diagnostic.json). before 6/6, after 21/21; 앱은 `dbd3b70`과 동일 |
+| 그 진단의 MSTR·BMNR × 두 경로 | **4/4 통과** | 올바른 종목의 실제 차트 표시, 최종 스켈레톤 0개 |
+| 그 진단의 BTC 범례·리플레이 | 범례 화면 초과 **6크기 모두 0px**, 1440 리플레이 잘림 **0개** | 3절의 `03dcd1b` 측정. 모바일 스크롤 영역 밖 항목도 별도 공개 |
+| 그 진단의 12종목 셸 | **1440×900에서 모두 통과** | 상단 10 / 하단 8 기능 그룹, 좌 11 / 우 11 슬롯, 현재 종목의 접근성 이름. 이후 드러난 모바일 접근 실패와 구분 |
+| 그 진단의 이미지·원본 | **PNG 19/19 + JSON 3/3 확보** | [manifest](ui-review-20261108/native-4acab/manifest.json), [22파일 독립 대조](ui-review-20261108/native-4acab/independent-file-check.json). 직접 수신 8개 + 동일 SHA 보완 11개 |
+| `5393cfa` 정식 모델 단계 | **13/13 게이트·3074/3074 테스트 통과** | [모델 영수증](ui-review-20261108/production-5393/model-gates-selected.json), [성공 종료 상태](ui-review-20261108/production-5393/model-final-status.json) |
+| 모델 영수증 게시 | **게시·정확한 바이트 재확인 완료** | [게시 영수증](ui-review-20261108/production-5393/model-publication.json). 사이트 배포와 별개 |
+| 공개 반영·운영 화면 | **미완료** | 실패한 `5393cfa`의 배포는 진행할 수 없음. 수정 병합 소스의 전체 CI·공개 `sourceCommit`·브라우저 확인이 필요 |
 
-코드 커밋, 로컬 검증, 보조 UI 진단, 정식 모델 게이트와 공개 배포를 각각 구분한다. 3절은 새 `4acab602-49a5-470e-9935-20005e98e5a3` 실행의 원본에서 다시 추출했다. 이전 24e 실행은 원래 파일과 통과 판정을 보존하고 부록 C로 옮겼다.
+코드 커밋, 로컬 검증, 보조 UI 진단, 정식 모델·consumer 게이트와 공개 배포를 각각 구분한다. 3절의 27/27 결과와 측정은 `4acab602-49a5-470e-9935-20005e98e5a3`가 실행한 **수정 전 소스 `03dcd1b`의 결과로 보존**한다. `bf89e78`·`c11234d`의 통과 판정으로 승격하지 않는다. 이전 24e 실행은 원래 파일과 판정을 부록 C에 보존했다.
 
 ## 1. 적용 소스와 배포 대상
 
@@ -30,22 +30,23 @@
 | PR #78 병합 | `dbd3b70e567c3047524e6a0e3b5d01b1dc9d910d` · [PR #78](https://github.com/twoimo/bitcoin-cycle-atlas/pull/78), 정식 모델 13/13 통과 소스 |
 | 이번 4acab 진단 소스 | **`03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9`** · `dbd3b70`에 PNG 로그 전송 필터만 추가 |
 | 진단 애플리케이션 `dist` | **`a836349f38c7e65835c239dc9f7d74a362241452`** · `dbd3b70`과 동일 |
-| 최신 main / 운영 검증·배포 대상 | **`5393cfafe18ac89bb85c319e622b43e5db0cc7e0`** · [PR #79](https://github.com/twoimo/bitcoin-cycle-atlas/pull/79) relay 화면·자산 URL 버전 변경 |
-| 같은 작업 브랜치의 통합 | `c9e6e3b32f8a24eff338c72599c041ff723a4c04` · 최신 main과 기존 증거 보존 |
-| 최신 운영 대상의 `dist` | `ca187d8c2d4a7feae3d7a83e05755f6e985bad07` · relay 변경 때문에 진단 `dist`와 다름 |
+| 현재 main / 실패한 운영 후보 | **`5393cfafe18ac89bb85c319e622b43e5db0cc7e0`** · [PR #79](https://github.com/twoimo/bitcoin-cycle-atlas/pull/79) 포함. 정식 consumer 실패로 배포 불가 |
+| 같은 작업 브랜치의 main 통합 | `c9e6e3b32f8a24eff338c72599c041ff723a4c04` · `5393cfa`와 기존 증거 보존 |
+| 후속 실패 수정 / 병합 상태 | **`bf89e78`·`c11234d`**, [PR #81](https://github.com/twoimo/bitcoin-cycle-atlas/pull/81) 병합 전 · 수정 후 정식 브라우저 재검증 필요 |
+| 실패한 `5393cfa` 후보의 `dist` | `ca187d8c2d4a7feae3d7a83e05755f6e985bad07` · relay 변경 때문에 진단 `dist`와 다름. 후속 수정 소스의 해시와 구분 |
 | 공개 운영 관찰 | `2026-11-08 16:55 UTC`의 `sourceCommit`: `bd5b70a96e1fab466ee6648c2c07db882b02681f` · 이번 UI 반영 확인 전 |
 
 변경 전 기준은 사용자가 실제 문제를 재현한 운영 배포 `1635f87`이다. 이전 보고서의 `04860c2`는 그 이후 WP3 소스이므로 운영 변경 전 화면으로 취급하지 않는다.
 
 새 진단 `03dcd1b`와 PR #78 main `dbd3b70`의 `dist`는 동일하다. 두 소스의 차이는 `scripts/ui-review-log-filter.cjs` 하나이며, 원본 판정·assertion·런타임·기존 운영 게이트는 유지했다. [소스 비교](ui-review-20261108/native-4acab/source-comparison.json)와 [정식 작업 비교](ui-review-20261108/native-4acab/production-job-comparison.json)에 그 범위를 기록했다.
 
-그 뒤 main `5393cfa`에는 PR #79가 추가됐다. [파일별 비교 영수증](ui-review-20261108/production-source-comparison-5393.json)에 따르면 변경 15개 파일 중 12개 `dist` 경로는 `?v=1.37.1` → `?v=1.37.7` 문자열 변경뿐이다. 이 12개는 `app.js`·`site-entry.js`와 루트·Market Lab의 HTML 10개다. 나머지는 relay 화면 전용 `relay-room.js`·`relay-room.css`와 해당 테스트다. **실제 차트 JS·CSS는 바뀌지 않았지만 진입 파일과 전체 `dist`는 달라졌다.** 따라서 27/27 판정은 원래 진단 소스 `03dcd1b`에 귀속하며 `5393cfa`를 직접 실행한 결과로 표시하지 않는다. 최신 대상은 영향 범위 19개·정적 검사와 운영 전체 CI·공개 브라우저 관찰로 따로 확인한다.
+그 뒤 main `5393cfa`에는 PR #79가 추가됐다. [파일별 비교 영수증](ui-review-20261108/production-source-comparison-5393.json)에 따르면 변경 15개 파일 중 12개 `dist` 경로는 `?v=1.37.1` → `?v=1.37.7` 문자열 변경뿐이다. 이 12개는 `app.js`·`site-entry.js`와 루트·Market Lab의 HTML 10개다. 나머지는 relay 화면 전용 `relay-room.js`·`relay-room.css`와 해당 테스트다. **실제 차트 JS·CSS는 바뀌지 않았지만 진입 파일과 전체 `dist`는 달라졌다.** 따라서 27/27 판정은 원래 진단 소스 `03dcd1b`에 귀속하며 `5393cfa`를 직접 실행한 결과로 표시하지 않는다. `5393cfa`의 영향 범위 19개·정적 검사는 통과했으나, 정식 consumer는 5절의 9개 실패로 배포를 차단했다. 후속 `bf89e78`·`c11234d`는 실제 차트 설명과 셸 CSS를 바꾸므로 이 동일성 비교를 수정 후 소스에 확대하지 않는다.
 
 이전 `f5b1a874` → `5df078d`의 UI 소스 145개 동일 판정은 [당시 영수증](ui-review-20261108/production-source-comparison.json)의 범위에만 적용된다. 후속 PR #76과 #79의 변경에 그 판정을 확대하지 않는다. 구현·병합·진단·문서 증거 커밋의 자세한 이력은 부록에 보존했다.
 
 ## 2. 현재 구현과 동작
 
-P0·WP4·WP7 구현 위에 PR #76의 예측 갱신 대기 중 geometry 보존 변경을 통합했다. 아래는 현재 구현 설명이며, 4acab 브라우저 진단의 실제 적용·검증 범위를 항목별로 구분한다. 최신 main `5393cfa`의 relay 변경과 운영 확인 범위는 1·5절에 구분한다.
+P0·WP4·WP7 구현 위에 PR #76의 예측 갱신 대기 중 geometry 보존 변경을 통합했다. 현재 작업 브랜치에는 정식 consumer에서 드러난 범례 설명·모바일 스크롤 실패를 고친 `bf89e78`·`c11234d`도 있다. 아래 구현 설명과 4acab가 검사한 이전 소스의 범위는 구분하며, 두 후속 수정의 브라우저 결과는 아직 없다. 현재 main `5393cfa`의 실패와 후속 병합·재검증 상태는 5절에 명시한다.
 
 ### P0 — MSTR·BMNR 진입과 로딩 실패
 
@@ -72,7 +73,7 @@ BTC의 공통 가격·사이클 범례는 실제 SVG 가격 플롯의 왼쪽·�
 | 모델 근거 문구·거시 시계·사건 라벨 | 범례와 다른 HUD의 측정 영역을 피해 문구 상자 배치 | 날짜·가격 기준점 유지, 읽을 수 있는 문구 또는 상세 진입점 유지 |
 | 기간선·하단 리플레이 조작부 | 범례·가격축·사이클 정보와 별도의 안전영역을 사용 | 정보 가림 없음, 선택 모드 전환 전후 막대 y 동일 |
 
-범례 시트는 숨겨진 항목을 포함한 전체 의미를 보존한다. `실선 · 관측 사후 기준`, `점선 · 잠정·가정`, 거시 시계와 예시 경로의 구분도 목록에 포함한다. 닫기 및 Escape 후에는 실제로 보이는 열기 버튼으로 포커스가 돌아가야 한다. 리플레이 중에도 범례가 같은 우상단 배치 규칙을 사용해야 한다.
+범례 시트는 숨겨진 항목을 포함한 전체 의미를 보존해야 한다. 정식 consumer에서는 리플레이의 `◇ 거시 시계 · ○ 예시 경로` 설명 누락이 확인됐다. 후속 `bf89e78`은 이 설명을 실제 화면 데이터에 복원하고 전체 범례의 의미도 검사한다. `실선 · 관측 사후 기준`, `점선 · 잠정·가정` 설명은 유지하며 수정 후 네이티브 재검증은 대기다. 닫기 및 Escape 후에는 실제로 보이는 열기 버튼으로 포커스가 돌아가야 한다. 리플레이 중에도 범례가 같은 우상단 배치 규칙을 사용해야 한다.
 
 구현 근거: [범례 배치 함수](../dist/ui/chart-legend-layout.js), [범례 컨트롤러](../dist/ui/chart-legend.js), [범례 스타일](../dist/ui/chart-legend.css), [가격 차트의 안전영역 통합](../dist/atlas-price-chart.js).
 
@@ -98,6 +99,8 @@ hosted 차트를 표시할 때 배경 BTC 영역을 숨기는 CSS는 baseline `1
 ### WP7-D·WP4-B — 공통 셸, URL, 리플레이
 
 상단은 종목·간격·차트 유형·지표·종목 기능·변경 기록·명령 검색·차트 메뉴·내보내기·설정의 **10개 기능 그룹**을 고정 순서로 사용한다. 종목 특화 컨트롤은 모두 5번째 그룹에 둔다. 하단은 기간·날짜·사건·표시 범위·눈금·자동 맞춤·전체 맞춤·상태의 8개 기능 그룹을 사용한다. 좌우 도구의 순서와 폭, 비활성 사유, 실제 종목의 접근성 이름은 각 종목의 원래 컨트롤을 유지한 상태에서 검사한다.
+
+정식 consumer의 모바일 실패를 분석한 결과, 5번째 종목 기능 그룹의 별도 스크롤 영역이 바깥 상단 행으로 전달되어야 할 터치·휠 이동을 가로막았다. `c11234d`는 620px 이하에서 이 내부 그룹의 폭 제한·스크롤을 해제하고 바깥 상단 행 하나가 스크롤을 소유하도록 바꿨다. BTC·ETH·MSTR·BMNR·hosted 차트에 같은 규칙을 적용하며 그룹 순서와 44px 조작 목표는 유지한다. 구조 회귀는 통과했지만 실제 손가락 스크롤·주택 요약 접근의 브라우저 재검증은 아직 대기다.
 
 이번 WP7 범위는 **10개 기능 그룹의 순서와 5번째 그룹으로의 종목 기능 집약**이다. [셸 구현](../dist/ui/shell-slots.js)은 기존 컨트롤 노드를 실제 그룹 안으로 이동시키고 순서를 정하며 이벤트 핸들러를 유지한다. 개별 버튼 10개나 종목 특화 버튼 1개로 줄이는 구현은 아니다. 예를 들어 종목 기능 그룹의 버튼은 BTC 5개, MSTR 6개이고 변경 기록 그룹에도 버튼 2개가 있다. 좁은 화면은 가로 스크롤 접근을 사용하므로 10개 그룹이 한 화면에 모두 보인다는 의미도 아니다. 사용자가 허용한 WP7 범위 조정 안에서 이 그룹 단위 일관성을 검사했다.
 
@@ -139,9 +142,9 @@ embedded 차트는 현재 종목과 일치하는 같은 출처의 부모 URL을 
 
 구현 근거: [기간 비교 상세](../dist/cycle-period-comparison.js), [기간선 툴팁](../dist/cycle-interval-overlay.js), [기준점 상세](../dist/cycle-milestones-view.js), [고점권 설명](../dist/atlas-analysis.js), [모델 범위](MODEL_SCOPE.md).
 
-## 3. 최신 네이티브 측정과 브라우저 증거 — 4acab / 03dcd1b
+## 3. 보존된 네이티브 측정과 브라우저 증거 — 4acab / 03dcd1b
 
-**before 6/6 + after 21/21 = 27/27 통과다.** 변경 전 6개 통과는 기존 문제를 포함한 관찰 수집의 완료를 뜻한다. 개선 후 21개는 BTC의 여섯 뷰포트·추가 11종목 셸·MSTR/BMNR 네 진입 조합이다. 양쪽 모두 런타임 오류와 예상 밖 리소스 오류는 0건이다. 아래 모든 표는 이번 before·after 원본을 다시 읽어 작성했다.
+**소스 `03dcd1b`에서 before 6/6 + after 21/21 = 27/27 통과다.** 정식 consumer의 다른 범위에서 후속 실패가 확인됐고 `bf89e78`·`c11234d`가 추가되었으므로, 아래 표·이미지는 수정 후 측정이나 전체 배포 판정이 아니다. 새 진단 전까지 원래 수치를 보존한다. 변경 전 6개 통과는 기존 문제를 포함한 관찰 수집의 완료를 뜻한다. 개선 후 21개는 BTC의 여섯 뷰포트·추가 11종목 셸·MSTR/BMNR 네 진입 조합이다. 양쪽 모두 런타임 오류와 예상 밖 리소스 오류는 0건이다. 아래 모든 표는 이번 before·after 원본을 다시 읽어 작성했다.
 
 | 측정 식별 | 확인된 값 |
 |---|---|
@@ -283,6 +286,9 @@ BTC 각 사례의 `initial` 상태다. 변경 후 여섯 크기 모두 화면과
 
 | 실행 | 확인된 결과 | 범위 / 남은 확인 |
 |---|---|---|
+| 리플레이 설명 수정 `bf89e78` 관련 영향 범위 | **65/65 통과** | 이번 스레드 실행 결과. 실제 설명 복원·전체 범례 의미 검증; 수정 후 네이티브 브라우저 결과는 대기 |
+| 모바일 스크롤 수정 `c11234d` 관련 영향 범위 | **22/22 통과, 실패 0, 건너뜀 0** | 고정 Node **24.22.2**, 451.216688ms. 셸 구조·native workbench·모바일·53개 브라우저 사례 목록 회귀 |
+| 두 수정 후 `npm run verify:static` | **통과 — 930개 파일, 954개 참조** | 이번 스레드 실행 결과. 정식 consumer 재검증을 대신하지 않음 |
 | 최신 main `5393cfa` relay·native 진입·standalone 영향 범위 | **19/19 통과, 실패 0, 건너뜀 0** | [원본 로그](ui-review-20261108/local-verification/5393-relay-entry-tests.log). 28675.808998ms; 최신 대상의 전체 CI와 구분 |
 | `npm run verify:static`, 최신 main `5393cfa` | **통과 — 930개 파일, 954개 참조** | [원본 로그](ui-review-20261108/local-verification/verify-static-5393.log) |
 | 고정 Node **24.22.2**의 완료된 `f5b1a874` 전체 `npm test` | **3062/3062 통과, 실패 0, 건너뜀 0** | 소스 `f5b1a874`. 정식 테스트 실행기 단일 배치, 종료 코드 0. `complete: true`, 실행 228814.099319ms, 약 3분 49초 |
@@ -305,52 +311,72 @@ BTC 각 사례의 `initial` 상태다. 변경 후 여섯 크기 모두 화면과
 
 ## 5. 운영 CI와 공개 배포
 
-**최신 운영 대상 `5393cfa`의 정식 모델 단계는 13/13 게이트와 전체 테스트 3074/3074를 통과했다.** 모델 영수증 게시 후 원격에서 같은 바이트를 읽어 확인했고, 후속 퍼블리케이션 consumer `e0d7b526…`가 요청됐다. consumer의 전체 검증·사이트 배포와 공개 화면 확인은 아직 완료되지 않았다.
+**`5393cfa`의 정식 consumer는 실패했고 이 후보는 배포할 수 없다.** 모델 13/13 게이트·3074/3074 테스트와 consumer 선행 7개 게이트는 통과했으나, native-browser의 관찰 결과는 **53개 중 44 PASS / 9 FAIL**이다. [원본 선택 영수증](ui-review-20261108/production-5393/consumer-failure-selected.json)에 실패·사례·두 lane·소스 인수·게이트 결과를 함께 보존했다. 수정 `bf89e78`·`c11234d`의 PR #81 병합과 정식 재검증은 대기이며, 공개 서비스의 이번 UI 반영은 완료되지 않았다.
 
 ### 소스별 완료 판정
 
 | 소스 | 검증 종류·실행 | 확인된 결과 | 운영 완료와의 관계 |
 |---|---|---|---|
 | **`5393cfa`** | 정식 모델 `d3b0c7c4-a185-4eb6-8f0d-ca5b1078a64f` | **13/13 PASS, 3074/3074 테스트 통과**, 실패·건너뜀 0, 단일 배치 | [모델 영수증](ui-review-20261108/production-5393/model-gates-selected.json). 모델 구성요소만으로 전체 배포 자격을 부여하지 않음 |
-| **`5393cfa`** | 후속 퍼블리케이션 요청 `e0d7b526-9ea1-400a-82a2-0ca6fda9f036` | **queued 확인, 결과 대기** | [모델 종료 때의 consumer 상태](ui-review-20261108/production-5393/model-final-status.json). 실제 consumer가 검증한 소스·전체 게이트·배포 결과는 후속 영수증으로 확인 |
-| `03dcd1b` | 보조 네이티브 UI `4acab602-49a5-470e-9935-20005e98e5a3` | **before 6/6 + after 21/21 = 27/27 PASS** | 앱 `dist`는 `dbd3b70`과 동일. 최신 `5393cfa`와의 차이는 1절에 한정하며 사이트 배포 자격을 대신하지 않음 |
+| **`5393cfa`** | 정식 consumer `e0d7b526-9ea1-400a-82a2-0ca6fda9f036` | **FAIL**, 선행 게이트 7개 PASS, native-browser **44 PASS / 9 FAIL** | [실패 영수증](ui-review-20261108/production-5393/consumer-failure-selected.json). 전체 53개 사례 실행을 확인했으며 사이트 배포 차단 |
+| **`bf89e78`·`c11234d`** | 실패 수정의 로컬 영향 범위·정적 검사 | **65/65·22/22, static 930/954 통과** | PR #81 병합 전. 수정 후 정식 53개 브라우저·보조 UI 27개 재검증은 대기 |
+| `03dcd1b` | 이전 소스의 보조 네이티브 UI `4acab602-49a5-470e-9935-20005e98e5a3` | **before 6/6 + after 21/21 = 27/27 PASS** | 앱 `dist`는 `dbd3b70`과 동일. 해당 소스·범위의 결과를 보존하며 정식 consumer 실패나 수정 후 결과를 대체하지 않음 |
 | `dbd3b70` | 이전 정식 모델 `5e21418c-95a1-4c8a-8c53-f0135244684a` | **13/13 PASS, 3072/3072 테스트 통과** | [원본 영수증](ui-review-20261108/local-verification/cloudflare-dbd-model-gates.json). 이후 main 변경을 확인해 `MODEL_COMPONENT_REMOTE_HEAD`로 배포 요청 차단 |
 | `f5b1a874` | 구현 소스의 로컬 전체 `npm test` | **3062/3062 통과** | [원본·해시 영수증](ui-review-20261108/local-verification/results.json). 후속 소스의 정식 CI와 구분 |
 
-### 최신 모델·퍼블리케이션·공개 서비스 상태
+### 정식 consumer의 실패 범위
+
+consumer는 모델의 같은 소스 `5393cfa`와 계획 해시를 `2026-11-08T17:59:09.274Z`에 인수했다. runtime-preflight·locked-dependencies·generated-pages·typecheck·panel-tests·service-build·postgres-service-tests의 **7개 게이트는 모두 PASS**였다. 이어 native-browser는 `2026-11-08T17:59:09.706Z`에 시작해 **`18:09:15.868Z`에 FAIL**, 종료 코드 1로 끝났다.
+
+실패한 총괄 영수증의 **`completedCaseCount: 0`은 원문 그대로 보존**한다. 이를 53으로 고쳐 쓰지 않는다. 별도 원본 lane 영수증에는 chart-replay **예정 7 / 완료 7**, non-chart-replay **예정 46 / 완료 46**이 있고, 회수한 개별 사례 53개에서 **44개 통과·9개 실패**를 집계했다. 따라서 53개 실행은 lane·개별 사례 증거이며, 실패한 총괄 영수증이 전체 성공을 인정했다는 뜻이 아니다. 원본 보고서 5,719,301바이트와 압축 전송본 505,987바이트의 해시도 대조했다. 총괄 결합은 실패한 child의 종료 코드 1을 거부했으며 전체 검증 자격은 없다.
+
+| 실패 묶음 | 사례·뷰포트 | 실제 실패 | 후속 수정 / 재검증 상태 |
+|---|---|---|---|
+| BTC 리플레이 범례 **3건** | `chart-replay-btc`: 1440×900, 320×568, 900×430 | `Compact legend lost its provisional/retrospective meanings`; `◇ 거시 시계 · ○ 예시 경로` 설명 누락 | `bf89e78`에서 실제 설명 복원·전체 범례 의미 검사 추가. 네이티브 재검증 대기 |
+| native 상단 터치 **3건** | ETH·BMNR·MSTR 각각 320×900 | `Native touch must scroll the overflowing toolbar` | `c11234d`의 모바일 단일 스크롤 소유자 수정. 기존 제스처 대상·조건 유지, 재검증 대기 |
+| 중앙 자료 화면 진입 **1건** | `workspace-center-data`: 320×900 | `Timed out: native heading pan`; 자료 iframe 진입 전 BTC 상단 조작에서 정지 | 같은 중첩 스크롤 원인을 제거하는 `c11234d` 적용. 재검증 대기 |
+| 주택 요약 접근 **2건** | `workspace-consolidated`: 320×900, 390×844 | 폭 160px 버튼의 표시 폭이 각각 75.75px·135.75px로 남아 `Required action remains clipped` | 같은 `c11234d`로 바깥 상단 행이 스크롤을 소유하도록 변경. 재검증 대기 |
+
+ETH·BMNR·MSTR의 390·768·1024 사례 통과를 390px 터치 제스처의 별도 통과로 확대하지 않는다. 해당 터치 검사는 320px에서만 실행된다. BTC fast-cadence 단계도 범례 실패로 측정에 도달하지 못했고, 원본의 `fixture: null`, `measurement: null`, `restored: false`를 성공으로 바꾸어 해석하지 않는다.
+
+`bf89e78`은 리플레이의 빠진 참조 설명을 화면 데이터에 복원했다. `c11234d`는 모바일 종목 기능 그룹의 내부 스크롤·폭 제한을 없애 바깥 상단 행이 터치·휠 이동을 소유하게 했다. 기존 53개 사례를 삭제하거나 실패 검사를 우회하지 않았으며, 터치 assertion은 같은 조건·대상을 유지하고 실패 메시지에 실제 수치를 추가했다. 로컬 관련 65/65·22/22와 정적 참조 검사는 통과했지만 **수정의 실제 브라우저 통과는 아직 확인되지 않았다.**
+
+### 모델 증거와 공개 서비스 상태
 
 | 단계 | 대상 / 현재 확인 |
 |---|---|
-| 현재 main / 운영 검증·배포 대상 | **`5393cfafe18ac89bb85c319e622b43e5db0cc7e0`** · PR #79 포함 |
-| 같은 작업 브랜치의 통합 | `c9e6e3b32f8a24eff338c72599c041ff723a4c04` |
-| 현재 대상의 `dist` | `ca187d8c2d4a7feae3d7a83e05755f6e985bad07` |
+| 현재 main / 실패한 운영 후보 | **`5393cfafe18ac89bb85c319e622b43e5db0cc7e0`** · PR #79 포함, consumer 실패로 배포 불가 |
+| 같은 작업 브랜치의 후속 수정 | `bf89e78`·`c11234d`, **PR #81 병합 전** |
+| 실패한 후보의 `dist` | `ca187d8c2d4a7feae3d7a83e05755f6e985bad07` |
 | 정식 모델 시작 / 종료 | **`2026-11-08T17:30:09.464Z` / `2026-11-08T17:45:15.508Z`**, `stopped / success` · [빌드 상태](ui-review-20261108/production-5393/model-final-status.json) |
-| 정식 `npm test` | **3074/3074 통과**, 실패 0, 건너뜀 0, 단일 배치, `complete: true` · [원문 0025](ui-review-20261108/production-5393/model-d3b-log-page-0025.json) |
-| formal / static / 마지막 chart-replay 게이트 | **모두 PASS** · 마지막 게이트 종료 `2026-11-08T17:45:06.183Z` |
+| 정식 모델 `npm test` | **3074/3074 통과**, 실패 0, 건너뜀 0, 단일 배치, `complete: true` · [원문 0025](ui-review-20261108/production-5393/model-d3b-log-page-0025.json) |
+| 모델 formal / static / 마지막 chart-replay 게이트 | **모두 PASS** · 마지막 게이트 종료 `2026-11-08T17:45:06.183Z`; 후속 네이티브 실패와 구분 |
 | 모델 영수증 게시 | **`MODEL_COMPONENT_PUBLISHED`**, `2026-11-08T17:45:14.089Z` · [게시 영수증](ui-review-20261108/production-5393/model-publication.json) / [원문 0028](ui-review-20261108/production-5393/model-d3b-log-page-0028.json) |
 | 게시한 바이트 재확인 | **`EXACT_BYTES_CONFIRMED`** · 모델 구성요소 5009바이트·소스 인덱스 533바이트, 두 응답 HTTP 200, 1회 확인 |
-| 후속 consumer | **queued**, `e0d7b526-9ea1-400a-82a2-0ca6fda9f036`, 요청 `2026-11-08T17:45:13.956Z` · `17:45:19.793Z` 관찰 기준 |
-| 정식 전체 네이티브·퍼블리케이션 검증 / 사이트 배포 | **결과 대기** |
+| 후속 consumer | **FAIL**, `e0d7b526-9ea1-400a-82a2-0ca6fda9f036`; native-browser 실패 종료 `2026-11-08T18:09:15.868Z` |
+| 이 후보의 사이트 배포 | **차단** · consumer 전체 검증 실패 |
 | 진단 작업 명령 복원 | **완료** · `2026-11-08T17:12:08.293Z` 원래 명령으로 복원. 정식 게이트·고정 런타임 변경 없음 |
 | 사용자 확인 운영 기준 | `1635f87a10962b7ff5eecd094b6e0625e09771f4` · publication `2026-11-08T13:03:05Z` |
 | 마지막 공개 운영 관찰 | **`bd5b70a96e1fab466ee6648c2c07db882b02681f`**, `2026-11-08 16:55 UTC` |
-| 이번 UI 변경의 공개 운영 반영 / 실제 화면 | **확인 대기 / 확인 대기** |
-| 완료 판정 대상 | [운영 publication.json](https://bitcoin-cycle-atlas.twoimo.workers.dev/publication.json)의 `sourceCommit`과 **`5393cfa`**의 일치, 이후 공개 브라우저 관찰 |
+| 이번 UI 변경의 공개 운영 반영 / 실제 화면 | **미완료 / 확인 대기** |
+| 후속 완료 판정 대상 | 수정 병합 뒤 확정할 새 main 소스. 전체 CI 성공, [운영 publication.json](https://bitcoin-cycle-atlas.twoimo.workers.dev/publication.json)의 동일 `sourceCommit`, 공개 브라우저 관찰을 함께 확인 |
 
-정식 시작·종료는 Cloudflare의 `running_on`·`stopped_on`이다. 앞서 기록한 `17:30:15 UTC`는 실행 중 상태를 읽은 관찰 시각으로, 공식 시작 시각과 구분한다. 정식 테스트 게이트 자체는 `17:30:41.432Z`–`17:43:06.130Z`, 744698ms였다.
+정식 모델 시작·종료는 Cloudflare의 `running_on`·`stopped_on`이다. 앞서 기록한 `17:30:15 UTC`는 실행 중 상태를 읽은 관찰 시각으로, 공식 시작 시각과 구분한다. 정식 테스트 게이트 자체는 `17:30:41.432Z`–`17:43:06.130Z`, 744698ms였다.
 
 완료된 13개 모델 게이트는 runtime-preflight·locked-dependencies·model-tests·forecast·research·eth-events·treasury-paths·numerics·formal·cycle·performance·static·chart-replay다. [선택 원본 영수증](ui-review-20261108/production-5393/model-gates-selected.json)에 각 시작·종료 시각과 원본 로그 해시가 있으며 [파일 목록](ui-review-20261108/production-5393/model-receipt-inventory.json)에 보존 파일의 바이트 수·SHA-256이 있다.
 
-`MODEL_COMPONENT_PUBLISHED`는 모델 증거 저장소에 영수증을 게시했다는 뜻이다. 공개 차트 사이트의 퍼블리케이션과 구분하며 모델 영수증의 `qualifiesFullVerification`도 `false`다. consumer 요청 UUID가 실제 deploy hook 대기 작업과 일치하는 것까지 확인했으며, consumer가 이후 검사한 전체 게이트·소스와 배포를 확인해야 한다.
+`MODEL_COMPONENT_PUBLISHED`는 모델 증거 저장소에 영수증을 게시했다는 뜻이다. 공개 차트 사이트의 퍼블리케이션과 구분하며 모델 영수증의 `qualifiesFullVerification`도 `false`다. 이어 실행된 consumer가 같은 소스를 인수한 뒤 실제 실패를 확인했으므로 모델 성공을 공개 배포 성공으로 표시하지 않는다.
 
-보조 UI 진단은 공개 하위 도메인과 preview URL을 끈 별도 Worker에서 수행하며 사이트를 배포하지 않는다. **27/27 UI 진단·모델 단계 통과·PR 병합만으로 공개 배포 완료를 표시하지 않는다.** 최신 대상 `5393cfa`의 운영 전체 게이트·공개 `sourceCommit`·브라우저 표시를 각각 확인한다.
+보조 UI 진단은 공개 하위 도메인과 preview URL을 끈 별도 Worker에서 수행하며 사이트를 배포하지 않는다. **이전 소스의 27/27 UI 진단·모델 단계 통과·PR 병합만으로 공개 배포 완료를 표시하지 않는다.** 다음 수정 병합 소스의 운영 전체 게이트·공개 `sourceCommit`·브라우저 표시를 각각 확인해야 한다.
 
 사용자가 제공한 예상 소요는 push 이후 모델 빌드 약 12분과 퍼블리케이션 배포 약 15분이다. 예상 시간이 지났다는 사실로 완료를 판정하지 않는다. 보고서·증거만 추가하는 커밋도 애플리케이션 배포 대상과 구분한다.
 
 ## 6. 아직 남은 확인
 
-- 최신 main `5393cfa`의 후속 consumer 전체 네이티브·퍼블리케이션 CI 결과와 사이트 배포 영수증. 모델 13개 게이트 통과와 구분.
-- 공개 `publication.json`의 `sourceCommit`이 `5393cfa`와 일치하는지 확인.
+- 실패 수정 `bf89e78`·`c11234d`의 PR #81 병합과 새 운영 대상 소스 확정.
+- 같은 수정 병합 소스의 정식 모델·consumer 전체 게이트 재검증. 기존 **53개 네이티브 사례**와 BTC fast-cadence 단계를 유지하며 9개 실패의 해소를 실제 브라우저에서 확인.
+- 수정 후 보조 UI **27개** 재실행, 여섯 뷰포트의 새 측정·스크린샷 확보. 현재 3절의 `03dcd1b` 수치를 수정 후 결과로 재사용하지 않음.
+- 성공한 새 배포 소스와 공개 `publication.json`의 `sourceCommit` 일치 확인. 실패한 `5393cfa`는 완료 대상에서 제외.
 - 이미 열려 있던 운영 탭을 일반 새로고침한 뒤 새 화면이 반영되는지 확인. 캐시 삭제·서비스 워커 해제·강제 새로고침을 선행하지 않음.
 - 운영 MSTR·BMNR × 루트·Market Lab 경로 네 조합에서 실제 종목 차트, 로딩 종료, 이전 차트 부재를 확인하고 브라우저 증거 보존.
 
@@ -411,8 +437,10 @@ BTC 각 사례의 `initial` 상태다. 변경 후 여섯 크기 모두 화면과
 | [`47573f4`](https://github.com/twoimo/bitcoin-cycle-atlas/commit/47573f4adf202ca654c6738c506b509fa64794ba) | 주식 formal 임시 사본에 parser로 찾은 전체 의존성을 복사하고 변경 전 격리 사본 통과를 먼저 검사 |
 | [`dbd3b70`](https://github.com/twoimo/bitcoin-cycle-atlas/commit/dbd3b70e567c3047524e6a0e3b5d01b1dc9d910d) | PR #78 병합. formal 복구를 포함한 정식 모델 13개 게이트·3072개 테스트 통과, 이후 원격 main 변경으로 배포 요청 차단 |
 | [`03dcd1b`](https://github.com/twoimo/bitcoin-cycle-atlas/commit/03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9) | 애플리케이션 변경 없이 PNG stdout 전송 필터 추가. 이 소스의 새 4acab UI 27개 통과와 이미지 19개 확보 |
-| [`5393cfa`](https://github.com/twoimo/bitcoin-cycle-atlas/commit/5393cfafe18ac89bb85c319e622b43e5db0cc7e0) | PR #79 병합. relay 전용 화면·스타일과 자산 URL `1.37.7` 변경, 최신 운영 전체 검증·배포 대상 |
+| [`5393cfa`](https://github.com/twoimo/bitcoin-cycle-atlas/commit/5393cfafe18ac89bb85c319e622b43e5db0cc7e0) | PR #79 병합. relay 전용 화면·스타일과 자산 URL `1.37.7` 변경. 모델은 통과했으나 consumer 9개 실패로 배포 차단 |
 | [`c9e6e3b`](https://github.com/twoimo/bitcoin-cycle-atlas/commit/c9e6e3b32f8a24eff338c72599c041ff723a4c04) | 같은 작업 브랜치에 최신 main `5393cfa`와 기존 진단 증거를 보존하여 통합 |
+| [`bf89e78`](https://github.com/twoimo/bitcoin-cycle-atlas/commit/bf89e78add8880453ec28ca028f4fd6cdc11ca52) | 정식 consumer에서 드러난 리플레이 참조 설명을 복원하고 전체 범례에도 의미가 남는지 검사. 관련 65개 로컬 통과, 브라우저 재검증 대기 |
+| [`c11234d`](https://github.com/twoimo/bitcoin-cycle-atlas/commit/c11234da358ee096a1f92cefd7c87bcb7b271e4f) | 모바일 상단 행 하나가 스크롤을 소유하도록 내부 종목 기능 그룹의 폭·스크롤 제한 제거. 22개 로컬 회귀 통과, 원래 터치 제스처·assertion 유지 |
 
 새 범례·셸 모듈은 `dist/ui/` 아래에 둔다. `dist/` 최상위에 새 JavaScript 파일을 추가하지 않는다. 기존 충분성·캘리브레이션·자산군 모델 모듈을 다시 구현하지 않는다.
 
