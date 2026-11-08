@@ -95,7 +95,8 @@ for (const s of series) {
 const payload = {
   schemaVersion: 1,
   kind: 'atlas-forecast-calibration',
-  generatedAt: new Date().toISOString(),
+  generatedAt: process.env.CALIBRATION_AS_OF || '2026-11-06',
+  generatedAtMeaning: '입력 데이터 마지막 관측일 기준. 재실행 시 같은 바이트가 나오도록 고정한다.',
   policy: '앞 70%에서 계수 추정, 뒤 30%에서 커버리지 재검증. 명목 80% ±5%p 통과해야 화면 문구를 바꾼다.',
   results
 };
