@@ -102,6 +102,7 @@ export function mountCenterWorkbench() {
   let epoch=0,selectionEpochFloor=0,activeIntentSerial=0;
   let lastSelection={epoch:-1,serial:0};
   let originalReader=null;
+  let originalIdentity=null;
   const controls=createChartWorkbenchControls({send:message=>frame?.contentWindow.postMessage(message,location.origin),isActive:()=>isWorkspaceChart(activePage)});
   const saved = new Map();
   // The BTC renderer can update its navigation buttons after the center opens.
@@ -131,6 +132,11 @@ export function mountCenterWorkbench() {
       lastChart={page,symbol:activeSymbol,region:activeRegion};
     }else{activeRegion=undefined;if(atlasNavigationId(page)==='market-us')lastMarket=page;}
     document.body.dataset.centerTool=page.id;
+    const headingNode=document.getElementById('outlook-heading'),graph=document.querySelector('.atlas-workbench');
+    if(!originalIdentity)originalIdentity={heading:headingNode?.textContent,graphLabel:graph?.getAttribute('aria-label')};
+    const instrument=isWorkspaceChart(page)?workspaceInstrument(activeSymbol):null;
+    if(headingNode)headingNode.textContent=instrument?`${instrument.koreanName} (${instrument.symbol}) 가격 차트`:page.title;
+    if(graph)graph.setAttribute('aria-label',instrument?`${instrument.koreanName} · ${instrument.symbol} · ${instrument.currency} 관측 가격 그래프`:page.title);
     protectNavigation();
     for (const item of document.querySelectorAll('[data-atlas-page]')) {
       const selected=item.dataset.atlasPage===atlasNavigationId(page);item.classList.toggle('active',selected);
@@ -151,6 +157,12 @@ export function mountCenterWorkbench() {
     frame.hidden=true;delete document.body.dataset.centerTool;activePage=null;lastChart=null;syncPriceLink();
     for (const [node,state] of saved) { node.inert=state.inert; if(state.aria==null)node.removeAttribute('aria-hidden');else node.setAttribute('aria-hidden',state.aria);if('disabled' in node)node.disabled=state.disabled;if('hidden' in state)node.hidden=state.hidden; }
     saved.clear();
+    if(originalIdentity){
+      const headingNode=document.getElementById('outlook-heading'),graph=document.querySelector('.atlas-workbench');
+      if(headingNode&&originalIdentity.heading!=null)headingNode.textContent=originalIdentity.heading;
+      if(graph){if(originalIdentity.graphLabel==null)graph.removeAttribute('aria-label');else graph.setAttribute('aria-label',originalIdentity.graphLabel);}
+      originalIdentity=null;
+    }
     document.dispatchEvent(new CustomEvent('atlas:active-symbol',{detail:{symbol:originalSymbol}}));
     document.dispatchEvent(new CustomEvent('atlas:center-restored'));
     if(originalReader)document.dispatchEvent(new CustomEvent('atlas:open-detail',{detail:{kind:originalReader,focus:false}}));originalReader=null;

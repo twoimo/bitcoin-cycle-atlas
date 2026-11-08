@@ -45,6 +45,7 @@ test('shared chart perimeter respects HYPE units and monthly housing capabilitie
   assert.equal(adapter.update({...ready,unit:'USD'}),false,'USDC cannot silently become USD');
   assert.equal(adapter.update({...ready,frequencies:['daily','hourly']}),false,'unsupported intraday data cannot become a display option');
   assert.equal(adapter.update(ready),true);assert.equal(interval.value,'daily');
+  assert.equal((document.querySelector('#history-journal-toggle') as HTMLButtonElement).hidden,false,'HYPE keeps its only textual record action');
   assert.equal(document.querySelector('.workbench-zone')!.textContent,'UTC');
   assert.equal((document.querySelector('#workbench-next-turn') as HTMLButtonElement).disabled,true);
   assert.equal(document.querySelector('#history-journal-toggle')!.getAttribute('aria-label'),'HYPE 판정 기록');

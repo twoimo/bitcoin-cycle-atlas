@@ -2,7 +2,7 @@ import {workspaceInstrument} from './workspace-instruments.js';
 
 // These actions retain native ETH/equity data and handlers. Shared chart
 // acknowledgements must never grant them ownership of a different instrument.
-export const nativeChartControlSelector='#eth-history-trigger,[data-eth-action],[data-equity-action],#equity-scenario';
+export const nativeChartControlSelector='#eth-history-trigger,[data-eth-action],[data-equity-action],#equity-scenario,#workbench-monthly-backtest';
 
 // All observed instruments use the existing perimeter. The underlying native
 // chart retains its state; only an acknowledged current frame owns controls.
@@ -127,6 +127,9 @@ export function createChartWorkbenchControls({send,isActive}) {
     }
     attr($('#lab-svg'),'aria-label',`${scope.symbol} 차트 내보내기 · PNG/SVG`);attr($('#lab-svg'),'title',`${scope.symbol} 차트 내보내기 · PNG/SVG`);attr($('#workbench-workspace'),'aria-label',`${scope.symbol} 차트 명령 검색 · Ctrl/⌘ K`);
     text($('#history-journal-toggle'),'기록');enable($('#workbench-annotations'));attr($('#workbench-annotations'),'aria-label',`${scope.symbol} 측정·선택 데이터`);
+    // RSI already exposes its chart/backtest/records tabs in the shared header.
+    // Other instruments still use the bottom record action.
+    attr($('#history-journal-toggle'),'hidden',instrument?.page==='rsi'?'':null);
     attr($('[data-reader=events]'),'aria-label',`${scope.symbol} ${recordLabel}`);attr($('[data-reader=volume]'),'aria-label',`${scope.symbol} 거래량 표시 설정`);
     for(const node of document.querySelectorAll('[data-reader]')){const pane=route(node)?.[1],label=node.getAttribute('aria-label')||node.textContent;attr(node,'aria-expanded',message.pane===pane);attr(node,'title',label.startsWith(scope.symbol)?label:`${scope.symbol} ${label}`);}
     for(const id of ['atlas-mode-menu','atlas-display-options','workbench-workspace','workbench-go-date'])attr($('#'+id),'aria-expanded',message.pane===ids[id][1]);
