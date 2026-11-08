@@ -10,7 +10,10 @@ export function formatBtcVolume(value){
   return value>=1e6?`${number(value/1e6)}M`:value>=1e3?`${number(value/1e3)}k`:number(value,value<1?6:2);
 }
 
-export function chartPaneLayout({width,height,volume=true,drawdown=false,states=false,cycleTiming=false,top=66}){
+export function chartPaneLayout({width,height,volume=true,drawdown=false,states=false,cycleTiming=false,top=66,bottomInset=0}){
+  // Replay owns a footer below every data/axis pane without resizing the SVG.
+  // Live callers keep the original allocation when no inset is supplied.
+  if(Number.isFinite(bottomInset)&&bottomInset>0)height=Math.max(Math.min(height,48),height-bottomInset);
   const small=width<600,short=height<360,left=Math.min(small?8:12,width*.05),right=Math.min(small?66:82,width*.25);
   // Normal tick text and the selected date occupy separate vertical lanes.
   // On wider charts the added date lane uses seven pixels from the former

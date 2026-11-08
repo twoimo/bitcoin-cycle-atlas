@@ -81,7 +81,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   // Match the allocated viewport instead of shrinking a fixed-height drawing.
   // An explicitly enabled secondary band stays present even in a short chart.
   const W=Math.max(1,Math.round(svg.clientWidth||svg.parentElement?.clientWidth||1100)),H=Math.max(1,Math.round(svg.clientHeight||svg.parentElement?.clientHeight||500)),small=W<600,compactHeight=H<320;
-  const layout=chartPaneLayout({width:W,height:H,volume:showVolume,drawdown:showDrawdown,states:showStates,cycleTiming:showCycleTiming,top:Number.isFinite(headerInset)?Math.max(8,headerInset):compactHeight?62:70});
+  const layout=chartPaneLayout({width:W,height:H,volume:showVolume,drawdown:showDrawdown,states:showStates,cycleTiming:showCycleTiming,top:Number.isFinite(headerInset)?Math.max(8,headerInset):compactHeight?62:70,bottomInset:Number(svg.dataset.replayTransportInset)||0});
   const axisText=createPriceAxisLayout({svg,width:W,left:layout.left,minRight:layout.right});layout.right=axisText.right;
   const {left:L,right:R,top:T,axisY,dateBadgeTop,priceBottom,ddTop,ddBottom,stateTop,stateBottom,volumeTop,volumeBottom,cycleTop,cycleBottom}=layout,stateHeight=stateBottom-stateTop,ddHeight=ddBottom-ddTop;
   // Position HTML annotations from the same measured price plot. This does not
