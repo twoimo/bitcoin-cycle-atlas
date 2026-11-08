@@ -12,10 +12,8 @@ import {readBrowserBuildSource} from "./cloudflare-browser-source.mjs";
 import {createEthBrowserCaseSpecs,selectEthBrowserCaseSpecs} from "./eth-browser-case-specs.mjs";
 import {cloudflareStagedPlanSha256,cloudflareStagedPolicy} from "./cloudflare-staged-contract.mjs";
 import {emitCompressedBrowserReport} from "./browser-evidence-transport.mjs";
-const argv=process.argv.slice(2);
-assert.equal(argv.length,2);
-const options=Object.fromEntries(argv.map(value=>{const match=/^--(expected-source|expected-tree)=([a-f0-9]{40})$/.exec(value);assert.ok(match,"Two exact immutable source arguments are required");return [match[1],match[2]];}));
-assert.deepEqual(Object.keys(options).sort(),["expected-source","expected-tree"]);
+import {readReplayDiagnosticOptions,replayProfileEnvironmentKey} from "./chart-replay-profile.mjs";
+const options=readReplayDiagnosticOptions(process.argv.slice(2));
 const root=process.cwd(),branch="fix/hype-price-axis-markers-20261108",scope="chart-replay";
 const expectedSource=options["expected-source"],expectedTree=options["expected-tree"];
 assert.equal(process.env.WORKERS_CI,"1");
@@ -25,6 +23,7 @@ assert.match(process.env.WORKERS_CI_BUILD_UUID??"",/^[a-f0-9]{8}-[a-f0-9]{4}-[a-
 assert.equal(process.env.ATLAS_VERIFICATION_STAGE,undefined);
 assert.equal(process.env.ATLAS_BROWSER_LANE,undefined);
 assert.equal(process.env.ATLAS_BROWSER_SUITE_RUN_ID,undefined);
+assert.equal(process.env[replayProfileEnvironmentKey],undefined,"The explicit --profile option owns diagnostic profiling");
 assert.equal(getPriority(),0,"Diagnostic CPU priority must remain unchanged");
 assert.equal(cloudflareStagedPolicy.maximumExecutionMs,1140000);
 assert.equal(cloudflareStagedPlanSha256,"c7ef8e7921f0d9235ceeec910efafd21d092d48f96d2f77ee7e3e50932f1cfbd");
@@ -40,13 +39,13 @@ function currentRemoteHead(){const ref="refs/heads/"+branch;const rows=execFileS
 const remoteHead=currentRemoteHead(),suiteRunId=randomUUID(),out="build/replay-focused-diagnostic",reportPath=resolve(root,out,"report.json");
 const deadline=Date.now()+cloudflareStagedPolicy.maximumExecutionMs,remaining=()=>{const ms=deadline-Date.now();assert.ok(ms>1000,"The unchanged diagnostic execution budget expired");return ms;};
 const log=text=>process.stdout.write(text);
-console.log("ATLAS_BROWSER_REPLAY_FOCUSED_INPUT "+JSON.stringify({qualifiesFullVerification:false,sourceCommit:source.sourceCommit,sourceTree:source.sourceTree,providerSource,remoteHead,suiteRunId,caseScope:scope,declaredCaseCount:53,expectedCaseCount:7,cases:selected,planSha256:cloudflareStagedPlanSha256}));
+console.log("ATLAS_BROWSER_REPLAY_FOCUSED_INPUT "+JSON.stringify({qualifiesFullVerification:false,qualifiesCadence:false,profiling:options.profile,sourceCommit:source.sourceCommit,sourceTree:source.sourceTree,providerSource,remoteHead,suiteRunId,caseScope:scope,declaredCaseCount:53,expectedCaseCount:7,cases:selected,planSha256:cloudflareStagedPlanSha256}));
 await rm(reportPath,{force:true});
 let result=null,runtimeError=null,bytes=null,report=null,transport=null,reportError=null;
 try{
 const runtime=await bootstrapCloudflareBuild({root,log,timeoutMs:Math.min(480000,remaining())});
 console.log("ATLAS_BROWSER_REPLAY_FOCUSED_RUNTIME "+JSON.stringify(runtime.receipt));
-result=await runRuntimeCommand(process.execPath,["scripts/verify-eth-candidate-browser.mjs"],{cwd:root,env:{...process.env,...runtime.environment,ATLAS_BROWSER_CASE_SCOPE:scope,ATLAS_BROWSER_LANE:scope,ATLAS_BROWSER_SUITE_RUN_ID:suiteRunId,ATLAS_BROWSER_OUT:out,ETH_BROWSER_IMAGE_LOG_MODE:"representative"},timeout:Math.min(900000,remaining()),log,allowFailure:true});
+result=await runRuntimeCommand(process.execPath,["scripts/verify-eth-candidate-browser.mjs"],{cwd:root,env:{...process.env,...runtime.environment,ATLAS_BROWSER_CASE_SCOPE:scope,ATLAS_BROWSER_LANE:scope,ATLAS_BROWSER_SUITE_RUN_ID:suiteRunId,ATLAS_BROWSER_OUT:out,ETH_BROWSER_IMAGE_LOG_MODE:"representative",...(options.profile?{[replayProfileEnvironmentKey]:"1"}:{})},timeout:Math.min(900000,remaining()),log,allowFailure:true});
 }catch(error){runtimeError=error;}
 try{
 bytes=await readFile(reportPath);
@@ -61,6 +60,16 @@ assert.equal(report.sourceCommit,expectedSource);assert.equal(report.sourceTree,
 assert.equal(report.lane,scope);assert.equal(report.caseScope,scope);assert.equal(report.suiteRunId,suiteRunId);
 assert.equal(report.declaredCaseCount,53);assert.equal(report.expectedCaseCount,7);
 assert.deepEqual(report.cases.map(item=>item.caseSpec),selected);
+if(options.profile){
+assert.equal(report.kind,"atlas-replay-profile-native-diagnostic");assert.equal(report.profiling,true);
+assert.equal(report.qualifiesFullVerification,false);assert.equal(report.qualifiesCadence,false);
+assert.equal(report.fastCadence.kind,"atlas-browser-fast-cadence-profile-diagnostic");
+const captures=report.cases.filter(item=>item.earlyCadenceProfile);assert.equal(captures.length,1);
+const capture=captures[0].earlyCadenceProfile;assert.equal(capture.status,"collected");
+assert.equal(capture.sourceCommit,expectedSource);assert.equal(capture.sourceTree,expectedTree);
+assert.equal(capture.suiteRunId,suiteRunId);assert.equal(capture.providerBuildUuid,process.env.WORKERS_CI_BUILD_UUID);
+assert.deepEqual(capture.caseSpec,captures[0].caseSpec);assert.equal(capture.qualifiesCadence,false);
+}else{assert.equal(report.kind,"eth-candidate-real-browser");assert.equal(report.profiling,undefined);}
 assert.equal(result.code,0,"The unchanged native verifier failed");
 assert.equal(result.signal,null);assert.equal(report.status,"passed");assert.deepEqual(report.failures,[]);
 assert.ok(report.cases.every(item=>item.status==="passed"));assert.equal(report.sourceIntegrity.unchangedDuringRun,true);
@@ -72,7 +81,7 @@ assert.equal(currentRemoteHead(),expectedSource);
 remaining();
 }catch(error){validationError=error;}
 const cases=Array.isArray(report?.cases)?report.cases:null;
-const diagnostic={schemaVersion:1,kind:"atlas-replay-focused-diagnostic",qualifiesFullVerification:false,productionDeployed:false,status:validationError?"FAIL":"PASS",nativeStatus:report?.status??null,sourceCommit:expectedSource,sourceTree:expectedTree,providerBuildUuid:process.env.WORKERS_CI_BUILD_UUID,providerSource,suiteRunId,caseScope:scope,declaredCaseCount:53,expectedCaseCount:7,completedCaseCount:cases?.length??null,passed:cases?.filter(item=>item?.status==="passed").length??null,failed:cases?.filter(item=>item?.status==="failed").length??null,commandExitCode:result?.code??null,commandSignal:result?.signal??null,report:bytes?{file:out+"/report.json",bytes:bytes.length,sha256:createHash("sha256").update(bytes).digest("hex"),transport}:null,fastCadence:report?.fastCadence??null,...(runtimeError?{runtimeError:String(runtimeError.stack??runtimeError)}:{}),...(reportError?{reportError:String(reportError.stack??reportError)}:{}),...(validationError?{error:String(validationError.stack??validationError)}:{}),scope:"Partial real-Chrome diagnosis only; canonical model13/browser12/native53 are still required."};
+const diagnostic={schemaVersion:1,kind:"atlas-replay-focused-diagnostic",qualifiesFullVerification:false,qualifiesCadence:false,profiling:options.profile,productionDeployed:false,status:validationError?"FAIL":"PASS",nativeStatus:report?.status??null,sourceCommit:expectedSource,sourceTree:expectedTree,providerBuildUuid:process.env.WORKERS_CI_BUILD_UUID,providerSource,suiteRunId,caseScope:scope,declaredCaseCount:53,expectedCaseCount:7,completedCaseCount:cases?.length??null,passed:cases?.filter(item=>item?.status==="passed").length??null,failed:cases?.filter(item=>item?.status==="failed").length??null,commandExitCode:result?.code??null,commandSignal:result?.signal??null,report:bytes?{file:out+"/report.json",bytes:bytes.length,sha256:createHash("sha256").update(bytes).digest("hex"),transport}:null,fastCadence:report?.fastCadence??null,...(runtimeError?{runtimeError:String(runtimeError.stack??runtimeError)}:{}),...(reportError?{reportError:String(reportError.stack??reportError)}:{}),...(validationError?{error:String(validationError.stack??validationError)}:{}),scope:"Partial real-Chrome diagnosis only; profiled timing cannot qualify cadence and canonical model13/browser12/native53 are still required."};
 try{
 await mkdir(resolve(root,out),{recursive:true});
 await writeFile(resolve(root,out,"diagnostic.json"),JSON.stringify(diagnostic,null,2)+"\n");

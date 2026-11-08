@@ -20,7 +20,7 @@ test('the isolated baseline copies only the declared verifier modules and links 
   assert.equal(uiReviewHarnessFiles,uiReviewVerifierFiles,'baseline copying and source hashing must share one dependency inventory');
   assert.deepEqual(uiReviewHarnessFiles,[
     'scripts/verify-eth-candidate-browser.mjs','scripts/verify-ui-contract-browser.mjs',
-    'scripts/browser-source-identity.mjs','scripts/btc-offline-refresh-policy.mjs',
+    'scripts/browser-source-identity.mjs','scripts/btc-offline-refresh-policy.mjs','scripts/chart-replay-profile.mjs',
   ]);
   assert.ok(uiReviewHarnessFiles.every(file=>file.startsWith('scripts/')&&file.endsWith('.mjs')),'application and market data cannot be copied into the baseline');
   const directory=await mkdtemp(resolve(tmpdir(),'atlas-ui-verifier-link-'));
@@ -38,6 +38,8 @@ test('the isolated baseline copies only the declared verifier modules and links 
     for(const name of ['ownsOfflineBtcPriceReadout','offlineBtcRefreshSurface','isExpectedOfflineBtcRefresh'])assert.equal(typeof linked[name],'function');
     assert.equal(linked.ownsOfflineBtcPriceReadout({page:'outlook',center:'housing'}),false);
     assert.equal(linked.ownsOfflineBtcPriceReadout({page:'outlook'}),true);
+    const profile=await import(pathToFileURL(resolve(directory,'scripts/chart-replay-profile.mjs')).href);
+    assert.equal(profile.replayProfileEnabled({ATLAS_UI_REVIEW:'wp4-wp7'}),false,'The copied runner dependency stays inactive for the baseline');
   }finally{await rm(directory,{recursive:true,force:true});}
 });
 

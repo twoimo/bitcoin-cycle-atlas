@@ -12,8 +12,9 @@ import {classifyProjectBrowserResource,verifyProjectGeneratedImages} from './bro
 import {mountUiReviewCase,uiContractBrowserCases,verifyUiContractSurface,verifyUiShellSurface} from './verify-ui-contract-browser.mjs';
 import {verifyNativeChartWorkbench} from './verify-native-chart-workbench-browser.mjs';
 import {verifyChartZoomBrowser} from './verify-chart-zoom-browser.mjs';
-import {emitBrowserEvidenceChunks} from './browser-evidence-transport.mjs';
+import {emitBrowserEvidenceChunks,emitCompressedBrowserReport} from './browser-evidence-transport.mjs';
 import {fastCadencePolicy,fastCadenceMilestonePrefix,browserSourceInventorySha256} from './browser-fast-cadence-contract.mjs';
+import {replayProfileEnabled,profileEarlyReplayCadence} from './chart-replay-profile.mjs';
 import {createServer} from 'node:http';
 import {readFile,writeFile,mkdir,mkdtemp,rm,stat} from 'node:fs/promises';
 import {resolve,relative,sep,extname} from 'node:path';
@@ -46,9 +47,11 @@ if(!uiReview&&!ethBrowserCaseScopes.includes(caseScope))throw new Error('Unknown
 const lane=process.env.ATLAS_BROWSER_LANE??'',suiteRunId=process.env.ATLAS_BROWSER_SUITE_RUN_ID??'';
 if(lane){assert.ok(['non-chart-replay','chart-replay'].includes(lane),'Unknown browser lane');assert.equal(caseScope,lane);assert.match(suiteRunId,/^[a-f0-9-]{36}$/);}
 else assert.equal(suiteRunId,'','A suite run requires its explicit lane');
+const profiling=replayProfileEnabled(process.env);
 const artifactName=name=>lane?'lanes/'+lane+'/'+name:name;
 const report={schemaVersion:1,kind:'eth-candidate-real-browser',startedAt:new Date().toISOString(),status:'running',imageLogMode,caseScope,cases:[],failures:[],
   ...(lane?{lane,suiteRunId}:{}),
+  ...(profiling?{kind:'atlas-replay-profile-native-diagnostic',profiling:true,qualifiesFullVerification:false,qualifiesCadence:false}:{}),
   scope:'Actual checked-out static site in headless Chromium through native CDP; no production deployment, Safari or physical-device claim.'};
 let server,chrome,browser,profile,base;
 let chromeStderr='';
@@ -865,13 +868,14 @@ async function main(){
       assert.deepEqual(spec,fastCadencePolicy.caseSpec);
       assert.ok(['passed','failed'].includes(result.status));
       if(result.status==='passed')assert.equal(result.restoration?.unchanged,true,'Cadence cannot release before its original baseline is restored');
-      const milestone={schemaVersion:1,kind:'atlas-browser-fast-cadence',phase:fastCadencePolicy.phase,status:result.status,
+      const milestone={schemaVersion:1,kind:report.profiling?'atlas-browser-fast-cadence-profile-diagnostic':'atlas-browser-fast-cadence',phase:fastCadencePolicy.phase,status:result.status,
         sourceCommit:report.sourceCommit,sourceTree:report.sourceTree,sourceInventorySha256:browserSourceInventorySha256(report.sourceHashes),
         suiteRunId,lane,caseSpec:{...spec},startedAt:result.startedAt,completedAt:result.completedAt,
         fixture:result.fixture??null,measurement:result.measurement??null,restored:result.status==='passed',
+        ...(report.profiling?{qualifiesFullVerification:false,qualifiesCadence:false}:{}),
         ...(result.error?{error:String(result.error).slice(0,900)}:{})};
       receipt.fastCadence=milestone;report.fastCadence=milestone;
-      console.log(fastCadenceMilestonePrefix+JSON.stringify(milestone));
+      console.log((report.profiling?'ATLAS_BROWSER_REPLAY_PROFILE_CADENCE ':fastCadenceMilestonePrefix)+JSON.stringify(milestone));
     };
     try{
       // A saved replay belongs to one user's browser. Each replay scenario
@@ -997,7 +1001,13 @@ async function main(){
       if(spec.uiContract)await verifyUiContractSurface({cdp,receipt,evaluate,until,settled,click,screenshot,verifyOfflineRefresh});
       else if(spec.uiShell)await verifyUiShellSurface({cdp,receipt,evaluate,until,settled,click,screenshot,verifyOfflineRefresh});
       else if(spec.consolidated)await verifyConsolidatedWorkspaceSurface({cdp,receipt,evaluate,until,settled,screenshot,verifyOfflineRefresh});
-      else if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,browserContextId,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh,onFastCadenceMilestone});
+      else if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,browserContextId,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh,onFastCadenceMilestone,
+        ...(profiling&&isEarlyChartReplayCadenceCase(spec)?{profileEarlyCadence:run=>profileEarlyReplayCadence({cdp,evaluate,receipt,
+          identity:{sourceCommit:report.sourceCommit,sourceTree:report.sourceTree,sourceInventorySha256:browserSourceInventorySha256(report.sourceHashes),
+            suiteRunId,lane,caseSpec:{...spec},providerBuildUuid:process.env.WORKERS_CI_BUILD_UUID,phase:fastCadencePolicy.phase},
+          expectedCaseSpec:fastCadencePolicy.caseSpec,readMeasurement:()=>receipt.chartReplay?.timing?.find(row=>row.speed===10)??null,
+          onCaptured:capture=>{receipt.earlyCadenceProfileTransport=emitCompressedBrowserReport(Buffer.from(JSON.stringify(capture)+'\n'),
+            {name:'replay-cadence-profile.json',log:line=>console.log(line)});}},run)}:{})});
       else if(spec.replay)await verifyForecastReplaySurface({cdp,browser,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
       else if(spec.surface){
         await verifyWorkspaceSurface({cdp,receipt,evaluate,until,settled,click,bounds,visibleBounds,dark,screenshot,verifyOfflineRefresh,expectedBtc,verifyHeaderOwnership:()=>verifyHeaderOwnership(cdp)});

@@ -12,6 +12,7 @@ export const uiReviewVerifierFiles=Object.freeze([
   'scripts/verify-ui-contract-browser.mjs',
   'scripts/browser-source-identity.mjs',
   'scripts/btc-offline-refresh-policy.mjs',
+  'scripts/chart-replay-profile.mjs',
 ]);
 
 // One source inventory binds both Chrome lanes and their combining process.
@@ -22,6 +23,7 @@ export async function readBrowserSourceIdentity(root){
   sourceHashes['scripts/eth-browser-case-specs.mjs']=digest(await readFile(resolve(root,'scripts/eth-browser-case-specs.mjs')));
   sourceHashes['scripts/browser-evidence-transport.mjs']=digest(await readFile(resolve(root,'scripts/browser-evidence-transport.mjs')));
   sourceHashes['scripts/browser-project-resource-policy.mjs']=digest(await readFile(resolve(root,'scripts/browser-project-resource-policy.mjs')));
+  sourceHashes['scripts/chart-replay-profile.mjs']=digest(await readFile(resolve(root,'scripts/chart-replay-profile.mjs')));
   for(const path of ['scripts/verify-chart-zoom-browser.mjs','dist/chart-navigation.js','dist/chart-view-policy.js','dist/price-axis.js','dist/empty-price-chart.js'])sourceHashes[path]=digest(await readFile(resolve(root,path)));
   for(const path of ['dist/relay-room.js','dist/relay-room.css'])sourceHashes[path]=digest(await readFile(resolve(root,path)));
   for(const path of ['dist/index.html','dist/site-entry.js','dist/asset-comparison.js','dist/asset-judgment-history.js','dist/daily-data-view.js','dist/daily-data.css','dist/eth-view.js','dist/eth-view.css','dist/ethereum-forecast.js','dist/ethereum-adaptive-model.js','dist/ethereum-pooled-model.js','dist/eth-view-state.js','dist/ethereum-adoption-scenarios.js','dist/ethereum-research-panel.js','dist/ethereum-research-catalog.js','dist/eth-market-data.js','dist/intraday-chart.js','dist/equity-forecast-chart.js','dist/equity-view.js','dist/treasury-projection.js','dist/treasury-model.js','dist/forecast-information-time.js','dist/data/bmnr-ohlc.json','dist/data/eth-ohlc.json','scripts/verify-eth-candidate-browser.mjs','scripts/btc-offline-refresh-policy.mjs','tests/ethereum-offline-refresh-policy.test.mjs','dist/data/btc-daily.json','dist/app.js','dist/btc-refresh-status.js','tests/ethereum-btc-refresh-status.test.mjs','dist/data-source.js','dist/published-data.js','dist/asset-forecast-journal.js','dist/asset-forecast-records.js','dist/journal-entry.js','dist/forecast-journal.css','dist/data/asset-forecast-ledger/index.json','dist/data/mstr-ohlc.json','dist/lab-view.js','dist/analysis-dock.css','dist/compact-chart-layout.css','dist/mobile-workspace.css','dist/mobile-preview.js','scripts/verify-workspace-browser.mjs']){
