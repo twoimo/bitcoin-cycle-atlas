@@ -18,7 +18,7 @@
 
 ## 2026-11-08 · WP2 캘리브레이션 계층
 - 브랜치: `feat/forecast-calibration-20261108` (WP5 브랜치 위에 분기 — 충분성 게이트를 먼저 씀)
-- 커밋: (커밋 후 갱신)
+- 커밋: `161d92f`
 - 검증: `node --test tests/forecast-calibration.test.mjs` 6개 통과, `node scripts/estimate-calibration.mjs` 재실행 → `factors.json` 재생성
 - 결과 요지: BTC 180일 커버리지 67.8→84.5, SPX 180일 65.1→82.7, NASDAQ 365일 53.9→84.2 통과. BTC 90일·ETH 365일은 과보정, KOSPI 90일은 무효. 부동산은 적합 표본 156~163 < 200으로 보정 차단
 - 남음: 통과 조합만 경로·밴드에 연결, 화면 문구는 WP4
