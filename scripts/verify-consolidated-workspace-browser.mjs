@@ -224,7 +224,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
         rightRail:document.querySelector('.workbench-rail').getBoundingClientRect().width,svg:{width:b.width,height:b.height,viewWidth:svg.viewBox.baseVal.width,viewHeight:svg.viewBox.baseVal.height,start:svg.dataset.start,end:svg.dataset.end,visible:svg.checkVisibility()},
         childHeight:doc.defaultView.innerHeight,sourceClock:document.querySelector('#atlas-update-status').getAttribute('aria-label'),candles:!document.querySelector('#workbench-chart-type').disabled};
     });
-    assert.deepEqual(result.nav,['outlook','market-us','evidence','data','ipo'],symbol+': one price destination');
+    assert.deepEqual(result.nav,['outlook','market-us','evidence','data','ipo','relay'],symbol+': one price destination');
     assert.deepEqual(result.active,['outlook'],symbol+': price destination owns all charts');
     assert.ok(result.range.includes(symbol+' / '+unit+' /'),symbol+': original price unit');
     assert.deepEqual(result.frequencies,frequencies,symbol+': only observed source frequencies');
