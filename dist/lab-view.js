@@ -784,7 +784,7 @@ export function initLabView() {
         'historical-reconstruction':{label:'BTC 축소 추세 · 과거 재구성',description:`기준일 ${session.asOf}까지의 관측으로 만든 BTC 축소 추세 기준모형입니다. 현재 자료 판본으로 과거를 재구성한 경로이며 당시 발행된 예측이 아닙니다.`},
         recorded:{label:reconstructedRecord?'보존 예측 · 재구성 기록':'보존 예측',description:`예측 기준 ${session.asOf}의 보존 기록을 그대로 재생합니다.${reconstructedRecord?' 과거를 재구성해 보존한 기록이며 당시 발행된 예측이 아닙니다.':''}`}
       }[session.mode]??{label:'고정 경로 리플레이',description:'선택한 고정 경로를 재생합니다.'};
-      $('#atlas-chart-legend').innerHTML=priceLegendMarkup({compact:true,candles,forming,source:candles?candleSource:priceSource,forecast:true,band,turns:p.showTurns})+
+      $('#atlas-chart-legend').innerHTML=priceLegendMarkup({compact:true,candles,forming,source:candles?candleSource:priceSource,forecast:true,band,turns:p.showTurns,replayMode:session.mode})+
         ((p.showCycleMarkers||p.showCycleIntervals)?cycleLegendMarkup():'');
       $('#atlas-chart-caveat').textContent=replayMeaning.label;
       $('#lab-chart-title').textContent=`${replayMeaning.label} · ${dateLabel(start)} — ${dateLabel(end)} · ${frequency==='weekly'?'주별':'일별'} 리플레이`;
