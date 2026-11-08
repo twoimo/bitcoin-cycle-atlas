@@ -24,7 +24,11 @@
 .chart-legend-dock button{box-sizing:border-box;flex:none;min-width:32px;height:24px;margin:0;padding:2px 6px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface-raised);color:var(--text);font:12px/16px var(--font,sans-serif);white-space:nowrap;cursor:pointer}
 .chart-legend-dock button:hover{background:var(--surface-hover)}
 .chart-legend-dock button:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
-.atlas-plot>.chart-legend-dock[data-legend-mode=chip]{padding:0;border:0;background:transparent}
+/* Replay uses stronger visibility selectors; the chip must still own its full
+   44px box without inheriting the two-row legend's padding and border. */
+.atlas-plot>.lab-chart-foot.chart-legend-dock[data-legend-mode=chip],
+.chart-replay-active.chart-replay-atlas.atlas-plot:not([data-chart-focus=true])>.lab-chart-foot.chart-legend-dock[data-legend-mode=chip]:not([hidden]),
+.chart-replay-active.chart-replay-atlas.atlas-plot[data-chart-replay-mode="cutoff-backtest"]>.lab-chart-foot.chart-legend-dock[data-legend-mode=chip]:not([hidden]){padding:0;border:0;background:transparent}
 .chart-legend-dock[data-legend-mode=chip]>.chart-legend-open{display:block;width:100%;min-width:0;height:44px;padding:4px;border-color:var(--border);background:var(--surface);font-size:12px}
 .atlas-plot>.chart-legend-dock>.lab-caveat{display:none}
 .atlas-plot[data-legend-dock=top-right][data-legend-visible=true]>:is(#lab-metrics,.workbench-market-info,.chart-replay-hud){max-width:var(--chart-legend-hud-max-width,55%)!important;right:auto}
