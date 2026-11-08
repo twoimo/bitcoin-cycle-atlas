@@ -1,0 +1,46 @@
+{
+  "checkedAt": "2026-11-08T18:43:08.801871+00:00",
+  "sourceCommit": "7d066d5643d00b40674dffadbf1b6e4345afe286",
+  "sourceTree": "465d27f72bb4fcf341c556b360dbcdb84dd64cac",
+  "modelBuildId": "78e9e650-7b09-4d84-8047-8cbda0dd746b",
+  "modelGateCount": 13,
+  "allModelGatesPass": true,
+  "testTotal": {
+    "complete": true,
+    "tests": 3082,
+    "pass": 3082,
+    "fail": 0,
+    "skipped": 0,
+    "batches": 1
+  },
+  "modelReceiptReadback": "EXACT_BYTES_CONFIRMED",
+  "createdConsumerBuildId": "ab22dab8-b730-40f3-97cd-40f551d714da",
+  "sitePublicationVerified": false,
+  "files": [
+    {
+      "path": "model-gates-selected.json",
+      "bytes": 7810,
+      "sha256": "335a4a9d61bbd605bc17b2233a6efb2e2ae5aa3d8bb388f8f5c523376632736f"
+    },
+    {
+      "path": "model-test-total.json",
+      "bytes": 290,
+      "sha256": "ca989ba914fe09e4e9ff45f251d9dedef0217ab0afe7e508f8d6176b10341086"
+    },
+    {
+      "path": "model-component.json",
+      "bytes": 337,
+      "sha256": "5c54196bf8e5927a45098c9ff541b59adfef948b09b249ffaf84b4c316eaec48"
+    },
+    {
+      "path": "model-publication.json",
+      "bytes": 1395,
+      "sha256": "92345f00282407777fcda3419e9034d1d2788d8c4a5de52704cfb20d4e927339"
+    },
+    {
+      "path": "model-final-status.json",
+      "bytes": 1216,
+      "sha256": "2ba5908cfac82c210e8482a0527691c72a2f2c1026c1403709cecb37a121d957"
+    }
+  ]
+}

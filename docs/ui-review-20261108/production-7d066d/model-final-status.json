@@ -1,0 +1,37 @@
+{
+  "observedAt": "2026-11-08T18:41:41.615Z",
+  "sourceCommit": "7d066d5643d00b40674dffadbf1b6e4345afe286",
+  "model": {
+    "build_uuid": "78e9e650-7b09-4d84-8047-8cbda0dd746b",
+    "status": "stopped",
+    "build_outcome": "success",
+    "created_on": "2026-11-08T18:18:04.624Z",
+    "initializing_on": "2026-11-08T18:23:12.103Z",
+    "running_on": "2026-11-08T18:23:14.100Z",
+    "stopped_on": "2026-11-08T18:41:32.626Z",
+    "modified_on": "2026-11-08T18:41:32.626Z",
+    "trigger_name": "Atlas production model verification",
+    "sourceCommit": "7d066d5643d00b40674dffadbf1b6e4345afe286",
+    "trigger_source": "push_event",
+    "branch": "main",
+    "deploy_hook": null
+  },
+  "consumer": {
+    "build_uuid": "ab22dab8-b730-40f3-97cd-40f551d714da",
+    "status": "queued",
+    "build_outcome": null,
+    "created_on": "2026-11-08T18:41:31.111Z",
+    "initializing_on": null,
+    "running_on": null,
+    "stopped_on": null,
+    "modified_on": "2026-11-08T18:41:31.111Z",
+    "trigger_name": "628e08964572463ebdacbd91e965ab9a",
+    "sourceCommit": "",
+    "trigger_source": "deploy_hook",
+    "branch": "main",
+    "deploy_hook": {
+      "name": "Atlas production publication"
+    }
+  },
+  "newerSources": []
+}

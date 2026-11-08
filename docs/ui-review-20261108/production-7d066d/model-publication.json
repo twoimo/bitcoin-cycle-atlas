@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-cloudflare-model-publication",
+  "status": "MODEL_COMPONENT_PUBLISHED",
+  "qualifiesFullVerification": false,
+  "sourceCommit": "7d066d5643d00b40674dffadbf1b6e4345afe286",
+  "sourceTree": "465d27f72bb4fcf341c556b360dbcdb84dd64cac",
+  "planSha256": "c7ef8e7921f0d9235ceeec910efafd21d092d48f96d2f77ee7e3e50932f1cfbd",
+  "runId": "78e9e650-7b09-4d84-8047-8cbda0dd746b",
+  "mode": "production",
+  "origin": "https://bitcoin-cycle-atlas-models.twoimo.workers.dev",
+  "component": {
+    "path": "/receipts/7d066d5643d00b40674dffadbf1b6e4345afe286/78e9e650-7b09-4d84-8047-8cbda0dd746b.json",
+    "bytes": 5011,
+    "sha256": "eac4bdf2588ba304110328e0bb418ba8704a573b21770cdd0c7ab17837539a1b"
+  },
+  "index": {
+    "path": "/sources/7d066d5643d00b40674dffadbf1b6e4345afe286.json",
+    "bytes": 533,
+    "sha256": "a8191e3c85be76616fdf344e709601ecaace1350a9d2842405a73e3672de9beb"
+  },
+  "readback": {
+    "status": "EXACT_BYTES_CONFIRMED",
+    "attempts": 1,
+    "elapsedMs": 280,
+    "responses": [
+      {
+        "asset": "component",
+        "status": 200,
+        "bytes": 5011
+      },
+      {
+        "asset": "index",
+        "status": 200,
+        "bytes": 533
+      }
+    ],
+    "retries": []
+  },
+  "publication": {
+    "buildUuid": "ab22dab8-b730-40f3-97cd-40f551d714da",
+    "alreadyExists": false
+  },
+  "confirmedAt": "2026-11-08T18:41:31.179Z"
+}

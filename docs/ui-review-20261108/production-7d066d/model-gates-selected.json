@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "kind": "production-model-selected-evidence",
+  "sourceCommit": "7d066d5643d00b40674dffadbf1b6e4345afe286",
+  "sourceTree": "465d27f72bb4fcf341c556b360dbcdb84dd64cac",
+  "buildId": "78e9e650-7b09-4d84-8047-8cbda0dd746b",
+  "planSha256": "c7ef8e7921f0d9235ceeec910efafd21d092d48f96d2f77ee7e3e50932f1cfbd",
+  "qualifiesFullVerification": false,
+  "gateCount": 13,
+  "gates": [
+    {
+      "timestamp": "2026-11-08T18:23:36.367Z",
+      "receipt": {
+        "stage": "model",
+        "id": "runtime-preflight",
+        "status": "PASS",
+        "startedAt": "2026-11-08T18:23:33.198Z",
+        "completedAt": "2026-11-08T18:23:36.367Z",
+        "durationMs": 3169,
+        "log": "build/cloudflare-stage-model/runtime-preflight.log",
+        "logSha256": "367b8c51fd0ae68925e4305f2a9a5d0eb6bdb32649f07e0ba2b4780399ccc7b5"
+      }
+    },
+    {
+      "timestamp": "2026-11-08T18:23:42.221Z",
+      "receipt": {
+        "stage": "model",
+        "id": "locked-dependencies",
+        "status": "PASS",
+        "startedAt": "2026-11-08T18:23:36.396Z",
+        "completedAt": "2026-11-08T18:23:42.220Z",
+        "durationMs": 5824,
+        "log": "build/cloudflare-stage-model/locked-dependencies.log",
+        "logSha256": "84ad8f2da853d8ac28a9cf920e9a3f54caf0269a293c631c3a9241076136d67b"
+      }
+    },
+    {
+      "timestamp": "2026-11-08T18:38:47.532Z",
+      "receipt": {
+        "stage": "model",
+        "id": "model-tests",
+        "status": "PASS",
+        "startedAt": "2026-11-08T18:23:42.246Z",
+        "completedAt": "2026-11-08T18:38:47.429Z",
+        "durationMs": 905183,
+        "log": "build/cloudflare-stage-model/model-tests.log",
+        "logSha256": "0483ddf85cd11315bd6abdef1ce45d9fe19c8be06a5720126ffa7a239f5d33c0"
+      }
+    },
+    {
+      "timestamp": "2026-11-08T18:38:54.856Z",
+      "receipt": {
+        "stage": "model",
+        "id": "forecast",
+        "status": "PASS",
+        "startedAt": "2026-11-08T18:38:47.480Z",
+        "completedAt": "2026-11-08T18:38:54.855Z",
+        "durationMs": 7375,
+        "log": "build/cloudflare-stage-model/forecast.log",
+        "logSha256": "7fe49b371ea8c806610adf2c2a53d9a173c5fee9b5898c72140e45e7bb7eac03"
+      }
+    },
+    {
+      "timestamp": "2026-11-08T18:38:55.588Z",
+      "receipt": {
+        "stage": "model",
+        "id": "research",
+        "status": "PASS",
+        "startedAt": "2026-11-08T18:38:54.893Z",
+        "completedAt": "2026-11-08T18:38:55.587Z",
+        "durationMs": 694,
+        "log": "build/cloudflare-stage-model/research.log",
+        "logSha256": "673cc45b3ae2c6101b12ad2d4687a957a410a11edb294270dfd7c39590c36c67"
+      }
+    },
+    {
+      "timestamp": "2026-11-08T18:38:55.934Z",
+      "receipt": {
+        "stage": "model",
+        "id": "eth-events",
+        "status": "PASS",
+        "startedAt": "2026-11-08T18:38:55.620Z",
+        "completedAt": "2026-11-08T18:38:55.933Z",
+        "durationMs": 313,
+        "log": "build/cloudflare-stage-model/eth-events.log",
+        "logSha256": "936763564d296c63229684f9588593ff30fced9aef3817d6c43883253dfa5503"
+      }
+    },
+    {
+      "timestamp": "2026-11-08T18:39:01.220Z",
+      "receipt": {
+        "stage": "model",
+        "id": "treasury-paths",
+        "status": "PASS",
+        "startedAt": "2026-11-08T18:38:55.967Z",
+        "completedAt": "2026-11-08T18:39:01.219Z",
+        "durationMs": 5253,
+        "log": "build/cloudflare-stage-model/treasury-paths.log",
+        "logSha256": "2b4760cfcc15fb1b491d58835e55598917d994af71932b69b022b287f272c6ee"
+      }
+    },
+    {
+      "timestamp": "2026-11-08T18:39:11.980Z",
+      "receipt": {
+        "stage": "model",
+        "id": "numerics",
+        "status": "PASS",
+        "startedAt": "2026-11-08T18:39:01.247Z",
+        "completedAt": "2026-11-08T18:39:11.979Z",
+        "durationMs": 10732,
+        "log": "build/cloudflare-stage-model/numerics.log",
+        "logSha256": "395e8112b522d0769639c8b3582f9f666009698973f8dc524749f7cf816b87b9"
+      }
+    },
+    {
+      "timestamp": "2026-11-08T18:40:15.298Z",
+      "receipt": {
+        "stage": "model",
+        "id": "formal",
+        "status": "PASS",
+        "startedAt": "2026-11-08T18:39:12.006Z",
+        "completedAt": "2026-11-08T18:40:15.295Z",
+        "durationMs": 63289,
+        "log": "build/cloudflare-stage-model/formal.log",
+        "logSha256": "f436b186d28b6ec1a0946dc25bb698d2fd3fdc9bec6828c2fc512823e4d7b1a6"
+      }
+    },
+    {
+      "timestamp": "2026-11-08T18:40:16.238Z",
+      "receipt": {
+        "stage": "model",
+        "id": "cycle",
+        "status": "PASS",
+        "startedAt": "2026-11-08T18:40:15.334Z",
+        "completedAt": "2026-11-08T18:40:16.237Z",
+        "durationMs": 903,
+        "log": "build/cloudflare-stage-model/cycle.log",
+        "logSha256": "162ad7a624e45a899bce97bde1c82303e103b957ea51f687511b70048e5711be"
+      }
+    },
+    {
+      "timestamp": "2026-11-08T18:40:16.904Z",
+      "receipt": {
+        "stage": "model",
+        "id": "performance",
+        "status": "PASS",
+        "startedAt": "2026-11-08T18:40:16.277Z",
+        "completedAt": "2026-11-08T18:40:16.903Z",
+        "durationMs": 626,
+        "log": "build/cloudflare-stage-model/performance.log",
+        "logSha256": "91dfccd2baa9d316b75f1a7035d1fc54e8c5633b8cdd45d98c106de7c86679b9"
+      }
+    },
+    {
+      "timestamp": "2026-11-08T18:40:27.393Z",
+      "receipt": {
+        "stage": "model",
+        "id": "static",
+        "status": "PASS",
+        "startedAt": "2026-11-08T18:40:16.945Z",
+        "completedAt": "2026-11-08T18:40:27.392Z",
+        "durationMs": 10447,
+        "log": "build/cloudflare-stage-model/static.log",
+        "logSha256": "4c244002ab2cb6f78c6efaef86f0233f4d65f1801e14664e218d87c347519f1a"
+      }
+    },
+    {
+      "timestamp": "2026-11-08T18:41:22.877Z",
+      "receipt": {
+        "stage": "model",
+        "id": "chart-replay",
+        "status": "PASS",
+        "startedAt": "2026-11-08T18:40:27.426Z",
+        "completedAt": "2026-11-08T18:41:22.876Z",
+        "durationMs": 55450,
+        "log": "build/cloudflare-stage-model/chart-replay.log",
+        "logSha256": "93abb0418d2e23438e9c7ccc711f8121fe3acc4800655977538ab7532013bf81"
+      }
+    }
+  ],
+  "testTotal": {
+    "timestamp": "2026-11-08T18:38:47.532Z",
+    "receipt": {
+      "complete": true,
+      "tests": 3082,
+      "pass": 3082,
+      "fail": 0,
+      "skipped": 0,
+      "batches": 1
+    }
+  },
+  "component": {
+    "timestamp": "2026-11-08T18:41:22.950Z",
+    "receipt": {
+      "status": "PASS",
+      "qualifiesFullVerification": false,
+      "sourceCommit": "7d066d5643d00b40674dffadbf1b6e4345afe286",
+      "sourceTree": "465d27f72bb4fcf341c556b360dbcdb84dd64cac",
+      "planSha256": "c7ef8e7921f0d9235ceeec910efafd21d092d48f96d2f77ee7e3e50932f1cfbd",
+      "runId": "78e9e650-7b09-4d84-8047-8cbda0dd746b",
+      "gateCount": 13
+    }
+  },
+  "publicationRecordedAt": "2026-11-08T18:41:31.180Z",
+  "sourceLogFiles": [
+    "model-78e-log-page-0001.json",
+    "model-78e-log-page-0002.json",
+    "model-78e-log-page-0003.json",
+    "model-78e-log-page-0004.json",
+    "model-78e-log-page-0005.json",
+    "model-78e-log-page-0006.json",
+    "model-78e-log-page-0007.json",
+    "model-78e-log-page-0008.json",
+    "model-78e-log-page-0009.json",
+    "model-78e-log-page-0010.json",
+    "model-78e-log-page-0011.json",
+    "model-78e-log-page-0012.json",
+    "model-78e-log-page-0013.json",
+    "model-78e-log-page-0014.json",
+    "model-78e-log-page-0015.json",
+    "model-78e-log-page-0016.json",
+    "model-78e-log-page-0017.json",
+    "model-78e-log-page-0018.json",
+    "model-78e-log-page-0019.json",
+    "model-78e-log-page-0020.json",
+    "model-78e-log-page-0021.json",
+    "model-78e-log-page-0022.json",
+    "model-78e-log-page-0023.json",
+    "model-78e-log-page-0024.json"
+  ]
+}
