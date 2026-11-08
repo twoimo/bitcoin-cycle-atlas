@@ -77,6 +77,8 @@ body[data-chart-controls] .center-workspace-toolbar{flex:0 0 auto;overflow:visib
   .center-workspace-toolbar input[type=search]{width:144px}
   .center-workspace-toolbar select{max-width:128px}
   .center-workspace-toolbar [data-toolbar-open]{max-width:160px;overflow:hidden;text-overflow:ellipsis}
+  /* Observed values and units keep their full width in the scrollable header. */
+  .center-workspace-toolbar [data-toolbar-open$="-observation"]{max-width:none}
   .center-workspace-toolbar .compact-toolbar-summary{gap:4px}
   .compact-toolbar-dialog{width:calc(100% - 16px);max-width:calc(100% - 16px);max-height:calc(100dvh - 16px)}
   .compact-toolbar-dialog-header{padding:4px 12px}

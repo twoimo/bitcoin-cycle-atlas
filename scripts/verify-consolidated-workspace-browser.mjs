@@ -10,6 +10,48 @@ export const consolidatedWorkspaceCases = [320, 390, 1440].map(width => ({
   touch: width <= 390, route: `${consolidatedPagesBase}market-lab/us/`, consolidated: true,
 }));
 
+// Parent-owned portals retain their original observed values and units. Measure
+// text ranges against the button's own padding clip, not the horizontally
+// scrollable header viewport: an offscreen control can still be reached by pan.
+export function readConsolidatedObservationGeometry(unit) {
+  const frame=document.querySelector('.atlas-center-frame:not([hidden])');
+  const host=frame&&document.getElementById(frame.dataset.toolbarId);
+  const rect=box=>({left:box.left,right:box.right,top:box.top,bottom:box.bottom,width:box.width,height:box.height});
+  const textRange=node=>{
+    const range=document.createRange();range.selectNodeContents(node);
+    return {text:node.textContent,box:rect(range.getBoundingClientRect())};
+  };
+  return {buttons:[...host?.querySelectorAll('[data-toolbar-open$="-observation"]')||[]].filter(button=>button.checkVisibility()).map(button=>{
+    const box=button.getBoundingClientRect(),style=getComputedStyle(button),summary=button.querySelector('.compact-toolbar-summary');
+    const left=box.left+parseFloat(style.borderLeftWidth),right=box.right-parseFloat(style.borderRightWidth);
+    const top=box.top+parseFloat(style.borderTopWidth),bottom=box.bottom-parseFloat(style.borderBottomWidth);
+    const glyphs=[];
+    if(summary){
+      const walker=document.createTreeWalker(summary,NodeFilter.SHOW_TEXT);
+      while(walker.nextNode())if(walker.currentNode.textContent.trim())glyphs.push(textRange(walker.currentNode));
+    }
+    return {name:button.dataset.toolbarOpen,box:rect(box),clip:{left,right,top,bottom,width:right-left,height:bottom-top},
+      visible:button.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),disabled:button.disabled,
+      overflow:{x:style.overflowX,y:style.overflowY},summary:summary?{...textRange(summary),glyphs}:null,
+      units:[...summary?.querySelectorAll('span')||[]].filter(node=>node.textContent.trim()===unit).map(textRange)};
+  })};
+}
+
+export function assertConsolidatedObservationGeometry(result,symbol,unit) {
+  assert.equal(result.buttons.length,1,symbol+': one active observed-value toolbar button');
+  const button=result.buttons[0],clip=button.clip;
+  const valid=box=>box&&Object.values(box).every(Number.isFinite)&&box.width>0&&box.height>0;
+  assert.ok(button.visible&&!button.disabled&&valid(clip),symbol+': observed-value button must remain available');
+  assert.ok(button.summary?.glyphs.length>0,symbol+': observed-value summary retains actual text');
+  assert.equal(button.units.length,1,symbol+': observation retains one original source unit '+unit);
+  assert.equal(button.units[0].text.trim(),unit,symbol+': observation retains the original source unit');
+  for(const [kind,value]of [['summary',button.summary],...button.summary.glyphs.map(glyph=>['text',glyph]),['unit',button.units[0]]]){
+    const box=value.box;
+    assert.ok(valid(box)&&box.left>=clip.left-.5&&box.right<=clip.right+.5&&box.top>=clip.top-.5&&box.bottom<=clip.bottom+.5,
+      symbol+': observation '+kind+' glyphs must fit their own button clip: '+JSON.stringify({text:value.text,box,clip}));
+  }
+}
+
 // Real static sources, native keyboard/pointer input, and the actual parent and
 // iframe documents. No substitute model, synthetic price, or dispatched DOM event.
 export async function verifyConsolidatedWorkspaceSurface(api) {
@@ -239,6 +281,11 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     });
     // Preserve the real glyph bounds even when the new axis assertion fails.
     (evidence.priceAxisGeometry??=[]).push({symbol,svg:result.svg,plot:result.plot,units:result.units,markers:result.markers});
+    result.observation=await evaluate(cdp,readConsolidatedObservationGeometry,unit);
+    // Keep the original ranges in a failed receipt too, including the unit's
+    // last character when its parent button clips a longer observed readout.
+    (evidence.observationGeometry??=[]).push({symbol,...result.observation});
+    assertConsolidatedObservationGeometry(result.observation,symbol,unit);
     assert.deepEqual(result.nav,['outlook','market-us','evidence','data','ipo','relay'],symbol+': one price destination');
     assert.deepEqual(result.active,['outlook'],symbol+': price destination owns all charts');
     assert.ok(result.range.includes(symbol+' / '+unit+' /'),symbol+': original price unit');
