@@ -563,10 +563,15 @@ export function buildReplayChartData(session,options={}){
   const inRange=row=>{const day=utcDay(row.endDate??row.date);return day>=start&&day<=end;};
   const visible=[...chartHistory(session,frame),...frame.actual];
   const observedRows=visible.filter(inRange).map(row=>({date:row.date,price:row.price}));
-  const dailyCandles=dailyReplayCandles(visible);
-  const weekly=frequency==='weekly'?weeklyReplayCandles(dailyCandles,session.market,frame):null;
-  const observedCandles=(weekly?.candles??dailyCandles).filter(inRange);
-  const availableDailyDates=new Set(dailyCandles.map(row=>row.date));
+  // Session-owned rows are already validated and frozen. Weekly aggregation
+  // needs their date/OHLC/volume, not a new daily display object per history row.
+  // Keep the full history here so missing/forming-week metadata stays complete.
+  const candleRows=frequency==='weekly'
+    ?visible.filter(row=>['open','high','low','close'].every(key=>Number.isFinite(row[key])))
+    :dailyReplayCandles(visible);
+  const weekly=frequency==='weekly'?weeklyReplayCandles(candleRows,session.market,frame):null;
+  const observedCandles=(weekly?.candles??candleRows).filter(inRange);
+  const availableDailyDates=new Set(candleRows.map(row=>row.date));
   return freeze({frame,frequency,originDate:session.asOf,observedRows,observedCandles,
     ohlcAvailable:observedCandles.length>0,
     completeOhlcCoverage:observedRows.length>0&&observedRows.every(row=>availableDailyDates.has(row.date)),

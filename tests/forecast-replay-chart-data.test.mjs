@@ -122,6 +122,25 @@ test('missing genuine candles remain missing and cannot become a manufactured we
   assert.deepEqual(line.observedCandles,[]);assert.equal(line.observedRows.length,404);
 });
 
+test('weekly chart aggregation preserves full-history gaps and its immutable input across narrow views',async()=>{
+  const mutable=observations.map(row=>row.date===date(-35)?{date:row.date,price:row.price}:{...row});
+  const session=await historical(mutable),saved=structuredClone(session);
+  const options={cursorIndex:1,frequency:'weekly'},range={startDate:'2025-12-29',endDate:'2026-01-01'};
+  const full=buildReplayChartData(session,options),narrow=buildReplayChartData(session,{...options,...range});
+  assert.ok(full.missingWeekCount>0);
+  assert.equal(narrow.observedCandles.length,1);
+  assert.deepEqual(narrow.observedCandles,full.observedCandles.filter(row=>row.endDate>=range.startDate&&row.endDate<=range.endDate));
+  for(const key of ['partialWeekCount','formingWeekCount','missingWeekCount','unreviewedWeekCount'])assert.equal(narrow[key],full[key],key);
+  assert.equal(full.completeOhlcCoverage,false);assert.equal(narrow.completeOhlcCoverage,true);
+  // Caller edits cannot change a session's private validated history. A new
+  // session must still reject an invalid OHLC revision before either display.
+  mutable.find(row=>row.date===asOf).high=1;
+  await assert.rejects(historical(mutable),/genuine consistent observed values/);
+  for(const frequency of ['daily','weekly','daily'])buildReplayChartData(session,{cursorIndex:4,frequency});
+  assert.deepEqual(buildReplayChartData(session,{...options,...range}),narrow);
+  assert.deepEqual(session,saved);assert.ok(Object.isFrozen(session)&&Object.isFrozen(session.observations[0]));
+});
+
 test('weekly volume stays unknown if a disclosed day lacks volume and preserves genuine zeroes',async()=>{
   const options={cursorIndex:1,startDate:'2025-12-29',frequency:'weekly'};
   const missing=observations.map(row=>row.date==='2025-12-30'?Object.fromEntries(Object.entries(row).filter(([key])=>key!=='volume')):row);

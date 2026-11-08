@@ -59,6 +59,29 @@ const frame=(cursorDate=originDate)=>({cursorDate,inputVisible:true,forecastVisi
 const data=(cursorDate=originDate)=>({originDate,frequency:'daily',observedRows:rows,observedCandles:[],candleSource:'Coin Metrics',frame:frame(cursorDate)});
 function draw(svg,options={}){return drawAtlasChartReplay({svg,session:{asOf:originDate},data:data(),start:'2024-10-20',end:'2028-10-20',context,...options});}
 
+test('replay presentation preserves frozen tuple/object inputs and rereads later caller revisions',()=>{
+  const input=Object.freeze([
+    Object.freeze({date:originDate,price:110,drawdownPct:999,replaySource:'forecast'}),
+    Object.freeze(['2026-10-19',120]),
+    Object.freeze({date:'2026-10-18',price:100}),
+    Object.freeze({date:'2026-10-21',price:9e15}),
+    Object.freeze({date:'2026-10-17',price:NaN}),
+  ]),saved=structuredClone(input);
+  const clean=[{date:'2026-10-18',price:100},{date:'2026-10-19',price:120},{date:originDate,price:110}];
+  const options={start:'2026-10-16',end:'2026-10-24',context:createAtlasReplayContext({dataset,forecast:current,originDate,presentation:{...presentation,showDrawdown:true,showCycleMarkers:false,showCycleIntervals:false,showTurns:false,scale:'linear'}})};
+  const left=fixture(),right=fixture();
+  const painted=draw(left.svg,{...options,data:{...data(),observedRows:input}});
+  draw(right.svg,{...options,data:{...data(),observedRows:clean}});
+  assert.deepEqual(input,saved);assert.ok(input.every(Object.isFrozen));
+  assert.equal(left.svg.innerHTML,right.svg.innerHTML);assert.deepEqual(left.svg.dataset,right.svg.dataset);
+  assert.equal(painted.getSelection().actual,110);assert.equal(left.svg.dataset.replayObservedCount,'3');
+  const previous=left.svg.innerHTML,mutable=structuredClone(input);
+  mutable[0].price=115;mutable[1][1]=125;
+  const revised=draw(right.svg,{...options,data:{...data(),observedRows:mutable}});
+  assert.equal(revised.getSelection().actual,115);revised.selectDate('2026-10-19');assert.equal(revised.getSelection().actual,125);
+  assert.equal(left.svg.innerHTML,previous);assert.deepEqual(input,saved);
+});
+
 test('a captured current forecast keeps its distinct input date and immutable path, while historical labels use only the replay origin',()=>{
   const clone=structuredClone(current),input=structuredClone(dataset);
   const result=createAtlasReplayContext({dataset:input,forecast:clone,presentation,originDate});
