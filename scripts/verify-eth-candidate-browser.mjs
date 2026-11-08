@@ -111,6 +111,7 @@ async function screenshot(cdp,name,receipt){
     'workspace-btc-320x900-chart-zoom.png','workspace-btc-1440x900-chart-zoom.png',
     'native-ethusd-1440x900-layout.png','native-bmnr-768x900-layout.png','native-mstr-320x900-layout.png',
     'workspace-consolidated-1440-soxl.png','workspace-consolidated-1440-housing.png','workspace-consolidated-390-hype.png',
+    'workspace-btc-candles-settings-open.png',
   ].includes(name);
   if((imageLogMode==='representative'&&["workspace-btc-qa-390x844.png","workspace-btc-qa-320x740.png","workspace-btc-qa-390x430.png","workspace-btc-320x900-refresh-retry-failed.png","workspace-btc-1440x900-refresh-retry-failed.png","workspace-btc-short-900x430-refresh-retry-failed.png","workspace-btc-short-900x430-indicators-scroll-end.png","data-corner-320x568.png","data-corner-900x430.png","workspace-legacy-375x900-legacy-sources.png","eth-320-pooled-chart.png","eth-1440-pooled-chart.png","eth-320-pooled-model.png","eth-1440-pooled-model.png","data-fill-1620x1008.png","data-fill-1620x1100.png","data-fill-1920x1440.png","ethusd-journal-320-base.png","bmnr-journal-320-stress.png","workspace-btc-320x900-annotations-empty.png","workspace-btc-320x900-go-to.png","workspace-btc-320x900-export-preview.png","workspace-btc-short-900x430-btc-journal.png","workspace-btc-short-900x430-bottom-menu.png","workspace-legacy-320x900-legacy-scroll-owner.png","workspace-legacy-1440x900-legacy-scroll-owner.png","workspace-evidence-320x900-research-reader.png","workspace-evidence-320x900-research-empty.png","workspace-preview-320x900-preview-scroll-end.png","workspace-preview-1440x900-preview-scroll-end.png","workspace-preview-320x900-preview-loading.png","workspace-preview-320x900-preview-error.png"].includes(name))||(imageLogMode==='representative'&&/^workspace-consolidated-(390|1440)-(market-us|scenario|digital-assets|ipo)\.png$/.test(name))||(imageLogMode==='representative'&&['chart-replay-btc-1440x900-fixed-origin.png','chart-replay-btc-320x568-next-bar.png','chart-replay-eth-320x568-next-bar.png'].includes(name))||name.endsWith('-failure.png')){
     emitBrowserEvidenceChunks('ETH_BROWSER_IMAGE_CHUNK',bytes,{name:artifactName(name)});
@@ -901,11 +902,18 @@ async function main(){
         if(optional(url)&&event.blockedReason)receipt.blockedOptionalFonts.push({url,reason:event.blockedReason});
         else receipt.resourceErrors.push({...requestDetails.get(event.requestId),networkEvent:'Network.loadingFailed',url,errorText:event.errorText,canceled:event.canceled??false,blockedReason:event.blockedReason??null});
       });
-      const verifyOfflineRefresh=async({preview=false,phase='initial-document'}={})=>{
+      const verifyOfflineRefresh=async({preview=false,consolidatedEvidence=false,phase='initial-document'}={})=>{
+        if(consolidatedEvidence){
+          assert.equal(spec.consolidated,true,'Only the declared consolidated case may verify its evidence child');
+          assert.equal(preview,false,'The evidence child cannot borrow the mobile preview owner');
+          assert.equal(phase,'consolidated-evidence-document');
+        }
         const stale=(Math.floor(Date.now()/86400000)-Date.parse(expectedBtc.asOf+'T00:00:00Z')/86400000)>1;
         if(!stale)return;
-        const read=()=>evaluate(cdp,({preview})=>{
-          const doc=preview?document.querySelector('#mobile-preview')?.contentDocument:document;
+        const read=()=>evaluate(cdp,({preview,consolidatedEvidence})=>{
+          const frames=consolidatedEvidence?[...document.querySelectorAll('.atlas-center-frame:not([hidden])')]:[];
+          const frame=frames[0];
+          const doc=consolidatedEvidence?frame?.contentDocument:preview?document.querySelector('#mobile-preview')?.contentDocument:document;
           if(!doc)return null;
           const button=doc.querySelector('#refresh-button');
           const visible=Boolean(button&&button.getClientRects().length&&doc.defaultView.getComputedStyle(button).visibility==='visible');
@@ -913,11 +921,17 @@ async function main(){
           const summary=doc.querySelector('#btc-refresh-summary'),detail=doc.querySelector('#btc-refresh-detail'),live=doc.querySelector('#btc-refresh-announcement');
           const box=node=>{if(!node)return null;const b=node.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};};
           const topmost=node=>{if(!node)return false;const b=node.getBoundingClientRect(),hit=doc.elementFromPoint(b.left+b.width/2,b.top+b.height/2);return Boolean(hit&&(hit===node||node.contains(hit)));};
+          const frameBox=box(frame);
+          const parentTopmost=node=>{if(!frame||!node)return false;const b=node.getBoundingClientRect();return document.elementFromPoint(frameBox.left+b.left+b.width/2,frameBox.top+b.top+b.height/2)===frame;};
+          const frameOwner=consolidatedEvidence?{parentUrl:location.href,parentCenter:document.body.dataset.centerTool,count:frames.length,source:frame.src,
+            visible:Boolean(frame.checkVisibility()&&doc.readyState==='complete'&&doc.URL===frame.src&&frameBox.width>0&&frameBox.height>0&&frameBox.left>=-1&&frameBox.right<=innerWidth+1&&frameBox.top>=-1&&frameBox.bottom<=innerHeight+1),
+            topmost:document.elementFromPoint(frameBox.left+frameBox.width/2,frameBox.top+frameBox.height/2)===frame,box:frameBox}:null;
           const painted=Boolean(notice&&!notice.hidden&&notice.getClientRects().length&&doc.defaultView.getComputedStyle(notice).visibility==='visible');
-          return {url:doc.location.href,timeOrigin:doc.defaultView.performance.timeOrigin,
+          return {url:doc.location.href,timeOrigin:doc.defaultView.performance.timeOrigin,embedded:doc.body?.dataset.embedded==='true',frameOwner,
             notice:{state:notice?.dataset.state,visible:painted,box:box(notice),summary:summary?.textContent,detail:detail?.textContent,
               summaryUnclipped:Boolean(summary&&summary.scrollWidth<=summary.clientWidth+1),detailUnclipped:Boolean(detail&&detail.scrollWidth<=detail.clientWidth+1),
               retryBox:box(retry),retryDisabled:retry?.disabled,retryTopmost:topmost(retry),summaryTopmost:topmost(summary),
+              ...(consolidatedEvidence?{retryParentTopmost:parentTopmost(retry),summaryParentTopmost:parentTopmost(summary)}:{}),
               liveRole:live?.getAttribute('role'),livePoliteness:live?.getAttribute('aria-live'),liveAtomic:live?.getAttribute('aria-atomic'),announcement:live?.textContent,
               duplicateAnnouncements:[...doc.querySelectorAll('[role="status"]')].filter(n=>n.textContent.startsWith('비트코인 일별')).length,
               viewportWidth:doc.defaultView.innerWidth,viewportHeight:doc.defaultView.innerHeight},
@@ -927,7 +941,7 @@ async function main(){
             price:doc.querySelector('#lab-metrics .readout-main > strong')?.textContent,
             priceDate:doc.querySelector('#lab-metrics .atlas-observation-date')?.textContent,
             priceKind:doc.querySelector('#lab-metrics')?.dataset.kind};
-        },{preview});
+        },{preview,consolidatedEvidence});
         const observed=await until(async()=>{const value=await read();return value?.title==='갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.'&&value.disabled===false&&!value.busy?value:null;},'explicit failed offline refresh state');
         assert.equal(observed.cutoff,'관측 · '+expectedBtc.asOf.replaceAll('-','.')+' UTC');
         const notice=observed.notice;
@@ -936,6 +950,7 @@ async function main(){
         assert.equal(notice.state,'failed');assert.equal(notice.summary,'비트코인 일별 갱신 실패');
         assert.equal(notice.detail,expectedBtc.asOf.replaceAll('-','.')+' UTC 자료 유지');
         assert.equal(notice.retryDisabled,false);assert.ok(notice.retryTopmost&&notice.summaryTopmost,'Refresh notice or retry is occluded');
+        if(consolidatedEvidence)assert.ok(notice.retryParentTopmost&&notice.summaryParentTopmost,'The evidence refresh notice must also be reachable in the actual parent viewport');
         assert.ok(notice.summaryUnclipped&&notice.detailUnclipped,'Refresh notice text is clipped');
         for(const box of [notice.box,notice.retryBox])assert.ok(box.left>=-1&&box.right<=notice.viewportWidth+1&&box.top>=-1&&box.bottom<=notice.viewportHeight+1,'Refresh notice escapes its document viewport');
         if(notice.viewportWidth<=620)assert.ok(notice.retryBox.width>=44&&notice.retryBox.height>=44,'Refresh retry must remain touch-sized');
@@ -952,16 +967,17 @@ async function main(){
         const matching=frames.filter(frame=>frame.url===observed.url);
         assert.equal(matching.length,1,'Offline failure must bind to one current app document');
         const frame=matching[0];
-        const surface=offlineBtcRefreshSurface(spec,{...observed,preview});
-        if(spec.consolidated)assert.equal(surface,'btc','Consolidated refresh must belong to the actual native BTC market-entry parent');
+        const surface=offlineBtcRefreshSurface(spec,{...observed,preview,consolidatedEvidence});
+        if(spec.consolidated)assert.equal(surface,consolidatedEvidence?'evidence':'btc','Consolidated refresh must bind to its explicitly observed document owner');
         const candidates=await until(async()=>{const matches=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId)&&error.frameId===frame.id&&error.loaderId===frame.loaderId&&
+          (!consolidatedEvidence||error.documentUrl===observed.url)&&
           isExpectedOfflineBtcRefresh(error,{surface,archiveAsOf:expectedBtc.asOf}));return matches.length?matches:null;},'identified blocked refresh request');
         assert.equal(candidates.length,1,'Each verified refresh attempt must bind to exactly one new blocked request');
         for(const error of candidates)validatedOfflineRequestIds.add(error.requestId);
         receipt.expectedOfflineRefresh.push({phase,surface,frameId:frame.id,loaderId:frame.loaderId,observed,
           requestIds:candidates.map(error=>error.requestId),archiveSha256:expectedBtc.archiveSha256,
           archiveAsOf:expectedBtc.asOf,displayedPriceVerified:priceDisplayed,displayedPricePrecision:'USD rounded to 2 decimals',
-          failureTitleVerified:true,persistentVisibleErrorVerified:true,noticeVisibilityScope:preview?'child-document viewport; parent reachability checked separately':'actual viewport',
+          failureTitleVerified:true,persistentVisibleErrorVerified:true,noticeVisibilityScope:consolidatedEvidence?'active evidence child and actual parent viewport':preview?'child-document viewport; parent reachability checked separately':'actual viewport',
           interpretation:priceDisplayed?'Expected offline refresh failure; archive cutoff and displayed BTC price retained':
             'Expected offline refresh failure; archive cutoff retained. This surface does not display a current numeric BTC quote.'});
         return true;
