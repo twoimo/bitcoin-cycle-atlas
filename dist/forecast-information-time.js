@@ -5,20 +5,12 @@ export const FORECAST_INFORMATION_VERSION = 'forecast-information-clock-1';
 const HEX = /^[a-f0-9]{64}$/;
 const SYMBOLS = new Set(['BTCUSD','ETHUSD','MSTR','BMNR']);
 
-const NORMALIZED_TIMESTAMPS = new Map();
 export function normalizeForecastTimestamp(value, name='timestamp') {
-  if (typeof value === 'string') {
-    const cached = NORMALIZED_TIMESTAMPS.get(value);
-    if (cached !== undefined) return cached;
-  }
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/.test(value)) throw new TypeError(name+' must be an explicit UTC timestamp with at most millisecond precision');
   parseDay(value.slice(0,10));
   const result = Date.parse(value);
   if (!Number.isFinite(result) || new Date(result).toISOString().slice(0,19)!==value.slice(0,19)) throw new RangeError(name+' is not a valid timestamp');
-  const normalized = new Date(result).toISOString();
-  if (NORMALIZED_TIMESTAMPS.size >= 16384) NORMALIZED_TIMESTAMPS.clear();
-  NORMALIZED_TIMESTAMPS.set(value, normalized);
-  return normalized;
+  return new Date(result).toISOString();
 }
 function nonempty(value, name) {
   if (typeof value!=='string' || !value.trim() || value.length>1024) throw new TypeError(name+' is required');

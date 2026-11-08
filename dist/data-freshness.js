@@ -1,6 +1,4 @@
 const DAY = 86_400_000;
-const dayCache = new Map();
-const closeCache = new Map();
 export const MARKET_CALENDAR = Object.freeze({
   id: 'nyse-core-2026-2028-v1',
   firstYear: 2026,
@@ -22,12 +20,8 @@ export const FRESHNESS_LABELS = Object.freeze({
 
 export function parseDay(value) {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new TypeError('A calendar date is required');
-  const cached = dayCache.get(value);
-  if (cached !== undefined) return cached;
   const time = Date.parse(`${value}T00:00:00Z`);
   if (!Number.isFinite(time) || new Date(time).toISOString().slice(0,10) !== value) throw new RangeError('Invalid calendar date');
-  if (dayCache.size >= 16384) dayCache.clear();
-  dayCache.set(value, time);
   return time;
 }
 function instant(value) {
@@ -56,22 +50,14 @@ export function isEquitySession(day) {
 }
 export function sessionCloseUtc(day, market = 'crypto') {
   const time = parseDay(day);
-  if (market !== 'crypto' && market !== 'equity') throw new RangeError('Unknown market calendar');
-  const key = `${market}\0${day}`;
-  if (closeCache.has(key)) return closeCache.get(key);
-  let result;
-  if (market === 'crypto') result = new Date(time + DAY).toISOString();
-  else if (!isEquitySession(day)) result = null;
-  else {
-    const year = Number(day.slice(0,4));
-    const secondSundayMarch = 8 + (7 - new Date(Date.UTC(year,2,8)).getUTCDay()) % 7;
-    const firstSundayNovember = 1 + (7 - new Date(Date.UTC(year,10,1)).getUTCDay()) % 7;
-    const daylight = time >= Date.UTC(year,2,secondSundayMarch) && time < Date.UTC(year,10,firstSundayNovember);
-    result = new Date(time + ((EARLY_CLOSE.has(day) ? 13 : 16) + (daylight ? 4 : 5)) * 3_600_000).toISOString();
-  }
-  if (closeCache.size >= 16384) closeCache.clear();
-  closeCache.set(key, result);
-  return result;
+  if (market === 'crypto') return new Date(time + DAY).toISOString();
+  if (market !== 'equity') throw new RangeError('Unknown market calendar');
+  if (!isEquitySession(day)) return null;
+  const year = Number(day.slice(0,4));
+  const secondSundayMarch = 8 + (7 - new Date(Date.UTC(year,2,8)).getUTCDay()) % 7;
+  const firstSundayNovember = 1 + (7 - new Date(Date.UTC(year,10,1)).getUTCDay()) % 7;
+  const daylight = time >= Date.UTC(year,2,secondSundayMarch) && time < Date.UTC(year,10,firstSundayNovember);
+  return new Date(time + ((EARLY_CLOSE.has(day) ? 13 : 16) + (daylight ? 4 : 5)) * 3_600_000).toISOString();
 }
 
 export function observationTiming(day, market = 'crypto') {
