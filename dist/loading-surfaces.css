@@ -20,7 +20,13 @@
 .atlas-has-skeleton>.atlas-skeleton{position:absolute;inset:0;z-index:1;background:var(--loading-surface)}
 .atlas-inline-loading{height:3px;position:relative;flex:none;overflow:hidden;width:100%}
 .atlas-inline-loading>[skullet-bar]{display:block;width:40%;height:3px;background:var(--skullet-base)}
-.atlas-center-loading{position:absolute;inset:0;z-index:5;background:var(--loading-surface)}
+.atlas-center-loading{position:absolute;inset:0;z-index:21;background:var(--loading-surface);min-height:0}
+.atlas-center-frame[data-center-status=loading],.atlas-center-frame[data-center-status=error],.center-workspace-toolbar[data-center-status=loading],.center-workspace-toolbar[data-center-status=error]{visibility:hidden;pointer-events:none}
+.atlas-center-error{height:100%;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;box-sizing:border-box;text-align:center;color:var(--text);overflow:auto}
+.atlas-center-error strong{font-size:16px}
+.atlas-center-error p{margin:0;color:var(--muted);line-height:1.6;overflow-wrap:anywhere}
+.atlas-center-error button{min-width:88px;min-height:44px;padding:8px 16px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font:inherit;cursor:pointer}
+.atlas-center-error button:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
 .atlas-chart-pending{position:absolute;inset:0;z-index:2;pointer-events:none}
 .atlas-chart-pending[hidden],body[data-center-tool] .atlas-chart-pending{display:none}
 .eth-empty.atlas-has-skeleton{position:absolute;inset:0;display:block;padding:0;transform:none;max-width:none;min-height:0}

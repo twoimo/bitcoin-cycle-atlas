@@ -173,7 +173,10 @@ html[data-boot="loading"],html[data-boot="error"]{background:var(--boot-surface)
       const shell = document.getElementById('atlas-boot-shell');
       const status = document.getElementById('atlas-boot-status');
       const error = document.getElementById('atlas-boot-error');
+      let timeout = window.setTimeout(fail, 20000);
       function detach() {
+        window.clearTimeout(timeout);
+        timeout = null;
         document.removeEventListener('atlas:ready', ready);
         document.removeEventListener('atlas:boot-error', fail);
         window.removeEventListener('error', onError, true);

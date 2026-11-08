@@ -1,9 +1,9 @@
 import {atlasSitePath,atlasRootPath} from './site-paths.js';
-import { atlasPages,atlasNavigationId,atlasPageHref,labPageFromLocation,isWorkspaceChart } from './atlas-navigation.js?v=1.36.1';
+import { atlasPages,atlasNavigationId,atlasPageHref,labPageFromLocation,isWorkspaceChart,canonicalNativeChartEntry } from './atlas-navigation.js?v=1.36.1';
 import { workspaceInstrument } from './workspace-instruments.js';
 import { mountLegacyWorkspaceToolbar } from './legacy-workspace-toolbar.js';
 import { createChartWorkbenchControls,nativeChartControlSelector } from './rsi-workbench-controls.js?v=1.36.1';
-import { setLoadingSurface,clearLoadingSurface } from './loading-surfaces.js';
+import { mountCenterLoading } from './ui/center-loading.js';
 
 // Chromium retargets activeElement to an iframe when a child control owns
 // focus, without matching :focus or :focus-within on that iframe. Reflect the
@@ -60,9 +60,12 @@ export function mountCenterFrameFocus({frame,epoch,isActive}) {
 // The original chart owns all four perimeter regions. Only its center is
 // replaced; the same-origin frame keeps React's DOM and styles independently owned.
 export function mountCenterWorkbench() {
+  const document=globalThis.document,window=globalThis.window,location=globalThis.location;
   const service=document.querySelector('meta[name="atlas-service-base"]');
   const staticEntry=!service&&/^https?:$/.test(location.protocol)?document.querySelector('meta[name="atlas-static-entry"]')?.getAttribute('content'):null;
   if (window.parent !== window || !(service||staticEntry)) return;
+  const nativeEntry=canonicalNativeChartEntry(location);
+  if(nativeEntry){location.replace(nativeEntry);return;}
   // Freeze document-relative icons before history changes the route depth.
   if(staticEntry)for(const icon of document.querySelectorAll('link[rel~="icon"][href]'))icon.href=new URL(icon.getAttribute('href'),document.baseURI).href;
   const home=atlasSitePath('/');
@@ -80,7 +83,7 @@ export function mountCenterWorkbench() {
   let lastChart=null,lastMarket=atlasPages.find(page=>page.id==='market-us');
   const frames=new Map();
   const toolbarHosts=new Map();
-  let loadingLayer=null;
+  let loading=null;
   let legacyToolbar=null;
   let frameFocus=null;
   // Each same-origin frame retains its own toolbar mount. React portals keep
@@ -98,7 +101,8 @@ export function mountCenterWorkbench() {
     host.setAttribute('aria-label',`${page.title} 도구`);host.dataset.page=page.id;
     return host;
   }
-  function clearCenterLoading(){if(loadingLayer){clearLoadingSurface(loadingLayer);loadingLayer.remove();loadingLayer=null;}}
+  function clearCenterLoading(){loading?.destroy();loading=null;}
+  window.addEventListener('pagehide',clearCenterLoading);
   let epoch=0,selectionEpochFloor=0,activeIntentSerial=0;
   let lastSelection={epoch:-1,serial:0};
   let originalReader=null;
@@ -219,11 +223,28 @@ export function mountCenterWorkbench() {
     if(frame && frame!==existing){frame.contentWindow.postMessage({kind:'atlas:center-visibility',visible:false},location.origin);frame.hidden=true;}
     frame=existing;context(page,symbol,region);
     if(isWorkspaceChart(page))controls.begin(activeSymbol,epoch);
-    if(!frame) {frame=document.createElement('iframe');frame.className='atlas-center-frame';frame.title=page.title;frames.set(key,frame);plot.append(frame);const owned=frame;frame.addEventListener('load',()=>{owned.dataset.centerLoaded='true';if(frame===owned)clearCenterLoading();});}
-    frame.dataset.toolbarId=toolbar.id;frame.dataset.centerEpoch=String(epoch);frame.hidden=false;frame.title=page.title;
+    if(!frame) {frame=document.createElement('iframe');frame.className='atlas-center-frame';frames.set(key,frame);plot.append(frame);}
+    frame.dataset.toolbarId=toolbar.id;frame.dataset.centerEpoch=String(epoch);frame.hidden=false;frame.title=isWorkspaceChart(page)?`${activeSymbol} 가격 차트`:page.title;
+    delete frame.dataset.centerLoaded;
     const focusOwner=frame,focusEpoch=epoch;
     frameFocus=mountCenterFrameFocus({frame:focusOwner,epoch:focusEpoch,isActive:()=>frame===focusOwner&&!!activePage&&epoch===focusEpoch});
-    if(frame.dataset.centerLoaded!=='true'){loadingLayer=document.createElement('div');loadingLayer.className='atlas-center-loading';plot.append(loadingLayer);setLoadingSurface(loadingLayer,true,{kind:page.id==='rsi'?'rsi':page.tab==='diagnosis'?'diagnosis':page.id==='data'?'table':'chart',label:`${page.title} 로딩`});}
+    loading=mountCenterLoading({frame:focusOwner,plot,toolbar,
+      kind:page.id==='rsi'?'rsi':page.tab==='diagnosis'?'diagnosis':page.id==='data'?'table':'chart',
+      label:isWorkspaceChart(page)?`${activeSymbol} 가격 차트`:page.title,
+      isCurrent:()=>frame===focusOwner&&activePage?.id===page.id&&epoch===focusEpoch,
+      documentReady:!page.tab,
+      onLoad:()=>{if(page.tab)focusOwner.contentWindow?.postMessage(navigateMessage(),location.origin);},
+      onSettled:()=>document.dispatchEvent(new CustomEvent('atlas:ready')),
+      onRetry:()=>{
+        // A failed document must not acknowledge the retry or leave its old
+        // React portals attached to the new frame's toolbar host.
+        const retryPage=activePage,retrySymbol=activeSymbol,retryRegion=activeRegion;
+        frameFocus?.destroy();frameFocus=null;legacyToolbar?.destroy();legacyToolbar=null;
+        focusOwner.hidden=true;focusOwner.remove();frames.delete(key);frame=null;
+        toolbar.remove();toolbarHosts.delete(key);
+        open(retryPage,retrySymbol,{history:false,region:retryRegion});
+      },
+    });
     if(existing && page.tab) frame.contentWindow.postMessage(navigateMessage(),location.origin);
     else if(!existing) {
       if(page.tab&&staticEntry){const target=new URL(staticEntry,new URL(home,location.origin));if(target.origin!==location.origin||!target.pathname.startsWith(atlasRootPath()))throw new Error('Static frame escaped Atlas root');target.search=new URLSearchParams({embedded:'1','lab-tab':page.tab,'lab-region':page.region||'us',epoch:String(epoch),...(isWorkspaceChart(page)?{symbol:activeSymbol}:{}),...(activeRegion?{region:activeRegion}:{})}).toString();frame.src=versionedFrame(target);}
@@ -262,7 +283,11 @@ export function mountCenterWorkbench() {
   });
   window.addEventListener('message',event=>{
     if(!frame||!activePage?.tab||event.source!==frame.contentWindow||event.origin!==location.origin)return;
-    if(['atlas:rsi-state','atlas:chart-state'].includes(event.data?.kind)){controls.update(event.data);return;}
+    if(loading?.status==='error')return;
+    if(['atlas:rsi-state','atlas:chart-state'].includes(event.data?.kind)){
+      if(controls.update(event.data)&&loading?.accept())frame.dataset.centerLoaded='true';
+      return;
+    }
     if(event.data?.kind==='atlas:center-select') {
       const next=atlasPages.find(page=>page.id===event.data.page);if(!next?.tab)return;
       const instrument=workspaceInstrument(event.data.symbol);
@@ -283,7 +308,11 @@ export function mountCenterWorkbench() {
     // The host owns navigation. An initial/late frame render acknowledges its
     // state; if a newer user selection overtook it, replay that latest intent.
     const nextInstrument=workspaceInstrument(event.data.symbol);
-    if(activePage.id===page.id && (!isWorkspaceChart(page)||nextInstrument?.page===page.id&&activeSymbol===nextInstrument.symbol)&&event.data.epoch===epoch){frame.dataset.centerLoaded='true';clearCenterLoading();return;}
+    if(activePage.id===page.id && (!isWorkspaceChart(page)||nextInstrument?.page===page.id&&activeSymbol===nextInstrument.symbol)&&event.data.epoch===epoch){
+      // The route acknowledgement can precede price data and a painted chart.
+      if(!isWorkspaceChart(page)&&loading?.accept())frame.dataset.centerLoaded='true';
+      return;
+    }
     frame.contentWindow.postMessage(navigateMessage(),location.origin);
   });
   window.addEventListener('popstate',()=>{

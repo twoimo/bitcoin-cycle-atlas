@@ -134,7 +134,7 @@ body[data-shell=chart] .workbench-rail .atlas-nav .active{color:var(--nav-active
 body[data-center-tool] #lab-chart-stage{overflow:clip}
 .atlas-center-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--bg);z-index:20}
 .atlas-center-frame[hidden]{display:none}
-body.js[data-center-tool] .atlas-plot>:not(.atlas-center-frame){visibility:hidden;pointer-events:none}
+body.js[data-center-tool] .atlas-plot>:not(.atlas-center-frame):not(.atlas-center-loading){visibility:hidden;pointer-events:none}
 body[data-center-tool] .atlas-canvas-heading::after{content:attr(data-center-page);font-size:12px;color:var(--muted);white-space:nowrap;padding-inline:8px}
 body[data-center-tool] :is(.atlas-canvas-heading,.workbench-bottom-bar,.workbench-tools,.workbench-detail-tools,.mobile-extra-actions) :disabled{color:var(--subtle);background:var(--surface);cursor:default}
 body[data-center-tool] :is(.mobile-gesture-hint,.mobile-gesture-help){display:none}

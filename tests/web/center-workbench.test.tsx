@@ -54,10 +54,18 @@ test('center navigation retains all perimeter nodes, restores controls and bound
   toolbar.append(retainedButton,retainedSelect);
   click('[data-atlas-page=rsi]');
   assert.equal(document.getElementById(frame.dataset.toolbarId!),toolbar,'Reopening reuses the live portal owner');
-  assert.equal(toolbar.hidden,false);assert.notEqual(toolbar.inert,true,'A retained toolbar is not a background-chart control');
+  assert.equal(toolbar.hidden,false);assert.equal(toolbar.inert,true,'Retained portal actions wait for the current symbol and epoch');
+  assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,true,'The background chart stays protected during the new load');
+  listeners.get('message')!({source:(frame as any).contentWindow,origin:'http://localhost',data:{
+    kind:'atlas:chart-state',ready:true,symbol:'TQQQ',epoch:Number(frame.dataset.centerEpoch),unit:'USD',timezone:'America/New_York',
+    start:'2025-01-01',end:'2026-01-01',first:'2010-02-11',last:'2026-01-01',selected:'2026-01-01',close:50,
+    frequency:'daily',frequencies:['daily','weekly'],scale:'log',chartType:'line',tool:'crosshair',magnet:'off',
+    autoScale:true,candles:true,canUndo:false,canRedo:false,measurement:false,
+  }});
+  assert.notEqual(toolbar.inert,true,'The acknowledged toolbar is not a background-chart control');
   assert.equal(retainedButton.disabled,false,'Reopening does not disable retained portal buttons');
   assert.equal(retainedSelect.disabled,false,'Reopening does not disable retained portal selects');
-  assert.equal((document.querySelector('#type') as HTMLButtonElement).disabled,true,'The background chart stays protected');
+  assert.equal(svg.getAttribute('aria-hidden'),'true','The hidden native plot remains concealed after the active child owns shared controls');
 });
 
 test('static project navigation retains perimeter identity and rejects stale or foreign frames',async t=>{

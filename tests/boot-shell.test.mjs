@@ -53,6 +53,14 @@ function bootstrap({ earlyErrors = [] } = {}) {
   }
   assert.ok(root);
   const window = new EventTarget(), document = new EventTarget();
+  let now = 0, timerId = 0;
+  const timers = new Map();
+  window.setTimeout = (callback, delay) => { const id = ++timerId; timers.set(id, { callback, due: now + delay }); return id; };
+  window.clearTimeout = id => timers.delete(id);
+  const advance = milliseconds => {
+    now += milliseconds;
+    for (const [id, timer] of [...timers]) if (timer.due <= now) { timers.delete(id); timer.callback(); }
+  };
   document.documentElement = root;
   let parsingPosition = 0;
   document.getElementById = id => {
@@ -87,7 +95,7 @@ function bootstrap({ earlyErrors = [] } = {}) {
     step.run();
   }
   parsingPosition = Infinity;
-  return { root, window, document, content, byId, emit, resourceError, reloads: () => reloads };
+  return { root, window, document, content, byId, emit, resourceError, advance, pendingTimers: () => timers.size, reloads: () => reloads };
 }
 
 test('the initial HTML provides a visible loading status while unfinished controls stay inert', () => {
@@ -136,6 +144,35 @@ test('startup failures expose accessible recovery and a late ready event cannot 
     assert.ok(content.every(node => node.inert));
     byId.get('atlas-boot-retry').click();
     assert.equal(reloads(), 1, 'Recovery remains actionable while the app workspace is inert');
+  }
+});
+
+test('a silent startup stalls for at most 20 seconds and exposes a working retry without releasing old content', () => {
+  const f = bootstrap();
+  f.advance(19_999);
+  assert.equal(f.root.dataset.boot, 'loading');
+  f.advance(1);
+  assert.equal(f.root.dataset.boot, 'error');
+  assert.equal(f.byId.get('atlas-boot-status').hidden, true);
+  assert.equal(f.byId.get('atlas-boot-status').getAttribute('aria-busy'), 'false');
+  assert.equal(f.byId.get('atlas-boot-error').hidden, false);
+  assert.ok(f.content.every(node => node.inert && node.getAttribute('aria-hidden') === 'true'));
+  assert.equal(f.pendingTimers(), 0);
+  f.emit('atlas:ready');
+  assert.equal(f.root.dataset.boot, 'error', 'late rendering cannot replace the terminal failure');
+  f.byId.get('atlas-boot-retry').click();
+  assert.equal(f.reloads(), 1);
+});
+
+test('successful and failed startup both cancel the fallback deadline', () => {
+  for (const event of ['atlas:ready', 'atlas:boot-error']) {
+    const f = bootstrap();
+    assert.equal(f.pendingTimers(), 1);
+    f.emit(event);
+    assert.equal(f.pendingTimers(), 0);
+    const terminal = f.root.dataset.boot;
+    f.advance(60_000);
+    assert.equal(f.root.dataset.boot, terminal);
   }
 });
 
