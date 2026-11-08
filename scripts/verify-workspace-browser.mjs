@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+import {readNativeHorizontalScrollOwner,planNativeHorizontalScrollGesture,planNativeHorizontalScrollWheel} from './native-heading-scroll-contract.mjs';
 
 export async function readComparisonAssetSymbols(source=new URL('../dist/data/asset-comparison.json',import.meta.url)){
   const snapshot=JSON.parse(await readFile(source,'utf8')),symbols=snapshot.assets?.map(asset=>asset.symbol);
@@ -92,22 +93,25 @@ export async function verifyEmbeddedDataSurface(api){
           return host&&host.scrollWidth>host.clientWidth+1?'#'+host.id:'.atlas-canvas-heading';
         },selector);
         const heading=await bounds(cdp,owner);visibleBounds(heading,width,height);
-        const before=await evaluate(cdp,owner=>document.querySelector(owner).scrollLeft,owner);
-        const direction=target.box.left<heading.left?1:-1,distance=Math.min(144,heading.width/2),x=direction<0?heading.right-24:heading.left+24,y=(heading.top+heading.bottom)/2;
+        const ownerState=await evaluate(cdp,readNativeHorizontalScrollOwner,owner),before=ownerState.scrollLeft;
+        const direction=target.box.left<ownerState.clip.left?-1:1;
+        const distanceLimit=Math.min(144,heading.width/2);
+        const gesture=receipt.touch?planNativeHorizontalScrollGesture(ownerState,direction,{maxDistance:distanceLimit,inset:24}):planNativeHorizontalScrollWheel(ownerState,direction);
+        const {x,y}=gesture,distance=gesture.distance??distanceLimit,endX=gesture.endX??null;
         if(receipt.touch){
           await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});
           for(let step=1;step<=12;step++){
-            await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+direction*distance*step/12,y,id:1}]});
+            await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+(endX-x)*step/12,y,id:1}]});
             await new Promise(resolve=>setTimeout(resolve,16));
           }
           await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
         }else{
-          await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',x,y,deltaX:-direction*distance,deltaY:0});
+          await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',x,y,deltaX:direction*distance,deltaY:0});
         }
         await until(()=>evaluate(cdp,(owner,value)=>Math.abs(document.querySelector(owner).scrollLeft-value)>1,owner,before),'native heading pan',5000);
         let previous=null,stable=0;
         await until(async()=>{const left=await evaluate(cdp,owner=>document.querySelector(owner).scrollLeft,owner);stable=previous!==null&&Math.abs(left-previous)<.1?stable+1:0;previous=left;return stable>=3;},'native heading pan end',5000);
-        evidence.inputs.push({kind:receipt.touch?'native-heading-swipe':'native-heading-wheel',selector,owner,before,after:previous,x,y,distance,direction,parentAfter:await evaluate(cdp,readParent)});
+        evidence.inputs.push({kind:receipt.touch?'native-heading-swipe':'native-heading-wheel',selector,owner,before,after:previous,x,y,endX,distance,direction,hit:gesture.hit,nearestOwner:gesture.nearestOwner,ownerClip:gesture.clip,parentAfter:await evaluate(cdp,readParent)});
       }
       const target=await evaluate(cdp,readNativeInteractiveTarget,selector);
       assert.ok(complete(target),'Native heading pan never exposed '+selector+': '+JSON.stringify(target));return target;

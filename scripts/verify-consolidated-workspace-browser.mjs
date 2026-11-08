@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { readNativeInteractiveTarget } from './verify-workspace-browser.mjs';
 import { verifyChartZoomBrowser } from './verify-chart-zoom-browser.mjs';
+import { readNativeHorizontalScrollOwner, planNativeHorizontalScrollWheel } from './native-heading-scroll-contract.mjs';
 
 // Match scripts/build-pages.mjs and the public GitHub Pages project root.
 export const consolidatedPagesBase = '/bitcoin-cycle-atlas/';
@@ -9,6 +10,40 @@ export const consolidatedWorkspaceCases = [320, 390, 1440].map(width => ({
   page: 'workspace-consolidated', width, height: width === 390 ? 844 : 900,
   touch: width <= 390, route: `${consolidatedPagesBase}market-lab/us/`, consolidated: true,
 }));
+
+// A child toolbar may fit an action within its own scrollport while the outer
+// heading clips that whole toolbar. Choose the ancestor whose own client edge
+// clips the action; viewport clipping alone is not a reason to scroll a child.
+export function readNativeRevealMovement(selector) {
+  const node = document.querySelector(selector), box = node.getBoundingClientRect();
+  const selectorFor = element => {
+    const parts = [];
+    for (let current = element; current; current = current.parentElement) {
+      if (current.id) { parts.unshift('#' + CSS.escape(current.id)); break; }
+      let index = 1;
+      for (let sibling = current.previousElementSibling; sibling; sibling = sibling.previousElementSibling) if (sibling.localName === current.localName) index++;
+      parts.unshift(current.localName + ':nth-of-type(' + index + ')');
+    }
+    return parts.join(' > ');
+  };
+  for (let owner = node.parentElement; owner; owner = owner.parentElement) {
+    const style = getComputedStyle(owner), rect = owner.getBoundingClientRect();
+    const left = Math.max(0, rect.left), right = Math.min(innerWidth, rect.right), top = Math.max(0, rect.top), bottom = Math.min(innerHeight, rect.bottom);
+    if (right - left < 4 || bottom - top < 4) continue;
+    const horizontal = /auto|scroll/.test(style.overflowX) && owner.scrollWidth > owner.clientWidth + 1;
+    const vertical = /auto|scroll/.test(style.overflowY) && owner.scrollHeight > owner.clientHeight + 1;
+    const clientLeft = rect.left + owner.clientLeft, clientRight = clientLeft + owner.clientWidth;
+    const distanceX = box.left < clientLeft ? box.left - clientLeft - 2 : box.right > clientRight ? box.right - clientRight + 2 : 0;
+    const distanceY = box.top < top ? box.top - top - 2 : box.bottom > bottom ? box.bottom - bottom + 2 : 0;
+    const proposedX = horizontal ? Math.max(-180, Math.min(180, distanceX)) : 0;
+    const remainingX = proposedX > 0 ? owner.scrollWidth - owner.clientWidth - owner.scrollLeft : owner.scrollLeft;
+    const dx = remainingX > 1 ? proposedX : 0;
+    const dy = !dx && vertical ? Math.max(-260, Math.min(260, distanceY)) : 0;
+    if (dx || dy) return {x:(left+right)/2,y:(top+bottom)/2,deltaX:dx,deltaY:dy,
+      ownerSelector:selectorFor(owner),ownerClient:{left:clientLeft,right:clientRight},ownerScrollLeft:owner.scrollLeft};
+  }
+  return null;
+}
 
 // Real static sources, native keyboard/pointer input, and the actual parent and
 // iframe documents. No substitute model, synthetic price, or dispatched DOM event.
@@ -58,29 +93,21 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
       lastTarget=target;
       if (complete(target)) return target;
       assert.equal(target.disabled, false, 'Required action is disabled: ' + selector);
-      const movement = await evaluate(context, selector => {
-        const node = document.querySelector(selector), box = node.getBoundingClientRect();
-        for (let owner = node.parentElement; owner; owner = owner.parentElement) {
-          const style = getComputedStyle(owner), rect = owner.getBoundingClientRect();
-          const left = Math.max(0, rect.left), right = Math.min(innerWidth, rect.right), top = Math.max(0, rect.top), bottom = Math.min(innerHeight, rect.bottom);
-          if (right - left < 4 || bottom - top < 4) continue;
-          const horizontal = /auto|scroll/.test(style.overflowX) && owner.scrollWidth > owner.clientWidth + 1;
-          const vertical = /auto|scroll/.test(style.overflowY) && owner.scrollHeight > owner.clientHeight + 1;
-          // Move only the clipped edge into view. A fixed fraction of the
-          // viewport overshoots controls wider than half a narrow toolbar and
-          // alternates between clipping their left and right edges forever.
-          const distanceX=box.left<left?box.left-left-2:box.right>right?box.right-right+2:0;
-          const distanceY=box.top<top?box.top-top-2:box.bottom>bottom?box.bottom-bottom+2:0;
-          const dx=horizontal?Math.max(-180,Math.min(180,distanceX)):0;
-          const dy=!dx&&vertical?Math.max(-260,Math.min(260,distanceY)):0;
-          if (dx || dy) return { x: (left + right) / 2, y: (top + bottom) / 2, deltaX: dx, deltaY: dy };
-        }
-        return null;
-      }, selector);
+      const movement = await evaluate(context, readNativeRevealMovement, selector);
       assert.ok(movement, 'No native scroll can reveal ' + selector + ': ' + JSON.stringify(target));
+      let ownerBefore = null, gesture = null;
+      if (movement.deltaX) {
+        ownerBefore = await evaluate(context, readNativeHorizontalScrollOwner, movement.ownerSelector);
+        gesture = planNativeHorizontalScrollWheel(ownerBefore, Math.sign(movement.deltaX));
+        movement.x = gesture.x; movement.y = gesture.y;
+      }
       const point = await parentPoint(context, movement);
       await cdp.send('Input.dispatchMouseEvent', { type: 'mouseWheel', ...point, deltaX: movement.deltaX, deltaY: movement.deltaY });
       await settled(context);
+      const ownerAfter = ownerBefore ? await evaluate(context, readNativeHorizontalScrollOwner, movement.ownerSelector) : null;
+      evidence.inputs.push({kind:'native-reveal-wheel',selector,frame:context===cdp?'parent':childId,point,
+        deltaX:movement.deltaX,deltaY:movement.deltaY,owner:movement.ownerSelector,ownerClient:movement.ownerClient,
+        before:ownerBefore?.scrollLeft??null,after:ownerAfter?.scrollLeft??null,hit:gesture?.hit??null,nearestOwner:gesture?.nearestOwner??null,ownerClip:gesture?.clip??null});
     }
     throw new Error('Required action remains clipped: ' + selector + ': ' + JSON.stringify(lastTarget));
   }
