@@ -1,0 +1,121 @@
+[
+  {
+    "file": "ui-review-after/ui-entry-bmnr-root-1440x900.png",
+    "width": 1440,
+    "height": 900,
+    "bytes": 153587,
+    "sha256": "f677df8fa63834f50b72dfe9c37c48d46afde07a6ae76318e03d32d798805e7d"
+  },
+  {
+    "file": "ui-review-after/ui-entry-mstr-root-1440x900.png",
+    "width": 1440,
+    "height": 900,
+    "bytes": 163767,
+    "sha256": "2afcab5c01e69c5c507a7ac30071a86b2db6aab37834d62e1c8fb00a7499c058"
+  },
+  {
+    "file": "ui-review-after/wp4-after-1024x768-chart.png",
+    "width": 1024,
+    "height": 768,
+    "bytes": 207040,
+    "sha256": "01aa73dc28d6d640f37f9926e5996742ffb86eae0f8d96e82585ff9806e21579"
+  },
+  {
+    "file": "ui-review-after/wp4-after-1440x900-chart.png",
+    "width": 1440,
+    "height": 900,
+    "bytes": 265180,
+    "sha256": "6205377a36c43bfbce29194eee0dd246ec29fe61a11b979179d75047a3593137"
+  },
+  {
+    "file": "ui-review-after/wp4-after-1440x900-legend.png",
+    "width": 1440,
+    "height": 900,
+    "bytes": 210401,
+    "sha256": "acae384c7b6134a920e501e2b3532981bb521c80370f00d0de84237376142c76"
+  },
+  {
+    "file": "ui-review-after/wp4-after-1920x1080-chart.png",
+    "width": 1920,
+    "height": 1080,
+    "bytes": 312827,
+    "sha256": "4c24ee58d4cdefc3228bb36bf28ebef897b1ca4648275c848a88f35574d19b16"
+  },
+  {
+    "file": "ui-review-after/wp4-after-320x740-chart.png",
+    "width": 320,
+    "height": 740,
+    "bytes": 80073,
+    "sha256": "89e3d36aecb6baa42227ee8e1906ce8e703577235942f2af65c7f6eb6d4baba0"
+  },
+  {
+    "file": "ui-review-after/wp4-after-320x740-legend.png",
+    "width": 320,
+    "height": 740,
+    "bytes": 33020,
+    "sha256": "0c793e0404d396d5b05f74cf72a87d031a7a1d3d10042cebe1f1812684a95487"
+  },
+  {
+    "file": "ui-review-after/wp4-after-390x844-chart.png",
+    "width": 390,
+    "height": 844,
+    "bytes": 98938,
+    "sha256": "9492ec11ac9306d2d87990149863c80bf2d1a79bfd6feb0af3b09f6f619e26c5"
+  },
+  {
+    "file": "ui-review-after/wp4-after-390x844-legend.png",
+    "width": 390,
+    "height": 844,
+    "bytes": 44351,
+    "sha256": "ef655ee0811460bbed981df41e60e55b4520fba1978bc7f0c432b92dc92cc293"
+  },
+  {
+    "file": "ui-review-after/wp4-after-768x1024-chart.png",
+    "width": 768,
+    "height": 1024,
+    "bytes": 188118,
+    "sha256": "1a909ea0f0720643a7c2895636143fda8449a44331ea1ec8497579ce6944ae2e"
+  },
+  {
+    "file": "ui-review-before/wp4-before-1024x768-chart.png",
+    "width": 1024,
+    "height": 768,
+    "bytes": 206753,
+    "sha256": "17fdceb34bf73e817506b2506053e3362f51b575b166de332afb1df43d67205f"
+  },
+  {
+    "file": "ui-review-before/wp4-before-1440x900-chart.png",
+    "width": 1440,
+    "height": 900,
+    "bytes": 265021,
+    "sha256": "c200d3e53c19a7e73c98d4aba98efb3f3a8602ef88825a95500f8cb0a18c4578"
+  },
+  {
+    "file": "ui-review-before/wp4-before-1920x1080-chart.png",
+    "width": 1920,
+    "height": 1080,
+    "bytes": 310341,
+    "sha256": "ab5436b64d449bb85b73e9a376065a244249af35fca1378390c9c3a9a6d43021"
+  },
+  {
+    "file": "ui-review-before/wp4-before-320x740-chart.png",
+    "width": 320,
+    "height": 740,
+    "bytes": 81087,
+    "sha256": "5ac0aea41b778f437a923718e626d50008e6d98b9e20e0ba5fc0b54d4df75b6c"
+  },
+  {
+    "file": "ui-review-before/wp4-before-390x844-chart.png",
+    "width": 390,
+    "height": 844,
+    "bytes": 99336,
+    "sha256": "b9c6db22e078f227e1d1dff3c473d7ff758114fb2b5e9c33cac9d7c33ea28323"
+  },
+  {
+    "file": "ui-review-before/wp4-before-768x1024-chart.png",
+    "width": 768,
+    "height": 1024,
+    "bytes": 189440,
+    "sha256": "fc092c2ff44f3e190235043a7babb6049ee693f6359b8628f6bc735481a03536"
+  }
+]
