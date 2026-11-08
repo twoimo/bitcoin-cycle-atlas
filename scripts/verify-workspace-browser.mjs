@@ -831,4 +831,41 @@ export async function verifyWorkspaceSurface(api) {
   await key('End','End',35);await focused('#workbench-bottom-menu');
   await key('Escape','Escape',27);
   assert.equal(await evaluate(cdp,()=>document.querySelector('#workbench-bottom-menu').hidden),true);
+  if(page==='workspace-btc'&&width===1440){
+    receipt.workspace.reportedQaViewports=[];
+    try{
+      for(const [qaWidth,qaHeight]of [[390,844],[320,740],[390,430]]){
+        await cdp.send('Emulation.setDeviceMetricsOverride',{width:qaWidth,height:qaHeight,deviceScaleFactor:1,mobile:receipt.touch});
+        await settled(cdp);
+        await until(()=>evaluate(cdp,()=>{const svg=document.querySelector('#lab-chart'),b=svg.getBoundingClientRect(),v=svg.viewBox.baseVal;return b.width>0&&b.height>0&&Math.abs(b.width-v.width)<=1&&Math.abs(b.height-v.height)<=1;}),'reported mobile SVG resize',10000);
+        await settled(cdp);
+        const qa=await evaluate(cdp,()=>{
+          const svg=document.querySelector('#lab-chart'),b=svg.getBoundingClientRect(),v=svg.viewBox.baseVal;
+          const rect=el=>{const r=el.getBoundingClientRect();return {text:el.textContent.trim().slice(0,120),left:r.left,right:r.right,top:r.top,bottom:r.bottom};};
+          const boxes=selector=>[...svg.querySelectorAll(selector)].filter(el=>el.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})&&el.getBoundingClientRect().width>0).map(rect);
+          return {width:innerWidth,height:innerHeight,pageWidth:document.documentElement.scrollWidth,
+            chart:{left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height,viewWidth:v.width,viewHeight:v.height},
+            plotRight:b.left+(Number(svg.dataset.plotRight)-v.x)/v.width*b.width,
+            events:boxes('.history-event-marker.has-label > text'),periods:boxes('.cycle-interval-label'),
+            ticks:boxes('[data-price-axis-label="tick"]'),badges:boxes('.chart-latest-price-tag > rect,.cross-price-tag > rect'),
+            dates:boxes('.cross-date-tag > rect'),timeTicks:boxes('.price-time-label,.market-time-label')};
+        });
+        const overlaps=(a,b)=>Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1;
+        assert.equal(qa.width,qaWidth);assert.equal(qa.height,qaHeight);assert.ok(qa.pageWidth<=qaWidth+1,'Reported mobile viewport acquired horizontal overflow');
+        assert.ok(Math.abs(qa.chart.width-qa.chart.viewWidth)<=1&&Math.abs(qa.chart.height-qa.chart.viewHeight)<=1,'Reported mobile SVG must remain pixel-sized');
+        for(const event of qa.events)for(const period of qa.periods)assert.ok(!overlaps(event,period),'Historical label covers period comparison: '+JSON.stringify({qaWidth,qaHeight,event,period}));
+        for(const tick of qa.ticks){
+          assert.ok(tick.left>=qa.plotRight-1&&tick.right<=qa.chart.right+1,'Price tick escapes its reserved axis gutter: '+JSON.stringify({qaWidth,qaHeight,tick,plotRight:qa.plotRight}));
+          for(const badge of qa.badges)assert.ok(!overlaps(tick,badge),'Selected/latest price tag covers a visible price tick');
+        }
+        for(const date of qa.dates)for(const tick of qa.timeTicks)assert.ok(!overlaps(date,tick),'Selected date badge covers a normal time tick');
+        receipt.workspace.reportedQaViewports.push(qa);
+        await screenshot(cdp,`workspace-btc-qa-${qaWidth}x${qaHeight}.png`,receipt);
+      }
+    }finally{
+      await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:receipt.touch});
+      await settled(cdp);
+      await until(()=>evaluate(cdp,()=>{const svg=document.querySelector('#lab-chart'),b=svg.getBoundingClientRect(),v=svg.viewBox.baseVal;return Math.abs(b.width-v.width)<=1&&Math.abs(b.height-v.height)<=1;}),'restored desktop SVG resize',10000);
+    }
+  }
 }
