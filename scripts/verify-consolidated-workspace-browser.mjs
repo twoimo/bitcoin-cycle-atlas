@@ -219,17 +219,53 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     const result=await evaluate(cdp,()=>{
       const doc=document.querySelector('.atlas-center-frame:not([hidden])').contentDocument,svg=doc.querySelector('.rsi-chart-canvas svg'),b=svg.getBoundingClientRect();
       const interval=document.querySelector('#workbench-interval-select');
+      const box=node=>{if(!node)return null;const b=node.getBBox();return {x:b.x,y:b.y,width:b.width,height:b.height};};
+      const units=[...svg.querySelectorAll('.rsi-price-unit')],guides=[...svg.querySelectorAll('.theme-event-guide[data-date]')];
       return {nav:[...document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(n=>n.dataset.atlasPage),active:[...document.querySelectorAll('.atlas-nav [aria-current=page]')].map(n=>n.dataset.atlasPage),
         range:document.querySelector('#workbench-range-label').title,frequencies:[...interval.options].filter(o=>!o.disabled&&!o.hidden).map(o=>o.value),frequency:interval.value,
         rightRail:document.querySelector('.workbench-rail').getBoundingClientRect().width,svg:{width:b.width,height:b.height,viewWidth:svg.viewBox.baseVal.width,viewHeight:svg.viewBox.baseVal.height,start:svg.dataset.start,end:svg.dataset.end,visible:svg.checkVisibility()},
+        plot:{left:Number(svg.dataset.plotLeft),right:Number(svg.dataset.plotRight),top:Number(svg.dataset.plotTop),axisBox:box(svg.querySelector('[data-price-axis="true"] > rect'))},
+        units:units.map(node=>({text:node.textContent,box:box(node),visible:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})})),
+        markers:[...svg.querySelectorAll('.theme-event-mark')].map(node=>{
+          const kind=node.classList.contains('evidence')?'evidence':'judgment',guide=guides.find(line=>line.dataset.date===node.dataset.date&&line.classList.contains(kind));
+          return {date:node.dataset.date,anchorX:Number(node.dataset.anchorX),kind,label:node.querySelector('text')?.textContent,
+            box:box(node),rectBox:box(node.querySelector('rect')),textBox:box(node.querySelector('text')),
+            strokeWidth:parseFloat(doc.defaultView.getComputedStyle(node.querySelector('rect')).strokeWidth),
+            role:node.getAttribute('role'),tabIndex:node.getAttribute('tabindex'),
+            guide:guide?{x1:Number(guide.getAttribute('x1')),x2:Number(guide.getAttribute('x2')),
+              pointerEvents:doc.defaultView.getComputedStyle(guide).pointerEvents,hidden:guide.getAttribute('aria-hidden')}:null};
+        }),
         childHeight:doc.defaultView.innerHeight,sourceClock:document.querySelector('#atlas-update-status').getAttribute('aria-label'),candles:!document.querySelector('#workbench-chart-type').disabled};
     });
+    // Preserve the real glyph bounds even when the new axis assertion fails.
+    (evidence.priceAxisGeometry??=[]).push({symbol,svg:result.svg,plot:result.plot,units:result.units,markers:result.markers});
     assert.deepEqual(result.nav,['outlook','market-us','evidence','data','ipo','relay'],symbol+': one price destination');
     assert.deepEqual(result.active,['outlook'],symbol+': price destination owns all charts');
     assert.ok(result.range.includes(symbol+' / '+unit+' /'),symbol+': original price unit');
     assert.deepEqual(result.frequencies,frequencies,symbol+': only observed source frequencies');
     assert.ok(result.svg.visible&&result.svg.height>=result.childHeight*.75,symbol+': chart fills its allocated work area');
     assert.ok(Math.abs(result.svg.width-result.svg.viewWidth)<=1&&Math.abs(result.svg.height-result.svg.viewHeight)<=1,symbol+': pixel-sized chart labels');
+    assert.equal(result.units.length,1,symbol+': one visible price-axis unit');
+    const axisUnit=result.units[0],unitBox=axisUnit.box;
+    assert.ok(result.plot.axisBox&&Math.abs(result.plot.axisBox.x-result.plot.right)<.01,symbol+': actual price gutter matches its plot boundary');
+    assert.equal(axisUnit.text,unit,symbol+': axis retains the original source unit');
+    assert.ok(axisUnit.visible&&unitBox&&Object.values(unitBox).every(Number.isFinite)&&unitBox.width>0&&unitBox.height>0&&
+      unitBox.x>=result.plot.axisBox.x&&unitBox.x+unitBox.width<=result.svg.viewWidth&&unitBox.y>=0&&unitBox.y+unitBox.height<=result.plot.top,
+    symbol+': unit glyphs stay inside the existing upper price-gutter margin');
+    if(symbol==='HYPE'){
+      assert.ok(result.markers.length>0,'HYPE: actual evidence and judgment badges must be present');
+      for(const marker of result.markers){
+        const b=marker.box,stroke=marker.strokeWidth/2;
+        assert.ok(b&&Object.values(b).every(Number.isFinite)&&b.width>0&&b.height>0&&Number.isFinite(stroke)&&stroke>=0&&
+          b.x-stroke>=result.plot.left&&b.x+b.width+stroke<=result.plot.axisBox.x,'HYPE: painted badge glyphs and stroke must not enter the price gutter');
+        const start=Date.parse(result.svg.start+'T00:00:00Z'),end=Date.parse(result.svg.end+'T00:00:00Z'),stamp=Date.parse(marker.date+'T00:00:00Z');
+        const x=result.plot.left+(stamp-start)/Math.max(86400000,end-start)*(result.plot.right-result.plot.left);
+        assert.ok(Number.isFinite(x)&&Math.abs(marker.anchorX-x)<.01&&marker.guide&&Math.abs(marker.guide.x1-x)<.01&&Math.abs(marker.guide.x2-x)<.01,
+          'HYPE: moving a badge must preserve its original observed date guide');
+        assert.equal(marker.guide.pointerEvents,'none','HYPE: date guides cannot become button hit targets');
+        assert.equal(marker.guide.hidden,'true');assert.equal(marker.role,'button');assert.equal(marker.tabIndex,'0');
+      }
+    }
     if(receipt.width>760)assert.equal(result.rightRail,45,symbol+': same narrow rail');
     if(frequencies[0]==='monthly'){assert.equal(result.candles,false);assert.match(result.sourceClock,/가격지수 \d{4}-\d{2} · 거래량 \d{4}-\d{2}/);}
     evidence.states.push({label:'common-chart-'+symbol,...result});

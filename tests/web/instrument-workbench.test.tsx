@@ -6,6 +6,8 @@ import { parseHTML } from 'linkedom';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { analyzeHousing, type HousingRow } from '@atlas/domain/housing';
 import { InstrumentWorkbench } from '../../apps/web/src/components/instrument-workbench.js';
+import { RsiChartCanvas, type InstrumentMarker } from '../../apps/web/src/components/rsi-chart-canvas.js';
+import { RsiWorkbench } from '../../apps/web/src/panels/rsi-workbench.js';
 import { HousingChart, housingChartSeries } from '../../apps/web/src/panels/housing-chart.js';
 import { HousingPanel, type HousingCache } from '../../apps/web/src/panels/housing-panel.js';
 import { ThemePanel, type ThemeCache } from '../../apps/web/src/panels/theme-panel.js';
@@ -15,6 +17,7 @@ import { day } from '../../apps/web/src/rsi-chart-model.js';
 
 const housing = JSON.parse(await readFile(new URL('../../dist/data/housing.json', import.meta.url), 'utf8'));
 const themes = JSON.parse(await readFile(new URL('../../dist/data/themes.json', import.meta.url), 'utf8'));
+const marketSnapshot = JSON.parse(await readFile(new URL('../../dist/data/market-lab.json', import.meta.url), 'utf8'));
 const options = { region: 'busan', window: 36, band: 10, lag: 2, start: '2006-01', end: '2026-09' };
 const monthlyRows: HousingRow[] = Array.from({ length: 9 }, (_, index) => ({
   month: `2025-${String(index + 1).padStart(2, '0')}`, price: index === 3 || index === 8 ? null : 100 + index,
@@ -66,6 +69,7 @@ test('housing canvas breaks missing index segments and distinguishes real zero v
   assert.equal(document.querySelector('[data-volume="2025-06-01"]'), null, 'a missing transaction count produces no bar');
   assert.equal(document.querySelectorAll('[data-volume-average]').length, 1);
   assert.equal(document.querySelector('.rsi-price-badge'), null, 'the volume-only September selection has no invented price badge');
+  assert.equal(document.querySelector('.rsi-price-unit')?.textContent, '지수', 'the monthly index unit is visible on the price axis');
   assert.match(document.body.textContent!, /미공표/); assert.doesNotMatch(html, /NaN|Infinity/);
 });
 
@@ -80,7 +84,7 @@ test('HYPE weekly display aggregates its actual USDC candles and keeps the under
   assert.equal(view.frequency, 'weekly'); assert.equal(applyInstrumentCommand(view, series, 'frequency', 'monthly'), view);
 });
 
-async function mount(content: React.ReactNode, fetchSource?: typeof fetch) {
+async function mount(content: React.ReactNode, fetchSource?: typeof fetch, chartSize?: { width: number; height: number }) {
   const { document, window: dom } = parseHTML('<html><body><div id="root"></div></body></html>');
   Object.defineProperty(document, 'oninput', { value: null, configurable: true });
   const listeners = new Map<string, Set<(event: any) => void>>(), posts: any[] = [];
@@ -95,9 +99,13 @@ async function mount(content: React.ReactNode, fetchSource?: typeof fetch) {
   const { createRoot } = await import('react-dom/client'); const root = createRoot(document.getElementById('root')!);
   const elementPrototype = dom.Element.prototype as Element & { focus?: () => void };
   const focus = elementPrototype.focus;
+  const dimensions = new Map(['clientWidth','clientHeight'].map(key=>[key,Object.getOwnPropertyDescriptor(elementPrototype,key)]));
+  if(chartSize)for(const [key,value]of [['clientWidth',chartSize.width],['clientHeight',chartSize.height]] as const)
+    Object.defineProperty(elementPrototype,key,{configurable:true,get(this:Element){return this.classList.contains('rsi-chart-canvas')?value:0;}});
   elementPrototype.focus = function () {};
   const cleanup = async () => {
     await act(async () => root.unmount()); elementPrototype.focus = focus;
+    if(chartSize)for(const [key,descriptor]of dimensions)if(descriptor)Object.defineProperty(elementPrototype,key,descriptor);else Reflect.deleteProperty(elementPrototype,key);
     for (const [key, descriptor] of previous) if (descriptor) Object.defineProperty(globalThis, key, descriptor); else Reflect.deleteProperty(globalThis, key);
   };
   try { await act(async () => root.render(content)); } catch (error) { await cleanup(); throw error; }
@@ -109,6 +117,65 @@ async function mount(content: React.ReactNode, fetchSource?: typeof fetch) {
     click: (selector: string) => act(async () => { const target = document.querySelector(selector); assert(target, selector); target.dispatchEvent(new dom.Event('click', { bubbles: true, cancelable: true })); }),
   };
 }
+
+test('edge evidence groups stay inside the price plot while their guides and selection retain the original dates', async () => {
+  const series:InstrumentSeries={frequency:'daily',prices:[['2025-01-01',10],['2025-12-31',20]],bars:[],timeline:['2025-01-01','2025-12-31'],volumes:[]};
+  for(const [width,height]of [[320,808],[390,338],[1335,820]]){
+    const selected:string[]=[],picked:string[]=[],opened:string[]=[];
+    const marker=(id:string,date:string,kind:'evidence'|'judgment',chosen=false):InstrumentMarker=>({id,date,kind,label:kind==='evidence'?'E':'J',title:id,selected:chosen,onSelect:()=>selected.push(id)});
+    const markers=[marker('left-selected','2025-01-01','evidence',true),marker('left-other','2025-01-01','evidence'),
+      marker('left-judgment','2025-01-01','judgment'),marker('near-left','2025-01-02','evidence'),
+      marker('near-right','2025-12-30','evidence'),marker('right-selected','2025-12-31','evidence',true),
+      marker('right-other','2025-12-31','evidence'),marker('right-judgment','2025-12-31','judgment')];
+    const fixture=await mount(<RsiChartCanvas symbol="HYPE" unit="USDC" series={series} prices={series.prices} bars={[]} rows={[]}
+      view={initialInstrumentView(series)} active menuPulse={0} hover={null} svgRef={{current:null}} markers={markers}
+      onView={()=>{}} onStart={()=>{}} onEnd={()=>{}} onHover={()=>{}} onPick={pick=>picked.push(pick.date)} onMarker={()=>opened.push('details')}/>,undefined,{width,height});
+    try{
+      const svg=fixture.document.querySelector('.rsi-chart-canvas > svg')!,left=Number(svg.getAttribute('data-plot-left')),right=Number(svg.getAttribute('data-plot-right'));
+      assert.equal(svg.getAttribute('viewBox'),`0 0 ${width} ${height}`);
+      const groups=[...fixture.document.querySelectorAll('.theme-event-mark')];assert.equal(groups.length,6);
+      const bounds=groups.map(group=>{const rect=group.querySelector('rect')!;return {left:Number(rect.getAttribute('x'))-1,right:Number(rect.getAttribute('x'))+Number(rect.getAttribute('width'))+1,
+        top:Number(rect.getAttribute('y'))-1,bottom:Number(rect.getAttribute('y'))+Number(rect.getAttribute('height'))+1};});
+      for(const b of bounds)assert(b.left>=left&&b.right<=right,`${width}px: the badge including its selected stroke must not enter either gutter`);
+      for(let i=0;i<bounds.length;i++)for(let j=i+1;j<bounds.length;j++){
+        const a=bounds[i],b=bounds[j];assert(a.right<=b.left||b.right<=a.left||a.bottom<=b.top||b.bottom<=a.top,'Clamped badge centers must determine the collision lanes');
+      }
+      for(const group of groups){
+        const stamp=group.getAttribute('data-date')!,kind=group.classList.contains('evidence')?'evidence':'judgment';
+        const expected=left+(day(stamp)-day('2025-01-01'))/(day('2025-12-31')-day('2025-01-01'))*(right-left);
+        const guide=fixture.document.querySelector(`.theme-event-guide.${kind}[data-date="${stamp}"]`)!;
+        assert(guide,'The badge must retain its dated guide');
+        assert.equal(Number(group.getAttribute('data-anchor-x')),expected);
+        assert.equal(Number(guide.getAttribute('x1')),expected);assert.equal(guide.getAttribute('x1'),guide.getAttribute('x2'));
+        assert.equal(guide.getAttribute('pointer-events'),'none');assert.equal(guide.getAttribute('aria-hidden'),'true');
+        assert.equal(group.querySelector('line'),null,'The date guide is outside the button hit area');
+        assert.equal(group.getAttribute('role'),'button');assert.equal(group.getAttribute('tabindex'),'0');
+        assert(group.getAttribute('aria-label')!.includes(stamp));
+      }
+      const first=groups.find(group=>group.classList.contains('evidence')&&group.getAttribute('data-date')==='2025-01-01')!;
+      const last=groups.find(group=>group.classList.contains('evidence')&&group.getAttribute('data-date')==='2025-12-31')!;
+      assert.equal(first.querySelector('text')!.textContent,'E2');assert.equal(last.querySelector('text')!.textContent,'E2');
+      assert(Number(first.querySelector('text')!.getAttribute('x'))>Number(first.getAttribute('data-anchor-x')));
+      assert(Number(last.querySelector('text')!.getAttribute('x'))<Number(last.getAttribute('data-anchor-x')));
+      await fixture.click('.theme-event-mark.evidence[data-date="2025-12-31"]');
+      await fixture.key('.theme-event-mark.evidence[data-date="2025-01-01"]','Enter');
+      await fixture.key('.theme-event-mark.judgment[data-date="2025-12-31"]',' ');
+      assert.deepEqual(selected,['right-selected','left-selected','right-judgment']);assert.deepEqual(picked,[]);assert.equal(opened.length,3);
+    }finally{await fixture.cleanup();}
+  }
+});
+
+test('ETF price axes expose the original snapshot USD and KRW units above the plot',()=>{
+  for(const [symbol,id,unit]of [['TQQQ','tqqq','USD'],['SOXL','soxl','USD'],['233740','kodex-kosdaq150','KRW']]){
+    const market=marketSnapshot.markets.find((item:{id:string})=>item.id===id);assert.equal(market.unit,unit);
+    const html=renderToStaticMarkup(<RsiWorkbench symbol={symbol} market={market} snapshot={marketSnapshot} now={new Date(marketSnapshot.generatedAt)}
+      rows={[]} epoch={1} active embedded={false} onDate={()=>{}} comparison={null} references={null}/>);
+    const document=parseHTML(`<html><body>${html}</body></html>`).document,svg=document.querySelector('.rsi-chart-canvas > svg')!,label=svg.querySelector('.rsi-price-unit')!;
+    assert(label,`${symbol}: a unit is required without opening a disclosure`);assert.equal(label.textContent,unit);
+    assert(Number(label.getAttribute('x'))>Number(svg.getAttribute('data-plot-right')));
+    assert(Number(label.getAttribute('y'))<Number(svg.getAttribute('data-plot-top')));
+  }
+});
 
 test('instrument commands reject stale scopes, preserve nullable monthly quotes and reopen the common chart from records', async t => {
   const series = housingChartSeries(monthlyRows), cache: InstrumentChartCache = {};
@@ -181,6 +248,7 @@ test('housing parent initializes each newly selected region independently and re
 test('HYPE parent shares chart settings and retains evidence selection without a permanent inspector', async t => {
   const cache: ThemeCache = {}, fixture = await mount(<ThemePanel cache={cache} embedded epoch={9}/>, savedSource); t.after(fixture.cleanup);
   await fixture.ready('.theme-price-chart');
+  assert.equal(fixture.document.querySelector('.theme-price-chart .rsi-price-unit')?.textContent,'USDC');
   const message = (action: string, value?: unknown) => fixture.message({ kind: 'atlas:center-command', symbol: 'HYPE', epoch: 9, action, value });
   assert(fixture.document.querySelector('.theme-price-chart')); assert.equal(fixture.document.querySelector('.theme-inspector'), null);
   await message('zoom', .6); assert.equal(cache.view?.start, cache.chart?.view?.start, 'theme event navigation and the shared range have one retained value');

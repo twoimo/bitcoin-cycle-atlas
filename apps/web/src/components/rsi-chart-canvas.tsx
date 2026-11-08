@@ -73,7 +73,14 @@ export function RsiChartCanvas(props:Props) {
   const markerGroups=new Map<string,InstrumentMarker[]>();
   for(const marker of props.markers||[])if(marker.date>=view.start&&marker.date<=view.end){const key=`${marker.kind}:${marker.date}`;markerGroups.set(key,[...markerGroups.get(key)||[],marker]);}
   const laneEnds:number[]=[];
-  const marks=[...markerGroups.entries()].sort(([,a],[,b])=>a[0].date.localeCompare(b[0].date)).map(([key,items])=>{const marker=items.find(item=>item.selected)||items.at(-1)!,x=g.x(marker.date);let lane=laneEnds.findIndex(end=>end+30<x);if(lane<0)lane=laneEnds.length;laneEnds[lane]=x;return {key,items,marker,x,y:g.top+10+lane*20};});
+  const marks=[...markerGroups.entries()].sort(([,a],[,b])=>a[0].date.localeCompare(b[0].date)).map(([key,items])=>{
+    const marker=items.find(item=>item.selected)||items.at(-1)!,x=g.x(marker.date);
+    // Keep the full 24px badge and selected stroke inside the price plot.
+    // The original date still owns its guide; only the label is displaced.
+    const labelX=Math.max(g.left+14,Math.min(g.right-14,x));
+    let lane=laneEnds.findIndex(end=>end+30<labelX);if(lane<0)lane=laneEnds.length;laneEnds[lane]=labelX;
+    return {key,items,marker,x,labelX,y:g.top+10+lane*20};
+  });
   function pointer(event:React.PointerEvent<SVGSVGElement>|React.MouseEvent<SVGSVGElement>):Pick|null {
     const rect=event.currentTarget.getBoundingClientRect(),px=(event.clientX-rect.left)/rect.width*size.width,py=(event.clientY-rect.top)/rect.height*size.height;
     if(px<g.left||px>g.right||py<g.top||py>g.bottom)return null;
@@ -95,6 +102,7 @@ export function RsiChartCanvas(props:Props) {
       onPointerMove={event=>{if(active&&!event.buttons)onHover(pointer(event));}} onPointerLeave={()=>onHover(null)} onClick={event=>{if(!active||event.defaultPrevented)return;const p=pointer(event);if(p)onPick(p);}}>
       <title>{`${symbol} ${({daily:'1D',weekly:'1W',monthly:'1M'})[view.frequency]} 관측 차트`}</title><desc>{`${view.start}부터 ${view.end}, ${g.visible.length}개 가격 관측.${props.series?' 미공표 가격과 거래량은 생성하지 않습니다.':' 가격과 RSI는 같은 날짜 축을 사용합니다.'}`}</desc>
       <defs><clipPath id={priceClip}><rect x={g.left} y={g.top} width={g.right-g.left} height={g.priceBottom-g.top}/></clipPath><clipPath id={oscClip}><rect x={g.left} y={g.rsiTop} width={g.right-g.left} height={Math.max(0,g.bottom-g.rsiTop)}/></clipPath></defs>
+      <text className="rsi-axis rsi-price-unit" x={g.right+size.axis.inset} y={g.top-5} aria-label={`가격 단위 ${unit}`}>{unit}</text>
       {!g.visible.length&&<text className="rsi-axis" x={(g.left+g.right)/2} y={(g.top+g.priceBottom)/2} textAnchor="middle">표시 구간에 관측 자료 없음</text>}
       {g.ticks.map(value=><g key={value}><line className="rsi-grid" x1={g.left} x2={g.right} y1={g.y(value)} y2={g.y(value)}/><text className="rsi-axis" x={g.right+size.axis.inset} y={g.y(value)+4} {...axisText(labels.tick(value))}>{labels.tick(value)}</text></g>)}
       {Array.from({length:timeTickCount},(_,i)=>{const value=date(day(view.start)+(day(view.end)-day(view.start))*i/(timeTickCount-1)),x=g.x(value);return <g key={i}><line className="rsi-grid" x1={x} x2={x} y1={g.top} y2={g.bottom}/><text className="rsi-axis" x={x} y={size.height-8} textAnchor={i===0?'start':i===timeTickCount-1?'end':'middle'}>{view.frequency==='monthly'||day(view.end)-day(view.start)>730?value.slice(0,7):value.slice(5)}</text></g>;})}
@@ -115,7 +123,16 @@ export function RsiChartCanvas(props:Props) {
       {selectedDate&&g.x(selectedDate)>=g.left&&g.x(selectedDate)<=g.right&&<g><line className="rsi-crosshair" x1={g.x(selectedDate)} x2={g.x(selectedDate)} y1={g.top} y2={g.bottom}/><rect className="rsi-date-badge" x={Math.max(g.left,Math.min(g.right-94,g.x(selectedDate)-47))} y={g.bottom+2} width="94" height="22"/><text className="rsi-date-text" x={Math.max(g.left+47,Math.min(g.right-47,g.x(selectedDate)))} y={g.bottom+17} textAnchor="middle">{view.frequency==='monthly'?selectedDate.slice(0,7):selectedDate}</text>{selected&&<><rect className="rsi-price-badge" x={g.right+1} y={Math.max(g.top,Math.min(g.priceBottom-18,g.y(selected[1])-9))} width={size.width-g.right-2} height="18"/><text className="rsi-price-text" x={g.right+size.axis.inset} y={Math.max(g.top+13,Math.min(g.priceBottom-5,g.y(selected[1])+4))} {...axisText(labels.price(selected[1]),true)}>{labels.price(selected[1])}</text></>}</g>}
       {hover&&<line className="rsi-crosshair" x1={g.left} x2={g.right} y1={hover.panel==='rsi'?g.rsiY(hover.value):g.y(hover.value)} y2={hover.panel==='rsi'?g.rsiY(hover.value):g.y(hover.value)}/>}
       {measurement.length===2&&<g className="rsi-measurement"><rect x={Math.min(g.x(measurement[0].date),g.x(measurement[1].date))} y={Math.min(anchorY(measurement[0]),anchorY(measurement[1]))} width={Math.max(1,Math.abs(g.x(measurement[0].date)-g.x(measurement[1].date)))} height={Math.max(1,Math.abs(anchorY(measurement[0])-anchorY(measurement[1])))}/><line x1={g.x(measurement[0].date)} x2={g.x(measurement[1].date)} y1={anchorY(measurement[0])} y2={anchorY(measurement[1])}/><text x={Math.max(g.left,Math.min(g.right-190,g.x(measurement[1].date)))} y={Math.max(g.top+16,Math.min(g.bottom-8,anchorY(measurement[1])-10))}>{`${axisNumber(measurement[1].value-measurement[0].value)} ${measurement[0].panel==='rsi'?'RSI pt':unit} (${measurement[0].value===0?'비율 미산출':((measurement[1].value/measurement[0].value-1)*100).toFixed(2)+'%'}) / ${Math.abs(day(measurement[1].date)-day(measurement[0].date))}일`}</text></g>}
-      {marks.map(({key,items,marker,x,y})=><Fragment key={key}><line className={`theme-event-guide ${marker.kind}`} x1={x} x2={x} y1={y+8} y2={g.priceBottom}/><g className={`theme-event-mark ${marker.kind} ${items.some(item=>item.selected)?'selected':''}`} role="button" tabIndex={active?0:-1} aria-label={`${marker.kind==='judgment'?'판정':'근거'} ${items.length>1?`${items.length}건`:marker.title} ${marker.date}`} onClick={event=>{event.stopPropagation();if(active){marker.onSelect();props.onMarker?.();}}} onKeyDown={event=>{if(active&&['Enter',' '].includes(event.key)){event.preventDefault();event.stopPropagation();marker.onSelect();props.onMarker?.();}}}><title>{`${items.map(item=>item.title).join(' / ')} / ${marker.date}`}</title><rect x={x-12} y={y-8} width={24} height={16} rx={2}/><text x={x} y={y+4} textAnchor="middle">{marker.label}{items.length>1?items.length:''}</text></g></Fragment>)}
+      {marks.map(({key,items,marker,x,labelX,y})=><Fragment key={key}>
+        <line className={`theme-event-guide ${marker.kind}`} data-date={marker.date} x1={x} x2={x} y1={y+8} y2={g.priceBottom} pointerEvents="none" aria-hidden="true"/>
+        {labelX!==x&&<line className={`theme-event-guide theme-event-connector ${marker.kind}`} x1={labelX} x2={x} y1={y+8} y2={y+8} pointerEvents="none" aria-hidden="true"/>}
+        <g className={`theme-event-mark ${marker.kind} ${items.some(item=>item.selected)?'selected':''}`} data-date={marker.date} data-anchor-x={x}
+          role="button" tabIndex={active?0:-1} aria-label={`${marker.kind==='judgment'?'판정':'근거'} ${items.length>1?`${items.length}건`:marker.title} ${marker.date}`}
+          onClick={event=>{event.stopPropagation();if(active){marker.onSelect();props.onMarker?.();}}}
+          onKeyDown={event=>{if(active&&['Enter',' '].includes(event.key)){event.preventDefault();event.stopPropagation();marker.onSelect();props.onMarker?.();}}}>
+          <title>{`${items.map(item=>item.title).join(' / ')} / ${marker.date}`}</title><rect x={labelX-12} y={y-8} width={24} height={16} rx={2}/><text x={labelX} y={y+4} textAnchor="middle">{marker.label}{items.length>1?items.length:''}</text>
+        </g>
+      </Fragment>)}
       <g data-price-axis="true"><title>가격축 · 드래그·휠로 확대·축소 · 두 번 눌러 자동 맞춤</title><rect x={g.right} y={g.top} width={Math.max(1,size.width-g.right)} height={Math.max(1,g.priceBottom-g.top)} fill="transparent" pointerEvents="all" style={{cursor:'ns-resize',touchAction:'none'}}/></g>
       <g data-time-axis="true"><title>시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 전체 범위</title><rect x={g.left} y={g.bottom} width={g.right-g.left} height={Math.max(1,size.height-g.bottom)} fill="transparent" pointerEvents="all" style={{cursor:'ew-resize',touchAction:'none'}}/></g>
     </svg>
