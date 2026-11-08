@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 import {utcDay,dateFromDay} from '../dist/cycle-engine.js';
-import {sessionCloseUtc} from '../dist/data-freshness.js';
+import {sessionCloseUtc,isEquitySession} from '../dist/data-freshness.js';
 import {forecastHash,createForecastSnapshot,createForecastRecord} from '../dist/forecast-records.js';
 import {createHistoricalReplaySession,createRecordedReplaySession,buildReplayFrame,buildReplayChartData} from '../dist/forecast-replay.js';
 
@@ -169,4 +170,101 @@ test('chart range filters historical prices and candles without changing forecas
   assert.deepEqual(data.frame,frame);
   assert.throws(()=>buildReplayChartData(session,{frequency:'1m'}),/daily or weekly/);
   assert.throws(()=>buildReplayChartData(session,{startDate:date(2),endDate:date(1)}),/reversed/);
+});
+
+test('warmed calendar reuse preserves full outputs across clock changes, rewinds and different same-date prices',async()=>{
+  const rows=observations.map(row=>receipt(row)),original=rows.find(row=>row.date===asOf);
+  rows.push({...original,high:9999,collectedAt:'2026-01-05T01:00:00.000Z',vintageId:'later-origin-high'});
+  rows.sort((a,b)=>a.date.localeCompare(b.date));
+  const create=values=>createRecordedReplaySession({record,snapshot,observations:values,evaluatedAt:at,horizonDays:30});
+  const session=await create(rows),options=[
+    {clockMode:'information-time',frequency:'weekly',cursorIndex:0},
+    {clockMode:'information-time',frequency:'weekly',cursorIndex:1,cursorAt:'2026-01-02T01:00:00.000Z'},
+    {clockMode:'information-time',frequency:'weekly',cursorIndex:4,cursorAt:'2026-01-05T01:00:00.000Z'},
+    {frequency:'weekly',cursorIndex:10,startDate:'2025-12-29',endDate:'2026-01-12'},
+    {clockMode:'information-time',frequency:'weekly',cursorIndex:5,cursorAt:'2026-01-06T00:00:00.000Z'},
+    {clockMode:'information-time',frequency:'weekly',cursorIndex:5,cursorAt:'2026-01-06T01:00:00.000Z'},
+    {frequency:'daily',cursorIndex:2,startDate:date(-2),endDate:date(2)},
+  ];
+  const expected=[];
+  for(const option of options)expected.push(buildReplayChartData(await create(rows),option));
+  const different=rows.map(row=>row.date<=asOf?row:{...row,price:row.price*2,open:row.open*2,high:row.high*2,low:row.low*2,close:row.close*2});
+  const other=await create(different);
+  for(const index of [3,6,5,4,2,1,0,3,1,2,6]){
+    const foreign=buildReplayChartData(other,options[3]);
+    assert.equal(foreign.frame.selected.actual,observations.find(row=>row.date===date(10)).price*2);
+    assert.deepEqual(buildReplayChartData(session,options[index]),expected[index]);
+  }
+  assert.equal(expected[0].observedRows.length,0);
+  assert.ok(expected[1].observedCandles.every(row=>row.high<9999));
+  assert.ok(expected[2].observedCandles.some(row=>row.high===9999));
+});
+
+test('equity calendar reuse retains holiday, early-close, DST and unreviewed-week boundaries',async()=>{
+  const directory=new URL('../dist/data/asset-forecast-ledger/',import.meta.url),index=JSON.parse(await readFile(new URL('index.json',directory)));
+  const boundaries=[
+    {symbol:'MSTR',cursor:'2027-03-15',close:'2027-03-15T20:00:00.000Z',days:1,complete:false,gap:'2027-03-10',gapWeek:'2027-03-08',priorDate:'2027-03-12',priorClose:'2027-03-12T21:00:00.000Z'},
+    {symbol:'BMNR',cursor:'2026-11-02',close:'2026-11-02T21:00:00.000Z',days:1,complete:false,unreviewed:true,priorDate:'2026-10-30',priorClose:'2026-10-30T20:00:00.000Z'},
+    {symbol:'MSTR',cursor:'2026-11-27',close:'2026-11-27T18:00:00.000Z',days:4,complete:true},
+  ];
+  for(const boundary of boundaries){
+    const entry=index.entries.find(row=>row.symbol===boundary.symbol&&row.scenario==='base'&&row.asOf==='2026-10-23');
+    const record=JSON.parse(await readFile(new URL(entry.recordPath,directory))),snapshot=JSON.parse(await readFile(new URL(entry.snapshotPath,directory)));
+    const origin=utcDay(record.asOf),anchor=snapshot.inputs.primaryPrices.at(-1)[1];
+    // The preserved record and consumed closes are verified unchanged; only
+    // these test OHLC/future observations are synthetic calendar fixtures.
+    const candle=(date,price)=>date===boundary.gap?{date,price}:{date,price,open:price*.99,high:price*1.02,low:price*.98,close:price,volume:1};
+    const rows=snapshot.inputs.primaryPrices.map(([date,price])=>candle(date,price));
+    for(let offset=1;offset<=180;offset++){
+      const date=dateFromDay(origin+offset);if(isEquitySession(date))rows.push(candle(date,anchor+offset));
+    }
+    const create=()=>createRecordedReplaySession({record,snapshot,observations:rows,horizonDays:180,evaluatedAt:'2027-04-30T12:00:00.000Z'});
+    const session=await create(),before={frequency:'weekly',cursorDate:boundary.cursor,cursorAt:new Date(Date.parse(boundary.close)-1).toISOString()},after={...before,cursorAt:boundary.close};
+    assert.equal(sessionCloseUtc(boundary.cursor,'equity'),boundary.close);
+    if(boundary.priorDate)assert.equal(sessionCloseUtc(boundary.priorDate,'equity'),boundary.priorClose);
+    const expectedBefore=buildReplayChartData(await create(),before),expectedAfter=buildReplayChartData(await create(),after);
+    buildReplayChartData(session,{frequency:'weekly',cursorDate:session.timeline.at(-1)});
+    for(const option of [before,after,before,after]){
+      buildReplayChartData(session,{...option,frequency:'daily'});
+      assert.deepEqual(buildReplayChartData(session,option),option===before?expectedBefore:expectedAfter);
+    }
+    assert.ok(!expectedBefore.observedCandles.some(row=>row.endDate===boundary.cursor));
+    const disclosed=expectedAfter.observedCandles.find(row=>row.endDate===boundary.cursor);
+    assert.equal(disclosed.daysIncluded,boundary.days);assert.equal(disclosed.complete,boundary.complete);
+    if(boundary.gap){assert.ok(expectedAfter.missingWeekCount>0);assert.ok(!expectedAfter.observedCandles.some(row=>row.periodStartDate===boundary.gapWeek));}
+    if(boundary.unreviewed){assert.ok(expectedAfter.unreviewedWeekCount>0);assert.ok(!expectedAfter.observedCandles.some(row=>row.periodStartDate==='2025-12-29'));}
+  }
+});
+
+test('equity calendar reuse never caches prices or acquisition-dependent weekly disclosure',async()=>{
+  const directory=new URL('../dist/data/asset-forecast-ledger/',import.meta.url),index=JSON.parse(await readFile(new URL('index.json',directory)));
+  const entry=index.entries.find(row=>row.symbol==='MSTR'&&row.scenario==='base'&&row.asOf==='2026-10-23');
+  const record=JSON.parse(await readFile(new URL(entry.recordPath,directory))),snapshot=JSON.parse(await readFile(new URL(entry.snapshotPath,directory)));
+  const collectedAt=snapshot.informationClock.latestCollectionAt,anchor=snapshot.inputs.primaryPrices.at(-1)[1];
+  const withReceipt=(date,price,captured,extra={})=>({date,price,open:price*.99,high:price*1.02,low:price*.98,close:price,volume:1,
+    collectedAt:captured,sourceHash:'a'.repeat(64),sourceUrl:'https://example.invalid/equity-calendar',vintageId:'base:'+date,...extra});
+  const rows=snapshot.inputs.primaryPrices.map(([date,price])=>withReceipt(date,price,collectedAt));
+  for(let day=utcDay('2026-10-26');day<=utcDay('2026-11-06');day++){
+    const date=dateFromDay(day);if(!isEquitySession(date))continue;
+    rows.push(withReceipt(date,anchor+day-utcDay('2026-10-26')+1,new Date(Date.parse(sessionCloseUtc(date,'equity'))+3600000).toISOString()));
+  }
+  const original=rows.find(row=>row.date==='2026-11-02');
+  rows.push({...original,high:original.high*2,collectedAt:'2026-11-04T23:00:00.000Z',sourceHash:'b'.repeat(64),vintageId:'later-high'});
+  rows.sort((a,b)=>a.date.localeCompare(b.date));
+  const create=()=>createRecordedReplaySession({record,snapshot,observations:rows,evaluatedAt:'2026-11-08T12:00:00.000Z',horizonDays:30});
+  const session=await create(),options=[
+    {clockMode:'information-time',frequency:'weekly',cursorDate:'2026-11-02',cursorAt:'2026-11-02T21:00:00.000Z'},
+    {clockMode:'information-time',frequency:'weekly',cursorDate:'2026-11-02',cursorAt:'2026-11-02T22:00:00.000Z'},
+    {clockMode:'information-time',frequency:'weekly',cursorDate:'2026-11-04',cursorAt:'2026-11-04T23:00:00.000Z'},
+    {clockMode:'observed-date',frequency:'weekly',cursorDate:'2026-11-02'},
+  ],expected=[];
+  for(const option of options)expected.push(buildReplayChartData(await create(),option));
+  for(const index of [3,2,1,0,2,0,1,3]){
+    buildReplayChartData(session,{...options[index],frequency:'daily'});
+    assert.deepEqual(buildReplayChartData(session,options[index]),expected[index]);
+  }
+  assert.ok(!expected[0].observedCandles.some(row=>row.periodStartDate==='2026-11-02'));
+  assert.equal(expected[1].observedCandles.find(row=>row.periodStartDate==='2026-11-02').high,original.high);
+  assert.equal(expected[2].observedCandles.find(row=>row.periodStartDate==='2026-11-02').high,original.high*2);
+  assert.equal(expected[3].observedCandles.find(row=>row.periodStartDate==='2026-11-02').high,original.high*2);
 });
