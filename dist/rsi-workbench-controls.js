@@ -1,4 +1,5 @@
 import {workspaceInstrument} from './workspace-instruments.js';
+import {refreshShellSlots} from './ui/shell-slots.js';
 
 // These actions retain native ETH/equity data and handlers. Shared chart
 // acknowledgements must never grant them ownership of a different instrument.
@@ -127,13 +128,30 @@ export function createChartWorkbenchControls({send,isActive}) {
     }
     attr($('#lab-svg'),'aria-label',`${scope.symbol} 차트 내보내기 · PNG/SVG`);attr($('#lab-svg'),'title',`${scope.symbol} 차트 내보내기 · PNG/SVG`);attr($('#workbench-workspace'),'aria-label',`${scope.symbol} 차트 명령 검색 · Ctrl/⌘ K`);
     text($('#history-journal-toggle'),'기록');enable($('#workbench-annotations'));attr($('#workbench-annotations'),'aria-label',`${scope.symbol} 측정·선택 데이터`);
-    // RSI already exposes its chart/backtest/records tabs in the shared header.
-    // Other instruments still use the bottom record action.
-    attr($('#history-journal-toggle'),'hidden',instrument?.page==='rsi'?'':null);
+    // Keep the same footer record slot even when the current instrument also
+    // exposes records in its own toolbar.
+    attr($('#history-journal-toggle'),'hidden',null);
     attr($('[data-reader=events]'),'aria-label',`${scope.symbol} ${recordLabel}`);attr($('[data-reader=volume]'),'aria-label',`${scope.symbol} 거래량 표시 설정`);
     for(const node of document.querySelectorAll('[data-reader]')){const pane=route(node)?.[1],label=node.getAttribute('aria-label')||node.textContent;attr(node,'aria-expanded',message.pane===pane);attr(node,'title',label.startsWith(scope.symbol)?label:`${scope.symbol} ${label}`);}
     for(const id of ['atlas-mode-menu','atlas-display-options','workbench-workspace','workbench-go-date'])attr($('#'+id),'aria-expanded',message.pane===ids[id][1]);
     for(const node of document.querySelectorAll('[data-mobile-target]')){const target=route(node);if(target){enable(node,target[0]==='undo'?message.canUndo:target[0]==='redo'?message.canRedo:true);if(node.dataset.mobileTarget==='#workbench-workspace'){text(node.querySelector('span')||node,'명령 검색');attr(node,'aria-label',`${scope.symbol} 차트 명령 검색`);}}else{enable(node,false);attr(node,'hidden','');}}
+    const disabledReasons={
+      'workbench-chart-type':message.candles?null:'OHLC 자료가 없어 관측 가격선만 지원합니다.',
+      'workbench-undo':message.canUndo?null:'취소할 차트 변경이 없습니다.',
+      'workbench-redo':message.canRedo?null:'다시 실행할 차트 변경이 없습니다.',
+      'workbench-clear':message.measurement?null:'완료한 측정이 없습니다.',
+      'workbench-next-turn':message.nextSignal?null:'이 종목은 기준선 신호 이동을 지원하지 않습니다.',
+      'history-journal-toggle':message.records?null:'이 종목에는 공개된 판정 기록이 없습니다.',
+    };
+    for(const [id,reason]of Object.entries(disabledReasons)){
+      const node=$('#'+id);attr(node,'data-disabled-reason',reason);attr(node,'aria-description',reason);
+    }
+    for(const node of document.querySelectorAll('.workbench-tools [data-chart-tool],.workbench-tools [data-chart-navigation],.workbench-detail-tools [data-reader],.workbench-help')){
+      const label=node.getAttribute('aria-label')||node.title||node.textContent;
+      attr(node,'aria-label',`${scope.symbol} ${label.replace(/^(?:BTCUSD|BTC|ETHUSD|ETH|MSTR|BMNR|TQQQ|SOXL|233740|HYPE|HOUSING-[A-Z]+)\s+/,'')}`);
+      if(node.disabled){const reason=node.dataset.reader==='events'?'이 종목에는 공개된 판정 기록이 없습니다.':'현재 상태에서는 이 조작을 사용할 수 없습니다.';attr(node,'data-disabled-reason',reason);attr(node,'aria-description',reason);}else{attr(node,'data-disabled-reason',null);attr(node,'aria-description',null);}
+    }
+    refreshShellSlots(document,{symbol:scope.symbol});
     for(const selector of ['.atlas-canvas-heading','.workbench-bottom-bar','.workbench-tools','.workbench-detail-tools']){const node=$(selector);if(node)observer?.observe(node,{subtree:true,attributes:true,childList:true,characterData:true});}
     return true;
   }

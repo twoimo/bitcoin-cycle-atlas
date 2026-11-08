@@ -198,3 +198,27 @@ body[data-data-actions-hosted=true] #data-view .daily-heading{display:none!impor
    Native wheel/touch/keyboard movement, sticky headers and dialog owners stay. */
 *,*::before,*::after{scrollbar-width:none!important;scrollbar-gutter:auto!important;-ms-overflow-style:none}
 *::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+
+/* WP7: source-owned controls occupy the same perimeter positions. Only the
+   instrument slot contains asset-specific actions or the hosted toolbar. */
+body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]{flex-wrap:nowrap;min-width:0;box-sizing:border-box}
+body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]>[data-shell-owner=top]{flex:none;order:0}
+body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]>.shell-instrument-slot{display:flex;align-items:center;flex:1 1 0;min-width:32px;max-width:100%;height:100%;gap:2px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;white-space:nowrap;touch-action:pan-x pinch-zoom}
+body[data-shell=chart] .shell-instrument-slot>.workbench-icon{display:inline-flex;align-items:center;justify-content:center;flex:none;width:38px;height:38px;min-height:32px;padding:8px;border:0;border-radius:4px}
+body[data-shell=chart] .shell-instrument-slot .center-workspace-toolbar{flex:0 0 auto;min-width:0;width:max-content;max-width:none}
+body[data-shell=chart] .shell-instrument-slot :is(#workbench-scenario,#workbench-replay,#workbench-monthly-backtest){flex:none;white-space:nowrap}
+body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]>.shell-instrument-slot:has(#atlas-cycle-options[open]){overflow:visible}
+body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]>.workspace-history-controls{margin-left:0}
+body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]>.shell-history-slot{width:76px}
+body[data-shell=chart] .workbench-rail[data-shell-region=right]{flex:0 0 45px;width:45px;box-sizing:border-box}
+body[data-shell=chart] .workbench-rail[data-shell-region=right] [data-shell-owner=right]{width:44px;min-width:44px;max-width:44px;box-sizing:border-box}
+body[data-shell=chart] [data-disabled-reason]{cursor:not-allowed}
+@media(max-width:620px){
+  body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]{max-width:100%;overflow-x:auto;overflow-y:hidden}
+  body[data-shell=chart]:not([data-chart-controls]) .atlas-canvas-heading[data-shell-region=top]>.shell-instrument-slot{flex:0 0 auto;max-width:min(260px,75vw)}
+  body[data-shell=chart][data-chart-controls] .atlas-canvas-heading[data-shell-region=top]>.shell-instrument-slot{flex:0 0 auto;max-width:min(260px,75vw)}
+  body[data-shell=chart] .shell-instrument-slot>.workbench-icon{min-width:44px;min-height:44px;height:44px}
+  body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]>.shell-history-slot{display:none}
+  body[data-shell=chart] .workbench-rail[data-shell-region=right][data-mobile-open=true]{flex:none;width:calc(100% - 16px)}
+  body[data-shell=chart] .workbench-rail[data-shell-region=right][data-mobile-open=true] [data-shell-owner=right]{width:auto;min-width:0;max-width:none}
+}

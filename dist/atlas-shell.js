@@ -27,6 +27,7 @@ import {atlasSitePath} from './site-paths.js';
 import { atlasPages, atlasNavigationPages, atlasNavigationId, labPageFromLocation } from './atlas-navigation.js?v=1.36.1';
 import { readShellPreference, writeShellPreference } from './atlas-shell-state.js';
 import { mountCenterWorkbench } from './center-workbench.js?v=1.36.1';
+import { mountShellSlots } from './ui/shell-slots.js';
 
 const pageNames = { outlook: '통합 차트', compare: '사이클 비교', evidence: '리서치 자료', data: '자산 비교표', ipo: '공모주 캘린더', market: '세 축 연구실' };
 
@@ -161,5 +162,6 @@ export function initAtlasShell() {
   workspaceObserver.observe(workspace, { childList: true });
   sync();
   const removeRailTooltip = mountRailTooltip(document);
-  return () => { removeRailTooltip(); pageObserver.disconnect(); workspaceObserver.disconnect(); document.removeEventListener('click', routeToService, true); };
+  const shellSlots = mountShellSlots(document);
+  return () => { shellSlots.destroy(); removeRailTooltip(); pageObserver.disconnect(); workspaceObserver.disconnect(); document.removeEventListener('click', routeToService, true); };
 }
