@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {atlasPages,atlasNavigationPages,atlasNavigationId,atlasPageHref,isWorkspaceChart,labPageFromLocation} from '../dist/atlas-navigation.js';
 
 test('visible navigation has one price chart while retaining every legacy route identity',()=>{
-  assert.deepEqual(atlasNavigationPages.map(page=>page.id),['outlook','market-us','evidence','data','ipo']);
+  assert.deepEqual(atlasNavigationPages.map(page=>page.id),['outlook','market-us','evidence','data','ipo','relay']);
   assert.equal(atlasNavigationPages.find(page=>page.id==='market-us').label,'시장 분석');
   assert.equal(atlasNavigationPages.find(page=>page.id==='outlook').label,'가격 차트');
   for(const page of atlasPages.filter(page=>page.tab)) {

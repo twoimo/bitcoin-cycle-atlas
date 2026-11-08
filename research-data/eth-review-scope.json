@@ -203,6 +203,8 @@
     "dist/project-replay-baseline.js",
     "dist/publication-contract.js",
     "dist/published-data.js",
+    "dist/relay-room.css",
+    "dist/relay-room.js",
     "dist/replay-cutoff-forecast.js",
     "dist/replay-retrospective.js",
     "dist/research-annotations-workbench.js",
