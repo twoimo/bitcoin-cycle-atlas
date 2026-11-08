@@ -18,7 +18,7 @@ function readChart({svgSelector,allocationSelector}) {
     price:pick([.4,.6,.3].map(fy=>({x:x(right+(view.width-right)*.55),y:y(top+(bottom-top)*fy)}))),
     time:pick([.38,.28,.48].map(fx=>({x:x(left+(right-left)*fx),y:y(timeTop+(view.height-timeTop)*.5)}))),
   };
-  return {start:data.start,end:data.end,first:time(data.start),last:time(data.end),priceMin:number('priceMin'),priceMax:number('priceMax'),priceMode:data.priceMode,
+  return {start:data.start,end:data.end,first:time(data.start),last:time(data.end),interval:data.interval,numericTime:/^-?\d+(?:\.\d+)?$/.test(data.start||''),priceMin:number('priceMin'),priceMax:number('priceMax'),priceMode:data.priceMode,
     scale:data.scale,visible:svg.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),box,view:{width:view.width,height:view.height},
     allocation:{box:rect(owner),width:owner.clientWidth,height:owner.clientHeight},
     plot:{left:x(left),right:x(right),top:y(top),bottom:y(bottom),timeTop:y(timeTop)},points,
@@ -81,6 +81,14 @@ export async function verifyChartZoomBrowser({cdp,context=cdp,receipt,evaluate,u
     assert.equal(a.start,b.start,label+': '+stage+' changed the time start');
     assert.equal(a.end,b.end,label+': '+stage+' changed the time end');
   }
+  function samePointerTime(before,after,pointerX,stage){
+    const at=(state)=>state.first+(pointerX-state.plot.left)/(state.plot.right-state.plot.left)*span(state);
+    const seconds={'1m':60,'5m':300,'15m':900,'30m':1800,'1h':3600,'4h':14400,'1W':604800,weekly:604800}[before.interval]||86400;
+    const candle=seconds*(before.numericTime?1:1000),pixel=span(before)/(before.plot.right-before.plot.left);
+    const error=Math.abs(at(before)-at(after)),tolerance=candle+pixel;
+    assert.ok(error<=tolerance,label+': '+stage+' moved the pointer time beyond candle/pixel rounding: '+JSON.stringify({error,tolerance,pointerX,before:at(before),after:at(after)}));
+    (record.pointerAnchors??=[]).push({stage,pointerX,before:at(before),after:at(after),error,tolerance});
+  }
   try{
     await until(async()=>valid(await read()),label+' rendered zoom metadata',10000);
     await settled(context);
@@ -91,7 +99,7 @@ export async function verifyChartZoomBrowser({cdp,context=cdp,receipt,evaluate,u
     await until(async()=>{const next=await read();return valid(next)&&span(next)<span(baseline);},label+' native plot-wheel zoom',5000);
     await settled(context);const zoomed=await capture('plot-wheel');
     assert.ok(span(zoomed)<span(baseline),label+': wheel-up must reduce the visible time span');
-    assert.equal(zoomed.end,baseline.end,label+': ordinary plot-wheel zoom must retain the right endpoint');
+    samePointerTime(baseline,zoomed,baseline.points.plot.x,'ordinary plot-wheel zoom');
 
     await wheel(zoomed,'price');
     await until(async()=>{const next=await read();return valid(next)&&next.priceMode==='manual'&&priceSpan(next)<priceSpan(zoomed);},label+' native price-axis wheel',5000);
@@ -119,7 +127,7 @@ export async function verifyChartZoomBrowser({cdp,context=cdp,receipt,evaluate,u
     await until(async()=>{const next=await read();return valid(next)&&span(next)>span(automatic);},label+' native rightward time-axis drag',5000);
     await settled(context);const expanded=await capture('time-axis-drag');
     assert.ok(span(expanded)>span(automatic),label+': dragging the time axis right must expand the visible time span');
-    assert.equal(expanded.end,automatic.end,label+': time-axis drag must retain the right endpoint');
+    samePointerTime(automatic,expanded,automatic.points.time.x,'time-axis drag');
     record.status='passed';return record;
   }catch(error){
     record.status='failed';record.error=error instanceof Error?error.message:String(error);

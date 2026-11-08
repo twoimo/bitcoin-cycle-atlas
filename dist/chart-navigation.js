@@ -141,6 +141,7 @@ export function bindChartNavigation({
   const status = document.createElement('span');status.className = 'lab-visually-hidden chart-navigation-status';
   status.setAttribute('role', 'status');status.setAttribute('aria-live', 'polite');element.append(status);
   const announce = text => { if (onAnnounce) onAnnounce(text); else status.textContent = text; };
+  const zoomLimitReason = range => `최대 표시 범위 ${rangeUnits(range).maximum.toLocaleString('en-US')}${range.unit==='seconds'?'봉':'일'}에 도달했습니다. 확대하거나 다른 구간으로 이동할 수 있습니다.`;
   const previousTouchAction = element.style.touchAction;
   element.style.touchAction = 'pan-y pinch-zoom';
   let frame = null, pending = null, pendingPanPrice = null, priceFrame = null, pendingPrice = null, drag = null, pinch = null, suppressClickUntil = 0;
@@ -316,7 +317,9 @@ export function bindChartNavigation({
       enqueue(wheelRange(range,rect,{pan:clamp((event.deltaX || event.deltaY) * unit,-rect.width,rect.width)/rect.width}));
     } else {
       const factor = Math.exp(clamp(event.deltaY * unit, -600, 600) * .0015);
-      enqueue(wheelRange(range,rect,{factor,anchor:zoomAt(event,rect)}));
+      const next=wheelRange(range,rect,{factor,anchor:zoomAt(event,rect)});
+      if(factor>1&&sameWindow(next,range))announce(zoomLimitReason(range));
+      enqueue(next);
     }
   }
   function pointerDown(event) {
@@ -538,7 +541,11 @@ export function bindChartNavigation({
     if (action === 'menu') openMenu();
     else if (action === 'reset') reset();
     else if (action === 'left' || action === 'right') discrete(panRange(range, action === 'left' ? -.25 : .25));
-    else discrete(zoomRange(range, action === 'in' ? .8 : 1.25, zoomAt(event)));
+    else {
+      const next=zoomRange(range, action === 'in' ? .8 : 1.25, zoomAt(event));
+      if(action==='out'&&sameWindow(next,range))announce(zoomLimitReason(range));
+      discrete(next);
+    }
   }
   for (const [action, button] of buttons) button.onclick = event => {
     const range = current();if (!range) return;
@@ -599,6 +606,11 @@ export function bindChartNavigation({
     const units = rangeUnits(range), count = units.end - units.start + 1;
     buttons.get('in').disabled = count <= units.minimum;
     buttons.get('out').disabled = count >= units.maximum;
+    const out=buttons.get('out'),reason=out.disabled?zoomLimitReason(range):'';
+    out.title=reason?`차트 축소 불가 · ${reason}`:'차트 축소 · −';
+    out.setAttribute('aria-label',out.title);
+    if(reason){out.setAttribute('data-disabled-reason',reason);toolbar.setAttribute('data-zoom-limit-reason',reason);toolbar.title=reason;}
+    else {out.removeAttribute('data-disabled-reason');toolbar.removeAttribute('data-zoom-limit-reason');toolbar.title='';}
     buttons.get('left').disabled = units.start <= (units.free?units.hardMin:0);
     buttons.get('right').disabled = units.end >= (units.free?units.hardMax:units.max);
   }

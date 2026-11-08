@@ -161,6 +161,7 @@ class TestElement extends EventSurface {
   remove(){if(this.parentElement){this.parentElement.children=this.parentElement.children.filter(child=>child!==this);this.parentElement=null;}}
   setAttribute(key,value){this.attributes.set(key,String(value));}
   getAttribute(key){return this.attributes.get(key)??null;}
+  removeAttribute(key){this.attributes.delete(key);}
   contains(target){return target===this||this.children.some(child=>child.contains?.(target));}
   matchesSelector(selector){
     const exclusions=[...selector.matchAll(/:not\(([^)]+)\)/g)].map(match=>match[1]);
@@ -377,6 +378,9 @@ test('a bounded intraday viewport can keep panning beyond the initial cache',()=
   assert.equal(barCount(panRange(wide,-1)),6000);
   const h=navigationHarness(wide);h.controller.update();
   assert.equal(h.controller.toolbar.children.find(b=>b.dataset.chartNavigation==='out')?.disabled??h.controller.toolbar.children[1].disabled,true);
+  const out=h.controller.toolbar.children.find(b=>b.dataset.chartNavigation==='out');
+  assert.match(out.title,/최대 표시 범위 6,000봉/);assert.equal(out.getAttribute('aria-label'),out.title);
+  h.fire('wheel',{deltaY:120});h.flush();assert.match(h.announcements.at(-1),/최대 표시 범위 6,000봉/);
   h.controller.destroy();
   assert.throws(()=>zoomRange({...long,maxSpan:3},2),RangeError);
 });

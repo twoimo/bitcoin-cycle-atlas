@@ -795,7 +795,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
       const kind=insideReplayRegion(event,geometry.price)?'price':insideReplayRegion(event,geometry.time)?'time-scale':insideReplayRegion(event,geometry.plot)?'plot':null;
       if(!kind)return;releaseGesture();suppressClickUntil=0;event.preventDefault();
       gesture={kind,x:event.clientX,y:event.clientY,start,moved:false,id:event.pointerId,geometry,axis:replayAxis(),pointerType:event.pointerType,
-        anchor:event.ctrlKey?clamp((event.clientX-geometry.plot.left)/geometry.plot.width,0,1):1};
+        anchor:clamp((event.clientX-geometry.plot.left)/geometry.plot.width,0,1)};
       plot.setPointerCapture?.(event.pointerId);svg.focus({preventScroll:true});
     }else if(event.type==='pointermove'){
       // A lost mouse-up/capture must not leave future hover in the drag branch.
@@ -848,7 +848,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
     const unit=event.deltaMode===1?16:event.deltaMode===2?rect.height:1;
     const options=event.shiftKey||Math.abs(event.deltaX)>Math.abs(event.deltaY)
       ?{pan:clamp((event.deltaX||event.deltaY)*unit,-rect.width,rect.width)/rect.width}
-      :{factor:Math.exp(clamp(event.deltaY*unit,-600,600)*.0015),anchor:event.ctrlKey?clamp((event.clientX-rect.left)/rect.width,0,1):1};
+      :{factor:Math.exp(clamp(event.deltaY*unit,-600,600)*.0015),anchor:clamp((event.clientX-rect.left)/rect.width,0,1)};
     wheelViewport=accumulateWheelRange(current,wheelViewport,options);useNavigationRange(wheelViewport.range);
   }
   plot.addEventListener('wheel',wheel,{capture:true,passive:false});
