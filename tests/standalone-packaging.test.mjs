@@ -173,6 +173,7 @@ test('the real standalone is deterministic, preserves every module and snapshot,
     const checkImages=paths=>{const nodes=[...relayRoot.querySelectorAll('img')];assert.equal(nodes.length,paths.length);nodes.forEach((node,index)=>{assert.ok(node.getAttribute('src')===relayAssets[paths[index]],'the rendered image must use its exact embedded bytes');seenImages.add(paths[index]);});};
     for(const room of source.rooms){
       click(`[data-room="${room.id}"]`);
+      if(room.kind==='chat')checkImages((room.messages||[]).flatMap(message=>(message.images||[]).map(image=>typeof image==='string'?image:image.src)));
       if(room.kind==='articles')for(const article of room.articles){
         click(`[data-article="${article.id}"]`);
         assert.equal(relayRoot.querySelector('.relay-body').textContent.replace(/\s+/g,''),String(article.body_text).replace(/\s+/g,''));

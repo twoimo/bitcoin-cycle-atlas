@@ -7,6 +7,7 @@ const array=value=>Array.isArray(value)?value:[];
 /** Collect only image references actually used by the preserved relay payload. */
 export function relayLocalImagePaths(data){
   const references=array(data?.rooms).flatMap(room=>[
+    ...array(room.messages).flatMap(message=>array(message.images).map(image=>typeof image==='string'?image:image?.src)),
     ...array(room.articles).flatMap(article=>array(article.images).map(image=>typeof image==='string'?image:image?.src)),
     ...array(room.editions).flatMap(edition=>array(edition.pages).map(page=>page?.image)),
   ]).filter(Boolean);

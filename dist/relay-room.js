@@ -18,7 +18,48 @@ function dayLabel(iso) {
   const d = new Date(t + 9 * 3600000);
   return `${d.getUTCFullYear()}.${String(d.getUTCMonth() + 1).padStart(2, '0')}.${String(d.getUTCDate()).padStart(2, '0')}`;
 }
-const safeHref = value => (typeof value === 'string' && /^https:\/\//.test(value) ? value : null);
+const safeHref = value => {
+  const href = typeof value === 'string' ? value.trim() : '';
+  return /^https?:\/\//i.test(href) ? href : null;
+};
+const trimUrl = value => value.replace(/[.,;:!?]+$/, '');
+function autoLinks(text) {
+  const links = [];
+  for (const match of text.matchAll(/https?:\/\/[^\s<>"']+/g)) {
+    const url = trimUrl(match[0]);
+    if (safeHref(url)) links.push({ offset: match.index, length: url.length, url });
+  }
+  return links;
+}
+function messageLinks(message) {
+  const text = String(message?.text || '');
+  if (!text) return [];
+  const supplied = (Array.isArray(message?.links) ? message.links : []).flatMap(link => {
+    const url = safeHref(link?.url), offset = Number(link?.offset), length = Number(link?.length);
+    return url && Number.isInteger(offset) && Number.isInteger(length)
+      && offset >= 0 && length > 0 && offset + length <= text.length
+      ? [{ offset, length, url }] : [];
+  });
+  const all = [...supplied];
+  for (const link of autoLinks(text)) {
+    if (!all.some(other => link.offset < other.offset + other.length && other.offset < link.offset + link.length)) all.push(link);
+  }
+  return all.sort((a, b) => a.offset - b.offset || b.length - a.length);
+}
+function renderMessageText(message) {
+  const text = String(message?.text || '');
+  if (!text) return '';
+  let html = '', cursor = 0;
+  for (const link of messageLinks(message)) {
+    if (link.offset < cursor) continue;
+    const end = Math.min(text.length, link.offset + link.length);
+    if (end <= link.offset) continue;
+    html += esc(text.slice(cursor, link.offset)).replace(/\n/g, '<br>');
+    html += `<a class="relay-msg-inline-link" href="${esc(link.url)}" target="_blank" rel="noopener noreferrer">${esc(text.slice(link.offset, end)).replace(/\n/g, '<br>')}</a>`;
+    cursor = end;
+  }
+  return html + esc(text.slice(cursor)).replace(/\n/g, '<br>');
+}
 
 const svg = path => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">${path}</svg>`;
 const GLYPH = {
@@ -82,12 +123,42 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
     const messages = Array.isArray(item.messages) ? item.messages : [];
     if (!messages.length) return '<p class="relay-empty" role="status">아직 받은 메시지가 없습니다.</p>';
     return `<ol class="relay-chat">${messages.map(message => {
+      const text = renderMessageText(message);
+      const imageList = (Array.isArray(message.images) ? message.images : []).flatMap(image => {
+        const src = typeof image === 'string' ? image : image?.src;
+        if (!src) return [];
+        const width = Number(image?.width), height = Number(image?.height);
+        const dims = Number.isInteger(width) && Number.isInteger(height) && width > 0 && height > 0
+          ? ` width="${width}" height="${height}"` : '';
+        const alt = String(image?.alt || message.text || '텔레그램 사진').slice(0, 160);
+        return [{ src: imageSource(src), dims, alt }];
+      });
+      const images = imageList.map(image => `<a class="relay-msg-image" href="${esc(image.src)}" target="_blank" rel="noopener noreferrer"><img src="${esc(image.src)}" alt="${esc(image.alt)}" loading="lazy" decoding="async"${image.dims}></a>`).join('');
+      const previews = (Array.isArray(message.previews) ? message.previews : []).flatMap(preview => {
+        const url = safeHref(preview?.url);
+        if (!url) return [];
+        const title = preview.title || preview.display_url || url;
+        const site = preview.site_name || '', description = preview.description || '';
+        return [`<a class="relay-preview" href="${esc(url)}" target="_blank" rel="noopener noreferrer">
+          ${site ? `<span class="relay-preview-site">${esc(site)}</span>` : ''}
+          <span class="relay-preview-title">${esc(title)}</span>
+          ${description ? `<span class="relay-preview-description">${esc(description)}</span>` : ''}
+          <span class="relay-preview-url">${esc(preview.display_url || url)}</span>
+        </a>`];
+      }).join('');
+      const quote = message.quote ? `<blockquote class="relay-msg-quote">${esc(message.quote).replace(/\n/g, '<br>')}</blockquote>` : '';
+      const reply = message.reply_to && !message.quote ? '<span class="relay-msg-reply">↩ 이전 메시지</span>' : '';
+      const withheld = message.withheld && !text ? '<p class="relay-msg-withheld">Telegram에서 본문이 제한된 글입니다.</p>' : '';
       const link = safeHref(message.url || message.link);
-      const body = esc(message.text || '').replace(/\n/g, '<br>');
+      const album = imageList.length > 1 ? `<span class="relay-msg-album">사진 ${imageList.length}장</span>` : '';
       return `<li class="relay-msg">
-        <div class="relay-msg-meta"><span class="relay-msg-author">${esc(message.author || item.title || '')}</span><time>${esc(hhmm(message.at))}</time></div>
-        <p class="relay-msg-text">${body}</p>
-        ${link ? `<a class="relay-msg-link" href="${esc(link)}" target="_blank" rel="noopener noreferrer">원문 링크</a>` : ''}
+        <div class="relay-msg-meta"><span class="relay-msg-author">${esc(message.author || item.title || '')}</span><span class="relay-msg-side">${album}<time>${esc(hhmm(message.at))}</time></span></div>
+        ${reply}${quote}
+        ${text ? `<p class="relay-msg-text">${text}</p>` : ''}
+        ${images ? `<div class="relay-msg-images" data-count="${imageList.length}">${images}</div>` : ''}
+        ${previews ? `<div class="relay-msg-previews">${previews}</div>` : ''}
+        ${withheld}
+        ${link && !previews ? `<a class="relay-msg-link" href="${esc(link)}" target="_blank" rel="noopener noreferrer">원문 링크</a>` : ''}
       </li>`;
     }).join('')}</ol>`;
   }

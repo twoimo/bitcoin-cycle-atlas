@@ -35,3 +35,53 @@ test('the online relay controller retains its source request and original image 
   assert.deepEqual(calls,['./data/relay/index.json']);assert.equal(root.querySelector('img').getAttribute('src'),path);
   assert.equal(root.querySelector('.relay-body').textContent,'원문 <script> 그대로');assert.equal(root.querySelector('.relay-body script'),null);
 });
+
+const chatPayload=()=>({rooms:[{id:'telegram',kind:'chat',title:'소수의견',subtitle:'Telegram',updated_at:'2026-11-08T10:01:00+09:00',messages:[
+  {id:'1',at:'2026-11-08T10:00:00+09:00',author:'소수의견',text:'본문 https://example.com/a',links:[{offset:3,length:21,url:'https://example.com/a'}],
+    images:[{src:'data/relay/assets/chat-1.jpg',width:900,height:600,alt:'첫 사진'},{src:'data/relay/assets/chat-2.jpg',width:900,height:600,alt:'둘째 사진'}],
+    post_ids:['1','2'],quote:'인용문',previews:[{url:'https://example.com/preview',title:'미리보기 제목',site_name:'예시뉴스',description:'요약 문장',display_url:'example.com/preview'}]},
+  {id:'3',at:'2026-11-08T10:01:00+09:00',author:'소수의견',text:'',withheld:true,withheld_reasons:['unsupported_or_protected_attribute']},
+]}]});
+
+test('relay packaging embeds chat image bytes as well as article and edition media',async t=>{
+  const root=await mkdtemp(resolve(tmpdir(),'atlas-relay-chat-assets-'));t.after(()=>rm(root,{recursive:true,force:true}));
+  const dist=resolve(root,'dist'),assets=resolve(dist,'data/relay/assets');await mkdir(assets,{recursive:true});
+  const first='data/relay/assets/chat-1.jpg',second='data/relay/assets/chat-2.jpg',body=Buffer.from([0xff,0xd8,7,8,9,0xff,0xd9]);
+  await writeFile(resolve(dist,first),body);await writeFile(resolve(dist,second),Buffer.concat([body,Buffer.from([1])]));
+  assert.deepEqual(relayLocalImagePaths(chatPayload()),[first,second]);
+  const result=await readRelayStandaloneAssets(dist,chatPayload());
+  assert.deepEqual(Object.keys(result.images),[first,second]);
+  assert.deepEqual(Buffer.from(result.images[first].split(',')[1],'base64'),body);
+  assert.equal(result.bytes,body.length*2+1);
+});
+
+test('the relay chat renders image albums, inline links, previews, quotes and withheld notes',async t=>{
+  const data=chatPayload(),{document}=parseHTML('<section id="relay"></section>');
+  const previous=globalThis.fetch;globalThis.fetch=async()=>{throw new Error('embedded relay must not fetch');};t.after(()=>{globalThis.fetch=previous;});
+  let ready;const loaded=new Promise(resolve=>{ready=resolve;});
+  const root=document.getElementById('relay'),controller=initRelayRoomView({root,embeddedData:()=>JSON.stringify(data),onReady:ready});
+  controller.show(true);await loaded;
+  assert.equal(root.querySelectorAll('.relay-msg-image img').length,2);
+  assert.deepEqual([...root.querySelectorAll('.relay-msg-image img')].map(node=>node.getAttribute('src')),['data/relay/assets/chat-1.jpg','data/relay/assets/chat-2.jpg']);
+  assert.equal(root.querySelector('.relay-msg-album').textContent,'사진 2장');
+  const link=root.querySelector('.relay-msg-inline-link');
+  assert.equal(link.getAttribute('href'),'https://example.com/a');assert.equal(link.textContent,'https://example.com/a');
+  const preview=root.querySelector('.relay-preview');
+  assert.equal(preview.getAttribute('href'),'https://example.com/preview');
+  assert.match(preview.textContent,/미리보기 제목/);assert.match(preview.textContent,/요약 문장/);
+  assert.equal(root.querySelector('.relay-msg-quote').textContent,'인용문');
+  assert.match(root.querySelector('.relay-msg-withheld').textContent,/본문이 제한된 글/);
+  assert.equal(root.querySelector('.relay-msg-text script'),null);
+});
+
+test('unsafe chat links and previews are not rendered as anchors',async t=>{
+  const data=chatPayload();data.rooms[0].messages[0].links=[{offset:0,length:2,url:'javascript:alert(1)'}];
+  data.rooms[0].messages[0].previews=[{url:'javascript:alert(2)',title:'위험'}];
+  data.rooms[0].messages[0].text='본문';
+  const {document}=parseHTML('<section id="relay"></section>');
+  let ready;const loaded=new Promise(resolve=>{ready=resolve;});
+  const root=document.getElementById('relay');
+  initRelayRoomView({root,embeddedData:()=>JSON.stringify(data),onReady:ready}).show(true);await loaded;
+  assert.equal(root.querySelector('.relay-msg-inline-link'),null);assert.equal(root.querySelector('.relay-preview'),null);
+  assert.equal(root.querySelector('.relay-msg-text').textContent,'본문');
+});

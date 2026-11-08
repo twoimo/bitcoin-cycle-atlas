@@ -54,6 +54,25 @@
 .relay-msg-author{font-weight:600;color:var(--relay-mark)}
 .relay-msg-text{margin:0;white-space:normal;word-break:break-word}
 .relay-msg-link{display:inline-block;margin-top:8px;color:var(--relay-accent);font-size:12px;text-decoration:none}
+.relay-msg-side{display:inline-flex;align-items:center;gap:8px}
+.relay-msg-album{color:var(--relay-ink-2);font-size:11px}
+.relay-msg-inline-link{color:var(--relay-accent);text-decoration:underline;text-underline-offset:2px;word-break:break-word}
+.relay-msg-quote{margin:0 0 8px;padding:6px 10px;border-left:3px solid var(--relay-mark);border-radius:0 6px 6px 0;background:#0b1119;color:var(--relay-ink-2);font-size:13px;line-height:1.55;word-break:break-word}
+.relay-msg-reply{display:inline-block;margin-bottom:6px;color:var(--relay-ink-2);font-size:12px}
+.relay-msg-withheld{margin:8px 0 0;color:var(--relay-ink-2);font-size:12px}
+.relay-msg-images{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-top:9px;max-width:680px}
+.relay-msg-images[data-count="1"]{grid-template-columns:minmax(0,1fr);max-width:540px}
+.relay-msg-image{display:block;overflow:hidden;border:1px solid var(--relay-rule);border-radius:8px;background:#0b1119;text-decoration:none}
+.relay-msg-image:hover{border-color:#3c4c63}
+.relay-msg-image img{display:block;width:100%;height:auto;max-height:420px;object-fit:contain;background:#0b1119}
+.relay-msg-images[data-count="1"] .relay-msg-image img{max-height:560px}
+.relay-msg-previews{display:grid;gap:8px;margin-top:9px;max-width:560px}
+.relay-preview{display:grid;gap:3px;padding:9px 11px;border:1px solid var(--relay-rule);border-left:3px solid var(--relay-accent);border-radius:8px;background:#0d141e;color:inherit;text-decoration:none}
+.relay-preview:hover{background:#131c28;border-color:#3c4c63;border-left-color:var(--relay-accent)}
+.relay-preview-site{color:var(--relay-accent);font-size:12px}
+.relay-preview-title{font-weight:600;line-height:1.4}
+.relay-preview-description{display:-webkit-box;overflow:hidden;color:var(--relay-ink-2);font-size:13px;line-height:1.5;-webkit-box-orient:vertical;-webkit-line-clamp:3}
+.relay-preview-url{color:var(--relay-ink-2);font-size:11px;word-break:break-all}
 /* 인생의 방 — 글 목록 + Medium 스타일 리더 */
 .relay-articles{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-width:760px}
 .relay-article{display:grid;gap:3px;width:100%;padding:12px 14px;border:1px solid var(--relay-rule);border-radius:10px;background:var(--relay-panel);color:inherit;text-align:left;cursor:pointer;font:inherit}
@@ -94,4 +113,5 @@
   .relay-room-item{min-width:190px}
   .relay-paper-body{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
   .relay-pager{flex-direction:row;max-height:none}
+  .relay-msg-images{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
 }
