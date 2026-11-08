@@ -21,7 +21,6 @@ const COLORS = ['#a696ef', '#67aafa', '#49c8ae', '#f0a956', '#ef9154'];
 // Repeated validation, moving windows and source anchors reuse only this pure
 // conversion, never prices or fitted results. FIFO bounds memory on long visits.
 const utcDayCache = new Map();
-const dateFromDayCache = new Map();
 const UTC_DAY_CACHE_LIMIT = 32768;
 
 export function utcDay(date) {
@@ -44,15 +43,10 @@ export function utcDay(date) {
 
 export function dateFromDay(day) {
   if (!Number.isSafeInteger(day)) throw new TypeError('UTC day must be a safe integer');
-  const cached = dateFromDayCache.get(day);
-  if (cached !== undefined) return cached;
   const date = new Date(day * DAY_MS);
   const year = date.getUTCFullYear();
   if (!(year >= 0 && year <= 9999)) throw new RangeError('UTC day must produce a date in years 0000 through 9999');
-  const label = date.toISOString().slice(0, 10);
-  if (dateFromDayCache.size >= UTC_DAY_CACHE_LIMIT) dateFromDayCache.delete(dateFromDayCache.keys().next().value);
-  dateFromDayCache.set(day, label);
-  return label;
+  return date.toISOString().slice(0, 10);
 }
 
 /** Validate without filling gaps. Accept raw { prices: [[date, price], ...] } or rows. */
