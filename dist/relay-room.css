@@ -48,7 +48,7 @@
 .relay-detail-body{overflow:auto;min-height:0;padding:18px 20px 40px}
 .relay-empty{color:var(--relay-ink-2);padding:18px 2px}
 /* 텔레그램 — 대화방 메시지 */
-.relay-chat{list-style:none;margin:0;padding:0;display:grid;gap:12px;max-width:720px}
+.relay-chat{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;max-width:720px}
 .relay-msg{padding:11px 13px;background:var(--relay-panel);border:1px solid var(--relay-rule);border-radius:10px}
 .relay-msg-meta{display:flex;justify-content:space-between;gap:12px;color:var(--relay-ink-2);font-size:12px;margin-bottom:6px}
 .relay-msg-author{font-weight:600;color:var(--relay-mark)}
