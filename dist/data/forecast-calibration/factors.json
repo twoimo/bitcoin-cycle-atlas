@@ -1,0 +1,1361 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-forecast-calibration",
+  "generatedAt": "2026-11-06",
+  "generatedAtMeaning": "입력 데이터 마지막 관측일 기준. 재실행 시 같은 바이트가 나오도록 고정한다.",
+  "policy": "앞 70%에서 계수 추정, 뒤 30%에서 커버리지 재검증. 명목 80% ±5%p 통과해야 화면 문구를 바꾼다.",
+  "results": [
+    {
+      "asset": "BTC",
+      "unit": "calendar-day",
+      "horizon": 30,
+      "tier": "T1",
+      "samples": 5836,
+      "fitSamples": 4085,
+      "holdoutSamples": 1751,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.286,
+      "widthScale50": 1.051,
+      "driftLogPerSqrtH": 0.5139165697512217,
+      "kurtosis": 8.24,
+      "holdout": {
+        "n": 1751,
+        "coverage80Before": 77.5,
+        "coverage80After": 83.3
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.1864,
+        0.0844,
+        0.3553
+      ]
+    },
+    {
+      "asset": "BTC",
+      "unit": "calendar-day",
+      "horizon": 90,
+      "tier": "T1",
+      "samples": 5776,
+      "fitSamples": 4043,
+      "holdoutSamples": 1733,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.672,
+      "widthScale50": 1.294,
+      "driftLogPerSqrtH": 0.8947724350458033,
+      "kurtosis": 11.17,
+      "holdout": {
+        "n": 1733,
+        "coverage80Before": 71.1,
+        "coverage80After": 88.3
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.3552,
+        0.2547,
+        0.8645
+      ]
+    },
+    {
+      "asset": "BTC",
+      "unit": "calendar-day",
+      "horizon": 180,
+      "tier": "T1",
+      "samples": 5686,
+      "fitSamples": 3980,
+      "holdoutSamples": 1706,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.946,
+      "widthScale50": 1.599,
+      "driftLogPerSqrtH": 1.0996872523006203,
+      "kurtosis": 4.9,
+      "holdout": {
+        "n": 1706,
+        "coverage80Before": 67.8,
+        "coverage80After": 84.5
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.5612,
+        0.4426,
+        1.4464
+      ]
+    },
+    {
+      "asset": "BTC",
+      "unit": "calendar-day",
+      "horizon": 365,
+      "tier": "T1",
+      "samples": 5501,
+      "fitSamples": 3850,
+      "holdoutSamples": 1651,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 2.072,
+      "widthScale50": 1.777,
+      "driftLogPerSqrtH": 1.6189123856614533,
+      "kurtosis": 7.84,
+      "holdout": {
+        "n": 1651,
+        "coverage80Before": 59.1,
+        "coverage80After": 83
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.594,
+        0.9279,
+        2.4498
+      ]
+    },
+    {
+      "asset": "ETH",
+      "unit": "calendar-day",
+      "horizon": 30,
+      "tier": "T1",
+      "samples": 3703,
+      "fitSamples": 2592,
+      "holdoutSamples": 1111,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.191,
+      "widthScale50": 1.073,
+      "driftLogPerSqrtH": 0.17520197776863347,
+      "kurtosis": 4.37,
+      "holdout": {
+        "n": 1111,
+        "coverage80Before": 73.3,
+        "coverage80After": 80.3
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.222,
+        0.0288,
+        0.2796
+      ]
+    },
+    {
+      "asset": "ETH",
+      "unit": "calendar-day",
+      "horizon": 90,
+      "tier": "T1",
+      "samples": 3643,
+      "fitSamples": 2550,
+      "holdoutSamples": 1093,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.124,
+      "widthScale50": 1.065,
+      "driftLogPerSqrtH": 0.35032215724969973,
+      "kurtosis": 6.01,
+      "holdout": {
+        "n": 1093,
+        "coverage80Before": 70.2,
+        "coverage80After": 76.6
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.3103,
+        0.0997,
+        0.5097
+      ]
+    },
+    {
+      "asset": "ETH",
+      "unit": "calendar-day",
+      "horizon": 180,
+      "tier": "T1",
+      "samples": 3553,
+      "fitSamples": 2487,
+      "holdoutSamples": 1066,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.384,
+      "widthScale50": 1.222,
+      "driftLogPerSqrtH": 0.6081213541866547,
+      "kurtosis": 7.11,
+      "holdout": {
+        "n": 1066,
+        "coverage80Before": 74.1,
+        "coverage80After": 84
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.4691,
+        0.2448,
+        0.9587
+      ]
+    },
+    {
+      "asset": "ETH",
+      "unit": "calendar-day",
+      "horizon": 365,
+      "tier": "T1",
+      "samples": 3368,
+      "fitSamples": 2357,
+      "holdoutSamples": 1011,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.77,
+      "widthScale50": 1.127,
+      "driftLogPerSqrtH": 0.7551161045466817,
+      "kurtosis": 5.11,
+      "holdout": {
+        "n": 1011,
+        "coverage80Before": 87.7,
+        "coverage80After": 100
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.8673,
+        0.4328,
+        1.7329
+      ]
+    },
+    {
+      "asset": "SPX",
+      "unit": "session",
+      "horizon": 30,
+      "tier": "T1",
+      "samples": 4113,
+      "fitSamples": 2879,
+      "holdoutSamples": 1234,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.88,
+      "widthScale50": 0.941,
+      "driftLogPerSqrtH": 0.24587569963794573,
+      "kurtosis": 28.18,
+      "holdout": {
+        "n": 1234,
+        "coverage80Before": 82.4,
+        "coverage80After": 79.6
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.1449,
+        0.0404,
+        0.2257
+      ]
+    },
+    {
+      "asset": "SPX",
+      "unit": "session",
+      "horizon": 90,
+      "tier": "T1",
+      "samples": 4053,
+      "fitSamples": 2837,
+      "holdoutSamples": 1216,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.935,
+      "widthScale50": 1.067,
+      "driftLogPerSqrtH": 0.4802653787216212,
+      "kurtosis": 5.64,
+      "holdout": {
+        "n": 1216,
+        "coverage80Before": 80.5,
+        "coverage80After": 84.3
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.2043,
+        0.1367,
+        0.4777
+      ]
+    },
+    {
+      "asset": "SPX",
+      "unit": "session",
+      "horizon": 180,
+      "tier": "T1",
+      "samples": 3963,
+      "fitSamples": 2774,
+      "holdoutSamples": 1189,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.028,
+      "widthScale50": 1.237,
+      "driftLogPerSqrtH": 0.7182863299637298,
+      "kurtosis": 4.25,
+      "holdout": {
+        "n": 1189,
+        "coverage80Before": 65.1,
+        "coverage80After": 82.7
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.2412,
+        0.2891,
+        0.8194
+      ]
+    },
+    {
+      "asset": "SPX",
+      "unit": "session",
+      "horizon": 365,
+      "tier": "T1",
+      "samples": 3778,
+      "fitSamples": 2644,
+      "holdoutSamples": 1134,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.257,
+      "widthScale50": 1.329,
+      "driftLogPerSqrtH": 1.0014752870840877,
+      "kurtosis": 4.04,
+      "holdout": {
+        "n": 1134,
+        "coverage80Before": 59.6,
+        "coverage80After": 88.4
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.3493,
+        0.574,
+        1.4973
+      ]
+    },
+    {
+      "asset": "NASDAQ",
+      "unit": "session",
+      "horizon": 30,
+      "tier": "T1",
+      "samples": 4113,
+      "fitSamples": 2879,
+      "holdoutSamples": 1234,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.902,
+      "widthScale50": 0.989,
+      "driftLogPerSqrtH": 0.29333666820664817,
+      "kurtosis": 15.98,
+      "holdout": {
+        "n": 1234,
+        "coverage80Before": 82.3,
+        "coverage80After": 80.7
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.1417,
+        0.0482,
+        0.2381
+      ]
+    },
+    {
+      "asset": "NASDAQ",
+      "unit": "session",
+      "horizon": 90,
+      "tier": "T1",
+      "samples": 4053,
+      "fitSamples": 2837,
+      "holdoutSamples": 1216,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.968,
+      "widthScale50": 1.061,
+      "driftLogPerSqrtH": 0.5682131435500486,
+      "kurtosis": 4.61,
+      "holdout": {
+        "n": 1216,
+        "coverage80Before": 78.8,
+        "coverage80After": 82.3
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.1913,
+        0.1617,
+        0.5148
+      ]
+    },
+    {
+      "asset": "NASDAQ",
+      "unit": "session",
+      "horizon": 180,
+      "tier": "T1",
+      "samples": 3963,
+      "fitSamples": 2774,
+      "holdoutSamples": 1189,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.193,
+      "widthScale50": 1.323,
+      "driftLogPerSqrtH": 0.8400396021542262,
+      "kurtosis": 2.92,
+      "holdout": {
+        "n": 1189,
+        "coverage80Before": 69.8,
+        "coverage80After": 83.3
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.2773,
+        0.3381,
+        0.9535
+      ]
+    },
+    {
+      "asset": "NASDAQ",
+      "unit": "session",
+      "horizon": 365,
+      "tier": "T1",
+      "samples": 3778,
+      "fitSamples": 2644,
+      "holdoutSamples": 1134,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.492,
+      "widthScale50": 1.498,
+      "driftLogPerSqrtH": 1.1966618868361794,
+      "kurtosis": 2.7,
+      "holdout": {
+        "n": 1134,
+        "coverage80Before": 53.9,
+        "coverage80After": 84.2
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.41,
+        0.6859,
+        1.7818
+      ]
+    },
+    {
+      "asset": "KOSPI",
+      "unit": "session",
+      "horizon": 30,
+      "tier": "T1",
+      "samples": 4016,
+      "fitSamples": 2811,
+      "holdoutSamples": 1205,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.999,
+      "widthScale50": 0.964,
+      "driftLogPerSqrtH": 0.06499797302903922,
+      "kurtosis": 7.52,
+      "holdout": {
+        "n": 1205,
+        "coverage80Before": 75.7,
+        "coverage80After": 75.4
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.1997,
+        0.0107,
+        0.2211
+      ]
+    },
+    {
+      "asset": "KOSPI",
+      "unit": "session",
+      "horizon": 90,
+      "tier": "T1",
+      "samples": 3956,
+      "fitSamples": 2769,
+      "holdoutSamples": 1187,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.027,
+      "widthScale50": 0.907,
+      "driftLogPerSqrtH": 0.14210160762667112,
+      "kurtosis": 3.46,
+      "holdout": {
+        "n": 1187,
+        "coverage80Before": 67.3,
+        "coverage80After": 66.6
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.3341,
+        0.0404,
+        0.415
+      ]
+    },
+    {
+      "asset": "KOSPI",
+      "unit": "session",
+      "horizon": 180,
+      "tier": "T1",
+      "samples": 3866,
+      "fitSamples": 2706,
+      "holdoutSamples": 1160,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.964,
+      "widthScale50": 0.698,
+      "driftLogPerSqrtH": 0.2003478749581403,
+      "kurtosis": 3.5,
+      "holdout": {
+        "n": 1160,
+        "coverage80Before": 61.3,
+        "coverage80After": 59.6
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.4166,
+        0.0806,
+        0.5779
+      ]
+    },
+    {
+      "asset": "KOSPI",
+      "unit": "session",
+      "horizon": 365,
+      "tier": "T1",
+      "samples": 3681,
+      "fitSamples": 2576,
+      "holdoutSamples": 1105,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.961,
+      "widthScale50": 0.692,
+      "driftLogPerSqrtH": 0.291214936404748,
+      "kurtosis": 3.84,
+      "holdout": {
+        "n": 1105,
+        "coverage80Before": 65.9,
+        "coverage80After": 59.5
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.539,
+        0.1669,
+        0.8728
+      ]
+    },
+    {
+      "asset": "KOSDAQ",
+      "unit": "session",
+      "horizon": 30,
+      "tier": "T1",
+      "samples": 4017,
+      "fitSamples": 2811,
+      "holdoutSamples": 1206,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.021,
+      "widthScale50": 0.977,
+      "driftLogPerSqrtH": 0.08324452352239613,
+      "kurtosis": 5.43,
+      "holdout": {
+        "n": 1206,
+        "coverage80Before": 80.8,
+        "coverage80After": 81.6
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.2013,
+        0.0137,
+        0.2287
+      ]
+    },
+    {
+      "asset": "KOSDAQ",
+      "unit": "session",
+      "horizon": 90,
+      "tier": "T1",
+      "samples": 3957,
+      "fitSamples": 2769,
+      "holdoutSamples": 1188,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.907,
+      "widthScale50": 0.877,
+      "driftLogPerSqrtH": 0.21947789167444023,
+      "kurtosis": 4.94,
+      "holdout": {
+        "n": 1188,
+        "coverage80Before": 79.5,
+        "coverage80After": 68.8
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.2684,
+        0.0625,
+        0.3933
+      ]
+    },
+    {
+      "asset": "KOSDAQ",
+      "unit": "session",
+      "horizon": 180,
+      "tier": "T1",
+      "samples": 3867,
+      "fitSamples": 2706,
+      "holdoutSamples": 1161,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.872,
+      "widthScale50": 0.882,
+      "driftLogPerSqrtH": 0.33818292566170133,
+      "kurtosis": 3.89,
+      "holdout": {
+        "n": 1161,
+        "coverage80Before": 75.7,
+        "coverage80After": 62.9
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.3137,
+        0.1361,
+        0.5859
+      ]
+    },
+    {
+      "asset": "KOSDAQ",
+      "unit": "session",
+      "horizon": 365,
+      "tier": "T1",
+      "samples": 3682,
+      "fitSamples": 2577,
+      "holdoutSamples": 1105,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.026,
+      "widthScale50": 0.799,
+      "driftLogPerSqrtH": 0.452773449385559,
+      "kurtosis": 2.88,
+      "holdout": {
+        "n": 1105,
+        "coverage80Before": 87.4,
+        "coverage80After": 80.8
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.4941,
+        0.2595,
+        1.0131
+      ]
+    },
+    {
+      "asset": "TQQQ",
+      "unit": "session",
+      "horizon": 30,
+      "tier": "T1",
+      "samples": 4086,
+      "fitSamples": 2860,
+      "holdoutSamples": 1226,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.918,
+      "widthScale50": 0.996,
+      "driftLogPerSqrtH": 0.2661256410670485,
+      "kurtosis": 18.71,
+      "holdout": {
+        "n": 1226,
+        "coverage80Before": 82.3,
+        "coverage80After": 78.8
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.1496,
+        0.0437,
+        0.237
+      ]
+    },
+    {
+      "asset": "TQQQ",
+      "unit": "session",
+      "horizon": 90,
+      "tier": "T1",
+      "samples": 4026,
+      "fitSamples": 2818,
+      "holdoutSamples": 1208,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.918,
+      "widthScale50": 1.035,
+      "driftLogPerSqrtH": 0.4964825401572409,
+      "kurtosis": 4.34,
+      "holdout": {
+        "n": 1208,
+        "coverage80Before": 81.8,
+        "coverage80After": 79.6
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.1935,
+        0.1413,
+        0.4761
+      ]
+    },
+    {
+      "asset": "TQQQ",
+      "unit": "session",
+      "horizon": 180,
+      "tier": "T1",
+      "samples": 3936,
+      "fitSamples": 2755,
+      "holdoutSamples": 1181,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.055,
+      "widthScale50": 1.182,
+      "driftLogPerSqrtH": 0.7326506603366256,
+      "kurtosis": 3.16,
+      "holdout": {
+        "n": 1181,
+        "coverage80Before": 79.4,
+        "coverage80After": 81.3
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.2493,
+        0.2949,
+        0.8391
+      ]
+    },
+    {
+      "asset": "TQQQ",
+      "unit": "session",
+      "horizon": 365,
+      "tier": "T1",
+      "samples": 3751,
+      "fitSamples": 2625,
+      "holdoutSamples": 1126,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.373,
+      "widthScale50": 1.269,
+      "driftLogPerSqrtH": 1.028414852751894,
+      "kurtosis": 2.68,
+      "holdout": {
+        "n": 1126,
+        "coverage80Before": 84.2,
+        "coverage80After": 80.6
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.4191,
+        0.5894,
+        1.5979
+      ]
+    },
+    {
+      "asset": "SOXL",
+      "unit": "session",
+      "horizon": 30,
+      "tier": "T1",
+      "samples": 4068,
+      "fitSamples": 2847,
+      "holdoutSamples": 1221,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.936,
+      "widthScale50": 0.938,
+      "driftLogPerSqrtH": 0.17789981767399127,
+      "kurtosis": 7.98,
+      "holdout": {
+        "n": 1221,
+        "coverage80Before": 78.5,
+        "coverage80After": 75.4
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.1679,
+        0.0292,
+        0.2263
+      ]
+    },
+    {
+      "asset": "SOXL",
+      "unit": "session",
+      "horizon": 90,
+      "tier": "T1",
+      "samples": 4008,
+      "fitSamples": 2805,
+      "holdoutSamples": 1203,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.946,
+      "widthScale50": 1.102,
+      "driftLogPerSqrtH": 0.3180333408680845,
+      "kurtosis": 3.31,
+      "holdout": {
+        "n": 1203,
+        "coverage80Before": 77.6,
+        "coverage80After": 73.9
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.2545,
+        0.0905,
+        0.4356
+      ]
+    },
+    {
+      "asset": "SOXL",
+      "unit": "session",
+      "horizon": 180,
+      "tier": "T1",
+      "samples": 3918,
+      "fitSamples": 2742,
+      "holdoutSamples": 1176,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 0.961,
+      "widthScale50": 1.101,
+      "driftLogPerSqrtH": 0.44639279082293043,
+      "kurtosis": 2.74,
+      "holdout": {
+        "n": 1176,
+        "coverage80Before": 76.1,
+        "coverage80After": 72.6
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.316,
+        0.1797,
+        0.6754
+      ]
+    },
+    {
+      "asset": "SOXL",
+      "unit": "session",
+      "horizon": 365,
+      "tier": "T1",
+      "samples": 3733,
+      "fitSamples": 2613,
+      "holdoutSamples": 1120,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.101,
+      "widthScale50": 1.144,
+      "driftLogPerSqrtH": 0.645744521120889,
+      "kurtosis": 2.62,
+      "holdout": {
+        "n": 1120,
+        "coverage80Before": 84.7,
+        "coverage80After": 79.4
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.4386,
+        0.3701,
+        1.1788
+      ]
+    },
+    {
+      "asset": "KODEX-KOSDAQ150",
+      "unit": "session",
+      "horizon": 30,
+      "tier": "T1",
+      "samples": 2513,
+      "fitSamples": 1759,
+      "holdoutSamples": 754,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.048,
+      "widthScale50": 1.008,
+      "driftLogPerSqrtH": 0.0265175097980682,
+      "kurtosis": 5.73,
+      "holdout": {
+        "n": 754,
+        "coverage80Before": 81.3,
+        "coverage80After": 83.3
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.2163,
+        0.0044,
+        0.225
+      ]
+    },
+    {
+      "asset": "KODEX-KOSDAQ150",
+      "unit": "session",
+      "horizon": 90,
+      "tier": "T1",
+      "samples": 2453,
+      "fitSamples": 1717,
+      "holdoutSamples": 736,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.062,
+      "widthScale50": 1.157,
+      "driftLogPerSqrtH": 0.09616183650553252,
+      "kurtosis": 6.06,
+      "holdout": {
+        "n": 736,
+        "coverage80Before": 80,
+        "coverage80After": 82.1
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.36,
+        0.0274,
+        0.4147
+      ]
+    },
+    {
+      "asset": "KODEX-KOSDAQ150",
+      "unit": "session",
+      "horizon": 180,
+      "tier": "T1",
+      "samples": 2363,
+      "fitSamples": 1654,
+      "holdoutSamples": 709,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.129,
+      "widthScale50": 1.293,
+      "driftLogPerSqrtH": 0.13950186890236535,
+      "kurtosis": 4.77,
+      "holdout": {
+        "n": 709,
+        "coverage80Before": 78,
+        "coverage80After": 83.5
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.5262,
+        0.0561,
+        0.6385
+      ]
+    },
+    {
+      "asset": "KODEX-KOSDAQ150",
+      "unit": "session",
+      "horizon": 365,
+      "tier": "T1",
+      "samples": 2178,
+      "fitSamples": 1524,
+      "holdoutSamples": 654,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.186,
+      "widthScale50": 1.371,
+      "driftLogPerSqrtH": 0.09934384688252838,
+      "kurtosis": 2.32,
+      "holdout": {
+        "n": 654,
+        "coverage80Before": 99.4,
+        "coverage80After": 100
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.8142,
+        0.0569,
+        0.9281
+      ]
+    },
+    {
+      "asset": "MSTR",
+      "unit": "session",
+      "horizon": 30,
+      "tier": "T1",
+      "samples": 7027,
+      "fitSamples": 4918,
+      "holdoutSamples": 2109,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.066,
+      "widthScale50": 0.986,
+      "driftLogPerSqrtH": 0.04097306592585158,
+      "kurtosis": 8.6,
+      "holdout": {
+        "n": 2109,
+        "coverage80Before": 77.1,
+        "coverage80After": 79.4
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.2177,
+        0.0067,
+        0.2312
+      ]
+    },
+    {
+      "asset": "MSTR",
+      "unit": "session",
+      "horizon": 90,
+      "tier": "T1",
+      "samples": 6967,
+      "fitSamples": 4876,
+      "holdoutSamples": 2091,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.23,
+      "widthScale50": 1.085,
+      "driftLogPerSqrtH": 0.07689658193676362,
+      "kurtosis": 4.08,
+      "holdout": {
+        "n": 2091,
+        "coverage80Before": 74.6,
+        "coverage80After": 80.2
+      },
+      "passes": true,
+      "exampleIntervalLog": [
+        -0.4267,
+        0.0219,
+        0.4705
+      ]
+    },
+    {
+      "asset": "MSTR",
+      "unit": "session",
+      "horizon": 180,
+      "tier": "T1",
+      "samples": 6877,
+      "fitSamples": 4813,
+      "holdoutSamples": 2064,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.118,
+      "widthScale50": 1.135,
+      "driftLogPerSqrtH": 0.08727369587765087,
+      "kurtosis": 4.6,
+      "holdout": {
+        "n": 2064,
+        "coverage80Before": 67.1,
+        "coverage80After": 71
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.5416,
+        0.0351,
+        0.6118
+      ]
+    },
+    {
+      "asset": "MSTR",
+      "unit": "session",
+      "horizon": 365,
+      "tier": "T1",
+      "samples": 6692,
+      "fitSamples": 4684,
+      "holdoutSamples": 2008,
+      "calibrated": true,
+      "reason": null,
+      "widthScale80": 1.022,
+      "widthScale50": 1.112,
+      "driftLogPerSqrtH": 0.052828373563680545,
+      "kurtosis": 3.13,
+      "holdout": {
+        "n": 2008,
+        "coverage80Before": 61.8,
+        "coverage80After": 62.3
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.7204,
+        0.0303,
+        0.781
+      ]
+    },
+    {
+      "asset": "HOUSING-부산",
+      "unit": "month",
+      "horizon": 3,
+      "tier": "T2",
+      "samples": 233,
+      "fitSamples": 163,
+      "holdoutSamples": 70,
+      "calibrated": false,
+      "reason": "적합 표본 163개 < 200개",
+      "widthScale80": null,
+      "widthScale50": null,
+      "driftLogPerSqrtH": null,
+      "kurtosis": null,
+      "holdout": {
+        "n": 70,
+        "coverage80Before": 62.9,
+        "coverage80After": 62.9
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.0666,
+        0,
+        0.0666
+      ]
+    },
+    {
+      "asset": "HOUSING-부산",
+      "unit": "month",
+      "horizon": 6,
+      "tier": "T2",
+      "samples": 230,
+      "fitSamples": 161,
+      "holdoutSamples": 69,
+      "calibrated": false,
+      "reason": "적합 표본 161개 < 200개",
+      "widthScale80": null,
+      "widthScale50": null,
+      "driftLogPerSqrtH": null,
+      "kurtosis": null,
+      "holdout": {
+        "n": 69,
+        "coverage80Before": 56.5,
+        "coverage80After": 56.5
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.0942,
+        0,
+        0.0942
+      ]
+    },
+    {
+      "asset": "HOUSING-부산",
+      "unit": "month",
+      "horizon": 12,
+      "tier": "T2",
+      "samples": 224,
+      "fitSamples": 156,
+      "holdoutSamples": 68,
+      "calibrated": false,
+      "reason": "적합 표본 156개 < 200개",
+      "widthScale80": null,
+      "widthScale50": null,
+      "driftLogPerSqrtH": null,
+      "kurtosis": null,
+      "holdout": {
+        "n": 68,
+        "coverage80Before": 42.6,
+        "coverage80After": 42.6
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.1332,
+        0,
+        0.1332
+      ]
+    },
+    {
+      "asset": "HOUSING-서울",
+      "unit": "month",
+      "horizon": 3,
+      "tier": "T2",
+      "samples": 233,
+      "fitSamples": 163,
+      "holdoutSamples": 70,
+      "calibrated": false,
+      "reason": "적합 표본 163개 < 200개",
+      "widthScale80": null,
+      "widthScale50": null,
+      "driftLogPerSqrtH": null,
+      "kurtosis": null,
+      "holdout": {
+        "n": 70,
+        "coverage80Before": 41.4,
+        "coverage80After": 41.4
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.0666,
+        0,
+        0.0666
+      ]
+    },
+    {
+      "asset": "HOUSING-서울",
+      "unit": "month",
+      "horizon": 6,
+      "tier": "T2",
+      "samples": 230,
+      "fitSamples": 161,
+      "holdoutSamples": 69,
+      "calibrated": false,
+      "reason": "적합 표본 161개 < 200개",
+      "widthScale80": null,
+      "widthScale50": null,
+      "driftLogPerSqrtH": null,
+      "kurtosis": null,
+      "holdout": {
+        "n": 69,
+        "coverage80Before": 33.3,
+        "coverage80After": 33.3
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.0942,
+        0,
+        0.0942
+      ]
+    },
+    {
+      "asset": "HOUSING-서울",
+      "unit": "month",
+      "horizon": 12,
+      "tier": "T2",
+      "samples": 224,
+      "fitSamples": 156,
+      "holdoutSamples": 68,
+      "calibrated": false,
+      "reason": "적합 표본 156개 < 200개",
+      "widthScale80": null,
+      "widthScale50": null,
+      "driftLogPerSqrtH": null,
+      "kurtosis": null,
+      "holdout": {
+        "n": 68,
+        "coverage80Before": 27.9,
+        "coverage80After": 27.9
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.1332,
+        0,
+        0.1332
+      ]
+    },
+    {
+      "asset": "HOUSING-경기",
+      "unit": "month",
+      "horizon": 3,
+      "tier": "T2",
+      "samples": 233,
+      "fitSamples": 163,
+      "holdoutSamples": 70,
+      "calibrated": false,
+      "reason": "적합 표본 163개 < 200개",
+      "widthScale80": null,
+      "widthScale50": null,
+      "driftLogPerSqrtH": null,
+      "kurtosis": null,
+      "holdout": {
+        "n": 70,
+        "coverage80Before": 51.4,
+        "coverage80After": 51.4
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.0666,
+        0,
+        0.0666
+      ]
+    },
+    {
+      "asset": "HOUSING-경기",
+      "unit": "month",
+      "horizon": 6,
+      "tier": "T2",
+      "samples": 230,
+      "fitSamples": 161,
+      "holdoutSamples": 69,
+      "calibrated": false,
+      "reason": "적합 표본 161개 < 200개",
+      "widthScale80": null,
+      "widthScale50": null,
+      "driftLogPerSqrtH": null,
+      "kurtosis": null,
+      "holdout": {
+        "n": 69,
+        "coverage80Before": 44.9,
+        "coverage80After": 44.9
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.0942,
+        0,
+        0.0942
+      ]
+    },
+    {
+      "asset": "HOUSING-경기",
+      "unit": "month",
+      "horizon": 12,
+      "tier": "T2",
+      "samples": 224,
+      "fitSamples": 156,
+      "holdoutSamples": 68,
+      "calibrated": false,
+      "reason": "적합 표본 156개 < 200개",
+      "widthScale80": null,
+      "widthScale50": null,
+      "driftLogPerSqrtH": null,
+      "kurtosis": null,
+      "holdout": {
+        "n": 68,
+        "coverage80Before": 41.2,
+        "coverage80After": 41.2
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.1332,
+        0,
+        0.1332
+      ]
+    },
+    {
+      "asset": "HOUSING-전국",
+      "unit": "month",
+      "horizon": 3,
+      "tier": "T2",
+      "samples": 233,
+      "fitSamples": 163,
+      "holdoutSamples": 70,
+      "calibrated": false,
+      "reason": "적합 표본 163개 < 200개",
+      "widthScale80": null,
+      "widthScale50": null,
+      "driftLogPerSqrtH": null,
+      "kurtosis": null,
+      "holdout": {
+        "n": 70,
+        "coverage80Before": 50,
+        "coverage80After": 50
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.0666,
+        0,
+        0.0666
+      ]
+    },
+    {
+      "asset": "HOUSING-전국",
+      "unit": "month",
+      "horizon": 6,
+      "tier": "T2",
+      "samples": 230,
+      "fitSamples": 161,
+      "holdoutSamples": 69,
+      "calibrated": false,
+      "reason": "적합 표본 161개 < 200개",
+      "widthScale80": null,
+      "widthScale50": null,
+      "driftLogPerSqrtH": null,
+      "kurtosis": null,
+      "holdout": {
+        "n": 69,
+        "coverage80Before": 43.5,
+        "coverage80After": 43.5
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.0942,
+        0,
+        0.0942
+      ]
+    },
+    {
+      "asset": "HOUSING-전국",
+      "unit": "month",
+      "horizon": 12,
+      "tier": "T2",
+      "samples": 224,
+      "fitSamples": 156,
+      "holdoutSamples": 68,
+      "calibrated": false,
+      "reason": "적합 표본 156개 < 200개",
+      "widthScale80": null,
+      "widthScale50": null,
+      "driftLogPerSqrtH": null,
+      "kurtosis": null,
+      "holdout": {
+        "n": 68,
+        "coverage80Before": 38.2,
+        "coverage80After": 38.2
+      },
+      "passes": false,
+      "exampleIntervalLog": [
+        -0.1332,
+        0,
+        0.1332
+      ]
+    }
+  ]
+}
