@@ -93,6 +93,25 @@ are separate evidence categories. Final deployment evidence must identify the
 new source's own Build UUIDs and manifest; the starting receipts above cannot
 qualify a later change.
 
+## First review candidate and follow-up
+
+Candidate `dd4b7c2014a97eb202457469d4d263ca4a0b7947` passed all 13 model
+gates and 2,877 tests in Build `9454befc-84d3-4f66-9911-412b8aa833a7`.
+Its browser Build `5baa06ee-4a62-4e9f-bb61-bf2544af282f` completed all 53
+cases: 50 passed and the three consolidated cases failed. Both previously
+failing BTC replay cases passed, including the complete seven-case replay lane.
+
+The consolidated cases reached the final resource-error assertion. Each had
+correctly verified the parent refresh, then encountered one additional BTC
+refresh from the active embedded research document. That document performs
+its own legitimate refresh and displays its own persistent failure notice.
+The follow-up verifies the child while it is active, including its visible
+notice, retry reachability from the parent, retained cutoff and exact direct
+child frame/loader identity. It retains the original narrow request policy
+and final unexpected-resource assertion. A focused diagnostic can establish
+the three-case repair, but cannot replace a new source's full model and
+53-case browser verification.
+
 ## Scheduled refresh: observed inactive state
 
 The live account contains three deployed scripts: the product Worker and its

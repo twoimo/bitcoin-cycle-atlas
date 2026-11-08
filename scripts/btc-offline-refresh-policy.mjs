@@ -4,12 +4,27 @@
  * failed-refresh UI and preserved archive cutoff before accepting its request ID. */
 export function offlineBtcRefreshSurface(spec,document={}){
   if(spec?.consolidated!==true)return spec?.surface;
-  // Consolidation changes the visible center, not the native BTC document that
-  // owns its refresh. Only the declared market-entry case and its actual parent
-  // can use the existing BTC policy; undefined/unknown surfaces stay ineligible.
+  // The market parent and embedded research document each own their own BTC
+  // refresh. An active research child must not borrow the parent's verification.
   if(spec.page!=='workspace-consolidated'||spec.surface!==undefined||document.preview===true||
-    document.nativeSymbol!=='BTCUSD'||document.page!=='outlook'||document.center!=='market-us')return undefined;
+    document.nativeSymbol!=='BTCUSD')return undefined;
+  if(document.owner==='active-evidence-child'){
+    if(document.page!=='evidence'||document.embedded!=='true'||document.center!=null||
+      document.parentCenter!=='evidence'||document.parentNativeSymbol!=='BTCUSD'||
+      document.activeFrameCount!==1||document.frameVisible!==true||document.frameSrc!==document.url)return undefined;
+    try{
+      const child=new URL(document.url),parent=new URL(document.parentUrl);
+      if(child.origin!==parent.origin||child.searchParams.get('page')!=='evidence'||child.searchParams.get('embedded')!=='1')return undefined;
+    }catch{return undefined;}
+    return 'evidence';
+  }
+  if(document.owner!==undefined&&document.owner!=='parent'||document.page!=='outlook'||document.center!=='market-us')return undefined;
   return 'btc';
+}
+
+export function isExpectedOfflineBtcRefreshForFrame(error,{frame,surface,archiveAsOf}={}){
+  if(!frame?.id||!frame.loaderId||error?.frameId!==frame.id||error.loaderId!==frame.loaderId)return false;
+  return isExpectedOfflineBtcRefresh(error,{surface,archiveAsOf});
 }
 
 export function isExpectedOfflineBtcRefresh(error,{surface,archiveAsOf}={}){

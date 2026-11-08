@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {isExpectedOfflineBtcRefresh,offlineBtcRefreshSurface} from '../scripts/btc-offline-refresh-policy.mjs';
+import {isExpectedOfflineBtcRefresh,isExpectedOfflineBtcRefreshForFrame,offlineBtcRefreshSurface} from '../scripts/btc-offline-refresh-policy.mjs';
 import {consolidatedWorkspaceCases} from '../scripts/verify-consolidated-workspace-browser.mjs';
 const policy={surface:'btc',archiveAsOf:'2026-10-25'};
 const error={url:'https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=btc&metrics=PriceUSD&frequency=1d&start_time=2010-07-18&end_time=2026-10-27&page_size=10000&paging_from=start',
@@ -32,6 +32,47 @@ test('a consolidated child, other asset, wrong center or undeclared case cannot 
     assert.equal(offlineBtcRefreshSurface(candidate,parent),undefined);
   for(const surface of ['btc','evidence','legacy','preview','center-data'])
     assert.equal(offlineBtcRefreshSurface({surface},parent),surface,'Existing surface contracts are unchanged');
+});
+const evidenceOwner={owner:'active-evidence-child',nativeSymbol:'BTCUSD',page:'evidence',embedded:'true',
+  parentCenter:'evidence',parentNativeSymbol:'BTCUSD',activeFrameCount:1,frameVisible:true,
+  parentUrl:'http://127.0.0.1:44529/bitcoin-cycle-atlas/?page=outlook&center=evidence',
+  url:'http://127.0.0.1:44529/bitcoin-cycle-atlas/?page=evidence&embedded=1&v=1.36.1',
+  frameSrc:'http://127.0.0.1:44529/bitcoin-cycle-atlas/?page=evidence&embedded=1&v=1.36.1'};
+test('a separately observed active research child retains evidence ownership without borrowing its BTC parent',()=>{
+  for(const spec of consolidatedWorkspaceCases){
+    assert.equal(offlineBtcRefreshSurface(spec,evidenceOwner),'evidence');
+    assert.equal(offlineBtcRefreshSurface(spec,{...evidenceOwner,owner:undefined}),undefined);
+    assert.equal(offlineBtcRefreshSurface(spec,{...evidenceOwner,owner:'parent'}),undefined);
+  }
+});
+test('hidden, uncommitted, foreign, nested or misidentified research documents cannot excuse a refresh',()=>{
+  const spec=consolidatedWorkspaceCases[0];
+  for(const change of [{nativeSymbol:'ETHUSD'},{page:'outlook'},{embedded:undefined},{embedded:'false'},
+    {center:'evidence'},{parentCenter:'market-us'},{parentNativeSymbol:'ETHUSD'},
+    {activeFrameCount:0},{activeFrameCount:2},{frameVisible:false},{frameSrc:'about:blank'},
+    {parentUrl:'https://foreign.example/?center=evidence'},{parentUrl:'invalid'},{owner:'any-child'},
+    {url:evidenceOwner.url.replace('embedded=1','embedded=0'),frameSrc:evidenceOwner.url.replace('embedded=1','embedded=0')},
+    {url:evidenceOwner.url.replace('page=evidence','page=data'),frameSrc:evidenceOwner.url.replace('page=evidence','page=data')}])
+    assert.equal(offlineBtcRefreshSurface(spec,{...evidenceOwner,...change}),undefined,JSON.stringify(change));
+  for(const change of [{page:'undeclared'},{surface:'evidence'}])
+    assert.equal(offlineBtcRefreshSurface({...spec,...change},evidenceOwner),undefined);
+});
+test('the recovered child request qualifies only for its current evidence frame and loader',()=>{
+  // Exact identities from the 320x900 consumer failure. The earlier parent
+  // failure was already verified; matching the same provider URL is insufficient.
+  const childFrame={id:'BA1996B00CFC6ECAFDD990A8FFB2731B',loaderId:'9391C5EE4117568170AC316302EC2C46'};
+  const parentFrame={id:'03DAA65FF4E2FCFF103AE990CF9B9807',loaderId:'97B525DA46D84C7581F85C22D8389582'};
+  const childError={...error,requestId:'4211.571',frameId:childFrame.id,loaderId:childFrame.loaderId,
+    requestWallTime:1794115040.614463,documentUrl:evidenceOwner.url,url:error.url.replace('2026-10-27','2026-11-08')};
+  const childPolicy={surface:offlineBtcRefreshSurface(consolidatedWorkspaceCases[0],evidenceOwner),archiveAsOf:'2026-11-06',frame:childFrame};
+  assert.equal(isExpectedOfflineBtcRefreshForFrame(childError,childPolicy),true);
+  for(const frame of [undefined,{},parentFrame,{...childFrame,loaderId:parentFrame.loaderId},{...childFrame,id:parentFrame.id}])
+    assert.equal(isExpectedOfflineBtcRefreshForFrame(childError,{...childPolicy,frame}),false);
+  for(const change of [{url:childError.url+'&assets=btc'},{url:childError.url.replace('assets=btc','assets=eth')},
+    {method:'POST'},{resourceType:'Script'},{blockedReason:'other'},{httpStatus:503},{requestId:''}])
+    assert.equal(isExpectedOfflineBtcRefreshForFrame({...childError,...change},childPolicy),false);
+  assert.equal(isExpectedOfflineBtcRefreshForFrame(childError,{...childPolicy,surface:undefined}),false);
+  assert.equal(isExpectedOfflineBtcRefreshForFrame(childError,{...childPolicy,archiveAsOf:'2026-11-07'}),false);
 });
 test('center-data admits only the existing stale BTC request eligibility',()=>{
   assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface:'center-data'}),true);

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {isExpectedOfflineBtcRefresh,offlineBtcRefreshSurface} from './btc-offline-refresh-policy.mjs';
+import {isExpectedOfflineBtcRefreshForFrame,offlineBtcRefreshSurface} from './btc-offline-refresh-policy.mjs';
 // PR-only verification of checked-out dist files. Does not deploy or alter UI.
 import assert from 'node:assert/strict';
 import {verifyWorkspaceSurface,readNativeInteractiveTarget} from './verify-workspace-browser.mjs';
@@ -901,11 +901,14 @@ async function main(){
         if(optional(url)&&event.blockedReason)receipt.blockedOptionalFonts.push({url,reason:event.blockedReason});
         else receipt.resourceErrors.push({...requestDetails.get(event.requestId),networkEvent:'Network.loadingFailed',url,errorText:event.errorText,canceled:event.canceled??false,blockedReason:event.blockedReason??null});
       });
-      const verifyOfflineRefresh=async({preview=false,phase='initial-document'}={})=>{
+      const verifyOfflineRefresh=async({preview=false,evidenceChild=false,expectedFrameId,phase='initial-document'}={})=>{
+        if(evidenceChild)assert.ok(spec.consolidated&&!preview&&typeof expectedFrameId==='string'&&expectedFrameId,'The evidence refresh requires its already bound active child');
         const stale=(Math.floor(Date.now()/86400000)-Date.parse(expectedBtc.asOf+'T00:00:00Z')/86400000)>1;
         if(!stale)return;
-        const read=()=>evaluate(cdp,({preview})=>{
-          const doc=preview?document.querySelector('#mobile-preview')?.contentDocument:document;
+        const read=()=>evaluate(cdp,({preview,evidenceChild})=>{
+          const activeFrames=evidenceChild?[...document.querySelectorAll('.atlas-center-frame:not([hidden])')]:[];
+          const activeFrame=activeFrames.length===1?activeFrames[0]:null;
+          const doc=evidenceChild?activeFrame?.contentDocument:preview?document.querySelector('#mobile-preview')?.contentDocument:document;
           if(!doc)return null;
           const button=doc.querySelector('#refresh-button');
           const visible=Boolean(button&&button.getClientRects().length&&doc.defaultView.getComputedStyle(button).visibility==='visible');
@@ -914,7 +917,16 @@ async function main(){
           const box=node=>{if(!node)return null;const b=node.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height};};
           const topmost=node=>{if(!node)return false;const b=node.getBoundingClientRect(),hit=doc.elementFromPoint(b.left+b.width/2,b.top+b.height/2);return Boolean(hit&&(hit===node||node.contains(hit)));};
           const painted=Boolean(notice&&!notice.hidden&&notice.getClientRects().length&&doc.defaultView.getComputedStyle(notice).visibility==='visible');
+          const frameBox=box(activeFrame),reachable=node=>{
+            if(!activeFrame||!node)return false;
+            const b=node.getBoundingClientRect();
+            return document.elementFromPoint(frameBox.left+b.left+b.width/2,frameBox.top+b.top+b.height/2)===activeFrame;
+          };
           return {url:doc.location.href,timeOrigin:doc.defaultView.performance.timeOrigin,
+            ...(evidenceChild?{owner:'active-evidence-child',embedded:doc.body?.dataset.embedded,parentUrl:location.href,
+              parentCenter:document.body?.dataset.centerTool,parentNativeSymbol:document.documentElement?.dataset.symbol,
+              activeFrameCount:activeFrames.length,frameSrc:activeFrame.src,frameVisible:activeFrame.checkVisibility(),frameBox,
+              parentViewport:{width:innerWidth,height:innerHeight},retryReachableFromParent:reachable(retry),summaryReachableFromParent:reachable(summary)}:{}),
             notice:{state:notice?.dataset.state,visible:painted,box:box(notice),summary:summary?.textContent,detail:detail?.textContent,
               summaryUnclipped:Boolean(summary&&summary.scrollWidth<=summary.clientWidth+1),detailUnclipped:Boolean(detail&&detail.scrollWidth<=detail.clientWidth+1),
               retryBox:box(retry),retryDisabled:retry?.disabled,retryTopmost:topmost(retry),summaryTopmost:topmost(summary),
@@ -927,7 +939,7 @@ async function main(){
             price:doc.querySelector('#lab-metrics .readout-main > strong')?.textContent,
             priceDate:doc.querySelector('#lab-metrics .atlas-observation-date')?.textContent,
             priceKind:doc.querySelector('#lab-metrics')?.dataset.kind};
-        },{preview});
+        },{preview,evidenceChild});
         const observed=await until(async()=>{const value=await read();return value?.title==='갱신에 실패했습니다. 검증된 이전 데이터를 표시합니다.'&&value.disabled===false&&!value.busy?value:null;},'explicit failed offline refresh state');
         assert.equal(observed.cutoff,'관측 · '+expectedBtc.asOf.replaceAll('-','.')+' UTC');
         const notice=observed.notice;
@@ -941,6 +953,12 @@ async function main(){
         if(notice.viewportWidth<=620)assert.ok(notice.retryBox.width>=44&&notice.retryBox.height>=44,'Refresh retry must remain touch-sized');
         assert.equal(notice.liveRole,'status');assert.equal(notice.livePoliteness,'polite');assert.equal(notice.liveAtomic,'true');
         assert.equal(notice.duplicateAnnouncements,1,'BTC refresh results must have one live announcement owner');
+        if(evidenceChild){
+          const frameBox=observed.frameBox;
+          assert.ok(observed.frameVisible&&frameBox.left>=-1&&frameBox.right<=observed.parentViewport.width+1&&frameBox.top>=-1&&frameBox.bottom<=observed.parentViewport.height+1,'Evidence refresh must belong to a visible, unclipped active iframe');
+          assert.ok(Math.abs(frameBox.width-notice.viewportWidth)<=1&&Math.abs(frameBox.height-notice.viewportHeight)<=1,'Evidence notice coordinates must map 1:1 to the parent viewport');
+          assert.ok(observed.retryReachableFromParent&&observed.summaryReachableFromParent,'The parent must expose the actual child failure notice and retry');
+        }
         const priceDisplayed=observed.page==='outlook';
         if(priceDisplayed){
           assert.equal(observed.price,expectedBtc.formattedPrice);
@@ -953,15 +971,20 @@ async function main(){
         assert.equal(matching.length,1,'Offline failure must bind to one current app document');
         const frame=matching[0];
         const surface=offlineBtcRefreshSurface(spec,{...observed,preview});
-        if(spec.consolidated)assert.equal(surface,'btc','Consolidated refresh must belong to the actual native BTC market-entry parent');
-        const candidates=await until(async()=>{const matches=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId)&&error.frameId===frame.id&&error.loaderId===frame.loaderId&&
-          isExpectedOfflineBtcRefresh(error,{surface,archiveAsOf:expectedBtc.asOf}));return matches.length?matches:null;},'identified blocked refresh request');
+        if(spec.consolidated)assert.equal(surface,evidenceChild?'evidence':'btc','Consolidated refresh must belong to its observed native BTC document');
+        if(evidenceChild){
+          assert.equal(frame.id,expectedFrameId,'Evidence refresh must use the child bound before verification');
+          assert.equal(frame.parentId,frameTree.frameTree.frame.id,'Evidence refresh must belong to the current direct child');
+          assert.equal(frame.url,observed.frameSrc,'The active evidence iframe must have committed its declared source');
+        }
+        const candidates=await until(async()=>{const matches=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId)&&
+          isExpectedOfflineBtcRefreshForFrame(error,{frame,surface,archiveAsOf:expectedBtc.asOf}));return matches.length?matches:null;},'identified blocked refresh request');
         assert.equal(candidates.length,1,'Each verified refresh attempt must bind to exactly one new blocked request');
         for(const error of candidates)validatedOfflineRequestIds.add(error.requestId);
         receipt.expectedOfflineRefresh.push({phase,surface,frameId:frame.id,loaderId:frame.loaderId,observed,
           requestIds:candidates.map(error=>error.requestId),archiveSha256:expectedBtc.archiveSha256,
           archiveAsOf:expectedBtc.asOf,displayedPriceVerified:priceDisplayed,displayedPricePrecision:'USD rounded to 2 decimals',
-          failureTitleVerified:true,persistentVisibleErrorVerified:true,noticeVisibilityScope:preview?'child-document viewport; parent reachability checked separately':'actual viewport',
+          failureTitleVerified:true,persistentVisibleErrorVerified:true,noticeVisibilityScope:evidenceChild?'active evidence child viewport and actual parent reachability':preview?'child-document viewport; parent reachability checked separately':'actual viewport',
           interpretation:priceDisplayed?'Expected offline refresh failure; archive cutoff and displayed BTC price retained':
             'Expected offline refresh failure; archive cutoff retained. This surface does not display a current numeric BTC quote.'});
         return true;

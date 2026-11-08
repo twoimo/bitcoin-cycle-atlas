@@ -355,6 +355,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
   evidence.ipo.source=source;await closeMenu('source');
   await state('ipo-restored');
   await navigate('evidence');
+  await verifyOfflineRefresh({evidenceChild:true,expectedFrameId:childId,phase:'consolidated-active-evidence-child'});
   await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('#center-evidence-search'))),'research search hosted');
   await type(cdp,'#center-evidence-search','no-matching-atlas-record-20261107');
   await until(()=>evaluate(child,()=>/^0\s*\//.test(document.querySelector('#evidence-total')?.textContent||'')),'research empty search');
