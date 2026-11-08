@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {isExpectedOfflineBtcRefresh} from './btc-offline-refresh-policy.mjs';
+import {isExpectedOfflineBtcRefresh,offlineBtcRefreshSurface} from './btc-offline-refresh-policy.mjs';
 // PR-only verification of checked-out dist files. Does not deploy or alter UI.
 import assert from 'node:assert/strict';
 import {verifyWorkspaceSurface,readNativeInteractiveTarget} from './verify-workspace-browser.mjs';
@@ -923,6 +923,7 @@ async function main(){
               viewportWidth:doc.defaultView.innerWidth,viewportHeight:doc.defaultView.innerHeight},
             title:button?.title,disabled:button?.disabled,busy:button?.classList.contains('busy'),refreshButtonVisible:visible,
             cutoff:doc.querySelector('#sidebar-asof')?.textContent,page:doc.body?.dataset.page,
+            nativeSymbol:doc.documentElement?.dataset.symbol,center:doc.body?.dataset.centerTool,
             price:doc.querySelector('#lab-metrics .readout-main > strong')?.textContent,
             priceDate:doc.querySelector('#lab-metrics .atlas-observation-date')?.textContent,
             priceKind:doc.querySelector('#lab-metrics')?.dataset.kind};
@@ -951,11 +952,13 @@ async function main(){
         const matching=frames.filter(frame=>frame.url===observed.url);
         assert.equal(matching.length,1,'Offline failure must bind to one current app document');
         const frame=matching[0];
+        const surface=offlineBtcRefreshSurface(spec,{...observed,preview});
+        if(spec.consolidated)assert.equal(surface,'btc','Consolidated refresh must belong to the actual native BTC market-entry parent');
         const candidates=await until(async()=>{const matches=receipt.resourceErrors.filter(error=>!validatedOfflineRequestIds.has(error.requestId)&&error.frameId===frame.id&&error.loaderId===frame.loaderId&&
-          isExpectedOfflineBtcRefresh(error,{surface:spec.surface,archiveAsOf:expectedBtc.asOf}));return matches.length?matches:null;},'identified blocked refresh request');
+          isExpectedOfflineBtcRefresh(error,{surface,archiveAsOf:expectedBtc.asOf}));return matches.length?matches:null;},'identified blocked refresh request');
         assert.equal(candidates.length,1,'Each verified refresh attempt must bind to exactly one new blocked request');
         for(const error of candidates)validatedOfflineRequestIds.add(error.requestId);
-        receipt.expectedOfflineRefresh.push({phase,frameId:frame.id,loaderId:frame.loaderId,observed,
+        receipt.expectedOfflineRefresh.push({phase,surface,frameId:frame.id,loaderId:frame.loaderId,observed,
           requestIds:candidates.map(error=>error.requestId),archiveSha256:expectedBtc.archiveSha256,
           archiveAsOf:expectedBtc.asOf,displayedPriceVerified:priceDisplayed,displayedPricePrecision:'USD rounded to 2 decimals',
           failureTitleVerified:true,persistentVisibleErrorVerified:true,noticeVisibilityScope:preview?'child-document viewport; parent reachability checked separately':'actual viewport',

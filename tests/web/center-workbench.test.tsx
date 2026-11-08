@@ -91,3 +91,38 @@ test('static project navigation retains perimeter identity and rejects stale or 
   assert.equal(selectedSymbols.at(-1),'ETHUSD','returning to the background chart restores its actual asset identity');
   assert.equal(new URL(urls.at(-1)!).searchParams.get('symbol'),'ETHUSD');
 });
+
+for(const symbol of ['ETHUSD','MSTR','BMNR'])test(`${symbol} source actions stay concealed across acknowledged child charts and restore on return`,async t=>{
+  const nativeActions=symbol==='ETHUSD'
+    ? '<button id="eth-history-trigger" aria-label="이더리움 역사 사건">history</button><button data-eth-action="refresh" aria-label="ETH 가격 새로고침">refresh</button><button data-eth-action="info" aria-label="ETH 데이터 출처와 조회 상태">source</button><button id="workbench-scenario" data-eth-action="forecast" hidden disabled>forecast</button>'
+    : '<button data-equity-action="history">history</button><button data-equity-action="research">research</button><button data-equity-action="info">source</button><select id="equity-scenario"><option value="base">기준 가정</option></select><button id="workbench-scenario" data-equity-action="forecast" hidden disabled>forecast</button>';
+  const {document,window:dom}=parseHTML(`<html data-symbol="${symbol}"><head><meta name="atlas-service-base" content="/market-lab/"></head><body><header class="atlas-canvas-heading"><button class="symbol-selector-trigger">${symbol}</button>${nativeActions}<button id="workbench-chart-type">line</button></header><section class="atlas-plot"><svg></svg></section></body></html>`);
+  const original=new Map(['document','window','location','MutationObserver','CustomEvent'].map(key=>[key,Object.getOwnPropertyDescriptor(globalThis,key)]));
+  const listeners=new Map<string,Function>(),urls:string[]=[];
+  const window={parent:null as unknown,addEventListener:(key:string,fn:Function)=>listeners.set(key,fn),history:{pushState:(_a:unknown,_b:unknown,url:string)=>urls.push(url),replaceState:(_a:unknown,_b:unknown,url:string)=>urls.push(url)}};window.parent=window;
+  for(const [key,value]of Object.entries({document,window,location:new URL(`http://localhost/?page=outlook&symbol=${symbol}`),MutationObserver:dom.MutationObserver,CustomEvent:dom.CustomEvent}))Object.defineProperty(globalThis,key,{value,configurable:true});
+  t.after(()=>{for(const [key,value]of original){if(value)Object.defineProperty(globalThis,key,value);else Reflect.deleteProperty(globalThis,key);}});
+  const create=document.createElement.bind(document);document.createElement=((tag:string)=>{const node=create(tag);if(tag==='iframe')Object.defineProperty(node,'contentWindow',{value:{postMessage:()=>{}}});return node;}) as typeof document.createElement;
+  const sourceControls=[...document.querySelectorAll<HTMLButtonElement | HTMLSelectElement>('#eth-history-trigger,[data-eth-action],[data-equity-action],#equity-scenario')];
+  const sourceState=sourceControls.map(node=>({node,hidden:node.hidden,disabled:node.disabled,aria:node.getAttribute('aria-label')}));
+  const source=sourceControls.find(node=>node.getAttribute('data-eth-action')==='info'||node.getAttribute('data-equity-action')==='info')!;
+  let sourceClicks=0;source.addEventListener('click',()=>sourceClicks++);
+  mountCenterWorkbench();
+  const select=(next:string)=>document.dispatchEvent(new dom.CustomEvent('atlas:symbol-select',{cancelable:true,detail:{symbol:next}}));
+  const assertConcealed=()=>{for(const node of sourceControls){assert.equal(node.hidden,true,'inactive source actions cannot be painted or keyboard-reachable');assert.equal(node.disabled,true,'the child acknowledgement cannot re-enable a source-owned action');}};
+  const ready={kind:'atlas:chart-state',ready:true,timezone:'UTC',start:'2025-01-01',end:'2026-01-01',first:'2024-11-29',last:'2026-01-01',selected:'2026-01-01',close:24.2,frequency:'daily',frequencies:['daily','weekly'],scale:'log',chartType:'line',tool:'crosshair',magnet:'off',autoScale:true,candles:true,volume:true,canUndo:false,canRedo:false,measurement:false,records:true,nextSignal:false,pane:null};
+  for(const [next,unit] of [['TQQQ','USD'],['HYPE','USDC']]){
+    select(next);assertConcealed();
+    const frame=document.querySelector('iframe')!;
+    listeners.get('message')!({source:(frame as any).contentWindow,origin:'http://localhost',data:{...ready,symbol:next,unit,epoch:Number(frame.dataset.centerEpoch)}});
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(document.body.dataset.chartControls,'ready');assertConcealed();
+    assert.equal((document.querySelector('#workbench-chart-type') as HTMLButtonElement).disabled,false,'the active child still owns shared chart controls');
+    assert.equal((document.querySelector('.symbol-selector-trigger') as HTMLButtonElement).hidden,false,'symbol selection remains available');
+  }
+  select(symbol);
+  assert.equal(document.body.dataset.centerTool,undefined);
+  for(const {node,hidden,disabled,aria} of sourceState){assert.equal(node.isConnected,true);assert.equal(node.hidden,hidden);assert.equal(node.disabled,disabled);assert.equal(node.getAttribute('aria-label'),aria);}
+  source.click();assert.equal(sourceClicks,1,'returning preserves the original source action and its listener');
+  assert.equal(new URL(urls.at(-1)!).searchParams.get('symbol'),symbol);
+});

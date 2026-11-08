@@ -93,12 +93,14 @@ html[data-chart-replay-active=true] #eth-status,html[data-chart-replay-active=tr
 html[data-chart-replay-active=true] .workspace-toast{display:none!important}
 html[data-chart-replay-active=true] .eth-interval-buttons,html[data-chart-replay-active=true] #eth-interval,html[data-chart-replay-active=true] .equity-intervals,html[data-chart-replay-active=true] #equity-interval,html[data-chart-replay-active=true] .eth-chart-types{display:none!important}
 @media(max-width:620px),(pointer:coarse){
-  .chart-replay-controls{--replay-bar-height:56px;--replay-control-size:44px}
+  /* 44px targets + 4px padding and 1px border on each edge. Do not reserve
+     extra height above the legend in an already short price pane. */
+  .chart-replay-controls{--replay-bar-height:54px;--replay-control-size:44px}
   .chart-replay-trigger{min-height:44px;padding:4px 8px}
   .chart-replay-actions button{min-width:44px}
   .chart-replay-actions [data-cr=speed]{width:68px}
   .chart-replay-actions [data-cr=update-interval]{width:44px}
-  .chart-replay-controls>.chart-replay-exit{bottom:calc(var(--replay-bottom) + 6px)}
+  .chart-replay-controls>.chart-replay-exit{bottom:calc(var(--replay-bottom) + 5px)}
   .chart-replay-progress input{min-height:44px}
 }
 @media(pointer:coarse) and (min-width:621px){

@@ -1,5 +1,9 @@
 import {workspaceInstrument} from './workspace-instruments.js';
 
+// These actions retain native ETH/equity data and handlers. Shared chart
+// acknowledgements must never grant them ownership of a different instrument.
+export const nativeChartControlSelector='#eth-history-trigger,[data-eth-action],[data-equity-action],#equity-scenario';
+
 // All observed instruments use the existing perimeter. The underlying native
 // chart retains its state; only an acknowledged current frame owns controls.
 export function createChartWorkbenchControls({send,isActive}) {
@@ -92,7 +96,7 @@ export function createChartWorkbenchControls({send,isActive}) {
     state={...message,frequencies,records:message.records??legacy,nextSignal:message.nextSignal??legacy};message=state;
     document.body.dataset.rsiControls='ready';document.body.dataset.chartControls='ready';
     for(const selector of ['.atlas-canvas-heading','.workbench-tools','.workbench-detail-tools','.workbench-bottom-bar','.mobile-extra-actions','#workbench-frequency','#workbench-navigation','.workbench-ranges','.workbench-axis','.workspace-history-controls']){const node=$(selector);enable(node);if(node)attr(node,'inert',null);}
-    for(const child of $('.atlas-canvas-heading')?.children||[])if(!child.matches('#workbench-scenario,#atlas-cycle-panel,#workbench-replay')){enable(child);attr(child,'inert',null);}
+    for(const child of $('.atlas-canvas-heading')?.children||[])if(!child.matches(`${nativeChartControlSelector},#workbench-scenario,#atlas-cycle-panel,#workbench-replay`)){enable(child);attr(child,'inert',null);}
     for(const node of document.querySelectorAll('[data-chart-tool],[data-chart-navigation],[data-chart-span],.workbench-detail-tools button,.workbench-help,.mobile-extra-actions button'))enable(node);
     for(const id of Object.keys(ids))enable($('#'+id));
     enable($('#workbench-chart-type'),message.candles);enable($('#workbench-undo'),message.canUndo);enable($('#workbench-redo'),message.canRedo);enable($('#workbench-clear'),message.measurement);enable($('#workbench-next-turn'),message.nextSignal);enable($('#history-journal-toggle'),message.records);enable($('[data-reader=events]'),message.records);

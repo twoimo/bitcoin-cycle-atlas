@@ -1,9 +1,9 @@
 import {setChartLoading} from './loading-surfaces.js';
-import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.36.0';
-import {captureReplayView,sealReplaySnapshot,supplementReplaySnapshot,restoreReplaySnapshot,persistReplayDraft} from './chart-replay-snapshot.js?v=1.36.0';
-import {panRange,zoomRange,accumulateWheelRange} from './chart-navigation.js?v=1.36.0';
-import {withChartSpacing} from './chart-view-policy.js?v=1.36.0';
-import {normalizePriceDomain,scalePriceDomain,panPriceDomain} from './price-axis.js?v=1.36.0';
+import {createChartReplayController,CHART_REPLAY_SPEEDS} from './chart-replay-state.js?v=1.36.1';
+import {captureReplayView,sealReplaySnapshot,supplementReplaySnapshot,restoreReplaySnapshot,persistReplayDraft} from './chart-replay-snapshot.js?v=1.36.1';
+import {panRange,zoomRange,accumulateWheelRange} from './chart-navigation.js?v=1.36.1';
+import {withChartSpacing} from './chart-view-policy.js?v=1.36.1';
+import {normalizePriceDomain,scalePriceDomain,panPriceDomain} from './price-axis.js?v=1.36.1';
 
 const day=date=>Date.parse(date+'T00:00:00Z')/86400000;
 const dateAt=value=>new Date(Math.round(value)*86400000).toISOString().slice(0,10);
@@ -341,7 +341,7 @@ export function mountChartReplay({svg,plot,toolbar,symbol='BTCUSD',restore=()=>{
         if(!active||token!==epoch||signal.aborted)return;
         restoredSnapshot=saved;atlasCaptured=saved.view;atlasCapturedAt=saved.capturedAt;
       }
-      modules??=await Promise.all([import('./forecast-replay.js?v=1.36.0'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
+      modules??=await Promise.all([import('./forecast-replay.js?v=1.36.1'),import('./chart-replay-renderer.js'),import('./chart-replay-sources.js')]);
       if(!active||token!==epoch)return;
       if(atlasMode){
         atlasCaptured??=captureReplayView(getAtlasContext());

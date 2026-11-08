@@ -1,11 +1,11 @@
 import {createPriceScale,barPriceChange} from './chart-math.js?v=1.29.0';
-import {candleBodyWidth} from './chart-view-policy.js?v=1.36.0';
+import {candleBodyWidth} from './chart-view-policy.js?v=1.36.1';
 import { priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxisFormatter } from './price-axis.js?v=1.29.0';
 import { createPriceDisplay, formatDisplayPrice } from './price-display.js?v=1.29.0';
-import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.36.0';
+import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.36.1';
 import { researchAnnotationsMarkup } from './research-annotations.js?v=1.29.0';
 import {chartInterval} from './ohlc-data.js?v=1.29.0';
-import {chartPaneLayout,volumePaneMarkup,historicalMarkersMarkup} from './chart-overlays.js?v=1.36.0';
+import {chartPaneLayout,volumePaneMarkup,historicalMarkersMarkup} from './chart-overlays.js?v=1.36.1';
 import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.29.0';
 import { clearChartHover, clearChartHoverPointer, getChartHoverPointer, rememberChartHoverPointer, coalescedChartHover, paintPriceCursor } from './chart-hover.js?v=1.29.0';
 import { dateWindow, pixelExtrema } from './chart-window.js?v=1.29.0';

@@ -1,6 +1,6 @@
 import { replaceWithSkeleton } from './loading-surfaces.js';
 import { loadForecastIndex, loadForecastRecord, loadForecastSnapshot, loadForecastEvaluation, loadForecastExperiments, verifyForecastRecord, restoreForecastPath, compareForecastRecords } from './forecast-records.js?v=1.29.0';
-import { drawAtlasPriceChart } from './atlas-price-chart.js?v=1.36.0';
+import { drawAtlasPriceChart } from './atlas-price-chart.js?v=1.36.1';
 import { mountDialogViewport } from './dialog-viewport.js?v=1.29.0';
 import { describeFreshness } from './data-freshness.js?v=1.29.0';
 import { performanceSnapshot, downloadPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';

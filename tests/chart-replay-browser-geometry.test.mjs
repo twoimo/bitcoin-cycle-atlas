@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import vm from 'node:vm';
+import {readFile} from 'node:fs/promises';
 import {parseHTML} from 'linkedom';
 import {drawReplaySelection} from '../dist/chart-replay-renderer.js';
-import {readChartReplayFloatingGeometry,assertChartReplayPricePaneAccess} from '../scripts/verify-chart-replay-browser.mjs';
+import {chartPaneLayout} from '../dist/chart-overlays.js';
+import {readChartReplayFocusTarget,readChartReplayFloatingGeometry,assertChartReplayPricePaneAccess} from '../scripts/verify-chart-replay-browser.mjs';
 
 const box=(left,top,width,height)=>({left,top,right:left+width,bottom:top+height,width,height});
 
@@ -93,4 +95,40 @@ test('missing or detached native price-axis metadata fails instead of silently p
     const geometry=f.read();assert.equal(geometry.pricePane,null);assert.equal(geometry.probes.length,0);
     assert.throws(()=>assertChartReplayPricePaneAccess(geometry),/transformable price-pane bounds/);
   }
+});
+
+test('the pre-replay focus click uses the SVG gutter even when its center opens a research article',()=>{
+  const f=fixture(),document=f.svg.ownerDocument;
+  const article=document.createElementNS('http://www.w3.org/2000/svg','g');article.setAttribute('role','button');article.dataset.forecastEvidence='model-method';f.svg.append(article);
+  document.elementFromPoint=x=>x<Number(f.svg.dataset.plotLeft)?f.svg:article;
+  const nativeContext=vm.createContext({document});
+  const read=()=>vm.runInContext(`(${readChartReplayFocusTarget.toString()})('#eth-chart')`,nativeContext);
+  assert.equal(document.elementFromPoint(160,286),article,'the old center click would open the source-owned article');
+  const live=read();assert.ok(live,'the live chart needs the same safe native focus entrance as replay');
+  assert.equal(live.reachesChart,true);assert.equal(live.interactive,false);assert.ok(live.point.x<Number(f.svg.dataset.plotLeft));
+  f.svg.dataset.chartReplayActive='true';
+  assert.deepEqual(read(),live,'replay does not move the native focus entrance');
+  document.elementFromPoint=()=>article;
+  assert.equal(read().interactive,true,'an interactive SVG descendant cannot masquerade as an inert focus target');
+  document.elementFromPoint=()=>document.querySelector('#unexpected-blocker');
+  assert.equal(read().reachesChart,false,'an overlay blocker cannot be bypassed by programmatic focus');
+});
+
+test('touch replay transport keeps 44px controls and stays below the midpoint of the observed short price pane',async()=>{
+  const css=await readFile(new URL('../dist/chart-replay.css',import.meta.url),'utf8');
+  const {document}=parseHTML(`<html><head><style>${css}</style></head></html>`);
+  const coarse=Array.from(document.querySelector('style').sheet.cssRules).find(rule=>rule.media?.mediaText==='(max-width:620px), (pointer:coarse)');
+  const controls=Array.from(coarse.cssRules).find(rule=>rule.selectorText==='.chart-replay-controls').style;
+  const barHeight=Number.parseFloat(controls.getPropertyValue('--replay-bar-height'));
+  const targetHeight=Number.parseFloat(controls.getPropertyValue('--replay-control-size'));
+  assert.ok(targetHeight>=44,'compact presentation must preserve touch targets');
+  assert.ok(barHeight>=targetHeight+10,'controls retain their padding and border');
+  // Actual failed 900×430 receipt: the persistent refresh notice leaves a
+  // 795×285 chart with its selected cycle pane. This uses the real allocator;
+  // native CSS/hit geometry remains verified in the unchanged browser gate.
+  const pane=chartPaneLayout({width:795,height:285,top:18,volume:false,cycleTiming:true});
+  const legendHeight=26,legendInset=4,legendGap=8;
+  const barTop=pane.priceBottom-legendInset-legendHeight-legendGap-barHeight;
+  assert.ok(barTop>pane.top+(pane.priceBottom-pane.top)/2,'the touch transport must leave the upper half of the price pane unobstructed');
+  assert.ok(pane.cycleBottom>pane.cycleTop,'the selected cycle pane remains present');
 });
