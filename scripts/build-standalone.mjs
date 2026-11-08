@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { standaloneModuleMap } from './standalone-modules.mjs';
+import {readRelayStandaloneAssets} from './relay-standalone-assets.mjs';
 import {validateSnapshot as validateMarketLabSnapshot} from '../dist/market-lab-math.js';
 import { validateSavedJudgmentIndex, validateSavedJudgmentRecord, judgmentRecordSha256 } from '../dist/asset-judgment-records.js';
 import { readForecastArchive } from './build-forecast-ledger.mjs';
@@ -17,7 +18,7 @@ let html = await readFile(resolve(dist, 'index.html'), 'utf8');
 // The downloadable file uses local fallback fonts and needs no external CSS.
 html = html.replace(/\s*<link\b[^>]*id="atlas-optional-fonts"[^>]*>/, '')
   .replace(/\s*<script\b[^>]*id="atlas-fonts-script"[^>]*>[\s\S]*?<\/script>/, '');
-for (const file of ['styles.css', 'compact.css', 'outlook.css', 'lab.css', 'atlas.css', 'viewport.css', 'chart-details-panel.css', 'analysis-dock.css', 'chart-magnet.css', 'mobile-workspace.css', 'workspace-tools.css', 'chart-workspace-controls.css', 'research-annotations.css', 'chart-export-workbench.css', 'cycle-milestones.css', 'compact-chart-layout.css', 'chart-bottom-bar.css', 'symbol-selector.css', 'eth-view.css', 'ethereum-history.css', 'equity-view.css', 'research-reader.css', 'daily-data.css', 'forecast-journal.css', 'chart-replay.css', 'monthly-backtest.css', 'ipo-view.css', 'market-lab.css', 'atlas-shell.css', 'compact-toolbar.css', 'legacy-workspace-toolbar.css', 'vendor/skullet/styles.css', 'loading-surfaces.css', 'editorial-system.css', 'editorial-panels.css', 'editorial-ledgers.css']) {
+for (const file of ['styles.css', 'compact.css', 'outlook.css', 'lab.css', 'atlas.css', 'viewport.css', 'chart-details-panel.css', 'analysis-dock.css', 'chart-magnet.css', 'mobile-workspace.css', 'workspace-tools.css', 'chart-workspace-controls.css', 'research-annotations.css', 'chart-export-workbench.css', 'cycle-milestones.css', 'compact-chart-layout.css', 'chart-bottom-bar.css', 'symbol-selector.css', 'eth-view.css', 'ethereum-history.css', 'equity-view.css', 'research-reader.css', 'daily-data.css', 'forecast-journal.css', 'chart-replay.css', 'monthly-backtest.css', 'ipo-view.css', 'market-lab.css', 'atlas-shell.css', 'compact-toolbar.css', 'legacy-workspace-toolbar.css', 'vendor/skullet/styles.css', 'loading-surfaces.css', 'editorial-system.css', 'editorial-panels.css', 'editorial-ledgers.css', 'relay-room.css']) {
   // Font URLs contain semicolons in their weight lists. Consume the complete
   // url(...) before its terminating semicolon so :root stays valid CSS.
   const css = (await readFile(resolve(dist, file), 'utf8')).replace(/@import\s+url\(\s*(?:"[^"]*"|'[^']*'|[^)]*)\s*\)\s*;/g, '');
@@ -65,14 +66,19 @@ const equities=await Promise.all(['mstr','bmnr'].map(async symbol=>`<script id="
 const ipoCalendarJson=(await readFile(resolve(dist,'data/ipo-calendar.json'),'utf8')).replaceAll('<','\\u003c');
 const marketLabRaw=await readFile(resolve(dist,'data/market-lab.json'),'utf8');validateMarketLabSnapshot(JSON.parse(marketLabRaw));
 const marketLabJson=marketLabRaw.replaceAll('<','\\u003c');
+const relayRaw=await readFile(resolve(dist,'data/relay/index.json'),'utf8');
+const relayJson=relayRaw.replaceAll('<','\\u003c');
+const relayAssets=await readRelayStandaloneAssets(dist,JSON.parse(relayRaw));
+const relayAssetsJson=JSON.stringify(relayAssets.images).replaceAll('<','\\u003c');
 const modules = await standaloneModuleMap(dist);
 const importMap = JSON.stringify({imports:modules.imports}).replaceAll('<', '\\u003c');
 html = html.replace(/<script type="module" src="\.\/site-entry\.js(?:\?[^"\s]*)?"><\/script>/,
   ()=>`<script id="embedded-market-lab-data" type="application/json">${marketLabJson}</script>\n  <script id="embedded-ipo-calendar-data" type="application/json">${ipoCalendarJson}</script>\n  <script id="embedded-btc-data" type="application/json">${data}</script>\n  <script id="embedded-ohlc-data" type="application/json">${ohlc}</script>\n  <script id="embedded-volume-data" type="application/json">${volume}</script>\n  <script id="embedded-eth-data" type="application/json">${eth}</script>\n  ${equities.join('\n')}\n  <script id="embedded-asset-comparison-data" type="application/json">${assetComparison}</script>\n  <script id="embedded-judgment-snapshot-index" type="application/json">${snapshotIndexJson}</script>\n  <script id="embedded-judgment-snapshots" type="application/json">${snapshotRecordsJson}</script>\n  <script type="importmap">${importMap}</script>\n  <script type="module">import ${JSON.stringify(modules.entry)};</script>`);
 // Source documents contain literal replacement tokens such as $& and $'.
 // A callback inserts those bytes literally instead of expanding them as HTML.
+html=html.replace('<script type="importmap">',()=>`<script id="embedded-relay-data" type="application/json">${relayJson}</script>\n  <script id="embedded-relay-assets" type="application/json">${relayAssetsJson}</script>\n  <script type="importmap">`);
 html=html.replace('<script type="importmap">',()=>`<script id="atlas-forecast-ledger" type="application/json">${forecastJson}</script>\n  <script id="atlas-asset-forecast-ledger" type="application/json">${assetForecastJson}</script>\n  <script id="atlas-replay-price-archives" type="application/json">${replayJson}</script>\n  <script id="atlas-project-origin-baseline" type="application/json">${projectBaselineJson}</script>\n  <script id="atlas-publication" type="application/json">${publicationJson}</script>\n  <script type="importmap">`);
 if (/\b(?:src|href)=["']\.\//.test(html)) throw new Error('Unresolved local resource');
 await mkdir(dirname(output), { recursive: true });
 await writeFile(output, html);
-console.log(JSON.stringify({ file: basename(output), bytes: Buffer.byteLength(html), modules: Object.keys(modules.imports).length, embeddedObservations: JSON.parse(data).prices.length }));
+console.log(JSON.stringify({ file: basename(output), bytes: Buffer.byteLength(html), modules: Object.keys(modules.imports).length, embeddedObservations: JSON.parse(data).prices.length, embeddedRelayImages:Object.keys(relayAssets.images).length, embeddedRelayImageBytes:relayAssets.bytes }));

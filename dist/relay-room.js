@@ -29,9 +29,11 @@ const GLYPH = {
 };
 const KIND_GLYPH = { chat: 'chat', articles: 'book', editions: 'paper' };
 
-export function initRelayRoomView({ root, embeddedData, onReady } = {}) {
+export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady } = {}) {
   if (!root) throw new TypeError('relay view root is required');
   let data = null, roomId = null, articleId = null, editionIndex = 0, pageIndex = 0, loading = false, error = null, readySent = false;
+  let imageAssets = {};
+  const imageSource = value => Object.hasOwn(imageAssets, value) ? imageAssets[value] : value;
   const signalReady = () => { if (!readySent) { readySent = true; try { onReady?.(); } catch { /* optional */ } } };
 
   const rooms = () => (Array.isArray(data?.rooms) ? data.rooms : []);
@@ -42,7 +44,11 @@ export function initRelayRoomView({ root, embeddedData, onReady } = {}) {
     loading = true; error = null; render();
     try {
       const inline = embeddedData?.();
-      if (inline) data = JSON.parse(inline);
+      if (inline) {
+        data = JSON.parse(inline);
+        const assets = embeddedAssets?.();
+        imageAssets = assets ? JSON.parse(assets) : {};
+      }
       else {
         const response = await fetch('./data/relay/index.json', { signal: AbortSignal.timeout(15000) });
         if (!response.ok) throw new Error('relay data unavailable');
@@ -92,7 +98,7 @@ export function initRelayRoomView({ root, embeddedData, onReady } = {}) {
     const images = (Array.isArray(article.images) ? article.images : []).map(image => {
       const src = typeof image === 'string' ? image : image?.src;
       if (!src) return '';
-      return `<figure><img src="${esc(src)}" alt="${esc(image?.alt || '')}" loading="lazy"></figure>`;
+      return `<figure><img src="${esc(imageSource(src))}" alt="${esc(image?.alt || '')}" loading="lazy"></figure>`;
     }).join('');
     const link = safeHref(article.url);
     return `<article class="relay-reader">
@@ -128,7 +134,7 @@ export function initRelayRoomView({ root, embeddedData, onReady } = {}) {
     const dates = editions.map((entry, index) => `<button type="button" class="relay-edition-chip${index === editionIndex ? ' active' : ''}" data-edition="${index}">${esc(entry.version || '')} ${esc(dayLabel(entry.date))}</button>`).join('');
     const pager = pages.map((entry, index) => `<button type="button" class="relay-page-chip${index === pageIndex ? ' active' : ''}" data-page="${index}"${index === pageIndex ? ' aria-current="true"' : ''}>${esc(entry.label || String(index + 1))}</button>`).join('');
     const stage = page?.image
-      ? `<img class="relay-paper-image" src="${esc(page.image)}" alt="${esc(page.alt || (page.label || ''))}" loading="lazy">`
+      ? `<img class="relay-paper-image" src="${esc(imageSource(page.image))}" alt="${esc(page.alt || (page.label || ''))}" loading="lazy">`
       : `<div class="relay-paper-placeholder">${esc(page?.text || '이미지 준비 중')}</div>`;
     return `<div class="relay-paper">
       <div class="relay-paper-foot"><div class="relay-edition-list">${dates}</div><span class="relay-paper-status">${esc(page?.label || '')} · ${pageIndex + 1}/${Math.max(pages.length, 1)}</span></div>

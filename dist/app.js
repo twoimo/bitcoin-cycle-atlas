@@ -147,6 +147,7 @@ const relayController = initRelayRoomView({
   root: $('#relay-view'),
   onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'relay' } })),
   embeddedData: () => document.getElementById('embedded-relay-data')?.textContent ?? null,
+  embeddedAssets: () => document.getElementById('embedded-relay-assets')?.textContent ?? null,
 });
 $('#market-view').addEventListener('click', event => {
   if (state.view !== 'market' || !event.target.closest('[data-view="outlook"]')) return;

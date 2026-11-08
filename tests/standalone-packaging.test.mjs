@@ -10,6 +10,7 @@ import { standaloneModuleMap } from '../scripts/standalone-modules.mjs';
 import { verifyStandaloneArtifact } from '../scripts/standalone-verification.mjs';
 import { javascriptModuleReferences, javascriptModuleSpecifiers } from '../scripts/module-references.mjs';
 import { isolatedPackagingFixture } from './helpers/isolated-packaging-fixture.mjs';
+import {parseHTML} from 'linkedom';
 
 const run = promisify(execFile);
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -116,16 +117,19 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   const first = resolve(directory, 'first.html'), second = resolve(directory, 'second.html');
   const builder = resolve(directory, 'scripts/build-standalone.mjs');
   await run(process.execPath,[resolve(directory,'scripts/build-publication.mjs'),'--preview'],options);
+  const buildStarted=performance.now();
   await run(process.execPath, [builder, first],options);
+  const buildMilliseconds=performance.now()-buildStarted;
   await run(process.execPath, [builder, second],options);
   const html = await readFile(first, 'utf8');
   assert.equal(await readFile(second, 'utf8'), html);
   const verification = await verifyStandaloneArtifact(html, isolated.dist);
+  t.diagnostic(JSON.stringify({standaloneBytes:Buffer.byteLength(html),buildMilliseconds:Math.round(buildMilliseconds),relayImages:verification.relayImages,relayImageBytes:verification.relayImageBytes}));
   const bundle = await standaloneModuleMap(isolated.dist);
   assert.equal(verification.modules, Object.keys(bundle.imports).length);
-  assert.equal(verification.snapshots, 9); // Existing eight plus the research snapshot.
+  assert.equal(verification.snapshots, 10); // Existing nine plus the exact relay source.
   assert.ok(verification.forecastRecords>=5,'all five initial economic scenarios have actual preserved outputs');
-  assert.equal(verification.stylesheets, 36); // Existing 33 plus the three editorial stylesheets.
+  assert.equal(verification.stylesheets, 37); // Existing 36 plus the relay room stylesheet.
   const monthlyStyle = `<style>\n${await readFile(resolve(root, 'dist/monthly-backtest.css'), 'utf8')}\n</style>`;
   assert.equal(html.split(monthlyStyle).length - 1, 1, 'monthly backtest styles are preserved exactly once');
   assert.match(html,/\.forecast-journal\s*\{/,'the archived forecast workspace retains its offline styles');
@@ -133,14 +137,55 @@ test('the real standalone is deterministic, preserves every module and snapshot,
   assert.equal(html.split(replayStyle).length - 1, 1, 'inline chart replay embeds its exact stylesheet once');
   const shellStyle = `<style>\n${await readFile(resolve(root, 'dist/atlas-shell.css'), 'utf8')}\n</style>`;
   assert.equal(html.split(shellStyle).length - 1, 1, 'the shared shell remains exact and offline');
-  for(const file of ['vendor/skullet/styles.css','loading-surfaces.css','compact-toolbar.css','legacy-workspace-toolbar.css','editorial-system.css','editorial-panels.css','editorial-ledgers.css']){const style=`<style>\n${await readFile(resolve(root,'dist',file),'utf8')}\n</style>`;assert.equal(html.split(style).length-1,1,file+' is exact and offline');}
+  for(const file of ['vendor/skullet/styles.css','loading-surfaces.css','compact-toolbar.css','legacy-workspace-toolbar.css','editorial-system.css','editorial-panels.css','editorial-ledgers.css','relay-room.css']){const style=`<style>\n${await readFile(resolve(root,'dist',file),'utf8')}\n</style>`;assert.equal(html.split(style).length-1,1,file+' is exact and offline');}
   const editorialStyle = `<style>\n${await readFile(resolve(root, 'dist/editorial-system.css'), 'utf8')}\n</style>`;
   await assert.rejects(verifyStandaloneArtifact(html.replace(editorialStyle, ''), isolated.dist), /Missing or changed stylesheet: editorial-system\.css/);
   await assert.rejects(verifyStandaloneArtifact(html.replace(replayStyle, '<style>.chart-replay-controls{display:none}</style>'), isolated.dist), /Missing or changed stylesheet: chart-replay\.css/);
   const {stdout} = await run(process.execPath, ['--experimental-vm-modules', runtime, 'artifact', first]);
   assert.deepEqual(JSON.parse(stdout), {modules:verification.modules, parsed:true, linked:true});
+  const relayMatch=html.match(/(<script id="embedded-relay-data" type="application\/json">)([\s\S]*?)(<\/script>)/);
+  assert.ok(relayMatch,'the exact relay source must be embedded');
+  const relayRaw=await readFile(resolve(isolated.dist,'data/relay/index.json'),'utf8');
+  assert.equal(relayMatch[2],relayRaw.replaceAll('<','\\u003c'),'HTML escaping preserves every source byte after decoding');
+  assert.deepEqual(JSON.parse(relayMatch[2]),JSON.parse(relayRaw));
+  await assert.rejects(verifyStandaloneArtifact(html.replace(relayMatch[0],()=>relayMatch[1]+' '+relayMatch[2]+relayMatch[3]),isolated.dist),/Changed embedded relay source bytes/);
+  const relay=JSON.parse(relayMatch[2]);relay.rooms[0].title+=' changed';
+  await assert.rejects(verifyStandaloneArtifact(html.replace(relayMatch[0],()=>relayMatch[1]+JSON.stringify(relay)+relayMatch[3]),isolated.dist),/Changed embedded snapshot: relay/);
+  await assert.rejects(verifyStandaloneArtifact(html.replace(relayMatch[0],''),isolated.dist),/Missing or repeated snapshot: relay/);
+  const relayAssetsMatch=html.match(/(<script id="embedded-relay-assets" type="application\/json">)([\s\S]*?)(<\/script>)/);
+  assert.ok(relayAssetsMatch,'offline relay image bytes must be embedded');
+  const relayAssets=JSON.parse(relayAssetsMatch[2]);
+  assert.ok(verification.relayImages>0);assert.equal(verification.relayImages,Object.keys(relayAssets).length);
+  for(const [path,url]of Object.entries(relayAssets))assert.deepEqual(Buffer.from(url.slice(url.indexOf(',')+1),'base64'),await readFile(resolve(isolated.dist,path)),path+' retains exact image bytes');
+  const changedRelayAssets={...relayAssets,[Object.keys(relayAssets)[0]]:'data:image/jpeg;base64,AAAA'};
+  await assert.rejects(verifyStandaloneArtifact(html.replace(relayAssetsMatch[0],()=>relayAssetsMatch[1]+JSON.stringify(changedRelayAssets)+relayAssetsMatch[3]),isolated.dist),/Changed embedded relay image bytes/);
   const mapMatch = html.match(/<script type="importmap">([\s\S]*?)<\/script>/);
   const map = JSON.parse(mapMatch[1]);
+  const {initRelayRoomView}=await import(map.imports['@atlas/relay-room.js']);
+  const {document,window}=parseHTML('<section id="relay"></section>'),relayRoot=document.getElementById('relay');
+  const previousFetch=globalThis.fetch,fetches=[];globalThis.fetch=async url=>{fetches.push(url);throw new Error('Standalone relay requested an external resource');};
+  try{
+    let ready;const loaded=new Promise(resolve=>{ready=resolve;});
+    const controller=initRelayRoomView({root:relayRoot,embeddedData:()=>relayMatch[2],embeddedAssets:()=>relayAssetsMatch[2],onReady:ready});
+    controller.show(true);await loaded;
+    const source=JSON.parse(relayRaw),seenImages=new Set();
+    const click=selector=>{const target=relayRoot.querySelector(selector);assert.ok(target,selector);target.dispatchEvent(new window.Event('click',{bubbles:true}));};
+    const checkImages=paths=>{const nodes=[...relayRoot.querySelectorAll('img')];assert.equal(nodes.length,paths.length);nodes.forEach((node,index)=>{assert.ok(node.getAttribute('src')===relayAssets[paths[index]],'the rendered image must use its exact embedded bytes');seenImages.add(paths[index]);});};
+    for(const room of source.rooms){
+      click(`[data-room="${room.id}"]`);
+      if(room.kind==='articles')for(const article of room.articles){
+        click(`[data-article="${article.id}"]`);
+        assert.equal(relayRoot.querySelector('.relay-body').textContent.replace(/\s+/g,''),String(article.body_text).replace(/\s+/g,''));
+        checkImages((article.images||[]).map(image=>typeof image==='string'?image:image.src));
+        click('[data-relay-action="article-back"]');
+      }
+      if(room.kind==='editions')for(const [editionIndex,edition]of room.editions.entries()){
+        click(`[data-edition="${editionIndex}"]`);
+        for(const [pageIndex,page]of edition.pages.entries()){click(`[data-page="${pageIndex}"]`);checkImages(page.image?[page.image]:[]);}
+      }
+    }
+    assert.deepEqual([...seenImages].sort(),Object.keys(relayAssets).sort());assert.deepEqual(fetches,[]);
+  }finally{globalThis.fetch=previousFetch;}
   const changed = structuredClone(map);
   delete changed.imports['@atlas/cycle-engine.js'];
   await assert.rejects(verifyStandaloneArtifact(html.replace(mapMatch[1], JSON.stringify(changed)), isolated.dist), /Unmapped module/);
