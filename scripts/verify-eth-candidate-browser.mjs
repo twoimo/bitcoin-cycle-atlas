@@ -650,7 +650,7 @@ async function verifyInfoDataLinks(cdp,symbol){
     const bar=document.querySelector('.eth-topbar'),app=bar.closest('.eth-app');
     return {scrollLeft:bar.scrollLeft,scrollWidth:bar.scrollWidth,clientWidth:bar.clientWidth,height:bar.getBoundingClientRect().height,appScrollLeft:app.scrollLeft,rootWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth};
   });
-  assert.ok(gesture.scrollWidth>gesture.clientWidth&&gesture.scrollLeft>0,'Native touch must scroll the overflowing toolbar');
+  assert.ok(gesture.scrollWidth>gesture.clientWidth&&gesture.scrollLeft>0,'Native touch must scroll the overflowing toolbar: '+JSON.stringify({gestureStart,gesture}));
   assert.equal(gesture.appScrollLeft,0,'Touch must not scroll the clipped app shell');
   assert.equal(gesture.height,gestureStart.height,'Touch must retain one toolbar row');
   assert.ok(gesture.rootWidth<=gesture.viewportWidth+1,'Touch must not cause document overflow');

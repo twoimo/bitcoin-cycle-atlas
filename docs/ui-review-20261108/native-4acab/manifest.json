@@ -1,0 +1,842 @@
+{
+  "schemaVersion": 1,
+  "kind": "verified-filtered-ui-evidence-recovery",
+  "diagnosticStatus": "passed",
+  "nativeCases": {
+    "before": 6,
+    "after": 21,
+    "failed": 0
+  },
+  "build": {
+    "build_uuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+    "status": "stopped",
+    "build_outcome": "success",
+    "created_on": "2026-11-08T16:54:19.655Z",
+    "initializing_on": "2026-11-08T17:06:24.251Z",
+    "running_on": "2026-11-08T17:06:28.933Z",
+    "stopped_on": "2026-11-08T17:10:36.326Z",
+    "commit_hash": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9"
+  },
+  "sourceProof": {
+    "application": {
+      "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+      "sourceTree": "8b5732b21ccc3354e4630ac9b03011176f1f93cb",
+      "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+      "trackedDistFiles": 930,
+      "distUnchanged": true
+    },
+    "verifier": {
+      "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+      "files": {
+        "scripts/verify-eth-candidate-browser.mjs": "f2e798c4bc42fab4d88bedbfe3816f22a1dc485491acb58031edeaec58c610c1",
+        "scripts/verify-ui-contract-browser.mjs": "dfd940b4e6f2434df93d6826271a17fb019039c9ee8ac4d38752b9e22af42ab9",
+        "scripts/browser-source-identity.mjs": "493bd0f291827d0d5e6f7102907e24845a8753f16dca376189df16ee8bf72cf0",
+        "scripts/btc-offline-refresh-policy.mjs": "da9810a7faad88565c6238bda313b943d0b99a08b6bc47c1f361e727e46aca27"
+      },
+      "wrapperSha256": "c2b051b2cc376d4a035ce5d71908acc286cdd549729ad2b2f097aeab90ea7b33",
+      "committedHarness": true
+    },
+    "baselineCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+    "phases": [
+      {
+        "phase": "before",
+        "status": "passed",
+        "application": {
+          "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+          "sourceTree": "100fa0b63a2776983d05d60e6a897f06d0cf86c0",
+          "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+          "trackedDistFiles": 886,
+          "distUnchanged": true
+        },
+        "verifier": {
+          "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+          "copiedIntoBaseline": true,
+          "files": {
+            "scripts/verify-eth-candidate-browser.mjs": "f2e798c4bc42fab4d88bedbfe3816f22a1dc485491acb58031edeaec58c610c1",
+            "scripts/verify-ui-contract-browser.mjs": "dfd940b4e6f2434df93d6826271a17fb019039c9ee8ac4d38752b9e22af42ab9",
+            "scripts/browser-source-identity.mjs": "493bd0f291827d0d5e6f7102907e24845a8753f16dca376189df16ee8bf72cf0",
+            "scripts/btc-offline-refresh-policy.mjs": "da9810a7faad88565c6238bda313b943d0b99a08b6bc47c1f361e727e46aca27"
+          }
+        },
+        "nativeReport": {
+          "status": "passed",
+          "caseScope": "wp4-wp7",
+          "expectedCaseCount": 6,
+          "completedCaseCount": 6,
+          "browserVersion": {
+            "protocolVersion": "1.3",
+            "product": "Chrome/157.0.8103.38",
+            "revision": "@a733b5afbb3ba618844ff8876b89ad1a774b2f18",
+            "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+            "jsVersion": "15.7.112.23"
+          },
+          "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+          "sourceIntegrity": {
+            "checkedFiles": 139,
+            "changedSources": [],
+            "unchangedDuringRun": true
+          },
+          "failedCases": []
+        }
+      },
+      {
+        "phase": "after",
+        "status": "passed",
+        "application": {
+          "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+          "sourceTree": "8b5732b21ccc3354e4630ac9b03011176f1f93cb",
+          "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+          "trackedDistFiles": 930,
+          "distUnchanged": true
+        },
+        "verifier": {
+          "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+          "copiedIntoBaseline": false,
+          "files": {
+            "scripts/verify-eth-candidate-browser.mjs": "f2e798c4bc42fab4d88bedbfe3816f22a1dc485491acb58031edeaec58c610c1",
+            "scripts/verify-ui-contract-browser.mjs": "dfd940b4e6f2434df93d6826271a17fb019039c9ee8ac4d38752b9e22af42ab9",
+            "scripts/browser-source-identity.mjs": "493bd0f291827d0d5e6f7102907e24845a8753f16dca376189df16ee8bf72cf0",
+            "scripts/btc-offline-refresh-policy.mjs": "da9810a7faad88565c6238bda313b943d0b99a08b6bc47c1f361e727e46aca27"
+          }
+        },
+        "nativeReport": {
+          "status": "passed",
+          "caseScope": "wp4-wp7",
+          "expectedCaseCount": 21,
+          "completedCaseCount": 21,
+          "browserVersion": {
+            "protocolVersion": "1.3",
+            "product": "Chrome/157.0.8103.38",
+            "revision": "@a733b5afbb3ba618844ff8876b89ad1a774b2f18",
+            "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+            "jsVersion": "15.7.112.23"
+          },
+          "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+          "sourceIntegrity": {
+            "checkedFiles": 145,
+            "changedSources": [],
+            "unchangedDuringRun": true
+          },
+          "failedCases": []
+        }
+      }
+    ]
+  },
+  "sourceComparison": {
+    "sourceExecution": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+    "productionMain": "dbd3b70e567c3047524e6a0e3b5d01b1dc9d910d",
+    "executionDistTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+    "productionDistTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+    "sameDist": true,
+    "changedFiles": [
+      "A\tscripts/ui-review-log-filter.cjs"
+    ],
+    "filterBytes": 4293,
+    "filterSha256": "60aebd8f6227a119da44ca019986e1d4ec850aa9fb64391dcb452cb2f53b3559",
+    "filterMatchesTestedOriginal": true,
+    "deploymentVerified": false
+  },
+  "deploymentVerified": false,
+  "reports": [
+    {
+      "name": "ui-review/diagnostic.json",
+      "bytes": 42473,
+      "sha256": "652870f8e37a87f2dc51d50d91630ed60ce6330b7341cc6a6e82a432a24b248a",
+      "encodedBytes": 8257,
+      "encodedSha256": "cfe83bbff17be93ba142c6dee3a4b543b65d170074fa8415cec59a7cdd4241bd",
+      "status": "passed",
+      "expectedFrom": "summary receipt"
+    },
+    {
+      "name": "ui-review-before/report.json",
+      "bytes": 671406,
+      "sha256": "2ad73f0ecf1cab5b85c84c98dc2a849a9e02616428d605b1b148aae2538fd242",
+      "encodedBytes": 45478,
+      "encodedSha256": "7941b1343bcf6da6bd118b9bc86371f624effa8d29cccf427779098d47afbb86",
+      "status": "passed",
+      "expectedFrom": "summary receipt"
+    },
+    {
+      "name": "ui-review-after/report.json",
+      "bytes": 1031479,
+      "sha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390",
+      "encodedBytes": 66249,
+      "encodedSha256": "3d4cfd5d5c158f2cb79d78f8bbf67b2bc58f02cc0c4c69c2e9f010a1b2b86f93",
+      "status": "passed",
+      "expectedFrom": "summary receipt"
+    }
+  ],
+  "pngTransport": {
+    "planned": 19,
+    "directFreshRecovery": 8,
+    "intentionallyOmitted": 11,
+    "preservedExactMatchRecovery": 11,
+    "available": 19,
+    "missing": 0,
+    "originalImagesComplete": {
+      "status": "emitted",
+      "images": 19,
+      "pngBytes": 3233185,
+      "estimatedLogBytes": 4547122
+    },
+    "filterComplete": {
+      "version": 1,
+      "streamStatus": "complete",
+      "wrapperVerdict": "see unchanged original receipt and pipeline exit status",
+      "keptImageNames": [
+        "ui-review-after/wp4-after-320x740-chart.png",
+        "ui-review-after/wp4-after-390x844-chart.png",
+        "ui-review-after/wp4-after-768x1024-chart.png",
+        "ui-review-after/wp4-after-1024x768-chart.png",
+        "ui-review-after/wp4-after-1440x900-chart.png",
+        "ui-review-after/wp4-after-1920x1080-chart.png",
+        "ui-review-after/wp4-after-1440x900-replay.png",
+        "ui-review-after/wp4-after-1920x1080-replay.png"
+      ],
+      "omittedImageNames": [
+        "ui-review-before/wp4-before-320x740-chart.png",
+        "ui-review-before/wp4-before-390x844-chart.png",
+        "ui-review-before/wp4-before-768x1024-chart.png",
+        "ui-review-before/wp4-before-1024x768-chart.png",
+        "ui-review-before/wp4-before-1440x900-chart.png",
+        "ui-review-before/wp4-before-1920x1080-chart.png",
+        "ui-review-after/ui-entry-mstr-root-1440x900.png",
+        "ui-review-after/ui-entry-bmnr-root-1440x900.png",
+        "ui-review-after/wp4-after-320x740-legend.png",
+        "ui-review-after/wp4-after-390x844-legend.png",
+        "ui-review-after/wp4-after-1440x900-legend.png"
+      ],
+      "missingExpectedKeptImageNames": [],
+      "passedOtherBytes": 197008,
+      "keptChunkBytes": 2075479,
+      "omittedChunkBytes": 2471643,
+      "inputPngs": 19,
+      "keptPngs": 8,
+      "omittedPngs": 11,
+      "verifiedOriginalImages": [
+        {
+          "name": "ui-review-before/wp4-before-320x740-chart.png",
+          "kept": false,
+          "bytes": 81087,
+          "sha256": "5ac0aea41b778f437a923718e626d50008e6d98b9e20e0ba5fc0b54d4df75b6c",
+          "chunks": 27
+        },
+        {
+          "name": "ui-review-before/wp4-before-390x844-chart.png",
+          "kept": false,
+          "bytes": 99336,
+          "sha256": "b9c6db22e078f227e1d1dff3c473d7ff758114fb2b5e9c33cac9d7c33ea28323",
+          "chunks": 33
+        },
+        {
+          "name": "ui-review-before/wp4-before-768x1024-chart.png",
+          "kept": false,
+          "bytes": 189440,
+          "sha256": "fc092c2ff44f3e190235043a7babb6049ee693f6359b8628f6bc735481a03536",
+          "chunks": 62
+        },
+        {
+          "name": "ui-review-before/wp4-before-1024x768-chart.png",
+          "kept": false,
+          "bytes": 206753,
+          "sha256": "17fdceb34bf73e817506b2506053e3362f51b575b166de332afb1df43d67205f",
+          "chunks": 68
+        },
+        {
+          "name": "ui-review-before/wp4-before-1440x900-chart.png",
+          "kept": false,
+          "bytes": 265021,
+          "sha256": "c200d3e53c19a7e73c98d4aba98efb3f3a8602ef88825a95500f8cb0a18c4578",
+          "chunks": 87
+        },
+        {
+          "name": "ui-review-before/wp4-before-1920x1080-chart.png",
+          "kept": false,
+          "bytes": 310341,
+          "sha256": "ab5436b64d449bb85b73e9a376065a244249af35fca1378390c9c3a9a6d43021",
+          "chunks": 102
+        },
+        {
+          "name": "ui-review-after/wp4-after-320x740-chart.png",
+          "kept": true,
+          "bytes": 80073,
+          "sha256": "89e3d36aecb6baa42227ee8e1906ce8e703577235942f2af65c7f6eb6d4baba0",
+          "chunks": 27
+        },
+        {
+          "name": "ui-review-after/wp4-after-390x844-chart.png",
+          "kept": true,
+          "bytes": 98938,
+          "sha256": "9492ec11ac9306d2d87990149863c80bf2d1a79bfd6feb0af3b09f6f619e26c5",
+          "chunks": 33
+        },
+        {
+          "name": "ui-review-after/wp4-after-768x1024-chart.png",
+          "kept": true,
+          "bytes": 188125,
+          "sha256": "47344b03a8045362eefeb9f34733065281b409391e9ac60ec51f7d5a816ee9aa",
+          "chunks": 62
+        },
+        {
+          "name": "ui-review-after/wp4-after-1024x768-chart.png",
+          "kept": true,
+          "bytes": 207040,
+          "sha256": "01aa73dc28d6d640f37f9926e5996742ffb86eae0f8d96e82585ff9806e21579",
+          "chunks": 68
+        },
+        {
+          "name": "ui-review-after/wp4-after-1440x900-chart.png",
+          "kept": true,
+          "bytes": 265180,
+          "sha256": "6205377a36c43bfbce29194eee0dd246ec29fe61a11b979179d75047a3593137",
+          "chunks": 87
+        },
+        {
+          "name": "ui-review-after/wp4-after-1920x1080-chart.png",
+          "kept": true,
+          "bytes": 312827,
+          "sha256": "4c24ee58d4cdefc3228bb36bf28ebef897b1ca4648275c848a88f35574d19b16",
+          "chunks": 102
+        },
+        {
+          "name": "ui-review-after/ui-entry-mstr-root-1440x900.png",
+          "kept": false,
+          "bytes": 163767,
+          "sha256": "2afcab5c01e69c5c507a7ac30071a86b2db6aab37834d62e1c8fb00a7499c058",
+          "chunks": 54
+        },
+        {
+          "name": "ui-review-after/ui-entry-bmnr-root-1440x900.png",
+          "kept": false,
+          "bytes": 153587,
+          "sha256": "f677df8fa63834f50b72dfe9c37c48d46afde07a6ae76318e03d32d798805e7d",
+          "chunks": 50
+        },
+        {
+          "name": "ui-review-after/wp4-after-320x740-legend.png",
+          "kept": false,
+          "bytes": 33020,
+          "sha256": "0c793e0404d396d5b05f74cf72a87d031a7a1d3d10042cebe1f1812684a95487",
+          "chunks": 11
+        },
+        {
+          "name": "ui-review-after/wp4-after-390x844-legend.png",
+          "kept": false,
+          "bytes": 44351,
+          "sha256": "ef655ee0811460bbed981df41e60e55b4520fba1978bc7f0c432b92dc92cc293",
+          "chunks": 15
+        },
+        {
+          "name": "ui-review-after/wp4-after-1440x900-legend.png",
+          "kept": false,
+          "bytes": 210401,
+          "sha256": "acae384c7b6134a920e501e2b3532981bb521c80370f00d0de84237376142c76",
+          "chunks": 69
+        },
+        {
+          "name": "ui-review-after/wp4-after-1440x900-replay.png",
+          "kept": true,
+          "bytes": 146597,
+          "sha256": "cc54b392efd671bd18f33c42f754ae5d4cd432ec3781a44ecc78f4d4f393d6c6",
+          "chunks": 48
+        },
+        {
+          "name": "ui-review-after/wp4-after-1920x1080-replay.png",
+          "kept": true,
+          "bytes": 177301,
+          "sha256": "e7bad55c459a73f6c88a6faf24eac6544a0a87221c9161b881e52619581fbb2d",
+          "chunks": 58
+        }
+      ]
+    },
+    "selectedTransportComplete": true,
+    "allPlannedArtifactBytesAvailable": true
+  },
+  "requiredBeforeAfterViewportCharts": {
+    "complete": true,
+    "count": 12,
+    "files": [
+      "ui-review-before/wp4-before-320x740-chart.png",
+      "ui-review-before/wp4-before-390x844-chart.png",
+      "ui-review-before/wp4-before-768x1024-chart.png",
+      "ui-review-before/wp4-before-1024x768-chart.png",
+      "ui-review-before/wp4-before-1440x900-chart.png",
+      "ui-review-before/wp4-before-1920x1080-chart.png",
+      "ui-review-after/wp4-after-320x740-chart.png",
+      "ui-review-after/wp4-after-390x844-chart.png",
+      "ui-review-after/wp4-after-768x1024-chart.png",
+      "ui-review-after/wp4-after-1024x768-chart.png",
+      "ui-review-after/wp4-after-1440x900-chart.png",
+      "ui-review-after/wp4-after-1920x1080-chart.png"
+    ]
+  },
+  "pngs": [
+    {
+      "name": "ui-review-before/wp4-before-320x740-chart.png",
+      "bytes": 81087,
+      "sha256": "5ac0aea41b778f437a923718e626d50008e6d98b9e20e0ba5fc0b54d4df75b6c",
+      "width": 320,
+      "height": 740,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+        "nativeReport": "ui-review-before/report.json",
+        "nativeReportSha256": "2ad73f0ecf1cab5b85c84c98dc2a849a9e02616428d605b1b148aae2538fd242"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "nativeReportSha256": "e1f51cbe16fce3c68fda8d6d008c69509dd80ccb3de2f2473f866648aa774ac0",
+        "nativeReportStatus": "passed",
+        "originalScreenshot": "wp4-before-320x740-chart.png",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-24e/ui-review-before/wp4-before-320x740-chart.png",
+        "originalArtifactWasDirectLogRecovery": true,
+        "verification": "Exact byte count and SHA-256 match both the latest native screenshot receipt and original filter verification"
+      }
+    },
+    {
+      "name": "ui-review-before/wp4-before-390x844-chart.png",
+      "bytes": 99336,
+      "sha256": "b9c6db22e078f227e1d1dff3c473d7ff758114fb2b5e9c33cac9d7c33ea28323",
+      "width": 390,
+      "height": 844,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+        "nativeReport": "ui-review-before/report.json",
+        "nativeReportSha256": "2ad73f0ecf1cab5b85c84c98dc2a849a9e02616428d605b1b148aae2538fd242"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "nativeReportSha256": "e1f51cbe16fce3c68fda8d6d008c69509dd80ccb3de2f2473f866648aa774ac0",
+        "nativeReportStatus": "passed",
+        "originalScreenshot": "wp4-before-390x844-chart.png",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-24e/ui-review-before/wp4-before-390x844-chart.png",
+        "originalArtifactWasDirectLogRecovery": true,
+        "verification": "Exact byte count and SHA-256 match both the latest native screenshot receipt and original filter verification"
+      }
+    },
+    {
+      "name": "ui-review-before/wp4-before-768x1024-chart.png",
+      "bytes": 189440,
+      "sha256": "fc092c2ff44f3e190235043a7babb6049ee693f6359b8628f6bc735481a03536",
+      "width": 768,
+      "height": 1024,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+        "nativeReport": "ui-review-before/report.json",
+        "nativeReportSha256": "2ad73f0ecf1cab5b85c84c98dc2a849a9e02616428d605b1b148aae2538fd242"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "nativeReportSha256": "e1f51cbe16fce3c68fda8d6d008c69509dd80ccb3de2f2473f866648aa774ac0",
+        "nativeReportStatus": "passed",
+        "originalScreenshot": "wp4-before-768x1024-chart.png",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-24e/ui-review-before/wp4-before-768x1024-chart.png",
+        "originalArtifactWasDirectLogRecovery": true,
+        "verification": "Exact byte count and SHA-256 match both the latest native screenshot receipt and original filter verification"
+      }
+    },
+    {
+      "name": "ui-review-before/wp4-before-1024x768-chart.png",
+      "bytes": 206753,
+      "sha256": "17fdceb34bf73e817506b2506053e3362f51b575b166de332afb1df43d67205f",
+      "width": 1024,
+      "height": 768,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+        "nativeReport": "ui-review-before/report.json",
+        "nativeReportSha256": "2ad73f0ecf1cab5b85c84c98dc2a849a9e02616428d605b1b148aae2538fd242"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "nativeReportSha256": "e1f51cbe16fce3c68fda8d6d008c69509dd80ccb3de2f2473f866648aa774ac0",
+        "nativeReportStatus": "passed",
+        "originalScreenshot": "wp4-before-1024x768-chart.png",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-24e/ui-review-before/wp4-before-1024x768-chart.png",
+        "originalArtifactWasDirectLogRecovery": true,
+        "verification": "Exact byte count and SHA-256 match both the latest native screenshot receipt and original filter verification"
+      }
+    },
+    {
+      "name": "ui-review-before/wp4-before-1440x900-chart.png",
+      "bytes": 265021,
+      "sha256": "c200d3e53c19a7e73c98d4aba98efb3f3a8602ef88825a95500f8cb0a18c4578",
+      "width": 1440,
+      "height": 900,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+        "nativeReport": "ui-review-before/report.json",
+        "nativeReportSha256": "2ad73f0ecf1cab5b85c84c98dc2a849a9e02616428d605b1b148aae2538fd242"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "nativeReportSha256": "e1f51cbe16fce3c68fda8d6d008c69509dd80ccb3de2f2473f866648aa774ac0",
+        "nativeReportStatus": "passed",
+        "originalScreenshot": "wp4-before-1440x900-chart.png",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-24e/ui-review-before/wp4-before-1440x900-chart.png",
+        "originalArtifactWasDirectLogRecovery": true,
+        "verification": "Exact byte count and SHA-256 match both the latest native screenshot receipt and original filter verification"
+      }
+    },
+    {
+      "name": "ui-review-before/wp4-before-1920x1080-chart.png",
+      "bytes": 310341,
+      "sha256": "ab5436b64d449bb85b73e9a376065a244249af35fca1378390c9c3a9a6d43021",
+      "width": 1920,
+      "height": 1080,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+        "nativeReport": "ui-review-before/report.json",
+        "nativeReportSha256": "2ad73f0ecf1cab5b85c84c98dc2a849a9e02616428d605b1b148aae2538fd242"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "nativeReportSha256": "e1f51cbe16fce3c68fda8d6d008c69509dd80ccb3de2f2473f866648aa774ac0",
+        "nativeReportStatus": "passed",
+        "originalScreenshot": "wp4-before-1920x1080-chart.png",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-24e/ui-review-before/wp4-before-1920x1080-chart.png",
+        "originalArtifactWasDirectLogRecovery": true,
+        "verification": "Exact byte count and SHA-256 match both the latest native screenshot receipt and original filter verification"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-320x740-chart.png",
+      "bytes": 80073,
+      "sha256": "89e3d36aecb6baa42227ee8e1906ce8e703577235942f2af65c7f6eb6d4baba0",
+      "width": 320,
+      "height": 740,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "originalChunkName": "ui-review-after/wp4-after-320x740-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-390x844-chart.png",
+      "bytes": 98938,
+      "sha256": "9492ec11ac9306d2d87990149863c80bf2d1a79bfd6feb0af3b09f6f619e26c5",
+      "width": 390,
+      "height": 844,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "originalChunkName": "ui-review-after/wp4-after-390x844-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-768x1024-chart.png",
+      "bytes": 188125,
+      "sha256": "47344b03a8045362eefeb9f34733065281b409391e9ac60ec51f7d5a816ee9aa",
+      "width": 768,
+      "height": 1024,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "originalChunkName": "ui-review-after/wp4-after-768x1024-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-1024x768-chart.png",
+      "bytes": 207040,
+      "sha256": "01aa73dc28d6d640f37f9926e5996742ffb86eae0f8d96e82585ff9806e21579",
+      "width": 1024,
+      "height": 768,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "originalChunkName": "ui-review-after/wp4-after-1024x768-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-1440x900-chart.png",
+      "bytes": 265180,
+      "sha256": "6205377a36c43bfbce29194eee0dd246ec29fe61a11b979179d75047a3593137",
+      "width": 1440,
+      "height": 900,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "originalChunkName": "ui-review-after/wp4-after-1440x900-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-1920x1080-chart.png",
+      "bytes": 312827,
+      "sha256": "4c24ee58d4cdefc3228bb36bf28ebef897b1ca4648275c848a88f35574d19b16",
+      "width": 1920,
+      "height": 1080,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "originalChunkName": "ui-review-after/wp4-after-1920x1080-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-after/ui-entry-mstr-root-1440x900.png",
+      "bytes": 163767,
+      "sha256": "2afcab5c01e69c5c507a7ac30071a86b2db6aab37834d62e1c8fb00a7499c058",
+      "width": 1440,
+      "height": 900,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "d121c72b-be74-47b3-a19b-a5dcbdfb1c93",
+        "sourceCommit": "1e7db4bdfa33774d2d9871aaf015c16df27807f4",
+        "nativeReportSha256": "d48460c5c1ee12e28ffa49333d444783ed726723c229c820442932003e590015",
+        "nativeReportStatus": "passed",
+        "originalScreenshot": "ui-entry-mstr-root-1440x900.png",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-d121/ui-review-after/ui-entry-mstr-root-1440x900.png",
+        "originalArtifactWasDirectLogRecovery": true,
+        "verification": "Exact byte count and SHA-256 match both the latest native screenshot receipt and original filter verification"
+      }
+    },
+    {
+      "name": "ui-review-after/ui-entry-bmnr-root-1440x900.png",
+      "bytes": 153587,
+      "sha256": "f677df8fa63834f50b72dfe9c37c48d46afde07a6ae76318e03d32d798805e7d",
+      "width": 1440,
+      "height": 900,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "d121c72b-be74-47b3-a19b-a5dcbdfb1c93",
+        "sourceCommit": "1e7db4bdfa33774d2d9871aaf015c16df27807f4",
+        "nativeReportSha256": "d48460c5c1ee12e28ffa49333d444783ed726723c229c820442932003e590015",
+        "nativeReportStatus": "passed",
+        "originalScreenshot": "ui-entry-bmnr-root-1440x900.png",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-d121/ui-review-after/ui-entry-bmnr-root-1440x900.png",
+        "originalArtifactWasDirectLogRecovery": true,
+        "verification": "Exact byte count and SHA-256 match both the latest native screenshot receipt and original filter verification"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-320x740-legend.png",
+      "bytes": 33020,
+      "sha256": "0c793e0404d396d5b05f74cf72a87d031a7a1d3d10042cebe1f1812684a95487",
+      "width": 320,
+      "height": 740,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "d121c72b-be74-47b3-a19b-a5dcbdfb1c93",
+        "sourceCommit": "1e7db4bdfa33774d2d9871aaf015c16df27807f4",
+        "nativeReportSha256": "d48460c5c1ee12e28ffa49333d444783ed726723c229c820442932003e590015",
+        "nativeReportStatus": "passed",
+        "originalScreenshot": "wp4-after-320x740-legend.png",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-d121/ui-review-after/wp4-after-320x740-legend.png",
+        "originalArtifactWasDirectLogRecovery": true,
+        "verification": "Exact byte count and SHA-256 match both the latest native screenshot receipt and original filter verification"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-390x844-legend.png",
+      "bytes": 44351,
+      "sha256": "ef655ee0811460bbed981df41e60e55b4520fba1978bc7f0c432b92dc92cc293",
+      "width": 390,
+      "height": 844,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "d121c72b-be74-47b3-a19b-a5dcbdfb1c93",
+        "sourceCommit": "1e7db4bdfa33774d2d9871aaf015c16df27807f4",
+        "nativeReportSha256": "d48460c5c1ee12e28ffa49333d444783ed726723c229c820442932003e590015",
+        "nativeReportStatus": "passed",
+        "originalScreenshot": "wp4-after-390x844-legend.png",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-d121/ui-review-after/wp4-after-390x844-legend.png",
+        "originalArtifactWasDirectLogRecovery": true,
+        "verification": "Exact byte count and SHA-256 match both the latest native screenshot receipt and original filter verification"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-1440x900-legend.png",
+      "bytes": 210401,
+      "sha256": "acae384c7b6134a920e501e2b3532981bb521c80370f00d0de84237376142c76",
+      "width": 1440,
+      "height": 900,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "d121c72b-be74-47b3-a19b-a5dcbdfb1c93",
+        "sourceCommit": "1e7db4bdfa33774d2d9871aaf015c16df27807f4",
+        "nativeReportSha256": "d48460c5c1ee12e28ffa49333d444783ed726723c229c820442932003e590015",
+        "nativeReportStatus": "passed",
+        "originalScreenshot": "wp4-after-1440x900-legend.png",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-d121/ui-review-after/wp4-after-1440x900-legend.png",
+        "originalArtifactWasDirectLogRecovery": true,
+        "verification": "Exact byte count and SHA-256 match both the latest native screenshot receipt and original filter verification"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-1440x900-replay.png",
+      "bytes": 146597,
+      "sha256": "cc54b392efd671bd18f33c42f754ae5d4cd432ec3781a44ecc78f4d4f393d6c6",
+      "width": 1440,
+      "height": 900,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "originalChunkName": "ui-review-after/wp4-after-1440x900-replay.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-1920x1080-replay.png",
+      "bytes": 177301,
+      "sha256": "e7bad55c459a73f6c88a6faf24eac6544a0a87221c9161b881e52619581fbb2d",
+      "width": 1920,
+      "height": 1080,
+      "sourceExecution": {
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "applicationCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "verifierCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+        "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "originalChunkName": "ui-review-after/wp4-after-1920x1080-replay.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    }
+  ],
+  "missingPngs": [],
+  "measurementFiles": [
+    "measurements.json",
+    "measurements.md"
+  ]
+}

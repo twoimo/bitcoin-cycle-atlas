@@ -1,0 +1,622 @@
+{
+  "kind": "selected-original-consumer-failure-receipts",
+  "consumerBuildUuid": "e0d7b526-9ea1-400a-82a2-0ca6fda9f036",
+  "sourceCommit": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+  "originalSummaryReceipt": {
+    "status": "failed",
+    "caseScope": "all",
+    "suiteRunId": "844c0dcb-5bfa-46c2-8772-45f24e30411b",
+    "sourceCommit": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+    "declaredCaseCount": 53,
+    "expectedCaseCount": 53,
+    "completedCaseCount": 0,
+    "report": "build/eth-browser/report.json",
+    "reportBytes": 5719301,
+    "reportSha256": "d8fe66a47cbd3aeb6596bdfa0ac67b36b6874d0e6e72738bf69eba82d53d87fa",
+    "transport": {
+      "name": "report.json.gz",
+      "bytes": 505987,
+      "sha256": "8d442d2e21948e104e7f3e1dc175fb2476cf262b09fbf974afdd14ed45894868",
+      "total": 165,
+      "contentEncoding": "gzip",
+      "originalName": "report.json",
+      "originalBytes": 5719301,
+      "originalSha256": "d8fe66a47cbd3aeb6596bdfa0ac67b36b6874d0e6e72738bf69eba82d53d87fa"
+    }
+  },
+  "originalLaneReceipts": [
+    {
+      "status": "failed",
+      "lane": "chart-replay",
+      "suiteRunId": "844c0dcb-5bfa-46c2-8772-45f24e30411b",
+      "sourceCommit": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+      "caseScope": "chart-replay",
+      "expectedCaseCount": 7,
+      "completedCaseCount": 7,
+      "report": {
+        "file": "lanes/chart-replay/report.json",
+        "bytes": 1008763,
+        "sha256": "8035ee4bd63f9fcb81bf6e527ae4d2397048f63fa4db7d3a3ffd18163b324f01"
+      }
+    },
+    {
+      "status": "failed",
+      "lane": "non-chart-replay",
+      "suiteRunId": "844c0dcb-5bfa-46c2-8772-45f24e30411b",
+      "sourceCommit": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+      "caseScope": "non-chart-replay",
+      "expectedCaseCount": 46,
+      "completedCaseCount": 46,
+      "report": {
+        "file": "lanes/non-chart-replay/report.json",
+        "bytes": 3908769,
+        "sha256": "8a2eb708b1d3e1dc6ddf020dce96c2d7ae1ec4d40aae1ae84db0b89f24cc1983"
+      }
+    }
+  ],
+  "observedCaseCount": 53,
+  "observedPassedCaseCount": 44,
+  "observedFailedCaseCount": 9,
+  "cases": [
+    {
+      "page": "chart-replay-btc",
+      "width": 1440,
+      "height": 900,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Compact legend lost its provisional/retrospective meanings\n+ actual - expected\n\n  [\n    '실선 · 관측 사후 기준',\n    '점선 · 잠정·가정',\n-   '◇ 거시 시계 · ○ 예시 경로'\n  ]\n\n    at verifyFloatingBar (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:440:14)\n    at async verifyChartReplaySurface (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:1753:3)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1000:32)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "data",
+      "width": 320,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "eth",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Native touch must scroll the overflowing toolbar\n    at verifyInfoDataLinks (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:653:10)\n    at async ethCase (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:589:40)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1008:159)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "bmnr",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Native touch must scroll the overflowing toolbar\n    at verifyInfoDataLinks (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:653:10)\n    at async equityCase (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:714:40)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1008:310)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "chart-replay-btc",
+      "width": 320,
+      "height": 568,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Compact legend lost its provisional/retrospective meanings\n+ actual - expected\n\n  [\n    '실선 · 관측 사후 기준',\n    '점선 · 잠정·가정',\n-   '◇ 거시 시계 · ○ 예시 경로'\n  ]\n\n    at verifyFloatingBar (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:440:14)\n    at async verifyChartReplaySurface (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:1753:3)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1000:32)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "mstr",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Native touch must scroll the overflowing toolbar\n    at verifyInfoDataLinks (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:653:10)\n    at async equityCase (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:714:40)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1008:310)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "zero-fixture",
+      "width": 320,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "data",
+      "width": 390,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "chart-replay-btc",
+      "width": 900,
+      "height": 430,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Compact legend lost its provisional/retrospective meanings\n+ actual - expected\n\n  [\n    '실선 · 관측 사후 기준',\n    '점선 · 잠정·가정',\n-   '◇ 거시 시계 · ○ 예시 경로'\n  ]\n\n    at verifyFloatingBar (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:440:14)\n    at async verifyChartReplaySurface (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:1753:3)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1000:32)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "eth",
+      "width": 390,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "chart-replay-eth",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "bmnr",
+      "width": 390,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "mstr",
+      "width": 390,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "data",
+      "width": 768,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "eth",
+      "width": 768,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "chart-replay-eth",
+      "width": 320,
+      "height": 568,
+      "status": "passed"
+    },
+    {
+      "page": "bmnr",
+      "width": 768,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "chart-replay-mstr",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "mstr",
+      "width": 768,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "data",
+      "width": 1024,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "eth",
+      "width": 1024,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "chart-replay-bmnr",
+      "width": 390,
+      "height": 844,
+      "status": "passed"
+    },
+    {
+      "page": "bmnr",
+      "width": 1024,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "mstr",
+      "width": 1024,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "data",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "eth",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "bmnr",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "mstr",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "data",
+      "width": 1620,
+      "height": 1008,
+      "status": "passed"
+    },
+    {
+      "page": "data",
+      "width": 1620,
+      "height": 1100,
+      "status": "passed"
+    },
+    {
+      "page": "data",
+      "width": 1920,
+      "height": 1440,
+      "status": "passed"
+    },
+    {
+      "page": "data",
+      "width": 900,
+      "height": 430,
+      "status": "passed"
+    },
+    {
+      "page": "data",
+      "width": 320,
+      "height": 568,
+      "status": "passed"
+    },
+    {
+      "page": "workspace-btc",
+      "width": 320,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "workspace-evidence",
+      "width": 320,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "workspace-legacy",
+      "width": 320,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "workspace-preview",
+      "width": 320,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "workspace-btc",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "workspace-evidence",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "workspace-legacy",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "workspace-preview",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "workspace-btc-short",
+      "width": 900,
+      "height": 430,
+      "status": "passed"
+    },
+    {
+      "page": "workspace-legacy",
+      "width": 375,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "workspace-center-data",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "error": "Error: Timed out: native heading pan\n    at until (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:63:9)\n    at async revealHeadingControl (file:///opt/buildhome/repo/scripts/verify-workspace-browser.mjs:107:9)\n    at async chooseNavigation (file:///opt/buildhome/repo/scripts/verify-workspace-browser.mjs:118:20)\n    at async verifyEmbeddedDataSurface (file:///opt/buildhome/repo/scripts/verify-workspace-browser.mjs:162:3)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1003:9)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "workspace-center-data",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "workspace-center-data",
+      "width": 900,
+      "height": 430,
+      "status": "passed"
+    },
+    {
+      "page": "replay-btc",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "replay-btc",
+      "width": 900,
+      "height": 430,
+      "status": "passed"
+    },
+    {
+      "page": "replay-eth",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    },
+    {
+      "page": "replay-eth",
+      "width": 320,
+      "height": 568,
+      "status": "passed"
+    },
+    {
+      "page": "workspace-consolidated",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "error": "Error: Required action remains clipped: [data-toolbar-open=\"housing-summary\"]: {\"selector\":\"[data-toolbar-open=\\\"housing-summary\\\"]\",\"box\":{\"left\":244.25,\"right\":404.25,\"top\":54.5,\"bottom\":98.5,\"width\":160,\"height\":44},\"clip\":{\"left\":244.25,\"right\":320,\"top\":54.5,\"bottom\":98.5,\"width\":75.75,\"height\":44},\"x\":324.25,\"y\":76.5,\"viewport\":{\"width\":320,\"height\":900},\"inside\":true,\"painted\":true,\"disabled\":false,\"topmost\":false,\"tag\":\"BUTTON\",\"label\":\"부동산 관측 요약\",\"outline\":\"none\",\"outlineWidth\":3,\"outlineColor\":\"rgb(219, 219, 219)\"}\n    at reveal (file:///opt/buildhome/repo/scripts/verify-consolidated-workspace-browser.mjs:85:11)\n    at async pointer (file:///opt/buildhome/repo/scripts/verify-consolidated-workspace-browser.mjs:88:20)\n    at async verifyConsolidatedWorkspaceSurface (file:///opt/buildhome/repo/scripts/verify-consolidated-workspace-browser.mjs:294:3)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:999:33)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "workspace-consolidated",
+      "width": 390,
+      "height": 844,
+      "status": "failed",
+      "error": "Error: Required action remains clipped: [data-toolbar-open=\"housing-summary\"]: {\"selector\":\"[data-toolbar-open=\\\"housing-summary\\\"]\",\"box\":{\"left\":254.25,\"right\":414.25,\"top\":54.5,\"bottom\":98.5,\"width\":160,\"height\":44},\"clip\":{\"left\":254.25,\"right\":390,\"top\":54.5,\"bottom\":98.5,\"width\":135.75,\"height\":44},\"x\":334.25,\"y\":76.5,\"viewport\":{\"width\":390,\"height\":844},\"inside\":true,\"painted\":true,\"disabled\":false,\"topmost\":true,\"tag\":\"BUTTON\",\"label\":\"부동산 관측 요약\",\"outline\":\"none\",\"outlineWidth\":3,\"outlineColor\":\"rgb(219, 219, 219)\"}\n    at reveal (file:///opt/buildhome/repo/scripts/verify-consolidated-workspace-browser.mjs:85:11)\n    at async pointer (file:///opt/buildhome/repo/scripts/verify-consolidated-workspace-browser.mjs:88:20)\n    at async verifyConsolidatedWorkspaceSurface (file:///opt/buildhome/repo/scripts/verify-consolidated-workspace-browser.mjs:294:3)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:999:33)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "workspace-consolidated",
+      "width": 1440,
+      "height": 900,
+      "status": "passed"
+    }
+  ],
+  "failures": [
+    {
+      "page": "chart-replay-btc",
+      "width": 1440,
+      "height": 900,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Compact legend lost its provisional/retrospective meanings\n+ actual - expected\n\n  [\n    '실선 · 관측 사후 기준',\n    '점선 · 잠정·가정',\n-   '◇ 거시 시계 · ○ 예시 경로'\n  ]\n\n    at verifyFloatingBar (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:440:14)\n    at async verifyChartReplaySurface (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:1753:3)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1000:32)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "eth",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Native touch must scroll the overflowing toolbar\n    at verifyInfoDataLinks (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:653:10)\n    at async ethCase (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:589:40)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1008:159)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "bmnr",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Native touch must scroll the overflowing toolbar\n    at verifyInfoDataLinks (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:653:10)\n    at async equityCase (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:714:40)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1008:310)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "chart-replay-btc",
+      "width": 320,
+      "height": 568,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Compact legend lost its provisional/retrospective meanings\n+ actual - expected\n\n  [\n    '실선 · 관측 사후 기준',\n    '점선 · 잠정·가정',\n-   '◇ 거시 시계 · ○ 예시 경로'\n  ]\n\n    at verifyFloatingBar (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:440:14)\n    at async verifyChartReplaySurface (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:1753:3)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1000:32)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "mstr",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Native touch must scroll the overflowing toolbar\n    at verifyInfoDataLinks (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:653:10)\n    at async equityCase (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:714:40)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1008:310)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "chart-replay-btc",
+      "width": 900,
+      "height": 430,
+      "status": "failed",
+      "error": "AssertionError [ERR_ASSERTION]: Compact legend lost its provisional/retrospective meanings\n+ actual - expected\n\n  [\n    '실선 · 관측 사후 기준',\n    '점선 · 잠정·가정',\n-   '◇ 거시 시계 · ○ 예시 경로'\n  ]\n\n    at verifyFloatingBar (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:440:14)\n    at async verifyChartReplaySurface (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:1753:3)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1000:32)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "workspace-center-data",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "error": "Error: Timed out: native heading pan\n    at until (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:63:9)\n    at async revealHeadingControl (file:///opt/buildhome/repo/scripts/verify-workspace-browser.mjs:107:9)\n    at async chooseNavigation (file:///opt/buildhome/repo/scripts/verify-workspace-browser.mjs:118:20)\n    at async verifyEmbeddedDataSurface (file:///opt/buildhome/repo/scripts/verify-workspace-browser.mjs:162:3)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1003:9)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "workspace-consolidated",
+      "width": 320,
+      "height": 900,
+      "status": "failed",
+      "error": "Error: Required action remains clipped: [data-toolbar-open=\"housing-summary\"]: {\"selector\":\"[data-toolbar-open=\\\"housing-summary\\\"]\",\"box\":{\"left\":244.25,\"right\":404.25,\"top\":54.5,\"bottom\":98.5,\"width\":160,\"height\":44},\"clip\":{\"left\":244.25,\"right\":320,\"top\":54.5,\"bottom\":98.5,\"width\":75.75,\"height\":44},\"x\":324.25,\"y\":76.5,\"viewport\":{\"width\":320,\"height\":900},\"inside\":true,\"painted\":true,\"disabled\":false,\"topmost\":false,\"tag\":\"BUTTON\",\"label\":\"부동산 관측 요약\",\"outline\":\"none\",\"outlineWidth\":3,\"outlineColor\":\"rgb(219, 219, 219)\"}\n    at reveal (file:///opt/buildhome/repo/scripts/verify-consolidated-workspace-browser.mjs:85:11)\n    at async pointer (file:///opt/buildhome/repo/scripts/verify-consolidated-workspace-browser.mjs:88:20)\n    at async verifyConsolidatedWorkspaceSurface (file:///opt/buildhome/repo/scripts/verify-consolidated-workspace-browser.mjs:294:3)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:999:33)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    },
+    {
+      "page": "workspace-consolidated",
+      "width": 390,
+      "height": 844,
+      "status": "failed",
+      "error": "Error: Required action remains clipped: [data-toolbar-open=\"housing-summary\"]: {\"selector\":\"[data-toolbar-open=\\\"housing-summary\\\"]\",\"box\":{\"left\":254.25,\"right\":414.25,\"top\":54.5,\"bottom\":98.5,\"width\":160,\"height\":44},\"clip\":{\"left\":254.25,\"right\":390,\"top\":54.5,\"bottom\":98.5,\"width\":135.75,\"height\":44},\"x\":334.25,\"y\":76.5,\"viewport\":{\"width\":390,\"height\":844},\"inside\":true,\"painted\":true,\"disabled\":false,\"topmost\":true,\"tag\":\"BUTTON\",\"label\":\"부동산 관측 요약\",\"outline\":\"none\",\"outlineWidth\":3,\"outlineColor\":\"rgb(219, 219, 219)\"}\n    at reveal (file:///opt/buildhome/repo/scripts/verify-consolidated-workspace-browser.mjs:85:11)\n    at async pointer (file:///opt/buildhome/repo/scripts/verify-consolidated-workspace-browser.mjs:88:20)\n    at async verifyConsolidatedWorkspaceSurface (file:///opt/buildhome/repo/scripts/verify-consolidated-workspace-browser.mjs:294:3)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:999:33)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    }
+  ],
+  "sourceAcceptance": [
+    {
+      "producerBuildUuid": "d3b0c7c4-a185-4eb6-8f0d-ca5b1078a64f",
+      "consumerBuildUuid": "e0d7b526-9ea1-400a-82a2-0ca6fda9f036",
+      "acceptedAt": "2026-11-08T17:59:09.274Z",
+      "sourceCommit": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+      "planSha256": "c7ef8e7921f0d9235ceeec910efafd21d092d48f96d2f77ee7e3e50932f1cfbd"
+    }
+  ],
+  "fastCadence": [
+    {
+      "schemaVersion": 1,
+      "kind": "atlas-browser-fast-cadence",
+      "phase": "btc-10x-weekly-display-daily-observations",
+      "status": "failed",
+      "sourceCommit": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+      "sourceTree": "b18d10dd079ad2d704a643e02547695b1cfc7661",
+      "sourceInventorySha256": "13eb3d3b92667ae6022eb02c96acc3ae538c31b6a2cc0207689e7c09689433df",
+      "suiteRunId": "844c0dcb-5bfa-46c2-8772-45f24e30411b",
+      "lane": "chart-replay",
+      "caseSpec": {
+        "symbol": "BTCUSD",
+        "surface": "btc",
+        "width": 1440,
+        "height": 900,
+        "touch": false,
+        "page": "chart-replay-btc",
+        "chartReplay": true,
+        "route": "/?symbol=BTCUSD&granularity=daily&type=line"
+      },
+      "startedAt": "2026-11-08T17:59:11.573Z",
+      "completedAt": "2026-11-08T17:59:19.538Z",
+      "fixture": null,
+      "measurement": null,
+      "restored": false,
+      "error": "The required early cadence phase did not complete: AssertionError [ERR_ASSERTION]: Compact legend lost its provisional/retrospective meanings\n+ actual - expected\n\n  [\n    '실선 · 관측 사후 기준',\n    '점선 · 잠정·가정',\n-   '◇ 거시 시계 · ○ 예시 경로'\n  ]\n\n    at verifyFloatingBar (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:440:14)\n    at async verifyChartReplaySurface (file:///opt/buildhome/repo/scripts/verify-chart-replay-browser.mjs:1753:3)\n    at async main (file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1000:32)\n    at async file:///opt/buildhome/repo/scripts/verify-eth-candidate-browser.mjs:1039:5"
+    }
+  ],
+  "browserGateReceipts": [
+    {
+      "stage": "browser",
+      "id": "runtime-preflight",
+      "status": "RUNNING"
+    },
+    {
+      "stage": "browser",
+      "id": "runtime-preflight",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:57:55.504Z",
+      "completedAt": "2026-11-08T17:58:21.270Z",
+      "durationMs": 25766,
+      "log": "build/cloudflare-stage-browser/runtime-preflight.log",
+      "logSha256": "c5a93f1aead449f30eb80cc04b0c0c934829b88d3b54406bb33394bf5d5b00c6"
+    },
+    {
+      "stage": "browser",
+      "id": "locked-dependencies",
+      "status": "RUNNING"
+    },
+    {
+      "stage": "browser",
+      "id": "locked-dependencies",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:58:21.306Z",
+      "completedAt": "2026-11-08T17:58:26.262Z",
+      "durationMs": 4956,
+      "log": "build/cloudflare-stage-browser/locked-dependencies.log",
+      "logSha256": "2074b00ac9cce401002b052bfdbce94783c56a1f889e8ab8ae330233b42ea3cc"
+    },
+    {
+      "stage": "browser",
+      "id": "generated-pages",
+      "status": "RUNNING"
+    },
+    {
+      "stage": "browser",
+      "id": "generated-pages",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:58:26.302Z",
+      "completedAt": "2026-11-08T17:58:27.552Z",
+      "durationMs": 1250,
+      "log": "build/cloudflare-stage-browser/generated-pages.log",
+      "logSha256": "d8e36e98da75c7c481b3382858c5623f5d3323773eabce395bd2a3c4e7fe924e"
+    },
+    {
+      "stage": "browser",
+      "id": "typecheck",
+      "status": "RUNNING"
+    },
+    {
+      "stage": "browser",
+      "id": "typecheck",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:58:27.590Z",
+      "completedAt": "2026-11-08T17:58:28.870Z",
+      "durationMs": 1280,
+      "log": "build/cloudflare-stage-browser/typecheck.log",
+      "logSha256": "105590b0774e0b7bfc27e4ac54de5e61ef04fdf38cf96da4aba62c93d0904ba8"
+    },
+    {
+      "stage": "browser",
+      "id": "panel-tests",
+      "status": "RUNNING"
+    },
+    {
+      "stage": "browser",
+      "id": "panel-tests",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:58:28.909Z",
+      "completedAt": "2026-11-08T17:58:54.457Z",
+      "durationMs": 25548,
+      "log": "build/cloudflare-stage-browser/panel-tests.log",
+      "logSha256": "170e1d6e46dc46d46f1634a2e7d9498a8005a69b7a7e98b98d920a4f9cc79ae9"
+    },
+    {
+      "stage": "browser",
+      "id": "service-build",
+      "status": "RUNNING"
+    },
+    {
+      "stage": "browser",
+      "id": "service-build",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:58:54.494Z",
+      "completedAt": "2026-11-08T17:58:55.659Z",
+      "durationMs": 1165,
+      "log": "build/cloudflare-stage-browser/service-build.log",
+      "logSha256": "cdc8c3de5f1a62a6ffaf351b2b5506a358745aa71db73db16a1854142f8bd9fc"
+    },
+    {
+      "stage": "browser",
+      "id": "postgres-service-tests",
+      "status": "RUNNING"
+    },
+    {
+      "stage": "browser",
+      "id": "postgres-service-tests",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:58:55.699Z",
+      "completedAt": "2026-11-08T17:59:08.388Z",
+      "durationMs": 12689,
+      "log": "build/cloudflare-stage-browser/postgres-service-tests.log",
+      "logSha256": "2892e37476300aeb4a0c73e5bdb7689370899805db00c2f70f71e903297eb85e"
+    },
+    {
+      "stage": "browser",
+      "id": "native-browser",
+      "status": "RUNNING"
+    },
+    {
+      "stage": "browser",
+      "id": "native-browser",
+      "status": "FAIL",
+      "startedAt": "2026-11-08T17:59:09.706Z",
+      "completedAt": "2026-11-08T18:09:15.868Z",
+      "durationMs": 606162,
+      "log": "build/cloudflare-stage-browser/native-browser.log",
+      "logSha256": "0abf93bed404bf38b9e49e98a671e3688dc2a7399749ac9d79e79421c57c95a0",
+      "error": "native-browser failed with exit 1"
+    }
+  ],
+  "aggregateError": "AssertionError [ERR_ASSERTION]: Browser child did not exit successfully: non-chart-replay\n\n1 !== 0\n\n    at combineNativeBrowserLanes (file:///opt/buildhome/repo/scripts/verify-native-browser-suite.mjs:83:12)\n    at verifyNativeBrowserSuite (file:///opt/buildhome/repo/scripts/verify-native-browser-suite.mjs:204:18)\n    at async file:///opt/buildhome/repo/scripts/verify-native-browser-suite.mjs:225:11",
+  "rawReportSha256": "d8fe66a47cbd3aeb6596bdfa0ac67b36b6874d0e6e72738bf69eba82d53d87fa",
+  "rawReportBytes": 5719301,
+  "compressedReportSha256": "8d442d2e21948e104e7f3e1dc175fb2476cf262b09fbf974afdd14ed45894868",
+  "compressedReportBytes": 505987,
+  "transportVerified": true,
+  "qualifiesFullVerification": false
+}

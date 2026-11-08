@@ -1,0 +1,14 @@
+[
+  {
+    "file": "foreground-before.json",
+    "originalBrowserSharedFile": "atlas-foreground-before-1794160431704.json",
+    "bytes": 220896,
+    "sha256": "26a763c1b46b8f6614f193415da9e6366015748b2786d9d3d7fb430b62a03d0c"
+  },
+  {
+    "file": "market-analysis-before.jpg",
+    "originalBrowserSharedFile": "atlas-market-analysis-before-1794160431705.jpg",
+    "bytes": 81856,
+    "sha256": "9b364c210519f082905eab7d70287e0e7b7775ba4ce999f09c481f2d8d1be490"
+  }
+]

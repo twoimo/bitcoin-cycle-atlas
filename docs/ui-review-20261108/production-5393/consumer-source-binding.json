@@ -1,0 +1,119 @@
+{
+  "sourceCommit": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+  "sourceTree": "b18d10dd079ad2d704a643e02547695b1cfc7661",
+  "producerBuildUuid": "d3b0c7c4-a185-4eb6-8f0d-ca5b1078a64f",
+  "consumerBuildUuid": "e0d7b526-9ea1-400a-82a2-0ca6fda9f036",
+  "suiteRunId": "844c0dcb-5bfa-46c2-8772-45f24e30411b",
+  "modelComponent": {
+    "path": "/receipts/5393cfafe18ac89bb85c319e622b43e5db0cc7e0/d3b0c7c4-a185-4eb6-8f0d-ca5b1078a64f.json",
+    "bytes": 5009,
+    "sha256": "cf37ccca7a9a8ab8cb322804e9413f1ba9d298c1bacf539846b8ffa884b1af5a"
+  },
+  "modelSourceIndex": {
+    "path": "/sources/5393cfafe18ac89bb85c319e622b43e5db0cc7e0.json",
+    "bytes": 533,
+    "sha256": "5acb00adedd221b40f5438ac9fd2d697d6e2ac845ace0b0d8e699ba0096b33e6"
+  },
+  "planSha256": "c7ef8e7921f0d9235ceeec910efafd21d092d48f96d2f77ee7e3e50932f1cfbd",
+  "nativeReport": {
+    "bytes": 5719301,
+    "sha256": "d8fe66a47cbd3aeb6596bdfa0ac67b36b6874d0e6e72738bf69eba82d53d87fa",
+    "compressedBytes": 505987,
+    "compressedSha256": "8d442d2e21948e104e7f3e1dc175fb2476cf262b09fbf974afdd14ed45894868"
+  },
+  "matches": {
+    "sourceCommit": true,
+    "sourceTree": true,
+    "producer": true,
+    "consumer": true,
+    "plan": true
+  },
+  "browserGates": [
+    {
+      "stage": "browser",
+      "id": "runtime-preflight",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:57:55.504Z",
+      "completedAt": "2026-11-08T17:58:21.270Z",
+      "durationMs": 25766,
+      "log": "build/cloudflare-stage-browser/runtime-preflight.log",
+      "logSha256": "c5a93f1aead449f30eb80cc04b0c0c934829b88d3b54406bb33394bf5d5b00c6"
+    },
+    {
+      "stage": "browser",
+      "id": "locked-dependencies",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:58:21.306Z",
+      "completedAt": "2026-11-08T17:58:26.262Z",
+      "durationMs": 4956,
+      "log": "build/cloudflare-stage-browser/locked-dependencies.log",
+      "logSha256": "2074b00ac9cce401002b052bfdbce94783c56a1f889e8ab8ae330233b42ea3cc"
+    },
+    {
+      "stage": "browser",
+      "id": "generated-pages",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:58:26.302Z",
+      "completedAt": "2026-11-08T17:58:27.552Z",
+      "durationMs": 1250,
+      "log": "build/cloudflare-stage-browser/generated-pages.log",
+      "logSha256": "d8e36e98da75c7c481b3382858c5623f5d3323773eabce395bd2a3c4e7fe924e"
+    },
+    {
+      "stage": "browser",
+      "id": "typecheck",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:58:27.590Z",
+      "completedAt": "2026-11-08T17:58:28.870Z",
+      "durationMs": 1280,
+      "log": "build/cloudflare-stage-browser/typecheck.log",
+      "logSha256": "105590b0774e0b7bfc27e4ac54de5e61ef04fdf38cf96da4aba62c93d0904ba8"
+    },
+    {
+      "stage": "browser",
+      "id": "panel-tests",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:58:28.909Z",
+      "completedAt": "2026-11-08T17:58:54.457Z",
+      "durationMs": 25548,
+      "log": "build/cloudflare-stage-browser/panel-tests.log",
+      "logSha256": "170e1d6e46dc46d46f1634a2e7d9498a8005a69b7a7e98b98d920a4f9cc79ae9"
+    },
+    {
+      "stage": "browser",
+      "id": "service-build",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:58:54.494Z",
+      "completedAt": "2026-11-08T17:58:55.659Z",
+      "durationMs": 1165,
+      "log": "build/cloudflare-stage-browser/service-build.log",
+      "logSha256": "cdc8c3de5f1a62a6ffaf351b2b5506a358745aa71db73db16a1854142f8bd9fc"
+    },
+    {
+      "stage": "browser",
+      "id": "postgres-service-tests",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:58:55.699Z",
+      "completedAt": "2026-11-08T17:59:08.388Z",
+      "durationMs": 12689,
+      "log": "build/cloudflare-stage-browser/postgres-service-tests.log",
+      "logSha256": "2892e37476300aeb4a0c73e5bdb7689370899805db00c2f70f71e903297eb85e"
+    },
+    {
+      "stage": "browser",
+      "id": "native-browser",
+      "status": "FAIL",
+      "startedAt": "2026-11-08T17:59:09.706Z",
+      "completedAt": "2026-11-08T18:09:15.868Z",
+      "durationMs": 606162,
+      "log": "build/cloudflare-stage-browser/native-browser.log",
+      "logSha256": "0abf93bed404bf38b9e49e98a671e3688dc2a7399749ac9d79e79421c57c95a0",
+      "error": "native-browser failed with exit 1"
+    }
+  ],
+  "observedCaseCount": 53,
+  "observedPassedCaseCount": 44,
+  "observedFailedCaseCount": 9,
+  "originalAggregateCompletedCaseCount": 0,
+  "qualifiesFullVerification": false
+}
