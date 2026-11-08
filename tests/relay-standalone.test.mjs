@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,mkdir,writeFile,symlink,rm} from 'node:fs/promises';
+import {mkdtemp,mkdir,writeFile,symlink,rm,readFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {resolve} from 'node:path';
 import {parseHTML} from 'linkedom';
@@ -84,4 +84,9 @@ test('unsafe chat links and previews are not rendered as anchors',async t=>{
   initRelayRoomView({root,embeddedData:()=>JSON.stringify(data),onReady:ready}).show(true);await loaded;
   assert.equal(root.querySelector('.relay-msg-inline-link'),null);assert.equal(root.querySelector('.relay-preview'),null);
   assert.equal(root.querySelector('.relay-msg-text').textContent,'본문');
+});
+
+test('the relay chat track can shrink below its content width on narrow screens',async()=>{
+  const css=await readFile(new URL('../dist/relay-room.css',import.meta.url),'utf8');
+  assert.match(css,/\.relay-chat\{[^}]*grid-template-columns:minmax\(0,1fr\)/);
 });
