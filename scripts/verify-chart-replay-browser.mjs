@@ -53,6 +53,16 @@ export function readChartReplayFocusTarget(selector) {
     owner: hit ? { tag: hit.tagName, id: hit.id || null, className: hit.getAttribute('class'), control: hit.closest('[data-cr]')?.dataset.cr ?? null } : null };
 }
 
+// onAtlasFrame renders the two cycle line meanings without the live-only
+// macro/example reference key. The live chart retains its separate three-key
+// oracle in assertPriceLegendScrollSurface; never infer either list from DOM size.
+export function assertChartReplayLegendSemantics({ items, statusItems }) {
+  assert.deepEqual(items, ['실제 가격', '미래 가정', '가정 범위', '고점·저점', 'CYCLE TOP', 'PIT STOP', 'FIRST TOP', 'ATH', 'MID-TOP', 'BOTTOM'],
+    'Replay legend lost an original price/cycle semantic entry');
+  assert.deepEqual(statusItems, ['실선 · 관측 사후 기준', '점선 · 잠정·가정'],
+    'Replay legend lost its exact provisional/retrospective meanings');
+}
+
 /** Read the actual renderer's price pane for every instrument. SVG boxes also
  * include the time/price axes; those are not unobstructed price input probes. */
 export function readChartReplayFloatingGeometry({ chartSelector, panel }) {
@@ -434,10 +444,7 @@ export async function verifyChartReplaySurface(api) {
       assert.ok(geometry.legend.scrollWidth <= geometry.legend.clientWidth + 1, 'BTC legend content overflows its measured width');
       for (const label of geometry.legend.reservedLabels) assert.equal(overlaps(geometry.legend, label), false,
         'BTC legend covers a current-price, evidence, clock, event or replay label: ' + JSON.stringify(label));
-      const expectedItems = ['실제 가격', '미래 가정', '가정 범위', '고점·저점', 'CYCLE TOP', 'PIT STOP', 'FIRST TOP', 'ATH', 'MID-TOP', 'BOTTOM'];
-      const expectedStatus = ['실선 · 관측 사후 기준', '점선 · 잠정·가정', '◇ 거시 시계 · ○ 예시 경로'];
-      assert.deepEqual(geometry.legend.allItems, expectedItems, 'Compact legend lost an original semantic entry');
-      assert.deepEqual(geometry.legend.statusItems, expectedStatus, 'Compact legend lost its provisional/retrospective meanings');
+      assertChartReplayLegendSemantics({ items: geometry.legend.allItems, statusItems: geometry.legend.statusItems });
       if (width <= 430) assert.equal(geometry.legend.mode, 'chip');
       else if (geometry.legend.mode === 'chip') assert.ok(['height','protected-anchors'].includes(geometry.legend.compactReason), 'A wide plot needs a measured height/anchor reason to use the compact legend');
       else assert.equal(geometry.legend.mode, 'rows');
@@ -468,7 +475,7 @@ export async function verifyChartReplaySurface(api) {
             statusItems: [...node.querySelectorAll('.cycle-style-sample,.cycle-reference-key')].map(item => item.textContent.replace(/\s+/g, ' ').trim()),
             horizontalOverflow: node.scrollWidth > node.clientWidth + 1 };
         });
-        visibleBounds(dialog, width, height);assert.deepEqual(dialog.items, expectedItems);assert.deepEqual(dialog.statusItems, expectedStatus);
+        visibleBounds(dialog, width, height);assertChartReplayLegendSemantics(dialog);
         assert.equal(dialog.horizontalOverflow, false, 'Full legend sheet has horizontal overflow');
         if (geometry.legend.mode === 'chip') { assert.ok(Math.abs(dialog.width - width) <= 1);assert.ok(Math.abs(dialog.height - height) <= 1); }
         await click(cdp, '#chart-legend-dialog > header > button');
