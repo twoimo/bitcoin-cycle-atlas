@@ -1,6 +1,6 @@
 # WP4 표기·리플레이 UI / WP7 셸 검토 보고서
 
-**통합 차트 UI의 새 네이티브 비교는 27/27 통과했고, 원본 JSON 3개와 PNG 19개를 모두 확보했다. MSTR·BMNR의 두 진입 경로, BTC 여섯 뷰포트의 범례·리플레이, 12종목 셸을 확인했다. 진단 소스는 `03dcd1b`이며 애플리케이션은 PR #78 병합 `dbd3b70`과 같다. 최신 운영 대상은 후속 relay 변경이 포함된 `5393cfa`다. 이 대상의 운영 전체 CI와 공개 배포 반영은 아직 확인 대기다.**
+**통합 차트 UI의 새 네이티브 비교는 27/27 통과했고, 원본 JSON 3개와 PNG 19개를 모두 확보했다. MSTR·BMNR의 두 진입 경로, BTC 여섯 뷰포트의 범례·리플레이, 12종목 셸을 확인했다. 진단 소스는 `03dcd1b`이며 애플리케이션은 PR #78 병합 `dbd3b70`과 같다. 최신 운영 대상 `5393cfa`의 정식 모델은 13/13 게이트·3074/3074 테스트를 통과했다. 후속 퍼블리케이션 검증·공개 배포 반영·운영 화면 확인은 아직 대기다.**
 
 | 현재 확인 단계 | 결과 | 근거 |
 |---|---|---|
@@ -10,10 +10,11 @@
 | BTC 범례·리플레이 | 범례 화면 초과 **6크기 모두 0px**, 1440 리플레이 잘림 **0개** | 3절의 새 원본 측정. 모바일 스크롤 영역 밖 항목도 별도 공개 |
 | 12종목 셸 | **모두 통과** | 상단 10 / 하단 8 기능 그룹, 좌 11 / 우 11 슬롯, 현재 종목의 접근성 이름 |
 | 브라우저 이미지·원본 | **PNG 19/19 + JSON 3/3 확보** | [manifest](ui-review-20261108/native-4acab/manifest.json), [22파일 독립 대조](ui-review-20261108/native-4acab/independent-file-check.json). 직접 수신 8개 + 동일 SHA 보완 11개 |
-| 완료된 정식 모델 단계 | `dbd3b70` **13/13 게이트·3072/3072 테스트 통과** | [모델 영수증](ui-review-20261108/local-verification/cloudflare-dbd-model-gates.json). 이후 main 변경으로 배포 요청 차단 |
+| 최신 정식 모델 단계 | `5393cfa` **13/13 게이트·3074/3074 테스트 통과** | [모델 영수증](ui-review-20261108/production-5393/model-gates-selected.json), [성공 종료 상태](ui-review-20261108/production-5393/model-final-status.json) |
 | 최신 운영 대상 | main **`5393cfafe18ac89bb85c319e622b43e5db0cc7e0`** | PR #79 relay 변경. [진단 소스와의 정확한 차이](ui-review-20261108/production-source-comparison-5393.json) |
 | 최신 대상의 영향 범위·정적 검사 | **19/19 테스트**, **930개 파일·954개 참조 통과** | [테스트](ui-review-20261108/local-verification/5393-relay-entry-tests.log), [정적 검사](ui-review-20261108/local-verification/verify-static-5393.log) |
-| 최신 운영 CI / 공개 반영 | **확인 대기** | 모델 `d3b0c7c4…` **실행 중**(17:30:15 UTC 확인). 16:55 UTC의 공개 `sourceCommit`은 `bd5b70a` |
+| 모델 영수증 게시 / 후속 실행 | **게시·정확한 바이트 재확인 완료 / consumer 대기** | [게시 영수증](ui-review-20261108/production-5393/model-publication.json). consumer `e0d7b526…` 요청 확인 |
+| 운영 전체 CI / 공개 반영·화면 | **확인 대기** | 정식 consumer 결과 대기. 마지막 공개 관찰 `sourceCommit`은 `bd5b70a` |
 
 코드 커밋, 로컬 검증, 보조 UI 진단, 정식 모델 게이트와 공개 배포를 각각 구분한다. 3절은 새 `4acab602-49a5-470e-9935-20005e98e5a3` 실행의 원본에서 다시 추출했다. 이전 24e 실행은 원래 파일과 통과 판정을 보존하고 부록 C로 옮겼다.
 
@@ -304,27 +305,43 @@ BTC 각 사례의 `initial` 상태다. 변경 후 여섯 크기 모두 화면과
 
 ## 5. 운영 CI와 공개 배포
 
-**`dbd3b70`은 정식 모델 단계 13/13 게이트와 전체 테스트 3072/3072를 통과했다.** 모델 완료 후 원격 main이 PR #79의 `5393cfa`로 바뀌었으므로 배포 요청은 `MODEL_COMPONENT_REMOTE_HEAD` 검사에서 차단됐다. 통과한 모델 결과와 배포 차단을 모두 보존하며, 이 결과를 최신 main의 전체 CI 통과로 확대하지 않는다.
+**최신 운영 대상 `5393cfa`의 정식 모델 단계는 13/13 게이트와 전체 테스트 3074/3074를 통과했다.** 모델 영수증 게시 후 원격에서 같은 바이트를 읽어 확인했고, 후속 퍼블리케이션 consumer `e0d7b526…`가 요청됐다. consumer의 전체 검증·사이트 배포와 공개 화면 확인은 아직 완료되지 않았다.
+
+### 소스별 완료 판정
+
+| 소스 | 검증 종류·실행 | 확인된 결과 | 운영 완료와의 관계 |
+|---|---|---|---|
+| **`5393cfa`** | 정식 모델 `d3b0c7c4-a185-4eb6-8f0d-ca5b1078a64f` | **13/13 PASS, 3074/3074 테스트 통과**, 실패·건너뜀 0, 단일 배치 | [모델 영수증](ui-review-20261108/production-5393/model-gates-selected.json). 모델 구성요소만으로 전체 배포 자격을 부여하지 않음 |
+| **`5393cfa`** | 후속 퍼블리케이션 요청 `e0d7b526-9ea1-400a-82a2-0ca6fda9f036` | **queued 확인, 결과 대기** | [모델 종료 때의 consumer 상태](ui-review-20261108/production-5393/model-final-status.json). 실제 consumer가 검증한 소스·전체 게이트·배포 결과는 후속 영수증으로 확인 |
+| `03dcd1b` | 보조 네이티브 UI `4acab602-49a5-470e-9935-20005e98e5a3` | **before 6/6 + after 21/21 = 27/27 PASS** | 앱 `dist`는 `dbd3b70`과 동일. 최신 `5393cfa`와의 차이는 1절에 한정하며 사이트 배포 자격을 대신하지 않음 |
+| `dbd3b70` | 이전 정식 모델 `5e21418c-95a1-4c8a-8c53-f0135244684a` | **13/13 PASS, 3072/3072 테스트 통과** | [원본 영수증](ui-review-20261108/local-verification/cloudflare-dbd-model-gates.json). 이후 main 변경을 확인해 `MODEL_COMPONENT_REMOTE_HEAD`로 배포 요청 차단 |
+| `f5b1a874` | 구현 소스의 로컬 전체 `npm test` | **3062/3062 통과** | [원본·해시 영수증](ui-review-20261108/local-verification/results.json). 후속 소스의 정식 CI와 구분 |
+
+### 최신 모델·퍼블리케이션·공개 서비스 상태
 
 | 단계 | 대상 / 현재 확인 |
 |---|---|
 | 현재 main / 운영 검증·배포 대상 | **`5393cfafe18ac89bb85c319e622b43e5db0cc7e0`** · PR #79 포함 |
 | 같은 작업 브랜치의 통합 | `c9e6e3b32f8a24eff338c72599c041ff723a4c04` |
 | 현재 대상의 `dist` | `ca187d8c2d4a7feae3d7a83e05755f6e985bad07` |
-| 완료된 정식 모델 실행 | `5e21418c-95a1-4c8a-8c53-f0135244684a` · **소스 `dbd3b70`**, [선택 원본 영수증](ui-review-20261108/local-verification/cloudflare-dbd-model-gates.json) |
-| 이 모델의 전체 테스트 | **3072/3072 통과**, 실패 0, 건너뜀 0, 단일 배치, `complete: true` |
-| 이 모델의 게이트 | **13/13 PASS** · formal 포함. 마지막 chart-replay 게이트 완료 `2026-11-08T17:06:20.440Z` |
-| 이 모델 뒤 배포 요청 | **차단** · `MODEL_COMPONENT_REMOTE_HEAD`: 원격 main 변경을 확인. `qualifiesFullVerification: false` |
-| 새 최신 main 모델 | **실행 중** · build 접두사 `d3b0c7c4…`, 소스 `5393cfa`, `2026-11-08 17:30:15 UTC` 상태 확인. 파이프라인 결과 대기 |
-| 별도 보조 UI 진단 | **4acab 27/27 PASS** · `03dcd1b`, 앱 `dbd3b70`과 동일. 최신 `5393cfa`와의 차이는 1절에 한정 |
+| 정식 모델 시작 / 종료 | **`2026-11-08T17:30:09.464Z` / `2026-11-08T17:45:15.508Z`**, `stopped / success` · [빌드 상태](ui-review-20261108/production-5393/model-final-status.json) |
+| 정식 `npm test` | **3074/3074 통과**, 실패 0, 건너뜀 0, 단일 배치, `complete: true` · [원문 0025](ui-review-20261108/production-5393/model-d3b-log-page-0025.json) |
+| formal / static / 마지막 chart-replay 게이트 | **모두 PASS** · 마지막 게이트 종료 `2026-11-08T17:45:06.183Z` |
+| 모델 영수증 게시 | **`MODEL_COMPONENT_PUBLISHED`**, `2026-11-08T17:45:14.089Z` · [게시 영수증](ui-review-20261108/production-5393/model-publication.json) / [원문 0028](ui-review-20261108/production-5393/model-d3b-log-page-0028.json) |
+| 게시한 바이트 재확인 | **`EXACT_BYTES_CONFIRMED`** · 모델 구성요소 5009바이트·소스 인덱스 533바이트, 두 응답 HTTP 200, 1회 확인 |
+| 후속 consumer | **queued**, `e0d7b526-9ea1-400a-82a2-0ca6fda9f036`, 요청 `2026-11-08T17:45:13.956Z` · `17:45:19.793Z` 관찰 기준 |
+| 정식 전체 네이티브·퍼블리케이션 검증 / 사이트 배포 | **결과 대기** |
 | 진단 작업 명령 복원 | **완료** · `2026-11-08T17:12:08.293Z` 원래 명령으로 복원. 정식 게이트·고정 런타임 변경 없음 |
-| 최신 대상의 전체 네이티브·모델 게이트 / 퍼블리케이션 | **결과 대기** |
 | 사용자 확인 운영 기준 | `1635f87a10962b7ff5eecd094b6e0625e09771f4` · publication `2026-11-08T13:03:05Z` |
-| 최근 공개 운영 관찰 | **`bd5b70a96e1fab466ee6648c2c07db882b02681f`**, `2026-11-08 16:55 UTC` |
-| 이번 UI 변경의 공개 운영 반영 | **확인 대기** |
+| 마지막 공개 운영 관찰 | **`bd5b70a96e1fab466ee6648c2c07db882b02681f`**, `2026-11-08 16:55 UTC` |
+| 이번 UI 변경의 공개 운영 반영 / 실제 화면 | **확인 대기 / 확인 대기** |
 | 완료 판정 대상 | [운영 publication.json](https://bitcoin-cycle-atlas.twoimo.workers.dev/publication.json)의 `sourceCommit`과 **`5393cfa`**의 일치, 이후 공개 브라우저 관찰 |
 
-완료된 13개 모델 게이트는 runtime-preflight·locked-dependencies·model-tests·forecast·research·eth-events·treasury-paths·numerics·formal·cycle·performance·static·chart-replay다. [영수증](ui-review-20261108/local-verification/cloudflare-dbd-model-gates.json)에 각 시작·종료 시각과 원본 로그 해시가 있다. 모델 구성요소의 통과는 전체 네이티브·퍼블리케이션을 포함한 운영 완료 판정과 다르다.
+정식 시작·종료는 Cloudflare의 `running_on`·`stopped_on`이다. 앞서 기록한 `17:30:15 UTC`는 실행 중 상태를 읽은 관찰 시각으로, 공식 시작 시각과 구분한다. 정식 테스트 게이트 자체는 `17:30:41.432Z`–`17:43:06.130Z`, 744698ms였다.
+
+완료된 13개 모델 게이트는 runtime-preflight·locked-dependencies·model-tests·forecast·research·eth-events·treasury-paths·numerics·formal·cycle·performance·static·chart-replay다. [선택 원본 영수증](ui-review-20261108/production-5393/model-gates-selected.json)에 각 시작·종료 시각과 원본 로그 해시가 있으며 [파일 목록](ui-review-20261108/production-5393/model-receipt-inventory.json)에 보존 파일의 바이트 수·SHA-256이 있다.
+
+`MODEL_COMPONENT_PUBLISHED`는 모델 증거 저장소에 영수증을 게시했다는 뜻이다. 공개 차트 사이트의 퍼블리케이션과 구분하며 모델 영수증의 `qualifiesFullVerification`도 `false`다. consumer 요청 UUID가 실제 deploy hook 대기 작업과 일치하는 것까지 확인했으며, consumer가 이후 검사한 전체 게이트·소스와 배포를 확인해야 한다.
 
 보조 UI 진단은 공개 하위 도메인과 preview URL을 끈 별도 Worker에서 수행하며 사이트를 배포하지 않는다. **27/27 UI 진단·모델 단계 통과·PR 병합만으로 공개 배포 완료를 표시하지 않는다.** 최신 대상 `5393cfa`의 운영 전체 게이트·공개 `sourceCommit`·브라우저 표시를 각각 확인한다.
 
@@ -332,7 +349,7 @@ BTC 각 사례의 `initial` 상태다. 변경 후 여섯 크기 모두 화면과
 
 ## 6. 아직 남은 확인
 
-- 최신 main `5393cfa`의 운영 모델·전체 네이티브·퍼블리케이션 CI 결과.
+- 최신 main `5393cfa`의 후속 consumer 전체 네이티브·퍼블리케이션 CI 결과와 사이트 배포 영수증. 모델 13개 게이트 통과와 구분.
 - 공개 `publication.json`의 `sourceCommit`이 `5393cfa`와 일치하는지 확인.
 - 이미 열려 있던 운영 탭을 일반 새로고침한 뒤 새 화면이 반영되는지 확인. 캐시 삭제·서비스 워커 해제·강제 새로고침을 선행하지 않음.
 - 운영 MSTR·BMNR × 루트·Market Lab 경로 네 조합에서 실제 종목 차트, 로딩 종료, 이전 차트 부재를 확인하고 브라우저 증거 보존.
