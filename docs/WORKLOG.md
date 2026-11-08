@@ -37,3 +37,9 @@
 - 빌드 로그에서 `model-tests` FAIL 확인: `tests/eth-review-packet.test.mjs`가 "최상위 dist 브라우저 소스는 모두 ETH 리뷰 시드여야 한다"를 검사하는데, 새로 추가한 `dist/forecast-sufficiency.js`·`dist/forecast-calibration.js`가 목록에 없었음
 - 수정: 두 모듈을 `dist/forecast/` 하위로 이동(브라우저 소스가 아니라 스크립트·테스트 전용 모듈임을 경로로 구분), 모든 import·문서 경로 갱신
 - 검증: `node --test tests/eth-review-packet.test.mjs` 31개 통과, 자체 테스트 13개 통과, 두 스크립트 재실행 정상, `verify:static` ok(887 files)
+
+## 2026-11-08 · WP3 자산군별 모델 사양
+- 브랜치: `feat/per-asset-models-20261108`
+- 검증: `node --test tests/forecast-models.test.mjs` 8개 통과, eth-review·verify:static 통과
+- 결과 요지: 자산군별 모델 계열(점프·구조·레버리지·부트스트랩·월별 AR)과 추정/가정 구분을 코드로 고정. 레버리지 감쇄는 −½L(L−1)σ²t 유도식, BMNR은 등록돼 있지만 T3로 경로 생성 거부
+- 남음: 실제 경로 생성기, 화면 배지(WP4)
