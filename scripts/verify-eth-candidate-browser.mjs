@@ -3,6 +3,7 @@ import {isExpectedOfflineBtcRefresh,offlineBtcRefreshSurface,ownsOfflineBtcPrice
 // PR-only verification of checked-out dist files. Does not deploy or alter UI.
 import assert from 'node:assert/strict';
 import {verifyWorkspaceSurface,readNativeInteractiveTarget} from './verify-workspace-browser.mjs';
+import {readNativeHorizontalScrollOwner,planNativeHorizontalScrollGesture} from './native-heading-scroll-contract.mjs';
 import {verifyForecastReplaySurface} from './verify-forecast-replay-browser.mjs';
 import {verifyChartReplaySurface,isEarlyChartReplayCadenceCase} from './verify-chart-replay-browser.mjs';
 import {consolidatedPagesBase,verifyConsolidatedWorkspaceSurface} from './verify-consolidated-workspace-browser.mjs';
@@ -633,37 +634,94 @@ async function ethCase(cdp,width,receipt,expected,archive){
   assert.equal((await bounds(cdp,'#eth-data-dialog')).open,false);
 }
 
+async function verifyNativeInfoToolbarScroll(cdp,symbol){
+  const infoSelector=symbol==='ETHUSD'?'[data-eth-action="info"]':'[data-equity-action="info"]';
+  const selectors={outer:'.eth-topbar[data-shell-region="top"]',inner:'.eth-topbar>.shell-instrument-slot[data-shell-key="instrument"]'};
+  const read=()=>evaluate(cdp,infoSelector=>{
+    const info=document.querySelector(infoSelector),inner=info?.closest('.shell-instrument-slot'),bar=info?.closest('.eth-topbar'),app=bar?.closest('.eth-app');
+    if(!bar||!inner||inner.parentElement!==bar||bar.dataset.shellRegion!=='top'||inner.dataset.shellKey!=='instrument'||inner.dataset.shellSlot!=='5')throw new Error('Native info lost its explicit instrument/outer toolbar owners');
+    const box=node=>{const r=node.getBoundingClientRect();return {left:r.left+node.clientLeft,right:r.left+node.clientLeft+node.clientWidth,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+    const owner=node=>({...box(node),scrollLeft:node.scrollLeft,scrollWidth:node.scrollWidth,clientWidth:node.clientWidth,overflowX:getComputedStyle(node).overflowX});
+    const r=info.getBoundingClientRect();
+    return {outer:owner(bar),inner:owner(inner),button:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height},
+      appScrollLeft:app.scrollLeft,appScrollTop:app.scrollTop,scrollX,scrollY,rootWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth};
+  },infoSelector);
+  // Fixture initialization is recorded separately and is never native evidence.
+  await evaluate(cdp,selectors=>{for(const selector of Object.values(selectors))document.querySelector(selector).scrollLeft=0;},selectors);
+  await settled(cdp);
+  const fixtureInitialization=await read(),gestures=[];
+  assert.equal(fixtureInitialization.outer.scrollLeft,0);assert.equal(fixtureInitialization.inner.scrollLeft,0);
+  async function move(owner,direction,label,maxDistance=160){
+    const before=await read(),state=await evaluate(cdp,readNativeHorizontalScrollOwner,selectors[owner]);
+    const point=planNativeHorizontalScrollGesture(state,direction,{maxDistance,inset:16});
+    await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:point.x,y:point.y,id:1}]});
+    for(let step=1;step<=6;step++){
+      await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:point.x+(point.endX-point.x)*step/6,y:point.y,id:1}]});await delay(16);
+    }
+    await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await settled(cdp);
+    let previous=null,stable=0;
+    await until(async()=>{const value=await read();const left=value[owner].scrollLeft;stable=previous!==null&&Math.abs(left-previous)<.1?stable+1:0;previous=left;return stable>=3;},'native toolbar pan end',5000);
+    const after=await read(),other=owner==='outer'?'inner':'outer';
+    assert.ok(after[owner].scrollWidth>after[owner].clientWidth&&direction*(after[owner].scrollLeft-before[owner].scrollLeft)>0,'Native touch must scroll the overflowing '+owner+' toolbar owner');
+    assert.equal(after[other].scrollLeft,before[other].scrollLeft,'Native '+owner+' touch must not move the '+other+' scroll owner');
+    assert.equal(after.appScrollLeft,0,'Touch must not scroll the clipped app shell');assert.equal(after.appScrollTop,before.appScrollTop,'Touch must not scroll the app vertically');
+    assert.equal(after.scrollX,before.scrollX,'Touch must not move the document horizontally');assert.equal(after.scrollY,before.scrollY,'Touch must not move the document vertically');
+    assert.equal(after.outer.height,fixtureInitialization.outer.height,'Touch must retain one toolbar row');
+    assert.equal(after.inner.height,fixtureInitialization.inner.height,'Touch must retain the instrument row height');
+    assert.ok(after.rootWidth<=after.viewportWidth+1,'Touch must not cause document overflow');
+    gestures.push({kind:'native-touch',label,owner,point,before,after});return after;
+  }
+  const exposeInner=async(direction,label)=>{
+    for(let attempt=0;attempt<18;attempt++){
+      const inner=await evaluate(cdp,readNativeHorizontalScrollOwner,selectors.inner);
+      assert.ok(inner.maximum>0,'Native instrument controls must retain their horizontal scroll owner');
+      try{planNativeHorizontalScrollGesture(inner,direction,{maxDistance:160,inset:16});return;}
+      catch(error){if(!/not visible|No exposed/.test(error.message))throw error;}
+      const outer=await evaluate(cdp,readNativeHorizontalScrollOwner,selectors.outer);
+      const difference=(inner.box.left+inner.box.right-outer.clip.left-outer.clip.right)/2;
+      await move('outer',difference<0?-1:1,label,Math.max(44,Math.min(160,Math.abs(difference))));
+    }
+    throw new Error('Native outer scrolling never exposed the instrument scroll owner');
+  };
+  await move('outer',1,'outer-owner-proof');
+  await exposeInner(1,'expose-inner-owner');
+  await move('inner',1,'inner-owner-proof');
+  let target;
+  const complete=value=>value.painted&&!value.disabled&&value.topmost&&value.box.left>=value.clip.left-1&&value.box.right<=value.clip.right+1&&value.box.top>=value.clip.top-1&&value.box.bottom<=value.clip.bottom+1;
+  for(let attempt=0;attempt<18;attempt++){
+    target=await evaluate(cdp,readNativeInteractiveTarget,infoSelector);
+    if(complete(target))break;
+    assert.ok(target.painted&&!target.disabled&&target.box.width>0&&target.box.height>0,'Native toolbar info action is hidden or disabled');
+    const state=await read(),button=state.button;
+    // Select the owner against its real client box first. An inner owner that
+    // already contains the target cannot repair clipping caused by its parent.
+    const owner=button.left<state.inner.left-1||button.right>state.inner.right+1?'inner':'outer';
+    const bounds=state[owner],direction=button.left<bounds.left?-1:1;
+    const distance=Math.max(44,Math.min(160,direction<0?bounds.left-button.left:button.right-bounds.right));
+    if(owner==='inner')await exposeInner(direction,'expose-info-owner');
+    await move(owner,direction,'reveal-info',distance);
+  }
+  target=await evaluate(cdp,readNativeInteractiveTarget,infoSelector);
+  assert.ok(complete(target),'Native toolbar scrolling never exposed its info action: '+JSON.stringify(target));
+  const final=await read(),toolbarAccess={button:final.button,bar:final.outer,instrument:final.inner,target,rootWidth:final.rootWidth,viewportWidth:final.viewportWidth};
+  assert.ok(toolbarAccess.button.width>=44&&toolbarAccess.button.height>=44,'Mobile info needs a real 44px target');
+  for(const owner of [toolbarAccess.bar,toolbarAccess.instrument]){
+    assert.equal(owner.overflowX,'auto','Mobile toolbar owners retain their horizontal scroll');
+    assert.ok(toolbarAccess.button.left>=owner.left-1&&toolbarAccess.button.right<=owner.right+1,'Revealed info target remains clipped by a toolbar owner');
+  }
+  assert.ok(toolbarAccess.rootWidth<=toolbarAccess.viewportWidth+1,'Toolbar scroll leaked to the document');
+  // The measured native gestures exposed this button; do not use scrollIntoView
+  // or a script click to make the toolbar-access assertion pass.
+  const point={x:target.x,y:target.y};
+  await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...point});
+  await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});
+  await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});await settled(cdp);
+  return {fixtureInitialization,gestures,toolbarAccess,final};
+}
+
 async function verifyInfoDataLinks(cdp,symbol){
   const eth=symbol==='ETHUSD',dialogId=eth?'eth-data-dialog':'equity-detail-dialog';
-  const gestureStart=await evaluate(cdp,()=>{
-    const bar=document.querySelector('.eth-topbar');bar.scrollLeft=0;
-    const r=bar.getBoundingClientRect();return {left:r.left+bar.clientLeft,right:r.left+bar.clientLeft+bar.clientWidth,y:r.top+r.height/2,height:r.height};
-  });
-  const startX=gestureStart.right-16,endX=Math.max(gestureStart.left+16,startX-160);
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:startX,y:gestureStart.y,id:1}]});
-  for(let step=1;step<=6;step++){
-    await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:startX+(endX-startX)*step/6,y:gestureStart.y,id:1}]});
-    await delay(16);
-  }
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await settled(cdp);
-  const gesture=await evaluate(cdp,()=>{
-    const bar=document.querySelector('.eth-topbar'),app=bar.closest('.eth-app');
-    return {scrollLeft:bar.scrollLeft,scrollWidth:bar.scrollWidth,clientWidth:bar.clientWidth,height:bar.getBoundingClientRect().height,appScrollLeft:app.scrollLeft,rootWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth};
-  });
-  assert.ok(gesture.scrollWidth>gesture.clientWidth&&gesture.scrollLeft>0,'Native touch must scroll the overflowing toolbar');
-  assert.equal(gesture.appScrollLeft,0,'Touch must not scroll the clipped app shell');
-  assert.equal(gesture.height,gestureStart.height,'Touch must retain one toolbar row');
-  assert.ok(gesture.rootWidth<=gesture.viewportWidth+1,'Touch must not cause document overflow');
-  await click(cdp,eth?'[data-eth-action="info"]':'[data-equity-action="info"]');
-  const toolbarAccess=await evaluate(cdp,eth=>{
-    const button=document.querySelector(eth?'[data-eth-action="info"]':'[data-equity-action="info"]'),bar=button.closest('.eth-topbar'),b=button.getBoundingClientRect(),r=bar.getBoundingClientRect();
-    return {button:{width:b.width,height:b.height,left:b.left,right:b.right},bar:{left:r.left,right:r.right,scrollLeft:bar.scrollLeft,scrollWidth:bar.scrollWidth,clientWidth:bar.clientWidth,overflowX:getComputedStyle(bar).overflowX},
-      rootWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth};
-  },eth);
-  assert.ok(toolbarAccess.button.width>=44&&toolbarAccess.button.height>=44,'Mobile info needs a real 44px target');
-  assert.equal(toolbarAccess.bar.overflowX,'auto','Mobile toolbar owns its horizontal scroll');
-  assert.ok(toolbarAccess.button.left>=toolbarAccess.bar.left-1&&toolbarAccess.button.right<=toolbarAccess.bar.right+1,'Revealed info target remains clipped');
-  assert.ok(toolbarAccess.rootWidth<=toolbarAccess.viewportWidth+1,'Toolbar scroll leaked to the document');
+  const {toolbarAccess,...gesture}=await verifyNativeInfoToolbarScroll(cdp,symbol);
   const state=await evaluate(cdp,async({symbol,dialogId})=>{
     const dialog=document.getElementById(dialogId);
     if(!dialog?.open)throw new Error('Data information did not open');

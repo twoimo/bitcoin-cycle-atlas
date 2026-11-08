@@ -465,6 +465,7 @@
     "scripts/issue-ethereum-prospective.mjs",
     "scripts/manage-ethereum-prospective-archive.mjs",
     "scripts/prepare-ethereum-base-rollover.mjs",
+    "scripts/native-heading-scroll-contract.mjs",
     "scripts/verify-eth-candidate-browser.mjs",
     "scripts/verify-forecast-replay-browser.mjs",
     "scripts/verify-workspace-browser.mjs",

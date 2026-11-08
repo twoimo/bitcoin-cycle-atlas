@@ -21,6 +21,7 @@ test('the isolated baseline copies only the declared verifier modules and links 
   assert.deepEqual(uiReviewHarnessFiles,[
     'scripts/verify-eth-candidate-browser.mjs','scripts/verify-ui-contract-browser.mjs',
     'scripts/browser-source-identity.mjs','scripts/btc-offline-refresh-policy.mjs',
+    'scripts/native-heading-scroll-contract.mjs',
   ]);
   assert.ok(uiReviewHarnessFiles.every(file=>file.startsWith('scripts/')&&file.endsWith('.mjs')),'application and market data cannot be copied into the baseline');
   const directory=await mkdtemp(resolve(tmpdir(),'atlas-ui-verifier-link-'));
@@ -32,10 +33,13 @@ test('the isolated baseline copies only the declared verifier modules and links 
     const runner=await readFile(resolve(directory,'scripts/verify-eth-candidate-browser.mjs'),'utf8');
     const declaration=runner.match(/import\s*\{[^}]+\}\s*from\s*(['"])\.\/btc-offline-refresh-policy\.mjs\1\s*;/)?.[0];
     assert.ok(declaration,'the actual native runner must declare its offline-policy imports');
+    const headingDeclaration=runner.match(/import\s*\{[^}]+\}\s*from\s*(['"])\.\/native-heading-scroll-contract\.mjs\1\s*;/)?.[0];
+    assert.ok(headingDeclaration,'the actual native runner must declare its scroll-owner imports');
     const shim=resolve(directory,'scripts/verifier-policy-link.mjs');
-    await writeFile(shim,declaration+'\nexport * from "./btc-offline-refresh-policy.mjs";\n');
+    await writeFile(shim,declaration+'\n'+headingDeclaration+'\nexport * from "./btc-offline-refresh-policy.mjs";\nexport * from "./native-heading-scroll-contract.mjs";\n');
     const linked=await import(pathToFileURL(shim).href);
     for(const name of ['ownsOfflineBtcPriceReadout','offlineBtcRefreshSurface','isExpectedOfflineBtcRefresh'])assert.equal(typeof linked[name],'function');
+    for(const name of ['readNativeHorizontalScrollOwner','planNativeHorizontalScrollGesture','planNativeHorizontalScrollWheel'])assert.equal(typeof linked[name],'function');
     assert.equal(linked.ownsOfflineBtcPriceReadout({page:'outlook',center:'housing'}),false);
     assert.equal(linked.ownsOfflineBtcPriceReadout({page:'outlook'}),true);
   }finally{await rm(directory,{recursive:true,force:true});}
