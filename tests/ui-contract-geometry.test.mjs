@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {parseHTML} from 'linkedom';
-import {readUiContractGeometry,readShellContract,uiContractBrowserCases} from '../scripts/verify-ui-contract-browser.mjs';
+import {mountUiReviewCase,readHostedUiReadiness,readUiContractGeometry,readShellContract,uiContractBrowserCases} from '../scripts/verify-ui-contract-browser.mjs';
 import {uiReviewBaseline} from '../scripts/verify-ui-cloudflare.mjs';
 
 const box=(x,y,width,height)=>({x,y,left:x,top:y,right:x+width,bottom:y+height,width,height});
@@ -67,4 +67,44 @@ test('the UI native-entry inventory explicitly covers both equity symbols on bot
   ]);
   assert.equal(new Set(cases.map(item=>item.page)).size,4,'each route owns a separate receipt and screenshot');
   assert.equal(uiReviewBaseline,'1635f87a10962b7ff5eecd094b6e0625e09771f4','the before UI must match the supplied deployed source');
+});
+
+test('fixture requests and exact canonical expectations share the declared Pages mount without changing query state',()=>{
+  const native=uiContractBrowserCases.find(item=>item.page==='ui-entry-mstr-charts');
+  const mounted=mountUiReviewCase(native,'/bitcoin-cycle-atlas/');
+  assert.equal(mounted.route,'/bitcoin-cycle-atlas/market-lab/charts/?symbol=MSTR');
+  assert.equal(mounted.canonicalRoute,'/bitcoin-cycle-atlas/?symbol=MSTR');
+  assert.equal(mounted.publicRoute,native.route);assert.equal(mounted.publicCanonicalRoute,native.canonicalRoute);
+  assert.equal(native.route,'/market-lab/charts/?symbol=MSTR','mounting must not mutate the public four-route inventory');
+  for(const spec of uiContractBrowserCases){
+    const underRoot=mountUiReviewCase(spec,'/'),underPages=mountUiReviewCase(spec,'/bitcoin-cycle-atlas/');
+    assert.equal(underRoot.route,spec.route);
+    assert.equal(underPages.route,'/bitcoin-cycle-atlas'+spec.route);
+    assert.equal(underPages.route.slice(underPages.route.indexOf('?')),spec.route.slice(spec.route.indexOf('?')));
+    if(spec.canonicalRoute)assert.equal(underRoot.canonicalRoute,spec.canonicalRoute);
+  }
+  const settings={route:'/?symbol=BMNR&scale=linear&indicator-hide=volume%2Crsi&from=2026-01-01#chart'};
+  assert.equal(mountUiReviewCase(settings,'/bitcoin-cycle-atlas/').route,'/bitcoin-cycle-atlas'+settings.route);
+  for(const projectRoot of ['https://example.test/','//example.test/','/../','/bitcoin-cycle-atlas'])assert.throws(()=>mountUiReviewCase(native,projectRoot));
+  for(const route of ['//example.test/','/../?symbol=MSTR','/market-lab/./charts/'])assert.throws(()=>mountUiReviewCase({route},'/bitcoin-cycle-atlas/'));
+});
+
+test('hosted fixtures wait for the native boot and current painted iframe before measuring refresh failure disclosure',()=>{
+  const {document}=parseHTML('<html data-boot="loading"><body data-chart-controls="ready"><div class="atlas-plot" data-chart-symbol="HOUSING-SEOUL"><iframe class="atlas-center-frame" data-center-loaded="true" data-center-status="ready"></iframe></div></body></html>');
+  const frame=document.querySelector('iframe'),child={readyState:'complete'};let visibility='visible';
+  Object.defineProperty(frame,'contentDocument',{value:child});frame.getBoundingClientRect=()=>box(50,50,600,500);
+  const context=vm.createContext({document,getComputedStyle:()=>({display:'block',visibility})});
+  const read=()=>vm.runInContext('('+readHostedUiReadiness.toString()+')('+JSON.stringify('HOUSING-SEOUL')+')',context);
+  assert.equal(read().ready,false,'a child ack cannot make the boot-hidden parent notice visible');
+  document.documentElement.dataset.boot='ready';assert.equal(read().ready,true);
+  document.documentElement.dataset.boot='error';assert.equal(read().ready,false);
+  document.documentElement.dataset.boot='ready';visibility='hidden';assert.equal(read().ready,false);
+  visibility='visible';child.readyState='loading';assert.equal(read().ready,false);
+  child.readyState='complete';frame.dataset.centerStatus='loading';assert.equal(read().ready,false);
+  frame.dataset.centerStatus='ready';document.querySelector('.atlas-plot').dataset.chartSymbol='TQQQ';assert.equal(read().ready,false);
+  document.querySelector('.atlas-plot').dataset.chartSymbol='HOUSING-SEOUL';frame.dataset.centerLoaded='false';assert.equal(read().ready,false);
+  frame.dataset.centerLoaded='true';assert.equal(read().ready,true);
+  const stale=document.createElement('iframe');stale.className='atlas-center-frame';document.querySelector('.atlas-plot').append(stale);
+  assert.equal(read().ready,false,'two visible frame owners must not qualify for the shell screenshot');
+  stale.hidden=true;assert.equal(read().ready,true);
 });

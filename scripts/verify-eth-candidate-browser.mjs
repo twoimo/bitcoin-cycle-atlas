@@ -9,7 +9,7 @@ import {consolidatedPagesBase,verifyConsolidatedWorkspaceSurface} from './verify
 import {createEthBrowserCaseSpecs,ethBrowserCaseScopes,selectEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
 import {readBrowserSourceIdentity} from './browser-source-identity.mjs';
 import {classifyProjectBrowserResource,verifyProjectGeneratedImages} from './browser-project-resource-policy.mjs';
-import {uiContractBrowserCases,verifyUiContractSurface,verifyUiShellSurface} from './verify-ui-contract-browser.mjs';
+import {mountUiReviewCase,uiContractBrowserCases,verifyUiContractSurface,verifyUiShellSurface} from './verify-ui-contract-browser.mjs';
 import {verifyNativeChartWorkbench} from './verify-native-chart-workbench-browser.mjs';
 import {verifyChartZoomBrowser} from './verify-chart-zoom-browser.mjs';
 import {emitBrowserEvidenceChunks} from './browser-evidence-transport.mjs';
@@ -849,7 +849,7 @@ async function main(){
   await writeFile(resolve(out,'zero-fixture.json'),fixtureBytes);
   report.syntheticFixture={file:'zero-fixture.json',bytes:fixtureBytes.length,sha256:hash(fixtureBytes),recordId:syntheticZeroRecord.id,snapshotId:snapshot.id};
   const caseSpecs=createEthBrowserCaseSpecs();
-  const selectedCases=uiReview?uiContractBrowserCases:selectEthBrowserCaseSpecs(caseScope);
+  const selectedCases=uiReview?uiContractBrowserCases.map(spec=>mountUiReviewCase(spec,consolidatedPagesBase)):selectEthBrowserCaseSpecs(caseScope);
   assert.ok(selectedCases.length,'The selected browser scope must execute at least one declared case');
   report.declaredCaseCount=caseSpecs.length;report.expectedCaseCount=selectedCases.length;
   for(const spec of selectedCases){

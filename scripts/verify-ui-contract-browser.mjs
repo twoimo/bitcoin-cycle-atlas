@@ -15,6 +15,21 @@ const nativeEntryCases=['MSTR','BMNR'].flatMap(symbol=>['/','/market-lab/charts/
   route:path+'?symbol='+symbol,canonicalRoute:'/?symbol='+symbol,
 })));
 export const uiContractBrowserCases = process.env.ATLAS_UI_REVIEW_PHASE==='before'?viewportCases:[...viewportCases,...instrumentCases,...nativeEntryCases];
+
+// The saved Pages fixtures declare their hosting root. Request that same mount
+// and keep exact expected URLs, rather than accepting a route rewrite as clean.
+export function mountUiReviewCase(spec,projectRoot){
+  assert.match(projectRoot,/^\/(?:[A-Za-z0-9._~-]+\/)*$/);
+  assert.ok(!projectRoot.includes('/../')&&!projectRoot.includes('/./'));
+  const mount=route=>{
+    assert.equal(typeof route,'string');
+    assert.ok(route.startsWith('/')&&!route.startsWith('//')&&!/[\\\r\n]/.test(route));
+    assert.ok(!route.split(/[?#]/)[0].split('/').some(part=>part==='.'||part==='..'));
+    return projectRoot+route.slice(1);
+  };
+  return {...spec,publicRoute:spec.route,route:mount(spec.route),projectRoot,
+    ...(spec.canonicalRoute?{publicCanonicalRoute:spec.canonicalRoute,canonicalRoute:mount(spec.canonicalRoute)}:{})};
+}
 const shellKeys={
   top:['symbol','interval','chart-type','indicators','instrument','history','workspace','chart-menu','export','settings'],
   bottom:['range','date','events','readout','scale','auto-scale','fit','status'],
@@ -93,11 +108,25 @@ async function verifyNativeEntry(api){
   assert.deepEqual(final.frames,[],'Native entry must not instantiate or retain an ETF iframe');
 }
 
+export function readHostedUiReadiness(symbol){
+  const frames=[...document.querySelectorAll('.atlas-center-frame:not([hidden])')],frame=frames[0];
+  const rect=frame?.getBoundingClientRect(),style=frame&&getComputedStyle(frame);
+  const state={boot:document.documentElement.dataset.boot,controls:document.body.dataset.chartControls,
+    symbol:document.querySelector('.atlas-plot')?.dataset.chartSymbol,frameCount:frames.length,
+    frameLoaded:frame?.dataset.centerLoaded,frameStatus:frame?.dataset.centerStatus,documentReady:frame?.contentDocument?.readyState,
+    framePainted:Boolean(frame&&rect.width>0&&rect.height>0&&style.display!=='none'&&style.visibility!=='hidden')};
+  return {...state,ready:state.boot==='ready'&&state.controls==='ready'&&state.symbol===symbol&&state.frameCount===1&&
+    state.frameLoaded==='true'&&state.frameStatus==='ready'&&state.documentReady==='complete'&&state.framePainted};
+}
+
 export async function verifyUiShellSurface(api){
   const {cdp,receipt,evaluate,until,settled,screenshot,verifyOfflineRefresh}=api;
   if(receipt.uiNativeEntry)await verifyNativeEntry(api);
   else if(receipt.surface==='btc'){
-    await until(()=>evaluate(cdp,()=>document.querySelector('.atlas-center-frame:not([hidden])')?.dataset.centerLoaded==='true'&&document.body.dataset.chartControls==='ready'),'loaded and acknowledged instrument workspace');
+    // The child can acknowledge before the native parent has completed boot.
+    // Its BTC status is deliberately hidden by the boot stylesheet until then.
+    receipt.hostedReadiness=await until(async()=>{const value=await evaluate(cdp,readHostedUiReadiness,receipt.symbol);return value.ready?value:null;},'painted native shell and acknowledged current instrument workspace');
+    await settled(cdp);
     await verifyOfflineRefresh();
   }else{
     await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('#eth-chart path,#equity-chart path'))),'native instrument chart');
@@ -178,7 +207,7 @@ export async function verifyUiContractSurface(api){
     const initial=await state('initial');await screenshot(cdp,prefix+'-chart.png',receipt);
   if(phase==='after'){
     await verifyShellSnapshot(api);
-    checkLegend(initial);assert.equal(initial.url,'/','First render must retain the clean URL');assert.equal(initial.undoDisabled,true,'First render must not create an undo record');
+    checkLegend(initial);assert.equal(initial.url,receipt.route,'First render must retain the clean URL');assert.equal(initial.undoDisabled,true,'First render must not create an undo record');
     const trigger=initial.legend.mode==='chip'?'.chart-legend-open':'.chart-legend-more:not([hidden])';
     if(await evaluate(cdp,s=>Boolean(document.querySelector(s)),trigger)){
       await click(cdp,trigger);await until(()=>evaluate(cdp,()=>document.querySelector('#chart-legend-dialog')?.open),'legend dialog');
@@ -230,8 +259,12 @@ export async function verifyUiContractSurface(api){
       const secondary=await evaluate(cdp,s=>[...document.querySelector(s).querySelectorAll('[data-cr]')].map(node=>node.dataset.cr),control('transport-panel'));
       for(const name of ['speed','update-interval','live'])assert.ok(secondary.includes(name),'Overflow loses '+name);
       await tabTo(control('speed'));const priorSpeed=await evaluate(cdp,s=>document.querySelector(s).value,control('speed'));
-      await key(' ','Space',32);await key('Home','Home',36);await key('ArrowDown','ArrowDown',40);await key('Enter','Enter',13);
+      // Change the focused select with native arrows without opening Chromium's
+      // separate popup, whose Escape belongs to the picker instead of the menu.
+      await key('Home','Home',36);await key('ArrowDown','ArrowDown',40);
       const keyboardSpeed=await evaluate(cdp,s=>document.querySelector(s).value,control('speed'));assert.notEqual(keyboardSpeed,priorSpeed,'Keyboard cannot change replay speed');
+      await tabTo(control('transport-close'));
+      assert.equal(await evaluate(cdp,s=>document.activeElement===document.querySelector(s),control('transport-close')),true,'Keyboard cannot leave the speed select');
       await key('Escape','Escape',27);assert.equal(await evaluate(cdp,s=>document.querySelector(s).hidden,control('transport-panel')),true);
       assert.equal(await evaluate(cdp,s=>document.activeElement===document.querySelector(s),control('transport-more')),true,'Overflow loses keyboard focus');
       await pointer(control('transport-more'),receipt.touch);await pointer(control('transport-close'),receipt.touch);
