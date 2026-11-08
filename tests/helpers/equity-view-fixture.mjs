@@ -115,9 +115,10 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
   const source = await readFile(new URL('../../dist/equity-view.js', import.meta.url), 'utf8');
   const transformed = source.replace(/^import\s*\{([^}]+)\}\s*from\s*['"][^'"]+['"];?\s*$/gm, (_, names) => `const {${names}} = __deps;`)
     .replace('export async function initEquityView', 'async function initEquityView');
+  const location = { search: `?symbol=${symbol}${query}`, pathname }, urlWrites = [];
   const context = vm.createContext({
     __deps: deps, document, window, URLSearchParams, AbortController, AbortSignal, Date, Intl,
-    location: { search: `?symbol=${symbol}${query}`, pathname }, history: { replaceState() {} },
+    location, history: { replaceState(_state, _title, path) { urlWrites.push(String(path)); const next = new URL(path, 'https://atlas.test'); location.pathname = next.pathname; location.search = next.search; } },
     console: { error: (...args) => errors.push(args) },
     CustomEvent: class { constructor(type, options = {}) { this.type = type; Object.assign(this, options); } },
     ResizeObserver: class { observe() {} disconnect() {} },
@@ -144,7 +145,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     app.dispatchEvent({ type: 'click', target });
   };
   return {
-    requests, frames, draws, calculations, errors, events, articles, initialization, document, app,
+    requests, frames, draws, calculations, errors, events, articles, initialization, document, app, location, urlWrites,
     microtasks, frame, settle,
     reply: (index, value) => requests[index].resolve({ ok: true, json: async () => value }),
     reject: (index, message = 'Archive failed') => requests[index].reject(new Error(message)),

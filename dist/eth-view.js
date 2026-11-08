@@ -344,6 +344,8 @@ export async function initEthView() {
     suspended=false;
     if(!currentSeries())void load();else schedule();
   });
-  persist();await load();
+  // Opening a chart must retain the supplied URL. Explicit controls still
+  // serialize their state through persist(), after the user changes the view.
+  await load();
   await new Promise(resolve=>requestAnimationFrame(()=>{render();resolve();}));
 }

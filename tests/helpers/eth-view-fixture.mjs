@@ -121,9 +121,10 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
   const source = await readFile(process.env.ETH_VIEW_SOURCE || new URL('../../dist/eth-view.js', import.meta.url), 'utf8');
   const transformed = source.replace(/^import\s*\{([^}]+)\}\s*from\s*['"][^'"]+['"];?\s*$/gm, (_, names) => `const {${names}} = __deps;`)
     .replace('export async function initEthView', 'async function initEthView');
+  const location = { search: `?symbol=ETHUSD${query}`, pathname }, urlWrites = [];
   const context = vm.createContext({
     __deps: deps, document, window, URLSearchParams, AbortController, AbortSignal, Date, Intl,
-    location: { search: `?symbol=ETHUSD${query}`, pathname }, history: { replaceState() {} },
+    location, history: { replaceState(_state, _title, path) { urlWrites.push(String(path)); const next = new URL(path, 'https://atlas.test'); location.pathname = next.pathname; location.search = next.search; } },
     CustomEvent: class { constructor(type, options = {}) { this.type = type; Object.assign(this, options); } },
     ResizeObserver: class { constructor(callback) { resize = callback; } observe() {} disconnect() {} },
     requestAnimationFrame: callback => { frames.set(++frameId, callback); return frameId; },
@@ -150,7 +151,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     app.dispatchEvent({ type: 'click', target });
   };
   return {
-    requests, liveRequests, frames, timers, draws, events: emitted, initialization, document, app,
+    requests, liveRequests, frames, timers, draws, events: emitted, initialization, document, app, location, urlWrites,
     microtasks, frame, settle,
     reply: (index, payload) => requests[index].resolve({ ok: true, json: async () => payload }),
     reject: (index, message = 'Archive failed') => requests[index].reject(new Error(message)),
