@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {buildLongHorizonForecast,LONG_HORIZON_SCENARIOS} from '../dist/long-horizon-forecast.js';
 import {buildCycleMilestones} from '../dist/cycle-milestones.js';
-import {buildCyclePeriodComparison,calculateCyclePeriodSensitivity,periodDistribution,cycleComparisonFields,cyclePeriodComparisonMarkup,macroClockMarkup,macroClockInspection} from '../dist/cycle-period-comparison.js';
+import {buildCyclePeriodComparison,calculateCyclePeriodSensitivity,periodDistribution,cycleComparisonSummary,cycleSensitivityDefinition,cycleComparisonFields,cyclePeriodComparisonMarkup,macroClockMarkup,macroClockInspection} from '../dist/cycle-period-comparison.js';
 import {cycleIntervalsOverlayMarkup} from '../dist/cycle-interval-overlay.js';
 import {milestoneMarkersMarkup} from '../dist/cycle-milestones-view.js';
 import {drawAtlasPriceChart} from '../dist/atlas-price-chart.js';
@@ -52,6 +52,17 @@ test('seven reproducible settings retain missing landmarks rather than fabricati
   for(const row of selected.intervals){const point=original.find(p=>p.relation===row.relation);assert.equal(row.startDate,point.startDate);assert.equal(row.endDate,point.endDate);assert.equal(row.days,point.days);}
   assert.ok(Object.values(analysis.byInterval).some(c=>c.sensitivity.missing.length>0));
   assert.match(cycleComparisonFields(by('bottom-bottom')).at(-1).value,/확률구간 아님/);
+  for(const comparison of Object.values(analysis.byInterval)){
+    const {samples,expectedCount,missing}=comparison.sensitivity;
+    assert.match(cycleComparisonSummary(comparison),new RegExp(`설정 ${samples.length}/${expectedCount}`));
+    const definition=cycleSensitivityDefinition(comparison);
+    assert.ok(definition.includes(`기준점이 성립한 설정 ${samples.length}개`));
+    assert.ok(definition.includes(`미성립 ${missing.length}개`));
+    assert.match(definition,/경제 가정 5개.*보조 시드 2개/);
+    assert.match(definition,/적중률·신뢰도·독립 표본 수가 아닙니다/);
+    assert.equal(cycleComparisonFields(comparison).find(row=>row.label==='설정 수의 정의').value,definition);
+  }
+
 });
 test('cutoff/scenario mismatches and corrupt worker payloads fail instead of displaying stale ranges',()=>{
   assert.throws(()=>buildCyclePeriodComparison({milestones,forecast,sensitivity:{...sensitivity,asOf:'1999-01-01'}}),/cutoff/);
