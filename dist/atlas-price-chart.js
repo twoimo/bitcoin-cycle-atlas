@@ -33,6 +33,35 @@ const COLORS={warmup:'#536173','price-discovery':'#dfb567','bottom-formation':'#
 const plainState={warmup:'초기 자료', 'price-discovery':'최고가를 새로 쓰는 중','bottom-formation':'낮은 가격대에서 회복 중',range:'좁은 범위에서 횡보',rebound:'하락 뒤 반등',pullback:'상승 중 되돌림',advance:'상승 흐름',correction:'하락 흐름',transition:'방향이 섞인 구간'};
 const timingReasons={'causal-daily-clock-applied':'관측 보정을 근거리 시계에 반영','near-phase-unavailable':'적용할 근거리 기준 시계 없음','adjustment-would-expire-required-anchor':'보정하면 필수 기준일이 이미 지남','insufficient-causal-timing-evidence':'완료된 관측 근거 부족','calibration-reference-high-differs':'보정과 근거리 모형의 기준 고점이 다름','disabled-for-comparison':'비교 조건에서 보정 끔','legacy-calendar-prior':'기존 달력 기준 사용'};
 const milestoneTypeIds=new Set(MILESTONE_TYPES.map(type=>type.id));
+
+// A new dataset can be computing while the last complete chart remains visible.
+// Reflow that exact draw input when its allocation changes; never combine its
+// model with the pending dataset or publish another selection during repaint.
+export function createChartRenderSnapshot(paint,options,onReflow=()=>{}){
+  let repainting=false,controller;
+  const {onHover,onInspect}=options;
+  const input={...options,onHover:(...args)=>{if(!repainting)onHover?.(...args);},onInspect:(...args)=>{if(!repainting)onInspect?.(...args);}};
+  controller=paint(input);
+  return {get controller(){return controller;},reflow(){
+    const svg=input.svg,width=Math.round(svg.clientWidth),height=Math.round(svg.clientHeight);
+    if(!(width>0&&height>0)||svg.hidden||svg.inert||svg.closest?.('[hidden]'))return false;
+    const style=svg.ownerDocument?.defaultView?.getComputedStyle?.(svg);
+    if(style?.display==='none'||style?.visibility==='hidden')return false;
+    const view=svg.getAttribute('viewBox')?.trim().split(/\s+/).map(Number);
+    if(view?.length===4&&view[2]===width&&view[3]===height)return false;
+    const focused=svg.ownerDocument?.activeElement;
+    const focus=focused!==svg&&focused?.closest?.('svg')===svg?['id','data-cycle-marker','data-cycle-interval','data-research-annotation','data-history-event','data-forecast-evidence','data-cycle-clock','data-next-turn'].map(name=>[name,focused.getAttribute(name)]).find(([,value])=>value):null;
+    const selected=controller?.getDate?.(),selection=selected==null?{}:{[Object.hasOwn(input,'selectedTime')?'selectedTime':'selectedDate']:selected};
+    repainting=true;
+    try{
+      controller=paint({...input,...selection});onReflow(svg);
+      if(focus){const [name,value]=focus,target=[...svg.querySelectorAll(`[${name}]`)].find(node=>node.getAttribute(name)===value);(target||svg).focus({preventScroll:true});}
+      return true;
+    }
+    finally{repainting=false;}
+  }};
+}
+
 function sample(rows,frequency,retainedDates){return frequency==='daily'?rows:rows.filter((p,i)=>new Date(`${p.date}T00:00:00Z`).getUTCDay()===0||i===0||i===rows.length-1||retainedDates?.has(p.date));}
 
 // Split the daily source before weekly/pixel sampling. Otherwise a missing
