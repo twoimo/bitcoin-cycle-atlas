@@ -9,6 +9,7 @@ import {consolidatedPagesBase,verifyConsolidatedWorkspaceSurface} from './verify
 import {createEthBrowserCaseSpecs,ethBrowserCaseScopes,selectEthBrowserCaseSpecs} from './eth-browser-case-specs.mjs';
 import {readBrowserSourceIdentity} from './browser-source-identity.mjs';
 import {classifyProjectBrowserResource,verifyProjectGeneratedImages} from './browser-project-resource-policy.mjs';
+import {uiContractBrowserCases,verifyUiContractSurface} from './verify-ui-contract-browser.mjs';
 import {verifyNativeChartWorkbench} from './verify-native-chart-workbench-browser.mjs';
 import {verifyChartZoomBrowser} from './verify-chart-zoom-browser.mjs';
 import {emitBrowserEvidenceChunks} from './browser-evidence-transport.mjs';
@@ -39,8 +40,9 @@ const expectedAssetGroups=comparisonAssets.reduce((groups,asset,index)=>{
 const height=900;
 const imageLogMode=process.env.ETH_BROWSER_IMAGE_LOG_MODE??'representative';
 if(!['representative','failures-only'].includes(imageLogMode))throw new Error('Unknown screenshot log transport mode');
-const caseScope=process.env.ATLAS_BROWSER_CASE_SCOPE??'all';
-if(!ethBrowserCaseScopes.includes(caseScope))throw new Error('Unknown browser case scope');
+const uiReview=process.env.ATLAS_UI_REVIEW==='wp4-wp7';
+const caseScope=uiReview?'wp4-wp7':process.env.ATLAS_BROWSER_CASE_SCOPE??'all';
+if(!uiReview&&!ethBrowserCaseScopes.includes(caseScope))throw new Error('Unknown browser case scope');
 const lane=process.env.ATLAS_BROWSER_LANE??'',suiteRunId=process.env.ATLAS_BROWSER_SUITE_RUN_ID??'';
 if(lane){assert.ok(['non-chart-replay','chart-replay'].includes(lane),'Unknown browser lane');assert.equal(caseScope,lane);assert.match(suiteRunId,/^[a-f0-9-]{36}$/);}
 else assert.equal(suiteRunId,'','A suite run requires its explicit lane');
@@ -847,7 +849,7 @@ async function main(){
   await writeFile(resolve(out,'zero-fixture.json'),fixtureBytes);
   report.syntheticFixture={file:'zero-fixture.json',bytes:fixtureBytes.length,sha256:hash(fixtureBytes),recordId:syntheticZeroRecord.id,snapshotId:snapshot.id};
   const caseSpecs=createEthBrowserCaseSpecs();
-  const selectedCases=selectEthBrowserCaseSpecs(caseScope);
+  const selectedCases=uiReview?uiContractBrowserCases:selectEthBrowserCaseSpecs(caseScope);
   assert.ok(selectedCases.length,'The selected browser scope must execute at least one declared case');
   report.declaredCaseCount=caseSpecs.length;report.expectedCaseCount=selectedCases.length;
   for(const spec of selectedCases){
@@ -876,7 +878,7 @@ async function main(){
       // gets its own context so an earlier viewport's explicit save cannot
       // pre-populate the next scenario's Continue / Start new decision.
       // Existing shared-workspace/model cases retain their context and guards.
-      if(spec.chartReplay)({browserContextId}=await browser.send('Target.createBrowserContext',{}));
+      if(spec.chartReplay||spec.uiContract)({browserContextId}=await browser.send('Target.createBrowserContext',{}));
       ({targetId}=await browser.send('Target.createTarget',{url:'about:blank',...(browserContextId?{browserContextId}:{})}));
       const target=await until(async()=>{const list=await (await fetch(debugBase+'/json/list')).json();return list.find(t=>t.id===targetId&&t.webSocketDebuggerUrl);},'page CDP target');
       cdp=await Cdp.connect(target.webSocketDebuggerUrl);
@@ -989,7 +991,8 @@ async function main(){
       await cdp.send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'},{name:'prefers-color-scheme',value:'dark'}]});
       receipt.url=spec.route?base+spec.route:base+(page==='zero-fixture'?'/__synthetic-zero__/?symbol=BMNR&granularity=daily&type=line':page==='data'?'/?indicator-hide=volume&indicator-list=open&indicator-settings=%7B%7D&page=data':page==='eth'?'/?symbol=ETHUSD&granularity=daily&type=line':'/?symbol='+page.toUpperCase()+'&granularity=daily&type=line');
       await cdp.send('Page.navigate',{url:receipt.url});
-      if(spec.consolidated)await verifyConsolidatedWorkspaceSurface({cdp,receipt,evaluate,until,settled,screenshot,verifyOfflineRefresh});
+      if(spec.uiContract)await verifyUiContractSurface({cdp,receipt,evaluate,until,settled,click,screenshot,verifyOfflineRefresh});
+      else if(spec.consolidated)await verifyConsolidatedWorkspaceSurface({cdp,receipt,evaluate,until,settled,screenshot,verifyOfflineRefresh});
       else if(spec.chartReplay)await verifyChartReplaySurface({cdp,browser,browserContextId,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh,onFastCadenceMilestone});
       else if(spec.replay)await verifyForecastReplaySurface({cdp,browser,receipt,root,outputDirectory:out,evaluate,until,settled,click,bounds,visibleBounds,screenshot,verifyOfflineRefresh});
       else if(spec.surface){
@@ -1044,6 +1047,6 @@ finally{
       report:{file:artifactName('report.json'),bytes:bytes.length,sha256:hash(bytes)}}));
   }else{
   emitBrowserEvidenceChunks('ETH_BROWSER_REPORT_CHUNK',await readFile(resolve(out,'report.json')),{name:'report.json'});
-  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,caseScope:report.caseScope,declaredCaseCount:report.declaredCaseCount,expectedCaseCount:report.expectedCaseCount,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,sourceIntegrity:report.sourceIntegrity,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({caseSpec:c.caseSpec,page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,consolidated:c.consolidated,replay:c.replay,chartReplay:c.chartReplay,infoDataLinks:c.infoDataLinks,nativeWorkbench:c.nativeWorkbench,chartZoom:c.chartZoom,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:relative(root,resolve(out,'report.json'))}));
+  console.log('ETH_BROWSER_RECEIPT '+JSON.stringify({status:report.status,imageLogMode:report.imageLogMode,caseScope:report.caseScope,declaredCaseCount:report.declaredCaseCount,expectedCaseCount:report.expectedCaseCount,sourceCommit:report.sourceCommit,startedAt:report.startedAt,finishedAt:report.finishedAt,browserVersion:report.browserVersion,expectedObservedBtc:report.expectedObservedBtc,sourceHashes:report.sourceHashes,sourceIntegrity:report.sourceIntegrity,syntheticFixture:report.syntheticFixture,cases:report.cases.map(c=>({caseSpec:c.caseSpec,page:c.page,width:c.width,height:c.height,status:c.status,layout:c.layout,geometry:c.geometry,resize:c.resize,sticky:c.sticky,clockLabels:c.clockLabels,journal:c.journal,synthetic:c.synthetic,scope:c.scope,workspace:c.workspace,uiContract:c.uiContract,consolidated:c.consolidated,replay:c.replay,chartReplay:c.chartReplay,infoDataLinks:c.infoDataLinks,nativeWorkbench:c.nativeWorkbench,chartZoom:c.chartZoom,modelSwitch:c.modelSwitch,chart:c.chart?{...c.chart,observed:undefined,future:undefined,baseline:undefined}:null,screenshots:c.screenshots,runtimeErrors:c.runtimeErrors,resourceErrors:c.resourceErrors,expectedOfflineRefresh:c.expectedOfflineRefresh,unexpectedResourceErrors:c.unexpectedResourceErrors,lastRefreshObservation:c.lastRefreshObservation,error:c.error})),failures:report.failures,error:report.error,report:relative(root,resolve(out,'report.json'))}));
   }
 }
