@@ -19,7 +19,7 @@ function isDay(value) {
 }
 
 test('historical catalog stays sourced, unique, chronological and within its review cutoff', () => {
-  assert.equal(BITCOIN_EVENTS.length, 48);
+  assert.equal(BITCOIN_EVENTS.length, 50);
   assert.equal(BITCOIN_EVENTS_REVIEW_DATE, '2026-11-08');
   assert.equal(new Set(BITCOIN_EVENTS.map(event => event.id)).size, BITCOIN_EVENTS.length);
   let previous = '';
@@ -126,6 +126,32 @@ test('bank partnership and collateral reporting preserve announcement and plan s
     assert.ok(byId(id).sources.every(source => source.accessedAt === '2026-11-08'));
   }
   assert.equal(byId('genesis-2009').sources[0].accessedAt, '2026-10-22', 'new research must not imply old sources were all re-read');
+});
+
+test('IBIT asset milestone preserves reporting-day uncertainty and AUM definition', () => {
+  const event = byId('ibit-70-billion-record-2025');
+  assert.equal(event.date, '2025-06-09');
+  assert.equal(event.importance, 2);
+  assert.match(event.description, /341거래일.*700억 달러/);
+  assert.match(event.description, /GLD.*1,691거래일/);
+  assert.match(event.limitations.join(' '), /6월 6일/);
+  assert.match(event.limitations.join(' '), /누적 순유입액이 아니다/);
+  assert.ok(event.sources.some(source => source.type === 'primary' && new URL(source.url).hostname === 'www.blackrock.com'));
+  assert.equal(event.sources.find(source => source.publisher === 'etf.com').publishedAt, '2025-06-11');
+});
+
+test('Texas first investment separates trade, reporting, instrument and later aggregate funding', () => {
+  const event = byId('texas-bitcoin-reserve-first-investment-2025');
+  assert.equal(event.date, '2025-11-20');
+  assert.equal(event.importance, 3);
+  assert.match(event.description, /1,000만 달러 중 첫 500만 달러/);
+  assert.match(event.dateBasis, /12월 8일.*12월 9일/);
+  assert.match(event.limitations.join(' '), /IBIT 주식.*51\.8694/);
+  assert.match(event.limitations.join(' '), /현물 BTC 직접 매입으로 단정하거나 IBIT를 배제하지 않는다/);
+  assert.match(event.limitations.join(' '), /후속 합계 상태/);
+  assert.deepEqual(event.sources.map(source => source.publishedAt), ['2025-12-08', '2025-12-09', '2026-05-07']);
+  assert.ok(event.sources.every(source => source.accessedAt === '2026-11-08'));
+  assert.ok(!BITCOIN_EVENTS.some(item => /2026.*ETF.*10위/.test(item.title)), 'unverified all-ETF ranking must not become a historical fact');
 });
 
 test('tariff events preserve announcement dates, policy qualifications and searchable common aliases', () => {

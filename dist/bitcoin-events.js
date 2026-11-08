@@ -449,6 +449,18 @@ const events = [
     ],
   },
   {
+    id: 'ibit-70-billion-record-2025', date: '2025-06-09', label: 'IBIT 700억 달러 최단 기록', title: 'IBIT의 운용자산 700억 달러 최단 도달 기록', category: 'institution', importance: 2,
+    description: 'IBIT가 341거래일 만에 운용자산 700억 달러에 도달한 최단 ETF 기록이 보도됐다. 당시 비교 대상인 금 ETF GLD의 1,691거래일보다 약 5배 빠른 속도다. BlackRock의 2026년 전망 문서도 자사 집계 기준으로 IBIT의 341거래일 기록을 확인한다.',
+    dateBasis: 'The Block의 2025년 6월 9일 기록 보도일을 차트 날짜로 사용한다. etf.com은 6월 11일 후속 보도했고, BlackRock의 2026년 회고 자료는 거래일 수와 기록을 확인하지만 정확한 돌파 날짜는 명시하지 않는다.',
+    limitations: ['CryptoSlate의 6월 9일 기사(6월 10일 수정)는 실제 돌파일을 6월 6일로 적는다. 출처 사이 날짜 불일치가 있어 6월 9일을 정확한 최초 돌파 시각으로 단정하지 않는다.', '700억 달러는 운용자산(AUM)이며 누적 순유입액이 아니다. 자금 유입과 보유 BTC의 가격 변동이 함께 영향을 준다.', '최단 기록은 당시 보도와 발행사 집계의 비교 범위에 따른다. 여러 매체가 같은 Bloomberg 분석가 자료를 인용하므로 독립된 재계산으로 세지 않는다.'],
+    sources: [
+      reviewedSource('BlackRock / iShares', '2026 Thematic Outlook — page 3, footnote 4', 'https://www.blackrock.com/us/financial-professionals/literature/presentation/2026-thematic-outlook-stamped.pdf'),
+      reviewedSource('The Block', 'BlackRock’s spot Bitcoin ETF becomes fastest to hit $70 billion, crushing gold’s previous record', 'https://www.theblock.co/news/markets/2025-06-09-blackrocks-spot-bitcoin-etf-becomes-fastest-to-hit-70-billion-crushing-golds-previous-record-357465', '2025-06-09', 'secondary'),
+      reviewedSource('etf.com', 'IBIT Hits $70B in Assets. What’s Next for the Crypto Beast?', 'https://www.etf.com/sections/features/ibit-hits-70b-assets-whats-next-crypto-beast', '2025-06-11', 'secondary'),
+      reviewedSource('CryptoSlate', 'BlackRock’s IBIT rockets to $70B in 341 days, 5x faster than previous record', 'https://cryptoslate.com/blackrocks-ibit-rockets-to-70b-in-341-days-5x-faster-than-previous-record/', '2025-06-09', 'secondary'),
+    ],
+  },
+  {
     id: 'texas-bitcoin-reserve-law-2025', date: '2025-06-20', label: '텍사스 BTC 준비기금법', title: '텍사스 전략적 비트코인 준비기금법 SB 21 서명·발효', category: 'regulation', importance: 2,
     description: 'Greg Abbott 주지사가 Texas Strategic Bitcoin Reserve and Investment Act인 SB 21에 서명했다. 주 재무부 밖의 특별기금을 회계감사관이 관리하도록 하고, 직전 24개월 평균 시가총액이 5,000억 달러 이상인 암호자산만 매입할 수 있도록 정했다.',
     dateBasis: '2025년 6월 20일 서명일이며 즉시 발효 조항에 따른 효력 발생일도 같은 날이다.',
@@ -488,6 +500,17 @@ const events = [
     sources: [
       reviewedSource('Bloomberg News', 'JPMorgan to Allow Bitcoin, Ether as Collateral in Crypto Push', 'https://news.bloomberglaw.com/banking-law/jpmorgan-to-allow-bitcoin-ether-as-collateral-in-crypto-push', '2025-10-24', 'secondary'),
       reviewedSource('Reuters', 'JPMorgan considers offering loans backed by clients cryptocurrency holdings, FT reports', 'https://www.reuters.com/business/finance/jpmorgan-considers-offering-loans-backed-by-clients-cryptocurrency-holdings-ft-2025-07-22/', '2025-07-22', 'secondary'),
+    ],
+  },
+  {
+    id: 'texas-bitcoin-reserve-first-investment-2025', date: '2025-11-20', label: '텍사스 BTC 준비금 첫 투자', title: '텍사스 비트코인 준비기금의 첫 500만 달러 투자', category: 'adoption', importance: 3,
+    description: '텍사스가 비트코인 준비기금 배정액 1,000만 달러 중 첫 500만 달러를 투자했다. Texas Tribune은 회계감사관실 확인을 근거로 11월 20일 아침 BTC 기준가격 약 91,336달러 때 집행됐으며, 암호자산 수탁 계약 전의 임시 투자였다고 보도했다.',
+    dateBasis: '실제 투자일 2025년 11월 20일이다. Texas Tribune 보도일 12월 8일 및 Bond Buyer 보도일 12월 9일과 구분한다.',
+    limitations: ['Texas Tribune은 일반적으로 Bitcoin 투자라고 쓰며 매입 수단을 명시하지 않는다. Bond Buyer는 회계감사관 대변인을 인용해 같은 11월 20일 투자 대상이 IBIT 주식이고 매입가는 주당 51.8694달러였다고 구체적으로 보도했다. 따라서 현물 BTC 직접 매입으로 단정하거나 IBIT를 배제하지 않는다.', '2026년 5월 7일 공식 RFP의 원문 전재본은 당시 배정액 1,000만 달러가 IBIT에 임시 투자됐다고 명시한다. 이는 후속 합계 상태이며 2025년 11월 20일 하루에 1,000만 달러를 집행했다는 뜻이 아니다. 조달 원문은 GovTribe의 문서 본문 전재로 확인했다.', '약 91,336달러는 당시 BTC의 기준 시세이며 ETF 주식 매입가와 다르다. Texas Tribune이 애리조나·뉴햄프셔의 미매입을 언급한 기준은 2025년 12월 8일 보도 시점이다.'],
+    sources: [
+      reviewedSource('Texas Tribune', 'Texas launches cryptocurrency reserve with $5 million investment', 'https://www.texastribune.org/2025/12/08/texas-crypto-currency-investment/', '2025-12-08', 'secondary'),
+      reviewedSource('The Bond Buyer', 'Texas makes first purchase for state’s bitcoin reserve', 'https://www.bondbuyer.com/news/texas-makes-first-purchase-for-states-bitcoin-reserve', '2025-12-09', 'secondary'),
+      reviewedSource('Texas Comptroller / GovTribe 원문 전재', 'RFP 908-26-1778WS — Texas Strategic Bitcoin Reserve Custody and Liquidity Services, section 1.2', 'https://govtribe.com/file/government-file/esbd-513147-1778176486492-908-26-1778ws-texas-strategic-bitcoin-reserve-dot-pdf', '2026-05-07'),
     ],
   },
 ];
