@@ -98,7 +98,7 @@ const icons = {
 export function bindChartNavigation({
   element, getRange, getTool = () => 'crosshair', onRangeChange, onReset,
   getPriceAxis = () => null, onPriceRangeChange = null, onPriceReset = null,
-  getContext = () => null, onAnnounce, onGestureStart = null, onGestureEnd = null, onMenuOpen = null, zoomAnchor = 'right', signal,
+  getContext = () => null, onAnnounce, onGestureStart = null, onGestureEnd = null, onMenuOpen = null, zoomAnchor = 'pointer', signal,
 }) {
   if (!['right','pointer','center'].includes(zoomAnchor)) throw new RangeError('지원하지 않는 확대 기준입니다.');
   const document = element.ownerDocument, window = document.defaultView;
@@ -296,7 +296,7 @@ export function bindChartNavigation({
     const range = current(), rect = plotBounds();
     if (!range || event.metaKey || interactive(event.target, true)) return;
     const priceRect=priceAxisBounds(),onPlot=inside(event,rect),onAxis=inside(event,priceRect);
-    // Ctrl changes the chart anchor only over its plot. Browser zoom outside
+    // Ctrl shares the pointer anchor over the plot. Browser zoom outside
     // that surface, and Meta/browser shortcuts everywhere, keep ownership.
     if (event.ctrlKey&&!onPlot) return;
     if (onAxis && typeof onPriceRangeChange==='function' && event.deltaY) {
@@ -544,7 +544,7 @@ export function bindChartNavigation({
     const range = current();if (!range) return;
     if (action === 'reset') reset();
     else if (action === 'left' || action === 'right') discrete(panRange(range, action === 'left' ? -.25 : .25));
-    else discrete(zoomRange(range, action === 'in' ? .8 : 1.25, zoomAt(event)));
+    else discrete(zoomRange(range, action === 'in' ? .8 : 1.25, zoomAt(null)));
     focusChart();
   };
   for (const [action, button] of menuButtons) button.onclick = () => {

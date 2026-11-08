@@ -67,7 +67,15 @@ export function drawIntradayChart({svg,series,chartType='candles',scale='log',pr
   const tickCount=small?4:8;
   const tickRows=forecast?Array.from({length:tickCount},(_,index)=>({time:minTime+(maxTime-minTime)*index/(tickCount-1)})):scaleRows;
   const tickStep=forecast?1:Math.max(1,Math.ceil(tickRows.length/(small?3:7)));
-  for(let i=0;i<tickRows.length;i+=tickStep){const row=tickRows[i],xx=x(row.time),label=timeTickLabel(row.time,interval.seconds,maxTime-minTime);s+=`<line x1="${xx}" x2="${xx}" y1="${T}" y2="${bottom}" stroke="#212c37"/><text class="market-time-label" x="${xx}" y="${axisY}" text-anchor="${i===0?'start':forecast&&i===tickRows.length-1?'end':'middle'}" fill="#aebaca" font-size="10">${label}</text>`;}
+  const ticks=[];for(let i=0;i<tickRows.length;i+=tickStep)ticks.push({time:tickRows[i].time,label:timeTickLabel(tickRows[i].time,interval.seconds,maxTime-minTime)});
+  // A wide viewport can contain a much shorter loaded history window. In
+  // that case row-spaced ticks may land in the same month: add date detail
+  // instead of presenting different instants with identical axis labels.
+  if(new Set(ticks.map(tick=>tick.label)).size<ticks.length){
+    for(const tick of ticks)tick.label=timestamp(tick.time).slice(0,10);
+    if(new Set(ticks.map(tick=>tick.label)).size<ticks.length)for(const tick of ticks)tick.label=timestamp(tick.time);
+  }
+  for(const [index,tick]of ticks.entries()){const xx=x(tick.time);s+=`<line x1="${xx}" x2="${xx}" y1="${T}" y2="${bottom}" stroke="#212c37"/><text class="market-time-label" x="${xx}" y="${axisY}" text-anchor="${index===0?'start':index===ticks.length-1?'end':'middle'}" fill="#aebaca" font-size="10">${tick.label}</text>`;}
   s+=`<g clip-path="url(#${clip})">`;
   if(chartType==='candles'){
     const dense=rows.length>256&&width<2;svg.dataset.candleRendering=dense?'batched':'individual';
