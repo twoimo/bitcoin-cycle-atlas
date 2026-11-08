@@ -12,6 +12,7 @@ import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29
 // Changed release modules use a versioned URL so a cached v1.5 module cannot
 // leave a new long-horizon page running the old three-year workbench.
 import { initDailyDataView } from './daily-data-view.js?v=1.32.1';
+import { initRelayRoomView } from './relay-room.js?v=1.36.0';
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.1';
 import { initIpoView } from './ipo-view.js?v=1.32.1';
 import { initMarketLabView } from './market-lab-view.js?v=1.31.3';
@@ -49,7 +50,8 @@ const icons = {
   breakout:'<path d="M2 12h20" stroke-dasharray="2 3"/><path d="m3 19 5-4 4 1 8-13m-5 0h5v5"/>',
   reset:'<path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/>',
   info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/>',
-  close:'<path d="m6 6 12 12M6 18 18 6"/>'
+  close:'<path d="m6 6 12 12M6 18 18 6"/>',
+  relay:'<path d="M4 5h16v11H7l-3 3V5Zm4 4h8M8 12h5"/>'
 };
 const icon = name => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${icons[name] || icons.chart}</svg>`;
 $$('[data-icon]').forEach(el => el.innerHTML = icon(el.dataset.icon));
@@ -65,7 +67,7 @@ const state = {
   horizon: ['365','730','1461','current','all'].includes(params.get('range')) ? params.get('range') : '1461',
   cursor: /^\d{1,5}$/.test(params.get('day') || '') ? Number(params.get('day')) : null,
   hidden: new Set((params.get('hide') || '').split(',').filter(Boolean)),
-  view: params.get('page')==='compare'&&!params.has('legacy')?'outlook':['outlook','compare','evidence','data','ipo','market'].includes(params.get('page')) ? params.get('page') : 'outlook', dataset: null, comparison: null, chart: null,
+  view: params.get('page')==='compare'&&!params.has('legacy')?'outlook':['outlook','compare','evidence','data','ipo','market','relay'].includes(params.get('page')) ? params.get('page') : 'outlook', dataset: null, comparison: null, chart: null,
   timing: null, timingDataset: null, timingBaseline: ['previous','recent2','all3'].includes(params.get('baseline')) ? params.get('baseline') : 'recent2',
   analysisView: ['forecast','peak','timing'].includes(params.get('analysis')) ? params.get('analysis') : 'forecast',
   peakThreshold: ['0.9','0.93','0.94','0.95','0.98'].includes(params.get('zone')) ? Number(params.get('zone')) : .95,
@@ -99,7 +101,7 @@ function persistUrl() {
 document.documentElement.dataset.theme = 'dark';
 let initialPageRendered = false;
 function finishInitialPage() {
-  if (document.documentElement.dataset.boot !== 'loading' || (!state.dataset && !['data','ipo','market'].includes(state.view)) || !initialPageRendered) return;
+  if (document.documentElement.dataset.boot !== 'loading' || (!state.dataset && !['data','ipo','market','relay'].includes(state.view)) || !initialPageRendered) return;
   document.removeEventListener('atlas:page-ready', onInitialPageReady);
   document.dispatchEvent(new CustomEvent('atlas:ready'));
 }
@@ -141,6 +143,11 @@ const marketController = initMarketLabView({
   onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'market' } })),
   embeddedData: document.getElementById('embedded-market-lab-data')?.textContent ?? undefined,
 });
+const relayController = initRelayRoomView({
+  root: $('#relay-view'),
+  onReady: () => document.dispatchEvent(new CustomEvent('atlas:page-ready', { detail: { page: 'relay' } })),
+  embeddedData: () => document.getElementById('embedded-relay-data')?.textContent ?? null,
+});
 $('#market-view').addEventListener('click', event => {
   if (state.view !== 'market' || !event.target.closest('[data-view="outlook"]')) return;
   state.view = 'outlook'; syncPage(); persistUrl(); void ensureDataset();
@@ -154,8 +161,8 @@ const dailyDataController = initDailyDataView({
 function syncPage() {
   document.body.dataset.page=state.view; if(state.view!=='market'){const slot=document.getElementById('market-header-slot'); if(slot){slot.hidden=true; slot.replaceChildren();}}
   btcRefreshStatus.update({page:['ipo','market'].includes(state.view)?'data':state.view});
-  document.title = state.view === 'market' ? '세 축 연구실 · Bitcoin Cycle Atlas' : state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
-  for (const view of ['outlook','compare','evidence','data','ipo','market']) document.querySelector(`#${view}-view`).hidden=state.view!==view;
+  document.title = state.view === 'market' ? '세 축 연구실 · Bitcoin Cycle Atlas' : state.view === 'data' ? '자산 비교표 · Bitcoin Cycle Atlas' : state.view === 'ipo' ? '공모주 캘린더 · Bitcoin Cycle Atlas' : state.view === 'relay' ? '릴레이 콘텐츠 · Bitcoin Cycle Atlas' : 'Bitcoin Cycle Atlas';
+  for (const view of ['outlook','compare','evidence','data','ipo','market','relay']) document.querySelector(`#${view}-view`).hidden=state.view!==view;
   $$('[data-view]').forEach(n=>{const active=n.dataset.view===state.view;n.classList.toggle('active',active);if(active)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current');});
   evidenceModule?.showEvidenceView(state.view==='evidence');
   outlookController?.show(state.view==='outlook');
@@ -164,6 +171,7 @@ function syncPage() {
   if (state.view === 'evidence') void ensureEvidence();
   if (state.view === 'ipo') void ipoController.render();
   if (state.view === 'market') void marketController.render();
+  if (state.view === 'relay') relayController?.show(true);
 }
 syncPage();
 if (state.view === 'data') renderData();
@@ -386,7 +394,7 @@ function renderData() {
 }
 $$('[data-view]').forEach(b => b.addEventListener('click', () => {
   state.view = b.dataset.view;
-  if (!['data','ipo','market'].includes(state.view)) void ensureDataset();
+  if (!['data','ipo','market','relay'].includes(state.view)) void ensureDataset();
   syncPage();
   closeExport();
   if(state.view==='compare') requestAnimationFrame(()=>render()); else if(state.view==='data') renderData();
