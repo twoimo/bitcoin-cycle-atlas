@@ -21,7 +21,7 @@
   .mobile-chart-home svg{width:19px;height:19px}
   body:not([data-page=outlook]):not([data-page=data]) .workspace.atlas-details-layout>#main{padding-top:52px;box-sizing:border-box}
   .atlas-plot{contain:layout paint;--mobile-legend-top:calc(var(--indicator-top,90px) + var(--chart-hud-countdown-height,0px) + var(--chart-hud-legend-height,0px) + var(--chart-hud-gap,0px));--mobile-countdown-height:0px;--mobile-countdown-gap:0px}
-  .atlas-plot>#lab-metrics,.atlas-plot[data-countdown-visible=true]>#lab-metrics{top:8px;left:10px;right:10px;max-width:calc(100% - 20px);padding:0;gap:4px;min-height:0}
+  .atlas-plot>#lab-metrics,.atlas-plot[data-countdown-visible=true]>#lab-metrics{top:8px;left:10px;right:var(--plot-right-gap,80px);max-width:calc(100% - var(--plot-right-gap,80px) - 10px);padding:0;gap:4px;min-height:0}
   .readout-main{gap:8px;flex-wrap:wrap;white-space:normal;row-gap:1px}
   .atlas-plot>.atlas-readout strong{font-size:16px;letter-spacing:-.3px}
   .atlas-readout .atlas-symbol,.atlas-readout .atlas-day-change{font-size:11px}
@@ -29,7 +29,7 @@
   .atlas-readout .atlas-observation-date{font-size:11px;margin-left:0}
   .atlas-plot .readout-detail,.atlas-plot .readout-ohlc{display:flex;flex-wrap:wrap;white-space:normal;overflow:visible;gap:4px 8px;font-size:11px;line-height:1.5;min-height:0}
   .readout-detail>span,.readout-ohlc>span{white-space:nowrap}
-  .atlas-plot>.workbench-market-info,.atlas-plot[data-countdown-visible=true]>.workbench-market-info{left:10px;right:10px;width:auto;max-width:calc(100% - 20px);font-size:11px;line-height:16px}
+  .atlas-plot>.workbench-market-info,.atlas-plot[data-countdown-visible=true]>.workbench-market-info{left:10px;right:var(--plot-right-gap,80px);width:auto;max-width:calc(100% - var(--plot-right-gap,80px) - 10px);font-size:11px;line-height:16px}
   .atlas-plot .observed-split-badge{display:none}
   .workbench-market-info #workbench-market-refresh{width:28px;height:24px;min-height:24px;padding:4px;flex:none}
   .chart-indicator-manager{top:var(--mobile-legend-top);left:10px;width:max-content;max-width:calc(100% - var(--plot-right-gap,65px) - 12px);box-sizing:border-box;box-shadow:none;background:transparent;border:0;border-radius:0}

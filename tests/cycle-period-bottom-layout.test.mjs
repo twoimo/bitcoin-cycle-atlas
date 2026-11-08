@@ -322,3 +322,26 @@ test('moving the legend into the top HUD no longer compresses all period rows as
   legend.getBoundingClientRect=()=>({left:170,top:370,width:180,height:30});
   assert.equal(priceChartOverlayObstacles(svg)[0].dock,'bottom');
 });
+
+test('period text yields to a fixed model-evidence dot without moving its date, price or the chart frame',()=>{
+  const data={...baseline,start:dateFromDay(utcDay(baseline.split)-730),end:dateFromDay(utcDay(baseline.split)+730)};
+  const options={width:320,height:595,scale:'linear',priceDomain:{min:1,max:1000000},showCycleMarkers:false};
+  const before=render(options,data),left=Number(before.svg.dataset.plotLeft),right=Number(before.svg.dataset.plotRight),splitX=(left+right)/2;
+  const target=before.svg.querySelectorAll('.cycle-interval-label').find(node=>number(node,'x')>splitX+12);
+  assert.ok(target,'The regression requires a visible future period label');
+  const intervalId=target.closest('[data-cycle-interval]').dataset.cycleInterval;
+  const run=target.querySelector('tspan')||target,baselineY=run.getAttribute('y')===null?number(target,'y'):number(run,'y');
+  const day=utcDay(data.start)+Math.round((number(target,'x')-left)/(right-left)*(utcDay(data.end)-utcDay(data.start)));
+  const evidence={id:'fixed-evidence-collision',date:dateFromDay(day),price:before.controller.getPriceScale().invert(baselineY-3),title:'모델 근거',description:'The existing model anchor remains fixed.'};
+  const after=render({...options,forecastEvidence:[evidence]},data),dot=after.svg.querySelector('[data-forecast-evidence="fixed-evidence-collision"]').querySelector('circle');
+  assert.ok(dot);near(number(dot,'cx'),left+(day-utcDay(data.start))/(utcDay(data.end)-utcDay(data.start))*(right-left),'evidence date coordinate');
+  near(number(dot,'cy'),baselineY-3,'evidence price coordinate');
+  assert.equal(after.svg.getAttribute('viewBox'),before.svg.getAttribute('viewBox'));
+  for(const key of ['plotLeft','plotRight','plotTop','plotBottom','priceBottom'])assert.equal(after.svg.dataset[key],before.svg.dataset[key],key);
+  assert.deepEqual(new Set(periods(after.svg).map(node=>node.dataset.cycleInterval)),new Set(periods(before.svg).map(node=>node.dataset.cycleInterval)),'Every period remains inspectable');
+  const label=()=>periods(after.svg).find(node=>node.dataset.cycleInterval===intervalId).querySelector('.cycle-interval-label');
+  const original=serialize(target);
+  assert.notEqual(label()&&serialize(label()),original,'The exact colliding text must move or use the existing collapsed-label policy');
+  after.controller.updateCycleOverlayObstacles([]);
+  assert.notEqual(label()&&serialize(label()),original,'HUD repacking must retain the evidence obstacle');
+});

@@ -245,7 +245,20 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   if(showTurns&&visibleTurns.length)s+='</g>';s+='</g>';
   if(showCycleTiming)s+=cycleTimingMarkup({points:visibleTiming,x,left:L,right:W-R,top:cycleTop,bottom:cycleBottom,titleY:layout.cycleTitleY,titleFontSize:layout.cycleTitleFontSize,dayWidth:(W-L-R)/span,split}).markup;
   if(showVolume)s+=volumePaneMarkup({bars:visibleVolume,x:bar=>xday(dayOf(bar.periodStartDate??bar.date)),left:L,right:W-R,top:volumeTop,bottom:volumeBottom,titleY:layout.volumeTitleY,titleFontSize:layout.volumeTitleFontSize,separatorY:layout.volumeSeparatorY,barWidth:candleBodyWidth(W-L-R,span,candleDays),source:volumeSource,projectionLabel:volumeProjection?.summary?.centralMethod==='persistence'?'중앙 · 최근 90일 활동 유지':'점선 · 조건부 평균 거래량',projection:projectedVolume,clipId:`${svg.id}-volume-clip`,futureX:split&&dayOf(split)>=minDay&&dayOf(split)<maxDay?xday(dayOf(split)):null}).markup;
-  const historicalObstacles=[...cycleOverlayObstacles,...priceChartOverlayObstacles(svg)];
+  // Evidence controls stay on their original model date and price. Reserve
+  // their painted dot and title before placing surrounding period labels.
+  const evidenceMarkers=forecastEvidence.filter(item=>item.date>split&&item.date>=start&&item.date<=end&&Number.isFinite(item.price)&&item.price>0);
+  const evidenceLayout=[];let lastEvidenceX=-Infinity;
+  for(const item of evidenceMarkers){
+    const xx=x(item),yy=y(item.price);if(xx-lastEvidenceX<60||yy<T||yy>priceBottom)continue;
+    lastEvidenceX=xx;const labelX=Math.max(L+36,Math.min(W-R-36,xx)),labelY=yy<T+35?yy+28:yy-15;
+    evidenceLayout.push({item,xx,yy,labelX,labelY});
+  }
+  const evidenceObstacles=evidenceLayout.flatMap(({xx,yy,labelX,labelY})=>[
+    {x:xx-10,y:yy-10,width:20,height:20},
+    {x:labelX-33,y:labelY-11,width:66,height:17},
+  ]);
+  const historicalObstacles=[...cycleOverlayObstacles,...priceChartOverlayObstacles(svg),...evidenceObstacles];
   // Historical names and period arrows share one plot. Reserve the period
   // band before placing names; dots retain their true date/price positions.
   if(showHistoricalEvents&&showCycleIntervals){
@@ -266,7 +279,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   const milestoneLayer=showCycleMarkers?milestoneMarkersMarkup({markers:cycleMarkers,start,end,x,y,left:L,right:W-R,top:T,bottom:priceBottom,clipId:`${svg.id}-milestone-clip`,activeMarkerId:activeCycleMarkerId,activeMarkerIds:activeCycleMarkerIds,activeInterval:activeCycleInterval}):null;
   let updateCycleOverlayObstacles=()=>null;
   if(showCycleIntervals){
-    const markerObstacles=[...historyLabelObstacles];
+    const markerObstacles=[...historyLabelObstacles,...evidenceObstacles];
     for(const point of milestoneLayer?.markers||[]){
       markerObstacles.push({x:point.x-point.radius-3,y:point.y-point.radius-3,width:2*point.radius+6,height:2*point.radius+6});
       if(point.box)markerObstacles.push(point.box);
@@ -299,11 +312,9 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   if(latest&&latest.price>=min&&latest.price<=max){const yy=y(latest.price),labelTop=Math.max(T,Math.min(priceBottom-18,yy-9)),label=axisLabels.price(latest.price);s+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" stroke="#7da89c" stroke-dasharray="2 5" opacity=".5"/><g class="chart-latest-price-tag" pointer-events="none"><rect x="${W-R}" y="${labelTop}" width="${R-3}" height="18" rx="2" fill="#2b6558"/><text x="${W-R+axisText.inset}" y="${labelTop+13}" ${axisText.attributes(label,{badge:true,kind:'latest'})} fill="#edf8f3" font-size="${axisText.badgeFontSize}">${esc(label)}</text></g>`;}
   const annotations=researchAnnotationsMarkup({annotations:researchAnnotations,start,end,x:({date:value})=>xday(typeof value==='number'?value/86400:value.length>10?Date.parse(value)/86400000:dayOf(value)),y,left:L,right:W-R,top:T,bottom:priceBottom,clipId:priceClip,activeId:selectedAnnotation,scenarioId});
   s+=annotations.markup;svg.dataset.researchAnnotationCount=String(annotations.visibleCount);
-  const evidenceMarkers=forecastEvidence.filter(item=>item.date>split&&item.date>=start&&item.date<=end&&Number.isFinite(item.price)&&item.price>0);
-  let lastEvidenceX=-Infinity,evidenceCount=0;
   s+='<g class="forecast-evidence-layer" clip-path="url(#'+priceClip+')">';
-  for(const item of evidenceMarkers){const xx=x(item),yy=y(item.price);if(xx-lastEvidenceX<60||yy<T||yy>priceBottom)continue;lastEvidenceX=xx;evidenceCount++;const labelX=Math.max(L+36,Math.min(W-R-36,xx)),labelY=yy<T+35?yy+28:yy-15;s+=`<g data-forecast-evidence="${esc(item.id)}" role="button" tabindex="0" aria-label="${esc(item.title)}: ${esc(item.description)}"><circle cx="${xx}" cy="${yy}" r="9" fill="#151f2c" stroke="#a8c695" stroke-width="1.5"/><text x="${xx}" y="${yy+3.2}" text-anchor="middle" fill="#d5e5c7" font-size="10">i</text><rect x="${labelX-33}" y="${labelY-11}" width="66" height="17" rx="4" fill="#192a23"/><text x="${labelX}" y="${labelY+1}" text-anchor="middle" fill="#c1d8ad" font-size="9">${esc(item.title)}</text><title>${esc(item.description)}</title></g>`;}
-  s+='</g>';svg.dataset.forecastEvidenceCount=String(evidenceCount);
+  for(const {item,xx,yy,labelX,labelY} of evidenceLayout)s+=`<g data-forecast-evidence="${esc(item.id)}" role="button" tabindex="0" aria-label="${esc(item.title)}: ${esc(item.description)}"><circle class="forecast-evidence-dot" cx="${xx}" cy="${yy}" r="9" fill="#151f2c" stroke="#a8c695" stroke-width="1.5"/><text x="${xx}" y="${yy+3.2}" text-anchor="middle" fill="#d5e5c7" font-size="10">i</text><rect class="forecast-evidence-label" x="${labelX-33}" y="${labelY-11}" width="66" height="17" rx="4" fill="#192a23"/><text x="${labelX}" y="${labelY+1}" text-anchor="middle" fill="#c1d8ad" font-size="9">${esc(item.title)}</text><title>${esc(item.description)}</title></g>`;
+  s+='</g>';svg.dataset.forecastEvidenceCount=String(evidenceLayout.length);
 
   s+=`<g id="${svg.id}-cross" pointer-events="none"><line class="cross-time" y1="${T}" y2="${bottom}" stroke="#afc4dd" stroke-dasharray="3 3" opacity=".6"/><line class="cross-price" clip-path="url(#${priceClip})" x1="${L}" x2="${W-R}" stroke="#afc4dd" stroke-dasharray="3 3" opacity=".6"/><circle clip-path="url(#${priceClip})" r="4" fill="#10151c" stroke="#f4dcac" stroke-width="1.5"/><g class="cross-price-tag" clip-path="url(#${axisClip})"><rect x="${W-R}" width="${R-3}" height="18" rx="2" fill="#465366"/><text x="${W-R+axisText.inset}" fill="#edf2f9" font-size="${axisText.badgeFontSize}"></text></g><g class="cross-date-tag"><rect width="80" height="18" rx="2" fill="#39485b"/><text fill="#edf2f9" font-size="10" text-anchor="middle"></text></g></g>`;
   s+=measurementOverlayMarkup(priceClip);

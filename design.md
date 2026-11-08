@@ -26,6 +26,12 @@ The latest user direction replaces the previous editorial styling and 64px label
 
 This document records the product requirements and shared design decisions. Actual test and browser results belong to their identified source revision and execution receipt.
 
+2026-11-08 recovered mobile QA: the quote and source HUD stop before the
+renderer-measured right price gutter, so their backgrounds cannot cover upper
+price ticks. Model evidence dots retain their exact model dates and prices;
+period annotations reserve the existing evidence dot and title rectangles.
+These are overlay-only corrections and do not reduce the allocated chart height.
+
 ## Product and scope
 
 2026-11-03 user direction: chart pages use the compact top/left/right/bottom working regions familiar from TradingView. Other pages use the adapted MIT shadcn/ui dashboard-01 sidebar, header and inset content composition. `dist/atlas-shell.css` owns the shared visual roles and the chart/dashboard variants. Keep the existing dark financial palette, real controls, calculations and independent scroll owners. The user requested terse interfaces: visible copy is limited to names, values, clocks, status and actions; longer methodology belongs in source or calculation disclosures. Do not introduce marketing copy, invented KPI cards, demo account UI or implementation explanations.
