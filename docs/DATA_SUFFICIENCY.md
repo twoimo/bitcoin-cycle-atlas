@@ -1,6 +1,6 @@
 # 데이터 충분성 등급과 지평 단위 (WP5)
 
-구현: `dist/forecast-sufficiency.js` · 테스트: `tests/forecast-sufficiency.test.mjs`
+구현: `dist/forecast/forecast-sufficiency.js` · 테스트: `tests/forecast-sufficiency.test.mjs`
 
 ## 등급 경계
 | 등급 | 조건 | 허용 범위 |

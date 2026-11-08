@@ -1,0 +1,35 @@
+{
+  "worktree": {
+    "setup": [
+      "node -e \"const major = Number(process.versions.node.split('.')[0]); if (major < 24) { console.error('Node.js 24 or newer is required, found ' + process.version); process.exit(1); } console.log('node ' + process.version);\""
+    ],
+    "teardown": "rm -rf build"
+  },
+  "scripts": {
+    "web": {
+      "type": "service",
+      "command": "exec python3 -m http.server --bind \"${HOST:-127.0.0.1}\" --directory dist \"$PASEO_PORT\""
+    },
+    "test": {
+      "command": "npm test"
+    },
+    "verify-static": {
+      "command": "npm run verify:static"
+    },
+    "verify-cycle": {
+      "command": "npm run verify:cycle && npm run verify:performance"
+    },
+    "verify-numerics": {
+      "command": "npm run verify:numerics"
+    },
+    "verify-research": {
+      "command": "npm run verify:research && npm run verify:eth-events && npm run verify:treasury-paths"
+    },
+    "verify-formal": {
+      "command": "npm run verify:formal"
+    },
+    "standalone": {
+      "command": "npm run build:standalone && node scripts/verify-static.mjs --standalone build/Bitcoin_Cycles_Comparison.html"
+    }
+  }
+}
