@@ -161,6 +161,7 @@ class TestElement extends EventSurface {
   remove(){if(this.parentElement){this.parentElement.children=this.parentElement.children.filter(child=>child!==this);this.parentElement=null;}}
   setAttribute(key,value){this.attributes.set(key,String(value));}
   getAttribute(key){return this.attributes.get(key)??null;}
+  removeAttribute(key){this.attributes.delete(key);}
   contains(target){return target===this||this.children.some(child=>child.contains?.(target));}
   matchesSelector(selector){
     const exclusions=[...selector.matchAll(/:not\(([^)]+)\)/g)].map(match=>match[1]);
@@ -198,14 +199,26 @@ function navigationHarness(initial=range,extra={}){
   return {window,document,element,svg,controller,changes,copies,announcements,get range(){return live;},set range(value){live=value;},set tool(value){tool=value;},get resets(){return resets;},frames,flush(){for(const [id,fn]of [...frames]){frames.delete(id);fn();}},fire(type,props={}){return element.emit(type,{target:svg,...props});},pointer(type,props={}){return window.emit(type,{target:svg,...props});},menuButton(action){return controller.menu.children.find(child=>child.dataset?.chartContext===action);}};
 }
 
-test('wheel zoom keeps the right endpoint; controls and browser zoom outside the plot stay untouched',()=>{
+test('wheel zoom anchors to the pointer; controls and browser zoom outside the plot stay untouched',()=>{
   const h=navigationHarness();
   const ignored=[{clientX:960,deltaY:-100},{clientY:20,deltaY:-100},{clientX:960,ctrlKey:true,deltaY:-100},{metaKey:true,deltaY:-100},{target:h.controller.toolbar.children[0],deltaY:-100}];
   for(const props of ignored)assert.equal(h.fire('wheel',props).defaultPrevented,false);
   assert.equal(h.frames.size,0);
   const event=h.fire('wheel',{clientX:234,deltaY:-200});assert.equal(event.defaultPrevented,true);h.flush();
-  assert.equal(h.range.end,range.end);assert.ok(length(h.range)<100);
+  assert.deepEqual(h.range,zoomRange(range,Math.exp(-200*.0015),.2));assert.ok(length(h.range)<100);
   h.controller.destroy();
+});
+
+test('three wheel steps over opposite sides preserve different dates beneath the pointer',()=>{
+  const windows=[];
+  for(const clientX of [234,756]){
+    const h=navigationHarness();
+    for(let step=0;step<3;step++){h.fire('wheel',{clientX,deltaY:-120});h.flush();}
+    const anchor=(clientX-60)/870,originalPivot=utcDay(range.start)+anchor*(length(range)-1),pivot=utcDay(h.range.start)+anchor*(length(h.range)-1);
+    assert.ok(Math.abs(originalPivot-pivot)<=1,'rounding stays within one source day of the pointer date');
+    windows.push(h.range);h.controller.destroy();
+  }
+  assert.notEqual(windows[0].start,windows[1].start);assert.notEqual(windows[0].end,windows[1].end);
 });
 
 test('historical event label children allow wheel zoom and pan but retain activation and real control boundaries',()=>{
@@ -214,14 +227,14 @@ test('historical event label children allow wheel zoom and pan but retain activa
   marker.setAttribute('class','history-event-marker has-label');marker.setAttribute('role','button');marker.dataset.historyEvent='ftx-bankruptcy';
   marker.append(label,text);h.svg.append(marker);
   assert.equal(h.fire('wheel',{target:label,clientX:234,deltaY:-200}).defaultPrevented,true);h.flush();
-  assert.deepEqual(h.range,zoomRange(range,Math.exp(-200*.0015),1));
+  assert.deepEqual(h.range,zoomRange(range,Math.exp(-200*.0015),.2));
   const zoomed=h.range;
   assert.equal(h.fire('wheel',{target:text,shiftKey:true,deltaY:174}).defaultPrevented,true);h.flush();
   assert.deepEqual(h.range,panRange(zoomed,.2));assert.equal(length(h.range),length(zoomed));
   const shifted=h.range;
   assert.equal(h.fire('wheel',{target:label,deltaX:-87,deltaY:2}).defaultPrevented,true);h.flush();
   const preciseCount=100*Math.exp(-200*.0015);
-  assert.equal(utcDay(h.range.start)-utcDay(range.start),Math.round(100-preciseCount+(preciseCount-1)*.1),'one burst retains the fractional displacement between wheel events');
+  assert.equal(utcDay(h.range.start)-utcDay(range.start),Math.round(.2*(100-preciseCount)+(preciseCount-1)*.1),'one burst retains the fractional displacement between wheel events');
   assert.equal(length(h.range),length(shifted));
   const changed=h.changes.length;
   for(const type of ['click','pointerdown','dblclick','contextmenu'])assert.equal(h.fire(type,{target:label}).defaultPrevented,false);
@@ -248,11 +261,11 @@ test('period arrows and labels share price-chart wheel navigation while activati
   period.dataset.cycleInterval='bottom-to-top';period.append(line,label);h.svg.append(period);
   const event=h.fire('wheel',{target:line,clientX:321,deltaY:-180});
   assert.equal(event.defaultPrevented,true);h.flush();
-  assert.deepEqual(h.range,zoomRange(range,Math.exp(-180*.0015),1));
+  assert.deepEqual(h.range,zoomRange(range,Math.exp(-180*.0015),.3));
   const zoomed=h.range;
   assert.equal(h.fire('wheel',{target:label,shiftKey:true,deltaY:87}).defaultPrevented,true);h.flush();
   const preciseCount=100*Math.exp(-180*.0015);
-  assert.equal(utcDay(h.range.start)-utcDay(range.start),Math.round(100-preciseCount+(preciseCount-1)*.1));assert.equal(length(h.range),length(zoomed));
+  assert.equal(utcDay(h.range.start)-utcDay(range.start),Math.round(.3*(100-preciseCount)+(preciseCount-1)*.1));assert.equal(length(h.range),length(zoomed));
   const changed=h.changes.length;
   for(const type of ['click','pointerdown','dblclick','contextmenu'])assert.equal(h.fire(type,{target:line}).defaultPrevented,false);
   for(const key of ['Enter',' ','+'])assert.equal(h.fire('keydown',{target:label,key}).defaultPrevented,false);
@@ -365,6 +378,9 @@ test('a bounded intraday viewport can keep panning beyond the initial cache',()=
   assert.equal(barCount(panRange(wide,-1)),6000);
   const h=navigationHarness(wide);h.controller.update();
   assert.equal(h.controller.toolbar.children.find(b=>b.dataset.chartNavigation==='out')?.disabled??h.controller.toolbar.children[1].disabled,true);
+  const out=h.controller.toolbar.children.find(b=>b.dataset.chartNavigation==='out');
+  assert.match(out.title,/최대 표시 범위 6,000봉/);assert.equal(out.getAttribute('aria-label'),out.title);
+  h.fire('wheel',{deltaY:120});h.flush();assert.match(h.announcements.at(-1),/최대 표시 범위 6,000봉/);
   h.controller.destroy();
   assert.throws(()=>zoomRange({...long,maxSpan:3},2),RangeError);
 });

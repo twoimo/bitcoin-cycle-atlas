@@ -32,7 +32,12 @@ export function indicatorReadout(item,{selection=null,workbench={},cycle=null,an
       return output(`${future?'가정 ':''}${value}${finite(change)?`  전봉 ${percent(change)}`:''}`,[context,basis,ohlc,previous,fromOpen].filter(Boolean).join(' · '),future?'scenario':change>0?'up':change<0?'down':'neutral');
     }
     case 'volume': {
-      if(!finite(selected.volume)||selected.volume<0)return missing(workbench.marketLoading?'Vol 불러오는 중':'Vol 자료 없음');
+      if(!finite(selected.volume)||selected.volume<0){
+        if(workbench.marketLoading)return missing('Vol 불러오는 중');
+        const coverage=!workbench.intraday&&!future?workbench.volumeMeta:null;
+        if(selected.date&&coverage?.firstDate&&coverage?.lastDate)return output('Vol 선택일 없음',`${context} · 선택한 날짜의 거래량은 없습니다. ${coverage.source||'Bitstamp'} BTC/USD 거래량 자료 범위 ${date(coverage.firstDate)}–${date(coverage.lastDate)} UTC · 가격과 거래량의 출처·마지막 관측일은 다를 수 있으며 빈 값을 0이나 이전 거래량으로 채우지 않습니다.`,'muted');
+        return missing('Vol 자료 없음');
+      }
       const projected=selected.volumeKind==='scenario',unit=projected?`BTC/${selected.frequency==='weekly'?'주':'일'}`:'BTC';
       const range=projected&&finite(selected.volumeLower)&&finite(selected.volumeUpper)?` · 가정 범위 ${formatBtcVolume(selected.volumeLower)}–${formatBtcVolume(selected.volumeUpper)} ${unit}`:'';
       return output(`Vol${projected?' 가정':''} ${formatBtcVolume(selected.volume)} ${unit}`,`${context} · ${selected.volumeSource||selected.source||'거래소'} · ${number(selected.volume,6)} ${unit}${range}${projected?' · 실체결량이나 확률구간이 아닙니다.':' · 이 현물쌍의 거래량입니다.'}`,projected?'scenario':'neutral');

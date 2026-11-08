@@ -15,6 +15,7 @@ function counted(rows) {
 class SvgNode {
   constructor() { this.attrs = new Map(); this.nodes = new Map(); this.dataset = {}; this.textContent = ''; }
   setAttribute(key, value) { this.attrs.set(key, String(value)); }
+  getAttribute(key) { return this.attrs.get(key) ?? null; }
   removeAttribute(key) { this.attrs.delete(key); }
   querySelector(selector) { if (!this.nodes.has(selector)) this.nodes.set(selector, new SvgNode()); return this.nodes.get(selector); }
   querySelectorAll(selector) { return selector === 'text' ? [0, 1, 2, 3].map(index => this.querySelector(`text-${index}`)) : []; }

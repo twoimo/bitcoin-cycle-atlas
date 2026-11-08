@@ -256,11 +256,12 @@ const interactionCases=[
     assert.equal(h.controllers[0].getState().session,session);assert.equal(JSON.stringify(session),frozen);
     await h.mounted.exit({saveSession:true});const saved=h.saved();assert.deepEqual(Object.keys(saved.range).sort(),['end','start']);assert.doesNotMatch(h.savedText(),/spacingBounds/);h.mounted.destroy();
   }},
-  {name:'replay wheel and keyboard zoom preserve the right date while Ctrl wheel anchors the pointer without changing the fixed session',async run(source){
+  {name:'replay wheel anchors the pointer while keyboard zoom preserves its command anchor without changing the fixed session',async run(source){
     const h=await harness(source,{rendererAxis:navigationAxis});await h.mounted.open();await h.start();
     const before=replayRange(h),state=h.controllers[0].getState(),snapshot=JSON.stringify(state.session),builds=h.builds.length;
     const wheel=replayGesture(h,'wheel',{deltaY:-120});h.repaint();
-    const zoomed=replayRange(h);assert.equal(wheel.prevented,true);assert.equal(zoomed.end,before.end);assert.ok(replaySpan(zoomed)<replaySpan(before));
+    const zoomed=replayRange(h),anchor=(200-navigationAxis.left)/(navigationAxis.right-navigationAxis.left),pivot=value=>Date.parse(value.start)/86400000+anchor*replaySpan(value);
+    assert.equal(wheel.prevented,true);assert.ok(Math.abs(pivot(zoomed)-pivot(before))<=1);assert.ok(replaySpan(zoomed)<replaySpan(before));
     replayGesture(h,'wheel',{deltaY:-120,ctrlKey:true,clientX:navigationAxis.left});h.repaint();
     const pointerZoom=replayRange(h);assert.equal(pointerZoom.start,zoomed.start);assert.ok(pointerZoom.end<zoomed.end);
     keyEvent(h,'+');h.repaint();const keyZoom=replayRange(h);assert.equal(keyZoom.end,pointerZoom.end);assert.ok(replaySpan(keyZoom)<replaySpan(pointerZoom));
@@ -274,7 +275,9 @@ const interactionCases=[
       const event=replayGesture(h,'wheel',{deltaY:-120,...extra});h.repaint();assert.equal(event.prevented,undefined);assert.equal(event.immediatePropagationStopped,undefined);assert.deepEqual(replayRange(h),before);
     }
     for(let i=0;i<40;i++){replayGesture(h,'wheel',{deltaY:-1});h.repaint();}
-    assert.ok(replayRange(h).start>before.start,'sub-day wheel changes must accumulate instead of disappearing in calendar rounding');assert.equal(replayRange(h).end,before.end);
+    assert.ok(replayRange(h).start>before.start,'sub-day wheel changes must accumulate instead of disappearing in calendar rounding');
+    const anchor=(200-navigationAxis.left)/(navigationAxis.right-navigationAxis.left),pivot=value=>Date.parse(value.start)/86400000+anchor*replaySpan(value);
+    assert.ok(Math.abs(pivot(replayRange(h))-pivot(before))<=1);
     for(let i=0;i<10;i++){replayGesture(h,'wheel',{deltaY:600});h.repaint();}
     const limit=replayRange(h);replayGesture(h,'wheel',{deltaY:600});h.repaint();assert.deepEqual(replayRange(h),limit);
     replayGesture(h,'wheel',{deltaY:-10});h.repaint();assert.ok(replaySpan(replayRange(h))<replaySpan(limit),'reversing at a density limit must respond immediately');h.mounted.destroy();
@@ -300,7 +303,8 @@ const interactionCases=[
     assert.equal(h.controllers[0].getState().status,'selecting');assert.equal(h.builds.length,0);
     await h.start();const before=replayRange(h);
     replayGesture(h,'pointerdown',{clientX:500,clientY:380});replayGesture(h,'pointermove',{clientX:432,clientY:380});replayGesture(h,'pointerup',{clientX:432,clientY:380});h.repaint();
-    const narrowed=replayRange(h);assert.equal(narrowed.end,before.end);assert.ok(Math.abs(replaySpan(narrowed)/replaySpan(before)-Math.exp(-.2))<.02);
+    const narrowed=replayRange(h),anchor=(500-navigationAxis.left)/(navigationAxis.right-navigationAxis.left),pivot=value=>Date.parse(value.start)/86400000+anchor*replaySpan(value);
+    assert.ok(Math.abs(pivot(narrowed)-pivot(before))<=1);assert.ok(Math.abs(replaySpan(narrowed)/replaySpan(before)-Math.exp(-.2))<.02);
     replayGesture(h,'pointerdown',{clientX:200});replayGesture(h,'pointermove',{clientX:268});replayGesture(h,'pointerup',{clientX:268});h.repaint();
     const panned=replayRange(h);assert.equal(replaySpan(panned),replaySpan(narrowed));
     assert.ok(Math.abs((Date.parse(panned.start)-Date.parse(narrowed.start))/86400000+replaySpan(narrowed)*.1)<=1,'68px is ten percent of the680px plot, independent of the80px gutters');

@@ -9,8 +9,9 @@ compact controls, and a narrow icon rail. Preserve the authored Atlas routes,
 actual data, calculations, immutable records, replay and ztd-charts.
 
 The latest follow-up merges every supported instrument into one 가격 차트
-destination. Keep five primary destinations: 가격 차트, 시장 분석, 리서치,
-자산 비교 and 공모주. Symbol search selects BTC, ETH, MSTR, BMNR, the three
+destination. The current main retains 가격 차트, 시장 분석, 리서치, 자산 비교
+and 공모주 in that order, followed by 릴레이 콘텐츠 at `/?page=relay`.
+Symbol search selects BTC, ETH, MSTR, BMNR, the three
 ETFs, HYPE and the four housing regions. Returning from another destination
 retains the last chart and its source-specific controls. All instruments use
 the same four perimeter regions and full-height chart layout. Actual source
@@ -119,7 +120,7 @@ The original icon nodes retain their meaning and Korean accessible names.
 Pointer and keyboard focus reveal a body-level tooltip which cannot be clipped
 by rail scrolling. Escape, blur and navigation dismiss it. Pointer scrolling
 dismisses it; keyboard-induced scrolling keeps it beside the focused control. Preserve
-all five destinations, active destination state and mobile navigation.
+all six destinations, active destination state and mobile navigation.
 
 The interval select already dispatches the same command and synchronizes the
 original eight choices and `aria-pressed` states. Use it on desktop as well as

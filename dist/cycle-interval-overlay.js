@@ -24,18 +24,36 @@ const horizontalOverlap = (a, b, gap = 0) => Math.max(0, Math.min(a.x2, b.x2) - 
 
 // Test segments, not just vertices: a steep sampled price trace can cross a
 // duration line even when both sampled price points are far from its y value.
-function segmentIntersectsBox(segment, box) {
+function segmentBoxRange(segment, box) {
   const { x1, y1, x2, y2 } = segment;
-  if (Math.max(x1, x2) < box.x || Math.min(x1, x2) > box.x + box.width || Math.max(y1, y2) < box.y || Math.min(y1, y2) > box.y + box.height) return false;
+  if (Math.max(x1, x2) < box.x || Math.min(x1, x2) > box.x + box.width || Math.max(y1, y2) < box.y || Math.min(y1, y2) > box.y + box.height) return null;
   let low = 0, high = 1;
   const dx = x2 - x1, dy = y2 - y1;
   for (const [p, q] of [[-dx, x1 - box.x], [dx, box.x + box.width - x1], [-dy, y1 - box.y], [dy, box.y + box.height - y1]]) {
-    if (p === 0) { if (q < 0) return false; continue; }
+    if (p === 0) { if (q < 0) return null; continue; }
     const ratio = q / p;
     if (p < 0) low = Math.max(low, ratio); else high = Math.min(high, ratio);
-    if (low > high) return false;
+    if (low > high) return null;
   }
-  return true;
+  return [low, high];
+}
+const segmentIntersectsBox = (segment, box) => segmentBoxRange(segment, box) !== null;
+
+// Keep the original UTC endpoints and relation row. Only the paint beneath a
+// fixed marker/HUD is removed; a small gap also clears the stroke's thickness.
+function clearStrokeSegments(segment, obstacles, padding) {
+  const cuts = obstacles.map(box => segmentBoxRange(segment, {
+    x: box.x - padding, y: box.y - padding, width: box.width + 2 * padding, height: box.height + 2 * padding,
+  })).filter(Boolean).sort((a, b) => a[0] - b[0]);
+  if (!cuts.length) return [segment];
+  const ranges = []; let cursor = 0;
+  for (const [start, end] of cuts) {
+    if (start > cursor) ranges.push([cursor, start]);
+    cursor = Math.max(cursor, end);
+  }
+  if (cursor < 1) ranges.push([cursor, 1]);
+  const dx = segment.x2 - segment.x1, dy = segment.y2 - segment.y1;
+  return ranges.map(([start, end]) => ({ x1: segment.x1 + dx * start, y1: segment.y1 + dy * start, x2: segment.x1 + dx * end, y2: segment.y1 + dy * end }));
 }
 
 function priceSegments(points) {
@@ -121,20 +139,28 @@ function spanMarkup(item) {
   const dash = isDashed(interval) ? ' stroke-dasharray="5 3"' : '';
   const title = `${item.comparison?'경로 ':''}${relation.label} · ${interval.startDate} → ${interval.endDate} UTC\n${item.duration} · ${item.days}일 · ${status(interval)}${item.comparison?'\n'+cycleComparisonSummary(item.comparison):''}${clippedStart || clippedEnd ? '\n현재 화면에는 일부만 표시됩니다. 기간은 전체 양 끝 날짜의 차이입니다.' : ''}`;
   const edge = Math.min(3, item.capHeight), head = Math.min(4, (x2 - x1) / 3);
+  const obstacles = item.strokeObstacles || [], line = { x1, y1: y, x2, y2: y };
+  const path = (segments, original) => {
+    const visible = segments.flatMap(segment => clearStrokeSegments(segment, obstacles, 2 + weight / 2));
+    if (visible.length === segments.length && visible.every((segment, index) => segment === segments[index])) return original;
+    return visible.map(segment => `M${fmt(segment.x1)},${fmt(segment.y1)}L${fmt(segment.x2)},${fmt(segment.y2)}`).join('');
+  };
+  const segment = (x1, y1, x2, y2) => ({ x1, y1, x2, y2 });
   let markup = `<g class="cycle-interval-span cycle-interval${active ? ' is-active' : ''}${related ? ' is-related' : ''}${item.crowded ? ' is-crowded' : ''}" data-cycle-interval="${esc(interval.id)}" data-cycle-relation="${relation.id}" data-kind="${esc(interval.kind || 'observed')}" data-start-date="${interval.startDate}" data-end-date="${interval.endDate}" data-days="${item.days}" data-clipped-start="${clippedStart}" data-clipped-end="${clippedEnd}" data-x1="${fmt(x1)}" data-x2="${fmt(x2)}" data-raw-x1="${fmt(item.rawX1)}" data-raw-x2="${fmt(item.rawX2)}" data-y="${fmt(y)}" data-label-mode="${item.labelMode}" role="button" tabindex="0" aria-pressed="${active}" aria-label="${esc(title.replaceAll('\n', ' · '))}"><title>${esc(title)}</title>`;
   // Only the 8px line and painted text receive pointers. There is no broad hit
   // rectangle: the rest of the plot remains available for pan and inspection.
-  markup += `<line class="cycle-interval-hit" x1="${fmt(x1)}" x2="${fmt(x2)}" y1="${fmt(y)}" y2="${fmt(y)}" stroke="transparent" stroke-width="8" pointer-events="stroke"/><line class="cycle-interval-line" x1="${fmt(x1)}" x2="${fmt(x2)}" y1="${fmt(y)}" y2="${fmt(y)}" stroke="${color}" stroke-width="${weight}"${dash} opacity="${active ? 1 : related ? .95 : .78}" pointer-events="none"/>`;
+  for (const part of clearStrokeSegments(line, obstacles, 6)) markup += `<line class="cycle-interval-hit" x1="${fmt(part.x1)}" x2="${fmt(part.x2)}" y1="${fmt(y)}" y2="${fmt(y)}" stroke="transparent" stroke-width="8" pointer-events="stroke"/>`;
+  for (const part of clearStrokeSegments(line, obstacles, 2 + weight / 2)) markup += `<line class="cycle-interval-line" x1="${fmt(part.x1)}" x2="${fmt(part.x2)}" y1="${fmt(y)}" y2="${fmt(y)}" stroke="${color}" stroke-width="${weight}"${dash}${dash && part.x1 !== x1 ? ` stroke-dashoffset="${fmt(part.x1 - x1)}"` : ''} opacity="${active ? 1 : related ? .95 : .78}" pointer-events="none"/>`;
   const stroke = `fill="none" stroke="${color}" stroke-width="${weight}" stroke-linejoin="round" pointer-events="none"`;
   if (clippedStart) {
-    markup += `<path class="cycle-interval-continuation cycle-interval-continuation-start" d="M${fmt(x1 + head)},${fmt(y - edge)}L${fmt(x1)},${fmt(y)}L${fmt(x1 + head)},${fmt(y + edge)}M${fmt(x1 + 2 * head)},${fmt(y - edge)}L${fmt(x1 + head)},${fmt(y)}L${fmt(x1 + 2 * head)},${fmt(y + edge)}" ${stroke}/>`;
+    markup += `<path class="cycle-interval-continuation cycle-interval-continuation-start" d="${path([segment(x1 + head,y - edge,x1,y),segment(x1,y,x1 + head,y + edge),segment(x1 + 2 * head,y - edge,x1 + head,y),segment(x1 + head,y,x1 + 2 * head,y + edge)],`M${fmt(x1 + head)},${fmt(y - edge)}L${fmt(x1)},${fmt(y)}L${fmt(x1 + head)},${fmt(y + edge)}M${fmt(x1 + 2 * head)},${fmt(y - edge)}L${fmt(x1 + head)},${fmt(y)}L${fmt(x1 + 2 * head)},${fmt(y + edge)}`)}" ${stroke}/>`;
   } else {
-    markup += `<path class="cycle-interval-cap cycle-interval-start-cap" d="M${fmt(x1)},${fmt(y - edge)}V${fmt(y + edge)}" ${stroke}/>`;
+    markup += `<path class="cycle-interval-cap cycle-interval-start-cap" d="${path([segment(x1,y - edge,x1,y + edge)],`M${fmt(x1)},${fmt(y - edge)}V${fmt(y + edge)}`)}" ${stroke}/>`;
   }
   if (clippedEnd) {
-    markup += `<path class="cycle-interval-continuation cycle-interval-continuation-end" d="M${fmt(x2 - 2 * head)},${fmt(y - edge)}L${fmt(x2 - head)},${fmt(y)}L${fmt(x2 - 2 * head)},${fmt(y + edge)}M${fmt(x2 - head)},${fmt(y - edge)}L${fmt(x2)},${fmt(y)}L${fmt(x2 - head)},${fmt(y + edge)}" ${stroke}/>`;
+    markup += `<path class="cycle-interval-continuation cycle-interval-continuation-end" d="${path([segment(x2 - 2 * head,y - edge,x2 - head,y),segment(x2 - head,y,x2 - 2 * head,y + edge),segment(x2 - head,y - edge,x2,y),segment(x2,y,x2 - head,y + edge)],`M${fmt(x2 - 2 * head)},${fmt(y - edge)}L${fmt(x2 - head)},${fmt(y)}L${fmt(x2 - 2 * head)},${fmt(y + edge)}M${fmt(x2 - head)},${fmt(y - edge)}L${fmt(x2)},${fmt(y)}L${fmt(x2 - head)},${fmt(y + edge)}`)}" ${stroke}/>`;
   } else {
-    markup += `<path class="cycle-interval-end-arrow" d="M${fmt(x2 - head)},${fmt(y - edge)}L${fmt(x2)},${fmt(y)}L${fmt(x2 - head)},${fmt(y + edge)}" ${stroke}/>`;
+    markup += `<path class="cycle-interval-end-arrow" d="${path([segment(x2 - head,y - edge,x2,y),segment(x2,y,x2 - head,y + edge)],`M${fmt(x2 - head)},${fmt(y - edge)}L${fmt(x2)},${fmt(y)}L${fmt(x2 - head)},${fmt(y + edge)}`)}" ${stroke}/>`;
   }
   if (labelBox) {
     const center = fmt(labelBox.x + labelBox.width / 2);
@@ -164,8 +190,8 @@ export function cycleIntervalsOverlayMarkup({ intervals = [], comparisons = null
   const safeObstacles = (Array.isArray(obstacles) ? obstacles : []).filter(box => box && [box.x, box.y, box.width, box.height].every(finite) && box.width > 0 && box.height > 0);
   // The existing legend and replay transport belong inside the same plot. A
   // bottom-docked HUD explicitly reserves its top edge so complete continuous
-  // period lines sit above it; arbitrary marker/readout boxes affect labels
-  // only. This moves annotations, never the price/date axes or price scale.
+  // period lines sit above it. Other marker/readout boxes reserve both labels
+  // and visible strokes without moving the original row or UTC endpoints.
   const plotHeight = bottom - top, inset = Math.min(28, plotHeight / 4);
   const docks = safeObstacles.filter(box => box.dock === 'bottom' && box.x < right && box.x + box.width > left && box.y < bottom && box.y + box.height > top);
   const bandBottom = Math.max(top + inset, Math.min(bottom - inset, ...docks.map(box => box.y - 8)));
@@ -211,6 +237,7 @@ export function cycleIntervalsOverlayMarkup({ intervals = [], comparisons = null
     item.labelBox = null;
     item.capHeight = Math.min(3, lanePitch / 3, item.y - bandTop, bandBottom - item.y);
     item.previewBox = previewFor(item, bounds);
+    item.strokeObstacles = safeObstacles.filter(box => box.x < item.x2 + 6 && box.x + box.width > item.x1 - 6);
   }
   // Selection only prioritizes readable text and foreground painting. It never
   // moves a row; dense layouts drop text before crossing a neighboring line.

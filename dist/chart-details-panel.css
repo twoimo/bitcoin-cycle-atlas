@@ -1,7 +1,7 @@
 .workspace.atlas-details-layout{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 0 var(--rail-width);grid-template-rows:minmax(0,1fr)}
 .workspace.atlas-details-layout>#main{grid-column:1;grid-row:1;width:100%;margin:0;justify-self:stretch;min-width:0;min-height:0}
 .workspace.atlas-details-layout[data-details-open=true]{grid-template-columns:minmax(0,1fr) var(--detail-width,320px) var(--rail-width)}
-.chart-details-panel{position:relative;grid-column:2;grid-row:1;display:flex;flex-direction:column;gap:12px;min-width:0;min-height:0;height:100%;box-sizing:border-box;padding:12px 12px;border-left:1px solid var(--chart-details-panel-rule);background:var(--chart-details-panel-surface);color:var(--chart-details-panel-ink);overflow:hidden;z-index:36}
+.chart-details-panel{position:relative;grid-column:2;grid-row:1;display:flex;flex-direction:column;gap:12px;min-width:0;min-height:0;height:100%;box-sizing:border-box;padding:12px 12px;border-left:1px solid var(--chart-details-panel-rule);background:var(--chart-details-panel-surface);color:var(--chart-details-panel-ink);overflow:hidden;isolation:isolate;z-index:40}
 .chart-details-panel[hidden]{display:none}
 .chart-details-panel .reader-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex:none;min-width:0;margin:0}
 .chart-details-panel .reader-heading h2{flex:1;min-width:0;margin:4px 0 0;font-size:13px;line-height:1.5;font-weight:550;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
@@ -48,7 +48,7 @@
 .chart-details-panel .atlas-mode-tabs button:hover{background:var(--chart-details-panel-surface-5);color:var(--chart-details-panel-ink-13)}
 @media(max-width:900px){
   .workspace.atlas-details-layout[data-details-open=true]{grid-template-columns:minmax(0,1fr) 0 var(--rail-width)}
-  .chart-details-panel{position:absolute;grid-column:1;grid-row:1;inset:0 var(--rail-width) 0 auto;width:min(340px,calc(100% - var(--rail-width)));height:100%;padding:8px 12px;gap:8px;z-index:38;box-shadow:-10px 0 28px var(--chart-details-panel-shadow)}
+  .chart-details-panel{position:absolute;grid-column:1;grid-row:1;inset:0 var(--rail-width) 0 auto;width:min(340px,calc(100% - var(--rail-width)));height:100%;padding:8px 12px;gap:8px;z-index:40;box-shadow:-10px 0 28px var(--chart-details-panel-shadow)}
   .chart-details-panel .reader-heading h2{font-size:12px}
   .chart-details-panel .reader-body p,.chart-details-panel .reader-body li{font-size:11px;line-height:1.65}
 }

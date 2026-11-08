@@ -2,7 +2,7 @@ import { replaceWithSkeleton } from './loading-surfaces.js';
 import {restoreAssetForecastPath} from './asset-forecast-records.js?v=1.29.0';
 import {createAssetJournalLoader} from './asset-forecast-loader.js?v=1.29.0';
 export {createAssetJournalLoader};
-import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.36.0';
+import {drawAtlasPriceChart} from './atlas-price-chart.js?v=1.36.1';
 import {nearestDailyIndex} from './chart-math.js?v=1.29.0';
 import {mountDialogViewport} from './dialog-viewport.js?v=1.29.0';
 import {mountForecastReplay} from './forecast-replay-view.js?v=1.29.0';

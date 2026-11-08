@@ -1,8 +1,8 @@
-import { atlasNavigationPages } from './atlas-navigation.js?v=1.36.0';
+import { atlasNavigationPages } from './atlas-navigation.js?v=1.36.1';
 import { mountChartBottomBar } from './chart-bottom-bar.js';
 import { mountMobileWorkspace } from './mobile-workspace.js';
 import { createWorkspaceHistory } from './workspace-history.js';
-import { parseGoToRequest } from './chart-view-policy.js?v=1.36.0';
+import { parseGoToRequest } from './chart-view-policy.js?v=1.36.1';
 import { normalizePriceDomain } from './price-axis.js';
 import { createChartSvgExport, createChartPngFromSvg } from './chart-export.js';
 import { isIntradayInterval } from './ohlc-data.js';

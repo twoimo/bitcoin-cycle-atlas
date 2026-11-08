@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
-import { drawAtlasPriceChart } from '../dist/atlas-price-chart.js';
+import { drawAtlasPriceChart, priceChartOverlayObstacles } from '../dist/atlas-price-chart.js';
 import { buildCycleMilestones, INTERVAL_RELATIONS, MILESTONE_TYPES } from '../dist/cycle-milestones.js';
 import { resolveCycleSelection } from '../dist/cycle-selection.js';
 import { createChartSvgExport } from '../dist/chart-export.js';
@@ -253,6 +253,7 @@ test('SVG export preserves the actual bottom layout once, with source dates, nin
   assert.deepEqual(new Set(periods(exported).map(node => node.dataset.cycleRelation)), new Set(INTERVAL_RELATIONS.map(row => row.id)));
   assert.equal(exported.querySelectorAll('.cycle-interval-preview').length, 0);
   assert.equal(exported.querySelectorAll('[tabindex]').length, 0);
+  assert.equal(exported.querySelector('.chart-latest-price-tag').getAttribute('visibility'),'visible','export restores the latest quote after removing the temporary selection cursor');
   assert.equal(serialize(svg), before, 'export removes temporary interactions only from its clone');
 });
 
@@ -289,4 +290,58 @@ test('HUD geometry updates only period annotations without rebuilding the price 
   const replacement = serialize(svg);
   assert.equal(controller.updateCycleOverlayObstacles([]), null, 'a retired controller cannot relayout a newer drawing');
   assert.equal(serialize(svg), replacement);
+});
+
+test('phone history names, period arrows, date badges and price labels retain separate painted regions',()=>{
+  const historicalEvents=source.prices.filter((_,index)=>index%365===0).map(([date],index)=>({id:`mobile-event-${index}`,date,label:'역사 사건',title:'역사 사건 근거',category:'market',importance:3}));
+  for(const [width,height]of [[390,844],[320,740],[390,430]]){
+    const {svg}=render({width,height,historicalEvents,showHistoricalEvents:true});
+    const labelled=svg.querySelectorAll('.history-event-marker').filter(node=>(node.getAttribute('class')||'').includes('has-label'));
+    assert.ok(labelled.length>0,`${width}×${height}: available historical names remain visible`);
+    const arrows=svg.querySelectorAll('.cycle-interval-line');
+    for(const node of labelled){
+      const box=node.querySelector('rect'),x=number(box,'x'),y=number(box,'y'),right=x+number(box,'width'),bottom=y+number(box,'height');
+      assert.ok(right<Number(svg.dataset.plotRight),'names stop before the price-axis gutter');
+      for(const arrow of arrows)assert.ok(right<=number(arrow,'x1')||x>=number(arrow,'x2')||bottom<number(arrow,'y1')||y>number(arrow,'y1'),'a permanent historical name cannot cover a period arrow');
+    }
+    const badge=svg.querySelector('.cross-date-tag').querySelector('rect'),badgeTop=number(badge,'y');
+    assert.ok(badgeTop+number(badge,'height')<=height);
+    for(const tick of svg.querySelectorAll('.price-time-label'))assert.ok(number(tick,'y')+3<badgeTop,'normal date ticks retain a separate row');
+    const cursor=svg.querySelector('.cross-price-tag').querySelector('rect');
+    for(const tick of svg.querySelectorAll('[data-price-axis-label="tick"]').filter(node=>node.getAttribute('visibility')!=='hidden')){
+      const top=number(tick,'y')-number(tick,'font-size'),bottom=number(tick,'y')+3;
+      assert.ok(bottom<=number(cursor,'y')||top>=number(cursor,'y')+number(cursor,'height'),'visible price ticks stay clear of the selected-price tag');
+    }
+  }
+});
+
+test('moving the legend into the top HUD no longer compresses all period rows as a bottom dock',()=>{
+  const legend={hidden:false,closest:()=>null,matches:()=>true,getBoundingClientRect:()=>({left:170,top:36,width:180,height:30})};
+  const svg={clientWidth:390,clientHeight:430,getBoundingClientRect:()=>({left:0,top:0,width:390,height:430}),parentElement:{querySelectorAll:()=>[legend]}};
+  const [top]=priceChartOverlayObstacles(svg);assert.equal(top.dock,undefined);
+  legend.getBoundingClientRect=()=>({left:170,top:370,width:180,height:30});
+  assert.equal(priceChartOverlayObstacles(svg)[0].dock,'bottom');
+});
+
+test('period text yields to a fixed model-evidence dot without moving its date, price or the chart frame',()=>{
+  const data={...baseline,start:dateFromDay(utcDay(baseline.split)-730),end:dateFromDay(utcDay(baseline.split)+730)};
+  const options={width:320,height:595,scale:'linear',priceDomain:{min:1,max:1000000},showCycleMarkers:false};
+  const before=render(options,data),left=Number(before.svg.dataset.plotLeft),right=Number(before.svg.dataset.plotRight),splitX=(left+right)/2;
+  const target=before.svg.querySelectorAll('.cycle-interval-label').find(node=>number(node,'x')>splitX+12);
+  assert.ok(target,'The regression requires a visible future period label');
+  const intervalId=target.closest('[data-cycle-interval]').dataset.cycleInterval;
+  const run=target.querySelector('tspan')||target,baselineY=run.getAttribute('y')===null?number(target,'y'):number(run,'y');
+  const day=utcDay(data.start)+Math.round((number(target,'x')-left)/(right-left)*(utcDay(data.end)-utcDay(data.start)));
+  const evidence={id:'fixed-evidence-collision',date:dateFromDay(day),price:before.controller.getPriceScale().invert(baselineY-3),title:'모델 근거',description:'The existing model anchor remains fixed.'};
+  const after=render({...options,forecastEvidence:[evidence]},data),dot=after.svg.querySelector('[data-forecast-evidence="fixed-evidence-collision"]').querySelector('circle');
+  assert.ok(dot);near(number(dot,'cx'),left+(day-utcDay(data.start))/(utcDay(data.end)-utcDay(data.start))*(right-left),'evidence date coordinate');
+  near(number(dot,'cy'),baselineY-3,'evidence price coordinate');
+  assert.equal(after.svg.getAttribute('viewBox'),before.svg.getAttribute('viewBox'));
+  for(const key of ['plotLeft','plotRight','plotTop','plotBottom','priceBottom'])assert.equal(after.svg.dataset[key],before.svg.dataset[key],key);
+  assert.deepEqual(new Set(periods(after.svg).map(node=>node.dataset.cycleInterval)),new Set(periods(before.svg).map(node=>node.dataset.cycleInterval)),'Every period remains inspectable');
+  const label=()=>periods(after.svg).find(node=>node.dataset.cycleInterval===intervalId).querySelector('.cycle-interval-label');
+  const original=serialize(target);
+  assert.notEqual(label()&&serialize(label()),original,'The exact colliding text must move or use the existing collapsed-label policy');
+  after.controller.updateCycleOverlayObstacles([]);
+  assert.notEqual(label()&&serialize(label()),original,'HUD repacking must retain the evidence obstacle');
 });
