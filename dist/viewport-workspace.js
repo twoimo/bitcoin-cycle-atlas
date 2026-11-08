@@ -9,7 +9,7 @@ import { mountMobileWorkspace } from './mobile-workspace.js?v=1.29.0';
 
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const kst = value => value ? new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(value)) : '첫 갱신 대기';
+const kst = value => value ? new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(value)) : '확인 기록 없음';
 const compactKst = value => {
   const parts=Object.fromEntries(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Seoul',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(value)).map(part=>[part.type,part.value]));
   return `${parts.month}.${parts.day} ${parts.hour}:${parts.minute}`;
@@ -164,7 +164,7 @@ export function initViewportWorkspace(icon) {
   plot.prepend($('#lab-metrics'));plot.append($('.lab-chart-foot'));
   stage.append($('.lab-chart-meta'),$('.atlas-inspector'),$('#atlas-event-rail'));
   const tools=document.createElement('div');tools.className='atlas-canvas-tools';
-  tools.innerHTML='<button data-reader="selection">값·근거</button><button data-reader="guide">읽는 법</button><button data-reader="math">계산식</button><button data-reader="update" id="atlas-update-status" title="자동 갱신 상태"></button>';
+  tools.innerHTML='<button data-reader="selection">값·근거</button><button data-reader="guide">읽는 법</button><button data-reader="math">계산식</button><button data-reader="update" id="atlas-update-status" title="마지막 자료 확인"></button>';
   stage.append(tools);
   const workspace=$('.workspace');workspace.classList.add('atlas-details-layout');workspace.dataset.detailsOpen='false';
   const reader=document.createElement('aside');reader.id='chart-reader';reader.className='chart-details-panel';reader.hidden=true;reader.setAttribute('aria-labelledby','chart-reader-title');
@@ -248,10 +248,10 @@ export function initViewportWorkspace(icon) {
   }
   const status=()=>{
     const pending=!update.checkedAt;
-    $('#atlas-update-status').textContent=pending?'갱신 대기':`${compactKst(update.checkedAt)} KST`;
-    $('#atlas-update-status').setAttribute('aria-label',pending?'자동 자료 갱신 첫 실행 대기 · 상세 보기':`자동 자료 갱신 확인 ${kst(update.checkedAt)} KST · 상세 보기`);
+    $('#atlas-update-status').textContent=pending?'기록 없음':`${compactKst(update.checkedAt)} KST`;
+    $('#atlas-update-status').setAttribute('aria-label',pending?'자료 확인 기록 없음 · 상세 보기':`마지막 자료 확인 ${kst(update.checkedAt)} KST · 상세 보기`);
     $('#atlas-update-status').dataset.status=update.status;
-    $('#atlas-update-status').title=`차트 ${displayedObservationDate||'—'} UTC · 자동 배포 ${update.latestObservationDate||'—'} UTC · ${pending?'첫 실행 대기':kst(update.checkedAt)+' KST 확인'} · 6시간마다`;
+    $('#atlas-update-status').title=`차트 ${displayedObservationDate||'—'} UTC · 배포 자료 ${update.latestObservationDate||'—'} UTC · ${pending?'확인 기록 없음':'마지막 자료 확인 '+kst(update.checkedAt)+' KST'}`;
   };
   status();
   document.addEventListener('atlas:dataset',event=>{displayedObservationDate=event.detail.latestObservationDate;status();if(!reader.hidden&&reader.dataset.kind==='update')openReader('update',{preservePage:true});});
@@ -281,9 +281,9 @@ export function initViewportWorkspace(icon) {
       source.append($('#atlas-exact-details .lab-details-body').cloneNode(true));
     }
     else{
-      source.innerHTML=`<p><b>현재 차트의 관측일</b><br>${esc(displayedObservationDate||'—')} UTC</p><p><b>자동 배포 자료의 관측일</b><br>${esc(update.latestObservationDate||'—')} UTC</p><p><b>자동 확인</b><br>${esc(kst(update.checkedAt))}${update.checkedAt?' KST':''}</p><p><b>가격 자료 변경</b><br>${esc(kst(update.dataUpdatedAt))} KST</p><p><b>상태</b><br>${esc({pending:'아직 자동 갱신을 실행하지 않았습니다.',validated:'검증을 통과한 새 일별 자료를 반영했습니다.','no-change':'확인 결과 새 완료 일봉이 없어 기존 자료를 유지했습니다.'}[update.status]||update.status)}</p><p>매일 03:20 · 09:20 · 15:20 · 21:20 KST에 확인합니다. GitHub 실행 대기나 데이터 제공 지연으로 시각이 달라질 수 있습니다. 당일 진행 중인 값은 제외합니다.</p><p>날짜 순서, 연속성, 양수 가격, 기존 기록 보존을 검증합니다. 실패하면 기존 공개 자료를 유지합니다. 차트는 갱신된 자료로 다시 계산하고, 과거 연구 보고서의 고정 표본은 유지합니다.</p><p><a href="https://github.com/twoimo/bitcoin-cycle-atlas/actions/workflows/refresh-data.yml" target="_blank" rel="noopener noreferrer">자동 갱신 실행 기록 ↗</a></p><p>Data © Coin Metrics · CC BY-NC 4.0 · 비상업 연구용 · UTC 일말 기준.</p>`;
+      source.innerHTML=`<p><b>현재 차트의 관측일</b><br>${esc(displayedObservationDate||'—')} UTC</p><p><b>배포 자료의 관측일</b><br>${esc(update.latestObservationDate||'—')} UTC</p><p><b>마지막 자료 확인</b><br>${esc(kst(update.checkedAt))}${update.checkedAt?' KST':''}</p><p><b>가격 자료 변경</b><br>${esc(kst(update.dataUpdatedAt))}${update.dataUpdatedAt?' KST':''}</p><p><b>상태</b><br>${esc({pending:'자료 확인 시각이 아직 기록되지 않았습니다.',validated:'검증을 통과한 새 일별 자료를 반영했습니다.','no-change':'확인 결과 새 완료 일봉이 없어 기존 자료를 유지했습니다.'}[update.status]||update.status)}</p><p>기록된 마지막 확인 시각과 완료된 UTC 일봉의 관측일을 표시합니다. 당일 진행 중인 값은 제외합니다.</p><p>날짜 순서, 연속성, 양수 가격, 기존 기록 보존을 검증합니다. 실패하면 기존 공개 자료를 유지합니다. 차트는 갱신된 자료로 다시 계산하고, 과거 연구 보고서의 고정 표본은 유지합니다.</p><p>Data © Coin Metrics · CC BY-NC 4.0 · 비상업 연구용 · UTC 일말 기준.</p>`;
       if(browserCheckedAt)source.insertAdjacentHTML('beforeend',`<p>이 브라우저에서 별도 확인한 시각 · ${esc(kst(browserCheckedAt))} KST</p>`);
-      if(displayedObservationDate!==update.latestObservationDate)source.insertAdjacentHTML('beforeend','<p>이 기기에 저장됐거나 별도로 가져온 자료가 자동 배포 번들보다 최신입니다. 차트는 현재 차트의 관측일까지 표시합니다.</p>');
+      if(displayedObservationDate!==update.latestObservationDate)source.insertAdjacentHTML('beforeend','<p>이 기기에 저장됐거나 별도로 가져온 자료의 관측일이 배포 자료와 다릅니다. 차트는 현재 차트의 관측일까지 표시합니다.</p>');
       if(update.runUrl)source.insertAdjacentHTML('beforeend',`<p><a href="${esc(update.runUrl)}" target="_blank" rel="noopener noreferrer">이 자료를 만든 실행 ↗</a></p>`);
     }
     showReader(kind,titles[kind],source,options);
