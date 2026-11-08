@@ -1,0 +1,623 @@
+{
+  "schemaVersion": 1,
+  "kind": "verified-ui-evidence-recovery",
+  "diagnosticStatus": "passed",
+  "nativeCases": {
+    "before": 6,
+    "after": 21,
+    "failed": 0
+  },
+  "build": {
+    "build_uuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+    "status": "stopped",
+    "build_outcome": "success",
+    "created_on": "2026-11-08T15:45:28.951Z",
+    "initializing_on": "2026-11-08T16:07:06.234Z",
+    "running_on": "2026-11-08T16:07:09.374Z",
+    "stopped_on": "2026-11-08T16:12:33.166Z",
+    "commit_hash": "f5b1a874817aeda9bb1b7c6f7d731a010757772e"
+  },
+  "sourceProof": {
+    "application": {
+      "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+      "sourceTree": "aae89d4bb10c3636f692347f72e6ad3726c9152f",
+      "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+      "trackedDistFiles": 931,
+      "distUnchanged": true
+    },
+    "verifier": {
+      "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+      "files": {
+        "scripts/verify-eth-candidate-browser.mjs": "f2e798c4bc42fab4d88bedbfe3816f22a1dc485491acb58031edeaec58c610c1",
+        "scripts/verify-ui-contract-browser.mjs": "dfd940b4e6f2434df93d6826271a17fb019039c9ee8ac4d38752b9e22af42ab9",
+        "scripts/browser-source-identity.mjs": "493bd0f291827d0d5e6f7102907e24845a8753f16dca376189df16ee8bf72cf0",
+        "scripts/btc-offline-refresh-policy.mjs": "da9810a7faad88565c6238bda313b943d0b99a08b6bc47c1f361e727e46aca27"
+      },
+      "wrapperSha256": "c2b051b2cc376d4a035ce5d71908acc286cdd549729ad2b2f097aeab90ea7b33",
+      "committedHarness": true
+    },
+    "baselineCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+    "phases": [
+      {
+        "phase": "before",
+        "status": "passed",
+        "application": {
+          "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+          "sourceTree": "100fa0b63a2776983d05d60e6a897f06d0cf86c0",
+          "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+          "trackedDistFiles": 886,
+          "distUnchanged": true
+        },
+        "verifier": {
+          "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+          "copiedIntoBaseline": true,
+          "files": {
+            "scripts/verify-eth-candidate-browser.mjs": "f2e798c4bc42fab4d88bedbfe3816f22a1dc485491acb58031edeaec58c610c1",
+            "scripts/verify-ui-contract-browser.mjs": "dfd940b4e6f2434df93d6826271a17fb019039c9ee8ac4d38752b9e22af42ab9",
+            "scripts/browser-source-identity.mjs": "493bd0f291827d0d5e6f7102907e24845a8753f16dca376189df16ee8bf72cf0",
+            "scripts/btc-offline-refresh-policy.mjs": "da9810a7faad88565c6238bda313b943d0b99a08b6bc47c1f361e727e46aca27"
+          }
+        },
+        "nativeReport": {
+          "status": "passed",
+          "caseScope": "wp4-wp7",
+          "expectedCaseCount": 6,
+          "completedCaseCount": 6,
+          "browserVersion": {
+            "protocolVersion": "1.3",
+            "product": "Chrome/157.0.8103.38",
+            "revision": "@a733b5afbb3ba618844ff8876b89ad1a774b2f18",
+            "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+            "jsVersion": "15.7.112.23"
+          },
+          "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+          "sourceIntegrity": {
+            "checkedFiles": 139,
+            "changedSources": [],
+            "unchangedDuringRun": true
+          },
+          "failedCases": []
+        }
+      },
+      {
+        "phase": "after",
+        "status": "passed",
+        "application": {
+          "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+          "sourceTree": "aae89d4bb10c3636f692347f72e6ad3726c9152f",
+          "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+          "trackedDistFiles": 931,
+          "distUnchanged": true
+        },
+        "verifier": {
+          "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+          "copiedIntoBaseline": false,
+          "files": {
+            "scripts/verify-eth-candidate-browser.mjs": "f2e798c4bc42fab4d88bedbfe3816f22a1dc485491acb58031edeaec58c610c1",
+            "scripts/verify-ui-contract-browser.mjs": "dfd940b4e6f2434df93d6826271a17fb019039c9ee8ac4d38752b9e22af42ab9",
+            "scripts/browser-source-identity.mjs": "493bd0f291827d0d5e6f7102907e24845a8753f16dca376189df16ee8bf72cf0",
+            "scripts/btc-offline-refresh-policy.mjs": "da9810a7faad88565c6238bda313b943d0b99a08b6bc47c1f361e727e46aca27"
+          }
+        },
+        "nativeReport": {
+          "status": "passed",
+          "caseScope": "wp4-wp7",
+          "expectedCaseCount": 21,
+          "completedCaseCount": 21,
+          "browserVersion": {
+            "protocolVersion": "1.3",
+            "product": "Chrome/157.0.8103.38",
+            "revision": "@a733b5afbb3ba618844ff8876b89ad1a774b2f18",
+            "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+            "jsVersion": "15.7.112.23"
+          },
+          "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+          "sourceIntegrity": {
+            "checkedFiles": 145,
+            "changedSources": [],
+            "unchangedDuringRun": true
+          },
+          "failedCases": []
+        }
+      }
+    ]
+  },
+  "productionMergeComparison": {
+    "commit": "b92c6d79ccf2fb9a82a344a6b58e3f29dc533bf0",
+    "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+    "matchesNativeApplicationDist": true,
+    "deploymentVerifiedByThisManifest": false
+  },
+  "reports": [
+    {
+      "name": "ui-review/diagnostic.json",
+      "bytes": 42473,
+      "sha256": "dd92a6aff89aaa36d8cbb3924fc9e3cab83598694077101e5fc9f010d737a00f",
+      "encodedBytes": 8256,
+      "encodedSha256": "51a3cf7e7713c5d568bd6c32c2546be7ffee0ee92ad596c7f15304194c2ba8b5",
+      "status": "passed",
+      "expectedFrom": "summary receipt"
+    },
+    {
+      "name": "ui-review-before/report.json",
+      "bytes": 671656,
+      "sha256": "e1f51cbe16fce3c68fda8d6d008c69509dd80ccb3de2f2473f866648aa774ac0",
+      "encodedBytes": 45522,
+      "encodedSha256": "9774e2b95854cba59221c5a058c6a678cc12c406fa413fe8b0f65f869cc3dbbb",
+      "status": "passed",
+      "expectedFrom": "summary receipt"
+    },
+    {
+      "name": "ui-review-after/report.json",
+      "bytes": 1031400,
+      "sha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e",
+      "encodedBytes": 66394,
+      "encodedSha256": "72ce420f59e4ddec3e2e960d2b3bb75262e4f1e117a1ece1c2039fc8f335e5f0",
+      "status": "passed",
+      "expectedFrom": "summary receipt"
+    }
+  ],
+  "pngTransport": {
+    "planned": 19,
+    "directBuildLogRecovery": 11,
+    "sha256IdenticalPreservedRecovery": 6,
+    "available": 17,
+    "missing": 2,
+    "imagesCompleteMarkerReceived": false,
+    "fullTransportComplete": false,
+    "freshPaginationCheck": "fresh-retrieval-check.json"
+  },
+  "requiredBeforeAfterViewportCharts": {
+    "complete": true,
+    "count": 12,
+    "files": [
+      "ui-review-before/wp4-before-320x740-chart.png",
+      "ui-review-before/wp4-before-390x844-chart.png",
+      "ui-review-before/wp4-before-768x1024-chart.png",
+      "ui-review-before/wp4-before-1024x768-chart.png",
+      "ui-review-before/wp4-before-1440x900-chart.png",
+      "ui-review-before/wp4-before-1920x1080-chart.png",
+      "ui-review-after/wp4-after-320x740-chart.png",
+      "ui-review-after/wp4-after-390x844-chart.png",
+      "ui-review-after/wp4-after-768x1024-chart.png",
+      "ui-review-after/wp4-after-1024x768-chart.png",
+      "ui-review-after/wp4-after-1440x900-chart.png",
+      "ui-review-after/wp4-after-1920x1080-chart.png"
+    ]
+  },
+  "pngs": [
+    {
+      "name": "ui-review-before/wp4-before-320x740-chart.png",
+      "bytes": 81087,
+      "sha256": "5ac0aea41b778f437a923718e626d50008e6d98b9e20e0ba5fc0b54d4df75b6c",
+      "width": 320,
+      "height": 740,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+        "nativeReport": "ui-review-before/report.json",
+        "nativeReportSha256": "e1f51cbe16fce3c68fda8d6d008c69509dd80ccb3de2f2473f866648aa774ac0"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "originalChunkName": "ui-review-before/wp4-before-320x740-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-before/wp4-before-390x844-chart.png",
+      "bytes": 99336,
+      "sha256": "b9c6db22e078f227e1d1dff3c473d7ff758114fb2b5e9c33cac9d7c33ea28323",
+      "width": 390,
+      "height": 844,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+        "nativeReport": "ui-review-before/report.json",
+        "nativeReportSha256": "e1f51cbe16fce3c68fda8d6d008c69509dd80ccb3de2f2473f866648aa774ac0"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "originalChunkName": "ui-review-before/wp4-before-390x844-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-before/wp4-before-768x1024-chart.png",
+      "bytes": 189440,
+      "sha256": "fc092c2ff44f3e190235043a7babb6049ee693f6359b8628f6bc735481a03536",
+      "width": 768,
+      "height": 1024,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+        "nativeReport": "ui-review-before/report.json",
+        "nativeReportSha256": "e1f51cbe16fce3c68fda8d6d008c69509dd80ccb3de2f2473f866648aa774ac0"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "originalChunkName": "ui-review-before/wp4-before-768x1024-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-before/wp4-before-1024x768-chart.png",
+      "bytes": 206753,
+      "sha256": "17fdceb34bf73e817506b2506053e3362f51b575b166de332afb1df43d67205f",
+      "width": 1024,
+      "height": 768,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+        "nativeReport": "ui-review-before/report.json",
+        "nativeReportSha256": "e1f51cbe16fce3c68fda8d6d008c69509dd80ccb3de2f2473f866648aa774ac0"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "originalChunkName": "ui-review-before/wp4-before-1024x768-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-before/wp4-before-1440x900-chart.png",
+      "bytes": 265021,
+      "sha256": "c200d3e53c19a7e73c98d4aba98efb3f3a8602ef88825a95500f8cb0a18c4578",
+      "width": 1440,
+      "height": 900,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+        "nativeReport": "ui-review-before/report.json",
+        "nativeReportSha256": "e1f51cbe16fce3c68fda8d6d008c69509dd80ccb3de2f2473f866648aa774ac0"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "originalChunkName": "ui-review-before/wp4-before-1440x900-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-before/wp4-before-1920x1080-chart.png",
+      "bytes": 310341,
+      "sha256": "ab5436b64d449bb85b73e9a376065a244249af35fca1378390c9c3a9a6d43021",
+      "width": 1920,
+      "height": 1080,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+        "nativeReport": "ui-review-before/report.json",
+        "nativeReportSha256": "e1f51cbe16fce3c68fda8d6d008c69509dd80ccb3de2f2473f866648aa774ac0"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "originalChunkName": "ui-review-before/wp4-before-1920x1080-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-320x740-chart.png",
+      "bytes": 80073,
+      "sha256": "89e3d36aecb6baa42227ee8e1906ce8e703577235942f2af65c7f6eb6d4baba0",
+      "width": 320,
+      "height": 740,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "originalChunkName": "ui-review-after/wp4-after-320x740-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-390x844-chart.png",
+      "bytes": 98938,
+      "sha256": "9492ec11ac9306d2d87990149863c80bf2d1a79bfd6feb0af3b09f6f619e26c5",
+      "width": 390,
+      "height": 844,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "originalChunkName": "ui-review-after/wp4-after-390x844-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-768x1024-chart.png",
+      "bytes": 188118,
+      "sha256": "1a909ea0f0720643a7c2895636143fda8449a44331ea1ec8497579ce6944ae2e",
+      "width": 768,
+      "height": 1024,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "originalChunkName": "ui-review-after/wp4-after-768x1024-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-1024x768-chart.png",
+      "bytes": 207040,
+      "sha256": "01aa73dc28d6d640f37f9926e5996742ffb86eae0f8d96e82585ff9806e21579",
+      "width": 1024,
+      "height": 768,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "originalChunkName": "ui-review-after/wp4-after-1024x768-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-1440x900-chart.png",
+      "bytes": 265180,
+      "sha256": "6205377a36c43bfbce29194eee0dd246ec29fe61a11b979179d75047a3593137",
+      "width": 1440,
+      "height": 900,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e"
+      },
+      "recoveredBytesFrom": {
+        "method": "original-build-log-chunks",
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "sourceCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "originalChunkName": "ui-review-after/wp4-after-1440x900-chart.png",
+        "rawApiDirectory": "raw-api/"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-1920x1080-chart.png",
+      "bytes": 312827,
+      "sha256": "4c24ee58d4cdefc3228bb36bf28ebef897b1ca4648275c848a88f35574d19b16",
+      "width": 1920,
+      "height": 1080,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "d121c72b-be74-47b3-a19b-a5dcbdfb1c93",
+        "sourceCommit": "1e7db4bdfa33774d2d9871aaf015c16df27807f4",
+        "distTree": "2b47f6287171d0e148ae3bf4cdf63970edaac24f",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-d121/ui-review-after/wp4-after-1920x1080-chart.png",
+        "originalNativeReportSha256": "d48460c5c1ee12e28ffa49333d444783ed726723c229c820442932003e590015",
+        "originalNativePhaseStatus": "passed",
+        "originalAggregateStatus": "failed",
+        "verification": "PNG byte count and SHA-256 exactly match the screenshot receipt from the final 24e native execution"
+      }
+    },
+    {
+      "name": "ui-review-after/ui-entry-mstr-root-1440x900.png",
+      "bytes": 163767,
+      "sha256": "2afcab5c01e69c5c507a7ac30071a86b2db6aab37834d62e1c8fb00a7499c058",
+      "width": 1440,
+      "height": 900,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "d121c72b-be74-47b3-a19b-a5dcbdfb1c93",
+        "sourceCommit": "1e7db4bdfa33774d2d9871aaf015c16df27807f4",
+        "distTree": "2b47f6287171d0e148ae3bf4cdf63970edaac24f",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-d121/ui-review-after/ui-entry-mstr-root-1440x900.png",
+        "originalNativeReportSha256": "d48460c5c1ee12e28ffa49333d444783ed726723c229c820442932003e590015",
+        "originalNativePhaseStatus": "passed",
+        "originalAggregateStatus": "failed",
+        "verification": "PNG byte count and SHA-256 exactly match the screenshot receipt from the final 24e native execution"
+      }
+    },
+    {
+      "name": "ui-review-after/ui-entry-bmnr-root-1440x900.png",
+      "bytes": 153587,
+      "sha256": "f677df8fa63834f50b72dfe9c37c48d46afde07a6ae76318e03d32d798805e7d",
+      "width": 1440,
+      "height": 900,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "d121c72b-be74-47b3-a19b-a5dcbdfb1c93",
+        "sourceCommit": "1e7db4bdfa33774d2d9871aaf015c16df27807f4",
+        "distTree": "2b47f6287171d0e148ae3bf4cdf63970edaac24f",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-d121/ui-review-after/ui-entry-bmnr-root-1440x900.png",
+        "originalNativeReportSha256": "d48460c5c1ee12e28ffa49333d444783ed726723c229c820442932003e590015",
+        "originalNativePhaseStatus": "passed",
+        "originalAggregateStatus": "failed",
+        "verification": "PNG byte count and SHA-256 exactly match the screenshot receipt from the final 24e native execution"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-320x740-legend.png",
+      "bytes": 33020,
+      "sha256": "0c793e0404d396d5b05f74cf72a87d031a7a1d3d10042cebe1f1812684a95487",
+      "width": 320,
+      "height": 740,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "d121c72b-be74-47b3-a19b-a5dcbdfb1c93",
+        "sourceCommit": "1e7db4bdfa33774d2d9871aaf015c16df27807f4",
+        "distTree": "2b47f6287171d0e148ae3bf4cdf63970edaac24f",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-d121/ui-review-after/wp4-after-320x740-legend.png",
+        "originalNativeReportSha256": "d48460c5c1ee12e28ffa49333d444783ed726723c229c820442932003e590015",
+        "originalNativePhaseStatus": "passed",
+        "originalAggregateStatus": "failed",
+        "verification": "PNG byte count and SHA-256 exactly match the screenshot receipt from the final 24e native execution"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-390x844-legend.png",
+      "bytes": 44351,
+      "sha256": "ef655ee0811460bbed981df41e60e55b4520fba1978bc7f0c432b92dc92cc293",
+      "width": 390,
+      "height": 844,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "d121c72b-be74-47b3-a19b-a5dcbdfb1c93",
+        "sourceCommit": "1e7db4bdfa33774d2d9871aaf015c16df27807f4",
+        "distTree": "2b47f6287171d0e148ae3bf4cdf63970edaac24f",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-d121/ui-review-after/wp4-after-390x844-legend.png",
+        "originalNativeReportSha256": "d48460c5c1ee12e28ffa49333d444783ed726723c229c820442932003e590015",
+        "originalNativePhaseStatus": "passed",
+        "originalAggregateStatus": "failed",
+        "verification": "PNG byte count and SHA-256 exactly match the screenshot receipt from the final 24e native execution"
+      }
+    },
+    {
+      "name": "ui-review-after/wp4-after-1440x900-legend.png",
+      "bytes": 210401,
+      "sha256": "acae384c7b6134a920e501e2b3532981bb521c80370f00d0de84237376142c76",
+      "width": 1440,
+      "height": 900,
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e"
+      },
+      "recoveredBytesFrom": {
+        "method": "sha256-identical-preserved-png",
+        "buildUuid": "d121c72b-be74-47b3-a19b-a5dcbdfb1c93",
+        "sourceCommit": "1e7db4bdfa33774d2d9871aaf015c16df27807f4",
+        "distTree": "2b47f6287171d0e148ae3bf4cdf63970edaac24f",
+        "originalFile": "/workspace/scratch/42f0fe61337b/ui-review-d121/ui-review-after/wp4-after-1440x900-legend.png",
+        "originalNativeReportSha256": "d48460c5c1ee12e28ffa49333d444783ed726723c229c820442932003e590015",
+        "originalNativePhaseStatus": "passed",
+        "originalAggregateStatus": "failed",
+        "verification": "PNG byte count and SHA-256 exactly match the screenshot receipt from the final 24e native execution"
+      }
+    }
+  ],
+  "missingPngs": [
+    {
+      "name": "ui-review-after/wp4-after-1440x900-replay.png",
+      "bytes": 146597,
+      "sha256": "cc54b392efd671bd18f33c42f754ae5d4cd432ec3781a44ecc78f4d4f393d6c6",
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e"
+      },
+      "reason": "No complete log transport and no byte-identical preserved PNG"
+    },
+    {
+      "name": "ui-review-after/wp4-after-1920x1080-replay.png",
+      "bytes": 177307,
+      "sha256": "b1fbbae10ab34c95de429f4ad97bda9dcea63d078cbd06e6f3246ed8a0b54ce7",
+      "sourceExecution": {
+        "buildUuid": "24e736e3-c6dc-4b31-89ec-29f95e924945",
+        "applicationCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "verifierCommit": "f5b1a874817aeda9bb1b7c6f7d731a010757772e",
+        "distTree": "6c2199767ac39bf99b94de3d94aff41f43f71dd9",
+        "nativeReport": "ui-review-after/report.json",
+        "nativeReportSha256": "4975a807d06a8338805e51122d10ef0215e2ddcef83ec2acae2313ceeca4656e"
+      },
+      "reason": "No complete log transport and no byte-identical preserved PNG"
+    }
+  ],
+  "measurementFiles": [
+    "measurements.json",
+    "measurements.md"
+  ],
+  "note": "Native assertions and all three original reports passed. Cloudflare log retrieval stopped before the final PNGs and completion marker. Six missing transports were recovered from separately identified earlier executions only after exact final native-receipt byte-count and SHA-256 agreement. Two new replay PNGs remain unavailable."
+}
