@@ -1,4 +1,4 @@
-const interactive = target => target?.closest?.('button,input,select,textarea,a,summary,[role="button"],[role="menu"],dialog,.analysis-indicator-window,#chart-indicator-manager');
+const interactive = target => target?.closest?.('button,input,select,textarea,a,summary,[role="button"],[role="menu"],dialog,.lab-chart-foot,.analysis-indicator-window,#chart-indicator-manager');
 
 /** Long press enters value tracking. A later tap exits; a second touch hands off to pinch. */
 export function mountChartTouchTracking({element,getTool=()=> 'crosshair',canStart=()=>true,preview=()=>{},clear=()=>{},cancelNavigation=()=>{},resumeNavigation=()=>{},onChange=()=>{},delay=500,tolerance=10,timers=globalThis}={}) {

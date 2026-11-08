@@ -187,17 +187,54 @@ class TestElement extends EventSurface {
   releasePointerCapture(id){this.capture.delete(id);this.emit('lostpointercapture',{pointerId:id});}
   click(){if(!this.disabled&&!this.hidden)this.onclick?.({target:this});}
 }
-function navigationHarness(initial=range,extra={}){
+function navigationHarness(initial=range,extra={},surfaceTouch={}){
   const window=new EventSurface(),document=new EventSurface();document.defaultView=window;document.hidden=false;
   window.navigator={clipboard:{writeText:text=>{copies.push(text);return Promise.resolve();}}};
   let nextFrame=0;const frames=new Map();window.requestAnimationFrame=fn=>{frames.set(++nextFrame,fn);return nextFrame;};window.cancelAnimationFrame=id=>frames.delete(id);
   document.createElement=tag=>new TestElement(tag,document);
   const element=document.createElement('div'),svg=document.createElement('svg');
+  svg.style.touchAction=surfaceTouch.inline??'';svg.cssTouchAction=surfaceTouch.css??'auto';
+  window.getComputedStyle=node=>({touchAction:node.style.touchAction||node.cssTouchAction||'auto'});
   svg.dataset={plotLeft:'60',plotRight:'930',plotTop:'50',plotBottom:'440'};svg.viewBox={baseVal:{x:0,y:0,width:1000,height:500}};element.append(svg);document.activeElement=svg;
   let live={...initial},tool='crosshair',resets=0;const changes=[],copies=[],announcements=[];
   const controller=bindChartNavigation({element,getRange:()=>live,getTool:()=>tool,onRangeChange:value=>{live=value;changes.push(value);},onReset:()=>resets++,onAnnounce:value=>announcements.push(value),getContext:()=>({label:'2026-10-22 00:00 UTC · 실제 봉',copyText:'Coinbase BTC-USD\n2026-10-22 00:00 UTC\nC 100'}),...extra});
   return {window,document,element,svg,controller,changes,copies,announcements,get range(){return live;},set range(value){live=value;},set tool(value){tool=value;},get resets(){return resets;},frames,flush(){for(const [id,fn]of [...frames]){frames.delete(id);fn();}},fire(type,props={}){return element.emit(type,{target:svg,...props});},pointer(type,props={}){return window.emit(type,{target:svg,...props});},menuButton(action){return controller.menu.children.find(child=>child.dataset?.chartContext===action);}};
 }
+
+test('legend descendants retain native wheel, pointer and keyboard ownership without changing the chart',()=>{
+  const transactions=[],h=navigationHarness(range,{onGestureStart:()=>transactions.push('start'),onGestureEnd:()=>transactions.push('end')});
+  try{
+    const legend=h.document.createElement('div'),label=h.document.createElement('span'),swatch=h.document.createElement('svg'),line=h.document.createElement('path');
+    legend.setAttribute('class','lab-chart-foot');swatch.append(line);legend.append(label,swatch);h.element.append(legend);
+    for(const tool of ['crosshair','pan'])for(const target of [legend,label,line]){
+      h.tool=tool;h.controller.update();
+      for(const delta of [{deltaX:110,deltaY:0},{deltaX:0,deltaY:-120}])assert.equal(h.fire('wheel',{target,...delta}).defaultPrevented,false);
+      h.fire('pointerdown',{target,clientX:650});
+      assert.equal(h.pointer('pointermove',{target,clientX:350}).defaultPrevented,false);
+      assert.equal(h.pointer('pointerup',{target,clientX:300}).defaultPrevented,false);
+      assert.equal(h.fire('keydown',{target,key:'ArrowRight'}).defaultPrevented,false);
+      h.flush();assert.deepEqual(h.range,range);assert.equal(h.element.capture.size,0);
+    }
+    assert.deepEqual(h.changes,[]);assert.deepEqual(transactions,[]);
+  }finally{h.controller.destroy();}
+});
+
+test('chart touch policies leave sibling scroll owners unrestricted and restore the original SVG styles',()=>{
+  for(const [css,expected]of [['none','none'],['pan-y','pan-y'],['auto','pan-y pinch-zoom'],['pan-x','none']]){
+    const h=navigationHarness(range,{}, {css});
+    try{
+      assert.equal(h.element.style.touchAction,'auto','the shared container must allow a sibling pan-x scroll owner');
+      assert.equal(h.svg.style.touchAction,expected,'crosshair preserves the prior SVG/parent touch-policy intersection');
+      h.tool='pan';h.controller.update();assert.equal(h.svg.style.touchAction,'none');assert.equal(h.element.style.touchAction,'auto');
+      h.tool='crosshair';h.controller.update();assert.equal(h.svg.style.touchAction,expected);
+      h.range=null;h.controller.update();assert.equal(h.svg.style.touchAction,'','an inactive chart cannot override replay CSS');
+      h.range={...range};h.controller.update();assert.equal(h.svg.style.touchAction,expected);
+    }finally{h.controller.destroy();}
+    assert.equal(h.element.style.touchAction,'original');assert.equal(h.svg.style.touchAction,'');
+  }
+  const h=navigationHarness(range,{}, {inline:'pan-y',css:'none'});
+  h.tool='pan';h.controller.update();h.controller.destroy();assert.equal(h.svg.style.touchAction,'pan-y','an authored inline policy is restored');
+});
 
 test('wheel zoom anchors to the pointer; controls and browser zoom outside the plot stay untouched',()=>{
   const h=navigationHarness();

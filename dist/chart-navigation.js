@@ -143,7 +143,8 @@ export function bindChartNavigation({
   const announce = text => { if (onAnnounce) onAnnounce(text); else status.textContent = text; };
   const zoomLimitReason = range => `최대 표시 범위 ${rangeUnits(range).maximum.toLocaleString('en-US')}${range.unit==='seconds'?'봉':'일'}에 도달했습니다. 확대하거나 다른 구간으로 이동할 수 있습니다.`;
   const previousTouchAction = element.style.touchAction;
-  element.style.touchAction = 'pan-y pinch-zoom';
+  const surfaceTouchActions = new Map();
+  element.style.touchAction = 'auto';
   let frame = null, pending = null, pendingPanPrice = null, priceFrame = null, pendingPrice = null, drag = null, pinch = null, suppressClickUntil = 0;
   let transaction = null, wheelTimer = null, finishOnFlush = false, wheelViewport = null;
   const delay = typeof window.setTimeout === 'function' ? window.setTimeout.bind(window) : globalThis.setTimeout;
@@ -166,10 +167,28 @@ export function bindChartNavigation({
     // A chart inside an outer dialog still owns its own plot interactions.
     const dialog = target?.closest?.('dialog,[role=dialog]');
     if (dialog && dialog !== element && element.contains(dialog)) return true;
-    return Boolean(target?.closest?.(`button,input,select,textarea,summary,a,[contenteditable=true],.analysis-indicator-windows,#chart-indicator-manager,[role=button]${allowAnnotations ? ':not(.history-event-marker):not(.cycle-interval):not(.cycle-marker):not(.cycle-milestone-marker):not(.research-annotation)' : ''},[role=menu]${allowAnnotations ? '' : ',[data-next-turn]'}`));
+    return Boolean(target?.closest?.(`button,input,select,textarea,summary,a,[contenteditable=true],.lab-chart-foot,.analysis-indicator-windows,#chart-indicator-manager,[role=button]${allowAnnotations ? ':not(.history-event-marker):not(.cycle-interval):not(.cycle-marker):not(.cycle-milestone-marker):not(.research-annotation)' : ''},[role=menu]${allowAnnotations ? '' : ',[data-next-turn]'}`));
   };
   const chartSvg = () => element.querySelector('svg[data-plot-left]:not([hidden])');
   const focusChart = () => chartSvg()?.focus?.({ preventScroll: true });
+  function restoreSurfaceTouchActions(){
+    for(const [svg,original]of surfaceTouchActions){
+      if(svg.style.setProperty)svg.style.setProperty('touch-action',original.value,original.priority);
+      else svg.style.touchAction=original.value;
+    }
+  }
+  function updateTouchAction(range){
+    // Legend/replay scroll owners are siblings of the price SVG. Restricting
+    // their shared parent also disables their native horizontal gestures.
+    element.style.touchAction='auto';restoreSurfaceTouchActions();
+    const svg=range&&chartSvg();if(!svg)return;
+    if(!surfaceTouchActions.has(svg))surfaceTouchActions.set(svg,{value:svg.style.touchAction??'',priority:svg.style.getPropertyPriority?.('touch-action')||''});
+    const policy=window.getComputedStyle?.(svg)?.touchAction||svg.style.touchAction||'auto';
+    // Preserve the old SVG/CSS intersection with pan-y pinch-zoom, including
+    // BTC/ETH's existing none policy. Re-read CSS after resize/replay changes.
+    const actions=policy==='auto'||policy==='manipulation'?['pan-y','pinch-zoom']:policy.split(/\s+/).filter(value=>['pan-y','pan-up','pan-down','pinch-zoom'].includes(value));
+    svg.style.touchAction=getTool()==='pan'?'none':actions.join(' ')||'none';
+  }
 
   function clearPending() {
     if (frame !== null) window.cancelAnimationFrame(frame);
@@ -594,10 +613,8 @@ export function bindChartNavigation({
 
   function update() {
     if (destroyed) return;
-    // H owns vertical as well as horizontal movement. Crosshair navigation
-    // waits for horizontal intent; native scrolling also depends on SVG CSS.
-    element.style.touchAction=getTool()==='pan'?'none':'pan-y pinch-zoom';
     const range = getRange();toolbar.hidden = !range;
+    updateTouchAction(range);
     if (!range || (drag && (drag.kind==='price'?!validPriceScope(drag):!sameScope(drag.range,range)||getTool()!==drag.tool||(drag.axis&&!validPanScope(drag)))) || (pinch&&(!sameScope(pinch.range,range)||getTool()!==pinch.tool))) cancelGesture();
     if (pending && !sameScope(pending, range)) clearPending();
     if (pendingPrice && !validPriceScope(pendingPrice)) clearPricePending();
@@ -620,7 +637,7 @@ export function bindChartNavigation({
     for (const [target, type, handler, options] of listeners) target.removeEventListener(type, handler, options);
     signal?.removeEventListener('abort', destroy);
     for (const button of [...buttons.values(), ...menuButtons.values()]) button.onclick = null;
-    toolbar.remove();menu.remove();status.remove();element.style.touchAction = previousTouchAction;
+    toolbar.remove();menu.remove();status.remove();restoreSurfaceTouchActions();surfaceTouchActions.clear();element.style.touchAction = previousTouchAction;
   }
   update();
   if (signal?.aborted) destroy();else signal?.addEventListener('abort', destroy, { once: true });
