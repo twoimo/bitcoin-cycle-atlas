@@ -1,0 +1,97 @@
+/* 릴레이 콘텐츠 방(Relay room) — 다크 표면·얇은 구분선·기존 아틀라스 색을 그대로 쓴다. */
+#relay-view[hidden]{display:none!important}
+.relay-room{
+  --relay-surface:#10151c;
+  --relay-panel:#131b27;
+  --relay-panel-2:#0e141d;
+  --relay-rule:#2a3647;
+  --relay-ink:#d3deec;
+  --relay-ink-2:#95a6ba;
+  --relay-mark:#e1bd6e;
+  --relay-accent:#6ea8e6;
+  display:grid;
+  grid-template-columns:minmax(208px,268px) minmax(0,1fr);
+  min-height:0;
+  height:100%;
+  color:var(--relay-ink);
+  background:var(--relay-surface);
+  font:14px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo",sans-serif;
+}
+.relay-room *{box-sizing:border-box}
+.relay-rooms{
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
+  min-height:0;
+  border-right:1px solid var(--relay-rule);
+  background:var(--relay-panel-2);
+}
+.relay-rooms-head{display:flex;align-items:center;gap:9px;padding:14px 16px;border-bottom:1px solid var(--relay-rule)}
+.relay-rooms-head h1{margin:0;font-size:14px;font-weight:650;letter-spacing:.2px}
+.relay-rooms-head .icon{width:17px;height:17px;color:var(--relay-mark)}
+.relay-room-list{list-style:none;margin:0;padding:8px;overflow:auto;min-height:0}
+.relay-room-item{
+  display:grid;grid-template-columns:18px minmax(0,1fr) auto;grid-template-rows:auto auto;
+  gap:2px 9px;width:100%;padding:10px 11px;border:1px solid transparent;border-radius:8px;
+  background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit
+}
+.relay-room-item:hover{background:#1a2432}
+.relay-room-item.active{background:#1b2736;border-color:var(--relay-rule)}
+.relay-room-glyph{grid-row:1/3;align-self:center;color:var(--relay-ink-2);display:inline-flex}
+.relay-room-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.relay-room-sub{grid-column:2;color:var(--relay-ink-2);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.relay-room-count{grid-row:1/3;align-self:center;color:var(--relay-ink-2);font-size:12px;font-variant-numeric:tabular-nums}
+.relay-rooms-foot{padding:10px 16px;border-top:1px solid var(--relay-rule);color:var(--relay-ink-2);font-size:12px}
+.relay-detail{display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0;min-height:0}
+.relay-detail-head{display:flex;align-items:baseline;gap:12px;padding:14px 20px;border-bottom:1px solid var(--relay-rule)}
+.relay-detail-head h2{margin:0;font-size:15px;font-weight:650}
+.relay-detail-sub{color:var(--relay-ink-2);font-size:12px}
+.relay-detail-body{overflow:auto;min-height:0;padding:18px 20px 40px}
+.relay-empty{color:var(--relay-ink-2);padding:18px 2px}
+/* 텔레그램 — 대화방 메시지 */
+.relay-chat{list-style:none;margin:0;padding:0;display:grid;gap:12px;max-width:720px}
+.relay-msg{padding:11px 13px;background:var(--relay-panel);border:1px solid var(--relay-rule);border-radius:10px}
+.relay-msg-meta{display:flex;justify-content:space-between;gap:12px;color:var(--relay-ink-2);font-size:12px;margin-bottom:6px}
+.relay-msg-author{font-weight:600;color:var(--relay-mark)}
+.relay-msg-text{margin:0;white-space:normal;word-break:break-word}
+.relay-msg-link{display:inline-block;margin-top:8px;color:var(--relay-accent);font-size:12px;text-decoration:none}
+/* 인생의 방 — 글 목록 + Medium 스타일 리더 */
+.relay-articles{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-width:760px}
+.relay-article{display:grid;gap:3px;width:100%;padding:12px 14px;border:1px solid var(--relay-rule);border-radius:10px;background:var(--relay-panel);color:inherit;text-align:left;cursor:pointer;font:inherit}
+.relay-article:hover{border-color:#3c4c63;background:#16202d}
+.relay-article-title{font-weight:600}
+.relay-article-meta{color:var(--relay-ink-2);font-size:12px}
+.relay-reader{max-width:720px}
+.relay-reader-back{border:0;background:none;color:var(--relay-accent);cursor:pointer;font:inherit;padding:0 0 12px}
+.relay-reader h1{margin:0 0 6px;font-size:24px;line-height:1.3}
+.relay-byline{margin:0 0 4px;color:var(--relay-ink-2);font-size:13px}
+.relay-source-link{margin:0 0 18px}
+.relay-source-link a{color:var(--relay-accent);text-decoration:none;font-size:13px}
+.relay-body{font-size:16px;line-height:1.85;color:#e2eaf4}
+.relay-body p{margin:0 0 1.1em}
+.relay-body figure{margin:1.4em 0}
+.relay-body img{max-width:100%;height:auto;border-radius:8px;border:1px solid var(--relay-rule)}
+/* 모바일한경 — 캐러셀 + 우측 면 이동 */
+.relay-paper{display:grid;gap:12px}
+.relay-paper-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:space-between}
+.relay-edition-list{display:flex;flex-wrap:wrap;gap:6px}
+.relay-edition-chip{padding:4px 9px;border:1px solid var(--relay-rule);border-radius:999px;background:transparent;color:var(--relay-ink-2);cursor:pointer;font:inherit;font-size:12px}
+.relay-edition-chip.active{background:#1b2736;color:var(--relay-ink);border-color:#3c4c63}
+.relay-paper-status{color:var(--relay-ink-2);font-size:12px;font-variant-numeric:tabular-nums}
+.relay-paper-body{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;min-height:0}
+.relay-paper-stage{position:relative;background:var(--relay-panel);border:1px solid var(--relay-rule);border-radius:10px;padding:10px;min-height:320px;display:grid;place-items:center}
+.relay-paper-image{max-width:100%;max-height:70vh;height:auto;border-radius:6px;background:#0b0f15}
+.relay-paper-placeholder{color:var(--relay-ink-2);padding:40px 20px;text-align:center;white-space:pre-wrap}
+.relay-paper-turn{position:absolute;inset:auto 10px 10px;display:flex;justify-content:flex-end;gap:6px}
+.relay-turn{width:36px;height:36px;border:1px solid var(--relay-rule);border-radius:8px;background:#0e141dcc;color:var(--relay-ink);font-size:18px;cursor:pointer}
+.relay-turn:disabled{opacity:.4;cursor:default}
+.relay-pager{display:flex;flex-direction:column;gap:5px;overflow:auto;max-height:70vh;padding-right:2px}
+.relay-page-chip{min-width:44px;padding:6px 8px;border:1px solid var(--relay-rule);border-radius:7px;background:transparent;color:var(--relay-ink-2);cursor:pointer;font:inherit;font-size:12px;font-variant-numeric:tabular-nums}
+.relay-page-chip.active{background:var(--relay-mark);color:#20180a;border-color:var(--relay-mark);font-weight:650}
+@media (max-width:820px){
+  .relay-room{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .relay-rooms{border-right:0;border-bottom:1px solid var(--relay-rule);grid-template-rows:auto auto auto}
+  .relay-room-list{display:flex;overflow-x:auto}
+  .relay-room-item{min-width:190px}
+  .relay-paper-body{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+  .relay-pager{flex-direction:row;max-height:none}
+}
