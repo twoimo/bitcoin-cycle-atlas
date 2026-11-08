@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createPriceAxisLayout, createPriceAxisFormatter } from '../dist/price-axis.js';
+import { createPriceAxisLayout, createPriceAxisFormatter, createPriceAxisLabelVisibility } from '../dist/price-axis.js';
 import { createPriceDisplay } from '../dist/price-display.js';
 import { createPriceScale } from '../dist/chart-math.js';
 import { chartPaneLayout } from '../dist/chart-overlays.js';
@@ -55,6 +55,18 @@ test('axis gutter uses actual glyph metrics, keeps a bounded plot, and leaves no
   const display=createPriceDisplay({unit:'usd'}),axis={min:80000,max:90000,ticks:[80000,82500,85000,87500,90000]},format=createPriceAxisFormatter({axis,display,layout:a});
   assert.equal(format.price(85386.18),'$85,386.18');assert.ok(a.measure(format.price(85386.18),a.badgeFontSize)<=a.labelWidth);
   assert.equal(a.right,createPriceAxisLayout({svg:regular,width:320}).right);
+});
+
+test('price ticks and current-price badge yield only the rows occupied by the live selection badge',()=>{
+  const ticks=[100,150,250].map(y=>{const node=new Node('text');node.setAttribute('y',y);node.setAttribute('font-size',12);return node;});
+  const latest=new Node(),cursor=new Node();
+  for(const [tag,y]of [[latest,140],[cursor,146]]){tag.querySelector('rect').setAttribute('y',y);tag.querySelector('rect').setAttribute('height',18);}
+  const svg={querySelectorAll:()=>ticks,querySelector:()=>latest};
+  const update=createPriceAxisLabelVisibility(svg,{cursorTag:cursor});update();
+  assert.equal(latest.getAttribute('visibility'),'hidden');assert.equal(ticks[1].getAttribute('visibility'),'hidden');assert.equal(ticks[0].getAttribute('visibility'),'visible');
+  cursor.querySelector('rect').setAttribute('y',240);update();
+  assert.equal(latest.getAttribute('visibility'),'visible');assert.equal(ticks[1].getAttribute('visibility'),'hidden');assert.equal(ticks[2].getAttribute('visibility'),'hidden');
+  cursor.setAttribute('visibility','hidden');update();assert.equal(ticks[2].getAttribute('visibility'),'visible');assert.equal(ticks[1].getAttribute('visibility'),'hidden');
 });
 
 for(const kind of ['daily','intraday']){

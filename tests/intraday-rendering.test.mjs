@@ -52,6 +52,8 @@ test('hourly ticks distinguish loaded dates even inside a much wider viewport',(
   const svg=svgFixture(1280);
   drawIntradayChart({svg,series:{...series(rows),interval:'1h'},range:{start:Date.parse('2025-01-01T00:00:00Z')/1000,end:Date.parse('2028-01-01T00:00:00Z')/1000},showVolume:false});
   const labels=[...svg.innerHTML.matchAll(/class="market-time-label"[^>]*>([^<]+)</g)].map(match=>match[1]);
-  assert.ok(labels.length>=3);assert.equal(new Set(labels).size,labels.length,'distinct ticks never repeat a month-only label');
+  assert.ok(labels.length>=1);assert.equal(new Set(labels).size,labels.length,'distinct ticks never repeat a month-only label');
   assert.ok(labels.every(label=>/^2026-\d{2}-\d{2}$/.test(label)));
+  const nodes=[...svg.innerHTML.matchAll(/class="market-time-label" x="([^"]+)"[^>]*>([^<]+)</g)];
+  for(let index=1;index<nodes.length;index++)assert.ok(Number(nodes[index][1])-Number(nodes[index-1][1])>=70,'full-date labels keep horizontal room');
 });

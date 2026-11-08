@@ -68,6 +68,31 @@ export function createPriceAxisFormatter({axis,display,layout}){
   return {tick:value=>format(value,false),price:value=>format(value,true),tickDigits};
 }
 
+/** Reserve the painted badge rows, not a second price axis. Labels return as
+ * soon as the live cursor leaves their vertical interval; values stay intact. */
+export function createPriceAxisLabelVisibility(svg,{cursorTag,padding=3}={}){
+  const ticks=[...(svg.querySelectorAll?.('[data-price-axis-label="tick"]')||[])];
+  const latest=svg.querySelector?.('.chart-latest-price-tag');
+  const badgeBounds=tag=>{
+    if(!tag||tag.getAttribute('visibility')==='hidden')return null;
+    const rect=tag.querySelector('rect'),raw=rect?.getAttribute('y'),height=Number(rect?.getAttribute('height'));
+    if(raw==null||!Number.isFinite(Number(raw))||!(height>0))return null;
+    return {top:Number(raw),bottom:Number(raw)+height};
+  };
+  const overlaps=(a,b)=>a&&b&&a.top<b.bottom+padding&&a.bottom+padding>b.top;
+  return ()=>{
+    const cursor=badgeBounds(cursorTag);
+    if(latest)latest.setAttribute('visibility','visible');
+    const current=badgeBounds(latest),hideLatest=overlaps(current,cursor);
+    if(latest&&hideLatest)latest.setAttribute('visibility','hidden');
+    const badges=[cursor,...(hideLatest?[]:[current])].filter(Boolean);
+    for(const tick of ticks){
+      const y=Number(tick.getAttribute('y')),size=Number(tick.getAttribute('font-size'))||12;
+      tick.setAttribute('visibility',badges.some(badge=>overlaps({top:y-size,bottom:y+3},badge))?'hidden':'visible');
+    }
+  };
+}
+
 // Price viewports are always expressed in the original USD coordinates.
 // Indexed labels are a display concern and never change this domain.
 export function normalizePriceDomain(domain, { scale = 'log' } = {}) {

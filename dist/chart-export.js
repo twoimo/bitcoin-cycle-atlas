@@ -1,3 +1,5 @@
+import {createPriceAxisLabelVisibility} from './price-axis.js?v=1.29.0';
+
 const NS='http://www.w3.org/2000/svg';
 const INTERVAL_SECONDS=Object.freeze({'1m':60,'5m':300,'15m':900,'30m':1800,'1h':3600,'4h':14400,daily:86400,weekly:604800});
 const dateMs=value=>typeof value==='number'?value*1000:Date.parse(value);
@@ -106,6 +108,7 @@ export function createChartSvgExport(svg,{title='BTCUSD',readout='',source='',no
     const clone=sourceChart.cloneNode(true);clone.removeAttribute('id');clone.removeAttribute('class');clone.removeAttribute('hidden');clone.removeAttribute('tabindex');clone.setAttribute('x','0');clone.setAttribute('y',String(y));clone.setAttribute('width',String(width));clone.setAttribute('height',String(chartHeight));
     clone.removeAttribute('style');
     for(const node of clone.querySelectorAll('[id$="-cross"],.history-event-preview,.cycle-marker-preview,.cycle-interval-preview,.chart-magnet-preview,.chart-snap-feedback,.price-axis-interaction,.chart-measurement[data-pending="true"],script,foreignObject'))node.remove();
+    createPriceAxisLabelVisibility(clone)();
     for(const node of [clone,...clone.querySelectorAll('*')]){
       node.removeAttribute('tabindex');node.removeAttribute('role');
       for(const attr of [...node.attributes])if(attr.name.startsWith('on'))node.removeAttribute(attr.name);
