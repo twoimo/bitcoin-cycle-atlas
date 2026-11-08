@@ -111,7 +111,7 @@ async function verifyNativeEntry(api){
 export function readHostedUiReadiness(symbol){
   const frames=[...document.querySelectorAll('.atlas-center-frame:not([hidden])')],frame=frames[0];
   const rect=frame?.getBoundingClientRect(),style=frame&&getComputedStyle(frame);
-  const state={boot:document.documentElement.dataset.boot,controls:document.body.dataset.chartControls,
+  const state={boot:document.documentElement?.dataset.boot,controls:document.body?.dataset.chartControls,
     symbol:document.querySelector('.atlas-plot')?.dataset.chartSymbol,frameCount:frames.length,
     frameLoaded:frame?.dataset.centerLoaded,frameStatus:frame?.dataset.centerStatus,documentReady:frame?.contentDocument?.readyState,
     framePainted:Boolean(frame&&rect.width>0&&rect.height>0&&style.display!=='none'&&style.visibility!=='hidden')};

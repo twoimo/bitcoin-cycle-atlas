@@ -108,3 +108,17 @@ test('hosted fixtures wait for the native boot and current painted iframe before
   assert.equal(read().ready,false,'two visible frame owners must not qualify for the shell screenshot');
   stale.hidden=true;assert.equal(read().ready,true);
 });
+
+test('hosted readiness treats the empty navigation document and partial shell as pending before its real ready state',()=>{
+  const {document}=parseHTML('<html data-boot="ready"><body data-chart-controls="ready"><div class="atlas-plot" data-chart-symbol="HYPE"><iframe class="atlas-center-frame" data-center-loaded="true" data-center-status="ready"></iframe></div></body></html>');
+  const frame=document.querySelector('iframe');
+  Object.defineProperty(frame,'contentDocument',{value:{readyState:'complete'}});frame.getBoundingClientRect=()=>box(50,50,600,500);
+  const context=vm.createContext({document:{documentElement:null,body:null,querySelectorAll:()=>[],querySelector:()=>null},getComputedStyle:()=>({display:'block',visibility:'visible'})});
+  const read=()=>vm.runInContext('('+readHostedUiReadiness.toString()+')("HYPE")',context);
+  const empty=read();assert.equal(empty.ready,false);assert.equal(empty.frameCount,0);assert.equal(empty.framePainted,false);
+  context.document={documentElement:document.documentElement,body:null,querySelectorAll:()=>[],querySelector:()=>null};
+  const partial=read();assert.equal(partial.boot,'ready');assert.equal(partial.controls,undefined);assert.equal(partial.ready,false);
+  context.document=document;
+  const ready=read();assert.equal(ready.ready,true);assert.equal(ready.symbol,'HYPE');assert.equal(ready.frameCount,1);
+  assert.equal(ready.frameLoaded,'true');assert.equal(ready.frameStatus,'ready');assert.equal(ready.documentReady,'complete');assert.equal(ready.framePainted,true);
+});
