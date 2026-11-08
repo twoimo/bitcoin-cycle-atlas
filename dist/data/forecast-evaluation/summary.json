@@ -1,0 +1,1829 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-forecast-evaluation",
+  "scriptVersion": "1.0.0",
+  "generatedAt": "2026-11-08T09:54:12.227Z",
+  "horizons": {
+    "calendar-day": [
+      30,
+      90,
+      180,
+      365
+    ],
+    "session": [
+      30,
+      90,
+      180,
+      365
+    ],
+    "month": [
+      3,
+      6,
+      12
+    ]
+  },
+  "window": {
+    "calendar-day": 90,
+    "session": 90,
+    "month": 12
+  },
+  "benchmarkMeaning": {
+    "flat": "마지막 가격 유지(로그수익률 0)",
+    "rw": "무작위보행 + 직전 창 변동성, 정규분포 구간",
+    "ewma": "EWMA(λ=0.94) 변동성 근사. GARCH(1,1)-t의 정식 적합이 아니다"
+  },
+  "assets": [
+    {
+      "id": "BTC",
+      "unit": "calendar-day",
+      "source": "dist/data/btc-daily.json",
+      "sourceHash": "d04c7443eb4ccd17d93ddc2d61b75e844d86b6cf5f5d456aa986def86e97aca9",
+      "observations": 5956,
+      "years": 16.3,
+      "maxEvalSamples": 5501,
+      "tier": "T1-eligible"
+    },
+    {
+      "id": "ETH",
+      "unit": "calendar-day",
+      "source": "dist/data/eth-ohlc.json",
+      "sourceHash": "a6bfab88a2a5ba982bb68ecf78932bf3438713cad54b2a075894ebbad0b445a5",
+      "observations": 3823,
+      "years": 10.5,
+      "maxEvalSamples": 3368,
+      "tier": "T1-eligible"
+    },
+    {
+      "id": "SPX",
+      "unit": "session",
+      "source": "dist/data/market-lab.json",
+      "sourceHash": "3eeca3d402b1ce83e89ebf834309867cdd0ecc06f59de098ba96f80abf590107",
+      "observations": 4233,
+      "years": 16.8,
+      "maxEvalSamples": 3778,
+      "tier": "T1-eligible"
+    },
+    {
+      "id": "NASDAQ",
+      "unit": "session",
+      "source": "dist/data/market-lab.json",
+      "sourceHash": "3eeca3d402b1ce83e89ebf834309867cdd0ecc06f59de098ba96f80abf590107",
+      "observations": 4233,
+      "years": 16.8,
+      "maxEvalSamples": 3778,
+      "tier": "T1-eligible"
+    },
+    {
+      "id": "KOSPI",
+      "unit": "session",
+      "source": "dist/data/market-lab.json",
+      "sourceHash": "3eeca3d402b1ce83e89ebf834309867cdd0ecc06f59de098ba96f80abf590107",
+      "observations": 4136,
+      "years": 16.8,
+      "maxEvalSamples": 3681,
+      "tier": "T1-eligible"
+    },
+    {
+      "id": "KOSDAQ",
+      "unit": "session",
+      "source": "dist/data/market-lab.json",
+      "sourceHash": "3eeca3d402b1ce83e89ebf834309867cdd0ecc06f59de098ba96f80abf590107",
+      "observations": 4137,
+      "years": 16.8,
+      "maxEvalSamples": 3682,
+      "tier": "T1-eligible"
+    },
+    {
+      "id": "TQQQ",
+      "unit": "session",
+      "source": "dist/data/market-lab.json",
+      "sourceHash": "3eeca3d402b1ce83e89ebf834309867cdd0ecc06f59de098ba96f80abf590107",
+      "observations": 4206,
+      "years": 16.7,
+      "maxEvalSamples": 3751,
+      "tier": "T1-eligible"
+    },
+    {
+      "id": "SOXL",
+      "unit": "session",
+      "source": "dist/data/market-lab.json",
+      "sourceHash": "3eeca3d402b1ce83e89ebf834309867cdd0ecc06f59de098ba96f80abf590107",
+      "observations": 4188,
+      "years": 16.6,
+      "maxEvalSamples": 3733,
+      "tier": "T1-eligible"
+    },
+    {
+      "id": "KODEX-KOSDAQ150",
+      "unit": "session",
+      "source": "dist/data/market-lab.json",
+      "sourceHash": "3eeca3d402b1ce83e89ebf834309867cdd0ecc06f59de098ba96f80abf590107",
+      "observations": 2633,
+      "years": 10.9,
+      "maxEvalSamples": 2178,
+      "tier": "T1-eligible"
+    },
+    {
+      "id": "MSTR",
+      "unit": "session",
+      "source": "dist/data/mstr-ohlc.json",
+      "sourceHash": "acea405cfa7b40d5a8ee815f5d7f749bab63e8fc59323cea8a6a9f589b2f8f74",
+      "observations": 7147,
+      "years": 28.4,
+      "maxEvalSamples": 6692,
+      "tier": "T1-eligible"
+    },
+    {
+      "id": "BMNR",
+      "unit": "session",
+      "source": "dist/data/bmnr-ohlc.json",
+      "sourceHash": "64f8734f5cfdd99b1d5c7066874d171e46926054f15c8e2e4bb0e338ed7d3690",
+      "observations": 359,
+      "years": 1.4,
+      "maxEvalSamples": 0,
+      "tier": "T3-insufficient"
+    },
+    {
+      "id": "HOUSING-부산",
+      "unit": "month",
+      "source": "dist/data/housing.json",
+      "sourceHash": "c39382261ca09e4ffe49accbce80d8eef20baab4c3cf38d4e2f04273e4923146",
+      "observations": 248,
+      "years": 20.6,
+      "maxEvalSamples": 224,
+      "tier": "T2-limited"
+    },
+    {
+      "id": "HOUSING-서울",
+      "unit": "month",
+      "source": "dist/data/housing.json",
+      "sourceHash": "c39382261ca09e4ffe49accbce80d8eef20baab4c3cf38d4e2f04273e4923146",
+      "observations": 248,
+      "years": 20.6,
+      "maxEvalSamples": 224,
+      "tier": "T2-limited"
+    },
+    {
+      "id": "HOUSING-경기",
+      "unit": "month",
+      "source": "dist/data/housing.json",
+      "sourceHash": "c39382261ca09e4ffe49accbce80d8eef20baab4c3cf38d4e2f04273e4923146",
+      "observations": 248,
+      "years": 20.6,
+      "maxEvalSamples": 224,
+      "tier": "T2-limited"
+    },
+    {
+      "id": "HOUSING-전국",
+      "unit": "month",
+      "source": "dist/data/housing.json",
+      "sourceHash": "c39382261ca09e4ffe49accbce80d8eef20baab4c3cf38d4e2f04273e4923146",
+      "observations": 248,
+      "years": 20.6,
+      "maxEvalSamples": 224,
+      "tier": "T2-limited"
+    }
+  ],
+  "rows": [
+    {
+      "asset": "BTC",
+      "unit": "calendar-day",
+      "horizon": 30,
+      "samples": 5836,
+      "coverage80": {
+        "rw": 74.1,
+        "ewma": 70.8
+      },
+      "coverage50": {
+        "rw": 49.8,
+        "ewma": 48.4
+      },
+      "pinball": {
+        "rw": 0.07018,
+        "ewma": 0.07052
+      },
+      "meanAbsPctError": 24.9,
+      "meanAbsLogError": {
+        "rw": 0.2009,
+        "drift": 0.2366,
+        "flat": 0.2009
+      },
+      "skillVsFlat": -0.178,
+      "skillPinballEwmaVsRw": -0.005,
+      "driftCoverage80": 66.7,
+      "zMean": 0.39,
+      "zKurtosis": 8.8,
+      "widthScale80": 1.22
+    },
+    {
+      "asset": "BTC",
+      "unit": "calendar-day",
+      "horizon": 90,
+      "samples": 5776,
+      "coverage80": {
+        "rw": 65,
+        "ewma": 63.2
+      },
+      "coverage50": {
+        "rw": 42.7,
+        "ewma": 41.3
+      },
+      "pinball": {
+        "rw": 0.14979,
+        "ewma": 0.15271
+      },
+      "meanAbsPctError": 75.9,
+      "meanAbsLogError": {
+        "rw": 0.4275,
+        "drift": 0.5649,
+        "flat": 0.4275
+      },
+      "skillVsFlat": -0.321,
+      "skillPinballEwmaVsRw": -0.019,
+      "driftCoverage80": 51.1,
+      "zMean": 0.68,
+      "zKurtosis": 12.7,
+      "widthScale80": 1.49
+    },
+    {
+      "asset": "BTC",
+      "unit": "calendar-day",
+      "horizon": 180,
+      "samples": 5686,
+      "coverage80": {
+        "rw": 60,
+        "ewma": 58.2
+      },
+      "coverage50": {
+        "rw": 36.2,
+        "ewma": 34.3
+      },
+      "pinball": {
+        "rw": 0.22954,
+        "ewma": 0.23595
+      },
+      "meanAbsPctError": 182.8,
+      "meanAbsLogError": {
+        "rw": 0.6596,
+        "drift": 0.9508,
+        "flat": 0.6596
+      },
+      "skillVsFlat": -0.441,
+      "skillPinballEwmaVsRw": -0.028,
+      "driftCoverage80": 44.7,
+      "zMean": 0.83,
+      "zKurtosis": 5.2,
+      "widthScale80": 1.7
+    },
+    {
+      "asset": "BTC",
+      "unit": "calendar-day",
+      "horizon": 365,
+      "samples": 5501,
+      "coverage80": {
+        "rw": 54.7,
+        "ewma": 51.4
+      },
+      "coverage50": {
+        "rw": 30.4,
+        "ewma": 29
+      },
+      "pinball": {
+        "rw": 0.35683,
+        "ewma": 0.36602
+      },
+      "meanAbsPctError": 351.1,
+      "meanAbsLogError": {
+        "rw": 1.0324,
+        "drift": 1.9235,
+        "flat": 1.0324
+      },
+      "skillVsFlat": -0.863,
+      "skillPinballEwmaVsRw": -0.026,
+      "driftCoverage80": 30.4,
+      "zMean": 1.23,
+      "zKurtosis": 9.3,
+      "widthScale80": 1.7
+    },
+    {
+      "asset": "ETH",
+      "unit": "calendar-day",
+      "horizon": 30,
+      "samples": 3703,
+      "coverage80": {
+        "rw": 74,
+        "ewma": 71.5
+      },
+      "coverage50": {
+        "rw": 47.7,
+        "ewma": 47
+      },
+      "pinball": {
+        "rw": 0.07419,
+        "ewma": 0.0757
+      },
+      "meanAbsPctError": 25.3,
+      "meanAbsLogError": {
+        "rw": 0.225,
+        "drift": 0.2512,
+        "flat": 0.225
+      },
+      "skillVsFlat": -0.116,
+      "skillPinballEwmaVsRw": -0.02,
+      "driftCoverage80": 67.7,
+      "zMean": 0.15,
+      "zKurtosis": 4.1,
+      "widthScale80": 1.19
+    },
+    {
+      "asset": "ETH",
+      "unit": "calendar-day",
+      "horizon": 90,
+      "samples": 3643,
+      "coverage80": {
+        "rw": 74,
+        "ewma": 69.3
+      },
+      "coverage50": {
+        "rw": 42.5,
+        "ewma": 39.9
+      },
+      "pinball": {
+        "rw": 0.14199,
+        "ewma": 0.14303
+      },
+      "meanAbsPctError": 64.9,
+      "meanAbsLogError": {
+        "rw": 0.4322,
+        "drift": 0.5559,
+        "flat": 0.4322
+      },
+      "skillVsFlat": -0.286,
+      "skillPinballEwmaVsRw": -0.007,
+      "driftCoverage80": 57.6,
+      "zMean": 0.3,
+      "zKurtosis": 5.7,
+      "widthScale80": 1.16
+    },
+    {
+      "asset": "ETH",
+      "unit": "calendar-day",
+      "horizon": 180,
+      "samples": 3553,
+      "coverage80": {
+        "rw": 71.1,
+        "ewma": 68.5
+      },
+      "coverage50": {
+        "rw": 41.8,
+        "ewma": 41.7
+      },
+      "pinball": {
+        "rw": 0.22905,
+        "ewma": 0.23021
+      },
+      "meanAbsPctError": 164.5,
+      "meanAbsLogError": {
+        "rw": 0.6746,
+        "drift": 1.0261,
+        "flat": 0.6746
+      },
+      "skillVsFlat": -0.521,
+      "skillPinballEwmaVsRw": -0.005,
+      "driftCoverage80": 47.7,
+      "zMean": 0.48,
+      "zKurtosis": 7.8,
+      "widthScale80": 1.25
+    },
+    {
+      "asset": "ETH",
+      "unit": "calendar-day",
+      "horizon": 365,
+      "samples": 3368,
+      "coverage80": {
+        "rw": 70.5,
+        "ewma": 70.3
+      },
+      "coverage50": {
+        "rw": 45.7,
+        "ewma": 43.1
+      },
+      "pinball": {
+        "rw": 0.34126,
+        "ewma": 0.34444
+      },
+      "meanAbsPctError": 488.4,
+      "meanAbsLogError": {
+        "rw": 0.9704,
+        "drift": 2.0758,
+        "flat": 0.9704
+      },
+      "skillVsFlat": -1.139,
+      "skillPinballEwmaVsRw": -0.009,
+      "driftCoverage80": 32.1,
+      "zMean": 0.6,
+      "zKurtosis": 6.6,
+      "widthScale80": 1.26
+    },
+    {
+      "asset": "SPX",
+      "unit": "session",
+      "horizon": 30,
+      "samples": 4113,
+      "coverage80": {
+        "rw": 84.4,
+        "ewma": 83.5
+      },
+      "coverage50": {
+        "rw": 52.6,
+        "ewma": 49.2
+      },
+      "pinball": {
+        "rw": 0.01248,
+        "ewma": 0.01227
+      },
+      "meanAbsPctError": 3.9,
+      "meanAbsLogError": {
+        "rw": 0.0385,
+        "drift": 0.0418,
+        "flat": 0.0385
+      },
+      "skillVsFlat": -0.085,
+      "skillPinballEwmaVsRw": 0.017,
+      "driftCoverage80": 80.5,
+      "zMean": 0.25,
+      "zKurtosis": 25,
+      "widthScale80": 0.89
+    },
+    {
+      "asset": "SPX",
+      "unit": "session",
+      "horizon": 90,
+      "samples": 4053,
+      "coverage80": {
+        "rw": 82.5,
+        "ewma": 80.5
+      },
+      "coverage50": {
+        "rw": 46.2,
+        "ewma": 42.7
+      },
+      "pinball": {
+        "rw": 0.02125,
+        "ewma": 0.02119
+      },
+      "meanAbsPctError": 7.2,
+      "meanAbsLogError": {
+        "rw": 0.0696,
+        "drift": 0.0821,
+        "flat": 0.0696
+      },
+      "skillVsFlat": -0.179,
+      "skillPinballEwmaVsRw": 0.003,
+      "driftCoverage80": 75.7,
+      "zMean": 0.47,
+      "zKurtosis": 4.9,
+      "widthScale80": 0.96
+    },
+    {
+      "asset": "SPX",
+      "unit": "session",
+      "horizon": 180,
+      "samples": 3963,
+      "coverage80": {
+        "rw": 74.2,
+        "ewma": 71.3
+      },
+      "coverage50": {
+        "rw": 38.8,
+        "ewma": 35.4
+      },
+      "pinball": {
+        "rw": 0.03195,
+        "ewma": 0.03202
+      },
+      "meanAbsPctError": 11.5,
+      "meanAbsLogError": {
+        "rw": 0.108,
+        "drift": 0.1368,
+        "flat": 0.108
+      },
+      "skillVsFlat": -0.266,
+      "skillPinballEwmaVsRw": -0.002,
+      "driftCoverage80": 67.9,
+      "zMean": 0.69,
+      "zKurtosis": 4.1,
+      "widthScale80": 1.08
+    },
+    {
+      "asset": "SPX",
+      "unit": "session",
+      "horizon": 365,
+      "samples": 3778,
+      "coverage80": {
+        "rw": 63.3,
+        "ewma": 60.5
+      },
+      "coverage50": {
+        "rw": 31.6,
+        "ewma": 31.1
+      },
+      "pinball": {
+        "rw": 0.0537,
+        "ewma": 0.05462
+      },
+      "meanAbsPctError": 20.5,
+      "meanAbsLogError": {
+        "rw": 0.1816,
+        "drift": 0.2628,
+        "flat": 0.1816
+      },
+      "skillVsFlat": -0.447,
+      "skillPinballEwmaVsRw": -0.017,
+      "driftCoverage80": 53.5,
+      "zMean": 0.95,
+      "zKurtosis": 3.3,
+      "widthScale80": 1.29
+    },
+    {
+      "asset": "NASDAQ",
+      "unit": "session",
+      "horizon": 30,
+      "samples": 4113,
+      "coverage80": {
+        "rw": 84.2,
+        "ewma": 81.7
+      },
+      "coverage50": {
+        "rw": 51,
+        "ewma": 47.4
+      },
+      "pinball": {
+        "rw": 0.01542,
+        "ewma": 0.01528
+      },
+      "meanAbsPctError": 4.9,
+      "meanAbsLogError": {
+        "rw": 0.0489,
+        "drift": 0.0529,
+        "flat": 0.0489
+      },
+      "skillVsFlat": -0.081,
+      "skillPinballEwmaVsRw": 0.009,
+      "driftCoverage80": 79,
+      "zMean": 0.26,
+      "zKurtosis": 12.6,
+      "widthScale80": 0.92
+    },
+    {
+      "asset": "NASDAQ",
+      "unit": "session",
+      "horizon": 90,
+      "samples": 4053,
+      "coverage80": {
+        "rw": 81,
+        "ewma": 80.8
+      },
+      "coverage50": {
+        "rw": 45.6,
+        "ewma": 41.6
+      },
+      "pinball": {
+        "rw": 0.02634,
+        "ewma": 0.02608
+      },
+      "meanAbsPctError": 9.2,
+      "meanAbsLogError": {
+        "rw": 0.0881,
+        "drift": 0.1027,
+        "flat": 0.0881
+      },
+      "skillVsFlat": -0.166,
+      "skillPinballEwmaVsRw": 0.01,
+      "driftCoverage80": 73.8,
+      "zMean": 0.5,
+      "zKurtosis": 4.4,
+      "widthScale80": 0.98
+    },
+    {
+      "asset": "NASDAQ",
+      "unit": "session",
+      "horizon": 180,
+      "samples": 3963,
+      "coverage80": {
+        "rw": 71.6,
+        "ewma": 69
+      },
+      "coverage50": {
+        "rw": 34.1,
+        "ewma": 32.1
+      },
+      "pinball": {
+        "rw": 0.04253,
+        "ewma": 0.04243
+      },
+      "meanAbsPctError": 15.4,
+      "meanAbsLogError": {
+        "rw": 0.1426,
+        "drift": 0.1734,
+        "flat": 0.1426
+      },
+      "skillVsFlat": -0.216,
+      "skillPinballEwmaVsRw": 0.002,
+      "driftCoverage80": 65.4,
+      "zMean": 0.72,
+      "zKurtosis": 4.9,
+      "widthScale80": 1.17
+    },
+    {
+      "asset": "NASDAQ",
+      "unit": "session",
+      "horizon": 365,
+      "samples": 3778,
+      "coverage80": {
+        "rw": 58.4,
+        "ewma": 57.2
+      },
+      "coverage50": {
+        "rw": 26,
+        "ewma": 26.4
+      },
+      "pinball": {
+        "rw": 0.07389,
+        "ewma": 0.07548
+      },
+      "meanAbsPctError": 28.7,
+      "meanAbsLogError": {
+        "rw": 0.2464,
+        "drift": 0.3373,
+        "flat": 0.2464
+      },
+      "skillVsFlat": -0.369,
+      "skillPinballEwmaVsRw": -0.022,
+      "driftCoverage80": 49.3,
+      "zMean": 1.02,
+      "zKurtosis": 4,
+      "widthScale80": 1.37
+    },
+    {
+      "asset": "KOSPI",
+      "unit": "session",
+      "horizon": 30,
+      "samples": 4016,
+      "coverage80": {
+        "rw": 78.7,
+        "ewma": 78
+      },
+      "coverage50": {
+        "rw": 51.2,
+        "ewma": 50.3
+      },
+      "pinball": {
+        "rw": 0.01638,
+        "ewma": 0.0163
+      },
+      "meanAbsPctError": 5.1,
+      "meanAbsLogError": {
+        "rw": 0.0498,
+        "drift": 0.0555,
+        "flat": 0.0498
+      },
+      "skillVsFlat": -0.114,
+      "skillPinballEwmaVsRw": 0.005,
+      "driftCoverage80": 72,
+      "zMean": 0.11,
+      "zKurtosis": 6.3,
+      "widthScale80": 1.03
+    },
+    {
+      "asset": "KOSPI",
+      "unit": "session",
+      "horizon": 90,
+      "samples": 3956,
+      "coverage80": {
+        "rw": 75.3,
+        "ewma": 75.3
+      },
+      "coverage50": {
+        "rw": 49.7,
+        "ewma": 49.3
+      },
+      "pinball": {
+        "rw": 0.02946,
+        "ewma": 0.02951
+      },
+      "meanAbsPctError": 9.5,
+      "meanAbsLogError": {
+        "rw": 0.0893,
+        "drift": 0.1083,
+        "flat": 0.0893
+      },
+      "skillVsFlat": -0.213,
+      "skillPinballEwmaVsRw": -0.002,
+      "driftCoverage80": 63.7,
+      "zMean": 0.23,
+      "zKurtosis": 4.4,
+      "widthScale80": 1.12
+    },
+    {
+      "asset": "KOSPI",
+      "unit": "session",
+      "horizon": 180,
+      "samples": 3866,
+      "coverage80": {
+        "rw": 75,
+        "ewma": 73.6
+      },
+      "coverage50": {
+        "rw": 56.1,
+        "ewma": 56.3
+      },
+      "pinball": {
+        "rw": 0.0444,
+        "ewma": 0.04467
+      },
+      "meanAbsPctError": 14.7,
+      "meanAbsLogError": {
+        "rw": 0.1264,
+        "drift": 0.184,
+        "flat": 0.1264
+      },
+      "skillVsFlat": -0.455,
+      "skillPinballEwmaVsRw": -0.006,
+      "driftCoverage80": 56.3,
+      "zMean": 0.32,
+      "zKurtosis": 7.3,
+      "widthScale80": 1.16
+    },
+    {
+      "asset": "KOSPI",
+      "unit": "session",
+      "horizon": 365,
+      "samples": 3681,
+      "coverage80": {
+        "rw": 76.7,
+        "ewma": 76.5
+      },
+      "coverage50": {
+        "rw": 55.6,
+        "ewma": 54.6
+      },
+      "pinball": {
+        "rw": 0.06191,
+        "ewma": 0.06175
+      },
+      "meanAbsPctError": 21.7,
+      "meanAbsLogError": {
+        "rw": 0.1737,
+        "drift": 0.3721,
+        "flat": 0.1737
+      },
+      "skillVsFlat": -1.142,
+      "skillPinballEwmaVsRw": 0.003,
+      "driftCoverage80": 40.7,
+      "zMean": 0.38,
+      "zKurtosis": 4.9,
+      "widthScale80": 1.12
+    },
+    {
+      "asset": "KOSDAQ",
+      "unit": "session",
+      "horizon": 30,
+      "samples": 4017,
+      "coverage80": {
+        "rw": 79.7,
+        "ewma": 77.3
+      },
+      "coverage50": {
+        "rw": 51.4,
+        "ewma": 50.1
+      },
+      "pinball": {
+        "rw": 0.01899,
+        "ewma": 0.0192
+      },
+      "meanAbsPctError": 5.8,
+      "meanAbsLogError": {
+        "rw": 0.0585,
+        "drift": 0.0672,
+        "flat": 0.0585
+      },
+      "skillVsFlat": -0.149,
+      "skillPinballEwmaVsRw": -0.011,
+      "driftCoverage80": 73,
+      "zMean": 0.05,
+      "zKurtosis": 5,
+      "widthScale80": 1.01
+    },
+    {
+      "asset": "KOSDAQ",
+      "unit": "session",
+      "horizon": 90,
+      "samples": 3957,
+      "coverage80": {
+        "rw": 82.7,
+        "ewma": 80.6
+      },
+      "coverage50": {
+        "rw": 50.6,
+        "ewma": 49.4
+      },
+      "pinball": {
+        "rw": 0.0315,
+        "ewma": 0.03141
+      },
+      "meanAbsPctError": 10,
+      "meanAbsLogError": {
+        "rw": 0.0985,
+        "drift": 0.1373,
+        "flat": 0.0985
+      },
+      "skillVsFlat": -0.395,
+      "skillPinballEwmaVsRw": 0.003,
+      "driftCoverage80": 64.7,
+      "zMean": 0.13,
+      "zKurtosis": 4.2,
+      "widthScale80": 0.94
+    },
+    {
+      "asset": "KOSDAQ",
+      "unit": "session",
+      "horizon": 180,
+      "samples": 3867,
+      "coverage80": {
+        "rw": 81.1,
+        "ewma": 78.8
+      },
+      "coverage50": {
+        "rw": 51.9,
+        "ewma": 48.7
+      },
+      "pinball": {
+        "rw": 0.04283,
+        "ewma": 0.04288
+      },
+      "meanAbsPctError": 13.8,
+      "meanAbsLogError": {
+        "rw": 0.1314,
+        "drift": 0.2393,
+        "flat": 0.1314
+      },
+      "skillVsFlat": -0.821,
+      "skillPinballEwmaVsRw": -0.001,
+      "driftCoverage80": 50.5,
+      "zMean": 0.19,
+      "zKurtosis": 3.6,
+      "widthScale80": 0.96
+    },
+    {
+      "asset": "KOSDAQ",
+      "unit": "session",
+      "horizon": 365,
+      "samples": 3682,
+      "coverage80": {
+        "rw": 81.3,
+        "ewma": 80.8
+      },
+      "coverage50": {
+        "rw": 58,
+        "ewma": 56.2
+      },
+      "pinball": {
+        "rw": 0.05411,
+        "ewma": 0.05466
+      },
+      "meanAbsPctError": 17.9,
+      "meanAbsLogError": {
+        "rw": 0.1668,
+        "drift": 0.4452,
+        "flat": 0.1668
+      },
+      "skillVsFlat": -1.67,
+      "skillPinballEwmaVsRw": -0.01,
+      "driftCoverage80": 43.6,
+      "zMean": 0.26,
+      "zKurtosis": 3.2,
+      "widthScale80": 0.97
+    },
+    {
+      "asset": "TQQQ",
+      "unit": "session",
+      "horizon": 30,
+      "samples": 4086,
+      "coverage80": {
+        "rw": 83.6,
+        "ewma": 80
+      },
+      "coverage50": {
+        "rw": 51,
+        "ewma": 48.6
+      },
+      "pinball": {
+        "rw": 0.04742,
+        "ewma": 0.04726
+      },
+      "meanAbsPctError": 15.4,
+      "meanAbsLogError": {
+        "rw": 0.1497,
+        "drift": 0.167,
+        "flat": 0.1497
+      },
+      "skillVsFlat": -0.115,
+      "skillPinballEwmaVsRw": 0.003,
+      "driftCoverage80": 77.2,
+      "zMean": 0.21,
+      "zKurtosis": 14.6,
+      "widthScale80": 0.93
+    },
+    {
+      "asset": "TQQQ",
+      "unit": "session",
+      "horizon": 90,
+      "samples": 4026,
+      "coverage80": {
+        "rw": 83.2,
+        "ewma": 81.5
+      },
+      "coverage50": {
+        "rw": 48.4,
+        "ewma": 45.6
+      },
+      "pinball": {
+        "rw": 0.0781,
+        "ewma": 0.07801
+      },
+      "meanAbsPctError": 28.7,
+      "meanAbsLogError": {
+        "rw": 0.2563,
+        "drift": 0.3272,
+        "flat": 0.2563
+      },
+      "skillVsFlat": -0.277,
+      "skillPinballEwmaVsRw": 0.001,
+      "driftCoverage80": 71,
+      "zMean": 0.39,
+      "zKurtosis": 4.4,
+      "widthScale80": 0.93
+    },
+    {
+      "asset": "TQQQ",
+      "unit": "session",
+      "horizon": 180,
+      "samples": 3936,
+      "coverage80": {
+        "rw": 77.4,
+        "ewma": 74.9
+      },
+      "coverage50": {
+        "rw": 41.5,
+        "ewma": 40.2
+      },
+      "pinball": {
+        "rw": 0.11914,
+        "ewma": 0.11908
+      },
+      "meanAbsPctError": 47.3,
+      "meanAbsLogError": {
+        "rw": 0.39,
+        "drift": 0.5343,
+        "flat": 0.39
+      },
+      "skillVsFlat": -0.37,
+      "skillPinballEwmaVsRw": 0.001,
+      "driftCoverage80": 65.4,
+      "zMean": 0.55,
+      "zKurtosis": 6,
+      "widthScale80": 1.05
+    },
+    {
+      "asset": "TQQQ",
+      "unit": "session",
+      "horizon": 365,
+      "samples": 3751,
+      "coverage80": {
+        "rw": 71,
+        "ewma": 67.7
+      },
+      "coverage50": {
+        "rw": 35.5,
+        "ewma": 34.6
+      },
+      "pinball": {
+        "rw": 0.19142,
+        "ewma": 0.19514
+      },
+      "meanAbsPctError": 94.5,
+      "meanAbsLogError": {
+        "rw": 0.6356,
+        "drift": 1.0634,
+        "flat": 0.6356
+      },
+      "skillVsFlat": -0.673,
+      "skillPinballEwmaVsRw": -0.019,
+      "driftCoverage80": 48.5,
+      "zMean": 0.78,
+      "zKurtosis": 5.3,
+      "widthScale80": 1.29
+    },
+    {
+      "asset": "SOXL",
+      "unit": "session",
+      "horizon": 30,
+      "samples": 4068,
+      "coverage80": {
+        "rw": 81.7,
+        "ewma": 80.4
+      },
+      "coverage50": {
+        "rw": 51.1,
+        "ewma": 49.8
+      },
+      "pinball": {
+        "rw": 0.07132,
+        "ewma": 0.07109
+      },
+      "meanAbsPctError": 23.5,
+      "meanAbsLogError": {
+        "rw": 0.2235,
+        "drift": 0.2514,
+        "flat": 0.2235
+      },
+      "skillVsFlat": -0.125,
+      "skillPinballEwmaVsRw": 0.003,
+      "driftCoverage80": 77.4,
+      "zMean": 0.14,
+      "zKurtosis": 6.3,
+      "widthScale80": 0.96
+    },
+    {
+      "asset": "SOXL",
+      "unit": "session",
+      "horizon": 90,
+      "samples": 4008,
+      "coverage80": {
+        "rw": 81.7,
+        "ewma": 78.7
+      },
+      "coverage50": {
+        "rw": 45.4,
+        "ewma": 43.5
+      },
+      "pinball": {
+        "rw": 0.11944,
+        "ewma": 0.12043
+      },
+      "meanAbsPctError": 45.6,
+      "meanAbsLogError": {
+        "rw": 0.3934,
+        "drift": 0.4959,
+        "flat": 0.3934
+      },
+      "skillVsFlat": -0.26,
+      "skillPinballEwmaVsRw": -0.008,
+      "driftCoverage80": 70.3,
+      "zMean": 0.26,
+      "zKurtosis": 3,
+      "widthScale80": 0.97
+    },
+    {
+      "asset": "SOXL",
+      "unit": "session",
+      "horizon": 180,
+      "samples": 3918,
+      "coverage80": {
+        "rw": 80.7,
+        "ewma": 79.2
+      },
+      "coverage50": {
+        "rw": 44.2,
+        "ewma": 42.1
+      },
+      "pinball": {
+        "rw": 0.17176,
+        "ewma": 0.17186
+      },
+      "meanAbsPctError": 76.9,
+      "meanAbsLogError": {
+        "rw": 0.5633,
+        "drift": 0.8518,
+        "flat": 0.5633
+      },
+      "skillVsFlat": -0.512,
+      "skillPinballEwmaVsRw": -0.001,
+      "driftCoverage80": 61.1,
+      "zMean": 0.35,
+      "zKurtosis": 3.7,
+      "widthScale80": 0.99
+    },
+    {
+      "asset": "SOXL",
+      "unit": "session",
+      "horizon": 365,
+      "samples": 3733,
+      "coverage80": {
+        "rw": 77.7,
+        "ewma": 75.2
+      },
+      "coverage50": {
+        "rw": 47.4,
+        "ewma": 47.2
+      },
+      "pinball": {
+        "rw": 0.23037,
+        "ewma": 0.23302
+      },
+      "meanAbsPctError": 134.3,
+      "meanAbsLogError": {
+        "rw": 0.7575,
+        "drift": 1.7006,
+        "flat": 0.7575
+      },
+      "skillVsFlat": -1.245,
+      "skillPinballEwmaVsRw": -0.012,
+      "driftCoverage80": 42.1,
+      "zMean": 0.45,
+      "zKurtosis": 2.6,
+      "widthScale80": 1.05
+    },
+    {
+      "asset": "KODEX-KOSDAQ150",
+      "unit": "session",
+      "horizon": 30,
+      "samples": 2513,
+      "coverage80": {
+        "rw": 79.4,
+        "ewma": 78.1
+      },
+      "coverage50": {
+        "rw": 50.4,
+        "ewma": 49.3
+      },
+      "pinball": {
+        "rw": 0.04856,
+        "ewma": 0.04901
+      },
+      "meanAbsPctError": 15,
+      "meanAbsLogError": {
+        "rw": 0.1504,
+        "drift": 0.171,
+        "flat": 0.1504
+      },
+      "skillVsFlat": -0.137,
+      "skillPinballEwmaVsRw": -0.009,
+      "driftCoverage80": 73.5,
+      "zMean": 0.01,
+      "zKurtosis": 5.4,
+      "widthScale80": 1.02
+    },
+    {
+      "asset": "KODEX-KOSDAQ150",
+      "unit": "session",
+      "horizon": 90,
+      "samples": 2453,
+      "coverage80": {
+        "rw": 78,
+        "ewma": 75.8
+      },
+      "coverage50": {
+        "rw": 43.8,
+        "ewma": 44.3
+      },
+      "pinball": {
+        "rw": 0.08572,
+        "ewma": 0.08619
+      },
+      "meanAbsPctError": 28,
+      "meanAbsLogError": {
+        "rw": 0.2735,
+        "drift": 0.3481,
+        "flat": 0.2735
+      },
+      "skillVsFlat": -0.273,
+      "skillPinballEwmaVsRw": -0.006,
+      "driftCoverage80": 63.8,
+      "zMean": 0.06,
+      "zKurtosis": 6.1,
+      "widthScale80": 1.04
+    },
+    {
+      "asset": "KODEX-KOSDAQ150",
+      "unit": "session",
+      "horizon": 180,
+      "samples": 2363,
+      "coverage80": {
+        "rw": 75.5,
+        "ewma": 73
+      },
+      "coverage50": {
+        "rw": 41.6,
+        "ewma": 39.6
+      },
+      "pinball": {
+        "rw": 0.12262,
+        "ewma": 0.12291
+      },
+      "meanAbsPctError": 42.7,
+      "meanAbsLogError": {
+        "rw": 0.3899,
+        "drift": 0.6245,
+        "flat": 0.3899
+      },
+      "skillVsFlat": -0.601,
+      "skillPinballEwmaVsRw": -0.002,
+      "driftCoverage80": 48.8,
+      "zMean": 0.09,
+      "zKurtosis": 5.2,
+      "widthScale80": 1.08
+    },
+    {
+      "asset": "KODEX-KOSDAQ150",
+      "unit": "session",
+      "horizon": 365,
+      "samples": 2178,
+      "coverage80": {
+        "rw": 79.7,
+        "ewma": 79.4
+      },
+      "coverage50": {
+        "rw": 48.3,
+        "ewma": 48.5
+      },
+      "pinball": {
+        "rw": 0.14656,
+        "ewma": 0.14817
+      },
+      "meanAbsPctError": 50.4,
+      "meanAbsLogError": {
+        "rw": 0.4665,
+        "drift": 1.2472,
+        "flat": 0.4665
+      },
+      "skillVsFlat": -1.674,
+      "skillPinballEwmaVsRw": -0.011,
+      "driftCoverage80": 34.8,
+      "zMean": 0.09,
+      "zKurtosis": 2.8,
+      "widthScale80": 1.01
+    },
+    {
+      "asset": "MSTR",
+      "unit": "session",
+      "horizon": 30,
+      "samples": 7027,
+      "coverage80": {
+        "rw": 77.3,
+        "ewma": 75.5
+      },
+      "coverage50": {
+        "rw": 50.5,
+        "ewma": 48.5
+      },
+      "pinball": {
+        "rw": 0.06446,
+        "ewma": 0.06445
+      },
+      "meanAbsPctError": 19.9,
+      "meanAbsLogError": {
+        "rw": 0.1925,
+        "drift": 0.2225,
+        "flat": 0.1925
+      },
+      "skillVsFlat": -0.156,
+      "skillPinballEwmaVsRw": 0,
+      "driftCoverage80": 70.2,
+      "zMean": 0.07,
+      "zKurtosis": 7.9,
+      "widthScale80": 1.07
+    },
+    {
+      "asset": "MSTR",
+      "unit": "session",
+      "horizon": 90,
+      "samples": 6967,
+      "coverage80": {
+        "rw": 73.6,
+        "ewma": 71.5
+      },
+      "coverage50": {
+        "rw": 48.1,
+        "ewma": 44.9
+      },
+      "pinball": {
+        "rw": 0.1179,
+        "ewma": 0.11833
+      },
+      "meanAbsPctError": 41,
+      "meanAbsLogError": {
+        "rw": 0.3496,
+        "drift": 0.4816,
+        "flat": 0.3496
+      },
+      "skillVsFlat": -0.378,
+      "skillPinballEwmaVsRw": -0.004,
+      "driftCoverage80": 56.8,
+      "zMean": 0.13,
+      "zKurtosis": 5.8,
+      "widthScale80": 1.23
+    },
+    {
+      "asset": "MSTR",
+      "unit": "session",
+      "horizon": 180,
+      "samples": 6877,
+      "coverage80": {
+        "rw": 72.4,
+        "ewma": 70.3
+      },
+      "coverage50": {
+        "rw": 45.6,
+        "ewma": 45.1
+      },
+      "pinball": {
+        "rw": 0.16598,
+        "ewma": 0.1697
+      },
+      "meanAbsPctError": 71.8,
+      "meanAbsLogError": {
+        "rw": 0.5119,
+        "drift": 0.8497,
+        "flat": 0.5119
+      },
+      "skillVsFlat": -0.66,
+      "skillPinballEwmaVsRw": -0.022,
+      "driftCoverage80": 47.6,
+      "zMean": 0.19,
+      "zKurtosis": 4.4,
+      "widthScale80": 1.18
+    },
+    {
+      "asset": "MSTR",
+      "unit": "session",
+      "horizon": 365,
+      "samples": 6692,
+      "coverage80": {
+        "rw": 73.8,
+        "ewma": 70.7
+      },
+      "coverage50": {
+        "rw": 44.4,
+        "ewma": 41.7
+      },
+      "pinball": {
+        "rw": 0.23329,
+        "ewma": 0.23262
+      },
+      "meanAbsPctError": 108.4,
+      "meanAbsLogError": {
+        "rw": 0.7231,
+        "drift": 1.5841,
+        "flat": 0.7231
+      },
+      "skillVsFlat": -1.191,
+      "skillPinballEwmaVsRw": 0.003,
+      "driftCoverage80": 39.2,
+      "zMean": 0.29,
+      "zKurtosis": 6,
+      "widthScale80": 1.17
+    },
+    {
+      "asset": "BMNR",
+      "unit": "session",
+      "horizon": 30,
+      "samples": 239,
+      "coverage80": {
+        "rw": 84.5,
+        "ewma": 83.7
+      },
+      "coverage50": {
+        "rw": 54.8,
+        "ewma": 46.9
+      },
+      "pinball": {
+        "rw": 0.07721,
+        "ewma": 0.07106
+      },
+      "meanAbsPctError": 22.3,
+      "meanAbsLogError": {
+        "rw": 0.2319,
+        "drift": 0.304,
+        "flat": 0.2319
+      },
+      "skillVsFlat": -0.311,
+      "skillPinballEwmaVsRw": 0.08,
+      "driftCoverage80": 82.4,
+      "zMean": -0.1,
+      "zKurtosis": 2.8,
+      "widthScale80": 0.9
+    },
+    {
+      "asset": "BMNR",
+      "unit": "session",
+      "horizon": 90,
+      "samples": 179,
+      "coverage80": {
+        "rw": 100,
+        "ewma": 97.8
+      },
+      "coverage50": {
+        "rw": 76,
+        "ewma": 58.7
+      },
+      "pinball": {
+        "rw": 0.12691,
+        "ewma": 0.11033
+      },
+      "meanAbsPctError": 30.8,
+      "meanAbsLogError": {
+        "rw": 0.3589,
+        "drift": 0.7153,
+        "flat": 0.3589
+      },
+      "skillVsFlat": -0.993,
+      "skillPinballEwmaVsRw": 0.131,
+      "driftCoverage80": 79.9,
+      "zMean": -0.18,
+      "zKurtosis": 2.3,
+      "widthScale80": 0.54
+    },
+    {
+      "asset": "BMNR",
+      "unit": "session",
+      "horizon": 180,
+      "samples": 89,
+      "status": "insufficient-samples"
+    },
+    {
+      "asset": "BMNR",
+      "unit": "session",
+      "horizon": 365,
+      "samples": 0,
+      "status": "insufficient-samples"
+    },
+    {
+      "asset": "HOUSING-부산",
+      "unit": "month",
+      "horizon": 3,
+      "samples": 233,
+      "coverage80": {
+        "rw": 44.6,
+        "ewma": 63.5
+      },
+      "coverage50": {
+        "rw": 26.2,
+        "ewma": 37.8
+      },
+      "pinball": {
+        "rw": 0.0077,
+        "ewma": 0.00721
+      },
+      "meanAbsPctError": 2.1,
+      "meanAbsLogError": {
+        "rw": 0.0206,
+        "drift": 0.0182,
+        "flat": 0.0206
+      },
+      "skillVsFlat": 0.115,
+      "skillPinballEwmaVsRw": 0.065,
+      "driftCoverage80": 54.1,
+      "zMean": 1.07,
+      "zKurtosis": 4.3,
+      "widthScale80": 2.31
+    },
+    {
+      "asset": "HOUSING-부산",
+      "unit": "month",
+      "horizon": 6,
+      "samples": 230,
+      "coverage80": {
+        "rw": 38.7,
+        "ewma": 50.9
+      },
+      "coverage50": {
+        "rw": 21.3,
+        "ewma": 31.7
+      },
+      "pinball": {
+        "rw": 0.01529,
+        "ewma": 0.01434
+      },
+      "meanAbsPctError": 3.9,
+      "meanAbsLogError": {
+        "rw": 0.0385,
+        "drift": 0.0367,
+        "flat": 0.0385
+      },
+      "skillVsFlat": 0.048,
+      "skillPinballEwmaVsRw": 0.062,
+      "driftCoverage80": 41.7,
+      "zMean": 1.59,
+      "zKurtosis": 4.2,
+      "widthScale80": 3.56
+    },
+    {
+      "asset": "HOUSING-부산",
+      "unit": "month",
+      "horizon": 12,
+      "samples": 224,
+      "coverage80": {
+        "rw": 29.9,
+        "ewma": 40.6
+      },
+      "coverage50": {
+        "rw": 15.6,
+        "ewma": 25.9
+      },
+      "pinball": {
+        "rw": 0.03015,
+        "ewma": 0.02863
+      },
+      "meanAbsPctError": 7.6,
+      "meanAbsLogError": {
+        "rw": 0.073,
+        "drift": 0.0788,
+        "flat": 0.073
+      },
+      "skillVsFlat": -0.079,
+      "skillPinballEwmaVsRw": 0.05,
+      "driftCoverage80": 23.2,
+      "zMean": 2.49,
+      "zKurtosis": 3.2,
+      "widthScale80": 4.83
+    },
+    {
+      "asset": "HOUSING-서울",
+      "unit": "month",
+      "horizon": 3,
+      "samples": 233,
+      "coverage80": {
+        "rw": 45.5,
+        "ewma": 63.9
+      },
+      "coverage50": {
+        "rw": 25.3,
+        "ewma": 34.3
+      },
+      "pinball": {
+        "rw": 0.01132,
+        "ewma": 0.01041
+      },
+      "meanAbsPctError": 3.2,
+      "meanAbsLogError": {
+        "rw": 0.0316,
+        "drift": 0.0308,
+        "flat": 0.0316
+      },
+      "skillVsFlat": 0.027,
+      "skillPinballEwmaVsRw": 0.08,
+      "driftCoverage80": 54.5,
+      "zMean": 0.89,
+      "zKurtosis": 5.5,
+      "widthScale80": 2.15
+    },
+    {
+      "asset": "HOUSING-서울",
+      "unit": "month",
+      "horizon": 6,
+      "samples": 230,
+      "coverage80": {
+        "rw": 34.8,
+        "ewma": 48.7
+      },
+      "coverage50": {
+        "rw": 15.7,
+        "ewma": 27.8
+      },
+      "pinball": {
+        "rw": 0.02051,
+        "ewma": 0.01891
+      },
+      "meanAbsPctError": 5.6,
+      "meanAbsLogError": {
+        "rw": 0.0554,
+        "drift": 0.0523,
+        "flat": 0.0554
+      },
+      "skillVsFlat": 0.055,
+      "skillPinballEwmaVsRw": 0.078,
+      "driftCoverage80": 43.9,
+      "zMean": 1.2,
+      "zKurtosis": 4.8,
+      "widthScale80": 2.79
+    },
+    {
+      "asset": "HOUSING-서울",
+      "unit": "month",
+      "horizon": 12,
+      "samples": 224,
+      "coverage80": {
+        "rw": 27.2,
+        "ewma": 45.1
+      },
+      "coverage50": {
+        "rw": 16.1,
+        "ewma": 19.6
+      },
+      "pinball": {
+        "rw": 0.03468,
+        "ewma": 0.03205
+      },
+      "meanAbsPctError": 9.4,
+      "meanAbsLogError": {
+        "rw": 0.0907,
+        "drift": 0.0907,
+        "flat": 0.0907
+      },
+      "skillVsFlat": 0,
+      "skillPinballEwmaVsRw": 0.076,
+      "driftCoverage80": 36.6,
+      "zMean": 1.7,
+      "zKurtosis": 2.9,
+      "widthScale80": 3.62
+    },
+    {
+      "asset": "HOUSING-경기",
+      "unit": "month",
+      "horizon": 3,
+      "samples": 233,
+      "coverage80": {
+        "rw": 49.4,
+        "ewma": 67
+      },
+      "coverage50": {
+        "rw": 28.3,
+        "ewma": 42.1
+      },
+      "pinball": {
+        "rw": 0.00925,
+        "ewma": 0.00857
+      },
+      "meanAbsPctError": 2.5,
+      "meanAbsLogError": {
+        "rw": 0.0247,
+        "drift": 0.0271,
+        "flat": 0.0247
+      },
+      "skillVsFlat": -0.095,
+      "skillPinballEwmaVsRw": 0.073,
+      "driftCoverage80": 46.4,
+      "zMean": 0.8,
+      "zKurtosis": 4.6,
+      "widthScale80": 2.48
+    },
+    {
+      "asset": "HOUSING-경기",
+      "unit": "month",
+      "horizon": 6,
+      "samples": 230,
+      "coverage80": {
+        "rw": 41.3,
+        "ewma": 62.2
+      },
+      "coverage50": {
+        "rw": 22.2,
+        "ewma": 34.3
+      },
+      "pinball": {
+        "rw": 0.01664,
+        "ewma": 0.01555
+      },
+      "meanAbsPctError": 4.4,
+      "meanAbsLogError": {
+        "rw": 0.0432,
+        "drift": 0.0516,
+        "flat": 0.0432
+      },
+      "skillVsFlat": -0.193,
+      "skillPinballEwmaVsRw": 0.065,
+      "driftCoverage80": 36.1,
+      "zMean": 1.06,
+      "zKurtosis": 5.3,
+      "widthScale80": 2.86
+    },
+    {
+      "asset": "HOUSING-경기",
+      "unit": "month",
+      "horizon": 12,
+      "samples": 224,
+      "coverage80": {
+        "rw": 42.4,
+        "ewma": 56.7
+      },
+      "coverage50": {
+        "rw": 22.8,
+        "ewma": 31.7
+      },
+      "pinball": {
+        "rw": 0.02729,
+        "ewma": 0.02532
+      },
+      "meanAbsPctError": 7.1,
+      "meanAbsLogError": {
+        "rw": 0.0686,
+        "drift": 0.0965,
+        "flat": 0.0686
+      },
+      "skillVsFlat": -0.407,
+      "skillPinballEwmaVsRw": 0.072,
+      "driftCoverage80": 29,
+      "zMean": 1.53,
+      "zKurtosis": 5,
+      "widthScale80": 3
+    },
+    {
+      "asset": "HOUSING-전국",
+      "unit": "month",
+      "horizon": 3,
+      "samples": 233,
+      "coverage80": {
+        "rw": 52.8,
+        "ewma": 66.1
+      },
+      "coverage50": {
+        "rw": 29.2,
+        "ewma": 39.5
+      },
+      "pinball": {
+        "rw": 0.0071,
+        "ewma": 0.00661
+      },
+      "meanAbsPctError": 1.9,
+      "meanAbsLogError": {
+        "rw": 0.0193,
+        "drift": 0.0205,
+        "flat": 0.0193
+      },
+      "skillVsFlat": -0.06,
+      "skillPinballEwmaVsRw": 0.069,
+      "driftCoverage80": 44.6,
+      "zMean": 1,
+      "zKurtosis": 4.8,
+      "widthScale80": 2.42
+    },
+    {
+      "asset": "HOUSING-전국",
+      "unit": "month",
+      "horizon": 6,
+      "samples": 230,
+      "coverage80": {
+        "rw": 42.2,
+        "ewma": 57.8
+      },
+      "coverage50": {
+        "rw": 22.6,
+        "ewma": 34.8
+      },
+      "pinball": {
+        "rw": 0.01279,
+        "ewma": 0.01205
+      },
+      "meanAbsPctError": 3.4,
+      "meanAbsLogError": {
+        "rw": 0.0336,
+        "drift": 0.0388,
+        "flat": 0.0336
+      },
+      "skillVsFlat": -0.152,
+      "skillPinballEwmaVsRw": 0.058,
+      "driftCoverage80": 38.7,
+      "zMean": 1.3,
+      "zKurtosis": 5,
+      "widthScale80": 3.07
+    },
+    {
+      "asset": "HOUSING-전국",
+      "unit": "month",
+      "horizon": 12,
+      "samples": 224,
+      "coverage80": {
+        "rw": 38.8,
+        "ewma": 54.5
+      },
+      "coverage50": {
+        "rw": 23.7,
+        "ewma": 29
+      },
+      "pinball": {
+        "rw": 0.02127,
+        "ewma": 0.01991
+      },
+      "meanAbsPctError": 5.6,
+      "meanAbsLogError": {
+        "rw": 0.0538,
+        "drift": 0.072,
+        "flat": 0.0538
+      },
+      "skillVsFlat": -0.337,
+      "skillPinballEwmaVsRw": 0.064,
+      "driftCoverage80": 33,
+      "zMean": 1.77,
+      "zKurtosis": 6.1,
+      "widthScale80": 3.09
+    }
+  ],
+  "notes": [
+    "커버리지는 명목 50%·80% 구간에 실제 로그수익률이 들어온 비율이다.",
+    "skillVsFlat은 로그 MAE 기준 1 - model/flat 이며, 0보다 크면 flat보다 낫다는 뜻이다. 표본이 작으면 판별력이 없다.",
+    "zMean이 0에서 멀면 드리프트 편향, zKurtosis가 3보다 크면 정규분포보다 두꺼운 꼬리다.",
+    "이 스크립트는 모델을 바꾸지 않는다. 화면·예측 경로·배포에는 어떤 변경도 가하지 않는다."
+  ]
+}
