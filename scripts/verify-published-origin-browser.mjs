@@ -208,8 +208,16 @@ export function validatePage(state,spec){
   let plotTop=state.top.bottom;
   if(state.refreshNotice?.painted){
     inside(state.refreshNotice,'Source status notice');
-    assert.ok(state.refreshNotice.top>=state.top.bottom-1&&state.refreshNotice.bottom<=state.chart.allocation.top+1,'Source status notice overlaps controls or price plot');
-    plotTop=state.refreshNotice.bottom;
+    if(spec.width<=620){
+      // Mobile keeps the source notice before its flow-positioned toolbar;
+      // desktop keeps the toolbar fixed above the main notice/plot grid.
+      assert.ok(Math.abs(state.refreshNotice.top)<=1&&Math.abs(state.refreshNotice.bottom-state.top.top)<=1,
+        'Mobile source status notice must meet the top controls from the viewport top without overlap or gap');
+    }else{
+      assert.ok(state.refreshNotice.top>=state.top.bottom-1&&state.refreshNotice.top<=state.top.bottom+5&&
+        state.refreshNotice.bottom<=state.chart.allocation.top+1,'Source status notice overlaps controls or price plot, or leaves an unexpected gap');
+      plotTop=state.refreshNotice.bottom;
+    }
   }
   assert.ok(state.chart.allocation.top>=plotTop-1&&state.chart.allocation.top<=plotTop+5&&
     state.chart.allocation.bottom>=state.bottom.top-5&&state.chart.allocation.bottom<=state.bottom.top+1,
