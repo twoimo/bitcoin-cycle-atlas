@@ -7,6 +7,7 @@ import { createForecastComputation, browserForecastWorkerFactory } from './forec
 import {bitcoinForecastEvidence} from './forecast-evidence.js?v=1.29.0';
 import {openResearchArticle} from './research-reader.js?v=1.36.1';
 import {priceLegendMarkup,priceReadoutKind,observedPriceSourceLabel} from './price-legend.js?v=1.31.3';
+import {writeChartLegendMarkup} from './ui/chart-legend.js?v=1.36.1';
 import { buildCycleMilestones, INTERVAL_RELATIONS, MILESTONE_TYPES } from "./cycle-milestones.js?v=1.29.0";
 import { cycleLegendMarkup, cycleMilestoneInspection, cycleIntervalInspection, cycleDurationLabel } from "./cycle-milestones-view.js?v=1.29.0";
 import { resolveCycleSelection, cycleSelectionViewport, cycleOverviewViewport } from './cycle-selection.js?v=1.29.0';
@@ -557,7 +558,7 @@ export function initLabView() {
           $('#lab-asof').textContent=market.status==='error'?'거래소 봉 조회 실패':'거래소 봉 조회 중';
           $('#lab-chart-title').textContent=`${chartInterval(state.frequency).label} · 실제 거래소 OHLC`;
         }
-        $('#atlas-chart-legend').innerHTML=priceLegendMarkup({candles:state.chartType==='candles',source:'Coinbase Exchange'});
+        writeChartLegendMarkup($('#atlas-chart-legend'),priceLegendMarkup({candles:state.chartType==='candles',source:'Coinbase Exchange'}));
         $('#atlas-chart-caveat').textContent='완료 봉';
         $('#atlas-chart-note').textContent=`${marketStatusText(market)}. 미완성 봉과 빈 구간은 채우지 않습니다. 장기 전망은 1D·1W에서 같은 차트에 이어 표시합니다.`;
         $('#atlas-inspect-prev').setAttribute('aria-label','이전 완료 봉');$('#atlas-inspect-next').setAttribute('aria-label','다음 완료 봉');
@@ -587,7 +588,7 @@ export function initLabView() {
         state.chartReplaySnapshot={dataset:state.dataset,forecast:m,modelOptions:modelOptions(state.scenario),start,end:chartEnd,frequency:state.frequency,window:state.window,customRange:Boolean(state.priceRange),chartType:state.chartType,presentation:captureReplayPresentation()};
         $('#atlas-date').min=b.rows[0].date;$('#atlas-date').max=end;
         $('#lab-chart-title').textContent=`${dateLabel(start)} — ${dateLabel(chartEnd)} · ${state.frequency==='daily'?'일별':'주별'} 가격`;
-        $('#atlas-chart-legend').innerHTML=priceLegendMarkup({compact:true,candles:Number($('#lab-chart').dataset.observedCandleCount)>0,observed:Number($('#lab-chart').dataset.observedCandleCount)>0||Number($('#lab-chart').dataset.observedLineCount)>0,mixedLine:Number($('#lab-chart').dataset.observedLineCount)>0,source:Number($('#lab-chart').dataset.observedCandleCount)>0?history?.source||'Bitstamp':'Coin Metrics',forecast:true,band:$('#lab-band').checked,turns:$('#lab-turns').checked})+((shown('cycle-landmarks')||(shown('cycle-intervals')&&!state.cycleCollapsed))?cycleLegendMarkup()+'<span class="cycle-reference-key">◇ 거시 시계 · ○ 예시 경로</span>':'');
+        writeChartLegendMarkup($('#atlas-chart-legend'),priceLegendMarkup({compact:true,candles:Number($('#lab-chart').dataset.observedCandleCount)>0,observed:Number($('#lab-chart').dataset.observedCandleCount)>0||Number($('#lab-chart').dataset.observedLineCount)>0,mixedLine:Number($('#lab-chart').dataset.observedLineCount)>0,source:Number($('#lab-chart').dataset.observedCandleCount)>0?history?.source||'Bitstamp':'Coin Metrics',forecast:true,band:$('#lab-band').checked,turns:$('#lab-turns').checked})+((shown('cycle-landmarks')||(shown('cycle-intervals')&&!state.cycleCollapsed))?cycleLegendMarkup()+'<span class="cycle-reference-key">◇ 거시 시계 · ○ 예시 경로</span>':''));
         renderCycleControls(milestones);
         const comparisonPanel=$('#atlas-cycle-comparison');if(comparisonPanel){
           const markup=cyclePeriodComparisonMarkup(comparison);
@@ -794,8 +795,8 @@ export function initLabView() {
         'historical-reconstruction':{label:'BTC 축소 추세 · 과거 재구성',description:`기준일 ${session.asOf}까지의 관측으로 만든 BTC 축소 추세 기준모형입니다. 현재 자료 판본으로 과거를 재구성한 경로이며 당시 발행된 예측이 아닙니다.`},
         recorded:{label:reconstructedRecord?'보존 예측 · 재구성 기록':'보존 예측',description:`예측 기준 ${session.asOf}의 보존 기록을 그대로 재생합니다.${reconstructedRecord?' 과거를 재구성해 보존한 기록이며 당시 발행된 예측이 아닙니다.':''}`}
       }[session.mode]??{label:'고정 경로 리플레이',description:'선택한 고정 경로를 재생합니다.'};
-      $('#atlas-chart-legend').innerHTML=priceLegendMarkup({compact:true,candles,forming,source:candles?candleSource:priceSource,forecast:true,band,turns:p.showTurns,replayMode:session.mode})+
-        ((p.showCycleMarkers||p.showCycleIntervals)?cycleLegendMarkup()+'<span class="cycle-reference-key">◇ 거시 시계 · ○ 예시 경로</span>':'');
+      writeChartLegendMarkup($('#atlas-chart-legend'),priceLegendMarkup({compact:true,candles,forming,source:candles?candleSource:priceSource,forecast:true,band,turns:p.showTurns,replayMode:session.mode})+
+        ((p.showCycleMarkers||p.showCycleIntervals)?cycleLegendMarkup()+'<span class="cycle-reference-key">◇ 거시 시계 · ○ 예시 경로</span>':''));
       $('#atlas-chart-caveat').textContent=replayMeaning.label;
       $('#lab-chart-title').textContent=`${replayMeaning.label} · ${dateLabel(start)} — ${dateLabel(end)} · ${frequency==='weekly'?'주별':'일별'} 리플레이`;
       $('#lab-asof').textContent=observedDate?`실제 관측 ${observedDate} UTC까지 공개`:'첫 관측 공개 전';
