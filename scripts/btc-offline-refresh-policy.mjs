@@ -2,12 +2,18 @@
  * No production URL, freshness rule, price value or error is changed here.
  * A true result is only eligibility; the caller must verify the actual document's
  * failed-refresh UI and preserved archive cutoff before accepting its request ID. */
-export function offlineBtcRefreshSurface(spec={}){
-  return spec.consolidated===true&&spec.page==='workspace-consolidated'?'consolidated':spec.surface;
+export function offlineBtcRefreshSurface(spec,document={}){
+  if(spec?.consolidated!==true)return spec?.surface;
+  // Consolidation changes the visible center, not the native BTC document that
+  // owns its refresh. Only the declared market-entry case and its actual parent
+  // can use the existing BTC policy; undefined/unknown surfaces stay ineligible.
+  if(spec.page!=='workspace-consolidated'||spec.surface!==undefined||document.preview===true||
+    document.nativeSymbol!=='BTCUSD'||document.page!=='outlook'||document.center!=='market-us')return undefined;
+  return 'btc';
 }
 
 export function isExpectedOfflineBtcRefresh(error,{surface,archiveAsOf}={}){
-  if(!['btc','evidence','legacy','preview','center-data','consolidated'].includes(surface)||!error||
+  if(!['btc','evidence','legacy','preview','center-data'].includes(surface)||!error||
     error.networkEvent!=='Network.loadingFailed'||typeof error.errorText!=='string'||error.blockedReason!=='inspector'||error.method!=='GET'||error.resourceType!=='Fetch'||
     error.httpStatus!=null||typeof error.requestId!=='string'||!error.requestId||
     typeof error.frameId!=='string'||!error.frameId||typeof error.loaderId!=='string'||!error.loaderId||

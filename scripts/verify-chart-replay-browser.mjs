@@ -39,6 +39,20 @@ function disclosedBitcoinWeeks(rows, cursor) {
   });
 }
 
+// Focusing the chart is a native input action, not a click on an arbitrary
+// date/annotation. The renderer's left SVG gutter must be visible and free of
+// interactive descendants before the test sends the real pointer input.
+export function readChartReplayFocusTarget(selector) {
+  const svg = document.querySelector(selector);
+  const box = svg.getBoundingClientRect();
+  const point = { x: box.left + 3, y: box.top + box.height * .25 };
+  const hit = document.elementFromPoint(point.x, point.y);
+  const action = hit?.closest('a,button,input,select,textarea,[role="button"],[tabindex],[data-cycle-clock],[data-forecast-evidence],[data-research-annotation],[data-cycle-interval],[data-cycle-marker],[data-history-event],[data-next-turn]');
+  return { point, chart: { left: box.left, right: box.right, top: box.top, bottom: box.bottom },
+    reachesChart: svg.contains(hit), interactive: Boolean(action && action !== svg),
+    owner: hit ? { tag: hit.tagName, id: hit.id || null, className: hit.getAttribute('class'), control: hit.closest('[data-cr]')?.dataset.cr ?? null } : null };
+}
+
 /** Read the actual renderer's price pane for every instrument. SVG boxes also
  * include the time/price axes; those are not unobstructed price input probes. */
 export function readChartReplayFloatingGeometry({ chartSelector, panel }) {
@@ -322,27 +336,16 @@ export async function verifyChartReplaySurface(api) {
     else if (!target.toggle) await closeMenu();
     await revealOwnedControl(selector);
     if (btc && selector === chartSelector) {
-      const focusTarget = await evaluate(connection, selector => {
-        const svg = document.querySelector(selector);
-        if (svg.dataset.chartReplayActive !== 'true') return null;
-        const box = svg.getBoundingClientRect();
-        // A chart-focus click belongs to the existing left SVG gutter, not
-        // the whole SVG's center where the legitimate replay bar can sit.
-        const point = { x: box.left + 3, y: box.top + box.height * .25 };
-        const hit = document.elementFromPoint(point.x, point.y);
-        return { point, chart: { left: box.left, right: box.right, top: box.top, bottom: box.bottom },
-          reachesChart: svg.contains(hit), owner: hit ? { tag: hit.tagName, id: hit.id || null, className: hit.getAttribute('class'), control: hit.closest('[data-cr]')?.dataset.cr ?? null } : null };
-      }, selector);
-      if (focusTarget) {
-        const recorded = { label: 'native-chart-focus-click-in-left-svg-gutter', validated: false, ...focusTarget };
-        evidence.lifecycle.push(recorded);
-        assert.ok(focusTarget.point.x > 0 && focusTarget.point.x < width && focusTarget.point.y > 0 && focusTarget.point.y < height, 'Chart-focus click escaped the viewport');
-        assert.ok(focusTarget.point.x > focusTarget.chart.left && focusTarget.point.x < focusTarget.chart.right && focusTarget.point.y > focusTarget.chart.top && focusTarget.point.y < focusTarget.chart.bottom, 'Chart-focus click escaped the main SVG');
-        assert.equal(focusTarget.reachesChart, true, 'The deterministic chart-focus gutter is covered: ' + JSON.stringify(focusTarget));
-        await pointAction('click', focusTarget.point);
-        recorded.validated = true;
-        return;
-      }
+      const focusTarget = await evaluate(connection, readChartReplayFocusTarget, selector);
+      const recorded = { label: 'native-chart-focus-click-in-left-svg-gutter', validated: false, ...focusTarget };
+      evidence.lifecycle.push(recorded);
+      assert.ok(focusTarget.point.x > 0 && focusTarget.point.x < width && focusTarget.point.y > 0 && focusTarget.point.y < height, 'Chart-focus click escaped the viewport');
+      assert.ok(focusTarget.point.x > focusTarget.chart.left && focusTarget.point.x < focusTarget.chart.right && focusTarget.point.y > focusTarget.chart.top && focusTarget.point.y < focusTarget.chart.bottom, 'Chart-focus click escaped the main SVG');
+      assert.equal(focusTarget.reachesChart, true, 'The deterministic chart-focus gutter is covered: ' + JSON.stringify(focusTarget));
+      assert.equal(focusTarget.interactive, false, 'The chart-focus gutter contains an interactive annotation: ' + JSON.stringify(focusTarget));
+      await pointAction('click', focusTarget.point);
+      recorded.validated = true;
+      return;
     }
     await nativeClick(connection, selector);
   }

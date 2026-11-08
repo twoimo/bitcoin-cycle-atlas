@@ -7,10 +7,10 @@ import { shiftCalendarMonths } from './cycle-timing.js?v=1.29.0';
 import { STATE_LABELS } from "./market-structure.js?v=1.29.0";
 import { chartPaneLayout, historicalMarkersMarkup, volumePaneMarkup, cycleTimingMarkup, formatBtcVolume } from './chart-overlays.js?v=1.29.0';
 import { createPriceScale, barPriceChange, nearestDailyIndex as nearest } from './chart-math.js?v=1.29.0';
-import { candleBodyWidth } from './chart-view-policy.js?v=1.36.0';
+import { candleBodyWidth } from './chart-view-policy.js?v=1.36.1';
 import { priceAxisMarkup, timeAxisMarkup, createPriceAxisLayout, createPriceAxisFormatter } from './price-axis.js?v=1.29.0';
 import { createPriceDisplay, formatDisplayPrice } from './price-display.js?v=1.29.0';
-import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.36.0';
+import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-chart.js?v=1.36.1';
 import { researchAnnotationsMarkup } from './research-annotations.js?v=1.29.0';
 
 import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.29.0';

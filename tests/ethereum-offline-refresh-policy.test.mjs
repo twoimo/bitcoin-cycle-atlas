@@ -10,6 +10,29 @@ test('only the exact stale BTC archive request is eligible for a separately veri
   for(const surface of ['btc','evidence','legacy','preview'])assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface}),true);
   for(const surface of ['eth','data',undefined])assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface}),false);
 });
+test('consolidated market cases bind the blocked BTC request to their observed native parent',()=>{
+  const parent={nativeSymbol:'BTCUSD',page:'outlook',center:'market-us',preview:false};
+  for(const spec of consolidatedWorkspaceCases){
+    assert.equal(spec.surface,undefined,'The existing case inventory remains unchanged');
+    assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface:spec.surface}),false,'An omitted surface cannot qualify a request');
+    const surface=offlineBtcRefreshSurface(spec,parent);
+    assert.equal(surface,'btc');assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface}),true);
+    for(const change of [{url:error.url.replace('assets=btc','assets=eth')},{url:error.url+'&assets=btc'},
+      {blockedReason:'other'},{resourceType:'Script'},{frameId:''},{loaderId:''},{requestId:''},{httpStatus:503}])
+      assert.equal(isExpectedOfflineBtcRefresh({...error,...change},{...policy,surface}),false,'Owner binding must not broaden request eligibility');
+  }
+});
+test('a consolidated child, other asset, wrong center or undeclared case cannot acquire BTC refresh ownership',()=>{
+  const spec=consolidatedWorkspaceCases[0],parent={nativeSymbol:'BTCUSD',page:'outlook',center:'market-us',preview:false};
+  for(const change of [{nativeSymbol:'ETHUSD'},{nativeSymbol:undefined},{page:'market'},{center:'data'},{center:undefined},{preview:true}]){
+    const surface=offlineBtcRefreshSurface(spec,{...parent,...change});
+    assert.equal(surface,undefined);assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface}),false);
+  }
+  for(const candidate of [{...spec,page:'unknown'},{...spec,surface:'btc'},{}])
+    assert.equal(offlineBtcRefreshSurface(candidate,parent),undefined);
+  for(const surface of ['btc','evidence','legacy','preview','center-data'])
+    assert.equal(offlineBtcRefreshSurface({surface},parent),surface,'Existing surface contracts are unchanged');
+});
 test('center-data admits only the existing stale BTC request eligibility',()=>{
   assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface:'center-data'}),true);
   for(const surface of ['data','center-data-eth','center-data-frame'])
@@ -22,22 +45,6 @@ test('center-data cannot excuse ETH, missing document identity or other network 
     {blockedReason:'other'},{frameId:''},{loaderId:''},{requestId:''},{requestWallTime:NaN}])
     assert.equal(isExpectedOfflineBtcRefresh({...error,...change},centerPolicy),false);
   assert.equal(isExpectedOfflineBtcRefresh(error,{...centerPolicy,archiveAsOf:'2026-10-27'}),false);
-});
-test('every consolidated viewport identifies its BTC host without excusing unrelated failures',()=>{
-  assert.deepEqual(consolidatedWorkspaceCases.map(spec=>spec.width),[320,390,1440]);
-  for(const spec of consolidatedWorkspaceCases){
-    assert.equal(offlineBtcRefreshSurface(spec),'consolidated');
-    const hostPolicy={...policy,surface:offlineBtcRefreshSurface(spec)};
-    assert.equal(isExpectedOfflineBtcRefresh(error,hostPolicy),true);
-    for(const change of [{url:error.url.replace('assets=btc','assets=eth')},
-      {networkEvent:'Network.responseReceived',httpStatus:503},{blockedReason:null},
-      {method:'POST'},{frameId:''},{loaderId:''},{requestId:''},{requestWallTime:NaN}])
-      assert.equal(isExpectedOfflineBtcRefresh({...error,...change},hostPolicy),false);
-    assert.equal(isExpectedOfflineBtcRefresh(error,{...hostPolicy,archiveAsOf:'2026-10-27'}),false);
-  }
-  for(const spec of [{},{page:'workspace-consolidated'},{page:'other',consolidated:true}])
-    assert.equal(isExpectedOfflineBtcRefresh(error,{...policy,surface:offlineBtcRefreshSurface(spec)}),false);
-  assert.equal(offlineBtcRefreshSurface({surface:'btc'}),'btc');
 });
 test('different hosts, metrics, query keys, credentials and request methods stay failures',()=>{
   for(const url of [error.url.replace('coinmetrics.io','coinmetrics.io.evil.example'),error.url.replace('assets=btc','assets=eth'),
