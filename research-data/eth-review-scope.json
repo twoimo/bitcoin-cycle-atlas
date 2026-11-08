@@ -211,6 +211,8 @@
     "dist/research-format.js",
     "dist/research-library-data.js",
     "dist/research-methods.js",
+    "dist/relay-room.css",
+    "dist/relay-room.js",
     "dist/research-reader.css",
     "dist/research-reader.js",
     "dist/research-source-data.js",
