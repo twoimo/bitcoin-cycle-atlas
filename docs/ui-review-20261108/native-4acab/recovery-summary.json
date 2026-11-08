@@ -1,0 +1,122 @@
+{
+  "build": {
+    "build_uuid": "4acab602-49a5-470e-9935-20005e98e5a3",
+    "status": "stopped",
+    "build_outcome": "success",
+    "created_on": "2026-11-08T16:54:19.655Z",
+    "initializing_on": "2026-11-08T17:06:24.251Z",
+    "running_on": "2026-11-08T17:06:28.933Z",
+    "stopped_on": "2026-11-08T17:10:36.326Z",
+    "commit_hash": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9"
+  },
+  "apiPages": 22,
+  "logLines": 642,
+  "reports": [
+    {
+      "name": "ui-review/diagnostic.json",
+      "bytes": 42473,
+      "sha256": "652870f8e37a87f2dc51d50d91630ed60ce6330b7341cc6a6e82a432a24b248a",
+      "encodedBytes": 8257,
+      "encodedSha256": "cfe83bbff17be93ba142c6dee3a4b543b65d170074fa8415cec59a7cdd4241bd",
+      "status": "passed",
+      "expectedFrom": "summary receipt"
+    },
+    {
+      "name": "ui-review-before/report.json",
+      "bytes": 671406,
+      "sha256": "2ad73f0ecf1cab5b85c84c98dc2a849a9e02616428d605b1b148aae2538fd242",
+      "encodedBytes": 45478,
+      "encodedSha256": "7941b1343bcf6da6bd118b9bc86371f624effa8d29cccf427779098d47afbb86",
+      "status": "passed",
+      "expectedFrom": "summary receipt"
+    },
+    {
+      "name": "ui-review-after/report.json",
+      "bytes": 1031479,
+      "sha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390",
+      "encodedBytes": 66249,
+      "encodedSha256": "3d4cfd5d5c158f2cb79d78f8bbf67b2bc58f02cc0c4c69c2e9f010a1b2b86f93",
+      "status": "passed",
+      "expectedFrom": "summary receipt"
+    }
+  ],
+  "pngs": 8,
+  "pending": [
+    {
+      "name": "ui-review-before/wp4-before-320x740-chart.png",
+      "got": 0,
+      "reason": "Planned original PNG not yet present in collected API logs"
+    },
+    {
+      "name": "ui-review-before/wp4-before-390x844-chart.png",
+      "got": 0,
+      "reason": "Planned original PNG not yet present in collected API logs"
+    },
+    {
+      "name": "ui-review-before/wp4-before-768x1024-chart.png",
+      "got": 0,
+      "reason": "Planned original PNG not yet present in collected API logs"
+    },
+    {
+      "name": "ui-review-before/wp4-before-1024x768-chart.png",
+      "got": 0,
+      "reason": "Planned original PNG not yet present in collected API logs"
+    },
+    {
+      "name": "ui-review-before/wp4-before-1440x900-chart.png",
+      "got": 0,
+      "reason": "Planned original PNG not yet present in collected API logs"
+    },
+    {
+      "name": "ui-review-before/wp4-before-1920x1080-chart.png",
+      "got": 0,
+      "reason": "Planned original PNG not yet present in collected API logs"
+    },
+    {
+      "name": "ui-review-after/ui-entry-mstr-root-1440x900.png",
+      "got": 0,
+      "reason": "Planned original PNG not yet present in collected API logs"
+    },
+    {
+      "name": "ui-review-after/ui-entry-bmnr-root-1440x900.png",
+      "got": 0,
+      "reason": "Planned original PNG not yet present in collected API logs"
+    },
+    {
+      "name": "ui-review-after/wp4-after-320x740-legend.png",
+      "got": 0,
+      "reason": "Planned original PNG not yet present in collected API logs"
+    },
+    {
+      "name": "ui-review-after/wp4-after-390x844-legend.png",
+      "got": 0,
+      "reason": "Planned original PNG not yet present in collected API logs"
+    },
+    {
+      "name": "ui-review-after/wp4-after-1440x900-legend.png",
+      "got": 0,
+      "reason": "Planned original PNG not yet present in collected API logs"
+    }
+  ],
+  "errors": [],
+  "cases": [
+    {
+      "name": "ui-review-before/report.json",
+      "status": "passed",
+      "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+      "caseScope": "wp4-wp7",
+      "expectedCaseCount": 6,
+      "completedCaseCount": 6,
+      "failures": []
+    },
+    {
+      "name": "ui-review-after/report.json",
+      "status": "passed",
+      "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+      "caseScope": "wp4-wp7",
+      "expectedCaseCount": 21,
+      "completedCaseCount": 21,
+      "failures": []
+    }
+  ]
+}

@@ -53,14 +53,42 @@ export function readChartReplayFocusTarget(selector) {
     owner: hit ? { tag: hit.tagName, id: hit.id || null, className: hit.getAttribute('class'), control: hit.closest('[data-cr]')?.dataset.cr ?? null } : null };
 }
 
-// onAtlasFrame renders the two cycle line meanings without the live-only
-// macro/example reference key. The live chart retains its separate three-key
-// oracle in assertPriceLegendScrollSurface; never infer either list from DOM size.
+const replayLegendStatusItems = Object.freeze(['실선 · 관측 사후 기준', '점선 · 잠정·가정', '◇ 거시 시계 · ○ 예시 경로']);
+
+// verifyFloatingBar explicitly selects the current-chart snapshot. Both its
+// compact row and full-list clones must retain these exact ten entries and
+// three meanings; never infer the expected list from the observed DOM size.
 export function assertChartReplayLegendSemantics({ items, statusItems }) {
   assert.deepEqual(items, ['실제 가격', '미래 가정', '가정 범위', '고점·저점', 'CYCLE TOP', 'PIT STOP', 'FIRST TOP', 'ATH', 'MID-TOP', 'BOTTOM'],
     'Replay legend lost an original price/cycle semantic entry');
-  assert.deepEqual(statusItems, ['실선 · 관측 사후 기준', '점선 · 잠정·가정'],
-    'Replay legend lost its exact provisional/retrospective meanings');
+  assert.deepEqual(statusItems, replayLegendStatusItems,
+    'Replay legend lost its exact provisional/retrospective/reference meanings');
+}
+
+// The compact row may hide these meanings behind +N. Read their actual clones
+// in the opened dialog, then verify them after native scrolling exposes them.
+export function readChartReplayLegendStatusAccess() {
+  const owner = document.querySelector('#chart-legend-dialog .chart-legend-dialog-content');
+  const rect = node => { const b = node.getBoundingClientRect(); return { left: b.left, right: b.right, top: b.top, bottom: b.bottom, width: b.width, height: b.height }; };
+  return { owner: { ...rect(owner), scrollTop: owner.scrollTop, scrollHeight: owner.scrollHeight, clientHeight: owner.clientHeight,
+      overflowY: getComputedStyle(owner).overflowY },
+    entries: [...owner.querySelectorAll('.cycle-style-sample,.cycle-reference-key')].map(node => {
+      const box = rect(node), style = getComputedStyle(node), hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+      return { text: node.textContent.replace(/\s+/g, ' ').trim(), ...box,
+        painted: Boolean(!node.closest('[hidden],[inert],[aria-hidden="true"]') && node.getClientRects().length && box.width > 0 && box.height > 0 && style.display !== 'none' && style.visibility === 'visible' && Number(style.opacity) > 0),
+        reachable: Boolean(hit && node.contains(hit)) };
+    }) };
+}
+
+export function assertChartReplayLegendStatusAccess(value, expected) {
+  assert.deepEqual(value.entries.map(entry => entry.text), expected, 'Full legend lost a provisional, retrospective or reference meaning');
+  assert.ok(['auto', 'scroll'].includes(value.owner.overflowY), 'Full legend must own its native vertical scrolling');
+  for (const entry of value.entries) {
+    assert.equal(entry.painted, true, 'Full legend meaning remains hidden: ' + entry.text);
+    assert.ok(entry.left >= value.owner.left - 1 && entry.right <= value.owner.right + 1 && entry.top >= value.owner.top - 1 && entry.bottom <= value.owner.bottom + 1,
+      'Native legend scrolling did not expose the complete meaning: ' + JSON.stringify(entry));
+    assert.equal(entry.reachable, true, 'Full legend meaning is covered: ' + entry.text);
+  }
 }
 
 /** Read the actual renderer's price pane for every instrument. SVG boxes also
@@ -478,6 +506,17 @@ export async function verifyChartReplaySurface(api) {
         visibleBounds(dialog, width, height);assertChartReplayLegendSemantics(dialog);
         assert.equal(dialog.horizontalOverflow, false, 'Full legend sheet has horizontal overflow');
         if (geometry.legend.mode === 'chip') { assert.ok(Math.abs(dialog.width - width) <= 1);assert.ok(Math.abs(dialog.height - height) <= 1); }
+        const statusBefore = await evaluate(cdp, readChartReplayLegendStatusAccess);
+        if (statusBefore.owner.scrollHeight > statusBefore.owner.clientHeight + 1) {
+          const owner = statusBefore.owner;
+          await cdp.send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: owner.left + owner.width / 2, y: owner.top + owner.height / 2, deltaX: 0, deltaY: owner.scrollHeight });
+          await until(async () => {
+            const value = await evaluate(cdp, readChartReplayLegendStatusAccess);
+            return value.owner.scrollTop >= value.owner.scrollHeight - value.owner.clientHeight - 1 ? value : null;
+          }, 'native full legend scroll reaches the reference meanings');
+        }
+        dialog.statusAccess = await evaluate(cdp, readChartReplayLegendStatusAccess);
+        assertChartReplayLegendStatusAccess(dialog.statusAccess, replayLegendStatusItems);
         await click(cdp, '#chart-legend-dialog > header > button');
         await until(() => evaluate(cdp, () => !document.querySelector('#chart-legend-dialog')?.open), 'native full legend closes');
         assert.equal(await evaluate(cdp, () => document.activeElement.matches('.chart-legend-open,.chart-legend-more')), true, 'Full legend failed to return focus to its visible trigger');

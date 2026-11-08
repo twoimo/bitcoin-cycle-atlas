@@ -641,73 +641,96 @@ async function verifyNativeInfoToolbarScroll(cdp,symbol){
     const info=document.querySelector(infoSelector),inner=info?.closest('.shell-instrument-slot'),bar=info?.closest('.eth-topbar'),app=bar?.closest('.eth-app');
     if(!bar||!inner||inner.parentElement!==bar||bar.dataset.shellRegion!=='top'||inner.dataset.shellKey!=='instrument'||inner.dataset.shellSlot!=='5')throw new Error('Native info lost its explicit instrument/outer toolbar owners');
     const box=node=>{const r=node.getBoundingClientRect();return {left:r.left+node.clientLeft,right:r.left+node.clientLeft+node.clientWidth,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
-    const owner=node=>({...box(node),scrollLeft:node.scrollLeft,scrollWidth:node.scrollWidth,clientWidth:node.clientWidth,overflowX:getComputedStyle(node).overflowX});
+    const owner=node=>{const css=getComputedStyle(node);return {...box(node),scrollLeft:node.scrollLeft,scrollWidth:node.scrollWidth,clientWidth:node.clientWidth,
+      overflowX:css.overflowX,overflowY:css.overflowY,maxWidth:css.maxWidth,overscrollBehaviorX:css.overscrollBehaviorX};};
     const r=info.getBoundingClientRect();
     return {outer:owner(bar),inner:owner(inner),button:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height},
       appScrollLeft:app.scrollLeft,appScrollTop:app.scrollTop,scrollX,scrollY,rootWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth};
   },infoSelector);
+  const assertMobileOwner=value=>{
+    assert.ok(value.viewportWidth<=620,'This info access case verifies the mobile toolbar contract');
+    assert.equal(value.outer.overflowX,'auto','The mobile outer toolbar owns horizontal scrolling');
+    assert.equal(value.inner.overflowX,'visible','The mobile instrument group must not create a nested horizontal scroll owner');
+    assert.equal(value.inner.overflowY,'visible','The mobile instrument group must not create an implicit scroll container');
+    assert.equal(value.inner.maxWidth,'none','The mobile instrument group must retain its full content width');
+    assert.equal(value.inner.overscrollBehaviorX,'auto','The mobile instrument group must not contain the outer gesture');
+    assert.equal(value.inner.scrollLeft,0,'Native touch must not move the non-scrolling instrument group');
+  };
   // Fixture initialization is recorded separately and is never native evidence.
   await evaluate(cdp,selectors=>{for(const selector of Object.values(selectors))document.querySelector(selector).scrollLeft=0;},selectors);
   await settled(cdp);
   const fixtureInitialization=await read(),gestures=[];
-  assert.equal(fixtureInitialization.outer.scrollLeft,0);assert.equal(fixtureInitialization.inner.scrollLeft,0);
-  async function move(owner,direction,label,maxDistance=160){
-    const before=await read(),state=await evaluate(cdp,readNativeHorizontalScrollOwner,selectors[owner]);
-    const point=planNativeHorizontalScrollGesture(state,direction,{maxDistance,inset:16});
+  assert.equal(fixtureInitialization.outer.scrollLeft,0);assert.equal(fixtureInitialization.inner.scrollLeft,0);assertMobileOwner(fixtureInitialization);
+  const gestureState=async inputGroup=>{
+    const state=await evaluate(cdp,readNativeHorizontalScrollOwner,selectors.outer);
+    if(inputGroup)state.hits=await evaluate(cdp,({hits,inputGroup})=>{
+      const bar=document.querySelector('.eth-topbar'),inner=bar.querySelector('.shell-instrument-slot');
+      return hits.filter(point=>{
+        const button=document.elementFromPoint(point.x,point.y)?.closest('button');
+        return point.owned&&button&&!button.disabled&&bar.contains(button)&&(inputGroup==='instrument'?inner.contains(button):!inner.contains(button));
+      });
+    },{hits:state.hits,inputGroup});
+    return state;
+  };
+  async function move(inputGroup,direction,label,maxDistance=160){
+    const before=await read();assertMobileOwner(before);
+    const state=await gestureState(inputGroup),point=planNativeHorizontalScrollGesture(state,direction,{maxDistance,inset:16});
+    point.start=await evaluate(cdp,point=>{
+      const bar=document.querySelector('.eth-topbar'),inner=bar.querySelector('.shell-instrument-slot'),hit=document.elementFromPoint(point.x,point.y),button=hit?.closest('button');
+      let nearest=null;
+      for(let node=hit;node;node=node.parentElement)if(/^(auto|scroll)$/.test(getComputedStyle(node).overflowX)&&node.scrollWidth>node.clientWidth){nearest=node;break;}
+      return {group:button&&bar.contains(button)?(inner.contains(button)?'instrument':'common'):null,
+        button:button?{id:button.id||null,label:(button.getAttribute('aria-label')||button.textContent).trim(),disabled:Boolean(button.disabled||button.hasAttribute('disabled'))}:null,outerOwnsInput:nearest===bar};
+    },point);
+    assert.equal(point.start.outerOwnsInput,true,'Native toolbar touch must start in its actual outer scroll owner');
+    if(inputGroup){assert.equal(point.start.group,inputGroup,'Native toolbar touch started on the wrong action group');assert.equal(point.start.button.disabled,false);}
     await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:point.x,y:point.y,id:1}]});
     for(let step=1;step<=6;step++){
       await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:point.x+(point.endX-point.x)*step/6,y:point.y,id:1}]});await delay(16);
     }
     await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await settled(cdp);
     let previous=null,stable=0;
-    await until(async()=>{const value=await read();const left=value[owner].scrollLeft;stable=previous!==null&&Math.abs(left-previous)<.1?stable+1:0;previous=left;return stable>=3;},'native toolbar pan end',5000);
-    const after=await read(),other=owner==='outer'?'inner':'outer';
-    assert.ok(after[owner].scrollWidth>after[owner].clientWidth&&direction*(after[owner].scrollLeft-before[owner].scrollLeft)>0,'Native touch must scroll the overflowing '+owner+' toolbar owner');
-    assert.equal(after[other].scrollLeft,before[other].scrollLeft,'Native '+owner+' touch must not move the '+other+' scroll owner');
+    await until(async()=>{const value=await read();const left=value.outer.scrollLeft;stable=previous!==null&&Math.abs(left-previous)<.1?stable+1:0;previous=left;return stable>=3;},'native toolbar pan end',5000);
+    const after=await read();assertMobileOwner(after);
+    assert.ok(after.outer.scrollWidth>after.outer.clientWidth&&direction*(after.outer.scrollLeft-before.outer.scrollLeft)>0,
+      'Native touch must scroll the overflowing outer toolbar: '+JSON.stringify({inputGroup,point,before,after}));
     assert.equal(after.appScrollLeft,0,'Touch must not scroll the clipped app shell');assert.equal(after.appScrollTop,before.appScrollTop,'Touch must not scroll the app vertically');
     assert.equal(after.scrollX,before.scrollX,'Touch must not move the document horizontally');assert.equal(after.scrollY,before.scrollY,'Touch must not move the document vertically');
     assert.equal(after.outer.height,fixtureInitialization.outer.height,'Touch must retain one toolbar row');
     assert.equal(after.inner.height,fixtureInitialization.inner.height,'Touch must retain the instrument row height');
     assert.ok(after.rootWidth<=after.viewportWidth+1,'Touch must not cause document overflow');
-    gestures.push({kind:'native-touch',label,owner,point,before,after});return after;
+    gestures.push({kind:'native-touch',label,owner:'outer',inputGroup,point,before,after});return after;
   }
-  const exposeInner=async(direction,label)=>{
-    for(let attempt=0;attempt<18;attempt++){
-      const inner=await evaluate(cdp,readNativeHorizontalScrollOwner,selectors.inner);
-      assert.ok(inner.maximum>0,'Native instrument controls must retain their horizontal scroll owner');
-      try{planNativeHorizontalScrollGesture(inner,direction,{maxDistance:160,inset:16});return;}
-      catch(error){if(!/not visible|No exposed/.test(error.message))throw error;}
-      const outer=await evaluate(cdp,readNativeHorizontalScrollOwner,selectors.outer);
-      const difference=(inner.box.left+inner.box.right-outer.clip.left-outer.clip.right)/2;
-      await move('outer',difference<0?-1:1,label,Math.max(44,Math.min(160,Math.abs(difference))));
-    }
-    throw new Error('Native outer scrolling never exposed the instrument scroll owner');
-  };
-  await move('outer',1,'outer-owner-proof');
-  await exposeInner(1,'expose-inner-owner');
-  await move('inner',1,'inner-owner-proof');
+  await move('common',1,'common-button-owner-proof');
+  // PR81 makes the feature group overflow:visible on mobile. A second actual
+  // swipe must begin on one of its buttons and move the same outer row.
+  let instrumentDirection;
+  for(let attempt=0;attempt<18;attempt++){
+    const state=await gestureState('instrument'),direction=state.scrollLeft<state.maximum?1:-1;
+    try{planNativeHorizontalScrollGesture(state,direction,{maxDistance:160,inset:16});instrumentDirection=direction;break;}
+    catch(error){if(!/No exposed/.test(error.message))throw error;}
+    const value=await read(),difference=(value.inner.left+value.inner.right-value.outer.left-value.outer.right)/2;
+    await move(null,difference<0?-1:1,'expose-instrument-button',Math.max(44,Math.min(160,Math.abs(difference))));
+  }
+  assert.ok(instrumentDirection,'Native outer scrolling never exposed an instrument button for its own swipe');
+  await move('instrument',instrumentDirection,'instrument-button-owner-proof');
   let target;
   const complete=value=>value.painted&&!value.disabled&&value.topmost&&value.box.left>=value.clip.left-1&&value.box.right<=value.clip.right+1&&value.box.top>=value.clip.top-1&&value.box.bottom<=value.clip.bottom+1;
   for(let attempt=0;attempt<18;attempt++){
     target=await evaluate(cdp,readNativeInteractiveTarget,infoSelector);
     if(complete(target))break;
     assert.ok(target.painted&&!target.disabled&&target.box.width>0&&target.box.height>0,'Native toolbar info action is hidden or disabled');
-    const state=await read(),button=state.button;
-    // Select the owner against its real client box first. An inner owner that
-    // already contains the target cannot repair clipping caused by its parent.
-    const owner=button.left<state.inner.left-1||button.right>state.inner.right+1?'inner':'outer';
-    const bounds=state[owner],direction=button.left<bounds.left?-1:1;
+    const state=await read(),button=state.button,bounds=state.outer,direction=button.left<bounds.left?-1:1;
     const distance=Math.max(44,Math.min(160,direction<0?bounds.left-button.left:button.right-bounds.right));
-    if(owner==='inner')await exposeInner(direction,'expose-info-owner');
-    await move(owner,direction,'reveal-info',distance);
+    await move(null,direction,'reveal-info',distance);
   }
   target=await evaluate(cdp,readNativeInteractiveTarget,infoSelector);
   assert.ok(complete(target),'Native toolbar scrolling never exposed its info action: '+JSON.stringify(target));
-  const final=await read(),toolbarAccess={button:final.button,bar:final.outer,instrument:final.inner,target,rootWidth:final.rootWidth,viewportWidth:final.viewportWidth};
+  const final=await read();assertMobileOwner(final);
+  const toolbarAccess={button:final.button,bar:final.outer,instrument:final.inner,target,rootWidth:final.rootWidth,viewportWidth:final.viewportWidth};
   assert.ok(toolbarAccess.button.width>=44&&toolbarAccess.button.height>=44,'Mobile info needs a real 44px target');
   for(const owner of [toolbarAccess.bar,toolbarAccess.instrument]){
-    assert.equal(owner.overflowX,'auto','Mobile toolbar owners retain their horizontal scroll');
-    assert.ok(toolbarAccess.button.left>=owner.left-1&&toolbarAccess.button.right<=owner.right+1,'Revealed info target remains clipped by a toolbar owner');
+    assert.ok(toolbarAccess.button.left>=owner.left-1&&toolbarAccess.button.right<=owner.right+1,'Revealed info target remains outside its toolbar group');
   }
   assert.ok(toolbarAccess.rootWidth<=toolbarAccess.viewportWidth+1,'Toolbar scroll leaked to the document');
   // The measured native gestures exposed this button; do not use scrollIntoView
@@ -716,7 +739,7 @@ async function verifyNativeInfoToolbarScroll(cdp,symbol){
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...point});
   await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});await settled(cdp);
-  return {fixtureInitialization,gestures,toolbarAccess,final};
+  return {contract:'mobile-single-outer-scroll-owner',fixtureInitialization,gestures,toolbarAccess,final};
 }
 
 async function verifyInfoDataLinks(cdp,symbol){

@@ -1,0 +1,986 @@
+{
+  "schemaVersion": 1,
+  "kind": "atlas-supplementary-ui-review",
+  "scope": "wp4-wp7",
+  "startedAt": "2026-11-08T17:06:44.368Z",
+  "status": "passed",
+  "diagnosticOnly": true,
+  "qualifiesForPublication": false,
+  "canonicalBrowserGateUnchanged": true,
+  "deploymentPerformed": false,
+  "baselineCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+  "phases": [
+    {
+      "phase": "before",
+      "kind": "baseline-measurement",
+      "status": "passed",
+      "application": {
+        "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "sourceTree": "100fa0b63a2776983d05d60e6a897f06d0cf86c0",
+        "distTree": "4ab622a7a81b557e9c3995dfb5063ed3b65f85e2",
+        "trackedDistFiles": 886,
+        "distUnchanged": true
+      },
+      "verifier": {
+        "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "copiedIntoBaseline": true,
+        "files": {
+          "scripts/verify-eth-candidate-browser.mjs": "f2e798c4bc42fab4d88bedbfe3816f22a1dc485491acb58031edeaec58c610c1",
+          "scripts/verify-ui-contract-browser.mjs": "dfd940b4e6f2434df93d6826271a17fb019039c9ee8ac4d38752b9e22af42ab9",
+          "scripts/browser-source-identity.mjs": "493bd0f291827d0d5e6f7102907e24845a8753f16dca376189df16ee8bf72cf0",
+          "scripts/btc-offline-refresh-policy.mjs": "da9810a7faad88565c6238bda313b943d0b99a08b6bc47c1f361e727e46aca27"
+        }
+      },
+      "outputDirectory": "build/ui-review/run-TLTOEK/before",
+      "diagnosticOnly": true,
+      "qualifiesForPublication": false,
+      "errors": [],
+      "screenshots": [
+        {
+          "file": "wp4-before-320x740-chart.png",
+          "bytes": 81087,
+          "sha256": "5ac0aea41b778f437a923718e626d50008e6d98b9e20e0ba5fc0b54d4df75b6c",
+          "transport": {
+            "name": "ui-review-before/wp4-before-320x740-chart.png",
+            "bytes": 81087,
+            "sha256": "5ac0aea41b778f437a923718e626d50008e6d98b9e20e0ba5fc0b54d4df75b6c",
+            "total": 27
+          }
+        },
+        {
+          "file": "wp4-before-390x844-chart.png",
+          "bytes": 99336,
+          "sha256": "b9c6db22e078f227e1d1dff3c473d7ff758114fb2b5e9c33cac9d7c33ea28323",
+          "transport": {
+            "name": "ui-review-before/wp4-before-390x844-chart.png",
+            "bytes": 99336,
+            "sha256": "b9c6db22e078f227e1d1dff3c473d7ff758114fb2b5e9c33cac9d7c33ea28323",
+            "total": 33
+          }
+        },
+        {
+          "file": "wp4-before-768x1024-chart.png",
+          "bytes": 189440,
+          "sha256": "fc092c2ff44f3e190235043a7babb6049ee693f6359b8628f6bc735481a03536",
+          "transport": {
+            "name": "ui-review-before/wp4-before-768x1024-chart.png",
+            "bytes": 189440,
+            "sha256": "fc092c2ff44f3e190235043a7babb6049ee693f6359b8628f6bc735481a03536",
+            "total": 62
+          }
+        },
+        {
+          "file": "wp4-before-1024x768-chart.png",
+          "bytes": 206753,
+          "sha256": "17fdceb34bf73e817506b2506053e3362f51b575b166de332afb1df43d67205f",
+          "transport": {
+            "name": "ui-review-before/wp4-before-1024x768-chart.png",
+            "bytes": 206753,
+            "sha256": "17fdceb34bf73e817506b2506053e3362f51b575b166de332afb1df43d67205f",
+            "total": 68
+          }
+        },
+        {
+          "file": "wp4-before-1440x900-chart.png",
+          "bytes": 265021,
+          "sha256": "c200d3e53c19a7e73c98d4aba98efb3f3a8602ef88825a95500f8cb0a18c4578",
+          "transport": {
+            "name": "ui-review-before/wp4-before-1440x900-chart.png",
+            "bytes": 265021,
+            "sha256": "c200d3e53c19a7e73c98d4aba98efb3f3a8602ef88825a95500f8cb0a18c4578",
+            "total": 87
+          }
+        },
+        {
+          "file": "wp4-before-1920x1080-chart.png",
+          "bytes": 310341,
+          "sha256": "ab5436b64d449bb85b73e9a376065a244249af35fca1378390c9c3a9a6d43021",
+          "transport": {
+            "name": "ui-review-before/wp4-before-1920x1080-chart.png",
+            "bytes": 310341,
+            "sha256": "ab5436b64d449bb85b73e9a376065a244249af35fca1378390c9c3a9a6d43021",
+            "total": 102
+          }
+        }
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "nativeReport": {
+        "status": "passed",
+        "caseScope": "wp4-wp7",
+        "expectedCaseCount": 6,
+        "completedCaseCount": 6,
+        "browserVersion": {
+          "protocolVersion": "1.3",
+          "product": "Chrome/157.0.8103.38",
+          "revision": "@a733b5afbb3ba618844ff8876b89ad1a774b2f18",
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+          "jsVersion": "15.7.112.23"
+        },
+        "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+        "sourceIntegrity": {
+          "checkedFiles": 139,
+          "changedSources": [],
+          "unchangedDuringRun": true
+        },
+        "failedCases": []
+      },
+      "reportTransport": {
+        "name": "ui-review-before/report.json.gz",
+        "bytes": 45478,
+        "sha256": "7941b1343bcf6da6bd118b9bc86371f624effa8d29cccf427779098d47afbb86",
+        "total": 15,
+        "contentEncoding": "gzip",
+        "originalName": "ui-review-before/report.json",
+        "originalBytes": 671406,
+        "originalSha256": "2ad73f0ecf1cab5b85c84c98dc2a849a9e02616428d605b1b148aae2538fd242"
+      },
+      "screenshotPlan": {
+        "budget": {
+          "pngBytes": 1300000,
+          "logBytes": 1850000
+        },
+        "originalCount": 24,
+        "selected": [
+          {
+            "file": "wp4-before-320x740-chart.png",
+            "bytes": 81087,
+            "sha256": "5ac0aea41b778f437a923718e626d50008e6d98b9e20e0ba5fc0b54d4df75b6c"
+          },
+          {
+            "file": "wp4-before-390x844-chart.png",
+            "bytes": 99336,
+            "sha256": "b9c6db22e078f227e1d1dff3c473d7ff758114fb2b5e9c33cac9d7c33ea28323"
+          },
+          {
+            "file": "wp4-before-768x1024-chart.png",
+            "bytes": 189440,
+            "sha256": "fc092c2ff44f3e190235043a7babb6049ee693f6359b8628f6bc735481a03536"
+          },
+          {
+            "file": "wp4-before-1024x768-chart.png",
+            "bytes": 206753,
+            "sha256": "17fdceb34bf73e817506b2506053e3362f51b575b166de332afb1df43d67205f"
+          },
+          {
+            "file": "wp4-before-1440x900-chart.png",
+            "bytes": 265021,
+            "sha256": "c200d3e53c19a7e73c98d4aba98efb3f3a8602ef88825a95500f8cb0a18c4578"
+          },
+          {
+            "file": "wp4-before-1920x1080-chart.png",
+            "bytes": 310341,
+            "sha256": "ab5436b64d449bb85b73e9a376065a244249af35fca1378390c9c3a9a6d43021"
+          }
+        ],
+        "omitted": [
+          {
+            "file": "wp4-before-320x740-replay-entry.png",
+            "bytes": 39419,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-320x740-replay.png",
+            "bytes": 57992,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-320x740-replay-picking.png",
+            "bytes": 55956,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-390x844-replay-entry.png",
+            "bytes": 47158,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-390x844-replay.png",
+            "bytes": 69434,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-390x844-replay-picking.png",
+            "bytes": 67120,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-768x1024-replay-entry.png",
+            "bytes": 81813,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-768x1024-replay.png",
+            "bytes": 114399,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-768x1024-replay-picking.png",
+            "bytes": 110337,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-1024x768-replay-entry.png",
+            "bytes": 85456,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-1024x768-replay.png",
+            "bytes": 117330,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-1024x768-replay-picking.png",
+            "bytes": 113309,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-1440x900-replay-entry.png",
+            "bytes": 105219,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-1440x900-replay.png",
+            "bytes": 145780,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-1440x900-replay-picking.png",
+            "bytes": 140978,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-1920x1080-replay-entry.png",
+            "bytes": 122915,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-1920x1080-replay.png",
+            "bytes": 174657,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-before-1920x1080-replay-picking.png",
+            "bytes": 168682,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          }
+        ],
+        "errors": [],
+        "pngBytes": 1151978,
+        "logBytes": 1620519
+      }
+    },
+    {
+      "phase": "after",
+      "kind": "changed-ui-assertions",
+      "status": "passed",
+      "application": {
+        "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "sourceTree": "8b5732b21ccc3354e4630ac9b03011176f1f93cb",
+        "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+        "trackedDistFiles": 930,
+        "distUnchanged": true
+      },
+      "verifier": {
+        "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "copiedIntoBaseline": false,
+        "files": {
+          "scripts/verify-eth-candidate-browser.mjs": "f2e798c4bc42fab4d88bedbfe3816f22a1dc485491acb58031edeaec58c610c1",
+          "scripts/verify-ui-contract-browser.mjs": "dfd940b4e6f2434df93d6826271a17fb019039c9ee8ac4d38752b9e22af42ab9",
+          "scripts/browser-source-identity.mjs": "493bd0f291827d0d5e6f7102907e24845a8753f16dca376189df16ee8bf72cf0",
+          "scripts/btc-offline-refresh-policy.mjs": "da9810a7faad88565c6238bda313b943d0b99a08b6bc47c1f361e727e46aca27"
+        }
+      },
+      "outputDirectory": "build/ui-review/run-TLTOEK/after",
+      "diagnosticOnly": true,
+      "qualifiesForPublication": false,
+      "errors": [],
+      "screenshots": [
+        {
+          "file": "wp4-after-320x740-chart.png",
+          "bytes": 80073,
+          "sha256": "89e3d36aecb6baa42227ee8e1906ce8e703577235942f2af65c7f6eb6d4baba0",
+          "transport": {
+            "name": "ui-review-after/wp4-after-320x740-chart.png",
+            "bytes": 80073,
+            "sha256": "89e3d36aecb6baa42227ee8e1906ce8e703577235942f2af65c7f6eb6d4baba0",
+            "total": 27
+          }
+        },
+        {
+          "file": "wp4-after-390x844-chart.png",
+          "bytes": 98938,
+          "sha256": "9492ec11ac9306d2d87990149863c80bf2d1a79bfd6feb0af3b09f6f619e26c5",
+          "transport": {
+            "name": "ui-review-after/wp4-after-390x844-chart.png",
+            "bytes": 98938,
+            "sha256": "9492ec11ac9306d2d87990149863c80bf2d1a79bfd6feb0af3b09f6f619e26c5",
+            "total": 33
+          }
+        },
+        {
+          "file": "wp4-after-768x1024-chart.png",
+          "bytes": 188125,
+          "sha256": "47344b03a8045362eefeb9f34733065281b409391e9ac60ec51f7d5a816ee9aa",
+          "transport": {
+            "name": "ui-review-after/wp4-after-768x1024-chart.png",
+            "bytes": 188125,
+            "sha256": "47344b03a8045362eefeb9f34733065281b409391e9ac60ec51f7d5a816ee9aa",
+            "total": 62
+          }
+        },
+        {
+          "file": "wp4-after-1024x768-chart.png",
+          "bytes": 207040,
+          "sha256": "01aa73dc28d6d640f37f9926e5996742ffb86eae0f8d96e82585ff9806e21579",
+          "transport": {
+            "name": "ui-review-after/wp4-after-1024x768-chart.png",
+            "bytes": 207040,
+            "sha256": "01aa73dc28d6d640f37f9926e5996742ffb86eae0f8d96e82585ff9806e21579",
+            "total": 68
+          }
+        },
+        {
+          "file": "wp4-after-1440x900-chart.png",
+          "bytes": 265180,
+          "sha256": "6205377a36c43bfbce29194eee0dd246ec29fe61a11b979179d75047a3593137",
+          "transport": {
+            "name": "ui-review-after/wp4-after-1440x900-chart.png",
+            "bytes": 265180,
+            "sha256": "6205377a36c43bfbce29194eee0dd246ec29fe61a11b979179d75047a3593137",
+            "total": 87
+          }
+        },
+        {
+          "file": "wp4-after-1920x1080-chart.png",
+          "bytes": 312827,
+          "sha256": "4c24ee58d4cdefc3228bb36bf28ebef897b1ca4648275c848a88f35574d19b16",
+          "transport": {
+            "name": "ui-review-after/wp4-after-1920x1080-chart.png",
+            "bytes": 312827,
+            "sha256": "4c24ee58d4cdefc3228bb36bf28ebef897b1ca4648275c848a88f35574d19b16",
+            "total": 102
+          }
+        },
+        {
+          "file": "ui-entry-mstr-root-1440x900.png",
+          "bytes": 163767,
+          "sha256": "2afcab5c01e69c5c507a7ac30071a86b2db6aab37834d62e1c8fb00a7499c058",
+          "transport": {
+            "name": "ui-review-after/ui-entry-mstr-root-1440x900.png",
+            "bytes": 163767,
+            "sha256": "2afcab5c01e69c5c507a7ac30071a86b2db6aab37834d62e1c8fb00a7499c058",
+            "total": 54
+          }
+        },
+        {
+          "file": "ui-entry-bmnr-root-1440x900.png",
+          "bytes": 153587,
+          "sha256": "f677df8fa63834f50b72dfe9c37c48d46afde07a6ae76318e03d32d798805e7d",
+          "transport": {
+            "name": "ui-review-after/ui-entry-bmnr-root-1440x900.png",
+            "bytes": 153587,
+            "sha256": "f677df8fa63834f50b72dfe9c37c48d46afde07a6ae76318e03d32d798805e7d",
+            "total": 50
+          }
+        },
+        {
+          "file": "wp4-after-320x740-legend.png",
+          "bytes": 33020,
+          "sha256": "0c793e0404d396d5b05f74cf72a87d031a7a1d3d10042cebe1f1812684a95487",
+          "transport": {
+            "name": "ui-review-after/wp4-after-320x740-legend.png",
+            "bytes": 33020,
+            "sha256": "0c793e0404d396d5b05f74cf72a87d031a7a1d3d10042cebe1f1812684a95487",
+            "total": 11
+          }
+        },
+        {
+          "file": "wp4-after-390x844-legend.png",
+          "bytes": 44351,
+          "sha256": "ef655ee0811460bbed981df41e60e55b4520fba1978bc7f0c432b92dc92cc293",
+          "transport": {
+            "name": "ui-review-after/wp4-after-390x844-legend.png",
+            "bytes": 44351,
+            "sha256": "ef655ee0811460bbed981df41e60e55b4520fba1978bc7f0c432b92dc92cc293",
+            "total": 15
+          }
+        },
+        {
+          "file": "wp4-after-1440x900-legend.png",
+          "bytes": 210401,
+          "sha256": "acae384c7b6134a920e501e2b3532981bb521c80370f00d0de84237376142c76",
+          "transport": {
+            "name": "ui-review-after/wp4-after-1440x900-legend.png",
+            "bytes": 210401,
+            "sha256": "acae384c7b6134a920e501e2b3532981bb521c80370f00d0de84237376142c76",
+            "total": 69
+          }
+        },
+        {
+          "file": "wp4-after-1440x900-replay.png",
+          "bytes": 146597,
+          "sha256": "cc54b392efd671bd18f33c42f754ae5d4cd432ec3781a44ecc78f4d4f393d6c6",
+          "transport": {
+            "name": "ui-review-after/wp4-after-1440x900-replay.png",
+            "bytes": 146597,
+            "sha256": "cc54b392efd671bd18f33c42f754ae5d4cd432ec3781a44ecc78f4d4f393d6c6",
+            "total": 48
+          }
+        },
+        {
+          "file": "wp4-after-1920x1080-replay.png",
+          "bytes": 177301,
+          "sha256": "e7bad55c459a73f6c88a6faf24eac6544a0a87221c9161b881e52619581fbb2d",
+          "transport": {
+            "name": "ui-review-after/wp4-after-1920x1080-replay.png",
+            "bytes": 177301,
+            "sha256": "e7bad55c459a73f6c88a6faf24eac6544a0a87221c9161b881e52619581fbb2d",
+            "total": 58
+          }
+        }
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "nativeReport": {
+        "status": "passed",
+        "caseScope": "wp4-wp7",
+        "expectedCaseCount": 21,
+        "completedCaseCount": 21,
+        "browserVersion": {
+          "protocolVersion": "1.3",
+          "product": "Chrome/157.0.8103.38",
+          "revision": "@a733b5afbb3ba618844ff8876b89ad1a774b2f18",
+          "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+          "jsVersion": "15.7.112.23"
+        },
+        "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+        "sourceIntegrity": {
+          "checkedFiles": 145,
+          "changedSources": [],
+          "unchangedDuringRun": true
+        },
+        "failedCases": []
+      },
+      "reportTransport": {
+        "name": "ui-review-after/report.json.gz",
+        "bytes": 66249,
+        "sha256": "3d4cfd5d5c158f2cb79d78f8bbf67b2bc58f02cc0c4c69c2e9f010a1b2b86f93",
+        "total": 22,
+        "contentEncoding": "gzip",
+        "originalName": "ui-review-after/report.json",
+        "originalBytes": 1031479,
+        "originalSha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390"
+      },
+      "screenshotPlan": {
+        "budget": {
+          "pngBytes": 2200000,
+          "logBytes": 3150000
+        },
+        "originalCount": 45,
+        "selected": [
+          {
+            "file": "wp4-after-320x740-chart.png",
+            "bytes": 80073,
+            "sha256": "89e3d36aecb6baa42227ee8e1906ce8e703577235942f2af65c7f6eb6d4baba0"
+          },
+          {
+            "file": "wp4-after-390x844-chart.png",
+            "bytes": 98938,
+            "sha256": "9492ec11ac9306d2d87990149863c80bf2d1a79bfd6feb0af3b09f6f619e26c5"
+          },
+          {
+            "file": "wp4-after-768x1024-chart.png",
+            "bytes": 188125,
+            "sha256": "47344b03a8045362eefeb9f34733065281b409391e9ac60ec51f7d5a816ee9aa"
+          },
+          {
+            "file": "wp4-after-1024x768-chart.png",
+            "bytes": 207040,
+            "sha256": "01aa73dc28d6d640f37f9926e5996742ffb86eae0f8d96e82585ff9806e21579"
+          },
+          {
+            "file": "wp4-after-1440x900-chart.png",
+            "bytes": 265180,
+            "sha256": "6205377a36c43bfbce29194eee0dd246ec29fe61a11b979179d75047a3593137"
+          },
+          {
+            "file": "wp4-after-1920x1080-chart.png",
+            "bytes": 312827,
+            "sha256": "4c24ee58d4cdefc3228bb36bf28ebef897b1ca4648275c848a88f35574d19b16"
+          },
+          {
+            "file": "ui-entry-mstr-root-1440x900.png",
+            "bytes": 163767,
+            "sha256": "2afcab5c01e69c5c507a7ac30071a86b2db6aab37834d62e1c8fb00a7499c058"
+          },
+          {
+            "file": "ui-entry-bmnr-root-1440x900.png",
+            "bytes": 153587,
+            "sha256": "f677df8fa63834f50b72dfe9c37c48d46afde07a6ae76318e03d32d798805e7d"
+          },
+          {
+            "file": "wp4-after-320x740-legend.png",
+            "bytes": 33020,
+            "sha256": "0c793e0404d396d5b05f74cf72a87d031a7a1d3d10042cebe1f1812684a95487"
+          },
+          {
+            "file": "wp4-after-390x844-legend.png",
+            "bytes": 44351,
+            "sha256": "ef655ee0811460bbed981df41e60e55b4520fba1978bc7f0c432b92dc92cc293"
+          },
+          {
+            "file": "wp4-after-1440x900-legend.png",
+            "bytes": 210401,
+            "sha256": "acae384c7b6134a920e501e2b3532981bb521c80370f00d0de84237376142c76"
+          },
+          {
+            "file": "wp4-after-1440x900-replay.png",
+            "bytes": 146597,
+            "sha256": "cc54b392efd671bd18f33c42f754ae5d4cd432ec3781a44ecc78f4d4f393d6c6"
+          },
+          {
+            "file": "wp4-after-1920x1080-replay.png",
+            "bytes": 177301,
+            "sha256": "e7bad55c459a73f6c88a6faf24eac6544a0a87221c9161b881e52619581fbb2d"
+          }
+        ],
+        "omitted": [
+          {
+            "file": "wp4-after-320x740-replay-entry.png",
+            "bytes": 35894,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-320x740-replay.png",
+            "bytes": 49545,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-320x740-replay-picking.png",
+            "bytes": 47283,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-390x844-replay-entry.png",
+            "bytes": 43375,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-390x844-replay.png",
+            "bytes": 62922,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-390x844-replay-picking.png",
+            "bytes": 60310,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-768x1024-legend.png",
+            "bytes": 75048,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-768x1024-replay-entry.png",
+            "bytes": 81622,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-768x1024-replay.png",
+            "bytes": 109456,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-768x1024-replay-picking.png",
+            "bytes": 106824,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-1024x768-legend.png",
+            "bytes": 118321,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-1024x768-replay-entry.png",
+            "bytes": 90328,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-1024x768-replay.png",
+            "bytes": 116479,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-1024x768-replay-picking.png",
+            "bytes": 114934,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-1440x900-replay-entry.png",
+            "bytes": 109919,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-1440x900-replay-picking.png",
+            "bytes": 142623,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-1920x1080-legend.png",
+            "bytes": 283004,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-1920x1080-replay-entry.png",
+            "bytes": 129169,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp4-after-1920x1080-replay-picking.png",
+            "bytes": 172360,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp7-ethusd-1440x900.png",
+            "bytes": 154912,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp7-mstr-1440x900.png",
+            "bytes": 163767,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp7-bmnr-1440x900.png",
+            "bytes": 153587,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp7-tqqq-1440x900.png",
+            "bytes": 220985,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp7-soxl-1440x900.png",
+            "bytes": 225207,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp7-233740-1440x900.png",
+            "bytes": 228180,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp7-hype-1440x900.png",
+            "bytes": 105907,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp7-housing-busan-1440x900.png",
+            "bytes": 87073,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp7-housing-seoul-1440x900.png",
+            "bytes": 87374,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp7-housing-gyeonggi-1440x900.png",
+            "bytes": 88549,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "wp7-housing-national-1440x900.png",
+            "bytes": 86877,
+            "reason": "Additional state retained in original native report; omitted from bounded log transport"
+          },
+          {
+            "file": "ui-entry-mstr-charts-1440x900.png",
+            "bytes": 163767,
+            "reason": "Canonical entry has its own full route receipt; root entry supplies the representative native chart image",
+            "representativeFile": "ui-entry-mstr-root-1440x900.png"
+          },
+          {
+            "file": "ui-entry-bmnr-charts-1440x900.png",
+            "bytes": 153587,
+            "reason": "Canonical entry has its own full route receipt; root entry supplies the representative native chart image",
+            "representativeFile": "ui-entry-bmnr-root-1440x900.png"
+          }
+        ],
+        "errors": [],
+        "pngBytes": 2081207,
+        "logBytes": 2926603
+      }
+    }
+  ],
+  "outputDirectory": "build/ui-review/run-TLTOEK",
+  "application": {
+    "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+    "sourceTree": "8b5732b21ccc3354e4630ac9b03011176f1f93cb",
+    "distTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+    "trackedDistFiles": 930,
+    "distUnchanged": true
+  },
+  "verifier": {
+    "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+    "files": {
+      "scripts/verify-eth-candidate-browser.mjs": "f2e798c4bc42fab4d88bedbfe3816f22a1dc485491acb58031edeaec58c610c1",
+      "scripts/verify-ui-contract-browser.mjs": "dfd940b4e6f2434df93d6826271a17fb019039c9ee8ac4d38752b9e22af42ab9",
+      "scripts/browser-source-identity.mjs": "493bd0f291827d0d5e6f7102907e24845a8753f16dca376189df16ee8bf72cf0",
+      "scripts/btc-offline-refresh-policy.mjs": "da9810a7faad88565c6238bda313b943d0b99a08b6bc47c1f361e727e46aca27"
+    },
+    "wrapperSha256": "c2b051b2cc376d4a035ce5d71908acc286cdd549729ad2b2f097aeab90ea7b33",
+    "committedHarness": true
+  },
+  "runtime": {
+    "schemaVersion": 1,
+    "kind": "atlas-cloudflare-runtime-preflight",
+    "checkedAt": "2026-11-08T17:06:44.471Z",
+    "node": "v24.22.2",
+    "platform": "linux",
+    "arch": "x64",
+    "uid": 2500,
+    "cpuCount": 2,
+    "memoryBytes": 8394612736,
+    "osRelease": "PRETTY_NAME=\"Ubuntu 24.04.2 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.2 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+    "tools": {
+      "git": {
+        "available": true,
+        "path": "/usr/bin/git",
+        "exitCode": 0,
+        "version": "git version 2.43.0"
+      },
+      "curl": {
+        "available": true,
+        "path": "/usr/bin/curl",
+        "exitCode": 0,
+        "version": "curl 8.5.0 (x86_64-pc-linux-gnu) libcurl/8.5.0 OpenSSL/3.0.13 zlib/1.3 brotli/1.1.0 zstd/1.5.5 libidn2/2.3.7 libpsl/0.21.2 (+libidn2/2.3.7) libssh/0.10.6/openssl/zlib nghttp2/1.59.0 librtmp/2.3 OpenLDAP/2.6.10\nRelease-Date: 2023-12-06, security patched: 8.5.0-2ubuntu10.16\nProtocols: dict file ftp ftps gopher gophers http https imap imaps ldap ldaps mqtt pop3 pop3s rtmp rtsp scp sftp smb smbs smtp smtps telnet tftp\nFeatures: alt-svc AsynchDNS brotli GSS-API HSTS HTTP2 HTTPS-proxy IDN IPv6 Kerberos Largefile libz NTLM PSL SPNEGO SSL threadsafe TLS-SRP UnixSockets zstd"
+      },
+      "unzip": {
+        "available": true,
+        "path": "/usr/bin/unzip",
+        "exitCode": 0,
+        "version": "UnZip 6.00 of 20 April 2009, by Debian. Original by Info-ZIP.\n\nLatest sources and executables are at ftp://ftp.info-zip.org/pub/infozip/ ;\nsee ftp://ftp.info-zip.org/pub/infozip/UnZip.html for other sites.\n\nCompiled with gcc 13.2.0 for Unix (Linux ELF).\n\nUnZip special compilation options:\n        ACORN_FTYPE_NFS\n        COPYRIGHT_CLEAN (PKZIP 0.9x unreducing method not supported)\n        SET_DIR_ATTRIB\n        SYMLINKS (symbolic links supported, if RTL and file system permit)\n        TIMESTAMP\n        UNIXBACKUP\n        USE_EF_UT_TIME\n        USE_UNSHRINK (PKZIP/Zip 1.x unshrinking method supported)\n        USE_DEFLATE64 (PKZIP 4.x Deflate64(tm) supported)\n        UNICODE_SUPPORT [wide-chars, char coding: other] (handle UTF-8 paths)\n        LARGE_FILE_SUPPORT (large files over 2 GiB supported)\n        ZIP64_SUPPORT (archives using Zip64 for large files supported)\n        USE_BZIP2 (PKZIP 4.6+, using bzip2 lib version 1.0.8, 13-Jul-2019)\n        VMS_TEXT_CONV\n        WILD_STOP_AT_DIR\n        [decryption, version 2.11 of 05 Jan 2007]\n\nUnZip and ZipInfo environment options:\n           UNZIP:  [none]\n        UNZIPOPT:  [none]\n         ZIPINFO:  [none]\n      ZIPINFOOPT:  [none]"
+      },
+      "tar": {
+        "available": true,
+        "path": "/usr/bin/tar",
+        "exitCode": 0,
+        "version": "tar (GNU tar) 1.35\nCopyright (C) 2023 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n\nWritten by John Gilmore and Jay Fenlason."
+      },
+      "dpkg-deb": {
+        "available": true,
+        "path": "/usr/bin/dpkg-deb",
+        "exitCode": 0,
+        "version": "Debian 'dpkg-deb' package archive backend version 1.22.6 (amd64).\nThis is free software; see the GNU General Public License version 2 or\nlater for copying conditions. There is NO warranty."
+      },
+      "ldd": {
+        "available": true,
+        "path": "/usr/bin/ldd",
+        "exitCode": 0,
+        "version": "ldd (Ubuntu GLIBC 2.39-0ubuntu8.9) 2.39\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\nWritten by Roland McGrath and Ulrich Drepper."
+      },
+      "gpgv": {
+        "available": true,
+        "path": "/usr/bin/gpgv",
+        "exitCode": 0,
+        "version": "gpgv (GnuPG) 2.4.4\nlibgcrypt 1.10.3\nCopyright (C) 2024 g10 Code GmbH\nLicense GNU GPL-3.0-or-later <https://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law."
+      },
+      "java": {
+        "available": false
+      },
+      "fc-list": {
+        "available": true,
+        "path": "/usr/bin/fc-list",
+        "exitCode": 0,
+        "version": "fontconfig version 2.15.0"
+      },
+      "apt-get": {
+        "available": true,
+        "path": "/usr/bin/apt-get",
+        "exitCode": 0,
+        "version": "apt 2.7.14 (amd64)\nSupported modules:\n*Ver: Standard .deb\n Pkg:  Debian APT solver interface (Priority -1000)\n Pkg:  Debian APT planner interface (Priority -1000)\n*Pkg:  Debian dpkg interface (Priority 30)\n S.L: 'deb' Debian binary tree\n S.L: 'deb-src' Debian source tree\n Idx: EDSP scenario file\n Idx: EIPP scenario file\n Idx: Debian Source Index\n Idx: Debian Package Index\n Idx: Debian Translation Index\n Idx: Debian dpkg status file\n Idx: Debian deb file\n Idx: Debian dsc file\n Idx: Debian control file"
+      },
+      "sudo": {
+        "available": false
+      },
+      "runuser": {
+        "available": true,
+        "path": "/usr/sbin/runuser",
+        "exitCode": 0,
+        "version": "runuser from util-linux 2.39.3"
+      }
+    },
+    "canInstallPackages": false,
+    "postgres": {
+      "path": "/opt/buildhome/repo/build/cloudflare-tools/root/usr/lib/postgresql/17/bin/postgres",
+      "version": "postgres (PostgreSQL) 17.11 (Ubuntu 17.11-1.pgdg24.04+2)",
+      "packages": [
+        {
+          "name": "postgresql-17",
+          "version": "17.11-1.pgdg24.04+2",
+          "sha256": "d5b58058a82a3f344f832aea2cc54badc4f6265c25c960752cb1f5df5d2180ee",
+          "systemInstalled": false
+        },
+        {
+          "name": "postgresql-client-17",
+          "version": "17.11-1.pgdg24.04+2",
+          "sha256": "b3b071b67a814a382516d6f6241b529c52f909672457e2f48083acce047b634f",
+          "systemInstalled": false
+        },
+        {
+          "name": "libpq5",
+          "version": "18.6-1.pgdg24.04+2",
+          "sha256": "b487c5ed2ceb9244c6a9d6ae65818ed6707c3c44a2e14488394ae4194c52c53b",
+          "systemInstalled": false
+        }
+      ],
+      "databaseVerified": false
+    },
+    "targetRuntimeVerified": true,
+    "gateStatus": "READY",
+    "dockerRequired": false,
+    "completedAt": "2026-11-08T17:07:10.718Z",
+    "portable": true,
+    "systemPackagesModified": false,
+    "dependencyPackages": [
+      {
+        "file": "at-spi2-common_2.52.0-1build1_all.deb",
+        "sha256": "7e05959b067031468f21ae46c6653a6813f1dccd994ef12a0b5f75de0ed346b6",
+        "bytes": 8674,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      },
+      {
+        "file": "libasound2-data_1.2.11-1ubuntu0.3_all.deb",
+        "sha256": "0c26896193480d9dbb055e85e8ddfb9c9f34cf19afee340987cd6311e2886fc1",
+        "bytes": 21350,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      },
+      {
+        "file": "libasound2t64_1.2.11-1ubuntu0.3_amd64.deb",
+        "sha256": "5d17bfb5683eb99f1be951fe48e1be5bf3c52391913b6b74a8aecf9b4f5e779f",
+        "bytes": 397772,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      },
+      {
+        "file": "libatk-bridge2.0-0t64_2.52.0-1build1_amd64.deb",
+        "sha256": "22b7d47e3c0f7953a78d3cfd309d1b20771085de9220fbe610c0989b9e808c9b",
+        "bytes": 66020,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      },
+      {
+        "file": "libatk1.0-0t64_2.52.0-1build1_amd64.deb",
+        "sha256": "42c5d4b00954f17c2c3c4b866844f691eb8b6d57bf08b59203e65f12dc84a4f9",
+        "bytes": 55282,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      },
+      {
+        "file": "libatspi2.0-0t64_2.52.0-1build1_amd64.deb",
+        "sha256": "d686ace4080eca9c2d6ce8de69392a5ac56c846701894c0858922d4ce341a1d7",
+        "bytes": 80548,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      },
+      {
+        "file": "libllvm19_1%3a19.1.1-1ubuntu1~24.04.2_amd64.deb",
+        "sha256": "a62f1074eb7aecf10e00fed9c7c967dc6c801fae444a40b8007e246320f5ee15",
+        "bytes": 28737618,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      },
+      {
+        "file": "libxcomposite1_1%3a0.4.5-1build3_amd64.deb",
+        "sha256": "a12d5d9ae70b798cbbf284080eae32b87367561fc9c24492f641b8860ac0f308",
+        "bytes": 6320,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      },
+      {
+        "file": "libxdamage1_1%3a1.1.6-1build1_amd64.deb",
+        "sha256": "6891faf325e996ebd28ef53ebb9c043dc96f67327500490affc3e89d366d35ed",
+        "bytes": 6150,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      },
+      {
+        "file": "libxfixes3_1%3a6.0.0-2build1_amd64.deb",
+        "sha256": "0ee1015cccd063249e01c0cd0bf45f513c8ac9a1e5e485070c12e69192455e4a",
+        "bytes": 10764,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      },
+      {
+        "file": "libxi6_2%3a1.8.1-1build1_amd64.deb",
+        "sha256": "0ea7acb5e8a8ce4d6653b30e03a319bfe136db7bfb5ee7cad34c2aa1272ea8d9",
+        "bytes": 32404,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      },
+      {
+        "file": "libxkbcommon0_1.6.0-1build1_amd64.deb",
+        "sha256": "2b9caeb423efb540296a1cb20b872cc630c23908407ecb5c1c787a617622d664",
+        "bytes": 121944,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      },
+      {
+        "file": "libxrandr2_2%3a1.5.2-2build1_amd64.deb",
+        "sha256": "f2955a5e594f5724b58ad241d9231ea191cb36574a0d5e5ca6b661cd41d6256d",
+        "bytes": 19670,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      },
+      {
+        "file": "xkb-data_2.41-2ubuntu1.1_all.deb",
+        "sha256": "e99f2a0b4c56cdf35dec489e56b6a8418826cab8ce6306ec6d0bd98e2cd0014a",
+        "bytes": 397328,
+        "source": "Ubuntu Noble signed APT metadata",
+        "systemInstalled": false
+      }
+    ],
+    "chrome": {
+      "path": "/opt/buildhome/repo/build/cloudflare-tools/chrome-linux64/chrome",
+      "version": "Google Chrome for Testing 157.0.8103.38",
+      "archiveSha256": "8cdeb344e9b2cefe59f4aea8d1d93d5d93054c03cde217665c16fc1f62e72a66",
+      "mode": "full Chrome --headless=new"
+    },
+    "font": {
+      "path": "/opt/buildhome/repo/build/cloudflare-tools/fonts/NotoSansCJKkr-Regular.otf",
+      "gitBlob": "dc4a7c65e6f450bf17c10a2405250b620eb78703",
+      "licenseGitBlob": "d952d62c065f3f35fb83a173496e90b21525aef3"
+    },
+    "java": {
+      "path": "/opt/buildhome/repo/build/cloudflare-tools/java/bin/java",
+      "version": "openjdk version \"21.0.13\" 2026-10-20 LTS\nOpenJDK Runtime Environment Temurin-21.0.13+9 (build 21.0.13+9-LTS)\nOpenJDK 64-Bit Server VM Temurin-21.0.13+9 (build 21.0.13+9-LTS, mixed mode, sharing)",
+      "archiveSha256": "a535a1df9c6284d9618872984e026ae0352d1f7e9e0605425c0e6114f47351dd"
+    },
+    "tlc": {
+      "path": "/opt/buildhome/repo/build/formal-tools/tla2tools-1.7.4.jar",
+      "sha256": "936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88"
+    },
+    "durationMs": 26319
+  },
+  "dependencies": {
+    "command": "npm ci --no-audit --no-fund",
+    "node": "v24.22.2",
+    "npmCli": "/opt/buildhome/.asdf/installs/nodejs/24.22.2/lib/node_modules/npm/bin/npm-cli.js",
+    "lockSha256": "f7e018c13a98c9190f28e7ac02f3c2266a8e83602997f2d42b349032a37f8cb4"
+  },
+  "baselineWorktreeRemoved": true,
+  "finishedAt": "2026-11-08T17:10:26.026Z",
+  "durationMs": 221658,
+  "screenshotTransport": {
+    "status": "prepared",
+    "images": 19,
+    "pngBytes": 3233185,
+    "estimatedLogBytes": 4547122,
+    "order": "native reports, diagnostic receipt, then bounded PNGs"
+  }
+}

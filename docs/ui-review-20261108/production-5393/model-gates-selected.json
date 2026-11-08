@@ -1,0 +1,200 @@
+{
+  "kind": "selected-original-model-gate-receipts",
+  "sourceCommit": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+  "buildId": "d3b0c7c4-a185-4eb6-8f0d-ca5b1078a64f",
+  "modelComponent": {
+    "status": "PASS",
+    "qualifiesFullVerification": false,
+    "sourceCommit": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+    "sourceTree": "b18d10dd079ad2d704a643e02547695b1cfc7661",
+    "planSha256": "c7ef8e7921f0d9235ceeec910efafd21d092d48f96d2f77ee7e3e50932f1cfbd",
+    "runId": "d3b0c7c4-a185-4eb6-8f0d-ca5b1078a64f",
+    "gateCount": 13
+  },
+  "testTotal": {
+    "complete": true,
+    "tests": 3074,
+    "pass": 3074,
+    "fail": 0,
+    "skipped": 0,
+    "batches": 1
+  },
+  "gates": [
+    {
+      "stage": "model",
+      "id": "runtime-preflight",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:30:31.980Z",
+      "completedAt": "2026-11-08T17:30:35.277Z",
+      "durationMs": 3297,
+      "log": "build/cloudflare-stage-model/runtime-preflight.log",
+      "logSha256": "f07b05c63052deb707be827bb3f5571f4df18aac297926c1ee937ada44244ff7"
+    },
+    {
+      "stage": "model",
+      "id": "locked-dependencies",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:30:35.304Z",
+      "completedAt": "2026-11-08T17:30:41.402Z",
+      "durationMs": 6098,
+      "log": "build/cloudflare-stage-model/locked-dependencies.log",
+      "logSha256": "84ad8f2da853d8ac28a9cf920e9a3f54caf0269a293c631c3a9241076136d67b"
+    },
+    {
+      "stage": "model",
+      "id": "model-tests",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:30:41.432Z",
+      "completedAt": "2026-11-08T17:43:06.130Z",
+      "durationMs": 744698,
+      "log": "build/cloudflare-stage-model/model-tests.log",
+      "logSha256": "b98e096339b153c17aa1f4f871b6a9d5d9fc600fc3cbcac95fd6c805e3dcff0e"
+    },
+    {
+      "stage": "model",
+      "id": "forecast",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:43:06.162Z",
+      "completedAt": "2026-11-08T17:43:12.957Z",
+      "durationMs": 6795,
+      "log": "build/cloudflare-stage-model/forecast.log",
+      "logSha256": "7fe49b371ea8c806610adf2c2a53d9a173c5fee9b5898c72140e45e7bb7eac03"
+    },
+    {
+      "stage": "model",
+      "id": "research",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:43:12.983Z",
+      "completedAt": "2026-11-08T17:43:13.495Z",
+      "durationMs": 512,
+      "log": "build/cloudflare-stage-model/research.log",
+      "logSha256": "673cc45b3ae2c6101b12ad2d4687a957a410a11edb294270dfd7c39590c36c67"
+    },
+    {
+      "stage": "model",
+      "id": "eth-events",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:43:13.518Z",
+      "completedAt": "2026-11-08T17:43:13.741Z",
+      "durationMs": 223,
+      "log": "build/cloudflare-stage-model/eth-events.log",
+      "logSha256": "936763564d296c63229684f9588593ff30fced9aef3817d6c43883253dfa5503"
+    },
+    {
+      "stage": "model",
+      "id": "treasury-paths",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:43:13.763Z",
+      "completedAt": "2026-11-08T17:43:18.762Z",
+      "durationMs": 4999,
+      "log": "build/cloudflare-stage-model/treasury-paths.log",
+      "logSha256": "2b4760cfcc15fb1b491d58835e55598917d994af71932b69b022b287f272c6ee"
+    },
+    {
+      "stage": "model",
+      "id": "numerics",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:43:18.790Z",
+      "completedAt": "2026-11-08T17:43:27.822Z",
+      "durationMs": 9032,
+      "log": "build/cloudflare-stage-model/numerics.log",
+      "logSha256": "5ce9bbfe411fadceb0645dff30efdbb8c7053603893518349c2ae7583c067632"
+    },
+    {
+      "stage": "model",
+      "id": "formal",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:43:27.845Z",
+      "completedAt": "2026-11-08T17:44:19.326Z",
+      "durationMs": 51481,
+      "log": "build/cloudflare-stage-model/formal.log",
+      "logSha256": "fabb196f3b0de8c35c556f1d9bc1cd3843933beef825a0ef05e6e0de2c38fe96"
+    },
+    {
+      "stage": "model",
+      "id": "cycle",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:44:19.361Z",
+      "completedAt": "2026-11-08T17:44:20.079Z",
+      "durationMs": 718,
+      "log": "build/cloudflare-stage-model/cycle.log",
+      "logSha256": "162ad7a624e45a899bce97bde1c82303e103b957ea51f687511b70048e5711be"
+    },
+    {
+      "stage": "model",
+      "id": "performance",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:44:20.104Z",
+      "completedAt": "2026-11-08T17:44:20.592Z",
+      "durationMs": 488,
+      "log": "build/cloudflare-stage-model/performance.log",
+      "logSha256": "91dfccd2baa9d316b75f1a7035d1fc54e8c5633b8cdd45d98c106de7c86679b9"
+    },
+    {
+      "stage": "model",
+      "id": "static",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:44:20.619Z",
+      "completedAt": "2026-11-08T17:44:27.784Z",
+      "durationMs": 7165,
+      "log": "build/cloudflare-stage-model/static.log",
+      "logSha256": "4c244002ab2cb6f78c6efaef86f0233f4d65f1801e14664e218d87c347519f1a"
+    },
+    {
+      "stage": "model",
+      "id": "chart-replay",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:44:27.809Z",
+      "completedAt": "2026-11-08T17:45:06.183Z",
+      "durationMs": 38375,
+      "log": "build/cloudflare-stage-model/chart-replay.log",
+      "logSha256": "57bacaca324636031c7edf49ae51eae91f8a78fad096a0f4600d25c3a098b8e0"
+    }
+  ],
+  "publication": {
+    "schemaVersion": 1,
+    "kind": "atlas-cloudflare-model-publication",
+    "status": "MODEL_COMPONENT_PUBLISHED",
+    "qualifiesFullVerification": false,
+    "sourceCommit": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+    "sourceTree": "b18d10dd079ad2d704a643e02547695b1cfc7661",
+    "planSha256": "c7ef8e7921f0d9235ceeec910efafd21d092d48f96d2f77ee7e3e50932f1cfbd",
+    "runId": "d3b0c7c4-a185-4eb6-8f0d-ca5b1078a64f",
+    "mode": "production",
+    "origin": "https://bitcoin-cycle-atlas-models.twoimo.workers.dev",
+    "component": {
+      "path": "/receipts/5393cfafe18ac89bb85c319e622b43e5db0cc7e0/d3b0c7c4-a185-4eb6-8f0d-ca5b1078a64f.json",
+      "bytes": 5009,
+      "sha256": "cf37ccca7a9a8ab8cb322804e9413f1ba9d298c1bacf539846b8ffa884b1af5a"
+    },
+    "index": {
+      "path": "/sources/5393cfafe18ac89bb85c319e622b43e5db0cc7e0.json",
+      "bytes": 533,
+      "sha256": "5acb00adedd221b40f5438ac9fd2d697d6e2ac845ace0b0d8e699ba0096b33e6"
+    },
+    "readback": {
+      "status": "EXACT_BYTES_CONFIRMED",
+      "attempts": 1,
+      "elapsedMs": 266,
+      "responses": [
+        {
+          "asset": "component",
+          "status": 200,
+          "bytes": 5009
+        },
+        {
+          "asset": "index",
+          "status": 200,
+          "bytes": 533
+        }
+      ],
+      "retries": []
+    },
+    "publication": {
+      "buildUuid": "e0d7b526-9ea1-400a-82a2-0ca6fda9f036",
+      "alreadyExists": false
+    },
+    "confirmedAt": "2026-11-08T17:45:14.089Z"
+  },
+  "qualifiesFullVerification": false
+}

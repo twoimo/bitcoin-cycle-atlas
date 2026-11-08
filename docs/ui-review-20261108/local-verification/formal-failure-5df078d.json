@@ -1,0 +1,312 @@
+{
+  "observedAt": "2026-11-08T16:42:19.399Z",
+  "buildId": "5f5ff0ff-0f3a-4aa3-b86a-39250980641e",
+  "success": true,
+  "errors": [],
+  "cursor": "WzQzLDIxNDI3XQ",
+  "truncated": false,
+  "totalLines": 376,
+  "matchIndex": 317,
+  "context": [
+    [
+      1794156073853,
+      "✔ BMNR ignores revoked stock replies, success or failure=true (4.293733ms)"
+    ],
+    [
+      1794156073853,
+      "✔ BMNR ignores revoked underlying replies, success or failure=true (5.89818ms)"
+    ],
+    [
+      1794156073853,
+      "✔ BMNR cancels projection after 0 paint yields (3.310448ms)"
+    ],
+    [
+      1794156073853,
+      "✔ BMNR cancels projection after 1 paint yields (3.451238ms)"
+    ],
+    [
+      1794156073853,
+      "✔ BMNR invalidates the previous projection when refreshed stock prices publish (5.720583ms)"
+    ],
+    [
+      1794156073853,
+      "✔ BMNR preserves user interval, scenario and range while the projection is pending (3.891029ms)"
+    ],
+    [
+      1794156073853,
+      "✔ BMNR keeps observed prices after coin failure and recovers on retry (5.066041ms)"
+    ],
+    [
+      1794156073853,
+      "✔ BMNR keeps observed prices when projection rejects inputs and a retry can recover (5.689557ms)"
+    ],
+    [
+      1794156073853,
+      "ℹ tests 28"
+    ],
+    [
+      1794156073853,
+      "ℹ suites 0"
+    ],
+    [
+      1794156073853,
+      "ℹ pass 28"
+    ],
+    [
+      1794156073854,
+      "ℹ fail 0"
+    ],
+    [
+      1794156073854,
+      "ℹ cancelled 0"
+    ],
+    [
+      1794156073854,
+      "ℹ skipped 0"
+    ],
+    [
+      1794156073854,
+      "ℹ todo 0"
+    ],
+    [
+      1794156073854,
+      "ℹ duration_ms 229.691689"
+    ],
+    [
+      1794156073929,
+      "node:internal/modules/run_main:107"
+    ],
+    [
+      1794156073930,
+      "    triggerUncaughtException("
+    ],
+    [
+      1794156073930,
+      "    ^"
+    ],
+    [
+      1794156073931,
+      ""
+    ],
+    [
+      1794156073932,
+      "AssertionError [ERR_ASSERTION]: Mutation failed for an unrelated reason: deferred-readiness"
+    ],
+    [
+      1794156073932,
+      "node:internal/modules/esm/resolve:272"
+    ],
+    [
+      1794156073932,
+      "    throw new ERR_MODULE_NOT_FOUND("
+    ],
+    [
+      1794156073932,
+      "          ^"
+    ],
+    [
+      1794156073932,
+      ""
+    ],
+    [
+      1794156073932,
+      "Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/tmp/atlas-equity-proof-wcbKpP/implementation/dist/ui/chart-url-state.js' imported from /tmp/atlas-equity-proof-wcbKpP/implementation/tests/helpers/equity-view-fixture.mjs"
+    ],
+    [
+      1794156073932,
+      "    at finalizeResolution (node:internal/modules/esm/resolve:272:11)"
+    ],
+    [
+      1794156073932,
+      "    at moduleResolve (node:internal/modules/esm/resolve:879:10)"
+    ],
+    [
+      1794156073932,
+      "    at defaultResolve (node:internal/modules/esm/resolve:1006:11)"
+    ],
+    [
+      1794156073932,
+      "    at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)"
+    ],
+    [
+      1794156073932,
+      "    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)"
+    ],
+    [
+      1794156073932,
+      "    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)"
+    ],
+    [
+      1794156073932,
+      "    at #resolve (node:internal/modules/esm/loader:687:17)"
+    ],
+    [
+      1794156073932,
+      "    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)"
+    ],
+    [
+      1794156073932,
+      "    at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33)"
+    ],
+    [
+      1794156073932,
+      "    at ModuleJob.link (node:internal/modules/esm/module_job:381:17) {"
+    ],
+    [
+      1794156073932,
+      "  code: 'ERR_MODULE_NOT_FOUND',"
+    ],
+    [
+      1794156073932,
+      "  url: 'file:///tmp/atlas-equity-proof-wcbKpP/implementation/dist/ui/chart-url-state.js'"
+    ],
+    [
+      1794156073932,
+      "}"
+    ],
+    [
+      1794156073932,
+      ""
+    ],
+    [
+      1794156073932,
+      "Node.js v24.22.2"
+    ],
+    [
+      1794156073932,
+      ""
+    ],
+    [
+      1794156073932,
+      "    at implementation (file:///opt/buildhome/repo/scripts/verify-equity-state.mjs:127:12)"
+    ],
+    [
+      1794156073932,
+      "    at async file:///opt/buildhome/repo/scripts/verify-equity-state.mjs:140:46 {"
+    ],
+    [
+      1794156073932,
+      "  generatedMessage: false,"
+    ],
+    [
+      1794156073932,
+      "  code: 'ERR_ASSERTION',"
+    ],
+    [
+      1794156073932,
+      "  actual: 'node:internal/modules/esm/resolve:272\\n' +"
+    ],
+    [
+      1794156073933,
+      "    '    throw new ERR_MODULE_NOT_FOUND(\\n' +"
+    ],
+    [
+      1794156073933,
+      "    '          ^\\n' +"
+    ],
+    [
+      1794156073933,
+      "    '\\n' +"
+    ],
+    [
+      1794156073933,
+      "    \"Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/tmp/atlas-equity-proof-wcbKpP/implementation/dist/ui/chart-url-state.js' imported from /tmp/atlas-equity-proof-wcbKpP/implementation/tests/helpers/equity-view-fixture.mjs\\n\" +"
+    ],
+    [
+      1794156073933,
+      "    '    at finalizeResolution (node:internal/modules/esm/resolve:272:11)\\n' +"
+    ],
+    [
+      1794156073933,
+      "    '    at moduleResolve (node:internal/modules/esm/resolve:879:10)\\n' +"
+    ],
+    [
+      1794156073933,
+      "    '    at defaultResolve (node:internal/modules/esm/resolve:1006:11)\\n' +"
+    ],
+    [
+      1794156073933,
+      "    '    at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)\\n' +"
+    ],
+    [
+      1794156073933,
+      "    '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)\\n' +"
+    ],
+    [
+      1794156073934,
+      "    '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)\\n' +"
+    ],
+    [
+      1794156073934,
+      "    '    at #resolve (node:internal/modules/esm/loader:687:17)\\n' +"
+    ],
+    [
+      1794156073934,
+      "    '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)\\n' +"
+    ],
+    [
+      1794156073934,
+      "    '    at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33)\\n' +"
+    ],
+    [
+      1794156073934,
+      "    '    at ModuleJob.link (node:internal/modules/esm/module_job:381:17) {\\n' +"
+    ],
+    [
+      1794156073934,
+      "    \"  code: 'ERR_MODULE_NOT_FOUND',\\n\" +"
+    ],
+    [
+      1794156073934,
+      "    \"  url: 'file:///tmp/atlas-equity-proof-wcbKpP/implementation/dist/ui/chart-url-state.js'\\n\" +"
+    ],
+    [
+      1794156073934,
+      "    '}\\n' +"
+    ],
+    [
+      1794156073934,
+      "    '\\n' +"
+    ],
+    [
+      1794156073934,
+      "    'Node.js v24.22.2\\n',"
+    ],
+    [
+      1794156073934,
+      "  expected: /a completed observed render must release the boot shell/,"
+    ],
+    [
+      1794156073934,
+      "  operator: 'match',"
+    ],
+    [
+      1794156073934,
+      "  diff: 'simple'"
+    ],
+    [
+      1794156073934,
+      "}"
+    ],
+    [
+      1794156073934,
+      ""
+    ],
+    [
+      1794156073934,
+      "Node.js v24.22.2"
+    ],
+    [
+      1794156073946,
+      "ATLAS_CLOUDFLARE_GATE {\"stage\":\"model\",\"id\":\"formal\",\"status\":\"FAIL\",\"startedAt\":\"2026-11-08T16:40:53.660Z\",\"completedAt\":\"2026-11-08T16:41:13.945Z\",\"durationMs\":20285,\"log\":\"build/cloudflare-stage-model/formal.log\",\"logSha256\":\"3db642546bef5ae23f6f8876d33f3e098fadc97a2954779741474cea6b565f59\",\"error\":\"formal failed with exit 1\"}"
+    ],
+    [
+      1794156073975,
+      "AggregateError: Required staged verification failed: formal failed: formal failed with exit 1"
+    ],
+    [
+      1794156073975,
+      "    at record (file:///opt/buildhome/repo/scripts/verify-cloudflare-stage.mjs:162:28)"
+    ]
+  ]
+}

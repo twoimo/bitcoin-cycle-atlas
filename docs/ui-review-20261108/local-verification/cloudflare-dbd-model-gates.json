@@ -1,0 +1,161 @@
+{
+  "kind": "selected-original-model-gate-receipts",
+  "sourceCommit": "dbd3b70e567c3047524e6a0e3b5d01b1dc9d910d",
+  "buildId": "5e21418c-95a1-4c8a-8c53-f0135244684a",
+  "modelComponent": {
+    "status": "PASS",
+    "qualifiesFullVerification": false,
+    "sourceCommit": "dbd3b70e567c3047524e6a0e3b5d01b1dc9d910d",
+    "sourceTree": "8381db4c14126adc372cd1145ca73a81cc188e15",
+    "planSha256": "c7ef8e7921f0d9235ceeec910efafd21d092d48f96d2f77ee7e3e50932f1cfbd",
+    "runId": "5e21418c-95a1-4c8a-8c53-f0135244684a",
+    "gateCount": 13
+  },
+  "testTotal": {
+    "complete": true,
+    "tests": 3072,
+    "pass": 3072,
+    "fail": 0,
+    "skipped": 0,
+    "batches": 1
+  },
+  "gates": [
+    {
+      "stage": "model",
+      "id": "runtime-preflight",
+      "status": "PASS",
+      "startedAt": "2026-11-08T16:50:18.978Z",
+      "completedAt": "2026-11-08T16:50:21.986Z",
+      "durationMs": 3008,
+      "log": "build/cloudflare-stage-model/runtime-preflight.log",
+      "logSha256": "8f6cc99b455595c86102422e7f84a3a478d961f5a901042d89d23cf33ab3f6e1"
+    },
+    {
+      "stage": "model",
+      "id": "locked-dependencies",
+      "status": "PASS",
+      "startedAt": "2026-11-08T16:50:22.027Z",
+      "completedAt": "2026-11-08T16:50:28.529Z",
+      "durationMs": 6502,
+      "log": "build/cloudflare-stage-model/locked-dependencies.log",
+      "logSha256": "84ad8f2da853d8ac28a9cf920e9a3f54caf0269a293c631c3a9241076136d67b"
+    },
+    {
+      "stage": "model",
+      "id": "model-tests",
+      "status": "PASS",
+      "startedAt": "2026-11-08T16:50:28.568Z",
+      "completedAt": "2026-11-08T17:04:00.747Z",
+      "durationMs": 812179,
+      "log": "build/cloudflare-stage-model/model-tests.log",
+      "logSha256": "e94d4d2559fbb044f300ff56da7a992f554f93c465973949c825c8662082892b"
+    },
+    {
+      "stage": "model",
+      "id": "forecast",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:04:00.788Z",
+      "completedAt": "2026-11-08T17:04:08.366Z",
+      "durationMs": 7578,
+      "log": "build/cloudflare-stage-model/forecast.log",
+      "logSha256": "7fe49b371ea8c806610adf2c2a53d9a173c5fee9b5898c72140e45e7bb7eac03"
+    },
+    {
+      "stage": "model",
+      "id": "research",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:04:08.391Z",
+      "completedAt": "2026-11-08T17:04:09.120Z",
+      "durationMs": 729,
+      "log": "build/cloudflare-stage-model/research.log",
+      "logSha256": "673cc45b3ae2c6101b12ad2d4687a957a410a11edb294270dfd7c39590c36c67"
+    },
+    {
+      "stage": "model",
+      "id": "eth-events",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:04:09.151Z",
+      "completedAt": "2026-11-08T17:04:09.481Z",
+      "durationMs": 330,
+      "log": "build/cloudflare-stage-model/eth-events.log",
+      "logSha256": "936763564d296c63229684f9588593ff30fced9aef3817d6c43883253dfa5503"
+    },
+    {
+      "stage": "model",
+      "id": "treasury-paths",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:04:09.522Z",
+      "completedAt": "2026-11-08T17:04:14.989Z",
+      "durationMs": 5467,
+      "log": "build/cloudflare-stage-model/treasury-paths.log",
+      "logSha256": "2b4760cfcc15fb1b491d58835e55598917d994af71932b69b022b287f272c6ee"
+    },
+    {
+      "stage": "model",
+      "id": "numerics",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:04:15.019Z",
+      "completedAt": "2026-11-08T17:04:25.326Z",
+      "durationMs": 10307,
+      "log": "build/cloudflare-stage-model/numerics.log",
+      "logSha256": "224c6d8d3f79077a8163c89fe7e998f2a0b7ccd17777953c6abf9ac34694c1d2"
+    },
+    {
+      "stage": "model",
+      "id": "formal",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:04:25.363Z",
+      "completedAt": "2026-11-08T17:05:25.047Z",
+      "durationMs": 59684,
+      "log": "build/cloudflare-stage-model/formal.log",
+      "logSha256": "f3111337a7b8da5bde2132ea18e65a167402e39b42d98226ace0cb3a2be3529f"
+    },
+    {
+      "stage": "model",
+      "id": "cycle",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:05:25.076Z",
+      "completedAt": "2026-11-08T17:05:25.874Z",
+      "durationMs": 798,
+      "log": "build/cloudflare-stage-model/cycle.log",
+      "logSha256": "162ad7a624e45a899bce97bde1c82303e103b957ea51f687511b70048e5711be"
+    },
+    {
+      "stage": "model",
+      "id": "performance",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:05:25.910Z",
+      "completedAt": "2026-11-08T17:05:26.412Z",
+      "durationMs": 502,
+      "log": "build/cloudflare-stage-model/performance.log",
+      "logSha256": "91dfccd2baa9d316b75f1a7035d1fc54e8c5633b8cdd45d98c106de7c86679b9"
+    },
+    {
+      "stage": "model",
+      "id": "static",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:05:26.437Z",
+      "completedAt": "2026-11-08T17:05:35.564Z",
+      "durationMs": 9127,
+      "log": "build/cloudflare-stage-model/static.log",
+      "logSha256": "4c244002ab2cb6f78c6efaef86f0233f4d65f1801e14664e218d87c347519f1a"
+    },
+    {
+      "stage": "model",
+      "id": "chart-replay",
+      "status": "PASS",
+      "startedAt": "2026-11-08T17:05:35.604Z",
+      "completedAt": "2026-11-08T17:06:20.440Z",
+      "durationMs": 44836,
+      "log": "build/cloudflare-stage-model/chart-replay.log",
+      "logSha256": "658c658d28fc1ab724387857d07b735a733e815eb2ad076de5cf03dbf7a09d9c"
+    }
+  ],
+  "publicationBlock": [
+    {
+      "timestamp": 1794157582601,
+      "line": "{\"status\":\"FAIL\",\"code\":\"MODEL_COMPONENT_REMOTE_HEAD\"}"
+    }
+  ],
+  "qualifiesFullVerification": false
+}

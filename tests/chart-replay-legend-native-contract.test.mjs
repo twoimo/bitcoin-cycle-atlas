@@ -1,25 +1,42 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
+import vm from 'node:vm';
 import { parseHTML } from 'linkedom';
 import { priceLegendMarkup } from '../dist/price-legend.js';
 import { cycleLegendMarkup } from '../dist/cycle-milestones-view.js';
 import { assertChartReplayLegendSemantics } from '../scripts/verify-chart-replay-browser.mjs';
 import { assertPriceLegendScrollSurface } from '../scripts/verify-workspace-browser.mjs';
 
-// Use the actual markup producers with the two explicit lab-view compositions.
+const source = readFileSync(new URL('../dist/lab-view.js', import.meta.url), 'utf8');
+const frameStart = source.indexOf('    onAtlasFrame:'), frameEnd = source.indexOf('\n    }});', frameStart);
+assert.ok(frameStart >= 0 && frameEnd > frameStart, 'Exercise the actual Atlas replay frame callback');
+const callback = source.slice(frameStart, frameEnd).replace(/^\s*onAtlasFrame:/, '') + '\n}';
+
+// Replay executes the actual frame callback, including its reference key.
 // Geometry is only a boundary fixture; real dialog/input layout remains in Chrome.
-function rendered(context) {
-  const markup = priceLegendMarkup({ compact: true, observed: true, forecast: true, band: true, turns: true,
-    replayMode: context === 'replay' ? 'current-chart-snapshot' : null }) + cycleLegendMarkup()
-    + (context === 'live' ? '<span class="cycle-reference-key">◇ 거시 시계 · ○ 예시 경로</span>' : '');
-  const { document } = parseHTML('<html><body>' + markup + '</body></html>');
+function rendered(context, mode = 'current-chart-snapshot') {
+  const { document, window } = parseHTML('<html><body><svg id="lab-chart"></svg><div id="atlas-chart-legend"></div><span id="atlas-chart-caveat"></span><span id="lab-chart-title"></span><span id="lab-asof"></span><span id="atlas-chart-note"></span><input id="lab-window"></body></html>');
+  if (context === 'replay') {
+    const frame = vm.runInNewContext('(' + callback + ')', { document, CustomEvent: window.CustomEvent, $: selector => document.querySelector(selector),
+      priceLegendMarkup, cycleLegendMarkup, dateLabel: value => value, chartInterval: () => ({ label: '1D' }), state: { scenario: 'base' }, DEFAULT_CHART_SPAN: 'focus' });
+    frame({ session: { mode, asOf: '2026-05-30', identity: { recordKind: 'reconstructed' } },
+      data: { frequency: 'daily', observedRows: [{ date: '2026-05-30' }], observedCandles: [], priceSource: 'Coin Metrics', candleSource: 'Bitstamp', frame: { cursorDate: '2026-06-01', forecast: [{ lower: 1, upper: 3 }] } },
+      context: { presentation: { band: true, showTurns: true, showCycleMarkers: true, showCycleIntervals: true } },
+      start: '2026-01-01', end: '2028-01-01', chartType: 'line', window: 'focus' });
+  } else {
+    document.querySelector('#atlas-chart-legend').innerHTML = priceLegendMarkup({ compact: true, observed: true, forecast: true, band: true, turns: true })
+      + cycleLegendMarkup() + '<span class="cycle-reference-key">◇ 거시 시계 · ○ 예시 경로</span>';
+  }
   const names = selector => [...document.querySelectorAll(selector)].map(node => node.textContent.replace(/\s+/g, ' ').trim());
-  return { items: names('.price-legend-item,.cycle-legend-item'), statusItems: names('.cycle-style-sample,.cycle-reference-key') };
+  const priceSamples = [...document.querySelectorAll('.price-legend-item')].map(node => ({ title: node.getAttribute('title'),
+    path: node.querySelector('path')?.getAttribute('stroke'), fill: node.querySelector('rect')?.getAttribute('fill') }));
+  return { items: names('.price-legend-item,.cycle-legend-item'), statusItems: names('.cycle-style-sample,.cycle-reference-key'), priceSamples };
 }
 
-test('native Replay accepts the actual atlas frame markup with ten entries and two line meanings', () => {
+test('native Replay accepts the actual atlas frame markup with ten entries and three explicit meanings', () => {
   const replay = rendered('replay');
-  assert.equal(replay.items.length, 10);assert.equal(replay.statusItems.length, 2);
+  assert.equal(replay.items.length, 10);assert.equal(replay.statusItems.length, 3);
   assert.doesNotThrow(() => assertChartReplayLegendSemantics(replay));
 });
 
@@ -35,12 +52,26 @@ test('native Replay rejects missing, reordered or relabeled price and cycle entr
   assert.throws(() => assertChartReplayLegendSemantics(relabeled), /original price\/cycle semantic entry/);
 });
 
-test('native Replay rejects absent, altered, reordered and live-only status meanings', () => {
+test('native Replay rejects missing, altered, reordered or extra status meanings', () => {
   const replay = rendered('replay');
-  for (const statusItems of [[], [replay.statusItems[0]], [replay.statusItems[1]],
-    [...replay.statusItems].reverse(), ['실선 · 예측', replay.statusItems[1]], rendered('live').statusItems]) {
-    assert.throws(() => assertChartReplayLegendSemantics({ ...replay, statusItems }), /exact provisional\/retrospective meanings/);
+  const missing = replay.statusItems.map((_, index) => replay.statusItems.filter((_, itemIndex) => itemIndex !== index));
+  for (const statusItems of [[], ...missing, [...replay.statusItems].reverse(),
+    ['실선 · 예측', ...replay.statusItems.slice(1)], [...replay.statusItems, replay.statusItems[2]]]) {
+    assert.throws(() => assertChartReplayLegendSemantics({ ...replay, statusItems }), /exact provisional\/retrospective\/reference meanings/);
   }
+});
+
+test('the actual Replay frame keeps mode-specific colors and range explanations alongside all three cycle meanings', () => {
+  const current = rendered('replay'), cutoff = rendered('replay', 'cutoff-backtest');
+  assert.deepEqual(cutoff.statusItems, current.statusItems);
+  assert.deepEqual(cutoff.items, ['실제 가격', '고정 예측', '모형 범위', ...current.items.slice(3)]);
+  assert.equal(current.priceSamples[1].path, '#f2b960');assert.equal(current.priceSamples[2].fill, '#f2aa4c25');
+  assert.match(current.priceSamples[2].title, /경제 가정.*통계적 확률구간이 아닙니다/);
+  assert.equal(cutoff.priceSamples[1].path, 'var(--replay-cutoff-ink,#74a7ee)');
+  assert.equal(cutoff.priceSamples[2].fill, cutoff.priceSamples[1].path);
+  assert.match(cutoff.priceSamples[1].title, /현재 재구성.*당시 발행된 예측 기록이나 실제 거래 가격이 아닙니다/);
+  assert.match(cutoff.priceSamples[2].title, /기준시점 모형.*고정.*보정된 확률구간이 아닙니다/);
+  assert.deepEqual(cutoff.priceSamples[0], current.priceSamples[0]);assert.deepEqual(cutoff.priceSamples[3], current.priceSamples[3]);
 });
 
 test('the separate live native oracle still requires all three meanings and every full-sheet entry', () => {

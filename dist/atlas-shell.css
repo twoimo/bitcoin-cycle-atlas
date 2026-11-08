@@ -215,8 +215,9 @@ body[data-shell=chart] .workbench-rail[data-shell-region=right] [data-shell-owne
 body[data-shell=chart] [data-disabled-reason]{cursor:not-allowed}
 @media(max-width:620px){
   body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]{max-width:100%;overflow-x:auto;overflow-y:hidden}
-  body[data-shell=chart]:not([data-chart-controls]) .atlas-canvas-heading[data-shell-region=top]>.shell-instrument-slot{flex:0 0 auto;max-width:min(260px,75vw)}
-  body[data-shell=chart][data-chart-controls] .atlas-canvas-heading[data-shell-region=top]>.shell-instrument-slot{flex:0 0 auto;max-width:min(260px,75vw)}
+  /* One mobile row owns the gesture. A nested, contained feature scroller can
+     trap swipes that start on the first visible asset action at 320px. */
+  body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]>.shell-instrument-slot{flex:0 0 auto;max-width:none;overflow:visible;overscroll-behavior-x:auto}
   body[data-shell=chart] .shell-instrument-slot>.workbench-icon{min-width:44px;min-height:44px;height:44px}
   body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top]>.shell-history-slot{display:none}
   body[data-shell=chart] .workbench-rail[data-shell-region=right][data-mobile-open=true]{flex:none;width:calc(100% - 16px)}

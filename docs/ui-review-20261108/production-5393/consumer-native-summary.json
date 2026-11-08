@@ -1,0 +1,22 @@
+{
+  "status": "failed",
+  "caseScope": "all",
+  "suiteRunId": "844c0dcb-5bfa-46c2-8772-45f24e30411b",
+  "sourceCommit": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+  "declaredCaseCount": 53,
+  "expectedCaseCount": 53,
+  "completedCaseCount": 0,
+  "report": "build/eth-browser/report.json",
+  "reportBytes": 5719301,
+  "reportSha256": "d8fe66a47cbd3aeb6596bdfa0ac67b36b6874d0e6e72738bf69eba82d53d87fa",
+  "transport": {
+    "name": "report.json.gz",
+    "bytes": 505987,
+    "sha256": "8d442d2e21948e104e7f3e1dc175fb2476cf262b09fbf974afdd14ed45894868",
+    "total": 165,
+    "contentEncoding": "gzip",
+    "originalName": "report.json",
+    "originalBytes": 5719301,
+    "originalSha256": "d8fe66a47cbd3aeb6596bdfa0ac67b36b6874d0e6e72738bf69eba82d53d87fa"
+  }
+}
