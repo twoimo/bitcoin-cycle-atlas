@@ -342,8 +342,9 @@ export function assertPreviewBootSurface(state){
 
 export function readIndicatorLegendSurface(){
   const manager=document.querySelector('#chart-indicator-manager'),list=manager.querySelector('.chart-indicator-list'),toggle=manager.querySelector('.indicator-legend-toggle');
-  const b=manager.getBoundingClientRect(),rows=[...list.querySelectorAll('.indicator-label')];
+  const b=manager.getBoundingClientRect(),l=list.getBoundingClientRect(),t=toggle.getBoundingClientRect(),rows=[...list.querySelectorAll('.indicator-label')];
   return {background:getComputedStyle(manager).backgroundColor,listBackground:getComputedStyle(list).backgroundColor,
+    foldOverlap:Math.max(0,Math.min(l.right,t.right)-Math.max(l.left,t.left))*Math.max(0,Math.min(l.bottom,t.bottom)-Math.max(l.top,t.top)),
     collapsed:manager.dataset.collapsed==='true',listHidden:list.hidden,expanded:toggle.getAttribute('aria-expanded'),
     mobile:matchMedia('(max-width:620px)').matches,disabled:toggle.disabled,name:toggle.getAttribute('aria-label'),controls:toggle.getAttribute('aria-controls'),listId:list.id,
     painted:manager.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,height:b.height,
@@ -366,6 +367,7 @@ export function assertIndicatorLegendSurface(state){
   }else assert.equal(state.disabled,false);
   if(!state.collapsed)assert.ok(state.visibleLabels.length>0&&state.visibleLabels.every(label=>label.text&&computedColorAlpha(label.color)>0),
     'Expanded indicator labels are missing');
+  if(!state.collapsed)assert.equal(state.foldOverlap,0,'The fold control covers the indicator list scrollport');
 }
 
 /** Long-document readers must retain native controls and the actual opener. */
@@ -756,6 +758,14 @@ export async function verifyWorkspaceSurface(api) {
   await command('차트 설정');
   await inspect('#chart-reader','settings');
   assert.equal(await evaluate(cdp,()=>document.querySelector('#chart-reader').dataset.kind),'settings');
+  const panelBoundary=await evaluate(cdp,()=>{
+    const panel=document.querySelector('#chart-reader'),rail=document.querySelector('.workbench-rail');
+    const p=panel.getBoundingClientRect(),r=rail.getBoundingClientRect();
+    return {panel:p.toJSON(),rail:r.toJSON(),railVisible:rail.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),
+      overlap:Math.max(0,Math.min(p.right,r.right)-Math.max(p.left,r.left))*Math.max(0,Math.min(p.bottom,r.bottom)-Math.max(p.top,r.top))};
+  });
+  if(panelBoundary.railVisible)assert.equal(panelBoundary.overlap,0,'Settings panel and right rail must occupy separate areas');
+  receipt.workspace.settingsPanelBoundary=panelBoundary;
   await key('Escape','Escape',27);
   assert.equal(await evaluate(cdp,()=>document.querySelector('#chart-reader').hidden),true);
   await click(cdp,'#atlas-mode-menu');
