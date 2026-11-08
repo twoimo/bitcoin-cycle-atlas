@@ -11,6 +11,8 @@ const SYMBOLS=new Set(['BTCUSD','ETHUSD','MSTR','BMNR']);
 const HEX=/^[a-f0-9]{64}$/;
 const sessions=new WeakSet();
 const chartHistories=new WeakMap();
+const weekSessionCache=new Map();
+const weekCloseCache=new Map();
 const marketFor=symbol=>{
   if(!SYMBOLS.has(symbol))throw new RangeError('Unsupported replay symbol');
   return symbol.endsWith('USD')?'crypto':'equity';
@@ -27,9 +29,16 @@ function horizon(value){
   if(!Number.isSafeInteger(value)||value<1||value>730)throw new RangeError('Replay horizon must be 1 through 730 calendar days');
   return value;
 }
+const OBSERVATION_ROWS_CACHE = new WeakMap();
 function observationRows(rows,{symbol,observedAt,observedThrough,source}={}){
   const market=marketFor(symbol);
   if(!Array.isArray(rows)||rows.length>100000)throw new RangeError('A bounded observation list is required');
+  // The same archive is revalidated for each replay tick. Cache by the input
+  // array identity plus the declared receipt fields that affect normalization.
+  const cacheKey=[symbol,observedAt??'',observedThrough??'',source?.sourceHash??'',source?.sourceUrl??'',
+    source?.vintageId??'',source?.publishedAt??''].join('\0');
+  let cachedByInput=OBSERVATION_ROWS_CACHE.get(rows);
+  if(cachedByInput?.has(cacheKey))return cachedByInput.get(cacheKey);
   const captured=observedAt===null||observedAt===undefined?null:normalizeForecastTimestamp(observedAt,'observedAt');
   let previous=null;
   const seen=new Set();
@@ -67,6 +76,9 @@ function observationRows(rows,{symbol,observedAt,observedThrough,source}={}){
     return value;
   });
   if(observedThrough!==null&&observedThrough!==undefined){utcDay(observedThrough);if(normalized.some(row=>row.date>observedThrough))throw new RangeError('Replay observations exceed declared coverage');}
+  if(!cachedByInput)OBSERVATION_ROWS_CACHE.set(rows,cachedByInput=new Map());
+  if(cachedByInput.size>=8)cachedByInput.clear();
+  cachedByInput.set(cacheKey,normalized);
   return normalized;
 }
 function receiptComplete(row){
@@ -442,9 +454,24 @@ function chartHistory(session,frame){
 
 function replayWeekStart(date){const day=utcDay(date);return day-((day+3)%7+7)%7;}
 function replayWeekSessions(monday,market){
+  const key=`${market}\0${monday}`;
+  if(weekSessionCache.has(key))return weekSessionCache.get(key);
   const week=Array.from({length:7},(_,offset)=>dateFromDay(monday+offset));
-  if(market==='equity'&&week.some(date=>isEquitySession(date)===null))return null;
-  return market==='crypto'?week:week.filter(date=>isEquitySession(date));
+  const result=market==='equity'&&week.some(date=>isEquitySession(date)===null)?null:market==='crypto'?week:week.filter(date=>isEquitySession(date));
+  if(weekSessionCache.size>=4096)weekSessionCache.clear();
+  weekSessionCache.set(key,result);
+  return result;
+}
+// Market closes are immutable per session. Weekly aggregation asks for every
+// session in the visible history on each replay tick; resolve them once.
+function replayWeekCloses(monday,market){
+  const key=`${market}\0${monday}`;
+  if(weekCloseCache.has(key))return weekCloseCache.get(key);
+  const sessionsForWeek=replayWeekSessions(monday,market);
+  const result=sessionsForWeek===null?null:sessionsForWeek.map(date=>({date,close:sessionCloseUtc(date,market)}));
+  if(weekCloseCache.size>=4096)weekCloseCache.clear();
+  weekCloseCache.set(key,result);
+  return result;
 }
 function dailyReplayCandles(rows){
   return rows.filter(row=>['open','high','low','close'].every(key=>Number.isFinite(row[key]))).map(row=>({
@@ -465,7 +492,11 @@ function weeklyReplayCandles(rows,market,{cursorDate,evaluationAt}){
     // A forming week uses every completed daily observation from its actual
     // opening session through this cursor. Missing completed sessions are not
     // partial future days, and may never produce a manufactured weekly candle.
-    const disclosed=expected.filter(date=>date<=cursorDate&&sessionCloseUtc(date,market)<=evaluationAt);
+    const closes=replayWeekCloses(monday,market),disclosed=[];
+    for(const entry of closes){
+      if(entry.date>cursorDate)break;
+      if(entry.close<=evaluationAt)disclosed.push(entry.date);
+    }
     if(!disclosed.length||days.length!==disclosed.length||days.some((row,index)=>row.date!==disclosed[index])){
       incompleteGroups++;missingGroups++;continue;
     }
