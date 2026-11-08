@@ -73,6 +73,7 @@
     "dist/cycle-interval-overlay.js",
     "dist/cycle-milestones-view.js",
     "dist/cycle-milestones.css",
+    "dist/ui/chart-legend.css",
     "dist/cycle-milestones.js",
     "dist/cycle-period-comparison.js",
     "dist/cycle-period-worker.js",

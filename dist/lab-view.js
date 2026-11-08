@@ -359,7 +359,7 @@ export function initLabView() {
   // Readout text may resize while the pointer moves. Repack only the period
   // annotations; rebuilding the price chart here would reset its live cursor.
   function refreshCycleHudPlacement(){
-    if(plot.dataset.legendDock!=='bottom')plot.dataset.legendDock='bottom';
+    if(plot.dataset.legendDock!=='top-right')plot.dataset.legendDock='top-right';
     if(!isIntradayInterval(state.frequency)&&shown('cycle-intervals')&&!state.cycleCollapsed){state.priceController?.updateCycleOverlayObstacles?.(cycleHudObstacles());applyIndicatorPresentation($('#lab-chart'),state.indicators,state.frequency);}
   }
   function currentFib(){
@@ -863,6 +863,7 @@ export function initLabView() {
   document.addEventListener('atlas:hud-layout-change',()=>{
     refreshCycleHudPlacement();
   });
+  document.addEventListener('atlas:legend-layout-change',refreshCycleHudPlacement);
   document.addEventListener('atlas:indicator-command',event=>{
     const before=state.indicators,command=event.detail||{};
     state.indicators=changeIndicatorState(before,command);state.analysisMode=state.indicators.active;syncAnalysisInputs();

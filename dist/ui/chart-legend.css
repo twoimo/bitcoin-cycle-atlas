@@ -1,0 +1,49 @@
+/* The price axis has first claim on its measured gutter. The legend reserves
+   the upper-right corner; readouts/replay HUD use the remainder at the left.
+   Model, macro and event text yields to this rectangle without moving anchors. */
+.atlas-plot>.lab-chart-foot.chart-legend-dock,
+.chart-replay-active.chart-replay-atlas.atlas-plot:not([data-chart-focus=true])>.lab-chart-foot.chart-legend-dock:not([hidden]),
+.chart-replay-active.chart-replay-atlas.atlas-plot[data-chart-replay-mode="cutoff-backtest"]>.lab-chart-foot.chart-legend-dock:not([hidden]){
+  position:absolute;inset:var(--chart-legend-top,30px) var(--chart-legend-right,92px) auto auto;
+  display:block!important;box-sizing:border-box;width:var(--chart-legend-width,42%);max-width:42%;height:var(--chart-legend-height,64px);max-height:none;min-height:0;
+  margin:0;padding:4px 6px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--muted);
+  overflow:hidden;pointer-events:auto;touch-action:manipulation;z-index:8;
+}
+.atlas-plot>.lab-chart-foot.chart-legend-dock[hidden],
+.atlas-plot[data-chart-focus=true]>.lab-chart-foot.chart-legend-dock{display:none!important}
+.chart-legend-dock [hidden]{display:none!important}
+.atlas-plot[data-mode=price]>.chart-legend-dock .lab-legend,
+.atlas-plot>.chart-legend-dock .lab-legend{display:grid;grid-template-rows:repeat(2,minmax(0,1fr));align-items:stretch;justify-content:stretch;gap:4px;width:100%;max-width:100%;height:100%;min-width:0;flex:none;margin:0;padding:0}
+.chart-legend-dock .chart-legend-row{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%;height:25px;overflow:hidden}
+.atlas-plot>.chart-legend-dock .chart-legend-row-label{flex:none;width:32px;font:11px/14px var(--font,sans-serif);color:var(--subtle);white-space:nowrap}
+.chart-legend-dock .chart-legend-items{display:flex;align-items:center;flex:1 1 auto;gap:8px;min-width:0;overflow:hidden}
+.atlas-plot>.chart-legend-dock .chart-legend-entry{display:inline-flex;align-items:center;flex:none;gap:4px;width:max-content;max-width:none;margin:0;padding:0;border:0;font:12px/16px var(--font,sans-serif);white-space:nowrap;color:var(--muted)}
+.atlas-plot>.chart-legend-dock .chart-legend-entry>span{font:inherit;line-height:inherit;white-space:nowrap}
+.atlas-plot>.chart-legend-dock .chart-legend-entry>svg{display:block;position:static;flex:none;width:16px;height:14px;min-width:16px;max-width:18px;max-height:14px;overflow:visible;pointer-events:none}
+.atlas-plot>.chart-legend-dock .chart-legend-entry.cycle-style-sample>svg{width:22px;min-width:22px;max-width:22px}
+.chart-legend-dock button{box-sizing:border-box;flex:none;min-width:32px;height:24px;margin:0;padding:2px 6px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface-raised);color:var(--text);font:12px/16px var(--font,sans-serif);white-space:nowrap;cursor:pointer}
+.chart-legend-dock button:hover{background:var(--surface-hover)}
+.chart-legend-dock button:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.atlas-plot>.chart-legend-dock[data-legend-mode=chip]{padding:0;border:0;background:transparent}
+.chart-legend-dock[data-legend-mode=chip]>.chart-legend-open{display:block;width:100%;min-width:0;height:44px;padding:4px;border-color:var(--border);background:var(--surface);font-size:12px}
+.atlas-plot>.chart-legend-dock>.lab-caveat{display:none}
+.atlas-plot[data-legend-dock=top-right][data-legend-visible=true]>:is(#lab-metrics,.workbench-market-info,.chart-replay-hud){max-width:var(--chart-legend-hud-max-width,55%)!important;right:auto}
+.atlas-plot[data-legend-dock=top-right][data-legend-visible=true]>.chart-replay-hud{width:var(--chart-legend-hud-max-width,55%)}
+
+.chart-legend-dialog{box-sizing:border-box;width:min(620px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:calc(var(--dialog-viewport-height,100dvh) - 24px);margin:auto;padding:0;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface);color:var(--text);font:13px/1.6 var(--font,sans-serif);overflow:hidden}
+.chart-legend-dialog[open]{display:flex;flex-direction:column}
+.chart-legend-dialog::backdrop{background:rgb(0 0 0 / .55)}
+.chart-legend-dialog>header{display:flex;flex:none;align-items:center;justify-content:space-between;gap:12px;min-height:56px;padding:8px 16px;border-bottom:1px solid var(--border)}
+.chart-legend-dialog h2{margin:0;font-size:16px;font-weight:600}
+.chart-legend-dialog>header>button{flex:none;box-sizing:border-box;min-width:44px;min-height:44px;padding:8px 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);color:var(--text);font:inherit;cursor:pointer}
+.chart-legend-dialog>header>button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.chart-legend-dialog-content{flex:1 1 auto;min-height:0;min-width:0;padding:16px;overflow:auto;overscroll-behavior:contain;scrollbar-width:none}
+.chart-legend-dialog-content::-webkit-scrollbar{display:none}
+.chart-legend-dialog-content section+section{margin-top:24px}
+.chart-legend-dialog-content h3{margin:0 0 8px;font-size:13px;font-weight:600;color:var(--text)}
+.chart-legend-dialog-content ul{margin:0;padding:0;list-style:none}
+.chart-legend-dialog-content li{padding:12px 0;border-bottom:1px solid var(--border-soft)}
+.chart-legend-dialog-content p{margin:6px 0 0;color:var(--muted);overflow-wrap:anywhere}
+.chart-legend-dialog-sample{display:flex;align-items:center;gap:8px;color:var(--text);font-size:13px;white-space:normal}
+.chart-legend-dialog-sample>svg{position:static;display:block;flex:none;width:22px;height:16px;max-width:30px;overflow:visible}
+.chart-legend-dialog[data-fullscreen=true]{inset:var(--dialog-viewport-top,0px) 0 auto;margin:0;width:100vw;max-width:100vw;height:var(--dialog-viewport-height,100dvh);max-height:var(--dialog-viewport-height,100dvh);border:0;border-radius:0}

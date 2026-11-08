@@ -1,3 +1,4 @@
+import {placePlotLabel} from './ui/chart-legend-layout.js';
 import {utcDay,dateFromDay} from './cycle-engine.js';
 import {buildCycleMilestones,INTERVAL_RELATIONS} from './cycle-milestones.js';
 
@@ -91,12 +92,15 @@ export function cycleComparisonFields(comparison){
 }
 export function macroClockInspection(anchor,analysis){return {label:anchor.label,date:anchor.date,kind:'assumption',fields:[{label:'거시 기준일 · UTC',value:anchor.date},{label:'시계 보정 민감도 · UTC',value:`${anchor.earliest} → ${anchor.latest}`},{label:'가격',value:'시간 기준만 표시 · 가격 목표 아님'},{label:'관측 입력 마감 · UTC',value:analysis.asOf}],note:'48개월 고점·12개월 하락의 조건부 달력 시계입니다. 표시 범위는 무보정·현재 보정·원시 보정의 민감도이며 확률구간이 아닙니다. 예시 가격 경로의 극값 날짜와 구분합니다.'};}
 const fmt=n=>Number(n.toFixed(2));
-export function macroClockMarkup({anchors=[],start,end,x,left,right,top,bottom}={}){
+export function macroClockMarkup({anchors=[],start,end,x,left,right,top,bottom,obstacles=[]}={}){
   if(!anchors.length)return '';
   const first=utcDay(start),last=utcDay(end);if(last<=first)return '';
+  const placed=[];
   return `<g class="cycle-macro-clocks" pointer-events="none">${anchors.filter(a=>a.date>=start&&a.date<=end).map((a,i)=>{
-    const xx=x({date:a.date}),lo=Math.max(left,x({date:a.earliest})),hi=Math.min(right,x({date:a.latest})),yy=top+8+i*24,width=Math.min(196,right-left-4),tx=Math.max(left+2,Math.min(right-width-2,xx-width/2));
-    return `<g data-cycle-clock="${esc(a.id)}" data-date="${a.date}" data-earliest="${a.earliest}" data-latest="${a.latest}" role="button" tabindex="0" aria-label="${esc(a.label)} · ${a.date} · 시계 민감도 ${a.earliest}–${a.latest}"><title>${esc(a.label)} · 가격 목표가 아닌 시간 기준 · 민감도는 확률구간 아님</title>${hi>lo?`<rect x="${fmt(lo)}" y="${yy+20}" width="${fmt(hi-lo)}" height="3" fill="var(--muted)" opacity=".15"/>`:''}<path d="M${fmt(xx)},${yy+18}V${bottom}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="2 6" opacity=".5"/><rect class="cycle-macro-clock-label" x="${fmt(tx)}" y="${yy}" width="${width}" height="18" rx="3" fill="var(--surface)" stroke="var(--muted)" pointer-events="all"/><text x="${fmt(tx+width/2)}" y="${yy+12}" text-anchor="middle" fill="var(--text)" font-size="10">◇ ${esc(a.label)} · ${a.date}</text></g>`;
+    const xx=x({date:a.date}),lo=Math.max(left,x({date:a.earliest})),hi=Math.min(right,x({date:a.latest})),preferredY=top+8+i*24,width=Math.min(196,right-left-4);
+    const box=placePlotLabel({x:Math.max(left+2,Math.min(right-width-2,xx-width/2)),y:preferredY,width,height:18,left:left+2,right:right-2,top:top+2,bottom:bottom-2,obstacles:[...obstacles,...placed]});
+    if(box)placed.push(box);const yy=box?.y??preferredY,tx=box?.x??xx;
+    return `<g data-cycle-clock="${esc(a.id)}" data-date="${a.date}" data-earliest="${a.earliest}" data-latest="${a.latest}" role="button" tabindex="0" aria-label="${esc(a.label)} · ${a.date} · 시계 민감도 ${a.earliest}–${a.latest}"><title>${esc(a.label)} · 가격 목표가 아닌 시간 기준 · 민감도는 확률구간 아님</title>${hi>lo?`<rect x="${fmt(lo)}" y="${yy+20}" width="${fmt(hi-lo)}" height="3" fill="var(--muted)" opacity=".15"/>`:''}<path d="M${fmt(xx)},${yy+18}V${bottom}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="2 6" opacity=".5"/>${box?`<rect class="cycle-macro-clock-label" x="${fmt(tx)}" y="${yy}" width="${width}" height="18" rx="3" fill="var(--surface)" stroke="var(--muted)" pointer-events="all"/><text x="${fmt(tx+width/2)}" y="${yy+12}" text-anchor="middle" fill="var(--text)" font-size="10">◇ ${esc(a.label)} · ${a.date}</text>`:`<circle cx="${fmt(xx)}" cy="${yy+9}" r="8" fill="var(--surface)" stroke="var(--muted)" pointer-events="all"/>`}</g>`;
   }).join('')}</g>`;
 }
 function historyPlot(d){
