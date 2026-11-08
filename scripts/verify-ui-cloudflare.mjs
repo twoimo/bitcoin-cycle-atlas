@@ -12,7 +12,7 @@ import {cloudflareRuntime} from './cloudflare-build-contract.mjs';
 import {emitBrowserEvidenceChunks,emitCompressedBrowserReport} from './browser-evidence-transport.mjs';
 
 const root=fileURLToPath(new URL('..',import.meta.url));
-export const uiReviewBaseline='04860c220aa0bc4737e599b2302affb5fb733ba2';
+export const uiReviewBaseline='1635f87a10962b7ff5eecd094b6e0625e09771f4';
 export const uiReviewHarnessFiles=Object.freeze([
   'scripts/verify-eth-candidate-browser.mjs',
   'scripts/verify-ui-contract-browser.mjs',
@@ -35,15 +35,16 @@ export function createUiReviewLogFilter(write){
   };
 }
 
-/** Keep six chart/replay pairs and the two mobile plus one desktop full legend.
- * Failure images are always included, even when outside that useful subset. */
+/** Keep six chart/replay/selection sets and native entry route evidence, plus
+ * the two mobile and one desktop full legend. Always include failure images. */
 export function selectUiReviewScreenshots(report,phase){
   assert.ok(['before','after'].includes(phase));
   const selected=new Map(),sizes='(?:320x740|390x844|768x1024|1024x768|1440x900|1920x1080)';
-  const charts=new RegExp('^wp4-'+phase+'-'+sizes+'-(?:chart|replay)\\.png$');
+  const charts=new RegExp('^wp4-'+phase+'-'+sizes+'-(?:chart|replay|replay-picking)\\.png$');
   const legends=new RegExp('^wp4-'+phase+'-(?:320x740|390x844|1440x900)-legend\\.png$');
+  const entries=phase==='after'?/^ui-entry-(?:mstr|bmnr)-(?:root|charts)-1440x900\.png$/:null;
   for(const entry of report.cases??[])for(const screenshot of entry.screenshots??[]){
-    if(!charts.test(screenshot.file)&&!legends.test(screenshot.file)&&!screenshot.file?.endsWith('-failure.png'))continue;
+    if(!charts.test(screenshot.file)&&!legends.test(screenshot.file)&&!entries?.test(screenshot.file)&&!screenshot.file?.endsWith('-failure.png'))continue;
     const previous=selected.get(screenshot.file);
     if(previous)assert.deepEqual(previous,screenshot,'Conflicting screenshot receipts for one artifact');
     selected.set(screenshot.file,screenshot);

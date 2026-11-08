@@ -10,7 +10,11 @@ const instrumentCases = ['ETHUSD','MSTR','BMNR','TQQQ','SOXL','233740','HYPE','H
   if(symbol.startsWith('HOUSING-'))query.set('region',symbol.slice(8).toLowerCase());
   return {page:'ui-shell-'+symbol.toLowerCase(),uiShell:true,...(!native?{surface:'btc'}:{}),symbol,width:1440,height:900,touch:false,route:(native?'/':'/market-lab/charts/')+'?'+query};
 });
-export const uiContractBrowserCases = process.env.ATLAS_UI_REVIEW_PHASE==='before'?viewportCases:[...viewportCases,...instrumentCases];
+const nativeEntryCases=['MSTR','BMNR'].flatMap(symbol=>['/','/market-lab/charts/'].map(path=>({
+  page:'ui-entry-'+symbol.toLowerCase()+'-'+(path==='/'?'root':'charts'),uiShell:true,uiNativeEntry:true,symbol,width:1440,height:900,touch:false,
+  route:path+'?symbol='+symbol,canonicalRoute:'/?symbol='+symbol,
+})));
+export const uiContractBrowserCases = process.env.ATLAS_UI_REVIEW_PHASE==='before'?viewportCases:[...viewportCases,...instrumentCases,...nativeEntryCases];
 const shellKeys={
   top:['symbol','interval','chart-type','indicators','instrument','history','workspace','chart-menu','export','settings'],
   bottom:['range','date','events','readout','scale','auto-scale','fit','status'],
@@ -24,7 +28,7 @@ export function readShellContract(){
     const owner=document.querySelector('[data-shell-region="'+region+'"]'),box=owner?.getBoundingClientRect();
     return [region,{width:box?.width,painted:painted(owner),label:owner?.getAttribute('aria-label'),slots:owner?[...owner.querySelectorAll('[data-shell-owner="'+region+'"]')].map(node=>({
       slot:node.dataset.shellSlot,key:node.dataset.shellKey,painted:painted(node),label:node.getAttribute('aria-label')||node.title||node.textContent.trim(),
-      disabled:node.matches(':disabled,[aria-disabled="true"]'),reason:node.dataset.disabledReason||node.getAttribute('aria-description')||node.title||'',
+      disabled:node.matches(':disabled,[aria-disabled="true"]'),reason:node.dataset.disabledReason||node.getAttribute('aria-description')||'',
     })):[]}];
   }));
   return {symbol:document.querySelector('.atlas-plot')?.dataset.chartSymbol,graphName:document.querySelector('.atlas-workbench,.native-chart-workbench')?.getAttribute('aria-label'),regions,
@@ -45,23 +49,61 @@ async function verifyShellSnapshot(api){
     for(const slot of shell.regions[region].slots)if(slot.disabled)assert.ok(slot.reason.trim(),receipt.symbol+' '+region+'/'+slot.key+' has no disabled explanation');
   }
   assert.equal(shell.symbol,receipt.symbol);assert.equal(shell.graphName,receipt.symbol+' 가격 차트');
-  assert.equal(shell.url,receipt.route,'First entry writes extra URL state');
+  assert.equal(shell.url,receipt.canonicalRoute||receipt.route,'First entry writes extra URL state');
   assert.equal(shell.undoDisabled,true,'First entry records an undoable edit');
   assert.ok(Math.max(shell.rootWidth,shell.bodyWidth)<=receipt.width+1,'Common shell overflows page');
   if(receipt.width>=1024){assert.ok(Math.abs(shell.regions.right.width-45)<=1,'Right rail width differs');assert.ok(shell.regions.left.width>0&&shell.regions.left.width<=52,'Left controls escape their 52px rail');}
   receipt.shellContract=shell;return shell;
 }
 
+export function readNativeEntryContract(){
+  const painted=node=>Boolean(node&&!node.hidden&&!node.closest('[hidden]')&&node.getClientRects().length&&getComputedStyle(node).display!=='none'&&getComputedStyle(node).visibility!=='hidden');
+  const chart=document.querySelector('#equity-chart');
+  return {url:location.pathname+location.search,title:document.title,boot:document.documentElement?.dataset.boot,
+    rootSymbol:document.documentElement?.dataset.symbol,market:document.body?.dataset.market,chartSymbol:document.querySelector('.atlas-plot')?.dataset.chartSymbol,
+    chartName:chart?.getAttribute('aria-label'),observedCount:Number(chart?.dataset.observedCandleCount)||0,
+    price:document.querySelector('#equity-price')?.textContent,chartPainted:painted(chart),
+    observedPaths:chart?[...chart.querySelectorAll('path[d]')].filter(node=>painted(node)&&node.getAttribute('d').trim()).length:0,
+    bootShellPainted:painted(document.querySelector('#atlas-boot-shell')),
+    visibleSkeletons:[...document.querySelectorAll('[data-atlas-skeleton]')].filter(painted).map(node=>node.textContent.trim()),
+    error:painted(document.querySelector('#atlas-boot-error'))?document.querySelector('#atlas-boot-error').textContent.trim():null,
+    frames:[...document.querySelectorAll('.atlas-center-frame')].map(frame=>({source:frame.src,painted:painted(frame),status:frame.dataset.centerStatus,loaded:frame.dataset.centerLoaded})),
+  };
+}
+async function verifyNativeEntry(api){
+  const {cdp,receipt,evaluate,until}=api,started=Date.now(),observations=[];
+  receipt.nativeEntry={requested:receipt.route,canonical:receipt.canonicalRoute,observations};
+  let last='';
+  const final=await until(async()=>{
+    const state=await evaluate(cdp,readNativeEntryContract),key=JSON.stringify(state);
+    if(key!==last){last=key;observations.push({elapsedMs:Date.now()-started,...state});}
+    return state.error||state.boot==='ready'&&state.chartPainted&&state.observedCount>0&&state.observedPaths>0?state:null;
+  },receipt.symbol+' canonical native entry or explicit terminal error',25000);
+  receipt.nativeEntry.elapsedMs=Date.now()-started;receipt.nativeEntry.final=final;
+  assert.equal(final.error,null,'Native entry ended with an explicit error: '+final.error);
+  assert.equal(final.boot,'ready','Native entry did not finish boot');
+  assert.equal(final.url,receipt.canonicalRoute,'Legacy entry did not reach its own canonical symbol');
+  for(const field of ['rootSymbol','market','chartSymbol'])assert.equal(final[field],receipt.symbol,'Native entry has stale '+field);
+  assert.ok(final.title.startsWith(receipt.symbol+' · '),'Native entry title belongs to another instrument');
+  assert.ok(final.chartName?.startsWith(receipt.symbol+' 가격 차트'),'Native chart accessibility name belongs to another instrument');
+  assert.ok(final.observedCount>0&&final.observedPaths>0&&final.chartPainted,'Native entry has no painted observed prices');
+  assert.ok(final.price&&final.price!=='—','Native entry has no source price');
+  assert.equal(final.bootShellPainted,false,'Boot skeleton still covers the native chart');
+  assert.deepEqual(final.visibleSkeletons,[],'Native entry leaves a loading skeleton');
+  assert.deepEqual(final.frames,[],'Native entry must not instantiate or retain an ETF iframe');
+}
+
 export async function verifyUiShellSurface(api){
   const {cdp,receipt,evaluate,until,settled,screenshot,verifyOfflineRefresh}=api;
-  if(receipt.surface==='btc'){
+  if(receipt.uiNativeEntry)await verifyNativeEntry(api);
+  else if(receipt.surface==='btc'){
     await until(()=>evaluate(cdp,()=>document.querySelector('.atlas-center-frame:not([hidden])')?.dataset.centerLoaded==='true'&&document.body.dataset.chartControls==='ready'),'loaded and acknowledged instrument workspace');
     await verifyOfflineRefresh();
   }else{
     await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('#eth-chart path,#equity-chart path'))),'native instrument chart');
   }
   await settled(cdp);await verifyShellSnapshot(api);
-  await screenshot(cdp,'wp7-'+receipt.symbol.toLowerCase()+'-'+receipt.width+'x'+receipt.height+'.png',receipt);
+  await screenshot(cdp,(receipt.uiNativeEntry?receipt.page:'wp7-'+receipt.symbol.toLowerCase())+'-'+receipt.width+'x'+receipt.height+'.png',receipt);
 }
 
 export function readUiContractGeometry(){
@@ -74,10 +116,20 @@ export function readUiContractGeometry(){
   const l=painted(legend)?rect(legend):null;
   const overlap=(a,b)=>a&&b&&a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;
   const labels=[...document.querySelectorAll('.market-last-price,.cycle-macro-clock-label,[data-forecast-evidence] text,[data-history-event] text,.chart-replay-hud')].filter(painted);
+  // Every persistent transport surface must leave painted chart information
+  // uncovered, including the separate cancel button during start selection.
+  // Inspect native SVG text and date/price badges as well as the cycle strip;
+  // a footer reservation alone is not evidence of unobstructed rendered labels.
+  const transportOverlays=[['bar',bar],['pick-cancel',document.querySelector('.chart-replay-controls>[data-cr="pick-cancel"]')],['scroll-hint',document.querySelector('.chart-replay-scroll-hint')]]
+    .filter(([,node])=>painted(node)).map(([kind,node])=>({kind,...rect(node)}));
+  const information=svg?[...svg.querySelectorAll('text,.cycle-timing-ribbon,.cross-date-tag,.cross-price-tag,.chart-latest-price-tag')]
+    .filter(painted).map(node=>({kind:node.getAttribute('class')||node.tagName,label:node.getAttribute('aria-label')||node.textContent.trim(),...rect(node)}))
+    .filter(box=>box.width>0&&box.height>0):[];
+  const informationCollisions=transportOverlays.flatMap(overlay=>information.filter(label=>overlap(overlay,label)).map(label=>({overlay:overlay.kind,overlayRect:overlay,label})));
   return {viewport:{width:innerWidth,height:innerHeight},url:location.pathname+location.search,rootWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,
     plot:rect(plot),pricePane:{left:Number(svg?.dataset.plotLeft),right:Number(svg?.dataset.plotRight),top:Number(svg?.dataset.plotTop),bottom:Number(svg?.dataset.priceBottom)},
     legend:l&&{...l,mode:legend.dataset.legendMode||'legacy',compactReason:legend.dataset.legendCompactReason||null,groups:[...legend.querySelectorAll('[data-legend-group]')].map(e=>({id:e.dataset.legendGroup,visibleCount:e.dataset.visibleCount,hiddenCount:e.dataset.hiddenCount,...rect(e)})),more:[...legend.querySelectorAll('.chart-legend-more')].filter(painted).map(e=>({text:e.textContent,...rect(e)})),collisions:labels.filter(e=>overlap(l,rect(e))).map(e=>({tag:e.tagName,className:e.getAttribute('class'),text:e.textContent,...rect(e)}))},
-    replay:painted(bar)?{bar:rect(bar),actions:view,clipped,controls,hint:[...document.querySelectorAll('.chart-replay-scroll-hint')].map(e=>({visible:painted(e),text:e.textContent,...rect(e)})),arrows:[...bar.querySelectorAll('.chart-replay-scroll-arrow')].map(e=>({visible:painted(e),disabled:e.disabled,...rect(e)})),state:document.querySelector('.chart-replay-controls')?.dataset.state,selecting:svg?.dataset.replaySelecting==='true',cursor:svg?.dataset.replayCursor,strip:[...document.querySelectorAll('.cycle-timing-ribbon,.cycle-interval-overlay-layer')].filter(painted).map(rect),coveredLabels:[...document.querySelectorAll('.cycle-timing-ribbon,.market-last-price')].filter(e=>painted(e)&&overlap(rect(bar),rect(e))).map(e=>({label:e.getAttribute('aria-label')||e.textContent,...rect(e)}))}:null,
+    replay:painted(bar)?{bar:rect(bar),actions:view,clipped,controls,transportOverlays,information,informationCollisions,hint:[...document.querySelectorAll('.chart-replay-scroll-hint')].map(e=>({visible:painted(e),text:e.textContent,...rect(e)})),arrows:[...bar.querySelectorAll('.chart-replay-scroll-arrow')].map(e=>({visible:painted(e),disabled:e.disabled,...rect(e)})),state:document.querySelector('.chart-replay-controls')?.dataset.state,selecting:svg?.dataset.replaySelecting==='true',cursor:svg?.dataset.replayCursor,strip:[...document.querySelectorAll('.cycle-timing-ribbon,.cycle-interval-overlay-layer')].filter(painted).map(rect),coveredLabels:[...document.querySelectorAll('.cycle-timing-ribbon,.market-last-price')].filter(e=>painted(e)&&overlap(rect(bar),rect(e))).map(e=>({label:e.getAttribute('aria-label')||e.textContent,...rect(e)}))}:null,
     undoDisabled:document.querySelector('#workbench-undo')?.disabled,
     firstEntryStorage:Object.keys(localStorage).filter(k=>/replay|history/.test(k)).map(k=>({key:k,bytes:localStorage.getItem(k)?.length||0})),
   };
@@ -156,12 +208,14 @@ export async function verifyUiContractSurface(api){
   await until(()=>evaluate(cdp,()=>['paused','ended'].includes(document.querySelector('.chart-replay-controls')?.dataset.state)),'fixed replay cutoff');
   const ready=await state('replay-paused');await screenshot(cdp,prefix+'-replay.png',receipt);
   await click(cdp,control('pick'));await until(()=>evaluate(cdp,()=>document.querySelector('#lab-chart')?.dataset.replaySelecting==='true'),'replay picking');
-  const picking=await state('replay-picking');await key('Escape','Escape',27);const canceled=await state('replay-pick-canceled');
+  const picking=await state('replay-picking');await screenshot(cdp,prefix+'-replay-picking.png',receipt);await key('Escape','Escape',27);const canceled=await state('replay-pick-canceled');
   result.selectionY={entry:entry.replay.bar.y,paused:ready.replay.bar.y,picking:picking.replay.bar.y,canceled:canceled.replay.bar.y};
   if(phase==='after'){
     for(const value of [entry,ready,picking,canceled]){
       checkLegend(value);within(value.replay.bar,'replay bar');
       assert.equal(value.replay.coveredLabels.length,0,'Replay covers chart information: '+JSON.stringify(value.replay.coveredLabels));
+      for(const overlay of value.replay.transportOverlays)within(overlay,'Replay '+overlay.kind);
+      assert.equal(value.replay.informationCollisions.length,0,'Replay transport or selection control covers painted chart information: '+JSON.stringify(value.replay.informationCollisions));
       const overflow=value.replay.actions.scrollWidth>value.replay.actions.clientWidth;
       assert.equal(value.replay.hint.some(hint=>hint.visible),overflow,'Hint must follow measured overflow at every viewport');
       if(receipt.width>=1024)assert.equal(value.replay.clipped.length,0,'Desktop replay controls clipped: '+JSON.stringify(value.replay.clipped));

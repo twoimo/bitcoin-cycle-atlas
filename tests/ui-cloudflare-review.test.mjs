@@ -13,14 +13,16 @@ test('phase transport removes split raw evidence lines without losing native cas
   assert.deepEqual(lines,['ETH_BROWSER_CASE {"status":"failed"}','Chrome stderr: native input failed']);
 });
 
-test('curated native screenshots retain six sizes and every failure but no redundant replay-entry pictures',()=>{
+test('curated native screenshots retain six sizes, selection controls, native entry routes and every failure',()=>{
   const images=['wp4-after-320x740-chart.png','wp4-after-320x740-replay.png','wp4-after-320x740-replay-entry.png',
     'wp4-after-390x844-legend.png','wp4-after-768x1024-legend.png','wp4-after-1440x900-legend.png',
-    'wp4-before-1920x1080-chart.png','ui-contract-tqqq-1440-failure.png','ui-contract-btc-320-failure.png'];
+    'wp4-before-1920x1080-chart.png','ui-contract-tqqq-1440-failure.png','ui-contract-btc-320-failure.png',
+    'wp4-after-390x844-replay-picking.png','ui-entry-mstr-root-1440x900.png','ui-entry-bmnr-charts-1440x900.png'];
   const report={cases:[{screenshots:images.map(file=>({file,bytes:10,sha256:'a'.repeat(64)}))}]};
   assert.deepEqual(selectUiReviewScreenshots(report,'after').map(item=>item.file),[
-    images[0],images[1],images[3],images[5],images[7],images[8],
+    images[0],images[1],images[3],images[5],images[7],images[8],images[9],images[10],images[11],
   ]);
+  assert.deepEqual(selectUiReviewScreenshots(report,'before').map(item=>item.file),[images[6],images[7],images[8]]);
 });
 
 test('screenshot transport rejects changed original bytes and paths outside the phase directory',async()=>{
