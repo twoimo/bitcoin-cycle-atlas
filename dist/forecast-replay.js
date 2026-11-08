@@ -11,7 +11,8 @@ const SYMBOLS=new Set(['BTCUSD','ETHUSD','MSTR','BMNR']);
 const HEX=/^[a-f0-9]{64}$/;
 const sessions=new WeakSet();
 const chartHistories=new WeakMap();
-const chartCalendars=new WeakMap();
+const weekSessionCache=new Map();
+const weekCloseCache=new Map();
 const marketFor=symbol=>{
   if(!SYMBOLS.has(symbol))throw new RangeError('Unsupported replay symbol');
   return symbol.endsWith('USD')?'crypto':'equity';
@@ -441,50 +442,51 @@ function chartHistory(session,frame){
   return result;
 }
 
-function replayCalendarDate(date,calendar){
-  let value=calendar.days.get(date);
-  if(!value){const day=utcDay(date);value={day,monday:day-((day+3)%7+7)%7};calendar.days.set(date,value);}
-  return value;
-}
-function replayDay(date,calendar){return calendar?replayCalendarDate(date,calendar).day:utcDay(date);}
-function replayWeekStart(date,calendar){
-  if(calendar)return replayCalendarDate(date,calendar).monday;
-  const day=utcDay(date);return day-((day+3)%7+7)%7;
-}
-function replaySessionClose(date,market,calendar){
-  if(!calendar)return sessionCloseUtc(date,market);
-  const value=replayCalendarDate(date,calendar);
-  if(value.close===undefined)value.close=sessionCloseUtc(date,market);
-  return value.close;
-}
-function replayWeekSessions(monday,market,calendar){
-  if(calendar?.weeks.has(monday))return calendar.weeks.get(monday);
+function replayWeekStart(date){const day=utcDay(date);return day-((day+3)%7+7)%7;}
+function replayWeekSessions(monday,market){
+  const key=`${market}\0${monday}`;
+  if(weekSessionCache.has(key))return weekSessionCache.get(key);
   const week=Array.from({length:7},(_,offset)=>dateFromDay(monday+offset));
-  const expected=market==='equity'&&week.some(date=>isEquitySession(date)===null)?null:
-    market==='crypto'?week:week.filter(date=>isEquitySession(date));
-  if(calendar)calendar.weeks.set(monday,expected===null?null:Object.freeze(expected));
-  return expected;
+  const result=market==='equity'&&week.some(date=>isEquitySession(date)===null)?null:market==='crypto'?week:week.filter(date=>isEquitySession(date));
+  if(weekSessionCache.size>=4096)weekSessionCache.clear();
+  weekSessionCache.set(key,result);
+  return result;
 }
-function dailyReplayCandles(rows,calendar){
+// Market closes are immutable per session. Weekly aggregation asks for every
+// session in the visible history on each replay tick; resolve them once.
+function replayWeekCloses(monday,market){
+  const key=`${market}\0${monday}`;
+  if(weekCloseCache.has(key))return weekCloseCache.get(key);
+  const sessionsForWeek=replayWeekSessions(monday,market);
+  const result=sessionsForWeek===null?null:sessionsForWeek.map(date=>({date,close:sessionCloseUtc(date,market)}));
+  if(weekCloseCache.size>=4096)weekCloseCache.clear();
+  weekCloseCache.set(key,result);
+  return result;
+}
+function dailyReplayCandles(rows){
   return rows.filter(row=>['open','high','low','close'].every(key=>Number.isFinite(row[key]))).map(row=>({
-    date:row.date,time:replayDay(row.date,calendar)*86400,startDate:row.date,endDate:row.date,
+    date:row.date,time:utcDay(row.date)*86400,startDate:row.date,endDate:row.date,
     open:row.open,high:row.high,low:row.low,close:row.close,...(row.volume===undefined?{}:{volume:row.volume}),complete:true}));
 }
-function weeklyReplayCandles(rows,market,{cursorDate,evaluationAt},calendar){
+function weeklyReplayCandles(rows,market,{cursorDate,evaluationAt}){
   const groups=new Map();
   for(const row of rows){
-    const monday=replayWeekStart(row.date,calendar);
+    const monday=replayWeekStart(row.date);
     if(!groups.has(monday))groups.set(monday,[]);
     groups.get(monday).push(row);
   }
   const candles=[];let incompleteGroups=0,formingGroups=0,missingGroups=0,unreviewedGroups=0;
   for(const [monday,days]of groups){
-    const expected=replayWeekSessions(monday,market,calendar);
+    const expected=replayWeekSessions(monday,market);
     if(expected===null){unreviewedGroups++;continue;}
     // A forming week uses every completed daily observation from its actual
     // opening session through this cursor. Missing completed sessions are not
     // partial future days, and may never produce a manufactured weekly candle.
-    const disclosed=expected.filter(date=>date<=cursorDate&&replaySessionClose(date,market,calendar)<=evaluationAt);
+    const closes=replayWeekCloses(monday,market),disclosed=[];
+    for(const entry of closes){
+      if(entry.date>cursorDate)break;
+      if(entry.close<=evaluationAt)disclosed.push(entry.date);
+    }
     if(!disclosed.length||days.length!==disclosed.length||days.some((row,index)=>row.date!==disclosed[index])){
       incompleteGroups++;missingGroups++;continue;
     }
@@ -555,18 +557,14 @@ export function buildReplayChartData(session,options={}){
   const frequency=options.frequency??'daily';
   if(!['daily','weekly'].includes(frequency))throw new RangeError('Replay supports daily or weekly observations');
   const frame=buildReplayFrame(session,options);
-  // Only verified sessions reach this cache. It contains calendar facts, never
-  // observed prices, vintages, cursor-dependent disclosure or aggregated OHLC.
-  let calendar=chartCalendars.get(session);
-  if(!calendar){calendar={days:new Map(),weeks:new Map()};chartCalendars.set(session,calendar);}
   const start=options.startDate===undefined?-Infinity:utcDay(options.startDate);
   const end=options.endDate===undefined?Infinity:utcDay(options.endDate);
   if(start>end)throw new RangeError('Replay chart range is reversed');
-  const inRange=row=>{const day=replayDay(row.endDate??row.date,calendar);return day>=start&&day<=end;};
+  const inRange=row=>{const day=utcDay(row.endDate??row.date);return day>=start&&day<=end;};
   const visible=[...chartHistory(session,frame),...frame.actual];
   const observedRows=visible.filter(inRange).map(row=>({date:row.date,price:row.price}));
-  const dailyCandles=dailyReplayCandles(visible,calendar);
-  const weekly=frequency==='weekly'?weeklyReplayCandles(dailyCandles,session.market,frame,calendar):null;
+  const dailyCandles=dailyReplayCandles(visible);
+  const weekly=frequency==='weekly'?weeklyReplayCandles(dailyCandles,session.market,frame):null;
   const observedCandles=(weekly?.candles??dailyCandles).filter(inRange);
   const availableDailyDates=new Set(dailyCandles.map(row=>row.date));
   return freeze({frame,frequency,originDate:session.asOf,observedRows,observedCandles,

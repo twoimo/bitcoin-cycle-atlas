@@ -62,3 +62,41 @@ test('display source revisions respect the selected current-vintage or informati
   assert.deepEqual(unavailable.candles,[]);
   assert.throws(()=>buildReplayObservedCandles({...options,cursorDate:'2026-01-08',clockMode:'information-time'}),/complete acquisition receipts/);
 });
+
+function mutableDisplayInput(){
+  return {...options,frequency:'daily',cursorDate:'2026-01-09',observations:observations.slice(0,4).map(row=>({...row,price:row.close}))};
+}
+
+test('a reused mutable observation array reflects revised daily prices and OHLC',()=>{
+  const input=mutableDisplayInput(),before=buildReplayObservedCandles(input);
+  Object.assign(input.observations[0],{price:66000,open:64000,high:67000,low:63000,close:66000,volume:11});
+  const after=buildReplayObservedCandles(input),bar=after.candles[0];
+  assert.deepEqual([bar.open,bar.high,bar.low,bar.close,bar.volume],[64000,67000,63000,66000,11]);
+  assert.equal(before.candles[0].close,63200,'The earlier frozen result remains an independent snapshot');
+});
+
+test('a reused mutable observation array discloses newly appended completed bars',()=>{
+  const input=mutableDisplayInput(),before=buildReplayObservedCandles(input);
+  input.observations.push({...observations[4],price:observations[4].close});
+  const after=buildReplayObservedCandles(input);
+  assert.equal(before.candles.length,4);assert.equal(after.candles.length,5);
+  assert.equal(after.candles.at(-1).endDate,'2026-01-09');assert.equal(after.candles.at(-1).high,90000);
+});
+
+test('a reused mutable observation array revalidates replacement entries',()=>{
+  const input=mutableDisplayInput();buildReplayObservedCandles(input);
+  input.observations[0]={...input.observations[0],date:'2026-01-04',high:68000};
+  const after=buildReplayObservedCandles(input);
+  assert.equal(after.candles[0].date,'2026-01-04');assert.equal(after.candles[0].high,68000);
+});
+
+test('a formerly valid observation array cannot bypass row validation after mutation',()=>{
+  const input=mutableDisplayInput();buildReplayObservedCandles(input);
+  input.observations[0].price=-1;
+  assert.throws(()=>buildReplayObservedCandles(input),/prices must be positive and finite/);
+});
+
+test('an absent collection clock does not authorize an invalid empty collection timestamp',()=>{
+  const input=mutableDisplayInput();buildReplayObservedCandles({...input,observedAt:null});
+  assert.throws(()=>buildReplayObservedCandles({...input,observedAt:''}),/observedAt must be an explicit UTC timestamp/);
+});
