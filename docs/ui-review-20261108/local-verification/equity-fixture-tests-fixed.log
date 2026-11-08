@@ -1,0 +1,48 @@
+✔ the actual formal fixture runs in isolation with its complete UI dependency closure (520.92031ms)
+✔ fixture copying follows cyclic imports, re-exports and lazy literals with versioned URLs (8.408615ms)
+✔ a missing transitive fixture module stops copying before any mutation is attempted (2.417529ms)
+✔ MSTR releases the usable observed chart before the coin response or projection (40.135838ms)
+✔ MSTR shows an actionable price failure and opens a requested source view once (4.518391ms)
+✔ MSTR cannot release or render a suspended document before restoration (4.90357ms)
+✔ MSTR does not reveal loaded prices after leaving before their first render (9.796714ms)
+✔ MSTR ignores revoked stock replies, success or failure=false (4.620073ms)
+✔ MSTR ignores revoked underlying replies, success or failure=false (4.509547ms)
+✔ MSTR ignores revoked stock replies, success or failure=true (9.106496ms)
+✔ MSTR ignores revoked underlying replies, success or failure=true (4.096375ms)
+✔ MSTR cancels projection after 0 paint yields (8.153717ms)
+✔ MSTR cancels projection after 1 paint yields (7.862914ms)
+✔ MSTR invalidates the previous projection when refreshed stock prices publish (7.520178ms)
+✔ MSTR preserves user interval, scenario and range while the projection is pending (3.371304ms)
+✔ MSTR keeps observed prices after coin failure and recovers on retry (5.163391ms)
+✔ MSTR keeps observed prices when projection rejects inputs and a retry can recover (2.690039ms)
+✔ BMNR releases the usable observed chart before the coin response or projection (2.948638ms)
+✔ BMNR shows an actionable price failure and opens a requested source view once (9.9399ms)
+✔ BMNR cannot release or render a suspended document before restoration (5.643093ms)
+✔ BMNR does not reveal loaded prices after leaving before their first render (4.734081ms)
+✔ BMNR ignores revoked stock replies, success or failure=false (2.258039ms)
+✔ BMNR ignores revoked underlying replies, success or failure=false (8.520744ms)
+✔ BMNR ignores revoked stock replies, success or failure=true (3.418731ms)
+✔ BMNR ignores revoked underlying replies, success or failure=true (3.758016ms)
+✔ BMNR cancels projection after 0 paint yields (6.187703ms)
+✔ BMNR cancels projection after 1 paint yields (6.06665ms)
+✔ BMNR invalidates the previous projection when refreshed stock prices publish (3.524755ms)
+✔ BMNR preserves user interval, scenario and range while the projection is pending (3.961602ms)
+✔ BMNR keeps observed prices after coin failure and recovers on retry (4.841036ms)
+✔ BMNR keeps observed prices when projection rejects inputs and a retry can recover (3.455311ms)
+✔ source titles, quoted examples, comments and regexp bodies are not imports (3.422221ms)
+✔ all static import and re-export forms retain their literal specifiers across comments and line breaks (0.606002ms)
+✔ dynamic literals inside code and template expressions are checked, while computed URLs are not guessed (0.407072ms)
+✔ escaped module strings resolve to the browser-visible path (0.333602ms)
+✔ declaration regexp bodies stay opaque while division after function and class expressions retains imports (1.263292ms)
+✔ the real generated event catalog no longer acquires a reciprocal bare import (46.9949ms)
+✔ the unchanged Pages resource validator accepts real relative imports and ignores citation prose (244.385635ms)
+✔ the unchanged Pages resource validator still rejects bare, root, escaping and missing module paths (1416.463797ms)
+✔ Pages directory index links resolve at the project root while missing directories and escapes fail (470.256046ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2284.273433

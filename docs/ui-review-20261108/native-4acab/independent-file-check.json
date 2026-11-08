@@ -1,0 +1,138 @@
+{
+  "checkedFiles": 22,
+  "allMatch": true,
+  "files": [
+    {
+      "name": "ui-review/diagnostic.json",
+      "bytes": 42473,
+      "sha256": "652870f8e37a87f2dc51d50d91630ed60ce6330b7341cc6a6e82a432a24b248a",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-before/report.json",
+      "bytes": 671406,
+      "sha256": "2ad73f0ecf1cab5b85c84c98dc2a849a9e02616428d605b1b148aae2538fd242",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/report.json",
+      "bytes": 1031479,
+      "sha256": "ed4b74b70e231ad0277dd7398a553740ce002b811c52af7e732e4702ca2e9390",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-before/wp4-before-320x740-chart.png",
+      "bytes": 81087,
+      "sha256": "5ac0aea41b778f437a923718e626d50008e6d98b9e20e0ba5fc0b54d4df75b6c",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-before/wp4-before-390x844-chart.png",
+      "bytes": 99336,
+      "sha256": "b9c6db22e078f227e1d1dff3c473d7ff758114fb2b5e9c33cac9d7c33ea28323",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-before/wp4-before-768x1024-chart.png",
+      "bytes": 189440,
+      "sha256": "fc092c2ff44f3e190235043a7babb6049ee693f6359b8628f6bc735481a03536",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-before/wp4-before-1024x768-chart.png",
+      "bytes": 206753,
+      "sha256": "17fdceb34bf73e817506b2506053e3362f51b575b166de332afb1df43d67205f",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-before/wp4-before-1440x900-chart.png",
+      "bytes": 265021,
+      "sha256": "c200d3e53c19a7e73c98d4aba98efb3f3a8602ef88825a95500f8cb0a18c4578",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-before/wp4-before-1920x1080-chart.png",
+      "bytes": 310341,
+      "sha256": "ab5436b64d449bb85b73e9a376065a244249af35fca1378390c9c3a9a6d43021",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/wp4-after-320x740-chart.png",
+      "bytes": 80073,
+      "sha256": "89e3d36aecb6baa42227ee8e1906ce8e703577235942f2af65c7f6eb6d4baba0",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/wp4-after-390x844-chart.png",
+      "bytes": 98938,
+      "sha256": "9492ec11ac9306d2d87990149863c80bf2d1a79bfd6feb0af3b09f6f619e26c5",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/wp4-after-768x1024-chart.png",
+      "bytes": 188125,
+      "sha256": "47344b03a8045362eefeb9f34733065281b409391e9ac60ec51f7d5a816ee9aa",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/wp4-after-1024x768-chart.png",
+      "bytes": 207040,
+      "sha256": "01aa73dc28d6d640f37f9926e5996742ffb86eae0f8d96e82585ff9806e21579",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/wp4-after-1440x900-chart.png",
+      "bytes": 265180,
+      "sha256": "6205377a36c43bfbce29194eee0dd246ec29fe61a11b979179d75047a3593137",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/wp4-after-1920x1080-chart.png",
+      "bytes": 312827,
+      "sha256": "4c24ee58d4cdefc3228bb36bf28ebef897b1ca4648275c848a88f35574d19b16",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/ui-entry-mstr-root-1440x900.png",
+      "bytes": 163767,
+      "sha256": "2afcab5c01e69c5c507a7ac30071a86b2db6aab37834d62e1c8fb00a7499c058",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/ui-entry-bmnr-root-1440x900.png",
+      "bytes": 153587,
+      "sha256": "f677df8fa63834f50b72dfe9c37c48d46afde07a6ae76318e03d32d798805e7d",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/wp4-after-320x740-legend.png",
+      "bytes": 33020,
+      "sha256": "0c793e0404d396d5b05f74cf72a87d031a7a1d3d10042cebe1f1812684a95487",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/wp4-after-390x844-legend.png",
+      "bytes": 44351,
+      "sha256": "ef655ee0811460bbed981df41e60e55b4520fba1978bc7f0c432b92dc92cc293",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/wp4-after-1440x900-legend.png",
+      "bytes": 210401,
+      "sha256": "acae384c7b6134a920e501e2b3532981bb521c80370f00d0de84237376142c76",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/wp4-after-1440x900-replay.png",
+      "bytes": 146597,
+      "sha256": "cc54b392efd671bd18f33c42f754ae5d4cd432ec3781a44ecc78f4d4f393d6c6",
+      "matchesReceipt": true
+    },
+    {
+      "name": "ui-review-after/wp4-after-1920x1080-replay.png",
+      "bytes": 177301,
+      "sha256": "e7bad55c459a73f6c88a6faf24eac6544a0a87221c9161b881e52619581fbb2d",
+      "matchesReceipt": true
+    }
+  ]
+}

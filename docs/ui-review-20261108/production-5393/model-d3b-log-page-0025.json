@@ -1,0 +1,69 @@
+{
+  "observedAt": "2026-11-08T17:43:24.960Z",
+  "buildId": "d3b0c7c4-a185-4eb6-8f0d-ca5b1078a64f",
+  "success": true,
+  "errors": [],
+  "result": {
+    "cursor": "WzQ1LDIwODMyXQ",
+    "truncated": false,
+    "lineCount": 1889,
+    "lines": [
+      [
+        1794159786244,
+        "# tests 3074"
+      ],
+      [
+        1794159786244,
+        "# pass 3074"
+      ],
+      [
+        1794159786244,
+        "# fail 0"
+      ],
+      [
+        1794159786247,
+        "ATLAS_TEST_TOTAL {\"complete\":true,\"tests\":3074,\"pass\":3074,\"fail\":0,\"skipped\":0,\"batches\":1}"
+      ],
+      [
+        1794159786247,
+        "ATLAS_CLOUDFLARE_GATE {\"stage\":\"model\",\"id\":\"model-tests\",\"status\":\"PASS\",\"startedAt\":\"2026-11-08T17:30:41.432Z\",\"completedAt\":\"2026-11-08T17:43:06.130Z\",\"durationMs\":744698,\"log\":\"build/cloudflare-stage-model/model-tests.log\",\"logSha256\":\"b98e096339b153c17aa1f4f871b6a9d5d9fc600fc3cbcac95fd6c805e3dcff0e\"}"
+      ],
+      [
+        1794159786247,
+        "ATLAS_CLOUDFLARE_GATE {\"stage\":\"model\",\"id\":\"forecast\",\"status\":\"RUNNING\"}"
+      ],
+      [
+        1794159792958,
+        "ATLAS_CLOUDFLARE_GATE {\"stage\":\"model\",\"id\":\"forecast\",\"status\":\"PASS\",\"startedAt\":\"2026-11-08T17:43:06.162Z\",\"completedAt\":\"2026-11-08T17:43:12.957Z\",\"durationMs\":6795,\"log\":\"build/cloudflare-stage-model/forecast.log\",\"logSha256\":\"7fe49b371ea8c806610adf2c2a53d9a173c5fee9b5898c72140e45e7bb7eac03\"}"
+      ],
+      [
+        1794159792986,
+        "ATLAS_CLOUDFLARE_GATE {\"stage\":\"model\",\"id\":\"research\",\"status\":\"RUNNING\"}"
+      ],
+      [
+        1794159793495,
+        "ATLAS_CLOUDFLARE_GATE {\"stage\":\"model\",\"id\":\"research\",\"status\":\"PASS\",\"startedAt\":\"2026-11-08T17:43:12.983Z\",\"completedAt\":\"2026-11-08T17:43:13.495Z\",\"durationMs\":512,\"log\":\"build/cloudflare-stage-model/research.log\",\"logSha256\":\"673cc45b3ae2c6101b12ad2d4687a957a410a11edb294270dfd7c39590c36c67\"}"
+      ],
+      [
+        1794159793518,
+        "ATLAS_CLOUDFLARE_GATE {\"stage\":\"model\",\"id\":\"eth-events\",\"status\":\"RUNNING\"}"
+      ],
+      [
+        1794159793742,
+        "ATLAS_CLOUDFLARE_GATE {\"stage\":\"model\",\"id\":\"eth-events\",\"status\":\"PASS\",\"startedAt\":\"2026-11-08T17:43:13.518Z\",\"completedAt\":\"2026-11-08T17:43:13.741Z\",\"durationMs\":223,\"log\":\"build/cloudflare-stage-model/eth-events.log\",\"logSha256\":\"936763564d296c63229684f9588593ff30fced9aef3817d6c43883253dfa5503\"}"
+      ],
+      [
+        1794159793763,
+        "ATLAS_CLOUDFLARE_GATE {\"stage\":\"model\",\"id\":\"treasury-paths\",\"status\":\"RUNNING\"}"
+      ],
+      [
+        1794159798763,
+        "ATLAS_CLOUDFLARE_GATE {\"stage\":\"model\",\"id\":\"treasury-paths\",\"status\":\"PASS\",\"startedAt\":\"2026-11-08T17:43:13.763Z\",\"completedAt\":\"2026-11-08T17:43:18.762Z\",\"durationMs\":4999,\"log\":\"build/cloudflare-stage-model/treasury-paths.log\",\"logSha256\":\"2b4760cfcc15fb1b491d58835e55598917d994af71932b69b022b287f272c6ee\"}"
+      ],
+      [
+        1794159798791,
+        "ATLAS_CLOUDFLARE_GATE {\"stage\":\"model\",\"id\":\"numerics\",\"status\":\"RUNNING\"}"
+      ]
+    ]
+  }
+}

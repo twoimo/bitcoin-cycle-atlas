@@ -1,0 +1,32 @@
+{
+  "kind": "model-receipt-file-inventory",
+  "sourceCommit": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+  "note": "Selected original log lines and derived gate summary; model component alone does not qualify full deployment.",
+  "files": [
+    {
+      "file": "model-final-status.json",
+      "bytes": 1508,
+      "sha256": "2af9e00d686848a7b2d944cd9743f41c7b792c745fe8ec0905df023f0264bd87"
+    },
+    {
+      "file": "model-gates-selected.json",
+      "bytes": 6855,
+      "sha256": "92d7fac746dbc75fd301c4f9bc77b828cc50e18ed929b595a6f12dcfc6b966a5"
+    },
+    {
+      "file": "model-publication.json",
+      "bytes": 1151,
+      "sha256": "ec350888b10f849939ea4915ed621a63a72c98a94279ba83cf12ec2cb32cf7fd"
+    },
+    {
+      "file": "model-d3b-log-page-0025.json",
+      "bytes": 3202,
+      "sha256": "8cb58187631cd3ee1de9a3e89bf60c8fbbfa4d496ecf5843554ee7c784a70fc4"
+    },
+    {
+      "file": "model-d3b-log-page-0028.json",
+      "bytes": 3270,
+      "sha256": "95f9de38c3c68e84b45ec9c79ab1123f99eee92a6c0b870f310f84f8a5d120f4"
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {parseHTML} from 'linkedom';
 import {mountShellSlots, refreshShellSlots, SHELL_SLOT_KEYS} from '../dist/ui/shell-slots.js';
 
@@ -101,4 +102,49 @@ test('hosted chart tools share instrument slot; nonchart portals remain direct a
   refreshShellSlots(document);
   assert.equal(host.parentElement, heading, 'existing nonchart direct-child visibility contract survives');
   assert.equal(host.firstChild, action, 'the React portal owner is never replaced');
+});
+
+test('mobile BTC, native and hosted feature groups leave horizontal gestures to the outer toolbar', () => {
+  const css = readFileSync(new URL('../dist/atlas-shell.css', import.meta.url), 'utf8');
+  for (const symbol of ['BTCUSD', 'ETHUSD', 'MSTR', 'BMNR', 'TQQQ']) {
+    const {document} = fixture();
+    const heading = document.querySelector('.atlas-canvas-heading');
+    if (['ETHUSD', 'MSTR', 'BMNR'].includes(symbol)) {
+      heading.classList.add('eth-topbar');
+      heading.parentElement.classList.add('native-chart-workbench');
+    }
+    if (symbol === 'TQQQ') {
+      document.body.dataset.centerTool = 'rsi';
+      document.body.dataset.chartControls = 'ready';
+    }
+    const action = document.querySelector('#workbench-scenario');
+    action.classList.add('workbench-icon');
+    refreshShellSlots(document, {symbol});
+    const group = heading.querySelector('.shell-instrument-slot');
+    const style = document.createElement('style'); style.textContent = css; document.head.append(style);
+    // Inspect the actual mobile override rules. Native Chrome remains the
+    // authority for hit testing and touch scrolling; this guards the nested
+    // scroll structure that previously trapped the 320px toolbar gesture.
+    const mobileRules = [...style.sheet.cssRules]
+      .filter(rule => rule.type === 4 && rule.media.mediaText === '(max-width:620px)')
+      .flatMap(rule => [...rule.cssRules]);
+    const mobileStyle = node => Object.assign({}, ...mobileRules
+      .filter(rule => rule.selectorText && !rule.selectorText.includes('::') && node.matches(rule.selectorText))
+      .map(rule => Object.fromEntries(Array.from({length:rule.style.length}, (_, i) => [rule.style[i], rule.style.getPropertyValue(rule.style[i])]))));
+    const outer = mobileStyle(heading), feature = mobileStyle(group), control = mobileStyle(action);
+    assert.equal(action.parentElement, group, `${symbol}: original action remains in slot 5`);
+    assert.equal(group.dataset.shellSlot, '5');
+    assert.equal(outer['overflow-x'], 'auto', `${symbol}: outer row owns horizontal scrolling`);
+    assert.equal(outer['max-width'], '100%', `${symbol}: outer row stays within the viewport`);
+    assert.equal(outer['touch-action'], 'pan-x pinch-zoom');
+    assert.equal(feature['flex-grow'], '0');
+    assert.equal(feature['flex-shrink'], '0', `${symbol}: feature contents retain their width in the row`);
+    assert.equal(feature['flex-basis'], 'auto');
+    assert.equal(feature['max-width'], 'none', `${symbol}: no nested narrow scroll viewport`);
+    assert.equal(feature['overflow-x'], 'visible', `${symbol}: touch can reach the outer scroll owner`);
+    assert.equal(feature['overflow-y'], 'visible', `${symbol}: no implicit horizontal scroll container`);
+    assert.equal(feature['overscroll-behavior-x'], 'auto', `${symbol}: group cannot contain the outer gesture`);
+    assert.equal(control['min-width'], '44px');
+    assert.equal(control['min-height'], '44px');
+  }
 });

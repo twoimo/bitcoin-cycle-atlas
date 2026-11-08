@@ -795,7 +795,7 @@ export function initLabView() {
         recorded:{label:reconstructedRecord?'보존 예측 · 재구성 기록':'보존 예측',description:`예측 기준 ${session.asOf}의 보존 기록을 그대로 재생합니다.${reconstructedRecord?' 과거를 재구성해 보존한 기록이며 당시 발행된 예측이 아닙니다.':''}`}
       }[session.mode]??{label:'고정 경로 리플레이',description:'선택한 고정 경로를 재생합니다.'};
       $('#atlas-chart-legend').innerHTML=priceLegendMarkup({compact:true,candles,forming,source:candles?candleSource:priceSource,forecast:true,band,turns:p.showTurns,replayMode:session.mode})+
-        ((p.showCycleMarkers||p.showCycleIntervals)?cycleLegendMarkup():'');
+        ((p.showCycleMarkers||p.showCycleIntervals)?cycleLegendMarkup()+'<span class="cycle-reference-key">◇ 거시 시계 · ○ 예시 경로</span>':'');
       $('#atlas-chart-caveat').textContent=replayMeaning.label;
       $('#lab-chart-title').textContent=`${replayMeaning.label} · ${dateLabel(start)} — ${dateLabel(end)} · ${frequency==='weekly'?'주별':'일별'} 리플레이`;
       $('#lab-asof').textContent=observedDate?`실제 관측 ${observedDate} UTC까지 공개`:'첫 관측 공개 전';

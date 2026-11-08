@@ -74,6 +74,37 @@ test('the relay chat renders image albums, inline links, previews, quotes and wi
   assert.equal(root.querySelector('.relay-msg-text script'),null);
 });
 
+test('the relay chat groups messages by day and carries the replied excerpt',async t=>{
+  const data={rooms:[{id:'telegram',kind:'chat',title:'소수의견',messages:[
+    {id:'1',at:'2026-11-07T21:10:00+09:00',author:'소수의견',text:'어제 남긴 본문입니다'},
+    {id:'2',at:'2026-11-08T09:05:00+09:00',author:'소수의견',text:'답장 본문입니다',reply_to:'1'},
+    {id:'3',at:'2026-11-08T09:06:00+09:00',author:'소수의견',text:'',images:[{src:'data/relay/assets/chat-1.jpg',width:900,height:600,alt:'답장 사진'}]},
+  ]}]};
+  const {document}=parseHTML('<section id="relay"></section>');
+  let ready;const loaded=new Promise(resolve=>{ready=resolve;});
+  const root=document.getElementById('relay');
+  initRelayRoomView({root,embeddedData:()=>JSON.stringify(data),onReady:ready}).show(true);await loaded;
+  const days=[...root.querySelectorAll('.relay-day')].map(node=>node.textContent.trim());
+  assert.equal(days.length,2);assert.match(days[0],/11월 7일 \(토\)/);assert.match(days[1],/11월 8일 \(일\)/);
+  assert.equal(root.querySelector('.relay-msg-author'),null);
+  assert.match(root.querySelector('.relay-reply-text').textContent,/어제 남긴 본문입니다/);
+  assert.equal(root.querySelectorAll('.relay-msg--media').length,1);
+  assert.equal(root.querySelector('.relay-msg--media time').textContent,'09:06');
+});
+
+test('relay actions do not confuse the page container with a pager button',async t=>{
+  const data=chatPayload(),{document,window}=parseHTML('<section id="relay"></section>');
+  let reads=0,ready;const loaded=new Promise(resolve=>{ready=resolve;});
+  const root=document.getElementById('relay');
+  initRelayRoomView({root,embeddedData:()=>{reads++;return JSON.stringify(data);},onReady:ready}).show(true);await loaded;
+  const message=root.querySelector('.relay-msg');
+  root.querySelector('.relay-msg-text').dispatchEvent(new window.Event('click',{bubbles:true}));
+  assert.equal(root.querySelector('.relay-msg'),message);
+  assert.equal(reads,1);
+  root.querySelector('[data-relay-action="reload"]').dispatchEvent(new window.Event('click',{bubbles:true}));
+  assert.equal(reads,2);
+});
+
 test('unsafe chat links and previews are not rendered as anchors',async t=>{
   const data=chatPayload();data.rooms[0].messages[0].links=[{offset:0,length:2,url:'javascript:alert(1)'}];
   data.rooms[0].messages[0].previews=[{url:'javascript:alert(2)',title:'위험'}];

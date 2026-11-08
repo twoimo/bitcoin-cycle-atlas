@@ -1,0 +1,381 @@
+{
+  "diagnosticBuild": "4acab602-49a5-470e-9935-20005e98e5a3",
+  "aggregateStatus": "passed",
+  "note": "Mobile clipped controls are recorded as scroll viewport contents, with native pointer/keyboard/touch accessibility tested separately.",
+  "rows": [
+    {
+      "phase": "before",
+      "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+      "viewport": "320×740",
+      "caseStatus": "passed",
+      "legendRect": {
+        "x": 25,
+        "y": 583.5,
+        "width": 839.109375,
+        "height": 13
+      },
+      "legendMode": "legacy",
+      "legendViewportOverflowPx": 544.109375,
+      "legendPlotOverflowPx": 544.109375,
+      "barScrollWidth": 161,
+      "barClientWidth": 161,
+      "actionsScrollWidth": 617,
+      "actionsClientWidth": 153,
+      "clippedControls": [
+        "mode-badge",
+        "result",
+        "pick",
+        "play",
+        "next",
+        "speed",
+        "update-interval",
+        "live"
+      ],
+      "barY": {
+        "replay-paused": 551,
+        "replay-picking": 551,
+        "replay-pick-canceled": 551
+      },
+      "replayInformationCollisions": [],
+      "reportFile": "ui-review-before/report.json"
+    },
+    {
+      "phase": "before",
+      "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+      "viewport": "390×844",
+      "caseStatus": "passed",
+      "legendRect": {
+        "x": 25,
+        "y": 687.5,
+        "width": 839.109375,
+        "height": 13
+      },
+      "legendMode": "legacy",
+      "legendViewportOverflowPx": 474.109375,
+      "legendPlotOverflowPx": 474.109375,
+      "barScrollWidth": 231,
+      "barClientWidth": 231,
+      "actionsScrollWidth": 617,
+      "actionsClientWidth": 223,
+      "clippedControls": [
+        "mode-badge",
+        "result",
+        "pick",
+        "play",
+        "next",
+        "speed",
+        "update-interval",
+        "live"
+      ],
+      "barY": {
+        "replay-paused": 655,
+        "replay-picking": 655,
+        "replay-pick-canceled": 655
+      },
+      "replayInformationCollisions": [],
+      "reportFile": "ui-review-before/report.json"
+    },
+    {
+      "phase": "before",
+      "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+      "viewport": "768×1024",
+      "caseStatus": "passed",
+      "legendRect": {
+        "x": 85,
+        "y": 870,
+        "width": 847.109375,
+        "height": 14
+      },
+      "legendMode": "legacy",
+      "legendViewportOverflowPx": 164.109375,
+      "legendPlotOverflowPx": 213.109375,
+      "barScrollWidth": 349,
+      "barClientWidth": 349,
+      "actionsScrollWidth": 617,
+      "actionsClientWidth": 341,
+      "clippedControls": [
+        "pick",
+        "play",
+        "next",
+        "speed",
+        "update-interval",
+        "live"
+      ],
+      "barY": {
+        "replay-paused": 838,
+        "replay-picking": 838,
+        "replay-pick-canceled": 838
+      },
+      "replayInformationCollisions": [],
+      "reportFile": "ui-review-before/report.json"
+    },
+    {
+      "phase": "before",
+      "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+      "viewport": "1024×768",
+      "caseStatus": "passed",
+      "legendRect": {
+        "x": 85,
+        "y": 624,
+        "width": 847.109375,
+        "height": 14
+      },
+      "legendMode": "legacy",
+      "legendViewportOverflowPx": 0,
+      "legendPlotOverflowPx": 0,
+      "barScrollWidth": 418,
+      "barClientWidth": 418,
+      "actionsScrollWidth": 541,
+      "actionsClientWidth": 410,
+      "clippedControls": [
+        "speed",
+        "update-interval",
+        "live"
+      ],
+      "barY": {
+        "replay-paused": 602,
+        "replay-picking": 602,
+        "replay-pick-canceled": 602
+      },
+      "replayInformationCollisions": [],
+      "reportFile": "ui-review-before/report.json"
+    },
+    {
+      "phase": "before",
+      "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+      "viewport": "1440×900",
+      "caseStatus": "passed",
+      "legendRect": {
+        "x": 429.890625,
+        "y": 756,
+        "width": 847.109375,
+        "height": 14
+      },
+      "legendMode": "legacy",
+      "legendViewportOverflowPx": 0,
+      "legendPlotOverflowPx": 0,
+      "barScrollWidth": 418,
+      "barClientWidth": 418,
+      "actionsScrollWidth": 541,
+      "actionsClientWidth": 410,
+      "clippedControls": [
+        "speed",
+        "update-interval",
+        "live"
+      ],
+      "barY": {
+        "replay-paused": 734,
+        "replay-picking": 734,
+        "replay-pick-canceled": 734
+      },
+      "replayInformationCollisions": [],
+      "reportFile": "ui-review-before/report.json"
+    },
+    {
+      "phase": "before",
+      "sourceCommit": "1635f87a10962b7ff5eecd094b6e0625e09771f4",
+      "viewport": "1920×1080",
+      "caseStatus": "passed",
+      "legendRect": {
+        "x": 909.890625,
+        "y": 936,
+        "width": 847.109375,
+        "height": 14
+      },
+      "legendMode": "legacy",
+      "legendViewportOverflowPx": 0,
+      "legendPlotOverflowPx": 0,
+      "barScrollWidth": 418,
+      "barClientWidth": 418,
+      "actionsScrollWidth": 541,
+      "actionsClientWidth": 410,
+      "clippedControls": [
+        "speed",
+        "update-interval",
+        "live"
+      ],
+      "barY": {
+        "replay-paused": 914,
+        "replay-picking": 914,
+        "replay-pick-canceled": 914
+      },
+      "replayInformationCollisions": [],
+      "reportFile": "ui-review-before/report.json"
+    },
+    {
+      "phase": "after",
+      "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+      "viewport": "320×740",
+      "caseStatus": "passed",
+      "legendRect": {
+        "x": 150,
+        "y": 131,
+        "width": 68,
+        "height": 44
+      },
+      "legendMode": "chip",
+      "legendViewportOverflowPx": 0,
+      "legendPlotOverflowPx": 0,
+      "barScrollWidth": 294,
+      "barClientWidth": 294,
+      "actionsScrollWidth": 413,
+      "actionsClientWidth": 94,
+      "clippedControls": [
+        "first",
+        "mode-badge",
+        "result",
+        "pick",
+        "play",
+        "next"
+      ],
+      "barY": {
+        "replay-paused": 630,
+        "replay-picking": 630,
+        "replay-pick-canceled": 630
+      },
+      "replayInformationCollisions": [],
+      "reportFile": "ui-review-after/report.json"
+    },
+    {
+      "phase": "after",
+      "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+      "viewport": "390×844",
+      "caseStatus": "passed",
+      "legendRect": {
+        "x": 220,
+        "y": 131,
+        "width": 68,
+        "height": 44
+      },
+      "legendMode": "chip",
+      "legendViewportOverflowPx": 0,
+      "legendPlotOverflowPx": 0,
+      "barScrollWidth": 364,
+      "barClientWidth": 364,
+      "actionsScrollWidth": 425,
+      "actionsClientWidth": 164,
+      "clippedControls": [
+        "mode-badge",
+        "result",
+        "pick",
+        "play",
+        "next"
+      ],
+      "barY": {
+        "replay-paused": 734,
+        "replay-picking": 734,
+        "replay-pick-canceled": 734
+      },
+      "replayInformationCollisions": [],
+      "reportFile": "ui-review-after/report.json"
+    },
+    {
+      "phase": "after",
+      "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+      "viewport": "768×1024",
+      "caseStatus": "passed",
+      "legendRect": {
+        "x": 377.328125,
+        "y": 127,
+        "width": 232.671875,
+        "height": 64
+      },
+      "legendMode": "rows",
+      "legendViewportOverflowPx": 0,
+      "legendPlotOverflowPx": 0,
+      "barScrollWidth": 558,
+      "barClientWidth": 558,
+      "actionsScrollWidth": 454,
+      "actionsClientWidth": 454,
+      "clippedControls": [],
+      "barY": {
+        "replay-paused": 910,
+        "replay-picking": 910,
+        "replay-pick-canceled": 910
+      },
+      "replayInformationCollisions": [],
+      "reportFile": "ui-review-after/report.json"
+    },
+    {
+      "phase": "after",
+      "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+      "viewport": "1024×768",
+      "caseStatus": "passed",
+      "legendRect": {
+        "x": 525.8125,
+        "y": 117,
+        "width": 340.1875,
+        "height": 64
+      },
+      "legendMode": "rows",
+      "legendViewportOverflowPx": 0,
+      "legendPlotOverflowPx": 0,
+      "barScrollWidth": 558,
+      "barClientWidth": 558,
+      "actionsScrollWidth": 478,
+      "actionsClientWidth": 478,
+      "clippedControls": [],
+      "barY": {
+        "replay-paused": 674,
+        "replay-picking": 674,
+        "replay-pick-canceled": 674
+      },
+      "replayInformationCollisions": [],
+      "reportFile": "ui-review-after/report.json"
+    },
+    {
+      "phase": "after",
+      "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+      "viewport": "1440×900",
+      "caseStatus": "passed",
+      "legendRect": {
+        "x": 767.09375,
+        "y": 117,
+        "width": 514.90625,
+        "height": 64
+      },
+      "legendMode": "rows",
+      "legendViewportOverflowPx": 0,
+      "legendPlotOverflowPx": 0,
+      "barScrollWidth": 558,
+      "barClientWidth": 558,
+      "actionsScrollWidth": 478,
+      "actionsClientWidth": 478,
+      "clippedControls": [],
+      "barY": {
+        "replay-paused": 806,
+        "replay-picking": 806,
+        "replay-pick-canceled": 806
+      },
+      "replayInformationCollisions": [],
+      "reportFile": "ui-review-after/report.json"
+    },
+    {
+      "phase": "after",
+      "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+      "viewport": "1920×1080",
+      "caseStatus": "passed",
+      "legendRect": {
+        "x": 1045.484375,
+        "y": 117,
+        "width": 716.515625,
+        "height": 64
+      },
+      "legendMode": "rows",
+      "legendViewportOverflowPx": 0,
+      "legendPlotOverflowPx": 0,
+      "barScrollWidth": 558,
+      "barClientWidth": 558,
+      "actionsScrollWidth": 478,
+      "actionsClientWidth": 478,
+      "clippedControls": [],
+      "barY": {
+        "replay-paused": 986,
+        "replay-picking": 986,
+        "replay-pick-canceled": 986
+      },
+      "replayInformationCollisions": [],
+      "reportFile": "ui-review-after/report.json"
+    }
+  ]
+}

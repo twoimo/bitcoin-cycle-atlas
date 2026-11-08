@@ -1,0 +1,104 @@
+{
+  "nativeDiagnosticSource": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+  "nativeApplicationEquivalentTo": "dbd3b70e567c3047524e6a0e3b5d01b1dc9d910d",
+  "productionCandidate": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+  "nativeDistTree": "a836349f38c7e65835c239dc9f7d74a362241452",
+  "candidateDistTree": "ca187d8c2d4a7feae3d7a83e05755f6e985bad07",
+  "changedPaths": [
+    "dist/app.js",
+    "dist/index.html",
+    "dist/market-lab/cashflow/index.html",
+    "dist/market-lab/charts/index.html",
+    "dist/market-lab/housing/index.html",
+    "dist/market-lab/index.html",
+    "dist/market-lab/kr/index.html",
+    "dist/market-lab/rsi/index.html",
+    "dist/market-lab/scenario/index.html",
+    "dist/market-lab/themes/index.html",
+    "dist/market-lab/us/index.html",
+    "dist/relay-room.css",
+    "dist/relay-room.js",
+    "dist/site-entry.js",
+    "tests/relay-standalone.test.mjs"
+  ],
+  "versionOnlyChanges": [
+    {
+      "path": "dist/app.js",
+      "onlyChange": "?v=1.37.1 -> ?v=1.37.7",
+      "beforeSha256": "ff4af948d37c087f28a9dd3819aa18d4cee4967ec01f532e71aa50a996950e7c",
+      "afterSha256": "7c8e2ef4e677a452839e08ac5b5d0ee324f77e5fa2bc0d47b1c1a6d583223fc3"
+    },
+    {
+      "path": "dist/index.html",
+      "onlyChange": "?v=1.37.1 -> ?v=1.37.7",
+      "beforeSha256": "027384578492e7c2cf2ca63065ac7b0bcfb2f96842ec591b07d2489ae6ef57f1",
+      "afterSha256": "b43e08f1c173302aaa4f5c48748a054a518436e49e955dbf18dbccbd8c6ea520"
+    },
+    {
+      "path": "dist/market-lab/cashflow/index.html",
+      "onlyChange": "?v=1.37.1 -> ?v=1.37.7",
+      "beforeSha256": "21ee22bd8f8f5057246858d23f8314faea6187e315a9f424ec7bb72c6c6cd810",
+      "afterSha256": "8c3b4942f8d6e12efdcaeda80e4d8a7f0b02a25fe5b07e1fe35ca2e66c83bf88"
+    },
+    {
+      "path": "dist/market-lab/charts/index.html",
+      "onlyChange": "?v=1.37.1 -> ?v=1.37.7",
+      "beforeSha256": "21ee22bd8f8f5057246858d23f8314faea6187e315a9f424ec7bb72c6c6cd810",
+      "afterSha256": "8c3b4942f8d6e12efdcaeda80e4d8a7f0b02a25fe5b07e1fe35ca2e66c83bf88"
+    },
+    {
+      "path": "dist/market-lab/housing/index.html",
+      "onlyChange": "?v=1.37.1 -> ?v=1.37.7",
+      "beforeSha256": "21ee22bd8f8f5057246858d23f8314faea6187e315a9f424ec7bb72c6c6cd810",
+      "afterSha256": "8c3b4942f8d6e12efdcaeda80e4d8a7f0b02a25fe5b07e1fe35ca2e66c83bf88"
+    },
+    {
+      "path": "dist/market-lab/index.html",
+      "onlyChange": "?v=1.37.1 -> ?v=1.37.7",
+      "beforeSha256": "cb98bb7b6e200b700116269988b7b3201d2b6eab6aa3778b045e9d0004547c57",
+      "afterSha256": "31a38202c2cbac363bde3d6db4c9effa2949a0257f27c8f99905b752163cc510"
+    },
+    {
+      "path": "dist/market-lab/kr/index.html",
+      "onlyChange": "?v=1.37.1 -> ?v=1.37.7",
+      "beforeSha256": "21ee22bd8f8f5057246858d23f8314faea6187e315a9f424ec7bb72c6c6cd810",
+      "afterSha256": "8c3b4942f8d6e12efdcaeda80e4d8a7f0b02a25fe5b07e1fe35ca2e66c83bf88"
+    },
+    {
+      "path": "dist/market-lab/rsi/index.html",
+      "onlyChange": "?v=1.37.1 -> ?v=1.37.7",
+      "beforeSha256": "21ee22bd8f8f5057246858d23f8314faea6187e315a9f424ec7bb72c6c6cd810",
+      "afterSha256": "8c3b4942f8d6e12efdcaeda80e4d8a7f0b02a25fe5b07e1fe35ca2e66c83bf88"
+    },
+    {
+      "path": "dist/market-lab/scenario/index.html",
+      "onlyChange": "?v=1.37.1 -> ?v=1.37.7",
+      "beforeSha256": "21ee22bd8f8f5057246858d23f8314faea6187e315a9f424ec7bb72c6c6cd810",
+      "afterSha256": "8c3b4942f8d6e12efdcaeda80e4d8a7f0b02a25fe5b07e1fe35ca2e66c83bf88"
+    },
+    {
+      "path": "dist/market-lab/themes/index.html",
+      "onlyChange": "?v=1.37.1 -> ?v=1.37.7",
+      "beforeSha256": "21ee22bd8f8f5057246858d23f8314faea6187e315a9f424ec7bb72c6c6cd810",
+      "afterSha256": "8c3b4942f8d6e12efdcaeda80e4d8a7f0b02a25fe5b07e1fe35ca2e66c83bf88"
+    },
+    {
+      "path": "dist/market-lab/us/index.html",
+      "onlyChange": "?v=1.37.1 -> ?v=1.37.7",
+      "beforeSha256": "21ee22bd8f8f5057246858d23f8314faea6187e315a9f424ec7bb72c6c6cd810",
+      "afterSha256": "8c3b4942f8d6e12efdcaeda80e4d8a7f0b02a25fe5b07e1fe35ca2e66c83bf88"
+    },
+    {
+      "path": "dist/site-entry.js",
+      "onlyChange": "?v=1.37.1 -> ?v=1.37.7",
+      "beforeSha256": "07e79911a2329e1ffa3a6532f573811ec7e48b06464a16170105bab3fba9028a",
+      "afterSha256": "82a3f8f14f60f611c3c27f6c490bfb9bf851527ced4f0d8fe74300edf83d1758"
+    }
+  ],
+  "otherChangedDistFiles": [
+    "dist/relay-room.js",
+    "dist/relay-room.css"
+  ],
+  "allRemainingDistFilesUnchanged": true,
+  "interpretation": "The viewport diagnostic remains bound to 03dcd1b1, not relabelled as the candidate. Relay-specific code and asset URL revisions are the only application delta. Canonical production verification and live UI confirmation must independently qualify the candidate."
+}

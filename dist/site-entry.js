@@ -27,7 +27,7 @@ if (nativeEntry) {
       const { initEquityView } = await import("./equity-view.js?v=1.36.1");
       await initEquityView({symbol});
     } else {
-      await import("./app.js?v=1.37.1");
+      await import("./app.js?v=1.37.7");
     }
   } catch (error) {
     console.error('Chart initialization failed', error);
