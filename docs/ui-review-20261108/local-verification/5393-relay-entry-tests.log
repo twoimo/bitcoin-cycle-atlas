@@ -1,0 +1,28 @@
+✔ MSTR / enters its own native chart before any ETF frame can mount (3.862615ms)
+✔ MSTR /market-lab/charts/ enters its own native chart before any ETF frame can mount (2.224153ms)
+✔ BMNR / enters its own native chart before any ETF frame can mount (0.872401ms)
+✔ BMNR /market-lab/charts/ enters its own native chart before any ETF frame can mount (1.675889ms)
+✔ native canonical entry keeps project roots and supplied chart settings without inserting defaults (0.593763ms)
+✔ relay packaging reads only referenced local bytes and rejects traversal, missing files and escaping symlinks (24.47792ms)
+✔ the online relay controller retains its source request and original image path without an embedded map (14.067543ms)
+✔ relay packaging embeds chat image bytes as well as article and edition media (13.667021ms)
+✔ the relay chat renders image albums, inline links, previews, quotes and withheld notes (7.833763ms)
+✔ the relay chat groups messages by day and carries the replied excerpt (3.570186ms)
+✔ relay actions do not confuse the page container with a pager button (3.102554ms)
+✔ unsafe chat links and previews are not rendered as anchors (1.665193ms)
+✔ the relay chat track can shrink below its content width on narrow screens (3.164487ms)
+✔ module references include exact quoted source spans without changing the existing string API (3.051096ms)
+✔ a shared dependency is encoded once and version/hash aliases keep the existing snapshot identity (45.035868ms)
+✔ source prose, comments, regexps and template text are untouched while literal imports are rewritten (3.812189ms)
+✔ real module evaluation preserves cycles, side effects, re-exports, shared instances and dynamic import (78.994091ms)
+✔ outside, missing and nonlocal module dependencies stop packaging (4.246352ms)
+✔ the real standalone is deterministic, preserves every module and snapshot, and passes the runtime parser/linker (28261.133766ms)
+ℹ {"standaloneBytes":82956206,"buildMilliseconds":3612,"relayImages":114,"relayImageBytes":36459386}
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 28675.808998

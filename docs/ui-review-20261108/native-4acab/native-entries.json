@@ -1,0 +1,101 @@
+{
+  "sourceCommit": "03dcd1b1ac2acc6ae93b240eb6f47d6673d9b9a9",
+  "entries": [
+    {
+      "case": "ui-entry-mstr-root",
+      "status": "passed",
+      "requestedPublicRoute": "/?symbol=MSTR",
+      "canonicalPublicRoute": "/?symbol=MSTR",
+      "elapsedMs": 1282,
+      "final": {
+        "url": "/bitcoin-cycle-atlas/?symbol=MSTR",
+        "title": "MSTR · Strategy — Bitcoin Cycle Atlas",
+        "boot": "ready",
+        "rootSymbol": "MSTR",
+        "market": "MSTR",
+        "chartSymbol": "MSTR",
+        "chartName": "MSTR 가격 차트. 실선과 채운 캔들은 관측, 점선과 빈 경로봉·음영은 조건부 미래 가정입니다.",
+        "observedCount": 1004,
+        "price": "$128.93",
+        "chartPainted": true,
+        "observedPaths": 12,
+        "bootShellPainted": false,
+        "visibleSkeletons": [],
+        "error": null,
+        "frames": []
+      }
+    },
+    {
+      "case": "ui-entry-mstr-charts",
+      "status": "passed",
+      "requestedPublicRoute": "/market-lab/charts/?symbol=MSTR",
+      "canonicalPublicRoute": "/?symbol=MSTR",
+      "elapsedMs": 686,
+      "final": {
+        "url": "/bitcoin-cycle-atlas/?symbol=MSTR",
+        "title": "MSTR · Strategy — Bitcoin Cycle Atlas",
+        "boot": "ready",
+        "rootSymbol": "MSTR",
+        "market": "MSTR",
+        "chartSymbol": "MSTR",
+        "chartName": "MSTR 가격 차트. 실선과 채운 캔들은 관측, 점선과 빈 경로봉·음영은 조건부 미래 가정입니다.",
+        "observedCount": 1004,
+        "price": "$128.93",
+        "chartPainted": true,
+        "observedPaths": 12,
+        "bootShellPainted": false,
+        "visibleSkeletons": [],
+        "error": null,
+        "frames": []
+      }
+    },
+    {
+      "case": "ui-entry-bmnr-root",
+      "status": "passed",
+      "requestedPublicRoute": "/?symbol=BMNR",
+      "canonicalPublicRoute": "/?symbol=BMNR",
+      "elapsedMs": 757,
+      "final": {
+        "url": "/bitcoin-cycle-atlas/?symbol=BMNR",
+        "title": "BMNR · Bitmine — Bitcoin Cycle Atlas",
+        "boot": "ready",
+        "rootSymbol": "BMNR",
+        "market": "BMNR",
+        "chartSymbol": "BMNR",
+        "chartName": "BMNR 가격 차트. 실선과 채운 캔들은 관측, 점선과 빈 경로봉·음영은 조건부 미래 가정입니다.",
+        "observedCount": 359,
+        "price": "$18.76",
+        "chartPainted": true,
+        "observedPaths": 18,
+        "bootShellPainted": false,
+        "visibleSkeletons": [],
+        "error": null,
+        "frames": []
+      }
+    },
+    {
+      "case": "ui-entry-bmnr-charts",
+      "status": "passed",
+      "requestedPublicRoute": "/market-lab/charts/?symbol=BMNR",
+      "canonicalPublicRoute": "/?symbol=BMNR",
+      "elapsedMs": 973,
+      "final": {
+        "url": "/bitcoin-cycle-atlas/?symbol=BMNR",
+        "title": "BMNR · Bitmine — Bitcoin Cycle Atlas",
+        "boot": "ready",
+        "rootSymbol": "BMNR",
+        "market": "BMNR",
+        "chartSymbol": "BMNR",
+        "chartName": "BMNR 가격 차트. 실선과 채운 캔들은 관측, 점선과 빈 경로봉·음영은 조건부 미래 가정입니다.",
+        "observedCount": 359,
+        "price": "$18.76",
+        "chartPainted": true,
+        "observedPaths": 18,
+        "bootShellPainted": false,
+        "visibleSkeletons": [],
+        "error": null,
+        "frames": []
+      }
+    }
+  ]
+}

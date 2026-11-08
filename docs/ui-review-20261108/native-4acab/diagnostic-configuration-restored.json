@@ -1,0 +1,16 @@
+{
+  "success": true,
+  "restoredBuildCommand": "node scripts/verify-ui-cloudflare.mjs",
+  "deployCommand": "node --version",
+  "branchIncludes": [
+    "fix/wp4-wp7-ui-20261108"
+  ],
+  "pathIncludes": [
+    "*"
+  ],
+  "pathExcludes": [
+    "*"
+  ],
+  "buildCachingEnabled": false,
+  "modifiedOn": "2026-11-08T17:12:08.293Z"
+}

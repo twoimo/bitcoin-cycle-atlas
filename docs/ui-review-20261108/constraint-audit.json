@@ -1,0 +1,38 @@
+{
+  "baselineMain": "bd5b70a96e1fab466ee6648c2c07db882b02681f",
+  "productionCandidate": "5393cfafe18ac89bb85c319e622b43e5db0cc7e0",
+  "preservedCommitAncestry": {
+    "1080ced": true,
+    "4a31b68": true,
+    "2084530": true,
+    "4d2df00": true,
+    "3170544": true,
+    "267e7ac": true
+  },
+  "protectedForecastModules": {
+    "dist/forecast/forecast-sufficiency.js": {
+      "beforeBlob": "b282b546526d6d14cda5cfe3d1d61e8e835055d3",
+      "afterBlob": "b282b546526d6d14cda5cfe3d1d61e8e835055d3",
+      "unchanged": true
+    },
+    "dist/forecast/forecast-calibration.js": {
+      "beforeBlob": "ba9af9e1de00d87ad564c73e7c26de912749b932",
+      "afterBlob": "ba9af9e1de00d87ad564c73e7c26de912749b932",
+      "unchanged": true
+    },
+    "dist/forecast/forecast-models.js": {
+      "beforeBlob": "9197c2da0f4f986d0fadcc67259d2eb5eb184057",
+      "afterBlob": "9197c2da0f4f986d0fadcc67259d2eb5eb184057",
+      "unchanged": true
+    }
+  },
+  "newTopLevelJsCss": [],
+  "addedUiModules": [
+    "dist/ui/center-loading.js",
+    "dist/ui/chart-legend-layout.js",
+    "dist/ui/chart-legend.css",
+    "dist/ui/chart-legend.js",
+    "dist/ui/chart-url-state.js",
+    "dist/ui/shell-slots.js"
+  ]
+}
