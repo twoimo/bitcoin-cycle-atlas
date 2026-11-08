@@ -103,7 +103,15 @@ test('one standalone price-chart destination retains every selected source and r
   const fixture=await mount(<MarketLabApp load={pending} clock={()=>new Date('2026-11-04T06:00:00Z')}/>);t.after(fixture.cleanup);
   const priceLink=()=>fixture.document.querySelector('[data-atlas-page="outlook"]')!;
   const selectedPage=()=>fixture.document.querySelector('.atlas-nav [aria-current="page"]')?.getAttribute('data-atlas-page');
-  assert.equal(fixture.document.querySelectorAll('.atlas-nav [data-atlas-page]').length,5);
+  assert.deepEqual([...fixture.document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(node=>node.getAttribute('data-atlas-page')),['outlook','market-us','evidence','data','ipo','relay']);
+  assert.deepEqual([...fixture.document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(node=>[node.getAttribute('aria-label'),node.getAttribute('href')]),[
+    ['가격 차트','/market-lab/charts/?symbol=TQQQ'],
+    ['시장 분석','/market-lab/'],
+    ['리서치','/?page=evidence'],
+    ['자산 비교','/?page=data'],
+    ['공모주','/?page=ipo'],
+    ['릴레이 콘텐츠','/?page=relay'],
+  ]);
   assert.equal(fixture.document.querySelector('[data-atlas-page="rsi"]'),null);
   for(const instrument of WORKSPACE_INSTRUMENTS) {
     await fixture.click('[role=combobox]');

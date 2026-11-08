@@ -36,7 +36,8 @@ for(const symbol of ['ETHUSD','MSTR','BMNR'])test(`${symbol} retains the real sh
   assert.equal(document.querySelector('.workspace'),f.workspace);assert.equal(document.querySelector('.atlas-sidebar'),f.sidebar);assert.equal(document.querySelector('.atlas-nav'),f.nav);
   assert.equal(f.nav.closest('.workbench-rail'),document.querySelector('.workbench-rail'));
   assert.equal(document.querySelectorAll('.atlas-canvas-heading').length,1);assert.equal(document.querySelectorAll('.workbench-bottom-bar').length,1);
-  assert.equal(document.querySelectorAll('.atlas-nav [data-atlas-page]').length,5);assert.equal(document.querySelector('#old-btc'),null);assert.equal(document.querySelector('#btc-only'),null);assert.ok(document.querySelector('#retained-prices'));
+  assert.deepEqual([...document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(node=>node.dataset.atlasPage),['outlook','market-us','evidence','data','ipo','relay']);
+  assert.equal(document.querySelector('#old-btc'),null);assert.equal(document.querySelector('#btc-only'),null);assert.ok(document.querySelector('#retained-prices'));
   assert.equal(document.body.dataset.page,'outlook');assert.equal(document.body.dataset.shell,'chart');
   adapter.command('tool','measure');adapter.command('magnet');adapter.command('toggle','showVolume');adapter.command('auto-scale');adapter.command('chart-type');
   assert.equal(state.tool,'measure');assert.equal(state.magnet,'weak');assert.equal(state.showVolume,true);assert.equal(state.chartType,'candles');assert.deepEqual(state.priceDomain,{min:100,max:150},'chart type retains the chosen manual price viewport');

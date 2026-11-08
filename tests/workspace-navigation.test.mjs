@@ -3,9 +3,17 @@ import assert from 'node:assert/strict';
 import {atlasPages,atlasNavigationPages,atlasNavigationId,atlasPageHref,isWorkspaceChart,labPageFromLocation} from '../dist/atlas-navigation.js';
 
 test('visible navigation has one price chart while retaining every legacy route identity',()=>{
-  assert.deepEqual(atlasNavigationPages.map(page=>page.id),['outlook','market-us','evidence','data','ipo']);
+  assert.deepEqual(atlasNavigationPages.map(page=>page.id),['outlook','market-us','evidence','data','ipo','relay']);
   assert.equal(atlasNavigationPages.find(page=>page.id==='market-us').label,'시장 분석');
   assert.equal(atlasNavigationPages.find(page=>page.id==='outlook').label,'가격 차트');
+  assert.deepEqual(atlasNavigationPages.map(page=>[page.id,page.label,page.view,atlasPageHref(page)]),[
+    ['outlook','가격 차트','outlook','/?page=outlook'],
+    ['market-us','시장 분석','market','/market-lab/'],
+    ['evidence','리서치','evidence','/?page=evidence'],
+    ['data','자산 비교','data','/?page=data'],
+    ['ipo','공모주','ipo','/?page=ipo'],
+    ['relay','릴레이 콘텐츠','relay','/?page=relay'],
+  ]);
   for(const page of atlasPages.filter(page=>page.tab)) {
     const old=labPageFromLocation(new URL('https://example.com/bitcoin-cycle-atlas'+page.href));
     assert.equal(old.id,page.id);
