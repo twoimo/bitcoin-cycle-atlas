@@ -80,7 +80,7 @@ for (const s of series) {
   const years = (new Date(rowsRaw[rowsRaw.length - 1][0]) - new Date(rowsRaw[0][0])) / (365.25 * 24 * 3600 * 1000);
   const horizons = HORIZONS[s.unit];
   const maxEval = Math.max(0, logP.length - win - Math.max(...horizons));
-  assetMeta.push({ id: s.id, unit: s.unit, source: s.source, sourceHash: s.hash, observations: logP.length, years: +years.toFixed(1), maxEvalSamples: maxEval, tier: tierOf(logP.length, years, maxEval) });
+  assetMeta.push({ id: s.id, unit: s.unit, source: s.source, sourceHash: s.hash, asOf: rowsRaw[rowsRaw.length - 1][0], observations: logP.length, years: +years.toFixed(1), maxEvalSamples: maxEval, tier: tierOf(logP.length, years, maxEval) });
 
   for (const h of horizons) {
     const acc = { n: 0, rwIn80: 0, rwIn50: 0, ewIn80: 0, ewIn50: 0, drIn80: 0, pinRw: [], pinEw: [], pinDr: [], apeRw: [], logRw: [], logFlat: [], logDr: [], z: [] };
@@ -147,7 +147,8 @@ const payload = {
   schemaVersion: 1,
   kind: 'atlas-forecast-evaluation',
   scriptVersion: SCRIPT_VERSION,
-  generatedAt: new Date().toISOString(),
+  generatedAt: assetMeta.reduce((latest, a) => (a.id === 'BTC' ? a.asOf ?? latest : latest), null) || null,
+  generatedAtMeaning: '계산 시각이 아니라 입력 데이터의 마지막 관측일이다(재실행 시 같은 바이트가 나오도록).',
   horizons: HORIZONS,
   window: WINDOW,
   benchmarkMeaning: {
