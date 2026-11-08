@@ -72,8 +72,13 @@ export function readIndicatorState(search='',{mobile=globalThis.matchMedia?.('(m
   return applyIndicatorLayout(normalizeIndicatorState({added,hidden,minimized:params.get('indicator-minimize')?.split(',')||[],active:legacy,primary:params.get('indicator-primary'),collapsed:legend==='closed',settings,paneOrder:params.get('pane-order')?.split(',')||[],paneHeights:parseJson(params.get('pane-heights')),maximized:params.get('pane-maximized')}),{mobile});
 }
 
-export function writeIndicatorState(params,state) {
+export function writeIndicatorState(params,state,{mobile=globalThis.matchMedia?.('(max-width:620px)')?.matches??false}={}) {
   const next=normalizeIndicatorState(state),defaultKey=defaults.join(','),addedKey=next.added.join(',');
+  // A render of an untouched chart must not turn implicit defaults into a
+  // navigation edit. Explicit saved layouts still use the lossless format below,
+  // including an empty hide list and the guard against legacy input revival.
+  const authored=[...params.keys()].some(key=>key==='indicators'||key.startsWith('indicator-')||key.startsWith('pane-')||key==='chart'||key==='dock');
+  if(!authored&&JSON.stringify(next)===JSON.stringify(applyIndicatorLayout(normalizeIndicatorState(),{mobile})))return params;
   if(addedKey===defaultKey)params.delete('indicators');else params.set('indicators',addedKey);
   if(next.hidden.length||next.added.includes('volume'))params.set('indicator-hide',next.hidden.join(','));else params.delete('indicator-hide');
   if(next.minimized.length)params.set('indicator-minimize',next.minimized.join(','));else params.delete('indicator-minimize');
