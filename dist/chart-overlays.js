@@ -13,7 +13,9 @@ export function formatBtcVolume(value){
 export function chartPaneLayout({width,height,volume=true,drawdown=false,states=false,cycleTiming=false,top=66}){
   const small=width<600,short=height<360,left=Math.min(small?8:12,width*.05),right=Math.min(small?66:82,width*.25);
   // Normal tick text and the selected date occupy separate vertical lanes.
-  const axisY=height-Math.min(29,height*.15),dateBadgeTop=height-21,bottom=axisY-Math.min(24,height*.12);
+  // On wider charts the added date lane uses seven pixels from the former
+  // 24px plot-to-tick gap, preserving the price pane and its replay controls.
+  const axisY=height-Math.min(29,height*.15),dateBadgeTop=height-21,bottom=axisY-Math.min(small?24:17,height*.12);
   // Explicitly requested secondary panes stay present. Reduce their heights and
   // title gaps together when the viewport cannot hold their preferred sizes.
   top=Math.min(top,bottom*.55);

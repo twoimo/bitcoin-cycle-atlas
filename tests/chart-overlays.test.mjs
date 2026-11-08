@@ -61,10 +61,11 @@ test('time tick labels stay separated and contained when long dates cluster in a
 });
 
 test('selected date badges occupy a separate lane below normal date ticks',()=>{
-  for(const [width,height]of [[390,844],[320,740],[390,430],[1280,720]]){
+  for(const [width,height]of [[390,844],[320,740],[390,430],[795,285],[1280,720]]){
     const layout=chartPaneLayout({width,height});
     assert.ok(layout.dateBadgeTop>=layout.axisY+4);
     assert.ok(layout.dateBadgeTop+18<=height);
+    assert.ok(layout.axisY-12>=layout.bottom+4,'normal date text retains clear space above its own lane');
   }
 });
 
