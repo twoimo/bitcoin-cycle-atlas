@@ -1797,7 +1797,7 @@ export async function verifyChartReplaySurface(api) {
     assert.equal(await evaluate(cdp, selector => document.querySelector(selector).value, control('date')), '2026-10-21');
     await click(cdp, control('start')); await ready();
     if (isEarlyChartReplayCadenceCase(receipt.caseSpec ?? receipt)) {
-      await verifyEarlyChartReplayCadence({
+      const earlyCadence=()=>verifyEarlyChartReplayCadence({
         readFrame: snapshot,
         readPersistence: () => evaluate(cdp, () => ({ url: location.href, historyLength: history.length,
           local: Object.keys(localStorage).sort().map(key => [key, localStorage.getItem(key)]),
@@ -1812,6 +1812,8 @@ export async function verifyChartReplaySurface(api) {
         getMeasurement: () => evidence.timing.find(row => row.speed === 10) ?? null,
         onMilestone: async value => { evidence.earlyCadence = value; await onFastCadenceMilestone?.(value); },
       });
+      if(api.profileEarlyCadence)await api.profileEarlyCadence(earlyCadence);
+      else await earlyCadence();
     }
     await verifyPopoverLifecycle();
   }

@@ -22,6 +22,23 @@ test('exchange close follows DST, early close and bounded holiday calendar',()=>
   assert.equal(sessionCloseUtc('2029-01-03','equity'),null);
   assert.throws(()=>sessionCloseUtc('2026-02-30'));
 });
+
+test('a warmed session-close lookup still requires a primitive calendar-date string',()=>{
+  for(const market of ['crypto','equity']){
+    const date='2026-11-02',expected=sessionCloseUtc(date,market);
+    for(const invalid of [[date],new String(date),{toString:()=>date}]){
+      assert.throws(()=>sessionCloseUtc(invalid,market),{name:'TypeError',message:'A calendar date is required'});
+    }
+    assert.equal(sessionCloseUtc(date,market),expected);
+  }
+});
+
+test('session-close validation rejects the date before an unknown market',()=>{
+  assert.throws(()=>sessionCloseUtc('not-a-date','unknown'),{name:'TypeError',message:'A calendar date is required'});
+  assert.throws(()=>sessionCloseUtc('2026-02-30','unknown'),{name:'RangeError',message:'Invalid calendar date'});
+  assert.throws(()=>sessionCloseUtc('2026-11-02','unknown'),/Unknown market calendar/);
+});
+
 test('completion policy does not pretend to know provider publication time',()=>{
   const time=observationTiming('2026-11-27','equity');
   assert.equal(time.eligibleAt,'2026-11-28T00:00:00.000Z');

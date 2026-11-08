@@ -10,6 +10,48 @@ export const consolidatedWorkspaceCases = [320, 390, 1440].map(width => ({
   touch: width <= 390, route: `${consolidatedPagesBase}market-lab/us/`, consolidated: true,
 }));
 
+// Parent-owned portals retain their original observed values and units. Measure
+// text ranges against the button's own padding clip, not the horizontally
+// scrollable header viewport: an offscreen control can still be reached by pan.
+export function readConsolidatedObservationGeometry(unit) {
+  const frame=document.querySelector('.atlas-center-frame:not([hidden])');
+  const host=frame&&document.getElementById(frame.dataset.toolbarId);
+  const rect=box=>({left:box.left,right:box.right,top:box.top,bottom:box.bottom,width:box.width,height:box.height});
+  const textRange=node=>{
+    const range=document.createRange();range.selectNodeContents(node);
+    return {text:node.textContent,box:rect(range.getBoundingClientRect())};
+  };
+  return {buttons:[...host?.querySelectorAll('[data-toolbar-open$="-observation"]')||[]].filter(button=>button.checkVisibility()).map(button=>{
+    const box=button.getBoundingClientRect(),style=getComputedStyle(button),summary=button.querySelector('.compact-toolbar-summary');
+    const left=box.left+parseFloat(style.borderLeftWidth),right=box.right-parseFloat(style.borderRightWidth);
+    const top=box.top+parseFloat(style.borderTopWidth),bottom=box.bottom-parseFloat(style.borderBottomWidth);
+    const glyphs=[];
+    if(summary){
+      const walker=document.createTreeWalker(summary,NodeFilter.SHOW_TEXT);
+      while(walker.nextNode())if(walker.currentNode.textContent.trim())glyphs.push(textRange(walker.currentNode));
+    }
+    return {name:button.dataset.toolbarOpen,box:rect(box),clip:{left,right,top,bottom,width:right-left,height:bottom-top},
+      visible:button.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),disabled:button.disabled,
+      overflow:{x:style.overflowX,y:style.overflowY},summary:summary?{...textRange(summary),glyphs}:null,
+      units:[...summary?.querySelectorAll('span')||[]].filter(node=>node.textContent.trim()===unit).map(textRange)};
+  })};
+}
+
+export function assertConsolidatedObservationGeometry(result,symbol,unit) {
+  assert.equal(result.buttons.length,1,symbol+': one active observed-value toolbar button');
+  const button=result.buttons[0],clip=button.clip;
+  const valid=box=>box&&Object.values(box).every(Number.isFinite)&&box.width>0&&box.height>0;
+  assert.ok(button.visible&&!button.disabled&&valid(clip),symbol+': observed-value button must remain available');
+  assert.ok(button.summary?.glyphs.length>0,symbol+': observed-value summary retains actual text');
+  assert.equal(button.units.length,1,symbol+': observation retains one original source unit '+unit);
+  assert.equal(button.units[0].text.trim(),unit,symbol+': observation retains the original source unit');
+  for(const [kind,value]of [['summary',button.summary],...button.summary.glyphs.map(glyph=>['text',glyph]),['unit',button.units[0]]]){
+    const box=value.box;
+    assert.ok(valid(box)&&box.left>=clip.left-.5&&box.right<=clip.right+.5&&box.top>=clip.top-.5&&box.bottom<=clip.bottom+.5,
+      symbol+': observation '+kind+' glyphs must fit their own button clip: '+JSON.stringify({text:value.text,box,clip}));
+  }
+}
+
 // Real static sources, native keyboard/pointer input, and the actual parent and
 // iframe documents. No substitute model, synthetic price, or dispatched DOM event.
 export async function verifyConsolidatedWorkspaceSurface(api) {
@@ -219,17 +261,58 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     const result=await evaluate(cdp,()=>{
       const doc=document.querySelector('.atlas-center-frame:not([hidden])').contentDocument,svg=doc.querySelector('.rsi-chart-canvas svg'),b=svg.getBoundingClientRect();
       const interval=document.querySelector('#workbench-interval-select');
+      const box=node=>{if(!node)return null;const b=node.getBBox();return {x:b.x,y:b.y,width:b.width,height:b.height};};
+      const units=[...svg.querySelectorAll('.rsi-price-unit')],guides=[...svg.querySelectorAll('.theme-event-guide[data-date]')];
       return {nav:[...document.querySelectorAll('.atlas-nav [data-atlas-page]')].map(n=>n.dataset.atlasPage),active:[...document.querySelectorAll('.atlas-nav [aria-current=page]')].map(n=>n.dataset.atlasPage),
         range:document.querySelector('#workbench-range-label').title,frequencies:[...interval.options].filter(o=>!o.disabled&&!o.hidden).map(o=>o.value),frequency:interval.value,
         rightRail:document.querySelector('.workbench-rail').getBoundingClientRect().width,svg:{width:b.width,height:b.height,viewWidth:svg.viewBox.baseVal.width,viewHeight:svg.viewBox.baseVal.height,start:svg.dataset.start,end:svg.dataset.end,visible:svg.checkVisibility()},
+        plot:{left:Number(svg.dataset.plotLeft),right:Number(svg.dataset.plotRight),top:Number(svg.dataset.plotTop),axisBox:box(svg.querySelector('[data-price-axis="true"] > rect'))},
+        units:units.map(node=>({text:node.textContent,box:box(node),visible:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true})})),
+        markers:[...svg.querySelectorAll('.theme-event-mark')].map(node=>{
+          const kind=node.classList.contains('evidence')?'evidence':'judgment',guide=guides.find(line=>line.dataset.date===node.dataset.date&&line.classList.contains(kind));
+          return {date:node.dataset.date,anchorX:Number(node.dataset.anchorX),kind,label:node.querySelector('text')?.textContent,
+            box:box(node),rectBox:box(node.querySelector('rect')),textBox:box(node.querySelector('text')),
+            strokeWidth:parseFloat(doc.defaultView.getComputedStyle(node.querySelector('rect')).strokeWidth),
+            role:node.getAttribute('role'),tabIndex:node.getAttribute('tabindex'),
+            guide:guide?{x1:Number(guide.getAttribute('x1')),x2:Number(guide.getAttribute('x2')),
+              pointerEvents:doc.defaultView.getComputedStyle(guide).pointerEvents,hidden:guide.getAttribute('aria-hidden')}:null};
+        }),
         childHeight:doc.defaultView.innerHeight,sourceClock:document.querySelector('#atlas-update-status').getAttribute('aria-label'),candles:!document.querySelector('#workbench-chart-type').disabled};
     });
+    // Preserve the real glyph bounds even when the new axis assertion fails.
+    (evidence.priceAxisGeometry??=[]).push({symbol,svg:result.svg,plot:result.plot,units:result.units,markers:result.markers});
+    result.observation=await evaluate(cdp,readConsolidatedObservationGeometry,unit);
+    // Keep the original ranges in a failed receipt too, including the unit's
+    // last character when its parent button clips a longer observed readout.
+    (evidence.observationGeometry??=[]).push({symbol,...result.observation});
+    assertConsolidatedObservationGeometry(result.observation,symbol,unit);
     assert.deepEqual(result.nav,['outlook','market-us','evidence','data','ipo','relay'],symbol+': one price destination');
     assert.deepEqual(result.active,['outlook'],symbol+': price destination owns all charts');
     assert.ok(result.range.includes(symbol+' / '+unit+' /'),symbol+': original price unit');
     assert.deepEqual(result.frequencies,frequencies,symbol+': only observed source frequencies');
     assert.ok(result.svg.visible&&result.svg.height>=result.childHeight*.75,symbol+': chart fills its allocated work area');
     assert.ok(Math.abs(result.svg.width-result.svg.viewWidth)<=1&&Math.abs(result.svg.height-result.svg.viewHeight)<=1,symbol+': pixel-sized chart labels');
+    assert.equal(result.units.length,1,symbol+': one visible price-axis unit');
+    const axisUnit=result.units[0],unitBox=axisUnit.box;
+    assert.ok(result.plot.axisBox&&Math.abs(result.plot.axisBox.x-result.plot.right)<.01,symbol+': actual price gutter matches its plot boundary');
+    assert.equal(axisUnit.text,unit,symbol+': axis retains the original source unit');
+    assert.ok(axisUnit.visible&&unitBox&&Object.values(unitBox).every(Number.isFinite)&&unitBox.width>0&&unitBox.height>0&&
+      unitBox.x>=result.plot.axisBox.x&&unitBox.x+unitBox.width<=result.svg.viewWidth&&unitBox.y>=0&&unitBox.y+unitBox.height<=result.plot.top,
+    symbol+': unit glyphs stay inside the existing upper price-gutter margin');
+    if(symbol==='HYPE'){
+      assert.ok(result.markers.length>0,'HYPE: actual evidence and judgment badges must be present');
+      for(const marker of result.markers){
+        const b=marker.box,stroke=marker.strokeWidth/2;
+        assert.ok(b&&Object.values(b).every(Number.isFinite)&&b.width>0&&b.height>0&&Number.isFinite(stroke)&&stroke>=0&&
+          b.x-stroke>=result.plot.left&&b.x+b.width+stroke<=result.plot.axisBox.x,'HYPE: painted badge glyphs and stroke must not enter the price gutter');
+        const start=Date.parse(result.svg.start+'T00:00:00Z'),end=Date.parse(result.svg.end+'T00:00:00Z'),stamp=Date.parse(marker.date+'T00:00:00Z');
+        const x=result.plot.left+(stamp-start)/Math.max(86400000,end-start)*(result.plot.right-result.plot.left);
+        assert.ok(Number.isFinite(x)&&Math.abs(marker.anchorX-x)<.01&&marker.guide&&Math.abs(marker.guide.x1-x)<.01&&Math.abs(marker.guide.x2-x)<.01,
+          'HYPE: moving a badge must preserve its original observed date guide');
+        assert.equal(marker.guide.pointerEvents,'none','HYPE: date guides cannot become button hit targets');
+        assert.equal(marker.guide.hidden,'true');assert.equal(marker.role,'button');assert.equal(marker.tabIndex,'0');
+      }
+    }
     if(receipt.width>760)assert.equal(result.rightRail,45,symbol+': same narrow rail');
     if(frequencies[0]==='monthly'){assert.equal(result.candles,false);assert.match(result.sourceClock,/가격지수 \d{4}-\d{2} · 거래량 \d{4}-\d{2}/);}
     evidence.states.push({label:'common-chart-'+symbol,...result});

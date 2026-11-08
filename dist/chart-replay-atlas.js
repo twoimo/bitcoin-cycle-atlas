@@ -91,8 +91,11 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
   const cursorDate=frame.cursorDate;utcDay(cursorDate);
   renderers.get(svg)?.destroy();clearChartHover(svg);
   const p=context.presentation;
-  const actual=drawdown(canonicalRows(data.observedRows??[]).filter(row=>row.date<=cursorDate&&positive(row.price)).sort((a,b)=>a.date.localeCompare(b.date)))
-    .map(row=>({...row,replaySource:'observed'}));
+  const actual=canonicalRows(data.observedRows??[]).filter(row=>row.date<=cursorDate&&positive(row.price)).sort((a,b)=>a.date.localeCompare(b.date));
+  // These are fresh presentation copies. Fill them once without copying the
+  // same history again for drawdown and source labels on every replay frame.
+  let peak=0;
+  for(const row of actual){peak=Math.max(peak,row.price);row.drawdownPct=(row.price/peak-1)*100;row.replaySource='observed';}
   // The fixed path is never replaced by the latest view's model or by actuals.
   // The frame supplies the permitted horizon and information-time gate.
   const dates=new Set(frame.forecast.map(row=>row.date));
@@ -104,7 +107,7 @@ export function drawAtlasChartReplay({svg,session,data,start,end,chartType='line
   const retrospectiveByDate=new Map(retrospective.map(row=>[row.date,row]));
   if(retrospectiveFrame.some(row=>{const frozen=retrospectiveByDate.get(row.date);return !frozen||['price','lower','upper'].some(key=>row[key]!==undefined&&row[key]!==null&&row[key]!==frozen[key]);}))throw new RangeError('Displayed retrospective path does not match its separate frozen record');
   const actualByDate=new Map(actual.map(row=>[row.date,row]));
-  const predictionByDate=new Map(fixed.map(row=>[row.date,row]));
+  const predictionByDate=fixedByDate;
   const observedCandles=(data.observedCandles??[]).filter(row=>{
     const date=row.endDate??row.date;return date<=cursorDate&&['open','high','low','close'].every(key=>positive(row[key]))&&row.low<=Math.min(row.open,row.close)&&row.high>=Math.max(row.open,row.close);
   }).map(row=>({...row,date:row.endDate??row.date,startDate:row.startDate??row.date,endDate:row.endDate??row.date}));

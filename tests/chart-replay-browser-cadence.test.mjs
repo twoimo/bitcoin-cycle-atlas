@@ -141,8 +141,8 @@ test('milestone transport failure preserves the original phase error and emits n
 const mainSource = await readFile(new URL('../scripts/verify-eth-candidate-browser.mjs', import.meta.url), 'utf8');
 const reporterSource = mainSource.match(/    const onFastCadenceMilestone=async result=>\{[\s\S]*?\n    \};/)?.[0];
 assert.ok(reporterSource, 'Test the actual harness milestone adapter without starting its HTTP server or Chrome');
-function reporter({ lane = 'chart-replay', spec = fastCadencePolicy.caseSpec } = {}) {
-  const receipt = {}, report = { sourceCommit: 'a'.repeat(40), sourceTree: 'b'.repeat(40), sourceHashes: { 'tracked-source.js': 'c'.repeat(64) } }, lines = [];
+function reporter({ lane = 'chart-replay', spec = fastCadencePolicy.caseSpec, profiling = false } = {}) {
+  const receipt = {}, report = { sourceCommit: 'a'.repeat(40), sourceTree: 'b'.repeat(40), sourceHashes: { 'tracked-source.js': 'c'.repeat(64) }, ...(profiling ? { profiling: true } : {}) }, lines = [];
   const suiteRunId = 'd0000000-1111-4222-8333-444444444444';
   const publish = vm.runInNewContext(reporterSource + '\nonFastCadenceMilestone;', { lane, spec, receipt, report, suiteRunId, assert,
     fastCadencePolicy, fastCadenceMilestonePrefix, browserSourceInventorySha256, isEarlyChartReplayCadenceCase, console: { log: line => lines.push(line) } });
@@ -172,4 +172,15 @@ test('the main adapter rejects unrestored passes, accepts a failed fallback, and
     const independent = reporter(options); await independent.publish(phase);
     assert.equal(independent.lines.length, 0); assert.equal(independent.receipt.fastCadence, undefined);
   }
+});
+
+test('profiled actual adapter output cannot be accepted as a canonical cadence milestone', async () => {
+  const f = phaseFixture(), phase = await verifyEarlyChartReplayCadence(f.api), r = reporter({ profiling: true });
+  await r.publish(phase);
+  assert.equal(r.lines.length, 1);assert.ok(r.lines[0].startsWith('ATLAS_BROWSER_REPLAY_PROFILE_CADENCE '));
+  assert.equal(r.lines[0].startsWith(fastCadenceMilestonePrefix), false);
+  const milestone = JSON.parse(r.lines[0].slice('ATLAS_BROWSER_REPLAY_PROFILE_CADENCE '.length));
+  assert.equal(milestone.status, 'passed');assert.equal(milestone.qualifiesCadence, false);
+  assert.equal(milestone.qualifiesFullVerification, false);
+  assert.throws(() => assertFastCadenceMilestone(milestone, r.context), /atlas-browser-fast-cadence/);
 });

@@ -29,16 +29,9 @@ function horizon(value){
   if(!Number.isSafeInteger(value)||value<1||value>730)throw new RangeError('Replay horizon must be 1 through 730 calendar days');
   return value;
 }
-const OBSERVATION_ROWS_CACHE = new WeakMap();
 function observationRows(rows,{symbol,observedAt,observedThrough,source}={}){
   const market=marketFor(symbol);
   if(!Array.isArray(rows)||rows.length>100000)throw new RangeError('A bounded observation list is required');
-  // The same archive is revalidated for each replay tick. Cache by the input
-  // array identity plus the declared receipt fields that affect normalization.
-  const cacheKey=[symbol,observedAt??'',observedThrough??'',source?.sourceHash??'',source?.sourceUrl??'',
-    source?.vintageId??'',source?.publishedAt??''].join('\0');
-  let cachedByInput=OBSERVATION_ROWS_CACHE.get(rows);
-  if(cachedByInput?.has(cacheKey))return cachedByInput.get(cacheKey);
   const captured=observedAt===null||observedAt===undefined?null:normalizeForecastTimestamp(observedAt,'observedAt');
   let previous=null;
   const seen=new Set();
@@ -76,9 +69,6 @@ function observationRows(rows,{symbol,observedAt,observedThrough,source}={}){
     return value;
   });
   if(observedThrough!==null&&observedThrough!==undefined){utcDay(observedThrough);if(normalized.some(row=>row.date>observedThrough))throw new RangeError('Replay observations exceed declared coverage');}
-  if(!cachedByInput)OBSERVATION_ROWS_CACHE.set(rows,cachedByInput=new Map());
-  if(cachedByInput.size>=8)cachedByInput.clear();
-  cachedByInput.set(cacheKey,normalized);
   return normalized;
 }
 function receiptComplete(row){
@@ -573,10 +563,15 @@ export function buildReplayChartData(session,options={}){
   const inRange=row=>{const day=utcDay(row.endDate??row.date);return day>=start&&day<=end;};
   const visible=[...chartHistory(session,frame),...frame.actual];
   const observedRows=visible.filter(inRange).map(row=>({date:row.date,price:row.price}));
-  const dailyCandles=dailyReplayCandles(visible);
-  const weekly=frequency==='weekly'?weeklyReplayCandles(dailyCandles,session.market,frame):null;
-  const observedCandles=(weekly?.candles??dailyCandles).filter(inRange);
-  const availableDailyDates=new Set(dailyCandles.map(row=>row.date));
+  // Session-owned rows are already validated and frozen. Weekly aggregation
+  // needs their date/OHLC/volume, not a new daily display object per history row.
+  // Keep the full history here so missing/forming-week metadata stays complete.
+  const candleRows=frequency==='weekly'
+    ?visible.filter(row=>['open','high','low','close'].every(key=>Number.isFinite(row[key])))
+    :dailyReplayCandles(visible);
+  const weekly=frequency==='weekly'?weeklyReplayCandles(candleRows,session.market,frame):null;
+  const observedCandles=(weekly?.candles??candleRows).filter(inRange);
+  const availableDailyDates=new Set(candleRows.map(row=>row.date));
   return freeze({frame,frequency,originDate:session.asOf,observedRows,observedCandles,
     ohlcAvailable:observedCandles.length>0,
     completeOhlcCoverage:observedRows.length>0&&observedRows.every(row=>availableDailyDates.has(row.date)),
