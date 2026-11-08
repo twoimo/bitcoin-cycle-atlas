@@ -1,20 +1,13 @@
 import { CHART_INTERVALS, chartInterval, isIntradayInterval } from './ohlc-data.js?v=1.29.0';
+import { readChartUrlState, writeChartUrlState } from './ui/chart-url-state.js';
 
 export function readEthView(params) {
-  return {
-    frequency: CHART_INTERVALS.some(item => item.id === params.get('granularity')) ? params.get('granularity') : 'daily',
-    chartType: params.get('type') === 'candles' ? 'candles' : 'line',
-    scale: params.get('axis') === 'linear' ? 'linear' : 'log',
-    span: ['1m', '6m', '1y', '4y', 'all'].includes(params.get('eth-span')) ? params.get('eth-span') : '4y',
-  };
+  const { frequency, chartType, scale, span } = readChartUrlState(params, { frequencies: ['daily', ...CHART_INTERVALS.filter(item => item.id !== 'daily').map(item => item.id)], spanAliases: ['eth-span'] });
+  return { frequency, chartType, scale, span };
 }
 
 export function ethViewQuery(state) {
-  const params = new URLSearchParams({symbol:'ETHUSD'});
-  if (state.frequency !== 'daily') params.set('granularity', state.frequency);
-  if (state.chartType === 'candles') params.set('type', 'candles');
-  if (state.scale === 'linear') params.set('axis', 'linear');
-  if (state.span !== '4y') params.set('eth-span', state.span);
+  const params = writeChartUrlState(new URLSearchParams({symbol:'ETHUSD'}), state);
   if (state.forecastVisible === false) params.set('forecast', 'off');
   if (['pooled','valuation'].includes(state.ethModel)) params.set('eth-model', state.ethModel);
   if (state.ethModel === 'valuation' && ['stress','bull'].includes(state.ethScenario)) params.set('eth-scenario', state.ethScenario);

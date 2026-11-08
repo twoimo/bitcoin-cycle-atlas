@@ -5,6 +5,8 @@ import { normalizePriceDomain } from '../../dist/price-axis.js';
 import * as ohlc from '../../dist/ohlc-data.js';
 import * as ethData from '../../dist/eth-market-data.js';
 import * as ethState from '../../dist/eth-view-state.js';
+import { readChartUrlState } from '../../dist/ui/chart-url-state.js';
+import { nativeDateRange } from '../../dist/native-chart-workbench.js';
 import {buildEthereumForecasts} from '../../dist/ethereum-forecast.js';
 import {buildEthereumAdaptiveForecast} from '../../dist/ethereum-adaptive-model.js';
 import {buildEthereumPooledForecast} from '../../dist/ethereum-pooled-model.js';
@@ -85,6 +87,9 @@ export function ethPayload(revision = 1) {
 export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
   const requests = [], liveRequests = [], frames = new Map(), timers = new Map(), draws = [], emitted = [];
   const window = new Surface(), document = new Surface();
+  const bootTimers = new Map(); let bootTimerId = 0;
+  window.setTimeout = callback => { bootTimers.set(++bootTimerId, callback); return bootTimerId; };
+  window.clearTimeout = id => bootTimers.delete(id);
   document.body = new Node(); document.activeElement = new Node(); document.documentElement = new Node();
   document.documentElement.dataset.boot = 'loading';
   const boot = new Map(['atlas-boot-shell', 'atlas-boot-status', 'atlas-boot-error', 'atlas-boot-retry'].map(id => [id, new Node()]));
@@ -99,7 +104,7 @@ export async function ethViewFixture({ query = '', pathname = '/' } = {}) {
     const pending = deferred(); requests.push({ url, options, ...pending }); return pending.promise;
   };
   const deps = {
-    withChartSpacing,retargetChartRange,normalizePriceDomain,
+    withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,nativeDateRange,
     mountNativeChartApp: app => document.body.append(app),
     // The real shell adapter is exercised separately with a parsed DOM. This
     // fixture owns network/loader races and keeps its DOM boundary explicit.

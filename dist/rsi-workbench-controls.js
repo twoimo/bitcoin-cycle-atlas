@@ -1,5 +1,7 @@
 import {workspaceInstrument} from './workspace-instruments.js';
 import {refreshShellSlots} from './ui/shell-slots.js';
+import {chartUrlRange,writeChartUrlState} from './ui/chart-url-state.js';
+import {normalizePriceDomain} from './price-axis.js';
 
 // These actions retain native ETH/equity data and handlers. Shared chart
 // acknowledgements must never grant them ownership of a different instrument.
@@ -8,7 +10,7 @@ export const nativeChartControlSelector='#eth-history-trigger,[data-eth-action],
 // All observed instruments use the existing perimeter. The underlying native
 // chart retains its state; only an acknowledged current frame owns controls.
 export function createChartWorkbenchControls({send,isActive}) {
-  let scope=null,state=null;const saved=new Map(),added=new Set();
+  let scope=null,state=null,urlRevision=null;const saved=new Map(),added=new Set();
   // Background BTC paints may finish after the iframe acknowledgement. Keep
   // only the owned perimeter contextual while active; never observe the chart.
   const observer=typeof MutationObserver==='undefined'?null:new MutationObserver(()=>{if(state&&isActive())update(state);});
@@ -24,10 +26,28 @@ export function createChartWorkbenchControls({send,isActive}) {
     observer?.disconnect();
     for(const node of added)node.remove();added.clear();
     for(const [node,old]of saved){for(const attribute of [...node.attributes])node.removeAttribute(attribute.name);for(const [key,value]of old.attributes)node.setAttribute(key,value);node.inert=old.inert;if('disabled'in node)node.disabled=old.disabled;if(old.text!==null)node.replaceChildren(...old.text);if(old.value!==undefined)node.value=old.value;}
-    saved.clear();state=null;scope=null;delete document.body.dataset.rsiControls;delete document.body.dataset.chartControls;
+    saved.clear();state=null;scope=null;urlRevision=null;delete document.body.dataset.rsiControls;delete document.body.dataset.chartControls;
   }
   function begin(symbol,epoch){restore();scope={symbol,epoch};document.body.dataset.rsiControls='loading';document.body.dataset.chartControls='loading';text($('#history-journal-toggle'),'기록');attr($('#history-journal-toggle'),'aria-label',`${symbol} 기록 준비`);text($('#workbench-range-label'),'');text($('#atlas-update-status'),'—');attr($('#atlas-update-status'),'aria-label',`${symbol} 자료 로딩`);}
   function matches(message){return scope&&isActive()&&message?.symbol===scope.symbol&&message?.epoch===scope.epoch;}
+  function syncUserUrl(message){
+    const revision=message.userViewRevision;
+    if(!Number.isSafeInteger(revision)||revision<0)return;
+    // A restored cached frame may already have edits. Its first acknowledgement
+    // establishes ownership and a baseline; opening it never writes history.
+    if(urlRevision===null){urlRevision=revision;return;}
+    if(revision<=urlRevision)return;
+    const view=message.urlView;
+    if(!view||['frequency','chartType','scale','start','end','autoScale','magnet'].some(key=>view[key]!==message[key])||typeof view.inverted!=='boolean'||!chartUrlRange(view,view.frequency))return;
+    if(view.domain!=null&&!normalizePriceDomain(view.domain,{scale:view.scale}))return;
+    urlRevision=revision;
+    try{
+      const query=new URLSearchParams(location.search);
+      if(query.get('symbol')?.toUpperCase()!==scope.symbol)return;
+      const next=writeChartUrlState(query,view,{explicit:true});
+      if(next.toString()!==query.toString())history.replaceState(history.state,'',`${location.pathname}?${next}${location.hash||''}`);
+    }catch{/* A readonly/isolated preview keeps its current chart state. */}
+  }
   function command(action,value){
     if(!state||!isActive())return;
     if(action==='frequency'&&!state.frequencies.includes(value)){update(state);return;}
@@ -95,6 +115,7 @@ export function createChartWorkbenchControls({send,isActive}) {
     if(!['atlas:rsi-state','atlas:chart-state'].includes(message.kind)||message.ready!==true||message.unit!==expectedUnit||!Array.isArray(frequencies)||!frequencies.length||frequencies.some(value=>!allowed.includes(value))||!frequencies.includes(message.frequency)||!['log','linear'].includes(message.scale)||!['line','candles'].includes(message.chartType)||!['crosshair','pan','measure'].includes(message.tool)||!['off','weak','strong'].includes(message.magnet)||!['start','end','first','last','selected'].every(key=>validDay(message[key]))||message.start>message.end||message.first>message.last||message.selected<message.first||message.selected>message.last||!['candles','canUndo','canRedo','measurement','autoScale'].every(key=>typeof message[key]==='boolean')||!closeValid||monthly&&(message.candles||message.chartType!=='line')||['priceLast','volumeLast'].some(key=>message[key]!=null&&!validDay(message[key])))return false;
     observer?.disconnect();
     state={...message,frequencies,records:message.records??legacy,nextSignal:message.nextSignal??legacy};message=state;
+    syncUserUrl(message);
     document.body.dataset.rsiControls='ready';document.body.dataset.chartControls='ready';
     for(const selector of ['.atlas-canvas-heading','.workbench-tools','.workbench-detail-tools','.workbench-bottom-bar','.mobile-extra-actions','#workbench-frequency','#workbench-navigation','.workbench-ranges','.workbench-axis','.workspace-history-controls']){const node=$(selector);enable(node);if(node)attr(node,'inert',null);}
     for(const child of $('.atlas-canvas-heading')?.children||[])if(!child.matches(`${nativeChartControlSelector},#workbench-scenario,#atlas-cycle-panel,#workbench-replay`)){enable(child);attr(child,'inert',null);}

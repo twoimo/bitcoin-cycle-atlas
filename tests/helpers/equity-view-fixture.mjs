@@ -4,6 +4,8 @@ import { withChartSpacing,retargetChartRange } from '../../dist/chart-view-polic
 import { normalizePriceDomain } from '../../dist/price-axis.js';
 import {CAPITAL_POLICIES} from '../../dist/treasury-instruments.js';
 import * as equityData from '../../dist/equity-market-data.js';
+import { readChartUrlState, writeChartUrlState } from '../../dist/ui/chart-url-state.js';
+import { nativeDateRange } from '../../dist/native-chart-workbench.js';
 
 export function deferred() {
   let resolve, reject;
@@ -66,6 +68,9 @@ export function equityPayload(symbol, revision) {
 export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname = '/', project } = {}) {
   const requests = [], frames = new Map(), draws = [], calculations = [], errors = [], events = [], articles = [];
   const window = new Surface(), document = new Surface();
+  const bootTimers = new Map(); let bootTimerId = 0;
+  window.setTimeout = callback => { bootTimers.set(++bootTimerId, callback); return bootTimerId; };
+  window.clearTimeout = id => bootTimers.delete(id);
   document.body = new Node(); document.activeElement = new Node();
   const boot = new Map(['atlas-boot-shell', 'atlas-boot-status', 'atlas-boot-error', 'atlas-boot-retry'].map(id => [id, new Node()]));
   document.documentElement = new Node(); document.documentElement.dataset.boot = 'loading';
@@ -80,7 +85,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
   let frameId = 0, navigation;
   const mount = () => ({ cancel() {}, cancelPending() {}, destroy() {} });
   const deps = {
-    withChartSpacing,retargetChartRange,normalizePriceDomain,
+    withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,writeChartUrlState,nativeDateRange,
     mountNativeChartApp: app => document.body.append(app),
     // Native shell/command behavior has a separate parsed-DOM integration test.
     mountNativeChartWorkbench: () => ({update(){},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),

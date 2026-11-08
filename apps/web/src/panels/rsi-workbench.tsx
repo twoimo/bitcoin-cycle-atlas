@@ -9,6 +9,7 @@ import { applyChartCommand,boundedDates,chartRange,day,nearestPoint,initialChart
 import { RsiHistory,type RsiHistoryState } from './rsi-history.js';
 import { rsiCrossings } from '../rsi-crossings.js';
 import {CompactToolbar,CompactToolbarMenu} from '../components/compact-toolbar.js';
+import {initialChartUrlView,chartUrlView,persistStandaloneChartUrl} from '../chart-url-state.js';
 const History=memo(RsiHistory);
 type Props={symbol:string;market:Market;snapshot:MarketSnapshot;now:Date;rows:RsiRow[];revision?:string;epoch:number;active:boolean;embedded:boolean;historyCache?:Map<string,RsiHistoryState>;chartCache?:Map<string,RsiChartCache>;onDate:(index:number)=>void;comparison:React.ReactNode;references:React.ReactNode};
 const panes=['data','indicators','settings','method','help','export','date','search'];
@@ -22,18 +23,19 @@ function serializeSvg(svg:SVGSVGElement,symbol:string,unit:string,frequency:stri
 }
 export function RsiWorkbench(props:Props) {
   const {symbol,market,snapshot,now,revision,epoch,active,embedded,historyCache,chartCache}=props,prices=market.prices;
-  const [view,setView]=useState<RsiChartView>(()=>chartCache?.get(symbol)?.view||initialChartView(prices));
-  const [pane,setPane]=useState<Pane>(null),[tab,setTab]=useState<'chart'|'backtest'|'records'>('chart'),[hover,setHover]=useState<Pick|null>(null),[status,setStatus]=useState('');
-  const undo=useRef<RsiChartView[]>(chartCache?.get(symbol)?.undo||[]),redo=useRef<RsiChartView[]>(chartCache?.get(symbol)?.redo||[]),gesture=useRef<RsiChartView|null>(null);
-  const live=useRef({view,props,tab,pane});live.current={view,props,tab,pane};
-  const svg=useRef<SVGSVGElement>(null),[exportText,setExportText]=useState(''),[exportUrl,setExportUrl]=useState('');
-  const [pngUrl,setPngUrl]=useState(''),[search,setSearch]=useState('');
   const evidence=market.ohlcEvidence as BarEvidence|undefined;
   const barData=useMemo(()=>{
     try {if(!evidence||typeof evidence.retrievedAt!=='string'||!Number.isFinite(Date.parse(evidence.retrievedAt))||!/^[a-f0-9]{64}$/.test(evidence.responseSha256||'')||evidence.timezone!==market.timezone||isFutureStamp(evidence.retrievedAt,now))return [];
       return validateRsiBars(market.ohlc,prices);
     }catch{return [];}
   },[market,prices,+now]);
+  const [view,setView]=useState<RsiChartView>(()=>initialChartUrlView(symbol,chartCache?.get(symbol)?.view||initialChartView(prices),{frequencies:['daily','weekly'],candles:barData.length>0,embedded}));
+  const [pane,setPane]=useState<Pane>(null),[tab,setTab]=useState<'chart'|'backtest'|'records'>('chart'),[hover,setHover]=useState<Pick|null>(null),[status,setStatus]=useState('');
+  const undo=useRef<RsiChartView[]>(chartCache?.get(symbol)?.undo||[]),redo=useRef<RsiChartView[]>(chartCache?.get(symbol)?.redo||[]),gesture=useRef<RsiChartView|null>(null);
+  const userViewRevision=useRef(0);
+  const live=useRef({view,props,tab,pane});live.current={view,props,tab,pane};
+  const svg=useRef<SVGSVGElement>(null),[exportText,setExportText]=useState(''),[exportUrl,setExportUrl]=useState('');
+  const [pngUrl,setPngUrl]=useState(''),[search,setSearch]=useState('');
   const displayPrices=useMemo(()=>view.frequency==='weekly'?weeklyRsiPrices(prices):prices,[prices,view.frequency]);
   const bars=useMemo(()=>view.frequency==='weekly'?weeklyRsiBars(barData):barData,[barData,view.frequency]);
   const rows=useMemo(()=>view.frequency==='weekly'?calculateRsiSeries(displayPrices,14,9):props.rows,[displayPrices,view.frequency,props.rows]);
@@ -44,11 +46,14 @@ export function RsiWorkbench(props:Props) {
     if(visible.length&&(next.selected<visible[0][0]||next.selected>visible.at(-1)![0]))next={...next,selected:next.selected<visible[0][0]?visible[0][0]:visible.at(-1)![0]};
     const previous=live.current.view;if(JSON.stringify(next)===JSON.stringify(previous))return;
     if(record){undo.current=[...undo.current,previous].slice(-40);redo.current=[];}
+    if(!gesture.current){userViewRevision.current++;persistStandaloneChartUrl(symbol,next,embedded);}
     live.current.view=next;setView(next);setExportText('');
   }
   const selectDate=useCallback((index:number)=>{
     const p=live.current.props.market.prices[index];if(!p)return;
-    const next=applyChartCommand(live.current.view,live.current.props.market.prices,'date',p[0]);live.current.view=next;setView(next);live.current.props.onDate(index);
+    const next=applyChartCommand(live.current.view,live.current.props.market.prices,'date',p[0]);
+    if(JSON.stringify(next)!==JSON.stringify(live.current.view)){userViewRevision.current++;persistStandaloneChartUrl(live.current.props.symbol,next,live.current.props.embedded);}
+    live.current.view=next;setView(next);live.current.props.onDate(index);
   },[]);
   const command=useRef<(action:string,value?:unknown)=>void>(()=>{});
   command.current=(action,value)=>{
@@ -92,7 +97,7 @@ export function RsiWorkbench(props:Props) {
     window.parent.postMessage({kind:'atlas:rsi-state',epoch,symbol,ready:true,unit:market.unit,timezone:market.timezone||'',revision,
       start:view.start,end:view.end,first:prices[0][0],last:prices.at(-1)![0],selected:point?.[0],close:point?.[1],rsi:row?.rsi??null,
       tool:view.tool,magnet:view.magnet,scale:view.scale,autoScale:view.autoScale,chartType:view.chartType,frequency:view.frequency,
-      candles:barData.length>0,volume:barData.some(b=>b[5]!==null),canUndo:undo.current.length>0,canRedo:redo.current.length>0,measurement:view.measurement.length>0,pane,tab},location.origin);
+      candles:barData.length>0,volume:barData.some(b=>b[5]!==null),canUndo:undo.current.length>0,canRedo:redo.current.length>0,measurement:view.measurement.length>0,pane,tab,userViewRevision:userViewRevision.current,urlView:chartUrlView(view)},location.origin);
   },[embedded,active,epoch,symbol,view,pane,tab,point?.[0],point?.[1],row?.rsi,barData,revision,market.unit,market.timezone,prices]);
   useEffect(()=>{
     const key=(event:KeyboardEvent)=>{
@@ -118,7 +123,7 @@ export function RsiWorkbench(props:Props) {
   },[exportText]);
   function pick(p:Pick){setHover(null);if(view.tool==='measure')persist({...view,measurement:view.measurement.length===1&&view.measurement[0].panel===p.panel?[view.measurement[0],p]:[p]});
     else {persist({...view,selected:p.date},false);const at=nearestPoint(prices,p.date);props.onDate(at);}}
-  function endGesture(){if(gesture.current&&JSON.stringify(gesture.current)!==JSON.stringify(live.current.view)){undo.current=[...undo.current,gesture.current].slice(-40);redo.current=[];setView({...live.current.view});}gesture.current=null;}
+  function endGesture(){if(gesture.current&&JSON.stringify(gesture.current)!==JSON.stringify(live.current.view)){undo.current=[...undo.current,gesture.current].slice(-40);redo.current=[];userViewRevision.current++;persistStandaloneChartUrl(symbol,live.current.view,embedded);setView({...live.current.view});}gesture.current=null;}
   const [jump,setJump]=useState(view.selected),[from,setFrom]=useState(view.start),[to,setTo]=useState(view.end);
   const [menuPulse,setMenuPulse]=useState(0);
   return <section className="rsi-workbench" data-tab={tab} aria-label={`${symbol} 차트 작업 화면`}>

@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 import { readEthView, ethViewQuery, ethHistoryRange, ethRangeLabel } from '../dist/eth-view-state.js';
 import { panRange, zoomRange, fitRange } from '../dist/chart-navigation.js';
+import { canonicalNativeChartEntry } from '../dist/atlas-navigation.js';
 
 const DAY=86400,WEEK=7*DAY;
 const seconds=date=>Date.parse(`${date}T00:00:00Z`)/1000;
@@ -22,16 +23,16 @@ test('ETH reads only supported presentation choices and ignores BTC scenarios, d
   assert.deepEqual(readEthView(invalid),{frequency:'daily',chartType:'line',scale:'log',span:'4y'});
 });
 
-test('ETH share queries round-trip every supported interval with only asset-scoped presentation state',()=>{
+test('ETH share queries round-trip supported intervals through the common keys without model state',()=>{
   for(const frequency of ['1m','5m','15m','30m','1h','4h','daily','weekly']){
     for(const chartType of ['line','candles']){
       for(const scale of ['log','linear']){
         for(const span of ['1m','6m','1y','4y','all']){
-          const state={frequency,chartType,scale,span,assumption:'stress',priceDomain:{min:90000,max:150000},range:{start:0,end:9999999999}};
+          const state={frequency,chartType,scale,span,assumption:'stress',priceDomain:null,range:null};
           const params=new URLSearchParams(ethViewQuery(state));
           assert.equal(params.get('symbol'),'ETHUSD');
           assert.deepEqual(readEthView(params),{frequency,chartType,scale,span});
-          assert.ok([...params.keys()].every(key=>['symbol','granularity','type','axis','eth-span'].includes(key)));
+          assert.ok([...params.keys()].every(key=>['symbol','granularity','type','axis','span'].includes(key)));
         }
       }
     }
@@ -103,7 +104,7 @@ async function runEntry(search,{failImport=false,failInit=false}={}){
   const source=await readFile(new URL('../dist/site-entry.js',import.meta.url),'utf8');
   const imports=[],events=[],errors=[],bootSymbol={textContent:'BTCUSD'},root={dataset:{}},initializations=[];
   const context={
-    URLSearchParams,location:{search},console:{error:(...values)=>errors.push(values)},
+    URLSearchParams,canonicalNativeChartEntry,location:{search,pathname:'/'},console:{error:(...values)=>errors.push(values)},
     enhanceBootSkeleton:()=>{},mountJournalEntry:()=>{},initPerformanceDiagnostics:()=>{},initAtlasShell:()=>{},
     CustomEvent:class{constructor(type){this.type=type;}},
     document:{documentElement:root,querySelector:()=>bootSymbol,dispatchEvent:event=>events.push(event.type)},
@@ -111,7 +112,7 @@ async function runEntry(search,{failImport=false,failInit=false}={}){
   };
   // These shared, data-free entry hooks do not determine which asset workspace
   // is loaded. Keep the production routing and dynamic-import errors intact.
-  const routing=source.replace(/^import \{ (?:enhanceBootSkeleton|mountJournalEntry|initPerformanceDiagnostics|initAtlasShell) \} from ['"][^'"]+['"];\n/gm,'').replace(/\bimport\s*\(/g,'__import(');
+  const routing=source.replace(/^import \{ (?:enhanceBootSkeleton|mountJournalEntry|initPerformanceDiagnostics|initAtlasShell|canonicalNativeChartEntry) \} from ['"][^'"]+['"];\n/gm,'').replace(/\bimport\s*\(/g,'__import(');
   await vm.runInNewContext(`(async()=>{${routing}\n})()`,context,{timeout:1000});
   return {imports,events,errors,bootSymbol,root,initializations};
 }
