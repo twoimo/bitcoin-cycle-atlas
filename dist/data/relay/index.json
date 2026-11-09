@@ -1,155 +1,15 @@
 {
   "schema": 1,
   "source": "RelayDeck",
-  "generated_at": "2026-11-09T01:15:29+09:00",
+  "generated_at": "2026-11-09T09:39:39+09:00",
   "rooms": [
     {
       "id": "telegram",
       "kind": "chat",
       "title": "소수의견(26년 4분기)",
       "subtitle": "Telegram",
-      "updated_at": "2026-11-08T19:55:54+09:00",
+      "updated_at": "2026-11-09T08:26:42+09:00",
       "messages": [
-        {
-          "id": "2333",
-          "at": "2026-11-07T09:15:40+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<🐒오늘 하루 요약>\n1.일단 반등은 했으나 힘이 약했다 \n2. 일단 반등은 했으나 거래량이 매우 작았다 \n3. 하지만 추가 하락할 악재는 없었다 \n4. 다음주 지켜보자는 분위기(앤트로픽 등)"
-        },
-        {
-          "id": "2334",
-          "at": "2026-11-07T09:19:36+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "🐒앤트로픽 상장예정일은 11/16이\n높아지고 있습니다"
-        },
-        {
-          "id": "2335",
-          "at": "2026-11-07T09:35:55+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "<🗞소몽선정 데일리 뉴스,11/7>\n[정치]\n민주, 애플·메타·머스크 정조준\n美 민주, 캐나다 관세 철폐 추진\n워런, 암호화폐·예측시장 조사 예고\n백악관 \"DC, 지지 주지사 곳으로\"\n트럼프 \"증시 폭락은 민주당 때문\"\n트럼프 비서실장에 스티븐 밀러\n트럼프 \"초지능 100% 지지\"\n\n[지정학]\n\"9일 이란 공격 유리\"…트럼프 회의\n\n[테크/AI]\n머스크 \"스페이스X 정부 매출 10%↓\"\nTSMC, AI 메모리 생산 검토\nMS, 오라클 클라우드 계약 종료\n엔비디아, 전화국 130곳 DC 전환\n오픈AI, 110억달러 조달…목표 축소\n칼시, 앤스로픽 IPO 확률 90→57%\n테슬라, 사이버트럭 생산 중단\n리사 수 \"AI 투자 우려 근시안적\"\n번스타인 \"DC 규제 우려 과도\"\n'블루쓰나미' 빅테크, 해외·사막행\n램리서치, 250억달러 자사주 매입\n오픈AI CFO \"DC 투자 계속\"\n헤지펀드 10여년만 최대 포지션 축소\n\n[기타]\n모더나 3Q 흑자전환…주가 7%↑\n아이온큐 전망 상회…주가 18%↑\n에어비앤비 3Q 호실적…주가 12%↑\n\n출처 : 소수의견 🐒\n(기사 누르면 링크 연결됩니다)",
-          "links": [
-            {
-              "offset": 26,
-              "length": 17,
-              "url": "https://biz.sbs.co.kr/article/20000344894"
-            },
-            {
-              "offset": 44,
-              "length": 18,
-              "url": "https://www.yna.co.kr/view/AKR20261107005700072"
-            },
-            {
-              "offset": 63,
-              "length": 19,
-              "url": "https://www.digitaltoday.co.kr/news/articleView.html?idxno=713561"
-            },
-            {
-              "offset": 83,
-              "length": 20,
-              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4443570"
-            },
-            {
-              "offset": 104,
-              "length": 19,
-              "url": "https://n.news.naver.com/mnews/article/009/0005760297"
-            },
-            {
-              "offset": 124,
-              "length": 16,
-              "url": "https://n.news.naver.com/mnews/article/014/0005600725"
-            },
-            {
-              "offset": 141,
-              "length": 17,
-              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4443561"
-            },
-            {
-              "offset": 166,
-              "length": 20,
-              "url": "https://www.yna.co.kr/view/AKR20261106192700071"
-            },
-            {
-              "offset": 196,
-              "length": 22,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=01912246645643424"
-            },
-            {
-              "offset": 219,
-              "length": 18,
-              "url": "https://news.einfomax.co.kr/news/articleView.html?idxno=4443572"
-            },
-            {
-              "offset": 238,
-              "length": 18,
-              "url": "https://n.news.naver.com/mnews/article/018/0006405437"
-            },
-            {
-              "offset": 257,
-              "length": 20,
-              "url": "https://www.aitimes.com/news/articleView.html?idxno=217096"
-            },
-            {
-              "offset": 278,
-              "length": 21,
-              "url": "https://www.mk.co.kr/news/it/12201340"
-            },
-            {
-              "offset": 300,
-              "length": 22,
-              "url": "https://n.news.naver.com/mnews/article/014/0005600722"
-            },
-            {
-              "offset": 323,
-              "length": 16,
-              "url": "https://www.mk.co.kr/news/it/12201334"
-            },
-            {
-              "offset": 340,
-              "length": 20,
-              "url": "https://kr.benzinga.com/news/usa/othermarkets/amd-%eb%a6%ac%ec%82%ac-%ec%88%98-ceo-%ec%9b%94%ea%b0%80%ec%9d%98-ai-%ed%88%ac%ec%9e%90-%ec%9a%b0%eb%a0%a4%eb%8a%94-%ea%b7%bc%ec%8b%9c%ec%95%88%ec%a0%81%ec%9e%a5/"
-            },
-            {
-              "offset": 361,
-              "length": 18,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=07763766645643096"
-            },
-            {
-              "offset": 380,
-              "length": 19,
-              "url": "https://biz.sbs.co.kr/article/20000344814"
-            },
-            {
-              "offset": 400,
-              "length": 19,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=01338246645643424"
-            },
-            {
-              "offset": 420,
-              "length": 19,
-              "url": "https://n.news.naver.com/mnews/article/014/0005600723"
-            },
-            {
-              "offset": 440,
-              "length": 20,
-              "url": "https://www.yna.co.kr/view/AKR20261107001700072"
-            },
-            {
-              "offset": 467,
-              "length": 18,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=01334966645643424"
-            },
-            {
-              "offset": 486,
-              "length": 18,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=01325126645643424"
-            },
-            {
-              "offset": 505,
-              "length": 20,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=01357926645643424"
-            }
-          ]
-        },
         {
           "id": "2337",
           "at": "2026-11-07T09:36:32+09:00",
@@ -804,6 +664,24 @@
           "at": "2026-11-08T19:55:54+09:00",
           "author": "소수의견(26년 4분기)",
           "text": "💥보충자료3)\n\n제가 중요하다고 말씀드린\n강경파 전환 시그널 정리본입니다\n\n2006 부시 정부때도\n중간선거 패배 후\n오히려 전쟁 강도를\n올리면서\n\n강대강으로\n움직였습니다\n\n가능성이 높지는 않으나\n그렇다고 또\n불가능한 시나리오는 아니라서\n참고차 공유드립니다"
+        },
+        {
+          "id": "2408",
+          "at": "2026-11-09T08:21:44+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "젠슨황이 불륜을 \n공식 인정했네요😳"
+        },
+        {
+          "id": "2409",
+          "at": "2026-11-09T08:22:14+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "젠슨 황의 회사 임직원 대상 이메일 (전체 내용)\n\n나는 아내에게 불륜을 저질렀습니다. 나의 행동은 아내와 우리 아이들에게 상처를 주었습니다. 내가 저지른 행동에는 어떠한 변명의 여지도 없습니다. 진심으로 깊이 사과드립니다.\n\n평생 동안 가족들은 나에게 사랑과 지지를 보내주었습니다. 가족들은 나의 정직함과 충성을 받을 자격이 있습니다. 하지만 나는 가족들을 실망시켰고, 우리가 함께 쌓아온 삶에 상처를 입혔습니다. 나는 내가 저지른 행동과 그로 인해 발생한 모든 상처에 대해 전적으로 책임을 지며, 이에 따른 비판도 받아들이겠습니다.\n\n아내와 가족들에게:\n\n사랑합니다. 사과한다고 해서 내가 저지른 일이 없던 일이 될 수 없다는 것을 잘 알고 있습니다. 우리 가족이 상처를 치유하고, 시간이 지나면서 내가 여러분의 신뢰를 다시 얻을 수 있기를 바랍니다.\n\n엔비디아 동료들과 이사회, 파트너 및 주주 여러분께:\n\n수십 년간 함께 일해 온 동료들을 비롯해 엔비디아의 모든 임직원, 이사회, 전 세계 파트너 및 주주 여러분은 나에게서 더 나은 모습을 기대할 자격이 있습니다.\n\n엔비디아를 이끄는 것은 내 인생에서 가장 큰 영광입니다. 나의 책임은 여러분에게 봉사하고 여러분의 신뢰를 받을 자격이 있는 사람이 되는 것입니다."
+        },
+        {
+          "id": "2410",
+          "at": "2026-11-09T08:26:42+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "중간선거 전까지 덮었다가\n딱 터뜨리는 것 같습니다\n(언론 타이밍상)"
         }
       ]
     },
