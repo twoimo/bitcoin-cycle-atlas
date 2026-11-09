@@ -6,6 +6,7 @@ import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-cha
 import { researchAnnotationsMarkup } from './research-annotations.js?v=1.29.0';
 import {chartInterval} from './ohlc-data.js?v=1.29.0';
 import {chartPaneLayout,volumePaneMarkup,historicalMarkersMarkup,layoutTimeTickLabels} from './chart-overlays.js?v=1.36.1';
+import {createChartAnnotationLayout} from './ui/chart-annotation-layout.js';
 import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.29.0';
 import { clearChartHover, clearChartHoverPointer, getChartHoverPointer, rememberChartHoverPointer, coalescedChartHover, paintPriceCursor } from './chart-hover.js?v=1.29.0';
 import { dateWindow, pixelExtrema } from './chart-window.js?v=1.29.0';
@@ -207,6 +208,7 @@ export function drawIntradayChart({svg,series,chartType='candles',scale='log',pr
     if(tool==='measure'){active=Math.max(0,Math.min(rows.length-1,index));mark(active);if(measurementState&&!measurementState.endDate)renderMeasurement(anchorAt(active));}
     else commit(index,true,false);
   };
+  createChartAnnotationLayout(svg,{isCurrent:()=>svg.onpointermove===hoverHandler,eventPriorities:new Map(historicalEvents.map(event=>[event.id,event.importance]))});
   renderMeasurement();
   if(retainedPointer&&pointerPreview({...retainedPointer,target:svg})){
     if(tool!=='measure')onInspect(inspection(active),{user:false,openPanel:false});
