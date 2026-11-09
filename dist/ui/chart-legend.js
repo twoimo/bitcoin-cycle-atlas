@@ -95,8 +95,11 @@ export function mountChartLegend({plot,groups}={}){
       for(const entry of row.entries)entry.node.hidden=false;
       row.more.hidden=false;row.more.textContent=`+${row.entries.length}`;
       const widths=row.entries.map(entry=>entry.node.getBoundingClientRect().width);
-      const available=Math.max(0,width-row.labelNode.getBoundingClientRect().width-8);
-      const result=fitLegendEntries(widths,{available,gap:8,moreWidth:Math.max(32,row.more.getBoundingClientRect().width)});
+      // Both semantic groups share one line. Each group fits only its own
+      // allocated width, not the full legend width used by the former stack.
+      const rowWidth=row.row.clientWidth||Math.max(0,(width-8*(rows.length-1))/rows.length);
+      const available=Math.max(0,rowWidth-row.labelNode.getBoundingClientRect().width-8);
+      const result=fitLegendEntries(widths,{available,gap:8,moreWidth:Math.max(44,row.more.getBoundingClientRect().width)});
       row.entries.forEach((entry,index)=>{entry.node.hidden=index>=result.visibleCount;});
       row.more.textContent=`+${result.hiddenCount}`;row.more.hidden=result.hiddenCount===0;
       row.more.setAttribute('aria-label',`${row.label} ${result.hiddenCount}개 더 보기 · 전체 ${row.entries.length}개`);

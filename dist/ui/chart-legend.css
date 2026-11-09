@@ -5,16 +5,16 @@
 .chart-replay-active.chart-replay-atlas.atlas-plot:not([data-chart-focus=true])>.lab-chart-foot.chart-legend-dock:not([hidden]),
 .chart-replay-active.chart-replay-atlas.atlas-plot[data-chart-replay-mode="cutoff-backtest"]>.lab-chart-foot.chart-legend-dock:not([hidden]){
   position:absolute;inset:var(--chart-legend-top,30px) var(--chart-legend-right,92px) auto auto;
-  display:block!important;box-sizing:border-box;width:var(--chart-legend-width,42%);max-width:42%;height:var(--chart-legend-height,64px);max-height:none;min-height:0;
+  display:block!important;box-sizing:border-box;width:var(--chart-legend-width,42%);max-width:42%;height:var(--chart-legend-height,40px);max-height:none;min-height:0;
   margin:0;padding:4px 6px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--muted);
-  overflow:hidden;pointer-events:auto;touch-action:manipulation;z-index:8;
+  overflow:visible;pointer-events:auto;touch-action:manipulation;z-index:8;
 }
 .atlas-plot>.lab-chart-foot.chart-legend-dock[hidden],
 .atlas-plot[data-chart-focus=true]>.lab-chart-foot.chart-legend-dock{display:none!important}
 .chart-legend-dock [hidden]{display:none!important}
 .atlas-plot[data-mode=price]>.chart-legend-dock .lab-legend,
-.atlas-plot>.chart-legend-dock .lab-legend{display:grid;grid-template-rows:repeat(2,minmax(0,1fr));align-items:stretch;justify-content:stretch;gap:4px;width:100%;max-width:100%;height:100%;min-width:0;flex:none;margin:0;padding:0}
-.chart-legend-dock .chart-legend-row{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%;height:25px;overflow:hidden}
+.atlas-plot>.chart-legend-dock .lab-legend{display:flex;flex-flow:row nowrap;align-items:center;justify-content:stretch;gap:8px;width:100%;max-width:100%;height:100%;min-width:0;flex:none;margin:0;padding:0;overflow:visible}
+.chart-legend-dock .chart-legend-row{display:flex;flex:1 1 0;align-items:center;gap:8px;min-width:0;max-width:100%;height:100%;overflow:visible}
 .atlas-plot>.chart-legend-dock .chart-legend-row-label{flex:none;width:32px;font:11px/14px var(--font,sans-serif);color:var(--subtle);white-space:nowrap}
 .chart-legend-dock .chart-legend-items{display:flex;align-items:center;flex:1 1 auto;gap:8px;min-width:0;overflow:hidden}
 .atlas-plot>.chart-legend-dock .chart-legend-entry{display:inline-flex;align-items:center;flex:none;gap:4px;width:max-content;max-width:none;margin:0;padding:0;border:0;font:12px/16px var(--font,sans-serif);white-space:nowrap;color:var(--muted)}
@@ -24,9 +24,12 @@
 .chart-legend-dock button{box-sizing:border-box;flex:none;min-width:32px;height:24px;margin:0;padding:2px 6px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface-raised);color:var(--text);font:12px/16px var(--font,sans-serif);white-space:nowrap;cursor:pointer}
 .chart-legend-dock button:hover{background:var(--surface-hover)}
 .rsi-chart-canvas>.chart-legend-dock button{min-height:24px}
+.atlas-plot>.chart-legend-dock .chart-legend-more{position:relative;min-width:44px;height:44px;min-height:44px;padding:8px 6px;border:0;background:transparent;isolation:isolate}
+.atlas-plot>.chart-legend-dock .chart-legend-more::before{content:"";position:absolute;inset:8px 0;z-index:-1;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface-raised)}
+.atlas-plot>.chart-legend-dock .chart-legend-more:hover::before{background:var(--surface-hover)}
 .chart-legend-dock button:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
 /* Replay uses stronger visibility selectors; the chip must still own its full
-   44px box without inheriting the two-row legend's padding and border. */
+   44px box without inheriting the single-line legend's padding and border. */
 .atlas-plot>.lab-chart-foot.chart-legend-dock[data-legend-mode=chip],
 .chart-replay-active.chart-replay-atlas.atlas-plot:not([data-chart-focus=true])>.lab-chart-foot.chart-legend-dock[data-legend-mode=chip]:not([hidden]),
 .chart-replay-active.chart-replay-atlas.atlas-plot[data-chart-replay-mode="cutoff-backtest"]>.lab-chart-foot.chart-legend-dock[data-legend-mode=chip]:not([hidden]){padding:0;border:0;background:transparent}

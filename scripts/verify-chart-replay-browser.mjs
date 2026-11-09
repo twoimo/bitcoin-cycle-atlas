@@ -469,7 +469,7 @@ export async function verifyChartReplaySurface(api) {
       assert.deepEqual(geometry.legend.allItems, expectedItems, 'Compact legend lost an original semantic entry');
       assert.deepEqual(geometry.legend.statusItems, expectedStatus, 'Compact legend lost its provisional/retrospective meanings');
       if (width <= 430) assert.equal(geometry.legend.mode, 'chip');
-      else if (geometry.legend.mode === 'chip') assert.ok(['height','protected-anchors'].includes(geometry.legend.compactReason), 'A wide plot needs a measured height/anchor reason to use the compact legend');
+      else if (geometry.legend.mode === 'chip') assert.ok(['width','height','protected-anchors'].includes(geometry.legend.compactReason), 'A wide plot needs a measured size/anchor reason to use the compact legend');
       else assert.equal(geometry.legend.mode, 'rows');
       if (geometry.legend.mode === 'chip') {
         assert.equal(geometry.legend.rows.length, 0, 'Mobile legend must show one chip');
@@ -477,13 +477,15 @@ export async function verifyChartReplaySurface(api) {
         assert.ok(inside(geometry.legend.trigger, geometry.legend), 'Mobile legend chip is clipped');
         assert.ok(geometry.legend.trigger.height >= 44, 'Mobile legend lost its 44px touch target');
       } else {
-        assert.deepEqual(geometry.legend.rows.map(row => row.id), ['price', 'cycle'], 'BTC legend must keep separate price/cycle rows');
-        assert.ok(geometry.legend.rows[1].top >= geometry.legend.rows[0].bottom, 'BTC legend rows overlap');
+        assert.deepEqual(geometry.legend.rows.map(row => row.id), ['price', 'cycle'], 'BTC legend must keep both semantic groups');
+        assert.ok(geometry.legend.height <= 40, 'Desktop legend must fit in one 40px line');
+        assert.ok(Math.abs(geometry.legend.rows[1].top - geometry.legend.rows[0].top) <= 1, 'Legend groups must share one line');
+        assert.ok(geometry.legend.rows[1].left >= geometry.legend.rows[0].right, 'Legend groups overlap horizontally');
         for (const row of geometry.legend.rows) {
           assert.ok(inside(row, geometry.legend) && row.scrollWidth <= row.clientWidth + 1, 'BTC legend row is clipped');
           assert.equal(row.items.length, row.visibleCount);assert.equal(row.visibleCount + row.hiddenCount, row.total);
           assert.equal(Boolean(row.more), row.hiddenCount > 0, 'Hidden legend entries require a visible +N control');
-          if (row.more) { assert.equal(row.more.text, '+' + row.hiddenCount);assert.ok(inside(row.more, row), 'The +N chip is clipped'); }
+          if (row.more) { assert.equal(row.more.text, '+' + row.hiddenCount);assert.ok(row.more.left >= row.left && row.more.right <= row.right + 1, 'The +N chip is clipped horizontally');assert.ok(row.more.height >= 44, 'The +N control must retain a 44px hit area'); }
           for (const item of row.items) assert.ok(inside(item, row), 'A visible legend entry is clipped: ' + item.text);
         }
       }

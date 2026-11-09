@@ -110,7 +110,7 @@ test('semantic source changes and external restoration cannot reuse a stale repl
 });
 
 test('legend fitting reuses stable measurements and invalidates on actual width, font, visibility and source changes',()=>{
-  const f=fixture(1440);f.render();const controller=mountChartLegend({plot:f.plot});
+  const f=fixture(1440);f.setWidth(700);f.render();const controller=mountChartLegend({plot:f.plot});
   const visible=()=>[...f.legend.querySelectorAll('.chart-legend-row')].reduce((sum,row)=>sum+Number(row.dataset.visibleCount),0);
   try{
     f.render();f.flush();const initial=f.measurements(),wide=visible();
@@ -118,7 +118,7 @@ test('legend fitting reuses stable measurements and invalidates on actual width,
     const shifted=controller.refresh({width:1440,height:700,left:8,right:1360,top:18,bottom:600,protectedAnchors:[{x:slot.x,y:slot.y,width:slot.width,height:slot.height}]});
     assert.ok(shifted.y>slot.y,'Protected price/date anchors still change actual placement while fitting is reused');
     assert.equal(f.measurements(),initial,'Repeated geometry refresh must not unhide and remeasure every unchanged entry');
-    f.setWidth(320);controller.refresh();assert.ok(f.measurements()>initial);assert.ok(visible()<wide,'A narrower actual row must expose fewer whole entries');
+    f.setWidth(400);controller.refresh();assert.ok(f.measurements()>initial);assert.ok(visible()<wide,'A narrower actual row must expose fewer whole entries');
     const narrow=visible(),beforeFont=f.measurements();f.setEntryWidth(140);f.fontLoaded();f.flush();
     assert.ok(f.measurements()>beforeFont);assert.ok(visible()<narrow,'Loaded font metrics must be applied at the same available width');
     const settled=f.measurements();controller.refresh();assert.equal(f.measurements(),settled);

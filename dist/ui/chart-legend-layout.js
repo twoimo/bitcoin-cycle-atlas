@@ -8,12 +8,12 @@ export function chartLegendSlot({width=0,height=0,left=0,right=width,top=0,botto
   bottom=clamp(finite(bottom,height),0,height);top=clamp(finite(top),0,bottom);
   const plotWidth=right-left,inset=Math.min(12,plotWidth/2),maxWidth=Math.max(0,Math.min(plotWidth*.42,plotWidth-inset*2));
   const availableHeight=Math.max(0,bottom-top-24);
-  let compactReason=finite(viewportWidth,width)<=430?'viewport':maxWidth<116?'width':availableHeight<64?'height':null;
+  let compactReason=finite(viewportWidth,width)<=430?'viewport':maxWidth<200?'width':availableHeight<44?'height':null;
   // A model evidence dot is a date/price fact. If it reaches the corner, the
   // legend yields within the price pane. A short pane can use the same full-
   // list chip as mobile instead of spilling into cycle, volume or footer lanes.
   function placement(compact){
-    const legendWidth=compact?Math.min(68,maxWidth):maxWidth,legendHeight=Math.min(compact?44:64,availableHeight);
+    const legendWidth=compact?Math.min(68,maxWidth):maxWidth,legendHeight=Math.min(compact?44:40,availableHeight);
     const x=Math.max(left,right-inset-legendWidth),minimumY=Math.min(top+12,Math.max(top,bottom-legendHeight));
     const maxY=Math.max(minimumY,bottom-legendHeight-12),candidates=[minimumY,...protectedAnchors.map(box=>box.y+box.height+4)].filter(y=>Number.isFinite(y)&&y>=minimumY&&y<=maxY).sort((a,b)=>a-b);
     const clearY=candidates.find(y=>!protectedAnchors.some(anchor=>overlayBoxesIntersect({x,y,width:legendWidth,height:legendHeight},anchor,4)));

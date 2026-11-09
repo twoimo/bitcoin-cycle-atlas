@@ -8,7 +8,7 @@ test('six requested viewports keep the legend inside the price plot, at most 42%
     const slot=chartLegendSlot({width,height,left,right,top,viewportWidth});
     assert.ok(slot.width<=(right-left)*.42+.01);assert.ok(slot.x>=left);assert.ok(slot.x+slot.width<=right-12+.01);
     assert.equal(slot.y,top+12);assert.ok(slot.y+slot.height<height);
-    assert.equal(slot.compact,viewportWidth<=430);assert.equal(slot.height,viewportWidth<=430?44:64);
+    assert.equal(slot.compact,viewportWidth<=430);assert.equal(slot.height,viewportWidth<=430?44:40);
     assert.ok(slot.hudMaxWidth+20<=slot.x+.01,'readout and replay HUD end before the legend');
   }
 });
@@ -40,9 +40,9 @@ test('short replay price panes use the full-list chip before a reserved cycle or
   assert.equal(slot.height,44);assert.equal(slot.y,input.top+12);
   assert.equal(slot.x+slot.width,input.right-12);assert.ok(slot.y+slot.height<=input.bottom-12);
   assert.equal(overlayBoxesIntersect(slot,anchor,4),false);assert.equal(JSON.stringify(input),snapshot);
-  const shorter=chartLegendSlot({...input,bottom:100});
-  assert.equal(shorter.compact,true);assert.equal(shorter.compactReason,'height');assert.equal(shorter.height,44);
-  assert.ok(shorter.y+shorter.height<=100-12);
+  const shorter=chartLegendSlot({...input,bottom:85});
+  assert.equal(shorter.compact,true);assert.equal(shorter.compactReason,'height');assert.equal(shorter.height,43);
+  assert.ok(shorter.y+shorter.height<=85-12);
 });
 
 test('model, macro and event label boxes avoid the same reserved corner without altering their supplied anchors',()=>{
