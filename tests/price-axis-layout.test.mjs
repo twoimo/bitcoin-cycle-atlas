@@ -4,6 +4,7 @@ import { createPriceAxisLayout, createPriceAxisFormatter, createPriceAxisLabelVi
 import { createPriceDisplay } from '../dist/price-display.js';
 import { createPriceScale } from '../dist/chart-math.js';
 import { chartPaneLayout } from '../dist/chart-overlays.js';
+import { rsiChartLayout,RSI_CHART_LAYOUT } from '../dist/rsi-chart-layout.js';
 import { drawAtlasPriceChart } from '../dist/atlas-price-chart.js';
 import { drawIntradayChart } from '../dist/intraday-chart.js';
 import { createChartSvgExport, createChartPngExport, createObservedChartCsv } from '../dist/chart-export.js';
@@ -48,13 +49,53 @@ function contained(label,width){
   assert.ok(label.attrs['font-family'],'the measured family must survive export');
 }
 
-test('axis gutter uses actual glyph metrics, keeps a bounded plot, and leaves no hidden measuring node',()=>{
-  const regular=fixture(320),wide=fixture(320,1.5),a=createPriceAxisLayout({svg:regular,width:320}),b=createPriceAxisLayout({svg:wide,width:320});
-  assert.ok(regular.ownerDocument.measures>0);assert.ok(b.right>a.right);assert.ok(b.right<=112);assert.ok(320-8-b.right>=200);
-  assert.equal(regular.children.length,0);assert.equal(wide.children.length,0);
-  const display=createPriceDisplay({unit:'usd'}),axis={min:80000,max:90000,ticks:[80000,82500,85000,87500,90000]},format=createPriceAxisFormatter({axis,display,layout:a});
-  assert.equal(format.price(85386.18),'$85,386.18');assert.ok(a.measure(format.price(85386.18),a.badgeFontSize)<=a.labelWidth);
-  assert.equal(a.right,createPriceAxisLayout({svg:regular,width:320}).right);
+test('64px axis measures real glyphs and fits full normal quotes without changing their numeric notation',()=>{
+  const display=createPriceDisplay({unit:'usd'}),axis={min:70000,max:100000,ticks:[70000,75000,100000]};
+  for(const widthScale of [.75,1,1.5]){
+    const svg=fixture(320,widthScale),layout=createPriceAxisLayout({svg,width:320}),format=createPriceAxisFormatter({axis,display,layout});
+    assert.ok(svg.ownerDocument.measures>0);assert.equal(layout.right,64);assert.equal(layout.labelWidth,54);
+    assert.equal(layout.fontSize,11);assert.equal(layout.badgeFontSize,11);assert.equal(layout.inset,4);assert.equal(layout.edge,6);
+    assert.equal(svg.children.length,0,'measurement never leaves a hidden SVG node');
+    for(const [value,label] of [[74967.72,'$74,967.72'],[75000,'$75,000'],[100000,'$100,000']]){
+      assert.equal(format.price(value),label,'font width cannot switch a normal quote into scientific notation');
+      const node=new Node('text',svg.ownerDocument);node.textContent=label;layout.fitNode(node,{badge:true});
+      assert.equal(node.textContent,label);assert.equal(node.getAttribute('font-size'),'11');
+      assert.ok(Number(node.getAttribute('textLength'))<=54);assert.equal(node.getAttribute('lengthAdjust'),'spacingAndGlyphs');
+      assert.equal(Number(node.getAttribute('textLength')),Number(Math.min(54,layout.measure(label,11)).toFixed(3)));
+    }
+    if(widthScale===1.5)assert.ok(layout.measure('$74,967.72',11)>54,'natural measurement stays unclamped while SVG textLength fits the glyphs');
+    assert.equal(layout.right,createPriceAxisLayout({svg,width:320}).right);
+  }
+});
+
+test('font metric identity detects loaded glyphs even when the family name and gutter stay unchanged',()=>{
+  const svg=fixture(390,.75),a=createPriceAxisLayout({svg,width:390}),before=a.measure('$74,967.72',11);
+  assert.equal(createPriceAxisLayout({svg,width:390}).metricKey,a.metricKey,'stable metrics do not cause another React update');
+  svg.ownerDocument.widthScale=1.5;
+  const b=createPriceAxisLayout({svg,width:390});assert.equal(a.right,b.right);assert.notEqual(a.metricKey,b.metricKey,'font loading changes measured advances without changing CSS family');
+  assert.equal(a.measure('$74,967.72',11),before,'the prior render has a cached label measurement');
+  assert.ok(b.measure('$74,967.72',11)>before,'the new axis fitter replaces the cached font measurement');
+  svg.ownerDocument.defaultView.getComputedStyle=()=>({fontFamily:'Replacement Digits',fontWeight:'600',fontStyle:'italic',letterSpacing:'0.3px'});
+  const c=createPriceAxisLayout({svg,width:390});assert.equal(c.right,64);assert.notEqual(c.metricKey,b.metricKey,'computed font properties are also part of the key');
+});
+
+for(const [width,height] of [[390,844],[320,740],[768,1024],[1024,768],[1440,900],[1920,1080]])test(`${width}×${height}: native price/empty and RSI/loading layouts share a 64px gutter`,()=>{
+  assert.equal(chartPaneLayout({width,height}).right,64);
+  assert.equal(RSI_CHART_LAYOUT.right,64);assert.equal(RSI_CHART_LAYOUT.narrowRight,64);
+  for(const showRsi of [false,true]){
+    const loading=rsiChartLayout(width,height,showRsi),ready=rsiChartLayout(width,height,showRsi,createPriceAxisLayout({svg:null,width,left:12}).right);
+    assert.equal(width-loading.right,64);assert.deepEqual(ready,loading,'loading and rendered RSI geometry use the same plot edge');
+  }
+  for(const kind of ['daily','intraday']){
+    const h=chart(kind,{width,value:74967.72,widthScale:1.5}),axis=h.controller.getPriceScale();
+    assert.equal(width-axis.right,64);assert.equal(Number(h.svg.dataset.plotRight),width-64);
+    const hit=h.svg.innerHTML.match(/<g class="price-axis-interaction"[^>]*>[\s\S]*?<rect ([^>]+)>/);
+    assert.ok(hit);const rect=parseAttributes(hit[1]);assert.equal(Number(rect.x),width-64);assert.equal(Number(rect.width),64);
+    for(const label of labels(h.svg.innerHTML))contained(label,width);
+    assert.ok(labels(h.svg.innerHTML).some(label=>label.text==='$74,967.72'),'latest quote retains its full price string');
+    const empty=h.draw(kind==='daily'?{start:'1900-01-01',end:'1900-02-01'}:{range:{start:first-1000000,end:first-999000}});
+    assert.equal(width-empty.getPriceScale().right,64);assert.equal(h.svg.dataset.visiblePointCount,'0');
+  }
 });
 
 test('price ticks and current-price badge yield only the rows occupied by the live selection badge',()=>{
@@ -104,7 +145,7 @@ for(const kind of ['daily','intraday']){
 
 test('very small prices stay nonzero and extremely narrow large-price ticks stay distinct',()=>{
   const svg=fixture(320,1.5),layout=createPriceAxisLayout({svg,width:320}),display=createPriceDisplay({unit:'usd'});
-  for(const [min,max] of [[1e-100,4e-100],[1e-16,5e-16],[1e11,1e11+1],[1e100,2e100]]){
+  for(const [min,max] of [[1e-100,4e-100],[1e-16,5e-16],[1e-7,1e-7+1e-15],[1e11,1e11+1],[1e100,2e100]]){
     const axis=createPriceScale([min,max],{scale:'linear',top:70,bottom:400,domain:{min,max},tickCount:5}),format=createPriceAxisFormatter({axis,display,layout}),ticks=axis.ticks.map(format.tick);
     assert.equal(new Set(ticks).size,ticks.length);for(const label of ticks){assert.notEqual(Number(label.replaceAll(',','').replace('$','')),0);assert.doesNotMatch(label,/…|Infinity|NaN/);}
     assert.ok(Number(format.price(min).replaceAll(',','').replace('$',''))>0);

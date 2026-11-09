@@ -14,7 +14,7 @@ export function chartPaneLayout({width,height,volume=true,drawdown=false,states=
   // Replay owns a footer below every data/axis pane without resizing the SVG.
   // Live callers keep the original allocation when no inset is supplied.
   if(Number.isFinite(bottomInset)&&bottomInset>0)height=Math.max(Math.min(height,48),height-bottomInset);
-  const small=width<600,short=height<360,left=Math.min(small?8:12,width*.05),right=Math.min(small?66:82,width*.25);
+  const small=width<600,short=height<360,left=Math.min(small?8:12,width*.05),right=Math.min(64,Math.max(1,width-left-48));
   // Normal tick text and the selected date occupy separate vertical lanes.
   // On wider charts the added date lane uses seven pixels from the former
   // 24px plot-to-tick gap, preserving the price pane and its replay controls.

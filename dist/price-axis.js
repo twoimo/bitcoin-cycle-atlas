@@ -27,27 +27,32 @@ function priceAxisTextMetrics(svg){
   return {font,measure};
 }
 
-/** A price-independent gutter prevents a pan/hover from moving its own X axis.
- * Reserve a normal six-digit USD quote plus sign and cents using actual font
- * metrics. Unusually large/small values adapt inside this same stable gutter. */
-export function createPriceAxisLayout({svg,width,left=8,minRight=66,fontSize=width<600?11:12,badgeFontSize=width<600?10:11}){
-  const metrics=priceAxisTextMetrics(svg),inset=7,edge=7;
-  const limit=Math.max(1,Math.min(128,width*.35,width-left-48));
-  const right=Math.min(limit,Math.max(minRight,Math.ceil(metrics.measure('$-999,999.99',fontSize)+inset+edge+2)));
+/** A fixed gutter gives the recovered width to the price plot. Actual glyph
+ * metrics fit complete labels inside it without moving the axis on font load,
+ * pan or hover. Exceptionally small embedded canvases retain a usable plot. */
+export function createPriceAxisLayout({svg,width,left=8,minRight=64,fontSize=11,badgeFontSize=11}){
+  const metrics=priceAxisTextMetrics(svg),inset=4,edge=6;
+  const right=Math.min(minRight,Math.max(1,width-left-48));
   const labelWidth=Math.max(1,right-inset-edge),{font}=metrics;
+  // Font face loading can change glyph advances without changing the computed
+  // family name or this fixed gutter. React must refresh its measured fitter.
+  const probe='$-0123456789.,%';
+  const metricKey=JSON.stringify([font,fontSize,badgeFontSize,metrics.measure(probe,fontSize),metrics.measure(probe,badgeFontSize)]);
   const common={'font-family':font.family,'font-weight':font.weight,'font-style':font.style,'font-variant-numeric':'tabular-nums','letter-spacing':font.spacing,lengthAdjust:'spacingAndGlyphs'};
   function textAttributes(label,{badge=false,kind=badge?'badge':'tick'}={}){
     const length=Math.min(labelWidth,Math.max(.01,metrics.measure(label,badge?badgeFontSize:fontSize)));
     return {...common,'data-price-axis-label':kind,textLength:Number(length.toFixed(3))};
   }
-  return {right,inset,edge,labelWidth,fontSize,badgeFontSize,measure:metrics.measure,
+  return {right,inset,edge,labelWidth,fontSize,badgeFontSize,metricKey,measure:metrics.measure,
     attributes(label,options){return Object.entries(textAttributes(label,options)).map(([name,value])=>`${name}="${axisEscape(value)}"`).join(' ');},
     fitNode(node,options={}){if(!node)return;for(const [name,value] of Object.entries(textAttributes(node.textContent,options)))node.setAttribute(name,value);node.setAttribute('font-size',options.badge?badgeFontSize:fontSize);},
   };
 }
 
-/** Axis labels may use scientific notation, but never truncate a number or
- * replace a nonzero tiny price by zero. Source values/readouts stay untouched. */
+/** Normal quotes keep their full decimal representation at every font width.
+ * Scientific notation is a numeric-range policy for extreme values, never a
+ * width fallback. Tiny prices stay nonzero and tight tick ranges stay distinct.
+ * Source values/readouts remain untouched. */
 export function createPriceAxisFormatter({axis,display,layout}){
   const shown=value=>display?.toDisplay?display.toDisplay(value):display?.available===false?null:value*(display?.factor??1)+(display?.offset??0);
   const values=(axis?.ticks||[]).map(shown).filter(Number.isFinite).sort((a,b)=>a-b);
@@ -58,12 +63,14 @@ export function createPriceAxisFormatter({axis,display,layout}){
   function format(raw,badge){
     const value=shown(raw);if(!Number.isFinite(value))return '—';
     const abs=Math.abs(value),digits=Math.min(12,Math.max(tickDigits,badge?(abs>0&&abs<1?6:2):0));
-    const fixed=wrap(axisNumber(value,digits)),size=badge?layout.badgeFontSize:layout.fontSize;
-    if((value===0||Number(axisNumber(value,digits).replaceAll(',',''))!==0)&&layout.measure(fixed,size)<=layout.labelWidth)return fixed;
+    const numeric=axisNumber(value,digits),fixed=wrap(numeric),rounded=Number(numeric.replaceAll(',',''));
+    const precise=badge||!Number.isFinite(gap)||gap<=0||10**-digits<gap;
+    const ordinary=abs>=1e-6&&abs<1e9;
+    if(value===0||ordinary&&rounded!==0&&precise)return fixed;
     // Keep adjacent ticks distinguishable even in a very tight manual range.
     const significant=badge?8:Math.max(3,Math.min(16,Number.isFinite(gap)&&gap>0&&abs>0?Math.floor(Math.log10(abs))-Math.floor(Math.log10(gap))+3:6));
     const scientific=wrap(value.toExponential(significant-1).replace(/(\.\d*?[1-9])0+e/,'$1e').replace(/\.0+e/,'e').replace('e+','e'));
-    return layout.measure(scientific,size)<layout.measure(fixed,size)||Number(axisNumber(value,digits).replaceAll(',',''))===0?scientific:fixed;
+    return rounded===0||!precise||scientific.length<fixed.length?scientific:fixed;
   }
   return {tick:value=>format(value,false),price:value=>format(value,true),tickDigits};
 }

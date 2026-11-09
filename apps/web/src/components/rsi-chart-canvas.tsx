@@ -17,7 +17,7 @@ interface Props {menuPulse:number;symbol:string;unit:string;prices:Point[];bars:
   series?:InstrumentSeries;markers?:InstrumentMarker[];onMarker?:()=>void;volumeUnit?:string;description?:string;className?:string;revision?:string}
 export function RsiChartCanvas(props:Props) {
   const {symbol,unit,prices,bars,rows,view,active,onPick,onHover,hover,svgRef}=props,root=useRef<HTMLDivElement>(null);
-  const [size,setSize]=useState(()=>({width:900,height:520,axis:createPriceAxisLayout({svg:null,width:900,left:12,minRight:82})})),live=useRef(props),navigation=useRef<ReturnType<typeof bindChartNavigation>|null>(null);
+  const [size,setSize]=useState(()=>({width:900,height:520,axis:createPriceAxisLayout({svg:null,width:900,left:12,minRight:64})})),live=useRef(props),navigation=useRef<ReturnType<typeof bindChartNavigation>|null>(null);
   const source=useRef({prices,bars,version:0});
   const legend=useRef<ReturnType<typeof mountInstrumentChartLegend>|null>(null);
   if(source.current.prices!==prices||source.current.bars!==bars)source.current={prices,bars,version:source.current.version+1};
@@ -27,8 +27,8 @@ export function RsiChartCanvas(props:Props) {
   useLayoutEffect(()=>{
     let disposed=false;
     const measure=()=>{if(disposed||!root.current)return;const width=root.current.clientWidth,height=root.current.clientHeight;if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)return;
-      const axis=createPriceAxisLayout({svg:svgRef.current,width,left:Math.min(12,width*.05),minRight:width<600?66:82});
-      setSize(previous=>previous.width===width&&previous.height===height&&previous.axis.right===axis.right?previous:{width,height,axis});};
+      const axis=createPriceAxisLayout({svg:svgRef.current,width,left:Math.min(12,width*.05),minRight:64});
+      setSize(previous=>previous.width===width&&previous.height===height&&previous.axis.right===axis.right&&previous.axis.metricKey===axis.metricKey?previous:{width,height,axis});};
     measure();const observer=typeof ResizeObserver==='undefined'?null:new ResizeObserver(measure);if(root.current)observer?.observe(root.current);
     void root.current?.ownerDocument.fonts?.ready.then(measure);
     return()=>{disposed=true;observer?.disconnect();};
