@@ -79,3 +79,15 @@ test('WP6 probes the painted iframe chart and its legend instead of the retained
   const result=observe(parent);assert.equal(result.chart.id,'active-rsi-chart');assert.equal(result.chart.embedded,true);assert.equal(result.chart.observedCount,63);
   assert.equal(result.legend.text,'TQQQ actual legend');assert.equal(result.legend.rect.left,20);assert.equal(result.chart.rect.top,40);
 });
+
+test('native heading input follows the actual responsive scroll owner, including the tablet instrument slot',()=>{
+  const source=browserSource.slice(browserSource.indexOf('function readHeadingScrollOwner('),browserSource.indexOf('async function revealHeading('))+'\nreadHeadingScrollOwner("#workbench-replay");';
+  const owners={'.center-workspace-toolbar':{id:'center-tools',scrollWidth:700,clientWidth:700,overflowX:'visible'},
+    '.shell-instrument-slot':{scrollWidth:420,clientWidth:130,overflowX:'auto'},'.atlas-canvas-heading':{scrollWidth:663,clientWidth:663,overflowX:'auto'}};
+  const run=()=>runInNewContext(source,{document:{querySelector:()=>({closest:selector=>owners[selector]})},getComputedStyle:node=>node});
+  assert.equal(run(),'.shell-instrument-slot');
+  owners['.shell-instrument-slot'].overflowX='visible';owners['.atlas-canvas-heading'].scrollWidth=550;owners['.atlas-canvas-heading'].clientWidth=390;
+  assert.equal(run(),'.atlas-canvas-heading');
+  owners['.center-workspace-toolbar'].overflowX='auto';owners['.center-workspace-toolbar'].clientWidth=220;
+  assert.equal(run(),'#center-tools');
+});

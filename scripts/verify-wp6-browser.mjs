@@ -75,14 +75,22 @@ async function locate(cdp,selector){return evaluate(cdp,async selector=>{
 async function click(cdp,selector){const target=await locate(cdp,selector);assert.ok(target?.visible,'Native target is not reachable: '+selector+' '+JSON.stringify(target));assert.ok(!target.disabled,'Native target is disabled: '+selector);await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,x:target.x,y:target.y});await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,x:target.x,y:target.y});await settled(cdp);}
 async function key(cdp,key,code,n){for(const type of ['keyDown','keyUp'])await cdp.send('Input.dispatchKeyEvent',{type,key,code,windowsVirtualKeyCode:n,nativeVirtualKeyCode:n});await settled(cdp);}
 
+function readHeadingScrollOwner(selector){
+  const node=document.querySelector(selector);
+  for(const candidate of ['.center-workspace-toolbar','.shell-instrument-slot','.atlas-canvas-heading']){
+    const owner=node?.closest(candidate);
+    if(owner&&owner.scrollWidth>owner.clientWidth+1&&/auto|scroll/.test(getComputedStyle(owner).overflowX))return owner.id?'#'+owner.id:candidate;
+  }
+  return '.atlas-canvas-heading';
+}
 async function revealHeading(cdp,selector,width,receipt){
   const complete=t=>t.painted&&!t.disabled&&t.topmost&&t.box.width>0&&t.box.height>0&&t.clip.width>0&&t.clip.height>0&&t.box.left>=t.clip.left-1&&t.box.right<=t.clip.right+1&&t.box.top>=t.clip.top-1&&t.box.bottom<=t.clip.bottom+1;
   for(let attempt=0;attempt<18;attempt++){
     const target=await evaluate(cdp,readNativeInteractiveTarget,selector);if(complete(target))return;
     assert.ok(target.painted&&!target.disabled,'Header action is hidden or disabled: '+selector);
-    const owner=await evaluate(cdp,selector=>{const node=document.querySelector(selector),host=node?.closest('.center-workspace-toolbar');return host&&host.scrollWidth>host.clientWidth+1?'#'+host.id:'.atlas-canvas-heading';},selector);
+    const owner=await evaluate(cdp,readHeadingScrollOwner,selector);
     const area=await evaluate(cdp,owner=>{const node=document.querySelector(owner),b=node.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width,scrollLeft:node.scrollLeft};},owner);
-    const direction=target.box.left<area.left?1:-1,distance=Math.min(144,area.width/2),x=direction<0?area.right-24:area.left+24,y=(area.top+area.bottom)/2;
+    const direction=target.box.left<area.left?1:-1,distance=Math.min(144,area.width/2),inset=Math.min(24,area.width/4),x=direction<0?area.right-inset:area.left+inset,y=(area.top+area.bottom)/2;
     if(width<=768){await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});for(let step=1;step<=12;step++){await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+direction*distance*step/12,y,id:1}]});await delay(16);}await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
     else await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',x,y,deltaX:-direction*distance,deltaY:0});
     await until(()=>evaluate(cdp,(owner,before)=>Math.abs(document.querySelector(owner).scrollLeft-before)>1,owner,area.scrollLeft),'native heading pan',5000);
