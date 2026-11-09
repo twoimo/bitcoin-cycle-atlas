@@ -59,8 +59,8 @@ export function wp6ScreenshotLogBytes(image){
 export function planWp6ScreenshotTransport(inventory,{phases,budget=wp6TransportBudget,suite='wp6'}={}){
   assert.ok(Array.isArray(inventory));for(const key of ['pngBytes','logBytes'])assert.ok(Number.isSafeInteger(budget[key])&&budget[key]>0);
   phases??=[...new Set(inventory.map(image=>image.phase))];
-  const required=phases.flatMap(phase=>wp6EvidenceViewports.flatMap(([width,height])=>(suite==='chart-qa'?['btcusd','compare']:['tqqq']).map(symbol=>phase+'/'+symbol+'-'+width+'x'+height+'-chart.png')));
-  const priority=image=>suite==='chart-qa'?(image.file.endsWith('-chart.png')?0:1):screenshotPriority(image);
+  const required=phases.flatMap(phase=>wp6EvidenceViewports.flatMap(([width,height])=>[...(suite==='chart-qa'?['btcusd','compare']:['tqqq']).map(symbol=>phase+'/'+symbol+'-'+width+'x'+height+'-chart.png'),...(suite==='chart-qa'&&phase!=='before'&&width<=390?[phase+'/btcusd-'+width+'x'+height+'-interval-30m.png']:[])]));
+  const priority=image=>suite==='chart-qa'?(required.includes(image.phase+'/'+image.file)?0:null):screenshotPriority(image);
   const identity=image=>image.phase+'/'+image.file,available=new Set(inventory.map(identity)),selected=[],omitted=[],errors=[];
   for(const name of required)if(!available.has(name))errors.push('Required viewport screenshot was not captured: '+name);
   let pngBytes=0,logBytes=0;
@@ -123,7 +123,7 @@ export function validateWp6Report(report,{phase,origin,expectedSource}={}){
     assert.equal(item.status,'PASS',item.id+' failed');assert.deepEqual(item.runtimeErrors,[]);
     assert.ok(typeof item.contextId==='string'&&item.contextId.length>0);
     const prefix=item.symbol.toLowerCase()+'-'+item.width+'x'+item.height;
-    const required=[prefix+'-chart.png',...(report.suite!=='chart-qa'&&item.symbol==='BTCUSD'?[prefix+'-replay.png']:[]),...(phase!=='before'&&item.symbol==='TQQQ'?[prefix+'-statistics.png']:[])];
+    const required=[prefix+'-chart.png',...(report.suite==='chart-qa'&&phase!=='before'&&item.symbol==='BTCUSD'&&item.width<=390?[prefix+'-interval-30m.png']:[]),...(report.suite!=='chart-qa'&&item.symbol==='BTCUSD'?[prefix+'-replay.png']:[]),...(phase!=='before'&&item.symbol==='TQQQ'?[prefix+'-statistics.png']:[])];
     for(const file of required)assert.ok(item.screenshots.some(image=>image.file===file),'Required screenshot missing: '+file);
   }
   return collectWp6Screenshots(report);

@@ -40,7 +40,7 @@ async function evaluate(cdp,fn,...args){const result=await cdp.send('Runtime.eva
 async function settled(cdp){await evaluate(cdp,async()=>{await document.fonts.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});}
 async function publication(){try{const response=await fetch(origin+'/publication.json',{cache:'no-store',signal:AbortSignal.timeout(20000)});if(!response.ok)throw new Error('HTTP '+response.status);const bytes=Buffer.from(await response.arrayBuffer()),value=JSON.parse(bytes);if(expectedSource)assert.equal(value.sourceCommit,expectedSource);return {sourceCommit:value.sourceCommit,sourceTree:value.sourceTree,generatedAt:value.generatedAt,publishedAt:value.publishedAt,sha256:hash(bytes),checkedAt:new Date().toISOString()};}catch(error){if(expectedSource)throw error;return {error:String(error.message),checkedAt:new Date().toISOString()};}}
 async function candidateSource(){const response=await fetch(origin+'/__wp6-candidate-source.json',{cache:'no-store',signal:AbortSignal.timeout(20000)});assert.equal(response.status,200);const bytes=Buffer.from(await response.arrayBuffer()),identity=JSON.parse(bytes);assert.equal(identity.kind,'atlas-wp6-candidate-source');assert.equal(identity.productionDeployment,false);assert.equal(identity.verifiedTrackedDistClean,true);assert.match(identity.sourceCommit,/^[a-f0-9]{40}$/);assert.match(identity.sourceTree,/^[a-f0-9]{40}$/);assert.match(identity.distTreeSha256,/^[a-f0-9]{64}$/);assert.equal(identity.sourceCommit,expectedSource);return {...identity,sha256:hash(bytes),checkedAt:new Date().toISOString()};}
-async function screenshot(cdp,name,receipt){const capture=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false}),bytes=Buffer.from(capture.data,'base64');await writeFile(resolve(out,name),bytes);receipt.screenshots.push({file:name,bytes:bytes.length,sha256:hash(bytes)});}
+async function screenshot(cdp,name,receipt,clip=null){const capture=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false,...(clip?{clip}:{})}),bytes=Buffer.from(capture.data,'base64');await writeFile(resolve(out,name),bytes);receipt.screenshots.push({file:name,bytes:bytes.length,sha256:hash(bytes),...(clip?{clip}:{})});}
 
 function readWp6(){
   const frame=[...document.querySelectorAll('.atlas-center-frame')].find(f=>f.getClientRects().length),child=frame?.contentDocument;
@@ -227,6 +227,16 @@ async function runChartQaCase(spec,debugBase){
           await click(cdp,'#atlas-shell-features-toggle');receipt.menu=await evaluate(cdp,readChartQa,selector);assert.equal(receipt.menu.heading.featurePanelOpen,true);assert.deepEqual(receipt.menu.heading.clippedControls,[],'Menu controls clipped');assert.deepEqual(receipt.menu.heading.smallControls,[],'44px menu targets lost');
           await screenshot(cdp,id+'-heading-menu.png',receipt);await key(cdp,'Escape','Escape',27);
           assert.equal(await evaluate(cdp,()=>document.activeElement?.id),'atlas-shell-features-toggle','Disclosure focus not restored');
+          const choice=await evaluate(cdp,()=>{const s=document.querySelector('#workbench-interval-select');return {value:s.value,label:s.selectedOptions[0]?.textContent,index:[...s.options].filter(o=>!o.disabled&&!o.hidden).findIndex(o=>o.value==='30m')};});
+          assert.equal(choice.label,'1D');assert.ok(choice.index>=0,'Native30m choice missing');receipt.intervalInitial=choice;
+          await click(cdp,'#workbench-interval-select');await key(cdp,'Home','Home',36);
+          for(let i=0;i<choice.index;i++)await key(cdp,'ArrowDown','ArrowDown',40);
+          await key(cdp,'Enter','Enter',13);
+          await until(()=>evaluate(cdp,()=>document.querySelector('#workbench-interval-select').value==='30m'),'Native30m selection');
+          receipt.intervalSelected=await evaluate(cdp,()=>{const s=document.querySelector('#workbench-interval-select'),r=s.getBoundingClientRect(),c=getComputedStyle(s);return {value:s.value,label:s.selectedOptions[0]?.textContent,rect:{left:r.left,top:r.top,width:r.width,height:r.height},fontSize:c.fontSize,padding:c.padding};});
+          await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:1,y:height-1});await settled(cdp);
+          await screenshot(cdp,id+'-interval-30m.png',receipt,{x:0,y:0,width,height:Math.ceil(heading.rect.bottom),scale:1});
+
         }
       }
     }else if(phase!=='before')assert.equal(receipt.initial.axis.paintedPairs,0,'Painted latest quote overlaps a tick');
