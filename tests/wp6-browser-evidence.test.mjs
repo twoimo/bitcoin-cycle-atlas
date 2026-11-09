@@ -119,3 +119,14 @@ test('paced image emission awaits writes and drains while preserving exact captu
   assert.deepEqual(decodeBrowserEvidenceChunks(chunks,{name}),bytes);
   assert.equal(result.logBytes,wp6ScreenshotLogBytes({phase:'candidate',file:'tqqq-390x844-chart.png',bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')}));
 });
+
+
+test('supplementary chart QA keeps all twelve source-bound cases and six route screenshots',()=>{
+  const report=fixture('before');report.suite='chart-qa';
+  report.cases=wp6EvidenceViewports.flatMap(([width,height])=>['BTCUSD','COMPARE'].map(symbol=>{const id=symbol.toLowerCase()+'-'+width+'x'+height;return {symbol,width,height,id,contextId:id,status:'PASS',runtimeErrors:[],screenshots:[{file:id+'-chart.png',bytes:1000,sha256:'c'.repeat(64)}]};}));
+  assert.equal(validateWp6Report(report,{phase:'before',origin}).length,12);
+  const inventory=collectWp6Screenshots(report).map(image=>({phase:'before',...image}));
+  const plan=planWp6ScreenshotTransport(inventory,{suite:'chart-qa',phases:['before']});
+  assert.equal(plan.selected.length,12);assert.deepEqual(plan.errors,[]);assert.equal(plan.omitted.length,0);
+  report.cases.pop();assert.throws(()=>validateWp6Report(report,{phase:'before',origin}),/every instrument/);
+});
