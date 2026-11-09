@@ -28,8 +28,12 @@ export function mountMobileShellHeading(document) {
     if(ownedFocus)focus(source || feature.querySelector('button:not(:disabled),select:not(:disabled)') || heading.querySelector('#workbench-workspace'));
   }
   function apply() {
-    const chart=document.body.dataset.shell==='chart'&&(!document.body.dataset.centerTool||Boolean(document.body.dataset.chartControls));
-    if(!heading||!feature||!media?.matches||!chart){restore();return;}
+    if(!heading||!feature||!media?.matches||document.body.dataset.shell!=='chart'){restore();return;}
+    // Center workspaces replace the plot, not its surrounding shell. Retain
+    // the two-row perimeter and exact protected chart controls while their
+    // independently owned toolbar occupies the second row.
+    const chart=!document.body.dataset.centerTool||Boolean(document.body.dataset.chartControls);
+    if(!chart)setOpen(false);
     if(!trigger){
       const active=document.activeElement,retainFocus=feature.contains(active);
       const original=[...feature.childNodes];
