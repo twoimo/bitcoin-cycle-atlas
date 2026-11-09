@@ -49,3 +49,9 @@
 - 산출물: `docs/requirements/REQ_AUTH_PRIVATE_20261109.md`, `docs/requirements/REQ_RELAY_RAG_20261109.md`, `docs/requirements/README.md`
 - 내용: 초대·승인·강등·자기관리·Google 로그인, 블러 우회 대응 원칙(데이터 미전송), 보안 7종 도구 통과 기준, 3열 레이아웃 계약, RAG 파이프라인·OpenAI 키 취급·평가 메트릭 임계값·QA 시나리오
 - 남음: 미결정 항목 확정, 구현 마일스톤 승인
+
+## 2026-11-09 · 시즌 테마(명절·행사) 1차 구현
+- 브랜치: `feat/seasonal-theme-20261109` (99e071e), 문서: `docs/requirements/REQ_SEASONAL_THEMES_20261109.md`
+- 18개 이벤트(KST 기준일 ± 창) 판정 엔진, 음력 3종은 `korean-lunar-calendar`로 2024–2040 표 생성
+- 장식 전용 레이어(차트 데이터 색 불변), 사용자 해제 배지, 모션·인쇄·강제 대비 폴백
+- 검증: 단위 테스트 10건, 2024–2040 6,209일 전수 점검 위반 0, 브라우저 18개 테마 전수(차트 `--accent` 불변)
