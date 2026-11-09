@@ -7,6 +7,7 @@ export function readChartQa(selector='#lab-chart') {
   const overlaps=(a,b)=>{const r=intersection(a,b);return r&&r.width>.5&&r.height>.5;};
   const painted=(node,allowOffscreen=false)=>{
     if(!node||!node.getClientRects().length)return false;
+    if(node.checkVisibility&&!node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true,contentVisibilityAuto:true}))return false;
     const own=getComputedStyle(node),r=box(node);
     if(own.visibility!=='visible'||r.width<=0||r.height<=0)return false;
     for(let p=node;p&&p.nodeType===1;p=p.parentElement){const s=getComputedStyle(p);if(s.display==='none'||Number(s.opacity)===0||p.hidden)return false;}
@@ -31,7 +32,7 @@ export function readChartQa(selector='#lab-chart') {
     text:{rawCount:texts.length,rawPairs:rawPairs.length,rawPairDetails:rawPairs,paintedCount:visibleTexts.length,paintedPairs:visiblePairs.length,paintedPairDetails:visiblePairs},
     annotations:{rawCount:annotations.length,paintedCount:visibleAnnotations.length,pairs:annotationPairs.length,pairDetails:annotationPairs,labels:annotations},
     axis:{quote:quoteEntry,ticks,rawPairs:quotePairs(false).length,paintedPairs:quotePairs(true).length,rawPairDetails:quotePairs(false),paintedPairDetails:quotePairs(true)},
-    heading:heading?{rect:h,scrollWidth:heading.scrollWidth,clientWidth:heading.clientWidth,mode:heading.dataset.mobileHeading||'legacy',toolbarLabels:[...heading.querySelectorAll('[role="toolbar"]')].map(n=>n.getAttribute('aria-label')),controls,clippedControls:controls.filter(c=>c.clipped),smallControls:controls.filter(c=>c.small),featurePanelOpen:document.querySelector('#atlas-shell-features-toggle')?.getAttribute('aria-expanded')==='true'}:null};
+    heading:heading?{rect:h,scrollWidth:heading.scrollWidth,clientWidth:heading.clientWidth,mode:heading.dataset.mobileHeading||'legacy',toolbarLabels:[heading,...heading.querySelectorAll('[role="toolbar"]')].map(n=>n.getAttribute('aria-label')).filter(Boolean),controls,clippedControls:controls.filter(c=>c.clipped),smallControls:controls.filter(c=>c.small),featurePanelOpen:document.querySelector('#atlas-shell-features-toggle')?.getAttribute('aria-expanded')==='true'}:null};
 }
 
 /** Coordinates for native pointer input. No synthetic dispatch or DOM state

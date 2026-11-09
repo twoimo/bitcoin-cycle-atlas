@@ -213,7 +213,7 @@ async function runChartQaCase(spec,debugBase){
       receipt.hover=[];const targets=await evaluate(cdp,readAnnotationHoverTargets);let worst=null;
       for(const target of targets){
         await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:target.x,y:target.y});await settled(cdp);
-        const state=await evaluate(cdp,readChartQa,selector),sample={target,annotations:state.annotations,text:state.text};receipt.hover.push(sample);
+        const state=await evaluate(cdp,readChartQa,selector),sample={target,annotations:{rawCount:state.annotations.rawCount,paintedCount:state.annotations.paintedCount,pairs:state.annotations.pairs,pairDetails:state.annotations.pairDetails},text:{rawCount:state.text.rawCount,rawPairs:state.text.rawPairs,paintedCount:state.text.paintedCount,paintedPairs:state.text.paintedPairs,paintedPairDetails:state.text.paintedPairDetails}};receipt.hover.push(sample);
         if(!worst||sample.annotations.pairs>worst.annotations.pairs)worst=sample;
       }
       receipt.maximumAnnotationPairs=Math.max(receipt.initial.annotations.pairs,...receipt.hover.map(s=>s.annotations.pairs));

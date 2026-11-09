@@ -243,7 +243,7 @@ export async function runWp6CloudflareReview(args=process.argv.slice(2)){
   finally{
     if(candidateServer)try{await candidateServer.close();}catch(error){receipt.status='FAIL';receipt.errors.push(errorText(error));}
     if(receipt.phases.length===1){receipt.nativeReport=receipt.phases[0].nativeReport;receipt.exitCode=receipt.phases[0].exitCode;}
-    const plan=planWp6ScreenshotTransport(receipt.screenshots,{phases:receipt.phases.map(result=>result.phase),suite,budget:suite==='chart-qa'?{pngBytes:6_000_000,logBytes:8_500_000}:wp6TransportBudget});receipt.screenshotPlan=plan;
+    const plan=planWp6ScreenshotTransport(receipt.screenshots,{phases:receipt.phases.map(result=>result.phase),suite,budget:suite==='chart-qa'?{pngBytes:1_900_000,logBytes:2_650_000}:wp6TransportBudget});receipt.screenshotPlan=plan;
     if(plan.errors.length){receipt.status='FAIL';receipt.errors.push(...plan.errors);}
     const selectedQueue=plan.selected.map(image=>imageQueue.find(item=>item.name==='wp6-'+image.phase+'/'+image.file));
     assert.ok(selectedQueue.every(Boolean),'Selected screenshot bytes are missing');
