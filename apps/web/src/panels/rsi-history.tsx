@@ -11,7 +11,7 @@ import { rsiCrossings } from '../rsi-crossings.js';
 import {CompactToolbar,CompactToolbarMenu} from '../components/compact-toolbar.js';
 
 export interface RsiHistoryState {options:BacktestOptions;result:BacktestResult|null;revision?:string}
-export function RsiHistory({symbol,unit,prices,rows,revision,onDate,cache}:{symbol:string;unit:string;prices:Point[];rows:RsiRow[];revision?:string;onDate:(index:number)=>void;cache?:Map<string,RsiHistoryState>}) {
+export function RsiHistory({symbol,unit,prices,rows,revision,onDate,cache,initialCsv=false}:{symbol:string;unit:string;prices:Point[];rows:RsiRow[];revision?:string;onDate:(index:number)=>void;cache?:Map<string,RsiHistoryState>;initialCsv?:boolean}) {
   const [options,setOptions] = useState<BacktestOptions>(() => cache?.get(symbol)?.options || ({start:prices[0]?.[0] || '',end:prices.at(-1)?.[0] || '',capital:unit === 'KRW' ? 10000000 : 10000,buy:33.5,sell:43,feeBps:10}));
   const [result,setResult] = useState<BacktestResult|null>(()=>cache?.get(symbol)?.revision===revision ? cache?.get(symbol)?.result || null : null), [error,setError] = useState(''), [busy,setBusy] = useState(false);
   const resultRevision=useRef(revision);
@@ -45,6 +45,7 @@ export function RsiHistory({symbol,unit,prices,rows,revision,onDate,cache}:{symb
     })].map(row => row.map(value => `"${String(value).replaceAll('"','""')}"`).join(',')).join('\r\n');
     setCsvText(output);
   }
+  useEffect(()=>{if(initialCsv)csv();},[initialCsv]);
   return <section className="rsi-history" data-presentation-control aria-label="과거 기록·백테스트">
     <CompactToolbar label={`${symbol} 과거 기록 도구`} order={30}>
       <CompactToolbarMenu name="rsi-history-summary" label={`${history.length.toLocaleString()}일 · 가정`} title={`${symbol} 과거 기록·계산 가정`}><p>{prices[0]?.[0]} ~ {prices.at(-1)?.[0]} · {prices.length.toLocaleString()}일</p><p>가정 실험 · 다음 관측일 종가 체결 · 전액 매수/전량 매도 · {options.feeBps}bp = {fmt(options.feeBps/100)}%</p></CompactToolbarMenu>

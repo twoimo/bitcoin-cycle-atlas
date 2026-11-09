@@ -5,6 +5,7 @@ import type { RsiBar } from '@atlas/domain/rsi-bars';
 import { bindChartNavigation } from '../../../../dist/chart-navigation.js';
 import { withChartSpacing,candleBodyWidth } from '../../../../dist/chart-view-policy.js';
 import { createPriceAxisLayout,createPriceAxisFormatter } from '../../../../dist/price-axis.js';
+import { mountInstrumentChartLegend } from '../../../../dist/ui/instrument-chart-legend.js';
 import { chartGeometry,chartRange,date,day,nearestPoint,type Anchor,type RsiChartView } from '../rsi-chart-model.js';
 import { rsiCrossings } from '../rsi-crossings.js';
 import { instrumentRange,nearestObservation,observedPricePath,type InstrumentSeries } from '../instrument-chart-model.js';
@@ -18,6 +19,7 @@ export function RsiChartCanvas(props:Props) {
   const {symbol,unit,prices,bars,rows,view,active,onPick,onHover,hover,svgRef}=props,root=useRef<HTMLDivElement>(null);
   const [size,setSize]=useState(()=>({width:900,height:520,axis:createPriceAxisLayout({svg:null,width:900,left:12,minRight:82})})),live=useRef(props),navigation=useRef<ReturnType<typeof bindChartNavigation>|null>(null);
   const source=useRef({prices,bars,version:0});
+  const legend=useRef<ReturnType<typeof mountInstrumentChartLegend>|null>(null);
   if(source.current.prices!==prices||source.current.bars!==bars)source.current={prices,bars,version:source.current.version+1};
   const clipId=useId().replaceAll(':',''),priceClip=`${clipId}-price`,oscClip=`${clipId}-osc`;
   const geometry=useMemo(()=>chartGeometry(prices,bars,rows,view,size.width,size.height,size.axis.right),[prices,bars,rows,view,size]);
@@ -81,6 +83,15 @@ export function RsiChartCanvas(props:Props) {
     let lane=laneEnds.findIndex(end=>end+30<labelX);if(lane<0)lane=laneEnds.length;laneEnds[lane]=labelX;
     return {key,items,marker,x,labelX,y:g.top+10+lane*20};
   });
+  useLayoutEffect(()=>{
+    if(!root.current)return;
+    const controller=mountInstrumentChartLegend({plot:root.current});legend.current=controller;
+    return()=>{controller.destroy();legend.current=null;};
+  },[symbol]);
+  useLayoutEffect(()=>{
+    legend.current?.update({...props,prices,bars,rows,view},{width:size.width,height:size.height,left:g.left,right:g.right,top:g.top,bottom:g.priceBottom,
+      protectedAnchors:marks.map(mark=>({x:mark.labelX-13,y:mark.y-9,width:26,height:18}))});
+  },[symbol,unit,prices,bars,rows,view,active,size,props.series,props.markers,props.volumeUnit]);
   function pointer(event:React.PointerEvent<SVGSVGElement>|React.MouseEvent<SVGSVGElement>):Pick|null {
     const rect=event.currentTarget.getBoundingClientRect(),px=(event.clientX-rect.left)/rect.width*size.width,py=(event.clientY-rect.top)/rect.height*size.height;
     if(px<g.left||px>g.right||py<g.top||py>g.bottom)return null;
@@ -96,7 +107,7 @@ export function RsiChartCanvas(props:Props) {
   const color=(bar:RsiBar)=>bar[4]>=bar[1]?'var(--green)':'var(--red)';
   const anchorY=(a:Anchor)=>a.panel==='rsi'?g.rsiY(a.value):g.y(a.value);
   const measurement=view.measurement.length===1&&hover?.panel===view.measurement[0].panel?[...view.measurement,hover]:view.measurement;
-  return <div className={`rsi-chart-canvas ${props.className||''}`} ref={root} data-tool={view.tool} data-chart={props.series?'instrument-price':'rsi-price'}>
+  return <div className={`atlas-plot rsi-chart-canvas ${props.className||''}`} ref={root} data-tool={view.tool} data-chart={props.series?'instrument-price':'rsi-price'}>
     <svg ref={svgRef} width={size.width} height={size.height} viewBox={`0 0 ${size.width} ${size.height}`} role="img" tabIndex={0} aria-label={`${props.description||`${symbol} 가격·RSI 차트`}, 휠 확대·축소, 드래그 이동, C 십자선, H 이동, M 측정`}
       data-plot-left={g.left} data-plot-right={g.right} data-plot-top={g.top} data-plot-bottom={g.bottom} data-price-bottom={g.priceBottom} data-time-axis-top={g.bottom} data-start={view.start} data-end={view.end} data-price-min={g.min} data-price-max={g.max} data-price-mode={view.autoScale?'auto':'manual'}
       onPointerMove={event=>{if(active&&!event.buttons)onHover(pointer(event));}} onPointerLeave={()=>onHover(null)} onClick={event=>{if(!active||event.defaultPrevented)return;const p=pointer(event);if(p)onPick(p);}}>

@@ -59,14 +59,32 @@ try{
   assert.equal(await page.getByText('스냅샷은 읽었지만 관측 자료가 없습니다.',{exact:false}).count(),0);
   report.checks.push('older empty fallback retains populated API observations and accurate notice');
   await page.locator('[data-atlas-page="outlook"]').click();
-  await page.locator('.rsi-workbench-tabs button').nth(1).click();
-  const submit=page.locator('.rsi-backtest-form button[type="submit"]');
+  await page.locator('.rsi-chart-canvas svg').waitFor();
+  const chart=await page.locator('.rsi-chart-canvas svg').elementHandle();
+  const range=await chart.evaluate(node=>[node.dataset.start,node.dataset.end]);
+  const dialog=page.locator('dialog[data-rsi-dialog="backtest"]');
+  async function openBacktest(){
+    await page.locator('[data-rsi-view="backtest"]').click();
+    await page.locator('dialog[data-rsi-dialog="backtest"][open]').waitFor();
+    assert.equal(await chart.evaluate(node=>node===document.querySelector('.rsi-chart-canvas svg')),true,'opening details retains the same chart canvas');
+    assert.deepEqual(await chart.evaluate(node=>[node.dataset.start,node.dataset.end]),range,'opening details preserves the observed chart range');
+    assert.equal(await page.locator('.rsi-chart-canvas svg').count(),1,'details keep one primary chart');
+  }
+  async function closeBacktest(){
+    await dialog.locator('[data-rsi-dialog-close]').click();
+    await dialog.waitFor({state:'hidden'});
+    assert.equal(await page.locator('[data-rsi-view="backtest"]').evaluate(node=>node===document.activeElement),true,'closing details returns focus to its chart toolbar trigger');
+  }
+  await openBacktest();
+  const submit=dialog.locator('.rsi-backtest-form button[type="submit"]');
   assert.equal(await submit.isEnabled(),true);await submit.click();
   for(let i=0;i<100&&!backtest;i++)await new Promise(resolve=>setTimeout(resolve,20));
   assert.equal(backtest?.revision,revision);
   report.checks.push('real RSI request retains the revision of its displayed API observations');
+  await closeBacktest();
   mode='pending';await page.locator('.ml-delivery button').click();
   await page.locator('#market-view[aria-busy="true"]').waitFor();
+  await openBacktest();
   assert.equal(await submit.isEnabled(),true);
   for(let i=0;i<100&&!pending;i++)await new Promise(resolve=>setTimeout(resolve,20));
   assert(pending,'replacement request entered the pending HTTP boundary');
@@ -75,6 +93,7 @@ try{
   assert.equal(await submit.isEnabled(),true);
   assert.match(await page.locator('.ml-delivery').textContent(),/직전 자료 유지/);
   report.checks.push('pending and failed retries retain the accepted revision and available backtest action');
+  report.checks.push('backtest details open and close as a modal while preserving the chart canvas and observed range');
   assert.deepEqual(report.runtimeErrors,[]);
   await page.screenshot({path:path.join(output,'retained-snapshot.png')});
   report.status='passed';
