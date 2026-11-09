@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "source": "RelayDeck",
-  "generated_at": "2026-11-09T22:09:00+09:00",
+  "generated_at": "2026-11-10T01:13:48+09:00",
   "rooms": [
     {
       "id": "telegram",
@@ -1492,132 +1492,6 @@
       "updated_at": null,
       "editions": [
         {
-          "date": "2026-11-07",
-          "version": "v3",
-          "pages": [
-            {
-              "label": "1면",
-              "alt": "모바일한경 2026-11-07 v3 1면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-01.jpg"
-            },
-            {
-              "label": "2면",
-              "alt": "모바일한경 2026-11-07 v3 2면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-02.jpg"
-            },
-            {
-              "label": "3면",
-              "alt": "모바일한경 2026-11-07 v3 3면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-03.jpg"
-            },
-            {
-              "label": "4면",
-              "alt": "모바일한경 2026-11-07 v3 4면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-04.jpg"
-            },
-            {
-              "label": "5면",
-              "alt": "모바일한경 2026-11-07 v3 5면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-05.jpg"
-            },
-            {
-              "label": "6면",
-              "alt": "모바일한경 2026-11-07 v3 6면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-06.jpg"
-            },
-            {
-              "label": "7면",
-              "alt": "모바일한경 2026-11-07 v3 7면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-07.jpg"
-            },
-            {
-              "label": "8면",
-              "alt": "모바일한경 2026-11-07 v3 8면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-08.jpg"
-            },
-            {
-              "label": "9면",
-              "alt": "모바일한경 2026-11-07 v3 9면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-09.jpg"
-            },
-            {
-              "label": "10면",
-              "alt": "모바일한경 2026-11-07 v3 10면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-10.jpg"
-            },
-            {
-              "label": "11면",
-              "alt": "모바일한경 2026-11-07 v3 11면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-11.jpg"
-            },
-            {
-              "label": "12면",
-              "alt": "모바일한경 2026-11-07 v3 12면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-12.jpg"
-            },
-            {
-              "label": "13면",
-              "alt": "모바일한경 2026-11-07 v3 13면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-13.jpg"
-            },
-            {
-              "label": "14면",
-              "alt": "모바일한경 2026-11-07 v3 14면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-14.jpg"
-            },
-            {
-              "label": "15면",
-              "alt": "모바일한경 2026-11-07 v3 15면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-15.jpg"
-            },
-            {
-              "label": "16면",
-              "alt": "모바일한경 2026-11-07 v3 16면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-16.jpg"
-            },
-            {
-              "label": "17면",
-              "alt": "모바일한경 2026-11-07 v3 17면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-17.jpg"
-            },
-            {
-              "label": "18면",
-              "alt": "모바일한경 2026-11-07 v3 18면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-18.jpg"
-            },
-            {
-              "label": "19면",
-              "alt": "모바일한경 2026-11-07 v3 19면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-19.jpg"
-            },
-            {
-              "label": "20면",
-              "alt": "모바일한경 2026-11-07 v3 20면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-20.jpg"
-            },
-            {
-              "label": "21면",
-              "alt": "모바일한경 2026-11-07 v3 21면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-21.jpg"
-            },
-            {
-              "label": "22면",
-              "alt": "모바일한경 2026-11-07 v3 22면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-22.jpg"
-            },
-            {
-              "label": "23면",
-              "alt": "모바일한경 2026-11-07 v3 23면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-23.jpg"
-            },
-            {
-              "label": "24면",
-              "alt": "모바일한경 2026-11-07 v3 24면",
-              "image": "data/relay/assets/hankyung-2026-11-07-v3-24.jpg"
-            }
-          ]
-        },
-        {
           "date": "2026-11-09",
           "version": "v3",
           "pages": [
@@ -1800,6 +1674,177 @@
               "label": "36면",
               "alt": "모바일한경 2026-11-09 v3 36면",
               "image": "data/relay/assets/hankyung-2026-11-09-v3-36.jpg"
+            }
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "version": "v4",
+          "pages": [
+            {
+              "label": "1면",
+              "alt": "모바일한경 2026-11-10 v4 1면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-01.jpg"
+            },
+            {
+              "label": "2면",
+              "alt": "모바일한경 2026-11-10 v4 2면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-02.jpg"
+            },
+            {
+              "label": "3면",
+              "alt": "모바일한경 2026-11-10 v4 3면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-03.jpg"
+            },
+            {
+              "label": "4면",
+              "alt": "모바일한경 2026-11-10 v4 4면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-04.jpg"
+            },
+            {
+              "label": "5면",
+              "alt": "모바일한경 2026-11-10 v4 5면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-05.jpg"
+            },
+            {
+              "label": "6면",
+              "alt": "모바일한경 2026-11-10 v4 6면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-06.jpg"
+            },
+            {
+              "label": "7면",
+              "alt": "모바일한경 2026-11-10 v4 7면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-07.jpg"
+            },
+            {
+              "label": "8면",
+              "alt": "모바일한경 2026-11-10 v4 8면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-08.jpg"
+            },
+            {
+              "label": "9면",
+              "alt": "모바일한경 2026-11-10 v4 9면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-09.jpg"
+            },
+            {
+              "label": "10면",
+              "alt": "모바일한경 2026-11-10 v4 10면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-10.jpg"
+            },
+            {
+              "label": "11면",
+              "alt": "모바일한경 2026-11-10 v4 11면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-11.jpg"
+            },
+            {
+              "label": "12면",
+              "alt": "모바일한경 2026-11-10 v4 12면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-12.jpg"
+            },
+            {
+              "label": "13면",
+              "alt": "모바일한경 2026-11-10 v4 13면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-13.jpg"
+            },
+            {
+              "label": "14면",
+              "alt": "모바일한경 2026-11-10 v4 14면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-14.jpg"
+            },
+            {
+              "label": "15면",
+              "alt": "모바일한경 2026-11-10 v4 15면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-15.jpg"
+            },
+            {
+              "label": "16면",
+              "alt": "모바일한경 2026-11-10 v4 16면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-16.jpg"
+            },
+            {
+              "label": "17면",
+              "alt": "모바일한경 2026-11-10 v4 17면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-17.jpg"
+            },
+            {
+              "label": "18면",
+              "alt": "모바일한경 2026-11-10 v4 18면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-18.jpg"
+            },
+            {
+              "label": "19면",
+              "alt": "모바일한경 2026-11-10 v4 19면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-19.jpg"
+            },
+            {
+              "label": "20면",
+              "alt": "모바일한경 2026-11-10 v4 20면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-20.jpg"
+            },
+            {
+              "label": "21면",
+              "alt": "모바일한경 2026-11-10 v4 21면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-21.jpg"
+            },
+            {
+              "label": "22면",
+              "alt": "모바일한경 2026-11-10 v4 22면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-22.jpg"
+            },
+            {
+              "label": "23면",
+              "alt": "모바일한경 2026-11-10 v4 23면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-23.jpg"
+            },
+            {
+              "label": "24면",
+              "alt": "모바일한경 2026-11-10 v4 24면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-24.jpg"
+            },
+            {
+              "label": "A024A",
+              "alt": "모바일한경 2026-11-10 v4 A024A",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-25.jpg"
+            },
+            {
+              "label": "25면",
+              "alt": "모바일한경 2026-11-10 v4 25면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-26.jpg"
+            },
+            {
+              "label": "26면",
+              "alt": "모바일한경 2026-11-10 v4 26면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-27.jpg"
+            },
+            {
+              "label": "27면",
+              "alt": "모바일한경 2026-11-10 v4 27면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-28.jpg"
+            },
+            {
+              "label": "28면",
+              "alt": "모바일한경 2026-11-10 v4 28면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-29.jpg"
+            },
+            {
+              "label": "29면",
+              "alt": "모바일한경 2026-11-10 v4 29면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-30.jpg"
+            },
+            {
+              "label": "30면",
+              "alt": "모바일한경 2026-11-10 v4 30면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-31.jpg"
+            },
+            {
+              "label": "31면",
+              "alt": "모바일한경 2026-11-10 v4 31면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-32.jpg"
+            },
+            {
+              "label": "32면",
+              "alt": "모바일한경 2026-11-10 v4 32면",
+              "image": "data/relay/assets/hankyung-2026-11-10-v4-33.jpg"
             }
           ]
         }
