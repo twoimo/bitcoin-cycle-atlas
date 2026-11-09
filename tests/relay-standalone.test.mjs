@@ -121,3 +121,16 @@ test('the relay chat track can shrink below its content width on narrow screens'
   const css=await readFile(new URL('../dist/relay-room.css',import.meta.url),'utf8');
   assert.match(css,/\.relay-chat\{[^}]*grid-template-columns:minmax\(0,1fr\)/);
 });
+
+test('the relay chat reflows soft line breaks so bubbles keep a readable width',async t=>{
+  const data={rooms:[{id:'telegram',kind:'chat',title:'소수의견',messages:[
+    {id:'1',at:'2026-11-08T10:00:00+09:00',author:'소수의견',text:'첫 줄입니다\n둘째 줄입니다\n\n새 단락 첫 줄\n새 단락 둘째 줄'},
+  ]}]};
+  const {document}=parseHTML('<section id="relay"></section>');
+  let ready;const loaded=new Promise(resolve=>{ready=resolve;});
+  const root=document.getElementById('relay');
+  initRelayRoomView({root,embeddedData:()=>JSON.stringify(data),onReady:ready}).show(true);await loaded;
+  const html=root.querySelector('.relay-msg-text').innerHTML;
+  assert.equal(html,'첫 줄입니다 둘째 줄입니다<br><br>새 단락 첫 줄 새 단락 둘째 줄');
+  assert.equal((html.match(/<br>/g)||[]).length,2);
+});

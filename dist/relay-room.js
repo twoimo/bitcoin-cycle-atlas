@@ -67,6 +67,9 @@ function messageLinks(message) {
   }
   return all.sort((a, b) => a.offset - b.offset || b.length - a.length);
 }
+function softWrap(html) {
+  return html.replace(/\r\n?/g, '\n').replace(/\n{2,}/g, '\u0001').replace(/\n/g, ' ').replace(/\u0001/g, '<br><br>');
+}
 function renderMessageText(message) {
   const text = String(message?.text || '');
   if (!text) return '';
@@ -75,11 +78,11 @@ function renderMessageText(message) {
     if (link.offset < cursor) continue;
     const end = Math.min(text.length, link.offset + link.length);
     if (end <= link.offset) continue;
-    html += esc(text.slice(cursor, link.offset)).replace(/\n/g, '<br>');
-    html += `<a class="relay-msg-inline-link" href="${esc(link.url)}" target="_blank" rel="noopener noreferrer">${esc(text.slice(link.offset, end)).replace(/\n/g, '<br>')}</a>`;
+    html += softWrap(esc(text.slice(cursor, link.offset)));
+    html += `<a class="relay-msg-inline-link" href="${esc(link.url)}" target="_blank" rel="noopener noreferrer">${softWrap(esc(text.slice(link.offset, end)))}</a>`;
     cursor = end;
   }
-  return html + esc(text.slice(cursor)).replace(/\n/g, '<br>');
+  return html + softWrap(esc(text.slice(cursor)));
 }
 function replySnippet(message) {
   const text = String(message?.text || '').replace(/\s+/g, ' ').trim();
@@ -231,7 +234,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
       const reply = replied
         ? `<div class="relay-reply"><span class="relay-reply-name">${esc(replied.author || item.title || '')}</span><span class="relay-reply-text">${esc(replySnippet(replied))}</span></div>`
         : message.reply_to ? '<div class="relay-reply"><span class="relay-reply-text">이전 메시지</span></div>' : '';
-      const quote = message.quote ? `<blockquote class="relay-msg-quote">${esc(message.quote).replace(/\n/g, '<br>')}</blockquote>` : '';
+      const quote = message.quote ? `<blockquote class="relay-msg-quote">${softWrap(esc(message.quote))}</blockquote>` : '';
       const withheld = message.withheld && !text ? '<p class="relay-msg-withheld">Telegram에서 본문이 제한된 글입니다.</p>' : '';
       const link = safeHref(message.url || message.link);
       const album = imageList.length > 1 ? `<span class="relay-msg-album">사진 ${imageList.length}장</span>` : '';
@@ -254,7 +257,7 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
 
   function articleReader(article) {
     const body = String(article.body_text || '').trim();
-    const paragraphs = body ? body.split(/\n{2,}/).map(part => `<p>${esc(part).replace(/\n/g, '<br>')}</p>`).join('') : '<p>본문이 아직 없습니다.</p>';
+    const paragraphs = body ? body.split(/\n{2,}/).map(part => `<p>${softWrap(esc(part))}</p>`).join('') : '<p>본문이 아직 없습니다.</p>';
     const images = (Array.isArray(article.images) ? article.images : []).map(image => {
       const src = typeof image === 'string' ? image : image?.src;
       if (!src) return '';
