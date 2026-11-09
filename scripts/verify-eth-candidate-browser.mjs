@@ -125,6 +125,7 @@ async function screenshot(cdp,name,receipt){
   }
 }
 async function click(cdp,selector){
+  if(await evaluate(cdp,s=>Boolean(document.querySelector(s)?.closest('.shell-feature-panel[hidden]')),selector))await click(cdp,'#atlas-shell-features-toggle');
   await evaluate(cdp,s=>{const el=document.querySelector(s);if(!el)throw new Error('Missing click target '+s);el.scrollIntoView({behavior:'instant',block:'nearest',inline:'nearest'});},selector);
   await settled(cdp);
   const target=await evaluate(cdp,readNativeInteractiveTarget,selector);
@@ -663,6 +664,16 @@ async function ethCase(cdp,width,receipt,expected,archive){
 
 async function verifyInfoDataLinks(cdp,symbol){
   const eth=symbol==='ETHUSD',dialogId=eth?'eth-data-dialog':'equity-detail-dialog';
+  const disclosed=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading')?.dataset.mobileHeading==='two-row');
+  let gesture;
+  if(disclosed){
+    if(await evaluate(cdp,()=>document.querySelector('#atlas-shell-features-panel').hidden))await click(cdp,'#atlas-shell-features-toggle');
+    gesture=await evaluate(cdp,()=>{const bar=document.querySelector('.eth-topbar'),panel=document.querySelector('#atlas-shell-features-panel');return {
+      kind:'native-feature-disclosure',scrollLeft:bar.scrollLeft,scrollWidth:bar.scrollWidth,clientWidth:bar.clientWidth,height:bar.getBoundingClientRect().height,
+      open:!panel.hidden,expanded:document.querySelector('#atlas-shell-features-toggle').getAttribute('aria-expanded'),rootWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth};});
+    assert.equal(gesture.open,true);assert.equal(gesture.expanded,'true');assert.equal(gesture.height,92);
+    assert.ok(gesture.scrollWidth<=gesture.clientWidth,'Narrow top controls must fit without horizontal scrolling');
+  }else{
   const gestureStart=await evaluate(cdp,()=>{
     const bar=document.querySelector('.eth-topbar');bar.scrollLeft=0;
     const r=bar.getBoundingClientRect();return {left:r.left+bar.clientLeft,right:r.left+bar.clientLeft+bar.clientWidth,y:r.top+r.height/2,height:r.height};
@@ -674,7 +685,7 @@ async function verifyInfoDataLinks(cdp,symbol){
     await delay(16);
   }
   await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await settled(cdp);
-  const gesture=await evaluate(cdp,()=>{
+  gesture=await evaluate(cdp,()=>{
     const bar=document.querySelector('.eth-topbar'),app=bar.closest('.eth-app');
     return {scrollLeft:bar.scrollLeft,scrollWidth:bar.scrollWidth,clientWidth:bar.clientWidth,height:bar.getBoundingClientRect().height,appScrollLeft:app.scrollLeft,rootWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth};
   });
@@ -682,14 +693,16 @@ async function verifyInfoDataLinks(cdp,symbol){
   assert.equal(gesture.appScrollLeft,0,'Touch must not scroll the clipped app shell');
   assert.equal(gesture.height,gestureStart.height,'Touch must retain one toolbar row');
   assert.ok(gesture.rootWidth<=gesture.viewportWidth+1,'Touch must not cause document overflow');
+  }
   await click(cdp,eth?'[data-eth-action="info"]':'[data-equity-action="info"]');
   const toolbarAccess=await evaluate(cdp,eth=>{
-    const button=document.querySelector(eth?'[data-eth-action="info"]':'[data-equity-action="info"]'),bar=button.closest('.eth-topbar'),b=button.getBoundingClientRect(),r=bar.getBoundingClientRect();
+    const button=document.querySelector(eth?'[data-eth-action="info"]':'[data-equity-action="info"]'),bar=button.closest('.shell-feature-panel')||button.closest('.eth-topbar'),b=button.getBoundingClientRect(),r=bar.getBoundingClientRect();
     return {button:{width:b.width,height:b.height,left:b.left,right:b.right},bar:{left:r.left,right:r.right,scrollLeft:bar.scrollLeft,scrollWidth:bar.scrollWidth,clientWidth:bar.clientWidth,overflowX:getComputedStyle(bar).overflowX},
       rootWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth};
   },eth);
   assert.ok(toolbarAccess.button.width>=44&&toolbarAccess.button.height>=44,'Mobile info needs a real 44px target');
-  assert.equal(toolbarAccess.bar.overflowX,'auto','Mobile toolbar owns its horizontal scroll');
+  if(!disclosed)assert.equal(toolbarAccess.bar.overflowX,'auto','Wider mobile toolbar owns its horizontal scroll');
+  else assert.ok(toolbarAccess.bar.scrollWidth<=toolbarAccess.bar.clientWidth,'The feature disclosure must preserve full source text without horizontal clipping');
   assert.ok(toolbarAccess.button.left>=toolbarAccess.bar.left-1&&toolbarAccess.button.right<=toolbarAccess.bar.right+1,'Revealed info target remains clipped');
   assert.ok(toolbarAccess.rootWidth<=toolbarAccess.viewportWidth+1,'Toolbar scroll leaked to the document');
   const state=await evaluate(cdp,async({symbol,dialogId})=>{
@@ -717,6 +730,7 @@ async function verifyInfoDataLinks(cdp,symbol){
   assert.equal(state.misleading,false);
   await click(cdp,'#'+dialogId+' > header > button');
   assert.equal(await evaluate(cdp,id=>document.getElementById(id).open,dialogId),false);
+  if(disclosed){await click(cdp,'[data-shell-feature-close]');assert.equal(await evaluate(cdp,()=>document.activeElement===document.querySelector('#atlas-shell-features-toggle')),true,'Feature close returns focus to the visible header disclosure');}
   return {...state,toolbarAccess,gesture};
 }
 

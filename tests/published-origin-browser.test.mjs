@@ -9,7 +9,7 @@ const box=(left,top,width,height,painted=true)=>({left,top,width,height,right:le
 function fixture(symbol='ETHUSD',width=390,height=430,noticeHeight=0){
   const spec=publishedOriginCases.find(item=>item.symbol===symbol&&item.width===width&&item.height===height);
   assert.ok(spec);
-  const desktop=width>620,left=desktop?52:0,right=desktop?45:0,top=desktop?38:48,bottom=38;
+  const desktop=width>620,left=desktop?52:0,right=desktop?45:0,top=desktop?38:width<=390?92:48,bottom=38;
   const allocation=box(left,top+noticeHeight,width-left-right,height-top-bottom-noticeHeight);
   const state={url:spec.url,origin,boot:'ready',bootHidden:true,blockedContent:false,symbol:spec.center?'BTCUSD':symbol,
     shell:'chart',page:'outlook',center:spec.center||null,controls:spec.center?'ready':null,frameCount:spec.center?1:0,
@@ -24,7 +24,8 @@ function fixture(symbol='ETHUSD',width=390,height=430,noticeHeight=0){
       box:allocation,allocation,renderAllocation:allocation,viewBox:`0 0 ${allocation.width} ${allocation.height}`,
       observedCount:50,pathCount:3,invalidPath:false,candleCount:0,invalidCandle:false},
     ownerCounts:{'.atlas-canvas-heading':1,'.workbench-tools':1,'.workbench-rail':1,'.workbench-bottom-bar':1},
-    nav:['outlook','market-us','evidence','data','ipo','relay'],top:box(left,0,width-left-right,top),bottom:box(left,height-bottom,width-left-right,bottom),
+    nav:['outlook','market-us','evidence','data','ipo','relay'],top:box(left,0,width-left-right,top),headingLayout:width<=390?'two-row':null,
+    headingScroll:{width:width-left-right,client:width-left-right},bottom:box(left,height-bottom,width-left-right,bottom),
     refreshNotice:noticeHeight?box(left,top,width-left-right,noticeHeight):null,
     left:box(0,0,left,height,desktop),right:box(width-right,0,right,height,desktop),cspViolations:[]};
   return {spec,state};
@@ -90,6 +91,12 @@ test('receipt validation rejects collapsed allocations, overlapping axes and cha
     [state=>state.right={...state.right,width:90},/rail widths/],
     [state=>state.top={...state.top,height:88},/fixed-height row/],
   ]){const {state,spec}=fixture('MSTR',1440,900);mutate(state);assert.throws(()=>validatePage(state,spec),reason);}
+});
+
+test('receipt validation rejects narrow heading clipping or an undisclosed layout regression',()=>{
+  for(const mutate of [state=>state.headingScroll.width+=44,state=>state.headingLayout=null]){
+    const {state,spec}=fixture();mutate(state);assert.throws(()=>validatePage(state,spec),assert.AssertionError);
+  }
 });
 
 test('receipt validation rejects exposed or enabled ancestor asset actions over an embedded chart',()=>{

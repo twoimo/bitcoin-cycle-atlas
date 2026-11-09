@@ -14,6 +14,7 @@ import { retainPriceViewport, renderEmptyPriceViewport } from './empty-price-cha
 import { researchAnnotationsMarkup } from './research-annotations.js?v=1.29.0';
 import { refreshChartLegendGeometry } from './ui/chart-legend.js?v=1.36.1';
 import { chartLegendSlot, placePlotLabel } from './ui/chart-legend-layout.js';
+import { createChartAnnotationLayout } from './ui/chart-annotation-layout.js';
 
 import { resolveMagnetPoint, advanceMeasurement, measurePriceAnchors, measurementOverlayMarkup, createMeasurementOverlay } from './chart-magnet.js?v=1.29.0';
 
@@ -326,7 +327,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
   }
   if(showCycleMarkers||showCycleIntervals)s+=macroClockMarkup({anchors:cycleClockAnchors,start,end,x,left:L,right:W-R,top:T,bottom:priceBottom,obstacles:[...upperOverlayObstacles,...evidenceObstacles,...historyLabelObstacles]});
   const milestoneLayer=showCycleMarkers?milestoneMarkersMarkup({markers:cycleMarkers,start,end,x,y,left:L,right:W-R,top:T,bottom:priceBottom,clipId:`${svg.id}-milestone-clip`,activeMarkerId:activeCycleMarkerId,activeMarkerIds:activeCycleMarkerIds,activeInterval:activeCycleInterval}):null;
-  let updateCycleOverlayObstacles=()=>null;
+  let annotationLayout=null,updateCycleOverlayObstacles=()=>null;
   if(showCycleIntervals){
     const markerObstacles=[...historyLabelObstacles,...evidenceObstacles];
     for(const point of milestoneLayer?.markers||[]){
@@ -348,11 +349,12 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
       if(svg.onpointermove!==hoverHandler)return null;
       const layer=svg.querySelector('.cycle-interval-overlay-layer');if(!layer)return null;
       const next=renderPeriods(obstacles),metadata=periodMetadata(next);
-      if(next.markup===periodMarkup)return {...metadata,changed:false};
+      if(next.markup===periodMarkup){annotationLayout?.refresh();return {...metadata,labelCount:Number(svg.dataset.cycleIntervalLabelCount),changed:false};}
       const focus=svg.ownerDocument?.activeElement?.closest?.('[data-cycle-interval]'),focusId=focus?.closest?.('.cycle-interval-overlay-layer')===layer?focus.dataset.cycleInterval:null;
       periodMarkup=next.markup;layer.innerHTML=periodMarkup;
       if(focusId)[...layer.querySelectorAll('[data-cycle-interval]')].find(node=>node.dataset.cycleInterval===focusId)?.focus({preventScroll:true});
-      return {...metadata,changed:true};
+      annotationLayout?.refresh();
+      return {...metadata,labelCount:Number(svg.dataset.cycleIntervalLabelCount),changed:true};
     };
   }
   if(milestoneLayer){if(milestoneLayer.markers.length||activeCycleInterval)s+=`<g data-indicator-layer="cycle-landmarks">${milestoneLayer.markup}</g>`;svg.dataset.cycleMarkerCount=String(milestoneLayer.markers.length);svg.dataset.cycleMarkerLabelCount=String(milestoneLayer.labelCount);}
@@ -476,6 +478,7 @@ export function drawAtlasPriceChart({svg,tooltip,rows,start,end,split,fixedForec
     if(tool==='measure'){active=Math.max(0,Math.min(selectionRows.length-1,index));mark(active);onHover(hoverInfo(active,false));if(measurementState&&!measurementState.endDate)renderMeasurement(anchorAt(active));}
     else commit(index,false,true);
   };
+  annotationLayout=createChartAnnotationLayout(svg,{isCurrent:()=>svg.onpointermove===hoverHandler,eventPriorities:new Map(historicalEvents.map(event=>[event.id,event.importance]))});
   renderMeasurement();
   if(retainedPointer&&pointerPreview({...retainedPointer,target:svg})){
     if(tool!=='measure')onInspect(inspection(active),{user:false,openPanel:false});

@@ -10,18 +10,20 @@ import { spawn, execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readChartReplayFloatingGeometry } from './verify-chart-replay-browser.mjs';
 import { readNativeInteractiveTarget } from './verify-workspace-browser.mjs';
+import { readChartQa,readAnnotationHoverTargets } from './verify-chart-qa-metrics.mjs';
 
 const root=resolve(fileURLToPath(new URL('..',import.meta.url)));
 const argv=process.argv.slice(2),arg=(key,fallback)=>{const i=argv.indexOf(key);return i<0?fallback:argv[i+1];};
 const origin=arg('--origin','https://bitcoin-cycle-atlas.twoimo.workers.dev').replace(/\/$/,'');
 const out=resolve(root,arg('--out','build/wp6-browser')),phase=arg('--phase',out.includes('before')?'before':'after');
 const expectedSource=arg('--expected-source',null),isCandidate=phase==='candidate';
+const suite=arg('--suite','wp6');
 const symbols=arg('--symbols','BTCUSD,ETHUSD,MSTR,BMNR,TQQQ').split(',');
 const viewports=[[390,844],[320,740],[768,1024],[1024,768],[1440,900],[1920,1080]];
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const delay=ms=>new Promise(accept=>setTimeout(accept,ms));
 const git=args=>execFileSync('git',args,{cwd:root,encoding:'utf8'}).trim();
-const report={schemaVersion:1,kind:'atlas-wp6-native-browser-evidence',qualifiesFullVerification:false,phase,origin,startedAt:new Date().toISOString(),status:'RUNNING',cases:[],failures:[],
+const report={schemaVersion:1,kind:'atlas-wp6-native-browser-evidence',qualifiesFullVerification:false,suite,phase,origin,startedAt:new Date().toISOString(),status:'RUNNING',cases:[],failures:[],
   scope:'Five instruments and six explicit CSS viewports in isolated headless Chrome contexts. Native clicks and keyboard for replay and dialogs. Local or public origin is explicitly recorded; no Safari/physical-device or forecast-validity claim.'};
 let chrome,browser,profile,stderr='';
 
@@ -84,6 +86,9 @@ function readHeadingScrollOwner(selector){
   return '.atlas-canvas-heading';
 }
 async function revealHeading(cdp,selector,width,receipt){
+  if(await evaluate(cdp,selector=>Boolean(document.querySelector(selector)?.closest('#atlas-shell-features-panel[hidden]')),selector)){
+    await click(cdp,'#atlas-shell-features-toggle');receipt.inputs.push({kind:'native-feature-disclosure',selector});
+  }
   const complete=t=>t.painted&&!t.disabled&&t.topmost&&t.box.width>0&&t.box.height>0&&t.clip.width>0&&t.clip.height>0&&t.box.left>=t.clip.left-1&&t.box.right<=t.clip.right+1&&t.box.top>=t.clip.top-1&&t.box.bottom<=t.clip.bottom+1;
   for(let attempt=0;attempt<18;attempt++){
     const target=await evaluate(cdp,readNativeInteractiveTarget,selector);if(complete(target))return;
@@ -114,6 +119,7 @@ async function revealReplayControl(cdp,selector){
 }
 async function replayReady(cdp,selecting){await until(()=>evaluate(cdp,selecting=>{const panel=document.querySelector('.chart-replay-controls'),state=panel?.dataset.state;if(state==='error')throw new Error(document.querySelector('.chart-replay-hud [role="status"]')?.textContent||'Replay loading failed');return Boolean(document.querySelector('svg[data-chart-replay-active="true"] [data-chart-replay-overlay]'))&&(selecting?state==='selecting':['paused','ended','playing'].includes(state));},selecting),'replay '+(selecting?'source selection':'confirmed source'),60000);await settled(cdp);}
 async function openReplay(cdp,width,receipt){
+  if(await evaluate(cdp,()=>Boolean(document.querySelector('#workbench-replay')?.closest('#atlas-shell-features-panel[hidden]'))))await click(cdp,'#atlas-shell-features-toggle');
   const trigger=await locate(cdp,'#workbench-replay');
   if(!trigger&&width<=620){await revealHeading(cdp,'#mobile-details-toggle',width,receipt);await click(cdp,'#mobile-details-toggle');await revealReplayControl(cdp,'[data-mobile-target="#workbench-replay"]');await click(cdp,'[data-mobile-target="#workbench-replay"]');}
   else{if(!trigger?.visible)await revealHeading(cdp,'#workbench-replay',width,receipt);await click(cdp,'#workbench-replay');}
@@ -185,6 +191,50 @@ async function runCase(spec,debugBase){
   finally{cdp?.close();if(contextId)try{await browser.send('Target.disposeBrowserContext',{browserContextId:contextId});}catch{}receipt.finishedAt=new Date().toISOString();await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({id,status:receipt.status,error:receipt.error?.split('\n')[0],screenshots:receipt.screenshots.length}));}
 }
 
+async function runChartQaCase(spec,debugBase){
+  const {symbol,width,height}=spec,id=symbol.toLowerCase()+'-'+width+'x'+height,selector=symbol==='COMPARE'?'#structure-chart':'#lab-chart';
+  const receipt={...spec,id,status:'RUNNING',screenshots:[],inputs:[],runtimeErrors:[],startedAt:new Date().toISOString()};report.cases.push(receipt);
+  let cdp,contextId;
+  try{
+    ({browserContextId:contextId}=await browser.send('Target.createBrowserContext'));
+    const {targetId}=await browser.send('Target.createTarget',{url:'about:blank',browserContextId:contextId});
+    const target=await until(async()=>{const list=await(await fetch(debugBase+'/json/list')).json();return list.find(t=>t.id===targetId&&t.webSocketDebuggerUrl);},'chart QA target');
+    cdp=await Cdp.connect(target.webSocketDebuggerUrl);receipt.contextId=contextId;
+    cdp.on('Runtime.exceptionThrown',event=>receipt.runtimeErrors.push(event.exceptionDetails));
+    await cdp.send('Page.enable');await cdp.send('Runtime.enable');await cdp.send('Network.enable');await cdp.send('Network.setCacheDisabled',{cacheDisabled:true});
+    await cdp.send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
+    await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:width<=768,maxTouchPoints:5});
+    receipt.url=origin+(symbol==='COMPARE'?'/?page=compare&legacy=1':'/?symbol=BTCUSD&granularity=daily&type=line');
+    await cdp.send('Page.navigate',{url:receipt.url});
+    await until(()=>evaluate(cdp,selector=>{const svg=document.querySelector(selector);return svg&&svg.getClientRects().length&&svg.querySelectorAll('path[d]').length>0;},selector),id+' usable chart',60000);
+    await settled(cdp);receipt.initial=await evaluate(cdp,readChartQa,selector);await screenshot(cdp,id+'-chart.png',receipt);
+    assert.ok(receipt.initial.chart.painted&&receipt.initial.chart.paths>0,'No painted chart');
+    if(symbol==='BTCUSD'){
+      receipt.hover=[];const targets=await evaluate(cdp,readAnnotationHoverTargets);let worst=null;
+      for(const target of targets){
+        await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:target.x,y:target.y});await settled(cdp);
+        const state=await evaluate(cdp,readChartQa,selector),sample={target,annotations:{rawCount:state.annotations.rawCount,paintedCount:state.annotations.paintedCount,pairs:state.annotations.pairs,pairDetails:state.annotations.pairDetails},text:{rawCount:state.text.rawCount,rawPairs:state.text.rawPairs,paintedCount:state.text.paintedCount,paintedPairs:state.text.paintedPairs,paintedPairDetails:state.text.paintedPairDetails}};receipt.hover.push(sample);
+        if(!worst||sample.annotations.pairs>worst.annotations.pairs)worst=sample;
+      }
+      receipt.maximumAnnotationPairs=Math.max(receipt.initial.annotations.pairs,...receipt.hover.map(s=>s.annotations.pairs));
+      if(worst&&[390,1440].includes(width)){await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:worst.target.x,y:worst.target.y});await settled(cdp);await screenshot(cdp,id+'-hover.png',receipt);}
+      await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:1,y:height-1});await settled(cdp);
+      if(phase!=='before'){
+        assert.equal(receipt.maximumAnnotationPairs,0,'Painted event/period/milestone text overlaps, including native hover');
+        if(width<=390){
+          const heading=receipt.initial.heading;assert.equal(heading.mode,'two-row');assert.ok(heading.scrollWidth<=heading.clientWidth+1,'Heading horizontally overflows');assert.deepEqual(heading.clippedControls,[],'Core controls clipped');assert.deepEqual(heading.overlapPairs,[],'Core header controls overlap');assert.deepEqual(heading.smallControls,[],'44px core targets lost');
+          assert.ok(heading.toolbarLabels.some(label=>label==='BTCUSD 차트 상단 도구'),'Instrument-specific accessible toolbar name changed');
+          await click(cdp,'#atlas-shell-features-toggle');receipt.menu=await evaluate(cdp,readChartQa,selector);assert.equal(receipt.menu.heading.featurePanelOpen,true);assert.deepEqual(receipt.menu.heading.clippedControls,[],'Menu controls clipped');assert.deepEqual(receipt.menu.heading.smallControls,[],'44px menu targets lost');
+          await screenshot(cdp,id+'-heading-menu.png',receipt);await key(cdp,'Escape','Escape',27);
+          assert.equal(await evaluate(cdp,()=>document.activeElement?.id),'atlas-shell-features-toggle','Disclosure focus not restored');
+        }
+      }
+    }else if(phase!=='before')assert.equal(receipt.initial.axis.paintedPairs,0,'Painted latest quote overlaps a tick');
+    assert.deepEqual(receipt.runtimeErrors,[]);receipt.status='PASS';
+  }catch(error){receipt.status='FAIL';receipt.error=String(error.stack||error);report.failures.push({id,error:receipt.error});if(cdp)try{receipt.failureState=await evaluate(cdp,readChartQa,selector);await screenshot(cdp,id+'-failure.png',receipt);}catch{}}
+  finally{cdp?.close();if(contextId)try{await browser.send('Target.disposeBrowserContext',{browserContextId:contextId});}catch{}receipt.finishedAt=new Date().toISOString();await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({id,status:receipt.status,error:receipt.error?.split('\n')[0],screenshots:receipt.screenshots.length}));}
+}
+
 try{
   await mkdir(out,{recursive:true});assert.ok(['before','after','candidate'].includes(phase));
   if(phase!=='before')assert.match(expectedSource??'',/^[a-f0-9]{40}$/,'An exact source is required for candidate/after evidence');
@@ -197,7 +247,8 @@ try{
   let spawnError;chrome.on('error',error=>{spawnError=error;});chrome.stderr.on('data',bytes=>{stderr=(stderr+bytes.toString()).slice(-12000);});
   const active=await until(async()=>{if(spawnError)throw spawnError;if(chrome.exitCode!==null||chrome.signalCode!==null)throw new Error('Chrome launch failed ('+(chrome.exitCode??chrome.signalCode)+'): '+stderr);try{return(await readFile(resolve(profile,'DevToolsActivePort'),'utf8')).trim().split('\n');}catch{return null;}},'Chrome inspector',20000);
   const debugBase='http://127.0.0.1:'+active[0];browser=await Cdp.connect('ws://127.0.0.1:'+active[0]+active[1]);report.browser=await browser.send('Browser.getVersion');
-  for(const [width,height] of viewports)for(const symbol of symbols)await runCase({symbol,width,height},debugBase);
+  assert.ok(['wp6','chart-qa'].includes(suite));
+  for(const [width,height] of viewports)for(const symbol of suite==='chart-qa'?['BTCUSD','COMPARE']:symbols)await (suite==='chart-qa'?runChartQaCase:runCase)({symbol,width,height},debugBase);
   if(isCandidate){report.candidateSourceAfter=await candidateSource();assert.equal(report.candidateSourceAfter.sha256,report.candidateSourceBefore.sha256,'Candidate source changed during capture');}
   else{report.publicationAfter=await publication();assert.equal(report.publicationAfter.sha256,report.publicationBefore.sha256,'Publication changed during captures');}
   report.status=report.failures.length?'FAIL':'PASS';

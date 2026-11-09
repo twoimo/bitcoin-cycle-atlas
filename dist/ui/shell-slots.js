@@ -1,5 +1,7 @@
 // The shell owns positions, while the existing chart controllers keep their
 // nodes, listeners and state. Asset-specific controls share only top slot 5.
+import {mountMobileShellHeading, shellFeatureContainer} from './mobile-shell-heading.js';
+
 export const SHELL_SLOT_KEYS = Object.freeze({
   top: ['symbol', 'interval', 'chart-type', 'indicators', 'instrument', 'history', 'workspace', 'chart-menu', 'export', 'settings'],
   bottom: ['range', 'date', 'events', 'readout', 'scale', 'auto-scale', 'fit', 'status'],
@@ -70,14 +72,15 @@ export function refreshShellSlots(document, {symbol} = {}) {
   }
   slot(feature, 'top', 4);
   set(feature, 'aria-label', `${currentSymbol} 종목 기능`);
+  const featureControls=shellFeatureContainer(feature);
   const special = '#workbench-scenario,#atlas-cycle-panel,#workbench-monthly-backtest,#workbench-replay,#workbench-next-turn,#equity-scenario,#eth-history-trigger,[data-eth-action],[data-equity-action],.center-workspace-toolbar';
   for (const node of heading.querySelectorAll(special)) {
     if (node.matches('.center-workspace-toolbar') && document.body.dataset.centerTool && !document.body.dataset.chartControls) {
       if (node.parentElement !== heading) heading.append(node);
       continue;
     }
-    if (node.parentElement !== feature && !node.closest('.center-workspace-toolbar')) feature.append(node);
-    else if (node.matches('.center-workspace-toolbar') && node.parentElement !== feature) feature.append(node);
+    if (node.parentElement !== featureControls && !node.closest('.center-workspace-toolbar')) featureControls.append(node);
+    else if (node.matches('.center-workspace-toolbar') && node.parentElement !== featureControls) featureControls.append(node);
   }
   // The symbol controller adds history buttons later during BTC boot. Reserve
   // its slot without creating a second, nonfunctional undo/redo action.
@@ -129,6 +132,7 @@ export function refreshShellSlots(document, {symbol} = {}) {
   const plot = $('.atlas-plot');
   if (plot) set(plot, 'data-chart-symbol', currentSymbol);
   for (const node of document.querySelectorAll('[data-shell-region] button,[data-shell-region] select')) explainDisabled(node);
+  instance?.mobileHeading.update({heading,feature,symbol:currentSymbol});
 }
 
 /** One observer covers asynchronous shell mounts, not chart paints. It never
@@ -136,7 +140,7 @@ export function refreshShellSlots(document, {symbol} = {}) {
 export function mountShellSlots(document) {
   if (instances.has(document)) return instances.get(document).controller;
   const view = document.defaultView || globalThis;
-  const state = {symbol: null, controller: null};
+  const state = {symbol: null, controller: null,mobileHeading:mountMobileShellHeading(document)};
   let queued = false, destroyed = false;
   const schedule = () => {
     if (queued || destroyed) return;
@@ -160,7 +164,7 @@ export function mountShellSlots(document) {
     })) schedule();
   }) : null;
   state.controller = {refresh: options => refreshShellSlots(document, options), destroy() {
-    destroyed = true; observer?.disconnect(); document.removeEventListener('atlas:active-symbol', onSymbol); document.removeEventListener('atlas:workbench-state', schedule); instances.delete(document);
+    destroyed = true; observer?.disconnect();state.mobileHeading.destroy(); document.removeEventListener('atlas:active-symbol', onSymbol); document.removeEventListener('atlas:workbench-state', schedule); instances.delete(document);
   }};
   instances.set(document, state);
   document.addEventListener('atlas:active-symbol', onSymbol);

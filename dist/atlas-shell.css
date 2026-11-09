@@ -223,3 +223,37 @@ body[data-shell=chart] [data-disabled-reason]{cursor:not-allowed}
   body[data-shell=chart] .workbench-rail[data-shell-region=right][data-mobile-open=true]{flex:none;width:calc(100% - 16px)}
   body[data-shell=chart] .workbench-rail[data-shell-region=right][data-mobile-open=true] [data-shell-owner=right]{width:auto;min-width:0;max-width:none}
 }
+
+/* At phone widths the primary controls occupy a fixed, touch-sized first row.
+   The original instrument actions open below the second row without clipping
+   observed text or changing their native/React event owners. */
+@media(max-width:390px){
+  body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top][data-mobile-heading=two-row]{display:grid;grid-template-columns:minmax(80px,1fr) repeat(5,44px);grid-template-rows:44px 44px;gap:0;height:calc(92px + var(--mobile-top,0px));min-height:calc(92px + var(--mobile-top,0px));padding:calc(1px + var(--mobile-top,0px)) 4px 1px;overflow:visible;touch-action:manipulation}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>:is(.symbol-selector-trigger,.workbench-symbol){grid-area:1/1;width:100%;max-width:none;min-width:0;height:44px;min-height:44px;justify-self:stretch;box-sizing:border-box}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#workbench-frequency{grid-area:1/2;min-width:0;width:44px;height:44px;margin:0;box-sizing:border-box}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] #workbench-interval-select{width:44px;min-width:44px;max-width:44px;height:44px;min-height:44px;padding:4px 12px 4px 4px;box-sizing:border-box}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#workbench-chart-type{grid-area:1/3}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#atlas-mode-menu{grid-area:1/4}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#mobile-tools-toggle{grid-area:1/5}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#mobile-details-toggle{grid-area:1/6}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>.shell-instrument-slot{grid-area:2/1/3/6;position:static;width:auto;min-width:0;max-width:100%;height:44px;overflow:visible;justify-self:stretch;align-self:center;box-sizing:border-box}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#workbench-workspace{grid-area:2/6;width:44px;min-width:44px;max-width:44px;height:44px;min-height:44px;box-sizing:border-box}
+  body[data-shell=chart] .shell-instrument-slot[data-mobile-disclosure=true] .shell-feature-toggle{display:flex;align-items:center;justify-content:flex-start;width:100%;min-width:44px;min-height:44px;height:44px;padding:4px 12px;border:0;border-radius:4px;background:transparent;color:var(--text);font:12px var(--font);cursor:pointer;box-sizing:border-box}
+  body[data-shell=chart] .shell-instrument-slot[data-mobile-disclosure=true] .shell-feature-toggle:hover,body[data-shell=chart] .shell-instrument-slot[data-mobile-disclosure=true] .shell-feature-toggle[aria-expanded=true]{background:var(--surface-hover)}
+  body[data-shell=chart] .shell-feature-panel{position:absolute;top:calc(100% + 4px);left:4px;right:4px;z-index:52;display:flex;flex-direction:column;max-height:calc(100dvh - 112px - var(--mobile-top,0px));padding:8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);overflow:auto;overscroll-behavior:contain;box-sizing:border-box}
+  body[data-shell=chart] .shell-feature-panel[hidden]{display:none!important}
+  body[data-shell=chart] .shell-feature-header{display:flex;align-items:center;justify-content:space-between;gap:8px;flex:none;position:sticky;top:-8px;z-index:1;min-width:0;padding:0 0 4px;background:var(--surface);font-size:12px}
+  body[data-shell=chart] .shell-feature-header strong{font-weight:600;overflow-wrap:anywhere;white-space:normal}
+  body[data-shell=chart] .shell-feature-header button{min-width:44px;min-height:44px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);font:12px var(--font);cursor:pointer}
+  body[data-shell=chart] .shell-feature-actions{display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-width:0;width:100%;box-sizing:border-box;white-space:normal}
+  body[data-shell=chart] .shell-feature-actions>button{min-width:44px;min-height:44px;box-sizing:border-box}
+  body[data-shell=chart] .shell-feature-actions>.workbench-icon{display:inline-flex;align-items:center;justify-content:center;flex:none;width:44px;min-width:44px;height:44px;min-height:44px;padding:8px;border:0;border-radius:4px;box-sizing:border-box}
+  body[data-shell=chart] .shell-feature-actions>select{min-height:44px;min-width:0;max-width:100%;flex:1 1 auto;box-sizing:border-box}
+  body[data-shell=chart] .shell-feature-actions>#equity-scenario{max-width:100%;width:auto}
+  body[data-shell=chart] .shell-feature-actions .center-workspace-toolbar{height:auto;min-width:0;width:100%;max-width:100%;flex:1 1 100%;flex-wrap:wrap;overflow:visible;white-space:normal;box-sizing:border-box}
+  body[data-shell=chart] .shell-feature-actions :is(.compact-toolbar-group,.compact-toolbar-tabs){height:auto;min-width:0;max-width:100%;flex-wrap:wrap;white-space:normal;box-sizing:border-box}
+  body[data-shell=chart] .shell-feature-actions .compact-toolbar-group{width:100%;flex:1 1 100%;padding:0;border:0}
+  body[data-shell=chart] .shell-feature-actions .center-workspace-toolbar [data-toolbar-open]{max-width:100%;min-width:44px;min-height:44px;max-height:none;white-space:normal;overflow:visible;text-overflow:clip;flex:0 1 auto;box-sizing:border-box}
+  body[data-shell=chart] .shell-feature-actions .compact-toolbar-summary{display:flex;flex-wrap:wrap;min-width:0;max-width:100%;white-space:normal;gap:4px}
+  body[data-shell=chart] .shell-feature-actions :is(button,select,input),body[data-shell=chart] .shell-feature-toggle:focus-visible,body[data-shell=chart] .shell-feature-header button:focus-visible{outline-offset:-2px}
+}

@@ -89,7 +89,8 @@ export function createChartWorkbenchControls({send,isActive}) {
     else if(action==='span')command('span',spanDays[value]??0);else if(action==='chart-type')command('type');else if(action==='scale'||action==='auto-scale'||action==='fit'||action==='context-menu')command(action);
   }
   function key(event){
-    if(!isActive()||event.target.closest?.('input,textarea,select,dialog[open],[contenteditable=true]'))return;
+    if(event.defaultPrevented||!isActive()||event.target.closest?.('input,textarea,select,dialog[open],[contenteditable=true]'))return;
+    if(event.key==='Escape'&&event.target.closest?.('.shell-instrument-slot[data-mobile-disclosure=true]')?.querySelector('.shell-feature-toggle[aria-expanded=true]'))return;
     if(event.key==='Escape'&&$('.mobile-workbench-button[aria-expanded="true"]'))return;
     let action,value;const k=event.key.toLowerCase();
     if((event.ctrlKey||event.metaKey)&&k==='z')action=event.shiftKey?'redo':'undo';
@@ -119,6 +120,7 @@ export function createChartWorkbenchControls({send,isActive}) {
     document.body.dataset.rsiControls='ready';document.body.dataset.chartControls='ready';
     for(const selector of ['.atlas-canvas-heading','.workbench-tools','.workbench-detail-tools','.workbench-bottom-bar','.mobile-extra-actions','#workbench-frequency','#workbench-navigation','.workbench-ranges','.workbench-axis','.workspace-history-controls']){const node=$(selector);enable(node);if(node)attr(node,'inert',null);}
     for(const child of $('.atlas-canvas-heading')?.children||[])if(!child.matches(`${nativeChartControlSelector},#workbench-scenario,#atlas-cycle-panel,#workbench-replay`)){enable(child);attr(child,'inert',null);}
+    for(const node of document.querySelectorAll('.shell-feature-toggle,[data-shell-feature-close]'))enable(node);
     for(const node of document.querySelectorAll('[data-chart-tool],[data-chart-navigation],[data-chart-span],.workbench-detail-tools button,.workbench-help,.mobile-extra-actions button'))enable(node);
     for(const id of Object.keys(ids))enable($('#'+id));
     enable($('#workbench-chart-type'),message.candles);enable($('#workbench-undo'),message.canUndo);enable($('#workbench-redo'),message.canRedo);enable($('#workbench-clear'),message.measurement);enable($('#workbench-next-turn'),message.nextSignal);enable($('#history-journal-toggle'),message.records);enable($('[data-reader=events]'),message.records);

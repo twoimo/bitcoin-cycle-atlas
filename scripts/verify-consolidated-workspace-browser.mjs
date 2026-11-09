@@ -94,6 +94,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     return { x: frame.box.left + point.x, y: frame.box.top + point.y };
   }
   async function reveal(context, selector) {
+    if(context===cdp&&await evaluate(cdp,s=>Boolean(document.querySelector(s)?.closest('.shell-feature-panel[hidden]')),selector))await pointer(cdp,'#atlas-shell-features-toggle');
     let lastTarget;
     for (let attempt = 0; attempt < 18; attempt++) {
       const target = await evaluate(context, readNativeInteractiveTarget, selector);
@@ -150,6 +151,8 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     await until(() => evaluate(context, (selector, value) => document.querySelector(selector)?.value === value, selector, value), 'selected ' + value);
   }
   async function state(label) {
+    const narrowDisclosure=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading')?.dataset.mobileHeading==='two-row');
+    if(narrowDisclosure&&await evaluate(cdp,()=>document.querySelector('#atlas-shell-features-panel')?.hidden))await pointer(cdp,'#atlas-shell-features-toggle');
     const result = await evaluate(cdp, () => {
       const frame=document.querySelector('.atlas-center-frame:not([hidden])'),doc = frame?.contentDocument;
       const header=document.querySelector('.atlas-canvas-heading'),host=document.getElementById(frame.dataset.toolbarId);
@@ -164,7 +167,8 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
         tab: host?.querySelector('[data-workspace-page][aria-selected=true]')?.dataset.workspacePage,
         market: document.querySelector('[data-control="market"]')?.value, date: document.querySelector('[data-selected-date]')?.textContent||doc?.querySelector('[data-selected-date]')?.textContent,
         instrument:document.querySelector('.symbol-selector-trigger')?.textContent,
-        header:box(header),host:box(host),frame:box(frame),visibleHosts:document.querySelectorAll('.center-workspace-toolbar:not([hidden])').length,scrollbars,
+        header:box(header),headingLayout:header.dataset.mobileHeading||null,headingScroll:{width:header.scrollWidth,client:header.clientWidth},
+        featurePanel:host.closest('.shell-feature-panel')?box(host.closest('.shell-feature-panel')):null,host:box(host),frame:box(frame),visibleHosts:document.querySelectorAll('.center-workspace-toolbar:not([hidden])').length,scrollbars,
         duplicateRows:obsoleteRows.filter(selector=>doc.querySelector(selector)?.checkVisibility()),
         symbols: [...doc?.querySelectorAll('#data-body tr[data-asset-symbol]') || []].map(row => row.dataset.assetSymbol) };
     });
@@ -173,11 +177,15 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     assert.ok(result.childDocumentWidth <= result.childWidth + 1, label + ': inner document overflows');
     assert.equal(result.visibleHosts,1,label+': exactly one active toolbar owner');
     assert.deepEqual(result.duplicateRows,[],label+': redundant inner control rows remain visible');
-    assert.ok(result.header.height<=(receipt.width<=620?48:44)+1,label+': controls must occupy one outer row');
-    assert.ok(result.host.top>=result.header.top-1&&result.host.bottom<=result.header.bottom+1,label+': tool controls belong inside the outer header');
+    assert.ok(result.header.height<=(narrowDisclosure?92:receipt.width<=620?48:44)+1,label+': controls fit their declared outer rows');
+    const toolOwner=result.featurePanel||result.header;
+    assert.ok(result.host.height>0&&result.host.top>=toolOwner.top-1&&result.host.bottom<=toolOwner.bottom+1,label+': tool controls belong inside their visible header or disclosure');
+    if(narrowDisclosure){assert.equal(result.headingLayout,'two-row');assert.ok(result.headingScroll.width<=result.headingScroll.client,label+': narrow primary controls cannot require horizontal scrolling');}
     assert.ok(result.frame.top>=result.header.bottom-1,label+': toolbar cannot cover the data canvas');
     assert.ok(result.scrollbars.every(owner=>owner.bar==='none'),label+': scrollbars remain visibly enabled: '+JSON.stringify(result.scrollbars));
-    evidence.states.push({ label, ...result }); return result;
+    evidence.states.push({ label, ...result });
+    if(narrowDisclosure)await pointer(cdp,'[data-shell-feature-close]');
+    return result;
   }
   async function marketTab(page) {
     await pointer(cdp, `[data-workspace-page="${page}"]`);
@@ -281,11 +289,14 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     });
     // Preserve the real glyph bounds even when the new axis assertion fails.
     (evidence.priceAxisGeometry??=[]).push({symbol,svg:result.svg,plot:result.plot,units:result.units,markers:result.markers});
+    const observationDisclosure=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading')?.dataset.mobileHeading==='two-row');
+    if(observationDisclosure&&await evaluate(cdp,()=>document.querySelector('#atlas-shell-features-panel')?.hidden))await pointer(cdp,'#atlas-shell-features-toggle');
     result.observation=await evaluate(cdp,readConsolidatedObservationGeometry,unit);
     // Keep the original ranges in a failed receipt too, including the unit's
     // last character when its parent button clips a longer observed readout.
     (evidence.observationGeometry??=[]).push({symbol,...result.observation});
     assertConsolidatedObservationGeometry(result.observation,symbol,unit);
+    if(observationDisclosure)await pointer(cdp,'[data-shell-feature-close]');
     assert.deepEqual(result.nav,['outlook','market-us','evidence','data','ipo','relay'],symbol+': one price destination');
     assert.deepEqual(result.active,['outlook'],symbol+': price destination owns all charts');
     assert.ok(result.range.includes(symbol+' / '+unit+' /'),symbol+': original price unit');
