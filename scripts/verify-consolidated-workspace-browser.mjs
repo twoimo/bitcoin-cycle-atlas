@@ -52,6 +52,118 @@ export function assertConsolidatedObservationGeometry(result,symbol,unit) {
   }
 }
 
+// The two-row perimeter survives a center-workspace switch. Only an active
+// chart toolbar owns the disclosure; market/data toolbars occupy row two directly.
+export function readConsolidatedToolbarOwnership() {
+  const frame=document.querySelector('.atlas-center-frame:not([hidden])'),header=document.querySelector('.atlas-canvas-heading');
+  const host=frame&&document.getElementById(frame.dataset.toolbarId),panel=document.querySelector('#atlas-shell-features-panel');
+  const read=node=>{if(!node)return null;const r=node.getBoundingClientRect();let displayNoneOwner=null;
+    for(let owner=node;owner;owner=owner.parentElement)if(getComputedStyle(owner).display==='none'){
+      displayNoneOwner={tag:owner.tagName,id:owner.id||null,className:typeof owner.className==='string'?owner.className:null,display:'none'};break;
+    }
+    return {rect:{top:r.top,bottom:r.bottom,height:r.height},display:getComputedStyle(node).display,displayNoneOwner,
+      visible:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),hidden:Boolean(node.closest('[hidden]')),inert:Boolean(node.closest('[inert]')),disabled:Boolean(node.disabled)};};
+  return {twoRow:header?.dataset.mobileHeading==='two-row',chartControls:document.body.dataset.chartControls||null,
+    center:document.body.dataset.centerTool||null,activeHost:frame?.dataset.toolbarId||null,hostId:host?.id||null,
+    hostInPanel:Boolean(host?.closest('.shell-feature-panel')),hostInHeader:host?.parentElement===header,
+    header:read(header),host:read(host),panel:read(panel),feature:read(header?.querySelector('.shell-instrument-slot')),
+    toggle:read(document.querySelector('#atlas-shell-features-toggle'))};
+}
+
+export function consolidatedToolbarUsesDisclosure(ownership,label='workspace') {
+  assert.ok(ownership.activeHost&&ownership.hostId===ownership.activeHost&&ownership.host,label+': current iframe retains its actual toolbar owner');
+  if(ownership.twoRow){
+    assert.equal(ownership.hostInPanel,Boolean(ownership.chartControls),label+': only the active chart toolbar belongs to the feature disclosure');
+  }
+  return ownership.twoRow&&ownership.hostInPanel;
+}
+
+export function assertConsolidatedToolbarOwnership(ownership,label) {
+  const disclosure=consolidatedToolbarUsesDisclosure(ownership,label),host=ownership.host;
+  assert.ok(host.visible&&!host.hidden&&!host.inert&&host.rect.height>0,label+': active toolbar is visible and interactive');
+  if(disclosure){
+    assert.ok(ownership.panel?.visible&&!ownership.panel.hidden&&!ownership.panel.inert,label+': active chart disclosure is open and interactive');
+    assert.ok(ownership.toggle?.visible&&!ownership.toggle.inert&&!ownership.toggle.disabled,label+': active chart disclosure retains its reachable trigger');
+  }else if(ownership.twoRow){
+    assert.ok(ownership.hostInHeader,label+': nonchart toolbar remains a direct header child');
+    assert.ok(Math.abs(host.rect.height-44)<=1&&host.rect.top>=ownership.header.rect.top+44-1&&host.rect.bottom<=ownership.header.rect.bottom+1,
+      label+': nonchart toolbar occupies the second 44px row');
+    assert.ok(ownership.panel?.hidden&&!ownership.panel.visible,label+': retained chart disclosure stays closed in a nonchart center');
+    assert.ok(ownership.feature&&!ownership.feature.visible&&(ownership.feature.inert||ownership.feature.hidden||ownership.feature.displayNoneOwner?.display==='none'),label+': previous chart feature controls remain hidden and protected');
+    assert.ok(ownership.toggle&&!ownership.toggle.visible&&(ownership.toggle.inert||ownership.toggle.hidden||ownership.toggle.disabled||ownership.toggle.displayNoneOwner?.display==='none'),label+': previous chart trigger remains hidden and protected');
+  }
+}
+
+// WP6 adds a non-shrinking HUD above the flex chart body. Read the actual
+// active iframe and its CSS allocation; the SVG no longer owns the HUD's pixels.
+export function readConsolidatedChartAllocation() {
+  const frame=document.querySelector('.atlas-center-frame:not([hidden])'),doc=frame?.contentDocument;
+  const svg=doc?.querySelector('.rsi-chart-canvas svg'),canvas=svg?.closest('.rsi-chart-canvas');
+  const workbench=canvas?.closest('.rsi-workbench'),body=canvas?.closest('.rsi-workbench-body');
+  const hud=workbench?.querySelector(':scope > .rsi-simulation-hud');
+  const rect=node=>{if(!node)return null;const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+  const pixels=value=>Number.parseFloat(value)||0;
+  const measured=node=>{
+    if(!node)return null;
+    const r=rect(node),style=node.ownerDocument.defaultView.getComputedStyle(node);
+    const content={left:r.left+pixels(style.borderLeftWidth)+pixels(style.paddingLeft),right:r.right-pixels(style.borderRightWidth)-pixels(style.paddingRight),
+      top:r.top+pixels(style.borderTopWidth)+pixels(style.paddingTop),bottom:r.bottom-pixels(style.borderBottomWidth)-pixels(style.paddingBottom)};
+    return {rect:r,content:{...content,width:content.right-content.left,height:content.bottom-content.top},
+      visible:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),marginTop:pixels(style.marginTop),marginBottom:pixels(style.marginBottom)};
+  };
+  const style=workbench&&doc.defaultView.getComputedStyle(workbench);
+  return {frame:{source:frame?.src,documentUrl:doc?.URL,parentUrl:document.URL,rect:rect(frame)},viewport:{width:doc?.defaultView.innerWidth,height:doc?.defaultView.innerHeight},
+    owners:{activeWindow:doc?.defaultView.frameElement===frame,svgInActiveFrame:svg?.ownerDocument===doc,canvasOwnsSvg:svg?.parentElement===canvas,bodyOwnsCanvas:canvas?.parentElement===body,hudSharesWorkbench:hud?.parentElement===workbench},
+    svg:measured(svg),canvas:measured(canvas),body:measured(body),workbench:measured(workbench),
+    flow:{display:style?.display,direction:style?.flexDirection,gap:pixels(style?.rowGap),children:[...workbench?.children||[]].filter(node=>{
+      const s=doc.defaultView.getComputedStyle(node);return s.display!=='none'&&!['absolute','fixed'].includes(s.position)&&node.getClientRects().length;
+    }).map(node=>({kind:node===body?'body':node===hud?'hud':node.matches('.rsi-workbench-status')?'status':'unexpected',...measured(node)}))},
+    hud:hud?{...measured(hud),label:hud.getAttribute('aria-label'),fields:[...hud.querySelectorAll('[data-rsi-hud]')].map(node=>({key:node.dataset.rsiHud,text:node.textContent.trim(),...measured(node)}))}:null};
+}
+
+export function assertConsolidatedChartAllocation(result,symbol) {
+  const label=symbol+': chart fills its allocated work area';
+  if(!['TQQQ','SOXL','233740'].includes(symbol)){
+    // These instruments have no WP6 HUD: preserve the original viewport gate.
+    assert.ok(result.svg.visible&&result.svg.height>=result.childHeight*.75,label);
+    return;
+  }
+  const a=result.allocation,tolerance=1;
+  const valid=r=>r&&['left','right','top','bottom','width','height'].every(k=>Number.isFinite(r[k]))&&r.width>0&&r.height>0;
+  const inside=(r,owner)=>valid(r)&&valid(owner)&&r.left>=owner.left-tolerance&&r.right<=owner.right+tolerance&&r.top>=owner.top-tolerance&&r.bottom<=owner.bottom+tolerance;
+  const same=(r,owner)=>inside(r,owner)&&['left','right','top','bottom'].every(k=>Math.abs(r[k]-owner[k])<=tolerance);
+  assert.ok(a?.hud&&a.workbench&&a.body&&a.canvas&&a.svg,symbol+': actual WP6 HUD and chart allocation must exist');
+  const sourceUrl=new URL(a.frame.source),documentUrl=new URL(a.frame.documentUrl),parentUrl=new URL(a.frame.parentUrl);
+  assert.ok(documentUrl.origin===sourceUrl.origin&&sourceUrl.origin===parentUrl.origin&&documentUrl.pathname===sourceUrl.pathname&&documentUrl.pathname.startsWith(consolidatedPagesBase),symbol+': allocation retains the active iframe source application');
+  assert.ok(['activeWindow','svgInActiveFrame','canvasOwnsSvg','bodyOwnsCanvas','hudSharesWorkbench'].every(key=>a.owners[key]===true),symbol+': HUD, body, canvas and SVG retain their active-frame owners');
+  assert.ok(Math.abs(a.frame.rect.width-a.viewport.width)<=tolerance&&Math.abs(a.frame.rect.height-a.viewport.height)<=tolerance,symbol+': active iframe maps to its child viewport 1:1');
+  const viewport={left:0,top:0,right:a.viewport.width,bottom:a.viewport.height,width:a.viewport.width,height:a.viewport.height};
+  assert.ok(a.workbench.visible&&same(a.workbench.rect,viewport),symbol+': workbench fills the active child viewport');
+  assert.equal(a.flow.display,'flex',symbol+': HUD and chart use the actual flex allocation');
+  assert.equal(a.flow.direction,'column',symbol+': HUD precedes the chart vertically');
+  assert.ok(Number.isFinite(a.flow.gap)&&a.flow.gap>=0,symbol+': declared row gap is finite');
+  const rows=a.flow.children,index=rows.findIndex(row=>row.kind==='body');
+  assert.equal(rows.filter(row=>row.kind==='body').length,1,symbol+': one allocated chart body');
+  assert.equal(rows.filter(row=>row.kind==='hud').length,1,symbol+': one in-flow simulation HUD');
+  assert.ok(rows.every(row=>['hud','body','status'].includes(row.kind)),symbol+': no unexplained in-flow spacer consumes chart height');
+  assert.ok(rows.findIndex(row=>row.kind==='hud')<index,symbol+': HUD precedes its allocated chart body');
+  for(const row of rows)assert.ok(row.visible&&inside(row.rect,a.workbench.content)&&Number.isFinite(row.marginTop)&&Number.isFinite(row.marginBottom),symbol+': visible flow rows stay inside the workbench');
+  const extent=row=>row.rect.height+row.marginTop+row.marginBottom;
+  const top=a.workbench.content.top+rows.slice(0,index).reduce((sum,row)=>sum+extent(row),0)+a.flow.gap*index+rows[index].marginTop;
+  const bottom=a.workbench.content.bottom-rows.slice(index+1).reduce((sum,row)=>sum+extent(row),0)-a.flow.gap*(rows.length-index-1)-rows[index].marginBottom;
+  const remainingHeight=bottom-top;
+  assert.ok(remainingHeight>0&&Math.abs(a.body.rect.top-top)<=tolerance&&Math.abs(a.body.rect.bottom-bottom)<=tolerance,
+    symbol+': chart body fills all remaining height after actual HUD, status, margins and gaps: '+JSON.stringify({top,bottom,remainingHeight,body:a.body.rect}));
+  assert.ok(a.body.visible&&a.canvas.visible&&same(a.canvas.rect,a.body.content),symbol+': chart canvas fills its allocated body without blank space');
+  assert.ok(result.svg.visible&&a.svg.visible&&result.svg.height>=a.canvas.content.height*.75,label);
+  assert.ok(same(a.svg.rect,a.canvas.content),symbol+': SVG stays contained in and fills the actual canvas');
+  assert.ok(Math.abs(result.svg.height-a.svg.rect.height)<=tolerance&&Math.abs(result.svg.width-a.svg.rect.width)<=tolerance,symbol+': price-axis and allocation receipts measure the same SVG');
+  assert.ok(a.hud.visible&&inside(a.hud.rect,a.workbench.content)&&a.hud.rect.bottom<=a.canvas.rect.top+tolerance,symbol+': HUD and chart are contained without overlap');
+  assert.equal(a.hud.label,symbol+' 분할 매매 평단가',symbol+': HUD retains its selected instrument owner');
+  assert.deepEqual(a.hud.fields.map(field=>field.key).sort(),['holdings','quantity','average-cost','current-price','pnl','next-trigger','updated-at'].sort(),symbol+': all seven HUD fields remain present');
+  for(const field of a.hud.fields)assert.ok(field.text&&field.visible&&inside(field.rect,a.hud.rect),symbol+': HUD field remains visible and contained: '+field.key);
+}
+
 // Real static sources, native keyboard/pointer input, and the actual parent and
 // iframe documents. No substitute model, synthetic price, or dispatched DOM event.
 export async function verifyConsolidatedWorkspaceSurface(api) {
@@ -151,8 +263,10 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     await until(() => evaluate(context, (selector, value) => document.querySelector(selector)?.value === value, selector, value), 'selected ' + value);
   }
   async function state(label) {
-    const narrowDisclosure=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading')?.dataset.mobileHeading==='two-row');
-    if(narrowDisclosure&&await evaluate(cdp,()=>document.querySelector('#atlas-shell-features-panel')?.hidden))await pointer(cdp,'#atlas-shell-features-toggle');
+    const ownership=await evaluate(cdp,readConsolidatedToolbarOwnership),narrowHeading=ownership.twoRow;
+    (evidence.toolbarOwnership??=[]).push({label,before:ownership});
+    const narrowDisclosure=consolidatedToolbarUsesDisclosure(ownership,label);
+    if(narrowDisclosure&&ownership.panel?.hidden)await pointer(cdp,'#atlas-shell-features-toggle');
     const result = await evaluate(cdp, () => {
       const frame=document.querySelector('.atlas-center-frame:not([hidden])'),doc = frame?.contentDocument;
       const header=document.querySelector('.atlas-canvas-heading'),host=document.getElementById(frame.dataset.toolbarId);
@@ -177,10 +291,13 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     assert.ok(result.childDocumentWidth <= result.childWidth + 1, label + ': inner document overflows');
     assert.equal(result.visibleHosts,1,label+': exactly one active toolbar owner');
     assert.deepEqual(result.duplicateRows,[],label+': redundant inner control rows remain visible');
-    assert.ok(result.header.height<=(narrowDisclosure?92:receipt.width<=620?48:44)+1,label+': controls fit their declared outer rows');
+    assert.ok(result.header.height<=(narrowHeading?92:receipt.width<=620?48:44)+1,label+': controls fit their declared outer rows');
     const toolOwner=result.featurePanel||result.header;
     assert.ok(result.host.height>0&&result.host.top>=toolOwner.top-1&&result.host.bottom<=toolOwner.bottom+1,label+': tool controls belong inside their visible header or disclosure');
-    if(narrowDisclosure){assert.equal(result.headingLayout,'two-row');assert.ok(result.headingScroll.width<=result.headingScroll.client,label+': narrow primary controls cannot require horizontal scrolling');}
+    if(narrowHeading){assert.equal(result.headingLayout,'two-row');assert.ok(result.headingScroll.width<=result.headingScroll.client,label+': narrow primary controls cannot require horizontal scrolling');}
+    result.toolbarOwnership=await evaluate(cdp,readConsolidatedToolbarOwnership);
+    assert.equal(result.toolbarOwnership.activeHost,ownership.activeHost,label+': state inspection retains the same iframe toolbar');
+    assertConsolidatedToolbarOwnership(result.toolbarOwnership,label);
     assert.ok(result.frame.top>=result.header.bottom-1,label+': toolbar cannot cover the data canvas');
     assert.ok(result.scrollbars.every(owner=>owner.bar==='none'),label+': scrollbars remain visibly enabled: '+JSON.stringify(result.scrollbars));
     evidence.states.push({ label, ...result });
@@ -287,7 +404,9 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
         }),
         childHeight:doc.defaultView.innerHeight,sourceClock:document.querySelector('#atlas-update-status').getAttribute('aria-label'),candles:!document.querySelector('#workbench-chart-type').disabled};
     });
-    // Preserve the real glyph bounds even when the new axis assertion fails.
+    result.allocation=await evaluate(cdp,readConsolidatedChartAllocation);
+    // Preserve actual allocation and glyph bounds even if either assertion fails.
+    (evidence.chartAllocation??=[]).push({symbol,...result.allocation});
     (evidence.priceAxisGeometry??=[]).push({symbol,svg:result.svg,plot:result.plot,units:result.units,markers:result.markers});
     const observationDisclosure=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading')?.dataset.mobileHeading==='two-row');
     if(observationDisclosure&&await evaluate(cdp,()=>document.querySelector('#atlas-shell-features-panel')?.hidden))await pointer(cdp,'#atlas-shell-features-toggle');
@@ -301,7 +420,7 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     assert.deepEqual(result.active,['outlook'],symbol+': price destination owns all charts');
     assert.ok(result.range.includes(symbol+' / '+unit+' /'),symbol+': original price unit');
     assert.deepEqual(result.frequencies,frequencies,symbol+': only observed source frequencies');
-    assert.ok(result.svg.visible&&result.svg.height>=result.childHeight*.75,symbol+': chart fills its allocated work area');
+    assertConsolidatedChartAllocation(result,symbol);
     assert.ok(Math.abs(result.svg.width-result.svg.viewWidth)<=1&&Math.abs(result.svg.height-result.svg.viewHeight)<=1,symbol+': pixel-sized chart labels');
     assert.equal(result.units.length,1,symbol+': one visible price-axis unit');
     const axisUnit=result.units[0],unitBox=axisUnit.box;
