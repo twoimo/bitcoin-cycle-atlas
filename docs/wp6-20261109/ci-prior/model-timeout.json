@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "scope": "Read-only inspection of historical production model builds; no CI rerun, configuration change, gate change or deployment.",
+  "inspectedAt": "2026-11-09",
+  "failure": {
+    "buildUuid": "022df3ac-ffe5-40bb-9ff4-00af7a10eefc",
+    "sourceCommit": "4d31e0786912193076c0269ed04d80d945fff57f",
+    "branch": "main",
+    "runningOn": "2026-11-09T06:15:53.134Z",
+    "stoppedOn": "2026-11-09T06:35:20.005Z",
+    "outcome": "fail",
+    "downloadedLogPages": 10,
+    "downloadedLogLines": 11068,
+    "allPagesRead": true,
+    "finalGates": [
+      {
+        "stage": "model",
+        "id": "runtime-preflight",
+        "status": "PASS",
+        "startedAt": "2026-11-09T06:16:18.919Z",
+        "completedAt": "2026-11-09T06:16:51.275Z",
+        "durationMs": 32356,
+        "log": "build/cloudflare-stage-model/runtime-preflight.log",
+        "logSha256": "025195aea4faa13c21b8fd0b2166313195e9386c7fac6eed02103b6ca00538f7"
+      },
+      {
+        "stage": "model",
+        "id": "locked-dependencies",
+        "status": "PASS",
+        "startedAt": "2026-11-09T06:16:51.322Z",
+        "completedAt": "2026-11-09T06:17:02.961Z",
+        "durationMs": 11639,
+        "log": "build/cloudflare-stage-model/locked-dependencies.log",
+        "logSha256": "f9cf2edd311961766292457862919c676d92497cfbde43a86e1f28cb0b6fb80f"
+      },
+      {
+        "stage": "model",
+        "id": "model-tests",
+        "status": "FAIL",
+        "startedAt": "2026-11-09T06:17:03.039Z",
+        "completedAt": "2026-11-09T06:35:18.577Z",
+        "durationMs": 1095538,
+        "log": "build/cloudflare-stage-model/model-tests.log",
+        "logSha256": "ea4cad1afba10e3e049122e84b8cf093437f18cb26b498ccc29e0897caa0fb85",
+        "error": "Verification exceeded its execution budget at model-tests"
+      }
+    ],
+    "notOkLines": [],
+    "fullTestCompletionReceiptObserved": false,
+    "lastPrintedTopLevelTest": {
+      "ordinal": 1659,
+      "name": "a forged original evaluator row with unchanged aggregate counts fails actual global-vintage reexecution",
+      "indent": 0,
+      "completedLogAt": "2026-11-09T06:35:00.601Z",
+      "durationMs": 30361.286361
+    },
+    "laterModelGatesReached": false
+  },
+  "baseline": {
+    "buildUuid": "9e5576fd-0c06-47fe-bd81-f6fdcc4477f3",
+    "sourceCommit": "f798b21f79ed8835c48c3c43067ba42c28dbeceb",
+    "branch": "main",
+    "runningOn": "2026-11-08T23:56:26.824Z",
+    "stoppedOn": "2026-11-09T00:10:37.889Z",
+    "outcome": "success",
+    "downloadedLogPages": 13,
+    "downloadedLogLines": 21427,
+    "allPagesRead": true,
+    "finalGates": [
+      {
+        "stage": "model",
+        "id": "runtime-preflight",
+        "status": "PASS",
+        "startedAt": "2026-11-08T23:56:45.146Z",
+        "completedAt": "2026-11-08T23:56:48.566Z",
+        "durationMs": 3420,
+        "log": "build/cloudflare-stage-model/runtime-preflight.log",
+        "logSha256": "b7a820d8f8962427beaffc490111e1f0d9307799a3d333a180ed026b767483a9"
+      },
+      {
+        "stage": "model",
+        "id": "locked-dependencies",
+        "status": "PASS",
+        "startedAt": "2026-11-08T23:56:48.589Z",
+        "completedAt": "2026-11-08T23:56:54.397Z",
+        "durationMs": 5809,
+        "log": "build/cloudflare-stage-model/locked-dependencies.log",
+        "logSha256": "84ad8f2da853d8ac28a9cf920e9a3f54caf0269a293c631c3a9241076136d67b"
+      },
+      {
+        "stage": "model",
+        "id": "model-tests",
+        "status": "PASS",
+        "startedAt": "2026-11-08T23:56:54.425Z",
+        "completedAt": "2026-11-09T00:08:28.849Z",
+        "durationMs": 694424,
+        "log": "build/cloudflare-stage-model/model-tests.log",
+        "logSha256": "b128c966c7966749f12874e879ab3d49493d2ef8602ea6997a558072d3cd53fe"
+      },
+      {
+        "stage": "model",
+        "id": "forecast",
+        "status": "PASS",
+        "startedAt": "2026-11-09T00:08:28.875Z",
+        "completedAt": "2026-11-09T00:08:34.628Z",
+        "durationMs": 5754,
+        "log": "build/cloudflare-stage-model/forecast.log",
+        "logSha256": "7fe49b371ea8c806610adf2c2a53d9a173c5fee9b5898c72140e45e7bb7eac03"
+      },
+      {
+        "stage": "model",
+        "id": "research",
+        "status": "PASS",
+        "startedAt": "2026-11-09T00:08:34.651Z",
+        "completedAt": "2026-11-09T00:08:35.113Z",
+        "durationMs": 462,
+        "log": "build/cloudflare-stage-model/research.log",
+        "logSha256": "673cc45b3ae2c6101b12ad2d4687a957a410a11edb294270dfd7c39590c36c67"
+      },
+      {
+        "stage": "model",
+        "id": "eth-events",
+        "status": "PASS",
+        "startedAt": "2026-11-09T00:08:35.136Z",
+        "completedAt": "2026-11-09T00:08:35.368Z",
+        "durationMs": 232,
+        "log": "build/cloudflare-stage-model/eth-events.log",
+        "logSha256": "936763564d296c63229684f9588593ff30fced9aef3817d6c43883253dfa5503"
+      },
+      {
+        "stage": "model",
+        "id": "treasury-paths",
+        "status": "PASS",
+        "startedAt": "2026-11-09T00:08:35.392Z",
+        "completedAt": "2026-11-09T00:08:39.554Z",
+        "durationMs": 4163,
+        "log": "build/cloudflare-stage-model/treasury-paths.log",
+        "logSha256": "2b4760cfcc15fb1b491d58835e55598917d994af71932b69b022b287f272c6ee"
+      },
+      {
+        "stage": "model",
+        "id": "numerics",
+        "status": "PASS",
+        "startedAt": "2026-11-09T00:08:39.578Z",
+        "completedAt": "2026-11-09T00:08:47.899Z",
+        "durationMs": 8321,
+        "log": "build/cloudflare-stage-model/numerics.log",
+        "logSha256": "2d15ae50e0416cf2991b4e04ed8c6f1c0194813d9317994d671514d353de9aec"
+      },
+      {
+        "stage": "model",
+        "id": "formal",
+        "status": "PASS",
+        "startedAt": "2026-11-09T00:08:47.923Z",
+        "completedAt": "2026-11-09T00:09:37.697Z",
+        "durationMs": 49774,
+        "log": "build/cloudflare-stage-model/formal.log",
+        "logSha256": "86ff071cbb36fd17c16c835deb8fa8394ba4d6cb5568048a57ec4816480f423b"
+      },
+      {
+        "stage": "model",
+        "id": "cycle",
+        "status": "PASS",
+        "startedAt": "2026-11-09T00:09:37.715Z",
+        "completedAt": "2026-11-09T00:09:38.325Z",
+        "durationMs": 610,
+        "log": "build/cloudflare-stage-model/cycle.log",
+        "logSha256": "162ad7a624e45a899bce97bde1c82303e103b957ea51f687511b70048e5711be"
+      },
+      {
+        "stage": "model",
+        "id": "performance",
+        "status": "PASS",
+        "startedAt": "2026-11-09T00:09:38.354Z",
+        "completedAt": "2026-11-09T00:09:38.739Z",
+        "durationMs": 385,
+        "log": "build/cloudflare-stage-model/performance.log",
+        "logSha256": "91dfccd2baa9d316b75f1a7035d1fc54e8c5633b8cdd45d98c106de7c86679b9"
+      },
+      {
+        "stage": "model",
+        "id": "static",
+        "status": "PASS",
+        "startedAt": "2026-11-09T00:09:38.762Z",
+        "completedAt": "2026-11-09T00:09:45.430Z",
+        "durationMs": 6668,
+        "log": "build/cloudflare-stage-model/static.log",
+        "logSha256": "dcadcb210fd42f092a5b6f7cd87b02d3565ae0768ea9c5ac7d317bbd52f15141"
+      },
+      {
+        "stage": "model",
+        "id": "chart-replay",
+        "status": "PASS",
+        "startedAt": "2026-11-09T00:09:45.454Z",
+        "completedAt": "2026-11-09T00:10:26.291Z",
+        "durationMs": 40837,
+        "log": "build/cloudflare-stage-model/chart-replay.log",
+        "logSha256": "8cbc72eca13735f4828720cf73e4aca6cecefbe2f878f996844c1d33b176e052"
+      }
+    ],
+    "fullTestCompletionReceipt": {
+      "complete": true,
+      "tests": 3110,
+      "pass": 3110,
+      "fail": 0,
+      "skipped": 0,
+      "batches": 1
+    }
+  },
+  "sourceDiff": {
+    "range": "f798b21..4d31e07",
+    "changedPaths": [
+      "dist/data/relay/assets/naver-261101225040278cf-1.jpg",
+      "dist/data/relay/assets/naver-261101225040278cf-2.jpg",
+      "dist/data/relay/assets/naver-261109145117700at-1.jpg",
+      "dist/data/relay/assets/naver-261109145117700at-2.jpg",
+      "dist/data/relay/index.json"
+    ],
+    "testModelOrGateSourcesChanged": false
+  },
+  "reviewedContract": {
+    "maximumExecutionMs": 1140000,
+    "modelTestCommand": "npm test -- --test-concurrency=2",
+    "modelGateCount": 13
+  },
+  "identicalCaseDurationComparison": [
+    {
+      "name": "synthetic 2001-record growth is fully visited without a global flat index; synthetic source graph replay is not claimed",
+      "failedDurationMs": 252999.638264,
+      "baselineDurationMs": 105957.9923,
+      "ratio": 2.388
+    },
+    {
+      "name": "isolated real-model operations issue once, reuse same completed input, replay, report and append original clocks exactly",
+      "failedDurationMs": 210098.774042,
+      "baselineDurationMs": 106618.002698,
+      "ratio": 1.971
+    },
+    {
+      "name": "committed seed plus 501 synthetic independent vintages survive restore, append, verification and a fresh remote restore byte-for-byte",
+      "failedDurationMs": 159852.190855,
+      "baselineDurationMs": 77365.975523,
+      "ratio": 2.066
+    },
+    {
+      "name": "summary independently replays all archived and current records, consumes complete component pages, and preserves model counts",
+      "failedDurationMs": 139775.279931,
+      "baselineDurationMs": 65628.895251,
+      "ratio": 2.13
+    },
+    {
+      "name": "a failed complete HTTP body is preserved without a new record, observation, or successful issuance",
+      "failedDurationMs": 65900.678903,
+      "baselineDurationMs": 32322.459354,
+      "ratio": 2.039
+    },
+    {
+      "name": "missing pages, wrong offsets, false entry counts and oversized descriptors are rejected before using summaries",
+      "failedDurationMs": 53008.687581,
+      "baselineDurationMs": 24156.377778,
+      "ratio": 2.194
+    },
+    {
+      "name": "verification checks original output bytes and the exact append source identity",
+      "failedDurationMs": 44848.754087,
+      "baselineDurationMs": 20057.045241,
+      "ratio": 2.236
+    },
+    {
+      "name": "mutable restore summary counts cannot relabel retained evidence as new",
+      "failedDurationMs": 44508.823961,
+      "baselineDurationMs": 19513.858236,
+      "ratio": 2.281
+    },
+    {
+      "name": "real seed restore, actual prior-run append and fresh remote restore preserve original bytes, clocks and independent ETH evidence",
+      "failedDurationMs": 37861.883734,
+      "baselineDurationMs": 19073.241184,
+      "ratio": 1.985
+    },
+    {
+      "name": "preflight rejects a conflicting immutable input without writing a candidate file",
+      "failedDurationMs": 36458.734971,
+      "baselineDurationMs": 15933.440451,
+      "ratio": 2.288
+    }
+  ],
+  "conclusion": "The repository's global execution deadline terminated model-tests. No assertion failure was printed and no full-test receipt was completed. The inspected source delta is relay-only. Expensive unchanged cases took about twice the baseline time; logs do not establish whether CPU throttling, filesystem latency, or other shared-runner variation caused the slowdown.",
+  "recommendations": [
+    "Keep all gates, full inventory, numerical precision, pinned runtime and --test-concurrency=2 unchanged.",
+    "A narrow test-only option is to prepare archive-issuer's exact isolated Git repository and restored seed once, then deep-copy its filesystem per scenario and create fresh clock/capture closures. The archive-summary tests already use this pattern. Measure before/after locally under the same canonical runtime before adopting.",
+    "Do not cache verification or model replay outputs; altered-evidence, same-ID alias, mutable-source, exact-output and global-vintage negative controls require fresh validation.",
+    "Bounded parallel physical-file authentication in assertStable is a possible separately reviewed runtime optimization, but the retrieved logs do not prove an I/O bottleneck and no such change was made.",
+    "Do not claim a move to four test workers would fix the deadline on a documented two-vCPU runner without a controlled measurement."
+  ],
+  "rawLogs": {
+    "committed": false,
+    "location": "Scratch-only ci-prior-raw directory; full raw pages were not included in this repository receipt."
+  }
+}
