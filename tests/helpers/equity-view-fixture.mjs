@@ -1,3 +1,4 @@
+import { quoteRsiAt } from '../../dist/ui/quote-rsi.js';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 import { withChartSpacing,retargetChartRange } from '../../dist/chart-view-policy.js';
@@ -67,7 +68,7 @@ export function equityPayload(symbol, revision) {
 }
 
 export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname = '/', project, useActualSufficiency = false } = {}) {
-  const requests = [], frames = new Map(), draws = [], calculations = [], errors = [], events = [], articles = [];
+  const requests = [], frames = new Map(), draws = [], calculations = [], errors = [], events = [], articles = [], hudUpdates = [], hudMounts = [];
   const window = new Surface(), document = new Surface();
   const bootTimers = new Map(); let bootTimerId = 0;
   window.setTimeout = callback => { bootTimers.set(++bootTimerId, callback); return bootTimerId; };
@@ -86,6 +87,8 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
   let frameId = 0, navigation, replayOptions;
   const mount = () => ({ cancel() {}, cancelPending() {}, destroy() {} });
   const deps = {
+    quoteRsiAt,
+    mountQuoteHud:(host,options)=>{hudMounts.push({host,options});return {update:value=>hudUpdates.push({...value}),destroy(){}};},
     withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,writeChartUrlState,nativeDateRange,
     mountNativeChartApp: app => document.body.append(app),
     // Native shell/command behavior has a separate parsed-DOM integration test.
@@ -154,7 +157,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     app.dispatchEvent({ type: 'click', target });
   };
   return {
-    requests, frames, draws, calculations, errors, events, articles, initialization, document, app, location, urlWrites,
+    requests, frames, draws, calculations, errors, events, articles, initialization, document, app, location, urlWrites, hudUpdates, hudMounts,
     microtasks, frame, settle,
     reply: (index, value) => requests[index].resolve({ ok: true, json: async () => value }),
     reject: (index, message = 'Archive failed') => requests[index].reject(new Error(message)),

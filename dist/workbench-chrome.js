@@ -100,9 +100,9 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
   const workspaceButton=button('search','작업 화면·명령 검색 · Ctrl/⌘ K',{'id':'workbench-workspace'});
   heading.append(symbol,frequency,chartType,menu,scenario,$('#atlas-cycle-panel'),$('#workbench-monthly-backtest'),spacer,workspaceButton,chartMenu,save,settingButton);stage.prepend(heading);
   const workspaceTools=mountWorkspaceTools({trigger:workspaceButton,plot,openReader,closeReader});
-  const marketInfo=document.createElement('div');marketInfo.className='workbench-market-info';marketInfo.hidden=true;
+  const marketInfo=document.createElement('div');marketInfo.className='workbench-market-info quote-hud-source-controls';marketInfo.hidden=true;
   const marketStatus=document.createElement('span');marketStatus.id='workbench-market-status';marketStatus.setAttribute('role','status');marketStatus.setAttribute('aria-live','polite');
-  const marketRefresh=button('refresh','거래소 캔들 새로 조회',{'id':'workbench-market-refresh'});marketRefresh.onclick=()=>command('refresh-market');marketInfo.append(marketStatus,marketRefresh);plot.append(marketInfo);
+  const marketRefresh=button('refresh','거래소 캔들 새로 조회',{'id':'workbench-market-refresh','aria-describedby':marketStatus.id});marketRefresh.onclick=()=>command('refresh-market');marketInfo.append(marketStatus,marketRefresh);plot.append(marketInfo);
 
   const left=document.createElement('nav');left.className='workbench-tools';left.setAttribute('aria-label','차트 조작 도구');
   for(const [name,glyphName,label] of [['crosshair','crosshair','십자선 · C · 클릭 고정 / 드래그 이동'],['pan','pan','차트 이동 · H · 좌클릭 드래그'],['measure','ruler','두 지점 측정 · M']]){
@@ -183,6 +183,9 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
     for(const node of intervalControls){const selected=node.dataset.labFrequency===s.frequency;node.setAttribute('aria-pressed',String(selected));node.tabIndex=selected?0:-1;}
     chartType.setAttribute('aria-pressed',String(candles));chartType.innerHTML=glyph(candles?'candles':'line');chartType.title=`${candles?'캔들':'선'} 표시 · ${candles?'선':'캔들'}으로 변경`;chartType.setAttribute('aria-label',chartType.title);
     marketInfo.hidden=!price;const marketText=typeof s.marketStatus==='string'?s.marketStatus:s.marketStatus?.text||'거래소 완료 봉 · 조회 대기';marketStatus.textContent=marketText;marketStatus.title=marketText;marketRefresh.disabled=Boolean(s.marketLoading);marketInfo.setAttribute('aria-busy',String(Boolean(s.marketLoading)));
+    // The quote keeps the selected point's provider; its disclosure includes
+    // the chart's full coverage and collection clocks without a third row.
+    const quoteSource=plot.querySelector('[data-quote-field="source"]');if(quoteSource)quoteSource.title=`${quoteSource.textContent} · ${marketText}`;
     symbol.title=intraday?'비트코인 / 미국 달러 · Coinbase Exchange 실제 완료 봉':candles?'비트코인 / 미국 달러 · Bitstamp 실제 완료 봉과 장기 가정':'비트코인 / 미국 달러 · Coin Metrics 일말 가격과 장기 가정';
     layerEmpty.hidden=price;scenarioName.textContent=`${scenarioNames[s.scenario]?.[0]||'기본'} 가정`;
     scenario.title=`미래 가정 · ${scenarioNames[s.scenario]?.[1]||''}`;scenario.setAttribute('aria-label',scenario.title);

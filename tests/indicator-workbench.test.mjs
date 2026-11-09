@@ -62,7 +62,7 @@ class Element extends Surface {
   scrollIntoView(){}
 }
 const cleanups=new WeakMap();
-function fixture(t,{mobile=false,search='',viewport=null}={}){
+function fixture(t,{mobile=false,search='',viewport=null,quoteHud=false}={}){
   const original=new Map(['location','matchMedia','ResizeObserver','requestAnimationFrame','cancelAnimationFrame'].map(key=>[key,Object.getOwnPropertyDescriptor(globalThis,key)]));
   const frames=new Map(),observers=[];let frame=0;
   Object.assign(globalThis,{location:{search},matchMedia:()=>({matches:mobile}),ResizeObserver:class{constructor(callback){this.callback=callback;this.targets=new Set();observers.push(this);}observe(node){this.targets.add(node);}disconnect(){this.targets.clear();}},requestAnimationFrame:callback=>{frames.set(++frame,callback);return frame;},cancelAnimationFrame:id=>frames.delete(id)});
@@ -72,7 +72,9 @@ function fixture(t,{mobile=false,search='',viewport=null}={}){
   const add=(parent,tag,id,className='')=>{const node=doc.createElement(tag);node.id=id;node.className=className;parent.append(node);return node;};
   const opener=add(doc.body,'button','atlas-mode-menu'),stage=add(doc.body,'section','stage'),plot=add(stage,'div','plot');
   const price=add(plot,'svg','lab-chart');price.innerHTML='<path d="M10 20L30 40"/>';
-  add(plot,'div','lab-metrics');add(plot,'div','source','workbench-market-info');add(plot,'div','foot','lab-chart-foot');
+  const quote=add(plot,'div','lab-metrics');
+  add(plot,'div','source',`workbench-market-info${quoteHud?' quote-hud-source-controls':''}`);add(plot,'div','foot','lab-chart-foot');
+  if(quoteHud){const source=add(quote,'span','quote-source');source.dataset.quoteField='source';source.textContent='Coin Metrics';source.title='Coin Metrics · 일말 2026-11-08 UTC';}
   let state=readIndicatorState(search),query=search;
   const publish=()=>doc.dispatchEvent({type:'atlas:indicator-state',detail:{indicators:state}});
   const command=detail=>doc.dispatchEvent(new CustomEvent('atlas:indicator-command',{detail}));
@@ -220,6 +222,48 @@ test('study folding leaves the legend anchored directly below readout/source wit
   assert.equal(notices[3].legend.top,119);assert.equal(notices[3].manager.top,193);
   assert.equal(f.node('scenario-countdown'),null);assert.equal(plot.style.getPropertyValue('--countdown-height'),'');
   assert.equal(f.price.innerHTML,path,'the HUD controller does not mutate the price geometry');
+});
+
+test('quote provenance follows the source setting without replacing its value or refresh owner',t=>{
+  const f=fixture(t,{quoteHud:true,search:'indicators=readout,source,legend,volume'}),quote=f.node('lab-metrics'),source=f.node('source'),label=f.node('quote-source');
+  const refresh=f.doc.createElement('button');refresh.id='workbench-market-refresh';refresh.setAttribute('aria-label','거래소 캔들 새로 조회');source.append(refresh);
+  let refreshes=0;const refreshOwner=()=>refreshes++;refresh.onclick=refreshOwner;
+  assert.equal(quote.dataset.sourceVisible,'true');assert.equal(label.dataset.sourceVisible,'true');assert.equal(label.getAttribute('aria-hidden'),'false');assert.equal(label.style.getPropertyValue('visibility'),'');
+  const originalChildren=[...quote.children];
+  f.command({action:'visibility',id:'source'});
+  assert.equal(source.hidden,true);assert.equal(quote.hidden,false,'hiding provenance does not hide the quote');
+  assert.equal(quote.dataset.sourceVisible,'false');assert.equal(label.dataset.sourceVisible,'false');assert.equal(label.getAttribute('aria-hidden'),'true');
+  assert.equal(label.style.getPropertyValue('visibility'),'hidden');assert.equal(label.hidden,false,'the source cell keeps its grid slot');
+  assert.deepEqual(quote.children,originalChildren);
+  label.textContent='Bitstamp';label.title='Bitstamp · 완료 일봉 2026-11-08 UTC';
+  f.doc.dispatchEvent({type:'atlas:workbench-state',detail:{intraday:false,marketStatus:'Coin Metrics · 일말 2026-11-08 UTC'}});
+  assert.equal(label.textContent,'Bitstamp','display settings never replace the selected candle provider');
+  assert.equal(label.title,'Bitstamp · 완료 일봉 2026-11-08 UTC');assert.equal(label.style.getPropertyValue('visibility'),'hidden');
+  f.command({action:'visibility',id:'source'});
+  assert.equal(source.hidden,false);assert.equal(quote.dataset.sourceVisible,'true');assert.equal(label.dataset.sourceVisible,'true');assert.equal(label.getAttribute('aria-hidden'),'false');assert.equal(label.style.getPropertyValue('visibility'),'');
+  assert.equal(refresh.parentElement,source);assert.equal(refresh.onclick,refreshOwner);assert.equal(refresh.getAttribute('aria-label'),'거래소 캔들 새로 조회');refresh.focus();refresh.click();assert.equal(refreshes,1);assert.equal(f.doc.activeElement,refresh);
+  f.command({action:'visibility',id:'readout'});
+  assert.equal(quote.hidden,true);assert.equal(source.hidden,false,'readout and source settings remain independent');
+  const restored=fixture(t,{quoteHud:true,search:'indicators=readout,source,legend&indicator-hide=source'});
+  assert.equal(restored.node('lab-metrics').dataset.sourceVisible,'false');assert.equal(restored.node('quote-source').style.getPropertyValue('visibility'),'hidden');assert.equal(restored.node('source').hidden,true);
+});
+
+test('source controls in the axis header retain geometry notifications without reserving a third quote row',t=>{
+  const f=fixture(t,{quoteHud:true,search:'indicators=readout,source,legend,volume'}),plot=f.node('plot'),quote=f.node('lab-metrics'),source=f.node('source');
+  let quoteHeight=40,sourceHeight=44,notices=0;
+  plot.rect={left:20,top:30,width:320,height:600};quote.rect=()=>({left:30,top:38,width:244,height:quoteHeight});source.rect=()=>({left:288,top:32,width:44,height:sourceHeight});
+  f.doc.addEventListener('atlas:hud-layout-change',()=>notices++);
+  const report=()=>f.resize([{target:quote,width:244,height:quoteHeight},{target:source,width:44,height:sourceHeight}]);
+  report();f.flush();
+  assert.equal(plot.style.getPropertyValue('--source-height'),'44px','the original observed source owner keeps its real box');
+  assert.equal(plot.style.getPropertyValue('--source-top'),'51px');assert.equal(plot.style.getPropertyValue('--indicator-top'),'51px','the refresh hit area is beside the quote, not an extra source row');assert.equal(notices,1);
+  sourceHeight=48;report();f.flush();
+  assert.equal(plot.style.getPropertyValue('--source-height'),'48px');assert.equal(plot.style.getPropertyValue('--indicator-top'),'51px');assert.equal(notices,2,'a changed control box still informs annotation placement');
+  report();f.flush();assert.equal(notices,2,'unchanged boxes do not cause layout feedback');
+  f.command({action:'visibility',id:'source'});
+  assert.equal(plot.style.getPropertyValue('--indicator-top'),'51px','source visibility cannot move the study stack');
+  quoteHeight=60;report();f.flush();
+  assert.equal(plot.style.getPropertyValue('--source-top'),'71px');assert.equal(plot.style.getPropertyValue('--indicator-top'),'71px','the original quote measurement still controls its own reservation');
 });
 
 test('chart legend uses its border box, clears hidden height and restores without redundant layout feedback',t=>{

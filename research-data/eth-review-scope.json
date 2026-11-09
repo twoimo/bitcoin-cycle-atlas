@@ -74,6 +74,7 @@
     "dist/cycle-milestones-view.js",
     "dist/cycle-milestones.css",
     "dist/ui/chart-legend.css",
+    "dist/ui/quote-hud.css",
     "dist/ui/rsi-simulation.css",
     "dist/cycle-milestones.js",
     "dist/cycle-period-comparison.js",

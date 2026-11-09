@@ -1,6 +1,8 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { calculateRsiSeries } from '@atlas/domain/market-lab';
 import { CompactToolbar, CompactToolbarMenu } from './compact-toolbar.js';
-import { RsiChartCanvas, axisNumber, type InstrumentMarker, type Pick } from './rsi-chart-canvas.js';
+import { RsiChartCanvas, axisNumber, type ChartQuote, type InstrumentMarker, type Pick } from './rsi-chart-canvas.js';
+import { workspaceInstrument } from '../../../../dist/workspace-instruments.js';
 import { type Pane, type RsiChartView } from '../rsi-chart-model.js';
 import { applyInstrumentCommand, boundedInstrumentDates, displayInstrumentSeries, initialInstrumentView, nearestObservation,
   type ExternalInstrumentView, type InstrumentChartCache, type InstrumentSeries } from '../instrument-chart-model.js';
@@ -73,6 +75,22 @@ export function InstrumentWorkbench(props: Props) {
   const selected = display.prices.find(point => point[0] === selectedDate), bar = display.bars.find(point => point[0] === selectedDate);
   const volume = display.volumes.find(point => point.date === selectedDate);
   const monthly = series.frequency === 'monthly', dateLabel = (stamp: string) => monthly ? stamp.slice(0, 7) : stamp;
+  // The oscillator panel stays capability-owned; this adds only the common
+  // quote summary from the unchanged canonical RSI calculation.
+  const quoteRows = useMemo(() => monthly ? [] : calculateRsiSeries(display.prices, 14, 9), [display.prices, monthly]);
+  const quoteRsi = quoteRows.find(row => row.date === selectedDate)?.rsi ?? null;
+  const priorDate = display.timeline[display.timeline.indexOf(selectedDate) - 1];
+  const prior = display.prices.find(point => point[0] === priorDate);
+  const instrument = workspaceInstrument(symbol), interval = monthly ? '1M' : view.frequency === 'weekly' ? '1W' : '1D';
+  const quote: ChartQuote = { symbol, name: monthly ? instrument?.base || symbol : instrument?.koreanName || symbol, fullName: instrument?.name || symbol,
+    interval, kind: selected ? 'observed' : 'unavailable', kindLabel: monthly ? '관측 실거래가격지수' : '관측 종가', priceLabel: monthly ? '지수' : '종가',
+    priceText: selected ? `${axisNumber(selected[1])}${monthly ? '' : ` ${unit}`}` : '—',
+    changePct: selected && prior ? (selected[1] / prior[1] - 1) * 100 : null,
+    dateTime: selectedDate, ...(monthly && selectedDate ? { timestampText: `${dateLabel(selectedDate).replace('-', '.')} ${timezone === 'Asia/Seoul' ? 'KST' : timezone}` } : {}), timezone,
+    rsi: quoteRsi, rsiReason: monthly ? '월별 실거래가격지수 RSI 미제공' : quoteRsi === null ? '선택 봉까지 RSI 14 산출에 필요한 관측 부족' : `${interval} 관측 종가의 Wilder RSI 14`,
+    source: instrument?.source, sourceDescription: `${instrument?.source || '출처 미제공'} · ${props.description}`,
+    description: `${instrument?.name || symbol} · ${interval} · ${unit} · ${dateLabel(selectedDate)} · ${timezone} · ${props.description}`,
+    detailText: bar ? `O ${bar[1]} · H ${bar[2]} · L ${bar[3]} · C ${bar[4]} ${unit}` : selected ? `관측 ${monthly ? '지수' : '종가'} ${selected[1]} ${unit}` : monthly ? '선택 월 가격 미공표' : '관측 자료 없음' };
   const frequencies: RsiChartView['frequency'][] = monthly ? ['monthly'] : ['daily', 'weekly'];
   const hasCandles = series.bars.length > 0, hasVolume = series.volumes.some(point => point.value !== null);
 
@@ -235,7 +253,7 @@ export function InstrumentWorkbench(props: Props) {
       </>}
     </CompactToolbar>
     <div className="rsi-workbench-body">
-      <RsiChartCanvas symbol={symbol} unit={unit} prices={display.prices} bars={display.bars} rows={emptyRows} series={display} view={view}
+      <RsiChartCanvas symbol={symbol} unit={unit} prices={display.prices} bars={display.bars} rows={emptyRows} series={display} view={view} quote={quote}
         active={active && visible} revision={`${revision||''}:${epoch}`} menuPulse={menuPulse} svgRef={svg} onView={next => persist(next, false)} onStart={() => { setHover(null); gesture.current = live.current.view; }} onEnd={endGesture}
         onPick={pick} onHover={setHover} hover={hover} markers={props.markers} onMarker={() => { if (pane !== 'data') openPane('data'); }} volumeUnit={volumeUnit} description={props.description} className={props.chartClassName}/>
       {pane && <aside className="rsi-workbench-panel" aria-label={`${symbol} ${paneNames[pane]}`}><header><strong>{paneNames[pane]}</strong><button ref={closeButton} type="button" aria-label={`${symbol} ${paneNames[pane]} 닫기`} onClick={closePane}>×</button></header><div className="rsi-workbench-panel-scroll">

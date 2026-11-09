@@ -43,6 +43,9 @@ export async function structureViewFixture({ root = fileURLToPath(new URL('../..
   const mounts = () => ({ cancel() {}, cancelPending() {}, destroy() {}, update() {}, refresh() {}, open() {}, toolbar: new NodeBoundary() });
   Object.assign(deps, {
     mountResearchAnnotationsWorkbench: mounts, mountChartTouchTracking: mounts, mountChartExportWorkbench: mounts, mountChartReplay: mounts,
+    // This fixture measures the real comparison controller and SVG pipeline;
+    // quote DOM lifecycle has its own shared/native integration fixtures.
+    mountQuoteHud: () => ({ update() {}, destroy() {} }),
     bindChartNavigation: () => ({ ...mounts(), cancelGesture() {}, resumeTouchGesture() {} }),
     createMarketDataController: () => ({ cancel() {}, get() { return { status: 'idle' }; } }),
   });

@@ -4,7 +4,8 @@ import type { RsiRow } from '@atlas/domain/market-lab';
 import { validateRsiBars,weeklyRsiBars,weeklyRsiPrices } from '@atlas/domain/rsi-bars';
 import type { Market,MarketSnapshot,Point } from '@atlas/contracts/market-lab';
 import { SourceDisclosure } from '../components/source-disclosure.js';
-import { RsiChartCanvas,axisNumber,type Pick } from '../components/rsi-chart-canvas.js';
+import { RsiChartCanvas,axisNumber,type ChartQuote,type Pick } from '../components/rsi-chart-canvas.js';
+import { rsiInstrument } from '../../../../dist/rsi-instruments.js';
 import { applyChartCommand,boundedDates,chartRange,day,nearestPoint,initialChartView,type Pane,type RsiChartView,type RsiChartCache } from '../rsi-chart-model.js';
 import { RsiHistory,type RsiHistoryState } from './rsi-history.js';
 import { rsiCrossings } from '../rsi-crossings.js';
@@ -45,6 +46,17 @@ export function RsiWorkbench(props:Props) {
   const rows=useMemo(()=>view.frequency==='weekly'?calculateRsiSeries(displayPrices,14,9):props.rows,[displayPrices,view.frequency,props.rows]);
   const selectedDate=hover?.date||view.selected,selectedIndex=nearestPoint(displayPrices,selectedDate),point=displayPrices[selectedIndex],row=rows[selectedIndex],bar=bars.find(b=>b[0]===point?.[0]);
   const previous=displayPrices[selectedIndex-1],change=point&&previous?(point[1]/previous[1]-1)*100:null;
+  const quoteSource=snapshot.sources.find(source=>source.id===market.sourceId),interval=view.frequency==='weekly'?'1W':'1D';
+  const instrument=rsiInstrument(symbol),name=instrument?.koreanName?.split(' · ')[0]||market.name;
+  const fullName=`${instrument?.koreanName||market.name} · ${symbol} · ${instrument?.name||market.name}`;
+  const quote:ChartQuote={symbol,name,fullName,interval,kind:point?'observed':'unavailable',kindLabel:'관측 종가',
+    priceText:point?`${market.unit==='USD'?'$':market.unit==='KRW'?'₩':''}${axisNumber(point[1])}${!['USD','KRW'].includes(market.unit)?` ${market.unit}`:''}`:'—',
+    changePct:change,dateTime:point?.[0],timezone:market.timezone,
+    rsi:row?.date===point?.[0]?row?.rsi:null,rsiReason:row?.rsi==null?'선택 봉까지 RSI 14 산출에 필요한 관측 부족':`${interval} 관측 종가의 Wilder RSI 14`,
+    source:quoteSource?.label.startsWith('Yahoo Finance')?'Yahoo Finance':quoteSource?.label,
+    sourceDescription:quoteSource?`${quoteSource.label} · ${quoteSource.url} · 수집 ${quoteSource.retrievedAt} · ${market.timezone||'시간대 미제공'}`:undefined,
+    description:`${fullName} · ${interval} · ${market.unit} · ${point?.[0]||'관측 없음'} · ${market.timezone||'시간대 미제공'} · ${quoteSource?.label||'출처 미제공'}`,
+    detailText:bar?`O ${bar[1]} · H ${bar[2]} · L ${bar[3]} · C ${bar[4]} ${market.unit}`:point?`관측 종가 ${point[1]} ${market.unit}`:'관측 자료 없음'};
   function persist(next:RsiChartView,record=true) {
     const series=next.frequency==='weekly'?weeklyRsiPrices(prices):prices,visible=series.filter(p=>p[0]>=next.start&&p[0]<=next.end);
     if(visible.length&&(next.selected<visible[0][0]||next.selected>visible.at(-1)![0]))next={...next,selected:next.selected<visible[0][0]?visible[0][0]:visible.at(-1)![0]};
@@ -62,6 +74,7 @@ export function RsiWorkbench(props:Props) {
   const command=useRef<(action:string,value?:unknown)=>void>(()=>{});
   command.current=(action,value)=>{
     if(!live.current.props.active)return;
+    setHover(null);
     if(action==='pane'&&panes.includes(String(value))){if(value==='data')props.onDate(nearestPoint(prices,view.selected));if(value==='date'){setJump(view.selected);setFrom(view.start);setTo(view.end);}setPane(p=>p===value?null:value as Pane);setTab('chart');return;}
     if(action==='tab'&&['chart','backtest','records','csv','simulation'].includes(String(value))){setTab(value as typeof tab);return;}
     if(action==='undo'||action==='redo'){
@@ -143,8 +156,8 @@ export function RsiWorkbench(props:Props) {
     {status&&<p className="rsi-workbench-status" role="status">{status}</p>}
     <SimulationHud symbol={symbol} unit={market.unit} result={simulation.result} error={simulation.error} onDetails={()=>setTab('simulation')} onSettings={()=>command.current('pane','settings')}/>
     <div className="rsi-workbench-body">
-      <RsiChartCanvas menuPulse={menuPulse} symbol={symbol} revision={`${revision||''}:${epoch}`} unit={market.unit} prices={displayPrices} bars={bars} rows={rows} view={view} active={active} hover={hover} svgRef={svg}
-        onHover={setHover} onPick={pick} onView={next=>persist(next,false)} onStart={()=>{gesture.current=live.current.view;}} onEnd={endGesture}/>
+      <RsiChartCanvas menuPulse={menuPulse} symbol={symbol} revision={`${revision||''}:${epoch}`} unit={market.unit} prices={displayPrices} bars={bars} rows={rows} view={view} active={active} hover={hover} svgRef={svg} quote={quote}
+        onHover={setHover} onPick={pick} onView={next=>persist(next,false)} onStart={()=>{setHover(null);gesture.current=live.current.view;}} onEnd={endGesture}/>
       {pane&&<aside className="rsi-workbench-panel" aria-label={`${symbol} ${pane}`}><header><strong>{symbol} · {({data:'선택 데이터',indicators:'지표',settings:'차트 설정',method:'계산·출처',help:'차트 사용법',export:'차트 내보내기',date:'날짜 이동',search:'차트 명령 검색'} as Record<string,string>)[pane]}</strong><button type="button" aria-label="차트 패널 닫기" onClick={()=>setPane(null)}>×</button></header><div className="rsi-workbench-panel-scroll">
         {pane==='data'&&<><dl className="rsi-data-list"><dt>날짜</dt><dd>{point?.[0]}</dd><dt>종가 · {market.unit}</dt><dd>{point?.[1]}</dd><dt>RSI14</dt><dd>{row?.rsi??'미산출'}</dd><dt>SMA9</dt><dd>{row?.signal??'미산출'}</dd>{bar&&<><dt>시가 / 고가 / 저가</dt><dd>{bar.slice(1,4).map(v=>axisNumber(Number(v))).join(' / ')}</dd><dt>거래량</dt><dd>{bar[5]?.toLocaleString()??'자료 없음'}</dd></>}</dl><button type="button" onClick={()=>{setPane(null);setTab('records');}}>전체 기록</button><button type="button" onClick={()=>{setPane(null);setTab('backtest');}}>백테스트</button><details open={view.measurement.length>0}><summary>측정 눈금값</summary><table aria-label="측정 데이터"><thead><tr><th>날짜</th><th>값</th><th>단위</th></tr></thead><tbody>{view.measurement.map((anchor,index)=><tr key={index}><td>{anchor.date}</td><td>{anchor.value}</td><td>{anchor.panel==='rsi'?'RSI pt':market.unit}</td></tr>)}</tbody></table><button type="button" disabled={!view.measurement.length} onClick={()=>command.current('clear-measurement')}>측정 지우기</button></details><details className="ml-original"><summary>키움 일봉 RSI 비교</summary>{props.comparison}</details></>}
         {pane==='indicators'&&<>{[['showRsi','RSI14'],['showSignal','SMA9 신호'],['showLevels','기준선 29.5 / 33.5 / 40 / 43'],['showCrossings','Buy / Sell'],['showVolume','거래량']].map(([key,label])=><label className="rsi-panel-check" key={key}><input type="checkbox" checked={Boolean(view[key as keyof RsiChartView])} disabled={key==='showVolume'&&!barData.some(b=>b[5]!==null)} onChange={()=>command.current('toggle',key)}/>{label}</label>)}</>}

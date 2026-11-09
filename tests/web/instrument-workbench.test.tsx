@@ -5,8 +5,10 @@ import { readFile } from 'node:fs/promises';
 import { parseHTML } from 'linkedom';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { analyzeHousing, type HousingRow } from '@atlas/domain/housing';
+import { calculateRsiSeries } from '@atlas/domain/market-lab';
+import { weeklyRsiPrices } from '@atlas/domain/rsi-bars';
 import { InstrumentWorkbench } from '../../apps/web/src/components/instrument-workbench.js';
-import { RsiChartCanvas, type InstrumentMarker } from '../../apps/web/src/components/rsi-chart-canvas.js';
+import { RsiChartCanvas, type ChartQuote, type InstrumentMarker } from '../../apps/web/src/components/rsi-chart-canvas.js';
 import { RsiWorkbench } from '../../apps/web/src/panels/rsi-workbench.js';
 import { HousingChart, housingChartSeries } from '../../apps/web/src/panels/housing-chart.js';
 import { HousingPanel, type HousingCache } from '../../apps/web/src/panels/housing-panel.js';
@@ -137,6 +139,109 @@ test('the React chart mounts one common legend and cleans up its dialog when the
     assert.equal(fixture.document.querySelectorAll('.chart-legend-dock').length,1);
   }finally{await fixture.cleanup();}
   assert.equal(fixture.document.querySelector('#chart-legend-dialog'),null);
+});
+
+test('the React quote HUD keeps the shared field nodes across updates and reserves the price plot header',async()=>{
+  const series:InstrumentSeries={frequency:'daily',prices:[['2025-01-01',10],['2025-12-31',20]],bars:[],timeline:['2025-01-01','2025-12-31'],volumes:[]};
+  const props={symbol:'HYPE',unit:'USDC',series,prices:series.prices,bars:[],rows:[],view:initialInstrumentView(series),active:true,menuPulse:0,hover:null,svgRef:{current:null},
+    onView:()=>{},onStart:()=>{},onEnd:()=>{},onHover:()=>{},onPick:()=>{}};
+  const fixture=await mount(<RsiChartCanvas {...props}/>,undefined,undefined,{width:390,height:600});
+  try{
+    const hud=fixture.document.querySelector('.rsi-chart-canvas > .atlas-quote-hud')!;
+    const fields=[...hud.querySelectorAll('[data-quote-field]')],price=hud.querySelector('[data-quote-field=price]')!;
+    assert.equal(hud.querySelectorAll('.quote-hud-row').length,2);
+    assert.equal(price.textContent,'—','a direct canvas without a source quote cannot invent its own close');
+    assert.equal(hud.querySelector('[data-quote-field=time]')?.textContent,'—');
+    const quote:ChartQuote={symbol:'HYPE',name:'HYPE',fullName:'Hyperliquid HYPE/USDC',interval:'1D',kind:'observed',
+      priceText:'20 USDC',changePct:100,dateTime:'2025-12-31',timezone:'UTC',rsi:62.4,source:'Hyperliquid',sourceDescription:'Hyperliquid spot candle source'};
+    await fixture.render(<RsiChartCanvas {...props} quote={quote} hover={{date:'2025-12-31',panel:'rsi',value:3}}/>);
+    assert.equal(fixture.document.querySelector('.atlas-quote-hud'),hud);
+    assert.deepEqual([...hud.querySelectorAll('[data-quote-field]')],fields,'hover updates retain the same field layout');
+    assert.equal(price.textContent,'20 USDC','an oscillator cursor value is never a price quote');
+    assert.equal(hud.querySelector('[data-quote-rsi-value]')?.textContent,'62.4');
+    assert.match(hud.getAttribute('aria-label')||'',/Hyperliquid HYPE\/USDC/);
+    const svg=fixture.document.querySelector('.rsi-chart-canvas > svg')!;
+    assert.equal(Number(svg.getAttribute('data-plot-top')),56);
+    assert.equal(390-Number(svg.getAttribute('data-plot-right')),64,'R2 right gutter stays unchanged');
+    await fixture.render(<RsiChartCanvas {...props} symbol="HOUSING-SEOUL" unit="지수" quote={{symbol:'HOUSING-SEOUL',name:'서울',fullName:'서울 아파트 실거래가격지수',interval:'1M',kind:'unavailable'}}/>);
+    assert.equal(fixture.document.querySelectorAll('.atlas-quote-hud').length,1);
+    assert.equal(fixture.document.querySelector('.atlas-quote-hud'),hud);
+    assert.deepEqual([...hud.querySelectorAll('[data-quote-field]')],fields);
+    assert.equal(price.textContent,'—');assert.equal(hud.querySelector('[data-quote-rsi-value]')?.textContent,'—');
+  }finally{await fixture.cleanup();}
+  assert.equal(fixture.document.querySelector('.atlas-quote-hud'),null);
+});
+
+test('all ETF HUDs follow the actual selected daily or weekly observation, canonical RSI and source calendar',async()=>{
+  for(const [symbol,id,lastPrice,zone]of [['TQQQ','tqqq','$62.01','NY'],['SOXL','soxl','$68.17','NY'],['233740','kodex-kosdaq150','₩4,990','KST']]){
+    const market=marketSnapshot.markets.find((item:{id:string})=>item.id===id),original=structuredClone(market.prices);
+    const rows=calculateRsiSeries(market.prices,14,9),source=marketSnapshot.sources.find((item:{id:string})=>item.id===market.sourceId);
+    const fixture=await mount(<RsiWorkbench symbol={symbol} market={market} snapshot={marketSnapshot} now={new Date('2026-11-09T12:00:00Z')}
+      rows={rows} epoch={9} active embedded onDate={()=>{}} comparison={null} references={null}/>);
+    try{
+      const hud=fixture.document.querySelector('.atlas-quote-hud')!,field=(name:string)=>hud.querySelector(`[data-quote-field=${name}]`)!;
+      const send=(action:string,value:unknown)=>fixture.message({kind:'atlas:center-command',epoch:9,symbol,action,value});
+      assert.equal(field('name').textContent,({TQQQ:'삼플레',SOXL:'속쓸','233740':'코스닥150 2배'} as Record<string,string>)[symbol]);
+      assert.ok(field('name').getAttribute('aria-label')?.includes(symbol));
+      assert.ok(hud.getAttribute('aria-label')?.includes(symbol));
+      assert.equal(field('interval').textContent,'1D');assert.equal(field('price').textContent,lastPrice);
+      assert.equal(field('time').getAttribute('datetime'),market.prices.at(-1)[0]);
+      assert.equal(field('time').textContent,`${market.prices.at(-1)[0].replaceAll('-','.')} ${zone}`);
+      assert.equal(Number(hud.querySelector('[data-quote-rsi-value]')?.textContent),Math.round(rows.at(-1)!.rsi!*10)/10);
+      assert.equal(field('source').textContent,'Yahoo Finance');assert.ok(field('source').getAttribute('title')?.includes(source.label));
+      assert.ok(field('source').getAttribute('title')?.includes(source.retrievedAt));
+      assert.ok(field('source').getAttribute('title')?.includes(source.url));
+      await send('frequency','weekly');
+      const weekly=weeklyRsiPrices(market.prices),weeklyRows=calculateRsiSeries(weekly,14,9);
+      assert.equal(field('interval').textContent,'1W');assert.equal(field('time').getAttribute('datetime'),weekly.at(-1)![0]);
+      assert.equal(Number(hud.querySelector('[data-quote-rsi-value]')?.textContent),Math.round(weeklyRows.at(-1)!.rsi!*10)/10);
+      await send('frequency','daily');await send('date',market.prices[0][0]);
+      assert.equal(field('time').getAttribute('datetime'),market.prices[0][0]);
+      assert.equal(hud.querySelector('[data-quote-rsi-value]')?.textContent,'—');assert.equal(field('change').textContent,'전봉 —');
+      assert.equal(fixture.document.querySelector('.atlas-quote-hud'),hud,'commands update the source-owned shared fields');
+      assert.deepEqual(market.prices,original);
+    }finally{await fixture.cleanup();}
+  }
+});
+
+test('HYPE HUD uses canonical daily and weekly USDC RSI without enabling an oscillator or changing retained prices',async()=>{
+  const bars=structuredClone(themes.asset.bars);
+  const series:InstrumentSeries={frequency:'daily',bars,prices:bars.map((bar:any)=>[bar[0],bar[4]]),timeline:bars.map((bar:any)=>bar[0]),volumes:bars.map((bar:any)=>({date:bar[0],value:bar[5]}))};
+  const fixture=await mount(<InstrumentWorkbench symbol="HYPE" unit="USDC" timezone="UTC" series={series} volumeUnit="HYPE" description="HYPE/USDC 현물 관측" embedded epoch={4}/>);
+  try{
+    const hud=fixture.document.querySelector('.atlas-quote-hud')!,field=(name:string)=>hud.querySelector(`[data-quote-field=${name}]`)!;
+    assert.equal(field('name').textContent,'하이퍼리퀴드');
+    assert.equal(field('source').textContent,'Hyperliquid');assert.equal(field('time').getAttribute('datetime'),bars.at(-1)[0]);
+    assert.match(field('price').textContent||'',/ USDC$/);assert.doesNotMatch(field('price').textContent||'',/\$/);
+    assert.equal(Number(hud.querySelector('[data-quote-rsi-value]')?.textContent),Math.round(calculateRsiSeries(series.prices).at(-1)!.rsi!*10)/10);
+    await fixture.message({kind:'atlas:center-command',epoch:4,symbol:'HYPE',action:'frequency',value:'weekly'});
+    const weekly=displayInstrumentSeries(series,'weekly');
+    assert.equal(field('interval').textContent,'1W');assert.equal(field('time').getAttribute('datetime'),weekly.prices.at(-1)![0]);
+    assert.equal(Number(hud.querySelector('[data-quote-rsi-value]')?.textContent),Math.round(calculateRsiSeries(weekly.prices).at(-1)!.rsi!*10)/10);
+    assert.equal(fixture.document.querySelector('svg [data-chart=rsi]'),null,'the quote summary does not manufacture HYPE oscillator controls');
+    assert.doesNotMatch(fixture.document.querySelector('.lab-legend')?.textContent||'',/RSI14|SMA9/);
+    assert.deepEqual(series.bars,themes.asset.bars);
+  }finally{await fixture.cleanup();}
+});
+
+test('every housing HUD preserves an unpublished selected month with missing price and RSI slots',async()=>{
+  for(const region of housing.regions){
+    const rows=analyzeHousing(housing,{...options,region:region.id}).rows,series=housingChartSeries(rows),symbol=`HOUSING-${region.id.toUpperCase()}`;
+    const fixture=await mount(<InstrumentWorkbench symbol={symbol} unit="지수" timezone="Asia/Seoul" series={series} volumeUnit="건" description="월별 아파트 실거래가격지수" embedded epoch={5}/>);
+    try{
+      const hud=fixture.document.querySelector('.atlas-quote-hud')!,field=(name:string)=>hud.querySelector(`[data-quote-field=${name}]`)!;
+      assert.equal(field('interval').textContent,'1M');assert.equal(field('price').textContent,'—');assert.equal(field('change').textContent,'전봉 —');
+      assert.equal(field('time').textContent,'2026.09 KST');assert.equal(field('time').getAttribute('datetime'),'2026-09-01');
+      assert.equal(field('source').textContent,'한국부동산원');assert.equal(hud.querySelector('[data-quote-rsi-value]')?.textContent,'—');
+      assert.match(field('rsi').getAttribute('aria-label')||'',/월별 실거래가격지수 RSI 미제공/);
+      assert.match(hud.getAttribute('aria-label')||'',/아파트 실거래가격지수/);
+      await fixture.message({kind:'atlas:center-command',epoch:5,symbol,action:'date',value:'2026-08-01'});
+      assert.equal(field('time').textContent,'2026.08 KST');assert.equal(field('kind').textContent,'지수');
+      assert.equal(Number(field('price').textContent?.replaceAll(',','')),Number(region.price.at(-1)[1].toFixed(2)));
+      assert.equal(hud.querySelector('[data-quote-rsi-value]')?.textContent,'—');assert.equal(hud.getAttribute('data-kind'),'observed');
+      assert.equal(fixture.document.querySelector('.atlas-quote-hud'),hud);assert.equal(fixture.document.querySelectorAll('.quote-hud-row').length,2);
+    }finally{await fixture.cleanup();}
+  }
 });
 
 test('edge evidence groups stay inside the price plot while their guides and selection retain the original dates', async () => {

@@ -6,24 +6,42 @@ import { bindChartNavigation } from '../../../../dist/chart-navigation.js';
 import { withChartSpacing,candleBodyWidth } from '../../../../dist/chart-view-policy.js';
 import { createPriceAxisLayout,createPriceAxisFormatter } from '../../../../dist/price-axis.js';
 import { mountInstrumentChartLegend } from '../../../../dist/ui/instrument-chart-legend.js';
+import { mountQuoteHud } from '../../../../dist/ui/quote-hud.js';
 import { chartGeometry,chartRange,date,day,nearestPoint,type Anchor,type RsiChartView } from '../rsi-chart-model.js';
 import { rsiCrossings } from '../rsi-crossings.js';
 import { instrumentRange,nearestObservation,observedPricePath,type InstrumentSeries } from '../instrument-chart-model.js';
 export const axisNumber=(value:number)=>Math.abs(value)>0&&Math.abs(value)<.001?value.toPrecision(3):new Intl.NumberFormat('en-US',{maximumFractionDigits:Math.abs(value)<1?4:2}).format(value);
 export interface Pick {date:string;value:number;panel:'price'|'rsi'}
 export interface InstrumentMarker {id:string;date:string;label:string;title:string;kind:'evidence'|'judgment';selected:boolean;onSelect:()=>void}
+export interface ChartQuote {
+  symbol:string;name?:string;fullName?:string;interval:string;
+  kind:'observed'|'simulated'|'forecast'|'unavailable';kindLabel?:string;
+  priceText?:string;priceLabel?:string;changePct?:number|null;changeText?:string;
+  dateTime?:string;timestampText?:string;timezone?:string;rsi?:number|null;rsiReason?:string;
+  description?:string;detailText?:string;source?:string;sourceDescription?:string;sourceVisible?:boolean;
+}
 interface Props {menuPulse:number;symbol:string;unit:string;prices:Point[];bars:RsiBar[];rows:RsiRow[];view:RsiChartView;active:boolean;
   onView:(view:RsiChartView)=>void;onStart:()=>void;onEnd:()=>void;onPick:(pick:Pick)=>void;onHover:(pick:Pick|null)=>void;hover:Pick|null;svgRef:React.RefObject<SVGSVGElement|null>;
-  series?:InstrumentSeries;markers?:InstrumentMarker[];onMarker?:()=>void;volumeUnit?:string;description?:string;className?:string;revision?:string}
+  series?:InstrumentSeries;markers?:InstrumentMarker[];onMarker?:()=>void;volumeUnit?:string;description?:string;className?:string;revision?:string;quote?:ChartQuote}
 export function RsiChartCanvas(props:Props) {
   const {symbol,unit,prices,bars,rows,view,active,onPick,onHover,hover,svgRef}=props,root=useRef<HTMLDivElement>(null);
   const [size,setSize]=useState(()=>({width:900,height:520,axis:createPriceAxisLayout({svg:null,width:900,left:12,minRight:64})})),live=useRef(props),navigation=useRef<ReturnType<typeof bindChartNavigation>|null>(null);
   const source=useRef({prices,bars,version:0});
   const legend=useRef<ReturnType<typeof mountInstrumentChartLegend>|null>(null);
+  const quoteHost=useRef<HTMLDivElement>(null),quoteHud=useRef<ReturnType<typeof mountQuoteHud>|null>(null);
   if(source.current.prices!==prices||source.current.bars!==bars)source.current={prices,bars,version:source.current.version+1};
   const clipId=useId().replaceAll(':',''),priceClip=`${clipId}-price`,oscClip=`${clipId}-osc`;
   const geometry=useMemo(()=>chartGeometry(prices,bars,rows,view,size.width,size.height,size.axis.right),[prices,bars,rows,view,size]);
   const geom=useRef(geometry);live.current=props;geom.current=geometry;
+  useLayoutEffect(()=>{
+    if(!quoteHost.current)return;
+    const controller=mountQuoteHud(quoteHost.current);quoteHud.current=controller;
+    return()=>{controller.destroy();quoteHud.current=null;};
+  },[]);
+  useLayoutEffect(()=>{
+    quoteHud.current?.update(props.quote||{symbol,name:symbol,interval:({daily:'1D',weekly:'1W',monthly:'1M'})[view.frequency],
+      kind:'unavailable',rsiReason:'관측 계기판 자료 없음',description:props.description});
+  },[props.quote,symbol,view.frequency,props.description]);
   useLayoutEffect(()=>{
     let disposed=false;
     const measure=()=>{if(disposed||!root.current)return;const width=root.current.clientWidth,height=root.current.clientHeight;if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)return;
@@ -108,6 +126,7 @@ export function RsiChartCanvas(props:Props) {
   const anchorY=(a:Anchor)=>a.panel==='rsi'?g.rsiY(a.value):g.y(a.value);
   const measurement=view.measurement.length===1&&hover?.panel===view.measurement[0].panel?[...view.measurement,hover]:view.measurement;
   return <div className={`atlas-plot rsi-chart-canvas ${props.className||''}`} ref={root} data-tool={view.tool} data-chart={props.series?'instrument-price':'rsi-price'}>
+    <div ref={quoteHost}/>
     <svg ref={svgRef} width={size.width} height={size.height} viewBox={`0 0 ${size.width} ${size.height}`} role="img" tabIndex={0} aria-label={`${props.description||`${symbol} 가격·RSI 차트`}, 휠 확대·축소, 드래그 이동, C 십자선, H 이동, M 측정`}
       data-plot-left={g.left} data-plot-right={g.right} data-plot-top={g.top} data-plot-bottom={g.bottom} data-price-bottom={g.priceBottom} data-time-axis-top={g.bottom} data-start={view.start} data-end={view.end} data-price-min={g.min} data-price-max={g.max} data-price-mode={view.autoScale?'auto':'manual'}
       onPointerMove={event=>{if(active&&!event.buttons)onHover(pointer(event));}} onPointerLeave={()=>onHover(null)} onClick={event=>{if(!active||event.defaultPrevented)return;const p=pointer(event);if(p)onPick(p);}}>

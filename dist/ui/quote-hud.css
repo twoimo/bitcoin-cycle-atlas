@@ -1,0 +1,51 @@
+/* Two permanent rows; each field occupies its actual text width. The local
+   container also works in the embedded React chart, which has no plot container. */
+.atlas-plot>.atlas-quote-hud,.atlas-plot>#lab-metrics.atlas-quote-hud{
+  position:absolute;inset:8px 66px auto 8px;display:grid;grid-template-rows:20px 20px;gap:0;
+  width:auto;max-width:calc(100% - 74px)!important;height:40px;min-height:40px;margin:0;padding:0;border:0;border-radius:0;
+  background:transparent;overflow:visible;white-space:nowrap;line-height:20px;font:12px/20px var(--font,sans-serif);
+  font-variant-numeric:tabular-nums;pointer-events:none;z-index:5;text-shadow:none;
+  container:quote-hud / inline-size;
+}
+.atlas-plot>.atlas-quote-hud .quote-hud-row{display:flex;align-items:center;flex-flow:row nowrap;gap:6px;min-width:0;width:max-content;max-width:100%;height:20px;line-height:20px;overflow:visible}
+.atlas-plot>.atlas-quote-hud .quote-hud-row>[data-quote-field]{flex:0 0 auto;min-width:0}
+.atlas-plot>.atlas-quote-hud :is(.quote-hud-name,.quote-hud-price){margin:0;font:inherit;font-weight:600;letter-spacing:0;color:var(--text)}
+.atlas-plot>.atlas-quote-hud :is(.quote-hud-interval,.quote-hud-kind,.quote-hud-change,.quote-hud-source,.quote-hud-time,.quote-hud-rsi){display:block;flex:none;font:inherit;line-height:20px;white-space:nowrap;overflow:visible;text-overflow:clip;letter-spacing:0;color:var(--muted)}
+.atlas-plot>.atlas-quote-hud .quote-hud-kind{font-size:11px;color:var(--subtle)}
+.atlas-plot>.atlas-quote-hud .quote-hud-meta{font-size:11px;column-gap:6px}
+.atlas-plot>.atlas-quote-hud .quote-hud-time{min-width:0}
+.atlas-plot>.atlas-quote-hud .quote-hud-rsi{display:inline-flex;gap:3px}
+.atlas-quote-hud .quote-hud-rsi b{display:inline-block;font:inherit;text-align:right;color:var(--text)}
+.atlas-quote-hud [data-source-visible=false]{visibility:hidden}
+.atlas-plot>.atlas-quote-hud .quote-hud-source{pointer-events:auto}
+.atlas-plot>.atlas-quote-hud [data-tone=up]{color:var(--green)}
+.atlas-plot>.atlas-quote-hud [data-tone=down]{color:var(--red)}
+.atlas-plot>.atlas-quote-hud[data-quote-state=assumption] :is(.quote-hud-price,.quote-hud-kind){color:var(--accent)}
+.atlas-quote-hud .quote-hud-detail,.quote-hud-source-controls>#workbench-market-status{
+  position:absolute!important;inset:auto!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;
+  overflow:hidden!important;clip-path:inset(50%);white-space:normal!important;border:0!important;
+}
+/* The original refresh action occupies the otherwise empty axis header. Its
+   complete status remains its accessible description and the source tooltip. */
+.atlas-plot>.workbench-market-info.quote-hud-source-controls{
+  inset:2px 8px auto auto;left:auto;width:44px;max-width:44px;height:44px;min-height:44px;
+  padding:0;margin:0;gap:0;background:transparent;overflow:visible;text-shadow:none;
+}
+.atlas-plot>.quote-hud-source-controls #workbench-market-refresh{display:grid;place-items:center;width:44px;min-width:44px;height:44px;min-height:44px;padding:12px;pointer-events:auto}
+@media(max-width:430px){
+  .atlas-plot>.atlas-quote-hud .quote-hud-row{font-size:11px;column-gap:4px}
+}
+@container quote-hud (max-width:430px){
+  .atlas-plot>.atlas-quote-hud .quote-hud-row{font-size:11px;column-gap:4px}
+}
+/* At a 320px plot the HUD has 246px. Keep the name, price/unit, previous-bar
+   change, full clock and RSI visible. Only the redundant observed price label
+   and an intraday provider label move to accessible text; assumptions stay named. */
+@container quote-hud (max-width:280px){
+  .atlas-plot>.atlas-quote-hud .quote-hud-row{column-gap:3px}
+  .atlas-plot>.atlas-quote-hud:not([data-quote-state=assumption]) .quote-hud-kind,
+  .atlas-plot>.atlas-quote-hud[data-quote-intraday=true] .quote-hud-source{
+    position:absolute;width:1px;max-width:1px;height:1px;margin:-1px;padding:0;border:0;
+    overflow:hidden;clip-path:inset(50%);white-space:nowrap;pointer-events:none;
+  }
+}
