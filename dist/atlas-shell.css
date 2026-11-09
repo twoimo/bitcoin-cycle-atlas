@@ -228,10 +228,10 @@ body[data-shell=chart] [data-disabled-reason]{cursor:not-allowed}
    The original instrument actions open below the second row without clipping
    observed text or changing their native/React event owners. */
 @media(max-width:390px){
-  body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top][data-mobile-heading=two-row]{display:grid;grid-template-columns:minmax(80px,1fr) repeat(5,44px);grid-template-rows:44px 44px;gap:0;height:calc(92px + var(--mobile-top,0px));min-height:calc(92px + var(--mobile-top,0px));padding:calc(1px + var(--mobile-top,0px)) 4px 1px;overflow:visible;touch-action:manipulation}
+  body[data-shell=chart] .atlas-canvas-heading[data-shell-region=top][data-mobile-heading=two-row]{display:grid;grid-template-columns:minmax(80px,1fr) 56px repeat(4,44px);grid-template-rows:44px 44px;gap:0;height:calc(92px + var(--mobile-top,0px));min-height:calc(92px + var(--mobile-top,0px));padding:calc(1px + var(--mobile-top,0px)) 4px 1px;overflow:visible;touch-action:manipulation}
   body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>:is(.symbol-selector-trigger,.workbench-symbol){grid-area:1/1;width:100%;max-width:none;min-width:0;height:44px;min-height:44px;justify-self:stretch;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#workbench-frequency{grid-area:1/2;min-width:0;width:44px;height:44px;margin:0;box-sizing:border-box}
-  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] #workbench-interval-select{width:44px;min-width:44px;max-width:44px;height:44px;min-height:44px;padding:4px 12px 4px 4px;box-sizing:border-box}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#workbench-frequency{grid-area:1/2;min-width:0;width:56px;height:44px;margin:0;box-sizing:border-box}
+  body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row] #workbench-interval-select{width:56px;min-width:56px;max-width:56px;height:44px;min-height:44px;padding:4px 0;font-size:12px;box-sizing:border-box}
   body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#workbench-chart-type{grid-area:1/3}
   body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#atlas-mode-menu{grid-area:1/4}
   body[data-shell=chart] .atlas-canvas-heading[data-mobile-heading=two-row]>#mobile-tools-toggle{grid-area:1/5}
