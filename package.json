@@ -67,6 +67,7 @@
     "@types/react-dom": "19.3.0",
     "cf": "1.0.0-beta.28",
     "esbuild": "0.28.2",
+    "korean-lunar-calendar": "^0.4.0",
     "linkedom": "0.18.15",
     "tsx": "4.23.15",
     "typescript": "7.0.2",

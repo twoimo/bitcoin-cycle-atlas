@@ -1,0 +1,141 @@
+/* 시즌 테마 레이어.
+   기준 테마(dark/light)의 토큰은 건드리지 않고, 장식용 토큰만 덮어쓴다.
+   차트 시리즈 색(--accent 등)은 데이터 의미가 있으므로 시즌 테마가 바꾸지 않는다. */
+
+html {
+  --season-accent: #7da89c;
+  --season-soft: rgba(125, 168, 156, 0.14);
+  --season-line: rgba(125, 168, 156, 0.5);
+  --season-ink: #eaf2ef;
+}
+
+html[data-theme="light"] {
+  --season-ink: #1d2620;
+}
+
+/* 상단 머리선: 시즌이 켜져 있을 때만 보인다. */
+html[data-season] body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 2px;
+  z-index: 90;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--season-accent), transparent);
+  opacity: 0.9;
+}
+
+/* 사이드바 활성 항목과 강조 표식에 시즌 색을 얹는다. */
+html[data-season] .atlas-sidebar [aria-current="page"],
+html[data-season] .atlas-sidebar .is-active {
+  background: var(--season-soft);
+  color: var(--season-ink);
+}
+
+html[data-season] .brand-icon {
+  box-shadow: 0 0 0 1px var(--season-line), 0 0 18px var(--season-soft);
+}
+
+html[data-season] :focus-visible {
+  outline-color: var(--season-accent);
+}
+
+/* 사용자가 적용 중인 시즌을 알고 끌 수 있도록 작은 배지를 띄운다. */
+.atlas-season-chip {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 95;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid var(--season-line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 82%, var(--season-accent) 18%);
+  color: var(--season-ink);
+  font: 600 12px/1.2 var(--font, system-ui);
+  letter-spacing: -0.1px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+}
+
+.atlas-season-chip:hover { background: color-mix(in srgb, var(--bg) 70%, var(--season-accent) 30%); }
+.atlas-season-chip:focus-visible { outline: 2px solid var(--season-accent); outline-offset: 2px; }
+html[data-theme="light"] .atlas-season-chip { color: #1b2029; box-shadow: 0 6px 18px rgba(20, 30, 40, 0.14); }
+
+@media (max-width: 600px) {
+  .atlas-season-chip { right: 12px; bottom: calc(72px + env(safe-area-inset-bottom, 0px)); min-height: 32px; padding: 5px 10px; font-size: 11px; }
+}
+
+/* 명절 당일에는 상단에 아주 옅은 빛을 더한다. */
+html[data-season-phase="day"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 180px;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 100% at 50% 0%, var(--season-soft), transparent 70%);
+  opacity: 0.85;
+}
+
+
+/* 명절 당일에는 상단 프레임에도 옅은 시즌 색을 얹어 "오늘은 무슨 날"인지 읽히게 한다. */
+html[data-season-phase="day"] .atlas-canvas-heading,
+html[data-season-phase="day"] .atlas-dashboard-header {
+  background-image: linear-gradient(180deg, var(--season-soft), transparent 78%);
+}
+
+/* 시즌별 팔레트 */
+html[data-season="newyear"] { --season-accent: #e0b34a; --season-soft: rgba(224, 179, 74, 0.16); --season-line: rgba(224, 179, 74, 0.55); --season-ink: #fdf3d8; }
+html[data-season="seollal"] { --season-accent: #d2522f; --season-soft: rgba(210, 82, 47, 0.16); --season-line: rgba(210, 82, 47, 0.55); --season-ink: #fde8e0; }
+html[data-season="valentine"] { --season-accent: #d9607f; --season-soft: rgba(217, 96, 127, 0.16); --season-line: rgba(217, 96, 127, 0.55); --season-ink: #fde7ed; }
+html[data-season="samil"] { --season-accent: #3f6fbf; --season-soft: rgba(63, 111, 191, 0.16); --season-line: rgba(63, 111, 191, 0.55); --season-ink: #e6eefb; }
+html[data-season="whiteday"] { --season-accent: #d78cae; --season-soft: rgba(215, 140, 174, 0.16); --season-line: rgba(215, 140, 174, 0.55); --season-ink: #fbeaf1; }
+html[data-season="children"] { --season-accent: #e0a33a; --season-soft: rgba(224, 163, 58, 0.16); --season-line: rgba(224, 163, 58, 0.55); --season-ink: #fdf1dc; }
+html[data-season="parents"] { --season-accent: #c2683f; --season-soft: rgba(194, 104, 63, 0.16); --season-line: rgba(194, 104, 63, 0.55); --season-ink: #fbeade; }
+html[data-season="buddha"] { --season-accent: #c9a227; --season-soft: rgba(201, 162, 39, 0.16); --season-line: rgba(201, 162, 39, 0.55); --season-ink: #fbf3d9; }
+html[data-season="memorial"] { --season-accent: #6f7d8c; --season-soft: rgba(111, 125, 140, 0.16); --season-line: rgba(111, 125, 140, 0.5); --season-ink: #e9eef4; }
+html[data-season="liberation"] { --season-accent: #b0453f; --season-soft: rgba(176, 69, 63, 0.16); --season-line: rgba(176, 69, 63, 0.55); --season-ink: #fbe7e5; }
+html[data-season="chuseok"] { --season-accent: #c99a2e; --season-soft: rgba(201, 154, 46, 0.16); --season-line: rgba(201, 154, 46, 0.55); --season-ink: #fcf2da; }
+html[data-season="gaecheon"] { --season-accent: #7a6bb5; --season-soft: rgba(122, 107, 181, 0.16); --season-line: rgba(122, 107, 181, 0.55); --season-ink: #eeeafb; }
+html[data-season="hangul"] { --season-accent: #4a7fa5; --season-soft: rgba(74, 127, 165, 0.16); --season-line: rgba(74, 127, 165, 0.55); --season-ink: #e6f1f9; }
+html[data-season="halloween"] { --season-accent: #e08a2e; --season-soft: rgba(224, 138, 46, 0.18); --season-line: rgba(224, 138, 46, 0.55); --season-ink: #fdf0e0; }
+html[data-season="pepero"] { --season-accent: #b1734a; --season-soft: rgba(177, 115, 74, 0.16); --season-line: rgba(177, 115, 74, 0.55); --season-ink: #f9ece3; }
+html[data-season="suneung"] { --season-accent: #4f7fd0; --season-soft: rgba(79, 127, 208, 0.16); --season-line: rgba(79, 127, 208, 0.55); --season-ink: #e8f0fd; }
+html[data-season="christmas"] { --season-accent: #c0392b; --season-soft: rgba(192, 57, 43, 0.18); --season-line: rgba(192, 57, 43, 0.55); --season-ink: #fdeae7; }
+html[data-season="yearend"] { --season-accent: #d0a94a; --season-soft: rgba(208, 169, 74, 0.18); --season-line: rgba(208, 169, 74, 0.55); --season-ink: #fdf4dd; }
+
+/* 라이트 테마에서는 대비를 위해 조금 더 진하게 */
+html[data-theme="light"][data-season] { --season-ink: #1b2029; }
+html[data-theme="light"][data-season="christmas"] { --season-accent: #a5281b; }
+html[data-theme="light"][data-season="seollal"] { --season-accent: #b8401f; }
+html[data-theme="light"][data-season="halloween"] { --season-accent: #b96a17; }
+html[data-theme="light"][data-season="newyear"] { --season-accent: #a67c1c; }
+html[data-theme="light"][data-season="chuseok"] { --season-accent: #9a7418; }
+html[data-theme="light"][data-season="yearend"] { --season-accent: #9a7418; }
+
+/* 명절 당일에는 머리선을 아주 약하게 호흡시킨다. 모션 최소화 설정이면 끈다. */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-season-phase="day"] body::before {
+    animation: season-breathe 6s ease-in-out infinite;
+  }
+}
+
+@keyframes season-breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+/* 인쇄·강제 대비 모드에서는 장식을 끈다. */
+@media print {
+  html[data-season] body::before, html[data-season] body::after { display: none; }
+  .atlas-season-chip { display: none; }
+}
+
+@media (forced-colors: active) {
+  html[data-season] body::before { display: none; }
+  html[data-season] .brand-icon { box-shadow: none; }
+}

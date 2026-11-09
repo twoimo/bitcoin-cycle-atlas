@@ -16,6 +16,7 @@ import { initRelayRoomView } from './relay-room.js?v=1.37.7';
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.1';
 import { initIpoView } from './ipo-view.js?v=1.32.1';
 import { initMarketLabView } from './market-lab-view.js?v=1.31.3';
+import { initSeasonalTheme } from './ui/seasonal-theme-boot.js?v=1.0.0';
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -513,3 +514,10 @@ async function init() {
   }
 }
 if (!['data','ipo','market'].includes(state.view)) void ensureDataset();
+
+// 시즌 테마: 기준 테마(dark/light)와 별개로 날짜에 맞는 장식만 얹는다.
+try {
+  globalThis.atlasSeason = initSeasonalTheme();
+} catch (error) {
+  console.warn('seasonal theme skipped', error);
+}
