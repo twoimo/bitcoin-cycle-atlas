@@ -92,6 +92,7 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
   const frequency=$('.eth-interval-buttons')||$('.equity-intervals');frequency.id='workbench-frequency';frequency.classList.add('native-frequency');
   const segmented=make('div','lab-segmented');segmented.append(...frequency.children);frequency.append(segmented);
   for(const node of segmented.querySelectorAll('button')){node.dataset.labFrequency=node.dataset.ethInterval||node.dataset.equityInterval;node.id=`workbench-interval-${node.dataset.labFrequency}`;}
+  const intervalControls=[...segmented.querySelectorAll('[data-lab-frequency]')];
   const interval=make('select');interval.id='workbench-interval-select';interval.setAttribute('aria-label','가격 표시 간격');
   for(const item of intervals){const option=make('option','',item.label);option.value=item.id;interval.append(option);}interval.onchange=()=>command('frequency',interval.value);frequency.append(interval);
   const type=button('line','가격 표시 · 캔들로 변경','workbench-chart-type','chart-type');frequency.after(type);
@@ -207,7 +208,7 @@ export function mountNativeChartWorkbench({app,svg,plot,symbol,intervals,state,g
     legend.update();
     interval.value=state.frequency;type.innerHTML=icon(state.chartType==='candles'?'candles':'line');type.setAttribute('aria-pressed',String(state.chartType==='candles'));type.title=`${symbol} ${state.chartType==='candles'?'선':'캔들'}으로 변경`;type.setAttribute('aria-label',type.title);
     for(const node of left.querySelectorAll('[data-chart-tool]'))node.setAttribute('aria-pressed',String(node.dataset.chartTool===state.tool));
-    for(const node of segmented.querySelectorAll('[data-lab-frequency]')){node.setAttribute('aria-pressed',String(node.dataset.labFrequency===state.frequency));node.tabIndex=node.dataset.labFrequency===state.frequency?0:-1;}
+    for(const node of intervalControls){node.setAttribute('aria-pressed',String(node.dataset.labFrequency===state.frequency));node.tabIndex=node.dataset.labFrequency===state.frequency?0:-1;}
     magnet.setAttribute('aria-pressed',String(state.magnet!=='off'));badge.textContent=({off:'OFF',weak:'약',strong:'강'})[state.magnet||'off'];magnet.setAttribute('aria-label',`${symbol} 자석 · ${{off:'끄기',weak:'약하게',strong:'강하게'}[state.magnet||'off']} · Alt+M`);
     clear.disabled=!state.measurement;undo.disabled=!historyState.canUndo;redo.disabled=!historyState.canRedo;save.disabled=!ready;dateButton.disabled=!ready;type.disabled=!ready;
     scale.textContent=state.scale==='log'?'로그':'선형';scale.setAttribute('aria-pressed',String(state.scale==='log'));auto.textContent=state.priceDomain?'수동':'자동';auto.setAttribute('aria-pressed',String(!state.priceDomain));auto.setAttribute('aria-label',`${symbol} 가격축 자동 맞춤 ${state.priceDomain?'꺼짐':'켜짐'}`);

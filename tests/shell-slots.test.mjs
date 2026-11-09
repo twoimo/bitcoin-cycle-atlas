@@ -81,7 +81,7 @@ test('late native identity, history and replay mounts settle without duplicate s
   assert.equal(heading.querySelectorAll('[data-shell-owner="top"]').length, 10);
   assert.equal(Boolean(heading.querySelector('.shell-history-slot')), false);
   assert.equal(history.dataset.shellSlot, '6');
-  assert.equal(replay.parentElement.dataset.shellSlot, '5');
+  assert.equal(replay.closest('[data-shell-key=instrument]').dataset.shellSlot, '5');
   assert.equal(heading.lastElementChild.className, 'mobile-workbench-button');
   document.dispatchEvent(new window.CustomEvent('atlas:active-symbol', {detail:{symbol:'TQQQ'}}));
   await settle();
@@ -104,7 +104,7 @@ test('hosted chart tools share instrument slot; nonchart portals remain direct a
   assert.equal(host.firstChild, action, 'the React portal owner is never replaced');
 });
 
-test('mobile BTC, native and hosted feature groups leave horizontal gestures to the outer toolbar', () => {
+test('unmounted shell fallback keeps source scroll ownership until the measured disclosure takes over', () => {
   const css = readFileSync(new URL('../dist/atlas-shell.css', import.meta.url), 'utf8');
   for (const symbol of ['BTCUSD', 'ETHUSD', 'MSTR', 'BMNR', 'TQQQ']) {
     const {document} = fixture();

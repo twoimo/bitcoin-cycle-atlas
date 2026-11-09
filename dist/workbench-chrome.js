@@ -62,6 +62,7 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
     node.title=`${interval.label} · ${interval.seconds<86400?'실제 거래소 완료 봉':'일·주별 가격'}`;node.setAttribute('aria-label',node.title);node.setAttribute('aria-pressed',String(interval.id==='daily'));
     node.onclick=()=>command('frequency',interval.id);intervalButtons.append(node);
   }
+  const intervalControls=[...intervalButtons.querySelectorAll('button')];
   const intervalSelect=document.createElement('select');intervalSelect.id='workbench-interval-select';intervalSelect.setAttribute('aria-label','가격 표시 간격');
   for(const interval of CHART_INTERVALS){const option=document.createElement('option');option.value=interval.id;option.textContent=interval.label;intervalSelect.append(option);}intervalSelect.value='daily';intervalSelect.onchange=()=>command('frequency',intervalSelect.value);frequency.append(intervalSelect);
   const layers=document.createElement('div');layers.className='atlas-settings-body workbench-layers';
@@ -179,7 +180,7 @@ export function mountWorkbenchChrome({icon,stage,workspace,plot,tools,controlSto
     workspace.dataset.analysisMode=s.analysisMode||'';goTo.update(s);
     left.hidden=!price;left.querySelector('[data-chart-tool=measure]').hidden=false;clear.hidden=false;chartMenu.hidden=!price;chartMenu.disabled=s.navigationAvailable===false;scenario.hidden=!price||intraday;layerButton.hidden=!price;ranges.hidden=!price;axis.hidden=!price;next.hidden=!price||intraday;goDate.hidden=!price;chartType.hidden=!price;
     intervalSelect.value=s.frequency||'daily';
-    for(const node of intervalButtons.querySelectorAll('button')){const selected=node.dataset.labFrequency===s.frequency;node.setAttribute('aria-pressed',String(selected));node.tabIndex=selected?0:-1;}
+    for(const node of intervalControls){const selected=node.dataset.labFrequency===s.frequency;node.setAttribute('aria-pressed',String(selected));node.tabIndex=selected?0:-1;}
     chartType.setAttribute('aria-pressed',String(candles));chartType.innerHTML=glyph(candles?'candles':'line');chartType.title=`${candles?'캔들':'선'} 표시 · ${candles?'선':'캔들'}으로 변경`;chartType.setAttribute('aria-label',chartType.title);
     marketInfo.hidden=!price;const marketText=typeof s.marketStatus==='string'?s.marketStatus:s.marketStatus?.text||'거래소 완료 봉 · 조회 대기';marketStatus.textContent=marketText;marketStatus.title=marketText;marketRefresh.disabled=Boolean(s.marketLoading);marketInfo.setAttribute('aria-busy',String(Boolean(s.marketLoading)));
     symbol.title=intraday?'비트코인 / 미국 달러 · Coinbase Exchange 실제 완료 봉':candles?'비트코인 / 미국 달러 · Bitstamp 실제 완료 봉과 장기 가정':'비트코인 / 미국 달러 · Coin Metrics 일말 가격과 장기 가정';
