@@ -92,7 +92,7 @@ export async function initEquityView({symbol}={}){
     persist();schedule();
   }
   function showForecast(id=null){
-    if(forecastAvailability&&!forecastAvailability.allowed){openDialog(`${symbol} 전망`,`<p class="equity-vintage-note">${esc(forecastAvailability.message)}</p><p>${esc(forecastAvailability.sampleLabel)} · 평가 표본 ${forecastAvailability.evalSamples}개</p><ul>${forecastAvailability.reasons.map(reason=>`<li>${esc(reason)}</li>`).join('')}</ul><p>관측 가격과 역사 사건은 계속 표시합니다.</p>`);return;}
+    if(forecastAvailability&&!forecastAvailability.allowed){openDialog(`${symbol} 전망`,`<p class="equity-vintage-note">${esc(forecastAvailability.message)}</p><p>${esc(forecastAvailability.sampleLabel)} · 평가 표본 ${forecastAvailability.evalSamples}개</p><ul>${forecastAvailability.reasons.map(reason=>`<li>${esc(reason)}</li>`).join('')}</ul><p>관측 가격과 역사 사건은 계속 표시합니다.</p><button type="button" data-open-asset-forecast-journal="${esc(symbol)}">보존된 예측 기록 · 당시 근거와 결과</button><p>보존 기록은 당시 작성된 자료이며 현재 제공 가능한 미래 경로가 아닙니다.</p>`);return;}
     const milestone=forecast?.milestones.find(item=>item.id===id);
     if(!forecast){openDialog(`${symbol} 전망`,`<p>${esc(forecastError||'관측 자료와 코인 경로를 준비하고 있습니다.')}</p>${forecastError?'<button type="button" data-equity-retry>자료 다시 조회</button>':''}`);return;}
     const assumptions=forecast.assumptions||{},coin=forecast.snapshot.coin,asset=forecast.assetPath,training=asset.training,metadata=asset.metadata;
@@ -215,7 +215,7 @@ export async function initEquityView({symbol}={}){
   workbench=mountNativeChartWorkbench({app,svg,plot,symbol,intervals:EQUITY_INTERVALS,state,getSeries:current,navigation,cancelInteraction,
     actions:{frequency:changeInterval,span:changeSpan,fit:resetRange,source:showInfo,forecast:showForecast,history:showHistory},
     onChange:()=>{persist();schedule();}});
-  mountChartReplay({svg,plot,toolbar:$('.eth-topbar'),symbol,restore:schedule});
+  mountChartReplay({svg,plot,toolbar:$('.eth-topbar'),symbol,restore:schedule,getForecastAvailability:()=>forecastAvailability});
   const observer=new ResizeObserver(schedule);observer.observe(plot);document.fonts?.ready.then(schedule);
   window.addEventListener('pagehide',event=>{suspended=true;++generation;request?.abort();state.loading=false;if(state.frame!==null){cancelAnimationFrame(state.frame);state.frame=null;}cancelInteraction();if(!event.persisted){touch.destroy();navigation.destroy();observer.disconnect();selector.destroy();viewport.destroy();workbench.destroy();document.removeEventListener('atlas:modal-open',onModal);}});
   window.addEventListener('pageshow',event=>{if(event.persisted){suspended=false;if(!daily||!projection)void load();else schedule();}});

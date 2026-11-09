@@ -30,7 +30,7 @@ const archive=(name,{missing=[],length=185}={})=>({observations:Array.from({leng
 
 async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('current'),loadRecord,stored=null,storedText=null,buildSession,
   getAtlasContext=null,getChartState=null,resolveAtlasRange=null,loadBaseline,random=()=>.5,storageFailure=false,rendererAxis=null,rendererBarDateAt=null,
-  initialMode='atlas-chart',additionalStored={},transportGeometry=null,barWidth=null}={}){
+  initialMode='atlas-chart',additionalStored={},transportGeometry=null,barWidth=null,getForecastAvailability=null}={}){
   const storageKey='atlas-chart-replay-v1:'+symbol;
   const controls=new Map(),saved=new Map([...Object.entries(additionalStored),...(storedText!==null?[[storageKey,storedText]]:stored?[[storageKey,JSON.stringify(stored)]]:[])]),timers=new Map(),frames=new Map();
   const builds=[],factories=[],draws=[],controllers=[],atlasContexts=[],chartCalls=[],displayCalls=[],frameEvents=[],writes=[],capabilityCalls=[],resizeCallbacks=[];
@@ -135,7 +135,7 @@ async function harness(source,{symbol='BTCUSD',loadArchive=async()=>archive('cur
   };
   const view=new vm.SourceTextModule(source,{context,identifier:sourceUrl.href,importModuleDynamically:specifier=>{assert.ok(imports[specifier],specifier);return imports[specifier];}});
   await view.link(specifier=>{if(imports[specifier])return imports[specifier];if(specifier==='./chart-replay-snapshot.js?v='+releaseVersion)return snapshotModule;assert.equal(specifier,'./chart-replay-state.js?v='+releaseVersion);return state;});await view.evaluate();
-  const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol,initialMode,getAtlasContext,getChartState,resolveAtlasRange,
+  const mounted=view.namespace.mountChartReplay({svg,plot,toolbar,symbol,initialMode,getAtlasContext,getChartState,resolveAtlasRange,getForecastAvailability,
     getChartRenderer:()=>({getPriceScale:()=>axis}),onAtlasFrame:detail=>frameEvents.push(detail),
     loadAtlasRenderer:()=>imports['./chart-replay-atlas.js'].namespace,
     loadCutoffModel:async()=>({firstCutoffBacktestStart:()=>dateAt(181)}),
@@ -885,6 +885,22 @@ const interactionCases=[
       h.repaint();assertFrame();assert.equal(h.builds.length,1,'header synchronization and repaint must not recreate the selected model');
       assert.equal(JSON.stringify(fixture.forecast.path),path);assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);h.mounted.destroy();
     }
+  }},
+  {name:'T3 replay refusal retains actual prices and saved records without starting any forecast request',async run(source){
+    const raw=JSON.stringify({version:1,symbol:'BMNR',mode:'recorded',origin:'2024-06-30',horizon:180,cursorIndex:0})+'\n';
+    let loads=0;
+    const h=await harness(source,{symbol:'BMNR',storedText:raw,loadArchive:async()=>{loads++;return archive('BMNR');},
+      getForecastAvailability:()=>({allowed:false,message:'표본 부족으로 미래 경로를 제공하지 않습니다',sampleLabel:'T3 · 관측 359거래일 · 1.4년'})});
+    h.svg.innerHTML='<path data-observed-price="true"></path>';
+    const original=h.svg.innerHTML;
+    h.trigger.click();await flush();
+    assert.equal(h.mounted.isActive(),false);assert.equal(h.panel.hidden,true);assert.equal(h.svg.innerHTML,original);
+    assert.equal(h.notice().hidden,false);assert.match(h.notice().textContent,/표본 부족으로 미래 경로를 제공하지 않습니다.*359거래일/);
+    assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);assert.equal(loads,0);assert.equal(h.builds.length,0);
+    await h.mounted.open({resume:JSON.parse(raw)});await flush();
+    assert.equal(h.mounted.isActive(),false);assert.equal(h.panel.hidden,true);assert.equal(h.svg.innerHTML,original);
+    assert.equal(h.savedText(),raw);assert.equal(h.writes.length,0);assert.equal(loads,0);assert.equal(h.builds.length,0);
+    h.mounted.destroy();
   }},
 ];
 

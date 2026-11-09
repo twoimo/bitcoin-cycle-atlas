@@ -83,7 +83,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
   document.createElement = () => new Node();
   document.fonts = { ready: Promise.resolve() };
   for (const type of ['atlas:ready', 'atlas:boot-error']) document.addEventListener(type, () => events.push(type));
-  let frameId = 0, navigation;
+  let frameId = 0, navigation, replayOptions;
   const mount = () => ({ cancel() {}, cancelPending() {}, destroy() {} });
   const deps = {
     withChartSpacing,retargetChartRange,normalizePriceDomain,readChartUrlState,writeChartUrlState,nativeDateRange,
@@ -102,7 +102,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     },
     mountChartTouchTracking: mount, clearChartHover() {}, mountSymbolSelector: mount,
     // Inline replay owns a separate lifecycle, exercised by chart-replay-ui.test.mjs.
-    mountChartReplay: () => ({isActive:()=>false,open(){},exit(){},destroy(){}}),
+    mountChartReplay: options => { replayOptions=options; return {isActive:()=>false,open(){},exit(){},destroy(){}}; },
     bindPreservedArchiveDownload() {}, // DOM download behavior is verified separately.
     mountDialogViewport: mount, EQUITY_FORECAST_BAR_NOTE: 'simulated values',
     TREASURY_EVENTS: [], TREASURY_SOURCES: [], treasuryEventMarkup() {},
@@ -166,6 +166,7 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     scenario: value => app.querySelector('#equity-scenario').onchange({ target: { value } }),
     pan: range => navigation.onRangeChange(range),
     navigationRange: () => navigation.getRange(),
+    replayAvailability: () => replayOptions.getForecastAvailability(),
     priceRange: range => navigation.onPriceRangeChange(range),
     latest: () => draws.at(-1),
     status: () => app.querySelector('#equity-status').textContent,

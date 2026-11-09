@@ -34,6 +34,7 @@
 .chart-replay-actions [data-cr=speed]{width:60px;font-variant-numeric:tabular-nums}
 .chart-replay-actions [data-cr=update-interval]{width:32px;appearance:none;text-align:center;opacity:1;color:var(--muted);cursor:not-allowed}
 .chart-replay-actions .chart-replay-live-label{display:none}
+.chart-replay-menu-label{display:none}
 .chart-replay-bar>[data-cr=transport-more],.chart-replay-bar>.chart-replay-scroll-arrow,.chart-replay-bar>.chart-replay-exit{flex:none;width:var(--replay-control-size);padding:0;background:transparent;border-color:transparent}
 .chart-replay-bar>[data-cr=transport-more]{font-size:22px;border-left-color:var(--border)}
 .chart-replay-bar>[data-cr=transport-more][aria-expanded=true]{background:var(--surface-hover);color:var(--focus)}
@@ -49,6 +50,10 @@
 .chart-replay-transport-menu>label{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0;min-width:0}
 .chart-replay-transport-menu select{flex:none;width:80px;max-width:45%}
 .chart-replay-transport-menu [data-cr=live]{width:100%;min-height:var(--replay-control-size);justify-content:flex-start}
+.chart-replay-transport-menu .chart-replay-menu-label{display:inline}
+.chart-replay-extra-actions{display:grid;gap:4px;margin-top:8px}
+.chart-replay-extra-actions>div:empty{display:none}
+.chart-replay-extra-actions button{width:100%;min-height:var(--replay-control-size);justify-content:flex-start}
 .chart-replay-transport-menu>p{margin:8px 0 0;color:var(--muted);font-size:11px;white-space:normal}
 .chart-replay-select-menu{width:280px}
 .chart-replay-select-menu[data-menu-view=forecast]{width:420px}

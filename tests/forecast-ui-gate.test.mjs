@@ -35,6 +35,8 @@ test('BMNR UI rejects model generation before requesting an underlying path and 
   assert.equal(f.requests.length,1,'a rejected model must not fetch its underlying path');
   assert.equal(f.calculations.length,0,'no treasury projection is built');
   assert.equal(f.latest().forecast,null,'the actual renderer receives no future path or milestones');
+  assert.equal(f.replayAvailability().allowed,false,'main-canvas replay receives the same T3 gate');
+  assert.equal(f.replayAvailability().observations,archive.candles.length);
   assert.equal(f.latest().series.candles.length,archive.candles.length);
   assert.equal(f.document.documentElement.dataset.boot,'ready');
   assert.equal(f.app.inert,false);
@@ -47,6 +49,7 @@ test('BMNR UI rejects model generation before requesting an underlying path and 
   assert.equal(f.app.querySelector('#equity-scenario').disabled,true);
   assert.match(f.status(),/표본 부족 · T3/);
   assert.match(f.forecastDialog(),/표본 부족으로 미래 경로를 제공하지 않습니다/);
+  assert.match(f.forecastDialog(),/data-open-asset-forecast-journal="BMNR"/,'preserved historical records remain accessible separately');
   assert.doesNotMatch(f.forecastDialog(),/data-equity-retry/,'insufficient data is not a retryable load failure');
   f.interval('weekly');f.scenario('bull');await f.settle();
   assert.equal(f.latest().forecast,null,'interval/scenario changes cannot revive a blocked cached path');
@@ -64,6 +67,7 @@ test('eligible MSTR UI still computes and renders its linked model through the r
   f.reply(1,{revision:1});await f.settle();await f.initialization;
   assert.equal(f.calculations.length,1);
   assert.equal(f.latest().forecast.scenario,'base');
+  assert.equal(f.replayAvailability().allowed,true,'eligible MSTR replay remains available');
   assert.equal(f.app.querySelector('#equity-forecast-unavailable').hidden,true);
   assert.equal(f.app.querySelector('.equity-projected').hidden,false);
   assert.equal(f.app.querySelector('#equity-scenario').disabled,false);

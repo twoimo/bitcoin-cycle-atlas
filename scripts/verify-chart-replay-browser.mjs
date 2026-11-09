@@ -134,8 +134,9 @@ export function readChartReplayFloatingGeometry({ chartSelector, panel }) {
   return { chart: box, plot: { ...rect(plot), clientHeight: plot.clientHeight }, root: { ...rect(root), pointerEvents: getComputedStyle(root).pointerEvents, background: getComputedStyle(root).backgroundColor },
     bar: { ...rect(bar), secondaryOverflow: bar.dataset.secondaryOverflow === 'true', overflow: bar.dataset.overflow === 'true', hintVisible: visible(bar.querySelector('.chart-replay-scroll-hint')) },
     actions: { ...rect(actions), scrollLeft: actions.scrollLeft, scrollWidth: actions.scrollWidth, clientWidth: actions.clientWidth, flexWrap: getComputedStyle(actions).flexWrap },
-    controls: [...actions.children].filter(visible).map(node => ({ name: node.dataset.cr, ...rect(node) })), exit: { ...rect(exit), separate: !actions.contains(exit), inBar: bar.contains(exit) },
+    controls: [...actions.children].filter(visible).map(node => ({ name: node.dataset.cr, ...rect(node) })), exit: { ...rect(exit), separate: !actions.contains(exit), inBar: bar.contains(exit), inOverflow: Boolean(exit.closest('[data-cr="transport-panel"]')) },
     overflowControls: [...(root.querySelector('[data-cr="transport-panel"]')?.querySelectorAll('select[data-cr],button[data-cr="live"]') ?? [])].map(node => node.dataset.cr),
+    overflowActions: [...(root.querySelector('.chart-replay-extra-actions')?.querySelectorAll('button[data-cr]') ?? [])].filter(node=>!node.hidden).map(node=>node.dataset.cr),
     overflowMenuHidden: root.querySelector('[data-cr="transport-panel"]')?.hidden ?? true,
     fixedControls: [...bar.querySelectorAll(':scope > button')].filter(visible).map(node => ({ name: node.dataset.cr, disabled: node.disabled, ...rect(node) })),
     transportInset: Number(svg.dataset.replayTransportInset) || 0,
@@ -418,7 +419,9 @@ export async function verifyChartReplaySurface(api) {
     assertChartReplayPricePaneAccess(geometry);
     assert.deepEqual(geometry.removedControls, [], 'Removed previous/duplicate random/menu-resume controls remain in the DOM');
     const secondary = ['speed', 'update-interval', 'live'];
-    assert.deepEqual(geometry.controls.map(node => node.name), ['first', 'select-menu', 'mode-badge', 'pick', 'play', 'next', ...(geometry.bar.secondaryOverflow ? [] : secondary)]);
+    const movedActions=geometry.overflowActions.filter(name=>name!=='exit'),expectedPrimary=['first','select-menu','mode-badge','pick','play','next'];
+    assert.deepEqual(geometry.controls.map(node => node.name), [...expectedPrimary.filter(name=>!movedActions.includes(name)), ...(geometry.bar.secondaryOverflow ? [] : secondary)]);
+    assert.deepEqual([...geometry.controls.map(node=>node.name).filter(name=>!secondary.includes(name)),...movedActions].sort(),[...expectedPrimary].sort(),'Every primary replay action must have exactly one responsive owner');
     assert.deepEqual(geometry.overflowControls, geometry.bar.secondaryOverflow ? secondary : [], 'Secondary controls must have exactly one responsive owner');
     assert.equal(geometry.overflowMenuHidden, true);
     assert.equal(geometry.bar.hintVisible, geometry.actions.scrollWidth > geometry.actions.clientWidth, 'Overflow hints must follow the measured scroll owner at every viewport');
@@ -435,8 +438,9 @@ export async function verifyChartReplaySurface(api) {
     assert.ok(geometry.chart.height >= originalChartBox.height - 1, 'Entering replay reduced the existing chart height');
     assert.ok(geometry.chart.height >= geometry.plot.clientHeight - 2, 'The chart does not own its full allocated plot height');
     assert.ok(geometry.pageWidth <= width + 1); assert.equal(geometry.scrollX, 0);
-    assert.equal(geometry.exit.separate, true); assert.equal(geometry.exit.inBar, true);
-    assert.ok(geometry.exit.width >= (touch || width <= 620 ? 43 : 31) && geometry.exit.height >= (touch || width <= 620 ? 43 : 31));
+    assert.equal(geometry.exit.separate, true); assert.notEqual(geometry.exit.inBar,geometry.exit.inOverflow,'Exit must have one visible or disclosed owner');
+    if(geometry.exit.inBar)assert.ok(geometry.exit.width >= (touch || width <= 620 ? 43 : 31) && geometry.exit.height >= (touch || width <= 620 ? 43 : 31));
+    else assert.ok(geometry.overflowActions.includes('exit')&&geometry.bar.secondaryOverflow,'Hidden exit must remain in the reachable overflow menu');
     assert.ok(geometry.transportInset >= geometry.bar.height + 39, 'Replay did not reserve the transport and hint lane');
     assert.ok(geometry.bar.top >= geometry.chart.bottom - geometry.transportInset, 'Replay toolbar escaped its reserved footer');
     assert.ok(Math.abs(geometry.plot.bottom - geometry.bar.bottom - 12) <= 1, 'Replay footer no longer has a stable 12px bottom anchor');
@@ -444,7 +448,7 @@ export async function verifyChartReplaySurface(api) {
       const inside = (item, area) => item.left >= area.left - 1 && item.right <= area.right + 1 && item.top >= area.top - 1 && item.bottom <= area.bottom + 1;
       const overlaps = (a, b) => Math.min(a.right, b.right) - Math.max(a.left, b.left) > 1 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 1;
       assert.ok(inside(geometry.bar, geometry.plot), 'BTC replay toolbar escaped the chart');
-      assert.ok(inside(geometry.exit, geometry.bar), 'BTC exit X escaped its fixed toolbar slot');
+      if(geometry.exit.inBar)assert.ok(inside(geometry.exit, geometry.bar), 'BTC exit X escaped its fixed toolbar slot');
       assert.ok(geometry.bar.top > geometry.pricePane.bottom, 'BTC replay transport covers its price pane');
       assert.equal(overlaps(geometry.bar, geometry.priceAxis), false, 'BTC replay toolbar covers the price axis');
       assert.equal(overlaps(geometry.exit, geometry.priceAxis), false, 'BTC exit X covers the price axis');
@@ -517,11 +521,11 @@ export async function verifyChartReplaySurface(api) {
         evidence.floatingBar.push({ label: 'native-full-legend-retains-all-semantics-and-replay', validated: true, dialog });
       }
     } else assert.ok(geometry.bar.top > geometry.pricePane.bottom, 'Replay transport covers the asset price pane');
-    assert.ok(Math.abs(geometry.exit.top + geometry.exit.height / 2 - centerY) <= 1, 'Exit X does not align with the floating controls');
+    if(geometry.exit.inBar)assert.ok(Math.abs(geometry.exit.top + geometry.exit.height / 2 - centerY) <= 1, 'Exit X does not align with the floating controls');
     assert.ok(Math.abs(geometry.bar.width - Math.min(560, geometry.plot.width - 24)) <= 1, 'Replay toolbar does not use the requested bounded width');
     assert.ok(Math.abs((geometry.bar.left + geometry.bar.right - geometry.plot.left - geometry.plot.right) / 2) <= 1, 'Replay is not centered on the current chart');
     assert.ok(geometry.fixedControls.every(node => node.left >= geometry.bar.left && node.right <= geometry.bar.right), 'A fixed replay action is clipped');
-    if (width >= 1440) assert.equal(geometry.actions.scrollWidth, geometry.actions.clientWidth, 'Desktop replay controls still clip');
+    assert.ok(geometry.actions.scrollWidth<=geometry.actions.clientWidth,'Replay controls still depend on horizontal scrolling');
     if (touch || width <= 620) {
       for (const node of geometry.controls) assert.ok(node.width >= 43 && node.height >= 43, 'Mobile replay lost its 44px control target: ' + node.name);
       for (const node of geometry.fixedControls) assert.ok(node.width >= 43 && node.height >= 43, 'Mobile replay lost its fixed 44px control target: ' + node.name);
@@ -560,6 +564,7 @@ export async function verifyChartReplaySurface(api) {
       assert.equal(menu.controls[1].value, 'daily'); assert.equal(menu.controls[1].disabled, true);
       assert.ok(menu.left >= 0 && menu.right <= width && menu.top >= 0 && menu.bottom <= height, 'Additional replay controls escaped the viewport');
       for (const name of secondary) await revealOwnedControl(control(name));
+      for(const name of geometry.overflowActions){await revealOwnedControl(control(name));visibleBounds(await bounds(cdp,control(name)),width,height);}
       await screenshot(cdp, prefix + '-transport-overflow.png', receipt);
       await key('Escape', 'Escape', 27);
       assert.equal(await evaluate(cdp, selector => document.querySelector(selector).hidden, control('transport-panel')), true, 'Escape did not close additional replay controls');
@@ -618,7 +623,10 @@ export async function verifyChartReplaySurface(api) {
     visibleBounds(await bounds(cdp, control('select-close')), width, height);
     await screenshot(cdp, prefix + '-floating-menu-date.png', receipt);
     await key('Escape', 'Escape', 27);
-    assert.equal(await menuIsOpen(), false); assert.equal(await evaluate(cdp, selector => document.activeElement === document.querySelector(selector), control('select-menu')), true);
+    assert.equal(await menuIsOpen(), false);assert.equal(await evaluate(cdp,selector=>{
+      const target=document.querySelector(selector),menu=target.closest('[data-cr="transport-panel"]');
+      return document.activeElement===(menu?.hidden?document.querySelector('[data-cr="transport-more"]'):target);
+    },control('select-menu')),true,'Closing Select bar must return focus to its visible owning trigger');
     await verifyLandingMenu('escape-reopens-the-four-action-landing');
     await click(cdp, control('menu-settings'));
     const settings = await evaluate(cdp, selector => {
@@ -1733,6 +1741,26 @@ export async function verifyChartReplaySurface(api) {
 
   await until(() => evaluate(cdp, selector => Boolean(document.querySelector(selector)?.querySelector('path')) && Boolean(document.querySelector('#workbench-replay')), chartSelector), 'main price chart and replay control');
   await settled(cdp);
+  if(symbol==='BMNR'){
+    const read=()=>evaluate(cdp,({chartSelector,symbol})=>{
+      const svg=document.querySelector(chartSelector),plot=svg.closest('.atlas-plot'),notice=document.querySelector('.chart-replay-notice');
+      return {tier:plot.dataset.forecastTier,allowed:plot.dataset.forecastAllowed,observations:Number(plot.dataset.forecastObservations),
+        observed:Number(svg.dataset.observedCandleCount),future:Number(svg.dataset.forecastPointCount),futureCandles:Number(svg.dataset.forecastCandleCount),
+        forecastNodes:svg.querySelectorAll('.equity-forecast-line,.equity-forecast-band,.replay-forecast-path,[data-replay-forecast-path]').length,
+        path:svg.querySelector('.market-close-line')?.getAttribute('d'),active:svg.dataset.chartReplayActive==='true',panelHidden:document.querySelector('.chart-replay-controls').hidden,
+        message:notice?.textContent,noticeVisible:Boolean(notice&&!notice.hidden&&notice.getClientRects().length),saved:localStorage.getItem('atlas-chart-replay-v1:'+symbol),
+        sample:document.querySelector('[data-forecast-sample]')?.textContent,triggerPressed:document.querySelector('#workbench-replay').getAttribute('aria-pressed')};
+    },{chartSelector,symbol});
+    const before=await read();assert.equal(before.tier,'T3');assert.equal(before.allowed,'false');assert.ok(before.observations>0&&before.observed>0);
+    assert.equal(before.future,0);assert.equal(before.futureCandles,0);assert.equal(before.forecastNodes,0);
+    await click(cdp,'#workbench-replay');await settled(cdp);const after=await read();
+    assert.equal(after.active,false);assert.equal(after.panelHidden,true);assert.equal(after.triggerPressed,'false');
+    assert.equal(after.noticeVisible,true);assert.match(after.message,/표본 부족으로 미래 경로를 제공하지 않습니다/);assert.ok(after.message.includes(after.sample));
+    assert.equal(after.path,before.path,'Rejected replay must retain the actual price series');assert.equal(after.saved,before.saved,'Rejected replay must not rewrite historical saved records');
+    assert.equal(after.future,0);assert.equal(after.futureCandles,0);assert.equal(after.forecastNodes,0);
+    evidence.lifecycle.push({label:'T3-replay-unavailable-actual-chart-preserved',validated:true,before,after});
+    await screenshot(cdp,prefix+'-T3-replay-unavailable.png',receipt);return;
+  }
   if (btc) await verifyOfflineRefresh({ phase: 'main-chart-replay-entry' });
   // Preserve all three BTC viewport cases. The short landscape case also
   // proves that opening replay respects an already selected weekly interval.
@@ -2070,7 +2098,7 @@ export async function verifyChartReplaySurface(api) {
     await select(control('mode'), 'recorded'); await ready();
     if (recorded.lastIndex > 0) await click(cdp, control('next'));
   }
-  visibleBounds(await bounds(cdp, control('exit')), width, height);
+  await revealOwnedControl(control('exit'));visibleBounds(await bounds(cdp, control('exit')), width, height);await closeMenu();
   const beforeExit = await snapshot('before-exit');
   const expectedResume = beforeExit;
   evidence.lifecycle.push({ label: 'resume-session-policy',

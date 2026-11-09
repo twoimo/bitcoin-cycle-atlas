@@ -13,10 +13,11 @@ export function writeChartLegendMarkup(source,markup){
 /** Called by the renderer with its real plot bounds, before placing SVG labels. */
 export function refreshChartLegendGeometry(plot,geometry){return controllers.get(plot)?.refresh(geometry)||null;}
 
-export function mountChartLegend({plot}={}){
+export function mountChartLegend({plot,groups}={}){
   const foot=plot?.querySelector('.lab-chart-foot'),source=foot?.querySelector('#atlas-chart-legend');
   if(!foot||!source)return {refresh(){return null;},destroy(){}};
-  const doc=plot.ownerDocument,win=doc.defaultView,svg=plot.querySelector('#lab-chart');
+  const doc=plot.ownerDocument,win=doc.defaultView,svg=plot.querySelector(':scope > svg');
+  const groupSpecs=groups||[{id:'price',label:'가격 계열',shortLabel:'가격',selector:'.price-legend-item'},{id:'cycle',label:'사이클 색상',shortLabel:'사이클',selector:'.cycle-legend-item,.cycle-style-sample,.cycle-reference-key'}];
   const request=win.requestAnimationFrame?.bind(win)||globalThis.requestAnimationFrame;
   const cancel=win.cancelAnimationFrame?.bind(win)||globalThis.cancelAnimationFrame;
   let geometry=null,rows=[],frame=null,queued=false,destroyed=false,opener=null,lastLayoutKey='',lastMarkup=null,lastFitWidth=null;
@@ -61,13 +62,13 @@ export function mountChartLegend({plot}={}){
     if(!force&&source.querySelector(':scope > .chart-legend-row'))return;
     sourceObserver?.disconnect();
     lastFitWidth=null;
-    const groups=[{id:'price',label:'가격 계열',nodes:[...source.querySelectorAll('.price-legend-item')]},{id:'cycle',label:'사이클 색상',nodes:[...source.querySelectorAll('.cycle-legend-item,.cycle-style-sample,.cycle-reference-key')]}];
-    if(!groups[0].nodes.length&&!groups[1].nodes.length)groups[0].nodes=[...source.children];
+    const groups=groupSpecs.map(group=>({...group,nodes:[...source.querySelectorAll(group.selector)]}));
+    if(!groups.some(group=>group.nodes.length))groups[0].nodes=[...source.children];
     rows=[];
     for(const group of groups.filter(group=>group.nodes.length)){
       const row=doc.createElement('div'),label=doc.createElement('span'),items=doc.createElement('div'),more=doc.createElement('button');
       row.className='chart-legend-row';row.dataset.legendGroup=group.id;row.setAttribute('role','group');row.setAttribute('aria-label',group.label);
-      label.className='chart-legend-row-label';label.textContent=group.id==='price'?'가격':'사이클';items.className='chart-legend-items';
+      label.className='chart-legend-row-label';label.textContent=group.shortLabel||group.label;items.className='chart-legend-items';
       const entries=group.nodes.map(node=>{node.classList.add('chart-legend-entry');node.hidden=false;items.append(node);return {node,label:node.textContent.trim(),meaning:node.getAttribute('title')||node.textContent.trim()};});
       more.type='button';more.className='chart-legend-more';more.setAttribute('aria-controls',dialog.id);more.setAttribute('aria-haspopup','dialog');more.setAttribute('aria-expanded',String(dialog.open));more.onclick=()=>open(more);more.textContent=`+${entries.length}`;
       row.append(label,items,more);rows.push({...group,row,labelNode:label,items,more,entries});

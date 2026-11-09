@@ -31,6 +31,7 @@
 .chart-replay-active.chart-replay-atlas.atlas-plot[data-chart-replay-mode="cutoff-backtest"]>.lab-chart-foot.chart-legend-dock[data-legend-mode=chip]:not([hidden]){padding:0;border:0;background:transparent}
 .chart-legend-dock[data-legend-mode=chip]>.chart-legend-open{display:block;width:100%;min-width:0;height:44px;padding:4px;border-color:var(--border);background:var(--surface);font-size:12px}
 .atlas-plot>.chart-legend-dock>.lab-caveat{display:none}
+.atlas-plot>.native-chart-legend-source{display:none!important}
 .atlas-plot[data-legend-dock=top-right][data-legend-visible=true]>:is(#lab-metrics,.workbench-market-info,.chart-replay-hud){max-width:var(--chart-legend-hud-max-width,55%)!important;right:auto}
 .atlas-plot[data-legend-dock=top-right][data-legend-visible=true]>.chart-replay-hud{width:var(--chart-legend-hud-max-width,55%)}
 
