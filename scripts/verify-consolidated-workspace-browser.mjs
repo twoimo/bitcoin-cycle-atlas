@@ -52,6 +52,44 @@ export function assertConsolidatedObservationGeometry(result,symbol,unit) {
   }
 }
 
+// The two-row perimeter survives a center-workspace switch. Only an active
+// chart toolbar owns the disclosure; market/data toolbars occupy row two directly.
+export function readConsolidatedToolbarOwnership() {
+  const frame=document.querySelector('.atlas-center-frame:not([hidden])'),header=document.querySelector('.atlas-canvas-heading');
+  const host=frame&&document.getElementById(frame.dataset.toolbarId),panel=document.querySelector('#atlas-shell-features-panel');
+  const read=node=>{if(!node)return null;const r=node.getBoundingClientRect();return {rect:{top:r.top,bottom:r.bottom,height:r.height},
+    visible:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),hidden:Boolean(node.closest('[hidden]')),inert:Boolean(node.closest('[inert]')),disabled:Boolean(node.disabled)};};
+  return {twoRow:header?.dataset.mobileHeading==='two-row',chartControls:document.body.dataset.chartControls||null,
+    center:document.body.dataset.centerTool||null,activeHost:frame?.dataset.toolbarId||null,hostId:host?.id||null,
+    hostInPanel:Boolean(host?.closest('.shell-feature-panel')),hostInHeader:host?.parentElement===header,
+    header:read(header),host:read(host),panel:read(panel),feature:read(header?.querySelector('.shell-instrument-slot')),
+    toggle:read(document.querySelector('#atlas-shell-features-toggle'))};
+}
+
+export function consolidatedToolbarUsesDisclosure(ownership,label='workspace') {
+  assert.ok(ownership.activeHost&&ownership.hostId===ownership.activeHost&&ownership.host,label+': current iframe retains its actual toolbar owner');
+  if(ownership.twoRow){
+    assert.equal(ownership.hostInPanel,Boolean(ownership.chartControls),label+': only the active chart toolbar belongs to the feature disclosure');
+  }
+  return ownership.twoRow&&ownership.hostInPanel;
+}
+
+export function assertConsolidatedToolbarOwnership(ownership,label) {
+  const disclosure=consolidatedToolbarUsesDisclosure(ownership,label),host=ownership.host;
+  assert.ok(host.visible&&!host.hidden&&!host.inert&&host.rect.height>0,label+': active toolbar is visible and interactive');
+  if(disclosure){
+    assert.ok(ownership.panel?.visible&&!ownership.panel.hidden&&!ownership.panel.inert,label+': active chart disclosure is open and interactive');
+    assert.ok(ownership.toggle?.visible&&!ownership.toggle.inert&&!ownership.toggle.disabled,label+': active chart disclosure retains its reachable trigger');
+  }else if(ownership.twoRow){
+    assert.ok(ownership.hostInHeader,label+': nonchart toolbar remains a direct header child');
+    assert.ok(Math.abs(host.rect.height-44)<=1&&host.rect.top>=ownership.header.rect.top+44-1&&host.rect.bottom<=ownership.header.rect.bottom+1,
+      label+': nonchart toolbar occupies the second 44px row');
+    assert.ok(ownership.panel?.hidden&&!ownership.panel.visible,label+': retained chart disclosure stays closed in a nonchart center');
+    assert.ok(ownership.feature&&!ownership.feature.visible&&(ownership.feature.inert||ownership.feature.hidden),label+': previous chart feature controls remain hidden and protected');
+    assert.ok(ownership.toggle&&!ownership.toggle.visible&&(ownership.toggle.inert||ownership.toggle.hidden||ownership.toggle.disabled),label+': previous chart trigger remains hidden and protected');
+  }
+}
+
 // WP6 adds a non-shrinking HUD above the flex chart body. Read the actual
 // active iframe and its CSS allocation; the SVG no longer owns the HUD's pixels.
 export function readConsolidatedChartAllocation() {
@@ -221,8 +259,10 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     await until(() => evaluate(context, (selector, value) => document.querySelector(selector)?.value === value, selector, value), 'selected ' + value);
   }
   async function state(label) {
-    const narrowDisclosure=await evaluate(cdp,()=>document.querySelector('.atlas-canvas-heading')?.dataset.mobileHeading==='two-row');
-    if(narrowDisclosure&&await evaluate(cdp,()=>document.querySelector('#atlas-shell-features-panel')?.hidden))await pointer(cdp,'#atlas-shell-features-toggle');
+    const ownership=await evaluate(cdp,readConsolidatedToolbarOwnership),narrowHeading=ownership.twoRow;
+    (evidence.toolbarOwnership??=[]).push({label,before:ownership});
+    const narrowDisclosure=consolidatedToolbarUsesDisclosure(ownership,label);
+    if(narrowDisclosure&&ownership.panel?.hidden)await pointer(cdp,'#atlas-shell-features-toggle');
     const result = await evaluate(cdp, () => {
       const frame=document.querySelector('.atlas-center-frame:not([hidden])'),doc = frame?.contentDocument;
       const header=document.querySelector('.atlas-canvas-heading'),host=document.getElementById(frame.dataset.toolbarId);
@@ -247,10 +287,13 @@ export async function verifyConsolidatedWorkspaceSurface(api) {
     assert.ok(result.childDocumentWidth <= result.childWidth + 1, label + ': inner document overflows');
     assert.equal(result.visibleHosts,1,label+': exactly one active toolbar owner');
     assert.deepEqual(result.duplicateRows,[],label+': redundant inner control rows remain visible');
-    assert.ok(result.header.height<=(narrowDisclosure?92:receipt.width<=620?48:44)+1,label+': controls fit their declared outer rows');
+    assert.ok(result.header.height<=(narrowHeading?92:receipt.width<=620?48:44)+1,label+': controls fit their declared outer rows');
     const toolOwner=result.featurePanel||result.header;
     assert.ok(result.host.height>0&&result.host.top>=toolOwner.top-1&&result.host.bottom<=toolOwner.bottom+1,label+': tool controls belong inside their visible header or disclosure');
-    if(narrowDisclosure){assert.equal(result.headingLayout,'two-row');assert.ok(result.headingScroll.width<=result.headingScroll.client,label+': narrow primary controls cannot require horizontal scrolling');}
+    if(narrowHeading){assert.equal(result.headingLayout,'two-row');assert.ok(result.headingScroll.width<=result.headingScroll.client,label+': narrow primary controls cannot require horizontal scrolling');}
+    result.toolbarOwnership=await evaluate(cdp,readConsolidatedToolbarOwnership);
+    assert.equal(result.toolbarOwnership.activeHost,ownership.activeHost,label+': state inspection retains the same iframe toolbar');
+    assertConsolidatedToolbarOwnership(result.toolbarOwnership,label);
     assert.ok(result.frame.top>=result.header.bottom-1,label+': toolbar cannot cover the data canvas');
     assert.ok(result.scrollbars.every(owner=>owner.bar==='none'),label+': scrollbars remain visibly enabled: '+JSON.stringify(result.scrollbars));
     evidence.states.push({ label, ...result });
