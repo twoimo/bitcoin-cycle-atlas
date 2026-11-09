@@ -154,6 +154,7 @@ async function runCase(spec,debugBase){
     }
     if(symbol==='TQQQ'&&phase!=='before'){
       assert.match(receipt.initial.badge?.text||'',/승률.*n\s*=\s*\d+/);
+      if(width<=390)assert.ok(receipt.initial.badge.rect.height>=44,'Mobile win badge must retain a 44px native hit target');
       assert.deepEqual(receipt.initial.hud?.fields.map(x=>x.key).sort(),['holdings','quantity','average-cost','current-price','pnl','next-trigger','updated-at'].sort());
       await click(cdp,'[data-rsi-win-badge]');await until(()=>evaluate(cdp,()=>Boolean(document.querySelector('[data-rsi-dialog="simulation"][open]'))),'statistics modal');
       receipt.simulationDialog=await evaluate(cdp,readWp6);

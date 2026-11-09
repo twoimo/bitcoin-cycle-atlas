@@ -293,6 +293,122 @@
     "Bounded parallel physical-file authentication in assertStable is a possible separately reviewed runtime optimization, but the retrieved logs do not prove an I/O bottleneck and no such change was made.",
     "Do not claim a move to four test workers would fix the deadline on a documented two-vCPU runner without a controlled measurement."
   ],
+  "otherRelayBuilds": [
+  {
+    "buildUuid": "2acf00fe-543e-47e0-806d-d1d0d6bd8770",
+    "sourceCommit": "8d993b6faf5d231e4f5743b51ed79a74fcc9597d",
+    "allPagesRead": true,
+    "pages": 14,
+    "lines": 17385,
+    "passedGateIds": [
+      "runtime-preflight",
+      "locked-dependencies"
+    ],
+    "failure": {
+      "stage": "model",
+      "id": "model-tests",
+      "status": "FAIL",
+      "startedAt": "2026-11-09T04:14:41.084Z",
+      "completedAt": "2026-11-09T04:33:24.532Z",
+      "durationMs": 1123448,
+      "log": "build/cloudflare-stage-model/model-tests.log",
+      "logSha256": "c0f82f6a1ec7bd7944397483734e92775ec3042b36ad6a31c7917c2c3daded74",
+      "error": "Verification exceeded its execution budget at model-tests"
+    },
+    "modelTests": {
+      "stage": "model",
+      "id": "model-tests",
+      "status": "FAIL",
+      "startedAt": "2026-11-09T04:14:41.084Z",
+      "completedAt": "2026-11-09T04:33:24.532Z",
+      "durationMs": 1123448,
+      "log": "build/cloudflare-stage-model/model-tests.log",
+      "logSha256": "c0f82f6a1ec7bd7944397483734e92775ec3042b36ad6a31c7917c2c3daded74",
+      "error": "Verification exceeded its execution budget at model-tests"
+    },
+    "notOkLines": [],
+    "completion": [],
+    "lastPrintedTopLevel": {
+      "at": 1794198741278,
+      "text": "ok 2618 - unavailable source stays an error, and retry accepts a supported date without saving preview"
+    }
+  },
+  {
+    "buildUuid": "dfc19c47-cb8e-49bb-9441-7d20c29fb03c",
+    "sourceCommit": "ee220865219bf2db10c3c2b4b8e2c86136adf7dc",
+    "allPagesRead": true,
+    "pages": 14,
+    "lines": 21341,
+    "passedGateIds": [
+      "runtime-preflight",
+      "locked-dependencies",
+      "model-tests",
+      "forecast",
+      "research",
+      "eth-events",
+      "treasury-paths",
+      "numerics",
+      "formal",
+      "cycle",
+      "performance",
+      "static"
+    ],
+    "failure": {
+      "stage": "model",
+      "id": "chart-replay",
+      "status": "FAIL",
+      "startedAt": "2026-11-09T00:59:03.272Z",
+      "completedAt": "2026-11-09T00:59:32.858Z",
+      "durationMs": 29586,
+      "log": "build/cloudflare-stage-model/chart-replay.log",
+      "logSha256": "8f7e1723dba4372437058ad646576e46cce10cef733e5d43e2c594ba0424d8ea",
+      "error": "Verification exceeded its execution budget at chart-replay"
+    },
+    "modelTests": {
+      "stage": "model",
+      "id": "model-tests",
+      "status": "PASS",
+      "startedAt": "2026-11-09T00:40:45.083Z",
+      "completedAt": "2026-11-09T00:57:20.713Z",
+      "durationMs": 995630,
+      "log": "build/cloudflare-stage-model/model-tests.log",
+      "logSha256": "ba10a50f02bf7001a11bdeda23849962d27984b20c89a82d84572d80ec2b9e45"
+    },
+    "notOkLines": [],
+    "completion": [
+      {
+        "at": 1794185840757,
+        "text": "ATLAS_TEST_TOTAL {\"complete\":true,\"tests\":3110,\"pass\":3110,\"fail\":0,\"skipped\":0,\"batches\":1}"
+      }
+    ],
+    "lastPrintedTopLevel": {
+      "at": 1794185906560,
+      "text": "ok 17 - ETH weekly refresh preserves the later preset and updated observation bounds"
+    }
+  }
+],
+  "setupBenchmark": {
+  "runtime": "v24.22.2",
+  "scope": "Read-only execution of the exact committedOperationFixture setup and two independent filesystem copies in temporary directories; scenario assertions were not rerun and no source fixture changed.",
+  "originalSetupMs": [
+    10980.481592,
+    7647.825097000001
+  ],
+  "restorePartMs": [
+    10385.548422,
+    7375.116259000002
+  ],
+  "independentCloneMs": [
+    225.9989829999995,
+    208.6288370000002
+  ],
+  "estimatedTotalAvoidedSetupAcrossThreeScenariosSeconds": [
+    15,
+    21
+  ],
+  "qualification": "Estimate from two setup samples; total suite wall-time benefit can be smaller with parallel overlap. A single scenario still pays one full preparation.",
+  "decision": "Do not implement the small fixture optimization for this task. Keep the original runtime contract and retry one complete remote model verification."
+},
   "rawLogs": {
     "committed": false,
     "location": "Scratch-only ci-prior-raw directory; full raw pages were not included in this repository receipt."

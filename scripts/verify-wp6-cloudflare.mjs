@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 import { createServer } from 'node:http';
 import { bootstrapCloudflareBuild, runRuntimeCommand } from './bootstrap-cloudflare-build.mjs';
 import { cloudflareRuntime } from './cloudflare-build-contract.mjs';
-import { emitBrowserEvidenceChunks, emitCompressedBrowserReport } from './browser-evidence-transport.mjs';
+import { browserEvidenceChunkSize, emitBrowserEvidenceChunks, emitCompressedBrowserReport } from './browser-evidence-transport.mjs';
 import { drainVerificationOutput } from './cloudflare-gate-runner.mjs';
 
 const root=fileURLToPath(new URL('..',import.meta.url));
@@ -19,6 +19,7 @@ const harnessFiles=['scripts/verify-wp6-browser.mjs','scripts/verify-wp6-cloudfl
 export const wp6EvidenceViewports=Object.freeze([[390,844],[320,740],[768,1024],[1024,768],[1440,900],[1920,1080]].map(Object.freeze));
 export const wp6EvidenceSymbols=Object.freeze(['BTCUSD','ETHUSD','MSTR','BMNR','TQQQ']);
 export const wp6EvidenceLimits=Object.freeze({pngBytes:24*1024*1024,individualPngBytes:2*1024*1024});
+export const wp6TransportBudget=Object.freeze({pngBytes:3_000_000,logBytes:4_250_000});
 
 /** Valid failure screenshots remain useful diagnostic evidence. This checks
  * only their byte receipts, independently of the browser verdict. */
@@ -36,6 +37,51 @@ export function collectWp6Screenshots(report){
   assert.equal(new Set(screenshots.map(image=>image.file)).size,screenshots.length,'Duplicate screenshot receipt');
   assert.ok(screenshots.reduce((sum,image)=>sum+image.bytes,0)<=wp6EvidenceLimits.pngBytes,'All screenshots exceed the explicit transport budget');
   return screenshots;
+}
+
+function screenshotPriority(image){
+  const current=image.phase!=='before';
+  if(/^tqqq-(390x844|320x740|768x1024|1024x768|1440x900|1920x1080)-chart\.png$/.test(image.file))return current?0:1;
+  if(/^btcusd-(390x844|320x740)-replay(?:-menu)?\.png$/.test(image.file))return current?2:5;
+  if(/^bmnr-(390x844|1440x900)-chart\.png$/.test(image.file))return current?3:6;
+  if(/^(ethusd|mstr)-1440x900-chart\.png$/.test(image.file))return current?4:7;
+  if(image.file.endsWith('-failure.png'))return 8;
+  return null;
+}
+export function wp6ScreenshotLogBytes(image){
+  const encoded=Math.ceil(image.bytes/3)*4,total=Math.max(1,Math.ceil(encoded/browserEvidenceChunkSize));let bytes=0;
+  for(let index=0;index<total;index++)bytes+=Buffer.byteLength('ETH_BROWSER_IMAGE_CHUNK '+JSON.stringify({schemaVersion:1,name:'wp6-'+image.phase+'/'+image.file,
+    bytes:image.bytes,sha256:image.sha256,total,index,data:''})+'\n')+Math.min(browserEvidenceChunkSize,encoded-index*browserEvidenceChunkSize);
+  return bytes;
+}
+/** Every capture stays in its native report. Only this declared, bounded set
+ * enters public logs; selecting a screenshot does not establish retrieval. */
+export function planWp6ScreenshotTransport(inventory,{phases,budget=wp6TransportBudget}={}){
+  assert.ok(Array.isArray(inventory));for(const key of ['pngBytes','logBytes'])assert.ok(Number.isSafeInteger(budget[key])&&budget[key]>0);
+  phases??=[...new Set(inventory.map(image=>image.phase))];
+  const required=phases.flatMap(phase=>wp6EvidenceViewports.map(([width,height])=>phase+'/tqqq-'+width+'x'+height+'-chart.png'));
+  const identity=image=>image.phase+'/'+image.file,available=new Set(inventory.map(identity)),selected=[],omitted=[],errors=[];
+  for(const name of required)if(!available.has(name))errors.push('Required viewport screenshot was not captured: '+name);
+  let pngBytes=0,logBytes=0;
+  for(const image of inventory.filter(image=>screenshotPriority(image)!==null).sort((a,b)=>screenshotPriority(a)-screenshotPriority(b))){
+    const cost=wp6ScreenshotLogBytes(image);
+    if(pngBytes+image.bytes>budget.pngBytes||logBytes+cost>budget.logBytes){omitted.push({...image,reason:'PNG or encoded log budget exceeded'});if(required.includes(identity(image)))errors.push('Required viewport screenshot exceeds transport budget: '+identity(image));continue;}
+    selected.push(image);pngBytes+=image.bytes;logBytes+=cost;
+  }
+  for(const image of inventory)if(screenshotPriority(image)===null)omitted.push({...image,reason:'Additional captured state retained in native report; omitted from representative log transport'});
+  return {budget,capturedImages:inventory.length,selected,omitted,errors,pngBytes,logBytes,order:'candidate/after TQQQ six, before TQQQ six, current native details, baseline details, failure frames'};
+}
+
+export async function emitWp6ScreenshotTransport(queue,{write=line=>new Promise((accept,reject)=>process.stdout.write(line,error=>error?reject(error):accept())),
+  drain=()=>drainVerificationOutput(),pause=ms=>new Promise(accept=>setTimeout(accept,ms)),batchBytes=64_000,delayMs=100}={}){
+  let logBytes=0,images=0,batch=0;
+  for(const item of queue){
+    const lines=[];emitBrowserEvidenceChunks('ETH_BROWSER_IMAGE_CHUNK',item.bytes,{name:item.name,log:line=>lines.push(line+'\n')});
+    for(const line of lines){await write(line);const bytes=Buffer.byteLength(line);logBytes+=bytes;batch+=bytes;
+      if(batch>=batchBytes){await drain();await pause(delayMs);batch=0;}}
+    await drain();await pause(delayMs);images++;
+  }
+  return {status:'emitted',images,logBytes,meaning:'Original selected PNG chunks written to stdout with backpressure; retrieval must verify the chunk inventory and hashes'};
 }
 
 export function validateWp6CandidateSource(source,{expectedSource}={}){
@@ -140,7 +186,7 @@ export async function runWp6CloudflareReview(args=process.argv.slice(2)){
   let candidateServer;const imageQueue=[],reportQueue=[];
   async function runPhase(spec,runtime){
     const phaseDirectory=resolve(root,'build/wp6-review',spec.phase);await mkdir(phaseDirectory,{recursive:true});
-    const resultReceipt={...spec,status:'RUNNING',errors:[],outputDirectory:relative(root,phaseDirectory),capturedImages:null,transportedImages:0};receipt.phases.push(resultReceipt);
+    const resultReceipt={...spec,status:'RUNNING',errors:[],outputDirectory:relative(root,phaseDirectory),capturedImages:null,verifiedImageFiles:0};receipt.phases.push(resultReceipt);
     let result=null,reportBytes=null;
     try{
       await rm(resolve(phaseDirectory,'report.json'),{force:true});
@@ -158,7 +204,7 @@ export async function runWp6CloudflareReview(args=process.argv.slice(2)){
         try{
           const bytes=await readFile(resolve(phaseDirectory,image.file));assert.equal(bytes.length,image.bytes);assert.equal(sha(bytes),image.sha256);assert.equal(bytes.subarray(0,8).toString('hex'),'89504e470d0a1a0a');
           assert.ok(imageQueue.reduce((sum,item)=>sum+item.bytes.length,0)+bytes.length<=wp6EvidenceLimits.pngBytes,'Combined screenshots exceed the explicit transport budget');
-          receipt.screenshots.push({phase:spec.phase,...image});imageQueue.push({name:'wp6-'+spec.phase+'/'+image.file,bytes});resultReceipt.transportedImages++;
+          receipt.screenshots.push({phase:spec.phase,...image});imageQueue.push({name:'wp6-'+spec.phase+'/'+image.file,bytes});resultReceipt.verifiedImageFiles++;
         }catch(error){resultReceipt.errors.push(errorText(error));}
       }
       validateWp6Report(report,spec);assert.equal(result?.code,0,'Native browser process failed');
@@ -195,16 +241,23 @@ export async function runWp6CloudflareReview(args=process.argv.slice(2)){
   finally{
     if(candidateServer)try{await candidateServer.close();}catch(error){receipt.status='FAIL';receipt.errors.push(errorText(error));}
     if(receipt.phases.length===1){receipt.nativeReport=receipt.phases[0].nativeReport;receipt.exitCode=receipt.phases[0].exitCode;}
+    const plan=planWp6ScreenshotTransport(receipt.screenshots,{phases:receipt.phases.map(result=>result.phase)});receipt.screenshotPlan=plan;
+    if(plan.errors.length){receipt.status='FAIL';receipt.errors.push(...plan.errors);}
+    const selectedQueue=plan.selected.map(image=>imageQueue.find(item=>item.name==='wp6-'+image.phase+'/'+image.file));
+    assert.ok(selectedQueue.every(Boolean),'Selected screenshot bytes are missing');
     receipt.finishedAt=new Date().toISOString();receipt.durationMs=Date.now()-started;
-    receipt.screenshotTransport={images:imageQueue.length,pngBytes:imageQueue.reduce((sum,item)=>sum+item.bytes.length,0),limit:wp6EvidenceLimits.pngBytes,
-      allCapturedImagesIncluded:receipt.phases.length>0&&receipt.phases.every(result=>result.capturedImages!==null&&result.capturedImages===result.transportedImages),allVerificationCasesPassed:receipt.status==='PASS'};
+    receipt.screenshotTransport={status:'prepared',capturedImages:receipt.phases.reduce((sum,result)=>sum+(result.capturedImages??0),0),selectedImages:selectedQueue.length,
+      pngBytes:plan.pngBytes,estimatedLogBytes:plan.logBytes,budget:plan.budget,omittedImages:plan.omitted.length,allCapturedImagesIncluded:plan.omitted.length===0,
+      allCapturedFilesVerified:receipt.phases.length>0&&receipt.phases.every(result=>result.capturedImages!==null&&result.capturedImages===result.verifiedImageFiles),allVerificationCasesPassed:receipt.status==='PASS',
+      deliveryMeaning:'Selection only. Actual retrieval requires the final completion marker and complete hash-verified chunks.'};
     receipt.reportTransports=reportQueue.map(item=>emitCompressedBrowserReport(item.bytes,{name:item.name}));
     const bytes=Buffer.from(JSON.stringify(receipt,null,2)+'\n');await writeFile(resolve(directory,'diagnostic.json'),bytes);
     const transport=emitCompressedBrowserReport(bytes,{name:'wp6-'+phase+'/diagnostic.json'});
     console.log('ATLAS_WP6_REVIEW_RECEIPT '+JSON.stringify({status:receipt.status,phase,origin,expectedSource,inspectorCommit:receipt.inspectorCommit,qualifiesForPublication:false,deploymentPerformed:false,
       nativeStatus:receipt.nativeReport?.status,cases:receipt.nativeReport?.cases,screenshotTransport:receipt.screenshotTransport,transport,errors:receipt.errors}));
-    for(const item of imageQueue)emitBrowserEvidenceChunks('ETH_BROWSER_IMAGE_CHUNK',item.bytes,{name:item.name});
-    console.log('ATLAS_WP6_REVIEW_IMAGES_COMPLETE '+JSON.stringify(receipt.screenshotTransport));await drainVerificationOutput();
+    const emitted=await emitWp6ScreenshotTransport(selectedQueue);
+    assert.equal(emitted.images,selectedQueue.length);assert.equal(emitted.logBytes,plan.logBytes);
+    console.log('ATLAS_WP6_REVIEW_IMAGES_COMPLETE '+JSON.stringify({...emitted,pngBytes:plan.pngBytes,capturedImages:receipt.screenshotTransport.capturedImages,omittedImages:plan.omitted.length}));await drainVerificationOutput();
   }
   return receipt;
 }

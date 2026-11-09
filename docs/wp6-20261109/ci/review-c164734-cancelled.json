@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "scope": "Cancelled superseded review-model attempt; this is not a successful complete model verification.",
+  "build": {
+    "buildUuid": "9bf0d469-a7ac-4d45-90c0-6b612683453d",
+    "status": "stopped",
+    "outcome": "cancelled",
+    "createdOn": "2026-11-09T07:17:50.293Z",
+    "runningOn": "2026-11-09T07:21:35.711Z",
+    "stoppedOn": "2026-11-09T07:28:11.177Z",
+    "sourceCommit": "c164734e17188bb7461b7e818b074c0c5aaf705f"
+  },
+  "gates": [
+    {
+      "stage": "model",
+      "id": "runtime-preflight",
+      "status": "PASS",
+      "startedAt": "2026-11-09T07:21:54.653Z",
+      "completedAt": "2026-11-09T07:22:16.375Z",
+      "durationMs": 21722,
+      "log": "build/cloudflare-stage-model/runtime-preflight.log",
+      "logSha256": "e9e14a5a0a1e6bf543def7c1a4f08da7ebbfb553472fc81dbbfe2575fedf2b6d",
+      "observedLogEpochMs": 1794208936375
+    },
+    {
+      "stage": "model",
+      "id": "locked-dependencies",
+      "status": "PASS",
+      "startedAt": "2026-11-09T07:22:16.409Z",
+      "completedAt": "2026-11-09T07:22:23.041Z",
+      "durationMs": 6632,
+      "log": "build/cloudflare-stage-model/locked-dependencies.log",
+      "logSha256": "84ad8f2da853d8ac28a9cf920e9a3f54caf0269a293c631c3a9241076136d67b",
+      "observedLogEpochMs": 1794208943042
+    }
+  ],
+  "incompleteGate": "model-tests",
+  "fullTestCompletionReceiptObserved": false,
+  "testReceipts": [],
+  "observedAssertion": {
+    "name": "declared ETH review inventory includes every top-level browser source and root stylesheet",
+    "logAt": "2026-11-09T07:24:00.161Z",
+    "file": "tests/eth-review-packet.test.mjs",
+    "line": 423,
+    "message": "Every top-level browser source and locally linked root stylesheet must be an explicit review seed",
+    "actual": [
+      "dist/ui/rsi-simulation.css"
+    ],
+    "expected": [],
+    "reason": "The new stylesheet is in dist/ui, but the root HTML explicitly links it, so it also belongs in research-data/eth-review-scope.json seedPaths.",
+    "topLevelNewJsOrCssAdded": false
+  },
+  "cancellation": "Root cancelled the known-failing old-source review attempt to release the queue for a complete verification after the explicit CSS seed correction. Build API confirms stopped/cancelled at the timestamp above.",
+  "correction": {
+    "file": "research-data/eth-review-scope.json",
+    "change": "Added dist/ui/rsi-simulation.css to seedPaths. Kept the complete-inventory assertion and standalone exact-once/omission checks unchanged."
+  },
+  "focusedVerification": {
+    "runtime": "v24.22.2",
+    "command": "node --test tests/eth-review-packet.test.mjs tests/standalone-packaging.test.mjs",
+    "tests": 37,
+    "pass": 37,
+    "fail": 0,
+    "skipped": 0,
+    "durationMs": 59236.810603,
+    "log": "/tmp/atlas-wp6-packet-packaging.log",
+    "completeRemoteGateClaimed": false
+  },
+  "capturedLogs": {
+    "rawCommitted": false,
+    "chunks": 10,
+    "lines": 10551,
+    "lastApiPageTruncated": false
+  },
+  "noCloudflareConfigurationChanges": true
+}

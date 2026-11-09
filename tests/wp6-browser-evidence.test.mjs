@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
-import { collectWp6Screenshots,validateWp6Report,validateWp6CandidateSource,wp6EvidenceSymbols,wp6EvidenceViewports } from '../scripts/verify-wp6-cloudflare.mjs';
+import { createHash } from 'node:crypto';
+import { decodeBrowserEvidenceChunks } from '../scripts/browser-evidence-transport.mjs';
+import { collectWp6Screenshots,validateWp6Report,validateWp6CandidateSource,wp6EvidenceSymbols,wp6EvidenceViewports,planWp6ScreenshotTransport,wp6ScreenshotLogBytes,emitWp6ScreenshotTransport } from '../scripts/verify-wp6-cloudflare.mjs';
 
 const origin='https://bitcoin-cycle-atlas.twoimo.workers.dev',source='a'.repeat(40);
 const fixture=phase=>({kind:'atlas-wp6-native-browser-evidence',qualifiesFullVerification:false,phase,origin,status:'PASS',failures:[],
@@ -90,4 +92,30 @@ test('native heading input follows the actual responsive scroll owner, including
   assert.equal(run(),'.atlas-canvas-heading');
   owners['.center-workspace-toolbar'].overflowX='auto';owners['.center-workspace-toolbar'].clientWidth=220;
   assert.equal(run(),'#center-tools');
+});
+
+test('bounded PNG transport puts every requested TQQQ viewport first and explicitly lists omitted captures',()=>{
+  const inventory=['before','candidate'].flatMap(phase=>collectWp6Screenshots(fixture(phase)).map(image=>({phase,...image})));
+  const options={phases:['before','candidate'],budget:{pngBytes:12000,logBytes:100000}};
+  const plan=planWp6ScreenshotTransport(inventory,options);
+  assert.equal(plan.selected.length,12);assert.deepEqual(plan.errors,[]);assert.equal(plan.capturedImages,78);
+  assert.equal(plan.omitted.length,66);assert.ok(plan.omitted.every(image=>image.reason));
+  assert.deepEqual(plan.selected.slice(0,6).map(image=>image.phase),Array(6).fill('candidate'));
+  assert.deepEqual(plan.selected.slice(6).map(image=>image.phase),Array(6).fill('before'));
+  assert.deepEqual(plan.selected.slice(0,6).map(image=>image.file),wp6EvidenceViewports.map(([width,height])=>'tqqq-'+width+'x'+height+'-chart.png'));
+  assert.equal(plan.logBytes,plan.selected.reduce((sum,image)=>sum+wp6ScreenshotLogBytes(image),0));
+  const tooSmall=planWp6ScreenshotTransport(inventory,{...options,budget:{pngBytes:11999,logBytes:100000}});
+  assert.equal(tooSmall.selected.length,11);assert.match(tooSmall.errors[0],/Required viewport screenshot exceeds/);
+});
+
+test('paced image emission awaits writes and drains while preserving exact captured bytes',async()=>{
+  const bytes=Buffer.from(Array.from({length:18000},(_,i)=>(i*17)%256)),name='wp6-candidate/tqqq-390x844-chart.png';
+  const lines=[];let active=0,maximumActive=0,drains=0,pauses=0;
+  const result=await emitWp6ScreenshotTransport([{name,bytes}],{batchBytes:8000,delayMs:1,
+    write:async line=>{active++;maximumActive=Math.max(maximumActive,active);await Promise.resolve();lines.push(line);active--;},
+    drain:async()=>{assert.equal(active,0);drains++;},pause:async()=>{pauses++;}});
+  assert.equal(maximumActive,1);assert.ok(drains>=3&&pauses>=3);assert.equal(result.images,1);assert.equal(result.status,'emitted');
+  const chunks=lines.map(line=>JSON.parse(line.slice('ETH_BROWSER_IMAGE_CHUNK '.length)));
+  assert.deepEqual(decodeBrowserEvidenceChunks(chunks,{name}),bytes);
+  assert.equal(result.logBytes,wp6ScreenshotLogBytes({phase:'candidate',file:'tqqq-390x844-chart.png',bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')}));
 });
