@@ -6,6 +6,7 @@ import {CAPITAL_POLICIES} from '../../dist/treasury-instruments.js';
 import * as equityData from '../../dist/equity-market-data.js';
 import { readChartUrlState, writeChartUrlState } from '../../dist/ui/chart-url-state.js';
 import { nativeDateRange } from '../../dist/native-chart-workbench.js';
+import { forecastAvailabilityForSeries } from '../../dist/forecast/forecast-ui-gate.js';
 
 export function deferred() {
   let resolve, reject;
@@ -65,7 +66,7 @@ export function equityPayload(symbol, revision) {
   };
 }
 
-export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname = '/', project } = {}) {
+export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname = '/', project, useActualSufficiency = false } = {}) {
   const requests = [], frames = new Map(), draws = [], calculations = [], errors = [], events = [], articles = [];
   const window = new Surface(), document = new Surface();
   const bootTimers = new Map(); let bootTimerId = 0;
@@ -91,6 +92,9 @@ export async function equityViewFixture(symbol = 'MSTR', { query = '', pathname 
     mountNativeChartWorkbench: () => ({update(){},inspect(){},measure(){},beginGesture(){},endGesture(){},destroy(){}}),
     setLoadingSurface:(element,busy)=>element?.setAttribute('data-skeleton',String(busy)),
     ...equityData,CAPITAL_POLICIES,
+    // These tiny fixtures isolate request ownership, not sample sufficiency.
+    // Gate integration tests explicitly enable the real completed-history gate.
+    forecastAvailabilityForSeries: useActualSufficiency ? forecastAvailabilityForSeries : () => ({ allowed:true, tier:'T2', observations:5, reasons:[], sampleLabel:'test fixture' }),
     drawIntradayChart: options => { draws.push(options); return {}; },
     bindChartNavigation: options => {
       navigation = options;

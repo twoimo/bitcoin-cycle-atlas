@@ -20,3 +20,7 @@ body[data-market="MSTR"],body[data-market="BMNR"]{margin:0;display:block;backgro
 .equity-capital-controls{display:grid;gap:8px;font-size:12px}.equity-capital-controls select{width:100%;min-width:0;padding:8px;background:var(--equity-view-surface-6);color:var(--equity-view-ink-18);border:1px solid var(--equity-view-rule-2);border-radius:5px;font:inherit}.equity-capital-controls select:focus-visible{outline:2px solid var(--equity-view-rule-3);outline-offset:2px}.equity-instrument-scroll{overflow-x:auto;max-width:100%;margin:16px 0}.equity-instrument-scroll table{width:100%;border-collapse:collapse;font-size:11px;text-align:right}.equity-instrument-scroll th,.equity-instrument-scroll td{padding:8px 8px;border-bottom:1px solid var(--equity-view-rule-5);white-space:nowrap}.equity-instrument-scroll th:first-child{text-align:left}.equity-detail-dialog details{font-size:12px;color:var(--equity-view-ink-13);margin:16px 0}.equity-detail-dialog summary{cursor:pointer}
 
 .equity-detail-dialog ul { font-size: var(--copy-size); line-height: var(--copy-leading); }
+
+.equity-forecast-unavailable{position:absolute;z-index:2;left:12px;right:88px;top:var(--equity-forecast-notice-top,88px);margin:0;color:var(--muted);font-size:11px;line-height:1.5;pointer-events:none;overflow-wrap:anywhere}
+.equity-forecast-unavailable span{display:block;font-variant-numeric:tabular-nums}
+.equity-forecast-unavailable[hidden]{display:none}
