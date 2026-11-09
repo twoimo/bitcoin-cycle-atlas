@@ -13,6 +13,7 @@ import './themes.css';
 import './us-direction.css';
 import './workspace.css';
 import '../../../dist/compact-toolbar.css';
+import '../../../dist/ui/rsi-simulation.css';
 import '../../../dist/legacy-workspace-toolbar.css';
 import '../../../dist/editorial-system.css';
 import '../../../dist/editorial-panels.css';
