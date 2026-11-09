@@ -13,7 +13,10 @@ export function chartLegendSlot({width=0,height=0,left=0,right=width,top=0,botto
   // legend yields within the price pane. A short pane can use the same full-
   // list chip as mobile instead of spilling into cycle, volume or footer lanes.
   function placement(compact){
-    const legendWidth=compact?Math.min(68,maxWidth):maxWidth,legendHeight=Math.min(compact?44:40,availableHeight);
+    // The compact chip owns a real 44px touch target. A short price pane may
+    // not afford the 12px top inset, but it must never clip the chip: use the
+    // pane's full height when that is all the room available.
+    const legendWidth=compact?Math.min(68,maxWidth):maxWidth,legendHeight=Math.min(compact?44:40,Math.max(0,bottom-top));
     const x=Math.max(left,right-inset-legendWidth),minimumY=Math.min(top+12,Math.max(top,bottom-legendHeight));
     const maxY=Math.max(minimumY,bottom-legendHeight-12),candidates=[minimumY,...protectedAnchors.map(box=>box.y+box.height+4)].filter(y=>Number.isFinite(y)&&y>=minimumY&&y<=maxY).sort((a,b)=>a-b);
     const clearY=candidates.find(y=>!protectedAnchors.some(anchor=>overlayBoxesIntersect({x,y,width:legendWidth,height:legendHeight},anchor,4)));

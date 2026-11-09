@@ -458,7 +458,9 @@ export async function verifyChartReplaySurface(api) {
       assert.equal(overlaps(geometry.legend, geometry.priceAxis), false, 'BTC legend covers the price axis');
       assert.ok(geometry.legend.width <= geometry.pricePane.width * .42 + 1, 'BTC legend exceeds 42% of the price pane');
       assert.ok(Math.abs(geometry.pricePane.right - geometry.legend.right - 12) <= 1, 'BTC legend lost its 12px upper-right inset');
-      assert.ok(geometry.legend.top >= geometry.pricePane.top + 11, 'BTC legend escaped its upper-right safe area');
+      const legendBottomAnchored=Math.abs(geometry.legend.bottom-geometry.pricePane.bottom)<=1;
+      assert.ok(geometry.legend.top >= geometry.pricePane.top + 11 || legendBottomAnchored,
+        'BTC legend escaped its upper-right safe area');
       assert.equal(overlaps(geometry.legend, geometry.bar), false, 'BTC legend covers the replay bar');
       assert.equal(overlaps(geometry.legend, geometry.exit), false, 'BTC legend covers the separate replay exit');
       assert.ok(geometry.legend.scrollWidth <= geometry.legend.clientWidth + 1, 'BTC legend content overflows its measured width');
@@ -669,6 +671,60 @@ export async function verifyChartReplaySurface(api) {
       assert.equal(actual.cursors, 0, 'Selecting a new start still paints a committed cutoff');
     } else assert.deepEqual(actual.confirmedCursorXs, expected.confirmedCursorXs, label + ' changed confirmedCursorXs');
   }
+  // Chromium's native date input exposes its segments in locale order, and
+  // ArrowLeft/ArrowRight clamp at the first/last segment. Click-focus lands on
+  // a different segment per width, so never assume an order: clamp to the first
+  // segment, then identify each one by typing a disposable digit and restoring
+  // the original part with native keys. The input value is never assigned.
+  async function readDateValue() {
+    return evaluate(cdp, selector => document.querySelector(selector).value, control('date'));
+  }
+  async function typeNativeDigits(value) {
+    for (const digit of value) for (const type of ['keyDown', 'keyUp']) {
+      await cdp.send('Input.dispatchKeyEvent', { type, key: digit, code: 'Digit' + digit, windowsVirtualKeyCode: 48 + Number(digit), nativeVirtualKeyCode: 48 + Number(digit),
+        ...(type === 'keyDown' ? { text: digit, unmodifiedText: digit } : {}) });
+    }
+    await settled(cdp);
+  }
+  async function probeDatePart() {
+    const original = await readDateValue(), parts = original.split('-');
+    assert.equal(parts.length, 3, 'Native date field lost its ISO value: ' + original);
+    const used = new Set([parts[0][0], parts[1][0], parts[2][0]]);
+    const digit = [...'0123456789'].find(candidate => !used.has(candidate));
+    await typeNativeDigits(digit);
+    const probed = (await readDateValue()).split('-');
+    const changed = probed[0] !== parts[0] ? 'year' : probed[1] !== parts[1] ? 'month' : probed[2] !== parts[2] ? 'day' : null;
+    assert.ok(changed, 'Native date probe changed no segment: ' + original);
+    await key('Backspace', 'Backspace', 8, 0, false);
+    await typeNativeDigits(parts[changed === 'year' ? 0 : changed === 'month' ? 1 : 2]);
+    assert.equal(await readDateValue(), original, 'Native date probe did not restore ' + original);
+    return changed;
+  }
+  async function focusDateOffset(offset) {
+    for (let segment = 0; segment < 6; segment++) await key('ArrowLeft', 'ArrowLeft', 37, 0, false);
+    for (let step = 0; step < offset; step++) await key('ArrowRight', 'ArrowRight', 39, 0, false);
+  }
+  async function focusDatePart(part) {
+    await click(cdp, control('date'));
+    let found = -1;
+    for (let offset = 0; offset < 3; offset++) {
+      await focusDateOffset(offset);
+      if (await probeDatePart() === part) { found = offset; break; }
+    }
+    assert.ok(found >= 0, 'Native date field did not expose the ' + part + ' segment');
+    // Restoring a probed segment with typed digits can auto-advance focus, so
+    // re-select the discovered offset with navigation keys only.
+    await focusDateOffset(found);
+  }
+  async function decrementNativeDateYear(original) {
+    const target = String(Number(original.slice(0, 4)) - 1) + original.slice(4);
+    await focusDatePart('year');
+    await key('ArrowDown', 'ArrowDown', 40);
+    const draft = await readDateValue();
+    if (draft === target) return draft;
+    await key('ArrowUp', 'ArrowUp', 38);
+    throw new Error('Native date field did not decrement the year: ' + original + ' -> ' + draft);
+  }
   async function verifySavedDateEditor(before, label) {
     const saved = await storedBytes(); assert.ok(saved);
     assert.equal(JSON.parse(saved).cursorDate, before.cursor);
@@ -689,11 +745,7 @@ export async function verifyChartReplaySurface(api) {
     assertSameReplayFrame(await snapshot(label + '-editor-open'), before, 'Opening the saved-date editor');
     await screenshot(cdp, prefix + '-' + label + '-current-date.png', receipt);
     // A native, unconfirmed edit must neither seek nor overwrite the save.
-    await click(cdp, control('date'));
-    for (let segment = 0; segment < 5; segment++) await key('ArrowRight', 'ArrowRight', 39, 0, false);
-    await key('ArrowDown', 'ArrowDown', 40);
-    const draft = await evaluate(cdp, selector => document.querySelector(selector).value, control('date'));
-    assert.equal(draft, String(Number(expected.slice(0, 4)) - 1) + expected.slice(4));
+    const draft = await decrementNativeDateYear(expected);
     assertSameReplayFrame(await snapshot(label + '-unapplied-date'), before, 'Editing an unconfirmed start date');
     await storedUnchanged(saved, label + '-date-editor-does-not-save');
     await click(cdp, control('menu-back')); await verifyLandingMenu(label + '-back-cancels-date-draft');
@@ -704,16 +756,10 @@ export async function verifyChartReplaySurface(api) {
     await closeMenu(); await storedUnchanged(saved, label + '-date-close-keeps-saved-session');
     evidence.dateEditors.push({ label, originalStart: before.playbackStartDate, cursor: before.cursor, next, ...observed, canceledDraft: draft, reopened });
   }
-  async function typeDateSegment(value, leftFromYear = 0) {
-    await click(cdp, control('date'));
-    for (let segment = 0; segment < 5; segment++) await key('ArrowRight', 'ArrowRight', 39, 0, false);
-    for (let segment = 0; segment < leftFromYear; segment++) await key('ArrowLeft', 'ArrowLeft', 37, 0, false);
+  async function typeDateSegment(value, part = 'year') {
+    await focusDatePart(part);
     await key('Backspace', 'Backspace', 8, 0, false);
-    for (const digit of value) for (const type of ['keyDown', 'keyUp']) {
-      await cdp.send('Input.dispatchKeyEvent', { type, key: digit, code: 'Digit' + digit, windowsVirtualKeyCode: 48 + Number(digit), nativeVirtualKeyCode: 48 + Number(digit),
-        ...(type === 'keyDown' ? { text: digit, unmodifiedText: digit } : {}) });
-    }
-    await settled(cdp);
+    await typeNativeDigits(value);
   }
   async function verifyManualDateInputs(before) {
     const saved = await storedBytes(); assert.ok(saved); assert.ok(before.snapshotDigest);
@@ -767,11 +813,11 @@ export async function verifyChartReplaySurface(api) {
       const label = 'native-valid-date-' + bound + '-' + submit;
       await openDate();
       const requested = await evaluate(cdp, ({ selector, bound }) => document.querySelector(selector)[bound], { selector: control('date'), bound });
-      // The existing Chromium date field orders its native spinbuttons month,
-      // day, year. Read back the completed value before exercising the app.
-      await typeDateSegment(requested.slice(5, 7), 2);
-      await typeDateSegment(requested.slice(8, 10), 1);
-      await typeDateSegment(requested.slice(0, 4));
+      // The native date field exposes locale-ordered segments. The verifier
+      // probes them with actual keyboard input rather than assuming an order.
+      await typeDateSegment(requested.slice(5, 7), 'month');
+      await typeDateSegment(requested.slice(8, 10), 'day');
+      await typeDateSegment(requested.slice(0, 4), 'year');
       const entered = await evaluate(cdp, selector => { const input = document.querySelector(selector); return { value: input.value, valid: input.validity.valid }; }, control('date'));
       assert.equal(entered.value, requested, 'Native date spinbuttons did not enter the requested boundary'); assert.equal(entered.valid, true);
       if (submit === 'button') await click(cdp, control('start')); else await key('Enter', 'Enter', 13);
@@ -806,11 +852,26 @@ export async function verifyChartReplaySurface(api) {
     if (wait) await settled(cdp);
   }
   async function select(selector, value, expectedValue = value) {
-    const choices = await evaluate(cdp, selector => [...document.querySelector(selector).options].filter(option => !option.disabled).map(option => option.value), selector);
-    const index = choices.indexOf(value); assert.ok(index >= 0, 'Unavailable native option: ' + value);
-    await click(cdp, selector); await key('Home', 'Home', 36, 0, false);
-    for (let i = 0; i < index; i++) await key('ArrowDown', 'ArrowDown', 40, 0, false);
-    await key('Enter', 'Enter', 13);
+    const choices = await evaluate(cdp, selector => [...document.querySelector(selector).options].filter(option => !option.disabled)
+      .map(option => ({ value: option.value, label: option.textContent.trim() })), selector);
+    const target = choices.find(choice => choice.value === value); assert.ok(target, 'Unavailable native option: ' + value);
+    // Headless Chrome on macOS does not move a closed <select> with arrow or
+    // Home keys, and its popup is not rendered, so native keyboard selection
+    // uses type-ahead: the shortest unique label prefix. Let the previous
+    // type-ahead buffer expire first so a stale prefix cannot steal the match.
+    let prefix = target.label;
+    for (let length = 1; length <= target.label.length; length++) {
+      const candidate = target.label.slice(0, length);
+      if (choices.filter(choice => choice.label.startsWith(candidate)).length === 1) { prefix = candidate; break; }
+    }
+    assert.equal(choices.filter(choice => choice.label.startsWith(prefix)).length, 1, 'No unique native option label for ' + value);
+    await evaluate(cdp, selector => document.querySelector(selector).focus({ preventScroll: true }), selector);
+    await delay(900);
+    for (const character of prefix) for (const type of ['keyDown', 'keyUp']) {
+      await cdp.send('Input.dispatchKeyEvent', { type, key: character,
+        ...(type === 'keyDown' ? { text: character, unmodifiedText: character } : {}) });
+      await delay(60);
+    }
     await until(() => evaluate(cdp, ({ selector, expectedValue }) => document.querySelector(selector)?.value === expectedValue, { selector, expectedValue }),
       'native replay selection ' + value + (expectedValue === value ? '' : ' returns to ' + expectedValue));
   }
@@ -1770,7 +1831,12 @@ export async function verifyChartReplaySurface(api) {
   if (btc && entryFrequency === 'weekly') await interval('weekly');
   if (btc && !touch) {
     const volumeToggle = '[data-indicator-row="volume"] [data-indicator-action="visibility"]';
-    if (await evaluate(cdp, selector => document.querySelector(selector)?.getAttribute('aria-pressed') === 'false', volumeToggle)) await click(cdp, volumeToggle);
+    if (await evaluate(cdp, selector => document.querySelector(selector)?.getAttribute('aria-pressed') === 'false', volumeToggle)) {
+      // The row action is intentionally transparent until its row is hovered or
+      // keyboard-focused. Reveal it through native focus, never by rewriting CSS.
+      await evaluate(cdp, selector => document.querySelector(selector)?.focus({ preventScroll: true }), volumeToggle);
+      await click(cdp, volumeToggle);
+    }
     await until(() => evaluate(cdp, () => Number(document.querySelector('#lab-chart .volume-pane')?.dataset.volumeObservedCount) > 0), 'genuine current volume before replay');
   }
   if (btc) {
@@ -2000,14 +2066,10 @@ export async function verifyChartReplaySurface(api) {
     await pointAction(touch ? 'tap' : 'click', point); await ready();
     const picked = await snapshot('chart-picked'); assert.equal(picked.origin, hoveredDate);
     if (!touch) {
-      await click(cdp, control('date'));
-      // The native date control's center can land on a different segment
-      // when the popover changes its width. ArrowRight stops at the final
-      // year segment in the tested Chromium; select it before decrementing.
-      // A real native-input probe covered 140, 280 and 400px field widths.
-      for (let segment = 0; segment < 5; segment++) await key('ArrowRight', 'ArrowRight', 39, 0, false);
-      await key('ArrowDown', 'ArrowDown', 40);
-      const date = await evaluate(cdp, selector => document.querySelector(selector).value, control('date'));
+      // The native date control's segment order and click target vary with
+      // locale and width. Probe adjacent segments with native keys so the
+      // requested origin always moves back exactly one year.
+      const date = await decrementNativeDateYear(picked.origin);
       assert.match(date, /^\d{4}-\d{2}-\d{2}$/); assert.notEqual(date, picked.origin, 'Native date editing did not change the chosen origin');
       assert.equal(date, String(Number(picked.origin.slice(0, 4)) - 1) + picked.origin.slice(4), 'Native keyboard editing did not decrement the explicitly selected year');
       if (symbol === 'ETHUSD') assert.equal(date, '2025-04-30', 'The preserved adaptive-model negative case changed its requested origin');
