@@ -37,16 +37,27 @@ export function createPriceAxisLayout({svg,width,left=8,minRight=64,fontSize=11,
   // Font face loading can change glyph advances without changing the computed
   // family name or this fixed gutter. React must refresh its measured fitter.
   const probe='$-0123456789.,%';
-  const metricKey=JSON.stringify([font,fontSize,badgeFontSize,metrics.measure(probe,fontSize),metrics.measure(probe,badgeFontSize)]);
+  // One real glyph check per layout keeps font-load detection honest; its result
+  // stays in this instance's measurement cache, so the lazy identity below does
+  // not force another SVG layout.
+  const measuredSample=metrics.measure(probe,fontSize);
   const common={'font-family':font.family,'font-weight':font.weight,'font-style':font.style,'font-variant-numeric':'tabular-nums','letter-spacing':font.spacing,lengthAdjust:'spacingAndGlyphs'};
   function textAttributes(label,{badge=false,kind=badge?'badge':'tick'}={}){
     const length=Math.min(labelWidth,Math.max(.01,metrics.measure(label,badge?badgeFontSize:fontSize)));
     return {...common,'data-price-axis-label':kind,textLength:Number(length.toFixed(3))};
   }
-  return {right,inset,edge,labelWidth,fontSize,badgeFontSize,metricKey,measure:metrics.measure,
+  // Only React asks for this identity, and reading it forces two glyph
+  // measurements. Keep it lazy so every native chart render (including the
+  // per-day replay redraw) never pays for a font probe it does not consume.
+  const axis={right,inset,edge,labelWidth,fontSize,badgeFontSize,measure:metrics.measure,
     attributes(label,options){return Object.entries(textAttributes(label,options)).map(([name,value])=>`${name}="${axisEscape(value)}"`).join(' ');},
     fitNode(node,options={}){if(!node)return;for(const [name,value] of Object.entries(textAttributes(node.textContent,options)))node.setAttribute(name,value);node.setAttribute('font-size',options.badge?badgeFontSize:fontSize);},
   };
+  Object.defineProperty(axis,'metricKey',{enumerable:true,get(){
+    const measured=metrics.measure(probe,fontSize),badgeMeasured=badgeFontSize===fontSize?measuredSample:metrics.measure(probe,badgeFontSize);
+    return JSON.stringify([font,fontSize,badgeFontSize,measured,badgeMeasured]);
+  }});
+  return axis;
 }
 
 /** Normal quotes keep their full decimal representation at every font width.
