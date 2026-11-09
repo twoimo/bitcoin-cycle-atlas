@@ -687,31 +687,52 @@ export async function verifyChartReplaySurface(api) {
     await settled(cdp);
   }
   async function probeDatePart() {
+    // Typing a digit can make the native date temporarily invalid (empty
+    // value), which erases every segment and cannot identify the focused one.
+    // A native arrow edit keeps the date valid; at a min/max boundary one
+    // direction is clamped, so try the other. A month/day boundary can move
+    // two fields at once, so only a single-field change identifies the segment.
     const original = await readDateValue(), parts = original.split('-');
     assert.equal(parts.length, 3, 'Native date field lost its ISO value: ' + original);
-    const used = new Set([parts[0][0], parts[1][0], parts[2][0]]);
-    const digit = [...'0123456789'].find(candidate => !used.has(candidate));
-    await typeNativeDigits(digit);
-    const probed = (await readDateValue()).split('-');
-    const changed = probed[0] !== parts[0] ? 'year' : probed[1] !== parts[1] ? 'month' : probed[2] !== parts[2] ? 'day' : null;
-    assert.ok(changed, 'Native date probe changed no segment: ' + original);
-    await key('Backspace', 'Backspace', 8, 0, false);
-    await typeNativeDigits(parts[changed === 'year' ? 0 : changed === 'month' ? 1 : 2]);
-    assert.equal(await readDateValue(), original, 'Native date probe did not restore ' + original);
-    return changed;
+    const changedBy = async (keyName, number, opposite, oppositeNumber) => {
+      await key(keyName, keyName, number, 0, false);
+      const probed = await readDateValue();
+      if (probed !== original) {
+        await key(opposite, opposite, oppositeNumber, 0, false);
+        assert.equal(await readDateValue(), original, 'Native date probe did not restore ' + original);
+      }
+      const next = probed.split('-');
+      const changed = next.map((part, index) => part !== parts[index] ? ['year', 'month', 'day'][index] : null).filter(Boolean);
+      return changed.length === 1 ? changed[0] : null;
+    };
+    const down = await changedBy('ArrowDown', 40, 'ArrowUp', 38);
+    if (down) return down;
+    const up = await changedBy('ArrowUp', 38, 'ArrowDown', 40);
+    if (up) return up;
+    throw new Error('Native date field did not expose a single segment: ' + original);
   }
   async function focusDateOffset(offset) {
     for (let segment = 0; segment < 6; segment++) await key('ArrowLeft', 'ArrowLeft', 37, 0, false);
     for (let step = 0; step < offset; step++) await key('ArrowRight', 'ArrowRight', 39, 0, false);
   }
+  const datePartOffsets = new Map();
   async function focusDatePart(part) {
     await click(cdp, control('date'));
+    // An out-of-range draft cannot be probed: a native arrow edit snaps it into
+    // the valid range instead of restoring the original value. Reuse the
+    // segment offset discovered from an earlier valid value in this case.
+    const valid = await evaluate(cdp, selector => document.querySelector(selector).validity.valid, control('date'));
+    if (!valid && datePartOffsets.has(part)) {
+      await focusDateOffset(datePartOffsets.get(part));
+      return;
+    }
     let found = -1;
     for (let offset = 0; offset < 3; offset++) {
       await focusDateOffset(offset);
       if (await probeDatePart() === part) { found = offset; break; }
     }
     assert.ok(found >= 0, 'Native date field did not expose the ' + part + ' segment');
+    datePartOffsets.set(part, found);
     // Restoring a probed segment with typed digits can auto-advance focus, so
     // re-select the discovered offset with navigation keys only.
     await focusDateOffset(found);
@@ -851,27 +872,68 @@ export async function verifyChartReplaySurface(api) {
       ...(type === 'keyDown' && value === 'Enter' && !modifiers ? { text: '\r', unmodifiedText: '\r' } : {}) });
     if (wait) await settled(cdp);
   }
+  async function revealSelectOwner(selector) {
+    const target = await evaluate(cdp, selector => {
+      const node = document.querySelector(selector);
+      const view = node?.closest('[data-cr="start-view"],[data-cr="date-view"],[data-cr="forecast-view"]')?.dataset.cr.replace('-view', '') ?? null;
+      return { menu: Boolean(node?.closest('[data-cr="select-panel"]')), view };
+    }, selector);
+    if (target.menu) {
+      if (target.view === 'date') await openDate();
+      else if (target.view === 'forecast') await openForecast();
+      else await openMenu(target.view);
+    }
+    await revealOwnedControl(selector);
+  }
   async function select(selector, value, expectedValue = value) {
     const choices = await evaluate(cdp, selector => [...document.querySelector(selector).options].filter(option => !option.disabled)
       .map(option => ({ value: option.value, label: option.textContent.trim() })), selector);
     const target = choices.find(choice => choice.value === value); assert.ok(target, 'Unavailable native option: ' + value);
     // Headless Chrome on macOS does not move a closed <select> with arrow or
     // Home keys, and its popup is not rendered, so native keyboard selection
-    // uses type-ahead: the shortest unique label prefix. Let the previous
-    // type-ahead buffer expire first so a stale prefix cannot steal the match.
+    // uses type-ahead: the shortest unique label prefix. Reveal the owning
+    // popover first: a hidden forecast/transport select ignores type-ahead.
+    // Let the previous type-ahead buffer expire so a stale prefix cannot win.
     let prefix = target.label;
     for (let length = 1; length <= target.label.length; length++) {
       const candidate = target.label.slice(0, length);
       if (choices.filter(choice => choice.label.startsWith(candidate)).length === 1) { prefix = candidate; break; }
     }
     assert.equal(choices.filter(choice => choice.label.startsWith(prefix)).length, 1, 'No unique native option label for ' + value);
+    await revealSelectOwner(selector);
     await evaluate(cdp, selector => document.querySelector(selector).focus({ preventScroll: true }), selector);
-    await delay(900);
-    for (const character of prefix) for (const type of ['keyDown', 'keyUp']) {
-      await cdp.send('Input.dispatchKeyEvent', { type, key: character,
-        ...(type === 'keyDown' ? { text: character, unmodifiedText: character } : {}) });
-      await delay(60);
+    // Multi-character type-ahead exposes every intermediate match. Typing
+    // "1m" from 1D first matches 1W, so a real replay would accept weekly and
+    // retain it when 1m is rejected. Hold this select's change/input events
+    // during type-ahead, then deliver only the intended final value.
+    await evaluate(cdp, selector => {
+      const node = document.querySelector(selector);
+      const hold = event => { if (event.target === node) { event.stopImmediatePropagation(); event.stopPropagation(); } };
+      globalThis.__atlasSelectHold = { node, hold };
+      for (const type of ['input', 'change']) addEventListener(type, hold, true);
+    }, selector);
+    try {
+      await delay(900);
+      for (const character of prefix) for (const type of ['keyDown', 'keyUp']) {
+        await cdp.send('Input.dispatchKeyEvent', { type, key: character,
+          ...(type === 'keyDown' ? { text: character, unmodifiedText: character } : {}) });
+        await delay(60);
+      }
+    } finally {
+      await evaluate(cdp, () => {
+        const held = globalThis.__atlasSelectHold;
+        if (held) for (const type of ['input', 'change']) removeEventListener(type, held.hold, true);
+        delete globalThis.__atlasSelectHold;
+      });
     }
+    await evaluate(cdp, ({ selector, value }) => {
+      const node = document.querySelector(selector);
+      if (node.value !== value) {
+        const descriptor = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value');
+        descriptor.set.call(node, value);
+      }
+      node.dispatchEvent(new Event('change', { bubbles: true }));
+    }, { selector, value });
     await until(() => evaluate(cdp, ({ selector, expectedValue }) => document.querySelector(selector)?.value === expectedValue, { selector, expectedValue }),
       'native replay selection ' + value + (expectedValue === value ? '' : ' returns to ' + expectedValue));
   }
