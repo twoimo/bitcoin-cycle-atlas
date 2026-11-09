@@ -81,8 +81,11 @@ export function mountMobileShellHeading(document) {
   }
   function apply() {
     if(destroyed)return;
-    const chart=document.body.dataset.shell==='chart'&&(!document.body.dataset.centerTool||Boolean(document.body.dataset.chartControls));
-    if(!heading||!feature||!chart){restore();return;}
+    if(!heading||!feature||document.body.dataset.shell!=='chart'){restore();return;}
+    // Center workspaces keep the one-row shell and exact protected chart
+    // controls while their independent toolbar remains a direct heading child.
+    const chart=!document.body.dataset.centerTool||Boolean(document.body.dataset.chartControls);
+    if(!chart)setOpen(false);
     const active=document.activeElement;
     if(!trigger)create();
     set(heading,'data-mobile-heading','one-row');set(feature,'data-mobile-disclosure','true');
@@ -144,7 +147,7 @@ export function mountMobileShellHeading(document) {
     if(heading.scrollLeft)heading.scrollLeft=0;
     if(open&&active?.matches?.('[data-lab-frequency]')&&active.parentElement===segmented)setOpen(false);
     if(active?.isConnected&&heading.contains(active)&&document.activeElement!==active)focus(active);
-    if(active&&panel.contains(active)&&!open)setOpen(true);
+    if(chart&&active&&panel.contains(active)&&!open)setOpen(true);
   }
   const schedule=()=>{if(queued||destroyed)return;queued=true;queueMicrotask(()=>{queued=false;apply();});};
   const outside=event=>{

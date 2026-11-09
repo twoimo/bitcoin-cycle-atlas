@@ -567,8 +567,10 @@ async function verifyNativeCommonLegend(cdp,width,receipt){
     const plot=document.querySelector('.atlas-plot'),svg=plot.querySelector(':scope > svg'),dock=plot.querySelector('.chart-legend-dock'),source=dock?.querySelector('.lab-legend');
     const box=node=>{const r=node.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
     const painted=node=>Boolean(node&&!node.hidden&&!node.closest('[hidden]')&&node.getClientRects().length);
+    const observed=source?.querySelector('.price-legend-item .price-legend-swatch')?.closest('.price-legend-item');
     return {dock:dock?{...box(dock),painted:painted(dock),mode:dock.dataset.legendMode,scrollWidth:dock.scrollWidth,clientWidth:dock.clientWidth}:null,
       priceWidth:Number(svg.dataset.plotRight)-Number(svg.dataset.plotLeft),
+      observedEntry:observed?{label:observed.textContent.trim(),title:observed.getAttribute('title')||''}:null,
       text:source?.textContent||'',entries:[...source?.querySelectorAll('.chart-legend-entry')||[]].filter(painted).map(box),
       disclosure:[...dock?.querySelectorAll('.chart-legend-open,.chart-legend-more')||[]].find(painted)?.className||null};
   });
@@ -612,7 +614,11 @@ async function ethCase(cdp,width,receipt,expected,archive){
   assert.equal(chart.note.hidden,false);assert.equal(chart.dataset.forecastModel,'adaptive');assert.ok(chart.note.text.includes('적중률 미보정'));
   for(const text of ['실제 관측','모형 중앙값','모형 예시 1개','음영: 모의 10–90%'])assert.ok(chart.note.text.includes(text),'Missing forecast semantic label '+text);
   const legend=await verifyNativeCommonLegend(cdp,width,receipt);
-  for(const text of ['실제 관측','모형 중앙값','모형 예시 1개','음영: 모의 10–90%'])assert.ok((legend.expandedText||legend.text).includes(text),'Common ETH legend lost meaning '+text);
+  assert.equal(legend.observedEntry?.label,'실제 가격','Common ETH legend must identify the observed price entry');
+  assert.ok(legend.observedEntry.title.startsWith(expected.source+'의 '),'Common ETH observed legend lost the validated archive source');
+  assert.ok(legend.observedEntry.title.includes('관측 종가를 이은 선'),'Common ETH observed legend lost its line meaning');
+  assert.ok(legend.observedEntry.title.includes('실시간 현재가 표시는 아닙니다'),'Common ETH observed legend must not imply a live quote');
+  for(const text of ['실제 가격','모형 중앙값','모형 예시 1개','음영: 모의 10–90%'])assert.ok((legend.expandedText||legend.text).includes(text),'Common ETH legend lost meaning '+text);
   dark(chart.background,'ETH plot');
   await screenshot(cdp,'eth-'+width+'-loaded.png',receipt);
   if(width===320)receipt.infoDataLinks=await verifyInfoDataLinks(cdp,'ETHUSD');
@@ -883,7 +889,7 @@ async function main(){
   browser=await Cdp.connect('ws://127.0.0.1:'+active[0]+active[1]);
   report.browserVersion=await browser.send('Browser.getVersion');
   const archived=parseEthArchive(JSON.parse(await readFile(resolve(dist,'data/eth-ohlc.json'),'utf8')),'daily');
-  const last=archived.candles.at(-1),expected={price:'$'+new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(last.close),date:last.date.slice(0,10),close:last.close};
+  const last=archived.candles.at(-1),expected={price:'$'+new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(last.close),date:last.date.slice(0,10),close:last.close,source:archived.source};
   report.expectedObservedEth=expected;
   const btcArchiveBytes=await readFile(resolve(dist,'data/btc-daily.json'));
   const btcArchive=JSON.parse(btcArchiveBytes.toString('utf8')),lastBtc=btcArchive.prices.at(-1);

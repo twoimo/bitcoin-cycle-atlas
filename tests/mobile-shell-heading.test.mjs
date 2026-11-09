@@ -85,13 +85,17 @@ test('late source controls enter the same disclosure and repeated shell refreshe
   controller.refresh({symbol:'ETHUSD'});controller.refresh({symbol:'ETHUSD'});
   await settle();assert.equal(document.querySelector('#atlas-shell-features-toggle'),trigger);assert.equal(document.querySelector('#atlas-shell-features-panel'),panel);
   assert.equal(heading.getAttribute('aria-label'),'ETHUSD 차트 상단 도구');
+  f.click('#atlas-shell-features-toggle');
+  const host=document.createElement('div');host.className='center-workspace-toolbar';heading.append(host);
   document.body.dataset.centerTool='data';delete document.body.dataset.chartControls;controller.refresh();
-  assert.equal(heading.hasAttribute('data-mobile-heading'),false,'nonchart workspaces retain their existing owner');
-  assert.equal(document.querySelector('#atlas-shell-features-panel'),null);
+  assert.equal(heading.dataset.mobileHeading,'one-row','nonchart centers retain the same mobile shell perimeter');
+  assert.equal(document.querySelector('#atlas-shell-features-panel'),panel,'protected source controls retain their exact disclosure owner');
+  assert.equal(panel.hidden,true,'a chart disclosure closes when the nonchart center takes ownership');
+  assert.equal(host.parentElement,heading,'the independent center toolbar remains a direct shell child');
 });
 
-test('BTC to acknowledged TQQQ and back retains enabled shell disclosure and its own Escape handling',async t=>{
-  const f=fixture(t),{document,window:dom,heading}=f;
+for(const width of [320,390])test(`${width}px BTC, acknowledged TQQQ and data transitions retain the shell and control owners`,async t=>{
+  const f=fixture(t,width),{document,window:dom,heading}=f;
   document.querySelector('#workbench-interval-select').remove();
   document.head.innerHTML='<meta name="atlas-service-base" content="/market-lab/">';
   const listeners=new Map(),posts=[];
@@ -131,10 +135,43 @@ test('BTC to acknowledged TQQQ and back retains enabled shell disclosure and its
   const escape=new dom.Event('keydown',{bubbles:true,cancelable:true});escape.key='Escape';backtest.dispatchEvent(escape);
   assert.equal(document.querySelector('#atlas-shell-features-panel').hidden,true);assert.equal(document.activeElement,toggle);
   assert.equal(posts.filter(message=>message.action==='close-pane').length,before,'Escape belongs to the open shell feature disclosure');
+  const panel=document.querySelector('#atlas-shell-features-panel');
+  f.click('#atlas-shell-features-toggle');
+  const dataLink=create('a');dataLink.dataset.atlasPage='data';document.querySelector('#app').append(dataLink);dataLink.click();await settle();await settle();
+  assert.equal(document.body.dataset.centerTool,'data');assert.equal(document.body.dataset.chartControls,undefined);
+  assert.equal(heading.dataset.mobileHeading,'one-row','center data keeps the same one-row shell as the native and RSI charts');
+  assert.equal(document.querySelector('#atlas-shell-features-toggle'),toggle);assert.equal(document.querySelector('#atlas-shell-features-panel'),panel);
+  assert.equal(panel.hidden,true);assert.equal(originalAction.disabled,true);assert.equal(originalAction.hidden,true);
+  const dataFrame=document.querySelector('.atlas-center-frame:not([hidden])'),dataHost=document.getElementById(dataFrame.dataset.toolbarId);
+  assert.equal(dataHost.parentElement,heading,'data controls use their existing direct toolbar host, outside the hidden chart disclosure');
+  assert.equal(host.hidden,true);assert.equal(dataHost.inert,true,'the current center loader retains its pending toolbar protection');
+  const child=parseHTML('<html data-boot="ready"><head></head><body data-page="data"></body></html>').document;
+  Object.defineProperty(dataFrame,'contentDocument',{value:child});dataFrame.dispatchEvent(new dom.Event('load'));await settle();await settle();
+  assert.equal(dataHost.inert,false,'only the accepted child ready state enables its toolbar');
+  const dataAction=create('button');dataAction.textContent='자료 읽는 법';let dataCalls=0;dataAction.addEventListener('click',()=>dataCalls++);dataHost.append(dataAction);
+  await settle();await settle();dataAction.click();dataAction.focus();
+  assert.equal(dataCalls,1);assert.equal(document.activeElement,dataAction);assert.equal(dataAction.parentElement,dataHost);
   document.dispatchEvent(new dom.CustomEvent('atlas:symbol-select',{cancelable:true,detail:{symbol:'BTCUSD'}}));await settle();await settle();
-  assert.equal(frame.hidden,true);assert.equal(originalAction.disabled,false);assert.equal(originalAction.hidden,false);
-  assert.equal(document.querySelector('#atlas-shell-features-toggle').disabled,false);
+  assert.equal(frame.hidden,true);assert.equal(dataFrame.hidden,true);assert.equal(dataHost.hidden,true);assert.equal(originalAction.disabled,false);assert.equal(originalAction.hidden,false);
+  assert.equal(heading.dataset.mobileHeading,'one-row');assert.equal(document.querySelector('#atlas-shell-features-toggle'),toggle);assert.equal(toggle.disabled,false);
   assert.equal(heading.getAttribute('aria-label'),'BTCUSD 차트 상단 도구');
+});
+
+test('narrow CSS reserves both mobile tray buttons and wraps observed text within the feature disclosure',t=>{
+  const {document}=fixture(t);const style=document.createElement('style');style.textContent=readFileSync(new URL('../dist/atlas-shell.css',import.meta.url),'utf8');document.head.append(style);
+  const rules=[...style.sheet.cssRules].filter(rule=>rule.type===4&&rule.media.mediaText==='(max-width:390px)').flatMap(rule=>[...rule.cssRules]);
+  const normalized=value=>value.replace(/["\s]/g,'');
+  const read=part=>rules.find(rule=>rule.selectorText&&normalized(rule.selectorText).includes(normalized(part)))?.style;
+  assert.equal(read('[data-shell-region=top][data-mobile-heading=two-row]').getPropertyValue('grid-template-rows'),'44px 44px');
+  assert.equal(normalized(read('[data-shell-region=top][data-mobile-heading=two-row]').getPropertyValue('grid-template-columns')),'minmax(80px,1fr)56pxrepeat(4,44px)');
+  assert.equal(read('>#mobile-tools-toggle').getPropertyValue('grid-area'),'1/5');
+  assert.equal(read('>#mobile-details-toggle').getPropertyValue('grid-area'),'1/6');
+  assert.equal(read('>.center-workspace-toolbar').getPropertyValue('grid-area'),'2/1/3/-1');
+  assert.equal(read('>.center-workspace-toolbar').getPropertyValue('height'),'44px');
+  assert.equal(read('>.center-workspace-toolbar').getPropertyValue('max-height'),'44px');
+  assert.equal(read('.center-workspace-toolbar [data-toolbar-open]').getPropertyValue('max-height'),'none');
+  assert.equal(read('.center-workspace-toolbar [data-toolbar-open]').getPropertyValue('white-space'),'normal');
+  assert.equal(read('.center-workspace-toolbar [data-toolbar-open]').getPropertyValue('text-overflow'),'clip');
 });
 
 test('one-row CSS retains full labels, 44px targets, a 56px native fallback and wrapping disclosure text',t=>{
@@ -148,9 +185,9 @@ test('one-row CSS retains full labels, 44px targets, a 56px native fallback and 
   assert.equal(read('.atlas-canvas-heading[data-mobile-heading=one-row] #workbench-frequency [data-lab-frequency]').getPropertyValue('min-height'),'44px');
   assert.equal(read('.atlas-canvas-heading[data-mobile-heading=one-row] #workbench-frequency [data-lab-frequency]').getPropertyValue('white-space'),'nowrap');
   assert.equal(read('.atlas-canvas-heading[data-mobile-heading=one-row] #workbench-interval-select').getPropertyValue('min-width'),'56px','PR88 native 30m label width survives');
-  assert.equal(read('.center-workspace-toolbar [data-toolbar-open]').getPropertyValue('max-height'),'none');
-  assert.equal(read('.center-workspace-toolbar [data-toolbar-open]').getPropertyValue('white-space'),'normal');
-  assert.equal(read('.center-workspace-toolbar [data-toolbar-open]').getPropertyValue('text-overflow'),'clip');
+  assert.equal(read('.shell-feature-panel>.shell-feature-actions .center-workspace-toolbar [data-toolbar-open]').getPropertyValue('max-height'),'none');
+  assert.equal(read('.shell-feature-panel>.shell-feature-actions .center-workspace-toolbar [data-toolbar-open]').getPropertyValue('white-space'),'normal');
+  assert.equal(read('.shell-feature-panel>.shell-feature-actions .center-workspace-toolbar [data-toolbar-open]').getPropertyValue('text-overflow'),'clip');
 });
 
 const intervalIds=['1m','5m','15m','30m','1h','4h','daily','weekly'];

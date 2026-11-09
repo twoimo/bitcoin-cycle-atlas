@@ -22,6 +22,7 @@
 .atlas-plot>.chart-legend-dock .chart-legend-entry>svg{display:block;position:static;flex:none;width:16px;height:14px;min-width:16px;max-width:18px;max-height:14px;overflow:visible;pointer-events:none}
 .atlas-plot>.chart-legend-dock .chart-legend-entry.cycle-style-sample>svg{width:22px;min-width:22px;max-width:22px}
 .chart-legend-dock button{box-sizing:border-box;flex:none;min-width:32px;height:24px;margin:0;padding:2px 6px;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface-raised);color:var(--text);font:12px/16px var(--font,sans-serif);white-space:nowrap;cursor:pointer}
+.chart-legend-dock .chart-legend-more{min-height:24px}
 .chart-legend-dock button:hover{background:var(--surface-hover)}
 .rsi-chart-canvas>.chart-legend-dock button{min-height:24px}
 .atlas-plot>.chart-legend-dock .chart-legend-more{position:relative;min-width:44px;height:44px;min-height:44px;padding:8px 6px;border:0;background:transparent;isolation:isolate}

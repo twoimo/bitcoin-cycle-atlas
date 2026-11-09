@@ -11,8 +11,14 @@ test('native legend preserves ETH model semantics and omits the unavailable fore
   const source=document.querySelector('#source'),input={symbol:'ETHUSD',chartType:'candles',series:{...series,source:'Coinbase Exchange'},source};
   let markup=nativeChartLegendMarkup(input),output=parsed(markup);
   assert.equal(output.querySelectorAll('.price-legend-item').length,4);
+  const observed=output.querySelector('.price-legend-item');
+  assert.equal(observed.textContent,'실제 가격');
+  assert.equal(observed.getAttribute('title'),'Coinbase Exchange의 완료된 OHLC 봉입니다. 실시간 현재가 표시는 아닙니다.');
   assert.match(output.body.textContent,/모형 중앙값/);assert.match(output.body.textContent,/모의 10–90%/);assert.match(output.body.textContent,/적중률 미보정/);
   assert.match(markup,/Coinbase Exchange.*완료된 OHLC/);assert.match(markup,/수집 2026-11-07T05:00:00Z/);
+  const observedLine=parsed(nativeChartLegendMarkup({...input,chartType:'line'})).querySelector('.price-legend-item');
+  assert.equal(observedLine.textContent,'실제 가격');
+  assert.equal(observedLine.getAttribute('title'),'Coinbase Exchange의 관측 종가를 이은 선입니다. 실시간 현재가 표시는 아닙니다.');
   source.hidden=true;output=parsed(nativeChartLegendMarkup(input));
   assert.equal(output.querySelectorAll('.price-legend-item').length,1);
   assert.doesNotMatch(output.body.textContent,/모형 예시|모형 중앙값|10–90%/);
@@ -23,6 +29,8 @@ test('the BMNR T3 source cannot contribute a hidden future series or a fabricate
   const source=document.querySelector('.equity-legend');
   // The old native observed span is replaced by a genuine completed-price key.
   let output=parsed(nativeChartLegendMarkup({symbol:'BMNR',chartType:'line',series,source}));
+  assert.equal(output.querySelector('.price-legend-item').textContent,'실제 가격');
+  assert.equal(output.querySelector('.price-legend-item').getAttribute('title'),'Yahoo Finance의 관측 종가를 이은 선입니다. 실시간 현재가 표시는 아닙니다.');
   assert.equal(output.querySelectorAll('.price-legend-item').length,1);assert.doesNotMatch(output.body.textContent,/조건부|재무/);
   source.querySelector('.equity-projected').hidden=false;
   source.querySelector('#equity-vintage').textContent='재무 2026-09-30 · 과거 구조 가정';
