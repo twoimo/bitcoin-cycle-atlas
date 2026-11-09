@@ -1,14 +1,15 @@
 import { enhanceBootSkeleton } from './loading-surfaces.js';
 import { initAtlasShell } from './atlas-shell.js?v=1.36.1';
 import { canonicalNativeChartEntry } from './atlas-navigation.js?v=1.36.1';
+import { canonicalWorkspaceChartEntry } from './atlas-navigation.js?v=1.36.1';
 import { mountJournalEntry } from './journal-entry.js?v=1.29.0';
 import { initPerformanceDiagnostics } from './performance-diagnostics.js?v=1.29.0';
 
-const nativeEntry = canonicalNativeChartEntry(location);
-if (nativeEntry) {
-  // Redirect before the center host can reinterpret a native symbol as TQQQ,
-  // or any asset-owned controller starts fetching/rendering another chart.
-  location.replace(nativeEntry);
+const chartEntry = canonicalNativeChartEntry(location) || canonicalWorkspaceChartEntry(location);
+if (chartEntry) {
+  // Resolve either chart family before a fallback owner starts fetching or
+  // rendering another instrument in the shared shell.
+  location.replace(chartEntry);
 } else {
   enhanceBootSkeleton();
   initAtlasShell();

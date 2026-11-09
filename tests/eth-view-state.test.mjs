@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 import { readEthView, ethViewQuery, ethHistoryRange, ethRangeLabel } from '../dist/eth-view-state.js';
 import { panRange, zoomRange, fitRange } from '../dist/chart-navigation.js';
-import { canonicalNativeChartEntry } from '../dist/atlas-navigation.js';
+import { canonicalNativeChartEntry, canonicalWorkspaceChartEntry } from '../dist/atlas-navigation.js';
 
 const DAY=86400,WEEK=7*DAY;
 const seconds=date=>Date.parse(`${date}T00:00:00Z`)/1000;
@@ -104,7 +104,7 @@ async function runEntry(search,{failImport=false,failInit=false}={}){
   const source=await readFile(new URL('../dist/site-entry.js',import.meta.url),'utf8');
   const imports=[],events=[],errors=[],bootSymbol={textContent:'BTCUSD'},root={dataset:{}},initializations=[];
   const context={
-    URLSearchParams,canonicalNativeChartEntry,location:{search,pathname:'/'},console:{error:(...values)=>errors.push(values)},
+    URLSearchParams,canonicalNativeChartEntry,canonicalWorkspaceChartEntry,location:{search,pathname:'/'},console:{error:(...values)=>errors.push(values)},
     enhanceBootSkeleton:()=>{},mountJournalEntry:()=>{},initPerformanceDiagnostics:()=>{},initAtlasShell:()=>{},
     CustomEvent:class{constructor(type){this.type=type;}},
     document:{documentElement:root,querySelector:()=>bootSymbol,dispatchEvent:event=>events.push(event.type)},
@@ -112,7 +112,7 @@ async function runEntry(search,{failImport=false,failInit=false}={}){
   };
   // These shared, data-free entry hooks do not determine which asset workspace
   // is loaded. Keep the production routing and dynamic-import errors intact.
-  const routing=source.replace(/^import \{ (?:enhanceBootSkeleton|mountJournalEntry|initPerformanceDiagnostics|initAtlasShell|canonicalNativeChartEntry) \} from ['"][^'"]+['"];\n/gm,'').replace(/\bimport\s*\(/g,'__import(');
+  const routing=source.replace(/^import \{ (?:enhanceBootSkeleton|mountJournalEntry|initPerformanceDiagnostics|initAtlasShell|canonicalNativeChartEntry|canonicalWorkspaceChartEntry) \} from ['"][^'"]+['"];\n/gm,'').replace(/\bimport\s*\(/g,'__import(');
   await vm.runInNewContext(`(async()=>{${routing}\n})()`,context,{timeout:1000});
   return {imports,events,errors,bootSymbol,root,initializations};
 }

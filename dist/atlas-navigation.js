@@ -70,6 +70,23 @@ export function canonicalNativeChartEntry(location) {
   if(query.get('page')==='market')query.delete('page');
   return `${root}?${query}${location?.hash||''}`;
 }
+// Root symbol links are also valid chart entry points. Route known hosted
+// instruments before the native BTC boot fallback can claim their identity.
+// Explicit dashboard/center links and already canonical chart routes keep
+// their owner; the inverse native redirect above remains independent.
+export function canonicalWorkspaceChartEntry(location) {
+  const root=location?.pathname||'/';
+  if(location?.protocol&&!/^https?:$/.test(location.protocol))return null;
+  if(!/^\/(?:[A-Za-z0-9._~-]+\/)*$/.test(root)||root.includes('/market-lab/')||root.includes('/../')||root.includes('/./'))return null;
+  const query=new URLSearchParams(location?.search||'');
+  if(query.get('embedded')==='1'||query.has('center')||query.has('page')&&query.get('page')!=='outlook')return null;
+  const instrument=workspaceInstrument(query.get('symbol'));
+  if(!instrument)return null;
+  query.set('symbol',instrument.symbol);
+  query.delete('page');
+  if(instrument.page==='housing')query.set('region',instrument.region);
+  return `${root}market-lab/charts/?${query}${location?.hash||''}`;
+}
 export function labPageFromLocation(location) {
   const pathname=location?.pathname||'';
   const query=new URLSearchParams(location?.search||'');

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { runInNewContext } from 'node:vm';
-import { canonicalNativeChartEntry, labPageFromLocation } from '../dist/atlas-navigation.js';
+import { canonicalNativeChartEntry, canonicalWorkspaceChartEntry, labPageFromLocation } from '../dist/atlas-navigation.js';
 
 const entrySource = (await readFile(new URL('../dist/site-entry.js', import.meta.url), 'utf8'))
   .replace(/^import [^\n]+;\s*$/gm, '')
@@ -17,7 +17,7 @@ async function boot(url) {
   const symbolNode = { textContent: '' };
   const document = { documentElement: { dataset: {} }, querySelector: () => symbolNode, dispatchEvent: event => events.push(event.type) };
   await runInNewContext(`(async () => {${entrySource}\n})()`, {
-    location, document, URLSearchParams, canonicalNativeChartEntry, console,
+    location, document, URLSearchParams, canonicalNativeChartEntry, canonicalWorkspaceChartEntry, console,
     enhanceBootSkeleton: () => calls.push('skeleton'), initAtlasShell: () => calls.push('shell'),
     initPerformanceDiagnostics: () => calls.push('diagnostics'), mountJournalEntry: () => calls.push('journal'),
     CustomEvent: class { constructor(type) { this.type = type; } },
@@ -62,4 +62,55 @@ test('native canonical entry keeps project roots and supplied chart settings wit
   for (const symbol of ['TQQQ', 'HYPE', 'HOUSING-SEOUL', 'unknown', 'https://foreign.example']) assert.equal(canonicalNativeChartEntry(new URL(`https://atlas.example/market-lab/charts/?symbol=${encodeURIComponent(symbol)}`)), null);
   assert.equal(canonicalNativeChartEntry(new URL('https://atlas.example/market-lab/app/?symbol=MSTR')), null);
   assert.equal(canonicalNativeChartEntry(new URL('https://atlas.example//foreign.example/market-lab/charts/?symbol=MSTR')), null, 'a supplied path cannot become a protocol-relative redirect');
+});
+
+for (const symbol of ['BTCUSD', 'ETHUSD', 'MSTR', 'TQQQ', 'SOXL', '233740']) {
+  test(`${symbol} root deep link dispatches to the instrument's own chart family`, async () => {
+    const supplied = new URL(`https://atlas.example/?symbol=${symbol}`);
+    const result = await boot(supplied.href);
+    if (['TQQQ', 'SOXL', '233740'].includes(symbol)) {
+      assert.deepEqual(result.redirects, [`/market-lab/charts/?symbol=${symbol}`]);
+      assert.deepEqual(result.calls, [], 'root alias must resolve before initializing the BTC shell');
+      assert.deepEqual(result.modules, [], 'root alias must not fetch or paint a BTC price owner');
+      assert.equal(result.document.documentElement.dataset.symbol, undefined, 'fallback cannot publish a false BTC identity');
+      const destination = new URL(result.redirects[0], supplied);
+      assert.equal(labPageFromLocation(destination).id, 'rsi');
+      assert.equal(destination.searchParams.get('symbol'), symbol);
+      assert.equal(canonicalWorkspaceChartEntry(destination), null, 'hosted route cannot redirect in a loop');
+      assert.equal(canonicalNativeChartEntry(destination), null, 'hosted instrument cannot take a native redirect');
+    } else {
+      assert.deepEqual(result.redirects, []);
+      assert.equal(result.document.documentElement.dataset.symbol, symbol);
+      assert.equal(result.symbolNode.textContent, symbol);
+      assert.equal(result.modules.length, 1);
+      assert.match(result.modules[0], new RegExp('^\\./' + ({BTCUSD:'app', ETHUSD:'eth-view', MSTR:'equity-view'})[symbol] + '\\.js\\?v='));
+      assert.deepEqual(result.events, []);
+    }
+  });
+}
+
+test('workspace root aliases preserve supplied chart settings, project root and hash', () => {
+  const supplied = new URL('https://atlas.example/bitcoin-cycle-atlas/?symbol=%20233740.ks%20&page=outlook&granularity=weekly&type=candles&axis=linear&view-start=2020-01-01&view-end=2026-11-01#price');
+  const destination = new URL(canonicalWorkspaceChartEntry(supplied), supplied);
+  assert.equal(destination.pathname, '/bitcoin-cycle-atlas/market-lab/charts/');
+  assert.equal(destination.searchParams.get('symbol'), '233740');
+  assert.equal(destination.searchParams.has('page'), false);
+  assert.equal(destination.hash, '#price');
+  for (const key of ['granularity', 'type', 'axis', 'view-start', 'view-end']) assert.equal(destination.searchParams.get(key), supplied.searchParams.get(key));
+  assert.equal(canonicalWorkspaceChartEntry(new URL('https://atlas.example/?symbol=HOUSING-SEOUL&region=busan')), '/market-lab/charts/?symbol=HOUSING-SEOUL&region=seoul');
+});
+
+test('workspace root routing preserves explicit non-chart owners and existing fallback boundaries', async () => {
+  for (const suffix of ['&page=evidence', '&page=data', '&page=ipo', '&page=relay', '&page=compare', '&page=market', '&center=evidence', '&embedded=1']) {
+    assert.equal(canonicalWorkspaceChartEntry(new URL(`https://atlas.example/?symbol=TQQQ${suffix}`)), null, suffix);
+  }
+  for (const url of ['https://atlas.example/market-lab/?symbol=TQQQ', 'https://atlas.example/market-lab/rsi/?symbol=SOXL', 'https://atlas.example/market-lab/charts/?symbol=233740', 'file:///tmp/?symbol=TQQQ', 'https://atlas.example//foreign.example/?symbol=TQQQ']) {
+    assert.equal(canonicalWorkspaceChartEntry(new URL(url)), null, url);
+  }
+  for (const symbol of ['unknown', 'ETHUSDT', 'https://foreign.example']) {
+    const result = await boot(`https://atlas.example/?symbol=${encodeURIComponent(symbol)}`);
+    assert.deepEqual(result.redirects, []);
+    assert.equal(result.document.documentElement.dataset.symbol, 'BTCUSD');
+    assert.match(result.modules[0], /^\.\/app\.js\?v=/);
+  }
 });
