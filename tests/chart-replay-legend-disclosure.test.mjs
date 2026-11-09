@@ -85,6 +85,41 @@ test('unchanged actual replay frames preserve legend entries, native disclosure 
   }finally{controller.destroy();}
 });
 
+test('crossing the two-group width floor keeps semantic owners and returns modal focus to a visible disclosure',()=>{
+  const f=fixture(1440);f.setWidth(194.32);f.render();const controller=mountChartLegend({plot:f.plot});
+  const dialog=f.document.querySelector('#chart-legend-dialog');dialog.showModal=()=>{dialog.open=true;};
+  dialog.close=()=>{dialog.open=false;dialog.dispatchEvent(new f.document.defaultView.CustomEvent('close'));};
+  const geometry={width:1440,height:700,left:8,right:504,top:56,bottom:600};
+  try{
+    f.render();f.flush();const slot=controller.refresh(geometry);
+    assert.equal(slot.compact,false);assert.equal(slot.height,40);
+    const rows=[...f.legend.children],entries=[...f.legend.querySelectorAll('.chart-legend-entry')];
+    assert.deepEqual(rows.map(row=>row.dataset.legendGroup),['price','cycle']);
+    assert.deepEqual(rows.map(row=>row.querySelector('.chart-legend-row-label').textContent),['가격','사이클']);
+    assert.deepEqual(rows.map(row=>row.getAttribute('aria-label')),['가격 계열','사이클 색상']);
+    assert.equal(entries.length,13);assert.ok(rows.every(row=>row.dataset.visibleCount==='0'));
+    const trigger=rows[1].querySelector('.chart-legend-more'),chip=f.document.querySelector('.chart-legend-open');
+    assert.equal(trigger.hidden,false);trigger.focus();trigger.click();assert.equal(dialog.open,true);
+    const samples=[...dialog.querySelectorAll('.chart-legend-dialog-sample')];
+    const narrow=controller.refresh({...geometry,right:503});
+    assert.equal(narrow.compact,true);assert.equal(narrow.compactReason,'width');assert.equal(narrow.height,44);
+    assert.equal(f.legend.hidden,true);assert.equal(chip.hidden,false);assert.equal(trigger.getClientRects().length,0,'a hidden source ancestor hides its otherwise enabled +N button');
+    f.render('current-chart-snapshot',true,{cursorDate:'2026-06-02'});f.flush();
+    assert.deepEqual([...f.legend.children],rows,'separation adds no sibling nodes or replacements');
+    assert.deepEqual([...f.legend.querySelectorAll('.chart-legend-entry')],entries);
+    assert.deepEqual([...dialog.querySelectorAll('.chart-legend-dialog-sample')],samples,'a layout transition retains open disclosure contents');
+    assert.deepEqual([...dialog.querySelectorAll(statusSelector)].map(text),expectedStatus);
+    dialog.close();assert.equal(f.document.activeElement,chip);
+
+    chip.focus();chip.click();assert.equal(dialog.open,true);controller.refresh(geometry);
+    assert.equal(chip.hidden,true);assert.equal(f.legend.hidden,false);
+    dialog.close();
+    assert.ok(rows.some(row=>row.querySelector('.chart-legend-more')===f.document.activeElement));
+    assert.equal(f.document.activeElement.closest('[hidden]'),null,'returning to groups chooses a still-visible +N owner');
+    assert.deepEqual([...f.legend.children],rows);
+  }finally{controller.destroy();}
+});
+
 test('semantic source changes and external restoration cannot reuse a stale replay legend',()=>{
   const f=fixture(1440);f.render();const controller=mountChartLegend({plot:f.plot});
   const dialog=f.document.querySelector('#chart-legend-dialog');dialog.showModal=()=>{dialog.open=true;};

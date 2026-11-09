@@ -8,7 +8,9 @@ export function chartLegendSlot({width=0,height=0,left=0,right=width,top=0,botto
   bottom=clamp(finite(bottom,height),0,height);top=clamp(finite(top),0,bottom);
   const plotWidth=right-left,inset=Math.min(12,plotWidth/2),maxWidth=Math.max(0,Math.min(plotWidth*.42,plotWidth-inset*2));
   const availableHeight=Math.max(0,bottom-top-24);
-  let compactReason=finite(viewportWidth,width)<=430?'viewport':maxWidth<200?'width':availableHeight<44?'height':null;
+  // Two groups need 206px for 32px labels, two 8px gaps and 44px controls,
+  // including the dock's padding/borders and group gap. Leave 2px rounding room.
+  let compactReason=finite(viewportWidth,width)<=430?'viewport':maxWidth<208?'width':availableHeight<44?'height':null;
   // A model evidence dot is a date/price fact. If it reaches the corner, the
   // legend yields within the price pane. A short pane can use the same full-
   // list chip as mobile instead of spilling into cycle, volume or footer lanes.
