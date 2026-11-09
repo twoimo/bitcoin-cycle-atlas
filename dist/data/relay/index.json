@@ -1,37 +1,15 @@
 {
   "schema": 1,
   "source": "RelayDeck",
-  "generated_at": "2026-11-09T09:39:39+09:00",
+  "generated_at": "2026-11-09T13:13:35+09:00",
   "rooms": [
     {
       "id": "telegram",
       "kind": "chat",
       "title": "소수의견(26년 4분기)",
       "subtitle": "Telegram",
-      "updated_at": "2026-11-09T08:26:42+09:00",
+      "updated_at": "2026-11-09T12:10:10+09:00",
       "messages": [
-        {
-          "id": "2337",
-          "at": "2026-11-07T09:36:32+09:00",
-          "author": "소수의견(26년 4분기)",
-          "text": "https://www.edaily.co.kr/News/Read?newsId=01912246645643424",
-          "links": [
-            {
-              "offset": 0,
-              "length": 59,
-              "url": "https://www.edaily.co.kr/News/Read?newsId=01912246645643424"
-            }
-          ],
-          "previews": [
-            {
-              "url": "https://edaily.co.kr/News/Read?newsId=01912246645643424",
-              "title": "[美특징주]머스크 “스페이스X 정부 매출 비중, 이번 분기 10% 미만”…시간외, 상승 지속",
-              "description": "미국 정부 기관 부문의 스페이스X(SPCX) 매출 비중이 현 분기 전체 10% 미만으로 감소할 것이라고 일론 머스크 최고경영자(CEO)가 밝혔다.  6일(현지시간) 그는 자신의 소셜 미디어 엑스 계에서 이를 언급하며, 한 때 스페이스X의 주요 수입원이었던 정부 계약 ...",
-              "site_name": "이데일리",
-              "display_url": "edaily.co.kr/News/Read?newsId=01912246645643424"
-            }
-          ]
-        },
         {
           "id": "2338",
           "at": "2026-11-07T09:37:40+09:00",
@@ -682,6 +660,124 @@
           "at": "2026-11-09T08:26:42+09:00",
           "author": "소수의견(26년 4분기)",
           "text": "중간선거 전까지 덮었다가\n딱 터뜨리는 것 같습니다\n(언론 타이밍상)"
+        },
+        {
+          "id": "2411",
+          "at": "2026-11-09T12:10:10+09:00",
+          "author": "소수의견(26년 4분기)",
+          "text": "<🗞소몽선정 데일리 뉴스,11/9>\n[시황/정치]\n트럼프 \"증시 하루새 3조달러 증발\"\n트럼프, 민주당 위협에 법무부 조사 지시\n트럼프 미디어 시총 33% 증발\n트럼프, UFC 회장에 대변인 제안\n민주당 장악에 '코인 황금기' 끝나나\n민주당, 머스크·밀러 조사 예고\n美 기술주, S&P500보다 싸졌다\n민주당, 20조 우크라 지원 추진\n제프리스 \"새 비서실장과 협력 안 해\"\n美기업 '인플레' 언급 2년8개월래 최다\n\n[테크]\n젠슨 황, 불륜 인정…이사회 조사\n황 불륜상대 회사, 칩 밀반출 의혹\n앤트로픽, 가스발전기 4.6조 확보\n앤트로픽 몸값 1조달러로 하락\n머스크 \"옵티머스 판매보다 임대\"\n유럽 15개국 AI 데이터센터 반대 시위\n\n[지정학]\n사우디 수도에 후티 미사일\n이란 외무 \"종전 협상 중단\"\n트럼프, 이란 공습 \"방공 무력화\"\n\n[기타]\n美 헤지펀드, 인력 감축\n버크셔, 자사주 13조 매입 '최대'\n골드만 공포지수 9.57 '극단 패닉'\n\n출처 : 소수의견 🐒\n(기사 누르면 링크 연결됩니다)",
+          "links": [
+            {
+              "offset": 29,
+              "length": 20,
+              "url": "https://www.joongang.co.kr/article/25476825"
+            },
+            {
+              "offset": 50,
+              "length": 22,
+              "url": "https://www.news1.kr/world/usa-canada/6346576"
+            },
+            {
+              "offset": 73,
+              "length": 17,
+              "url": "https://www.g-enews.com/article/Global-Biz/2026/11/2026110807520145779a1f309431_1"
+            },
+            {
+              "offset": 91,
+              "length": 19,
+              "url": "https://www.news1.kr/world/usa-canada/6346690"
+            },
+            {
+              "offset": 111,
+              "length": 20,
+              "url": "https://n.news.naver.com/mnews/article/018/0006406184"
+            },
+            {
+              "offset": 132,
+              "length": 17,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=01800726645644080&mediaCodeNo=257"
+            },
+            {
+              "offset": 150,
+              "length": 19,
+              "url": "https://www.g-enews.com/article/Global-Biz/2026/11/2026110819440030359a1f309431_1"
+            },
+            {
+              "offset": 170,
+              "length": 18,
+              "url": "https://biz.sbs.co.kr/article/20000344962"
+            },
+            {
+              "offset": 189,
+              "length": 21,
+              "url": "https://www.yna.co.kr/view/AKR20261109002200071"
+            },
+            {
+              "offset": 211,
+              "length": 22,
+              "url": "https://n.news.naver.com/mnews/article/018/0006406275"
+            },
+            {
+              "offset": 240,
+              "length": 18,
+              "url": "https://www.yna.co.kr/view/AKR20261109005251091"
+            },
+            {
+              "offset": 259,
+              "length": 19,
+              "url": "https://n.news.naver.com/mnews/article/421/0009277770"
+            },
+            {
+              "offset": 279,
+              "length": 19,
+              "url": "https://n.news.naver.com/mnews/article/001/0016430033"
+            },
+            {
+              "offset": 299,
+              "length": 16,
+              "url": "https://www.digitaltoday.co.kr/news/articleView.html?idxno=713609"
+            },
+            {
+              "offset": 316,
+              "length": 18,
+              "url": "https://www.g-enews.com/article/Global-Biz/2026/11/2026110719430895199a1f309431_1"
+            },
+            {
+              "offset": 335,
+              "length": 22,
+              "url": "https://n.news.naver.com/mnews/article/018/0006405974"
+            },
+            {
+              "offset": 365,
+              "length": 14,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=02427206645643752&mediaCodeNo=257"
+            },
+            {
+              "offset": 380,
+              "length": 16,
+              "url": "https://www.news1.kr/world/middleeast-africa/6347034"
+            },
+            {
+              "offset": 397,
+              "length": 19,
+              "url": "https://www.sedaily.com/article/20111451"
+            },
+            {
+              "offset": 423,
+              "length": 13,
+              "url": "https://www.sedaily.com/article/20111710"
+            },
+            {
+              "offset": 437,
+              "length": 20,
+              "url": "https://www.edaily.co.kr/News/Read?newsId=01918806645643752&mediaCodeNo=257"
+            },
+            {
+              "offset": 458,
+              "length": 21,
+              "url": "https://www.g-enews.com/article/Global-Biz/2026/11/2026110820442142319a1f309431_1"
+            }
+          ]
         }
       ]
     },
