@@ -32,13 +32,13 @@ export function RsiWorkbench(props:Props) {
       return validateRsiBars(market.ohlc,prices);
     }catch{return [];}
   },[market,prices,+now]);
-  const [view,setView]=useState<RsiChartView>(()=>initialChartUrlView(symbol,chartCache?.get(symbol)?.view||initialChartView(prices),{frequencies:['daily','weekly'],candles:barData.length>0,embedded}));
+  // Publish the view and its revision from the same committed render.
+  const [{view,userViewRevision},setViewState]=useState(()=>({view:initialChartUrlView(symbol,chartCache?.get(symbol)?.view||initialChartView(prices),{frequencies:['daily','weekly'],candles:barData.length>0,embedded}),userViewRevision:0}));
   const [pane,setPane]=useState<Pane>(null),[tab,setTab]=useState<'chart'|'backtest'|'records'|'csv'|'simulation'>('chart'),[hover,setHover]=useState<Pick|null>(null),[status,setStatus]=useState('');
   const simulation=useRsiSimulation(symbol,market,snapshot,now);
   const confirmedPrices=useMemo(()=>prices.filter(([date])=>date<=simulation.confirmedThrough),[prices,simulation.confirmedThrough]);
   const confirmedRows=useMemo(()=>props.rows.filter(row=>row.date<=simulation.confirmedThrough),[props.rows,simulation.confirmedThrough]);
   const undo=useRef<RsiChartView[]>(chartCache?.get(symbol)?.undo||[]),redo=useRef<RsiChartView[]>(chartCache?.get(symbol)?.redo||[]),gesture=useRef<RsiChartView|null>(null);
-  const userViewRevision=useRef(0);
   const live=useRef({view,props,tab,pane});live.current={view,props,tab,pane};
   const svg=useRef<SVGSVGElement>(null),[exportText,setExportText]=useState(''),[exportUrl,setExportUrl]=useState('');
   const [pngUrl,setPngUrl]=useState(''),[search,setSearch]=useState('');
@@ -63,14 +63,18 @@ export function RsiWorkbench(props:Props) {
     if(visible.length&&(next.selected<visible[0][0]||next.selected>visible.at(-1)![0]))next={...next,selected:next.selected<visible[0][0]?visible[0][0]:visible.at(-1)![0]};
     const previous=live.current.view;if(JSON.stringify(next)===JSON.stringify(previous))return;
     if(record){undo.current=[...undo.current,previous].slice(-40);redo.current=[];}
-    if(!gesture.current){userViewRevision.current++;persistStandaloneChartUrl(symbol,next,embedded);}
-    live.current.view=next;setView(next);setExportText('');
+    const userEdit=!gesture.current;
+    if(userEdit)persistStandaloneChartUrl(symbol,next,embedded);
+    live.current.view=next;
+    setViewState(previous=>({view:next,userViewRevision:previous.userViewRevision+(userEdit?1:0)}));setExportText('');
   }
   const selectDate=useCallback((index:number)=>{
     const p=live.current.props.market.prices[index];if(!p)return;
     const next=applyChartCommand(live.current.view,live.current.props.market.prices,'date',p[0]);
-    if(JSON.stringify(next)!==JSON.stringify(live.current.view)){userViewRevision.current++;persistStandaloneChartUrl(live.current.props.symbol,next,live.current.props.embedded);}
-    live.current.view=next;setView(next);live.current.props.onDate(index);
+    const changed=JSON.stringify(next)!==JSON.stringify(live.current.view);
+    if(changed)persistStandaloneChartUrl(live.current.props.symbol,next,live.current.props.embedded);
+    live.current.view=next;
+    setViewState(previous=>({view:next,userViewRevision:previous.userViewRevision+(changed?1:0)}));live.current.props.onDate(index);
   },[]);
   const command=useRef<(action:string,value?:unknown)=>void>(()=>{});
   command.current=(action,value)=>{
@@ -115,8 +119,8 @@ export function RsiWorkbench(props:Props) {
     window.parent.postMessage({kind:'atlas:rsi-state',epoch,symbol,ready:true,unit:market.unit,timezone:market.timezone||'',revision,
       start:view.start,end:view.end,first:prices[0][0],last:prices.at(-1)![0],selected:point?.[0],close:point?.[1],rsi:row?.rsi??null,
       tool:view.tool,magnet:view.magnet,scale:view.scale,autoScale:view.autoScale,chartType:view.chartType,frequency:view.frequency,
-      candles:barData.length>0,volume:barData.some(b=>b[5]!==null),canUndo:undo.current.length>0,canRedo:redo.current.length>0,measurement:view.measurement.length>0,pane,tab,userViewRevision:userViewRevision.current,urlView:chartUrlView(view)},location.origin);
-  },[embedded,active,epoch,symbol,view,pane,tab,point?.[0],point?.[1],row?.rsi,barData,revision,market.unit,market.timezone,prices]);
+      candles:barData.length>0,volume:barData.some(b=>b[5]!==null),canUndo:undo.current.length>0,canRedo:redo.current.length>0,measurement:view.measurement.length>0,pane,tab,userViewRevision,urlView:chartUrlView(view)},location.origin);
+  },[embedded,active,epoch,symbol,view,userViewRevision,pane,tab,point?.[0],point?.[1],row?.rsi,barData,revision,market.unit,market.timezone,prices]);
   useEffect(()=>{
     const key=(event:KeyboardEvent)=>{
       if(!active||live.current.tab!=='chart'||event.target instanceof Element&&event.target.closest('dialog,summary,input,select,textarea,button,a,[contenteditable=true]'))return;
@@ -141,7 +145,14 @@ export function RsiWorkbench(props:Props) {
   },[exportText]);
   function pick(p:Pick){setHover(null);if(view.tool==='measure')persist({...view,measurement:view.measurement.length===1&&view.measurement[0].panel===p.panel?[view.measurement[0],p]:[p]});
     else {persist({...view,selected:p.date},false);const at=nearestPoint(prices,p.date);props.onDate(at);}}
-  function endGesture(){if(gesture.current&&JSON.stringify(gesture.current)!==JSON.stringify(live.current.view)){undo.current=[...undo.current,gesture.current].slice(-40);redo.current=[];userViewRevision.current++;persistStandaloneChartUrl(symbol,live.current.view,embedded);setView({...live.current.view});}gesture.current=null;}
+  function endGesture(){
+    if(gesture.current&&JSON.stringify(gesture.current)!==JSON.stringify(live.current.view)){
+      const next={...live.current.view};
+      undo.current=[...undo.current,gesture.current].slice(-40);redo.current=[];persistStandaloneChartUrl(symbol,next,embedded);
+      setViewState(previous=>({view:next,userViewRevision:previous.userViewRevision+1}));
+    }
+    gesture.current=null;
+  }
   const [jump,setJump]=useState(view.selected),[from,setFrom]=useState(view.start),[to,setTo]=useState(view.end);
   const [menuPulse,setMenuPulse]=useState(0);
   return <section className="rsi-workbench" data-tab="chart" aria-label={`${symbol} 차트 작업 화면`}>
