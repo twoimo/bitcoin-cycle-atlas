@@ -223,3 +223,13 @@ body[data-shell=chart] [data-disabled-reason]{cursor:not-allowed}
   body[data-shell=chart] .workbench-rail[data-shell-region=right][data-mobile-open=true]{flex:none;width:calc(100% - 16px)}
   body[data-shell=chart] .workbench-rail[data-shell-region=right][data-mobile-open=true] [data-shell-owner=right]{width:auto;min-width:0;max-width:none}
 }
+
+/* 2026-11-09 QA: 가로 스크롤 도구줄이 숨은 컨트롤처럼 보이지 않도록 스크롤 단서를 준다 */
+@media (max-width:1180px){
+  body[data-shell=dashboard] .atlas-canvas-heading,
+  body[data-shell=dashboard] :is(.evidence-controls,.asset-filters){scrollbar-width:thin;scrollbar-color:var(--border-strong) transparent}
+  body[data-shell=dashboard] .atlas-canvas-heading::-webkit-scrollbar,
+  body[data-shell=dashboard] :is(.evidence-controls,.asset-filters)::-webkit-scrollbar{height:3px}
+  body[data-shell=dashboard] .atlas-canvas-heading::-webkit-scrollbar-thumb,
+  body[data-shell=dashboard] :is(.evidence-controls,.asset-filters)::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:999px}
+}
