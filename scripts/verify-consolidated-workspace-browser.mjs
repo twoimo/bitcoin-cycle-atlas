@@ -57,8 +57,12 @@ export function assertConsolidatedObservationGeometry(result,symbol,unit) {
 export function readConsolidatedToolbarOwnership() {
   const frame=document.querySelector('.atlas-center-frame:not([hidden])'),header=document.querySelector('.atlas-canvas-heading');
   const host=frame&&document.getElementById(frame.dataset.toolbarId),panel=document.querySelector('#atlas-shell-features-panel');
-  const read=node=>{if(!node)return null;const r=node.getBoundingClientRect();return {rect:{top:r.top,bottom:r.bottom,height:r.height},
-    visible:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),hidden:Boolean(node.closest('[hidden]')),inert:Boolean(node.closest('[inert]')),disabled:Boolean(node.disabled)};};
+  const read=node=>{if(!node)return null;const r=node.getBoundingClientRect();let displayNoneOwner=null;
+    for(let owner=node;owner;owner=owner.parentElement)if(getComputedStyle(owner).display==='none'){
+      displayNoneOwner={tag:owner.tagName,id:owner.id||null,className:typeof owner.className==='string'?owner.className:null,display:'none'};break;
+    }
+    return {rect:{top:r.top,bottom:r.bottom,height:r.height},display:getComputedStyle(node).display,displayNoneOwner,
+      visible:node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}),hidden:Boolean(node.closest('[hidden]')),inert:Boolean(node.closest('[inert]')),disabled:Boolean(node.disabled)};};
   return {twoRow:header?.dataset.mobileHeading==='two-row',chartControls:document.body.dataset.chartControls||null,
     center:document.body.dataset.centerTool||null,activeHost:frame?.dataset.toolbarId||null,hostId:host?.id||null,
     hostInPanel:Boolean(host?.closest('.shell-feature-panel')),hostInHeader:host?.parentElement===header,
@@ -85,8 +89,8 @@ export function assertConsolidatedToolbarOwnership(ownership,label) {
     assert.ok(Math.abs(host.rect.height-44)<=1&&host.rect.top>=ownership.header.rect.top+44-1&&host.rect.bottom<=ownership.header.rect.bottom+1,
       label+': nonchart toolbar occupies the second 44px row');
     assert.ok(ownership.panel?.hidden&&!ownership.panel.visible,label+': retained chart disclosure stays closed in a nonchart center');
-    assert.ok(ownership.feature&&!ownership.feature.visible&&(ownership.feature.inert||ownership.feature.hidden),label+': previous chart feature controls remain hidden and protected');
-    assert.ok(ownership.toggle&&!ownership.toggle.visible&&(ownership.toggle.inert||ownership.toggle.hidden||ownership.toggle.disabled),label+': previous chart trigger remains hidden and protected');
+    assert.ok(ownership.feature&&!ownership.feature.visible&&(ownership.feature.inert||ownership.feature.hidden||ownership.feature.displayNoneOwner?.display==='none'),label+': previous chart feature controls remain hidden and protected');
+    assert.ok(ownership.toggle&&!ownership.toggle.visible&&(ownership.toggle.inert||ownership.toggle.hidden||ownership.toggle.disabled||ownership.toggle.displayNoneOwner?.display==='none'),label+': previous chart trigger remains hidden and protected');
   }
 }
 

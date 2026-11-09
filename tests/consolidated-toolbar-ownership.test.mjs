@@ -2,13 +2,14 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {assertConsolidatedToolbarOwnership,consolidatedToolbarUsesDisclosure} from '../scripts/verify-consolidated-workspace-browser.mjs';
 
-const measured=(top,height,extra={})=>({rect:{top,bottom:top+height,height},visible:true,hidden:false,inert:false,disabled:false,...extra});
+const measured=(top,height,extra={})=>({rect:{top,bottom:top+height,height},display:'flex',displayNoneOwner:null,visible:true,hidden:false,inert:false,disabled:false,...extra});
+const hiddenFeature={tag:'DIV',id:null,className:'shell-instrument-slot',display:'none'};
 function market(){
   return {twoRow:true,chartControls:null,center:'market-us',activeHost:'atlas-center-toolbar-lab',hostId:'atlas-center-toolbar-lab',
     hostInPanel:false,hostInHeader:true,header:measured(0,92),host:measured(45,44),
-    feature:measured(0,0,{visible:false,inert:true}),
-    panel:measured(0,0,{visible:false,hidden:true,inert:true}),
-    toggle:measured(0,0,{visible:false,inert:true,disabled:true,label:'BTCUSD 종목 기능 더 보기'})};
+    feature:measured(0,0,{display:'none',displayNoneOwner:hiddenFeature,visible:false}),
+    panel:measured(0,0,{visible:false,hidden:true}),
+    toggle:measured(0,0,{displayNoneOwner:hiddenFeature,visible:false,label:'BTCUSD 종목 기능 더 보기'})};
 }
 function chart({open=false}={}){
   const result=market();result.chartControls='ready';result.center='rsi';result.hostInPanel=true;result.hostInHeader=false;
@@ -18,9 +19,11 @@ function chart({open=false}={}){
   return result;
 }
 
-test('a market center retains the two-row perimeter without opening its protected BTC disclosure',()=>{
+test('a market center retains row two while CSS hides its BTC disclosure without hidden or inert attributes',()=>{
   const result=market();
   assert.equal(result.twoRow,true);
+  assert.equal(result.feature.hidden,false);assert.equal(result.feature.inert,false);
+  assert.equal(result.toggle.hidden,false);assert.equal(result.toggle.inert,false);assert.equal(result.toggle.disabled,false);
   assert.equal(consolidatedToolbarUsesDisclosure(result,'us'),false);
   assert.doesNotThrow(()=>assertConsolidatedToolbarOwnership(result,'us'));
 });
@@ -60,8 +63,13 @@ test('a previous chart menu cannot be exposed or re-enabled to make the nonchart
   assert.throws(()=>assertConsolidatedToolbarOwnership(open,'us'),/retained chart disclosure stays closed/);
   const exposed=market();exposed.feature={...exposed.feature,visible:true,inert:false};
   assert.throws(()=>assertConsolidatedToolbarOwnership(exposed,'us'),/previous chart feature controls remain hidden and protected/);
-  const enabled=market();enabled.toggle={...enabled.toggle,inert:false,disabled:false};
+  const enabled=market();enabled.toggle={...enabled.toggle,inert:false,disabled:false,displayNoneOwner:null};
   assert.throws(()=>assertConsolidatedToolbarOwnership(enabled,'us'),/previous chart trigger remains hidden and protected/);
+});
+
+test('opacity-only invisibility cannot replace native display, hidden or inert protection',()=>{
+  const result=market();result.feature.display='flex';result.feature.displayNoneOwner=null;
+  assert.throws(()=>assertConsolidatedToolbarOwnership(result,'us'),/previous chart feature controls remain hidden and protected/);
 });
 
 test('an inactive iframe toolbar cannot supply the current workspace controls',()=>{
