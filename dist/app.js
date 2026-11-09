@@ -12,7 +12,7 @@ import { renderForecastView, exportForecastSvg } from './forecast-view.js?v=1.29
 // Changed release modules use a versioned URL so a cached v1.5 module cannot
 // leave a new long-horizon page running the old three-year workbench.
 import { initDailyDataView } from './daily-data-view.js?v=1.32.1';
-import { initRelayRoomView } from './relay-room.js?v=1.37.7';
+import { initRelayRoomView } from './relay-room.js?v=1.37.8';
 import { createAssetComparisonLoader } from './asset-comparison-source.js?v=1.32.1';
 import { initIpoView } from './ipo-view.js?v=1.32.1';
 import { initMarketLabView } from './market-lab-view.js?v=1.31.3';

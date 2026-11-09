@@ -8,7 +8,10 @@ const array=value=>Array.isArray(value)?value:[];
 export function relayLocalImagePaths(data){
   const references=array(data?.rooms).flatMap(room=>[
     ...array(room.messages).flatMap(message=>array(message.images).map(image=>typeof image==='string'?image:image?.src)),
-    ...array(room.articles).flatMap(article=>array(article.images).map(image=>typeof image==='string'?image:image?.src)),
+    ...array(room.articles).flatMap(article=>[
+      ...array(article.images).map(image=>typeof image==='string'?image:image?.src),
+      ...array(article.blocks).filter(block=>block?.kind==='image').map(block=>block?.src),
+    ]),
     ...array(room.editions).flatMap(edition=>array(edition.pages).map(page=>page?.image)),
   ]).filter(Boolean);
   const paths=new Set();

@@ -178,7 +178,7 @@ test('the real standalone is deterministic, preserves every module and snapshot,
       if(room.kind==='chat')checkImages((room.messages||[]).flatMap(message=>(message.images||[]).map(image=>typeof image==='string'?image:image.src)));
       if(room.kind==='articles')for(const article of room.articles){
         click(`[data-article="${article.id}"]`);
-        assert.equal(relayRoot.querySelector('.relay-body').textContent.replace(/\s+/g,''),String(article.body_text).replace(/\s+/g,''));
+        assert.equal(relayRoot.querySelector('.relay-body').textContent.replace(/[\u200b\u200c\u200d\u2060\ufeff]/g,'').replace(/\s+/g,''),String(article.body_text).replace(/[\u200b\u200c\u200d\u2060\ufeff]/g,'').replace(/\s+/g,''));
         checkImages((article.images||[]).map(image=>typeof image==='string'?image:image.src));
         click('[data-relay-action="article-back"]');
       }

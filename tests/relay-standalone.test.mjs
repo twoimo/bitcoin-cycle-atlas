@@ -55,6 +55,82 @@ test('relay packaging embeds chat image bytes as well as article and edition med
   assert.equal(result.bytes,body.length*2+1);
 });
 
+const articlePayload=()=>({rooms:[{id:'naver',kind:'articles',title:'인생의 방',subtitle:'네이버 프리미엄 · 플스포',articles:[{
+  id:'a',title:'운동에서 가장 중요한 두 가지 패턴',published_date:'2026-11-09',
+  url:'https://contents.premium.naver.com/ps4/ps4life/contents/a',
+  body_text:'무시되는 예전 본문',
+  blocks:[
+    {kind:'text',text:'첫 문단입니다.\n둘째 줄입니다.\n\n\u200b\n\n'},
+    {kind:'image',src:'data/relay/assets/a-1.jpg',alt:'첫 사진',width:1200,height:800},
+    {kind:'text',text:'\u200b'},
+    {kind:'text',text:'1. 첫 번째 제목\n\n제목 아래 본문'},
+    {kind:'image',src:'data/relay/assets/a-2.jpg',alt:'',width:900,height:1200},
+    {kind:'text',text:'마지막 문단'},
+  ],
+  images:[{src:'data/relay/assets/a-1.jpg'},{src:'data/relay/assets/a-2.jpg'}],
+}]}]});
+
+test('the article reader interleaves images, joins soft wraps and drops invisible paragraphs',async t=>{
+  const data=articlePayload(),{document,window}=parseHTML('<section id="relay"></section>');
+  let ready;const loaded=new Promise(resolve=>{ready=resolve;});
+  const root=document.getElementById('relay');
+  initRelayRoomView({root,embeddedData:()=>JSON.stringify(data),onReady:ready}).show(true);await loaded;
+  assert.match(root.querySelector('.relay-article-title').textContent,/운동에서/);
+  assert.match(root.querySelector('.relay-article-excerpt').textContent,/첫 문단입니다/);
+  assert.equal(root.querySelector('.relay-article-thumb img').getAttribute('src'),'data/relay/assets/a-1.jpg');
+  root.querySelector('[data-article="a"]').dispatchEvent(new window.Event('click',{bubbles:true}));
+  const body=root.querySelector('.relay-body');
+  assert.deepEqual([...body.children].map(node=>node.tagName),['P','FIGURE','H2','P','FIGURE','P']);
+  assert.equal(body.children[0].textContent,'첫 문단입니다. 둘째 줄입니다.');
+  assert.equal(body.querySelectorAll('br').length,0);
+  assert.equal([...body.querySelectorAll('p')].every(node=>node.textContent.trim()),true);
+  assert.equal(body.querySelector('h2').textContent,'1. 첫 번째 제목');
+  const figures=[...body.querySelectorAll('figure')];
+  assert.deepEqual(figures.map(node=>node.querySelector('img').getAttribute('src')),
+    ['data/relay/assets/a-1.jpg','data/relay/assets/a-2.jpg']);
+  assert.equal(figures[1].querySelector('img').getAttribute('width'),'900');
+  assert.equal(figures[1].querySelector('img').getAttribute('height'),'1200');
+  assert.match(root.querySelector('.relay-reader-meta').textContent,/2026\.11\.09 · \d+분 읽기/);
+  assert.equal(root.querySelector('.relay-reader-foot a').getAttribute('href'),
+    'https://contents.premium.naver.com/ps4/ps4life/contents/a');
+  assert.doesNotMatch(body.textContent,/\u200b/);
+  root.querySelector('[data-relay-action="article-back"]').dispatchEvent(new window.Event('click',{bubbles:true}));
+  assert.ok(root.querySelector('.relay-article'));
+});
+
+test('the article reader falls back to legacy body text and appends its image array',async t=>{
+  const data={rooms:[{id:'naver',kind:'articles',title:'인생의 방',articles:[{
+    id:'legacy',title:'예전 글',published_date:'2026-11-01',
+    body_text:'첫 줄\n둘째 줄\n\n\u200b\n\n둘째 문단',images:['data/relay/assets/legacy.jpg'],
+  }]}]};
+  const {document,window}=parseHTML('<section id="relay"></section>');
+  let ready;const loaded=new Promise(resolve=>{ready=resolve;});
+  const root=document.getElementById('relay');
+  initRelayRoomView({root,embeddedData:()=>JSON.stringify(data),onReady:ready}).show(true);await loaded;
+  root.querySelector('[data-article="legacy"]').dispatchEvent(new window.Event('click',{bubbles:true}));
+  const body=root.querySelector('.relay-body');
+  assert.deepEqual([...body.children].map(node=>node.tagName),['P','P','FIGURE']);
+  assert.equal(body.children[0].textContent,'첫 줄 둘째 줄');
+  assert.equal(body.children[1].textContent,'둘째 문단');
+  assert.equal(body.querySelectorAll('br').length,0);
+  assert.equal(body.querySelector('figure img').getAttribute('src'),'data/relay/assets/legacy.jpg');
+});
+
+test('the article reader maps numbered subheads to a smaller heading level',async t=>{
+  const data={rooms:[{id:'naver',kind:'articles',title:'인생의 방',articles:[{
+    id:'sub',title:'소제목 글',published_date:'2026-11-02',
+    blocks:[{kind:'text',text:'1) 첫 번째 조건\n\n조건 설명'}],
+  }]}]};
+  const {document,window}=parseHTML('<section id="relay"></section>');
+  let ready;const loaded=new Promise(resolve=>{ready=resolve;});
+  const root=document.getElementById('relay');
+  initRelayRoomView({root,embeddedData:()=>JSON.stringify(data),onReady:ready}).show(true);await loaded;
+  root.querySelector('[data-article="sub"]').dispatchEvent(new window.Event('click',{bubbles:true}));
+  assert.equal(root.querySelector('.relay-body h3').textContent,'1) 첫 번째 조건');
+  assert.equal(root.querySelector('.relay-body h2'),null);
+  assert.equal(root.querySelector('.relay-body p').textContent,'조건 설명');
+});
+
 test('the relay chat renders image albums, inline links, previews, quotes and withheld notes',async t=>{
   const data=chatPayload(),{document}=parseHTML('<section id="relay"></section>');
   const previous=globalThis.fetch;globalThis.fetch=async()=>{throw new Error('embedded relay must not fetch');};t.after(()=>{globalThis.fetch=previous;});

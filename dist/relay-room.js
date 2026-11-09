@@ -88,6 +88,116 @@ function replySnippet(message) {
   return images ? `사진 ${images}장` : '이전 메시지';
 }
 
+// 인생의 방 본문은 네이버 에디터의 줄바꿈·zero-width 공백을 그대로 담고 있다.
+// Medium처럼 문단은 빈 줄로만 나누고, 한 줄짜리 줄바꿈은 이어 붙인다.
+const ARTICLE_INVISIBLE = /[\u200b\u200c\u200d\u2060\ufeff]/g;
+const ARTICLE_GENERIC_ALT = /본문 사진\s*\d+\s*$/;
+
+function normalizeArticleText(value) {
+  return String(value ?? '')
+    .replace(/\r\n?/g, '\n')
+    .replace(ARTICLE_INVISIBLE, '')
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+function articleLines(part) {
+  return part.split('\n').map(line => line.trim()).filter(Boolean);
+}
+function articleImage(block) {
+  const src = typeof block?.src === 'string' ? block.src.trim() : '';
+  if (!src) return null;
+  const width = Number(block?.width), height = Number(block?.height);
+  return {
+    kind: 'image', src,
+    alt: typeof block?.alt === 'string' ? block.alt.trim() : '',
+    caption: typeof block?.caption === 'string' ? block.caption.trim() : '',
+    width: Number.isInteger(width) && width > 0 ? width : 0,
+    height: Number.isInteger(height) && height > 0 ? height : 0,
+  };
+}
+function articleContentBlocks(article) {
+  const content = [];
+  for (const block of Array.isArray(article?.blocks) ? article.blocks : []) {
+    if (!block || typeof block !== 'object') continue;
+    if (block.kind === 'image') {
+      const image = articleImage(block);
+      if (image) content.push(image);
+      continue;
+    }
+    if (block.kind !== 'text') continue;
+    const text = normalizeArticleText(block.text);
+    if (!text) continue;
+    const lines = text.split('\n').filter(line => line.trim());
+    if (lines.length && lines.every(line => /^\s*>/.test(line))) {
+      const quote = lines.map(line => line.replace(/^\s*>\s?/, '').trim()).filter(Boolean).join(' ');
+      if (quote) content.push({kind: 'quote', text: quote});
+      continue;
+    }
+    for (const part of text.split(/\n{2,}/)) {
+      const paragraph = articleLines(part).join(' ');
+      if (paragraph) content.push({kind: 'text', text: paragraph});
+    }
+  }
+  if (!content.length) {
+    for (const part of normalizeArticleText(article?.body_text).split(/\n{2,}/)) {
+      const paragraph = articleLines(part).join(' ');
+      if (paragraph) content.push({kind: 'text', text: paragraph});
+    }
+  }
+  const seen = new Set(content.filter(block => block.kind === 'image').map(block => block.src));
+  for (const value of Array.isArray(article?.images) ? article.images : []) {
+    const image = articleImage(typeof value === 'string' ? {src: value} : value);
+    if (!image || seen.has(image.src)) continue;
+    content.push(image); seen.add(image.src);
+  }
+  return content;
+}
+function articleHeading(text) {
+  const markdown = /^(#{1,3})\s+(.+)$/.exec(text);
+  if (markdown) return {level: Math.min(3, markdown[1].length + 1), text: markdown[2].trim()};
+  const numbered = /^(\d{1,2})([.)])\s+\S/.exec(text);
+  if (numbered) return {level: numbered[2] === ')' ? 3 : 2, text};
+  if (/^제?\s*\d{1,2}\s*[장절][.:]?\s+\S/.test(text)) return {level: 2, text};
+  const marked = /^([■◆▶◈●])\s*(.+)$/.exec(text);
+  if (marked) return {level: 3, text: marked[2].trim()};
+  return null;
+}
+function articlePlainText(article) {
+  return articleContentBlocks(article)
+    .filter(block => block.kind === 'text' || block.kind === 'quote')
+    .map(block => block.text).join('\n\n');
+}
+function articleReadMinutes(article) {
+  const chars = articlePlainText(article).replace(/\s/g, '').length;
+  return Math.max(1, Math.round(chars / 500));
+}
+function articleExcerpt(article) {
+  const text = articleContentBlocks(article)
+    .filter(block => block.kind === 'text')
+    .map(block => block.text).join(' ')
+    .replace(/\s+/g, ' ').trim();
+  if (!text) return '';
+  return text.length > 150 ? `${text.slice(0, 150).trimEnd()}…` : text;
+}
+function articleCaption(image) {
+  if (image.caption) return image.caption;
+  const alt = String(image.alt || '').trim();
+  return alt && alt.length <= 120 && !ARTICLE_GENERIC_ALT.test(alt) ? alt : '';
+}
+function articleInline(text) {
+  const links = autoLinks(text);
+  if (!links.length) return esc(text);
+  let html = '', cursor = 0;
+  for (const link of links) {
+    if (link.offset < cursor) continue;
+    html += esc(text.slice(cursor, link.offset));
+    html += `<a class="relay-reader-link" href="${esc(link.url)}" target="_blank" rel="noopener noreferrer">${esc(text.slice(link.offset, link.offset + link.length))}</a>`;
+    cursor = link.offset + link.length;
+  }
+  return html + esc(text.slice(cursor));
+}
+
 const svg = path => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">${path}</svg>`;
 const GLYPH = {
   relay: svg('<path d="M4 5h16v11H7l-3 3V5Zm4 4h8M8 12h5"/>'),
@@ -95,6 +205,7 @@ const GLYPH = {
   book: svg('<path d="M12 6c-3-2-6-2-10-1v14c4-1 7-1 10 1 3-2 6-2 10-1V5c-4-1-7-1-10 1Zm0 0v14"/>'),
   paper: svg('<path d="M5 3h11l3 3v15H5V3Zm3 5h8M8 12h8M8 16h5"/>'),
   refresh: svg('<path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5V9H15"/>'),
+  back: svg('<path d="M15 5l-7 7 7 7"/>'),
 };
 const KIND_GLYPH = { chat: 'chat', articles: 'book', editions: 'paper' };
 const kindGlyph = kind => GLYPH[KIND_GLYPH[kind]] || GLYPH.book;
@@ -252,35 +363,69 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
     return `<ol class="relay-chat" aria-label="${esc(item.title || '텔레그램')} 메시지">${rows}</ol>`;
   }
 
-  function articleReader(article) {
-    const body = String(article.body_text || '').trim();
-    const paragraphs = body ? body.split(/\n{2,}/).map(part => `<p>${esc(part).replace(/\n/g, '<br>')}</p>`).join('') : '<p>본문이 아직 없습니다.</p>';
-    const images = (Array.isArray(article.images) ? article.images : []).map(image => {
-      const src = typeof image === 'string' ? image : image?.src;
-      if (!src) return '';
-      return `<figure><img src="${esc(imageSource(src))}" alt="${esc(image?.alt || '')}" loading="lazy"></figure>`;
-    }).join('');
+  function articleReader(article, publication = '인생의 방') {
+    const title = article.title || '제목 없음';
+    const date = dayLabel(article.published_date || article.at);
+    const minutes = articleReadMinutes(article);
     const link = safeHref(article.url);
+    let firstImage = true;
+    const body = articleContentBlocks(article).map(block => {
+      if (block.kind === 'image') {
+        const dims = block.width && block.height ? ` width="${block.width}" height="${block.height}"` : '';
+        const caption = articleCaption(block);
+        const figure = `<figure class="relay-reader-figure"><img src="${esc(imageSource(block.src))}" alt="${esc(block.alt || '본문 사진')}" loading="${firstImage ? 'eager' : 'lazy'}" decoding="async"${dims}>${caption ? `<figcaption>${esc(caption)}</figcaption>` : ''}</figure>`;
+        firstImage = false;
+        return figure;
+      }
+      if (block.kind === 'quote') return `<blockquote>${articleInline(block.text)}</blockquote>`;
+      const heading = articleHeading(block.text);
+      return heading
+        ? `<h${heading.level}>${articleInline(heading.text)}</h${heading.level}>`
+        : `<p>${articleInline(block.text)}</p>`;
+    }).join('');
     return `<article class="relay-reader">
-      <button type="button" class="relay-reader-back" data-relay-action="article-back">← 글 목록</button>
-      <h1>${esc(article.title || '제목 없음')}</h1>
-      <p class="relay-byline">${esc(dayLabel(article.published_date || article.at))}${article.author ? ' · ' + esc(article.author) : ''}</p>
-      ${link ? `<p class="relay-source-link"><a href="${esc(link)}" target="_blank" rel="noopener noreferrer">네이버 원문</a></p>` : ''}
-      <div class="relay-body">${paragraphs}${images}</div>
+      <header class="relay-reader-head">
+        <h1>${esc(title)}</h1>
+        <div class="relay-reader-byline">
+          <span class="relay-reader-avatar" aria-hidden="true">${GLYPH.book}</span>
+          <div class="relay-reader-byline-copy">
+            <span class="relay-reader-author">${esc(publication)}</span>
+            <span class="relay-reader-meta">${esc(date)} · ${minutes}분 읽기</span>
+          </div>
+        </div>
+      </header>
+      <div class="relay-body">${body || '<p class="relay-reader-empty">본문이 아직 없습니다.</p>'}</div>
+      <footer class="relay-reader-foot">
+        <span>${esc(publication)}</span>
+        ${link ? `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer">네이버 원문 <span aria-hidden="true">↗</span></a>` : ''}
+      </footer>
     </article>`;
+  }
+
+  function articleCard(article) {
+    const content = articleContentBlocks(article);
+    const images = content.filter(block => block.kind === 'image');
+    const excerpt = articleExcerpt(article);
+    const thumb = images.length
+      ? `<span class="relay-article-thumb"><img src="${esc(imageSource(images[0].src))}" alt="" loading="lazy" decoding="async"></span>`
+      : '<span class="relay-article-thumb relay-article-thumb--empty" aria-hidden="true"></span>';
+    return `<li><button type="button" class="relay-article" data-article="${esc(article.id)}">
+      <span class="relay-article-copy">
+        <span class="relay-article-meta">${esc(dayLabel(article.published_date || article.at))} · ${articleReadMinutes(article)}분 읽기</span>
+        <span class="relay-article-title">${esc(article.title || '제목 없음')}</span>
+        ${excerpt ? `<span class="relay-article-excerpt">${esc(excerpt)}</span>` : ''}
+        <span class="relay-article-foot">${images.length ? `사진 ${images.length}장` : '글'}</span>
+      </span>
+      ${thumb}
+    </button></li>`;
   }
 
   function articleDetail(item) {
     const articles = Array.isArray(item.articles) ? item.articles : [];
     if (!articles.length) return '<p class="relay-empty" role="status">아직 받은 글이 없습니다.</p>';
     const chosen = articles.find(article => article.id === articleId);
-    if (chosen) return articleReader(chosen);
-    return `<ul class="relay-articles">${articles.map(article => `
-      <li><button type="button" class="relay-article" data-article="${esc(article.id)}">
-        <span class="relay-article-title">${esc(article.title || '제목 없음')}</span>
-        <span class="relay-article-meta">${esc(dayLabel(article.published_date || article.at))}${
-          (article.images?.length) ? ` · 사진 ${article.images.length}` : ''}</span>
-      </button></li>`).join('')}</ul>`;
+    if (chosen) return articleReader(chosen, item.title || '인생의 방');
+    return `<div class="relay-feed"><ul class="relay-articles">${articles.map(articleCard).join('')}</ul></div>`;
   }
 
   function editionDetail(item) {
@@ -307,14 +452,23 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
     </div>`;
   }
 
+  function currentArticle(item) {
+    if ((item?.kind || 'chat') !== 'articles' || !articleId) return null;
+    return (Array.isArray(item.articles) ? item.articles : []).find(article => article.id === articleId) || null;
+  }
+
   function detail() {
     const item = room();
     if (!item) return '<p class="relay-empty" role="status">표시할 원천이 없습니다.</p>';
     const kind = item.kind || 'chat';
+    const article = currentArticle(item);
     const body = kind === 'chat' ? chatDetail(item) : kind === 'editions' ? editionDetail(item) : articleDetail(item);
     const generated = data?.generated_at ? `최근 갱신 ${hhmm(data.generated_at)}` : '';
-    return `<header class="relay-detail-head">
-        <span class="relay-peer-avatar" data-kind="${esc(kind)}" aria-hidden="true">${kindGlyph(kind)}</span>
+    const avatar = article
+      ? `<button type="button" class="relay-detail-back" data-relay-action="article-back" aria-label="글 목록으로" title="글 목록">${GLYPH.back}</button>`
+      : `<span class="relay-peer-avatar" data-kind="${esc(kind)}" aria-hidden="true">${kindGlyph(kind)}</span>`;
+    return `<header class="relay-detail-head${article ? ' relay-detail-head--reading' : ''}">
+        ${avatar}
         <div class="relay-peer">
           <h2>${esc(item.title || item.id)}</h2>
           <p class="relay-peer-sub">${esc([item.subtitle, countLabel(item)].filter(Boolean).join(' · '))}</p>
@@ -329,6 +483,9 @@ export function initRelayRoomView({ root, embeddedData, embeddedAssets, onReady 
 
   function render() {
     const generatedTime = data?.generated_at ? hhmm(data.generated_at) : '';
+    const currentRoom = room(), currentKind = currentRoom?.kind || 'chat';
+    const reading = !!(currentArticle(currentRoom));
+    root.dataset.relayMode = reading ? 'reading' : currentKind === 'articles' ? 'articles' : 'default';
     root.innerHTML = `
       <aside class="relay-rooms" aria-label="릴레이 채널">
         <header class="relay-rooms-head"><h1>채널</h1><span class="relay-rooms-total">${rooms().length}</span></header>
