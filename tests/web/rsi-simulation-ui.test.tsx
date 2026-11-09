@@ -5,6 +5,10 @@ import {parseHTML} from 'linkedom';
 import type {Market,MarketSnapshot,Point} from '@atlas/contracts/market-lab';
 import {useRsiSimulation,SimulationHud,SimulationSettingsForm,SimulationDetails,RsiDetailDialog} from '../../apps/web/src/components/rsi-simulation.js';
 import {CompactToolbarProvider,CompactToolbarHost} from '../../apps/web/src/components/compact-toolbar.js';
+import {TradingCriteriaHud,TradingCriteriaDetails,tradingCriteriaState} from '../../apps/web/src/components/rsi-trading-criteria.js';
+import {simulateRsiTranches} from '@atlas/domain/rsi-simulation';
+import {rsiChartLayout} from '../../dist/rsi-chart-layout.js';
+import {chartLegendSlot} from '../../dist/ui/chart-legend-layout.js';
 
 const prices:Point[]=[...Array.from({length:20},(_,i)=>100+i),...Array.from({length:18},(_,i)=>116-i*3),...Array.from({length:20},(_,i)=>68+i*4)]
   .map((close,index)=>[new Date(Date.UTC(2025,0,index+1)).toISOString().slice(0,10),close]);
@@ -51,6 +55,7 @@ async function mount(content:React.ReactNode,storage=new Map<string,string>(),em
       node.dispatchEvent(new dom.Event('input',{bubbles:true,cancelable:true}));
     });},
     submit:async()=>{await act(async()=>document.querySelector('form')!.dispatchEvent(new dom.Event('submit',{bubbles:true,cancelable:true})));},
+    cancel:async()=>{await act(async()=>document.querySelector('dialog')!.dispatchEvent(new dom.Event('cancel',{cancelable:true})));},
     hideFrame:async()=>{await act(async()=>{frame.hidden=true;await Promise.resolve();});}
   };
 }
@@ -146,4 +151,71 @@ test('hosted modal closes immediately when its originating iframe is hidden',asy
   const fixture=await mount(<Harness/>,new Map(),true);t.after(fixture.cleanup);
   await fixture.click('[data-open]');assert.equal((fixture.document.querySelector('dialog') as unknown as HTMLDialogElement).open,true);
   await fixture.hideFrame();assert.equal((fixture.document.querySelector('dialog') as unknown as HTMLDialogElement).open,false);
+});
+
+function criteriaGeometry(width:number,height=700){
+  const {left,right,top,priceBottom:bottom}=rsiChartLayout(width,height,true,64);
+  const input={width,height,left,right,top,bottom,viewportWidth:width};
+  return {...input,legend:chartLegendSlot(input)};
+}
+
+test('whole-history criteria retain the latest confirmed state when saved experiment dates change',async t=>{
+  let current!:ReturnType<typeof useRsiSimulation>;
+  const stored=new Map([['atlas:rsi-simulation:v1:TQQQ',JSON.stringify({capital:1000,feeBps:5,firstWeight:50,start:'',end:'2025-01-29'})]]);
+  function Harness(){current=useRsiSimulation('TQQQ',market,snapshot(market),new Date('2025-03-01T12:00:00Z'));
+    return <TradingCriteriaHud symbol="TQQQ" result={current.overallResult} error={current.overallError} geometry={criteriaGeometry(1440)} open={false} onDetails={()=>{}}/>;}
+  const fixture=await mount(<Harness/>,stored);t.after(fixture.cleanup);
+  assert.equal(current.result!.usedThrough,'2025-01-29');assert.equal(current.result!.holdings.length,2);assert.equal(current.result!.metrics.closedTranches,0);
+  assert.equal(current.overallResult!.usedThrough,'2025-02-27');assert.equal(current.overallResult!.holdings.length,0);assert.equal(current.overallResult!.metrics.closedTranches,2);
+  assert.match(fixture.document.querySelector('[data-criteria-field="win-rate"]')!.textContent!,/0\.0% · n=2/);
+  const whole=current.overallResult;
+  await act(async()=>current.setSettings({...current.settings,start:'2025-01-28',end:'2025-02-12'}));
+  assert.equal(current.result!.usedThrough,'2025-02-12');assert.equal(current.overallResult,whole,'date-only edits never recalculate or truncate the overall observation');
+  assert.equal(fixture.document.querySelector('[data-rsi-criteria]')!.getAttribute('data-criteria-through'),'2025-02-27');
+  await act(async()=>current.setSettings({...current.settings,firstWeight:70,feeBps:0}));
+  assert.equal(current.overallResult!.assumptions.weights[0],.7);assert.equal(current.overallResult!.assumptions.feeBps,0);
+  assert.notEqual(current.overallResult!.finalEquity,whole!.finalEquity);
+});
+
+test('criteria distinguish pending fills, inactive crossing waits, unmet active thresholds and missing RSI',()=>{
+  const calculate=(end:string,start=prices[0][0],input=prices)=>simulateRsiTranches(input,{start,end,confirmedThrough:end,capital:1000,feeBps:5});
+  const pending=calculate('2025-01-27'),met=tradingCriteriaState(pending);
+  assert.equal(met.state,'met');assert.match(met.reason,/1차 매수 충족.*체결 대기/);assert.equal(pending.trades.length,0,'signal is not a fill');
+  const held=tradingCriteriaState(calculate('2025-01-29'));
+  assert.equal(held.state,'unmet');assert.match(held.reason,/매도 기준 40 미충족/);assert.equal(held.band,'strong-buy','RSI display band does not override active holding state');
+  const noCross=tradingCriteriaState(calculate('2025-01-29','2025-01-28'));
+  assert.equal(noCross.state,'waiting');assert.match(noCross.reason,/새 33.5 하향 통과 대기/);
+  for(const result of [null,calculate('2025-01-10',prices[0][0],prices.slice(0,10))]){
+    const state=tradingCriteriaState(result);assert.equal(state.state,'waiting');assert.equal(state.rsi,null);assert.equal(state.band,'unavailable');assert.equal(state.bandLabel,'—');
+  }
+  assert.equal(tradingCriteriaState(pending,'출처 확인 대기').state,'waiting');
+});
+
+test('three symbol criteria start as mobile chips, expose every rule in a native dialog and return focus',async t=>{
+  const result=simulateRsiTranches(prices,{start:prices[0][0],end:'2025-01-27',confirmedThrough:'2025-01-27',capital:1000,feeBps:5});
+  function Harness({symbol,width=390}:{symbol:string;width?:number}){
+    const [open,setOpen]=useState(false);
+    return <CompactToolbarProvider embedded={false} active epoch={1}><CompactToolbarHost/>
+      <TradingCriteriaHud symbol={symbol} result={result} error="" geometry={criteriaGeometry(width)} open={open} onDetails={()=>setOpen(true)}/>
+      <RsiDetailDialog open={open} title={`${symbol} 매매 기준`} name="simulation" onClose={()=>setOpen(false)}><TradingCriteriaDetails symbol={symbol} result={result} error=""/></RsiDetailDialog>
+    </CompactToolbarProvider>;
+  }
+  const fixture=await mount(<Harness symbol="TQQQ"/>);t.after(fixture.cleanup);
+  for(const symbol of ['TQQQ','SOXL','233740']){
+    await fixture.render(<Harness key={symbol} symbol={symbol}/>);
+    const chip=fixture.document.querySelector('[data-rsi-criteria]')!;
+    assert.equal(chip.getAttribute('data-rsi-criteria'),symbol);assert.equal(chip.getAttribute('data-criteria-collapsed'),'true');assert.equal(chip.getAttribute('data-criteria-height'),'44');
+    assert.match(chip.getAttribute('aria-label')!,new RegExp(symbol+' 매매 기준 상세'));assert.equal(chip.getAttribute('aria-expanded'),'false');
+    await fixture.click('[data-rsi-criteria]');
+    const dialog=fixture.document.querySelector('dialog')!;assert(dialog.hasAttribute('open'));assert.equal(chip.getAttribute('aria-expanded'),'true');
+    assert.equal(dialog.querySelectorAll('[data-criteria-detail]').length,7);
+    assert.match(dialog.textContent!,/RSI 33\.5\/29\.5\/40\/43/);assert.match(dialog.textContent!,/전체 승률— · n=0/);assert.match(dialog.textContent!,/다음 확정 봉 종가 체결 대기/);
+    assert.match(dialog.textContent!,/화면 표시 구간/);assert.match(dialog.textContent!,/자료가 없으면 중립으로 채우지 않습니다/);
+    await fixture.cancel();assert.equal(dialog.hasAttribute('open'),false);assert.equal(fixture.document.activeElement,chip);
+    await fixture.click('[data-rsi-criteria]');await fixture.click('[data-rsi-dialog-close]');assert.equal(dialog.hasAttribute('open'),false);assert.equal(fixture.document.activeElement,chip);
+  }
+  await fixture.render(<Harness key="desktop" symbol="TQQQ" width={1440}/>);
+  const card=fixture.document.querySelector('[data-rsi-criteria]')!;
+  assert.equal(card.getAttribute('data-criteria-collapsed'),'false');assert.equal(card.querySelectorAll('[data-criteria-field]').length,7);
+  assert.match(card.textContent!,/분할 매수1차 33.5 · 2차 29.5/);assert.match(card.textContent!,/분할 매도1차 40 · 2차 43/);assert.match(card.textContent!,/적극매수 ≤29.5 · 매도 ≥43/);
 });

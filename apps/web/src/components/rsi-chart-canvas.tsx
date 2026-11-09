@@ -20,12 +20,13 @@ export interface ChartQuote {
   dateTime?:string;timestampText?:string;timezone?:string;rsi?:number|null;rsiReason?:string;
   description?:string;detailText?:string;source?:string;sourceDescription?:string;sourceVisible?:boolean;
 }
+export interface ChartOverlayGeometry {width:number;height:number;left:number;right:number;top:number;bottom:number;viewportWidth:number;protectedAnchors?:Array<{x:number;y:number;width:number;height:number}>}
 interface Props {menuPulse:number;symbol:string;unit:string;prices:Point[];bars:RsiBar[];rows:RsiRow[];view:RsiChartView;active:boolean;
   onView:(view:RsiChartView)=>void;onStart:()=>void;onEnd:()=>void;onPick:(pick:Pick)=>void;onHover:(pick:Pick|null)=>void;hover:Pick|null;svgRef:React.RefObject<SVGSVGElement|null>;
-  series?:InstrumentSeries;markers?:InstrumentMarker[];onMarker?:()=>void;volumeUnit?:string;description?:string;className?:string;revision?:string;quote?:ChartQuote}
+  series?:InstrumentSeries;markers?:InstrumentMarker[];onMarker?:()=>void;volumeUnit?:string;description?:string;className?:string;revision?:string;quote?:ChartQuote;overlay?:(geometry:ChartOverlayGeometry)=>React.ReactNode}
 export function RsiChartCanvas(props:Props) {
   const {symbol,unit,prices,bars,rows,view,active,onPick,onHover,hover,svgRef}=props,root=useRef<HTMLDivElement>(null);
-  const [size,setSize]=useState(()=>({width:900,height:520,axis:createPriceAxisLayout({svg:null,width:900,left:12,minRight:64})})),live=useRef(props),navigation=useRef<ReturnType<typeof bindChartNavigation>|null>(null);
+  const [size,setSize]=useState(()=>({width:900,height:520,viewportWidth:typeof window==='undefined'?900:window.innerWidth||900,axis:createPriceAxisLayout({svg:null,width:900,left:12,minRight:64})})),live=useRef(props),navigation=useRef<ReturnType<typeof bindChartNavigation>|null>(null);
   const source=useRef({prices,bars,version:0});
   const legend=useRef<ReturnType<typeof mountInstrumentChartLegend>|null>(null);
   const quoteHost=useRef<HTMLDivElement>(null),quoteHud=useRef<ReturnType<typeof mountQuoteHud>|null>(null);
@@ -46,10 +47,12 @@ export function RsiChartCanvas(props:Props) {
     let disposed=false;
     const measure=()=>{if(disposed||!root.current)return;const width=root.current.clientWidth,height=root.current.clientHeight;if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)return;
       const axis=createPriceAxisLayout({svg:svgRef.current,width,left:Math.min(12,width*.05),minRight:64});
-      setSize(previous=>previous.width===width&&previous.height===height&&previous.axis.right===axis.right&&previous.axis.metricKey===axis.metricKey?previous:{width,height,axis});};
+      const viewportWidth=root.current.ownerDocument.defaultView?.innerWidth||width;
+      setSize(previous=>previous.width===width&&previous.height===height&&previous.viewportWidth===viewportWidth&&previous.axis.right===axis.right&&previous.axis.metricKey===axis.metricKey?previous:{width,height,viewportWidth,axis});};
     measure();const observer=typeof ResizeObserver==='undefined'?null:new ResizeObserver(measure);if(root.current)observer?.observe(root.current);
+    const win=root.current?.ownerDocument.defaultView;win?.addEventListener('resize',measure);
     void root.current?.ownerDocument.fonts?.ready.then(measure);
-    return()=>{disposed=true;observer?.disconnect();};
+    return()=>{disposed=true;observer?.disconnect();win?.removeEventListener('resize',measure);};
   },[]);
   useEffect(()=>{
     if(!root.current)return;
@@ -101,14 +104,15 @@ export function RsiChartCanvas(props:Props) {
     let lane=laneEnds.findIndex(end=>end+30<labelX);if(lane<0)lane=laneEnds.length;laneEnds[lane]=labelX;
     return {key,items,marker,x,labelX,y:g.top+10+lane*20};
   });
+  const overlayBounds={width:size.width,height:size.height,left:g.left,right:g.right,top:g.top,bottom:g.priceBottom,viewportWidth:size.viewportWidth,
+    protectedAnchors:marks.map(mark=>({x:mark.labelX-13,y:mark.y-9,width:26,height:18}))};
   useLayoutEffect(()=>{
     if(!root.current)return;
     const controller=mountInstrumentChartLegend({plot:root.current});legend.current=controller;
     return()=>{controller.destroy();legend.current=null;};
   },[symbol]);
   useLayoutEffect(()=>{
-    legend.current?.update({...props,prices,bars,rows,view},{width:size.width,height:size.height,left:g.left,right:g.right,top:g.top,bottom:g.priceBottom,
-      protectedAnchors:marks.map(mark=>({x:mark.labelX-13,y:mark.y-9,width:26,height:18}))});
+    legend.current?.update({...props,prices,bars,rows,view},overlayBounds);
   },[symbol,unit,prices,bars,rows,view,active,size,props.series,props.markers,props.volumeUnit]);
   function pointer(event:React.PointerEvent<SVGSVGElement>|React.MouseEvent<SVGSVGElement>):Pick|null {
     const rect=event.currentTarget.getBoundingClientRect(),px=(event.clientX-rect.left)/rect.width*size.width,py=(event.clientY-rect.top)/rect.height*size.height;
@@ -166,5 +170,6 @@ export function RsiChartCanvas(props:Props) {
       <g data-price-axis="true"><title>가격축 · 드래그·휠로 확대·축소 · 두 번 눌러 자동 맞춤</title><rect x={g.right} y={g.top} width={Math.max(1,size.width-g.right)} height={Math.max(1,g.priceBottom-g.top)} fill="transparent" pointerEvents="all" style={{cursor:'ns-resize',touchAction:'none'}}/></g>
       <g data-time-axis="true"><title>시간축 · 좌우 드래그하여 시간 간격 확대·축소 · 두 번 눌러 전체 범위</title><rect x={g.left} y={g.bottom} width={g.right-g.left} height={Math.max(1,size.height-g.bottom)} fill="transparent" pointerEvents="all" style={{cursor:'ew-resize',touchAction:'none'}}/></g>
     </svg>
+    {active&&props.overlay?.(overlayBounds)}
   </div>;
 }

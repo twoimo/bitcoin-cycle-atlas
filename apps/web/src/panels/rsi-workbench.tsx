@@ -11,6 +11,7 @@ import { RsiHistory,type RsiHistoryState } from './rsi-history.js';
 import { rsiCrossings } from '../rsi-crossings.js';
 import {CompactToolbar,CompactToolbarMenu,CompactToolbarProvider,CompactToolbarHost} from '../components/compact-toolbar.js';
 import {useRsiSimulation,SimulationHud,SimulationSettingsForm,SimulationDetails,RsiDetailDialog} from '../components/rsi-simulation.js';
+import {TradingCriteriaHud,TradingCriteriaDetails} from '../components/rsi-trading-criteria.js';
 import {initialChartUrlView,chartUrlView,persistStandaloneChartUrl} from '../chart-url-state.js';
 const History=memo(RsiHistory);
 type Props={symbol:string;market:Market;snapshot:MarketSnapshot;now:Date;rows:RsiRow[];revision?:string;epoch:number;active:boolean;embedded:boolean;historyCache?:Map<string,RsiHistoryState>;chartCache?:Map<string,RsiChartCache>;onDate:(index:number)=>void;comparison:React.ReactNode;references:React.ReactNode};
@@ -118,7 +119,7 @@ export function RsiWorkbench(props:Props) {
   },[embedded,active,epoch,symbol,view,pane,tab,point?.[0],point?.[1],row?.rsi,barData,revision,market.unit,market.timezone,prices]);
   useEffect(()=>{
     const key=(event:KeyboardEvent)=>{
-      if(!active||event.target instanceof Element&&event.target.closest('input,select,textarea,button,a,[contenteditable=true]'))return;
+      if(!active||live.current.tab!=='chart'||event.target instanceof Element&&event.target.closest('dialog,summary,input,select,textarea,button,a,[contenteditable=true]'))return;
       let action='',value:unknown;
       if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='z'){action=event.shiftKey?'redo':'undo';}
       else if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){action='pane';value='search';}
@@ -154,9 +155,9 @@ export function RsiWorkbench(props:Props) {
       {!embedded&&<div className="rsi-toolbar compact-toolbar-tabs">{[[365,'1년'],[1095,'3년'],[0,'전체']].map(([days,label])=><button className="compact-toolbar-action" key={days} type="button" aria-pressed={Number(days)===0&&view.start===prices[0][0]||Number(days)>0&&Math.abs(day(view.end)-day(view.start)-Number(days))<2} onClick={()=>command.current('span',days)}>{label}</button>)}<button className="compact-toolbar-action" type="button" onClick={()=>command.current('zoom',.7)}>확대</button><button className="compact-toolbar-action" type="button" onClick={()=>command.current('zoom',1.4)}>축소</button><button className="compact-toolbar-action" type="button" onClick={()=>command.current('pane','settings')}>설정</button></div>}
     </CompactToolbar>
     {status&&<p className="rsi-workbench-status" role="status">{status}</p>}
-    <SimulationHud symbol={symbol} unit={market.unit} result={simulation.result} error={simulation.error} onDetails={()=>setTab('simulation')} onSettings={()=>command.current('pane','settings')}/>
     <div className="rsi-workbench-body">
       <RsiChartCanvas menuPulse={menuPulse} symbol={symbol} revision={`${revision||''}:${epoch}`} unit={market.unit} prices={displayPrices} bars={bars} rows={rows} view={view} active={active} hover={hover} svgRef={svg} quote={quote}
+        overlay={geometry=><TradingCriteriaHud symbol={symbol} result={simulation.overallResult} error={simulation.overallError} geometry={geometry} open={tab==='simulation'} onDetails={()=>setTab('simulation')}/>}
         onHover={setHover} onPick={pick} onView={next=>persist(next,false)} onStart={()=>{setHover(null);gesture.current=live.current.view;}} onEnd={endGesture}/>
       {pane&&<aside className="rsi-workbench-panel" aria-label={`${symbol} ${pane}`}><header><strong>{symbol} · {({data:'선택 데이터',indicators:'지표',settings:'차트 설정',method:'계산·출처',help:'차트 사용법',export:'차트 내보내기',date:'날짜 이동',search:'차트 명령 검색'} as Record<string,string>)[pane]}</strong><button type="button" aria-label="차트 패널 닫기" onClick={()=>setPane(null)}>×</button></header><div className="rsi-workbench-panel-scroll">
         {pane==='data'&&<><dl className="rsi-data-list"><dt>날짜</dt><dd>{point?.[0]}</dd><dt>종가 · {market.unit}</dt><dd>{point?.[1]}</dd><dt>RSI14</dt><dd>{row?.rsi??'미산출'}</dd><dt>SMA9</dt><dd>{row?.signal??'미산출'}</dd>{bar&&<><dt>시가 / 고가 / 저가</dt><dd>{bar.slice(1,4).map(v=>axisNumber(Number(v))).join(' / ')}</dd><dt>거래량</dt><dd>{bar[5]?.toLocaleString()??'자료 없음'}</dd></>}</dl><button type="button" onClick={()=>{setPane(null);setTab('records');}}>전체 기록</button><button type="button" onClick={()=>{setPane(null);setTab('backtest');}}>백테스트</button><details open={view.measurement.length>0}><summary>측정 눈금값</summary><table aria-label="측정 데이터"><thead><tr><th>날짜</th><th>값</th><th>단위</th></tr></thead><tbody>{view.measurement.map((anchor,index)=><tr key={index}><td>{anchor.date}</td><td>{anchor.value}</td><td>{anchor.panel==='rsi'?'RSI pt':market.unit}</td></tr>)}</tbody></table><button type="button" disabled={!view.measurement.length} onClick={()=>command.current('clear-measurement')}>측정 지우기</button></details><details className="ml-original"><summary>키움 일봉 RSI 비교</summary>{props.comparison}</details></>}
@@ -169,8 +170,15 @@ export function RsiWorkbench(props:Props) {
         {pane==='export'&&<><p>{symbol} {view.start} ~ {view.end}</p><button type="button" onClick={()=>{if(svg.current)setExportText(serializeSvg(svg.current,symbol,market.unit,view.frequency));}}>현재 차트 준비</button>{exportUrl&&<><a href={exportUrl} download={`${symbol}-${view.start}-${view.end}.svg`}>SVG 저장</a>{pngUrl&&<a href={pngUrl} download={`${symbol}-${view.start}-${view.end}.png`}>PNG 저장</a>}<img className="rsi-export-preview" src={pngUrl||exportUrl} alt={`${symbol} 현재 차트 내보내기 미리보기`}/><details><summary>SVG 원문</summary><textarea readOnly value={exportText} aria-label="차트 SVG 원문" onFocus={e=>e.currentTarget.select()}/></details></>}</>}
       </div></aside>}
     </div>
-    <RsiDetailDialog open={tab!=='chart'} name={tab} title={`${symbol} ${({simulation:'분할 매매 성과',backtest:'백테스트',records:'과거 기록',csv:'CSV 내보내기',chart:'차트'})[tab]}`} onClose={()=>setTab('chart')}>
-      {tab==='simulation'&&simulation.result?<SimulationDetails result={simulation.result} unit={market.unit} symbol={symbol}/>:tab!=='chart'&&<>
+    <RsiDetailDialog open={tab!=='chart'} name={tab} title={`${symbol} ${({simulation:'매매 기준 · 분할 매매 성과',backtest:'백테스트',records:'과거 기록',csv:'CSV 내보내기',chart:'차트'})[tab]}`} onClose={()=>setTab('chart')}>
+      {tab==='simulation'?<>
+        <TradingCriteriaDetails symbol={symbol} result={simulation.overallResult} error={simulation.overallError}/>
+        {simulation.overallResult&&<details className="rsi-split-summary"><summary>전체 기간 체결·성과</summary><SimulationDetails result={simulation.overallResult} unit={market.unit} symbol={symbol}/></details>}
+        <h3>선택 기간 평단가·성과</h3>
+        <SimulationHud symbol={symbol} unit={market.unit} result={simulation.result} error={simulation.error} onDetails={()=>setTab('backtest')} onSettings={()=>command.current('pane','settings')}/>
+        {simulation.result&&<SimulationDetails result={simulation.result} unit={market.unit} symbol={symbol}/>}
+      </>:tab!=='chart'&&<>
+        {tab==='backtest'&&<details className="rsi-split-summary"><summary>매매 기준 · 전체 기간 판정</summary><TradingCriteriaDetails symbol={symbol} result={simulation.overallResult} error={simulation.overallError}/></details>}
         {tab==='backtest'&&simulation.result&&<details open className="rsi-split-summary"><summary>분할 {simulation.settings.firstWeight}/{100-simulation.settings.firstWeight} · 현재 설정 결과</summary><SimulationDetails result={simulation.result} unit={market.unit} symbol={symbol}/></details>}
         <CompactToolbarProvider embedded={false} active={active} epoch={epoch}><CompactToolbarHost/><div className="rsi-history-page" data-mode={tab}><History symbol={symbol} unit={market.unit} prices={confirmedPrices} rows={confirmedRows} revision={revision} cache={historyCache} initialCsv={tab==='csv'} onDate={index=>{selectDate(nearestPoint(prices,confirmedPrices[index][0]));setTab('chart');}}/></div></CompactToolbarProvider>
       </>}

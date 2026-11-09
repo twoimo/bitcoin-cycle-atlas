@@ -31,7 +31,15 @@ export function useRsiSimulation(symbol:string,market:Market,snapshot:MarketSnap
       capital:settings.capital,feeBps:settings.feeBps,weights:[settings.firstWeight/100,1-settings.firstWeight/100],updatedAt}),error:''};}
     catch(error){return {result:null,error:error instanceof Error?error.message:'분할 매매를 계산하지 못했습니다.'};}
   },[market.prices,settings,confirmedThrough,updatedAt,today]);
-  return {...calculation,settings,setSettings,confirmedThrough};
+  // The criteria corner always reports the latest confirmed daily state and
+  // all retained closed tranches, independently of a saved experiment period.
+  const overall=useMemo(()=>{
+    try{const start=market.prices[0]?.[0];if(!today||!start)throw new RangeError('거래소 시간대와 확정 봉 기준 시각을 확인할 수 없습니다.');
+      return {result:simulateRsiTranches(market.prices,{start,end:confirmedThrough,confirmedThrough,
+        capital:settings.capital,feeBps:settings.feeBps,weights:[settings.firstWeight/100,1-settings.firstWeight/100],updatedAt}),error:''};}
+    catch(error){return {result:null,error:error instanceof Error?error.message:'전체 기간 분할 매매를 계산하지 못했습니다.'};}
+  },[market.prices,settings.capital,settings.feeBps,settings.firstWeight,confirmedThrough,updatedAt,today]);
+  return {...calculation,overallResult:overall.result,overallError:overall.error,settings,setSettings,confirmedThrough};
 }
 
 export function SimulationHud({symbol,unit,result,error,onDetails,onSettings}:{symbol:string;unit:string;result:RsiSimulationResult|null;error:string;onDetails:()=>void;onSettings:()=>void}){

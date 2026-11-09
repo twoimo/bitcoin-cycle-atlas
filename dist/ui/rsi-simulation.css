@@ -23,3 +23,23 @@
 @media(max-width:1000px){.rsi-position-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px 12px}.rsi-simulation-hud>footer{gap:3px 10px}}
 @media(max-width:640px){.rsi-simulation-hud{padding:5px 8px}.rsi-simulation-name{font-size:11px}.rsi-simulation-name small{display:none}.rsi-simulation-hud .rsi-win-badge{min-height:44px;padding:4px 7px;font-size:11px}.rsi-position-grid{gap:3px 8px}.rsi-position-grid dt{font-size:10px}.rsi-position-grid dd{font-size:11px}.rsi-next-trigger{grid-column:1/-1;display:flex;gap:6px;align-items:baseline}.rsi-next-trigger dd span{display:inline}.rsi-next-trigger dd span+span:before{content:' / '}.rsi-simulation-hud>footer{font-size:9px;gap:1px 6px}.rsi-simulation-hud>footer button{min-height:44px}.rsi-detail-dialog{width:calc(100vw - 16px);max-height:calc(100dvh - 16px)}.rsi-detail-dialog>.compact-toolbar-dialog-header{min-height:48px}.rsi-detail-dialog>.compact-toolbar-dialog-header button{min-width:44px;min-height:44px}.rsi-detail-body{padding:12px}.rsi-simulation-metrics{gap:10px 12px}.rsi-simulation-metrics dd{font-size:13px}.rsi-simulation-settings input{font-size:16px;min-height:44px}.rsi-simulation-settings button,.rsi-csv-download{min-height:44px}}
 @media(max-width:340px){.rsi-position-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rsi-simulation-hud>header{gap:4px}.rsi-simulation-hud .rsi-win-badge{font-size:10px;padding:4px 5px}.rsi-simulation-hud>footer [data-rsi-ongoing]{display:block}}
+
+/* R4: one disclosure in the actual price pane; all controls retain 44px hits.
+   The seven 22px rows, 18px clock, 16px padding and 2px border total 190px. */
+.rsi-workbench .rsi-trading-criteria{position:absolute;z-index:7;box-sizing:border-box;display:block;min-width:44px;min-height:44px;margin:0;padding:8px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text);font:11px/22px var(--font-system,var(--font));font-variant-numeric:tabular-nums;text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;touch-action:manipulation}
+.rsi-workbench .rsi-trading-criteria:hover{background:var(--surface-hover)}
+.rsi-workbench .rsi-trading-criteria:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.rsi-criteria-row{display:grid;grid-template-columns:58px minmax(0,1fr);column-gap:6px;align-items:center;height:22px;line-height:22px}
+.rsi-criteria-row>span{color:var(--muted)}.rsi-criteria-row>strong{font:500 11px/22px var(--font-system,var(--font));text-align:right}
+.rsi-criteria-row[data-criteria-field=criteria]{font-weight:600}.rsi-criteria-row[data-criteria-field=criteria]>strong{font-size:10px}
+.rsi-trading-criteria[data-criteria-state=met] [data-criteria-field=current]>strong{color:var(--green)}
+.rsi-trading-criteria[data-criteria-state=waiting] [data-criteria-field=current]>strong{color:var(--muted)}
+.rsi-criteria-clock{display:flex;justify-content:space-between;height:18px;line-height:18px;font-size:10px;color:var(--muted)}
+.rsi-trading-criteria[data-criteria-collapsed=true]{padding:0 7px;font-size:12px;line-height:42px}
+.rsi-criteria-chip{display:flex;align-items:center;justify-content:center;gap:6px;height:100%;line-height:normal}
+.rsi-criteria-chip small{font-size:10px;color:var(--muted)}
+.rsi-criteria-details>dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px;margin:0 0 14px;font-variant-numeric:tabular-nums}
+.rsi-criteria-details>dl>div{min-width:0;padding-bottom:7px;border-bottom:1px solid var(--border)}.rsi-criteria-details dt{color:var(--muted);font-size:11px}.rsi-criteria-details dd{margin:3px 0 0;font-size:13px;overflow-wrap:anywhere}
+.rsi-criteria-details>p,.rsi-criteria-details details p{color:var(--muted);line-height:1.7}
+.rsi-detail-dialog .rsi-criteria-details summary,.rsi-detail-dialog .rsi-split-summary>summary,.rsi-detail-dialog .rsi-simulation-hud button{min-height:44px}
+@media(max-width:430px){.rsi-criteria-details>dl{grid-template-columns:1fr;gap:8px}.rsi-criteria-details>dl>div{display:grid;grid-template-columns:74px minmax(0,1fr);gap:6px}.rsi-criteria-details dd{margin:0}}

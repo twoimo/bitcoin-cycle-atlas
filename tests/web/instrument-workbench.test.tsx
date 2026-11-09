@@ -180,6 +180,10 @@ test('all ETF HUDs follow the actual selected daily or weekly observation, canon
       rows={rows} epoch={9} active embedded onDate={()=>{}} comparison={null} references={null}/>);
     try{
       const hud=fixture.document.querySelector('.atlas-quote-hud')!,field=(name:string)=>hud.querySelector(`[data-quote-field=${name}]`)!;
+      const criteria=fixture.document.querySelector(`[data-rsi-criteria="${symbol}"]`)!;
+      assert(criteria);assert.equal(criteria.parentElement,hud.parentElement,'quote and criteria share the actual price canvas');
+      assert.equal(fixture.document.querySelector('.rsi-workbench>.rsi-simulation-hud'),null,'full-width holdings are available from the details, leaving plot height intact');
+      const wholeCriteria=criteria.textContent;
       const send=(action:string,value:unknown)=>fixture.message({kind:'atlas:center-command',epoch:9,symbol,action,value});
       assert.equal(field('name').textContent,({TQQQ:'삼플레',SOXL:'속쓸','233740':'코스닥150 2배'} as Record<string,string>)[symbol]);
       assert.ok(field('name').getAttribute('aria-label')?.includes(symbol));
@@ -199,9 +203,32 @@ test('all ETF HUDs follow the actual selected daily or weekly observation, canon
       assert.equal(field('time').getAttribute('datetime'),market.prices[0][0]);
       assert.equal(hud.querySelector('[data-quote-rsi-value]')?.textContent,'—');assert.equal(field('change').textContent,'전봉 —');
       assert.equal(fixture.document.querySelector('.atlas-quote-hud'),hud,'commands update the source-owned shared fields');
+      assert.equal(criteria.textContent,wholeCriteria,'daily/weekly and selected past dates do not relabel the full-history current criteria');
+      assert.equal(criteria.getAttribute('data-criteria-through'),market.prices.at(-1)[0]);
       assert.deepEqual(market.prices,original);
     }finally{await fixture.cleanup();}
   }
+});
+
+test('standalone RSI criteria summaries own keyboard input while the chart shortcuts resume after closing',async()=>{
+  const market=marketSnapshot.markets.find((item:{id:string})=>item.id==='tqqq'),rows=calculateRsiSeries(market.prices,14,9);
+  const fixture=await mount(<RsiWorkbench symbol="TQQQ" market={market} snapshot={marketSnapshot} now={new Date('2026-11-09T12:00:00Z')}
+    rows={rows} epoch={1} active embedded={false} onDate={()=>{}} comparison={null} references={null}/>);
+  try{
+    const dialog=fixture.document.querySelector('.rsi-detail-dialog')!,dom=fixture.document.defaultView!;
+    Object.defineProperty(dialog,'open',{configurable:true,get:()=>dialog.hasAttribute('open')});
+    Object.assign(dialog,{showModal(){dialog.setAttribute('open','');},close(){if(dialog.hasAttribute('open')){dialog.removeAttribute('open');dialog.dispatchEvent(new dom.Event('close'));}}});
+    const quoteDate=()=>fixture.document.querySelector('[data-quote-field=time]')?.getAttribute('datetime'),before=quoteDate();
+    await fixture.click('[data-rsi-criteria]');assert(dialog.hasAttribute('open'));
+    for(const key of ['ArrowLeft','ArrowRight','c','h','m']){
+      await fixture.key('.rsi-criteria-details summary',key);
+      assert(dialog.hasAttribute('open'),`${key} must not dismiss the criteria dialog`);
+      assert.equal(quoteDate(),before,`${key} must not change the underlying selection`);
+      assert.equal(fixture.document.querySelector('.rsi-chart-canvas')?.getAttribute('data-tool'),'crosshair');
+    }
+    await fixture.click('[data-rsi-dialog-close]');assert.equal(dialog.hasAttribute('open'),false);
+    await fixture.key('.rsi-chart-canvas>svg','ArrowLeft');assert.notEqual(quoteDate(),before,'normal chart navigation resumes');
+  }finally{await fixture.cleanup();}
 });
 
 test('HYPE HUD uses canonical daily and weekly USDC RSI without enabling an oscillator or changing retained prices',async()=>{
